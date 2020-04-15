@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA17C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AFC0C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:59:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F5F620771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:59:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B1C2206F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:59:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="CE1dlWhj"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="dD0vBGZT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1415023AbgDOP7P (ORCPT
+        id S1415034AbgDOP7Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 11:59:15 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:22260 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2410041AbgDOP6x (ORCPT
+        Wed, 15 Apr 2020 11:59:25 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:21762 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2410051AbgDOP7F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 11:58:53 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03FFbV25021305;
-        Wed, 15 Apr 2020 17:58:17 +0200
+        Wed, 15 Apr 2020 11:59:05 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03FFW5Hp032217;
+        Wed, 15 Apr 2020 17:58:46 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=5+wPLTXf7KCWI+acfIrjcQ/PREWC0t0gEQB9xOF7Ecw=;
- b=CE1dlWhjOoE21vSjZAYOfdq3eO0I6p/FrnE2ThaKsJbk+ttSFEAyizXaLfsu8/BliFXW
- CVglVsYevIlLAPrsByXs4vDX5lIJqF1SHOgFtEXSsRNYrC5pWlGWM4wOj8Ul/wxNu+qN
- fuoWyNpFPMaHUekRfSpvWS0vBPs2miT5ZqA0AjQFw1kjaGFrW/TGBn6by5nB0puLlz1V
- fdZo8zT7RjMOtkT2UNtgkYlr2d9w+eRAB3U0Oc+N8TyaAnm2tNJjF+Pm78wdaIZ+nws+
- s8yumbAKoelkEJgOVmA7LB8YXJNgXN4qHhbmkIy2N/XFKtk5WiR9BDQj8h57peG+NSNP Gw== 
+ bh=Khc/U1sUR95Aj2cY969DKti/dzXYr2tJdsiqM1nCHow=;
+ b=dD0vBGZTW/7pq4LFVz7FHtV46GmihzFC636+ak1yV/xA6cBKTpaQ2WU+HBhTXjJU7Sen
+ tmD+VfUh2eLZCp+5JItD1U6mgLVq2wITRiauilVZ1Ds/pCm5I/aqUukJarxG1siCBjse
+ P63jojI20enLafnRlRxc4Kxf1ZZbSI4dkFXFVrCPmi0q2cGnvp+WfqWZqKCq+VqMGxsy
+ QpaCHoRC5L5ZgwXZ0qK4LbkSu8b7Louvz4p6dZyOQwqPeLxC+L50NVbsk09Ivdvw6Nkq
+ b8qj318uhT7gb46bv/Ki3DRiDkRbrNkUO0mMW0B7zJ5KOmPBLfzvoDdQptKXVnZyjrtu Zw== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30dn8rvwun-1
+        by mx07-00178001.pphosted.com with ESMTP id 30dn94cxy7-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 Apr 2020 17:58:17 +0200
+        Wed, 15 Apr 2020 17:58:46 +0200
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7712C100038;
-        Wed, 15 Apr 2020 17:58:16 +0200 (CEST)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 221F1100038;
+        Wed, 15 Apr 2020 17:58:46 +0200 (CEST)
 Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 660D72B213D;
-        Wed, 15 Apr 2020 17:58:16 +0200 (CEST)
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 0EDDB2AF597;
+        Wed, 15 Apr 2020 17:58:46 +0200 (CEST)
 Received: from localhost (10.75.127.51) by SFHDAG6NODE2.st.com (10.75.127.17)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 15 Apr 2020 17:58:14
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 15 Apr 2020 17:58:43
  +0200
 From:   Christophe Kerello <christophe.kerello@st.com>
 To:     <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
@@ -56,16 +56,16 @@ CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         <devicetree@vger.kernel.org>, <marex@denx.de>,
         Christophe Kerello <christophe.kerello@st.com>
-Subject: [PATCH v2 01/12] dt-bindings: mfd: stm32-fmc2: add STM32 FMC2 controller documentation
-Date:   Wed, 15 Apr 2020 17:57:25 +0200
-Message-ID: <1586966256-29548-2-git-send-email-christophe.kerello@st.com>
+Subject: [PATCH v2 05/12] mtd: rawnand: stm32_fmc2: remove useless inline comments
+Date:   Wed, 15 Apr 2020 17:57:29 +0200
+Message-ID: <1586966256-29548-6-git-send-email-christophe.kerello@st.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1586966256-29548-1-git-send-email-christophe.kerello@st.com>
 References: <1586966256-29548-1-git-send-email-christophe.kerello@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.75.127.51]
-X-ClientProxiedBy: SFHDAG8NODE3.st.com (10.75.127.24) To SFHDAG6NODE2.st.com
+X-ClientProxiedBy: SFHDAG2NODE1.st.com (10.75.127.4) To SFHDAG6NODE2.st.com
  (10.75.127.17)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
  definitions=2020-04-15_05:2020-04-14,2020-04-15 signatures=0
@@ -74,391 +74,279 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds the documentation of the device tree bindings for the STM32
-FMC2 controller.
+Remove inline comments that are useless since function label are
+self explanatory.
 
 Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
 ---
- .../devicetree/bindings/mfd/st,stm32-fmc2.yaml     | 370 +++++++++++++++++++++
- 1 file changed, 370 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/st,stm32-fmc2.yaml
+ drivers/mtd/nand/raw/stm32_fmc2_nand.c | 40 ----------------------------------
+ 1 file changed, 40 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mfd/st,stm32-fmc2.yaml b/Documentation/devicetree/bindings/mfd/st,stm32-fmc2.yaml
-new file mode 100644
-index 0000000..0ce1340
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/st,stm32-fmc2.yaml
-@@ -0,0 +1,370 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mfd/st,stm32-fmc2.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: STMicroelectronics Flexible Memory Controller 2 (FMC2) Bindings
-+
-+description: |
-+  The FMC2 functional block makes the interface with: synchronous and
-+  asynchronous static devices (such as PSNOR, PSRAM or other memory-mapped
-+  peripherals) and NAND flash memories.
-+  Its main purposes are:
-+    - to translate AXI transactions into the appropriate external device
-+      protocol
-+    - to meet the access time requirements of the external devices
-+  All external devices share the addresses, data and control signals with the
-+  controller. Each external device is accessed by means of a unique Chip
-+  Select. The FMC2 performs only one access at a time to an external device.
-+
-+maintainers:
-+  - Christophe Kerello <christophe.kerello@st.com>
-+
-+properties:
-+  compatible:
-+    const: st,stm32mp1-fmc2
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
-+
-+  "#address-cells":
-+    const: 1
-+
-+  "#size-cells":
-+    const: 1
-+
-+  ranges: true
-+
-+patternProperties:
-+  "^ebi(@.*)?":
-+    type: object
-+
-+    properties:
-+      compatible:
-+        const: st,stm32mp1-fmc2-ebi
-+
-+      "#address-cells":
-+        const: 2
-+
-+      "#size-cells":
-+        const: 1
-+
-+      ranges: true
-+
-+    patternProperties:
-+      "^[a-zA-Z]*-ebi@[a-f0-9,]*$":
-+        type: object
-+
-+        properties:
-+          reg:
-+            maxItems: 1
-+
-+          st,fmc2_ebi_cs_transaction_type:
-+            allOf:
-+              - $ref: /schemas/types.yaml#/definitions/uint32
-+              - minimum: 0
-+                maximum: 11
-+            description: |
-+                         Select one of the transactions type supported
-+                           0: Asynchronous mode 1 SRAM/FRAM
-+                           1: Asynchronous mode 1 PSRAM.
-+                           2: Asynchronous mode A SRAM/FRAM.
-+                           3: Asynchronous mode A PSRAM.
-+                           4: Asynchronous mode 2 NOR.
-+                           5: Asynchronous mode B NOR.
-+                           6: Asynchronous mode C NOR.
-+                           7: Asynchronous mode D NOR.
-+                           8: Synchronous read synchronous write PSRAM.
-+                           9: Synchronous read asynchronous write PSRAM.
-+                           10: Synchronous read synchronous write NOR.
-+                           11: Synchronous read asynchronous write NOR.
-+
-+          st,fmc2_ebi_cs_cclk_enable:
-+            $ref: /schemas/types.yaml#/definitions/flag
-+            description: Continuous clock enable (first bank must be configured
-+                         in synchronous mode). The FMC_CLK is generated continuously
-+                         during asynchronous and synchronous access. By default, the
-+                         FMC_CLK is only generated during synchronous access.
-+
-+          st,fmc2_ebi_cs_mux_enable:
-+            $ref: /schemas/types.yaml#/definitions/flag
-+            description: Address/Data multiplexed on databus (valid only with
-+                         NOR and PSRAM transactions type). By default, Address/Data are
-+                         not multiplexed.
-+
-+          st,fmc2_ebi_cs_buswidth:
-+            allOf:
-+              - $ref: /schemas/types.yaml#/definitions/uint32
-+              - enum: [ 8, 16 ]
-+              - default: 16
-+            description: Data bus width
-+
-+          st,fmc2_ebi_cs_waitpol_high:
-+            $ref: /schemas/types.yaml#/definitions/flag
-+            description: Wait signal polarity (NWAIT signal active high).
-+                         By default, NWAIT is active low.
-+
-+          st,fmc2_ebi_cs_waitcfg_enable:
-+            $ref: /schemas/types.yaml#/definitions/flag
-+            description: The NWAIT signal indicates wheither the data from the
-+                         device are valid or if a wait state must be inserted when
-+                         accessing the device in synchronous mode. By default, the NWAIT
-+                         signal is active one data cycle before wait state.
-+
-+          st,fmc2_ebi_cs_wait_enable:
-+            $ref: /schemas/types.yaml#/definitions/flag
-+            description: The NWAIT signal is enabled (its level is taken into
-+                         account after the programmed latency period to insert wait states
-+                         if asserted). By default, the NWAIT signal is disabled.
-+
-+          st,fmc2_ebi_cs_asyncwait_enable:
-+            $ref: /schemas/types.yaml#/definitions/flag
-+            description: The NWAIT signal is taken into account during
-+                         asynchronous transactions. By default, the NWAIT signal is not
-+                         taken into account during asynchronous transactions.
-+
-+          st,fmc2_ebi_cs_cpsize:
-+            allOf:
-+              - $ref: /schemas/types.yaml#/definitions/uint32
-+              - enum: [ 0, 128, 256, 512, 1024 ]
-+              - default: 0
-+            description: CRAM page size. The controller splits the burst access
-+                         when the memory page is reached. By default, no burst split when
-+                         crossing page boundary.
-+
-+          st,fmc2_ebi_cs_byte_lane_setup:
-+            allOf:
-+              - $ref: /schemas/types.yaml#/definitions/uint32
-+            description: This property configures the byte lane setup timing
-+                         defined in ns from NBLx low to Chip Select NEx low.
-+
-+          st,fmc2_ebi_cs_address_setup:
-+            allOf:
-+              - $ref: /schemas/types.yaml#/definitions/uint32
-+            description: This property defines the duration of the address
-+                         setup phase in ns used for asynchronous read/write transactions.
-+
-+          st,fmc2_ebi_cs_address_hold:
-+            allOf:
-+              - $ref: /schemas/types.yaml#/definitions/uint32
-+            description: This property defines the duration of the address
-+                         hold phase in ns used for asynchronous multiplexed
-+                         read/write transactions.
-+
-+          st,fmc2_ebi_cs_data_setup:
-+            allOf:
-+              - $ref: /schemas/types.yaml#/definitions/uint32
-+            description: This property defines the duration of the data
-+                         setup phase in ns used for asynchronous read/write transactions.
-+
-+          st,fmc2_ebi_cs_bus_turnaround:
-+            allOf:
-+              - $ref: /schemas/types.yaml#/definitions/uint32
-+            description: This property defines the delay between the end of
-+                         current read/write transaction and the next transaction.
-+
-+          st,fmc2_ebi_cs_data_hold:
-+            allOf:
-+              - $ref: /schemas/types.yaml#/definitions/uint32
-+            description: This property defines the duration of the data
-+                         hold phase in ns used for asynchronous read/write transactions.
-+
-+          st,fmc2_ebi_cs_clk_period:
-+            allOf:
-+              - $ref: /schemas/types.yaml#/definitions/uint32
-+            description: This property defines the FMC_CLK output signal period in ns.
-+
-+          st,fmc2_ebi_cs_data_latency:
-+            allOf:
-+              - $ref: /schemas/types.yaml#/definitions/uint32
-+            description: This property defines the data latency before reading or writing
-+                         the first data. This timing is expressed in FMC_CLK periods.
-+
-+          st,fmc2_ebi_cs_write_address_setup:
-+            allOf:
-+              - $ref: /schemas/types.yaml#/definitions/uint32
-+            description: This property defines the duration of the address
-+                         setup phase in ns used for asynchronous write transactions.
-+
-+          st,fmc2_ebi_cs_write_address_hold:
-+            allOf:
-+              - $ref: /schemas/types.yaml#/definitions/uint32
-+            description: This property defines the duration of the address hold phase in
-+                         ns used for asynchronous multiplexed write transactions.
-+
-+          st,fmc2_ebi_cs_write_data_setup:
-+            allOf:
-+              - $ref: /schemas/types.yaml#/definitions/uint32
-+            description: This property defines the duration of the data setup phase in
-+                         ns used for asynchronous write transactions.
-+
-+          st,fmc2_ebi_cs_write_bus_turnaround:
-+            allOf:
-+              - $ref: /schemas/types.yaml#/definitions/uint32
-+            description: This property defines the delay between the end of current
-+                         write transaction and the next transaction.
-+
-+          st,fmc2_ebi_cs_write_data_hold:
-+            allOf:
-+              - $ref: /schemas/types.yaml#/definitions/uint32
-+            description: This property defines the duration of the data hold phase
-+                         in ns used for asynchronous write transactions.
-+
-+          st,fmc2_ebi_cs_max_low_pulse:
-+            allOf:
-+              - $ref: /schemas/types.yaml#/definitions/uint32
-+            description: This property defines the maximum chip select low pulse duration
-+                         in ns for synchronous transactions. When this timing reaches 0,
-+                         the controller splits the current access, toggles NE to allow
-+                         device refresh and restarts a new access.
-+
-+        required:
-+          - reg
-+          - st,fmc2_ebi_cs_transaction_type
-+
-+    additionalProperties: false
-+
-+    required:
-+      - compatible
-+      - "#address-cells"
-+      - "#size-cells"
-+      - ranges
-+
-+  nand-controller:
-+    allOf:
-+      - $ref: "../mtd/nand-controller.yaml#"
-+
-+    type: object
-+
-+    properties:
-+      compatible:
-+        const: st,stm32mp1-fmc2-nand
-+
-+      reg:
-+        items:
-+          - description: Chip select 0 data
-+          - description: Chip select 0 command
-+          - description: Chip select 0 address space
-+          - description: Chip select 1 data
-+          - description: Chip select 1 command
-+          - description: Chip select 1 address space
-+
-+      interrupts:
-+        maxItems: 1
-+
-+      dmas:
-+        items:
-+          - description: tx DMA channel
-+          - description: rx DMA channel
-+          - description: ecc DMA channel
-+
-+      dma-names:
-+        items:
-+          - const: tx
-+          - const: rx
-+          - const: ecc
-+
-+      "#address-cells":
-+        const: 1
-+
-+      "#size-cells":
-+        const: 0
-+
-+    patternProperties:
-+      "^nand@[a-f0-9]$":
-+        type: object
-+
-+        properties:
-+          nand-ecc-step-size:
-+            const: 512
-+
-+          nand-ecc-strength:
-+            enum: [1, 4 ,8 ]
-+
-+    additionalProperties: false
-+
-+    required:
-+      - "#address-cells"
-+      - "#size-cells"
-+      - compatible
-+      - reg
-+      - interrupts
-+
-+  additionalProperties: false
-+
-+required:
-+  - "#address-cells"
-+  - "#size-cells"
-+  - compatible
-+  - reg
-+  - clocks
-+  - ranges
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/clock/stm32mp1-clks.h>
-+    #include <dt-bindings/reset/stm32mp1-resets.h>
-+    fmc@58002000 {
-+      #address-cells = <1>;
-+      #size-cells = <1>;
-+      compatible = "st,stm32mp1-fmc2";
-+      reg = <0x58002000 0x1000>;
-+      clocks = <&rcc FMC_K>;
-+      resets = <&rcc FMC_R>;
-+      ranges;
-+
-+      ebi@0 {
-+        #address-cells = <2>;
-+        #size-cells = <1>;
-+        compatible = "st,stm32mp1-fmc2-ebi";
-+        ranges = <0 0 0x60000000 0x4000000>,
-+                 <1 0 0x64000000 0x4000000>,
-+                 <2 0 0x68000000 0x4000000>,
-+                 <3 0 0x6c000000 0x4000000>;
-+
-+        psram-ebi@0,0 {
-+          compatible = "mtd-ram";
-+          reg = <0 0x00000000 0x100000>;
-+          bank-width = <2>;
-+
-+          st,fmc2_ebi_cs_transaction_type = <1>;
-+          st,fmc2_ebi_cs_address_setup = <60>;
-+          st,fmc2_ebi_cs_data_setup = <30>;
-+          st,fmc2_ebi_cs_bus_turnaround = <5>;
-+        };
-+      };
-+
-+      nand-controller@1 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        compatible = "st,stm32mp1-fmc2-nand";
-+        reg = <0x80000000 0x1000>,
-+              <0x88010000 0x1000>,
-+              <0x88020000 0x1000>,
-+              <0x81000000 0x1000>,
-+              <0x89010000 0x1000>,
-+              <0x89020000 0x1000>;
-+        interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
-+        dmas = <&mdma1 20 0x2 0x12000a02 0x0 0x0>,
-+               <&mdma1 20 0x2 0x12000a08 0x0 0x0>,
-+               <&mdma1 21 0x2 0x12000a0a 0x0 0x0>;
-+        dma-names = "tx", "rx", "ecc";
-+
-+        nand@0 {
-+          reg = <0>;
-+          nand-on-flash-bbt;
-+          #address-cells = <1>;
-+          #size-cells = <1>;
-+        };
-+      };
-+    };
-+
-+...
+diff --git a/drivers/mtd/nand/raw/stm32_fmc2_nand.c b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
+index 0a96797..ab53314 100644
+--- a/drivers/mtd/nand/raw/stm32_fmc2_nand.c
++++ b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
+@@ -281,7 +281,6 @@ static inline struct stm32_fmc2_nfc *to_stm32_nfc(struct nand_controller *base)
+ 	return container_of(base, struct stm32_fmc2_nfc, base);
+ }
+ 
+-/* Timings configuration */
+ static void stm32_fmc2_timings_init(struct nand_chip *chip)
+ {
+ 	struct stm32_fmc2_nfc *fmc2 = to_stm32_nfc(chip->controller);
+@@ -313,7 +312,6 @@ static void stm32_fmc2_timings_init(struct nand_chip *chip)
+ 	writel_relaxed(patt, fmc2->io_base + FMC2_PATT);
+ }
+ 
+-/* Controller configuration */
+ static void stm32_fmc2_setup(struct nand_chip *chip)
+ {
+ 	struct stm32_fmc2_nfc *fmc2 = to_stm32_nfc(chip->controller);
+@@ -341,7 +339,6 @@ static void stm32_fmc2_setup(struct nand_chip *chip)
+ 	writel_relaxed(pcr, fmc2->io_base + FMC2_PCR);
+ }
+ 
+-/* Select target */
+ static int stm32_fmc2_select_chip(struct nand_chip *chip, int chipnr)
+ {
+ 	struct stm32_fmc2_nfc *fmc2 = to_stm32_nfc(chip->controller);
+@@ -353,11 +350,7 @@ static int stm32_fmc2_select_chip(struct nand_chip *chip, int chipnr)
+ 		return 0;
+ 
+ 	fmc2->cs_sel = nand->cs_used[chipnr];
+-
+-	/* FMC2 setup routine */
+ 	stm32_fmc2_setup(chip);
+-
+-	/* Apply timings */
+ 	stm32_fmc2_timings_init(chip);
+ 
+ 	if (fmc2->dma_tx_ch && fmc2->dma_rx_ch) {
+@@ -407,7 +400,6 @@ static int stm32_fmc2_select_chip(struct nand_chip *chip, int chipnr)
+ 	return 0;
+ }
+ 
+-/* Set bus width to 16-bit or 8-bit */
+ static void stm32_fmc2_set_buswidth_16(struct stm32_fmc2_nfc *fmc2, bool set)
+ {
+ 	u32 pcr = readl_relaxed(fmc2->io_base + FMC2_PCR);
+@@ -418,7 +410,6 @@ static void stm32_fmc2_set_buswidth_16(struct stm32_fmc2_nfc *fmc2, bool set)
+ 	writel_relaxed(pcr, fmc2->io_base + FMC2_PCR);
+ }
+ 
+-/* Enable/disable ECC */
+ static void stm32_fmc2_set_ecc(struct stm32_fmc2_nfc *fmc2, bool enable)
+ {
+ 	u32 pcr = readl(fmc2->io_base + FMC2_PCR);
+@@ -429,7 +420,6 @@ static void stm32_fmc2_set_ecc(struct stm32_fmc2_nfc *fmc2, bool enable)
+ 	writel(pcr, fmc2->io_base + FMC2_PCR);
+ }
+ 
+-/* Enable irq sources in case of the sequencer is used */
+ static inline void stm32_fmc2_enable_seq_irq(struct stm32_fmc2_nfc *fmc2)
+ {
+ 	u32 csqier = readl_relaxed(fmc2->io_base + FMC2_CSQIER);
+@@ -441,7 +431,6 @@ static inline void stm32_fmc2_enable_seq_irq(struct stm32_fmc2_nfc *fmc2)
+ 	writel_relaxed(csqier, fmc2->io_base + FMC2_CSQIER);
+ }
+ 
+-/* Disable irq sources in case of the sequencer is used */
+ static inline void stm32_fmc2_disable_seq_irq(struct stm32_fmc2_nfc *fmc2)
+ {
+ 	u32 csqier = readl_relaxed(fmc2->io_base + FMC2_CSQIER);
+@@ -453,13 +442,11 @@ static inline void stm32_fmc2_disable_seq_irq(struct stm32_fmc2_nfc *fmc2)
+ 	fmc2->irq_state = FMC2_IRQ_UNKNOWN;
+ }
+ 
+-/* Clear irq sources in case of the sequencer is used */
+ static inline void stm32_fmc2_clear_seq_irq(struct stm32_fmc2_nfc *fmc2)
+ {
+ 	writel_relaxed(FMC2_CSQICR_CLEAR_IRQ, fmc2->io_base + FMC2_CSQICR);
+ }
+ 
+-/* Enable irq sources in case of bch is used */
+ static inline void stm32_fmc2_enable_bch_irq(struct stm32_fmc2_nfc *fmc2,
+ 					     int mode)
+ {
+@@ -475,7 +462,6 @@ static inline void stm32_fmc2_enable_bch_irq(struct stm32_fmc2_nfc *fmc2,
+ 	writel_relaxed(bchier, fmc2->io_base + FMC2_BCHIER);
+ }
+ 
+-/* Disable irq sources in case of bch is used */
+ static inline void stm32_fmc2_disable_bch_irq(struct stm32_fmc2_nfc *fmc2)
+ {
+ 	u32 bchier = readl_relaxed(fmc2->io_base + FMC2_BCHIER);
+@@ -488,7 +474,6 @@ static inline void stm32_fmc2_disable_bch_irq(struct stm32_fmc2_nfc *fmc2)
+ 	fmc2->irq_state = FMC2_IRQ_UNKNOWN;
+ }
+ 
+-/* Clear irq sources in case of bch is used */
+ static inline void stm32_fmc2_clear_bch_irq(struct stm32_fmc2_nfc *fmc2)
+ {
+ 	writel_relaxed(FMC2_BCHICR_CLEAR_IRQ, fmc2->io_base + FMC2_BCHICR);
+@@ -549,10 +534,7 @@ static int stm32_fmc2_ham_calculate(struct nand_chip *chip, const u8 *data,
+ 	}
+ 
+ 	heccr = readl_relaxed(fmc2->io_base + FMC2_HECCR);
+-
+ 	stm32_fmc2_ham_set_ecc(heccr, ecc);
+-
+-	/* Disable ECC */
+ 	stm32_fmc2_set_ecc(fmc2, false);
+ 
+ 	return 0;
+@@ -654,13 +636,11 @@ static int stm32_fmc2_bch_calculate(struct nand_chip *chip, const u8 *data,
+ 		ecc[12] = bchpbr;
+ 	}
+ 
+-	/* Disable ECC */
+ 	stm32_fmc2_set_ecc(fmc2, false);
+ 
+ 	return 0;
+ }
+ 
+-/* BCH algorithm correction */
+ static int stm32_fmc2_bch_decode(int eccsize, u8 *dat, u32 *ecc_sta)
+ {
+ 	u32 bchdsr0 = ecc_sta[0];
+@@ -720,7 +700,6 @@ static int stm32_fmc2_bch_correct(struct nand_chip *chip, u8 *dat,
+ 	ecc_sta[3] = readl_relaxed(fmc2->io_base + FMC2_BCHDSR3);
+ 	ecc_sta[4] = readl_relaxed(fmc2->io_base + FMC2_BCHDSR4);
+ 
+-	/* Disable ECC */
+ 	stm32_fmc2_set_ecc(fmc2, false);
+ 
+ 	return stm32_fmc2_bch_decode(chip->ecc.size, dat, ecc_sta);
+@@ -1054,7 +1033,6 @@ static int stm32_fmc2_sequencer_write_page(struct nand_chip *chip,
+ {
+ 	int ret;
+ 
+-	/* Select the target */
+ 	ret = stm32_fmc2_select_chip(chip, chip->cur_cs);
+ 	if (ret)
+ 		return ret;
+@@ -1069,7 +1047,6 @@ static int stm32_fmc2_sequencer_write_page_raw(struct nand_chip *chip,
+ {
+ 	int ret;
+ 
+-	/* Select the target */
+ 	ret = stm32_fmc2_select_chip(chip, chip->cur_cs);
+ 	if (ret)
+ 		return ret;
+@@ -1153,7 +1130,6 @@ static int stm32_fmc2_sequencer_read_page(struct nand_chip *chip, u8 *buf,
+ 	u16 sta_map;
+ 	int ret;
+ 
+-	/* Select the target */
+ 	ret = stm32_fmc2_select_chip(chip, chip->cur_cs);
+ 	if (ret)
+ 		return ret;
+@@ -1199,7 +1175,6 @@ static int stm32_fmc2_sequencer_read_page_raw(struct nand_chip *chip, u8 *buf,
+ 	struct mtd_info *mtd = nand_to_mtd(chip);
+ 	int ret;
+ 
+-	/* Select the target */
+ 	ret = stm32_fmc2_select_chip(chip, chip->cur_cs);
+ 	if (ret)
+ 		return ret;
+@@ -1409,7 +1384,6 @@ static int stm32_fmc2_exec_op(struct nand_chip *chip,
+ 	return ret;
+ }
+ 
+-/* Controller initialization */
+ static void stm32_fmc2_init(struct stm32_fmc2_nfc *fmc2)
+ {
+ 	u32 pcr = readl_relaxed(fmc2->io_base + FMC2_PCR);
+@@ -1452,7 +1426,6 @@ static void stm32_fmc2_init(struct stm32_fmc2_nfc *fmc2)
+ 	writel_relaxed(FMC2_PATT_DEFAULT, fmc2->io_base + FMC2_PATT);
+ }
+ 
+-/* Controller timings */
+ static void stm32_fmc2_calc_timings(struct nand_chip *chip,
+ 				    const struct nand_sdr_timings *sdrt)
+ {
+@@ -1596,14 +1569,11 @@ static int stm32_fmc2_setup_interface(struct nand_chip *chip, int chipnr,
+ 		return 0;
+ 
+ 	stm32_fmc2_calc_timings(chip, sdrt);
+-
+-	/* Apply timings */
+ 	stm32_fmc2_timings_init(chip);
+ 
+ 	return 0;
+ }
+ 
+-/* DMA configuration */
+ static int stm32_fmc2_dma_setup(struct stm32_fmc2_nfc *fmc2)
+ {
+ 	int ret = 0;
+@@ -1667,7 +1637,6 @@ static int stm32_fmc2_dma_setup(struct stm32_fmc2_nfc *fmc2)
+ 	return ret;
+ }
+ 
+-/* NAND callbacks setup */
+ static void stm32_fmc2_nand_callbacks_setup(struct nand_chip *chip)
+ {
+ 	struct stm32_fmc2_nfc *fmc2 = to_stm32_nfc(chip->controller);
+@@ -1708,7 +1677,6 @@ static void stm32_fmc2_nand_callbacks_setup(struct nand_chip *chip)
+ 		chip->ecc.bytes = chip->options & NAND_BUSWIDTH_16 ? 8 : 7;
+ }
+ 
+-/* FMC2 layout */
+ static int stm32_fmc2_nand_ooblayout_ecc(struct mtd_info *mtd, int section,
+ 					 struct mtd_oob_region *oobregion)
+ {
+@@ -1744,7 +1712,6 @@ static int stm32_fmc2_nand_ooblayout_free(struct mtd_info *mtd, int section,
+ 	.free = stm32_fmc2_nand_ooblayout_free,
+ };
+ 
+-/* FMC2 caps */
+ static int stm32_fmc2_calc_ecc_bytes(int step_size, int strength)
+ {
+ 	/* Hamming */
+@@ -1763,7 +1730,6 @@ static int stm32_fmc2_calc_ecc_bytes(int step_size, int strength)
+ 		     FMC2_ECC_STEP_SIZE,
+ 		     FMC2_ECC_HAM, FMC2_ECC_BCH4, FMC2_ECC_BCH8);
+ 
+-/* FMC2 controller ops */
+ static int stm32_fmc2_attach_chip(struct nand_chip *chip)
+ {
+ 	struct stm32_fmc2_nfc *fmc2 = to_stm32_nfc(chip->controller);
+@@ -1797,13 +1763,10 @@ static int stm32_fmc2_attach_chip(struct nand_chip *chip)
+ 	if (chip->bbt_options & NAND_BBT_USE_FLASH)
+ 		chip->bbt_options |= NAND_BBT_NO_OOB;
+ 
+-	/* NAND callbacks setup */
+ 	stm32_fmc2_nand_callbacks_setup(chip);
+ 
+-	/* Define ECC layout */
+ 	mtd_set_ooblayout(mtd, &stm32_fmc2_nand_ooblayout_ops);
+ 
+-	/* Configure bus width to 16-bit */
+ 	if (chip->options & NAND_BUSWIDTH_16)
+ 		stm32_fmc2_set_buswidth_16(fmc2, true);
+ 
+@@ -1816,7 +1779,6 @@ static int stm32_fmc2_attach_chip(struct nand_chip *chip)
+ 	.setup_data_interface = stm32_fmc2_setup_interface,
+ };
+ 
+-/* FMC2 probe */
+ static int stm32_fmc2_parse_child(struct stm32_fmc2_nfc *fmc2,
+ 				  struct device_node *dn)
+ {
+@@ -1976,12 +1938,10 @@ static int stm32_fmc2_probe(struct platform_device *pdev)
+ 		reset_control_deassert(rstc);
+ 	}
+ 
+-	/* DMA setup */
+ 	ret = stm32_fmc2_dma_setup(fmc2);
+ 	if (ret)
+ 		goto err_dma_setup;
+ 
+-	/* FMC2 init routine */
+ 	stm32_fmc2_init(fmc2);
+ 
+ 	nand = &fmc2->nand;
 -- 
 1.9.1
 
