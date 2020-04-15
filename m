@@ -2,168 +2,161 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BD92C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:31:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B28BC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:33:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD2CE2076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:31:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586957493;
-	bh=wh8P4Y8m6LWxobisEMWoiN2hCWnoOBEtof1UWN68Qx4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fx9yswbcnoqcdCM9r1nBip8AVNH8PGMcOGIPO7EV1oRRrK4CI4zjup+dH+cgqz0/C
-	 X6Y4uwJHiTZalOWm2zLfABC63wx1VZ1K2AItDfqsw9u4teRe5JiKWsrbVFmV18a0W7
-	 z1ofkIwJdyKGBOAWR8+d3/h/kUtREUAM6o3STV/w=
+	by mail.kernel.org (Postfix) with ESMTP id 5309C20767
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:33:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EtO6NHec"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2636111AbgDONbc (ORCPT
+        id S2636117AbgDONdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:31:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60850 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731696AbgDONb1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 09:31:27 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69F8A20767;
-        Wed, 15 Apr 2020 13:31:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586957484;
-        bh=wh8P4Y8m6LWxobisEMWoiN2hCWnoOBEtof1UWN68Qx4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HiNa/6pn7ZPvPQ0P8TuZcIsps5srrh0s2MvMC9z2c0A0jH6BobpJAm/j1ySmwYyg9
-         K7/8bvK4uIvMinundZG3vbjGAEsTBJnSVVbf+p60+2RqTBkVJMbflqIObvXoIBnbp/
-         NaqA8RjagminJ4aIN4JDEOrYAWjnW12/vla8BkXw=
-Date:   Wed, 15 Apr 2020 15:31:22 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        linux-kselftest@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Shuah Khan <shuah@kernel.org>, anders.roxell@linaro.org,
-        lkft-triage@lists.linaro.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: Re: [PATCH v1] kobject: make sure parent is not released before
- children
-Message-ID: <20200415133122.GB3461248@kroah.com>
-References: <20200414204240.186377-1-brendanhiggins@google.com>
- <20200415061154.GA2496263@kroah.com>
- <20200415084653.GM2828150@kuha.fi.intel.com>
- <CAJZ5v0hNemTDVa_S-FfVMbrKjM-RWYoHh88asnUvTNxZinY2cw@mail.gmail.com>
- <20200415131018.GO2828150@kuha.fi.intel.com>
+        Wed, 15 Apr 2020 09:33:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58280 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731696AbgDONdF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 09:33:05 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE0D5C061A0C;
+        Wed, 15 Apr 2020 06:33:04 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id r7so3621214ljg.13;
+        Wed, 15 Apr 2020 06:33:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rweJjnMrX8DVOwJI978T4+zp/Dc4ldAeC6N/9wICZ1w=;
+        b=EtO6NHecxgTrUGnMVlx7i3ATAgsdf3gtJ68v14xO88EpmFNAGg5igoHGOh8H+9iFnT
+         U+aXfzs2UAcidoE88j2khBx/3IrLqn8AZ3NnVdzNEjcKn7bZKB+OcZtOdX4ff/KxDIXM
+         SWEqmB3uZq2eqv2y9+ATuYiiBISQFQIdqWAMwk+ZKHtO23SE6prvYcSrAAXNrPbMXOdR
+         m/c6Mesnr6DF343g2os+JR122TLWwd7rcOgRCbskoANzQ2v9sLEKLQhgON1xOTYh6mtk
+         F71Ri+dIC9ZYwKcdNurMEVJuwKbo6aqZi9CutbZazhbkbNQhCrbz7ZNPaysnwr3o/ZoM
+         bR5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rweJjnMrX8DVOwJI978T4+zp/Dc4ldAeC6N/9wICZ1w=;
+        b=U7tZMZnmFgfEIZHuqw6+PugcOhI4ipUVbzRaIO1mzGjBH5YLVmQAFTvp+E7s4j5eTd
+         Ajk6FcUH1PdWulDZ4YPfDskBnjNlx3EmkCPhgrfKMYV6M3vQgXYZ2Mp7zBmKCYji493r
+         T8i79JwC3JjjNxJuhXHMXIOFTwJtIUZKAyYI5JC4jQpMn/lMHSt5zsHPfUUw1W1pRBv0
+         ZDFuOqwqY2QFCi3bCHRQ7m9x2Py7ON+r7TSkWwqASp3OMkwcZ4yHHeK79Iysp+KQGETn
+         OR5onZ2aUhauWtEwmJjaslzmbS4JH2wmuIj/I1AsFE/DNbK9Yedx9oZ32MbrMrNM2s0W
+         uqTA==
+X-Gm-Message-State: AGi0PuaJOr3wbtsslPybx5UuGAtTHF0cYckJU3YnKkZXbgv1JADL1oAt
+        gDdmAfQNUobzuQtBfKkmm9jOrAgbTMVb4MZHOPQ=
+X-Google-Smtp-Source: APiQypKS3xz8rw5Jy7+JZAEVCjE7qNjWum5PB0iQLEBBPGJIPaZ4eDEcQCJaRQ98XaFHtdQO4V9Zs8EXEbzFYwJFXV4=
+X-Received: by 2002:a2e:9b07:: with SMTP id u7mr3252420lji.110.1586957583245;
+ Wed, 15 Apr 2020 06:33:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200415131018.GO2828150@kuha.fi.intel.com>
+References: <20200414220943.6203-1-ezequiel@collabora.com>
+In-Reply-To: <20200414220943.6203-1-ezequiel@collabora.com>
+From:   Baolin Wang <baolin.wang7@gmail.com>
+Date:   Wed, 15 Apr 2020 21:32:52 +0800
+Message-ID: <CADBw62oJj_x046piRbPP48A04ALo-w2J6jZXNspyN5eOGj-TEg@mail.gmail.com>
+Subject: Re: [PATCH] hwspinlock: Simplify Kconfig
+To:     Ezequiel Garcia <ezequiel@collabora.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-remoteproc@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>, kernel@collabora.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 04:10:18PM +0300, Heikki Krogerus wrote:
-> On Wed, Apr 15, 2020 at 11:21:03AM +0200, Rafael J. Wysocki wrote:
-> > On Wed, Apr 15, 2020 at 10:47 AM Heikki Krogerus
-> > <heikki.krogerus@linux.intel.com> wrote:
-> > >
-> > > Hi Greg,
-> > >
-> > > On Wed, Apr 15, 2020 at 08:11:54AM +0200, Greg KH wrote:
-> > > > > diff --git a/lib/kobject.c b/lib/kobject.c
-> > > > > index 83198cb37d8d..5921e2470b46 100644
-> > > > > --- a/lib/kobject.c
-> > > > > +++ b/lib/kobject.c
-> > > > > @@ -663,6 +663,7 @@ EXPORT_SYMBOL(kobject_get_unless_zero);
-> > > > >   */
-> > > > >  static void kobject_cleanup(struct kobject *kobj)
-> > > > >  {
-> > > > > +   struct kobject *parent = kobj->parent;
-> > > > >     struct kobj_type *t = get_ktype(kobj);
-> > > > >     const char *name = kobj->name;
-> > > > >
-> > > > > @@ -680,6 +681,9 @@ static void kobject_cleanup(struct kobject *kobj)
-> > > > >             kobject_uevent(kobj, KOBJ_REMOVE);
-> > > > >     }
-> > > > >
-> > > > > +   /* make sure the parent is not released before the (last) child */
-> > > > > +   kobject_get(parent);
-> > > > > +
-> > > > >     /* remove from sysfs if the caller did not do it */
-> > > > >     if (kobj->state_in_sysfs) {
-> > > > >             pr_debug("kobject: '%s' (%p): auto cleanup kobject_del\n",
-> > > > > @@ -693,6 +697,8 @@ static void kobject_cleanup(struct kobject *kobj)
-> > > > >             t->release(kobj);
-> > > > >     }
-> > > > >
-> > > > > +   kobject_put(parent);
-> > > > > +
-> > > >
-> > > > No, please don't do this.
-> > > >
-> > > > A child device should have always incremented the parent already if it
-> > > > was correctly registered.  We have had this patch been proposed multiple
-> > > > times over the years, and every time it was, we said no and went and
-> > > > fixed the real issue which was with the user of the interface.
-> > >
-> > > The parent ref count is incremented by the child, that is not the
-> > > problem. The problem is that when that child is released, if it's the
-> > > last child of the parent, and there are no other users for the parent,
-> > > then the parent is actually released _before_ the child. And that
-> > > happens in the above function kobject_cleanup().
-> > 
-> > In fact, it happens in kobject_del() invoked by kobject_cleanup() AFAICS.
-> > 
-> > So it appears incorrect to use kobject_del() as is in the latter.
-> > 
-> > > We can work around the problem by taking a reference to the parent
-> > > separately, but we have to do that everywhere separately (which I
-> > > guess is exactly what has been done so far). That workaroud still does
-> > > not really fix the core problem. The core problem is still that
-> > > lib/kboject.c is allowing the parent kobject to be released before the
-> > > child kobject, and that quite simply should not be allowed to happen.
-> > >
-> > > I don't have a problem if you want to have a better solution for this,
-> > > but the solution really can't anymore be that we are always expected
-> > > to separately increment the parent's ref count with every type of
-> > > kobject.
-> > 
-> > An alternative might be to define something like __kobject_del() doing
-> > everything that kobject_del() does *without* the
-> > kobject_put(kobj->parent).
-> > 
-> > Then, kobject_del() could be defined as something like (pseudocode):
-> > 
-> > kobject_del(kobj)
-> > {
-> >     kobject *perent = kobj->parent;
-> > 
-> >     __kobject_del(kobj);
-> >     kobject_put(parent);
-> > }
-> > 
-> > and kobject_cleanup() could call __kobject_del() instead of
-> > kobject_del() and then do the last kobject_put(parent) when it is done
-> > with the child.
-> > 
-> > Would that work?
-> 
-> I think so. Greg, what do you think?
+Hi Ezequiel,
 
-Hm, maybe.  Can someone test it out with the reproducer?
+On Wed, Apr 15, 2020 at 6:09 AM Ezequiel Garcia <ezequiel@collabora.com> wrote:
+>
+> Every hwspinlock driver is expected to depend on the
+> hwspinlock core, so it's possible to simplify the
+> Kconfig, factoring out the HWSPINLOCK dependency.
+>
+> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
 
-thanks,
+Looks reasonable to me.
+Reviewed-by: Baolin Wang <baolin.wang7@gmail.com>
 
-greg k-h
+> ---
+>  drivers/hwspinlock/Kconfig | 10 ++++------
+>  1 file changed, 4 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/hwspinlock/Kconfig b/drivers/hwspinlock/Kconfig
+> index 826a1054100d..32cd26352f38 100644
+> --- a/drivers/hwspinlock/Kconfig
+> +++ b/drivers/hwspinlock/Kconfig
+> @@ -6,9 +6,10 @@
+>  menuconfig HWSPINLOCK
+>         bool "Hardware Spinlock drivers"
+>
+> +if HWSPINLOCK
+> +
+>  config HWSPINLOCK_OMAP
+>         tristate "OMAP Hardware Spinlock device"
+> -       depends on HWSPINLOCK
+>         depends on ARCH_OMAP4 || SOC_OMAP5 || SOC_DRA7XX || SOC_AM33XX || SOC_AM43XX || ARCH_K3 || COMPILE_TEST
+>         help
+>           Say y here to support the OMAP Hardware Spinlock device (firstly
+> @@ -18,7 +19,6 @@ config HWSPINLOCK_OMAP
+>
+>  config HWSPINLOCK_QCOM
+>         tristate "Qualcomm Hardware Spinlock device"
+> -       depends on HWSPINLOCK
+>         depends on ARCH_QCOM || COMPILE_TEST
+>         select MFD_SYSCON
+>         help
+> @@ -30,7 +30,6 @@ config HWSPINLOCK_QCOM
+>
+>  config HWSPINLOCK_SIRF
+>         tristate "SIRF Hardware Spinlock device"
+> -       depends on HWSPINLOCK
+>         depends on ARCH_SIRF || COMPILE_TEST
+>         help
+>           Say y here to support the SIRF Hardware Spinlock device, which
+> @@ -43,7 +42,6 @@ config HWSPINLOCK_SIRF
+>  config HWSPINLOCK_SPRD
+>         tristate "SPRD Hardware Spinlock device"
+>         depends on ARCH_SPRD || COMPILE_TEST
+> -       depends on HWSPINLOCK
+>         help
+>           Say y here to support the SPRD Hardware Spinlock device.
+>
+> @@ -52,7 +50,6 @@ config HWSPINLOCK_SPRD
+>  config HWSPINLOCK_STM32
+>         tristate "STM32 Hardware Spinlock device"
+>         depends on MACH_STM32MP157 || COMPILE_TEST
+> -       depends on HWSPINLOCK
+>         help
+>           Say y here to support the STM32 Hardware Spinlock device.
+>
+> @@ -60,7 +57,6 @@ config HWSPINLOCK_STM32
+>
+>  config HSEM_U8500
+>         tristate "STE Hardware Semaphore functionality"
+> -       depends on HWSPINLOCK
+>         depends on ARCH_U8500 || COMPILE_TEST
+>         help
+>           Say y here to support the STE Hardware Semaphore functionality, which
+> @@ -68,3 +64,5 @@ config HSEM_U8500
+>           SoC.
+>
+>           If unsure, say N.
+> +
+> +endif # HWSPINLOCK
+> --
+> 2.26.0.rc2
+>
+
+
+-- 
+Baolin Wang
