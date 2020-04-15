@@ -2,129 +2,80 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 180CBC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:22:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4901EC3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:22:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E24E5206F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:22:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586967759;
-	bh=5W2f+v9XZr0qP/kIWQkjbbEgQ09ZuCIq5zRy2H1Fv6w=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=u9SPo3To8EpdrYD2uqI+FcxJ+Y6cSMIimlz5PZSEzwit8dkQGR5BoRuUEGSw7V1wL
-	 Msw4iu1QPrbIAGPsfLBuvlqovIbHe9W5rymEbACOmtqGq7GydbFFIWFbxMO5d1JgU/
-	 pWaa0K8BF6kLWinDNqIDLFsaZr04gJSE1vCiMbYM=
+	by mail.kernel.org (Postfix) with ESMTP id 26AC3206F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:22:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1415700AbgDOQWh (ORCPT
+        id S1415709AbgDOQWp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 12:22:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37062 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 12:22:45 -0400
+Received: from sauhun.de ([88.99.104.3]:56374 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1415627AbgDOQWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 12:22:30 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15BB720737;
-        Wed, 15 Apr 2020 16:22:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586967750;
-        bh=5W2f+v9XZr0qP/kIWQkjbbEgQ09ZuCIq5zRy2H1Fv6w=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=WJUQ8ieGLmlGLrey/1gl+9cKf1orwABumVzG+ZVsi5cy7RnBGl0XQ4psiRRGb2GBh
-         FrKZQAHQzUvHQrGQxI8A08EPAumadauxzV9Tc48BExxmXmHc4a62vfKO2Xlzj4G4Y4
-         vKUO6nz0Pz3hnSTT7GPVVr3J2qfGi+gPg7ZgKP2A=
-Message-ID: <b4161f1df3436d7371ab7e88709169e9a391f15d.camel@kernel.org>
-Subject: Re: [PATCH v5 2/2] buffer: record blockdev write errors in
- super_block that it backs
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Jan Kara <jack@suse.cz>
-Cc:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        andres@anarazel.de, willy@infradead.org, dhowells@redhat.com,
-        hch@infradead.org, akpm@linux-foundation.org, david@fromorbit.com
-Date:   Wed, 15 Apr 2020 12:22:27 -0400
-In-Reply-To: <20200415140642.GK6126@quack2.suse.cz>
-References: <20200415121300.228017-1-jlayton@kernel.org>
-         <20200415121300.228017-3-jlayton@kernel.org>
-         <20200415140642.GK6126@quack2.suse.cz>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        id S1415627AbgDOQWj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 12:22:39 -0400
+Received: from localhost (p54B33507.dip0.t-ipconnect.de [84.179.53.7])
+        by pokefinder.org (Postfix) with ESMTPSA id 38B962C1FF1;
+        Wed, 15 Apr 2020 18:22:37 +0200 (CEST)
+Date:   Wed, 15 Apr 2020 18:22:36 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Michal Simek <michal.simek@xilinx.com>
+Cc:     Radu Pirea <radu_nicolae.pirea@upb.ro>,
+        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, shubhrajyoti.datta@gmail.com,
+        Chirag Parekh <chirag.parekh@xilinx.com>
+Subject: Re: [PATCH v2] i2c: cadence: Added slave support
+Message-ID: <20200415162236.GA2830@ninjato>
+References: <20200106104336.101987-1-radu_nicolae.pirea@upb.ro>
+ <20200415125850.GD910@ninjato>
+ <d7bbb013-aba1-6623-f656-46b3f5689834@xilinx.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="TB36FDmn/VVEgNH/"
+Content-Disposition: inline
+In-Reply-To: <d7bbb013-aba1-6623-f656-46b3f5689834@xilinx.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-04-15 at 16:06 +0200, Jan Kara wrote:
-> On Wed 15-04-20 08:13:00, Jeff Layton wrote:
-> > From: Jeff Layton <jlayton@redhat.com>
-> > 
-> > When syncing out a block device (a'la __sync_blockdev), any error
-> > encountered will only be recorded in the bd_inode's mapping. When the
-> > blockdev contains a filesystem however, we'd like to also record the
-> > error in the super_block that's stored there.
-> > 
-> > Make mark_buffer_write_io_error also record the error in the
-> > corresponding super_block when a writeback error occurs and the block
-> > device contains a mounted superblock.
-> > 
-> > Since superblocks are RCU freed, hold the rcu_read_lock to ensure
-> > that the superblock doesn't go away while we're marking it.
-> > 
-> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > ---
-> >  fs/buffer.c | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> > 
-> > diff --git a/fs/buffer.c b/fs/buffer.c
-> > index f73276d746bb..2a4a5cc20418 100644
-> > --- a/fs/buffer.c
-> > +++ b/fs/buffer.c
-> > @@ -1154,12 +1154,19 @@ EXPORT_SYMBOL(mark_buffer_dirty);
-> >  
-> >  void mark_buffer_write_io_error(struct buffer_head *bh)
-> >  {
-> > +	struct super_block *sb;
-> > +
-> >  	set_buffer_write_io_error(bh);
-> >  	/* FIXME: do we need to set this in both places? */
-> >  	if (bh->b_page && bh->b_page->mapping)
-> >  		mapping_set_error(bh->b_page->mapping, -EIO);
-> >  	if (bh->b_assoc_map)
-> >  		mapping_set_error(bh->b_assoc_map, -EIO);
-> > +	rcu_read_lock();
-> > +	sb = bh->b_bdev->bd_super;
-> 
-> You still need READ_ONCE() here. Otherwise the dereference below can still
-> result in refetch and NULL ptr deref.
-> 
-> 								Honza
-> 
 
-Huh? That seems like a really suspicious thing for the compiler/arch to
-do. We are checking that sb isn't NULL before we dereference it. Doesn't
-that imply a data dependency? How could the value of "sb" change after
-that?
+--TB36FDmn/VVEgNH/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I'm also not sure I understand how using READ_ONCE really helps there if
-we can't count on the value of a local variable not changing.
+> > Michal, do you want a second look or is your SoB good as-is?
+>=20
+> It should be good to go.
 
-> > +	if (sb)
-> > +		errseq_set(&sb->s_wb_err, -EIO);
-> > +	rcu_read_unlock();
-> >  }
-> >  EXPORT_SYMBOL(mark_buffer_write_io_error);
-> >  
-> > -- 
-> > 2.25.2
-> > 
+Thanks, Michal!
 
--- 
-Jeff Layton <jlayton@kernel.org>
 
+--TB36FDmn/VVEgNH/
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6XNMgACgkQFA3kzBSg
+KbbAiw//RBrtmb0bH65DgAGQFsaUex9274i1aOt2WRAxBxxsU9KYpjYXZTJtJIPM
+H+rQ2NZORdTz4Vbk7zWzL5cPWVgTgayyAEgTUWmggvji1mahB9ATMMhRV+YT8IT8
+lfyLZ8jr8pkanVFa6FE0aC5fwY/O8mCLesPbIwV3UhFv4CkTgh9HZcBOs0zzyqFd
+gkSBkmn5y8A9YnovysL+Rq7HAfd05UUGdkGPca6zW5RzwdELizUC+Nh7ZREhyUUr
+w7IjyE61kxdxSs10+IEyKzv9YLdsBfWcDbjYwLCeyadeSwjPyW+quD37TdGxHjPM
+xdBKCnOffArucQz8PhghU52AUkjEWMhEdNE2ri9PlfsaodT7LweoqIRtpyinWH4D
+uPdsX071f/GA6I9nGtvbJRh/ogVYySTAZgRfxeMMexWptKcOp60Ta7q1Pkbh2Ryl
+E7b1eYm9wNriBi5vHpRyvSpLstfcJUL55fxlfdwlH+zGOuHP9ayDn5i+5T4b7HIu
+6QdGkeYQRoVCEbeTk1vlkAhE9q0dgeAWldtDrxrCWHx5VAJi0+PeR80avDwLXfyM
+78dA+74416jx2MEXu1LhAbQU1ep5P+qhtcQ5HHctU2hVdC0tMKMs6E9gT9sqdZaR
+/14imMDRUa6Qqu0gVJQBvAh7PsxoYPTd7tMBuyvJEuwfJ8SX41A=
+=orf9
+-----END PGP SIGNATURE-----
+
+--TB36FDmn/VVEgNH/--
