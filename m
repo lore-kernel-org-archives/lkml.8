@@ -2,116 +2,178 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53756C2BB85
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:07:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCFC6C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:10:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 266BE20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:07:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DW/aynPd"
+	by mail.kernel.org (Postfix) with ESMTP id AAE92216FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:10:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405974AbgDORHl (ORCPT
+        id S2410696AbgDORK0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 13:07:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35318 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1416349AbgDORHi (ORCPT
+        Wed, 15 Apr 2020 13:10:26 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53974 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2406230AbgDORKW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 13:07:38 -0400
-Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CAC2C061A0C;
-        Wed, 15 Apr 2020 10:07:38 -0700 (PDT)
-Received: by mail-yb1-xb42.google.com with SMTP id a9so375288ybc.8;
-        Wed, 15 Apr 2020 10:07:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mEawja+POkeWDhdeSb2n3JPPbIrc1MBf0BcSpr4jXiw=;
-        b=DW/aynPdwuOV0UulG8/7DG2OSJ6ky7m4cHJ+Gz21nR6FRRF2vhyh16CWluwim3SoYH
-         Sa3l3B3FzcLzAWMfA6xNlEZa48cJ9CxVyXx9wg8ieAy8Y5M9yIqLVmci0t7KahDzEp3+
-         0TqZwO9P5Molcs7XpM8HUylYXdhNKpm1l4A7g2qFfA3vk8FbXmQZ1hXFuN1x1RAhqt7v
-         FwAoYkOyjNfRiOoUzhrbnRB1KWQFZ4mT1YcaV5pjQKptgjzp1AtP5iy5Tg2xG69PKdwT
-         tTojddkg9JdojP/Tpl3xBs1VsghOKLCz4A+73Z27B3CA1QGRd0/CftSCiv79EQSHLi++
-         fpfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mEawja+POkeWDhdeSb2n3JPPbIrc1MBf0BcSpr4jXiw=;
-        b=N8j0bZXCFcUIH/gk1jPyGQ+F6ktrC3LQ8dZ21CB70LUexUDNj1mivlSbtn8lwq+9XB
-         fI7kOPyP2mRbz1WIzZf4Rn8R63EDf4JvV2FCy37yogdTGzq+vgSx67q23XH+d3OIuAaO
-         1+r4kH2AwS8HWH8vF0SBjxfii0QGoTxkn9RK6TiX+OSc7ikg0jJma8i3+bHhplib7TkF
-         68VT4dmeAK1r4xWYOPEPfc7p5RicvX713rn9d2G6YgIy/Dl+HKsBu/EIuQN59QizLnpH
-         FGXm0yse3u78rVRQwTB+vEEDW3HACpwReRhmaeOf1cgsFQuQRJlpwP93oowJO5S2QP7l
-         gycA==
-X-Gm-Message-State: AGi0PuYlV1gzJ3HoO2JpjNrjeCx9B441KlnIXhwuhEP1PeGgwgG1XNtr
-        hEaY0ayS/qdRS+OOAfdJRoreQFdBx6l+uEIbryY=
-X-Google-Smtp-Source: APiQypIUYnCqlboeLXX498mvDUEkiFizMnzOWoFRqJIN9jX23XsZO6pmKNshpPPzZLdtasP8OYlYcSo7oKRRSZZK1Gc=
-X-Received: by 2002:a25:cf12:: with SMTP id f18mr9443585ybg.167.1586970457348;
- Wed, 15 Apr 2020 10:07:37 -0700 (PDT)
+        Wed, 15 Apr 2020 13:10:22 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03FH31Nu070056;
+        Wed, 15 Apr 2020 13:10:17 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30dnmutvcb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 15 Apr 2020 13:10:17 -0400
+Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03FH36iB070295;
+        Wed, 15 Apr 2020 13:10:16 -0400
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30dnmutvby-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 15 Apr 2020 13:10:16 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03FH7uBv019345;
+        Wed, 15 Apr 2020 17:10:15 GMT
+Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
+        by ppma04wdc.us.ibm.com with ESMTP id 30b5h6ueq3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 15 Apr 2020 17:10:15 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03FHACnI61473156
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 Apr 2020 17:10:12 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4C225BE05F;
+        Wed, 15 Apr 2020 17:10:12 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2C7DCBE051;
+        Wed, 15 Apr 2020 17:10:11 +0000 (GMT)
+Received: from cpe-172-100-172-46.stny.res.rr.com (unknown [9.85.131.104])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Wed, 15 Apr 2020 17:10:10 +0000 (GMT)
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Subject: Re: [PATCH v7 03/15] s390/zcrypt: driver callback to indicate
+ resource in use
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
+        mjrosato@linux.ibm.com, pmorel@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        jjherne@linux.ibm.com, fiuczy@linux.ibm.com
+References: <20200407192015.19887-1-akrowiak@linux.ibm.com>
+ <20200407192015.19887-4-akrowiak@linux.ibm.com>
+ <20200414145851.562867ae.cohuck@redhat.com>
+Message-ID: <35d8c3cb-78bb-8f84-41d8-c6e59d201ba0@linux.ibm.com>
+Date:   Wed, 15 Apr 2020 13:10:10 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <3865908.1586874010@warthog.procyon.org.uk> <e751977dac616d93806d98f4ad3ce144bb1eb244.camel@kernel.org>
-In-Reply-To: <e751977dac616d93806d98f4ad3ce144bb1eb244.camel@kernel.org>
-From:   Steve French <smfrench@gmail.com>
-Date:   Wed, 15 Apr 2020 12:07:26 -0500
-Message-ID: <CAH2r5mvj7GF3i8AE6E=+5f_Vigtb3uw=665F2uuBOgGzUhHObQ@mail.gmail.com>
-Subject: Re: What's a good default TTL for DNS keys in the kernel
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     David Howells <dhowells@redhat.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>,
-        CIFS <linux-cifs@vger.kernel.org>, linux-afs@lists.infradead.org,
-        ceph-devel@vger.kernel.org, keyrings@vger.kernel.org,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, fweimer@redhat.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200414145851.562867ae.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-15_06:2020-04-14,2020-04-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ clxscore=1015 impostorscore=0 suspectscore=3 bulkscore=0 malwarescore=0
+ phishscore=0 lowpriorityscore=0 mlxlogscore=999 spamscore=0 mlxscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004150124
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 8:22 AM Jeff Layton <jlayton@kernel.org> wrote:
->
-> On Tue, 2020-04-14 at 15:20 +0100, David Howells wrote:
-> > Since key.dns_resolver isn't given a TTL for the address information obtained
-> > for getaddrinfo(), no expiry is set on dns_resolver keys in the kernel for
-> > NFS, CIFS or Ceph.  AFS gets one if it looks up a cell SRV or AFSDB record
-> > because that is looked up in the DNS directly, but it doesn't look up A or
-> > AAAA records, so doesn't get an expiry for the addresses themselves.
-> >
-> > I've previously asked the libc folks if there's a way to get this information
-> > exposed in struct addrinfo, but I don't think that ended up going anywhere -
-> > and, in any case, would take a few years to work through the system.
-> >
-> > For the moment, I think I should put a default on any dns_resolver keys and
-> > have it applied either by the kernel (configurable with a /proc/sys/ setting)
-> > or by the key.dnf_resolver program (configurable with an /etc file).
-> >
-> > Any suggestion as to the preferred default TTL?  10 minutes?
-> >
->
-> Typical DNS TTL values are on the order of a day but it can vary widely.
-> There's really no correct answer for this, since you have no way to tell
-> how long the entry has been sitting in the DNS server's cache before you
-> queried for it.
->
-> So, you're probably down to just finding some value that doesn't hammer
-> the DNS server too much, but that allows you to get new entries in a
-> reasonable amount of time.
->
-> 10 mins sounds like a reasonable default to me.
-
-I would lean toward slightly longer (20 minutes?) but aren't there
-usually different timeouts for 'static' vs. 'dynamic' DNS records (so
-static records would have longer timeouts)?
 
 
--- 
-Thanks,
+On 4/14/20 8:58 AM, Cornelia Huck wrote:
+> On Tue,  7 Apr 2020 15:20:03 -0400
+> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+>
+>> Introduces a new driver callback to prevent a root user from unbinding
+>> an AP queue from its device driver if the queue is in use. The intent of
+>> this callback is to provide a driver with the means to prevent a root user
+>> from inadvertently taking a queue away from a guest and giving it to the
+>> host while the guest is still using it. The callback will
+>> be invoked whenever a change to the AP bus's sysfs apmask or aqmask
+>> attributes would result in one or more AP queues being removed from its
+>> driver. If the callback responds in the affirmative for any driver
+>> queried, the change to the apmask or aqmask will be rejected with a device
+>> in use error.
+>>
+>> For this patch, only non-default drivers will be queried. Currently,
+>> there is only one non-default driver, the vfio_ap device driver. The
+>> vfio_ap device driver manages AP queues passed through to one or more
+>> guests and we don't want to unexpectedly take AP resources away from
+>> guests which are most likely independently administered.
+>>
+>> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+>> ---
+>>   drivers/s390/crypto/ap_bus.c | 144 +++++++++++++++++++++++++++++++++--
+>>   drivers/s390/crypto/ap_bus.h |   4 +
+>>   2 files changed, 142 insertions(+), 6 deletions(-)
+> (...)
+>
+>> @@ -1196,12 +1202,75 @@ static ssize_t apmask_show(struct bus_type *bus, char *buf)
+>>   	return rc;
+>>   }
+>>   
+>> +int __verify_card_reservations(struct device_driver *drv, void *data)
+>> +{
+>> +	int rc = 0;
+>> +	struct ap_driver *ap_drv = to_ap_drv(drv);
+>> +	unsigned long *newapm = (unsigned long *)data;
+>> +
+>> +	/*
+>> +	 * If the reserved bits do not identify cards reserved for use by the
+>> +	 * non-default driver, there is no need to verify the driver is using
+>> +	 * the queues.
+> I had to read that one several times... what about
+> "No need to verify whether the driver is using the queues if it is the
+> default driver."
+>
+> ?
 
-Steve
+Sure, that's better.
+
+>
+>> +	 */
+>> +	if (ap_drv->flags & AP_DRIVER_FLAG_DEFAULT)
+>> +		return 0;
+>> +
+>> +	/* The non-default driver's module must be loaded */
+>> +	if (!try_module_get(drv->owner))
+>> +		return 0;
+> Is that really needed? I would have thought that the driver core's
+> klist usage would make sure that the callback would not be invoked for
+> drivers that are not registered anymore. Or am I missing a window?
+>
+>> +
+>> +	if (ap_drv->in_use)
+>> +		if (ap_drv->in_use(newapm, ap_perms.aqm))
+> Can we log the offending apm somewhere, preferably with additional info
+> that allows the admin to figure out why an error was returned?
+
+One of the things on my TODO list is to add logging to the vfio_ap
+module which will track all significant activity within the device
+driver. I plan to do that with a patch or set of patches specifically
+put together for that purpose. Having said that, the best place to
+log this would be in the in_use callback in the vfio_ap device driver
+(see next patch) where the APQNs that are in use can be identified.
+For now, I will log a message to the dmesg log indicating which
+APQNs are in use by the matrix mdev.
+
+>
+>> +			rc = -EADDRINUSE;
+>> +
+>> +	module_put(drv->owner);
+>> +
+>> +	return rc;
+>> +}
+> (Same comments for the other changes further along in this patch.)
+>
+
