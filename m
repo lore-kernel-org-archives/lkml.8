@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC8EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:18:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96BF4C2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:18:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F02A2078A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:18:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EEF82078A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:18:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586953102;
-	bh=14d0vipBRsRPlRsQS2dkebED6wLV/m2MRXuuwhWQ9Mw=;
+	s=default; t=1586953105;
+	bh=5woW1Hev8PR1JzsTaygw1uSfdpUK6kXSaG0IuUcIShw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WyLNVsQI96tVtTj2HkqHN901grtVAJwVS6p5Oe6d63+ran1xmOOOBgvrLvh5hEFXU
-	 k41cclOeFDHTbwcmiXFeFU94RelchdAjEOlIW1R8gdSC/gcXp6azYLmwzMo2cwFxCt
-	 tcLnBGLdVfguXNQg4QcP6Iljt43ZNXOXHMGF0Gy0=
+	b=LP9+HxWusVmiYlflbMkh7A8rriZsar4EkFnBatxRjplBkY2zrnSdy4I37qSed9oD8
+	 7sCIx6McyRu9xiMRrNuocGxqgCXpN+6Tz/wjfrGZ0bkIuHQKddc3P54IVhTb1q7DtU
+	 PQ00GBwNTwp22jBLnraBvDhX/ITGPZ/0tavxh7kg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S368868AbgDOMSV (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:18:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40992 "EHLO mail.kernel.org"
+        id S368859AbgDOMSO (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:18:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409273AbgDOLqP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:46:15 -0400
+        id S2409276AbgDOLqR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:46:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 409CC206A2;
-        Wed, 15 Apr 2020 11:46:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61BED20732;
+        Wed, 15 Apr 2020 11:46:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951174;
-        bh=14d0vipBRsRPlRsQS2dkebED6wLV/m2MRXuuwhWQ9Mw=;
+        s=default; t=1586951176;
+        bh=5woW1Hev8PR1JzsTaygw1uSfdpUK6kXSaG0IuUcIShw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gKirTRHF3NqR/x6MEVlaaFSsLocxeRks00KCJmXGsgiS0jeujNlG6Ea3o6lcenOZv
-         hyK0bNIENwSiR5bcBoi06/Q7Xhr0UD/iNhst+QHIGgpzH3RUyI+QagS9bw4E3yBFd2
-         zs6ymomKj0/YGgvyzj+5f8wh1qAZeM+W75yVydZA=
+        b=TZMxyD0KcVaZwORHeAM4dlMq7T91Ln6WmDZTqUT9uM23GPD0QnsHXAbC3n47J1xPd
+         ds6pNF3x7PfByW8XViW6YkYWfQGdYG8cDs9HlZimIqavI+HzA8mmcUwDqx5FE0rQmv
+         9x0hU+u/Ls5BaZJ6EjIj28gndMt8i/GCW2KLOs6E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Guo Ren <guoren@linux.alibaba.com>,
-        Lu Chongzhi <chongzhi.lcz@alibaba-inc.com>,
-        Sasha Levin <sashal@kernel.org>, linux-csky@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 78/84] csky: Fixup init_fpu compile warning with __init
-Date:   Wed, 15 Apr 2020 07:44:35 -0400
-Message-Id: <20200415114442.14166-78-sashal@kernel.org>
+Cc:     Pi-Hsun Shih <pihsun@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 80/84] platform/chrome: cros_ec_rpmsg: Fix race with host event
+Date:   Wed, 15 Apr 2020 07:44:37 -0400
+Message-Id: <20200415114442.14166-80-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114442.14166-1-sashal@kernel.org>
 References: <20200415114442.14166-1-sashal@kernel.org>
@@ -58,71 +58,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guo Ren <guoren@linux.alibaba.com>
+From: Pi-Hsun Shih <pihsun@chromium.org>
 
-[ Upstream commit 12879bda3c2a974b7e4fe199a9c21f0c5f6bca04 ]
+[ Upstream commit f775ac78fcfc6bdc96bdda07029d11f2a5e84869 ]
 
-WARNING: vmlinux.o(.text+0x2366): Section mismatch in reference from the
-function csky_start_secondary() to the function .init.text:init_fpu()
+Host event can be sent by remoteproc by any time, and
+cros_ec_rpmsg_callback would be called after cros_ec_rpmsg_create_ept.
+But the cros_ec_device is initialized after that, which cause host event
+handler to use cros_ec_device that are not initialized properly yet.
 
-The function csky_start_secondary() references
-the function __init init_fpu().
-This is often because csky_start_secondary lacks a __init
-annotation or the annotation of init_fpu is wrong.
+Fix this by don't schedule host event handler before cros_ec_register
+returns. Instead, remember that we have a pending host event, and
+schedule host event handler after cros_ec_register.
 
-Reported-by: Lu Chongzhi <chongzhi.lcz@alibaba-inc.com>
-Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+Fixes: 71cddb7097e2 ("platform/chrome: cros_ec_rpmsg: Fix race with host command when probe failed.")
+Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/csky/abiv2/fpu.c         | 5 -----
- arch/csky/abiv2/inc/abi/fpu.h | 3 ++-
- arch/csky/kernel/smp.c        | 3 +++
- 3 files changed, 5 insertions(+), 6 deletions(-)
+ drivers/platform/chrome/cros_ec_rpmsg.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/arch/csky/abiv2/fpu.c b/arch/csky/abiv2/fpu.c
-index 86d187d4e5af1..5acc5c2e544e1 100644
---- a/arch/csky/abiv2/fpu.c
-+++ b/arch/csky/abiv2/fpu.c
-@@ -10,11 +10,6 @@
- #define MTCR_DIST	0xC0006420
- #define MFCR_DIST	0xC0006020
+diff --git a/drivers/platform/chrome/cros_ec_rpmsg.c b/drivers/platform/chrome/cros_ec_rpmsg.c
+index 0c3738c3244d8..aa2059b33ba56 100644
+--- a/drivers/platform/chrome/cros_ec_rpmsg.c
++++ b/drivers/platform/chrome/cros_ec_rpmsg.c
+@@ -42,6 +42,8 @@ struct cros_ec_rpmsg {
+ 	struct completion xfer_ack;
+ 	struct work_struct host_event_work;
+ 	struct rpmsg_endpoint *ept;
++	bool has_pending_host_event;
++	bool probe_done;
+ };
  
--void __init init_fpu(void)
--{
--	mtcr("cr<1, 2>", 0);
--}
--
- /*
-  * fpu_libc_helper() is to help libc to excute:
-  *  - mfcr %a, cr<1, 2>
-diff --git a/arch/csky/abiv2/inc/abi/fpu.h b/arch/csky/abiv2/inc/abi/fpu.h
-index 22ca3cf2794a1..09e2700a36936 100644
---- a/arch/csky/abiv2/inc/abi/fpu.h
-+++ b/arch/csky/abiv2/inc/abi/fpu.h
-@@ -9,7 +9,8 @@
+ /**
+@@ -186,7 +188,14 @@ static int cros_ec_rpmsg_callback(struct rpmsg_device *rpdev, void *data,
+ 		memcpy(ec_dev->din, resp->data, len);
+ 		complete(&ec_rpmsg->xfer_ack);
+ 	} else if (resp->type == HOST_EVENT_MARK) {
+-		schedule_work(&ec_rpmsg->host_event_work);
++		/*
++		 * If the host event is sent before cros_ec_register is
++		 * finished, queue the host event.
++		 */
++		if (ec_rpmsg->probe_done)
++			schedule_work(&ec_rpmsg->host_event_work);
++		else
++			ec_rpmsg->has_pending_host_event = true;
+ 	} else {
+ 		dev_warn(ec_dev->dev, "rpmsg received invalid type = %d",
+ 			 resp->type);
+@@ -249,6 +258,11 @@ static int cros_ec_rpmsg_probe(struct rpmsg_device *rpdev)
+ 		return ret;
+ 	}
  
- int fpu_libc_helper(struct pt_regs *regs);
- void fpu_fpe(struct pt_regs *regs);
--void __init init_fpu(void);
++	ec_rpmsg->probe_done = true;
 +
-+static inline void init_fpu(void) { mtcr("cr<1, 2>", 0); }
++	if (ec_rpmsg->has_pending_host_event)
++		schedule_work(&ec_rpmsg->host_event_work);
++
+ 	return 0;
+ }
  
- void save_to_user_fp(struct user_fp *user_fp);
- void restore_from_user_fp(struct user_fp *user_fp);
-diff --git a/arch/csky/kernel/smp.c b/arch/csky/kernel/smp.c
-index de61feb4b6df2..b5c5bc3afeb5c 100644
---- a/arch/csky/kernel/smp.c
-+++ b/arch/csky/kernel/smp.c
-@@ -22,6 +22,9 @@
- #include <asm/sections.h>
- #include <asm/mmu_context.h>
- #include <asm/pgalloc.h>
-+#ifdef CONFIG_CPU_HAS_FPU
-+#include <abi/fpu.h>
-+#endif
- 
- struct ipi_data_struct {
- 	unsigned long bits ____cacheline_aligned;
 -- 
 2.20.1
 
