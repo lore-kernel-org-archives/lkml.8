@@ -2,108 +2,129 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCDA3C2BB85
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:08:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1311C3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:08:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9492720784
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:08:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D08D5206F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:08:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W2aiBz4u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2635610AbgDOIIS (ORCPT
+        id S2635619AbgDOIIY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 04:08:18 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:39686 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403805AbgDOID1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 04:03:27 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5A0641A079A;
-        Wed, 15 Apr 2020 10:03:05 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 4C4851A078C;
-        Wed, 15 Apr 2020 10:03:05 +0200 (CEST)
-Received: from fsr-ub1664-175.ea.freescale.net (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id B19C5202B0;
-        Wed, 15 Apr 2020 10:03:04 +0200 (CEST)
-From:   Abel Vesa <abel.vesa@nxp.com>
-To:     Lee Jones <lee.jones@linaro.org>, Shawn Guo <shawnguo@kernel.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Anson Huang <anson.huang@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>
-Cc:     NXP Linux Team <linux-imx@nxp.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, Abel Vesa <abel.vesa@nxp.com>
-Subject: [PATCH v3 00/13] Add generic MFD i.MX mix and audiomix support
-Date:   Wed, 15 Apr 2020 11:02:40 +0300
-Message-Id: <1586937773-5836-1-git-send-email-abel.vesa@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Wed, 15 Apr 2020 04:08:24 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:44277 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2635561AbgDOIHM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 04:07:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586938028;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=EDdYfSg43KpYWuuPakF4B4tcdGZPYljqQUL9gLxwyrs=;
+        b=W2aiBz4ualxEo/496vq76TreYWhNzLmc3EAetuqeGhLNdcNJPmw+A/CPTI6Jg6XcLu1qnN
+        SaQX4AN0ZHp+WR2jiwJGwhwgEhxxbAYUbjzkG+Oa8x6g9EiqWWkZF6mzADyyGrGNf1s7TZ
+        UFGA0r2SvIA+yYr7Gn2SF8GILNjhYlc=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-215-P9wXlSKWOL-EXoRNtwSBLA-1; Wed, 15 Apr 2020 04:07:06 -0400
+X-MC-Unique: P9wXlSKWOL-EXoRNtwSBLA-1
+Received: by mail-wr1-f72.google.com with SMTP id q10so3643767wrv.10
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 01:07:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=EDdYfSg43KpYWuuPakF4B4tcdGZPYljqQUL9gLxwyrs=;
+        b=fv1KvyLktcwNM0VapT4jRzOEOiic93+5WwxMsPFTakokmW3yl7UnFMHAn6fWz8Ip4u
+         C2BQ/wmNMWDXWIz3sazPyaahnQcydTtqhwtrfEemGoC7jaHmI0iQbAsSEsUecILm9rTa
+         aD6OcOFXuuG1SixBQVBs+TB8dH6UZCFAEt8ilP4UVZFZU46bS8VwpHUcPF1tzLMoaos6
+         EQBrFTgbPBxMGuvbqz2dTWqOxKEQWzB0d+L6u67MxNqunMFskOlrVSQG5MFo74rkKPmz
+         3SnWdbpYf8lOjRktBUiZPQF8bvMnxcsk95tEs9fYsars61JuYELwbr1W7DtuN6TET0GV
+         feRg==
+X-Gm-Message-State: AGi0PubX+5Mp2zh+XX46pFtE5UYT81eNxmhNsPnsmB+XDk1ehVJY9m4e
+        +Lfz03WpYE6g/YJz6HhCMfvKipxY1vgohQflQ+2boSNvVcFHsyK0lmJDQZ0m4gSDsiBS+YB9Sb4
+        WIwpRh74HV1KDKKv44BzRX+41
+X-Received: by 2002:a1c:2b06:: with SMTP id r6mr4163561wmr.25.1586938025008;
+        Wed, 15 Apr 2020 01:07:05 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLM8/guNljwdxt33+rGLqxJ5oJ/t0p2TiWjT5KUdTEEF6BNudkLy+55c9aOC9WA4m3vasp/fw==
+X-Received: by 2002:a1c:2b06:: with SMTP id r6mr4163541wmr.25.1586938024762;
+        Wed, 15 Apr 2020 01:07:04 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
+        by smtp.gmail.com with ESMTPSA id m14sm20326145wrs.76.2020.04.15.01.07.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Apr 2020 01:07:04 -0700 (PDT)
+Subject: Re: [PATCH] power: supply: axp288_charger: Omit superfluous error
+ message
+To:     Tang Bin <tangbin@cmss.chinamobile.com>, sre@kernel.org,
+        wens@csie.org
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Shengju Zhang <zhangshengju@cmss.chinamobile.com>
+References: <20200415042727.13496-1-tangbin@cmss.chinamobile.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <8f9ae92b-9aab-34a2-dc15-a9c3514c7ca8@redhat.com>
+Date:   Wed, 15 Apr 2020 10:07:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <20200415042727.13496-1-tangbin@cmss.chinamobile.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The i.MX8MP has some new IPs called mixes. They are formed usually by some
-GPRs that can be split into different functionalities. The first example
-here is the audiomix which has dedicated registers that can be registered
-as a clock controller and some other registers that can be registered as
-a reset controller, plus some dedicated ones that will be registered as
-syscon and used by each dedicated audio IP.
+Hi,
 
-More mixes to be following the same structure are to come, like hdmimix,
-dispmix and mediamix. They will all be populated and registered by the MFD
-imx-mix generic driver.
+On 4/15/20 6:27 AM, Tang Bin wrote:
+> In the axp288_charger_probe(), when get irq failed, the function
+> platform_get_irq() logs an error message, so remove redundant
+> message here.
+> 
+> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+> Signed-off-by: Shengju Zhang <zhangshengju@cmss.chinamobile.com>
 
-Changes since v2:
- * removed the runtime PM for now
- * changed the new SPDX identifiers to GPL-2.0-only
- * took care of the DT schema comment
+Thank you for this nice cleanup patch:
 
-Abel Vesa (13):
-  mfd: Add i.MX generic mix support
-  Documentation: mfd: Add DT bindings for i.MX Mix
-  arm64: dts: imx8mp: Add AIPS 4 and 5
-  arm64: dts: imx8mp: Add audiomix node
-  clk: imx: gate2: Allow single bit gating clock
-  clk: imx: pll14xx: Add the device as argument when registering
-  clk: imx: Add helpers for passing the device as argument
-  dt-bindings: clocks: imx8mp: Add ids for audiomix clocks
-  clk: imx: Add audiomix clock controller support
-  arm64: dts: imx8mp: Add audiomix clock controller node
-  dt-bindings: reset: imx8mp: Add ids for audiomix reset
-  reset: imx: Add audiomix reset controller support
-  arm64: dts: imx8mp: Add audiomix reset controller node
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
- .../devicetree/bindings/mfd/fsl,imx-mix.yaml       |  34 ++++
- arch/arm64/boot/dts/freescale/imx8mp.dtsi          |  41 ++++-
- drivers/clk/imx/Makefile                           |   2 +-
- drivers/clk/imx/clk-audiomix.c                     | 175 +++++++++++++++++++++
- drivers/clk/imx/clk-gate2.c                        |  31 +++-
- drivers/clk/imx/clk-pll14xx.c                      |   8 +-
- drivers/clk/imx/clk.h                              |  55 ++++++-
- drivers/mfd/Kconfig                                |  11 ++
- drivers/mfd/Makefile                               |   1 +
- drivers/mfd/imx-mix.c                              |  48 ++++++
- drivers/reset/Kconfig                              |   7 +
- drivers/reset/Makefile                             |   1 +
- drivers/reset/reset-imx-audiomix.c                 | 117 ++++++++++++++
- include/dt-bindings/clock/imx8mp-clock.h           |  62 ++++++++
- include/dt-bindings/reset/imx-audiomix-reset.h     |  15 ++
- 15 files changed, 590 insertions(+), 18 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/fsl,imx-mix.yaml
- create mode 100644 drivers/clk/imx/clk-audiomix.c
- create mode 100644 drivers/mfd/imx-mix.c
- create mode 100644 drivers/reset/reset-imx-audiomix.c
- create mode 100644 include/dt-bindings/reset/imx-audiomix-reset.h
+Regards,
 
--- 
-2.7.4
+Hans
+
+
+
+> ---
+>   drivers/power/supply/axp288_charger.c | 5 ++---
+>   1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/power/supply/axp288_charger.c b/drivers/power/supply/axp288_charger.c
+> index 1bbba6bba..16fb4ae1c 100644
+> --- a/drivers/power/supply/axp288_charger.c
+> +++ b/drivers/power/supply/axp288_charger.c
+> @@ -825,10 +825,9 @@ static int axp288_charger_probe(struct platform_device *pdev)
+>   	/* Register charger interrupts */
+>   	for (i = 0; i < CHRG_INTR_END; i++) {
+>   		pirq = platform_get_irq(info->pdev, i);
+> -		if (pirq < 0) {
+> -			dev_err(&pdev->dev, "Failed to get IRQ: %d\n", pirq);
+> +		if (pirq < 0)
+>   			return pirq;
+> -		}
+> +
+>   		info->irq[i] = regmap_irq_get_virq(info->regmap_irqc, pirq);
+>   		if (info->irq[i] < 0) {
+>   			dev_warn(&info->pdev->dev,
+> 
 
