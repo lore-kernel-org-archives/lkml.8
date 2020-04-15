@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25E72C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 519A9C2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:58:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE87D20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:57:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 256D020737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:58:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586951880;
-	bh=lzAr4ppCgdjZHX3lpnDUbHFj+hcvIzVExwUEm8K4/hI=;
+	s=default; t=1586951897;
+	bh=T79XHf50BU5f0IfLsPJwFGr7LufjqUk3a/qjHUQveQc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2a+IfpEYLOLEJ7Hz9DKx99HpkJVwHFV+jkHMvn7imGHu9+mN7pEOUQ6xeKkjB+ot0
-	 ibvXW9LHoTHvCKlZz6E6T7kJfzJe+kpgl+/5RGgfjSTUmdWRTF0ChxgnVadBweInp4
-	 3jNLA6LP3tMpHvugiosxkUDE0gAdPvzA6pY21+Zs=
+	b=rESMZddZkl8Pz8Ka/6xwV/eBztvst5FhNdJe3cQjGDufJsrZuGn0xuAEfrEgOdNE1
+	 yZ3PqXO0FTEkNAAOKYY0dv999nXGmpum6j9OPFkbKMlZQ7zyIq1r308WYfQgnEjBD6
+	 5McnTMuJB1IgbcxCAF2D+WHssOi83nR3fNUM/s2g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2897983AbgDOL55 (ORCPT
+        id S2898014AbgDOL6P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:57:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41714 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 07:58:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409312AbgDOLql (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:46:41 -0400
+        id S2409317AbgDOLqo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:46:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 171FF21655;
-        Wed, 15 Apr 2020 11:46:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55108206A2;
+        Wed, 15 Apr 2020 11:46:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951200;
-        bh=lzAr4ppCgdjZHX3lpnDUbHFj+hcvIzVExwUEm8K4/hI=;
+        s=default; t=1586951203;
+        bh=T79XHf50BU5f0IfLsPJwFGr7LufjqUk3a/qjHUQveQc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zcC296suW7zJDNEHdPAsUUqUQYPJXGwj1Eu4zFrNgeq3LK+S1RO+6splXAYfJk69+
-         4cpbwaR9VbO58CpRJu59DrDFobe7mvcTAG27Lf5pnwreIta5NDrXf82OaM4/JBkZcH
-         dHne8I3pIh0FSouTfgpDKLHR94F0WNWeM2BiQ8SI=
+        b=hwX15IehHum/b3XSQDlWM2/YF1BjbQoKh41UTFFOopifRof1YJxlIedv+jDfM7dJz
+         BWGz1elfQS8E2MwBYN6QUUgGwMhuJO7tGgu90WpYV9tMswoycQvXlm1kkvVWQ1Re69
+         QaNaVpQp714YkZ9HeEEGonrEiPoS720OxytpiuF0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gabriel Krisman Bertazi <krisman@collabora.com>,
-        Martyn Welch <martyn.welch@collabora.com>,
-        Richard Weinberger <richard@nod.at>,
-        Sasha Levin <sashal@kernel.org>, linux-um@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 15/40] um: ubd: Prevent buffer overrun on command completion
-Date:   Wed, 15 Apr 2020 07:45:58 -0400
-Message-Id: <20200415114623.14972-15-sashal@kernel.org>
+Cc:     Richard Palethorpe <rpalethorpe@suse.com>,
+        Kees Cook <keescook@chromium.org>, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org, security@kernel.org, wg@grandegger.com,
+        mkl@pengutronix.de, davem@davemloft.net,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 17/40] slcan: Don't transmit uninitialized stack data in padding
+Date:   Wed, 15 Apr 2020 07:46:00 -0400
+Message-Id: <20200415114623.14972-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114623.14972-1-sashal@kernel.org>
 References: <20200415114623.14972-1-sashal@kernel.org>
@@ -60,39 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gabriel Krisman Bertazi <krisman@collabora.com>
+From: Richard Palethorpe <rpalethorpe@suse.com>
 
-[ Upstream commit 6e682d53fc1ef73a169e2a5300326cb23abb32ee ]
+[ Upstream commit b9258a2cece4ec1f020715fe3554bc2e360f6264 ]
 
-On the hypervisor side, when completing commands and the pipe is full,
-we retry writing only the entries that failed, by offsetting
-io_req_buffer, but we don't reduce the number of bytes written, which
-can cause a buffer overrun of io_req_buffer, and write garbage to the
-pipe.
+struct can_frame contains some padding which is not explicitly zeroed in
+slc_bump. This uninitialized data will then be transmitted if the stack
+initialization hardening feature is not enabled (CONFIG_INIT_STACK_ALL).
 
-Cc: Martyn Welch <martyn.welch@collabora.com>
-Signed-off-by: Gabriel Krisman Bertazi <krisman@collabora.com>
-Signed-off-by: Richard Weinberger <richard@nod.at>
+This commit just zeroes the whole struct including the padding.
+
+Signed-off-by: Richard Palethorpe <rpalethorpe@suse.com>
+Fixes: a1044e36e457 ("can: add slcan driver for serial/USB-serial CAN adapters")
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Cc: linux-can@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Cc: security@kernel.org
+Cc: wg@grandegger.com
+Cc: mkl@pengutronix.de
+Cc: davem@davemloft.net
+Acked-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/um/drivers/ubd_kern.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/can/slcan.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/arch/um/drivers/ubd_kern.c b/arch/um/drivers/ubd_kern.c
-index 83c470364dfb3..748bd0921dfff 100644
---- a/arch/um/drivers/ubd_kern.c
-+++ b/arch/um/drivers/ubd_kern.c
-@@ -1574,7 +1574,9 @@ int io_thread(void *arg)
- 		written = 0;
+diff --git a/drivers/net/can/slcan.c b/drivers/net/can/slcan.c
+index db96078096206..f99cd94509be3 100644
+--- a/drivers/net/can/slcan.c
++++ b/drivers/net/can/slcan.c
+@@ -147,7 +147,7 @@ static void slc_bump(struct slcan *sl)
+ 	u32 tmpid;
+ 	char *cmd = sl->rbuff;
  
- 		do {
--			res = os_write_file(kernel_fd, ((char *) io_req_buffer) + written, n);
-+			res = os_write_file(kernel_fd,
-+					    ((char *) io_req_buffer) + written,
-+					    n - written);
- 			if (res >= 0) {
- 				written += res;
- 			} else {
+-	cf.can_id = 0;
++	memset(&cf, 0, sizeof(cf));
+ 
+ 	switch (*cmd) {
+ 	case 'r':
+@@ -186,8 +186,6 @@ static void slc_bump(struct slcan *sl)
+ 	else
+ 		return;
+ 
+-	*(u64 *) (&cf.data) = 0; /* clear payload */
+-
+ 	/* RTR frames may have a dlc > 0 but they never have any data bytes */
+ 	if (!(cf.can_id & CAN_RTR_FLAG)) {
+ 		for (i = 0; i < cf.can_dlc; i++) {
 -- 
 2.20.1
 
