@@ -7,45 +7,44 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9EBCC2BB55
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C7EC2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B15942074F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:14:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 834CA20737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:14:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586956456;
-	bh=DJq3kiVid+PEWn5WE6VUYAktHgMxGYUpiygRCvaI3+Q=;
+	s=default; t=1586956465;
+	bh=FtXTfofnjxnh+C0trmA6BpW36cW+yD3+qYSHdl9Ug4M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eMpGihHx4VyU8qpWsHXSwMROEH/Ps0WGnxeXW30UdevNLZdOB2nCai6BOgdD8qw/G
-	 jWhrJkhybVIahyxEv79M0oZeo3PCxL/1tHk2OjLHhuVFqd6ukP4l8nhDeZFgV6h+oF
-	 g6NJ8kUSit5MHSa/S+RL125hINSubvLBBKca/Qu4=
+	b=KErMJP7XP9EDxRM2qaNMugcG1Z8QhJGUkVbWBZxjof1fdCxSoecLBow8BbHiy5v92
+	 JUjwaOz5ZUBEm++R9N5wgDhpAhE7r8mgqRdlm4rXQMIAGhF33j6K5rkWHlfCjthkXg
+	 ZuayvnIOAiUdUmJTguI2/oc67BmzBbrXypiPY1+M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506177AbgDONOM (ORCPT
-        <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:14:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54892 "EHLO mail.kernel.org"
+        id S370674AbgDONOX (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 09:14:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897051AbgDOLf0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:35:26 -0400
+        id S2897049AbgDOLfZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:35:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BDF620857;
-        Wed, 15 Apr 2020 11:35:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A02AE20737;
+        Wed, 15 Apr 2020 11:35:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950526;
-        bh=DJq3kiVid+PEWn5WE6VUYAktHgMxGYUpiygRCvaI3+Q=;
+        s=default; t=1586950525;
+        bh=FtXTfofnjxnh+C0trmA6BpW36cW+yD3+qYSHdl9Ug4M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xOxlYBsGXuwq1b7R+ihsvoFhKpIFlzh5Q8BJgMazGHHsDFlagVYhUef05ccqMh2Ec
-         0s58O1a8W8kW2D+UCLyf+wS74MckGhDg/SFZDR4r7D7niEWXbyZibNf2MDHIkbZy3v
-         AL/R7OechECoYUlP73TO/q23NNv2F9W4bDA1+tX0=
+        b=KxW4A6k8wrrZ3JErvUi5HdHPMuvtpGUv6wrHvOIIAj6N0T4eCKYvgRx6qLZ+Ig4Xf
+         A1odxLHabbXq7kpgE6mkGflz+9H3EYiqyPferC5xkHy5MlLwlzg+5aBH1WBAB2u4k4
+         Ukr7U9U3YinEYzkyzEkvw97KOP2zYm1THDJecM4U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
         Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 035/129] NFSv4/pnfs: Return valid stateids in nfs_layout_find_inode_by_stateid()
-Date:   Wed, 15 Apr 2020 07:33:10 -0400
-Message-Id: <20200415113445.11881-35-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 034/129] NFS: alloc_nfs_open_context() must use the file cred when available
+Date:   Wed, 15 Apr 2020 07:33:09 -0400
+Message-Id: <20200415113445.11881-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
 References: <20200415113445.11881-1-sashal@kernel.org>
@@ -60,32 +59,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit d911c57a19551c6bef116a3b55c6b089901aacb0 ]
+[ Upstream commit 1d179d6bd67369a52edea8562154b31ee20be1cc ]
 
-Make sure to test the stateid for validity so that we catch instances
-where the server may have been reusing stateids in
-nfs_layout_find_inode_by_stateid().
+If we're creating a nfs_open_context() for a specific file pointer,
+we must use the cred assigned to that file.
 
-Fixes: 7b410d9ce460 ("pNFS: Delay getting the layout header in CB_LAYOUTRECALL handlers")
+Fixes: a52458b48af1 ("NFS/NFSD/SUNRPC: replace generic creds with 'struct cred'.")
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/callback_proc.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/nfs/inode.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/fs/nfs/callback_proc.c b/fs/nfs/callback_proc.c
-index cd4c6bc81caed..40d31024b72d1 100644
---- a/fs/nfs/callback_proc.c
-+++ b/fs/nfs/callback_proc.c
-@@ -128,6 +128,8 @@ static struct inode *nfs_layout_find_inode_by_stateid(struct nfs_client *clp,
+diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+index 11bf15800ac99..a10fb87c6ac33 100644
+--- a/fs/nfs/inode.c
++++ b/fs/nfs/inode.c
+@@ -959,16 +959,16 @@ struct nfs_open_context *alloc_nfs_open_context(struct dentry *dentry,
+ 						struct file *filp)
+ {
+ 	struct nfs_open_context *ctx;
+-	const struct cred *cred = get_current_cred();
  
- 	list_for_each_entry_rcu(server, &clp->cl_superblocks, client_link) {
- 		list_for_each_entry(lo, &server->layouts, plh_layouts) {
-+			if (!pnfs_layout_is_valid(lo))
-+				continue;
- 			if (stateid != NULL &&
- 			    !nfs4_stateid_match_other(stateid, &lo->plh_stateid))
- 				continue;
+ 	ctx = kmalloc(sizeof(*ctx), GFP_KERNEL);
+-	if (!ctx) {
+-		put_cred(cred);
++	if (!ctx)
+ 		return ERR_PTR(-ENOMEM);
+-	}
+ 	nfs_sb_active(dentry->d_sb);
+ 	ctx->dentry = dget(dentry);
+-	ctx->cred = cred;
++	if (filp)
++		ctx->cred = get_cred(filp->f_cred);
++	else
++		ctx->cred = get_current_cred();
+ 	ctx->ll_cred = NULL;
+ 	ctx->state = NULL;
+ 	ctx->mode = f_mode;
 -- 
 2.20.1
 
