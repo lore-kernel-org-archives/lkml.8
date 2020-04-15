@@ -2,241 +2,138 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7DA6C3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:16:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF94AC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:16:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A12EA20768
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:16:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="gKxyrbz+"
+	by mail.kernel.org (Postfix) with ESMTP id 89E7D20771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:16:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586942195;
+	bh=DBJHhwh9ZnxQg604Oc+Qnu5YCCqtx3fTWag+7vPzb68=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sc55D1A0ZHdgXhel1Od/5pQ1ROsvAWwCIOeuxvkyBIlEZthXuPXnx17ZYPgTqEUcM
+	 fORV/sKKnh9SwPzaj7KPMXPQk3tX6kUnalmwezIPd7F2DyAxSANdSoeRnhVSnXnGZU
+	 R2zje7eLk5UfGx1f6OJsM3nsILgxd/mJ960h8mCc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895189AbgDOJQU (ORCPT
+        id S2895205AbgDOJQc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 05:16:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46586 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2895120AbgDOJQO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 05:16:14 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28302C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 02:16:14 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id k133so12187504oih.12
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 02:16:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=NUFpX5X0+874xazg12sL5+CoHp00OHExFRdbolbY+Cs=;
-        b=gKxyrbz+omFe6Izpzdw477lRVjZG0kgsOz7iuDPWRAwYjbuD5qUP4qJpSjabKDJRaU
-         +BL/HXfY1tVxiHnTeWH8KCK+k02R+pu5jEbLxWwl+TxfwTXDN4tTRUJso2o+f0xlBhaL
-         JFNM8p4ka2TKysv2KB+QMx+MQKqRwKC00GVek=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=NUFpX5X0+874xazg12sL5+CoHp00OHExFRdbolbY+Cs=;
-        b=eWKO/R1NYnfQCgXtoktSX8S42523lfx47tW6rTq7rMVEPIHaMSnSXtWvd0FQ9l6cD1
-         dT/fZvyPQp5P1KU47verHon/3yiPH/J9WeFPEAYNKAVQSCZwBou23Sn4bWcwwCBETwRg
-         XSkPrHkgoYidJ7M4norANoyVPvok3MhCzUUg4/afsscbHAQwXHL4U4v+ml03vYNm6vr3
-         hwsXy2vYprtMzV5OnMWVfBKBRJ6eXSEW5bPqf1KLtxlo25iwNtzDzlcIyU70oYtpWDIX
-         3xcoGqWWdjjQMqC5DEcn0F4bQc0sphhUl4SgQIukr1cRx8kCooBfDTsc+ExSEyaVTs0j
-         cwdg==
-X-Gm-Message-State: AGi0PuZ30JGCu3EPmCEA7ldFw+WMCYsfxXnU/eDnyFsNHklrJRZ7mBCe
-        ppP+ef1DLHoVc2++RGLaFJv3TsVH0Dtik4yu5Eaj9Ry3
-X-Google-Smtp-Source: APiQypJjUOh6nv2pcgwPQMR6DVT/UE/f75S+/R0sjUu4lPd87AIjXo6A/D8OV/vl3Tae3FRr61UndcOwlV+jMRFnJps=
-X-Received: by 2002:aca:4408:: with SMTP id r8mr16355603oia.14.1586942173410;
- Wed, 15 Apr 2020 02:16:13 -0700 (PDT)
+        Wed, 15 Apr 2020 05:16:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35508 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2895121AbgDOJQS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 05:16:18 -0400
+Received: from linux-8ccs (p3EE2C7AC.dip0.t-ipconnect.de [62.226.199.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6D2020771;
+        Wed, 15 Apr 2020 09:16:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586942177;
+        bh=DBJHhwh9ZnxQg604Oc+Qnu5YCCqtx3fTWag+7vPzb68=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pXy1eVlDbhoKyEdUrIJ/LQLiotIxm6446XQm4JqZly0sKcPmuMLMABoQs85L0RCI3
+         rk1rj8jIoawXHdpTUaBUy0Fww/ytK8HhuCyop9PfluY6bIShlw0gMafXkHkxlntpR6
+         KlPsAw96jkZifAIwMD1/zeXkwW15mFd7+MES5yOM=
+Date:   Wed, 15 Apr 2020 11:16:12 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Lucas De Marchi <lucas.demarchi@intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-modules@vger.kernel.org,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        live-patching@vger.kernel.org
+Subject: Re: RFC: Handle hard module dependencies that are not symbol-based
+ (r8169 + realtek)
+Message-ID: <20200415091612.GA384@linux-8ccs>
+References: <f8e3f271-82df-165f-63f1-6df73ba3d59c@gmail.com>
+ <20200409000200.2qsqcbrzcztk6gmu@ldmartin-desk1>
+ <6ed6259b-888d-605a-9a6f-526c18e7bb14@gmail.com>
+ <20200414160930.GA20229@linux-8ccs>
+ <e38f3115-1e77-ebce-423b-8ea445be9e0d@gmail.com>
 MIME-Version: 1.0
-References: <1586864113-30682-1-git-send-email-bernard@vivo.com>
- <CADnq5_Phca3L-HGOQz0DPBoARHgwcJRK_a7-WmeFMPkrPWeOeg@mail.gmail.com>
- <87lfmx5h72.fsf@intel.com> <b5ffc6b7-bfa5-0827-a267-4e8c20027982@amd.com>
-In-Reply-To: <b5ffc6b7-bfa5-0827-a267-4e8c20027982@amd.com>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Wed, 15 Apr 2020 11:16:01 +0200
-Message-ID: <CAKMK7uEYUnX3p0QUtosOaiB_9Z8epFkc8HxtBDW=mCTUrziPxw@mail.gmail.com>
-Subject: Re: [PATCH] Optimized division operation to shift operation
-To:     =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Alex Deucher <alexdeucher@gmail.com>,
-        Bernard Zhao <bernard@vivo.com>,
-        Alex Sierra <alex.sierra@amd.com>,
-        David Airlie <airlied@linux.ie>, Oak Zeng <Oak.Zeng@amd.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>, kernel@vivo.com,
-        Huang Rui <ray.huang@amd.com>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Xiaojie Yuan <xiaojie.yuan@amd.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Kent Russell <kent.russell@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e38f3115-1e77-ebce-423b-8ea445be9e0d@gmail.com>
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 9:57 AM Christian K=C3=B6nig
-<christian.koenig@amd.com> wrote:
++++ Heiner Kallweit [14/04/20 18:20 +0200]:
+>On 14.04.2020 18:09, Jessica Yu wrote:
+>> +++ Heiner Kallweit [10/04/20 00:25 +0200]:
+>>> On 09.04.2020 02:02, Lucas De Marchi wrote:
+>>>> On Wed, Apr 01, 2020 at 11:20:20PM +0200, Heiner Kallweit wrote:
+>>>>> Currently we have no way to express a hard dependency that is not
+>>>>> a symbol-based dependency (symbol defined in module A is used in
+>>>>> module B). Use case:
+>>>>> Network driver ND uses callbacks in the dedicated PHY driver DP
+>>>>> for the integrated PHY (namely read_page() and write_page() in
+>>>>> struct phy_driver). If DP can't be loaded (e.g. because ND is in
+>>>>> initramfs but DP is not), then phylib will use the generic
+>>>>> PHY driver GP. GP doesn't implement certain callbacks that are
+>>>>> needed by ND, therefore ND's probe has to bail out with an error
+>>>>> once it detects that DP is not loaded.
+>>>>> We have this problem with driver r8169 having such a dependency
+>>>>> on PHY driver realtek. Some distributions have tools for
+>>>>> configuring initramfs that consider hard dependencies based on
+>>>>> depmod output. Means so far somebody can add r8169.ko to initramfs,
+>>>>> and neither human being nor machine will have an idea that
+>>>>> realtek.ko needs to be added too.
+>>>>
+>>>> Could you expand on why softdep doesn't solve this problem
+>>>> with MODULE_SOFTDEP()
+>>>>
+>>>> initramfs tools can already read it and modules can already expose them
+>>>> (they end up in /lib/modules/$(uname -r)/modules.softdep and modprobe
+>>>> makes use of them)
+>>>>
+>>> Thanks for the feedback. I was under the impression that initramfs-tools
+>>> is affected, but you're right, it considers softdeps.
+>>> Therefore I checked the error reports again, and indeed they are about
+>>> Gentoo's "genkernel" tool only. See here:
+>>> https://bugzilla.kernel.org/show_bug.cgi?id=204343#c15
+>>>
+>>> If most kernel/initramfs tools consider softdeps, then I don't see
+>>> a need for the proposed change. But well, everything is good for
+>>> something, and I learnt something about the structure of kmod.
+>>> Sorry for the noise.
+>>
+>> Well, I wouldn't really call it noise :) I think there *could* be
+>> cases out there where a establishing a non-symbol-based hard
+>> dependency would be beneficial.
+>>
+>Thanks for the encouraging words ;)
 >
-> Am 15.04.20 um 09:41 schrieb Jani Nikula:
-> > On Tue, 14 Apr 2020, Alex Deucher <alexdeucher@gmail.com> wrote:
-> >> On Tue, Apr 14, 2020 at 9:05 AM Bernard Zhao <bernard@vivo.com> wrote:
-> >>> On some processors, the / operate will call the compiler`s div lib,
-> >>> which is low efficient, We can replace the / operation with shift,
-> >>> so that we can replace the call of the division library with one
-> >>> shift assembly instruction.
-> > This was applied already, and it's not in a driver I look after... but
-> > to me this feels like something that really should be
-> > justified. Using >> instead of / for multiples of 2 division mattered 2=
-0
-> > years ago, I'd be surprised if it still did on modern compilers.
+>> In the bug you linked, I think one could hypothetically run into the
+>> same oops if the realtek module fails to load for whatever reason, no?
 >
-> I have similar worries, especially since we replace the "/ (4 * 2)" with
-> ">> 3" it's making the code just a bit less readable.
+>Basically yes. Just that it wouldn't be an oops any longer, r8169
+>would detect the missing dedicated PHY driver and bail out in probe().
 >
-> And that the code runs exactly once while loading the driver and pushing
-> the firmware into the hardware. So performance is completely irrelevant
-> here.
+>> Since realtek is only a soft dependency of r8169, modprobe would
+>> consider realtek optional and would still try to load r8169 even if
+>> realtek had failed to load previously. Then wouldn't the same problem
+>> (described in the bugzilla) arise?  Maybe a hard dependency could
+>> possibly come in handy in this case, because a softdep unfortunately
+>> implies that r8169 can work without realtek loaded.
+>>
+>Right. Even though kmod treats a softdep more or less like a harddep
+>with regard to module loading, it's called "soft" for a reason.
+>Relying on a softdep to satisfy a hard dependency doesn't seem
+>to be the ideal solution.
 
-Yeah, and even in general I'd really want to see proof that such bad
-compilers exist first. Doing a peephole pass for stuff like this is
-like undergrad compiler course stuff. Also I'd trust the compiler's
-call on which is faster much more than humans doing a manual peephole
-pass.
+Hm, I wonder how many other drivers do this. It may be worth auditing
+all current MODULE_SOFTDEP() users to see if there are others also
+using it to mean harddep (i.e., it's actually a non-optional
+dependency) rather than softdep. Something to add on my todo list.
 
-Or am I just massively biased from all the layman following of what
-kind of our gl/vk/compute compiler people are doing on a daily basis?
--Daniel
-
->
-> Regards,
-> Christian.
->
-> >
-> > BR,
-> > Jani.
-> >
-> >
-> >>> Signed-off-by: Bernard Zhao <bernard@vivo.com>
-> >> Applied.  thanks.
-> >>
-> >> Alex
-> >>
-> >>> ---
-> >>>   drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c | 4 ++--
-> >>>   drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c | 4 ++--
-> >>>   drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c | 4 ++--
-> >>>   3 files changed, 6 insertions(+), 6 deletions(-)
-> >>>
-> >>> diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c b/drivers/gpu/drm/=
-amd/amdgpu/gmc_v6_0.c
-> >>> index b205039..66cd078 100644
-> >>> --- a/drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c
-> >>> +++ b/drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c
-> >>> @@ -175,10 +175,10 @@ static int gmc_v6_0_mc_load_microcode(struct am=
-dgpu_device *adev)
-> >>>          amdgpu_ucode_print_mc_hdr(&hdr->header);
-> >>>
-> >>>          adev->gmc.fw_version =3D le32_to_cpu(hdr->header.ucode_versi=
-on);
-> >>> -       regs_size =3D le32_to_cpu(hdr->io_debug_size_bytes) / (4 * 2)=
-;
-> >>> +       regs_size =3D le32_to_cpu(hdr->io_debug_size_bytes) >> 3;
-> >>>          new_io_mc_regs =3D (const __le32 *)
-> >>>                  (adev->gmc.fw->data + le32_to_cpu(hdr->io_debug_arra=
-y_offset_bytes));
-> >>> -       ucode_size =3D le32_to_cpu(hdr->header.ucode_size_bytes) / 4;
-> >>> +       ucode_size =3D le32_to_cpu(hdr->header.ucode_size_bytes) >> 2=
-;
-> >>>          new_fw_data =3D (const __le32 *)
-> >>>                  (adev->gmc.fw->data + le32_to_cpu(hdr->header.ucode_=
-array_offset_bytes));
-> >>>
-> >>> diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c b/drivers/gpu/drm/=
-amd/amdgpu/gmc_v7_0.c
-> >>> index 9da9596..ca26d63 100644
-> >>> --- a/drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c
-> >>> +++ b/drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c
-> >>> @@ -193,10 +193,10 @@ static int gmc_v7_0_mc_load_microcode(struct am=
-dgpu_device *adev)
-> >>>          amdgpu_ucode_print_mc_hdr(&hdr->header);
-> >>>
-> >>>          adev->gmc.fw_version =3D le32_to_cpu(hdr->header.ucode_versi=
-on);
-> >>> -       regs_size =3D le32_to_cpu(hdr->io_debug_size_bytes) / (4 * 2)=
-;
-> >>> +       regs_size =3D le32_to_cpu(hdr->io_debug_size_bytes) >> 3;
-> >>>          io_mc_regs =3D (const __le32 *)
-> >>>                  (adev->gmc.fw->data + le32_to_cpu(hdr->io_debug_arra=
-y_offset_bytes));
-> >>> -       ucode_size =3D le32_to_cpu(hdr->header.ucode_size_bytes) / 4;
-> >>> +       ucode_size =3D le32_to_cpu(hdr->header.ucode_size_bytes) >> 2=
-;
-> >>>          fw_data =3D (const __le32 *)
-> >>>                  (adev->gmc.fw->data + le32_to_cpu(hdr->header.ucode_=
-array_offset_bytes));
-> >>>
-> >>> diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c b/drivers/gpu/drm/=
-amd/amdgpu/gmc_v8_0.c
-> >>> index 27d83204..295039c 100644
-> >>> --- a/drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c
-> >>> +++ b/drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c
-> >>> @@ -318,10 +318,10 @@ static int gmc_v8_0_tonga_mc_load_microcode(str=
-uct amdgpu_device *adev)
-> >>>          amdgpu_ucode_print_mc_hdr(&hdr->header);
-> >>>
-> >>>          adev->gmc.fw_version =3D le32_to_cpu(hdr->header.ucode_versi=
-on);
-> >>> -       regs_size =3D le32_to_cpu(hdr->io_debug_size_bytes) / (4 * 2)=
-;
-> >>> +       regs_size =3D le32_to_cpu(hdr->io_debug_size_bytes) >> 3;
-> >>>          io_mc_regs =3D (const __le32 *)
-> >>>                  (adev->gmc.fw->data + le32_to_cpu(hdr->io_debug_arra=
-y_offset_bytes));
-> >>> -       ucode_size =3D le32_to_cpu(hdr->header.ucode_size_bytes) / 4;
-> >>> +       ucode_size =3D le32_to_cpu(hdr->header.ucode_size_bytes) >> 2=
-;
-> >>>          fw_data =3D (const __le32 *)
-> >>>                  (adev->gmc.fw->data + le32_to_cpu(hdr->header.ucode_=
-array_offset_bytes));
-> >>>
-> >>> --
-> >>> 2.7.4
-> >>>
-> >>> _______________________________________________
-> >>> amd-gfx mailing list
-> >>> amd-gfx@lists.freedesktop.org
-> >>> https://nam11.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fl=
-ists.freedesktop.org%2Fmailman%2Flistinfo%2Famd-gfx&amp;data=3D02%7C01%7Cch=
-ristian.koenig%40amd.com%7C1e91f7edcfe0473b0d7008d7e11074a8%7C3dd8961fe4884=
-e608e11a82d994e183d%7C0%7C0%7C637225333103893889&amp;sdata=3DVDJlEY2%2Bl1SS=
-O8Fw1dYqqPFqQtyHpsxQ0Tm7iVOgJQY%3D&amp;reserved=3D0
-> >> _______________________________________________
-> >> dri-devel mailing list
-> >> dri-devel@lists.freedesktop.org
-> >> https://nam11.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fli=
-sts.freedesktop.org%2Fmailman%2Flistinfo%2Fdri-devel&amp;data=3D02%7C01%7Cc=
-hristian.koenig%40amd.com%7C1e91f7edcfe0473b0d7008d7e11074a8%7C3dd8961fe488=
-4e608e11a82d994e183d%7C0%7C0%7C637225333103893889&amp;sdata=3DEpqRRbCiksur%=
-2BjMlVQplExuJsmw6UPODhyBOutOVukw%3D&amp;reserved=3D0
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-
-
-
---=20
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+Jessica
