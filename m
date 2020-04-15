@@ -7,42 +7,43 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF93BC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:51:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AB7BC2BB85
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1FE520775
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:51:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F23120775
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:51:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895957AbgDOJvE (ORCPT
+        id S2895970AbgDOJvO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 05:51:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51886 "EHLO
+        Wed, 15 Apr 2020 05:51:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2895891AbgDOJtz (ORCPT
+        by vger.kernel.org with ESMTP id S2895900AbgDOJuB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 05:49:55 -0400
+        Wed, 15 Apr 2020 05:50:01 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB2D7C0610D6;
-        Wed, 15 Apr 2020 02:49:53 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AAF6C061A0C;
+        Wed, 15 Apr 2020 02:50:01 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jOeg2-0005tL-6Y; Wed, 15 Apr 2020 11:49:50 +0200
+        id 1jOefz-0005rO-1R; Wed, 15 Apr 2020 11:49:47 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id CC2CB1C0081;
-        Wed, 15 Apr 2020 11:49:49 +0200 (CEST)
-Date:   Wed, 15 Apr 2020 09:49:49 -0000
-From:   "tip-bot2 for Tony Luck" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 7ACFF1C0081;
+        Wed, 15 Apr 2020 11:49:46 +0200 (CEST)
+Date:   Wed, 15 Apr 2020 09:49:46 -0000
+From:   "tip-bot2 for Borislav Petkov" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: ras/core] x86/mce: Rename "first" function as "early"
-Cc:     Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@suse.de>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200214222720.13168-2-tony.luck@intel.com>
-References: <20200214222720.13168-2-tony.luck@intel.com>
+Subject: [tip: ras/core] x86/mce: Fixup exception only for the correct MCEs
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@suse.de>,
+        Tony Luck <tony.luck@intel.com>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200407163414.18058-10-bp@alien8.de>
+References: <20200407163414.18058-10-bp@alien8.de>
 MIME-Version: 1.0
-Message-ID: <158694418938.28353.14495297521999305514.tip-bot2@tip-bot2>
+Message-ID: <158694418608.28353.4166689107383983190.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -58,93 +59,99 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the ras/core branch of tip:
 
-Commit-ID:     c9c6d216ed28be6e2c91e3651af169eca284813a
-Gitweb:        https://git.kernel.org/tip/c9c6d216ed28be6e2c91e3651af169eca284813a
-Author:        Tony Luck <tony.luck@intel.com>
-AuthorDate:    Fri, 14 Feb 2020 14:27:14 -08:00
+Commit-ID:     1df73b2131e3b33d518609769636b41ce00212de
+Gitweb:        https://git.kernel.org/tip/1df73b2131e3b33d518609769636b41ce00212de
+Author:        Borislav Petkov <bp@suse.de>
+AuthorDate:    Tue, 07 Apr 2020 13:49:58 +02:00
 Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Tue, 14 Apr 2020 15:55:01 +02:00
+CommitterDate: Tue, 14 Apr 2020 16:01:49 +02:00
 
-x86/mce: Rename "first" function as "early"
+x86/mce: Fixup exception only for the correct MCEs
 
-It isn't going to be first on the notifier chain when the CEC is moved
-to be a normal user of the notifier chain.
+The severity grading code returns IN_KERNEL_RECOV error context for
+errors which have happened in kernel space but from which the kernel can
+recover. Whether the recovery can happen is determined by the exception
+table entry having as handler ex_handler_fault() and which has been
+declared at build time using _ASM_EXTABLE_FAULT().
 
-Fix the enum for the MCE_PRIO symbols to list them in reverse order so
-that the compiler can give them numbers from low to high priority. Add
-an entry for MCE_PRIO_CEC as the highest priority.
+IN_KERNEL_RECOV is used in mce_severity_intel() to lookup the
+corresponding error severity in the severities table.
 
- [ bp: Use passive voice, add comments. ]
+However, the mapping back from error severity to whether the error is
+IN_KERNEL_RECOV is ambiguous and in the very paranoid case - which
+might not be possible right now - but be better safe than sorry later,
+an exception fixup could be attempted for another MCE whose address
+is in the exception table and has the proper severity. Which would be
+unfortunate, to say the least.
 
-Signed-off-by: Tony Luck <tony.luck@intel.com>
+Therefore, mark such MCEs explicitly as MCE_IN_KERNEL_RECOV so that the
+recovery attempt is done only for them.
+
+Document the whole handling, while at it, as it is not trivial.
+
+Reported-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Borislav Petkov <bp@suse.de>
 Tested-by: Tony Luck <tony.luck@intel.com>
-Link: https://lkml.kernel.org/r/20200214222720.13168-2-tony.luck@intel.com
+Link: https://lkml.kernel.org/r/20200407163414.18058-10-bp@alien8.de
 ---
- arch/x86/include/asm/mce.h     | 16 +++++++++-------
- arch/x86/kernel/cpu/mce/core.c | 10 +++++-----
- 2 files changed, 14 insertions(+), 12 deletions(-)
+ arch/x86/include/asm/mce.h         |  1 +
+ arch/x86/kernel/cpu/mce/core.c     | 15 +++++++++++++--
+ arch/x86/kernel/cpu/mce/severity.c |  6 +++++-
+ 3 files changed, 19 insertions(+), 3 deletions(-)
 
 diff --git a/arch/x86/include/asm/mce.h b/arch/x86/include/asm/mce.h
-index 83b6dda..689ac6e 100644
+index 5f04a24..c598aaa 100644
 --- a/arch/x86/include/asm/mce.h
 +++ b/arch/x86/include/asm/mce.h
-@@ -144,14 +144,16 @@ struct mce_log_buffer {
- 	struct mce entry[];
- };
+@@ -136,6 +136,7 @@
+ #define	MCE_HANDLED_NFIT	BIT_ULL(3)
+ #define	MCE_HANDLED_EDAC	BIT_ULL(4)
+ #define	MCE_HANDLED_MCELOG	BIT_ULL(5)
++#define MCE_IN_KERNEL_RECOV	BIT_ULL(6)
  
-+/* Highest last */
- enum mce_notifier_prios {
--	MCE_PRIO_FIRST		= INT_MAX,
--	MCE_PRIO_UC		= INT_MAX - 1,
--	MCE_PRIO_EXTLOG		= INT_MAX - 2,
--	MCE_PRIO_NFIT		= INT_MAX - 3,
--	MCE_PRIO_EDAC		= INT_MAX - 4,
--	MCE_PRIO_MCELOG		= 1,
--	MCE_PRIO_LOWEST		= 0,
-+	MCE_PRIO_LOWEST,
-+	MCE_PRIO_MCELOG,
-+	MCE_PRIO_EDAC,
-+	MCE_PRIO_NFIT,
-+	MCE_PRIO_EXTLOG,
-+	MCE_PRIO_UC,
-+	MCE_PRIO_EARLY,
-+	MCE_PRIO_CEC
- };
- 
- struct notifier_block;
+ /*
+  * This structure contains all data related to the MCE log.  Also
 diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-index a6009ef..43b1519 100644
+index 4efe6c1..02e1f16 100644
 --- a/arch/x86/kernel/cpu/mce/core.c
 +++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -559,7 +559,7 @@ static bool cec_add_mce(struct mce *m)
- 	return false;
+@@ -1331,8 +1331,19 @@ void notrace do_machine_check(struct pt_regs *regs, long error_code)
+ 		local_irq_disable();
+ 		ist_end_non_atomic();
+ 	} else {
+-		if (!fixup_exception(regs, X86_TRAP_MC, error_code, 0))
+-			mce_panic("Failed kernel mode recovery", &m, msg);
++		/*
++		 * Handle an MCE which has happened in kernel space but from
++		 * which the kernel can recover: ex_has_fault_handler() has
++		 * already verified that the rIP at which the error happened is
++		 * a rIP from which the kernel can recover (by jumping to
++		 * recovery code specified in _ASM_EXTABLE_FAULT()) and the
++		 * corresponding exception handler which would do that is the
++		 * proper one.
++		 */
++		if (m.kflags & MCE_IN_KERNEL_RECOV) {
++			if (!fixup_exception(regs, X86_TRAP_MC, error_code, 0))
++				mce_panic("Failed kernel mode recovery", &m, msg);
++		}
+ 	}
+ 
+ out_ist:
+diff --git a/arch/x86/kernel/cpu/mce/severity.c b/arch/x86/kernel/cpu/mce/severity.c
+index 87bcdc6..e1da619 100644
+--- a/arch/x86/kernel/cpu/mce/severity.c
++++ b/arch/x86/kernel/cpu/mce/severity.c
+@@ -213,8 +213,12 @@ static int error_context(struct mce *m)
+ {
+ 	if ((m->cs & 3) == 3)
+ 		return IN_USER;
+-	if (mc_recoverable(m->mcgstatus) && ex_has_fault_handler(m->ip))
++
++	if (mc_recoverable(m->mcgstatus) && ex_has_fault_handler(m->ip)) {
++		m->kflags |= MCE_IN_KERNEL_RECOV;
+ 		return IN_KERNEL_RECOV;
++	}
++
+ 	return IN_KERNEL;
  }
  
--static int mce_first_notifier(struct notifier_block *nb, unsigned long val,
-+static int mce_early_notifier(struct notifier_block *nb, unsigned long val,
- 			      void *data)
- {
- 	struct mce *m = (struct mce *)data;
-@@ -580,9 +580,9 @@ static int mce_first_notifier(struct notifier_block *nb, unsigned long val,
- 	return NOTIFY_DONE;
- }
- 
--static struct notifier_block first_nb = {
--	.notifier_call	= mce_first_notifier,
--	.priority	= MCE_PRIO_FIRST,
-+static struct notifier_block early_nb = {
-+	.notifier_call	= mce_early_notifier,
-+	.priority	= MCE_PRIO_EARLY,
- };
- 
- static int uc_decode_notifier(struct notifier_block *nb, unsigned long val,
-@@ -2041,7 +2041,7 @@ __setup("mce", mcheck_enable);
- int __init mcheck_init(void)
- {
- 	mcheck_intel_therm_init();
--	mce_register_decode_chain(&first_nb);
-+	mce_register_decode_chain(&early_nb);
- 	mce_register_decode_chain(&mce_uc_nb);
- 	mce_register_decode_chain(&mce_default_nb);
- 	mcheck_vendor_init_severity();
