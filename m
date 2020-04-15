@@ -2,137 +2,514 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92797C3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:43:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9EEAC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:44:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7116D20857
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:43:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Rzm5dxhT"
+	by mail.kernel.org (Postfix) with ESMTP id 9C1832076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:44:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586961845;
+	bh=Q3U1hQDxy6sLQJ5wofpO1tuM+QzKGrul6grkAhNw/78=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=YHSKnmWMkWru19+eeSu0TRcolAdWSHa/VYz/NZzCkL9LHfpHC3aXqO/F4OvQhMsX9
+	 TCgamTuRK8kAlQOOwJmD7bws6jLgB35q9tkSOtlWRIb61xT57Z6CacVXuG5ZKQdXGD
+	 W+ZJymqnSAD4PUk9xf72CExA6yOGHG8Imcfd3tgM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S370902AbgDOOnv (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:43:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40808 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2634584AbgDOOmW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 10:42:22 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86E69C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 07:42:22 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id 188so1565364pgj.13
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 07:42:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=TrCr8YaKtrXKuZI1mDLlJ9OwmvLg/1PUlN/6+Ie7Iy0=;
-        b=Rzm5dxhTeaUONGsH972GQ1cAaKsulUeSHXueDBEsqI8cmXTh3SCPNcNqjQ5CFDTa5h
-         EBQ9soIZStcseclUh0yP5zlUIowfh0ce0sZYGy/PfzX/U+/NGIrjEh3eABab7h+60/hz
-         pgsokVn1zTw/hG3mJPqkplXu3r554x7uKaTXB0r0q3T6r1ELTx5v9wViytUbbto8Q8Ip
-         dpym/NWKqOLMvWLZOorTFDWkgr536ve61EELqLbC0ALfHW0VWLJHXG9ZAzadzRLExZCW
-         X2qP2xQy66PsBltBjdCkqzG3vbqeK2UOlflEoG9zaYgGLAsb6H997UH8MDClWBTP/Uka
-         +rlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=TrCr8YaKtrXKuZI1mDLlJ9OwmvLg/1PUlN/6+Ie7Iy0=;
-        b=aqJed+NzxvdDqPV2KGI2bsUQnL8O1DJVi6XPlG6jnb91ukKA0bHR0yNX+AwzuR/pMz
-         8QMO9whsBjOVIgHlOQwM82eNO4xlBkjnH4tWHIR6P8aOJmTf69LZUBlDwOZiXESCuIy8
-         JdI/9sbyG2//BFp5mhQLZihrQwjZRn/8aj2lFmqz7BBEZjaXZ8S+ou36jQevvhRbOQgi
-         U5bTI8i5qXKCpv09YYXCjpZR5XtXvSK3NWXHmc6VtAXlAlgV4J74J/DM30XvQUghvO5i
-         9wxGH35wi4qTckCqeKvEtWE3iQL9h8Ne4nPnYpudF+hzNyWuDmhczOWe370EK3j3inQp
-         OZFg==
-X-Gm-Message-State: AGi0PuaXLw/YlnbxL/EzO4XskUOJozoaq9tbv18RCWDXbhkn90D2ca9f
-        dQxxqcLdp78xLiBVmacTxWirWw==
-X-Google-Smtp-Source: APiQypKrD/31MKHUWmycbWqZm3NAXgiF4vyGNvf1olANylF0PjsMdQ5ZiArHj6E665hYlxTSD05JxQ==
-X-Received: by 2002:aa7:8d97:: with SMTP id i23mr27432269pfr.325.1586961741436;
-        Wed, 15 Apr 2020 07:42:21 -0700 (PDT)
-Received: from google.com ([2620:15c:2ce:0:9efe:9f1:9267:2b27])
-        by smtp.gmail.com with ESMTPSA id i15sm2199851pfo.195.2020.04.15.07.42.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2020 07:42:20 -0700 (PDT)
-Date:   Wed, 15 Apr 2020 07:42:17 -0700
-From:   Fangrui Song <maskray@google.com>
-To:     Ilie Halip <ilie.halip@gmail.com>
-Cc:     linux-riscv@lists.infradead.org,
-        Jordan Rupprecht <rupprecht@google.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mao Han <han_mao@c-sky.com>, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH v2] riscv: fix vdso build with lld
-Message-ID: <20200415144217.cxxdfeeepzgikp4n@google.com>
-References: <20200415142959.25673-1-ilie.halip@gmail.com>
+        id S2636779AbgDOOoC (ORCPT
+        <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 10:44:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45410 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2392068AbgDOOc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 10:32:58 -0400
+Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0E1A214AF;
+        Wed, 15 Apr 2020 14:32:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586961171;
+        bh=Q3U1hQDxy6sLQJ5wofpO1tuM+QzKGrul6grkAhNw/78=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=l5kf8quJRLSP9N43Xk8NmfPIQFFjFMFz+93fapYXm1laMczCqQV2EdEJfIJpGKSup
+         sIqgFSz/rbPcVFYi0Kd3xhz7LLH/xT6qvLF7xXL3zdGjPA7XNC2HI8is4NbUc3qaKw
+         1tGXiuV6Hry6aRjZso//aHyLNLQ+RGRuz3c38Gk4=
+Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
+        (envelope-from <mchehab@kernel.org>)
+        id 1jOj5t-006kO9-48; Wed, 15 Apr 2020 16:32:49 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        David Howells <dhowells@redhat.com>, linux-cachefs@redhat.com
+Subject: [PATCH 06/34] docs: filesystems: caching/cachefiles.txt: convert to ReST
+Date:   Wed, 15 Apr 2020 16:32:19 +0200
+Message-Id: <a69606f9893919a11d8971620fc1399c31152733.1586960617.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.25.2
+In-Reply-To: <cover.1586960617.git.mchehab+huawei@kernel.org>
+References: <cover.1586960617.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200415142959.25673-1-ilie.halip@gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-15, Ilie Halip wrote:
->When building with the LLVM linker this error occurrs:
->    LD      arch/riscv/kernel/vdso/vdso-syms.o
->  ld.lld: error: no input files
->
->This happens because the lld treats -R as an alias to -rpath, as opposed
->to ld where -R means --just-symbols.
->
->Use the long option name for compatibility between the two.
->
->Link: https://github.com/ClangBuiltLinux/linux/issues/805
->Reported-by: Dmitry Golovin <dima@golovin.in>
->Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
->Signed-off-by: Ilie Halip <ilie.halip@gmail.com>
->
->---
->Changed in v2:
->  * a comment line dropped, another one slightly reworded
->  * added Nick's Reviewed-by
->---
-> arch/riscv/kernel/vdso/Makefile | 6 +++---
-> 1 file changed, 3 insertions(+), 3 deletions(-)
->
->diff --git a/arch/riscv/kernel/vdso/Makefile b/arch/riscv/kernel/vdso/Makefile
->index 33b16f4212f7..a4ee3a0e7d20 100644
->--- a/arch/riscv/kernel/vdso/Makefile
->+++ b/arch/riscv/kernel/vdso/Makefile
->@@ -33,15 +33,15 @@ $(obj)/vdso.so.dbg: $(src)/vdso.lds $(obj-vdso) FORCE
-> 	$(call if_changed,vdsold)
->
-> # We also create a special relocatable object that should mirror the symbol
->-# table and layout of the linked DSO.  With ld -R we can then refer to
->-# these symbols in the kernel code rather than hand-coded addresses.
->+# table and layout of the linked DSO. With ld --just-symbols we can then
->+# refer to these symbols in the kernel code rather than hand-coded addresses.
->
-> SYSCFLAGS_vdso.so.dbg = -shared -s -Wl,-soname=linux-vdso.so.1 \
-> 	-Wl,--build-id -Wl,--hash-style=both
-> $(obj)/vdso-dummy.o: $(src)/vdso.lds $(obj)/rt_sigreturn.o FORCE
-> 	$(call if_changed,vdsold)
->
->-LDFLAGS_vdso-syms.o := -r -R
->+LDFLAGS_vdso-syms.o := -r --just-symbols
-> $(obj)/vdso-syms.o: $(obj)/vdso-dummy.o FORCE
-> 	$(call if_changed,ld)
->
->-- 
->2.17.1
+- Add a SPDX header;
+- Adjust document title;
+- Mark literal blocks as such;
+- Add table markups;
+- Comment out text ToC for html/pdf output;
+- Add lists markups;
+- Add it to filesystems/caching/index.rst.
 
-https://lore.kernel.org/linux-riscv/20200402175354.pzhzhumlqsjk66nu@google.com/
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ .../{cachefiles.txt => cachefiles.rst}        | 139 ++++++++----------
+ Documentation/filesystems/caching/index.rst   |   1 +
+ MAINTAINERS                                   |   2 +-
+ fs/cachefiles/Kconfig                         |   4 +-
+ 4 files changed, 65 insertions(+), 81 deletions(-)
+ rename Documentation/filesystems/caching/{cachefiles.txt => cachefiles.rst} (90%)
 
-Reviewed-by: Fangrui Song <maskray@google.com>
+diff --git a/Documentation/filesystems/caching/cachefiles.txt b/Documentation/filesystems/caching/cachefiles.rst
+similarity index 90%
+rename from Documentation/filesystems/caching/cachefiles.txt
+rename to Documentation/filesystems/caching/cachefiles.rst
+index 28aefcbb1442..65d3db476765 100644
+--- a/Documentation/filesystems/caching/cachefiles.txt
++++ b/Documentation/filesystems/caching/cachefiles.rst
+@@ -1,8 +1,10 @@
+-	       ===============================================
+-	       CacheFiles: CACHE ON ALREADY MOUNTED FILESYSTEM
+-	       ===============================================
++.. SPDX-License-Identifier: GPL-2.0
+ 
+-Contents:
++===============================================
++CacheFiles: CACHE ON ALREADY MOUNTED FILESYSTEM
++===============================================
++
++.. Contents:
+ 
+  (*) Overview.
+ 
+@@ -27,8 +29,8 @@ Contents:
+  (*) Debugging.
+ 
+ 
+-========
+-OVERVIEW
++
++Overview
+ ========
+ 
+ CacheFiles is a caching backend that's meant to use as a cache a directory on
+@@ -58,8 +60,8 @@ spare space and automatically contract when the set of data requires more
+ space.
+ 
+ 
+-============
+-REQUIREMENTS
++
++Requirements
+ ============
+ 
+ The use of CacheFiles and its daemon requires the following features to be
+@@ -79,84 +81,70 @@ It is strongly recommended that the "dir_index" option is enabled on Ext3
+ filesystems being used as a cache.
+ 
+ 
+-=============
+-CONFIGURATION
++Configuration
+ =============
+ 
+ The cache is configured by a script in /etc/cachefilesd.conf.  These commands
+ set up cache ready for use.  The following script commands are available:
+ 
+- (*) brun <N>%
+- (*) bcull <N>%
+- (*) bstop <N>%
+- (*) frun <N>%
+- (*) fcull <N>%
+- (*) fstop <N>%
+-
++ brun <N>%, bcull <N>%, bstop <N>%, frun <N>%, fcull <N>%, fstop <N>%
+ 	Configure the culling limits.  Optional.  See the section on culling
+ 	The defaults are 7% (run), 5% (cull) and 1% (stop) respectively.
+ 
+ 	The commands beginning with a 'b' are file space (block) limits, those
+ 	beginning with an 'f' are file count limits.
+ 
+- (*) dir <path>
+-
++ dir <path>
+ 	Specify the directory containing the root of the cache.  Mandatory.
+ 
+- (*) tag <name>
+-
++ tag <name>
+ 	Specify a tag to FS-Cache to use in distinguishing multiple caches.
+ 	Optional.  The default is "CacheFiles".
+ 
+- (*) debug <mask>
+-
++ debug <mask>
+ 	Specify a numeric bitmask to control debugging in the kernel module.
+ 	Optional.  The default is zero (all off).  The following values can be
+ 	OR'd into the mask to collect various information:
+ 
++		==	=================================================
+ 		1	Turn on trace of function entry (_enter() macros)
+ 		2	Turn on trace of function exit (_leave() macros)
+ 		4	Turn on trace of internal debug points (_debug())
++		==	=================================================
+ 
+-	This mask can also be set through sysfs, eg:
++	This mask can also be set through sysfs, eg::
+ 
+ 		echo 5 >/sys/modules/cachefiles/parameters/debug
+ 
+ 
+-==================
+-STARTING THE CACHE
++Starting the Cache
+ ==================
+ 
+ The cache is started by running the daemon.  The daemon opens the cache device,
+ configures the cache and tells it to begin caching.  At that point the cache
+ binds to fscache and the cache becomes live.
+ 
+-The daemon is run as follows:
++The daemon is run as follows::
+ 
+ 	/sbin/cachefilesd [-d]* [-s] [-n] [-f <configfile>]
+ 
+ The flags are:
+ 
+- (*) -d
+-
++ ``-d``
+ 	Increase the debugging level.  This can be specified multiple times and
+ 	is cumulative with itself.
+ 
+- (*) -s
+-
++ ``-s``
+ 	Send messages to stderr instead of syslog.
+ 
+- (*) -n
+-
++ ``-n``
+ 	Don't daemonise and go into background.
+ 
+- (*) -f <configfile>
+-
++ ``-f <configfile>``
+ 	Use an alternative configuration file rather than the default one.
+ 
+ 
+-===============
+-THINGS TO AVOID
++Things to Avoid
+ ===============
+ 
+ Do not mount other things within the cache as this will cause problems.  The
+@@ -179,8 +167,7 @@ Do not chmod files in the cache.  The module creates things with minimal
+ permissions to prevent random users being able to access them directly.
+ 
+ 
+-=============
+-CACHE CULLING
++Cache Culling
+ =============
+ 
+ The cache may need culling occasionally to make space.  This involves
+@@ -192,27 +179,21 @@ Cache culling is done on the basis of the percentage of blocks and the
+ percentage of files available in the underlying filesystem.  There are six
+ "limits":
+ 
+- (*) brun
+- (*) frun
+-
++ brun, frun
+      If the amount of free space and the number of available files in the cache
+      rises above both these limits, then culling is turned off.
+ 
+- (*) bcull
+- (*) fcull
+-
++ bcull, fcull
+      If the amount of available space or the number of available files in the
+      cache falls below either of these limits, then culling is started.
+ 
+- (*) bstop
+- (*) fstop
+-
++ bstop, fstop
+      If the amount of available space or the number of available files in the
+      cache falls below either of these limits, then no further allocation of
+      disk space or files is permitted until culling has raised things above
+      these limits again.
+ 
+-These must be configured thusly:
++These must be configured thusly::
+ 
+ 	0 <= bstop < bcull < brun < 100
+ 	0 <= fstop < fcull < frun < 100
+@@ -226,16 +207,14 @@ started as soon as space is made in the table.  Objects will be skipped if
+ their atimes have changed or if the kernel module says it is still using them.
+ 
+ 
+-===============
+-CACHE STRUCTURE
++Cache Structure
+ ===============
+ 
+ The CacheFiles module will create two directories in the directory it was
+ given:
+ 
+- (*) cache/
+-
+- (*) graveyard/
++ * cache/
++ * graveyard/
+ 
+ The active cache objects all reside in the first directory.  The CacheFiles
+ kernel module moves any retired or culled objects that it can't simply unlink
+@@ -261,10 +240,10 @@ If an object has children, then it will be represented as a directory.
+ Immediately in the representative directory are a collection of directories
+ named for hash values of the child object keys with an '@' prepended.  Into
+ this directory, if possible, will be placed the representations of the child
+-objects:
++objects::
+ 
+-	INDEX     INDEX      INDEX                             DATA FILES
+-	========= ========== ================================= ================
++	 /INDEX    /INDEX     /INDEX                            /DATA FILES
++	/=========/==========/=================================/================
+ 	cache/@4a/I03nfs/@30/Ji000000000000000--fHg8hi8400
+ 	cache/@4a/I03nfs/@30/Ji000000000000000--fHg8hi8400/@75/Es0g000w...DB1ry
+ 	cache/@4a/I03nfs/@30/Ji000000000000000--fHg8hi8400/@75/Es0g000w...N22ry
+@@ -275,7 +254,7 @@ If the key is so long that it exceeds NAME_MAX with the decorations added on to
+ it, then it will be cut into pieces, the first few of which will be used to
+ make a nest of directories, and the last one of which will be the objects
+ inside the last directory.  The names of the intermediate directories will have
+-'+' prepended:
++'+' prepended::
+ 
+ 	J1223/@23/+xy...z/+kl...m/Epqr
+ 
+@@ -288,11 +267,13 @@ To handle this, CacheFiles will use a suitably printable filename directly and
+ "base-64" encode ones that aren't directly suitable.  The two versions of
+ object filenames indicate the encoding:
+ 
++	===============	===============	===============
+ 	OBJECT TYPE	PRINTABLE	ENCODED
+ 	===============	===============	===============
+ 	Index		"I..."		"J..."
+ 	Data		"D..."		"E..."
+ 	Special		"S..."		"T..."
++	===============	===============	===============
+ 
+ Intermediate directories are always "@" or "+" as appropriate.
+ 
+@@ -307,8 +288,7 @@ Note that CacheFiles will erase from the cache any file it doesn't recognise or
+ any file of an incorrect type (such as a FIFO file or a device file).
+ 
+ 
+-==========================
+-SECURITY MODEL AND SELINUX
++Security Model and SELinux
+ ==========================
+ 
+ CacheFiles is implemented to deal properly with the LSM security features of
+@@ -331,26 +311,26 @@ When the CacheFiles module is asked to bind to its cache, it:
+ 
+  (1) Finds the security label attached to the root cache directory and uses
+      that as the security label with which it will create files.  By default,
+-     this is:
++     this is::
+ 
+ 	cachefiles_var_t
+ 
+  (2) Finds the security label of the process which issued the bind request
+-     (presumed to be the cachefilesd daemon), which by default will be:
++     (presumed to be the cachefilesd daemon), which by default will be::
+ 
+ 	cachefilesd_t
+ 
+      and asks LSM to supply a security ID as which it should act given the
+-     daemon's label.  By default, this will be:
++     daemon's label.  By default, this will be::
+ 
+ 	cachefiles_kernel_t
+ 
+      SELinux transitions the daemon's security ID to the module's security ID
+-     based on a rule of this form in the policy.
++     based on a rule of this form in the policy::
+ 
+ 	type_transition <daemon's-ID> kernel_t : process <module's-ID>;
+ 
+-     For instance:
++     For instance::
+ 
+ 	type_transition cachefilesd_t kernel_t : process cachefiles_kernel_t;
+ 
+@@ -370,7 +350,7 @@ There are policy source files available in:
+ 
+ 	http://people.redhat.com/~dhowells/fscache/cachefilesd-0.8.tar.bz2
+ 
+-and later versions.  In that tarball, see the files:
++and later versions.  In that tarball, see the files::
+ 
+ 	cachefilesd.te
+ 	cachefilesd.fc
+@@ -379,7 +359,7 @@ and later versions.  In that tarball, see the files:
+ They are built and installed directly by the RPM.
+ 
+ If a non-RPM based system is being used, then copy the above files to their own
+-directory and run:
++directory and run::
+ 
+ 	make -f /usr/share/selinux/devel/Makefile
+ 	semodule -i cachefilesd.pp
+@@ -394,7 +374,7 @@ an auxiliary policy must be installed to label the alternate location of the
+ cache.
+ 
+ For instructions on how to add an auxiliary policy to enable the cache to be
+-located elsewhere when SELinux is in enforcing mode, please see:
++located elsewhere when SELinux is in enforcing mode, please see::
+ 
+ 	/usr/share/doc/cachefilesd-*/move-cache.txt
+ 
+@@ -402,8 +382,7 @@ When the cachefilesd rpm is installed; alternatively, the document can be found
+ in the sources.
+ 
+ 
+-==================
+-A NOTE ON SECURITY
++A Note on Security
+ ==================
+ 
+ CacheFiles makes use of the split security in the task_struct.  It allocates
+@@ -445,17 +424,18 @@ for CacheFiles to run in a context of a specific security label, or to create
+ files and directories with another security label.
+ 
+ 
+-=======================
+-STATISTICAL INFORMATION
++Statistical Information
+ =======================
+ 
+-If FS-Cache is compiled with the following option enabled:
++If FS-Cache is compiled with the following option enabled::
+ 
+ 	CONFIG_CACHEFILES_HISTOGRAM=y
+ 
+ then it will gather certain statistics and display them through a proc file.
+ 
+- (*) /proc/fs/cachefiles/histogram
++ /proc/fs/cachefiles/histogram
++
++     ::
+ 
+ 	cat /proc/fs/cachefiles/histogram
+ 	JIFS  SECS  LOOKUPS   MKDIRS    CREATES
+@@ -465,36 +445,39 @@ then it will gather certain statistics and display them through a proc file.
+      between 0 jiffies and HZ-1 jiffies a variety of tasks took to run.  The
+      columns are as follows:
+ 
++	=======		=======================================================
+ 	COLUMN		TIME MEASUREMENT
+ 	=======		=======================================================
+ 	LOOKUPS		Length of time to perform a lookup on the backing fs
+ 	MKDIRS		Length of time to perform a mkdir on the backing fs
+ 	CREATES		Length of time to perform a create on the backing fs
++	=======		=======================================================
+ 
+      Each row shows the number of events that took a particular range of times.
+      Each step is 1 jiffy in size.  The JIFS column indicates the particular
+      jiffy range covered, and the SECS field the equivalent number of seconds.
+ 
+ 
+-=========
+-DEBUGGING
++Debugging
+ =========
+ 
+ If CONFIG_CACHEFILES_DEBUG is enabled, the CacheFiles facility can have runtime
+-debugging enabled by adjusting the value in:
++debugging enabled by adjusting the value in::
+ 
+ 	/sys/module/cachefiles/parameters/debug
+ 
+ This is a bitmask of debugging streams to enable:
+ 
++	=======	=======	===============================	=======================
+ 	BIT	VALUE	STREAM				POINT
+ 	=======	=======	===============================	=======================
+ 	0	1	General				Function entry trace
+ 	1	2					Function exit trace
+ 	2	4					General
++	=======	=======	===============================	=======================
+ 
+ The appropriate set of values should be OR'd together and the result written to
+-the control file.  For example:
++the control file.  For example::
+ 
+ 	echo $((1|4|8)) >/sys/module/cachefiles/parameters/debug
+ 
+diff --git a/Documentation/filesystems/caching/index.rst b/Documentation/filesystems/caching/index.rst
+index 75492b7c8ea0..a2cf35f89e28 100644
+--- a/Documentation/filesystems/caching/index.rst
++++ b/Documentation/filesystems/caching/index.rst
+@@ -8,5 +8,6 @@ Filesystem Caching
+ 
+    fscache
+    object
++   cachefiles
+    netfs-api
+    operations
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 58725773cec4..015a5119cfae 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3730,7 +3730,7 @@ CACHEFILES: FS-CACHE BACKEND FOR CACHING ON MOUNTED FILESYSTEMS
+ M:	David Howells <dhowells@redhat.com>
+ L:	linux-cachefs@redhat.com (moderated for non-subscribers)
+ S:	Supported
+-F:	Documentation/filesystems/caching/cachefiles.txt
++F:	Documentation/filesystems/caching/cachefiles.rst
+ F:	fs/cachefiles/
+ 
+ CADENCE MIPI-CSI2 BRIDGES
+diff --git a/fs/cachefiles/Kconfig b/fs/cachefiles/Kconfig
+index ae559ed5b3b3..ff9ca55a9ae9 100644
+--- a/fs/cachefiles/Kconfig
++++ b/fs/cachefiles/Kconfig
+@@ -8,7 +8,7 @@ config CACHEFILES
+ 	  filesystems - primarily networking filesystems - thus allowing fast
+ 	  local disk to enhance the speed of slower devices.
+ 
+-	  See Documentation/filesystems/caching/cachefiles.txt for more
++	  See Documentation/filesystems/caching/cachefiles.rst for more
+ 	  information.
+ 
+ config CACHEFILES_DEBUG
+@@ -36,5 +36,5 @@ config CACHEFILES_HISTOGRAM
+ 	  bouncing between CPUs.  On the other hand, the histogram may be
+ 	  useful for debugging purposes.  Saying 'N' here is recommended.
+ 
+-	  See Documentation/filesystems/caching/cachefiles.txt for more
++	  See Documentation/filesystems/caching/cachefiles.rst for more
+ 	  information.
+-- 
+2.25.2
+
