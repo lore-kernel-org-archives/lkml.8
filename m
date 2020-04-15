@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7416FC2BB55
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:57:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B05CC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:57:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4509E208FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:57:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEB652137B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:57:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586951854;
-	bh=zcjOvUCT85bEb9F0JG20QA/GI5+xjX+Y9XXT4eiJ2bs=;
+	s=default; t=1586951858;
+	bh=l7ekFKtaYoWG4FL2fqCcuTI64us+m53O/B1Hpmin2sw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ycyt38RjNoVZOunlqqWHFciNDsIPyjCrRkIKQSBV3Bfxz5JyRYE7bUOZATGrvEWI4
-	 StPuTHBEt82JyagqlCAxTBVskyX7Zdo1YcIp40iVqdYAAKCt+scjPg6sF7C4ETlAp3
-	 pDJv/Gp6GEUrBNcyNRrX4hFboy/yWNx5lDvxcLtM=
+	b=bNj5W80UXaBkVjwKf33t8X+9JG5R67hmxpKuK1o4hgmJ8yeO09dscSBhNSazlBM25
+	 p3zpTWM4+MgLUWa518eo4rSbf6nzk3HRTDpLwVNmu9ycF0BcoK9j0HZqXQBO1NPN3F
+	 5s6w0+HayRAqckmJK9pX4p52BYF7LpgTW7bvmUFw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2897970AbgDOL50 (ORCPT
+        id S2409675AbgDOL5h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:57:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41304 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 07:57:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409286AbgDOLqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:46:21 -0400
+        id S2409283AbgDOLqU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:46:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E3A621569;
-        Wed, 15 Apr 2020 11:46:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86D8720732;
+        Wed, 15 Apr 2020 11:46:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951181;
-        bh=zcjOvUCT85bEb9F0JG20QA/GI5+xjX+Y9XXT4eiJ2bs=;
+        s=default; t=1586951180;
+        bh=l7ekFKtaYoWG4FL2fqCcuTI64us+m53O/B1Hpmin2sw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AIxYfeJ2MgTZG0NVdCbD5i91j8s+u5VKAhEHdFZnz++th8srQDh4hsW+5A+fvx5pH
-         oVX/o/8/2H4CoB3Bz84/v0akvej/V9D8cSxSO0CXHC0gop5XAM7VAcg3YtoUItnSQz
-         41zRO8bvhJuUPzvprzER6hbVzJMw5iuO4TdthXLI=
+        b=HPA6ShFvVBcit+w+QDFIAQPVLNtYd1x5YPn8MsyDR5eHvg0UJ9g/ZaNFZqixilSMg
+         2ab5plHWoqCv6XE/304zzvD+XMDHSB8mO1UoiIlem3KSkhEUAcFyA734NkjFBOvowi
+         Z3iKkFHv1SVzS1BwIPD6E1WPnRmzQD27QJtqH9BE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+Cc:     Adrian Huang <ahuang12@lenovo.com>, Joerg Roedel <jroedel@suse.de>,
         Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.4 84/84] f2fs: fix to wait all node page writeback
-Date:   Wed, 15 Apr 2020 07:44:41 -0400
-Message-Id: <20200415114442.14166-84-sashal@kernel.org>
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 5.4 83/84] iommu/amd: Fix the configuration of GCR3 table root pointer
+Date:   Wed, 15 Apr 2020 07:44:40 -0400
+Message-Id: <20200415114442.14166-83-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114442.14166-1-sashal@kernel.org>
 References: <20200415114442.14166-1-sashal@kernel.org>
@@ -59,56 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Adrian Huang <ahuang12@lenovo.com>
 
-[ Upstream commit dc5a941223edd803f476a153abd950cc3a83c3e1 ]
+[ Upstream commit c20f36534666e37858a14e591114d93cc1be0d34 ]
 
-There is a race condition that we may miss to wait for all node pages
-writeback, fix it.
+The SPA of the GCR3 table root pointer[51:31] masks 20 bits. However,
+this requires 21 bits (Please see the AMD IOMMU specification).
+This leads to the potential failure when the bit 51 of SPA of
+the GCR3 table root pointer is 1'.
 
-- fsync()				- shrink
- - f2fs_do_sync_file
-					 - __write_node_page
-					  - set_page_writeback(page#0)
-					  : remove DIRTY/TOWRITE flag
-  - f2fs_fsync_node_pages
-  : won't find page #0 as TOWRITE flag was removeD
-  - f2fs_wait_on_node_pages_writeback
-  : wont' wait page #0 writeback as it was not in fsync_node_list list.
-					   - f2fs_add_fsync_node_entry
-
-Fixes: 50fa53eccf9f ("f2fs: fix to avoid broken of dnode block list")
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Adrian Huang <ahuang12@lenovo.com>
+Fixes: 52815b75682e2 ("iommu/amd: Add support for IOMMUv2 domain mode")
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/node.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/iommu/amd_iommu_types.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
-index 8b66bc4c004b6..f14401a77d601 100644
---- a/fs/f2fs/node.c
-+++ b/fs/f2fs/node.c
-@@ -1562,15 +1562,16 @@ static int __write_node_page(struct page *page, bool atomic, bool *submitted,
- 	if (atomic && !test_opt(sbi, NOBARRIER))
- 		fio.op_flags |= REQ_PREFLUSH | REQ_FUA;
+diff --git a/drivers/iommu/amd_iommu_types.h b/drivers/iommu/amd_iommu_types.h
+index daeabd98c60e2..0679896b9e2e1 100644
+--- a/drivers/iommu/amd_iommu_types.h
++++ b/drivers/iommu/amd_iommu_types.h
+@@ -348,7 +348,7 @@
  
--	set_page_writeback(page);
--	ClearPageError(page);
--
-+	/* should add to global list before clearing PAGECACHE status */
- 	if (f2fs_in_warm_node_list(sbi, page)) {
- 		seq = f2fs_add_fsync_node_entry(sbi, page);
- 		if (seq_id)
- 			*seq_id = seq;
- 	}
+ #define DTE_GCR3_VAL_A(x)	(((x) >> 12) & 0x00007ULL)
+ #define DTE_GCR3_VAL_B(x)	(((x) >> 15) & 0x0ffffULL)
+-#define DTE_GCR3_VAL_C(x)	(((x) >> 31) & 0xfffffULL)
++#define DTE_GCR3_VAL_C(x)	(((x) >> 31) & 0x1fffffULL)
  
-+	set_page_writeback(page);
-+	ClearPageError(page);
-+
- 	fio.old_blkaddr = ni.blk_addr;
- 	f2fs_do_write_node_page(nid, &fio);
- 	set_node_addr(sbi, &ni, fio.new_blkaddr, is_fsync_dnode(page));
+ #define DTE_GCR3_INDEX_A	0
+ #define DTE_GCR3_INDEX_B	1
 -- 
 2.20.1
 
