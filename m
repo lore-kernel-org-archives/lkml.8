@@ -2,128 +2,75 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA3DC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D003DC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:29:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E0A820936
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:29:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586953742;
-	bh=yZRJLnU4ErUB6W+jl5bb662sTl3GJZbnFAsMghgK1O4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0vU/5ARyo/A2YtrOq09QlhdkQiOb8a1iU99KArTmqtqU+bzKvBrBQZOuIEBhNd2lC
-	 S2B4teLsusKSficFevkAmjzsbI3/IsgHplf5qCUjcMdZ2nRu732DVsi420eTLzms0e
-	 j+bpF9Uybc/84NRz8ojcK7tY8cUFPPGZEOCwg09M=
+	by mail.kernel.org (Postfix) with ESMTP id A019E20936
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:29:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UYHl/yOv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S369377AbgDOM3A (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:29:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38270 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409125AbgDOLpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:45:05 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D4C02137B;
-        Wed, 15 Apr 2020 11:45:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951105;
-        bh=yZRJLnU4ErUB6W+jl5bb662sTl3GJZbnFAsMghgK1O4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JhD9O9eD8hK7vfx3CuZwgXPgHLg++G45LFXntPY1DCLU9Oz+e3ZQgje0H+sxuJRRJ
-         D5mCzK6WnEPnn1hlITuBC7FJTgHhwzWA4+MrxSpbh894Q08Y1QXaUQ5Dbd6Tqoz/Wg
-         0CkFoTChmuay/OcukbaUcH57sfMegUeeYpX2sKCY=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johan Jonker <jbx6244@gmail.com>, Heiko Stuebner <heiko@sntech.de>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 20/84] ARM: dts: rockchip: fix lvds-encoder ports subnode for rk3188-bqedison2qc
-Date:   Wed, 15 Apr 2020 07:43:37 -0400
-Message-Id: <20200415114442.14166-20-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415114442.14166-1-sashal@kernel.org>
-References: <20200415114442.14166-1-sashal@kernel.org>
+        id S2409914AbgDOM3G (ORCPT
+        <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:29:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41510 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2409123AbgDOLpE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:45:04 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16A44C061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 04:45:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=F0TfwyL8cSoc6EbuwXOEHdNQToqkZSCb0ZeMj1NZt6Y=; b=UYHl/yOv/tYtFT7s05SpGr0Aep
+        u9OV4QmhxJFMBHGAUrYs9WCxILLk/xtgHJcKEiySuB8o1WxrsdkSxCkUlcRNr5GGWx08t9HfDCWk5
+        FazvGzuDeGDbBm9dQxXRitKQugJmnIvbqyBeh9yADPznN71P4reB7nVPhd7YsxZ8ZM+5CU/TTd+9a
+        cPQdthDc1qTYLZkcs0AzpN16uh9nVCkMLrqrRmT3P+i5El3nNFgK6LoChcXovkvOgwHPiIvZxyFon
+        AmCPSXDSbgSj+S56//tUTQFMlsaqznAb74qvIAUqxlzznob8LFl3T1w7P5JBLeKbjBWVVIA8Y9f9B
+        c7IYsvHQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jOgTD-0000yb-V3; Wed, 15 Apr 2020 11:44:44 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A0A8730066E;
+        Wed, 15 Apr 2020 13:44:41 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 57FA12038BC5A; Wed, 15 Apr 2020 13:44:41 +0200 (CEST)
+Date:   Wed, 15 Apr 2020 13:44:41 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Muchun Song <songmuchun@bytedance.com>, mingo@redhat.com,
+        mingo@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] seqlock: Use while instead of if+goto in
+ __read_seqcount_begin
+Message-ID: <20200415114441.GG20730@hirez.programming.kicks-ass.net>
+References: <20200409134558.90863-1-songmuchun@bytedance.com>
+ <20200410115658.GB24814@willie-the-truck>
+ <20200414110516.GO20713@hirez.programming.kicks-ass.net>
+ <20200414134830.GB28750@willie-the-truck>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200414134830.GB28750@willie-the-truck>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Jonker <jbx6244@gmail.com>
+On Tue, Apr 14, 2020 at 02:48:31PM +0100, Will Deacon wrote:
+> Oh yeah, good thinking. Didn't spot that one, but it should work well as
+> long as smp_cond_load_relaxed() always implies a control dependency (surely
+> it has to?)
 
-[ Upstream commit 1a7e99599dffd836fcb720cdc0eaf3cd43d7af4a ]
-
-A test with the command below gives this error:
-
-arch/arm/boot/dts/rk3188-bqedison2qc.dt.yaml: lvds-encoder:
-'ports' is a required property
-
-Fix error by adding a ports wrapper for port@0 and port@1
-inside the 'lvds-encoder' node for rk3188-bqedison2qc.
-
-make ARCH=arm dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/
-bridge/lvds-codec.yaml
-
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-Link: https://lore.kernel.org/r/20200316174647.5598-1-jbx6244@gmail.com
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/rk3188-bqedison2qc.dts | 27 ++++++++++++++----------
- 1 file changed, 16 insertions(+), 11 deletions(-)
-
-diff --git a/arch/arm/boot/dts/rk3188-bqedison2qc.dts b/arch/arm/boot/dts/rk3188-bqedison2qc.dts
-index 8afb2fd5d9f1b..66a0ff196eb1f 100644
---- a/arch/arm/boot/dts/rk3188-bqedison2qc.dts
-+++ b/arch/arm/boot/dts/rk3188-bqedison2qc.dts
-@@ -58,20 +58,25 @@
- 
- 	lvds-encoder {
- 		compatible = "ti,sn75lvds83", "lvds-encoder";
--		#address-cells = <1>;
--		#size-cells = <0>;
- 
--		port@0 {
--			reg = <0>;
--			lvds_in_vop0: endpoint {
--				remote-endpoint = <&vop0_out_lvds>;
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+
-+				lvds_in_vop0: endpoint {
-+					remote-endpoint = <&vop0_out_lvds>;
-+				};
- 			};
--		};
- 
--		port@1 {
--			reg = <1>;
--			lvds_out_panel: endpoint {
--				remote-endpoint = <&panel_in_lvds>;
-+			port@1 {
-+				reg = <1>;
-+
-+				lvds_out_panel: endpoint {
-+					remote-endpoint = <&panel_in_lvds>;
-+				};
- 			};
- 		};
- 	};
--- 
-2.20.1
-
+Well, yeah, but then you know as well as I do that compilers are dodgy
+pieces of crap which are out to get you. Still, I too can't see how it
+could mess this up.
