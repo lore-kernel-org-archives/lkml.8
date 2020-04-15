@@ -2,709 +2,183 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1DA8C2BB85
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:53:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 256A3C38A2B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:54:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3126208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:53:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586969636;
-	bh=d0maaho1HljAyZxrBF/Y0MKWe+9/IRHQHs1rdMMn4mk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jLm+sY8LrM59ox9ip6bjxZTpfC/SlRDh4UC8f+iJD1CJhMxlg3RtNfG/JsA06itLh
-	 aCfoeiE0wM1uqzHUcE7Yx1ZNKfSuZlqrX/xJr8NPVBZe1M7iuHV43uSpOOP02Az1Jp
-	 WryklShyt3vn62mefoVZlLfkHcVg7TedjrBN0yjo=
+	by mail.kernel.org (Postfix) with ESMTP id 0496E20737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:54:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lh/qkSRR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1416292AbgDOQxy (ORCPT
+        id S1416299AbgDOQx7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 12:53:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55420 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2410542AbgDOQxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 12:53:24 -0400
-Received: from localhost.localdomain (unknown [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58B1D20857;
-        Wed, 15 Apr 2020 16:53:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586969602;
-        bh=d0maaho1HljAyZxrBF/Y0MKWe+9/IRHQHs1rdMMn4mk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pmxogfk0nmrARjyu7CTm63f6H3JcBqpKcpVTZkYR2L3BX7szsMuI1FOD632hm968T
-         O9lEP6u+Pi9oY2VIdp6BoLQFZbrBJzjbWWOISOYZzB+jg2TpOkKvJbhaDPTl3NFSDl
-         DmSiRza8X0gybXsJMQOhaw+5yiC2gSjfBsp37uzI=
-From:   Will Deacon <will@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-arch@vger.kernel.org, kernel-team@android.com,
-        Will Deacon <will@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: [PATCH v3 12/12] gcov: Remove old GCC 3.4 support
-Date:   Wed, 15 Apr 2020 17:52:18 +0100
-Message-Id: <20200415165218.20251-13-will@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415165218.20251-1-will@kernel.org>
-References: <20200415165218.20251-1-will@kernel.org>
+        Wed, 15 Apr 2020 12:53:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33148 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2410562AbgDOQxe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 12:53:34 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 138FEC061A0C;
+        Wed, 15 Apr 2020 09:53:34 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id k1so715036wrx.4;
+        Wed, 15 Apr 2020 09:53:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=qSFqdR3FlK/8YD5+KmU963ChViLz5asYpHXALyUz8zg=;
+        b=lh/qkSRR2q0rz21SvhbeddtEnTG1gL1C7Gj5sszZ4sH8jTdjW3VlqYEi+vIv32XaU2
+         jWyKcqYVvB3SvWmPyxiBg9Sm6pH/Bx3aeVyu53sEilxvdom7MHjt33q2OVQuXwyNyFIT
+         2gFKs/oggqM8xv2RjYn5jzXMYUAP2kcXGn1nYAZHib/mNxFgdUVNs+GOPQ8JLmwNdeWt
+         p8nzcbH59ineFrIxCWxQP3Z33Tv4HxErZhllM+QrPa2f1I6BpjLJ4m/Qz5oks4wB+0hp
+         RhcrCKE8mtBtQNUgCf3x24cNlcSfzm3AdsKKzEFACAugcwNPVvp/kFI4o7hVIALhSJv/
+         gocw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=qSFqdR3FlK/8YD5+KmU963ChViLz5asYpHXALyUz8zg=;
+        b=X7abJsYx5qQJ7lpUbXeDQGCN0f63LVLi04MZkeiXSHVK446JBTewiciX8idP7e0Yxr
+         nGeK1y1oN4isoRJCOwGPagWEJJ82j6NBITa4vbrMQF/8sRRhGMqHdTqnp6Vg2MHPA6vj
+         YbIUumKaCMO1sEa9JghtEN40PxJHUh1PQVD8UJ9yX0BYQvJsYSFkVGTZ3xPIdVWssPcL
+         9550R6188CBjYZrCibN+m3PDX9N+S5TzQ38iAnP9G1tk9R/VtO5t7htcSfsX1/0+LDo9
+         PAI4cUPz/gJ5mkFe/uQT4qV7lk6VYzFgMagmWReArDGu1BZN1M8Q3tLxT+SLK8kyQj4F
+         bcqg==
+X-Gm-Message-State: AGi0PubSFQJBSoA5ofwzuIwOofc8oXy5BTAX1p9kmtxrfCxqX2gZcpD/
+        Bf5NAIMP6RjFp/u2yq6sC1IDDmaJCJ8=
+X-Google-Smtp-Source: APiQypJiIITjjK6VWhGWP47Ot8DOs4nOVL2YTiDNOOs0rPCSib2Bz7Qd+lEzdaR51D9N5nxP+ZySiw==
+X-Received: by 2002:a5d:5304:: with SMTP id e4mr16191827wrv.87.1586969612335;
+        Wed, 15 Apr 2020 09:53:32 -0700 (PDT)
+Received: from [192.168.0.104] (p5B3F6CCC.dip0.t-ipconnect.de. [91.63.108.204])
+        by smtp.gmail.com with ESMTPSA id 132sm131870wmc.47.2020.04.15.09.53.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Apr 2020 09:53:31 -0700 (PDT)
+Subject: Re: [PATCH v9 0/6] Add battery charger driver support for MP2629
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald <pmeerw@pmeerw.net>,
+        Sebastian Reichel <sre@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+References: <20200415162030.16414-1-sravanhome@gmail.com>
+ <CAHp75VerGG0_J+fHrZfwJRa3EHtGuz-pJbD7zwoXN2jfO7dszA@mail.gmail.com>
+From:   saravanan sekar <sravanhome@gmail.com>
+Message-ID: <dea1d71e-af5d-356a-79c0-38f343f54dfd@gmail.com>
+Date:   Wed, 15 Apr 2020 18:53:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHp75VerGG0_J+fHrZfwJRa3EHtGuz-pJbD7zwoXN2jfO7dszA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kernel requires at least GCC 4.8 in order to build, and so there is
-no need to cater for the pre-4.7 gcov format.
+Hi Andy,
 
-Remove the obsolete code.
+On 15/04/20 6:40 pm, Andy Shevchenko wrote:
+> On Wed, Apr 15, 2020 at 7:20 PM Saravanan Sekar <sravanhome@gmail.com> wrote:
+>> changes in v9:
+>>   - fixed review comments in mp2629 power supply such as resource based
+>>     iio channel, replace workqueue by threaded irq, irq get with "_optional"
+>>
+> May I ask you why you are ignoring my tag?
+> If you don't want to have your patches reviewed / applied, just don't send them.
 
-Acked-by: Peter Oberparleiter <oberpar@linux.ibm.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Will Deacon <will@kernel.org>
----
- kernel/gcov/Kconfig   |  24 --
- kernel/gcov/Makefile  |   3 +-
- kernel/gcov/gcc_3_4.c | 573 ------------------------------------------
- 3 files changed, 1 insertion(+), 599 deletions(-)
- delete mode 100644 kernel/gcov/gcc_3_4.c
 
-diff --git a/kernel/gcov/Kconfig b/kernel/gcov/Kconfig
-index 3941a9c48f83..feaad597b3f4 100644
---- a/kernel/gcov/Kconfig
-+++ b/kernel/gcov/Kconfig
-@@ -51,28 +51,4 @@ config GCOV_PROFILE_ALL
- 	larger and run slower. Also be sure to exclude files from profiling
- 	which are not linked to the kernel image to prevent linker errors.
- 
--choice
--	prompt "Specify GCOV format"
--	depends on GCOV_KERNEL
--	depends on CC_IS_GCC
--	---help---
--	The gcov format is usually determined by the GCC version, and the
--	default is chosen according to your GCC version. However, there are
--	exceptions where format changes are integrated in lower-version GCCs.
--	In such a case, change this option to adjust the format used in the
--	kernel accordingly.
--
--config GCOV_FORMAT_3_4
--	bool "GCC 3.4 format"
--	depends on GCC_VERSION < 40700
--	---help---
--	Select this option to use the format defined by GCC 3.4.
--
--config GCOV_FORMAT_4_7
--	bool "GCC 4.7 format"
--	---help---
--	Select this option to use the format defined by GCC 4.7.
--
--endchoice
--
- endmenu
-diff --git a/kernel/gcov/Makefile b/kernel/gcov/Makefile
-index d66a74b0f100..16f8ecc7d882 100644
---- a/kernel/gcov/Makefile
-+++ b/kernel/gcov/Makefile
-@@ -2,6 +2,5 @@
- ccflags-y := -DSRCTREE='"$(srctree)"' -DOBJTREE='"$(objtree)"'
- 
- obj-y := base.o fs.o
--obj-$(CONFIG_GCOV_FORMAT_3_4) += gcc_base.o gcc_3_4.o
--obj-$(CONFIG_GCOV_FORMAT_4_7) += gcc_base.o gcc_4_7.o
-+obj-$(CONFIG_CC_IS_GCC) += gcc_base.o gcc_4_7.o
- obj-$(CONFIG_CC_IS_CLANG) += clang.o
-diff --git a/kernel/gcov/gcc_3_4.c b/kernel/gcov/gcc_3_4.c
-deleted file mode 100644
-index acb83558e5df..000000000000
---- a/kernel/gcov/gcc_3_4.c
-+++ /dev/null
-@@ -1,573 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--/*
-- *  This code provides functions to handle gcc's profiling data format
-- *  introduced with gcc 3.4. Future versions of gcc may change the gcov
-- *  format (as happened before), so all format-specific information needs
-- *  to be kept modular and easily exchangeable.
-- *
-- *  This file is based on gcc-internal definitions. Functions and data
-- *  structures are defined to be compatible with gcc counterparts.
-- *  For a better understanding, refer to gcc source: gcc/gcov-io.h.
-- *
-- *    Copyright IBM Corp. 2009
-- *    Author(s): Peter Oberparleiter <oberpar@linux.vnet.ibm.com>
-- *
-- *    Uses gcc-internal data definitions.
-- */
--
--#include <linux/errno.h>
--#include <linux/slab.h>
--#include <linux/string.h>
--#include <linux/seq_file.h>
--#include <linux/vmalloc.h>
--#include "gcov.h"
--
--#define GCOV_COUNTERS		5
--
--static struct gcov_info *gcov_info_head;
--
--/**
-- * struct gcov_fn_info - profiling meta data per function
-- * @ident: object file-unique function identifier
-- * @checksum: function checksum
-- * @n_ctrs: number of values per counter type belonging to this function
-- *
-- * This data is generated by gcc during compilation and doesn't change
-- * at run-time.
-- */
--struct gcov_fn_info {
--	unsigned int ident;
--	unsigned int checksum;
--	unsigned int n_ctrs[];
--};
--
--/**
-- * struct gcov_ctr_info - profiling data per counter type
-- * @num: number of counter values for this type
-- * @values: array of counter values for this type
-- * @merge: merge function for counter values of this type (unused)
-- *
-- * This data is generated by gcc during compilation and doesn't change
-- * at run-time with the exception of the values array.
-- */
--struct gcov_ctr_info {
--	unsigned int	num;
--	gcov_type	*values;
--	void		(*merge)(gcov_type *, unsigned int);
--};
--
--/**
-- * struct gcov_info - profiling data per object file
-- * @version: gcov version magic indicating the gcc version used for compilation
-- * @next: list head for a singly-linked list
-- * @stamp: time stamp
-- * @filename: name of the associated gcov data file
-- * @n_functions: number of instrumented functions
-- * @functions: function data
-- * @ctr_mask: mask specifying which counter types are active
-- * @counts: counter data per counter type
-- *
-- * This data is generated by gcc during compilation and doesn't change
-- * at run-time with the exception of the next pointer.
-- */
--struct gcov_info {
--	unsigned int			version;
--	struct gcov_info		*next;
--	unsigned int			stamp;
--	const char			*filename;
--	unsigned int			n_functions;
--	const struct gcov_fn_info	*functions;
--	unsigned int			ctr_mask;
--	struct gcov_ctr_info		counts[];
--};
--
--/**
-- * gcov_info_filename - return info filename
-- * @info: profiling data set
-- */
--const char *gcov_info_filename(struct gcov_info *info)
--{
--	return info->filename;
--}
--
--/**
-- * gcov_info_version - return info version
-- * @info: profiling data set
-- */
--unsigned int gcov_info_version(struct gcov_info *info)
--{
--	return info->version;
--}
--
--/**
-- * gcov_info_next - return next profiling data set
-- * @info: profiling data set
-- *
-- * Returns next gcov_info following @info or first gcov_info in the chain if
-- * @info is %NULL.
-- */
--struct gcov_info *gcov_info_next(struct gcov_info *info)
--{
--	if (!info)
--		return gcov_info_head;
--
--	return info->next;
--}
--
--/**
-- * gcov_info_link - link/add profiling data set to the list
-- * @info: profiling data set
-- */
--void gcov_info_link(struct gcov_info *info)
--{
--	info->next = gcov_info_head;
--	gcov_info_head = info;
--}
--
--/**
-- * gcov_info_unlink - unlink/remove profiling data set from the list
-- * @prev: previous profiling data set
-- * @info: profiling data set
-- */
--void gcov_info_unlink(struct gcov_info *prev, struct gcov_info *info)
--{
--	if (prev)
--		prev->next = info->next;
--	else
--		gcov_info_head = info->next;
--}
--
--/**
-- * gcov_info_within_module - check if a profiling data set belongs to a module
-- * @info: profiling data set
-- * @mod: module
-- *
-- * Returns true if profiling data belongs module, false otherwise.
-- */
--bool gcov_info_within_module(struct gcov_info *info, struct module *mod)
--{
--	return within_module((unsigned long)info, mod);
--}
--
--/* Symbolic links to be created for each profiling data file. */
--const struct gcov_link gcov_link[] = {
--	{ OBJ_TREE, "gcno" },	/* Link to .gcno file in $(objtree). */
--	{ 0, NULL},
--};
--
--/*
-- * Determine whether a counter is active. Based on gcc magic. Doesn't change
-- * at run-time.
-- */
--static int counter_active(struct gcov_info *info, unsigned int type)
--{
--	return (1 << type) & info->ctr_mask;
--}
--
--/* Determine number of active counters. Based on gcc magic. */
--static unsigned int num_counter_active(struct gcov_info *info)
--{
--	unsigned int i;
--	unsigned int result = 0;
--
--	for (i = 0; i < GCOV_COUNTERS; i++) {
--		if (counter_active(info, i))
--			result++;
--	}
--	return result;
--}
--
--/**
-- * gcov_info_reset - reset profiling data to zero
-- * @info: profiling data set
-- */
--void gcov_info_reset(struct gcov_info *info)
--{
--	unsigned int active = num_counter_active(info);
--	unsigned int i;
--
--	for (i = 0; i < active; i++) {
--		memset(info->counts[i].values, 0,
--		       info->counts[i].num * sizeof(gcov_type));
--	}
--}
--
--/**
-- * gcov_info_is_compatible - check if profiling data can be added
-- * @info1: first profiling data set
-- * @info2: second profiling data set
-- *
-- * Returns non-zero if profiling data can be added, zero otherwise.
-- */
--int gcov_info_is_compatible(struct gcov_info *info1, struct gcov_info *info2)
--{
--	return (info1->stamp == info2->stamp);
--}
--
--/**
-- * gcov_info_add - add up profiling data
-- * @dest: profiling data set to which data is added
-- * @source: profiling data set which is added
-- *
-- * Adds profiling counts of @source to @dest.
-- */
--void gcov_info_add(struct gcov_info *dest, struct gcov_info *source)
--{
--	unsigned int i;
--	unsigned int j;
--
--	for (i = 0; i < num_counter_active(dest); i++) {
--		for (j = 0; j < dest->counts[i].num; j++) {
--			dest->counts[i].values[j] +=
--				source->counts[i].values[j];
--		}
--	}
--}
--
--/* Get size of function info entry. Based on gcc magic. */
--static size_t get_fn_size(struct gcov_info *info)
--{
--	size_t size;
--
--	size = sizeof(struct gcov_fn_info) + num_counter_active(info) *
--	       sizeof(unsigned int);
--	if (__alignof__(struct gcov_fn_info) > sizeof(unsigned int))
--		size = ALIGN(size, __alignof__(struct gcov_fn_info));
--	return size;
--}
--
--/* Get address of function info entry. Based on gcc magic. */
--static struct gcov_fn_info *get_fn_info(struct gcov_info *info, unsigned int fn)
--{
--	return (struct gcov_fn_info *)
--		((char *) info->functions + fn * get_fn_size(info));
--}
--
--/**
-- * gcov_info_dup - duplicate profiling data set
-- * @info: profiling data set to duplicate
-- *
-- * Return newly allocated duplicate on success, %NULL on error.
-- */
--struct gcov_info *gcov_info_dup(struct gcov_info *info)
--{
--	struct gcov_info *dup;
--	unsigned int i;
--	unsigned int active;
--
--	/* Duplicate gcov_info. */
--	active = num_counter_active(info);
--	dup = kzalloc(struct_size(dup, counts, active), GFP_KERNEL);
--	if (!dup)
--		return NULL;
--	dup->version		= info->version;
--	dup->stamp		= info->stamp;
--	dup->n_functions	= info->n_functions;
--	dup->ctr_mask		= info->ctr_mask;
--	/* Duplicate filename. */
--	dup->filename		= kstrdup(info->filename, GFP_KERNEL);
--	if (!dup->filename)
--		goto err_free;
--	/* Duplicate table of functions. */
--	dup->functions = kmemdup(info->functions, info->n_functions *
--				 get_fn_size(info), GFP_KERNEL);
--	if (!dup->functions)
--		goto err_free;
--	/* Duplicate counter arrays. */
--	for (i = 0; i < active ; i++) {
--		struct gcov_ctr_info *ctr = &info->counts[i];
--		size_t size = ctr->num * sizeof(gcov_type);
--
--		dup->counts[i].num = ctr->num;
--		dup->counts[i].merge = ctr->merge;
--		dup->counts[i].values = vmalloc(size);
--		if (!dup->counts[i].values)
--			goto err_free;
--		memcpy(dup->counts[i].values, ctr->values, size);
--	}
--	return dup;
--
--err_free:
--	gcov_info_free(dup);
--	return NULL;
--}
--
--/**
-- * gcov_info_free - release memory for profiling data set duplicate
-- * @info: profiling data set duplicate to free
-- */
--void gcov_info_free(struct gcov_info *info)
--{
--	unsigned int active = num_counter_active(info);
--	unsigned int i;
--
--	for (i = 0; i < active ; i++)
--		vfree(info->counts[i].values);
--	kfree(info->functions);
--	kfree(info->filename);
--	kfree(info);
--}
--
--/**
-- * struct type_info - iterator helper array
-- * @ctr_type: counter type
-- * @offset: index of the first value of the current function for this type
-- *
-- * This array is needed to convert the in-memory data format into the in-file
-- * data format:
-- *
-- * In-memory:
-- *   for each counter type
-- *     for each function
-- *       values
-- *
-- * In-file:
-- *   for each function
-- *     for each counter type
-- *       values
-- *
-- * See gcc source gcc/gcov-io.h for more information on data organization.
-- */
--struct type_info {
--	int ctr_type;
--	unsigned int offset;
--};
--
--/**
-- * struct gcov_iterator - specifies current file position in logical records
-- * @info: associated profiling data
-- * @record: record type
-- * @function: function number
-- * @type: counter type
-- * @count: index into values array
-- * @num_types: number of counter types
-- * @type_info: helper array to get values-array offset for current function
-- */
--struct gcov_iterator {
--	struct gcov_info *info;
--
--	int record;
--	unsigned int function;
--	unsigned int type;
--	unsigned int count;
--
--	int num_types;
--	struct type_info type_info[];
--};
--
--static struct gcov_fn_info *get_func(struct gcov_iterator *iter)
--{
--	return get_fn_info(iter->info, iter->function);
--}
--
--static struct type_info *get_type(struct gcov_iterator *iter)
--{
--	return &iter->type_info[iter->type];
--}
--
--/**
-- * gcov_iter_new - allocate and initialize profiling data iterator
-- * @info: profiling data set to be iterated
-- *
-- * Return file iterator on success, %NULL otherwise.
-- */
--struct gcov_iterator *gcov_iter_new(struct gcov_info *info)
--{
--	struct gcov_iterator *iter;
--
--	iter = kzalloc(struct_size(iter, type_info, num_counter_active(info)),
--		       GFP_KERNEL);
--	if (iter)
--		iter->info = info;
--
--	return iter;
--}
--
--/**
-- * gcov_iter_free - release memory for iterator
-- * @iter: file iterator to free
-- */
--void gcov_iter_free(struct gcov_iterator *iter)
--{
--	kfree(iter);
--}
--
--/**
-- * gcov_iter_get_info - return profiling data set for given file iterator
-- * @iter: file iterator
-- */
--struct gcov_info *gcov_iter_get_info(struct gcov_iterator *iter)
--{
--	return iter->info;
--}
--
--/**
-- * gcov_iter_start - reset file iterator to starting position
-- * @iter: file iterator
-- */
--void gcov_iter_start(struct gcov_iterator *iter)
--{
--	int i;
--
--	iter->record = 0;
--	iter->function = 0;
--	iter->type = 0;
--	iter->count = 0;
--	iter->num_types = 0;
--	for (i = 0; i < GCOV_COUNTERS; i++) {
--		if (counter_active(iter->info, i)) {
--			iter->type_info[iter->num_types].ctr_type = i;
--			iter->type_info[iter->num_types++].offset = 0;
--		}
--	}
--}
--
--/* Mapping of logical record number to actual file content. */
--#define RECORD_FILE_MAGIC	0
--#define RECORD_GCOV_VERSION	1
--#define RECORD_TIME_STAMP	2
--#define RECORD_FUNCTION_TAG	3
--#define RECORD_FUNCTON_TAG_LEN	4
--#define RECORD_FUNCTION_IDENT	5
--#define RECORD_FUNCTION_CHECK	6
--#define RECORD_COUNT_TAG	7
--#define RECORD_COUNT_LEN	8
--#define RECORD_COUNT		9
--
--/**
-- * gcov_iter_next - advance file iterator to next logical record
-- * @iter: file iterator
-- *
-- * Return zero if new position is valid, non-zero if iterator has reached end.
-- */
--int gcov_iter_next(struct gcov_iterator *iter)
--{
--	switch (iter->record) {
--	case RECORD_FILE_MAGIC:
--	case RECORD_GCOV_VERSION:
--	case RECORD_FUNCTION_TAG:
--	case RECORD_FUNCTON_TAG_LEN:
--	case RECORD_FUNCTION_IDENT:
--	case RECORD_COUNT_TAG:
--		/* Advance to next record */
--		iter->record++;
--		break;
--	case RECORD_COUNT:
--		/* Advance to next count */
--		iter->count++;
--		/* fall through */
--	case RECORD_COUNT_LEN:
--		if (iter->count < get_func(iter)->n_ctrs[iter->type]) {
--			iter->record = 9;
--			break;
--		}
--		/* Advance to next counter type */
--		get_type(iter)->offset += iter->count;
--		iter->count = 0;
--		iter->type++;
--		/* fall through */
--	case RECORD_FUNCTION_CHECK:
--		if (iter->type < iter->num_types) {
--			iter->record = 7;
--			break;
--		}
--		/* Advance to next function */
--		iter->type = 0;
--		iter->function++;
--		/* fall through */
--	case RECORD_TIME_STAMP:
--		if (iter->function < iter->info->n_functions)
--			iter->record = 3;
--		else
--			iter->record = -1;
--		break;
--	}
--	/* Check for EOF. */
--	if (iter->record == -1)
--		return -EINVAL;
--	else
--		return 0;
--}
--
--/**
-- * seq_write_gcov_u32 - write 32 bit number in gcov format to seq_file
-- * @seq: seq_file handle
-- * @v: value to be stored
-- *
-- * Number format defined by gcc: numbers are recorded in the 32 bit
-- * unsigned binary form of the endianness of the machine generating the
-- * file.
-- */
--static int seq_write_gcov_u32(struct seq_file *seq, u32 v)
--{
--	return seq_write(seq, &v, sizeof(v));
--}
--
--/**
-- * seq_write_gcov_u64 - write 64 bit number in gcov format to seq_file
-- * @seq: seq_file handle
-- * @v: value to be stored
-- *
-- * Number format defined by gcc: numbers are recorded in the 32 bit
-- * unsigned binary form of the endianness of the machine generating the
-- * file. 64 bit numbers are stored as two 32 bit numbers, the low part
-- * first.
-- */
--static int seq_write_gcov_u64(struct seq_file *seq, u64 v)
--{
--	u32 data[2];
--
--	data[0] = (v & 0xffffffffUL);
--	data[1] = (v >> 32);
--	return seq_write(seq, data, sizeof(data));
--}
--
--/**
-- * gcov_iter_write - write data for current pos to seq_file
-- * @iter: file iterator
-- * @seq: seq_file handle
-- *
-- * Return zero on success, non-zero otherwise.
-- */
--int gcov_iter_write(struct gcov_iterator *iter, struct seq_file *seq)
--{
--	int rc = -EINVAL;
--
--	switch (iter->record) {
--	case RECORD_FILE_MAGIC:
--		rc = seq_write_gcov_u32(seq, GCOV_DATA_MAGIC);
--		break;
--	case RECORD_GCOV_VERSION:
--		rc = seq_write_gcov_u32(seq, iter->info->version);
--		break;
--	case RECORD_TIME_STAMP:
--		rc = seq_write_gcov_u32(seq, iter->info->stamp);
--		break;
--	case RECORD_FUNCTION_TAG:
--		rc = seq_write_gcov_u32(seq, GCOV_TAG_FUNCTION);
--		break;
--	case RECORD_FUNCTON_TAG_LEN:
--		rc = seq_write_gcov_u32(seq, 2);
--		break;
--	case RECORD_FUNCTION_IDENT:
--		rc = seq_write_gcov_u32(seq, get_func(iter)->ident);
--		break;
--	case RECORD_FUNCTION_CHECK:
--		rc = seq_write_gcov_u32(seq, get_func(iter)->checksum);
--		break;
--	case RECORD_COUNT_TAG:
--		rc = seq_write_gcov_u32(seq,
--			GCOV_TAG_FOR_COUNTER(get_type(iter)->ctr_type));
--		break;
--	case RECORD_COUNT_LEN:
--		rc = seq_write_gcov_u32(seq,
--				get_func(iter)->n_ctrs[iter->type] * 2);
--		break;
--	case RECORD_COUNT:
--		rc = seq_write_gcov_u64(seq,
--			iter->info->counts[iter->type].
--				values[iter->count + get_type(iter)->offset]);
--		break;
--	}
--	return rc;
--}
--- 
-2.26.0.110.g2183baf09c-goog
+Sorry last time it was by mistake. But now I have added in below, if 
+suppose to added in top its my ignorance
 
+>
+>> changes in v8:
+>>   - fixed order of call in probe/remove in iio adc
+>>   - add ABI documentation for mp2629 power supply
+>>
+>> changes in v7:
+>>   - fixed probe/remove order, managed and unmanaged call mix use in adc.
+>>   - Documentation dual license, i2c node with controller address
+>>
+>> Overall looks good to me, FWIW,
+>> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+>>
+>> One question though in reply to patch 4.
+
+
+Please see here, this is first experience of tag in cover letter so just 
+kept here as you gave against v7
+
+>>
+>> changes in v6:
+>>   - removed includes types.h in mfd, of_device.h in adc.
+>>   - fixed review comments parentheses, err check, kstrtouint
+>>
+>> changes in v5:
+>>   - removed platfrom data stored in mfd and directly accessed mfd struct in child
+>>   - fixed spell check and capitalization in mfd and documentation
+>>
+>> changes in v4:
+>>   - fixed capitalization in mfg Kconfig and documentation
+>>
+>> changes in v3:
+>>   - regmap for children passed using platform data and remove mfd driver info
+>>     access directly from children
+>>
+>> changes in v2:
+>>   - removed EXPORT_SYMBOL of register set/get helper
+>>   - regmap bit filed used, fixed other review comments
+>>
+>> This patch series add support for Battery charger control driver for Monolithic
+>> Power System's MP2629 chipset, includes MFD driver for ADC battery & input
+>> power supply measurement and battery charger control driver.
+>>
+>> Thanks,
+>> Saravanan
+>>
+>> Saravanan Sekar (6):
+>>    dt-bindings: mfd: add document bindings for mp2629
+>>    mfd: mp2629: Add support for mps battery charger
+>>    iio: adc: mp2629: Add support for mp2629 ADC driver
+>>    power: supply: Add support for mps mp2629 battery charger
+>>    power: supply: mp2629: Add impedance compenstation config
+>>    MAINTAINERS: Add entry for mp2629 Battery Charger driver
+>>
+>>   .../ABI/testing/sysfs-class-power-mp2629      |   8 +
+>>   .../devicetree/bindings/mfd/mps,mp2629.yaml   |  60 ++
+>>   MAINTAINERS                                   |   5 +
+>>   drivers/iio/adc/Kconfig                       |  10 +
+>>   drivers/iio/adc/Makefile                      |   1 +
+>>   drivers/iio/adc/mp2629_adc.c                  | 208 ++++++
+>>   drivers/mfd/Kconfig                           |   9 +
+>>   drivers/mfd/Makefile                          |   2 +
+>>   drivers/mfd/mp2629.c                          |  86 +++
+>>   drivers/power/supply/Kconfig                  |  10 +
+>>   drivers/power/supply/Makefile                 |   1 +
+>>   drivers/power/supply/mp2629_charger.c         | 667 ++++++++++++++++++
+>>   include/linux/mfd/mp2629.h                    |  28 +
+>>   13 files changed, 1095 insertions(+)
+>>   create mode 100644 Documentation/ABI/testing/sysfs-class-power-mp2629
+>>   create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+>>   create mode 100644 drivers/iio/adc/mp2629_adc.c
+>>   create mode 100644 drivers/mfd/mp2629.c
+>>   create mode 100644 drivers/power/supply/mp2629_charger.c
+>>   create mode 100644 include/linux/mfd/mp2629.h
+>>
+>> --
+>> 2.17.1
+>>
+>
