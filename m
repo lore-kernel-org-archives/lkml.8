@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB14C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:48:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9FC6C3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:48:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35595206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:48:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4659206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:48:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586954929;
-	bh=SLx+8Doplj29R1VJ6jV+nfPg3iJ+iqYQ9SdTzhFzqJ0=;
+	s=default; t=1586954937;
+	bh=HJVDu28gY1/bAP0E/D5bAYl4WxLMLzNvno4dmyQIw/E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y3vk5/bo9Y/Z1bpf/kvJf5dLi+aiR+Ef2jOwyQNWtvyym/WuYzTuiTnMm/6JXQhlf
-	 hp1yg12qGYyguxIb1VWXK4H2QaiJQR0IFj151lX5bqpWsKESZvK9ySb8Zg7gF5Y+Xq
-	 boPbXn2QTAfBJ1gpeOhQMgVWT19ABrNAOCFkEf54=
+	b=da6cKWw9lcWv2mAVBwJtb1ZCiJR2TLOFj6L2uFYTTJ0nVH/eVlV8JgYqG4HXiVP3f
+	 Ha420DHEQQyDS3s39ZC99BS7Sx5jzSQzkYTF7QYf1udCZlfdXUA1GlzKSRciSUWwms
+	 jPeJaZ+28bssvwoDNIopk0lq/pm2x3IEFcaKqvd4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S370308AbgDOMsr (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:48:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34772 "EHLO mail.kernel.org"
+        id S370313AbgDOMs4 (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:48:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408953AbgDOLnF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:43:05 -0400
+        id S2408952AbgDOLnE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:43:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35C6D20775;
-        Wed, 15 Apr 2020 11:43:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBB9220737;
+        Wed, 15 Apr 2020 11:43:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950984;
-        bh=SLx+8Doplj29R1VJ6jV+nfPg3iJ+iqYQ9SdTzhFzqJ0=;
+        s=default; t=1586950983;
+        bh=HJVDu28gY1/bAP0E/D5bAYl4WxLMLzNvno4dmyQIw/E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qJ9ysCC3jZV5gYmbcGWgo+Gc/PDOoyGN6xs9t9P3j5NyiYtL/2/Ry2byzOVXCFAZX
-         hQudjNDI/W1Nz68VjyIAhct5WXTzMhIthWEycPAoD7e/5iqMPtfbjQYZOanX2hXpuk
-         ioUWre9XwnRUUcrXTLUorE27aTTCd/fZoOlRzl54=
+        b=GUsjGYYSA7PFGrQ71q4iLSe54PdeSDF8/M8IJaL+MdnB02mwJRw6D5aCdGuDc3WAJ
+         pSKizkrG/QhSOFguE2tSN8ktLArPpM/fV9Q9XHgHe19s6WE4f4KjjlH9tAJowSQ08j
+         fRXEnVCW5abwRDqNPEf2FoVnbgbWweNpBmLFBavU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.5 032/106] f2fs: fix to show norecovery mount option
-Date:   Wed, 15 Apr 2020 07:41:12 -0400
-Message-Id: <20200415114226.13103-32-sashal@kernel.org>
+Cc:     Michael Roth <mdroth@linux.vnet.ibm.com>, linuxppc-dev@ozlabs.org,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Sasha Levin <sashal@kernel.org>, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.5 031/106] KVM: PPC: Book3S HV: Fix H_CEDE return code for nested guests
+Date:   Wed, 15 Apr 2020 07:41:11 -0400
+Message-Id: <20200415114226.13103-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
 References: <20200415114226.13103-1-sashal@kernel.org>
@@ -58,65 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Michael Roth <mdroth@linux.vnet.ibm.com>
 
-[ Upstream commit a9117eca1de6b738e713d2142126db2cfbf6fb36 ]
+[ Upstream commit 1f50cc1705350a4697923203fedd7d8fb1087fe2 ]
 
-Previously, 'norecovery' mount option will be shown as
-'disable_roll_forward', fix to show original option name correctly.
+The h_cede_tm kvm-unit-test currently fails when run inside an L1 guest
+via the guest/nested hypervisor.
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+  ./run-tests.sh -v
+  ...
+  TESTNAME=h_cede_tm TIMEOUT=90s ACCEL= ./powerpc/run powerpc/tm.elf -smp 2,threads=2 -machine cap-htm=on -append "h_cede_tm"
+  FAIL h_cede_tm (2 tests, 1 unexpected failures)
+
+While the test relates to transactional memory instructions, the actual
+failure is due to the return code of the H_CEDE hypercall, which is
+reported as 224 instead of 0. This happens even when no TM instructions
+are issued.
+
+224 is the value placed in r3 to execute a hypercall for H_CEDE, and r3
+is where the caller expects the return code to be placed upon return.
+
+In the case of guest running under a nested hypervisor, issuing H_CEDE
+causes a return from H_ENTER_NESTED. In this case H_CEDE is
+specially-handled immediately rather than later in
+kvmppc_pseries_do_hcall() as with most other hcalls, but we forget to
+set the return code for the caller, hence why kvm-unit-test sees the
+224 return code and reports an error.
+
+Guest kernels generally don't check the return value of H_CEDE, so
+that likely explains why this hasn't caused issues outside of
+kvm-unit-tests so far.
+
+Fix this by setting r3 to 0 after we finish processing the H_CEDE.
+
+RHBZ: 1778556
+
+Fixes: 4bad77799fed ("KVM: PPC: Book3S HV: Handle hypercalls correctly when nested")
+Cc: linuxppc-dev@ozlabs.org
+Cc: David Gibson <david@gibson.dropbear.id.au>
+Cc: Paul Mackerras <paulus@ozlabs.org>
+Signed-off-by: Michael Roth <mdroth@linux.vnet.ibm.com>
+Reviewed-by: David Gibson <david@gibson.dropbear.id.au>
+Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/f2fs.h  | 1 +
- fs/f2fs/super.c | 7 +++++--
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ arch/powerpc/kvm/book3s_hv.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index b0e0535f7f56a..647f8b31b268b 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -100,6 +100,7 @@ extern const char *f2fs_fault_name[FAULT_MAX];
- #define F2FS_MOUNT_INLINE_XATTR_SIZE	0x00800000
- #define F2FS_MOUNT_RESERVE_ROOT		0x01000000
- #define F2FS_MOUNT_DISABLE_CHECKPOINT	0x02000000
-+#define F2FS_MOUNT_NORECOVERY		0x04000000
- 
- #define F2FS_OPTION(sbi)	((sbi)->mount_opt)
- #define clear_opt(sbi, option)	(F2FS_OPTION(sbi).opt &= ~F2FS_MOUNT_##option)
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index a0a2f46f450dc..b2f8b934d8fc5 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -439,7 +439,7 @@ static int parse_options(struct super_block *sb, char *options)
- 			break;
- 		case Opt_norecovery:
- 			/* this option mounts f2fs with ro */
--			set_opt(sbi, DISABLE_ROLL_FORWARD);
-+			set_opt(sbi, NORECOVERY);
- 			if (!f2fs_readonly(sb))
- 				return -EINVAL;
- 			break;
-@@ -1348,6 +1348,8 @@ static int f2fs_show_options(struct seq_file *seq, struct dentry *root)
- 	}
- 	if (test_opt(sbi, DISABLE_ROLL_FORWARD))
- 		seq_puts(seq, ",disable_roll_forward");
-+	if (test_opt(sbi, NORECOVERY))
-+		seq_puts(seq, ",norecovery");
- 	if (test_opt(sbi, DISCARD))
- 		seq_puts(seq, ",discard");
- 	else
-@@ -3499,7 +3501,8 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
- 		goto reset_checkpoint;
- 
- 	/* recover fsynced data */
--	if (!test_opt(sbi, DISABLE_ROLL_FORWARD)) {
-+	if (!test_opt(sbi, DISABLE_ROLL_FORWARD) &&
-+			!test_opt(sbi, NORECOVERY)) {
- 		/*
- 		 * mount should be failed, when device has readonly mode, and
- 		 * previous checkpoint was not done by clean system shutdown.
+diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
+index ef6aa63b071b3..a1d793b96d2b7 100644
+--- a/arch/powerpc/kvm/book3s_hv.c
++++ b/arch/powerpc/kvm/book3s_hv.c
+@@ -3628,6 +3628,7 @@ int kvmhv_p9_guest_entry(struct kvm_vcpu *vcpu, u64 time_limit,
+ 		if (trap == BOOK3S_INTERRUPT_SYSCALL && !vcpu->arch.nested &&
+ 		    kvmppc_get_gpr(vcpu, 3) == H_CEDE) {
+ 			kvmppc_nested_cede(vcpu);
++			kvmppc_set_gpr(vcpu, 3, 0);
+ 			trap = 0;
+ 		}
+ 	} else {
 -- 
 2.20.1
 
