@@ -2,112 +2,119 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B1B5C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 22:09:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BC07C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 22:15:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AF6D2076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 22:09:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NWwrkLgQ"
+	by mail.kernel.org (Postfix) with ESMTP id 23ABF206E9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 22:15:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731026AbgDOWJA (ORCPT
+        id S1731375AbgDOWPf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 18:09:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53704 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727993AbgDOWHy (ORCPT
+        Wed, 15 Apr 2020 18:15:35 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:41306 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725796AbgDOWPW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 18:07:54 -0400
-Received: from mail-oo1-xc41.google.com (mail-yw1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8700BC061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 15:07:54 -0700 (PDT)
-Received: by mail-oo1-xc41.google.com with SMTP id x17so228991ooa.3
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 15:07:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AO8FQcIBS/InzSZoeDG5+CPMG3oUisZA/X5pOuP5vKs=;
-        b=NWwrkLgQP+I0zsUOocKLhWk4/pd13XLNZZo4NAu1rj4CpSl2oULy3J5lL+MuKsMfi8
-         okI6YaIF50qSPE0pvu3keBgsqlpZufgrH0zsZo5+wSDnF7/7C01jRta8EtEmv112+oSX
-         KBkKlexajWQaQiuluOMmBlZ11aoSFMFRsoNhO8D7Id9L69oaVg2FrLMMX/vnG56eexc7
-         NMulOCOVt36rLyeqoYhrGO6KES0n1PSZeQ/NVN/1UOlhOrGzQzO3UWEDdy5y1tNmuSWv
-         hYYJYI4JaB6sbkqnpJGzHH4PtohC3bYq+lBw0GxnAfAuz3h8e0V3LGz3ByPDRfkaMVAz
-         Q44w==
+        Wed, 15 Apr 2020 18:15:22 -0400
+Received: by mail-qk1-f195.google.com with SMTP id y3so19286298qky.8;
+        Wed, 15 Apr 2020 15:15:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AO8FQcIBS/InzSZoeDG5+CPMG3oUisZA/X5pOuP5vKs=;
-        b=IPu6Np1iX93ks7V8aEnL7/tKMiDdg7dCcuxNS9hWiJ3Zx3/Aookj8OebZ+6lUlFURS
-         lauWUfl04VJSnGGc81UN9q78z5ef+Qn2BGCgNviNnyZeDTgmrXB0pD6fKeKl/Jk+hbUF
-         PT7IDZv10BDLv7MowYdheZeFQQ5sx04HxKUCAhXqOu76Ii2PPneEtP0K0EEDFzMMzmoQ
-         OZhVBWJdDy6Lz3fxA0KKOp47eGydVvRnOos7cAnarXSS4rIxdz7p/Mna9NeOknnJUoRZ
-         zMO+ljfyQ7Q0XdSbxwE1zxP6/rKUYufLbWWWHMFngfsuP0eD8yiCvT4Xif8k7iCZvmw/
-         mBiQ==
-X-Gm-Message-State: AGi0Pub/z85IIZ45h8ej3CDU/g+FBh4jBmveTVMPAWdHZKQ72KGT7BG8
-        I3odozKSMlkTlk5HD4ikYDOb9n77FkE6JfhV3opDSQ==
-X-Google-Smtp-Source: APiQypJPHRBWQswBCsfIxkxlXFaBUB4SFmPRN+miP1DTmokHqJMRVTUBdHdwPOglEoy0vy+uFKvVltmuJeTU3BdAdUE=
-X-Received: by 2002:a4a:df05:: with SMTP id i5mr24869527oou.9.1586988473299;
- Wed, 15 Apr 2020 15:07:53 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LncCRWwsHSyHm2+Q1R5MkVDJxDhecE7946LHPNlHWxE=;
+        b=YiOpi0E4CyKRbRehnzXPgjrX9vshvvDZUBPufwHYeY7uR/gzNciq+szY11K4hNQ1zH
+         dQHgNIm0CPPmVkJyC7/Zmrr6twaJ/enGMtUE8sNNIFLwzo7umJOTV+gORCI2AhhPKMT9
+         uqsLYyOuPI9rgl83eYeADiG2KlvVMgosjT7XVTY+V8HbmypF4XJoSC9T6CtaUAQugFqF
+         yeejp4QreqeDakkhi+JGSklnhLtky/o+9Ai8At/Px3g5D7CrkX5GyjkkUkIt7azqrAxU
+         ozI1WXwn4QpLKuChma6GysElkoX9s/ElG3BvNCQaw67f3lBG1CainFIp7Ewrvrl1k4HQ
+         lkwA==
+X-Gm-Message-State: AGi0PuYskHn8EHLDBX2VGv8Fu0wGBxx1NiejR1p09Y3DduUXxExQq81x
+        uQrKF/Mmvx+pRC1fCQGr1rk=
+X-Google-Smtp-Source: APiQypJsDv1bXLDEpxnZEb5zwIkObKu8f3Si7Aa/hJPgAYvnQd+75LxKQmr2QYWRZnG+xey3DQMsfw==
+X-Received: by 2002:a05:620a:4f2:: with SMTP id b18mr28120143qkh.433.1586988921329;
+        Wed, 15 Apr 2020 15:15:21 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id i20sm13264340qkl.135.2020.04.15.15.15.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2020 15:15:20 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/5] efi: Remove __efistub_global annotation
+Date:   Wed, 15 Apr 2020 18:15:15 -0400
+Message-Id: <20200415221520.2692512-1-nivedita@alum.mit.edu>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-References: <CALAqxLV4rM74wuzuZ+BkUi+keccxkAxv30N4vrFO7CVQ5vnT1A@mail.gmail.com>
- <20200415085348.5511a5fe@gandalf.local.home> <CALAqxLV1A6sOC1GWpFYXeBoDff0+AJgoOYK7NktcTdvX3kvAeg@mail.gmail.com>
- <20200415161424.584d07d3@gandalf.local.home> <CALAqxLU26PVFPSza5GceSF6gTVdzo_2D3G0dBp0KZXvAWFUktA@mail.gmail.com>
- <20200415164116.40564f2c@gandalf.local.home> <CALAqxLW6jqr38bk8pp-Hom2=MLm3coTmzCP8MMfrDvMfx388=Q@mail.gmail.com>
- <20200415174918.154a86d0@gandalf.local.home>
-In-Reply-To: <20200415174918.154a86d0@gandalf.local.home>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Wed, 15 Apr 2020 15:07:42 -0700
-Message-ID: <CALAqxLUMnjAYdnTBNHmzjw3L8qfeZb8UVVaenzxtwN3UxNcWJg@mail.gmail.com>
-Subject: Re: On trace_*_rcuidle functions in modules
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     paulmck@kernel.org, Josh Triplett <josh@joshtriplett.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Todd Kjos <tkjos@google.com>, Stephen Boyd <sboyd@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 2:49 PM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> On Wed, 15 Apr 2020 14:02:04 -0700
-> John Stultz <john.stultz@linaro.org> wrote:
->
-> >
-> > So in my case your concerns may not be a problem, but I guess
-> > generally it might. Though I'd hope the callback would be unregistered
-> > (and whatever waiting for the grace period to complete be done) before
-> > the module removal is complete. But maybe I'm still missing your
-> > point?
->
-> Hmm, you may have just brought up a problem here...
->
-> You're saying that cpu_pm_register_notifier() callers are called from non
-> RCU watching context? If that's the case, we have this:
+This patch series removes the need for annotating global data in the EFI
+stub with __efistub_global for ARM32 and X86.
 
-Wait? what? I don't think I'm saying that.  :) I'm just trying to fix
-a build issue that prevents a driver from being a module since it has
-a trace_*_rcuidle call in it.
+This is done by renaming the .data and .bss sections in the object files
+linked into the EFI stub to .data.efistub and .bss.efistub respectively,
+and including those sections into the compressed kernel's .data section
+using its linker script.
 
-Honestly, I really don't know much about how the cpu pm notifiers
-interact with rcu.  It's just this recent change, which seems
-necessary, now seemingly prevents the driver from being built as a
-module:
-  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=efde2659b0fe835732047357b2902cca14f054d9
+The series is based on efi/next, rebased onto v5.7-rc1, plus two earlier
+fixes for x86 EFI that are queued for v5.7.
 
-Maybe there's a better solution than using trace_*_rcuidle?
+Patches on top of v5.7-rc1:
+In efi/next:
 
-thanks
--john
+Ard Biesheuvel (2):
+      efi: clean up config table description arrays
+      efi: move arch_tables check to caller
+
+Arvind Sankar (19):
+      efi/gop: Remove redundant current_fb_base
+      efi/gop: Move check for framebuffer before con_out
+      efi/gop: Get mode information outside the loop
+      efi/gop: Factor out locating the gop into a function
+      efi/gop: Slightly re-arrange logic of find_gop
+      efi/gop: Move variable declarations into loop block
+      efi/gop: Use helper macros for populating lfb_base
+      efi/gop: Use helper macros for find_bits
+      efi/gop: Remove unreachable code from setup_pixel_info
+      efi/gop: Add prototypes for query_mode and set_mode
+      efi/gop: Allow specifying mode number on command line
+      efi/gop: Allow specifying mode by <xres>x<yres>
+      efi/gop: Allow specifying depth as well as resolution
+      efi/gop: Allow automatically choosing the best mode
+
+Additional:
+Arvind Sankar (2):
+      efi/x86: Move efi stub globals from .bss to .data
+      efi/x86: Always relocate the kernel for EFI handover entry
+
+Arvind Sankar (5):
+  efi/arm: Remove __efistub_global annotation
+  efi/libstub: Factor out relocation checking
+  efi/x86: Remove __efistub_global annotation
+  efi: Kill __efistub_global
+  efi/x86: Check for bad relocations
+
+ arch/arm/boot/compressed/vmlinux.lds.S        |  2 +-
+ arch/x86/boot/compressed/vmlinux.lds.S        |  1 +
+ drivers/firmware/efi/libstub/Makefile         | 43 +++++++++++++------
+ drivers/firmware/efi/libstub/arm-stub.c       |  4 +-
+ .../firmware/efi/libstub/efi-stub-helper.c    | 15 +++----
+ drivers/firmware/efi/libstub/efistub.h        |  6 ---
+ drivers/firmware/efi/libstub/gop.c            |  2 +-
+ drivers/firmware/efi/libstub/x86-stub.c       |  2 +-
+ 8 files changed, 42 insertions(+), 33 deletions(-)
+
+-- 
+2.24.1
+
