@@ -7,118 +7,144 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3113BC2BB85
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:24:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E1B5C2BB85
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E29720768
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:24:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 077E920768
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:25:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MZISFk0+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yAETmibb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895460AbgDOJYe (ORCPT
+        id S2895474AbgDOJZp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 05:24:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47932 "EHLO
+        Wed, 15 Apr 2020 05:25:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2895392AbgDOJYT (ORCPT
+        by vger.kernel.org with ESMTP id S2895464AbgDOJZk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 05:24:19 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46324C061A0F
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 02:24:19 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id x25so16560554wmc.0
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 02:24:19 -0700 (PDT)
+        Wed, 15 Apr 2020 05:25:40 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7762AC061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 02:25:39 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id h9so18242339wrc.8
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 02:25:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=25hsR70J4xkR7QjWib9TX4C/RIJl6X5HgsLKdDMfcIM=;
-        b=MZISFk0+SGdYrIGleUjYyNyFlKlBZtpvcsFKyJMVxKBrgMGYtPYkcBrS4bRdkEp/7t
-         IW0OdNkkEzJjOHq32c8nyyFfVBOA0CWrvJjsIloNh7+9VO5CUroLlbNB3EdfC+VubzHW
-         RKiPdet4ElIC56WiuMenvtixe2coFc0mPjdD569+2OT9S+0GbYhuHmAMDdAJ2/wquaHH
-         afuwBSmcYlb9MymeQAxl6jMcXisGmnphb0nXiXzgHpPoKvx7ynmkS1jh5aDHDA3xUcag
-         t1mwgvkRTAPwn/Ml63NOIpJfKAurHTPzOMenfettsfMf8meyF+86UE6hMxa9KMhNgPe7
-         /dqw==
+        bh=ZWggYGy5+ypMqGqv3DNlvkeDC7Fwyk09CE6tJxrl9As=;
+        b=yAETmibb8HvejiyM/sXx1gWJMBhdkYj+FhYy7xp+PelrTRoY6cWOI7vlWmSSyf3/r8
+         Zs7zbY4OY0HkPENvC3MebqmtVYDArhkyX/g7FTCwfijd4SiDs1/6sbl1jq4MKLPElHnk
+         9VKATFRT9sOJo4mRUK+WBMHugVTceCqQPi1zlKDZVNOSqDSOz+6uTukiwId07cKmWcgp
+         XJxImHct6GIxxb7WyVTTlC6x3xy/LL9RImgVJnr1bV1Gk95SPry4pp++J2dF0JiCW1/i
+         U/8iG7CmRO3gVZGqdupqmJQRzcbF2FVeyYIXOSA2bifkKrKSkYX5BoXstYm34gXq/2wL
+         tN5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to;
-        bh=25hsR70J4xkR7QjWib9TX4C/RIJl6X5HgsLKdDMfcIM=;
-        b=YiAZF7zPxAH9hlDXKURqJY+OQaMAB3Crje/X9iuy9mTw/hU1BTLfcEmnnnvWsXkxhj
-         wRLCIQQl9ZQ4xwCmTjNh3SBjlDgJynl55qlf2KUpL4V04ILl0vj1hm9ZRc+yIcu6RWqP
-         +9chlSsx22B6pKTBNvr6KOrPbpe54prcbe+59Pl1GLN69iUyheY81l8r+VroPG5uV4gR
-         LvbG8BYgFfEYVsGlJB3liNXcsK5uFfufje1xmVjALTWaQGaj30f/BEzk08eOmwrbAOqt
-         x+W6Q4i+oF4kMLN8XMQHi19uedLUOyMTTD07OdETgcFe65S8U19z0/EnazWtxpvXHcwc
-         dQIQ==
-X-Gm-Message-State: AGi0PubHHC9v/za6JEZCKVKl/58ATBWnbvRO/8VvLF4PX0SejfUp8rkm
-        QRlqh2uZEYlWK3tcvc62yUG7RA==
-X-Google-Smtp-Source: APiQypI1L9Xj03pMeY/s2kTnKETE0bYjImrIZAgEBCHLd+qOzGsuktY5U9KyEtfeFWAbhU8Q4g0UeA==
-X-Received: by 2002:a7b:c10d:: with SMTP id w13mr4131241wmi.78.1586942657950;
-        Wed, 15 Apr 2020 02:24:17 -0700 (PDT)
+        bh=ZWggYGy5+ypMqGqv3DNlvkeDC7Fwyk09CE6tJxrl9As=;
+        b=V+Wb0w7Nn8hRtFduu+3alUHhYQM4jurdRe2rp/AA+wakjHd9pDWrK63RAlG2iSAEhQ
+         4YNVKdBU4QM4oZJAzL1Vim+lKjzqpiH66WuXcH1zI1Yo6pkBAaof2LW8QaWwAfdp7lGp
+         hCqp7aB0xexdxyrQjLCt7ujGt7rL4djjdIUOz4CiBN6+jd2tWS1M90Gs+x5SebLGDINz
+         6//2OwP1a3l5SJJr8kPQCSLEQWDW4QnyFUytFPcvhM2nJZ7mC59JMSlRxKRPP/1PsvXn
+         pq7WQ5ZJQq0/TJYldFjd7kcEyF9Apyxiw0yR6K/r1N0plYn0QhoRq0dMrXwGrVqf+ZFI
+         C/7Q==
+X-Gm-Message-State: AGi0PuZ3bDWMhq55TJU7yztM7gm20hJS6gsNXd6KpwA5XFtA2MjPEd3G
+        fzNDkmLrAleJTFv33lfpgaWj8g==
+X-Google-Smtp-Source: APiQypIF43NYr8JHA746c2oer4jXDUVqBd6KdFR7FEBIeVOo3DZguLN98tLGGC6iP9SMBCFc+YgdsA==
+X-Received: by 2002:a5d:658e:: with SMTP id q14mr29224669wru.92.1586942738248;
+        Wed, 15 Apr 2020 02:25:38 -0700 (PDT)
 Received: from dell ([95.149.164.124])
-        by smtp.gmail.com with ESMTPSA id e1sm12258399wrc.12.2020.04.15.02.24.16
+        by smtp.gmail.com with ESMTPSA id h16sm24769457wrw.36.2020.04.15.02.25.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2020 02:24:17 -0700 (PDT)
-Date:   Wed, 15 Apr 2020 10:25:17 +0100
+        Wed, 15 Apr 2020 02:25:37 -0700 (PDT)
+Date:   Wed, 15 Apr 2020 10:26:38 +0100
 From:   Lee Jones <lee.jones@linaro.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Alexander Graf <graf@amazon.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        qemu-devel@nongnu.org
-Subject: Re: [PATCH v6 3/8] mfd: sm501: Use GPIO_LOOKUP_IDX() helper macro
-Message-ID: <20200415092517.GF2167633@dell>
-References: <20200324135328.5796-1-geert+renesas@glider.be>
- <20200324135653.6676-1-geert+renesas@glider.be>
- <20200324135653.6676-3-geert+renesas@glider.be>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Guru Das Srinagesh <gurus@codeaurora.org>,
+        linux-pwm@vger.kernel.org,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        linux-kernel@vger.kernel.org, Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
+Subject: Re: [PATCH v11 10/12] backlight: pwm_bl: Use 64-bit division function
+Message-ID: <20200415092638.GG2167633@dell>
+References: <cover.1584667964.git.gurus@codeaurora.org>
+ <17fc1dcf8b9b392d1e37dc7e3e67409e3c502840.1584667964.git.gurus@codeaurora.org>
+ <20200320133123.GD5477@dell>
+ <20200324110710.GL5477@dell>
+ <20200324125735.2mjuvbxt5bpon2ft@pengutronix.de>
+ <20200324130410.dwlg767ku6kwequv@holly.lan>
+ <20200324142441.GD442973@dell>
+ <20200324144307.kxhqzyjj4evrouqa@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200324135653.6676-3-geert+renesas@glider.be>
+In-Reply-To: <20200324144307.kxhqzyjj4evrouqa@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 24 Mar 2020, Geert Uytterhoeven wrote:
+On Tue, 24 Mar 2020, Uwe Kleine-König wrote:
 
-> i801_add_mux() fills in the GPIO lookup table by manually populating an
-> array of gpiod_lookup structures.  Use the existing GPIO_LOOKUP_IDX()
-> helper macro instead, to relax a dependency on the gpiod_lookup
-> structure's member names.
+> On Tue, Mar 24, 2020 at 02:24:41PM +0000, Lee Jones wrote:
+> > On Tue, 24 Mar 2020, Daniel Thompson wrote:
+> > 
+> > > On Tue, Mar 24, 2020 at 01:57:35PM +0100, Uwe Kleine-König wrote:
+> > > > Hello Lee,
+> > > > 
+> > > > On Tue, Mar 24, 2020 at 11:07:10AM +0000, Lee Jones wrote:
+> > > > > On Fri, 20 Mar 2020, Lee Jones wrote:
+> > > > > 
+> > > > > > On Thu, 19 Mar 2020, Guru Das Srinagesh wrote:
+> > > > > > 
+> > > > > > > Since the PWM framework is switching struct pwm_state.period's datatype
+> > > > > > > to u64, prepare for this transition by using div_u64 to handle a 64-bit
+> > > > > > > dividend instead of a straight division operation.
+> > > > > > > 
+> > > > > > > Cc: Lee Jones <lee.jones@linaro.org>
+> > > > > > > Cc: Daniel Thompson <daniel.thompson@linaro.org>
+> > > > > > > Cc: Jingoo Han <jingoohan1@gmail.com>
+> > > > > > > Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> > > > > > > Cc: linux-pwm@vger.kernel.org
+> > > > > > > Cc: dri-devel@lists.freedesktop.org
+> > > > > > > Cc: linux-fbdev@vger.kernel.org
+> > > > > > > 
+> > > > > > > Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
+> > > > > > > Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+> > > > > > > ---
+> > > > > > >  drivers/video/backlight/pwm_bl.c | 3 ++-
+> > > > > > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > > > > > 
+> > > > > > Can this patch be taken on its own?
+> > > > > 
+> > > > > Hellooooo ...
+> > > > 
+> > > > Conceptually it can. As the last patch depends on this one (and the
+> > > > others) some coordination might be beneficial. But that's up to Thierry
+> > > > to decide how (and if) he want this series to be applied.
+> > > 
+> > > ... and on the backlight side we definitely need to know about the "if"
+> > > otherwise there's no point in taking it.
+> > 
+> > Right.
+> > 
+> > I'm happy to wait for Thierry.  Although this isn't the only set he's
+> > currently blocking.  Is he okay?  On holiday perhaps?
 > 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Cc: Lee Jones <lee.jones@linaro.org>
-> ---
-> While this patch is a dependency for "[PATCH v6 4/8] gpiolib: Add
-> support for GPIO lookup by line name", it can be applied independently.
-> But an Acked-by would be nice, too.
-> 
-> Cover letter and full series at
-> https://lore.kernel.org/r/20200324135328.5796-1-geert+renesas@glider.be/
-> 
-> v6:
->   - New.
-> ---
->  drivers/mfd/sm501.c | 24 ++++++++----------------
->  1 file changed, 8 insertions(+), 16 deletions(-)
+> The newest commit by him in next is from last week. My guess is he
+> just didn't come around yet to care for the PWM duties.
 
-Acked-by: Lee Jones <lee.jones@linaro.org>
+Looks like we missed the last release.
+
+Let's hope we don't miss the next one also.
 
 -- 
 Lee Jones [李琼斯]
