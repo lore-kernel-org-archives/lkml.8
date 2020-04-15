@@ -2,128 +2,91 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 673E7C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 05:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A27E2C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 05:29:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36B0F2076A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 05:27:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bi9PW74S"
+	by mail.kernel.org (Postfix) with ESMTP id 7BAD92076A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 05:29:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407442AbgDOF1P (ORCPT
+        id S2407900AbgDOF3F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 01:27:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39234 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2389364AbgDOF1O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 01:27:14 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5C05C061A0C;
-        Tue, 14 Apr 2020 22:27:13 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id b62so16018960qkf.6;
-        Tue, 14 Apr 2020 22:27:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ct0hBuohHuHlRfoGecOViSQANLKNyL7v3AAbn8mtpmI=;
-        b=bi9PW74S2tR6/OEmNB3G6K5L+UoHkLnJybBMMNSv1RBtGZEM6EOe8FC7uyksNsYrGE
-         ytL62J4Efm00kGtcTP/YRdgQD1P3sI7xkHRzsbNwNobA19+SpaKpxc+K8yf+roTmOKXo
-         Tj9iM3DZsJQglNjLKO8q/TFauvei+8QVy12+mWTYA1h3RVgyVpFQ7jaq3XsB+zihYIPv
-         b9J87QCNy5OddX6h6qY74gMOxgjMS/m3snoIMoNzA25FconMtwYsKkBeCm8MQGWx19Q9
-         VouscXGisUU8EsyHuT5Dx1meDV6TUnrrI8+dZXaj0CH7iE1TSAgnXLJ/A6dWoB5XJVWA
-         bHZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ct0hBuohHuHlRfoGecOViSQANLKNyL7v3AAbn8mtpmI=;
-        b=FW7HeEs4XS60uQsAVQrfvHZ1aU42S6m4demD5D7r6XB3DT31NlkidWR3OnuP0sXSPc
-         cEFiYC/8SQs/cDU90B4SdKJSbo4VeRTM40rpY2rRFy9LmpTR3DyxxIuT+qisjqY7rfpf
-         k2YBiF2WR0b8r2L779sEevIyDnL9eotKPNLE1rJ4dy5GwRw9QKRwmLDoOD4CmV/N8tRp
-         KqkUUHwhXkcWwCXOjW8gHHZbk9c7SsdHYrm43NahLxNG23rUKtO+7445GRj6xIBj0iqx
-         V1JcZZuGT+xchfQAv5a1dG88ncNrIGQkgaLNw9631CIWYUOwDbgBeqPk9b9oX1kcsitD
-         m3wg==
-X-Gm-Message-State: AGi0Pua/8dIYKNQyzU6iaSK3SJgQkB/8QlBxvj8LVRpxHJm9ssgFUvP+
-        2ppD2YWUwU98rY5lR7uMQK/n7tkRCDV2RTgrjurFEaB0pR0=
-X-Google-Smtp-Source: APiQypKssePFI6UhQtg8SF7PbNhoguf9oD2a6cXt10K44wIbpgtLtWPSB9ygg60X1uxamG9sttyTJ7xnQTqaNq+RebA=
-X-Received: by 2002:a37:84c7:: with SMTP id g190mr24227289qkd.335.1586928432947;
- Tue, 14 Apr 2020 22:27:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200415012320.236065-1-jcargill@google.com> <20200415023726.GD12547@linux.intel.com>
- <20200415025105.GE12547@linux.intel.com>
-In-Reply-To: <20200415025105.GE12547@linux.intel.com>
-From:   Eric Northup <digitaleric@gmail.com>
-Date:   Tue, 14 Apr 2020 22:27:01 -0700
-Message-ID: <CAPC9edWgcrC+mc1pQSYmJjPs17VZ-Af1LJ+s6PaeY=9fPA89NQ@mail.gmail.com>
-Subject: Re: [PATCH 1/1] KVM: pass through CPUID(0x80000006)
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Jon Cargille <jcargill@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Eric Northup <digitaleric@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 15 Apr 2020 01:29:05 -0400
+Received: from mga18.intel.com ([134.134.136.126]:30107 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389364AbgDOF3B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 01:29:01 -0400
+IronPort-SDR: cACbbizbj4GSYsniv1iDto6uUkJIRri6Bpo4XM3FgVj5I5vHAFennK8L8eCfyHkapV8dH7QaSD
+ nvOFQxxvE4xw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 22:29:00 -0700
+IronPort-SDR: 7MxBb7rl7r0a399Q743Ii+47fUxTTEONxEMePjuwNCoPfGk8H/nKEWgA45CJgDJLFvSzGt7EtG
+ 0F8+uQNETuWw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,385,1580803200"; 
+   d="scan'208";a="277504145"
+Received: from allen-box.sh.intel.com ([10.239.159.139])
+  by fmsmga004.fm.intel.com with ESMTP; 14 Apr 2020 22:28:58 -0700
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     ashok.raj@intel.com, jacob.jun.pan@linux.intel.com,
+        Liu Yi L <yi.l.liu@intel.com>, kevin.tian@intel.com,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Lu Baolu <baolu.lu@linux.intel.com>
+Subject: [PATCH v2 0/7] iommu/vt-d: Add page request draining support
+Date:   Wed, 15 Apr 2020 13:25:35 +0800
+Message-Id: <20200415052542.30421-1-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 7:51 PM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
->
-> On Tue, Apr 14, 2020 at 07:37:26PM -0700, Sean Christopherson wrote:
-> > On Tue, Apr 14, 2020 at 06:23:20PM -0700, Jon Cargille wrote:
-> > > From: Eric Northup <digitaleric@gmail.com>
-> > >
-> > > Return L2 cache and TLB information to guests.
-> > > They could have been set before, but the defaults that KVM returns will be
-> > > necessary for usermode that doesn't supply their own CPUID tables.
-> >
-> > I don't follow the changelog.  The code makes sense, but I don't understand
-> > the justification.  This only affects KVM_GET_SUPPORTED_CPUID, i.e. what's
-> > advertised to userspace, it doesn't directly change CPUID emulation in any
-> > way.  The "They could have been set before" blurb is especially confusing.
-> >
-> > I assume you want to say something like:
-> >
-> >   Return the host's L2 cache and TLB information for CPUID.0x80000006
-> >   instead of zeroing out the entry as part of KVM_GET_SUPPORTED_CPUID.
-> >   This allows a userspace VMM to feed KVM_GET_SUPPORTED_CPUID's output
-> >   directly into KVM_SET_CPUID2 (without breaking the guest).
+When a PASID is stopped or terminated, there can be pending PRQs
+(requests that haven't received responses) in the software and
+remapping hardware. The pending page requests must be drained
+so that the pasid could be reused. The register level interface
+for page request draining is defined in 7.11 of the VT-d spec.
+This series adds the support for page requests draining.
 
-This is a much better commit message, thanks.
+This includes two parts:
+ - PATCH 1/7 ~ 3/7: refactor the qi_submit_sync() to support
+   multiple descriptors per submission which will be used by
+   PATCH 6/7.
+ - PATCH 4/7 ~ 7/7: add page request drain support after a
+   pasid entry is torn down due to an unbind operation.
 
-> >
-> > > Signed-off-by: Eric Northup <digitaleric@google.com>
-> > > Signed-off-by: Eric Northup <digitaleric@gmail.com>
-> > > Signed-off-by: Jon Cargille <jcargill@google.com>
-> > > Signed-off-by: Jim Mattson <jmattson@google.com>
-> >
-> > Jim's tag is unnecessary, unless he was a middleman between Eric and Jon,
-> > in which case Jim's tag should also come between Eric's and Jon's.
-> >
-> > Only one of Eric's signoffs is needed (the one that matches the From: tag,
-> > i.e. is the official author).  I'm guessing Google would prefer the author
-> > to be the @google.com address.
->
-> Ah, Eric's @google.com mail bounced.  Maybe do:
->
->   Signed-off-by: Eric Northup (Google) <digitaleric@gmail.com>
->
-> to clarify the work was done for Google without having a double signoff
-> and/or a dead email.
+Please help to review.
 
-That works for me. Thanks for upstreaming these patches Jon!
+Best regards,
+baolu
+
+Change log:
+ v1->v2:
+  - Fix race between multiple prq handling threads
+
+Lu Baolu (7):
+  iommu/vt-d: Refactor parameters for qi_submit_sync()
+  iommu/vt-d: Multiple descriptors per qi_submit_sync()
+  iommu/vt-d: debugfs: Add support to show inv queue internals
+  iommu/vt-d: Refactor prq_event_thread()
+  iommu/vt-d: Save prq descriptors in an internal list
+  iommu/vt-d: Add page request draining support
+  iommu/vt-d: Remove redundant IOTLB flush
+
+ drivers/iommu/dmar.c                |  63 +++--
+ drivers/iommu/intel-iommu-debugfs.c |  62 +++++
+ drivers/iommu/intel-pasid.c         |   4 +-
+ drivers/iommu/intel-svm.c           | 383 ++++++++++++++++++----------
+ drivers/iommu/intel_irq_remapping.c |   2 +-
+ include/linux/intel-iommu.h         |  12 +-
+ 6 files changed, 369 insertions(+), 157 deletions(-)
+
+-- 
+2.17.1
+
