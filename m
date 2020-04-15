@@ -2,85 +2,107 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8BE8C2BB85
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:44:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF46AC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:45:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A291A206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:44:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C88EE20768
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:45:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2635265AbgDOHoe (ORCPT
+        id S2635278AbgDOHp0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 03:44:34 -0400
-Received: from mga07.intel.com ([134.134.136.100]:35275 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2635245AbgDOHoM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 03:44:12 -0400
-IronPort-SDR: 4Aht1Cit3gqBivU5pF6Jr3CMKVSvsv2blI2vMI4xYfedGOcdRp3FU7PNJLihdDXQTvImQS4Hca
- KDVM6hxMviEg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 00:44:11 -0700
-IronPort-SDR: xG888X2yA7QrY0sNtoht0u4esMcn2G+GOhx/16MnoB2aXnYmjAV3LwZ4oJU9DfgrThk0bRYSas
- Q1macOKatCgQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,386,1580803200"; 
-   d="scan'208";a="253447153"
-Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.23])
-  by orsmga003.jf.intel.com with ESMTP; 15 Apr 2020 00:44:09 -0700
-From:   "Huang\, Ying" <ying.huang@intel.com>
-To:     Andrea Righi <andrea.righi@canonical.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Minchan Kim <minchan@kernel.org>,
-        Anchal Agarwal <anchalag@amazon.com>, <linux-mm@kvack.org>,
+        Wed, 15 Apr 2020 03:45:26 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2374 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2635166AbgDOHo5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 03:44:57 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 2FA05A3C4D514F23AA5D;
+        Wed, 15 Apr 2020 15:29:14 +0800 (CST)
+Received: from DESKTOP-8RFUVS3.china.huawei.com (10.173.222.27) by
+ DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
+ 14.3.487.0; Wed, 15 Apr 2020 15:29:08 +0800
+From:   Zenghui Yu <yuzenghui@huawei.com>
+To:     <kvmarm@lists.cs.columbia.edu>,
+        <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] mm: swap: use fixed-size readahead during swapoff
-References: <20200413111810.GA801367@xps-13>
-        <87a73f7d71.fsf@yhuang-dev.intel.com> <20200413133150.GA810380@xps-13>
-        <87wo6i6efn.fsf@yhuang-dev.intel.com> <20200414130520.GF810380@xps-13>
-        <87v9m1zd83.fsf@yhuang-dev.intel.com> <20200415073239.GG810380@xps-13>
-Date:   Wed, 15 Apr 2020 15:44:08 +0800
-In-Reply-To: <20200415073239.GG810380@xps-13> (Andrea Righi's message of "Wed,
-        15 Apr 2020 09:32:39 +0200")
-Message-ID: <87imi1yz07.fsf@yhuang-dev.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+CC:     <wanghaibin.wang@huawei.com>, Zenghui Yu <yuzenghui@huawei.com>,
+        "Marc Zyngier" <maz@kernel.org>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        "James Morse" <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: [PATCH RFC] KVM: arm64: Sidestep stage2_unmap_vm() on vcpu reset when S2FWB is supported
+Date:   Wed, 15 Apr 2020 15:28:35 +0800
+Message-ID: <20200415072835.1164-1-yuzenghui@huawei.com>
+X-Mailer: git-send-email 2.23.0.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.173.222.27]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrea Righi <andrea.righi@canonical.com> writes:
+stage2_unmap_vm() was introduced to unmap user RAM region in the stage2
+page table to make the caches coherent. E.g., a guest reboot with stage1
+MMU disabled will access memory using non-cacheable attributes. If the
+RAM and caches are not coherent at this stage, some evicted dirty cache
+line may go and corrupt guest data in RAM.
 
->  mm/swapfile.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/mm/swapfile.c b/mm/swapfile.c
-> index 9fd47e6f7a86..cb9eb517178d 100644
-> --- a/mm/swapfile.c
-> +++ b/mm/swapfile.c
-> @@ -1944,7 +1944,9 @@ static int unuse_pte_range(struct vm_area_struct *vma, pmd_t *pmd,
->  		vmf.pmd = pmd;
->  		last_ra = atomic_read(&last_readahead_pages);
->  		atomic_set(&swapin_readahead_hits, last_ra);
+Since ARMv8.4, S2FWB feature is mandatory and KVM will take advantage
+of it to configure the stage2 page table and the attributes of memory
+access. So we ensure that guests always access memory using cacheable
+attributes and thus, the caches always be coherent.
 
-You need to remove the above 2 lines firstly.
+So on CPUs that support S2FWB, we can safely reset the vcpu without a
+heavy stage2 unmapping.
 
-Best Regards,
-Huang, Ying
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: Christoffer Dall <christoffer.dall@arm.com>
+Cc: James Morse <james.morse@arm.com>
+Cc: Julien Thierry <julien.thierry.kdev@gmail.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+---
 
-> -		page = swapin_readahead(entry, GFP_HIGHUSER_MOVABLE, &vmf);
-> +		page = lookup_swap_cache(entry, vma, addr);
-> +		if (!page)
-> +			page = swapin_readahead(entry, GFP_HIGHUSER_MOVABLE, &vmf);
->  		if (!page) {
->  			if (*swap_map == 0 || *swap_map == SWAP_MAP_BAD)
->  				goto try_next;
->
-> Thanks!
-> -Andrea
+If this is correct, there should be a great performance improvement on
+a guest reboot (or reset) on systems support S2FWB. But I'm afraid that
+I've missed some points here, so please comment!
+
+The commit 957db105c997 ("arm/arm64: KVM: Introduce stage2_unmap_vm")
+was merged about six years ago and I failed to track its histroy and
+intention. Instead of a whole stage2 unmapping, something like
+stage2_flush_vm() looks enough to me. But again, I'm unsure...
+
+Thanks for having a look!
+
+ virt/kvm/arm/arm.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
+index 48d0ec44ad77..e6378162cdef 100644
+--- a/virt/kvm/arm/arm.c
++++ b/virt/kvm/arm/arm.c
+@@ -983,8 +983,11 @@ static int kvm_arch_vcpu_ioctl_vcpu_init(struct kvm_vcpu *vcpu,
+ 	/*
+ 	 * Ensure a rebooted VM will fault in RAM pages and detect if the
+ 	 * guest MMU is turned off and flush the caches as needed.
++	 *
++	 * S2FWB enforces all memory accesses to RAM being cacheable, we
++	 * ensure that the cache is always coherent.
+ 	 */
+-	if (vcpu->arch.has_run_once)
++	if (vcpu->arch.has_run_once && !cpus_have_const_cap(ARM64_HAS_STAGE2_FWB))
+ 		stage2_unmap_vm(vcpu->kvm);
+ 
+ 	vcpu_reset_hcr(vcpu);
+-- 
+2.19.1
+
+
