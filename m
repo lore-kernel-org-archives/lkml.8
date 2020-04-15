@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B57EAC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2204C3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:47:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82DA52076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:47:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC8432076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:47:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586962045;
-	bh=a1eyqEdmzN0DfOJU1eSZCMjYbz9xksLR9xHit1mh8r8=;
+	s=default; t=1586962052;
+	bh=oVpWH0qpmsIfqBvaqvZk4DhmzrNPI+GFYenh6pTu4+I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UAsew7msPs0kzMwdv7pJft+xff9wLgfJL0Xe0UgJ+j+en1LleN8bk+/nUEuNXs4hR
-	 ISl3oYSvSOjuZyoniix1kzqkr6DpwDwFQFjJ+POvi0LshwZJmcn+50r+PMN8qFE3+C
-	 DUra3aI3D6mnlnLyFnz8R3VWYjIqqkVGE5iCy+Ek=
+	b=pUBcgC16cIskAcFiqh9SSmwnJuD0PWsA13f6f3xJsh4I0VDl5f8JCaSxdvg4XYGx5
+	 n4egKfrPIXT7QiEInXgZOMa6mAu//w3guhOmm1w+BVm3+Q5aUR2AJqOpYTOBE5Oknj
+	 PqDB+Rdj2XP9pOjkkRk/P62jvvZjFPiaZQq6nfr8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S370974AbgDOOrX (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:47:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39962 "EHLO mail.kernel.org"
+        id S371033AbgDOOra (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 10:47:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2634635AbgDOOp3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 10:45:29 -0400
+        id S2636787AbgDOOpa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 10:45:30 -0400
 Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9F8A2137B;
+        by mail.kernel.org (Postfix) with ESMTPSA id EED52214D8;
         Wed, 15 Apr 2020 14:45:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1586961929;
-        bh=a1eyqEdmzN0DfOJU1eSZCMjYbz9xksLR9xHit1mh8r8=;
+        bh=oVpWH0qpmsIfqBvaqvZk4DhmzrNPI+GFYenh6pTu4+I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KlheR7OZFIOZpLzBn7hNLdU5/4QWs9zy1nGbgebiwZPxdc7gz9ORQLmmN2kqVAghY
-         qnx7Plkm62MtehKP6H32vzSjXKortR29qSDIKrXpMnTyN0W2CMHGiyJlOGx7xePZFE
-         oRh4oZyTVgDMkWMaN2mnYAFzbte9+bclBUI/Xkgg=
+        b=UK/v4KpK8hxPFvXSdUhaebc9I2OHm5j+drtz7PhkVfQefhI+b6yMY1RUUP7Mwv9JA
+         +xWMBf0BxWsUiuXvr6FGW+37qOFR1619I9UhjaqsUmn4vnrP3lIFxWHksns7Liibqz
+         FiL6AMJEyKPuEP+pnKXNbQt0DLRlyACu363Y5Bcw=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jOjI7-006kZB-2c; Wed, 15 Apr 2020 16:45:27 +0200
+        id 1jOjI7-006kZV-8O; Wed, 15 Apr 2020 16:45:27 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH v3 01/12] docs: dt: add an index.rst file for devicetree
-Date:   Wed, 15 Apr 2020 16:45:15 +0200
-Message-Id: <ccce3ccc02f7b4cbb90558065de38858b9e37c3c.1586961793.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v3 05/12] docs: dt: convert changesets to ReST
+Date:   Wed, 15 Apr 2020 16:45:19 +0200
+Message-Id: <6ae9724c28cef35f44f3d99d3907f0228a233e27.1586961793.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <cover.1586961793.git.mchehab+huawei@kernel.org>
 References: <cover.1586961793.git.mchehab+huawei@kernel.org>
@@ -59,51 +59,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are some device tree documentation under
-Documentation/devicetree. Add a top index file for it and
-add the already-existing ReST file on it.
+- Add a SPDX header;
+- Add a document title;
+- Some whitespace fixes and new line breaks;
+- Add it to devicetree/index.rst.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/devicetree/index.rst | 10 ++++++++++
- Documentation/index.rst            |  3 +++
- 2 files changed, 13 insertions(+)
- create mode 100644 Documentation/devicetree/index.rst
+ .../{changesets.txt => changesets.rst}        | 24 ++++++++++++-------
+ Documentation/devicetree/index.rst            |  1 +
+ 2 files changed, 16 insertions(+), 9 deletions(-)
+ rename Documentation/devicetree/{changesets.txt => changesets.rst} (59%)
 
+diff --git a/Documentation/devicetree/changesets.txt b/Documentation/devicetree/changesets.rst
+similarity index 59%
+rename from Documentation/devicetree/changesets.txt
+rename to Documentation/devicetree/changesets.rst
+index cb488eeb6353..c7fd8cd6a270 100644
+--- a/Documentation/devicetree/changesets.txt
++++ b/Documentation/devicetree/changesets.rst
+@@ -1,3 +1,9 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++=============
++DT Changesets
++=============
++
+ A DT changeset is a method which allows one to apply changes
+ in the live tree in such a way that either the full set of changes
+ will be applied, or none of them will be. If an error occurs partway
+@@ -15,17 +21,17 @@ The sequence of a changeset is as follows.
+ 1. of_changeset_init() - initializes a changeset
+ 
+ 2. A number of DT tree change calls, of_changeset_attach_node(),
+-of_changeset_detach_node(), of_changeset_add_property(),
+-of_changeset_remove_property, of_changeset_update_property() to prepare
+-a set of changes. No changes to the active tree are made at this point.
+-All the change operations are recorded in the of_changeset 'entries'
+-list.
++   of_changeset_detach_node(), of_changeset_add_property(),
++   of_changeset_remove_property, of_changeset_update_property() to prepare
++   a set of changes. No changes to the active tree are made at this point.
++   All the change operations are recorded in the of_changeset 'entries'
++   list.
+ 
+ 3. of_changeset_apply() - Apply the changes to the tree. Either the
+-entire changeset will get applied, or if there is an error the tree will
+-be restored to the previous state. The core ensures proper serialization
+-through locking. An unlocked version __of_changeset_apply is available,
+-if needed.
++   entire changeset will get applied, or if there is an error the tree will
++   be restored to the previous state. The core ensures proper serialization
++   through locking. An unlocked version __of_changeset_apply is available,
++   if needed.
+ 
+ If a successfully applied changeset needs to be removed, it can be done
+ with of_changeset_revert().
 diff --git a/Documentation/devicetree/index.rst b/Documentation/devicetree/index.rst
-new file mode 100644
-index 000000000000..a11efe26f205
---- /dev/null
+index 6b4daf252375..64c78c3ffea6 100644
+--- a/Documentation/devicetree/index.rst
 +++ b/Documentation/devicetree/index.rst
-@@ -0,0 +1,10 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=============================
-+Open Firmware and Device Tree
-+=============================
-+
-+.. toctree::
-+   :maxdepth: 1
-+
-+   writing-schema
-diff --git a/Documentation/index.rst b/Documentation/index.rst
-index 9599c0f3eea8..c7f89cb204d1 100644
---- a/Documentation/index.rst
-+++ b/Documentation/index.rst
-@@ -1,3 +1,5 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
- 
- .. The Linux Kernel documentation master file, created by
-    sphinx-quickstart on Fri Feb 12 13:51:46 2016.
-@@ -46,6 +48,7 @@ platform firmwares.
-    :maxdepth: 2
- 
-    firmware-guide/index
-+   devicetree/index
- 
- Application-developer documentation
- -----------------------------------
+@@ -10,3 +10,4 @@ Open Firmware and Device Tree
+    usage-model
+    writing-schema
+    booting-without-of
++   changesets
 -- 
 2.25.2
 
