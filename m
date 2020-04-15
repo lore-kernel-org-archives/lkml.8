@@ -2,62 +2,57 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9042FC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:33:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 755DEC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:33:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 625D0208FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:33:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FA892076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:33:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586961224;
-	bh=KiqG+YaH9TfLHMU7kAk5iZVq2iZm2vOE/nCgWZIaKyc=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=KviDCj1KEJOk8dUsuwEARTS8/x0xT0FCxbjDxkSpn9X6e5PToy5mMoZkxiOgC1/+X
-	 QAGrungCLdBwG3KoqrzjcBbLOwUVHitjZDR/JU1sJm1DLCRRIZoAA4bo+OK4kf8r7t
-	 qIkcQK67+2qieB9frDI0z068do17aoFXJLaYjpBs=
+	s=default; t=1586961238;
+	bh=tnnJpVmnbVuJ6k+jQRIZ9yUNqaXuvO9AT5XcHy6DOVg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=04KcjaWZAF93lf3X7OSSvbbA0wLPBgwI16U/9IkpmM7dNg5CnWoS2kiVKsckA9m07
+	 03/fM9GfaOi2dc/Al9EYJGav7bgD0H4ZmMagvwms9qOeW10aVGW8XGui0YvEua7YkZ
+	 PvKjdXaFo60E4xUMkbK7xhL/frOkX2xDOCvyPu+o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392142AbgDOOdk (ORCPT
+        id S2394129AbgDOOd4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:33:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44616 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 10:33:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394033AbgDOOcw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2394034AbgDOOcw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Apr 2020 10:32:52 -0400
 Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE72520857;
+        by mail.kernel.org (Postfix) with ESMTPSA id C759E2137B;
         Wed, 15 Apr 2020 14:32:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586961170;
-        bh=KiqG+YaH9TfLHMU7kAk5iZVq2iZm2vOE/nCgWZIaKyc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=zmtkQ2yvb4lMCW7VyZbrY08AHuA6jaNelMxk+XjbrMt6hLetgzFtmSoM/epsya/Qn
-         SEsnxu9G/tLR8lcHUuNuNcTbKgVyOplhVgI6xMcESplhJZCdGjqpBiZ/9grkpTlftr
-         a1iGFMi+kSC7G4SOvfHDNZD5/3QnrIy5wZXFM5Y4=
+        s=default; t=1586961171;
+        bh=tnnJpVmnbVuJ6k+jQRIZ9yUNqaXuvO9AT5XcHy6DOVg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=UFfFcxcUtSqL8VLIaHeiLYto6vE/cKHVPRQgcqCO7Ah8QHCu+XcJMXpRJN85Fe57g
+         WsfN5oGdA0lLFpROxGyNGJ44Ux+MCFMhOajE2Zu8QOj9s5hcaCv8HXEkJSdhtNAm0g
+         +66PK3O6L8NBuyKiQbxRSe+CIezMcUuFX79mdsl0=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jOj5s-006kNi-SJ; Wed, 15 Apr 2020 16:32:48 +0200
+        id 1jOj5t-006kO4-2g; Wed, 15 Apr 2020 16:32:49 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linuxppc-dev@lists.ozlabs.org, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        linux-fsdevel@vger.kernel.org, linux-afs@lists.infradead.org,
-        ecryptfs@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net,
-        ocfs2-devel@oss.oracle.com, linux-unionfs@vger.kernel.org,
-        linux-cachefs@redhat.com, linux-usb@vger.kernel.org,
-        codalist@coda.cs.cmu.edu, linux-ext4@vger.kernel.org,
-        cluster-devel@redhat.com, linux-xfs@vger.kernel.org
-Subject: [PATCH 00/34] fs: convert remaining docs to ReST file format
-Date:   Wed, 15 Apr 2020 16:32:13 +0200
-Message-Id: <cover.1586960617.git.mchehab+huawei@kernel.org>
+        David Howells <dhowells@redhat.com>, linux-cachefs@redhat.com
+Subject: [PATCH 05/34] docs: filesystems: caching/operations.txt: convert it to ReST
+Date:   Wed, 15 Apr 2020 16:32:18 +0200
+Message-Id: <c3c380b7b33ae2a3f7194c27421da18eba22c9bb.1586960617.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.2
+In-Reply-To: <cover.1586960617.git.mchehab+huawei@kernel.org>
+References: <cover.1586960617.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -65,197 +60,195 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series convert the remaining files under Documentation/filesystems
-to the ReST file format. It is based on linux-next (next-20200414).
+- Add a SPDX header;
+- Adjust document and section titles;
+- Comment out text ToC for html/pdf output;
+- Mark literal blocks as such;
+- Add it to filesystems/caching/index.rst.
 
-PS.: I opted to add mainly ML from the output of get_maintainers.pl to the c/c
-list of patch 00/34, because  otherwise the number of c/c would be too many,
-with would very likely cause ML servers to reject it.
-
-The results of those changes (together with other changes from my pending
-doc patches) are available at:
-
-   https://www.infradead.org/~mchehab/kernel_docs/filesystems/index.html
-
-Mauro Carvalho Chehab (34):
-  docs: filesystems: fix references for doc files there
-  docs: filesystems: convert caching/object.txt to ReST
-  docs: filesystems: convert caching/fscache.txt to ReST format
-  docs: filesystems: caching/netfs-api.txt: convert it to ReST
-  docs: filesystems: caching/operations.txt: convert it to ReST
-  docs: filesystems: caching/cachefiles.txt: convert to ReST
-  docs: filesystems: caching/backend-api.txt: convert it to ReST
-  docs: filesystems: convert cifs/cifsroot.rst to ReST
-  docs: filesystems: convert configfs.txt to ReST
-  docs: filesystems: convert automount-support.txt to ReST
-  docs: filesystems: convert coda.txt to ReST
-  docs: filesystems: convert dax.txt to ReST
-  docs: filesystems: convert devpts.txt to ReST
-  docs: filesystems: convert dnotify.txt to ReST
-  docs: filesystems: convert fiemap.txt to ReST
-  docs: filesystems: convert files.txt to ReST
-  docs: filesystems: convert fuse-io.txt to ReST
-  docs: filesystems: convert gfs2-glocks.txt to ReST
-  docs: filesystems: convert locks.txt to ReST
-  docs: filesystems: convert mandatory-locking.txt to ReST
-  docs: filesystems: convert mount_api.txt to ReST
-  docs: filesystems: rename path-lookup.txt file
-  docs: filesystems: convert path-walking.txt to ReST
-  docs: filesystems: convert quota.txt to ReST
-  docs: filesystems: convert seq_file.txt to ReST
-  docs: filesystems: convert sharedsubtree.txt to ReST
-  docs: filesystems: split spufs.txt into 3 separate files
-  docs: filesystems: convert spufs/spu_create.txt to ReST
-  docs: filesystems: convert spufs/spufs.txt to ReST
-  docs: filesystems: convert spufs/spu_run.txt to ReST
-  docs: filesystems: convert sysfs-pci.txt to ReST
-  docs: filesystems: convert sysfs-tagging.txt to ReST
-  docs: filesystems: convert xfs-delayed-logging-design.txt to ReST
-  docs: filesystems: convert xfs-self-describing-metadata.txt to ReST
-
- Documentation/ABI/stable/sysfs-devices-node   |    2 +-
- Documentation/ABI/testing/procfs-smaps_rollup |    2 +-
- Documentation/admin-guide/cpu-load.rst        |    2 +-
- Documentation/admin-guide/ext4.rst            |    2 +-
- Documentation/admin-guide/nfs/nfsroot.rst     |    2 +-
- Documentation/admin-guide/sysctl/kernel.rst   |    2 +-
- .../driver-api/driver-model/device.rst        |    2 +-
- .../driver-api/driver-model/overview.rst      |    2 +-
- ...ount-support.txt => automount-support.rst} |   23 +-
- .../{backend-api.txt => backend-api.rst}      |  165 +-
- .../{cachefiles.txt => cachefiles.rst}        |  139 +-
- Documentation/filesystems/caching/fscache.rst |  565 ++++++
- Documentation/filesystems/caching/fscache.txt |  448 -----
- Documentation/filesystems/caching/index.rst   |   14 +
- .../caching/{netfs-api.txt => netfs-api.rst}  |  172 +-
- .../caching/{object.txt => object.rst}        |   43 +-
- .../{operations.txt => operations.rst}        |   45 +-
- .../cifs/{cifsroot.txt => cifsroot.rst}       |   56 +-
- Documentation/filesystems/coda.rst            | 1670 ++++++++++++++++
- Documentation/filesystems/coda.txt            | 1676 -----------------
- .../{configfs/configfs.txt => configfs.rst}   |  129 +-
- .../filesystems/{dax.txt => dax.rst}          |   11 +-
- Documentation/filesystems/devpts.rst          |   36 +
- Documentation/filesystems/devpts.txt          |   26 -
- .../filesystems/{dnotify.txt => dnotify.rst}  |   13 +-
- Documentation/filesystems/ext2.rst            |    2 +-
- .../filesystems/{fiemap.txt => fiemap.rst}    |  133 +-
- .../filesystems/{files.txt => files.rst}      |   15 +-
- .../filesystems/{fuse-io.txt => fuse-io.rst}  |    6 +
- .../{gfs2-glocks.txt => gfs2-glocks.rst}      |  147 +-
- Documentation/filesystems/index.rst           |   26 +
- .../filesystems/{locks.txt => locks.rst}      |   14 +-
- ...tory-locking.txt => mandatory-locking.rst} |   25 +-
- .../{mount_api.txt => mount_api.rst}          |  329 ++--
- .../{path-lookup.txt => path-walking.rst}     |   88 +-
- Documentation/filesystems/porting.rst         |    2 +-
- Documentation/filesystems/proc.rst            |    2 +-
- .../filesystems/{quota.txt => quota.rst}      |   41 +-
- .../filesystems/ramfs-rootfs-initramfs.rst    |    2 +-
- .../{seq_file.txt => seq_file.rst}            |   61 +-
- .../{sharedsubtree.txt => sharedsubtree.rst}  |  394 ++--
- Documentation/filesystems/spufs/index.rst     |   13 +
- .../filesystems/spufs/spu_create.rst          |  131 ++
- Documentation/filesystems/spufs/spu_run.rst   |  138 ++
- .../{spufs.txt => spufs/spufs.rst}            |  304 +--
- .../{sysfs-pci.txt => sysfs-pci.rst}          |   23 +-
- .../{sysfs-tagging.txt => sysfs-tagging.rst}  |   22 +-
- ...ign.txt => xfs-delayed-logging-design.rst} |   65 +-
- ...a.txt => xfs-self-describing-metadata.rst} |  182 +-
- Documentation/iio/iio_configfs.rst            |    2 +-
- .../powerpc/firmware-assisted-dump.rst        |    2 +-
- Documentation/process/adding-syscalls.rst     |    2 +-
- .../it_IT/process/adding-syscalls.rst         |    2 +-
- .../translations/zh_CN/filesystems/sysfs.txt  |    6 +-
- Documentation/usb/gadget_configfs.rst         |    4 +-
- MAINTAINERS                                   |   16 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h       |    2 +-
- fs/Kconfig                                    |    2 +-
- fs/Kconfig.binfmt                             |    2 +-
- fs/adfs/Kconfig                               |    2 +-
- fs/affs/Kconfig                               |    2 +-
- fs/afs/Kconfig                                |    6 +-
- fs/bfs/Kconfig                                |    2 +-
- fs/cachefiles/Kconfig                         |    4 +-
- fs/coda/Kconfig                               |    2 +-
- fs/configfs/inode.c                           |    2 +-
- fs/configfs/item.c                            |    2 +-
- fs/cramfs/Kconfig                             |    2 +-
- fs/dcache.c                                   |    6 +-
- fs/ecryptfs/Kconfig                           |    2 +-
- fs/fat/Kconfig                                |    8 +-
- fs/fscache/Kconfig                            |    8 +-
- fs/fscache/cache.c                            |    8 +-
- fs/fscache/cookie.c                           |    2 +-
- fs/fscache/object.c                           |    4 +-
- fs/fscache/operation.c                        |    2 +-
- fs/fuse/Kconfig                               |    2 +-
- fs/fuse/dev.c                                 |    2 +-
- fs/hfs/Kconfig                                |    2 +-
- fs/hpfs/Kconfig                               |    2 +-
- fs/isofs/Kconfig                              |    2 +-
- fs/locks.c                                    |    2 +-
- fs/namei.c                                    |    2 +-
- fs/namespace.c                                |    2 +-
- fs/notify/inotify/Kconfig                     |    2 +-
- fs/ntfs/Kconfig                               |    2 +-
- fs/ocfs2/Kconfig                              |    2 +-
- fs/overlayfs/Kconfig                          |    6 +-
- fs/proc/Kconfig                               |    4 +-
- fs/romfs/Kconfig                              |    2 +-
- fs/sysfs/dir.c                                |    2 +-
- fs/sysfs/file.c                               |    2 +-
- fs/sysfs/mount.c                              |    2 +-
- fs/sysfs/symlink.c                            |    2 +-
- fs/sysv/Kconfig                               |    2 +-
- fs/udf/Kconfig                                |    2 +-
- include/linux/configfs.h                      |    2 +-
- include/linux/fs_context.h                    |    2 +-
- include/linux/fscache-cache.h                 |    4 +-
- include/linux/fscache.h                       |   42 +-
- include/linux/lsm_hooks.h                     |    2 +-
- include/linux/relay.h                         |    2 +-
- include/linux/sysfs.h                         |    2 +-
- kernel/relay.c                                |    2 +-
- 104 files changed, 4048 insertions(+), 3572 deletions(-)
- rename Documentation/filesystems/{automount-support.txt => automount-support.rst} (92%)
- rename Documentation/filesystems/caching/{backend-api.txt => backend-api.rst} (87%)
- rename Documentation/filesystems/caching/{cachefiles.txt => cachefiles.rst} (90%)
- create mode 100644 Documentation/filesystems/caching/fscache.rst
- delete mode 100644 Documentation/filesystems/caching/fscache.txt
- create mode 100644 Documentation/filesystems/caching/index.rst
- rename Documentation/filesystems/caching/{netfs-api.txt => netfs-api.rst} (91%)
- rename Documentation/filesystems/caching/{object.txt => object.rst} (95%)
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ Documentation/filesystems/caching/index.rst   |  1 +
+ .../{operations.txt => operations.rst}        | 45 +++++++++----------
+ fs/fscache/operation.c                        |  2 +-
+ 3 files changed, 23 insertions(+), 25 deletions(-)
  rename Documentation/filesystems/caching/{operations.txt => operations.rst} (90%)
- rename Documentation/filesystems/cifs/{cifsroot.txt => cifsroot.rst} (72%)
- create mode 100644 Documentation/filesystems/coda.rst
- delete mode 100644 Documentation/filesystems/coda.txt
- rename Documentation/filesystems/{configfs/configfs.txt => configfs.rst} (87%)
- rename Documentation/filesystems/{dax.txt => dax.rst} (96%)
- create mode 100644 Documentation/filesystems/devpts.rst
- delete mode 100644 Documentation/filesystems/devpts.txt
- rename Documentation/filesystems/{dnotify.txt => dnotify.rst} (88%)
- rename Documentation/filesystems/{fiemap.txt => fiemap.rst} (70%)
- rename Documentation/filesystems/{files.txt => files.rst} (95%)
- rename Documentation/filesystems/{fuse-io.txt => fuse-io.rst} (95%)
- rename Documentation/filesystems/{gfs2-glocks.txt => gfs2-glocks.rst} (63%)
- rename Documentation/filesystems/{locks.txt => locks.rst} (91%)
- rename Documentation/filesystems/{mandatory-locking.txt => mandatory-locking.rst} (91%)
- rename Documentation/filesystems/{mount_api.txt => mount_api.rst} (79%)
- rename Documentation/filesystems/{path-lookup.txt => path-walking.rst} (91%)
- rename Documentation/filesystems/{quota.txt => quota.rst} (81%)
- rename Documentation/filesystems/{seq_file.txt => seq_file.rst} (92%)
- rename Documentation/filesystems/{sharedsubtree.txt => sharedsubtree.rst} (72%)
- create mode 100644 Documentation/filesystems/spufs/index.rst
- create mode 100644 Documentation/filesystems/spufs/spu_create.rst
- create mode 100644 Documentation/filesystems/spufs/spu_run.rst
- rename Documentation/filesystems/{spufs.txt => spufs/spufs.rst} (57%)
- rename Documentation/filesystems/{sysfs-pci.txt => sysfs-pci.rst} (92%)
- rename Documentation/filesystems/{sysfs-tagging.txt => sysfs-tagging.rst} (72%)
- rename Documentation/filesystems/{xfs-delayed-logging-design.txt => xfs-delayed-logging-design.rst} (97%)
- rename Documentation/filesystems/{xfs-self-describing-metadata.txt => xfs-self-describing-metadata.rst} (83%)
 
+diff --git a/Documentation/filesystems/caching/index.rst b/Documentation/filesystems/caching/index.rst
+index d0651db450fb..75492b7c8ea0 100644
+--- a/Documentation/filesystems/caching/index.rst
++++ b/Documentation/filesystems/caching/index.rst
+@@ -9,3 +9,4 @@ Filesystem Caching
+    fscache
+    object
+    netfs-api
++   operations
+diff --git a/Documentation/filesystems/caching/operations.txt b/Documentation/filesystems/caching/operations.rst
+similarity index 90%
+rename from Documentation/filesystems/caching/operations.txt
+rename to Documentation/filesystems/caching/operations.rst
+index d8976c434718..f7ddcc028939 100644
+--- a/Documentation/filesystems/caching/operations.txt
++++ b/Documentation/filesystems/caching/operations.rst
+@@ -1,10 +1,12 @@
+-		       ================================
+-		       ASYNCHRONOUS OPERATIONS HANDLING
+-		       ================================
++.. SPDX-License-Identifier: GPL-2.0
++
++================================
++Asynchronous Operations Handling
++================================
+ 
+ By: David Howells <dhowells@redhat.com>
+ 
+-Contents:
++.. Contents:
+ 
+  (*) Overview.
+ 
+@@ -17,8 +19,7 @@ Contents:
+  (*) Asynchronous callback.
+ 
+ 
+-========
+-OVERVIEW
++Overview
+ ========
+ 
+ FS-Cache has an asynchronous operations handling facility that it uses for its
+@@ -33,11 +34,10 @@ backend for completion.
+ To make use of this facility, <linux/fscache-cache.h> should be #included.
+ 
+ 
+-===============================
+-OPERATION RECORD INITIALISATION
++Operation Record Initialisation
+ ===============================
+ 
+-An operation is recorded in an fscache_operation struct:
++An operation is recorded in an fscache_operation struct::
+ 
+ 	struct fscache_operation {
+ 		union {
+@@ -50,7 +50,7 @@ An operation is recorded in an fscache_operation struct:
+ 	};
+ 
+ Someone wanting to issue an operation should allocate something with this
+-struct embedded in it.  They should initialise it by calling:
++struct embedded in it.  They should initialise it by calling::
+ 
+ 	void fscache_operation_init(struct fscache_operation *op,
+ 				    fscache_operation_release_t release);
+@@ -67,8 +67,7 @@ FSCACHE_OP_WAITING may be set in op->flags prior to each submission of the
+ operation and waited for afterwards.
+ 
+ 
+-==========
+-PARAMETERS
++Parameters
+ ==========
+ 
+ There are a number of parameters that can be set in the operation record's flag
+@@ -87,7 +86,7 @@ operations:
+ 
+      If this option is to be used, FSCACHE_OP_WAITING must be set in op->flags
+      before submitting the operation, and the operating thread must wait for it
+-     to be cleared before proceeding:
++     to be cleared before proceeding::
+ 
+ 		wait_on_bit(&op->flags, FSCACHE_OP_WAITING,
+ 			    TASK_UNINTERRUPTIBLE);
+@@ -101,7 +100,7 @@ operations:
+      page to a netfs page after the backing fs has read the page in.
+ 
+      If this option is used, op->fast_work and op->processor must be
+-     initialised before submitting the operation:
++     initialised before submitting the operation::
+ 
+ 		INIT_WORK(&op->fast_work, do_some_work);
+ 
+@@ -114,7 +113,7 @@ operations:
+      pages that have just been fetched from a remote server.
+ 
+      If this option is used, op->slow_work and op->processor must be
+-     initialised before submitting the operation:
++     initialised before submitting the operation::
+ 
+ 		fscache_operation_init_slow(op, processor)
+ 
+@@ -132,8 +131,7 @@ Furthermore, operations may be one of two types:
+      operations running at the same time.
+ 
+ 
+-=========
+-PROCEDURE
++Procedure
+ =========
+ 
+ Operations are used through the following procedure:
+@@ -143,7 +141,7 @@ Operations are used through the following procedure:
+      generic op embedded within.
+ 
+  (2) The submitting thread must then submit the operation for processing using
+-     one of the following two functions:
++     one of the following two functions::
+ 
+ 	int fscache_submit_op(struct fscache_object *object,
+ 			      struct fscache_operation *op);
+@@ -164,7 +162,7 @@ Operations are used through the following procedure:
+      operation of conflicting exclusivity is in progress on the object.
+ 
+      If the operation is asynchronous, the manager will retain a reference to
+-     it, so the caller should put their reference to it by passing it to:
++     it, so the caller should put their reference to it by passing it to::
+ 
+ 	void fscache_put_operation(struct fscache_operation *op);
+ 
+@@ -179,12 +177,12 @@ Operations are used through the following procedure:
+  (4) The operation holds an effective lock upon the object, preventing other
+      exclusive ops conflicting until it is released.  The operation can be
+      enqueued for further immediate asynchronous processing by adjusting the
+-     CPU time provisioning option if necessary, eg:
++     CPU time provisioning option if necessary, eg::
+ 
+ 	op->flags &= ~FSCACHE_OP_TYPE;
+ 	op->flags |= ~FSCACHE_OP_FAST;
+ 
+-     and calling:
++     and calling::
+ 
+ 	void fscache_enqueue_operation(struct fscache_operation *op)
+ 
+@@ -192,13 +190,12 @@ Operations are used through the following procedure:
+      pools.
+ 
+ 
+-=====================
+-ASYNCHRONOUS CALLBACK
++Asynchronous Callback
+ =====================
+ 
+ When used in asynchronous mode, the worker thread pool will invoke the
+ processor method with a pointer to the operation.  This should then get at the
+-container struct by using container_of():
++container struct by using container_of()::
+ 
+ 	static void fscache_write_op(struct fscache_operation *_op)
+ 	{
+diff --git a/fs/fscache/operation.c b/fs/fscache/operation.c
+index 1a22a55f75a0..4a5651d4904e 100644
+--- a/fs/fscache/operation.c
++++ b/fs/fscache/operation.c
+@@ -4,7 +4,7 @@
+  * Copyright (C) 2008 Red Hat, Inc. All Rights Reserved.
+  * Written by David Howells (dhowells@redhat.com)
+  *
+- * See Documentation/filesystems/caching/operations.txt
++ * See Documentation/filesystems/caching/operations.rst
+  */
+ 
+ #define FSCACHE_DEBUG_LEVEL OPERATION
 -- 
 2.25.2
-
 
