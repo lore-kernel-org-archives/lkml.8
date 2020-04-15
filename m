@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2F49C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:10:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99007C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:10:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0312206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:10:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75B4E206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:10:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586952648;
-	bh=c3tDbP3kjZMereB6y5jCbrX1IZryCnz0sMYCtncHOyQ=;
+	s=default; t=1586952658;
+	bh=gijuMuXAk82YOcDVXOKELxZqLlkkMSKbpQf1l7DG7WE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j2uS95re6aQ9hZHPNZyT1SZEq6qNBAndXFGN/TXPaAiuiTxqZSN4Aq/MnIHDfAXPS
-	 0n1kJrnqc+cwF8lgmDVPnUSBBNPLZcsd81SBna+uM6/bXkH+kkltAY+w6MMMIJhFVT
-	 pqDMS0zRYgr32fdxtp5SSSwTh8DjTDD7mzUQA0wY=
+	b=cJI7A6e0Pa5W8aq3MmLmac5uC42zQMgPvegpeS2HEa4+aZ9YuHEoIYave9SJs7btd
+	 688VOcZ5DjoPlTDUThwouQEtaapjwPSb+kuN5JKZ0cgKjlBRexpt3gIr+HSGVpgVxm
+	 uEGe5FWRK8XKRzNBAYP2y1396UIEMLz/X/TbchDE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S368558AbgDOMKq (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:10:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41934 "EHLO mail.kernel.org"
+        id S368567AbgDOMK4 (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:10:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897613AbgDOLrQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:47:16 -0400
+        id S2897608AbgDOLrK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:47:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FC5C20775;
-        Wed, 15 Apr 2020 11:47:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 523B121582;
+        Wed, 15 Apr 2020 11:47:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951235;
-        bh=c3tDbP3kjZMereB6y5jCbrX1IZryCnz0sMYCtncHOyQ=;
+        s=default; t=1586951230;
+        bh=gijuMuXAk82YOcDVXOKELxZqLlkkMSKbpQf1l7DG7WE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jpda8+Z3M2DhHBXflwd/F9bkRGbYBCT3AjnTIBGvDz4p4Pf7CskFI1fss0m0/BxJc
-         W0sYIeSX7/nf1p9Tp/khmny7hzEBHjn8pddluh7ySQTwODp4EMCtlSRnBUIwfSDwPP
-         tWwm3GBwY/AXc4LaDZsRZIYw+kLaiur93rFyIPV4=
+        b=x6YRUBfD32iKXTGFDAke5bJg1x2WB5myvHcZ1jTg+XQGI2s8T56c1ST3R8oIdyWeZ
+         MLlRi5g+IvzL+1Gw7H2i3ReUZI7npBdeNq0QUGTvx4gtrCHpZHimlvz8OJYLUtAemZ
+         Jmk+IKnsvYlQBF5PWpcH3a1O582HrUy9+9XS9npA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 03/30] clk: tegra: Fix Tegra PMC clock out parents
-Date:   Wed, 15 Apr 2020 07:46:44 -0400
-Message-Id: <20200415114711.15381-3-sashal@kernel.org>
+Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.19 40/40] f2fs: fix to wait all node page writeback
+Date:   Wed, 15 Apr 2020 07:46:23 -0400
+Message-Id: <20200415114623.14972-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415114711.15381-1-sashal@kernel.org>
-References: <20200415114711.15381-1-sashal@kernel.org>
+In-Reply-To: <20200415114623.14972-1-sashal@kernel.org>
+References: <20200415114623.14972-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,54 +58,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit 6fe38aa8cac3a5db38154331742835a4d9740788 ]
+[ Upstream commit dc5a941223edd803f476a153abd950cc3a83c3e1 ]
 
-Tegra PMC clocks clk_out_1, clk_out_2, and clk_out_3 supported parents
-are osc, osc_div2, osc_div4 and extern clock.
+There is a race condition that we may miss to wait for all node pages
+writeback, fix it.
 
-Clock driver is using incorrect parents clk_m, clk_m_div2, clk_m_div4
-for PMC clocks.
+- fsync()				- shrink
+ - f2fs_do_sync_file
+					 - __write_node_page
+					  - set_page_writeback(page#0)
+					  : remove DIRTY/TOWRITE flag
+  - f2fs_fsync_node_pages
+  : won't find page #0 as TOWRITE flag was removeD
+  - f2fs_wait_on_node_pages_writeback
+  : wont' wait page #0 writeback as it was not in fsync_node_list list.
+					   - f2fs_add_fsync_node_entry
 
-This patch fixes this.
-
-Tested-by: Dmitry Osipenko <digetx@gmail.com>
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Fixes: 50fa53eccf9f ("f2fs: fix to avoid broken of dnode block list")
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/tegra/clk-tegra-pmc.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ fs/f2fs/node.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/clk/tegra/clk-tegra-pmc.c b/drivers/clk/tegra/clk-tegra-pmc.c
-index a35579a3f884f..476dab494c44d 100644
---- a/drivers/clk/tegra/clk-tegra-pmc.c
-+++ b/drivers/clk/tegra/clk-tegra-pmc.c
-@@ -60,16 +60,16 @@ struct pmc_clk_init_data {
+diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
+index e5d474681471c..f0714c1258c79 100644
+--- a/fs/f2fs/node.c
++++ b/fs/f2fs/node.c
+@@ -1559,15 +1559,16 @@ static int __write_node_page(struct page *page, bool atomic, bool *submitted,
+ 	if (atomic && !test_opt(sbi, NOBARRIER))
+ 		fio.op_flags |= REQ_PREFLUSH | REQ_FUA;
  
- static DEFINE_SPINLOCK(clk_out_lock);
+-	set_page_writeback(page);
+-	ClearPageError(page);
+-
++	/* should add to global list before clearing PAGECACHE status */
+ 	if (f2fs_in_warm_node_list(sbi, page)) {
+ 		seq = f2fs_add_fsync_node_entry(sbi, page);
+ 		if (seq_id)
+ 			*seq_id = seq;
+ 	}
  
--static const char *clk_out1_parents[] = { "clk_m", "clk_m_div2",
--	"clk_m_div4", "extern1",
-+static const char *clk_out1_parents[] = { "osc", "osc_div2",
-+	"osc_div4", "extern1",
- };
- 
--static const char *clk_out2_parents[] = { "clk_m", "clk_m_div2",
--	"clk_m_div4", "extern2",
-+static const char *clk_out2_parents[] = { "osc", "osc_div2",
-+	"osc_div4", "extern2",
- };
- 
--static const char *clk_out3_parents[] = { "clk_m", "clk_m_div2",
--	"clk_m_div4", "extern3",
-+static const char *clk_out3_parents[] = { "osc", "osc_div2",
-+	"osc_div4", "extern3",
- };
- 
- static struct pmc_clk_init_data pmc_clks[] = {
++	set_page_writeback(page);
++	ClearPageError(page);
++
+ 	fio.old_blkaddr = ni.blk_addr;
+ 	f2fs_do_write_node_page(nid, &fio);
+ 	set_node_addr(sbi, &ni, fio.new_blkaddr, is_fsync_dnode(page));
 -- 
 2.20.1
 
