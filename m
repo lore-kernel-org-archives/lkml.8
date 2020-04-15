@@ -2,54 +2,52 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB27C38A29
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:46:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9749EC3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39E1A21707
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:46:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 748232137B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:47:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586951193;
-	bh=xfxEHbO2CYxxBaJ6smtcDNMkhdPl2Aa+kTgvxGBP8Uw=;
+	s=default; t=1586951269;
+	bh=cV2r83eP8e/jucUSXYvFnWLjmbcZKhtPCDO2eIQor/o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oobNMfdw8tFCjjU0GFLzrUGzZZ2Wv++kOuqmexnnaElKShOGzX7WYk7QxPrHPfrTV
-	 Hh+v2nPljizDXz88t9AE1tLtn3U3PYSV0scAf2pAExpAa96iBmmC73jwGk/N1KdVFT
-	 +JuVaVocwomYA3f3HSk0A6SSqSC1iaNazvRypP5Q=
+	b=R0fzb9zL27VkJx4DCvAX+RT+6D7bBnEd+uv8sV2/3U+PsJApaPjJpKlTiegCaexGj
+	 KDCNI9ARwFwQeCwnYyqHwVg5EC/DLKuAscZMsV5/RLsqzed/MKHg6TvfNDZKVOuSh0
+	 oFby/aWZSJzxDTHAVXKNiHUmILaXRJ4bHOTNDwB0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406480AbgDOLqZ (ORCPT
+        id S2409389AbgDOLrq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:46:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34006 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 07:47:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897483AbgDOLmi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:42:38 -0400
+        id S2408932AbgDOLmz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:42:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0EACB206A2;
-        Wed, 15 Apr 2020 11:42:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41964206A2;
+        Wed, 15 Apr 2020 11:42:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950958;
-        bh=xfxEHbO2CYxxBaJ6smtcDNMkhdPl2Aa+kTgvxGBP8Uw=;
+        s=default; t=1586950974;
+        bh=cV2r83eP8e/jucUSXYvFnWLjmbcZKhtPCDO2eIQor/o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nrhVDEh1SkwzUfjtuL8dQeWYfiso4TfAUWijpH7AdA1RLylt/MQLlptUi2aTiCRvq
-         cMeRpcdKMhau8YUDWVn5PKNInLHbdIxClpDrj+3laZQXnVcyN+BVJNcpW4VoQZhRxf
-         WvB0uqfDmSJhWbptsvt5P5dB6cWKW+Wy4z4BHkDo=
+        b=Cpy9uLAE2pqP90ZVVtwIBnLWp1Ge/X59UKgazrYPINV9qf2aF6JH4GhrLu6fjxRO4
+         GbWfMx0OU76VqbllZBy934fLDe6fKxI7sIAFsjTTon4IomwZf5y+Oa9EcUIJaQwLzd
+         R+Vk5eFR5NajFqdG2941HdQss/AHTEvVilSqvwb4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrii Nakryiko <andriin@fb.com>,
-        Wenbo Zhang <ethercflow@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Yonghong Song <yhs@fb.com>, Sasha Levin <sashal@kernel.org>,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 5.5 009/106] bpf: Reliably preserve btf_trace_xxx types
-Date:   Wed, 15 Apr 2020 07:40:49 -0400
-Message-Id: <20200415114226.13103-9-sashal@kernel.org>
+Cc:     Lucas Stach <l.stach@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.5 023/106] soc: imx: gpc: fix power up sequencing
+Date:   Wed, 15 Apr 2020 07:41:03 -0400
+Message-Id: <20200415114226.13103-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
 References: <20200415114226.13103-1-sashal@kernel.org>
@@ -62,64 +60,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrii Nakryiko <andriin@fb.com>
+From: Lucas Stach <l.stach@pengutronix.de>
 
-[ Upstream commit 441420a1f0b3031f228453697406c86f110e59d4 ]
+[ Upstream commit e0ea2d11f8a08ba7066ff897e16c5217215d1e68 ]
 
-btf_trace_xxx types, crucial for tp_btf BPF programs (raw tracepoint with
-verifier-checked direct memory access), have to be preserved in kernel BTF to
-allow verifier do its job and enforce type/memory safety. It was reported
-([0]) that for kernels built with Clang current type-casting approach doesn't
-preserve these types.
+Currently we wait only until the PGC inverts the isolation setting
+before disabling the peripheral clocks. This doesn't ensure that the
+reset is properly propagated through the peripheral devices in the
+power domain.
 
-This patch fixes it by declaring an anonymous union for each registered
-tracepoint, capturing both struct bpf_raw_event_map information, as well as
-recording btf_trace_##call type reliably. Structurally, it's still the same
-content as for a plain struct bpf_raw_event_map, so no other changes are
-necessary.
+Wait until the PGC signals that the power up request is done and
+wait a bit for resets to propagate before disabling the clocks.
 
-  [0] https://github.com/iovisor/bcc/issues/2770#issuecomment-591007692
-
-Fixes: e8c423fb31fa ("bpf: Add typecast to raw_tracepoints to help BTF generation")
-Reported-by: Wenbo Zhang <ethercflow@gmail.com>
-Signed-off-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: Yonghong Song <yhs@fb.com>
-Link: https://lore.kernel.org/bpf/20200301081045.3491005-2-andriin@fb.com
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/trace/bpf_probe.h | 18 +++++++++++-------
- 1 file changed, 11 insertions(+), 7 deletions(-)
+ drivers/soc/imx/gpc.c | 24 +++++++++++++-----------
+ 1 file changed, 13 insertions(+), 11 deletions(-)
 
-diff --git a/include/trace/bpf_probe.h b/include/trace/bpf_probe.h
-index b04c292709730..1ce3be63add1f 100644
---- a/include/trace/bpf_probe.h
-+++ b/include/trace/bpf_probe.h
-@@ -75,13 +75,17 @@ static inline void bpf_test_probe_##call(void)				\
- 	check_trace_callback_type_##call(__bpf_trace_##template);	\
- }									\
- typedef void (*btf_trace_##call)(void *__data, proto);			\
--static struct bpf_raw_event_map	__used					\
--	__attribute__((section("__bpf_raw_tp_map")))			\
--__bpf_trace_tp_map_##call = {						\
--	.tp		= &__tracepoint_##call,				\
--	.bpf_func	= (void *)(btf_trace_##call)__bpf_trace_##template,	\
--	.num_args	= COUNT_ARGS(args),				\
--	.writable_size	= size,						\
-+static union {								\
-+	struct bpf_raw_event_map event;					\
-+	btf_trace_##call handler;					\
-+} __bpf_trace_tp_map_##call __used					\
-+__attribute__((section("__bpf_raw_tp_map"))) = {			\
-+	.event = {							\
-+		.tp		= &__tracepoint_##call,			\
-+		.bpf_func	= __bpf_trace_##template,		\
-+		.num_args	= COUNT_ARGS(args),			\
-+		.writable_size	= size,					\
-+	},								\
+diff --git a/drivers/soc/imx/gpc.c b/drivers/soc/imx/gpc.c
+index 98b9d9a902ae3..90a8b2c0676ff 100644
+--- a/drivers/soc/imx/gpc.c
++++ b/drivers/soc/imx/gpc.c
+@@ -87,8 +87,8 @@ static int imx6_pm_domain_power_off(struct generic_pm_domain *genpd)
+ static int imx6_pm_domain_power_on(struct generic_pm_domain *genpd)
+ {
+ 	struct imx_pm_domain *pd = to_imx_pm_domain(genpd);
+-	int i, ret, sw, sw2iso;
+-	u32 val;
++	int i, ret;
++	u32 val, req;
+ 
+ 	if (pd->supply) {
+ 		ret = regulator_enable(pd->supply);
+@@ -107,17 +107,18 @@ static int imx6_pm_domain_power_on(struct generic_pm_domain *genpd)
+ 	regmap_update_bits(pd->regmap, pd->reg_offs + GPC_PGC_CTRL_OFFS,
+ 			   0x1, 0x1);
+ 
+-	/* Read ISO and ISO2SW power up delays */
+-	regmap_read(pd->regmap, pd->reg_offs + GPC_PGC_PUPSCR_OFFS, &val);
+-	sw = val & 0x3f;
+-	sw2iso = (val >> 8) & 0x3f;
+-
+ 	/* Request GPC to power up domain */
+-	val = BIT(pd->cntr_pdn_bit + 1);
+-	regmap_update_bits(pd->regmap, GPC_CNTR, val, val);
++	req = BIT(pd->cntr_pdn_bit + 1);
++	regmap_update_bits(pd->regmap, GPC_CNTR, req, req);
+ 
+-	/* Wait ISO + ISO2SW IPG clock cycles */
+-	udelay(DIV_ROUND_UP(sw + sw2iso, pd->ipg_rate_mhz));
++	/* Wait for the PGC to handle the request */
++	ret = regmap_read_poll_timeout(pd->regmap, GPC_CNTR, val, !(val & req),
++				       1, 50);
++	if (ret)
++		pr_err("powerup request on domain %s timed out\n", genpd->name);
++
++	/* Wait for reset to propagate through peripherals */
++	usleep_range(5, 10);
+ 
+ 	/* Disable reset clocks for all devices in the domain */
+ 	for (i = 0; i < pd->num_clks; i++)
+@@ -343,6 +344,7 @@ static const struct regmap_config imx_gpc_regmap_config = {
+ 	.rd_table = &access_table,
+ 	.wr_table = &access_table,
+ 	.max_register = 0x2ac,
++	.fast_io = true,
  };
  
- #define FIRST(x, ...) x
+ static struct generic_pm_domain *imx_gpc_onecell_domains[] = {
 -- 
 2.20.1
 
