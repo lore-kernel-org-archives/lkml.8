@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1372DC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E76C2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7437206D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:59:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D175720575
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:59:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586951976;
-	bh=jObTWNnMaHHidvtaybkPvbifiOTSw/wElwG0AYkUPhI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GCgBlurgmc/4NEmzr5Raxg6ujEgLU1zHSd1+nUFCKZm5LdpnPv0OpW9lvwwb8pQ6F
-	 KpGSlo3Vj44gu1Ff2YpSeAjlAhMY7Rl4yfYyUXh51cyZoa2VDUW+uYLcPsx32BCJpu
-	 iioZ/GO9o0KFvbMBh8ucM6XKvstKWDlOIr+kAZdg=
+	s=default; t=1586951984;
+	bh=S6wAKXdXmDJgv7u1+X6ARKowSlSQupWIYsmGHU1DPC0=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=ZKyoTmlpxPHXC17l6rvTTgL4gy0C42BT+kEuTerB6uePtJFiI6P56BdzYHzXW/n58
+	 zyjCaLO94xDwMFzvGAEOOI8j4UWlHkCJvO9T8H5MVEGCcCV3GNgLvumIlf43JUmO1K
+	 4zALaXHi0MpwKJhglKRsaND19f4pVYUNChz6Xf3E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S368051AbgDOL72 (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:59:28 -0400
+        id S368058AbgDOL7n (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 07:59:43 -0400
 Received: from mail.kernel.org ([198.145.29.99]:41934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897585AbgDOLrA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:47:00 -0400
+        id S2409346AbgDOLrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:47:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7196E21655;
-        Wed, 15 Apr 2020 11:46:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8BFA2168B;
+        Wed, 15 Apr 2020 11:47:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951220;
-        bh=jObTWNnMaHHidvtaybkPvbifiOTSw/wElwG0AYkUPhI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UcbWAuryh4zxdi1LGc9cN18r1DKS9AuvpqJufNqlrpylZjCgHLvrI2CwAZi1C2f2N
-         BgZfwEkFlqlJM2TSW5ul4F5Yol+vq3+qhKfd+uzN3qFLqcKVYUgUltefEBZQB0ZE9h
-         MP7GZqynwZyhygX8lbs0P9L8+6G67IimqWnJr+vo=
+        s=default; t=1586951233;
+        bh=S6wAKXdXmDJgv7u1+X6ARKowSlSQupWIYsmGHU1DPC0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=KaA0SrNIyIrrEe09tFojBDHmLp1CttB2rUVTjvY9RlXEFu+yFQrBdqAvU9PDhryJJ
+         0cvbk3/hQjDlP3n00WcaUD4bH+yuNQXWmX2OL77fRPKXMXpI1wuM5xu9S9a+cIGcuv
+         eBZOUu6szAJ+dXiAxIthtxyZvBzxwm3ReAuWCEWo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Oliver Neukum <oneukum@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 31/40] mfd: dln2: Fix sanity checking for endpoints
-Date:   Wed, 15 Apr 2020 07:46:14 -0400
-Message-Id: <20200415114623.14972-31-sashal@kernel.org>
+Cc:     Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 01/30] clk: at91: usb: continue if clk_hw_round_rate() return zero
+Date:   Wed, 15 Apr 2020 07:46:42 -0400
+Message-Id: <20200415114711.15381-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415114623.14972-1-sashal@kernel.org>
-References: <20200415114623.14972-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,59 +57,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Claudiu Beznea <claudiu.beznea@microchip.com>
 
-[ Upstream commit fb945c95a482200876993977008b67ea658bd938 ]
+[ Upstream commit b0ecf1c6c6e82da4847900fad0272abfd014666d ]
 
-While the commit 2b8bd606b1e6 ("mfd: dln2: More sanity checking for endpoints")
-tries to harden the sanity checks it made at the same time a regression,
-i.e.  mixed in and out endpoints. Obviously it should have been not tested on
-real hardware at that time, but unluckily it didn't happen.
+clk_hw_round_rate() may call round rate function of its parents. In case
+of SAM9X60 two of USB parrents are PLLA and UPLL. These clocks are
+controlled by clk-sam9x60-pll.c driver. The round rate function for this
+driver is sam9x60_pll_round_rate() which call in turn
+sam9x60_pll_get_best_div_mul(). In case the requested rate is not in the
+proper range (rate < characteristics->output[0].min &&
+rate > characteristics->output[0].max) the sam9x60_pll_round_rate() will
+return a negative number to its caller (called by
+clk_core_round_rate_nolock()). clk_hw_round_rate() will return zero in
+case a negative number is returned by clk_core_round_rate_nolock(). With
+this, the USB clock will continue its rate computation even caller of
+clk_hw_round_rate() returned an error. With this, the USB clock on SAM9X60
+may not chose the best parent. I detected this after a suspend/resume
+cycle on SAM9X60.
 
-So, fix above mentioned typo and make device being enumerated again.
-
-While here, introduce an enumerator for magic values to prevent similar issue
-to happen in the future.
-
-Fixes: 2b8bd606b1e6 ("mfd: dln2: More sanity checking for endpoints")
-Cc: Oliver Neukum <oneukum@suse.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Link: https://lkml.kernel.org/r/1579261009-4573-2-git-send-email-claudiu.beznea@microchip.com
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/dln2.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/clk/at91/clk-usb.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/mfd/dln2.c b/drivers/mfd/dln2.c
-index 1476465ce803b..6ea0dd37b4535 100644
---- a/drivers/mfd/dln2.c
-+++ b/drivers/mfd/dln2.c
-@@ -93,6 +93,11 @@ struct dln2_mod_rx_slots {
- 	spinlock_t lock;
- };
- 
-+enum dln2_endpoint {
-+	DLN2_EP_OUT	= 0,
-+	DLN2_EP_IN	= 1,
-+};
+diff --git a/drivers/clk/at91/clk-usb.c b/drivers/clk/at91/clk-usb.c
+index 791770a563fcc..6fac6383d024e 100644
+--- a/drivers/clk/at91/clk-usb.c
++++ b/drivers/clk/at91/clk-usb.c
+@@ -78,6 +78,9 @@ static int at91sam9x5_clk_usb_determine_rate(struct clk_hw *hw,
+ 			tmp_parent_rate = req->rate * div;
+ 			tmp_parent_rate = clk_hw_round_rate(parent,
+ 							   tmp_parent_rate);
++			if (!tmp_parent_rate)
++				continue;
 +
- struct dln2_dev {
- 	struct usb_device *usb_dev;
- 	struct usb_interface *interface;
-@@ -736,10 +741,10 @@ static int dln2_probe(struct usb_interface *interface,
- 	    hostif->desc.bNumEndpoints < 2)
- 		return -ENODEV;
- 
--	epin = &hostif->endpoint[0].desc;
--	epout = &hostif->endpoint[1].desc;
-+	epout = &hostif->endpoint[DLN2_EP_OUT].desc;
- 	if (!usb_endpoint_is_bulk_out(epout))
- 		return -ENODEV;
-+	epin = &hostif->endpoint[DLN2_EP_IN].desc;
- 	if (!usb_endpoint_is_bulk_in(epin))
- 		return -ENODEV;
- 
+ 			tmp_rate = DIV_ROUND_CLOSEST(tmp_parent_rate, div);
+ 			if (tmp_rate < req->rate)
+ 				tmp_diff = req->rate - tmp_rate;
 -- 
 2.20.1
 
