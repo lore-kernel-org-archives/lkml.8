@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42935C2BB55
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F7F5C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:03:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 140E220575
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:03:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7307320575
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:03:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586952225;
-	bh=Io7ZAUQgTGEVP6jfptqaQMhzw5ws1pAVV5VQMKGqF0s=;
+	s=default; t=1586952231;
+	bh=YAjB2sHGtTpMKpHyVaKkXJWfs47xXB9KBtYdIXiACn4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mQDlvxYMj0C2KMzyj4u7ESrMVx8gvYKPszUTSjHHoiZFZv3OcyjtQlsCYn68DA+rP
-	 aHZps53ayxaW3CNsyKs6vaGxUk4Jlxl8rlhjjjez9LF02aZSdzhJZXgWxZN9YOGclR
-	 Kk8X7vxe0QVOkbNm6AauCyWURAfDVcl9TG7sx6P4=
+	b=kOg039jVaCCBJXlvu1l3L0FPTGXUdSQ4YLO/pfRlvkE5MiPHzEUOYfG/9avu5l5Yc
+	 IqY86DEUZdTRfRpTTzJ9rhliZ5Tu3avhUI0WFKhUKuJhkhoInqgYAKgQ5ZdtYnbJVY
+	 DOaoLWbLDjS1tM7/MzW3cz+90Fprj2KiNrYiXL78=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S368266AbgDOMDn (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:03:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44044 "EHLO mail.kernel.org"
+        id S368163AbgDOMDu (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:03:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409457AbgDOLsX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:48:23 -0400
+        id S2409453AbgDOLsV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:48:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AFED20768;
-        Wed, 15 Apr 2020 11:48:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1C8521569;
+        Wed, 15 Apr 2020 11:48:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951303;
-        bh=Io7ZAUQgTGEVP6jfptqaQMhzw5ws1pAVV5VQMKGqF0s=;
+        s=default; t=1586951300;
+        bh=YAjB2sHGtTpMKpHyVaKkXJWfs47xXB9KBtYdIXiACn4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bxbNcmyyeOEqWO2kJb3MEGb7mw/MqL+1QQDOc9AEyjidah8aj9Lw4kty1ItK1dCCf
-         2LHlndyVcrbO6Dh5JAEHP3e4BIFr3MFN2ATGHZJMhxijMk5Uba8FPpJHGZEISB+j4j
-         +hsUulfalAKnJzl3ckguTBWc8QBY1gAAQIwqZr/8=
+        b=viSYZpZLqjLpIz2zSCV2DEmeSb7RH7wupjhTjcdmfHsPjH0GJxa6h0deSiF0cn6Kk
+         lH2gIPwDObRbG9JzL0YtJitHVOotL4M6bNeOMspszeptRX7McTj/ou6UwejpV6SkFx
+         QXo3JqSuIkrwIB0DAMNrbC8mU/7W1yuPEj9ORvo4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Richard Palethorpe <rpalethorpe@suse.com>,
-        Kees Cook <keescook@chromium.org>, linux-can@vger.kernel.org,
-        netdev@vger.kernel.org, security@kernel.org, wg@grandegger.com,
-        mkl@pengutronix.de, davem@davemloft.net,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 07/14] slcan: Don't transmit uninitialized stack data in padding
-Date:   Wed, 15 Apr 2020 07:48:07 -0400
-Message-Id: <20200415114814.15954-7-sashal@kernel.org>
+Cc:     Josh Triplett <josh@joshtriplett.org>,
+        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
+        linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 05/14] ext4: fix incorrect group count in ext4_fill_super error message
+Date:   Wed, 15 Apr 2020 07:48:05 -0400
+Message-Id: <20200415114814.15954-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114814.15954-1-sashal@kernel.org>
 References: <20200415114814.15954-1-sashal@kernel.org>
@@ -60,54 +58,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Richard Palethorpe <rpalethorpe@suse.com>
+From: Josh Triplett <josh@joshtriplett.org>
 
-[ Upstream commit b9258a2cece4ec1f020715fe3554bc2e360f6264 ]
+[ Upstream commit df41460a21b06a76437af040d90ccee03888e8e5 ]
 
-struct can_frame contains some padding which is not explicitly zeroed in
-slc_bump. This uninitialized data will then be transmitted if the stack
-initialization hardening feature is not enabled (CONFIG_INIT_STACK_ALL).
+ext4_fill_super doublechecks the number of groups before mounting; if
+that check fails, the resulting error message prints the group count
+from the ext4_sb_info sbi, which hasn't been set yet. Print the freshly
+computed group count instead (which at that point has just been computed
+in "blocks_count").
 
-This commit just zeroes the whole struct including the padding.
-
-Signed-off-by: Richard Palethorpe <rpalethorpe@suse.com>
-Fixes: a1044e36e457 ("can: add slcan driver for serial/USB-serial CAN adapters")
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Cc: linux-can@vger.kernel.org
-Cc: netdev@vger.kernel.org
-Cc: security@kernel.org
-Cc: wg@grandegger.com
-Cc: mkl@pengutronix.de
-Cc: davem@davemloft.net
-Acked-by: Marc Kleine-Budde <mkl@pengutronix.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Josh Triplett <josh@joshtriplett.org>
+Fixes: 4ec1102813798 ("ext4: Add sanity checks for the superblock before mounting the filesystem")
+Link: https://lore.kernel.org/r/8b957cd1513fcc4550fe675c10bcce2175c33a49.1585431964.git.josh@joshtriplett.org
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/can/slcan.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ fs/ext4/super.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/can/slcan.c b/drivers/net/can/slcan.c
-index 27f42763eaf5a..5bacb019ec1f8 100644
---- a/drivers/net/can/slcan.c
-+++ b/drivers/net/can/slcan.c
-@@ -147,7 +147,7 @@ static void slc_bump(struct slcan *sl)
- 	u32 tmpid;
- 	char *cmd = sl->rbuff;
- 
--	cf.can_id = 0;
-+	memset(&cf, 0, sizeof(cf));
- 
- 	switch (*cmd) {
- 	case 'r':
-@@ -186,8 +186,6 @@ static void slc_bump(struct slcan *sl)
- 	else
- 		return;
- 
--	*(u64 *) (&cf.data) = 0; /* clear payload */
--
- 	/* RTR frames may have a dlc > 0 but they never have any data bytes */
- 	if (!(cf.can_id & CAN_RTR_FLAG)) {
- 		for (i = 0; i < cf.can_dlc; i++) {
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index cb96d343993f7..d8b2d38d2942e 100644
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -3792,9 +3792,9 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
+ 			EXT4_BLOCKS_PER_GROUP(sb) - 1);
+ 	do_div(blocks_count, EXT4_BLOCKS_PER_GROUP(sb));
+ 	if (blocks_count > ((uint64_t)1<<32) - EXT4_DESC_PER_BLOCK(sb)) {
+-		ext4_msg(sb, KERN_WARNING, "groups count too large: %u "
++		ext4_msg(sb, KERN_WARNING, "groups count too large: %llu "
+ 		       "(block count %llu, first data block %u, "
+-		       "blocks per group %lu)", sbi->s_groups_count,
++		       "blocks per group %lu)", blocks_count,
+ 		       ext4_blocks_count(es),
+ 		       le32_to_cpu(es->s_first_data_block),
+ 		       EXT4_BLOCKS_PER_GROUP(sb));
 -- 
 2.20.1
 
