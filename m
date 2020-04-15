@@ -4,48 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C15CEC2BB55
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:29:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63543C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F6FE2076C
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:29:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3891E20936
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:29:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586953755;
-	bh=gESVvPTfx2xSpiVG8TxKGdtaWIy+comoS9exNaI75lo=;
+	s=default; t=1586953765;
+	bh=0rcL6w+U3QxTPUxJYsUdrnHmbxHPVlcjvRNL/c8lbPI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xM1wqtyvXGFecIi/1IhZ6UdyeNNPHKxlCZK0x62fhORmA2HD7bM4wavKn6WDID79n
-	 gBmcNfJdaqF8QIthbP9g4vJ/rTNhm5r42tganj6B/fzU5JVAVLwCStSbFRSxRWPBgZ
-	 nENeKogV0ISznUWIH4YOSACdfxV96paClq5IVclI=
+	b=myafYaVsIhXYLAcu1wdAuGl1gqORAPULA7ngloIvjqorGg4728wq+BILYBKYQ36rH
+	 Z4Kffvh5MzS4dLMBd+FktgUtjUS5ah7J931NwHggvUi0qUm0yliGwcq/lKo0kLuqvY
+	 pj2wibcFptelMmef4wit/khAeyqMl4CtB9R2pUtI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S369386AbgDOM3N (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:29:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38226 "EHLO mail.kernel.org"
+        id S369396AbgDOM3W (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:29:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409122AbgDOLpE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:45:04 -0400
+        id S2409119AbgDOLpC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:45:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 549E421569;
-        Wed, 15 Apr 2020 11:45:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 764AE20775;
+        Wed, 15 Apr 2020 11:45:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951104;
-        bh=gESVvPTfx2xSpiVG8TxKGdtaWIy+comoS9exNaI75lo=;
+        s=default; t=1586951101;
+        bh=0rcL6w+U3QxTPUxJYsUdrnHmbxHPVlcjvRNL/c8lbPI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qVTpbSfHzfMXILdQsdSdb4DXL94OZwhhzm/feb4bRLkhY3kwIHV62e+NSduWAue/I
-         8WfvdaNXuO9Ilw5STL2hF+s1jSbkPk4OmzCTP4tU35lj3dkkZTcQGmAa9sVo1s7K/r
-         +njORDEUgw0IDqGrYaB7q5z3voJNmsyNe8eKNjAk=
+        b=lzVUNWGqa6nxWznGCYJkSW3V90OO15gGSYqAZm+MoGym+Ig3Cd+jmIGWmIRZyMAPn
+         t+Eo8yOgw7GxJXGSJity72gzHpE//y9MrOrve9pMXncVpCaVeWGGjHcJHYklVmsiCM
+         AtuXAFweGFwk+IQ/mYKbfXEllbz467ESGCL7i/7Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Murphy Zhou <jencce.kernel@gmail.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 19/84] NFSv4.2: error out when relink swapfile
-Date:   Wed, 15 Apr 2020 07:43:36 -0400
-Message-Id: <20200415114442.14166-19-sashal@kernel.org>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 16/84] rtc: 88pm860x: fix possible race condition
+Date:   Wed, 15 Apr 2020 07:43:33 -0400
+Message-Id: <20200415114442.14166-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114442.14166-1-sashal@kernel.org>
 References: <20200415114442.14166-1-sashal@kernel.org>
@@ -58,33 +57,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Murphy Zhou <jencce.kernel@gmail.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-[ Upstream commit f5fdf1243fb750598b46305dd03c553949cfa14f ]
+[ Upstream commit 9cf4789e6e4673d0b2c96fa6bb0c35e81b43111a ]
 
-This fixes xfstests generic/356 failure on NFSv4.2.
+The RTC IRQ is requested before the struct rtc_device is allocated,
+this may lead to a NULL pointer dereference in the IRQ handler.
 
-Signed-off-by: Murphy Zhou <jencce.kernel@gmail.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+To fix this issue, allocating the rtc_device struct before requesting
+the RTC IRQ using devm_rtc_allocate_device, and use rtc_register_device
+to register the RTC device.
+
+Also remove the unnecessary error message as the core already prints the
+info.
+
+Link: https://lore.kernel.org/r/20200311223956.51352-1-alexandre.belloni@bootlin.com
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4file.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/rtc/rtc-88pm860x.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
-index 54f1c1f626fc5..fb55c04cdc6bd 100644
---- a/fs/nfs/nfs4file.c
-+++ b/fs/nfs/nfs4file.c
-@@ -210,6 +210,9 @@ static loff_t nfs42_remap_file_range(struct file *src_file, loff_t src_off,
- 	if (remap_flags & ~REMAP_FILE_ADVISORY)
- 		return -EINVAL;
+diff --git a/drivers/rtc/rtc-88pm860x.c b/drivers/rtc/rtc-88pm860x.c
+index 4743b16a8d849..1526402e126b2 100644
+--- a/drivers/rtc/rtc-88pm860x.c
++++ b/drivers/rtc/rtc-88pm860x.c
+@@ -336,6 +336,10 @@ static int pm860x_rtc_probe(struct platform_device *pdev)
+ 	info->dev = &pdev->dev;
+ 	dev_set_drvdata(&pdev->dev, info);
  
-+	if (IS_SWAPFILE(dst_inode) || IS_SWAPFILE(src_inode))
-+		return -ETXTBSY;
++	info->rtc_dev = devm_rtc_allocate_device(&pdev->dev);
++	if (IS_ERR(info->rtc_dev))
++		return PTR_ERR(info->rtc_dev);
 +
- 	/* check alignment w.r.t. clone_blksize */
- 	ret = -EINVAL;
- 	if (bs) {
+ 	ret = devm_request_threaded_irq(&pdev->dev, info->irq, NULL,
+ 					rtc_update_handler, IRQF_ONESHOT, "rtc",
+ 					info);
+@@ -377,13 +381,11 @@ static int pm860x_rtc_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 
+-	info->rtc_dev = devm_rtc_device_register(&pdev->dev, "88pm860x-rtc",
+-					    &pm860x_rtc_ops, THIS_MODULE);
+-	ret = PTR_ERR(info->rtc_dev);
+-	if (IS_ERR(info->rtc_dev)) {
+-		dev_err(&pdev->dev, "Failed to register RTC device: %d\n", ret);
++	info->rtc_dev->ops = &pm860x_rtc_ops;
++
++	ret = rtc_register_device(info->rtc_dev);
++	if (ret)
+ 		return ret;
+-	}
+ 
+ 	/*
+ 	 * enable internal XO instead of internal 3.25MHz clock since it can
 -- 
 2.20.1
 
