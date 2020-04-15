@@ -7,52 +7,56 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DBD6C2BB55
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A95E9C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25B452137B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:51:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82744206D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:51:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586951487;
-	bh=1pQapq9m3603xrXiSN4BF3wGZPcBk5uTiJAJZ3h1E+A=;
+	s=default; t=1586951495;
+	bh=9NXEEyNPle9buOD5PAzi2advwivMFIPGG4uNAn1qRVs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=liB20wCkg/e2nk3GDk2v+SZSkpkmkhHngea1V/CTXLwFOXqOlIfXqMpMIp0LTrvyx
-	 cTHD1nVOyZNvNKrkFBVPJFPeXSVJXnhVN8g7WyArgJAEO/Vt6xEKY0hTqd/NgE7ebG
-	 9GHwxY0sf9NBv/bgc29JbYFbkekv2fNOgRQtIxMY=
+	b=ji3EleP57ImaVSPS7D2bcNU6WFfe1jnMD/aXDtML3OmaREVMOAKrunEXkTm+PqDrn
+	 e7oCatyws2HSd195uO2IibUU8/mvxrBc1S0uYtOrPel7FmEXQHl+cV1EHzIk2ckbCu
+	 gE8cU9xvqhZC8BRJeb1mI0vdRg+m3ypB22HIc9yU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2897674AbgDOLvZ (ORCPT
+        id S2897686AbgDOLvc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:51:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36162 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 07:51:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409040AbgDOLny (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:43:54 -0400
+        id S2897541AbgDOLnt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:43:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4955020775;
-        Wed, 15 Apr 2020 11:43:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78D9D2078A;
+        Wed, 15 Apr 2020 11:43:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951034;
-        bh=1pQapq9m3603xrXiSN4BF3wGZPcBk5uTiJAJZ3h1E+A=;
+        s=default; t=1586951028;
+        bh=9NXEEyNPle9buOD5PAzi2advwivMFIPGG4uNAn1qRVs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vr5AaBfqmg0C5wdJfkyZ0jxFav6JEQHKILq2tmzGr8LGM30+TSEtRRDUp9tJ2p4Vq
-         OkCQq8Bi5lePBj8K/luI3Vjg60y1BhbB0H5+JJXjfV0Yx/rbLtohJiAcapz9BiX45G
-         O66Kkvc871gevIsyx/2MHpGT3k0O7FwUt8FdKRUw=
+        b=f8vAoJ/0NOpGC9TbaIPPDTQjkfD0vcVBxxUjV6UjD7HC11llz4vueRzFh/hzQywZ9
+         FttX0iG7Jsxm1hFsJFA7RGECt9ojtp3H7UdMhAKMV23LdfEV6k5PSPTgE0DTsTmU0f
+         GgrInUhTCbxM2EKxd8FAPqKl3G6rFyqQlccuHpe0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Hildenbrand <david@redhat.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 071/106] KVM: s390: vsie: Fix possible race when shadowing region 3 tables
-Date:   Wed, 15 Apr 2020 07:41:51 -0400
-Message-Id: <20200415114226.13103-71-sashal@kernel.org>
+Cc:     Steven Price <steven.price@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 067/106] include/linux/swapops.h: correct guards for non_swap_entry()
+Date:   Wed, 15 Apr 2020 07:41:47 -0400
+Message-Id: <20200415114226.13103-67-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
 References: <20200415114226.13103-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,50 +65,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Hildenbrand <david@redhat.com>
+From: Steven Price <steven.price@arm.com>
 
-[ Upstream commit 1493e0f944f3c319d11e067c185c904d01c17ae5 ]
+[ Upstream commit 3f3673d7d324d872d9d8ddb73b3e5e47fbf12e0d ]
 
-We have to properly retry again by returning -EINVAL immediately in case
-somebody else instantiated the table concurrently. We missed to add the
-goto in this function only. The code now matches the other, similar
-shadowing functions.
+If CONFIG_DEVICE_PRIVATE is defined, but neither CONFIG_MEMORY_FAILURE nor
+CONFIG_MIGRATION, then non_swap_entry() will return 0, meaning that the
+condition (non_swap_entry(entry) && is_device_private_entry(entry)) in
+zap_pte_range() will never be true even if the entry is a device private
+one.
 
-We are overwriting an existing region 2 table entry. All allocated pages
-are added to the crst_list to be freed later, so they are not lost
-forever. However, when unshadowing the region 2 table, we wouldn't trigger
-unshadowing of the original shadowed region 3 table that we replaced. It
-would get unshadowed when the original region 3 table is modified. As it's
-not connected to the page table hierarchy anymore, it's not going to get
-used anymore. However, for a limited time, this page table will stick
-around, so it's in some sense a temporary memory leak.
+Equally any other code depending on non_swap_entry() will not function as
+expected.
 
-Identified by manual code inspection. I don't think this classifies as
-stable material.
+I originally spotted this just by looking at the code, I haven't actually
+observed any problems.
 
-Fixes: 998f637cc4b9 ("s390/mm: avoid races on region/segment/page table shadowing")
-Signed-off-by: David Hildenbrand <david@redhat.com>
-Link: https://lore.kernel.org/r/20200403153050.20569-4-david@redhat.com
-Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Looking a bit more closely it appears that actually this situation
+(currently at least) cannot occur:
+
+DEVICE_PRIVATE depends on ZONE_DEVICE
+ZONE_DEVICE depends on MEMORY_HOTREMOVE
+MEMORY_HOTREMOVE depends on MIGRATION
+
+Fixes: 5042db43cc26 ("mm/ZONE_DEVICE: new type of ZONE_DEVICE for unaddressable memory")
+Signed-off-by: Steven Price <steven.price@arm.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Jérôme Glisse <jglisse@redhat.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: John Hubbard <jhubbard@nvidia.com>
+Link: http://lkml.kernel.org/r/20200305130550.22693-1-steven.price@arm.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/mm/gmap.c | 1 +
- 1 file changed, 1 insertion(+)
+ include/linux/swapops.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/s390/mm/gmap.c b/arch/s390/mm/gmap.c
-index edcdca97e85ee..06d602c5ec7b7 100644
---- a/arch/s390/mm/gmap.c
-+++ b/arch/s390/mm/gmap.c
-@@ -1840,6 +1840,7 @@ int gmap_shadow_r3t(struct gmap *sg, unsigned long saddr, unsigned long r3t,
- 		goto out_free;
- 	} else if (*table & _REGION_ENTRY_ORIGIN) {
- 		rc = -EAGAIN;		/* Race with shadow */
-+		goto out_free;
- 	}
- 	crst_table_init(s_r3t, _REGION3_ENTRY_EMPTY);
- 	/* mark as invalid as long as the parent table is not protected */
+diff --git a/include/linux/swapops.h b/include/linux/swapops.h
+index 877fd239b6fff..3208a520d0be3 100644
+--- a/include/linux/swapops.h
++++ b/include/linux/swapops.h
+@@ -348,7 +348,8 @@ static inline void num_poisoned_pages_inc(void)
+ }
+ #endif
+ 
+-#if defined(CONFIG_MEMORY_FAILURE) || defined(CONFIG_MIGRATION)
++#if defined(CONFIG_MEMORY_FAILURE) || defined(CONFIG_MIGRATION) || \
++    defined(CONFIG_DEVICE_PRIVATE)
+ static inline int non_swap_entry(swp_entry_t entry)
+ {
+ 	return swp_type(entry) >= MAX_SWAPFILES;
 -- 
 2.20.1
 
