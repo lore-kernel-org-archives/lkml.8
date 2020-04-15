@@ -2,103 +2,111 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C498C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:53:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7475CC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:53:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 451872076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:53:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JjydEm3K"
+	by mail.kernel.org (Postfix) with ESMTP id 54F642076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:53:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408865AbgDOOxl (ORCPT
+        id S2408899AbgDOOxw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:53:41 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:23078 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2407866AbgDOOxe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 10:53:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586962413;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=K5aShlaM4L7LBpzpuTEwY9oR96TrokeSvhA+JevS168=;
-        b=JjydEm3K+xWc2nEV5L+8ZaX23sdIouTvuMz7Cz8Jnjz/rI4L/lTo9gxWzUYQ3SdNzaVfVB
-        HXFEUYXmezcWWbE9/5BnInA/OY6JigarzpKICa7rJe0chUEGgkEc8SSrnfL95BeewS0odx
-        YNlOEuVHhO0ayg8j8tpzXNUx7miRg8k=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-395-5txRY81jPO-hE3qfR8-GTQ-1; Wed, 15 Apr 2020 10:53:32 -0400
-X-MC-Unique: 5txRY81jPO-hE3qfR8-GTQ-1
-Received: by mail-wr1-f70.google.com with SMTP id j16so16184wrw.20
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 07:53:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=K5aShlaM4L7LBpzpuTEwY9oR96TrokeSvhA+JevS168=;
-        b=ia9zhcpACeADIZO33z/yHwK8A+deSfNTNBbgNIKlFOGTPqNQeJTguautSUFk6ZEk5m
-         36IxRj0oKZ2ORPQpfTPgrZHgxRcnCZxoktdd3bZ0Zpn7mXDJCRkjiVCTvCfX/bYzDb96
-         cnzQzdfnJgjuBgEEBOgFXnLfx0CA7ERkoZ1BKBbp9yQcvqVqtcb9Fs8TuOK4jWtacYAL
-         26cBgBI+OqCmda8rTxSUUBetW3gZ84SFsjfaY8VTs+R5XKcIONbcYJgT1xYvYOU7P/UV
-         SlP0vXKvYnDs7Jh2R3hcSIKKOAWYW6ZvJCQQCnKRNe8gibR/Cxl9RnVN8sH7m36OAUSW
-         S2LA==
-X-Gm-Message-State: AGi0PubXK5kIgKa6wgdgKd8MDJkZ6487yoOoPCSgfJWXeEeGuqyjduoP
-        dHG75OGzu0vL/nLBwwcpXPfKbxyujbPjsTiqAclmr3ukLkI3G7N28TjKCn4tFo2EZ/HQvNfNP8T
-        pzlGMq29FsVBPFhrUtpJ1QsEL
-X-Received: by 2002:a1c:4ca:: with SMTP id 193mr5676268wme.18.1586962410826;
-        Wed, 15 Apr 2020 07:53:30 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKgkkaOjvC7IzHh45gZluJBlRAB0EDDEKLC5J1nBzdDb/gCljFCcJsnBzwUJEmVbAtBvAy4Yw==
-X-Received: by 2002:a1c:4ca:: with SMTP id 193mr5676247wme.18.1586962410610;
-        Wed, 15 Apr 2020 07:53:30 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:9066:4f2:9fbd:f90e? ([2001:b07:6468:f312:9066:4f2:9fbd:f90e])
-        by smtp.gmail.com with ESMTPSA id p10sm22953476wrm.6.2020.04.15.07.53.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Apr 2020 07:53:30 -0700 (PDT)
-Subject: Re: [PATCH] KVM: Optimize kvm_arch_vcpu_ioctl_run function
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Cc:     kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        sean.j.christopherson@intel.com, wanpengli@tencent.com,
-        jmattson@google.com, joro@8bytes.org, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
-        maz@kernel.org, james.morse@arm.com, julien.thierry.kdev@gmail.com,
-        suzuki.poulose@arm.com
-References: <20200413034523.110548-1-tianjia.zhang@linux.alibaba.com>
- <875ze2ywhy.fsf@vitty.brq.redhat.com>
- <cc29ce22-4c70-87d1-d7aa-9d38438ba8a5@linux.alibaba.com>
- <87a73dxgk6.fsf@vitty.brq.redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <9e122372-249d-3d93-99ed-a670fff33936@redhat.com>
-Date:   Wed, 15 Apr 2020 16:53:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 15 Apr 2020 10:53:52 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54986 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2407940AbgDOOxs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 10:53:48 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 53B93AB3D;
+        Wed, 15 Apr 2020 14:53:45 +0000 (UTC)
+Date:   Wed, 15 Apr 2020 14:53:45 +0000 (UTC)
+From:   Michael Matz <matz@suse.de>
+To:     Borislav Petkov <bp@alien8.de>
+cc:     Jakub Jelinek <jakub@redhat.com>,
+        Sergei Trofimovich <slyfox@gentoo.org>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org
+Subject: Re: [PATCH v2] x86: fix early boot crash on gcc-10
+In-Reply-To: <20200415074842.GA31016@zn.tnic>
+Message-ID: <alpine.LSU.2.21.2004151445520.11688@wotan.suse.de>
+References: <20200326223501.GK11398@zn.tnic> <20200328084858.421444-1-slyfox@gentoo.org> <20200413163540.GD3772@zn.tnic> <alpine.LSU.2.21.2004141343370.11688@wotan.suse.de> <20200415074842.GA31016@zn.tnic>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <87a73dxgk6.fsf@vitty.brq.redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/04/20 11:07, Vitaly Kuznetsov wrote:
-> In case this is no longer needed I'd suggest we drop 'kvm_run' parameter
-> and extract it from 'struct kvm_vcpu' when needed. This looks like a
-> natural add-on to your cleanup patch.
+Hello,
 
-I agree, though I think it should be _instead_ of Tianjia's patch rather
-than on top.
+On Wed, 15 Apr 2020, Borislav Petkov wrote:
 
-Paolo
+> On Tue, Apr 14, 2020 at 01:50:29PM +0000, Michael Matz wrote:
+> > So this part expects that the caller (!) of trace_hardirqs_on was compiled
+> > with a frame pointer (in %ebp).
+> 
+> /me looks at the .s file...
+> 
+> options passed comment at the top has -fno-omit-frame-pointer
+> 
+> > Obviously that's not the case as you traced above. Is start_secondary
+> > the immediate caller in the above case?
+> 
+> Yes, start_secondary() is the function which is marked as
+> __attribute__((optimize("-fno-stack-protector"))) and it does:
+> 
+> # arch/x86/kernel/smpboot.c:264:        local_irq_enable();
+>         call    trace_hardirqs_on       #
+> 
+> (the local_irq_enable() is a macro which has the call to
+> trace_hardirqs_on().
+> 
+> > Look at it's disassembly.  If it doesn't have the usual push
+> > %ebp/mov%esp,%ebp prologue it probably doesn't use a frame pointer.
+> 
+> Here's the preamble:
+> 
+>         .text
+>         .p2align 4
+>         .type   start_secondary, @function
+> start_secondary:
+>         pushl   %esi    #
+>         pushl   %ebx    #
 
+Right.  So meanwhile it became clear: the optimize function attribute 
+doesn't work cumulative but rather replaces all cmdline args (the 
+optimization ones, but that roughly translates to -fxxx options).  In this 
+case an 'optimize("-fno-stack-protector")' also disables the crucial 
+-fno-omit-frame-pointer, reverting to the compilers default, which, 
+depending on version, is also to omit the frame pointer on 32bit.  You 
+could fix that by adding ',-fno-omit-frame-pointer' to the attribute 
+string.  But that quickly gets out of hand, considering all the options 
+you carefully need to set in Makefiles to get the right behaviour.  (Note 
+that e.g. the optimization level is reset to -O0 as well!).
+
+(I'll admit that I was somewhat surprised by this behaviour, even though 
+it makes sense in the abstract; resetting to a clean slate and 
+everything).
+
+I think in its current form the optimize attribute is not useful for the 
+purposes you need, and you're better off to disable the stack protector 
+for the whole compilation unit from the Makefile.
+
+(That attribute is also documented as "not suitable in production code", 
+so go figure ;-) )
+
+I think it will be possible to make that attribute a bit more useful 
+in the future, but for the time being I think you'll just want to live 
+without it.
+
+
+Ciao,
+Michael.
