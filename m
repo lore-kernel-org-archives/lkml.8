@@ -2,130 +2,99 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B02EC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F06DC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E75EC206F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:20:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="icZ8PQrX"
+	by mail.kernel.org (Postfix) with ESMTP id 1B49F206F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:20:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441169AbgDOHUP (ORCPT
+        id S2635108AbgDOHUb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 03:20:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56700 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2441149AbgDOHUK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 03:20:10 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C856FC061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 00:20:09 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id z6so17651733wml.2
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 00:20:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=JNTtrAlb/mmW6eYfSwP0Ro8M7IaMvjXCniYxJ2CnwM8=;
-        b=icZ8PQrXhCZI6D32MNsceXbhSUdE3ss+k0PgEpqDHKKpUuNLoudWdHM44NERTbVm8o
-         LgPj3+qoxx5rF5qJjQv0Y1ykLL37R/dqLSLiZ3J9hvBMgGZ8SBYTXgL4W61sPsaPkkmg
-         tj8QWK8y/A2zfxups2uwgfp/r8d19M2NCwdg4cf5sElp5s0no2yDwcTjLX6DRaaNwZK6
-         sU/M+nt9Hk9F9avYx4KpUOdeSVd6vX9NBHEAEQ1Uh9M3Esv8cpfZnoAyxp2ig3UX2B4y
-         DMziWRGoduMn20Oc0ArYn16VU+Y8rXMG+QmlShsO9H/q0VXyNs0/rf79/7Pg/bvbRN2/
-         3Sww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=JNTtrAlb/mmW6eYfSwP0Ro8M7IaMvjXCniYxJ2CnwM8=;
-        b=SSnpyDAI68IdOznrCka2Fb5Y7ZL/jlSNMZn/JLBh0EmSXMJoofInftJv2qy/8IfW7P
-         E5iULi2qoM6PxEPNjFnKEMR8kHpiBUnlnd3+mW339vo4eVKWUNrS8uck4EGtpmhJ5dr2
-         +6Qxy1svrmglEsD5X8Om+acQShPERfDULkl6GyhghkZLrZshnMZY6H1H1Z4MqrLmhnT8
-         eLeLZ7zE8qG1HSJg1jPBNRY84YsgYZ1hGBif9XKZGO5Te+f9KeN1LRtpYAccOOj+jqE8
-         FPJ8WQ/ilZNdtKePeJR0VigYXNpkSDkRAhKCVbSuKTDfvMcsxt+e1THYqz6zu8ap5ryA
-         qrWw==
-X-Gm-Message-State: AGi0PuaTw2BliPFFg2cbQ0gkRBqMHuakI7iqhCc3InUGoydPio+qnLt4
-        dQGz5vpPvJQxytQvzcZ8vDrJ8Q==
-X-Google-Smtp-Source: APiQypIt8y3v1RcXGhlIV5rcKng20PQp5/POLLPotSkVPDavNgF+b9tnwft19fx0HP2uPFDJdrAkQQ==
-X-Received: by 2002:a1c:1d92:: with SMTP id d140mr3649301wmd.67.1586935208412;
-        Wed, 15 Apr 2020 00:20:08 -0700 (PDT)
-Received: from dell ([95.149.164.124])
-        by smtp.gmail.com with ESMTPSA id a9sm16577131wmm.38.2020.04.15.00.20.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2020 00:20:07 -0700 (PDT)
-Date:   Wed, 15 Apr 2020 08:21:08 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     =?utf-8?B?Z2VuZV9jaGVuKOmZs+S/iuWuhyk=?= <gene_chen@richtek.com>
-Cc:     Gene Chen <gene.chen.richtek@gmail.com>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wilma.Wu@mediatek.com" <Wilma.Wu@mediatek.com>,
-        =?utf-8?B?c2h1ZmFuX2xlZSjmnY7mm7jluIYp?= <shufan_lee@richtek.com>,
-        =?utf-8?B?Y3lfaHVhbmco6buD5ZWf5Y6fKQ==?= <cy_huang@richtek.com>
-Subject: Re: [PATCH resend v8] mfd: mt6360: add pmic mt6360 driver
-Message-ID: <20200415072108.GE2167633@dell>
-References: <1586273804-7722-1-git-send-email-gene.chen.richtek@gmail.com>
- <0f60497f62d24a37a0530941d6eec258@ex1.rt.l>
+        Wed, 15 Apr 2020 03:20:31 -0400
+Received: from mga18.intel.com ([134.134.136.126]:60518 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2441149AbgDOHUT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 03:20:19 -0400
+IronPort-SDR: PaqZ+AhgjoUOcGbCRQoi83QTU4wBFrb6vn7ucmDOHh4+mEW/e2QutXMHLyEq3d0RtZxtoBDSVZ
+ pstsBaGYkw5A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 00:20:17 -0700
+IronPort-SDR: filQrUmefFZnsuI2X6HjURYn2GJAKFaqJdDUHDl1jbs6NDIyk22jUx+7DXjhQrFwuoD9Str+50
+ oTIdIdhXOLog==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,386,1580803200"; 
+   d="scan'208";a="244032687"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.87]) ([10.237.72.87])
+  by fmsmga007.fm.intel.com with ESMTP; 15 Apr 2020 00:20:14 -0700
+Subject: Re: [PATCH 1/2] mmc: sdhci: move SDHCI_CAPABILITIES_1 to a more
+ suitable place
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-mmc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
+        masahiroy@kernel.org
+References: <20200408072105.422-1-yamada.masahiro@socionext.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <af02a837-c5a9-4d0a-34a4-534e155ac968@intel.com>
+Date:   Wed, 15 Apr 2020 10:19:24 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <20200408072105.422-1-yamada.masahiro@socionext.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0f60497f62d24a37a0530941d6eec258@ex1.rt.l>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Apr 2020, gene_chen(陳俊宇) wrote:
-
-> Hi Lee/Matthias,
+On 8/04/20 10:21 am, Masahiro Yamada wrote:
+> In the SDHCI specification, the Capabilities Register (Offset 0x40h)
+> is the 64-bit width register, but in Linux, it is represented as two
+> registers, SDHCI_CAPABILITIES and SDHCI_CAPABILITIES_1 so that drivers
+> can use 32-bit register accessors.
 > 
-> I try to fix subject and update again, please help to review it, thanks
-
-Few things wrong with this.
-
- - Please don't top post
- - Please snip the parts of the message you're not directly replying to 
- - Please do not send contentless pings
-
-With regards to the latter point; you sent this patch during the
-merge-window (please pay attention to the release cycle).  Not a great
-deal of reviewing happens during this period.  If ~2 weeks have passed
-(they haven't), you may assume that your patch has been missed and
-submit a [RESEND], but whatever happens, do not ping.
-
-FYI, your patch is on the list - you do not need to send a [RESEND].
-
-> -----Original Message-----
-> From: Gene Chen [mailto:gene.chen.richtek@gmail.com]
-> Sent: Tuesday, April 07, 2020 11:37 PM
-> To: lee.jones@linaro.org; matthias.bgg@gmail.com
-> Cc: linux-arm-kernel@lists.infradead.org; linux-mediatek@lists.infradead.org; linux-kernel@vger.kernel.org; gene_chen(陳俊宇) <gene_chen@richtek.com>; Wilma.Wu@mediatek.com; shufan_lee(李書帆) <shufan_lee@richtek.com>; cy_huang(黃啟原) <cy_huang@richtek.com>
-> Subject: [PATCH resend v8] mfd: mt6360: add pmic mt6360 driver
+> The upper 32-bit field is associated with SDHCI_CAPABILITIES_1.
 > 
-> Add mfd driver for mt6360 pmic chip include Battery Charger/USB_PD/Flash LED/RGB LED/LDO/Buck
+> Move the definition of SDHCI_CAPABILITIES_1 to the correct place.
 > 
-> Signed-off-by: Gene Chen <gene_chen@richtek.com>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+
 > ---
->  drivers/mfd/Kconfig        |  12 ++
->  drivers/mfd/Makefile       |   1 +
->  drivers/mfd/mt6360-core.c  | 425 +++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/mfd/mt6360.h | 240 +++++++++++++++++++++++++
->  4 files changed, 678 insertions(+)
->  create mode 100644 drivers/mfd/mt6360-core.c  create mode 100644 include/linux/mfd/mt6360.h
+> 
+>  drivers/mmc/host/sdhci.h | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+> index 79dffbb731d3..b786b68e0302 100644
+> --- a/drivers/mmc/host/sdhci.h
+> +++ b/drivers/mmc/host/sdhci.h
+> @@ -220,6 +220,7 @@
+>  #define  SDHCI_CAN_64BIT_V4	0x08000000
+>  #define  SDHCI_CAN_64BIT	0x10000000
+>  
+> +#define SDHCI_CAPABILITIES_1	0x44
+>  #define  SDHCI_SUPPORT_SDR50	0x00000001
+>  #define  SDHCI_SUPPORT_SDR104	0x00000002
+>  #define  SDHCI_SUPPORT_DDR50	0x00000004
+> @@ -236,8 +237,6 @@
+>  #define  SDHCI_CAN_DO_ADMA3	0x08000000
+>  #define  SDHCI_SUPPORT_HS400	0x80000000 /* Non-standard */
+>  
+> -#define SDHCI_CAPABILITIES_1	0x44
+> -
+>  #define SDHCI_MAX_CURRENT		0x48
+>  #define  SDHCI_MAX_CURRENT_LIMIT	0xFF
+>  #define  SDHCI_MAX_CURRENT_330_MASK	0x0000FF
+> 
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
