@@ -4,58 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA369C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:55:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66053C2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:56:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9721E20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:55:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 429A4206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:56:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586951758;
-	bh=PXxlVk0aAEea5k6TpIzN1612LLubxTEmTIQU4OPjeI8=;
+	s=default; t=1586951766;
+	bh=9comZy+VKV018j2KhxsEbXwamZKAXU7+CY3v7/ohlVE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E/lit30MhoHX/BCgcSebWaVYmYZxbgVfDA87zo1KEJ0Gs7h2Y0PZXR+sHVj2ldPTk
-	 78hySoRJXTz+MTAfVwlvCGJY/UNTPc6wj1ro2+vcuXfhkYAfTtiYDxKUllx7Br5Z4A
-	 D/H0BD5QY4zGs7GOFovFzAfDhRntCDgs+rsGyakI=
+	b=p80oCjI/NQCgrB5e4baLSbEuoC9YCxQFkLTY9kEIogQMO8nB9OQrMzN6SUScOslZY
+	 b7abShfumdBt+HekyopTliGbHc/CgnNb5oCJdhyL8EiVULKqnAGsutfsm2Unor3A7l
+	 TMFf8TNe1GP76O8rvTmcaL2WZLVeeicVDOAGeeVA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409604AbgDOLzy (ORCPT
+        id S2409620AbgDOL4E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:55:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39298 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 07:56:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409212AbgDOLpo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:45:44 -0400
+        id S2897574AbgDOLpw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:45:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A34F20737;
-        Wed, 15 Apr 2020 11:45:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEDE2206A2;
+        Wed, 15 Apr 2020 11:45:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951143;
-        bh=PXxlVk0aAEea5k6TpIzN1612LLubxTEmTIQU4OPjeI8=;
+        s=default; t=1586951151;
+        bh=9comZy+VKV018j2KhxsEbXwamZKAXU7+CY3v7/ohlVE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wzcwvokajlcvggsfeqRM3ivtzoFdkRl1lQ79DT+DFmBcpBqjZTBNMvboOV9MrYbUA
-         HAN6Gd5Ts9D5MWe5I0+EpB4+87yaUjeXSik1MXHH2E1IcqkndR0W3NKoqbZ84AvjQh
-         6pvCdQuQbvXaKbBGWO/FkDC99WuueESu79KDQfik=
+        b=CsDrZbZN0NYHh/yrTSbZTE9GXmlqO2AySYQ62tVf43ssHxSFLBv+YGdt4oc/tgeST
+         pWydJooj3+dxjMInGEnennRxg4K12ImYTB4EbI6KwnbqXWe2DWKsOd3LrVHOTO0Xgr
+         GjI3h3w3B5LzCDiXHLubT9Jn2/I42yVT+qRjZ3z0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rikard Falkeborn <rikard.falkeborn@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Haren Myneni <haren@us.ibm.com>, Joe Perches <joe@perches.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 52/84] linux/bits.h: add compile time sanity check of GENMASK inputs
-Date:   Wed, 15 Apr 2020 07:44:09 -0400
-Message-Id: <20200415114442.14166-52-sashal@kernel.org>
+Cc:     Qian Cai <cai@lca.pw>, Borislav Petkov <bp@suse.de>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org,
+        linux-acpi@vger.kernel.org, devel@acpica.org
+Subject: [PATCH AUTOSEL 5.4 58/84] x86: ACPI: fix CPU hotplug deadlock
+Date:   Wed, 15 Apr 2020 07:44:15 -0400
+Message-Id: <20200415114442.14166-58-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114442.14166-1-sashal@kernel.org>
 References: <20200415114442.14166-1-sashal@kernel.org>
@@ -68,97 +60,167 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit 295bcca84916cb5079140a89fccb472bb8d1f6e2 ]
+[ Upstream commit 696ac2e3bf267f5a2b2ed7d34e64131f2287d0ad ]
 
-GENMASK() and GENMASK_ULL() are supposed to be called with the high bit as
-the first argument and the low bit as the second argument.  Mixing them
-will return a mask with zero bits set.
+Similar to commit 0266d81e9bf5 ("acpi/processor: Prevent cpu hotplug
+deadlock") except this is for acpi_processor_ffh_cstate_probe():
 
-Recent commits show getting this wrong is not uncommon, see e.g.  commit
-aa4c0c9091b0 ("net: stmmac: Fix misuses of GENMASK macro") and commit
-9bdd7bb3a844 ("clocksource/drivers/npcm: Fix misuse of GENMASK macro").
+"The problem is that the work is scheduled on the current CPU from the
+hotplug thread associated with that CPU.
 
-To prevent such mistakes from appearing again, add compile time sanity
-checking to the arguments of GENMASK() and GENMASK_ULL().  If both
-arguments are known at compile time, and the low bit is higher than the
-high bit, break the build to detect the mistake immediately.
+It's not required to invoke these functions via the workqueue because
+the hotplug thread runs on the target CPU already.
 
-Since GENMASK() is used in declarations, BUILD_BUG_ON_ZERO() must be used
-instead of BUILD_BUG_ON().
+Check whether current is a per cpu thread pinned on the target CPU and
+invoke the function directly to avoid the workqueue."
 
-__builtin_constant_p does not evaluate is argument, it only checks if it
-is a constant or not at compile time, and __builtin_choose_expr does not
-evaluate the expression that is not chosen.  Therefore, GENMASK(x++, 0)
-does only evaluate x++ once.
+ WARNING: possible circular locking dependency detected
+ ------------------------------------------------------
+ cpuhp/1/15 is trying to acquire lock:
+ ffffc90003447a28 ((work_completion)(&wfc.work)){+.+.}-{0:0}, at: __flush_work+0x4c6/0x630
 
-Commit 95b980d62d52 ("linux/bits.h: make BIT(), GENMASK(), and friends
-available in assembly") made the macros in linux/bits.h available in
-assembly.  Since BUILD_BUG_OR_ZERO() is not asm compatible, disable the
-checks if the file is included in an asm file.
+ but task is already holding lock:
+ ffffffffafa1c0e8 (cpuidle_lock){+.+.}-{3:3}, at: cpuidle_pause_and_lock+0x17/0x20
 
-Due to bugs in GCC versions before 4.9 [0], disable the check if building
-with a too old GCC compiler.
+ which lock already depends on the new lock.
 
-[0]: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=19449
+ the existing dependency chain (in reverse order) is:
 
-Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Haren Myneni <haren@us.ibm.com>
-Cc: Joe Perches <joe@perches.com>
-Cc: Johannes Berg <johannes@sipsolutions.net>
-Cc: lkml <linux-kernel@vger.kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/20200308193954.2372399-1-rikard.falkeborn@gmail.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+ -> #1 (cpu_hotplug_lock){++++}-{0:0}:
+ cpus_read_lock+0x3e/0xc0
+ irq_calc_affinity_vectors+0x5f/0x91
+ __pci_enable_msix_range+0x10f/0x9a0
+ pci_alloc_irq_vectors_affinity+0x13e/0x1f0
+ pci_alloc_irq_vectors_affinity at drivers/pci/msi.c:1208
+ pqi_ctrl_init+0x72f/0x1618 [smartpqi]
+ pqi_pci_probe.cold.63+0x882/0x892 [smartpqi]
+ local_pci_probe+0x7a/0xc0
+ work_for_cpu_fn+0x2e/0x50
+ process_one_work+0x57e/0xb90
+ worker_thread+0x363/0x5b0
+ kthread+0x1f4/0x220
+ ret_from_fork+0x27/0x50
+
+ -> #0 ((work_completion)(&wfc.work)){+.+.}-{0:0}:
+ __lock_acquire+0x2244/0x32a0
+ lock_acquire+0x1a2/0x680
+ __flush_work+0x4e6/0x630
+ work_on_cpu+0x114/0x160
+ acpi_processor_ffh_cstate_probe+0x129/0x250
+ acpi_processor_evaluate_cst+0x4c8/0x580
+ acpi_processor_get_power_info+0x86/0x740
+ acpi_processor_hotplug+0xc3/0x140
+ acpi_soft_cpu_online+0x102/0x1d0
+ cpuhp_invoke_callback+0x197/0x1120
+ cpuhp_thread_fun+0x252/0x2f0
+ smpboot_thread_fn+0x255/0x440
+ kthread+0x1f4/0x220
+ ret_from_fork+0x27/0x50
+
+ other info that might help us debug this:
+
+ Chain exists of:
+ (work_completion)(&wfc.work) --> cpuhp_state-up --> cpuidle_lock
+
+ Possible unsafe locking scenario:
+
+ CPU0                    CPU1
+ ----                    ----
+ lock(cpuidle_lock);
+                         lock(cpuhp_state-up);
+                         lock(cpuidle_lock);
+ lock((work_completion)(&wfc.work));
+
+ *** DEADLOCK ***
+
+ 3 locks held by cpuhp/1/15:
+ #0: ffffffffaf51ab10 (cpu_hotplug_lock){++++}-{0:0}, at: cpuhp_thread_fun+0x69/0x2f0
+ #1: ffffffffaf51ad40 (cpuhp_state-up){+.+.}-{0:0}, at: cpuhp_thread_fun+0x69/0x2f0
+ #2: ffffffffafa1c0e8 (cpuidle_lock){+.+.}-{3:3}, at: cpuidle_pause_and_lock+0x17/0x20
+
+ Call Trace:
+ dump_stack+0xa0/0xea
+ print_circular_bug.cold.52+0x147/0x14c
+ check_noncircular+0x295/0x2d0
+ __lock_acquire+0x2244/0x32a0
+ lock_acquire+0x1a2/0x680
+ __flush_work+0x4e6/0x630
+ work_on_cpu+0x114/0x160
+ acpi_processor_ffh_cstate_probe+0x129/0x250
+ acpi_processor_evaluate_cst+0x4c8/0x580
+ acpi_processor_get_power_info+0x86/0x740
+ acpi_processor_hotplug+0xc3/0x140
+ acpi_soft_cpu_online+0x102/0x1d0
+ cpuhp_invoke_callback+0x197/0x1120
+ cpuhp_thread_fun+0x252/0x2f0
+ smpboot_thread_fn+0x255/0x440
+ kthread+0x1f4/0x220
+ ret_from_fork+0x27/0x50
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+Tested-by: Borislav Petkov <bp@suse.de>
+[ rjw: Subject ]
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/bits.h | 22 ++++++++++++++++++++--
- 1 file changed, 20 insertions(+), 2 deletions(-)
+ arch/x86/kernel/acpi/cstate.c       | 3 ++-
+ drivers/acpi/processor_throttling.c | 7 -------
+ include/acpi/processor.h            | 8 ++++++++
+ 3 files changed, 10 insertions(+), 8 deletions(-)
 
-diff --git a/include/linux/bits.h b/include/linux/bits.h
-index 669d69441a625..f108302a3121c 100644
---- a/include/linux/bits.h
-+++ b/include/linux/bits.h
-@@ -18,12 +18,30 @@
-  * position @h. For example
-  * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
-  */
--#define GENMASK(h, l) \
-+#if !defined(__ASSEMBLY__) && \
-+	(!defined(CONFIG_CC_IS_GCC) || CONFIG_GCC_VERSION >= 49000)
-+#include <linux/build_bug.h>
-+#define GENMASK_INPUT_CHECK(h, l) \
-+	(BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
-+		__builtin_constant_p((l) > (h)), (l) > (h), 0)))
-+#else
-+/*
-+ * BUILD_BUG_ON_ZERO is not available in h files included from asm files,
-+ * disable the input check if that is the case.
-+ */
-+#define GENMASK_INPUT_CHECK(h, l) 0
-+#endif
+diff --git a/arch/x86/kernel/acpi/cstate.c b/arch/x86/kernel/acpi/cstate.c
+index caf2edccbad2e..49ae4e1ac9cd8 100644
+--- a/arch/x86/kernel/acpi/cstate.c
++++ b/arch/x86/kernel/acpi/cstate.c
+@@ -161,7 +161,8 @@ int acpi_processor_ffh_cstate_probe(unsigned int cpu,
+ 
+ 	/* Make sure we are running on right CPU */
+ 
+-	retval = work_on_cpu(cpu, acpi_processor_ffh_cstate_probe_cpu, cx);
++	retval = call_on_cpu(cpu, acpi_processor_ffh_cstate_probe_cpu, cx,
++			     false);
+ 	if (retval == 0) {
+ 		/* Use the hint in CST */
+ 		percpu_entry->states[cx->index].eax = cx->address;
+diff --git a/drivers/acpi/processor_throttling.c b/drivers/acpi/processor_throttling.c
+index 532a1ae3595a7..a0bd56ece3ff5 100644
+--- a/drivers/acpi/processor_throttling.c
++++ b/drivers/acpi/processor_throttling.c
+@@ -897,13 +897,6 @@ static long __acpi_processor_get_throttling(void *data)
+ 	return pr->throttling.acpi_processor_get_throttling(pr);
+ }
+ 
+-static int call_on_cpu(int cpu, long (*fn)(void *), void *arg, bool direct)
+-{
+-	if (direct || (is_percpu_thread() && cpu == smp_processor_id()))
+-		return fn(arg);
+-	return work_on_cpu(cpu, fn, arg);
+-}
+-
+ static int acpi_processor_get_throttling(struct acpi_processor *pr)
+ {
+ 	if (!pr)
+diff --git a/include/acpi/processor.h b/include/acpi/processor.h
+index 47805172e73d8..683e124ad517d 100644
+--- a/include/acpi/processor.h
++++ b/include/acpi/processor.h
+@@ -297,6 +297,14 @@ static inline void acpi_processor_ffh_cstate_enter(struct acpi_processor_cx
+ }
+ #endif
+ 
++static inline int call_on_cpu(int cpu, long (*fn)(void *), void *arg,
++			      bool direct)
++{
++	if (direct || (is_percpu_thread() && cpu == smp_processor_id()))
++		return fn(arg);
++	return work_on_cpu(cpu, fn, arg);
++}
 +
-+#define __GENMASK(h, l) \
- 	(((~UL(0)) - (UL(1) << (l)) + 1) & \
- 	 (~UL(0) >> (BITS_PER_LONG - 1 - (h))))
-+#define GENMASK(h, l) \
-+	(GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+ /* in processor_perflib.c */
  
--#define GENMASK_ULL(h, l) \
-+#define __GENMASK_ULL(h, l) \
- 	(((~ULL(0)) - (ULL(1) << (l)) + 1) & \
- 	 (~ULL(0) >> (BITS_PER_LONG_LONG - 1 - (h))))
-+#define GENMASK_ULL(h, l) \
-+	(GENMASK_INPUT_CHECK(h, l) + __GENMASK_ULL(h, l))
- 
- #endif	/* __LINUX_BITS_H */
+ #ifdef CONFIG_CPU_FREQ
 -- 
 2.20.1
 
