@@ -2,39 +2,64 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ABE3C3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:36:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E45CC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:37:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AF3F206F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:36:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E1C820857
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:37:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586957825;
+	bh=c42btVjX+Yo5ch+/fc7QG+39nnq0rypOoe5gU6XPg74=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=CqPaCLs3CNHPxyFL31FCanMRluGITWJ/qVqjx6dikzVeBLhomebIzYY3BcArxSApr
+	 VeyU/A0Pb2CZ2bd5/NsgfXebwYMVnooRVlbiyLLNLYmNzRwxRXJNTFTjzJ7yygPbZN
+	 IxmXRSvmXNYk0z7KSKhzlaG4+OtT43oeQIy26ieQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2636131AbgDONgf (ORCPT
+        id S2636152AbgDONhC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:36:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58812 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730130AbgDONg2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 09:36:28 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30B56C061A0C;
-        Wed, 15 Apr 2020 06:36:27 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: gtucker)
-        with ESMTPSA id 5DC1B2A0920
-From:   Guillaume Tucker <guillaume.tucker@collabora.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     kernel@collabora.com, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] media: Kconfig: include test_drivers with MEDIA_TEST_SUPPORT
-Date:   Wed, 15 Apr 2020 14:35:52 +0100
-Message-Id: <20200415133552.26411-1-guillaume.tucker@collabora.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 15 Apr 2020 09:37:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34662 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730053AbgDONgy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 09:36:54 -0400
+Received: from localhost (unknown [213.57.247.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7670A206F9;
+        Wed, 15 Apr 2020 13:36:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586957814;
+        bh=c42btVjX+Yo5ch+/fc7QG+39nnq0rypOoe5gU6XPg74=;
+        h=From:To:Cc:Subject:Date:From;
+        b=nj1f1cz02jLROcEL5+Bj4oaaLcObUQOq+uLYteUf4h0YVvHM+BJ1T6wsYUUXMy+Aj
+         2CiA8ZpGPmlweMjiFoSNN9CewJ5xWK9quglXdEoIXKcGfjrVp7DMLnNwGL6vmmICRd
+         lsYT+sxU+TbmnzRTfB6UtPTN1AmCTxemqLobXn5I=
+From:   Leon Romanovsky <leon@kernel.org>
+To:     "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Leon Romanovsky <leonro@mellanox.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        Borislav Petkov <bp@suse.de>, Ion Badulescu <ionut@badula.org>,
+        Jay Vosburgh <j.vosburgh@gmail.com>,
+        Jessica Yu <jeyu@kernel.org>, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>, netdev@vger.kernel.org,
+        oss-drivers@netronome.com, Pensando Drivers <drivers@pensando.io>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Shannon Nelson <snelson@pensando.io>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Yisen Zhuang <yisen.zhuang@huawei.com>
+Subject: [PATCH net-next v1 0/4] Remove vermagic header from global include folder
+Date:   Wed, 15 Apr 2020 16:36:44 +0300
+Message-Id: <20200415133648.1306956-1-leon@kernel.org>
+X-Mailer: git-send-email 2.25.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -42,59 +67,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Include test_drivers/Kconfig when MEDIA_TEST_SUPPORT is enabled rather
-than MEDIA_PLATFORM_SUPPORT.  Test drivers should not depend on
-platform drivers to be enabled.
+From: Leon Romanovsky <leonro@mellanox.com>
 
-Reported-by: "kernelci.org bot" <bot@kernelci.org>
-Fixes: 4b32216adb010 ("media: split test drivers from platform directory")
-Signed-off-by: Guillaume Tucker <guillaume.tucker@collabora.com>
----
+Changelog:
+v1:
+ * Added tags
+ * Updated patch #4 with test results
+ * Changed scripts/mod/modpost.c to create inclusion of vermagic.h
+   from kernel folder and not from general include/linux. This is
+   needed to generate *.mod.c files, while building modules.
+v0: https://lore.kernel.org/lkml/20200414155732.1236944-1-leon@kernel.org
+----------------------------------------------------------------------------
 
-Notes:
-    v2: Drop redundant "if MEDIA_TEST_SUPPORT" in test_drivers/Kconfig
+Hi,
 
- drivers/media/Kconfig              | 5 ++++-
- drivers/media/test_drivers/Kconfig | 4 ----
- 2 files changed, 4 insertions(+), 5 deletions(-)
+This is followup to the failure reported by Borislav [1] and suggested
+fix later on [2].
 
-diff --git a/drivers/media/Kconfig b/drivers/media/Kconfig
-index a8def1591352..d926c2603de2 100644
---- a/drivers/media/Kconfig
-+++ b/drivers/media/Kconfig
-@@ -238,10 +238,13 @@ source "drivers/media/common/Kconfig"
- 
- if MEDIA_PLATFORM_SUPPORT
- source "drivers/media/platform/Kconfig"
--source "drivers/media/test_drivers/Kconfig"
- source "drivers/media/mmc/Kconfig"
- endif
- 
-+if MEDIA_TEST_SUPPORT
-+source "drivers/media/test_drivers/Kconfig"
-+endif
-+
- source "drivers/media/firewire/Kconfig"
- 
- endmenu
-diff --git a/drivers/media/test_drivers/Kconfig b/drivers/media/test_drivers/Kconfig
-index 9f4a9cfbacc9..e62abec030c3 100644
---- a/drivers/media/test_drivers/Kconfig
-+++ b/drivers/media/test_drivers/Kconfig
-@@ -1,7 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0-only
- 
--if MEDIA_TEST_SUPPORT
--
- menuconfig V4L_TEST_DRIVERS
- 	bool "V4L test drivers"
- 	depends on VIDEO_DEV
-@@ -24,5 +22,3 @@ config VIDEO_VIM2M
- source "drivers/media/test_drivers/vicodec/Kconfig"
- 
- endif #V4L_TEST_DRIVERS
--
--endif #MEDIA_TEST_SUPPORT
--- 
-2.20.1
+The series removes all includes of linux/vermagic.h, updates hns and
+nfp to use same kernel versioning scheme (exactly like we did for
+other drivers in previous cycle) and removes vermagic.h from global
+include folder.
+
+[1] https://lore.kernel.org/lkml/20200411155623.GA22175@zn.tnic
+[2] https://lore.kernel.org/lkml/20200413080452.GA3772@zn.tnic
+
+------------------------------------------------------------
+1. Honestly, I have no idea if it can go to net-rc, clearly not all my
+patches are fixes, so I'm sending them to the net-next.
+2. Still didn't get response from kbuild, but it passed my own
+compilation tests.
+https://git.kernel.org/pub/scm/linux/kernel/git/leon/linux-rdma.git/log/?h=vermagic
+
+Thanks
+
+Leon Romanovsky (4):
+  drivers: Remove inclusion of vermagic header
+  net/hns: Remove custom driver version in favour of global one
+  net/nfp: Update driver to use global kernel version
+  kernel/module: Hide vermagic header file from general use
+
+ drivers/net/bonding/bonding_priv.h                   | 2 +-
+ drivers/net/ethernet/3com/3c509.c                    | 1 -
+ drivers/net/ethernet/3com/3c515.c                    | 1 -
+ drivers/net/ethernet/adaptec/starfire.c              | 1 -
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c      | 3 ---
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.h      | 4 ----
+ drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c   | 4 ----
+ drivers/net/ethernet/netronome/nfp/nfp_main.c        | 3 ---
+ drivers/net/ethernet/netronome/nfp/nfp_net_ethtool.c | 2 --
+ drivers/net/ethernet/pensando/ionic/ionic_main.c     | 2 +-
+ drivers/power/supply/test_power.c                    | 2 +-
+ kernel/module.c                                      | 2 +-
+ {include/linux => kernel}/vermagic.h                 | 0
+ net/ethtool/ioctl.c                                  | 3 +--
+ scripts/mod/modpost.c                                | 2 +-
+ 15 files changed, 6 insertions(+), 26 deletions(-)
+ rename {include/linux => kernel}/vermagic.h (100%)
+
+--
+2.25.2
 
