@@ -2,160 +2,108 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC52C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D31C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:52:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53CEE20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:51:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAC6320737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:52:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="FUUAvjfw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392755AbgDOBvn (ORCPT
+        id S2392764AbgDOBwQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 21:51:43 -0400
-Received: from mga11.intel.com ([192.55.52.93]:4241 "EHLO mga11.intel.com"
+        Tue, 14 Apr 2020 21:52:16 -0400
+Received: from ozlabs.org ([203.11.71.1]:40947 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387766AbgDOBvl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 21:51:41 -0400
-IronPort-SDR: 6NHwnvVpa4O27Yb1dCn5zYOD+7WpuHTbptzvqEz9Xdfx9bqVt74CjwkBqMtSSFVfZzcdLpYx1A
- NZcLZ0CP2vJA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 18:51:40 -0700
-IronPort-SDR: oNyv8pcwMJmynapfKtQ0XsbFivhe1B0qmEbjepMC1qvn4eCXwy6Ki4qR6KZypWCVy2mi8zrETg
- d/N11J3ZPtDQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,385,1580803200"; 
-   d="scan'208";a="288403966"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga002.fm.intel.com with ESMTP; 14 Apr 2020 18:51:39 -0700
-Received: from [10.213.147.143] (thiphuo2-mobl4.ccr.corp.intel.com [10.213.147.143])
-        by linux.intel.com (Postfix) with ESMTP id 2640E5802C9;
-        Tue, 14 Apr 2020 18:51:23 -0700 (PDT)
-Subject: Re: [PATCH v1 1/2] dt-bindings: mtd: Add YAML for Nand Flash
- Controller support
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        devicetree@vger.kernel.org, miquel.raynal@bootlin.com,
-        richard@nod.at, vigneshr@ti.com, arnd@arndb.de,
-        brendanhiggins@google.com, tglx@linutronix.de,
-        anders.roxell@linaro.org, masonccyang@mxic.com.tw,
-        piotrs@cadence.com, robh+dt@kernel.org,
-        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
-        cheol.yong.kim@intel.com
-References: <20200414022433.36622-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200414022433.36622-2-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200414090459.3c37c961@collabora.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <9b638a65-04b7-5708-ea00-0e6dd47bab8c@linux.intel.com>
-Date:   Wed, 15 Apr 2020 09:51:22 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S2387766AbgDOBwI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 21:52:08 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49252G1V8jz9s71;
+        Wed, 15 Apr 2020 11:52:06 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1586915526;
+        bh=fV1TG65RHgW5mIIIywIzh+2jkntYkoQhdhBIuj+ePD0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=FUUAvjfwRzKEGTbuUm4Y1r7k7qnFRNUM2MLeVhoodY3Ji61ZSmq6NwbBmJW8G99ap
+         M+9fugTMZoHdjjTBdES84Gthquced4zaLFGk9TbkqpMoJnjdTWRvlMVEycVcPc08ju
+         QDYtjX3BOHNa3k/gCmFhKhDZN2aQnFsd+WnqsSHAlGL6hToPU8cyJR7DYkEnZ4i3Wu
+         6Ve3qH3UDtLPHqT4eXewLm1MD7aEhRNiPIj+D+rpnPXjzYbBlQo6sIl9wH3fVmI5R7
+         rMlnwRYpDkFf2/WE1Na/ro0hL2n1AyX8kzzHkDmomMRMyjwz/wI9PyjZj0TReKawN1
+         3pIUwlmDtnMGA==
+Date:   Wed, 15 Apr 2020 11:52:04 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        DRI <dri-devel@lists.freedesktop.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Lyude Paul <lyude@redhat.com>,
+        Ville =?UTF-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
+Subject: linux-next: manual merge of the drm-misc tree with the drm-intel
+ tree
+Message-ID: <20200415115204.4929f663@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20200414090459.3c37c961@collabora.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: multipart/signed; boundary="Sig_/hn/Ojf3YwBFqzq4+MhBG6XU";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Boris,
+--Sig_/hn/Ojf3YwBFqzq4+MhBG6XU
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-     Thank you so much for the review comments and your time...
+Hi all,
 
-On 1 4/4/2020 3:04 pm, Boris Brezillon wrote:
-> On Tue, 14 Apr 2020 10:24:32 +0800
-> "Ramuthevar,Vadivel MuruganX"
-> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
->
->> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->>
->> Add YAML file for dt-bindings to support NAND Flash Controller
->> on Intel's Lightning Mountain SoC.
->>
->> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->> ---
->>   .../devicetree/bindings/mtd/intel,lgm-nand.yaml    | 61 ++++++++++++++++++++++
->>   1 file changed, 61 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml b/Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
->> new file mode 100644
->> index 000000000000..361e5051c602
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
->> @@ -0,0 +1,61 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/mtd/intel,lgm-nand.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Intel LGM SoC NAND Controller Device Tree Bindings
->> +
->> +allOf:
->> +  - $ref: "nand-controller.yaml"
->> +
->> +maintainers:
->> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->> +
->> +properties:
->> +  compatible:
->> +    const: intel,lgm-nand
-> intel,lgm-nand-controller
+Today's linux-next merge of the drm-misc tree got a conflict in:
 
-Noted, will update in the next patch.
+  drivers/gpu/drm/i915/display/intel_dp_mst.c
 
-Regards
-Vadivel
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    maxItems: 1
->> +
->> +  dmas:
->> +    maxItems: 2
->> +
->> +  dma-names:
->> +    enum:
->> +      - rx
->> +      - tx
->> +
->> +  pinctrl-names: true
->> +
->> +patternProperties:
->> +  "^pinctrl-[0-9]+$": true
->> +
->> +  "^nand@[a-f0-9]+$":
->> +    type: object
->> +    properties:
->> +      reg:
->> +        minimum: 0
->> +        maximum: 7
->> +
->> +      nand-ecc-mode: true
->> +
->> +      nand-ecc-algo:
->> +        const: hw
->> +
->> +    additionalProperties: false
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - clocks
->> +  - clock-names
->> +  - dmas
->> +
->> +additionalProperties: false
->> +
->> +...
+between commit:
+
+  743acd115070 ("drm/i915: Get rid of silly void* from MST code")
+
+from the drm-intel tree and commit:
+
+  20c22ad32957 ("drm/dp_mst: Remove drm_dp_mst_has_audio()")
+
+from the drm-misc tree.
+
+I fixed it up (I just used the latter version) and can carry the fix as
+necessary. This is now fixed as far as linux-next is concerned, but any
+non trivial conflicts should be mentioned to your upstream maintainer
+when your tree is submitted for merging.  You may also want to consider
+cooperating with the maintainer of the conflicting tree to minimise any
+particularly complex conflicts.
+
+
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/hn/Ojf3YwBFqzq4+MhBG6XU
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6WaMQACgkQAVBC80lX
+0GzpcQf8CYjcwn/7zvb9NfTafo2jJWZDi0WdDDL19Jt/R0k+404h9D2DL44+bf1v
+8892nWITiUWZmjrnjM/D6J4Q86CVyTVavZ8Fb0rdmxKWBm5EjjZV7//aV4hphYt3
+24y37cVvGpxeWvLHlWq7NR5sBs1yRZjzACsw4mKxGuJcVdHD22jJhcPqF09QKTq/
+53CJvOc4i/czFo6GwaUoKzpAmYdl0pbrfwglzooNWZBhKZp6HcVogLQ0nmLSKR2B
+zd0+Tx69+zThCSfO1ZCo7sr1xn4cCJuXvtqn3cUuV1epxMi0ve/Ty6XCk24XIqmx
+TYX+mwcJrKasdiy3kYV6TUsVa+Lo7A==
+=mYXD
+-----END PGP SIGNATURE-----
+
+--Sig_/hn/Ojf3YwBFqzq4+MhBG6XU--
