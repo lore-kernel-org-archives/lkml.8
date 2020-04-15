@@ -2,117 +2,104 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D876C2BB55
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:11:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D9EC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:12:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CB3E2076C
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:11:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB38220737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:12:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586952734;
+	bh=pPR3E/+TEmW7X9ElB0tBqcMc5d+em6cDWmEOV6tWQKA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=HPQ7USSh8O7EfhTAX/bnCoLBpqCjiunVIXx3Op2Sib513r7JyzV5m33OZKKc95aYC
+	 nOJPaEnxRA/3cZCP0RrtJVyKWu7c3OHnVU14LcIwHbxZV0sGZAn6wbYMq63bKfLYRH
+	 sbXn3y68O5FuGL2X4lUYLSPpl95psjJ3JAFkfCNU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S368603AbgDOML4 (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:11:56 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:41649 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2441259AbgDOMIU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 08:08:20 -0400
-X-Originating-IP: 2.224.242.101
-Received: from uno.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 4300420009;
-        Wed, 15 Apr 2020 12:08:10 +0000 (UTC)
-Date:   Wed, 15 Apr 2020 14:11:14 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Roman Kovalivskyi <roman.kovalivskyi@globallogic.com>
-Cc:     linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Luis Oliveira <lolivei@synopsys.com>,
-        Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        Michael Rodin <mrodin@de.adit-jv.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hugues Fruchet <hugues.fruchet@st.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Adam Ford <aford173@gmail.com>,
-        Todor Tomov <todor.tomov@linaro.org>,
-        Suresh Udipi <sudipi@jp.adit-jv.com>,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Dave Stevenson <dave.stevenson@raspberrypi.org>
-Subject: Re: [PATCH 1/4] media: ov5647: Add set_fmt and get_fmt calls.
-Message-ID: <20200415121114.2bfe6lqjy57p2xlb@uno.localdomain>
-References: <cover.1586759968.git.roman.kovalivskyi@globallogic.com>
- <8a4c0d157d26251c9916b32866e6a4a91c023ef9.1586759968.git.roman.kovalivskyi@globallogic.com>
+        id S368620AbgDOMMH (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:12:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42342 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2897599AbgDOLrH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:47:07 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1EED02166E;
+        Wed, 15 Apr 2020 11:47:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586951226;
+        bh=pPR3E/+TEmW7X9ElB0tBqcMc5d+em6cDWmEOV6tWQKA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=eT1btFCTd4Kgwu1k97sSmd+E/ypWQJZ6e4AHMVV0qrHVFH1Jo9AGsDCiccZzI5TZu
+         CulewAps3mTt2hHe4ZrzWlcmuYa8IDLqBAtVtWoSWVITH7+NfDyscWZjXUcueQIL65
+         O5GFM6g69sb7NUuyiaNwkDYJU9Wjcgm1/GzAcprQ=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Jeffery Miller <jmiller@neverware.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 37/40] power: supply: axp288_fuel_gauge: Broaden vendor check for Intel Compute Sticks.
+Date:   Wed, 15 Apr 2020 07:46:20 -0400
+Message-Id: <20200415114623.14972-37-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200415114623.14972-1-sashal@kernel.org>
+References: <20200415114623.14972-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <8a4c0d157d26251c9916b32866e6a4a91c023ef9.1586759968.git.roman.kovalivskyi@globallogic.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Roman,
+From: Jeffery Miller <jmiller@neverware.com>
 
-On Mon, Apr 13, 2020 at 12:17:44PM +0300, Roman Kovalivskyi wrote:
-> From: Dave Stevenson <dave.stevenson@raspberrypi.org>
->
-> There's no way to query the subdevice for the supported
-> resolutions. Add set_fmt and get_fmt implementations. Since there's
-> only one format supported set_fmt does nothing and get returns single
-> format.
->
-> Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.org>
-> Signed-off-by: Roman Kovalivskyi <roman.kovalivskyi@globallogic.com>
+[ Upstream commit e42fe5b29ac07210297e75f36deefe54edbdbf80 ]
 
-Looks good to me
-Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
+The Intel Compute Stick `STK1A32SC` can have a system vendor of
+"Intel(R) Client Systems".
+Broaden the Intel Compute Stick DMI checks so that they match "Intel
+Corporation" as well as "Intel(R) Client Systems".
 
-Thanks
-  j
+This fixes an issue where the STK1A32SC compute sticks were still
+exposing a battery with the existing blacklist entry.
 
-> ---
->  drivers/media/i2c/ov5647.c | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
->
-> diff --git a/drivers/media/i2c/ov5647.c b/drivers/media/i2c/ov5647.c
-> index e7d2e5b4ad4b..3e587eb0a30e 100644
-> --- a/drivers/media/i2c/ov5647.c
-> +++ b/drivers/media/i2c/ov5647.c
-> @@ -463,8 +463,30 @@ static int ov5647_enum_mbus_code(struct v4l2_subdev *sd,
->  	return 0;
->  }
->
-> +static int ov5647_set_get_fmt(struct v4l2_subdev *sd,
-> +			      struct v4l2_subdev_pad_config *cfg,
-> +			      struct v4l2_subdev_format *format)
-> +{
-> +	struct v4l2_mbus_framefmt *fmt = &format->format;
-> +
-> +	if (format->pad != 0)
-> +		return -EINVAL;
-> +
-> +	/* Only one format is supported, so return that */
-> +	memset(fmt, 0, sizeof(*fmt));
-> +	fmt->code = MEDIA_BUS_FMT_SBGGR8_1X8;
-> +	fmt->colorspace = V4L2_COLORSPACE_SRGB;
-> +	fmt->field = V4L2_FIELD_NONE;
-> +	fmt->width = 640;
-> +	fmt->height = 480;
-> +
-> +	return 0;
-> +}
-> +
->  static const struct v4l2_subdev_pad_ops ov5647_subdev_pad_ops = {
->  	.enum_mbus_code = ov5647_enum_mbus_code,
-> +	.set_fmt =	  ov5647_set_get_fmt,
-> +	.get_fmt =	  ov5647_set_get_fmt,
->  };
->
->  static const struct v4l2_subdev_ops ov5647_subdev_ops = {
-> --
-> 2.17.1
->
+Signed-off-by: Jeffery Miller <jmiller@neverware.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/power/supply/axp288_fuel_gauge.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/power/supply/axp288_fuel_gauge.c b/drivers/power/supply/axp288_fuel_gauge.c
+index ab0b6e78ca02a..157cf5ec6b023 100644
+--- a/drivers/power/supply/axp288_fuel_gauge.c
++++ b/drivers/power/supply/axp288_fuel_gauge.c
+@@ -718,14 +718,14 @@ static const struct dmi_system_id axp288_fuel_gauge_blacklist[] = {
+ 	{
+ 		/* Intel Cherry Trail Compute Stick, Windows version */
+ 		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "Intel Corporation"),
++			DMI_MATCH(DMI_SYS_VENDOR, "Intel"),
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "STK1AW32SC"),
+ 		},
+ 	},
+ 	{
+ 		/* Intel Cherry Trail Compute Stick, version without an OS */
+ 		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "Intel Corporation"),
++			DMI_MATCH(DMI_SYS_VENDOR, "Intel"),
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "STK1A32SC"),
+ 		},
+ 	},
+-- 
+2.20.1
+
