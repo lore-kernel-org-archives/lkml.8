@@ -2,101 +2,94 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E86A4C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:42:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9044AC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:43:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB56F20656
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:42:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D50920656
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:43:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fudan.edu.cn header.i=@fudan.edu.cn header.b="gn7HKmrn"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="HNfL3in5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2894864AbgDOImH (ORCPT
+        id S2894886AbgDOIm5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 04:42:07 -0400
-Received: from mail.fudan.edu.cn ([202.120.224.10]:41677 "EHLO fudan.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2894856AbgDOIlz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 04:41:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fudan.edu.cn; s=dkim; h=Received:From:To:Cc:Subject:Date:
-        Message-Id; bh=gtRcE5Gaw5iPz6XU4C6AlWYuxu3QdDFR+izPJ+jn8H4=; b=g
-        n7HKmrnLpSSE3qWDy4Y1GUlRFobRGv9rDOUuJNGNRXp9HSbuGfCyNuLDUskz5U9n
-        I7LHvT8pBv2VqxblKIGVxr4BNMBwXJh6ajx4o1xm0XdaPIbxM5QZ+ADHRIdJZFtE
-        Q7qaROkBFqk6pbEg2NoUcC+q3AlbOFUem0R5+H3MRk=
-Received: from localhost.localdomain (unknown [120.229.255.108])
-        by app1 (Coremail) with SMTP id XAUFCgAnLPzKyJZekodFAA--.16897S3;
-        Wed, 15 Apr 2020 16:41:48 +0800 (CST)
-From:   Xiyu Yang <xiyuyang19@fudan.edu.cn>
-To:     Inaky Perez-Gonzalez <inaky.perez-gonzalez@intel.com>,
-        linux-wimax@intel.com, "David S. Miller" <davem@davemloft.net>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
-        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>
-Subject: [PATCH] wimax/i2400m: Fix potential urb refcnt leak
-Date:   Wed, 15 Apr 2020 16:41:20 +0800
-Message-Id: <1586940080-70052-1-git-send-email-xiyuyang19@fudan.edu.cn>
-X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID: XAUFCgAnLPzKyJZekodFAA--.16897S3
-X-Coremail-Antispam: 1UD129KBjvJXoWruryUCr1UtF1UtrW3CFykZrb_yoW8JrWfpr
-        4DJFWjyrn0qF1DWwn8A3sYgF15Xa1UX34IqFW5ua98ZF9rXanxJr1kt3y3ZFyYkrW5Aw1a
-        qrZFvr43Crn8KF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvv14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26rxl
-        6s0DM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-        0DM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AKxVWUJVW8Jw
-        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAG
-        YxC7MxkIecxEwVAFwVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8Jw
-        C20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAF
-        wI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjx
-        v20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVW8JVW3JwCI42IY6I8E
-        87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73Uj
-        IFyTuYvjfUePfQDUUUU
-X-CM-SenderInfo: irzsiiysuqikmy6i3vldqovvfxof0/
+        Wed, 15 Apr 2020 04:42:57 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:35413 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2894871AbgDOImu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 04:42:50 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586940170; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=QKDw62bpMO1wwchuPEun25pneBt8hRj+Wno/6nm/b3Q=;
+ b=HNfL3in5xnTM20oXevtdWKKdBEI/yb2Qw+9sxBXUKKCvMz3sjPw9vNubQFWiIfkDFp+fL4g+
+ p2hpDporpnxMTG7g4P0h9KkzjUR6j7rhp8Xq6nRSNrVb0kSdcfIILXYYg3M4ieQXYmuvpbta
+ I5syFK0+BnMZvYjSYW8ZYdjXukM=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e96c908.7ff158d1c768-smtp-out-n02;
+ Wed, 15 Apr 2020 08:42:48 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id CD050C433CB; Wed, 15 Apr 2020 08:42:47 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2D3F5C433F2;
+        Wed, 15 Apr 2020 08:42:44 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2D3F5C433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH 3/9] hostap: Add missing annotations for
+ prism2_bss_list_proc_start() and prism2_bss_list_proc_stop
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200411001933.10072-4-jbi.octave@gmail.com>
+References: <20200411001933.10072-4-jbi.octave@gmail.com>
+To:     Jules Irenge <jbi.octave@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, boqun.feng@gmail.com,
+        Jouni Malinen <j@w1.fi>,
+        "David S. Miller" <davem@davemloft.net>,
+        zhong jiang <zhongjiang@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        linux-wireless@vger.kernel.org (open list:HOST AP DRIVER),
+        netdev@vger.kernel.org (open list:NETWORKING DRIVERS)
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20200415084247.CD050C433CB@smtp.codeaurora.org>
+Date:   Wed, 15 Apr 2020 08:42:47 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-i2400mu_bus_bm_wait_for_ack() invokes usb_get_urb(), which increases the
-refcount of the "notif_urb".
+Jules Irenge <jbi.octave@gmail.com> wrote:
 
-When i2400mu_bus_bm_wait_for_ack() returns, local variable "notif_urb"
-becomes invalid, so the refcount should be decreased to keep refcount
-balanced.
+> Sparse reports warnings at prism2_bss_list_proc_start() and prism2_bss_list_proc_stop()
+> 
+> warning: context imbalance in prism2_wds_proc_stop() - unexpected unlock
+> warning: context imbalance in prism2_bss_list_proc_start() - wrong count at exit
+> 
+> The root cause is the missing annotations at prism2_bss_list_proc_start()
+> 
+> Add the missing __acquires(&local->lock) annotation
+> Add the missing __releases(&local->lock) annotation
+> 
+> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 
-The issue happens in all paths of i2400mu_bus_bm_wait_for_ack(), which
-forget to decrease the refcnt increased by usb_get_urb(), causing a
-refcnt leak.
+Patch applied to wireless-drivers-next.git, thanks.
 
-Fix this issue by calling usb_put_urb() before the
-i2400mu_bus_bm_wait_for_ack() returns.
+1c0e3c73e98d hostap: Add missing annotations for prism2_bss_list_proc_start() and prism2_bss_list_proc_stop
 
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
----
- drivers/net/wimax/i2400m/usb-fw.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/net/wimax/i2400m/usb-fw.c b/drivers/net/wimax/i2400m/usb-fw.c
-index 529ebca1e9e1..1f7709d24f35 100644
---- a/drivers/net/wimax/i2400m/usb-fw.c
-+++ b/drivers/net/wimax/i2400m/usb-fw.c
-@@ -354,6 +354,7 @@ ssize_t i2400mu_bus_bm_wait_for_ack(struct i2400m *i2400m,
- 		usb_autopm_put_interface(i2400mu->usb_iface);
- 	d_fnend(8, dev, "(i2400m %p ack %p size %zu) = %ld\n",
- 		i2400m, ack, ack_size, (long) result);
-+	usb_put_urb(&notif_urb);
- 	return result;
- 
- error_exceeded:
 -- 
-2.7.4
+https://patchwork.kernel.org/patch/11483853/
 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
