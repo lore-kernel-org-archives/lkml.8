@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D79C3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:30:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A02C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:30:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18DF22078A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:30:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CE502078A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:30:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586953826;
-	bh=akMjQJ64mNR3wfa9mHacNmsGeQLx5+Kc0AWod/pu0pk=;
+	s=default; t=1586953831;
+	bh=W78xDKL9vZeAOmKKhIvU94QXZNobNiSeA2UTlKqPmz8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GZudzzIVWTLwbKuZqH4VzqjTgsm3GyXxojPX/M0M6Zoocs11aebZAlO+qFGm+6UA9
-	 y2865akXkp3/zcdmZtt7qO3E0RJ21vUpIhsByices17mTXbAYM0McacXhazMYARwev
-	 6da+Y/+SuSaRT8wU8ygOSVqHPhlpV4hY9GBAvrbk=
+	b=boPt4xXSWQRb5suNWS+ycj1RkqAgG5SGX/kTq62k75SQEKJ+7kbDEhJ5pUZrAWwIl
+	 yYK5eA9S5XKGCRmbK65ieMOj5Xqt3CKNdb1+Mm2iukzHap7KQmqLqQY2kkfFbxHteM
+	 E7cJ2RND2YYbmsTYVgLD1VkZt6O5tX/LR7Ma2HTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S369474AbgDOMaY (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:30:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37404 "EHLO mail.kernel.org"
+        id S369483AbgDOMa3 (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:30:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406022AbgDOLoz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:44:55 -0400
+        id S2409110AbgDOLow (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:44:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3E7620737;
-        Wed, 15 Apr 2020 11:44:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CFC82137B;
+        Wed, 15 Apr 2020 11:44:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951095;
-        bh=akMjQJ64mNR3wfa9mHacNmsGeQLx5+Kc0AWod/pu0pk=;
+        s=default; t=1586951092;
+        bh=W78xDKL9vZeAOmKKhIvU94QXZNobNiSeA2UTlKqPmz8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GoJ/7ppDsVRX+MJOZDOGAE+U4eiHhrwBpTYpoZtuIQ1HdnzyOD5w0zmMBfbT/9kX7
-         Tjx+9YwhfeCuk4tNkfc9R5gCUiyR8qAa6TaOriK1FIUqJ4VgrBJglElWw2hZcSEYOz
-         qOij9znVOnECBiGF4Li/CYVbvR8HiXdxtXY12IPY=
+        b=w5b1lejBbPRapuazUXqeLCU30Sx2Awzsj8GFAUTUnqBNfkLH2KDrx+/2tSDxFRp+V
+         argjYTUc+kYaYsGPy3u+xf6K+EkaQHPX9eVE7UdpOJmPVDbm+9wLyUGAryy60nqMlj
+         /rxF8CrqrdtV+YA9lB6p9ZPnFzHi8DAHYY+ltE/o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vidya Sagar <vidyas@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 11/84] arm64: tegra: Add PCIe endpoint controllers nodes for Tegra194
-Date:   Wed, 15 Apr 2020 07:43:28 -0400
-Message-Id: <20200415114442.14166-11-sashal@kernel.org>
+Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
+        Chen-Yu Tsai <wens@csie.org>, Sasha Levin <sashal@kernel.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 08/84] arm64: dts: allwinner: a64: Fix display clock register range
+Date:   Wed, 15 Apr 2020 07:43:25 -0400
+Message-Id: <20200415114442.14166-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114442.14166-1-sashal@kernel.org>
 References: <20200415114442.14166-1-sashal@kernel.org>
@@ -59,130 +58,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vidya Sagar <vidyas@nvidia.com>
+From: Jernej Skrabec <jernej.skrabec@siol.net>
 
-[ Upstream commit 0c988b731e6430f0081991fdb4f63f7fc837df9a ]
+[ Upstream commit 3e9a1a8b7f811de3eb1445d72f68766b704ad17c ]
 
-Add endpoint mode controllers nodes for the dual mode PCIe controllers
-present in Tegra194 SoC.
+Register range of display clocks is 0x10000, as it can be seen from
+DE2 documentation.
 
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Fix it.
+
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+Fixes: 2c796fc8f5dbd ("arm64: dts: allwinner: a64: add necessary device tree nodes for DE2 CCU")
+[wens@csie.org: added fixes tag]
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/nvidia/tegra194.dtsi | 99 ++++++++++++++++++++++++
- 1 file changed, 99 insertions(+)
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-index 3c0cf54f0aab3..57adcbb7352d6 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-@@ -1430,6 +1430,105 @@
- 			  0x82000000 0x0  0x40000000 0x1f 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
- 	};
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index ba41c1b85887a..367699c8c9028 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -227,7 +227,7 @@
  
-+	pcie_ep@14160000 {
-+		compatible = "nvidia,tegra194-pcie-ep", "snps,dw-pcie-ep";
-+		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX4A>;
-+		reg = <0x00 0x14160000 0x0 0x00020000   /* appl registers (128K)      */
-+		       0x00 0x36040000 0x0 0x00040000   /* iATU_DMA reg space (256K)  */
-+		       0x00 0x36080000 0x0 0x00040000   /* DBI reg space (256K)       */
-+		       0x14 0x00000000 0x4 0x00000000>; /* Address Space (16G)        */
-+		reg-names = "appl", "atu_dma", "dbi", "addr_space";
-+
-+		status = "disabled";
-+
-+		num-lanes = <4>;
-+		num-ib-windows = <2>;
-+		num-ob-windows = <8>;
-+
-+		clocks = <&bpmp TEGRA194_CLK_PEX0_CORE_4>;
-+		clock-names = "core";
-+
-+		resets = <&bpmp TEGRA194_RESET_PEX0_CORE_4_APB>,
-+			 <&bpmp TEGRA194_RESET_PEX0_CORE_4>;
-+		reset-names = "apb", "core";
-+
-+		interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;	/* controller interrupt */
-+		interrupt-names = "intr";
-+
-+		nvidia,bpmp = <&bpmp 4>;
-+
-+		nvidia,aspm-cmrt-us = <60>;
-+		nvidia,aspm-pwr-on-t-us = <20>;
-+		nvidia,aspm-l0s-entrance-latency-us = <3>;
-+	};
-+
-+	pcie_ep@14180000 {
-+		compatible = "nvidia,tegra194-pcie-ep", "snps,dw-pcie-ep";
-+		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX8B>;
-+		reg = <0x00 0x14180000 0x0 0x00020000   /* appl registers (128K)      */
-+		       0x00 0x38040000 0x0 0x00040000   /* iATU_DMA reg space (256K)  */
-+		       0x00 0x38080000 0x0 0x00040000   /* DBI reg space (256K)       */
-+		       0x18 0x00000000 0x4 0x00000000>; /* Address Space (16G)        */
-+		reg-names = "appl", "atu_dma", "dbi", "addr_space";
-+
-+		status = "disabled";
-+
-+		num-lanes = <8>;
-+		num-ib-windows = <2>;
-+		num-ob-windows = <8>;
-+
-+		clocks = <&bpmp TEGRA194_CLK_PEX0_CORE_0>;
-+		clock-names = "core";
-+
-+		resets = <&bpmp TEGRA194_RESET_PEX0_CORE_0_APB>,
-+			 <&bpmp TEGRA194_RESET_PEX0_CORE_0>;
-+		reset-names = "apb", "core";
-+
-+		interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;	/* controller interrupt */
-+		interrupt-names = "intr";
-+
-+		nvidia,bpmp = <&bpmp 0>;
-+
-+		nvidia,aspm-cmrt-us = <60>;
-+		nvidia,aspm-pwr-on-t-us = <20>;
-+		nvidia,aspm-l0s-entrance-latency-us = <3>;
-+	};
-+
-+	pcie_ep@141a0000 {
-+		compatible = "nvidia,tegra194-pcie-ep", "snps,dw-pcie-ep";
-+		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX8A>;
-+		reg = <0x00 0x141a0000 0x0 0x00020000   /* appl registers (128K)      */
-+		       0x00 0x3a040000 0x0 0x00040000   /* iATU_DMA reg space (256K)  */
-+		       0x00 0x3a080000 0x0 0x00040000   /* DBI reg space (256K)       */
-+		       0x1c 0x00000000 0x4 0x00000000>; /* Address Space (16G)        */
-+		reg-names = "appl", "atu_dma", "dbi", "addr_space";
-+
-+		status = "disabled";
-+
-+		num-lanes = <8>;
-+		num-ib-windows = <2>;
-+		num-ob-windows = <8>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&clkreq_c5_bi_dir_state>;
-+
-+		clocks = <&bpmp TEGRA194_CLK_PEX1_CORE_5>;
-+		clock-names = "core";
-+
-+		resets = <&bpmp TEGRA194_RESET_PEX1_CORE_5_APB>,
-+			 <&bpmp TEGRA194_RESET_PEX1_CORE_5>;
-+		reset-names = "apb", "core";
-+
-+		interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;	/* controller interrupt */
-+		interrupt-names = "intr";
-+
-+		nvidia,bpmp = <&bpmp 5>;
-+
-+		nvidia,aspm-cmrt-us = <60>;
-+		nvidia,aspm-pwr-on-t-us = <20>;
-+		nvidia,aspm-l0s-entrance-latency-us = <3>;
-+	};
-+
- 	sysram@40000000 {
- 		compatible = "nvidia,tegra194-sysram", "mmio-sram";
- 		reg = <0x0 0x40000000 0x0 0x50000>;
+ 			display_clocks: clock@0 {
+ 				compatible = "allwinner,sun50i-a64-de2-clk";
+-				reg = <0x0 0x100000>;
++				reg = <0x0 0x10000>;
+ 				clocks = <&ccu CLK_BUS_DE>,
+ 					 <&ccu CLK_DE>;
+ 				clock-names = "bus",
 -- 
 2.20.1
 
