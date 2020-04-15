@@ -6,72 +6,68 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B466EC3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:34:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C5E5C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:34:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EF9920768
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:34:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FBDC206D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:34:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404960AbgDOIeY (ORCPT
+        id S2408086AbgDOIeh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 04:34:24 -0400
-Received: from m17617.mail.qiye.163.com ([59.111.176.17]:11921 "EHLO
-        m17617.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbgDOIeS (ORCPT
+        Wed, 15 Apr 2020 04:34:37 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:53715 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725932AbgDOIe2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 04:34:18 -0400
-Received: from wangqing-virtual-machine.localdomain (unknown [157.0.31.122])
-        by m17617.mail.qiye.163.com (Hmail) with ESMTPA id AC17A2623E5;
-        Wed, 15 Apr 2020 16:34:10 +0800 (CST)
-From:   Wang Qing <wangqing@vivo.com>
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] [V2 1/2]sched:add task_running_oncpu
-Date:   Wed, 15 Apr 2020 16:34:05 +0800
-Message-Id: <1586939645-2470-1-git-send-email-wangqing@vivo.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1586779466-4439-2-git-send-email-wangqing@vivo.com>
-References: <1586779466-4439-2-git-send-email-wangqing@vivo.com>
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSVVLTk5CQkJCQk9JTExCTllXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Nhw6CDo6NzgyKAlLD0MxP0sP
-        Ix0aCixVSlVKTkNNQkhCTU5LQ0hMVTMWGhIXVQwaFRwKEhUcOw0SDRRVGBQWRVlXWRILWUFZSk5M
-        VUtVSEpVSklJWVdZCAFZQUlJS0g3Bg++
-X-HM-Tid: 0a717cf962af9375kuwsac17a2623e5
+        Wed, 15 Apr 2020 04:34:28 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jOdUy-00031X-KU; Wed, 15 Apr 2020 08:34:20 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Sandy Huang <hjc@rock-chips.com>,
+        =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] drm/rockchip: fix spelling mistake "modifer" -> "modifier"
+Date:   Wed, 15 Apr 2020 09:34:20 +0100
+Message-Id: <20200415083420.366279-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->On Tue, Apr 14, 2020 at 09:20:57AM +0200, Vincent Guittot wrote:
->> On Mon, 13 Apr 2020 at 14:04, Wang Qing <wangqing@vivo.com> wrote:
->> >
->> > We have no interface whether the task is running,
->> > so we need to add an interface and distinguish CONFIG_SMP.
->> >
->> > Signed-off-by: Wang Qing <wangqing@vivo.com>
->> > ---
->> >  include/linux/sched.h | 10 ++++++++++
->> >  1 file changed, 10 insertions(+)
->> >
->> > diff --git a/include/linux/sched.h b/include/linux/sched.h
->> > index 4418f5c..13cc8f5 100644
->> > --- a/include/linux/sched.h
->> > +++ b/include/linux/sched.h
->> > @@ -1843,6 +1843,11 @@ static inline unsigned int task_cpu(const struct task_struct *p)
->> >
->> >  extern void set_task_cpu(struct task_struct *p, unsigned int cpu);
->> >
->> > +static inline int task_running_oncpu(const struct task_struct *p)
->> 
->> This function name is too close from task_running_on_cpu() and can be
->> misleading as the difference is only "_"
->> Also, how task_running_oncpu() is different from task_running() ?
->
->It doesn't have the (arguably superfluous) rq argument. But yes, agreed,
->if anything lift that thing (without the argument).
+From: Colin Ian King <colin.king@canonical.com>
 
-I think task_running() should be renamed to task_running_on_rq() like
-the naming of task_running_on_cpu(), this is what it originally mean,
-and add task_running() (with the task argument only).
+There is a spelling mistake in a DRM_DEBUG_KMS debug message. Fix it.
 
-I updated the patch for that.
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+index b87d22eb6ae1..33463b79a37b 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
++++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+@@ -769,7 +769,7 @@ static bool rockchip_mod_supported(struct drm_plane *plane,
+ 		return true;
+ 
+ 	if (!rockchip_afbc(modifier)) {
+-		DRM_DEBUG_KMS("Unsupported format modifer 0x%llx\n", modifier);
++		DRM_DEBUG_KMS("Unsupported format modifier 0x%llx\n", modifier);
+ 
+ 		return false;
+ 	}
+-- 
+2.25.1
+
