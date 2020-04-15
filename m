@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B68C9C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:59:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE3CC2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 985CB2078A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:59:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B25221582
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:59:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586951948;
-	bh=I2uUxjHtJ2Bl5V9iG8w5PAC575AFfnuGItHBb/Skifc=;
+	s=default; t=1586951953;
+	bh=2I6y3vuOUo/PyL/oaOcUw3u8Ki9kFdjaK/cLRcZ80SE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0FydGhxwaG1UYydtP7/buAIIQNW4M8MYu6Kd1MPgI/jyW2qJ/uuTaihLlbDpLk4Mx
-	 d6RwIXmtHcOgokwSEK4jaix4s8wjYbK4qrixxxJLulmx+pOvpu3k4XBQHKfonFx6hy
-	 gQGr6aANRs7xHBgSVAl+mRDHx0y/Ir6iTCDY6HnE=
+	b=2cLRd/TJ8gSJ6S/2viQpAvhtZqAE/DO2ao4bLCFdykkIgXpczGbGSHQh/pdUAz7KV
+	 IZHg8qwu0EjlvWQjGSn5Voy+bNk7DsIIdq5GOuZEQZnvf/hD/ZStDKhJNcihA4BEOI
+	 Vopm43PQlAM5RgeNOm8BW1I7uURsu66RS2TaFlMk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409688AbgDOL5n (ORCPT
-        <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:57:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41484 "EHLO mail.kernel.org"
+        id S368037AbgDOL7K (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 07:59:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409292AbgDOLqa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:46:30 -0400
+        id S2409338AbgDOLq4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:46:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 440C02168B;
-        Wed, 15 Apr 2020 11:46:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1987521582;
+        Wed, 15 Apr 2020 11:46:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951189;
-        bh=I2uUxjHtJ2Bl5V9iG8w5PAC575AFfnuGItHBb/Skifc=;
+        s=default; t=1586951215;
+        bh=2I6y3vuOUo/PyL/oaOcUw3u8Ki9kFdjaK/cLRcZ80SE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uaHL17L0A7CvIMMRHVtXGGwju6/KNqLnYKmxWuEYeCLntzr45XapkW5hoACSmxU5+
-         CiY6+IvRCmA4O/zhBCY/rZPbRWUxvWQT6wG3EMfa30BjuS688lKZzD3KxQcJ3TNyn7
-         ut+5CugqKWVq7pG8aSJqAgqmJ6wHCNP8ESP4FOvM=
+        b=wPhnuhqDxLJQ7jVSD9/0jbJ66aoYhLi+RdQjjmufZwslO5XPiB6ocTafHzKll+gnH
+         PZknVEL0OqgGzr0ZWunl0t0sm68R7vfSHnb2O0/ZQEGCUI4lxmuxTOihA9P9cb5CRB
+         JiFzMqrvWCOmMxBZvYq2O6UR2ToB+/B7ZdcH6KLk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 05/40] rtc: 88pm860x: fix possible race condition
-Date:   Wed, 15 Apr 2020 07:45:48 -0400
-Message-Id: <20200415114623.14972-5-sashal@kernel.org>
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 27/40] net: phy: micrel: kszphy_resume(): add delay after genphy_resume() before accessing PHY registers
+Date:   Wed, 15 Apr 2020 07:46:10 -0400
+Message-Id: <20200415114623.14972-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114623.14972-1-sashal@kernel.org>
 References: <20200415114623.14972-1-sashal@kernel.org>
@@ -58,60 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+From: Oleksij Rempel <o.rempel@pengutronix.de>
 
-[ Upstream commit 9cf4789e6e4673d0b2c96fa6bb0c35e81b43111a ]
+[ Upstream commit 6110dff776f7fa65c35850ef65b41d3b39e2fac2 ]
 
-The RTC IRQ is requested before the struct rtc_device is allocated,
-this may lead to a NULL pointer dereference in the IRQ handler.
+After the power-down bit is cleared, the chip internally triggers a
+global reset. According to the KSZ9031 documentation, we have to wait at
+least 1ms for the reset to finish.
 
-To fix this issue, allocating the rtc_device struct before requesting
-the RTC IRQ using devm_rtc_allocate_device, and use rtc_register_device
-to register the RTC device.
+If the chip is accessed during reset, read will return 0xffff, while
+write will be ignored. Depending on the system performance and MDIO bus
+speed, we may or may not run in to this issue.
 
-Also remove the unnecessary error message as the core already prints the
-info.
+This bug was discovered on an iMX6QP system with KSZ9031 PHY and
+attached PHY interrupt line. If IRQ was used, the link status update was
+lost. In polling mode, the link status update was always correct.
 
-Link: https://lore.kernel.org/r/20200311223956.51352-1-alexandre.belloni@bootlin.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+The investigation showed, that during a read-modify-write access, the
+read returned 0xffff (while the chip was still in reset) and
+corresponding write hit the chip _after_ reset and triggered (due to the
+0xffff) another reset in an undocumented bit (register 0x1f, bit 1),
+resulting in the next write being lost due to the new reset cycle.
+
+This patch fixes the issue by adding a 1...2 ms sleep after the
+genphy_resume().
+
+Fixes: 836384d2501d ("net: phy: micrel: Add specific suspend")
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-88pm860x.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ drivers/net/phy/micrel.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/rtc/rtc-88pm860x.c b/drivers/rtc/rtc-88pm860x.c
-index 73697e4b18a9d..9d4a59aa29a1a 100644
---- a/drivers/rtc/rtc-88pm860x.c
-+++ b/drivers/rtc/rtc-88pm860x.c
-@@ -341,6 +341,10 @@ static int pm860x_rtc_probe(struct platform_device *pdev)
- 	info->dev = &pdev->dev;
- 	dev_set_drvdata(&pdev->dev, info);
+diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
+index b4c67c3a928b5..55caaaf969da5 100644
+--- a/drivers/net/phy/micrel.c
++++ b/drivers/net/phy/micrel.c
+@@ -29,6 +29,7 @@
+ #include <linux/micrel_phy.h>
+ #include <linux/of.h>
+ #include <linux/clk.h>
++#include <linux/delay.h>
  
-+	info->rtc_dev = devm_rtc_allocate_device(&pdev->dev);
-+	if (IS_ERR(info->rtc_dev))
-+		return PTR_ERR(info->rtc_dev);
-+
- 	ret = devm_request_threaded_irq(&pdev->dev, info->irq, NULL,
- 					rtc_update_handler, IRQF_ONESHOT, "rtc",
- 					info);
-@@ -382,13 +386,11 @@ static int pm860x_rtc_probe(struct platform_device *pdev)
- 		}
- 	}
+ /* Operation Mode Strap Override */
+ #define MII_KSZPHY_OMSO				0x16
+@@ -738,6 +739,12 @@ static int kszphy_resume(struct phy_device *phydev)
  
--	info->rtc_dev = devm_rtc_device_register(&pdev->dev, "88pm860x-rtc",
--					    &pm860x_rtc_ops, THIS_MODULE);
--	ret = PTR_ERR(info->rtc_dev);
--	if (IS_ERR(info->rtc_dev)) {
--		dev_err(&pdev->dev, "Failed to register RTC device: %d\n", ret);
-+	info->rtc_dev->ops = &pm860x_rtc_ops;
+ 	genphy_resume(phydev);
+ 
++	/* After switching from power-down to normal mode, an internal global
++	 * reset is automatically generated. Wait a minimum of 1 ms before
++	 * read/write access to the PHY registers.
++	 */
++	usleep_range(1000, 2000);
 +
-+	ret = rtc_register_device(info->rtc_dev);
-+	if (ret)
+ 	ret = kszphy_config_reset(phydev);
+ 	if (ret)
  		return ret;
--	}
- 
- 	/*
- 	 * enable internal XO instead of internal 3.25MHz clock since it can
 -- 
 2.20.1
 
