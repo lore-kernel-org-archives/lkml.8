@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A72DEC3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A94C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:34:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82CF3208E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:34:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E35782076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:34:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586972040;
-	bh=JUcg+B91/9Gp3VgiUqN1wZx9m8F/cwzYoxpa4XW01qA=;
+	s=default; t=1586972053;
+	bh=15gYlNw04FVyZSj5Ko62CfL9r+JJcyc0eFb5yZQ+evg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Eda9YfEzp8AJpow8npbhJ9Ov4MPDoGCsfKRbLKcGSavgp9dyNPCfzZGN6TVJfh4/G
-	 L06rf/L9za7U/iLJ77Ag0BuQDGTzKqSwJ53kiVrvNUyjHyVxW9+52BGVZG7MxdXJpO
-	 Ww020zFs/q4EEasc4OUmtrKrzjRWJzP7HX8cB+q0=
+	b=2kzYoyHeCP4VrGiAr8nqdOPnEKgCuEX6dtqrZqkxCqAQ+oZUzM03XfZ/QgJ8IPopv
+	 VsGhgKk7J3MTeA4RyQ9dyxoBVa4yDGCrJJ1P+46GTZanW9cBz49ePovhcB9G1FJ4nx
+	 jUhnNr3Mibyh+vS6ddlMbsu2KO8RWO0s8+9RXdAU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2411334AbgDORd5 (ORCPT
+        id S2411348AbgDOReI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 13:33:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46318 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 13:34:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2411130AbgDORbH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2411122AbgDORbH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Apr 2020 13:31:07 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C451217BA;
-        Wed, 15 Apr 2020 17:31:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E058208FE;
+        Wed, 15 Apr 2020 17:31:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586971866;
-        bh=JUcg+B91/9Gp3VgiUqN1wZx9m8F/cwzYoxpa4XW01qA=;
+        s=default; t=1586971865;
+        bh=15gYlNw04FVyZSj5Ko62CfL9r+JJcyc0eFb5yZQ+evg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JXU8mrOI40mWCLHj7I9NlhoBCXHuWTA/ywtOsk4JOabv/MNMhjduVo5BtuwqxltFR
-         YvK00786ukjo62Y3tqK2c1TrNBTbNQv/mF5itdgA0gYTOK3/TAT62NhfCXq0dadngV
-         UqLoNBQnNO9bTCFSPXbjy2rEBcypvlz5ardvCcTk=
+        b=1V51dcQgbMPMLiG4o9JDWpiEzAnsYtt83wa6ggg8Zgb9LydluFSK5rbhjuNWGTXUn
+         UcRFwMehb+FpQ5IHGA1bVOkA7rkrmBzRBp381BMHK2p0EPrt73zxeO3ksG+kGcz4pr
+         HEElPtO/6+Nh4/4P007KYAwfqWkEnZoj0Ao8lIzs=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 15/18] torture: Allow scenario-specific Kconfig options to override CFcommon
-Date:   Wed, 15 Apr 2020 10:30:57 -0700
-Message-Id: <20200415173100.9927-15-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 12/18] torture: Eliminate duplicate #CHECK# from ConfigFragment
+Date:   Wed, 15 Apr 2020 10:30:54 -0700
+Message-Id: <20200415173100.9927-12-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200415173037.GA9768@paulmck-ThinkPad-P72>
 References: <20200415173037.GA9768@paulmck-ThinkPad-P72>
@@ -61,38 +61,51 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-This commit applies config_override_param() to allow scenario-specific
-Kconfig options to override those in CFcommon.  This in turn will allow
-additional Kconfig options to be placed in CFcommon, for example, an
-option common to all but a few scenario can be placed in CFcommon and
-then overridden in those few scenarios.  Plus this change saves one
-whole line of code.
+The #CHECK# directives that can be present in CFcommon and in the
+rcutorture scenario Kconfig files are both copied to ConfigFragment
+and grepped out of the two directive files and added to ConfigFragment.
+This commit therefore removes the redundant "grep" commands and takes
+advantage of the consequent opportunity to simplify redirection.
 
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
 diff --git a/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh b/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh
-index b7296f1..c7534fd 100755
+index e035230..74da059 100755
 --- a/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh
 +++ b/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh
-@@ -67,12 +67,11 @@ if test -r "$config_dir/CFcommon"
+@@ -44,19 +44,17 @@ then
+ fi
+ echo ' ---' `date`: Starting build
+ echo ' ---' Kconfig fragment at: $config_template >> $resdir/log
+-touch $resdir/ConfigFragment.input $resdir/ConfigFragment
++touch $resdir/ConfigFragment.input
+ if test -r "$config_dir/CFcommon"
  then
  	echo " --- $config_dir/CFcommon" >> $resdir/ConfigFragment.input
  	cat < $config_dir/CFcommon >> $resdir/ConfigFragment.input
--	config_override.sh $config_dir/CFcommon $config_template > $T/Kc1
-+	cp $config_dir/CFcommon $T/Kc0
+ 	config_override.sh $config_dir/CFcommon $config_template > $T/Kc1
+-	grep '#CHECK#' $config_dir/CFcommon >> $resdir/ConfigFragment
  else
--	cp $config_template $T/Kc1
-+	echo > $T/Kc0
+ 	cp $config_template $T/Kc1
  fi
--echo " --- $config_template" >> $resdir/ConfigFragment.input
--cat $config_template >> $resdir/ConfigFragment.input
-+config_override_param "$config_template" Kc0 Kc1 "`cat $config_template 2> /dev/null`"
- config_override_param "--kcsan options" Kc1 Kc2 "$TORTURE_KCONFIG_KCSAN_ARG"
- config_override_param "--kconfig argument" Kc2 Kc3 "$TORTURE_KCONFIG_ARG"
- cp $T/Kc3 $resdir/ConfigFragment
+ echo " --- $config_template" >> $resdir/ConfigFragment.input
+ cat $config_template >> $resdir/ConfigFragment.input
+-grep '#CHECK#' $config_template >> $resdir/ConfigFragment
+ if test -n "$TORTURE_KCONFIG_ARG"
+ then
+ 	echo $TORTURE_KCONFIG_ARG | tr -s " " "\012" > $T/cmdline
+@@ -67,7 +65,7 @@ then
+ else
+ 	cp $T/Kc1 $T/Kc2
+ fi
+-cat $T/Kc2 >> $resdir/ConfigFragment
++cat $T/Kc2 > $resdir/ConfigFragment
+ 
+ base_resdir=`echo $resdir | sed -e 's/\.[0-9]\+$//'`
+ if test "$base_resdir" != "$resdir" -a -f $base_resdir/bzImage -a -f $base_resdir/vmlinux
 -- 
 2.9.5
 
