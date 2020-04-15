@@ -2,96 +2,96 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF4CC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:46:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25064C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B26DB206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:46:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF886206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:46:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586954820;
+	bh=wYLXLG27rnEwhy1UBlgPAvszNrYaMJ0woRo+YuC+rz8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Jt9K7K5C5HFPSbggKJFl73sPI8wC8Dk7bSG6zNbR5L8edRALUx4MivMjgAkpBFbp0
+	 cZFOoANgInUudkp2fqsGueHXESfcbCgVEvFlRrgil4j4baLkriA6z9YtxCs2pDLdHb
+	 9Ahq6mOgBdtrltV+S+kO4Jp81521SDav2vW3Dgf4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S370228AbgDOMql (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:46:41 -0400
-Received: from mga11.intel.com ([192.55.52.93]:38139 "EHLO mga11.intel.com"
+        id S370186AbgDOMpq (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:45:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898214AbgDOMpQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 08:45:16 -0400
-IronPort-SDR: z/6xoj2ZU/4X0z5P3Z4Y9rRZzu2YznYM3L0KmvhZ26hUTbpLDGc1K7kQh5GkUkG3MVh/L3Bdop
- J4WfLQqV9rDw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 05:45:14 -0700
-IronPort-SDR: q1xBjxILhRQpAuAQ37RLJ2+p/+tMWl0yibVHrlAqFoKxKj+N4QMVKNnfxcIB+5B9fk71i+ZJ3U
- 2HwW4Yh2h3zg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,386,1580803200"; 
-   d="scan'208";a="400302526"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.87]) ([10.237.72.87])
-  by orsmga004.jf.intel.com with ESMTP; 15 Apr 2020 05:45:10 -0700
-Subject: Re: [PATCH 2/7] mmc: sdhci: fix programmable clock config from preset
- value
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Kevin Liu <kliu5@marvell.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Suneel Garapati <suneel.garapati@xilinx.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
-References: <cover.1585827904.git.mirq-linux@rere.qmqm.pl>
- <0077b8bc2a4da024a3b985dd622674ebebe5b71b.1585827904.git.mirq-linux@rere.qmqm.pl>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <94e170c9-e4cd-2109-667c-f6c81f65acd3@intel.com>
-Date:   Wed, 15 Apr 2020 15:44:20 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S2408995AbgDOLnU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:43:20 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 159A9206A2;
+        Wed, 15 Apr 2020 11:43:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586950999;
+        bh=wYLXLG27rnEwhy1UBlgPAvszNrYaMJ0woRo+YuC+rz8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=i69UK7Vqv9n3w8zsJt4kSYbswKPs/vHJbNbIpdjqJumfWxeP7nub3Bfxrn5DcsUnr
+         w36x0iuMlbbIACwKgjtY1AzvcAwkXLK+8jeyDu3HIsmLXaHr0Ix48j/vW+88t3yQdo
+         i71BXJqIfTtrMWRGIdk7/V3W3kPVZ0R31lbwdiXM=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.5 045/106] powerpc/prom_init: Pass the "os-term" message to hypervisor
+Date:   Wed, 15 Apr 2020 07:41:25 -0400
+Message-Id: <20200415114226.13103-45-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
+References: <20200415114226.13103-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <0077b8bc2a4da024a3b985dd622674ebebe5b71b.1585827904.git.mirq-linux@rere.qmqm.pl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/04/20 2:54 pm, Michał Mirosław wrote:
-> When host controller uses programmable clock presets but doesn't
-> advertise programmable clock support, we can only guess what frequency
-> it generates. Let's at least return correct SDHCI_PROG_CLOCK_MODE bit
-> value in this case.
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
 
-It sounds like the hardware is broken, so I tend to think a workaround
-should be in the relevant vendor driver, because that is where
-device-specific information really belongs.
+[ Upstream commit 74bb84e5117146fa73eb9d01305975c53022b3c3 ]
 
-> 
-> Fixes: 52983382c74f ("mmc: sdhci: enhance preset value function")
-> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-> ---
->  drivers/mmc/host/sdhci.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index 9aa3af5826df..b2dc4f1cfa5c 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -1767,11 +1767,10 @@ u16 sdhci_calc_clk(struct sdhci_host *host, unsigned int clock,
->  
->  			pre_val = sdhci_get_preset_value(host);
->  			div = FIELD_GET(SDHCI_PRESET_SDCLK_FREQ_MASK, pre_val);
-> -			if (host->clk_mul &&
-> -				(pre_val & SDHCI_PRESET_CLKGEN_SEL)) {
-> +			if (pre_val & SDHCI_PRESET_CLKGEN_SEL) {
->  				clk = SDHCI_PROG_CLOCK_MODE;
->  				real_div = div + 1;
-> -				clk_mul = host->clk_mul;
-> +				clk_mul = host->clk_mul ?: 1;
->  			} else {
->  				real_div = max_t(int, 1, div << 1);
->  			}
-> 
+The "os-term" RTAS calls has one argument with a message address of OS
+termination cause. rtas_os_term() already passes it but the recently
+added prom_init's version of that missed it; it also does not fill
+args correctly.
+
+This passes the message address and initializes the number of arguments.
+
+Fixes: 6a9c930bd775 ("powerpc/prom_init: Add the ESM call to prom_init")
+Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200312074404.87293-1-aik@ozlabs.ru
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/powerpc/kernel/prom_init.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/arch/powerpc/kernel/prom_init.c b/arch/powerpc/kernel/prom_init.c
+index 577345382b23f..673f13b87db13 100644
+--- a/arch/powerpc/kernel/prom_init.c
++++ b/arch/powerpc/kernel/prom_init.c
+@@ -1773,6 +1773,9 @@ static void __init prom_rtas_os_term(char *str)
+ 	if (token == 0)
+ 		prom_panic("Could not get token for ibm,os-term\n");
+ 	os_term_args.token = cpu_to_be32(token);
++	os_term_args.nargs = cpu_to_be32(1);
++	os_term_args.nret = cpu_to_be32(1);
++	os_term_args.args[0] = cpu_to_be32(__pa(str));
+ 	prom_rtas_hcall((uint64_t)&os_term_args);
+ }
+ #endif /* CONFIG_PPC_SVM */
+-- 
+2.20.1
 
