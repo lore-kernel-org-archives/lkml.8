@@ -2,112 +2,115 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01C45C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:55:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C43B8C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:57:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CED1820768
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:55:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BF8820768
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:57:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="QtWKMFFZ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ynKp2qGN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441955AbgDOTzJ (ORCPT
+        id S2436778AbgDOT5G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 15:55:09 -0400
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:22140 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406336AbgDOTyn (ORCPT
+        Wed, 15 Apr 2020 15:57:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33402 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2406322AbgDOT5D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 15:54:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1586980482; x=1618516482;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=qT9c7eXt7ksLkS8LTzuMlCHOyGGyAUacpIVqI65fctQ=;
-  b=QtWKMFFZvshehjkCuXOkhVK2vjfM69CY0jQLwQMUosceq5koYKpbDWs2
-   sT+nYnxKY0mKvxbo57QLKwtvJRGVvXkqQMPDzUkDEphBCUG7D2rsdhrl+
-   0fZuUFXBy1i5rVD7JYr7xVZho94oJ4r8T+oMat3CGye9oDN+s5Ia5Y4fa
-   T4cmSBU1sCSseShi9FuiOXbMZuLD03E4eIyklejO4sFR3Bn3NQAj0VIaR
-   79GylVooOWlUcXBQAQJUU52HDejd+DVlw6C6yjTUknMElndmMoTXe4DES
-   h7w2kDLOLE3IyaIcPXeVfy6nArtoRJKXC+HESoYoD86yl5UGn4iZpdKAn
-   g==;
-IronPort-SDR: 51fIwTWZrPDIWI4I2/8o84TWcu6c475mmQHC0B350yZlu9G6SaQqtgW4wCNSzik20LDVFG0wMC
- uOjhdY4faXo7SaS4cd7Zjy4PlnRxcq4fJdZ39hgwViJzxiuJ3ylnIk8jMXSKTRIqHFxFSgOoql
- a6ETLOHtHVYHwVfEEU/BfaM1sKLttjS5ryIVL1mWWGXhXwVf2orCFOD2mIg9uNN0NIUqt5Y/gd
- YLj60Gh8e3XidA9Bmv3JtEFogv91ulh9aU5r2H79aXO1lMOyU2EAPgAqhrm8iGUKB1/GB/crdD
- Zkk=
-X-IronPort-AV: E=Sophos;i="5.72,388,1580745600"; 
-   d="scan'208";a="244077017"
-Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 16 Apr 2020 03:54:41 +0800
-IronPort-SDR: r2MTZIgYKd16wFwYsEpdbd2f8UDMBhPx1yX3kI9Z7d/z7XDLvPmJYp8ujlDM7DK5kt/Ks4rOOW
- 6yseG3mWyuLqWPdCtQ+sBVq3IFCVQ53ShN+MNGi/71/KcFbmMJasga5sAOiVkBIt2Biul2c/WH
- 33fpb3yaxMxoCjUl0eg7u+GRMSpkDtWIKFDutoxg+Cv8PzUZpDt/JRJ2QNVY6femAbqlCp5wRm
- l9p6Ov4BPNjjChSvkjLmXYkob+cLIdNaknh7e+zJ9wBDOIuYJ9cUkKnEBejeg9mVw+aRCUUyOn
- ZBMXnP7tATqH77zIQJwLqVzS
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 12:45:09 -0700
-IronPort-SDR: knJxDpysSdXz1GAUcRumT6u3DQfuJKc6iXGu46uVx6L6yak8+KA0bLmLArXQGY0922X1ngMzDf
- vQnhFvlOMK4Bvry2PcsKAh2GOXYccYAGxa2yalQ+SUmw8/tqPAan7ZDULyBafUl6HbGby4Cwnb
- tiolgXLVo+J7AD1a2FBjHkCWFs81lfxedUY5YC+Wjl6qq52YwIvKJVv2/Xu+UR57l/VjRwSBMb
- rowNC+ZGuUjXkUKTuXO2prpj+3tXkmss1t6HXEnniWbkBOd9jx5mXLEWgLaJqN3QXAem8bXeTX
- 53w=
-WDCIronportException: Internal
-Received: from 6hj08h2.ad.shared (HELO jedi-01.hgst.com) ([10.86.55.244])
-  by uls-op-cesaip02.wdc.com with ESMTP; 15 Apr 2020 12:54:41 -0700
-From:   Atish Patra <atish.patra@wdc.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Atish Patra <atish.patra@wdc.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-efi@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Will Deacon <will@kernel.org>
-Subject: [v3 PATCH 2/5] include: pe.h: Add RISC-V related PE definition
-Date:   Wed, 15 Apr 2020 12:54:19 -0700
-Message-Id: <20200415195422.19866-3-atish.patra@wdc.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200415195422.19866-1-atish.patra@wdc.com>
-References: <20200415195422.19866-1-atish.patra@wdc.com>
+        Wed, 15 Apr 2020 15:57:03 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A461C061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 12:57:03 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id m13so1097500otf.6
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 12:57:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=E7N/+DQkyWiqwxQNccTH6eWsJt9DMfcvRQg/n6t3Ja8=;
+        b=ynKp2qGNmiLRebgQ6glvt23ydPIdnpzU4vuQM3TbZpHJdi5grB/Yz4n5w8acKIE5EA
+         mpHNee/zhK9zsIFxUytoRXk1OZDXL7p5QJ/b2QQctoIirRA38RyynxYNM+AIJhrkPy6u
+         W9wySvMHABrSnvUhHEjQZo9N3p72SSCWjmOJgRmqiSCXweeKMz8dTUCbWu3F4Tbqul5/
+         Erm91YVVHDrpvNMOYgVnYVt+lQEW2T9FH9dQPEuxOSfWAXDxMCAoflFGzi0hi3P35KN4
+         UyKtRxvuAvaqf1QTqPukQAJtWIHjR5semUJLs/0TsLBLOv1QsLWmjKGtj3cuohKRndab
+         /u5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=E7N/+DQkyWiqwxQNccTH6eWsJt9DMfcvRQg/n6t3Ja8=;
+        b=EcDPRjt3DQy1DZWwh8UrfFTCDu6eHC/XLspENs5bxpnFYWGsyxG0LcZrkK9DusH+7d
+         Z/xD2Rn102+mIImTbqpqtywfmDqLJ2iJzWBMRRh/heGUa637m/oE0GTNQ0IKVvksektx
+         5rEZ+tfiwVta5Z7kGFVUxsQHb3MTa4lna9rqymaHirH1FpcFucheoZcaKFuPcNwAcHUw
+         tlycbFnZmuL1233cZe2fzkUMl+CF/1VclqxcrEzd0GxfuXD6OLFLjHMqdZnIeo9nUrM2
+         47DyAHlOkiHn//3CFUEKJozx/4meO83lxkXVFlMcdPqbD+uGy+TVuqNwwhIYt5oyY5Ul
+         mgDQ==
+X-Gm-Message-State: AGi0PuY9NLTUdsKSKO0w3EA4hUhBRj7QWKArHDuPYDGyLFPKHaCIGD/q
+        47UfuyoZF889E8Su+JL0149Vt5hXcMi4ipMd+y8uFA==
+X-Google-Smtp-Source: APiQypIigKVoQPIsc8PQgCgpVx3lMNl7uBlbch3FQNtVCqLxr9i2paYqnuYgX3Rl4ZAEBzXgTEXe3a6hPHZ6+NPx89E=
+X-Received: by 2002:a05:6830:20c3:: with SMTP id z3mr17902764otq.102.1586980622709;
+ Wed, 15 Apr 2020 12:57:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CALAqxLV4rM74wuzuZ+BkUi+keccxkAxv30N4vrFO7CVQ5vnT1A@mail.gmail.com>
+ <20200415085348.5511a5fe@gandalf.local.home>
+In-Reply-To: <20200415085348.5511a5fe@gandalf.local.home>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Wed, 15 Apr 2020 12:56:52 -0700
+Message-ID: <CALAqxLV1A6sOC1GWpFYXeBoDff0+AJgoOYK7NktcTdvX3kvAeg@mail.gmail.com>
+Subject: Re: On trace_*_rcuidle functions in modules
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     paulmck@kernel.org, Josh Triplett <josh@joshtriplett.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Todd Kjos <tkjos@google.com>, Stephen Boyd <sboyd@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Define RISC-V related machine types.
+On Wed, Apr 15, 2020 at 5:53 AM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> [ +Peter +Thomas ]
+>
+> On Tue, 14 Apr 2020 19:20:01 -0700
+> John Stultz <john.stultz@linaro.org> wrote:
+>
+> > Hey folks,
+> >   So recently I was looking at converting some drivers to be loadable
+> > modules instead of built-in only, and one of my patches just landed in
+> > -next and started getting build error reports.
+> >
+> > It ends up, recently in the merge window, the driver I was converting
+> > to module switched a trace_*() function to trace_*_rcuidle() to fix a
+> > bug.  Now when building as a module, if tracing is configured on, it
+> > can't seem to find the trace_*_rcuidle() symbol.
+>
+> Which modules need this.
 
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
-Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
----
- include/linux/pe.h | 3 +++
- 1 file changed, 3 insertions(+)
+Hey Steven!
 
-diff --git a/include/linux/pe.h b/include/linux/pe.h
-index 8ad71d763a77..daf09ffffe38 100644
---- a/include/linux/pe.h
-+++ b/include/linux/pe.h
-@@ -55,6 +55,9 @@
- #define	IMAGE_FILE_MACHINE_POWERPC	0x01f0
- #define	IMAGE_FILE_MACHINE_POWERPCFP	0x01f1
- #define	IMAGE_FILE_MACHINE_R4000	0x0166
-+#define	IMAGE_FILE_MACHINE_RISCV32	0x5032
-+#define	IMAGE_FILE_MACHINE_RISCV64	0x5064
-+#define	IMAGE_FILE_MACHINE_RISCV128	0x5128
- #define	IMAGE_FILE_MACHINE_SH3		0x01a2
- #define	IMAGE_FILE_MACHINE_SH3DSP	0x01a3
- #define	IMAGE_FILE_MACHINE_SH3E		0x01a4
--- 
-2.24.0
+I'm trying to enable the qcom rpmh driver
+(drivers/soc/qcom/rpmh-rsc.c) to be a module.  As I mentioned to Paul,
+it registers a cpu_pm notifier callback, which calls its
+__tcs_buffer_write() function. The trace in the __tcs_buffer_write()
+function was just converted to using rcuidle to address bugs seen when
+it was being called from idle.
 
+> Currently, Thomas and Peter are working on removing trace events from
+> places that don't have RCU enabled, or at least cleaning up the context
+> switches from user to kernel to interrupt.
+
+So does that mean folks would most likely lean to trying to remove the
+tracepoint rather than reevaluating allowing the rcuidle call to be
+made from the module?
+
+thanks
+-john
