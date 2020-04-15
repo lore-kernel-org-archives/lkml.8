@@ -2,146 +2,230 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 159D9C38A29
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:45:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE97C3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:45:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 005FB208FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:45:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D4742078B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:45:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586961946;
+	bh=VYrdfxPvSnlAugkruISgIrBzyDsUwFovOIfuhVj7+P8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Fh+KLGTb4/4QE8E8e/4a2R2l1Vbrz1995MbGANzC7coa5oC6hLhPSginHdF5jeg3w
+	 HOFecvVNKR8rNIuKS/B+437b6dTnD92jPENW8nPXiHsi2a25rmZujf6/zYpXlGTcSl
+	 rT68v9ouDFwjSQeetGHm/6xuvsf48JxZg4yJeLgg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2636800AbgDOOpj (ORCPT
+        id S2634644AbgDOOpp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:45:39 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:33209 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388669AbgDOOpW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 10:45:22 -0400
-Received: by mail-pj1-f68.google.com with SMTP id ay6so77791pjb.0;
-        Wed, 15 Apr 2020 07:45:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=pBJo/JQSnidWIsZkfJsj1QT0fRaerLE2o4j81aCDQl4=;
-        b=XY5CPSn6z+RdSSJgvwljbJj0V06TGZIQtXQ7QsurU7HyY2kZyA2Ie27+taAcZuN2kL
-         f7ApyYNJpyvOt97FVz/OHMpqPus2UWZO3aC+qa8b38hXalo/lMvcBbDiqRojsMnmthDA
-         EhMaGkasqpsXYunTfvII6ax7QCrQA158Atbcc9F4sX7+xlYIjBFgQlxI0Y/lXkbHOqtx
-         jgyJ4QzvQK9Xxc5/KaM4rMo4baLW2ILaV4DZQU9KPswgCzTZ6CD7Jbb5iZGXcufTW6iC
-         OyL3yPAmr8YH6dQVoAA4ZhuG8hXSrVfOH+THHnZqj3uB8i4iYyed4Lf/ZUVDCZ4Wx0ad
-         qD8A==
-X-Gm-Message-State: AGi0PuZa68HUFFZiuIOyy4ivlp+JXWYCGgLK58kxFQBjXZdNnmsJWkUD
-        nPkVJv/VJf3vfWUZFZ2Vnrs=
-X-Google-Smtp-Source: APiQypKUu9JDV3E8NnRbxbNWJAsd3dksGpoqMVJtTMB0nvp0uezQYXkIIqv1ZWREFaMB8ztY9s+DMA==
-X-Received: by 2002:a17:902:a5c7:: with SMTP id t7mr5227310plq.330.1586961921350;
-        Wed, 15 Apr 2020 07:45:21 -0700 (PDT)
-Received: from ?IPv6:2601:647:4000:d7:74a5:f25a:9320:53da? ([2601:647:4000:d7:74a5:f25a:9320:53da])
-        by smtp.gmail.com with ESMTPSA id o15sm14773001pjp.41.2020.04.15.07.45.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Apr 2020 07:45:20 -0700 (PDT)
-Subject: Re: [PATCH 3/5] blktrace: refcount the request_queue during ioctl
-To:     Luis Chamberlain <mcgrof@kernel.org>,
-        Christoph Hellwig <hch@infradead.org>
-Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk,
-        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
-        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
-        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>
-References: <20200414041902.16769-1-mcgrof@kernel.org>
- <20200414041902.16769-4-mcgrof@kernel.org>
- <20200414154044.GB25765@infradead.org>
- <20200415061649.GS11244@42.do-not-panic.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <49bfcbe0-2630-5c82-f305-fcee489ac9ea@acm.org>
-Date:   Wed, 15 Apr 2020 07:45:18 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 15 Apr 2020 10:45:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39900 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2634601AbgDOOp3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 10:45:29 -0400
+Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D119D2076D;
+        Wed, 15 Apr 2020 14:45:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586961929;
+        bh=VYrdfxPvSnlAugkruISgIrBzyDsUwFovOIfuhVj7+P8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=PiM4EXpPDrRBwxkowPnGLMDIDOWNN2E/dtaRmmR7brxfG/y3F6HHSZCvSwTptfsqY
+         ncooAM4fpvzpjOerde2faQqfdSu3x+lkuMn5T8InoJfeA7UhX3oIm/w5wDs69kF4TJ
+         AC2hj9IYRdphC7nvL1sSiYOVbjI+KyO71wc0fAOE=
+Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
+        (envelope-from <mchehab@kernel.org>)
+        id 1jOjI7-006kZF-47; Wed, 15 Apr 2020 16:45:27 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org
+Subject: [PATCH v3 02/12] docs: dt: convert usage-model.txt to ReST
+Date:   Wed, 15 Apr 2020 16:45:16 +0200
+Message-Id: <cfec677ffc34540f5f5b63c393f2d0fae4383787.1586961793.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.25.2
+In-Reply-To: <cover.1586961793.git.mchehab+huawei@kernel.org>
+References: <cover.1586961793.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200415061649.GS11244@42.do-not-panic.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-14 23:16, Luis Chamberlain wrote:
-> On Tue, Apr 14, 2020 at 08:40:44AM -0700, Christoph Hellwig wrote:
->> Hmm, where exactly does the race come in so that it can only happen
->> after where you take the reference, but not before it?  I'm probably
->> missing something, but that just means it needs to be explained a little
->> better :)
-> 
->>From the trace on patch 2/5:
-> 
->     BLKTRACE_SETUP(loop0) #2
->     [   13.933961] == blk_trace_ioctl(2, BLKTRACESETUP) start
->     [   13.936758] === do_blk_trace_setup(2) start
->     [   13.938944] === do_blk_trace_setup(2) creating directory
->     [   13.941029] === do_blk_trace_setup(2) using what debugfs_lookup() gave
->     
->     ---> From LOOP_CTL_DEL(loop0) #2
->     [   13.971046] === blk_trace_cleanup(7) end
->     [   13.973175] == __blk_trace_remove(7) end
->     [   13.975352] == blk_trace_shutdown(7) end
->     [   13.977415] = __blk_release_queue(7) calling blk_mq_debugfs_unregister()
->     [   13.980645] ==== blk_mq_debugfs_unregister(7) begin
->     [   13.980696] ==== blk_mq_debugfs_unregister(7) debugfs_remove_recursive(q->debugfs_dir)
->     [   13.983118] ==== blk_mq_debugfs_unregister(7) end q->debugfs_dir is NULL
->     [   13.986945] = __blk_release_queue(7) blk_mq_debugfs_unregister() end
->     [   13.993155] = __blk_release_queue(7) end
->     
->     ---> From BLKTRACE_SETUP(loop0) #2
->     [   13.995928] === do_blk_trace_setup(2) end with ret: 0
->     [   13.997623] == blk_trace_ioctl(2, BLKTRACESETUP) end
-> 
-> The BLKTRACESETUP above works on request_queue which later
-> LOOP_CTL_DEL races on and sweeps the debugfs dir underneath us.
-> If you use this commit alone though, this doesn't fix the race issue
-> however, and that's because of both still the debugfs_lookup() use
-> and that we're still using asynchronous removal at this point.
-> 
-> refcounting will just ensure we don't take the request_queue underneath
-> our noses.
+- Add a SPDX header;
+- Adjust document title;
+- Use footnoote markups;
+- Some whitespace fixes and new line breaks;
+- Mark literal blocks as such;
+- Add it to devicetree/index.rst.
 
-I think the above trace reveals a bug in the loop driver. The loop
-driver shouldn't allow the associated request queue to disappear while
-the loop device is open. One may want to have a look at sd_open() in the
-sd driver. The scsi_disk_get() call in that function not only increases
-the reference count of the SCSI disk but also of the underlying SCSI device.
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ Documentation/devicetree/index.rst            |  1 +
+ Documentation/devicetree/of_unittest.txt      |  2 +-
+ .../{usage-model.txt => usage-model.rst}      | 35 +++++++++++--------
+ include/linux/mfd/core.h                      |  2 +-
+ 4 files changed, 23 insertions(+), 17 deletions(-)
+ rename Documentation/devicetree/{usage-model.txt => usage-model.rst} (97%)
 
-Thanks,
+diff --git a/Documentation/devicetree/index.rst b/Documentation/devicetree/index.rst
+index a11efe26f205..7a6aad7d384a 100644
+--- a/Documentation/devicetree/index.rst
++++ b/Documentation/devicetree/index.rst
+@@ -7,4 +7,5 @@ Open Firmware and Device Tree
+ .. toctree::
+    :maxdepth: 1
+ 
++   usage-model
+    writing-schema
+diff --git a/Documentation/devicetree/of_unittest.txt b/Documentation/devicetree/of_unittest.txt
+index 3e4e7d48ae93..9fdd2de9b770 100644
+--- a/Documentation/devicetree/of_unittest.txt
++++ b/Documentation/devicetree/of_unittest.txt
+@@ -11,7 +11,7 @@ architecture.
+ 
+ It is recommended to read the following documents before moving ahead.
+ 
+-[1] Documentation/devicetree/usage-model.txt
++[1] Documentation/devicetree/usage-model.rst
+ [2] http://www.devicetree.org/Device_Tree_Usage
+ 
+ OF Selftest has been designed to test the interface (include/linux/of.h)
+diff --git a/Documentation/devicetree/usage-model.txt b/Documentation/devicetree/usage-model.rst
+similarity index 97%
+rename from Documentation/devicetree/usage-model.txt
+rename to Documentation/devicetree/usage-model.rst
+index 33a8aaac02a8..326d7af10c5b 100644
+--- a/Documentation/devicetree/usage-model.txt
++++ b/Documentation/devicetree/usage-model.rst
+@@ -1,14 +1,18 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++=========================
+ Linux and the Device Tree
+--------------------------
++=========================
++
+ The Linux usage model for device tree data
+ 
+-Author: Grant Likely <grant.likely@secretlab.ca>
++:Author: Grant Likely <grant.likely@secretlab.ca>
+ 
+ This article describes how Linux uses the device tree.  An overview of
+ the device tree data format can be found on the device tree usage page
+-at devicetree.org[1].
++at devicetree.org\ [1]_.
+ 
+-[1] http://devicetree.org/Device_Tree_Usage
++.. [1] http://devicetree.org/Device_Tree_Usage
+ 
+ The "Open Firmware Device Tree", or simply Device Tree (DT), is a data
+ structure and language for describing hardware.  More specifically, it
+@@ -57,7 +61,7 @@ Tree (FDT) was created which could be passed to the kernel as a binary
+ blob without requiring a real Open Firmware implementation.  U-Boot,
+ kexec, and other bootloaders were modified to support both passing a
+ Device Tree Binary (dtb) and to modify a dtb at boot time.  DT was
+-also added to the PowerPC boot wrapper (arch/powerpc/boot/*) so that
++also added to the PowerPC boot wrapper (``arch/powerpc/boot/*``) so that
+ a dtb could be wrapped up with the kernel image to support booting
+ existing non-DT aware firmware.
+ 
+@@ -68,7 +72,7 @@ out of mainline (nios) have some level of DT support.
+ 
+ 2. Data Model
+ -------------
+-If you haven't already read the Device Tree Usage[1] page,
++If you haven't already read the Device Tree Usage\ [1]_ page,
+ then go read it now.  It's okay, I'll wait....
+ 
+ 2.1 High Level View
+@@ -88,6 +92,7 @@ duplication and make it easier to support a wide range of hardware
+ with a single kernel image.
+ 
+ Linux uses DT data for three major purposes:
++
+ 1) platform identification,
+ 2) runtime configuration, and
+ 3) device population.
+@@ -117,7 +122,7 @@ The 'compatible' property contains a sorted list of strings starting
+ with the exact name of the machine, followed by an optional list of
+ boards it is compatible with sorted from most compatible to least.  For
+ example, the root compatible properties for the TI BeagleBoard and its
+-successor, the BeagleBoard xM board might look like, respectively:
++successor, the BeagleBoard xM board might look like, respectively::
+ 
+ 	compatible = "ti,omap3-beagleboard", "ti,omap3450", "ti,omap3";
+ 	compatible = "ti,omap3-beagleboard-xm", "ti,omap3450", "ti,omap3";
+@@ -183,7 +188,7 @@ configuration data like the kernel parameters string and the location
+ of an initrd image.
+ 
+ Most of this data is contained in the /chosen node, and when booting
+-Linux it will look something like this:
++Linux it will look something like this::
+ 
+ 	chosen {
+ 		bootargs = "console=ttyS0,115200 loglevel=8";
+@@ -251,9 +256,9 @@ platform devices roughly correspond to device nodes at the root of the
+ tree and children of simple memory mapped bus nodes.
+ 
+ About now is a good time to lay out an example.  Here is part of the
+-device tree for the NVIDIA Tegra board.
++device tree for the NVIDIA Tegra board::
+ 
+-/{
++  /{
+ 	compatible = "nvidia,harmony", "nvidia,tegra20";
+ 	#address-cells = <1>;
+ 	#size-cells = <1>;
+@@ -313,7 +318,7 @@ device tree for the NVIDIA Tegra board.
+ 		i2s-controller = <&i2s1>;
+ 		i2s-codec = <&wm8903>;
+ 	};
+-};
++  };
+ 
+ At .init_machine() time, Tegra board support code will need to look at
+ this DT and decide which nodes to create platform_devices for.
+@@ -379,13 +384,13 @@ device tree support code reflects that and makes the above example
+ simpler.  The second argument to of_platform_populate() is an
+ of_device_id table, and any node that matches an entry in that table
+ will also get its child nodes registered.  In the Tegra case, the code
+-can look something like this:
++can look something like this::
+ 
+-static void __init harmony_init_machine(void)
+-{
++  static void __init harmony_init_machine(void)
++  {
+ 	/* ... */
+ 	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
+-}
++  }
+ 
+ "simple-bus" is defined in the Devicetree Specification as a property
+ meaning a simple memory mapped bus, so the of_platform_populate() code
+diff --git a/include/linux/mfd/core.h b/include/linux/mfd/core.h
+index d01d1299e49d..21718c8b2b48 100644
+--- a/include/linux/mfd/core.h
++++ b/include/linux/mfd/core.h
+@@ -74,7 +74,7 @@ struct mfd_cell {
+ 
+ 	/*
+ 	 * Device Tree compatible string
+-	 * See: Documentation/devicetree/usage-model.txt Chapter 2.2 for details
++	 * See: Documentation/devicetree/usage-model.rst Chapter 2.2 for details
+ 	 */
+ 	const char		*of_compatible;
+ 
+-- 
+2.25.2
 
-Bart.
