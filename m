@@ -2,154 +2,188 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C068C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 06:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D4AFC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 06:43:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FE8E206F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 06:43:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sN8HRF3n"
+	by mail.kernel.org (Postfix) with ESMTP id E95E020771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 06:43:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393591AbgDOGn0 (ORCPT
+        id S2393601AbgDOGno (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 02:43:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50958 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393583AbgDOGnW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 02:43:22 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59798C061A0C;
-        Tue, 14 Apr 2020 23:43:22 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id a43so3257426edf.6;
-        Tue, 14 Apr 2020 23:43:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=KS5I1xey5qWdWCCxHOW9gisVgPOdfTeYMV2x/9+Flfo=;
-        b=sN8HRF3ni60qScLQ9lgBgPcjgKEQZKT2fjDSm8aJfJdr+SFMRPjaid7ryokZOT2IFK
-         Qs4HdYjSoQc9EVuFOfqOgibHurpls5jIAfKatHH3z/u5sOwYNexiAqfCBGklOQEFhiH5
-         3123YGWrI+BCKP9KdzKodHL3UhT/3G2sI65K5LQV4+0Eaj4UIJEkbt8p3GlAFkqqECAp
-         MM9pBT+etucFvdgZrmIHiAvkWg8pfTPIsrZXYhgz0GqDWjWYAe1W2Jg4hQrZxnGR7J7I
-         DXKpR35gVGby2BlRAqWjElUFFHt8h/+38Vn7ClyRw3dhSqIqYmgtQ86wI+2gtP97/f2u
-         6+PA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=KS5I1xey5qWdWCCxHOW9gisVgPOdfTeYMV2x/9+Flfo=;
-        b=ADuMkPXQYbVNcibi5njvAI3pJc6xj8GvJPM3TniJJdr9Fzp4D+ihpmXkB6JJ4Eoj16
-         /1uRoIJfPMl2OpDK838+Fof5tx4uy9toH8llgzi3HZ5bYSV7N5tm8s6g4KYQtgubBJ7C
-         niPbrbnaqit4kcMvWLLSbPGvpdXWljtioNEzSqKMwENIto9TrKCNaNn66YqznpMNufXx
-         sVzZK+OPGvyOdzU1ytVOGSN4dXe8HrcpTBh/7xc/rsTqjEHGe1qgr8qabRjhjuFUKS+5
-         pYrWlhqJMelMfLYOrM0dOrtA12XYc8xsoyo9KVb9LbgfZVFiHwFyYPr7H9hiqCBz87Iw
-         tboA==
-X-Gm-Message-State: AGi0PubOUKSkxv/5D+AgRTezkuAN/B2behnSisJuJbjGcbF5l7PC4Ulj
-        raEATwAh6ruY1acbWGxdHgc=
-X-Google-Smtp-Source: APiQypLoBpg3FM2Ci5vp77S7a/Ww05Hwpd/ejUHk1DghI5OsILOLJoHG7cpRnKlxWnMFatnnEsZE0Q==
-X-Received: by 2002:a17:906:3085:: with SMTP id 5mr3595386ejv.381.1586933001111;
-        Tue, 14 Apr 2020 23:43:21 -0700 (PDT)
-Received: from [192.168.1.39] (116.red-83-42-57.dynamicip.rima-tde.net. [83.42.57.116])
-        by smtp.gmail.com with ESMTPSA id z13sm2032486edj.0.2020.04.14.23.43.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Apr 2020 23:43:20 -0700 (PDT)
-Subject: Re: [PATCH] mips: define pud_index() regardless of page table folding
-To:     Mike Rapoport <rppt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, Peter Xu <peterx@redhat.com>,
-        maobibo <maobibo@loongson.cn>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>
-References: <20200402081614.5696-1-rppt@kernel.org>
-From:   =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>
-Autocrypt: addr=f4bug@amsat.org; keydata=
- mQINBDU8rLoBEADb5b5dyglKgWF9uDbIjFXU4gDtcwiga9wJ/wX6xdhBqU8tlQ4BroH7AeRl
- u4zXP0QnBDAG7EetxlQzcfYbPmxFISWjckDBFvDbFsojrZmwF2/LkFSzlvKiN5KLghzzJhLO
- HhjGlF8deEZz/d/G8qzO9mIw8GIBS8uuWh6SIcG/qq7+y+2+aifaj92EdwU79apZepT/U3vN
- YrfcAuo1Ycy7/u0hJ7rlaFUn2Fu5KIgV2O++hHYtCCQfdPBg/+ujTL+U+sCDawCyq+9M5+LJ
- ojCzP9rViLZDd/gS6jX8T48hhidtbtsFRj/e9QpdZgDZfowRMVsRx+TB9yzjFdMO0YaYybXp
- dg/wCUepX5xmDBrle6cZ8VEe00+UQCAU1TY5Hs7QFfBbjgR3k9pgJzVXNUKcJ9DYQP0OBH9P
- ZbZvM0Ut2Bk6bLBO5iCVDOco0alrPkX7iJul2QWBy3Iy9j02GnA5jZ1Xtjr9kpCqQT+sRXso
- Vpm5TPGWaWljIeLWy/qL8drX1eyJzwTB3A36Ck4r3YmjMjfmvltSZB1uAdo1elHTlFEULpU/
- HiwvvqXQ9koB15U154VCuguvx/Qnboz8GFb9Uw8VyawzVxYVNME7xw7CQF8FYxzj6eI7rBf2
- Dj/II6wxWPgDEy3oUzuNOxTB7sT3b/Ym76yOJzWX5BylXQIJ5wARAQABtDFQaGlsaXBwZSBN
- YXRoaWV1LURhdWTDqSAoRjRCVUcpIDxmNGJ1Z0BhbXNhdC5vcmc+iQJVBBMBCAA/AhsPBgsJ
- CAcDAgYVCAIJCgsEFgIDAQIeAQIXgBYhBPqr514SkXIh3P1rsuPjLCzercDeBQJd660aBQks
- klzgAAoJEOPjLCzercDe2iMP+gMG2dUf+qHz2uG8nTBGMjgK0aEJrKVPodFA+iedQ5Kp3BMo
- jrTg3/DG1HMYdcvQu/NFLYwamUfUasyor1k+3dB23hY09O4xOsYJBWdilkBGsJTKErUmkUO2
- 3J/kawosvYtJJSHUpw3N6mwz/iWnjkT8BPp7fFXSujV63aZWZINueTbK7Y8skFHI0zpype9s
- loU8xc4JBrieGccy3n4E/kogGrTG5jcMTNHZ106DsQkhFnjhWETp6g9xOKrzZQbETeRBOe4P
- sRsY9YSG2Sj+ZqmZePvO8LyzGRjYU7T6Z80S1xV0lH6KTMvq7vvz5rd92f3pL4YrXq+e//HZ
- JsiLen8LH/FRhTsWRgBtNYkOsd5F9NvfJtSM0qbX32cSXMAStDVnS4U+H2vCVCWnfNug2TdY
- 7v4NtdpaCi4CBBa3ZtqYVOU05IoLnlx0miKTBMqmI05kpgX98pi2QUPJBYi/+yNu3fjjcuS9
- K5WmpNFTNi6yiBbNjJA5E2qUKbIT/RwQFQvhrxBUcRCuK4x/5uOZrysjFvhtR8YGm08h+8vS
- n0JCnJD5aBhiVdkohEFAz7e5YNrAg6kOA5IVRHB44lTBOatLqz7ntwdGD0rteKuHaUuXpTYy
- CRqCVAKqFJtxhvJvaX0vLS1Z2dwtDwhjfIdgPiKEGOgCNGH7R8l+aaM4OPOd
-Message-ID: <191a4b86-3921-e72c-998d-c490de3ee6e0@amsat.org>
-Date:   Wed, 15 Apr 2020 08:43:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 15 Apr 2020 02:43:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43816 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2393592AbgDOGnk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 02:43:40 -0400
+Received: from ROU-LT-M43218B.mchp-main.com (amontpellier-556-1-155-96.w109-210.abo.wanadoo.fr [109.210.131.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E673206F9;
+        Wed, 15 Apr 2020 06:43:38 +0000 (UTC)
+Date:   Wed, 15 Apr 2020 08:43:52 +0200
+From:   ludovic.desroches@microchip.com
+To:     Eugen Hristev - M18282 <Eugen.Hristev@microchip.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] iio: at91-sama5d2_adc: split
+ at91_adc_current_chan_is_touch() helper
+Message-ID: <20200415064352.yn7xkvjtsdcvnvni@ROU-LT-M43218B.mchp-main.com>
+References: <20200304084219.20810-1-alexandru.ardelean@analog.com>
+ <20200413180556.20638f3b@archlinux>
+ <9315e9a7-0703-b119-ca32-69f0c2fcc7de@microchip.com>
 MIME-Version: 1.0
-In-Reply-To: <20200402081614.5696-1-rppt@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9315e9a7-0703-b119-ca32-69f0c2fcc7de@microchip.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/2/20 10:16 AM, Mike Rapoport wrote:
-> From: Mike Rapoport <rppt@linux.ibm.com>
+On Tue, Apr 14, 2020 at 12:22:45PM +0000, Eugen Hristev - M18282 wrote:
+> On 13.04.2020 20:05, Jonathan Cameron wrote:
+> > On Wed, 4 Mar 2020 10:42:18 +0200
+> > Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+> > 
+> >> This change moves the logic to check if the current channel is the
+> >> touchscreen channel to a separate helper.
+> >> This reduces some code duplication, but the main intent is to re-use this
+> >> in the next patches.
+> >>
+> >> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> > Eugen / Ludovic,
+> > 
+> > Have you had a chance to look at this series?
 > 
-> Commit 31168f033e37 ("mips: drop __pXd_offset() macros that duplicate
-> pXd_index() ones") is correct that pud_index() & __pud_offset() are the
-> same when pud_index() is actually provided, however it does not take into
-> account the __PAGETABLE_PUD_FOLDED case. This has broken MIPS KVM
-> compilation because it relied on availability of pud_index().
+> Hi Jonathan,
 > 
-> Define pud_index() regardless of page table folded. It will evaluate to
-> actual index for 4-level pagetables and to 0 for folded PUD level.
-> 
-> Link: https://lore.kernel.org/lkml/20200331154749.5457-1-pbonzini@redhat.com
-> Reported-by: Paolo Bonzini <pbonzini@redhat.com>
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> Does the patch apply correctly for you ?
 
-Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
+No issue on my side to apply them (v5.7-rc1 and next).
 
-> ---
->  arch/mips/include/asm/pgtable-64.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> I will try to test it , if I manage to apply it.
+> I can only test the ADC though because at this moment I do not have a 
+> touchscreen at disposal.
+
+Same here, not able to test the touchscreen but it doesn't seem very risky.
+
 > 
-> diff --git a/arch/mips/include/asm/pgtable-64.h b/arch/mips/include/asm/pgtable-64.h
-> index f92716cfa4f4..ee5dc0c145b9 100644
-> --- a/arch/mips/include/asm/pgtable-64.h
-> +++ b/arch/mips/include/asm/pgtable-64.h
-> @@ -172,6 +172,8 @@
->  
->  extern pte_t invalid_pte_table[PTRS_PER_PTE];
->  
-> +#define pud_index(address)	(((address) >> PUD_SHIFT) & (PTRS_PER_PUD - 1))
-> +
->  #ifndef __PAGETABLE_PUD_FOLDED
->  /*
->   * For 4-level pagetables we defines these ourselves, for 3-level the
-> @@ -210,8 +212,6 @@ static inline void p4d_clear(p4d_t *p4dp)
->  	p4d_val(*p4dp) = (unsigned long)invalid_pud_table;
->  }
->  
-> -#define pud_index(address)	(((address) >> PUD_SHIFT) & (PTRS_PER_PUD - 1))
-> -
->  static inline unsigned long p4d_page_vaddr(p4d_t p4d)
->  {
->  	return p4d_val(p4d);
+> Meanwhile, the code looks good for me,
+> 
+> Reviewed-by: Eugen Hristev <eugen.hristev@microchip.com>
+
+You can add mine as well:
+
+Reviewed-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+
+Regards
+
+Ludovic
+
+> 
+> By the way, I do not know if my two pending patches on this driver will 
+> conflict or not.
+> 
+> Eugen
+> 
+> > 
+> > Thanks,
+> > 
+> > Jonathan
+> > 
+> >> ---
+> >>
+> >> This patchset continues discussion:
+> >>     https://lore.kernel.org/linux-iio/20191023082508.17583-1-alexandru.ardelean@analog.com/
+> >> Apologies for the delay.
+> >>
+> >> Changelog v1 -> v2:
+> >> * added patch 'iio: at91-sama5d2_adc: split at91_adc_current_chan_is_touch()
+> >>    helper'
+> >> * renamed at91_adc_buffer_postenable() -> at91_adc_buffer_preenable()
+> >>    - at91_adc_buffer_postenable() - now just calls
+> >>      iio_triggered_buffer_postenable() if the channel isn't the touchscreen
+> >>      channel
+> >> * renamed at91_adc_buffer_predisable() -> at91_adc_buffer_postdisable()
+> >>    - at91_adc_buffer_predisable() - now just calls
+> >>      iio_triggered_buffer_predisable() if the channel isn't the touchscreen
+> >>      channel
+> >>
+> >>   drivers/iio/adc/at91-sama5d2_adc.c | 31 +++++++++++++++---------------
+> >>   1 file changed, 15 insertions(+), 16 deletions(-)
+> >>
+> >> diff --git a/drivers/iio/adc/at91-sama5d2_adc.c b/drivers/iio/adc/at91-sama5d2_adc.c
+> >> index a5c7771227d5..f2a74c47c768 100644
+> >> --- a/drivers/iio/adc/at91-sama5d2_adc.c
+> >> +++ b/drivers/iio/adc/at91-sama5d2_adc.c
+> >> @@ -873,18 +873,24 @@ static int at91_adc_dma_start(struct iio_dev *indio_dev)
+> >>        return 0;
+> >>   }
+> >>
+> >> +static bool at91_adc_current_chan_is_touch(struct iio_dev *indio_dev)
+> >> +{
+> >> +     struct at91_adc_state *st = iio_priv(indio_dev);
+> >> +
+> >> +     return !!bitmap_subset(indio_dev->active_scan_mask,
+> >> +                            &st->touch_st.channels_bitmask,
+> >> +                            AT91_SAMA5D2_MAX_CHAN_IDX + 1);
+> >> +}
+> >> +
+> >>   static int at91_adc_buffer_postenable(struct iio_dev *indio_dev)
+> >>   {
+> >>        int ret;
+> >>        struct at91_adc_state *st = iio_priv(indio_dev);
+> >>
+> >>        /* check if we are enabling triggered buffer or the touchscreen */
+> >> -     if (bitmap_subset(indio_dev->active_scan_mask,
+> >> -                       &st->touch_st.channels_bitmask,
+> >> -                       AT91_SAMA5D2_MAX_CHAN_IDX + 1)) {
+> >> -             /* touchscreen enabling */
+> >> +     if (at91_adc_current_chan_is_touch(indio_dev))
+> >>                return at91_adc_configure_touch(st, true);
+> >> -     }
+> >> +
+> >>        /* if we are not in triggered mode, we cannot enable the buffer. */
+> >>        if (!(indio_dev->currentmode & INDIO_ALL_TRIGGERED_MODES))
+> >>                return -EINVAL;
+> >> @@ -906,12 +912,9 @@ static int at91_adc_buffer_predisable(struct iio_dev *indio_dev)
+> >>        u8 bit;
+> >>
+> >>        /* check if we are disabling triggered buffer or the touchscreen */
+> >> -     if (bitmap_subset(indio_dev->active_scan_mask,
+> >> -                       &st->touch_st.channels_bitmask,
+> >> -                       AT91_SAMA5D2_MAX_CHAN_IDX + 1)) {
+> >> -             /* touchscreen disable */
+> >> +     if (at91_adc_current_chan_is_touch(indio_dev))
+> >>                return at91_adc_configure_touch(st, false);
+> >> -     }
+> >> +
+> >>        /* if we are not in triggered mode, nothing to do here */
+> >>        if (!(indio_dev->currentmode & INDIO_ALL_TRIGGERED_MODES))
+> >>                return -EINVAL;
+> >> @@ -1886,14 +1889,10 @@ static __maybe_unused int at91_adc_resume(struct device *dev)
+> >>                return 0;
+> >>
+> >>        /* check if we are enabling triggered buffer or the touchscreen */
+> >> -     if (bitmap_subset(indio_dev->active_scan_mask,
+> >> -                       &st->touch_st.channels_bitmask,
+> >> -                       AT91_SAMA5D2_MAX_CHAN_IDX + 1)) {
+> >> -             /* touchscreen enabling */
+> >> +     if (at91_adc_current_chan_is_touch(indio_dev))
+> >>                return at91_adc_configure_touch(st, true);
+> >> -     } else {
+> >> +     else
+> >>                return at91_adc_configure_trigger(st->trig, true);
+> >> -     }
+> >>
+> >>        /* not needed but more explicit */
+> >>        return 0;
+> > 
 > 
