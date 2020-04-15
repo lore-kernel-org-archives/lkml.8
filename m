@@ -2,93 +2,161 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A122C2BB55
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B81C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:44:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF39A21734
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:44:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OP0JQBSw"
+	by mail.kernel.org (Postfix) with ESMTP id 7CC04206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:44:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586951094;
+	bh=oK4kqRGGJPW2CAwiNXBLNogWEszRqkKuvhC/5JUXd5c=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=PBjk8eAIZIHvXwxQx5MJUTP+FeqNP0T1dqv/np1XequORJefxQtrX4+7w5uvCHpAU
+	 jelNpq68gO0s2Z4fhvC0ayU9Jb/hJd9hjJyiZxxfs4ZCTXLupE1Izl9tmKitBZ1tu3
+	 maBeQbLP9o5qTZBDijYvyexdn6900tvc1yHoBjrE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409075AbgDOLoX (ORCPT
+        id S2409094AbgDOLon (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:44:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41018 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2897427AbgDOLl5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:41:57 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8549C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 04:41:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=lApmsTY3DbCgBeKnA8O+HpWuoSZ/POP3KyPMIcSKnIc=; b=OP0JQBSweEKaYNeyead3UT/x3T
-        zovFgpBEpoL30IUAKLbIGXuqEgBNlODw2FVU0zOuJN88psxgfV02p6ymo/A9AcbRvSS7084Z2dY84
-        VEOLdWaf5UFbxMoIJQDot09vnCPGq3jeeftAlik9cqZEV+7l85LPkbAwcFTaTqi6LaUzwVQmE3Gxx
-        0IvcA8v3f4i/Bgl1TLCf2vJwHq0SJMOjMd2tviPV+U9v3isilv/VhmCiHPvDE94Y6KdLwfGFqkFwV
-        maJDRCd6tgEVaFh6Lhsr+KhobWAjpMMAwdh7OIE4LMdPYvSDuacBai9ZGZwfMegf8fGFLTFj6jFXh
-        QR09KK9w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jOgQW-0007ly-LG; Wed, 15 Apr 2020 11:41:56 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id F187A304D2B;
-        Wed, 15 Apr 2020 13:41:54 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9875D2038BC5A; Wed, 15 Apr 2020 13:41:54 +0200 (CEST)
-Date:   Wed, 15 Apr 2020 13:41:54 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Muchun Song <songmuchun@bytedance.com>
-Cc:     Will Deacon <will@kernel.org>, mingo@redhat.com, mingo@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [External] Re: [PATCH] seqlock: Use while instead of if+goto in
- __read_seqcount_begin
-Message-ID: <20200415114154.GF20730@hirez.programming.kicks-ass.net>
-References: <20200409134558.90863-1-songmuchun@bytedance.com>
- <20200410115658.GB24814@willie-the-truck>
- <20200414110516.GO20713@hirez.programming.kicks-ass.net>
- <CAMZfGtWk+gG7Z2bOy_bq=XnuuSJzic16zpeajhJiiekpJEFrFg@mail.gmail.com>
+        Wed, 15 Apr 2020 07:44:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57504 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2897229AbgDOLhU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:37:20 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A4912166E;
+        Wed, 15 Apr 2020 11:37:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586950639;
+        bh=oK4kqRGGJPW2CAwiNXBLNogWEszRqkKuvhC/5JUXd5c=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=xGTfU2hsHjGY0QLhElESfBBCBKFddo0cDMAt0xK+hnYAexW7V5//RksXbTtwkag+b
+         3NMiA30K1lv/zOTTamZdwE9Zvm+peBK7lrI1/cc1BFWoUw4CMUPNKlbN+2vFdb/uUG
+         BkalmNauLxoZZNaBXQiQJvQvN7GMm9/8vDXcx2Jk=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Yicheng Li <yichengli@chromium.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 129/129] platform/chrome: cros_ec: Query EC protocol version if EC transitions between RO/RW
+Date:   Wed, 15 Apr 2020 07:34:44 -0400
+Message-Id: <20200415113445.11881-129-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
+References: <20200415113445.11881-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMZfGtWk+gG7Z2bOy_bq=XnuuSJzic16zpeajhJiiekpJEFrFg@mail.gmail.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 08:01:06PM +0800, Muchun Song wrote:
-> On Tue, Apr 14, 2020 at 7:05 PM Peter Zijlstra <peterz@infradead.org> wrote:
+From: Yicheng Li <yichengli@chromium.org>
 
-> > .... That said,
-> > Will, would it make sense to use smp_cond_load_relaxed() here ?
-> 
-> I have a similar idea. Would it make sense to use smp_cond_load_acquire()
-> in raw_read_seqcount_begin()?
+[ Upstream commit 42cd0ab476e2daffc23982c37822a78f9a53cdd5 ]
 
-Not sure; I did consider it, but that rmb it has seems more natural in
-the over-all ordering scheme here. I mean:
+RO and RW of EC may have different EC protocol version. If EC transitions
+between RO and RW, but AP does not reboot (this is true for fingerprint
+microcontroller / cros_fp, but not true for main ec / cros_ec), the AP
+still uses the protocol version queried before transition, which can
+cause problems. In the case of fingerprint microcontroller, this causes
+AP to send the wrong version of EC_CMD_GET_NEXT_EVENT to RO in the
+interrupt handler, which in turn prevents RO to clear the interrupt
+line to AP, in an infinite loop.
 
-	load seqcount		inc seqcount
-	rmb			wmb
-	// load stuff		// modify stuff
-	rmb			wmb
-	compare seqcount	inc seqcount
+Once an EC_HOST_EVENT_INTERFACE_READY is received, we know that there
+might have been a transition between RO and RW, so re-query the protocol.
 
-is nice and symmetric, making that upper left rmb an acquire 'works' but
-is just weird IMO. And I suppose you can make the lower right wmb a
-store-release, which is somewhat better, but then it gets all weird when
-you consider things like barrier and latch.
+Signed-off-by: Yicheng Li <yichengli@chromium.org>
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/platform/chrome/cros_ec.c           | 30 +++++++++++++++++++++
+ include/linux/platform_data/cros_ec_proto.h |  4 +++
+ 2 files changed, 34 insertions(+)
 
-So best to just leave it as is I think.
+diff --git a/drivers/platform/chrome/cros_ec.c b/drivers/platform/chrome/cros_ec.c
+index 6fc8f2c3ac517..7ee43b2e0654a 100644
+--- a/drivers/platform/chrome/cros_ec.c
++++ b/drivers/platform/chrome/cros_ec.c
+@@ -138,6 +138,24 @@ static int cros_ec_sleep_event(struct cros_ec_device *ec_dev, u8 sleep_event)
+ 	return ret;
+ }
+ 
++static int cros_ec_ready_event(struct notifier_block *nb,
++			       unsigned long queued_during_suspend,
++			       void *_notify)
++{
++	struct cros_ec_device *ec_dev = container_of(nb, struct cros_ec_device,
++						     notifier_ready);
++	u32 host_event = cros_ec_get_host_event(ec_dev);
++
++	if (host_event & EC_HOST_EVENT_MASK(EC_HOST_EVENT_INTERFACE_READY)) {
++		mutex_lock(&ec_dev->lock);
++		cros_ec_query_all(ec_dev);
++		mutex_unlock(&ec_dev->lock);
++		return NOTIFY_OK;
++	}
++
++	return NOTIFY_DONE;
++}
++
+ /**
+  * cros_ec_register() - Register a new ChromeOS EC, using the provided info.
+  * @ec_dev: Device to register.
+@@ -237,6 +255,18 @@ int cros_ec_register(struct cros_ec_device *ec_dev)
+ 		dev_dbg(ec_dev->dev, "Error %d clearing sleep event to ec",
+ 			err);
+ 
++	if (ec_dev->mkbp_event_supported) {
++		/*
++		 * Register the notifier for EC_HOST_EVENT_INTERFACE_READY
++		 * event.
++		 */
++		ec_dev->notifier_ready.notifier_call = cros_ec_ready_event;
++		err = blocking_notifier_chain_register(&ec_dev->event_notifier,
++						      &ec_dev->notifier_ready);
++		if (err)
++			return err;
++	}
++
+ 	dev_info(dev, "Chrome EC device registered\n");
+ 
+ 	return 0;
+diff --git a/include/linux/platform_data/cros_ec_proto.h b/include/linux/platform_data/cros_ec_proto.h
+index ba59147701918..3832433266762 100644
+--- a/include/linux/platform_data/cros_ec_proto.h
++++ b/include/linux/platform_data/cros_ec_proto.h
+@@ -125,6 +125,9 @@ struct cros_ec_command {
+  * @host_event_wake_mask: Mask of host events that cause wake from suspend.
+  * @last_event_time: exact time from the hard irq when we got notified of
+  *     a new event.
++ * @notifier_ready: The notifier_block to let the kernel re-query EC
++ *		    communication protocol when the EC sends
++ *		    EC_HOST_EVENT_INTERFACE_READY.
+  * @ec: The platform_device used by the mfd driver to interface with the
+  *      main EC.
+  * @pd: The platform_device used by the mfd driver to interface with the
+@@ -166,6 +169,7 @@ struct cros_ec_device {
+ 	u32 host_event_wake_mask;
+ 	u32 last_resume_result;
+ 	ktime_t last_event_time;
++	struct notifier_block notifier_ready;
+ 
+ 	/* The platform devices used by the mfd driver */
+ 	struct platform_device *ec;
+-- 
+2.20.1
 
-Those incs do seem to be really wanting a WRITE_ONCE() though.
