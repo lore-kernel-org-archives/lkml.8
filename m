@@ -2,108 +2,118 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D2AC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:52:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CAFFC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:52:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3B5B20775
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:52:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="R+fcctcp"
+	by mail.kernel.org (Postfix) with ESMTP id E7839206F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:52:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895159AbgDOIwn (ORCPT
+        id S2895170AbgDOIwy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 04:52:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42840 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2505552AbgDOIwT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 04:52:19 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42646C061A0F
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 01:52:18 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id i27so2633495ota.7
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 01:52:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZCUHiYYMH/G4Vj/Sqwd6OPeDpXyCtDoKrnuuyZW76nM=;
-        b=R+fcctcpUVM7bgjtt7NExQLE64KZbCPh591b4Nqle1ymrs0xUAs9xAbfm+y3RIteHq
-         LZxzhYavPfqV/e56OMNc9fNpAdNOssa0Vb8X/Bw6xr8synPXvDFNV45/vPdjIJcBEQmH
-         l2mazh36QyecmW4hnuCSM5+VX0lRsNTYPmTGNuojb/6qa9ihAt/B2DCHdCxFk2+KSAra
-         7P3OBmp6OUvC0jtT53z0pD2OD5MIZwXz0qmVMwhRnon+Q4lvKVEy89DaxcChUQJhu5Q6
-         8epUAaEKHdykKA1+Hru1q0GxZUHAtW5+Q1+pqR+Zju9M/NWp/k9cGQGaT1D3UZuQkIlh
-         nUQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZCUHiYYMH/G4Vj/Sqwd6OPeDpXyCtDoKrnuuyZW76nM=;
-        b=cyLL4lIL220w+O3cYbOmj8wzj8bEZveWFYJGaMTtdNIuaTaekcWUEpb6rzyZrp+Ru+
-         hywZjEktz+rK+2GWqxDtTKdJmdh2SzbVeSpkTthexyv1uRolXK8BSJktBiMJFdObiuPN
-         Iplt3DkgagnlN48YX3yq2sjTLVGDfNsHWBPRF/9fjAaQvhNAdqCDIIUEW/Gp84OngiBu
-         dO7M15haMUpyGm2A1jglTmQkJEI37iCYABJSuBl6nEP/D0X7huLhJZhjSs+fsid79lYu
-         KhS5/AXYYayth3QPkKvQOZOIJBDcTKYtJEi2dWmEMFMkW5+fgSK8w0VlHoP1W7Jrh6Iw
-         0oYQ==
-X-Gm-Message-State: AGi0PuaFP6JuWEy+9osx2qIiXaghGvkDpoGzTGwgNY8fjfi1HEA0S0It
-        4ry3HK+LXCwWLvGBdJEZcfN2jXu2Dq+x28Ey+K6GQQ==
-X-Google-Smtp-Source: APiQypKBgMlXolVF7p7MsOedbvV4RyaNeLUsZBlgYqPA/1aeIk6fU5CCiWfO/6W9C+vbRqDTHLyMDAXwBdIuvXdXvZM=
-X-Received: by 2002:a9d:6041:: with SMTP id v1mr11709860otj.66.1586940737597;
- Wed, 15 Apr 2020 01:52:17 -0700 (PDT)
+        Wed, 15 Apr 2020 04:52:54 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47854 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2505548AbgDOIwU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 04:52:20 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 58DA8AFB1;
+        Wed, 15 Apr 2020 08:52:16 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 2D9361E1250; Wed, 15 Apr 2020 10:52:16 +0200 (CEST)
+Date:   Wed, 15 Apr 2020 10:52:16 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     ira.weiny@intel.com
+Cc:     linux-kernel@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V8 08/11] fs: Define I_DONTCACNE in VFS layer
+Message-ID: <20200415085216.GE501@quack2.suse.cz>
+References: <20200415064523.2244712-1-ira.weiny@intel.com>
+ <20200415064523.2244712-9-ira.weiny@intel.com>
 MIME-Version: 1.0
-References: <20200414181012.114905-1-robert.marko@sartura.hr>
- <20200414181012.114905-2-robert.marko@sartura.hr> <08c288da-6f5c-7f04-81bc-4c7cb311af3e@gmail.com>
-In-Reply-To: <08c288da-6f5c-7f04-81bc-4c7cb311af3e@gmail.com>
-From:   Robert Marko <robert.marko@sartura.hr>
-Date:   Wed, 15 Apr 2020 10:52:06 +0200
-Message-ID: <CA+HBbNEke7e=+_zoiv67V5_pZqes+3P7pR6VkTz24=CQySLtRw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] dt-bindings: add Qualcomm IPQ4019 MDIO bindings
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>, linux@armlinux.org.uk,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        devicetree@vger.kernel.org, Luka Perkov <luka.perkov@sartura.hr>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200415064523.2244712-9-ira.weiny@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 11:11 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
->
->
->
-> On 4/14/2020 11:10 AM, Robert Marko wrote:
-> > This patch adds the binding document for the IPQ40xx MDIO driver.
-> >
-> > Signed-off-by: Robert Marko <robert.marko@sartura.hr>
-> > Cc: Luka Perkov <luka.perkov@sartura.hr>
-> > ---
->
-> [snip]
->
-> > +examples:
-> > +  - |
-> > +    mdio@90000 {
-> > +      #address-cells = <1>;
-> > +      #size-cells = <0>;
-> > +      compatible = "qcom,ipq40xx-mdio";
-> > +      reg = <0x90000 0x64>;
-> > +      status = "disabled";
->
-> I believe the preference is to not put status properties in examples.
-> Other than that:
-Will be changed in v3.
-Thanks
->
-> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-> --
-> Florian
+There's a typo in the subject - I_DONTCACNE.
+
+On Tue 14-04-20 23:45:20, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> DAX effective mode changes (setting of S_DAX) require inode eviction.
+> 
+> Define a flag which can be set to inform the VFS layer that inodes
+> should not be cached.  This will expedite the eviction of those nodes
+> requiring reload.
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> ---
+>  include/linux/fs.h | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index a818ced22961..e2db71d150c3 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -2151,6 +2151,8 @@ static inline void kiocb_clone(struct kiocb *kiocb, struct kiocb *kiocb_src,
+>   *
+>   * I_CREATING		New object's inode in the middle of setting up.
+>   *
+> + * I_DONTCACHE		Do not cache the inode
+> + *
+
+Maybe, I'd be more specific here and write: "Evict inode as soon as it is
+not used anymore"?
+
+Otherwise the patch looks good to me so feel free to add:
+
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+Also it would be good to CC Al Viro on this one (and the dentry flag) I
+guess.
+
+								Honza
+
+>   * Q: What is the difference between I_WILL_FREE and I_FREEING?
+>   */
+>  #define I_DIRTY_SYNC		(1 << 0)
+> @@ -2173,6 +2175,7 @@ static inline void kiocb_clone(struct kiocb *kiocb, struct kiocb *kiocb_src,
+>  #define I_WB_SWITCH		(1 << 13)
+>  #define I_OVL_INUSE		(1 << 14)
+>  #define I_CREATING		(1 << 15)
+> +#define I_DONTCACHE		(1 << 16)
+>  
+>  #define I_DIRTY_INODE (I_DIRTY_SYNC | I_DIRTY_DATASYNC)
+>  #define I_DIRTY (I_DIRTY_INODE | I_DIRTY_PAGES)
+> @@ -3042,7 +3045,8 @@ extern int inode_needs_sync(struct inode *inode);
+>  extern int generic_delete_inode(struct inode *inode);
+>  static inline int generic_drop_inode(struct inode *inode)
+>  {
+> -	return !inode->i_nlink || inode_unhashed(inode);
+> +	return !inode->i_nlink || inode_unhashed(inode) ||
+> +		(inode->i_state & I_DONTCACHE);
+>  }
+>  
+>  extern struct inode *ilookup5_nowait(struct super_block *sb,
+> -- 
+> 2.25.1
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
