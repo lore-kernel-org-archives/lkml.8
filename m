@@ -2,119 +2,128 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0896DC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 22:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52790C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 22:30:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D67FF20784
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 22:27:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BEAE206E9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 22:30:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ogbq48oE"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gXSGbTR0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732099AbgDOW1R (ORCPT
+        id S1732170AbgDOW36 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 18:27:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56708 "EHLO
+        Wed, 15 Apr 2020 18:29:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727993AbgDOW1H (ORCPT
+        by vger.kernel.org with ESMTP id S1732112AbgDOW3o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 18:27:07 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D283C061A0C;
-        Wed, 15 Apr 2020 15:27:07 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id z6so2067572wml.2;
-        Wed, 15 Apr 2020 15:27:07 -0700 (PDT)
+        Wed, 15 Apr 2020 18:29:44 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA982C061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 15:29:42 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id b12so18944666ion.8
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 15:29:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=zg3ob5dFIHsdWUyPt1RU43xeZYyJjlIPkOiX/f8YR84=;
-        b=ogbq48oEXKMvuX6Wqc6V76/Y7aYtAhaE3UxZLBIRfJWjqKTFOGiMRkVg03+/9opHA0
-         Nq6JVFRzLkJTSiWD4gAsFBQEX7eFyrNMHD7B3XftHASOHKXdIzeVyv4D7j69sC1bLwIe
-         aPFXb+CYlnhKrsIqHb2AXECHd6qlZ4mH4rZ4cEhZQ9ZnNOHzycXeSdFC0KuJMtcuhINR
-         UO5jtzUV+dpWuVz/6KV/c6mIHKpGO8vTqMFIxRaN5d9gy+mtTGct+2KDKgvJQCCs3Fvy
-         QpYmYrE3jVGqaF+PyeEh8uOYzopcs35jPRrF1Ac2l3N3RQDta9L8/ERN881JxIBhXm0X
-         OBhw==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PVtGYrIeBI2+9xVgD4LCkJpnGBHTWG+8tKFXeAJgTRU=;
+        b=gXSGbTR09MscBjxHvvT6Zy0GE7nYGjJ8nQRhWPJMjuaPZPTM411vSTxLoPH1wb/lRH
+         E6Z4jtglLRMXQKommS2CbxodCJi11rjz7cgYPRAWFMxtk1Sc3UXB1U2xuagdbDr83VUY
+         5gnHcn+7SSgE8W9/iOMJ1SOy7cFoMYxBGg8EM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=zg3ob5dFIHsdWUyPt1RU43xeZYyJjlIPkOiX/f8YR84=;
-        b=scLId3iEV3u4iyy+5md9kBsHOJ168jni7pinyGawwapuGY7VQd1qehZ6J60gshiRxP
-         faWnpUndNbTLQV6c1MgglQwU/JpuavQjAa1YgbJ0yNlIF0um+UH+AMBkNUVyOR2ukL9N
-         sLasdSeelGafspvuRHnNEgsH4PvslZ0mikxadN2A3csW1+qlgMyiNgnB6sTPROijglkE
-         9XA8DprLrv9Pw3qjcBlzsrvdd7qDX2A1OCyDISRhBNUn5dy+sMpDUt1gSA9Au9ju525i
-         p12JOYkcX709CEfpf5NBnXQD0i3T/uYLh2qOEnjrVfnjfqrtGytnBj+pTzQuwYfx40Ln
-         8RUQ==
-X-Gm-Message-State: AGi0PuZ8ddYhVP8nHyBafBbSUZMFy26owqzRU4XahPfz7xQ1GNq8eh7m
-        VQ8IBzAYumBzD+zdxUxWiQ8=
-X-Google-Smtp-Source: APiQypJ4nk4y/NIUuy7cNNsNj4JyK9eMcuHuy+sY0Q3j/CR3sPw4tKyyX94iSUliU+33fV8kivTCDw==
-X-Received: by 2002:a1c:1d4b:: with SMTP id d72mr1421501wmd.19.1586989626211;
-        Wed, 15 Apr 2020 15:27:06 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id b4sm20105151wrv.42.2020.04.15.15.27.05
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 15 Apr 2020 15:27:05 -0700 (PDT)
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     paulmck@kernel.org, josh@joshtriplett.org
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Wei Yang <richard.weiyang@gmail.com>
-Subject: [PATCH] rcu: init and destroy rcu_synchronize when necessary
-Date:   Wed, 15 Apr 2020 22:26:55 +0000
-Message-Id: <20200415222655.9006-1-richard.weiyang@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PVtGYrIeBI2+9xVgD4LCkJpnGBHTWG+8tKFXeAJgTRU=;
+        b=OTT5J0gcG7nulV+bMGxxFbKvcSCiZKaIG1KhE2z456T1mDvZBGvZ/OKXKPC1E+lU6T
+         +5oI4wlgw0f5hUGUHSxjr61Olb0yq4cF9J+g1aJbgp94zZ0Jz03UJZPfBpc0UQHHOPBs
+         BPkXljErjiZrqd7kbpM61z2d5OCJm6/aFqUdP0JwC8TvqTvrfJUNH2cktf1TUA/OzcgC
+         sH8qXgIUC+IMaDrVOThN/rz221q46iRpXyFVKyUfj50cLLFJNGTJfsbbqAv1K2f/NmON
+         7/dESHrslLRfKkDIybfcDnGWGwJKJ6lI+LcB3DE7is7Pk4m1ibvmB3yMPDYyB9ZxIJHW
+         lX2w==
+X-Gm-Message-State: AGi0Pua7WXEhjaSocZO/D2kr7wcdEPNNKOxAmglV5OGikWTluOQAIOSF
+        jaPHKgkZ6xG56dM/DfcJfi3NYhv6myHmvwgiTPhmpA==
+X-Google-Smtp-Source: APiQypJ3eoCymVEhOWkVktr1qddf2Xa0knAtkx0Gy+/ySRR66TTx2i5h4oQ94XSCgON3AJO5/Bo8xzGkGGc86wd33Kk=
+X-Received: by 2002:a05:6602:1302:: with SMTP id h2mr28555486iov.186.1586989781796;
+ Wed, 15 Apr 2020 15:29:41 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200403052900.258855-1-evanbenn@chromium.org>
+ <CAKz_xw0gV+w_gMkLfB4qUBdULLfFoiv1TBWp9_PHy33wP_XWyA@mail.gmail.com>
+ <890948ef-7276-fdae-d270-eb30eff3eab2@amlogic.com> <243e107c-35c1-2d14-5285-c9e13744963c@amlogic.com>
+In-Reply-To: <243e107c-35c1-2d14-5285-c9e13744963c@amlogic.com>
+From:   Julius Werner <jwerner@chromium.org>
+Date:   Wed, 15 Apr 2020 15:29:29 -0700
+Message-ID: <CAODwPW9RSB37+4EJ2QXAwz=ShFB23L1GKC2mLYE5L5JuQR2tPw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] Add a watchdog driver that uses ARM Secure Monitor Calls.
+To:     Xingyu Chen <xingyu.chen@amlogic.com>
+Cc:     Evan Benn <evanbenn@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Julius Werner <jwerner@chromium.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Vinod Koul <vkoul@kernel.org>, Will Deacon <will@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Yonghui Yu <yonghui.yu@amlogic.com>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We would skip the rcu_synchronize if it is a duplicate call back function.
+> In addition, It looks more reasonable to use the "msec" as the unit of
+> timeout parameter for the ATF fw interface with SMCWD_SET_TIMEOUT:
+>
+> - The fw interface will compatible with the uboot generic watchdog
+> interface at [0], and there is no need to convert timeout from msec
+> to sec.
 
-This is not necessary to init and destroy for them.
+I think we're trying hard to keep this compatible to a Trusted
+Firmware counterpart that we have already shipped, so we would prefer
+to keep it at seconds if possible. That's what the Linux watchdog core
+uses as well after all, so it just seems natural. I don't really see
+how what U-Boot does would have anything to do with this.
 
-Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
----
- kernel/rcu/update.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+> - Some vendor's watchdog may be not support the "wdt_trigger_reset"
+> reset operation, but they can use the method below to reset the system
+> by the watchdog right now.
+>
+> watchdog_set_time(1);  //1ms
+> watchdog_enable();
 
-diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
-index 6c4b862f57d6..91e44b527aad 100644
---- a/kernel/rcu/update.c
-+++ b/kernel/rcu/update.c
-@@ -353,13 +353,14 @@ void __wait_rcu_gp(bool checktiny, int n, call_rcu_func_t *crcu_array,
- 			might_sleep();
- 			continue;
- 		}
--		init_rcu_head_on_stack(&rs_array[i].head);
--		init_completion(&rs_array[i].completion);
- 		for (j = 0; j < i; j++)
- 			if (crcu_array[j] == crcu_array[i])
- 				break;
--		if (j == i)
-+		if (j == i) {
-+			init_rcu_head_on_stack(&rs_array[i].head);
-+			init_completion(&rs_array[i].completion);
- 			(crcu_array[i])(&rs_array[i].head, wakeme_after_rcu);
-+		}
- 	}
- 
- 	/* Wait for all callbacks to be invoked. */
-@@ -370,9 +371,10 @@ void __wait_rcu_gp(bool checktiny, int n, call_rcu_func_t *crcu_array,
- 		for (j = 0; j < i; j++)
- 			if (crcu_array[j] == crcu_array[i])
- 				break;
--		if (j == i)
-+		if (j == i) {
- 			wait_for_completion(&rs_array[i].completion);
--		destroy_rcu_head_on_stack(&rs_array[i].head);
-+			destroy_rcu_head_on_stack(&rs_array[i].head);
-+		}
- 	}
- }
- EXPORT_SYMBOL_GPL(__wait_rcu_gp);
--- 
-2.23.0
-
+They can still do that but they should do that on the Trusted Firmware
+side. Emulating a missing reset functionality should be handled by the
+hardware abstraction layer (in this case Trusted Firmware), not at the
+Linux API level. So Linux would still send a PSCI_SYSTEM_RESET SMC,
+but then Trusted Firmware can choose to implement that by setting the
+watchdog to the smallest possible timeout (which it can because it's
+accessing it directly, not through this SMC interface) and letting it
+expire.
