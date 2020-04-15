@@ -2,254 +2,136 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC501C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC5AC2BB85
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:35:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D18592074F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:35:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECE222074F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:35:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="A1ZwyGSo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895636AbgDOJfY (ORCPT
+        id S2895651AbgDOJf4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 05:35:24 -0400
-Received: from mga06.intel.com ([134.134.136.31]:10350 "EHLO mga06.intel.com"
+        Wed, 15 Apr 2020 05:35:56 -0400
+Received: from mout.web.de ([212.227.17.12]:37303 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2895613AbgDOJfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 05:35:19 -0400
-IronPort-SDR: HOxahpQ08nuLL3rHiQN1oMTcqGy8j0ipai/oxjZ4grQpfLDjBfykxgGZgC7Ymij0JYk6fxATpp
- G7vlCt5WB4YA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 02:35:18 -0700
-IronPort-SDR: k4rRel3jDwOX9z9ZY15vHKbdib2oiO1AyNV9W1xXF+YaVV8LKuXXH7IdhwsYYovzclndUvdm7d
- u5JZuYKtSOHA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,386,1580803200"; 
-   d="scan'208";a="332447829"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.87]) ([10.237.72.87])
-  by orsmga001.jf.intel.com with ESMTP; 15 Apr 2020 02:35:14 -0700
-Subject: Re: [PATCH 2/2] mmc: sdhci: use FIELD_GET/PREP for capabilities bit
- masks
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-mmc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
-        masahiroy@kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-References: <20200408072105.422-1-yamada.masahiro@socionext.com>
- <20200408072105.422-2-yamada.masahiro@socionext.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <3cc8c9b8-b957-2fef-d6da-47980d1926aa@intel.com>
-Date:   Wed, 15 Apr 2020 12:34:25 +0300
+        id S2895613AbgDOJfu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 05:35:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1586943301;
+        bh=ezw4TLO8n8l15GvUg+iOtElfoPwFhfpISR9wA5pB/EM=;
+        h=X-UI-Sender-Class:Cc:Subject:To:From:Date;
+        b=A1ZwyGSoLP7tROnrOqdHfWgLWbN7cDdFDml42VlKT23D/YhkXOUPrtYyIdgZp+xzS
+         tq+u2avCm2pEIYFG/ECQKdHP+TC3+UQZTUSjUr3y5pGCDPtmbiU9jo/rhVZAu6hCGp
+         XEgcgg/dHLQPjTB6/x9nd6p4S2Zh83F5f0ITVPk4=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.3] ([78.48.133.192]) by smtp.web.de (mrweb101
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MBkPj-1jW6hm2ghb-00Ap6c; Wed, 15
+ Apr 2020 11:35:01 +0200
+Cc:     linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jon Maloy <jmaloy@redhat.com>, Kangjie Lu <kjlu@umn.edu>,
+        Ying Xue <ying.xue@windriver.com>,
+        Yuan Zhang <yuanxzhang@fudan.edu.cn>
+Subject: Re: [PATCH] tipc: Fix potential tipc_node refcnt leak in tipc_rcv
+To:     Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>, netdev@vger.kernel.org,
+        tipc-discussion@lists.sourceforge.net
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <53bb4a56-0bd2-3964-7cfb-b5745a8ba25c@web.de>
+Date:   Wed, 15 Apr 2020 11:34:54 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200408072105.422-2-yamada.masahiro@socionext.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:u4noMxXZAQN29VZ7DnfQnHQpVDgs3OBGHH3ZaHfbT9kBadItvZd
+ KED8KsZy3rlOCi3E1qWLwTq4Qm/GSd2mVVbfEjEQGzQGzneyI/6Mz7Xq9vXAc9ggl2cGhqx
+ FWPR1BlUfk0PAa+SAZlROMT3xWQ5X2mkLlI93PyPdoNyi5J7Cw6iEJdSZxqUkCalcKfHpj6
+ 8lZoQCGMIVzvUCMIKsEBA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:bjgr2cNAAqY=:L58s1mb6zQFpPqznJqp/a4
+ dhj5iRsiALqRrokVlj6LYOrzVn3jhdvDxi9LR8LqE893BYk5gA7nDc7I2Ho+mW1oap0wa97bg
+ SZOdQ1ly1PB0J1IQlvheWxzBrQ5/dSNwclmxTtgDRI/Ut9eVK5G5NKOn+Bt4VGdOpZqk1Ev+M
+ W1vtEGQGLNZ9RAIETMrpXw9PWw7MpEbBsfOHuxnZemiojP0qEolndEhhKSqw7rl6Fg7EicKHE
+ jhFDJiPOj1WQaoWOLg+t4nOK2+S1BMj4GC9j/Q3hJEFFoLSRh2z90vpTXcc0tFOqzt5oa9/8e
+ n9Su10KKpONicLrH1F8cj6qHbAneYCTlTZ2xsj+1nIBIXJs9f0LuJWg54iuA89Wxeg8k/uzTn
+ megLTVAq4aokTv9tLdPDf3/ZmzAkXyzk+SDMOw289Cv4nyPSpKW+kPqVKiXnvtmWDZbnarEpb
+ 1X52LQW5paTTmYdbf/dumXyAjrbpfZP+KvIo7o2XoiYNKfVRPe6kseo4jHBPgeesWkNizi12/
+ iibCUDkGFjFfJxOEr0BTBFpJPtCApfpfeR+L91g5lncvwYJHYbsObjSD2e8pRhqwcfoOUJ79Q
+ xf8emjO4ihAZoT65neBKp+dK39354am7GvHTvH1Mg3QarqBxvDR63SmYbvtk3diBryW16bb6q
+ joC75Qcq88RG9L04o6DojqZJLRxyAJbVczFqAzNbs3j+yYyd5c75zcxUsuWvDQcOwiUP4AMyw
+ kfD9o71ZK+ulyNjuu0TCFmRm21wQdw+1WUqlMg8kZDmtcWF1/0jaStnxOW1lhZb7RQ89KxSP9
+ ZY8e3Z2y8OpUrFGUDE6RDkHxsrdVS+fmpwuROMP39RzyO0JeYGlV0eQ4brtubdvensuNcDOHw
+ P0Eox/+m3EFqxIqAbYwPEz2CsMHCiuSZlxyr4DyztE4HMHnVBVrUJRWyxOJshcqlwHdZHCEUJ
+ XNWv/lpKuyVHrRlG6JFPAFp/BWfsmJtT3/B6/vuASYymRsDQpEsdmFmWcjz8cdcvdXQN1piyZ
+ b9ivLBoCIQD43WOMQKeYWJdEn+GK6kDFjUGUpvCuCOPDu2q7HZEkghqT7FXEZSWC7r1uwNQAr
+ AklkQVvwau9YahSIenR4I/mKNSY3fJQsHFEPceeS9cGoGIwXPHSVT+4g/KhxbbTGTlHUmK6hp
+ eQ5Rd2945QVjtgO8ssVQ2OvXgjjhrj2QH6vZGcS+TVmHTsJzzmPbrI/CX2dx93vm7rwzRQpvc
+ Y2w8+sFa5B/k3g+46
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/04/20 10:21 am, Masahiro Yamada wrote:
-> Use FIELD_GET and FIELD_PREP to get access to the register fields.
-> Delete the shift macros. I used GENMASK() for touched macros.
+> The issue happens in some paths of tipc_rcv(), which forget to decrease
+> the refcnt increased by tipc_node_find() and will cause a refcnt leak.
 
-That has the side-effect of changing the constants to 64-bit on 64-bit
-platforms, which needs to be mentioned in the commit message.
+How do you think about to mention the term =E2=80=9Creference counting=E2=
+=80=9D in
+the commit message?
 
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Would you like to add the tag =E2=80=9CFixes=E2=80=9D to the change descri=
+ption?
 
-Apart from above:
-
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-
-> ---
-> 
->  drivers/mmc/host/sdhci-esdhc-imx.c |  4 +++-
->  drivers/mmc/host/sdhci-of-at91.c   |  5 +++--
->  drivers/mmc/host/sdhci-pci-core.c  |  8 ++------
->  drivers/mmc/host/sdhci.c           | 19 +++++++------------
->  drivers/mmc/host/sdhci.h           | 17 ++++++-----------
->  5 files changed, 21 insertions(+), 32 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhci-esdhc-imx.c
-> index 5ec8e4bf1ac7..38cd83118082 100644
-> --- a/drivers/mmc/host/sdhci-esdhc-imx.c
-> +++ b/drivers/mmc/host/sdhci-esdhc-imx.c
-> @@ -8,6 +8,7 @@
->   *   Author: Wolfram Sang <kernel@pengutronix.de>
->   */
->  
-> +#include <linux/bitfield.h>
->  #include <linux/io.h>
->  #include <linux/iopoll.h>
->  #include <linux/delay.h>
-> @@ -399,7 +400,8 @@ static u32 esdhc_readl_le(struct sdhci_host *host, int reg)
->  				val = SDHCI_SUPPORT_DDR50 | SDHCI_SUPPORT_SDR104
->  					| SDHCI_SUPPORT_SDR50
->  					| SDHCI_USE_SDR50_TUNING
-> -					| (SDHCI_TUNING_MODE_3 << SDHCI_RETUNING_MODE_SHIFT);
-> +					| FIELD_PREP(SDHCI_RETUNING_MODE_MASK,
-> +						     SDHCI_TUNING_MODE_3);
->  
->  			if (imx_data->socdata->flags & ESDHC_FLAG_HS400)
->  				val |= SDHCI_SUPPORT_HS400;
-> diff --git a/drivers/mmc/host/sdhci-of-at91.c b/drivers/mmc/host/sdhci-of-at91.c
-> index c79bff5e2280..25f4e0f4f53b 100644
-> --- a/drivers/mmc/host/sdhci-of-at91.c
-> +++ b/drivers/mmc/host/sdhci-of-at91.c
-> @@ -6,6 +6,7 @@
->   *		 2015 Ludovic Desroches <ludovic.desroches@atmel.com>
->   */
->  
-> +#include <linux/bitfield.h>
->  #include <linux/clk.h>
->  #include <linux/delay.h>
->  #include <linux/err.h>
-> @@ -179,9 +180,9 @@ static int sdhci_at91_set_clks_presets(struct device *dev)
->  	clk_mul = gck_rate / clk_base_rate - 1;
->  
->  	caps0 &= ~SDHCI_CLOCK_V3_BASE_MASK;
-> -	caps0 |= (clk_base << SDHCI_CLOCK_BASE_SHIFT) & SDHCI_CLOCK_V3_BASE_MASK;
-> +	caps0 |= FIELD_PREP(SDHCI_CLOCK_V3_BASE_MASK, clk_base);
->  	caps1 &= ~SDHCI_CLOCK_MUL_MASK;
-> -	caps1 |= (clk_mul << SDHCI_CLOCK_MUL_SHIFT) & SDHCI_CLOCK_MUL_MASK;
-> +	caps1 |= FIELD_PREP(SDHCI_CLOCK_MUL_MASK, clk_mul);
->  	/* Set capabilities in r/w mode. */
->  	writel(SDMMC_CACR_KEY | SDMMC_CACR_CAPWREN, host->ioaddr + SDMMC_CACR);
->  	writel(caps0, host->ioaddr + SDHCI_CAPABILITIES);
-> diff --git a/drivers/mmc/host/sdhci-pci-core.c b/drivers/mmc/host/sdhci-pci-core.c
-> index 525de2454a4d..a98c9476bfc8 100644
-> --- a/drivers/mmc/host/sdhci-pci-core.c
-> +++ b/drivers/mmc/host/sdhci-pci-core.c
-> @@ -249,12 +249,8 @@ static int ricoh_probe(struct sdhci_pci_chip *chip)
->  static int ricoh_mmc_probe_slot(struct sdhci_pci_slot *slot)
->  {
->  	slot->host->caps =
-> -		((0x21 << SDHCI_TIMEOUT_CLK_SHIFT)
-> -			& SDHCI_TIMEOUT_CLK_MASK) |
-> -
-> -		((0x21 << SDHCI_CLOCK_BASE_SHIFT)
-> -			& SDHCI_CLOCK_BASE_MASK) |
-> -
-> +		FIELD_PREP(SDHCI_TIMEOUT_CLK_MASK, 0x21) |
-> +		FIELD_PREP(SDHCI_CLOCK_BASE_MASK, 0x21) |
->  		SDHCI_TIMEOUT_CLK_UNIT |
->  		SDHCI_CAN_VDD_330 |
->  		SDHCI_CAN_DO_HISPD |
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index 3f716466fcfd..344a7e0e33fe 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -4117,11 +4117,9 @@ int sdhci_setup_host(struct sdhci_host *host)
->  	}
->  
->  	if (host->version >= SDHCI_SPEC_300)
-> -		host->max_clk = (host->caps & SDHCI_CLOCK_V3_BASE_MASK)
-> -			>> SDHCI_CLOCK_BASE_SHIFT;
-> +		host->max_clk = FIELD_GET(SDHCI_CLOCK_V3_BASE_MASK, host->caps);
->  	else
-> -		host->max_clk = (host->caps & SDHCI_CLOCK_BASE_MASK)
-> -			>> SDHCI_CLOCK_BASE_SHIFT;
-> +		host->max_clk = FIELD_GET(SDHCI_CLOCK_BASE_MASK, host->caps);
->  
->  	host->max_clk *= 1000000;
->  	if (host->max_clk == 0 || host->quirks &
-> @@ -4139,8 +4137,7 @@ int sdhci_setup_host(struct sdhci_host *host)
->  	 * In case of Host Controller v3.00, find out whether clock
->  	 * multiplier is supported.
->  	 */
-> -	host->clk_mul = (host->caps1 & SDHCI_CLOCK_MUL_MASK) >>
-> -			SDHCI_CLOCK_MUL_SHIFT;
-> +	host->clk_mul = FIELD_GET(SDHCI_CLOCK_MUL_MASK, host->caps1);
->  
->  	/*
->  	 * In case the value in Clock Multiplier is 0, then programmable
-> @@ -4173,8 +4170,7 @@ int sdhci_setup_host(struct sdhci_host *host)
->  		mmc->f_max = max_clk;
->  
->  	if (!(host->quirks & SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK)) {
-> -		host->timeout_clk = (host->caps & SDHCI_TIMEOUT_CLK_MASK) >>
-> -					SDHCI_TIMEOUT_CLK_SHIFT;
-> +		host->timeout_clk = FIELD_GET(SDHCI_TIMEOUT_CLK_MASK, host->caps);
->  
->  		if (host->caps & SDHCI_TIMEOUT_CLK_UNIT)
->  			host->timeout_clk *= 1000;
-> @@ -4326,8 +4322,8 @@ int sdhci_setup_host(struct sdhci_host *host)
->  		mmc->caps |= MMC_CAP_DRIVER_TYPE_D;
->  
->  	/* Initial value for re-tuning timer count */
-> -	host->tuning_count = (host->caps1 & SDHCI_RETUNING_TIMER_COUNT_MASK) >>
-> -			     SDHCI_RETUNING_TIMER_COUNT_SHIFT;
-> +	host->tuning_count = FIELD_GET(SDHCI_RETUNING_TIMER_COUNT_MASK,
-> +				       host->caps1);
->  
->  	/*
->  	 * In case Re-tuning Timer is not disabled, the actual value of
-> @@ -4337,8 +4333,7 @@ int sdhci_setup_host(struct sdhci_host *host)
->  		host->tuning_count = 1 << (host->tuning_count - 1);
->  
->  	/* Re-tuning mode supported by the Host Controller */
-> -	host->tuning_mode = (host->caps1 & SDHCI_RETUNING_MODE_MASK) >>
-> -			     SDHCI_RETUNING_MODE_SHIFT;
-> +	host->tuning_mode = FIELD_GET(SDHCI_RETUNING_MODE_MASK, host->caps1);
->  
->  	ocr_avail = 0;
->  
-> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-> index b786b68e0302..d7f1441b0fc3 100644
-> --- a/drivers/mmc/host/sdhci.h
-> +++ b/drivers/mmc/host/sdhci.h
-> @@ -200,12 +200,10 @@
->  #define  SDHCI_CTRL_PRESET_VAL_ENABLE	0x8000
->  
->  #define SDHCI_CAPABILITIES	0x40
-> -#define  SDHCI_TIMEOUT_CLK_MASK	0x0000003F
-> -#define  SDHCI_TIMEOUT_CLK_SHIFT 0
-> +#define  SDHCI_TIMEOUT_CLK_MASK		GENMASK(5, 0)
->  #define  SDHCI_TIMEOUT_CLK_UNIT	0x00000080
-> -#define  SDHCI_CLOCK_BASE_MASK	0x00003F00
-> -#define  SDHCI_CLOCK_V3_BASE_MASK	0x0000FF00
-> -#define  SDHCI_CLOCK_BASE_SHIFT	8
-> +#define  SDHCI_CLOCK_BASE_MASK		GENMASK(13, 8)
-> +#define  SDHCI_CLOCK_V3_BASE_MASK	GENMASK(15, 8)
->  #define  SDHCI_MAX_BLOCK_MASK	0x00030000
->  #define  SDHCI_MAX_BLOCK_SHIFT  16
->  #define  SDHCI_CAN_DO_8BIT	0x00040000
-> @@ -227,13 +225,10 @@
->  #define  SDHCI_DRIVER_TYPE_A	0x00000010
->  #define  SDHCI_DRIVER_TYPE_C	0x00000020
->  #define  SDHCI_DRIVER_TYPE_D	0x00000040
-> -#define  SDHCI_RETUNING_TIMER_COUNT_MASK	0x00000F00
-> -#define  SDHCI_RETUNING_TIMER_COUNT_SHIFT	8
-> +#define  SDHCI_RETUNING_TIMER_COUNT_MASK	GENMASK(11, 8)
->  #define  SDHCI_USE_SDR50_TUNING			0x00002000
-> -#define  SDHCI_RETUNING_MODE_MASK		0x0000C000
-> -#define  SDHCI_RETUNING_MODE_SHIFT		14
-> -#define  SDHCI_CLOCK_MUL_MASK	0x00FF0000
-> -#define  SDHCI_CLOCK_MUL_SHIFT	16
-> +#define  SDHCI_RETUNING_MODE_MASK		GENMASK(15, 14)
-> +#define  SDHCI_CLOCK_MUL_MASK			GENMASK(23, 16)
->  #define  SDHCI_CAN_DO_ADMA3	0x08000000
->  #define  SDHCI_SUPPORT_HS400	0x80000000 /* Non-standard */
->  
-> 
-
+Regards,
+Markus
