@@ -2,91 +2,111 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A9AC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:20:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 414A6C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:20:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C57232074F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:20:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 223FA216FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:20:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IfPy7LVH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xy0NAs50"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506312AbgDONU0 (ORCPT
-        <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:20:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56178 "EHLO
+        id S370703AbgDONUg (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 09:20:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56198 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2506249AbgDONTg (ORCPT
+        by vger.kernel.org with ESMTP id S2506285AbgDONTo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 09:19:36 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63626C061A0C;
-        Wed, 15 Apr 2020 06:19:36 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id t11so1475059pgg.2;
-        Wed, 15 Apr 2020 06:19:36 -0700 (PDT)
+        Wed, 15 Apr 2020 09:19:44 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5EDCC061A0C;
+        Wed, 15 Apr 2020 06:19:43 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id b11so7742306wrs.6;
+        Wed, 15 Apr 2020 06:19:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=mGivcgEJ6E876yj00y3QoKcNXlu3JKn22U740NPN6wE=;
-        b=IfPy7LVHeMGkWmqorJ6OgR3uVTalPLTzftap1Wuz4dA3PVwCzEi0GBWkixQcOITQ/U
-         /mx6tx5mAtFfpJr5K8A+uCNfaUXZKsPVrGiGnk+amCKDOLSRySJOPXRK+PdWkN6vnuI7
-         XmQsg5tBqG12SCEdkuYUkvSZz+1etZmwx6pqXbcIZlHOPZS4p3D/fTI2wtCl+Gpl9+X/
-         AYNFYNeduNCOdLZVzkcJZWRm6poyG/b2bKyQny9VrktjnvNY2LMtsSUn75VwvVcn6OV1
-         GD7c6FG8Yobax+jXnwLWKMHtvitBw0bxk9pLzmh20zRreyYASNDTT78JGpADNvwrgkJn
-         JVpw==
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=lfpK/xOIlDnyJhSEQBBYKy273A0qYIk6KaRxAULUFas=;
+        b=Xy0NAs50nauKNzelhrgCoZ1oAYS0by3FW/Xaw2GPXjjbxeHr7P51WtKfCf1iVTlDao
+         1cOOPmWg97iJ76qPu3Zf8K1JeiI+rzszWGk02qVHLNvlaAePVcN0Z1ZL+XQNVE5e9274
+         GYzX7MjCAThNITca93dboFwAqeKUQEJNeSp75p0d8awYnOijpfDLDm0N9I+yyxD6oci7
+         AUyJfwQuq1AqKugkFVaK5DG/Twamt2jjtWUBC/Q78V6LlzCa56wRZOhfgAQvg26w7Zfk
+         Ki+dfNNizSoeEwHuWdzLPllpRX8OzyQKILZp1EwCutUgg3ED3sqXDlxRzrDrAzQvSFX9
+         Bp/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=mGivcgEJ6E876yj00y3QoKcNXlu3JKn22U740NPN6wE=;
-        b=DALeLHHyR1nc+dGeA+pKYmIj74Qsne5lce6O+SFs0DnLUonsXsf4kC5zqmOFxVmJS6
-         LY6jBR5yN7QTYszSZq7uVXvONJ0iWzBfEZq3jpEhHf/15Ph7okIRbC58Z5dJLHBAs4si
-         +Jjdeiq3Zl5oNsYfU2LjQ84NZB18Pa1MM4IpsDrgmGEEHO7hLrASqNGHyU0mWUE7AJtB
-         g3HjTswY1EmLDTdk2UEViqucf46RbyvCD2hrw5K3sFaC+iEkeoFsaEqhEHA4Y5kEaMVG
-         5flaEes0RUMRFTxoVX7Vt0bHMASvyTdHQeshGlSlEdtMzVUTyRpFXTpzUOFVdQwAnjlR
-         yKhQ==
-X-Gm-Message-State: AGi0PuZ0FoKabSNNUl9C/f3ksu98pYvGi74UR2kwsN67TtqcF2cWX4zf
-        nZgLETlYkB6/58FeNN8LPQRb9ESfJZ1oTw==
-X-Google-Smtp-Source: APiQypIBDKrme0mTxDjPnkAwvY8r34Ay4utm2CzhTMzkVCkR+WUfXWBN0Ic/WlLbhdK4/6ew0sMONg==
-X-Received: by 2002:a63:1a16:: with SMTP id a22mr20756378pga.264.1586956775700;
-        Wed, 15 Apr 2020 06:19:35 -0700 (PDT)
-Received: from localhost.localdomain ([2409:4072:6e1c:dc2f:f465:67ce:fbea:c439])
-        by smtp.gmail.com with ESMTPSA id r9sm13403346pfg.2.2020.04.15.06.19.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2020 06:19:34 -0700 (PDT)
-From:   Aishwarya R <aishwaryarj100@gmail.com>
-To:     wsa@the-dreams.de
-Cc:     aishwaryarj100@gmail.com, Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-i2c@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] i2c: powermac: Simplify reading the "reg" and "i2c-address" property
-Date:   Wed, 15 Apr 2020 18:49:14 +0530
-Message-Id: <20200415131916.23555-1-aishwaryarj100@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200408100354.17782-1-aishwaryarj100@gmail.com>
-References: <20200408100354.17782-1-aishwaryarj100@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=lfpK/xOIlDnyJhSEQBBYKy273A0qYIk6KaRxAULUFas=;
+        b=bBHeMvd4p6pfzZqUQ5yM8GBAZuuS/BtWb31bb32ABhqN6PUzGkDYSa0oWCCDPohrxD
+         BwZ1Fdv3wskLVDfKER+qhlsWGKPFDAZUjbuOAoIUlMzgRfxb/qLPkYAH/uTq3KgwuWkK
+         k/xowWap+PdKC3DTaJ3/oTkV5KOor9wXYFVibyiWuKGmEjsBeEdFevzUvO59ikxLVHEq
+         p3ELX/MQHAWVpJZIdgpw/GoCP3kyv6+ntp3CcjWwlV4djrWj+XGwRGEBsEygVLceArz4
+         Kzl/Gw1n3H6tTPVTUcUz/9nKQ0GJ23TT0aCpa9Vzoi2u5TAyn2w+s8Mq2vhaRy17Q68a
+         4oRA==
+X-Gm-Message-State: AGi0PuZ3MSLAa2hREzCktIdd/tShzn5rlfWHKSID5unkgZN9H13bkmxR
+        ztMB5Vo1dADsOcE7JxYNc9q81JybyWGRIAqsypM=
+X-Google-Smtp-Source: APiQypIW8Pb7KI2m47zG2TSNaiw4mMtQU1+5Wz2hxAJY83V2FfpcUzk0ZWhEopuJDFTjiX0vj3fcibyWGzm0sC1HtaI=
+X-Received: by 2002:adf:ef51:: with SMTP id c17mr28624905wrp.130.1586956782339;
+ Wed, 15 Apr 2020 06:19:42 -0700 (PDT)
+MIME-Version: 1.0
+References: <1586254255-28713-1-git-send-email-sumit.garg@linaro.org>
+ <CABPxzY+hL=jD6Zy=netP3oqNXg69gDL2g0KiPe40eaXXgZBnxw@mail.gmail.com>
+ <CAFA6WYMZAq6X5m++h33ySCa6jOQCq_tHL=8mUi-kPMcn4FH=jA@mail.gmail.com> <CAFA6WYOW9ne0iffwC1dc48a_aSaYkkxQzyHQXTV2Wkob9KOXQg@mail.gmail.com>
+In-Reply-To: <CAFA6WYOW9ne0iffwC1dc48a_aSaYkkxQzyHQXTV2Wkob9KOXQg@mail.gmail.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Wed, 15 Apr 2020 15:19:30 +0200
+Message-ID: <CA+icZUUDm=WPjmwh5ikp8t+xt7dqTgghCeB8F0+czaUh-sHXxA@mail.gmail.com>
+Subject: Re: [PATCH v2] mac80211: fix race in ieee80211_register_hw()
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     Johannes Berg <johannes@sipsolutions.net>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Krishna Chaitanya <chaitanya.mgit@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, kuba@kernel.org,
+        Kalle Valo <kvalo@codeaurora.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Matthias=2DPeter_Sch=C3=B6pfer?= 
+        <matthias.schoepfer@ithinx.io>,
+        "Berg Philipp (HAU-EDS)" <Philipp.Berg@liebherr.com>,
+        "Weitner Michael (HAU-EDS)" <Michael.Weitner@liebherr.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Loic Poulain <loic.poulain@linaro.org>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> Use of_property_read_u32 to read the "reg" and "i2c-address" property
->> instead of using of_get_property to check the return values.
->>
->> Signed-off-by: Aishwarya R <aishwaryarj100@gmail.com>
+On Wed, Apr 15, 2020 at 3:10 PM Sumit Garg <sumit.garg@linaro.org> wrote:
 
-> This is quite a fragile driver. Have you tested it on HW?
+[.. ]
 
-This change is not tested with the Hardware.
-But of_property_read_u32 is better here than generic of_get_property.
-This make sure that value read properly independent of system endianess.
+> > In case we don't have any further comments, could you fix this nitpick
+> > from Chaitanya while applying or would you like me to respin and send
+> > v3?
+>
+> A gentle ping. Is this patch a good candidate for 5.7-rc2?
+>
+
+Hi Sumit,
+
+it's in [1] (see [2]) with slightly mods by Johannes but not in Linus tree.
+
+Johannes requested a pull-request means will be merged in a next step
+in net.git and then hopefully land in Linus tree after Dave M.
+requested a pull-request.
+
+Thanks for your patch.
+
+Regards,
+- Sedat -
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/jberg/mac80211.git/tag/?h=mac80211-for-net-2020-04-15
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/jberg/mac80211.git/commit/?h=mac80211-for-net-2020-04-15&id=52e04b4ce5d03775b6a78f3ed1097480faacc9fd
