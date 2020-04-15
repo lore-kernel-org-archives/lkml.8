@@ -2,96 +2,97 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 974F0C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D6FC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:55:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 755322078A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:55:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586951711;
-	bh=HwwyHRg0ZPQDirdfAAsga1hDTp9J9Yf9FyLxGAaxAx8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yrh3YYySzRTvdOEefxlVhsAK5ve/k0eb/A0uu0EGerDtgVb4RnL2nl3dPoKGh72HQ
-	 OvD9NrXx8kfQTyp1t/xdOcS6w09uRWFB1eZadUjswEB14fP+hAtKA+XRhg6LYEyWb+
-	 o8VsPSdXGSbOPgMccmm9zPZ7NNslVRsuRQZtuV+4=
+	by mail.kernel.org (Postfix) with ESMTP id 04CCF206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:55:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2897891AbgDOLzH (ORCPT
+        id S2897908AbgDOLzZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:55:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39634 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 07:55:25 -0400
+Received: from sauhun.de ([88.99.104.3]:53290 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409191AbgDOLpi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2409185AbgDOLpi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Apr 2020 07:45:38 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE9942078A;
-        Wed, 15 Apr 2020 11:45:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951138;
-        bh=HwwyHRg0ZPQDirdfAAsga1hDTp9J9Yf9FyLxGAaxAx8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HVle0SlAED82z7e/aohAGuZYjZpa0N3Ix+BjgpXPTu5/g4MpG8R0ss2fnOdOTYVGw
-         vVpnzCltcQxSTAFwAAS+jaXCzLL6Of6CFia+w82cy7kkbZGFUNQh2qr4AVA58LGd+8
-         JDVpibHylCsQhhrZBdhzUkUCubBZ4Yu+jDFl9vrY=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ralph Campbell <rcampbell@nvidia.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 48/84] drm/nouveau/svm: check for SVM initialized before migrating
-Date:   Wed, 15 Apr 2020 07:44:05 -0400
-Message-Id: <20200415114442.14166-48-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415114442.14166-1-sashal@kernel.org>
-References: <20200415114442.14166-1-sashal@kernel.org>
+Received: from localhost (p54B33507.dip0.t-ipconnect.de [84.179.53.7])
+        by pokefinder.org (Postfix) with ESMTPSA id AFE072C1FF1;
+        Wed, 15 Apr 2020 13:45:36 +0200 (CEST)
+Date:   Wed, 15 Apr 2020 13:45:36 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] NVIDIA Tegra I2C synchronization correction
+Message-ID: <20200415114536.GB910@ninjato>
+References: <20200324191217.1829-1-digetx@gmail.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Fba/0zbH8Xs+Fj9o"
+Content-Disposition: inline
+In-Reply-To: <20200324191217.1829-1-digetx@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ralph Campbell <rcampbell@nvidia.com>
 
-[ Upstream commit 822cab6150d3002952407a8297ff5a0d32bb7b54 ]
+--Fba/0zbH8Xs+Fj9o
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-When migrating system memory to GPU memory, check that SVM has been
-enabled. Even though most errors can be ignored since migration is
-a performance optimization, return an error because this is a violation
-of the API.
+On Tue, Mar 24, 2020 at 10:12:15PM +0300, Dmitry Osipenko wrote:
+> Hello,
+>=20
+> Recently I found a way to reliably reproduce I2C timeouts that happen due
+> to improper synchronizations made by the I2C driver. It's quite easy to
+> reproduce the problem when memory is running on a lower freq + there is
+> some memory activity + CPU could get busy for a significant time. This
+> is the case when KASAN is enabled and CPU is busy while accessing FS via
+> NFS. This small series addresses the found problems.
+>=20
+> Changelog:
+>=20
+> v2: - The "Better handle case where CPU0 is busy for a long time" patch
+>       now preserves the old behavior where completion is checked after
+>       disabling the interrupt, preventing potential race-condition of
+>       the completion awaiting vs interrupt syncing.
+>=20
+> Dmitry Osipenko (2):
+>   i2c: tegra: Better handle case where CPU0 is busy for a long time
+>   i2c: tegra: Synchronize DMA before termination
 
-Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/nouveau/nouveau_svm.c | 5 +++++
- 1 file changed, 5 insertions(+)
+Patches look good to me. I tend to apply them to for-current instead of
+for-next because they are fixing issues. Even a stable tag?
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_svm.c b/drivers/gpu/drm/nouveau/nouveau_svm.c
-index 668d4bd0c118f..25b7055949c45 100644
---- a/drivers/gpu/drm/nouveau/nouveau_svm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_svm.c
-@@ -173,6 +173,11 @@ nouveau_svmm_bind(struct drm_device *dev, void *data,
- 	mm = get_task_mm(current);
- 	down_read(&mm->mmap_sem);
- 
-+	if (!cli->svm.svmm) {
-+		up_read(&mm->mmap_sem);
-+		return -EINVAL;
-+	}
-+
- 	for (addr = args->va_start, end = args->va_start + size; addr < end;) {
- 		struct vm_area_struct *vma;
- 		unsigned long next;
--- 
-2.20.1
 
+--Fba/0zbH8Xs+Fj9o
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6W8+AACgkQFA3kzBSg
+KbbVLBAApD7mx+QXfeiebrOtz1sVemHBiPDyiGMu++48UzBSAWD9V6/01TcHK6wm
+ovJ5euQmL554Drn2nONQReDLuNLvrIG+5zqkGBFHEzpO/o+fad1bTc9daw6WJLja
+Pa97wqs5lYZMR9bZxDS5Dm437+7hzHmBEQWJkSRfsHh87l48jzG2ymuN8pJ1bMWB
++n2aXocb8P7LeD1GT3M1rn/2NOFtCwE194RCBsF8Z/fN0FuesRcDmRcZt6Dmd/cZ
+3x1Ppuv3v5T4cFrRAXb6ySV9Lbr1EC3yCWtmnXGYs98OiaJ6p8qKL3w+gwNIFKWF
+K4lEh/7bMBWeq/CSMX+a4PJBSXsdNHtxClHZOrrAXzxVGVytVKmt/aKbyAV5jHyL
++PKZqbC9LJ1DfAc/CFBNxMfJyj34nYwHbX7tROQK7/3RlO/8nNhBYiabf1ja9f7A
+SBrsxuh3wWoVnj1GylB23IrErugxi7ef1szTNGJaGbsTU6xLwmz8eBtOP6lRU/B2
+G441mFDbymv+cEBKn+BcB9ejMELSma/vJq97zcMSln/z5CuflX7UazIGKygyyu/d
+muJWz3QlakJMwoVlNCgVd9ieAxdC1wudbo0tMj1K2qS/9nYLQmgfPEZe7c00bYb0
+UxYu/e6vrHC7LZ80HliOQZ9N1RI9BL0qbIUEXW5cpCVjxIWfZfk=
+=ah7+
+-----END PGP SIGNATURE-----
+
+--Fba/0zbH8Xs+Fj9o--
