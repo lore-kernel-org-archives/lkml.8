@@ -2,230 +2,104 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F6D6C3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 413A5C3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:40:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2734C20784
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:40:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2125E2078A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:40:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="r+q6VWwW"
+	dkim=pass (1024-bit key) header.d=fudan.edu.cn header.i=@fudan.edu.cn header.b="u04oYSc7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2894787AbgDOIkn (ORCPT
+        id S2894807AbgDOIkx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 04:40:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40920 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2894742AbgDOIkI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 04:40:08 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B51B3C061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 01:40:07 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id t14so4848636wrw.12
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 01:40:07 -0700 (PDT)
+        Wed, 15 Apr 2020 04:40:53 -0400
+Received: from mail.fudan.edu.cn ([202.120.224.10]:34153 "EHLO fudan.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2894777AbgDOIka (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 04:40:30 -0400
+X-Greylist: delayed 352 seconds by postgrey-1.27 at vger.kernel.org; Wed, 15 Apr 2020 04:40:27 EDT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to;
-        bh=UrgT7wSdMoxC/RrnuBGfx9Flpwdpyrd8OIIl88CP38Q=;
-        b=r+q6VWwWplsZyK8nW0yyEAwuekMEL6XsOjfiaudV9Ea1rUGFjnQM3kg5GIjJtU4SeD
-         rch9TIZsUmjifqDjK+WvJ37DANa7M52BZOts/wUDVxfpCEYTWpl8Nqom3I+0tdE9+xm7
-         vfVJ7PMNELFSeQiU1VPmyCQkWHIYtolSqvN1AJTDf5byAc22M6Q4hKut57yG8i8NIr/f
-         mgudi1Y/M52KtlhijfVi94wcy5BRnuLs+dMo9ev0xBrLBJk8QopP50GEK0xQe5YWdtBD
-         yPshwm5izTWC8RiZYy8F/+TczADEo+UFhSh3hktyMgVgEGfZ+4j990MEpXpRicvC77bM
-         KeLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to;
-        bh=UrgT7wSdMoxC/RrnuBGfx9Flpwdpyrd8OIIl88CP38Q=;
-        b=ApMtPHLRH/9FExYopMgVbAzjR4BhSoVvYc1Dffh+P3LMIrJ23N1Wdgl/c8ORq+hkHq
-         5IXAnygaAfTp1jsBJMpblJF38sqOkgPhQQgp0dBpZA07gnqVq82J0nuwl8gr6S+cSEWH
-         vJnEXTvJz1t7QZsOZxUoBopy2Ge6fYoOw8JrCNA1yNv6Wi23jI7WpjBT/2os6Zfz4Bl6
-         ni6OdgSJlB+1OYOH+olTB/VgaiKoJ1XR0lwnrzdAS4ozYMix+5dT37W0sceVs0zu1Ucf
-         i6VEyh20kcYI/JOBNPOc9tjymI71/ISYlZbwk+rnMcJLPPZFtwue7bD6F21LLi2FIG+x
-         Beeg==
-X-Gm-Message-State: AGi0PuY4bJ9YO9dhJm1xyTs+id7Ce3W+PzqhwfyLGQaOnhQGeaODEXCE
-        Ta2O+lGaFaTwj9Gzz8I6UEtustoAioGkyA==
-X-Google-Smtp-Source: APiQypIktIBbOp0xkrRc8oV2zDeo5f6+XenMI8zyCwnGFas2If0f7LjCiy6hAmEZJ5vS57BM/+4grg==
-X-Received: by 2002:a5d:4283:: with SMTP id k3mr19357148wrq.238.1586940006141;
-        Wed, 15 Apr 2020 01:40:06 -0700 (PDT)
-Received: from [173.194.76.108] ([149.199.62.129])
-        by smtp.gmail.com with ESMTPSA id j68sm23094011wrj.32.2020.04.15.01.39.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Apr 2020 01:40:04 -0700 (PDT)
-Subject: Re: [PATCH] arm64: zynqmp: Fix GIC compatible property
-To:     Michal Simek <michal.simek@xilinx.com>,
-        linux-arm-kernel@lists.infradead.org, git@xilinx.com
-Cc:     Durga Challa <vnsl.durga.challa@xilinx.com>,
-        Manish Narani <manish.narani@xilinx.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Tretter <m.tretter@pengutronix.de>,
-        Nava kishore Manne <nava.manne@xilinx.com>,
-        Rajan Vaja <rajan.vaja@xilinx.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <a50412fbb520954e4602f274f19a7ffbd1154ead.1582621224.git.michal.simek@xilinx.com>
-From:   Michal Simek <monstr@monstr.eu>
-Autocrypt: addr=monstr@monstr.eu; keydata=
- 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
- 0Z1MQlmNcq2bhOMzTxuXX2NDzUZs4aqEyZQ=
-Message-ID: <f943a6ba-2040-4b78-8c90-cb6ee1d13c38@monstr.eu>
-Date:   Wed, 15 Apr 2020 10:39:48 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <a50412fbb520954e4602f274f19a7ffbd1154ead.1582621224.git.michal.simek@xilinx.com>
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="8qCppseVFnBYesUMXQf2YqqxPjyp7Gte2"
+        d=fudan.edu.cn; s=dkim; h=Received:From:To:Cc:Subject:Date:
+        Message-Id; bh=+7ymPy9X5j+FaNt3AHq7PMuOVkMbwkiPlxtK3UBUMTw=; b=u
+        04oYSc7tk0cfjSIke3bOGW3JxrcDlCqpiux8KCJ5Eboeh9sb7NcnebuvYit1DemF
+        ZFeXCu6gKj5PyIWUkJQW0L0DbS/gqAOOd2ENh1tftYBQSoZLlM8pVEQOqJBNl/6h
+        lCs9vthKbMCat/c5wYs68Dx5B05jCyeR3dZAzm5MqA=
+Received: from localhost.localdomain (unknown [120.229.255.108])
+        by app1 (Coremail) with SMTP id XAUFCgAHzSxyyJZejoVFAA--.36467S3;
+        Wed, 15 Apr 2020 16:40:19 +0800 (CST)
+From:   Xiyu Yang <xiyuyang19@fudan.edu.cn>
+To:     Jon Maloy <jmaloy@redhat.com>, Ying Xue <ying.xue@windriver.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        tipc-discussion@lists.sourceforge.net, linux-kernel@vger.kernel.org
+Cc:     yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
+        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>
+Subject: [PATCH] tipc: Fix potential tipc_aead refcnt leak in tipc_crypto_rcv
+Date:   Wed, 15 Apr 2020 16:39:56 +0800
+Message-Id: <1586939996-69937-1-git-send-email-xiyuyang19@fudan.edu.cn>
+X-Mailer: git-send-email 2.7.4
+X-CM-TRANSID: XAUFCgAHzSxyyJZejoVFAA--.36467S3
+X-Coremail-Antispam: 1UD129KBjvJXoWrurW7XF1rAryUWw1rZr1rXrb_yoW8Jr1xp3
+        yUC39rArn5Gr4DKan5GF93K348Gry7urZxWFZ8uF15XFsFqw1IyrySqrWj9ry5uFWUArWq
+        vrZYvw1Y9F45uFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU9K14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26rxl
+        6s0DM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+        0DM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
+        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AKxVWUJVW8Jw
+        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAG
+        YxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxkIecxEwVAFwVW8ZwCF04k20xvY0x0EwIxGrw
+        CFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE
+        14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2
+        IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAv
+        wI8IcIk0rVW8JVW3JwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14
+        v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUePfQDUUUU
+X-CM-SenderInfo: irzsiiysuqikmy6i3vldqovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---8qCppseVFnBYesUMXQf2YqqxPjyp7Gte2
-Content-Type: multipart/mixed; boundary="h2oqIBgbjxjxvvrpHQfFPOMWLsTp5ZpTk";
- protected-headers="v1"
-From: Michal Simek <monstr@monstr.eu>
-To: Michal Simek <michal.simek@xilinx.com>,
- linux-arm-kernel@lists.infradead.org, git@xilinx.com
-Cc: Durga Challa <vnsl.durga.challa@xilinx.com>,
- Manish Narani <manish.narani@xilinx.com>, Mark Rutland
- <mark.rutland@arm.com>, Michael Tretter <m.tretter@pengutronix.de>,
- Nava kishore Manne <nava.manne@xilinx.com>,
- Rajan Vaja <rajan.vaja@xilinx.com>, Rob Herring <robh+dt@kernel.org>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-ID: <f943a6ba-2040-4b78-8c90-cb6ee1d13c38@monstr.eu>
-Subject: Re: [PATCH] arm64: zynqmp: Fix GIC compatible property
-References: <a50412fbb520954e4602f274f19a7ffbd1154ead.1582621224.git.michal.simek@xilinx.com>
-In-Reply-To: <a50412fbb520954e4602f274f19a7ffbd1154ead.1582621224.git.michal.simek@xilinx.com>
+tipc_crypto_rcv() invokes tipc_aead_get(), which returns a reference of
+the tipc_aead object to "aead" with increased refcnt.
 
---h2oqIBgbjxjxvvrpHQfFPOMWLsTp5ZpTk
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+When tipc_crypto_rcv() returns, the original local reference of "aead"
+becomes invalid, so the refcount should be decreased to keep refcount
+balanced.
 
-On 25. 02. 20 10:00, Michal Simek wrote:
-> dtbs_check is showing warning around GIC compatible property as
-> interrupt-controller@f9010000: compatible: ['arm,gic-400', 'arm,cortex-=
-a15-gic']
-> is not valid under any of the given schemas
->=20
-> Similar change has been done also by commit 5400cdc1410b
-> ("ARM: dts: sunxi: Fix GIC compatible")
->=20
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> ---
->=20
->  arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/d=
-ts/xilinx/zynqmp.dtsi
-> index 1ebb540624de..cde6025b7e24 100644
-> --- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-> +++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-> @@ -233,7 +233,7 @@ amba_apu: amba-apu@0 {
->  		ranges =3D <0 0 0 0 0xffffffff>;
-> =20
->  		gic: interrupt-controller@f9010000 {
-> -			compatible =3D "arm,gic-400", "arm,cortex-a15-gic";
-> +			compatible =3D "arm,gic-400";
->  			#interrupt-cells =3D <3>;
->  			reg =3D <0x0 0xf9010000 0x10000>,
->  			      <0x0 0xf9020000 0x20000>,
->=20
+The issue happens in one error path of tipc_crypto_rcv(). When TIPC
+message decryption status is EINPROGRESS or EBUSY, the function forgets
+to decrease the refcnt increased by tipc_aead_get() and causes a refcnt
+leak.
 
-Applied.
-M
+Fix this issue by calling tipc_aead_put() on the error path when TIPC
+message decryption status is EINPROGRESS or EBUSY.
 
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Xilinx Microblaze
-Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
-U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP/Versal SoCs
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+---
+ net/tipc/crypto.c | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/net/tipc/crypto.c b/net/tipc/crypto.c
+index c8c47fc72653..8c47ded2edb6 100644
+--- a/net/tipc/crypto.c
++++ b/net/tipc/crypto.c
+@@ -1712,6 +1712,7 @@ int tipc_crypto_rcv(struct net *net, struct tipc_crypto *rx,
+ 	case -EBUSY:
+ 		this_cpu_inc(stats->stat[STAT_ASYNC]);
+ 		*skb = NULL;
++		tipc_aead_put(aead);
+ 		return rc;
+ 	default:
+ 		this_cpu_inc(stats->stat[STAT_NOK]);
+-- 
+2.7.4
 
-
---h2oqIBgbjxjxvvrpHQfFPOMWLsTp5ZpTk--
-
---8qCppseVFnBYesUMXQf2YqqxPjyp7Gte2
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EARECAB0WIQQbPNTMvXmYlBPRwx7KSWXLKUoMIQUCXpbIWAAKCRDKSWXLKUoM
-IcayAJ9i7JMNA/SZA/EidydkgHNtboFuUQCffXbVgvIAnJMaani0OuBFqEZ/M4s=
-=0Pe7
------END PGP SIGNATURE-----
-
---8qCppseVFnBYesUMXQf2YqqxPjyp7Gte2--
