@@ -2,137 +2,102 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8904BC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:04:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64575C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:04:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6435E206E9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:04:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586941470;
-	bh=6Uf+FHmo8nvRfSiHPdrZgA/7AJpQX7o1hOkc3xcNH5Y=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Tvu6hW/wm+VehR0a/OgXDPPR8YXrZwPuU9LaSCs6cpMhh/batl8mAN5LhaxuqOD87
-	 KebddauTI0nKcRj/yiEi6CsAc/qB98+BqK8ZOAqhI6PLS8Hnfq8n2MKGY0T2GSVRxt
-	 21JYhZiMSWLEOa9rsK+4G8CIOje+HYnNGreMq+CI=
+	by mail.kernel.org (Postfix) with ESMTP id 369D7206E9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:04:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b="t4PUxGF6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393836AbgDOJEV (ORCPT
+        id S2393849AbgDOJEq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 05:04:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55104 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390645AbgDOJEC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 05:04:02 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98A0120775;
-        Wed, 15 Apr 2020 09:03:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586941441;
-        bh=6Uf+FHmo8nvRfSiHPdrZgA/7AJpQX7o1hOkc3xcNH5Y=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=whw9AE1FcCYHqiqYow7YdaN0KuUEpYhHQmobiTs2rs34TaCZrbGc+BCL5rwKSJJQx
-         0xvzItctDZoQc90DshDkCR1jfedSWYbvNDvDOXWDHI/NCRnEGyvssM+5XtRsfRFd0f
-         vwpw6v/8zFe88LhTTbrQmJb0U2YE2DJfJzVCSEwU=
-Date:   Wed, 15 Apr 2020 18:03:55 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH v2 1/3] kernel/sysctl: support setting sysctl parameters
- from kernel command line
-Message-Id: <20200415180355.00bc828ea726c421638db871@kernel.org>
-In-Reply-To: <20200414113222.16959-2-vbabka@suse.cz>
-References: <20200414113222.16959-1-vbabka@suse.cz>
-        <20200414113222.16959-2-vbabka@suse.cz>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 15 Apr 2020 05:04:46 -0400
+Received: from dvalin.narfation.org ([213.160.73.56]:41518 "EHLO
+        dvalin.narfation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393831AbgDOJEU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 05:04:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=narfation.org;
+        s=20121; t=1586941449;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=tVtwvlOsN93bbG9x0uA4RYzVQ7E8MaWkOr3JMOVqIew=;
+        b=t4PUxGF66q+sK8FG57Ok5BLQHR3pCRxrdEwBBRvAsKHkHFT007ugssH4rWrDArHFxEljwB
+        NEczT77qmd6oqnAlfbBCn+TlitS3ZptlLHjkA1lGla4/xsp7V+OgtX/0dP8zPGF8Axv9kg
+        qEbrG0FlOIusx7qJep2lF9RO5GByTjQ=
+From:   Sven Eckelmann <sven@narfation.org>
+To:     Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Cc:     Marek Lindner <mareklindner@neomailbox.ch>,
+        Simon Wunderlich <sw@simonwunderlich.de>,
+        Antonio Quartulli <a@unstable.cc>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        b.a.t.m.a.n@lists.open-mesh.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yuanxzhang@fudan.edu.cn,
+        kjlu@umn.edu, Xin Tan <tanxin.ctf@gmail.com>
+Subject: Re: [PATCH] batman-adv: Fix refcnt leak in batadv_show_throughput_override
+Date:   Wed, 15 Apr 2020 11:04:02 +0200
+Message-ID: <28340414.QPzbqP6r4N@bentobox>
+In-Reply-To: <1586939510-69461-1-git-send-email-xiyuyang19@fudan.edu.cn>
+References: <1586939510-69461-1-git-send-email-xiyuyang19@fudan.edu.cn>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="nextPart3979470.HMjOjGzVmR"; micalg="pgp-sha512"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Apr 2020 13:32:20 +0200
-Vlastimil Babka <vbabka@suse.cz> wrote:
+--nextPart3979470.HMjOjGzVmR
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-> A recently proposed patch to add vm_swappiness command line parameter in
-> addition to existing sysctl [1] made me wonder why we don't have a general
-> support for passing sysctl parameters via command line. Googling found only
-> somebody else wondering the same [2], but I haven't found any prior discussion
-> with reasons why not to do this.
-> 
-> Settings the vm_swappiness issue aside (the underlying issue might be solved in
-> a different way), quick search of kernel-parameters.txt shows there are already
-> some that exist as both sysctl and kernel parameter - hung_task_panic,
-> nmi_watchdog, numa_zonelist_order, traceoff_on_warning. A general mechanism
-> would remove the need to add more of those one-offs and might be handy in
-> situations where configuration by e.g. /etc/sysctl.d/ is impractical.
-> 
-> Hence, this patch adds a new parse_args() pass that looks for parameters
-> prefixed by 'sysctl.' and tries to interpret them as writes to the
-> corresponding sys/ files using an temporary in-kernel procfs mount. This
-> mechanism was suggested by Eric W. Biederman [3], as it handles all dynamically
-> registered sysctl tables, even though we don't handle modular sysctls. Errors
-> due to e.g. invalid parameter name or value are reported in the kernel log.
-> 
-> The processing is hooked right before the init process is loaded, as some
-> handlers might be more complicated than simple setters and might need some
-> subsystems to be initialized. At the moment the init process can be started and
-> eventually execute a process writing to /proc/sys/ then it should be also fine
-> to do that from the kernel.
-> 
-> Sysctls registered later on module load time are not set by this mechanism -
-> it's expected that in such scenarios, setting sysctl values from userspace is
-> practical enough.
-> 
-> [1] https://lore.kernel.org/r/BL0PR02MB560167492CA4094C91589930E9FC0@BL0PR02MB5601.namprd02.prod.outlook.com/
-> [2] https://unix.stackexchange.com/questions/558802/how-to-set-sysctl-using-kernel-command-line-parameter
-> [3] https://lore.kernel.org/r/87bloj2skm.fsf@x220.int.ebiederm.org/
-> 
-> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-> Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
-
+On Wednesday, 15 April 2020 10:31:50 CEST Xiyu Yang wrote:
+[...]
+> Fix this issue by calling batadv_hardif_put() before the
 [...]
 
-> diff --git a/init/main.c b/init/main.c
-> index a48617f2e5e5..7b43118215d6 100644
-> --- a/init/main.c
-> +++ b/init/main.c
-> @@ -1372,6 +1372,8 @@ static int __ref kernel_init(void *unused)
->  
->  	rcu_end_inkernel_boot();
->  
-> +	do_sysctl_args();
-> +
+Thanks, fixes for batadv_store_throughput_override [1] and 
+batadv_show_throughput_override [2] were applied. I've also added the missing 
+Fixes: line to both patches.
 
-Ah, I see. Since the sysctl is designed to be called after all __init calls were
-done, it shouldn't use bootconfig directly because bootconfig is full of __init
-call. OK, anyway we can use "kernel.sysctl" prefixed bootconfig for these.
+May I ask whether you are still a user of the deprecated sysfs interface or 
+did you find this in an automated fashion?
 
-Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+Thanks,
+	Sven
 
-Thank you,
+[1] https://git.open-mesh.org/linux-merge.git/commit/cd339d8b14cd895d8333d94d832b05f67f00eefc
+[2] https://git.open-mesh.org/linux-merge.git/commit/3d3e548f74fe51aee9a3c9e297518a2655dbc642
+--nextPart3979470.HMjOjGzVmR
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEF10rh2Elc9zjMuACXYcKB8Eme0YFAl6WzgIACgkQXYcKB8Em
+e0YWYA//cxS1UcxnDCvjyQWGYwFAPix8PLJ9rCp7jlscYfwarzqplrpPvLM6GNkl
+O0H1Hh6SEWsyJ4kBdWrcADqHWfhanPco1Bh0o+Oh307JFtlViDVWpZnAKsICz1Hm
+X9GsDu1SwkTepf+py6GNUnMJj2FXC/M1bXQJC15t8gAXwVwhQU8VVP9Vq0Hk1c7a
+vwKU4vdV1JTix1zzWWDHGHXrMODQMFdOfBMuSS+AdCPONmffbsRzfGw8aJPu/qDW
+vdMajAZWgYC9LP4FFZxyK1DLkaEVeVUScobj69RuyxFdZT2dCPakgMeLKZmtLmxt
+yCKzxetELw107//zOXbRGqf1R7zTnqj5Zn8DmmNGA8H1EVii1WQhB8M1r17f8ROy
+093I3ZgvnCd5T2i7yPWP6BLIHGt6ckIvdqERhw3EV4xTiS5KyWpTRPJ8B0Mqva4y
+Us4k+D8EaTrZuwZwCR20DUx2liWsDSoGfWjEJ0ufIPWAe4qTs0f5ZFRbSuQf7FQW
+KSLuI1dTEZp3zZH4zMSxhapCLNZt6d/+HRaVWrdr1ZRTXzdqdFNWmZKRUMUpXZYT
+pXJNA5PDJBYXRGEfJUsM0/m/B2NDCvfbXSgl0wOsT3kPyZkE93K8szKLJhvbfiCW
+gPOrz+UQsl6Sd2i7fKLmC+W01l4DOURUplSyP4HgHL0XnCMz3K4=
+=iyC7
+-----END PGP SIGNATURE-----
+
+--nextPart3979470.HMjOjGzVmR--
+
+
+
