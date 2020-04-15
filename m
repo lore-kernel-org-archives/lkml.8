@@ -2,173 +2,125 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA92AC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 22:18:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F5FCC3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 22:19:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3DE1206E9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 22:18:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CY+JSN4H"
+	by mail.kernel.org (Postfix) with ESMTP id 8502C206E9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 22:19:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731745AbgDOWSn (ORCPT
+        id S1731869AbgDOWTv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 18:18:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55364 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731098AbgDOWSi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 18:18:38 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53497C061A0F
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 15:18:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=c/5NlqOAmhcH6sCzbSCqfq7cT6kkrdzXJ8S6MG10Tjg=; b=CY+JSN4HHHUjTkvc5niF/1YwSz
-        /W9lmivJ6Qn4s1CJqJnblTdO6VaZa5+v7MDDxJZa8EUHIw3UiwUrY6yLjvy1Zwm4qhGFAFTYKmW7Z
-        nZivfRTjCZgtsx4vTp+5xMciLbpUYSM3jBFFac+MqEjLUy08Tko3hBfjCAqXfbhttEsuuG2WF0P2b
-        Ovnm6lJy3DY7NI39C/f6Dd/9vFCIhgkIzZZulgdTngVKT/T8txzQD96gTd3HHneo4PXVpPY7fQa5y
-        zDVTotxjbBuF/uK9bmwTQkTMHOIBoUTlZ8Os3znNSKppN3F7VTY9EUa+FHErK/ETETCG1RLuXxtpH
-        3KxmJ/bQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jOqM1-0001IP-Fl; Wed, 15 Apr 2020 22:17:57 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 4338D981086; Thu, 16 Apr 2020 00:17:54 +0200 (CEST)
-Date:   Thu, 16 Apr 2020 00:17:54 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        linux-next@vger.kernel.org, akpm@linux-foundation.org,
-        jack@suse.cz, kirill@shutemov.name,
-        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        borntraeger@de.ibm.com, david@redhat.com, aarcange@redhat.com,
-        linux-mm@kvack.org, frankja@linux.ibm.com, sfr@canb.auug.org.au,
-        jhubbard@nvidia.com, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, Will Deacon <will@kernel.org>,
-        "Williams, Dan J" <dan.j.williams@intel.com>
-Subject: Re: [PATCH v4 2/2] mm/gup/writeback: add callbacks for inaccessible
- pages
-Message-ID: <20200415221754.GM2483@worktop.programming.kicks-ass.net>
-References: <20200306132537.783769-1-imbrenda@linux.ibm.com>
- <20200306132537.783769-3-imbrenda@linux.ibm.com>
- <3ae46945-0c7b-03cd-700a-a6fe8003c6ab@intel.com>
+        Wed, 15 Apr 2020 18:19:51 -0400
+Received: from smtp.gentoo.org ([140.211.166.183]:46544 "EHLO smtp.gentoo.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729180AbgDOWTi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 18:19:38 -0400
+Received: from sf (tunnel547699-pt.tunnel.tserv1.lon2.ipv6.he.net [IPv6:2001:470:1f1c:3e6::2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: slyfox)
+        by smtp.gentoo.org (Postfix) with ESMTPSA id 0D3C834F114;
+        Wed, 15 Apr 2020 22:19:33 +0000 (UTC)
+Date:   Wed, 15 Apr 2020 23:19:30 +0100
+From:   Sergei Trofimovich <slyfox@gentoo.org>
+To:     Michael Matz <matz@suse.de>
+Cc:     Borislav Petkov <bp@alien8.de>, Jakub Jelinek <jakub@redhat.com>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org
+Subject: Re: [PATCH v2] x86: fix early boot crash on gcc-10
+Message-ID: <20200415231930.19755bc7@sf>
+In-Reply-To: <alpine.LSU.2.21.2004151445520.11688@wotan.suse.de>
+References: <20200326223501.GK11398@zn.tnic>
+        <20200328084858.421444-1-slyfox@gentoo.org>
+        <20200413163540.GD3772@zn.tnic>
+        <alpine.LSU.2.21.2004141343370.11688@wotan.suse.de>
+        <20200415074842.GA31016@zn.tnic>
+        <alpine.LSU.2.21.2004151445520.11688@wotan.suse.de>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3ae46945-0c7b-03cd-700a-a6fe8003c6ab@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 02:52:31PM -0700, Dave Hansen wrote:
-> On 3/6/20 5:25 AM, Claudio Imbrenda wrote:
-> > +	/*
-> > +	 * We need to make the page accessible if and only if we are going
-> > +	 * to access its content (the FOLL_PIN case).  Please see
-> > +	 * Documentation/core-api/pin_user_pages.rst for details.
-> > +	 */
-> > +	if (flags & FOLL_PIN) {
-> > +		ret = arch_make_page_accessible(page);
-> > +		if (ret) {
-> > +			unpin_user_page(page);
-> > +			page = ERR_PTR(ret);
-> > +			goto out;
-> > +		}
-> > +	}
+On Wed, 15 Apr 2020 14:53:45 +0000 (UTC)
+Michael Matz <matz@suse.de> wrote:
+
+> Hello,
 > 
-> Thanks, Claudio, for a really thorough refresher on this in private mail.
+> On Wed, 15 Apr 2020, Borislav Petkov wrote:
 > 
-> But, I think this mechanism probably hooks into the wrong place.  I
-> don't doubt that it *functions* on s390, but I think these calls are
-> misplaced.  I think the end result is that no other architecture will
-> have a chance to use the same hooks.  They're far too s390-specific even
-> for a concept that's not limited to s390.
+> > On Tue, Apr 14, 2020 at 01:50:29PM +0000, Michael Matz wrote:  
+> > > So this part expects that the caller (!) of trace_hardirqs_on was compiled
+> > > with a frame pointer (in %ebp).  
+> > 
+> > /me looks at the .s file...
+> > 
+> > options passed comment at the top has -fno-omit-frame-pointer
+> >   
+> > > Obviously that's not the case as you traced above. Is start_secondary
+> > > the immediate caller in the above case?  
+> > 
+> > Yes, start_secondary() is the function which is marked as
+> > __attribute__((optimize("-fno-stack-protector"))) and it does:
+> > 
+> > # arch/x86/kernel/smpboot.c:264:        local_irq_enable();
+> >         call    trace_hardirqs_on       #
+> > 
+> > (the local_irq_enable() is a macro which has the call to
+> > trace_hardirqs_on().
+> >   
+> > > Look at it's disassembly.  If it doesn't have the usual push
+> > > %ebp/mov%esp,%ebp prologue it probably doesn't use a frame pointer.  
+> > 
+> > Here's the preamble:
+> > 
+> >         .text
+> >         .p2align 4
+> >         .type   start_secondary, @function
+> > start_secondary:
+> >         pushl   %esi    #
+> >         pushl   %ebx    #  
 > 
-> get_user_pages(FOLL_PIN) does *not* mean "the kernel will access this
-> page's contents".  The kmap() family is really what we use for that.
-> kmap()s are often *preceded* by get_user_pages(), which is probably why
-> this works for you, though.
+> Right.  So meanwhile it became clear: the optimize function attribute 
+> doesn't work cumulative but rather replaces all cmdline args (the 
+> optimization ones, but that roughly translates to -fxxx options).  In this 
+> case an 'optimize("-fno-stack-protector")' also disables the crucial 
+> -fno-omit-frame-pointer, reverting to the compilers default, which, 
+> depending on version, is also to omit the frame pointer on 32bit.  You 
+> could fix that by adding ',-fno-omit-frame-pointer' to the attribute 
+> string.  But that quickly gets out of hand, considering all the options 
+> you carefully need to set in Makefiles to get the right behaviour.  (Note 
+> that e.g. the optimization level is reset to -O0 as well!).
 > 
-> Yes, the docs do say that FOLL_PIN is for accessing the pages.  But,
-> there's a crucial thing that it leaves out: *WHO* will be accessing the
-> pages.  For Direct IO, for instance, the CPU isn't touching the page at
-> all.  It's always a device.  Also, crucially, the page contents are
-> *not* accessible from the CPU's perspective after a gup.  They're not
-> accessible until a kmap().  They're also not even accessible for
-> *devices* after a gup.  There's a _separate_ mapping process that's
-> requires to make them accessible to the CPU.
-
-I think the crucial detail is that we can fail gup(), while we cannot
-ever fail kmap() or whatever else a device needs to do.
-
-> > --- a/mm/page-writeback.c
-> > +++ b/mm/page-writeback.c
-> > @@ -2764,7 +2764,7 @@ int test_clear_page_writeback(struct page *page)
-> >  int __test_set_page_writeback(struct page *page, bool keep_write)
-> >  {
-> >  	struct address_space *mapping = page_mapping(page);
-> > -	int ret;
-> > +	int ret, access_ret;
-> >  
-> >  	lock_page_memcg(page);
-> >  	if (mapping && mapping_use_writeback_tags(mapping)) {
-> > @@ -2807,6 +2807,13 @@ int __test_set_page_writeback(struct page *page, bool keep_write)
-> >  		inc_zone_page_state(page, NR_ZONE_WRITE_PENDING);
-> >  	}
-> >  	unlock_page_memcg(page);
-> > +	access_ret = arch_make_page_accessible(page);
-> > +	/*
-> > +	 * If writeback has been triggered on a page that cannot be made
-> > +	 * accessible, it is too late to recover here.
-> > +	 */
-> > +	VM_BUG_ON_PAGE(access_ret != 0, page);
-> > +
-> >  	return ret;
-> >  
-> >  }
+> (I'll admit that I was somewhat surprised by this behaviour, even though 
+> it makes sense in the abstract; resetting to a clean slate and 
+> everything).
 > 
-> I think this one really shows the cracks in the approach.  Pages being
-> swapped *don't* have get_user_pages() done on them since we've already
-> got the physical page at the time writeback and aren't looking at PTEs.
-
-I suspect this happens because FOLL_TOUCH or something later does
-set_page_dirty() on the page, which then eventually gets it in
-writeback.
-
-Failing gup() ealier, should ensure the above VM_BUG never happens,
-unless someone is doing dodgy things.
-
-> Why do I care?
+> I think in its current form the optimize attribute is not useful for the 
+> purposes you need, and you're better off to disable the stack protector 
+> for the whole compilation unit from the Makefile.
 > 
-> I was looking at AMD's SEV (Secure Encrypted Virtualization) code which
-> is in the kernel which shares some implementation details with the
-> not-in-the-tree Intel MKTME.  SEV currently has a concept of guest pages
-> being encrypted and being gibberish to the host, plus a handshake to
-> share guest-selected pages.  Some of the side-effects of exposing the
-> gibberish to the host aren't great (I think it can break cache coherency
-> if a stray write occurs) and it would be nice to get better behavior.
+> (That attribute is also documented as "not suitable in production code", 
+> so go figure ;-) )
 > 
-> But, to get better behavior, the host kernel might need to remove pages
-> from its direct map, making them inaccessible. 
+> I think it will be possible to make that attribute a bit more useful 
+> in the future, but for the time being I think you'll just want to live 
+> without it.
 
-But for SEV we would actually need to fail this
-arch_make_page_acesssible() thing, right? The encrypted guest pages
-cannot be sanely accessed by the host IIRC, ever. Isn't their encryption
-key linked to the phys addr of the page?
+Ah, that makes sense. Borislav, should I send a fix forward against
+x86 tree to move -fno-stack-protector as it was in v1 patch?
+Or you'll revert v2 and apply v1 ~as is? Or should I send those myself?
 
-> I was hoping to reuse
-> arch_make_page_accessible() for obvious reasons.  But, get_user_pages()
-> is not the right spot to map pages because they might not *ever* be
-> accessed by the CPU, only devices.
+-- 
 
-I'm confused, why does it matter who accesses it? The point is that they
-want to access it through this vaddr/mapping.
+  Sergei
