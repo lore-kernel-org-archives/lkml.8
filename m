@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA860C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A467BC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:58:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C80E2078A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:58:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80DAD20737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:58:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586951921;
-	bh=k8xYy+LMBvtR9vGrgEP7ljRQZTei9c9KafyXYKHGOAA=;
+	s=default; t=1586951930;
+	bh=J+5NNN+ZKJmcrZjlqrrTDsqXcJDLt2+GNu/YQmcBwdw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JhjRjMnVIeJH+w5R15FfXjc5+3gft+p8dV4IF3uggF3cUTxnOsHBle1QodBpyflp4
-	 wMhASku9FPw+hQUwMB6barLSpBhqZYTSO5JMQr0qF6Bp3lbwjGj4w+K7myNvFGf4KK
-	 2m2ywcVeyTL3P7vvP8kGplyiAsQZbXpD/vXIppOs=
+	b=iR2jlaYL8hQU2uEAkjmZa3dboFzx/xDyv/PpLMDYmA4hXg7W+vxjtqczQfIME56fB
+	 O6UUIrgeFbZheGmL9aXe6rwf/5kVGZKO2tKe13Ev9+P+t5WyqWLsUUsE5S8t5wD9ID
+	 /GjG8A5jwxhdTb4gh8Z5Z3647/4jGowAh42flL7g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2897997AbgDOL6J (ORCPT
-        <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:58:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41572 "EHLO mail.kernel.org"
+        id S368022AbgDOL6q (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 07:58:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409314AbgDOLqm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:46:42 -0400
+        id S2897483AbgDOLqv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:46:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 307E121734;
-        Wed, 15 Apr 2020 11:46:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CEBF1206A2;
+        Wed, 15 Apr 2020 11:46:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951201;
-        bh=k8xYy+LMBvtR9vGrgEP7ljRQZTei9c9KafyXYKHGOAA=;
+        s=default; t=1586951211;
+        bh=J+5NNN+ZKJmcrZjlqrrTDsqXcJDLt2+GNu/YQmcBwdw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wvd12+5pB72wixG2pSVhp0vumfO7LtxpG/vzGrdKPTUq0TmEWS9Liw5/rtpC/JXFs
-         uSSPIFDE7I8NF5NKJDtBd9pDNISrIzoUEE2OPQBBrQvE60YwJfFIBg/AeBDNnjhsW3
-         Mroi8fr8EgHz4DQ/k9HYoOLuAr0nAgJrh74R70K0=
+        b=di8Wz00qXLipp1GTzwzFaXYF5mDpoT39jXe/G9c+xtFMxm4s15iFC0UtauNkQSC8D
+         iPsbQ2RxCzuUWojnPW+toi83eEn6jyjrWOBJtwZwlK1hv3N6hqvsvXqKgYHnLqNfeM
+         QX6N3zNjr7yK8ACcQHfWugPNaRRti2SUH0uP7uLU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Long Li <longli@microsoft.com>,
-        Steve French <stfrench@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org
-Subject: [PATCH AUTOSEL 4.19 16/40] cifs: Allocate encryption header through kmalloc
-Date:   Wed, 15 Apr 2020 07:45:59 -0400
-Message-Id: <20200415114623.14972-16-sashal@kernel.org>
+Cc:     Vegard Nossum <vegard.nossum@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Daniel Santos <daniel.santos@pobox.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Ian Abbott <abbotti@mev.co.uk>, Joe Perches <joe@perches.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-sparse@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 23/40] compiler.h: fix error in BUILD_BUG_ON() reporting
+Date:   Wed, 15 Apr 2020 07:46:06 -0400
+Message-Id: <20200415114623.14972-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114623.14972-1-sashal@kernel.org>
 References: <20200415114623.14972-1-sashal@kernel.org>
@@ -60,81 +63,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Long Li <longli@microsoft.com>
+From: Vegard Nossum <vegard.nossum@oracle.com>
 
-[ Upstream commit 3946d0d04bb360acca72db5efe9ae8440012d9dc ]
+[ Upstream commit af9c5d2e3b355854ff0e4acfbfbfadcd5198a349 ]
 
-When encryption is used, smb2_transform_hdr is defined on the stack and is
-passed to the transport. This doesn't work with RDMA as the buffer needs to
-be DMA'ed.
+compiletime_assert() uses __LINE__ to create a unique function name.  This
+means that if you have more than one BUILD_BUG_ON() in the same source
+line (which can happen if they appear e.g.  in a macro), then the error
+message from the compiler might output the wrong condition.
 
-Fix it by using kmalloc.
+For this source file:
 
-Signed-off-by: Long Li <longli@microsoft.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+	#include <linux/build_bug.h>
+
+	#define macro() \
+		BUILD_BUG_ON(1); \
+		BUILD_BUG_ON(0);
+
+	void foo()
+	{
+		macro();
+	}
+
+gcc would output:
+
+./include/linux/compiler.h:350:38: error: call to `__compiletime_assert_9' declared with attribute error: BUILD_BUG_ON failed: 0
+  _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
+
+However, it was not the BUILD_BUG_ON(0) that failed, so it should say 1
+instead of 0. With this patch, we use __COUNTER__ instead of __LINE__, so
+each BUILD_BUG_ON() gets a different function name and the correct
+condition is printed:
+
+./include/linux/compiler.h:350:38: error: call to `__compiletime_assert_0' declared with attribute error: BUILD_BUG_ON failed: 1
+  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+
+Signed-off-by: Vegard Nossum <vegard.nossum@oracle.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Reviewed-by: Daniel Santos <daniel.santos@pobox.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Ian Abbott <abbotti@mev.co.uk>
+Cc: Joe Perches <joe@perches.com>
+Link: http://lkml.kernel.org/r/20200331112637.25047-1-vegard.nossum@oracle.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/transport.c | 28 +++++++++++++++++-----------
- 1 file changed, 17 insertions(+), 11 deletions(-)
+ include/linux/compiler.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/cifs/transport.c b/fs/cifs/transport.c
-index 0c4df56c825ab..70412944b267d 100644
---- a/fs/cifs/transport.c
-+++ b/fs/cifs/transport.c
-@@ -392,7 +392,7 @@ smb_send_rqst(struct TCP_Server_Info *server, int num_rqst,
- 	      struct smb_rqst *rqst, int flags)
- {
- 	struct kvec iov;
--	struct smb2_transform_hdr tr_hdr;
-+	struct smb2_transform_hdr *tr_hdr;
- 	struct smb_rqst cur_rqst[MAX_COMPOUND];
- 	int rc;
+diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+index bb22908c79e83..75112aa8064e8 100644
+--- a/include/linux/compiler.h
++++ b/include/linux/compiler.h
+@@ -345,7 +345,7 @@ static inline void *offset_to_ptr(const int *off)
+  * compiler has support to do so.
+  */
+ #define compiletime_assert(condition, msg) \
+-	_compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
++	_compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
  
-@@ -402,28 +402,34 @@ smb_send_rqst(struct TCP_Server_Info *server, int num_rqst,
- 	if (num_rqst > MAX_COMPOUND - 1)
- 		return -ENOMEM;
- 
--	memset(&cur_rqst[0], 0, sizeof(cur_rqst));
--	memset(&iov, 0, sizeof(iov));
--	memset(&tr_hdr, 0, sizeof(tr_hdr));
--
--	iov.iov_base = &tr_hdr;
--	iov.iov_len = sizeof(tr_hdr);
--	cur_rqst[0].rq_iov = &iov;
--	cur_rqst[0].rq_nvec = 1;
--
- 	if (!server->ops->init_transform_rq) {
- 		cifs_dbg(VFS, "Encryption requested but transform callback "
- 			 "is missing\n");
- 		return -EIO;
- 	}
- 
-+	tr_hdr = kmalloc(sizeof(*tr_hdr), GFP_NOFS);
-+	if (!tr_hdr)
-+		return -ENOMEM;
-+
-+	memset(&cur_rqst[0], 0, sizeof(cur_rqst));
-+	memset(&iov, 0, sizeof(iov));
-+	memset(tr_hdr, 0, sizeof(*tr_hdr));
-+
-+	iov.iov_base = tr_hdr;
-+	iov.iov_len = sizeof(*tr_hdr);
-+	cur_rqst[0].rq_iov = &iov;
-+	cur_rqst[0].rq_nvec = 1;
-+
- 	rc = server->ops->init_transform_rq(server, num_rqst + 1,
- 					    &cur_rqst[0], rqst);
- 	if (rc)
--		return rc;
-+		goto out;
- 
- 	rc = __smb_send_rqst(server, num_rqst + 1, &cur_rqst[0]);
- 	smb3_free_compound_rqst(num_rqst, &cur_rqst[1]);
-+out:
-+	kfree(tr_hdr);
- 	return rc;
- }
- 
+ #define compiletime_assert_atomic_type(t)				\
+ 	compiletime_assert(__native_word(t),				\
 -- 
 2.20.1
 
