@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DD82C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:09:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E69D8C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:09:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61A69206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:09:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2916206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:09:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586952581;
-	bh=GKSjlZDpSsH34pag1b7kvu2cZ6Kl6/zbeisGVvWw0j4=;
+	s=default; t=1586952584;
+	bh=+KsFgRRbcx70Cyd3ib/fDZsP7Fe1mJWdVWiwh53kR7o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FKJ1LElJYGZoRDswDeZoo3n18vVVLC2/6h2rbOUjFDIJje/+keXn/qcZ5+DyU0x1z
-	 5PCMYPw+u3GcdUJ61oRl0hMVDdzecQzHDV12Cj23N8uqCcyCfyc8ERqQL/taxOXpPK
-	 rqYiYjNWWSEk+Yq8dd3MOy2fBsdQKAFv+l5ALy3k=
+	b=RESE7FxEeNISjYiYJ57yZ++UCz7YsiZx8zt2PAGCostmxuFY98WcPXFjV94P+Z1nv
+	 8/aYDEYLluyg0OlUSKPRH4ACbDP23CaxXqQpyZP7z1dwyMSaMHwOZWh67q+DeV8Zp7
+	 4upIS+I+4SED5JUaZXcCAqoCw0Q7ngKsNnzj4kLo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409344AbgDOLq6 (ORCPT
-        <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:46:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34162 "EHLO mail.kernel.org"
+        id S368493AbgDOMJl (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:09:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897500AbgDOLmn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:42:43 -0400
+        id S2406396AbgDOLrf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:47:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B2D820775;
-        Wed, 15 Apr 2020 11:42:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 170EC21582;
+        Wed, 15 Apr 2020 11:47:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950962;
-        bh=GKSjlZDpSsH34pag1b7kvu2cZ6Kl6/zbeisGVvWw0j4=;
+        s=default; t=1586951246;
+        bh=+KsFgRRbcx70Cyd3ib/fDZsP7Fe1mJWdVWiwh53kR7o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fe9YshogVe9zh40cXSQr0xmAAU4S9SYyIGeLcik9a2+LppJMhLd4q9qNrKQH0OmJD
-         USr7uc6ZCWsJzYDpyRO1J2H9Za1lCmzPUQIXCvkKe45CbntIscJe0PoitiqIqstswv
-         +XzKiAMKcL8Xy/9vMCw43Sv70M7mvMPdACz1C+C4=
+        b=tIMVTpgImxCQyUb/PvkNFVvE7OWMEenWwpKbMJ/1bUh1VuQ3sACoBQZvuovEy48D4
+         DSOAO6PJRDleELsljzxOyQ1RSk2KCintIBr5DTV88FiebxGRuFdkDBzLkl+yJSxuf5
+         CyBnjBwhQByVL+0EeVurGw/aQuLpHD2MkIM250vI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
-        Chen-Yu Tsai <wens@csie.org>, Sasha Levin <sashal@kernel.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.5 013/106] arm64: dts: allwinner: a64: Fix display clock register range
-Date:   Wed, 15 Apr 2020 07:40:53 -0400
-Message-Id: <20200415114226.13103-13-sashal@kernel.org>
+Cc:     Josh Triplett <josh@joshtriplett.org>,
+        Andreas Dilger <adilger@dilger.ca>,
+        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
+        linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 13/30] ext4: fix incorrect inodes per group in error message
+Date:   Wed, 15 Apr 2020 07:46:54 -0400
+Message-Id: <20200415114711.15381-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
-References: <20200415114226.13103-1-sashal@kernel.org>
+In-Reply-To: <20200415114711.15381-1-sashal@kernel.org>
+References: <20200415114711.15381-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,37 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jernej Skrabec <jernej.skrabec@siol.net>
+From: Josh Triplett <josh@joshtriplett.org>
 
-[ Upstream commit 3e9a1a8b7f811de3eb1445d72f68766b704ad17c ]
+[ Upstream commit b9c538da4e52a7b79dfcf4cfa487c46125066dfb ]
 
-Register range of display clocks is 0x10000, as it can be seen from
-DE2 documentation.
+If ext4_fill_super detects an invalid number of inodes per group, the
+resulting error message printed the number of blocks per group, rather
+than the number of inodes per group. Fix it to print the correct value.
 
-Fix it.
-
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-Fixes: 2c796fc8f5dbd ("arm64: dts: allwinner: a64: add necessary device tree nodes for DE2 CCU")
-[wens@csie.org: added fixes tag]
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Fixes: cd6bb35bf7f6d ("ext4: use more strict checks for inodes_per_block on mount")
+Link: https://lore.kernel.org/r/8be03355983a08e5d4eed480944613454d7e2550.1585434649.git.josh@joshtriplett.org
+Reviewed-by: Andreas Dilger <adilger@dilger.ca>
+Signed-off-by: Josh Triplett <josh@joshtriplett.org>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 2 +-
+ fs/ext4/super.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index 27e48234f1c23..38ecd227c34c1 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -227,7 +227,7 @@
- 
- 			display_clocks: clock@0 {
- 				compatible = "allwinner,sun50i-a64-de2-clk";
--				reg = <0x0 0x100000>;
-+				reg = <0x0 0x10000>;
- 				clocks = <&ccu CLK_BUS_DE>,
- 					 <&ccu CLK_DE>;
- 				clock-names = "bus",
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index 47cbd51111739..96696015e4ef3 100644
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -3970,7 +3970,7 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
+ 	if (sbi->s_inodes_per_group < sbi->s_inodes_per_block ||
+ 	    sbi->s_inodes_per_group > blocksize * 8) {
+ 		ext4_msg(sb, KERN_ERR, "invalid inodes per group: %lu\n",
+-			 sbi->s_blocks_per_group);
++			 sbi->s_inodes_per_group);
+ 		goto failed_mount;
+ 	}
+ 	sbi->s_itb_per_group = sbi->s_inodes_per_group /
 -- 
 2.20.1
 
