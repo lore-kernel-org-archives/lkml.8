@@ -2,102 +2,96 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13257C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D84D2C352BE
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:18:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD619214D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:18:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B724A20784
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:18:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B+V2QJhL"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="S/fPuJfr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392451AbgDOBSf (ORCPT
+        id S2392476AbgDOBSt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 21:18:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57358 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2392448AbgDOBSY (ORCPT
+        Tue, 14 Apr 2020 21:18:49 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:44032 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392461AbgDOBSf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 21:18:24 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 408FFC061A0E
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 18:18:23 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id b13so1810245oti.3
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 18:18:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=U1l2/pt2vcXJs4JHOfaqDncBBzdHatpYCeFPNCdgXmY=;
-        b=B+V2QJhLQsBm/e5lZ06FfL9w72jKW1Ok92LzH6+jMc/K7B3adM/3jfrxAccX7mEHh/
-         viSNMwIytJNitnDOPAGcYsDZ6hg1F1B2KRhSZad2SqUfaZAKtNSEHMr/KqZntR31eW9b
-         mnqU+JLn3CH43CYPUI/cvfgs7CxJv9F/MIgF7y/BSBRwSs+gOOq6SNbqr2GveCzOkz5p
-         CUScmSV7n51+5Onkqn/h6yrEICD/toxBejyWTEtaTdAfPvPPnMW8YO5SMzRY12wbQNpq
-         qrdse3QF/S6pP6v4PWXI6zy50Cg+YLM4nPIGu9iSofBzsZtwerlh6l/kv037LJENL7pz
-         wYYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=U1l2/pt2vcXJs4JHOfaqDncBBzdHatpYCeFPNCdgXmY=;
-        b=kEynsth2VEHaEOrQoU+KjxygXnGvHB1hSjzsvFzlYgdFwTt/gWvEy2W801inbdflvm
-         wFr3bb3Ybi0CdPt+budm4B5kKNeAj4YqBXoTMkOzzvoBfVB5KbBYMPM8P0erXqpjxf6F
-         pxgjUGBAEgvQoBM2elPAtimCAyRHylhMzKOloNDg+B0las3lEl/7RVChnQbUIhQirM7F
-         GOeU45/OLL3J2fS0CJIAI4BHlATa7u4/yKe0MEMZnqLlITj9OJS/cuy1f07f2OT+kN3z
-         s28uHI1LOQ8U4SyfOZph1Q7s+C9HnI3pkYzoN+XxhlQfW5X0IVLWIHgA5tgaXy8KTPHa
-         kfSg==
-X-Gm-Message-State: AGi0PuYUNqrPiessrDhooR5DtxqYRz1h+ff9hVB5P6l6+gdud8i5gcZs
-        EcSZa0WnaaNDs/Qt6xQ1MpP0YnnnxQrbyhf+oQXELw==
-X-Google-Smtp-Source: APiQypK9nKDX/Fv38V2E+Fpv1Q1bTceAzMb90oayw7n7ZzkqoIHvTjqwdd5FRXUJe5CujZpV+QwZrLgaUvSjidfYTdQ=
-X-Received: by 2002:a9d:3988:: with SMTP id y8mr11026479otb.352.1586913502446;
- Tue, 14 Apr 2020 18:18:22 -0700 (PDT)
+        Tue, 14 Apr 2020 21:18:35 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03F1Eo7M069531;
+        Wed, 15 Apr 2020 01:18:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2020-01-29;
+ bh=V+FGQ+Fp0ENCqGAxNIY9AUsRPmrf+3JeOdO7ro1QI18=;
+ b=S/fPuJfr5OwO+QZS2ihclKnrLDCuTIUxMOp12UfyrmSXy+7qB+ebQoHrr1bwtdgkvc3O
+ 8NGPXclIqZ405TpmkDwVwcPwU3ya3WcIMRoMFPbIIFtmOlAup6jRENFeTeKNGbzqV1eh
+ YuCL5WD8abIDwTcatZmlNEN0hpbXMHPAZK3L38q5A71NNi9pEFl5CfloljaYOQw5ej6F
+ Fj/VqvlaF4D5m6DND6A1q5G8GFYDC4h/xzIDxODgybRbNYl0iqe3OohQCC9FdcSJiQgE
+ Ez9FBYiWFJCRAkbesW9zHbXVjMFO9zqYR4CedqOEgOphnO47/BuVKaYe9E85D4nO4lL1 SA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 30dn95gjjd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 Apr 2020 01:18:24 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03F1CxFm020563;
+        Wed, 15 Apr 2020 01:18:23 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 30dn8sd7aj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 Apr 2020 01:18:23 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03F1IKVS031963;
+        Wed, 15 Apr 2020 01:18:21 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 14 Apr 2020 18:18:20 -0700
+To:     Wu Bo <wubo40@huawei.com>
+Cc:     Doug Gilbert <dgilbert@interlog.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <liuzhiqiang26@huawei.com>, <linfeilong@huawei.com>
+Subject: Re: [PATCH] scsi:sg: add sg_remove_request in sg_write
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <610618d9-e983-fd56-ed0f-639428343af7@huawei.com>
+Date:   Tue, 14 Apr 2020 21:18:18 -0400
+In-Reply-To: <610618d9-e983-fd56-ed0f-639428343af7@huawei.com> (Wu Bo's
+        message of "Tue, 14 Apr 2020 10:13:28 +0800")
+Message-ID: <yq1pnc9r1gl.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-References: <20200415104152.4d770116@canb.auug.org.au>
-In-Reply-To: <20200415104152.4d770116@canb.auug.org.au>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Tue, 14 Apr 2020 18:18:11 -0700
-Message-ID: <CALAqxLVN_MZ7XWsg99dhy1=Vde_XSCHey78mrxRuu7a_THxYYw@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the qcom tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Andy Gross <agross@kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9591 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=854 suspectscore=0
+ bulkscore=0 malwarescore=0 phishscore=0 adultscore=0 mlxscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004150005
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9591 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 clxscore=1015
+ malwarescore=0 bulkscore=0 priorityscore=1501 lowpriorityscore=0
+ mlxscore=0 phishscore=0 spamscore=0 impostorscore=0 suspectscore=0
+ mlxlogscore=929 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004150005
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 5:41 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi all,
->
-> After merging the qcom tree, today's linux-next build (x86_64
-> allmodconfig) failed like this:
->
-> drivers/soc/qcom/rpmh-rsc.c: In function '__tcs_buffer_write':
-> drivers/soc/qcom/rpmh-rsc.c:484:3: error: implicit declaration of function 'trace_rpmh_send_msg_rcuidle'; did you mean 'trace_rpmh_send_msg_enabled'? [-Werror=implicit-function-declaration]
->   484 |   trace_rpmh_send_msg_rcuidle(drv, tcs_id, j, msgid, cmd);
->       |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
->       |   trace_rpmh_send_msg_enabled
-> cc1: some warnings being treated as errors
->
-> I don't know why this error only started happening today.  However
-> reverting commit
->
->   1d3c6f86fd3f ("soc: qcom: rpmh: Allow RPMH driver to be loaded as a module")
->
-> fixes the build, so I have done that for today.
 
+Wu,
 
-Ah. I'm guessing the newly added rpmh-rsc code depends on rpmh being built in.
+> If the __copy_from_user function return failed, it should call
+> sg_remove_request in sg_write.
 
-I'll take a look at it.
+Applied to 5.7/scsi-fixes (by hand, another mangled patch). Thanks.
 
-thanks
--john
+-- 
+Martin K. Petersen	Oracle Linux Engineering
