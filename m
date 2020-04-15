@@ -2,89 +2,92 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6DC4C2BB85
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:17:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6048C2BB85
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB8FB20771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:17:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586978266;
-	bh=XHeNfk+RvsFEdUEKBdrYeqc0dFZ4gjXC8xUbp/AyGBk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bUs1bpctXGpbpKATQRk6ggNBfqDR3qp46uOgSgHstW2yQVxAwwirv54Y0sJjJFEfe
-	 1TGB1++jepXze3/9wgq/vF75A9djVzg5RDkefmpvpGXBsZDnhsSS2vRB0LwBmy2XO1
-	 f0qyEZK6GQKOVd+V2vlsDvlOZvrzQHj4tRO7Igps=
+	by mail.kernel.org (Postfix) with ESMTP id 8BEAF20771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:17:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="mCQ5dkGb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2411731AbgDOTHV (ORCPT
+        id S2506456AbgDOTRt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 15:07:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42424 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1416820AbgDOSeQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 14:34:16 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9132F217D8;
-        Wed, 15 Apr 2020 18:34:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586975655;
-        bh=XHeNfk+RvsFEdUEKBdrYeqc0dFZ4gjXC8xUbp/AyGBk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DXPlfztCxoKWzI1spL1DCIdLqG/S2QQFvqTcQEBso6ov2x8BuS6zoIWiEdHAh9Z/B
-         cA2rPggQjK9uO8HBGfjCNgt4FpQvSLri8vYgu6rEILVBvyfihZMrqnb+au69Nh5urH
-         C4cRtDR38yDJxNZKY3KVi2M9X4Cy48fychENGWEg=
-From:   paulmck@kernel.org
-To:     linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
-        kernel-team@fb.com, mingo@kernel.org
-Cc:     elver@google.com, andreyknvl@google.com, glider@google.com,
-        dvyukov@google.com, cai@lca.pw, boqun.feng@gmail.com,
-        "Paul E . McKenney" <paulmck@kernel.org>
-Subject: [PATCH v4 tip/core/rcu 10/15] objtool, kcsan: Add explicit check functions to uaccess whitelist
-Date:   Wed, 15 Apr 2020 11:34:06 -0700
-Message-Id: <20200415183411.12368-10-paulmck@kernel.org>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20200415183343.GA12265@paulmck-ThinkPad-P72>
-References: <20200415183343.GA12265@paulmck-ThinkPad-P72>
+        Wed, 15 Apr 2020 15:17:49 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:18924 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438103AbgDOTHb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 15:07:31 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e9759d70000>; Wed, 15 Apr 2020 12:00:39 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 15 Apr 2020 12:02:28 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 15 Apr 2020 12:02:28 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Apr
+ 2020 19:02:28 +0000
+Received: from rcampbell-dev.nvidia.com (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Apr
+ 2020 19:02:28 +0000
+Subject: Re: [PATCH] mm/filemap: Fix a typo in comment
+ "unneccssary"->"unnecessary"
+To:     Matthew Wilcox <willy@infradead.org>
+CC:     Ethon Paul <ethp@qq.com>, <akpm@linux-foundation.org>,
+        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
+References: <20200411065141.15936-1-ethp@qq.com>
+ <9677805f-5194-b6e8-8949-6ff0cbeb504e@nvidia.com>
+ <20200415183743.GE5820@bombadil.infradead.org>
+X-Nvconfidentiality: public
+From:   Ralph Campbell <rcampbell@nvidia.com>
+Message-ID: <c85bd99a-f921-d294-b454-3c5d8e0f4221@nvidia.com>
+Date:   Wed, 15 Apr 2020 12:02:27 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <20200415183743.GE5820@bombadil.infradead.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1586977239; bh=KyoYk8q6/O85eMdsE3qMRX+wPYPXu0EM5khVV9wjUpQ=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=mCQ5dkGbx8+HeqaAlzgJrkFZcsYUWLSPaAPrtsL/FYvl4+truvBdG/Fpef3XbeiEY
+         wIJWGkputVBX8s+e1SQWYr9Hc9b71W1pqIMRf3opy3vWStB5zNwjxRP64S8WknHzw1
+         IbFiWQiY6No+N7EGhsq1VuiYIpCLR2lSTKhjVt48L1s6t+/EI8P5VD3DJG84hoVGo8
+         cyiNlijZwKUd7/F5ZFrSNsu/+EEXwpI79579cGAefWumrXtWpZmIhVsij0iq4qA42G
+         Uji+o3g2tZe+fP0gwIeAK3+JYTi2P4bo/Xt2zGZFPFxO8LPqpEsIruvZU/DWMywe94
+         NtHQ0GW6xTsrg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marco Elver <elver@google.com>
 
-Add explicitly invoked KCSAN check functions to objtool's uaccess
-whitelist. This is needed in order to permit calling into
-kcsan_check_scoped_accesses() from the fast-path, which in turn calls
-__kcsan_check_access().  __kcsan_check_access() is the generic variant
-of the already whitelisted specializations __tsan_{read,write}N.
+On 4/15/20 11:37 AM, Matthew Wilcox wrote:
+> On Wed, Apr 15, 2020 at 11:36:34AM -0700, Ralph Campbell wrote:
+>>
+>> On 4/10/20 11:51 PM, Ethon Paul wrote:
+>>> There is a typo in comment, fix it.
+>>>
+>>> Signed-off-by: Ethon Paul <ethp@qq.com>
+>>
+>> Reviewed-by: Ralph Campbell <rcampbell@nvidia.com>
+> 
+> NAK.  See earlier response.
 
-Signed-off-by: Marco Elver <elver@google.com>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
----
- tools/objtool/check.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index b6da413..b6a573d 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -468,8 +468,10 @@ static const char *uaccess_safe_builtin[] = {
- 	"__asan_report_store8_noabort",
- 	"__asan_report_store16_noabort",
- 	/* KCSAN */
-+	"__kcsan_check_access",
- 	"kcsan_found_watchpoint",
- 	"kcsan_setup_watchpoint",
-+	"kcsan_check_scoped_accesses",
- 	/* KCSAN/TSAN */
- 	"__tsan_func_entry",
- 	"__tsan_func_exit",
--- 
-2.9.5
-
+Oops. Sorry about that.
+I was looking at 5.7.0-rc1 and forgot about your pending change that makes this
+unnecessary. :-)
