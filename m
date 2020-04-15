@@ -4,48 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F5D5C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E292EC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:10:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C9EB206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:10:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBED9206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:10:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586952621;
-	bh=/63fZqYCIXjoyIJCOZP6JWSBlxyWwKCVjmCJ99axx4g=;
+	s=default; t=1586952625;
+	bh=weKFicrvkC2K2sjZLNc8aFh+HzKrDX3YrP6qh3Kb1QI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=10c8vsncHVtVDxCAhDnxqWcmPMaLJMEw3jfWt1zXtvlP1D/k7Ndo4U8tyWR5Ap2Hr
-	 h29cjMdNcwFsCrtdw3qBsKfs9BCWnXaQpl5H68zdtqXo7qL5DH4F/X3oj0VvuJfswX
-	 PAvketrL+RIuFZNM+UqvJPF0/Bqh+PZScJcfvg74=
+	b=nNvh4QAta9ICQaKOCGZFgQli+yVCDUfBWa3aqufmu99jicOEoKNepOsxtXv33ySwf
+	 mODszT3iXW+s5tyDNMA2xODRqvHQWzzDNwHwTQfGVO+wz5ywrKCtayPun6B1J571f1
+	 GGzRRWE0ECgYUdv7fvCpMRaJggFYrU3/gDrsGG50=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S368519AbgDOMKN (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:10:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42664 "EHLO mail.kernel.org"
+        id S368528AbgDOMKW (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:10:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897625AbgDOLrU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2897620AbgDOLrU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Apr 2020 07:47:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 489C32166E;
-        Wed, 15 Apr 2020 11:47:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C6762137B;
+        Wed, 15 Apr 2020 11:47:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951239;
-        bh=/63fZqYCIXjoyIJCOZP6JWSBlxyWwKCVjmCJ99axx4g=;
+        s=default; t=1586951237;
+        bh=weKFicrvkC2K2sjZLNc8aFh+HzKrDX3YrP6qh3Kb1QI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k1TDw2TMmUyxsrqOIdrLcPtn5YVW7RwTN1w1q86Azxo2NygHVTgmxghQkSWhLjZ38
-         DabK8CRLlkmlxGcP6+cFYwx8iukXrXWGeg0DPB7AunAhSazOaHfxI7TIu0kJrYUw5t
-         mDMd3+1d+5b59bsVdjnl73fjv6ws3ELSJR72C3Ts=
+        b=CJodTshYh4lLR5z6mk0vfMoobiUEEKwLp6u8TvVJozn3ayx4pRPazWp5kvRbDW1wx
+         Eevg36o4fRPe31yG3SNI2NJplHbqCelloI+hWYsJJjjmqgH3reGMRmp5FfLsKXY6Xe
+         NB2juZaEPu21LLVhcUdt6DjDlnTSFPWF0H+C7iSM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Misono Tomohiro <misono.tomohiro@jp.fujitsu.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 07/30] NFS: direct.c: Fix memory leak of dreq when nfs_get_lock_context fails
-Date:   Wed, 15 Apr 2020 07:46:48 -0400
-Message-Id: <20200415114711.15381-7-sashal@kernel.org>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 05/30] rtc: 88pm860x: fix possible race condition
+Date:   Wed, 15 Apr 2020 07:46:46 -0400
+Message-Id: <20200415114711.15381-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114711.15381-1-sashal@kernel.org>
 References: <20200415114711.15381-1-sashal@kernel.org>
@@ -58,48 +57,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Misono Tomohiro <misono.tomohiro@jp.fujitsu.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-[ Upstream commit 8605cf0e852af3b2c771c18417499dc4ceed03d5 ]
+[ Upstream commit 9cf4789e6e4673d0b2c96fa6bb0c35e81b43111a ]
 
-When dreq is allocated by nfs_direct_req_alloc(), dreq->kref is
-initialized to 2. Therefore we need to call nfs_direct_req_release()
-twice to release the allocated dreq. Usually it is called in
-nfs_file_direct_{read, write}() and nfs_direct_complete().
+The RTC IRQ is requested before the struct rtc_device is allocated,
+this may lead to a NULL pointer dereference in the IRQ handler.
 
-However, current code only calls nfs_direct_req_relese() once if
-nfs_get_lock_context() fails in nfs_file_direct_{read, write}().
-So, that case would result in memory leak.
+To fix this issue, allocating the rtc_device struct before requesting
+the RTC IRQ using devm_rtc_allocate_device, and use rtc_register_device
+to register the RTC device.
 
-Fix this by adding the missing call.
+Also remove the unnecessary error message as the core already prints the
+info.
 
-Signed-off-by: Misono Tomohiro <misono.tomohiro@jp.fujitsu.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Link: https://lore.kernel.org/r/20200311223956.51352-1-alexandre.belloni@bootlin.com
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/direct.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/rtc/rtc-88pm860x.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
-index 9d07b53e1647b..e6ea4511c41ce 100644
---- a/fs/nfs/direct.c
-+++ b/fs/nfs/direct.c
-@@ -600,6 +600,7 @@ ssize_t nfs_file_direct_read(struct kiocb *iocb, struct iov_iter *iter)
- 	l_ctx = nfs_get_lock_context(dreq->ctx);
- 	if (IS_ERR(l_ctx)) {
- 		result = PTR_ERR(l_ctx);
-+		nfs_direct_req_release(dreq);
- 		goto out_release;
+diff --git a/drivers/rtc/rtc-88pm860x.c b/drivers/rtc/rtc-88pm860x.c
+index 7d3e5168fcefc..efbbde7379f13 100644
+--- a/drivers/rtc/rtc-88pm860x.c
++++ b/drivers/rtc/rtc-88pm860x.c
+@@ -341,6 +341,10 @@ static int pm860x_rtc_probe(struct platform_device *pdev)
+ 	info->dev = &pdev->dev;
+ 	dev_set_drvdata(&pdev->dev, info);
+ 
++	info->rtc_dev = devm_rtc_allocate_device(&pdev->dev);
++	if (IS_ERR(info->rtc_dev))
++		return PTR_ERR(info->rtc_dev);
++
+ 	ret = devm_request_threaded_irq(&pdev->dev, info->irq, NULL,
+ 					rtc_update_handler, IRQF_ONESHOT, "rtc",
+ 					info);
+@@ -382,13 +386,11 @@ static int pm860x_rtc_probe(struct platform_device *pdev)
+ 		}
  	}
- 	dreq->l_ctx = l_ctx;
-@@ -1023,6 +1024,7 @@ ssize_t nfs_file_direct_write(struct kiocb *iocb, struct iov_iter *iter)
- 	l_ctx = nfs_get_lock_context(dreq->ctx);
- 	if (IS_ERR(l_ctx)) {
- 		result = PTR_ERR(l_ctx);
-+		nfs_direct_req_release(dreq);
- 		goto out_release;
- 	}
- 	dreq->l_ctx = l_ctx;
+ 
+-	info->rtc_dev = devm_rtc_device_register(&pdev->dev, "88pm860x-rtc",
+-					    &pm860x_rtc_ops, THIS_MODULE);
+-	ret = PTR_ERR(info->rtc_dev);
+-	if (IS_ERR(info->rtc_dev)) {
+-		dev_err(&pdev->dev, "Failed to register RTC device: %d\n", ret);
++	info->rtc_dev->ops = &pm860x_rtc_ops;
++
++	ret = rtc_register_device(info->rtc_dev);
++	if (ret)
+ 		return ret;
+-	}
+ 
+ 	/*
+ 	 * enable internal XO instead of internal 3.25MHz clock since it can
 -- 
 2.20.1
 
