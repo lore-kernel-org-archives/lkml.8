@@ -2,112 +2,135 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DCF0C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D4CC2BB85
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:45:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB0BB206D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:44:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cEwnuLfI"
+	by mail.kernel.org (Postfix) with ESMTP id 214F0206D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:45:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895765AbgDOJor (ORCPT
+        id S2895745AbgDOJpY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 05:44:47 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60804 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2895744AbgDOJok (ORCPT
+        Wed, 15 Apr 2020 05:45:24 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:44126 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2895743AbgDOJpG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 05:44:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586943876;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=bKa8snlnDryG0vgt7Fg/rdv6w9fg6r4FpdXiLIxnEdE=;
-        b=cEwnuLfIVICCCloM/nkjOx2cvpv9pItx8yQEk7qZGIS06k5uJfkbfcZwO4rKtfWn+cyxCh
-        RLsrR9A65ny3Zd16rY+ew4aQXa6iXmQ4DP7XEzZf/Vc5zwjWXG1wWwr2NM+905Nqixle4i
-        LB75cl6uqWjw4LIcdUMRcYBGHGqamnk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-508-olUJzS60OsClk0RUhQWf4A-1; Wed, 15 Apr 2020 05:44:34 -0400
-X-MC-Unique: olUJzS60OsClk0RUhQWf4A-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 216EB800D5C;
-        Wed, 15 Apr 2020 09:44:33 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (ovpn-114-61.ams2.redhat.com [10.36.114.61])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0E8D72B479;
-        Wed, 15 Apr 2020 09:44:30 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     David Howells <dhowells@redhat.com>
-Cc:     linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-        linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org,
-        keyrings@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: What's a good default TTL for DNS keys in the kernel
-References: <3865908.1586874010@warthog.procyon.org.uk>
-Date:   Wed, 15 Apr 2020 11:44:29 +0200
-In-Reply-To: <3865908.1586874010@warthog.procyon.org.uk> (David Howells's
-        message of "Tue, 14 Apr 2020 15:20:10 +0100")
-Message-ID: <874ktl2ide.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        Wed, 15 Apr 2020 05:45:06 -0400
+Received: from 185.80.35.16 (185.80.35.16) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
+ id f6ab41578b3b780a; Wed, 15 Apr 2020 11:45:02 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Maxim Mikityanskiy <maxtram95@gmail.com>,
+        "5 . 3+" <stable@vger.kernel.org>
+Subject: Re: [PATCH v2] platform/x86: intel_int0002_vgpio: Only bind to the INT0002 dev when using s2idle
+Date:   Wed, 15 Apr 2020 11:45:01 +0200
+Message-ID: <4380034.KJPSqyn9gG@kreacher>
+In-Reply-To: <20200414131953.131533-1-hdegoede@redhat.com>
+References: <20200414131953.131533-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* David Howells:
+On Tuesday, April 14, 2020 3:19:53 PM CEST Hans de Goede wrote:
+> Commit 871f1f2bcb01 ("platform/x86: intel_int0002_vgpio: Only implement
+> irq_set_wake on Bay Trail") stopped passing irq_set_wake requests on to
+> the parents IRQ because this was breaking suspend (causing immediate
+> wakeups) on an Asus E202SA.
+> 
+> This workaround for this issue is mostly fine, on most Cherry Trail
+> devices where we need the INT0002 device for wakeups by e.g. USB kbds,
+> the parent IRQ is shared with the ACPI SCI and that is marked as wakeup
+> anyways.
+> 
+> But not on all devices, specifically on a Medion Akoya E1239T there is
+> no SCI at all, and because the irq_set_wake request is not passed on to
+> the parent IRQ, wake up by the builtin USB kbd does not work here.
+> 
+> So the workaround for the Asus E202SA immediate wake problem is causing
+> problems elsewhere; and in hindsight it is not the correct fix,
+> the Asus E202SA uses Airmont CPU cores, but this does not mean it is a
+> Cherry Trail based device, Brasswell uses Airmont CPU cores too and this
+> actually is a Braswell device.
+> 
+> Most (all?) Braswell devices use classic S3 mode suspend rather then
+> s2idle suspend and in this case directly dealing with PME events as
+> the INT0002 driver does likely is not the best idea, so that this is
+> causing issues is not surprising.
+> 
+> Replace the workaround of not passing irq_set_wake requests on to the
+> parents IRQ, by not binding to the INT0002 device when s2idle is not used.
+> This fixes USB kbd wakeups not working on some Cherry Trail devices,
+> while still avoiding mucking with the wakeup flags on the Asus E202SA
+> (and other Brasswell devices).
+> 
+> Cc: Maxim Mikityanskiy <maxtram95@gmail.com>
+> Cc: 5.3+ <stable@vger.kernel.org> # 5.3+
+> Fixes: 871f1f2bcb01 ("platform/x86: intel_int0002_vgpio: Only implement irq_set_wake on Bay Trail")
+> Tested-by: Maxim Mikityanskiy <maxtram95@gmail.com>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+> Changes in v2:
+> - Rebase on top of 5.7-rc1
+> ---
+>  drivers/platform/x86/intel_int0002_vgpio.c | 18 +++++-------------
+>  1 file changed, 5 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel_int0002_vgpio.c b/drivers/platform/x86/intel_int0002_vgpio.c
+> index 289c6655d425..30806046b664 100644
+> --- a/drivers/platform/x86/intel_int0002_vgpio.c
+> +++ b/drivers/platform/x86/intel_int0002_vgpio.c
+> @@ -143,21 +143,9 @@ static struct irq_chip int0002_byt_irqchip = {
+>  	.irq_set_wake		= int0002_irq_set_wake,
+>  };
+>  
+> -static struct irq_chip int0002_cht_irqchip = {
+> -	.name			= DRV_NAME,
+> -	.irq_ack		= int0002_irq_ack,
+> -	.irq_mask		= int0002_irq_mask,
+> -	.irq_unmask		= int0002_irq_unmask,
+> -	/*
+> -	 * No set_wake, on CHT the IRQ is typically shared with the ACPI SCI
+> -	 * and we don't want to mess with the ACPI SCI irq settings.
+> -	 */
+> -	.flags			= IRQCHIP_SKIP_SET_WAKE,
+> -};
+> -
+>  static const struct x86_cpu_id int0002_cpu_ids[] = {
+>  	X86_MATCH_INTEL_FAM6_MODEL(ATOM_SILVERMONT,	&int0002_byt_irqchip),
+> -	X86_MATCH_INTEL_FAM6_MODEL(ATOM_AIRMONT,	&int0002_cht_irqchip),
+> +	X86_MATCH_INTEL_FAM6_MODEL(ATOM_AIRMONT,	&int0002_byt_irqchip),
+>  	{}
+>  };
+>  
+> @@ -181,6 +169,10 @@ static int int0002_probe(struct platform_device *pdev)
+>  	if (!cpu_id)
+>  		return -ENODEV;
+>  
+> +	/* We only need to directly deal with PMEs when using s2idle */
+> +	if (!pm_suspend_default_s2idle())
+> +		return -ENODEV;
+> +
 
-> Since key.dns_resolver isn't given a TTL for the address information obta=
-ined
-> for getaddrinfo(), no expiry is set on dns_resolver keys in the kernel for
-> NFS, CIFS or Ceph.  AFS gets one if it looks up a cell SRV or AFSDB record
-> because that is looked up in the DNS directly, but it doesn't look up A or
-> AAAA records, so doesn't get an expiry for the addresses themselves.
->
-> I've previously asked the libc folks if there's a way to get this informa=
-tion
-> exposed in struct addrinfo, but I don't think that ended up going anywher=
-e -
-> and, in any case, would take a few years to work through the system.
->
-> For the moment, I think I should put a default on any dns_resolver keys a=
-nd
-> have it applied either by the kernel (configurable with a /proc/sys/ sett=
-ing)
-> or by the key.dnf_resolver program (configurable with an /etc file).
->
-> Any suggestion as to the preferred default TTL?  10 minutes?
+What if the system supports s2idle which is not the default suspend option
+and then it is selected by user space (overriding the default)?
 
-You can get the real TTL if you do a DNS resolution on the name and
-match the addresses against what you get out of the NSS functions.  If
-they match, you can use the TTL from DNS.  Hackish, but it does give you
-*some* TTL value.
+>  	irq = platform_get_irq(pdev, 0);
+>  	if (irq < 0)
+>  		return irq;
+> 
 
-The question remains what the expected impact of TTL expiry is.  Will
-the kernel just perform a new DNS query if it needs one?  Or would you
-expect that (say) the NFS client rechecks the addresses after TTL expiry
-and if they change, reconnect to a new NFS server?
 
-If a TTL expiration does not trigger anything, than it seems purely an
-optimization to avoid kernel =E2=86=92 userspace callbacks.  I think you ca=
-n do
-with a very short TTL in this case, on the order of seconds (or no
-caching at all).
 
-Negative caching is also worthy of consideration and can be considerably
-more tricky.
-
-Thanks,
-Florian
 
