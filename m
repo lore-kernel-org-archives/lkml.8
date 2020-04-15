@@ -2,64 +2,110 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44BADC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:18:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64610C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:18:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29C3520656
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:18:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A41020656
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:18:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586967530;
+	bh=q8zTcG6Hj0nZ+flnS9S7FR0xRxG3fw+TBBjwkItPLsQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UCY1T3R/IkJ15RpzYrPvl9WQvkspJjjA2NNHzZ8fe78ueLTA8/RU3/SZOfEgn0wK0
+	 gQO0RrMI2hIv2UNX+gQ6e9K798UQfPVdmlA8esmrS9F70wjEEEyckBqCaXarz6o18R
+	 okTQUa5Hy7iLRzWjdDx3GiEyMg9JtgHQvfHKsQ3E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1415532AbgDOQS2 (ORCPT
+        id S1415545AbgDOQSr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 12:18:28 -0400
-Received: from mail.manjaro.org ([176.9.38.148]:43786 "EHLO mail.manjaro.org"
+        Wed, 15 Apr 2020 12:18:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729491AbgDOQST (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 12:18:19 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.manjaro.org (Postfix) with ESMTP id 119C33A4121D;
-        Wed, 15 Apr 2020 18:18:15 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at manjaro.org
-Received: from mail.manjaro.org ([127.0.0.1])
-        by localhost (manjaro.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id CP2gW0An3Rr8; Wed, 15 Apr 2020 18:18:13 +0200 (CEST)
-Subject: Re: [RESEND v6 2/3] dt-bindings: power: supply: add cw2015_battery
- bindings
-To:     Rob Herring <robh@kernel.org>,
-        Tobias Schramm <t.schramm@manjaro.org>
-Cc:     Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200414125208.1091989-1-t.schramm@manjaro.org>
- <20200414125208.1091989-3-t.schramm@manjaro.org>
- <20200415145739.GA7406@bogus>
-From:   Tobias Schramm <t.schramm@manjaro.org>
-Message-ID: <2161e423-a7b0-0331-4bd1-0bea3fc72d2b@manjaro.org>
-Date:   Wed, 15 Apr 2020 18:19:28 +0200
+        id S1415531AbgDOQSk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 12:18:40 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B085920656;
+        Wed, 15 Apr 2020 16:18:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586967518;
+        bh=q8zTcG6Hj0nZ+flnS9S7FR0xRxG3fw+TBBjwkItPLsQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Z46bEaHehb63VF8B8JD4a8vIFzqQjN4jhfV/Aod+FOSci+JNDg+SJA0HNWgEkHfeU
+         w343aZtAzYEx7beKZ7ZYbzfTqt+2hpLVE3qtbF25wEVvwz26QpHwtjZs54ENRN/hDk
+         eUlbtZL5EvUu7qNQSaNWTjHMYb96cozdlQk7QJPo=
+Received: by pali.im (Postfix)
+        id 92DCE58E; Wed, 15 Apr 2020 18:18:36 +0200 (CEST)
+Date:   Wed, 15 Apr 2020 18:18:36 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Remi Pommarel <repk@triplefau.lt>,
+        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Xogium <contact@xogium.me>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH 8/8] PCI: aardvark: Add FIXME for code which access
+ PCIE_CORE_CMD_STATUS_REG
+Message-ID: <20200415161836.lqbhr6bona7zmgpt@pali>
+References: <20200415160054.951-1-pali@kernel.org>
+ <20200415160348.1146-4-pali@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200415145739.GA7406@bogus>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US-large
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200415160348.1146-4-pali@kernel.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+On Wednesday 15 April 2020 18:03:48 Pali Rohár wrote:
+> Register PCIE_CORE_CMD_STATUS_REG is applicable only when aardvark
+> controller is configured for Endpoint mode. Which is not the case of
+> current kernel driver.
+> 
+> Signed-off-by: Pali Rohár <pali@kernel.org>
+> ---
+>  drivers/pci/controller/pci-aardvark.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> index 6a97a3838098..a1cebc734f2d 100644
+> --- a/drivers/pci/controller/pci-aardvark.c
+> +++ b/drivers/pci/controller/pci-aardvark.c
+> @@ -423,6 +423,12 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+>  		advk_writel(pcie, reg, PCIE_CORE_LINK_CTRL_STAT_REG);
+>  	} while (1);
+>  
+> +	/*
+> +	 * FIXME: Following code which access PCIE_CORE_CMD_STATUS_REG register
+> +	 *        is suspicious. This register is applicable only when the PCI
+> +	 *        controller is configured for Endpoint mode. And not when it
+> +	 *        is configured for Root Complex.
+> +	 */
+>  	reg = advk_readl(pcie, PCIE_CORE_CMD_STATUS_REG);
+>  	reg |= PCIE_CORE_CMD_MEM_ACCESS_EN |
+>  		PCIE_CORE_CMD_IO_ACCESS_EN |
+> -- 
+> 2.20.1
+> 
 
-> Please add Acked-by/Reviewed-by tags when posting new versions.
-Ah, sorry. Forgot your Acked-By. This patch should of course have an
+Just to note, above code needs to be removed or fixed or properly
+commented why is correct and what is doing.
 
-Acked-by: Rob Herring <robh@kernel.org>
-
-> However,
-> there's no need to repost patches *only* to add the tags. The upstream
-> maintainer will do that for acks received on the version they apply.
-
-This resend was mostly for inclusion of the driver in mainline. However,
-considering the current situation this was probably a little early.
-
-Tobias
+I really do not know, so I'm adding at least FIXME comment to document
+suspicious code which may cause unexpected problems.
