@@ -2,110 +2,166 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84757C2BB85
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:54:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5577C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F64620768
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:54:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0AA720768
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:54:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="PMuRmvfY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404724AbgDOTyg (ORCPT
+        id S2441922AbgDOTyq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 15:54:36 -0400
-Received: from mga12.intel.com ([192.55.52.136]:63487 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441903AbgDOTyf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 15:54:35 -0400
-IronPort-SDR: DytPXnRqkWwAOMaiIWyKsPd9ovHzwxlojwTUIV/Is+2XGqOSVPTJy5YUOC9UeRJpc3Y+K+NyeK
- qy3ityAsM/wg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 12:54:34 -0700
-IronPort-SDR: UYnRfjVorTkLlQYMLokFH4wd30kYLHIexetLQi98g7aKH3mQdcDdbo1EAyafNUj3AJiXpN1pGb
- hKLytQ2zJ6jQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,388,1580803200"; 
-   d="scan'208";a="274255875"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by orsmga008.jf.intel.com with ESMTP; 15 Apr 2020 12:54:34 -0700
-Date:   Wed, 15 Apr 2020 12:54:34 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     linux-kernel@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH RFC 3/8] fs/ext4: Disallow encryption if inode is DAX
-Message-ID: <20200415195433.GC2305801@iweiny-DESK2.sc.intel.com>
-References: <20200414040030.1802884-1-ira.weiny@intel.com>
- <20200414040030.1802884-4-ira.weiny@intel.com>
- <20200415160307.GJ90651@mit.edu>
+        Wed, 15 Apr 2020 15:54:46 -0400
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:22134 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406078AbgDOTyl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 15:54:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1586980480; x=1618516480;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Hhsd5JtwPM12DYmkDLyIy4E1RXRHsLoMVadetZOBWkA=;
+  b=PMuRmvfYHNO+RITsw6TNQsObAwRNSoFctkwCitYukUtSRiwzkvobMJv8
+   J369MkZXlMuVGr2mTq6rxqJTPgwHjjfw18mW2CVyetTc8Q9zDWVqo3qPk
+   cidIYu3Fztozb1fJ1a8GBQR2v+PHPv4zJJFTVFsZF87l+xi+CVs34fhGI
+   fIWBg4dXEQAFydi/auRU7U54r5+ewlbWc14X1GYrMqAAs6CrlJRx9Ov6y
+   92GsQowoe7Vz5Wh3uWmX8cjzdw+xu0LZaYQu+KK9RyTUl7EuVTOVIOvVo
+   kCPNgkl75YUc5TnJRYOn1Mch5g9MNgJ9g5TZbTK+JWuIyPBHT9S5eAQ18
+   w==;
+IronPort-SDR: HskfMLuEx+gW50VLbJ+A5FzSC8/DAh+CCZNzhTgr5Fqos7Y6H4SeAqp6JazVt2kASw9ZT9pYf/
+ 5a80S2vnjBkThuHpoGezCEaY50LzrtvPWV/2f8+Q0oDfI35540wfOQcYKTZf+18ruvLlvv33/T
+ zcwSpFhV5kBTKbyuIC+zBQqbORrOa8VEhMqkb2BIHOiNIeldhYlky4pmqOmWRLUVFyoZAk3kI3
+ ZwSblBkfyBQOwOmxqeVbPKC6axRzIENe6cOgap+gQB7NdCLPokxkz4iSRI3BkmgE500zrUxW5z
+ maM=
+X-IronPort-AV: E=Sophos;i="5.72,388,1580745600"; 
+   d="scan'208";a="244077013"
+Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 16 Apr 2020 03:54:40 +0800
+IronPort-SDR: +8G22lKOTSnisZhBia4e6azOMqzIMditu1TTMSrqnkU+/vRV+D9j0O/iYJZZE6KmRCZEdjKB39
+ ceTGljag/zDFgNQC9gP3W76t95Z3UyRnExxm/ge32n644K2hjgG5rIZNzWcMm+Y4n1b1ORoJLn
+ 0uC8arGR6sPPd4MMqXWax1UHIi2W1Xi3iCOgrQDgBak+zgpUHzcypXj/4ROr5bD1+eb6F6j6+T
+ Fkt2Z1urYEyVdkOgVgwnO2x50TF/a6FJaiSxZKPOZTjKwOmmieXgvnuBVgPzhq4eYLi8hGnxgF
+ GaHCnrG+QDCQAjyeGwIIcNE7
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 12:45:08 -0700
+IronPort-SDR: 4zlsxO4RkiT45OqVEJZYxpJPZzqj8CHvYmVLBNY/LOdQ/H1G/eqCmGl6vWjLtcH/tZit8rvf9J
+ 3aFsTlvTIsX7uIXQdsIdo/fQ9/h1tfKL0xL/VLUA3vNjnRRrMxDZaBvmtRYEhOr+bcfj6+MCCz
+ vsLlTP/3jLqHirySbTVKexPEbPGYOsyPp/IxkyeNtxS4lYDy8Q2cZ04nxyld0tycqO98l7YVMa
+ 13g6swKV44qzSYs9xfv8RAswec9tgjPOMdSiHURxJubnXqxlvi0eVTjp9IaQ/mYo3U4DBwhFV/
+ Dt8=
+WDCIronportException: Internal
+Received: from 6hj08h2.ad.shared (HELO jedi-01.hgst.com) ([10.86.55.244])
+  by uls-op-cesaip02.wdc.com with ESMTP; 15 Apr 2020 12:54:40 -0700
+From:   Atish Patra <atish.patra@wdc.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Atish Patra <atish.patra@wdc.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-efi@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Will Deacon <will@kernel.org>
+Subject: [v3 PATCH 0/5] Add UEFI support for RISC-V 
+Date:   Wed, 15 Apr 2020 12:54:17 -0700
+Message-Id: <20200415195422.19866-1-atish.patra@wdc.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200415160307.GJ90651@mit.edu>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 12:03:07PM -0400, Theodore Y. Ts'o wrote:
-> On Mon, Apr 13, 2020 at 09:00:25PM -0700, ira.weiny@intel.com wrote:
-> > From: Ira Weiny <ira.weiny@intel.com>
-> > 
-> > Encryption and DAX are incompatible.  Changing the DAX mode due to a
-> > change in Encryption mode is wrong without a corresponding
-> > address_space_operations update.
-> > 
-> > Make the 2 options mutually exclusive by returning an error if DAX was
-> > set first.
-> > 
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> 
-> The encryption flag is inherited from the containing directory, and
-> directories can't have the DAX flag set,
+This series adds UEFI support for RISC-V. Currently, only boot time
+services have been added. Runtime services will be added in a separate
+series. This series depends on some core EFI patches
+present in current in efi-next and following other patches.
 
-But they can have FS_XFLAG_DAX set.
+U-Boot: Adds the boot hartid under chosen node.
+https://lists.denx.de/pipermail/u-boot/2020-April/405726.html
 
-> so anything we do in
-> ext4_set_context() will be safety belt / sanity checking in nature.
-> 
-> But we *do* need to figure out what we do with mount -o dax=always
-> when the file system might have encrypted files.  My previous comments
-> about the verity flag and dax flag applies here.
+Linux kernel: 5.7-rc1
 
-:-( agreed.
+OpenSBI: master
 
-FWIW without these patches an inode which has encrypt or verity set is already
-turning off DAX...  So we already have a '-o dax' flag which is not "always".
+Patch 1 just moves arm-stub code to a generic code so that it can be used
+across different architecture.
 
-:-(
+Patch 3 adds fixmap bindings so that CONFIG_EFI can be compiled and we do not
+have create separate config to enable boot time services. 
+As runtime services are not enabled at this time, full generic early ioremap
+support is also not added in this series.
 
-Unfortunately the 'always' designation kind of breaks semantically but it is
-equal to the current mount option.
+Patch 4 and 5 adds the PE/COFF header and EFI stub code support for RISC-V
+respectively.
 
-> 
-> Also note that encrypted files are read/write so we must never allow
-> the combination of ENCRPYT_FL and DAX_FL.  So that may be something
-> where we should teach __ext4_iget() to check for this, and declare the
-> file system as corrupted if it sees this combination.
+The patches can also be found in following git repo.
 
-ok...
+https://github.com/atishp04/linux/tree/wip_uefi_riscv_v3
 
-> (For VERITY_FL
-> && DAX_FL that is a combo that we might want to support in the future,
-> so that's probably a case where arguably, we should just ignore the
-> DAX_FL for now.)
+The patches have been verified on Qemu using bootefi command in U-Boot.
 
-ok...
+Changes from v2->v3:
+1. Rebased on top of latest efi patches.
+2. Improved handle_kernel_image().
 
-Ira
+Changes from v1->v2:
+1. Rebased on 5.7-rc1.
+2. Fixed minor typos and removed redundant macros/comments.
+
+Changes from previous version:
+1. Renamed to the generic efi stub macro.
+2. Address all redundant comments.
+3. Supported EFI kernel image with normal booti command.
+4. Removed runtime service related macro defines.
+
+Atish Patra (5):
+efi: Move arm-stub to a common file
+include: pe.h: Add RISC-V related PE definition
+RISC-V: Define fixmap bindings for generic early ioremap support
+RISC-V: Add PE/COFF header for EFI stub
+RISC-V: Add EFI stub support.
+
+arch/arm/Kconfig                              |   2 +-
+arch/arm64/Kconfig                            |   2 +-
+arch/riscv/Kconfig                            |  21 ++++
+arch/riscv/Makefile                           |   1 +
+arch/riscv/configs/defconfig                  |   1 +
+arch/riscv/include/asm/Kbuild                 |   1 +
+arch/riscv/include/asm/efi.h                  |  44 +++++++
+arch/riscv/include/asm/fixmap.h               |  18 +++
+arch/riscv/include/asm/io.h                   |   1 +
+arch/riscv/include/asm/sections.h             |  13 ++
+arch/riscv/kernel/Makefile                    |   4 +
+arch/riscv/kernel/efi-header.S                |  99 ++++++++++++++++
+arch/riscv/kernel/head.S                      |  16 +++
+arch/riscv/kernel/image-vars.h                |  53 +++++++++
+arch/riscv/kernel/vmlinux.lds.S               |  20 +++-
+drivers/firmware/efi/Kconfig                  |   4 +-
+drivers/firmware/efi/libstub/Makefile         |  19 ++-
+.../efi/libstub/{arm-stub.c => efi-stub.c}    |   0
+drivers/firmware/efi/libstub/riscv-stub.c     | 111 ++++++++++++++++++
+include/linux/pe.h                            |   3 +
+20 files changed, 421 insertions(+), 12 deletions(-)
+create mode 100644 arch/riscv/include/asm/efi.h
+create mode 100644 arch/riscv/include/asm/sections.h
+create mode 100644 arch/riscv/kernel/efi-header.S
+create mode 100644 arch/riscv/kernel/image-vars.h
+rename drivers/firmware/efi/libstub/{arm-stub.c => efi-stub.c} (100%)
+create mode 100644 drivers/firmware/efi/libstub/riscv-stub.c
+
+--
+2.24.0
 
