@@ -2,129 +2,139 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A9FC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:15:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2BD2C3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:15:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B8E5206F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:15:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E7C1208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:15:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="Okii4WV7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gbtS2S4o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1415465AbgDOQP3 (ORCPT
+        id S2410244AbgDOQPf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 12:15:29 -0400
-Received: from mail-bn7nam10on2054.outbound.protection.outlook.com ([40.107.92.54]:6037
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2410244AbgDOQMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 12:12:41 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jqDm9owojMYMX/hrwgy1cVgcCMS/sSUvFuqP4b0TW4NeJnH4N0at0GfOYBYd6PMpiUQemeU13+3crqOQ0svIRRj+rqmj1xBJT6pkTW2tLcCul/UtAxOIIf9atIRe6MouPx7x0hyWN9tb5VKeksGUrvYUu663vVhBsT0j/w5urNdUeFvBqdFfADlW8Rn89gFTKZ1Y40NVTZK+hOlmQanS9iXTIyID7Zz4XTsRuHXgQeh0v5G7mnKoU3N7smv4i2s97EyMo3kbwF6kAnLjrczcFGjs7Fm5mK/8wnI2Tgd7ju2PRJc/LCnejn2zNwdjOsdC5vcZLxAt6RAe7hDq2neD6Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9nxtLj7G7XHMe7btmeHWLVBb66C5a5GyMZEEY3gGfKc=;
- b=mH6HMefeS1tOTD2aSLSd1fkGnbhp0Gvd72kskPwOUF/DPq+FQVo+g8oii6AugniOXJnbWfbUlv0G/36lgmGAkb1uSCaMny1/ROzKKQi6Rtdw623nJbF2O29mBzp+0bS2b0txEgAoD+pRVPa1ujCbWvXOWv87V6HhZ9jVMHeJM8HOves4gXIw3E6cNyW0pO5uBQYooijOtQaPSdauxOo29p9dXy6r338GJ0r67pOjoffZZ+O6wzbXAeG9fpccTre5d09EIT2Vzx6QGomWL3lZqZZsrLPtyWLekhNJUriZ3b/v3os4D1MloGmUoCbbpdaIYuKEItNLLlK0MlRFkOWJlQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
- dkim=pass header.d=silabs.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9nxtLj7G7XHMe7btmeHWLVBb66C5a5GyMZEEY3gGfKc=;
- b=Okii4WV7JRTVtHBhesSpJe8YDH8sID9P2F+3mt9RDb1POYzxjPcBV2tSWOh9C5rqglphQEJbLz89SRwhBwN0AG/0XMzThbNpSb6qyNogdZEpMQFlYeLRrdAVwNJP6VkRzOWgQDqCXZd94MeZr+waN/WBz201VYPkdPvP7god4ls=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Jerome.Pouiller@silabs.com; 
-Received: from MWHPR11MB1775.namprd11.prod.outlook.com (2603:10b6:300:10e::14)
- by MWHPR11MB1599.namprd11.prod.outlook.com (2603:10b6:301:e::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.28; Wed, 15 Apr
- 2020 16:12:37 +0000
-Received: from MWHPR11MB1775.namprd11.prod.outlook.com
- ([fe80::81d5:b62b:3770:ffbe]) by MWHPR11MB1775.namprd11.prod.outlook.com
- ([fe80::81d5:b62b:3770:ffbe%10]) with mapi id 15.20.2921.024; Wed, 15 Apr
- 2020 16:12:37 +0000
-From:   Jerome Pouiller <Jerome.Pouiller@silabs.com>
-To:     devel@driverdev.osuosl.org, linux-wireless@vger.kernel.org
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= 
-        <jerome.pouiller@silabs.com>
-Subject: [PATCH 10/20] staging: wfx: ensure that probe requests are filtered when AP
-Date:   Wed, 15 Apr 2020 18:11:37 +0200
-Message-Id: <20200415161147.69738-11-Jerome.Pouiller@silabs.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200415161147.69738-1-Jerome.Pouiller@silabs.com>
-References: <20200415161147.69738-1-Jerome.Pouiller@silabs.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
-X-ClientProxiedBy: PR1PR01CA0027.eurprd01.prod.exchangelabs.com
- (2603:10a6:102::40) To MWHPR11MB1775.namprd11.prod.outlook.com
- (2603:10b6:300:10e::14)
+        Wed, 15 Apr 2020 12:15:35 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:24191 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2410307AbgDOQPZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 12:15:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586967324;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=i9AiOSf2Ndp9zP+cv9L50OpP/JFrww4WbmeVKZKeKQk=;
+        b=gbtS2S4owyoWxYpsT9vjU+A8UHaMyjM5arF/uBdFuXe71L7bDQRGh/KRxn/+322ahVQaIp
+        2cISBLKLJGam2bb1Rco5TgpYclsIsQQh15N2M889/GFYdt7D6omCOBkVeIMN/hto3qwII8
+        t9I2N1LWEg3sg7c9MTNb4TUYyQDyQQg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-39-HVLJSW-cNR2Y5uo-GPBh_A-1; Wed, 15 Apr 2020 12:15:20 -0400
+X-MC-Unique: HVLJSW-cNR2Y5uo-GPBh_A-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 982DB13F6;
+        Wed, 15 Apr 2020 16:15:18 +0000 (UTC)
+Received: from madcap2.tricolour.ca (unknown [10.3.128.9])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4B8D0119F56;
+        Wed, 15 Apr 2020 16:15:06 +0000 (UTC)
+Date:   Wed, 15 Apr 2020 12:15:03 -0400
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Shuah Khan <skhan@linuxfoundation.org>, linux-audit@redhat.com,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org, Amol Grover <frextrite@gmail.com>
+Subject: Re: [PATCH v2] kernel: audit.c: Add __rcu notation to RCU pointer
+Message-ID: <20200415161503.umujm6v4gadmf6qm@madcap2.tricolour.ca>
+References: <20191128153203.GA23803@workstation-kernel-dev>
+ <20191130020742.GF157739@google.com>
+ <20200415153417.svpbimg66vbeuk7u@madcap2.tricolour.ca>
+ <CAHC9VhTdfkxdiEwCZu-JCQGxJ_DNr0b_Ukm40VEUxq=Lc-zx1g@mail.gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from pc-42.home (2a01:e35:2435:66a0:544b:f17b:7ae8:fb7) by PR1PR01CA0027.eurprd01.prod.exchangelabs.com (2603:10a6:102::40) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.25 via Frontend Transport; Wed, 15 Apr 2020 16:12:35 +0000
-X-Mailer: git-send-email 2.25.1
-X-Originating-IP: [2a01:e35:2435:66a0:544b:f17b:7ae8:fb7]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: e33c508f-29e6-44ae-d460-08d7e157d0b4
-X-MS-TrafficTypeDiagnostic: MWHPR11MB1599:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MWHPR11MB15997D7BD00AF9FA468E84DB93DB0@MWHPR11MB1599.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
-X-Forefront-PRVS: 0374433C81
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB1775.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(376002)(396003)(346002)(366004)(39850400004)(136003)(4326008)(66476007)(107886003)(81156014)(86362001)(8936002)(2616005)(6512007)(6486002)(316002)(52116002)(66556008)(66946007)(6506007)(8886007)(2906002)(1076003)(36756003)(66574012)(5660300002)(54906003)(478600001)(16526019)(8676002)(186003);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: silabs.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: B/cicagr4l+JnqMyR1SA353fr7oCh+XlYbeD/hRppwtTjt2jEjpUpMwLK6i1zsBWLON/sJS0s0HNyuYXsjCFxJSFa3qIcBg9hxvkBRs2Dl7uX4DalitJGUualO9oHLtCkJTDDJGsMTPP8KWnPNaSF3d+5cVGzhtvFjvy2jTmpkNBO+I8SfkDz7aFuHWrB+z/goZcmlspDQ+PP5/z6E5zAWirXDfELbExW+YpbAks7FCDyAyC49PfR9+qe8FzvTjT6kgEuZfAaSyQbfnsjooQiaTWJlqSW0E2F/xk+U5Ja4m8wWjvFncr9rKI1NOb88zCPJ9vEAeKcMadOV7ODsumeDrCkor2JHPLoAQXkudiM8JQ3fGdMr1hZYsLZLC/2kXbc2bzrzGpSs3JYyaRGiT5/WcCsB7x0UjkzEVXac/DqkWTxJXLkkE3h9c8RaHrNkmL
-X-MS-Exchange-AntiSpam-MessageData: /73MTPv8s1zrdRgheHZ8ScoJ0oZxze/PFaHSe7Vuu9k9Xj/MCC8QEj2BLuQvEPJe8RFB4vq27b1s+t702GpNtpsIEmNN+7rLfQXAEk9cGjLS9cYw5ZnOg7gSc/H7Y96H3cOSWhxb7Kb703B9tUyItbVsfq5sSewaOOsOldTX/fUvz7Mn66T0tdJD/8w+tdSE7oJQUwmP9E9vH91CWjKPqA==
-X-OriginatorOrg: silabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e33c508f-29e6-44ae-d460-08d7e157d0b4
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2020 16:12:37.7110
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 54dbd822-5231-4b20-944d-6f4abcd541fb
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8D7tuwZ9TNJugDx5tNPj/mqnH1E7w4KUOsoLQ1e/AzbX0BsAUoYJ5wjjGTV8+qpVxWuSrjv3L6gvd4x3/NzuYQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1599
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHC9VhTdfkxdiEwCZu-JCQGxJ_DNr0b_Ukm40VEUxq=Lc-zx1g@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogSsOpcsO0bWUgUG91aWxsZXIgPGplcm9tZS5wb3VpbGxlckBzaWxhYnMuY29tPgoKRGV2
-aWNlIGlzIGFibGUgdG8gYXV0b21hdGljYWxseSByZXBseSB0byBwcm9iZSByZXF1ZXN0ICh0aGVy
-ZWZvcmUsIHRoZQpwcm9iZSByZXF1ZXN0cyBhcmUgbm90IGZvcndhcmRlZCB0byBob3N0KS4gVGhp
-cyBmZWF0dXJlIGlzIGVuYWJsZWQgYnkKd2Z4X3N0YXJ0X2FwKCkuIEhvd2V2ZXIsIGZ1cnRoZXIg
-Y2FsbHMgdG8gd2Z4X2NvbmZpZ3VyZV9maWx0ZXIoKSBjYW4KZGlzYWJsZSBpdC4KClNvLCByZWxv
-Y2F0ZSB0aGUgaGFuZGxpbmcgb2YgcHJvYmUgcmVxdWVzdCBmaWx0ZXJpbmcgaW4Kd2Z4X2NvbmZp
-Z3VyZV9maWx0ZXIoKS4KCk5vdGUgdGhhdCB3ZnhfY29uZmlndXJlX2ZpbHRlcigpIGlzIGFsd2F5
-cyBjYWxsZWQgYnkgbWFjODAyMTEgd2hlbiBhbiBBUApzdGFydC4KClNpZ25lZC1vZmYtYnk6IErD
-qXLDtG1lIFBvdWlsbGVyIDxqZXJvbWUucG91aWxsZXJAc2lsYWJzLmNvbT4KLS0tCiBkcml2ZXJz
-L3N0YWdpbmcvd2Z4L3N0YS5jIHwgOCArKysrKysrLQogMSBmaWxlIGNoYW5nZWQsIDcgaW5zZXJ0
-aW9ucygrKSwgMSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvc3RhZ2luZy93Zngv
-c3RhLmMgYi9kcml2ZXJzL3N0YWdpbmcvd2Z4L3N0YS5jCmluZGV4IDBiMmVmMmQzMDIzYi4uYjc4
-NWIxYjdkNTgzIDEwMDY0NAotLS0gYS9kcml2ZXJzL3N0YWdpbmcvd2Z4L3N0YS5jCisrKyBiL2Ry
-aXZlcnMvc3RhZ2luZy93Zngvc3RhLmMKQEAgLTI0MSw2ICsyNDEsMTMgQEAgdm9pZCB3ZnhfY29u
-ZmlndXJlX2ZpbHRlcihzdHJ1Y3QgaWVlZTgwMjExX2h3ICpodywKIAkJZWxzZQogCQkJd3ZpZi0+
-ZmlsdGVyX2Jzc2lkID0gdHJ1ZTsKIAorCQkvLyBJbiBBUCBtb2RlLCBjaGlwIGNhbiByZXBseSB0
-byBwcm9iZSByZXF1ZXN0IGl0c2VsZgorCQlpZiAoKnRvdGFsX2ZsYWdzICYgRklGX1BST0JFX1JF
-USAmJgorCQkgICAgd3ZpZi0+dmlmLT50eXBlID09IE5MODAyMTFfSUZUWVBFX0FQKSB7CisJCQlk
-ZXZfZGJnKHdkZXYtPmRldiwgImRvIG5vdCBmb3J3YXJkIHByb2JlIHJlcXVlc3QgaW4gQVAgbW9k
-ZVxuIik7CisJCQkqdG90YWxfZmxhZ3MgJj0gfkZJRl9QUk9CRV9SRVE7CisJCX0KKwogCQlpZiAo
-KnRvdGFsX2ZsYWdzICYgRklGX1BST0JFX1JFUSkKIAkJCXdmeF9md2RfcHJvYmVfcmVxKHd2aWYs
-IHRydWUpOwogCQllbHNlCkBAIC01NzcsNyArNTg0LDYgQEAgaW50IHdmeF9zdGFydF9hcChzdHJ1
-Y3QgaWVlZTgwMjExX2h3ICpodywgc3RydWN0IGllZWU4MDIxMV92aWYgKnZpZikKIAl3dmlmLT5z
-dGF0ZSA9IFdGWF9TVEFURV9BUDsKIAl3ZnhfdXBkYXRlX2ZpbHRlcmluZyh3dmlmKTsKIAl3Znhf
-dXBsb2FkX2FwX3RlbXBsYXRlcyh3dmlmKTsKLQl3ZnhfZndkX3Byb2JlX3JlcSh3dmlmLCBmYWxz
-ZSk7CiAJaGlmX3N0YXJ0KHd2aWYsICZ2aWYtPmJzc19jb25mLCB3dmlmLT5jaGFubmVsKTsKIAly
-ZXR1cm4gMDsKIH0KLS0gCjIuMjUuMQoK
+On 2020-04-15 12:06, Paul Moore wrote:
+> On Wed, Apr 15, 2020 at 11:34 AM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > On 2019-11-29 21:07, Joel Fernandes wrote:
+> > > On Thu, Nov 28, 2019 at 09:02:03PM +0530, Amol Grover wrote:
+> > > > add __rcu notation to RCU protected global pointer auditd_conn
+> > >
+> > > Again, please use proper punctuation and captilization. This is unacceptable.
+> > > Please put more effort into changelog.
+> > >
+> > > Otherwise the patch diff itself looks good to me, with the above nit
+> > > corrected, you could add my tag to the next revision:
+> > >
+> > > Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > >
+> > > thanks,
+> > >
+> > >  - Joel
+> > >
+> > > >
+> > > > Fixes multiple instances of sparse error:
+> > > > error: incompatible types in comparison expression
+> > > > (different address spaces)
+> >
+> > Amol or Joel: Is there a reproducer recipe for this?
+> 
+> The commit which was merged has a slightly better description which may help.
+
+I've already seen this.  Perhaps I should have replied to this message
+instead to make that evident.  What really needed was Amol's original
+message sent to this list, but it was Joel who included this list in his
+reply (all 3 versions).
+
+I'm looking for the specific setup and commands that produced this error.
+
+>   commit cb5172d96d16df72db8b55146b0ec00bfd97f079
+>   Author: Amol Grover <frextrite@gmail.com>
+>   Date:   Mon Dec 2 00:03:48 2019 +0530
+> 
+>    audit: Add __rcu annotation to RCU pointer
+> 
+>    Add __rcu annotation to RCU-protected global pointer auditd_conn.
+> 
+>    auditd_conn is an RCU-protected global pointer,i.e., accessed
+>    via RCU methods rcu_dereference() and rcu_assign_pointer(),
+>    hence it must be annotated with __rcu for sparse to report
+>    warnings/errors correctly.
+> 
+>    Fix multiple instances of the sparse error:
+>    error: incompatible types in comparison expression
+>    (different address spaces)
+> 
+>    Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+>    Signed-off-by: Amol Grover <frextrite@gmail.com>
+>    [PM: tweak subject line]
+>    Signed-off-by: Paul Moore <paul@paul-moore.com>
+> 
+> -- 
+> paul moore
+> www.paul-moore.com
+> 
+
+- RGB
+
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
+
