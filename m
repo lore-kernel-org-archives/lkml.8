@@ -2,104 +2,67 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 622D1C2BB55
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:28:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2510C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:28:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38F6E20936
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:28:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586953710;
-	bh=L0c94b19MVAUqN2/oWXuSNcZrhQ1Dm0Nd6V1dgiWk8s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EI++bhULjkMrj4KDvDRy9ei43DwXRWEVxkaP9qCqBF98X2I0y3iemib2fjh7mnlnm
-	 LWwrFuKRAM2Jvn9DnmKjwTNYy4yJST46WW69EdKPLdCJvDW+J8ECMQnplfhqh60siQ
-	 dPUTXB2s9rZv3Dhf2GNyw0GZpzoOsMWHBUjXwvJw=
+	by mail.kernel.org (Postfix) with ESMTP id 89EC8208FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:28:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S369343AbgDOM22 (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:28:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38270 "EHLO mail.kernel.org"
+        id S369354AbgDOM2f (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:28:35 -0400
+Received: from foss.arm.com ([217.140.110.172]:44224 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409138AbgDOLpK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:45:10 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5A2E20775;
-        Wed, 15 Apr 2020 11:45:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951109;
-        bh=L0c94b19MVAUqN2/oWXuSNcZrhQ1Dm0Nd6V1dgiWk8s=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tkuvbjeRQJKeC35/892qkrbZcMPyoPRq1GB3ktgVYmktXSOS8ww/YFpj7bqgelv7p
-         OqTB+IaW5AYte/Z2bYwZqSz1c3PlEXBAH68CSBVoPjK4QR34yRwIVMCcxWEkLbLf32
-         uHErRTypemAcOzNywJi1aOwB3d9k36BnWhI56OqU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Misono Tomohiro <misono.tomohiro@jp.fujitsu.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 24/84] NFS: direct.c: Fix memory leak of dreq when nfs_get_lock_context fails
-Date:   Wed, 15 Apr 2020 07:43:41 -0400
-Message-Id: <20200415114442.14166-24-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415114442.14166-1-sashal@kernel.org>
-References: <20200415114442.14166-1-sashal@kernel.org>
+        id S369306AbgDOM2B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 08:28:01 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B1FAA1063;
+        Wed, 15 Apr 2020 05:28:00 -0700 (PDT)
+Received: from C02TD0UTHF1T.local (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 10F593F68F;
+        Wed, 15 Apr 2020 05:27:58 -0700 (PDT)
+Date:   Wed, 15 Apr 2020 13:27:31 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     Andrei Vagin <avagin@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dmitry Safonov <dima@arista.com>
+Subject: Re: [PATCH v2 3/6] arm64/vdso: Add time napespace page
+Message-ID: <20200415122731.GA27539@C02TD0UTHF1T.local>
+References: <20200225073731.465270-1-avagin@gmail.com>
+ <20200225073731.465270-4-avagin@gmail.com>
+ <20200414172014.GA6705@C02TD0UTHF1T.local>
+ <CANaxB-yBeSmYdZL6gbe-agDAaEVcYHrxUCojQ4xaWpsWinQsyA@mail.gmail.com>
+ <20200415100539.GA27339@C02TD0UTHF1T.local>
+ <a0179a69-fc1b-9e81-f3f2-72f6c639f40e@arm.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a0179a69-fc1b-9e81-f3f2-72f6c639f40e@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Misono Tomohiro <misono.tomohiro@jp.fujitsu.com>
+On Wed, Apr 15, 2020 at 11:16:00AM +0100, Vincenzo Frascino wrote:
+> Hi Mark,
+> 
+> On 4/15/20 11:05 AM, Mark Rutland wrote:
+> > It's a shame we're not using OPTIMIZER_HIDE_VAR() for that, as it can
+> > generate slightly better code and is easier to read than bare asm.
+> 
+> We are not because I was not aware when I wrote this code that such a macro
+> existed :)
+> 
+> But you are right it clearly makes the code more readable. To make up for it, I
+> am happy to make the effort to introduce it for both the cases and replace the
+> assembler once this patch series gets merged.
 
-[ Upstream commit 8605cf0e852af3b2c771c18417499dc4ceed03d5 ]
+Sounds good to me!
 
-When dreq is allocated by nfs_direct_req_alloc(), dreq->kref is
-initialized to 2. Therefore we need to call nfs_direct_req_release()
-twice to release the allocated dreq. Usually it is called in
-nfs_file_direct_{read, write}() and nfs_direct_complete().
-
-However, current code only calls nfs_direct_req_relese() once if
-nfs_get_lock_context() fails in nfs_file_direct_{read, write}().
-So, that case would result in memory leak.
-
-Fix this by adding the missing call.
-
-Signed-off-by: Misono Tomohiro <misono.tomohiro@jp.fujitsu.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/nfs/direct.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
-index 29f00da8a0b7f..6b0bf4ebd8124 100644
---- a/fs/nfs/direct.c
-+++ b/fs/nfs/direct.c
-@@ -571,6 +571,7 @@ ssize_t nfs_file_direct_read(struct kiocb *iocb, struct iov_iter *iter)
- 	l_ctx = nfs_get_lock_context(dreq->ctx);
- 	if (IS_ERR(l_ctx)) {
- 		result = PTR_ERR(l_ctx);
-+		nfs_direct_req_release(dreq);
- 		goto out_release;
- 	}
- 	dreq->l_ctx = l_ctx;
-@@ -989,6 +990,7 @@ ssize_t nfs_file_direct_write(struct kiocb *iocb, struct iov_iter *iter)
- 	l_ctx = nfs_get_lock_context(dreq->ctx);
- 	if (IS_ERR(l_ctx)) {
- 		result = PTR_ERR(l_ctx);
-+		nfs_direct_req_release(dreq);
- 		goto out_release;
- 	}
- 	dreq->l_ctx = l_ctx;
--- 
-2.20.1
-
+Mark.
