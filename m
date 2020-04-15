@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE1BEC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:58:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C762C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:58:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9AE320767
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:58:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFD86206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:58:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586955484;
-	bh=uJOLIfl4FKvP8Jesaa0wKyt+zFZumfqh+bE3cWD19U0=;
+	s=default; t=1586955494;
+	bh=92e03qfV5WzTTcnm4d7dLXBPeHPv6FHPB6NTC593rt0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gA82aVwiu95I0Orf20EXmIK5Zry2rMeld9yzqqbzmljiaknUS7PfJT82zfSKXKpNj
-	 BobdNvuQcEkyebjd1A4+ygZqj468q9s631RlrBYhQCdX6PIQFbDwQ/W7pFrYHfeqY1
-	 gh91EtfJqA9uQJwZj6qQZ/eD9d77m0SU49f+RviY=
+	b=Wpa57Or/GvEyfKZ5wV+h+yc3zZ2DnA6Zjk3NJmfIqhe0cjaQ8SjCloj7/gpldolOP
+	 GK7sdREAfrmhpcNdzLyGgs0GTfcjqPB1Ch8LPLT+vUqXJ/Oeanw5el5/+xSqNGZ7SH
+	 2YRJl/ulI0qdH1r7XX32SwL/X7m5IlWZ8eSxbAB8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505624AbgDOM57 (ORCPT
+        id S2505635AbgDOM6L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:57:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56718 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 08:58:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408899AbgDOLgu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:36:50 -0400
+        id S2408898AbgDOLgt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:36:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3BBE21556;
-        Wed, 15 Apr 2020 11:36:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 925BB21569;
+        Wed, 15 Apr 2020 11:36:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950610;
-        bh=uJOLIfl4FKvP8Jesaa0wKyt+zFZumfqh+bE3cWD19U0=;
+        s=default; t=1586950609;
+        bh=92e03qfV5WzTTcnm4d7dLXBPeHPv6FHPB6NTC593rt0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rulmA085Y240As+2+iMoV+20XFEGnYj8TI4R5xhIegwOylwNx49ByLZMRlsDPUx1O
-         2XJLkXOZFtZhpuU8JBBPvJKXBNe49j+bq9LJXWgBZX5R7AWx/Ezeo61KpWCaL4C6Ba
-         ddf79Z0w+87Ow+kfCBFXKj9xvvcFlQrfD+xIG7Ho=
+        b=Tcj+aj4HhdOkx0x5FmKTLrWZm44/t9tmckrDqG+vcOc5H8WSSMMg5LLTr50MABp4k
+         ynkqsCoWXqXSo72EbDM+1uYNJ7gievEOzktfR2KVzp2W+yBWxX39Ssl5e78zDsZhU1
+         ZGcyeCclDMfIwob+0pkhQbakg2r0+alpUGjXqIwE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Prashant Malani <pmalani@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Oliver Neukum <oneukum@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Lee Jones <lee.jones@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.6 104/129] mfd: cros_ec: Check DT node for usbpd-notify add
-Date:   Wed, 15 Apr 2020 07:34:19 -0400
-Message-Id: <20200415113445.11881-104-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 103/129] mfd: dln2: Fix sanity checking for endpoints
+Date:   Wed, 15 Apr 2020 07:34:18 -0400
+Message-Id: <20200415113445.11881-103-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
 References: <20200415113445.11881-1-sashal@kernel.org>
@@ -60,37 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Prashant Malani <pmalani@chromium.org>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit f8db89d14efb770dd59aa0ca74386e5de68310d5 ]
+[ Upstream commit fb945c95a482200876993977008b67ea658bd938 ]
 
-Add a check to ensure there is indeed an EC device tree entry before
-adding the cros-usbpd-notify device. This covers configs where both
-CONFIG_ACPI and CONFIG_OF are defined, but the EC device is defined
-using device tree and not in ACPI.
+While the commit 2b8bd606b1e6 ("mfd: dln2: More sanity checking for endpoints")
+tries to harden the sanity checks it made at the same time a regression,
+i.e.  mixed in and out endpoints. Obviously it should have been not tested on
+real hardware at that time, but unluckily it didn't happen.
 
-Fixes: 4602dce0361e ("mfd: cros_ec: Add cros-usbpd-notify subdevice")
-Signed-off-by: Prashant Malani <pmalani@chromium.org>
-Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+So, fix above mentioned typo and make device being enumerated again.
+
+While here, introduce an enumerator for magic values to prevent similar issue
+to happen in the future.
+
+Fixes: 2b8bd606b1e6 ("mfd: dln2: More sanity checking for endpoints")
+Cc: Oliver Neukum <oneukum@suse.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/cros_ec_dev.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mfd/dln2.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
-index 39e6116950536..32c2b912b58b2 100644
---- a/drivers/mfd/cros_ec_dev.c
-+++ b/drivers/mfd/cros_ec_dev.c
-@@ -211,7 +211,7 @@ static int ec_device_probe(struct platform_device *pdev)
- 	 * explicitly added on platforms that don't have the PD notifier ACPI
- 	 * device entry defined.
- 	 */
--	if (IS_ENABLED(CONFIG_OF)) {
-+	if (IS_ENABLED(CONFIG_OF) && ec->ec_dev->dev->of_node) {
- 		if (cros_ec_check_features(ec, EC_FEATURE_USB_PD)) {
- 			retval = mfd_add_hotplug_devices(ec->dev,
- 					cros_usbpd_notify_cells,
+diff --git a/drivers/mfd/dln2.c b/drivers/mfd/dln2.c
+index 7841c11411d08..4faa8d2e5d045 100644
+--- a/drivers/mfd/dln2.c
++++ b/drivers/mfd/dln2.c
+@@ -90,6 +90,11 @@ struct dln2_mod_rx_slots {
+ 	spinlock_t lock;
+ };
+ 
++enum dln2_endpoint {
++	DLN2_EP_OUT	= 0,
++	DLN2_EP_IN	= 1,
++};
++
+ struct dln2_dev {
+ 	struct usb_device *usb_dev;
+ 	struct usb_interface *interface;
+@@ -733,10 +738,10 @@ static int dln2_probe(struct usb_interface *interface,
+ 	    hostif->desc.bNumEndpoints < 2)
+ 		return -ENODEV;
+ 
+-	epin = &hostif->endpoint[0].desc;
+-	epout = &hostif->endpoint[1].desc;
++	epout = &hostif->endpoint[DLN2_EP_OUT].desc;
+ 	if (!usb_endpoint_is_bulk_out(epout))
+ 		return -ENODEV;
++	epin = &hostif->endpoint[DLN2_EP_IN].desc;
+ 	if (!usb_endpoint_is_bulk_in(epin))
+ 		return -ENODEV;
+ 
 -- 
 2.20.1
 
