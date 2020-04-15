@@ -2,32 +2,32 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA031C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCDA3C2BB85
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:08:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC6142051A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:08:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9492720784
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:08:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2635599AbgDOIIL (ORCPT
+        id S2635610AbgDOIIS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 04:08:11 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:46918 "EHLO inva021.nxp.com"
+        Wed, 15 Apr 2020 04:08:18 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:39686 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408049AbgDOID1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2403805AbgDOID1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Apr 2020 04:03:27 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 073522007C1;
-        Wed, 15 Apr 2020 10:03:10 +0200 (CEST)
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5A0641A079A;
+        Wed, 15 Apr 2020 10:03:05 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id EE2DB2007BB;
-        Wed, 15 Apr 2020 10:03:09 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 4C4851A078C;
+        Wed, 15 Apr 2020 10:03:05 +0200 (CEST)
 Received: from fsr-ub1664-175.ea.freescale.net (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 603DF202B0;
-        Wed, 15 Apr 2020 10:03:09 +0200 (CEST)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id B19C5202B0;
+        Wed, 15 Apr 2020 10:03:04 +0200 (CEST)
 From:   Abel Vesa <abel.vesa@nxp.com>
 To:     Lee Jones <lee.jones@linaro.org>, Shawn Guo <shawnguo@kernel.org>,
         Peng Fan <peng.fan@nxp.com>,
@@ -41,82 +41,69 @@ Cc:     NXP Linux Team <linux-imx@nxp.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, Abel Vesa <abel.vesa@nxp.com>
-Subject: [PATCH v3 07/13] clk: imx: Add helpers for passing the device as argument
-Date:   Wed, 15 Apr 2020 11:02:47 +0300
-Message-Id: <1586937773-5836-8-git-send-email-abel.vesa@nxp.com>
+Subject: [PATCH v3 00/13] Add generic MFD i.MX mix and audiomix support
+Date:   Wed, 15 Apr 2020 11:02:40 +0300
+Message-Id: <1586937773-5836-1-git-send-email-abel.vesa@nxp.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1586937773-5836-1-git-send-email-abel.vesa@nxp.com>
-References: <1586937773-5836-1-git-send-email-abel.vesa@nxp.com>
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All the imx clocks that need to be registered by the audiomix need to
-pass on the device so that the runtime PM support could work properly.
+The i.MX8MP has some new IPs called mixes. They are formed usually by some
+GPRs that can be split into different functionalities. The first example
+here is the audiomix which has dedicated registers that can be registered
+as a clock controller and some other registers that can be registered as
+a reset controller, plus some dedicated ones that will be registered as
+syscon and used by each dedicated audio IP.
 
-Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
-Reviewed-by: Peng Fan <peng.fan@nxp.com>
----
- drivers/clk/imx/clk.h | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+More mixes to be following the same structure are to come, like hdmimix,
+dispmix and mediamix. They will all be populated and registered by the MFD
+imx-mix generic driver.
 
-diff --git a/drivers/clk/imx/clk.h b/drivers/clk/imx/clk.h
-index fcd9952a..b91b1b1 100644
---- a/drivers/clk/imx/clk.h
-+++ b/drivers/clk/imx/clk.h
-@@ -319,6 +319,13 @@ static inline struct clk_hw *imx_clk_hw_gate(const char *name, const char *paren
- 				    shift, 0, &imx_ccm_lock);
- }
- 
-+static inline struct clk_hw *imx_dev_clk_hw_gate(struct device *dev, const char *name,
-+						const char *parent, void __iomem *reg, u8 shift)
-+{
-+	return clk_hw_register_gate(dev, name, parent, CLK_SET_RATE_PARENT, reg,
-+				    shift, 0, &imx_ccm_lock);
-+}
-+
- static inline struct clk_hw *imx_clk_hw_gate_dis(const char *name, const char *parent,
- 		void __iomem *reg, u8 shift)
- {
-@@ -431,6 +438,15 @@ static inline struct clk_hw *imx_clk_hw_mux(const char *name, void __iomem *reg,
- 			width, 0, &imx_ccm_lock);
- }
- 
-+static inline struct clk_hw *imx_dev_clk_hw_mux(struct device *dev,
-+			const char *name, void __iomem *reg, u8 shift,
-+			u8 width, const char * const *parents, int num_parents)
-+{
-+	return clk_hw_register_mux(dev, name, parents, num_parents,
-+			CLK_SET_RATE_NO_REPARENT | CLK_SET_PARENT_GATE,
-+			reg, shift, width, 0, &imx_ccm_lock);
-+}
-+
- static inline struct clk *imx_clk_mux2(const char *name, void __iomem *reg,
- 			u8 shift, u8 width, const char * const *parents,
- 			int num_parents)
-@@ -493,6 +509,19 @@ static inline struct clk_hw *imx_clk_hw_mux_flags(const char *name,
- 				   reg, shift, width, 0, &imx_ccm_lock);
- }
- 
-+static inline struct clk_hw *imx_dev_clk_hw_mux_flags(struct device *dev,
-+						  const char *name,
-+						  void __iomem *reg, u8 shift,
-+						  u8 width,
-+						  const char * const *parents,
-+						  int num_parents,
-+						  unsigned long flags)
-+{
-+	return clk_hw_register_mux(dev, name, parents, num_parents,
-+				   flags | CLK_SET_RATE_NO_REPARENT,
-+				   reg, shift, width, 0, &imx_ccm_lock);
-+}
-+
- struct clk_hw *imx_clk_hw_cpu(const char *name, const char *parent_name,
- 		struct clk *div, struct clk *mux, struct clk *pll,
- 		struct clk *step);
+Changes since v2:
+ * removed the runtime PM for now
+ * changed the new SPDX identifiers to GPL-2.0-only
+ * took care of the DT schema comment
+
+Abel Vesa (13):
+  mfd: Add i.MX generic mix support
+  Documentation: mfd: Add DT bindings for i.MX Mix
+  arm64: dts: imx8mp: Add AIPS 4 and 5
+  arm64: dts: imx8mp: Add audiomix node
+  clk: imx: gate2: Allow single bit gating clock
+  clk: imx: pll14xx: Add the device as argument when registering
+  clk: imx: Add helpers for passing the device as argument
+  dt-bindings: clocks: imx8mp: Add ids for audiomix clocks
+  clk: imx: Add audiomix clock controller support
+  arm64: dts: imx8mp: Add audiomix clock controller node
+  dt-bindings: reset: imx8mp: Add ids for audiomix reset
+  reset: imx: Add audiomix reset controller support
+  arm64: dts: imx8mp: Add audiomix reset controller node
+
+ .../devicetree/bindings/mfd/fsl,imx-mix.yaml       |  34 ++++
+ arch/arm64/boot/dts/freescale/imx8mp.dtsi          |  41 ++++-
+ drivers/clk/imx/Makefile                           |   2 +-
+ drivers/clk/imx/clk-audiomix.c                     | 175 +++++++++++++++++++++
+ drivers/clk/imx/clk-gate2.c                        |  31 +++-
+ drivers/clk/imx/clk-pll14xx.c                      |   8 +-
+ drivers/clk/imx/clk.h                              |  55 ++++++-
+ drivers/mfd/Kconfig                                |  11 ++
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/imx-mix.c                              |  48 ++++++
+ drivers/reset/Kconfig                              |   7 +
+ drivers/reset/Makefile                             |   1 +
+ drivers/reset/reset-imx-audiomix.c                 | 117 ++++++++++++++
+ include/dt-bindings/clock/imx8mp-clock.h           |  62 ++++++++
+ include/dt-bindings/reset/imx-audiomix-reset.h     |  15 ++
+ 15 files changed, 590 insertions(+), 18 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/fsl,imx-mix.yaml
+ create mode 100644 drivers/clk/imx/clk-audiomix.c
+ create mode 100644 drivers/mfd/imx-mix.c
+ create mode 100644 drivers/reset/reset-imx-audiomix.c
+ create mode 100644 include/dt-bindings/reset/imx-audiomix-reset.h
+
 -- 
 2.7.4
 
