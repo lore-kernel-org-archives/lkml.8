@@ -2,166 +2,91 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AD57C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF4DC2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:37:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CFE220767
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:36:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0828D20857
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:37:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S369867AbgDOMgp (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:36:45 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:42363 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S369820AbgDOMfu (ORCPT
+        id S369878AbgDOMhC (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:37:02 -0400
+Received: from m17618.mail.qiye.163.com ([59.111.176.18]:57727 "EHLO
+        m17618.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S369757AbgDOMe1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 08:35:50 -0400
-X-Originating-IP: 2.224.242.101
-Received: from uno.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 7A8631C0011;
-        Wed, 15 Apr 2020 12:35:37 +0000 (UTC)
-Date:   Wed, 15 Apr 2020 14:38:42 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Roman Kovalivskyi <roman.kovalivskyi@globallogic.com>
-Cc:     linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Luis Oliveira <lolivei@synopsys.com>,
-        Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        Michael Rodin <mrodin@de.adit-jv.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hugues Fruchet <hugues.fruchet@st.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Adam Ford <aford173@gmail.com>,
-        Todor Tomov <todor.tomov@linaro.org>,
-        Suresh Udipi <sudipi@jp.adit-jv.com>,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Dave Stevenson <dave.stevenson@raspberrypi.org>
-Subject: Re: [PATCH 2/4] media: ov5647: Add support for PWDN GPIO.
-Message-ID: <20200415123842.wiu5vs5lilxvqg7x@uno.localdomain>
-References: <cover.1586759968.git.roman.kovalivskyi@globallogic.com>
- <f88b99899eb5e680607349b37eb3679dbd12433e.1586759968.git.roman.kovalivskyi@globallogic.com>
+        Wed, 15 Apr 2020 08:34:27 -0400
+Received: from ubuntu.localdomain (unknown [58.251.74.226])
+        by m17618.mail.qiye.163.com (Hmail) with ESMTPA id 5BB5F4E237F;
+        Wed, 15 Apr 2020 20:34:26 +0800 (CST)
+From:   Wang Wenhu <wenhu.wang@vivo.com>
+To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        oss@buserror.net, christophe.leroy@c-s.fr,
+        linuxppc-dev@lists.ozlabs.org
+Cc:     kernel@vivo.com, Wang Wenhu <wenhu.wang@vivo.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4/5] powerpc: sysdev: fix compile error for fsl_85xx_l2ctlr
+Date:   Wed, 15 Apr 2020 05:33:45 -0700
+Message-Id: <20200415123346.116212-5-wenhu.wang@vivo.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200415123346.116212-1-wenhu.wang@vivo.com>
+References: <20200415123346.116212-1-wenhu.wang@vivo.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <f88b99899eb5e680607349b37eb3679dbd12433e.1586759968.git.roman.kovalivskyi@globallogic.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSFVLSE1LS0tLSkhITkpPT1lXWShZQU
+        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Ni46Kxw6PTg6HggwOUI0Izww
+        ARoKCQ1VSlVKTkNNQk5PS01NTEtNVTMWGhIXVQweFRMOVQwaFRw7DRINFFUYFBZFWVdZEgtZQVlO
+        Q1VJTkpVTE9VSUlNWVdZCAFZQUlCQks3Bg++
+X-HM-Tid: 0a717dd55ac69376kuws5bb5f4e237f
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Roman,
-   this patch requires the device bindings document to be updated
-to report an optional 'powerdown-gpios' property is available and that
-it's active HIGH.
+Include "linux/of_address.h" to fix the compile error for
+mpc85xx_l2ctlr_of_probe() when compiling fsl_85xx_cache_sram.c.
 
-On Mon, Apr 13, 2020 at 12:17:45PM +0300, Roman Kovalivskyi wrote:
-> From: Dave Stevenson <dave.stevenson@raspberrypi.org>
->
-> Add support for an optional GPIO connected to PWDN on the sensor. This
-> allows the use of hardware standby mode where internal device clock
-> and circuit activities are halted.
->
-> Please nothe that power is off when PWDN is high.
->
-> Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.org>
-> Signed-off-by: Roman Kovalivskyi <roman.kovalivskyi@globallogic.com>
-> ---
->  drivers/media/i2c/ov5647.c | 28 ++++++++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
->
-> diff --git a/drivers/media/i2c/ov5647.c b/drivers/media/i2c/ov5647.c
-> index 3e587eb0a30e..c39e3d20e3ef 100644
-> --- a/drivers/media/i2c/ov5647.c
-> +++ b/drivers/media/i2c/ov5647.c
-> @@ -21,6 +21,7 @@
->
->  #include <linux/clk.h>
->  #include <linux/delay.h>
-> +#include <linux/gpio/consumer.h>
->  #include <linux/i2c.h>
->  #include <linux/init.h>
->  #include <linux/io.h>
-> @@ -35,6 +36,13 @@
->
->  #define SENSOR_NAME "ov5647"
->
-> +/*
-> + * From the datasheet, "20ms after PWDN goes low or 20ms after RESETB goes
-> + * high if reset is inserted after PWDN goes high, host can access sensor's
-> + * SCCB to initialize sensor."
-> + */
-> +#define PWDN_ACTIVE_DELAY_MS	20
-> +
->  #define MIPI_CTRL00_CLOCK_LANE_GATE		BIT(5)
->  #define MIPI_CTRL00_BUS_IDLE			BIT(2)
->  #define MIPI_CTRL00_CLOCK_LANE_DISABLE		BIT(0)
-> @@ -86,6 +94,7 @@ struct ov5647 {
->  	unsigned int			height;
->  	int				power_count;
->  	struct clk			*xclk;
-> +	struct gpio_desc		*pwdn;
->  };
->
->  static inline struct ov5647 *to_state(struct v4l2_subdev *sd)
-> @@ -355,6 +364,11 @@ static int ov5647_sensor_power(struct v4l2_subdev *sd, int on)
->  	if (on && !ov5647->power_count)	{
->  		dev_dbg(&client->dev, "OV5647 power on\n");
->
-> +		if (ov5647->pwdn) {
-> +			gpiod_set_value(ov5647->pwdn, 0);
-> +			msleep(PWDN_ACTIVE_DELAY_MS);
+  CC      arch/powerpc/sysdev/fsl_85xx_l2ctlr.o
+arch/powerpc/sysdev/fsl_85xx_l2ctlr.c: In function ‘mpc85xx_l2ctlr_of_probe’:
+arch/powerpc/sysdev/fsl_85xx_l2ctlr.c:90:11: error: implicit declaration of function ‘of_iomap’; did you mean ‘pci_iomap’? [-Werror=implicit-function-declaration]
+  l2ctlr = of_iomap(dev->dev.of_node, 0);
+           ^~~~~~~~
+           pci_iomap
+arch/powerpc/sysdev/fsl_85xx_l2ctlr.c:90:9: error: assignment makes pointer from integer without a cast [-Werror=int-conversion]
+  l2ctlr = of_iomap(dev->dev.of_node, 0);
+         ^
+cc1: all warnings being treated as errors
+scripts/Makefile.build:267: recipe for target 'arch/powerpc/sysdev/fsl_85xx_l2ctlr.o' failed
+make[2]: *** [arch/powerpc/sysdev/fsl_85xx_l2ctlr.o] Error 1
 
-please use usleep_range() according to Documentation/timers/timers-howto.rst
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+Cc: Scott Wood <oss@buserror.net>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: linuxppc-dev@lists.ozlabs.org
+Fixes: 6db92cc9d07d ("powerpc/85xx: add cache-sram support")
+Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
+---
+ arch/powerpc/sysdev/fsl_85xx_l2ctlr.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thanks
-   j
-> +		}
-> +
->  		ret = clk_prepare_enable(ov5647->xclk);
->  		if (ret < 0) {
->  			dev_err(&client->dev, "clk prepare enable failed\n");
-> @@ -392,6 +406,8 @@ static int ov5647_sensor_power(struct v4l2_subdev *sd, int on)
->  			dev_dbg(&client->dev, "soft stby failed\n");
->
->  		clk_disable_unprepare(ov5647->xclk);
-> +
-> +		gpiod_set_value(ov5647->pwdn, 1);
->  	}
->
->  	/* Update the power count. */
-> @@ -603,6 +619,10 @@ static int ov5647_probe(struct i2c_client *client)
->  		return -EINVAL;
->  	}
->
-> +	/* Request the power down GPIO asserted */
-> +	sensor->pwdn = devm_gpiod_get_optional(&client->dev, "pwdn",
-> +					       GPIOD_OUT_HIGH);
-> +
->  	mutex_init(&sensor->lock);
->
->  	sd = &sensor->sd;
-> @@ -616,7 +636,15 @@ static int ov5647_probe(struct i2c_client *client)
->  	if (ret < 0)
->  		goto mutex_remove;
->
-> +	if (sensor->pwdn) {
-> +		gpiod_set_value(sensor->pwdn, 0);
-> +		msleep(PWDN_ACTIVE_DELAY_MS);
-> +	}
-> +
->  	ret = ov5647_detect(sd);
-> +
-> +	gpiod_set_value(sensor->pwdn, 1);
-> +
->  	if (ret < 0)
->  		goto error;
->
-> --
-> 2.17.1
->
+diff --git a/arch/powerpc/sysdev/fsl_85xx_l2ctlr.c b/arch/powerpc/sysdev/fsl_85xx_l2ctlr.c
+index 2d0af0c517bb..7533572492f0 100644
+--- a/arch/powerpc/sysdev/fsl_85xx_l2ctlr.c
++++ b/arch/powerpc/sysdev/fsl_85xx_l2ctlr.c
+@@ -10,6 +10,7 @@
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/of_platform.h>
++#include <linux/of_address.h>
+ #include <asm/io.h>
+ 
+ #include "fsl_85xx_cache_ctlr.h"
+-- 
+2.17.1
+
