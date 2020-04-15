@@ -2,152 +2,293 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E1B5C2BB85
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E782BC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:26:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 077E920768
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:25:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C011020771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:26:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yAETmibb"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="caooqgVO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895474AbgDOJZp (ORCPT
+        id S2895483AbgDOJ0G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 05:25:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48146 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2895464AbgDOJZk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 05:25:40 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7762AC061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 02:25:39 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id h9so18242339wrc.8
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 02:25:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=ZWggYGy5+ypMqGqv3DNlvkeDC7Fwyk09CE6tJxrl9As=;
-        b=yAETmibb8HvejiyM/sXx1gWJMBhdkYj+FhYy7xp+PelrTRoY6cWOI7vlWmSSyf3/r8
-         Zs7zbY4OY0HkPENvC3MebqmtVYDArhkyX/g7FTCwfijd4SiDs1/6sbl1jq4MKLPElHnk
-         9VKATFRT9sOJo4mRUK+WBMHugVTceCqQPi1zlKDZVNOSqDSOz+6uTukiwId07cKmWcgp
-         XJxImHct6GIxxb7WyVTTlC6x3xy/LL9RImgVJnr1bV1Gk95SPry4pp++J2dF0JiCW1/i
-         U/8iG7CmRO3gVZGqdupqmJQRzcbF2FVeyYIXOSA2bifkKrKSkYX5BoXstYm34gXq/2wL
-         tN5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=ZWggYGy5+ypMqGqv3DNlvkeDC7Fwyk09CE6tJxrl9As=;
-        b=V+Wb0w7Nn8hRtFduu+3alUHhYQM4jurdRe2rp/AA+wakjHd9pDWrK63RAlG2iSAEhQ
-         4YNVKdBU4QM4oZJAzL1Vim+lKjzqpiH66WuXcH1zI1Yo6pkBAaof2LW8QaWwAfdp7lGp
-         hCqp7aB0xexdxyrQjLCt7ujGt7rL4djjdIUOz4CiBN6+jd2tWS1M90Gs+x5SebLGDINz
-         6//2OwP1a3l5SJJr8kPQCSLEQWDW4QnyFUytFPcvhM2nJZ7mC59JMSlRxKRPP/1PsvXn
-         pq7WQ5ZJQq0/TJYldFjd7kcEyF9Apyxiw0yR6K/r1N0plYn0QhoRq0dMrXwGrVqf+ZFI
-         C/7Q==
-X-Gm-Message-State: AGi0PuZ3bDWMhq55TJU7yztM7gm20hJS6gsNXd6KpwA5XFtA2MjPEd3G
-        fzNDkmLrAleJTFv33lfpgaWj8g==
-X-Google-Smtp-Source: APiQypIF43NYr8JHA746c2oer4jXDUVqBd6KdFR7FEBIeVOo3DZguLN98tLGGC6iP9SMBCFc+YgdsA==
-X-Received: by 2002:a5d:658e:: with SMTP id q14mr29224669wru.92.1586942738248;
-        Wed, 15 Apr 2020 02:25:38 -0700 (PDT)
-Received: from dell ([95.149.164.124])
-        by smtp.gmail.com with ESMTPSA id h16sm24769457wrw.36.2020.04.15.02.25.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2020 02:25:37 -0700 (PDT)
-Date:   Wed, 15 Apr 2020 10:26:38 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Guru Das Srinagesh <gurus@codeaurora.org>,
-        linux-pwm@vger.kernel.org,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        linux-kernel@vger.kernel.org, Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH v11 10/12] backlight: pwm_bl: Use 64-bit division function
-Message-ID: <20200415092638.GG2167633@dell>
-References: <cover.1584667964.git.gurus@codeaurora.org>
- <17fc1dcf8b9b392d1e37dc7e3e67409e3c502840.1584667964.git.gurus@codeaurora.org>
- <20200320133123.GD5477@dell>
- <20200324110710.GL5477@dell>
- <20200324125735.2mjuvbxt5bpon2ft@pengutronix.de>
- <20200324130410.dwlg767ku6kwequv@holly.lan>
- <20200324142441.GD442973@dell>
- <20200324144307.kxhqzyjj4evrouqa@pengutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200324144307.kxhqzyjj4evrouqa@pengutronix.de>
+        Wed, 15 Apr 2020 05:26:06 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:36187 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2895464AbgDOJ0C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 05:26:02 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 492H5z5J9xz9tyhP;
+        Wed, 15 Apr 2020 11:25:59 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=caooqgVO; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id kBycoh46IrJf; Wed, 15 Apr 2020 11:25:59 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 492H5z4D9qz9tyhL;
+        Wed, 15 Apr 2020 11:25:59 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1586942759; bh=jCpxvczM71sn8Azp6qeNjlE7psKDaCPGFaX6QgvzGx0=;
+        h=From:Subject:To:Cc:Date:From;
+        b=caooqgVOJ+rDrRs50lcWq5fpgCJLKuTOUfebOPgPE5wImF41Jk7+OxoxHud1hS/QB
+         b0zKfR1QPqn2gCrE07LNRkh2Dwq+qkFU2x94X/wAN1wmScffTBolqvQF8LVvxreenn
+         wwOvScoLI3yGu30zy85H+OZAB2ZNSCJlu1o4xWvo=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8B4B78B933;
+        Wed, 15 Apr 2020 11:26:00 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id ASgRXOUP5tVO; Wed, 15 Apr 2020 11:26:00 +0200 (CEST)
+Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3B32C8B92E;
+        Wed, 15 Apr 2020 11:26:00 +0200 (CEST)
+Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id C6E7E65788; Wed, 15 Apr 2020 09:25:59 +0000 (UTC)
+Message-Id: <c9abd91e9bb0b3dd6e3470015e92b98bc2483780.1586942304.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH v2] powerpc/uaccess: Implement unsafe_put_user() using 'asm
+ goto'
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, npiggin@gmail.com,
+        segher@kernel.crashing.org
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Wed, 15 Apr 2020 09:25:59 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 24 Mar 2020, Uwe Kleine-König wrote:
+unsafe_put_user() is designed to take benefit of 'asm goto'.
 
-> On Tue, Mar 24, 2020 at 02:24:41PM +0000, Lee Jones wrote:
-> > On Tue, 24 Mar 2020, Daniel Thompson wrote:
-> > 
-> > > On Tue, Mar 24, 2020 at 01:57:35PM +0100, Uwe Kleine-König wrote:
-> > > > Hello Lee,
-> > > > 
-> > > > On Tue, Mar 24, 2020 at 11:07:10AM +0000, Lee Jones wrote:
-> > > > > On Fri, 20 Mar 2020, Lee Jones wrote:
-> > > > > 
-> > > > > > On Thu, 19 Mar 2020, Guru Das Srinagesh wrote:
-> > > > > > 
-> > > > > > > Since the PWM framework is switching struct pwm_state.period's datatype
-> > > > > > > to u64, prepare for this transition by using div_u64 to handle a 64-bit
-> > > > > > > dividend instead of a straight division operation.
-> > > > > > > 
-> > > > > > > Cc: Lee Jones <lee.jones@linaro.org>
-> > > > > > > Cc: Daniel Thompson <daniel.thompson@linaro.org>
-> > > > > > > Cc: Jingoo Han <jingoohan1@gmail.com>
-> > > > > > > Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> > > > > > > Cc: linux-pwm@vger.kernel.org
-> > > > > > > Cc: dri-devel@lists.freedesktop.org
-> > > > > > > Cc: linux-fbdev@vger.kernel.org
-> > > > > > > 
-> > > > > > > Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
-> > > > > > > Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-> > > > > > > ---
-> > > > > > >  drivers/video/backlight/pwm_bl.c | 3 ++-
-> > > > > > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > > > > > 
-> > > > > > Can this patch be taken on its own?
-> > > > > 
-> > > > > Hellooooo ...
-> > > > 
-> > > > Conceptually it can. As the last patch depends on this one (and the
-> > > > others) some coordination might be beneficial. But that's up to Thierry
-> > > > to decide how (and if) he want this series to be applied.
-> > > 
-> > > ... and on the backlight side we definitely need to know about the "if"
-> > > otherwise there's no point in taking it.
-> > 
-> > Right.
-> > 
-> > I'm happy to wait for Thierry.  Although this isn't the only set he's
-> > currently blocking.  Is he okay?  On holiday perhaps?
-> 
-> The newest commit by him in next is from last week. My guess is he
-> just didn't come around yet to care for the PWM duties.
+Instead of using the standard __put_user() approach and branch
+based on the returned error, use 'asm goto' and make the
+exception code branch directly to the error label. There is
+no code anymore in the fixup section.
 
-Looks like we missed the last release.
+This change significantly simplifies functions using
+unsafe_put_user()
 
-Let's hope we don't miss the next one also.
+Small exemple of the benefit with the following code:
 
+struct test {
+	u32 item1;
+	u16 item2;
+	u8 item3;
+	u64 item4;
+};
+
+int set_test_to_user(struct test __user *test, u32 item1, u16 item2, u8 item3, u64 item4)
+{
+	unsafe_put_user(item1, &test->item1, failed);
+	unsafe_put_user(item2, &test->item2, failed);
+	unsafe_put_user(item3, &test->item3, failed);
+	unsafe_put_user(item4, &test->item4, failed);
+	return 0;
+failed:
+	return -EFAULT;
+}
+
+Before the patch:
+
+00000be8 <set_test_to_user>:
+ be8:	39 20 00 00 	li      r9,0
+ bec:	90 83 00 00 	stw     r4,0(r3)
+ bf0:	2f 89 00 00 	cmpwi   cr7,r9,0
+ bf4:	40 9e 00 38 	bne     cr7,c2c <set_test_to_user+0x44>
+ bf8:	b0 a3 00 04 	sth     r5,4(r3)
+ bfc:	2f 89 00 00 	cmpwi   cr7,r9,0
+ c00:	40 9e 00 2c 	bne     cr7,c2c <set_test_to_user+0x44>
+ c04:	98 c3 00 06 	stb     r6,6(r3)
+ c08:	2f 89 00 00 	cmpwi   cr7,r9,0
+ c0c:	40 9e 00 20 	bne     cr7,c2c <set_test_to_user+0x44>
+ c10:	90 e3 00 08 	stw     r7,8(r3)
+ c14:	91 03 00 0c 	stw     r8,12(r3)
+ c18:	21 29 00 00 	subfic  r9,r9,0
+ c1c:	7d 29 49 10 	subfe   r9,r9,r9
+ c20:	38 60 ff f2 	li      r3,-14
+ c24:	7d 23 18 38 	and     r3,r9,r3
+ c28:	4e 80 00 20 	blr
+ c2c:	38 60 ff f2 	li      r3,-14
+ c30:	4e 80 00 20 	blr
+
+00000000 <.fixup>:
+	...
+  b8:	39 20 ff f2 	li      r9,-14
+  bc:	48 00 00 00 	b       bc <.fixup+0xbc>
+			bc: R_PPC_REL24	.text+0xbf0
+  c0:	39 20 ff f2 	li      r9,-14
+  c4:	48 00 00 00 	b       c4 <.fixup+0xc4>
+			c4: R_PPC_REL24	.text+0xbfc
+  c8:	39 20 ff f2 	li      r9,-14
+  cc:	48 00 00 00 	b       cc <.fixup+0xcc>
+			cc: R_PPC_REL24	.text+0xc08
+  d0:	39 20 ff f2 	li      r9,-14
+  d4:	48 00 00 00 	b       d4 <.fixup+0xd4>
+			d4: R_PPC_REL24	.text+0xc18
+
+00000000 <__ex_table>:
+	...
+			a0: R_PPC_REL32	.text+0xbec
+			a4: R_PPC_REL32	.fixup+0xb8
+			a8: R_PPC_REL32	.text+0xbf8
+			ac: R_PPC_REL32	.fixup+0xc0
+			b0: R_PPC_REL32	.text+0xc04
+			b4: R_PPC_REL32	.fixup+0xc8
+			b8: R_PPC_REL32	.text+0xc10
+			bc: R_PPC_REL32	.fixup+0xd0
+			c0: R_PPC_REL32	.text+0xc14
+			c4: R_PPC_REL32	.fixup+0xd0
+
+After the patch:
+
+00000be8 <set_test_to_user>:
+ be8:	90 83 00 00 	stw     r4,0(r3)
+ bec:	b0 a3 00 04 	sth     r5,4(r3)
+ bf0:	98 c3 00 06 	stb     r6,6(r3)
+ bf4:	90 e3 00 08 	stw     r7,8(r3)
+ bf8:	91 03 00 0c 	stw     r8,12(r3)
+ bfc:	38 60 00 00 	li      r3,0
+ c00:	4e 80 00 20 	blr
+ c04:	38 60 ff f2 	li      r3,-14
+ c08:	4e 80 00 20 	blr
+
+00000000 <__ex_table>:
+	...
+			a0: R_PPC_REL32	.text+0xbe8
+			a4: R_PPC_REL32	.text+0xc04
+			a8: R_PPC_REL32	.text+0xbec
+			ac: R_PPC_REL32	.text+0xc04
+			b0: R_PPC_REL32	.text+0xbf0
+			b4: R_PPC_REL32	.text+0xc04
+			b8: R_PPC_REL32	.text+0xbf4
+			bc: R_PPC_REL32	.text+0xc04
+			c0: R_PPC_REL32	.text+0xbf8
+			c4: R_PPC_REL32	.text+0xc04
+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+v2:
+- Grouped most __goto() macros together
+- Removed stuff in .fixup section, referencing the error label
+directly from the extable
+- Using more flexible addressing in asm.
+---
+ arch/powerpc/include/asm/uaccess.h | 61 +++++++++++++++++++++++++-----
+ 1 file changed, 52 insertions(+), 9 deletions(-)
+
+diff --git a/arch/powerpc/include/asm/uaccess.h b/arch/powerpc/include/asm/uaccess.h
+index dee71e9c7618..5d323e4f2ce1 100644
+--- a/arch/powerpc/include/asm/uaccess.h
++++ b/arch/powerpc/include/asm/uaccess.h
+@@ -93,12 +93,12 @@ static inline int __access_ok(unsigned long addr, unsigned long size,
+ #define __get_user(x, ptr) \
+ 	__get_user_nocheck((x), (ptr), sizeof(*(ptr)), true)
+ #define __put_user(x, ptr) \
+-	__put_user_nocheck((__typeof__(*(ptr)))(x), (ptr), sizeof(*(ptr)), true)
++	__put_user_nocheck((__typeof__(*(ptr)))(x), (ptr), sizeof(*(ptr)))
++#define __put_user_goto(x, ptr, label) \
++	__put_user_nocheck_goto((__typeof__(*(ptr)))(x), (ptr), sizeof(*(ptr)), label)
+ 
+ #define __get_user_allowed(x, ptr) \
+ 	__get_user_nocheck((x), (ptr), sizeof(*(ptr)), false)
+-#define __put_user_allowed(x, ptr) \
+-	__put_user_nocheck((__typeof__(*(ptr)))(x), (ptr), sizeof(*(ptr)), false)
+ 
+ #define __get_user_inatomic(x, ptr) \
+ 	__get_user_nosleep((x), (ptr), sizeof(*(ptr)))
+@@ -162,17 +162,14 @@ do {								\
+ 	prevent_write_to_user(ptr, size);			\
+ } while (0)
+ 
+-#define __put_user_nocheck(x, ptr, size, do_allow)			\
++#define __put_user_nocheck(x, ptr, size)			\
+ ({								\
+ 	long __pu_err;						\
+ 	__typeof__(*(ptr)) __user *__pu_addr = (ptr);		\
+ 	if (!is_kernel_addr((unsigned long)__pu_addr))		\
+ 		might_fault();					\
+ 	__chk_user_ptr(ptr);					\
+-	if (do_allow)								\
+-		__put_user_size((x), __pu_addr, (size), __pu_err);		\
+-	else									\
+-		__put_user_size_allowed((x), __pu_addr, (size), __pu_err);	\
++	__put_user_size((x), __pu_addr, (size), __pu_err);		\
+ 	__pu_err;						\
+ })
+ 
+@@ -196,6 +193,52 @@ do {								\
+ })
+ 
+ 
++#define __put_user_asm_goto(x, addr, label, op)			\
++	asm volatile goto(					\
++		"1:	" op "%U1%X1 %0,%1	# put_user\n"	\
++		EX_TABLE(1b, %l2)				\
++		:						\
++		: "r" (x), "m" (*addr)				\
++		:						\
++		: label)
++
++#ifdef __powerpc64__
++#define __put_user_asm2_goto(x, ptr, label)			\
++	__put_user_asm_goto(x, ptr, label, "std")
++#else /* __powerpc64__ */
++#define __put_user_asm2_goto(x, addr, label)			\
++	asm volatile goto(					\
++		"1:	stw%U1%X1 %0, %1\n"			\
++		"2:	stw%U1%X1 %L0, %L1\n"			\
++		EX_TABLE(1b, %l2)				\
++		EX_TABLE(2b, %l2)				\
++		:						\
++		: "r" (x), "m" (*addr)				\
++		:						\
++		: label)
++#endif /* __powerpc64__ */
++
++#define __put_user_size_goto(x, ptr, size, label)		\
++do {								\
++	switch (size) {						\
++	case 1: __put_user_asm_goto(x, ptr, label, "stb"); break;	\
++	case 2: __put_user_asm_goto(x, ptr, label, "sth"); break;	\
++	case 4: __put_user_asm_goto(x, ptr, label, "stw"); break;	\
++	case 8: __put_user_asm2_goto(x, ptr, label); break;	\
++	default: __put_user_bad();				\
++	}							\
++} while (0)
++
++#define __put_user_nocheck_goto(x, ptr, size, label)		\
++do {								\
++	__typeof__(*(ptr)) __user *__pu_addr = (ptr);		\
++	if (!is_kernel_addr((unsigned long)__pu_addr))		\
++		might_fault();					\
++	__chk_user_ptr(ptr);					\
++	__put_user_size_goto((x), __pu_addr, (size), label);	\
++} while (0)
++
++
+ extern long __get_user_bad(void);
+ 
+ /*
+@@ -470,7 +513,7 @@ static __must_check inline bool user_access_begin(const void __user *ptr, size_t
+ 
+ #define unsafe_op_wrap(op, err) do { if (unlikely(op)) goto err; } while (0)
+ #define unsafe_get_user(x, p, e) unsafe_op_wrap(__get_user_allowed(x, p), e)
+-#define unsafe_put_user(x, p, e) unsafe_op_wrap(__put_user_allowed(x, p), e)
++#define unsafe_put_user(x, p, e) __put_user_goto(x, p, e)
+ #define unsafe_copy_to_user(d, s, l, e) \
+ 	unsafe_op_wrap(raw_copy_to_user_allowed(d, s, l), e)
+ 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.25.0
+
