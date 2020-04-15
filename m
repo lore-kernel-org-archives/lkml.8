@@ -2,84 +2,103 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1895C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE813C2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC32520737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:33:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B74F2078A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:35:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586950514;
+	bh=ic5MMHZntN33IMBrTIWsQVmdcrIefTFAyiQjjyVZ7jg=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=TeWApSy28L44Emnk+ep5dSWGS+akO2N9nInpmv1yLJnG5XobOQZX3GNm8hK80ztPy
+	 ca3gEFv92ht+Q0/I9BzvuL3jYDFJM93LRVjkMgDjlwWGWs6NP2M9T8OxsFuvUzkquf
+	 7BNLtJyd7mcKF5X0JtV4AIbqLhmp2lLSFsMNVOrI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408852AbgDOLdM (ORCPT
+        id S2897025AbgDOLfJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:33:12 -0400
-Received: from foss.arm.com ([217.140.110.172]:42644 "EHLO foss.arm.com"
+        Wed, 15 Apr 2020 07:35:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393930AbgDOLct (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:32:49 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8470B1063;
-        Wed, 15 Apr 2020 04:32:45 -0700 (PDT)
-Received: from [10.37.12.1] (unknown [10.37.12.1])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DCAB13F68F;
-        Wed, 15 Apr 2020 04:32:42 -0700 (PDT)
-Subject: Re: [PATCH 7/8] arm64: cpufeature: Relax checks for AArch32 support
- at EL[0-2]
-To:     will@kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com, maz@kernel.org,
-        anshuman.khandual@arm.com, catalin.marinas@arm.com,
-        saiprakash.ranjan@codeaurora.org, dianders@chromium.org,
-        kernel-team@android.com
-References: <20200414213114.2378-1-will@kernel.org>
- <20200414213114.2378-8-will@kernel.org>
- <714f124c-7eb7-b750-e98c-63da64ddae75@arm.com>
- <20200415105843.GE12621@willie-the-truck>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <d1f538ec-e956-c136-d0f8-54e7351a28a9@arm.com>
-Date:   Wed, 15 Apr 2020 12:37:31 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        id S2408860AbgDOLer (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:34:47 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7506520737;
+        Wed, 15 Apr 2020 11:34:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586950487;
+        bh=ic5MMHZntN33IMBrTIWsQVmdcrIefTFAyiQjjyVZ7jg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=cM6GbIxiSTcsD0vtJWc6VQBGC1DcfVTWzf3Qa0GEW8FCzZ9eTdxmSCrXomBAs4b7T
+         NO50eLOJ00/T1d6lkQT7b3FjbVJ+EOKFllVyw+8Cshc1XFAFPX/OB6JC2jr5R5+2ws
+         ylGqOYTFy3mVNXuz+Vgt8X+rk/Hzqkh8pXC1yMMY=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     xinhui pan <xinhui.pan@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+        linaro-mm-sig@lists.linaro.org
+Subject: [PATCH AUTOSEL 5.6 001/129] drm/ttm: flush the fence on the bo after we individualize the reservation object
+Date:   Wed, 15 Apr 2020 07:32:36 -0400
+Message-Id: <20200415113445.11881-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20200415105843.GE12621@willie-the-truck>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/15/2020 11:58 AM, Will Deacon wrote:
-> On Wed, Apr 15, 2020 at 11:50:58AM +0100, Suzuki K Poulose wrote:
->> On 04/14/2020 10:31 PM, Will Deacon wrote:
->>> We don't need to be quite as strict about mismatched AArch32 support,
->>> which is good because the friendly hardware folks have been busy
->>> mismatching this to their hearts' content.
->>>
->>>     * We don't care about EL2 or EL3 (there are silly comments concerning
->>>       the latter, so remove those)
->>>
->>>     * EL1 support is gated by the ARM64_HAS_32BIT_EL1 capability and handled
->>>       gracefully when a mismatch occurs
->>>
->>>     * EL1 support is gated by the ARM64_HAS_32BIT_EL0 capability and handled
->>
->> s/EL1/EL0
->>
->>>       gracefully when a mismatch occurs
->>>
->>> Relax the AArch32 checks to FTR_NONSTRICT.
->>
->> Agreed. We should do something similar for the features exposed by the
->> ELF_HWCAP, of course in a separate series.
-> 
-> Hmm, I didn't think we needed to touch the HWCAPs, as they're derived from
-> the sanitised feature register values. What am I missing?
+From: xinhui pan <xinhui.pan@amd.com>
 
-sorry, that was cryptic. I was suggesting to relax the ftr fields to
-NONSTRICT for the fields covered by ELF HWCAPs (and other CPU hwcaps).
+[ Upstream commit 1bbcf69e42fe7fd49b6f4339c970729d0e343753 ]
 
-Suzuki
+As we move the ttm_bo_individualize_resv() upwards, we need flush the
+copied fence too. Otherwise the driver keeps waiting for fence.
+
+run&Kill kfdtest, then perf top.
+
+  25.53%  [ttm]                     [k] ttm_bo_delayed_delete
+  24.29%  [kernel]                  [k] dma_resv_test_signaled_rcu
+  19.72%  [kernel]                  [k] ww_mutex_lock
+
+Fix: 378e2d5b("drm/ttm: fix ttm_bo_cleanup_refs_or_queue once more")
+Signed-off-by: xinhui pan <xinhui.pan@amd.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Link: https://patchwork.freedesktop.org/series/72339/
+Signed-off-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/ttm/ttm_bo.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/ttm/ttm_bo.c b/drivers/gpu/drm/ttm/ttm_bo.c
+index 5df596fb0280c..fe420ca454e0a 100644
+--- a/drivers/gpu/drm/ttm/ttm_bo.c
++++ b/drivers/gpu/drm/ttm/ttm_bo.c
+@@ -498,8 +498,10 @@ static void ttm_bo_cleanup_refs_or_queue(struct ttm_buffer_object *bo)
+ 
+ 		dma_resv_unlock(bo->base.resv);
+ 	}
+-	if (bo->base.resv != &bo->base._resv)
++	if (bo->base.resv != &bo->base._resv) {
++		ttm_bo_flush_all_fences(bo);
+ 		dma_resv_unlock(&bo->base._resv);
++	}
+ 
+ error:
+ 	kref_get(&bo->list_kref);
+-- 
+2.20.1
+
