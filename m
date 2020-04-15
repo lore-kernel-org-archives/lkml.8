@@ -2,123 +2,80 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19957C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:28:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1963CC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:29:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA0862078A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:28:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586960901;
-	bh=ZB6JwYNcMXtDqUpFqr+tucEk39Yxv3CVPGoD0O1qI9k=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ffj1TJst1Lp7uP8mUTvTK7igVhjKbRdzaGYOxIT/UAstaHr72YULMFodl/eDR04q9
-	 XAHEBST4/6RK5ay+gag60FhWcu4awm/ZabKEtiyDeeVOd1oNVplGokyCSK1IHnwOun
-	 c89fVSGqOqK1xVsC/cFXLHxUdGsRSm+daDuWCfX0=
+	by mail.kernel.org (Postfix) with ESMTP id F3C652076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:29:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393997AbgDOO2S (ORCPT
+        id S2394015AbgDOO3y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:28:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35088 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729551AbgDOO2C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 10:28:02 -0400
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FE362137B;
-        Wed, 15 Apr 2020 14:28:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586960881;
-        bh=ZB6JwYNcMXtDqUpFqr+tucEk39Yxv3CVPGoD0O1qI9k=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=EdiMO3msQAgzx0TyMSchthqY2rs2o5vaaovfnRG9lP0sq2zRvSd7A5QMdCQu0XiW5
-         uXdY7A/C7z5pANdqM7vdXpHOqvF+/a1K/sl74bMMKu9+Sx9F8tCvvrpCb/AwQAy0r7
-         2owN22MwmG4CKqQ5uKU7THxXQD4eJIJx09UaBv1c=
-Received: by mail-qv1-f51.google.com with SMTP id di6so78414qvb.10;
-        Wed, 15 Apr 2020 07:28:01 -0700 (PDT)
-X-Gm-Message-State: AGi0PuaxPsZ2sH6+7fEAC4bgOx5Bb6QfaCNZ1i5DfYDOecdNR3rQtC0V
-        DVtUBF+kUf2L03+tH+JEjiEHCkTr2XgbnI845Q==
-X-Google-Smtp-Source: APiQypLsz6XmmIsYo7wzUtEP93/5Mi9D1CSe82grG2qT7IqkeUxM3r49phjnJKjx+Z5cjvQrWQxLKQ0q/vwRTjsscsU=
-X-Received: by 2002:a05:6214:a8a:: with SMTP id ev10mr4632235qvb.20.1586960880451;
- Wed, 15 Apr 2020 07:28:00 -0700 (PDT)
+        Wed, 15 Apr 2020 10:29:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38862 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729358AbgDOO3t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 10:29:49 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B044C061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 07:29:49 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id D6E452A0156
+Subject: Re: [PATCH v4 0/3] platform/chrome: typec: Add port partner
+ registration
+To:     Prashant Malani <pmalani@chromium.org>,
+        linux-kernel@vger.kernel.org
+Cc:     heikki.krogerus@linux.intel.com,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>
+References: <20200415052943.93009-1-pmalani@chromium.org>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <3279b538-3f68-c2f4-814b-ad64969b29e4@collabora.com>
+Date:   Wed, 15 Apr 2020 16:29:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200329161552.215075-1-david@ixit.cz> <20200329162128.218584-5-david@ixit.cz>
- <20200410164905.GA719@bogus> <8c4ab1ce-1947-ab38-3f8c-9055406428e4@gmail.com>
-In-Reply-To: <8c4ab1ce-1947-ab38-3f8c-9055406428e4@gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 15 Apr 2020 09:27:46 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJgZaQux04vdkShX4vkmOK5T-H6tOXt7Da19jgG0P76-Q@mail.gmail.com>
-Message-ID: <CAL_JsqJgZaQux04vdkShX4vkmOK5T-H6tOXt7Da19jgG0P76-Q@mail.gmail.com>
-Subject: Re: [PATCH 4/9] dt-bindings: power: supply: Add device-tree binding
- for Summit SMB3xx
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     David Heidelberg <david@ixit.cz>,
-        Sebastian Reichel <sre@kernel.org>,
-        Jonghwa Lee <jonghwa3.lee@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Myungjoo Ham <myungjoo.ham@samsung.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Vinay Simha BN <simhavcs@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        ramakrishna.pallala@intel.com,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200415052943.93009-1-pmalani@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 10, 2020 at 2:02 PM Dmitry Osipenko <digetx@gmail.com> wrote:
->
-> 10.04.2020 19:49, Rob Herring =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> ...
-> >> +  summit,max-chg-curr:
-> >> +    description: Maximum current for charging (in uA)
-> >> +    allOf:
-> >> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> >> +
-> >> +  summit,max-chg-volt:
-> >> +    description: Maximum voltage for charging (in uV)
-> >> +    allOf:
-> >> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> >> +    minimum: 3500000
-> >> +    maximum: 4500000
-> >> +
-> >> +  summit,pre-chg-curr:
-> >> +    description: Pre-charging current for charging (in uA)
-> >> +    allOf:
-> >> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> >> +
-> >> +  summit,term-curr:
-> >> +    description: Charging cycle termination current (in uA)
-> >> +    allOf:
-> >> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> ...
-> > These are all properties of the battery attached and we have standard
-> > properties for some/all of these.
->
-> Looks like only four properties seem to be matching the properties of
-> the battery.txt binding.
->
-> Are you suggesting that these matching properties should be renamed
-> after the properties in battery.txt?
+Hi Prashant,
 
-Yes, and that there should be a battery node. Possibly you should add
-new properties battery.txt. It's curious that different properties are
-needed. Ultimately, for a given battery technology I would expect
-there's a fixed set of properties needed to describe how to charge
-them. Perhaps some of these properties can just be derived from other
-properties and folks are just picking what a specific charger wants.
-Unfortunately, we have just a mess of stuff made up for each charger
-out there. I don't have the time nor the experience in this area to do
-much more than say do better.
+On 15/4/20 7:29, Prashant Malani wrote:
+> The following series adds port-partner registration when
+> connects/disconnects are detected. In order to do that, we also register
+> a listener for the cros-usbpd-notifier, which will inform the driver of
+> EC PD events. While we are here, separate out the Type C port data
+> objects into a separate struct.
+> 
+> v3: https://lkml.org/lkml/2020/4/9/868
+> v2: https://lkml.org/lkml/2020/4/9/861
+> v1: https://lkml.org/lkml/2020/4/6/1155
+> 
+> Changes in v4:
+> - Modified typec_register_partner() error check.
+> 
+> Prashant Malani (3):
+>   platform/chrome: typec: Use notifier for updates
+>   platform/chrome: typec: Add struct for port data
+>   platform/chrome: typec: Register port partner
+> 
+>  drivers/platform/chrome/Kconfig         |   1 +
+>  drivers/platform/chrome/cros_ec_typec.c | 119 ++++++++++++++++++++----
+>  2 files changed, 103 insertions(+), 17 deletions(-)
+> 
 
-Rob
+Queued all the patches for 5.8
+
+Thanks,
+ Enric
