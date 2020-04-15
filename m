@@ -7,55 +7,56 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 314A2C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83742C2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:04:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF4F720775
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:04:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DE7520732
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:04:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586955869;
-	bh=/KnOurnx6Etk4y412/BZj+JikJrWXkN0RDnFDDfh8k0=;
+	s=default; t=1586955877;
+	bh=9NXEEyNPle9buOD5PAzi2advwivMFIPGG4uNAn1qRVs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OMlKkpea4Q6q75qXer0PQiAFt7fEEjfTaxGvblgy7Tt3tyP4ttL6XyHtCMRT4A2NI
-	 dj8FFsmtRq/9Yc9oI3GmsYd689nMFALeNEZImxR8wMOSC5bXKlQ6lN1SP74Pprkr7m
-	 fGz8MPF3tHy40YlySz+HZgXQoed2kW28A8romCSA=
+	b=0KNgM9NQyJvlheR55P8UZdb7JVK6h4G3AQ/NgK63Bay5fwHzzjjA5XVB88QWN6gTb
+	 4b/7iSsSxhq78n1JGI+rh183Pi7z5PvF3LD2m/lv/e7G+ASei9JZdSWUzjkkfNPRKD
+	 Mi/Li/XZeB45cdcZqKVJ3An+qUjahVn3XWhHfeRg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505854AbgDONE1 (ORCPT
+        id S2505866AbgDONEf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:04:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56152 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 09:04:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897142AbgDOLg0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2897135AbgDOLg0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Apr 2020 07:36:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55EAF2076D;
-        Wed, 15 Apr 2020 11:36:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14EE72078A;
+        Wed, 15 Apr 2020 11:36:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950583;
-        bh=/KnOurnx6Etk4y412/BZj+JikJrWXkN0RDnFDDfh8k0=;
+        s=default; t=1586950579;
+        bh=9NXEEyNPle9buOD5PAzi2advwivMFIPGG4uNAn1qRVs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xbdYsa/Dj33gpWqUBtoM3jduQLzI6VVPkcuoM1dFYdyvSb4fuU3UcrxDLq1AYAH9i
-         k87aTO2u2zTO76+QLCITswK1DT4TLFJndUjf5hv/Y2Tka7WVupQRU/u13EIpDbHMG0
-         O5bdnhrpUgeycz0m7V0ozg5c/TbjJMw6g+OsLx/g=
+        b=uz8xXU4iXfTmYdF9jPuacxWLGjOraH93i6FrBGUYx+jV48M/ahe54fJpTpLlHZ9U+
+         cHvUtw6ThP6hwqiAbs2Z4g7prva5r4IYmMuuPikd3SLSrCeynqnxT1CcLhZcAAFMo7
+         aEo8f0dY5Tez166gspxb4nl3LpdMdvzICOsU2WkI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vegard Nossum <vegard.nossum@oracle.com>,
+Cc:     Steven Price <steven.price@arm.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Daniel Santos <daniel.santos@pobox.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Ian Abbott <abbotti@mev.co.uk>, Joe Perches <joe@perches.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        John Hubbard <jhubbard@nvidia.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-sparse@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 082/129] compiler.h: fix error in BUILD_BUG_ON() reporting
-Date:   Wed, 15 Apr 2020 07:33:57 -0400
-Message-Id: <20200415113445.11881-82-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 079/129] include/linux/swapops.h: correct guards for non_swap_entry()
+Date:   Wed, 15 Apr 2020 07:33:54 -0400
+Message-Id: <20200415113445.11881-79-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
 References: <20200415113445.11881-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -64,68 +65,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vegard Nossum <vegard.nossum@oracle.com>
+From: Steven Price <steven.price@arm.com>
 
-[ Upstream commit af9c5d2e3b355854ff0e4acfbfbfadcd5198a349 ]
+[ Upstream commit 3f3673d7d324d872d9d8ddb73b3e5e47fbf12e0d ]
 
-compiletime_assert() uses __LINE__ to create a unique function name.  This
-means that if you have more than one BUILD_BUG_ON() in the same source
-line (which can happen if they appear e.g.  in a macro), then the error
-message from the compiler might output the wrong condition.
+If CONFIG_DEVICE_PRIVATE is defined, but neither CONFIG_MEMORY_FAILURE nor
+CONFIG_MIGRATION, then non_swap_entry() will return 0, meaning that the
+condition (non_swap_entry(entry) && is_device_private_entry(entry)) in
+zap_pte_range() will never be true even if the entry is a device private
+one.
 
-For this source file:
+Equally any other code depending on non_swap_entry() will not function as
+expected.
 
-	#include <linux/build_bug.h>
+I originally spotted this just by looking at the code, I haven't actually
+observed any problems.
 
-	#define macro() \
-		BUILD_BUG_ON(1); \
-		BUILD_BUG_ON(0);
+Looking a bit more closely it appears that actually this situation
+(currently at least) cannot occur:
 
-	void foo()
-	{
-		macro();
-	}
+DEVICE_PRIVATE depends on ZONE_DEVICE
+ZONE_DEVICE depends on MEMORY_HOTREMOVE
+MEMORY_HOTREMOVE depends on MIGRATION
 
-gcc would output:
-
-./include/linux/compiler.h:350:38: error: call to `__compiletime_assert_9' declared with attribute error: BUILD_BUG_ON failed: 0
-  _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
-
-However, it was not the BUILD_BUG_ON(0) that failed, so it should say 1
-instead of 0. With this patch, we use __COUNTER__ instead of __LINE__, so
-each BUILD_BUG_ON() gets a different function name and the correct
-condition is printed:
-
-./include/linux/compiler.h:350:38: error: call to `__compiletime_assert_0' declared with attribute error: BUILD_BUG_ON failed: 1
-  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-
-Signed-off-by: Vegard Nossum <vegard.nossum@oracle.com>
+Fixes: 5042db43cc26 ("mm/ZONE_DEVICE: new type of ZONE_DEVICE for unaddressable memory")
+Signed-off-by: Steven Price <steven.price@arm.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Reviewed-by: Daniel Santos <daniel.santos@pobox.com>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Ian Abbott <abbotti@mev.co.uk>
-Cc: Joe Perches <joe@perches.com>
-Link: http://lkml.kernel.org/r/20200331112637.25047-1-vegard.nossum@oracle.com
+Cc: Jérôme Glisse <jglisse@redhat.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: John Hubbard <jhubbard@nvidia.com>
+Link: http://lkml.kernel.org/r/20200305130550.22693-1-steven.price@arm.com
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/compiler.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/swapops.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-index 5e88e7e33abec..034b0a644efcc 100644
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -347,7 +347,7 @@ static inline void *offset_to_ptr(const int *off)
-  * compiler has support to do so.
-  */
- #define compiletime_assert(condition, msg) \
--	_compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
-+	_compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+diff --git a/include/linux/swapops.h b/include/linux/swapops.h
+index 877fd239b6fff..3208a520d0be3 100644
+--- a/include/linux/swapops.h
++++ b/include/linux/swapops.h
+@@ -348,7 +348,8 @@ static inline void num_poisoned_pages_inc(void)
+ }
+ #endif
  
- #define compiletime_assert_atomic_type(t)				\
- 	compiletime_assert(__native_word(t),				\
+-#if defined(CONFIG_MEMORY_FAILURE) || defined(CONFIG_MIGRATION)
++#if defined(CONFIG_MEMORY_FAILURE) || defined(CONFIG_MIGRATION) || \
++    defined(CONFIG_DEVICE_PRIVATE)
+ static inline int non_swap_entry(swp_entry_t entry)
+ {
+ 	return swp_type(entry) >= MAX_SWAPFILES;
 -- 
 2.20.1
 
