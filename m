@@ -2,85 +2,114 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 525ACC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 03:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD8F8C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 03:14:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 379B320678
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 03:11:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0D34206F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 03:14:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389393AbgDODLc (ORCPT
+        id S2389409AbgDODOJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 23:11:32 -0400
-Received: from smtprelay0247.hostedemail.com ([216.40.44.247]:38966 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731048AbgDODLV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 23:11:21 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 66338181D341E;
-        Wed, 15 Apr 2020 03:11:19 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: floor22_286eb4526923a
-X-Filterd-Recvd-Size: 2068
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf12.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 15 Apr 2020 03:11:17 +0000 (UTC)
-Message-ID: <414a17ea0978cf65020d9be84f257fe85edc62ab.camel@perches.com>
-Subject: Re: [PATCH 1/2] staging: rtl8192u: Refactoring setKey function
-From:   Joe Perches <joe@perches.com>
-To:     Camylla Cantanheide <c.cantanheide@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        navid.emamdoost@gmail.com, sylphrenadin@gmail.com,
-        nishkadg.linux@gmail.com, stephen@brennan.io,
-        devel@driverdev.osuosl.org, LKML <linux-kernel@vger.kernel.org>,
-        lkcamp@lists.libreplanetbr.org
-Date:   Tue, 14 Apr 2020 20:09:07 -0700
-In-Reply-To: <CAG3pEr+huVACoP7sTMALYfE46dc+D8DdGPF0ky6EShd4eXD9eg@mail.gmail.com>
-References: <20200413030129.861-1-c.cantanheide@gmail.com>
-         <20200414123326.GG1163@kadam>
-         <CAG3pEr+huVACoP7sTMALYfE46dc+D8DdGPF0ky6EShd4eXD9eg@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Tue, 14 Apr 2020 23:14:09 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2322 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731048AbgDODOD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 23:14:03 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id E965EEBDCFC4ED20D06F;
+        Wed, 15 Apr 2020 11:13:59 +0800 (CST)
+Received: from [127.0.0.1] (10.173.221.195) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Wed, 15 Apr 2020
+ 11:13:56 +0800
+Subject: Re: [PATCH] ACPICA: Use ARRAY_SIZE instead of hardcoded siz
+To:     "Moore, Robert" <robert.moore@intel.com>,
+        "Kaneda, Erik" <erik.kaneda@intel.com>,
+        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "devel@acpica.org" <devel@acpica.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200413143156.22633-1-yanaijie@huawei.com>
+ <94F2FBAB4432B54E8AACC7DFDE6C92E3C68A849E@ORSMSX108.amr.corp.intel.com>
+From:   Jason Yan <yanaijie@huawei.com>
+Message-ID: <7c560f1c-5074-fa6c-4dbf-fb2ae37b0c46@huawei.com>
+Date:   Wed, 15 Apr 2020 11:13:55 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
+In-Reply-To: <94F2FBAB4432B54E8AACC7DFDE6C92E3C68A849E@ORSMSX108.amr.corp.intel.com>
+Content-Type: text/plain; charset="gbk"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.173.221.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-04-14 at 22:18 -0300, Camylla Cantanheide wrote:
-> Em ter., 14 de abr. de 2020 às 09:35, Dan Carpenter <
-> dan.carpenter@oracle.com> escreveu:
-[]
-> > > diff --git a/drivers/staging/rtl8192u/r8192U_core.c
-[]
-> > > +     target_content = macaddr[0] << 16 |
-> > > +                      macaddr[0] << 24 |
-> > > +                     (u32)us_config;
-
-And Camylla, this statement should be
-
-+     target_content = macaddr[0] << 16 |
-+                      macaddr[1] << 24 |
-+                     (u32)us_config;
-
-Not a repeated [0]
-
-> > > +
-> > > +     write_nic_dword(dev, WCAMI, target_content);
-> > > +     write_nic_dword(dev, RWCAM, target_command++);
-> > > +
-> > > +     /* MAC */
-> > > +     target_content = macaddr[2]       |
-> > > +                      macaddr[3] <<  8 |
-> > > +                      macaddr[4] << 16 |
-> > > +                      macaddr[5] << 24;
 
 
+ÔÚ 2020/4/15 4:22, Moore, Robert Ð´µÀ:
+> I think we've discussed this in the past. ARRAY_SIZE is not standard, and will get in the way of portability:
+> 
+
+Thanks for the explanation. Got it.
+
+
+> On gcc v7.4.0:
+> ../../../source/components/resources/rsdumpinfo.c:335:25: note: in expansion of macro 'ACPI_RSD_TABLE_SIZE'
+>       {ACPI_RSD_TITLE,    ACPI_RSD_TABLE_SIZE (AcpiRsDumpGenericReg),         "Generic Register",         NULL},
+> 
+> ../../../source/components/resources/rsdumpinfo.c:166:37: error: initializer element is not constant
+>   #define ACPI_RSD_TABLE_SIZE(name)   ARRAY_SIZE (name)
+> 
+> 
+> And, on MSVC 2017:
+> Severity	Code	Description	Project	File	Line	Suppression State
+> Warning	C4013	'ARRAY_SIZE' undefined; assuming extern returning int	AcpiExec	c:\acpica\source\components\resources\rsdumpinfo.c	179	
+> -----Original Message-----
+> From: Jason Yan <yanaijie@huawei.com>
+> Sent: Monday, April 13, 2020 7:32 AM
+> To: Moore, Robert <robert.moore@intel.com>; Kaneda, Erik <erik.kaneda@intel.com>; Wysocki, Rafael J <rafael.j.wysocki@intel.com>; lenb@kernel.org; linux-acpi@vger.kernel.org; devel@acpica.org; linux-kernel@vger.kernel.org
+> Cc: Jason Yan <yanaijie@huawei.com>
+> Subject: [PATCH] ACPICA: Use ARRAY_SIZE instead of hardcoded siz
+> 
+> Fix the following coccicheck warning:
+> 
+> ./drivers/acpi/acpica/rsdumpinfo.c:18:48-49: WARNING: Use ARRAY_SIZE
+> ./drivers/acpi/acpica/rsdumpinfo.c:18:48-49: WARNING: Use ARRAY_SIZE
+> ./drivers/acpi/acpica/rsdumpinfo.c:18:48-49: WARNING: Use ARRAY_SIZE
+> ./drivers/acpi/acpica/rsdumpinfo.c:18:48-49: WARNING: Use ARRAY_SIZE
+> ./drivers/acpi/acpica/rsdumpinfo.c:18:48-49: WARNING: Use ARRAY_SIZE
+> ./drivers/acpi/acpica/rsdumpinfo.c:18:48-49: WARNING: Use ARRAY_SIZE
+> ./drivers/acpi/acpica/rsdumpinfo.c:18:48-49: WARNING: Use ARRAY_SIZE
+> 
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+> ---
+>   drivers/acpi/acpica/rsdumpinfo.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/acpi/acpica/rsdumpinfo.c b/drivers/acpi/acpica/rsdumpinfo.c
+> index cafa8134b4c6..f1ba4cd8080f 100644
+> --- a/drivers/acpi/acpica/rsdumpinfo.c
+> +++ b/drivers/acpi/acpica/rsdumpinfo.c
+> @@ -15,7 +15,7 @@ ACPI_MODULE_NAME("rsdumpinfo")  #if defined(ACPI_DEBUG_OUTPUT) || defined(ACPI_DISASSEMBLER) || defined(ACPI_DEBUGGER)
+>   #define ACPI_RSD_OFFSET(f)          (u8) ACPI_OFFSET (union acpi_resource_data,f)
+>   #define ACPI_PRT_OFFSET(f)          (u8) ACPI_OFFSET (struct acpi_pci_routing_table,f)
+> -#define ACPI_RSD_TABLE_SIZE(name)   (sizeof(name) / sizeof (struct acpi_rsdump_info))
+> +#define ACPI_RSD_TABLE_SIZE(name)   ARRAY_SIZE(name)
+>   /*******************************************************************************
+>    *
+>    * Resource Descriptor info tables
+> --
+> 2.21.1
+> 
+> 
+> .
+> 
 
