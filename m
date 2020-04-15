@@ -3,108 +3,145 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F40DC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:45:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 159D9C38A29
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 637EE21707
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:45:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 005FB208FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:45:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S370918AbgDOOpD (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:45:03 -0400
-Received: from esa3.mentor.iphmx.com ([68.232.137.180]:18220 "EHLO
-        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392245AbgDOOo3 (ORCPT
+        id S2636800AbgDOOpj (ORCPT
+        <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 10:45:39 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:33209 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388669AbgDOOpW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 10:44:29 -0400
-IronPort-SDR: yiWJWg5fstJaeCye+jYrwi2XmdAkUNvBpEGfPcGZw9gPJIUGopRumkvODChgpYBGMtUMq9kk7o
- AVr3B+xFk+JInmnu9TSqmduXw/uIoeOQKyS9ZQqj7th/A4/3QK8yi2kudpGmtuwe/qylGbbmOy
- ajFBnFi4NYYvvf8m1b8TN1HwZT6zJsGbVfjtgpdPLy2hEAPwb/4ZEM3M5nwhpKpyWNldLBiuBw
- LAe6sDaf7sQY6BDavNqqjaPJcVKRR7zW0oPZ3xjaUxPrSqEHdtY8BpkhtXNg3oNRb4NONZQvZN
- vic=
-X-IronPort-AV: E=Sophos;i="5.72,387,1580803200"; 
-   d="scan'208";a="47787672"
-Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa3.mentor.iphmx.com with ESMTP; 15 Apr 2020 06:44:26 -0800
-IronPort-SDR: 9uYF7mvROwVlcLs7KlWHLGDv79hxkktKn1BClQTMOeVnCk2ipA8zY0UhfMJuwLEwpAErYMOw2Y
- Dd+KcymEdj4Ca97QL65oZTzpU4bFzqWsJdWUCLwtNlMR1WKykYHs2EUvu0UsbZWypIQPza+Y0m
- q4w/mtToGGWFo1tjc6jDzv7+QViR/ig/Dn+ghwLWzcSvcooZze/4EveX1EoWm6bEojEM8oaSLS
- gYcP65YhgBJ1TjPKVHBkaIheuW9B4b7zF6nr1xIkXQL+J6g4e5JGQjakM1HHVpb+EL949ZsB0S
- nnU=
-Subject: Re: [PATCH v10 31/55] Input: atmel_mxt_ts - delay enabling IRQ when
- not using regulators
-To:     Dmitry Osipenko <digetx@gmail.com>, <nick@shmanahar.org>,
-        <dmitry.torokhov@gmail.com>, <jikos@kernel.org>,
-        <benjamin.tissoires@redhat.com>, <bsz@semihalf.com>
-CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>
-References: <20200331105051.58896-1-jiada_wang@mentor.com>
- <20200331105051.58896-32-jiada_wang@mentor.com>
- <46e0b0cf-63f1-4b46-dc3e-0e6610e72d75@gmail.com>
-From:   "Wang, Jiada" <jiada_wang@mentor.com>
-Message-ID: <75f81c9a-e5ca-1382-43c9-8fd4acc36510@mentor.com>
-Date:   Wed, 15 Apr 2020 23:44:21 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 15 Apr 2020 10:45:22 -0400
+Received: by mail-pj1-f68.google.com with SMTP id ay6so77791pjb.0;
+        Wed, 15 Apr 2020 07:45:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=pBJo/JQSnidWIsZkfJsj1QT0fRaerLE2o4j81aCDQl4=;
+        b=XY5CPSn6z+RdSSJgvwljbJj0V06TGZIQtXQ7QsurU7HyY2kZyA2Ie27+taAcZuN2kL
+         f7ApyYNJpyvOt97FVz/OHMpqPus2UWZO3aC+qa8b38hXalo/lMvcBbDiqRojsMnmthDA
+         EhMaGkasqpsXYunTfvII6ax7QCrQA158Atbcc9F4sX7+xlYIjBFgQlxI0Y/lXkbHOqtx
+         jgyJ4QzvQK9Xxc5/KaM4rMo4baLW2ILaV4DZQU9KPswgCzTZ6CD7Jbb5iZGXcufTW6iC
+         OyL3yPAmr8YH6dQVoAA4ZhuG8hXSrVfOH+THHnZqj3uB8i4iYyed4Lf/ZUVDCZ4Wx0ad
+         qD8A==
+X-Gm-Message-State: AGi0PuZa68HUFFZiuIOyy4ivlp+JXWYCGgLK58kxFQBjXZdNnmsJWkUD
+        nPkVJv/VJf3vfWUZFZ2Vnrs=
+X-Google-Smtp-Source: APiQypKUu9JDV3E8NnRbxbNWJAsd3dksGpoqMVJtTMB0nvp0uezQYXkIIqv1ZWREFaMB8ztY9s+DMA==
+X-Received: by 2002:a17:902:a5c7:: with SMTP id t7mr5227310plq.330.1586961921350;
+        Wed, 15 Apr 2020 07:45:21 -0700 (PDT)
+Received: from ?IPv6:2601:647:4000:d7:74a5:f25a:9320:53da? ([2601:647:4000:d7:74a5:f25a:9320:53da])
+        by smtp.gmail.com with ESMTPSA id o15sm14773001pjp.41.2020.04.15.07.45.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Apr 2020 07:45:20 -0700 (PDT)
+Subject: Re: [PATCH 3/5] blktrace: refcount the request_queue during ioctl
+To:     Luis Chamberlain <mcgrof@kernel.org>,
+        Christoph Hellwig <hch@infradead.org>
+Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk,
+        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
+        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
+        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Michal Hocko <mhocko@kernel.org>
+References: <20200414041902.16769-1-mcgrof@kernel.org>
+ <20200414041902.16769-4-mcgrof@kernel.org>
+ <20200414154044.GB25765@infradead.org>
+ <20200415061649.GS11244@42.do-not-panic.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <49bfcbe0-2630-5c82-f305-fcee489ac9ea@acm.org>
+Date:   Wed, 15 Apr 2020 07:45:18 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <46e0b0cf-63f1-4b46-dc3e-0e6610e72d75@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20200415061649.GS11244@42.do-not-panic.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: svr-orw-mbx-08.mgc.mentorg.com (147.34.90.208) To
- svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry
+On 2020-04-14 23:16, Luis Chamberlain wrote:
+> On Tue, Apr 14, 2020 at 08:40:44AM -0700, Christoph Hellwig wrote:
+>> Hmm, where exactly does the race come in so that it can only happen
+>> after where you take the reference, but not before it?  I'm probably
+>> missing something, but that just means it needs to be explained a little
+>> better :)
+> 
+>>From the trace on patch 2/5:
+> 
+>     BLKTRACE_SETUP(loop0) #2
+>     [   13.933961] == blk_trace_ioctl(2, BLKTRACESETUP) start
+>     [   13.936758] === do_blk_trace_setup(2) start
+>     [   13.938944] === do_blk_trace_setup(2) creating directory
+>     [   13.941029] === do_blk_trace_setup(2) using what debugfs_lookup() gave
+>     
+>     ---> From LOOP_CTL_DEL(loop0) #2
+>     [   13.971046] === blk_trace_cleanup(7) end
+>     [   13.973175] == __blk_trace_remove(7) end
+>     [   13.975352] == blk_trace_shutdown(7) end
+>     [   13.977415] = __blk_release_queue(7) calling blk_mq_debugfs_unregister()
+>     [   13.980645] ==== blk_mq_debugfs_unregister(7) begin
+>     [   13.980696] ==== blk_mq_debugfs_unregister(7) debugfs_remove_recursive(q->debugfs_dir)
+>     [   13.983118] ==== blk_mq_debugfs_unregister(7) end q->debugfs_dir is NULL
+>     [   13.986945] = __blk_release_queue(7) blk_mq_debugfs_unregister() end
+>     [   13.993155] = __blk_release_queue(7) end
+>     
+>     ---> From BLKTRACE_SETUP(loop0) #2
+>     [   13.995928] === do_blk_trace_setup(2) end with ret: 0
+>     [   13.997623] == blk_trace_ioctl(2, BLKTRACESETUP) end
+> 
+> The BLKTRACESETUP above works on request_queue which later
+> LOOP_CTL_DEL races on and sweeps the debugfs dir underneath us.
+> If you use this commit alone though, this doesn't fix the race issue
+> however, and that's because of both still the debugfs_lookup() use
+> and that we're still using asynchronous removal at this point.
+> 
+> refcounting will just ensure we don't take the request_queue underneath
+> our noses.
 
-On 2020/04/11 7:38, Dmitry Osipenko wrote:
-> 31.03.2020 13:50, Jiada Wang пишет:
->> From: Nick Dyer <nick.dyer@itdev.co.uk>
->>
->> The path of enabling the IRQ in the probe function is not safe in level
->> triggered operation, if it was already powered up and there is a message
->> waiting on the device (eg finger down) because the object table has not yet
->> been read. This forces the ISR into a hard loop.
->>
->> Delay enabling the interrupt until it is first needed.
-> 
-> 
->>
->> -	if (data->use_retrigen_workaround) {
->> +		/* Presence of data->irq means IRQ initialised */
->> +		data->irq = data->client->irq;
-> 
-> IIRC, IRQ=0 could be a valid interrupt since this is a "virtual"
-> interrupt number.
-> 
-> ...
->>   	init_completion(&data->chg_completion);
->> @@ -3826,26 +3842,22 @@ static int mxt_probe(struct i2c_client *client, const struct i2c_device_id *id)
->>   		return error;
->>   	}
-> 
-> What about just to tell the IRQ core not to enable the interrupt
-> handling during of the devm_request_threaded_irq()?
-> 
-> To achieve that, add this line here:
-> 
-> 	irq_set_status_flags(client->irq, IRQ_NOAUTOEN);
-> 
->> -	error = devm_request_threaded_irq(&client->dev, client->irq,
->> -					  NULL, mxt_interrupt, IRQF_ONESHOT,
->> -					  client->name, data);
-> ...
-> 
-> Then the interrupt will be requested in the disabled state and it will
-> be enabled only after the first enable_irq() invocation.
-> 
-thanks, I think your solution makes more sense,
-I will replace with your suggested solution in next version
+I think the above trace reveals a bug in the loop driver. The loop
+driver shouldn't allow the associated request queue to disappear while
+the loop device is open. One may want to have a look at sd_open() in the
+sd driver. The scsi_disk_get() call in that function not only increases
+the reference count of the SCSI disk but also of the underlying SCSI device.
 
 Thanks,
-Jiada
+
+Bart.
