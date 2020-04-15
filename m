@@ -2,81 +2,91 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53103C3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:03:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 023F8C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:03:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29BDE21556
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:03:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D308E21569
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:03:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586966627;
+	bh=tnofNk2cZ8cuojBkR8HvS1ZrcTEYmo/HO/TEFb9+Kcg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=K1Fy7/BTWctnXBJgQ+W/pL8XqAVs3ckxtWErB+J+iROrDeaOvN3mAfExhuSIl1zn7
+	 hesvEGmEHdfucDTQKG9BPPZf5dSG+yAVZobBo5blupEjmi6UBdWYzCrwGLeD9q0KTB
+	 XT3AL4PrLagnfcWD4QpKoNlyGa7yYJab1ZyK109M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410145AbgDOQDg (ORCPT
+        id S2410147AbgDOQDp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 12:03:36 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:32983 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2410121AbgDOQD1 (ORCPT
+        Wed, 15 Apr 2020 12:03:45 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:43804 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2410124AbgDOQDa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 12:03:27 -0400
-Received: from callcc.thunk.org (pool-72-93-95-157.bstnma.fios.verizon.net [72.93.95.157])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 03FG374v005145
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 Apr 2020 12:03:07 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 1C73242013D; Wed, 15 Apr 2020 12:03:07 -0400 (EDT)
-Date:   Wed, 15 Apr 2020 12:03:07 -0400
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     ira.weiny@intel.com
-Cc:     linux-kernel@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH RFC 3/8] fs/ext4: Disallow encryption if inode is DAX
-Message-ID: <20200415160307.GJ90651@mit.edu>
-References: <20200414040030.1802884-1-ira.weiny@intel.com>
- <20200414040030.1802884-4-ira.weiny@intel.com>
+        Wed, 15 Apr 2020 12:03:30 -0400
+Received: by mail-ot1-f66.google.com with SMTP id g14so376515otg.10;
+        Wed, 15 Apr 2020 09:03:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=c6iYkSq4Slgi0NcaSVF5Eyh9NovqIO1r52po8b+3Xik=;
+        b=gHqtjVkQ5RdmSYJ348TWfPA9em4wlFMFBIc7ZcVWwYEfPHUQmVcXlvBrkHuLQ/D9P7
+         yADXGCi+BSfU/PeM0xVhgKZHmXQ+FTnQbt79ZqxqCzdMuYotKnzVY3dpSfZgfG89OXR8
+         PD8f7HEAj3+Ku5L1xNFGfyOct9JbZL0BhiEKrAHxiIZSS14xkwl5SFwiCO/tMMZAvgoO
+         7MlyApOpkPDsmFjo5R8aubnf/oJ8EEqYqPi6MMcRBCshv4VKph20U4MQtp4doETORGv5
+         Mu4MvvWgvCZN9WBcMhYaLjXkqv3x9fJQPsr3edS/nyWdezpYKzIo0t3VhMnh6sLCXONP
+         QCqw==
+X-Gm-Message-State: AGi0PuY4U43Owi9aWA3YsWYe5RhTlGxS3v0JHvKwY5MC+Ai1fs9gyC5a
+        YnUVpirxXC097RGKHzrx6yLlaK+Hyw==
+X-Google-Smtp-Source: APiQypKaYFYJHZs0enq6gbxnLGIGugO6HL5erdsv69j55UR9Ev3B+NMON3be276KBJklwJCQQETZKQ==
+X-Received: by 2002:a9d:7f0f:: with SMTP id j15mr10087920otq.109.1586966608799;
+        Wed, 15 Apr 2020 09:03:28 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id c81sm6208036oib.35.2020.04.15.09.03.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2020 09:03:27 -0700 (PDT)
+Received: (nullmailer pid 4297 invoked by uid 1000);
+        Wed, 15 Apr 2020 16:03:27 -0000
+Date:   Wed, 15 Apr 2020 11:03:27 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: Re: [PATCH] dt-bindings: timer: renesas: tmu: Convert to json-schema
+Message-ID: <20200415160327.GA4237@bogus>
+References: <20200408091451.25845-1-geert+renesas@glider.be>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200414040030.1802884-4-ira.weiny@intel.com>
+In-Reply-To: <20200408091451.25845-1-geert+renesas@glider.be>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 09:00:25PM -0700, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
+On Wed,  8 Apr 2020 11:14:51 +0200, Geert Uytterhoeven wrote:
+> Convert the Renesas R-Mobile/R-Car Timer Unit (TMU) Device Tree binding
+> documentation to json-schema.
 > 
-> Encryption and DAX are incompatible.  Changing the DAX mode due to a
-> change in Encryption mode is wrong without a corresponding
-> address_space_operations update.
+> Document missing properties.
+> Update the example to match reality.
 > 
-> Make the 2 options mutually exclusive by returning an error if DAX was
-> set first.
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  .../devicetree/bindings/timer/renesas,tmu.txt | 49 ----------
+>  .../bindings/timer/renesas,tmu.yaml           | 97 +++++++++++++++++++
+>  2 files changed, 97 insertions(+), 49 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/timer/renesas,tmu.txt
+>  create mode 100644 Documentation/devicetree/bindings/timer/renesas,tmu.yaml
 > 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
-The encryption flag is inherited from the containing directory, and
-directories can't have the DAX flag set, so anything we do in
-ext4_set_context() will be safety belt / sanity checking in nature.
-
-But we *do* need to figure out what we do with mount -o dax=always
-when the file system might have encrypted files.  My previous comments
-about the verity flag and dax flag applies here.
-
-Also note that encrypted files are read/write so we must never allow
-the combination of ENCRPYT_FL and DAX_FL.  So that may be something
-where we should teach __ext4_iget() to check for this, and declare the
-file system as corrupted if it sees this combination.  (For VERITY_FL
-&& DAX_FL that is a combo that we might want to support in the future,
-so that's probably a case where arguably, we should just ignore the
-DAX_FL for now.)
-
-					- Ted
+Reviewed-by: Rob Herring <robh@kernel.org>
