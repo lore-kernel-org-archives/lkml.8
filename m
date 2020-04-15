@@ -2,90 +2,105 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E99C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A98CC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF766206F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:08:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="UeOoK6zh"
+	by mail.kernel.org (Postfix) with ESMTP id 78AD82078A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:08:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2635622AbgDOIIe (ORCPT
+        id S2635531AbgDOIGk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 04:08:34 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:33816 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2635591AbgDOIIF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 04:08:05 -0400
-Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 9D67E2D1;
-        Wed, 15 Apr 2020 10:07:58 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1586938079;
-        bh=d3cM3Q3qHFbLBztwm4kDpHyKueuNUZD1Tu5L0584nsY=;
-        h=Subject:To:Cc:References:Reply-To:From:Date:In-Reply-To:From;
-        b=UeOoK6zhCEGPmWLfhjDbfahqvS6Qzqp2JDYPHFhNseng8pD8GWoA8LBLcfgqV8B0d
-         FgdG8w1Y9HRgqoqn2TiLL/xE0BFME9xvY4VZWRmo4zLoJ2Z+SGoMKKSGLBNy4sGABS
-         bcUJCRW8hGIv5gCmFr39QrbNGoYsl5bInOrGZepM=
-Subject: Re: [RFC PATCH v2 2/6] i2c: allow DT nodes without 'compatible'
-To:     Wolfram Sang <wsa@the-dreams.de>,
-        Luca Ceresoli <luca@lucaceresoli.net>
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-i3c@lists.infradead.org,
-        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Rob Herring <robh@kernel.org>
-References: <20200318150059.21714-1-wsa+renesas@sang-engineering.com>
- <20200318150059.21714-3-wsa+renesas@sang-engineering.com>
- <11ca7487-ac07-f714-8573-20d1a0040212@lucaceresoli.net>
- <20200415075911.GA1141@ninjato>
-Reply-To: kieran.bingham+renesas@ideasonboard.com
-From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Organization: Ideas on Board
-Message-ID: <8937e466-fe3f-3686-98a9-8013990bc3f9@ideasonboard.com>
-Date:   Wed, 15 Apr 2020 09:07:56 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
-MIME-Version: 1.0
-In-Reply-To: <20200415075911.GA1141@ninjato>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+        Wed, 15 Apr 2020 04:06:40 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:46752 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2408044AbgDOID2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 04:03:28 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id AE110200349;
+        Wed, 15 Apr 2020 10:03:06 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A0B89200790;
+        Wed, 15 Apr 2020 10:03:06 +0200 (CEST)
+Received: from fsr-ub1664-175.ea.freescale.net (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 0994F202B0;
+        Wed, 15 Apr 2020 10:03:06 +0200 (CEST)
+From:   Abel Vesa <abel.vesa@nxp.com>
+To:     Lee Jones <lee.jones@linaro.org>, Shawn Guo <shawnguo@kernel.org>,
+        Peng Fan <peng.fan@nxp.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Anson Huang <anson.huang@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>
+Cc:     NXP Linux Team <linux-imx@nxp.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, Abel Vesa <abel.vesa@nxp.com>
+Subject: [PATCH v3 02/13] Documentation: mfd: Add DT bindings for i.MX Mix
+Date:   Wed, 15 Apr 2020 11:02:42 +0300
+Message-Id: <1586937773-5836-3-git-send-email-abel.vesa@nxp.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1586937773-5836-1-git-send-email-abel.vesa@nxp.com>
+References: <1586937773-5836-1-git-send-email-abel.vesa@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wolfram,
+Documnent the i.MX Mix with its devicetree properties.
 
-On 15/04/2020 08:59, Wolfram Sang wrote:
-> 
->> As I said in the reply to v1, I think we should reserve addresses also
->> when there is a compatible string but no matching driver, but this is
->> another story and can be handled separately.
-> 
-> Unless I misunderstand you, I think they do already. Note that
-> only 'i2cdetect' shows a device as busy *IFF* there is a driver bound to
-> it. The internal 'i2c_check_addr_busy' does not care about a driver
-> being bound. You can check this by trying to use
-> i2c_new_ancillary_device() with an address which is already described in
-> DT but which driver is disabled.
+Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+---
+ .../devicetree/bindings/mfd/fsl,imx-mix.yaml       | 34 ++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/fsl,imx-mix.yaml
 
-Aha, is it easy enough to distinguish that difference in user-space so
-that we can present a specific character to indicate this in i2cdetect?
-Or is that not so easy?
-
---
-Kieran
-
+diff --git a/Documentation/devicetree/bindings/mfd/fsl,imx-mix.yaml b/Documentation/devicetree/bindings/mfd/fsl,imx-mix.yaml
+new file mode 100644
+index 00000000..8b1870e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/fsl,imx-mix.yaml
+@@ -0,0 +1,34 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mfd/fsl,imx-mix.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale i.MX mix
++
++description: |
++  i.MX mix is a conglomerate of different GPRs that are
++  usually dedicated to one subsystem. These GPRs can be
++  further split between different types of drivers, once
++  the MFD populates all the devices based on its devicetree
++  subnodes.
++
++maintainers:
++  - Abel Vesa <abel.vesa@nxp.com>
++
++properties:
++  reg:
++    maxItems: 1
++  compatible:
++    const: fsl,imx8mp-mix
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    audiomix: mix@30e20000 {
++       compatible = "fsl,imx8mp-mix";
++       reg = <0x30e20000 0x10000>;
++    };
+-- 
+2.7.4
 
