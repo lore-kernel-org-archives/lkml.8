@@ -2,257 +2,137 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E784BC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:59:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B092C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:59:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA81C2084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:59:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08EDE20784
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:59:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nDBmuWGL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2411623AbgDOR7G (ORCPT
+        id S2411638AbgDOR7W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 13:59:06 -0400
-Received: from mga18.intel.com ([134.134.136.126]:30607 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441019AbgDORzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 13:55:36 -0400
-IronPort-SDR: FM71Eg+yqJXduwqcORxA3ECE55/jN57fklnOqJaS/15oo9RMe6rLzf7dS8xYOVIDBufQooxi20
- z8tGgTV185jw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 10:55:25 -0700
-IronPort-SDR: psTV5AxHU+H78T5fAqZOpSErKt0IqOjUau27Y7r5KjGdWxoaUw7L85OEMpTEtEO3sIryhuzaz+
- Yb9/8M0BSstw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,387,1580803200"; 
-   d="scan'208";a="332567353"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by orsmga001.jf.intel.com with ESMTP; 15 Apr 2020 10:55:23 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [PATCH v2 05/10] KVM: nVMX: Split VM-Exit reflection logic into L0 vs. L1 wants
-Date:   Wed, 15 Apr 2020 10:55:14 -0700
-Message-Id: <20200415175519.14230-6-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200415175519.14230-1-sean.j.christopherson@intel.com>
-References: <20200415175519.14230-1-sean.j.christopherson@intel.com>
+        Wed, 15 Apr 2020 13:59:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42766 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1416524AbgDORze (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 13:55:34 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 454F9C061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 10:55:34 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id a32so159498pje.5
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 10:55:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=WknHuSsMv5PZIolEyRt8fzItA0jcsProAC7yJPzp7k4=;
+        b=nDBmuWGLKCO2b/2H3Eg7fuNSI0hhyvNr8N1Q3txVfEtfoojywuD5oY4C9EEbR4Jj+I
+         x+RZqc5v9tmdbUboOysxB2lEk81n50KXM2XHhUJq2oH4bpmvVejNxSyD6vy/bPaxMdlo
+         iIs8Kka8G3S4OJScn6jfe8YMVVer0A1f4CpdI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=WknHuSsMv5PZIolEyRt8fzItA0jcsProAC7yJPzp7k4=;
+        b=EIf5FKGs2WCffvx1lW+qeqHXwXo/MZPnNTYygTAQNeQR//lP1r1LGH2miGJ7+2AU/y
+         E2QOEum8HTD5DSBNbzacRQU6Phhyac5U2z3E3iLfvRjZoYhVjwmARZG1iDsBz+Z/L6Qe
+         Cb/EESPG1wrW0wthi/8PtZH0DyweQWMbx1/BIiV58aAgCR+lVUOV+UFUv7vGNM8w2t6o
+         Ef8Kgjmg4AqhVXHEF8wb+eVsMfyrOAcXsjP1QMCKWc6SClUhqvcqInftIOMtb8SMsAxK
+         hMxkGy7xqseOTmIkl58akpnysEpBSE3O/IvJSumJNPVleW3tVGQDJpRfPk3r9FFZoQS5
+         SLBw==
+X-Gm-Message-State: AGi0Pub2Eh/gA/TMj5YPxbhXK+FJLcUbrMi11qnbwN/l4x+N15ugh6zv
+        XRFtEWAZeJLvNfd+9kC3ksTvbg==
+X-Google-Smtp-Source: APiQypJq7k4/MnAu3XXlcJmYNYMeOnaI3/KkXDgFGyoSc/dzG6EoQ4klxQczruF3S4zVhyJACGAUTg==
+X-Received: by 2002:a17:902:b284:: with SMTP id u4mr5638708plr.97.1586973333588;
+        Wed, 15 Apr 2020 10:55:33 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id d5sm14476337pfa.59.2020.04.15.10.55.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2020 10:55:32 -0700 (PDT)
+Date:   Wed, 15 Apr 2020 10:55:30 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Marco Elver <elver@google.com>
+Cc:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] slub: Avoid redzone when choosing freepointer location
+Message-ID: <202004151054.BD695840@keescook>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Split the logic that determines whether a nested VM-Exit is reflected
-into L1 into "L0 wants" and "L1 wants" to document the core control flow
-at a high level.  If L0 wants the VM-Exit, e.g. because the exit is due
-to a hardware event that isn't passed through to L1, then KVM should
-handle the exit in L0 without considering L1's configuration.  Then, if
-L0 doesn't want the exit, KVM needs to query L1's wants to determine
-whether or not L1 "caused" the exit, e.g. by setting an exiting control,
-versus the exit occurring due to an L0 setting, e.g. when L0 intercepts
-an action that L1 chose to pass-through.
+Marco Elver reported system crashes when booting with "slub_debug=Z".
+The freepointer location (s->offset) was not taking into account that
+the "inuse" size that includes the redzone area should not be used by
+the freelist pointer. Change the calculation to save the area of the
+object that an inline freepointer may be written into.
 
-Note, this adds an extra read on vmcs.VM_EXIT_INTR_INFO for exception.
-This will be addressed in a future patch via a VMX-wide enhancement,
-rather than pile on another case where vmx->exit_intr_info is
-conditionally available.
-
-Suggested-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Reported-by: Marco Elver <elver@google.com>
+Link: https://lore.kernel.org/linux-mm/20200415164726.GA234932@google.com
+Fixes: 3202fa62fb43 ("slub: relocate freelist pointer to middle of object")
+Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
+ mm/slub.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-The "future patch" mentioned above will be sent in a separate series.
-If my branch predictor is wrong and that series gets merged first, the
-entire note can be dropped.
-
- arch/x86/kvm/vmx/nested.c | 111 ++++++++++++++++++++++++--------------
- 1 file changed, 70 insertions(+), 41 deletions(-)
-
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index de122ef3eeed..c2745cd9e022 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -5642,34 +5642,85 @@ static bool nested_vmx_exit_handled_mtf(struct vmcs12 *vmcs12)
- }
- 
- /*
-- * Return true if we should exit from L2 to L1 to handle an exit, or false if we
-- * should handle it ourselves in L0 (and then continue L2). Only call this
-- * when in is_guest_mode (L2).
-+ * Return true if L0 wants to handle an exit from L2 regardless of whether or not
-+ * L1 wants the exit.  Only call this when in is_guest_mode (L2).
-  */
--static bool nested_vmx_exit_reflected(struct kvm_vcpu *vcpu, u32 exit_reason)
-+static bool nested_vmx_l0_wants_exit(struct kvm_vcpu *vcpu, u32 exit_reason)
+diff --git a/mm/slub.c b/mm/slub.c
+index 332d4b459a90..9bf44955c4f1 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -3533,6 +3533,7 @@ static int calculate_sizes(struct kmem_cache *s, int forced_order)
  {
--	struct vcpu_vmx *vmx = to_vmx(vcpu);
--	struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
- 	u32 intr_info;
- 
- 	switch (exit_reason) {
- 	case EXIT_REASON_EXCEPTION_NMI:
- 		intr_info = vmcs_read32(VM_EXIT_INTR_INFO);
- 		if (is_nmi(intr_info))
--			return false;
-+			return true;
- 		else if (is_page_fault(intr_info))
--			return !vmx->vcpu.arch.apf.host_apf_reason && enable_ept;
-+			return vcpu->arch.apf.host_apf_reason || !enable_ept;
- 		else if (is_debug(intr_info) &&
- 			 vcpu->guest_debug &
- 			 (KVM_GUESTDBG_SINGLESTEP | KVM_GUESTDBG_USE_HW_BP))
--			return false;
-+			return true;
- 		else if (is_breakpoint(intr_info) &&
- 			 vcpu->guest_debug & KVM_GUESTDBG_USE_SW_BP)
--			return false;
-+			return true;
-+		return false;
-+	case EXIT_REASON_EXTERNAL_INTERRUPT:
-+		return true;
-+	case EXIT_REASON_MCE_DURING_VMENTRY:
-+		return true;
-+	case EXIT_REASON_EPT_VIOLATION:
-+		/*
-+		 * L0 always deals with the EPT violation. If nested EPT is
-+		 * used, and the nested mmu code discovers that the address is
-+		 * missing in the guest EPT table (EPT12), the EPT violation
-+		 * will be injected with nested_ept_inject_page_fault()
-+		 */
-+		return true;
-+	case EXIT_REASON_EPT_MISCONFIG:
-+		/*
-+		 * L2 never uses directly L1's EPT, but rather L0's own EPT
-+		 * table (shadow on EPT) or a merged EPT table that L0 built
-+		 * (EPT on EPT). So any problems with the structure of the
-+		 * table is L0's fault.
-+		 */
-+		return true;
-+	case EXIT_REASON_PREEMPTION_TIMER:
-+		return true;
-+	case EXIT_REASON_PML_FULL:
-+		/* We emulate PML support to L1. */
-+		return true;
-+	case EXIT_REASON_VMFUNC:
-+		/* VM functions are emulated through L2->L0 vmexits. */
-+		return true;
-+	case EXIT_REASON_ENCLS:
-+		/* SGX is never exposed to L1 */
-+		return true;
-+	default:
-+		break;
-+	}
-+	return false;
-+}
-+
-+/*
-+ * Return 1 if L1 wants to intercept an exit from L2.  Only call this when in
-+ * is_guest_mode (L2).
-+ */
-+static bool nested_vmx_l1_wants_exit(struct kvm_vcpu *vcpu, u32 exit_reason)
-+{
-+	struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
-+	u32 intr_info;
-+
-+	switch (exit_reason) {
-+	case EXIT_REASON_EXCEPTION_NMI:
-+		intr_info = vmcs_read32(VM_EXIT_INTR_INFO);
-+		if (is_nmi(intr_info))
-+			return true;
-+		else if (is_page_fault(intr_info))
-+			return true;
- 		return vmcs12->exception_bitmap &
- 				(1u << (intr_info & INTR_INFO_VECTOR_MASK));
- 	case EXIT_REASON_EXTERNAL_INTERRUPT:
--		return false;
-+		return nested_exit_on_intr(vcpu);
- 	case EXIT_REASON_TRIPLE_FAULT:
- 		return true;
- 	case EXIT_REASON_INTERRUPT_WINDOW:
-@@ -5734,7 +5785,7 @@ static bool nested_vmx_exit_reflected(struct kvm_vcpu *vcpu, u32 exit_reason)
- 			nested_cpu_has2(vmcs12,
- 				SECONDARY_EXEC_PAUSE_LOOP_EXITING);
- 	case EXIT_REASON_MCE_DURING_VMENTRY:
--		return false;
-+		return true;
- 	case EXIT_REASON_TPR_BELOW_THRESHOLD:
- 		return nested_cpu_has(vmcs12, CPU_BASED_TPR_SHADOW);
- 	case EXIT_REASON_APIC_ACCESS:
-@@ -5746,22 +5797,6 @@ static bool nested_vmx_exit_reflected(struct kvm_vcpu *vcpu, u32 exit_reason)
- 		 * delivery" only come from vmcs12.
- 		 */
- 		return true;
--	case EXIT_REASON_EPT_VIOLATION:
--		/*
--		 * L0 always deals with the EPT violation. If nested EPT is
--		 * used, and the nested mmu code discovers that the address is
--		 * missing in the guest EPT table (EPT12), the EPT violation
--		 * will be injected with nested_ept_inject_page_fault()
--		 */
--		return false;
--	case EXIT_REASON_EPT_MISCONFIG:
--		/*
--		 * L2 never uses directly L1's EPT, but rather L0's own EPT
--		 * table (shadow on EPT) or a merged EPT table that L0 built
--		 * (EPT on EPT). So any problems with the structure of the
--		 * table is L0's fault.
--		 */
--		return false;
- 	case EXIT_REASON_INVPCID:
- 		return
- 			nested_cpu_has2(vmcs12, SECONDARY_EXEC_ENABLE_INVPCID) &&
-@@ -5778,17 +5813,6 @@ static bool nested_vmx_exit_reflected(struct kvm_vcpu *vcpu, u32 exit_reason)
- 		 * the XSS exit bitmap in vmcs12.
- 		 */
- 		return nested_cpu_has2(vmcs12, SECONDARY_EXEC_XSAVES);
--	case EXIT_REASON_PREEMPTION_TIMER:
--		return false;
--	case EXIT_REASON_PML_FULL:
--		/* We emulate PML support to L1. */
--		return false;
--	case EXIT_REASON_VMFUNC:
--		/* VM functions are emulated through L2->L0 vmexits. */
--		return false;
--	case EXIT_REASON_ENCLS:
--		/* SGX is never exposed to L1 */
--		return false;
- 	case EXIT_REASON_UMWAIT:
- 	case EXIT_REASON_TPAUSE:
- 		return nested_cpu_has2(vmcs12,
-@@ -5830,7 +5854,12 @@ bool nested_vmx_reflect_vmexit(struct kvm_vcpu *vcpu, u32 exit_reason)
- 				vmcs_read32(VM_EXIT_INTR_ERROR_CODE),
- 				KVM_ISA_VMX);
- 
--	if (!nested_vmx_exit_reflected(vcpu, exit_reason))
-+	/* If L0 (KVM) wants the exit, it trumps L1's desires. */
-+	if (nested_vmx_l0_wants_exit(vcpu, exit_reason))
-+		return false;
-+
-+	/* If L1 doesn't want the exit, handle it in L0. */
-+	if (!nested_vmx_l1_wants_exit(vcpu, exit_reason))
- 		return false;
+ 	slab_flags_t flags = s->flags;
+ 	unsigned int size = s->object_size;
++	unsigned int freepointer_area;
+ 	unsigned int order;
  
  	/*
-@@ -6162,7 +6191,7 @@ void nested_vmx_setup_ctls_msrs(struct nested_vmx_msrs *msrs, u32 ept_caps)
- 	 * reason is that if one of these bits is necessary, it will appear
- 	 * in vmcs01 and prepare_vmcs02, when it bitwise-or's the control
- 	 * fields of vmcs01 and vmcs02, will turn these bits off - and
--	 * nested_vmx_exit_reflected() will not pass related exits to L1.
-+	 * nested_vmx_l1_wants_exit() will not pass related exits to L1.
- 	 * These rules have exceptions below.
+@@ -3541,6 +3542,13 @@ static int calculate_sizes(struct kmem_cache *s, int forced_order)
+ 	 * the possible location of the free pointer.
  	 */
+ 	size = ALIGN(size, sizeof(void *));
++	/*
++	 * This is the area of the object where a freepointer can be
++	 * safely written. If redzoning adds more to the inuse size, we
++	 * can't use that portion for writing the freepointer, so
++	 * s->offset must be limited within this for the general case.
++	 */
++	freepointer_area = size;
  
+ #ifdef CONFIG_SLUB_DEBUG
+ 	/*
+@@ -3582,13 +3590,13 @@ static int calculate_sizes(struct kmem_cache *s, int forced_order)
+ 		 */
+ 		s->offset = size;
+ 		size += sizeof(void *);
+-	} else if (size > sizeof(void *)) {
++	} else if (freepointer_area > sizeof(void *)) {
+ 		/*
+ 		 * Store freelist pointer near middle of object to keep
+ 		 * it away from the edges of the object to avoid small
+ 		 * sized over/underflows from neighboring allocations.
+ 		 */
+-		s->offset = ALIGN(size / 2, sizeof(void *));
++		s->offset = ALIGN(freepointer_area / 2, sizeof(void *));
+ 	}
+ 
+ #ifdef CONFIG_SLUB_DEBUG
 -- 
-2.26.0
+2.20.1
 
+
+-- 
+Kees Cook
