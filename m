@@ -2,610 +2,170 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D56C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48097C3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 670F620775
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:49:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586940592;
-	bh=6Czx4eTMGDFT78QSchDzwvrg4425zPtDelRVP0gyVgQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B8hmHIvJ292vbQ7tsee1At2qCts1NWYAa95WEqDMDqQ62gknbjwGMA22H4cWO/nTJ
-	 409qKjc6C64CUNWZpmMBt5vK21e8YYxYm/pKm1iupSQ2fJcxuvesvTGeO9BO3MbbBf
-	 aH9FwjbSwWH9xQYFOfjztbsp1VhXc0H08GbycF8g=
+	by mail.kernel.org (Postfix) with ESMTP id 281E9206F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:50:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="mciyrlif"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2894976AbgDOItu (ORCPT
+        id S2895095AbgDOIuc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 04:49:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57174 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2895041AbgDOItp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 04:49:45 -0400
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12C9E206F9;
-        Wed, 15 Apr 2020 08:49:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586940584;
-        bh=6Czx4eTMGDFT78QSchDzwvrg4425zPtDelRVP0gyVgQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PmEA1zcRAXpV2u7tH0yNP0QKNsGdi5jxcXcTUGM8guH+7wnfvA5Q8VAQ0Wy0H4mL9
-         aT890u/uomeYtVoIPCfrZAgcLqxAAa7W0e1FdCMrQeovRKDgGWwNfp+VPvpBNCuxHm
-         SoC0nDpWMZuXL18bDHMNsKVHwvwFKlPoEevSUP6c=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Jann Horn <jannh@google.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>, amd-gfx@lists.freedesktop.org,
-        Alex Deucher <alexander.deucher@amd.com>,
-        David Zhou <David1.Zhou@amd.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH v4] x86: insn: Add insn_is_fpu()
-Date:   Wed, 15 Apr 2020 17:49:38 +0900
-Message-Id: <158694057870.6844.2013531396383081234.stgit@devnote2>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200409143212.GW20696@hirez.programming.kicks-ass.net>
-References: <20200409143212.GW20696@hirez.programming.kicks-ass.net>
-User-Agent: StGit/0.17.1-dirty
+        Wed, 15 Apr 2020 04:50:32 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:39244 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2895079AbgDOIuS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 04:50:18 -0400
+Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 79A4E2D1;
+        Wed, 15 Apr 2020 10:50:15 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1586940616;
+        bh=gou09fnjFJvhR1x9fvB0QuYMTNpfnFWwyMLgGzqgFXc=;
+        h=Subject:From:To:Cc:References:Reply-To:Date:In-Reply-To:From;
+        b=mciyrlifwnsfZbPwmMECsp60Sa5GaH5OEbXqLC3v7CwL3kuwpWl5iLGhLhSPZPkGu
+         8LTMN31DTnFJSHR3aPAjRJRoRap9fhmjaYqBr7gszmO+WsJTZoeax/RW3rwll5hgPe
+         33v+ipaQY6FkcyNH4WXrrqE9fW3o5Iu2Mstd/LyM=
+Subject: Re: [RFC PATCH v2 4/6] i2c: of: error message unification
+From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-i2c@vger.kernel.org
+Cc:     linux-renesas-soc@vger.kernel.org, linux-i3c@lists.infradead.org,
+        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
+        Luca Ceresoli <luca@lucaceresoli.net>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+References: <20200318150059.21714-1-wsa+renesas@sang-engineering.com>
+ <20200318150059.21714-5-wsa+renesas@sang-engineering.com>
+ <7014c94a-bb89-b282-52ee-49b42ab5aac1@bingham.xyz>
+Reply-To: kieran.bingham+renesas@ideasonboard.com
+Organization: Ideas on Board
+Message-ID: <4a63e7f5-8a0c-a9f1-640b-2f33c0076160@ideasonboard.com>
+Date:   Wed, 15 Apr 2020 09:50:12 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <7014c94a-bb89-b282-52ee-49b42ab5aac1@bingham.xyz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add insn_is_fpu(insn) which tells that the insn is
-whether touch the FPU/SSE/MMX register or the instruction
-of FP coprocessor.
+Hi Wolfram,
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
----
- Changes in v4:
- - Fix to match x87-opcode pattern with opcode instead
-   of ext(ension).
----
- arch/x86/include/asm/inat.h                |    7 +++
- arch/x86/include/asm/insn.h                |   12 ++++++
- arch/x86/lib/x86-opcode-map.txt            |   36 ++++++++++-------
- arch/x86/tools/gen-insn-attr-x86.awk       |   58 +++++++++++++++++++++++++---
- tools/arch/x86/include/asm/inat.h          |    7 +++
- tools/arch/x86/include/asm/insn.h          |   12 ++++++
- tools/arch/x86/lib/x86-opcode-map.txt      |   36 ++++++++++-------
- tools/arch/x86/tools/gen-insn-attr-x86.awk |   58 +++++++++++++++++++++++++---
- 8 files changed, 182 insertions(+), 44 deletions(-)
+On 15/04/2020 09:17, Kieran Bingham wrote:
+> Hi Wolfram,
+> 
+> On 18/03/2020 15:00, Wolfram Sang wrote:
+>> - don't prefix the device if %pOF is provided. That information is
+>>   enough.
+>> - move the prefix to pr_fmt
+>> - change prefix from "of_i2c" to "i2c_of" because the code was moved
+>>   out of the of-domain long ago
+>> - drop error string for callers of of_i2c_register_device because it
+>>   already reports enough (thanks to Tang Bin for the report!)
+>>
+>> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+>> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> 
+> Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> 
+>> ---
+>>  drivers/i2c/i2c-core-of.c | 18 +++++++-----------
+>>  1 file changed, 7 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/drivers/i2c/i2c-core-of.c b/drivers/i2c/i2c-core-of.c
+>> index 710704cd583e..f2d09ea0d336 100644
+>> --- a/drivers/i2c/i2c-core-of.c
+>> +++ b/drivers/i2c/i2c-core-of.c
+>> @@ -8,6 +8,8 @@
+>>   * Copyright (C) 2013, 2018 Wolfram Sang <wsa@the-dreams.de>
+>>   */
+>>  
+>> +#define pr_fmt(fmt) "i2c_of: " fmt
+>> +
+>>  #include <dt-bindings/i2c/i2c.h>
+>>  #include <linux/device.h>
+>>  #include <linux/err.h>
+>> @@ -28,7 +30,7 @@ int of_i2c_get_board_info(struct device_node *node, struct i2c_board_info *info)
 
-diff --git a/arch/x86/include/asm/inat.h b/arch/x86/include/asm/inat.h
-index 4cf2ad521f65..ffce45178c08 100644
---- a/arch/x86/include/asm/inat.h
-+++ b/arch/x86/include/asm/inat.h
-@@ -77,6 +77,8 @@
- #define INAT_VEXOK	(1 << (INAT_FLAG_OFFS + 5))
- #define INAT_VEXONLY	(1 << (INAT_FLAG_OFFS + 6))
- #define INAT_EVEXONLY	(1 << (INAT_FLAG_OFFS + 7))
-+#define INAT_FPU	(1 << (INAT_FLAG_OFFS + 8))
-+#define INAT_FPUIFVEX	(1 << (INAT_FLAG_OFFS + 9))
- /* Attribute making macros for attribute tables */
- #define INAT_MAKE_PREFIX(pfx)	(pfx << INAT_PFX_OFFS)
- #define INAT_MAKE_ESCAPE(esc)	(esc << INAT_ESC_OFFS)
-@@ -227,4 +229,9 @@ static inline int inat_must_evex(insn_attr_t attr)
- {
- 	return attr & INAT_EVEXONLY;
- }
-+
-+static inline int inat_is_fpu(insn_attr_t attr)
-+{
-+	return attr & INAT_FPU;
-+}
- #endif
-diff --git a/arch/x86/include/asm/insn.h b/arch/x86/include/asm/insn.h
-index 5c1ae3eff9d4..1752c54d2103 100644
---- a/arch/x86/include/asm/insn.h
-+++ b/arch/x86/include/asm/insn.h
-@@ -129,6 +129,18 @@ static inline int insn_is_evex(struct insn *insn)
- 	return (insn->vex_prefix.nbytes == 4);
- }
- 
-+static inline int insn_is_fpu(struct insn *insn)
-+{
-+	if (!insn->opcode.got)
-+		insn_get_opcode(insn);
-+	if (inat_is_fpu(insn->attr)) {
-+		if (insn->attr & INAT_FPUIFVEX)
-+			return insn_is_avx(insn);
-+		return 1;
-+	}
-+	return 0;
-+}
-+
- static inline int insn_has_emulate_prefix(struct insn *insn)
- {
- 	return !!insn->emulate_prefix_size;
-diff --git a/arch/x86/lib/x86-opcode-map.txt b/arch/x86/lib/x86-opcode-map.txt
-index ec31f5b60323..0adf11cbd3a8 100644
---- a/arch/x86/lib/x86-opcode-map.txt
-+++ b/arch/x86/lib/x86-opcode-map.txt
-@@ -33,6 +33,10 @@
- #  - (F2): the last prefix is 0xF2
- #  - (!F3) : the last prefix is not 0xF3 (including non-last prefix case)
- #  - (66&F2): Both 0x66 and 0xF2 prefixes are specified.
-+#
-+# Optional Superscripts
-+#  - {FPU}: this mnemonic doesn't have FPU/MMX/SSE operands but access those
-+#           registers.
- 
- Table: one byte opcode
- Referrer:
-@@ -202,7 +206,7 @@ AVXcode:
- 98: CBW/CWDE/CDQE
- 99: CWD/CDQ/CQO
- 9a: CALLF Ap (i64)
--9b: FWAIT/WAIT
-+9b: FWAIT/WAIT {FPU}
- 9c: PUSHF/D/Q Fv (d64)
- 9d: POPF/D/Q Fv (d64)
- 9e: SAHF
-@@ -269,14 +273,16 @@ d4: AAM Ib (i64)
- d5: AAD Ib (i64)
- d6:
- d7: XLAT/XLATB
--d8: ESC
--d9: ESC
--da: ESC
--db: ESC
--dc: ESC
--dd: ESC
--de: ESC
--df: ESC
-+# Intel SDM Appendix A Opcode Map shows these opcode are ESC (Escape to
-+# coprocessor instruction set), the coprocessor means x87 FPU.
-+d8: ESC {FPU}
-+d9: ESC {FPU}
-+da: ESC {FPU}
-+db: ESC {FPU}
-+dc: ESC {FPU}
-+dd: ESC {FPU}
-+de: ESC {FPU}
-+df: ESC {FPU}
- # 0xe0 - 0xef
- # Note: "forced64" is Intel CPU behavior: they ignore 0x66 prefix
- # in 64-bit mode. AMD CPUs accept 0x66 prefix, it causes RIP truncation
-@@ -339,7 +345,7 @@ AVXcode: 1
- 0c:
- # AMD's prefetch group. Intel supports prefetchw(/1) only.
- 0d: GrpP
--0e: FEMMS
-+0e: FEMMS {FPU}
- # 3DNow! uses the last imm byte as opcode extension.
- 0f: 3DNow! Pq,Qq,Ib
- # 0x0f 0x10-0x1f
-@@ -462,7 +468,7 @@ AVXcode: 1
- 75: pcmpeqw Pq,Qq | vpcmpeqw Vx,Hx,Wx (66),(v1)
- 76: pcmpeqd Pq,Qq | vpcmpeqd Vx,Hx,Wx (66),(v1)
- # Note: Remove (v), because vzeroall and vzeroupper becomes emms without VEX.
--77: emms | vzeroupper | vzeroall
-+77: emms {FPU} | vzeroupper | vzeroall
- 78: VMREAD Ey,Gy | vcvttps2udq/pd2udq Vx,Wpd (evo) | vcvttsd2usi Gv,Wx (F2),(ev) | vcvttss2usi Gv,Wx (F3),(ev) | vcvttps2uqq/pd2uqq Vx,Wx (66),(ev)
- 79: VMWRITE Gy,Ey | vcvtps2udq/pd2udq Vx,Wpd (evo) | vcvtsd2usi Gv,Wx (F2),(ev) | vcvtss2usi Gv,Wx (F3),(ev) | vcvtps2uqq/pd2uqq Vx,Wx (66),(ev)
- 7a: vcvtudq2pd/uqq2pd Vpd,Wx (F3),(ev) | vcvtudq2ps/uqq2ps Vpd,Wx (F2),(ev) | vcvttps2qq/pd2qq Vx,Wx (66),(ev)
-@@ -1036,10 +1042,10 @@ GrpTable: Grp14
- EndTable
- 
- GrpTable: Grp15
--0: fxsave | RDFSBASE Ry (F3),(11B)
--1: fxstor | RDGSBASE Ry (F3),(11B)
--2: vldmxcsr Md (v1) | WRFSBASE Ry (F3),(11B)
--3: vstmxcsr Md (v1) | WRGSBASE Ry (F3),(11B)
-+0: fxsave {FPU} | RDFSBASE Ry (F3),(11B)
-+1: fxrstor {FPU} | RDGSBASE Ry (F3),(11B)
-+2: ldmxcsr {FPU} | vldmxcsr Md (v1),{FPU} | WRFSBASE Ry (F3),(11B)
-+3: stmxcsr {FPU} | vstmxcsr Md (v1),{FPU} | WRGSBASE Ry (F3),(11B)
- 4: XSAVE | ptwrite Ey (F3),(11B)
- 5: XRSTOR | lfence (11B) | INCSSPD/Q Ry (F3),(11B)
- 6: XSAVEOPT | clwb (66) | mfence (11B) | TPAUSE Rd (66),(11B) | UMONITOR Rv (F3),(11B) | UMWAIT Rd (F2),(11B) | CLRSSBSY Mq (F3)
-diff --git a/arch/x86/tools/gen-insn-attr-x86.awk b/arch/x86/tools/gen-insn-attr-x86.awk
-index a42015b305f4..38475918467c 100644
---- a/arch/x86/tools/gen-insn-attr-x86.awk
-+++ b/arch/x86/tools/gen-insn-attr-x86.awk
-@@ -44,7 +44,7 @@ BEGIN {
- 	delete atable
- 
- 	opnd_expr = "^[A-Za-z/]"
--	ext_expr = "^\\("
-+	ext_expr = "^(\\(|\\{)"
- 	sep_expr = "^\\|$"
- 	group_expr = "^Grp[0-9A-Za-z]+"
- 
-@@ -65,7 +65,10 @@ BEGIN {
- 	modrm_expr = "^([CDEGMNPQRSUVW/][a-z]+|NTA|T[012])"
- 	force64_expr = "\\([df]64\\)"
- 	rex_expr = "^REX(\\.[XRWB]+)*"
--	fpu_expr = "^ESC" # TODO
-+	x87_expr = "^ESC"
-+
-+	fpureg_expr = "^[HLNPQUVW][a-z]+" # MMX/SSE register operands
-+	fpu_expr = "\\{FPU\\}"
- 
- 	lprefix1_expr = "\\((66|!F3)\\)"
- 	lprefix2_expr = "\\(F3\\)"
-@@ -236,10 +239,11 @@ function add_flags(old,new) {
- }
- 
- # convert operands to flags.
--function convert_operands(count,opnd,       i,j,imm,mod)
-+function convert_operands(count,opnd,       i,j,imm,mod,fpu)
- {
- 	imm = null
- 	mod = null
-+	fpu = null
- 	for (j = 1; j <= count; j++) {
- 		i = opnd[j]
- 		if (match(i, imm_expr) == 1) {
-@@ -253,7 +257,12 @@ function convert_operands(count,opnd,       i,j,imm,mod)
- 				imm = imm_flag[i]
- 		} else if (match(i, modrm_expr))
- 			mod = "INAT_MODRM"
-+		if (match(i, fpureg_expr) == 1) {
-+			fpu = "INAT_FPU"
-+		}
- 	}
-+	if (fpu)
-+		imm = add_flags(imm, fpu)
- 	return add_flags(imm, mod)
- }
- 
-@@ -283,6 +292,10 @@ function convert_operands(count,opnd,       i,j,imm,mod)
- 	variant = null
- 	# converts
- 	i = 2
-+	lpfpu[0] = 0
-+	lpfpu[1] = 0
-+	lpfpu[2] = 0
-+	lpfpu[3] = 0
- 	while (i <= NF) {
- 		opcode = $(i++)
- 		delete opnds
-@@ -318,10 +331,14 @@ function convert_operands(count,opnd,       i,j,imm,mod)
- 		if (match(opcode, rex_expr))
- 			flags = add_flags(flags, "INAT_MAKE_PREFIX(INAT_PFX_REX)")
- 
--		# check coprocessor escape : TODO
--		if (match(opcode, fpu_expr))
-+		# x87 escape opcode needs MODRM
-+		if (match(opcode, x87_expr))
- 			flags = add_flags(flags, "INAT_MODRM")
- 
-+		# check FPU/MMX/SSE superscripts
-+		if (match(ext, fpu_expr))
-+			flags = add_flags(flags, "INAT_FPU")
-+
- 		# check VEX codes
- 		if (match(ext, evexonly_expr))
- 			flags = add_flags(flags, "INAT_VEXOK | INAT_EVEXONLY")
-@@ -336,22 +353,49 @@ function convert_operands(count,opnd,       i,j,imm,mod)
- 				semantic_error("Unknown prefix: " opcode)
- 			flags = add_flags(flags, "INAT_MAKE_PREFIX(" prefix_num[opcode] ")")
- 		}
--		if (length(flags) == 0)
--			continue
-+
- 		# check if last prefix
- 		if (match(ext, lprefix1_expr)) {
-+			if (lpfpu[1] == 0 && flags !~ "INAT_FPU")
-+				lpfpu[1] = 1
-+			else if (lpfpu[1] != 0 && flags ~ "INAT_FPU")
-+				flags = add_flags(flags, "INAT_FPUIFVEX")
-+			if (length(flags) == 0)
-+				continue;
- 			lptable1[idx] = add_flags(lptable1[idx],flags)
- 			variant = "INAT_VARIANT"
- 		}
- 		if (match(ext, lprefix2_expr)) {
-+			if (lpfpu[2] == 0 && flags !~ "INAT_FPU")
-+				lpfpu[2] = 1
-+			else if (lpfpu[2] != 0 && flags ~ "INAT_FPU")
-+				flags = add_flags(flags, "INAT_FPUIFVEX")
-+			if (length(flags) == 0)
-+				continue;
- 			lptable2[idx] = add_flags(lptable2[idx],flags)
- 			variant = "INAT_VARIANT"
- 		}
- 		if (match(ext, lprefix3_expr)) {
-+			if (lpfpu[3] == 0 && flags !~ "INAT_FPU")
-+				lpfpu[3] = 1
-+			else if (lpfpu[3] != 0 && flags ~ "INAT_FPU")
-+				flags = add_flags(flags, "INAT_FPUIFVEX")
-+			if (length(flags) == 0)
-+				continue;
- 			lptable3[idx] = add_flags(lptable3[idx],flags)
- 			variant = "INAT_VARIANT"
- 		}
- 		if (!match(ext, lprefix_expr)){
-+			if (lpfpu[0] == 0 && flags !~ "INAT_FPU") {
-+				lpfpu[0] = 1
-+				lpfpu[1] = 1
-+				lpfpu[2] = 1
-+				lpfpu[3] = 1
-+			}
-+			else if (lpfpu[0] != 0 && flags ~ "INAT_FPU")
-+				flags = add_flags(flags, "INAT_FPUIFVEX")
-+			if (length(flags) == 0)
-+				continue;
- 			table[idx] = add_flags(table[idx],flags)
- 		}
- 	}
-diff --git a/tools/arch/x86/include/asm/inat.h b/tools/arch/x86/include/asm/inat.h
-index 877827b7c2c3..2e6a05290efd 100644
---- a/tools/arch/x86/include/asm/inat.h
-+++ b/tools/arch/x86/include/asm/inat.h
-@@ -77,6 +77,8 @@
- #define INAT_VEXOK	(1 << (INAT_FLAG_OFFS + 5))
- #define INAT_VEXONLY	(1 << (INAT_FLAG_OFFS + 6))
- #define INAT_EVEXONLY	(1 << (INAT_FLAG_OFFS + 7))
-+#define INAT_FPU	(1 << (INAT_FLAG_OFFS + 8))
-+#define INAT_FPUIFVEX	(1 << (INAT_FLAG_OFFS + 9))
- /* Attribute making macros for attribute tables */
- #define INAT_MAKE_PREFIX(pfx)	(pfx << INAT_PFX_OFFS)
- #define INAT_MAKE_ESCAPE(esc)	(esc << INAT_ESC_OFFS)
-@@ -227,4 +229,9 @@ static inline int inat_must_evex(insn_attr_t attr)
- {
- 	return attr & INAT_EVEXONLY;
- }
-+
-+static inline int inat_is_fpu(insn_attr_t attr)
-+{
-+	return attr & INAT_FPU;
-+}
- #endif
-diff --git a/tools/arch/x86/include/asm/insn.h b/tools/arch/x86/include/asm/insn.h
-index 568854b14d0a..d9f6bd9059c1 100644
---- a/tools/arch/x86/include/asm/insn.h
-+++ b/tools/arch/x86/include/asm/insn.h
-@@ -129,6 +129,18 @@ static inline int insn_is_evex(struct insn *insn)
- 	return (insn->vex_prefix.nbytes == 4);
- }
- 
-+static inline int insn_is_fpu(struct insn *insn)
-+{
-+	if (!insn->opcode.got)
-+		insn_get_opcode(insn);
-+	if (inat_is_fpu(insn->attr)) {
-+		if (insn->attr & INAT_FPUIFVEX)
-+			return insn_is_avx(insn);
-+		return 1;
-+	}
-+	return 0;
-+}
-+
- static inline int insn_has_emulate_prefix(struct insn *insn)
- {
- 	return !!insn->emulate_prefix_size;
-diff --git a/tools/arch/x86/lib/x86-opcode-map.txt b/tools/arch/x86/lib/x86-opcode-map.txt
-index ec31f5b60323..0adf11cbd3a8 100644
---- a/tools/arch/x86/lib/x86-opcode-map.txt
-+++ b/tools/arch/x86/lib/x86-opcode-map.txt
-@@ -33,6 +33,10 @@
- #  - (F2): the last prefix is 0xF2
- #  - (!F3) : the last prefix is not 0xF3 (including non-last prefix case)
- #  - (66&F2): Both 0x66 and 0xF2 prefixes are specified.
-+#
-+# Optional Superscripts
-+#  - {FPU}: this mnemonic doesn't have FPU/MMX/SSE operands but access those
-+#           registers.
- 
- Table: one byte opcode
- Referrer:
-@@ -202,7 +206,7 @@ AVXcode:
- 98: CBW/CWDE/CDQE
- 99: CWD/CDQ/CQO
- 9a: CALLF Ap (i64)
--9b: FWAIT/WAIT
-+9b: FWAIT/WAIT {FPU}
- 9c: PUSHF/D/Q Fv (d64)
- 9d: POPF/D/Q Fv (d64)
- 9e: SAHF
-@@ -269,14 +273,16 @@ d4: AAM Ib (i64)
- d5: AAD Ib (i64)
- d6:
- d7: XLAT/XLATB
--d8: ESC
--d9: ESC
--da: ESC
--db: ESC
--dc: ESC
--dd: ESC
--de: ESC
--df: ESC
-+# Intel SDM Appendix A Opcode Map shows these opcode are ESC (Escape to
-+# coprocessor instruction set), the coprocessor means x87 FPU.
-+d8: ESC {FPU}
-+d9: ESC {FPU}
-+da: ESC {FPU}
-+db: ESC {FPU}
-+dc: ESC {FPU}
-+dd: ESC {FPU}
-+de: ESC {FPU}
-+df: ESC {FPU}
- # 0xe0 - 0xef
- # Note: "forced64" is Intel CPU behavior: they ignore 0x66 prefix
- # in 64-bit mode. AMD CPUs accept 0x66 prefix, it causes RIP truncation
-@@ -339,7 +345,7 @@ AVXcode: 1
- 0c:
- # AMD's prefetch group. Intel supports prefetchw(/1) only.
- 0d: GrpP
--0e: FEMMS
-+0e: FEMMS {FPU}
- # 3DNow! uses the last imm byte as opcode extension.
- 0f: 3DNow! Pq,Qq,Ib
- # 0x0f 0x10-0x1f
-@@ -462,7 +468,7 @@ AVXcode: 1
- 75: pcmpeqw Pq,Qq | vpcmpeqw Vx,Hx,Wx (66),(v1)
- 76: pcmpeqd Pq,Qq | vpcmpeqd Vx,Hx,Wx (66),(v1)
- # Note: Remove (v), because vzeroall and vzeroupper becomes emms without VEX.
--77: emms | vzeroupper | vzeroall
-+77: emms {FPU} | vzeroupper | vzeroall
- 78: VMREAD Ey,Gy | vcvttps2udq/pd2udq Vx,Wpd (evo) | vcvttsd2usi Gv,Wx (F2),(ev) | vcvttss2usi Gv,Wx (F3),(ev) | vcvttps2uqq/pd2uqq Vx,Wx (66),(ev)
- 79: VMWRITE Gy,Ey | vcvtps2udq/pd2udq Vx,Wpd (evo) | vcvtsd2usi Gv,Wx (F2),(ev) | vcvtss2usi Gv,Wx (F3),(ev) | vcvtps2uqq/pd2uqq Vx,Wx (66),(ev)
- 7a: vcvtudq2pd/uqq2pd Vpd,Wx (F3),(ev) | vcvtudq2ps/uqq2ps Vpd,Wx (F2),(ev) | vcvttps2qq/pd2qq Vx,Wx (66),(ev)
-@@ -1036,10 +1042,10 @@ GrpTable: Grp14
- EndTable
- 
- GrpTable: Grp15
--0: fxsave | RDFSBASE Ry (F3),(11B)
--1: fxstor | RDGSBASE Ry (F3),(11B)
--2: vldmxcsr Md (v1) | WRFSBASE Ry (F3),(11B)
--3: vstmxcsr Md (v1) | WRGSBASE Ry (F3),(11B)
-+0: fxsave {FPU} | RDFSBASE Ry (F3),(11B)
-+1: fxrstor {FPU} | RDGSBASE Ry (F3),(11B)
-+2: ldmxcsr {FPU} | vldmxcsr Md (v1),{FPU} | WRFSBASE Ry (F3),(11B)
-+3: stmxcsr {FPU} | vstmxcsr Md (v1),{FPU} | WRGSBASE Ry (F3),(11B)
- 4: XSAVE | ptwrite Ey (F3),(11B)
- 5: XRSTOR | lfence (11B) | INCSSPD/Q Ry (F3),(11B)
- 6: XSAVEOPT | clwb (66) | mfence (11B) | TPAUSE Rd (66),(11B) | UMONITOR Rv (F3),(11B) | UMWAIT Rd (F2),(11B) | CLRSSBSY Mq (F3)
-diff --git a/tools/arch/x86/tools/gen-insn-attr-x86.awk b/tools/arch/x86/tools/gen-insn-attr-x86.awk
-index a42015b305f4..38475918467c 100644
---- a/tools/arch/x86/tools/gen-insn-attr-x86.awk
-+++ b/tools/arch/x86/tools/gen-insn-attr-x86.awk
-@@ -44,7 +44,7 @@ BEGIN {
- 	delete atable
- 
- 	opnd_expr = "^[A-Za-z/]"
--	ext_expr = "^\\("
-+	ext_expr = "^(\\(|\\{)"
- 	sep_expr = "^\\|$"
- 	group_expr = "^Grp[0-9A-Za-z]+"
- 
-@@ -65,7 +65,10 @@ BEGIN {
- 	modrm_expr = "^([CDEGMNPQRSUVW/][a-z]+|NTA|T[012])"
- 	force64_expr = "\\([df]64\\)"
- 	rex_expr = "^REX(\\.[XRWB]+)*"
--	fpu_expr = "^ESC" # TODO
-+	x87_expr = "^ESC"
-+
-+	fpureg_expr = "^[HLNPQUVW][a-z]+" # MMX/SSE register operands
-+	fpu_expr = "\\{FPU\\}"
- 
- 	lprefix1_expr = "\\((66|!F3)\\)"
- 	lprefix2_expr = "\\(F3\\)"
-@@ -236,10 +239,11 @@ function add_flags(old,new) {
- }
- 
- # convert operands to flags.
--function convert_operands(count,opnd,       i,j,imm,mod)
-+function convert_operands(count,opnd,       i,j,imm,mod,fpu)
- {
- 	imm = null
- 	mod = null
-+	fpu = null
- 	for (j = 1; j <= count; j++) {
- 		i = opnd[j]
- 		if (match(i, imm_expr) == 1) {
-@@ -253,7 +257,12 @@ function convert_operands(count,opnd,       i,j,imm,mod)
- 				imm = imm_flag[i]
- 		} else if (match(i, modrm_expr))
- 			mod = "INAT_MODRM"
-+		if (match(i, fpureg_expr) == 1) {
-+			fpu = "INAT_FPU"
-+		}
- 	}
-+	if (fpu)
-+		imm = add_flags(imm, fpu)
- 	return add_flags(imm, mod)
- }
- 
-@@ -283,6 +292,10 @@ function convert_operands(count,opnd,       i,j,imm,mod)
- 	variant = null
- 	# converts
- 	i = 2
-+	lpfpu[0] = 0
-+	lpfpu[1] = 0
-+	lpfpu[2] = 0
-+	lpfpu[3] = 0
- 	while (i <= NF) {
- 		opcode = $(i++)
- 		delete opnds
-@@ -318,10 +331,14 @@ function convert_operands(count,opnd,       i,j,imm,mod)
- 		if (match(opcode, rex_expr))
- 			flags = add_flags(flags, "INAT_MAKE_PREFIX(INAT_PFX_REX)")
- 
--		# check coprocessor escape : TODO
--		if (match(opcode, fpu_expr))
-+		# x87 escape opcode needs MODRM
-+		if (match(opcode, x87_expr))
- 			flags = add_flags(flags, "INAT_MODRM")
- 
-+		# check FPU/MMX/SSE superscripts
-+		if (match(ext, fpu_expr))
-+			flags = add_flags(flags, "INAT_FPU")
-+
- 		# check VEX codes
- 		if (match(ext, evexonly_expr))
- 			flags = add_flags(flags, "INAT_VEXOK | INAT_EVEXONLY")
-@@ -336,22 +353,49 @@ function convert_operands(count,opnd,       i,j,imm,mod)
- 				semantic_error("Unknown prefix: " opcode)
- 			flags = add_flags(flags, "INAT_MAKE_PREFIX(" prefix_num[opcode] ")")
- 		}
--		if (length(flags) == 0)
--			continue
-+
- 		# check if last prefix
- 		if (match(ext, lprefix1_expr)) {
-+			if (lpfpu[1] == 0 && flags !~ "INAT_FPU")
-+				lpfpu[1] = 1
-+			else if (lpfpu[1] != 0 && flags ~ "INAT_FPU")
-+				flags = add_flags(flags, "INAT_FPUIFVEX")
-+			if (length(flags) == 0)
-+				continue;
- 			lptable1[idx] = add_flags(lptable1[idx],flags)
- 			variant = "INAT_VARIANT"
- 		}
- 		if (match(ext, lprefix2_expr)) {
-+			if (lpfpu[2] == 0 && flags !~ "INAT_FPU")
-+				lpfpu[2] = 1
-+			else if (lpfpu[2] != 0 && flags ~ "INAT_FPU")
-+				flags = add_flags(flags, "INAT_FPUIFVEX")
-+			if (length(flags) == 0)
-+				continue;
- 			lptable2[idx] = add_flags(lptable2[idx],flags)
- 			variant = "INAT_VARIANT"
- 		}
- 		if (match(ext, lprefix3_expr)) {
-+			if (lpfpu[3] == 0 && flags !~ "INAT_FPU")
-+				lpfpu[3] = 1
-+			else if (lpfpu[3] != 0 && flags ~ "INAT_FPU")
-+				flags = add_flags(flags, "INAT_FPUIFVEX")
-+			if (length(flags) == 0)
-+				continue;
- 			lptable3[idx] = add_flags(lptable3[idx],flags)
- 			variant = "INAT_VARIANT"
- 		}
- 		if (!match(ext, lprefix_expr)){
-+			if (lpfpu[0] == 0 && flags !~ "INAT_FPU") {
-+				lpfpu[0] = 1
-+				lpfpu[1] = 1
-+				lpfpu[2] = 1
-+				lpfpu[3] = 1
-+			}
-+			else if (lpfpu[0] != 0 && flags ~ "INAT_FPU")
-+				flags = add_flags(flags, "INAT_FPUIFVEX")
-+			if (length(flags) == 0)
-+				continue;
- 			table[idx] = add_flags(table[idx],flags)
- 		}
- 	}
+
+Perhaps not directly needed by this patch but,
+
+at some point will you rename of_i2c_* to i2c_of_* ?
+
+
+>>  
+>>  	ret = of_property_read_u32(node, "reg", &addr);
+>>  	if (ret) {
+>> -		pr_err("of_i2c: invalid reg on %pOF\n", node);
+>> +		pr_err("invalid reg on %pOF\n", node);
+>>  		return ret;
+>>  	}
+>>  
+>> @@ -66,7 +68,7 @@ static struct i2c_client *of_i2c_register_device(struct i2c_adapter *adap,
+>>  	struct i2c_board_info info;
+>>  	int ret;
+>>  
+>> -	dev_dbg(&adap->dev, "of_i2c: register %pOF\n", node);
+>> +	pr_debug("register %pOF\n", node);
+>>  
+>>  	ret = of_i2c_get_board_info(node, &info);
+>>  	if (ret)
+>> @@ -74,7 +76,7 @@ static struct i2c_client *of_i2c_register_device(struct i2c_adapter *adap,
+>>  
+>>  	client = i2c_new_client_device(adap, &info);
+>>  	if (IS_ERR(client))
+>> -		dev_err(&adap->dev, "of_i2c: Failure registering %pOF\n", node);
+>> +		pr_err("failure registering %pOF (%ld)\n", node, PTR_ERR(client));
+>>  
+>>  	return client;
+>>  }
+>> @@ -88,7 +90,7 @@ void of_i2c_register_devices(struct i2c_adapter *adap)
+>>  	if (!adap->dev.of_node)
+>>  		return;
+>>  
+>> -	dev_dbg(&adap->dev, "of_i2c: walking child nodes\n");
+>> +	dev_dbg(&adap->dev, "walking child nodes\n");
+>>  
+>>  	bus = of_get_child_by_name(adap->dev.of_node, "i2c-bus");
+>>  	if (!bus)
+>> @@ -99,12 +101,8 @@ void of_i2c_register_devices(struct i2c_adapter *adap)
+>>  			continue;
+>>  
+>>  		client = of_i2c_register_device(adap, node);
+>> -		if (IS_ERR(client)) {
+>> -			dev_err(&adap->dev,
+>> -				 "Failed to create I2C device for %pOF\n",
+>> -				 node);
+>> +		if (IS_ERR(client))
+>>  			of_node_clear_flag(node, OF_POPULATED);
+>> -		}
+>>  	}
+>>  
+>>  	of_node_put(bus);
+>> @@ -243,8 +241,6 @@ static int of_i2c_notify(struct notifier_block *nb, unsigned long action,
+>>  
+>>  		client = of_i2c_register_device(adap, rd->dn);
+>>  		if (IS_ERR(client)) {
+>> -			dev_err(&adap->dev, "failed to create client for '%pOF'\n",
+>> -				 rd->dn);
+>>  			put_device(&adap->dev);
+>>  			of_node_clear_flag(rd->dn, OF_POPULATED);
+>>  			return notifier_from_errno(PTR_ERR(client));
+>>
+> 
 
