@@ -2,115 +2,281 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DFB3C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:02:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 339CBC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:05:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AAFD2076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:02:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="z3He7Hy0"
+	by mail.kernel.org (Postfix) with ESMTP id F223D2076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:05:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438737AbgDOVCS (ORCPT
+        id S2442215AbgDOVFL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 17:02:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43546 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2438334AbgDOVCQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 17:02:16 -0400
-Received: from mail-oi1-x231.google.com (mail-oi1-x231.google.com [IPv6:2607:f8b0:4864:20::231])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7C72C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 14:02:16 -0700 (PDT)
-Received: by mail-oi1-x231.google.com with SMTP id k9so14745417oia.8
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 14:02:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=N2S2rvnMUv9EkeNc34T2xFMYxr/qxEfAFfVcqbGmQws=;
-        b=z3He7Hy0epqDTOkSXK64WVlICvSnCcFHqsCYx/uvNSAbmtTkmCsUWNLV19wMHEgF2m
-         ZO8aR0VI3mv6ysj8ZeCUBW2XsCOtwIE9u7tp3Ra3SeNpWtFy2tcsRR+GDnVrIDf5B3xb
-         k31K4FR6UdMcRk5Wf3LTLkAXxo+Lwb4j/Gb2UiHNXTqgFnARQF2eMS2PQxV56Inh/JY0
-         gRW9Gjligh7X9oBNxz88d+bjHoTHwmeKY/3Jk5J5qUyjbxBOjKz5nHsu3FExcFxyQNAQ
-         LuB7Z0IlZYLz8Y1sWaxEvwKwadCasaCgLnF3fnIIPykEZVkVrRC2NnZ/bX1H5pcP3Ndt
-         fe5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=N2S2rvnMUv9EkeNc34T2xFMYxr/qxEfAFfVcqbGmQws=;
-        b=LyLE7ym5b6/kBRF8g7y1rpz4Aj5Ed+lzPNsNEmhSfgUbaxHoTPnZaHGGsKCTe+sUpz
-         2T433uAxWcPBaoWnJPqDq0QEQeKfTomyrrjwek2wtS4+rou7F6CrPyE19BZzP16fOeKr
-         jdH1XtBGyrZ5ufr6oG6fADNLAuhrsmvQ0CARldkL3uTK7rHcPelstFud2GIFh1QcW9r2
-         Q6Gzp0rC7gH+kfc2m7vfKTxQew7whKvXDZ9AAsGZs0mq7wgQkGlsPcp7x5L0ZEYjObJS
-         GVvRXyoWoSP7zW038mfvCZLiSf0Lb0iPZOHfGDBaRtbKUMktOJRQrWb6kRiI4wiz/PJ4
-         kuwA==
-X-Gm-Message-State: AGi0PuYByaNZYf84Xml7/2mGyee67n4Q2d7Gyg0rTpYuS8RU9X3SNcPf
-        8oyV0/GQDky1AJmTSlED7iBm3mjxvmPBv054klOoIw==
-X-Google-Smtp-Source: APiQypJzDy/lBs3s6hv5KNbEpCSLKC9tjMLP2UUce9WjeV9r/+KCrswmwuW6eufyQ6Omj+bNLNGrmEffcdkBU9Ft51k=
-X-Received: by 2002:a05:6808:a0a:: with SMTP id n10mr915668oij.10.1586984535153;
- Wed, 15 Apr 2020 14:02:15 -0700 (PDT)
+        Wed, 15 Apr 2020 17:05:11 -0400
+Received: from mga09.intel.com ([134.134.136.24]:27158 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2438334AbgDOVFG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 17:05:06 -0400
+IronPort-SDR: deevrgteYAPjfH63bfZnHwVCXdNHWMZstAM4qOVEtbB5FJ5JrJ/bfbstiPWIGnC1qHjxKxqV8p
+ BMbL8KdpZVwg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 14:05:04 -0700
+IronPort-SDR: R2bCasboqisfPPyuMLstwXFjoi0ukgJ86YMGSjrgOBFfwRqhItm+VLhEWOM3HRwgUH6pEDi4Ao
+ 9rSyaSjvgr9Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,388,1580803200"; 
+   d="scan'208";a="455035445"
+Received: from kcaccard-mobl.amr.corp.intel.com (HELO kcaccard-mobl1.jf.intel.com) ([10.209.116.191])
+  by fmsmga006.fm.intel.com with ESMTP; 15 Apr 2020 14:05:01 -0700
+From:   Kristen Carlson Accardi <kristen@linux.intel.com>
+To:     keescook@chromium.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com
+Cc:     arjan@linux.intel.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
+        rick.p.edgecomb@intel.com
+Subject: [PATCH 0/9] Function Granular Kernel Address Space Layout Randomization
+Date:   Wed, 15 Apr 2020 14:04:42 -0700
+Message-Id: <20200415210452.27436-1-kristen@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <CALAqxLV4rM74wuzuZ+BkUi+keccxkAxv30N4vrFO7CVQ5vnT1A@mail.gmail.com>
- <20200415085348.5511a5fe@gandalf.local.home> <CALAqxLV1A6sOC1GWpFYXeBoDff0+AJgoOYK7NktcTdvX3kvAeg@mail.gmail.com>
- <20200415161424.584d07d3@gandalf.local.home> <CALAqxLU26PVFPSza5GceSF6gTVdzo_2D3G0dBp0KZXvAWFUktA@mail.gmail.com>
- <20200415164116.40564f2c@gandalf.local.home>
-In-Reply-To: <20200415164116.40564f2c@gandalf.local.home>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Wed, 15 Apr 2020 14:02:04 -0700
-Message-ID: <CALAqxLW6jqr38bk8pp-Hom2=MLm3coTmzCP8MMfrDvMfx388=Q@mail.gmail.com>
-Subject: Re: On trace_*_rcuidle functions in modules
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     paulmck@kernel.org, Josh Triplett <josh@joshtriplett.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Todd Kjos <tkjos@google.com>, Stephen Boyd <sboyd@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 1:41 PM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> On Wed, 15 Apr 2020 13:17:53 -0700
-> John Stultz <john.stultz@linaro.org> wrote:
->
-> > > Hmm, isn't module code itself synchronized via RCU. Then having module code
-> > > being called without RCU "watching" could be dangerous?
-> >
-> > I'm not sure I'm following you here. Could you explain more?
->
-> So how does this code get registered to be called as a module?
+This patch set is an implementation of finer grained kernel address space
+randomization. It rearranges your kernel code at load time 
+on a per-function level granularity, with only around a second added to
+boot time.
 
-The driver is registered via standard platform_driver_register()
-called via module_initcall. The callback is then registered via
-cpu_pm_register_notifier() in the driver's probe function.
+Background
+----------
+KASLR was merged into the kernel with the objective of increasing the
+difficulty of code reuse attacks. Code reuse attacks reused existing code
+snippets to get around existing memory protections. They exploit software bugs
+which expose addresses of useful code snippets to control the flow of
+execution for their own nefarious purposes. KASLR moves the entire kernel
+code text as a unit at boot time in order to make addresses less predictable.
+The order of the code within the segment is unchanged - only the base address
+is shifted. There are a few shortcomings to this algorithm.
 
-> And if it is
-> registered, I'm guessing it needs to be unregistered too. How would that be
-> synchronized? Usually, calling synchronize_rcu() is done after
-> unregistering, but if that code is called without RCU watching, it is
-> possible synchronize_rcu() can finish before that code is released.
+1. Low Entropy - there are only so many locations the kernel can fit in. This
+   means an attacker could guess without too much trouble.
+2. Knowledge of a single address can reveal the offset of the base address,
+   exposing all other locations for a published/known kernel image.
+3. Info leaks abound.
 
-So I'm actually trying to enable the driver to be loaded as a
-permanent module, so there's no remove hook (so much depends on the
-driver that you couldn't remove it and have anything work - we just
-want it to be modularly loaded so all devices don't have to pay the
-cost of including the driver).
+Finer grained ASLR has been proposed as a way to make ASLR more resistant
+to info leaks. It is not a new concept at all, and there are many variations
+possible. Function reordering is an implementation of finer grained ASLR
+which randomizes the layout of an address space on a function level
+granularity. We use the term "fgkaslr" in this document to refer to the
+technique of function reordering when used with KASLR, as well as finer grained
+KASLR in general.
 
-So in my case your concerns may not be a problem, but I guess
-generally it might. Though I'd hope the callback would be unregistered
-(and whatever waiting for the grace period to complete be done) before
-the module removal is complete. But maybe I'm still missing your
-point?
+Proposed Improvement
+--------------------
+This patch set proposes adding function reordering on top of the existing
+KASLR base address randomization. The over-arching objective is incremental
+improvement over what we already have, as well as something that can be
+merged and deployed with as little disruption to our existing kernel/ecosystem
+as possible. It is designed to work with the existing solution, although it
+can be used independently (not sure why you would do that though...). The
+implementation is really pretty simple, and there are 2 main area where
+changes occur:
 
-thanks
--john
+* Build time
+
+GCC has an option to place functions into individual .text sections. We can
+use this option to implement function reordering at load time. The final
+compiled vmlinux retains all the section headers, which can be used to help
+us find the address ranges of each function. Using this information and
+an expanded table of relocation addresses, we can shuffle the individual
+text sections immediately after decompression. You are probably asking
+yourself how this could possibly work given the number of tables of
+addresses that exist inside the kernel today for features such as exception
+handling and kprobes. Most of these tables generate relocations and
+require a simple update, and some tables that have assumptions about order
+require sorting after the update. In order to modify these tables, we
+preserve a few key symbols from the objcopy symbol stripping process for use
+after shuffling the text segments.
+
+Some highlights from the build time changes to look for:
+
+The top level kernel Makefile was modified to add the gcc flag if it
+is supported. Currently, I am applying this flag to everything it is
+possible to randomize. Future work could turn off this flags for selected
+files or even entire subsystems, although obviously at the cost of security.
+
+The relocs tool is updated to add relative relocations. This information
+previously wasn't included because it wasn't necessary when moving the
+entire .text segment as a unit. 
+
+A new file was created to contain a list of symbols that objcopy should
+keep. We use those symbols at load time as described below.
+
+* Load time
+
+The boot kernel was modified to parse the vmlinux elf file after
+decompression to check for our interesting symbols that we kept, and to
+look for any .text.* sections to randomize. We then shuffle the sections
+and update any tables that need to be updated or resorted. The existing
+code which updated relocation addresses was modified to account for not
+just a fixed delta from the load address, but the offset that the function
+section was moved to. This requires inspection of each address to see if
+it was impacted by a randomization. We use a bsearch to make this less
+horrible on performance.
+
+In order to hide our new layout, symbols reported through /proc/kallsyms
+will be sorted by name alphabetically rather than by address.
+
+Security Considerations
+-----------------------
+The objective of this patch set is to improve a technology that is already
+merged into the kernel (KASLR). Obviously, this code is not a one stop
+shopping place for blocking code reuse attacks, but should instead be
+considered as one of several tools that can be used. In particular, this
+code is meant to make KASLR more effective in the presence of info leaks.
+A key point to note is that we are basically accepting that there are
+many and various ways to leak address today and in the future, and rather
+than assume that we can stop them all, we should find a method which makes
+individual info leaks less important. How much entropy we are adding to
+the existing entropy of standard KASLR will depend on a few variables.
+Firstly and most obviously, the number of functions you randomize matters.
+This implementation keeps the existing .text section for code that cannot be
+randomized - for example, because it was assembly code, or we opted out of
+randomization for performance reasons. The less sections to randomize, the
+less entropy. In addition, due to alignment (16 bytes for x86_64), the number
+of bits in a address that the attacker needs to guess is reduced, as the lower
+bits are identical.
+
+Performance Impact
+------------------
+There are two areas where function reordering can impact performance: boot
+time latency, and run time performance.
+
+* Boot time latency
+This implementation of finer grained KASLR impacts the boot time of the kernel
+in several places. It requires additional parsing of the kernel ELF file to
+obtain the section headers of the sections to be randomized. It calls the
+random number generator for each section to be randomized to determine that
+section's new memory location. It copies the decompressed kernel into a new
+area of memory to avoid corruption when laying out the newly randomized
+sections. It increases the number of relocations the kernel has to perform at
+boot time vs. standard KASLR, and it also requires a lookup on each address
+that needs to be relocated to see if it was in a randomized section and needs
+to be adjusted by a new offset. Finally, it re-sorts a few data tables that
+are required to be sorted by address.
+
+Booting a test VM on a modern, well appointed system showed an increase in
+latency of approximately 1 second.
+
+* Run time
+The performance impact at run-time of function reordering varies by workload.
+Using kcbench, a kernel compilation benchmark, the performance of a kernel
+build with finer grained KASLR was about 1% slower than a kernel with standard
+KASLR. Analysis with perf showed a slightly higher percentage of 
+L1-icache-load-misses. Other workloads were examined as well, with varied
+results. Some workloads performed significantly worse under FGKASLR, while
+others stayed the same or were mysteriously better. In general, it will
+depend on the code flow whether or not finer grained KASLR will impact
+your workload, and how the underlying code was designed. Future work could
+identify hot areas that may not be randomized and either leave them in the
+.text section or group them together into a single section that may be
+randomized. If grouping things together helps, one other thing to consider
+is that if we could identify text blobs that should be grouped together
+to benefit a particular code flow, it could be interesting to explore
+whether this security feature could be also be used as a performance
+feature if you are interested in optimizing your kernel layout for a
+particular workload at boot time. Optimizing function layout for a particular
+workload has been researched and proven effective - for more information
+read the Facebook paper "Optimizing Function Placement for Large-Scale
+Data-Center Applications" (see references section below).
+
+Image Size
+----------
+Adding additional section headers as a result of compiling with
+-ffunction-sections will increase the size of the vmlinux ELF file.
+With a standard distro config, the resulting vmlinux was increased by
+about 3%. The compressed image is also increased due to the header files,
+as well as the extra relocations that must be added. You can expect fgkaslr
+to increase the size of the compressed image by about 15%.
+
+Building
+--------
+To enable fine grained KASLR, you need to have the following config options
+set (including all the ones you would use to build normal KASLR)
+
+CONFIG_FG_KASLR=y
+
+In addition, fgkaslr is only supported for the X86_64 architecture.
+
+Modules
+-------
+Modules are randomized similarly to the rest of the kernel by shuffling
+the sections at load time prior to moving them into memory. The module must
+also have been build with the -ffunction-sections compiler option.
+
+References
+----------
+There are a lot of academic papers which explore finer grained ASLR.
+This paper in particular contributed the most to my implementation design
+as well as my overall understanding of the problem space:
+
+Selfrando: Securing the Tor Browser against De-anonymization Exploits,
+M. Conti, S. Crane, T. Frassetto, et al.
+
+For more information on how function layout impacts performance, see:
+
+Optimizing Function Placement for Large-Scale Data-Center Applications,
+G. Ottoni, B. Maher
+
+Kees Cook (1):
+  x86/boot: Allow a "silent" kaslr random byte fetch
+
+Kristen Carlson Accardi (8):
+  objtool: do not assume order of parent/child functions
+  x86: tools/relocs: Support >64K section headers
+  x86: Makefile: Add build and config option for CONFIG_FG_KASLR
+  x86: make sure _etext includes function sections
+  x86/tools: Adding relative relocs for randomized functions
+  x86: Add support for function granular KASLR
+  kallsyms: hide layout
+  module: Reorder functions
+
+ Documentation/security/fgkaslr.rst       | 151 +++++
+ Documentation/security/index.rst         |   1 +
+ Makefile                                 |   4 +
+ arch/x86/Kconfig                         |  13 +
+ arch/x86/boot/compressed/Makefile        |  10 +-
+ arch/x86/boot/compressed/fgkaslr.c       | 809 +++++++++++++++++++++++
+ arch/x86/boot/compressed/kaslr.c         |   7 +-
+ arch/x86/boot/compressed/misc.c          | 107 ++-
+ arch/x86/boot/compressed/misc.h          |  31 +
+ arch/x86/boot/compressed/utils.c         |  12 +
+ arch/x86/boot/compressed/vmlinux.symbols |  18 +
+ arch/x86/include/asm/boot.h              |  15 +-
+ arch/x86/kernel/vmlinux.lds.S            |  18 +-
+ arch/x86/lib/kaslr.c                     |  18 +-
+ arch/x86/tools/relocs.c                  | 143 +++-
+ arch/x86/tools/relocs.h                  |   4 +-
+ arch/x86/tools/relocs_common.c           |  14 +-
+ include/asm-generic/vmlinux.lds.h        |   2 +-
+ include/uapi/linux/elf.h                 |   1 +
+ kernel/kallsyms.c                        | 138 +++-
+ kernel/module.c                          |  82 +++
+ tools/objtool/elf.c                      |   8 +-
+ 22 files changed, 1543 insertions(+), 63 deletions(-)
+ create mode 100644 Documentation/security/fgkaslr.rst
+ create mode 100644 arch/x86/boot/compressed/fgkaslr.c
+ create mode 100644 arch/x86/boot/compressed/utils.c
+ create mode 100644 arch/x86/boot/compressed/vmlinux.symbols
+
+-- 
+2.20.1
+
