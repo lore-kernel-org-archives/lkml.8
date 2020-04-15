@@ -2,131 +2,92 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1189CC3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:37:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE232C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:38:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC8BA20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:37:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586954275;
-	bh=DrlZZnfpjcnq9LkIgSG2N2fWzqWh3eSaL4sYP7BdPj8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1e0Tqh4hyCm/1QlZ6p1P9nHNkew/zcYNyr2aJMmaMpSN2QuuSJkgJc7WG3dqp+QUu
-	 NJgD7OXXieFFCCAmtx6ALFwJXKgZ/o/k//ib9J4zwDpZ9yVr7Ku7VbjPmpSxOzqkSi
-	 aPu1JX0om84PtSrgpuIhPOFyHA3Dwvey8uzhgbLU=
+	by mail.kernel.org (Postfix) with ESMTP id C3E0D20737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:38:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S369918AbgDOMhw (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:37:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36572 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409048AbgDOLoI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:44:08 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2CAB20857;
-        Wed, 15 Apr 2020 11:44:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951048;
-        bh=DrlZZnfpjcnq9LkIgSG2N2fWzqWh3eSaL4sYP7BdPj8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RAXJPPZ3/PDWf/vmcqP00iKXgfC6HneK0mbd4RIVPlCuM+jnNHSeN9ZJ+O5wkQJi2
-         C9LsyLneMUXcnlA9XA2To7EkggAc7Or4OFoQYxAh5d30fxvDwJSCMTHt+usaE+8kCn
-         M7BqeXaDAs2xrV3wvxRGPiGtc1m+1epzzXj9ttz4=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.5 083/106] f2fs: fix NULL pointer dereference in f2fs_write_begin()
-Date:   Wed, 15 Apr 2020 07:42:03 -0400
-Message-Id: <20200415114226.13103-83-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
-References: <20200415114226.13103-1-sashal@kernel.org>
+        id S369891AbgDOMhK (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:37:10 -0400
+Received: from m17618.mail.qiye.163.com ([59.111.176.18]:57479 "EHLO
+        m17618.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S369752AbgDOMe0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 08:34:26 -0400
+Received: from ubuntu.localdomain (unknown [58.251.74.226])
+        by m17618.mail.qiye.163.com (Hmail) with ESMTPA id 494524E2032;
+        Wed, 15 Apr 2020 20:34:23 +0800 (CST)
+From:   Wang Wenhu <wenhu.wang@vivo.com>
+To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        oss@buserror.net, christophe.leroy@c-s.fr,
+        linuxppc-dev@lists.ozlabs.org
+Cc:     kernel@vivo.com, Wang Wenhu <wenhu.wang@vivo.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 2/5] powerpc: sysdev: fix compile error for fsl_85xx_cache_sram
+Date:   Wed, 15 Apr 2020 05:33:43 -0700
+Message-Id: <20200415123346.116212-3-wenhu.wang@vivo.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200415123346.116212-1-wenhu.wang@vivo.com>
+References: <20200415123346.116212-1-wenhu.wang@vivo.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSFVLSE1LS0tLSkhITkpPT1lXWShZQU
+        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NBw6Azo4ODg2TwgrE0I*IzAW
+        ORlPFCtVSlVKTkNNQk5PS01ITUxIVTMWGhIXVQweFRMOVQwaFRw7DRINFFUYFBZFWVdZEgtZQVlO
+        Q1VJTkpVTE9VSUlNWVdZCAFZQUhKTkI3Bg++
+X-HM-Tid: 0a717dd54ecd9376kuws494524e2032
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+Include linux/io.h into fsl_85xx_cache_sram.c to fix the
+implicit-declaration compile error when building Cache-Sram.
 
-[ Upstream commit 62f63eea291b50a5677ae7503ac128803174698a ]
+arch/powerpc/sysdev/fsl_85xx_cache_sram.c: In function ‘instantiate_cache_sram’:
+arch/powerpc/sysdev/fsl_85xx_cache_sram.c:97:26: error: implicit declaration of function ‘ioremap_coherent’; did you mean ‘bitmap_complement’? [-Werror=implicit-function-declaration]
+  cache_sram->base_virt = ioremap_coherent(cache_sram->base_phys,
+                          ^~~~~~~~~~~~~~~~
+                          bitmap_complement
+arch/powerpc/sysdev/fsl_85xx_cache_sram.c:97:24: error: assignment makes pointer from integer without a cast [-Werror=int-conversion]
+  cache_sram->base_virt = ioremap_coherent(cache_sram->base_phys,
+                        ^
+arch/powerpc/sysdev/fsl_85xx_cache_sram.c:123:2: error: implicit declaration of function ‘iounmap’; did you mean ‘roundup’? [-Werror=implicit-function-declaration]
+  iounmap(cache_sram->base_virt);
+  ^~~~~~~
+  roundup
+cc1: all warnings being treated as errors
 
-BUG: kernel NULL pointer dereference, address: 0000000000000000
-RIP: 0010:f2fs_write_begin+0x823/0xb90 [f2fs]
-Call Trace:
- f2fs_quota_write+0x139/0x1d0 [f2fs]
- write_blk+0x36/0x80 [quota_tree]
- get_free_dqblk+0x42/0xa0 [quota_tree]
- do_insert_tree+0x235/0x4a0 [quota_tree]
- do_insert_tree+0x26e/0x4a0 [quota_tree]
- do_insert_tree+0x26e/0x4a0 [quota_tree]
- do_insert_tree+0x26e/0x4a0 [quota_tree]
- qtree_write_dquot+0x70/0x190 [quota_tree]
- v2_write_dquot+0x43/0x90 [quota_v2]
- dquot_acquire+0x77/0x100
- f2fs_dquot_acquire+0x2f/0x60 [f2fs]
- dqget+0x310/0x450
- dquot_transfer+0x7e/0x120
- f2fs_setattr+0x11a/0x4a0 [f2fs]
- notify_change+0x349/0x480
- chown_common+0x168/0x1c0
- do_fchownat+0xbc/0xf0
- __x64_sys_fchownat+0x20/0x30
- do_syscall_64+0x5f/0x220
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Passing fsdata parameter to .write_{begin,end} in f2fs_quota_write(),
-so that if quota file is compressed one, we can avoid above NULL
-pointer dereference when updating quota content.
-
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+Cc: Scott Wood <oss@buserror.net>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: linuxppc-dev@lists.ozlabs.org
+Fixes: 6db92cc9d07d ("powerpc/85xx: add cache-sram support")
+Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
 ---
- fs/f2fs/super.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/powerpc/sysdev/fsl_85xx_cache_sram.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index b2f8b934d8fc5..0ed437dc53ecc 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -1826,6 +1826,7 @@ static ssize_t f2fs_quota_write(struct super_block *sb, int type,
- 	int offset = off & (sb->s_blocksize - 1);
- 	size_t towrite = len;
- 	struct page *page;
-+	void *fsdata = NULL;
- 	char *kaddr;
- 	int err = 0;
- 	int tocopy;
-@@ -1835,7 +1836,7 @@ static ssize_t f2fs_quota_write(struct super_block *sb, int type,
- 								towrite);
- retry:
- 		err = a_ops->write_begin(NULL, mapping, off, tocopy, 0,
--							&page, NULL);
-+							&page, &fsdata);
- 		if (unlikely(err)) {
- 			if (err == -ENOMEM) {
- 				congestion_wait(BLK_RW_ASYNC, HZ/50);
-@@ -1851,7 +1852,7 @@ static ssize_t f2fs_quota_write(struct super_block *sb, int type,
- 		flush_dcache_page(page);
+diff --git a/arch/powerpc/sysdev/fsl_85xx_cache_sram.c b/arch/powerpc/sysdev/fsl_85xx_cache_sram.c
+index f6c665dac725..be3aef4229d7 100644
+--- a/arch/powerpc/sysdev/fsl_85xx_cache_sram.c
++++ b/arch/powerpc/sysdev/fsl_85xx_cache_sram.c
+@@ -17,6 +17,7 @@
+ #include <linux/of_platform.h>
+ #include <asm/pgtable.h>
+ #include <asm/fsl_85xx_cache_sram.h>
++#include <linux/io.h>
  
- 		a_ops->write_end(NULL, mapping, off, tocopy, tocopy,
--						page, NULL);
-+						page, fsdata);
- 		offset = 0;
- 		towrite -= tocopy;
- 		off += tocopy;
+ #include "fsl_85xx_cache_ctlr.h"
+ 
 -- 
-2.20.1
+2.17.1
 
