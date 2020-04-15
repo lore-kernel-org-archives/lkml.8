@@ -7,50 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31366C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3719FC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:03:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F395E20575
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:03:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 175C820575
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:03:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586952194;
-	bh=3h2z9IDbzxVQV+fUdUOCvqUsPvo+eOXmgmiUdyvpTDk=;
+	s=default; t=1586952198;
+	bh=aS6rCUp0LQwVhHJsV5uUa9qCEMgITqc2OzijRDMUb+0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Om4oX1nfeyj9ZuiwITca2ZnpCTHyPxdTcY/wt9UAovtWb0105vMlx/0PU7OVPSq9n
-	 CZmr7wFHYx3U3rPrP5bwSxEfpo1DRnLpGgZwHs0a4D96RYmdnnDRdpxRE5JmZqTkFL
-	 6SmL2t2glH3kVHnCNNrkMLmrGaOUZyqPJfQxAD/k=
+	b=teI87x9r3yKnNb6BbzGurnNt+UGG6HRcgHwG47rw7fjEorDqbfFSI3rsZJhP9NmOf
+	 m1G0Li98M1nDBpzT0ENTaJu78KIXA3202AwHepRL0DKrVdx2aZG13AZDgUvTbRyv6h
+	 8N4Uneqt4kH5OakWLye+FwBRn5xul0fWexXAXr7A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S368200AbgDOMB6 (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:01:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43836 "EHLO mail.kernel.org"
+        id S368241AbgDOMDO (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:03:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409429AbgDOLsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:48:09 -0400
+        id S2409452AbgDOLs1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:48:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 691B020732;
-        Wed, 15 Apr 2020 11:48:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D408F2137B;
+        Wed, 15 Apr 2020 11:48:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951289;
-        bh=3h2z9IDbzxVQV+fUdUOCvqUsPvo+eOXmgmiUdyvpTDk=;
+        s=default; t=1586951307;
+        bh=aS6rCUp0LQwVhHJsV5uUa9qCEMgITqc2OzijRDMUb+0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dzwC7zi+7qWhkTiyOCke7qRJW3JgUO2YekNBDEOry8xzHMYzKkiBW4y2jU5GaC1xV
-         02SX3kxwVLfELFOb24xtFCYFw6nJ/K16llGkDQCpTB1YpYvlMvf5SrZzoA40Ueq6eL
-         Y2eNXmXbgUG2CXYfZJ2riQql5neUc4OQZ9/z2Op0=
+        b=tFhtEAL4WK1SQf1f5uAhdTokXOM/dRcTqL80zFQVEg7TqSDCYhPIlVpM3SoohKtym
+         3KL3VVQEANxJghnV4li/SPJn+ViNlbCu92WOoYJGuwjspO8YCGWSh+Ba+eKR4q6OO3
+         afmrYY7uqQhBhuQKUdp/geE1GBTW8uSYQ0WIfsXM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Oliver Neukum <oneukum@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 17/21] mfd: dln2: Fix sanity checking for endpoints
-Date:   Wed, 15 Apr 2020 07:47:44 -0400
-Message-Id: <20200415114748.15713-17-sashal@kernel.org>
+Cc:     Vegard Nossum <vegard.nossum@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Daniel Santos <daniel.santos@pobox.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Ian Abbott <abbotti@mev.co.uk>, Joe Perches <joe@perches.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-sparse@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 10/14] compiler.h: fix error in BUILD_BUG_ON() reporting
+Date:   Wed, 15 Apr 2020 07:48:10 -0400
+Message-Id: <20200415114814.15954-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415114748.15713-1-sashal@kernel.org>
-References: <20200415114748.15713-1-sashal@kernel.org>
+In-Reply-To: <20200415114814.15954-1-sashal@kernel.org>
+References: <20200415114814.15954-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,59 +63,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Vegard Nossum <vegard.nossum@oracle.com>
 
-[ Upstream commit fb945c95a482200876993977008b67ea658bd938 ]
+[ Upstream commit af9c5d2e3b355854ff0e4acfbfbfadcd5198a349 ]
 
-While the commit 2b8bd606b1e6 ("mfd: dln2: More sanity checking for endpoints")
-tries to harden the sanity checks it made at the same time a regression,
-i.e.  mixed in and out endpoints. Obviously it should have been not tested on
-real hardware at that time, but unluckily it didn't happen.
+compiletime_assert() uses __LINE__ to create a unique function name.  This
+means that if you have more than one BUILD_BUG_ON() in the same source
+line (which can happen if they appear e.g.  in a macro), then the error
+message from the compiler might output the wrong condition.
 
-So, fix above mentioned typo and make device being enumerated again.
+For this source file:
 
-While here, introduce an enumerator for magic values to prevent similar issue
-to happen in the future.
+	#include <linux/build_bug.h>
 
-Fixes: 2b8bd606b1e6 ("mfd: dln2: More sanity checking for endpoints")
-Cc: Oliver Neukum <oneukum@suse.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+	#define macro() \
+		BUILD_BUG_ON(1); \
+		BUILD_BUG_ON(0);
+
+	void foo()
+	{
+		macro();
+	}
+
+gcc would output:
+
+./include/linux/compiler.h:350:38: error: call to `__compiletime_assert_9' declared with attribute error: BUILD_BUG_ON failed: 0
+  _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
+
+However, it was not the BUILD_BUG_ON(0) that failed, so it should say 1
+instead of 0. With this patch, we use __COUNTER__ instead of __LINE__, so
+each BUILD_BUG_ON() gets a different function name and the correct
+condition is printed:
+
+./include/linux/compiler.h:350:38: error: call to `__compiletime_assert_0' declared with attribute error: BUILD_BUG_ON failed: 1
+  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+
+Signed-off-by: Vegard Nossum <vegard.nossum@oracle.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Reviewed-by: Daniel Santos <daniel.santos@pobox.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Ian Abbott <abbotti@mev.co.uk>
+Cc: Joe Perches <joe@perches.com>
+Link: http://lkml.kernel.org/r/20200331112637.25047-1-vegard.nossum@oracle.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/dln2.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ include/linux/compiler.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mfd/dln2.c b/drivers/mfd/dln2.c
-index 95d0f2df0ad42..672831d5ee32e 100644
---- a/drivers/mfd/dln2.c
-+++ b/drivers/mfd/dln2.c
-@@ -93,6 +93,11 @@ struct dln2_mod_rx_slots {
- 	spinlock_t lock;
- };
+diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+index 5508011cc0c79..5f8749440c6af 100644
+--- a/include/linux/compiler.h
++++ b/include/linux/compiler.h
+@@ -502,7 +502,7 @@ static __always_inline void __write_once_size(volatile void *p, void *res, int s
+  * compiler has support to do so.
+  */
+ #define compiletime_assert(condition, msg) \
+-	_compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
++	_compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
  
-+enum dln2_endpoint {
-+	DLN2_EP_OUT	= 0,
-+	DLN2_EP_IN	= 1,
-+};
-+
- struct dln2_dev {
- 	struct usb_device *usb_dev;
- 	struct usb_interface *interface;
-@@ -740,10 +745,10 @@ static int dln2_probe(struct usb_interface *interface,
- 	    hostif->desc.bNumEndpoints < 2)
- 		return -ENODEV;
- 
--	epin = &hostif->endpoint[0].desc;
--	epout = &hostif->endpoint[1].desc;
-+	epout = &hostif->endpoint[DLN2_EP_OUT].desc;
- 	if (!usb_endpoint_is_bulk_out(epout))
- 		return -ENODEV;
-+	epin = &hostif->endpoint[DLN2_EP_IN].desc;
- 	if (!usb_endpoint_is_bulk_in(epin))
- 		return -ENODEV;
- 
+ #define compiletime_assert_atomic_type(t)				\
+ 	compiletime_assert(__native_word(t),				\
 -- 
 2.20.1
 
