@@ -2,211 +2,128 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37775C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 06:15:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46762C3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 06:17:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EFFD2076A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 06:15:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VUXY8Rnk"
+	by mail.kernel.org (Postfix) with ESMTP id 25050206D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 06:17:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586931432;
+	bh=0n6/CWVjTfYgmYIxyNlxDiz0paPVlOuRK/A6BVXHcoU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=P1CjZKItPTeceu8G4jCL5w2SNiZySX++nyczd4R2PZT3tYMNwjYpqdXRlDMttlXhq
+	 hSA9pC6XfDIXwUz1folNh5wsYCiUVS92uZwntID49W9ln7M750A8SfUOE+hBils+oZ
+	 4oyYUIfToBcM3Mr6bq28CDO1OnBecFueCQvDZ2WM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634761AbgDOGPg (ORCPT
+        id S2393524AbgDOGRJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 02:15:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46600 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2393502AbgDOGOz (ORCPT
+        Wed, 15 Apr 2020 02:17:09 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:36962 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732426AbgDOGQx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 02:14:55 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5ED6C061A0E
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 23:14:55 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id p8so1035502pgi.5
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 23:14:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=wyUZsSY+NlJBOwEDdKjEJczJyIxzKNUE6uBL2wkJ/4I=;
-        b=VUXY8Rnk7Sd7xWTPZQqkw1xJwsrkfvcUs9wPDJhtfck1jf4dOUeLGhvcgk4E3zKZhq
-         7F5QrudMsU3enGNEsVFti6S0ZiXdXydhHQ6hqRAgx2nGtngWA4IDR+6NwYTkFBl4K/WW
-         uw00SzEFyeUDBW5x7Q8sSKNTxJw1Q4m7LK8LcorCBd9b9g2e3oJA3N7icUBfSHSVCmUA
-         es4adyUOKWX2Hbf/ED6oG8kJNqbcaEHWYvpUL+oRqT2hh8I5u0KuGkjj1NZRYgbFAD1s
-         B+ZfmJJTRBjiIjqm/Ep/lRDHcAM354bcdeT/TGPzN8PmFg1d1iK51A2COBsV6GK6FDNG
-         IT5A==
+        Wed, 15 Apr 2020 02:16:53 -0400
+Received: by mail-pj1-f67.google.com with SMTP id z9so6252767pjd.2;
+        Tue, 14 Apr 2020 23:16:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=wyUZsSY+NlJBOwEDdKjEJczJyIxzKNUE6uBL2wkJ/4I=;
-        b=awoOm1jkue/Fu7pnO67ziEFN5aPFWpic/3rg1/M28+QjLgRlzpAWTI40cLjf+RP+02
-         MMhxEJUCyuI6dvbUNa0CAmxHL7vWesT8FGFmhpOZhD351LgKVG0eeBrKoozVaY9W6Yms
-         Rx9RRBrt9FfH7F9qx6gRABFZ4a8shSY/8hLVPbGyW/Fxi0tuP3Dxvdobshmdp+vuYRpt
-         4SH7WIm8ZP3uEGi1OoYx/Dv2aMT3t7rMjLsfXDr2eMVgtH2I/Ce8xVu1SGhi/E+tBwLy
-         rDhxRIE1Ai+hvnwsQ9Bliy0RCmo3v+2dgBnA4bKYsSjSDFUW9m7WJO3OAbc6TEUaeyKn
-         i2lQ==
-X-Gm-Message-State: AGi0PuZ6+Fe9I2QsDEUfInhl6TYXNKxNqZa4i9QMY6bkui2fNb3X8shs
-        G71dnSmmCbTruqSn7UN2QmS39g==
-X-Google-Smtp-Source: APiQypLp7R/LKr1ecCSfGawkhCjHrfT/UNn7e++CPcMAKZMDJvgWYvoCWOdq6nCztFvj5zoPHBs46w==
-X-Received: by 2002:a63:c203:: with SMTP id b3mr26512755pgd.453.1586931295267;
-        Tue, 14 Apr 2020 23:14:55 -0700 (PDT)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id e196sm2939332pfh.43.2020.04.14.23.14.54
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kKwt+k2pDUu9qpX8GZzWlBWNHQkyl61044lYkr3xgoo=;
+        b=VK3NqCX5GJWZR0IOMzFqowungM2D3Z17M9Tml2MsGpuucVJHN5yvKWFkEuDJIvqgMg
+         5llyEJCK7ew5cRHTwkCO5X+plfbmI+sQUJmjH9vJa78UL9JIetbzZSGDnGsIhXqu34Zb
+         jsm0FLvYnEwwuATKf9otvBS4UmVh0Jl6JIyw7+sGk0o6Hdd2vA7qgc1HHrWye8EhwzS/
+         s3gN2vwI9kq3MJ6AFxDISXTvvDPKmW67KStV0BA9+Tmec5KO0tc+C0JUDr7ijfCXKm4h
+         4bSoCWLfFR5BO/bb5Hk8VDHtZehaXI3safCQElFyXMKsftiyK2C/Jys8sPpPGYIdRhdA
+         pGfQ==
+X-Gm-Message-State: AGi0Pua0RB9AQdtE12qPRkRPDBXXeS4vTIahdbmTXgGcFshudAs8Geeh
+        92U8g6vIguFkwLvjPALHbtI=
+X-Google-Smtp-Source: APiQypLUnBYTt2JPAvzaO1zJS12kV1LMzAoWxzi3yM07dJiAaH0luQJiHmQw3RCIjIBzSRfPCV0Vfw==
+X-Received: by 2002:a17:902:7616:: with SMTP id k22mr2578548pll.39.1586931411005;
+        Tue, 14 Apr 2020 23:16:51 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id z16sm3078792pfa.3.2020.04.14.23.16.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 23:14:54 -0700 (PDT)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] arm64: dts: qcom: sm8250: Add UFS controller and PHY
-Date:   Tue, 14 Apr 2020 23:14:30 -0700
-Message-Id: <20200415061430.740854-3-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200415061430.740854-1-bjorn.andersson@linaro.org>
-References: <20200415061430.740854-1-bjorn.andersson@linaro.org>
+        Tue, 14 Apr 2020 23:16:49 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 2980940277; Wed, 15 Apr 2020 06:16:49 +0000 (UTC)
+Date:   Wed, 15 Apr 2020 06:16:49 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
+        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
+        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
+        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Michal Hocko <mhocko@kernel.org>
+Subject: Re: [PATCH 3/5] blktrace: refcount the request_queue during ioctl
+Message-ID: <20200415061649.GS11244@42.do-not-panic.com>
+References: <20200414041902.16769-1-mcgrof@kernel.org>
+ <20200414041902.16769-4-mcgrof@kernel.org>
+ <20200414154044.GB25765@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200414154044.GB25765@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+On Tue, Apr 14, 2020 at 08:40:44AM -0700, Christoph Hellwig wrote:
+> On Tue, Apr 14, 2020 at 04:19:00AM +0000, Luis Chamberlain wrote:
+> > Ensure that the request_queue is refcounted during its full
+> > ioctl cycle. This avoids possible races against removal, given
+> > blk_get_queue() also checks to ensure the queue is not dying.
+> > 
+> > This small race is possible if you defer removal of the request_queue
+> > and userspace fires off an ioctl for the device in the meantime.
+> 
+> Hmm, where exactly does the race come in so that it can only happen
+> after where you take the reference, but not before it?  I'm probably
+> missing something, but that just means it needs to be explained a little
+> better :)
 
-Add nodes for the UFS controller and PHY, and enable these for the MTP
-with relevant supplies specified.
+From the trace on patch 2/5:
 
-Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- arch/arm64/boot/dts/qcom/sm8250-mtp.dts | 20 +++++++
- arch/arm64/boot/dts/qcom/sm8250.dtsi    | 71 +++++++++++++++++++++++++
- 2 files changed, 91 insertions(+)
+    BLKTRACE_SETUP(loop0) #2
+    [   13.933961] == blk_trace_ioctl(2, BLKTRACESETUP) start
+    [   13.936758] === do_blk_trace_setup(2) start
+    [   13.938944] === do_blk_trace_setup(2) creating directory
+    [   13.941029] === do_blk_trace_setup(2) using what debugfs_lookup() gave
+    
+    ---> From LOOP_CTL_DEL(loop0) #2
+    [   13.971046] === blk_trace_cleanup(7) end
+    [   13.973175] == __blk_trace_remove(7) end
+    [   13.975352] == blk_trace_shutdown(7) end
+    [   13.977415] = __blk_release_queue(7) calling blk_mq_debugfs_unregister()
+    [   13.980645] ==== blk_mq_debugfs_unregister(7) begin
+    [   13.980696] ==== blk_mq_debugfs_unregister(7) debugfs_remove_recursive(q->debugfs_dir)
+    [   13.983118] ==== blk_mq_debugfs_unregister(7) end q->debugfs_dir is NULL
+    [   13.986945] = __blk_release_queue(7) blk_mq_debugfs_unregister() end
+    [   13.993155] = __blk_release_queue(7) end
+    
+    ---> From BLKTRACE_SETUP(loop0) #2
+    [   13.995928] === do_blk_trace_setup(2) end with ret: 0
+    [   13.997623] == blk_trace_ioctl(2, BLKTRACESETUP) end
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8250-mtp.dts b/arch/arm64/boot/dts/qcom/sm8250-mtp.dts
-index 7b0f95e77482..cff7a85890ee 100644
---- a/arch/arm64/boot/dts/qcom/sm8250-mtp.dts
-+++ b/arch/arm64/boot/dts/qcom/sm8250-mtp.dts
-@@ -358,3 +358,23 @@ &qupv3_id_1 {
- &uart2 {
- 	status = "okay";
- };
-+
-+&ufs_mem_hc {
-+	status = "okay";
-+
-+	vcc-supply = <&vreg_l17a_3p0>;
-+	vcc-max-microamp = <750000>;
-+	vccq-supply = <&vreg_l6a_1p2>;
-+	vccq-max-microamp = <700000>;
-+	vccq2-supply = <&vreg_s4a_1p8>;
-+	vccq2-max-microamp = <750000>;
-+};
-+
-+&ufs_mem_phy {
-+	status = "okay";
-+
-+	vdda-phy-supply = <&vreg_l5a_0p875>;
-+	vdda-max-microamp = <90200>;
-+	vdda-pll-supply = <&vreg_l9a_1p2>;
-+	vdda-pll-max-microamp = <19000>;
-+};
-diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-index 2a7eaefd221d..d7b2049f339c 100644
---- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-@@ -4,6 +4,7 @@
-  */
- 
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/clock/qcom,gcc-sm8250.h>
- #include <dt-bindings/clock/qcom,rpmh.h>
- #include <dt-bindings/soc/qcom,rpmh-rsc.h>
- 
-@@ -304,6 +305,76 @@ uart2: serial@a90000 {
- 			};
- 		};
- 
-+		ufs_mem_hc: ufs@1d84000 {
-+			compatible = "qcom,sm8250-ufshc", "qcom,ufshc",
-+				     "jedec,ufs-2.0";
-+			reg = <0 0x01d84000 0 0x3000>;
-+			interrupts = <GIC_SPI 265 IRQ_TYPE_LEVEL_HIGH>;
-+			phys = <&ufs_mem_phy_lanes>;
-+			phy-names = "ufsphy";
-+			lanes-per-direction = <2>;
-+			#reset-cells = <1>;
-+			resets = <&gcc GCC_UFS_PHY_BCR>;
-+			reset-names = "rst";
-+
-+			power-domains = <&gcc UFS_PHY_GDSC>;
-+
-+			clock-names =
-+				"core_clk",
-+				"bus_aggr_clk",
-+				"iface_clk",
-+				"core_clk_unipro",
-+				"ref_clk",
-+				"tx_lane0_sync_clk",
-+				"rx_lane0_sync_clk",
-+				"rx_lane1_sync_clk";
-+			clocks =
-+				<&gcc GCC_UFS_PHY_AXI_CLK>,
-+				<&gcc GCC_AGGRE_UFS_PHY_AXI_CLK>,
-+				<&gcc GCC_UFS_PHY_AHB_CLK>,
-+				<&gcc GCC_UFS_PHY_UNIPRO_CORE_CLK>,
-+				<&rpmhcc RPMH_CXO_CLK>,
-+				<&gcc GCC_UFS_PHY_TX_SYMBOL_0_CLK>,
-+				<&gcc GCC_UFS_PHY_RX_SYMBOL_0_CLK>,
-+				<&gcc GCC_UFS_PHY_RX_SYMBOL_1_CLK>;
-+			freq-table-hz =
-+				<37500000 300000000>,
-+				<0 0>,
-+				<0 0>,
-+				<37500000 300000000>,
-+				<0 0>,
-+				<0 0>,
-+				<0 0>,
-+				<0 0>;
-+
-+			status = "disabled";
-+		};
-+
-+		ufs_mem_phy: phy@1d87000 {
-+			compatible = "qcom,sm8250-qmp-ufs-phy";
-+			reg = <0 0x01d87000 0 0x1c0>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+			clock-names = "ref",
-+				      "ref_aux";
-+			clocks = <&rpmhcc RPMH_CXO_CLK>,
-+				 <&gcc GCC_UFS_PHY_PHY_AUX_CLK>;
-+
-+			resets = <&ufs_mem_hc 0>;
-+			reset-names = "ufsphy";
-+			status = "disabled";
-+
-+			ufs_mem_phy_lanes: lanes@1d87400 {
-+				reg = <0 0x01d87400 0 0x108>,
-+				      <0 0x01d87600 0 0x1e0>,
-+				      <0 0x01d87c00 0 0x1dc>,
-+				      <0 0x01d87800 0 0x108>,
-+				      <0 0x01d87a00 0 0x1e0>;
-+				#phy-cells = <0>;
-+			};
-+		};
-+
- 		intc: interrupt-controller@17a00000 {
- 			compatible = "arm,gic-v3";
- 			#interrupt-cells = <3>;
--- 
-2.24.0
+The BLKTRACESETUP above works on request_queue which later
+LOOP_CTL_DEL races on and sweeps the debugfs dir underneath us.
+If you use this commit alone though, this doesn't fix the race issue
+however, and that's because of both still the debugfs_lookup() use
+and that we're still using asynchronous removal at this point.
 
+refcounting will just ensure we don't take the request_queue underneath
+our noses.
+
+Should I just add this to the commit log?
+
+  Luis
