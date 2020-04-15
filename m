@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 240E9C3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:09:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BFCFC2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:09:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFB7020737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:09:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D8F920737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:09:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586956180;
-	bh=usCuz3f0ItfdSJWnll6ILELC7QQ1rmL2dQtqXuMyAy4=;
+	s=default; t=1586956191;
+	bh=Ei7sJHbTUMMZtJhOvk3ipWf8WtSAiJzcufzicYNEPww=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EunwPiEmdNYoiSHdIOxeBmB27u1E1wXjCKhJcNUHN7q+dp/ZBMof6/5S96bRJjb2A
-	 aQzXuyWxtw2Gs8UTafMU9eSziaBGIv8m9zulWGnI8p2zVUBfhDSJsuHjUd0VP9jfzu
-	 4qpowpKhc69CaFaP4qYd4RuOKl9c447d8AVENeF4=
+	b=E8KmtUGpoF78KbDVpkeGqe/EvbnJoai/6AEOjGR8e2/z+S3LHdY4w55lOTpf+Xzmc
+	 wte1wsN7+3GrtWT3kOSVRmBgtA2sht6uPEmQihtsGSd3WYtyNfY6RQAHv1kgpIsqwG
+	 vLU66o6rIHBuB3kBkJSpQIehOLIrHisB+EejXcbo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504328AbgDONJi (ORCPT
+        id S2504376AbgDONJt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:09:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54800 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 09:09:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897083AbgDOLfs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:35:48 -0400
+        id S2897046AbgDOLfr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:35:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4280B2168B;
-        Wed, 15 Apr 2020 11:35:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEAF92166E;
+        Wed, 15 Apr 2020 11:35:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950548;
-        bh=usCuz3f0ItfdSJWnll6ILELC7QQ1rmL2dQtqXuMyAy4=;
+        s=default; t=1586950544;
+        bh=Ei7sJHbTUMMZtJhOvk3ipWf8WtSAiJzcufzicYNEPww=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UYFODH4SSlnE9pdMuSPSJLnk25+ORNaFlscyCQBh/+nKkAAr9VLT4hnDme7o8h0Kl
-         CEfDmQ2qFR9bnFHK5U6kfrM1Uss7WbeQzo7sgbT6+kf4PrIqPKZL1oRvc/nhn6B3QG
-         ZoPbTu6Iz7MWqf28UsT9Oz5McoZEQKTLaEJ268ZY=
+        b=berBmtTSSJBM6Hcf0L4nVVCXrFlLKJ6RryQ3fMqrrVOLJkbYRHH5tUfIc2s4qvdaK
+         IBfvE9L2zIqBGC3HWAxDoFzbrc9qTv2waOQFCkZYnJQtYJMdjgx3igTiDv3i/NeJZD
+         KKpB3GthDxu1PzCBgAsQK/mVcJtQEfP2G9LBAdgs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Ilie Halip <ilie.halip@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 5.6 054/129] powerpc/maple: Fix declaration made after definition
-Date:   Wed, 15 Apr 2020 07:33:29 -0400
-Message-Id: <20200415113445.11881-54-sashal@kernel.org>
+Cc:     Josef Bacik <josef@toxicpanda.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 051/129] btrfs: handle NULL roots in btrfs_put/btrfs_grab_fs_root
+Date:   Wed, 15 Apr 2020 07:33:26 -0400
+Message-Id: <20200415113445.11881-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
 References: <20200415113445.11881-1-sashal@kernel.org>
@@ -62,90 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Josef Bacik <josef@toxicpanda.com>
 
-[ Upstream commit af6cf95c4d003fccd6c2ecc99a598fb854b537e7 ]
+[ Upstream commit 4cdfd93002cb84471ed85b4999cd38077a317873 ]
 
-When building ppc64 defconfig, Clang errors (trimmed for brevity):
+We want to use this for dropping all roots, and in some error cases we
+may not have a root, so handle this to make the cleanup code easier.
+Make btrfs_grab_fs_root the same so we can use it in cases where the
+root may not exist (like the quota root).
 
-  arch/powerpc/platforms/maple/setup.c:365:1: error: attribute declaration
-  must precede definition [-Werror,-Wignored-attributes]
-  machine_device_initcall(maple, maple_cpc925_edac_setup);
-  ^
-
-machine_device_initcall expands to __define_machine_initcall, which in
-turn has the macro machine_is used in it, which declares mach_##name
-with an __attribute__((weak)). define_machine actually defines
-mach_##name, which in this file happens before the declaration, hence
-the warning.
-
-To fix this, move define_machine after machine_device_initcall so that
-the declaration occurs before the definition, which matches how
-machine_device_initcall and define_machine work throughout
-arch/powerpc.
-
-While we're here, remove some spaces before tabs.
-
-Fixes: 8f101a051ef0 ("edac: cpc925 MC platform device setup")
-Reported-by: Nick Desaulniers <ndesaulniers@google.com>
-Suggested-by: Ilie Halip <ilie.halip@gmail.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200323222729.15365-1-natechancellor@gmail.com
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/maple/setup.c | 34 ++++++++++++++--------------
- 1 file changed, 17 insertions(+), 17 deletions(-)
+ fs/btrfs/disk-io.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/powerpc/platforms/maple/setup.c b/arch/powerpc/platforms/maple/setup.c
-index 6f019df37916f..15b2c6eb506d0 100644
---- a/arch/powerpc/platforms/maple/setup.c
-+++ b/arch/powerpc/platforms/maple/setup.c
-@@ -291,23 +291,6 @@ static int __init maple_probe(void)
- 	return 1;
- }
+diff --git a/fs/btrfs/disk-io.h b/fs/btrfs/disk-io.h
+index 8c2d6cf1ce596..424c9c97b1ce8 100644
+--- a/fs/btrfs/disk-io.h
++++ b/fs/btrfs/disk-io.h
+@@ -97,6 +97,8 @@ struct btrfs_root *btrfs_alloc_dummy_root(struct btrfs_fs_info *fs_info);
+  */
+ static inline struct btrfs_root *btrfs_grab_fs_root(struct btrfs_root *root)
+ {
++	if (!root)
++		return NULL;
+ 	if (refcount_inc_not_zero(&root->refs))
+ 		return root;
+ 	return NULL;
+@@ -104,6 +106,8 @@ static inline struct btrfs_root *btrfs_grab_fs_root(struct btrfs_root *root)
  
--define_machine(maple) {
--	.name			= "Maple",
--	.probe			= maple_probe,
--	.setup_arch		= maple_setup_arch,
--	.init_IRQ		= maple_init_IRQ,
--	.pci_irq_fixup		= maple_pci_irq_fixup,
--	.pci_get_legacy_ide_irq	= maple_pci_get_legacy_ide_irq,
--	.restart		= maple_restart,
--	.halt			= maple_halt,
--       	.get_boot_time		= maple_get_boot_time,
--       	.set_rtc_time		= maple_set_rtc_time,
--       	.get_rtc_time		= maple_get_rtc_time,
--      	.calibrate_decr		= generic_calibrate_decr,
--	.progress		= maple_progress,
--	.power_save		= power4_idle,
--};
--
- #ifdef CONFIG_EDAC
- /*
-  * Register a platform device for CPC925 memory controller on
-@@ -364,3 +347,20 @@ static int __init maple_cpc925_edac_setup(void)
+ static inline void btrfs_put_fs_root(struct btrfs_root *root)
+ {
++	if (!root)
++		return;
+ 	if (refcount_dec_and_test(&root->refs))
+ 		kfree(root);
  }
- machine_device_initcall(maple, maple_cpc925_edac_setup);
- #endif
-+
-+define_machine(maple) {
-+	.name			= "Maple",
-+	.probe			= maple_probe,
-+	.setup_arch		= maple_setup_arch,
-+	.init_IRQ		= maple_init_IRQ,
-+	.pci_irq_fixup		= maple_pci_irq_fixup,
-+	.pci_get_legacy_ide_irq	= maple_pci_get_legacy_ide_irq,
-+	.restart		= maple_restart,
-+	.halt			= maple_halt,
-+	.get_boot_time		= maple_get_boot_time,
-+	.set_rtc_time		= maple_set_rtc_time,
-+	.get_rtc_time		= maple_get_rtc_time,
-+	.calibrate_decr		= generic_calibrate_decr,
-+	.progress		= maple_progress,
-+	.power_save		= power4_idle,
-+};
 -- 
 2.20.1
 
