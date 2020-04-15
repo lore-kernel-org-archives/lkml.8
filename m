@@ -2,121 +2,107 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42F52C2BB55
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:11:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0072BC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F6022076A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:11:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF6F620857
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:11:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kZ4BXox0"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bLXAHyto"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393168AbgDOPL2 (ORCPT
+        id S1414583AbgDOPLg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 11:11:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45400 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2393131AbgDOPLY (ORCPT
+        Wed, 15 Apr 2020 11:11:36 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:58289 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2393131AbgDOPL3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 11:11:24 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8BF5C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 08:11:23 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id u13so292504wrp.3
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 08:11:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Vzn5Qi0ZG5I2dfN+j2Q0PXBNrTKg5GnbDO72sf5kYmE=;
-        b=kZ4BXox0LCjCv71j6mhvSC6hJT0Z/VGQda1i6/OdAyN4W1ETBfMrmBAaUNfak62dI3
-         3RgoMqf4NrWAUABEgfHAShe0W9Ugx0uqNG9HBnqOjFxKen/NZrjX0Kb3TvjWgSRd5gs0
-         dlJSrbOOrGLjqJ65EYoQ+JQMoKJpmuTUVFeMQiv6GD/OXOuy0ROSiOpexEVW72YZL4ne
-         0OEx7p7O1RogVyTytQu6MdFp3uSbs3LBH4q+J6zMCsGLvBXD8XsoV76qaJGgdzoAikzc
-         9WM+V67zjUXRTeO4PdviJ4iCQ5dpsQ41nKcBL0kDP0/dwn+24klk82G1y0HwHLzgBR3P
-         2+9A==
+        Wed, 15 Apr 2020 11:11:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586963488;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=C0vYOJO4v4REcjYahYU+BEluO/YhMr3LnC3HEtpWFrM=;
+        b=bLXAHytosK8av7sofohPvmQMYcFny/v1XNc+m7Sql2y76wVO9OwPP6SgmX7uGD/rcFwh+y
+        w4uUKQjOi2BRTJ+Tcr6cF0LERHszx3aeYnahPbwzAnoK7JH/FgOFUfkIh9/kILjJystrZ9
+        39Tm5tASOsEX+RLf4tcvlCZlpame7+g=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-162-BEMnQwfqOpKJ2JOPmfkwIw-1; Wed, 15 Apr 2020 11:11:24 -0400
+X-MC-Unique: BEMnQwfqOpKJ2JOPmfkwIw-1
+Received: by mail-wm1-f69.google.com with SMTP id q5so4043845wmc.9
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 08:11:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Vzn5Qi0ZG5I2dfN+j2Q0PXBNrTKg5GnbDO72sf5kYmE=;
-        b=LU9H8428VIYFlyQlDJr7gEx/U9miVnE56E5BR2e3vStCfHXrKZsa9oRYj8A3JwLtg7
-         aCwFOk8AL7nN4Exmc26PWaCZGBP391uOKdxj34gSdqDMhB+x1NgBdxSwsxytR8env8zW
-         ILgsnJ7rKclNDWU6iM2wd/N7jF70vu7hiXKoVGEPcm5K0ABdvhY6qiTtJ2a+Al8F5kSw
-         zGaWhxMgUePxnLftL1/D5vgTs1lRRilSfCoN4IIVBtpmb7Pv1AaeZK+xGTHMCGM3D/RI
-         G3k0IsZ8PhN5El/XIcRooGvS1yK3k1ubaAwWIfHxhiuJFEpmjBU09Q/H/E2FHeI1aq0E
-         7OHw==
-X-Gm-Message-State: AGi0PuZuFh4cpy1+PKO9krrAVrHMnUa4uKxJBcv9wXTT5iGFLrcqeKc1
-        KyMNcsHX0VjYaDhkmro688kNzQ==
-X-Google-Smtp-Source: APiQypJ1tKF/+7Bq6w/nAZeilnVQ5/5MxeB23DPP2SO0LzWZkJI3hVp2OiXoJMV4vD1qTUVfbHmQog==
-X-Received: by 2002:adf:f844:: with SMTP id d4mr10793811wrq.362.1586963452757;
-        Wed, 15 Apr 2020 08:10:52 -0700 (PDT)
-Received: from myrica ([2001:171b:226b:54a0:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id k184sm22809016wmf.9.2020.04.15.08.10.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2020 08:10:51 -0700 (PDT)
-Date:   Wed, 15 Apr 2020 17:10:43 +0200
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Eric Auger <eric.auger@redhat.com>
-Subject: Re: [PATCH 05/10] iommu/ioasid: Create an IOASID set for host SVA use
-Message-ID: <20200415151043.GB738821@myrica>
-References: <1585158931-1825-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1585158931-1825-6-git-send-email-jacob.jun.pan@linux.intel.com>
- <20200401135316.GF882512@myrica>
- <20200406083353.73efda5b@jacob-builder>
- <20200407110146.GB285264@myrica>
- <20200413150631.60e54d85@jacob-builder>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=C0vYOJO4v4REcjYahYU+BEluO/YhMr3LnC3HEtpWFrM=;
+        b=ZKCNJ2h9Z+VMv+nk17d7XteLlcd1Or4BjCK+LUA5z2vQdNXy4YWB9qGHzH5Mca+RJ8
+         tPi4S/UYYmipjLrjM1USo+ND4Nh14Zris8oKI6p+u7pZkdFAY3DgfJyA8V6FMBCLUQZJ
+         OtzId6AT8Zj9cZ8LocWzB3D037pS4FM7dww0RQKHOQDhiwym/dup1qKuM0jt4nqqa1xk
+         g9GSdKcSETeqwjaYlnW2NuwOLburrnIxS6d76MwTV01twxynRQ/jZ90+FQEC1fN2vOiY
+         de7Cbg6nhTNLdcWjXSPtFTkuqvjru+1za+NRWS7W2WQSHiE8cOYvZPlVmXzlzEFDRmp+
+         704w==
+X-Gm-Message-State: AGi0PuZTySMr49r6BLsR6CuG5T8Vchcl9k9xnbZyYTq0CO/9oD9UMqkW
+        69TZbHgkRVnD4fx6rX0OsNzyAnprSobj2rWonh85v8mveDdYNuj1qRA6XLaKNAi3uJt+/U4HwLa
+        3cNrZpVI2BBVfdbWHs+Ht1Fl/
+X-Received: by 2002:a1c:7301:: with SMTP id d1mr6033192wmb.26.1586963483567;
+        Wed, 15 Apr 2020 08:11:23 -0700 (PDT)
+X-Google-Smtp-Source: APiQypKABLDLSsReEBMN+X/RLahvOhdo6qaiJnvnlmfjlbWNKdq2bnrmCnT0QXYbj9B/mxQdNLqTZw==
+X-Received: by 2002:a1c:7301:: with SMTP id d1mr6033166wmb.26.1586963483345;
+        Wed, 15 Apr 2020 08:11:23 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:9066:4f2:9fbd:f90e? ([2001:b07:6468:f312:9066:4f2:9fbd:f90e])
+        by smtp.gmail.com with ESMTPSA id h2sm23766953wmf.34.2020.04.15.08.11.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Apr 2020 08:11:22 -0700 (PDT)
+Subject: Re: [PATCH 01/10] KVM: selftests: Take vcpu pointer instead of id in
+ vm_vcpu_rm()
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wainer dos Santos Moschetta <wainersm@redhat.com>
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Peter Xu <peterx@redhat.com>,
+        Andrew Jones <drjones@redhat.com>
+References: <20200410231707.7128-1-sean.j.christopherson@intel.com>
+ <20200410231707.7128-2-sean.j.christopherson@intel.com>
+ <b696c5b9-2507-8849-e196-37c83806cfdf@redhat.com>
+ <20200413212659.GB21204@linux.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <d2def9fa-375e-d677-32a2-b1bb0e8d3fb6@redhat.com>
+Date:   Wed, 15 Apr 2020 17:11:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200413150631.60e54d85@jacob-builder>
+In-Reply-To: <20200413212659.GB21204@linux.intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 03:06:31PM -0700, Jacob Pan wrote:
-> > > > But quotas are only necessary for VMs, when the host shares the
-> > > > PASID space with them (which isn't a use-case for Arm systems as
-> > > > far as I know, each VM gets its own PASID space).  
-> > > Is there a host-guest PASID translation? or the PASID used by the
-> > > VM is physical PASID? When a page request comes in to SMMU, how
-> > > does it know the owner of the PASID if PASID range can overlap
-> > > between host and guest?  
-> > 
-> > We assign PCI functions to VMs, so Page Requests are routed with
-> > RID:PASID, not PASID alone. The SMMU finds the struct device
-> > associated with the RID, and submits the fault with
-> > iommu_report_device_fault(). If the VF is assigned to a VM, then the
-> > page request gets injected into the VM, otherwise it uses the host
-> > IOPF handler
-> > 
-> Got it, VM private PASID space works then.
-> For VM, the IOASID search is within the VM ioasid_set.
-> For SVA, the IOASID search is within host default set.
-> Should be faster than global search once we have per set xarray.
-> I guess the PASID table is per VM instead of per RID (device)? Sorry if
-> you already answered it before.
+On 13/04/20 23:26, Sean Christopherson wrote:
+> FWIW, I think the whole vcpuid thing is a bad interface, almost all the
+> tests end up defining an arbitrary number for the sole VCPU_ID, i.e. the
+> vcpuid interface just adds a pointless layer of obfuscation.  I haven't
+> looked through all the tests, but returning the vcpu and making the struct
+> opaque, same as kvm_vm, seems like it would yield more readable code with
+> less overhead.
 
-The PASID table is per IOMMU domain, so it's closer to per RID than per
-VM, unless userspace puts all devices in the same VFIO container (hence in
-the same IOMMU domain).
+Yes, I agree.  This was in the original Google submission, I didn't like
+it either but I didn't feel like changing it and I wouldn't mind if
+someone does the work...
 
-Thanks,
-Jean
+Paolo
+
