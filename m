@@ -2,100 +2,100 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37EE9C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCB53C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:29:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13DF92074F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:29:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F2BC20767
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:29:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586953780;
-	bh=gHxluNrZU2tTOHcwpOtq2n46qQQhnsi8V7TZgKMK1Ec=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0wFXDxVoWPA2uL/NhOslOu3lPXxWEQNIM9aeAQNE9TdeMzN77XB1FU46haphQdxC7
-	 oYp0LytMqVxuZr0CCF84Y3JDPn0uraAb6lndG2LLv2roYrqe5vtp4mk5ngWjVKSM0R
-	 VuTFLuQzmB+9zbBWNmHJYZH9ej0h9K3NnxJnOePo=
+	s=default; t=1586953785;
+	bh=oooFEStGUZHNuhXxGFvK4GTwAIxHao8rhtCGvyKcdGo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=rJ3HWxVIXqmd9rqX9OKyXgYKoKvwkJ8vCBlkJFVqxS4RC22iJZlD19veLOGf9Hy+3
+	 GGL+RRCVPjB/+X8r8n5MI18KH85zenfjXMPTYm41LiWZQXTGAL0E2fJ9CrrjXgtgbi
+	 NeM/R4eFxl7Qo4WKJcLaddRj4rwbh4/MWEWMEUzE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S369417AbgDOM3i (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:29:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48030 "EHLO mail.kernel.org"
+        id S369426AbgDOM3o (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:29:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409111AbgDOM3c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 08:29:32 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2409115AbgDOLo6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:44:58 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E55AF2074F;
-        Wed, 15 Apr 2020 12:29:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 354E220768;
+        Wed, 15 Apr 2020 11:44:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586953771;
-        bh=gHxluNrZU2tTOHcwpOtq2n46qQQhnsi8V7TZgKMK1Ec=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gq2BveZDD/Gb/fhWrNYUmp9bkKiMRoVR76H1UymoeIJDTW1qzZMFZ4KqJGQiYlRI4
-         3LemfZ0UNyfbRFuW4qThg5ia3zMNOvmcfBva2pDMq/CazF1sPRXR9Usvu0d2D0D1Dx
-         frs/d28k4Qrk6T3zmCS1b5T9p+dqmMeKPL4aXXJs=
-Date:   Wed, 15 Apr 2020 13:29:26 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com, maz@kernel.org,
-        anshuman.khandual@arm.com, catalin.marinas@arm.com,
-        saiprakash.ranjan@codeaurora.org, dianders@chromium.org,
-        kernel-team@android.com
-Subject: Re: [PATCH 7/8] arm64: cpufeature: Relax checks for AArch32 support
- at EL[0-2]
-Message-ID: <20200415122926.GA17095@willie-the-truck>
-References: <20200414213114.2378-1-will@kernel.org>
- <20200414213114.2378-8-will@kernel.org>
- <714f124c-7eb7-b750-e98c-63da64ddae75@arm.com>
- <20200415105843.GE12621@willie-the-truck>
- <d1f538ec-e956-c136-d0f8-54e7351a28a9@arm.com>
+        s=default; t=1586951098;
+        bh=oooFEStGUZHNuhXxGFvK4GTwAIxHao8rhtCGvyKcdGo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=sSemOUDfmah1SaVX3BQLP6BeihBz7XMZ0TouLc8Si3UPspi3GkSrXXNGba/IJ+AT7
+         yo2lc3qxzhmvyhQwKmBhHU+yunZolP5EEcqhrEysP/JalDUInKQmkgmIU2jbsdQ/KM
+         CLnooNyIUW5Qmt7AekYyxekdLqVS3Xn1Gt3fHdyc=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
+        Baruch Siach <baruch@tkos.co.il>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 13/84] arm64: dts: clearfog-gt-8k: set gigabit PHY reset deassert delay
+Date:   Wed, 15 Apr 2020 07:43:30 -0400
+Message-Id: <20200415114442.14166-13-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200415114442.14166-1-sashal@kernel.org>
+References: <20200415114442.14166-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d1f538ec-e956-c136-d0f8-54e7351a28a9@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 12:37:31PM +0100, Suzuki K Poulose wrote:
-> On 04/15/2020 11:58 AM, Will Deacon wrote:
-> > On Wed, Apr 15, 2020 at 11:50:58AM +0100, Suzuki K Poulose wrote:
-> > > On 04/14/2020 10:31 PM, Will Deacon wrote:
-> > > > We don't need to be quite as strict about mismatched AArch32 support,
-> > > > which is good because the friendly hardware folks have been busy
-> > > > mismatching this to their hearts' content.
-> > > > 
-> > > >     * We don't care about EL2 or EL3 (there are silly comments concerning
-> > > >       the latter, so remove those)
-> > > > 
-> > > >     * EL1 support is gated by the ARM64_HAS_32BIT_EL1 capability and handled
-> > > >       gracefully when a mismatch occurs
-> > > > 
-> > > >     * EL1 support is gated by the ARM64_HAS_32BIT_EL0 capability and handled
-> > > 
-> > > s/EL1/EL0
-> > > 
-> > > >       gracefully when a mismatch occurs
-> > > > 
-> > > > Relax the AArch32 checks to FTR_NONSTRICT.
-> > > 
-> > > Agreed. We should do something similar for the features exposed by the
-> > > ELF_HWCAP, of course in a separate series.
-> > 
-> > Hmm, I didn't think we needed to touch the HWCAPs, as they're derived from
-> > the sanitised feature register values. What am I missing?
-> 
-> sorry, that was cryptic. I was suggesting to relax the ftr fields to
-> NONSTRICT for the fields covered by ELF HWCAPs (and other CPU hwcaps).
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-Ah, gotcha. Given that the HWCAPs usually describe EL0 features, I say we
-can punt this down the road until people give us hardware with mismatched
-AArch32 at EL0.
+[ Upstream commit 46f94c7818e7ab82758fca74935ef3d454340b4e ]
 
-Will
+If the mv88e6xxx DSA driver is built as a module, it causes the
+ethernet driver to re-probe when it's loaded. This in turn causes
+the gigabit PHY to be momentarily reset and reprogrammed. However,
+we attempt to reprogram the PHY immediately after deasserting reset,
+and the PHY ignores the writes.
+
+This results in the PHY operating in the wrong mode, and the copper
+link states down.
+
+Set a reset deassert delay of 10ms for the gigabit PHY to avoid this.
+
+Fixes: babc5544c293 ("arm64: dts: clearfog-gt-8k: 1G eth PHY reset signal")
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Acked-by: Baruch Siach <baruch@tkos.co.il>
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts b/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
+index a211a046b2f2f..b90d78a5724b2 100644
+--- a/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
++++ b/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
+@@ -367,6 +367,7 @@
+ 		pinctrl-0 = <&cp0_copper_eth_phy_reset>;
+ 		reset-gpios = <&cp0_gpio2 11 GPIO_ACTIVE_LOW>;
+ 		reset-assert-us = <10000>;
++		reset-deassert-us = <10000>;
+ 	};
+ 
+ 	switch0: switch0@4 {
+-- 
+2.20.1
+
