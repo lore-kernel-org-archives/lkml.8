@@ -2,78 +2,183 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 281DDC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 18:20:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9936C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 18:20:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F12020784
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 18:20:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7C792076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 18:20:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586974841;
+	bh=3fdVTnSi8comzUB1gb25PxrIATOeQNlocOtrX8eRTQw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=jmKkwqnWNh92G7kXFCI8EpQwYgymr121d1N0Z3R3npSD9Dajfm+JVHhHitZoSX8gD
+	 I5h04TVjzje2Gzn2f3UN8S3Pz4ozlidagTGAVlwlhBJTPOWt3h3SnOkFmkaFo3OVlR
+	 34ycNBLzFwzP+Pgj1QDxkln4OjneMUBdkhXXW2Uc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441432AbgDOSUc (ORCPT
+        id S2898360AbgDOSUj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 14:20:32 -0400
-Received: from mga18.intel.com ([134.134.136.126]:32355 "EHLO mga18.intel.com"
+        Wed, 15 Apr 2020 14:20:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441375AbgDOSTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2441379AbgDOSTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Apr 2020 14:19:53 -0400
-IronPort-SDR: WwyccE4QvVkAR1VelEovus5aThHjGsdcxEaPFiyG9kajSKh+2ee9jsRODr8qVjwv97Ptz9eaVt
- nwiILlYcRQKg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 11:19:48 -0700
-IronPort-SDR: n+XuIFVH0I8zD1eGMSJvmpb2pD26TdunC5YJfZP8Yn4vHYEa/iRs+QQHt3CV1qvTpG/nZbHcqR
- RxP8T0x9r6vA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,388,1580803200"; 
-   d="scan'208";a="454016835"
-Received: from orsmsx109.amr.corp.intel.com ([10.22.240.7])
-  by fmsmga005.fm.intel.com with ESMTP; 15 Apr 2020 11:19:48 -0700
-Received: from orsmsx123.amr.corp.intel.com (10.22.240.116) by
- ORSMSX109.amr.corp.intel.com (10.22.240.7) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 15 Apr 2020 11:19:48 -0700
-Received: from orsmsx115.amr.corp.intel.com ([169.254.4.102]) by
- ORSMSX123.amr.corp.intel.com ([169.254.1.39]) with mapi id 14.03.0439.000;
- Wed, 15 Apr 2020 11:19:48 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Borislav Petkov <bp@suse.de>
-CC:     x86 <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [tip: ras/core] x86/mce: Add a struct mce.kflags field
-Thread-Topic: [tip: ras/core] x86/mce: Add a struct mce.kflags field
-Thread-Index: AQHWEwtD/L1uEGEe4ki2sOCfiE22MKh6fgOg
-Date:   Wed, 15 Apr 2020 18:19:47 +0000
-Message-ID: <3908561D78D1C84285E8C5FCA982C28F7F5E6485@ORSMSX115.amr.corp.intel.com>
-References: <20200214222720.13168-4-tony.luck@intel.com>
- <158694418849.28353.16699731019695420884.tip-bot2@tip-bot2>
-In-Reply-To: <158694418849.28353.16699731019695420884.tip-bot2@tip-bot2>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.138]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09F2521841;
+        Wed, 15 Apr 2020 18:19:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586974790;
+        bh=3fdVTnSi8comzUB1gb25PxrIATOeQNlocOtrX8eRTQw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ROcFl8/t1yRIkNW8wNgiVnV2fxDeMY/pYPbOUjw+jqQTzymfTRN+DOs0DtpUnr5rl
+         COKoxkA2FLgMQo0U/mMXaLrr3DM8KLGiMZeKQA+NeBmVv/RgapV6wMY/vyRyrfxL2p
+         P3Z7jCDpJHBfAnfCMN4QFDUKPvnPqKxwWOiHU+Qo=
+From:   paulmck@kernel.org
+To:     rcu@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
+        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
+        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
+        "Paul E. McKenney" <paulmck@kernel.org>
+Subject: [PATCH v4 tip/core/rcu 19/38] rcu-tasks: Add RCU tasks to rcutorture writer stall output
+Date:   Wed, 15 Apr 2020 11:19:22 -0700
+Message-Id: <20200415181941.11653-19-paulmck@kernel.org>
+X-Mailer: git-send-email 2.9.5
+In-Reply-To: <20200415181856.GA11037@paulmck-ThinkPad-P72>
+References: <20200415181856.GA11037@paulmck-ThinkPad-P72>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYvaW5jbHVkZS91YXBpL2FzbS9tY2UuaCBiL2FyY2gveDg2
-L2luY2x1ZGUvdWFwaS9hc20vbWNlLmgNCj4gaW5kZXggOTU1YzJhMi4uNWI1OWQ4MCAxMDA2NDQN
-Cj4gLS0tIGEvYXJjaC94ODYvaW5jbHVkZS91YXBpL2FzbS9tY2UuaA0KPiArKysgYi9hcmNoL3g4
-Ni9pbmNsdWRlL3VhcGkvYXNtL21jZS5oDQo+IEBAIC0zNSw2ICszNSw3IEBAIHN0cnVjdCBtY2Ug
-ew0KPiAJX191NjQgaXBpZDsJCS8qIE1DQV9JUElEIE1TUjogb25seSB2YWxpZCBvbiBTTUNBIHN5
-c3RlbXMgKi8NCj4gCV9fdTY0IHBwaW47CQkvKiBQcm90ZWN0ZWQgUHJvY2Vzc29yIEludmVudG9y
-eSBOdW1iZXIgKi8NCj4gCV9fdTMyIG1pY3JvY29kZTsJLyogTWljcm9jb2RlIHJldmlzaW9uICov
-DQo+ICsJX191NjQga2ZsYWdzOwkJLyogSW50ZXJuYWwga2VybmVsIHVzZS4gU2VlIGJlbG93ICov
-DQogPiB9Ow0KIA0KTWlub3Igbml0LiBZb3UgbW92ZWQgdGhlICNkZWZpbmVzIGZvciB0aGUga2Zs
-YWdzIGJpdHMgdG8gaW50ZXJuYWwuaCAod2hpY2gNCndhcyBhIGdvb2QgdGhpbmcpLCBidXQgbGVm
-dCB0aGUgIlNlZSBiZWxvdyIgY29tbWVudCBoZXJlLg0KDQotVG9ueQ0K
+From: "Paul E. McKenney" <paulmck@kernel.org>
+
+This commit adds state for each RCU-tasks flavor to the rcutorture
+writer stall output.  The initial state is minimal, but you have to
+start somewhere.
+
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+[ paulmck: Fixes based on feedback from kbuild test robot. ]
+---
+ kernel/rcu/rcu.h        |  1 +
+ kernel/rcu/tasks.h      | 45 +++++++++++++++++++++++++++++++++++++++++++--
+ kernel/rcu/tree_stall.h |  2 +-
+ 3 files changed, 45 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/rcu/rcu.h b/kernel/rcu/rcu.h
+index 72903867..e1089fd 100644
+--- a/kernel/rcu/rcu.h
++++ b/kernel/rcu/rcu.h
+@@ -431,6 +431,7 @@ bool rcu_gp_is_expedited(void);  /* Internal RCU use. */
+ void rcu_expedite_gp(void);
+ void rcu_unexpedite_gp(void);
+ void rcupdate_announce_bootup_oddness(void);
++void show_rcu_tasks_gp_kthreads(void);
+ void rcu_request_urgent_qs_task(struct task_struct *t);
+ #endif /* #else #ifdef CONFIG_TINY_RCU */
+ 
+diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
+index d65a97f..cd220a4 100644
+--- a/kernel/rcu/tasks.h
++++ b/kernel/rcu/tasks.h
+@@ -219,6 +219,16 @@ static void __init rcu_tasks_bootup_oddness(void)
+ 
+ #endif /* #ifndef CONFIG_TINY_RCU */
+ 
++/* Dump out rcutorture-relevant state common to all RCU-tasks flavors. */
++static void show_rcu_tasks_generic_gp_kthread(struct rcu_tasks *rtp, char *s)
++{
++	pr_info("%s %c%c %s\n",
++		rtp->kname,
++		".k"[!!data_race(rtp->kthread_ptr)],
++		".C"[!!data_race(rtp->cbs_head)],
++		s);
++}
++
+ #ifdef CONFIG_TASKS_RCU
+ 
+ ////////////////////////////////////////////////////////////////////////
+@@ -482,7 +492,14 @@ static int __init rcu_spawn_tasks_kthread(void)
+ }
+ core_initcall(rcu_spawn_tasks_kthread);
+ 
+-#endif /* #ifdef CONFIG_TASKS_RCU */
++static void show_rcu_tasks_classic_gp_kthread(void)
++{
++	show_rcu_tasks_generic_gp_kthread(&rcu_tasks, "");
++}
++
++#else /* #ifdef CONFIG_TASKS_RCU */
++static void show_rcu_tasks_classic_gp_kthread(void) { }
++#endif /* #else #ifdef CONFIG_TASKS_RCU */
+ 
+ #ifdef CONFIG_TASKS_RUDE_RCU
+ 
+@@ -578,7 +595,14 @@ static int __init rcu_spawn_tasks_rude_kthread(void)
+ }
+ core_initcall(rcu_spawn_tasks_rude_kthread);
+ 
+-#endif /* #ifdef CONFIG_TASKS_RUDE_RCU */
++static void show_rcu_tasks_rude_gp_kthread(void)
++{
++	show_rcu_tasks_generic_gp_kthread(&rcu_tasks_rude, "");
++}
++
++#else /* #ifdef CONFIG_TASKS_RUDE_RCU */
++static void show_rcu_tasks_rude_gp_kthread(void) {}
++#endif /* #else #ifdef CONFIG_TASKS_RUDE_RCU */
+ 
+ ////////////////////////////////////////////////////////////////////////
+ //
+@@ -978,10 +1002,27 @@ static int __init rcu_spawn_tasks_trace_kthread(void)
+ }
+ core_initcall(rcu_spawn_tasks_trace_kthread);
+ 
++static void show_rcu_tasks_trace_gp_kthread(void)
++{
++	char buf[32];
++
++	sprintf(buf, "N%d", atomic_read(&trc_n_readers_need_end));
++	show_rcu_tasks_generic_gp_kthread(&rcu_tasks_trace, buf);
++}
++
+ #else /* #ifdef CONFIG_TASKS_TRACE_RCU */
+ void exit_tasks_rcu_finish_trace(struct task_struct *t) { }
++static inline void show_rcu_tasks_trace_gp_kthread(void) {}
+ #endif /* #else #ifdef CONFIG_TASKS_TRACE_RCU */
+ 
++void show_rcu_tasks_gp_kthreads(void)
++{
++	show_rcu_tasks_classic_gp_kthread();
++	show_rcu_tasks_rude_gp_kthread();
++	show_rcu_tasks_trace_gp_kthread();
++}
++
+ #else /* #ifdef CONFIG_TASKS_RCU_GENERIC */
+ static inline void rcu_tasks_bootup_oddness(void) {}
++void show_rcu_tasks_gp_kthreads(void) {}
+ #endif /* #else #ifdef CONFIG_TASKS_RCU_GENERIC */
+diff --git a/kernel/rcu/tree_stall.h b/kernel/rcu/tree_stall.h
+index c65c975..e1c68a7 100644
+--- a/kernel/rcu/tree_stall.h
++++ b/kernel/rcu/tree_stall.h
+@@ -649,7 +649,7 @@ void show_rcu_gp_kthreads(void)
+ 		if (rcu_segcblist_is_offloaded(&rdp->cblist))
+ 			show_rcu_nocb_state(rdp);
+ 	}
+-	/* sched_show_task(rcu_state.gp_kthread); */
++	show_rcu_tasks_gp_kthreads();
+ }
+ EXPORT_SYMBOL_GPL(show_rcu_gp_kthreads);
+ 
+-- 
+2.9.5
+
