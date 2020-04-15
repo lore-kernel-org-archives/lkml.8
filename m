@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 036C8C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:05:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 339E0C2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:05:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C64DC206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:05:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10E8F206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:05:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586952301;
-	bh=2WU1KnZmrA8AQIpCo6xlMyXDOrFQw7bJMjD+x8xgYXk=;
+	s=default; t=1586952314;
+	bh=i3Ux0xyQDuBdGA7BktnWpwTgBU7SDcaAFTMtDViyrKQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0aigv2tqEwYYmkgxpcWNmzaKbrEFEVHzqTlNHFyz6beOK7nhnynQCjTaEBGO3hM5h
-	 Dj4CbKdmwL7oUjb2jzDtfCS91Av4RzjmfmO5lgBmL33fhSfzh1xM60cEB+XEC9r78v
-	 FuLI5E1sM2AFOE+ABpLeIaP/VnRSefjTqYT56fY0=
+	b=hPdb8151nM9ANWVJIKq/o6SQy60+5UYFF2SET6KsCeOQxNbFfkWitJ6Ls8Iex8X+n
+	 HxJ1+zX0n+Fhyy2+Z0Qw0EwykB2OyhE/1ugvVohk963YQ1zaLEr7OAHR26ANk9zLtg
+	 jTcmVIccBSj9C4zHEfL+nDIX0l8AQk1jbLlH5G/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409767AbgDOME7 (ORCPT
-        <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:04:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43584 "EHLO mail.kernel.org"
+        id S368338AbgDOMFK (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:05:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409405AbgDOLr6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:47:58 -0400
+        id S2406235AbgDOLr5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:47:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F47320732;
-        Wed, 15 Apr 2020 11:47:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A2492166E;
+        Wed, 15 Apr 2020 11:47:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951278;
-        bh=2WU1KnZmrA8AQIpCo6xlMyXDOrFQw7bJMjD+x8xgYXk=;
+        s=default; t=1586951276;
+        bh=i3Ux0xyQDuBdGA7BktnWpwTgBU7SDcaAFTMtDViyrKQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jr4reM7z9ZlnbEs/DA5HTctS3BNO1gdcg+ptJj72W5Utjx8Sh5/rhlkS0GcrVlgWa
-         5ye2byGDGeFlFNPDtTmyQBjnFjK9L9sUaUnO0M3/30PntPgq5psd+w/raqvwAAGg1M
-         n0P4qqeeFogsxR8XhonIf2fHkzKsQidCjpVLCwts=
+        b=NQ5HqyQtICSnZXrr3DEWgo0cVbtXiFV3aY5F1U+i+G+VG+5rjptWwCYTBv4dLuzzw
+         tmHtMCkobaIvyVsYWP664+U26qY+Wjy7JrT3qeHLIj/jiVXpTEbu5fEA6IVq6Yd+Q0
+         XD2GbRTUUAWd62OsP/wC7HM/Tt4Ady6f5rYv8EdM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Josh Triplett <josh@joshtriplett.org>,
-        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
-        linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 08/21] ext4: fix incorrect group count in ext4_fill_super error message
-Date:   Wed, 15 Apr 2020 07:47:35 -0400
-Message-Id: <20200415114748.15713-8-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Ilie Halip <ilie.halip@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.9 06/21] powerpc/maple: Fix declaration made after definition
+Date:   Wed, 15 Apr 2020 07:47:33 -0400
+Message-Id: <20200415114748.15713-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114748.15713-1-sashal@kernel.org>
 References: <20200415114748.15713-1-sashal@kernel.org>
@@ -59,41 +61,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Triplett <josh@joshtriplett.org>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit df41460a21b06a76437af040d90ccee03888e8e5 ]
+[ Upstream commit af6cf95c4d003fccd6c2ecc99a598fb854b537e7 ]
 
-ext4_fill_super doublechecks the number of groups before mounting; if
-that check fails, the resulting error message prints the group count
-from the ext4_sb_info sbi, which hasn't been set yet. Print the freshly
-computed group count instead (which at that point has just been computed
-in "blocks_count").
+When building ppc64 defconfig, Clang errors (trimmed for brevity):
 
-Signed-off-by: Josh Triplett <josh@joshtriplett.org>
-Fixes: 4ec1102813798 ("ext4: Add sanity checks for the superblock before mounting the filesystem")
-Link: https://lore.kernel.org/r/8b957cd1513fcc4550fe675c10bcce2175c33a49.1585431964.git.josh@joshtriplett.org
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+  arch/powerpc/platforms/maple/setup.c:365:1: error: attribute declaration
+  must precede definition [-Werror,-Wignored-attributes]
+  machine_device_initcall(maple, maple_cpc925_edac_setup);
+  ^
+
+machine_device_initcall expands to __define_machine_initcall, which in
+turn has the macro machine_is used in it, which declares mach_##name
+with an __attribute__((weak)). define_machine actually defines
+mach_##name, which in this file happens before the declaration, hence
+the warning.
+
+To fix this, move define_machine after machine_device_initcall so that
+the declaration occurs before the definition, which matches how
+machine_device_initcall and define_machine work throughout
+arch/powerpc.
+
+While we're here, remove some spaces before tabs.
+
+Fixes: 8f101a051ef0 ("edac: cpc925 MC platform device setup")
+Reported-by: Nick Desaulniers <ndesaulniers@google.com>
+Suggested-by: Ilie Halip <ilie.halip@gmail.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200323222729.15365-1-natechancellor@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/super.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/powerpc/platforms/maple/setup.c | 34 ++++++++++++++--------------
+ 1 file changed, 17 insertions(+), 17 deletions(-)
 
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index 508995e7e31d8..cbea8ff6e6c7b 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -3952,9 +3952,9 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
- 			EXT4_BLOCKS_PER_GROUP(sb) - 1);
- 	do_div(blocks_count, EXT4_BLOCKS_PER_GROUP(sb));
- 	if (blocks_count > ((uint64_t)1<<32) - EXT4_DESC_PER_BLOCK(sb)) {
--		ext4_msg(sb, KERN_WARNING, "groups count too large: %u "
-+		ext4_msg(sb, KERN_WARNING, "groups count too large: %llu "
- 		       "(block count %llu, first data block %u, "
--		       "blocks per group %lu)", sbi->s_groups_count,
-+		       "blocks per group %lu)", blocks_count,
- 		       ext4_blocks_count(es),
- 		       le32_to_cpu(es->s_first_data_block),
- 		       EXT4_BLOCKS_PER_GROUP(sb));
+diff --git a/arch/powerpc/platforms/maple/setup.c b/arch/powerpc/platforms/maple/setup.c
+index b7f937563827d..d1fee2d35b49c 100644
+--- a/arch/powerpc/platforms/maple/setup.c
++++ b/arch/powerpc/platforms/maple/setup.c
+@@ -299,23 +299,6 @@ static int __init maple_probe(void)
+ 	return 1;
+ }
+ 
+-define_machine(maple) {
+-	.name			= "Maple",
+-	.probe			= maple_probe,
+-	.setup_arch		= maple_setup_arch,
+-	.init_IRQ		= maple_init_IRQ,
+-	.pci_irq_fixup		= maple_pci_irq_fixup,
+-	.pci_get_legacy_ide_irq	= maple_pci_get_legacy_ide_irq,
+-	.restart		= maple_restart,
+-	.halt			= maple_halt,
+-       	.get_boot_time		= maple_get_boot_time,
+-       	.set_rtc_time		= maple_set_rtc_time,
+-       	.get_rtc_time		= maple_get_rtc_time,
+-      	.calibrate_decr		= generic_calibrate_decr,
+-	.progress		= maple_progress,
+-	.power_save		= power4_idle,
+-};
+-
+ #ifdef CONFIG_EDAC
+ /*
+  * Register a platform device for CPC925 memory controller on
+@@ -372,3 +355,20 @@ static int __init maple_cpc925_edac_setup(void)
+ }
+ machine_device_initcall(maple, maple_cpc925_edac_setup);
+ #endif
++
++define_machine(maple) {
++	.name			= "Maple",
++	.probe			= maple_probe,
++	.setup_arch		= maple_setup_arch,
++	.init_IRQ		= maple_init_IRQ,
++	.pci_irq_fixup		= maple_pci_irq_fixup,
++	.pci_get_legacy_ide_irq	= maple_pci_get_legacy_ide_irq,
++	.restart		= maple_restart,
++	.halt			= maple_halt,
++	.get_boot_time		= maple_get_boot_time,
++	.set_rtc_time		= maple_set_rtc_time,
++	.get_rtc_time		= maple_get_rtc_time,
++	.calibrate_decr		= generic_calibrate_decr,
++	.progress		= maple_progress,
++	.power_save		= power4_idle,
++};
 -- 
 2.20.1
 
