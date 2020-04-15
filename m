@@ -2,253 +2,124 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E9EFC3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:16:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0020FC3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:16:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 358C12078B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:16:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D03232078B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:16:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="BP5WqtaI"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PQEZoTss"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393354AbgDOPQe (ORCPT
+        id S2393368AbgDOPQq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 11:16:34 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:58196 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389664AbgDOPQ3 (ORCPT
+        Wed, 15 Apr 2020 11:16:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46224 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2393356AbgDOPQm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 11:16:29 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03FFDqV4079901;
-        Wed, 15 Apr 2020 15:16:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=azv6A8fofaaJBqvoTQzO8i+St/tE6gT3+0uEX2GLyaU=;
- b=BP5WqtaID1z19AxeGAKOwEYT9GUJBrFefGFKCMqJR0ClLr6+ywb9nmEafuC2cumWE2Ie
- rrVpo3GhQ9mQqvWIUjRIHuzkN33/8V+F8XTTuyFbLRb+JCkllwQeHvd5H3Z6d30qlYk2
- drGzT0vf/Z+8F3vtfDbyg6e8vjM9ieKtR7VZyouL7qPoWFQBJYFWbD30zvHuoaHFQgSk
- 6Okk6scfogYSdW/KpwRuPwxJZ/FOqSEKTNhAGxf2oIroqDdrQxuKwKVm9L8wlHEHuJwi
- T0/7NYVAeW736Fs+KGy3BUb3VDA8ul84AbdLW7K7EaljKGe0Vx3QE1A6/htV+lvmliJf dg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 30e0bf9h8n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Apr 2020 15:16:17 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03FFDEVS043676;
-        Wed, 15 Apr 2020 15:16:16 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 30dn8wdnr7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Apr 2020 15:16:16 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03FFGFdf001887;
-        Wed, 15 Apr 2020 15:16:15 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 15 Apr 2020 08:16:15 -0700
-Date:   Wed, 15 Apr 2020 08:16:13 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     ira.weiny@intel.com
-Cc:     linux-kernel@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH V8 05/11] fs/xfs: Make DAX mount option a tri-state
-Message-ID: <20200415151613.GO6742@magnolia>
-References: <20200415064523.2244712-1-ira.weiny@intel.com>
- <20200415064523.2244712-6-ira.weiny@intel.com>
+        Wed, 15 Apr 2020 11:16:42 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40C0AC061A0F
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 08:16:42 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id j4so17521300qkc.11
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 08:16:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2qQPAGL2IMZ0eMjrwtJCIRCLqfeX6RhiXaeITvmueB4=;
+        b=PQEZoTsslxtO2VG1gZ9IEXJ+x1EGsPSa5w+d4wjTJVgOduX5sEJ6HZoJfJRBbXRsU9
+         EXHzIHgdRzFaKGGE+fT3peXwkYEIAHFi3cdXG68+ylSdKhZL8gWe9zBXPqhUeWc2cNdF
+         gsEt61yr3z2YAwQghdQbDx6ZcQjhSEnozaayKcy7LJF75jqkrlpPlsnvR009mnmOtVmq
+         rjYjjR2c7Z1XHNg9dZbS7hATI88O0Qk6m97LJX9sd2Ky24Y2RfKkcTujsfHYrgtSzudc
+         op08cFDcPhGoabbs8CyIn+yDkK6oWBZ58w+VvEJ/gPs6yUnaHhv7LTvRu4+UHccln//R
+         Fm6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2qQPAGL2IMZ0eMjrwtJCIRCLqfeX6RhiXaeITvmueB4=;
+        b=Au2IgUCszhwPR/ABUV6bVa8tDjt8aRnyurs9TF5JqYtHdTCDOptRyzbdQIJcyvNHHm
+         bNLj/VxtW0tcInCVfDt0rPCDzF2cSblv5RbcnOchmcrWnL4oC+/sf5clhsz+t/L0MMJy
+         pj6YPs0Dig1pxUJ0UYgSGt1ANIMJYJ+K44Cbu4ZEbR7Bp5LGq1evGrYRkzI5/BUwZtwq
+         fY9BH5oHdtPQ8o4oxSmwKt/wQeH+ak8acryifhRM4m9ahe8ewyr0YU9zfgU8sGKdtukM
+         MHyxB+pzI8R5nwDpJbBuddHK5SD2eXkjbVtmCLxlhKZSBxRfFkqQZ8Aq59bIxYKZPZGs
+         dUPw==
+X-Gm-Message-State: AGi0PuZAsMwQkT2Rk9wq5Qj9pxbAshLR+EgDCiBH0X+Kn+QNCbaYgLTw
+        GdUvrEInEz+jCO6Bh7SYlXOinz0XO14Aejltg4U+bw==
+X-Google-Smtp-Source: APiQypJF3rrWtTJifwbFr2yPhwI9Guj+09QRJ+ZSsnlVpgr82MOSMQpPk7+ZCYHIQZ3xMrt25PXwdxnh13N+LBZi64Q=
+X-Received: by 2002:a37:8d86:: with SMTP id p128mr27408591qkd.250.1586963800654;
+ Wed, 15 Apr 2020 08:16:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200415064523.2244712-6-ira.weiny@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9591 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999
- suspectscore=0 malwarescore=0 spamscore=0 phishscore=0 adultscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004150113
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9591 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 clxscore=1015
- priorityscore=1501 mlxscore=0 lowpriorityscore=0 mlxlogscore=999
- impostorscore=0 adultscore=0 suspectscore=0 phishscore=0 spamscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004150113
+References: <000000000000cb517b05a32c917b@google.com> <ed2b00dfda5b6ce46a2c2a33093ee56f77af6a8f.camel@sipsolutions.net>
+In-Reply-To: <ed2b00dfda5b6ce46a2c2a33093ee56f77af6a8f.camel@sipsolutions.net>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Wed, 15 Apr 2020 17:16:28 +0200
+Message-ID: <CACT4Y+YtT4_An1wtzNWe3_=kMAF3Yhj+pr=GM5ZYOJ9TN3ryXA@mail.gmail.com>
+Subject: Re: WARNING in hwsim_new_radio_nl
+To:     Johannes Berg <johannes@sipsolutions.net>,
+        syzkaller <syzkaller@googlegroups.com>
+Cc:     syzbot <syzbot+a4aee3f42d7584d76761@syzkaller.appspotmail.com>,
+        David Miller <davem@davemloft.net>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-wireless@vger.kernel.org, mathew.j.martineau@linux.intel.com,
+        matthieu.baerts@tessares.net, netdev <netdev@vger.kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 11:45:17PM -0700, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> As agreed upon[1].  We make the dax mount option a tri-state.  '-o dax'
-> continues to operate the same.  We add 'always', 'never', and 'inode'
-> (default).
-> 
-> [1] https://lore.kernel.org/lkml/20200405061945.GA94792@iweiny-DESK2.sc.intel.com/
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> 
-> ---
-> Changes from v7:
-> 	Change to XFS_MOUNT_DAX_NEVER
-> 
-> Changes from v6:
-> 	Use 2 flag bits rather than a field.
-> 	change iflag to inode
-> 
-> Changes from v5:
-> 	New Patch
-> ---
->  fs/xfs/xfs_mount.h |  3 ++-
->  fs/xfs/xfs_super.c | 44 ++++++++++++++++++++++++++++++++++++++++----
->  2 files changed, 42 insertions(+), 5 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_mount.h b/fs/xfs/xfs_mount.h
-> index 54bd74088936..2e88c30642e3 100644
-> --- a/fs/xfs/xfs_mount.h
-> +++ b/fs/xfs/xfs_mount.h
-> @@ -233,7 +233,8 @@ typedef struct xfs_mount {
->  						   allocator */
->  #define XFS_MOUNT_NOATTR2	(1ULL << 25)	/* disable use of attr2 format */
->  
-> -#define XFS_MOUNT_DAX_ALWAYS	(1ULL << 62)	/* TEST ONLY! */
-> +#define XFS_MOUNT_DAX_ALWAYS	(1ULL << 62)
-> +#define XFS_MOUNT_DAX_NEVER	(1ULL << 63)
->  
->  /*
->   * Max and min values for mount-option defined I/O
-> diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-> index 3863f41757d2..142e5d03566f 100644
-> --- a/fs/xfs/xfs_super.c
-> +++ b/fs/xfs/xfs_super.c
-> @@ -47,6 +47,32 @@ static struct kset *xfs_kset;		/* top-level xfs sysfs dir */
->  static struct xfs_kobj xfs_dbg_kobj;	/* global debug sysfs attrs */
->  #endif
->  
-> +enum {
+On Tue, Apr 14, 2020 at 12:41 PM Johannes Berg
+<johannes@sipsolutions.net> wrote:
+>
+> Hi syzbot keepers,
+>
+> On Mon, 2020-04-13 at 07:05 -0700, syzbot wrote:
+> > syzbot has bisected this bug to:
+> >
+> > commit 01cacb00b35cb62b139f07d5f84bcf0eeda8eff6
+> > Author: Paolo Abeni <pabeni@redhat.com>
+> > Date:   Fri Mar 27 21:48:51 2020 +0000
+> >
+> >     mptcp: add netlink-based PM
+> >
+> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10225bb3e00000
+>
+> This is, fairly obviously, incorrect. Same with the bisection for
+> 6693adf1698864d21734, which is really the same underlying problem as
+> this one (though at a different code site).
+>
+> However, it stands out that this was bisected to a commit that adds a
+> new generic netlink family in both cases.
+>
+> This makes sense - the reproducer identifies the family by *number*, but
+> that number isn't stable, generic netlink families should be identified
+> by *name*.
+>
+> Perhaps somehow syzbot could be taught that, so that the bisection is
+> stable across kernels with different generic netlink families
+> registered?
+>
+> Alternatively, we _could_ add some kind of stable ID mode, but I'm not
+> sure we really want to ... since that would mean people start hardcoding
+> IDs?
 
-enum xfs_dax_mode {  for the reasons given below?
++syzkaller mailing list
 
-> +	XFS_DAX_INODE = 0,
-> +	XFS_DAX_ALWAYS = 1,
-> +	XFS_DAX_NEVER = 2,
-> +};
-> +
-> +static void xfs_mount_set_dax_mode(struct xfs_mount *mp, u32 val)
+Hi Johannes,
 
-xfs style, please:
-
-static void
-xfs_mount_set_dax_mode(
-	struct xfs_mount	*mp,
-	u32			val)
-
-or if you give a name to the enum above, you can enforce some type
-safety too:
-
-	enum xfs_dax_mode	val)
-
-> +{
-> +	if (val == XFS_DAX_INODE) {
-
-and this probably could have been a "switch (val) {", in which case if
-the enum ever gets expanded then gcc will whine about missing switch
-cases.
-
-The rest of the patch looks good.
-
---D
-
-> +		mp->m_flags &= ~(XFS_MOUNT_DAX_ALWAYS | XFS_MOUNT_DAX_NEVER);
-> +	} else if (val == XFS_DAX_ALWAYS) {
-> +		mp->m_flags |= XFS_MOUNT_DAX_ALWAYS;
-> +		mp->m_flags &= ~XFS_MOUNT_DAX_NEVER;
-> +	} else if (val == XFS_DAX_NEVER) {
-> +		mp->m_flags |= XFS_MOUNT_DAX_NEVER;
-> +		mp->m_flags &= ~XFS_MOUNT_DAX_ALWAYS;
-> +	}
-> +}
-> +
-> +static const struct constant_table dax_param_enums[] = {
-> +	{"inode",	XFS_DAX_INODE },
-> +	{"always",	XFS_DAX_ALWAYS },
-> +	{"never",	XFS_DAX_NEVER },
-> +	{}
-> +};
-> +
->  /*
->   * Table driven mount option parser.
->   */
-> @@ -59,7 +85,7 @@ enum {
->  	Opt_filestreams, Opt_quota, Opt_noquota, Opt_usrquota, Opt_grpquota,
->  	Opt_prjquota, Opt_uquota, Opt_gquota, Opt_pquota,
->  	Opt_uqnoenforce, Opt_gqnoenforce, Opt_pqnoenforce, Opt_qnoenforce,
-> -	Opt_discard, Opt_nodiscard, Opt_dax,
-> +	Opt_discard, Opt_nodiscard, Opt_dax, Opt_dax_enum,
->  };
->  
->  static const struct fs_parameter_spec xfs_fs_parameters[] = {
-> @@ -103,6 +129,7 @@ static const struct fs_parameter_spec xfs_fs_parameters[] = {
->  	fsparam_flag("discard",		Opt_discard),
->  	fsparam_flag("nodiscard",	Opt_nodiscard),
->  	fsparam_flag("dax",		Opt_dax),
-> +	fsparam_enum("dax",		Opt_dax_enum, dax_param_enums),
->  	{}
->  };
->  
-> @@ -129,7 +156,6 @@ xfs_fs_show_options(
->  		{ XFS_MOUNT_GRPID,		",grpid" },
->  		{ XFS_MOUNT_DISCARD,		",discard" },
->  		{ XFS_MOUNT_LARGEIO,		",largeio" },
-> -		{ XFS_MOUNT_DAX_ALWAYS,		",dax" },
->  		{ 0, NULL }
->  	};
->  	struct xfs_mount	*mp = XFS_M(root->d_sb);
-> @@ -185,6 +211,13 @@ xfs_fs_show_options(
->  	if (!(mp->m_qflags & XFS_ALL_QUOTA_ACCT))
->  		seq_puts(m, ",noquota");
->  
-> +	if (mp->m_flags & XFS_MOUNT_DAX_ALWAYS)
-> +		seq_puts(m, ",dax=always");
-> +	else if (mp->m_flags & XFS_MOUNT_DAX_NEVER)
-> +		seq_puts(m, ",dax=never");
-> +	else
-> +		seq_puts(m, ",dax=inode");
-> +
->  	return 0;
->  }
->  
-> @@ -1244,7 +1277,10 @@ xfs_fc_parse_param(
->  		return 0;
->  #ifdef CONFIG_FS_DAX
->  	case Opt_dax:
-> -		mp->m_flags |= XFS_MOUNT_DAX_ALWAYS;
-> +		xfs_mount_set_dax_mode(mp, XFS_DAX_ALWAYS);
-> +		return 0;
-> +	case Opt_dax_enum:
-> +		xfs_mount_set_dax_mode(mp, result.uint_32);
->  		return 0;
->  #endif
->  	default:
-> @@ -1451,7 +1487,7 @@ xfs_fc_fill_super(
->  		if (!rtdev_is_dax && !datadev_is_dax) {
->  			xfs_alert(mp,
->  			"DAX unsupported by block device. Turning off DAX.");
-> -			mp->m_flags &= ~XFS_MOUNT_DAX_ALWAYS;
-> +			xfs_mount_set_dax_mode(mp, XFS_DAX_NEVER);
->  		}
->  		if (xfs_sb_version_hasreflink(&mp->m_sb)) {
->  			xfs_alert(mp,
-> -- 
-> 2.25.1
-> 
+syzkaller has a pseudo-syscall to map string genetlink family ID to
+int ID. If that syscall would have been used, then I assume it should
+have worked. However in this case, it managed to trigger the bug with
+a plain opaque blob with no knowledge about the blob contents
+whatsoever. I don't see any realistic way to preserve family ID in
+this case.
