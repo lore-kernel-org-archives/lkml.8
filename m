@@ -2,117 +2,163 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89CC8C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35033C3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:16:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 660DF20767
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:15:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC61F20767
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:15:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A2lIE3kg"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TCBII8Gd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2636532AbgDOOPR (ORCPT
+        id S2636561AbgDOOP4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:15:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36522 "EHLO
+        Wed, 15 Apr 2020 10:15:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2636501AbgDOOOq (ORCPT
+        by vger.kernel.org with ESMTP id S2636501AbgDOOPi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 10:14:46 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66526C061A0E;
-        Wed, 15 Apr 2020 07:14:46 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id q22so3891583ljg.0;
-        Wed, 15 Apr 2020 07:14:46 -0700 (PDT)
+        Wed, 15 Apr 2020 10:15:38 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A16DC061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 07:15:36 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id r24so3857220ljd.4
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 07:15:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=QzeHwFEGJr/8bxH2v0CKWpMLToIaeBe6lea2lI4zgDM=;
-        b=A2lIE3kghVFiVELn6oIETNImTUq9oxgX6Z8wrQBo+dD793MmcVhfd8oX/2fuN5v2Xm
-         P/dgCGGxEzswK4sqGdGiAVgO1Zm/kIyMZYaAJmRO+oHFNyQMwhdq9kbZ93nN/uO4puTv
-         emU/DCjJF7eB9CYdHPsQhsfZRizM6jAU3nL1Twr1/O2GNCT49/0w/OpkAOAeGSG3bLYa
-         4dycP0xDJE3CHmNS5F9Z+TEsIi8oo68yZsSXPYpF65CvhY1EteCLgPDu0xyqCK6DpVPu
-         DyPTPTvqrY7z5odWPDzcCoYBW25tSTodKLXbQ3vTSnHUkdfKK0/a5TfjSvkgwVN+hZZ1
-         eH2g==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iD9DiJbsjFvR0l8VWA77X1IH3xwznCsLM8hKGPl+PRU=;
+        b=TCBII8GdGPliEdTt5zYPCbSfN/GirM3CNA1L+hF8wVCUcb+iXhsn7f4YnEpddGWFHV
+         lndjOYl1+Ns7/wuISMz2Dd0D+/VawofNWW5V73ksyTbJB5ra4IO6JKqx91XgSn1JhF40
+         nZuZv+M+5bEI1JnwoyBiAEOkCtd4T1RpAF7rCY5QFU0LCjN0ubdhmg+9YC3+sTOeGY7K
+         ZHKAFY9iv12Ap88OB7TIzT3ncKuekNYZTwCBD7GgsLT79eRn//B2ibp8bMrWjLZp8QEs
+         1BvhUkRp9v2avwM7XwqJKPmnl/Zj3hF+0DaW4/KdN90Q+6RKfJWxkK/aCb1XpBHgtM+S
+         Lifw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=QzeHwFEGJr/8bxH2v0CKWpMLToIaeBe6lea2lI4zgDM=;
-        b=RQAjNhTdh/I8N79Ez/f4CwDFP9hk2po19shv2BpuwCITpJFBDHZ9lzhcL5VnMVvaAl
-         FG7egINqKp0sopclNRQJOq+fG38mTdvcSosu/cKMR7s6UBqzNb2xwjXUQxuNoqJidtP8
-         BjjzuJI0Wx/q7VdVa+q7YEBnLRdwYLX/n3E80YDu0IfiSDT6yduoZGJ/9wXuouHQqwQd
-         0Qp+KNvccejZU/fyVNeQXvLmtVL+obBg1IIfRQPZo7OAZJMHQnyp4xMGehc+N1yZ4H7E
-         HpsVJBOsvBldPl1HARz6KzoQaA5SoLTkvUpf6zrlrGPQZOpw0AOVG+kWVsEjLpzJ/VIu
-         Dy+w==
-X-Gm-Message-State: AGi0PuY2JiEWc5Ti8WMl8lmOWU5syU7L8ES9w1jVMNy3CYKsOjmc32Og
-        Gqj6UDFKcXB8JoiTfwbypwRUOPE6
-X-Google-Smtp-Source: APiQypJu5jBUvBYy6D4/PMMoKIxi/FfAKbsFdPDm9YWKPHV3ho24uGk4mkxIr9iyr7sJKDautLwTYQ==
-X-Received: by 2002:a2e:85c4:: with SMTP id h4mr3553226ljj.112.1586960083875;
-        Wed, 15 Apr 2020 07:14:43 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id v17sm12851270lfe.34.2020.04.15.07.14.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Apr 2020 07:14:41 -0700 (PDT)
-Subject: Re: [PATCH v2 0/2] NVIDIA Tegra I2C synchronization correction
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200324191217.1829-1-digetx@gmail.com>
- <20200415114536.GB910@ninjato>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <87f18a67-5aec-b5df-9d8f-341f03ff3a72@gmail.com>
-Date:   Wed, 15 Apr 2020 17:14:39 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iD9DiJbsjFvR0l8VWA77X1IH3xwznCsLM8hKGPl+PRU=;
+        b=R+xo6IsenGoCGLQH8iHtdToVcH2Aqy52aaY3VFubOctILNbTBwEEXbTGXsVI5l29Np
+         Ht9kxLPIPSHHvdoqb1OS5xfdtgjV0aqySkkAV+wvy2+fiCaGsIPd01+yYZPa7JemLNiz
+         IPs+58CY3bxB98KGPqFsNoj9YY1SyYcQsFWX9gouV60SXYAbmzgWFI1peBI9zpdsV6dt
+         6P+n7lBop/Ha50wJR/ZjPHP6Gb7+mrF/Ja67fQhly+/f+EDHgRc44t2Bq/nmr5kR1MdV
+         KGDBzLeAbsI4BIHYoKyEPSlI4OKhQ9+ATbATOyzvl3wiFWjt3brA7fGzBsFGLmOyBvrp
+         Adkg==
+X-Gm-Message-State: AGi0PuZifQ7bSYMpLBiIUKElgf2eCwCxcAxJ1xJncRc4z0T9AIq4aWoY
+        h9KAZ7xMupes+txISq6DUh6eOsqC8i1Aiu7WJwCysGoYbc1/SZsk
+X-Google-Smtp-Source: APiQypIcyGvGInNcx/iI+quCACUkFCbt3D6BOE2RxrRaAY7YSDkYMPEja+ESZ2QVxtJaLPp2pbfh6o6G0FQktdlPVf0=
+X-Received: by 2002:a05:651c:20a:: with SMTP id y10mr3324332ljn.69.1586960134977;
+ Wed, 15 Apr 2020 07:15:34 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200415114536.GB910@ninjato>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <1583673879-20714-3-git-send-email-peng.fan@nxp.com>
+ <5e96e916.1c69fb81.14365.050b@mx.google.com> <20200415131612.GC31928@bogus>
+In-Reply-To: <20200415131612.GC31928@bogus>
+From:   Etienne Carriere <etienne.carriere@linaro.org>
+Date:   Wed, 15 Apr 2020 16:15:23 +0200
+Message-ID: <CAN5uoS9CSspCeMWX8JWVDdLtjX81F-15GL0QqrqzNgnnRiMpxQ@mail.gmail.com>
+Subject: Re: [PATCH V5 2/2] firmware: arm_scmi: add smc/hvc transport
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     Peng Fan <peng.fan@nxp.com>, devicetree@vger.kernel.org,
+        f.fainelli@gmail.com, linux-arm-kernel@lists.infradead.org,
+        linux-imx@nxp.com, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, Viresh Kumar <viresh.kumar@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-15.04.2020 14:45, Wolfram Sang пишет:
-> On Tue, Mar 24, 2020 at 10:12:15PM +0300, Dmitry Osipenko wrote:
->> Hello,
->>
->> Recently I found a way to reliably reproduce I2C timeouts that happen due
->> to improper synchronizations made by the I2C driver. It's quite easy to
->> reproduce the problem when memory is running on a lower freq + there is
->> some memory activity + CPU could get busy for a significant time. This
->> is the case when KASAN is enabled and CPU is busy while accessing FS via
->> NFS. This small series addresses the found problems.
->>
->> Changelog:
->>
->> v2: - The "Better handle case where CPU0 is busy for a long time" patch
->>       now preserves the old behavior where completion is checked after
->>       disabling the interrupt, preventing potential race-condition of
->>       the completion awaiting vs interrupt syncing.
->>
->> Dmitry Osipenko (2):
->>   i2c: tegra: Better handle case where CPU0 is busy for a long time
->>   i2c: tegra: Synchronize DMA before termination
-> 
-> Patches look good to me. I tend to apply them to for-current instead of
-> for-next because they are fixing issues. Even a stable tag?
-> 
+Hello Sudeep,
 
-Thank you, yes it should be good to apply this series to 5.7 because the
-Tegra APBDMA driver dependency-patches are already in 5.7.
+On Wed, 15 Apr 2020 at 15:16, Sudeep Holla <sudeep.holla@arm.com> wrote:
+>
+> On Wed, Apr 15, 2020 at 12:58:58PM +0200, Etienne Carriere wrote:
+> > Hello Peng,
+> >
+> > I  have 2 comments on this change. The main is about using
+> > arm_smccc_1_1_invoke(). Below some details and I added comments
+> > inside you patch. The second of on SMC return value, see my
+> > comment in your patch below.
+> >
+> > About arm_smccc_1_1_invoke(), this functon currently relies on PSCI
+> > driver to define a conduit method but SCMI agent driver does not
+> > mandate CONFIG_PSCI to be enable.
+> >
+>
+> Yes this was discussed and it is done so deliberately. I have added the
+> build dependency when I merged the patch. There's no dependency on
+> CONFIG_PSCI.
 
-The stable tag shouldn't be needed since this is not a critical bug fix
-and the DMA driver patches are not going into stable. This series should
-be more actual for the upcoming devices, which should be upstreamed in 5.8+.
+Ok, I understand your point.
+Yet it seems to me there is still a dependency on CONFIG_ARM_PSCI_FW
+and also a dependency on a PSCI node in the DT.
+
+However, I must admit I don't know yet a platform that enables
+CONFIG_ARM_SCMI_PROTOCOL but not CONFIG_ARM_PSCI_FW, hence
+so far, so good.
+
+
+About dependencies, it think the dependency on MAILBOX in
+firmware/Kconfig should be updated:
+
+ config ARM_SCMI_PROTOCOL
+         bool "ARM System Control and Management Interface (SCMI)
+Message Protocol"
+         depends on ARM || ARM64 || COMPILE_TEST
+-        depends on MAILBOX
++        depends on MAILBOX | HAVE_ARM_SMCCC
+         help
+
+>
+> > Could you add an optional "method" property for "arm,scmi-smc" for platforms
+> > willing to not rely on PSCI Linux driver? If no property "method" is
+> > defined in the FDT, invocation relies on arm_smccc_1_1_invoke().
+> >
+>
+> Nope, we don't want mixture here. Why is the system not using PSCI/SMCCC ?
+
+Ok, as I staed above, I don't know any platform that enables
+CONFIG_ARM_SCMI_PROTOCOL but not CONFIG_ARM_PSCI_FW.
+
+>
+> > "method" naming mimics what is done in the OP-TEE driver (drivers/tee/optee/).
+> > Here is a proposal for the documenting property "method" in
+> > Documentation/arm,scmi.txt:
+> >
+> > - method : "smc" or "hvc"
+> >             Optional property defining the conduit method for to be used
+> >           for invoking the SCMI server in secure world.
+> >           "smc" states instruction SMC #0 is used whereas "hvc" states
+> >           instruction HVC #0 is used.
+> >
+> >
+>
+> It was rejected, you can try your luck with OPTEE :)
+> We will just use the system conduit here with SCMI for SMC/HVC transport.
+> Details in previous version of the patch.
+>
+> [...]
+>
+> > > +struct scmi_smc {
+> > > +   struct scmi_chan_info *cinfo;
+> > > +   struct scmi_shared_mem __iomem *shmem;
+> > > +   u32 func_id;
+> > > +};
+> >
+> > Add here a field for the secure world invocation function handler:
+> >
+> >       scmi_arm_smccc_invoke_fn *invoke_fn;
+> >
+>
+> As stated not needed if we use  arm_smccc_1_1_invoke()
+>
+> [...]
+>
+
+Regards,
+Etienne
