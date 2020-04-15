@@ -2,106 +2,83 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA43CC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:37:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2222AC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:38:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95D8520656
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:37:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E790A20656
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:38:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="qtQYIjKX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2894660AbgDOIh3 (ORCPT
+        id S2894664AbgDOIiD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 04:37:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40250 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2894624AbgDOIf4 (ORCPT
+        Wed, 15 Apr 2020 04:38:03 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:23429 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2894663AbgDOIhz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 04:35:56 -0400
-Received: from mo6-p04-ob.smtp.rzone.de (mo6-p04-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5304::3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA724C061A10;
-        Wed, 15 Apr 2020 01:35:54 -0700 (PDT)
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1OAA2UNf2M7O2CKN9ej"
-X-RZG-CLASS-ID: mo00
-Received: from iMac.fritz.box
-        by smtp.strato.de (RZmta 46.4.0 DYNA|AUTH)
-        with ESMTPSA id 6028a2w3F8ZS0Iw
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Wed, 15 Apr 2020 10:35:28 +0200 (CEST)
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     Philipp Rossak <embed3d@gmail.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org,
-        "H . Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH v6 10/12] ARM: dts: sun6i: a31s: add sgx gpu child node
-Date:   Wed, 15 Apr 2020 10:35:17 +0200
-Message-Id: <fed0dc035c2e7cfe068588d7b5232924d2960ab1.1586939718.git.hns@goldelico.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1586939718.git.hns@goldelico.com>
-References: <cover.1586939718.git.hns@goldelico.com>
+        Wed, 15 Apr 2020 04:37:55 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586939875; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=ptWtTkJE5nnRCVqgIrXg59XuymHRBiaRK3L5xvf6wyE=;
+ b=qtQYIjKXB6slbH3QuwzE2rFr9LyOWoHIhtR6+coFJs+riWoOchgcp6OgH+16EEPJKyZAwbX3
+ F2wvewoPhBcsLE2hnPNHyMgoZsrcxP7qc9TSt/iFO8PxNmXEEw4aV2deztOQc98EXuC6Q4bZ
+ ojj7/Er0G5SiUjMQ5+LdWB+7Lws=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e96c7e2.7f621adf7458-smtp-out-n01;
+ Wed, 15 Apr 2020 08:37:54 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 9CD1FC433BA; Wed, 15 Apr 2020 08:37:54 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 97AF6C433F2;
+        Wed, 15 Apr 2020 08:37:52 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 97AF6C433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] ipw2x00: make ipw_qos_association_resp() void
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200410090850.27025-1-yanaijie@huawei.com>
+References: <20200410090850.27025-1-yanaijie@huawei.com>
+To:     Jason Yan <yanaijie@huawei.com>
+Cc:     <stas.yakovlev@gmail.com>, <davem@davemloft.net>,
+        <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Jason Yan <yanaijie@huawei.com>
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20200415083754.9CD1FC433BA@smtp.codeaurora.org>
+Date:   Wed, 15 Apr 2020 08:37:54 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Philipp Rossak <embed3d@gmail.com>
+Jason Yan <yanaijie@huawei.com> wrote:
 
-We are adding the devicetree binding for the PVR-SGX-544-115 gpu.
+> Fix the following coccicheck warning:
+> 
+> drivers/net/wireless/intel/ipw2x00/ipw2200.c:7048:5-8: Unneeded
+> variable: "ret". Return "0" on line 7055
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
 
-This driver is currently under development in the openpvrsgx-devgroup.
-Right now the full binding is not figured out, so we provide here a
-placeholder. It will be completed as soon as there is a demo available.
+Patch applied to wireless-drivers-next.git, thanks.
 
-The currently used binding that is used during development is more
-complete and was already verifyed by loading the kernelmodule successful.
+a69a1328fb03 ipw2x00: make ipw_qos_association_resp() void
 
-Signed-off-by: Philipp Rossak <embed3d@gmail.com>
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
----
- arch/arm/boot/dts/sun6i-a31s.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/arch/arm/boot/dts/sun6i-a31s.dtsi b/arch/arm/boot/dts/sun6i-a31s.dtsi
-index 97e2c51d0aea..669770d2934a 100644
---- a/arch/arm/boot/dts/sun6i-a31s.dtsi
-+++ b/arch/arm/boot/dts/sun6i-a31s.dtsi
-@@ -59,3 +59,13 @@ &pio {
- &tcon0 {
- 	compatible = "allwinner,sun6i-a31s-tcon";
- };
-+
-+&gpu {
-+	compatible = "allwinner,sun8i-a31s-sgx544-115",
-+		     "img,sgx544-115", "img,sgx544";
-+	/*
-+	 * This node is currently a placeholder for the gpu.
-+	 * This will be completed when a full demonstration
-+	 * of the openpvrsgx driver is available for this board.
-+	 */
-+};
 -- 
-2.25.1
+https://patchwork.kernel.org/patch/11483035/
 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
