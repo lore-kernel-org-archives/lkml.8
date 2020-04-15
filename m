@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0B47C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C2EFC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:13:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91AB420771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:12:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25AC120768
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:13:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586977977;
-	bh=anlHKj//g7q+uXXdFz0rSnxqzIqARPN1Tk58bO2fe6M=;
+	s=default; t=1586977989;
+	bh=uFSH6faDpro6amVZ/grq31h62yEoVX3R327HstULEew=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k9dCsM3V0ZC3tKCXZeoFklPk34PhEnv2DkfH9N3nkaHGFIeBhaD5Z1cWJ4jLd3teE
-	 4a7G5rOBLshoHy187a+EBD0fMCXmuxAbnoath0FUmVgNTsfCC4eSDgghM9MSV7pi02
-	 6TjOx6ojPbGAdlCoV1Ar8os8lO6BVPO2k4lCuglI=
+	b=clRiwVwaxTICRoCvyorgHJakpGS89q44IbiUJP6zG9TrM7H67j/CwiIddWdQCzaFk
+	 A6IH+vIxqJqQ6smo2w6asbjqzOok+zAt30dc464e2LKX2Uvq305pUEjsF3QGK4/8l5
+	 auYGQO2Q3V3tgC3lq7qx7vSlxpTpd/bA9NcO5J9o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437351AbgDOTMv (ORCPT
+        id S2437701AbgDOTNG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 15:12:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45860 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 15:13:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1416858AbgDOStt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1416865AbgDOStt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Apr 2020 14:49:49 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25D3920784;
-        Wed, 15 Apr 2020 18:49:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4628C2168B;
+        Wed, 15 Apr 2020 18:49:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586976587;
-        bh=anlHKj//g7q+uXXdFz0rSnxqzIqARPN1Tk58bO2fe6M=;
+        s=default; t=1586976589;
+        bh=uFSH6faDpro6amVZ/grq31h62yEoVX3R327HstULEew=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iR6WS45JgQEgrKh4xDZsevfwxOxAA4M1ShesoLrRN298M13LJTnvT3KTSFINOtKcF
-         fEXUzCqDijdDhVU4XoNYKUFEGFU8YNN/NlF9JciY1AFZOtuPEl4Q/Fh9ZfVYgUo2R+
-         RzkR0FxVsR6XiEDpcnBhwRjf4rMlLM09JPIRgZf0=
+        b=2px4J2DGPk2MZjGf7HO6yzMaSqsAsiP0ul7wDlDEL6bsxOGQoUjaHwjD7Bm9Szz5w
+         I+uu/lNCMv4OJPkhleHlqCB2Kx0rQOtpIgekmhZrBYvhcHZy0iL4Wsz3jy6dt1D0BN
+         vp13Po71qgo96YaZjUFi9dG02sqASh/0oUIRMv1s=
 From:   paulmck@kernel.org
 To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
         kernel-team@fb.com, mingo@kernel.org
 Cc:     stern@rowland.harvard.edu, parri.andrea@gmail.com, will@kernel.org,
         peterz@infradead.org, boqun.feng@gmail.com, npiggin@gmail.com,
         dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
-        akiyks@gmail.com, Marco Elver <elver@google.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>
-Subject: [PATCH lkmm tip/core/rcu 02/10] tools/memory-model: Fix "conflict" definition
-Date:   Wed, 15 Apr 2020 11:49:37 -0700
-Message-Id: <20200415184945.16487-2-paulmck@kernel.org>
+        akiyks@gmail.com, "Paul E . McKenney" <paulmck@kernel.org>
+Subject: [PATCH lkmm tip/core/rcu 09/10] Documentation/litmus-tests/atomic: Add a test for atomic_set()
+Date:   Wed, 15 Apr 2020 11:49:44 -0700
+Message-Id: <20200415184945.16487-9-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200415183343.GA12265@paulmck-ThinkPad-P72>
 References: <20200415183343.GA12265@paulmck-ThinkPad-P72>
@@ -58,187 +57,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marco Elver <elver@google.com>
+From: Boqun Feng <boqun.feng@gmail.com>
 
-The definition of "conflict" should not include the type of access nor
-whether the accesses are concurrent or not, which this patch addresses.
-The definition of "data race" remains unchanged.
+We already use a litmus test in atomic_t.txt to describe the behavior of
+an atomic_set() with the an atomic RMW, so add it into atomic-tests
+directory to make it easily accessible for anyone who cares about the
+semantics of our atomic APIs.
 
-The definition of "conflict" as we know it and is cited by various
-papers on memory consistency models appeared in [1]: "Two accesses to
-the same variable conflict if at least one is a write; two operations
-conflict if they execute conflicting accesses."
+Besides currently the litmus test "atomic-set" in atomic_t.txt has a few
+things to be improved:
 
-The LKMM as well as the C11 memory model are adaptations of
-data-race-free, which are based on the work in [2]. Necessarily, we need
-both conflicting data operations (plain) and synchronization operations
-(marked). For example, C11's definition is based on [3], which defines a
-"data race" as: "Two memory operations conflict if they access the same
-memory location, and at least one of them is a store, atomic store, or
-atomic read-modify-write operation. In a sequentially consistent
-execution, two memory operations from different threads form a type 1
-data race if they conflict, at least one of them is a data operation,
-and they are adjacent in <T (i.e., they may be executed concurrently)."
+1)	The CPU/Processor numbers "P1,P2" are not only inconsistent with
+	the rest of the document, which uses "CPU0" and "CPU1", but also
+	unacceptable by the herd tool, which requires processors start
+	at "P0".
 
-[1] D. Shasha, M. Snir, "Efficient and Correct Execution of Parallel
-    Programs that Share Memory", 1988.
-	URL: http://snir.cs.illinois.edu/listed/J21.pdf
+2)	The initialization block uses a "atomic_set()", which is OK, but
+	it's better to use ATOMIC_INIT() to make clear this is an
+	initialization.
 
-[2] S. Adve, "Designing Memory Consistency Models for Shared-Memory
-    Multiprocessors", 1993.
-	URL: http://sadve.cs.illinois.edu/Publications/thesis.pdf
+3)	The return value of atomic_add_unless() is discarded
+	inexplicitly, which is OK for C language, but it will be helpful
+	to the herd tool if we use a void cast to make the discard
+	explicit.
 
-[3] H.-J. Boehm, S. Adve, "Foundations of the C++ Concurrency Memory
-    Model", 2008.
-	URL: https://www.hpl.hp.com/techreports/2008/HPL-2008-56.pdf
+4)	The name and the paragraph describing the test need to be more
+	accurate and aligned with our wording in LKMM.
 
-Signed-off-by: Marco Elver <elver@google.com>
-Co-developed-by: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+Therefore fix these in both atomic_t.txt and the new added litmus test.
+
 Acked-by: Andrea Parri <parri.andrea@gmail.com>
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- tools/memory-model/Documentation/explanation.txt | 83 +++++++++++++-----------
- 1 file changed, 45 insertions(+), 38 deletions(-)
+ Documentation/atomic_t.txt                         | 14 ++++++-------
+ ...Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus | 24 ++++++++++++++++++++++
+ Documentation/litmus-tests/atomic/README           |  7 +++++++
+ 3 files changed, 38 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/litmus-tests/atomic/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
 
-diff --git a/tools/memory-model/Documentation/explanation.txt b/tools/memory-model/Documentation/explanation.txt
-index e91a2eb..993f800 100644
---- a/tools/memory-model/Documentation/explanation.txt
-+++ b/tools/memory-model/Documentation/explanation.txt
-@@ -1987,28 +1987,36 @@ outcome undefined.
+diff --git a/Documentation/atomic_t.txt b/Documentation/atomic_t.txt
+index 0ab747e..67d1d99f 100644
+--- a/Documentation/atomic_t.txt
++++ b/Documentation/atomic_t.txt
+@@ -85,21 +85,21 @@ smp_store_release() respectively. Therefore, if you find yourself only using
+ the Non-RMW operations of atomic_t, you do not in fact need atomic_t at all
+ and are doing it wrong.
  
- In technical terms, the compiler is allowed to assume that when the
- program executes, there will not be any data races.  A "data race"
--occurs when two conflicting memory accesses execute concurrently;
--two memory accesses "conflict" if:
-+occurs when there are two memory accesses such that:
+-A subtle detail of atomic_set{}() is that it should be observable to the RMW
+-ops. That is:
++A note for the implementation of atomic_set{}() is that it must not break the
++atomicity of the RMW ops. That is:
  
--	they access the same location,
-+1.	they access the same location,
+-  C atomic-set
++  C Atomic-RMW-ops-are-atomic-WRT-atomic_set
  
--	they occur on different CPUs (or in different threads on the
--	same CPU),
-+2.	at least one of them is a store,
+   {
+-    atomic_set(v, 1);
++    atomic_t v = ATOMIC_INIT(1);
+   }
  
--	at least one of them is a plain access,
-+3.	at least one of them is plain,
+-  P1(atomic_t *v)
++  P0(atomic_t *v)
+   {
+-    atomic_add_unless(v, 1, 0);
++    (void)atomic_add_unless(v, 1, 0);
+   }
  
--	and at least one of them is a store.
-+4.	they occur on different CPUs (or in different threads on the
-+	same CPU), and
- 
--The LKMM tries to determine whether a program contains two conflicting
--accesses which may execute concurrently; if it does then the LKMM says
--there is a potential data race and makes no predictions about the
--program's outcome.
-+5.	they execute concurrently.
- 
--Determining whether two accesses conflict is easy; you can see that
--all the concepts involved in the definition above are already part of
--the memory model.  The hard part is telling whether they may execute
--concurrently.  The LKMM takes a conservative attitude, assuming that
--accesses may be concurrent unless it can prove they cannot.
-+In the literature, two accesses are said to "conflict" if they satisfy
-+1 and 2 above.  We'll go a little farther and say that two accesses
-+are "race candidates" if they satisfy 1 - 4.  Thus, whether or not two
-+race candidates actually do race in a given execution depends on
-+whether they are concurrent.
+-  P2(atomic_t *v)
++  P1(atomic_t *v)
+   {
+     atomic_set(v, 0);
+   }
+diff --git a/Documentation/litmus-tests/atomic/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus b/Documentation/litmus-tests/atomic/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
+new file mode 100644
+index 0000000..4938531
+--- /dev/null
++++ b/Documentation/litmus-tests/atomic/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
+@@ -0,0 +1,24 @@
++C Atomic-RMW-ops-are-atomic-WRT-atomic_set
 +
-+The LKMM tries to determine whether a program contains race candidates
-+which may execute concurrently; if it does then the LKMM says there is
-+a potential data race and makes no predictions about the program's
-+outcome.
++(*
++ * Result: Never
++ *
++ * Test that atomic_set() cannot break the atomicity of atomic RMWs.
++ *)
 +
-+Determining whether two accesses are race candidates is easy; you can
-+see that all the concepts involved in the definition above are already
-+part of the memory model.  The hard part is telling whether they may
-+execute concurrently.  The LKMM takes a conservative attitude,
-+assuming that accesses may be concurrent unless it can prove they
-+are not.
- 
- If two memory accesses aren't concurrent then one must execute before
- the other.  Therefore the LKMM decides two accesses aren't concurrent
-@@ -2171,8 +2179,8 @@ again, now using plain accesses for buf:
- 	}
- 
- This program does not contain a data race.  Although the U and V
--accesses conflict, the LKMM can prove they are not concurrent as
--follows:
-+accesses are race candidates, the LKMM can prove they are not
-+concurrent as follows:
- 
- 	The smp_wmb() fence in P0 is both a compiler barrier and a
- 	cumul-fence.  It guarantees that no matter what hash of
-@@ -2326,12 +2334,11 @@ could now perform the load of x before the load of ptr (there might be
- a control dependency but no address dependency at the machine level).
- 
- Finally, it turns out there is a situation in which a plain write does
--not need to be w-post-bounded: when it is separated from the
--conflicting access by a fence.  At first glance this may seem
--impossible.  After all, to be conflicting the second access has to be
--on a different CPU from the first, and fences don't link events on
--different CPUs.  Well, normal fences don't -- but rcu-fence can!
--Here's an example:
-+not need to be w-post-bounded: when it is separated from the other
-+race-candidate access by a fence.  At first glance this may seem
-+impossible.  After all, to be race candidates the two accesses must
-+be on different CPUs, and fences don't link events on different CPUs.
-+Well, normal fences don't -- but rcu-fence can!  Here's an example:
- 
- 	int x, y;
- 
-@@ -2367,7 +2374,7 @@ concurrent and there is no race, even though P1's plain store to y
- isn't w-post-bounded by any marked accesses.
- 
- Putting all this material together yields the following picture.  For
--two conflicting stores W and W', where W ->co W', the LKMM says the
-+race-candidate stores W and W', where W ->co W', the LKMM says the
- stores don't race if W can be linked to W' by a
- 
- 	w-post-bounded ; vis ; w-pre-bounded
-@@ -2380,8 +2387,8 @@ sequence, and if W' is plain then they also have to be linked by a
- 
- 	w-post-bounded ; vis ; r-pre-bounded
- 
--sequence.  For a conflicting load R and store W, the LKMM says the two
--accesses don't race if R can be linked to W by an
-+sequence.  For race-candidate load R and store W, the LKMM says the
-+two accesses don't race if R can be linked to W by an
- 
- 	r-post-bounded ; xb* ; w-pre-bounded
- 
-@@ -2413,20 +2420,20 @@ is, the rules governing the memory subsystem's choice of a store to
- satisfy a load request and its determination of where a store will
- fall in the coherence order):
- 
--	If R and W conflict and it is possible to link R to W by one
--	of the xb* sequences listed above, then W ->rfe R is not
--	allowed (i.e., a load cannot read from a store that it
-+	If R and W are race candidates and it is possible to link R to
-+	W by one of the xb* sequences listed above, then W ->rfe R is
-+	not allowed (i.e., a load cannot read from a store that it
- 	executes before, even if one or both is plain).
- 
--	If W and R conflict and it is possible to link W to R by one
--	of the vis sequences listed above, then R ->fre W is not
--	allowed (i.e., if a store is visible to a load then the load
--	must read from that store or one coherence-after it).
-+	If W and R are race candidates and it is possible to link W to
-+	R by one of the vis sequences listed above, then R ->fre W is
-+	not allowed (i.e., if a store is visible to a load then the
-+	load must read from that store or one coherence-after it).
- 
--	If W and W' conflict and it is possible to link W to W' by one
--	of the vis sequences listed above, then W' ->co W is not
--	allowed (i.e., if one store is visible to a second then the
--	second must come after the first in the coherence order).
-+	If W and W' are race candidates and it is possible to link W
-+	to W' by one of the vis sequences listed above, then W' ->co W
-+	is not allowed (i.e., if one store is visible to a second then
-+	the second must come after the first in the coherence order).
- 
- This is the extent to which the LKMM deals with plain accesses.
- Perhaps it could say more (for example, plain accesses might
++{
++	atomic_t v = ATOMIC_INIT(1);
++}
++
++P0(atomic_t *v)
++{
++	(void)atomic_add_unless(v, 1, 0);
++}
++
++P1(atomic_t *v)
++{
++	atomic_set(v, 0);
++}
++
++exists
++(v=2)
+diff --git a/Documentation/litmus-tests/atomic/README b/Documentation/litmus-tests/atomic/README
+index ae61201..a1b7241 100644
+--- a/Documentation/litmus-tests/atomic/README
++++ b/Documentation/litmus-tests/atomic/README
+@@ -2,3 +2,10 @@ This directory contains litmus tests that are typical to describe the semantics
+ of our atomic APIs. For more information about how to "run" a litmus test or
+ how to generate a kernel test module based on a litmus test, please see
+ tools/memory-model/README.
++
++============
++LITMUS TESTS
++============
++
++Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
++	Test that atomic_set() cannot break the atomicity of atomic RMWs.
 -- 
 2.9.5
 
