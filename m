@@ -2,248 +2,180 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAEF3C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE49CC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:35:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A35AA20784
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:35:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="prSZA1vI"
+	by mail.kernel.org (Postfix) with ESMTP id A9C12206D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:35:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586946915;
+	bh=77bP08nDJwkuMBIczKe44qfyWWYykJVxclcbNqH4VLE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=dwGkjurnWfqSyc+fZvA/OWIVH2J2uZAzxNb8PQAG1/QcRKN6/lgkGhC9DE7jFZVcv
+	 HNotQZKoLouuGMrdmJrz0OcGfHi9JGqz45OSQiUpC3CnvS2kyCLJrH9+cQsYXjPt1R
+	 jmnDVp7KwgKjaXI2JyUvIPlDih/UpuQPcd12RSys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408726AbgDOKey (ORCPT
+        id S2408666AbgDOKfK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 06:34:54 -0400
-Received: from mail-mw2nam10on2075.outbound.protection.outlook.com ([40.107.94.75]:43489
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2408583AbgDOKZK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 06:25:10 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Krd1CZzv2Kd7/yscMhz5bcjV5HDCPsONa9c7hvDHAHpozJqyovrVUFbglvpZ4NvI3vhbq4uOHLFDf5ES7uYhT6LONcwGp4oqpOzIO9RgESR3tGX3cUZs2RZN77ZyTS79JOb1hE6EluyMM3VOWBLfRG5zXlfPjRbeT0UZi39fqN55eiIFeCucFdBQNjTscsuWcLEwIzCyOrTQSYOjXqof608Y2OKl6hRugvY5HMvRYCaWLd0Tm48ul3rxRKcGrxmEJLLY204tQ/fAZMaNWxQ4k6bn0wnoTsUrY7KVE86PI1k/c9koB/GThFKFcKvtb5TBJVvhJhH1CChCGDzeGawrYA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ixkfw4DV3l9ZzMixhU2bxIK8xqCuA2/DGCS5yAeFeYo=;
- b=SzMIW7hgeSpEhYdvPWWfW8TK1fO1W5Zdkaqlr1nu/99eNFKdv2GTvvEJ9Ecvddnno+IOy97bTrBlhINDwYiWULy0rW/OPiyNHfyIkeCbsrU3oJrw5m1oBo24fv8X3ouGy85KXOYkwXRsZx6/qxTi/yraZ30RVqkK7NNHHKbt+eM1HP0Ai24enn4inUVoGqmHkpiEEq7YZtHj59qUzf0jIazDhKQCO7CovjS/rK5LQou3CCEgpUc8iDYNXDwbKGGkcp9T2X4K9F9HiIprZdi6Dl4VNvY+08fR/dgtlMkEJXy/bAam0eWnc9cqg6lUNwm2gcOjc5UtHV6PkmdZSLP80g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=gmail.com smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ixkfw4DV3l9ZzMixhU2bxIK8xqCuA2/DGCS5yAeFeYo=;
- b=prSZA1vIyCBUwr5Hu8YjJ3lmazRjK8RYkFl/kc5eDWcbL9GQ7n1uNwK5/zklKDkVQm7TdedirjeHp88Vtvx4KZ/Sy24sF0tMZHa108UXtH5oPEPPBYKY15NTiz5dkquMbcnL3Nvs9zn2kxo19D9m3II1DEN4QeQcHj6pWF9DQS8=
-Received: from CY4PR01CA0019.prod.exchangelabs.com (2603:10b6:903:1f::29) by
- SN6PR02MB4702.namprd02.prod.outlook.com (2603:10b6:805:9c::18) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2900.26; Wed, 15 Apr 2020 10:25:03 +0000
-Received: from CY1NAM02FT064.eop-nam02.prod.protection.outlook.com
- (2603:10b6:903:1f:cafe::40) by CY4PR01CA0019.outlook.office365.com
- (2603:10b6:903:1f::29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.25 via Frontend
- Transport; Wed, 15 Apr 2020 10:25:03 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT064.mail.protection.outlook.com (10.152.74.64) with Microsoft SMTP
- Server id 15.20.2900.15 via Frontend Transport; Wed, 15 Apr 2020 10:25:02
- +0000
-Received: from [149.199.38.66] (port=57913 helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
-        (envelope-from <nava.manne@xilinx.com>)
-        id 1jOfDP-0002oq-Or; Wed, 15 Apr 2020 03:24:19 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <nava.manne@xilinx.com>)
-        id 1jOfE6-0000Qx-Hq; Wed, 15 Apr 2020 03:25:02 -0700
-Received: from xsj-pvapsmtp01 (smtp-fallback.xilinx.com [149.199.38.66] (may be forged))
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 03FAP0s6018322;
-        Wed, 15 Apr 2020 03:25:00 -0700
-Received: from [10.140.6.6] (helo=xhdappanad40.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <nava.manne@xilinx.com>)
-        id 1jOfE3-0000Kb-Sa; Wed, 15 Apr 2020 03:25:00 -0700
-From:   Nava kishore Manne <nava.manne@xilinx.com>
-To:     mdf@kernel.org, michal.simek@xilinx.com,
-        linux-fpga@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, chinnikishore369@gmail.com
-Cc:     Nava kishore Manne <nava.manne@xilinx.com>
-Subject: [PATCH 2/2] fpga: zynq: Add AFI config driver
-Date:   Wed, 15 Apr 2020 15:54:50 +0530
-Message-Id: <1586946290-7280-2-git-send-email-nava.manne@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1586946290-7280-1-git-send-email-nava.manne@xilinx.com>
-References: <1586946290-7280-1-git-send-email-nava.manne@xilinx.com>
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(136003)(346002)(39860400002)(396003)(46966005)(7696005)(2906002)(356005)(70586007)(8936002)(26005)(6666004)(186003)(107886003)(81166007)(336012)(70206006)(47076004)(426003)(9786002)(82740400003)(478600001)(36756003)(5660300002)(4326008)(316002)(8676002)(81156014)(2616005)(42866002);DIR:OUT;SFP:1101;
+        Wed, 15 Apr 2020 06:35:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34842 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2408675AbgDOKca (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 06:32:30 -0400
+Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 392C621734
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 10:32:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586946749;
+        bh=77bP08nDJwkuMBIczKe44qfyWWYykJVxclcbNqH4VLE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=IDz65g7Uaxp34zLubiGGNINQl8Jm03rAZA2ZyB+IlE2uEO2sehJaeH63vh5UpIkZG
+         pHhO9kpbU0QWTmsz5X//QAbGduHTHEYv0YJJYZfCe1mvdIA6oy3VlSG+1FZETwno0H
+         m+UhGCFNWmVD8PjIlaOywMttsl5+nUkwievYMBR4=
+Received: by mail-io1-f53.google.com with SMTP id u11so1000634iow.4
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 03:32:29 -0700 (PDT)
+X-Gm-Message-State: AGi0PuayFkYGD/eZPrMjK6LGZEg59R/tDU+JQHm6UbYsvekM1pf1oWxL
+        WUGTpK54W7+x3cuJ5Ig4GUrvXb1CmrZxEwZByGU=
+X-Google-Smtp-Source: APiQypKs/dssNLkwQF7Y6iZnfEqqaGRDYSqqtHnQ8mo1ghodoyGLM+E/adJ/pRaj/JHSfFfAohcDzcQidwXd2DtCqho=
+X-Received: by 2002:a05:6602:1550:: with SMTP id h16mr25731080iow.171.1586946748454;
+ Wed, 15 Apr 2020 03:32:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: c34a721e-d94d-4095-5f79-08d7e1274251
-X-MS-TrafficTypeDiagnostic: SN6PR02MB4702:
-X-Microsoft-Antispam-PRVS: <SN6PR02MB470263D84D7A1519E5B239E3C2DB0@SN6PR02MB4702.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:93;
-X-Forefront-PRVS: 0374433C81
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: BqvbgxK7Kmv9pqzFPSaeTF76/DkgZfXCI8t9QkmynRHlPVXK4e8Fa2/wOBtogfbS6OmKpNpc8u7/8bBC0p3va7Aq1JPCQij0pWsDZVbBAqoOSkrGl7sWiV5rD3he8t+TAJDwRKcXmHKrvkmevZcBdlKg4each3u0BGVtT38Tc5Wz1CDbaxz4l+yVKRdkQL2zl/VpADxafB8CqR8xfKfQ0vEDLQTL95FBmcnY/vAtbk3mcXCkyiOTMufqkqgVqTIZ95RDTKF89ySiVCgJmb9gMYfaWosC1u4fQq6SalDyetk6c19AB3RNr3lBlcAHuEu+KPSMqR//YkwCqzlQW0OnHu8nyaQJ9zAT66wh4lGwn7/QWHzbHjMhU++Vd0rcVdjJDHoMaZXGiGfAyTzPtDQ0/mVjS1gUbYj6dX+772gbzmm0r2iQoZVZq+uKdY1mv4Lh+K0MT7dZ2N86LORh4VbqDhP4MfuTQ/vejAzYmPyE5FQUAK4uqQnDKFV9w0a7+1mXJudGkzEMAVlmZbxuGmQmLrjbXXYmmjDp0Zt35iuc4Vs=
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2020 10:25:02.8717
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c34a721e-d94d-4095-5f79-08d7e1274251
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB4702
+References: <20200409232728.231527-1-caij2003@gmail.com> <CAK8P3a3uj7AHbAo4sNzr6KQx5Fk6v99k4ZixCgKo1tUuGoat9Q@mail.gmail.com>
+ <CAMj1kXGXNxXGiC4dmNXHkZ6n=J0Fhim3oSwNx4Bz5m9fEphJvQ@mail.gmail.com>
+ <20200410123301.GX25745@shell.armlinux.org.uk> <CAMj1kXFpknCfwb6JMdk_SHopnGqMswgSqaQUeAUEh5yaV10vJg@mail.gmail.com>
+ <CAKwvOdk-xwuppJzxd1+5sfsC8jYiP3t8D=aTNaYxnFCRDiEUmQ@mail.gmail.com>
+ <CAMj1kXFHb8th0rv1yjrsr=c1o-g9_ERPUy4itnrVN13fcQcXag@mail.gmail.com>
+ <CAKwvOdm5aawsa2-=atB8z6W8zo8YVgdDEVbU3i4evDcpo1_AxQ@mail.gmail.com> <202004141258.6D9CB92507@keescook>
+In-Reply-To: <202004141258.6D9CB92507@keescook>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Wed, 15 Apr 2020 12:32:17 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXG6_CO6pzeJCSeWiCDyLfWw+ZMuvkv_DLxe-si00fLd1Q@mail.gmail.com>
+Message-ID: <CAMj1kXG6_CO6pzeJCSeWiCDyLfWw+ZMuvkv_DLxe-si00fLd1Q@mail.gmail.com>
+Subject: Re: [PATCH] ARM: do not assemble iwmmxt.S with LLVM toolchain
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Kristof Beyls <Kristof.Beyls@arm.com>,
+        Stephen Hines <srhines@google.com>,
+        Luis Lozano <llozano@google.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>, Jian Cai <caij2003@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Peter Smith <Peter.Smith@arm.com>,
+        Stefan Agner <stefan@agner.ch>,
+        David Howells <dhowells@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Manoj Gupta <manojgupta@google.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Ilie Halip <ilie.halip@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Jian Cai <jiancai@google.com>,
+        Doug Anderson <armlinux@m.disordat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Patrick Bellasi <patrick.bellasi@arm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Tejun Heo <tj@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch Adds AFI config driver. This is useful for
-the PS to PL configuration for the fpga manager On zynq
-platform.
+On Tue, 14 Apr 2020 at 22:53, Kees Cook <keescook@chromium.org> wrote:
+>
+> I don't know if this will help, but I feel like folks might be talking
+> past each other a little here. I see two primary issues that are
+> colliding, and I just want to call them out specifically...
+>
 
-Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
----
- drivers/fpga/Kconfig    |  8 +++++
- drivers/fpga/Makefile   |  1 +
- drivers/fpga/zynq-afi.c | 81 +++++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 90 insertions(+)
- create mode 100644 drivers/fpga/zynq-afi.c
+Thanks Kees.
 
-diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
-index 474f304e..60982a0 100644
---- a/drivers/fpga/Kconfig
-+++ b/drivers/fpga/Kconfig
-@@ -214,4 +214,12 @@ config FPGA_MGR_ZYNQMP_FPGA
- 	  to configure the programmable logic(PL) through PS
- 	  on ZynqMP SoC.
- 
-+config FPGA_MGR_ZYNQ_AFI_FPGA
-+	bool "Xilinx AFI FPGA"
-+	depends on FPGA_MGR_ZYNQ_FPGA
-+	help
-+	  Zynq AFI driver support for writing to the AFI registers
-+	  for configuring the PS_PL interface. For some of the bitstream
-+	  or designs to work the PS to PL interfaces need to be configured
-+	  like the data bus-width etc.
- endif # FPGA
-diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
-index 312b937..d115e29 100644
---- a/drivers/fpga/Makefile
-+++ b/drivers/fpga/Makefile
-@@ -26,6 +26,7 @@ obj-$(CONFIG_FPGA_BRIDGE)		+= fpga-bridge.o
- obj-$(CONFIG_SOCFPGA_FPGA_BRIDGE)	+= altera-hps2fpga.o altera-fpga2sdram.o
- obj-$(CONFIG_ALTERA_FREEZE_BRIDGE)	+= altera-freeze-bridge.o
- obj-$(CONFIG_XILINX_PR_DECOUPLER)	+= xilinx-pr-decoupler.o
-+obj-$(CONFIG_FPGA_MGR_ZYNQ_AFI_FPGA)	+= zynq-afi.o
- 
- # High Level Interfaces
- obj-$(CONFIG_FPGA_REGION)		+= fpga-region.o
-diff --git a/drivers/fpga/zynq-afi.c b/drivers/fpga/zynq-afi.c
-new file mode 100644
-index 0000000..7ce0d08
---- /dev/null
-+++ b/drivers/fpga/zynq-afi.c
-@@ -0,0 +1,81 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Xilinx FPGA AFI driver.
-+ * Copyright (c) 2018 Xilinx Inc.
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+
-+/* Registers and special values for doing register-based operations */
-+#define AFI_RDCHAN_CTRL_OFFSET	0x00
-+#define AFI_WRCHAN_CTRL_OFFSET	0x14
-+
-+#define AFI_BUSWIDTH_MASK	0x01
-+
-+/**
-+ * struct afi_fpga - AFI register description
-+ * @membase:	pointer to register struct
-+ * @afi_width:	AFI bus width to be written
-+ */
-+struct zynq_afi_fpga {
-+	void __iomem	*membase;
-+	u32		afi_width;
-+};
-+
-+static int zynq_afi_fpga_probe(struct platform_device *pdev)
-+{
-+	struct zynq_afi_fpga *afi_fpga;
-+	struct resource *res;
-+	u32 reg_val;
-+	u32 val;
-+
-+	afi_fpga = devm_kzalloc(&pdev->dev, sizeof(*afi_fpga), GFP_KERNEL);
-+	if (!afi_fpga)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	afi_fpga->membase = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(afi_fpga->membase))
-+		return PTR_ERR(afi_fpga->membase);
-+
-+	val = device_property_read_u32(&pdev->dev, "xlnx,afi-width",
-+				       &afi_fpga->afi_width);
-+	if (val) {
-+		dev_err(&pdev->dev, "Fail to get the afi bus width\n");
-+		return -EINVAL;
-+	}
-+
-+	reg_val = readl(afi_fpga->membase + AFI_RDCHAN_CTRL_OFFSET);
-+	reg_val &= ~AFI_BUSWIDTH_MASK;
-+	writel(reg_val | afi_fpga->afi_width,
-+	       afi_fpga->membase + AFI_RDCHAN_CTRL_OFFSET);
-+	reg_val = readl(afi_fpga->membase + AFI_WRCHAN_CTRL_OFFSET);
-+	reg_val &= ~AFI_BUSWIDTH_MASK;
-+	writel(reg_val | afi_fpga->afi_width,
-+	       afi_fpga->membase + AFI_WRCHAN_CTRL_OFFSET);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id zynq_afi_fpga_ids[] = {
-+	{ .compatible = "xlnx,zynq-afi-fpga" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, zynq_afi_fpga_ids);
-+
-+static struct platform_driver zynq_afi_fpga_driver = {
-+	.driver = {
-+		.name = "zynq-afi-fpga",
-+		.of_match_table = zynq_afi_fpga_ids,
-+	},
-+	.probe = zynq_afi_fpga_probe,
-+};
-+module_platform_driver(zynq_afi_fpga_driver);
-+
-+MODULE_DESCRIPTION("ZYNQ FPGA AFI module");
-+MODULE_AUTHOR("Nava kishore Manne <nava.manne@xilinx.com>");
-+MODULE_LICENSE("GPL v2");
--- 
-2.7.4
+I don't think there is a huge difference of opinion here, and I hope I
+managed to strike the right tone, which was not meant to be a grumpy
+one.
 
+To reiterate my point: I strongly prefer minor asm surgery over
+elaborate Kconfig plumbing if it means we can retain the functionality
+even when using LLVM tools. In particular, the use of macros to
+implement missing ISA support should be considered before any other
+solution, as these are already being used widely across architectures
+to fill in such gaps.
+
+
+> On Tue, Apr 14, 2020 at 1:59 AM Ard Biesheuvel <ardb@kernel.org> wrote:
+> > On Mon, 13 Apr 2020 at 22:45, Nick Desaulniers <ndesaulniers@google.com> wrote:
+> > > 1. continuous integration and randconfigs.  We need CI to help us spot
+> > > where things are still broken, and help us from regressing the ground
+> > > we've fought for.  We can't expect kernel developers to test with
+> > > LLVM.  Currently, we have LLVM builds in numerous kernel continuous
+>
+> First, is this one. To paraphrase, "we don't want to lose hard-won
+> ground."
+>
+> > To be honest with you, I don't actually think iwmmxt is that
+> > important. But I have already demonstrated how we can use a couple of
+> > macros to emit the same instructions without resorting to bare
+> > opcodes, so there is really no need to disable pieces left and right
+> > because the Clang assembler does not support them outright - it just
+> > needs someone to care enough about this, rather than rush through the
+> > list with a tick the box attitude, and rip out the pieces that look a
+> > bit too complicated.
+>
+> The second is this one. To paraphrase, "we can just fix things instead
+> of disabling them."
+>
+> This feels a lot to me like the pain I (and plenty of others) have felt
+> when doing treewide changes (adding full compiler support is kind of a
+> treewide change). The above two points were really strongly felt when we
+> were trying to remove VLAs. In our case, we didn't even have the option
+> to disable stuff, so the pain was even worse: VLAs were being added to
+> the kernel faster than we could remove them.
+>
+> What's a good middle ground here? For VLAs, I ended up getting akpm's
+> help by having him add -Wvla to his local builds and send nag emails
+> to people when they added VLAs. That's not really a thing here, but it
+> seems like there should be a way to avoid losing ground (in this case,
+> it's the erosion of attention: repeated known-issue warnings means the
+> CI gets ignored for the warnings on newly added issues). It does seem
+> to me like adding the negative depends is a reasonable first step: it
+> marks what hard things need fixing later without losing coverage for
+> things that can be more easily fixed now with available resources.
+>
+> For the specific iwmmxt.S case, perhaps the solution is the suggested
+> changes? I imagine it should be possible to do a binary diff to see zero
+> changes before/after.
+>
+
+This code has been around since 2004. It has never been possible to
+assemble it with Clang's assembler. So the only thing this patch gives
+you is the ability to switch from a .config where IWMMXT was disabled
+by hand to one where it gets disabled automatically by Kconfig.
+
+So what hard-won ground are we losing here? Did IWMMXT recently get
+enabled in a defconfig that you care about?
+
+> For others, is a negative depends acceptable? Given how responsive
+> Nick, Nathan, and others are, I don't think there is any real risk of a
+> "slippery slope" of things just getting swept under the rug forever.
+> Everyone here wants to see the kernel be awesome. :)
+>
+
+I am not disagreeing with you here, and I have worked with Nick,
+Nathan and Stefan on numerous occasions to get Clang related build
+issues solved.
