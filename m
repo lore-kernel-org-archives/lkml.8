@@ -2,152 +2,321 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66AE0C2BB55
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C174FC2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:42:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 421D42076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:42:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="fxZIjOVQ"
+	by mail.kernel.org (Postfix) with ESMTP id 9D7EA20857
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:42:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586961774;
+	bh=uqXe98ljwrxbZSCPd4V2gEIfqMpRkxKGc273CiblwSs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=JJJ619ZHFi62uTcDa3aP07Ux6BV5OxaW0eCarF13LKvwCRYDD/75/56ZUSSHTr5X4
+	 RFWBDTHTYPCZh0eJguV+zYI0+AVunPiupq+ISMafF82znxb3SNndZ0Ewhm+H+j8is8
+	 uem5NlsneFLOpRoSWYXkUfIKt0+HG1iAbCN7LB1E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2636744AbgDOOmj (ORCPT
+        id S2636751AbgDOOmx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:42:39 -0400
-Received: from mail-eopbgr40085.outbound.protection.outlook.com ([40.107.4.85]:61607
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2636742AbgDOOlg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 10:41:36 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ex+0SpgjWvUGBYW12OhBAwYgg4VxvsW4IuQleWGEqsnxAc8qCrMDbbOy95AnxnKmf+nsGZ+SUkF8fHToI8eISpRoCmCDOox9Xw2AVQ01TecD28rMa3KaRggtS/10vdei26iqFUVDKK+JZO0GYDUgy5jnJQhrkA+9OZ0eUeN4hhqhd76kzKZb+IqQf33aeBTUSsY/+ogA6jSD0BK4v4cKtrGF8hxSxV0/XZsxdg1L3LnTcw/t708pmQI/+vGKRBPkwwpXTqlzfa7I+7OFG5sQ42Yk/MoBSc65dvN7cXyzR+iSzrx5nCdTcB//DATftr8RYyhYVOFd+HidpTOO5rGZIA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UN5QnRcedVZTuVlK057N6B0N5v9K0C2AFFtlJG+C85E=;
- b=OfkLgAw+wx29DLhHrSWcorAGJXIQx0/cgMtFYhBQsxJbb19uuVDjdwmZavM1VE9xQkBblL9OlBYNIbKevJ9PejXC7WlZSq3Yi7CRqBlqp6X1Y7JmXEgQx1kFdk25vLcUL2Ojjr9mjy5HYwRZBn7av2hupOoPNK9EF2NLcPwAlWBrvQ+PB8MTl1IPpmWprxJrgOUXPyDGVWkqYzUTpVDiJANaSdsbRU60ghF9vYB/qgTYnrTbP2/xJMThIEufd8bVoevCWa972ogjHG99/QsRtzkbq7/+eLumnybbPudbu9BscTSl5y1nPTmWA0AEl/7M1+fio0yO2cG9N/5TpNK3yg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UN5QnRcedVZTuVlK057N6B0N5v9K0C2AFFtlJG+C85E=;
- b=fxZIjOVQQIYcH1JUGv8SkKrnYgWbIqs9hxTJn3naT8eLml5sbOffS+9JD93TNzd783CO53jNbxgWnCB/wdQKMslCJjeRpw4598STmxJPufKwkpaIyvOb/73KsWbXfcIeUnvZ+OCB6Ssys6evsgXUucd0MnvXorQKDfawiJGAZsc=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
- by VI1PR05MB5533.eurprd05.prod.outlook.com (2603:10a6:803:96::29) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.26; Wed, 15 Apr
- 2020 14:41:29 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::a47b:e3cd:7d6d:5d4e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::a47b:e3cd:7d6d:5d4e%6]) with mapi id 15.20.2900.028; Wed, 15 Apr 2020
- 14:41:29 +0000
-Date:   Wed, 15 Apr 2020 11:41:25 -0300
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Ralph Campbell <rcampbell@nvidia.com>
-Cc:     Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>, linux-rdma@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v8 0/3] mm/hmm/test: add self tests for HMM
-Message-ID: <20200415144125.GU11945@mellanox.com>
-References: <20200321003108.22941-1-rcampbell@nvidia.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200321003108.22941-1-rcampbell@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: MN2PR19CA0055.namprd19.prod.outlook.com
- (2603:10b6:208:19b::32) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
+        Wed, 15 Apr 2020 10:42:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45456 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2394044AbgDOOc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 10:32:58 -0400
+Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37EA121744;
+        Wed, 15 Apr 2020 14:32:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586961171;
+        bh=uqXe98ljwrxbZSCPd4V2gEIfqMpRkxKGc273CiblwSs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=UqGFTXuDq0FYrtajFT4T8XSs4/5VREON8Vdnrpt4mOGlisOCLpaLN52EqbDI56xIA
+         4jRpXyi8POcxGjC9txIp7V2wdKWOQW0vBPpGAxlVkipj+F1oyMSQqw2wWSULSBgzOT
+         gHi/Lvjw7Cp7dNc8AS+++9KEBrhh8O6Lap+F1onM=
+Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
+        (envelope-from <mchehab@kernel.org>)
+        id 1jOj5t-006kOt-Gr; Wed, 15 Apr 2020 16:32:49 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH 15/34] docs: filesystems: convert fiemap.txt to ReST
+Date:   Wed, 15 Apr 2020 16:32:28 +0200
+Message-Id: <efd1f1ff140d14042116900f9245ba3af015175b.1586960617.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.25.2
+In-Reply-To: <cover.1586960617.git.mchehab+huawei@kernel.org>
+References: <cover.1586960617.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (142.68.57.212) by MN2PR19CA0055.namprd19.prod.outlook.com (2603:10b6:208:19b::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.16 via Frontend Transport; Wed, 15 Apr 2020 14:41:27 +0000
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1jOjED-0007Uk-5I; Wed, 15 Apr 2020 11:41:25 -0300
-X-Originating-IP: [142.68.57.212]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 032dd051-1370-4d2c-6a22-08d7e14b1481
-X-MS-TrafficTypeDiagnostic: VI1PR05MB5533:
-X-Microsoft-Antispam-PRVS: <VI1PR05MB55339E3891DBF7E4FEFCE2D5CFDB0@VI1PR05MB5533.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
-X-Forefront-PRVS: 0374433C81
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(39860400002)(136003)(366004)(376002)(346002)(396003)(66476007)(1076003)(8936002)(52116002)(81156014)(8676002)(9746002)(4326008)(33656002)(5660300002)(66946007)(316002)(66556008)(9786002)(54906003)(86362001)(7416002)(2616005)(6916009)(36756003)(2906002)(186003)(478600001)(26005)(24400500001);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: YpBxg11EYDmValOU/rCKBsdsr9b9/w/QMIGMupqMlQHq5mTeKy1W3J2Hnza62QrRutuO8PfpoWeXSEPo0shMg4i/PJS0nU1eqgsTYDFgXc3vtbPYKPr1UsetDtFSxUPkSQ+4pdhR+C11mFhjHxFz9Hy4YLgCkHmLMWx7JQi8r58XNiZypKH0sJN6n/v48LOqWFgM/EupckYozNGhpRygbFspvG/gKQ7YHilL6lJC+YIF/CH6alAsAATKike9ERQ5IydT19xdEYlkmMjWbIo7kgCBpVnTgaxwtHLRBbuETNOtDvqYDleDHrqKyvQa6xvLPh3UXFtGN/IqLDxh+a761ThbbyvRxeO+FBktJLcOloOZ8BK0QDDgHkA+pJNKQBpU+CJUIOu7enQ7IvPP3TlMKs8C31VrM7cEWAxulAe0x9LOEoNHmjHRXTIL1fS5eRtqYed8WGGsw9xQt8rzoH8VyOA+4zHddtNjhf9l8Z07nH77um2VOT7MEeSGQMfC+vaY
-X-MS-Exchange-AntiSpam-MessageData: cqSvC6QoY+WBbpkLrhNr0uopG/avHTbOW1kLmJYRva2rtt02/q6NB3iIwusTj9vBAJXuUua9peVN5j+vgUI7K2wZ+sGLXl/KtLzCUWCfjYi5R7cwPhg4liNfSJKxtmeFDgGHh+h0TTrX/DDMWKBdGg==
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 032dd051-1370-4d2c-6a22-08d7e14b1481
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2020 14:41:28.9551
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3xZ/q+/oN3DXhbq42Y9j169NR7GypD8m+tEMpVLiXf4aKy1e7DqcEJNfbwDXwEWGYVlvpVl5EoftF3CBzK+NIw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5533
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 05:31:05PM -0700, Ralph Campbell wrote:
-> This series adds basic self tests for HMM and are intended for Jason
-> Gunthorpe's rdma tree which has a number of HMM patches applied.
+- Add a SPDX header;
+- Some whitespace fixes and new line breaks;
+- Mark literal blocks as such;
+- Add it to filesystems/index.rst.
 
-Here are some hunks I noticed while testing this:
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ .../filesystems/{fiemap.txt => fiemap.rst}    | 133 +++++++++---------
+ Documentation/filesystems/index.rst           |   1 +
+ 2 files changed, 69 insertions(+), 65 deletions(-)
+ rename Documentation/filesystems/{fiemap.txt => fiemap.rst} (70%)
 
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -2201,7 +2201,8 @@ config TEST_MEMINIT
+diff --git a/Documentation/filesystems/fiemap.txt b/Documentation/filesystems/fiemap.rst
+similarity index 70%
+rename from Documentation/filesystems/fiemap.txt
+rename to Documentation/filesystems/fiemap.rst
+index ac87e6fda842..2a572e7edc08 100644
+--- a/Documentation/filesystems/fiemap.txt
++++ b/Documentation/filesystems/fiemap.rst
+@@ -1,3 +1,5 @@
++.. SPDX-License-Identifier: GPL-2.0
++
+ ============
+ Fiemap Ioctl
+ ============
+@@ -10,9 +12,9 @@ returns a list of extents.
+ Request Basics
+ --------------
  
- config TEST_HMM
- 	tristate "Test HMM (Heterogeneous Memory Management)"
--	depends on DEVICE_PRIVATE
-+	depends on TRANSPARENT_HUGEPAGE
-+	select DEVICE_PRIVATE
- 	select HMM_MIRROR
- 	select MMU_NOTIFIER
- 	help
-
-It fails testing if TRANSPARENT_HUGEPAGE is not on
-
-@@ -1097,6 +1071,7 @@ static int dmirror_device_init(struct dmirror_device *mdevice, int id)
- 	spin_lock_init(&mdevice->lock);
+-A fiemap request is encoded within struct fiemap:
++A fiemap request is encoded within struct fiemap::
  
- 	cdev_init(&mdevice->cdevice, &dmirror_fops);
-+	mdevice->cdevice.owner = THIS_MODULE;
- 	ret = cdev_add(&mdevice->cdevice, dev, 1);
- 	if (ret)
- 		return ret;
-
-The use of cdev without a struct device is super weird, but it still
-needs this
-
-diff --git a/tools/testing/selftests/vm/test_hmm.sh b/tools/testing/selftests/vm/test_hmm.sh
-index 461e4a99a362cf..0647b525a62564 100755
---- a/tools/testing/selftests/vm/test_hmm.sh
-+++ b/tools/testing/selftests/vm/test_hmm.sh
-@@ -59,7 +59,7 @@ run_smoke()
- 	echo "Running smoke test. Note, this test provides basic coverage."
+-struct fiemap {
++  struct fiemap {
+ 	__u64	fm_start;	 /* logical offset (inclusive) at
+ 				  * which to start mapping (in) */
+ 	__u64	fm_length;	 /* logical length of mapping which
+@@ -23,7 +25,7 @@ struct fiemap {
+ 	__u32	fm_extent_count; /* size of fm_extents array (in) */
+ 	__u32	fm_reserved;
+ 	struct fiemap_extent fm_extents[0]; /* array of mapped extents (out) */
+-};
++  };
  
- 	load_driver
--	./hmm-tests
-+	$(dirname "${BASH_SOURCE[0]}")/hmm-tests
- 	unload_driver
- }
+ 
+ fm_start, and fm_length specify the logical range within the file
+@@ -51,12 +53,12 @@ nothing to prevent the file from changing between calls to FIEMAP.
+ 
+ The following flags can be set in fm_flags:
+ 
+-* FIEMAP_FLAG_SYNC
+-If this flag is set, the kernel will sync the file before mapping extents.
++FIEMAP_FLAG_SYNC
++  If this flag is set, the kernel will sync the file before mapping extents.
+ 
+-* FIEMAP_FLAG_XATTR
+-If this flag is set, the extents returned will describe the inodes
+-extended attribute lookup tree, instead of its data tree.
++FIEMAP_FLAG_XATTR
++  If this flag is set, the extents returned will describe the inodes
++  extended attribute lookup tree, instead of its data tree.
+ 
+ 
+ Extent Mapping
+@@ -75,18 +77,18 @@ complete the requested range and will not have the FIEMAP_EXTENT_LAST
+ flag set (see the next section on extent flags).
+ 
+ Each extent is described by a single fiemap_extent structure as
+-returned in fm_extents.
++returned in fm_extents::
+ 
+-struct fiemap_extent {
+-	__u64	fe_logical;  /* logical offset in bytes for the start of
+-			      * the extent */
+-	__u64	fe_physical; /* physical offset in bytes for the start
+-			      * of the extent */
+-	__u64	fe_length;   /* length in bytes for the extent */
+-	__u64	fe_reserved64[2];
+-	__u32	fe_flags;    /* FIEMAP_EXTENT_* flags for this extent */
+-	__u32	fe_reserved[3];
+-};
++    struct fiemap_extent {
++	    __u64	fe_logical;  /* logical offset in bytes for the start of
++				* the extent */
++	    __u64	fe_physical; /* physical offset in bytes for the start
++				* of the extent */
++	    __u64	fe_length;   /* length in bytes for the extent */
++	    __u64	fe_reserved64[2];
++	    __u32	fe_flags;    /* FIEMAP_EXTENT_* flags for this extent */
++	    __u32	fe_reserved[3];
++    };
+ 
+ All offsets and lengths are in bytes and mirror those on disk.  It is valid
+ for an extents logical offset to start before the request or its logical
+@@ -114,26 +116,27 @@ worry about all present and future flags which might imply unaligned
+ data. Note that the opposite is not true - it would be valid for
+ FIEMAP_EXTENT_NOT_ALIGNED to appear alone.
+ 
+-* FIEMAP_EXTENT_LAST
+-This is generally the last extent in the file. A mapping attempt past
+-this extent may return nothing. Some implementations set this flag to
+-indicate this extent is the last one in the range queried by the user
+-(via fiemap->fm_length).
++FIEMAP_EXTENT_LAST
++  This is generally the last extent in the file. A mapping attempt past
++  this extent may return nothing. Some implementations set this flag to
++  indicate this extent is the last one in the range queried by the user
++  (via fiemap->fm_length).
+ 
+-* FIEMAP_EXTENT_UNKNOWN
+-The location of this extent is currently unknown. This may indicate
+-the data is stored on an inaccessible volume or that no storage has
+-been allocated for the file yet.
++FIEMAP_EXTENT_UNKNOWN
++  The location of this extent is currently unknown. This may indicate
++  the data is stored on an inaccessible volume or that no storage has
++  been allocated for the file yet.
+ 
+-* FIEMAP_EXTENT_DELALLOC
+-  - This will also set FIEMAP_EXTENT_UNKNOWN.
+-Delayed allocation - while there is data for this extent, its
+-physical location has not been allocated yet.
++FIEMAP_EXTENT_DELALLOC
++  This will also set FIEMAP_EXTENT_UNKNOWN.
+ 
+-* FIEMAP_EXTENT_ENCODED
+-This extent does not consist of plain filesystem blocks but is
+-encoded (e.g. encrypted or compressed).  Reading the data in this
+-extent via I/O to the block device will have undefined results.
++  Delayed allocation - while there is data for this extent, its
++  physical location has not been allocated yet.
++
++FIEMAP_EXTENT_ENCODED
++  This extent does not consist of plain filesystem blocks but is
++  encoded (e.g. encrypted or compressed).  Reading the data in this
++  extent via I/O to the block device will have undefined results.
+ 
+ Note that it is *always* undefined to try to update the data
+ in-place by writing to the indicated location without the
+@@ -145,32 +148,32 @@ unmounted, and then only if the FIEMAP_EXTENT_ENCODED flag is
+ clear; user applications must not try reading or writing to the
+ filesystem via the block device under any other circumstances.
+ 
+-* FIEMAP_EXTENT_DATA_ENCRYPTED
+-  - This will also set FIEMAP_EXTENT_ENCODED
+-The data in this extent has been encrypted by the file system.
++FIEMAP_EXTENT_DATA_ENCRYPTED
++  This will also set FIEMAP_EXTENT_ENCODED
++  The data in this extent has been encrypted by the file system.
+ 
+-* FIEMAP_EXTENT_NOT_ALIGNED
+-Extent offsets and length are not guaranteed to be block aligned.
++FIEMAP_EXTENT_NOT_ALIGNED
++  Extent offsets and length are not guaranteed to be block aligned.
+ 
+-* FIEMAP_EXTENT_DATA_INLINE
++FIEMAP_EXTENT_DATA_INLINE
+   This will also set FIEMAP_EXTENT_NOT_ALIGNED
+-Data is located within a meta data block.
++  Data is located within a meta data block.
+ 
+-* FIEMAP_EXTENT_DATA_TAIL
++FIEMAP_EXTENT_DATA_TAIL
+   This will also set FIEMAP_EXTENT_NOT_ALIGNED
+-Data is packed into a block with data from other files.
++  Data is packed into a block with data from other files.
+ 
+-* FIEMAP_EXTENT_UNWRITTEN
+-Unwritten extent - the extent is allocated but its data has not been
+-initialized.  This indicates the extent's data will be all zero if read
+-through the filesystem but the contents are undefined if read directly from
+-the device.
++FIEMAP_EXTENT_UNWRITTEN
++  Unwritten extent - the extent is allocated but its data has not been
++  initialized.  This indicates the extent's data will be all zero if read
++  through the filesystem but the contents are undefined if read directly from
++  the device.
+ 
+-* FIEMAP_EXTENT_MERGED
+-This will be set when a file does not support extents, i.e., it uses a block
+-based addressing scheme.  Since returning an extent for each block back to
+-userspace would be highly inefficient, the kernel will try to merge most
+-adjacent blocks into 'extents'.
++FIEMAP_EXTENT_MERGED
++  This will be set when a file does not support extents, i.e., it uses a block
++  based addressing scheme.  Since returning an extent for each block back to
++  userspace would be highly inefficient, the kernel will try to merge most
++  adjacent blocks into 'extents'.
+ 
+ 
+ VFS -> File System Implementation
+@@ -179,23 +182,23 @@ VFS -> File System Implementation
+ File systems wishing to support fiemap must implement a ->fiemap callback on
+ their inode_operations structure. The fs ->fiemap call is responsible for
+ defining its set of supported fiemap flags, and calling a helper function on
+-each discovered extent:
++each discovered extent::
+ 
+-struct inode_operations {
++  struct inode_operations {
+        ...
+ 
+        int (*fiemap)(struct inode *, struct fiemap_extent_info *, u64 start,
+                      u64 len);
+ 
+ ->fiemap is passed struct fiemap_extent_info which describes the
+-fiemap request:
++fiemap request::
+ 
+-struct fiemap_extent_info {
++  struct fiemap_extent_info {
+ 	unsigned int fi_flags;		/* Flags as passed from user */
+ 	unsigned int fi_extents_mapped;	/* Number of mapped extents */
+ 	unsigned int fi_extents_max;	/* Size of fiemap_extent array */
+ 	struct fiemap_extent *fi_extents_start;	/* Start of fiemap_extent array */
+-};
++  };
+ 
+ It is intended that the file system should not need to access any of this
+ structure directly. Filesystem handlers should be tolerant to signals and return
+@@ -203,9 +206,9 @@ EINTR once fatal signal received.
+ 
+ 
+ Flag checking should be done at the beginning of the ->fiemap callback via the
+-fiemap_check_flags() helper:
++fiemap_check_flags() helper::
+ 
+-int fiemap_check_flags(struct fiemap_extent_info *fieinfo, u32 fs_flags);
++  int fiemap_check_flags(struct fiemap_extent_info *fieinfo, u32 fs_flags);
+ 
+ The struct fieinfo should be passed in as received from ioctl_fiemap(). The
+ set of fiemap flags which the fs understands should be passed via fs_flags. If
+@@ -216,10 +219,10 @@ ioctl_fiemap().
+ 
+ 
+ For each extent in the request range, the file system should call
+-the helper function, fiemap_fill_next_extent():
++the helper function, fiemap_fill_next_extent()::
+ 
+-int fiemap_fill_next_extent(struct fiemap_extent_info *info, u64 logical,
+-			    u64 phys, u64 len, u32 flags, u32 dev);
++  int fiemap_fill_next_extent(struct fiemap_extent_info *info, u64 logical,
++			      u64 phys, u64 len, u32 flags, u32 dev);
+ 
+ fiemap_fill_next_extent() will use the passed values to populate the
+ next free extent in the fm_extents array. 'General' extent flags will
+diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
+index 960e0cc29491..5514fd122619 100644
+--- a/Documentation/filesystems/index.rst
++++ b/Documentation/filesystems/index.rst
+@@ -27,6 +27,7 @@ algorithms work.
+    dax
+    devpts
+    dnotify
++   fiemap
+ 
+    automount-support
+ 
+-- 
+2.25.2
 
-Make it runnably reliably
-
-Jason
