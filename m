@@ -7,88 +7,71 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2FEAC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 874D3C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:57:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE8D1208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:57:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 626FB2054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:57:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="iShV9VSE"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="K+4GfYRW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392528AbgDOO5W (ORCPT
+        id S2392769AbgDOO5c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:57:22 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:18464 "EHLO pegase1.c-s.fr"
+        Wed, 15 Apr 2020 10:57:32 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:53661 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388729AbgDOO5N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 10:57:13 -0400
+        id S2390410AbgDOO5O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 10:57:14 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 492QS52Fp0z9v13s;
-        Wed, 15 Apr 2020 16:57:09 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 492QS61xD1z9v13t;
+        Wed, 15 Apr 2020 16:57:10 +0200 (CEST)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=iShV9VSE; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=K+4GfYRW; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id livymf_PZKTn; Wed, 15 Apr 2020 16:57:09 +0200 (CEST)
+        with ESMTP id l7_0scJaQh56; Wed, 15 Apr 2020 16:57:10 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 492QS50kNVz9v13r;
-        Wed, 15 Apr 2020 16:57:09 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1586962629; bh=Tl45npFIhgl2M3utaD4p/4LKgIxW3bUawXCwDvGqrhE=;
-        h=From:Subject:To:Cc:Date:From;
-        b=iShV9VSEXj+o1B1LCu9Hpf75EcpSRUIDb/OcKzpKe5pV9jsItspKh938gZHNZgmOE
-         5aKOL+WX6f0pNUaXWDTSitnQHaxHYS6tCjQTbl9xSOXUdncoP7kHf3RJau/M5Mjmus
-         bjte4PCCsjrvf/lBbaUmdnBPr0XOHco7r4qJFTkw=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id A4B6D8BB09;
+        by pegase1.c-s.fr (Postfix) with ESMTP id 492QS60phYz9v13r;
         Wed, 15 Apr 2020 16:57:10 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1586962630; bh=1Xb7ETTN09xsr/258GQZjtHOSSD6VgHkXQ6yunhYxr8=;
+        h=From:Subject:To:Cc:Date:From;
+        b=K+4GfYRWGpfU2GiiSNnqBM6cOtyEfZMohzRvwcz+6rYZ1mvFtIh8UtmpW1x1GJO6n
+         UtWLVXsYPMY2wURgbUiSDVcc86+3acIZ+S2EdpNXT8mrsrEE9Doiz9hPsQVKBdvg1H
+         5dPpa32TC8c5gFI9XS5lj20WbeDFn9UFbKiryqY4=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7E2918BB6C;
+        Wed, 15 Apr 2020 16:57:11 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 1PxG32O8DJ-I; Wed, 15 Apr 2020 16:57:10 +0200 (CEST)
+        with ESMTP id kOjgO8qiAm7j; Wed, 15 Apr 2020 16:57:11 +0200 (CEST)
 Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 415048B931;
-        Wed, 15 Apr 2020 16:57:10 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2F59F8B931;
+        Wed, 15 Apr 2020 16:57:11 +0200 (CEST)
 Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id EC0C96578F; Wed, 15 Apr 2020 14:57:09 +0000 (UTC)
-Message-Id: <154a99399317b096ac1f04827b9f8d7a9179ddc1.1586962586.git.christophe.leroy@c-s.fr>
+        id 05A9E6578F; Wed, 15 Apr 2020 14:57:11 +0000 (UTC)
+Message-Id: <1492bb150c1aaa53d99a604b49992e60ea20cd5f.1586962582.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH] powerpc/uaccess: Don't set KUAP by default on book3s/32
+Subject: [PATCH] powerpc/uaccess: Don't set KUEP by default on book3s/32
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Wed, 15 Apr 2020 14:57:09 +0000 (UTC)
+Date:   Wed, 15 Apr 2020 14:57:11 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On book3s/32, KUAP is an heavy process as it requires to
-determine which segments are impacted and unlock/lock
-each of them.
+On book3s/32, KUEP is an heavy process as it requires to
+set/unset the NX bit in each of the 12 user segments
+everytime the kernel is entered/exited from/to user space.
 
-And since the implementation of user_access_begin/end, it
-is even worth for the time being because unlike __get_user(),
-user_access_begin doesn't make difference between read and write
-and unlocks access also for read allthought that's unneeded
-on book3s/32.
-
-As shown by the size of a kernel built with KUAP and one without,
-the overhead is 64k bytes of code. As a comparison a similar
-build on an 8xx has an overhead of only 8k bytes of code.
-
-   text	   data	    bss	    dec	    hex	filename
-7230416	1425868	 837376	9493660	 90dc9c	vmlinux.kuap6xx
-7165012	1425548	 837376	9427936	 8fdbe0	vmlinux.nokuap6xx
-6519796	1960028	 477464	8957288	 88ad68	vmlinux.kuap8xx
-6511664	1959864	 477464	8948992	 888d00	vmlinux.nokuap8xx
-
-Until a more optimised KUAP is implemented on book3s/32,
-don't select it by default.
+Don't select KUEP by default on book3s/32.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
@@ -96,17 +79,17 @@ Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/powerpc/platforms/Kconfig.cputype b/arch/powerpc/platforms/Kconfig.cputype
-index 0c3c1902135c..0c7151c98b56 100644
+index 0c7151c98b56..11412078e732 100644
 --- a/arch/powerpc/platforms/Kconfig.cputype
 +++ b/arch/powerpc/platforms/Kconfig.cputype
-@@ -389,7 +389,7 @@ config PPC_HAVE_KUAP
- config PPC_KUAP
- 	bool "Kernel Userspace Access Protection"
- 	depends on PPC_HAVE_KUAP
+@@ -377,7 +377,7 @@ config PPC_HAVE_KUEP
+ config PPC_KUEP
+ 	bool "Kernel Userspace Execution Prevention"
+ 	depends on PPC_HAVE_KUEP
 -	default y
 +	default y if !PPC_BOOK3S_32
  	help
- 	  Enable support for Kernel Userspace Access Protection (KUAP)
+ 	  Enable support for Kernel Userspace Execution Prevention (KUEP)
  
 -- 
 2.25.0
