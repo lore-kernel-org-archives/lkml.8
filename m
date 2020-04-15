@@ -2,106 +2,168 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 207C7C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BD92C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF86820575
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:25:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD2CE2076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:31:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586957143;
-	bh=2NWtP2cNZMrKlgOZdBrmPsy6fRqnD5tJXXFFLb6xOmA=;
+	s=default; t=1586957493;
+	bh=wh8P4Y8m6LWxobisEMWoiN2hCWnoOBEtof1UWN68Qx4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Yd64OZejVYu1NY48sYHVt46hafYe9ppvoh48bVBmPXVzPRgz5Y49bfvVvs9oXEsEU
-	 iVd0k0IVEcQEsQfG4mCOc3Ni44jjb/OQJV98y4BQWg5emjqtShFy9c4yTXyTJErjv6
-	 2COmNu4opBsiBzN447xmAP8V0wmXdBk+M6kCKcL8=
+	b=fx9yswbcnoqcdCM9r1nBip8AVNH8PGMcOGIPO7EV1oRRrK4CI4zjup+dH+cgqz0/C
+	 X6Y4uwJHiTZalOWm2zLfABC63wx1VZ1K2AItDfqsw9u4teRe5JiKWsrbVFmV18a0W7
+	 z1ofkIwJdyKGBOAWR8+d3/h/kUtREUAM6o3STV/w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2636096AbgDONZk (ORCPT
+        id S2636111AbgDONbc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:25:40 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:38242 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2636090AbgDONZG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 09:25:06 -0400
-Received: by mail-pj1-f68.google.com with SMTP id t40so6672649pjb.3;
-        Wed, 15 Apr 2020 06:25:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VxzOHBakm6zWRy000AuKfccE4q5d/hsyCc04Zt0DJtg=;
-        b=IRZ0H8DcQ2OaXUc/yZtJgNL6K8Kx4uKT+N1omloeQ5Up8gtBfHz0pMmHPOFIh+KY0o
-         BLvYaaZG0Y2X2gf9vclLe4Mzc9kAv1m27aqljqlzq9vVMY3IDG7egZC1nER4qWu8nhxc
-         Rq2s83bupsK0AEKNwJlvCbrCH6er9+Qk9kXZh2V87xjycZBldqU0qQn35bGY868GaOUF
-         sE7yOONXD7QbWLOAkDKIy1GAUmr09Ux+sldzykA9CrL+BnCtt58M6d7hsFAnEJQqB9mL
-         ZOEmNUBQw05vKN6I3gJugVn+640CJZ3DPO82S8kHbTnWUjkKpSpBXL82fREbQCwwDkcX
-         L1Dw==
-X-Gm-Message-State: AGi0PuYsxlMo9zy/2c/lHHWifFBbmK/8GOuIX4Ith2NBS9NcTIMWtFN4
-        K7rqaEK7DmIqk3di2nObq1A=
-X-Google-Smtp-Source: APiQypLzsjEy5ye1O+lv4UjZnyAkJCntXBLPPdDHpWm50UQu9/3cAd14/acJ8Zmqjk3bVWJOaNRWQw==
-X-Received: by 2002:a17:902:8608:: with SMTP id f8mr4959948plo.110.1586957105130;
-        Wed, 15 Apr 2020 06:25:05 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id z63sm13828068pfb.20.2020.04.15.06.25.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2020 06:25:04 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 757A040277; Wed, 15 Apr 2020 13:25:03 +0000 (UTC)
-Date:   Wed, 15 Apr 2020 13:25:03 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
-        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
-        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
-        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>
-Subject: Re: [PATCH 3/5] blktrace: refcount the request_queue during ioctl
-Message-ID: <20200415132503.GX11244@42.do-not-panic.com>
-References: <20200414041902.16769-1-mcgrof@kernel.org>
- <20200414041902.16769-4-mcgrof@kernel.org>
- <20200414154044.GB25765@infradead.org>
- <20200415061649.GS11244@42.do-not-panic.com>
- <20200415071425.GA21099@infradead.org>
- <20200415123434.GU11244@42.do-not-panic.com>
- <20200415123925.GA14925@infradead.org>
+        Wed, 15 Apr 2020 09:31:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60850 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731696AbgDONb1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 09:31:27 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69F8A20767;
+        Wed, 15 Apr 2020 13:31:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586957484;
+        bh=wh8P4Y8m6LWxobisEMWoiN2hCWnoOBEtof1UWN68Qx4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HiNa/6pn7ZPvPQ0P8TuZcIsps5srrh0s2MvMC9z2c0A0jH6BobpJAm/j1ySmwYyg9
+         K7/8bvK4uIvMinundZG3vbjGAEsTBJnSVVbf+p60+2RqTBkVJMbflqIObvXoIBnbp/
+         NaqA8RjagminJ4aIN4JDEOrYAWjnW12/vla8BkXw=
+Date:   Wed, 15 Apr 2020 15:31:22 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        linux-kselftest@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Shuah Khan <shuah@kernel.org>, anders.roxell@linaro.org,
+        lkft-triage@lists.linaro.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Subject: Re: [PATCH v1] kobject: make sure parent is not released before
+ children
+Message-ID: <20200415133122.GB3461248@kroah.com>
+References: <20200414204240.186377-1-brendanhiggins@google.com>
+ <20200415061154.GA2496263@kroah.com>
+ <20200415084653.GM2828150@kuha.fi.intel.com>
+ <CAJZ5v0hNemTDVa_S-FfVMbrKjM-RWYoHh88asnUvTNxZinY2cw@mail.gmail.com>
+ <20200415131018.GO2828150@kuha.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200415123925.GA14925@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200415131018.GO2828150@kuha.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 05:39:25AM -0700, Christoph Hellwig wrote:
-> On Wed, Apr 15, 2020 at 12:34:34PM +0000, Luis Chamberlain wrote:
-> > I'll pile up a fix. I've also considered doing a full review of callers
-> > outside of the core block layer using it, and maybe just unexporting
-> > this. It was originally exported due to commit d86e0e83b ("block: export
-> > blk_{get,put}_queue()") to fix a scsi bug, but I can't find such
-> > respective fix. I suspec that using bdgrab()/bdput() seems more likely
-> > what drivers should be using. That would allow us to keep this
-> > functionality internal.
+On Wed, Apr 15, 2020 at 04:10:18PM +0300, Heikki Krogerus wrote:
+> On Wed, Apr 15, 2020 at 11:21:03AM +0200, Rafael J. Wysocki wrote:
+> > On Wed, Apr 15, 2020 at 10:47 AM Heikki Krogerus
+> > <heikki.krogerus@linux.intel.com> wrote:
+> > >
+> > > Hi Greg,
+> > >
+> > > On Wed, Apr 15, 2020 at 08:11:54AM +0200, Greg KH wrote:
+> > > > > diff --git a/lib/kobject.c b/lib/kobject.c
+> > > > > index 83198cb37d8d..5921e2470b46 100644
+> > > > > --- a/lib/kobject.c
+> > > > > +++ b/lib/kobject.c
+> > > > > @@ -663,6 +663,7 @@ EXPORT_SYMBOL(kobject_get_unless_zero);
+> > > > >   */
+> > > > >  static void kobject_cleanup(struct kobject *kobj)
+> > > > >  {
+> > > > > +   struct kobject *parent = kobj->parent;
+> > > > >     struct kobj_type *t = get_ktype(kobj);
+> > > > >     const char *name = kobj->name;
+> > > > >
+> > > > > @@ -680,6 +681,9 @@ static void kobject_cleanup(struct kobject *kobj)
+> > > > >             kobject_uevent(kobj, KOBJ_REMOVE);
+> > > > >     }
+> > > > >
+> > > > > +   /* make sure the parent is not released before the (last) child */
+> > > > > +   kobject_get(parent);
+> > > > > +
+> > > > >     /* remove from sysfs if the caller did not do it */
+> > > > >     if (kobj->state_in_sysfs) {
+> > > > >             pr_debug("kobject: '%s' (%p): auto cleanup kobject_del\n",
+> > > > > @@ -693,6 +697,8 @@ static void kobject_cleanup(struct kobject *kobj)
+> > > > >             t->release(kobj);
+> > > > >     }
+> > > > >
+> > > > > +   kobject_put(parent);
+> > > > > +
+> > > >
+> > > > No, please don't do this.
+> > > >
+> > > > A child device should have always incremented the parent already if it
+> > > > was correctly registered.  We have had this patch been proposed multiple
+> > > > times over the years, and every time it was, we said no and went and
+> > > > fixed the real issue which was with the user of the interface.
+> > >
+> > > The parent ref count is incremented by the child, that is not the
+> > > problem. The problem is that when that child is released, if it's the
+> > > last child of the parent, and there are no other users for the parent,
+> > > then the parent is actually released _before_ the child. And that
+> > > happens in the above function kobject_cleanup().
 > > 
-> > Think that's worthy review?
+> > In fact, it happens in kobject_del() invoked by kobject_cleanup() AFAICS.
+> > 
+> > So it appears incorrect to use kobject_del() as is in the latter.
+> > 
+> > > We can work around the problem by taking a reference to the parent
+> > > separately, but we have to do that everywhere separately (which I
+> > > guess is exactly what has been done so far). That workaroud still does
+> > > not really fix the core problem. The core problem is still that
+> > > lib/kboject.c is allowing the parent kobject to be released before the
+> > > child kobject, and that quite simply should not be allowed to happen.
+> > >
+> > > I don't have a problem if you want to have a better solution for this,
+> > > but the solution really can't anymore be that we are always expected
+> > > to separately increment the parent's ref count with every type of
+> > > kobject.
+> > 
+> > An alternative might be to define something like __kobject_del() doing
+> > everything that kobject_del() does *without* the
+> > kobject_put(kobj->parent).
+> > 
+> > Then, kobject_del() could be defined as something like (pseudocode):
+> > 
+> > kobject_del(kobj)
+> > {
+> >     kobject *perent = kobj->parent;
+> > 
+> >     __kobject_del(kobj);
+> >     kobject_put(parent);
+> > }
+> > 
+> > and kobject_cleanup() could call __kobject_del() instead of
+> > kobject_del() and then do the last kobject_put(parent) when it is done
+> > with the child.
+> > 
+> > Would that work?
 > 
-> Probably.  I did in fact very quickly look into that but then gave
-> up due to the fair amount of modular users.
+> I think so. Greg, what do you think?
 
-Alright, then might as well then verify if the existing practice of
-bdgrab()/bdput() is indeed valid logic, as otherwise we'd be puting
-the atomic context / sleep concern to bdput(). As noted earlier I
-am able to confirm easily that bdgrab() can be called in atomic contex,
-however I cannot easily yet vet for *why* this was a safe assumption for
-bdput().
+Hm, maybe.  Can someone test it out with the reproducer?
 
-  Luis
+thanks,
+
+greg k-h
