@@ -2,97 +2,74 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B17C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:11:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CFC6C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:11:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42E9E20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:11:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="1a6J3nyn"
+	by mail.kernel.org (Postfix) with ESMTP id 045E520737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:11:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506103AbgDONLj (ORCPT
+        id S2506114AbgDONLq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:11:39 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:20516 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2897063AbgDOLfj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:35:39 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03FBW8SN016220;
-        Wed, 15 Apr 2020 13:35:24 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=STMicroelectronics;
- bh=xwnv8U88f9gKci+4R9gluFy4x+fECpay1QPWcflQP9g=;
- b=1a6J3nynIHUs1ZBzTWuJaxYH4jNMp3BBhK17usGCKTozaL9ffKuxXU3NnHI3yV4ftL92
- mUQ3c0K60Y/1B5c5Aw+jOsV3cYnjNz2jekg253yeaXkRAquScKAT8NaCw/KJEnaJfBH8
- 7Mhaon5u4CZ1iu7zjqwVUHVNVKonEp7bsvRsWwJdOo9HV5E4ioVxswrMG4/w3VaYeWJx
- mTUQbXbcrBLEVNBSXsVzmrj2asfCnrgh21Do4WePhZYLMkhH3arPyJsulQzX3JKur0wl
- AzjJIVogGD6M6WOBUGCHzyIXhFee9d5c/8D3qvZORE8OFsTb9ZMi6paQUpZvbnB/+FxL lg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30dn94bh6t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 Apr 2020 13:35:24 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B759110002A;
-        Wed, 15 Apr 2020 13:35:23 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A9F772B0FA8;
-        Wed, 15 Apr 2020 13:35:23 +0200 (CEST)
-Received: from gnbcxd0016.gnb.st.com (10.75.127.48) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 15 Apr
- 2020 13:35:23 +0200
-Date:   Wed, 15 Apr 2020 13:35:22 +0200
-From:   Alain Volmat <alain.volmat@st.com>
-To:     Wolfram Sang <wsa@the-dreams.de>
-CC:     <pierre-yves.mordret@st.com>, <alexandre.torgue@st.com>,
-        <linux-i2c@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>
-Subject: Re: [PATCH] i2c: i2c-stm32f7: improve nack debug message
-Message-ID: <20200415113522.GB16949@gnbcxd0016.gnb.st.com>
-Mail-Followup-To: Wolfram Sang <wsa@the-dreams.de>,
-        pierre-yves.mordret@st.com, alexandre.torgue@st.com,
-        linux-i2c@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        fabrice.gasnier@st.com
-References: <1584642115-15378-1-git-send-email-alain.volmat@st.com>
- <20200415110101.GM1141@ninjato>
+        Wed, 15 Apr 2020 09:11:46 -0400
+Received: from foss.arm.com ([217.140.110.172]:45328 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2506076AbgDONLF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 09:11:05 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8CA731063;
+        Wed, 15 Apr 2020 06:11:04 -0700 (PDT)
+Received: from [10.37.12.1] (unknown [10.37.12.1])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 21F3B3F6C4;
+        Wed, 15 Apr 2020 06:11:01 -0700 (PDT)
+Subject: Re: [PATCH 3/8] arm64: cpufeature: Add CPU capability for AArch32 EL1
+ support
+To:     will@kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-kernel@vger.kernel.org, mark.rutland@arm.com, maz@kernel.org,
+        anshuman.khandual@arm.com, catalin.marinas@arm.com,
+        saiprakash.ranjan@codeaurora.org, dianders@chromium.org,
+        kernel-team@android.com
+References: <20200414213114.2378-1-will@kernel.org>
+ <20200414213114.2378-4-will@kernel.org>
+ <a83a19eb-9051-0a43-0bac-353f67d93d79@arm.com>
+ <20200415101444.GC12621@willie-the-truck>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <7978a5a9-463e-5e96-7ea9-d8472b7b051c@arm.com>
+Date:   Wed, 15 Apr 2020 14:15:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200415110101.GM1141@ninjato>
-X-Disclaimer: ce message est personnel / this message is private
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG5NODE2.st.com (10.75.127.14) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-15_03:2020-04-14,2020-04-15 signatures=0
+In-Reply-To: <20200415101444.GC12621@willie-the-truck>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 01:01:01PM +0200, Wolfram Sang wrote:
-> On Thu, Mar 19, 2020 at 07:21:55PM +0100, Alain Volmat wrote:
-> > From: Fabrice Gasnier <fabrice.gasnier@st.com>
-> > 
-> > Add information on slave addr in the nack debug message.
-> > 
-> > Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> > Signed-off-by: Alain Volmat <alain.volmat@st.com>
+On 04/15/2020 11:14 AM, Will Deacon wrote:
+> On Wed, Apr 15, 2020 at 11:13:54AM +0100, Suzuki K Poulose wrote:
+>> On 04/14/2020 10:31 PM, Will Deacon wrote:
+>>> Although we emit a "SANITY CHECK" warning and taint the kernel if we
+>>> detect a CPU mismatch for AArch32 support at EL1, we still online the
+>>> CPU with disastrous consequences for any running 32-bit VMs.
+>>>
+>>> Introduce a capability for AArch32 support at EL1 so that late onlining
+>>> of incompatible CPUs is forbidden.
+>>>
+>>> Signed-off-by: Will Deacon <will@kernel.org>
+>>
+>> One of the other important missing sanity check for KVM is the VMID width
+>> check. I will code something up.
 > 
-> Applied to for-next, thanks! (I'd drop the __func__, though; doesn't
-> add information, does it?)
+> Cheers! Do we handle things like the IPA size already?
 
-In fact similar message is displayed in 2 places. One in case of master mode
-isr and the other one in case of slave isr. This message is adding slave
-address to the master mode isr. It only makes it more clear on first sight
-but indeed displaying the slave address obviously means this is master mode.
+Good point. No, we don't. I will include this too.
+
+Cheers
+Suzuki
