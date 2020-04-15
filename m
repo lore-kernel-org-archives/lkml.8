@@ -2,218 +2,159 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A07C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:54:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDCD0C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97F7920768
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:54:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90B4F20768
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:54:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Wjkf2zcC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393710AbgDOHyS (ORCPT
+        id S2393719AbgDOHyc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 03:54:18 -0400
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:35812 "EHLO
-        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2635345AbgDOHwh (ORCPT
+        Wed, 15 Apr 2020 03:54:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33614 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2635368AbgDOHxb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 03:52:37 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R721e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01419;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0TvbELz._1586937149;
-Received: from localhost(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0TvbELz._1586937149)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 15 Apr 2020 15:52:30 +0800
-From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-To:     zohar@linux.ibm.com, dmitry.kasatkin@gmail.com, jmorris@namei.org,
-        serge@hallyn.com, zhangliguang@linux.alibaba.com,
-        zhang.jia@linux.alibaba.com
-Cc:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, tianjia.zhang@linux.alibaba.com
-Subject: [PATCH v2] ima: optimize ima_pcr_extend function by asynchronous
-Date:   Wed, 15 Apr 2020 15:52:29 +0800
-Message-Id: <20200415075229.71595-1-tianjia.zhang@linux.alibaba.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 15 Apr 2020 03:53:31 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0823BC061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 00:53:30 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id b11so6522467wrs.6
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 00:53:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=kBML5p9FTR/cSP2nmZwVa8/pgzdTVSXOXZP4sLP4ogs=;
+        b=Wjkf2zcCTUG0Ok/lmmvQx1NU3ss3JLnGjq1ip3x7xuG8mX6QkhkJYKhkW/3x+4YhXC
+         sc/hWNKOOyzsx5aNjSF9L5KaC1VFrGC12XwZYVNIVN0TS+Hp1RIDRjuSCiSjtC/i6NXm
+         FL1Sd//FQu62V9kfT/pxFHSB0ZjyXw8ZPfIC/ptx00qwBmN2QakxTpwkRNslE0N/LQrB
+         IXouroTWaS9U4k4Ju07aEhV2EZiYw/aQmnRao6LG1hQIwDW8LZ1eoz82EMRRv6n358SP
+         AUuZcAlwEQ064jgSriufkm35olJYkn2D29G3HEO+lGgKD5mmFrRgiOYImNA0ZouIs6Bx
+         Ft3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=kBML5p9FTR/cSP2nmZwVa8/pgzdTVSXOXZP4sLP4ogs=;
+        b=LkzqPVeTb+kQKtZYaYNJ2EVxOf/9Qvk+2rQhLslvdwQXbAfZlEsDAbQxCthRE0XBha
+         4SVsJAcn0xLv/JCyEaMm1DqsTx1v59XZyc3IVWhNH6ouoXxpVqLZg4aBHj0qsZ6wyD/l
+         kLFzZP9MRF7WrEG5EssNBEVZtrI7+lIfE/h7Vtt4AsYJNeQ7um96bbzShHBYES1zH6Kh
+         /pru3sS+MYjUbquOs2CT486hfJfrVkB8jQcUzW0/nZK8HoGeBc45ym0NX7GzAW96MYp0
+         c7J1deLGC0mUwg3U3qnv69W0gLUA0zkZFF10n6Z4PZLng4fNgYhwNiIrmMdSAwre8pfk
+         ZvIg==
+X-Gm-Message-State: AGi0PuZKujYTSIiCI6mNsoUh6fiZxws9GFIKqz9BzYMSgwC9qB8BSARe
+        KKJrAbTvDZuoiKAycQEHvbSju+5Oxbnmiw==
+X-Google-Smtp-Source: APiQypKy1+Tc3Y0hGUfB49///1SHeOTBpfPZpDWXkJypIieHtRzn2n8uDhg2Uo4QBcdWnBEmeE/s1g==
+X-Received: by 2002:adf:e944:: with SMTP id m4mr14535852wrn.366.1586937208116;
+        Wed, 15 Apr 2020 00:53:28 -0700 (PDT)
+Received: from ?IPv6:2a01:e35:2ec0:82b0:39cc:a07:8b48:cc56? ([2a01:e35:2ec0:82b0:39cc:a07:8b48:cc56])
+        by smtp.gmail.com with ESMTPSA id b4sm17408679wrv.42.2020.04.15.00.53.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Apr 2020 00:53:27 -0700 (PDT)
+Subject: Re: [PATCH v2 0/2] clk: meson: prepare GX and G12 for GPU DVFS
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        jbrunet@baylibre.com, linux-amlogic@lists.infradead.org,
+        linux-clk@vger.kernel.org
+Cc:     mturquette@baylibre.com, sboyd@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200414195031.224021-1-martin.blumenstingl@googlemail.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ BSwxi7g3Mu7u5kUByanqHyA=
+Organization: Baylibre
+Message-ID: <fda0f007-4377-c78a-e2d7-aecb12779287@baylibre.com>
+Date:   Wed, 15 Apr 2020 09:53:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200414195031.224021-1-martin.blumenstingl@googlemail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Because ima_pcr_extend() to operate the TPM chip, this process is
-very time-consuming, for IMA, this is a blocking action, especially
-when the TPM is in self test state, this process will block for up
-to second level.
+On 14/04/2020 21:50, Martin Blumenstingl wrote:
+> This contains only the clock driver updates from my other series titled
+> "GPU DVFS for Meson GXBB/GXL/GXM/G12A/G12B/SM1" from [0]
+> 
+> 
+> Changes since v1 at [0]:
+> - update the patch descriptions to indicate that we explicitly don't
+>   want CLK_SET_RATE_PARENT on the muxes
+> - split into clock driver (this series) and .dts changes (future
+>   series, waiting for testing feedback on v1 from [0])
+> 
+> 
+> [0] https://patchwork.kernel.org/cover/11466399/
+> 
+> 
+> Martin Blumenstingl (2):
+>   clk: meson: gxbb: Prepare the GPU clock tree to change at runtime
+>   clk: meson: g12a: Prepare the GPU clock tree to change at runtime
+> 
+>  drivers/clk/meson/g12a.c | 30 ++++++++++++++++++++++--------
+>  drivers/clk/meson/gxbb.c | 40 ++++++++++++++++++++++------------------
+>  2 files changed, 44 insertions(+), 26 deletions(-)
+> 
 
-Because the return result of ima_pcr_extend() is of no concern to IMA,
-it only affects the audit of IMA, so this patch use async_schedule()
-and PCR extend event serial queue to asynchronously perform the
-ima_pcr_extend() operation and do an audit operation at the end.
 
-In a vtpm scenario, I added the measure policy of BPRM and MMAP to
-compare the efficiency before and after applying the patch. The results
-show that the overall startup efficiency of conventional processes can
-be increased by 5% to 10%. I believe this efficiency increase It will
-be more obvious on real hardware tpm.
-
-Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
----
-
-v2 chang:
-  Use a queue to queue tpm extend operations to avoid out of order
-
- security/integrity/ima/ima_queue.c | 102 +++++++++++++++++++++++------
- 1 file changed, 81 insertions(+), 21 deletions(-)
-
-diff --git a/security/integrity/ima/ima_queue.c b/security/integrity/ima/ima_queue.c
-index edbc2d6962be..ec146270d94b 100644
---- a/security/integrity/ima/ima_queue.c
-+++ b/security/integrity/ima/ima_queue.c
-@@ -17,6 +17,7 @@
- 
- #include <linux/rculist.h>
- #include <linux/slab.h>
-+#include <linux/async.h>
- #include "ima.h"
- 
- #define AUDIT_CAUSE_LEN_MAX 32
-@@ -44,6 +45,21 @@ struct ima_h_table ima_htable = {
-  */
- static DEFINE_MUTEX(ima_extend_list_mutex);
- 
-+/* list for pcr extned asynchronous */
-+static LIST_HEAD(ima_pcr_extend_list);
-+
-+struct ima_pcr_extend_async_ctx {
-+	struct list_head list;
-+	struct ima_template_entry *entry;
-+	int violation;
-+	const char *op;
-+	struct inode *inode;
-+	const unsigned char *filename;
-+	const char *audit_cause;
-+	int audit_info;
-+	int result;
-+};
-+
- /* lookup up the digest value in the hash table, and return the entry */
- static struct ima_queue_entry *ima_lookup_digest_entry(u8 *digest_value,
- 						       int pcr)
-@@ -150,6 +166,48 @@ static int ima_pcr_extend(const u8 *hash, int pcr)
- 	return result;
- }
- 
-+static void ima_pcr_extend_async(void *data, async_cookie_t cookie)
-+{
-+	struct ima_pcr_extend_async_ctx *ctx;
-+	u8 digest[TPM_DIGEST_SIZE];
-+	char tpm_audit_cause[AUDIT_CAUSE_LEN_MAX];
-+	int empty;
-+	int result;
-+
-+retry:
-+	mutex_lock(&ima_extend_list_mutex);
-+	empty = list_empty(&ima_pcr_extend_list);
-+	if (!empty) {
-+		ctx = list_first_entry(&ima_pcr_extend_list,
-+				struct ima_pcr_extend_async_ctx, list);
-+		list_del(&ctx->list);
-+	}
-+	mutex_unlock(&ima_extend_list_mutex);
-+
-+	/* no more pending pcr_extend, return */
-+	if (empty)
-+		return;
-+
-+	if (ctx->violation)		/* invalidate pcr */
-+		memset(digest, 0xff, sizeof(digest));
-+	else
-+		memcpy(digest, ctx->entry->digest, sizeof(digest));
-+
-+	result = ima_pcr_extend(digest, ctx->entry->pcr);
-+	if (result != 0) {
-+		snprintf(tpm_audit_cause, AUDIT_CAUSE_LEN_MAX, "TPM_error(%d)",
-+			 result);
-+		ctx->audit_cause = tpm_audit_cause;
-+		ctx->audit_info = 0;
-+	}
-+	integrity_audit_msg(AUDIT_INTEGRITY_PCR, ctx->inode, ctx->filename,
-+			    ctx->op, ctx->audit_cause,
-+			    ctx->result, ctx->audit_info);
-+
-+	kfree(ctx);
-+	goto retry;
-+}
-+
- /*
-  * Add template entry to the measurement list and hash table, and
-  * extend the pcr.
-@@ -162,20 +220,16 @@ int ima_add_template_entry(struct ima_template_entry *entry, int violation,
- 			   const char *op, struct inode *inode,
- 			   const unsigned char *filename)
- {
--	u8 digest[TPM_DIGEST_SIZE];
- 	const char *audit_cause = "hash_added";
--	char tpm_audit_cause[AUDIT_CAUSE_LEN_MAX];
- 	int audit_info = 1;
--	int result = 0, tpmresult = 0;
-+	int result = 0;
-+	struct ima_pcr_extend_async_ctx *ctx;
- 
- 	mutex_lock(&ima_extend_list_mutex);
--	if (!violation) {
--		memcpy(digest, entry->digest, sizeof(digest));
--		if (ima_lookup_digest_entry(digest, entry->pcr)) {
--			audit_cause = "hash_exists";
--			result = -EEXIST;
--			goto out;
--		}
-+	if (!violation && ima_lookup_digest_entry(entry->digest, entry->pcr)) {
-+		audit_cause = "hash_exists";
-+		result = -EEXIST;
-+		goto out;
- 	}
- 
- 	result = ima_add_digest_entry(entry, 1);
-@@ -185,20 +239,26 @@ int ima_add_template_entry(struct ima_template_entry *entry, int violation,
- 		goto out;
- 	}
- 
--	if (violation)		/* invalidate pcr */
--		memset(digest, 0xff, sizeof(digest));
--
--	tpmresult = ima_pcr_extend(digest, entry->pcr);
--	if (tpmresult != 0) {
--		snprintf(tpm_audit_cause, AUDIT_CAUSE_LEN_MAX, "TPM_error(%d)",
--			 tpmresult);
--		audit_cause = tpm_audit_cause;
--		audit_info = 0;
-+	ctx = kmalloc(sizeof(*ctx), GFP_KERNEL);
-+	if (!ctx) {
-+		audit_cause = "ENOMEM";
-+		result = -ENOMEM;
-+		goto out;
- 	}
-+
-+	ctx->entry = entry;
-+	ctx->violation = violation;
-+	ctx->op = op;
-+	ctx->inode = inode;
-+	ctx->filename = filename;
-+	ctx->audit_cause = audit_cause;
-+	ctx->audit_info = audit_info;
-+	ctx->result = result;
-+	list_add_tail(&ctx->list, &ima_pcr_extend_list);
-+	async_schedule(ima_pcr_extend_async, NULL);
-+
- out:
- 	mutex_unlock(&ima_extend_list_mutex);
--	integrity_audit_msg(AUDIT_INTEGRITY_PCR, inode, filename,
--			    op, audit_cause, result, audit_info);
- 	return result;
- }
- 
--- 
-2.17.1
-
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
