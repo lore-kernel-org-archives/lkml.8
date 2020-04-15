@@ -2,105 +2,81 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C4FC3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 06:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A6D7C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 06:53:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26E55206D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 06:48:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 183B8206D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 06:53:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2635102AbgDOGsi (ORCPT
+        id S2393637AbgDOGxm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 02:48:38 -0400
-Received: from mga04.intel.com ([192.55.52.120]:55532 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393623AbgDOGpf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 02:45:35 -0400
-IronPort-SDR: +NqNqtafpR4gYMT4Z7r4ihU80yB/lSF45hEveF7LhdWe5aQK0hfDJd7e3dXsDPeMWGpjp2bmjy
- WJpmKXgpb5CQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 23:45:30 -0700
-IronPort-SDR: s38PfrNfoaiNU7WUnFp7bthzUs4sdySvwSGdv+pZpPFvB4hI9jMZnN9R7HJ8owSALWQrS8+ubg
- DV5/X248gc9Q==
-X-IronPort-AV: E=Sophos;i="5.72,386,1580803200"; 
-   d="scan'208";a="454813076"
-Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 23:45:30 -0700
-From:   ira.weiny@intel.com
-To:     linux-kernel@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>,
-        Dave Chinner <dchinner@redhat.com>, Jan Kara <jack@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH V8 01/11] fs/xfs: Remove unnecessary initialization of i_rwsem
-Date:   Tue, 14 Apr 2020 23:45:13 -0700
-Message-Id: <20200415064523.2244712-2-ira.weiny@intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200415064523.2244712-1-ira.weiny@intel.com>
-References: <20200415064523.2244712-1-ira.weiny@intel.com>
+        Wed, 15 Apr 2020 02:53:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52566 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728702AbgDOGxf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 02:53:35 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23BF1C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 23:53:35 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jObv3-0005ZB-GO; Wed, 15 Apr 2020 08:53:09 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jObuz-00075V-Lb; Wed, 15 Apr 2020 08:53:05 +0200
+Date:   Wed, 15 Apr 2020 08:53:05 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Chris Ruehl <chris.ruehl@gtsys.com.hk>
+Cc:     devicetree@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Richard Fontana <rfontana@redhat.com>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/3] iio: documentation ltc2632_chip_info add
+ num_channels
+Message-ID: <20200415065305.tltdx4w6pz3lexgx@pengutronix.de>
+References: <20200414235609.20125-1-chris.ruehl@gtsys.com.hk>
+ <20200414235609.20125-2-chris.ruehl@gtsys.com.hk>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200414235609.20125-2-chris.ruehl@gtsys.com.hk>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+On Wed, Apr 15, 2020 at 07:56:02AM +0800, Chris Ruehl wrote:
+> The documentation for ltc_2632_chip_info missed the desciption for the
+> num_channels. This privial patch add it.
 
-An earlier call of xfs_reinit_inode() from xfs_iget_cache_hit() already
-handles initialization of i_rwsem.
+I don't know the work privial. Did you mean trivial? s/add/adds/
 
-Doing so again is unneeded.
+Other than that:
 
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+Fixes: 9f15a4a0adc9 ("iio: dac: ltc2632: add support for LTC2636 family")
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
----
-Changes from V4:
-	Update commit message to make it clear the xfs_iget_cache_hit()
-	is actually doing the initialization via xfs_reinit_inode()
+Thanks
+Uwe
 
-New for V4:
-
-NOTE: This was found while ensuring the new i_aops_sem was properly
-handled.  It seems like this is a layering violation so I think it is
-worth cleaning up so as to not confuse others.
----
- fs/xfs/xfs_icache.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-index 8dc2e5414276..836a1f09be03 100644
---- a/fs/xfs/xfs_icache.c
-+++ b/fs/xfs/xfs_icache.c
-@@ -419,6 +419,7 @@ xfs_iget_cache_hit(
- 		spin_unlock(&ip->i_flags_lock);
- 		rcu_read_unlock();
- 
-+		ASSERT(!rwsem_is_locked(&inode->i_rwsem));
- 		error = xfs_reinit_inode(mp, inode);
- 		if (error) {
- 			bool wake;
-@@ -452,9 +453,6 @@ xfs_iget_cache_hit(
- 		ip->i_sick = 0;
- 		ip->i_checked = 0;
- 
--		ASSERT(!rwsem_is_locked(&inode->i_rwsem));
--		init_rwsem(&inode->i_rwsem);
--
- 		spin_unlock(&ip->i_flags_lock);
- 		spin_unlock(&pag->pag_ici_lock);
- 	} else {
 -- 
-2.25.1
-
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
