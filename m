@@ -4,59 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ECFFC38A29
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64B5FC2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:54:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52369206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:54:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 379B020737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:54:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586951676;
-	bh=ZdQpdMXAuKXWa7gWPIpjYwpVyeQdiVktFAnHfPKPAMU=;
+	s=default; t=1586951685;
+	bh=xBEgba53mTyEABUlkIImud5TWQpeouQiE1ppnBXI4wc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1bTdpy94fppQd0HJpo0cTojPuysV65oKYpK6pJQ0YZpZXSAhmSuP2SioMKC+HPGIo
-	 roS3EdKkGqKct0nJ5hhBuMOUKZjfLpEoi+VOrZlvP9RFhcJUeuSApsTiBwy/CWufxn
-	 nTMuWalRzv5Q+QIuwBW9p32g1C9tGmXmlBkzrgoI=
+	b=imRDQzLgjB4g9lSItKSfIS1qVdCQG6xsuBhr7eBfGlMjTp5S6PkKnEpyCl2aA1GWd
+	 MpW8txWhnLhTk5GeDT0tRY/aHLLzua+to0uDDPlhYcm8ypp4No3E/46GsK0Mv86JqD
+	 q8C7We0NugNQ1novD8v5R4/3QUOlng/q5kxVOmpo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2897868AbgDOLy2 (ORCPT
+        id S2409602AbgDOLyl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:54:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39280 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 07:54:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409181AbgDOLpe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:45:34 -0400
+        id S2409179AbgDOLpc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:45:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89DDE20768;
-        Wed, 15 Apr 2020 11:45:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54831216FD;
+        Wed, 15 Apr 2020 11:45:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951133;
-        bh=ZdQpdMXAuKXWa7gWPIpjYwpVyeQdiVktFAnHfPKPAMU=;
+        s=default; t=1586951132;
+        bh=xBEgba53mTyEABUlkIImud5TWQpeouQiE1ppnBXI4wc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GcATTDqVReMMCGAKNSShEXVojRmSdAHa/S4R+atCH0YTNtLwjndPj+/FSu+IXVvkx
-         LN/xS3e5jlU5kBIgyXAVyg6YDG7mBkqabMDlN0IuO5Ar9XU6Wp8jYsAoO52BGgwaOW
-         UbfvPWozIQi8X9X9vsmDfiLl5NnDEy600sMlgUOA=
+        b=luh1KEAahIua7LIrYROE3DtNShFYkIgkZqrG3QL7Usk2Gwqk7ABBJSBqVJp0ARI8g
+         +HJhJIlC1I8Bbj3yzoM3CgTV6aWofqAozlobxf5WPniAvTAg7WEQfLhSW9VPm1mz+K
+         PKi3PccLvyEpriK4nV8mfNzp9hOSm7w9ZpcZnO0s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuanhong Guo <gch981213@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        =?UTF-8?q?Ren=C3=A9=20van=20Dorst?= <opensource@vdorst.com>,
+Cc:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 44/84] net: dsa: mt7530: fix null pointer dereferencing in port5 setup
-Date:   Wed, 15 Apr 2020 07:44:01 -0400
-Message-Id: <20200415114442.14166-44-sashal@kernel.org>
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 43/84] net: stmmac: dwmac1000: fix out-of-bounds mac address reg setting
+Date:   Wed, 15 Apr 2020 07:44:00 -0400
+Message-Id: <20200415114442.14166-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114442.14166-1-sashal@kernel.org>
 References: <20200415114442.14166-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -65,44 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuanhong Guo <gch981213@gmail.com>
+From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 
-[ Upstream commit 0452800f6db4ed0a42ffb15867c0acfd68829f6a ]
+[ Upstream commit 3e1221acf6a8f8595b5ce354bab4327a69d54d18 ]
 
-The 2nd gmac of mediatek soc ethernet may not be connected to a PHY
-and a phy-handle isn't always available.
-Unfortunately, mt7530 dsa driver assumes that the 2nd gmac is always
-connected to switch port 5 and setup mt7530 according to phy address
-of 2nd gmac node, causing null pointer dereferencing when phy-handle
-isn't defined in dts.
-This commit fix this setup code by checking return value of
-of_parse_phandle before using it.
+Commit 9463c4455900 ("net: stmmac: dwmac1000: Clear unused address
+entries") cleared the unused mac address entries, but introduced an
+out-of bounds mac address register programming bug -- After setting
+the secondary unicast mac addresses, the "reg" value has reached
+netdev_uc_count() + 1, thus we should only clear address entries
+if (addr < perfect_addr_number)
 
-Fixes: 38f790a80560 ("net: dsa: mt7530: Add support for port 5")
-Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
-Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Tested-by: René van Dorst <opensource@vdorst.com>
+Fixes: 9463c4455900 ("net: stmmac: dwmac1000: Clear unused address entries")
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/mt7530.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
-index e0e932f0aed1e..8071c3fa3fb7c 100644
---- a/drivers/net/dsa/mt7530.c
-+++ b/drivers/net/dsa/mt7530.c
-@@ -1353,6 +1353,9 @@ mt7530_setup(struct dsa_switch *ds)
- 				continue;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
+index 43a785f86c69d..bc9b01376e807 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
+@@ -209,7 +209,7 @@ static void dwmac1000_set_filter(struct mac_device_info *hw,
+ 			reg++;
+ 		}
  
- 			phy_node = of_parse_phandle(mac_np, "phy-handle", 0);
-+			if (!phy_node)
-+				continue;
-+
- 			if (phy_node->parent == priv->dev->of_node->parent) {
- 				interface = of_get_phy_mode(mac_np);
- 				id = of_mdio_parse_addr(ds->dev, phy_node);
+-		while (reg <= perfect_addr_number) {
++		while (reg < perfect_addr_number) {
+ 			writel(0, ioaddr + GMAC_ADDR_HIGH(reg));
+ 			writel(0, ioaddr + GMAC_ADDR_LOW(reg));
+ 			reg++;
 -- 
 2.20.1
 
