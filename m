@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D24C2BB55
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:10:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F999C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:10:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4364E2076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:10:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3D1C20737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:10:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586956216;
-	bh=nkzQYljAqqsLT0KyQ1yxVxy4hdkqt9fzHI0OYpbHm4E=;
+	s=default; t=1586956227;
+	bh=Y1oOwpvRztHomKDGyowfxLsgFTMmRI5+HPm22BtDbKY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UnkHOelpOJ7WR3V8+Z9hfuuuTobaBRf2u9o6+M+TspsVUAcxys4ItGX8D7swrzZcl
-	 cGVm6IDHsteDHEgMycqHsO0qG03E0Y11CcZSkMBEjQVdQ0lA2Juh/SpvQDtbBCdfhI
-	 w88Pdv9uZoMIIXpylRmlJmvG4oUQetKJ4ux2u4fw=
+	b=F6z9EElnc08GO7+8JylXy1NP9G4ueuPrkY8q2W9bOGmv+kEyo661KtfjR3j87miIF
+	 C5m1qAdKk4NHR2e2r3HWU2XAkrvsXh4rSQH2iUHye/KcDr3s+e6NhyM7RiP8XuDO8L
+	 A/UdP6pNrIn1hZ+FunPVs5Iy9ujudtBgRuII7YoQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504192AbgDONKO (ORCPT
+        id S2506045AbgDONKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:10:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55340 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 09:10:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897078AbgDOLfo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:35:44 -0400
+        id S2897073AbgDOLfm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:35:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF26E21569;
-        Wed, 15 Apr 2020 11:35:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A9CB21556;
+        Wed, 15 Apr 2020 11:35:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950543;
-        bh=nkzQYljAqqsLT0KyQ1yxVxy4hdkqt9fzHI0OYpbHm4E=;
+        s=default; t=1586950542;
+        bh=Y1oOwpvRztHomKDGyowfxLsgFTMmRI5+HPm22BtDbKY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yyBaPze295V3kVtFSGJnSFEySLBr2R6oVC78bKI8L4gZQgEcMKhkcsmwVj+CiWMM0
-         eer7Zd2Xm2OKU/k7nWwO/xIT38/V5h76NpEQpULzH/X2+9o7U00HWb8YGpoaKLBt0k
-         AHcpLCNKU9lUSYygzDfmqCVcJ/xvc6H1leJBlBCg=
+        b=2Uxs3E1jkHkXM5o4aBDgwh4Ttruw+9A5vreZnxk90DvSmXOlGUf7GsM+FvreowS9/
+         xakO4NEOMP6mTzDCtbwRVHk7Jtwi5dowTNiy6tr/eCrsZUoCbd5tnVckAJil4QcpU+
+         y6Q/vPdVPKWLQ0L2gAqM3sgwnPwFclGcnfExDhfI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Domenico Andreoli <domenico.andreoli@linux.com>,
-        Marian Klein <mkleinsoft@gmail.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 050/129] hibernate: Allow uswsusp to write to swap
-Date:   Wed, 15 Apr 2020 07:33:25 -0400
-Message-Id: <20200415113445.11881-50-sashal@kernel.org>
+Cc:     Willy Wolff <willy.mh.wolff.ml@gmail.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 049/129] thermal/drivers/cpufreq_cooling: Fix return of cpufreq_set_cur_state
+Date:   Wed, 15 Apr 2020 07:33:24 -0400
+Message-Id: <20200415113445.11881-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
 References: <20200415113445.11881-1-sashal@kernel.org>
@@ -60,48 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Domenico Andreoli <domenico.andreoli@linux.com>
+From: Willy Wolff <willy.mh.wolff.ml@gmail.com>
 
-[ Upstream commit 56939e014a6c212b317414faa307029e2e80c3b9 ]
+[ Upstream commit ff44f672d74178b3be19d41a169b98b3e391d4ce ]
 
-It turns out that there is one use case for programs being able to
-write to swap devices, and that is the userspace hibernation code.
+When setting the cooling device current state from userspace via sysfs,
+the operation fails by returning an -EINVAL.
 
-Quick fix: disable the S_SWAPFILE check if hibernation is configured.
+It appears the recent changes with the per-policy frequency QoS
+introduced a regression as reported by:
 
-Fixes: dc617f29dbe5 ("vfs: don't allow writes to swap files")
-Reported-by: Domenico Andreoli <domenico.andreoli@linux.com>
-Reported-by: Marian Klein <mkleinsoft@gmail.com>
-Signed-off-by: Domenico Andreoli <domenico.andreoli@linux.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+ https://lkml.org/lkml/2020/3/20/599
+
+The function freq_qos_update_request returns 0 or 1 describing update
+effectiveness, and a negative error code on failure. However,
+cpufreq_set_cur_state returns 0 on success or an error code otherwise.
+
+Consider the QoS update as successful if the function does not return
+an error.
+
+Fixes: 3000ce3c52f8b ("cpufreq: Use per-policy frequency QoS")
+Signed-off-by: Willy Wolff <willy.mh.wolff.ml@gmail.com>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Link: https://lore.kernel.org/r/20200321092740.7vvwfxsebcrznydh@macmini.local
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/block_dev.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/thermal/cpufreq_cooling.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/fs/block_dev.c b/fs/block_dev.c
-index 69bf2fb6f7cda..84fe0162ff13e 100644
---- a/fs/block_dev.c
-+++ b/fs/block_dev.c
-@@ -34,6 +34,7 @@
- #include <linux/task_io_accounting_ops.h>
- #include <linux/falloc.h>
- #include <linux/uaccess.h>
-+#include <linux/suspend.h>
- #include "internal.h"
+diff --git a/drivers/thermal/cpufreq_cooling.c b/drivers/thermal/cpufreq_cooling.c
+index fe83d7a210d47..af55ac08e1bd5 100644
+--- a/drivers/thermal/cpufreq_cooling.c
++++ b/drivers/thermal/cpufreq_cooling.c
+@@ -431,6 +431,7 @@ static int cpufreq_set_cur_state(struct thermal_cooling_device *cdev,
+ 				 unsigned long state)
+ {
+ 	struct cpufreq_cooling_device *cpufreq_cdev = cdev->devdata;
++	int ret;
  
- struct bdev_inode {
-@@ -2001,7 +2002,8 @@ ssize_t blkdev_write_iter(struct kiocb *iocb, struct iov_iter *from)
- 	if (bdev_read_only(I_BDEV(bd_inode)))
- 		return -EPERM;
+ 	/* Request state should be less than max_level */
+ 	if (WARN_ON(state > cpufreq_cdev->max_level))
+@@ -442,8 +443,9 @@ static int cpufreq_set_cur_state(struct thermal_cooling_device *cdev,
  
--	if (IS_SWAPFILE(bd_inode))
-+	/* uswsusp needs write permission to the swap */
-+	if (IS_SWAPFILE(bd_inode) && !hibernation_available())
- 		return -ETXTBSY;
+ 	cpufreq_cdev->cpufreq_state = state;
  
- 	if (!iov_iter_count(from))
+-	return freq_qos_update_request(&cpufreq_cdev->qos_req,
+-				get_state_freq(cpufreq_cdev, state));
++	ret = freq_qos_update_request(&cpufreq_cdev->qos_req,
++				      get_state_freq(cpufreq_cdev, state));
++	return ret < 0 ? ret : 0;
+ }
+ 
+ /* Bind cpufreq callbacks to thermal cooling device ops */
 -- 
 2.20.1
 
