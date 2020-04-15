@@ -2,229 +2,430 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B8EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:14:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C2CC38A29
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:15:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B13E7206F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:14:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586952895;
-	bh=LNWj9wDcXQ6iD/C2ADh+aNOYEGak6DBi/YB8YeGejXU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NFEwNupe5cxVPWAvlgJpKi3/j25BjbnUvdkNX8oEGI205VKRNd7GYQcuqQKmmY4aT
-	 JOTvqqQD/+kqZA8jl7rZ28orUR5oIbVw9Kkno0puZ95+5yumfNGi6SDTHWxr5XSAPB
-	 eLAlOyarnGQds3onLsUkhkbPHAfEBKCuTMHvZnSQ=
+	by mail.kernel.org (Postfix) with ESMTP id B4621206F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:15:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="fdRb7Esm";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Mt7/BmAI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S368704AbgDOMOx (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:14:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59488 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898111AbgDOMNE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 08:13:04 -0400
-Received: from tleilax.com (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S368716AbgDOMPD (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:15:03 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:46992 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S368630AbgDOMNS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 08:13:18 -0400
+Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B550F2076C;
-        Wed, 15 Apr 2020 12:13:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586952783;
-        bh=LNWj9wDcXQ6iD/C2ADh+aNOYEGak6DBi/YB8YeGejXU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eP8x2ynt2dsZpxEWWWVjAgU3NHPYAoWmR++xSWjZ0TkfxVCNESaywGjMP7DBjHwiq
-         xYt8N4pDz7Z2nXsapZQsIv/StT03DCH4H+AbdyfH9CLegITcMhWeiK7g2KCY0p3W6D
-         GelKbnRBjnNTIq97URqMkE3golCiE/0Y39x5hnM0=
-From:   Jeff Layton <jlayton@kernel.org>
-To:     viro@zeniv.linux.org.uk
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org, andres@anarazel.de, willy@infradead.org,
-        dhowells@redhat.com, hch@infradead.org, jack@suse.cz,
-        akpm@linux-foundation.org, david@fromorbit.com
-Subject: [PATCH v5 1/2] vfs: track per-sb writeback errors and report them to syncfs
-Date:   Wed, 15 Apr 2020 08:12:59 -0400
-Message-Id: <20200415121300.228017-2-jlayton@kernel.org>
-X-Mailer: git-send-email 2.25.2
-In-Reply-To: <20200415121300.228017-1-jlayton@kernel.org>
-References: <20200415121300.228017-1-jlayton@kernel.org>
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id D9221C0088;
+        Wed, 15 Apr 2020 12:13:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1586952797; bh=+XIg6yoMbUM9RXYaVwiqvwRjDOeauFE2ssoLDI9i9Vw=;
+        h=From:To:Subject:Date:References:In-Reply-To:From;
+        b=fdRb7EsmFV3nXHQAgXCbQYuQn8K1dlsWJkna5i+o4FurRMIPAZ0mu17JGKoe4pea0
+         TK2SEToxIe3BClScnhstLyYbgVDvsDhu/p4oeK3I8VczC5nlBxcLQNgmLysVpLwMJO
+         zjViDKr9/Ot+efFOgRKd4sBXIfy9YsNN2xoEdD/acsOMeQb9WQRkT8HpVqRwyLg2aO
+         01KD6Ro7ZmMUN4z+BbgYN7511Lz0noeHiZyIp7bj/TWBcZWfalLKP8tJjLwPPWhlfZ
+         oxI+RIqqPwMa8c4J9Iq5E1WmUQnpCobLrZnHe7TDL8x4yCgWurQDMZ5Avjm+OtZw6N
+         jC1Ql80+H45OQ==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id D1A29A0083;
+        Wed, 15 Apr 2020 12:13:15 +0000 (UTC)
+Received: from us01hybrid1.internal.synopsys.com (10.200.27.51) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 15 Apr 2020 05:13:15 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (10.202.3.67) by
+ mrs.synopsys.com (10.200.27.51) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Wed, 15 Apr 2020 05:13:14 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FlmF/xLtMgRJo85rZwczVjPvwo1KM4oOOQj2+YOIkxz1otKcDhE+72C3lNasTnqBzRqNwIUXOqw9MuyGU2YIfDc5lhiRLdU6ALQV3KzN+0CrgQPf4N1hgM8txfVBwsveyYUpYjo196LWDN+eSF5KaTTG/WdunV7Y45mvcDyOohzh+tA9epp5Q2uKvDSojbdc/lblOGro8TX0Wd8LqaHEYiu4D0CAw/eknhOWXRzQT7g8/pCj0EV4MwpKTzvJwII1CKwvwnhVW/kzjbfemfVUx8IqedTCHBawk41fWL/JHGSVntN4yuHCM0v9PNvp3VwmLqQR7U2l3kNKVqOwx1aPqw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MnZDPIfaDURoA0FEBzs5uTcInZAn7EhYc/CYaCs85+4=;
+ b=KjgD/ZIJiudNx92BtbNWQ0RZf3UGxWuhgGciNDvu07xNP38789ujHn8KcN+cPT+sf+9I+gRT8pXGmxokNODCE1Pb09HExS4ODlPWtKZ/ru1UTPZTID8WJK7UULmMJnMGH6h7j55knJIrG1d7/SIbFtiNNtw/fchQzl+ObLKfrBMwt3La6l3eb5QHYgv7ZXqFz8VhthAbVmqyHoYM3Sc7gaMXuQdBGLXuy26PIewb93WAe/xuyAc9VZwZkMb+QA1Cqm1A7+mn89xxH4JSWkGyrNAF2sMfs9jlZFojA04HPGcTeYMrOD5Gg0md/qQXyUc2FFE9bQHSVx9D8r1AHrlmyw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MnZDPIfaDURoA0FEBzs5uTcInZAn7EhYc/CYaCs85+4=;
+ b=Mt7/BmAIb0nXR4dwIltTT4TDL/chjrSRA28Umet9YbwYNmi3BfluhVfzA0I6ptkp/1W46GTkLN2qqB7rlV6xwkzE0/qtZyVz05o9idF8H/hNOIxPHYNtOBw0FIxSHeQcxmQydKTYTDEGOe74hJgG/QD1rUYQj07tBRmzv2Ov8ys=
+Received: from DM5PR12MB1276.namprd12.prod.outlook.com (2603:10b6:3:79::18) by
+ DM5PR12MB2389.namprd12.prod.outlook.com (2603:10b6:4:b4::18) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2900.18; Wed, 15 Apr 2020 12:13:13 +0000
+Received: from DM5PR12MB1276.namprd12.prod.outlook.com
+ ([fe80::cd06:6b04:8f2c:157e]) by DM5PR12MB1276.namprd12.prod.outlook.com
+ ([fe80::cd06:6b04:8f2c:157e%10]) with mapi id 15.20.2900.028; Wed, 15 Apr
+ 2020 12:13:13 +0000
+From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+To:     Alan Mikhak <alan.mikhak@sifive.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "kishon@ti.com" <kishon@ti.com>,
+        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>
+Subject: RE: [PATCH RFC] dmaengine: dw-edma: Decouple dw-edma-core.c from
+ struct pci_dev
+Thread-Topic: [PATCH RFC] dmaengine: dw-edma: Decouple dw-edma-core.c from
+ struct pci_dev
+Thread-Index: AQHWEsrRt1OuNWp8Y0WOATK/ErlmDqh6DhYA
+Date:   Wed, 15 Apr 2020 12:13:13 +0000
+Message-ID: <DM5PR12MB1276CB8FA4457D4CDCE3137EDADB0@DM5PR12MB1276.namprd12.prod.outlook.com>
+References: <1586916464-27727-1-git-send-email-alan.mikhak@sifive.com>
+In-Reply-To: <1586916464-27727-1-git-send-email-alan.mikhak@sifive.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcZ3VzdGF2b1xh?=
+ =?us-ascii?Q?cHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJh?=
+ =?us-ascii?Q?MjllMzViXG1zZ3NcbXNnLTc3YjU0NTJlLTdmMTItMTFlYS05OGE3LWY4OTRj?=
+ =?us-ascii?Q?MjczODA0MlxhbWUtdGVzdFw3N2I1NDUyZi03ZjEyLTExZWEtOThhNy1mODk0?=
+ =?us-ascii?Q?YzI3MzgwNDJib2R5LnR4dCIgc3o9IjgxNzQiIHQ9IjEzMjMxNDI2MzkwNTQ2?=
+ =?us-ascii?Q?MTk2MSIgaD0iL2x2Vk4rL0lpR05hWTNQaUNCenI4VDc3QnFFPSIgaWQ9IiIg?=
+ =?us-ascii?Q?Ymw9IjAiIGJvPSIxIiBjaT0iY0FBQUFFUkhVMVJTUlVGTkNnVUFBQlFKQUFE?=
+ =?us-ascii?Q?SlpzMDZIeFBXQVVJbmNJanlBc1dpUWlkd2lQSUN4YUlPQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUhBQUFBQ2tDQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUVBQVFBQkFBQUFFbU1la3dBQUFBQUFBQUFBQUFBQUFKNEFBQUJtQUdrQWJn?=
+ =?us-ascii?Q?QmhBRzRBWXdCbEFGOEFjQUJzQUdFQWJnQnVBR2tBYmdCbkFGOEFkd0JoQUhR?=
+ =?us-ascii?Q?QVpRQnlBRzBBWVFCeUFHc0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?RUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFHWUFid0IxQUc0QVpBQnlBSGtBWHdC?=
+ =?us-ascii?Q?d0FHRUFjZ0IwQUc0QVpRQnlBSE1BWHdCbkFHWUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFBQUFDQUFB?=
+ =?us-ascii?Q?QUFBQ2VBQUFBWmdCdkFIVUFiZ0JrQUhJQWVRQmZBSEFBWVFCeUFIUUFiZ0Js?=
+ =?us-ascii?Q?QUhJQWN3QmZBSE1BWVFCdEFITUFkUUJ1QUdjQVh3QmpBRzhBYmdCbUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFBQm1BRzhB?=
+ =?us-ascii?Q?ZFFCdUFHUUFjZ0I1QUY4QWNBQmhBSElBZEFCdUFHVUFjZ0J6QUY4QWN3QmhB?=
+ =?us-ascii?Q?RzBBY3dCMUFHNEFad0JmQUhJQVpRQnpBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUdZQWJ3QjFBRzRBWkFCeUFIa0FY?=
+ =?us-ascii?Q?d0J3QUdFQWNnQjBBRzRBWlFCeUFITUFYd0J6QUcwQWFRQmpBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFBQUNB?=
+ =?us-ascii?Q?QUFBQUFDZUFBQUFaZ0J2QUhVQWJnQmtBSElBZVFCZkFIQUFZUUJ5QUhRQWJn?=
+ =?us-ascii?Q?QmxBSElBY3dCZkFITUFkQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBSjRBQUFCbUFH?=
+ =?us-ascii?Q?OEFkUUJ1QUdRQWNnQjVBRjhBY0FCaEFISUFkQUJ1QUdVQWNnQnpBRjhBZEFC?=
+ =?us-ascii?Q?ekFHMEFZd0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBR1lBYndCMUFHNEFaQUJ5QUhr?=
+ =?us-ascii?Q?QVh3QndBR0VBY2dCMEFHNEFaUUJ5QUhNQVh3QjFBRzBBWXdBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFB?=
+ =?us-ascii?Q?Q0FBQUFBQUNlQUFBQVp3QjBBSE1BWHdCd0FISUFid0JrQUhVQVl3QjBBRjhB?=
+ =?us-ascii?Q?ZEFCeUFHRUFhUUJ1QUdrQWJnQm5BQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFKNEFBQUJ6?=
+ =?us-ascii?Q?QUdFQWJBQmxBSE1BWHdCaEFHTUFZd0J2QUhVQWJnQjBBRjhBY0FCc0FHRUFi?=
+ =?us-ascii?Q?Z0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBRUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFITUFZUUJzQUdVQWN3QmZB?=
+ =?us-ascii?Q?SEVBZFFCdkFIUUFaUUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFB?=
+ =?us-ascii?Q?QUFDQUFBQUFBQ2VBQUFBY3dCdUFIQUFjd0JmQUd3QWFRQmpBR1VBYmdCekFH?=
+ =?us-ascii?Q?VUFYd0IwQUdVQWNnQnRBRjhBTVFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFB?=
+ =?us-ascii?Q?QnpBRzRBY0FCekFGOEFiQUJwQUdNQVpRQnVBSE1BWlFCZkFIUUFaUUJ5QUcw?=
+ =?us-ascii?Q?QVh3QnpBSFFBZFFCa0FHVUFiZ0IwQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUhZQVp3QmZBR3NBWlFC?=
+ =?us-ascii?Q?NUFIY0Fid0J5QUdRQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFB?=
+ =?us-ascii?Q?QUFBQUNBQUFBQUFBPSIvPjwvbWV0YT4=3D?=
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=gustavo@synopsys.com; 
+x-originating-ip: [198.182.37.200]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8b62488d-c6b1-4e18-06c9-08d7e1365efe
+x-ms-traffictypediagnostic: DM5PR12MB2389:
+x-microsoft-antispam-prvs: <DM5PR12MB2389D0FE74DAF2F8EB25545CDADB0@DM5PR12MB2389.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0374433C81
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1276.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(346002)(366004)(396003)(376002)(136003)(39860400002)(8936002)(8676002)(478600001)(71200400001)(52536014)(81156014)(2906002)(86362001)(6506007)(76116006)(66446008)(64756008)(66476007)(9686003)(186003)(316002)(55016002)(53546011)(66556008)(33656002)(7696005)(5660300002)(26005)(66946007)(110136005);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: nqqsGKxFDPLFpdy/5KOSDHsGmUB6GdqR2ZEY2pjdolXwmeupd62+Rbjcci8lOe0tkpjoTbBBlQu9yMtCb127x/d7MQ4+745HODvDXTcrRgE2QlOrgXOKlEz/3VDG4t8nQj1FncvQ8i1HxXzIJzmBfYJqAm+w4fGBbg+Rn2mIytp5Ps+d4d4Dt5WbijLomUrTX1OM/XJcneKJ3s7OQuTKNrUgtC1VBJw/kwxi9Ufo8a/h8GTN8NxtTdDHZJoVc7vA/GBvEOS9OidHQ6iObDo+5gfoWtWmIqFmO660ZsUuB//DQCC981ZxZmqGXtFplVoC7LnCF8VWNWfxpxx25MNvVuSESBcfp6eEpPvy4O/10gy5UVlZRwjBmo/VBi1pUsAjhD6WKGGN9xZbQusKh01L4/bqkIlqA6nzX7tUQMXXQTLb67uCcGrKINYczWcZQEO7
+x-ms-exchange-antispam-messagedata: bP2RBaax4m5ch/F4Rw1kalzTtDa69ksa2vUHikwOcq5vDCEMs5sVzWytQXsCmtK/dKJeBY1cedoCjgUC8vxMrP6rkPN40CYFrvOcl/p9gMxxgOBakMirnYYJGvc2kuxGWKbG4KCsVU57Z9L22nBtPA==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8b62488d-c6b1-4e18-06c9-08d7e1365efe
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Apr 2020 12:13:13.1375
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: q7Y5WixYDe10JfWCjhVzA1exbVjR5aPqgwZO09/eU64PIm7xGX2MRp1sY7PIyuFrD9mZMqtKzylfLEWPnfocUg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB2389
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeff Layton <jlayton@redhat.com>
+Hi Alan,
 
-Usually we suggest that applications call fsync when they want to
-ensure that all data written to the file has made it to the backing
-store, but that can be inefficient when there are a lot of open
-files.
+On Wed, Apr 15, 2020 at 3:7:44, Alan Mikhak <alan.mikhak@sifive.com>=20
+wrote:
 
-Calling syncfs on the filesystem can be more efficient in some
-situations, but the error reporting doesn't currently work the way most
-people expect. If a single inode on a filesystem reports a writeback
-error, syncfs won't necessarily return an error. syncfs only returns an
-error if __sync_blockdev fails, and on some filesystems that's a no-op.
+> From: Alan Mikhak <alan.mikhak@sifive.com>
+>=20
+> While reviewing the Synopsys Designware eDMA PCIe driver, I came across
 
-It would be better if syncfs reported an error if there were any writeback
-failures. Then applications could call syncfs to see if there are any
-errors on any open files, and could then call fsync on all of the other
-descriptors to figure out which one failed.
+s/Designware/DesignWare
 
-This patch adds a new errseq_t to struct super_block, and has
-mapping_set_error also record writeback errors there.
+> the following field of struct dw_edma in dw-edma-core.h:
+>=20
+> const struct dw_edma_core_ops	*ops;
+>=20
+> I was unable to find a definition for struct dw_edma_core_ops. It was
+> surprising that the kernel would build without failure even though the
+> dw-edma driver was enabled with what seems to be an undefined struct.
 
-To report those errors, we also need to keep an errseq_t in struct
-file to act as a cursor. This patch adds a dedicated field for that
-purpose, which slots nicely into 4 bytes of padding at the end of
-struct file on x86_64.
+Initially, that struct was aimed to have a set of function callbacks that=20
+would allow being set differently according to the eDMA version. At the=20
+time it was expected to have multiple cores that would need to execute=20
+different code sequences.
 
-An earlier version of this patch used an O_PATH file descriptor to cue
-the kernel that the open file should track the superblock error and not
-the inode's writeback error.
+However, this approach was requested to be postponed on the patch review=20
+because at that time and even now there isn't an extra core that would=20
+justify this.
 
-I think that API is just too weird though. This is simpler and should
-make syncfs error reporting "just work" even if someone is multiplexing
-fsync and syncfs on the same fds.
+You caught some residue of that initial approach.
 
-Cc: Andres Freund <andres@anarazel.de>
-Cc: Matthew Wilcox <willy@infradead.org>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- drivers/dax/device.c    |  1 +
- fs/file_table.c         |  1 +
- fs/open.c               |  3 +--
- fs/sync.c               |  6 ++++--
- include/linux/fs.h      | 16 ++++++++++++++++
- include/linux/pagemap.h |  5 ++++-
- 6 files changed, 27 insertions(+), 5 deletions(-)
+> The reason I was reviewing the dw-edma driver was to see if I could
+> integrate it with pcitest to initiate dma operations from endpoint side.
 
-diff --git a/drivers/dax/device.c b/drivers/dax/device.c
-index 1af823b2fe6b..4c0af2eb7e19 100644
---- a/drivers/dax/device.c
-+++ b/drivers/dax/device.c
-@@ -377,6 +377,7 @@ static int dax_open(struct inode *inode, struct file *filp)
- 	inode->i_mapping->a_ops = &dev_dax_aops;
- 	filp->f_mapping = inode->i_mapping;
- 	filp->f_wb_err = filemap_sample_wb_err(filp->f_mapping);
-+	filp->f_sb_err = file_sample_sb_err(filp);
- 	filp->private_data = dev_dax;
- 	inode->i_flags = S_DAX;
- 
-diff --git a/fs/file_table.c b/fs/file_table.c
-index 30d55c9a1744..676e620948d2 100644
---- a/fs/file_table.c
-+++ b/fs/file_table.c
-@@ -198,6 +198,7 @@ static struct file *alloc_file(const struct path *path, int flags,
- 	file->f_inode = path->dentry->d_inode;
- 	file->f_mapping = path->dentry->d_inode->i_mapping;
- 	file->f_wb_err = filemap_sample_wb_err(file->f_mapping);
-+	file->f_sb_err = file_sample_sb_err(file);
- 	if ((file->f_mode & FMODE_READ) &&
- 	     likely(fop->read || fop->read_iter))
- 		file->f_mode |= FMODE_CAN_READ;
-diff --git a/fs/open.c b/fs/open.c
-index 719b320ede52..d9467a8a7f6a 100644
---- a/fs/open.c
-+++ b/fs/open.c
-@@ -743,9 +743,8 @@ static int do_dentry_open(struct file *f,
- 	path_get(&f->f_path);
- 	f->f_inode = inode;
- 	f->f_mapping = inode->i_mapping;
--
--	/* Ensure that we skip any errors that predate opening of the file */
- 	f->f_wb_err = filemap_sample_wb_err(f->f_mapping);
-+	f->f_sb_err = file_sample_sb_err(f);
- 
- 	if (unlikely(f->f_flags & O_PATH)) {
- 		f->f_mode = FMODE_PATH | FMODE_OPENED;
-diff --git a/fs/sync.c b/fs/sync.c
-index 4d1ff010bc5a..c6f6f5be5682 100644
---- a/fs/sync.c
-+++ b/fs/sync.c
-@@ -161,7 +161,7 @@ SYSCALL_DEFINE1(syncfs, int, fd)
- {
- 	struct fd f = fdget(fd);
- 	struct super_block *sb;
--	int ret;
-+	int ret, ret2;
- 
- 	if (!f.file)
- 		return -EBADF;
-@@ -171,8 +171,10 @@ SYSCALL_DEFINE1(syncfs, int, fd)
- 	ret = sync_filesystem(sb);
- 	up_read(&sb->s_umount);
- 
-+	ret2 = errseq_check_and_advance(&sb->s_wb_err, &f.file->f_sb_err);
-+
- 	fdput(f);
--	return ret;
-+	return ret ? ret : ret2;
- }
- 
- /**
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 4f6f59b4f22a..5ad13cd6441c 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -976,6 +976,7 @@ struct file {
- #endif /* #ifdef CONFIG_EPOLL */
- 	struct address_space	*f_mapping;
- 	errseq_t		f_wb_err;
-+	errseq_t		f_sb_err; /* for syncfs */
- } __randomize_layout
-   __attribute__((aligned(4)));	/* lest something weird decides that 2 is OK */
- 
-@@ -1520,6 +1521,9 @@ struct super_block {
- 	/* Being remounted read-only */
- 	int s_readonly_remount;
- 
-+	/* per-sb errseq_t for reporting writeback errors via syncfs */
-+	errseq_t s_wb_err;
-+
- 	/* AIO completions deferred from interrupt context */
- 	struct workqueue_struct *s_dio_done_wq;
- 	struct hlist_head s_pins;
-@@ -2827,6 +2831,18 @@ static inline errseq_t filemap_sample_wb_err(struct address_space *mapping)
- 	return errseq_sample(&mapping->wb_err);
- }
- 
-+/**
-+ * file_sample_sb_err - sample the current errseq_t to test for later errors
-+ * @mapping: mapping to be sampled
-+ *
-+ * Grab the most current superblock-level errseq_t value for the given
-+ * struct file.
-+ */
-+static inline errseq_t file_sample_sb_err(struct file *file)
-+{
-+	return errseq_sample(&file->f_path.dentry->d_sb->s_wb_err);
-+}
-+
- static inline int filemap_nr_thps(struct address_space *mapping)
- {
- #ifdef CONFIG_READ_ONLY_THP_FOR_FS
-diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-index a8f7bd8ea1c6..d4409b13747e 100644
---- a/include/linux/pagemap.h
-+++ b/include/linux/pagemap.h
-@@ -51,7 +51,10 @@ static inline void mapping_set_error(struct address_space *mapping, int error)
- 		return;
- 
- 	/* Record in wb_err for checkers using errseq_t based tracking */
--	filemap_set_wb_err(mapping, error);
-+	__filemap_set_wb_err(mapping, error);
-+
-+	/* Record it in superblock */
-+	errseq_set(&mapping->host->i_sb->s_wb_err, error);
- 
- 	/* Record it in flags for now, for legacy callers */
- 	if (error == -ENOSPC)
--- 
-2.25.2
+Great! That task was on my backlog for a very long time that I wasn't=20
+able to develop due the lack of time.
 
+> As I understand from reviewing the dw-edma code, it is designed to run
+> on the host side of PCIe link to initiate DMA operations remotely using
+> eDMA channels of PCIe controller on the endpoint side. I am not sure if
+> my understanding is correct. I infer this from seeing that dw-edma uses
+> struct pci_dev and accesses hardware registers of dma channels across the
+> bus using BAR0 and BAR2.
+
+You're correct.
+
+> I was exploring what would need to change in dw-edma to integrate it with
+> pci-epf-test to initiate dma operations locally from the endpoint side.
+> One barrier I see is dw_edma_probe() and other functions in dw-edma-core.=
+c
+> depend on struct pci_dev. Hence, instead of posting a patch to remove the
+> undefined and unused ops field, I would like to define the struct and use
+> it to decouple dw-edma-core.c from struct pci_dev.
+>=20
+> To my surprise, the kernel still builds without error even after defining
+> struct dw_edma_core_ops in dw-edma-core.h and using it as in this patch.
+>=20
+> I would appreciate any comments on my observations about the 'ops' field,
+> decoupling dw-edma-core.c from struct pci_dev, and how best to use
+> dw-edma with pcitest.
+
+I like your approach, it separates the PCIe glue logic from the eDMA=20
+itself.
+I would suggest that pcitest would have multiple options that could be=20
+triggered, for instance:
+ 1 - Execute Endpoint DMA (read/write) remotely with Linked List feature=20
+(from the Root Complex side)
+ 2 - Execute Endpoint DMA (read/write) remotely without Linked List=20
+feature (from the Root Complex side)
+ 3 - Execute Endpoint DMA (read/write) locally with Linked List feature
+ 4 - Execute Endpoint DMA (read/write) locally without Linked List=20
+feature
+
+Also, don't forget the DMA has of having multiple channels for reading=20
+and writing (depending on the design) that can be triggered=20
+simultaneously.
+
+Relative to the implementation of the options 3 and 4, I wonder if the=20
+linked list memory space and size could be set through the DT or by the=20
+configfs available on the pci-epf-test driver.
+
+>=20
+> Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
+> ---
+>  drivers/dma/dw-edma/dw-edma-core.c | 17 ++++++++++-------
+>  drivers/dma/dw-edma/dw-edma-core.h |  4 ++++
+>  drivers/dma/dw-edma/dw-edma-pcie.c | 10 ++++++++++
+>  3 files changed, 24 insertions(+), 7 deletions(-)
+>=20
+> diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-=
+edma-core.c
+> index ff392c01bad1..9417a5feabbf 100644
+> --- a/drivers/dma/dw-edma/dw-edma-core.c
+> +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> @@ -14,7 +14,7 @@
+>  #include <linux/err.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/dma/edma.h>
+> -#include <linux/pci.h>
+> +#include <linux/dma-mapping.h>
+> =20
+>  #include "dw-edma-core.h"
+>  #include "dw-edma-v0-core.h"
+> @@ -781,7 +781,7 @@ static int dw_edma_irq_request(struct dw_edma_chip *c=
+hip,
+> =20
+>  	if (dw->nr_irqs =3D=3D 1) {
+>  		/* Common IRQ shared among all channels */
+> -		err =3D request_irq(pci_irq_vector(to_pci_dev(dev), 0),
+> +		err =3D request_irq(dw->ops->irq_vector(dev, 0),
+>  				  dw_edma_interrupt_common,
+>  				  IRQF_SHARED, dw->name, &dw->irq[0]);
+>  		if (err) {
+> @@ -789,7 +789,7 @@ static int dw_edma_irq_request(struct dw_edma_chip *c=
+hip,
+>  			return err;
+>  		}
+> =20
+> -		get_cached_msi_msg(pci_irq_vector(to_pci_dev(dev), 0),
+> +		get_cached_msi_msg(dw->ops->irq_vector(dev, 0),
+>  				   &dw->irq[0].msi);
+>  	} else {
+>  		/* Distribute IRQs equally among all channels */
+> @@ -804,7 +804,7 @@ static int dw_edma_irq_request(struct dw_edma_chip *c=
+hip,
+>  		dw_edma_add_irq_mask(&rd_mask, *rd_alloc, dw->rd_ch_cnt);
+> =20
+>  		for (i =3D 0; i < (*wr_alloc + *rd_alloc); i++) {
+> -			err =3D request_irq(pci_irq_vector(to_pci_dev(dev), i),
+> +			err =3D request_irq(dw->ops->irq_vector(dev, i),
+>  					  i < *wr_alloc ?
+>  						dw_edma_interrupt_write :
+>  						dw_edma_interrupt_read,
+> @@ -815,7 +815,7 @@ static int dw_edma_irq_request(struct dw_edma_chip *c=
+hip,
+>  				return err;
+>  			}
+> =20
+> -			get_cached_msi_msg(pci_irq_vector(to_pci_dev(dev), i),
+> +			get_cached_msi_msg(dw->ops->irq_vector(dev, i),
+>  					   &dw->irq[i].msi);
+>  		}
+> =20
+> @@ -833,6 +833,9 @@ int dw_edma_probe(struct dw_edma_chip *chip)
+>  	u32 rd_alloc =3D 0;
+>  	int i, err;
+> =20
+> +	if (!dw->ops || !dw->ops->irq_vector)
+> +		return -EINVAL;
+> +
+
+I would suggest adding dw pointer check as well.
+
+>  	raw_spin_lock_init(&dw->lock);
+> =20
+>  	/* Find out how many write channels are supported by hardware */
+> @@ -884,7 +887,7 @@ int dw_edma_probe(struct dw_edma_chip *chip)
+> =20
+>  err_irq_free:
+>  	for (i =3D (dw->nr_irqs - 1); i >=3D 0; i--)
+> -		free_irq(pci_irq_vector(to_pci_dev(dev), i), &dw->irq[i]);
+> +		free_irq(dw->ops->irq_vector(dev, i), &dw->irq[i]);
+> =20
+>  	dw->nr_irqs =3D 0;
+> =20
+> @@ -904,7 +907,7 @@ int dw_edma_remove(struct dw_edma_chip *chip)
+> =20
+>  	/* Free irqs */
+>  	for (i =3D (dw->nr_irqs - 1); i >=3D 0; i--)
+> -		free_irq(pci_irq_vector(to_pci_dev(dev), i), &dw->irq[i]);
+> +		free_irq(dw->ops->irq_vector(dev, i), &dw->irq[i]);
+> =20
+>  	/* Power management */
+>  	pm_runtime_disable(dev);
+> diff --git a/drivers/dma/dw-edma/dw-edma-core.h b/drivers/dma/dw-edma/dw-=
+edma-core.h
+> index 4e5f9f6e901b..31fc50d31792 100644
+> --- a/drivers/dma/dw-edma/dw-edma-core.h
+> +++ b/drivers/dma/dw-edma/dw-edma-core.h
+> @@ -103,6 +103,10 @@ struct dw_edma_irq {
+>  	struct dw_edma			*dw;
+>  };
+> =20
+> +struct dw_edma_core_ops {
+> +	int	(*irq_vector)(struct device *dev, unsigned int nr);
+> +};
+> +
+>  struct dw_edma {
+>  	char				name[20];
+> =20
+> diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-=
+edma-pcie.c
+> index dc85f55e1bb8..1eafc602e17e 100644
+> --- a/drivers/dma/dw-edma/dw-edma-pcie.c
+> +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
+> @@ -54,6 +54,15 @@ static const struct dw_edma_pcie_data snps_edda_data =
+=3D {
+>  	.irqs				=3D 1,
+>  };
+> =20
+> +static int dw_edma_pcie_irq_vector(struct device *dev, unsigned int nr)
+> +{
+> +	return pci_irq_vector(to_pci_dev(dev), nr);
+> +}
+> +
+> +static const struct dw_edma_core_ops dw_edma_pcie_core_ops =3D {
+> +	.irq_vector =3D dw_edma_pcie_irq_vector,
+> +};
+> +
+>  static int dw_edma_pcie_probe(struct pci_dev *pdev,
+>  			      const struct pci_device_id *pid)
+>  {
+> @@ -151,6 +160,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+>  	dw->version =3D pdata->version;
+>  	dw->mode =3D pdata->mode;
+>  	dw->nr_irqs =3D nr_irqs;
+> +	dw->ops =3D &dw_edma_pcie_core_ops;
+> =20
+>  	/* Debug info */
+>  	pci_dbg(pdev, "Version:\t%u\n", dw->version);
+> --=20
+> 2.7.4
+
+In overall, nice patch, please fix that detail and I'll give my ACK.
+
+Regards,
+Gustavo
