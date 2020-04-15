@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82908C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:57:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 194AFC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:58:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 535C12084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:57:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8855208FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:58:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586973473;
-	bh=bLyVjyBmJbKAL3Fm3qC3ps5MjTLMjQ1npgysr5LECXk=;
+	s=default; t=1586973482;
+	bh=sUHNjfvt9VKaKe+T+Qzf/rdzfqwH/hiNXXR9xBQTwIQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FpWnh5Sh4GsgvsP1TMdwAAYPXO5CyuqrCiD0BDm0yUl4VDcpJSxBQZckSekptGU5P
-	 sfssaBkdtTrkAT0fdGFouRQTl8kkhZsjxRavMd6CP1j637gdieLOFGXrIzRs9CwviM
-	 jKBM0oAQAV9O4A6ggDbZotF1rOQ6aMgs5APE2cTU=
+	b=xL2AhXSKKVjwzbFwmK8tSWA6Xdv1p6Nh+a4ipIcyuHMf42bvGgIWyrlco8SA/dZbY
+	 jBG6UxvShgDnOYVhOYXB2QxpTw+F2objacXOXdugXBn2RcoZAyrfhJ3WrYQ4J/rP/n
+	 ZsE8B5B91h9UpeXY9uWEwCiolfu8uK/oakAs1YTE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2411554AbgDOR5v (ORCPT
+        id S2411563AbgDOR6A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 13:57:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49242 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 13:58:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1416558AbgDOR4T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 13:56:19 -0400
+        id S1416570AbgDOR4S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 13:56:18 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49D7D2166E;
-        Wed, 15 Apr 2020 17:56:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EA65208FE;
+        Wed, 15 Apr 2020 17:56:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586973378;
-        bh=bLyVjyBmJbKAL3Fm3qC3ps5MjTLMjQ1npgysr5LECXk=;
+        s=default; t=1586973377;
+        bh=sUHNjfvt9VKaKe+T+Qzf/rdzfqwH/hiNXXR9xBQTwIQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cq4Ksm0zwVGQX5DiGjXvx3qgi1igzSH5czEdg2A/Ooh3k5f/+n6s93v6nZR/BSzOf
-         SdILea+FRADo1FcVRO8+V9jixW0oPKfxfMzApWeq5F8kk4svuPemXecqcoURfONude
-         8seBbgFjEXOCxEkZML2Xjo1obUOK+r7EGqUiWXro=
+        b=UQ+7QExFC2QhNHllaTm8WBY4TY046QPL8IRheK2dC8J5I9xnjORPOCgge2/mR83/L
+         nQrWB2t7mtlHma2oDkRWxjAWkjbAGitB0jAs4TL6JRJvdrx/I4yrjRO4lA4IYbQ6wh
+         P6CiRJc7qLa01ZGlmYFz3KufsegiOibrr65rCDGY=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -47,13 +47,11 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Subject: [PATCH tip/core/rcu 6/6] rcutorture: Add test of holding scheduler locks across rcu_read_unlock()
-Date:   Wed, 15 Apr 2020 10:56:14 -0700
-Message-Id: <20200415175614.10837-6-paulmck@kernel.org>
+        Lai Jiangshan <laijs@linux.alibaba.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 4/6] rcu: Remove unused ->rcu_read_unlock_special.b.deferred_qs field
+Date:   Wed, 15 Apr 2020 10:56:12 -0700
+Message-Id: <20200415175614.10837-4-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200415175543.GA10416@paulmck-ThinkPad-P72>
 References: <20200415175543.GA10416@paulmck-ThinkPad-P72>
@@ -62,53 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Paul E. McKenney" <paulmck@kernel.org>
+From: Lai Jiangshan <laijs@linux.alibaba.com>
 
-Now that it should be safe to hold scheduler locks across
-rcu_read_unlock(), even in cases where the corresponding RCU read-side
-critical section might have been preempted and boosted, the commit adds
-a test of this capability to rcutorture.  This has been tested on current
-mainline (which can deadlock in this situation), and lockdep duly reported
-the expected deadlock.  On -rcu, lockdep is silent, thus far, anyway.
+The ->rcu_read_unlock_special.b.deferred_qs field is set to true in
+rcu_read_unlock_special() but never set to false.  This is not
+particularly useful, so this commit removes this field.
 
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
+The only possible justification for this field is to ease debugging
+of RCU deferred quiscent states, but the combination of the other
+->rcu_read_unlock_special fields plus ->rcu_blocked_node and of course
+->rcu_read_lock_nesting should cover debugging needs.  And if this last
+proves incorrect, this patch can always be reverted, along with the
+required setting of ->rcu_read_unlock_special.b.deferred_qs to false
+in rcu_preempt_deferred_qs_irqrestore().
+
+Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/rcutorture.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ include/linux/sched.h    | 2 +-
+ kernel/rcu/tree_plugin.h | 1 -
+ 2 files changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-index 5453bd5..b348cf8 100644
---- a/kernel/rcu/rcutorture.c
-+++ b/kernel/rcu/rcutorture.c
-@@ -1147,6 +1147,7 @@ static void rcutorture_one_extend(int *readstate, int newstate,
- 				  struct torture_random_state *trsp,
- 				  struct rt_read_seg *rtrsp)
- {
-+	unsigned long flags;
- 	int idxnew = -1;
- 	int idxold = *readstate;
- 	int statesnew = ~*readstate & newstate;
-@@ -1181,8 +1182,15 @@ static void rcutorture_one_extend(int *readstate, int newstate,
- 		rcu_read_unlock_bh();
- 	if (statesold & RCUTORTURE_RDR_SCHED)
- 		rcu_read_unlock_sched();
--	if (statesold & RCUTORTURE_RDR_RCU)
-+	if (statesold & RCUTORTURE_RDR_RCU) {
-+		bool lockit = !statesnew && !(torture_random(trsp) & 0xffff);
-+
-+		if (lockit)
-+			raw_spin_lock_irqsave(&current->pi_lock, flags);
- 		cur_ops->readunlock(idxold >> RCUTORTURE_RDR_SHIFT);
-+		if (lockit)
-+			raw_spin_unlock_irqrestore(&current->pi_lock, flags);
-+	}
- 
- 	/* Delay if neither beginning nor end and there was a change. */
- 	if ((statesnew || statesold) && *readstate && newstate)
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 4418f5c..a4b727f5 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -613,7 +613,7 @@ union rcu_special {
+ 		u8			blocked;
+ 		u8			need_qs;
+ 		u8			exp_hint; /* Hint for performance. */
+-		u8			deferred_qs;
++		u8			pad; /* No garbage from compiler! */
+ 	} b; /* Bits. */
+ 	u32 s; /* Set of bits. */
+ };
+diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+index 263c766..f31c599 100644
+--- a/kernel/rcu/tree_plugin.h
++++ b/kernel/rcu/tree_plugin.h
+@@ -634,7 +634,6 @@ static void rcu_read_unlock_special(struct task_struct *t)
+ 				irq_work_queue_on(&rdp->defer_qs_iw, rdp->cpu);
+ 			}
+ 		}
+-		t->rcu_read_unlock_special.b.deferred_qs = true;
+ 		local_irq_restore(flags);
+ 		return;
+ 	}
 -- 
 2.9.5
 
