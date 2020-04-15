@@ -2,164 +2,112 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE970C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 23:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE46C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 23:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A511520768
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 23:13:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77CED20732
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 23:15:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ii7+b4Ty"
+	dkim=pass (2048-bit key) header.d=landley-net.20150623.gappssmtp.com header.i=@landley-net.20150623.gappssmtp.com header.b="F35xhtgP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388584AbgDOXM6 (ORCPT
+        id S2388673AbgDOXPP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 19:12:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35492 "EHLO
+        Wed, 15 Apr 2020 19:15:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388104AbgDOXMo (ORCPT
+        with ESMTP id S2388353AbgDOXPI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 19:12:44 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6719C061A0C;
-        Wed, 15 Apr 2020 16:12:43 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id x18so2569668wrq.2;
-        Wed, 15 Apr 2020 16:12:43 -0700 (PDT)
+        Wed, 15 Apr 2020 19:15:08 -0400
+Received: from mail-oo1-xc41.google.com (mail-yw1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66064C061A10
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 16:15:08 -0700 (PDT)
+Received: by mail-oo1-xc41.google.com with SMTP id b17so265825ooa.0
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 16:15:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:references:in-reply-to:subject:date:message-id
-         :mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=Gm2Rd5l6DnoYokZ1IoTpz0zKlkvip4QX12cLk0Sh6/Y=;
-        b=Ii7+b4Ty/DtxMiNuZpivZZjQ3R8YyWC+6OAPG6Csb0Ff18LTuHK5Kc54s7zo7FopNt
-         Fjs8JVkdqkT2UHwxkraislcANwMZbYs2JoH/8TwFgA14VGFO+rXyuL8OdzFtG7k2oRGr
-         5thp0XbD6cfvool2rYkxBgVmRFH9n9NzcPmoaRmQLTelO7NZ+SY4zic/g2+/1FPM88Qg
-         BMc+1QEhXzECwfrpZVcFZxYwb8ZOyISzYLzsOaOZj5hxw7OkmRGaEdQTJFoByKu0oLO3
-         0oP7p5lAN7eB5WHVrk9QVfd/pE6ztuS3lz6bQiFMA9abRjOHcpyFFKrJ+MOrzHSAB1Iw
-         SToQ==
+        d=landley-net.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=3OjUG2BuSmqAZb0WXRtXD4dSg3ZpvowTxplHgaVM3Q8=;
+        b=F35xhtgPpx/jIbkJJBdV5g5+ruNOIXKelQQyX5bbrTqVnC7gIyw7HrbOzu3enHe323
+         sFh/bnS27E/omhCaw3SCfbMWoJSFeUQFPCmwybIdj/Q6kAkzUGA5GqDzLPUCYJkgaK60
+         YUzH1qXFrk8Hl+LTNeS1g3snqHA6YPHoqMUETupiyQq6He/GVwNeYMbC/+XOUEjIheHx
+         prQCsPkvd5m7qWUcj9ByTl9O+MQYBgcDHCdvJF0ifM2LIRt7ZUQEBF+XifKq05a0jumF
+         Z59n5r7F1PhddLmxE5Nb8oZa2Xj6Bd+y2gvlnhlQOzm9foLtxRLQ07xOLRDmBpBVoTc/
+         L8pQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
-         :message-id:mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=Gm2Rd5l6DnoYokZ1IoTpz0zKlkvip4QX12cLk0Sh6/Y=;
-        b=Kr4jk7+0gqXr4xf1Pv1cJhaFmN8TL7P3iVQT6J31zcwQeMMqrcpY3OFHSqal6KP6cz
-         mZTlEBR3O3h8hochrVCf2fO5kpGvp1rrgKN/Ses3I13aRMODHccRH6Ih7eUiU9p4w0Vw
-         NALS9AVwbBsVHECx4ve6CtHYHFabAtw/4Q1MXLd/Ckvff4fmSTpwigiCsq3wuqPADxHZ
-         3R+OaxP6dYnL8taOVfNd4jMc7WddLlVIWqvYI8unV/3O3kPC6twK2fCzG8TP18Gf5H+N
-         FQil521dUT3UX7gCbKRIP4R8++zxRZ17T5NJPVCdGdni1HH7XcHMDcrTjEPfX8uqeMAd
-         D/WQ==
-X-Gm-Message-State: AGi0Puaoe723tFxk6dBZeLvNpDioGnIJVNjtfN7J+w0zNG2zRDyZiBcw
-        JDblhQG2RSNBISygjv0QiPsRWMpcfv+hsgnb
-X-Google-Smtp-Source: APiQypICyCFJ/9PIcka/IfQfq2zd/BrN9iZHxRR5P1Zp5e6XGgqSpT7CshecraQpcd+sI0I+m/Is9Q==
-X-Received: by 2002:a5d:6688:: with SMTP id l8mr14527286wru.179.1586992362312;
-        Wed, 15 Apr 2020 16:12:42 -0700 (PDT)
-Received: from AnsuelXPS (host93-255-dynamic.47-79-r.retail.telecomitalia.it. [79.47.255.93])
-        by smtp.gmail.com with ESMTPSA id p16sm18711418wro.21.2020.04.15.16.12.40
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 15 Apr 2020 16:12:41 -0700 (PDT)
-From:   <ansuelsmth@gmail.com>
-To:     "'Stephen Boyd'" <sboyd@kernel.org>,
-        "'Andy Gross'" <agross@kernel.org>
-Cc:     "'Mathieu Olivari'" <mathieu@codeaurora.org>,
-        "'Bjorn Andersson'" <bjorn.andersson@linaro.org>,
-        "'Rob Herring'" <robh+dt@kernel.org>,
-        "'Mark Rutland'" <mark.rutland@arm.com>,
-        "'Michael Turquette'" <mturquette@baylibre.com>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>
-References: <20200330205647.24806-1-ansuelsmth@gmail.com> <158587766752.125146.7582840761926137726@swboyd.mtv.corp.google.com> <00f701d60958$a9ed46c0$fdc7d440$@gmail.com> <158605625697.158626.12280118012638752686@swboyd.mtv.corp.google.com>
-In-Reply-To: <158605625697.158626.12280118012638752686@swboyd.mtv.corp.google.com>
-Subject: R: R: [PATCH v2] ARM: qcom: Disable i2c device on gsbi4 for ipq806x
-Date:   Thu, 16 Apr 2020 01:12:39 +0200
-Message-ID: <011701d6137b$5cc6dcd0$16549670$@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=3OjUG2BuSmqAZb0WXRtXD4dSg3ZpvowTxplHgaVM3Q8=;
+        b=Sk+Mpe8QWtF/CO11MMoyTItwBwDVQPqZ8uMZ+lg1a8sJ6YO5DnKxYs99e5L64trkR2
+         97s47FZsopGBS6B2DS6JWX4YH8Kn/WBDPGivwlKEYNGQfo4GoEqfHOBtgl39tDMuhiAm
+         LJ08gtdLPJTdMlCqNFZ6JZK8MwQcSq1bP8Qe2qXctTPjJLu2AQcpMx75hCApoY+BQCgE
+         ur7SxhQ50iFrJp49iywtIz8nO/g3pl5hn9xKkgoaaKuNA7QClwaU2yXIU6LTKFewAzn2
+         5Me/2SM10wYZtQuxbMtqAkgaUOf/yJRAnTkPnjXE40e/H5xkup/VR1a/zQgtGq6gvaCy
+         U9Ng==
+X-Gm-Message-State: AGi0PubIEZatpbebTyiHpDDYTafjyLuTnFrSbF1O79//WB3TF2XnifkR
+        2UkFq7778gH3s1hG+V33qaJK9A==
+X-Google-Smtp-Source: APiQypJX4BQ8dde+gIq4uYB2s5OItvEplprtWtCefc9av8Gy6HUjt41wXcWpqBb6biLoaS77Egd/0g==
+X-Received: by 2002:a4a:874f:: with SMTP id a15mr14836132ooi.8.1586992507739;
+        Wed, 15 Apr 2020 16:15:07 -0700 (PDT)
+Received: from [192.168.86.21] ([136.62.4.88])
+        by smtp.googlemail.com with ESMTPSA id o23sm7330628oos.36.2020.04.15.16.15.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Apr 2020 16:15:07 -0700 (PDT)
+Subject: Re: [PATCH] serial: sh-sci: Make sure status register SCxSR is read
+ in correct sequence
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Kazuhiro Fujita <kazuhiro.fujita.jg@renesas.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hao Bui <hao.bui.yg@renesas.com>,
+        KAZUMI HARADA <kazumi.harada.rh@renesas.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Chris Brandt <Chris.Brandt@renesas.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+References: <1585333048-31828-1-git-send-email-kazuhiro.fujita.jg@renesas.com>
+ <CAMuHMdW+u5r6zyxFJsVzj21BYDrKCr=Q6Ojk5VeN+mkhvXX9Jw@mail.gmail.com>
+ <OSBPR01MB3590E3D12546BC6711CEB542AAC80@OSBPR01MB3590.jpnprd01.prod.outlook.com>
+ <CAMuHMdXmfQ0x7mCZ-E7OPQFv2z-=mFDT20hJ2_JKax=OePB8eA@mail.gmail.com>
+ <CA+V-a8vPn_z_j1Vwr_1F=dCw8H=g5UMWvWxgRqBeVR7dzHPz8Q@mail.gmail.com>
+ <CAMuHMdWc9q9NjQuAuy5M=v_x=i8XxVg5JZHswjvPsgNzhHfO0w@mail.gmail.com>
+ <CAMuHMdUyV58t3eihBJv2xex5gW1Oef37Jo3FHoJstU=SspmpHA@mail.gmail.com>
+From:   Rob Landley <rob@landley.net>
+Message-ID: <67d1a3a0-a160-f707-b7c5-ba610a3f76c8@landley.net>
+Date:   Wed, 15 Apr 2020 18:21:01 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: it
-Thread-Index: AQGo1QQgHzu0HPOv8BNyQx6G4xhnEwIGzuWZAjtxbVgBYzMGUaioH+Tg
+In-Reply-To: <CAMuHMdUyV58t3eihBJv2xex5gW1Oef37Jo3FHoJstU=SspmpHA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 4/15/20 7:36 AM, Geert Uytterhoeven wrote:
+>> Let's wait a bit, we're in the middle of the merge window anyway.
+>> Probably we can get it tested on SuperH during the coming weeks.
+> 
+> Anyone with a real (not qemu) SuperH system who can do the basic "stty evenp"
+> tests above, and report back to us?
+> Thanks a lot!
+The j-core boards use either uartlite or 16550a for serial, and neither of my
+legacy sh4 boxes is easily accessible right now. But if nobody manages to test
+this before next merge window poke me and I can set one up.
 
-
-> -----Messaggio originale-----
-> Da: Stephen Boyd <sboyd@kernel.org>
-> Inviato: domenica 5 aprile 2020 05:11
-> A: 'Andy Gross' <agross@kernel.org>; ansuelsmth@gmail.com
-> Cc: 'Mathieu Olivari' <mathieu@codeaurora.org>; 'Bjorn Andersson'
-> <bjorn.andersson@linaro.org>; 'Rob Herring' <robh+dt@kernel.org>; =
-'Mark
-> Rutland' <mark.rutland@arm.com>; 'Michael Turquette'
-> <mturquette@baylibre.com>; linux-arm-msm@vger.kernel.org;
-> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
-> clk@vger.kernel.org
-> Oggetto: Re: R: [PATCH v2] ARM: qcom: Disable i2c device on gsbi4 for
-> ipq806x
->=20
-> Quoting ansuelsmth@gmail.com (2020-04-02 18:39:04)
-> >
-> >
-> > > -----Messaggio originale-----
-> > > Da: Stephen Boyd <sboyd@kernel.org>
-> > > Inviato: venerd=C3=AC 3 aprile 2020 03:34
-> > > A: Andy Gross <agross@kernel.org>; Ansuel Smith
-> > > <ansuelsmth@gmail.com>
-> > > Cc: Ansuel Smith <ansuelsmth@gmail.com>; Mathieu Olivari
-> > > <mathieu@codeaurora.org>; Bjorn Andersson
-> > > <bjorn.andersson@linaro.org>; Rob Herring <robh+dt@kernel.org>;
-> Mark
-> > > Rutland <mark.rutland@arm.com>; Michael Turquette
-> > > <mturquette@baylibre.com>; linux-arm-msm@vger.kernel.org;
-> > > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
-> > > clk@vger.kernel.org
-> > > Oggetto: Re: [PATCH v2] ARM: qcom: Disable i2c device on gsbi4 for
-> > > ipq806x
-> > >
-> > > Quoting Ansuel Smith (2020-03-30 13:56:46)
-> > > > diff --git a/drivers/clk/qcom/gcc-ipq806x.c =
-b/drivers/clk/qcom/gcc-
-> > > ipq806x.c
-> > > > index b0eee0903807..f7d7a2bc84c1 100644
-> > > > --- a/drivers/clk/qcom/gcc-ipq806x.c
-> > > > +++ b/drivers/clk/qcom/gcc-ipq806x.c
-> > > > @@ -991,6 +991,7 @@ static struct clk_branch gsbi4_h_clk =3D {
-> > > >                 .hw.init =3D &(struct clk_init_data){
-> > > >                         .name =3D "gsbi4_h_clk",
-> > > >                         .ops =3D &clk_branch_ops,
-> > > > +                       .flags =3D CLK_IGNORE_UNUSED,
-> > >
-> > > Is this necessary? Shouldn't we skip clks that are protected =
-during the
-> > > unused phase?
-> > >
-> >
-> > gsbi4_h_clk is not protected. gsbi4_h_clk needs to not be disabled =
-if
-> unused
-> > (as it's used by rpm) but can't be protected since it's used by uart =
-gsbi4.
-> > (With some test protecting also this clk cause the malfunction of =
-uart
-> gsb4)
-> >
->=20
-> Who owns gsbi4 on this platform? Is it RPM? If so, it should be
-> protected and we shouldn't touch this clk from the kernel.
-
-Sorry for the late replay. Trying to protect gsbi4 clk cause the uart =
-serial to
-not work at all as it can't be used by the driver. If for some=20
-reason some dev decide to not use gsbi4 uart, GSBI4_CLK gets disabled=20
-(as it would be not used), this is the reason of the IGNORE_UNUSED.=20
-I really can't find another way to keep both gsbi4 protected and and =
-permit
-gsbi4 uart to use it.
-
+Rob
