@@ -2,163 +2,82 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A28EC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:00:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A113DC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:02:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF24E20771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:00:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7386120768
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:02:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586934162;
+	bh=O3EE8adfJ7Xiulrk10cKHPtPh9AVfab/yVbPmRMdQwI=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=FyFM96vL+unDU+ufoMEGdKULOpQua2tLEier/cGGKKkBQYNyTMpG9GPPGHHZfww1S
+	 n1ZKJHWC0heaL2Ee/IPgiRg3tS/+hdmzV0kVf7bJ+rGiyn5KKY3EcoQP4DiGgMTV6w
+	 Jtocb2N5XFE7N3/KBJ4XaqOLFrtRp2+0W9ChZSHo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404048AbgDOHA4 (ORCPT
+        id S2404096AbgDOHCk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 03:00:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53696 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404013AbgDOHAs (ORCPT
+        Wed, 15 Apr 2020 03:02:40 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35745 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404013AbgDOHCc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 03:00:48 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29738C061A0F
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 00:00:48 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jOc27-0006DZ-RA; Wed, 15 Apr 2020 09:00:27 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jOc25-0007Ko-JT; Wed, 15 Apr 2020 09:00:25 +0200
-Date:   Wed, 15 Apr 2020 09:00:25 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Chris Ruehl <chris.ruehl@gtsys.com.hk>
-Cc:     devicetree@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Alexandru Tachici <alexandru.tachici@analog.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Allison Randal <allison@lohutok.net>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] iio: DAC extension for ltc2634-12/10/8
-Message-ID: <20200415070025.6isvybjzpfhh3ts3@pengutronix.de>
-References: <20200414235609.20125-1-chris.ruehl@gtsys.com.hk>
- <20200414235609.20125-3-chris.ruehl@gtsys.com.hk>
+        Wed, 15 Apr 2020 03:02:32 -0400
+Received: by mail-wm1-f66.google.com with SMTP id r26so17594628wmh.0;
+        Wed, 15 Apr 2020 00:02:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=YAjVwOW5+MAEVGUZITzA9KP2ft9GY7dJC9IkrG7J3Iw=;
+        b=iZ3YliEPxi5ut2pMzERRZSOJI3M/K/V/egj45+oVUOFg4yZO0nhOi/O2MT1P+1izGa
+         U4+vS6UE0jbQFKsU9YMr272UwRN4bMrwhd3jdHnry0kL7nFNKW2RwjfiXFOGEc7w/vhY
+         r8RsyFewOmGQDXoUlOGsHqCl3nVIhb0ufWI1svBh7IQQ93Pujj3FOKTyVGhyGmEzMXYe
+         OVenb5xHf0g8bwLDAR9iiuy0ZRuKPDKsYjZZ5ai/KPNiUdm0ui4yiMCjiHRudjPeFlCm
+         9c71TBTDMq9QsQuccZOJa5Il8TRnGH0+/MvuaZHtn8mv8tkHs5lKc5ixUfTQnMAGmOl2
+         XKFg==
+X-Gm-Message-State: AGi0Pubw/H9OvbixtJUhLc59UfCFIiXpFPvvUakBKFi587q7yNSR501l
+        kNArw7tYypGEk11OpXsxnXc=
+X-Google-Smtp-Source: APiQypI5HqG7twtnkieJtfmzbu1uiIIPqFIE3j63CH5pDM0tP9ghY6y06m4sbK1+ERNGQzO0AIfQdQ==
+X-Received: by 2002:a7b:c401:: with SMTP id k1mr3551702wmi.152.1586934150877;
+        Wed, 15 Apr 2020 00:02:30 -0700 (PDT)
+Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
+        by smtp.gmail.com with ESMTPSA id g6sm2960436wrw.34.2020.04.15.00.02.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2020 00:02:30 -0700 (PDT)
+Date:   Wed, 15 Apr 2020 09:02:28 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Christoph Hellwig <hch@infradead.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: implicit AOP_FLAG_NOFS for grab_cache_page_write_begin
+Message-ID: <20200415070228.GW4629@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200414235609.20125-3-chris.ruehl@gtsys.com.hk>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 07:56:03AM +0800, Chris Ruehl wrote:
-> This patch add support for Analog Devices (Linear Technology)
-> LTC2634 Quad 12-/10-/8-Bit Rail-to-Rail DAC.
-> The SPI functionality based on them from LTC2632 therefor
-> add the definitions only and update the Kconfig.
-> 
-> V2:
-> Send the documentation fix in a extra patch
-> Kconfig simplify the driver description, details to the help text
-> ltc2632.txt add to this patch-set (prepare to convert to yaml)
-> 
-> V3:
-> Consistens decimal separator in help text
+Hi,
+I have just received a bug report about memcg OOM [1]. The underlying
+issue is memcg specific but the stack trace made me look at the write(2)
+patch and I have noticed that iomap_write_begin enforces AOP_FLAG_NOFS
+which means that all the page cache that has to be allocated is
+GFP_NOFS. What is the reason for this? Do all filesystems really need
+the reclaim protection? I was hoping that those filesystems which really
+need NOFS context would be using the scope API
+(memalloc_nofs_{save,restore}.
 
-The description about how the patch evolves usually goes below the ---
-and S-o-b area. This way it doesn't make it into the commit history.
-> 
-> Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
-> ---
->  .../devicetree/bindings/iio/dac/ltc2632.txt   |  8 ++-
->  drivers/iio/dac/Kconfig                       |  6 +-
->  drivers/iio/dac/ltc2632.c                     | 60 +++++++++++++++++++
->  3 files changed, 70 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/dac/ltc2632.txt b/Documentation/devicetree/bindings/iio/dac/ltc2632.txt
-> index 338c3220f01a..1ab9570cf219 100644
-> --- a/Documentation/devicetree/bindings/iio/dac/ltc2632.txt
-> +++ b/Documentation/devicetree/bindings/iio/dac/ltc2632.txt
-> @@ -1,4 +1,4 @@
-> -Linear Technology LTC2632/2636 DAC
-> +Linear Technology LTC2632/2634/2636 DAC
->  
->  Required properties:
->   - compatible: Has to contain one of the following:
-> @@ -8,6 +8,12 @@ Required properties:
->  	lltc,ltc2632-h12
->  	lltc,ltc2632-h10
->  	lltc,ltc2632-h8
-> +	lltc,ltc2634-l12
-> +	lltc,ltc2634-l10
-> +	lltc,ltc2634-l8
-> +	lltc,ltc2634-h12
-> +	lltc,ltc2634-h10
-> +	lltc,ltc2634-h8
->  	lltc,ltc2636-l12
->  	lltc,ltc2636-l10
->  	lltc,ltc2636-l8
-> diff --git a/drivers/iio/dac/Kconfig b/drivers/iio/dac/Kconfig
-> index 93744011b63f..aee13ced6ddf 100644
-> --- a/drivers/iio/dac/Kconfig
-> +++ b/drivers/iio/dac/Kconfig
-> @@ -279,12 +279,12 @@ config LTC1660
->  	  module will be called ltc1660.
->  
->  config LTC2632
-> -	tristate "Linear Technology LTC2632-12/10/8 and LTC2636-12/10/8 DAC spi driver"
-> +	tristate "Linear Technology LTC2632-12/10/8 and similar DAC spi driver"
->  	depends on SPI
->  	help
->  	  Say yes here to build support for Linear Technology
-> -	  LTC2632-12, LTC2632-10, LTC2632-8, LTC2636-12, LTC2636-10 and
-> -	  LTC2636-8 converters (DAC).
-> +	  LTC2632, LTC2634 and LTC2636 DAC resolution 12/10/8 bit
-> +	  low 0-2.5V and high 0-4.096V range converters.
->  
+Could you clarify please?
 
-The naming pattern seems to be:
-
-	LTC263ab-cc
-
-with:
-
-	a = 2 -> 2 channels
-	a = 4 -> 4 channels
-	a = 6 -> 8 channels
-
-	b = L -> Vref = 2.5V
-	b = H -> Vref = 4.096V
-
-	cc = 8 -> 8 bit precision
-	cc = 10 -> 10 bit precision
-	cc = 12 -> 12 bit precision
-
-Would it make sense to document this somewhere?
-
-But as this is (somewhat) orthogonal to this patch:
-
-Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-
-Best regards
-Uwe
-
+[1] http://lkml.kernel.org/r/20200414212558.58eaab4de2ecf864eaa87e5d@linux-foundation.org
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Michal Hocko
+SUSE Labs
