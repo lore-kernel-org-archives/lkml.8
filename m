@@ -2,211 +2,94 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CFF4C3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:14:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E62C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:14:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05105206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:14:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Ow9I7iEN"
+	by mail.kernel.org (Postfix) with ESMTP id 213ED206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:14:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441706AbgDOTOX (ORCPT
+        id S2437852AbgDOTOb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 15:14:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52132 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1416883AbgDOSzr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 14:55:47 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE772C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 11:55:45 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id j3so4458681ljg.8
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 11:55:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=D78ezzgr1zyOlgwKH7QLX+Li2SBqz2uUlzuC9KV6jFg=;
-        b=Ow9I7iEN9+wJS6FF5B8WBHiyCZox0Z40+SBu0cl9K6E7AztZehjLEUTLvT4cBrYzk2
-         gzX2BI+vld43OaOpaFYJlg3UzWF/jzyNYMCshoLQ43XncVa6WOFhKDvf+/N1kyPs1ZMA
-         Pliy2KCXpOEgNmv3NVrZbBO0WzqBHWAEnLKXa+CGUxiZT3ecGVJm2dcDiZ/noHGiJnYd
-         HqwI9SiEx5LfvmZDyF/9S+TZETw7hS32v7OcxEfeA+uciipy/kC/oVjVPBT6zw+Z8PpO
-         Iyn5m7ncmw/RE2M+LxaMdTxTsZWohK3yfoRWTin8+HrGrYpNraEDEL4UGU0g5w9mHDTS
-         nkYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=D78ezzgr1zyOlgwKH7QLX+Li2SBqz2uUlzuC9KV6jFg=;
-        b=dxdmbIRMV7CXSNkBPKVw6l8OhlsjgpGDzVXCfF24fLjbgm9wpRGT31cqm5kAvnr9Bk
-         uCUh/R+1f7psWvvDgYl0mAUuOEqb6CyAmRHF7bWTQR5V2nncNdryYqbE+t+f5rqyrGsj
-         FkjTR4jH8mjtgFRlk81o4+GYeZeUSo7iQRWP9shis8T3lXqcGKsk/dJ+kCDqL4Mi6cKA
-         xPZI3kp4SRGjpERto5skIFmJIqvmMI96PG/+eZWLnqCGKCwq1/l/nwOpAcCt7OaqhNuy
-         0CRcA+nxeO5RUvUx5lrbo3P67WitcZL93EFqPn8MgsdqpuO4hR1R0lQbInSB7lXEZa4y
-         RyOA==
-X-Gm-Message-State: AGi0Puahm+KkwUtsyro+HWmc0JZftd1Xf0N6sQjN2JpTUNYGx7/UpkXY
-        JrvyEzI2Hj+qhFXnDxTgk5Oe8NoF7wPk3tNRyer4Tw==
-X-Google-Smtp-Source: APiQypJXYNw4SDoKStFsU+56gq4FbE8anC1c48YFT200EteZlNxxTaQJtHbqWPO3STrbxva2wApkW5sioh8lhqP8s0Q=
-X-Received: by 2002:a2e:3e15:: with SMTP id l21mr4074589lja.251.1586976944036;
- Wed, 15 Apr 2020 11:55:44 -0700 (PDT)
+        Wed, 15 Apr 2020 15:14:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46638 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1416884AbgDOSzy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 14:55:54 -0400
+Received: from home.goodmis.org (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0196020732;
+        Wed, 15 Apr 2020 18:55:52 +0000 (UTC)
+Date:   Wed, 15 Apr 2020 14:55:45 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: linux-next: Tree for Apr 10 (lib/test_printf.ko)
+Message-ID: <20200415185545.GA1632@home.goodmis.org>
+References: <20200410132706.170811b7@canb.auug.org.au>
+ <27c212c4-b522-561d-411c-e74dc0ff0b74@infradead.org>
+ <CAHk-=wjhsM-n_NzSh=cSdpThX+62-x3EmyKjhMqGHFYEyG0nPg@mail.gmail.com>
+ <2b0f5d2e-3fe5-10c9-2a9a-9a0b341a52d5@infradead.org>
+ <CAHk-=wjXZSPPWzPs=KBDsLZWuq8qO=9qWfiKHw=yV10fFrDv9Q@mail.gmail.com>
+ <bfbcaa67-9656-3a80-fc66-c937297c8be0@infradead.org>
+ <CAHk-=whpvCqcCYvy=_v_F6NTtBSeQbXZ0iLr_smV2NJLT+XACw@mail.gmail.com>
+ <CA+G9fYu47hpXjYtAr32p9yJ97KZqTry+ioAY1S2TqtiKztCYRg@mail.gmail.com>
+ <f90fc906-395b-79be-8f44-3807586766f7@infradead.org>
+ <CAFd5g46ZaEVoMb2hO94A41Z=YH6ntTdXstZUhHu67mwOKY+QsA@mail.gmail.com>
 MIME-Version: 1.0
-References: <1586916464-27727-1-git-send-email-alan.mikhak@sifive.com>
- <DM5PR12MB1276CB8FA4457D4CDCE3137EDADB0@DM5PR12MB1276.namprd12.prod.outlook.com>
- <CABEDWGwYmO52g6cqvQdWb6HXWEHaMA1rcf96aUqv0f32tJZT-g@mail.gmail.com> <DM5PR12MB1276E09460BD4DB7E70EAF91DADB0@DM5PR12MB1276.namprd12.prod.outlook.com>
-In-Reply-To: <DM5PR12MB1276E09460BD4DB7E70EAF91DADB0@DM5PR12MB1276.namprd12.prod.outlook.com>
-From:   Alan Mikhak <alan.mikhak@sifive.com>
-Date:   Wed, 15 Apr 2020 11:55:32 -0700
-Message-ID: <CABEDWGw0OyQNppLpDaNgMedfB0Ci=kZVKm+h4T-LJoZYmbSgqA@mail.gmail.com>
-Subject: Re: [PATCH RFC] dmaengine: dw-edma: Decouple dw-edma-core.c from
- struct pci_dev
-To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Cc:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "kishon@ti.com" <kishon@ti.com>,
-        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFd5g46ZaEVoMb2hO94A41Z=YH6ntTdXstZUhHu67mwOKY+QsA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 11:17 AM Gustavo Pimentel
-<Gustavo.Pimentel@synopsys.com> wrote:
->
-> Hi Alan,
->
-> > > I like your approach, it separates the PCIe glue logic from the eDMA
-> > > itself.
-> > > I would suggest that pcitest would have multiple options that could be
-> > > triggered, for instance:
-> > >  1 - Execute Endpoint DMA (read/write) remotely with Linked List feature
-> > > (from the Root Complex side)
-> > >  2 - Execute Endpoint DMA (read/write) remotely without Linked List
-> > > feature (from the Root Complex side)
-> > >  3 - Execute Endpoint DMA (read/write) locally with Linked List feature
-> > >  4 - Execute Endpoint DMA (read/write) locally without Linked List
-> > > feature
+On Tue, Apr 14, 2020 at 12:26:29PM -0700, Brendan Higgins wrote:
+> On Sat, Apr 11, 2020 at 11:22 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+> >
+> > On 4/11/20 10:36 PM, Naresh Kamboju wrote:
+> > > FYI,
+> > >
+> > > Is this problem related to,
+> > >
+> > > Regression reported on Linux next 5.6.0-rc4-next-20200305 on x86_64,
+> > > i386, arm and arm64. The steps to reproduce is running kselftests lib
+> > > printf.sh test case.
+> > > Which is doing modprobe operations.
+> > >
+> > > BUG: kernel NULL pointer dereference, address: 00 - ida_free+0x76/0x140
+> > >
+> > > https://lore.kernel.org/linux-kselftest/CAFd5g46Bwd8HS9-xjHLh_rB59Nfw8iAnM6aFe0QPcveewDUT6g@mail.gmail.com/T/
 > > >
 > >
-> > I have all of the above four use cases in mind as well. At the moment,
-> > only #4 is possible with pcitest.
-> >
-> > Use case #3 would need a new command line option for pcitest such as -L
-> > to let its user specify linked list operationwhen used with dma in
-> > conjunction with the existing -D option.
-> >
-> > Use cases #1 and #2 would need another new command line option such as -R
-> > to specify remotely initiated dma operation in conjunction with -D option.
-> >
-> > New code in pci-epf-test and pci_endpoint_test drivers would be needed
-> > to support use cases #1, #2, and #3. However, use case #4 should be
-> > possible without modification to pci-epf-test or pci_endpoint_test as long
-> > as the dmaengine channels become available on the endpoint side.
->
-> I would suggest something like this:
->
-> -L option, local DMA triggering
-> -R option, remote DMA triggering
-> -W <n> option, to select the DMA write channel n => (0 ... 7) to be
-> used
-> -R <n> option, to select the DMA read channel n => (0 ... 7) to be
-> used
-> -K option, to use or not the linked list feature (K presence enables
-> the LL use)
-> -T <n> option, to select which type of DMA transfer to be used => (n = 0
-> - scatter-gather mode, 1 - cyclic mode)
-> -N <n> option, to define the number of cyclic transfers to perform in
-> total
-> -C <n> option, to define the size of each chunk to be used
-> -t <time> option, to define a timeout for the DMA operation
+> > Looks similar. Lots of fwnode, software_node, ida stuff there.
+> 
+> Sorry for the late reply, I was out.
+> 
+> Yeah, I am pretty sure it is the same. Heikki proposed a fix that I am
+> going to try.
 
-That looks like a more complete set of command line options.
+My test suite just tripped over this bug. Is this the patch that you think
+fixes it?
 
->
-> Also, the use of this options (especially when using the remote DMA
-> option) should be checked through the pci_epc_get_features(), which means
-> probably we need to pass the EP features capabilities to the
-> pci_endpoint_test Driver, perhaps using some sets of registers on located
-> on BAR0 or other.
+https://lore.kernel.org/linux-kselftest/20200414081513.GD2828150@kuha.fi.intel.com
 
-That is a great point. There may be changes required below pci-epf-test
-in the endpoint framework stack.
+I'll add it to see if I can continue my testing.
 
->
-> > At the moment, pci-epf-test grabs the first available dma channel on the
-> > endpoint side and uses it for either read, write, or copy operation. it is not
-> > possible at the moment to specify which dma channel to use on the pcitest
-> > command line. This may be possible by modifying the command line option
-> > -D to also specify the name of one or more dma channels.
->
-> I'm assuming that behavior is due to your code, right? I'm not seen that
-> behavior on the Kernel tree.
-> Check my previous suggestion, it should be something similar to what is
-> been done while you select the MSI/MSI-X interrupt to trigger.
+-- Steve
 
-I believe this behavior exists in the kernel tree because the call to
-dma_request_chan_by_mask() always specifies channel zero. The user
-of pcitest has no way of specifying which one of the available dma channels
-to use.
-
->
-> > Also, pci-epf-test grabs the dma channel at bind time and holds on to it
-> > until unloaded. This denies the use of the dma channel to others on the
-> > endpoint side. However, it seems possible to grab and release the dma
-> > channel only for the duration of each read, write, or copy test. These are
-> > improvements that can come over time. It is great that pci-epf-test was
-> > recently updated to include support for dma operations which makes such
-> > improvements possible.
->
-> Check my previous suggestion. I think by having a timeout for the DMA
-> operation we can provide a way to release the dma channel.
-> Or we could provide some kind of heart beat, once again through some
-> register in a BAR.
-
-I believe this behavior exists in the kernel tree because the call to
-dma_request_chan_by_mask() happens during the execution of
-pci_epf_test_bind() and the call to dma_release_channel() happens
-during the execution of pci_epf_test_unbind(). As long as pci-epf-test
-is bound, I cannot use another program such as dmatest from the
-endpoint-side command prompt to exercise the same channel.
-
-What I was suggesting is perhaps pci-epf-test can be modified to
-acquire and release the channel on each call to pci_epf_test_read(),
-...write(), or ...copy() when the pcitest user specifies -D option.
-
->
-> > > Relative to the implementation of the options 3 and 4, I wonder if the
-> > > linked list memory space and size could be set through the DT or by the
-> > > configfs available on the pci-epf-test driver.
-> > >
-> >
-> > Although these options could be set through DT or by configfs, another
-> > option is to enable the user of pcitest to specify such parameters on
-> > the command line when invoking each test from the host side.
->
-> That would be an easy and quick solution, but so far as I know there is a
-> movement in the Kernel to avoid any configuration through module
-> parameters. So I'm afraid that you have to choose by DT or configfs
-> strategy. Kishon can help you on this matter, by telling you what he
-> prefers.
-
-Thanks for that reminder. I will check before getting too invested in a
-specific implementation. Just to clarify, I was suggesting giving the
-user of pcitest a way to specify which one of the available dma channel to
-use on each invocation of pcitest, not what dma channels are available on
-the endpoint side. I assumed the strategy for which dma channels do
-become present and available on endpoint would be by DT or configfs.
-
->
-> Regards,
-> Gustavo
->
->
