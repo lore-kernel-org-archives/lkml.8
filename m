@@ -2,105 +2,150 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73404C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:09:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 240E9C3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:09:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 559832166E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:09:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFB7020737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:09:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586956180;
+	bh=usCuz3f0ItfdSJWnll6ILELC7QQ1rmL2dQtqXuMyAy4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=EunwPiEmdNYoiSHdIOxeBmB27u1E1wXjCKhJcNUHN7q+dp/ZBMof6/5S96bRJjb2A
+	 aQzXuyWxtw2Gs8UTafMU9eSziaBGIv8m9zulWGnI8p2zVUBfhDSJsuHjUd0VP9jfzu
+	 4qpowpKhc69CaFaP4qYd4RuOKl9c447d8AVENeF4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730986AbgDONJX (ORCPT
+        id S2504328AbgDONJi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:09:23 -0400
-Received: from esa1.mentor.iphmx.com ([68.232.129.153]:10713 "EHLO
-        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730996AbgDONIy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 09:08:54 -0400
-IronPort-SDR: 6k2uFKYTgrJE0rhzjuRkpiJvuqgCWkuP7DCmMFrEkYZOaSoZqNwvgLqaRLl6+jxfOgjmQngmUR
- XhxbBICcQjqxiwiYElZ8YuRw7VRqSs5fWKEeQy3rvZLoMUNOsoWFIvJcgnWP4TAZwUBkrhRts8
- TiUyymwPgyawCFHrCv5Ct7HWPUW4PIeDvctokaPojl7gzfFu5C7jYFKf2l1TNPLJht8GWbepOi
- qlg6uJB6vTejRYnHsUds5o1+DpqJV7IoFCcYx1BQ+4XkONifbvj7gdhXZ+wSPquiyXJ9sYBklE
- B7k=
-X-IronPort-AV: E=Sophos;i="5.72,386,1580803200"; 
-   d="scan'208";a="49774491"
-Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa1.mentor.iphmx.com with ESMTP; 15 Apr 2020 05:08:39 -0800
-IronPort-SDR: Y5LAQRItYnmMOn+DC8fv4yqie+YpKzOr+dWbCm+EKPE654a2TpX2guXwd4cB9WW/MCLh0d+iUY
- BsB6XlVT70qdLBaCLeEYHRwjYjgBe3eIWVv8YIRhU9NjrQ/w3+xt5MQ0ltBSrpexPxctv5g/MD
- ovOH9jODJaeC87HMj2+75S657YDnNIWlkshO1TmXod+gkzejCwOoNMfklbwSNVOv1j7mHVIWUt
- LBA3bu7dBRUkvLi+U2GCBJ6RSSHY292pdULSFYiBo3veTcvtcazDamY2AiW4aXvFoQ/PKhZDzC
- 5ew=
-Subject: Re: [PATCH v10 18/55] Input: atmel_mxt_ts: Rename mxt_hw_version_show
- to hw_version_show
-To:     Dmitry Osipenko <digetx@gmail.com>, <nick@shmanahar.org>,
-        <dmitry.torokhov@gmail.com>, <jikos@kernel.org>,
-        <benjamin.tissoires@redhat.com>, <bsz@semihalf.com>
-CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>
-References: <20200331105051.58896-1-jiada_wang@mentor.com>
- <20200331105051.58896-19-jiada_wang@mentor.com>
- <aae29974-7a8f-404b-b115-59416021ff61@gmail.com>
-From:   "Wang, Jiada" <jiada_wang@mentor.com>
-Message-ID: <620a300b-4aa4-efe6-20e4-4f44fd9a3fd0@mentor.com>
-Date:   Wed, 15 Apr 2020 22:08:34 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 15 Apr 2020 09:09:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54800 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2897083AbgDOLfs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:35:48 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4280B2168B;
+        Wed, 15 Apr 2020 11:35:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586950548;
+        bh=usCuz3f0ItfdSJWnll6ILELC7QQ1rmL2dQtqXuMyAy4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=UYFODH4SSlnE9pdMuSPSJLnk25+ORNaFlscyCQBh/+nKkAAr9VLT4hnDme7o8h0Kl
+         CEfDmQ2qFR9bnFHK5U6kfrM1Uss7WbeQzo7sgbT6+kf4PrIqPKZL1oRvc/nhn6B3QG
+         ZoPbTu6Iz7MWqf28UsT9Oz5McoZEQKTLaEJ268ZY=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Ilie Halip <ilie.halip@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 5.6 054/129] powerpc/maple: Fix declaration made after definition
+Date:   Wed, 15 Apr 2020 07:33:29 -0400
+Message-Id: <20200415113445.11881-54-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
+References: <20200415113445.11881-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <aae29974-7a8f-404b-b115-59416021ff61@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SVR-ORW-MBX-06.mgc.mentorg.com (147.34.90.206) To
- svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-On 2020/04/11 6:46, Dmitry Osipenko wrote:
-> 31.03.2020 13:50, Jiada Wang пишет:
->> Rename mxt_hw_version_show to hw_version_show to address checkpatch warning
->>
->> Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
->> ---
->>   drivers/input/touchscreen/atmel_mxt_ts.c | 6 +++---
->>   1 file changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
->> index b2a37a9597f3..cec823de4096 100644
->> --- a/drivers/input/touchscreen/atmel_mxt_ts.c
->> +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
->> @@ -3114,8 +3114,8 @@ static ssize_t fw_version_show(struct device *dev,
->>   }
->>   
->>   /* Hardware Version is returned as FamilyID.VariantID */
->> -static ssize_t mxt_hw_version_show(struct device *dev,
->> -				   struct device_attribute *attr, char *buf)
->> +static ssize_t hw_version_show(struct device *dev,
->> +			       struct device_attribute *attr, char *buf)
->>   {
->>   	struct mxt_data *data = dev_get_drvdata(dev);
->>   	struct mxt_info *info = data->info;
->> @@ -3404,7 +3404,7 @@ static const struct attribute_group mxt_fw_attr_group = {
->>   };
->>   
->>   static DEVICE_ATTR_RO(fw_version);
->> -static DEVICE_ATTR(hw_version, S_IRUGO, mxt_hw_version_show, NULL);
->> +static DEVICE_ATTR_RO(hw_version);
->>   static DEVICE_ATTR(object, S_IRUGO, mxt_object_show, NULL);
-> 
-> What about to add a patch to convert the mxt_object_show to
-> DEVICE_ATTR_RO(object_show)?
-> 
-sure, mxt_object, is the last attr not using DEVICE_ATTR_[RO|WO|RW],
-I will add another commit to update in next version
+[ Upstream commit af6cf95c4d003fccd6c2ecc99a598fb854b537e7 ]
 
-Thanks,
-Jiada
+When building ppc64 defconfig, Clang errors (trimmed for brevity):
+
+  arch/powerpc/platforms/maple/setup.c:365:1: error: attribute declaration
+  must precede definition [-Werror,-Wignored-attributes]
+  machine_device_initcall(maple, maple_cpc925_edac_setup);
+  ^
+
+machine_device_initcall expands to __define_machine_initcall, which in
+turn has the macro machine_is used in it, which declares mach_##name
+with an __attribute__((weak)). define_machine actually defines
+mach_##name, which in this file happens before the declaration, hence
+the warning.
+
+To fix this, move define_machine after machine_device_initcall so that
+the declaration occurs before the definition, which matches how
+machine_device_initcall and define_machine work throughout
+arch/powerpc.
+
+While we're here, remove some spaces before tabs.
+
+Fixes: 8f101a051ef0 ("edac: cpc925 MC platform device setup")
+Reported-by: Nick Desaulniers <ndesaulniers@google.com>
+Suggested-by: Ilie Halip <ilie.halip@gmail.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200323222729.15365-1-natechancellor@gmail.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/powerpc/platforms/maple/setup.c | 34 ++++++++++++++--------------
+ 1 file changed, 17 insertions(+), 17 deletions(-)
+
+diff --git a/arch/powerpc/platforms/maple/setup.c b/arch/powerpc/platforms/maple/setup.c
+index 6f019df37916f..15b2c6eb506d0 100644
+--- a/arch/powerpc/platforms/maple/setup.c
++++ b/arch/powerpc/platforms/maple/setup.c
+@@ -291,23 +291,6 @@ static int __init maple_probe(void)
+ 	return 1;
+ }
+ 
+-define_machine(maple) {
+-	.name			= "Maple",
+-	.probe			= maple_probe,
+-	.setup_arch		= maple_setup_arch,
+-	.init_IRQ		= maple_init_IRQ,
+-	.pci_irq_fixup		= maple_pci_irq_fixup,
+-	.pci_get_legacy_ide_irq	= maple_pci_get_legacy_ide_irq,
+-	.restart		= maple_restart,
+-	.halt			= maple_halt,
+-       	.get_boot_time		= maple_get_boot_time,
+-       	.set_rtc_time		= maple_set_rtc_time,
+-       	.get_rtc_time		= maple_get_rtc_time,
+-      	.calibrate_decr		= generic_calibrate_decr,
+-	.progress		= maple_progress,
+-	.power_save		= power4_idle,
+-};
+-
+ #ifdef CONFIG_EDAC
+ /*
+  * Register a platform device for CPC925 memory controller on
+@@ -364,3 +347,20 @@ static int __init maple_cpc925_edac_setup(void)
+ }
+ machine_device_initcall(maple, maple_cpc925_edac_setup);
+ #endif
++
++define_machine(maple) {
++	.name			= "Maple",
++	.probe			= maple_probe,
++	.setup_arch		= maple_setup_arch,
++	.init_IRQ		= maple_init_IRQ,
++	.pci_irq_fixup		= maple_pci_irq_fixup,
++	.pci_get_legacy_ide_irq	= maple_pci_get_legacy_ide_irq,
++	.restart		= maple_restart,
++	.halt			= maple_halt,
++	.get_boot_time		= maple_get_boot_time,
++	.set_rtc_time		= maple_set_rtc_time,
++	.get_rtc_time		= maple_get_rtc_time,
++	.calibrate_decr		= generic_calibrate_decr,
++	.progress		= maple_progress,
++	.power_save		= power4_idle,
++};
+-- 
+2.20.1
+
