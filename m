@@ -2,153 +2,141 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07DADC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:39:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 995E5C3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:39:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3D632076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:39:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 734672076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:39:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586961582;
-	bh=axJPNZ7WZDGG6/J9PCfgqTnSvKOyCRftQQJWdVCdoY4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=g0WfJ/lL85lqrDCpsV86DrOj0nioQmvKi7mgHGAsczsdO1EMZZ/2ERjBY0kIpy8HU
-	 F0hIWnreDMv+HtOOP396my6SzSKamgyHj19WQIbbcvlvAgQQfvr3CtPoxqqnfNJhEQ
-	 5Co9OHp2d36VrkDXhrZS4WYjYl1NflHgvIfihmrE=
+	s=default; t=1586961593;
+	bh=23W1yG2qd23ktTEijZVV4o1Pn9RiSi+sd+ontuQcaUo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=0tOwHIptmQlyCP5PS0G9S4ju9bXtf+Qh74MuX9SZILzeX9rN5pTnSya4sp6ctWAs3
+	 CiItsdGud4EJOZMK7/BiR4uFXI7XoHKItlyNT/YtpO575fY1JsEhMZ3WuLp2B/F4uF
+	 dy9tQyXRZahE41prR1fGjZnnZMf7fAfd9lE0SPMI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2636706AbgDOOjY (ORCPT
-        <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:39:24 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42785 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2634473AbgDOOh6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 10:37:58 -0400
-Received: by mail-wr1-f67.google.com with SMTP id j2so76318wrs.9;
-        Wed, 15 Apr 2020 07:37:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JFQ6OPmr3bYT6YpSGJ9844rrkbuCT3rhKovZKEMdYh0=;
-        b=qiyQlCkYPCtZHfLm/XKHhyDVdnPhtNbb9u63GDkyLnVXVN+nM4VKCjMwJUz/HEOTvB
-         y3TGzt93sSujI093P5rQPzgCD50TClpTTLqeZQbODnMPas+p5PyMgNfbB5A2131KZ4X1
-         bImA9UUvW5tIf0JoeVq63aAyT8t4vj2Z56t0+zY3p4G4L2IBykwG+WWcoBzkNPpcHsiH
-         Kv4wWsMv6TMoEVpHGvCPpSncMQYEcGbbh6V6HaAM8DcUJxnBmHXAEfon2AD8bfZmQtLi
-         otGje7/IAzHXp0i04LuhZNNLA1WJZGuIBvSuceMprYTAFxwqFORCUgQ8eKlNRjaU6Rfg
-         Eg+Q==
-X-Gm-Message-State: AGi0PuZH7DHRAm5/KX8nu1z+mUTZ8wURAqgotg/b4fBOUVYL2Vb65PWs
-        fdTIO/6q1bWvz9ihhYdW0xk=
-X-Google-Smtp-Source: APiQypJMJJT5Xdg+uQJVYoi7gV4Bgvt7rTcXwzNbFzINw6ITI4fwZ4N2Aq2ucU2Xm7enL/b+GekA1A==
-X-Received: by 2002:a5d:4106:: with SMTP id l6mr1527916wrp.111.1586961474756;
-        Wed, 15 Apr 2020 07:37:54 -0700 (PDT)
-Received: from debian (44.142.6.51.dyn.plus.net. [51.6.142.44])
-        by smtp.gmail.com with ESMTPSA id u16sm23302758wro.23.2020.04.15.07.37.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2020 07:37:54 -0700 (PDT)
-Date:   Wed, 15 Apr 2020 15:37:52 +0100
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "K . Y . Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org
-Subject: Re: [PATCH][next] drivers: hv: remove redundant assignment to
- pointer primary_channel
-Message-ID: <20200415143752.cm3xbesiuksfdbzm@debian>
-References: <20200414152343.243166-1-colin.king@canonical.com>
- <87d08axb7k.fsf@vitty.brq.redhat.com>
- <606c442c-1923-77d4-c350-e06878172c44@canonical.com>
- <87wo6hvxkz.fsf@vitty.brq.redhat.com>
+        id S370812AbgDOOjv (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 10:39:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45448 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2394081AbgDOOdD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 10:33:03 -0400
+Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 989B821D7F;
+        Wed, 15 Apr 2020 14:32:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586961171;
+        bh=23W1yG2qd23ktTEijZVV4o1Pn9RiSi+sd+ontuQcaUo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=d/6Ky7ulpaMQzAvg6L1uWqpqwxH1ebX+25NRicM8wfSkZivdFaRd3rqI4zkp7pxtN
+         eUUGumB8pAiNPQoY9tOGNR+gaL41mvffwk3TH4RiGaRce/zuapmqpGag+vQmmAcG/Z
+         dONKFtid4G8rVbhAe5CGmG6IBZsqeVlNjttMakXc=
+Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
+        (envelope-from <mchehab@kernel.org>)
+        id 1jOj5t-006kPR-QP; Wed, 15 Apr 2020 16:32:49 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH 22/34] docs: filesystems: rename path-lookup.txt file
+Date:   Wed, 15 Apr 2020 16:32:35 +0200
+Message-Id: <ddee231f968fcf8a9558ff39f251fdd7b2357ff2.1586960617.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.25.2
+In-Reply-To: <cover.1586960617.git.mchehab+huawei@kernel.org>
+References: <cover.1586960617.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87wo6hvxkz.fsf@vitty.brq.redhat.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 12:43:08PM +0200, Vitaly Kuznetsov wrote:
-> Colin Ian King <colin.king@canonical.com> writes:
-> 
-> > On 14/04/2020 17:51, Vitaly Kuznetsov wrote:
-> >> Colin King <colin.king@canonical.com> writes:
-> >> 
-> >>> From: Colin Ian King <colin.king@canonical.com>
-> >>>
-> >>> The pointer primary_channel is being assigned with a value that is never,
-> >>> The assignment is redundant and can be removed.
-> >>>
-> >>> Addresses-Coverity: ("Unused value")
-> >>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> >>> ---
-> >>>  drivers/hv/channel_mgmt.c | 2 --
-> >>>  1 file changed, 2 deletions(-)
-> >>>
-> >>> diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
-> >>> index ffd7fffa5f83..f7bbb8dc4b0f 100644
-> >>> --- a/drivers/hv/channel_mgmt.c
-> >>> +++ b/drivers/hv/channel_mgmt.c
-> >>> @@ -425,8 +425,6 @@ void hv_process_channel_removal(struct vmbus_channel *channel)
-> >>>  
-> >>>  	if (channel->primary_channel == NULL) {
-> >>>  		list_del(&channel->listentry);
-> >>> -
-> >>> -		primary_channel = channel;
-> >>>  	} else {
-> >>>  		primary_channel = channel->primary_channel;
-> >>>  		spin_lock_irqsave(&primary_channel->lock, flags);
-> >> 
-> >> If I'm looking at the right source (5.7-rc1) it *is* beeing used:
-> >> 
-> >> 	if (channel->primary_channel == NULL) {
-> >> 		list_del(&channel->listentry);
-> >> 
-> >> 		primary_channel = channel;
-> >> 	} else {
-> >> 		primary_channel = channel->primary_channel;
-> >> 		spin_lock_irqsave(&primary_channel->lock, flags);
-> >> 		list_del(&channel->sc_list);
-> >> 		spin_unlock_irqrestore(&primary_channel->lock, flags);
-> >> 	}
-> >> 
-> >> 	/*
-> >> 	 * We need to free the bit for init_vp_index() to work in the case
-> >> 	 * of sub-channel, when we reload drivers like hv_netvsc.
-> >> 	 */
-> >> 	if (channel->affinity_policy == HV_LOCALIZED)
-> >> 		cpumask_clear_cpu(channel->target_cpu,
-> >> 				  &primary_channel->alloced_cpus_in_node);
-> >>                                    ^^^^^ HERE ^^^^^
-> >> 
-> >
-> > I was basing my change on linux-next that has removed a hunk of code:
-> >
-> > commit bcefa400900739310e8ef0cb34cbe029c404455c
-> > Author: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-> > Date:   Mon Apr 6 02:15:11 2020 +0200
-> >
-> >     Drivers: hv: vmbus: Remove the unused HV_LOCALIZED channel affinity
-> > logic
-> >
-> 
-> Ah, please add the right 'Fixes:' tag then.
+There are two files called "patch-lookup", with different contents:
+one is a ReST file, the other one is the text.
 
-I don't think the Fixes tag is particularly useful in this instance.
-Andrea's commit is not yet in Linus' tree. If I rebase hyper-next over
-the next 2.5 months the tag is going to have a stale commit hash in it.
+As we'll be finishing the conversion of filesystem documents,
+let's fist rename the text one, in order to avoid messing with
+the existing ReST file.
 
-Wei.
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ .../filesystems/{path-lookup.txt => path-walking.txt}       | 0
+ Documentation/filesystems/porting.rst                       | 2 +-
+ fs/dcache.c                                                 | 6 +++---
+ fs/namei.c                                                  | 2 +-
+ 4 files changed, 5 insertions(+), 5 deletions(-)
+ rename Documentation/filesystems/{path-lookup.txt => path-walking.txt} (100%)
 
-> 
-> -- 
-> Vitaly
-> 
+diff --git a/Documentation/filesystems/path-lookup.txt b/Documentation/filesystems/path-walking.txt
+similarity index 100%
+rename from Documentation/filesystems/path-lookup.txt
+rename to Documentation/filesystems/path-walking.txt
+diff --git a/Documentation/filesystems/porting.rst b/Documentation/filesystems/porting.rst
+index 26c093969573..8f7d25acf326 100644
+--- a/Documentation/filesystems/porting.rst
++++ b/Documentation/filesystems/porting.rst
+@@ -404,7 +404,7 @@ the callback.  It used to be necessary to clean it there, but not anymore
+ 
+ vfs now tries to do path walking in "rcu-walk mode", which avoids
+ atomic operations and scalability hazards on dentries and inodes (see
+-Documentation/filesystems/path-lookup.txt). d_hash and d_compare changes
++Documentation/filesystems/path-walking.txt). d_hash and d_compare changes
+ (above) are examples of the changes required to support this. For more complex
+ filesystem callbacks, the vfs drops out of rcu-walk mode before the fs call, so
+ no changes are required to the filesystem. However, this is costly and loses
+diff --git a/fs/dcache.c b/fs/dcache.c
+index b280e07e162b..cf8d5893bd0e 100644
+--- a/fs/dcache.c
++++ b/fs/dcache.c
+@@ -2191,7 +2191,7 @@ static inline bool d_same_name(const struct dentry *dentry,
+  *
+  * __d_lookup_rcu is the dcache lookup function for rcu-walk name
+  * resolution (store-free path walking) design described in
+- * Documentation/filesystems/path-lookup.txt.
++ * Documentation/filesystems/path-walking.txt.
+  *
+  * This is not to be used outside core vfs.
+  *
+@@ -2239,7 +2239,7 @@ struct dentry *__d_lookup_rcu(const struct dentry *parent,
+ 	 * false-negative result. d_lookup() protects against concurrent
+ 	 * renames using rename_lock seqlock.
+ 	 *
+-	 * See Documentation/filesystems/path-lookup.txt for more details.
++	 * See Documentation/filesystems/path-walking.txt for more details.
+ 	 */
+ 	hlist_bl_for_each_entry_rcu(dentry, node, b, d_hash) {
+ 		unsigned seq;
+@@ -2362,7 +2362,7 @@ struct dentry *__d_lookup(const struct dentry *parent, const struct qstr *name)
+ 	 * false-negative result. d_lookup() protects against concurrent
+ 	 * renames using rename_lock seqlock.
+ 	 *
+-	 * See Documentation/filesystems/path-lookup.txt for more details.
++	 * See Documentation/filesystems/path-walking.txt for more details.
+ 	 */
+ 	rcu_read_lock();
+ 	
+diff --git a/fs/namei.c b/fs/namei.c
+index a320371899cf..d1b53fea83d8 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -645,7 +645,7 @@ static bool legitimize_root(struct nameidata *nd)
+ 
+ /*
+  * Path walking has 2 modes, rcu-walk and ref-walk (see
+- * Documentation/filesystems/path-lookup.txt).  In situations when we can't
++ * Documentation/filesystems/path-walking.txt).  In situations when we can't
+  * continue in RCU mode, we attempt to drop out of rcu-walk mode and grab
+  * normal reference counts on dentries and vfsmounts to transition to ref-walk
+  * mode.  Refcounts are grabbed at the last known good point before rcu-walk
+-- 
+2.25.2
+
