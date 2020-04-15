@@ -2,98 +2,108 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE94C3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:36:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4040C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:36:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4177220656
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:36:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D4E520656
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:36:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fudan.edu.cn header.i=@fudan.edu.cn header.b="2FKqfOEK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408131AbgDOIgd (ORCPT
+        id S2408142AbgDOIgj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 04:36:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40286 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726471AbgDOIgE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 04:36:04 -0400
-Received: from mo6-p03-ob.smtp.rzone.de (mo6-p03-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5303::4])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A87FC061A10;
-        Wed, 15 Apr 2020 01:36:02 -0700 (PDT)
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1OAA2UNf2M7O2CKN9ej"
-X-RZG-CLASS-ID: mo00
-Received: from iMac.fritz.box
-        by smtp.strato.de (RZmta 46.4.0 DYNA|AUTH)
-        with ESMTPSA id 6028a2w3F8ZO0Iq
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Wed, 15 Apr 2020 10:35:24 +0200 (CEST)
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     Philipp Rossak <embed3d@gmail.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org,
-        "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH v6 05/12] ARM: DTS: omap36xx: add sgx gpu child node
-Date:   Wed, 15 Apr 2020 10:35:12 +0200
-Message-Id: <c47e1d9256392fcf69ae399558008bfe1f5b302d.1586939718.git.hns@goldelico.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1586939718.git.hns@goldelico.com>
-References: <cover.1586939718.git.hns@goldelico.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 15 Apr 2020 04:36:39 -0400
+Received: from mail.fudan.edu.cn ([202.120.224.10]:41525 "EHLO fudan.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2894643AbgDOIgG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 04:36:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fudan.edu.cn; s=dkim; h=Received:From:To:Cc:Subject:Date:
+        Message-Id; bh=VMnYF5TnPGxJ5+udwsvMtzst56MUMS4Z9fbliVTfT90=; b=2
+        FKqfOEKFliU3EL8KOJeXvxfQOqrjpFqxPhPDoo2jGJS/0xvhDEBAimJJ/UAuS5ln
+        4eQ12SqJkAT+Bq9tXbz/7Kd66NOiyS44jI7wg2KA58LWMXfKnEqUYOLyT0GhAqdU
+        //LZpjElaZSp0LZp1rVFJRoa0tGHf+utMA5VAwkc9c=
+Received: from localhost.localdomain (unknown [120.229.255.108])
+        by app1 (Coremail) with SMTP id XAUFCgCXn_9nx5Ze5XtFAA--.16484S3;
+        Wed, 15 Apr 2020 16:35:52 +0800 (CST)
+From:   Xiyu Yang <xiyuyang19@fudan.edu.cn>
+To:     Marek Lindner <mareklindner@neomailbox.ch>,
+        Simon Wunderlich <sw@simonwunderlich.de>,
+        Antonio Quartulli <a@unstable.cc>,
+        Sven Eckelmann <sven@narfation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        b.a.t.m.a.n@lists.open-mesh.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
+        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>
+Subject: [PATCH] batman-adv: Fix refcnt leak in batadv_store_throughput_override
+Date:   Wed, 15 Apr 2020 16:35:21 +0800
+Message-Id: <1586939721-69731-1-git-send-email-xiyuyang19@fudan.edu.cn>
+X-Mailer: git-send-email 2.7.4
+X-CM-TRANSID: XAUFCgCXn_9nx5Ze5XtFAA--.16484S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7Zw43KF45Cw17Cr4xtF4fKrg_yoW8GFWDpr
+        WYkwnxGr4vg3WDG3Z8t345Wa15AFsrJFWUGFWrCr15urs3GwnYyryrtFyYgF1UAayrKw1v
+        gF4avFZxAFyDCFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU9K14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26rxl
+        6s0DM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+        0DM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
+        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8Jw
+        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAG
+        YxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxkIecxEwVAFwVW8ZwCF04k20xvY0x0EwIxGrw
+        CFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE
+        14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2
+        IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxK
+        x2IYs7xG6Fyj6rWUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14
+        v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUYmhFUUUUU
+X-CM-SenderInfo: irzsiiysuqikmy6i3vldqovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-and add interrupt.
+batadv_show_throughput_override() invokes batadv_hardif_get_by_netdev(),
+which gets a batadv_hard_iface object from net_dev with increased refcnt
+and its reference is assigned to a local pointer 'hard_iface'.
 
-Tested-by: H. Nikolaus Schaller <hns@goldelico.com> # GTA04, BeagleBoard XM
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+When batadv_store_throughput_override() returns, "hard_iface" becomes
+invalid, so the refcount should be decreased to keep refcount balanced.
+
+The issue happens in one error path of
+batadv_store_throughput_override(). When batadv_parse_throughput()
+returns NULL, the refcnt increased by batadv_hardif_get_by_netdev() is
+not decreased, causing a refcnt leak.
+
+Fix this issue by jumping to "out" label when batadv_parse_throughput()
+returns NULL.
+
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
 ---
- arch/arm/boot/dts/omap36xx.dtsi | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ net/batman-adv/sysfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/omap36xx.dtsi b/arch/arm/boot/dts/omap36xx.dtsi
-index 71f3c8f1f924..b308dbb3b1bb 100644
---- a/arch/arm/boot/dts/omap36xx.dtsi
-+++ b/arch/arm/boot/dts/omap36xx.dtsi
-@@ -211,10 +211,11 @@ sgx_module: target-module@50000000 {
- 			#size-cells = <1>;
- 			ranges = <0 0x50000000 0x2000000>;
+diff --git a/net/batman-adv/sysfs.c b/net/batman-adv/sysfs.c
+index c45962d8527b..97736696d042 100644
+--- a/net/batman-adv/sysfs.c
++++ b/net/batman-adv/sysfs.c
+@@ -1150,7 +1150,7 @@ static ssize_t batadv_store_throughput_override(struct kobject *kobj,
+ 	ret = batadv_parse_throughput(net_dev, buff, "throughput_override",
+ 				      &tp_override);
+ 	if (!ret)
+-		return count;
++		goto out;
  
--			/*
--			 * Closed source PowerVR driver, no child device
--			 * binding or driver in mainline
--			 */
-+			gpu: gpu@0 {
-+				compatible = "ti,omap3-sgx530-125", "img,sgx530-125", "img,sgx530";
-+				reg = <0x0 0x10000>;	/* 64kB */
-+				interrupts = <21>;
-+			};
- 		};
- 	};
- 
+ 	old_tp_override = atomic_read(&hard_iface->bat_v.throughput_override);
+ 	if (old_tp_override == tp_override)
 -- 
-2.25.1
+2.7.4
 
