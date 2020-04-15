@@ -2,148 +2,71 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD65CC3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:43:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46367C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:45:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB38D20787
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:43:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586979796;
-	bh=C7hZgIRoKst4X+y/++GrHJwRRSQ7OvedPg60SJqboFk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BUJ/+HIJw9+NeWTmIkyas2QSNvzbWVHrCZUG2PUseAq9XRBt4cp3t6RXdy3oYh7aj
-	 /l147r5V9F0J64CCuFBetXD9VYPmG4oYyhmGsl76X3GkaFxWmWcL4Nbh/C0BHqWTdB
-	 taoCHfqfLxwR4l6feJ2FPT2KcodNhB+BgM4q5eHM=
+	by mail.kernel.org (Postfix) with ESMTP id 085F220784
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:45:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ElslmzG2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441841AbgDOTnP (ORCPT
+        id S2441853AbgDOTpj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 15:43:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36352 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441830AbgDOTnM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 15:43:12 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 15 Apr 2020 15:45:39 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:54263 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2441830AbgDOTph (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 15:45:37 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586979937; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=ibbsr5ypXdlwHeDCbyU70XBfIzXR6KVFiTZ4QWWPCL0=; b=ElslmzG2UGJm9f5T/g6oMXFnPVdUzcc1sXKOAn52d0e2vNzVqIPxX5tApU+YDIWBq5GVNP/D
+ xgOvQDxXuI1iTDdF+PAWd30332CqFBAeLUwU4D3sJBGtC6kojItfbDkqEe+X9IIkt/hUSuhJ
+ UBtqzHMIFGMWNf/4i+FK8WiWLLQ=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e976457.7f8fb8566fb8-smtp-out-n05;
+ Wed, 15 Apr 2020 19:45:27 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 999E3C44788; Wed, 15 Apr 2020 19:45:26 +0000 (UTC)
+Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2EAFD2076D;
-        Wed, 15 Apr 2020 19:43:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586979791;
-        bh=C7hZgIRoKst4X+y/++GrHJwRRSQ7OvedPg60SJqboFk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GFRqC/O0DuUglBIAyPY/lyaMAN3dod1/uybVd3q53qYLQJx/5KvR5i22UFFkA+BiV
-         vMuPLC0kcjVlZJE/HgVqyENMCHe78GIcXGN8cnI0CU83YTL7oNe8xwMK+hjckDvUjC
-         sA/HB3EF+zX9ap0MIHe2X2qf8nuqIrf+RCJyXSWk=
-Date:   Wed, 15 Apr 2020 20:43:06 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v3 05/12] arm64: csum: Disable KASAN for do_csum()
-Message-ID: <20200415194305.GB21804@willie-the-truck>
-References: <20200415165218.20251-1-will@kernel.org>
- <20200415165218.20251-6-will@kernel.org>
- <20200415172813.GA2272@lakrids.cambridge.arm.com>
- <CAK8P3a0x10bCQMC=iGm+fU2G1Vc=Zo-4yjaX4Jwso6rgazVzYw@mail.gmail.com>
+        (Authenticated sender: ilina)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E8595C433CB;
+        Wed, 15 Apr 2020 19:45:25 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E8595C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
+Date:   Wed, 15 Apr 2020 13:45:25 -0600
+From:   Lina Iyer <ilina@codeaurora.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH] soc: qcom: cmd-db: Use 5 digits for printing address
+Message-ID: <20200415194525.GA3469@codeaurora.org>
+References: <20200415192916.78339-1-swboyd@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <CAK8P3a0x10bCQMC=iGm+fU2G1Vc=Zo-4yjaX4Jwso6rgazVzYw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200415192916.78339-1-swboyd@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 08:42:16PM +0200, Arnd Bergmann wrote:
-> On Wed, Apr 15, 2020 at 7:28 PM Mark Rutland <mark.rutland@arm.com> wrote:
-> > On Wed, Apr 15, 2020 at 05:52:11PM +0100, Will Deacon wrote:
-> > > do_csum() over-reads the source buffer and therefore abuses
-> > > READ_ONCE_NOCHECK() to avoid tripping up KASAN. In preparation for
-> > > READ_ONCE_NOCHECK() becoming a macro, and therefore losing its
-> > > '__no_sanitize_address' annotation, just annotate do_csum() explicitly
-> > > and fall back to normal loads.
-> >
-> > I'm confused by this. The whole point of READ_ONCE_NOCHECK() is that it
-> > isn't checked by KASAN, so if that semantic is removed it has no reason
-> > to exist.
-> >
-> > Changing that will break the unwind/stacktrace code across multiple
-> > architectures. IIRC they use READ_ONCE_NOCHECK() for two reasons:
-> >
-> > 1. Races with concurrent modification, as might happen when a thread's
-> >    stack is corrupted. Allowing the unwinder to bail out after a sanity
-> >    check means the resulting report is more useful than a KASAN splat in
-> >    the unwinder. I made the arm64 unwinder robust to this case.
-> >
-> > 2. I believe that the frame record itself /might/ be poisoned by KASAN,
-> >    since it's not meant to be an accessible object at the C langauge
-> >    level. I could be wrong about this, and would have to check.
-> 
-> I thought the main reason was deadlocks when a READ_ONCE()
-> is called inside of code that is part of the KASAN handling. If
-> READ_ONCE() ends up recursively calling itself, the kernel
-> tends to crash once it overflows its stack.
-
-That was also my understanding.
-
-> > I would like to keep the unwinding robust in the first case, even if the
-> > second case doesn't apply, and I'd prefer to not mark the entirety of
-> > the unwinding code as unchecked as that's sufficiently large an subtle
-> > that it could have nasty bugs.
-> >
-> > Is there any way we keep something like READ_ONCE_NOCHECK() around even
-> > if we have to give it reduced functionality relative to READ_ONCE()?
-> >
-> > I'm not enirely sure why READ_ONCE_NOCHECK() had to go, so if there's a
-> > particular pain point I'm happy to take a look.
-> 
-> As I understood, only this particular instance was removed, not all of
-> them.
-
-Right, but the problem is that whether the NOCHECK version gets checked
-or not now depends on the caller, since it's all just a macro. If we want
-to fix this, then we could force the nocheck variant to return unsigned
-long, which simplifies things a lot (completely untested):
-
-
-#define READ_ONCE(x)							\
-({									\
-	compiletime_assert_rwonce_type(x);				\
-	__READ_ONCE_SCALAR(x);						\
-})
-
-unsigned long __no_sanitise_address
-kasan_nocheck_read_once_ul(const volatile void *p)
-{
-	return READ_ONCE(*p);
-}
-
-/* Please don't use this */
-#define READ_ONCE_NOCHECK(x)	kasan_nocheck_read_once_ul(&x)
-
-
-which would make sense for the unwinders, where there is concurrency
-involved, but I'd be inclined to have them call kasan_nocheck_read_once_ul()
-directly and ditch READ_ONCE_NOCHECK() so that it doesn't get used for
-single-threaded code as a convenience to avoid annotation.
-
-What do you think?
-
-Will
+On Wed, Apr 15 2020 at 13:29 -0600, Stephen Boyd wrote:
+>The top few bits aren't relevant to pad out because they're always zero.
+>Let's just print 5 digits instead of 8 so that it's a little shorter and
+>more readable.
+>
+>Suggested-by: Lina Iyer <ilina@codeaurora.org>
+>Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+Reviewed-by: Lina Iyer <ilina@codeaurora.org>
