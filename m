@@ -7,125 +7,99 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AABEEC3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:14:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F12FBC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:14:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BC02206F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:14:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEA3B206F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:14:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586952880;
-	bh=uM8RYOThTOAePXpnhO/MjXiLuve+HcAfoAQLYud7kjg=;
+	s=default; t=1586952888;
+	bh=b/TqOdEtQ+XNOsrJtl1sQtvU/rN02AIBhTgnLenIEYM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nxGWRUji09nZ2wcL5AAIBY0w+DEkcar/YPcqWFKtcBQ/ziZ9AYSGQkK3dn65RC6YO
-	 811Wk9Pd7U1SRsh1EZFGHk7yYlGY3fQ7Y3Xkdprnd4istj7ChQIMo/JWQuJXex+S1O
-	 9zeBq48mlLC0Ab517QCVw+cRnla4xHF2LAJ2fBx8=
+	b=uPKdLH1bRt7404RVD7nueK2ocBUzMC9DDvMsXFmlRcd/6RiW37jJY1HIsnbTkIvrv
+	 vd+hMRZO9YptzhGLXS0Bb+iz1yvUVLis1fuMEsmq8sivS6RpteVTk3+dSYrTDF6rfs
+	 GBWXggmodgqaz6y9+c29z6HHDilPohm8x/VEcnl8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409316AbgDOLqm (ORCPT
-        <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:46:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34052 "EHLO mail.kernel.org"
+        id S368691AbgDOMOr (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:14:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897485AbgDOLmj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:42:39 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S2898112AbgDOMNF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 08:13:05 -0400
+Received: from tleilax.com (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E93E20768;
-        Wed, 15 Apr 2020 11:42:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4EDB20857;
+        Wed, 15 Apr 2020 12:13:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950959;
-        bh=uM8RYOThTOAePXpnhO/MjXiLuve+HcAfoAQLYud7kjg=;
+        s=default; t=1586952784;
+        bh=b/TqOdEtQ+XNOsrJtl1sQtvU/rN02AIBhTgnLenIEYM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H+DknSAtTaAAk5fNVPJxEDXVniR6vZMDMgHGU+wj/Y7IOtbB9YHdPhO0RIbFSd5pp
-         vBCYZFGcBtcpOsmtmdwL9sBebzAb4cOv8LdoBp0bJsbq1ih9cuzj2iaaEulG9ao6IJ
-         fZS4GP1Q22pA26JGv6PyiHgyTjgTZrHnb7R4JTU8=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Brian Foster <bfoster@redhat.com>, Zorro Lang <zlang@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 010/106] xfs: fix iclog release error check race with shutdown
-Date:   Wed, 15 Apr 2020 07:40:50 -0400
-Message-Id: <20200415114226.13103-10-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
-References: <20200415114226.13103-1-sashal@kernel.org>
+        b=HyNTN7wXXDKex326An012KHzZ5KzPqVogCqwxJg8dBgPFasj0NvMslf1qbiy9oZCx
+         ljyulGF7v0lR8H61GC+pDZ4FGe82FKD6HfRn3zhXRVQxG68sDZ0VEcxuuW8mZiZpaT
+         Q3Yiha+Aku40fjEzO+y+Z1HVlpBsqN6om8yWBWFw=
+From:   Jeff Layton <jlayton@kernel.org>
+To:     viro@zeniv.linux.org.uk
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org, andres@anarazel.de, willy@infradead.org,
+        dhowells@redhat.com, hch@infradead.org, jack@suse.cz,
+        akpm@linux-foundation.org, david@fromorbit.com
+Subject: [PATCH v5 2/2] buffer: record blockdev write errors in super_block that it backs
+Date:   Wed, 15 Apr 2020 08:13:00 -0400
+Message-Id: <20200415121300.228017-3-jlayton@kernel.org>
+X-Mailer: git-send-email 2.25.2
+In-Reply-To: <20200415121300.228017-1-jlayton@kernel.org>
+References: <20200415121300.228017-1-jlayton@kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Foster <bfoster@redhat.com>
+From: Jeff Layton <jlayton@redhat.com>
 
-[ Upstream commit 6b789c337a5963ae57cbc7fe9e41488c40a9b014 ]
+When syncing out a block device (a'la __sync_blockdev), any error
+encountered will only be recorded in the bd_inode's mapping. When the
+blockdev contains a filesystem however, we'd like to also record the
+error in the super_block that's stored there.
 
-Prior to commit df732b29c8 ("xfs: call xlog_state_release_iclog with
-l_icloglock held"), xlog_state_release_iclog() always performed a
-locked check of the iclog error state before proceeding into the
-sync state processing code. As of this commit, part of
-xlog_state_release_iclog() was open-coded into
-xfs_log_release_iclog() and as a result the locked error state check
-was lost.
+Make mark_buffer_write_io_error also record the error in the
+corresponding super_block when a writeback error occurs and the block
+device contains a mounted superblock.
 
-The lockless check still exists, but this doesn't account for the
-possibility of a race with a shutdown being performed by another
-task causing the iclog state to change while the original task waits
-on ->l_icloglock. This has reproduced very rarely via generic/475
-and manifests as an assert failure in __xlog_state_release_iclog()
-due to an unexpected iclog state.
+Since superblocks are RCU freed, hold the rcu_read_lock to ensure
+that the superblock doesn't go away while we're marking it.
 
-Restore the locked error state check in xlog_state_release_iclog()
-to ensure that an iclog state update via shutdown doesn't race with
-the iclog release state processing code.
-
-Fixes: df732b29c807 ("xfs: call xlog_state_release_iclog with l_icloglock held")
-Reported-by: Zorro Lang <zlang@redhat.com>
-Signed-off-by: Brian Foster <bfoster@redhat.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/xfs/xfs_log.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ fs/buffer.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
-index f6006d94a581e..796ff37d5bb5b 100644
---- a/fs/xfs/xfs_log.c
-+++ b/fs/xfs/xfs_log.c
-@@ -605,18 +605,23 @@ xfs_log_release_iclog(
- 	struct xlog		*log = mp->m_log;
- 	bool			sync;
+diff --git a/fs/buffer.c b/fs/buffer.c
+index f73276d746bb..2a4a5cc20418 100644
+--- a/fs/buffer.c
++++ b/fs/buffer.c
+@@ -1154,12 +1154,19 @@ EXPORT_SYMBOL(mark_buffer_dirty);
  
--	if (iclog->ic_state == XLOG_STATE_IOERROR) {
--		xfs_force_shutdown(mp, SHUTDOWN_LOG_IO_ERROR);
--		return -EIO;
--	}
-+	if (iclog->ic_state == XLOG_STATE_IOERROR)
-+		goto error;
- 
- 	if (atomic_dec_and_lock(&iclog->ic_refcnt, &log->l_icloglock)) {
-+		if (iclog->ic_state == XLOG_STATE_IOERROR) {
-+			spin_unlock(&log->l_icloglock);
-+			goto error;
-+		}
- 		sync = __xlog_state_release_iclog(log, iclog);
- 		spin_unlock(&log->l_icloglock);
- 		if (sync)
- 			xlog_sync(log, iclog);
- 	}
- 	return 0;
-+error:
-+	xfs_force_shutdown(mp, SHUTDOWN_LOG_IO_ERROR);
-+	return -EIO;
+ void mark_buffer_write_io_error(struct buffer_head *bh)
+ {
++	struct super_block *sb;
++
+ 	set_buffer_write_io_error(bh);
+ 	/* FIXME: do we need to set this in both places? */
+ 	if (bh->b_page && bh->b_page->mapping)
+ 		mapping_set_error(bh->b_page->mapping, -EIO);
+ 	if (bh->b_assoc_map)
+ 		mapping_set_error(bh->b_assoc_map, -EIO);
++	rcu_read_lock();
++	sb = bh->b_bdev->bd_super;
++	if (sb)
++		errseq_set(&sb->s_wb_err, -EIO);
++	rcu_read_unlock();
  }
+ EXPORT_SYMBOL(mark_buffer_write_io_error);
  
- /*
 -- 
-2.20.1
+2.25.2
 
