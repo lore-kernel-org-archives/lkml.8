@@ -2,210 +2,258 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C42BC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC55DC3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:41:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E536520737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:41:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6A4420737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:41:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gUpoSEeb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408534AbgDOKlc (ORCPT
+        id S2393897AbgDOKlv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 06:41:32 -0400
-Received: from mx.sdf.org ([205.166.94.20]:55862 "EHLO mx.sdf.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406608AbgDOKlI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 06:41:08 -0400
-Received: from sdf.org (IDENT:lkml@faeroes.freeshell.org [205.166.94.9])
-        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id 03FAewKx008805
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits) verified NO);
-        Wed, 15 Apr 2020 10:40:58 GMT
-Received: (from lkml@localhost)
-        by sdf.org (8.15.2/8.12.8/Submit) id 03FAevoY025706;
-        Wed, 15 Apr 2020 10:40:57 GMT
-Date:   Wed, 15 Apr 2020 10:40:57 +0000
-From:   George Spelvin <lkml@SDF.ORG>
-To:     "Theodore Ts'o" <tytso@mit.edu>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     Andy Lutomirski <luto@kernel.org>, linux-kernel@vger.kernel.org,
-        lkml@sdf.org
-Subject: Additional get_random_* ideas
-Message-ID: <20200415104057.GA13003@SDF.ORG>
+        Wed, 15 Apr 2020 06:41:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57234 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2408536AbgDOKYU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 06:24:20 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05838C061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 03:24:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=D67l6ZrBlbjgqm81fdLUU6QzODyFsUdr+ktwMeHypO4=; b=gUpoSEebGSj3l7vjKUnUekc+RV
+        0l5beNce78Gpg6mslD2nRFNhy0MTORuiFP9mnrQ0GIeALgKaazntpCPBLrF78SB0FOdD+lx90FWFc
+        PbgfCdLmH05zIm/8qvAmOXpTvEHDukwh6rruhMm9lC7w1u8FPHTt5xW9bzXMvW92XPXGKbwFrJXcQ
+        sbw9Xptahk90YIG8aAIjBo3EebbQyRe3HfNY3DRcoCNkh2j8lhwDzpPigNbPs1Cw47ovTB7WtiB2O
+        yzMXR6tPlHZvFBl/5PUqkF7Ws2V0Lzu0hMuBJzWFvOh9ooKFTP0fhMuyW4lt5K/Y3qKyfNPq3sQuY
+        Ahwjwttg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jOfCp-0007KT-GR; Wed, 15 Apr 2020 10:23:43 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 73A223006E0;
+        Wed, 15 Apr 2020 12:23:40 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 5DB3B2BC6F2DD; Wed, 15 Apr 2020 12:23:40 +0200 (CEST)
+Date:   Wed, 15 Apr 2020 12:23:40 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     CodyYao-oc <CodyYao-oc@zhaoxin.com>
+Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, tglx@linutronix.de, bp@alien8.de,
+        x86@kernel.org, hpa@zytor.com, linux-kernel@vger.kernel.org,
+        cooperyan@zhaoxin.com, codyyao@zhaoxin.com
+Subject: Re: [PATCH] x86/perf: Add hardware performance events support for
+ Zhaoxin CPU.
+Message-ID: <20200415102340.GB20730@hirez.programming.kicks-ass.net>
+References: <1586747669-4827-1-git-send-email-CodyYao-oc@zhaoxin.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline; filename=m
+Content-Disposition: inline
+In-Reply-To: <1586747669-4827-1-git-send-email-CodyYao-oc@zhaoxin.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I've done a bunch of hacking on get_random_uXX, and I recently
-thought of another possible way to reduce its cost.  I'd like to
-ask for some second opinions on whether it's worth pursuing.
+On Mon, Apr 13, 2020 at 11:14:29AM +0800, CodyYao-oc wrote:
+> Zhaoxin CPU has provided facilities for monitoring performance
+> via PMU(Performance Monitor Unit), but the functionality is unused so far.
+> Therefore, add support for zhaoxin pmu to make performance related
+> hardware events available.
+> 
+> Signed-off-by: CodyYao-oc <CodyYao-oc@zhaoxin.com>
+> Reported-by: kbuild test robot <lkp@intel.com>
 
-It takes around 1716 cycles to perform a chacha_block_generic()
-operation (without SSE) on my machine.  That's 3.35 cycles per bit,
-so reducing the number of bits consumed per output is worth something.
+What's that reported-by thing? Did the robot complain you didn't have a
+PMU implementation?
 
-It's not too difficult to extend my technique for merging the u32 and
-u64 batch pools into one that can return an arbitrary number of bits.  
-This has a secondary benefit of merging a lot of duplicate code in 
-get_random_u32() and get_random_u64().
+Anyway, I've made the below changes to the patch.
 
-There are a few direct applications for this (several places in the 
-infiniband code want 24 bits), and get_random_max() can ask for an
-appropriate number of bits.
-
-I've worked out the math for the most efficient way to generate random 
-numbers in an arbitrary range.  E.g. to generate a number uniformly 
-distributed mod 5, we can generate 3 random bits and retry with 
-probability 3/8 (expected # of bits = 3 * 8/5 = 4.8), or 4 random bits and 
-retry with probability 1/16 (expected # of bits 4 * 16/15 = 4.266).  
-Generating 7 random bits and retrying with probability 3/128 is not worth 
-it (expected # of bits 7 * 128/125 = 7.168), but increasing the cost per 
-attempt to account for other overhead might change that.
-
-(Of course, this level of fine-tuning is only practical when the range
-is a compile-time constant.  I have yet to figure out how much
-is worth doing with non-constant ranges,)
-
-I've also worked out that Lemire's multiplicative method can ignore extra 
-low-order bits in the input random number.  If we want to use 12 bits to 
-generate a random number mod K, use 32 bits to generate a random number 
-mod K << (32 - 12), then shift the result right 32 - 12 = 20 bits.  The 
-final output depends only on the high 12 bits of the random input.
-
-
-Anyway, the core function looks like this.  Any opinions on whether this
-is worth pursuing?
-
-#define CHACHA_BIT_SIZE (CHACHA_BLOCK_SIZE * 8)
-#define LONG_AT(base,offset) *(unsigned long *)((void *)(base) + (offset))
-/*
- * Return an unsigned long, with the most significant nbits holding
- * batched entropy.  The lsbits must be ignored, and must NOT be leaked.
- *
- * (This odd convention turns out to be convenient for both
- * get_random_bits() and get_random_max().  It's unfortunately
- * not convenient for get_random_u32().)
- *
- * This uses an XOR trick to read from an arbitrary bit position in the
- * batch buffer.  A fresh random bit is defined as one uncorrelated with
- * anything except the (carefully-guarded) ChaCha key.  Once a fresh
- * bit is output, it becomes stale, and we assume an attacker knows
- * it completely.
- *
- * If *either* X or Y are fresh random bits, then X^Y is a fresh random
- * bit.  If *both* X and Y are fresh random bits, then after disclosing
- * X^Y, one of X and Y is stale, but not both.
- *
- * If X is fresh, then X^Y is fresh, X is now stale, and Y is unchanged.
- * If X is stale, then X^Y is fresh, and Y is now stale.
- *
- * Now apply this 64x across two words.  The first word (X) is consumed
- * msbit-first, so consists of 1..64 stale msbits. followed by 0..63
- * fresh lsbits.  The second word Y is all fresh.
- *
- * To get n bits, we XOR that word with the following (all-fresh) word,
- * and rotate the result left by the number of stale bits in X, so that
- * the fresh bits in X start at bit 63.  To the right of the fresh bits
- * in X are the stale msbits, XORed with the fresh msbits of Y.
- *
- * The result is 64 fresh bits, but the accounting assumes the lsbits past
- * the requested number will not be exposed, so remain fresh.
- *
- * The one exception occurs if X is the last word in the batch buffer,
- * and the number of bits required is not enough to warrant refilling.
- * In that case, Y is the stale word past the end of the buffer
- * (containing the ChaCha sequence number), but the returnd msbits are
- * all fresh because they've been XORed with the fresh lsbits of X.
- */
-unsigned long __get_random_bits(unsigned nbits)
-{
-	unsigned long flags, ret;
-	unsigned pos;	/* Bit offset in entropy array */
-	size_t offset;	/* Byte offset */
-	struct batched_entropy *batch;
-	static void *previous;
-
-	WARN_ON(nbits > BITS_PER_LONG);
-
-	warn_unseeded_randomness(&previous);
-
-	local_irq_save(flags);	/* Disables preemption */
-	batch = this_cpu_ptr(&batched_entropy);
-	pos = batch->position;
-	if (unlikely(batch->crng_init != crng_init)) {
-		batch->seqno = raw_smp_processor_id() + 1;
-		batch->crng_init = crng_init;
-		pos = CHACHA_BIT_SIZE - 1;
-	}
-	/* Convert to byte offset and round down to previous word */
-	offset = pos / 8 & -sizeof(ret);
-	/* First word, 0..63 lsbits fresh */
-	ret = LONG_AT(batch->entropy8, offset);
-	offset += sizeof(ret);
-	pos += nbits;
-	batch->position = pos & (CHACHA_BIT_SIZE - 1);
-	/* GCC optimizes assuming <=10% taken, true if avg nbits <= 51 */
-	if (unlikely(pos >= CHACHA_BIT_SIZE)) {
-		batch_refill(batch);
-		offset = 0;
-	}
-	/* Second word, all-fresh (with one exception described above) */
-	ret ^= LONG_AT(batch->entropy8, offset);
-	local_irq_restore(flags);
-
-	/* Rotate to msbits */
-	pos &= BITS_PER_LONG - 1;
-	return ret << pos | ret >> (BITS_PER_LONG - pos);
-}
-EXPORT_SYMBOL(__get_random_bits);
-
-/**
- * get_random_bits() - Return some strong random bits
- * @nbits:	The number of bits to return (1 <= @nbits <= %BITS_PER_LONG)
- *
- * This is cryptographically secure, but significantly faster than
- * get_random_bytes() because it generates output in laarge batches and
- * divides it up as required.
- *
- * This requires omitting backtracking protection.  For most applications
- * of secure random numbers, this is ...FIXME: Keep writing...
- *
- * Context: Any context except NMI as long as crng_ready() is true.
- *          Does not sleep.
- * Return: A random value between 0 and 1ul << @nbits - 1.
- *         The valus is cryptographically secure, but not backtrack-
- *         resistant; if you need a value to remain secret after
- *	   memxero_explicit(), use get_random_bytes().
- */
-unsigned long get_random_bits(unsigned nbits)
-{
-	return __get_random_bits(nbits) >> (BITS_PER_LONG - nbits);
-}
-EXPORT_SYMBOL(get_random_bits);
-
-u32 get_random_u32(void)
-{
-	return __get_random_bits(32) >> (BITS_PER_LONG - 32);
-}
-EXPORT_SYMBOL(get_random_u32);
-
-u64 get_random_u64(void)
-{
-#if BITS_PER_LONG == 64
-	return __get_random_bits(64);
-#elif BITS_PER_LONG == 32
-	/*
-	 * This is inefficient, but get_random_u64() is rarely used
-	 * on 32-bit machines.
-	 */
-	return (u64)__get_random_bits(32) << 32 | __get_random_bits(32);
-#endif
-}
-EXPORT_SYMBOL(get_random_u64);
-
+---
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -618,6 +618,7 @@ struct x86_pmu {
+ 
+ 	/* PMI handler bits */
+ 	unsigned int	late_ack		:1,
++			enabled_ack		:1,
+ 			counter_freezing	:1;
+ 	/*
+ 	 * sysfs attrs
+--- a/arch/x86/events/zhaoxin/core.c
++++ b/arch/x86/events/zhaoxin/core.c
+@@ -357,10 +357,9 @@ static int zhaoxin_pmu_handle_irq(struct
+ {
+ 	struct perf_sample_data data;
+ 	struct cpu_hw_events *cpuc;
+-	int bit;
+-	u64 status;
+-	bool is_zxc = false;
+ 	int handled = 0;
++	u64 status;
++	int bit;
+ 
+ 	cpuc = this_cpu_ptr(&cpu_hw_events);
+ 	apic_write(APIC_LVTPC, APIC_DM_NMI);
+@@ -369,14 +368,8 @@ static int zhaoxin_pmu_handle_irq(struct
+ 	if (!status)
+ 		goto done;
+ 
+-	if (boot_cpu_data.x86 == 0x06 &&
+-		(boot_cpu_data.x86_model == 0x0f ||
+-			boot_cpu_data.x86_model == 0x19))
+-		is_zxc = true;
+ again:
+-
+-	/*Clearing status works only if the global control is enable on zxc.*/
+-	if (is_zxc)
++	if (x86_pmu.enabled_ack)
+ 		zxc_pmu_ack_status(status);
+ 	else
+ 		zhaoxin_pmu_ack_status(status);
+@@ -504,12 +497,10 @@ static __init void zhaoxin_arch_events_q
+ 	int bit;
+ 
+ 	/* disable event that reported as not presend by cpuid */
+-	for_each_set_bit(bit, x86_pmu.events_mask,
+-			ARRAY_SIZE(zx_arch_events_map)) {
+-
++	for_each_set_bit(bit, x86_pmu.events_mask, ARRAY_SIZE(zx_arch_events_map)) {
+ 		zx_pmon_event_map[zx_arch_events_map[bit].id] = 0;
+ 		pr_warn("CPUID marked event: \'%s\' unavailable\n",
+-				zx_arch_events_map[bit].name);
++			zx_arch_events_map[bit].name);
+ 	}
+ }
+ 
+@@ -534,12 +525,12 @@ __init int zhaoxin_pmu_init(void)
+ 		return -ENODEV;
+ 
+ 	version = eax.split.version_id;
+-	if (version == 2) {
+-		x86_pmu = zhaoxin_pmu;
+-		pr_info("Version check pass!\n");
+-	} else
++	if (version != 2)
+ 		return -ENODEV;
+ 
++	x86_pmu = zhaoxin_pmu;
++	pr_info("Version check pass!\n");
++
+ 	x86_pmu.version			= version;
+ 	x86_pmu.num_counters		= eax.split.num_counters;
+ 	x86_pmu.cntval_bits		= eax.split.bit_width;
+@@ -552,11 +543,13 @@ __init int zhaoxin_pmu_init(void)
+ 
+ 	switch (boot_cpu_data.x86) {
+ 	case 0x06:
+-		if (boot_cpu_data.x86_model == 0x0f ||
+-			boot_cpu_data.x86_model == 0x19) {
++		if (boot_cpu_data.x86_model == 0x0f || boot_cpu_data.x86_model == 0x19) {
+ 
+ 			x86_pmu.max_period = x86_pmu.cntval_mask >> 1;
+ 
++			/* Clearing status works only if the global control is enable on zxc. */
++			x86_pmu.enabled_ack = 1;
++
+ 			x86_pmu.event_constraints = zxc_event_constraints;
+ 			zx_pmon_event_map[PERF_COUNT_HW_INSTRUCTIONS] = 0;
+ 			zx_pmon_event_map[PERF_COUNT_HW_CACHE_REFERENCES] = 0;
+@@ -564,40 +557,37 @@ __init int zhaoxin_pmu_init(void)
+ 			zx_pmon_event_map[PERF_COUNT_HW_BUS_CYCLES] = 0;
+ 
+ 			pr_cont("ZXC events, ");
+-		} else
+-			return -ENODEV;
+-		break;
++			break;
++		}
++		return -ENODEV;
++
+ 	case 0x07:
+ 		zx_pmon_event_map[PERF_COUNT_HW_STALLED_CYCLES_FRONTEND] =
+-		X86_CONFIG(.event = 0x01, .umask = 0x01, .inv = 0x01, .cmask = 0x01);
++			X86_CONFIG(.event = 0x01, .umask = 0x01, .inv = 0x01, .cmask = 0x01);
+ 
+ 		zx_pmon_event_map[PERF_COUNT_HW_STALLED_CYCLES_BACKEND] =
+-		X86_CONFIG(.event = 0x0f, .umask = 0x04, .inv = 0, .cmask = 0);
++			X86_CONFIG(.event = 0x0f, .umask = 0x04, .inv = 0, .cmask = 0);
+ 
+ 		switch (boot_cpu_data.x86_model) {
+ 		case 0x1b:
+ 			memcpy(hw_cache_event_ids, zxd_hw_cache_event_ids,
+-				sizeof(hw_cache_event_ids));
++			       sizeof(hw_cache_event_ids));
+ 
+ 			x86_pmu.event_constraints = zxd_event_constraints;
+ 
+-			zx_pmon_event_map[PERF_COUNT_HW_BRANCH_INSTRUCTIONS]
+-				= 0x0700;
+-			zx_pmon_event_map[PERF_COUNT_HW_BRANCH_MISSES]
+-				= 0x0709;
++			zx_pmon_event_map[PERF_COUNT_HW_BRANCH_INSTRUCTIONS] = 0x0700;
++			zx_pmon_event_map[PERF_COUNT_HW_BRANCH_MISSES] = 0x0709;
+ 
+ 			pr_cont("ZXD events, ");
+ 			break;
+ 		case 0x3b:
+ 			memcpy(hw_cache_event_ids, zxe_hw_cache_event_ids,
+-				sizeof(hw_cache_event_ids));
++			       sizeof(hw_cache_event_ids));
+ 
+ 			x86_pmu.event_constraints = zxd_event_constraints;
+ 
+-			zx_pmon_event_map[PERF_COUNT_HW_BRANCH_INSTRUCTIONS]
+-				= 0x0028;
+-			zx_pmon_event_map[PERF_COUNT_HW_BRANCH_MISSES]
+-				= 0x0029;
++			zx_pmon_event_map[PERF_COUNT_HW_BRANCH_INSTRUCTIONS] = 0x0028;
++			zx_pmon_event_map[PERF_COUNT_HW_BRANCH_MISSES] = 0x0029;
+ 
+ 			pr_cont("ZXE events, ");
+ 			break;
+@@ -605,13 +595,13 @@ __init int zhaoxin_pmu_init(void)
+ 			return -ENODEV;
+ 		}
+ 		break;
++
+ 	default:
+ 		return -ENODEV;
+ 	}
+ 
+ 	x86_pmu.intel_ctrl = (1 << (x86_pmu.num_counters)) - 1;
+-	x86_pmu.intel_ctrl |=
+-		((1LL << x86_pmu.num_counters_fixed)-1) << INTEL_PMC_IDX_FIXED;
++	x86_pmu.intel_ctrl |= ((1LL << x86_pmu.num_counters_fixed)-1) << INTEL_PMC_IDX_FIXED;
+ 
+ 	if (x86_pmu.event_constraints) {
+ 		for_each_event_constraint(c, x86_pmu.event_constraints) {
+--- a/arch/x86/kernel/cpu/perfctr-watchdog.c
++++ b/arch/x86/kernel/cpu/perfctr-watchdog.c
+@@ -63,6 +63,7 @@ static inline unsigned int nmi_perfctr_m
+ 		case 15:
+ 			return msr - MSR_P4_BPU_PERFCTR0;
+ 		}
++		fallthrough;
+ 	case X86_VENDOR_ZHAOXIN:
+ 	case X86_VENDOR_CENTAUR:
+ 		return msr - MSR_ARCH_PERFMON_PERFCTR0;
+@@ -95,6 +96,7 @@ static inline unsigned int nmi_evntsel_m
+ 		case 15:
+ 			return msr - MSR_P4_BSU_ESCR0;
+ 		}
++		fallthrough;
+ 	case X86_VENDOR_ZHAOXIN:
+ 	case X86_VENDOR_CENTAUR:
+ 		return msr - MSR_ARCH_PERFMON_EVENTSEL0;
