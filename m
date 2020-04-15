@@ -2,133 +2,99 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAE67C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:49:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE63C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:51:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2C352072D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:49:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C65392072D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:51:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393004AbgDOCts (ORCPT
+        id S2393015AbgDOCvV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 22:49:48 -0400
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:47065 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728305AbgDOCtl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 22:49:41 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0Tva366D_1586918970;
-Received: from 30.27.118.45(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0Tva366D_1586918970)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 15 Apr 2020 10:49:30 +0800
-Subject: Re: [PATCH 0/2] support to read and tune appraise mode in runtime
-To:     Mimi Zohar <zohar@linux.ibm.com>, dmitry.kasatkin@gmail.com,
-        jmorris@namei.org, serge@hallyn.com, zhangliguang@linux.alibaba.com
-Cc:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Nayna Jain <nayna@linux.ibm.com>
-References: <20200409033907.102833-1-tianjia.zhang@linux.alibaba.com>
- <1586814958.7311.92.camel@linux.ibm.com>
- <a767d0e0-6c57-254a-3c95-f78026e80c1d@linux.alibaba.com>
- <1586871674.7311.189.camel@linux.ibm.com>
-From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Message-ID: <8afd9d82-b957-2be9-6132-411d28fa80dc@linux.alibaba.com>
-Date:   Wed, 15 Apr 2020 10:49:30 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 14 Apr 2020 22:51:21 -0400
+Received: from mga01.intel.com ([192.55.52.88]:1607 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730346AbgDOCvH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 22:51:07 -0400
+IronPort-SDR: FDcLjSRNUQGMlO6tN1lEKPA4uyVIi972AacZmK5IA6iTWQrx0EkB5TQYCDfkYhCmsWKUgNXIaV
+ m7AWqx+rWx1A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 19:51:05 -0700
+IronPort-SDR: 5lXNmwCXudgWW8KsmxKVXjnbctzEfYwxrspNAggrcqJvmWIEruLwb4wz1c845I4voEH0SJWFnK
+ 884hRA6oncJw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,385,1580803200"; 
+   d="scan'208";a="272027224"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga008.jf.intel.com with ESMTP; 14 Apr 2020 19:51:05 -0700
+Date:   Tue, 14 Apr 2020 19:51:05 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jon Cargille <jcargill@google.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Eric Northup <digitaleric@gmail.com>,
+        Eric Northup <digitaleric@google.com>
+Subject: Re: [PATCH 1/1] KVM: pass through CPUID(0x80000006)
+Message-ID: <20200415025105.GE12547@linux.intel.com>
+References: <20200415012320.236065-1-jcargill@google.com>
+ <20200415023726.GD12547@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <1586871674.7311.189.camel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200415023726.GD12547@linux.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Apr 14, 2020 at 07:37:26PM -0700, Sean Christopherson wrote:
+> On Tue, Apr 14, 2020 at 06:23:20PM -0700, Jon Cargille wrote:
+> > From: Eric Northup <digitaleric@gmail.com>
+> > 
+> > Return L2 cache and TLB information to guests.
+> > They could have been set before, but the defaults that KVM returns will be
+> > necessary for usermode that doesn't supply their own CPUID tables.
+> 
+> I don't follow the changelog.  The code makes sense, but I don't understand
+> the justification.  This only affects KVM_GET_SUPPORTED_CPUID, i.e. what's
+> advertised to userspace, it doesn't directly change CPUID emulation in any
+> way.  The "They could have been set before" blurb is especially confusing.
+> 
+> I assume you want to say something like:
+> 
+>   Return the host's L2 cache and TLB information for CPUID.0x80000006
+>   instead of zeroing out the entry as part of KVM_GET_SUPPORTED_CPUID.
+>   This allows a userspace VMM to feed KVM_GET_SUPPORTED_CPUID's output
+>   directly into KVM_SET_CPUID2 (without breaking the guest).
+> 
+> > Signed-off-by: Eric Northup <digitaleric@google.com>
+> > Signed-off-by: Eric Northup <digitaleric@gmail.com>
+> > Signed-off-by: Jon Cargille <jcargill@google.com>
+> > Signed-off-by: Jim Mattson <jmattson@google.com>
+> 
+> Jim's tag is unnecessary, unless he was a middleman between Eric and Jon,
+> in which case Jim's tag should also come between Eric's and Jon's.
+> 
+> Only one of Eric's signoffs is needed (the one that matches the From: tag,
+> i.e. is the official author).  I'm guessing Google would prefer the author
+> to be the @google.com address.
 
+Ah, Eric's @google.com mail bounced.  Maybe do:
 
-On 2020/4/14 21:41, Mimi Zohar wrote:
-> On Tue, 2020-04-14 at 11:36 +0800, Tianjia Zhang wrote:
->>
->> On 2020/4/14 5:55, Mimi Zohar wrote:
->>> On Thu, 2020-04-09 at 11:39 +0800, Tianjia Zhang wrote:
->>>> Support the read and write operations of ima_appraise by adding a
->>>> securifyfs file 'appraise_mode'.
->>>>
->>>> In order to tune appraise mode in runtime, writing a PKCS#7 signature
->>>> corresponding the signed content is required. The content should be off,
->>>> enforce, log or fix. Given a simple way to archive this:
->>>>
->>>> $ echo -n off > mode
->>>> $ openssl smime -sign -nocerts -noattr -binary \
->>>>       -in mode -inkey <system_trusted_key> \
->>>>       -signer <cert> -outform der -out mode.p7s
->>>> $ sudo cat mode.p7s \
->>>>       > /sys/kernel/security/ima/appraise_mode
->>>>
->>>> Note that the signing key must be a trust key located in
->>>> system trusted keyring. So even the root privilege cannot
->>>> simply disable the enforcement.
->>>
->>> There are major problems with disabling IMA appraisal.  This patch set
->>> proposes disabling IMA appraisal without even providing the motivation
->>> for such support.
->>>
->>> A lot of effort went into preventing custom IMA policies from
->>> disabling appraising the kexec or kernel module signatures.  In
->>> addition, the "lockdown" patch set was upstreamed permitting IMA
->>> signature verification.  This patch set would break both of these
->>> features.
->>>
->>> IMA relies on its own keyring for verifying file signatures, not the
->>> builtin or secondary trusted kernel keyrings.
->>>
->>> Two methods already exist - xattr and appended signatures - for
->>> verifying file signatures.  This patch set assumes creating and
->>> signing a file, which is then written to a securityfs file.  Like for
->>> loading a custom IMA policy, instead of cat'ing the file, write the
->>> pathname to the securityfs file.
->>>
->>> If you must define a new IMA method for verifying file signatures,
->>> then it needs to be generic and added to ima_appraise_measurement().
->>>    (Refer to the new IMA appended signature support.)
->>>
->>> Mimi
->>>
->>>>
->>>> Tianjia Zhang (2):
->>>>     ima: support to read appraise mode
->>>>     ima: support to tune appraise mode in runtime
->>>>
->>>>    security/integrity/ima/ima_fs.c | 134 +++++++++++++++++++++++++++++++-
->>>>    1 file changed, 133 insertions(+), 1 deletion(-)
->>>>
->>
->> Thanks for your suggestion, the way to close the appraise mode here is
->> indeed a bit rude, I will reconsider again according to your suggestions.
->>
->> In addition, [PATCH 1/2] ima: support to read appraise mode, by the way,
->> see if this patch is acceptable.
-> 
-> My comments were not meant as suggestions, but as an explanation as to
-> how IMA works.  More details follow.
-> 
-> IMA is based on policy.  That decision was made a long time ago.  It
-> allowed distros to configure IMA, allowing customers to experiment
-> with it.  You have one opportunity to totally change the boot time
-> policy rules, by loading a custom policy.  After that, rules may only
-> be added.
-> 
-> There is no valid reason for "turning off" the policy once it has been
-> enabled.  It breaks existing expectations.
-> 
-> Mimi
-> 
+  Signed-off-by: Eric Northup (Google) <digitaleric@gmail.com>
 
-Thank you very much for your explanation. I'm sorry I may not have 
-stated clearly. I didn't have to change the working mode of IMA. I was 
-convinced by you to give up the idea of "turn off" the appraise. 
-However, it should be possible to support appraise mode reading. Right?
+to clarify the work was done for Google without having a double signoff
+and/or a dead email.
