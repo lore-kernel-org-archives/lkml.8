@@ -2,140 +2,232 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB9BC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 06:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF3AEC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 06:41:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6546E206F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 06:40:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAFF0206F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 06:41:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pDd/QED2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634938AbgDOGkf (ORCPT
+        id S2393580AbgDOGlK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 02:40:35 -0400
-Received: from foss.arm.com ([217.140.110.172]:38190 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2634919AbgDOGkb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 02:40:31 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1FC971042;
-        Tue, 14 Apr 2020 23:40:31 -0700 (PDT)
-Received: from p8cg001049571a15.arm.com (unknown [10.163.1.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 14A233F73D;
-        Tue, 14 Apr 2020 23:44:37 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org
-Cc:     akpm@linux-foundation.org, catalin.marinas@arm.com,
-        will@kernel.com, mark.rutland@arm.com,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Steve Capper <steve.capper@arm.com>,
-        David Hildenbrand <david@redhat.com>,
+        Wed, 15 Apr 2020 02:41:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50604 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728535AbgDOGlF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 02:41:05 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18F17C061A0C;
+        Tue, 14 Apr 2020 23:41:05 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id b11so6308418wrs.6;
+        Tue, 14 Apr 2020 23:41:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=cc:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=U8TwIdyAMHCGD65LcfsNv1dps+LWQzXnmih7ivW+iwI=;
+        b=pDd/QED2TjetbLunJPMXoJonJRZrJ9PY4pKrJxtGfFhUQWq2acuHke6HxvRkSjpd9F
+         h0rRzz/7dvTAycclwpyau9aCA4yO2DRi+KrIJ7DYl0IaQNStADb56kYbJ8GHzOefaJ/b
+         RmFQKM/nbg9//76cwBBBObTY1D7fvGaAl4V++tLkc1tt86whilA/VF2pn6f1HvnX2KKv
+         m1DJr1yNHzL+EhEGlwDJNyeNbMAIwBuCj1KrE/m/nVaqu+UqbQd4RNDo4lFw6k0v0pkz
+         wFoX8/AoGjbQxkv3oeV/lIoVUsKei7nB6NODKkxVwyowDb2mtT4Ze4YeJZRwOD2uho/M
+         MNAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=U8TwIdyAMHCGD65LcfsNv1dps+LWQzXnmih7ivW+iwI=;
+        b=Dt3Udn4DfEZtuD2/0EUXudPy5SBE+0/OHFhYpnzXpGfH4sG1hP24+DqI2+5CNc5Fbk
+         oF8MnHH4H6n7ycS0ZHcfIUXrGlafWEYh3X15yOlSdaYEP+j4V98iIxg9JUXMg5ldnAPg
+         Rt8bJ9qCpeYhEMLki0ng1OwgZURUNk0f1txYqGM4FeKzxpoS0shuAW4u6ZPCTUlBmYPd
+         E7gGQTZH4XXjcX0PHIedn8JOlJJfTzBzebG1xnqsB5o7wjGBHvfDyfFexTjSfgMDyUwt
+         2o+Q+NYSheB02Hl33kxrTvK47RmN7IHEg6yYxid/YWKA34OLJ3pp5mXiLfkiZwHL9QBq
+         sX9A==
+X-Gm-Message-State: AGi0PuZD/jTGCuy1kYc8IfnXeQroXIQt3px9BBRaJ9r1ST3/kaBc9KsD
+        HOsRUmJ+PZHnHsx9oylsC6GX9XQl
+X-Google-Smtp-Source: APiQypIiSa36qQuryvRFPHZAb38Da+CxzjLHqJcBCMrYhcRW5R4YE/nbUJMgIa7p+dEAhJp+TGQyeQ==
+X-Received: by 2002:adf:b1d0:: with SMTP id r16mr6958136wra.312.1586932863432;
+        Tue, 14 Apr 2020 23:41:03 -0700 (PDT)
+Received: from ?IPv6:2001:a61:2482:101:3351:6160:8173:cc31? ([2001:a61:2482:101:3351:6160:8173:cc31])
+        by smtp.gmail.com with ESMTPSA id 91sm8073740wra.37.2020.04.14.23.41.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Apr 2020 23:41:02 -0700 (PDT)
+Cc:     mtk.manpages@gmail.com, "Michael S . Tsirkin" <mst@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-api@vger.kernel.org,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Deacon <will@kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
         Yu Zhao <yuzhao@google.com>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] arm64/hotplug: Process MEM_OFFLINE and MEM_CANCEL_OFFLINE
-Date:   Wed, 15 Apr 2020 12:09:44 +0530
-Message-Id: <1586932784-16315-3-git-send-email-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1586932784-16315-1-git-send-email-anshuman.khandual@arm.com>
-References: <1586932784-16315-1-git-send-email-anshuman.khandual@arm.com>
+        Jesse Barnes <jsbarnes@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        linux-man@vger.kernel.org
+Subject: Re: [PATCH v7] mremap.2: Add information for MREMAP_DONTUNMAP.
+To:     Brian Geffon <bgeffon@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20200221174248.244748-1-bgeffon@google.com>
+ <20200221174248.244748-3-bgeffon@google.com>
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Message-ID: <b5a4c54d-c358-7b54-c038-c79185330742@gmail.com>
+Date:   Wed, 15 Apr 2020 08:40:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <20200221174248.244748-3-bgeffon@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Process MEM_OFFLINE and MEM_CANCEL_OFFLINE memory events to intercept any
-possible error conditions during memory offline operation. This includes if
-boot memory still got offlined even after an expilicit notifier failure or
-if non-boot memory got declined for an offline request. This help improve
-memory notifier robustness while also enhancing debug capabilities during
-various potential memory offlining error conditions.
+Hello Brian,
 
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Steve Capper <steve.capper@arm.com>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Yu Zhao <yuzhao@google.com>
-Cc: Hsin-Yi Wang <hsinyi@chromium.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
- arch/arm64/mm/mmu.c | 52 ++++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 47 insertions(+), 5 deletions(-)
+I see that MREMAP_DONTUNMAP has been merged. Thanks for the 
+patch below.
 
-diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-index a374e4f51a62..48c71d8a29b2 100644
---- a/arch/arm64/mm/mmu.c
-+++ b/arch/arm64/mm/mmu.c
-@@ -1422,13 +1422,55 @@ static int prevent_bootmem_remove_notifier(struct notifier_block *nb,
- 	unsigned long end_pfn = arg->start_pfn + arg->nr_pages;
- 	unsigned long pfn = arg->start_pfn;
- 
--	if (action != MEM_GOING_OFFLINE)
-+	if ((action != MEM_GOING_OFFLINE) && (action != MEM_OFFLINE) &&
-+		(action != MEM_CANCEL_OFFLINE))
- 		return NOTIFY_OK;
- 
--	for (; pfn < end_pfn; pfn += PAGES_PER_SECTION) {
--		ms = __pfn_to_section(pfn);
--		if (early_section(ms))
--			return NOTIFY_BAD;
-+	if (action == MEM_GOING_OFFLINE) {
-+		for (; pfn < end_pfn; pfn += PAGES_PER_SECTION) {
-+			ms = __pfn_to_section(pfn);
-+			if (early_section(ms)) {
-+				pr_warn("Boot memory offlining attempted\n");
-+				return NOTIFY_BAD;
-+			}
-+		}
-+	} else if (action == MEM_OFFLINE) {
-+		for (; pfn < end_pfn; pfn += PAGES_PER_SECTION) {
-+			ms = __pfn_to_section(pfn);
-+			if (early_section(ms)) {
-+
-+				/*
-+				 * This should have never happened. Boot memory
-+				 * offlining should have been prevented by this
-+				 * very notifier. Probably some memory removal
-+				 * procedure might have changed which would then
-+				 * require further debug.
-+				 */
-+				pr_err("Boot memory offlined\n");
-+				return NOTIFY_BAD;
-+			}
-+		}
-+	} else if (action == MEM_CANCEL_OFFLINE) {
-+		enum offline_failure_reason reason = *(int *)arg->data;
-+
-+		if (reason != OFFLINE_FAILURE_NOTIFIER)
-+			return NOTIFY_OK;
-+
-+		for (; pfn < end_pfn; pfn += PAGES_PER_SECTION) {
-+			ms = __pfn_to_section(pfn);
-+			if (early_section(ms))
-+				return NOTIFY_OK;
-+		}
-+
-+		/*
-+		 * This should have never happened. Non boot memory
-+		 * offlining should never have been prevented from
-+		 * this notifier. Probably some memory hot removal
-+		 * procedure might have changed which would then
-+		 * require further debug.
-+		 */
-+		pr_err("Notifier declined non boot memory offlining\n");
-+		return NOTIFY_BAD;
- 	}
- 	return NOTIFY_OK;
- }
+In addition to Vlastimil's comments, could you please take a look
+at my comments below.
+
+On 2/21/20 6:42 PM, Brian Geffon wrote:
+> Signed-off-by: Brian Geffon <bgeffon@google.com>
+> ---
+>  man2/mremap.2 | 30 +++++++++++++++++++++++++++++-
+>  1 file changed, 29 insertions(+), 1 deletion(-)
+> 
+> diff --git a/man2/mremap.2 b/man2/mremap.2
+> index d73fb64fa..54ec67b20 100644
+> --- a/man2/mremap.2
+> +++ b/man2/mremap.2
+> @@ -26,7 +26,8 @@
+>  .\" 1996-04-12 Tom Bjorkholm <tomb@mydata.se>
+>  .\"            Update for Linux 1.3.87 and later
+>  .\" 2005-10-11 mtk: Added NOTES for MREMAP_FIXED; revised EINVAL text.
+> -.\"
+> +.\" 2020-02-05 Brian Geffon <bgeffon@google.com>
+> +.\"            Update for MREMAP_DONTUNMAP.
+
+No need to add this piece. This info is maintained
+via the Git log these days.
+
+>  .TH MREMAP 2 2019-03-06 "Linux" "Linux Programmer's Manual"
+>  .SH NAME
+>  mremap \- remap a virtual memory address
+> @@ -129,6 +130,13 @@ If
+>  is specified, then
+>  .B MREMAP_MAYMOVE
+>  must also be specified.
+> +.TP
+> +.BR MREMAP_DONTUNMAP " (since Linux 5.7)"
+> +This flag which must be used in conjuction with
+
+s/conjuction/conjunction/
+
+> +.B MREMAP_MAYMOVE
+> +remaps a mapping to a new address and it does not unmap the mapping at \fIold_address\fP. This flag can only be used with private anonymous mappings. Any access to the range specified at \fIold_address\fP after completion will result in a page fault. If a
+
+Please wrap source lines to no more than about 75 columns.
+Also, always start new sentences on new lines ("Semantic newlines").
+
+As a general rule, I prefer formatting to be done like this:
+
+.BR old_address .
+
+rather than:
+
+\fIold_address\fP.
+
+(Yes, I know there's plenty of existing text that goes the other
+way, but I try to avoid the \fX...\fP style for new text.
+
+Re the "Any access to the range ... will result in a page fault", I think
+it would be helpful to be more explicit. I presume that if we
+access the range at old_address the mapping is repopulated with 
+zero-filled pages, right? It would be good to note that explicitly,
+
+> +.BR userfaultfd (2)
+> +was registered on the mapping specified by \fIold_address\fP it will continue to watch that mapping for faults.
+
+(See comments above re wrapping and formatting.)
+
+Perhaps it would be nice to have a short paragraph on use cases?
+
+>  .PP
+>  If the memory segment specified by
+>  .I old_address
+> @@ -176,6 +184,8 @@ a value other than
+>  .B MREMAP_MAYMOVE
+>  or
+>  .B MREMAP_FIXED
+> +or
+> +.B MREMAP_DONTUNMAP
+>  was specified in
+>  .IR flags ;
+>  .IP *
+> @@ -197,9 +207,17 @@ and
+>  .IR old_size ;
+>  .IP *
+>  .B MREMAP_FIXED
+> +or
+> +.B MREMAP_DONTUNMAP
+>  was specified without also specifying
+>  .BR MREMAP_MAYMOVE ;
+>  .IP *
+> +.B MREMAP_DONTUNMAP
+> +was specified with an \fIold_address\fP that was not private anonymous;
+> +.IP *
+> +.B MREMAP_DONTUNMAP
+> +was specified and \fIold_size\fP was not equal to \fInew_size\fP;
+> +.IP *
+>  \fIold_size\fP was zero and \fIold_address\fP does not refer to a
+>  shareable mapping (but see BUGS);
+>  .IP *
+> @@ -209,10 +227,20 @@ flag was not specified.
+>  .RE
+>  .TP
+>  .B ENOMEM
+> +Not enough memory was available to complete the operation.
+> +Possible causes are:
+> +.RS
+> +.IP * 3
+>  The memory area cannot be expanded at the current virtual address, and the
+>  .B MREMAP_MAYMOVE
+>  flag is not set in \fIflags\fP.
+>  Or, there is not enough (virtual) memory available.
+> +.IP *
+> +.B MREMAP_DONTUNMAP
+> +was used without
+> +.B MREMAP_FIXED
+> +causing a new mapping to be created that would exceed the virtual memory available or it would exceed the maximum number of allowed mappings.
+
+(See comments above re wrapping.)
+
+> +.RE
+>  .SH CONFORMING TO
+>  This call is Linux-specific, and should not be used in programs
+>  intended to be portable.
+
+
+Thanks,
+
+Michael
+
+
 -- 
-2.20.1
-
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
