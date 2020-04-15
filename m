@@ -6,42 +6,42 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC37C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:55:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20CA4C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:56:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 513552054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:55:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06AAB208FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:56:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S371090AbgDOOzu (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:55:50 -0400
-Received: from mga02.intel.com ([134.134.136.20]:41479 "EHLO mga02.intel.com"
+        id S371110AbgDOOz7 (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 10:55:59 -0400
+Received: from mga06.intel.com ([134.134.136.31]:26553 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S371073AbgDOOzn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 10:55:43 -0400
-IronPort-SDR: 8zcR+T0+NbiV+3Ql9vMDZ+f3rLFPSJI4vkNaieWxxhSNbh/yVzcYbrBAaAkWAacxtl1hLaES5m
- fjvR8rsgLBFQ==
+        id S371074AbgDOOzp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 10:55:45 -0400
+IronPort-SDR: SsMhcEu6sPyt+4EakN3jNBz2k5uALjFYU1lNLvxRftVbqacqt7x8cRQGvPEXtrsro1HlTwPYze
+ LckqKoSKCFJg==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 07:55:42 -0700
-IronPort-SDR: lkIsegztChUG2UdlulFOtxgSR/g4jjKcHx7nB01BSjRW44m2IO3pHdwiT86La/h2+gWr0MgxK3
- tfT6hoLlLgFA==
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 07:55:43 -0700
+IronPort-SDR: NC6RuC1eboeplZ+JnOdr3jKnW0YZOOCsnVqbsW5kaYxbCIljnUwqwfKZGD0z4ADbcKDWt5+s+q
+ 2w8C8bq1PRDg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,387,1580803200"; 
-   d="scan'208";a="288571249"
+   d="scan'208";a="400336903"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga002.fm.intel.com with ESMTP; 15 Apr 2020 07:55:40 -0700
+  by orsmga004.jf.intel.com with ESMTP; 15 Apr 2020 07:55:41 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 24C7149F; Wed, 15 Apr 2020 17:55:40 +0300 (EEST)
+        id 1B1FF190; Wed, 15 Apr 2020 17:55:40 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
         Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v4 2/9] x86/quirks: Add missed include to satisfy static checker
-Date:   Wed, 15 Apr 2020 17:55:17 +0300
-Message-Id: <20200415145524.31745-3-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v4 1/9] x86/platform: Rename x86/apple.h -> x86/machine.h
+Date:   Wed, 15 Apr 2020 17:55:16 +0300
+Message-Id: <20200415145524.31745-2-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200415145524.31745-1-andriy.shevchenko@linux.intel.com>
 References: <20200415145524.31745-1-andriy.shevchenko@linux.intel.com>
@@ -52,29 +52,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Static checker is not happy with
+Rename linux/platform_data/x86/apple.h to linux/platform_data/x86/machine.h
+in order to add new quirks later on. For sake of being less intrusive,
+leave former file that includes a latter one.
 
-.../kernel/quirks.c:666:6: warning: symbol 'x86_apple_machine' was not declared. Should it be static?
-
-This is due to missed inclusion. Add it to satisfy the static checker.
+While here, add include to linux/types.h due to bool type in use.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- arch/x86/kernel/quirks.c | 1 +
- 1 file changed, 1 insertion(+)
+ include/linux/platform_data/x86/apple.h   | 14 +-------------
+ include/linux/platform_data/x86/machine.h | 15 +++++++++++++++
+ 2 files changed, 16 insertions(+), 13 deletions(-)
+ create mode 100644 include/linux/platform_data/x86/machine.h
 
-diff --git a/arch/x86/kernel/quirks.c b/arch/x86/kernel/quirks.c
-index 896d74cb5081..7c054650b3a6 100644
---- a/arch/x86/kernel/quirks.c
-+++ b/arch/x86/kernel/quirks.c
-@@ -4,6 +4,7 @@
-  */
- #include <linux/dmi.h>
- #include <linux/pci.h>
+diff --git a/include/linux/platform_data/x86/apple.h b/include/linux/platform_data/x86/apple.h
+index 079e816c3c21..1fd0af6ffea9 100644
+--- a/include/linux/platform_data/x86/apple.h
++++ b/include/linux/platform_data/x86/apple.h
+@@ -1,13 +1 @@
+-#ifndef PLATFORM_DATA_X86_APPLE_H
+-#define PLATFORM_DATA_X86_APPLE_H
+-
+-#ifdef CONFIG_X86
+-/**
+- * x86_apple_machine - whether the machine is an x86 Apple Macintosh
+- */
+-extern bool x86_apple_machine;
+-#else
+-#define x86_apple_machine false
+-#endif
+-
+-#endif
 +#include <linux/platform_data/x86/machine.h>
- #include <linux/irq.h>
- 
- #include <asm/hpet.h>
+diff --git a/include/linux/platform_data/x86/machine.h b/include/linux/platform_data/x86/machine.h
+new file mode 100644
+index 000000000000..b1e7a560a046
+--- /dev/null
++++ b/include/linux/platform_data/x86/machine.h
+@@ -0,0 +1,15 @@
++#ifndef PLATFORM_DATA_X86_MACHINE_H
++#define PLATFORM_DATA_X86_MACHINE_H
++
++#include <linux/types.h>
++
++#ifdef CONFIG_X86
++/**
++ * x86_apple_machine - whether the machine is an x86 Apple Macintosh
++ */
++extern bool x86_apple_machine;
++#else
++#define x86_apple_machine			false
++#endif
++
++#endif	/* PLATFORM_DATA_X86_MACHINE_H */
 -- 
 2.25.1
 
