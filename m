@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F714C3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:39:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41DFBC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:39:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6142720737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:39:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1999220775
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:39:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586950784;
-	bh=oooFEStGUZHNuhXxGFvK4GTwAIxHao8rhtCGvyKcdGo=;
+	s=default; t=1586950794;
+	bh=ZuDZLax0A1vB86vHwIF4QBPimeLqvY8IwBXTHs8dYVQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LRKc03RUPrJQ0tViH5bBqP46Z+taQwAbnFWcj+HxIOzoC2vbOjmCWb302tzt/vD43
-	 YevJPIO9l2Fnh4gkxxav2R4W+kleXujzIJHEkn1g71kHrb4OF4A8dqd1UXThu31SH4
-	 FpBWR7shDtjGceYgcGY6NxStEJWULEwcSbzI/WO4=
+	b=ju+TcGfG0umiA0sOdoT9JtPDxSrtyTo0ucaWQuu+JgEEwNnJKXSaGrJRDttqeBdjH
+	 9oXz1GmiUSVauOOe3ULKWCo48p4Ln82iZanJR6dxmbjuY5a8Y5z5wAzJYWt3MT7GDq
+	 Zw3VFX/giTXiKsf4LGbZHnYEy7tkETFIuqrHfCW4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2897315AbgDOLjk (ORCPT
+        id S2897326AbgDOLjw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:39:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54892 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 07:39:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897042AbgDOLfU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:35:20 -0400
+        id S2897057AbgDOLfc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:35:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40F062137B;
-        Wed, 15 Apr 2020 11:35:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 772AD2076D;
+        Wed, 15 Apr 2020 11:35:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950520;
-        bh=oooFEStGUZHNuhXxGFvK4GTwAIxHao8rhtCGvyKcdGo=;
+        s=default; t=1586950532;
+        bh=ZuDZLax0A1vB86vHwIF4QBPimeLqvY8IwBXTHs8dYVQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FykJemgG7Ow3yAdZxPQBROFyykzBT2ezgS4JTid1E06/vCLBHVmknklOijkuqO6rU
-         Uk9WtWUiN1wg8Fhfq3ugcz8dcyk+c9dDsM5LU4ggMduOJR8vOz4WzjjzASxW8AAjil
-         qgg+qbBFo5uXz6RqT9kL2NHc2dHmFioVHAcrVmXg=
+        b=nPVK744Wbu9mM7vyHPB1L7P7Ga5IMBJCYDKICScm08EfTT+2FIc5/oc2RXpvbe0WU
+         tV7yZ/QBGyYdIZ4yhUUBTFioabQfnL10D1SGIHULlfFfvkKPD76EGs3cVSEPnX3AMi
+         0XTgS9pfIi1OC9JeXjtmMq+NT61t1tWP3nbNcRkY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
-        Baruch Siach <baruch@tkos.co.il>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
+Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 029/129] arm64: dts: clearfog-gt-8k: set gigabit PHY reset deassert delay
-Date:   Wed, 15 Apr 2020 07:33:04 -0400
-Message-Id: <20200415113445.11881-29-sashal@kernel.org>
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 5.6 040/129] f2fs: fix to show norecovery mount option
+Date:   Wed, 15 Apr 2020 07:33:15 -0400
+Message-Id: <20200415113445.11881-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
 References: <20200415113445.11881-1-sashal@kernel.org>
@@ -61,42 +59,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit 46f94c7818e7ab82758fca74935ef3d454340b4e ]
+[ Upstream commit a9117eca1de6b738e713d2142126db2cfbf6fb36 ]
 
-If the mv88e6xxx DSA driver is built as a module, it causes the
-ethernet driver to re-probe when it's loaded. This in turn causes
-the gigabit PHY to be momentarily reset and reprogrammed. However,
-we attempt to reprogram the PHY immediately after deasserting reset,
-and the PHY ignores the writes.
+Previously, 'norecovery' mount option will be shown as
+'disable_roll_forward', fix to show original option name correctly.
 
-This results in the PHY operating in the wrong mode, and the copper
-link states down.
-
-Set a reset deassert delay of 10ms for the gigabit PHY to avoid this.
-
-Fixes: babc5544c293 ("arm64: dts: clearfog-gt-8k: 1G eth PHY reset signal")
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Acked-by: Baruch Siach <baruch@tkos.co.il>
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts | 1 +
- 1 file changed, 1 insertion(+)
+ fs/f2fs/f2fs.h  | 1 +
+ fs/f2fs/super.c | 7 +++++--
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts b/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
-index a211a046b2f2f..b90d78a5724b2 100644
---- a/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
-+++ b/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
-@@ -367,6 +367,7 @@
- 		pinctrl-0 = <&cp0_copper_eth_phy_reset>;
- 		reset-gpios = <&cp0_gpio2 11 GPIO_ACTIVE_LOW>;
- 		reset-assert-us = <10000>;
-+		reset-deassert-us = <10000>;
- 	};
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index d39f5de114208..64caa46f0c8bd 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -100,6 +100,7 @@ extern const char *f2fs_fault_name[FAULT_MAX];
+ #define F2FS_MOUNT_INLINE_XATTR_SIZE	0x00800000
+ #define F2FS_MOUNT_RESERVE_ROOT		0x01000000
+ #define F2FS_MOUNT_DISABLE_CHECKPOINT	0x02000000
++#define F2FS_MOUNT_NORECOVERY		0x04000000
  
- 	switch0: switch0@4 {
+ #define F2FS_OPTION(sbi)	((sbi)->mount_opt)
+ #define clear_opt(sbi, option)	(F2FS_OPTION(sbi).opt &= ~F2FS_MOUNT_##option)
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 686f5402660ed..3669f060b6257 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -446,7 +446,7 @@ static int parse_options(struct super_block *sb, char *options)
+ 			break;
+ 		case Opt_norecovery:
+ 			/* this option mounts f2fs with ro */
+-			set_opt(sbi, DISABLE_ROLL_FORWARD);
++			set_opt(sbi, NORECOVERY);
+ 			if (!f2fs_readonly(sb))
+ 				return -EINVAL;
+ 			break;
+@@ -1446,6 +1446,8 @@ static int f2fs_show_options(struct seq_file *seq, struct dentry *root)
+ 	}
+ 	if (test_opt(sbi, DISABLE_ROLL_FORWARD))
+ 		seq_puts(seq, ",disable_roll_forward");
++	if (test_opt(sbi, NORECOVERY))
++		seq_puts(seq, ",norecovery");
+ 	if (test_opt(sbi, DISCARD))
+ 		seq_puts(seq, ",discard");
+ 	else
+@@ -3598,7 +3600,8 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
+ 		goto reset_checkpoint;
+ 
+ 	/* recover fsynced data */
+-	if (!test_opt(sbi, DISABLE_ROLL_FORWARD)) {
++	if (!test_opt(sbi, DISABLE_ROLL_FORWARD) &&
++			!test_opt(sbi, NORECOVERY)) {
+ 		/*
+ 		 * mount should be failed, when device has readonly mode, and
+ 		 * previous checkpoint was not done by clean system shutdown.
 -- 
 2.20.1
 
