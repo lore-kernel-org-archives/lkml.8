@@ -2,93 +2,171 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3EECC2BB55
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:02:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AED0C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 940DC21556
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:02:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31D1F21556
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:02:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586966544;
-	bh=9VkA7tg0hn4Ub8bxsko+NpXHvDg8vbTQionDdhYFFoI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BkVtBjifZlLpHUyaiIpMcc1M0STuu2rFs2nJ0i+s38+mXRVxGj16esz6+djM0zIa5
-	 Bq+0vb3yAioWMHSJaXF2MkXXLEkd3r+LsFzp6sEd2haY4pqGPNoodz/L6FBrz5neFs
-	 +tp/vmBEP471ZznyJMG0kOwZe8BqhMXHQJ3KUnsk=
+	s=default; t=1586966551;
+	bh=F5rqYV9PFe7xx1HsmWsqK7hbyCJm0A+bMEzA6UyTwv0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=DYWO+IS9iiIXnRJxHLD6RyMZtFrCejKCwd95+YlriEDo8SkM9CtoPXt0sQihFythr
+	 +FZjWNPncS5ae5EFUSXXi4dpAP5AdQqxt7+6PZjuMxCweSFh1ItEj69Bey1wSNXi4r
+	 RoxNeui65lGq5K9iMIxAROH9EO5yH3FpUPfj3/P4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406296AbgDOQCU (ORCPT
+        id S2410095AbgDOQCa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 12:02:20 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:36414 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406231AbgDOQCF (ORCPT
+        Wed, 15 Apr 2020 12:02:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53270 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2410064AbgDOQCB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 12:02:05 -0400
-Received: by mail-oi1-f195.google.com with SMTP id s202so10681966oih.3;
-        Wed, 15 Apr 2020 09:02:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=423HVimEHq5Dj2Jz8+OlR5o9pwavv3x54hJ0usDWIDw=;
-        b=UKETlWzEqDrR4nN1yD5/Sib4ZkE+hcv5iYIdCdiexTMXeBmiDvyoR+wXcNCc6u3lAO
-         2ytb2qABEbPIeS8uAvrrpcW1I+3yVZgU3mXiqK/UD0ziJeplLE33kQmKrj4MWoltLud2
-         ahKQsZT03b0TeyXrRtztkXi3cs5M5lrlxgta2r/e0qjgh3FCX+1lSZp8RviWXTkUM9lr
-         y2YggFzHnf09v6a0Ps4YYaaU2F9wCi2hvnkp6eSKkCNyapRTJdQSyL/geOfoQ87mgT3y
-         ZnD6FI8PZkqdMlhpZZHOhoePY/bQbaT0Q820z/kcvQM6ea4BDAsBROy5NAxKXgdqsZBm
-         rltQ==
-X-Gm-Message-State: AGi0PuYDCjN+1jhZCbCPCPTIKCAVFmF8lx9PebUw57KBw9J8Hlb+lube
-        KIQpPA5yQCEFHmb4u5bo1Q==
-X-Google-Smtp-Source: APiQypIC6jqygwZFVB7+DVFz/zsP66LHK3iuIMxgJKYN6XMmFSItZFVNAJ6sRzf4dgEWIgvpTYf8+g==
-X-Received: by 2002:aca:4843:: with SMTP id v64mr18834734oia.13.1586966524049;
-        Wed, 15 Apr 2020 09:02:04 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id j90sm6385763otc.21.2020.04.15.09.02.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2020 09:02:03 -0700 (PDT)
-Received: (nullmailer pid 1964 invoked by uid 1000);
-        Wed, 15 Apr 2020 16:02:02 -0000
-Date:   Wed, 15 Apr 2020 11:02:02 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
+        Wed, 15 Apr 2020 12:02:01 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E81DFC061A0C;
+        Wed, 15 Apr 2020 09:02:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description;
+        bh=lInS3yd0u5ULGdaW04d0ps6JgPraHG4nqfTF9eszVgA=; b=SuO8JeDYYwWBCoAciAdoSEwK66
+        ylvG7tjsynS3i9KsQ91jqO2s2shMqz7d0FVR9Dxu/5x9QmOyb3pWzgjIi02NBrm1Oifjc5hHCZL5a
+        uqYtqeA+YEmLT48s8/SMpQ/2ZwXVgh8SRVrIufPBPuByC9T2nFSQC3FGdn9HA9SRmSV6i6M1FyhFu
+        AzFDM3BN+fCY1hyblne6dh3j/5c4QWxtVGDQ8GXllLTZXvzHpn7weeOrwpuQc4U4c79o2QST3YUK/
+        xxtmzsTi1IiHKGoXZakhm2jfH8I9xqmGga3lscOrQL0MNer1LZ04hSR5fJ12uTbgTww3Ip/PcLtoq
+        YHF2/KGw==;
+Received: from ip5f5ad4d8.dynamic.kabel-deutschland.de ([95.90.212.216] helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jOkUB-0008Ss-7z; Wed, 15 Apr 2020 16:01:59 +0000
+Date:   Wed, 15 Apr 2020 18:01:54 +0200
+From:   Mauro Carvalho Chehab <mchehab@kernel.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: Re: [PATCH] dt-bindings: timer: renesas: cmt: Convert to json-schema
-Message-ID: <20200415160202.GA30686@bogus>
-References: <20200408091416.25725-1-geert+renesas@glider.be>
- <CAMuHMdWBPS7hZZqPvSyns4OL37Dm21R+eReEAtmH8XUy=qsRqQ@mail.gmail.com>
+        linux-media <linux-media@vger.kernel.org>
+Subject: Re: linux-next: Tree for Apr 15 (MEDIA Kconfig symbols)
+Message-ID: <20200415180154.4a340e3e@coco.lan>
+In-Reply-To: <8e4b7065-75c4-8bcf-8ad2-ed21463c494c@infradead.org>
+References: <20200415152240.2422e06c@canb.auug.org.au>
+        <8e4b7065-75c4-8bcf-8ad2-ed21463c494c@infradead.org>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdWBPS7hZZqPvSyns4OL37Dm21R+eReEAtmH8XUy=qsRqQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 03:22:08PM +0200, Geert Uytterhoeven wrote:
-> On Wed, Apr 8, 2020 at 11:14 AM Geert Uytterhoeven
-> <geert+renesas@glider.be> wrote:
-> > Convert the Renesas Compare Match Timer (CMT) Device Tree binding
-> > documentation to json-schema.
-> >
-> > Document missing properties.
-> > Update the example to match reality.
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+HI Randy,
+
+Em Wed, 15 Apr 2020 08:39:00 -0700
+Randy Dunlap <rdunlap@infradead.org> escreveu:
+
+> On 4/14/20 10:22 PM, Stephen Rothwell wrote:
+> > Hi all,
+> > 
+> > Changes since 20200414:
+> > 
+> > My fixes tree contains:
+> > 
+> >   6b038bdcd3d1 sh: mm: Fix build error
+> > 
+> > The qcom tree gained a build failure for which I reverted a commit.
+> > 
+> > The drm-misc tree gained conflicts against Linus' and the drm-intel trees.
+> > 
+> > The sound-asoc tree gained build failures so I used the version from
+> > next-20200414.
+> > 
+> > Non-merge commits (relative to Linus' tree): 1793
+> >  2505 files changed, 50786 insertions(+), 22669 deletions(-)
+> > 
+> > ----------------------------------------------------------------------------
+> > 
+> > I have created today's linux-next tree at
+> > git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+> > (patches at http://www.kernel.org/pub/linux/kernel/next/ ).  If you
+> > are tracking the linux-next tree using git, you should not use "git pull"
+> > to do so as that will try to merge the new linux-next release with the
+> > old one.  You should use "git fetch" and checkout or reset to the new
+> > master.
+> > 
+> > You can see which trees have been included by looking in the Next/Trees
+> > file in the source.  There are also quilt-import.log and merge.log
+> > files in the Next directory.  Between each merge, the tree was built
+> > with a ppc64_defconfig for powerpc, an allmodconfig for x86_64, a
+> > multi_v7_defconfig for arm and a native build of tools/perf. After
+> > the final fixups (if any), I do an x86_64 modules_install followed by
+> > builds for x86_64 allnoconfig, powerpc allnoconfig (32 and 64 bit),
+> > ppc44x_defconfig, allyesconfig and pseries_le_defconfig and i386, sparc
+> > and sparc64 defconfig and htmldocs. And finally, a simple boot test
+> > of the powerpc pseries_le_defconfig kernel in qemu (with and without
+> > kvm enabled).
+> > 
+> > Below is a summary of the state of the merge.
+> > 
+> > I am currently merging 317 trees (counting Linus' and 78 trees of bug
+> > fix patches pending for the current merge release).
+> > 
+> > Stats about the size of the tree over time can be seen at
+> > http://neuling.org/linux-next-size.html .
+> > 
+> > Status of my local build tests will be at
+> > http://kisskb.ellerman.id.au/linux-next .  If maintainers want to give
+> > advice about cross compilers/configs that work, we are always open to add
+> > more builds.
+> > 
+> > Thanks to Randy Dunlap for doing many randconfig builds.  And to Paul
+> > Gortmaker for triage and bug fixes.
+> >   
 > 
-> Oops, I forgot the dreaded "additionalProperties: false".
+> on i386 or x86_64:
+> 
+> WARNING: unmet direct dependencies detected for CEC_NOTIFIER
+>   Depends on [n]: MEDIA_SUPPORT [=n]
+>   Selected by [y]:
+>   - DRM_I2C_NXP_TDA9950 [=y] && HAS_IOMEM [=y] && DRM [=y] && DRM_KMS_HELPER [=y] && I2C [=y]
+>   - DRM_DW_HDMI_CEC [=y] && HAS_IOMEM [=y] && DRM [=y] && DRM_BRIDGE [=y] && DRM_DW_HDMI [=y]
+> 
+> WARNING: unmet direct dependencies detected for CEC_CORE
+>   Depends on [n]: MEDIA_SUPPORT [=n]
+>   Selected by [y]:
+>   - DRM_I915 [=y] && HAS_IOMEM [=y] && DRM [=y] && X86 [=y] && PCI [=y] && CEC_NOTIFIER [=y]
+>   - DRM_I2C_NXP_TDA998X [=y] && HAS_IOMEM [=y] && DRM [=y] && DRM_KMS_HELPER [=y] && I2C [=y] && CEC_NOTIFIER [=y]
+>   - DRM_I2C_NXP_TDA9950 [=y] && HAS_IOMEM [=y] && DRM [=y] && DRM_KMS_HELPER [=y] && I2C [=y]
+>   - DRM_DW_HDMI [=y] && HAS_IOMEM [=y] && DRM [=y] && DRM_BRIDGE [=y] && CEC_NOTIFIER [=y]
+>   - DRM_DW_HDMI_CEC [=y] && HAS_IOMEM [=y] && DRM [=y] && DRM_BRIDGE [=y] && DRM_DW_HDMI [=y]
+> 
+> WARNING: unmet direct dependencies detected for CEC_NOTIFIER
+>   Depends on [n]: MEDIA_SUPPORT [=n]
+>   Selected by [y]:
+>   - DRM_I2C_NXP_TDA9950 [=y] && HAS_IOMEM [=y] && DRM [=y] && DRM_KMS_HELPER [=y] && I2C [=y]
+>   - DRM_DW_HDMI_CEC [=y] && HAS_IOMEM [=y] && DRM [=y] && DRM_BRIDGE [=y] && DRM_DW_HDMI [=y]
+> 
+> WARNING: unmet direct dependencies detected for CEC_CORE
+>   Depends on [n]: MEDIA_SUPPORT [=n]
+>   Selected by [y]:
+>   - DRM_I915 [=y] && HAS_IOMEM [=y] && DRM [=y] && X86 [=y] && PCI [=y] && CEC_NOTIFIER [=y]
+>   - DRM_I2C_NXP_TDA998X [=y] && HAS_IOMEM [=y] && DRM [=y] && DRM_KMS_HELPER [=y] && I2C [=y] && CEC_NOTIFIER [=y]
+>   - DRM_I2C_NXP_TDA9950 [=y] && HAS_IOMEM [=y] && DRM [=y] && DRM_KMS_HELPER [=y] && I2C [=y]
+>   - DRM_DW_HDMI [=y] && HAS_IOMEM [=y] && DRM [=y] && DRM_BRIDGE [=y] && CEC_NOTIFIER [=y]
+>   - DRM_DW_HDMI_CEC [=y] && HAS_IOMEM [=y] && DRM [=y] && DRM_BRIDGE [=y] && DRM_DW_HDMI [=y]
 
-With that fixed,
+Those should be fixed upstream.  DVB_CORE should not depend on MEDIA_SUPPORT.
+The patch that changed it was reverted:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+	https://git.linuxtv.org/media_tree.git/commit/?id=9393d050c860a8f03f1e04d380653d23c7911c90
+
+Yet, as we did a major rework at Kconfig, I don't doubt that some random
+config may still cause issues there.
+
+Regards,
+Mauro
