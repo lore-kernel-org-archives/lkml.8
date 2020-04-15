@@ -2,106 +2,89 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 309A4C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 03:24:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A450C352BE
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 03:28:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D35320784
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 03:24:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586921058;
-	bh=wTVTBdIHEqCex23yW6xwI9OoQMcfzXT4+ioyVchFUpQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=KvwiKSz1mH3brQon2Jnqiihy8xVcD5IFpOAO8VGsXtHXYqOCa/VwrSgUJJ82AOtYu
-	 5KJ2/stzk7OfKeztXbVzy9IFFwROEhD9Mi1kAfmYas8P6ooatMefuiWAiRw3tN3lB8
-	 yCEZmczPfCmpeI8T9RJqbYXd/+/2ptXyv3v2uOUA=
+	by mail.kernel.org (Postfix) with ESMTP id 322C9206F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 03:28:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729815AbgDODYO (ORCPT
+        id S1730931AbgDOD2R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 23:24:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38432 "EHLO mail.kernel.org"
+        Tue, 14 Apr 2020 23:28:17 -0400
+Received: from mga06.intel.com ([134.134.136.31]:11625 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727892AbgDODYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 23:24:06 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6FA72076C;
-        Wed, 15 Apr 2020 03:24:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586921046;
-        bh=wTVTBdIHEqCex23yW6xwI9OoQMcfzXT4+ioyVchFUpQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=SfgtJRTcjPqkS72/m2sKOzvm1oR0MQnLje3I7RBxdagvdugW7f21nTRsWItsS62Om
-         4ua6aAcdc1lphqCNXdIWozTCflGDucinEtWwGZ75IfujdrkhsLsMIVb4xDpJfWp3dM
-         eTGgBBUrs5bYS3IBK1IWiTLhp6ohQbxOCpdf5iG8=
-Date:   Wed, 15 Apr 2020 12:23:59 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH v2 0/3] support setting sysctl parameters from kernel
- command line
-Message-Id: <20200415122359.939364e2c54c389c6b3f6457@kernel.org>
-In-Reply-To: <20200414113222.16959-1-vbabka@suse.cz>
-References: <20200414113222.16959-1-vbabka@suse.cz>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        id S1727892AbgDOD2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 23:28:15 -0400
+IronPort-SDR: M/AJ0EAN852Cj9FlDZFXOzZt1QsyjI1lfgOnmKoWczTk20UElZ0D/2xkijEzyqxlyB2z2uKXfr
+ +it+oRIpXqlg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 20:28:13 -0700
+IronPort-SDR: 6mikhZX4YlawlkLmapDZYua/68wWKiO0WVIsxgOlrcBFuuVTi87P1ABA/cvUbU2eB8BvTWSdva
+ +G2Ha1cb2gNQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,385,1580803200"; 
+   d="scan'208";a="298883328"
+Received: from pazucen-mobl.amr.corp.intel.com (HELO [10.209.38.34]) ([10.209.38.34])
+  by FMSMGA003.fm.intel.com with ESMTP; 14 Apr 2020 20:28:12 -0700
+Subject: Re: linux-next: build failures after merge of the sound-asoc tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hui Wang <hui.wang@canonical.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Bard liao <yung-chuan.liao@linux.intel.com>
+References: <20200415121521.3e40b591@canb.auug.org.au>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <f73485eb-c0c8-c557-7491-5daabce4d3de@linux.intel.com>
+Date:   Tue, 14 Apr 2020 22:28:10 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200415121521.3e40b591@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vlastimil,
-
-On Tue, 14 Apr 2020 13:32:19 +0200
-Vlastimil Babka <vbabka@suse.cz> wrote:
-
-> This series adds support for something that seems like many people always
-> wanted but nobody added it yet, so here's the ability to set sysctl parameters
-> via kernel command line options in the form of sysctl.vm.something=1
-
-Sounds good. And would you consider to use the bootconfig instead of (or
-in addition to) the kernel command line, because it is too short to describe
-the sysctl options?
-
-With the bootconfig, you can describe the sysctl parameters in an
-independent file as same as /etc/sysctl.conf. It is easy to convert
-form sysctl.conf to bootconfig because bootconfig format is simply
-enhanced structured sysctl.conf :). What we just need is;
-
-(echo "sysctl {"; cat "/etc/sysctl.conf"; echo "}") >> sysctl.bconf
-bootconfig -a sysctl.bconf /boot/initrd.img
-
-Even with only your patch, since bootconfig can pass the options which
-start with "kernel." prefix to kernel command line, so;
-
-(echo "kernel.sysctl {"; cat "/etc/sysctl.conf"; echo "}") >> sysctl.bconf
-bootconfig -a sysctl.bconf /boot/initrd.img
-
-should work. 
-
-Thank you,
 
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+On 4/14/20 9:15 PM, Stephen Rothwell wrote:
+> Hi all,
+> 
+> After merging the sound-asoc tree, today's linux-next build (x86_64
+> allmodconfig) failed like this:
+> 
+> sound/soc/intel/boards/skl_hda_dsp_generic.c: In function 'skl_set_hda_codec_autosuspend_delay':
+> sound/soc/intel/boards/skl_hda_dsp_generic.c:178:37: error: 'struct snd_soc_pcm_runtime' has no member named 'codec_dai'
+>    178 |  struct snd_soc_dai *codec_dai = rtd->codec_dai;
+
+Yes, I just sent a fix for this.
+
+>        |                                     ^~
+> drivers/soundwire/intel.c: In function 'sdw_stream_setup':
+> drivers/soundwire/intel.c:672:39: error: 'struct snd_soc_pcm_runtime' has no member named 'codec_dais'
+>    672 |   ret = snd_soc_dai_set_sdw_stream(rtd->codec_dais[i], sdw_stream,
+>        |                                       ^~
+> In file included from include/linux/device.h:15,
+>                   from include/linux/acpi.h:15,
+>                   from drivers/soundwire/intel.c:8:
+> drivers/soundwire/intel.c:676:8: error: 'struct snd_soc_pcm_runtime' has no member named 'codec_dais'
+>    676 |     rtd->codec_dais[i]->name);
+
+Bard, can you take care of the SoundWire change - this needs to change 
+to asoc_rtd_to_codec(rtd, i)
+
+Thanks!
+
