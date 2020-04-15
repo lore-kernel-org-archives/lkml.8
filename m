@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF966C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 440CFC3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:52:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8204C2137B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:52:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1380220732
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:52:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586951538;
-	bh=q7zsvjomL7GdvICfv3oC9jSSccETTO2tWO9kI4zA6bc=;
+	s=default; t=1586951546;
+	bh=S8e/GIX3a0av0GNvocPZ8HDY4CwjlUxg8Z81u6oyVek=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G6PNCsJSx6NoKnfGxrtY3Lkem9ExFEUJc/Gqs+UkmcdLJjLtLG2kBnUrhMC/MnQiR
-	 eDGWNvjYRVAlrdy24/KKwx4xNyjP2zFODbAMy+E1aM/nw9Roa00Lzyh3w4Z4V9oJlN
-	 M0bs7oPC9YqGt4ygFJ4Or5G+o6RHrjs1CaRkF6uc=
+	b=lIbjWyosjNpIb0N9Ia6Jx/ci/O9zQ64yOt+AhsflrE99Zw+LOZDcsbug80RoaOUAs
+	 bspqsCOd1r94QccWcavXJ0WIKewd0DzIyA9vPCvMgjAUoNQ63lytVKRNwQBp1J3skJ
+	 Yb+BAgJ+CQbEJ1ju5xPsO7vrBjs8X/miYWu4MiCo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2897747AbgDOLwN (ORCPT
+        id S2897758AbgDOLwY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:52:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37136 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 07:52:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409074AbgDOLoW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:44:22 -0400
+        id S2409072AbgDOLoV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:44:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12B0D20732;
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DF8721569;
         Wed, 15 Apr 2020 11:44:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951061;
-        bh=q7zsvjomL7GdvICfv3oC9jSSccETTO2tWO9kI4zA6bc=;
+        s=default; t=1586951060;
+        bh=S8e/GIX3a0av0GNvocPZ8HDY4CwjlUxg8Z81u6oyVek=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zKP58rMR/lyeaSOKUYxEUOtMrbV5bje7kOCinrPhGD+hKMXfen0WiddOXdx/AQcVy
-         MBEyvuv8UWZ2gy2hbYlH73liDF8DJcC/t38GG9gj15qEo9ALoGHj0o6GhNK7E9D2WS
-         WeMOt6Vs4UtCOZcbykxTFNMbTrcesdSnaHXslcmg=
+        b=tEv+3XyX5r5hHn0DCFqh0g311mq3jrH64MCInWPkgBxS1AWADCvIh1ktP6L49QcQA
+         W+CiRg+fvOFDIDxSk/43y/VYKtRmdBHWy+/D8xxfDoW1p+1djYlt94IEHb+ZtW/s9P
+         TifP08EejsnmSz/OOAXHff5dd7S5YbxnTQxKBkM8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qian Cai <cai@lca.pw>, Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 5.5 094/106] iommu/vt-d: Silence RCU-list debugging warning in dmar_find_atsr()
-Date:   Wed, 15 Apr 2020 07:42:14 -0400
-Message-Id: <20200415114226.13103-94-sashal@kernel.org>
+Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 5.5 093/106] f2fs: skip GC when section is full
+Date:   Wed, 15 Apr 2020 07:42:13 -0400
+Message-Id: <20200415114226.13103-93-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
 References: <20200415114226.13103-1-sashal@kernel.org>
@@ -60,53 +58,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Jaegeuk Kim <jaegeuk@kernel.org>
 
-[ Upstream commit c6f4ebdeba4cff590594df931ff1ee610c426431 ]
+[ Upstream commit 2bac07635ddf9ed59268e61e415d8de9c5eaded7 ]
 
-dmar_find_atsr() calls list_for_each_entry_rcu() outside of an RCU read
-side critical section but with dmar_global_lock held. Silence this
-false positive.
+This fixes skipping GC when segment is full in large section.
 
- drivers/iommu/intel-iommu.c:4504 RCU-list traversed in non-reader section!!
- 1 lock held by swapper/0/1:
- #0: ffffffff9755bee8 (dmar_global_lock){+.+.}, at: intel_iommu_init+0x1a6/0xe19
-
- Call Trace:
-  dump_stack+0xa4/0xfe
-  lockdep_rcu_suspicious+0xeb/0xf5
-  dmar_find_atsr+0x1ab/0x1c0
-  dmar_parse_one_atsr+0x64/0x220
-  dmar_walk_remapping_entries+0x130/0x380
-  dmar_table_init+0x166/0x243
-  intel_iommu_init+0x1ab/0xe19
-  pci_iommu_init+0x1a/0x44
-  do_one_initcall+0xae/0x4d0
-  kernel_init_freeable+0x412/0x4c5
-  kernel_init+0x19/0x193
-
-Signed-off-by: Qian Cai <cai@lca.pw>
-Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/intel-iommu.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/f2fs/gc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 7f31775e9b554..65f8005589d36 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -4370,7 +4370,8 @@ static struct dmar_atsr_unit *dmar_find_atsr(struct acpi_dmar_atsr *atsr)
- 	struct dmar_atsr_unit *atsru;
- 	struct acpi_dmar_atsr *tmp;
+diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+index 47d4c343cec6d..66131e27910cc 100644
+--- a/fs/f2fs/gc.c
++++ b/fs/f2fs/gc.c
+@@ -1018,8 +1018,8 @@ static int gc_data_segment(struct f2fs_sb_info *sbi, struct f2fs_summary *sum,
+ 		 * race condition along with SSR block allocation.
+ 		 */
+ 		if ((gc_type == BG_GC && has_not_enough_free_secs(sbi, 0, 0)) ||
+-				get_valid_blocks(sbi, segno, false) ==
+-							sbi->blocks_per_seg)
++				get_valid_blocks(sbi, segno, true) ==
++							BLKS_PER_SEC(sbi))
+ 			return submitted;
  
--	list_for_each_entry_rcu(atsru, &dmar_atsr_units, list) {
-+	list_for_each_entry_rcu(atsru, &dmar_atsr_units, list,
-+				dmar_rcu_check()) {
- 		tmp = (struct acpi_dmar_atsr *)atsru->hdr;
- 		if (atsr->segment != tmp->segment)
- 			continue;
+ 		if (check_valid_map(sbi, segno, off) == 0)
 -- 
 2.20.1
 
