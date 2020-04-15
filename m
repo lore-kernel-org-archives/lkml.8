@@ -7,51 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51AD0C3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:05:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 593ACC2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:05:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 240AE20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:05:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DEA1206F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:05:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586952346;
-	bh=diZCH/Mg8n9hXnJ0WhmZgAaGP/vFOO2uGKOad9Enxpw=;
+	s=default; t=1586952354;
+	bh=k14wArMvku5tzqw6qQ4izhm1/3kfQ3VVApMHKECRR1I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fG47otcjlxKwGquZfV0S/0+RcbpEST+y+RjMrRVywL4N5dVs+kwqmHrpYn4sKNoXW
-	 papkiAYUf984U8RurorQBtPzD25/DoQvl+Rj2yAPdCU6bK2MpweFO4E/5FG7WZVsGT
-	 qWrcM05OitfEJG7TVHdqC8jlDNTS1c67SOBpen8s=
+	b=bFLdmY9Qr26uRdtzzGJaxbVSa9qqolSnKGvDoyMxb9yJn/Ao+mvyJE3QJbWQWazU2
+	 o5XjFv2V+ZqLHVDQ/EWO/s+KAIAX3RUtlFNJE3EQN2GPtiRFE2WPB8eu7F5voLaB33
+	 n+H4CnNvTuuP/aoP2TNORw1zoY4gYVyspxnrOq9o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S368378AbgDOMFm (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:05:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43460 "EHLO mail.kernel.org"
+        id S368395AbgDOMFw (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:05:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409400AbgDOLrx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:47:53 -0400
+        id S2406444AbgDOLrv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:47:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC43B2137B;
-        Wed, 15 Apr 2020 11:47:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97EA6214D8;
+        Wed, 15 Apr 2020 11:47:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951272;
-        bh=diZCH/Mg8n9hXnJ0WhmZgAaGP/vFOO2uGKOad9Enxpw=;
+        s=default; t=1586951271;
+        bh=k14wArMvku5tzqw6qQ4izhm1/3kfQ3VVApMHKECRR1I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k6JGzRWmG059w7EXAz8TGhThLULVatYwILZgRyT/ErgKlvyYt1lPJ5jCZJmMaouQM
-         zQSVTw8m8KC/lp+WbVAkFlKA+R0YKOOsD++IeGHctvkqi3cPqa1uFv/pmPw7fjynvd
-         KELttE8vB051nYOICcKx4sjx1bkAnS4fK4OV05sM=
+        b=N44Z8rADD4Lt37T6j4z60IBYJbmzEkiF8NWeD5Arw6UZekB8K/ULWD5Vg8er/beSm
+         vvQV+fUMJvu7yiykRvNKBFxeACvkoLoUZO0H4tBb1Lfegw6r6Qehb4/oHiMngz+hPp
+         /tRql7WuiCs9zE4kRb36Y733BiWuEkZHPc28vZgU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 03/21] clk: tegra: Fix Tegra PMC clock out parents
-Date:   Wed, 15 Apr 2020 07:47:30 -0400
-Message-Id: <20200415114748.15713-3-sashal@kernel.org>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        "Andrew F . Davis" <afd@ti.com>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 02/21] power: supply: bq27xxx_battery: Silence deferred-probe error
+Date:   Wed, 15 Apr 2020 07:47:29 -0400
+Message-Id: <20200415114748.15713-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114748.15713-1-sashal@kernel.org>
 References: <20200415114748.15713-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,54 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-[ Upstream commit 6fe38aa8cac3a5db38154331742835a4d9740788 ]
+[ Upstream commit 583b53ece0b0268c542a1eafadb62e3d4b0aab8c ]
 
-Tegra PMC clocks clk_out_1, clk_out_2, and clk_out_3 supported parents
-are osc, osc_div2, osc_div4 and extern clock.
+The driver fails to probe with -EPROBE_DEFER if battery's power supply
+(charger driver) isn't ready yet and this results in a bit noisy error
+message in KMSG during kernel's boot up. Let's silence the harmless
+error message.
 
-Clock driver is using incorrect parents clk_m, clk_m_div2, clk_m_div4
-for PMC clocks.
-
-This patch fixes this.
-
-Tested-by: Dmitry Osipenko <digetx@gmail.com>
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Reviewed-by: Andrew F. Davis <afd@ti.com>
+Reviewed-by: Pali Rohár <pali@kernel.org>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/tegra/clk-tegra-pmc.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/power/supply/bq27xxx_battery.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/tegra/clk-tegra-pmc.c b/drivers/clk/tegra/clk-tegra-pmc.c
-index 91377abfefa19..17a04300f93bf 100644
---- a/drivers/clk/tegra/clk-tegra-pmc.c
-+++ b/drivers/clk/tegra/clk-tegra-pmc.c
-@@ -60,16 +60,16 @@ struct pmc_clk_init_data {
+diff --git a/drivers/power/supply/bq27xxx_battery.c b/drivers/power/supply/bq27xxx_battery.c
+index bccb3f595ff3d..247be9155694f 100644
+--- a/drivers/power/supply/bq27xxx_battery.c
++++ b/drivers/power/supply/bq27xxx_battery.c
+@@ -1031,7 +1031,10 @@ int bq27xxx_battery_setup(struct bq27xxx_device_info *di)
  
- static DEFINE_SPINLOCK(clk_out_lock);
+ 	di->bat = power_supply_register_no_ws(di->dev, psy_desc, &psy_cfg);
+ 	if (IS_ERR(di->bat)) {
+-		dev_err(di->dev, "failed to register battery\n");
++		if (PTR_ERR(di->bat) == -EPROBE_DEFER)
++			dev_dbg(di->dev, "failed to register battery, deferring probe\n");
++		else
++			dev_err(di->dev, "failed to register battery\n");
+ 		return PTR_ERR(di->bat);
+ 	}
  
--static const char *clk_out1_parents[] = { "clk_m", "clk_m_div2",
--	"clk_m_div4", "extern1",
-+static const char *clk_out1_parents[] = { "osc", "osc_div2",
-+	"osc_div4", "extern1",
- };
- 
--static const char *clk_out2_parents[] = { "clk_m", "clk_m_div2",
--	"clk_m_div4", "extern2",
-+static const char *clk_out2_parents[] = { "osc", "osc_div2",
-+	"osc_div4", "extern2",
- };
- 
--static const char *clk_out3_parents[] = { "clk_m", "clk_m_div2",
--	"clk_m_div4", "extern3",
-+static const char *clk_out3_parents[] = { "osc", "osc_div2",
-+	"osc_div4", "extern3",
- };
- 
- static struct pmc_clk_init_data pmc_clks[] = {
 -- 
 2.20.1
 
