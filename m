@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE11C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E1DC3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:26:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1007E20936
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:26:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05F9F208FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:26:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586953602;
-	bh=fvFeEQ//Rmt+jquVaFV282Fm5Uz56zfIXOHUUtTozgU=;
+	s=default; t=1586953613;
+	bh=5/HU+5mPMZDHSKhelDvZphwM7oa683qtuQ+sg6gNB/g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FDeGj6m3qngBCmRkw+Ya0xYATR84YM5TYdJmeXiAVWtd5M8hKhtH7oXy+2Bzj2tGv
-	 hrkQSls00kAHYv0UQlm7GHTe/p20Sc1hAt/xiFgZZlRC6GeUEkL1hrnjzZyj2tOJZE
-	 Jq8D4yF8/56R00nZbbfsms8GvNH8fmld4h+I0oU4=
+	b=vfC9rjl5szpk+gbv2/NH2pAMYvrGu8PcMlNaQkiBR3KXT/7wvWsafbriuMmDIBbmR
+	 TPBOj68hDwgWirmz+oxKI42m/ymbTf8z4TC2oVbo9XjawDr5tghmTueovTfjHRXxD0
+	 p7yO58/Utb4ikfFC65sXA0xbd+hMcbkWXBRB4WHs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S369272AbgDOM0h (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:26:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39280 "EHLO mail.kernel.org"
+        id S2409855AbgDOM0u (ORCPT
+        <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:26:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409175AbgDOLpb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:45:31 -0400
+        id S2409172AbgDOLp0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:45:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C807A2137B;
-        Wed, 15 Apr 2020 11:45:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A51BE21582;
+        Wed, 15 Apr 2020 11:45:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951126;
-        bh=fvFeEQ//Rmt+jquVaFV282Fm5Uz56zfIXOHUUtTozgU=;
+        s=default; t=1586951125;
+        bh=5/HU+5mPMZDHSKhelDvZphwM7oa683qtuQ+sg6gNB/g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ud5sNYe+vVYhVB+xlx3Pu4rB6v+2umUp+q4+2OfcrWN9yh0JCtlbDSzVVPSMyz9Pv
-         cNzWOAhvL17JcRGzmEYwiL0eeCJ/gcgLsv5d3GLh+JsgM/CfCi7lDd2Iun84q697iZ
-         hUuCrDYIzkkWN/80JC9rTVf38qP28DAFQNo+PwCI=
+        b=J4BhK/EbQiscI/mqA6nt75eIlsi39IBKf3RCzD8Ba6GirNESsAuiErcGwbhKqsoWa
+         GBf+U2DRjDrQ6DgnECUMItzDULkrN71Hrh35DUbMJs3ETPUCnM+MLDxXZW094MrbLE
+         81n4iNowRb/P7IADrOkEuAGo9geR8PptvPjXDJYQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Herat Ramani <herat@chelsio.com>,
-        Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 39/84] cxgb4: fix MPS index overwrite when setting MAC address
-Date:   Wed, 15 Apr 2020 07:43:56 -0400
-Message-Id: <20200415114442.14166-39-sashal@kernel.org>
+Cc:     Long Li <longli@microsoft.com>,
+        Steve French <stfrench@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org
+Subject: [PATCH AUTOSEL 5.4 38/84] cifs: Allocate encryption header through kmalloc
+Date:   Wed, 15 Apr 2020 07:43:55 -0400
+Message-Id: <20200415114442.14166-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114442.14166-1-sashal@kernel.org>
 References: <20200415114442.14166-1-sashal@kernel.org>
@@ -59,43 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Herat Ramani <herat@chelsio.com>
+From: Long Li <longli@microsoft.com>
 
-[ Upstream commit 41aa8561ca3fc5748391f08cc5f3e561923da52c ]
+[ Upstream commit 3946d0d04bb360acca72db5efe9ae8440012d9dc ]
 
-cxgb4_update_mac_filt() earlier requests firmware to add a new MAC
-address into MPS TCAM. The MPS TCAM index returned by firmware is
-stored in pi->xact_addr_filt. However, the saved MPS TCAM index gets
-overwritten again with the return value of cxgb4_update_mac_filt(),
-which is wrong.
+When encryption is used, smb2_transform_hdr is defined on the stack and is
+passed to the transport. This doesn't work with RDMA as the buffer needs to
+be DMA'ed.
 
-When trying to update to another MAC address later, the wrong MPS TCAM
-index is sent to firmware, which causes firmware to return error,
-because it's not the same MPS TCAM index that firmware had sent
-earlier to driver.
+Fix it by using kmalloc.
 
-So, fix by removing the wrong overwrite being done after call to
-cxgb4_update_mac_filt().
-
-Fixes: 3f8cfd0d95e6 ("cxgb4/cxgb4vf: Program hash region for {t4/t4vf}_change_mac()")
-Signed-off-by: Herat Ramani <herat@chelsio.com>
-Signed-off-by: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Long Li <longli@microsoft.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c | 1 -
- 1 file changed, 1 deletion(-)
+ fs/cifs/transport.c | 28 +++++++++++++++++-----------
+ 1 file changed, 17 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
-index 38024877751c4..069a518478850 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
-@@ -3032,7 +3032,6 @@ static int cxgb_set_mac_addr(struct net_device *dev, void *p)
- 		return ret;
+diff --git a/fs/cifs/transport.c b/fs/cifs/transport.c
+index e67a43fd037c9..fe1552cc8a0a7 100644
+--- a/fs/cifs/transport.c
++++ b/fs/cifs/transport.c
+@@ -466,7 +466,7 @@ smb_send_rqst(struct TCP_Server_Info *server, int num_rqst,
+ 	      struct smb_rqst *rqst, int flags)
+ {
+ 	struct kvec iov;
+-	struct smb2_transform_hdr tr_hdr;
++	struct smb2_transform_hdr *tr_hdr;
+ 	struct smb_rqst cur_rqst[MAX_COMPOUND];
+ 	int rc;
  
- 	memcpy(dev->dev_addr, addr->sa_data, dev->addr_len);
--	pi->xact_addr_filt = ret;
- 	return 0;
+@@ -476,28 +476,34 @@ smb_send_rqst(struct TCP_Server_Info *server, int num_rqst,
+ 	if (num_rqst > MAX_COMPOUND - 1)
+ 		return -ENOMEM;
+ 
+-	memset(&cur_rqst[0], 0, sizeof(cur_rqst));
+-	memset(&iov, 0, sizeof(iov));
+-	memset(&tr_hdr, 0, sizeof(tr_hdr));
+-
+-	iov.iov_base = &tr_hdr;
+-	iov.iov_len = sizeof(tr_hdr);
+-	cur_rqst[0].rq_iov = &iov;
+-	cur_rqst[0].rq_nvec = 1;
+-
+ 	if (!server->ops->init_transform_rq) {
+ 		cifs_server_dbg(VFS, "Encryption requested but transform "
+ 				"callback is missing\n");
+ 		return -EIO;
+ 	}
+ 
++	tr_hdr = kmalloc(sizeof(*tr_hdr), GFP_NOFS);
++	if (!tr_hdr)
++		return -ENOMEM;
++
++	memset(&cur_rqst[0], 0, sizeof(cur_rqst));
++	memset(&iov, 0, sizeof(iov));
++	memset(tr_hdr, 0, sizeof(*tr_hdr));
++
++	iov.iov_base = tr_hdr;
++	iov.iov_len = sizeof(*tr_hdr);
++	cur_rqst[0].rq_iov = &iov;
++	cur_rqst[0].rq_nvec = 1;
++
+ 	rc = server->ops->init_transform_rq(server, num_rqst + 1,
+ 					    &cur_rqst[0], rqst);
+ 	if (rc)
+-		return rc;
++		goto out;
+ 
+ 	rc = __smb_send_rqst(server, num_rqst + 1, &cur_rqst[0]);
+ 	smb3_free_compound_rqst(num_rqst, &cur_rqst[1]);
++out:
++	kfree(tr_hdr);
+ 	return rc;
  }
  
 -- 
