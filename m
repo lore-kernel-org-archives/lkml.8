@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85032C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:30:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD79C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:31:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61D8B20767
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:30:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0801320767
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:31:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586953857;
-	bh=9o6m5FMWo8G2lJiL9CBwOJYFO3E98EfhxJDSAGxFII8=;
+	s=default; t=1586953862;
+	bh=aVfigafMAvv1hgwZCshZyIH+wEjppUtP4c/qdhe1li8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s61kRtGv3/Vm14ZlNgUgUsZs97678Vsb2HMyJH0hf48cymqSOXvTC3atw9CPNatiU
-	 1DRvXZk54INqPuA+UREBbBoi5cD0JYFl/9nfByeJEBcqqO58XKnFP9Gc3RGzOg8/t9
-	 imkZlFAVzk0vbQaWIO1XaYnq1hOsto4wPXqizMjE=
+	b=TdIdidSjBs2e5tgXUHKh7Ag/hUfUJUflFSxJzZdhadW0yHgHOwh0IOVq9L0H8GbCO
+	 wTc+QOnhGClapKCtsqWA8U11sVy0p8u2zU0tC027g47J4qWo4FUogdty+CoirhM/Jw
+	 uSLqg2blw0QDlSEZLQliyC0l4cmmUowBX/rdeL5E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S369525AbgDOMaz (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:30:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37394 "EHLO mail.kernel.org"
+        id S369534AbgDOMbA (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:31:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406149AbgDOLou (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2409105AbgDOLou (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Apr 2020 07:44:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A8CD21569;
-        Wed, 15 Apr 2020 11:44:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF16F20768;
+        Wed, 15 Apr 2020 11:44:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951073;
-        bh=9o6m5FMWo8G2lJiL9CBwOJYFO3E98EfhxJDSAGxFII8=;
+        s=default; t=1586951088;
+        bh=aVfigafMAvv1hgwZCshZyIH+wEjppUtP4c/qdhe1li8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ckt8K8b7Y3y00J+vqEnsK3kXdbvnxOI39W3R4MmAaRw+86ZPchWjQtOsXckCSOA9U
-         IfZhY/qu17+Y8soD7hUsrGb4iSrn8N14XI+6pp8teDTD6LodkQk6itbJeG9AgGZ3dQ
-         Tu6iaCyVdFkvlAKWvc1Bs81hZJzJEDaGZYHU/uZM=
+        b=NBY1kkjINEGxyARbbaM9Df0l9lZwIsMnAkZXJsT3jLO1c43hI5tx8AZAAcmjg+aZK
+         4KERsWhqil5jAu2B5L+yl6kEwuhRRl+uyUevExfcb2WTqb0hKwuAsiYX8u4O7xnwUk
+         p34OMG1DF6Hxu8q5kD98WLdwWPV3k9t2dUjyot1s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+Cc:     Sahitya Tummala <stummala@codeaurora.org>,
+        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>,
         linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.5 105/106] f2fs: fix to wait all node page writeback
-Date:   Wed, 15 Apr 2020 07:42:25 -0400
-Message-Id: <20200415114226.13103-105-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 05/84] f2fs: fix the panic in do_checkpoint()
+Date:   Wed, 15 Apr 2020 07:43:22 -0400
+Message-Id: <20200415114442.14166-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
-References: <20200415114226.13103-1-sashal@kernel.org>
+In-Reply-To: <20200415114442.14166-1-sashal@kernel.org>
+References: <20200415114442.14166-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,56 +59,133 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Sahitya Tummala <stummala@codeaurora.org>
 
-[ Upstream commit dc5a941223edd803f476a153abd950cc3a83c3e1 ]
+[ Upstream commit bf22c3cc8ce71454dddd772284773306a68031d8 ]
 
-There is a race condition that we may miss to wait for all node pages
-writeback, fix it.
+There could be a scenario where f2fs_sync_meta_pages() will not
+ensure that all F2FS_DIRTY_META pages are submitted for IO. Thus,
+resulting in the below panic in do_checkpoint() -
 
-- fsync()				- shrink
- - f2fs_do_sync_file
-					 - __write_node_page
-					  - set_page_writeback(page#0)
-					  : remove DIRTY/TOWRITE flag
-  - f2fs_fsync_node_pages
-  : won't find page #0 as TOWRITE flag was removeD
-  - f2fs_wait_on_node_pages_writeback
-  : wont' wait page #0 writeback as it was not in fsync_node_list list.
-					   - f2fs_add_fsync_node_entry
+f2fs_bug_on(sbi, get_pages(sbi, F2FS_DIRTY_META) &&
+				!f2fs_cp_error(sbi));
 
-Fixes: 50fa53eccf9f ("f2fs: fix to avoid broken of dnode block list")
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
+This can happen in a low-memory condition, where shrinker could
+also be doing the writepage operation (stack shown below)
+at the same time when checkpoint is running on another core.
+
+schedule
+down_write
+f2fs_submit_page_write -> by this time, this page in page cache is tagged
+			as PAGECACHE_TAG_WRITEBACK and PAGECACHE_TAG_DIRTY
+			is cleared, due to which f2fs_sync_meta_pages()
+			cannot sync this page in do_checkpoint() path.
+f2fs_do_write_meta_page
+__f2fs_write_meta_page
+f2fs_write_meta_page
+shrink_page_list
+shrink_inactive_list
+shrink_node_memcg
+shrink_node
+kswapd
+
+Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
 Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/node.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ fs/f2fs/checkpoint.c | 16 +++++++---------
+ fs/f2fs/f2fs.h       |  2 +-
+ fs/f2fs/super.c      |  2 +-
+ 3 files changed, 9 insertions(+), 11 deletions(-)
 
-diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
-index 3314a0f3405ef..905e8e39c9bf0 100644
---- a/fs/f2fs/node.c
-+++ b/fs/f2fs/node.c
-@@ -1562,15 +1562,16 @@ static int __write_node_page(struct page *page, bool atomic, bool *submitted,
- 	if (atomic && !test_opt(sbi, NOBARRIER))
- 		fio.op_flags |= REQ_PREFLUSH | REQ_FUA;
+diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+index a0eef95b9e0ed..410f5c2c6ef17 100644
+--- a/fs/f2fs/checkpoint.c
++++ b/fs/f2fs/checkpoint.c
+@@ -1250,20 +1250,20 @@ static void unblock_operations(struct f2fs_sb_info *sbi)
+ 	f2fs_unlock_all(sbi);
+ }
  
--	set_page_writeback(page);
--	ClearPageError(page);
--
-+	/* should add to global list before clearing PAGECACHE status */
- 	if (f2fs_in_warm_node_list(sbi, page)) {
- 		seq = f2fs_add_fsync_node_entry(sbi, page);
- 		if (seq_id)
- 			*seq_id = seq;
+-void f2fs_wait_on_all_pages_writeback(struct f2fs_sb_info *sbi)
++void f2fs_wait_on_all_pages(struct f2fs_sb_info *sbi, int type)
+ {
+ 	DEFINE_WAIT(wait);
+ 
+ 	for (;;) {
+ 		prepare_to_wait(&sbi->cp_wait, &wait, TASK_UNINTERRUPTIBLE);
+ 
+-		if (!get_pages(sbi, F2FS_WB_CP_DATA))
++		if (!get_pages(sbi, type))
+ 			break;
+ 
+ 		if (unlikely(f2fs_cp_error(sbi)))
+ 			break;
+ 
+-		io_schedule_timeout(5*HZ);
++		io_schedule_timeout(HZ/50);
  	}
+ 	finish_wait(&sbi->cp_wait, &wait);
+ }
+@@ -1384,8 +1384,6 @@ static int do_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
  
-+	set_page_writeback(page);
-+	ClearPageError(page);
-+
- 	fio.old_blkaddr = ni.blk_addr;
- 	f2fs_do_write_node_page(nid, &fio);
- 	set_node_addr(sbi, &ni, fio.new_blkaddr, is_fsync_dnode(page));
+ 	/* Flush all the NAT/SIT pages */
+ 	f2fs_sync_meta_pages(sbi, META, LONG_MAX, FS_CP_META_IO);
+-	f2fs_bug_on(sbi, get_pages(sbi, F2FS_DIRTY_META) &&
+-					!f2fs_cp_error(sbi));
+ 
+ 	/*
+ 	 * modify checkpoint
+@@ -1493,11 +1491,11 @@ static int do_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
+ 
+ 	/* Here, we have one bio having CP pack except cp pack 2 page */
+ 	f2fs_sync_meta_pages(sbi, META, LONG_MAX, FS_CP_META_IO);
+-	f2fs_bug_on(sbi, get_pages(sbi, F2FS_DIRTY_META) &&
+-					!f2fs_cp_error(sbi));
++	/* Wait for all dirty meta pages to be submitted for IO */
++	f2fs_wait_on_all_pages(sbi, F2FS_DIRTY_META);
+ 
+ 	/* wait for previous submitted meta pages writeback */
+-	f2fs_wait_on_all_pages_writeback(sbi);
++	f2fs_wait_on_all_pages(sbi, F2FS_WB_CP_DATA);
+ 
+ 	/* flush all device cache */
+ 	err = f2fs_flush_device_cache(sbi);
+@@ -1506,7 +1504,7 @@ static int do_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
+ 
+ 	/* barrier and flush checkpoint cp pack 2 page if it can */
+ 	commit_checkpoint(sbi, ckpt, start_blk);
+-	f2fs_wait_on_all_pages_writeback(sbi);
++	f2fs_wait_on_all_pages(sbi, F2FS_WB_CP_DATA);
+ 
+ 	/*
+ 	 * invalidate intermediate page cache borrowed from meta inode
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 9046432b87c2d..1a8b68ceaa62f 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -3185,7 +3185,7 @@ int f2fs_get_valid_checkpoint(struct f2fs_sb_info *sbi);
+ void f2fs_update_dirty_page(struct inode *inode, struct page *page);
+ void f2fs_remove_dirty_inode(struct inode *inode);
+ int f2fs_sync_dirty_inodes(struct f2fs_sb_info *sbi, enum inode_type type);
+-void f2fs_wait_on_all_pages_writeback(struct f2fs_sb_info *sbi);
++void f2fs_wait_on_all_pages(struct f2fs_sb_info *sbi, int type);
+ int f2fs_write_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc);
+ void f2fs_init_ino_entry_info(struct f2fs_sb_info *sbi);
+ int __init f2fs_create_checkpoint_caches(void);
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index ea8dbf1458c99..28441f4971b8d 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -1105,7 +1105,7 @@ static void f2fs_put_super(struct super_block *sb)
+ 	/* our cp_error case, we can wait for any writeback page */
+ 	f2fs_flush_merged_writes(sbi);
+ 
+-	f2fs_wait_on_all_pages_writeback(sbi);
++	f2fs_wait_on_all_pages(sbi, F2FS_WB_CP_DATA);
+ 
+ 	f2fs_bug_on(sbi, sbi->fsync_node_num);
+ 
 -- 
 2.20.1
 
