@@ -2,122 +2,118 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E3C1C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:27:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 222C0C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:27:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32C3D2084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:27:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED35920784
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:27:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="yd+J2FgA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2411029AbgDOR1s (ORCPT
+        id S2411041AbgDOR16 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 13:27:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38452 "EHLO
+        Wed, 15 Apr 2020 13:27:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2410996AbgDOR1i (ORCPT
+        with ESMTP id S2411015AbgDOR1n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 13:27:38 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0FEFC061A10;
-        Wed, 15 Apr 2020 10:27:37 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id DB5022A1D68
-Received: by jupiter.universe (Postfix, from userid 1000)
-        id 229804800F9; Wed, 15 Apr 2020 19:27:34 +0200 (CEST)
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        kernel@collabora.com,
-        Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: [PATCHv2 2/3] drm/panel: simple: Add support for AUO G156XTN01.0 panel
-Date:   Wed, 15 Apr 2020 19:27:24 +0200
-Message-Id: <20200415172725.84257-3-sebastian.reichel@collabora.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200415172725.84257-1-sebastian.reichel@collabora.com>
-References: <20200415172725.84257-1-sebastian.reichel@collabora.com>
+        Wed, 15 Apr 2020 13:27:43 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC722C061A10
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 10:27:42 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id j20so6024760edj.0
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 10:27:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PQn/ANk0pwHlFuEamxgp0PrtqC/xvAZ3EDlh2VOe0m0=;
+        b=yd+J2FgA/lmkvwZA0iSAyzd7KBbCuB/XPFMuZjRayE9JGURa/42PqYHqh7VHqG6yED
+         /nIczfFJbvdoQAofGTftRvfbs5J6uDzfmUI7zWxFs+8D4fq0K2r/F4vzakBSi+Gwk7Bx
+         X0xvX3stfs4GjV5EQpXvDPsua3QTuXUI9TSVNKzn1db2Q+eV16gw9MpJQd57dpb6Sr/D
+         1E623YfOYHf9Av67Mp04BaCkBoZRhDoZNiVRCSubUb/X8dM1J+YRK975cPajYodiP5EX
+         jhAtPq7673DF9HC3HsRN0ErLQCEH1HelkhzITVfbeLqLsX5cmWmt1bDXCJmLiAloPWcj
+         YC5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PQn/ANk0pwHlFuEamxgp0PrtqC/xvAZ3EDlh2VOe0m0=;
+        b=JzEaA/c96EznGrQoUsUS2UEknMJNXAvhPHl4sMT1GvOJyQlQoKYoHcZG45GLAsC94P
+         +ykPqSTnEZbuugU4LQKxtBUP3jnRyA0aiWS/2lvhcYfOFevc3yHbV5MHhHpWPpXSfwDh
+         ZZNr6fBlX/16vDDE4xVF5CqdtsPlIx6fdG84zEdJL/9XBEMtCDqzEEjDgAUImGPnoYw9
+         EG57CoqDj8e3k97QWoeucjshf4YX4IactMpNg2ObGgHAC6GOdRuAXYV2bhKkobP3Qfyv
+         kr2+ILbvhSxq2zlTsNaonIYRmsQMF98OE7ecvlo58zaReSP0HvdC4/QRjb7UO4e7BX7h
+         /aLw==
+X-Gm-Message-State: AGi0PubWhKFU2QkMsNEh7jFZaa4dPmByVBgcWVZwKt4SZV5L64tuZna2
+        y5XL+N3AZ34ipbn7/mKhJETjL6FkoROzM/+cfr/G/w==
+X-Google-Smtp-Source: APiQypJQto6RgiMwvrOJoJJZzQ2YMTpz2NolWBUDftzJdaKnsDAKa/cP6mTGhuplHbMRPC1NtLSayFuBX50THyRB8Ng=
+X-Received: by 2002:a17:906:1e42:: with SMTP id i2mr5854049ejj.317.1586971661463;
+ Wed, 15 Apr 2020 10:27:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200414040030.1802884-1-ira.weiny@intel.com> <20200414040030.1802884-4-ira.weiny@intel.com>
+ <20200415160307.GJ90651@mit.edu>
+In-Reply-To: <20200415160307.GJ90651@mit.edu>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 15 Apr 2020 10:27:30 -0700
+Message-ID: <CAPcyv4jmBRsexpW2=SxqatbMK_u2aZcGnjeF+76=XwrCHfPoXA@mail.gmail.com>
+Subject: Re: [PATCH RFC 3/8] fs/ext4: Disallow encryption if inode is DAX
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     "Weiny, Ira" <ira.weiny@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jan Kara <jack@suse.cz>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add timings for the AUO G156XTN01.0 panel.
+On Wed, Apr 15, 2020 at 9:03 AM Theodore Y. Ts'o <tytso@mit.edu> wrote:
+>
+> On Mon, Apr 13, 2020 at 09:00:25PM -0700, ira.weiny@intel.com wrote:
+> > From: Ira Weiny <ira.weiny@intel.com>
+> >
+> > Encryption and DAX are incompatible.  Changing the DAX mode due to a
+> > change in Encryption mode is wrong without a corresponding
+> > address_space_operations update.
+> >
+> > Make the 2 options mutually exclusive by returning an error if DAX was
+> > set first.
+> >
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+>
+> The encryption flag is inherited from the containing directory, and
+> directories can't have the DAX flag set, so anything we do in
+> ext4_set_context() will be safety belt / sanity checking in nature.
+>
+> But we *do* need to figure out what we do with mount -o dax=always
+> when the file system might have encrypted files.  My previous comments
+> about the verity flag and dax flag applies here.
+>
+> Also note that encrypted files are read/write so we must never allow
+> the combination of ENCRPYT_FL and DAX_FL.  So that may be something
+> where we should teach __ext4_iget() to check for this, and declare the
+> file system as corrupted if it sees this combination.  (For VERITY_FL
+> && DAX_FL that is a combo that we might want to support in the future,
+> so that's probably a case where arguably, we should just ignore the
+> DAX_FL for now.)
 
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
----
- .../bindings/display/panel/panel-simple.yaml  |  2 ++
- drivers/gpu/drm/panel/panel-simple.c          | 28 +++++++++++++++++++
- 2 files changed, 30 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-index 7c9a08d846b9..b3f1f4c83da6 100644
---- a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-+++ b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-@@ -57,6 +57,8 @@ properties:
-       - auo,g104sn02
-         # AU Optronics Corporation 13.3" FHD (1920x1080) TFT LCD panel
-       - auo,g133han01
-+        # AU Optronics Corporation 15.6" (1366x768) TFT LCD panel
-+      - auo,g156xtn01
-         # AU Optronics Corporation 18.5" FHD (1920x1080) TFT LCD panel
-       - auo,g185han01
-         # AU Optronics Corporation 19.0" (1280x1024) TFT LCD panel
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 8d1cf68ca01b..a80dced09b16 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -903,6 +903,31 @@ static const struct panel_desc auo_g133han01 = {
- 	.connector_type = DRM_MODE_CONNECTOR_LVDS,
- };
- 
-+static const struct drm_display_mode auo_g156xtn01_mode = {
-+	.clock = 76000,
-+	.hdisplay = 1366,
-+	.hsync_start = 1366 + 33,
-+	.hsync_end = 1366 + 33 + 67,
-+	.htotal = 1560,
-+	.vdisplay = 768,
-+	.vsync_start = 768 + 4,
-+	.vsync_end = 768 + 4 + 4,
-+	.vtotal = 806,
-+	.vrefresh = 60,
-+};
-+
-+static const struct panel_desc auo_g156xtn01 = {
-+	.modes = &auo_g156xtn01_mode,
-+	.num_modes = 1,
-+	.bpc = 8,
-+	.size = {
-+		.width = 344,
-+		.height = 194,
-+	},
-+	.bus_format = MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
-+	.connector_type = DRM_MODE_CONNECTOR_LVDS,
-+};
-+
- static const struct display_timing auo_g185han01_timings = {
- 	.pixelclock = { 120000000, 144000000, 175000000 },
- 	.hactive = { 1920, 1920, 1920 },
-@@ -3524,6 +3549,9 @@ static const struct of_device_id platform_of_match[] = {
- 	}, {
- 		.compatible = "auo,g133han01",
- 		.data = &auo_g133han01,
-+	}, {
-+		.compatible = "auo,g156xtn01",
-+		.data = &auo_g156xtn01,
- 	}, {
- 		.compatible = "auo,g185han01",
- 		.data = &auo_g185han01,
--- 
-2.25.1
-
+We also have a pending consideration for what MKTME (inline memory
+encryption with programmable hardware keys) means for file-encryption
++ dax. Certainly kernel based software encryption is incompatible with
+dax, but one of the hallway track discussions I wanted to have at LSF
+is whether fscrypt is the right interface for managing inline memory
+encryption. For now, disallowing ENCRPYT_FL + DAX_FL seems ok if
+ENCRPYT_FL always means software encryption, but this is something to
+circle back to once we get MKTME implemented for volume encryption and
+start to look at finer grained (per-directory key) encryption.
