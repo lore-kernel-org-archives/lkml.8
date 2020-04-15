@@ -2,107 +2,105 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7599C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:34:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D26FC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:35:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 847F820857
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:34:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17A4320656
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:35:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fudan.edu.cn header.i=@fudan.edu.cn header.b="MkExDy6L"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VMDZHZs1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2894610AbgDOIes (ORCPT
+        id S2894622AbgDOIe5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 04:34:48 -0400
-Received: from mail.fudan.edu.cn ([202.120.224.73]:43640 "EHLO fudan.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2408071AbgDOIeg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 04:34:36 -0400
+        Wed, 15 Apr 2020 04:34:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40056 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2894608AbgDOIer (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 04:34:47 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84342C061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 01:34:46 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id y12so1006019pll.2
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 01:34:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fudan.edu.cn; s=dkim; h=Received:From:To:Cc:Subject:Date:
-        Message-Id; bh=OdG4JenZYuQ6SubtD8jAKOkRVrIevOaSd9jsn2zjJrw=; b=M
-        kExDy6LJS0gvKwy6z3k4oYyr9K/y9RITg0sWY43l/+MuwuQZ9qbq+Km088wIscOw
-        kvNjgtWMkSbRJZpCf+o3nmCJxYrRxuK7fSspXLesjdbPFELovEQltkQLiENkKErv
-        dEyDD/lqGqoaS7TPBr8DULO4RetQj+FbtzGSXjEL8o=
-Received: from localhost.localdomain (unknown [120.229.255.108])
-        by app2 (Coremail) with SMTP id XQUFCgCnr4P9xpZeiEtZAA--.61S3;
-        Wed, 15 Apr 2020 16:34:08 +0800 (CST)
-From:   Xiyu Yang <xiyuyang19@fudan.edu.cn>
-To:     Marek Lindner <mareklindner@neomailbox.ch>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
-        Antonio Quartulli <a@unstable.cc>,
-        Sven Eckelmann <sven@narfation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        b.a.t.m.a.n@lists.open-mesh.org, netdev@vger.kernel.org,
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+q9fhhXPPAI7xxs/9paMNG32NDbx6qowMd0HgUTJNtQ=;
+        b=VMDZHZs1bvqz6PiZYIWZ+woRZRnHL6I1fpiW+L4HvfygeUqSu6Ii1p5NAf45V6eARl
+         z+UyKYu2Yk4TOIEALs30LSMo28PPAvKD+f6fG3Kig06kRdFrRUav4fixpF9OT8tJ2xHo
+         6Ki2asDTK1znR+MWJo94R2r+Y499EyKqr7SVIplFOWDXK07GAfMzPZWomr8np813v70o
+         +SrV5GJnZqp+kUIymHq2vrx4L4gA0orij7Nb0c1jNXIUrj6QkdvyErnyq4MHxI5enEY5
+         jG5s5q/BQDGIIxt4aFToHbsiSlCulRVNZAaydltkwT97FZmuKX7NeNIu0C6HyaPy4jGM
+         LHQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+q9fhhXPPAI7xxs/9paMNG32NDbx6qowMd0HgUTJNtQ=;
+        b=d/qTrUQJWgZ4AmlbB28hAGORLXe7q7WVThDXR/ycEQEHvRG0IiMWo/88DqC7D9mX5g
+         RlAfSbZDiAunhK81Bk1u/ZDD/azlPMwBFApo3NPBRiNM62Ndx5qix63tMHVtvq+RxzZa
+         fEfBb6VDh8xNi1Zq4jlxkBKDMOVuepKwt+7M25mhrBBrG2lTGHMHAOASlEDBc7eLlX+i
+         hMc7vPX9QDnVavad3fTzEAY/wiInnR0WzHWqZoI1lIROplT1w4VhsW6GySkQhOE6nqrn
+         0Mjw5diwfI7juSw5Q30Gyg6qrnErra2IgBhIeGWbrpeT26ZP/JNLprEuCgNBMW0oRNPY
+         wTCQ==
+X-Gm-Message-State: AGi0PubKGiHL+8zsKS2XC27VUBBhpBZmN1pVkiXNZdnyO8C462JXYfkJ
+        Kg+/Y4bES+zuHPH4F136xxTqYw==
+X-Google-Smtp-Source: APiQypLXlvIf9iAE5/Jo4UuQtf7n/lK3XHyTG3fumOIXJV/vUkc1I5jkiiE3V1Ixruw7tVE1wddAeQ==
+X-Received: by 2002:a17:90a:3327:: with SMTP id m36mr4926706pjb.116.1586939685903;
+        Wed, 15 Apr 2020 01:34:45 -0700 (PDT)
+Received: from localhost ([122.171.118.46])
+        by smtp.gmail.com with ESMTPSA id c190sm12840456pfa.66.2020.04.15.01.34.44
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 15 Apr 2020 01:34:45 -0700 (PDT)
+Date:   Wed, 15 Apr 2020 14:04:43 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Anders Roxell <anders.roxell@linaro.org>
+Cc:     rjw@rjwysocki.net, linux-pm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
-        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>
-Subject: [PATCH] batman-adv: Fix refcnt leak in batadv_show_throughput_override
-Date:   Wed, 15 Apr 2020 16:31:50 +0800
-Message-Id: <1586939510-69461-1-git-send-email-xiyuyang19@fudan.edu.cn>
-X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID: XQUFCgCnr4P9xpZeiEtZAA--.61S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7Zw43KF45Cw17Cr43WFy7trb_yoW8GrWfpr
-        Wjkr13Kr4vgw1DGwn0y3s8Wa4rAF43XFyUGF4rZ3WrArs5J3sayrySyFyjkr1UAFyrKw12
-        qF4avF98AFyDCFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26rxl
-        6s0DM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-        0DM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8Jw
-        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAG
-        YxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
-        AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
-        17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
-        IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq
-        3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
-        nIWIevJa73UjIFyTuYvjfUOlksUUUUU
-X-CM-SenderInfo: irzsiiysuqikmy6i3vldqovvfxof0/
+Subject: Re: [PATCH] cpufreq: omap: Build driver by default for ARCH_OMAP2PLUS
+Message-ID: <20200415083443.mb4ayu5ioyqljojn@vireshk-i7>
+References: <20200415081600.29904-1-anders.roxell@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200415081600.29904-1-anders.roxell@linaro.org>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-batadv_show_throughput_override() invokes batadv_hardif_get_by_netdev(),
-which gets a batadv_hard_iface object from net_dev with increased refcnt
-and its reference is assigned to a local pointer 'hard_iface'.
+On 15-04-20, 10:15, Anders Roxell wrote:
+> When building the mult_v7_defconfig, ARM_TI_CPUFREQ doesn't get enabled
+> evenwhen ARCH_OMAP(3|4) is selected. Build ARM_TI_CPUFREQ by default for
+> ARCH_OMAP2PLUS.
+> 
+> Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+> ---
+>  drivers/cpufreq/Kconfig.arm | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
+> index 15c1a1231516..9481292981f0 100644
+> --- a/drivers/cpufreq/Kconfig.arm
+> +++ b/drivers/cpufreq/Kconfig.arm
+> @@ -317,6 +317,7 @@ config ARM_TEGRA186_CPUFREQ
+>  config ARM_TI_CPUFREQ
+>  	bool "Texas Instruments CPUFreq support"
+>  	depends on ARCH_OMAP2PLUS
+> +	default ARCH_OMAP2PLUS
+>  	help
+>  	  This driver enables valid OPPs on the running platform based on
+>  	  values contained within the SoC in use. Enable this in order to
 
-When batadv_show_throughput_override() returns, "hard_iface" becomes
-invalid, so the refcount should be decreased to keep refcount balanced.
+Applied. Thanks.
 
-The issue happens in the normal path of
-batadv_show_throughput_override(), which forgets to decrease the refcnt
-increased by batadv_hardif_get_by_netdev() before the function returns,
-causing a refcnt leak.
-
-Fix this issue by calling batadv_hardif_put() before the
-batadv_show_throughput_override() returns in the normal path.
-
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
----
- net/batman-adv/sysfs.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/net/batman-adv/sysfs.c b/net/batman-adv/sysfs.c
-index 97736696d042..0f962dcd239e 100644
---- a/net/batman-adv/sysfs.c
-+++ b/net/batman-adv/sysfs.c
-@@ -1190,6 +1190,7 @@ static ssize_t batadv_show_throughput_override(struct kobject *kobj,
- 
- 	tp_override = atomic_read(&hard_iface->bat_v.throughput_override);
- 
-+	batadv_hardif_put(hard_iface);
- 	return sprintf(buff, "%u.%u MBit\n", tp_override / 10,
- 		       tp_override % 10);
- }
 -- 
-2.7.4
-
+viresh
