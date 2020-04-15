@@ -2,87 +2,87 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEFA3C3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:44:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D87CC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:44:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 964E12168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:44:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E1392076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:44:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586987084;
+	bh=d70WE9UrG3WG2ng9rKQE35xkTHOeB3Njfu1omBSNyRo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=aZWoEHCuNnah+EozfoxAKI6ia0uC6FMWcm3/ieY2SIiF5EJA51pgSvWJAcl1emI77
+	 GGrOCBaVvWKLenuzvxNnf+1SOKqM1X1Xk3xGMmJdjO3osQnlAh+bpEvgyBdLbJ0N9X
+	 PRDKL/60ZFv1kdb1oUfTB1yVZAjvGPAIA+iIm1BE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730243AbgDOVo1 (ORCPT
+        id S1730631AbgDOVok (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 17:44:27 -0400
-Received: from mga02.intel.com ([134.134.136.20]:2384 "EHLO mga02.intel.com"
+        Wed, 15 Apr 2020 17:44:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727857AbgDOVoQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 17:44:16 -0400
-IronPort-SDR: 0lqUjT+DyiL+wFhzy3nN5S0EBfcpRPuJixEy+8dY/2e1SOgVwgBmQIvFz+b2CN19PiKZ3n7hFF
- hZQsHb4h8q+Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 14:44:15 -0700
-IronPort-SDR: yeKwic9N8U6AnBAd+/yrXJjyKqEm4GeAUcuTcCxW3sjUiDgZWI3mSbul7ednoPy89yhVrHeCVg
- HpwD+NLgRynQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,388,1580803200"; 
-   d="scan'208";a="427584255"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by orsmga005.jf.intel.com with ESMTP; 15 Apr 2020 14:44:15 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>
-Subject: [PATCH 1/2] KVM: x86/mmu: Set @writable to false for non-visible accesses by L2
-Date:   Wed, 15 Apr 2020 14:44:13 -0700
-Message-Id: <20200415214414.10194-2-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200415214414.10194-1-sean.j.christopherson@intel.com>
-References: <20200415214414.10194-1-sean.j.christopherson@intel.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1730409AbgDOVo3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 17:44:29 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DAF8B2076C;
+        Wed, 15 Apr 2020 21:44:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586987067;
+        bh=d70WE9UrG3WG2ng9rKQE35xkTHOeB3Njfu1omBSNyRo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=vv6K5mdGmd/tAm9iNBNZO+qoEN/QyNrfO/tcJVi+jO+e318ZSnVlh3a7LaFjvzYxP
+         Hg0aPElrm+JCbdWq9R49xgZt3N/ZJfgz4jszW8zlBcfl9JX5+PTRhhlNi01fwNO20+
+         IfqccJ45QkqnX+0Zgl3VuuM/GdgPGCoa+e6ZkelU=
+Date:   Wed, 15 Apr 2020 14:44:26 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc:     Andrea Arcangeli <aarcange@redhat.com>, Zi Yan <ziy@nvidia.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        William Kucharski <william.kucharski@oracle.com>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv3, RESEND 6/8] khugepaged: Allow to collapse PTE-mapped
+ compound pages
+Message-Id: <20200415144426.a146ef173140f5bc396a6dcd@linux-foundation.org>
+In-Reply-To: <20200413125220.663-7-kirill.shutemov@linux.intel.com>
+References: <20200413125220.663-1-kirill.shutemov@linux.intel.com>
+        <20200413125220.663-7-kirill.shutemov@linux.intel.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Explicitly set @writable to false in try_async_pf() if the GFN->PFN
-translation is short-circuited due to the requested GFN not being
-visible to L2.
+On Mon, 13 Apr 2020 15:52:18 +0300 "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com> wrote:
 
-Leaving @writable ('map_writable' in the callers) uninitialized is ok
-in that it's never actually consumed, but one has to track it all the
-way through set_spte() being short-circuited by set_mmio_spte() to
-understand that the uninitialized variable is benign, and relying on
-@writable being ignored is an unnecessary risk.  Explicitly setting
-@writable also aligns try_async_pf() with __gfn_to_pfn_memslot().
+> We can collapse PTE-mapped compound pages. We only need to avoid
+> handling them more than once: lock/unlock page only once if it's present
+> in the PMD range multiple times as it handled on compound level. The
+> same goes for LRU isolation and putback.
+> 
+> ...
+>
+> --- a/mm/khugepaged.c
+> +++ b/mm/khugepaged.c
+> @@ -515,17 +515,30 @@ void __khugepaged_exit(struct mm_struct *mm)
+>  
+>  static void release_pte_page(struct page *page)
+>  {
+> -	dec_node_page_state(page, NR_ISOLATED_ANON + page_is_file_cache(page));
 
-Jim Mattson <jmattson@google.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/x86/kvm/mmu/mmu.c | 1 +
- 1 file changed, 1 insertion(+)
+I have
 
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index c6ea6032c222..6d6cb9416179 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -4090,6 +4090,7 @@ static bool try_async_pf(struct kvm_vcpu *vcpu, bool prefault, gfn_t gfn,
- 	 */
- 	if (is_guest_mode(vcpu) && !kvm_is_visible_gfn(vcpu->kvm, gfn)) {
- 		*pfn = KVM_PFN_NOSLOT;
-+		*writable = false;
- 		return false;
- 	}
- 
--- 
-2.26.0
+	dec_node_page_state(page, NR_ISOLATED_ANON + page_is_file_lru(page));
+
+here.  Is there some prerequisite which I wasn't able to find?
+
 
