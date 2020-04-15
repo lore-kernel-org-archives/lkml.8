@@ -2,126 +2,86 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B8AAC3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:10:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87E44C3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58F28216FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:10:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C4A721744
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:11:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586970635;
-	bh=DLkM0qrgDfqYJeNxDYgrge38PQpL7c5CoQoaVrnSvAU=;
-	h=Date:From:To:Cc:Subject:Reply-To:List-ID:From;
-	b=hpL74BXWie0i4qOGCBWTrui6ZwYsxJQdAF3tL3MCxLCNm0eeRmHeKZ5spXwbzQBz6
-	 ORJBLSUZeoJhpYYI1R9qBYFU1IIBHkIg0hjDj3cwPL/k5d5ziY9SOD0I5Cw1YGx/lt
-	 f1vGJiqvfezziaoiNBqzLc0R6mpgtJiAPd9VsGxg=
+	s=default; t=1586970669;
+	bh=dmpyRpRc++xi9KkXweAWSawKqD80BTw54kiQlk5yZVo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ODv1f8YSviU0i16AAqdcWIO/qpAc95ZvDMcp0fEIIlVpxziKl+uQhYTsEjnG65qgz
+	 WScBi2hO8Erl5WNw5PYE2ELQBtxS+zHqUp+Tp187klm/FdHHYaohAyOk4I97kvCKIx
+	 NqgbQj8WjfULyt4ZakAd5+OqBsZnQaxL9kh31ftE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410686AbgDORKX (ORCPT
+        id S2410742AbgDORLG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 13:10:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41134 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 13:11:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405975AbgDORKS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 13:10:18 -0400
+        id S2410710AbgDORK5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 13:10:57 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72A72214D8;
-        Wed, 15 Apr 2020 17:10:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D81E421973;
+        Wed, 15 Apr 2020 17:10:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586970617;
-        bh=DLkM0qrgDfqYJeNxDYgrge38PQpL7c5CoQoaVrnSvAU=;
-        h=Date:From:To:Cc:Subject:Reply-To:From;
-        b=URp+4Oeki+J2olm7TZ1D+p094+E/q/VE4p05GeRM4re/dkW6alKwIwoHL7uRX2VkV
-         2474+7gZV0soxlxHxLCryy4K1HYhAf5F1D3tFE+SgU6obQ5elAai7mkDdJAU4vqvvM
-         fmvNA8fhnwPpMyLiEBZAt1nD0Yb11sWw+S47N1Z4=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 1111B3522AD1; Wed, 15 Apr 2020 10:10:17 -0700 (PDT)
-Date:   Wed, 15 Apr 2020 10:10:17 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
+        s=default; t=1586970657;
+        bh=dmpyRpRc++xi9KkXweAWSawKqD80BTw54kiQlk5yZVo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1tVbQd/dvCVWYC2kNLKlHCDMVJDHASlNKsYSe1LPvlE1fLHuLR0TZP2xDHDou00cO
+         2ueBIzta+BYucxSRFfpf+AJshmQoAbAkE2KoPas79HThfUhm+s5WEx1K42xAZ8QKlX
+         KMcF3nYI1l3wGAh4b5AlSBo1miDKqVfZTBYWAmj4=
+From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         jiangshanlai@gmail.com, dipankar@in.ibm.com,
         akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
         josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org
-Subject: [PATCH tip/core/rcu 0/19] Miscellaneous fixes for v5.8
-Message-ID: <20200415171017.GA7821@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
+        "Paul E. McKenney" <paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 03/19] rcu: Mark rcu_state.ncpus to detect concurrent writes
+Date:   Wed, 15 Apr 2020 10:10:38 -0700
+Message-Id: <20200415171054.9013-3-paulmck@kernel.org>
+X-Mailer: git-send-email 2.9.5
+In-Reply-To: <20200415171017.GA7821@paulmck-ThinkPad-P72>
+References: <20200415171017.GA7821@paulmck-ThinkPad-P72>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+From: "Paul E. McKenney" <paulmck@kernel.org>
 
-This series provides miscellaneous fixes.
+The rcu_state structure's ncpus field is only to be modified by the
+CPU-hotplug CPU-online code path, which is single-threaded.  This
+commit therefore enlists KCSAN's help in enforcing this restriction.
 
-1.	Add KCSAN stubs to tree.c.
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+---
+ kernel/rcu/tree.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-2.	Add KCSAN stubs to srcutree.c.
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index f13130a..4fd3e0f 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -3612,6 +3612,7 @@ void rcu_cpu_starting(unsigned int cpu)
+ 	nbits = bitmap_weight(&oldmask, BITS_PER_LONG);
+ 	/* Allow lockless access for expedited grace periods. */
+ 	smp_store_release(&rcu_state.ncpus, rcu_state.ncpus + nbits); /* ^^^ */
++	ASSERT_EXCLUSIVE_WRITER(rcu_state.ncpus);
+ 	rcu_gpnum_ovf(rnp, rdp); /* Offline-induced counter wrap? */
+ 	rdp->rcu_onl_gp_seq = READ_ONCE(rcu_state.gp_seq);
+ 	rdp->rcu_onl_gp_flags = READ_ONCE(rcu_state.gp_flags);
+-- 
+2.9.5
 
-3.	Mark rcu_state.ncpus to detect concurrent writes.
-
-4.	Add *_ONCE() and data_race() to rcu_node ->exp_tasks and also
-	add some needed locking.
-
-5.	Add READ_ONCE and data_race() to rcu_node ->boost_tasks.
-
-6.	Add data_race() to ->srcu_lock_count and ->srcu_unlock_count arrays.
-
-7.	Add WRITE_ONCE() to rcu_node ->boost_tasks.
-
-8.	Use data_race() for RCU CPU stall-warning prints.
-
-9.	Make drm_dp_mst_dsc_aux_for_port() safe for old compilers.
-	Hey, I have the hair color for it!!!  ;-)
-
-10.	Expedite first two FQS scans under callback-overload conditions.
-
-11.	Fix the (t=0 jiffies) false positive, courtesy of Zhaolong Zhang.
-
-12.	Revert "rculist: Describe variadic macro argument in a
-	Sphinx-compatible way" due to Sphinx now being able to handle
-	the original description, courtesy of Jonathan Neuschäfer.
-
-13.	Get rid of some doc warnings in update.c, courtesy of
-	Mauro Carvalho Chehab.
-
-14.	Mark rcu_state.gp_seq to detect more concurrent writes.
-
-15.	Replace assigned pointer ret value by corresponding boolean value,
-	courtesy of Jules Irenge.
-
-16.	Replace 1 by true in use_softirq initialization, courtesy of
-	Jules Irenge.
-
-17.	Convert ULONG_CMP_GE() to time_after() for jiffy comparison.
-
-18.	Convert rcu_initiate_boost() ULONG_CMP_GE() to time_after().
-
-19.	Convert rcu_nohz_full_cpu() ULONG_CMP_LT() to time_before().
-
-							Thanx, Paul
-
-------------------------------------------------------------------------
-
- drivers/gpu/drm/drm_dp_mst_topology.c |    2 -
- include/linux/rculist.h               |    4 +--
- kernel/rcu/srcutree.c                 |   21 ++++++++++++++---
- kernel/rcu/tree.c                     |   41 ++++++++++++++++++++++++++++------
- kernel/rcu/tree.h                     |    1 
- kernel/rcu/tree_exp.h                 |   19 +++++++++------
- kernel/rcu/tree_plugin.h              |   21 +++++++++--------
- kernel/rcu/tree_stall.h               |   38 +++++++++++++++----------------
- kernel/rcu/update.c                   |   14 +++++------
- 9 files changed, 103 insertions(+), 58 deletions(-)
