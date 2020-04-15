@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71FFCC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:28:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBAEEC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:29:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D394206E9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:28:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7CD4206E9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:29:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="mk01WjuZ"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="W9Ip2w4s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2894557AbgDOI2u (ORCPT
+        id S2894566AbgDOI3E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 04:28:50 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:4463 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2894488AbgDOI1K (ORCPT
+        Wed, 15 Apr 2020 04:29:04 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:16774 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2894466AbgDOI1K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Apr 2020 04:27:10 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e96c49c0000>; Wed, 15 Apr 2020 01:23:56 -0700
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e96c4b90000>; Wed, 15 Apr 2020 01:24:25 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 15 Apr 2020 01:25:45 -0700
+  Wed, 15 Apr 2020 01:25:23 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 15 Apr 2020 01:25:45 -0700
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Apr
- 2020 08:25:45 +0000
+        by hqpgpgate101.nvidia.com on Wed, 15 Apr 2020 01:25:23 -0700
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Apr
+ 2020 08:25:22 +0000
 Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL111.nvidia.com
  (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 15 Apr 2020 08:25:45 +0000
+ Transport; Wed, 15 Apr 2020 08:25:22 +0000
 Received: from nkristam-ubuntu.nvidia.com (Not Verified[10.19.67.128]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e96c5050001>; Wed, 15 Apr 2020 01:25:44 -0700
+        id <B5e96c4ef0000>; Wed, 15 Apr 2020 01:25:21 -0700
 From:   Nagarjuna Kristam <nkristam@nvidia.com>
 To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
         <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
@@ -45,9 +45,9 @@ To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
 CC:     <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Nagarjuna Kristam <nkristam@nvidia.com>
-Subject: [PATCH V2 7/8] phy: tegra: xusb: Enable charger detect for Tegra186
-Date:   Wed, 15 Apr 2020 13:55:07 +0530
-Message-ID: <1586939108-10075-8-git-send-email-nkristam@nvidia.com>
+Subject: [PATCH V2 1/8] dt-bindings: phy: tegra-xusb: Add charger-detect property
+Date:   Wed, 15 Apr 2020 13:55:01 +0530
+Message-ID: <1586939108-10075-2-git-send-email-nkristam@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1586939108-10075-1-git-send-email-nkristam@nvidia.com>
 References: <1586939108-10075-1-git-send-email-nkristam@nvidia.com>
@@ -55,43 +55,49 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1586939036; bh=NFF4rNyK1bxZi46MjrBDC+rV9hWDW87mBhP0TbbGgTA=;
+        t=1586939065; bh=SV8SYGELTW8vG0isvMFMvi6jGyjhj/U0TJjzJY0h4YA=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=mk01WjuZWgabl8Wy/fkvjv+ayfW5bgYmcF+pYBmsNhgjaa+VOyrFXHUbz6BQHacU5
-         tzif5yOp2K6WtRLenXrgyZIm4vftNJsgZ6fU2BFH3iHt40t+f8AiBa/6EATEQRD+/T
-         OKn8qpNxCv1J1rDD2x5G5TnE5XUa/mnMPiDG46THt1bGSGYpSmjHrNZO5WgGwl3P/e
-         0e6lKj7TXyM9+x/x4FDNZ3AIpY3rBEbN2GfHdA0dizbsqYmBvgr6yLpdt/T0ugcwyX
-         vF4SP36dyi8GBbdFLVdklbN2+2qAvirR693fijsaJ0f/jQJlxeOOkb1WQvpaktXZD6
-         13zQ5COLtk36Q==
+        b=W9Ip2w4sJ4GcC+j42qRE8/LGsCSIOrqZ+8+7GADC/vJBlGvVVjGbltupTQjoBKVpU
+         zlD7HSFxoFF35N/OubsbW05ui8FG2h/MrjE2bioybjIUET9Zx0RoMZPNePqpoEhW4m
+         j4ZW8CuEZ4S8/s0u37ct4Sr+tmQSPyt05gWtQbU1WcqBOI5S1Ul+CN8g9Mm5AwhSSJ
+         ZhGe0t3LlWfFuVKpABfv2gYQnP0d4+Kq3C7kn0k86jLo78v9JtzBL49CfqEPeOCOXR
+         iFLnoFa41s9bRTGRBszW6CcWOkV1wTS2v9rifQz2yuHXiWcdkV+QrYRJckYpd3Jtsm
+         +R1Gztu25QExg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tegra186 SoC supports charger detect, set corresponding soc flag.
+Add nvidia,charger-detect boolean property for Tegra210 and Tegra186
+platforms. This property is used to inform driver to perform charger
+detection on corresponding USB 2 port.
 
 Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
 V2:
- - Patch re-based.
+ - Added Acked-by updates to commit message.
 ---
- drivers/phy/tegra/xusb-tegra186.c | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/phy/tegra/xusb-tegra186.c b/drivers/phy/tegra/xusb-tegra186.c
-index 03bdb5b..12ff492 100644
---- a/drivers/phy/tegra/xusb-tegra186.c
-+++ b/drivers/phy/tegra/xusb-tegra186.c
-@@ -1041,6 +1041,7 @@ const struct tegra_xusb_padctl_soc tegra186_xusb_padctl_soc = {
- 	.ops = &tegra186_xusb_padctl_ops,
- 	.supply_names = tegra186_xusb_padctl_supply_names,
- 	.num_supplies = ARRAY_SIZE(tegra186_xusb_padctl_supply_names),
-+	.charger_detect = true,
- };
- EXPORT_SYMBOL_GPL(tegra186_xusb_padctl_soc);
- #endif
+diff --git a/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt b/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt
+index 38c5fa2..9b2d2dd 100644
+--- a/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt
++++ b/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt
+@@ -190,6 +190,10 @@ Required properties for OTG/Peripheral capable USB2 ports:
+   and peripheral roles. Connector should be added as subnode.
+   See usb/usb-conn-gpio.txt.
+ 
++Optional properties for OTG/Peripheral capable USB2 ports:
++- nvidia,charger-detect: A boolean property whose presence inform driver to
++  perform charger-detect activity.
++
+ Optional properties:
+ - nvidia,internal: A boolean property whose presence determines that a port
+   is internal. In the absence of this property the port is considered to be
 -- 
 2.7.4
 
