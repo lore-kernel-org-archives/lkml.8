@@ -2,176 +2,289 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC75BC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:30:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51716C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:31:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6D8820767
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:30:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ApJldMkk"
+	by mail.kernel.org (Postfix) with ESMTP id 3002E20767
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:31:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2636929AbgDOPa3 (ORCPT
+        id S2636938AbgDOPb0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 11:30:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48276 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2636915AbgDOPaI (ORCPT
+        Wed, 15 Apr 2020 11:31:26 -0400
+Received: from m17618.mail.qiye.163.com ([59.111.176.18]:15290 "EHLO
+        m17618.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2636891AbgDOPbV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 11:30:08 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CD5CC061A0C;
-        Wed, 15 Apr 2020 08:30:07 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id h6so2999010lfc.0;
-        Wed, 15 Apr 2020 08:30:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=DPb8+Nlpt6o6yna8tbp3FRUHgnKxP8jckYKTvBj50iI=;
-        b=ApJldMkkCVVKxU6kq1SAxFv5PDRfiNyfKpgmK2Vd0uJdBj+w8iIYutz4KrSB2/Cq45
-         OE5JHyvfvfFKhfQajnrIP36sjB47tMiNXafcn/5YtAdaLpZ4Vu9a8eXCVHx1ESZ4ju9P
-         DT7ftWHICKujchkQaa6az3Sompeb8MWtUSaY65+NfLy+zPgC8+LtKyTVggVf7nC9idbC
-         IB0g0u5QY5ktrF4cRmeTtsumj463JYVTwZj7GrEjoBJT6il3z38oEjrgP8ctZxmAKAF9
-         MWobJP+tDedOmalmze7ZNCMET/GmLE1dxyXIurzf6B1qAxVQ2gUlWRkecbMZf5oIZICX
-         gs6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=DPb8+Nlpt6o6yna8tbp3FRUHgnKxP8jckYKTvBj50iI=;
-        b=YKQPvr47bcNuxtqf+WRSrvdysHY3K2ziPBYqUtIo++xuGqba1Ce63CTT3J7Ggz2OVd
-         C+7CnXykoftgmMt9mzsSbg0juqYi6W8MMZyKq6dtMWjhITNLv48r8AtXanFq1mH6RMrC
-         0klLHxezpon8y/+ycp3pcqjioxdqkFV7qDCvXDOcuzJUg9gLtC/dSuXxKIs2JaqH6BnW
-         N/Sr4/z5ZyEmRsCR29l8Qv1uO3RdSTfpmFHua4EdZsv39RK+GJ0R5fkkmpUJR1ZhVsfZ
-         KaE5PQfffkiURenmRDTuEkEhKSWkDKZwg89KXUbHGVC4oV8xFLtat0b0WWpCl1QLNr88
-         l8gw==
-X-Gm-Message-State: AGi0PuZgFzx7+VAA/i4AOTNhCu+KPCyGTPWh3RyECMuHLUWezsbyDgOG
-        U+nodaMpJ1SsKtz72BJCA/lZGoF2
-X-Google-Smtp-Source: APiQypLpFlA7IaDBDoJ9pTmc16n06mw9a2eJURsaHUuckGt8BSsHfTaDsETXroXxN4JjYGwHqKgpwg==
-X-Received: by 2002:ac2:4c39:: with SMTP id u25mr3472297lfq.54.1586964605024;
-        Wed, 15 Apr 2020 08:30:05 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id k18sm16579906lfg.81.2020.04.15.08.30.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Apr 2020 08:30:03 -0700 (PDT)
-Subject: Re: [PATCH 4/9] dt-bindings: power: supply: Add device-tree binding
- for Summit SMB3xx
-To:     Rob Herring <robh@kernel.org>, David Heidelberg <david@ixit.cz>,
-        Sebastian Reichel <sre@kernel.org>
-Cc:     Jonghwa Lee <jonghwa3.lee@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Myungjoo Ham <myungjoo.ham@samsung.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Vinay Simha BN <simhavcs@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        ramakrishna.pallala@intel.com,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org
-References: <20200329161552.215075-1-david@ixit.cz>
- <20200329162128.218584-5-david@ixit.cz> <20200410164905.GA719@bogus>
- <8c4ab1ce-1947-ab38-3f8c-9055406428e4@gmail.com>
- <CAL_JsqJgZaQux04vdkShX4vkmOK5T-H6tOXt7Da19jgG0P76-Q@mail.gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <687db60d-fea9-f157-d4ce-907189bb3cc7@gmail.com>
-Date:   Wed, 15 Apr 2020 18:30:02 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <CAL_JsqJgZaQux04vdkShX4vkmOK5T-H6tOXt7Da19jgG0P76-Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Wed, 15 Apr 2020 11:31:21 -0400
+Received: from ubuntu.localdomain (unknown [58.251.74.226])
+        by m17618.mail.qiye.163.com (Hmail) with ESMTPA id D314C4E1AAF;
+        Wed, 15 Apr 2020 23:25:42 +0800 (CST)
+From:   Wang Wenhu <wenhu.wang@vivo.com>
+To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        oss@buserror.net, christophe.leroy@c-s.fr,
+        linuxppc-dev@lists.ozlabs.org
+Cc:     kernel@vivo.com, Wang Wenhu <wenhu.wang@vivo.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH v2,5/5] drivers: uio: new driver for fsl_85xx_cache_sram
+Date:   Wed, 15 Apr 2020 08:24:42 -0700
+Message-Id: <20200415152442.122873-6-wenhu.wang@vivo.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200415152442.122873-1-wenhu.wang@vivo.com>
+References: <20200415124929.GA3265842@kroah.com>
+ <20200415152442.122873-1-wenhu.wang@vivo.com>
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSFVLSElCQkJCQklITEtNSllXWShZQU
+        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NAg6Mjo4Ezg*HghCESkJGQ8a
+        Gk8KCkpVSlVKTkNNQk1PSE9ISU9NVTMWGhIXVQweFRMOVQwaFRw7DRINFFUYFBZFWVdZEgtZQVlO
+        Q1VJTkpVTE9VSUlNWVdZCAFZQUNOS083Bg++
+X-HM-Tid: 0a717e72294f9376kuwsd314c4e1aaf
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-15.04.2020 17:27, Rob Herring пишет:
-> On Fri, Apr 10, 2020 at 2:02 PM Dmitry Osipenko <digetx@gmail.com> wrote:
->>
->> 10.04.2020 19:49, Rob Herring пишет:
->> ...
->>>> +  summit,max-chg-curr:
->>>> +    description: Maximum current for charging (in uA)
->>>> +    allOf:
->>>> +      - $ref: /schemas/types.yaml#/definitions/uint32
->>>> +
->>>> +  summit,max-chg-volt:
->>>> +    description: Maximum voltage for charging (in uV)
->>>> +    allOf:
->>>> +      - $ref: /schemas/types.yaml#/definitions/uint32
->>>> +    minimum: 3500000
->>>> +    maximum: 4500000
->>>> +
->>>> +  summit,pre-chg-curr:
->>>> +    description: Pre-charging current for charging (in uA)
->>>> +    allOf:
->>>> +      - $ref: /schemas/types.yaml#/definitions/uint32
->>>> +
->>>> +  summit,term-curr:
->>>> +    description: Charging cycle termination current (in uA)
->>>> +    allOf:
->>>> +      - $ref: /schemas/types.yaml#/definitions/uint32
->> ...
->>> These are all properties of the battery attached and we have standard
->>> properties for some/all of these.
->>
->> Looks like only four properties seem to be matching the properties of
->> the battery.txt binding.
->>
->> Are you suggesting that these matching properties should be renamed
->> after the properties in battery.txt?
-> 
-> Yes, and that there should be a battery node.
+A driver for freescale 85xx platforms to access the Cache-Sram form
+user level. This is extremely helpful for some user-space applications
+that require high performance memory accesses.
 
-Usually, it's a battery that has a phandle to the power-supply. Isn't it?
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+Cc: Scott Wood <oss@buserror.net>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: linuxppc-dev@lists.ozlabs.org
+Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
+---
+Changes since v1:
+ * Addressed comments of Greg K-H
+ * Moved kfree(info->name) into uio_info_free_internal()
+---
+ drivers/uio/Kconfig                   |   8 ++
+ drivers/uio/Makefile                  |   1 +
+ drivers/uio/uio_fsl_85xx_cache_sram.c | 182 ++++++++++++++++++++++++++
+ 3 files changed, 191 insertions(+)
+ create mode 100644 drivers/uio/uio_fsl_85xx_cache_sram.c
 
-> Possibly you should add
-> new properties battery.txt. It's curious that different properties are
-> needed.
+diff --git a/drivers/uio/Kconfig b/drivers/uio/Kconfig
+index 202ee81cfc2b..afd38ec13de0 100644
+--- a/drivers/uio/Kconfig
++++ b/drivers/uio/Kconfig
+@@ -105,6 +105,14 @@ config UIO_NETX
+ 	  To compile this driver as a module, choose M here; the module
+ 	  will be called uio_netx.
+ 
++config UIO_FSL_85XX_CACHE_SRAM
++	tristate "Freescale 85xx Cache-Sram driver"
++	depends on FSL_85XX_CACHE_SRAM
++	help
++	  Generic driver for accessing the Cache-Sram form user level. This
++	  is extremely helpful for some user-space applications that require
++	  high performance memory accesses.
++
+ config UIO_FSL_ELBC_GPCM
+ 	tristate "eLBC/GPCM driver"
+ 	depends on FSL_LBC
+diff --git a/drivers/uio/Makefile b/drivers/uio/Makefile
+index c285dd2a4539..be2056cffc21 100644
+--- a/drivers/uio/Makefile
++++ b/drivers/uio/Makefile
+@@ -10,4 +10,5 @@ obj-$(CONFIG_UIO_NETX)	+= uio_netx.o
+ obj-$(CONFIG_UIO_PRUSS)         += uio_pruss.o
+ obj-$(CONFIG_UIO_MF624)         += uio_mf624.o
+ obj-$(CONFIG_UIO_FSL_ELBC_GPCM)	+= uio_fsl_elbc_gpcm.o
++obj-$(CONFIG_UIO_FSL_85XX_CACHE_SRAM)	+= uio_fsl_85xx_cache_sram.o
+ obj-$(CONFIG_UIO_HV_GENERIC)	+= uio_hv_generic.o
+diff --git a/drivers/uio/uio_fsl_85xx_cache_sram.c b/drivers/uio/uio_fsl_85xx_cache_sram.c
+new file mode 100644
+index 000000000000..fb6903fdaddb
+--- /dev/null
++++ b/drivers/uio/uio_fsl_85xx_cache_sram.c
+@@ -0,0 +1,182 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2020 Vivo Communication Technology Co. Ltd.
++ * Copyright (C) 2020 Wang Wenhu <wenhu.wang@vivo.com>
++ * All rights reserved.
++ */
++
++#include <linux/platform_device.h>
++#include <linux/uio_driver.h>
++#include <linux/stringify.h>
++#include <linux/module.h>
++#include <linux/kernel.h>
++#include <asm/fsl_85xx_cache_sram.h>
++
++#define DRIVER_NAME	"uio_fsl_85xx_cache_sram"
++#define UIO_NAME	"uio_cache_sram"
++
++static const struct of_device_id uio_mpc85xx_l2ctlr_of_match[] = {
++	{	.compatible = "uio,fsl,p2020-l2-cache-controller",	},
++	{	.compatible = "uio,fsl,p2010-l2-cache-controller",	},
++	{	.compatible = "uio,fsl,p1020-l2-cache-controller",	},
++	{	.compatible = "uio,fsl,p1011-l2-cache-controller",	},
++	{	.compatible = "uio,fsl,p1013-l2-cache-controller",	},
++	{	.compatible = "uio,fsl,p1022-l2-cache-controller",	},
++	{	.compatible = "uio,fsl,mpc8548-l2-cache-controller",	},
++	{	.compatible = "uio,fsl,mpc8544-l2-cache-controller",	},
++	{	.compatible = "uio,fsl,mpc8572-l2-cache-controller",	},
++	{	.compatible = "uio,fsl,mpc8536-l2-cache-controller",	},
++	{	.compatible = "uio,fsl,p1021-l2-cache-controller",	},
++	{	.compatible = "uio,fsl,p1012-l2-cache-controller",	},
++	{	.compatible = "uio,fsl,p1025-l2-cache-controller",	},
++	{	.compatible = "uio,fsl,p1016-l2-cache-controller",	},
++	{	.compatible = "uio,fsl,p1024-l2-cache-controller",	},
++	{	.compatible = "uio,fsl,p1015-l2-cache-controller",	},
++	{	.compatible = "uio,fsl,p1010-l2-cache-controller",	},
++	{	.compatible = "uio,fsl,bsc9131-l2-cache-controller",	},
++	{},
++};
++
++static void uio_info_free_internal(struct uio_info *info)
++{
++	struct uio_mem *uiomem = &info->mem[0];
++
++	while (uiomem < &info->mem[MAX_UIO_MAPS]) {
++		if (uiomem->size) {
++			mpc85xx_cache_sram_free(uiomem->internal_addr);
++			kfree(uiomem->name);
++		}
++		uiomem++;
++	}
++
++	kfree(info->name);
++}
++
++static int uio_fsl_85xx_cache_sram_probe(struct platform_device *pdev)
++{
++	struct device_node *parent = pdev->dev.of_node;
++	struct device_node *node = NULL;
++	struct uio_info *info;
++	struct uio_mem *uiomem;
++	const char *dt_name;
++	u32 mem_size;
++	u32 align;
++	void *virt;
++	phys_addr_t phys;
++	int ret = -ENODEV;
++
++	/* alloc uio_info for one device */
++	info = kzalloc(sizeof(*info), GFP_KERNEL);
++	if (!info) {
++		ret = -ENOMEM;
++		goto err_out;
++	}
++
++	/* get optional uio name */
++	if (of_property_read_string(parent, "uio_name", &dt_name))
++		dt_name = UIO_NAME;
++
++	info->name = kstrdup(dt_name, GFP_KERNEL);
++	if (!info->name) {
++		ret = -ENOMEM;
++		goto err_info_free;
++	}
++
++	uiomem = &info->mem[0];
++	for_each_child_of_node(parent, node) {
++		ret = of_property_read_u32(node, "cache-mem-size", &mem_size);
++		if (ret) {
++			ret = -EINVAL;
++			goto err_info_free_internel;
++		}
++
++		if (mem_size == 0) {
++			dev_err(&pdev->dev, "cache-mem-size should not be 0\n");
++			ret = -EINVAL;
++			goto err_info_free_internel;
++		}
++
++		align = 2;
++		while (align < mem_size)
++			align *= 2;
++		virt = mpc85xx_cache_sram_alloc(mem_size, &phys, align);
++		if (!virt) {
++			/* mpc85xx_cache_sram_alloc to define the cause */
++			ret = -EINVAL;
++			goto err_info_free_internel;
++		}
++
++		uiomem->memtype = UIO_MEM_PHYS;
++		uiomem->addr = phys;
++		uiomem->size = mem_size;
++		uiomem->name = kstrdup(node->name, GFP_KERNEL);;
++		uiomem->internal_addr = virt;
++		++uiomem;
++
++		if (uiomem >= &info->mem[MAX_UIO_MAPS]) {
++			dev_warn(&pdev->dev, "more than %d uio-maps for device.\n",
++				 MAX_UIO_MAPS);
++			break;
++		}
++	}
++
++	while (uiomem < &info->mem[MAX_UIO_MAPS]) {
++		uiomem->size = 0;
++		++uiomem;
++	}
++
++	if (info->mem[0].size == 0) {
++		dev_err(&pdev->dev, "error no valid uio-map configured\n");
++		ret = -EINVAL;
++		goto err_info_free_internel;
++	}
++
++	info->version = "0.1.0";
++
++	/* register uio device */
++	if (uio_register_device(&pdev->dev, info)) {
++		dev_err(&pdev->dev, "uio registration failed\n");
++		ret = -ENODEV;
++		goto err_info_free_internel;
++	}
++
++	platform_set_drvdata(pdev, info);
++
++	return 0;
++err_info_free_internel:
++	uio_info_free_internal(info);
++err_info_free:
++	kfree(info);
++err_out:
++	return ret;
++}
++
++static int uio_fsl_85xx_cache_sram_remove(struct platform_device *pdev)
++{
++	struct uio_info *info = platform_get_drvdata(pdev);
++
++	uio_unregister_device(info);
++
++	uio_info_free_internal(info);
++
++	kfree(info);
++
++	return 0;
++}
++
++static struct platform_driver uio_fsl_85xx_cache_sram = {
++	.probe = uio_fsl_85xx_cache_sram_probe,
++	.remove = uio_fsl_85xx_cache_sram_remove,
++	.driver = {
++		.name = DRIVER_NAME,
++		.owner = THIS_MODULE,
++		.of_match_table	= uio_mpc85xx_l2ctlr_of_match,
++	},
++};
++
++module_platform_driver(uio_fsl_85xx_cache_sram);
++
++MODULE_AUTHOR("Wang Wenhu <wenhu.wang@vivo.com>");
++MODULE_DESCRIPTION("Freescale MPC85xx Cache-Sram UIO Platform Driver");
++MODULE_ALIAS("platform:" DRIVER_NAME);
++MODULE_LICENSE("GPL v2");
+-- 
+2.17.1
 
-I guess it should be possible to make all these properties generic.
-
-Sebastian, will you be okay if we will add all the required properties
-to the power_supply_core?
-
-> Ultimately, for a given battery technology I would expect
-> there's a fixed set of properties needed to describe how to charge
-> them.
-
-Please notice that the charger doesn't "only charge" the battery,
-usually it also supplies power to the whole device.
-
-For example, when battery is fully-charged and charger is connected to
-the power source (USB or mains), then battery may not draw any current
-at all.
-
-> Perhaps some of these properties can just be derived from other
-> properties and folks are just picking what a specific charger wants.
-
-Could be so, but I don't know for sure.
-
-Even if some properties could be derived from the others, it won't hurt
-if we will specify everything explicitly in the device-tree.
-
-> Unfortunately, we have just a mess of stuff made up for each charger
-> out there. I don't have the time nor the experience in this area to do
-> much more than say do better.
-
-I don't think it's a mess in the kernel. For example, it's common that
-embedded controllers are exposed to the system as "just a battery",
-while in fact it's a combined charger + battery controller and the
-charger parameters just couldn't be changed by SW.
-
-In a case of the Nexus 7 devices, the battery controller and charger
-controller are two separate entities in the system. The battery
-controller (bq27541) only monitors status of the battery (charge level,
-temperature and etc).
