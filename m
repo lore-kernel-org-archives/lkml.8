@@ -2,96 +2,73 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB13C3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:31:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7008C2BB85
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:31:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABF4720775
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:31:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9071020775
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:31:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408043AbgDOHbN (ORCPT
+        id S2635147AbgDOHbO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 03:31:13 -0400
-Received: from m17617.mail.qiye.163.com ([59.111.176.17]:34948 "EHLO
-        m17617.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408029AbgDOH2a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 03:28:30 -0400
-Received: from wangqing-virtual-machine.localdomain (unknown [157.0.31.122])
-        by m17617.mail.qiye.163.com (Hmail) with ESMTPA id 9A0CF261E55;
-        Wed, 15 Apr 2020 15:28:21 +0800 (CST)
-From:   Wang Qing <wangqing@vivo.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Dennis Zhou <dennis@kernel.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        David Sterba <dsterba@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Stefano Brivio <sbrivio@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        Wang Qing <wangqing@vivo.com>, linux-kernel@vger.kernel.org
-Cc:     opensource.kernel@vivo.com
-Subject: [PATCH] Bitmap: Optimized division operation to shift operation
-Date:   Wed, 15 Apr 2020 15:27:40 +0800
-Message-Id: <1586935667-4792-1-git-send-email-wangqing@vivo.com>
-X-Mailer: git-send-email 2.7.4
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZT1VLTE1LS0tJSkhNSUhLTllXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MQw6Vgw5Azg4NAkQCCk2CAkq
-        T04KCS5VSlVKTkNNQkhOTEtKQkxNVTMWGhIXVQwaFRwKEhUcOw0SDRRVGBQWRVlXWRILWUFZSk5M
-        VUtVSEpVSklJWVdZCAFZQUhJSkM3Bg++
-X-HM-Tid: 0a717cbd216b9375kuws9a0cf261e55
+        Wed, 15 Apr 2020 03:31:14 -0400
+Received: from mga07.intel.com ([134.134.136.100]:34449 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2408042AbgDOHaL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 03:30:11 -0400
+IronPort-SDR: /oKs/UbPK4325ELVukbPySSTekBJIGBNwwS6jlU6SuGF+McYZ3EGcV8x6bUuNk+c2HO0sbnMac
+ Qiw2CS06dYBg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 00:29:10 -0700
+IronPort-SDR: KVCB7M5H4JsEemWSm75DimYacBXeYdJneS1W8cr8ilfn/1KzPxmQkypfkqaDCgcAJqrv8ZXYoK
+ /TVsASPy9NOA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,386,1580803200"; 
+   d="scan'208";a="363600609"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 15 Apr 2020 00:29:07 -0700
+Received: by lahna (sSMTP sendmail emulation); Wed, 15 Apr 2020 10:29:06 +0300
+Date:   Wed, 15 Apr 2020 10:29:06 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH] PCI/PM: Call .bridge_d3() hook only if non-NULL
+Message-ID: <20200415072906.GS2586@lahna.fi.intel.com>
+References: <20200415000635.144283-1-helgaas@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200415000635.144283-1-helgaas@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On some processors, the / operate will call the compiler`s div lib,
-which is low efficient. Bitmap is performance sensitive, We can
-replace the / operation with shift.
+On Tue, Apr 14, 2020 at 07:06:35PM -0500, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> 26ad34d510a8 ("PCI / ACPI: Whitelist D3 for more PCIe hotplug ports") added
+> the struct pci_platform_pm_ops.bridge_d3() function pointer and
+> platform_pci_bridge_d3() to use it.
+> 
+> The .bridge_d3() op is implemented by acpi_pci_platform_pm, but not by
+> mid_pci_platform_pm.  We don't expect platform_pci_bridge_d3() to be called
+> on Intel MID platforms, but nothing in the code itself would prevent that.
+> 
+> Check the .bridge_d3() pointer for NULL before calling it.
+> 
+> Fixes: 26ad34d510a8 ("PCI / ACPI: Whitelist D3 for more PCIe hotplug ports")
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-Signed-off-by: Wang Qing <wangqing@vivo.com>
----
- include/linux/bitmap.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-diff --git a/include/linux/bitmap.h b/include/linux/bitmap.h
-index 99058eb..85ff982 100644
---- a/include/linux/bitmap.h
-+++ b/include/linux/bitmap.h
-@@ -337,7 +337,7 @@ static inline int bitmap_equal(const unsigned long *src1,
- 		return !((*src1 ^ *src2) & BITMAP_LAST_WORD_MASK(nbits));
- 	if (__builtin_constant_p(nbits & BITMAP_MEM_MASK) &&
- 	    IS_ALIGNED(nbits, BITMAP_MEM_ALIGNMENT))
--		return !memcmp(src1, src2, nbits / 8);
-+		return !memcmp(src1, src2, nbits >> 3);
- 	return __bitmap_equal(src1, src2, nbits);
- }
- 
-@@ -411,7 +411,7 @@ static __always_inline void bitmap_set(unsigned long *map, unsigned int start,
- 		 IS_ALIGNED(start, BITMAP_MEM_ALIGNMENT) &&
- 		 __builtin_constant_p(nbits & BITMAP_MEM_MASK) &&
- 		 IS_ALIGNED(nbits, BITMAP_MEM_ALIGNMENT))
--		memset((char *)map + start / 8, 0xff, nbits / 8);
-+		memset((char *)map + (start >> 3), 0xff, nbits >> 3);
- 	else
- 		__bitmap_set(map, start, nbits);
- }
-@@ -425,7 +425,7 @@ static __always_inline void bitmap_clear(unsigned long *map, unsigned int start,
- 		 IS_ALIGNED(start, BITMAP_MEM_ALIGNMENT) &&
- 		 __builtin_constant_p(nbits & BITMAP_MEM_MASK) &&
- 		 IS_ALIGNED(nbits, BITMAP_MEM_ALIGNMENT))
--		memset((char *)map + start / 8, 0, nbits / 8);
-+		memset((char *)map + (start >> 3), 0, nbits >> 3);
- 	else
- 		__bitmap_clear(map, start, nbits);
- }
--- 
-2.7.4
-
+Thanks!
