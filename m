@@ -2,167 +2,153 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8DEAC3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07DADC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:39:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A6052076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:39:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3D632076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:39:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586961580;
-	bh=J2VLKHFfGYVorzlk/8UwKCJP0drKzZlIAdlBq85Rcx8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2v9OLNu8ACCRXrvONoN0n5gPF10gLUsPg0qyvprLGT8BpCgCXGwf+OJhk4kJC5sUc
-	 Cp1HbxO74e6PzlHDPHEyZRIJQQ+ivz45tVZEwgLRZn5DCe96RLRt+ack/cQNF6x3xO
-	 1m+Oy0/buFO1MJJQTpwOv8VKIUf8EHy2cP9C/Mws=
+	s=default; t=1586961582;
+	bh=axJPNZ7WZDGG6/J9PCfgqTnSvKOyCRftQQJWdVCdoY4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=g0WfJ/lL85lqrDCpsV86DrOj0nioQmvKi7mgHGAsczsdO1EMZZ/2ERjBY0kIpy8HU
+	 F0hIWnreDMv+HtOOP396my6SzSKamgyHj19WQIbbcvlvAgQQfvr3CtPoxqqnfNJhEQ
+	 5Co9OHp2d36VrkDXhrZS4WYjYl1NflHgvIfihmrE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S370805AbgDOOjg (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:39:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45410 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394078AbgDOOdD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 10:33:03 -0400
-Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 764D221D7A;
-        Wed, 15 Apr 2020 14:32:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586961171;
-        bh=J2VLKHFfGYVorzlk/8UwKCJP0drKzZlIAdlBq85Rcx8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kEXCq8egdQ1CKEBOz9gAN5XiwALqK5M3P3qyK3Vgogo/eS3VUMtSqMKvcNX1rTSq7
-         Us9SbcQnW5+nYHNUZiaW2Dkrm0D/zkkRszoRs6VnpqecvPm5YRGpEdBvkrQzKgPoqi
-         RTaYAjUpVWw69LM7W3NYM2vtqMNB6RMo+4V5Bwu0=
-Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
-        (envelope-from <mchehab@kernel.org>)
-        id 1jOj5t-006kPH-NH; Wed, 15 Apr 2020 16:32:49 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH 20/34] docs: filesystems: convert mandatory-locking.txt to ReST
-Date:   Wed, 15 Apr 2020 16:32:33 +0200
-Message-Id: <289e82f172907dedabc67f3a5124840544f87b22.1586960617.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.25.2
-In-Reply-To: <cover.1586960617.git.mchehab+huawei@kernel.org>
-References: <cover.1586960617.git.mchehab+huawei@kernel.org>
+        id S2636706AbgDOOjY (ORCPT
+        <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 10:39:24 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42785 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2634473AbgDOOh6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 10:37:58 -0400
+Received: by mail-wr1-f67.google.com with SMTP id j2so76318wrs.9;
+        Wed, 15 Apr 2020 07:37:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JFQ6OPmr3bYT6YpSGJ9844rrkbuCT3rhKovZKEMdYh0=;
+        b=qiyQlCkYPCtZHfLm/XKHhyDVdnPhtNbb9u63GDkyLnVXVN+nM4VKCjMwJUz/HEOTvB
+         y3TGzt93sSujI093P5rQPzgCD50TClpTTLqeZQbODnMPas+p5PyMgNfbB5A2131KZ4X1
+         bImA9UUvW5tIf0JoeVq63aAyT8t4vj2Z56t0+zY3p4G4L2IBykwG+WWcoBzkNPpcHsiH
+         Kv4wWsMv6TMoEVpHGvCPpSncMQYEcGbbh6V6HaAM8DcUJxnBmHXAEfon2AD8bfZmQtLi
+         otGje7/IAzHXp0i04LuhZNNLA1WJZGuIBvSuceMprYTAFxwqFORCUgQ8eKlNRjaU6Rfg
+         Eg+Q==
+X-Gm-Message-State: AGi0PuZH7DHRAm5/KX8nu1z+mUTZ8wURAqgotg/b4fBOUVYL2Vb65PWs
+        fdTIO/6q1bWvz9ihhYdW0xk=
+X-Google-Smtp-Source: APiQypJMJJT5Xdg+uQJVYoi7gV4Bgvt7rTcXwzNbFzINw6ITI4fwZ4N2Aq2ucU2Xm7enL/b+GekA1A==
+X-Received: by 2002:a5d:4106:: with SMTP id l6mr1527916wrp.111.1586961474756;
+        Wed, 15 Apr 2020 07:37:54 -0700 (PDT)
+Received: from debian (44.142.6.51.dyn.plus.net. [51.6.142.44])
+        by smtp.gmail.com with ESMTPSA id u16sm23302758wro.23.2020.04.15.07.37.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2020 07:37:54 -0700 (PDT)
+Date:   Wed, 15 Apr 2020 15:37:52 +0100
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH][next] drivers: hv: remove redundant assignment to
+ pointer primary_channel
+Message-ID: <20200415143752.cm3xbesiuksfdbzm@debian>
+References: <20200414152343.243166-1-colin.king@canonical.com>
+ <87d08axb7k.fsf@vitty.brq.redhat.com>
+ <606c442c-1923-77d4-c350-e06878172c44@canonical.com>
+ <87wo6hvxkz.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87wo6hvxkz.fsf@vitty.brq.redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-- Add a SPDX header;
-- Adjust document title;
-- Some whitespace fixes and new line breaks;
-- Use notes markups;
-- Add it to filesystems/index.rst.
+On Wed, Apr 15, 2020 at 12:43:08PM +0200, Vitaly Kuznetsov wrote:
+> Colin Ian King <colin.king@canonical.com> writes:
+> 
+> > On 14/04/2020 17:51, Vitaly Kuznetsov wrote:
+> >> Colin King <colin.king@canonical.com> writes:
+> >> 
+> >>> From: Colin Ian King <colin.king@canonical.com>
+> >>>
+> >>> The pointer primary_channel is being assigned with a value that is never,
+> >>> The assignment is redundant and can be removed.
+> >>>
+> >>> Addresses-Coverity: ("Unused value")
+> >>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> >>> ---
+> >>>  drivers/hv/channel_mgmt.c | 2 --
+> >>>  1 file changed, 2 deletions(-)
+> >>>
+> >>> diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
+> >>> index ffd7fffa5f83..f7bbb8dc4b0f 100644
+> >>> --- a/drivers/hv/channel_mgmt.c
+> >>> +++ b/drivers/hv/channel_mgmt.c
+> >>> @@ -425,8 +425,6 @@ void hv_process_channel_removal(struct vmbus_channel *channel)
+> >>>  
+> >>>  	if (channel->primary_channel == NULL) {
+> >>>  		list_del(&channel->listentry);
+> >>> -
+> >>> -		primary_channel = channel;
+> >>>  	} else {
+> >>>  		primary_channel = channel->primary_channel;
+> >>>  		spin_lock_irqsave(&primary_channel->lock, flags);
+> >> 
+> >> If I'm looking at the right source (5.7-rc1) it *is* beeing used:
+> >> 
+> >> 	if (channel->primary_channel == NULL) {
+> >> 		list_del(&channel->listentry);
+> >> 
+> >> 		primary_channel = channel;
+> >> 	} else {
+> >> 		primary_channel = channel->primary_channel;
+> >> 		spin_lock_irqsave(&primary_channel->lock, flags);
+> >> 		list_del(&channel->sc_list);
+> >> 		spin_unlock_irqrestore(&primary_channel->lock, flags);
+> >> 	}
+> >> 
+> >> 	/*
+> >> 	 * We need to free the bit for init_vp_index() to work in the case
+> >> 	 * of sub-channel, when we reload drivers like hv_netvsc.
+> >> 	 */
+> >> 	if (channel->affinity_policy == HV_LOCALIZED)
+> >> 		cpumask_clear_cpu(channel->target_cpu,
+> >> 				  &primary_channel->alloced_cpus_in_node);
+> >>                                    ^^^^^ HERE ^^^^^
+> >> 
+> >
+> > I was basing my change on linux-next that has removed a hunk of code:
+> >
+> > commit bcefa400900739310e8ef0cb34cbe029c404455c
+> > Author: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
+> > Date:   Mon Apr 6 02:15:11 2020 +0200
+> >
+> >     Drivers: hv: vmbus: Remove the unused HV_LOCALIZED channel affinity
+> > logic
+> >
+> 
+> Ah, please add the right 'Fixes:' tag then.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- Documentation/filesystems/index.rst           |  1 +
- Documentation/filesystems/locks.rst           |  2 +-
- ...tory-locking.txt => mandatory-locking.rst} | 25 ++++++++++++-------
- fs/locks.c                                    |  2 +-
- 4 files changed, 19 insertions(+), 11 deletions(-)
- rename Documentation/filesystems/{mandatory-locking.txt => mandatory-locking.rst} (91%)
+I don't think the Fixes tag is particularly useful in this instance.
+Andrea's commit is not yet in Linus' tree. If I rebase hyper-next over
+the next 2.5 months the tag is going to have a stale commit hash in it.
 
-diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
-index 40cdc4ce2ffc..32759666a0be 100644
---- a/Documentation/filesystems/index.rst
-+++ b/Documentation/filesystems/index.rst
-@@ -30,6 +30,7 @@ algorithms work.
-    fiemap
-    files
-    locks
-+   mandatory-locking
- 
-    automount-support
- 
-diff --git a/Documentation/filesystems/locks.rst b/Documentation/filesystems/locks.rst
-index 10f67fb9ce07..c5ae858b1aac 100644
---- a/Documentation/filesystems/locks.rst
-+++ b/Documentation/filesystems/locks.rst
-@@ -58,7 +58,7 @@ fcntl(), with all the problems that implies.
- ---------------------------------------
- 
- Mandatory locking, as described in
--'Documentation/filesystems/mandatory-locking.txt' was prior to this release a
-+'Documentation/filesystems/mandatory-locking.rst' was prior to this release a
- general configuration option that was valid for all mounted filesystems.  This
- had a number of inherent dangers, not the least of which was the ability to
- freeze an NFS server by asking it to read a file for which a mandatory lock
-diff --git a/Documentation/filesystems/mandatory-locking.txt b/Documentation/filesystems/mandatory-locking.rst
-similarity index 91%
-rename from Documentation/filesystems/mandatory-locking.txt
-rename to Documentation/filesystems/mandatory-locking.rst
-index a251ca33164a..9ce73544a8f0 100644
---- a/Documentation/filesystems/mandatory-locking.txt
-+++ b/Documentation/filesystems/mandatory-locking.rst
-@@ -1,8 +1,13 @@
--	Mandatory File Locking For The Linux Operating System
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=====================================================
-+Mandatory File Locking For The Linux Operating System
-+=====================================================
- 
- 		Andy Walker <andy@lysaker.kvaerner.no>
- 
- 			   15 April 1996
-+
- 		     (Updated September 2007)
- 
- 0. Why you should avoid mandatory locking
-@@ -53,15 +58,17 @@ possible on existing user code. The scheme is based on marking individual files
- as candidates for mandatory locking, and using the existing fcntl()/lockf()
- interface for applying locks just as if they were normal, advisory locks.
- 
--Note 1: In saying "file" in the paragraphs above I am actually not telling
--the whole truth. System V locking is based on fcntl(). The granularity of
--fcntl() is such that it allows the locking of byte ranges in files, in addition
--to entire files, so the mandatory locking rules also have byte level
--granularity.
-+.. Note::
- 
--Note 2: POSIX.1 does not specify any scheme for mandatory locking, despite
--borrowing the fcntl() locking scheme from System V. The mandatory locking
--scheme is defined by the System V Interface Definition (SVID) Version 3.
-+   1. In saying "file" in the paragraphs above I am actually not telling
-+      the whole truth. System V locking is based on fcntl(). The granularity of
-+      fcntl() is such that it allows the locking of byte ranges in files, in
-+      addition to entire files, so the mandatory locking rules also have byte
-+      level granularity.
-+
-+   2. POSIX.1 does not specify any scheme for mandatory locking, despite
-+      borrowing the fcntl() locking scheme from System V. The mandatory locking
-+      scheme is defined by the System V Interface Definition (SVID) Version 3.
- 
- 2. Marking a file for mandatory locking
- ---------------------------------------
-diff --git a/fs/locks.c b/fs/locks.c
-index b8a31c1c4fff..1d4f4d5da704 100644
---- a/fs/locks.c
-+++ b/fs/locks.c
-@@ -61,7 +61,7 @@
-  *
-  *  Initial implementation of mandatory locks. SunOS turned out to be
-  *  a rotten model, so I implemented the "obvious" semantics.
-- *  See 'Documentation/filesystems/mandatory-locking.txt' for details.
-+ *  See 'Documentation/filesystems/mandatory-locking.rst' for details.
-  *  Andy Walker (andy@lysaker.kvaerner.no), April 06, 1996.
-  *
-  *  Don't allow mandatory locks on mmap()'ed files. Added simple functions to
--- 
-2.25.2
+Wei.
 
+> 
+> -- 
+> Vitaly
+> 
