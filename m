@@ -2,98 +2,87 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C63F0C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 18:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 390DBC3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:06:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A48CC20771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 18:32:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="XKCpi1B1"
+	by mail.kernel.org (Postfix) with ESMTP id 0D34E20784
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:06:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586977607;
+	bh=lN4qH4vNqp5l/bIWdFMvNUi0fzMnmVZ3kmiGvIPNwKA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=mHd5u5beKc/jZk2XeunbLhkYw/Hrhfl2+gwkwkRbFW9ULxdQmTSzEPeV5Q3lI+L0R
+	 ZsOD/cKroe1Mc54ZKSC8eHoUUqd7oLjQv1La0iIqiXVjboBw2GltgeEyG6IB57vYA0
+	 s+J6/ku+2w4c3KhXYSX5eAE+x7xUVdIw3kOOBo2s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1416807AbgDOScS (ORCPT
+        id S2389474AbgDOTGo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 14:32:18 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:15570 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1416781AbgDOScN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 14:32:13 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e9752bf0001>; Wed, 15 Apr 2020 11:30:23 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 15 Apr 2020 11:32:13 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 15 Apr 2020 11:32:13 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Apr
- 2020 18:32:13 +0000
-Received: from rcampbell-dev.nvidia.com (172.20.13.39) by
- DRHQMAIL107.nvidia.com (10.27.9.16) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3; Wed, 15 Apr 2020 18:32:12 +0000
-Subject: Re: [PATCH] mm/memblock: Fix a typo in comment "implict"->"implicit"
-To:     Ethon Paul <ethp@qq.com>, <akpm@linux-foundation.org>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
-References: <20200411070701.16097-1-ethp@qq.com>
-X-Nvconfidentiality: public
-From:   Ralph Campbell <rcampbell@nvidia.com>
-Message-ID: <3a15563b-de6c-7808-3c3c-f2ff12dc46de@nvidia.com>
-Date:   Wed, 15 Apr 2020 11:32:12 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <20200411070701.16097-1-ethp@qq.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1586975423; bh=7LwprBHLDzZhAWgs54pXObtERSf8bwUFR+a+iu/GM4w=;
-        h=X-PGP-Universal:Subject:To:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=XKCpi1B1mI62T/RI03mgDa3J6jblKt/0hwmpHZyuC8NgFMeQfw6fpQm5qlUMLc83y
-         umLoxipSaNI6MMdwUSBuSSSLZ7sJdRq4HzZAwA2hFahun3ALiF2LYmvY6s0ubxyvRd
-         GcDcnFSbjEAZZNGNGwkFi1czvkwBxQ4u9DakLtELLr5mJKOeq0jRyUOjshr5YeI8o2
-         wzeEHYehbXQ2ex7kbhpD6Gl5Kbi+3DhE6cTLe0jeEefYiykX4LZJSPTF1ZFGvVRHI6
-         FlRecxFm7EJk+6gMZ3WIgCDMwCPCWHDmLWSyTR1p25zTI3cl92IKfC8erfxPliyvTf
-         1Bm/3oJNGJvqw==
+        Wed, 15 Apr 2020 15:06:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42336 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1416812AbgDOSeO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 14:34:14 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1ADC2168B;
+        Wed, 15 Apr 2020 18:34:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586975654;
+        bh=lN4qH4vNqp5l/bIWdFMvNUi0fzMnmVZ3kmiGvIPNwKA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ZzPgZgiX2cyx6hZpOLPg8tbuO0xuGXjZuk1Fqp7lp615PIsRt7pnJ8XyvNxlPGl0h
+         Awz5CUhXLOuUVhBrmEXDi+e/MuxrFJnnBhjc9dMizbmobcpMwvp7kY4oeynxUDkwW/
+         GH1l2M7O2Uz/71rwPMTdUC9P2eUvEXqqu5Vj2/jE=
+From:   paulmck@kernel.org
+To:     linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+        kernel-team@fb.com, mingo@kernel.org
+Cc:     elver@google.com, andreyknvl@google.com, glider@google.com,
+        dvyukov@google.com, cai@lca.pw, boqun.feng@gmail.com,
+        Qiujun Huang <hqjagain@gmail.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>
+Subject: [PATCH v4 tip/core/rcu 04/15] kcsan: Fix a typo in a comment
+Date:   Wed, 15 Apr 2020 11:34:00 -0700
+Message-Id: <20200415183411.12368-4-paulmck@kernel.org>
+X-Mailer: git-send-email 2.9.5
+In-Reply-To: <20200415183343.GA12265@paulmck-ThinkPad-P72>
+References: <20200415183343.GA12265@paulmck-ThinkPad-P72>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Qiujun Huang <hqjagain@gmail.com>
 
-On 4/11/20 12:07 AM, Ethon Paul wrote:
-> There is a typo in commet, fix it.
-> 
-> Signed-off-by: Ethon Paul <ethp@qq.com>
+s/slots slots/slots/
 
-Reviewed-by: Ralph Campbell <rcampbell@nvidia.com>
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+[elver: commit message]
+Signed-off-by: Marco Elver <elver@google.com>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+---
+ kernel/kcsan/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> ---
->   mm/memblock.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/memblock.c b/mm/memblock.c
-> index 4d06bbaded0f..4cae23d2373a 100644
-> --- a/mm/memblock.c
-> +++ b/mm/memblock.c
-> @@ -78,7 +78,7 @@
->    * * memblock_alloc*() - these functions return the **virtual** address
->    *   of the allocated memory.
->    *
-> - * Note, that both API variants use implict assumptions about allowed
-> + * Note, that both API variants use implicit assumptions about allowed
->    * memory ranges and the fallback methods. Consult the documentation
->    * of memblock_alloc_internal() and memblock_alloc_range_nid()
->    * functions for more elaborate description.
-> 
+diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
+index eb30ecd..ee82008 100644
+--- a/kernel/kcsan/core.c
++++ b/kernel/kcsan/core.c
+@@ -45,7 +45,7 @@ static DEFINE_PER_CPU(struct kcsan_ctx, kcsan_cpu_ctx) = {
+ };
+ 
+ /*
+- * Helper macros to index into adjacent slots slots, starting from address slot
++ * Helper macros to index into adjacent slots, starting from address slot
+  * itself, followed by the right and left slots.
+  *
+  * The purpose is 2-fold:
+-- 
+2.9.5
+
