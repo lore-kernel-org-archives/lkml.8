@@ -2,94 +2,188 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD80C2BB85
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 05:13:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA3EFC3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 05:16:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BCFE206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 05:13:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94F472076A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 05:16:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yBawUuab"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F7vBBsb6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393244AbgDOFNJ (ORCPT
+        id S2393256AbgDOFQX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 01:13:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37040 "EHLO
+        Wed, 15 Apr 2020 01:16:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389851AbgDOFNG (ORCPT
+        with ESMTP id S2393245AbgDOFQU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 01:13:06 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5383FC061A0E
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 22:13:05 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id w3so829937plz.5
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 22:13:05 -0700 (PDT)
+        Wed, 15 Apr 2020 01:16:20 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AB81C061A0E
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 22:16:19 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id b13so2223411oti.3
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 22:16:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=wk1gKnV9MOmeaNOmUZ1VBgW92zzoZRIHZhM6e54Z8YY=;
-        b=yBawUuabGnud63/Poff12xtpKasP/5I8yL3emeRbWZtRY3AM4QET7F9YllgXspKsxk
-         fcwQ25vXNZuyb7Ar+SGyUb/FXakl2aa7RrKPjI4Guy5ogg29KbeVh65NZD3UKEPnKAaa
-         PFROMt9T/4ArwOn0gJ6pqvNN/STQ80Zmb+HyEJKhwPmetpVd07f9XHpUXu74PbFbGbvp
-         7gnG/QiEYrqzzBD9BQEDrRH1be3R2X2qKosleoEvSMGau36oZQSBSeG6f6wCzFp4vNva
-         Z0d+2dFSbQJnjlTYG2NGkZTlQDCnYNAGZcvHKc0qcTBgqeHCOeVJYzUq+u2CqQdtlY1D
-         c56Q==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=UETgjLgGy1I8D/vK9hQsvwfCTgzWUx9NFafEAQacD6E=;
+        b=F7vBBsb6EuShtNKrJqxknW9giKiJqe3/N8z/mYG48/aDXLbHF654CqZdbRpMn/wTGk
+         ejJd/XN9ME8sUsM+DYAMJSN6J6gxmdghDCpc08SJOmBnSltQS/zl4hn7obWjD9lPN+x2
+         cP4A0M5fBhyeKwlhk7aGqZejoaNgOX+6yHk6jpmCCUjRFI/OmbY0paA1ytezd6cvDw0F
+         ukkGdEX2xV2p649BOCB92WZAKdRP8FxBnzzD16p/dLzZSf3tby53qr79TCn95taktjUM
+         xj65E5akugViYZHtL83yL6vTDgQtLtz0xP6SW54QMximpjR33+0LPxCDniRUx35cfXz9
+         WIwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wk1gKnV9MOmeaNOmUZ1VBgW92zzoZRIHZhM6e54Z8YY=;
-        b=lLhh3Ee2PrG7vFN+OLV7hPdHKj2uR7mi1QwiV4RqzR81SovGjXo6Zd5c9paMZTprSv
-         SGdc/3WEFzIyPyU7qVo9Xl0UwfCmnI28P/bBYihjhRvAMTwL82KRBMHTlDPb1KWlg+ie
-         TiOoZ3DEfNSduDmu6ANox5+iATJ4Y+kZOHtJFogOspd1UYNBQLJ+wXiH9QOD9HvJoSlf
-         uih7o/xbrpLqb1qElF5MkbeDlkMq8oMPXLstsgcDvfHc2ZZ3DlQo72bg77U9TvGQY4MJ
-         QEvHc4+lYg+T4dLNPAhL1s38hOBBH/Jsf7GxuoKnOsLnAnR20nSmgpbMjPRqDgKkSyh5
-         ry5Q==
-X-Gm-Message-State: AGi0PuZawYtUqUxgu7IwrhmwgcgFgv+DoUwZCMOrkvGo5KAOojIW4hUO
-        wVI5ABVJsAYTbSgHXod+fEiWWA==
-X-Google-Smtp-Source: APiQypLZCWZaT5X6kAbkuh9roJAA1F1pyZLhruHQXsvmBhTmT9lVWi4Um5aIJ5CKpacErdblQszF8A==
-X-Received: by 2002:a17:90a:f313:: with SMTP id ca19mr4095267pjb.7.1586927584560;
-        Tue, 14 Apr 2020 22:13:04 -0700 (PDT)
-Received: from localhost ([122.171.118.46])
-        by smtp.gmail.com with ESMTPSA id x70sm12270635pfc.21.2020.04.14.22.13.03
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 Apr 2020 22:13:03 -0700 (PDT)
-Date:   Wed, 15 Apr 2020 10:43:01 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     sboyd@kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC] opp: Fixup release of clock when using set/put clkname
-Message-ID: <20200415051301.rvrstjodjlj42jic@vireshk-i7>
-References: <1586848508-1320-1-git-send-email-rnayak@codeaurora.org>
- <20200414071823.jdhkprtkizyeua23@vireshk-i7>
- <83c523d0-e18e-0401-5456-2dbba524ee98@codeaurora.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=UETgjLgGy1I8D/vK9hQsvwfCTgzWUx9NFafEAQacD6E=;
+        b=CEPxnkto39LB8SFdSW5siH2Dm1Dmu55JIGRs+eDmRicwrYW2UWqLdwQHjqs0eKN1wp
+         UrpkWdLeNuUx19flty1g4GeWKUiKa7H+8+GGwOsPSA8DkrMbRKire6wgqyYstrBUFP6z
+         GfAzTNgHd3x9QbJ2rBP3yb7fMCoFzQew+wZHEKvAfKAzrXAQ6G27xHIWAVXK+Dp09N/l
+         FJgK8znnjNDtAitlgMqb4v4gB3x6wOetf9+UOm/ydylHgBMt+uJiRxU6KL0IpbOzkcuf
+         UTz4Iv5EIwirzhn0Q5RlW7dTej0rjsIuKTq8yBmszlSIeHZObDN91D22zTTWK/BDjRA1
+         mKdA==
+X-Gm-Message-State: AGi0PubXDC6VVGExOIGa1KHa1jTfAwVTh3WQx11kCbL8PF3CIYI/uFc0
+        M2gt0I36E5vrHRVrt5a3pYQxbCMpmIfLzvN0MsKTNA==
+X-Google-Smtp-Source: APiQypIty2GFH7AT8Ct4yPfxkBQyl5Hh92NEBt4okHCUEtJD5zk9q94TPKfT/jPH6jgTg/aMTeFvV2K62fwQy8Poqnk=
+X-Received: by 2002:a05:6830:22dc:: with SMTP id q28mr239826otc.221.1586927778029;
+ Tue, 14 Apr 2020 22:16:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <83c523d0-e18e-0401-5456-2dbba524ee98@codeaurora.org>
-User-Agent: NeoMutt/20180716-391-311a52
+References: <20200414134629.54567-1-orjan.eide@arm.com> <20200414141849.55654-1-orjan.eide@arm.com>
+ <20200414142810.GA958163@kroah.com> <20200414161114.GA1949@e123356-lin.trondheim.arm.com>
+In-Reply-To: <20200414161114.GA1949@e123356-lin.trondheim.arm.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Tue, 14 Apr 2020 22:16:06 -0700
+Message-ID: <CALAqxLVM1i+Cj29h+kGfurEN9gEMwnD-9n9H1o0B4wRukmJRQw@mail.gmail.com>
+Subject: Re: [PATCH] staging: android: ion: Skip sync if not mapped
+To:     =?UTF-8?Q?=C3=98rjan_Eide?= <orjan.eide@arm.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>, nd <nd@arm.com>,
+        Anders Pedersen <anders.pedersen@arm.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Christian Brauner <christian@brauner.io>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        "Darren Hart (VMware)" <dvhart@infradead.org>,
+        Lecopzer Chen <lecopzer.chen@mediatek.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        driverdevel <devel@driverdev.osuosl.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14-04-20, 20:35, Rajendra Nayak wrote:
-> However, given I call these unconditionally in common drivers and on
-> some (old) platforms we really don't have an OPP table (only scale clocks)
-> things get a little tricky. So looks like the ref counting in such cases
-> gets messed up, and we end up with dev_pm_opp_of_remove_table() calling
-> _opp_table_kref_release() and releasing the clock, and then the subsequent
-> call to dev_pm_opp_put_clkname() crashes.
+On Tue, Apr 14, 2020 at 9:11 AM =C3=98rjan Eide <orjan.eide@arm.com> wrote:
+>
+> On Tue, Apr 14, 2020 at 04:28:10PM +0200, Greg Kroah-Hartman wrote:
+> > On Tue, Apr 14, 2020 at 04:18:47PM +0200, =EF=BF=BDrjan Eide wrote:
+> > > Only sync the sg-list of an Ion dma-buf attachment when the attachmen=
+t
+> > > is actually mapped on the device.
+> > >
+> > > dma-bufs may be synced at any time. It can be reached from user space
+> > > via DMA_BUF_IOCTL_SYNC, so there are no guarantees from callers on wh=
+en
+> > > syncs may be attempted, and dma_buf_end_cpu_access() and
+> > > dma_buf_begin_cpu_access() may not be paired.
+> > >
+> > > Since the sg_list's dma_address isn't set up until the buffer is used
+> > > on the device, and dma_map_sg() is called on it, the dma_address will=
+ be
+> > > NULL if sync is attempted on the dma-buf before it's mapped on a devi=
+ce.
+> > >
+> > > Before v5.0 (commit 55897af63091 ("dma-direct: merge swiotlb_dma_ops
+> > > into the dma_direct code")) this was a problem as the dma-api (at lea=
+st
+> > > the swiotlb_dma_ops on arm64) would use the potentially invalid
+> > > dma_address. How that failed depended on how the device handled physi=
+cal
+> > > address 0. If 0 was a valid address to physical ram, that page would =
+get
+> > > flushed a lot, while the actual pages in the buffer would not get syn=
+ced
+> > > correctly. While if 0 is an invalid physical address it may cause a
+> > > fault and trigger a crash.
+> > >
+> > > In v5.0 this was incidentally fixed by commit 55897af63091 ("dma-dire=
+ct:
+> > > merge swiotlb_dma_ops into the dma_direct code"), as this moved the
+> > > dma-api to use the page pointer in the sg_list, and (for Ion buffers =
+at
+> > > least) this will always be valid if the sg_list exists at all.
+> > >
+> > > But, this issue is re-introduced in v5.3 with
+> > > commit 449fa54d6815 ("dma-direct: correct the physical addr in
+> > > dma_direct_sync_sg_for_cpu/device") moves the dma-api back to the old
+> > > behaviour and picks the dma_address that may be invalid.
+> > >
+> > > dma-buf core doesn't ensure that the buffer is mapped on the device, =
+and
+> > > thus have a valid sg_list, before calling the exporter's
+> > > begin_cpu_access.
+> > >
+> > > Signed-off-by: =EF=BF=BDrjan Eide <orjan.eide@arm.com>
+> > > ---
+> > >  drivers/staging/android/ion/ion.c | 12 ++++++++++++
+> > >  1 file changed, 12 insertions(+)
+> > >
+> > > Resubmit without disclaimer, sorry about that.
+> > >
+> > > This seems to be part of a bigger issue where dma-buf exporters assum=
+e
+> > > that their dma-buf begin_cpu_access and end_cpu_access callbacks have=
+ a
+> > > certain guaranteed behavior, which isn't ensured by dma-buf core.
+> > >
+> > > This patch fixes this in ion only, but it also needs to be fixed for
+> > > other exporters, either handled like this in each exporter, or in
+> > > dma-buf core before calling into the exporters.
+> > >
+> > > diff --git a/drivers/staging/android/ion/ion.c b/drivers/staging/andr=
+oid/ion/ion.c
+> > > index 38b51eace4f9..7b752ba0cb6d 100644
+> > > --- a/drivers/staging/android/ion/ion.c
+> > > +++ b/drivers/staging/android/ion/ion.c
+> >
+> > Now that we have the dma-buff stuff in the tree, do we even need the
+> > ion code in the kernel anymore?  Can't we delete it now?
+>
+> It looks like the new dma-heaps have the same issue as ion. The
+> heap-helpers also do dma_sync_sg_for_device() unconditionally on
+> end_cpu_access which may happen before dma_map_sg(), leading to use of
+> the 0 dma_address in the sg list of a, yet unmapped, attachment.
 
-We aren't supposed to call dev_pm_opp_of_remove_table() if
-dev_pm_opp_of_add_table() isn't called or it failed. Either we can
-handle this in core, which I would like to avoid, or just keep a
-variable to track it in the driver, which will be easy enough I guess.
+Yea, the dma-buf heaps code came from the ION logic, so it likely has
+the same faults.
 
--- 
-viresh
+> It could be fixed in dma-heaps just like this patch does for ion. Is
+> patch a valid way to fix this problem? Or, should this rather be handled
+> in dma-buf core by tracking the mapped state of attachments there?
+
+In the short-term, I'd definitely prefer to have a fix to dmabuf heaps
+rather then ION, but I also agree that long term it probably shouldn't
+just be up to the dma-buf exporter (as there are other dmabuf
+exporters that may have it wrong too), and that we need to address
+some DMA API expectations/limitations to better handle multiple device
+pipelines. (I actually gave a talk last fall on some of the issues I
+see around it: https://youtu.be/UsEVoWD_o0c )
+
+thanks
+-john
