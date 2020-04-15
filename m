@@ -2,120 +2,75 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5880C2BB85
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 04:51:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E74C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 04:55:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFB3220784
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 04:51:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="c0DJ2wWf"
+	by mail.kernel.org (Postfix) with ESMTP id 89A4F20784
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 04:55:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393145AbgDOEv4 (ORCPT
+        id S2393154AbgDOEzK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 00:51:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33750 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393136AbgDOEvy (ORCPT
+        Wed, 15 Apr 2020 00:55:10 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:35754 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393136AbgDOEzF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 00:51:54 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4BE3C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 21:51:52 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id g2so815808plo.3
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 21:51:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=tRaZr2pDSuWH5+k9gK63dyub99+Tpfee62FDT1XUPLk=;
-        b=c0DJ2wWfn9n2e/+xp0xOTxPzhAe2O6scTqX+VRIo9QRz9VN1V+FSWcxJSyD62ZmAAR
-         i03f6x9cSiGWddVotKJlAngVY7E0Wm3gP8On9V/I+Nk54jFkPTn1zgM9wjaqNMHD4s7v
-         Uoc5ZGbLesBLVafR0q18s7ewIhhOY5bDkWPzg=
+        Wed, 15 Apr 2020 00:55:05 -0400
+Received: by mail-io1-f69.google.com with SMTP id s26so7664701ioj.2
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 21:55:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=tRaZr2pDSuWH5+k9gK63dyub99+Tpfee62FDT1XUPLk=;
-        b=CKqoah1/OrIBmDeWJ7fAUwVZPKjFXAAPKfnc5sKN11dbpGrxWq3d9mAlXJpsAtq1hI
-         oV4ylhIEHJoM+ONGXrLURwVFHAf+MFNTPuqQ8IABmyxDZWa5kgADUxTTinRtP5BfP5oz
-         +TRZB+jG0CRFjrmKorAAwv6CXSkQB/44lN+ezR6oIUcitxiecuA8FwurX7Q9JCtbI8PR
-         I8waGungj+MXTDG55xnXWJ20XDijvVb650rO6CpoMpKHrQUgEZKNySd149evpOt+bQD5
-         3MAc0DEtzlqkN+3vRATPbmkEnvKdxFoddBfpbtmUSJULTppbUDHnsmt8NtLNcYsgHluV
-         TDGA==
-X-Gm-Message-State: AGi0PubP+NuKWnmCA7rHKwG4fN9x9ao7chC08Tz6yxV2oXiWjF21NLQE
-        1rIExziAE66A8h+mWJW35QIQ5Q==
-X-Google-Smtp-Source: APiQypLbYVorUzsPOwd9PNsI32KawNSaZ0Dh1694rAc/lbQUJUWy9zFjZVibw2CuV+L8+qRj9rlgJw==
-X-Received: by 2002:a17:90a:14c6:: with SMTP id k64mr4023309pja.39.1586926312202;
-        Tue, 14 Apr 2020 21:51:52 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id g22sm5603822pju.21.2020.04.14.21.51.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 21:51:51 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=Y2W+RK5QX6ymnzvXaAg6rFGFyTW39IKvpdZtQG2d1eM=;
+        b=Xm+IXLY/zYONSbFXdY9EOBBSz/W0NYDIK5c9qh3AUPl/crpxEEFu6edhUubKeAtGFZ
+         3khz0d7d6lCt5FWLdSbxr4O9x5R5DxHweToqqoxLYvrOU9HjnOPecWP0GVAPIkK/wF7w
+         f61zzlOALiKayXDkihmE/T+c6u+dK7atArWX0k3Y0WJeA4outB2KeXo15lxOF12GeyGu
+         pE4X7uqahPyQPMuXUEl0xthAfcu/puuAAMwZqBJc2uWXCO4fIlSS5qoareakST6G+WJ1
+         g6QmaWePdV2f4uIzwfHyFCs5yWKm7LYA2yY4sgqutLrb6KMMS5qFwk6p+cSLnaFjqJWV
+         Au9A==
+X-Gm-Message-State: AGi0PuZxGz1wtBCMX0IdQ5MIii5yOAFlb2bImLMUcCdINhsGUjh1Ymeq
+        4UMV6p8Fo6Drg85cGYH6YcDO3uFgY9Nwitg7vgIp3y9ilsvu
+X-Google-Smtp-Source: APiQypLoHsOzgEfyXKGl1uv7QMFA3G0iEexcJWQkFz/EJ2Og/YlYLQkyynZxJlWrP+PyBVAXtw3KwYrchO1YR8DpHflA85WQ9cBY
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200415102534.6d22a377@canb.auug.org.au>
-References: <20200415102534.6d22a377@canb.auug.org.au>
-Subject: Re: linux-next: build warning after merge of the qcom tree
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Date:   Tue, 14 Apr 2020 21:51:50 -0700
-Message-ID: <158692631073.105027.12648118734810371009@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+X-Received: by 2002:a05:6602:154a:: with SMTP id h10mr24660899iow.137.1586926504681;
+ Tue, 14 Apr 2020 21:55:04 -0700 (PDT)
+Date:   Tue, 14 Apr 2020 21:55:04 -0700
+In-Reply-To: <20200415043553.GH90651@mit.edu>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000098a5d505a34d1e48@google.com>
+Subject: Re: BUG: unable to handle kernel NULL pointer dereference in
+ generic_perform_write (2)
+From:   syzbot <syzbot+bca9799bf129256190da@syzkaller.appspotmail.com>
+To:     adilger.kernel@dilger.ca, akpm@linux-foundation.org,
+        dan.j.williams@intel.com, jack@suse.cz, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        syzkaller-bugs@googlegroups.com, tytso@mit.edu
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Stephen Rothwell (2020-04-14 17:25:34)
-> Hi all,
->=20
-> After merging the qcom tree, today's linux-next build (x86_64
-> allmodconfig) produced this warning:
->=20
-> drivers/soc/qcom/cmd-db.c: In function 'cmd_db_debugfs_dump':
-> drivers/soc/qcom/cmd-db.c:281:30: warning: field width specifier '*' expe=
-cts argument of type 'int', but argument 4 has type 'long unsigned int' [-W=
-format=3D]
->   281 |    seq_printf(seq, "0x%08x: %*pEp", le32_to_cpu(ent->addr),
->       |                             ~^~
->       |                              |
->       |                              int
->   282 |        sizeof(ent->id), ent->id);
->       |        ~~~~~~~~~~~~~~~       =20
->       |        |
->       |        long unsigned int
->=20
-> Introduced by commit
->=20
->   d6815c5c43d4 ("soc: qcom: cmd-db: Add debugfs dumping file")
+Hello,
 
-Thanks. I didn't notice this warning. Looks like we need to cast
-sizeof() to int? Bjorn do you want another patch or does this get
-squashed in?
+syzbot has tested the proposed patch and the reproducer did not trigger crash:
 
----8<----
-diff --git a/drivers/soc/qcom/cmd-db.c b/drivers/soc/qcom/cmd-db.c
-index 6c308f92a13c..6b5c440c9dc3 100644
---- a/drivers/soc/qcom/cmd-db.c
-+++ b/drivers/soc/qcom/cmd-db.c
-@@ -280,7 +280,7 @@ static int cmd_db_debugfs_dump(struct seq_file *seq, vo=
-id *p)
- 		ent =3D rsc_to_entry_header(rsc);
- 		for (j =3D 0; j < le16_to_cpu(rsc->cnt); j++, ent++) {
- 			seq_printf(seq, "0x%08x: %*pEp", le32_to_cpu(ent->addr),
--				   sizeof(ent->id), ent->id);
-+				   (int)sizeof(ent->id), ent->id);
-=20
- 			len =3D le16_to_cpu(ent->len);
- 			if (len) {
+Reported-and-tested-by: syzbot+bca9799bf129256190da@syzkaller.appspotmail.com
+
+Tested on:
+
+commit:         5b8b9d0c Merge branch 'akpm' (patches from Andrew)
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+kernel config:  https://syzkaller.appspot.com/x/.config?x=23c5a352e32a1944
+dashboard link: https://syzkaller.appspot.com/bug?extid=bca9799bf129256190da
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=15524a00100000
+
+Note: testing is done by a robot and is best-effort only.
