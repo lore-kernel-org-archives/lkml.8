@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF7D1C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA34AC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:17:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B28B42078A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:16:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4DFA2078B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:17:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586953010;
-	bh=2UZ857xxFxryFMRb+KzkcCwdAD5jNdtdJqTv50+fnOo=;
+	s=default; t=1586953041;
+	bh=24UPFmfXLNXBNCv+C/THtHtqcN+u1DIgdtOzJ/Ej+EE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gWXUrMhnt5RTaM76m4WiBf+QY0LZlg0/eow6sr8uGhupzUY0i+HTnfDLOMgmB2OTE
-	 bLahtpehFbqizlsjqaVUJqDCbWN+dNCDoJ8HZ7QHK8/2qlZdcjiC6ci5Hvcm0xOJpD
-	 wFFsHqfEBi/oZM6Jb+aO54lMOnpk4oivgcBnuJ+Q=
+	b=S4gq409UCzBBTVJxoYKqyWNLmQme063eXBqBrCALbR8eWxLP43WaHF95z3rfloZVc
+	 uR+ASgtSag0oKvsVV1Yog097ZoQJYDGl+HxFWPV1bc3QIJBwI/MzOd95IzrZNyjrs2
+	 CCmbrWTgpcm/UW1rbbmWApTxFP08eMne304FJzEo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409801AbgDOMQq (ORCPT
+        id S2409817AbgDOMRU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:16:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41574 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 08:17:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409298AbgDOLqf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:46:35 -0400
+        id S2409291AbgDOLq3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:46:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FC95206A2;
-        Wed, 15 Apr 2020 11:46:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C36821655;
+        Wed, 15 Apr 2020 11:46:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951194;
-        bh=2UZ857xxFxryFMRb+KzkcCwdAD5jNdtdJqTv50+fnOo=;
+        s=default; t=1586951188;
+        bh=24UPFmfXLNXBNCv+C/THtHtqcN+u1DIgdtOzJ/Ej+EE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kKHJ+ZVVZJOv9/FPgCju9obWC7R0qOJyqmVYOe6YV4bKe9T5V81aDFR5N8LBkUnkV
-         pCTfTLyquzdt8TXvae90dY5MN+m8t7GDqrJ3MH4OHJ7fFgVNPay1sGAKwta8NeLpNm
-         hNyMFen7Qpx0JFGL9j/P8lOokgvU6ajV0KaEQyBU=
+        b=LLMcu0nk3WzqjVwmPUDhVCHFSaO6zHi9tPd7A0+fPwfMRe0JYhDE5xg8QdPDv1k2H
+         TLWsOuB8pDr3OzrhyNvML8SoRG2nNOJEsjaDV4eG3zLJqWU6Pu05gv5CBnhgV9JBMQ
+         0LABJbHmrc1q8fKC/yC6d+8ZBfDptG0/3FqSAcjs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Josef Bacik <josef@toxicpanda.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 09/40] btrfs: handle NULL roots in btrfs_put/btrfs_grab_fs_root
-Date:   Wed, 15 Apr 2020 07:45:52 -0400
-Message-Id: <20200415114623.14972-9-sashal@kernel.org>
+Cc:     Lucas Stach <l.stach@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 04/40] soc: imx: gpc: fix power up sequencing
+Date:   Wed, 15 Apr 2020 07:45:47 -0400
+Message-Id: <20200415114623.14972-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114623.14972-1-sashal@kernel.org>
 References: <20200415114623.14972-1-sashal@kernel.org>
@@ -60,46 +60,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Lucas Stach <l.stach@pengutronix.de>
 
-[ Upstream commit 4cdfd93002cb84471ed85b4999cd38077a317873 ]
+[ Upstream commit e0ea2d11f8a08ba7066ff897e16c5217215d1e68 ]
 
-We want to use this for dropping all roots, and in some error cases we
-may not have a root, so handle this to make the cleanup code easier.
-Make btrfs_grab_fs_root the same so we can use it in cases where the
-root may not exist (like the quota root).
+Currently we wait only until the PGC inverts the isolation setting
+before disabling the peripheral clocks. This doesn't ensure that the
+reset is properly propagated through the peripheral devices in the
+power domain.
 
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Wait until the PGC signals that the power up request is done and
+wait a bit for resets to propagate before disabling the clocks.
+
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/disk-io.h | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/soc/imx/gpc.c | 24 +++++++++++++-----------
+ 1 file changed, 13 insertions(+), 11 deletions(-)
 
-diff --git a/fs/btrfs/disk-io.h b/fs/btrfs/disk-io.h
-index 7a4a60f26dbf9..4f2d99fdf1e0c 100644
---- a/fs/btrfs/disk-io.h
-+++ b/fs/btrfs/disk-io.h
-@@ -100,6 +100,8 @@ struct btrfs_root *btrfs_alloc_dummy_root(struct btrfs_fs_info *fs_info);
-  */
- static inline struct btrfs_root *btrfs_grab_fs_root(struct btrfs_root *root)
+diff --git a/drivers/soc/imx/gpc.c b/drivers/soc/imx/gpc.c
+index d160fc2a7b7a2..56c019ec7f14a 100644
+--- a/drivers/soc/imx/gpc.c
++++ b/drivers/soc/imx/gpc.c
+@@ -93,8 +93,8 @@ static int imx6_pm_domain_power_off(struct generic_pm_domain *genpd)
+ static int imx6_pm_domain_power_on(struct generic_pm_domain *genpd)
  {
-+	if (!root)
-+		return NULL;
- 	if (refcount_inc_not_zero(&root->refs))
- 		return root;
- 	return NULL;
-@@ -107,6 +109,8 @@ static inline struct btrfs_root *btrfs_grab_fs_root(struct btrfs_root *root)
+ 	struct imx_pm_domain *pd = to_imx_pm_domain(genpd);
+-	int i, ret, sw, sw2iso;
+-	u32 val;
++	int i, ret;
++	u32 val, req;
  
- static inline void btrfs_put_fs_root(struct btrfs_root *root)
- {
-+	if (!root)
-+		return;
- 	if (refcount_dec_and_test(&root->refs))
- 		kfree(root);
- }
+ 	if (pd->supply) {
+ 		ret = regulator_enable(pd->supply);
+@@ -113,17 +113,18 @@ static int imx6_pm_domain_power_on(struct generic_pm_domain *genpd)
+ 	regmap_update_bits(pd->regmap, pd->reg_offs + GPC_PGC_CTRL_OFFS,
+ 			   0x1, 0x1);
+ 
+-	/* Read ISO and ISO2SW power up delays */
+-	regmap_read(pd->regmap, pd->reg_offs + GPC_PGC_PUPSCR_OFFS, &val);
+-	sw = val & 0x3f;
+-	sw2iso = (val >> 8) & 0x3f;
+-
+ 	/* Request GPC to power up domain */
+-	val = BIT(pd->cntr_pdn_bit + 1);
+-	regmap_update_bits(pd->regmap, GPC_CNTR, val, val);
++	req = BIT(pd->cntr_pdn_bit + 1);
++	regmap_update_bits(pd->regmap, GPC_CNTR, req, req);
+ 
+-	/* Wait ISO + ISO2SW IPG clock cycles */
+-	udelay(DIV_ROUND_UP(sw + sw2iso, pd->ipg_rate_mhz));
++	/* Wait for the PGC to handle the request */
++	ret = regmap_read_poll_timeout(pd->regmap, GPC_CNTR, val, !(val & req),
++				       1, 50);
++	if (ret)
++		pr_err("powerup request on domain %s timed out\n", genpd->name);
++
++	/* Wait for reset to propagate through peripherals */
++	usleep_range(5, 10);
+ 
+ 	/* Disable reset clocks for all devices in the domain */
+ 	for (i = 0; i < pd->num_clks; i++)
+@@ -345,6 +346,7 @@ static const struct regmap_config imx_gpc_regmap_config = {
+ 	.rd_table = &access_table,
+ 	.wr_table = &access_table,
+ 	.max_register = 0x2ac,
++	.fast_io = true,
+ };
+ 
+ static struct generic_pm_domain *imx_gpc_onecell_domains[] = {
 -- 
 2.20.1
 
