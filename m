@@ -2,83 +2,102 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0B46C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0B47C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:39:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A43BA20656
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:39:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB14020656
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:39:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="AvMJoB45"
+	dkim=pass (1024-bit key) header.d=fudan.edu.cn header.i=@fudan.edu.cn header.b="aowa2vF1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2894728AbgDOIj3 (ORCPT
+        id S2894737AbgDOIjp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 04:39:29 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:46739 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2894710AbgDOIi4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 04:38:56 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586939935; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=AMzv0dTiXtbC/nSmu3Wb4uhLamK6lblQmo4jjWC2e0c=;
- b=AvMJoB45vjJtjeJp5X+wh7UcAnbhY2WA5FWoC0rqTOzUrqgb5DzMfx6OW4uyLxp9Ptemnn3j
- VQqDMVShtYLKgSFQjK9CT5wKavLGDz5V8eZxx05ltJQKp8F2vxeCl9IIiHg9p29VSu3KyvEr
- s4jjAN+MI8zoLVAWe2Tjnrj/p5o=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e96c81e.7f7c1e073880-smtp-out-n02;
- Wed, 15 Apr 2020 08:38:54 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D6B04C44792; Wed, 15 Apr 2020 08:38:53 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 65A8AC4478F;
-        Wed, 15 Apr 2020 08:38:51 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 65A8AC4478F
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] cw1200: make cw1200_spi_irq_unsubscribe() void
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200410090910.27132-1-yanaijie@huawei.com>
-References: <20200410090910.27132-1-yanaijie@huawei.com>
-To:     Jason Yan <yanaijie@huawei.com>
-Cc:     <pizza@shaftnet.org>, <davem@davemloft.net>,
-        <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Jason Yan <yanaijie@huawei.com>
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20200415083853.D6B04C44792@smtp.codeaurora.org>
-Date:   Wed, 15 Apr 2020 08:38:53 +0000 (UTC)
+        Wed, 15 Apr 2020 04:39:45 -0400
+Received: from mail.fudan.edu.cn ([202.120.224.73]:60153 "EHLO fudan.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2894712AbgDOIjP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 04:39:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fudan.edu.cn; s=dkim; h=Received:From:To:Cc:Subject:Date:
+        Message-Id; bh=e38fCYno9Kg9NlWmZaHhXh61HmgAfMMOj8Y0iA5cL+s=; b=a
+        owa2vF1f4sVbxAm5sfCk7LCq0+kPR80uHE0lAA/A1rhwAAKRyK9bA5YxTWw9+o2X
+        qmbmNqmOTQKzxXMCV2LrOuNIzpCIXf2cuEYGwvX6O3QclJJvAu50bYV9hBDsE18L
+        PN1GkD4XYGi4Ek7gvQrdvacN9IZYcbYlB90iS+KaZ0=
+Received: from localhost.localdomain (unknown [120.229.255.108])
+        by app2 (Coremail) with SMTP id XQUFCgC3voIayJZegFVZAA--.91S3;
+        Wed, 15 Apr 2020 16:38:51 +0800 (CST)
+From:   Xiyu Yang <xiyuyang19@fudan.edu.cn>
+To:     Ralf Baechle <ralf@linux-mips.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux-hams@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
+        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>
+Subject: [PATCH] net: netrom: Fix potential nr_neigh refcnt leak in nr_add_node
+Date:   Wed, 15 Apr 2020 16:36:19 +0800
+Message-Id: <1586939780-69791-1-git-send-email-xiyuyang19@fudan.edu.cn>
+X-Mailer: git-send-email 2.7.4
+X-CM-TRANSID: XQUFCgC3voIayJZegFVZAA--.91S3
+X-Coremail-Antispam: 1UD129KBjvdXoW7XryDAryfCrW7KF1kWF4UArb_yoWkuFX_GF
+        1kWF9rWwn5Jr40g34jgw4fX39xta18Jr1rXrWfCrWaq34Ygw17ArZ5ur95ur1fWw4rGF98
+        C3s5JrW2y3WxujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbTkFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_GcCE
+        3s1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s
+        1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IE
+        w4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMc
+        vjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v
+        4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc2xSY4AK67AK6r43MxAIw28IcxkI7VAKI48JMx
+        C20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAF
+        wI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20x
+        vE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v2
+        0xvaj40_Zr0_Wr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI
+        0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JU6Hq7UUUUU=
+X-CM-SenderInfo: irzsiiysuqikmy6i3vldqovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jason Yan <yanaijie@huawei.com> wrote:
+nr_add_node() invokes nr_neigh_get_dev(), which returns a local
+reference of the nr_neigh object to "nr_neigh" with increased refcnt.
 
-> Fix the following coccicheck warning:
-> 
-> drivers/net/wireless/st/cw1200/cw1200_spi.c:273:5-8: Unneeded variable:
-> "ret". Return "0" on line 279
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+When nr_add_node() returns, "nr_neigh" becomes invalid, so the refcount
+should be decreased to keep refcount balanced.
 
-Patch applied to wireless-drivers-next.git, thanks.
+The issue happens in one normal path of nr_add_node(), which forgets to
+decrease the refcnt increased by nr_neigh_get_dev() and causes a refcnt
+leak. It should decrease the refcnt before the function returns like
+other normal paths do.
 
-80efb443ea03 cw1200: make cw1200_spi_irq_unsubscribe() void
+Fix this issue by calling nr_neigh_put() before the nr_add_node()
+returns.
 
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+---
+ net/netrom/nr_route.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/net/netrom/nr_route.c b/net/netrom/nr_route.c
+index d41335bad1f8..89cd9de21594 100644
+--- a/net/netrom/nr_route.c
++++ b/net/netrom/nr_route.c
+@@ -208,6 +208,7 @@ static int __must_check nr_add_node(ax25_address *nr, const char *mnemonic,
+ 		/* refcount initialized at 1 */
+ 		spin_unlock_bh(&nr_node_list_lock);
+ 
++		nr_neigh_put(nr_neigh);
+ 		return 0;
+ 	}
+ 	nr_node_lock(nr_node);
 -- 
-https://patchwork.kernel.org/patch/11483037/
+2.7.4
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
