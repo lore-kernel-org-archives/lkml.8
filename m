@@ -2,317 +2,212 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF59C3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:09:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6347C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:10:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4333D20857
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:09:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586963354;
-	bh=Zi63TDHc0SWtoedIqo/TgpSfp8hm8I33v4Z457DvElw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KOvpqlNWZ4g9RMiViDVkmseCfSpSF9GvL2dGn+7jtwfmGzioqJlBaXU0/NSoHo2vH
-	 wIV4gMy9taq0mpM9fT64G5IBdNKWbyj0rd4fRVVInR7aGMHgOxd4KDgpH1b1GpXU3o
-	 X7HElYx8lJqOv6wvhCKYMmOauXOFg1ZGp4iA4Kek=
+	by mail.kernel.org (Postfix) with ESMTP id B16B12076A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:10:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="oN6AmaKA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393122AbgDOPJM (ORCPT
+        id S2393126AbgDOPKU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 11:09:12 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:46667 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730523AbgDOPJJ (ORCPT
+        Wed, 15 Apr 2020 11:10:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45218 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726083AbgDOPKO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 11:09:09 -0400
-Received: by mail-ot1-f68.google.com with SMTP id w12so156473otm.13;
-        Wed, 15 Apr 2020 08:09:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HdC/Q7+fvd6pSZDjuejBxq/m9TWf81AbZW8TK43Po2w=;
-        b=pnX9ieNGS0RndPaznJ1l7UvdhhhVhLLYXxUJ1hBawgQjQvcaasET9hREMd0ymzgrYE
-         z5wzQmysDg5P3Wls3vzbIujAkDkMPqnOImNiBpZRp99ot1aDDL0AtcrC8EEt4BXeqQwS
-         JN+rQ/z2BeNXpfZo6MNYJ34PvtBKQRzwAR31b7Mnef8KoIV1WSUVII9T0LszqPuHdRhs
-         ixwi+8rO27Z1nqnJ/9xmxfPaExmCo7qvXnWgO5dA59imkyi6k+pnRUwl+INnyGi3lTN9
-         cn/tyA8ctMvHggIFzOKniUCQcXx6UgUORBTODyAxLhlmOTzf7c54HNHYTFul1DKYDbB/
-         6bTg==
-X-Gm-Message-State: AGi0PuZW1YaOmQl6VyeUpdnVbG31yQ9cojPaUg7x3zIpGViOOIS9fEmK
-        e5PxppApQhdPk+KmpfTUCQ==
-X-Google-Smtp-Source: APiQypJ53WgVdOzShhlDqFQl48EdVSSIisnmrcFsbp5L/x6xXtHCUnsjBYHk71gAGFPCUdUr6AVHnQ==
-X-Received: by 2002:a4a:3f41:: with SMTP id x1mr13267212ooe.69.1586963346738;
-        Wed, 15 Apr 2020 08:09:06 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id o73sm6310050ota.77.2020.04.15.08.09.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2020 08:09:05 -0700 (PDT)
-Received: (nullmailer pid 25557 invoked by uid 1000);
-        Wed, 15 Apr 2020 15:09:04 -0000
-Date:   Wed, 15 Apr 2020 10:09:04 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Kiran Gunda <kgunda@codeaurora.org>
-Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
-        lee.jones@linaro.org, b.zolnierkie@samsung.com,
-        dri-devel@lists.freedesktop.org, daniel.thompson@linaro.org,
-        jacek.anaszewski@gmail.com, pavel@ucw.cz, mark.rutland@arm.com,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
-        linux-arm-msm@vger.kernel.org,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>
-Subject: Re: [PATCH V5 1/4] backlight: qcom-wled: convert the wled bindings
- to .yaml format
-Message-ID: <20200415150904.GA11174@bogus>
-References: <1586274430-28402-1-git-send-email-kgunda@codeaurora.org>
- <1586274430-28402-2-git-send-email-kgunda@codeaurora.org>
-MIME-Version: 1.0
+        Wed, 15 Apr 2020 11:10:14 -0400
+Received: from mo6-p02-ob.smtp.rzone.de (mo6-p02-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5302::12])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4D2EC061A0C;
+        Wed, 15 Apr 2020 08:10:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1586963411;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=Q34KzgY6NfPQVgFm3W+dvYTabU2j2V7jhKL4UKLxuBE=;
+        b=oN6AmaKAqNF4xXgvHoIlXBZjPlrAXBxX98Uvsi+q8lNfJQ95s1Bs/WQs3VeKNIrXTx
+        mR3llMM3320nJXrDMoRTQyXT7IguWTpwYZEr+gPwC/kauMrFFwxgJuZx0K4ESHO4wT4N
+        t05CBYY+gSDDSfl5V8Wsbebz/o/3edw9yEcsEcai5/IERGs+cMkbnH+0o0yqj9Eh0Xg8
+        UK2HXvqO0r0GlTKR9QVqFgz8xQopKDSeBU5OI10ZK+HLM8dwgbHbxF7FixCimsdFZaMO
+        YY2qRHfBUOwaKneRrBAh6auAab1wG37H+9Rr8x/NNpdzPmkGm7fSWJLo5Ac8wNnaedEY
+        knoQ==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/PtwDConyM="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.4.0 DYNA|AUTH)
+        with ESMTPSA id 6028a2w3FF9k2b9
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Wed, 15 Apr 2020 17:09:46 +0200 (CEST)
+Subject: Re: [PATCH v6 01/12] dt-bindings: add img, pvrsgx.yaml for Imagination GPUs
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1586274430-28402-2-git-send-email-kgunda@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20200415142124.yzfh6mtqq7cdq22e@gilmour.lan>
+Date:   Wed, 15 Apr 2020 17:09:45 +0200
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        David Airlie <airlied@linux.ie>,
+        James Hogan <jhogan@kernel.org>,
+        dri-devel@lists.freedesktop.org, linux-mips@vger.kernel.org,
+        Paul Cercueil <paul@crapouillou.net>,
+        linux-samsung-soc@vger.kernel.org, letux-kernel@openphoenux.org,
+        Paul Burton <paulburton@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Tony Lindgren <tony@atomide.com>, Chen-Yu Tsai <wens@csie.org>,
+        Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org,
+        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Philipp Rossak <embed3d@gmail.com>,
+        openpvrsgx-devgroup@letux.org, linux-kernel@vger.kernel.org,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Daniel Vetter <daniel@ffwll.ch>, kernel@pyra-handheld.com
+Content-Transfer-Encoding: 7bit
+Message-Id: <DC0A2DE2-3D77-46F8-8DE1-55050FDACC9B@goldelico.com>
+References: <cover.1586939718.git.hns@goldelico.com> <06fb6569259bb9183d0a0d0fe70ec4f3033b8aab.1586939718.git.hns@goldelico.com> <20200415101251.o3wi5t6xvf56xmhq@gilmour.lan> <72919514-0657-4B71-902F-3E775E528F64@goldelico.com> <f4fdca8a-d18c-a8d2-7f51-d1ebbbab3647@baylibre.com> <535CAEBE-F43E-4BFC-B989-612C81F0D7EF@goldelico.com> <20200415142124.yzfh6mtqq7cdq22e@gilmour.lan>
+To:     Maxime Ripard <maxime@cerno.tech>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 09:17:07PM +0530, Kiran Gunda wrote:
-> Convert the qcom-wled bindings from .txt to .yaml format.
-> Also replace PM8941 to WLED3 and PMI8998 to WLED4.
+Hi Maxime,
+
+> Am 15.04.2020 um 16:21 schrieb Maxime Ripard <maxime@cerno.tech>:
 > 
-> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
-> Signed-off-by: Subbaraman Narayanamurthy <subbaram@codeaurora.org>
-> Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
-> ---
->  .../bindings/leds/backlight/qcom-wled.txt          | 154 ----------------
->  .../bindings/leds/backlight/qcom-wled.yaml         | 201 +++++++++++++++++++++
->  2 files changed, 201 insertions(+), 154 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
->  create mode 100644 Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
-
-
-> diff --git a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
-> new file mode 100644
-> index 0000000..770e780
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
-> @@ -0,0 +1,201 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/leds/backlight/qcom-wled.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Binding for Qualcomm Technologies, Inc. WLED driver
-> +
-> +maintainers:
-> +  - Bjorn Andersson <bjorn.andersson@linaro.org>
-> +  - Kiran Gunda <kgunda@codeaurora.org>
-> +
-> +description: |
-> +  WLED (White Light Emitting Diode) driver is used for controlling display
-> +  backlight that is part of PMIC on Qualcomm Technologies, Inc. reference
-> +  platforms. The PMIC is connected to the host processor via SPMI bus.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - qcom,pm8941-wled
-> +      - qcom,pmi8998-wled
-> +      - qcom,pm660l-wled
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  default-brightness:
-> +    description:
-> +      brightness value on boot.
-> +    minimum: 0
-> +    maximum: 4095
-> +    default: 2048
-> +
-> +  label: true
-> +
-> +  qcom,cs-out:
-> +    description:
-> +      enable current sink output.
-> +      This property is supported only for WLED3.
-> +    type: boolean
-> +
-> +  qcom,cabc:
-> +    description:
-> +      enable content adaptive backlight control.
-> +    type: boolean
-> +
-> +  qcom,ext-gen:
-> +    description:
-> +      use externally generated modulator signal to dim.
-> +      This property is supported only for WLED3.
-> +    type: boolean
-> +
-> +  qcom,current-limit:
-> +    description:
-> +      mA; per-string current limit.
-> +      This property is supported only for WLED3.
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +    default: 20
-> +    minimum: 0
-> +    maximum: 25
-> +    multipleOf: 1
-
-No point in defining a multiple of 1.
-
-> +
-> +  qcom,current-limit-microamp:
-> +    description:
-> +      uA; per-string current limit.
-> +    default: 25
-> +    minimum: 0
-> +    maximum: 30000
-> +    multipleOf: 25
-> +
-> +  qcom,current-boost-limit:
-> +    description:
-> +      mA; boost current limit.
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +
-> +  qcom,switching-freq:
-> +    description:
-> +      kHz; switching frequency.
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - enum: [ 600, 640, 685, 738, 800, 872, 960, 1066, 1200, 1371, 1600, 1920, 2400, 3200, 4800, 9600 ]
-> +
-> +  qcom,ovp:
-> +    description:
-> +      V; Over-voltage protection limit.
-> +      This property is supported only for WLED3.
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - enum: [ 27, 29, 32, 35 ]
-> +      - default: 29
-> +
-> +  qcom,ovp-millivolt:
-> +    description:
-> +      Over-voltage protection limit. This property is for WLED4 only.
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - enum: [ 18100, 19600, 29600, 31100 ]
-> +      - default: 29600
-> +
-> +  qcom,num-strings:
-> +    description:
-> +      number of led strings attached.
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +
-> +  qcom,enabled-strings:
-> +    description:
-> +      Array of the WLED strings numbered from 0 to 3. Each
-> +      string of leds are operated individually. Specify the
-> +      list of strings used by the device. Any combination of
-> +      led strings can be used.
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
-> +    minItems: 1
-> +    maxItems: 4
-> +
-> +  qcom,external-pfet:
-> +    description:
-> +      Specify if external PFET control for short circuit
-> +      protection is used. This property is supported only
-> +      for WLED4.
-> +    type: boolean
-> +        
-> +  qcom,auto-string-detection:
-> +    description:
-> +      Enables auto-detection of the WLED string configuration.
-> +      This feature is not supported for WLED3.
-> +    type: boolean
-> +
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: qcom,pm8941-wled
-> +
-> +    then:
-> +      properties:
-> +        qcom,current-boost-limit:
-> +           enum: [ 105, 385, 525, 805, 980, 1260, 1400, 1680 ]
-> +           default: 805
-> +
-> +        qcom,switching-freq:
-> +           default: 1600
-> +
-> +        qcom,num-strings:
-> +           enum: [ 1, 2, 3 ]
-> +  
-> +        interrupts:
-> +          items:
-> +            - description: over voltage protection interrupt.
-> +
-> +        interrupt-names:
-> +          items:
-> +            - const: ovp
-> +
-> +    else:
-> +      properties:
-> +        qcom,current-boost-limit:
-> +           enum: [ 105, 280, 450, 620, 970, 1150, 1300, 1500 ]
-> +           default: 970
-> +
-> +        qcom,switching-freq:
-> +           default: 800
-> +
-> +        qcom,num-strings:
-> +           enum: [ 1, 2, 3, 4 ]
-> +
-> +        interrupts:
-> +          items:
-> +            - description: over voltage protection interrupt.
-> +            - description: short circuit interrupt.
-> +
-> +        interrupt-names:
-> +          items:
-> +            - const: ovp
-> +            - const: short
-
-Move these 2 props to the main section adding a 'minItems: 1'. Then just 
-define 'minItems: 2' here and 'maxItems: 1' in the 'then' clause.
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - label
-
-Add:
-
-additionalProperties: false
-
-> +
-> +examples:
-> +  - |
-> +    backlight@d800 {
-> +        compatible = "qcom,pm8941-wled";
-> +        reg = <0xd800 0x100>;
-> +        label = "backlight";
-> +
-> +        qcom,cs-out;
-> +        qcom,current-limit = <20>;
-> +        qcom,current-boost-limit = <805>;
-> +        qcom,switching-freq = <1600>;
-> +        qcom,ovp = <29>;
-> +        qcom,num-strings = <2>;
-> +        qcom,enabled-strings = <0 1>;
-> +     };
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
->  a Linux Foundation Collaborative Project
+>> 
+>> Well we could add clocks and resets as optional but that would
+>> allow to wrongly define omap.
+>> 
+>> Or delegate them to a parent "simple-pm-bus" node.
+>> 
+>> I have to study that material more to understand what you seem
+>> to expect.
 > 
+> The thing is, once that binding is in, it has to be backward
+> compatible. So every thing that you leave out is something that you'll
+> need to support in the driver eventually.
+
+> 
+> If you don't want it to be a complete nightmare, you'll want to figure
+> out as much as possible on how the GPU is integrated and make a
+> binding out of that.
+
+Hm. Yes. We know that there likely are clocks and maybe reset
+but for some SoC this seems to be undocumented and the reset
+line the VHDL of the sgx gpu provides may be permanently tied
+to "inactive".
+
+So if clocks are optional and not provided, a driver simply can assume
+they are enabled somewhere else and does not have to care about. If
+they are specified, the driver can enable/disable them.
+
+> If OMAP is too much of a pain, you can also make
+> a separate binding for it, and a generic one for the rest of us.
+
+No, omap isn't any pain at all.
+
+The pain is that some other SoC are most easily defined by clocks in
+the gpu node which the omap doesn't need to explicitly specify.
+
+I would expect a much bigger nightmare if we split this into two
+bindings variants.
+
+> I'd say that it's pretty unlikely that the clocks, interrupts (and
+> even regulators) are optional. It might be fixed on some SoCs, but
+> that's up to the DT to express that using fixed clocks / regulators,
+> not the GPU binding itself.
+
+omap already has these defined them not to be part of the GPU binding.
+The reason seems to be that this needs special clock gating control
+especially for idle states which is beyond simple clock-enable.
+
+This sysc target-module@56000000 node is already merged and therefore
+we are only adding the gpu child node. Without defining clocks.
+
+For example:
+
+		sgx_module: target-module@56000000 {
+			compatible = "ti,sysc-omap4", "ti,sysc";
+			reg = <0x5600fe00 0x4>,
+			      <0x5600fe10 0x4>;
+			reg-names = "rev", "sysc";
+			ti,sysc-midle = <SYSC_IDLE_FORCE>,
+					<SYSC_IDLE_NO>,
+					<SYSC_IDLE_SMART>;
+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
+					<SYSC_IDLE_NO>,
+					<SYSC_IDLE_SMART>;
+			clocks = <&gpu_clkctrl OMAP5_GPU_CLKCTRL 0>;
+			clock-names = "fck";
+			#address-cells = <1>;
+			#size-cells = <1>;
+			ranges = <0 0x56000000 0x2000000>;
+
+			gpu: gpu@0 {
+				compatible = "ti,omap5-sgx544-116", "img,sgx544-116", "img,sgx544";
+				reg = <0x0 0x10000>;
+				interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
+			};
+		};
+
+The jz4780 example will like this:
+
+	gpu: gpu@13040000 {
+		compatible = "ingenic,jz4780-sgx540-130", "img,sgx540-130", "img,sgx540";
+		reg = <0x13040000 0x4000>;
+
+		clocks = <&cgu JZ4780_CLK_GPU>;
+		clock-names = "gpu";
+
+		interrupt-parent = <&intc>;
+		interrupts = <63>;
+	};
+
+So the question is which one is "generic for the rest of us"?
+
+And how can we make a single binding for the sgx. Not one for each
+special SoC variant that may exist.
+
+IMHO the best answer is to make clocks an optional property.
+Or if we do not want to define them explicitly, we use
+additionalProperties: true.
+
+An alternative could be to use a simple-pm-bus like:
+
+	sgx_module: sgx_module@13040000 {
+		compatible = "simple-pm-bus";
+
+		clocks = <&cgu JZ4780_CLK_GPU>;
+		clock-names = "gpu";
+		
+		#address-cells = <1>;
+		#size-cells = <1>;
+		ranges = <0 0x13040000 0x10000>;
+
+		gpu: gpu@0 {
+			compatible = "ingenic,jz4780-sgx540-130", "img,sgx540-130", "img,sgx540";
+			reg = <0x0 0x4000>;
+
+			interrupt-parent = <&intc>;
+			interrupts = <63>;
+		};
+	};
+
+This gets rid of any clock, reset and pm definitions for the sgx bindings.
+But how this is done is outside this sgx bindings.
+
+With such a scheme, the binding I propose here would be complete and fully
+generic. We can even add additionalProperties: false.
+
+BR,
+Nikolaus
+
