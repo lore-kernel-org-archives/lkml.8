@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 138C1C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:57:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87D94C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7A7F20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:57:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 586452078A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:57:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586951832;
-	bh=UjrAK+OQRBdE3nXPOYyXQpoWIFD+vJtFTxgV0domYGU=;
+	s=default; t=1586951842;
+	bh=wR40GoeRsbCaeLZmg7iG6efpBw+ES/ZLLE2S/S1kbak=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P+D2WkaGobo8G/8nN+u6TvIvYCyl+BikQOgj9c8B/mROIYtJJtJUsyxErf9C+Dw0x
-	 Rt4EIqj8Izws3xMuRxhN3VANXGfPILdx69yGzj5HOxRnHFLVMRhIW3zWa0Tk+pkLBh
-	 04ko2pk5ItN6fcuvxGbLYQ1x+9R4o3FsWtkTDtEw=
+	b=TLRkjgOzEru7lb+pqbjjTh1fd54dKLTq1Ls5QkbdUHFarrXc9fAl3bICsuFNdrIj7
+	 DavyQaZLN2VF8EpjmVzb9tF9rKYKtA4Wgp8moKlNOAfIDBlblwZcCulc6voeI18Ip+
+	 m3DrJcBxzipltRtwqA88iH9/E0/TjKztP3TvEhUY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2897949AbgDOL5K (ORCPT
+        id S2897960AbgDOL5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:57:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41112 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 07:57:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409275AbgDOLqQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:46:16 -0400
+        id S2406455AbgDOLqS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:46:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4758220775;
-        Wed, 15 Apr 2020 11:46:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 548C92078A;
+        Wed, 15 Apr 2020 11:46:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951176;
-        bh=UjrAK+OQRBdE3nXPOYyXQpoWIFD+vJtFTxgV0domYGU=;
+        s=default; t=1586951178;
+        bh=wR40GoeRsbCaeLZmg7iG6efpBw+ES/ZLLE2S/S1kbak=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CWq9K612Zel3WJputIVxcrhr8mwffZbgCQDAyic7xYdFx7KuHxX47Rj7th4ElyrbF
-         HPSB5WoQxxE0b1Z3dTMoF06HFOAuULk84qVizkcTuFQjh9WOPcgyD55Xrr81GucioD
-         ksxXPKHUWtfmrEMQGFo5JpJau4MuHXpbSg7KTgjs=
+        b=ptbxrdzKlZ99faPCWKMoPrexWdWv5NWYL+CMonI9OFyXpsCUJ1467TNg+0HbK6wuI
+         fGbNN0WFPzC3jLjhU9NwJJk+hzABD9+lOiLJjDLDF27fQ/QJ0G9IbgFrS4ItMsPFIq
+         cIKKf8H+i6S3useRn/6SaIJ3PVnxj2uW1ylGjQ94=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jeffery Miller <jmiller@neverware.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 79/84] power: supply: axp288_fuel_gauge: Broaden vendor check for Intel Compute Sticks.
-Date:   Wed, 15 Apr 2020 07:44:36 -0400
-Message-Id: <20200415114442.14166-79-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nvdimm@lists.01.org
+Subject: [PATCH AUTOSEL 5.4 81/84] libnvdimm: Out of bounds read in __nd_ioctl()
+Date:   Wed, 15 Apr 2020 07:44:38 -0400
+Message-Id: <20200415114442.14166-81-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114442.14166-1-sashal@kernel.org>
 References: <20200415114442.14166-1-sashal@kernel.org>
@@ -60,47 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeffery Miller <jmiller@neverware.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit e42fe5b29ac07210297e75f36deefe54edbdbf80 ]
+[ Upstream commit f84afbdd3a9e5e10633695677b95422572f920dc ]
 
-The Intel Compute Stick `STK1A32SC` can have a system vendor of
-"Intel(R) Client Systems".
-Broaden the Intel Compute Stick DMI checks so that they match "Intel
-Corporation" as well as "Intel(R) Client Systems".
+The "cmd" comes from the user and it can be up to 255.  It it's more
+than the number of bits in long, it results out of bounds read when we
+check test_bit(cmd, &cmd_mask).  The highest valid value for "cmd" is
+ND_CMD_CALL (10) so I added a compare against that.
 
-This fixes an issue where the STK1A32SC compute sticks were still
-exposing a battery with the existing blacklist entry.
-
-Signed-off-by: Jeffery Miller <jmiller@neverware.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Fixes: 62232e45f4a2 ("libnvdimm: control (ioctl) messages for nvdimm_bus and nvdimm devices")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Link: https://lore.kernel.org/r/20200225162055.amtosfy7m35aivxg@kili.mountain
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/power/supply/axp288_fuel_gauge.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/nvdimm/bus.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/power/supply/axp288_fuel_gauge.c b/drivers/power/supply/axp288_fuel_gauge.c
-index e1bc4e6e6f30e..f40fa0e63b6e5 100644
---- a/drivers/power/supply/axp288_fuel_gauge.c
-+++ b/drivers/power/supply/axp288_fuel_gauge.c
-@@ -706,14 +706,14 @@ static const struct dmi_system_id axp288_fuel_gauge_blacklist[] = {
- 	{
- 		/* Intel Cherry Trail Compute Stick, Windows version */
- 		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR, "Intel Corporation"),
-+			DMI_MATCH(DMI_SYS_VENDOR, "Intel"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "STK1AW32SC"),
- 		},
- 	},
- 	{
- 		/* Intel Cherry Trail Compute Stick, version without an OS */
- 		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR, "Intel Corporation"),
-+			DMI_MATCH(DMI_SYS_VENDOR, "Intel"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "STK1A32SC"),
- 		},
- 	},
+diff --git a/drivers/nvdimm/bus.c b/drivers/nvdimm/bus.c
+index d47412dcdf38d..5e5c6aafc070b 100644
+--- a/drivers/nvdimm/bus.c
++++ b/drivers/nvdimm/bus.c
+@@ -1010,8 +1010,10 @@ static int __nd_ioctl(struct nvdimm_bus *nvdimm_bus, struct nvdimm *nvdimm,
+ 			return -EFAULT;
+ 	}
+ 
+-	if (!desc || (desc->out_num + desc->in_num == 0) ||
+-			!test_bit(cmd, &cmd_mask))
++	if (!desc ||
++	    (desc->out_num + desc->in_num == 0) ||
++	    cmd > ND_CMD_CALL ||
++	    !test_bit(cmd, &cmd_mask))
+ 		return -ENOTTY;
+ 
+ 	/* fail write commands (when read-only) */
 -- 
 2.20.1
 
