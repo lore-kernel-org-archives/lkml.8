@@ -2,52 +2,52 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F09C3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97ADAC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:18:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 829AD20771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:17:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C227206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:18:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586978279;
-	bh=d7bFiCcoenMHmSeqgJZPLiXVTHM0uY6+TD4EXBmi8wg=;
+	s=default; t=1586978290;
+	bh=7nxr8v/IXu5xyZFvpoMi7aAlhE4Gd0YV5C/fKVUFZAM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r+0O9sT+cvuaLkLOAkyhKjblV6UFmynpjy8P7ucQaKosB4+LwkiQB40WBoBUV3mUn
-	 VjXtZAeUGBYlr/2nasevUeNnyjv2D4AxLXBa6hjPoTL7VD+7EovYUJWb6EcANREoku
-	 hAu2OtBRpah9ruM32OykN2ArTIyiez8KBqDDXfFg=
+	b=Df1CACVzK06+9xcyCo/inE/NVMU4q+w0AR+sUOZETRWRLDEpy97EbmPUFOwzHnpek
+	 eq5nlDisnlv7yLS5uvsFAEx9APmlU7EF6bvrT8MsNkhjHkLv2ZCjYb2FsGTZkOaNGL
+	 KrIpFsibHaAKtkjWLH0a3DfjII3absF9tEBavDBU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406939AbgDOTGq (ORCPT
+        id S2391120AbgDOTGo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 15:06:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42356 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 15:06:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1416813AbgDOSeP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 14:34:15 -0400
+        id S1416811AbgDOSeO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 14:34:14 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31E72216FD;
-        Wed, 15 Apr 2020 18:34:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0D7F2166E;
+        Wed, 15 Apr 2020 18:34:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586975654;
-        bh=d7bFiCcoenMHmSeqgJZPLiXVTHM0uY6+TD4EXBmi8wg=;
+        s=default; t=1586975653;
+        bh=7nxr8v/IXu5xyZFvpoMi7aAlhE4Gd0YV5C/fKVUFZAM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QyD7JMYo0p0OkupVDjsPyx/RKVbAFwxxvXtg3ciGT8jIh+o7Uz+q8CriDW8Pl6593
-         O0AzyWtGP7UwpwwQRBqWo/ht6fkcOPZU52uLx7znuXZAMWlWyFdrAzmfve5Fc04lJa
-         t4T9sywJZz75trdns4hez+9mMl3TJLPof9r++lxY=
+        b=EdjBUZSODrGYtqR3YnPj8Oze09lRB2yTI/AG6zLHSJM43igXck2sLVFG3T+rMLU0s
+         ctykKF709Zz4QgKnioKgQX9u40+CI7JBchNgMXBf37vCM5QNyp7luObMO99zM4h0qQ
+         jPZ1mP1djo1sr+CfaFIBDz2ggEj2aoAuvJEUYJvU=
 From:   paulmck@kernel.org
 To:     linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
         kernel-team@fb.com, mingo@kernel.org
 Cc:     elver@google.com, andreyknvl@google.com, glider@google.com,
         dvyukov@google.com, cai@lca.pw, boqun.feng@gmail.com,
         "Paul E . McKenney" <paulmck@kernel.org>
-Subject: [PATCH v4 tip/core/rcu 05/15] kcsan: Update Documentation/dev-tools/kcsan.rst
-Date:   Wed, 15 Apr 2020 11:34:01 -0700
-Message-Id: <20200415183411.12368-5-paulmck@kernel.org>
+Subject: [PATCH v4 tip/core/rcu 03/15] kcsan: Add current->state to implicitly atomic accesses
+Date:   Wed, 15 Apr 2020 11:33:59 -0700
+Message-Id: <20200415183411.12368-3-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200415183343.GA12265@paulmck-ThinkPad-P72>
 References: <20200415183343.GA12265@paulmck-ThinkPad-P72>
@@ -58,331 +58,174 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Marco Elver <elver@google.com>
 
-Extend and improve based on recent changes, and summarize important
-bits that have been missing. Tested with "make htmldocs".
+Add volatile current->state to list of implicitly atomic accesses. This
+is in preparation to eventually enable KCSAN on kernel/sched (which
+currently still has KCSAN_SANITIZE := n).
+
+Since accesses that match the special check in atomic.h are rare, it
+makes more sense to move this check to the slow-path, avoiding the
+additional compare in the fast-path. With the microbenchmark, a speedup
+of ~6% is measured.
 
 Signed-off-by: Marco Elver <elver@google.com>
-Cc: Qian Cai <cai@lca.pw>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- Documentation/dev-tools/kcsan.rst | 227 ++++++++++++++++++++++++--------------
- 1 file changed, 144 insertions(+), 83 deletions(-)
+ kernel/kcsan/atomic.h  | 21 +++++++--------------
+ kernel/kcsan/core.c    | 22 +++++++++++++++-------
+ kernel/kcsan/debugfs.c | 27 ++++++++++++++++++---------
+ 3 files changed, 40 insertions(+), 30 deletions(-)
 
-diff --git a/Documentation/dev-tools/kcsan.rst b/Documentation/dev-tools/kcsan.rst
-index 65a0be5..52a5d6f 100644
---- a/Documentation/dev-tools/kcsan.rst
-+++ b/Documentation/dev-tools/kcsan.rst
-@@ -1,27 +1,22 @@
- The Kernel Concurrency Sanitizer (KCSAN)
- ========================================
+diff --git a/kernel/kcsan/atomic.h b/kernel/kcsan/atomic.h
+index a9c1930..be9e625 100644
+--- a/kernel/kcsan/atomic.h
++++ b/kernel/kcsan/atomic.h
+@@ -4,24 +4,17 @@
+ #define _KERNEL_KCSAN_ATOMIC_H
  
--Overview
----------
--
--*Kernel Concurrency Sanitizer (KCSAN)* is a dynamic data race detector for
--kernel space. KCSAN is a sampling watchpoint-based data race detector. Key
--priorities in KCSAN's design are lack of false positives, scalability, and
--simplicity. More details can be found in `Implementation Details`_.
--
--KCSAN uses compile-time instrumentation to instrument memory accesses. KCSAN is
--supported in both GCC and Clang. With GCC it requires version 7.3.0 or later.
--With Clang it requires version 7.0.0 or later.
-+The Kernel Concurrency Sanitizer (KCSAN) is a dynamic race detector, which
-+relies on compile-time instrumentation, and uses a watchpoint-based sampling
-+approach to detect races. KCSAN's primary purpose is to detect `data races`_.
+ #include <linux/jiffies.h>
++#include <linux/sched.h>
  
- Usage
- -----
+ /*
+- * Helper that returns true if access to @ptr should be considered an atomic
+- * access, even though it is not explicitly atomic.
+- *
+- * List all volatile globals that have been observed in races, to suppress
+- * data race reports between accesses to these variables.
+- *
+- * For now, we assume that volatile accesses of globals are as strong as atomic
+- * accesses (READ_ONCE, WRITE_ONCE cast to volatile). The situation is still not
+- * entirely clear, as on some architectures (Alpha) READ_ONCE/WRITE_ONCE do more
+- * than cast to volatile. Eventually, we hope to be able to remove this
+- * function.
++ * Special rules for certain memory where concurrent conflicting accesses are
++ * common, however, the current convention is to not mark them; returns true if
++ * access to @ptr should be considered atomic. Called from slow-path.
+  */
+-static __always_inline bool kcsan_is_atomic(const volatile void *ptr)
++static bool kcsan_is_atomic_special(const volatile void *ptr)
+ {
+-	/* only jiffies for now */
+-	return ptr == &jiffies;
++	/* volatile globals that have been observed in data races. */
++	return ptr == &jiffies || ptr == &current->state;
+ }
  
--To enable KCSAN configure kernel with::
-+KCSAN is supported in both GCC and Clang. With GCC it requires version 7.3.0 or
-+later. With Clang it requires version 7.0.0 or later.
+ #endif /* _KERNEL_KCSAN_ATOMIC_H */
+diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
+index 065615d..eb30ecd 100644
+--- a/kernel/kcsan/core.c
++++ b/kernel/kcsan/core.c
+@@ -188,12 +188,13 @@ static __always_inline struct kcsan_ctx *get_ctx(void)
+ 	return in_task() ? &current->kcsan_ctx : raw_cpu_ptr(&kcsan_cpu_ctx);
+ }
+ 
++/* Rules for generic atomic accesses. Called from fast-path. */
+ static __always_inline bool
+ is_atomic(const volatile void *ptr, size_t size, int type)
+ {
+ 	struct kcsan_ctx *ctx;
+ 
+-	if ((type & KCSAN_ACCESS_ATOMIC) != 0)
++	if (type & KCSAN_ACCESS_ATOMIC)
+ 		return true;
+ 
+ 	/*
+@@ -201,16 +202,16 @@ is_atomic(const volatile void *ptr, size_t size, int type)
+ 	 * as atomic. This allows using them also in atomic regions, such as
+ 	 * seqlocks, without implicitly changing their semantics.
+ 	 */
+-	if ((type & KCSAN_ACCESS_ASSERT) != 0)
++	if (type & KCSAN_ACCESS_ASSERT)
+ 		return false;
+ 
+ 	if (IS_ENABLED(CONFIG_KCSAN_ASSUME_PLAIN_WRITES_ATOMIC) &&
+-	    (type & KCSAN_ACCESS_WRITE) != 0 && size <= sizeof(long) &&
++	    (type & KCSAN_ACCESS_WRITE) && size <= sizeof(long) &&
+ 	    IS_ALIGNED((unsigned long)ptr, size))
+ 		return true; /* Assume aligned writes up to word size are atomic. */
+ 
+ 	ctx = get_ctx();
+-	if (unlikely(ctx->atomic_next > 0)) {
++	if (ctx->atomic_next > 0) {
+ 		/*
+ 		 * Because we do not have separate contexts for nested
+ 		 * interrupts, in case atomic_next is set, we simply assume that
+@@ -224,10 +225,8 @@ is_atomic(const volatile void *ptr, size_t size, int type)
+ 			--ctx->atomic_next; /* in task, or outer interrupt */
+ 		return true;
+ 	}
+-	if (unlikely(ctx->atomic_nest_count > 0 || ctx->in_flat_atomic))
+-		return true;
+ 
+-	return kcsan_is_atomic(ptr);
++	return ctx->atomic_nest_count > 0 || ctx->in_flat_atomic;
+ }
+ 
+ static __always_inline bool
+@@ -367,6 +366,15 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
+ 	if (!kcsan_is_enabled())
+ 		goto out;
+ 
++	/*
++	 * Special atomic rules: unlikely to be true, so we check them here in
++	 * the slow-path, and not in the fast-path in is_atomic(). Call after
++	 * kcsan_is_enabled(), as we may access memory that is not yet
++	 * initialized during early boot.
++	 */
++	if (!is_assert && kcsan_is_atomic_special(ptr))
++		goto out;
 +
-+To enable KCSAN configure the kernel with::
+ 	if (!check_encodable((unsigned long)ptr, size)) {
+ 		kcsan_counter_inc(KCSAN_COUNTER_UNENCODABLE_ACCESSES);
+ 		goto out;
+diff --git a/kernel/kcsan/debugfs.c b/kernel/kcsan/debugfs.c
+index 2ff1961..72ee188 100644
+--- a/kernel/kcsan/debugfs.c
++++ b/kernel/kcsan/debugfs.c
+@@ -74,25 +74,34 @@ void kcsan_counter_dec(enum kcsan_counter_id id)
+  */
+ static noinline void microbenchmark(unsigned long iters)
+ {
++	const struct kcsan_ctx ctx_save = current->kcsan_ctx;
++	const bool was_enabled = READ_ONCE(kcsan_enabled);
+ 	cycles_t cycles;
  
-     CONFIG_KCSAN = y
- 
- KCSAN provides several other configuration options to customize behaviour (see
--their respective help text for more info).
-+the respective help text in ``lib/Kconfig.kcsan`` for more info).
- 
- Error reports
- ~~~~~~~~~~~~~
-@@ -96,7 +91,8 @@ The other less common type of data race report looks like this::
- This report is generated where it was not possible to determine the other
- racing thread, but a race was inferred due to the data value of the watched
- memory location having changed. These can occur either due to missing
--instrumentation or e.g. DMA accesses.
-+instrumentation or e.g. DMA accesses. These reports will only be generated if
-+``CONFIG_KCSAN_REPORT_RACE_UNKNOWN_ORIGIN=y`` (selected by default).
- 
- Selective analysis
- ~~~~~~~~~~~~~~~~~~
-@@ -110,9 +106,26 @@ the below options are available:
-   behaviour when encountering a data race is deemed safe.
- 
- * Disabling data race detection for entire functions can be accomplished by
--  using the function attribute ``__no_kcsan`` (or ``__no_kcsan_or_inline`` for
--  ``__always_inline`` functions). To dynamically control for which functions
--  data races are reported, see the `debugfs`_ blacklist/whitelist feature.
-+  using the function attribute ``__no_kcsan``::
++	/* We may have been called from an atomic region; reset context. */
++	memset(&current->kcsan_ctx, 0, sizeof(current->kcsan_ctx));
++	/*
++	 * Disable to benchmark fast-path for all accesses, and (expected
++	 * negligible) call into slow-path, but never set up watchpoints.
++	 */
++	WRITE_ONCE(kcsan_enabled, false);
 +
-+    __no_kcsan
-+    void foo(void) {
-+        ...
+ 	pr_info("KCSAN: %s begin | iters: %lu\n", __func__, iters);
+ 
+ 	cycles = get_cycles();
+ 	while (iters--) {
+-		/*
+-		 * We can run this benchmark from multiple tasks; this address
+-		 * calculation increases likelyhood of some accesses
+-		 * overlapping. Make the access type an atomic read, to never
+-		 * set up watchpoints and test the fast-path only.
+-		 */
+-		unsigned long addr =
+-			iters % (CONFIG_KCSAN_NUM_WATCHPOINTS * PAGE_SIZE);
+-		__kcsan_check_access((void *)addr, sizeof(long), KCSAN_ACCESS_ATOMIC);
++		unsigned long addr = iters & ((PAGE_SIZE << 8) - 1);
++		int type = !(iters & 0x7f) ? KCSAN_ACCESS_ATOMIC :
++				(!(iters & 0xf) ? KCSAN_ACCESS_WRITE : 0);
++		__kcsan_check_access((void *)addr, sizeof(long), type);
+ 	}
+ 	cycles = get_cycles() - cycles;
+ 
+ 	pr_info("KCSAN: %s end   | cycles: %llu\n", __func__, cycles);
 +
-+  To dynamically limit for which functions to generate reports, see the
-+  `DebugFS interface`_ blacklist/whitelist feature.
-+
-+  For ``__always_inline`` functions, replace ``__always_inline`` with
-+  ``__no_kcsan_or_inline`` (which implies ``__always_inline``)::
-+
-+    static __no_kcsan_or_inline void foo(void) {
-+        ...
-+
-+  Note: Older compiler versions (GCC < 9) also do not always honor the
-+  ``__no_kcsan`` attribute on regular ``inline`` functions. If false positives
-+  with these compilers cannot be tolerated, for small functions where
-+  ``__always_inline`` would be appropriate, ``__no_kcsan_or_inline`` should be
-+  preferred instead.
++	WRITE_ONCE(kcsan_enabled, was_enabled);
++	/* restore context */
++	current->kcsan_ctx = ctx_save;
+ }
  
- * To disable data race detection for a particular compilation unit, add to the
-   ``Makefile``::
-@@ -124,13 +137,29 @@ the below options are available:
- 
-     KCSAN_SANITIZE := n
- 
--debugfs
--~~~~~~~
-+Furthermore, it is possible to tell KCSAN to show or hide entire classes of
-+data races, depending on preferences. These can be changed via the following
-+Kconfig options:
-+
-+* ``CONFIG_KCSAN_REPORT_VALUE_CHANGE_ONLY``: If enabled and a conflicting write
-+  is observed via a watchpoint, but the data value of the memory location was
-+  observed to remain unchanged, do not report the data race.
-+
-+* ``CONFIG_KCSAN_ASSUME_PLAIN_WRITES_ATOMIC``: Assume that plain aligned writes
-+  up to word size are atomic by default. Assumes that such writes are not
-+  subject to unsafe compiler optimizations resulting in data races. The option
-+  causes KCSAN to not report data races due to conflicts where the only plain
-+  accesses are aligned writes up to word size.
-+
-+DebugFS interface
-+~~~~~~~~~~~~~~~~~
-+
-+The file ``/sys/kernel/debug/kcsan`` provides the following interface:
- 
--* The file ``/sys/kernel/debug/kcsan`` can be read to get stats.
-+* Reading ``/sys/kernel/debug/kcsan`` returns various runtime statistics.
- 
--* KCSAN can be turned on or off by writing ``on`` or ``off`` to
--  ``/sys/kernel/debug/kcsan``.
-+* Writing ``on`` or ``off`` to ``/sys/kernel/debug/kcsan`` allows turning KCSAN
-+  on or off, respectively.
- 
- * Writing ``!some_func_name`` to ``/sys/kernel/debug/kcsan`` adds
-   ``some_func_name`` to the report filter list, which (by default) blacklists
-@@ -142,91 +171,120 @@ debugfs
-   can be used to silence frequently occurring data races; the whitelist feature
-   can help with reproduction and testing of fixes.
- 
-+Tuning performance
-+~~~~~~~~~~~~~~~~~~
-+
-+Core parameters that affect KCSAN's overall performance and bug detection
-+ability are exposed as kernel command-line arguments whose defaults can also be
-+changed via the corresponding Kconfig options.
-+
-+* ``kcsan.skip_watch`` (``CONFIG_KCSAN_SKIP_WATCH``): Number of per-CPU memory
-+  operations to skip, before another watchpoint is set up. Setting up
-+  watchpoints more frequently will result in the likelihood of races to be
-+  observed to increase. This parameter has the most significant impact on
-+  overall system performance and race detection ability.
-+
-+* ``kcsan.udelay_task`` (``CONFIG_KCSAN_UDELAY_TASK``): For tasks, the
-+  microsecond delay to stall execution after a watchpoint has been set up.
-+  Larger values result in the window in which we may observe a race to
-+  increase.
-+
-+* ``kcsan.udelay_interrupt`` (``CONFIG_KCSAN_UDELAY_INTERRUPT``): For
-+  interrupts, the microsecond delay to stall execution after a watchpoint has
-+  been set up. Interrupts have tighter latency requirements, and their delay
-+  should generally be smaller than the one chosen for tasks.
-+
-+They may be tweaked at runtime via ``/sys/module/kcsan/parameters/``.
-+
- Data Races
- ----------
- 
--Informally, two operations *conflict* if they access the same memory location,
--and at least one of them is a write operation. In an execution, two memory
--operations from different threads form a **data race** if they *conflict*, at
--least one of them is a *plain access* (non-atomic), and they are *unordered* in
--the "happens-before" order according to the `LKMM
--<../../tools/memory-model/Documentation/explanation.txt>`_.
-+In an execution, two memory accesses form a *data race* if they *conflict*,
-+they happen concurrently in different threads, and at least one of them is a
-+*plain access*; they *conflict* if both access the same memory location, and at
-+least one is a write. For a more thorough discussion and definition, see `"Plain
-+Accesses and Data Races" in the LKMM`_.
-+
-+.. _"Plain Accesses and Data Races" in the LKMM: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/memory-model/Documentation/explanation.txt#n1922
- 
--Relationship with the Linux Kernel Memory Model (LKMM)
--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+Relationship with the Linux-Kernel Memory Consistency Model (LKMM)
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- 
- The LKMM defines the propagation and ordering rules of various memory
- operations, which gives developers the ability to reason about concurrent code.
- Ultimately this allows to determine the possible executions of concurrent code,
- and if that code is free from data races.
- 
--KCSAN is aware of *atomic* accesses (``READ_ONCE``, ``WRITE_ONCE``,
--``atomic_*``, etc.), but is oblivious of any ordering guarantees. In other
--words, KCSAN assumes that as long as a plain access is not observed to race
--with another conflicting access, memory operations are correctly ordered.
-+KCSAN is aware of *marked atomic operations* (``READ_ONCE``, ``WRITE_ONCE``,
-+``atomic_*``, etc.), but is oblivious of any ordering guarantees and simply
-+assumes that memory barriers are placed correctly. In other words, KCSAN
-+assumes that as long as a plain access is not observed to race with another
-+conflicting access, memory operations are correctly ordered.
- 
- This means that KCSAN will not report *potential* data races due to missing
--memory ordering. If, however, missing memory ordering (that is observable with
--a particular compiler and architecture) leads to an observable data race (e.g.
--entering a critical section erroneously), KCSAN would report the resulting
--data race.
--
--Race conditions vs. data races
--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
--
--Race conditions are logic bugs, where unexpected interleaving of racing
--concurrent operations result in an erroneous state.
--
--Data races on the other hand are defined at the *memory model/language level*.
--Many data races are also harmful race conditions, which a tool like KCSAN
--reports!  However, not all data races are race conditions and vice-versa.
--KCSAN's intent is to report data races according to the LKMM. A data race
--detector can only work at the memory model/language level.
--
--Deeper analysis, to find high-level race conditions only, requires conveying
--the intended kernel logic to a tool. This requires (1) the developer writing a
--specification or model of their code, and then (2) the tool verifying that the
--implementation matches. This has been done for small bits of code using model
--checkers and other formal methods, but does not scale to the level of what can
--be covered with a dynamic analysis based data race detector such as KCSAN.
--
--For reasons outlined in this `article <https://lwn.net/Articles/793253/>`_,
--data races can be much more subtle, but can cause no less harm than high-level
--race conditions.
-+memory ordering. Developers should therefore carefully consider the required
-+memory ordering requirements that remain unchecked. If, however, missing
-+memory ordering (that is observable with a particular compiler and
-+architecture) leads to an observable data race (e.g. entering a critical
-+section erroneously), KCSAN would report the resulting data race.
-+
-+Race Detection Beyond Data Races
-+--------------------------------
-+
-+For code with complex concurrency design, race-condition bugs may not always
-+manifest as data races. Race conditions occur if concurrently executing
-+operations result in unexpected system behaviour. On the other hand, data races
-+are defined at the C-language level. The following macros can be used to check
-+properties of concurrent code where bugs would not manifest as data races.
-+
-+.. kernel-doc:: include/linux/kcsan-checks.h
-+    :functions: ASSERT_EXCLUSIVE_WRITER ASSERT_EXCLUSIVE_ACCESS
-+                ASSERT_EXCLUSIVE_BITS
- 
- Implementation Details
- ----------------------
- 
--The general approach is inspired by `DataCollider
-+KCSAN relies on observing that two accesses happen concurrently. Crucially, we
-+want to (a) increase the chances of observing races (especially for races that
-+manifest rarely), and (b) be able to actually observe them. We can accomplish
-+(a) by injecting various delays, and (b) by using address watchpoints (or
-+breakpoints).
-+
-+If we deliberately stall a memory access, while we have a watchpoint for its
-+address set up, and then observe the watchpoint to fire, two accesses to the
-+same address just raced. Using hardware watchpoints, this is the approach taken
-+in `DataCollider
- <http://usenix.org/legacy/events/osdi10/tech/full_papers/Erickson.pdf>`_.
- Unlike DataCollider, KCSAN does not use hardware watchpoints, but instead
--relies on compiler instrumentation. Watchpoints are implemented using an
--efficient encoding that stores access type, size, and address in a long; the
--benefits of using "soft watchpoints" are portability and greater flexibility in
--limiting which accesses trigger a watchpoint.
-+relies on compiler instrumentation and "soft watchpoints".
- 
--More specifically, KCSAN requires instrumenting plain (unmarked, non-atomic)
--memory operations; for each instrumented plain access:
-+In KCSAN, watchpoints are implemented using an efficient encoding that stores
-+access type, size, and address in a long; the benefits of using "soft
-+watchpoints" are portability and greater flexibility. KCSAN then relies on the
-+compiler instrumenting plain accesses. For each instrumented plain access:
- 
- 1. Check if a matching watchpoint exists; if yes, and at least one access is a
-    write, then we encountered a racing access.
- 
- 2. Periodically, if no matching watchpoint exists, set up a watchpoint and
--   stall for a small delay.
-+   stall for a small randomized delay.
- 
- 3. Also check the data value before the delay, and re-check the data value
-    after delay; if the values mismatch, we infer a race of unknown origin.
- 
--To detect data races between plain and atomic memory operations, KCSAN also
--annotates atomic accesses, but only to check if a watchpoint exists
--(``kcsan_check_atomic_*``); i.e.  KCSAN never sets up a watchpoint on atomic
--accesses.
-+To detect data races between plain and marked accesses, KCSAN also annotates
-+marked accesses, but only to check if a watchpoint exists; i.e. KCSAN never
-+sets up a watchpoint on marked accesses. By never setting up watchpoints for
-+marked operations, if all accesses to a variable that is accessed concurrently
-+are properly marked, KCSAN will never trigger a watchpoint and therefore never
-+report the accesses.
- 
- Key Properties
- ~~~~~~~~~~~~~~
- 
--1. **Memory Overhead:**  The current implementation uses a small array of longs
--   to encode watchpoint information, which is negligible.
-+1. **Memory Overhead:**  The overall memory overhead is only a few MiB
-+   depending on configuration. The current implementation uses a small array of
-+   longs to encode watchpoint information, which is negligible.
- 
- 2. **Performance Overhead:** KCSAN's runtime aims to be minimal, using an
-    efficient watchpoint encoding that does not require acquiring any shared
-@@ -253,14 +311,17 @@ Key Properties
- Alternatives Considered
- -----------------------
- 
--An alternative data race detection approach for the kernel can be found in
-+An alternative data race detection approach for the kernel can be found in the
- `Kernel Thread Sanitizer (KTSAN) <https://github.com/google/ktsan/wiki>`_.
- KTSAN is a happens-before data race detector, which explicitly establishes the
- happens-before order between memory operations, which can then be used to
--determine data races as defined in `Data Races`_. To build a correct
--happens-before relation, KTSAN must be aware of all ordering rules of the LKMM
--and synchronization primitives. Unfortunately, any omission leads to false
--positives, which is especially important in the context of the kernel which
--includes numerous custom synchronization mechanisms. Furthermore, KTSAN's
--implementation requires metadata for each memory location (shadow memory);
--currently, for each page, KTSAN requires 4 pages of shadow memory.
-+determine data races as defined in `Data Races`_.
-+
-+To build a correct happens-before relation, KTSAN must be aware of all ordering
-+rules of the LKMM and synchronization primitives. Unfortunately, any omission
-+leads to large numbers of false positives, which is especially detrimental in
-+the context of the kernel which includes numerous custom synchronization
-+mechanisms. To track the happens-before relation, KTSAN's implementation
-+requires metadata for each memory location (shadow memory), which for each page
-+corresponds to 4 pages of shadow memory, and can translate into overhead of
-+tens of GiB on a large system.
+ /*
 -- 
 2.9.5
 
