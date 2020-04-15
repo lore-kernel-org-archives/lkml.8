@@ -2,134 +2,158 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 066BFC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 06:08:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C870C2BB85
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 06:08:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D656020767
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 06:08:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HBSlhJE1"
+	by mail.kernel.org (Postfix) with ESMTP id DF93F20737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 06:08:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586930910;
+	bh=+PM+6ru8FRqsHK3LP0aoNxEiY5HJVgp8X4OsKKsIgBY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UfZQ/r2o7n3EG75Ljcq9HRNtiM8xL/2+Uv6PqA3NBzLhIGJJmoEpAn6jdYH6WwI2R
+	 jtO6+A+rGkYwlwM7Uwaz8XwBEqTcwer46ok4aHan85QOuFbQfvJehN31Rf5mJel6g/
+	 3ZKzzYOPk5IPs9WX7EWEJ6IkByJU//5Sjscwom0Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441092AbgDOGIT (ORCPT
+        id S2441099AbgDOGI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 02:08:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45552 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2389821AbgDOGIJ (ORCPT
+        Wed, 15 Apr 2020 02:08:28 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:39060 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389822AbgDOGIL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 02:08:09 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52F0AC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 23:08:09 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id k18so869274pll.6
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 23:08:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FtoXwVoleXkIcgxv+sUDXuBjYYrXNWCbLasQJpcSpcA=;
-        b=HBSlhJE1D9sli7y3Lghond2tbNdmcv2k52X6Hc+g5U5gDHqLCoyA4V8trJ1hfDXtJZ
-         hL/C45uaWk31S3muKirUX6mxE9l7/jfKm44TJvP0ibCdxSppuRdEa+V5jgaghqPgvPwI
-         eu/W20Vrnl+C99uTB5/SyrV5HOjbQolwSD0F4bscBMiFPNwKQ+s//MBqj/pDAejbqtGV
-         YltAG7lbfdjyh2323dgGYG2zkzxv72b+gc/KcqSqVYZI4HZWhkaPYITCu6FX16G58tX7
-         mR6yPCRvnbR6gAWQxxosJTZcITIHjoXHzn/censmt3pPbP2o5VkW4dBenxTtyYDbnj95
-         alOQ==
+        Wed, 15 Apr 2020 02:08:11 -0400
+Received: by mail-pl1-f196.google.com with SMTP id k18so869301pll.6;
+        Tue, 14 Apr 2020 23:08:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FtoXwVoleXkIcgxv+sUDXuBjYYrXNWCbLasQJpcSpcA=;
-        b=IW7E2GiwS4qDT+wJyRqwIk1czbEqNhIR5lQ4+k9rf3B4272Jf1CXXbV9SguQMxHG5O
-         vjd1HTEdT2l0keg0xafjTmNexAuHkas9T1euboEvkAPmBbzXh7Mzvgy9qgioXvc4Iy8V
-         nPNP51Kb+b0b877ZoK9dVnHdrxrtf+dUaPXOXe3vhs30Dt6s2j5KcP2okLZ4idx3lHFb
-         e9LIR28WYRrovVy9EbOSeUc0upnOyY5f0j0bSPRHl6PlIPp/NNLc++OOi7TbEkKUwMhX
-         KI9wiEPAwREcA7yBHBc7N73Xg5y1DJCTP/2bEz9S9BlnM/elceQcu4/l+iKsJk0AYoPk
-         pkAQ==
-X-Gm-Message-State: AGi0PuZa2hga1PHpojwi3uMFKTI4Odqi+aSv8jhvkuzh06Cigr3fKeOL
-        s5z6+6Gvj28IDoAqtkAJQm0Siw==
-X-Google-Smtp-Source: APiQypLATgkPNLXkc5JX3Zzus/BzNEM7TgJHrpWr+foPIyUiTHiGtmwHXGsLk4VH5o6rDNk17+gOew==
-X-Received: by 2002:a17:902:968a:: with SMTP id n10mr3367186plp.74.1586930888484;
-        Tue, 14 Apr 2020 23:08:08 -0700 (PDT)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id b4sm2643951pff.6.2020.04.14.23.08.07
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZUFRFKP5XHm+tVn1iBb6i8NUmk+hMwix7vSoVxV5lZQ=;
+        b=m1tlQU+ZP2UNHqbmik7h67ZLbEvfQidvBkK1KXYMdJKwuraHTXVGMiz+c5D7oSM5gh
+         U8RvrMLqkTRo2EmUq/AoM7UYWY/9CQVnAPPMG0chk1TZAYp2f3/oI9PCXidqvaDbS4LY
+         5qFZt9c+8GKFPdXdiyM24JNoJVeDyCxEda+++pjORGcCXEzsQHDGzAPHgvVmb1Nn+0pf
+         mZIKlJPWYyxkyKbsYwtqlkL4WbmLUD+8L+2Lp9dc0AvXsBkCa0QAGQoTp0bGCEgJ2uEg
+         In9f/uQzMccBAgYnRy/x53PXkmTanVi1BmY3JJGngqFpQo/vCyyGgNBjouMbOvHrGyfd
+         LnMw==
+X-Gm-Message-State: AGi0PubKnWJ/oco0AvrIpmzx80beQq5BWzdDj202I2D4Y5ww+2XYORKG
+        q5Xz35aYmfsEfw+xO2BSRHY=
+X-Google-Smtp-Source: APiQypITe0Jo2LSazeCPOlLHzXhdbcDlQkPI1hUI+ssy+AUoQcqqY+hqTknibeyRkw3bWyzsVGcAig==
+X-Received: by 2002:a17:90a:aa0e:: with SMTP id k14mr4382466pjq.74.1586930890545;
+        Tue, 14 Apr 2020 23:08:10 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id q131sm7947640pfq.115.2020.04.14.23.08.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 23:08:07 -0700 (PDT)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH] phy: qcom: qmp: Add SM8250 UFS PHY
-Date:   Tue, 14 Apr 2020 23:07:45 -0700
-Message-Id: <20200415060745.740193-1-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.24.0
+        Tue, 14 Apr 2020 23:08:08 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id DA59D40277; Wed, 15 Apr 2020 06:08:07 +0000 (UTC)
+Date:   Wed, 15 Apr 2020 06:08:07 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH 1/3] kernel/sysctl: support setting sysctl parameters
+ from kernel command line
+Message-ID: <20200415060807.GR11244@42.do-not-panic.com>
+References: <20200330224422.GX11244@42.do-not-panic.com>
+ <287ac6ae-a898-3e68-c7d8-4c1d17a40db9@suse.cz>
+ <20200402160442.GA11244@42.do-not-panic.com>
+ <202004021017.3A23B759@keescook>
+ <20200402205932.GM11244@42.do-not-panic.com>
+ <202004031654.C4389A04EF@keescook>
+ <20200406140836.GA11244@42.do-not-panic.com>
+ <202004060856.6BC17C5C99@keescook>
+ <20200406170822.GE11244@42.do-not-panic.com>
+ <7585f0b0-c5d2-b527-aac7-eeafdd15ffad@suse.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7585f0b0-c5d2-b527-aac7-eeafdd15ffad@suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The SM8250 UFS PHY can run off the same initialization sequence as
-SM8150, but add the compatible to allow future changes.
+On Tue, Apr 14, 2020 at 01:25:07PM +0200, Vlastimil Babka wrote:
+> On 4/6/20 7:08 PM, Luis Chamberlain wrote:
+> > On Mon, Apr 06, 2020 at 08:58:50AM -0700, Kees Cook wrote:
+> >> On Mon, Apr 06, 2020 at 02:08:36PM +0000, Luis Chamberlain wrote:
+> >> > > Yes. Doing an internal extension isn't testing the actual code.
+> >> > 
+> >> > But it would.
+> >> > 
+> >> > [...]
+> >> > > I don't think anything is needed for this series. It can be boot tested
+> >> > > manually.
+> >> > 
+> >> > Why test it manually when it could be tested automatically with a new kconfig?
+> >> 
+> >> So, my impression is that adding code to the internals to test the
+> >> internals isn't a valid test (or at least makes it fragile) because the
+> >> test would depend on the changes to the internals (or at least depend on
+> >> non-default non-production CONFIGs).
+> > 
+> > The *internal* aspect here is an extension to boot params under a
+> > kconfig which would simply append to it, as if the user would have
+> 
+> So there's no such kconfig yet to apply boot parameters specified by configure,
+> right? That would itself be a new feature.
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt | 5 +++++
- drivers/phy/qualcomm/phy-qcom-qmp.c                    | 3 +++
- 2 files changed, 8 insertions(+)
+I cannot say, there is no easy grammatical expression for this. For
+kernel testing, no, I am not aware of one.
 
-diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-index 54d6f8d43508..5ff9e7ab6001 100644
---- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-@@ -19,6 +19,7 @@ Required properties:
- 	       "qcom,sdm845-qmp-usb3-uni-phy" for USB3 QMP V3 UNI phy on sdm845,
- 	       "qcom,sdm845-qmp-ufs-phy" for UFS QMP phy on sdm845,
- 	       "qcom,sm8150-qmp-ufs-phy" for UFS QMP phy on sm8150.
-+	       "qcom,sm8250-qmp-ufs-phy" for UFS QMP phy on sm8250.
- 
- - reg:
-   - index 0: address and length of register set for PHY's common
-@@ -69,6 +70,8 @@ Required properties:
- 			"ref", "ref_aux".
- 		For "qcom,sm8150-qmp-ufs-phy" must contain:
- 			"ref", "ref_aux".
-+		For "qcom,sm8250-qmp-ufs-phy" must contain:
-+			"ref", "ref_aux".
- 
-  - resets: a list of phandles and reset controller specifier pairs,
- 	   one for each entry in reset-names.
-@@ -103,6 +106,8 @@ Required properties:
- 			"ufsphy".
- 		For "qcom,sm8150-qmp-ufs-phy": must contain:
- 			"ufsphy".
-+		For "qcom,sm8250-qmp-ufs-phy": must contain:
-+			"ufsphy".
- 
-  - vdda-phy-supply: Phandle to a regulator supply to PHY core block.
-  - vdda-pll-supply: Phandle to 1.8V regulator supply to PHY refclk pll block.
-diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-index c190406246ab..50cbcdce3680 100644
---- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-@@ -2536,6 +2536,9 @@ static const struct of_device_id qcom_qmp_phy_of_match_table[] = {
- 	}, {
- 		.compatible = "qcom,sm8150-qmp-ufs-phy",
- 		.data = &sm8150_ufsphy_cfg,
-+	}, {
-+		.compatible = "qcom,sm8250-qmp-ufs-phy",
-+		.data = &sm8150_ufsphy_cfg,
- 	},
- 	{ },
- };
--- 
-2.24.0
+> Or could we use bootconfig? (CC Masami)
 
+Neat, yeah, that seems like a set of helpers of which could help for
+sure.
+
+> >> Regardless of testing, I think this series is ready for -mm.
+> > 
+> > I'm happy for it to go in provided we at least devise a follow up plan
+> > for testing. Otherwise -- like other things, it won't get done.
+> 
+> OK I'll send a v2 and we can discuss the test driver details. I don't want to
+> neglect testing, but also not block the new functionality,
+
+So long as the testing part gets done, I'm happy :)
+
+> in case it means
+> testing means adding another new functionality.
+
+Yeah, I can see how some new code may need to be added for that, its a
+good point.
+
+But think about this for a second, if we *didn't* have such code added,
+how could it have easily been tested before? The question is rhetorical,
+as I'm alluding to that a lot of old code wasn't designed for easy unit
+testing either, and I'd invite one to consider the value of the change
+in philosophy on first code design when one *does* take that into
+consideration. There are certain best practices that I'd wager are
+probably good for us to evaluate for the long term of kernel evolution,
+and I think that always advocating designing testing around new
+functionality would be one.
+
+Once and if you do add your testing, and if such testing is expanded to
+test parsing the cmdline further, and to purposely break it, who knows
+what other bugs bugs we'll find.
+
+But maybe Masami already uncovered all the fun bugs.
+
+  Luis
