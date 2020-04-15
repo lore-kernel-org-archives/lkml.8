@@ -2,141 +2,75 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 608DEC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B913C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:27:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3ECFA20784
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:25:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586913947;
-	bh=Jttip+q2gFr6gM6I9moyxzeHwN0fQYq8HT40g3rs6lY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ozZzxeIdCTtnx7bx+Fw75HB3sIfLupa0BB2hs7pY7WJ0ivE1PTeFfJHcl1v9Ku+OK
-	 ZBy3MkT5bV48ib7dTsISuTKMy2WeAOSwuhwS6ng/baJv+PYvJnnyl3/nq+EjkDEvso
-	 Sra5Ix/d3CFJ6gUUVKgjxrguCdB2yKspOuORzTxw=
+	by mail.kernel.org (Postfix) with ESMTP id 7E24820784
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:27:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392547AbgDOBZj (ORCPT
+        id S2392560AbgDOB14 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 21:25:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55006 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387762AbgDOBYd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 21:24:33 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC0E320784;
-        Wed, 15 Apr 2020 01:24:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586913871;
-        bh=Jttip+q2gFr6gM6I9moyxzeHwN0fQYq8HT40g3rs6lY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=JZfORDVrzKDLJirpGb9+s3ZEwYKVe+1aQi9jJl2B4EpQVaHqvSofy1OkreFy5zrFl
-         RCxeBGgCWqZFUHLEM0eGRWY/W9G0TMmU5gAJWZ6tiYxOQUeBw7pp/0bYOUsSQpOxzD
-         G3UkU16EORnqkD1GE3SmIGEbCJt+D/foJ5zsK4hw=
-Date:   Tue, 14 Apr 2020 18:24:30 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>, Hugh Dickins <hughd@google.com>
-Subject: Re: linux-next: Tree for Apr 14 (mm/shmem.c)
-Message-Id: <20200414182430.c5af29ddb1735f5fd0083983@linux-foundation.org>
-In-Reply-To: <200c608a-8159-18ce-b44e-cad2022e23e2@infradead.org>
-References: <20200414123900.4f97a83f@canb.auug.org.au>
-        <200c608a-8159-18ce-b44e-cad2022e23e2@infradead.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Tue, 14 Apr 2020 21:27:56 -0400
+Received: from cmccmta1.chinamobile.com ([221.176.66.79]:4375 "EHLO
+        cmccmta1.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387762AbgDOB1v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 21:27:51 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.19]) by rmmx-syy-dmz-app02-12002 (RichMail) with SMTP id 2ee25e9662ea362-5b5de; Wed, 15 Apr 2020 09:27:06 +0800 (CST)
+X-RM-TRANSID: 2ee25e9662ea362-5b5de
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from [172.20.21.224] (unknown[112.25.154.146])
+        by rmsmtp-syy-appsvr10-12010 (RichMail) with SMTP id 2eea5e9662e65fc-4303a;
+        Wed, 15 Apr 2020 09:27:05 +0800 (CST)
+X-RM-TRANSID: 2eea5e9662e65fc-4303a
+Subject: Re: [PATCH] ipmi:bt-bmc: Delete superfluous dev_warm()
+ inbt_bmc_config_irq()
+To:     minyard@acm.org
+Cc:     arnd@arndb.de, gregkh@linuxfoundation.org,
+        openipmi-developer@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org,
+        Shengju Zhang <zhangshengju@cmss.chinamobile.com>
+References: <20200414141951.19120-1-tangbin@cmss.chinamobile.com>
+ <20200414194455.GH3587@minyard.net>
+From:   Tang Bin <tangbin@cmss.chinamobile.com>
+Message-ID: <feb8858d-9778-dffb-8eb3-6a1efa24bb74@cmss.chinamobile.com>
+Date:   Wed, 15 Apr 2020 09:28:57 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200414194455.GH3587@minyard.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Apr 2020 07:18:01 -0700 Randy Dunlap <rdunlap@infradead.org> wrote:
+Hi Corey:
 
-> On 4/13/20 7:39 PM, Stephen Rothwell wrote:
-> > Hi all,
-> > 
-> > Changes since 20200413:
-> > 
-> > New tree: mhi
-> > 
-> > My fixes tree contains:
-> > 
-> >   6b038bdcd3d1 sh: mm: Fix build error
-> > 
-> > Non-merge commits (relative to Linus' tree): 1154
-> >  1160 files changed, 31764 insertions(+), 13498 deletions(-)
-> > 
-> > ----------------------------------------------------------------------------
-> 
-> on x86_64:
-> # CONFIG_TRANSPARENT_HUGEPAGE is not set
+On 2020/4/15 3:44, Corey Minyard wrote:
+> On Tue, Apr 14, 2020 at 10:19:51PM +0800, Tang Bin wrote:
+>> The priority of dev_warm() is higher than dev_info(),so if the
+>> function bt_bmc_probe() uses dev_info() to print error message,
+>> the dev_warm() is redundant.Thus should be removed.
+> Actually, this needs to be left in.  That error is not just a that irqs
+> were not configured, that's an error that something else went wrong.
 
-Thanks.  hm, this took a long time to be discovered.
+Oh ,It's my fault.
 
-> In file included from ../include/linux/export.h:43:0,
->                  from ../include/linux/linkage.h:7,
->                  from ../include/linux/fs.h:5,
->                  from ../mm/shmem.c:24:
-> ../mm/shmem.c: In function ‘shmem_undo_range’:
-> ../include/linux/compiler.h:394:38: error: call to ‘__compiletime_assert_110’ declared with attribute error: BUILD_BUG failed
->   _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
->                                       ^
-> ../include/linux/compiler.h:69:3: note: in definition of macro ‘__trace_if_value’
->   (cond) ?     \
->    ^~~~
-> ../include/linux/compiler.h:56:28: note: in expansion of macro ‘__trace_if_var’
->  #define if(cond, ...) if ( __trace_if_var( !!(cond , ## __VA_ARGS__) ) )
->                             ^~~~~~~~~~~~~~
-> ../mm/shmem.c:960:6: note: in expansion of macro ‘if’
->       if (index <
->       ^~
-> ../include/linux/kernel.h:71:36: note: in expansion of macro ‘__round_mask’
->  #define round_up(x, y) ((((x)-1) | __round_mask(x, y))+1)
->                                     ^~~~~~~~~~~~
-> ../mm/shmem.c:961:10: note: in expansion of macro ‘round_up’
->           round_up(start, HPAGE_PMD_NR))
->           ^~~~~~~~
-> ../include/linux/compiler.h:382:2: note: in expansion of macro ‘__compiletime_assert’
->   __compiletime_assert(condition, msg, prefix, suffix)
->   ^~~~~~~~~~~~~~~~~~~~
-> ../include/linux/compiler.h:394:2: note: in expansion of macro ‘_compiletime_assert’
->   _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
->   ^~~~~~~~~~~~~~~~~~~
-> ../include/linux/build_bug.h:39:37: note: in expansion of macro ‘compiletime_assert’
->  #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
->                                      ^~~~~~~~~~~~~~~~~~
-> ../include/linux/build_bug.h:59:21: note: in expansion of macro ‘BUILD_BUG_ON_MSG’
->  #define BUILD_BUG() BUILD_BUG_ON_MSG(1, "BUILD_BUG failed")
->                      ^~~~~~~~~~~~~~~~
-> ../include/linux/huge_mm.h:319:28: note: in expansion of macro ‘BUILD_BUG’
->  #define HPAGE_PMD_SHIFT ({ BUILD_BUG(); 0; })
->                             ^~~~~~~~~
-> ../include/linux/huge_mm.h:115:26: note: in expansion of macro ‘HPAGE_PMD_SHIFT’
->  #define HPAGE_PMD_ORDER (HPAGE_PMD_SHIFT-PAGE_SHIFT)
->                           ^~~~~~~~~~~~~~~
-> ../include/linux/huge_mm.h:116:26: note: in expansion of macro ‘HPAGE_PMD_ORDER’
->  #define HPAGE_PMD_NR (1<<HPAGE_PMD_ORDER)
->                           ^~~~~~~~~~~~~~~
-> ../mm/shmem.c:961:26: note: in expansion of macro ‘HPAGE_PMD_NR’
->           round_up(start, HPAGE_PMD_NR))
->                           ^~~~~~~~~~~~
-> 
+I had read the previous email with you again, and mistook it as that you 
+agreed with my point of view. I feel humiliated now.
 
-That's
+Thanks,
 
-					if (index <
-					    round_up(start, HPAGE_PMD_NR))
-						start = index + 1;
+Tang Bin
 
-from Hugh's 71725ed10c40696 ("mm: huge tmpfs: try to split_huge_page()
-when punching hole").
+
+
 
