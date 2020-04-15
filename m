@@ -4,39 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F06D4C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E9DC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:09:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF8D92076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:08:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 285A0206D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:09:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442286AbgDOVI5 (ORCPT
+        id S2442295AbgDOVJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 17:08:57 -0400
-Received: from foss.arm.com ([217.140.110.172]:52584 "EHLO foss.arm.com"
+        Wed, 15 Apr 2020 17:09:12 -0400
+Received: from mga03.intel.com ([134.134.136.65]:64180 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2442232AbgDOVFn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 17:05:43 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DCE32139F;
-        Wed, 15 Apr 2020 14:05:31 -0700 (PDT)
-Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A82223F6C4;
-        Wed, 15 Apr 2020 14:05:30 -0700 (PDT)
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: [PATCH v3 6/9] sched: Kill select_task_rq()'s sd_flag parameter
-Date:   Wed, 15 Apr 2020 22:05:09 +0100
-Message-Id: <20200415210512.805-7-valentin.schneider@arm.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200415210512.805-1-valentin.schneider@arm.com>
-References: <20200415210512.805-1-valentin.schneider@arm.com>
+        id S2442228AbgDOVFf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 17:05:35 -0400
+IronPort-SDR: WlL8J0k03OaBIolOfp+CZtNZMDbrpCC81vqutJ7XjrbRtdqeSno0t9pQNBu31LzsQFvDNk8pFu
+ ydER298UGeDQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 14:05:18 -0700
+IronPort-SDR: Y40uVd+P74lLUKeRusKoiPA8XYqHaH2O5MnWgeowvptaQZp656CMoN5LsabEpfLzz/rBr21F9T
+ 8ipIh+tzLoOg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,388,1580803200"; 
+   d="scan'208";a="455035560"
+Received: from kcaccard-mobl.amr.corp.intel.com (HELO kcaccard-mobl1.jf.intel.com) ([10.209.116.191])
+  by fmsmga006.fm.intel.com with ESMTP; 15 Apr 2020 14:05:15 -0700
+From:   Kristen Carlson Accardi <kristen@linux.intel.com>
+To:     keescook@chromium.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>, x86@kernel.org
+Cc:     arjan@linux.intel.com, linux-kernel@vger.kernel.org,
+        kernel-hardening@lists.openwall.com, rick.p.edgecomb@intel.com,
+        linux-kbuild@vger.kernel.org
+Subject: [PATCH 4/9] x86: Makefile: Add build and config option for CONFIG_FG_KASLR
+Date:   Wed, 15 Apr 2020 14:04:46 -0700
+Message-Id: <20200415210452.27436-5-kristen@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200415210452.27436-1-kristen@linux.intel.com>
+References: <20200415210452.27436-1-kristen@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -44,198 +54,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Only select_task_rq_fair() uses that parameter to do an actual domain
-search, other classes only care about what kind of wakeup is happening
-(fork, exec, or "regular") and thus just translate the flag into a wakeup
-type.
+Allow user to select CONFIG_FG_KASLR if dependencies are met. Change
+the make file to build with -ffunction-sections if CONFIG_FG_KASLR
 
-WF_TTWU and WF_EXEC have just been added, use these along with WF_FORK to
-encode the wakeup types we care about. This cleans up the API a
-bit, but adds an extra conversion layer within select_task_rq_fair().
-
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+Signed-off-by: Kristen Carlson Accardi <kristen@linux.intel.com>
 ---
- kernel/sched/core.c      | 10 +++++-----
- kernel/sched/deadline.c  |  4 ++--
- kernel/sched/fair.c      | 18 +++++++++++++++---
- kernel/sched/idle.c      |  2 +-
- kernel/sched/rt.c        |  4 ++--
- kernel/sched/sched.h     |  2 +-
- kernel/sched/stop_task.c |  2 +-
- 7 files changed, 27 insertions(+), 15 deletions(-)
+ Makefile         |  4 ++++
+ arch/x86/Kconfig | 13 +++++++++++++
+ 2 files changed, 17 insertions(+)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 3a61a3b8eaa9..aea9badd397a 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -2094,12 +2094,12 @@ static int select_fallback_rq(int cpu, struct task_struct *p)
-  * The caller (fork, wakeup) owns p->pi_lock, ->cpus_ptr is stable.
-  */
- static inline
--int select_task_rq(struct task_struct *p, int cpu, int sd_flags, int wake_flags)
-+int select_task_rq(struct task_struct *p, int cpu, int wake_flags)
- {
- 	lockdep_assert_held(&p->pi_lock);
+diff --git a/Makefile b/Makefile
+index 70def4907036..337b72787200 100644
+--- a/Makefile
++++ b/Makefile
+@@ -866,6 +866,10 @@ ifdef CONFIG_LIVEPATCH
+ KBUILD_CFLAGS += $(call cc-option, -flive-patching=inline-clone)
+ endif
  
- 	if (p->nr_cpus_allowed > 1)
--		cpu = p->sched_class->select_task_rq(p, cpu, sd_flags, wake_flags);
-+		cpu = p->sched_class->select_task_rq(p, cpu, wake_flags);
- 	else
- 		cpu = cpumask_any(p->cpus_ptr);
- 
-@@ -2612,7 +2612,7 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
- 		atomic_dec(&task_rq(p)->nr_iowait);
- 	}
- 
--	cpu = select_task_rq(p, p->wake_cpu, SD_BALANCE_WAKE, wake_flags);
-+	cpu = select_task_rq(p, p->wake_cpu, wake_flags | WF_TTWU);
- 	if (task_cpu(p) != cpu) {
- 		wake_flags |= WF_MIGRATED;
- 		psi_ttwu_dequeue(p);
-@@ -2945,7 +2945,7 @@ void wake_up_new_task(struct task_struct *p)
- 	 * as we're not fully set-up yet.
- 	 */
- 	p->recent_used_cpu = task_cpu(p);
--	__set_task_cpu(p, select_task_rq(p, task_cpu(p), SD_BALANCE_FORK, 0));
-+	__set_task_cpu(p, select_task_rq(p, task_cpu(p), WF_FORK));
- #endif
- 	rq = __task_rq_lock(p, &rf);
- 	update_rq_clock(rq);
-@@ -3486,7 +3486,7 @@ void sched_exec(void)
- 	int dest_cpu;
- 
- 	raw_spin_lock_irqsave(&p->pi_lock, flags);
--	dest_cpu = p->sched_class->select_task_rq(p, task_cpu(p), SD_BALANCE_EXEC, 0);
-+	dest_cpu = p->sched_class->select_task_rq(p, task_cpu(p), WF_EXEC);
- 	if (dest_cpu == smp_processor_id())
- 		goto unlock;
- 
-diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-index 504d2f51b0d6..0e96b435c51b 100644
---- a/kernel/sched/deadline.c
-+++ b/kernel/sched/deadline.c
-@@ -1601,12 +1601,12 @@ static void yield_task_dl(struct rq *rq)
- static int find_later_rq(struct task_struct *task);
- 
- static int
--select_task_rq_dl(struct task_struct *p, int cpu, int sd_flag, int flags)
-+select_task_rq_dl(struct task_struct *p, int cpu, int flags)
- {
- 	struct task_struct *curr;
- 	struct rq *rq;
- 
--	if (sd_flag != SD_BALANCE_WAKE)
-+	if (!(flags & WF_TTWU))
- 		goto out;
- 
- 	rq = cpu_rq(cpu);
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 3d34b4e4060f..b0bf98e6798b 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -6611,7 +6611,7 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
- 
- /*
-  * select_task_rq_fair: Select target runqueue for the waking task in domains
-- * that have the 'sd_flag' flag set. In practice, this is SD_BALANCE_WAKE,
-+ * that have the relevant SD flag set. In practice, this is SD_BALANCE_WAKE,
-  * SD_BALANCE_FORK, or SD_BALANCE_EXEC.
-  *
-  * Balances load by selecting the idlest CPU in the idlest group, or under
-@@ -6622,13 +6622,25 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
-  * preempt must be disabled.
-  */
- static int
--select_task_rq_fair(struct task_struct *p, int prev_cpu, int sd_flag, int wake_flags)
-+select_task_rq_fair(struct task_struct *p, int prev_cpu, int wake_flags)
- {
-+	int sync = (wake_flags & WF_SYNC) && !(current->flags & PF_EXITING);
- 	struct sched_domain *tmp, *sd = NULL;
- 	int cpu = smp_processor_id();
- 	int new_cpu = prev_cpu;
- 	int want_affine = 0;
--	int sync = (wake_flags & WF_SYNC) && !(current->flags & PF_EXITING);
-+	int sd_flag;
++ifdef CONFIG_FG_KASLR
++KBUILD_CFLAGS += -ffunction-sections
++endif
 +
-+	switch (wake_flags & (WF_TTWU | WF_FORK | WF_EXEC)) {
-+	case WF_TTWU:
-+		sd_flag = SD_BALANCE_WAKE;
-+		break;
-+	case WF_FORK:
-+		sd_flag = SD_BALANCE_FORK;
-+		break;
-+	default:
-+		sd_flag = SD_BALANCE_EXEC;
-+	}
+ # arch Makefile may override CC so keep this after arch Makefile is included
+ NOSTDINC_FLAGS += -nostdinc -isystem $(shell $(CC) -print-file-name=include)
  
- 	if (sd_flag & SD_BALANCE_WAKE) {
- 		record_wakee(p);
-diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
-index b743bf38f08f..e9c6a27f0647 100644
---- a/kernel/sched/idle.c
-+++ b/kernel/sched/idle.c
-@@ -367,7 +367,7 @@ void cpu_startup_entry(enum cpuhp_state state)
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 1d6104ea8af0..6aaece89f712 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -2182,6 +2182,19 @@ config RANDOMIZE_BASE
  
- #ifdef CONFIG_SMP
- static int
--select_task_rq_idle(struct task_struct *p, int cpu, int sd_flag, int flags)
-+select_task_rq_idle(struct task_struct *p, int cpu, int flags)
- {
- 	return task_cpu(p); /* IDLE tasks as never migrated */
- }
-diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-index df11d88c9895..88427ea0231b 100644
---- a/kernel/sched/rt.c
-+++ b/kernel/sched/rt.c
-@@ -1426,14 +1426,14 @@ static void yield_task_rt(struct rq *rq)
- static int find_lowest_rq(struct task_struct *task);
+ 	  If unsure, say Y.
  
- static int
--select_task_rq_rt(struct task_struct *p, int cpu, int sd_flag, int flags)
-+select_task_rq_rt(struct task_struct *p, int cpu, int flags)
- {
- 	struct task_struct *curr;
- 	struct rq *rq;
- 	bool test;
- 
- 	/* For anything but wake ups, just return the task_cpu */
--	if (sd_flag != SD_BALANCE_WAKE && sd_flag != SD_BALANCE_FORK)
-+	if (!(flags & (WF_TTWU | WF_FORK)))
- 		goto out;
- 
- 	rq = cpu_rq(cpu);
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index f32c5fa229af..448f5d630544 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -1767,7 +1767,7 @@ struct sched_class {
- 
- #ifdef CONFIG_SMP
- 	int (*balance)(struct rq *rq, struct task_struct *prev, struct rq_flags *rf);
--	int  (*select_task_rq)(struct task_struct *p, int task_cpu, int sd_flag, int flags);
-+	int  (*select_task_rq)(struct task_struct *p, int task_cpu, int flags);
- 	void (*migrate_task_rq)(struct task_struct *p, int new_cpu);
- 
- 	void (*task_woken)(struct rq *this_rq, struct task_struct *task);
-diff --git a/kernel/sched/stop_task.c b/kernel/sched/stop_task.c
-index 4c9e9975684f..4f061ddf8470 100644
---- a/kernel/sched/stop_task.c
-+++ b/kernel/sched/stop_task.c
-@@ -11,7 +11,7 @@
- 
- #ifdef CONFIG_SMP
- static int
--select_task_rq_stop(struct task_struct *p, int cpu, int sd_flag, int flags)
-+select_task_rq_stop(struct task_struct *p, int cpu, int flags)
- {
- 	return task_cpu(p); /* stop tasks as never migrate */
- }
++config FG_KASLR
++	bool "Function Granular Kernel Address Space Layout Randomization"
++	depends on $(cc-option, -ffunction-sections)
++	depends on RANDOMIZE_BASE && X86_64
++	help
++	  This option improves the randomness of the kernel text
++	  over basic Kernel Address Space Layout Randomization (KASLR)
++	  by reordering the kernel text at boot time. This feature
++	  uses information generated at compile time to re-layout the
++	  kernel text section at boot time at function level granularity.
++
++	  If unsure, say N.
++
+ # Relocation on x86 needs some additional build support
+ config X86_NEED_RELOCS
+ 	def_bool y
 -- 
-2.24.0
+2.20.1
 
