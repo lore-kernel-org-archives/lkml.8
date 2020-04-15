@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B7C5C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E068C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E187A20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:05:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F321820737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:05:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586955901;
-	bh=N7LuhKTX+VkNhecOFLMEu4r6U60EoVLmEHzq4lL3Zqk=;
+	s=default; t=1586955928;
+	bh=L2mnsrtXI6WPK/FDKmAyKYl2fu/wyu8NGUz3KTMXS2c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aLBLQDKMJvdtnhR+NHA/IQHSLjUx3EZZywhX+vOX0iyQYaKqLjB9cIgONuSQMMuHU
-	 o7rQkpAd45JeCX1THgyPklLSzXovMqGAbOT1sztpuz+1mzXo34RKbMaygE3ul6Wrbq
-	 ylGgmDa+ZKSY/Q1ejwqMdNvQcZ59I2PDvf50Psk0=
+	b=PogtBNqBhdTG/L8YmfLeScch41SzQLSs+8OXNsNeMg5h+L+wfI6KjtbMlK4Vm1bWC
+	 J1Zpz80Oz/g5kCi1WEuj8Tc/peeR78xgS1bRy9po12Qfgy2B1lvzf1PMVwnANp0UWB
+	 iC2pxCf5d7+9aDIdOTD8TLKG9rinpGlS7HysV3DM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505889AbgDONE6 (ORCPT
+        id S2505906AbgDONFK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:04:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55960 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 09:05:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897133AbgDOLgR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:36:17 -0400
+        id S2897129AbgDOLgP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:36:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E50B721556;
-        Wed, 15 Apr 2020 11:36:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B041020775;
+        Wed, 15 Apr 2020 11:36:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950577;
-        bh=N7LuhKTX+VkNhecOFLMEu4r6U60EoVLmEHzq4lL3Zqk=;
+        s=default; t=1586950575;
+        bh=L2mnsrtXI6WPK/FDKmAyKYl2fu/wyu8NGUz3KTMXS2c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FHuTqaYSEYNOmgme2maO/lXEOydt8681MuBkTEuv0sglIcc06dl2LbptFWtYYou1z
-         ZgHWFVQS3dM69h5xZwpL9NNx+PWtNkyDC94EOCkFJfz08AHvOx0MwIupR4BLHmnbJP
-         l3a+IqkTJvUnEtfM+cdbrXf1WOGyL/N9McBbW0Mw=
+        b=ltxFUR2j/tLVeD2QEO4tWaamLoXD2QcGQ/WdyV5zFvpjJfMlyMsPiIwDJaglZ1wWU
+         uV3bpbi0IGIxUHIp1iWD+nRrFEuX1aGQ57O7KxNGflpL/csHrQ1GyaoCVdGBGPKwfs
+         t7+cvMmq6tNrSuynHbf/5rxwMxRhclS6LlPK/txI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ralph Campbell <rcampbell@nvidia.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.6 078/129] drm/nouveau/svm: fix vma range check for migration
-Date:   Wed, 15 Apr 2020 07:33:53 -0400
-Message-Id: <20200415113445.11881-78-sashal@kernel.org>
+Cc:     Davide Caratti <dcaratti@redhat.com>,
+        syzbot+7022ab7c383875c17eff@syzkaller.appspotmail.com,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 076/129] macsec: fix NULL dereference in macsec_upd_offload()
+Date:   Wed, 15 Apr 2020 07:33:51 -0400
+Message-Id: <20200415113445.11881-76-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
 References: <20200415113445.11881-1-sashal@kernel.org>
@@ -60,38 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ralph Campbell <rcampbell@nvidia.com>
+From: Davide Caratti <dcaratti@redhat.com>
 
-[ Upstream commit b92103b559c77abc5f8b7bec269230a219c880b7 ]
+[ Upstream commit aa81700cf2326e288c9ca1fe7b544039617f1fc2 ]
 
-find_vma_intersection(mm, start, end) only guarantees that end is greater
-than or equal to vma->vm_start but doesn't guarantee that start is
-greater than or equal to vma->vm_start. The calculation for the
-intersecting range in nouveau_svmm_bind() isn't accounting for this and
-can call migrate_vma_setup() with a starting address less than
-vma->vm_start. This results in migrate_vma_setup() returning -EINVAL for
-the range instead of nouveau skipping that part of the range and migrating
-the rest.
+macsec_upd_offload() gets the value of MACSEC_OFFLOAD_ATTR_TYPE
+without checking its presence in the request message, and this causes
+a NULL dereference. Fix it rejecting any configuration that does not
+include this attribute.
 
-Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Reported-and-tested-by: syzbot+7022ab7c383875c17eff@syzkaller.appspotmail.com
+Fixes: dcb780fb2795 ("net: macsec: add nla support for changing the offloading selection")
+Signed-off-by: Davide Caratti <dcaratti@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nouveau_svm.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/macsec.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_svm.c b/drivers/gpu/drm/nouveau/nouveau_svm.c
-index 3ec5da025bea7..c567526b75b83 100644
---- a/drivers/gpu/drm/nouveau/nouveau_svm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_svm.c
-@@ -184,6 +184,7 @@ nouveau_svmm_bind(struct drm_device *dev, void *data,
- 		if (!vma)
- 			break;
+diff --git a/drivers/net/macsec.c b/drivers/net/macsec.c
+index 92bc2b2df6603..3cd1b13dffe5f 100644
+--- a/drivers/net/macsec.c
++++ b/drivers/net/macsec.c
+@@ -2398,6 +2398,9 @@ static int macsec_upd_offload(struct sk_buff *skb, struct genl_info *info)
+ 		return PTR_ERR(dev);
+ 	macsec = macsec_priv(dev);
  
-+		addr = max(addr, vma->vm_start);
- 		next = min(vma->vm_end, end);
- 		/* This is a best effort so we ignore errors */
- 		nouveau_dmem_migrate_vma(cli->drm, vma, addr, next);
++	if (!tb_offload[MACSEC_OFFLOAD_ATTR_TYPE])
++		return -EINVAL;
++
+ 	offload = nla_get_u8(tb_offload[MACSEC_OFFLOAD_ATTR_TYPE]);
+ 	if (macsec->offload == offload)
+ 		return 0;
 -- 
 2.20.1
 
