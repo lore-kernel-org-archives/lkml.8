@@ -2,163 +2,177 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BED8C3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:13:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 223D8C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:14:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E049B208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:13:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586959996;
-	bh=g9zc9gWFrZts6nCro79E4zNLwGrqjr25+7GmsmkzvQs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=V3Fc6MzW0syCz9KZ/Ya3IWFvQ75XeoJDFrO0+PfhQxsu7UuejG/w2edJQQAIuv3pA
-	 a6Tu8lgR1ZVYm68pMfzrdTMoay4vGHx/mSGgrjrHF4mg81MXXEbqTmINQj9nl++M6c
-	 32AWfc8RZxSuEXiQ6GVg2WxofO/VVDXUw42tUiFY=
+	by mail.kernel.org (Postfix) with ESMTP id 0AB872078B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:14:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2636489AbgDOONE (ORCPT
+        id S2636507AbgDOOOC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:13:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49622 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2636464AbgDOOMN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 10:12:13 -0400
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77B722078B;
-        Wed, 15 Apr 2020 14:12:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586959932;
-        bh=g9zc9gWFrZts6nCro79E4zNLwGrqjr25+7GmsmkzvQs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ZdESDpha5XBMMH2NumasO7B5X8dXw9HFSztHTSiLifxEnAtw7voFnYGdpI6EuoHdU
-         /ExqpEmsqp0/LnjQX+zOXaD6GTUv5AQ5l84baZvQtB4517udMY6ZG9NdsAZfO/Opr3
-         DN9/nwsr2l7i0O6illGKVq5zZAke9OzzviJ626A8=
-Received: by mail-qt1-f178.google.com with SMTP id x2so13298084qtr.0;
-        Wed, 15 Apr 2020 07:12:12 -0700 (PDT)
-X-Gm-Message-State: AGi0PuagO850FeY1scw2rjKb/80hAINyNkQzSXYbA7vSp8oIqAtX4fkq
-        04+/o0Tmt1IH7xGdoChOGMlis7ngC7L0MLWCJw==
-X-Google-Smtp-Source: APiQypKpcfRLgsq5L44xqX/Nd5yT1RL98k+9haGwOML5QU4TMV8UysP823kpICcUXqUoiZVvAG/C9S9NizqCtatbW/E=
-X-Received: by 2002:ac8:6695:: with SMTP id d21mr21432863qtp.110.1586959931603;
- Wed, 15 Apr 2020 07:12:11 -0700 (PDT)
+        Wed, 15 Apr 2020 10:14:02 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:36991 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2636464AbgDOONk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 10:13:40 -0400
+Received: by mail-oi1-f193.google.com with SMTP id r25so3688150oij.4;
+        Wed, 15 Apr 2020 07:13:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/Gt7M+RuQIzyJOeJqT0MWmg4GB8D71MVJXJNFoJPodE=;
+        b=kUd/Xa/FC50VWPa21LftEpFTamN5dQ+OQNYWc7HISdQRVAA5uEdwRCjFIFUZa2Tx22
+         Cqi1jCWR+DbzrZJzhv7v2KHFTn1EqZJd+diChuv2WDUJnp5N63L5LsqIPsBmEJEs3r8n
+         2G7BJ/byOeoN6mzUaxMGW6zcLVZAWV1yS2/tMrJhHXYP8KJA72z+Ers6dzL7m5EVpSR6
+         Z7XsPIOc5OsHNOL0oDqvCNDe9gZIFP9en2yFNUqc9lN4WkSUxo7+dZYwNxE13E+dPcfA
+         DscVdL+GtYY1EnnuFKWGiR+Zs7V/iLSzMJoScZ7kTq9ekVNoKc8uJTnGentlszFCAq/I
+         Mxbg==
+X-Gm-Message-State: AGi0Pub5KogBU3xeumkh9EzDs3LnAhRVnYXuTXpmqHSNMvyFQbeziu82
+        BI+UTqKBCDF7gdvspB3UY9Dj58MXQtaElYnNKG4=
+X-Google-Smtp-Source: APiQypJKNPStH9WvUHy2DqrB/2o9qQW0DQSnNK10fBvROlIKHk1iOoMOZcjvqUv1TgYjO2VVubUEuQoTiK4tig++zrg=
+X-Received: by 2002:aca:f541:: with SMTP id t62mr4667388oih.148.1586960018814;
+ Wed, 15 Apr 2020 07:13:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1585726761.git.shengjiu.wang@nxp.com> <68208297b49e85adfddf843bc205d154790a49de.1585726761.git.shengjiu.wang@nxp.com>
- <20200414154643.GA29098@bogus> <CAA+D8AP2CiRT7qkNa7yBDH0Dbd=i1eyqL4g4zobRmR-vEx4VBQ@mail.gmail.com>
-In-Reply-To: <CAA+D8AP2CiRT7qkNa7yBDH0Dbd=i1eyqL4g4zobRmR-vEx4VBQ@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 15 Apr 2020 09:11:58 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+Uk1zPT=JyZczH5WRWP617Mqhaur+LwbKKYDBGBhd-cQ@mail.gmail.com>
-Message-ID: <CAL_Jsq+Uk1zPT=JyZczH5WRWP617Mqhaur+LwbKKYDBGBhd-cQ@mail.gmail.com>
-Subject: Re: [PATCH v6 6/7] ASoC: dt-bindings: fsl_easrc: Add document for EASRC
-To:     Shengjiu Wang <shengjiu.wang@gmail.com>
-Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20200408202711.1198966-1-arnd@arndb.de> <20200408202711.1198966-6-arnd@arndb.de>
+ <20200414201739.GJ19819@pendragon.ideasonboard.com> <CAK8P3a0hd5bsezrJS3+GV2nRMui4P5yeD2Rk7wQpJsAZeOCOUg@mail.gmail.com>
+ <20200414205158.GM19819@pendragon.ideasonboard.com> <CAK8P3a1PZbwdvdH_Gi9UQVUz2+_a8QDxKuWLqPtjhK1stxzMBQ@mail.gmail.com>
+In-Reply-To: <CAK8P3a1PZbwdvdH_Gi9UQVUz2+_a8QDxKuWLqPtjhK1stxzMBQ@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 15 Apr 2020 16:13:27 +0200
+Message-ID: <CAMuHMdUb=XXucGUbxt26tZ1xu9pdyVUB8RVsfB2SffURVVXwSg@mail.gmail.com>
+Subject: Re: [RFC 5/6] drm/rcar-du: fix selection of CMM driver
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 9:56 PM Shengjiu Wang <shengjiu.wang@gmail.com> wrote:
->
-> Hi Rob
->
-> On Tue, Apr 14, 2020 at 11:49 PM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Wed, Apr 01, 2020 at 04:45:39PM +0800, Shengjiu Wang wrote:
-> > > EASRC (Enhanced Asynchronous Sample Rate Converter) is a new
-> > > IP module found on i.MX8MN.
+Hi Arnd,
+
+On Wed, Apr 15, 2020 at 3:47 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> On Tue, Apr 14, 2020 at 10:52 PM Laurent Pinchart
+> <laurent.pinchart@ideasonboard.com> wrote:
+> > On Tue, Apr 14, 2020 at 10:38:27PM +0200, Arnd Bergmann wrote:
+> > > On Tue, Apr 14, 2020 at 10:17 PM Laurent Pinchart wrote:
+> > > > On Wed, Apr 08, 2020 at 10:27:10PM +0200, Arnd Bergmann wrote:
+> > > > > The 'imply' statement does not seem to have an effect, as it's
+> > > > > still possible to turn the CMM code into a loadable module
+> > > > > in a randconfig build, leading to a link error:
+> > > > >
+> > > > > arm-linux-gnueabi-ld: drivers/gpu/drm/rcar-du/rcar_du_crtc.o: in function `rcar_du_crtc_atomic_enable':
+> > > > > rcar_du_crtc.c:(.text+0xad4): undefined reference to `rcar_lvds_clk_enable'
+> > > > > arm-linux-gnueabi-ld: drivers/gpu/drm/rcar-du/rcar_du_crtc.o: in function `rcar_du_crtc_atomic_disable':
+> > > > > rcar_du_crtc.c:(.text+0xd7c): undefined reference to `rcar_lvds_clk_disable'
+> > > > > arm-linux-gnueabi-ld: drivers/gpu/drm/rcar-du/rcar_du_drv.o: in function `rcar_du_init':
+> > > > > rcar_du_drv.c:(.init.text+0x4): undefined reference to `rcar_du_of_init'
+> > > > > arm-linux-gnueabi-ld: drivers/gpu/drm/rcar-du/rcar_du_encoder.o: in function `rcar_du_encoder_init':
+> > > > >
+> > > > > Remove the 'imply', and instead use a silent symbol that defaults
+> > > > > to the correct setting.
+> > > >
+> > > > This will result in the CMM always being selected when DU is, increasing
+> > > > the kernel size even for devices that don't need it. I believe we need a
+> > > > better construct in Kconfig to fix this.
 > > >
-> > > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-> > > ---
-> > >  .../devicetree/bindings/sound/fsl,easrc.yaml  | 101 ++++++++++++++++++
-> > >  1 file changed, 101 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/sound/fsl,easrc.yaml
+> > > I had expected this to have the same meaning that we had before the
+> > > Kconfig change: whenever the dependencies are available, turn it on,
+> > > otherwise leave it disabled.
 > > >
-> > > diff --git a/Documentation/devicetree/bindings/sound/fsl,easrc.yaml b/Documentation/devicetree/bindings/sound/fsl,easrc.yaml
-> > > new file mode 100644
-> > > index 000000000000..14ea60084420
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/sound/fsl,easrc.yaml
-> > > @@ -0,0 +1,101 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/sound/fsl,easrc.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: NXP Asynchronous Sample Rate Converter (ASRC) Controller
-> > > +
-> > > +maintainers:
-> > > +  - Shengjiu Wang <shengjiu.wang@nxp.com>
-> > > +
-> > > +properties:
-> > > +  $nodename:
-> > > +    pattern: "^easrc@.*"
-> > > +
-> > > +  compatible:
-> > > +    const: fsl,imx8mn-easrc
-> > > +
-> > > +  reg:
-> > > +    maxItems: 1
-> > > +
-> > > +  interrupts:
-> > > +    maxItems: 1
-> > > +
-> > > +  clocks:
-> > > +    items:
-> > > +      - description: Peripheral clock
-> > > +
-> > > +  clock-names:
-> > > +    items:
-> > > +      - const: mem
-> > > +
-> > > +  dmas:
-> > > +    maxItems: 8
-> > > +
-> > > +  dma-names:
-> > > +    items:
-> > > +      - const: ctx0_rx
-> > > +      - const: ctx0_tx
-> > > +      - const: ctx1_rx
-> > > +      - const: ctx1_tx
-> > > +      - const: ctx2_rx
-> > > +      - const: ctx2_tx
-> > > +      - const: ctx3_rx
-> > > +      - const: ctx3_tx
-> > > +
-> > > +  firmware-name:
-> > > +    allOf:
-> > > +      - $ref: /schemas/types.yaml#/definitions/string
-> > > +      - const: imx/easrc/easrc-imx8mn.bin
-> > > +    description: The coefficient table for the filters
-> > > +
-> > > +  fsl,asrc-rate:
+> > > Can you describe what behavior you actually want instead?
 > >
-> > fsl,asrc-rate-hz
+> > Doesn't "imply" mean it gets selected by default but can be manually
+> > disabled ?
 >
-> Can we keep "fsl,asrc-rate", because I want this property
-> align with the one in fsl,asrc.txt.  These two asrc modules
-> can share same property name.
+> That may be what it means now (I still don't understand how it's defined
+> as of v5.7-rc1), but traditionally it was more like a 'select if all
+> dependencies are met'.
 
-Oh, yes.
+That's still what it is supposed to mean right now ;-)
+Except that now it should correctly handle the modular case, too.
 
-So with the example fixed:
+> > > > > --- a/drivers/gpu/drm/rcar-du/Kconfig
+> > > > > +++ b/drivers/gpu/drm/rcar-du/Kconfig
+> > > > > @@ -4,7 +4,6 @@ config DRM_RCAR_DU
+> > > > >       depends on DRM && OF
+> > > > >       depends on ARM || ARM64
+> > > > >       depends on ARCH_RENESAS || COMPILE_TEST
+> > > > > -     imply DRM_RCAR_CMM
+> > > > >       imply DRM_RCAR_LVDS
+> > > > >       select DRM_KMS_HELPER
+> > > > >       select DRM_KMS_CMA_HELPER
+> > > > > @@ -15,9 +14,8 @@ config DRM_RCAR_DU
+> > > > >         If M is selected the module will be called rcar-du-drm.
+> > > > >
+> > > > >  config DRM_RCAR_CMM
+> > > > > -     tristate "R-Car DU Color Management Module (CMM) Support"
+> > > > > +     def_tristate DRM_RCAR_DU
+> > > > >       depends on DRM && OF
+> > > > > -     depends on DRM_RCAR_DU
+> > > > >       help
+> > >
+> > > It would be easy enough to make this a visible 'bool' symbol and
+> > > build it into the rcu-du-drm.ko module itself. Would that help you?
+> >
+> > That could indeed simplify a few things. I wonder if it could introduce
+> > a few small issues though (but likely nothing we can't fix). The two
+> > that come to mind are the fact that the module would have two
+> > MODULE_DESCRIPTION and MODULE_LICENSE entries (I have no idea if that
+> > could cause breakages), and that it could make module unloading more
+> > difficult as the CMM being used by the DU would increase the refcount on
+> > the module. I think the latter could be worked around by manually
+> > unbinding the DU device through sysfs before unloading the module (and I
+> > can't say for sure that unloading the DU module is not broken today
+> > *innocent and naive look* :-)).
+>
+> In that case, a Makefile trick could also work, doing
+>
+> ifdef CONFIG_DRM_RCAR_CMM
+> obj-$(CONFIG_DRM_RCAR_DU) += rcar-cmm.o
+> endif
+>
+> Thereby making the cmm module have the same state (y or m) as
+> the du module whenever the option is enabled.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+What about dropping the "imply DRM_RCAR_CMM", but defaulting to
+enable CMM if DU is enabled?
+
+    config DRM_RCAR_CMM
+            tristate "R-Car DU Color Management Module (CMM) Support"
+            depends on DRM_RCAR_DU && OF
+            default DRM_RCAR_DU
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
