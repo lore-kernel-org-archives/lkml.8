@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C9C2C38A2C
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 18:20:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C00C3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 18:20:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AE1321D81
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 18:20:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D6A6221EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 18:20:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586974803;
-	bh=kCdqRFRnqQGwm3UJqLKfxqSt2M7ow+SLUnbqAULlRe0=;
+	s=default; t=1586974808;
+	bh=WX3rvK+KLjoJ4P6nj6Msiv1bQF5K85x4Dor+mT2zmIo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ofhbaQdXezb/0jazWZm8ooCxWpwsfDrn/4OhN3+LvJFwoNeuikk7x3Sg4Qg8T+uF4
-	 85OUUqDBVK9AYYzh/a8fATh1Z6av9VmDqk7UIohOjg+TpaxcsarQQkvH6gDu7DhcL0
-	 c9HKPH/sHS7cI6I+7xq67ZKNQHcVdVPjaEeuKc6A=
+	b=I8nhAjyPhc0IElftyB8pSBshIYyD9zAMXcMRP8okg2+Gn8z7z+r77s1Wqt4f/65Aq
+	 lGRTCVAx7ECHLh1cSOYtfehCRTS9bIPjtDM6sjWvlWTn13Ksguod9HzHp2akgSahru
+	 o3ZwMmgHhC+9rhxNL86rSH6QLR2r10l12ObAplTU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2898330AbgDOSUC (ORCPT
+        id S2441417AbgDOSUG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 14:20:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36994 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 14:20:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436625AbgDOSTo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 14:19:44 -0400
+        id S2436610AbgDOSTp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 14:19:45 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6FC820787;
+        by mail.kernel.org (Postfix) with ESMTPSA id 826BF20771;
         Wed, 15 Apr 2020 18:19:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586974784;
-        bh=kCdqRFRnqQGwm3UJqLKfxqSt2M7ow+SLUnbqAULlRe0=;
+        s=default; t=1586974783;
+        bh=WX3rvK+KLjoJ4P6nj6Msiv1bQF5K85x4Dor+mT2zmIo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=etuvI54MC6WtQBQnRK6c/ipkOgCh1B/Jl//4uu+YdHEin7GLGRlE2aBuEH6CsAMEN
-         4BSC8LRhs4fCc3Zrlk6EUFuRKraiuhaIVJ03uPhC+t1wbOjji8iSsDpOS2Mmn7fY9Z
-         EZHch9CSeS/+bjxjtLm+bh2tm8jiG92J/MyEja2g=
+        b=vza0tVvLxzjXJDxYh+WJDdtWoKWdKjH/k6qGPBSZZl7mfkBuvr9b6Wz+XQHBGs3cH
+         tHqfuDXacGNV8vWprT8hcGJ1hIb5QBYJGTbhgDbxm9viJDfdLDgTrFo2yvLdugDxMt
+         JhYZD3IHYS4vZ0gHYNeiEvGge81GtCbpnXDFbdoE=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH v4 tip/core/rcu 02/38] rcu-tasks: Use context-switch hook for PREEMPT=y kernels
-Date:   Wed, 15 Apr 2020 11:19:05 -0700
-Message-Id: <20200415181941.11653-2-paulmck@kernel.org>
+Subject: [PATCH v4 tip/core/rcu 01/38] rcu: Add comments marking transitions between RCU watching and not
+Date:   Wed, 15 Apr 2020 11:19:04 -0700
+Message-Id: <20200415181941.11653-1-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200415181856.GA11037@paulmck-ThinkPad-P72>
 References: <20200415181856.GA11037@paulmck-ThinkPad-P72>
@@ -61,29 +61,129 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-Currently, the PREEMPT=y version of rcu_note_context_switch() does not
-invoke rcu_tasks_qs(), and we need it to in order to keep RCU Tasks
-Trace's IPIs down to a dull roar.  This commit therefore enables this
-hook.
+It is not as clear as it might be just where in RCU's idle entry/exit
+code RCU stops and starts watching the current CPU.  This commit therefore
+adds comments calling out the transitions.
 
+Reported-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/tree_plugin.h | 2 ++
- 1 file changed, 2 insertions(+)
+ kernel/rcu/tree.c | 29 +++++++++++++++++++++++++----
+ 1 file changed, 25 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-index 088e84e..4f34c32 100644
---- a/kernel/rcu/tree_plugin.h
-+++ b/kernel/rcu/tree_plugin.h
-@@ -331,6 +331,8 @@ void rcu_note_context_switch(bool preempt)
- 	rcu_qs();
- 	if (rdp->exp_deferred_qs)
- 		rcu_report_exp_rdp(rdp);
-+	if (!preempt)
-+		rcu_tasks_qs(current);
- 	trace_rcu_utilization(TPS("End context switch"));
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index f13130a..e54a8a1 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -238,7 +238,9 @@ void rcu_softirq_qs(void)
+ 
+ /*
+  * Record entry into an extended quiescent state.  This is only to be
+- * called when not already in an extended quiescent state.
++ * called when not already in an extended quiescent state, that is,
++ * RCU is watching prior to the call to this function and is no longer
++ * watching upon return.
+  */
+ static void rcu_dynticks_eqs_enter(void)
+ {
+@@ -251,7 +253,7 @@ static void rcu_dynticks_eqs_enter(void)
+ 	 * next idle sojourn.
+ 	 */
+ 	seq = atomic_add_return(RCU_DYNTICK_CTRL_CTR, &rdp->dynticks);
+-	/* Better be in an extended quiescent state! */
++	// RCU is no longer watching.  Better be in extended quiescent state!
+ 	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) &&
+ 		     (seq & RCU_DYNTICK_CTRL_CTR));
+ 	/* Better not have special action (TLB flush) pending! */
+@@ -261,7 +263,8 @@ static void rcu_dynticks_eqs_enter(void)
+ 
+ /*
+  * Record exit from an extended quiescent state.  This is only to be
+- * called from an extended quiescent state.
++ * called from an extended quiescent state, that is, RCU is not watching
++ * prior to the call to this function and is watching upon return.
+  */
+ static void rcu_dynticks_eqs_exit(void)
+ {
+@@ -274,6 +277,7 @@ static void rcu_dynticks_eqs_exit(void)
+ 	 * critical section.
+ 	 */
+ 	seq = atomic_add_return(RCU_DYNTICK_CTRL_CTR, &rdp->dynticks);
++	// RCU is now watching.  Better not be in an extended quiescent state!
+ 	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) &&
+ 		     !(seq & RCU_DYNTICK_CTRL_CTR));
+ 	if (seq & RCU_DYNTICK_CTRL_MASK) {
+@@ -584,6 +588,7 @@ static void rcu_eqs_enter(bool user)
+ 	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) &&
+ 		     rdp->dynticks_nesting == 0);
+ 	if (rdp->dynticks_nesting != 1) {
++		// RCU will still be watching, so just do accounting and leave.
+ 		rdp->dynticks_nesting--;
+ 		return;
+ 	}
+@@ -596,7 +601,9 @@ static void rcu_eqs_enter(bool user)
+ 	rcu_prepare_for_idle();
+ 	rcu_preempt_deferred_qs(current);
+ 	WRITE_ONCE(rdp->dynticks_nesting, 0); /* Avoid irq-access tearing. */
++	// RCU is watching here ...
+ 	rcu_dynticks_eqs_enter();
++	// ... but is no longer watching here.
+ 	rcu_dynticks_task_enter();
  }
- EXPORT_SYMBOL_GPL(rcu_note_context_switch);
+ 
+@@ -676,7 +683,9 @@ static __always_inline void rcu_nmi_exit_common(bool irq)
+ 	if (irq)
+ 		rcu_prepare_for_idle();
+ 
++	// RCU is watching here ...
+ 	rcu_dynticks_eqs_enter();
++	// ... but is no longer watching here.
+ 
+ 	if (irq)
+ 		rcu_dynticks_task_enter();
+@@ -751,11 +760,14 @@ static void rcu_eqs_exit(bool user)
+ 	oldval = rdp->dynticks_nesting;
+ 	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && oldval < 0);
+ 	if (oldval) {
++		// RCU was already watching, so just do accounting and leave.
+ 		rdp->dynticks_nesting++;
+ 		return;
+ 	}
+ 	rcu_dynticks_task_exit();
++	// RCU is not watching here ...
+ 	rcu_dynticks_eqs_exit();
++	// ... but is watching here.
+ 	rcu_cleanup_after_idle();
+ 	trace_rcu_dyntick(TPS("End"), rdp->dynticks_nesting, 1, atomic_read(&rdp->dynticks));
+ 	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && !user && !is_idle_task(current));
+@@ -832,7 +844,9 @@ static __always_inline void rcu_nmi_enter_common(bool irq)
+ 		if (irq)
+ 			rcu_dynticks_task_exit();
+ 
++		// RCU is not watching here ...
+ 		rcu_dynticks_eqs_exit();
++		// ... but is watching here.
+ 
+ 		if (irq)
+ 			rcu_cleanup_after_idle();
+@@ -842,9 +856,16 @@ static __always_inline void rcu_nmi_enter_common(bool irq)
+ 		   rdp->dynticks_nmi_nesting == DYNTICK_IRQ_NONIDLE &&
+ 		   READ_ONCE(rdp->rcu_urgent_qs) &&
+ 		   !READ_ONCE(rdp->rcu_forced_tick)) {
++		// We get here only if we had already exited the extended
++		// quiescent state and this was an interrupt (not an NMI).
++		// Therefore, (1) RCU is already watching and (2) The fact
++		// that we are in an interrupt handler and that the rcu_node
++		// lock is an irq-disabled lock prevents self-deadlock.
++		// So we can safely recheck under the lock.
+ 		raw_spin_lock_rcu_node(rdp->mynode);
+-		// Recheck under lock.
+ 		if (rdp->rcu_urgent_qs && !rdp->rcu_forced_tick) {
++			// A nohz_full CPU is in the kernel and RCU
++			// needs a quiescent state.  Turn on the tick!
+ 			WRITE_ONCE(rdp->rcu_forced_tick, true);
+ 			tick_dep_set_cpu(rdp->cpu, TICK_DEP_BIT_RCU);
+ 		}
 -- 
 2.9.5
 
