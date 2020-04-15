@@ -2,95 +2,130 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67777C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 03:00:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE1B2C38A29
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 03:01:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A1D7206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 03:00:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDEBB206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 03:01:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="J2JBgb+y"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="IJJ65I1W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634738AbgDODAS (ORCPT
+        id S2389231AbgDODBx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 23:00:18 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:17557 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729107AbgDOC5w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 22:57:52 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e9678220000>; Tue, 14 Apr 2020 19:57:38 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 14 Apr 2020 19:57:51 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 14 Apr 2020 19:57:51 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Apr
- 2020 02:57:51 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 15 Apr 2020 02:57:51 +0000
-Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.171.241]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e96782e0003>; Tue, 14 Apr 2020 19:57:50 -0700
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
-CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [RFC PATCH v7 8/9] dt-bindings: reset: Add ID for Tegra210 VI reset
-Date:   Tue, 14 Apr 2020 19:57:42 -0700
-Message-ID: <1586919463-30542-9-git-send-email-skomatineni@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1586919463-30542-1-git-send-email-skomatineni@nvidia.com>
-References: <1586919463-30542-1-git-send-email-skomatineni@nvidia.com>
-X-NVConfidentiality: public
+        Tue, 14 Apr 2020 23:01:53 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:48503 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389084AbgDODBu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 23:01:50 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4926Zd4FkSz9sQx;
+        Wed, 15 Apr 2020 13:01:45 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1586919707;
+        bh=wr6FGrvjjaQN2x9ODC6a9us38dRMb7OMhprJ91sYg7o=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=IJJ65I1WUYqc4ArGbU1X/J2cI7ABjrgXkwER3LkWC4g1d0oxCSmSADvRsSPRkyfYW
+         gkIzCNUUmqgKBDk/clptOgDt8qrFrQ/GmY5fneVv1hTzmVXdk3bUY3CQqqE7LZH3vP
+         obB2+RxmycGha1kc63WwQetad2T7/o6nzLvFd5Qk7Kg2srEAWZpEasVSiPb97+xIQj
+         gQdlhbyvLAcBaHhR8xGrKoadcf2l6Bw0/XVO4ID1bl4Pp/E1XqhoM1P6Uaxfro8Zog
+         2mABH0Xnzx4hIdz9OuqqreRCPhsHvdyT5pU58eVPxIdygYmHGDgi55lHNqeEKBAT7g
+         S67EjCLBvl4yQ==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     Jeremy Kerr <jk@ozlabs.org>, Arnd Bergmann <arnd@arndb.de>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/8] binfmt_elf: open code copy_siginfo_to_user to kernelspace buffer
+In-Reply-To: <20200414070142.288696-5-hch@lst.de>
+References: <20200414070142.288696-1-hch@lst.de> <20200414070142.288696-5-hch@lst.de>
+Date:   Wed, 15 Apr 2020 13:01:59 +1000
+Message-ID: <87y2qxih94.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
 Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1586919458; bh=KEZ1lHNwQNYea9tamUq6xhOd3Wa4inGS2Z794lURij8=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=J2JBgb+yrKQXv+Yi2bb/8GZfYpN7N6EqfuuPZeCJoBwZhmTgFaNZJSmbo1nAD2t46
-         l8fS9e+JYRIPgkDUFzs4jfWdDqcF65GlCQgSexlEcUWHcQPyfeFCMrnVbm2UI8ACha
-         t7lbJ/Lm3gcvsAKMNdPH6PlhSlxMtIx3TKMh8j792UfbkLHF3ep3BqObHH0eaNfyS+
-         WXwWNIbt2YDLFclYTNRBT1F3Kc9sy013xiQu7GRvuGfYs7kywO++jCsfhpvmdLkJuh
-         JHBqHKVaWbWgSdLAMfbdDioy2PzgSt+FXSPgJDTetMoG/Y4IfsVBDq66mgRQUcyvnA
-         uA1w/+ySupKNw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds ID for Tegra210 VI controller reset to use with
-device tree.
+Christoph Hellwig <hch@lst.de> writes:
 
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
----
- include/dt-bindings/reset/tegra210-car.h | 1 +
- 1 file changed, 1 insertion(+)
+> Instead of messing with the address limit just open code the trivial
+> memcpy + memset logic for the native version, and a call to
+> to_compat_siginfo for the compat version.
+>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  fs/binfmt_elf.c        | 9 +++++----
+>  fs/compat_binfmt_elf.c | 6 +++++-
+>  2 files changed, 10 insertions(+), 5 deletions(-)
+>
+> diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+> index 13f25e241ac4..607c5a5f855e 100644
+> --- a/fs/binfmt_elf.c
+> +++ b/fs/binfmt_elf.c
+> @@ -1553,15 +1553,16 @@ static void fill_auxv_note(struct memelfnote *note, struct mm_struct *mm)
+>  	fill_note(note, "CORE", NT_AUXV, i * sizeof(elf_addr_t), auxv);
+>  }
+>  
+> +#ifndef fill_siginfo_note
+>  static void fill_siginfo_note(struct memelfnote *note, user_siginfo_t *csigdata,
+>  		const kernel_siginfo_t *siginfo)
+>  {
+> -	mm_segment_t old_fs = get_fs();
+> -	set_fs(KERNEL_DS);
+> -	copy_siginfo_to_user((user_siginfo_t __user *) csigdata, siginfo);
+> -	set_fs(old_fs);
+> +	memcpy(csigdata, siginfo, sizeof(struct kernel_siginfo));
+> +	memset((char *)csigdata + sizeof(struct kernel_siginfo), 0,
+> +		SI_EXPANSION_SIZE);
+>  	fill_note(note, "CORE", NT_SIGINFO, sizeof(*csigdata), csigdata);
+>  }
+> +#endif
+>  
+>  #define MAX_FILE_NOTE_SIZE (4*1024*1024)
+>  /*
+> diff --git a/fs/compat_binfmt_elf.c b/fs/compat_binfmt_elf.c
+> index aaad4ca1217e..ab84e095618b 100644
+> --- a/fs/compat_binfmt_elf.c
+> +++ b/fs/compat_binfmt_elf.c
+> @@ -39,7 +39,11 @@
+>   */
+>  #define user_long_t		compat_long_t
+>  #define user_siginfo_t		compat_siginfo_t
+> -#define copy_siginfo_to_user	copy_siginfo_to_user32
+> +#define fill_siginfo_note(note, csigdata, siginfo)		\
+> +do {									\
+> +	to_compat_siginfo(csigdata, siginfo, compat_siginfo_flags());	\
+> +	fill_note(note, "CORE", NT_SIGINFO, sizeof(*csigdata), csigdata); \
+> +} while (0)
 
-diff --git a/include/dt-bindings/reset/tegra210-car.h b/include/dt-bindings/reset/tegra210-car.h
-index 9dc84ec..8755946 100644
---- a/include/dt-bindings/reset/tegra210-car.h
-+++ b/include/dt-bindings/reset/tegra210-car.h
-@@ -10,5 +10,6 @@
- #define TEGRA210_RESET(x)		(7 * 32 + (x))
- #define TEGRA210_RST_DFLL_DVCO		TEGRA210_RESET(0)
- #define TEGRA210_RST_ADSP		TEGRA210_RESET(1)
-+#define TEGRA210_RST_VI			20
- 
- #endif	/* _DT_BINDINGS_RESET_TEGRA210_CAR_H */
--- 
-2.7.4
+This doesn't build on ppc (cell_defconfig):
+
+  ../fs/binfmt_elf.c: In function 'fill_note_info':
+  ../fs/compat_binfmt_elf.c:44:39: error: implicit declaration of function 'compat_siginfo_flags'; did you mean 'to_compat_siginfo'? [-Werror=implicit-function-d
+  eclaration]
+    to_compat_siginfo(csigdata, siginfo, compat_siginfo_flags()); \
+                                         ^~~~~~~~~~~~~~~~~~~~
+  ../fs/binfmt_elf.c:1846:2: note: in expansion of macro 'fill_siginfo_note'
+    fill_siginfo_note(&info->signote, &info->csigdata, siginfo);
+    ^~~~~~~~~~~~~~~~~
+  cc1: some warnings being treated as errors
+  make[2]: *** [../scripts/Makefile.build:266: fs/compat_binfmt_elf.o] Error 1
+
+
+I guess the empty version from kernel/signal.c needs to move into a
+header somewhere.
+
+cheers
 
