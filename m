@@ -2,178 +2,286 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92008C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 20:45:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A5DC3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 20:46:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68B6D20732
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 20:45:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dQJk7MvQ"
+	by mail.kernel.org (Postfix) with ESMTP id 42A2220732
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 20:46:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S371344AbgDOUp2 (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 16:45:28 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:38889 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2442111AbgDOUpX (ORCPT
+        id S2438216AbgDOUqo (ORCPT
+        <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 16:46:44 -0400
+Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:34177 "EHLO
+        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2438015AbgDOUqm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 16:45:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586983521;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=dT66b+xhm+XGbqWaP327XREwdRAFpOiRNwTNoWDM3ic=;
-        b=dQJk7MvQLDRFck6M2HLaPoI471qO4Q8H/hZSy5yzA9k+In5pYvpDaLwhAjVXXxshUOQ6dk
-        ZrSNuAGU0Yd/iwBLyCP5drrQI1h5fR+AOfdYVKOnXn9Gam+200pXVNWs/TiN715uxxj3SW
-        S9qX6cgUYi4L5/AiKREy5ozvLfl/j1w=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-466-4ZXvfiFCPNinfxFfWM4ewQ-1; Wed, 15 Apr 2020 16:45:20 -0400
-X-MC-Unique: 4ZXvfiFCPNinfxFfWM4ewQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 223FF107B267;
-        Wed, 15 Apr 2020 20:45:17 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-116-15.gru2.redhat.com [10.97.116.15])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2657D5DA66;
-        Wed, 15 Apr 2020 20:45:12 +0000 (UTC)
-From:   Wainer dos Santos Moschetta <wainersm@redhat.com>
-To:     pbonzini@redhat.com, kvm@vger.kernel.org
-Cc:     drjones@redhat.com, sean.j.christopherson@intel.com,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        krish.sadhukhan@oracle.com
-Subject: [PATCH 1/1] selftests: kvm: Add overlapped memory regions test
-Date:   Wed, 15 Apr 2020 17:45:05 -0300
-Message-Id: <20200415204505.10021-2-wainersm@redhat.com>
-In-Reply-To: <20200415204505.10021-1-wainersm@redhat.com>
-References: <20200415204505.10021-1-wainersm@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+        Wed, 15 Apr 2020 16:46:42 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TveCydq_1586983596;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TveCydq_1586983596)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 16 Apr 2020 04:46:38 +0800
+Subject: Re: [PATCHv3, RESEND 6/8] khugepaged: Allow to collapse PTE-mapped
+ compound pages
+To:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        akpm@linux-foundation.org, Andrea Arcangeli <aarcange@redhat.com>
+Cc:     Zi Yan <ziy@nvidia.com>, Ralph Campbell <rcampbell@nvidia.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        William Kucharski <william.kucharski@oracle.com>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20200413125220.663-1-kirill.shutemov@linux.intel.com>
+ <20200413125220.663-7-kirill.shutemov@linux.intel.com>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <e171fd09-53a7-f8a0-e2c7-1ec4fccbd42d@linux.alibaba.com>
+Date:   Wed, 15 Apr 2020 13:46:35 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200413125220.663-7-kirill.shutemov@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the test_overlap_memory_regions() test case in
-set_memory_region_test. This should check that overlapping
-memory regions on the guest physical address cannot be added.
 
-Signed-off-by: Wainer dos Santos Moschetta <wainersm@redhat.com>
----
- .../selftests/kvm/set_memory_region_test.c    | 75 ++++++++++++++++++-
- 1 file changed, 74 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/kvm/set_memory_region_test.c b/tools/testing/selftests/kvm/set_memory_region_test.c
-index 260e638826dc..74a987002273 100644
---- a/tools/testing/selftests/kvm/set_memory_region_test.c
-+++ b/tools/testing/selftests/kvm/set_memory_region_test.c
-@@ -331,6 +331,8 @@ static void test_add_max_memory_regions(void)
- 	uint64_t mem_reg_npages;
- 	void *mem;
- 
-+	pr_info("Testing KVM_CAP_NR_MEMSLOTS memory regions can be added\n");
-+
- 	max_mem_slots = kvm_check_cap(KVM_CAP_NR_MEMSLOTS);
- 	TEST_ASSERT(max_mem_slots > 0,
- 		    "KVM_CAP_NR_MEMSLOTS should be greater than 0");
-@@ -338,7 +340,8 @@ static void test_add_max_memory_regions(void)
- 
- 	vm = vm_create(VM_MODE_DEFAULT, 0, O_RDWR);
- 
--	mem_reg_npages = vm_calc_num_guest_pages(VM_MODE_DEFAULT, MEM_REGION_SIZE);
-+	mem_reg_npages = vm_calc_num_guest_pages(VM_MODE_DEFAULT,
-+						 MEM_REGION_SIZE);
- 
- 	/* Check it can be added memory slots up to the maximum allowed */
- 	pr_info("Adding slots 0..%i, each memory region with %dK size\n",
-@@ -365,6 +368,75 @@ static void test_add_max_memory_regions(void)
- 	kvm_vm_free(vm);
- }
- 
-+/*
-+ * Test it cannot add memory slots with overlapped regions.
-+ *
-+ * The following cases are covered:
-+ *
-+ *             0x100000 0x300000
-+ *       0x0       0x200000  0x400000
-+ * slot0 |         |---2MB--|           (SUCCESS)
-+ * slot1       |---2MB--|               (FAIL)
-+ * slot2 |---2MB--|                     (SUCCESS)
-+ * slot3           |---2MB--|           (FAIL)
-+ * slot4                |---2MB--|      (FAIL)
-+ * slot5                     |---2MB--| (SUCCESS)
-+ */
-+void test_overlap_memory_regions(void)
-+{
-+	int i;
-+	int ret;
-+	int vm_fd;
-+	struct kvm_userspace_memory_region kvm_region;
-+	struct kvm_vm *vm;
-+	struct slot_t {
-+		uint64_t guest_addr;
-+		int exp_ret; /* Expected ioctl return value */
-+	};
-+	struct slot_t slots[] = {{0x200000,  0}, {0x100000, -1}, {0x000000,  0},
-+				 {0x200000, -1}, {0x300000, -1}, {0x400000,  0}
-+				};
-+	uint64_t mem_reg_npages;
-+	void *mem;
-+
-+	pr_info("Testing KVM_SET_USER_MEMORY_REGION with overlapped memory regions\n");
-+
-+	vm = vm_create(VM_MODE_DEFAULT, 0, O_RDWR);
-+	vm_fd = vm_get_fd(vm);
-+
-+	pr_info("Working with memory region of %iMB\n", MEM_REGION_SIZE >> 20);
-+	mem_reg_npages = vm_calc_num_guest_pages(VM_MODE_DEFAULT,
-+						 MEM_REGION_SIZE);
-+
-+	mem = mmap(NULL, MEM_REGION_SIZE, PROT_READ | PROT_WRITE,
-+		   MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-+	TEST_ASSERT(mem != MAP_FAILED, "Failed to mmap() host");
-+
-+	kvm_region.flags = 0;
-+	kvm_region.memory_size = MEM_REGION_SIZE;
-+	kvm_region.userspace_addr = (uint64_t) mem;
-+
-+	for (i = 0; i < sizeof(slots)/sizeof(struct slot_t); i++) {
-+		pr_info("Add slot %i, guest address 0x%06lx, expect rc=%i\n",
-+			i, slots[i].guest_addr, slots[i].exp_ret);
-+		if (slots[i].exp_ret == 0) {
-+			vm_userspace_mem_region_add(vm, VM_MEM_SRC_ANONYMOUS,
-+						    slots[i].guest_addr, i,
-+						    mem_reg_npages, 0);
-+		} else {
-+			kvm_region.slot = i;
-+			kvm_region.guest_phys_addr = slots[i].guest_addr;
-+			ret = ioctl(vm_fd, KVM_SET_USER_MEMORY_REGION,
-+				    &kvm_region);
-+			TEST_ASSERT(ret == -1 && errno == EEXIST,
-+				    "Adding overlapped memory region should fail with EEXIT");
-+		}
-+	}
-+
-+	munmap(mem, MEM_REGION_SIZE);
-+	kvm_vm_free(vm);
-+}
-+
- int main(int argc, char *argv[])
- {
- #ifdef __x86_64__
-@@ -383,6 +455,7 @@ int main(int argc, char *argv[])
- #endif
- 
- 	test_add_max_memory_regions();
-+	test_overlap_memory_regions();
- 
- #ifdef __x86_64__
- 	if (argc > 1)
--- 
-2.17.2
+On 4/13/20 5:52 AM, Kirill A. Shutemov wrote:
+> We can collapse PTE-mapped compound pages. We only need to avoid
+> handling them more than once: lock/unlock page only once if it's present
+> in the PMD range multiple times as it handled on compound level. The
+> same goes for LRU isolation and putback.
+>
+> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> ---
+>   mm/khugepaged.c | 99 ++++++++++++++++++++++++++++++++-----------------
+>   1 file changed, 65 insertions(+), 34 deletions(-)
+
+Acked-by: Yang Shi <yang.shi@linux.alibaba.com>
+
+>
+> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> index f9864644c3b7..11d500396d85 100644
+> --- a/mm/khugepaged.c
+> +++ b/mm/khugepaged.c
+> @@ -515,17 +515,30 @@ void __khugepaged_exit(struct mm_struct *mm)
+>   
+>   static void release_pte_page(struct page *page)
+>   {
+> -	dec_node_page_state(page, NR_ISOLATED_ANON + page_is_file_cache(page));
+> +	mod_node_page_state(page_pgdat(page),
+> +			NR_ISOLATED_ANON + page_is_file_cache(page),
+> +			-compound_nr(page));
+>   	unlock_page(page);
+>   	putback_lru_page(page);
+>   }
+>   
+> -static void release_pte_pages(pte_t *pte, pte_t *_pte)
+> +static void release_pte_pages(pte_t *pte, pte_t *_pte,
+> +		struct list_head *compound_pagelist)
+>   {
+> +	struct page *page, *tmp;
+> +
+>   	while (--_pte >= pte) {
+>   		pte_t pteval = *_pte;
+> -		if (!pte_none(pteval) && !is_zero_pfn(pte_pfn(pteval)))
+> -			release_pte_page(pte_page(pteval));
+> +
+> +		page = pte_page(pteval);
+> +		if (!pte_none(pteval) && !is_zero_pfn(pte_pfn(pteval)) &&
+> +				!PageCompound(page))
+> +			release_pte_page(page);
+> +	}
+> +
+> +	list_for_each_entry_safe(page, tmp, compound_pagelist, lru) {
+> +		list_del(&page->lru);
+> +		release_pte_page(page);
+>   	}
+>   }
+>   
+> @@ -549,7 +562,8 @@ static bool is_refcount_suitable(struct page *page)
+>   
+>   static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
+>   					unsigned long address,
+> -					pte_t *pte)
+> +					pte_t *pte,
+> +					struct list_head *compound_pagelist)
+>   {
+>   	struct page *page = NULL;
+>   	pte_t *_pte;
+> @@ -579,13 +593,21 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
+>   			goto out;
+>   		}
+>   
+> -		/* TODO: teach khugepaged to collapse THP mapped with pte */
+> +		VM_BUG_ON_PAGE(!PageAnon(page), page);
+> +
+>   		if (PageCompound(page)) {
+> -			result = SCAN_PAGE_COMPOUND;
+> -			goto out;
+> -		}
+> +			struct page *p;
+> +			page = compound_head(page);
+>   
+> -		VM_BUG_ON_PAGE(!PageAnon(page), page);
+> +			/*
+> +			 * Check if we have dealt with the compound page
+> +			 * already
+> +			 */
+> +			list_for_each_entry(p, compound_pagelist, lru) {
+> +				if (page == p)
+> +					goto next;
+> +			}
+> +		}
+>   
+>   		/*
+>   		 * We can do it before isolate_lru_page because the
+> @@ -614,19 +636,15 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
+>   			result = SCAN_PAGE_COUNT;
+>   			goto out;
+>   		}
+> -		if (pte_write(pteval)) {
+> -			writable = true;
+> -		} else {
+> -			if (PageSwapCache(page) &&
+> -			    !reuse_swap_page(page, NULL)) {
+> -				unlock_page(page);
+> -				result = SCAN_SWAP_CACHE_PAGE;
+> -				goto out;
+> -			}
+> +		if (!pte_write(pteval) && PageSwapCache(page) &&
+> +				!reuse_swap_page(page, NULL)) {
+>   			/*
+> -			 * Page is not in the swap cache. It can be collapsed
+> -			 * into a THP.
+> +			 * Page is in the swap cache and cannot be re-used.
+> +			 * It cannot be collapsed into a THP.
+>   			 */
+> +			unlock_page(page);
+> +			result = SCAN_SWAP_CACHE_PAGE;
+> +			goto out;
+>   		}
+>   
+>   		/*
+> @@ -638,16 +656,23 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
+>   			result = SCAN_DEL_PAGE_LRU;
+>   			goto out;
+>   		}
+> -		inc_node_page_state(page,
+> -				NR_ISOLATED_ANON + page_is_file_cache(page));
+> +		mod_node_page_state(page_pgdat(page),
+> +				NR_ISOLATED_ANON + page_is_file_cache(page),
+> +				compound_nr(page));
+>   		VM_BUG_ON_PAGE(!PageLocked(page), page);
+>   		VM_BUG_ON_PAGE(PageLRU(page), page);
+>   
+> +		if (PageCompound(page))
+> +			list_add_tail(&page->lru, compound_pagelist);
+> +next:
+>   		/* There should be enough young pte to collapse the page */
+>   		if (pte_young(pteval) ||
+>   		    page_is_young(page) || PageReferenced(page) ||
+>   		    mmu_notifier_test_young(vma->vm_mm, address))
+>   			referenced++;
+> +
+> +		if (pte_write(pteval))
+> +			writable = true;
+>   	}
+>   	if (likely(writable)) {
+>   		if (likely(referenced)) {
+> @@ -661,7 +686,7 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
+>   	}
+>   
+>   out:
+> -	release_pte_pages(pte, _pte);
+> +	release_pte_pages(pte, _pte, compound_pagelist);
+>   	trace_mm_collapse_huge_page_isolate(page, none_or_zero,
+>   					    referenced, writable, result);
+>   	return 0;
+> @@ -670,13 +695,14 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
+>   static void __collapse_huge_page_copy(pte_t *pte, struct page *page,
+>   				      struct vm_area_struct *vma,
+>   				      unsigned long address,
+> -				      spinlock_t *ptl)
+> +				      spinlock_t *ptl,
+> +				      struct list_head *compound_pagelist)
+>   {
+> +	struct page *src_page, *tmp;
+>   	pte_t *_pte;
+>   	for (_pte = pte; _pte < pte + HPAGE_PMD_NR;
+>   				_pte++, page++, address += PAGE_SIZE) {
+>   		pte_t pteval = *_pte;
+> -		struct page *src_page;
+>   
+>   		if (pte_none(pteval) || is_zero_pfn(pte_pfn(pteval))) {
+>   			clear_user_highpage(page, address);
+> @@ -696,7 +722,8 @@ static void __collapse_huge_page_copy(pte_t *pte, struct page *page,
+>   		} else {
+>   			src_page = pte_page(pteval);
+>   			copy_user_highpage(page, src_page, address, vma);
+> -			release_pte_page(src_page);
+> +			if (!PageCompound(src_page))
+> +				release_pte_page(src_page);
+>   			/*
+>   			 * ptl mostly unnecessary, but preempt has to
+>   			 * be disabled to update the per-cpu stats
+> @@ -713,6 +740,11 @@ static void __collapse_huge_page_copy(pte_t *pte, struct page *page,
+>   			free_page_and_swap_cache(src_page);
+>   		}
+>   	}
+> +
+> +	list_for_each_entry_safe(src_page, tmp, compound_pagelist, lru) {
+> +		list_del(&src_page->lru);
+> +		release_pte_page(src_page);
+> +	}
+>   }
+>   
+>   static void khugepaged_alloc_sleep(void)
+> @@ -971,6 +1003,7 @@ static void collapse_huge_page(struct mm_struct *mm,
+>   				   struct page **hpage,
+>   				   int node, int referenced, int unmapped)
+>   {
+> +	LIST_HEAD(compound_pagelist);
+>   	pmd_t *pmd, _pmd;
+>   	pte_t *pte;
+>   	pgtable_t pgtable;
+> @@ -1071,7 +1104,8 @@ static void collapse_huge_page(struct mm_struct *mm,
+>   	mmu_notifier_invalidate_range_end(&range);
+>   
+>   	spin_lock(pte_ptl);
+> -	isolated = __collapse_huge_page_isolate(vma, address, pte);
+> +	isolated = __collapse_huge_page_isolate(vma, address, pte,
+> +			&compound_pagelist);
+>   	spin_unlock(pte_ptl);
+>   
+>   	if (unlikely(!isolated)) {
+> @@ -1096,7 +1130,8 @@ static void collapse_huge_page(struct mm_struct *mm,
+>   	 */
+>   	anon_vma_unlock_write(vma->anon_vma);
+>   
+> -	__collapse_huge_page_copy(pte, new_page, vma, address, pte_ptl);
+> +	__collapse_huge_page_copy(pte, new_page, vma, address, pte_ptl,
+> +			&compound_pagelist);
+>   	pte_unmap(pte);
+>   	__SetPageUptodate(new_page);
+>   	pgtable = pmd_pgtable(_pmd);
+> @@ -1193,11 +1228,7 @@ static int khugepaged_scan_pmd(struct mm_struct *mm,
+>   			goto out_unmap;
+>   		}
+>   
+> -		/* TODO: teach khugepaged to collapse THP mapped with pte */
+> -		if (PageCompound(page)) {
+> -			result = SCAN_PAGE_COMPOUND;
+> -			goto out_unmap;
+> -		}
+> +		page = compound_head(page);
+>   
+>   		/*
+>   		 * Record which node the original page is from and save this
 
