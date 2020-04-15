@@ -2,85 +2,76 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A50C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:03:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA2AC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:05:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E78E4206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:03:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45344206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:05:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2636402AbgDOOD0 (ORCPT
+        id S2636403AbgDOOFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:03:26 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39446 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2633990AbgDOODL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 10:03:11 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 32C50AFB4;
-        Wed, 15 Apr 2020 14:03:09 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id E8D8F1E1250; Wed, 15 Apr 2020 16:03:08 +0200 (CEST)
-Date:   Wed, 15 Apr 2020 16:03:08 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     ira.weiny@intel.com
-Cc:     linux-kernel@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH RFC 7/8] fs/ext4: Only change S_DAX on inode load
-Message-ID: <20200415140308.GJ6126@quack2.suse.cz>
-References: <20200414040030.1802884-1-ira.weiny@intel.com>
- <20200414040030.1802884-8-ira.weiny@intel.com>
+        Wed, 15 Apr 2020 10:05:38 -0400
+Received: from cmccmta2.chinamobile.com ([221.176.66.80]:47046 "EHLO
+        cmccmta2.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2633951AbgDOOF3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 10:05:29 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.13]) by rmmx-syy-dmz-app06-12006 (RichMail) with SMTP id 2ee65e97148777f-6d7eb; Wed, 15 Apr 2020 22:04:56 +0800 (CST)
+X-RM-TRANSID: 2ee65e97148777f-6d7eb
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from localhost.localdomain (unknown[112.3.208.246])
+        by rmsmtp-syy-appsvr07-12007 (RichMail) with SMTP id 2ee75e97148659f-b8795;
+        Wed, 15 Apr 2020 22:04:56 +0800 (CST)
+X-RM-TRANSID: 2ee75e97148659f-b8795
+From:   Tang Bin <tangbin@cmss.chinamobile.com>
+To:     wsa@the-dreams.de, o.rempel@pengutronix.de,
+        u.kleine-koenig@pengutronix.de, ardb@kernel.org
+Cc:     linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Tang Bin <tangbin@cmss.chinamobile.com>,
+        Shengju Zhang <zhangshengju@cmss.chinamobile.com>
+Subject: [PATCH] i2c: drivers: Avoid unnecessary check in efm32_i2c_probe()
+Date:   Wed, 15 Apr 2020 22:06:40 +0800
+Message-Id: <20200415140640.19948-1-tangbin@cmss.chinamobile.com>
+X-Mailer: git-send-email 2.20.1.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200414040030.1802884-8-ira.weiny@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 13-04-20 21:00:29, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> To prevent complications with in memory inodes we only set S_DAX on
-> inode load.  FS_XFLAG_DAX can be changed at any time and S_DAX will
-> change after inode eviction and reload.
-> 
-> Add init bool to ext4_set_inode_flags() to indicate if the inode is
-> being newly initialized.
-> 
-> Assert that S_DAX is not set on an inode which is just being loaded.
+The function efm32_i2c_probe() is only called with an
+openfirmware platform device.Therefore there is no need
+to check that it has an openfirmware node.
 
-> @@ -4408,11 +4408,13 @@ static bool ext4_enable_dax(struct inode *inode)
->  	return (flags & EXT4_DAX_FL) == EXT4_DAX_FL;
->  }
->  
-> -void ext4_set_inode_flags(struct inode *inode)
-> +void ext4_set_inode_flags(struct inode *inode, bool init)
->  {
->  	unsigned int flags = EXT4_I(inode)->i_flags;
->  	unsigned int new_fl = 0;
->  
-> +	J_ASSERT(!(IS_DAX(inode) && init));
-> +
+Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+Signed-off-by: Shengju Zhang <zhangshengju@cmss.chinamobile.com>
+---
+ drivers/i2c/busses/i2c-efm32.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-WARN_ON or BUG_ON here? J_ASSERT is for journalling assertions...
-
-Otherwise the patch looks good.
-
-								Honza
-
+diff --git a/drivers/i2c/busses/i2c-efm32.c b/drivers/i2c/busses/i2c-efm32.c
+index 4de31fae7..4786ef6b2 100644
+--- a/drivers/i2c/busses/i2c-efm32.c
++++ b/drivers/i2c/busses/i2c-efm32.c
+@@ -312,9 +312,6 @@ static int efm32_i2c_probe(struct platform_device *pdev)
+ 	int ret;
+ 	u32 clkdiv;
+ 
+-	if (!np)
+-		return -EINVAL;
+-
+ 	ddata = devm_kzalloc(&pdev->dev, sizeof(*ddata), GFP_KERNEL);
+ 	if (!ddata)
+ 		return -ENOMEM;
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.20.1.windows.1
+
+
+
