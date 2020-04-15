@@ -2,153 +2,129 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE6E6C2BB55
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:34:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F33FBC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7A24206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:34:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D105E206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:34:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nDe1C43q"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hwn9oie7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1414725AbgDOPef (ORCPT
+        id S1414734AbgDOPeq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 11:34:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48936 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731298AbgDOPe3 (ORCPT
+        Wed, 15 Apr 2020 11:34:46 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43876 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1414720AbgDOPee (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 11:34:29 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FA20C061A0C;
-        Wed, 15 Apr 2020 08:34:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=k93jWTHKWpFEN4F9SAvfEChcPWYMd81tShHsmAijNZM=; b=nDe1C43qgxEOthZ67P6sU4NyQv
-        zE92U1Iyh0Rp3KjlFj5uRvTGHFP9dO/SsV4ELkffAtS7uHTfK4LXyyNBrdDAeSjPgUCPahiDm7wKn
-        WjfthkaM/NbPOS04qn47WarfifXSDfKorWU4Ze1oE0qPrHn5Mm9dbgc/1PJgoxZTxHDNZRu7oKnED
-        mthpJ086zvdIrp9FzDSJoQYOAfswJgQ9WEJXWPXXCxFlRB7NGRE/FdVevvVqMlf+WSoMu7hqmw2cN
-        K84Vewnr1SqfXYr1kV28cHEqNCstQwQCjvpIOLfOGEyWotcBHuyCtbj/wSXtXox/qbZKzwUw88LQG
-        rKvA8fGg==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jOk3X-0002Tz-VE; Wed, 15 Apr 2020 15:34:28 +0000
-Subject: Re: linux-next: Tree for Apr 14 (mm/shmem.c)
-To:     Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>
-References: <20200414123900.4f97a83f@canb.auug.org.au>
- <200c608a-8159-18ce-b44e-cad2022e23e2@infradead.org>
- <20200414182430.c5af29ddb1735f5fd0083983@linux-foundation.org>
- <alpine.LSU.2.11.2004142339170.10035@eggly.anvils>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <c1ea321f-b0f3-5ec3-3af8-8bf545a6462c@infradead.org>
-Date:   Wed, 15 Apr 2020 08:34:27 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 15 Apr 2020 11:34:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586964873;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=EOsn9WzC2Po9PCvhFuHMXouRRoh7kiQm7oVuP+zKwJQ=;
+        b=hwn9oie776lvjt1MqBo0gV5zgnVgT5cKDp/Se48IZ7faeO53EuvJl6TSEi4KMF7a7hwGMF
+        s0XV6T2W3dRJSVDCvdU0eVd1Vv6fR72U1/zeIIjH7Y4oOMuo9dELnhE3M6JyhO144YeuT2
+        1dfFW/qWB3XaFUmajZvoBuB3SmemApI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-388-4X0w2peNPB6VLyvD1vLIJg-1; Wed, 15 Apr 2020 11:34:29 -0400
+X-MC-Unique: 4X0w2peNPB6VLyvD1vLIJg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BCC2C6A6;
+        Wed, 15 Apr 2020 15:34:27 +0000 (UTC)
+Received: from madcap2.tricolour.ca (unknown [10.3.128.9])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E200560BF1;
+        Wed, 15 Apr 2020 15:34:20 +0000 (UTC)
+Date:   Wed, 15 Apr 2020 11:34:17 -0400
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Amol Grover <frextrite@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-audit@redhat.com, Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH v2] kernel: audit.c: Add __rcu notation to RCU pointer
+Message-ID: <20200415153417.svpbimg66vbeuk7u@madcap2.tricolour.ca>
+References: <20191128153203.GA23803@workstation-kernel-dev>
+ <20191130020742.GF157739@google.com>
 MIME-Version: 1.0
-In-Reply-To: <alpine.LSU.2.11.2004142339170.10035@eggly.anvils>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191130020742.GF157739@google.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/14/20 11:54 PM, Hugh Dickins wrote:
-> On Tue, 14 Apr 2020, Andrew Morton wrote:
->> On Tue, 14 Apr 2020 07:18:01 -0700 Randy Dunlap <rdunlap@infradead.org> wrote:
->>> On 4/13/20 7:39 PM, Stephen Rothwell wrote:
->>>> Hi all,
->>>>
->>>> Changes since 20200413:
->>>>
->>>> New tree: mhi
->>>>
->>>> My fixes tree contains:
->>>>
->>>>   6b038bdcd3d1 sh: mm: Fix build error
->>>>
->>>> Non-merge commits (relative to Linus' tree): 1154
->>>>  1160 files changed, 31764 insertions(+), 13498 deletions(-)
->>>>
->>>> ----------------------------------------------------------------------------
->>>
->>> on x86_64:
->>> # CONFIG_TRANSPARENT_HUGEPAGE is not set
->>
->> Thanks.  hm, this took a long time to be discovered.
->>
->>> In file included from ../include/linux/export.h:43:0,
->>>                  from ../include/linux/linkage.h:7,
->>>                  from ../include/linux/fs.h:5,
->>>                  from ../mm/shmem.c:24:
->>> ../mm/shmem.c: In function ‘shmem_undo_range’:
-> ...
->>> ../mm/shmem.c:961:26: note: in expansion of macro ‘HPAGE_PMD_NR’
->>>           round_up(start, HPAGE_PMD_NR))
->>>                           ^~~~~~~~~~~~
->>
->> That's
->> 					if (index <
->> 					    round_up(start, HPAGE_PMD_NR))
->> 						start = index + 1;
->>
->> from Hugh's 71725ed10c40696 ("mm: huge tmpfs: try to split_huge_page()
->> when punching hole").
+On 2019-11-29 21:07, Joel Fernandes wrote:
+> On Thu, Nov 28, 2019 at 09:02:03PM +0530, Amol Grover wrote:
+> > add __rcu notation to RCU protected global pointer auditd_conn
 > 
-> Sorry about that.  Yes, odd that it should only hit now: the false
-> PageTransCompound in shmem_punch_compound() has always been good
-> enough to handle it for me, but maybe Randy is trying a less able
-> compiler, or maybe unrelated changes in linux-next have just made
-> it harder for the compiler to see the optimization.
+> Again, please use proper punctuation and captilization. This is unacceptable.
+> Please put more effort into changelog.
 > 
-> I hope the patch below fixes it?
+> Otherwise the patch diff itself looks good to me, with the above nit
+> corrected, you could add my tag to the next revision:
 > 
-> [PATCH] mm/shmem: fix build without THP
+> Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 > 
-> Some optimizers don't notice that shmem_punch_compound() is always true
-> (PageTransCompound() being false) without CONFIG_TRANSPARENT_HUGEPAGE=y:
-> use IS_ENABLED to help them to avoid the BUILD_BUG inside HPAGE_PMD_NR.
+> thanks,
 > 
-> Fixes: 71725ed10c40 ("mm: huge tmpfs: try to split_huge_page() when punching hole")
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Signed-off-by: Hugh Dickins <hughd@google.com>
+>  - Joel
+> 
+> > 
+> > Fixes multiple instances of sparse error:
+> > error: incompatible types in comparison expression
+> > (different address spaces)
 
-Works for me, using gcc 7.5.0.
+Amol or Joel: Is there a reproducer recipe for this?
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+> > Signed-off-by: Amol Grover <frextrite@gmail.com>
+> > ---
+> > v2:
+> > - fix erroneous RCU pointer initialization
+> > 
+> >  kernel/audit.c | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/kernel/audit.c b/kernel/audit.c
+> > index da8dc0db5bd3..ff7cfc61f53d 100644
+> > --- a/kernel/audit.c
+> > +++ b/kernel/audit.c
+> > @@ -102,12 +102,13 @@ struct audit_net {
+> >   * This struct is RCU protected; you must either hold the RCU lock for reading
+> >   * or the associated spinlock for writing.
+> >   */
+> > -static struct auditd_connection {
+> > +struct auditd_connection {
+> >  	struct pid *pid;
+> >  	u32 portid;
+> >  	struct net *net;
+> >  	struct rcu_head rcu;
+> > -} *auditd_conn = NULL;
+> > +};
+> > +static struct auditd_connection __rcu *auditd_conn;
+> >  static DEFINE_SPINLOCK(auditd_conn_lock);
+> >  
+> >  /* If audit_rate_limit is non-zero, limit the rate of sending audit records
+> > -- 
+> > 2.24.0
 
-Thanks.
+- RGB
 
-> ---
-> 
->  mm/shmem.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> --- 5.7-rc1/mm/shmem.c	2020-04-11 12:58:26.415524805 -0700
-> +++ linux/mm/shmem.c	2020-04-14 23:20:25.517656174 -0700
-> @@ -952,7 +952,7 @@ static void shmem_undo_range(struct inod
->  				VM_BUG_ON_PAGE(PageWriteback(page), page);
->  				if (shmem_punch_compound(page, start, end))
->  					truncate_inode_page(mapping, page);
-> -				else {
-> +				else if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE)) {
->  					/* Wipe the page and don't get stuck */
->  					clear_highpage(page);
->  					flush_dcache_page(page);
-> 
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
 
-
--- 
-~Randy
