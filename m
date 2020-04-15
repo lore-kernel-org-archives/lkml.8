@@ -2,200 +2,148 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99285C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:40:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD65CC3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:43:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A40C2076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:40:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QhPVdjSc"
+	by mail.kernel.org (Postfix) with ESMTP id BB38D20787
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:43:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586979796;
+	bh=C7hZgIRoKst4X+y/++GrHJwRRSQ7OvedPg60SJqboFk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BUJ/+HIJw9+NeWTmIkyas2QSNvzbWVHrCZUG2PUseAq9XRBt4cp3t6RXdy3oYh7aj
+	 /l147r5V9F0J64CCuFBetXD9VYPmG4oYyhmGsl76X3GkaFxWmWcL4Nbh/C0BHqWTdB
+	 taoCHfqfLxwR4l6feJ2FPT2KcodNhB+BgM4q5eHM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441829AbgDOTkm (ORCPT
+        id S2441841AbgDOTnP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 15:40:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59108 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2438405AbgDOTki (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 15:40:38 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B09DC061A0C;
-        Wed, 15 Apr 2020 12:40:37 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id u15so5078060ljd.3;
-        Wed, 15 Apr 2020 12:40:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=g11hhgVDfWrK50P2wFGEQ+rhm9YH6tO11UJ098pNsjk=;
-        b=QhPVdjScB5TaLr6tHbcEhVShDdWhBXeXPv/HcTvO3WZxV1Ie0ZGKi4CgTS5WucUkC+
-         PBFtAQmEkJKM2AtIPk6VpU4NBlmXDmTbJS/Rtu+bh8efv/vjIAI8iCQ5i6PF0Ujzooag
-         lokco0leP2/cfZUr3Y1xCthKqBvQ9cm+f7pvPE4accqwd/EpAKSxHhdAvf2/OzVoIMVL
-         Se4VFWYWFwYZX+Q/OSNot4ZWJ05sjZqRt4akRXUSVQ9Pm1a/WfDhHuTsF+OaloSePosQ
-         ua7gDNWENtMECREsCMq2f3RmL2ZBYG6oeYEUVSbsUFCb+AYsC4u2u/p42hH0Uj/wcFqL
-         TNZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=g11hhgVDfWrK50P2wFGEQ+rhm9YH6tO11UJ098pNsjk=;
-        b=ndisbAX7z/G5+V+zqzv5sP6hVNwZ9A6DK+lfhfRJiAqncw1omulBEJNXxA1CmDh65q
-         O/Vj98byPDCel+i4v03DuUnxwXiZ1yyyhWL61SbS6TgFSWVKeM5d6jp0YQ9Njrhcj6CQ
-         lJ/Zljpd5IRkHZt61hg8jYxEhhS+0ncUKjY868mu2juL4t6l+qAmBINsOwReZUDI8Tsr
-         /UKRV/Y2Rj+ppGnXFE34xEo0PrGoyJmRM0cY0rJIB6b020E5tDYA31CzsmQoPqqqlGsh
-         l2woViNgTHzO5bdntr1sf0LQAnHqprBabcvQDSEIMmKVeJWe4y7cKrqnS+KXnHkzGKHG
-         9HHw==
-X-Gm-Message-State: AGi0PuZCfcud5zrYYIKsQd8JmC5t5ze2jzgF8ReXPHkACRux2Xa5N/kX
-        cG8jV6+0CGMtWWY9Z7kDHSU=
-X-Google-Smtp-Source: APiQypKCCQxJRxoAY+tMwcDypL2lWlAAvMjvbTWWnRb7fboPS+t9cRwq4pdZo60ltFVv5MyXKKytuA==
-X-Received: by 2002:a2e:b605:: with SMTP id r5mr2775346ljn.40.1586979635888;
-        Wed, 15 Apr 2020 12:40:35 -0700 (PDT)
-Received: from rikard (h-98-128-228-126.NA.cust.bahnhof.se. [98.128.228.126])
-        by smtp.gmail.com with ESMTPSA id p28sm12304016ljn.24.2020.04.15.12.40.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2020 12:40:35 -0700 (PDT)
-From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
-X-Google-Original-From: Rikard Falkeborn <rikard.falkeborn>
-Date:   Wed, 15 Apr 2020 21:40:32 +0200
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Rikard Falkeborn <rikard.falkeborn@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Haren Myneni <haren@us.ibm.com>, Joe Perches <joe@perches.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH AUTOSEL 5.4 52/84] linux/bits.h: add compile time sanity
- check of GENMASK inputs
-Message-ID: <20200415194032.GA935@rikard>
-References: <20200415114442.14166-1-sashal@kernel.org>
- <20200415114442.14166-52-sashal@kernel.org>
+        Wed, 15 Apr 2020 15:43:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36352 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2441830AbgDOTnM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 15:43:12 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2EAFD2076D;
+        Wed, 15 Apr 2020 19:43:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586979791;
+        bh=C7hZgIRoKst4X+y/++GrHJwRRSQ7OvedPg60SJqboFk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GFRqC/O0DuUglBIAyPY/lyaMAN3dod1/uybVd3q53qYLQJx/5KvR5i22UFFkA+BiV
+         vMuPLC0kcjVlZJE/HgVqyENMCHe78GIcXGN8cnI0CU83YTL7oNe8xwMK+hjckDvUjC
+         sA/HB3EF+zX9ap0MIHe2X2qf8nuqIrf+RCJyXSWk=
+Date:   Wed, 15 Apr 2020 20:43:06 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v3 05/12] arm64: csum: Disable KASAN for do_csum()
+Message-ID: <20200415194305.GB21804@willie-the-truck>
+References: <20200415165218.20251-1-will@kernel.org>
+ <20200415165218.20251-6-will@kernel.org>
+ <20200415172813.GA2272@lakrids.cambridge.arm.com>
+ <CAK8P3a0x10bCQMC=iGm+fU2G1Vc=Zo-4yjaX4Jwso6rgazVzYw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200415114442.14166-52-sashal@kernel.org>
+In-Reply-To: <CAK8P3a0x10bCQMC=iGm+fU2G1Vc=Zo-4yjaX4Jwso6rgazVzYw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 07:44:09AM -0400, Sasha Levin wrote:
-> From: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+On Wed, Apr 15, 2020 at 08:42:16PM +0200, Arnd Bergmann wrote:
+> On Wed, Apr 15, 2020 at 7:28 PM Mark Rutland <mark.rutland@arm.com> wrote:
+> > On Wed, Apr 15, 2020 at 05:52:11PM +0100, Will Deacon wrote:
+> > > do_csum() over-reads the source buffer and therefore abuses
+> > > READ_ONCE_NOCHECK() to avoid tripping up KASAN. In preparation for
+> > > READ_ONCE_NOCHECK() becoming a macro, and therefore losing its
+> > > '__no_sanitize_address' annotation, just annotate do_csum() explicitly
+> > > and fall back to normal loads.
+> >
+> > I'm confused by this. The whole point of READ_ONCE_NOCHECK() is that it
+> > isn't checked by KASAN, so if that semantic is removed it has no reason
+> > to exist.
+> >
+> > Changing that will break the unwind/stacktrace code across multiple
+> > architectures. IIRC they use READ_ONCE_NOCHECK() for two reasons:
+> >
+> > 1. Races with concurrent modification, as might happen when a thread's
+> >    stack is corrupted. Allowing the unwinder to bail out after a sanity
+> >    check means the resulting report is more useful than a KASAN splat in
+> >    the unwinder. I made the arm64 unwinder robust to this case.
+> >
+> > 2. I believe that the frame record itself /might/ be poisoned by KASAN,
+> >    since it's not meant to be an accessible object at the C langauge
+> >    level. I could be wrong about this, and would have to check.
 > 
-> [ Upstream commit 295bcca84916cb5079140a89fccb472bb8d1f6e2 ]
-> 
-> GENMASK() and GENMASK_ULL() are supposed to be called with the high bit as
-> the first argument and the low bit as the second argument.  Mixing them
-> will return a mask with zero bits set.
-> 
-> Recent commits show getting this wrong is not uncommon, see e.g.  commit
-> aa4c0c9091b0 ("net: stmmac: Fix misuses of GENMASK macro") and commit
-> 9bdd7bb3a844 ("clocksource/drivers/npcm: Fix misuse of GENMASK macro").
-> 
-> To prevent such mistakes from appearing again, add compile time sanity
-> checking to the arguments of GENMASK() and GENMASK_ULL().  If both
-> arguments are known at compile time, and the low bit is higher than the
-> high bit, break the build to detect the mistake immediately.
-> 
-> Since GENMASK() is used in declarations, BUILD_BUG_ON_ZERO() must be used
-> instead of BUILD_BUG_ON().
-> 
-> __builtin_constant_p does not evaluate is argument, it only checks if it
-> is a constant or not at compile time, and __builtin_choose_expr does not
-> evaluate the expression that is not chosen.  Therefore, GENMASK(x++, 0)
-> does only evaluate x++ once.
-> 
-> Commit 95b980d62d52 ("linux/bits.h: make BIT(), GENMASK(), and friends
-> available in assembly") made the macros in linux/bits.h available in
-> assembly.  Since BUILD_BUG_OR_ZERO() is not asm compatible, disable the
-> checks if the file is included in an asm file.
-> 
-> Due to bugs in GCC versions before 4.9 [0], disable the check if building
-> with a too old GCC compiler.
-> 
-> [0]: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=19449
-> 
-> Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
-> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-> Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-> Cc: Haren Myneni <haren@us.ibm.com>
-> Cc: Joe Perches <joe@perches.com>
-> Cc: Johannes Berg <johannes@sipsolutions.net>
-> Cc: lkml <linux-kernel@vger.kernel.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Link: http://lkml.kernel.org/r/20200308193954.2372399-1-rikard.falkeborn@gmail.com
-> Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  include/linux/bits.h | 22 ++++++++++++++++++++--
->  1 file changed, 20 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/linux/bits.h b/include/linux/bits.h
-> index 669d69441a625..f108302a3121c 100644
-> --- a/include/linux/bits.h
-> +++ b/include/linux/bits.h
-> @@ -18,12 +18,30 @@
->   * position @h. For example
->   * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
->   */
-> -#define GENMASK(h, l) \
-> +#if !defined(__ASSEMBLY__) && \
-> +	(!defined(CONFIG_CC_IS_GCC) || CONFIG_GCC_VERSION >= 49000)
-> +#include <linux/build_bug.h>
-> +#define GENMASK_INPUT_CHECK(h, l) \
-> +	(BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
-> +		__builtin_constant_p((l) > (h)), (l) > (h), 0)))
-> +#else
-> +/*
-> + * BUILD_BUG_ON_ZERO is not available in h files included from asm files,
-> + * disable the input check if that is the case.
-> + */
-> +#define GENMASK_INPUT_CHECK(h, l) 0
-> +#endif
-> +
-> +#define __GENMASK(h, l) \
->  	(((~UL(0)) - (UL(1) << (l)) + 1) & \
->  	 (~UL(0) >> (BITS_PER_LONG - 1 - (h))))
-> +#define GENMASK(h, l) \
-> +	(GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
->  
-> -#define GENMASK_ULL(h, l) \
-> +#define __GENMASK_ULL(h, l) \
->  	(((~ULL(0)) - (ULL(1) << (l)) + 1) & \
->  	 (~ULL(0) >> (BITS_PER_LONG_LONG - 1 - (h))))
-> +#define GENMASK_ULL(h, l) \
-> +	(GENMASK_INPUT_CHECK(h, l) + __GENMASK_ULL(h, l))
->  
->  #endif	/* __LINUX_BITS_H */
-> -- 
-> 2.20.1
-> 
+> I thought the main reason was deadlocks when a READ_ONCE()
+> is called inside of code that is part of the KASAN handling. If
+> READ_ONCE() ends up recursively calling itself, the kernel
+> tends to crash once it overflows its stack.
 
-This does not really fix anything, it's compile time prevention, so I
-don't know how appropriate this is for stable (it was also picked for
-5.5 and 5.6, but I'm just replying here now, I can ping the other
-selections if necessary if the patch should be dropped)?
+That was also my understanding.
 
-Also, for 5.4, it does somewhat depend on commit 8788994376d8
-("linux/build_bug.h: change type to int"). Without it, there may be a
-subtle integer promotion issue if sizeof(size_t) > sizeof(unsigned long)
-(I don't *think* such platform exists, but I don't have a warm a fuzzy
-feeling about it).
+> > I would like to keep the unwinding robust in the first case, even if the
+> > second case doesn't apply, and I'd prefer to not mark the entirety of
+> > the unwinding code as unchecked as that's sufficiently large an subtle
+> > that it could have nasty bugs.
+> >
+> > Is there any way we keep something like READ_ONCE_NOCHECK() around even
+> > if we have to give it reduced functionality relative to READ_ONCE()?
+> >
+> > I'm not enirely sure why READ_ONCE_NOCHECK() had to go, so if there's a
+> > particular pain point I'm happy to take a look.
+> 
+> As I understood, only this particular instance was removed, not all of
+> them.
 
-Rikard
+Right, but the problem is that whether the NOCHECK version gets checked
+or not now depends on the caller, since it's all just a macro. If we want
+to fix this, then we could force the nocheck variant to return unsigned
+long, which simplifies things a lot (completely untested):
 
+
+#define READ_ONCE(x)							\
+({									\
+	compiletime_assert_rwonce_type(x);				\
+	__READ_ONCE_SCALAR(x);						\
+})
+
+unsigned long __no_sanitise_address
+kasan_nocheck_read_once_ul(const volatile void *p)
+{
+	return READ_ONCE(*p);
+}
+
+/* Please don't use this */
+#define READ_ONCE_NOCHECK(x)	kasan_nocheck_read_once_ul(&x)
+
+
+which would make sense for the unwinders, where there is concurrency
+involved, but I'd be inclined to have them call kasan_nocheck_read_once_ul()
+directly and ditch READ_ONCE_NOCHECK() so that it doesn't get used for
+single-threaded code as a convenience to avoid annotation.
+
+What do you think?
+
+Will
