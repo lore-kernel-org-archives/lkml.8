@@ -2,53 +2,62 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F06C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 22:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5DE3C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 22:53:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B56DA2076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 22:51:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2A212076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 22:53:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586991199;
+	bh=WdDt++T0TbKV96xjyLypO9w7oBncQPpiZTQa5qF/uEk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=fOUhgEvMFLOoxzADiDDK0aV76//4FWsHvs3aeK6ecdSYb2ANuBRlL2LG1PN0q5ojS
+	 H3LTKo8tthBnNC16HYLhXI/fKrivKn/V5KJVV3rv+9nY1R598TBfwAne8TnaMTTAWR
+	 5WJXbTvEnpu94T1MIIn8/qHxScnQMoZDLX2r6tpQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732931AbgDOWvg (ORCPT
+        id S1733008AbgDOWxP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 18:51:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34244 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 18:53:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725800AbgDOWvY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 18:51:24 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        id S1725800AbgDOWxB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 18:53:01 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B2642076D;
-        Wed, 15 Apr 2020 22:51:23 +0000 (UTC)
-Date:   Wed, 15 Apr 2020 18:51:21 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Todd Kjos <tkjos@google.com>, Stephen Boyd <sboyd@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: On trace_*_rcuidle functions in modules
-Message-ID: <20200415185121.381a4bc3@gandalf.local.home>
-In-Reply-To: <20200415220459.GE17661@paulmck-ThinkPad-P72>
-References: <CALAqxLV4rM74wuzuZ+BkUi+keccxkAxv30N4vrFO7CVQ5vnT1A@mail.gmail.com>
-        <20200415085348.5511a5fe@gandalf.local.home>
-        <CALAqxLV1A6sOC1GWpFYXeBoDff0+AJgoOYK7NktcTdvX3kvAeg@mail.gmail.com>
-        <20200415161424.584d07d3@gandalf.local.home>
-        <CALAqxLU26PVFPSza5GceSF6gTVdzo_2D3G0dBp0KZXvAWFUktA@mail.gmail.com>
-        <20200415164116.40564f2c@gandalf.local.home>
-        <CALAqxLW6jqr38bk8pp-Hom2=MLm3coTmzCP8MMfrDvMfx388=Q@mail.gmail.com>
-        <20200415174918.154a86d0@gandalf.local.home>
-        <20200415220459.GE17661@paulmck-ThinkPad-P72>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 154B32076D;
+        Wed, 15 Apr 2020 22:53:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586991180;
+        bh=WdDt++T0TbKV96xjyLypO9w7oBncQPpiZTQa5qF/uEk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=DIObiXjJioAOylPSwb0uL8ZY5Jwv8Walwio8CdnTXmOhiWN8gyyAgoGVZGkMpaA4t
+         07pbJX77HmtdWrT+ZbXYCTIJcefzia9KIUsWVkIvYME/dHKVqFQzERCUjjUcp2VTzF
+         pgVIjOakDbN+TjBYQ9w/O6i/Rke3pMTE6SIM5lqk=
+Date:   Wed, 15 Apr 2020 15:52:59 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Zi Yan <ziy@nvidia.com>, Yang Shi <yang.shi@linux.alibaba.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        William Kucharski <william.kucharski@oracle.com>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv3, RESEND 6/8] khugepaged: Allow to collapse PTE-mapped
+ compound pages
+Message-Id: <20200415155259.8be9887c64b1420cfc9b9655@linux-foundation.org>
+In-Reply-To: <20200415215205.eaihc5snfe4ffhju@box>
+References: <20200413125220.663-1-kirill.shutemov@linux.intel.com>
+        <20200413125220.663-7-kirill.shutemov@linux.intel.com>
+        <20200415144426.a146ef173140f5bc396a6dcd@linux-foundation.org>
+        <20200415215205.eaihc5snfe4ffhju@box>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -56,95 +65,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Apr 2020 15:04:59 -0700
-"Paul E. McKenney" <paulmck@kernel.org> wrote:
+On Thu, 16 Apr 2020 00:52:05 +0300 "Kirill A. Shutemov" <kirill@shutemov.name> wrote:
 
-> On Wed, Apr 15, 2020 at 05:49:18PM -0400, Steven Rostedt wrote:
-> > On Wed, 15 Apr 2020 14:02:04 -0700
-> > John Stultz <john.stultz@linaro.org> wrote:
-> >   
+> On Wed, Apr 15, 2020 at 02:44:26PM -0700, Andrew Morton wrote:
+> > On Mon, 13 Apr 2020 15:52:18 +0300 "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com> wrote:
+> > 
+> > > We can collapse PTE-mapped compound pages. We only need to avoid
+> > > handling them more than once: lock/unlock page only once if it's present
+> > > in the PMD range multiple times as it handled on compound level. The
+> > > same goes for LRU isolation and putback.
 > > > 
-> > > So in my case your concerns may not be a problem, but I guess
-> > > generally it might. Though I'd hope the callback would be unregistered
-> > > (and whatever waiting for the grace period to complete be done) before
-> > > the module removal is complete. But maybe I'm still missing your
-> > > point?  
+> > > ...
+> > >
+> > > --- a/mm/khugepaged.c
+> > > +++ b/mm/khugepaged.c
+> > > @@ -515,17 +515,30 @@ void __khugepaged_exit(struct mm_struct *mm)
+> > >  
+> > >  static void release_pte_page(struct page *page)
+> > >  {
+> > > -	dec_node_page_state(page, NR_ISOLATED_ANON + page_is_file_cache(page));
 > > 
-> > Hmm, you may have just brought up a problem here...
+> > I have
 > > 
-> > You're saying that cpu_pm_register_notifier() callers are called from non
-> > RCU watching context? If that's the case, we have this:
+> > 	dec_node_page_state(page, NR_ISOLATED_ANON + page_is_file_lru(page));
 > > 
-> > int cpu_pm_unregister_notifier(struct notifier_block *nb)
-> > {
-> > 	return atomic_notifier_chain_unregister(&cpu_pm_notifier_chain, nb);
-> > }
-> > 
-> > And this:
-> > 
-> > int atomic_notifier_chain_unregister(struct atomic_notifier_head *nh,
-> > 		struct notifier_block *n)
-> > {
-> > 	unsigned long flags;
-> > 	int ret;
-> > 
-> > 	spin_lock_irqsave(&nh->lock, flags);
-> > 	ret = notifier_chain_unregister(&nh->head, n);
-> > 	spin_unlock_irqrestore(&nh->lock, flags);
-> > 	synchronize_rcu();
-> > 	return ret;
-> > }
-> > 
-> > Which means that if something registered a cpu_pm notifier, then
-> > unregistered it, and freed whatever the notifier accesses, then there's a
-> > chance that the synchronize_rcu() can return before the called notifier
-> > finishes, and anything that notifier accesses could have been freed.
-> > 
-> > I believe that module code should not be able to be run in RCU non watching
-> > context, and neither should notifiers. I think we just stumbled on a bug.
-> > 
-> > Paul?  
+> > here.  Is there some prerequisite which I wasn't able to find?
 > 
-> Or we say that such modules cannot be unloaded.  Or that such modules'
-> exit handlers, after disentangling themselves from the idle loop, must
-> invoke synchronize_rcu_rude() or similar, just as modules that use
-> call_rcu() are currently required to invoke rcu_barrier().
+> The patchset is on top of v5.6. It has been changed since. See
+> 9de4f22a60f7 ("mm: code cleanup for MADV_FREE").
 > 
-> Or is it possible to upgrade the protection that modules use?
-> 
-> My guess is that invoking rcu_irq_enter() and rcu_irq_exit() around every
-> potential call into module code out of the PM code is a non-starter,
-> but I cannot prove that either way.
->
+> Look like a trivial fixup is required.
 
-No this has nothing to do with modules. This is a bug right now with the
-cpu_pm notifier (after looking at the code, it's not a bug right now, see
-below).
-
-Say you have something that allocates some data and registers a
-callback to the cpu_pm notifier that access that data. Then for some
-reason, you want to remove that notifier and free the data. Usually you
-would do:
-
-	cpu_pm_unregister_notifier(my_notifier);
-	kfree(my_data);
-
-But the problem is that the callback of that my_notifier could be executing
-in a RCU non-watching space, and the cpu_pm_unregister_notifier() can
-return before the my_notifier is done, and the my_data is freed. Then the
-callback for the my_notifier could still be accessing the my_data.
-
-
-/me goes and reads the code and sees this is not an issue, and you can
-ignore the above concern.
-
-I was about to suggest a patch, but that has already been written...
-
-313c8c16ee62b ("PM / CPU: replace raw_notifier with atomic_notifier")
-
-Which surrounds the notifier callbacks with rcu_irq_enter_irqson()
-
-Which means that if John moves the code to use the notifier, then he could
-also remove the _rcuidle(), because RCU will be watching.
-
--- Steve
+[7/8] makes a big mess.  Can we please have a v4?
