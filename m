@@ -2,116 +2,130 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 633A3C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:22:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8936EC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:22:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4194420936
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:22:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 636D220775
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:22:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586956979;
+	bh=uM8RYOThTOAePXpnhO/MjXiLuve+HcAfoAQLYud7kjg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=iSJlCCUwZsI6FQDQrN6GlVOMVxrrJSMO/DS4wrOfyigncn/uGzFh/eRtOKems1IMQ
+	 uXIm6tLQ3zcokGY0e8IhU9aG5olr+UUTfpIEtceiMf55iZhvMEYnv1ogdfz8HGNPho
+	 OdjQ4ugiN+ae65FQOqDjBW4EruEdA++nnI3qDBgE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506349AbgDONWZ (ORCPT
+        id S2506370AbgDONWz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:22:25 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:39176 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2506231AbgDONWO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 09:22:14 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 8C9F94C817DDB2BDABE0;
-        Wed, 15 Apr 2020 21:22:10 +0800 (CST)
-Received: from localhost (10.173.223.234) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Wed, 15 Apr 2020
- 21:22:03 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <tomi.valkeinen@ti.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
-        <sebastian.reichel@collabora.com>,
-        <laurent.pinchart@ideasonboard.com>
-CC:     <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] drm/omap: venc: remove unused variable 'venc_config_pal_bdghi'
-Date:   Wed, 15 Apr 2020 21:21:05 +0800
-Message-ID: <20200415132105.43636-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Wed, 15 Apr 2020 09:22:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54364 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2408882AbgDOLfA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:35:00 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 816E82078A;
+        Wed, 15 Apr 2020 11:34:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586950500;
+        bh=uM8RYOThTOAePXpnhO/MjXiLuve+HcAfoAQLYud7kjg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=AptoPI5UUuxPPUt6e+DVzYSG85R51t2DFmxZbd3ItlUS4pLc3pi3I8FHivBBbMROh
+         EpffLXeyMo3aCGzrHV4YoZZXCLipQxSscrMf2Ux0E82yZBPjiE6jkQu8OLUMNrUXl8
+         687GBGgfM2my/LCGtC33G75d8F/NQ+me5/vfvEcg=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Brian Foster <bfoster@redhat.com>, Zorro Lang <zlang@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 012/129] xfs: fix iclog release error check race with shutdown
+Date:   Wed, 15 Apr 2020 07:32:47 -0400
+Message-Id: <20200415113445.11881-12-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
+References: <20200415113445.11881-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.173.223.234]
-X-CFilter-Loop: Reflected
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drivers/gpu/drm/omapdrm/dss/venc.c:211:33:
- warning: 'venc_config_pal_bdghi' defined but not used [-Wunused-const-variable=]
- static const struct venc_config venc_config_pal_bdghi = {
-                                 ^~~~~~~~~~~~~~~~~~~~~
+From: Brian Foster <bfoster@redhat.com>
 
-It is never used, remove it.
+[ Upstream commit 6b789c337a5963ae57cbc7fe9e41488c40a9b014 ]
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Prior to commit df732b29c8 ("xfs: call xlog_state_release_iclog with
+l_icloglock held"), xlog_state_release_iclog() always performed a
+locked check of the iclog error state before proceeding into the
+sync state processing code. As of this commit, part of
+xlog_state_release_iclog() was open-coded into
+xfs_log_release_iclog() and as a result the locked error state check
+was lost.
+
+The lockless check still exists, but this doesn't account for the
+possibility of a race with a shutdown being performed by another
+task causing the iclog state to change while the original task waits
+on ->l_icloglock. This has reproduced very rarely via generic/475
+and manifests as an assert failure in __xlog_state_release_iclog()
+due to an unexpected iclog state.
+
+Restore the locked error state check in xlog_state_release_iclog()
+to ensure that an iclog state update via shutdown doesn't race with
+the iclog release state processing code.
+
+Fixes: df732b29c807 ("xfs: call xlog_state_release_iclog with l_icloglock held")
+Reported-by: Zorro Lang <zlang@redhat.com>
+Signed-off-by: Brian Foster <bfoster@redhat.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/omapdrm/dss/venc.c | 43 ------------------------------
- 1 file changed, 43 deletions(-)
+ fs/xfs/xfs_log.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/omapdrm/dss/venc.c b/drivers/gpu/drm/omapdrm/dss/venc.c
-index 766553bb2f87..9701843ccf09 100644
---- a/drivers/gpu/drm/omapdrm/dss/venc.c
-+++ b/drivers/gpu/drm/omapdrm/dss/venc.c
-@@ -208,49 +208,6 @@ static const struct venc_config venc_config_ntsc_trm = {
- 	.gen_ctrl				= 0x00F90000,
- };
+diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
+index f6006d94a581e..796ff37d5bb5b 100644
+--- a/fs/xfs/xfs_log.c
++++ b/fs/xfs/xfs_log.c
+@@ -605,18 +605,23 @@ xfs_log_release_iclog(
+ 	struct xlog		*log = mp->m_log;
+ 	bool			sync;
  
--static const struct venc_config venc_config_pal_bdghi = {
--	.f_control				= 0,
--	.vidout_ctrl				= 0,
--	.sync_ctrl				= 0,
--	.hfltr_ctrl				= 0,
--	.x_color				= 0,
--	.line21					= 0,
--	.ln_sel					= 21,
--	.htrigger_vtrigger			= 0,
--	.tvdetgp_int_start_stop_x		= 0x00140001,
--	.tvdetgp_int_start_stop_y		= 0x00010001,
--	.gen_ctrl				= 0x00FB0000,
--
--	.llen					= 864-1,
--	.flens					= 625-1,
--	.cc_carr_wss_carr			= 0x2F7625ED,
--	.c_phase				= 0xDF,
--	.gain_u					= 0x111,
--	.gain_v					= 0x181,
--	.gain_y					= 0x140,
--	.black_level				= 0x3e,
--	.blank_level				= 0x3e,
--	.m_control				= 0<<2 | 1<<1,
--	.bstamp_wss_data			= 0x42,
--	.s_carr					= 0x2a098acb,
--	.l21__wc_ctl				= 0<<13 | 0x16<<8 | 0<<0,
--	.savid__eavid				= 0x06A70108,
--	.flen__fal				= 23<<16 | 624<<0,
--	.lal__phase_reset			= 2<<17 | 310<<0,
--	.hs_int_start_stop_x			= 0x00920358,
--	.hs_ext_start_stop_x			= 0x000F035F,
--	.vs_int_start_x				= 0x1a7<<16,
--	.vs_int_stop_x__vs_int_start_y		= 0x000601A7,
--	.vs_int_stop_y__vs_ext_start_x		= 0x01AF0036,
--	.vs_ext_stop_x__vs_ext_start_y		= 0x27101af,
--	.vs_ext_stop_y				= 0x05,
--	.avid_start_stop_x			= 0x03530082,
--	.avid_start_stop_y			= 0x0270002E,
--	.fid_int_start_x__fid_int_start_y	= 0x0005008A,
--	.fid_int_offset_y__fid_ext_start_x	= 0x002E0138,
--	.fid_ext_start_y__fid_ext_offset_y	= 0x01380005,
--};
--
- enum venc_videomode {
- 	VENC_MODE_UNKNOWN,
- 	VENC_MODE_PAL,
+-	if (iclog->ic_state == XLOG_STATE_IOERROR) {
+-		xfs_force_shutdown(mp, SHUTDOWN_LOG_IO_ERROR);
+-		return -EIO;
+-	}
++	if (iclog->ic_state == XLOG_STATE_IOERROR)
++		goto error;
+ 
+ 	if (atomic_dec_and_lock(&iclog->ic_refcnt, &log->l_icloglock)) {
++		if (iclog->ic_state == XLOG_STATE_IOERROR) {
++			spin_unlock(&log->l_icloglock);
++			goto error;
++		}
+ 		sync = __xlog_state_release_iclog(log, iclog);
+ 		spin_unlock(&log->l_icloglock);
+ 		if (sync)
+ 			xlog_sync(log, iclog);
+ 	}
+ 	return 0;
++error:
++	xfs_force_shutdown(mp, SHUTDOWN_LOG_IO_ERROR);
++	return -EIO;
+ }
+ 
+ /*
 -- 
-2.17.1
-
+2.20.1
 
