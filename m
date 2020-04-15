@@ -2,147 +2,114 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 670E2C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 23:28:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8F2DC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 23:32:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4542A20732
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 23:28:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="B7RqrbPG"
+	by mail.kernel.org (Postfix) with ESMTP id 9A34020787
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 23:32:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586993568;
+	bh=nlIoWzdqyk42cQzlK0nulsxbUgd+cIzM+bIMPUFDAlI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=qCLgCutn3RePvPX1X+NcybQpLhTYRnnv6cBSR8psjzAmPXe+qB+FlMTVASA1pwN+7
+	 DKhL6q2zGOo+JS8B5lbSBnRJSD6K11ddJVZ5m14eNiUtqwS5sVocSAlmvvl3Jj2jJa
+	 BP1ofU72LvhMZ+lZKIKRVcoLQMmZa96KnWTcPPoc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389436AbgDOX2x (ORCPT
+        id S2389646AbgDOXcp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 19:28:53 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:3970 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389251AbgDOX2r (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 19:28:47 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e9798a00000>; Wed, 15 Apr 2020 16:28:32 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 15 Apr 2020 16:28:45 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 15 Apr 2020 16:28:45 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Apr
- 2020 23:28:44 +0000
-Received: from [10.2.171.241] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Apr
- 2020 23:28:43 +0000
-Subject: Re: [RFC PATCH v7 6/9] media: tegra: Add Tegra210 Video input driver
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <frankc@nvidia.com>, <hverkuil@xs4all.nl>, <sakari.ailus@iki.fi>,
-        <helen.koike@collabora.com>, <sboyd@kernel.org>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1586919463-30542-1-git-send-email-skomatineni@nvidia.com>
- <1586919463-30542-7-git-send-email-skomatineni@nvidia.com>
- <4118112f-f865-5460-6319-d71271fd78d1@gmail.com>
- <a69a8b34-beea-3ad0-e08e-f7df8b9e7047@nvidia.com>
- <6afa951e-d904-f3c0-053f-82a02fb18979@nvidia.com>
- <b1c78827-13ea-0c94-a575-97b5afc0ede1@nvidia.com>
- <5954a7e1-910e-7f48-56d3-e671b56ead74@nvidia.com>
- <d6a9e07c-474a-a076-8313-32f5f4ca8d64@nvidia.com>
- <786949a9-8507-7723-f29b-b91a216bfd28@nvidia.com>
- <f831408b-bbf4-3047-20e3-5bebfa9fc1ad@gmail.com>
- <2ad9352f-cb65-1643-e540-a21f9c570266@nvidia.com>
- <31924f2b-8f85-d28d-4f5d-4e232bff94a5@nvidia.com>
-Message-ID: <c95cd2b6-8036-8c0a-25f3-6ea3fe35334a@nvidia.com>
-Date:   Wed, 15 Apr 2020 16:28:42 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <31924f2b-8f85-d28d-4f5d-4e232bff94a5@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1586993312; bh=ICREte8mX5YUPIFrhY1710Iw4rpBoVPzTv3ozhTn9IQ=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=B7RqrbPG3SxfbK/LMSLj3LRx5OE7G4VnGv/9K9BbpYBLlc/c02latfD7klMQQPpsW
-         DmK2qBDQKXnxZJaj2iBMOIwxaoouNqh9xnFAPa3t++oo3qFYKg7yCbiNFtFZInI6vV
-         86Pu5hHJwoW3NyGu4pUHDdZ3YqsjGuaz/WevEHFlh/FYN8W4UMSsO7cd6YORRROL1C
-         umfret7nuupHVgHkJzBEO/wbs6cE819Nips86flhMuaDD2E3wdXYjNpEFk1+cdTPG0
-         0Xn6EHqr+5WbRkj8XtpqiniD3lXxL/cckKNArjHhx4Yd1WiTCrDBHffmFUBPODdPXN
-         fMIj6L5A/Hh3A==
+        Wed, 15 Apr 2020 19:32:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34302 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389463AbgDOXcX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 19:32:23 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C30EF2076A;
+        Wed, 15 Apr 2020 23:32:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586993543;
+        bh=nlIoWzdqyk42cQzlK0nulsxbUgd+cIzM+bIMPUFDAlI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=WGqxd4fpo3ZsEYh6aXxSVCIdrT1K8T2znRG8hhVsfsxr9XhPD5uTNpqTRiX0NjMWU
+         gp2wkjEPfL2kfMKCD0erzZgzVBlKSKP5xKrVqbYJVPMmZgCRHLgCEBA6wOW6GbprWh
+         llu3dxu34Mv9J8at2M2E8C2ruA41A5STQW6x34T0=
+Date:   Thu, 16 Apr 2020 00:32:20 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
+Cc:     alsa-devel@alsa-project.org, Arnd Bergmann <arnd@arndb.de>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Takashi Iwai <tiwai@suse.com>
+Subject: Applied "ASoC: wcd9335: Fix missing regmap requirement" to the asoc tree
+In-Reply-To:  <8c0b22e2-2c67-8d45-a57d-dfc54043fbc9@free.fr>
+Message-Id:  <applied-8c0b22e2-2c67-8d45-a57d-dfc54043fbc9@free.fr>
+X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry please ignore.
+The patch
 
-We can't free vi during v4l2 device release as when no device nodes are=20
-opened, vi free happens right away during host1x_video_remove.
+   ASoC: wcd9335: Fix missing regmap requirement
 
-With this tegra-video driver unbind ->bind will not work as vi memory=20
-allocated during vi_probe gets freed during v4l2 device release so=20
-during bind init() callback execution will crash as vi got freed while=20
-vi driver is still bound to device.
+has been applied to the asoc tree at
 
-Will wait for Hans/Thierry comments as I see dependency depending on=20
-where unbind/bind happens.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-On 4/15/20 4:08 PM, Sowjanya Komatineni wrote:
-> With minor change of not using vi reference after=20
-> host1x_client_unregister and freeing vi during v4l2 device release works.
->
-> For csi, we can use devm_kzalloc for now untill we decide later if we=20
-> want to expose async subdev nodes during sensor support.
->
-> Will have this fix in v8 with a comment in vi_remove to make sure not=20
-> to use vi reference after host1x_client_unregister.
->
-> Will test more and will release v8 with above fix to allow direct=20
-> host1x client driver unbind.
->
-> Thanks
->
-> sowjanya
->
->
-> On 4/15/20 12:51 PM, Sowjanya Komatineni wrote:
->>
->> On 4/15/20 12:21 PM, Dmitry Osipenko wrote:
->>> External email: Use caution opening links or attachments
->>>
->>>
->>> 15.04.2020 21:53, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> ...
->>>>>>>>>> Have you tried to test this driver under KASAN? I suspect that
->>>>>>>>>> you just
->>>>>>>>>> masked the problem, instead of fixing it.
->>>> Tested with kmemleak scan and did not see any memory leaks
->>> You should get use-after-free and not memleak.
->> I don't see use-after-free bugs during the testing.
->>
->> But as mentioned when direct vi/csi client driver unbind happens=20
->> while video device node is kept opened, vi driver remove will free vi=20
->> structure memory but actual video device memory which is part of=20
->> channels remains but list head gets lost when vi structure is freed.
->>
->> So, when device node is released and executes release callback as=20
->> list head is lost it can't free allocated channels which is not good.
->>
->> This happens only with direct host1x client vi/csi driver unbind.
->>
->> Need to find better place to free host1x client driver data structure=20
->> to allow direct client driver unbind->bind.
->>
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 741bfce676b765f01396e148862740caec91338c Mon Sep 17 00:00:00 2001
+From: Marc Gonzalez <marc.w.gonzalez@free.fr>
+Date: Wed, 10 Apr 2019 16:23:38 +0200
+Subject: [PATCH] ASoC: wcd9335: Fix missing regmap requirement
+
+wcd9335.c: undefined reference to 'devm_regmap_add_irq_chip'
+
+Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/codecs/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
+index 419114edfd57..667fc1d59e18 100644
+--- a/sound/soc/codecs/Kconfig
++++ b/sound/soc/codecs/Kconfig
+@@ -1151,6 +1151,7 @@ config SND_SOC_WCD9335
+ 	tristate "WCD9335 Codec"
+ 	depends on SLIMBUS
+ 	select REGMAP_SLIMBUS
++	select REGMAP_IRQ
+ 	help
+ 	  The WCD9335 is a standalone Hi-Fi audio CODEC IC, supports
+ 	  Qualcomm Technologies, Inc. (QTI) multimedia solutions,
+-- 
+2.20.1
+
