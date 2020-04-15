@@ -2,164 +2,134 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4CECC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:28:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D7EAC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:28:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 898F220784
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:28:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A1C120784
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:28:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="TuSrV2Is"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2411069AbgDOR2j (ORCPT
+        id S2411087AbgDOR2r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 13:28:39 -0400
-Received: from foss.arm.com ([217.140.110.172]:50434 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2410994AbgDOR2X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 13:28:23 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AC66F1FB;
-        Wed, 15 Apr 2020 10:28:22 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CB8143F68F;
-        Wed, 15 Apr 2020 10:28:20 -0700 (PDT)
-Date:   Wed, 15 Apr 2020 18:28:14 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Will Deacon <will@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        kernel-team@android.com, Michael Ellerman <mpe@ellerman.id.au>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v3 05/12] arm64: csum: Disable KASAN for do_csum()
-Message-ID: <20200415172813.GA2272@lakrids.cambridge.arm.com>
-References: <20200415165218.20251-1-will@kernel.org>
- <20200415165218.20251-6-will@kernel.org>
+        Wed, 15 Apr 2020 13:28:47 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:3196 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2411067AbgDOR2b (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 13:28:31 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e9743cf0000>; Wed, 15 Apr 2020 10:26:39 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 15 Apr 2020 10:28:28 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 15 Apr 2020 10:28:28 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Apr
+ 2020 17:28:28 +0000
+Received: from rcampbell-dev.nvidia.com (172.20.13.39) by
+ DRHQMAIL107.nvidia.com (10.27.9.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3; Wed, 15 Apr 2020 17:28:23 +0000
+Subject: Re: [PATCH v8 0/3] mm/hmm/test: add self tests for HMM
+To:     Jason Gunthorpe <jgg@mellanox.com>
+CC:     Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <linux-kselftest@vger.kernel.org>
+References: <20200321003108.22941-1-rcampbell@nvidia.com>
+ <20200415144125.GU11945@mellanox.com>
+X-Nvconfidentiality: public
+From:   Ralph Campbell <rcampbell@nvidia.com>
+Message-ID: <6d7adb28-96a0-5dc5-e85e-68fca2db403a@nvidia.com>
+Date:   Wed, 15 Apr 2020 10:28:23 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200415165218.20251-6-will@kernel.org>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <20200415144125.GU11945@mellanox.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1586971599; bh=dqlcMJl24ki/evoHvr/O4JoODiicyWi8Sw0LjbvxTvI=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=TuSrV2IsUaLFPSBBuyEzLITMxYVaL+ZGWD/29n2/5zxMAGCt8AFyzMstB7sbQ4ffN
+         UoVgp2iLlLj55PlXTvsW2ckwc0ZH3UeDStag9jQVm3MMmjmYXvhNk4k1/jN1WdlF8y
+         KlMdAJh36AB7Oa1ntTlfMPxz/lkXKs/fxSJqesbZPw8R7TSWBNMaWIlCDtE7WpDdxJ
+         ILyI0u2vuNk2k+tepYOP6DJ5oic+Tjj99uI+MX11sLbMiC2JJCuvfFJ1UW7t37kw2G
+         TSPYbNDD0pgysPSGkU7I6q2Gs0POH5MyLY9ujSSXbjnSMc4WEG74xtVR+SXknlLCa/
+         evkqAuEz7eDDw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Will,
 
-On Wed, Apr 15, 2020 at 05:52:11PM +0100, Will Deacon wrote:
-> do_csum() over-reads the source buffer and therefore abuses
-> READ_ONCE_NOCHECK() to avoid tripping up KASAN. In preparation for
-> READ_ONCE_NOCHECK() becoming a macro, and therefore losing its
-> '__no_sanitize_address' annotation, just annotate do_csum() explicitly
-> and fall back to normal loads.
-
-I'm confused by this. The whole point of READ_ONCE_NOCHECK() is that it
-isn't checked by KASAN, so if that semantic is removed it has no reason
-to exist.
-
-Changing that will break the unwind/stacktrace code across multiple
-architectures. IIRC they use READ_ONCE_NOCHECK() for two reasons:
-
-1. Races with concurrent modification, as might happen when a thread's
-   stack is corrupted. Allowing the unwinder to bail out after a sanity
-   check means the resulting report is more useful than a KASAN splat in
-   the unwinder. I made the arm64 unwinder robust to this case.
-
-2. I believe that the frame record itself /might/ be poisoned by KASAN,
-   since it's not meant to be an accessible object at the C langauge
-   level. I could be wrong about this, and would have to check.
- 
-I would like to keep the unwinding robust in the first case, even if the
-second case doesn't apply, and I'd prefer to not mark the entirety of
-the unwinding code as unchecked as that's sufficiently large an subtle
-that it could have nasty bugs.
-
-Is there any way we keep something like READ_ONCE_NOCHECK() around even
-if we have to give it reduced functionality relative to READ_ONCE()?
-
-I'm not enirely sure why READ_ONCE_NOCHECK() had to go, so if there's a
-particular pain point I'm happy to take a look.
-
-Thanks,
-Mark.
-
+On 4/15/20 7:41 AM, Jason Gunthorpe wrote:
+> On Fri, Mar 20, 2020 at 05:31:05PM -0700, Ralph Campbell wrote:
+>> This series adds basic self tests for HMM and are intended for Jason
+>> Gunthorpe's rdma tree which has a number of HMM patches applied.
 > 
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Robin Murphy <robin.murphy@arm.com>
-> Signed-off-by: Will Deacon <will@kernel.org>
-> ---
->  arch/arm64/lib/csum.c | 20 ++++++++++++--------
->  1 file changed, 12 insertions(+), 8 deletions(-)
+> Here are some hunks I noticed while testing this:
 > 
-> diff --git a/arch/arm64/lib/csum.c b/arch/arm64/lib/csum.c
-> index 60eccae2abad..78b87a64ca0a 100644
-> --- a/arch/arm64/lib/csum.c
-> +++ b/arch/arm64/lib/csum.c
-> @@ -14,7 +14,11 @@ static u64 accumulate(u64 sum, u64 data)
->  	return tmp + (tmp >> 64);
->  }
->  
-> -unsigned int do_csum(const unsigned char *buff, int len)
-> +/*
-> + * We over-read the buffer and this makes KASAN unhappy. Instead, disable
-> + * instrumentation and call kasan explicitly.
-> + */
-> +unsigned int __no_sanitize_address do_csum(const unsigned char *buff, int len)
->  {
->  	unsigned int offset, shift, sum;
->  	const u64 *ptr;
-> @@ -42,7 +46,7 @@ unsigned int do_csum(const unsigned char *buff, int len)
->  	 * odd/even alignment, and means we can ignore it until the very end.
->  	 */
->  	shift = offset * 8;
-> -	data = READ_ONCE_NOCHECK(*ptr++);
-> +	data = *ptr++;
->  #ifdef __LITTLE_ENDIAN
->  	data = (data >> shift) << shift;
->  #else
-> @@ -58,10 +62,10 @@ unsigned int do_csum(const unsigned char *buff, int len)
->  	while (unlikely(len > 64)) {
->  		__uint128_t tmp1, tmp2, tmp3, tmp4;
->  
-> -		tmp1 = READ_ONCE_NOCHECK(*(__uint128_t *)ptr);
-> -		tmp2 = READ_ONCE_NOCHECK(*(__uint128_t *)(ptr + 2));
-> -		tmp3 = READ_ONCE_NOCHECK(*(__uint128_t *)(ptr + 4));
-> -		tmp4 = READ_ONCE_NOCHECK(*(__uint128_t *)(ptr + 6));
-> +		tmp1 = *(__uint128_t *)ptr;
-> +		tmp2 = *(__uint128_t *)(ptr + 2);
-> +		tmp3 = *(__uint128_t *)(ptr + 4);
-> +		tmp4 = *(__uint128_t *)(ptr + 6);
->  
->  		len -= 64;
->  		ptr += 8;
-> @@ -85,7 +89,7 @@ unsigned int do_csum(const unsigned char *buff, int len)
->  		__uint128_t tmp;
->  
->  		sum64 = accumulate(sum64, data);
-> -		tmp = READ_ONCE_NOCHECK(*(__uint128_t *)ptr);
-> +		tmp = *(__uint128_t *)ptr;
->  
->  		len -= 16;
->  		ptr += 2;
-> @@ -100,7 +104,7 @@ unsigned int do_csum(const unsigned char *buff, int len)
->  	}
->  	if (len > 0) {
->  		sum64 = accumulate(sum64, data);
-> -		data = READ_ONCE_NOCHECK(*ptr);
-> +		data = *ptr;
->  		len -= 8;
->  	}
->  	/*
-> -- 
-> 2.26.0.110.g2183baf09c-goog
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -2201,7 +2201,8 @@ config TEST_MEMINIT
+>   
+>   config TEST_HMM
+>   	tristate "Test HMM (Heterogeneous Memory Management)"
+> -	depends on DEVICE_PRIVATE
+> +	depends on TRANSPARENT_HUGEPAGE
+> +	select DEVICE_PRIVATE
+>   	select HMM_MIRROR
+>   	select MMU_NOTIFIER
+>   	help
 > 
+> It fails testing if TRANSPARENT_HUGEPAGE is not on
+> 
+> @@ -1097,6 +1071,7 @@ static int dmirror_device_init(struct dmirror_device *mdevice, int id)
+>   	spin_lock_init(&mdevice->lock);
+>   
+>   	cdev_init(&mdevice->cdevice, &dmirror_fops);
+> +	mdevice->cdevice.owner = THIS_MODULE;
+>   	ret = cdev_add(&mdevice->cdevice, dev, 1);
+>   	if (ret)
+>   		return ret;
+> 
+> The use of cdev without a struct device is super weird, but it still
+> needs this
+> 
+> diff --git a/tools/testing/selftests/vm/test_hmm.sh b/tools/testing/selftests/vm/test_hmm.sh
+> index 461e4a99a362cf..0647b525a62564 100755
+> --- a/tools/testing/selftests/vm/test_hmm.sh
+> +++ b/tools/testing/selftests/vm/test_hmm.sh
+> @@ -59,7 +59,7 @@ run_smoke()
+>   	echo "Running smoke test. Note, this test provides basic coverage."
+>   
+>   	load_driver
+> -	./hmm-tests
+> +	$(dirname "${BASH_SOURCE[0]}")/hmm-tests
+>   	unload_driver
+>   }
+> 
+> Make it runnably reliably
+> 
+> Jason
+
+Thanks for the fixes. I'll apply these and send a v9.
+I will also add missing calls to release_mem_region() to free the reserved device private
+addresses.
