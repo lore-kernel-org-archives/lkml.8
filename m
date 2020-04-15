@@ -2,117 +2,201 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A40DDC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:52:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE8CC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DF3620774
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:52:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="k6cxtDap"
+	by mail.kernel.org (Postfix) with ESMTP id D765D20774
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:53:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731268AbgDOVwR (ORCPT
+        id S1731402AbgDOVxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 17:52:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51238 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729648AbgDOVwL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 17:52:11 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAE15C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 14:52:08 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id l14so5507043ljj.5
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 14:52:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=IX3wruZGY7llk5Qpla+wL2jsH4dCdrR/VQCtvdqHmRU=;
-        b=k6cxtDappj81zBUBPie6lxpMF2nrL97TYrGrAUOqCxfT4ky97R2Q3AeRJ4OedvXDUb
-         Z03X1+zL+NZq5pX5Kud2gRwyHgVI17jNHK6K0umHL2Rq5ffhAB0igQul8/tH9U+BnEi8
-         ZMDbunyV3k1qL1EQXP4oRETQw/GSz9tJqz+8t0EhoJ1acPcpERKWqjkHuuuJUGRwEVCI
-         claL8VjyEGg/JVKhIdUcn3GS+tjGqCzn8YJ8Pi0tUwYE9EkTSiRe/wsgRZRVLOn47SIC
-         9MhqsjBDY0opeQ0rCR1PwSRIi79wRW+/Qkh81mRYp4/CkCGXvsxROPLLF61tXqBq5MjN
-         km1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=IX3wruZGY7llk5Qpla+wL2jsH4dCdrR/VQCtvdqHmRU=;
-        b=tc7QJsQfK292iP8De9cXZJAWJnUfiqupRy8rCGLNKui3tvbMXMO7ihyqMfPF4spv0u
-         6CecuOfdzHupKQxpEFFCC0PutY5osowe+AT5LlMuj301wTepWxs+9/deVIY0QR6lfz1E
-         6uFYjiZLyqX6Da7pascYMwmsWjk2kB0h7ivUs/lSclrv6uUFgw/oGI8ZOAi+3nYC4u5z
-         Eon4e2fHn0eljx2mTsNYhJTUGvjCeCssgEBwI9fQmQ18q+J9S+p+pU8Kj1tvNMnQJsEu
-         B2DUht/W+csB2rD8TCoQcZgfdPlVFMMlHVC3Aw9BZiUFfk4jrSJTeb3si6sSXRomufMN
-         4LjA==
-X-Gm-Message-State: AGi0PuabcCMeO0oUOb3mC1vZWhu5vgeKrWhAT1dVF7MooqiVowtz3RD+
-        gYKa4uGSdAYErdcUMSh084kExw==
-X-Google-Smtp-Source: APiQypLpChKCJYEqRpL8WtEqmh7slqCO4E/fzWqWoWPMT9Y2cxDHgHEDbxL4lL0lF3xb0Rp533ii+Q==
-X-Received: by 2002:a2e:140e:: with SMTP id u14mr2981970ljd.252.1586987527267;
-        Wed, 15 Apr 2020 14:52:07 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id x24sm13542101lfc.6.2020.04.15.14.52.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2020 14:52:06 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id D17A7102C64; Thu, 16 Apr 2020 00:52:05 +0300 (+03)
-Date:   Thu, 16 Apr 2020 00:52:05 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Zi Yan <ziy@nvidia.com>, Yang Shi <yang.shi@linux.alibaba.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        William Kucharski <william.kucharski@oracle.com>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv3, RESEND 6/8] khugepaged: Allow to collapse PTE-mapped
- compound pages
-Message-ID: <20200415215205.eaihc5snfe4ffhju@box>
-References: <20200413125220.663-1-kirill.shutemov@linux.intel.com>
- <20200413125220.663-7-kirill.shutemov@linux.intel.com>
- <20200415144426.a146ef173140f5bc396a6dcd@linux-foundation.org>
+        Wed, 15 Apr 2020 17:53:07 -0400
+Received: from mga01.intel.com ([192.55.52.88]:6892 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731290AbgDOVwe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 17:52:34 -0400
+IronPort-SDR: In9E5fXNBkqglo8TxAmOrOnqYtljVAReTOl3eqoQNTeQ7o0WMihZOgf4M3RCrrPtIn3SPSQl72
+ 6OJZqCoVmpoA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 14:52:33 -0700
+IronPort-SDR: UPlWAnNWjmdiTb9DDxhqHXmstlOrh1L3Erh+angx0aJl64LhAn9MON4WHlutCCWIyruoZTCjVS
+ FW3Hy6EPKnLw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,388,1580803200"; 
+   d="scan'208";a="256993381"
+Received: from jsfenner-mobl1.amr.corp.intel.com (HELO [10.252.129.141]) ([10.252.129.141])
+  by orsmga006.jf.intel.com with ESMTP; 15 Apr 2020 14:52:31 -0700
+Subject: Re: [PATCH v4 2/2] mm/gup/writeback: add callbacks for inaccessible
+ pages
+To:     Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        linux-next@vger.kernel.org, akpm@linux-foundation.org,
+        jack@suse.cz, kirill@shutemov.name,
+        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     borntraeger@de.ibm.com, david@redhat.com, aarcange@redhat.com,
+        linux-mm@kvack.org, frankja@linux.ibm.com, sfr@canb.auug.org.au,
+        jhubbard@nvidia.com, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, Will Deacon <will@kernel.org>,
+        "Williams, Dan J" <dan.j.williams@intel.com>
+References: <20200306132537.783769-1-imbrenda@linux.ibm.com>
+ <20200306132537.783769-3-imbrenda@linux.ibm.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <3ae46945-0c7b-03cd-700a-a6fe8003c6ab@intel.com>
+Date:   Wed, 15 Apr 2020 14:52:31 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200415144426.a146ef173140f5bc396a6dcd@linux-foundation.org>
+In-Reply-To: <20200306132537.783769-3-imbrenda@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 02:44:26PM -0700, Andrew Morton wrote:
-> On Mon, 13 Apr 2020 15:52:18 +0300 "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com> wrote:
-> 
-> > We can collapse PTE-mapped compound pages. We only need to avoid
-> > handling them more than once: lock/unlock page only once if it's present
-> > in the PMD range multiple times as it handled on compound level. The
-> > same goes for LRU isolation and putback.
-> > 
-> > ...
-> >
-> > --- a/mm/khugepaged.c
-> > +++ b/mm/khugepaged.c
-> > @@ -515,17 +515,30 @@ void __khugepaged_exit(struct mm_struct *mm)
-> >  
-> >  static void release_pte_page(struct page *page)
-> >  {
-> > -	dec_node_page_state(page, NR_ISOLATED_ANON + page_is_file_cache(page));
-> 
-> I have
-> 
-> 	dec_node_page_state(page, NR_ISOLATED_ANON + page_is_file_lru(page));
-> 
-> here.  Is there some prerequisite which I wasn't able to find?
+On 3/6/20 5:25 AM, Claudio Imbrenda wrote:
+> +	/*
+> +	 * We need to make the page accessible if and only if we are going
+> +	 * to access its content (the FOLL_PIN case).  Please see
+> +	 * Documentation/core-api/pin_user_pages.rst for details.
+> +	 */
+> +	if (flags & FOLL_PIN) {
+> +		ret = arch_make_page_accessible(page);
+> +		if (ret) {
+> +			unpin_user_page(page);
+> +			page = ERR_PTR(ret);
+> +			goto out;
+> +		}
+> +	}
 
-The patchset is on top of v5.6. It has been changed since. See
-9de4f22a60f7 ("mm: code cleanup for MADV_FREE").
+Thanks, Claudio, for a really thorough refresher on this in private mail.
 
-Look like a trivial fixup is required.
+But, I think this mechanism probably hooks into the wrong place.  I
+don't doubt that it *functions* on s390, but I think these calls are
+misplaced.  I think the end result is that no other architecture will
+have a chance to use the same hooks.  They're far too s390-specific even
+for a concept that's not limited to s390.
 
--- 
- Kirill A. Shutemov
+get_user_pages(FOLL_PIN) does *not* mean "the kernel will access this
+page's contents".  The kmap() family is really what we use for that.
+kmap()s are often *preceded* by get_user_pages(), which is probably why
+this works for you, though.
+
+Yes, the docs do say that FOLL_PIN is for accessing the pages.  But,
+there's a crucial thing that it leaves out: *WHO* will be accessing the
+pages.  For Direct IO, for instance, the CPU isn't touching the page at
+all.  It's always a device.  Also, crucially, the page contents are
+*not* accessible from the CPU's perspective after a gup.  They're not
+accessible until a kmap().  They're also not even accessible for
+*devices* after a gup.  There's a _separate_ mapping process that's
+requires to make them accessible to the CPU.
+
+> --- a/mm/page-writeback.c
+> +++ b/mm/page-writeback.c
+> @@ -2764,7 +2764,7 @@ int test_clear_page_writeback(struct page *page)
+>  int __test_set_page_writeback(struct page *page, bool keep_write)
+>  {
+>  	struct address_space *mapping = page_mapping(page);
+> -	int ret;
+> +	int ret, access_ret;
+>  
+>  	lock_page_memcg(page);
+>  	if (mapping && mapping_use_writeback_tags(mapping)) {
+> @@ -2807,6 +2807,13 @@ int __test_set_page_writeback(struct page *page, bool keep_write)
+>  		inc_zone_page_state(page, NR_ZONE_WRITE_PENDING);
+>  	}
+>  	unlock_page_memcg(page);
+> +	access_ret = arch_make_page_accessible(page);
+> +	/*
+> +	 * If writeback has been triggered on a page that cannot be made
+> +	 * accessible, it is too late to recover here.
+> +	 */
+> +	VM_BUG_ON_PAGE(access_ret != 0, page);
+> +
+>  	return ret;
+>  
+>  }
+
+I think this one really shows the cracks in the approach.  Pages being
+swapped *don't* have get_user_pages() done on them since we've already
+got the physical page at the time writeback and aren't looking at PTEs.
+
+They're read by I/O devices sending them out to storage, but also by the
+CPU if you're doing something like zswap.  But, again, critically,
+accessing page contents won't be done until kmap().
+
+I suspect you saw crashes underneath __swap_writepage()->submit_bio()
+and looked a few lines up to the set_page_writeback() and decided to
+hook in there.  I think a better spot, again, is to hook into kmap()
+which is called in the block layer.
+
+Why do I care?
+
+I was looking at AMD's SEV (Secure Encrypted Virtualization) code which
+is in the kernel which shares some implementation details with the
+not-in-the-tree Intel MKTME.  SEV currently has a concept of guest pages
+being encrypted and being gibberish to the host, plus a handshake to
+share guest-selected pages.  Some of the side-effects of exposing the
+gibberish to the host aren't great (I think it can break cache coherency
+if a stray write occurs) and it would be nice to get better behavior.
+
+But, to get better behavior, the host kernel might need to remove pages
+from its direct map, making them inaccessible.  I was hoping to reuse
+arch_make_page_accessible() for obvious reasons.  But, get_user_pages()
+is not the right spot to map pages because they might not *ever* be
+accessed by the CPU, only devices.
+
+Anyway, I know it's late feedback, but I'd hate to have core code like
+this that has no hope of ever getting reused.
