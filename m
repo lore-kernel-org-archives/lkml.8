@@ -7,50 +7,55 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B12CC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:14:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 485CAC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:14:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 087E3206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:14:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27C75206F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:14:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586952845;
-	bh=8Zkwt3Nxc5a6mdUgf20I8irYrlccMGLwx42I/QawL/4=;
+	s=default; t=1586952858;
+	bh=NwE/eePGRE2epUa7HeUfEFC+VuWkfx6PsFIOES8/qPE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PpN7uNyn42mb4bd80HUzcz3tWmuUTXIqOICtXs5Tm0vKY7/RNs10laHjc5aCytPnZ
-	 X3otBZxROAHqGI+qsr0YjITbubw07o4d4SIL4rm1ooTxDe+iFM3LgdW4Dpx+zJ69AR
-	 2W68mwdwq+86yJaW0s2X1WeCl9TqBqGxznfDivVs=
+	b=o6OoF6AoqJ2nJvdzWN4HnQAliZfNhnQuTNQL+adPryyVi05b3/84MTmbHxgg+Eu7h
+	 RDKaTrYJrbcZhrjUaFFFuqqmNBxhjgfL6sPFOccDK275n/7k4rL6DkH9yU8h4C+CBa
+	 asnNz2dwc35GdtBbG308B7Fo8BvjWdtMdB8b7K7g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S368657AbgDOMOC (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:14:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41934 "EHLO mail.kernel.org"
+        id S368580AbgDOMOP (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:14:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897462AbgDOLqu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:46:50 -0400
+        id S2409332AbgDOLqs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:46:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B176621569;
-        Wed, 15 Apr 2020 11:46:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A178214D8;
+        Wed, 15 Apr 2020 11:46:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951209;
-        bh=8Zkwt3Nxc5a6mdUgf20I8irYrlccMGLwx42I/QawL/4=;
+        s=default; t=1586951208;
+        bh=NwE/eePGRE2epUa7HeUfEFC+VuWkfx6PsFIOES8/qPE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JIKSYAjrEeEeUNZjbKn12Fo1zU7SkxSLPQZhBoM5rur+BNB0R3UNYzakLlQXkx3uc
-         WUwo9R8qr6CDsyL9+gS09kWddIXOlqo+ax7/y/rUOky1924evT0NVv6NliF5MpKAiv
-         BL3lxecoLjEkAN86hNBO7CZAHsacX9hZd3rmN6dQ=
+        b=zy0imCOY8JqQTQdUK/FzKWu+Js4stL1EyGg+MYd7dxPAKUMkYFvkIhsfmAuLWFBM5
+         aCATDsZBsBOf5sXWmQuzFKmpOZDytlrW/v3b3sHc3mKnkQxGg15RmamujsFIHRVOM2
+         ZqzgO5jV7dYHX8mkYKU37f5wGG+R7NaWzFZ2bO3Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qian Cai <cai@lca.pw>, Andrew Morton <akpm@linux-foundation.org>,
-        Marco Elver <elver@google.com>,
+Cc:     Steven Price <steven.price@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        John Hubbard <jhubbard@nvidia.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 22/40] percpu_counter: fix a data race at vm_committed_as
-Date:   Wed, 15 Apr 2020 07:46:05 -0400
-Message-Id: <20200415114623.14972-22-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 21/40] include/linux/swapops.h: correct guards for non_swap_entry()
+Date:   Wed, 15 Apr 2020 07:46:04 -0400
+Message-Id: <20200415114623.14972-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114623.14972-1-sashal@kernel.org>
 References: <20200415114623.14972-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,70 +64,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Steven Price <steven.price@arm.com>
 
-[ Upstream commit 7e2345200262e4a6056580f0231cccdaffc825f3 ]
+[ Upstream commit 3f3673d7d324d872d9d8ddb73b3e5e47fbf12e0d ]
 
-"vm_committed_as.count" could be accessed concurrently as reported by
-KCSAN,
+If CONFIG_DEVICE_PRIVATE is defined, but neither CONFIG_MEMORY_FAILURE nor
+CONFIG_MIGRATION, then non_swap_entry() will return 0, meaning that the
+condition (non_swap_entry(entry) && is_device_private_entry(entry)) in
+zap_pte_range() will never be true even if the entry is a device private
+one.
 
- BUG: KCSAN: data-race in __vm_enough_memory / percpu_counter_add_batch
+Equally any other code depending on non_swap_entry() will not function as
+expected.
 
- write to 0xffffffff9451c538 of 8 bytes by task 65879 on cpu 35:
-  percpu_counter_add_batch+0x83/0xd0
-  percpu_counter_add_batch at lib/percpu_counter.c:91
-  __vm_enough_memory+0xb9/0x260
-  dup_mm+0x3a4/0x8f0
-  copy_process+0x2458/0x3240
-  _do_fork+0xaa/0x9f0
-  __do_sys_clone+0x125/0x160
-  __x64_sys_clone+0x70/0x90
-  do_syscall_64+0x91/0xb05
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+I originally spotted this just by looking at the code, I haven't actually
+observed any problems.
 
- read to 0xffffffff9451c538 of 8 bytes by task 66773 on cpu 19:
-  __vm_enough_memory+0x199/0x260
-  percpu_counter_read_positive at include/linux/percpu_counter.h:81
-  (inlined by) __vm_enough_memory at mm/util.c:839
-  mmap_region+0x1b2/0xa10
-  do_mmap+0x45c/0x700
-  vm_mmap_pgoff+0xc0/0x130
-  ksys_mmap_pgoff+0x6e/0x300
-  __x64_sys_mmap+0x33/0x40
-  do_syscall_64+0x91/0xb05
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Looking a bit more closely it appears that actually this situation
+(currently at least) cannot occur:
 
-The read is outside percpu_counter::lock critical section which results in
-a data race.  Fix it by adding a READ_ONCE() in
-percpu_counter_read_positive() which could also service as the existing
-compiler memory barrier.
+DEVICE_PRIVATE depends on ZONE_DEVICE
+ZONE_DEVICE depends on MEMORY_HOTREMOVE
+MEMORY_HOTREMOVE depends on MIGRATION
 
-Signed-off-by: Qian Cai <cai@lca.pw>
+Fixes: 5042db43cc26 ("mm/ZONE_DEVICE: new type of ZONE_DEVICE for unaddressable memory")
+Signed-off-by: Steven Price <steven.price@arm.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Marco Elver <elver@google.com>
-Link: http://lkml.kernel.org/r/1582302724-2804-1-git-send-email-cai@lca.pw
+Cc: Jérôme Glisse <jglisse@redhat.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: John Hubbard <jhubbard@nvidia.com>
+Link: http://lkml.kernel.org/r/20200305130550.22693-1-steven.price@arm.com
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/percpu_counter.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/swapops.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/percpu_counter.h b/include/linux/percpu_counter.h
-index 4f052496cdfd7..0a4f54dd4737b 100644
---- a/include/linux/percpu_counter.h
-+++ b/include/linux/percpu_counter.h
-@@ -78,9 +78,9 @@ static inline s64 percpu_counter_read(struct percpu_counter *fbc)
-  */
- static inline s64 percpu_counter_read_positive(struct percpu_counter *fbc)
- {
--	s64 ret = fbc->count;
-+	/* Prevent reloads of fbc->count */
-+	s64 ret = READ_ONCE(fbc->count);
+diff --git a/include/linux/swapops.h b/include/linux/swapops.h
+index 22af9d8a84ae2..28d572b7ea73e 100644
+--- a/include/linux/swapops.h
++++ b/include/linux/swapops.h
+@@ -368,7 +368,8 @@ static inline void num_poisoned_pages_inc(void)
+ }
+ #endif
  
--	barrier();		/* Prevent reloads of fbc->count */
- 	if (ret >= 0)
- 		return ret;
- 	return 0;
+-#if defined(CONFIG_MEMORY_FAILURE) || defined(CONFIG_MIGRATION)
++#if defined(CONFIG_MEMORY_FAILURE) || defined(CONFIG_MIGRATION) || \
++    defined(CONFIG_DEVICE_PRIVATE)
+ static inline int non_swap_entry(swp_entry_t entry)
+ {
+ 	return swp_type(entry) >= MAX_SWAPFILES;
 -- 
 2.20.1
 
