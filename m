@@ -2,118 +2,115 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA44DC3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:12:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D008C3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:12:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A77FF2076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:12:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34B1E2076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:12:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586956361;
-	bh=Zi/f9H0m1a1c3VA6JImQDC0eq32jZrjXYXX9wes3NTA=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=MC54YuW6oClltYCT/K5ko67c01nw9UW1LgJlZap8S75rpqzyowq1BCA9PrcdG5Lke
-	 E4qIrGxRefrdE3ciT8QQ4cz61ap+V94Ca3CPXFu2CssSHGwpL7YxMR9xHiMFYEPOc3
-	 zrEIsb0cUBmVO+FJxrhM9NYo03yfOc4RAnmEb6As=
+	s=default; t=1586956376;
+	bh=gyrgOBtnruqsRqwFRaUPLR8jArzCvKh/o+Fs5Qs5DSA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=lNDcSUUo1VSFlf1o2GDSsFA9aZDiTcBV8jT3K71sRtr00u8uVce62JT57S4aM3Su3
+	 phLsU4U1PP7klgJbSdrato9VAKvIspmvrVQ2BJnCUvGYN3l5i7+pmfy7UvVp0zL1RW
+	 WeQ/efARw2YGltuz0uX/j7+tMUwyVJH1XuZGISk4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504733AbgDONMh (ORCPT
+        id S2506146AbgDONMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:12:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51644 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 09:12:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2504663AbgDONMB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 09:12:01 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2897065AbgDOLfi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:35:38 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A38AC2076D;
-        Wed, 15 Apr 2020 13:12:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D27C720737;
+        Wed, 15 Apr 2020 11:35:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586956320;
-        bh=Zi/f9H0m1a1c3VA6JImQDC0eq32jZrjXYXX9wes3NTA=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=gw+Ghbx4l4gaDRyLA18tSmh+2JKbBXj/Mh+xDF0D8UMW6SuKr+4Nlfre6IaC8aO+I
-         S6B3crjk+bwTXrBb2TAk5KzT1w/i7eQzRT3PXFC+qIP+DcIaYIszDhFhkQzEd+XBGV
-         YLPzdGY8QhQXPgN9tauA8PCeqlOhnZxGePLaWc/Q=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 6EE6D3522B45; Wed, 15 Apr 2020 06:12:00 -0700 (PDT)
-Date:   Wed, 15 Apr 2020 06:12:00 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Todd Kjos <tkjos@google.com>, Stephen Boyd <sboyd@kernel.org>
-Subject: Re: On trace_*_rcuidle functions in modules
-Message-ID: <20200415131200.GW17661@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <CALAqxLV4rM74wuzuZ+BkUi+keccxkAxv30N4vrFO7CVQ5vnT1A@mail.gmail.com>
- <20200415025748.GV17661@paulmck-ThinkPad-P72>
- <CALAqxLVsRboF+ABFttCj-kv6yNoAGLw9BaFkggSiGC+Me08gHQ@mail.gmail.com>
+        s=default; t=1586950536;
+        bh=gyrgOBtnruqsRqwFRaUPLR8jArzCvKh/o+Fs5Qs5DSA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=SBeDPkNzfw5+pi5zn64wqerDKZU6LHJNpMUSq65VcaBPReEqElgCjEB6I3lQXqixL
+         IvI+txdEbPc13GLA2tkKMbyFez4D+GPkWkew6mt8zb/uXiIXz1x4nvHQlnxTPUshmG
+         wGCpCmZdO6zIi0b9XCTU3L97jX0vkB8CKwsVzOtM=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 5.6 044/129] f2fs: fix to update f2fs_super_block fields under sb_lock
+Date:   Wed, 15 Apr 2020 07:33:19 -0400
+Message-Id: <20200415113445.11881-44-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
+References: <20200415113445.11881-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALAqxLVsRboF+ABFttCj-kv6yNoAGLw9BaFkggSiGC+Me08gHQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 08:47:18PM -0700, John Stultz wrote:
-> On Tue, Apr 14, 2020 at 7:57 PM Paul E. McKenney <paulmck@kernel.org> wrote:
-> >
-> > On Tue, Apr 14, 2020 at 07:20:01PM -0700, John Stultz wrote:
-> > > Hey folks,
-> > >   So recently I was looking at converting some drivers to be loadable
-> > > modules instead of built-in only, and one of my patches just landed in
-> > > -next and started getting build error reports.
-> > >
-> > > It ends up, recently in the merge window, the driver I was converting
-> > > to module switched a trace_*() function to trace_*_rcuidle() to fix a
-> > > bug.  Now when building as a module, if tracing is configured on, it
-> > > can't seem to find the trace_*_rcuidle() symbol.
-> > >
-> > > This is because, as you are aware, we don't declare trace_*_rcuidle
-> > > functions in modules - and haven't for quite some time:
-> > >   https://lore.kernel.org/lkml/20120905062306.GA14756@leaf/
-> > >
-> > > I wanted to better understand the background rationale for that patch,
-> > > to understand if not exporting the rcu_idle_exit and rcu_idle_enter,
-> > > calls was because they weren't used or if it was a more intentional
-> > > decision to avoid allowing modules to use them.
-> > >
-> > > Would it be reasonable to revisit that patch? Or is there some
-> > > recommended alternative solution?
-> >
-> > I will defer to Steven and Josh on the rationale.  (Cowardly of me,
-> > I know!)
-> >
-> > What I do is to maintain a wrapper for tracepoints within a built-in
-> > portion of RCU, export the wrapper, and invoke the wrapper from the
-> > rcutorture module.  Maybe you can do something similar?
-> 
-> That feels a little hackish, but I guess if there isn't a better option...
+From: Chao Yu <yuchao0@huawei.com>
 
-It is just rcutorture, so I am not going to claim that I put a huge
-amount of energy into researching better options.  ;-)
+[ Upstream commit a4ba5dfc5c88e49bb03385abfdd28c5a0acfbb54 ]
 
-> > But why would a module be invoked from the idle loop?  Is the module
-> > supplying an idle driver or some such?
-> 
-> The driver (qcom rpmh driver) registers a cpu_pm notifier callback,
-> which gets called when entering idle.
+Fields in struct f2fs_super_block should be updated under coverage
+of sb_lock, fix to adjust update_sb_metadata() for that rule.
 
-That would do it!  And yes, the idle-loop power-management code is in
-an interesting situation in that RCU is not watching it by default, but
-it does need to be debugged.  One straightforward approach would be for
-the PM code to tell RCU to watch on entry and exit, but I don't have a
-feel for how this would affect energy efficiency.
+Fixes: 04f0b2eaa3b3 ("f2fs: ioctl for removing a range from F2FS")
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/f2fs/gc.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
-							Thanx, Paul
+diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+index db8725d473b52..9cff2502e3bc6 100644
+--- a/fs/f2fs/gc.c
++++ b/fs/f2fs/gc.c
+@@ -1434,12 +1434,19 @@ static int free_segment_range(struct f2fs_sb_info *sbi, unsigned int start,
+ static void update_sb_metadata(struct f2fs_sb_info *sbi, int secs)
+ {
+ 	struct f2fs_super_block *raw_sb = F2FS_RAW_SUPER(sbi);
+-	int section_count = le32_to_cpu(raw_sb->section_count);
+-	int segment_count = le32_to_cpu(raw_sb->segment_count);
+-	int segment_count_main = le32_to_cpu(raw_sb->segment_count_main);
+-	long long block_count = le64_to_cpu(raw_sb->block_count);
++	int section_count;
++	int segment_count;
++	int segment_count_main;
++	long long block_count;
+ 	int segs = secs * sbi->segs_per_sec;
+ 
++	down_write(&sbi->sb_lock);
++
++	section_count = le32_to_cpu(raw_sb->section_count);
++	segment_count = le32_to_cpu(raw_sb->segment_count);
++	segment_count_main = le32_to_cpu(raw_sb->segment_count_main);
++	block_count = le64_to_cpu(raw_sb->block_count);
++
+ 	raw_sb->section_count = cpu_to_le32(section_count + secs);
+ 	raw_sb->segment_count = cpu_to_le32(segment_count + segs);
+ 	raw_sb->segment_count_main = cpu_to_le32(segment_count_main + segs);
+@@ -1453,6 +1460,8 @@ static void update_sb_metadata(struct f2fs_sb_info *sbi, int secs)
+ 		raw_sb->devs[last_dev].total_segments =
+ 						cpu_to_le32(dev_segs + segs);
+ 	}
++
++	up_write(&sbi->sb_lock);
+ }
+ 
+ static void update_fs_metadata(struct f2fs_sb_info *sbi, int secs)
+-- 
+2.20.1
+
