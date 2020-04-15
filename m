@@ -2,121 +2,84 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB33C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:47:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBCCCC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 703DD206F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:47:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9C97206F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:47:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ZOmuYngs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895024AbgDOIrP (ORCPT
+        id S2894992AbgDOIrh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 04:47:15 -0400
-Received: from mga14.intel.com ([192.55.52.115]:56295 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2895009AbgDOIq7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 04:46:59 -0400
-IronPort-SDR: Oe18Imx/71bJpDJYWK5nbi8LZ9xsC6/ceq+4iy7Ho2WWZIOMJucVuDEUINXeI5wmKM2jKBvjOl
- qVAzBGYwQmYQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 01:46:58 -0700
-IronPort-SDR: 3u20hooD25XQZI2V8xRYlsnfiBRb/6zG30Vc6mYtVCu8ifitQBI+BbTf0GsayPFQNB4mvD/KZu
- ufb2UKMyswdg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,386,1580803200"; 
-   d="scan'208";a="363615514"
-Received: from kuha.fi.intel.com ([10.237.72.162])
-  by fmsmga001.fm.intel.com with SMTP; 15 Apr 2020 01:46:53 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Wed, 15 Apr 2020 11:46:53 +0300
-Date:   Wed, 15 Apr 2020 11:46:53 +0300
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Brendan Higgins <brendanhiggins@google.com>, rafael@kernel.org,
-        linux-kernel@vger.kernel.org, naresh.kamboju@linaro.org,
-        sakari.ailus@linux.intel.com, andy.shevchenko@gmail.com,
-        hdegoede@redhat.com, rafael.j.wysocki@intel.com,
-        linux-kselftest@vger.kernel.org, rostedt@goodmis.org,
-        sergey.senozhatsky@gmail.com, andriy.shevchenko@linux.intel.com,
-        shuah@kernel.org, anders.roxell@linaro.org,
-        lkft-triage@lists.linaro.org, linux@rasmusvillemoes.dk
-Subject: Re: [PATCH v1] kobject: make sure parent is not released before
- children
-Message-ID: <20200415084653.GM2828150@kuha.fi.intel.com>
-References: <20200414204240.186377-1-brendanhiggins@google.com>
- <20200415061154.GA2496263@kroah.com>
+        Wed, 15 Apr 2020 04:47:37 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:53170 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2895033AbgDOIrb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 04:47:31 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586940450; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=fvi4ED+QTGD3lFB2nEF4L9OZBm+1tfFfScpv1utfIDM=;
+ b=ZOmuYngshrTRpe50at2MWiX8YDd/e8+aKBI4uQqOm1FtbfC7O6YFTYwpCi+aFSTdLa5wySLG
+ 9Yb0SXmUyy74gaMmLqbRp3O+UUMfe1Y+Qx7TKUIrTr5UHlsYc8YKB7E+D5wFtqqUqA/P2/gL
+ YvrIN6gUA2zSaGKilEelDvflKgo=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e96ca1c.7fe7ecffb880-smtp-out-n02;
+ Wed, 15 Apr 2020 08:47:24 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id BC0D7C433F2; Wed, 15 Apr 2020 08:47:23 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B0301C433BA;
+        Wed, 15 Apr 2020 08:47:21 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B0301C433BA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200415061154.GA2496263@kroah.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] orinoco: remove useless variable 'err' in
+ spectrum_cs_suspend()
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200413082043.22468-1-yanaijie@huawei.com>
+References: <20200413082043.22468-1-yanaijie@huawei.com>
+To:     Jason Yan <yanaijie@huawei.com>
+Cc:     <davem@davemloft.net>, <yanaijie@huawei.com>,
+        <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Hulk Robot <hulkci@huawei.com>
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20200415084723.BC0D7C433F2@smtp.codeaurora.org>
+Date:   Wed, 15 Apr 2020 08:47:23 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+Jason Yan <yanaijie@huawei.com> wrote:
 
-On Wed, Apr 15, 2020 at 08:11:54AM +0200, Greg KH wrote:
-> > diff --git a/lib/kobject.c b/lib/kobject.c
-> > index 83198cb37d8d..5921e2470b46 100644
-> > --- a/lib/kobject.c
-> > +++ b/lib/kobject.c
-> > @@ -663,6 +663,7 @@ EXPORT_SYMBOL(kobject_get_unless_zero);
-> >   */
-> >  static void kobject_cleanup(struct kobject *kobj)
-> >  {
-> > +	struct kobject *parent = kobj->parent;
-> >  	struct kobj_type *t = get_ktype(kobj);
-> >  	const char *name = kobj->name;
-> >  
-> > @@ -680,6 +681,9 @@ static void kobject_cleanup(struct kobject *kobj)
-> >  		kobject_uevent(kobj, KOBJ_REMOVE);
-> >  	}
-> >  
-> > +	/* make sure the parent is not released before the (last) child */
-> > +	kobject_get(parent);
-> > +
-> >  	/* remove from sysfs if the caller did not do it */
-> >  	if (kobj->state_in_sysfs) {
-> >  		pr_debug("kobject: '%s' (%p): auto cleanup kobject_del\n",
-> > @@ -693,6 +697,8 @@ static void kobject_cleanup(struct kobject *kobj)
-> >  		t->release(kobj);
-> >  	}
-> >  
-> > +	kobject_put(parent);
-> > +
+> Fix the following coccicheck warning:
 > 
-> No, please don't do this.
+> drivers/net/wireless/intersil/orinoco/spectrum_cs.c:281:5-8: Unneeded
+> variable: "err". Return "0" on line 286
 > 
-> A child device should have always incremented the parent already if it
-> was correctly registered.  We have had this patch been proposed multiple
-> times over the years, and every time it was, we said no and went and
-> fixed the real issue which was with the user of the interface.
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
 
-The parent ref count is incremented by the child, that is not the
-problem. The problem is that when that child is released, if it's the
-last child of the parent, and there are no other users for the parent,
-then the parent is actually released _before_ the child. And that
-happens in the above function kobject_cleanup().
+Patch applied to wireless-drivers-next.git, thanks.
 
-We can work around the problem by taking a reference to the parent
-separately, but we have to do that everywhere separately (which I
-guess is exactly what has been done so far). That workaroud still does
-not really fix the core problem. The core problem is still that
-lib/kboject.c is allowing the parent kobject to be released before the
-child kobject, and that quite simply should not be allowed to happen.
-
-I don't have a problem if you want to have a better solution for this,
-but the solution really can't anymore be that we are always expected
-to separately increment the parent's ref count with every type of
-kobject.
-
-
-thanks,
+7b9ae69d5441 orinoco: remove useless variable 'err' in spectrum_cs_suspend()
 
 -- 
-heikki
+https://patchwork.kernel.org/patch/11485247/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
