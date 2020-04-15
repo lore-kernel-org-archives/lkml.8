@@ -2,107 +2,123 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A13AC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:56:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7995FC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:56:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FF252054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:56:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 557AE208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:56:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="fxFdIKdg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S371176AbgDOO4m (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:56:42 -0400
-Received: from mga12.intel.com ([192.55.52.136]:42692 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S371095AbgDOOzw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 10:55:52 -0400
-IronPort-SDR: 3xL3wAuJ140/u/8yEDyljI74ygBkNAxXAJl41mQLg2DvRpz0JmNtNevcc4lXL9xsLqkwmtG86n
- HXLM4QOoxUaA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 07:55:46 -0700
-IronPort-SDR: nzBlDhgxLA/Vu41w8tUzhGXWrxA3Og/z70ebDgo7iz/xKPtB3kUMt5eQYwDOi7R1LzXF6yRba0
- na6mea+rQMPg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,387,1580803200"; 
-   d="scan'208";a="245709874"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga008.fm.intel.com with ESMTP; 15 Apr 2020 07:55:44 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 61499CA1; Wed, 15 Apr 2020 17:55:40 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v4 7/9] platform/x86: surface3_wmi: Switch DMI table match to a test of variable
-Date:   Wed, 15 Apr 2020 17:55:22 +0300
-Message-Id: <20200415145524.31745-8-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200415145524.31745-1-andriy.shevchenko@linux.intel.com>
-References: <20200415145524.31745-1-andriy.shevchenko@linux.intel.com>
+        id S371179AbgDOO4t (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 10:56:49 -0400
+Received: from www381.your-server.de ([78.46.137.84]:59296 "EHLO
+        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S371077AbgDOOzr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 10:55:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
+         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Yz0l86f24qxXld0PMX62MsPf2RZVXxmRh2DJRXJDM6E=; b=fxFdIKdgV28mihHYh8iY9qHHG2
+        p54PwuQp+gih3nPpoRxr5D//jlBEmngtnQJj/2SvNCVpd7I3OmXHIMZNfWkeZmmFHGHwCDQq5mkuw
+        Wm8+PoTmMu1WMkyOdBxoCI4qo3FrWmW2qVmIYE8T9LVwub/ssQ8pz96/QKy8E4AND0+NAPkRWl3U6
+        23jzKJvPzNTcm/D/Atj4jmFVqIgtAncuiW9Q5iv05Ml+n3v5SGKAUGyIjF/jkS7+nf+JO7V3Kg4HB
+        Yqt85o/bL4rXYo1jwPDmDiIzTHQlQI63zlTsGmJZrz5GHFTYlAXcbPvPNMfZca5i+veWtOQqHNFdt
+        6tLOxO9g==;
+Received: from sslproxy06.your-server.de ([78.46.172.3])
+        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <lars@metafoo.de>)
+        id 1jOjS1-00066E-8u; Wed, 15 Apr 2020 16:55:41 +0200
+Received: from [82.135.68.81] (helo=[192.168.178.20])
+        by sslproxy06.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <lars@metafoo.de>)
+        id 1jOjS1-000GwS-1r; Wed, 15 Apr 2020 16:55:41 +0200
+Subject: Re: [PATCH v2] iio: core: register chardev only if needed
+To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
+        "jic23@kernel.org" <jic23@kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
+References: <20200414083656.7696-1-alexandru.ardelean@analog.com>
+ <20200414190629.2d85759e@archlinux>
+ <761fb0aef92e5e026df78b6679329dbbb55b6226.camel@analog.com>
+From:   Lars-Peter Clausen <lars@metafoo.de>
+Message-ID: <5d3d6bad-934d-41c5-d167-dd69734e8015@metafoo.de>
+Date:   Wed, 15 Apr 2020 16:55:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <761fb0aef92e5e026df78b6679329dbbb55b6226.camel@analog.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Authenticated-Sender: lars@metafoo.de
+X-Virus-Scanned: Clear (ClamAV 0.102.2/25783/Wed Apr 15 14:03:13 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since we have a common x86 quirk that provides an exported variable,
-use it instead of local DMI table match.
+On 4/15/20 3:56 PM, Ardelean, Alexandru wrote:
+> On Tue, 2020-04-14 at 19:06 +0100, Jonathan Cameron wrote:
+>> [External]
+>>
+>> On Tue, 14 Apr 2020 11:36:56 +0300
+>> Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+>>
+>>> The final intent is to localize all buffer ops into the
+>>> industrialio-buffer.c file, to be able to add support for multiple buffers
+>>> per IIO device.
+>>>
+>>> We only need a chardev if we need to support buffers and/or events.
+>>>
+>>> With this change, a chardev will be created:
+>>> 1. if there is an IIO buffer attached OR
+>>> 2. if there is an event_interface configured
+>>>
+>>> Otherwise, no chardev will be created.
+>>> Quite a lot of IIO devices don't really need a chardev, so this is a minor
+>>> improvement to the IIO core, as the IIO device will take up fewer
+>>> resources.
+>>>
+>>> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+>>> ---
+>>>
+>>> Changelog v1 -> v2:
+>>> * split away from series 'iio: core,buffer: re-organize chardev creation';
+>>>    i'm getting the feeling that this has some value on it's own;
+>>>    no idea if it needs 'Fixes' tag; it is a bit fuzzy to point to a patch
+>>>    which this would be fixed by this; i'm guessing it would be fine
+>>>    without one
+>> I'd argue it's an 'optimization' rather than a fix :)
+>>
+>> Still looks good to me but I'd like it to sit for a little while to
+>> see if anyone points out something we are both missing!
+>>
+> This is not good.
+> It seems that I did not properly test all cases.
+> I had to break a device to not have an event_interface to notice that the sysfs
+> doesn't get instantiated either because device_add is missing.
+>
+> Will do another try.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/platform/x86/surface3-wmi.c | 16 ++--------------
- 1 file changed, 2 insertions(+), 14 deletions(-)
+I think you also have to make the `indio_dev->dev.devt = ...` 
+conditional. Or conditionally use device_add() instead of device_add_cdev().
 
-diff --git a/drivers/platform/x86/surface3-wmi.c b/drivers/platform/x86/surface3-wmi.c
-index 130b6f52a600..5eeedc4ddb8a 100644
---- a/drivers/platform/x86/surface3-wmi.c
-+++ b/drivers/platform/x86/surface3-wmi.c
-@@ -11,9 +11,9 @@
- #include <linux/slab.h>
- 
- #include <linux/acpi.h>
--#include <linux/dmi.h>
- #include <linux/input.h>
- #include <linux/mutex.h>
-+#include <linux/platform_data/x86/machine.h>
- #include <linux/platform_device.h>
- #include <linux/spi/spi.h>
- 
-@@ -29,18 +29,6 @@ MODULE_LICENSE("GPL");
- 
- MODULE_ALIAS("wmi:" SURFACE3_LID_GUID);
- 
--static const struct dmi_system_id surface3_dmi_table[] = {
--#if defined(CONFIG_X86)
--	{
--		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
--			DMI_MATCH(DMI_PRODUCT_NAME, "Surface 3"),
--		},
--	},
--#endif
--	{ }
--};
--
- struct surface3_wmi {
- 	struct acpi_device *touchscreen_adev;
- 	struct acpi_device *pnp0c0d_adev;
-@@ -201,7 +189,7 @@ static int __init s3_wmi_probe(struct platform_device *pdev)
- {
- 	int error;
- 
--	if (!dmi_check_system(surface3_dmi_table))
-+	if (!x86_microsoft_surface_3_machine)
- 		return -ENODEV;
- 
- 	memset(&s3_wmi, 0, sizeof(s3_wmi));
--- 
-2.25.1
+If you go for the former you need to call cdev_device_del() 
+unconditionally, for the latter call device_del() or cdev_device_del() 
+depending on whether the cdev was registered.
+
+- Lars
+
 
