@@ -7,44 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C7EC2BB55
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B0BFC3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 834CA20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:14:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ACA220737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:14:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586956465;
-	bh=FtXTfofnjxnh+C0trmA6BpW36cW+yD3+qYSHdl9Ug4M=;
+	s=default; t=1586956485;
+	bh=fa6sFC6ExgJLrtzdqYbGOIXx3ZLfMUmZOOEM2DJyOJ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KErMJP7XP9EDxRM2qaNMugcG1Z8QhJGUkVbWBZxjof1fdCxSoecLBow8BbHiy5v92
-	 JUjwaOz5ZUBEm++R9N5wgDhpAhE7r8mgqRdlm4rXQMIAGhF33j6K5rkWHlfCjthkXg
-	 ZuayvnIOAiUdUmJTguI2/oc67BmzBbrXypiPY1+M=
+	b=YxAlANFDv+PR6z+UVpCHYu1zRSo4xIGiicPWduc/CFrWsIbaNTWWxYlMpPdWbdHXv
+	 /qBdhv+Gi7l4J5VNpFmCpSj1l10OC8B/S58R/h7RmmMlkBJOhUmdzcA4papXxYuU/b
+	 UnhtsqVCzZiuQ1gQPmjZRZGRLx8oIc6qhF0oxNh0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S370674AbgDONOX (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:14:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55014 "EHLO mail.kernel.org"
+        id S2506186AbgDONOl (ORCPT
+        <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 09:14:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897049AbgDOLfZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:35:25 -0400
+        id S2897047AbgDOLfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:35:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A02AE20737;
-        Wed, 15 Apr 2020 11:35:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96815208FE;
+        Wed, 15 Apr 2020 11:35:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950525;
-        bh=FtXTfofnjxnh+C0trmA6BpW36cW+yD3+qYSHdl9Ug4M=;
+        s=default; t=1586950523;
+        bh=fa6sFC6ExgJLrtzdqYbGOIXx3ZLfMUmZOOEM2DJyOJ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KxW4A6k8wrrZ3JErvUi5HdHPMuvtpGUv6wrHvOIIAj6N0T4eCKYvgRx6qLZ+Ig4Xf
-         A1odxLHabbXq7kpgE6mkGflz+9H3EYiqyPferC5xkHy5MlLwlzg+5aBH1WBAB2u4k4
-         Ukr7U9U3YinEYzkyzEkvw97KOP2zYm1THDJecM4U=
+        b=eZDWb5VBbvhAT0aqnNV+XbgezOy9at19PFpxel5IDbAIOFWF5CaIiHFKgKqKupEkB
+         9Ak2DoVD7DNaBXXXPsFFaQyru9xGCDkYj8H0uu0L/uKTWxznkFJqeUR7kZkIteskoo
+         ZI1mcGwkeblmN0yUU39RIIQ816ExvtMexpku7aFc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 034/129] NFS: alloc_nfs_open_context() must use the file cred when available
-Date:   Wed, 15 Apr 2020 07:33:09 -0400
-Message-Id: <20200415113445.11881-34-sashal@kernel.org>
+Cc:     Kevin Grandemange <kevin.grandemange@allegrodvt.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 5.6 032/129] dma-coherent: fix integer overflow in the reserved-memory dma allocation
+Date:   Wed, 15 Apr 2020 07:33:07 -0400
+Message-Id: <20200415113445.11881-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
 References: <20200415113445.11881-1-sashal@kernel.org>
@@ -57,46 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Kevin Grandemange <kevin.grandemange@allegrodvt.com>
 
-[ Upstream commit 1d179d6bd67369a52edea8562154b31ee20be1cc ]
+[ Upstream commit 286c21de32b904131f8cf6a36ce40b8b0c9c5da3 ]
 
-If we're creating a nfs_open_context() for a specific file pointer,
-we must use the cred assigned to that file.
+pageno is an int and the PAGE_SHIFT shift is done on an int,
+overflowing if the memory is bigger than 2G
 
-Fixes: a52458b48af1 ("NFS/NFSD/SUNRPC: replace generic creds with 'struct cred'.")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+This can be reproduced using for example a reserved-memory of 4G
+
+reserved-memory {
+		    #address-cells = <2>;
+		    #size-cells = <2>;
+		    ranges;
+
+		    reserved_dma: buffer@0 {
+		        compatible = "shared-dma-pool";
+		        no-map;
+		        reg = <0x5 0x00000000 0x1 0x0>;
+        };
+};
+
+Signed-off-by: Kevin Grandemange <kevin.grandemange@allegrodvt.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/inode.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ kernel/dma/coherent.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
-index 11bf15800ac99..a10fb87c6ac33 100644
---- a/fs/nfs/inode.c
-+++ b/fs/nfs/inode.c
-@@ -959,16 +959,16 @@ struct nfs_open_context *alloc_nfs_open_context(struct dentry *dentry,
- 						struct file *filp)
- {
- 	struct nfs_open_context *ctx;
--	const struct cred *cred = get_current_cred();
+diff --git a/kernel/dma/coherent.c b/kernel/dma/coherent.c
+index 551b0eb7028a3..2a0c4985f38e4 100644
+--- a/kernel/dma/coherent.c
++++ b/kernel/dma/coherent.c
+@@ -134,7 +134,7 @@ static void *__dma_alloc_from_coherent(struct device *dev,
  
- 	ctx = kmalloc(sizeof(*ctx), GFP_KERNEL);
--	if (!ctx) {
--		put_cred(cred);
-+	if (!ctx)
- 		return ERR_PTR(-ENOMEM);
--	}
- 	nfs_sb_active(dentry->d_sb);
- 	ctx->dentry = dget(dentry);
--	ctx->cred = cred;
-+	if (filp)
-+		ctx->cred = get_cred(filp->f_cred);
-+	else
-+		ctx->cred = get_current_cred();
- 	ctx->ll_cred = NULL;
- 	ctx->state = NULL;
- 	ctx->mode = f_mode;
+ 	spin_lock_irqsave(&mem->spinlock, flags);
+ 
+-	if (unlikely(size > (mem->size << PAGE_SHIFT)))
++	if (unlikely(size > ((dma_addr_t)mem->size << PAGE_SHIFT)))
+ 		goto err;
+ 
+ 	pageno = bitmap_find_free_region(mem->bitmap, mem->size, order);
+@@ -144,8 +144,9 @@ static void *__dma_alloc_from_coherent(struct device *dev,
+ 	/*
+ 	 * Memory was found in the coherent area.
+ 	 */
+-	*dma_handle = dma_get_device_base(dev, mem) + (pageno << PAGE_SHIFT);
+-	ret = mem->virt_base + (pageno << PAGE_SHIFT);
++	*dma_handle = dma_get_device_base(dev, mem) +
++			((dma_addr_t)pageno << PAGE_SHIFT);
++	ret = mem->virt_base + ((dma_addr_t)pageno << PAGE_SHIFT);
+ 	spin_unlock_irqrestore(&mem->spinlock, flags);
+ 	memset(ret, 0, size);
+ 	return ret;
+@@ -194,7 +195,7 @@ static int __dma_release_from_coherent(struct dma_coherent_mem *mem,
+ 				       int order, void *vaddr)
+ {
+ 	if (mem && vaddr >= mem->virt_base && vaddr <
+-		   (mem->virt_base + (mem->size << PAGE_SHIFT))) {
++		   (mem->virt_base + ((dma_addr_t)mem->size << PAGE_SHIFT))) {
+ 		int page = (vaddr - mem->virt_base) >> PAGE_SHIFT;
+ 		unsigned long flags;
+ 
+@@ -238,10 +239,10 @@ static int __dma_mmap_from_coherent(struct dma_coherent_mem *mem,
+ 		struct vm_area_struct *vma, void *vaddr, size_t size, int *ret)
+ {
+ 	if (mem && vaddr >= mem->virt_base && vaddr + size <=
+-		   (mem->virt_base + (mem->size << PAGE_SHIFT))) {
++		   (mem->virt_base + ((dma_addr_t)mem->size << PAGE_SHIFT))) {
+ 		unsigned long off = vma->vm_pgoff;
+ 		int start = (vaddr - mem->virt_base) >> PAGE_SHIFT;
+-		int user_count = vma_pages(vma);
++		unsigned long user_count = vma_pages(vma);
+ 		int count = PAGE_ALIGN(size) >> PAGE_SHIFT;
+ 
+ 		*ret = -ENXIO;
 -- 
 2.20.1
 
