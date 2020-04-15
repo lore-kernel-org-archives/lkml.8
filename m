@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA75C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:35:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F177C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:36:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 660AD2076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:35:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAB43215A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:36:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586950551;
-	bh=KRZAghm7iDCJ9oOC4iVP6sgv81VCrYacbdcmBmkgHT0=;
+	s=default; t=1586950614;
+	bh=P04iBLwJn0vDXHqxsvdHNKZ9hXQfsXc2NSGvEKJvR4Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1AHYTxwQsvUB/Qs9sclNOfUQUukeWET4qtkTDvw6NHE6S+zaGZetNLsFrAr9Np6bk
-	 melXpMmkvnvGSK7m+rFtZHRk64ekqJKy/cyaTZBnLnivaun+kiiDnaH5IHi07y6DOz
-	 7Ga0LU5FaMHz70ZELHze5/5y5KQs4fTnr81ScH28=
+	b=nT2UdVRa/T2ghW0elwg9z50w3Ps1xZjXtCWk9F1cy3gbfcgVW49PY0c/Ei+qksLKr
+	 +o8cJ02379kiuJknV/iT7tLlz+wZrDuArdx7i/o943Gq4DjYBjEfaxLjjrC5SVLpzo
+	 6MOU3SclVXuF4y3CT66TtEJrCMwBDFqkGElYdqZI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2897079AbgDOLfr (ORCPT
+        id S2897179AbgDOLgm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:35:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54294 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 07:36:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408862AbgDOLes (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:34:48 -0400
+        id S2408865AbgDOLew (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:34:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A70FB2076D;
-        Wed, 15 Apr 2020 11:34:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B68620857;
+        Wed, 15 Apr 2020 11:34:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950488;
-        bh=KRZAghm7iDCJ9oOC4iVP6sgv81VCrYacbdcmBmkgHT0=;
+        s=default; t=1586950492;
+        bh=P04iBLwJn0vDXHqxsvdHNKZ9hXQfsXc2NSGvEKJvR4Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n9xY7nQWC5TtpoURT+5I89b4mXIe+bZeGl3YfBqAe22vB2S2Oyw7Tw4CaI9nOR88J
-         p7cBLL6SfWl73zED+XgkdDAXXFwIhg1LBaFWkffNvUJTY11D10yh/A/t+EOY5TEJD+
-         pESSGIZTKcrsyglWv/mk8smCgrnukRAahLXbmg3s=
+        b=zSWS3TgHFL5j7cDYIkDdqA7peZDpEyGB3rHouiLCTMyGpinY9PQMY3PXra0LUy4wh
+         GSVtCT6dc97Ab+rTsQfwEx3QD3vQDVUdc0VwCLiu5Y84t2zA34d7NL5TueQWwKlIns
+         sXc9K3v8wKXT1F5wSoTl+8bONLYpb/+imc7wUzpw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bob Peterson <rpeterso@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
-Subject: [PATCH AUTOSEL 5.6 002/129] gfs2: clear ail1 list when gfs2 withdraws
-Date:   Wed, 15 Apr 2020 07:32:37 -0400
-Message-Id: <20200415113445.11881-2-sashal@kernel.org>
+Cc:     Anson Huang <Anson.Huang@nxp.com>, Peng Fan <peng.fan@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.6 005/129] clk: imx: pll14xx: Add new frequency entries for pll1443x table
+Date:   Wed, 15 Apr 2020 07:32:40 -0400
+Message-Id: <20200415113445.11881-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
 References: <20200415113445.11881-1-sashal@kernel.org>
@@ -59,75 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bob Peterson <rpeterso@redhat.com>
+From: Anson Huang <Anson.Huang@nxp.com>
 
-[ Upstream commit 30fe70a85a909a23dcbc2c628ca6655b2c85e7a1 ]
+[ Upstream commit 57795654fb553a78f07a9f92d87fb2582379cd93 ]
 
-This patch fixes a bug in which function gfs2_log_flush can get into
-an infinite loop when a gfs2 file system is withdrawn. The problem
-is the infinite loop "for (;;)" in gfs2_log_flush which would never
-finish because the io error and subsequent withdraw prevented the
-items from being taken off the ail list.
+Add new frequency entries to pll1443x table to meet different
+display settings requirement.
 
-This patch tries to clean up the mess by allowing withdraw situations
-to move not-in-flight buffer_heads to the ail2 list, where they will
-be dealt with later.
-
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
-Reviewed-by: Andreas Gruenbacher <agruenba@redhat.com>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Reviewed-by: Peng Fan <peng.fan@nxp.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/log.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ drivers/clk/imx/clk-pll14xx.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/gfs2/log.c b/fs/gfs2/log.c
-index 00a2e721a374f..d295d2a773314 100644
---- a/fs/gfs2/log.c
-+++ b/fs/gfs2/log.c
-@@ -104,16 +104,22 @@ __acquires(&sdp->sd_ail_lock)
- 		gfs2_assert(sdp, bd->bd_tr == tr);
+diff --git a/drivers/clk/imx/clk-pll14xx.c b/drivers/clk/imx/clk-pll14xx.c
+index 5b0519a81a7af..37e311e1d0586 100644
+--- a/drivers/clk/imx/clk-pll14xx.c
++++ b/drivers/clk/imx/clk-pll14xx.c
+@@ -55,8 +55,10 @@ static const struct imx_pll14xx_rate_table imx_pll1416x_tbl[] = {
+ };
  
- 		if (!buffer_busy(bh)) {
--			if (!buffer_uptodate(bh) &&
--			    !test_and_set_bit(SDF_AIL1_IO_ERROR,
-+			if (buffer_uptodate(bh)) {
-+				list_move(&bd->bd_ail_st_list,
-+					  &tr->tr_ail2_list);
-+				continue;
-+			}
-+			if (!test_and_set_bit(SDF_AIL1_IO_ERROR,
- 					      &sdp->sd_flags)) {
- 				gfs2_io_error_bh(sdp, bh);
- 				*withdraw = true;
- 			}
--			list_move(&bd->bd_ail_st_list, &tr->tr_ail2_list);
--			continue;
- 		}
- 
-+		if (gfs2_withdrawn(sdp)) {
-+			gfs2_remove_from_ail(bd);
-+			continue;
-+		}
- 		if (!buffer_dirty(bh))
- 			continue;
- 		if (gl == bd->bd_gl)
-@@ -862,6 +868,8 @@ void gfs2_log_flush(struct gfs2_sbd *sdp, struct gfs2_glock *gl, u32 flags)
- 				if (gfs2_ail1_empty(sdp))
- 					break;
- 			}
-+			if (gfs2_withdrawn(sdp))
-+				goto out;
- 			atomic_dec(&sdp->sd_log_blks_free); /* Adjust for unreserved buffer */
- 			trace_gfs2_log_blocks(sdp, -1);
- 			log_write_header(sdp, flags);
-@@ -874,6 +882,7 @@ void gfs2_log_flush(struct gfs2_sbd *sdp, struct gfs2_glock *gl, u32 flags)
- 			atomic_set(&sdp->sd_freeze_state, SFS_FROZEN);
- 	}
- 
-+out:
- 	trace_gfs2_log_flush(sdp, 0, flags);
- 	up_write(&sdp->sd_log_flush_lock);
- 
+ static const struct imx_pll14xx_rate_table imx_pll1443x_tbl[] = {
++	PLL_1443X_RATE(1039500000U, 173, 2, 1, 16384),
+ 	PLL_1443X_RATE(650000000U, 325, 3, 2, 0),
+ 	PLL_1443X_RATE(594000000U, 198, 2, 2, 0),
++	PLL_1443X_RATE(519750000U, 173, 2, 2, 16384),
+ 	PLL_1443X_RATE(393216000U, 262, 2, 3, 9437),
+ 	PLL_1443X_RATE(361267200U, 361, 3, 3, 17511),
+ };
 -- 
 2.20.1
 
