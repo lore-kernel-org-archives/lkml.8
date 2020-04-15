@@ -2,250 +2,127 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E40E1C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:15:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BFDFC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:15:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0915206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:15:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="GSqy2qK9"
+	by mail.kernel.org (Postfix) with ESMTP id 6E10E206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:15:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503972AbgDOTPK (ORCPT
+        id S2505162AbgDOTPf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 15:15:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54290 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2441597AbgDOTJq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 15:09:46 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3A8EC061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 12:02:41 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id l14so4927370ljj.5
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 12:02:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=PAL4FT8oI0mRZyF3YfLl8XwS0XvdpC5f2FhsnqKXQQ4=;
-        b=GSqy2qK9ju2LPM8Q8WZSWDGak8bYygVT0fC/+xYkRBU8FR41raa0/9NdjN4NtbABLs
-         nkUhwBBBputEWOf6wDfR8p7bgjYOoTEH+VVO0mf44Xp2Tt/mYkTtmDPEx/QX7YAQMywF
-         V+ktG+8DRhYB4b+7AC5/0vpih7661me0Do1Vk/XJDycKxyYey6D9xuRkIQPS3Tiz1cKD
-         d45kVCmQ40qJnCgsNgIQP+2FW2+dhl/n+GO4EJV7E55XK+mitMnkyGV0YT7QNVLLDLMg
-         55eReRmR8eQUO3f7OcRFJ8lGLUCORi+WE4IolpIdsYyqZTH+a1iUrsNAObCyeKicfy2D
-         Z8rA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=PAL4FT8oI0mRZyF3YfLl8XwS0XvdpC5f2FhsnqKXQQ4=;
-        b=XX2/cdoNtuGRlo9g2rk66eJGKEDo+yGCpWGcTX7MvhPBbHwSMia/T8u9ozTfItxrwT
-         iv4CGHnM+9aOhIpd0T9RbXBva0dzbfC/dA3FogemxxjTAgi/ttEIdadQILlFf6rnXPHg
-         4uon25kCpTcHp8OgeGgr49AnrbFfhufg7TKlUbIA8226+bgg69IueC3P+ziIhyc9KKlI
-         w1k2qYDdJjuln4UF4dJu4+SDzQzOv/Cx7hzGeAKvTseQPpshSTvfBiCkMhIoCIUECHhy
-         GqEBPCfJhxj8j7RbEFmVk8hNu9/tr4ZrnXklkUDi9mpzAdX9sCuNkP0lIUX6uv2VDB2c
-         rMJQ==
-X-Gm-Message-State: AGi0PuZLUT/42o6/zpVN+xhbHi4u9FCcE8URsU4VEuseGadtSaqKtlpY
-        r71XqGFMGPz+EJcAQzJgiN4lujR+580GKrRy23tkDw==
-X-Google-Smtp-Source: APiQypLumLCXkKPV4iM2+8piZqvGIxHqHDB8sAtt+cxtBV34gvyU5kEIQvKGwzcEjcI1gDpFBh1ntrKOLCbpxb8QW94=
-X-Received: by 2002:a2e:a548:: with SMTP id e8mr4133522ljn.151.1586977360244;
- Wed, 15 Apr 2020 12:02:40 -0700 (PDT)
+        Wed, 15 Apr 2020 15:15:35 -0400
+Received: from mga17.intel.com ([192.55.52.151]:15254 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2441746AbgDOTOy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 15:14:54 -0400
+IronPort-SDR: uNPov8B7QUKj5K6qUWagJEFWgCfzzN2VwPe3mG+Yj7kkwtHjqFPA09MxLMuqL8Ghn3jsre/6Do
+ TRsIVMabYTQA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 12:14:52 -0700
+IronPort-SDR: 7PTC/XR0QNy6eWAG1dmEGZdP686/BpC1G/stOZBy1TC/E3yJp34kdFRlNT/1KE0DEUGhlHDlGi
+ aPIm544g1tvg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,388,1580803200"; 
+   d="scan'208";a="455008505"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by fmsmga006.fm.intel.com with ESMTP; 15 Apr 2020 12:14:52 -0700
+Date:   Wed, 15 Apr 2020 12:14:52 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Jan Kara <jack@suse.cz>
+Cc:     linux-kernel@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH RFC 2/8] fs/ext4: Disallow verity if inode is DAX
+Message-ID: <20200415191451.GA2305801@iweiny-DESK2.sc.intel.com>
+References: <20200414040030.1802884-1-ira.weiny@intel.com>
+ <20200414040030.1802884-3-ira.weiny@intel.com>
+ <20200415120002.GE6126@quack2.suse.cz>
 MIME-Version: 1.0
-References: <1586971629-30196-1-git-send-email-alan.mikhak@sifive.com>
-In-Reply-To: <1586971629-30196-1-git-send-email-alan.mikhak@sifive.com>
-From:   Alan Mikhak <alan.mikhak@sifive.com>
-Date:   Wed, 15 Apr 2020 12:02:29 -0700
-Message-ID: <CABEDWGza3WXzFJ5cP_v9yKT+F=iYzDyuxf-N=0_v=5wrbdz2AA@mail.gmail.com>
-Subject: Re: [PATCH v2] dmaengine: dw-edma: Decouple dw-edma-core.c from
- struct pci_dev
-To:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        dan.j.williams@intel.com, Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200415120002.GE6126@quack2.suse.cz>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 10:27 AM Alan Mikhak <alan.mikhak@sifive.com> wrote:
->
-> From: Alan Mikhak <alan.mikhak@sifive.com>
->
-> Decouple dw-edma-core.c from struct pci_dev as a step toward integration
-> of dw-edma with pci-epf-test so the latter can initiate dma operations
-> locally from the endpoint side. A barrier to such integration is the
-> dependency of dw_edma_probe() and other functions in dw-edma-core.c on
-> struct pci_dev.
->
-> The Synopsys DesignWare dw-edma driver was designed to run on host side
-> of PCIe link to initiate DMA operations remotely using eDMA channels of
-> PCIe controller on the endpoint side. This can be inferred from seeing
-> that dw-edma uses struct pci_dev and accesses hardware registers of dma
-> channels across the bus using BAR0 and BAR2.
->
-> The ops field of struct dw_edma in dw-edma-core.h is currenty undefined:
->
-> const struct dw_edma_core_ops   *ops;
->
-> However, the kernel builds without failure even when dw-edma driver is
-> enabled. Instead of removing the currently undefined and usued ops field,
-> define struct dw_edma_core_ops and use the ops field to decouple
-> dw-edma-core.c from struct pci_dev.
->
-> Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
+On Wed, Apr 15, 2020 at 02:00:02PM +0200, Jan Kara wrote:
+> On Mon 13-04-20 21:00:24, ira.weiny@intel.com wrote:
+> > From: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > Verity and DAX are incompatible.  Changing the DAX mode due to a verity
+> > flag change is wrong without a corresponding address_space_operations
+> > update.
+> > 
+> > Make the 2 options mutually exclusive by returning an error if DAX was
+> > set first.
+> > 
+> > (Setting DAX is already disabled if Verity is set first.)
+> > 
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> > ---
+> >  fs/ext4/verity.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> > 
+> > diff --git a/fs/ext4/verity.c b/fs/ext4/verity.c
+> > index dc5ec724d889..ce3f9a198d3b 100644
+> > --- a/fs/ext4/verity.c
+> > +++ b/fs/ext4/verity.c
+> > @@ -113,6 +113,9 @@ static int ext4_begin_enable_verity(struct file *filp)
+> >  	handle_t *handle;
+> >  	int err;
+> >  
+> > +	if (WARN_ON_ONCE(IS_DAX(inode)))
+> > +		return -EINVAL;
+> > +
+> 
+> Hum, one question, is there a reason for WARN_ON_ONCE()? If I understand
+> correctly, user could normally trigger this, couldn't he?
 
-Adding the ACK from RFC patch
+Ok.  I did not think this through but I did think about this.  I was following
+the code from the encryption side which issues a warning and was thinking that
+would be a good way to alert the user they are doing something wrong...
 
-Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> ---
->  drivers/dma/dw-edma/dw-edma-core.c | 29 ++++++++++++++++++++---------
->  drivers/dma/dw-edma/dw-edma-core.h |  4 ++++
->  drivers/dma/dw-edma/dw-edma-pcie.c | 10 ++++++++++
->  3 files changed, 34 insertions(+), 9 deletions(-)
->
-> diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-> index ff392c01bad1..db401eb11322 100644
-> --- a/drivers/dma/dw-edma/dw-edma-core.c
-> +++ b/drivers/dma/dw-edma/dw-edma-core.c
-> @@ -14,7 +14,7 @@
->  #include <linux/err.h>
->  #include <linux/interrupt.h>
->  #include <linux/dma/edma.h>
-> -#include <linux/pci.h>
-> +#include <linux/dma-mapping.h>
->
->  #include "dw-edma-core.h"
->  #include "dw-edma-v0-core.h"
-> @@ -781,7 +781,7 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
->
->         if (dw->nr_irqs == 1) {
->                 /* Common IRQ shared among all channels */
-> -               err = request_irq(pci_irq_vector(to_pci_dev(dev), 0),
-> +               err = request_irq(dw->ops->irq_vector(dev, 0),
->                                   dw_edma_interrupt_common,
->                                   IRQF_SHARED, dw->name, &dw->irq[0]);
->                 if (err) {
-> @@ -789,7 +789,7 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
->                         return err;
->                 }
->
-> -               get_cached_msi_msg(pci_irq_vector(to_pci_dev(dev), 0),
-> +               get_cached_msi_msg(dw->ops->irq_vector(dev, 0),
->                                    &dw->irq[0].msi);
->         } else {
->                 /* Distribute IRQs equally among all channels */
-> @@ -804,7 +804,7 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
->                 dw_edma_add_irq_mask(&rd_mask, *rd_alloc, dw->rd_ch_cnt);
->
->                 for (i = 0; i < (*wr_alloc + *rd_alloc); i++) {
-> -                       err = request_irq(pci_irq_vector(to_pci_dev(dev), i),
-> +                       err = request_irq(dw->ops->irq_vector(dev, i),
->                                           i < *wr_alloc ?
->                                                 dw_edma_interrupt_write :
->                                                 dw_edma_interrupt_read,
-> @@ -815,7 +815,7 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
->                                 return err;
->                         }
->
-> -                       get_cached_msi_msg(pci_irq_vector(to_pci_dev(dev), i),
-> +                       get_cached_msi_msg(dw->ops->irq_vector(dev, i),
->                                            &dw->irq[i].msi);
->                 }
->
-> @@ -827,12 +827,23 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
->
->  int dw_edma_probe(struct dw_edma_chip *chip)
->  {
-> -       struct device *dev = chip->dev;
-> -       struct dw_edma *dw = chip->dw;
-> +       struct device *dev;
-> +       struct dw_edma *dw;
->         u32 wr_alloc = 0;
->         u32 rd_alloc = 0;
->         int i, err;
->
-> +       if (!chip)
-> +               return -EINVAL;
-> +
-> +       dev = chip->dev;
-> +       if (!dev)
-> +               return -EINVAL;
-> +
-> +       dw = chip->dw;
-> +       if (!dw || !dw->irq || !dw->ops || !dw->ops->irq_vector)
-> +               return -EINVAL;
-> +
->         raw_spin_lock_init(&dw->lock);
->
->         /* Find out how many write channels are supported by hardware */
-> @@ -884,7 +895,7 @@ int dw_edma_probe(struct dw_edma_chip *chip)
->
->  err_irq_free:
->         for (i = (dw->nr_irqs - 1); i >= 0; i--)
-> -               free_irq(pci_irq_vector(to_pci_dev(dev), i), &dw->irq[i]);
-> +               free_irq(dw->ops->irq_vector(dev, i), &dw->irq[i]);
->
->         dw->nr_irqs = 0;
->
-> @@ -904,7 +915,7 @@ int dw_edma_remove(struct dw_edma_chip *chip)
->
->         /* Free irqs */
->         for (i = (dw->nr_irqs - 1); i >= 0; i--)
-> -               free_irq(pci_irq_vector(to_pci_dev(dev), i), &dw->irq[i]);
-> +               free_irq(dw->ops->irq_vector(dev, i), &dw->irq[i]);
->
->         /* Power management */
->         pm_runtime_disable(dev);
-> diff --git a/drivers/dma/dw-edma/dw-edma-core.h b/drivers/dma/dw-edma/dw-edma-core.h
-> index 4e5f9f6e901b..31fc50d31792 100644
-> --- a/drivers/dma/dw-edma/dw-edma-core.h
-> +++ b/drivers/dma/dw-edma/dw-edma-core.h
-> @@ -103,6 +103,10 @@ struct dw_edma_irq {
->         struct dw_edma                  *dw;
->  };
->
-> +struct dw_edma_core_ops {
-> +       int     (*irq_vector)(struct device *dev, unsigned int nr);
-> +};
-> +
->  struct dw_edma {
->         char                            name[20];
->
-> diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
-> index dc85f55e1bb8..1eafc602e17e 100644
-> --- a/drivers/dma/dw-edma/dw-edma-pcie.c
-> +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
-> @@ -54,6 +54,15 @@ static const struct dw_edma_pcie_data snps_edda_data = {
->         .irqs                           = 1,
->  };
->
-> +static int dw_edma_pcie_irq_vector(struct device *dev, unsigned int nr)
-> +{
-> +       return pci_irq_vector(to_pci_dev(dev), nr);
-> +}
-> +
-> +static const struct dw_edma_core_ops dw_edma_pcie_core_ops = {
-> +       .irq_vector = dw_edma_pcie_irq_vector,
-> +};
-> +
->  static int dw_edma_pcie_probe(struct pci_dev *pdev,
->                               const struct pci_device_id *pid)
->  {
-> @@ -151,6 +160,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
->         dw->version = pdata->version;
->         dw->mode = pdata->mode;
->         dw->nr_irqs = nr_irqs;
-> +       dw->ops = &dw_edma_pcie_core_ops;
->
->         /* Debug info */
->         pci_dbg(pdev, "Version:\t%u\n", dw->version);
-> --
-> 2.7.4
->
+I think you are right about both of them but we also need to put something in
+the verity, dax, and ...  (I can't find a file in Documentation which talks
+about encryption right off) documentation files....  For verity something like.
+
+<quote>
+Verity and DAX
+--------------
+
+Verity and DAX are not compatible and attempts to set both of these flags on a
+file will fail.
+</quote>
+
+And the same thing in the DAX doc?
+
+And where would be appropriate for the encrypt doc?
+
+Ira
+
+> 
+> 								Honza
+> 
+> >  	if (ext4_verity_in_progress(inode))
+> >  		return -EBUSY;
+> >  
+> > -- 
+> > 2.25.1
+> > 
+> -- 
+> Jan Kara <jack@suse.com>
+> SUSE Labs, CR
