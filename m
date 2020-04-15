@@ -2,141 +2,284 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0DEEC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:20:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D668C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:20:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3CCE20771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:20:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D491020768
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:20:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="FM7IwaxA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405350AbgDOJUk (ORCPT
+        id S2408406AbgDOJUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 05:20:40 -0400
-Received: from mail-il1-f198.google.com ([209.85.166.198]:54349 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2895331AbgDOJUQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 05:20:16 -0400
-Received: by mail-il1-f198.google.com with SMTP id m2so3285497ilb.21
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 02:20:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=xd9FG5EnS3ZB/2yZROcLKUcGKhAcYFKk/cfgDfazjdQ=;
-        b=nKODTojtVlwjhvHx93J0/NxqUTATM+UFv4OeispLiOdB0KSvnflbsJDpVpkguc5zdu
-         a+oVb5daEWiNfFiM+k5/9z9RaUZvSDwB+Ck64UNhMZm8t6CmuRiWGOGd+yyS04Y8kzl/
-         NOjC1o7XF7EazCnGXS4e0wyak3OiDpPjKnXnRsuzGHKopG4xrNhE2vrzhZB9g6rfBhj0
-         MTHB1QGg4rUgLVEcJTeiqQZLdGayUXRk7Y5SLxk4wjmdD617laSuHCJPFrygeSwxBAQn
-         4CT3ZyFHfaUlGflbgMsVYMRfIRdIaRim9E5NBaJ2k0brrNEa0Iy5dNg2Ii6Ph0END0fj
-         8tvw==
-X-Gm-Message-State: AGi0PubGIR1NwbQyHI9LTaaJ32Tkr9aBzcZXsCqTX+6dc1Wk7cjcYpXH
-        VVAxqqY6ZotDK6tUeBwulQAwCxdUxiykPOx11yCuceSXhMYc
-X-Google-Smtp-Source: APiQypJJSpD1Ep7fXJWHOTtFqck51Pumm5G+CBorKaCAHU9IFP/0Ymvq4fh6L55Ml+A66kLYB8dSmpIA2iAxcPO6mdctjblDZQxw
-MIME-Version: 1.0
-X-Received: by 2002:a02:205:: with SMTP id 5mr23601798jau.78.1586942414839;
- Wed, 15 Apr 2020 02:20:14 -0700 (PDT)
-Date:   Wed, 15 Apr 2020 02:20:14 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ea641705a350d2ee@google.com>
-Subject: WARNING: proc registration bug in snmp6_register_dev
-From:   syzbot <syzbot+1d51c8b74efa4c44adeb@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, kuba@kernel.org, kuznet@ms2.inr.ac.ru,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 15 Apr 2020 05:20:49 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:53594 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2895334AbgDOJU2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 05:20:28 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 492GzZ0PJNz9txYk;
+        Wed, 15 Apr 2020 11:20:26 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=FM7IwaxA; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id E8EYgGbt1l53; Wed, 15 Apr 2020 11:20:25 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 492GzY6FJRz9txYP;
+        Wed, 15 Apr 2020 11:20:25 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1586942425; bh=Zx/m7cX70Qco3IdgO2OxDCiZ5LszHX6htR1zAIB9hVA=;
+        h=From:Subject:To:Cc:Date:From;
+        b=FM7IwaxAf7QV+Yl778qcQ1H8k50Q5pC5C466U4BkhK6Sok/ghqGAbu2bspftQMLse
+         PWlTTG3rUrp98AUlKIAOU1efGw6PvjmP960hynKetpgx4/RPoUED3l9khKXaxVFtpl
+         P94wQ+qT11bM6DPrQ2GWJeoRInKzrjjWw4DuFzXg=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id E8E3E8B924;
+        Wed, 15 Apr 2020 11:20:26 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id vOAMJDbS8irH; Wed, 15 Apr 2020 11:20:26 +0200 (CEST)
+Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9854B8B91F;
+        Wed, 15 Apr 2020 11:20:26 +0200 (CEST)
+Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 5E95765788; Wed, 15 Apr 2020 09:20:26 +0000 (UTC)
+Message-Id: <4fdc2aba6f5e51887d1cd0fee94be0989eada2cd.1586942312.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH] powerpc/uaccess: Use flexible addressing with
+ __put_user()/__get_user()
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, npiggin@gmail.com,
+        segher@kernel.crashing.org
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Wed, 15 Apr 2020 09:20:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+At the time being, __put_user()/__get_user() and friends only use
+register indirect with immediate index addressing, with the index
+set to 0. Ex:
 
-syzbot found the following crash on:
+	lwz	reg1, 0(reg2)
 
-HEAD commit:    ab6f762f printk: queue wake_up_klogd irq_work only if per-..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1395613fe00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3010ccb0f380f660
-dashboard link: https://syzkaller.appspot.com/bug?extid=1d51c8b74efa4c44adeb
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+Give the compiler the opportunity to use other adressing modes
+whenever possible, to get more optimised code.
 
-Unfortunately, I don't have any reproducer for this crash yet.
+Hereunder is a small exemple:
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+1d51c8b74efa4c44adeb@syzkaller.appspotmail.com
+struct test {
+	u32 item1;
+	u16 item2;
+	u8 item3;
+	u64 item4;
+};
 
-------------[ cut here ]------------
-proc_dir_entry 'dev_snmp6/hsr1' already registered
-WARNING: CPU: 0 PID: 22141 at fs/proc/generic.c:363 proc_register+0x2bc/0x4e0 fs/proc/generic.c:362
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 22141 Comm: syz-executor.2 Not tainted 5.6.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1e9/0x30e lib/dump_stack.c:118
- panic+0x264/0x7a0 kernel/panic.c:221
- __warn+0x209/0x210 kernel/panic.c:582
- report_bug+0x1ac/0x2d0 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:175 [inline]
- do_error_trap+0xca/0x1c0 arch/x86/kernel/traps.c:267
- do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
- invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:proc_register+0x2bc/0x4e0 fs/proc/generic.c:362
-Code: 08 4c 8b 74 24 28 48 8b 6c 24 20 74 08 48 89 ef e8 99 29 d1 ff 48 8b 55 00 48 c7 c7 24 4e e9 88 48 89 de 31 c0 e8 e4 7c 65 ff <0f> 0b 48 c7 c7 20 e6 32 89 e8 66 41 2a 06 48 8b 44 24 30 42 8a 04
-RSP: 0000:ffffc900088feec0 EFLAGS: 00010246
-RAX: f20851673ab1bb00 RBX: ffff8880908a5264 RCX: 0000000000040000
-RDX: ffffc9000df22000 RSI: 00000000000150b4 RDI: 00000000000150b5
-RBP: ffff88808981bc18 R08: ffffffff815cac69 R09: ffffed1015d06660
-R10: ffffed1015d06660 R11: 0000000000000000 R12: dffffc0000000000
-R13: 0000000000000004 R14: ffff88808981bbd4 R15: ffff88808981bb40
- proc_create_single_data+0x18e/0x1e0 fs/proc/generic.c:631
- snmp6_register_dev+0xa1/0x110 net/ipv6/proc.c:254
- ipv6_add_dev+0x509/0x1430 net/ipv6/addrconf.c:408
- addrconf_notify+0x5f8/0x3ad0 net/ipv6/addrconf.c:3503
- notifier_call_chain kernel/notifier.c:83 [inline]
- __raw_notifier_call_chain kernel/notifier.c:361 [inline]
- raw_notifier_call_chain+0xd4/0x170 kernel/notifier.c:368
- call_netdevice_notifiers_info net/core/dev.c:1948 [inline]
- call_netdevice_notifiers_extack net/core/dev.c:1960 [inline]
- call_netdevice_notifiers net/core/dev.c:1974 [inline]
- register_netdevice+0x14a4/0x1a50 net/core/dev.c:9421
- hsr_dev_finalize+0x425/0x6d0 net/hsr/hsr_device.c:486
- hsr_newlink+0x3b5/0x460 net/hsr/hsr_netlink.c:77
- __rtnl_newlink net/core/rtnetlink.c:3333 [inline]
- rtnl_newlink+0x143e/0x1c00 net/core/rtnetlink.c:3391
- rtnetlink_rcv_msg+0x889/0xd40 net/core/rtnetlink.c:5454
- netlink_rcv_skb+0x190/0x3a0 net/netlink/af_netlink.c:2469
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x786/0x940 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0xa57/0xd70 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg net/socket.c:672 [inline]
- ____sys_sendmsg+0x4f9/0x7c0 net/socket.c:2362
- ___sys_sendmsg net/socket.c:2416 [inline]
- __sys_sendmsg+0x2a6/0x360 net/socket.c:2449
- do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x45c889
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f007299ac78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00007f007299b6d4 RCX: 000000000045c889
-RDX: 0000000000000000 RSI: 00000000200000c0 RDI: 0000000000000006
-RBP: 000000000076c180 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 00000000000009fc R14: 00000000004ccb7c R15: 000000000076c18c
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+int set_test_user(struct test __user *from, struct test __user *to, int idx)
+{
+	int err;
+	u32 item1;
+	u16 item2;
+	u8 item3;
+	u64 item4;
 
+	err = __get_user(item1, &from->item1);
+	err |= __get_user(item2, &from->item2);
+	err |= __get_user(item3, &from->item3);
+	err |= __get_user(item4, &from->item4);
 
+	err |= __put_user(item1, &to->item1);
+	err |= __put_user(item2, &to->item2);
+	err |= __put_user(item3, &to->item3);
+	err |= __put_user(item4, &to->item4);
+
+	return err;
+}
+
+Before the patch:
+
+00000df0 <set_test_user>:
+ df0:	94 21 ff f0 	stwu    r1,-16(r1)
+ df4:	39 40 00 00 	li      r10,0
+ df8:	93 c1 00 08 	stw     r30,8(r1)
+ dfc:	93 e1 00 0c 	stw     r31,12(r1)
+ e00:	7d 49 53 78 	mr      r9,r10
+ e04:	80 a3 00 00 	lwz     r5,0(r3)
+ e08:	38 e3 00 04 	addi    r7,r3,4
+ e0c:	7d 46 53 78 	mr      r6,r10
+ e10:	a0 e7 00 00 	lhz     r7,0(r7)
+ e14:	7d 29 33 78 	or      r9,r9,r6
+ e18:	39 03 00 06 	addi    r8,r3,6
+ e1c:	7d 46 53 78 	mr      r6,r10
+ e20:	89 08 00 00 	lbz     r8,0(r8)
+ e24:	7d 29 33 78 	or      r9,r9,r6
+ e28:	38 63 00 08 	addi    r3,r3,8
+ e2c:	7d 46 53 78 	mr      r6,r10
+ e30:	83 c3 00 00 	lwz     r30,0(r3)
+ e34:	83 e3 00 04 	lwz     r31,4(r3)
+ e38:	7d 29 33 78 	or      r9,r9,r6
+ e3c:	7d 43 53 78 	mr      r3,r10
+ e40:	90 a4 00 00 	stw     r5,0(r4)
+ e44:	7d 29 1b 78 	or      r9,r9,r3
+ e48:	38 c4 00 04 	addi    r6,r4,4
+ e4c:	7d 43 53 78 	mr      r3,r10
+ e50:	b0 e6 00 00 	sth     r7,0(r6)
+ e54:	7d 29 1b 78 	or      r9,r9,r3
+ e58:	38 e4 00 06 	addi    r7,r4,6
+ e5c:	7d 43 53 78 	mr      r3,r10
+ e60:	99 07 00 00 	stb     r8,0(r7)
+ e64:	7d 23 1b 78 	or      r3,r9,r3
+ e68:	38 84 00 08 	addi    r4,r4,8
+ e6c:	93 c4 00 00 	stw     r30,0(r4)
+ e70:	93 e4 00 04 	stw     r31,4(r4)
+ e74:	7c 63 53 78 	or      r3,r3,r10
+ e78:	83 c1 00 08 	lwz     r30,8(r1)
+ e7c:	83 e1 00 0c 	lwz     r31,12(r1)
+ e80:	38 21 00 10 	addi    r1,r1,16
+ e84:	4e 80 00 20 	blr
+
+After the patch:
+
+00000dbc <set_test_user>:
+ dbc:	39 40 00 00 	li      r10,0
+ dc0:	7d 49 53 78 	mr      r9,r10
+ dc4:	80 03 00 00 	lwz     r0,0(r3)
+ dc8:	7d 48 53 78 	mr      r8,r10
+ dcc:	a1 63 00 04 	lhz     r11,4(r3)
+ dd0:	7d 29 43 78 	or      r9,r9,r8
+ dd4:	7d 48 53 78 	mr      r8,r10
+ dd8:	88 a3 00 06 	lbz     r5,6(r3)
+ ddc:	7d 29 43 78 	or      r9,r9,r8
+ de0:	7d 48 53 78 	mr      r8,r10
+ de4:	80 c3 00 08 	lwz     r6,8(r3)
+ de8:	80 e3 00 0c 	lwz     r7,12(r3)
+ dec:	7d 29 43 78 	or      r9,r9,r8
+ df0:	7d 43 53 78 	mr      r3,r10
+ df4:	90 04 00 00 	stw     r0,0(r4)
+ df8:	7d 29 1b 78 	or      r9,r9,r3
+ dfc:	7d 43 53 78 	mr      r3,r10
+ e00:	b1 64 00 04 	sth     r11,4(r4)
+ e04:	7d 29 1b 78 	or      r9,r9,r3
+ e08:	7d 43 53 78 	mr      r3,r10
+ e0c:	98 a4 00 06 	stb     r5,6(r4)
+ e10:	7d 23 1b 78 	or      r3,r9,r3
+ e14:	90 c4 00 08 	stw     r6,8(r4)
+ e18:	90 e4 00 0c 	stw     r7,12(r4)
+ e1c:	7c 63 53 78 	or      r3,r3,r10
+ e20:	4e 80 00 20 	blr
+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ arch/powerpc/include/asm/uaccess.h | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/arch/powerpc/include/asm/uaccess.h b/arch/powerpc/include/asm/uaccess.h
+index 2f500debae21..dee71e9c7618 100644
+--- a/arch/powerpc/include/asm/uaccess.h
++++ b/arch/powerpc/include/asm/uaccess.h
+@@ -114,7 +114,7 @@ extern long __put_user_bad(void);
+  */
+ #define __put_user_asm(x, addr, err, op)			\
+ 	__asm__ __volatile__(					\
+-		"1:	" op " %1,0(%2)	# put_user\n"		\
++		"1:	" op "%U2%X2 %1,%2	# put_user\n"	\
+ 		"2:\n"						\
+ 		".section .fixup,\"ax\"\n"			\
+ 		"3:	li %0,%3\n"				\
+@@ -122,7 +122,7 @@ extern long __put_user_bad(void);
+ 		".previous\n"					\
+ 		EX_TABLE(1b, 3b)				\
+ 		: "=r" (err)					\
+-		: "r" (x), "b" (addr), "i" (-EFAULT), "0" (err))
++		: "r" (x), "m" (*addr), "i" (-EFAULT), "0" (err))
+ 
+ #ifdef __powerpc64__
+ #define __put_user_asm2(x, ptr, retval)				\
+@@ -130,8 +130,8 @@ extern long __put_user_bad(void);
+ #else /* __powerpc64__ */
+ #define __put_user_asm2(x, addr, err)				\
+ 	__asm__ __volatile__(					\
+-		"1:	stw %1,0(%2)\n"				\
+-		"2:	stw %1+1,4(%2)\n"			\
++		"1:	stw%U2%X2 %1,%2\n"			\
++		"2:	stw%U2%X2 %L1,%L2\n"			\
+ 		"3:\n"						\
+ 		".section .fixup,\"ax\"\n"			\
+ 		"4:	li %0,%3\n"				\
+@@ -140,7 +140,7 @@ extern long __put_user_bad(void);
+ 		EX_TABLE(1b, 4b)				\
+ 		EX_TABLE(2b, 4b)				\
+ 		: "=r" (err)					\
+-		: "r" (x), "b" (addr), "i" (-EFAULT), "0" (err))
++		: "r" (x), "m" (*addr), "i" (-EFAULT), "0" (err))
+ #endif /* __powerpc64__ */
+ 
+ #define __put_user_size_allowed(x, ptr, size, retval)		\
+@@ -217,7 +217,7 @@ extern long __get_user_bad(void);
+ 
+ #define __get_user_asm(x, addr, err, op)		\
+ 	__asm__ __volatile__(				\
+-		"1:	"op" %1,0(%2)	# get_user\n"	\
++		"1:	"op"%U2%X2 %1, %2	# get_user\n"	\
+ 		"2:\n"					\
+ 		".section .fixup,\"ax\"\n"		\
+ 		"3:	li %0,%3\n"			\
+@@ -226,7 +226,7 @@ extern long __get_user_bad(void);
+ 		".previous\n"				\
+ 		EX_TABLE(1b, 3b)			\
+ 		: "=r" (err), "=r" (x)			\
+-		: "b" (addr), "i" (-EFAULT), "0" (err))
++		: "m" (*addr), "i" (-EFAULT), "0" (err))
+ 
+ #ifdef __powerpc64__
+ #define __get_user_asm2(x, addr, err)			\
+@@ -234,8 +234,8 @@ extern long __get_user_bad(void);
+ #else /* __powerpc64__ */
+ #define __get_user_asm2(x, addr, err)			\
+ 	__asm__ __volatile__(				\
+-		"1:	lwz %1,0(%2)\n"			\
+-		"2:	lwz %1+1,4(%2)\n"		\
++		"1:	lwz%U2%X2 %1, %2\n"			\
++		"2:	lwz%U2%X2 %L1, %L2\n"		\
+ 		"3:\n"					\
+ 		".section .fixup,\"ax\"\n"		\
+ 		"4:	li %0,%3\n"			\
+@@ -246,7 +246,7 @@ extern long __get_user_bad(void);
+ 		EX_TABLE(1b, 4b)			\
+ 		EX_TABLE(2b, 4b)			\
+ 		: "=r" (err), "=&r" (x)			\
+-		: "b" (addr), "i" (-EFAULT), "0" (err))
++		: "m" (*addr), "i" (-EFAULT), "0" (err))
+ #endif /* __powerpc64__ */
+ 
+ #define __get_user_size_allowed(x, ptr, size, retval)		\
+@@ -256,10 +256,10 @@ do {								\
+ 	if (size > sizeof(x))					\
+ 		(x) = __get_user_bad();				\
+ 	switch (size) {						\
+-	case 1: __get_user_asm(x, ptr, retval, "lbz"); break;	\
+-	case 2: __get_user_asm(x, ptr, retval, "lhz"); break;	\
+-	case 4: __get_user_asm(x, ptr, retval, "lwz"); break;	\
+-	case 8: __get_user_asm2(x, ptr, retval);  break;	\
++	case 1: __get_user_asm(x, (u8 __user *)ptr, retval, "lbz"); break;	\
++	case 2: __get_user_asm(x, (u16 __user *)ptr, retval, "lhz"); break;	\
++	case 4: __get_user_asm(x, (u32 __user *)ptr, retval, "lwz"); break;	\
++	case 8: __get_user_asm2(x, (u64 __user *)ptr, retval);  break;	\
+ 	default: (x) = __get_user_bad();			\
+ 	}							\
+ } while (0)
+-- 
+2.25.0
+
