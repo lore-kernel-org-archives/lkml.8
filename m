@@ -2,116 +2,126 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3335C3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78ED5C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:37:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E7A72076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:37:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UFIONclS"
+	by mail.kernel.org (Postfix) with ESMTP id 5EA7B20767
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:37:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2636182AbgDONho (ORCPT
+        id S370710AbgDONhz convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:37:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58918 "EHLO
+        Wed, 15 Apr 2020 09:37:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2636147AbgDONhK (ORCPT
+        by vger.kernel.org with ESMTP id S2636175AbgDONhj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 09:37:10 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D132FC061A0C;
-        Wed, 15 Apr 2020 06:37:09 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id g12so11255762wmh.3;
-        Wed, 15 Apr 2020 06:37:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=pa4UHfY2/aSNPt2X2jGFb1KTFp1Ae6IbH0975jzZgos=;
-        b=UFIONclS26VhRCUUT3L94esG6sHKSSxeu0B0RIPlexIIFi4hqm3TyDtiDUGKLcKRbC
-         WRTJ74OJ+Kx5NXQrtvbclxCbBNeOJKHUVERX0v1ph7DY69qjNzxN05cd1aa3+SORd1zN
-         yM6HvbOsjEZid7wEVE43d+wA+hMLntwAMPV33PdSm4j4VVQ6A4i0gtjvDwv7sZEAZLla
-         unNO3Ge77+31zTDTDZTY24Y0h5GOxTt5GARtJuGZyc/tV1g3CmznSFZxNna1aHgaVyb1
-         87XooU9yiDhS5J+WJFUqFU4/3Wpnr0LhDaLGH4SDzMfXJwjC2xHPByJpQ9K0Axr08OTz
-         RzxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=pa4UHfY2/aSNPt2X2jGFb1KTFp1Ae6IbH0975jzZgos=;
-        b=sgN0DysRkiTQqd8+HfoYKbGwsplkiBfOfQgc3wT7Vbv08gSaO7fVePYf++5ismWC58
-         bP7lH2nWMtZ0XJWm8F05crRAbqGcTUUrVssQvkviR4uU3r+nVdqvUXbsSZa71+prXc1s
-         O4hg1cjgpIiBIPJfZCJChV98I1GxqtM1mnAgFbuMFy/o1QVCkJB6zLRhfpH3ZrrnbCMI
-         NAsmbWw1A0Ak+Q3vflrHklPzRUc7i4aXajuQiN5wmWvPngqm4GBdCYR7kAzVMsmmGSec
-         Bw+YMh7JFgsH56FnAyUjGUOomdRZePbWZ6/oaIVY84okoESfiV3EZtjKWCoM5WHQqUno
-         OpOQ==
-X-Gm-Message-State: AGi0Puay5GPS4VLjex/6CHkys8TLxXZ5q0724onE+we23kUiPo/lHwKp
-        w9mczcm630vcT9aaoodxCMH5Icq/IMs=
-X-Google-Smtp-Source: APiQypLNk8T6f4p+TzUVzRkkQMgmXTc/G+NMBWXmDW1uDgwgfwaRQv3mDBfAx4pQl3KDMPLaQokoSw==
-X-Received: by 2002:a1c:750a:: with SMTP id o10mr5230330wmc.161.1586957828498;
-        Wed, 15 Apr 2020 06:37:08 -0700 (PDT)
-Received: from localhost.localdomain ([151.29.194.179])
-        by smtp.gmail.com with ESMTPSA id l5sm9843280wmi.22.2020.04.15.06.37.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2020 06:37:06 -0700 (PDT)
-Date:   Wed, 15 Apr 2020 15:37:04 +0200
-From:   Juri Lelli <juri.lelli@gmail.com>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [ANNOUNCE] v5.6.2-rt1
-Message-ID: <20200415133704.GG9767@localhost.localdomain>
-References: <20200403170443.pzm24672qo4hufcm@linutronix.de>
- <20200408070013.GB14300@localhost.localdomain>
- <20200415111235.6gomftgifn62dylp@linutronix.de>
+        Wed, 15 Apr 2020 09:37:39 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8948CC061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 06:37:39 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jOiEN-0002og-3x; Wed, 15 Apr 2020 15:37:31 +0200
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jOiEK-0006aW-Fd; Wed, 15 Apr 2020 15:37:28 +0200
+Date:   Wed, 15 Apr 2020 15:37:28 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michal Kubecek <mkubecek@suse.cz>,
+        David Jander <david@protonic.nl>, kernel@pengutronix.de,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Russell King <linux@armlinux.org.uk>, mkl@pengutronix.de
+Subject: Re: [PATCH v1] ethtool: provide UAPI for PHY master/slave
+ configuration.
+Message-ID: <20200415133728.urvsdolwhaa4eknm@pengutronix.de>
+References: <20200415121209.12197-1-o.rempel@pengutronix.de>
+ <20200415131104.GA657811@lunn.ch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200415111235.6gomftgifn62dylp@linutronix.de>
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200415131104.GA657811@lunn.ch>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 15:23:06 up 152 days,  4:41, 170 users,  load average: 0.02, 0.06,
+ 0.01
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/04/20 13:12, Sebastian Andrzej Siewior wrote:
-> On 2020-04-08 09:00:13 [+0200], Juri Lelli wrote:
-> > Hi,
-> Hi,
+On Wed, Apr 15, 2020 at 03:11:04PM +0200, Andrew Lunn wrote:
+> On Wed, Apr 15, 2020 at 02:12:09PM +0200, Oleksij Rempel wrote:
+> > This UAPI is needed for BroadR-Reach 100BASE-T1 devices. Due to lack of
+> > auto-negotiation support, we needed to be able to configure the
+> > MASTER-SLAVE role of the port manually or from an application in user
+> > space.
 > 
-> > On 03/04/20 19:04, Sebastian Andrzej Siewior wrote:
-> > > Dear RT folks!
-> > > 
-> > > I'm pleased to announce the v5.6.2-rt1 patch set. 
-> > > 
-> > > Changes since v5.4.28-rt19:
-> > > 
-> > >   - Rebase to v5.6.2
-> > 
-> > I was reviewing the new set and I couldn't find v5.4.28-rt19
-> > 6dbbc833c99f ("mm: perform lru_add_drain_all() remotely"). Don't think
-> > it has been squashed either.
-> > 
-> > Am I wrong? If not, why was that left out?
+> Hi Oleksij
 > 
-> I was going to drop it from v5.4 but kept it last minute. I announced in
-> 	https://lkml.kernel.org/r/20200309171350.kjb3pdjazhxm2li2@linutronix.de
+> This is a nice way to do this.
 > 
-> that the problem it fixes is not limited to RT so we need a solution for
-> both config switches. The current plan for local-locks is not to work
-> cross CPU because it breaks the local_irq_save() / preempt_disable()
-> replacement which is something this patch relies on.
-> The worker triggered via vmstat_update() is also blocked if the user
-> task runs at an elevated priority for longer time.
+> > +/* Port mode */
+> > +#define PORT_MODE_MASTER	0x00
+> > +#define PORT_MODE_SLAVE		0x01
+> > +#define PORT_MODE_MASTER_FORCE	0x02
+> > +#define PORT_MODE_SLAVE_FORCE	0x03
+> > +#define PORT_MODE_UNKNOWN	0xff
+> 
+> It is not clear to me what PORT_MODE_MASTER and PORT_MODE_SLAVE. Do
+> these mean to negotiate master/slave? Maybe some comments, or clearer
+> names?
 
-OK. Thanks for clarifying.
+In the IEEE 802.3 it is described as:
+---------------------------------------------------------------------------
+Port type: Bit 9.10 is to be used to indicate the preference to operate
+as MASTER (multiport device) or as SLAVE (single-port device) if the
+MASTER-SLAVE Manual Configuration Enable bit, 9.12, is not set.  Usage
+of this bit is described in 40.5.2.
+1 = Multiport device
+0 = single-port device
+---------------------------------------------------------------------------
 
-Best,
+Setting PORT_MODE_MASTER/PORT_MODE_SLAVE will increase the chance to get
+MASTER or SLAVE mode, but not force it.
 
-Juri
+If we will follow strictly to the IEEE 802.3 spec, it should be named:
+
+#define PORT_MODE_UNKNOWN	0x00
+/* this two options will not force some specific mode, only influence
+ * the chance to get it */
+#define PORT_TYPE_MULTI_PORT	0x01
+#define PORT_TYPE_SINGLE_PORT	0x02
+/* this two options will force master or slave mode */
+#define PORT_MODE_MASTER	0x03
+#define PORT_MODE_SLAVE		0x04
+
+Please tell, if you have better ideas.
+
+Regards,
+Oleksij
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
