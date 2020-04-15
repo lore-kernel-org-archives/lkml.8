@@ -2,80 +2,248 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7932DC2BB85
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:27:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84730C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:27:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54DF920775
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:27:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A9AB206E9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:27:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="XtV98Fz/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2894469AbgDOI1G (ORCPT
+        id S2894512AbgDOI11 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 04:27:06 -0400
-Received: from mga17.intel.com ([192.55.52.151]:39079 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2894462AbgDOI04 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 04:26:56 -0400
-IronPort-SDR: kdWuOOzaNeKQQjjnTevTVzxYxM2K5kA/m+ItWPMOCsLY2FRghR4E3dLBIwgwq72s6/9Ko/muuo
- p26/qOyjFmOg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 01:25:59 -0700
-IronPort-SDR: 5a7UZZIm9TvTEGcNrZpZNtTbbut9jtRf7FLh9wLYQDttWAjWNSQ/q8K/7MTU+gkqrgGdeQptB9
- nTV5e999iZHg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,386,1580803200"; 
-   d="scan'208";a="363611763"
-Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.254.210.208]) ([10.254.210.208])
-  by fmsmga001.fm.intel.com with ESMTP; 15 Apr 2020 01:25:57 -0700
-Cc:     baolu.lu@linux.intel.com, "Raj, Ashok" <ashok.raj@intel.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 0/7] iommu/vt-d: Add page request draining support
-To:     "Tian, Kevin" <kevin.tian@intel.com>,
-        Joerg Roedel <joro@8bytes.org>
-References: <20200415052542.30421-1-baolu.lu@linux.intel.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D820475@SHSMSX104.ccr.corp.intel.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <86b04dae-ff11-fc4b-551a-17c0ce352843@linux.intel.com>
-Date:   Wed, 15 Apr 2020 16:25:56 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 15 Apr 2020 04:27:27 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:4442 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2894474AbgDOI1K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 04:27:10 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e96c48d0000>; Wed, 15 Apr 2020 01:23:41 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 15 Apr 2020 01:25:30 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 15 Apr 2020 01:25:30 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Apr
+ 2020 08:25:30 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 15 Apr 2020 08:25:30 +0000
+Received: from nkristam-ubuntu.nvidia.com (Not Verified[10.19.67.128]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5e96c4f60002>; Wed, 15 Apr 2020 01:25:29 -0700
+From:   Nagarjuna Kristam <nkristam@nvidia.com>
+To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <mark.rutland@arm.com>, <robh+dt@kernel.org>, <kishon@ti.com>
+CC:     <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Nagarjuna Kristam <nkristam@nvidia.com>
+Subject: [PATCH V2 3/8] phy: tegra: xusb: Add support for UTMI pad power control
+Date:   Wed, 15 Apr 2020 13:55:03 +0530
+Message-ID: <1586939108-10075-4-git-send-email-nkristam@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1586939108-10075-1-git-send-email-nkristam@nvidia.com>
+References: <1586939108-10075-1-git-send-email-nkristam@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D820475@SHSMSX104.ccr.corp.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1586939021; bh=54AsFYf8Iqj2Ar3hTENRodkHPBl+dIfWETSGg1O9VZE=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=XtV98Fz/PwRSt1chfLXRMVVUO0d3YWIiPdwncIdLrG40iZWb1bYtGLFkssynGBGrY
+         TOqOn1Ff3AXT0hUHJ8GCSsuTTHIFsptp55Rr9CnufBtwrjXx/SLeM6qKd5vNBRyUAE
+         /k8/zYsf0J9Tr/vyvVewch3lQ6AvQtMUMxzE5Hxd+bh4PB09kMqIPLMWL8APfDtaHl
+         LXp3Ry2ajxmDPKPtAdTwAmNIrj/N+jGm2xQ7rlPXyBQXqFRw/n2Oj/0iD+DQ+chSi6
+         Nj1NJGgNOfdQkrN63frhcLtqpezJfizBlLLFzuijQRZi3BorkMZHDZ1OT+HwO19XAv
+         6wM+qvEwJV3Cw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kevin,
+Add support for UTMI pad power on and off API's via soc ops. These API
+can be used by operations like charger detect to power on and off UTMI
+pad if needed. Update powered_on flag in the pad power control API's.
 
-On 2020/4/15 15:57, Tian, Kevin wrote:
->> From: Lu Baolu<baolu.lu@linux.intel.com>
->> Sent: Wednesday, April 15, 2020 1:26 PM
->>
->> When a PASID is stopped or terminated, there can be pending PRQs
->> (requests that haven't received responses) in the software and
->> remapping hardware. The pending page requests must be drained
->> so that the pasid could be reused. The register level interface
->> for page request draining is defined in 7.11 of the VT-d spec.
->> This series adds the support for page requests draining.
-> 7.11 doesn't include register-level interface. It just talks about
-> the general requirements on system software, endpoint device
-> and its driver.
-> 
+Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+---
+V2:
+ - Patch re-based.
+---
+ drivers/phy/tegra/xusb-tegra186.c | 51 ++++++++++++++++++---------------------
+ drivers/phy/tegra/xusb.h          |  2 ++
+ 2 files changed, 26 insertions(+), 27 deletions(-)
 
-I will replace this with "spec 7.10 specifies the software steps to
-drain page requests and response".
+diff --git a/drivers/phy/tegra/xusb-tegra186.c b/drivers/phy/tegra/xusb-tegra186.c
+index 5d64f69..f862254 100644
+--- a/drivers/phy/tegra/xusb-tegra186.c
++++ b/drivers/phy/tegra/xusb-tegra186.c
+@@ -192,12 +192,8 @@ static void tegra186_utmi_bias_pad_power_on(struct tegra_xusb_padctl *padctl)
+ 	u32 value;
+ 	int err;
+ 
+-	mutex_lock(&padctl->lock);
+-
+-	if (priv->bias_pad_enable++ > 0) {
+-		mutex_unlock(&padctl->lock);
++	if (priv->bias_pad_enable++ > 0)
+ 		return;
+-	}
+ 
+ 	err = clk_prepare_enable(priv->usb2_trk_clk);
+ 	if (err < 0)
+@@ -221,8 +217,6 @@ static void tegra186_utmi_bias_pad_power_on(struct tegra_xusb_padctl *padctl)
+ 	value = padctl_readl(padctl, XUSB_PADCTL_USB2_BIAS_PAD_CTL1);
+ 	value &= ~USB2_PD_TRK;
+ 	padctl_writel(padctl, value, XUSB_PADCTL_USB2_BIAS_PAD_CTL1);
+-
+-	mutex_unlock(&padctl->lock);
+ }
+ 
+ static void tegra186_utmi_bias_pad_power_off(struct tegra_xusb_padctl *padctl)
+@@ -230,44 +224,29 @@ static void tegra186_utmi_bias_pad_power_off(struct tegra_xusb_padctl *padctl)
+ 	struct tegra186_xusb_padctl *priv = to_tegra186_xusb_padctl(padctl);
+ 	u32 value;
+ 
+-	mutex_lock(&padctl->lock);
+-
+-	if (WARN_ON(priv->bias_pad_enable == 0)) {
+-		mutex_unlock(&padctl->lock);
++	if (WARN_ON(priv->bias_pad_enable == 0))
+ 		return;
+-	}
+ 
+-	if (--priv->bias_pad_enable > 0) {
+-		mutex_unlock(&padctl->lock);
++	if (--priv->bias_pad_enable > 0)
+ 		return;
+-	}
+ 
+ 	value = padctl_readl(padctl, XUSB_PADCTL_USB2_BIAS_PAD_CTL1);
+ 	value |= USB2_PD_TRK;
+ 	padctl_writel(padctl, value, XUSB_PADCTL_USB2_BIAS_PAD_CTL1);
+ 
+ 	clk_disable_unprepare(priv->usb2_trk_clk);
+-
+-	mutex_unlock(&padctl->lock);
+ }
+ 
+ static void tegra_phy_xusb_utmi_pad_power_on(struct phy *phy)
+ {
+ 	struct tegra_xusb_lane *lane = phy_get_drvdata(phy);
+ 	struct tegra_xusb_padctl *padctl = lane->pad->padctl;
+-	struct tegra_xusb_usb2_port *port;
+-	struct device *dev = padctl->dev;
++	struct tegra_xusb_usb2_lane *usb2 = to_usb2_lane(lane);
+ 	unsigned int index = lane->index;
+ 	u32 value;
+ 
+-	if (!phy)
+-		return;
+-
+-	port = tegra_xusb_find_usb2_port(padctl, index);
+-	if (!port) {
+-		dev_err(dev, "no port found for USB2 lane %u\n", index);
++	if (!phy || usb2->powered_on)
+ 		return;
+-	}
+ 
+ 	tegra186_utmi_bias_pad_power_on(padctl);
+ 
+@@ -280,16 +259,19 @@ static void tegra_phy_xusb_utmi_pad_power_on(struct phy *phy)
+ 	value = padctl_readl(padctl, XUSB_PADCTL_USB2_OTG_PADX_CTL1(index));
+ 	value &= ~USB2_OTG_PD_DR;
+ 	padctl_writel(padctl, value, XUSB_PADCTL_USB2_OTG_PADX_CTL1(index));
++
++	usb2->powered_on = true;
+ }
+ 
+ static void tegra_phy_xusb_utmi_pad_power_down(struct phy *phy)
+ {
+ 	struct tegra_xusb_lane *lane = phy_get_drvdata(phy);
+ 	struct tegra_xusb_padctl *padctl = lane->pad->padctl;
++	struct tegra_xusb_usb2_lane *usb2 = to_usb2_lane(lane);
+ 	unsigned int index = lane->index;
+ 	u32 value;
+ 
+-	if (!phy)
++	if (!phy || !usb2->powered_on)
+ 		return;
+ 
+ 	value = padctl_readl(padctl, XUSB_PADCTL_USB2_OTG_PADX_CTL0(index));
+@@ -303,6 +285,8 @@ static void tegra_phy_xusb_utmi_pad_power_down(struct phy *phy)
+ 	udelay(2);
+ 
+ 	tegra186_utmi_bias_pad_power_off(padctl);
++
++	usb2->powered_on = false;
+ }
+ 
+ static int tegra186_xusb_padctl_vbus_override(struct tegra_xusb_padctl *padctl,
+@@ -413,6 +397,8 @@ static int tegra186_utmi_phy_power_on(struct phy *phy)
+ 		return -ENODEV;
+ 	}
+ 
++	mutex_lock(&padctl->lock);
++
+ 	value = padctl_readl(padctl, XUSB_PADCTL_USB2_PAD_MUX);
+ 	value &= ~(USB2_PORT_MASK << USB2_PORT_SHIFT(index));
+ 	value |= (PORT_XUSB << USB2_PORT_SHIFT(index));
+@@ -464,14 +450,23 @@ static int tegra186_utmi_phy_power_on(struct phy *phy)
+ 
+ 	/* TODO: pad power saving */
+ 	tegra_phy_xusb_utmi_pad_power_on(phy);
++
++	mutex_unlock(&padctl->lock);
+ 	return 0;
+ }
+ 
+ static int tegra186_utmi_phy_power_off(struct phy *phy)
+ {
++	struct tegra_xusb_lane *lane = phy_get_drvdata(phy);
++	struct tegra_xusb_padctl *padctl = lane->pad->padctl;
++
++	mutex_lock(&padctl->lock);
++
+ 	/* TODO: pad power saving */
+ 	tegra_phy_xusb_utmi_pad_power_down(phy);
+ 
++	mutex_unlock(&padctl->lock);
++
+ 	return 0;
+ }
+ 
+@@ -938,6 +933,8 @@ static const struct tegra_xusb_padctl_ops tegra186_xusb_padctl_ops = {
+ 	.probe = tegra186_xusb_padctl_probe,
+ 	.remove = tegra186_xusb_padctl_remove,
+ 	.vbus_override = tegra186_xusb_padctl_vbus_override,
++	.utmi_pad_power_on = tegra_phy_xusb_utmi_pad_power_on,
++	.utmi_pad_power_down = tegra_phy_xusb_utmi_pad_power_down,
+ };
+ 
+ #if IS_ENABLED(CONFIG_ARCH_TEGRA_186_SOC)
+diff --git a/drivers/phy/tegra/xusb.h b/drivers/phy/tegra/xusb.h
+index ea35af7..6995fc4 100644
+--- a/drivers/phy/tegra/xusb.h
++++ b/drivers/phy/tegra/xusb.h
+@@ -396,6 +396,8 @@ struct tegra_xusb_padctl_ops {
+ 				    unsigned int index, bool enable);
+ 	int (*vbus_override)(struct tegra_xusb_padctl *padctl, bool set);
+ 	int (*utmi_port_reset)(struct phy *phy);
++	void (*utmi_pad_power_on)(struct phy *phy);
++	void (*utmi_pad_power_down)(struct phy *phy);
+ };
+ 
+ struct tegra_xusb_padctl_soc {
+-- 
+2.7.4
 
-Best regards,
-baolu
