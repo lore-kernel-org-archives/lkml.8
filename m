@@ -2,174 +2,199 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A4D1C3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:46:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 568C6C38A29
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65C412078B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:46:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="ZeyHf1lp"
+	by mail.kernel.org (Postfix) with ESMTP id 303532076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:46:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586961988;
+	bh=ygdLxe7J62lfuyTfl7GYvfFKZVzkmZyuH6fwVFe7bTA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Dk5sOchCoSqN19+k3wJwhSBYLyGpeKmEkWL4OnKRnLMLLcB1dSLMng2LEGzhHY7HO
+	 iDlSf6L6HgNkrwaIbmwSDuCCFMgnBBe42qDd6MoLkKpSi5DX6kjqISZL1uC5jmgd2e
+	 FhePHBtAaLXMl8xhnJQY3BfGn0d2XXHJjeAfn54I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S370889AbgDOOqR (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:46:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41384 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S370934AbgDOOp7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 10:45:59 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E21EC061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 07:45:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Q6y0RY1r/bsSQu1Pjhp5jZO0J0vCNZAdOGGiFado0tg=; b=ZeyHf1lpXQg+EMSv8Vfok/G9o
-        ZJsoZldDhcd6jFsf4UKnLOBvEET5e+YndugH+ve6UE9kS3I6DjJnt9fQ6bFucg/hQSUbxYDgjM8L4
-        RfzeXUZsn4k5GYAnWSSXOyTfqeW9tYzbrl7DusejqBnJRx9iLtpXjR8y6QbNvmEkrRIk+9zjB3/3D
-        Qa96b5KO8niSZzlk9xmx46bCcUUMamdj/tYa7a1rCQAuR929SCG92lC6s4pUhsB7RgbTMkfQiUw4A
-        R/ma6qh3WlWcb7GV2eZ9M0ICpTExfS2QpQFni+2bGeYsQDAwxXau45RDDpGhahCehnKArAFi5K/KK
-        cYCHjcxag==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:46312)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jOjHj-00071l-VP; Wed, 15 Apr 2020 15:45:04 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jOjHW-00010F-Ku; Wed, 15 Apr 2020 15:44:50 +0100
-Date:   Wed, 15 Apr 2020 15:44:50 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Kristof Beyls <Kristof.Beyls@arm.com>,
-        Stephen Hines <srhines@google.com>,
-        Luis Lozano <llozano@google.com>,
-        Jian Cai <caij2003@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Peter Smith <Peter.Smith@arm.com>,
-        Stefan Agner <stefan@agner.ch>,
-        David Howells <dhowells@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Manoj Gupta <manojgupta@google.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Ilie Halip <ilie.halip@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Jian Cai <jiancai@google.com>,
-        Doug Anderson <armlinux@m.disordat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Patrick Bellasi <patrick.bellasi@arm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Tejun Heo <tj@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] ARM: do not assemble iwmmxt.S with LLVM toolchain
-Message-ID: <20200415144450.GF25745@shell.armlinux.org.uk>
-References: <CAK8P3a3uj7AHbAo4sNzr6KQx5Fk6v99k4ZixCgKo1tUuGoat9Q@mail.gmail.com>
- <CAMj1kXGXNxXGiC4dmNXHkZ6n=J0Fhim3oSwNx4Bz5m9fEphJvQ@mail.gmail.com>
- <20200410123301.GX25745@shell.armlinux.org.uk>
- <CAMj1kXFpknCfwb6JMdk_SHopnGqMswgSqaQUeAUEh5yaV10vJg@mail.gmail.com>
- <CAKwvOdk-xwuppJzxd1+5sfsC8jYiP3t8D=aTNaYxnFCRDiEUmQ@mail.gmail.com>
- <CAMj1kXFHb8th0rv1yjrsr=c1o-g9_ERPUy4itnrVN13fcQcXag@mail.gmail.com>
- <CAKwvOdm5aawsa2-=atB8z6W8zo8YVgdDEVbU3i4evDcpo1_AxQ@mail.gmail.com>
- <202004141258.6D9CB92507@keescook>
- <CAMj1kXG6_CO6pzeJCSeWiCDyLfWw+ZMuvkv_DLxe-si00fLd1Q@mail.gmail.com>
- <CAK8P3a3Ko0XTLUGwBxVM=nNebGr6ww66+cCKbYBrd9A4ME0__w@mail.gmail.com>
+        id S2636836AbgDOOq0 (ORCPT
+        <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 10:46:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40252 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2636794AbgDOOpd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 10:45:33 -0400
+Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F1EC21841;
+        Wed, 15 Apr 2020 14:45:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586961929;
+        bh=ygdLxe7J62lfuyTfl7GYvfFKZVzkmZyuH6fwVFe7bTA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ad/xTao9wbvey6I7S429/jl7sCbbJcL2DXT6bIxDQVzSw0ZXhGkVKnwz5xFlq7jEK
+         G/hxdauQyDp40xJbrr9DK0tm69g5W5ENN1CCEv6Ea5V3u95q/vWFf8UkCdK25uapgc
+         7w6tJgkC0CXoQSwasdCOEJwxXF2Ae2XN+gIdiYCg=
+Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
+        (envelope-from <mchehab@kernel.org>)
+        id 1jOjI7-006kZz-Ga; Wed, 15 Apr 2020 16:45:27 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Federico Vaga <federico.vaga@vaga.pv.it>,
+        Andy Whitcroft <apw@canonical.com>,
+        Joe Perches <joe@perches.com>,
+        Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
+        Jacob Huisman <jacobhuisman@kernelthusiast.com>,
+        devicetree@vger.kernel.org
+Subject: [PATCH v3 11/12] docs: dt: convert submitting-patches.txt to ReST format
+Date:   Wed, 15 Apr 2020 16:45:25 +0200
+Message-Id: <887f9e25944831d8c285a80e4deeea5b1cf38803.1586961793.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.25.2
+In-Reply-To: <cover.1586961793.git.mchehab+huawei@kernel.org>
+References: <cover.1586961793.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a3Ko0XTLUGwBxVM=nNebGr6ww66+cCKbYBrd9A4ME0__w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 02:58:05PM +0200, Arnd Bergmann wrote:
-> On Wed, Apr 15, 2020 at 12:32 PM Ard Biesheuvel <ardb@kernel.org> wrote:
-> >
-> > On Tue, 14 Apr 2020 at 22:53, Kees Cook <keescook@chromium.org> wrote:
-> > >
-> > > I don't know if this will help, but I feel like folks might be talking
-> > > past each other a little here. I see two primary issues that are
-> > > colliding, and I just want to call them out specifically...
-> >
-> > To reiterate my point: I strongly prefer minor asm surgery over
-> > elaborate Kconfig plumbing if it means we can retain the functionality
-> > even when using LLVM tools. In particular, the use of macros to
-> > implement missing ISA support should be considered before any other
-> > solution, as these are already being used widely across architectures
-> > to fill in such gaps.
-> 
-> +1
-> 
-> > > What's a good middle ground here? For VLAs, I ended up getting akpm's
-> > > help by having him add -Wvla to his local builds and send nag emails
-> > > to people when they added VLAs. That's not really a thing here, but it
-> > > seems like there should be a way to avoid losing ground (in this case,
-> > > it's the erosion of attention: repeated known-issue warnings means the
-> > > CI gets ignored for the warnings on newly added issues). It does seem
-> > > to me like adding the negative depends is a reasonable first step: it
-> > > marks what hard things need fixing later without losing coverage for
-> > > things that can be more easily fixed now with available resources.
-> > >
-> > > For the specific iwmmxt.S case, perhaps the solution is the suggested
-> > > changes? I imagine it should be possible to do a binary diff to see zero
-> > > changes before/after.
-> >
-> > This code has been around since 2004. It has never been possible to
-> > assemble it with Clang's assembler. So the only thing this patch gives
-> > you is the ability to switch from a .config where IWMMXT was disabled
-> > by hand to one where it gets disabled automatically by Kconfig.
-> >
-> > So what hard-won ground are we losing here? Did IWMMXT recently get
-> > enabled in a defconfig that you care about?
-> 
-> I mainly care about the build testing aspect here, it seems we are getting
-> close to having the clang integrated assembler working with all .S files
-> in the kernel (it used to work for none), and I'd like to do randconfig and
-> allmodconfig tests that include these as well. Disabling the option works
-> for me, but your suggestion with the added macros is clearly better.
+- Add a SPDX header;
+- Adjust document and section titles;
+- Mark literal blocks as such;
+- Add it to bindings/index.rst.
 
-However, to me it seems the approach has been "clang doesn't like X,
-the kernel has to change to suit clang" - sometimes at the expense
-of either functionality or maintainability of the kernel.
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ Documentation/devicetree/bindings/index.rst          |  1 +
+ ...submitting-patches.txt => submitting-patches.rst} | 12 +++++++++---
+ .../devicetree/bindings/writing-bindings.txt         |  2 +-
+ Documentation/process/submitting-patches.rst         |  2 +-
+ .../it_IT/process/submitting-patches.rst             |  2 +-
+ scripts/checkpatch.pl                                |  2 +-
+ 6 files changed, 14 insertions(+), 7 deletions(-)
+ rename Documentation/devicetree/bindings/{submitting-patches.txt => submitting-patches.rst} (92%)
 
-Some of the changes have been good (provoking modernisation) but that's
-not true of everything - and I see nothing happening subsequently to
-rectify the situation.
-
-Had we gone down the path of disabling the build of iWMMXT, if anyone
-builds a kernel with clang for ARMv5 PXA and relies on iWMMXT, their
-userspace suddenly breaks because they used a different compiler and
-lost the necessary iWMMXT support in the kernel to allow userspace to
-operate, which isn't a nice approach.
-
-Using macros is the best solution to work around clang, but should not
-be done at the expense of GNU AS which has proper support.
-
-I'd say this: if clang wants to support building ARMv5, then it needs
-to support iWMMXT and stop forcing the kernel to adapt to Clang's
-incomplete implementations (which are no direct fault of the clang
-developers.)
-
+diff --git a/Documentation/devicetree/bindings/index.rst b/Documentation/devicetree/bindings/index.rst
+index 98ebdab24b51..6b87875a049c 100644
+--- a/Documentation/devicetree/bindings/index.rst
++++ b/Documentation/devicetree/bindings/index.rst
+@@ -8,3 +8,4 @@ Device Tree
+    :maxdepth: 1
+ 
+    ABI
++   submitting-patches
+diff --git a/Documentation/devicetree/bindings/submitting-patches.txt b/Documentation/devicetree/bindings/submitting-patches.rst
+similarity index 92%
+rename from Documentation/devicetree/bindings/submitting-patches.txt
+rename to Documentation/devicetree/bindings/submitting-patches.rst
+index 98bee6240b65..0aab2b3f16d0 100644
+--- a/Documentation/devicetree/bindings/submitting-patches.txt
++++ b/Documentation/devicetree/bindings/submitting-patches.rst
+@@ -1,13 +1,17 @@
++.. SPDX-License-Identifier: GPL-2.0
+ 
+-  Submitting devicetree (DT) binding patches
++==========================================
++Submitting devicetree (DT) binding patches
++==========================================
+ 
+ I. For patch submitters
++=======================
+ 
+   0) Normal patch submission rules from Documentation/process/submitting-patches.rst
+      applies.
+ 
+   1) The Documentation/ and include/dt-bindings/ portion of the patch should
+-     be a separate patch. The preferred subject prefix for binding patches is:
++     be a separate patch. The preferred subject prefix for binding patches is::
+ 
+        "dt-bindings: <binding dir>: ..."
+ 
+@@ -17,7 +21,7 @@ I. For patch submitters
+ 
+   2) DT binding files are written in DT schema format using json-schema
+      vocabulary and YAML file format. The DT binding files must pass validation
+-     by running:
++     by running::
+ 
+        make dt_binding_check
+ 
+@@ -60,6 +64,7 @@ I. For patch submitters
+ 
+ 
+ II. For kernel maintainers
++==========================
+ 
+   1) If you aren't comfortable reviewing a given binding, reply to it and ask
+      the devicetree maintainers for guidance.  This will help them prioritize
+@@ -76,6 +81,7 @@ II. For kernel maintainers
+      kept with the driver using the binding.
+ 
+ III. Notes
++==========
+ 
+   0) Please see ...bindings/ABI.txt for details regarding devicetree ABI.
+ 
+diff --git a/Documentation/devicetree/bindings/writing-bindings.txt b/Documentation/devicetree/bindings/writing-bindings.txt
+index 27dfd2d8016e..ca024b9c7433 100644
+--- a/Documentation/devicetree/bindings/writing-bindings.txt
++++ b/Documentation/devicetree/bindings/writing-bindings.txt
+@@ -4,7 +4,7 @@ This is a list of common review feedback items focused on binding design. With
+ every rule, there are exceptions and bindings have many gray areas.
+ 
+ For guidelines related to patches, see
+-Documentation/devicetree/bindings/submitting-patches.txt
++Documentation/devicetree/bindings/submitting-patches.rst
+ 
+ 
+ Overall design
+diff --git a/Documentation/process/submitting-patches.rst b/Documentation/process/submitting-patches.rst
+index ba5e944c7a63..1699b7f8e63a 100644
+--- a/Documentation/process/submitting-patches.rst
++++ b/Documentation/process/submitting-patches.rst
+@@ -16,7 +16,7 @@ for a list of items to check before
+ submitting code.  If you are submitting a driver, also read
+ :ref:`Documentation/process/submitting-drivers.rst <submittingdrivers>`;
+ for device tree binding patches, read
+-Documentation/devicetree/bindings/submitting-patches.txt.
++Documentation/devicetree/bindings/submitting-patches.rst.
+ 
+ Many of these steps describe the default behavior of the ``git`` version
+ control system; if you use ``git`` to prepare your patches, you'll find much
+diff --git a/Documentation/translations/it_IT/process/submitting-patches.rst b/Documentation/translations/it_IT/process/submitting-patches.rst
+index cba1f8cb61ed..7c23c08e4401 100644
+--- a/Documentation/translations/it_IT/process/submitting-patches.rst
++++ b/Documentation/translations/it_IT/process/submitting-patches.rst
+@@ -21,7 +21,7 @@ Leggete anche :ref:`Documentation/translations/it_IT/process/submit-checklist.rs
+ per una lista di punti da verificare prima di inviare del codice.  Se state
+ inviando un driver, allora leggete anche :ref:`Documentation/translations/it_IT/process/submitting-drivers.rst <it_submittingdrivers>`;
+ per delle patch relative alle associazioni per Device Tree leggete
+-Documentation/devicetree/bindings/submitting-patches.txt.
++Documentation/devicetree/bindings/submitting-patches.rst.
+ 
+ Molti di questi passi descrivono il comportamento di base del sistema di
+ controllo di versione ``git``; se utilizzate ``git`` per preparare le vostre
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index d64c67b67e3c..7d237a4598ae 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -2594,7 +2594,7 @@ sub process {
+ 				if (($last_binding_patch != -1) &&
+ 				    ($last_binding_patch ^ $is_binding_patch)) {
+ 					WARN("DT_SPLIT_BINDING_PATCH",
+-					     "DT binding docs and includes should be a separate patch. See: Documentation/devicetree/bindings/submitting-patches.txt\n");
++					     "DT binding docs and includes should be a separate patch. See: Documentation/devicetree/bindings/submitting-patches.rst\n");
+ 				}
+ 			}
+ 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+2.25.2
+
