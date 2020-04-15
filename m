@@ -2,136 +2,125 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 899A3C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF6FFC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:20:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63A7020732
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:20:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="dq1hDCWL";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="S1mXK+MV"
+	by mail.kernel.org (Postfix) with ESMTP id 8EC2320732
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:20:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442356AbgDOVUn (ORCPT
+        id S2442363AbgDOVUv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 17:20:43 -0400
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:32288 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2438818AbgDOVUj (ORCPT
+        Wed, 15 Apr 2020 17:20:51 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:51048 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438890AbgDOVUm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 17:20:39 -0400
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03FLEksq010310;
-        Wed, 15 Apr 2020 14:20:11 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=date : from : to :
- cc : subject : message-id : references : content-type :
- content-transfer-encoding : in-reply-to : mime-version; s=pfpt0818;
- bh=RWAS2f5CbuBYhr7iOYbeETIIz4Gt120dhBXJvlbkzvE=;
- b=dq1hDCWLzNRXO0vwQRco8xfE/2qE2HPvkwzd0t6cx8z0v5+wkNrbzhnmvheqLLcX+tln
- CeFSVQGkIlOr12dSy5QxeobCLfQhRSVSDKBAfwlf4FL2atOBmnxX8JbmWEEEGctpUglj
- glv0WuNQEdsFI66yeME6c9FQHy/eV7KxFyy3u35iPGL/QPufsu2nM/KaVsOSX+MZaRZR
- 4rVwmCTuNn6KWxkDq+VHaQmeDiD083Pm+YnM71xJdeSZVx1zEIJwtH85qk6OHbFXaqQf
- oVHLO75dj+sNsPM/wXOJL95R+3gIp0YJKjfm4NKlqrQZ258Osk4pefy2pFg2TJPQXZyN WA== 
-Received: from sc-exch02.marvell.com ([199.233.58.182])
-        by mx0a-0016f401.pphosted.com with ESMTP id 30dn8gm61f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 15 Apr 2020 14:20:11 -0700
-Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH02.marvell.com
- (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 15 Apr
- 2020 14:20:09 -0700
-Received: from SC-EXCH02.marvell.com (10.93.176.82) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 15 Apr
- 2020 14:20:09 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.170)
- by SC-EXCH02.marvell.com (10.93.176.82) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2 via Frontend Transport; Wed, 15 Apr 2020 14:20:08 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DhkJffdJQGCrXryXrstJ43lTnzsn/ikIPAxtMCkpO4AedHKFYHwjBvoHobqbJNCFLWyxFDJS8tfcsZ8JjcPPDv0LymKtwFrawyv4A68xL36Yh2qZiCflf/0GVNMwE5VdrT7GPhD87cW9t0d7VToMSuPDtBCrAgoOTOd5fe+CJPVXD0Z0JlgnoKL1EQqWCjunbyIC8FH9UoWllHSmpbObaL1rfhWrnbG/LebWFElFjJTKCSo/ZtQe5v6HEaMcOMcZVBc1IoHsIyYM/LiXo01dWv+VyLvpvT9lPUP65yrAtKN7Fo+9bU50o9jI1g7l3mx3yKO25z+w1RQgl2kkDvKMkA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RWAS2f5CbuBYhr7iOYbeETIIz4Gt120dhBXJvlbkzvE=;
- b=m6K7Lf4N+5O6kEs2LUe1PvupTYgWruSNQJJBz9calLKSpoHt8bAL6Toy9ccDyUMhDBQje91AIzbtY5Am/j365uX7Mji10yX3Rn+tP1P8TQwyWLfKmhr6/ODzo/StdpTpNKEOrqiv4PeEtM4MucICR45C3QGll7DN2OqI5gK3lnbGSHn7CfxVxViwXuthwFojtoAN9eR5bsLc0iQJpzXe5fDCT71JoxjrGK0KzCx7BZZdUUqXK5gGjS9I6rVcC01GL1W6+GlL9n8F2UbBMdSe40Y/wFg5B+f93FNu6Dgbl29LMSrRvlYtYBi+wsopJR64z0LcMUyjd2jNfy7OF02QWg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RWAS2f5CbuBYhr7iOYbeETIIz4Gt120dhBXJvlbkzvE=;
- b=S1mXK+MVQjFbjTwNJEPf+7lxVwny5FsfABy8OKjGL4KYb1oW/zjcISQRLROVA3npre4OOcsfWPhaxGnWIhWjCK+7bTTYDAkKRKNHvYLYLJ17h8j7qvaK1tuzgq5QwzOugn3vBswQYAhbOu0skp/19pA6eHDNuCnVc1MW+Mj81Kk=
-Received: from BYAPR18MB2661.namprd18.prod.outlook.com (2603:10b6:a03:136::26)
- by BYAPR18MB2759.namprd18.prod.outlook.com (2603:10b6:a03:10b::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.25; Wed, 15 Apr
- 2020 21:20:07 +0000
-Received: from BYAPR18MB2661.namprd18.prod.outlook.com
- ([fe80::a165:ffa5:f3eb:d62d]) by BYAPR18MB2661.namprd18.prod.outlook.com
- ([fe80::a165:ffa5:f3eb:d62d%7]) with mapi id 15.20.2900.028; Wed, 15 Apr 2020
- 21:20:07 +0000
-Date:   Wed, 15 Apr 2020 23:19:56 +0200
-From:   Robert Richter <rrichter@marvell.com>
-To:     Jason Yan <yanaijie@huawei.com>
-CC:     <bp@alien8.de>, <mchehab@kernel.org>, <tony.luck@intel.com>,
-        <james.morse@arm.com>, <linux-edac@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Hulk Robot <hulkci@huawei.com>
-Subject: Re: [PATCH] EDAC: remove defined but not used 'bridge_str'
-Message-ID: <20200415211956.nnvqsjt4ekf2qido@rric.localdomain>
-References: <20200415085006.6732-1-yanaijie@huawei.com>
+        Wed, 15 Apr 2020 17:20:42 -0400
+Received: from ip5f5bd698.dynamic.kabel-deutschland.de ([95.91.214.152] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jOpSU-0004QT-Au; Wed, 15 Apr 2020 21:20:34 +0000
+Date:   Wed, 15 Apr 2020 23:20:33 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     syzbot <syzbot+d9ae59d4662c941e39c6@syzkaller.appspotmail.com>,
+        adobriyan@gmail.com, akpm@linux-foundation.org, avagin@gmail.com,
+        bernd.edlinger@hotmail.de, christian@brauner.io, guro@fb.com,
+        kent.overstreet@gmail.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mhocko@suse.com,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
+        Alexey Gladkov <gladkov.alexey@gmail.com>
+Subject: Re: [PATCH] proc: Handle umounts cleanly
+Message-ID: <20200415212033.vrkybww6gwbja76x@wittgenstein>
+References: <0000000000001c5eaa05a357f2e1@google.com>
+ <878siwioxj.fsf@x220.int.ebiederm.org>
+ <20200415193612.7cmmbwfpof6pvsqv@wittgenstein>
+ <873694ijvt.fsf@x220.int.ebiederm.org>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200415085006.6732-1-yanaijie@huawei.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-ClientProxiedBy: HE1PR05CA0139.eurprd05.prod.outlook.com
- (2603:10a6:7:28::26) To BYAPR18MB2661.namprd18.prod.outlook.com
- (2603:10b6:a03:136::26)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from rric.localdomain (31.208.96.227) by HE1PR05CA0139.eurprd05.prod.outlook.com (2603:10a6:7:28::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.17 via Frontend Transport; Wed, 15 Apr 2020 21:20:04 +0000
-X-Originating-IP: [31.208.96.227]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 395c7210-0069-4d1a-5204-08d7e182c533
-X-MS-TrafficTypeDiagnostic: BYAPR18MB2759:
-X-Microsoft-Antispam-PRVS: <BYAPR18MB2759EB7AEA2F1BE196B952F2D9DB0@BYAPR18MB2759.namprd18.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1417;
-X-Forefront-PRVS: 0374433C81
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR18MB2661.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(396003)(39860400002)(366004)(346002)(376002)(136003)(8936002)(2906002)(316002)(4326008)(55016002)(186003)(81156014)(956004)(9686003)(8676002)(5660300002)(4744005)(6916009)(6506007)(16526019)(66946007)(6666004)(86362001)(66556008)(66476007)(478600001)(53546011)(1076003)(52116002)(7696005)(26005);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: iv5YlADogKG+jHyG3A7qREjppuP6mHAjZ8AmKsrUA7gEJiZMMH3svddep9v+XivblFuT53rNeGEKvHe9YO57SzGWO01JOxqfzD9ciomblM+TPDza4uM2k7uBbvV0tR5hQCKq4gYeubl267r0+g1eXEXQvNz5KGPdJKSSoTJntCIzI5f8WY3LU/Y9xWWrzQd24xLf5ez6p9Z6JjILU4qjGD2zlcuVoOpXSHefLdIQiab1g9t2urHpqaH06oEwDhFskG4vB/wP+u/wUxOH1uJgO06tXkJaerRnR7Eay7CS2/kEmRnGMiyfQVJSKLxYXoZK55ePdR91jtwxklAA0bmFpXfWf9MXlvEV4MMNk4N4AGtfKxrn4cgUM/P8zyQFxdtttu9GR6gmPaZ3t33d/80G+1QsG5vkFFUN9y0FLtnQOcsDrb/M2TR2tDvf5lD1NOU6
-X-MS-Exchange-AntiSpam-MessageData: ariM+BmLFusoBIZy40EQH+HsROF0JLgvq6kURWYuPsR9MQ0lNnFFu6oZEhSBM3CzFe2Cf0S8c0Vt3iL5v6z7SBY1xAMWhKmikkNTaASbfNVkkDgFtzkdjuCiYWd0xODMfNFcqvNA00ifFfOwvLQyMA==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 395c7210-0069-4d1a-5204-08d7e182c533
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2020 21:20:06.8706
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: exhEnqwnrHCokmkDiObOS0aQj2FHvEAUBf83ARYYqiR0kENHkO4JqhTjSWvCiEXvDUd8wIR9iDQ7fimIJlEiEQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR18MB2759
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-15_08:2020-04-14,2020-04-15 signatures=0
+In-Reply-To: <873694ijvt.fsf@x220.int.ebiederm.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15.04.20 16:50:06, Jason Yan wrote:
-> Fix the following gcc warning:
+On Wed, Apr 15, 2020 at 03:17:26PM -0500, Eric W. Biederman wrote:
+> Christian Brauner <christian.brauner@ubuntu.com> writes:
 > 
-> drivers/edac/amd8131_edac.c:47:21: warning: ‘bridge_str’ defined but not
-> used [-Wunused-const-variable=]
->  static char * const bridge_str[] = {
->                      ^~~~~~~~~~
+> > On Wed, Apr 15, 2020 at 01:28:24PM -0500, Eric W. Biederman wrote:
+> >> syzbot writes:
+> >> > KASAN: use-after-free Read in dput (2)
+> >> >
+> >> > proc_fill_super: allocate dentry failed
+> >> > ==================================================================
+> >> > BUG: KASAN: use-after-free in fast_dput fs/dcache.c:727 [inline]
+> >> > BUG: KASAN: use-after-free in dput+0x53e/0xdf0 fs/dcache.c:846
+> >> > Read of size 4 at addr ffff88808a618cf0 by task syz-executor.0/8426
+> >> >
+> >> > CPU: 0 PID: 8426 Comm: syz-executor.0 Not tainted 5.6.0-next-20200412-syzkaller #0
+> >> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> >> > Call Trace:
+> >> >  __dump_stack lib/dump_stack.c:77 [inline]
+> >> >  dump_stack+0x188/0x20d lib/dump_stack.c:118
+> >> >  print_address_description.constprop.0.cold+0xd3/0x315 mm/kasan/report.c:382
+> >> >  __kasan_report.cold+0x35/0x4d mm/kasan/report.c:511
+> >> >  kasan_report+0x33/0x50 mm/kasan/common.c:625
+> >> >  fast_dput fs/dcache.c:727 [inline]
+> >> >  dput+0x53e/0xdf0 fs/dcache.c:846
+> >> >  proc_kill_sb+0x73/0xf0 fs/proc/root.c:195
+> >> >  deactivate_locked_super+0x8c/0xf0 fs/super.c:335
+> >> >  vfs_get_super+0x258/0x2d0 fs/super.c:1212
+> >> >  vfs_get_tree+0x89/0x2f0 fs/super.c:1547
+> >> >  do_new_mount fs/namespace.c:2813 [inline]
+> >> >  do_mount+0x1306/0x1b30 fs/namespace.c:3138
+> >> >  __do_sys_mount fs/namespace.c:3347 [inline]
+> >> >  __se_sys_mount fs/namespace.c:3324 [inline]
+> >> >  __x64_sys_mount+0x18f/0x230 fs/namespace.c:3324
+> >> >  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+> >> >  entry_SYSCALL_64_after_hwframe+0x49/0xb3
+> >> > RIP: 0033:0x45c889
+> >> > Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+> >> > RSP: 002b:00007ffc1930ec48 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
+> >> > RAX: ffffffffffffffda RBX: 0000000001324914 RCX: 000000000045c889
+> >> > RDX: 0000000020000140 RSI: 0000000020000040 RDI: 0000000000000000
+> >> > RBP: 000000000076bf00 R08: 0000000000000000 R09: 0000000000000000
+> >> > R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000003
+> >> > R13: 0000000000000749 R14: 00000000004ca15a R15: 0000000000000013
+> >> 
+> >> Looking at the code now that it the internal mount of proc is no
+> >> longer used it is possible to unmount proc.   If proc is unmounted
+> >> the fields of the pid namespace that were used for filesystem
+> >> specific state are not reinitialized.
+> >> 
+> >> Which means that proc_self and proc_thread_self can be pointers to
+> >> already freed dentries.
+> >> 
+> >> The reported user after free appears to be from mounting and
+> >> unmounting proc followed by mounting proc again and using error
+> >> injection to cause the new root dentry allocation to fail.  This in
+> >> turn results in proc_kill_sb running with proc_self and
+> >> proc_thread_self still retaining their values from the previous mount
+> >> of proc.  Then calling dput on either proc_self of proc_thread_self
+> >> will result in double put.  Which KASAN sees as a use after free.
+> >> 
+> >> Solve this by always reinitializing the filesystem state stored
+> >> in the struct pid_namespace, when proc is unmounted.
+> >> 
+> >> Reported-by: syzbot+72868dd424eb66c6b95f@syzkaller.appspotmail.com
+> >> Fixes: 69879c01a0c3 ("proc: Remove the now unnecessary internal mount of proc")
+> >> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+> >
+> > Was looking at that earlier right before eod briefly here as well.
+> > Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
 > 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+> The syzbot report or did you see the failure another way?
 
-Reviewed-by: Robert Richter <rrichter@marvell.com>
+Yep, the syzbot report. I haven't seen other issues so far.
+
+Christian
