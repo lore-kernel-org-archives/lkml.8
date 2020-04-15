@@ -2,165 +2,110 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72765C352BE
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:56:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE8C2C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:58:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5202F2072D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:56:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE45020774
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:58:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dyBX2dum"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="HwWfGRLR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438565AbgDOC4C (ORCPT
+        id S1729517AbgDOC55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 22:56:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44158 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732779AbgDOC4A (ORCPT
+        Tue, 14 Apr 2020 22:57:57 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:12679 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728429AbgDOC5r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 22:56:00 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BD1BC061A0C;
-        Tue, 14 Apr 2020 19:56:00 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id di6so994937qvb.10;
-        Tue, 14 Apr 2020 19:56:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5+pk54KXVRCt6mCeYfu6u1hgghJvTphtuH45b199eug=;
-        b=dyBX2dumBT3DX60HltmnArMIt6VdxDUSG499ZJ+SRAW1GNYbaDK0TUKMeEq/aSkESG
-         ChLKmTo6et7e8BsIPVwRNLLNO9n/dw8bpcW9L9WweiHlT8y42jKTCt+AeIllZGKe76jU
-         RCJUyCb3E7/1slLwAqTMTggJnLfQCt+1pYkAtHgsu7uB3FhuoZHhbfYnkQ+I6xm8NEE6
-         FnY3Z833zX6HWbAH1HxGSB0Bo9GqexomPFByl1c6UoTg01cXsev+ZUKRSoBVimBuYroh
-         m71L7+eFHi5pdsEosfQhCxZfgq5510wDXejkW+/+V2tIAXptyqXdWbIIQX8BclLlyFL4
-         l+Mw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5+pk54KXVRCt6mCeYfu6u1hgghJvTphtuH45b199eug=;
-        b=L+rRD0Dq3VkaVXRQ/V715wmOJNkExUXD9o2sJ+130wiHNEAasW2XckEdAWka+5KTkc
-         XXwPuKdVeM7VbAh7odPA25Yzb6KzUlwaDdv/wi0a/PVvlAnHN2I/F+Bn8co9hxeu1Gm3
-         arkGTu2FmKs7PiSFXYOCeX+3v5GBJP0ladIWYV28vV/yz97pb9SFBzetfvWx+tSARXx1
-         ma/yaOJ+ekz8Aj5QZsOZ1+2BFeHlkX5SxiB3IcqOvwSMjuQU92yfV3Wygkikki1HNEDc
-         B8kv3+5xVWraT4WlnWiYpUeSxWG8tr9xtuv+iUL6BZ1MRiuFzOvCpHwLVedxdz+E7HWU
-         +elQ==
-X-Gm-Message-State: AGi0Puag2m/kldNPsIgjAZIqXvnm+Yj+1ZdYCQhTBi2uYJmw7/40IFvg
-        1cDbyFud9LPazS0I87ESXIMMPIN/JhDo7ekcq38=
-X-Google-Smtp-Source: APiQypL6fx5Jo66bviF7emrcPPuSgkq+sExxjq0BShhEl+ej8+MVt0ZP8mIC/3uoA9xgoayPyN+s0Rj7dR5hh4U60L4=
-X-Received: by 2002:ad4:46e3:: with SMTP id h3mr3036173qvw.14.1586919359561;
- Tue, 14 Apr 2020 19:55:59 -0700 (PDT)
+        Tue, 14 Apr 2020 22:57:47 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e9677be0000>; Tue, 14 Apr 2020 19:55:58 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 14 Apr 2020 19:57:47 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 14 Apr 2020 19:57:47 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Apr
+ 2020 02:57:46 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 15 Apr 2020 02:57:46 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.171.241]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5e96782a0000>; Tue, 14 Apr 2020 19:57:46 -0700
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
+CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [RFC PATCH v7 1/9] arm64: tegra: Fix sor powergate clocks and reset
+Date:   Tue, 14 Apr 2020 19:57:35 -0700
+Message-ID: <1586919463-30542-2-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1586919463-30542-1-git-send-email-skomatineni@nvidia.com>
+References: <1586919463-30542-1-git-send-email-skomatineni@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
-References: <cover.1585726761.git.shengjiu.wang@nxp.com> <68208297b49e85adfddf843bc205d154790a49de.1585726761.git.shengjiu.wang@nxp.com>
- <20200414154643.GA29098@bogus>
-In-Reply-To: <20200414154643.GA29098@bogus>
-From:   Shengjiu Wang <shengjiu.wang@gmail.com>
-Date:   Wed, 15 Apr 2020 10:55:47 +0800
-Message-ID: <CAA+D8AP2CiRT7qkNa7yBDH0Dbd=i1eyqL4g4zobRmR-vEx4VBQ@mail.gmail.com>
-Subject: Re: [PATCH v6 6/7] ASoC: dt-bindings: fsl_easrc: Add document for EASRC
-To:     Rob Herring <robh@kernel.org>
-Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org, Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1586919358; bh=PTc2SyRS9NP+68XdMh+c6cj6nLmKTNHZwxALx6dnzdM=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=HwWfGRLRiL3iq1+wLiMWHhw1zeNL5ViLWjAZ5OKqooBpEDkLzHglOp/8xXnqyMBaE
+         tuR88U4kTDTd/OUghr5q2XU593Ks+9lu4Hn2e0SKHd/oT/435j9WmKVNyI5wOmxWm2
+         6KWX69qlHDH75IIA9/0rL2HGEQ16MyjzBarhAtHeNaUWwIKiUvX7g2cNH9NEc15gub
+         Q3MqIExAegr4iRtOJYuFd6R6vY1QdrKCdOdXfFqekWhr70yY2hx9sXVNk8Mpie4J14
+         nKD+H3mRLXPE3KucnpaFPQrUK+z1OOErtL/vakd2YN/lN5vWyjx6imuWZYMYHbq18m
+         TRGdD0xjF87DA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob
+Tegra210 device tree lists csi clock and reset under SOR powergate
+node.
 
-On Tue, Apr 14, 2020 at 11:49 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Wed, Apr 01, 2020 at 04:45:39PM +0800, Shengjiu Wang wrote:
-> > EASRC (Enhanced Asynchronous Sample Rate Converter) is a new
-> > IP module found on i.MX8MN.
-> >
-> > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-> > ---
-> >  .../devicetree/bindings/sound/fsl,easrc.yaml  | 101 ++++++++++++++++++
-> >  1 file changed, 101 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/sound/fsl,easrc.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/sound/fsl,easrc.yaml b/Documentation/devicetree/bindings/sound/fsl,easrc.yaml
-> > new file mode 100644
-> > index 000000000000..14ea60084420
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/sound/fsl,easrc.yaml
-> > @@ -0,0 +1,101 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/sound/fsl,easrc.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: NXP Asynchronous Sample Rate Converter (ASRC) Controller
-> > +
-> > +maintainers:
-> > +  - Shengjiu Wang <shengjiu.wang@nxp.com>
-> > +
-> > +properties:
-> > +  $nodename:
-> > +    pattern: "^easrc@.*"
-> > +
-> > +  compatible:
-> > +    const: fsl,imx8mn-easrc
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    items:
-> > +      - description: Peripheral clock
-> > +
-> > +  clock-names:
-> > +    items:
-> > +      - const: mem
-> > +
-> > +  dmas:
-> > +    maxItems: 8
-> > +
-> > +  dma-names:
-> > +    items:
-> > +      - const: ctx0_rx
-> > +      - const: ctx0_tx
-> > +      - const: ctx1_rx
-> > +      - const: ctx1_tx
-> > +      - const: ctx2_rx
-> > +      - const: ctx2_tx
-> > +      - const: ctx3_rx
-> > +      - const: ctx3_tx
-> > +
-> > +  firmware-name:
-> > +    allOf:
-> > +      - $ref: /schemas/types.yaml#/definitions/string
-> > +      - const: imx/easrc/easrc-imx8mn.bin
-> > +    description: The coefficient table for the filters
-> > +
-> > +  fsl,asrc-rate:
->
-> fsl,asrc-rate-hz
+But Tegra210 has csicil in SOR partition and csi in VENC partition.
 
-Can we keep "fsl,asrc-rate", because I want this property
-align with the one in fsl,asrc.txt.  These two asrc modules
-can share same property name.
+So, this patch includes fix for sor powergate node.
 
-best regards
-wang shengjiu
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+---
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+index 64c46ce..d0eff92 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+@@ -796,7 +796,9 @@
+ 			pd_sor: sor {
+ 				clocks = <&tegra_car TEGRA210_CLK_SOR0>,
+ 					 <&tegra_car TEGRA210_CLK_SOR1>,
+-					 <&tegra_car TEGRA210_CLK_CSI>,
++					 <&tegra_car TEGRA210_CLK_CILAB>,
++					 <&tegra_car TEGRA210_CLK_CILCD>,
++					 <&tegra_car TEGRA210_CLK_CILE>,
+ 					 <&tegra_car TEGRA210_CLK_DSIA>,
+ 					 <&tegra_car TEGRA210_CLK_DSIB>,
+ 					 <&tegra_car TEGRA210_CLK_DPAUX>,
+@@ -804,7 +806,6 @@
+ 					 <&tegra_car TEGRA210_CLK_MIPI_CAL>;
+ 				resets = <&tegra_car TEGRA210_CLK_SOR0>,
+ 					 <&tegra_car TEGRA210_CLK_SOR1>,
+-					 <&tegra_car TEGRA210_CLK_CSI>,
+ 					 <&tegra_car TEGRA210_CLK_DSIA>,
+ 					 <&tegra_car TEGRA210_CLK_DSIB>,
+ 					 <&tegra_car TEGRA210_CLK_DPAUX>,
+-- 
+2.7.4
+
