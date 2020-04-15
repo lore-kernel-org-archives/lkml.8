@@ -2,85 +2,110 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C290C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:20:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02CD0C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:21:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65B202087E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:20:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dkEeBnsh"
+	by mail.kernel.org (Postfix) with ESMTP id D65732087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:21:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392492AbgDOBUG (ORCPT
+        id S2392504AbgDOBVQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 21:20:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57616 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2392479AbgDOBUD (ORCPT
+        Tue, 14 Apr 2020 21:21:16 -0400
+Received: from cmccmta1.chinamobile.com ([221.176.66.79]:12034 "EHLO
+        cmccmta1.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392479AbgDOBVK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 21:20:03 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6DD1C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 18:20:02 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id b8so788069pfp.8
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 18:20:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TrrpbbPwJAr8kyteNcvoZB2BPcqO+NKCa20U7yB2R10=;
-        b=dkEeBnshSPERc7o2ljrwrCS5c3w6V5JeyZ1SWZ4bxSJHqp+RtYf69d2Or1PLlJUTHd
-         IYW4G2DzmVjU6Pc8mVbOP5o/3yseehMtOB5C7jM5I9zYshJu2ML471uRB4XjnFClN6j7
-         FLE8lC+sY1gC/UF7YGOKOwjtc6mNn9zuRiAwmkUSxU91t+DZtQ9dZ6BhnOCvSOHvL+f9
-         5RmUZzyubiTyhvua6LZxOQNZddWmU67Flw8q7JSUgnb5cbzXhpGRSdDVACCrtN+1E2/j
-         e0U+YUn9M74i51At0N7WCsFJS2CDC1rxpgjCdoEkCSM/iN8W/990KuSOn69xYz/DGoy2
-         kHxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TrrpbbPwJAr8kyteNcvoZB2BPcqO+NKCa20U7yB2R10=;
-        b=NMJSvWv8HpqIs53YSu/B9AOdEK7+Y+W/HyFGuxqyEzr/o1Egh361t/EqwVGSrDJmxB
-         CnirU5WiethUDEm1mAv1If1wozuJF336SHvtvUg2M3NM3IPEdbKrslYqwP5XQFngUKXJ
-         qNQdM8b7hejdfOr9msH+zbhtcZM1BbI4NGVMyhzg5U+ZixmXh3TgdVIj2mLIqT3pAKfO
-         Ac77g8Ryv4coiRLZn79KtpHv3vEMnDvzB2vRn1Krmdbkpff7XdXVaQIMPQFmLgzdDu0s
-         9dfERbdO3Q6OtlCWYeKL4n5CWBL7QXTZTWOYB4vVH6/YjTXTMXiXPGOVugVKZdOhkiw1
-         lypg==
-X-Gm-Message-State: AGi0PuZn7ZgsZ1Y++0m+Uoym1CUyQpkP3fvIHGOfBKIY/dxgAqligV44
-        rJPICosAa5vE4n+FBLPGRR753RvC16H1mzF5PKck5g==
-X-Google-Smtp-Source: APiQypL1f0xDNqRsCbQhV1fCyIUtHEZERlcQ2pLpCcqFT9UQ8H0t8GsJ2OLer+AH91XIVyPKPZIwVMglEhr6RZ5xgQo=
-X-Received: by 2002:a63:cc0c:: with SMTP id x12mr25910799pgf.0.1586913601923;
- Tue, 14 Apr 2020 18:20:01 -0700 (PDT)
+        Tue, 14 Apr 2020 21:21:10 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.3]) by rmmx-syy-dmz-app04-12004 (RichMail) with SMTP id 2ee45e966162f67-5b220; Wed, 15 Apr 2020 09:20:34 +0800 (CST)
+X-RM-TRANSID: 2ee45e966162f67-5b220
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from [172.20.21.224] (unknown[112.25.154.146])
+        by rmsmtp-syy-appsvr02-12002 (RichMail) with SMTP id 2ee25e9661610ba-4593e;
+        Wed, 15 Apr 2020 09:20:33 +0800 (CST)
+X-RM-TRANSID: 2ee25e9661610ba-4593e
+Subject: Re: [PATCH] btrfs: Fix backref.c selftest compilation warning
+To:     dsterba@suse.cz, clm@fb.com, josef@toxicpanda.com,
+        dsterba@suse.com, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Shengju Zhang <zhangshengju@cmss.chinamobile.com>
+References: <20200411154915.9408-1-tangbin@cmss.chinamobile.com>
+ <20200414151931.GU5920@twin.jikos.cz> <20200414152233.GV5920@twin.jikos.cz>
+From:   Tang Bin <tangbin@cmss.chinamobile.com>
+Message-ID: <f292429f-6b4e-4b2e-db5a-9bf02a3cde0e@cmss.chinamobile.com>
+Date:   Wed, 15 Apr 2020 09:22:28 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200414195638.156123-1-gbiv@google.com> <20200414170006.10f70d361bfd085f3e846939@linux-foundation.org>
-In-Reply-To: <20200414170006.10f70d361bfd085f3e846939@linux-foundation.org>
-From:   George Burgess <gbiv@google.com>
-Date:   Tue, 14 Apr 2020 18:19:25 -0700
-Message-ID: <CA+rzOEmBYOBKUHYZNn3yvaFz00-tsmYKurQjTMY1-Vye_GLfEA@mail.gmail.com>
-Subject: Re: [PATCH] tools/build: tweak unused value workaround
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200414152233.GV5920@twin.jikos.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 5:00 PM Andrew Morton <akpm@linux-foundation.org> wrote:
-> What does "disabled by default" mean?  Presumably it should now be
-> enabled, but I don't think this disabling happens in the mainline
-> kernel tree?
+Hi David:
 
-Disabled when `perf` does its configure-ish checks. Concretely,
+On 2020/4/14 23:22, David Sterba wrote:
+> On Tue, Apr 14, 2020 at 05:19:31PM +0200, David Sterba wrote:
+>> On Sat, Apr 11, 2020 at 11:49:15PM +0800, Tang Bin wrote:
+>>> Fix missing braces compilation warning in the ARM
+>>> compiler environment:
+>>>      fs/btrfs/backref.c: In function ‘is_shared_data_backref’:
+>>>      fs/btrfs/backref.c:394:9: warning: missing braces around initializer [-Wmissing-braces]
+>>>        struct prelim_ref target = {0};
+>>>      fs/btrfs/backref.c:394:9: warning: (near initialization for ‘target.rbnode’) [-Wmissing-braces]
+>>>
+>>> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+>>> Signed-off-by: Shengju Zhang <zhangshengju@cmss.chinamobile.com>
+>>> ---
+>>>   fs/btrfs/backref.c | 2 +-
+>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/fs/btrfs/backref.c b/fs/btrfs/backref.c
+>>> index 9c380e7..0cc0257 100644
+>>> --- a/fs/btrfs/backref.c
+>>> +++ b/fs/btrfs/backref.c
+>>> @@ -391,7 +391,7 @@ static int is_shared_data_backref(struct preftrees *preftrees, u64 bytenr)
+>>>   	struct rb_node **p = &preftrees->direct.root.rb_root.rb_node;
+>>>   	struct rb_node *parent = NULL;
+>>>   	struct prelim_ref *ref = NULL;
+>>> -	struct prelim_ref target = {0};
+>>> +	struct prelim_ref target = {};
+>> I wonder why this initialization is a problem while there are about 20
+>> other uses of "{0}". The warning is about the embedded rbnode, but why
+>> does a more recent compiler not warn about that? Is this a missing fix
+>> from the one you use?
+>>
+>> I don't mind fixing compiler warnings as long as it bothers enough
+>> people, eg. we have fixes reported by gcc 7 but I'm hesitant to fix
+>> anything older without a good reason.
+> This seems to be the bug report
+>
+> https://gcc.gnu.org/bugzilla/show_bug.cgi?id=53119
+> "Bug 53119 - -Wmissing-braces wrongly warns about universal zero
+> initializer {0} "
 
-```
-~/linux/tools/perf $ make V=1 VF=1 CC=$clang -f Makefile.perf notarget \
-    |& grep 'Auto-detecting\|sync-compare-and-swap'
-Auto-detecting system features:
-...         sync-compare-and-swap: [ OFF ]
-```
+Thank you for your reply. My tool chain is 
+"arm-linux-gnueabihf-gcc(Linaro GCC 4.9-2017.01) 4.9.4".
+
+I was trying to do an experiment on the hardware so I compiled it and 
+there was a warning. Maybe as Qu Wenruo said possible tools are old?
+
+Thank you for your patience,
+
+Tang Bin
+
+
+
+
+
+
+
