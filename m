@@ -2,111 +2,100 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 414A6C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:20:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C34C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:20:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 223FA216FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:20:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xy0NAs50"
+	by mail.kernel.org (Postfix) with ESMTP id 68B5620775
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:20:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586956857;
+	bh=icevHMlNaKU3+OGN8LI44T7CknePHU+2Xhl97UBCtAI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HrOeIKqa4fZRy14XIdRf7jWW8exdOAFOHmiVXep9m6Ixh+YtZROwS8fy8Gp4Wj2um
+	 uVXOSIX/uMj/cbbCuixtN/8wNrITV3Zm+WrtRDqZFPNsaPXy+fqUu7thorJxk1wEBX
+	 kaRZ6f/BZytHo7BwaaedZ8drPDnjsx9aGBcNt4TI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S370703AbgDONUg (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:20:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56198 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2506285AbgDONTo (ORCPT
+        id S2506324AbgDONUx (ORCPT
+        <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 09:20:53 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:56183 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2506307AbgDONUW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 09:19:44 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5EDCC061A0C;
-        Wed, 15 Apr 2020 06:19:43 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id b11so7742306wrs.6;
-        Wed, 15 Apr 2020 06:19:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=lfpK/xOIlDnyJhSEQBBYKy273A0qYIk6KaRxAULUFas=;
-        b=Xy0NAs50nauKNzelhrgCoZ1oAYS0by3FW/Xaw2GPXjjbxeHr7P51WtKfCf1iVTlDao
-         1cOOPmWg97iJ76qPu3Zf8K1JeiI+rzszWGk02qVHLNvlaAePVcN0Z1ZL+XQNVE5e9274
-         GYzX7MjCAThNITca93dboFwAqeKUQEJNeSp75p0d8awYnOijpfDLDm0N9I+yyxD6oci7
-         AUyJfwQuq1AqKugkFVaK5DG/Twamt2jjtWUBC/Q78V6LlzCa56wRZOhfgAQvg26w7Zfk
-         Ki+dfNNizSoeEwHuWdzLPllpRX8OzyQKILZp1EwCutUgg3ED3sqXDlxRzrDrAzQvSFX9
-         Bp/A==
+        Wed, 15 Apr 2020 09:20:22 -0400
+Received: by mail-pj1-f66.google.com with SMTP id a32so6757488pje.5;
+        Wed, 15 Apr 2020 06:20:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=lfpK/xOIlDnyJhSEQBBYKy273A0qYIk6KaRxAULUFas=;
-        b=bBHeMvd4p6pfzZqUQ5yM8GBAZuuS/BtWb31bb32ABhqN6PUzGkDYSa0oWCCDPohrxD
-         BwZ1Fdv3wskLVDfKER+qhlsWGKPFDAZUjbuOAoIUlMzgRfxb/qLPkYAH/uTq3KgwuWkK
-         k/xowWap+PdKC3DTaJ3/oTkV5KOor9wXYFVibyiWuKGmEjsBeEdFevzUvO59ikxLVHEq
-         p3ELX/MQHAWVpJZIdgpw/GoCP3kyv6+ntp3CcjWwlV4djrWj+XGwRGEBsEygVLceArz4
-         Kzl/Gw1n3H6tTPVTUcUz/9nKQ0GJ23TT0aCpa9Vzoi2u5TAyn2w+s8Mq2vhaRy17Q68a
-         4oRA==
-X-Gm-Message-State: AGi0PuZ3MSLAa2hREzCktIdd/tShzn5rlfWHKSID5unkgZN9H13bkmxR
-        ztMB5Vo1dADsOcE7JxYNc9q81JybyWGRIAqsypM=
-X-Google-Smtp-Source: APiQypIW8Pb7KI2m47zG2TSNaiw4mMtQU1+5Wz2hxAJY83V2FfpcUzk0ZWhEopuJDFTjiX0vj3fcibyWGzm0sC1HtaI=
-X-Received: by 2002:adf:ef51:: with SMTP id c17mr28624905wrp.130.1586956782339;
- Wed, 15 Apr 2020 06:19:42 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RJpmPPEbW5DFD5EOE4e1MFnGEEY0tGlTM0SU0H+OaOw=;
+        b=kwd3IsEe9y/QMKAsTq1Wc0vZoVM0KpCPxPTibciD4XEiexhNx/nHVOggAAkHFCc4pI
+         Y9LrTG3WaHJWcbTV20e4t0WEKzbSOJQIzT8M+LV1309ZtiE1u0jIOzv8vTvRfKMooA0B
+         JpUia6/+S3tAmUyWMaobP+htZGCKgTnKUprm02v6Htnscgiu0vcTdzyGT0ecYLeKY0JE
+         oTgswhKaWqZJkeVoUqjn/TqjkXq4yqGrKh+4/AaldoW6GRV5pyFFFU8u6Y9XDeFr/bSn
+         u7R+183U0M5ojGK4QPlPlU9P27gpQc9tmob+q+sxvg8WSfDu1n1kI9P2Mt2aqYRUtGEf
+         phtQ==
+X-Gm-Message-State: AGi0PuYBihfwD0tnL1IbAGDYaE3bepcPVcJ1VVFYgE3kxs2XPSdYUiMH
+        nqC4tncEKXV4hDmfFJshcpA=
+X-Google-Smtp-Source: APiQypJUeYCz7pZivMHyL551WxNhmqBNbGwfbuuxjlm8hRiqy/s1ws3J2v8JSkBdw41jCGt/Xs+WVw==
+X-Received: by 2002:a17:902:6b07:: with SMTP id o7mr4705177plk.141.1586956821686;
+        Wed, 15 Apr 2020 06:20:21 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id x3sm13521951pfq.95.2020.04.15.06.20.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2020 06:20:20 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id EF32940277; Wed, 15 Apr 2020 13:20:19 +0000 (UTC)
+Date:   Wed, 15 Apr 2020 13:20:19 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
+        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
+        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
+        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Michal Hocko <mhocko@kernel.org>
+Subject: Re: [PATCH 5/5] block: revert back to synchronous request_queue
+ removal
+Message-ID: <20200415132019.GW11244@42.do-not-panic.com>
+References: <20200414041902.16769-1-mcgrof@kernel.org>
+ <20200414041902.16769-6-mcgrof@kernel.org>
+ <20200414154725.GD25765@infradead.org>
+ <20200414205852.GP11244@42.do-not-panic.com>
+ <20200415064644.GA28112@infradead.org>
 MIME-Version: 1.0
-References: <1586254255-28713-1-git-send-email-sumit.garg@linaro.org>
- <CABPxzY+hL=jD6Zy=netP3oqNXg69gDL2g0KiPe40eaXXgZBnxw@mail.gmail.com>
- <CAFA6WYMZAq6X5m++h33ySCa6jOQCq_tHL=8mUi-kPMcn4FH=jA@mail.gmail.com> <CAFA6WYOW9ne0iffwC1dc48a_aSaYkkxQzyHQXTV2Wkob9KOXQg@mail.gmail.com>
-In-Reply-To: <CAFA6WYOW9ne0iffwC1dc48a_aSaYkkxQzyHQXTV2Wkob9KOXQg@mail.gmail.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Wed, 15 Apr 2020 15:19:30 +0200
-Message-ID: <CA+icZUUDm=WPjmwh5ikp8t+xt7dqTgghCeB8F0+czaUh-sHXxA@mail.gmail.com>
-Subject: Re: [PATCH v2] mac80211: fix race in ieee80211_register_hw()
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     Johannes Berg <johannes@sipsolutions.net>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Krishna Chaitanya <chaitanya.mgit@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, kuba@kernel.org,
-        Kalle Valo <kvalo@codeaurora.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?Matthias=2DPeter_Sch=C3=B6pfer?= 
-        <matthias.schoepfer@ithinx.io>,
-        "Berg Philipp (HAU-EDS)" <Philipp.Berg@liebherr.com>,
-        "Weitner Michael (HAU-EDS)" <Michael.Weitner@liebherr.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Loic Poulain <loic.poulain@linaro.org>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200415064644.GA28112@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 3:10 PM Sumit Garg <sumit.garg@linaro.org> wrote:
+On Tue, Apr 14, 2020 at 11:46:44PM -0700, Christoph Hellwig wrote:
+> On Tue, Apr 14, 2020 at 08:58:52PM +0000, Luis Chamberlain wrote:
+> > > I think this needs a WARN_ON thrown in to enforece the calling context.
+> > 
+> > I considered adding a might_sleep() but upon review with Bart, he noted
+> > that this function already has a mutex_lock(), and if you look under the
+> > hood of mutex_lock(), it has a might_sleep() at the very top. The
+> > warning then is implicit.
+> 
+> It might just be a personal preference, but I think the documentation
+> value of a WARN_ON_ONCE or might_sleep with a comment at the top of
+> the function is much higher than a blurb in a long kerneldoc text and
+> a later mutex_lock.
 
-[.. ]
+Well I'm a fan of making this explicit, so sure will just sprinkle a
+might_sleep(), even though we have a mutex_lock().
 
-> > In case we don't have any further comments, could you fix this nitpick
-> > from Chaitanya while applying or would you like me to respin and send
-> > v3?
->
-> A gentle ping. Is this patch a good candidate for 5.7-rc2?
->
-
-Hi Sumit,
-
-it's in [1] (see [2]) with slightly mods by Johannes but not in Linus tree.
-
-Johannes requested a pull-request means will be merged in a next step
-in net.git and then hopefully land in Linus tree after Dave M.
-requested a pull-request.
-
-Thanks for your patch.
-
-Regards,
-- Sedat -
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/jberg/mac80211.git/tag/?h=mac80211-for-net-2020-04-15
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/jberg/mac80211.git/commit/?h=mac80211-for-net-2020-04-15&id=52e04b4ce5d03775b6a78f3ed1097480faacc9fd
+  Luis
