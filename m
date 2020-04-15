@@ -2,97 +2,108 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA4EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:14:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B3AC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9ED9D20771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:14:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0BBA20771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:14:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RMiUNy2e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441722AbgDOTOh (ORCPT
+        id S2441731AbgDOTOn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 15:14:37 -0400
-Received: from baldur.buserror.net ([165.227.176.147]:35596 "EHLO
-        baldur.buserror.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1416885AbgDOS4E (ORCPT
+        Wed, 15 Apr 2020 15:14:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52762 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1416889AbgDOS7z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 14:56:04 -0400
-Received: from [2601:449:8480:af0:12bf:48ff:fe84:c9a0]
-        by baldur.buserror.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <oss@buserror.net>)
-        id 1jOnAT-0006xw-Sc; Wed, 15 Apr 2020 13:53:50 -0500
-Message-ID: <36961f9d8c533d8b576043a2c6fc4859accfd9f1.camel@buserror.net>
-From:   Scott Wood <oss@buserror.net>
-To:     Wang Wenhu <wenhu.wang@vivo.com>, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, christophe.leroy@c-s.fr,
-        linuxppc-dev@lists.ozlabs.org
-Cc:     kernel@vivo.com, Michael Ellerman <mpe@ellerman.id.au>
-Date:   Wed, 15 Apr 2020 13:53:48 -0500
-In-Reply-To: <20200415152442.122873-2-wenhu.wang@vivo.com>
-References: <20200415124929.GA3265842@kroah.com>
-         <20200415152442.122873-1-wenhu.wang@vivo.com>
-         <20200415152442.122873-2-wenhu.wang@vivo.com>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2601:449:8480:af0:12bf:48ff:fe84:c9a0
-X-SA-Exim-Rcpt-To: wenhu.wang@vivo.com, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, christophe.leroy@c-s.fr, linuxppc-dev@lists.ozlabs.org, kernel@vivo.com, mpe@ellerman.id.au
-X-SA-Exim-Mail-From: oss@buserror.net
-Subject: Re: [PATCH v2,1/5] powerpc: 85xx: make FSL_85XX_CACHE_SRAM
- configurable
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on baldur.buserror.net)
+        Wed, 15 Apr 2020 14:59:55 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1457C061A0C;
+        Wed, 15 Apr 2020 11:59:54 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id r24so4937660ljd.4;
+        Wed, 15 Apr 2020 11:59:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+lgH9QEXgssaM2l+t80P4gQY7lGRB9KmgdYKNpUDs6o=;
+        b=RMiUNy2eQfnY3aZ1nGyJOaQD/7k7Bhwn1NGMoOyEJsKa4Dymv7l733xXw82+YXBxa5
+         HD6yD4dS4Z+0jafFk8nqJ1iSsMlCuurc1SHknGc8LLoMAG0DUHCD+HT5VkT/fxYJR8FB
+         VYNOk1TiBTmJgkaMKCIsKYrqvW5Ji3Ylf7ChsI4Fkwur0oMWK50q9lTSGkDh7cD+LIku
+         EmX9Br2zCpDM1EJoYRUcSSJ4RUDIYOzz4GSedf981nT6k1uKWu3szryS3s0QMsFLTi/v
+         +e2K6gHcbglGR83H5vK0u7yOLotn+3eQVvPc3OSteP/AlFXOqV9pIftX5yYP2T05AcHJ
+         UXMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+lgH9QEXgssaM2l+t80P4gQY7lGRB9KmgdYKNpUDs6o=;
+        b=Y+LHiMUxc1H7ciybuDnfp1BEWspq6Rr92Ci7jt+8rU8B3zhTmrrQn9d1STP3Vm7GUO
+         0jbQlI04ns344t5OLgLqkrO6zTIZDoTRpR5RmzCHOM+D1H9E0GoyRZtOn2zbwvbbbV91
+         U2ZlJ+Vv1HGFk+RLRUY4eK6GKt6x48qpsFegFzpO3CYvN38hXRv+pThPwXIXnUJH0CJL
+         hyIwG++edGDajOvdjcJYg4Txmy0w1hLCTpkRMjTYxdWbTsxbcPYIl7xeFkd3Qs1K8JUc
+         oHBZ/IW1j8Wt3CUWyxzmGpMqHEHjADozvKuITUIBz91hjHN4W+MvXEWZmR24KZ+2xA3S
+         cifA==
+X-Gm-Message-State: AGi0PuZCUqpYpzO691ufQ+UxaJyxSSN9SHt+J7xLpl7XZXS7aceepuuw
+        kNuNV6CfuuytA9T2cRf+VZVUDTnk8/Q=
+X-Google-Smtp-Source: APiQypKqiBElG3N9BOEElUArPJ2omb4ABpniF0/8hznTgBZEpfd2Ezm81K98PyMO3KRWjDby9/KL2Q==
+X-Received: by 2002:a2e:870f:: with SMTP id m15mr4201151lji.16.1586977193345;
+        Wed, 15 Apr 2020 11:59:53 -0700 (PDT)
+Received: from luk-pc.lan (host-46-186-7-151.dynamic.mm.pl. [46.186.7.151])
+        by smtp.googlemail.com with ESMTPSA id z9sm17026303lfd.9.2020.04.15.11.59.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2020 11:59:52 -0700 (PDT)
+From:   LuK1337 <priv.luk@gmail.com>
+Cc:     LuK1337 <priv.luk@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Richard Fontana <rfontana@redhat.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] Input: xpad - Update xboxone fw2015 init packet
+Date:   Wed, 15 Apr 2020 20:59:40 +0200
+Message-Id: <20200415185941.388910-1-priv.luk@gmail.com>
+X-Mailer: git-send-email 2.26.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-04-15 at 08:24 -0700, Wang Wenhu wrote:
-> Enable FSL_85XX_CACHE_SRAM selection. On e500 platforms, the cache
-> could be configured and used as a piece of SRAM which is hignly
-> friendly for some user level application performances.
-> 
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-> Cc: Scott Wood <oss@buserror.net>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
-> ---
-> Changes since v1:
->  * None
-> ---
->  arch/powerpc/platforms/85xx/Kconfig    | 2 +-
->  arch/powerpc/platforms/Kconfig.cputype | 5 +++--
->  2 files changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/powerpc/platforms/85xx/Kconfig
-> b/arch/powerpc/platforms/85xx/Kconfig
-> index fa3d29dcb57e..6debb4f1b9cc 100644
-> --- a/arch/powerpc/platforms/85xx/Kconfig
-> +++ b/arch/powerpc/platforms/85xx/Kconfig
-> @@ -17,7 +17,7 @@ if FSL_SOC_BOOKE
->  if PPC32
->  
->  config FSL_85XX_CACHE_SRAM
-> -	bool
-> +	bool "Freescale 85xx Cache-Sram"
->  	select PPC_LIB_RHEAP
->  	help
->  	  When selected, this option enables cache-sram support
+Appending { 0x05, 0x20, 0x02, 0x0f, 0x06 } to
+xboxone_fw2015_init fixes an issue where the
+controller is somewhat stuck in bluetooth
+mode until you plug it into Windows PC.
 
-NACK
+Signed-off-by: LuK1337 <priv.luk@gmail.com>
+---
+ drivers/input/joystick/xpad.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-As discussed before, the driver that uses this API should "select" this
-symbol.
-
--Scott
-
+diff --git a/drivers/input/joystick/xpad.c b/drivers/input/joystick/xpad.c
+index 6b40a1c68f9f..894fa81f717a 100644
+--- a/drivers/input/joystick/xpad.c
++++ b/drivers/input/joystick/xpad.c
+@@ -455,7 +455,8 @@ struct xboxone_init_packet {
+  * or later firmware installed (or present from the factory).
+  */
+ static const u8 xboxone_fw2015_init[] = {
+-	0x05, 0x20, 0x00, 0x01, 0x00
++	0x05, 0x20, 0x00, 0x01, 0x00,
++	0x05, 0x20, 0x02, 0x0f, 0x06
+ };
+ 
+ /*
+-- 
+2.26.0
 
