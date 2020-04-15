@@ -2,125 +2,140 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF6FFC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:20:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BFF1C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:22:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EC2320732
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:20:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B4ED20732
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:22:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442363AbgDOVUv (ORCPT
+        id S2442376AbgDOVWk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 17:20:51 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:51048 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438890AbgDOVUm (ORCPT
+        Wed, 15 Apr 2020 17:22:40 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:36329 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438888AbgDOVWa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 17:20:42 -0400
-Received: from ip5f5bd698.dynamic.kabel-deutschland.de ([95.91.214.152] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jOpSU-0004QT-Au; Wed, 15 Apr 2020 21:20:34 +0000
-Date:   Wed, 15 Apr 2020 23:20:33 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     syzbot <syzbot+d9ae59d4662c941e39c6@syzkaller.appspotmail.com>,
-        adobriyan@gmail.com, akpm@linux-foundation.org, avagin@gmail.com,
-        bernd.edlinger@hotmail.de, christian@brauner.io, guro@fb.com,
-        kent.overstreet@gmail.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mhocko@suse.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
-        Alexey Gladkov <gladkov.alexey@gmail.com>
-Subject: Re: [PATCH] proc: Handle umounts cleanly
-Message-ID: <20200415212033.vrkybww6gwbja76x@wittgenstein>
-References: <0000000000001c5eaa05a357f2e1@google.com>
- <878siwioxj.fsf@x220.int.ebiederm.org>
- <20200415193612.7cmmbwfpof6pvsqv@wittgenstein>
- <873694ijvt.fsf@x220.int.ebiederm.org>
+        Wed, 15 Apr 2020 17:22:30 -0400
+Received: from mail-qt1-f177.google.com ([209.85.160.177]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1N1Oft-1jHQcr3hHv-012qsn; Wed, 15 Apr 2020 23:22:27 +0200
+Received: by mail-qt1-f177.google.com with SMTP id f13so14596167qti.5;
+        Wed, 15 Apr 2020 14:22:26 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZ/kP3WUi2Zz6ULx+o2pAu96VKtRUBR8fUCGcJY7ystCJZsMkRw
+        zrxJ/j/RyhHK86Nl0vfliQkJrBXBrW0FVZE0QIg=
+X-Google-Smtp-Source: APiQypINvvbbsDvc+K5sPwo+K7MzKlFLIqVVyQJIWMYe8UMUC3pk7MCSaMVSsYr2RgizX7z/824mZq3G5jLNLnmv4G8=
+X-Received: by 2002:ac8:6757:: with SMTP id n23mr10344447qtp.304.1586985745338;
+ Wed, 15 Apr 2020 14:22:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <873694ijvt.fsf@x220.int.ebiederm.org>
+References: <20200408202711.1198966-1-arnd@arndb.de> <20200408202711.1198966-6-arnd@arndb.de>
+ <20200414201739.GJ19819@pendragon.ideasonboard.com> <CAK8P3a0hd5bsezrJS3+GV2nRMui4P5yeD2Rk7wQpJsAZeOCOUg@mail.gmail.com>
+ <20200414205158.GM19819@pendragon.ideasonboard.com> <CAK8P3a1PZbwdvdH_Gi9UQVUz2+_a8QDxKuWLqPtjhK1stxzMBQ@mail.gmail.com>
+ <CAMuHMdUb=XXucGUbxt26tZ1xu9pdyVUB8RVsfB2SffURVVXwSg@mail.gmail.com>
+ <CAK8P3a1uasBFg9dwvPEcokrRhYE2qh6iwOMW1fDTY+LBZMrTjg@mail.gmail.com>
+ <CAK8P3a0CoPUTSJp6ddDnmabo59iE73pugGSYayoeB5N57az9_w@mail.gmail.com> <20200415211220.GQ4758@pendragon.ideasonboard.com>
+In-Reply-To: <20200415211220.GQ4758@pendragon.ideasonboard.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 15 Apr 2020 23:22:08 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1rDZO4cuL6VAXgu9sOiedcHqOSL7ELhpvULz+YYRaGbA@mail.gmail.com>
+Message-ID: <CAK8P3a1rDZO4cuL6VAXgu9sOiedcHqOSL7ELhpvULz+YYRaGbA@mail.gmail.com>
+Subject: Re: [RFC 5/6] drm/rcar-du: fix selection of CMM driver
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:Hl+rud1vypg7WIK8rDk9bs6uEnKqs/OlTWu3wzR5saWRjBD2o1i
+ sL9990cHNVajheAgk5GS3bAYMQUtGpvsvpjtOzaElo36GexxoCKsxoZeKWIVzFmAhQUCtWH
+ lUMDSZh8/C5w7dTadNUhv4YFRrIsngQEXk4iG6am1FbeMtT7/JNWXNTCzMQRJ69ZkORLyh9
+ ntoyAIuVbcm+InOBYwqFQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:qOHnPyy+am0=:uITFvpA/Fajo3jltuWYdlR
+ GaZr+ZFb1wAIjLmDNChn3eRBDUUyw3bYQjjMM0a+H6bWI6gobydrADxfR1wMfEZsx56vkqcV9
+ v6VqiF/LJdqtVfxs4dullK+MquZ9JjSGa7HNzpoGZ2Ls1VwPZdvTOThRpuJcX2EI4c02LFRTJ
+ +T906lbY7T151zn3rUEwnkMZpFpc5HcE3DuClNb82b3yY3bSuaEYoAODAsyuGDiZh6aRxPwwI
+ RXeuoSqQITjA/YEthYZVnfc6wOKPOY/tAoUsjNuxjte6QqTJF7UoPtTKnHK/f37T9FPqa+owN
+ Xh5u/6sn6A4EN4ZGQ7ODxa+WRaDbqnVjtRiX8vlqtDqIPs7bCYltuFtOB+oAvwMyYGAENMwem
+ C//9cwWQvOSuUJEjt7o6noKtcn0fBQsHZ8W7vaqPgS2pToyFSUoC4V9A1cIieKxb6ZOIcP97i
+ PxR1Ock7v6EEetygPWimJAPhEUI7qGcpDb9FW9LVpFIE6WcBG8EH89mUJwwUhf7hNA9PVjSWo
+ NpU02HU0u+yHyHIRFfgijTEvi1FNZgk1BcHE/vA0ZgNnuvRvWHeMXcBYK1iGEfbYvs322+ApI
+ /CqNjVekqJuozSqmFlETgm7YeWa4mMIa4RLVNoDmG0MX0BGVyqZdh5u5X9pT4bqiONlPT4opr
+ rjJdgb7QDas1d1Srz9yW49g9w+IlTqwj0MnR2kQgItr740zsUoHvj7g4JII+3cn/Fq0Xb3NT7
+ suepIOWTjOcWbOTpnUN6hEhI6COhr8TXYhYKlY34hqdH7ocHCRHCBskSA0yOleXmlEPsEpZ6m
+ 3j4Iyc/qhvz9nt9djkgQqgZYWejrCE2nvcUix0tZcSnWfFGVwE=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 03:17:26PM -0500, Eric W. Biederman wrote:
-> Christian Brauner <christian.brauner@ubuntu.com> writes:
-> 
-> > On Wed, Apr 15, 2020 at 01:28:24PM -0500, Eric W. Biederman wrote:
-> >> syzbot writes:
-> >> > KASAN: use-after-free Read in dput (2)
-> >> >
-> >> > proc_fill_super: allocate dentry failed
-> >> > ==================================================================
-> >> > BUG: KASAN: use-after-free in fast_dput fs/dcache.c:727 [inline]
-> >> > BUG: KASAN: use-after-free in dput+0x53e/0xdf0 fs/dcache.c:846
-> >> > Read of size 4 at addr ffff88808a618cf0 by task syz-executor.0/8426
-> >> >
-> >> > CPU: 0 PID: 8426 Comm: syz-executor.0 Not tainted 5.6.0-next-20200412-syzkaller #0
-> >> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> >> > Call Trace:
-> >> >  __dump_stack lib/dump_stack.c:77 [inline]
-> >> >  dump_stack+0x188/0x20d lib/dump_stack.c:118
-> >> >  print_address_description.constprop.0.cold+0xd3/0x315 mm/kasan/report.c:382
-> >> >  __kasan_report.cold+0x35/0x4d mm/kasan/report.c:511
-> >> >  kasan_report+0x33/0x50 mm/kasan/common.c:625
-> >> >  fast_dput fs/dcache.c:727 [inline]
-> >> >  dput+0x53e/0xdf0 fs/dcache.c:846
-> >> >  proc_kill_sb+0x73/0xf0 fs/proc/root.c:195
-> >> >  deactivate_locked_super+0x8c/0xf0 fs/super.c:335
-> >> >  vfs_get_super+0x258/0x2d0 fs/super.c:1212
-> >> >  vfs_get_tree+0x89/0x2f0 fs/super.c:1547
-> >> >  do_new_mount fs/namespace.c:2813 [inline]
-> >> >  do_mount+0x1306/0x1b30 fs/namespace.c:3138
-> >> >  __do_sys_mount fs/namespace.c:3347 [inline]
-> >> >  __se_sys_mount fs/namespace.c:3324 [inline]
-> >> >  __x64_sys_mount+0x18f/0x230 fs/namespace.c:3324
-> >> >  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
-> >> >  entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> >> > RIP: 0033:0x45c889
-> >> > Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-> >> > RSP: 002b:00007ffc1930ec48 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-> >> > RAX: ffffffffffffffda RBX: 0000000001324914 RCX: 000000000045c889
-> >> > RDX: 0000000020000140 RSI: 0000000020000040 RDI: 0000000000000000
-> >> > RBP: 000000000076bf00 R08: 0000000000000000 R09: 0000000000000000
-> >> > R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000003
-> >> > R13: 0000000000000749 R14: 00000000004ca15a R15: 0000000000000013
-> >> 
-> >> Looking at the code now that it the internal mount of proc is no
-> >> longer used it is possible to unmount proc.   If proc is unmounted
-> >> the fields of the pid namespace that were used for filesystem
-> >> specific state are not reinitialized.
-> >> 
-> >> Which means that proc_self and proc_thread_self can be pointers to
-> >> already freed dentries.
-> >> 
-> >> The reported user after free appears to be from mounting and
-> >> unmounting proc followed by mounting proc again and using error
-> >> injection to cause the new root dentry allocation to fail.  This in
-> >> turn results in proc_kill_sb running with proc_self and
-> >> proc_thread_self still retaining their values from the previous mount
-> >> of proc.  Then calling dput on either proc_self of proc_thread_self
-> >> will result in double put.  Which KASAN sees as a use after free.
-> >> 
-> >> Solve this by always reinitializing the filesystem state stored
-> >> in the struct pid_namespace, when proc is unmounted.
-> >> 
-> >> Reported-by: syzbot+72868dd424eb66c6b95f@syzkaller.appspotmail.com
-> >> Fixes: 69879c01a0c3 ("proc: Remove the now unnecessary internal mount of proc")
-> >> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+On Wed, Apr 15, 2020 at 11:12 PM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+> On Wed, Apr 15, 2020 at 09:07:14PM +0200, Arnd Bergmann wrote:
+> > On Wed, Apr 15, 2020 at 5:18 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> > > On Wed, Apr 15, 2020 at 4:13 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > > On Wed, Apr 15, 2020 at 3:47 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> > > > > On Tue, Apr 14, 2020 at 10:52 PM Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
+> > > > > > Doesn't "imply" mean it gets selected by default but can be manually
+> > > > > > disabled ?
+> > > > >
+> > > > > That may be what it means now (I still don't understand how it's defined
+> > > > > as of v5.7-rc1), but traditionally it was more like a 'select if all
+> > > > > dependencies are met'.
+> > > >
+> > > > That's still what it is supposed to mean right now ;-)
+> > > > Except that now it should correctly handle the modular case, too.
+> > >
+> > > Then there is a bug. If I run 'make menuconfig' now on a mainline kernel
+> > > and enable CONFIG_DRM_RCAR_DU, I can set
+> > > DRM_RCAR_CMM and DRM_RCAR_LVDS to 'y', 'n' or 'm' regardless
+> > > of whether CONFIG_DRM_RCAR_DU is 'm' or 'y'. The 'implies'
+> > > statement seems to be ignored entirely, except as reverse 'default'
+> > > setting.
 > >
-> > Was looking at that earlier right before eod briefly here as well.
-> > Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
-> 
-> The syzbot report or did you see the failure another way?
+> > Here is another version that should do what we want and is only
+> > half-ugly. I can send that as a proper patch if it passes my testing
+> > and nobody hates it too much.
+>
+> This may be a stupid question, but doesn't this really call for fixing
+> Kconfig ? This seems to be such a common pattern that requiring
+> constructs similar to the ones below will be a never-ending chase of
+> offenders.
 
-Yep, the syzbot report. I haven't seen other issues so far.
+Maybe, I suppose the hardest part here would be to come up with
+an appropriate name for the keyword ;-)
 
-Christian
+Any suggestions?
+
+This specific issue is fairly rare though, in most cases the dependencies
+are in the right order so a Kconfig symbol 'depends on' a second one
+when the corresponding loadable module uses symbols from that second
+module. The problem here is that the two are mixed up.
+
+The much more common problem is the one where one needs to
+wrong
+
+config FOO
+       depends on BAR || !BAR
+
+To ensure the dependency is either met or BAR is disabled, but
+not FOO=y with BAR=m. If you have any suggestions for a keyword
+for that thing, we can clean up hundreds of such instances.
+
+        Arnd
