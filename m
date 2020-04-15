@@ -2,104 +2,82 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B61AC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:31:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E393C38A29
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:37:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D222220737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:31:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="axbnrEX4"
+	by mail.kernel.org (Postfix) with ESMTP id ECB1D206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:37:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392643AbgDOBbk (ORCPT
+        id S2392653AbgDOBh3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 21:31:40 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:30865 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2392633AbgDOBbd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 21:31:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586914292;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=1gQDebgdhfevaZB94Up55P4Eie+YbxHp+6IgQaQXMeo=;
-        b=axbnrEX4wjiSgX3FpuY7uyySZQhZrWSFvefMNEMKePAswm2grep1p1gAAJaiSN0H5CX2L/
-        tiqvRwPxT6MkC85GX+Rj0TlNkbaudpHEFNY9XZJBmHlxdUtK0BGzZv0VR79QC/25v5VQGT
-        ZK3uVX1SOaCdivzoKioxB4S+bCnh/+Y=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-132-6Z9TQ_sIPqS5vnz00oax3Q-1; Tue, 14 Apr 2020 21:31:25 -0400
-X-MC-Unique: 6Z9TQ_sIPqS5vnz00oax3Q-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BB363107ACC7;
-        Wed, 15 Apr 2020 01:31:24 +0000 (UTC)
-Received: from treble (ovpn-116-146.rdu2.redhat.com [10.10.116.146])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B3F7B9F9BB;
-        Wed, 15 Apr 2020 01:31:20 +0000 (UTC)
-Date:   Tue, 14 Apr 2020 20:31:17 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Joe Lawrence <joe.lawrence@redhat.com>
-Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jessica Yu <jeyu@kernel.org>
-Subject: Re: [PATCH 0/7] livepatch,module: Remove .klp.arch and
- module_disable_ro()
-Message-ID: <20200415013117.rc7vlidmo4okzypl@treble>
-References: <cover.1586881704.git.jpoimboe@redhat.com>
- <187a2ccd-1d04-54db-2fd3-8c4ca6872830@redhat.com>
+        Tue, 14 Apr 2020 21:37:29 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:41814 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1733236AbgDOBhQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 21:37:16 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 80AE34BA1B1AFC66BAA2;
+        Wed, 15 Apr 2020 09:37:13 +0800 (CST)
+Received: from [127.0.0.1] (10.173.223.60) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Wed, 15 Apr 2020
+ 09:37:09 +0800
+Subject: Re: [PATCH -next] bpf: remove set but not used variable 'dst_known'
+To:     Song Liu <songliubraving@fb.com>
+CC:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
+        "kpsingh@chromium.org" <kpsingh@chromium.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
+References: <20200413113703.194287-1-maowenan@huawei.com>
+ <C75FACD4-8549-4AD1-BDE6-1F5B47095E4C@fb.com>
+From:   maowenan <maowenan@huawei.com>
+Message-ID: <2b2e0060-ef9b-5541-1108-e28464b47f0a@huawei.com>
+Date:   Wed, 15 Apr 2020 09:37:08 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <187a2ccd-1d04-54db-2fd3-8c4ca6872830@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+In-Reply-To: <C75FACD4-8549-4AD1-BDE6-1F5B47095E4C@fb.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.173.223.60]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 08:57:15PM -0400, Joe Lawrence wrote:
-> On 4/14/20 12:28 PM, Josh Poimboeuf wrote:
-> > Better late than never, these patches add simplifications and
-> > improvements for some issues Peter found six months ago, as part of his
-> > non-writable text code (W^X) cleanups.
-> > 
-> > Highlights:
-> > 
-> > - Remove the livepatch arch-specific .klp.arch sections, which were used
-> >    to do paravirt patching and alternatives patching for livepatch
-> >    replacement code.
-> > 
-> > - Add support for jump labels in patched code.
+On 2020/4/15 6:05, Song Liu wrote:
 > 
-> Re: jump labels and late-module patching support...
 > 
-> Is there still an issue of a non-exported static key defined in a
-> to-be-patched module referenced and resolved via klp-relocation when the
-> livepatch module is loaded first?  (Basically the same case I asked Petr
-> about in his split livepatch module PoC. [1])
+>> On Apr 13, 2020, at 4:37 AM, Mao Wenan <maowenan@huawei.com> wrote:
+>>
+>> Fixes gcc '-Wunused-but-set-variable' warning:
+>>
+>> kernel/bpf/verifier.c:5603:18: warning: variable ‘dst_known’
+>> set but not used [-Wunused-but-set-variable]
+>>
+>> It is not used since commit f1174f77b50c ("bpf/verifier:
+>> rework value tracking")
 > 
-> Or should we declare this an invalid klp-relocation use case and force the
-> livepatch author to use static_key_enabled()?
+> The fix makes sense. But I think f1174f77b50c introduced dst_known, 
+> so this statement is not accurate. 
 > 
-> [1] https://lore.kernel.org/lkml/20200407205740.GA17061@redhat.com/
+thanks for review, yes, f1174f77b50c introduced dst_known, and below commit
+doesn't deference variable dst_known. So I send v2 later?
+3f50f132d840 ("bpf: Verifier, do explicit ALU32 bounds tracking")
 
-Right, if the static key lives in a module, then it's still not possible
-for a jump label to use it.  I added a check in kpatch-build to block
-that case and suggest static_key_enabled() instead.
+>>
+>> Signed-off-by: Mao Wenan <maowenan@huawei.com>
+> 
 
-I don't know what the solution is, other than getting rid of late module
-patching.
-
-I confess I haven't looked at Petr's patches due to other distractions,
-but I plan to soon.
-
--- 
-Josh
 
