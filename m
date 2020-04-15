@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 505FAC3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9598DC3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:31:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2277C20767
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:31:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A65520767
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:31:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586953876;
-	bh=x3s5st2H0lALnwOPZGbSBw57FqPK0nzULfLkX85UHk8=;
+	s=default; t=1586953884;
+	bh=cBk92c6nBULUxUTVafmDFD/ihP1iNDRokzEmXGn7xkk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F1JtYQuBGSxCHrUTyr/GNRl3/FB+tgcqsIveMFc1849rMNhjGEiY91Bj7ptcKP7Oq
-	 I7Gvh/tzAU/MX/0lsxLk03qzxqdFnqT8kIrhur9iw2CwpC7aWIvewtpV02i4QtQyDt
-	 k4F3v0/elEdaGyICl4zyxFWkf70kfpdtnFhfF60k=
+	b=DTIHJOPIqd392arcwZ1Ra0I2rso0yvHgVTVv/d6qcmHbRLV4Cmpt6GfUnR6YbN3IJ
+	 BvbKn26J4M2uYR8kO+UUTCAW+aTVvvQxO23BfguYPVcecPiRt0o81Gj9FCBfG8Hr0+
+	 +4wrQG65PWSSa/dxZxiRSIpgMyXl1pTIp0Sb8Wzs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S369552AbgDOMbO (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:31:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37814 "EHLO mail.kernel.org"
+        id S369562AbgDOMbW (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:31:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409106AbgDOLou (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2409101AbgDOLou (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Apr 2020 07:44:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDA7C217D8;
-        Wed, 15 Apr 2020 11:44:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86521217BA;
+        Wed, 15 Apr 2020 11:44:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951089;
-        bh=x3s5st2H0lALnwOPZGbSBw57FqPK0nzULfLkX85UHk8=;
+        s=default; t=1586951086;
+        bh=cBk92c6nBULUxUTVafmDFD/ihP1iNDRokzEmXGn7xkk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0UBoi2eRYqNvCwzO3tdaNoLAjVRvfCXTRBkaCFp+IqKJrYWO0GOG6coAMwFRDo4fb
-         jrUoqnicsUeuXCJ23P9bZxrkbfUYdQ45DVCWeLwtCopFEtxLxsfv14BUD0UyFaYOph
-         jRQDZX3N+45DOjLGDrCjWmiVRFu+eec5TIpPEUdU=
+        b=gKBFpsEr/3AstbE3l3psJTr3Cc+NIH4MKPE0wzlCjx5dwXkFxT7Dq9NEHqJxTw/w5
+         BjHiPuXuePs7YTHLf1/ZpanERpU8xdXhJBIGCfTS4XP8JBdLJIrxRyUrZ1kMEhk+Bw
+         cljfYDOHK04gHsLtb9AjfPW0PbB/Tn/AV5jaHpS8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Martin Kepplinger <martin.kepplinger@puri.sm>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+Cc:     Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 06/84] arm64: dts: librem5-devkit: add a vbus supply to usb0
-Date:   Wed, 15 Apr 2020 07:43:23 -0400
-Message-Id: <20200415114442.14166-6-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 03/84] clk: at91: usb: continue if clk_hw_round_rate() return zero
+Date:   Wed, 15 Apr 2020 07:43:20 -0400
+Message-Id: <20200415114442.14166-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114442.14166-1-sashal@kernel.org>
 References: <20200415114442.14166-1-sashal@kernel.org>
@@ -60,33 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Angus Ainslie (Purism)" <angus@akkea.ca>
+From: Claudiu Beznea <claudiu.beznea@microchip.com>
 
-[ Upstream commit dde061b865598ad91f50140760e1d224e5045db9 ]
+[ Upstream commit b0ecf1c6c6e82da4847900fad0272abfd014666d ]
 
-Without a VBUS supply the dwc3 driver won't go into otg mode.
+clk_hw_round_rate() may call round rate function of its parents. In case
+of SAM9X60 two of USB parrents are PLLA and UPLL. These clocks are
+controlled by clk-sam9x60-pll.c driver. The round rate function for this
+driver is sam9x60_pll_round_rate() which call in turn
+sam9x60_pll_get_best_div_mul(). In case the requested rate is not in the
+proper range (rate < characteristics->output[0].min &&
+rate > characteristics->output[0].max) the sam9x60_pll_round_rate() will
+return a negative number to its caller (called by
+clk_core_round_rate_nolock()). clk_hw_round_rate() will return zero in
+case a negative number is returned by clk_core_round_rate_nolock(). With
+this, the USB clock will continue its rate computation even caller of
+clk_hw_round_rate() returned an error. With this, the USB clock on SAM9X60
+may not chose the best parent. I detected this after a suspend/resume
+cycle on SAM9X60.
 
-Fixes: eb4ea0857c83 ("arm64: dts: fsl: librem5: Add a device tree for the Librem5 devkit")
-Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
-Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Link: https://lkml.kernel.org/r/1579261009-4573-2-git-send-email-claudiu.beznea@microchip.com
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/clk/at91/clk-usb.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-index 98cfe67b7db7b..19b427f68dad2 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-@@ -743,6 +743,7 @@
- };
- 
- &usb3_phy0 {
-+	vbus-supply = <&reg_5v_p>;
- 	status = "okay";
- };
- 
+diff --git a/drivers/clk/at91/clk-usb.c b/drivers/clk/at91/clk-usb.c
+index 22aede42a3362..3c0bd7e51b09d 100644
+--- a/drivers/clk/at91/clk-usb.c
++++ b/drivers/clk/at91/clk-usb.c
+@@ -75,6 +75,9 @@ static int at91sam9x5_clk_usb_determine_rate(struct clk_hw *hw,
+ 			tmp_parent_rate = req->rate * div;
+ 			tmp_parent_rate = clk_hw_round_rate(parent,
+ 							   tmp_parent_rate);
++			if (!tmp_parent_rate)
++				continue;
++
+ 			tmp_rate = DIV_ROUND_CLOSEST(tmp_parent_rate, div);
+ 			if (tmp_rate < req->rate)
+ 				tmp_diff = req->rate - tmp_rate;
 -- 
 2.20.1
 
