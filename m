@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56273C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:13:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9409C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:13:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30F71206F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:13:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2931206F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:13:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586952831;
-	bh=c1LLBhbrJAwwupo7JMHyhMst5yAHAHagRFzm7i73bDw=;
+	s=default; t=1586952838;
+	bh=Vmaa9Wy7Y6nNBD+Df2+E06G8y9s2D5mYbsUi7aBJcbE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DE+72H7ywOqm9KOOhhJOI/aCydQuJ4Na3ChPauIqqvXJGm2iNeSubqkrdBbNTMQXQ
-	 aoju8s04cKauW+VPURg1EGRaDvv2ZYDaiEKnytoHD+2OIXpggvG24enI9ubVIfnphq
-	 tsJbivFUc9zxhr30S5+TJ7ufhtaNs9TrJJS6abEs=
+	b=e6oSBf2vrE6wYmcGdg+sQVkN8NIqLlVcZcrRYEA6DVdePv7JmTDJKbxBydH45yvaB
+	 UetfxmOD/wDsKaajQ/JUlyl3/POKysINvFC93DJy0ujQXHfh1BqHsV+XXmWYth+Uq9
+	 1I0tvorRIxDxPcrJrgGjOZnBfWjk+Xj2pfpOFhm0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S368652AbgDOMNq (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:13:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41996 "EHLO mail.kernel.org"
+        id S2898133AbgDOMN4 (ORCPT
+        <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:13:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897575AbgDOLqy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:46:54 -0400
+        id S2897485AbgDOLqw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:46:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 988F1214D8;
-        Wed, 15 Apr 2020 11:46:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 644212168B;
+        Wed, 15 Apr 2020 11:46:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951213;
-        bh=c1LLBhbrJAwwupo7JMHyhMst5yAHAHagRFzm7i73bDw=;
+        s=default; t=1586951212;
+        bh=Vmaa9Wy7Y6nNBD+Df2+E06G8y9s2D5mYbsUi7aBJcbE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=weOXrZ7OkxdYv5tipwTkwD4Y/PpsUI4lpyo5+FGCOgqQao4sv1rqzEZZ11QWYpa/v
-         VZDKFRMk4hImnkEeu7k5ppTyJvocYfUJzJoBjmc/ClyEPojD6g15R0XJET6mQAN9MJ
-         FV5qDI4p4vTMnEjdF+FcprmgQ1ppHrldbhvEiBjk=
+        b=aPTzg5/HAEkxJQRJEx9zCEhhFobIFu59OXv4lB8U9NM7SMuCeiOuIVxWLpbeU59RK
+         iXJldhgHKG4VxXixPa6gWpYCU+vdN8pSZTUEpb8BdUl1UNkEqAL7cvAwy3RjLRkFVC
+         2k5KOTgVpBsK1WKTf6G4Ltr0LnqS8BHEh5+1iwwI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 25/40] net: dsa: bcm_sf2: Ensure correct sub-node is parsed
-Date:   Wed, 15 Apr 2020 07:46:08 -0400
-Message-Id: <20200415114623.14972-25-sashal@kernel.org>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 24/40] KVM: s390: vsie: Fix possible race when shadowing region 3 tables
+Date:   Wed, 15 Apr 2020 07:46:07 -0400
+Message-Id: <20200415114623.14972-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114623.14972-1-sashal@kernel.org>
 References: <20200415114623.14972-1-sashal@kernel.org>
@@ -59,51 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: David Hildenbrand <david@redhat.com>
 
-[ Upstream commit afa3b592953bfaecfb4f2f335ec5f935cff56804 ]
+[ Upstream commit 1493e0f944f3c319d11e067c185c904d01c17ae5 ]
 
-When the bcm_sf2 was converted into a proper platform device driver and
-used the new dsa_register_switch() interface, we would still be parsing
-the legacy DSA node that contained all the port information since the
-platform firmware has intentionally maintained backward and forward
-compatibility to client programs. Ensure that we do parse the correct
-node, which is "ports" per the revised DSA binding.
+We have to properly retry again by returning -EINVAL immediately in case
+somebody else instantiated the table concurrently. We missed to add the
+goto in this function only. The code now matches the other, similar
+shadowing functions.
 
-Fixes: d9338023fb8e ("net: dsa: bcm_sf2: Make it a real platform device driver")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+We are overwriting an existing region 2 table entry. All allocated pages
+are added to the crst_list to be freed later, so they are not lost
+forever. However, when unshadowing the region 2 table, we wouldn't trigger
+unshadowing of the original shadowed region 3 table that we replaced. It
+would get unshadowed when the original region 3 table is modified. As it's
+not connected to the page table hierarchy anymore, it's not going to get
+used anymore. However, for a limited time, this page table will stick
+around, so it's in some sense a temporary memory leak.
+
+Identified by manual code inspection. I don't think this classifies as
+stable material.
+
+Fixes: 998f637cc4b9 ("s390/mm: avoid races on region/segment/page table shadowing")
+Signed-off-by: David Hildenbrand <david@redhat.com>
+Link: https://lore.kernel.org/r/20200403153050.20569-4-david@redhat.com
+Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/bcm_sf2.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ arch/s390/mm/gmap.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
-index b56b2eaf654e1..ccba648452c42 100644
---- a/drivers/net/dsa/bcm_sf2.c
-+++ b/drivers/net/dsa/bcm_sf2.c
-@@ -1014,6 +1014,7 @@ static int bcm_sf2_sw_probe(struct platform_device *pdev)
- 	const struct bcm_sf2_of_data *data;
- 	struct b53_platform_data *pdata;
- 	struct dsa_switch_ops *ops;
-+	struct device_node *ports;
- 	struct bcm_sf2_priv *priv;
- 	struct b53_device *dev;
- 	struct dsa_switch *ds;
-@@ -1077,7 +1078,11 @@ static int bcm_sf2_sw_probe(struct platform_device *pdev)
- 	set_bit(0, priv->cfp.used);
- 	set_bit(0, priv->cfp.unique);
- 
--	bcm_sf2_identify_ports(priv, dn->child);
-+	ports = of_find_node_by_name(dn, "ports");
-+	if (ports) {
-+		bcm_sf2_identify_ports(priv, ports);
-+		of_node_put(ports);
-+	}
- 
- 	priv->irq0 = irq_of_parse_and_map(dn, 0);
- 	priv->irq1 = irq_of_parse_and_map(dn, 1);
+diff --git a/arch/s390/mm/gmap.c b/arch/s390/mm/gmap.c
+index 911c7ded35f15..fd67684a305d4 100644
+--- a/arch/s390/mm/gmap.c
++++ b/arch/s390/mm/gmap.c
+@@ -1834,6 +1834,7 @@ int gmap_shadow_r3t(struct gmap *sg, unsigned long saddr, unsigned long r3t,
+ 		goto out_free;
+ 	} else if (*table & _REGION_ENTRY_ORIGIN) {
+ 		rc = -EAGAIN;		/* Race with shadow */
++		goto out_free;
+ 	}
+ 	crst_table_init(s_r3t, _REGION3_ENTRY_EMPTY);
+ 	/* mark as invalid as long as the parent table is not protected */
 -- 
 2.20.1
 
