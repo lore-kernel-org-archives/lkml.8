@@ -2,139 +2,96 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8442BC2BB85
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:28:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81584C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:29:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B90620784
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:28:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JPgq5ZMx"
+	by mail.kernel.org (Postfix) with ESMTP id 5798E20732
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:29:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2411808AbgDOT2Q (ORCPT
+        id S2436615AbgDOT3U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 15:28:16 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:21167 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2406313AbgDOT1w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 15:27:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586978861;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=qJS2xD/VOhghsaFkFFvHEazrHBxU5zPlf7mCEhLQdiQ=;
-        b=JPgq5ZMxDt63VyNw++mPm4iVK9bRtpk8WL080VGHQiOO+BwJr5QE86BsorSa0kRXrkt1Du
-        /wQ25lm7gD4kqCgLRDxu8ad7A/kSitLQXl5+BrxwKNwC6aOII+JbxpTeh5hviondvEi3mU
-        cpXBOWPog2Hf4oOUS8LzuvPH8E1DLns=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-115-9B1YcOYqM9-ip6w5Y6j5iQ-1; Wed, 15 Apr 2020 15:27:37 -0400
-X-MC-Unique: 9B1YcOYqM9-ip6w5Y6j5iQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 15 Apr 2020 15:29:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53658 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2411884AbgDOT26 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 15:28:58 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2D62E8017F3;
-        Wed, 15 Apr 2020 19:27:36 +0000 (UTC)
-Received: from madcap2.tricolour.ca (unknown [10.3.128.9])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4DA471001DC2;
-        Wed, 15 Apr 2020 19:27:26 +0000 (UTC)
-Date:   Wed, 15 Apr 2020 15:27:23 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Ondrej Mosnacek <omosnace@redhat.com>
-Cc:     Paul Moore <paul@paul-moore.com>,
-        Amol Grover <frextrite@gmail.com>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH v2] kernel: audit.c: Add __rcu notation to RCU pointer
-Message-ID: <20200415192723.rrdwtitiu3f2cd67@madcap2.tricolour.ca>
-References: <20191128153203.GA23803@workstation-kernel-dev>
- <20191130020742.GF157739@google.com>
- <20200415153417.svpbimg66vbeuk7u@madcap2.tricolour.ca>
- <CAHC9VhTdfkxdiEwCZu-JCQGxJ_DNr0b_Ukm40VEUxq=Lc-zx1g@mail.gmail.com>
- <20200415161503.umujm6v4gadmf6qm@madcap2.tricolour.ca>
- <CAFqZXNuYnvru+pMhPwNTBn1+uB=MfYh1yWWBeAn+J-=LXrFgcg@mail.gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A73120771;
+        Wed, 15 Apr 2020 19:28:56 +0000 (UTC)
+Date:   Wed, 15 Apr 2020 15:28:54 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Brendan Higgins <brendanhiggins@google.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: linux-next: Tree for Apr 10 (lib/test_printf.ko)
+Message-ID: <20200415152854.625075ab@gandalf.local.home>
+In-Reply-To: <26e0f0dd-4ea2-14e7-fae5-81a5a1451272@infradead.org>
+References: <20200410132706.170811b7@canb.auug.org.au>
+        <27c212c4-b522-561d-411c-e74dc0ff0b74@infradead.org>
+        <CAHk-=wjhsM-n_NzSh=cSdpThX+62-x3EmyKjhMqGHFYEyG0nPg@mail.gmail.com>
+        <2b0f5d2e-3fe5-10c9-2a9a-9a0b341a52d5@infradead.org>
+        <CAHk-=wjXZSPPWzPs=KBDsLZWuq8qO=9qWfiKHw=yV10fFrDv9Q@mail.gmail.com>
+        <bfbcaa67-9656-3a80-fc66-c937297c8be0@infradead.org>
+        <CAHk-=whpvCqcCYvy=_v_F6NTtBSeQbXZ0iLr_smV2NJLT+XACw@mail.gmail.com>
+        <CA+G9fYu47hpXjYtAr32p9yJ97KZqTry+ioAY1S2TqtiKztCYRg@mail.gmail.com>
+        <f90fc906-395b-79be-8f44-3807586766f7@infradead.org>
+        <CAFd5g46ZaEVoMb2hO94A41Z=YH6ntTdXstZUhHu67mwOKY+QsA@mail.gmail.com>
+        <20200415185545.GA1632@home.goodmis.org>
+        <26e0f0dd-4ea2-14e7-fae5-81a5a1451272@infradead.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFqZXNuYnvru+pMhPwNTBn1+uB=MfYh1yWWBeAn+J-=LXrFgcg@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-15 18:53, Ondrej Mosnacek wrote:
-> On Wed, Apr 15, 2020 at 6:15 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > On 2020-04-15 12:06, Paul Moore wrote:
-> > > On Wed, Apr 15, 2020 at 11:34 AM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > > On 2019-11-29 21:07, Joel Fernandes wrote:
-> > > > > On Thu, Nov 28, 2019 at 09:02:03PM +0530, Amol Grover wrote:
-> > > > > > add __rcu notation to RCU protected global pointer auditd_conn
-> > > > >
-> > > > > Again, please use proper punctuation and captilization. This is unacceptable.
-> > > > > Please put more effort into changelog.
-> > > > >
-> > > > > Otherwise the patch diff itself looks good to me, with the above nit
-> > > > > corrected, you could add my tag to the next revision:
-> > > > >
-> > > > > Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > > > >
-> > > > > thanks,
-> > > > >
-> > > > >  - Joel
-> > > > >
-> > > > > >
-> > > > > > Fixes multiple instances of sparse error:
-> > > > > > error: incompatible types in comparison expression
-> > > > > > (different address spaces)
-> > > >
-> > > > Amol or Joel: Is there a reproducer recipe for this?
-> > >
-> > > The commit which was merged has a slightly better description which may help.
-> >
-> > I've already seen this.  Perhaps I should have replied to this message
-> > instead to make that evident.  What really needed was Amol's original
-> > message sent to this list, but it was Joel who included this list in his
-> > reply (all 3 versions).
-> >
-> > I'm looking for the specific setup and commands that produced this error.
+On Wed, 15 Apr 2020 12:16:49 -0700
+Randy Dunlap <rdunlap@infradead.org> wrote:
+
+
+> > My test suite just tripped over this bug. Is this the patch that you think
+> > fixes it?
+> > 
+> > https://lore.kernel.org/linux-kselftest/20200414081513.GD2828150@kuha.fi.intel.com  
 > 
-> You can run make with "C=1", which will run sparse on all files that
-> are rebuilt during that make run. For example, if I fully build the
-> kernel and then revert commit
-> cb5172d96d16df72db8b55146b0ec00bfd97f079, I get:
+> Yes, it is, but GregKH and Rafael Wysocki don't seem to like that patch
+> and are suggesting some changes in lib/kobject.c (only pseudocode,
+> no patch yet).
 > 
-> $ make [...] C=1
-> [...]
->   CHECK   [...]/kernel/audit.c
-> [...]/kernel/audit.c:218:14: error: incompatible types in comparison
-> expression (different address spaces):
-> [...]/kernel/audit.c:218:14:    struct auditd_connection [noderef] <asn:4> *
-> [...]/kernel/audit.c:218:14:    struct auditd_connection *
-> (...and a lot more errors like this + 2 different warnings)
+> > I'll add it to see if I can continue my testing.  
 > 
-> And when I un-revert it again, I get only the 2 warnings.
+> See the thread
+> [PATCH v1] kobject: make sure parent is not released before children
+> 
+> Here is Rafael's suggestion:
+> https://lore.kernel.org/linux-kselftest/CAJZ5v0hNemTDVa_S-FfVMbrKjM-RWYoHh88asnUvTNxZinY2cw@mail.gmail.com/
+> 
 
-Perfect, thanks Ondrej.
+Thanks for the update.
 
-> Ondrej Mosnacek <omosnace at redhat dot com>
+If the first patch prevents the crash from happening, then I'll keep it for
+the time being. I have a list of patch "fixes" that get applied to the
+kernel I'm testing, such that I can run the tests without them failing for
+something that I'm not testing. Otherwise, I'd never get to test my code :-)
 
-- RGB
+Some of theses patches just remove "WARN_ON" because those will cause my
+tests to fail. I really don't care if i915 triggers WARN_ON() as my code
+shouldn't be affecting it.
 
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
-
+-- Steve
