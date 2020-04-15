@@ -4,33 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 911C7C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 20:35:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE218C3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 20:35:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75D0321655
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 20:35:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A175520787
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 20:35:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S371347AbgDOUfS (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 16:35:18 -0400
-Received: from mga17.intel.com ([192.55.52.151]:20838 "EHLO mga17.intel.com"
+        id S2442054AbgDOUfl (ORCPT
+        <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 16:35:41 -0400
+Received: from mga17.intel.com ([192.55.52.151]:20837 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S371307AbgDOUfB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 16:35:01 -0400
-IronPort-SDR: tcXwW5i9eNYTmJmcktL1Znqr9YECHLqKfCS3KEBfEr93Y6mQ/mxMIT5fBS0kZ/G1ykrwzSC5N/
- dR/IKkYvH5qQ==
+        id S371298AbgDOUfA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 16:35:00 -0400
+IronPort-SDR: 03GrC2Kz5nhFW3vseNVDPmuAEnO89C3rcu37+Mt/pQN5iiDNE/ivZtVyK6g472AiBm/uBr/VLr
+ tmVMCadYv+Vg==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 13:34:59 -0700
-IronPort-SDR: V7EtECM9YPxHzjS4I9/cKGA3WMpz3PdrRPW4TlSVxrx41uizRRFmJxhjdHIMANKawU74Ywf7u2
- u5zgOa9Dzbpw==
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 13:34:57 -0700
+IronPort-SDR: cm7FFPlGwu2m2irY6U4wrSYhTw+9feNhVq8FaGUMHDgfb2mipzX4tOQiz2nBuhdRgdb7Pos7kl
+ w76Ag3Iau3AA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,388,1580803200"; 
-   d="scan'208";a="288657654"
+   d="scan'208";a="288657643"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga002.fm.intel.com with ESMTP; 15 Apr 2020 13:34:58 -0700
+  by fmsmga002.fm.intel.com with ESMTP; 15 Apr 2020 13:34:57 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -39,9 +41,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 5/5] KVM: VMX: Cache vmcs.EXIT_INTR_INFO using arch avail_reg flags
-Date:   Wed, 15 Apr 2020 13:34:54 -0700
-Message-Id: <20200415203454.8296-6-sean.j.christopherson@intel.com>
+Subject: [PATCH 2/5] KVM: nVMX: Reset register cache (available and dirty masks) on VMCS switch
+Date:   Wed, 15 Apr 2020 13:34:51 -0700
+Message-Id: <20200415203454.8296-3-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200415203454.8296-1-sean.j.christopherson@intel.com>
 References: <20200415203454.8296-1-sean.j.christopherson@intel.com>
@@ -52,158 +54,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce a new "extended register" type, EXIT_INFO_2 (to pair with the
-nomenclature in .get_exit_info()), and use it to cache VMX's
-vmcs.EXIT_INTR_INFO.  Drop a comment in vmx_recover_nmi_blocking() that
-is obsoleted by the generic caching mechanism.
+Reset the per-vCPU available and dirty register masks when switching
+between vmcs01 and vmcs02, as the masks track state relative to the
+current VMCS.  The stale masks don't cause problems in the current code
+base because the registers are either unconditionally written on nested
+transitions or, in the case of segment registers, have an additional
+tracker that is manually reset.
+
+Note, by dropping (previously implicitly, now explicitly) the dirty mask
+when switching the active VMCS, KVM is technically losing writes to the
+associated fields.  But, the only regs that can be dirtied (RIP, RSP and
+PDPTRs) are unconditionally written on nested transitions, e.g. explicit
+writeback is a waste of cycles, and a WARN_ON would be rather pointless.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/include/asm/kvm_host.h |  1 +
- arch/x86/kvm/vmx/nested.c       |  4 ++--
- arch/x86/kvm/vmx/nested.h       |  2 +-
- arch/x86/kvm/vmx/vmx.c          | 20 ++++++++------------
- arch/x86/kvm/vmx/vmx.h          | 14 +++++++++++++-
- 5 files changed, 25 insertions(+), 16 deletions(-)
+ arch/x86/kvm/vmx/nested.c |  1 +
+ arch/x86/kvm/vmx/vmx.c    |  7 +------
+ arch/x86/kvm/vmx/vmx.h    | 11 +++++++++++
+ 3 files changed, 13 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index faec08d49e98..fc4b959e2bce 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -171,6 +171,7 @@ enum kvm_reg {
- 	VCPU_EXREG_RFLAGS,
- 	VCPU_EXREG_SEGMENTS,
- 	VCPU_EXREG_EXIT_INFO_1,
-+	VCPU_EXREG_EXIT_INFO_2,
- };
- 
- enum {
 diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 8e2d86c6140e..1b9e3ffaeadb 100644
+index f9ae42209d78..91f04fb4f614 100644
 --- a/arch/x86/kvm/vmx/nested.c
 +++ b/arch/x86/kvm/vmx/nested.c
-@@ -5418,7 +5418,7 @@ static int handle_vmfunc(struct kvm_vcpu *vcpu)
+@@ -307,6 +307,7 @@ static void vmx_switch_vmcs(struct kvm_vcpu *vcpu, struct loaded_vmcs *vmcs)
+ 	vmx_sync_vmcs_host_state(vmx, prev);
+ 	put_cpu();
  
- fail:
- 	nested_vmx_vmexit(vcpu, vmx->exit_reason,
--			  vmcs_read32(VM_EXIT_INTR_INFO),
-+			  vmx_get_intr_info(vcpu),
- 			  vmx_get_exit_qual(vcpu));
- 	return 1;
++	vmx_register_cache_reset(vcpu);
+ 	vmx_segment_cache_clear(vmx);
  }
-@@ -5648,7 +5648,7 @@ static bool nested_vmx_exit_handled_mtf(struct vmcs12 *vmcs12)
-  */
- bool nested_vmx_exit_reflected(struct kvm_vcpu *vcpu, u32 exit_reason)
- {
--	u32 intr_info = vmcs_read32(VM_EXIT_INTR_INFO);
-+	u32 intr_info = vmx_get_intr_info(vcpu);
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
- 	struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
  
-diff --git a/arch/x86/kvm/vmx/nested.h b/arch/x86/kvm/vmx/nested.h
-index d81a349e7d45..04224e9c45c5 100644
---- a/arch/x86/kvm/vmx/nested.h
-+++ b/arch/x86/kvm/vmx/nested.h
-@@ -86,7 +86,7 @@ static inline bool nested_ept_ad_enabled(struct kvm_vcpu *vcpu)
- static inline int nested_vmx_reflect_vmexit(struct kvm_vcpu *vcpu,
- 					    u32 exit_reason)
- {
--	u32 exit_intr_info = vmcs_read32(VM_EXIT_INTR_INFO);
-+	u32 exit_intr_info = vmx_get_intr_info(vcpu);
- 
- 	/*
- 	 * At this point, the exit interruption info in exit_intr_info
 diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 106761fde58c..9405639b11d1 100644
+index 7da83325ace3..d1c16385904c 100644
 --- a/arch/x86/kvm/vmx/vmx.c
 +++ b/arch/x86/kvm/vmx/vmx.c
-@@ -5635,7 +5635,7 @@ static const int kvm_vmx_max_exit_handlers =
- static void vmx_get_exit_info(struct kvm_vcpu *vcpu, u64 *info1, u64 *info2)
- {
- 	*info1 = vmx_get_exit_qual(vcpu);
--	*info2 = vmcs_read32(VM_EXIT_INTR_INFO);
-+	*info2 = vmx_get_intr_info(vcpu);
- }
- 
- static void vmx_destroy_pml_buffer(struct vcpu_vmx *vmx)
-@@ -6298,16 +6298,16 @@ static void vmx_apicv_post_state_restore(struct kvm_vcpu *vcpu)
- 
- static void handle_exception_nmi_irqoff(struct vcpu_vmx *vmx)
- {
--	vmx->exit_intr_info = vmcs_read32(VM_EXIT_INTR_INFO);
-+	u32 intr_info = vmx_get_intr_info(&vmx->vcpu);
- 
- 	/* if exit due to PF check for async PF */
--	if (is_page_fault(vmx->exit_intr_info)) {
-+	if (is_page_fault(intr_info)) {
- 		vmx->vcpu.arch.apf.host_apf_reason = kvm_read_and_reset_pf_reason();
- 	/* Handle machine checks before interrupts are enabled */
--	} else if (is_machine_check(vmx->exit_intr_info)) {
-+	} else if (is_machine_check(intr_info)) {
- 		kvm_machine_check();
- 	/* We need to handle NMIs before interrupts are enabled */
--	} else if (is_nmi(vmx->exit_intr_info)) {
-+	} else if (is_nmi(intr_info)) {
- 		kvm_before_interrupt(&vmx->vcpu);
- 		asm("int $2");
- 		kvm_after_interrupt(&vmx->vcpu);
-@@ -6322,9 +6322,8 @@ static void handle_external_interrupt_irqoff(struct kvm_vcpu *vcpu)
- 	unsigned long tmp;
+@@ -6711,12 +6711,7 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
+ 	loadsegment(es, __USER_DS);
  #endif
- 	gate_desc *desc;
--	u32 intr_info;
-+	u32 intr_info = vmx_get_intr_info(vcpu);
  
--	intr_info = vmcs_read32(VM_EXIT_INTR_INFO);
- 	if (WARN_ONCE(!is_external_intr(intr_info),
- 	    "KVM: unexpected VM-Exit interrupt info: 0x%x", intr_info))
- 		return;
-@@ -6405,11 +6404,8 @@ static void vmx_recover_nmi_blocking(struct vcpu_vmx *vmx)
- 	if (enable_vnmi) {
- 		if (vmx->loaded_vmcs->nmi_known_unmasked)
- 			return;
--		/*
--		 * Can't use vmx->exit_intr_info since we're not sure what
--		 * the exit reason is.
--		 */
--		exit_intr_info = vmcs_read32(VM_EXIT_INTR_INFO);
-+
-+		exit_intr_info = vmx_get_intr_info(&vmx->vcpu);
- 		unblock_nmi = (exit_intr_info & INTR_INFO_UNBLOCK_NMI) != 0;
- 		vector = exit_intr_info & INTR_INFO_VECTOR_MASK;
- 		/*
+-	vcpu->arch.regs_avail = ~((1 << VCPU_REGS_RIP) | (1 << VCPU_REGS_RSP)
+-				  | (1 << VCPU_EXREG_RFLAGS)
+-				  | (1 << VCPU_EXREG_PDPTR)
+-				  | (1 << VCPU_EXREG_SEGMENTS)
+-				  | (1 << VCPU_EXREG_CR3));
+-	vcpu->arch.regs_dirty = 0;
++	vmx_register_cache_reset(vcpu);
+ 
+ 	pt_guest_exit(vmx);
+ 
 diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-index a13eafec67fc..edfb739e5907 100644
+index 31d7252df163..6b668b604898 100644
 --- a/arch/x86/kvm/vmx/vmx.h
 +++ b/arch/x86/kvm/vmx/vmx.h
-@@ -451,7 +451,8 @@ static inline void vmx_register_cache_reset(struct kvm_vcpu *vcpu)
- 				  | (1 << VCPU_EXREG_PDPTR)
- 				  | (1 << VCPU_EXREG_SEGMENTS)
- 				  | (1 << VCPU_EXREG_CR3)
--				  | (1 << VCPU_EXREG_EXIT_INFO_1));
-+				  | (1 << VCPU_EXREG_EXIT_INFO_1)
-+				  | (1 << VCPU_EXREG_EXIT_INFO_2));
- 	vcpu->arch.regs_dirty = 0;
+@@ -8,6 +8,7 @@
+ #include <asm/intel_pt.h>
+ 
+ #include "capabilities.h"
++#include "kvm_cache_regs.h"
+ #include "ops.h"
+ #include "vmcs.h"
+ 
+@@ -447,6 +448,16 @@ static inline void vmx_segment_cache_clear(struct vcpu_vmx *vmx)
+ 	vmx->segment_cache.bitmask = 0;
  }
  
-@@ -506,6 +507,17 @@ static inline unsigned long vmx_get_exit_qual(struct kvm_vcpu *vcpu)
- 	return vmx->exit_qualification;
- }
- 
-+static inline u32 vmx_get_intr_info(struct kvm_vcpu *vcpu)
++static inline void vmx_register_cache_reset(struct kvm_vcpu *vcpu)
 +{
-+	struct vcpu_vmx *vmx = to_vmx(vcpu);
-+
-+	if (!kvm_register_is_available(vcpu, VCPU_EXREG_EXIT_INFO_2)) {
-+		kvm_register_mark_available(vcpu, VCPU_EXREG_EXIT_INFO_2);
-+		vmx->exit_intr_info = vmcs_read32(VM_EXIT_INTR_INFO);
-+	}
-+	return vmx->exit_intr_info;
++	vcpu->arch.regs_avail = ~((1 << VCPU_REGS_RIP) | (1 << VCPU_REGS_RSP)
++				  | (1 << VCPU_EXREG_RFLAGS)
++				  | (1 << VCPU_EXREG_PDPTR)
++				  | (1 << VCPU_EXREG_SEGMENTS)
++				  | (1 << VCPU_EXREG_CR3));
++	vcpu->arch.regs_dirty = 0;
 +}
 +
- struct vmcs *alloc_vmcs_cpu(bool shadow, int cpu, gfp_t flags);
- void free_vmcs(struct vmcs *vmcs);
- int alloc_loaded_vmcs(struct loaded_vmcs *loaded_vmcs);
+ static inline u32 vmx_vmentry_ctrl(void)
+ {
+ 	u32 vmentry_ctrl = vmcs_config.vmentry_ctrl;
 -- 
 2.26.0
 
