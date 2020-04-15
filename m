@@ -2,120 +2,97 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3413EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:11:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B17C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:11:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 023B720737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:11:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586956289;
-	bh=z2JrKhRoKKS+q6sD+25g7H8YHyXTUOaWkucZGm0Hnhg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CJQkZVsq9qar/xTAQgJdSnzR79oCNnWjDmhf/lNHGIlUFehGQm4fqwD3ARvmrkiAr
-	 XPpeMIszP4pwxb+hh7HWWveVViuId+j5SR27IaTPqAx3AS+pecP3+0TO6EJaXIDcHx
-	 /FCJIzyXZvnnqtqoMn+VMSxxG144hhYcLhZ27iq8=
+	by mail.kernel.org (Postfix) with ESMTP id 42E9E20737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:11:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="1a6J3nyn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506094AbgDONL0 (ORCPT
+        id S2506103AbgDONLj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:11:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55008 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897069AbgDOLfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 09:11:39 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:20516 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2897063AbgDOLfj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Apr 2020 07:35:39 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06D84214AF;
-        Wed, 15 Apr 2020 11:35:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950538;
-        bh=z2JrKhRoKKS+q6sD+25g7H8YHyXTUOaWkucZGm0Hnhg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ARV1J8j9WhAIFeB+TZVMJz0tozcxA0hewsYEVEfPk+J3m7JQ/mpz1CX2QhhKn1555
-         ySh4beyq0w0XOoMLLBHwoDTkuqlUT5YydEftn22CvjH4c13eccj0RFN9hrc9WKPHS8
-         yY5wKS38ToXzgQzW3M+QG70SBKOqDa2WoXb6Ji8M=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sahitya Tummala <stummala@codeaurora.org>,
-        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.6 046/129] f2fs: Add a new CP flag to help fsck fix resize SPO issues
-Date:   Wed, 15 Apr 2020 07:33:21 -0400
-Message-Id: <20200415113445.11881-46-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
-References: <20200415113445.11881-1-sashal@kernel.org>
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03FBW8SN016220;
+        Wed, 15 Apr 2020 13:35:24 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=STMicroelectronics;
+ bh=xwnv8U88f9gKci+4R9gluFy4x+fECpay1QPWcflQP9g=;
+ b=1a6J3nynIHUs1ZBzTWuJaxYH4jNMp3BBhK17usGCKTozaL9ffKuxXU3NnHI3yV4ftL92
+ mUQ3c0K60Y/1B5c5Aw+jOsV3cYnjNz2jekg253yeaXkRAquScKAT8NaCw/KJEnaJfBH8
+ 7Mhaon5u4CZ1iu7zjqwVUHVNVKonEp7bsvRsWwJdOo9HV5E4ioVxswrMG4/w3VaYeWJx
+ mTUQbXbcrBLEVNBSXsVzmrj2asfCnrgh21Do4WePhZYLMkhH3arPyJsulQzX3JKur0wl
+ AzjJIVogGD6M6WOBUGCHzyIXhFee9d5c/8D3qvZORE8OFsTb9ZMi6paQUpZvbnB/+FxL lg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 30dn94bh6t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 15 Apr 2020 13:35:24 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B759110002A;
+        Wed, 15 Apr 2020 13:35:23 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A9F772B0FA8;
+        Wed, 15 Apr 2020 13:35:23 +0200 (CEST)
+Received: from gnbcxd0016.gnb.st.com (10.75.127.48) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 15 Apr
+ 2020 13:35:23 +0200
+Date:   Wed, 15 Apr 2020 13:35:22 +0200
+From:   Alain Volmat <alain.volmat@st.com>
+To:     Wolfram Sang <wsa@the-dreams.de>
+CC:     <pierre-yves.mordret@st.com>, <alexandre.torgue@st.com>,
+        <linux-i2c@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>
+Subject: Re: [PATCH] i2c: i2c-stm32f7: improve nack debug message
+Message-ID: <20200415113522.GB16949@gnbcxd0016.gnb.st.com>
+Mail-Followup-To: Wolfram Sang <wsa@the-dreams.de>,
+        pierre-yves.mordret@st.com, alexandre.torgue@st.com,
+        linux-i2c@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        fabrice.gasnier@st.com
+References: <1584642115-15378-1-git-send-email-alain.volmat@st.com>
+ <20200415110101.GM1141@ninjato>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200415110101.GM1141@ninjato>
+X-Disclaimer: ce message est personnel / this message is private
+X-Originating-IP: [10.75.127.48]
+X-ClientProxiedBy: SFHDAG5NODE2.st.com (10.75.127.14) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-15_03:2020-04-14,2020-04-15 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sahitya Tummala <stummala@codeaurora.org>
+On Wed, Apr 15, 2020 at 01:01:01PM +0200, Wolfram Sang wrote:
+> On Thu, Mar 19, 2020 at 07:21:55PM +0100, Alain Volmat wrote:
+> > From: Fabrice Gasnier <fabrice.gasnier@st.com>
+> > 
+> > Add information on slave addr in the nack debug message.
+> > 
+> > Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> > Signed-off-by: Alain Volmat <alain.volmat@st.com>
+> 
+> Applied to for-next, thanks! (I'd drop the __func__, though; doesn't
+> add information, does it?)
 
-[ Upstream commit c84ef3c5e65ccf99a7a91a4d731ebb5d6331a178 ]
-
-Add and set a new CP flag CP_RESIZEFS_FLAG during
-online resize FS to help fsck fix the metadata mismatch
-that may happen due to SPO during resize, where SB
-got updated but CP data couldn't be written yet.
-
-fsck errors -
-Info: CKPT version = 6ed7bccb
-        Wrong user_block_count(2233856)
-[f2fs_do_mount:3365] Checkpoint is polluted
-
-Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/f2fs/checkpoint.c    | 8 ++++++--
- include/linux/f2fs_fs.h | 1 +
- 2 files changed, 7 insertions(+), 2 deletions(-)
-
-diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-index 9c88fb3d255a2..79aaf06004f65 100644
---- a/fs/f2fs/checkpoint.c
-+++ b/fs/f2fs/checkpoint.c
-@@ -1301,10 +1301,14 @@ static void update_ckpt_flags(struct f2fs_sb_info *sbi, struct cp_control *cpc)
- 	else
- 		__clear_ckpt_flags(ckpt, CP_ORPHAN_PRESENT_FLAG);
- 
--	if (is_sbi_flag_set(sbi, SBI_NEED_FSCK) ||
--		is_sbi_flag_set(sbi, SBI_IS_RESIZEFS))
-+	if (is_sbi_flag_set(sbi, SBI_NEED_FSCK))
- 		__set_ckpt_flags(ckpt, CP_FSCK_FLAG);
- 
-+	if (is_sbi_flag_set(sbi, SBI_IS_RESIZEFS))
-+		__set_ckpt_flags(ckpt, CP_RESIZEFS_FLAG);
-+	else
-+		__clear_ckpt_flags(ckpt, CP_RESIZEFS_FLAG);
-+
- 	if (is_sbi_flag_set(sbi, SBI_CP_DISABLED))
- 		__set_ckpt_flags(ckpt, CP_DISABLED_FLAG);
- 	else
-diff --git a/include/linux/f2fs_fs.h b/include/linux/f2fs_fs.h
-index ac3f4888b3dfa..3c383ddd92ddd 100644
---- a/include/linux/f2fs_fs.h
-+++ b/include/linux/f2fs_fs.h
-@@ -125,6 +125,7 @@ struct f2fs_super_block {
- /*
-  * For checkpoint
-  */
-+#define CP_RESIZEFS_FLAG		0x00004000
- #define CP_DISABLED_QUICK_FLAG		0x00002000
- #define CP_DISABLED_FLAG		0x00001000
- #define CP_QUOTA_NEED_FSCK_FLAG		0x00000800
--- 
-2.20.1
-
+In fact similar message is displayed in 2 places. One in case of master mode
+isr and the other one in case of slave isr. This message is adding slave
+address to the master mode isr. It only makes it more clear on first sight
+but indeed displaying the slave address obviously means this is master mode.
