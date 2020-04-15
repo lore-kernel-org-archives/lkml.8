@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5743DC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 18:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C900C2BB85
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 18:23:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 319CC2076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 18:23:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 021AA20787
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 18:23:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586975005;
-	bh=yGRMtH20Rh8i3PCF3yestqxkWzIyt0WgNjtRB5YtRJI=;
+	s=default; t=1586975012;
+	bh=INgabvAlb4AsrKfzNR+JKWk0ecQAVyupAhHILsJUC60=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GMzTfOA74/Bf1naOKEgpp8sm2S0rhWG+/5wS0W06FecSqlefV3hqlEtKCn7H7JOfZ
-	 pWbQVH/U5kVEPKjN1+O2jycHEIOgyQmtKTu6leeVm1cUcTzd4fenkImfBCAu97WpT+
-	 iOUHrCKyBwmw+P6YT/YcjY0bxTB72sOi00EY4aFM=
+	b=so8KYecyX/gRuMay0xxbGCpcfJj2qcRqk8Rj+mEZDXEdcIgSuMd4qFzZyMIgkO3r+
+	 n+/sUKeGnQBsknJXdSZDGpwX+5Di3hXkdQVeq0UR1cMbX4gtXLYnEoB5tWh4fTlAQm
+	 6yhmTr2oXpV10R606HP9Rq59/a25ggU7naO0f7Gc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1416677AbgDOSXX (ORCPT
+        id S1416687AbgDOSXa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 14:23:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37208 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 14:23:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441387AbgDOSTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2441384AbgDOSTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Apr 2020 14:19:53 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CC4E21974;
-        Wed, 15 Apr 2020 18:19:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17A072192A;
+        Wed, 15 Apr 2020 18:19:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586974792;
-        bh=yGRMtH20Rh8i3PCF3yestqxkWzIyt0WgNjtRB5YtRJI=;
+        s=default; t=1586974791;
+        bh=INgabvAlb4AsrKfzNR+JKWk0ecQAVyupAhHILsJUC60=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n4o3zzaDDD0qZonDrtQVH5Qskl5D4zPlHmFXdn2jk28ERaGGrSB3pdGAf6/LRfsvo
-         69xTVbqhoPokZ7lkgBuGMjiFWwgrzYB4mS5apo6iRGkk2KlJgDvZ/ltGTO5zJJc9Qj
-         2ot3XbSvaSezMrdD25lVx8c2jIJ0rc8GudJxZZGk=
+        b=SAwH/b+RnqlJe6lre+2kLnwFXw1kLNV0HwkoxebcZ7JejAKW4pbsMYuZKqfkGDADj
+         UK9gs6M15Y2ZRDZWklWUoYs4tb3ca0ftUgjo+5AuS3hwAvwQFEf1Oa3RzcR5vz/QaF
+         FVBu1Noz4ZpkdW0OdgCMHvcWZ80p3LDtU3RE95/A=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH v4 tip/core/rcu 25/38] rcu-tasks: Add grace-period and IPI counts to statistics
-Date:   Wed, 15 Apr 2020 11:19:28 -0700
-Message-Id: <20200415181941.11653-25-paulmck@kernel.org>
+Subject: [PATCH v4 tip/core/rcu 22/38] rcu-tasks: Add a grace-period start time for throttling and debug
+Date:   Wed, 15 Apr 2020 11:19:25 -0700
+Message-Id: <20200415181941.11653-22-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200415181856.GA11037@paulmck-ThinkPad-P72>
 References: <20200415181856.GA11037@paulmck-ThinkPad-P72>
@@ -61,76 +61,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-This commit adds a grace-period count and a count of IPIs sent since
-boot, which is printed in response to rcutorture writer stalls and at
-the end of rcutorture testing.  These counts will be used to evaluate
-various schemes to reduce the number of IPIs sent.
+This commit adds a place to record the grace-period start in jiffies.
+This will be used by later commits for debugging purposes and to throttle
+IPIs early in the grace period.
 
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/tasks.h | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ kernel/rcu/tasks.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
-index 4a730f1..94225f9 100644
+index 2ec82f4..199f87a 100644
 --- a/kernel/rcu/tasks.h
 +++ b/kernel/rcu/tasks.h
-@@ -30,6 +30,8 @@ typedef void (*postgp_func_t)(struct rcu_tasks *rtp);
-  * @gp_state: Grace period's most recent state transition (debugging).
-  * @gp_jiffies: Time of last @gp_state transition.
-  * @gp_start: Most recent grace-period start in jiffies.
-+ * @n_gps: Number of grace periods completed since boot.
-+ * @n_ipis: Number of IPIs sent to encourage grace periods to end.
-  * @pregp_func: This flavor's pre-grace-period function (optional).
-  * @pertask_func: This flavor's per-task scan function (optional).
-  * @postscan_func: This flavor's post-task scan function (optional).
-@@ -47,6 +49,8 @@ struct rcu_tasks {
+@@ -46,6 +46,7 @@ struct rcu_tasks {
+ 	raw_spinlock_t cbs_lock;
  	int gp_state;
  	unsigned long gp_jiffies;
- 	unsigned long gp_start;
-+	unsigned long n_gps;
-+	unsigned long n_ipis;
++	unsigned long gp_start;
  	struct task_struct *kthread_ptr;
  	rcu_tasks_gp_func_t gp_func;
  	pregp_func_t pregp_func;
-@@ -208,6 +212,7 @@ static int __noreturn rcu_tasks_kthread(void *arg)
+@@ -200,6 +201,7 @@ static int __noreturn rcu_tasks_kthread(void *arg)
+ 
+ 		// Wait for one grace period.
  		set_tasks_gp_state(rtp, RTGS_WAIT_GP);
- 		rtp->gp_start = jiffies;
++		rtp->gp_start = jiffies;
  		rtp->gp_func(rtp);
-+		rtp->n_gps++;
  
  		/* Invoke the callbacks. */
- 		set_tasks_gp_state(rtp, RTGS_INVOKE_CBS);
-@@ -285,11 +290,12 @@ static void __init rcu_tasks_bootup_oddness(void)
- /* Dump out rcutorture-relevant state common to all RCU-tasks flavors. */
- static void show_rcu_tasks_generic_gp_kthread(struct rcu_tasks *rtp, char *s)
- {
--	pr_info("%s: %s(%d) since %lu %c%c %s\n",
-+	pr_info("%s: %s(%d) since %lu g:%lu i:%lu %c%c %s\n",
- 		rtp->kname,
- 		tasks_gp_state_getname(rtp),
- 		data_race(rtp->gp_state),
- 		jiffies - data_race(rtp->gp_jiffies),
-+		data_race(rtp->n_gps), data_race(rtp->n_ipis),
- 		".k"[!!data_race(rtp->kthread_ptr)],
- 		".C"[!!data_race(rtp->cbs_head)],
- 		s);
-@@ -592,6 +598,7 @@ static void rcu_tasks_be_rude(struct work_struct *work)
- // Wait for one rude RCU-tasks grace period.
- static void rcu_tasks_rude_wait_gp(struct rcu_tasks *rtp)
- {
-+	rtp->n_ipis += cpumask_weight(cpu_online_mask);
- 	schedule_on_each_cpu(rcu_tasks_be_rude);
- }
- 
-@@ -852,6 +859,7 @@ static void trc_wait_for_one_reader(struct task_struct *t,
- 		atomic_inc(&trc_n_readers_need_end);
- 		per_cpu(trc_ipi_to_cpu, cpu) = true;
- 		t->trc_ipi_to_cpu = cpu;
-+		rcu_tasks_trace.n_ipis++;
- 		if (smp_call_function_single(cpu,
- 					     trc_read_check_handler, t, 0)) {
- 			// Just in case there is some other reason for
 -- 
 2.9.5
 
