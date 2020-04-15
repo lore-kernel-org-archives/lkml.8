@@ -7,56 +7,59 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B48EC3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:42:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 867D1C2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:42:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5F59206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:42:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6732D20737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:42:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586950927;
-	bh=0ZUxPgFWWCpFhZxGLYIIM9I5IILi6OM4r9BWUSVirQQ=;
+	s=default; t=1586950935;
+	bh=PXxlVk0aAEea5k6TpIzN1612LLubxTEmTIQU4OPjeI8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r9K1DelmC6mOAD7F+FXztBLu9VrydotWvn2P6PIYk6WqdBgyu2IG/U+rGdsqFKk3N
-	 n+ZUjg4Lv0xoO6jUsfbqs4czITM6UEy1ELnTk2w0uE9ANg7GBEnzxkNeObvNQsMVuf
-	 MNRCLS6+Oh3UU6bsE0hgDiuYYPSAysNatA8hDpKg=
+	b=Wdl6VwrXK9R8U5mds/wLB7F47yXbR8PIDNhnmx1L6sucK6uNwy5maGQvVLdj/xBwX
+	 1c/L5DSAvFKenZGIIETXZl4YajkBmXdKOleW0gxLbTJRfMyZNh4va1y/NcI0JxH82o
+	 uSqLF/oAi58CrDEqp3RZ7hGOrvRdiJ/oPup1J0Uc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2897435AbgDOLmG (ORCPT
+        id S2897447AbgDOLmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:42:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54800 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 07:42:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897120AbgDOLgK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:36:10 -0400
+        id S2897140AbgDOLg0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:36:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 677F52076D;
-        Wed, 15 Apr 2020 11:36:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8983E20737;
+        Wed, 15 Apr 2020 11:36:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950570;
-        bh=0ZUxPgFWWCpFhZxGLYIIM9I5IILi6OM4r9BWUSVirQQ=;
+        s=default; t=1586950581;
+        bh=PXxlVk0aAEea5k6TpIzN1612LLubxTEmTIQU4OPjeI8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m4ZDcCJiubMf1wJ6pWK+Ggl1qaCYH6psCekzmTaQB/QWVAigVmVQkI+QXgXxPnvZB
-         wYqHopaVGkvI3sz8NNQARRm9kcQ6zcXWc1w2RLPmW42D+po5gFlVOAbwf7C+GbwLXp
-         /p9pRUZ3SAMxW4+cIgDkjB06rtpOMwEa98Fd5cn0=
+        b=0+lXH6jCI8TnRHMVmyTqIIxwMu9cSzAy1mD/mA4NhWlCbhJBo4xnzwH4Ol9HwoLvO
+         zzBYq+5pJBuhzQ2AA67g3/s1wmDrX4KxIpoGoFAXe0o4GrTVxT5/tN8XyCLma/UE7T
+         /1Ufop53k0Xget2jsYmQSopPtBZ5frZ40Ly6eV5I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuanhong Guo <gch981213@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        =?UTF-8?q?Ren=C3=A9=20van=20Dorst?= <opensource@vdorst.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.6 072/129] net: dsa: mt7530: fix null pointer dereferencing in port5 setup
-Date:   Wed, 15 Apr 2020 07:33:47 -0400
-Message-Id: <20200415113445.11881-72-sashal@kernel.org>
+Cc:     Rikard Falkeborn <rikard.falkeborn@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Haren Myneni <haren@us.ibm.com>, Joe Perches <joe@perches.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 081/129] linux/bits.h: add compile time sanity check of GENMASK inputs
+Date:   Wed, 15 Apr 2020 07:33:56 -0400
+Message-Id: <20200415113445.11881-81-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
 References: <20200415113445.11881-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -65,44 +68,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuanhong Guo <gch981213@gmail.com>
+From: Rikard Falkeborn <rikard.falkeborn@gmail.com>
 
-[ Upstream commit 0452800f6db4ed0a42ffb15867c0acfd68829f6a ]
+[ Upstream commit 295bcca84916cb5079140a89fccb472bb8d1f6e2 ]
 
-The 2nd gmac of mediatek soc ethernet may not be connected to a PHY
-and a phy-handle isn't always available.
-Unfortunately, mt7530 dsa driver assumes that the 2nd gmac is always
-connected to switch port 5 and setup mt7530 according to phy address
-of 2nd gmac node, causing null pointer dereferencing when phy-handle
-isn't defined in dts.
-This commit fix this setup code by checking return value of
-of_parse_phandle before using it.
+GENMASK() and GENMASK_ULL() are supposed to be called with the high bit as
+the first argument and the low bit as the second argument.  Mixing them
+will return a mask with zero bits set.
 
-Fixes: 38f790a80560 ("net: dsa: mt7530: Add support for port 5")
-Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
-Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Tested-by: René van Dorst <opensource@vdorst.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Recent commits show getting this wrong is not uncommon, see e.g.  commit
+aa4c0c9091b0 ("net: stmmac: Fix misuses of GENMASK macro") and commit
+9bdd7bb3a844 ("clocksource/drivers/npcm: Fix misuse of GENMASK macro").
+
+To prevent such mistakes from appearing again, add compile time sanity
+checking to the arguments of GENMASK() and GENMASK_ULL().  If both
+arguments are known at compile time, and the low bit is higher than the
+high bit, break the build to detect the mistake immediately.
+
+Since GENMASK() is used in declarations, BUILD_BUG_ON_ZERO() must be used
+instead of BUILD_BUG_ON().
+
+__builtin_constant_p does not evaluate is argument, it only checks if it
+is a constant or not at compile time, and __builtin_choose_expr does not
+evaluate the expression that is not chosen.  Therefore, GENMASK(x++, 0)
+does only evaluate x++ once.
+
+Commit 95b980d62d52 ("linux/bits.h: make BIT(), GENMASK(), and friends
+available in assembly") made the macros in linux/bits.h available in
+assembly.  Since BUILD_BUG_OR_ZERO() is not asm compatible, disable the
+checks if the file is included in an asm file.
+
+Due to bugs in GCC versions before 4.9 [0], disable the check if building
+with a too old GCC compiler.
+
+[0]: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=19449
+
+Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Haren Myneni <haren@us.ibm.com>
+Cc: Joe Perches <joe@perches.com>
+Cc: Johannes Berg <johannes@sipsolutions.net>
+Cc: lkml <linux-kernel@vger.kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lkml.kernel.org/r/20200308193954.2372399-1-rikard.falkeborn@gmail.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/mt7530.c | 3 +++
- 1 file changed, 3 insertions(+)
+ include/linux/bits.h | 22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
-index 7cbd1bd4c5a62..9b0de2852c698 100644
---- a/drivers/net/dsa/mt7530.c
-+++ b/drivers/net/dsa/mt7530.c
-@@ -1356,6 +1356,9 @@ mt7530_setup(struct dsa_switch *ds)
- 				continue;
- 
- 			phy_node = of_parse_phandle(mac_np, "phy-handle", 0);
-+			if (!phy_node)
-+				continue;
+diff --git a/include/linux/bits.h b/include/linux/bits.h
+index 669d69441a625..f108302a3121c 100644
+--- a/include/linux/bits.h
++++ b/include/linux/bits.h
+@@ -18,12 +18,30 @@
+  * position @h. For example
+  * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
+  */
+-#define GENMASK(h, l) \
++#if !defined(__ASSEMBLY__) && \
++	(!defined(CONFIG_CC_IS_GCC) || CONFIG_GCC_VERSION >= 49000)
++#include <linux/build_bug.h>
++#define GENMASK_INPUT_CHECK(h, l) \
++	(BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
++		__builtin_constant_p((l) > (h)), (l) > (h), 0)))
++#else
++/*
++ * BUILD_BUG_ON_ZERO is not available in h files included from asm files,
++ * disable the input check if that is the case.
++ */
++#define GENMASK_INPUT_CHECK(h, l) 0
++#endif
 +
- 			if (phy_node->parent == priv->dev->of_node->parent) {
- 				ret = of_get_phy_mode(mac_np, &interface);
- 				if (ret && ret != -ENODEV)
++#define __GENMASK(h, l) \
+ 	(((~UL(0)) - (UL(1) << (l)) + 1) & \
+ 	 (~UL(0) >> (BITS_PER_LONG - 1 - (h))))
++#define GENMASK(h, l) \
++	(GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+ 
+-#define GENMASK_ULL(h, l) \
++#define __GENMASK_ULL(h, l) \
+ 	(((~ULL(0)) - (ULL(1) << (l)) + 1) & \
+ 	 (~ULL(0) >> (BITS_PER_LONG_LONG - 1 - (h))))
++#define GENMASK_ULL(h, l) \
++	(GENMASK_INPUT_CHECK(h, l) + __GENMASK_ULL(h, l))
+ 
+ #endif	/* __LINUX_BITS_H */
 -- 
 2.20.1
 
