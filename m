@@ -2,146 +2,98 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4D9BC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 18:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C63F0C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 18:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA65921569
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 18:31:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A48CC20771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 18:32:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="XKCpi1B1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1416796AbgDOSbg (ORCPT
+        id S1416807AbgDOScS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 14:31:36 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:38740 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1416785AbgDOSb1 (ORCPT
+        Wed, 15 Apr 2020 14:32:18 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:15570 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1416781AbgDOScN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 14:31:27 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jOmon-0007m4-6E; Wed, 15 Apr 2020 12:31:25 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jOmom-0006UO-2C; Wed, 15 Apr 2020 12:31:24 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     syzbot <syzbot+d9ae59d4662c941e39c6@syzkaller.appspotmail.com>
-Cc:     adobriyan@gmail.com, akpm@linux-foundation.org, avagin@gmail.com,
-        bernd.edlinger@hotmail.de, christian@brauner.io, guro@fb.com,
-        kent.overstreet@gmail.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mhocko@suse.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
-        Alexey Gladkov <gladkov.alexey@gmail.com>
-References: <0000000000001c5eaa05a357f2e1@google.com>
-Date:   Wed, 15 Apr 2020 13:28:24 -0500
-In-Reply-To: <0000000000001c5eaa05a357f2e1@google.com> (syzbot's message of
-        "Wed, 15 Apr 2020 10:50:02 -0700")
-Message-ID: <878siwioxj.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Wed, 15 Apr 2020 14:32:13 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e9752bf0001>; Wed, 15 Apr 2020 11:30:23 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 15 Apr 2020 11:32:13 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 15 Apr 2020 11:32:13 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Apr
+ 2020 18:32:13 +0000
+Received: from rcampbell-dev.nvidia.com (172.20.13.39) by
+ DRHQMAIL107.nvidia.com (10.27.9.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3; Wed, 15 Apr 2020 18:32:12 +0000
+Subject: Re: [PATCH] mm/memblock: Fix a typo in comment "implict"->"implicit"
+To:     Ethon Paul <ethp@qq.com>, <akpm@linux-foundation.org>,
+        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
+References: <20200411070701.16097-1-ethp@qq.com>
+X-Nvconfidentiality: public
+From:   Ralph Campbell <rcampbell@nvidia.com>
+Message-ID: <3a15563b-de6c-7808-3c3c-f2ff12dc46de@nvidia.com>
+Date:   Wed, 15 Apr 2020 11:32:12 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jOmom-0006UO-2C;;;mid=<878siwioxj.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX18kv7/zTOHseDqGZuNDRRZg/nbyEXbjBWg=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: [PATCH] proc: Handle umounts cleanly
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+In-Reply-To: <20200411070701.16097-1-ethp@qq.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1586975423; bh=7LwprBHLDzZhAWgs54pXObtERSf8bwUFR+a+iu/GM4w=;
+        h=X-PGP-Universal:Subject:To:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=XKCpi1B1mI62T/RI03mgDa3J6jblKt/0hwmpHZyuC8NgFMeQfw6fpQm5qlUMLc83y
+         umLoxipSaNI6MMdwUSBuSSSLZ7sJdRq4HzZAwA2hFahun3ALiF2LYmvY6s0ubxyvRd
+         GcDcnFSbjEAZZNGNGwkFi1czvkwBxQ4u9DakLtELLr5mJKOeq0jRyUOjshr5YeI8o2
+         wzeEHYehbXQ2ex7kbhpD6Gl5Kbi+3DhE6cTLe0jeEefYiykX4LZJSPTF1ZFGvVRHI6
+         FlRecxFm7EJk+6gMZ3WIgCDMwCPCWHDmLWSyTR1p25zTI3cl92IKfC8erfxPliyvTf
+         1Bm/3oJNGJvqw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot writes:
-> KASAN: use-after-free Read in dput (2)
->
-> proc_fill_super: allocate dentry failed
-> ==================================================================
-> BUG: KASAN: use-after-free in fast_dput fs/dcache.c:727 [inline]
-> BUG: KASAN: use-after-free in dput+0x53e/0xdf0 fs/dcache.c:846
-> Read of size 4 at addr ffff88808a618cf0 by task syz-executor.0/8426
->
-> CPU: 0 PID: 8426 Comm: syz-executor.0 Not tainted 5.6.0-next-20200412-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0x188/0x20d lib/dump_stack.c:118
->  print_address_description.constprop.0.cold+0xd3/0x315 mm/kasan/report.c:382
->  __kasan_report.cold+0x35/0x4d mm/kasan/report.c:511
->  kasan_report+0x33/0x50 mm/kasan/common.c:625
->  fast_dput fs/dcache.c:727 [inline]
->  dput+0x53e/0xdf0 fs/dcache.c:846
->  proc_kill_sb+0x73/0xf0 fs/proc/root.c:195
->  deactivate_locked_super+0x8c/0xf0 fs/super.c:335
->  vfs_get_super+0x258/0x2d0 fs/super.c:1212
->  vfs_get_tree+0x89/0x2f0 fs/super.c:1547
->  do_new_mount fs/namespace.c:2813 [inline]
->  do_mount+0x1306/0x1b30 fs/namespace.c:3138
->  __do_sys_mount fs/namespace.c:3347 [inline]
->  __se_sys_mount fs/namespace.c:3324 [inline]
->  __x64_sys_mount+0x18f/0x230 fs/namespace.c:3324
->  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
->  entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> RIP: 0033:0x45c889
-> Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-> RSP: 002b:00007ffc1930ec48 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-> RAX: ffffffffffffffda RBX: 0000000001324914 RCX: 000000000045c889
-> RDX: 0000000020000140 RSI: 0000000020000040 RDI: 0000000000000000
-> RBP: 000000000076bf00 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000003
-> R13: 0000000000000749 R14: 00000000004ca15a R15: 0000000000000013
 
-Looking at the code now that it the internal mount of proc is no
-longer used it is possible to unmount proc.   If proc is unmounted
-the fields of the pid namespace that were used for filesystem
-specific state are not reinitialized.
+On 4/11/20 12:07 AM, Ethon Paul wrote:
+> There is a typo in commet, fix it.
+> 
+> Signed-off-by: Ethon Paul <ethp@qq.com>
 
-Which means that proc_self and proc_thread_self can be pointers to
-already freed dentries.
+Reviewed-by: Ralph Campbell <rcampbell@nvidia.com>
 
-The reported user after free appears to be from mounting and
-unmounting proc followed by mounting proc again and using error
-injection to cause the new root dentry allocation to fail.  This in
-turn results in proc_kill_sb running with proc_self and
-proc_thread_self still retaining their values from the previous mount
-of proc.  Then calling dput on either proc_self of proc_thread_self
-will result in double put.  Which KASAN sees as a use after free.
-
-Solve this by always reinitializing the filesystem state stored
-in the struct pid_namespace, when proc is unmounted.
-
-Reported-by: syzbot+72868dd424eb66c6b95f@syzkaller.appspotmail.com
-Fixes: 69879c01a0c3 ("proc: Remove the now unnecessary internal mount of proc")
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
----
- fs/proc/root.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/fs/proc/root.c b/fs/proc/root.c
-index 2633f10446c3..fbf084a7d14c 100644
---- a/fs/proc/root.c
-+++ b/fs/proc/root.c
-@@ -196,6 +196,13 @@ static void proc_kill_sb(struct super_block *sb)
- 	if (ns->proc_thread_self)
- 		dput(ns->proc_thread_self);
- 	kill_anon_super(sb);
-+
-+	/* Make the pid namespace safe for a new mount of proc */
-+	ns->proc_self = NULL;
-+	ns->proc_thread_self = NULL;
-+	ns->pid_gid = GLOBAL_ROOT_GID;
-+	ns->hide_pid = 0;
-+
- 	put_pid_ns(ns);
- }
- 
--- 
-2.20.1
-
-This should fix the reported syzbot failure.
+> ---
+>   mm/memblock.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/mm/memblock.c b/mm/memblock.c
+> index 4d06bbaded0f..4cae23d2373a 100644
+> --- a/mm/memblock.c
+> +++ b/mm/memblock.c
+> @@ -78,7 +78,7 @@
+>    * * memblock_alloc*() - these functions return the **virtual** address
+>    *   of the allocated memory.
+>    *
+> - * Note, that both API variants use implict assumptions about allowed
+> + * Note, that both API variants use implicit assumptions about allowed
+>    * memory ranges and the fallback methods. Consult the documentation
+>    * of memblock_alloc_internal() and memblock_alloc_range_nid()
+>    * functions for more elaborate description.
+> 
