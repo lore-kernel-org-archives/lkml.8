@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85124C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:05:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A530C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:05:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58C9920737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:05:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FF5620737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:05:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586955940;
-	bh=Lw5BH7pmk+9cni4ByfUZ7qQ8QaNhnIgwh6zVSoOuQGM=;
+	s=default; t=1586955945;
+	bh=kV5PHKdnWW5GIJPoGrB+L9uPK8tPi3PljY8grFtfbbM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i8/VEdUNS6t7EwklfnSr9YAk9HzbT9tDOojFV8tk1pRzt/vgXkhONfhH6s1vWstct
-	 IGenFVggGlHhMiJfcgVbVLJNquNrnIbQvoHbuWrUke30xiF5ogu4FAJQc7iQs9EA8I
-	 Qvv5uXgxSl41TsBBqtGlqS0FGlKKVkR2BQ30Yv3U=
+	b=TI4pKGHPlLphrUNWjb5xONOZwXV5zBNE3J4Z9nKHZDnSFiCT0ucYnhxh813+t/WUB
+	 tLseqEf9RIjrQJimmxTwiLybpxjikeaIzKYqEK8r+NS4qiSDkj4TpE2h1qdm7knjOW
+	 VwjGBLNKWlgHlDMJIgNh10I/E1V56A/Xk5NHgRP0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505921AbgDONFi (ORCPT
+        id S2505928AbgDONFn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:05:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56038 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 09:05:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897130AbgDOLgQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:36:16 -0400
+        id S2897128AbgDOLgO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:36:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C825820737;
-        Wed, 15 Apr 2020 11:36:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EB8D208FE;
+        Wed, 15 Apr 2020 11:36:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950576;
-        bh=Lw5BH7pmk+9cni4ByfUZ7qQ8QaNhnIgwh6zVSoOuQGM=;
+        s=default; t=1586950574;
+        bh=kV5PHKdnWW5GIJPoGrB+L9uPK8tPi3PljY8grFtfbbM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cJzzyOIzl1vFC0JQlLjrDHOMuHVQ2iamfFifRqS6vsIQDQTmulgWKtylE75NvSaON
-         JK9mtefBnG8plgc+v5WEt+8sa01PQWezdcmiWzk6AxAsnbVHKjBZF/HXLgI9HEd7EL
-         7yD8Vcw8CA8XLyk5a9lPMxG6mxkhHwUVcejwLQJc=
+        b=Wau/qm51ZBrwkfxdimuzKpIKMCNJTaayIEuB0WA+R4y2YBHsW2BeOzgIW2CS6aAdK
+         C92K42a3mnqoGq0L9zVZrE9BSBd4it/OSrgqr1MEOltWSdhiwcjpGaTpxdHgM+w62v
+         d5rdjJ8B3TwesVNxh1I/rD1dEcCveRPugIL2laaM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ralph Campbell <rcampbell@nvidia.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.6 077/129] drm/nouveau/svm: check for SVM initialized before migrating
-Date:   Wed, 15 Apr 2020 07:33:52 -0400
-Message-Id: <20200415113445.11881-77-sashal@kernel.org>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 075/129] net: dsa: bcm_sf2: Do not register slave MDIO bus with OF
+Date:   Wed, 15 Apr 2020 07:33:50 -0400
+Message-Id: <20200415113445.11881-75-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
 References: <20200415113445.11881-1-sashal@kernel.org>
@@ -60,38 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ralph Campbell <rcampbell@nvidia.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 822cab6150d3002952407a8297ff5a0d32bb7b54 ]
+[ Upstream commit 536fab5bf5826404534a6c271f622ad2930d9119 ]
 
-When migrating system memory to GPU memory, check that SVM has been
-enabled. Even though most errors can be ignored since migration is
-a performance optimization, return an error because this is a violation
-of the API.
+We were registering our slave MDIO bus with OF and doing so with
+assigning the newly created slave_mii_bus of_node to the master MDIO bus
+controller node. This is a bad thing to do for a number of reasons:
 
-Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+- we are completely lying about the slave MII bus is arranged and yet we
+  still want to control which MDIO devices it probes. It was attempted
+  before to play tricks with the bus_mask to perform that:
+  https://www.spinics.net/lists/netdev/msg429420.html but the approach
+  was rightfully rejected
+
+- the device_node reference counting is messed up and we are effectively
+  doing a double probe on the devices we already probed using the
+  master, this messes up all resources reference counts (such as clocks)
+
+The proper fix for this as indicated by David in his reply to the
+thread above is to use a platform data style registration so as to
+control exactly which devices we probe:
+https://www.spinics.net/lists/netdev/msg430083.html
+
+By using mdiobus_register(), our slave_mii_bus->phy_mask value is used
+as intended, and all the PHY addresses that must be redirected towards
+our slave MDIO bus is happening while other addresses get redirected
+towards the master MDIO bus.
+
+Fixes: 461cd1b03e32 ("net: dsa: bcm_sf2: Register our slave MDIO bus")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nouveau_svm.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/net/dsa/bcm_sf2.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_svm.c b/drivers/gpu/drm/nouveau/nouveau_svm.c
-index df9bf1fd1bc0b..3ec5da025bea7 100644
---- a/drivers/gpu/drm/nouveau/nouveau_svm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_svm.c
-@@ -171,6 +171,11 @@ nouveau_svmm_bind(struct drm_device *dev, void *data,
- 	mm = get_task_mm(current);
- 	down_read(&mm->mmap_sem);
+diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
+index b0f5280a83cb6..4481afd323a97 100644
+--- a/drivers/net/dsa/bcm_sf2.c
++++ b/drivers/net/dsa/bcm_sf2.c
+@@ -472,7 +472,7 @@ static int bcm_sf2_mdio_register(struct dsa_switch *ds)
+ 	priv->slave_mii_bus->parent = ds->dev->parent;
+ 	priv->slave_mii_bus->phy_mask = ~priv->indir_phy_mask;
  
-+	if (!cli->svm.svmm) {
-+		up_read(&mm->mmap_sem);
-+		return -EINVAL;
-+	}
-+
- 	for (addr = args->va_start, end = args->va_start + size; addr < end;) {
- 		struct vm_area_struct *vma;
- 		unsigned long next;
+-	err = of_mdiobus_register(priv->slave_mii_bus, dn);
++	err = mdiobus_register(priv->slave_mii_bus);
+ 	if (err && dn)
+ 		of_node_put(dn);
+ 
 -- 
 2.20.1
 
