@@ -2,81 +2,102 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E658DC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEAC5C3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:35:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5A172051A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:34:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 942FF2064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:35:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1416152AbgDOQeX (ORCPT
+        id S1416161AbgDOQfK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 12:34:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58362 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1416090AbgDOQeT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 12:34:19 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80F90C061A0C;
-        Wed, 15 Apr 2020 09:34:19 -0700 (PDT)
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1jOkzQ-0006Uc-V3; Wed, 15 Apr 2020 18:34:17 +0200
-Date:   Wed, 15 Apr 2020 18:34:16 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
-Subject: Re: [PATCH RT] printk: console must not schedule for drivers
-Message-ID: <20200415163416.r3fce3g5kokm4bub@linutronix.de>
-References: <20200406212217.2323-1-john.ogness@linutronix.de>
+        Wed, 15 Apr 2020 12:35:10 -0400
+Received: from foss.arm.com ([217.140.110.172]:49794 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1416090AbgDOQfG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 12:35:06 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 725901FB;
+        Wed, 15 Apr 2020 09:35:03 -0700 (PDT)
+Received: from [10.37.9.9] (unknown [10.37.9.9])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 430EC3F6C4;
+        Wed, 15 Apr 2020 09:35:02 -0700 (PDT)
+Subject: Re: [PATCH v2 0/6] arm64: add the time namespace support
+To:     Andrei Vagin <avagin@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dmitry Safonov <dima@arista.com>
+References: <20200225073731.465270-1-avagin@gmail.com>
+ <1c1ab662-5475-9d8b-038b-8411b060202a@arm.com>
+ <CANaxB-xUYOrVnfLPRYVBiASzCH89sZkD6vTdy8EFjT16ZJhLfg@mail.gmail.com>
+ <1d9c4c56-af16-e54f-08ca-76c6570b2d53@arm.com>
+ <CANaxB-w+_4BUOYb-5+w1xBPoZGOzBh-LYOFCY-WSysgbAAcn_w@mail.gmail.com>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <5f60bff9-0fe1-7f1f-2dcc-2a7363801897@arm.com>
+Date:   Wed, 15 Apr 2020 17:35:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <CANaxB-w+_4BUOYb-5+w1xBPoZGOzBh-LYOFCY-WSysgbAAcn_w@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200406212217.2323-1-john.ogness@linutronix.de>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-06 23:22:17 [+0200], John Ogness wrote:
-> Even though the printk kthread is always preemptible, it is still not
-> allowed to call cond_resched() from within console drivers. The
-> task may become non-preemptible in the console driver call chain. For
-> example, vt_console_print() takes a spinlock and then can call into
-> fbcon_redraw(), which can conditionally invoke cond_resched():
+Hi Andrei,
+
+On 4/15/20 5:14 PM, Andrei Vagin wrote:
+> On Tue, Apr 14, 2020 at 2:02 AM Vincenzo Frascino
+> <vincenzo.frascino@arm.com> wrote:
+>>
+>> Hi Andrei,
+>>
+>> On 4/11/20 8:33 AM, Andrei Vagin wrote:
+>>> On Thu, Apr 9, 2020 at 6:23 AM Vincenzo Frascino
+>>> <vincenzo.frascino@arm.com> wrote:
+>>>>
+>>>> I have though a question on something I encountered during the testing of the
+>>>> patches: I noticed that all the tests related to CLOCK_BOOTTIME_ALARM fail on
+>>>> arm64 (please find the results below the scissors). Is this expected?
+>>>
+>>> static int alarm_clock_get_timespec(clockid_t which_clock, struct
+>>> timespec64 *tp)
+>>> {
+>>>         struct alarm_base *base = &alarm_bases[clock2alarm(which_clock)];
+>>>
+>>>         if (!alarmtimer_get_rtcdev())
+>>>                 return -EINVAL;
+>>>
+>>> It is probably that you get EINVAL from here ^^^. I will send a
+>>> separate patch to handle this case in tests properly.
+>>>
+>>
+>> This makes sense :) Please let me know when you post the fix so I can test it again.
 > 
-> BUG: sleeping function called from invalid context at kernel/printk/printk.c:2322
-> in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 177, name: printk
-> CPU: 0 PID: 177 Comm: printk Not tainted 5.6.2-00011-ga536059557f1d9 #1
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
-> Call Trace:
->  dump_stack+0x66/0x8b
->  ___might_sleep+0x102/0x120
->  console_conditional_schedule+0x24/0x30
->  fbcon_redraw+0x96/0x1c0
->  ? fbcon_cursor+0x100/0x190
->  fbcon_scroll+0x556/0xd70
->  con_scroll+0x147/0x1e0
->  lf+0x9e/0xb0
->  vt_console_print+0x253/0x3d0
->  printk_kthread_func+0x1d5/0x3b0
+> I have sent this fix: https://lkml.org/lkml/2020/4/15/72
+>
+
+That's good, I will try it by the end of this week or beginning of next and let
+you know the results.
+
+>>
+>> Are you planning as well to rebase this set?>
+> What is the right tree to rebase on?
 > 
-> Disable cond_resched() for the call into the console drivers.
 
-Interesting. So you get a report and I don't?
+I guess master, I was asking because it would make easier my testing :)
 
-I have also patch related questions :)
-- So before the re-rewrite, console_unlock() set this 0 before invoking
-  the console drivers so it was always 0. I assume it was called with
-  disabled interrupts.
+> Thanks,
+> Andrei
+> 
 
-- Is there a scenario in fbcon where this function is invoked and
-  console_may_schedule is not 0?
-
-Sebastian
+-- 
+Regards,
+Vincenzo
