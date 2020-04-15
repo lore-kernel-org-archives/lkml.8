@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58AA7C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:04:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5940BC2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:04:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25EC720575
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:04:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3101020575
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:04:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586952252;
-	bh=diZCH/Mg8n9hXnJ0WhmZgAaGP/vFOO2uGKOad9Enxpw=;
+	s=default; t=1586952254;
+	bh=bUXNDQQRGaIuaP5JVoTNgFflarxDr46radtnMT9rNO0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PDKONOImy7NTTZIBqLAsd429ftl7Y8z2gi59McBttTsAONIWIU/x5uqasstsFIpkA
-	 6zW6c92GGoSmqICayf1X/z4NjZ/FeK1Cwnc01KSK2Rkb73cwdH8c+6hVCZ4hj4vA1w
-	 MuZDMYDjzK7xyWyxx0zthZBKzoXZTxy6Oc5UmQ5E=
+	b=gVBLgS6vbI9XkpDr/w4vGBjFPtKVux1VtPbVwRPF+G5trR/4Du9FY04QM6Ti+biwh
+	 OXEJh8kGAxvBbDXefUGmI5xERC6DVNH8SVYLJJ0dzX6bxk89sNVSmlNClpkNBOPJR+
+	 jqYpeMG9UcvZms3g0feDwoCPTrZyPp89OurBvBOE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S368299AbgDOMEJ (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:04:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44012 "EHLO mail.kernel.org"
+        id S368166AbgDOMBn (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:01:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409448AbgDOLsR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:48:17 -0400
+        id S2409422AbgDOLsH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:48:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65C1020775;
-        Wed, 15 Apr 2020 11:48:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58F7C20775;
+        Wed, 15 Apr 2020 11:48:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951297;
-        bh=diZCH/Mg8n9hXnJ0WhmZgAaGP/vFOO2uGKOad9Enxpw=;
+        s=default; t=1586951287;
+        bh=bUXNDQQRGaIuaP5JVoTNgFflarxDr46radtnMT9rNO0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TDqNr59t4PMHxAz3NxIhbJp01/dK3UoOPI+47yYK8/NcXPy3VVlKSLA9Xm6JsFrLq
-         EbdWxPxPgtvZYLt1qLWeDshJKwHVuTlUtRiRgQ3WKi1BGsZ/JzeZNtBGEdbdj9S4sj
-         uZxSBe0g+h5HxKyXdh0q1AIp3+lFuLs8DFowJgfY=
+        b=rAejOywbFFLt3IavI5Rxhnb/7UJfIE7+9CFZ2BhwpIdbaa1NaD0S205IEYn6Lrfj3
+         Zj/0Aqo9Y04YkxEyhPzCv4kxsSVQaWQ3fNIXibI4+8pNZrrpkMp96c7e+V3uDcM+TR
+         p0TPRi1v5o6NRYUU2vrvcTy3KCFHTzUPIO5bFVS4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 02/14] clk: tegra: Fix Tegra PMC clock out parents
-Date:   Wed, 15 Apr 2020 07:48:02 -0400
-Message-Id: <20200415114814.15954-2-sashal@kernel.org>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 15/21] net: dsa: bcm_sf2: Ensure correct sub-node is parsed
+Date:   Wed, 15 Apr 2020 07:47:42 -0400
+Message-Id: <20200415114748.15713-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415114814.15954-1-sashal@kernel.org>
-References: <20200415114814.15954-1-sashal@kernel.org>
+In-Reply-To: <20200415114748.15713-1-sashal@kernel.org>
+References: <20200415114748.15713-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,54 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 6fe38aa8cac3a5db38154331742835a4d9740788 ]
+[ Upstream commit afa3b592953bfaecfb4f2f335ec5f935cff56804 ]
 
-Tegra PMC clocks clk_out_1, clk_out_2, and clk_out_3 supported parents
-are osc, osc_div2, osc_div4 and extern clock.
+When the bcm_sf2 was converted into a proper platform device driver and
+used the new dsa_register_switch() interface, we would still be parsing
+the legacy DSA node that contained all the port information since the
+platform firmware has intentionally maintained backward and forward
+compatibility to client programs. Ensure that we do parse the correct
+node, which is "ports" per the revised DSA binding.
 
-Clock driver is using incorrect parents clk_m, clk_m_div2, clk_m_div4
-for PMC clocks.
-
-This patch fixes this.
-
-Tested-by: Dmitry Osipenko <digetx@gmail.com>
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Fixes: d9338023fb8e ("net: dsa: bcm_sf2: Make it a real platform device driver")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/tegra/clk-tegra-pmc.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/net/dsa/bcm_sf2.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/tegra/clk-tegra-pmc.c b/drivers/clk/tegra/clk-tegra-pmc.c
-index 91377abfefa19..17a04300f93bf 100644
---- a/drivers/clk/tegra/clk-tegra-pmc.c
-+++ b/drivers/clk/tegra/clk-tegra-pmc.c
-@@ -60,16 +60,16 @@ struct pmc_clk_init_data {
+diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
+index a3a8d7b62f3fb..796571fccba70 100644
+--- a/drivers/net/dsa/bcm_sf2.c
++++ b/drivers/net/dsa/bcm_sf2.c
+@@ -976,6 +976,7 @@ static int bcm_sf2_sw_probe(struct platform_device *pdev)
+ 	struct device_node *dn = pdev->dev.of_node;
+ 	struct b53_platform_data *pdata;
+ 	struct dsa_switch_ops *ops;
++	struct device_node *ports;
+ 	struct bcm_sf2_priv *priv;
+ 	struct b53_device *dev;
+ 	struct dsa_switch *ds;
+@@ -1038,7 +1039,11 @@ static int bcm_sf2_sw_probe(struct platform_device *pdev)
+ 	spin_lock_init(&priv->indir_lock);
+ 	mutex_init(&priv->stats_mutex);
  
- static DEFINE_SPINLOCK(clk_out_lock);
+-	bcm_sf2_identify_ports(priv, dn->child);
++	ports = of_find_node_by_name(dn, "ports");
++	if (ports) {
++		bcm_sf2_identify_ports(priv, ports);
++		of_node_put(ports);
++	}
  
--static const char *clk_out1_parents[] = { "clk_m", "clk_m_div2",
--	"clk_m_div4", "extern1",
-+static const char *clk_out1_parents[] = { "osc", "osc_div2",
-+	"osc_div4", "extern1",
- };
- 
--static const char *clk_out2_parents[] = { "clk_m", "clk_m_div2",
--	"clk_m_div4", "extern2",
-+static const char *clk_out2_parents[] = { "osc", "osc_div2",
-+	"osc_div4", "extern2",
- };
- 
--static const char *clk_out3_parents[] = { "clk_m", "clk_m_div2",
--	"clk_m_div4", "extern3",
-+static const char *clk_out3_parents[] = { "osc", "osc_div2",
-+	"osc_div4", "extern3",
- };
- 
- static struct pmc_clk_init_data pmc_clks[] = {
+ 	priv->irq0 = irq_of_parse_and_map(dn, 0);
+ 	priv->irq1 = irq_of_parse_and_map(dn, 1);
 -- 
 2.20.1
 
