@@ -2,136 +2,114 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4700BC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:15:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F153DC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:18:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21A22206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:15:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C38F820774
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:18:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="l+uunWU9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="b6QEUePW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392906AbgDOCPl (ORCPT
+        id S2392923AbgDOCSV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 22:15:41 -0400
-Received: from ozlabs.org ([203.11.71.1]:44089 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387984AbgDOCP0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 22:15:26 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4925Y71G2Vz9sSM;
-        Wed, 15 Apr 2020 12:15:22 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1586916925;
-        bh=GwSJW9qwj3VQE9O/y6ASuL4ZsieXgmyfhkDAyg2RkAk=;
-        h=Date:From:To:Cc:Subject:From;
-        b=l+uunWU9SSUUDyiYdZlKPCCnSDV2E5J3t+nlXpnsKaOqU8uR96eiu0o8lnu0j3acO
-         yTZdiqZK3rFr+JzyMjC7cyIIqiP1a2qfiS852NYOqullGpcd++DLU0i9zDoKSNJHqm
-         WQRBi+Zn5UZ5Is/BQtdKx5FTgu6xClM8g0V+Xbch/RXPCDjHxXLs5ncsfyWqxLAj/n
-         NbGbBkNcKNtLI1qtlOwyTkDKU43MPXl4FnZSo2UCwxz4b3P+6cSfdZM6HydKCfyOV7
-         YECSZWMuDvTSHmBMYdT66o7ZeYjXBv9CgMXM94uWekCc2L/gDPZ+BcMMgVIxO0YEqJ
-         4Nj5sWRbbEAjg==
-Date:   Wed, 15 Apr 2020 12:15:21 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hui Wang <hui.wang@canonical.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Subject: linux-next: build failures after merge of the sound-asoc tree
-Message-ID: <20200415121521.3e40b591@canb.auug.org.au>
+        Tue, 14 Apr 2020 22:18:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38352 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732702AbgDOCSQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 22:18:16 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5A68C061A0C;
+        Tue, 14 Apr 2020 19:18:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=9KHPxu7QAhV1u3S2ZqCIoyxy4Ym3v0RLTChLW2Oikv4=; b=b6QEUePWGS20adBA91jd/5eoL3
+        1qB1boh/lSdpZeSbJhBYeTpNJWWSCLq/Ywu3dBodJxi69s/hE26m1v0lWCZh7exlrHGttrDxBld0R
+        o0U22RBR4IM2REf02o5LLzkjtrvAsrb1SUhVA+XUN1jZuoZiPyNDNgaCQZNFu+XzGieExeS3WoTq2
+        HzrFZ6dcg3d7xLfboVDKIEwwlftwgdF2HBHdSLAnbd4RZD6VJwLdDQuDS9fhums2rjg8iZoJwG8r3
+        xi29XIpXU8O6p96+bY4jKHquY1oQY/ApSWHiG2HS0U86jqAf8CD/BieGTpXmH+rAb1cb1EZx8mhzT
+        VkdvlHpQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jOXcu-0000tf-4k; Wed, 15 Apr 2020 02:18:11 +0000
+Date:   Tue, 14 Apr 2020 19:18:08 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>,
+        William Kucharski <william.kucharski@oracle.com>
+Subject: Re: [PATCH v11 05/25] mm: Add new readahead_control API
+Message-ID: <20200415021808.GA5820@bombadil.infradead.org>
+References: <20200414150233.24495-1-willy@infradead.org>
+ <20200414150233.24495-6-willy@infradead.org>
+ <20200414181705.bfc4c0087092051a9475141e@linux-foundation.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/uPk4X/ZD9LzKl7nBfW8dLg_";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200414181705.bfc4c0087092051a9475141e@linux-foundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/uPk4X/ZD9LzKl7nBfW8dLg_
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, Apr 14, 2020 at 06:17:05PM -0700, Andrew Morton wrote:
+> On Tue, 14 Apr 2020 08:02:13 -0700 Matthew Wilcox <willy@infradead.org> wrote:
+> > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> > 
+> > Filesystems which implement the upcoming ->readahead method will get
+> > their pages by calling readahead_page() or readahead_page_batch().
+> > These functions support large pages, even though none of the filesystems
+> > to be converted do yet.
+> > 
+> > +static inline struct page *readahead_page(struct readahead_control *rac)
+> > +static inline unsigned int __readahead_batch(struct readahead_control *rac,
+> > +		struct page **array, unsigned int array_sz)
+> 
+> These are large functions.  Was it correct to inline them?
 
-Hi all,
+Hmm.  They don't seem that big to me.
 
-After merging the sound-asoc tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
+readahead_page, stripped of its sanity checks:
 
-sound/soc/intel/boards/skl_hda_dsp_generic.c: In function 'skl_set_hda_code=
-c_autosuspend_delay':
-sound/soc/intel/boards/skl_hda_dsp_generic.c:178:37: error: 'struct snd_soc=
-_pcm_runtime' has no member named 'codec_dai'
-  178 |  struct snd_soc_dai *codec_dai =3D rtd->codec_dai;
-      |                                     ^~
-drivers/soundwire/intel.c: In function 'sdw_stream_setup':
-drivers/soundwire/intel.c:672:39: error: 'struct snd_soc_pcm_runtime' has n=
-o member named 'codec_dais'
-  672 |   ret =3D snd_soc_dai_set_sdw_stream(rtd->codec_dais[i], sdw_stream,
-      |                                       ^~
-In file included from include/linux/device.h:15,
-                 from include/linux/acpi.h:15,
-                 from drivers/soundwire/intel.c:8:
-drivers/soundwire/intel.c:676:8: error: 'struct snd_soc_pcm_runtime' has no=
- member named 'codec_dais'
-  676 |     rtd->codec_dais[i]->name);
-      |        ^~
-include/linux/dev_printk.h:104:32: note: in definition of macro 'dev_err'
-  104 |  _dev_err(dev, dev_fmt(fmt), ##__VA_ARGS__)
-      |                                ^~~~~~~~~~~
++       rac->_nr_pages -= rac->_batch_count;
++       rac->_index += rac->_batch_count;
++       if (!rac->_nr_pages) {
++               rac->_batch_count = 0;
++               return NULL;
++       }
++       page = xa_load(&rac->mapping->i_pages, rac->_index);
++       rac->_batch_count = hpage_nr_pages(page);
 
-Caused by commit
+__readahead_batch is much bigger, but it's only used by btrfs and fuse,
+and it seemed unfair to make everybody pay the cost for a function only
+used by two filesystems.
 
-  1729025b04b9 ("ASoC: soc-core: remove cpu_dai/codec_dai/cpu_dais/codec_da=
-is")
+> The batching API only appears to be used by fuse?  If so, do we really
+> need it?  Does it provide some functional need, or is it a performance
+> thing?  If the latter, how significant is it?
 
-interacting with commit
+I must confess to not knowing the performance impact.  If the code uses
+xa_load() repeatedly, it costs O(log n) each time as we walk down the tree
+(mitigated to a large extent by cache, of course).  Using xas_for_each()
+keeps us at the bottom of the tree and each iteration is O(1).
+I'm interested to see if filesystem maintainers start to use the batch
+function or if they're happier sticking with the individual lookups.
 
-  3a24f135e6cc ("ASoC: intel/skl/hda - set autosuspend timeout for hda code=
-cs")
+The batch API was originally written for use with btrfs, but it was a
+significant simplification to convert fuse to use it.
 
-(which should have been fixed up in commit
+> The code adds quite a few (inlined!) VM_BUG_ONs.  Can we plan to remove
+> them at some stage?  Such as, before Linus shouts at us :)
 
-  df3e71c42f05 ("Merge series "ASoC: Intel: machine drivers update for 5.8"=
- from Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>:")
+I'd be happy to remove them.  Various reviewers said things like "are you
+sure this can't happen?"
 
-or before like other references)
-
-and interacting with commit
-
-  5e7484d01928 ("soundwire: intel: add sdw_stream_setup helper for .startup=
- callback")
-
-from Linus' tree.
-
-I have used the sound-asoc tree from next-20200414 for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/uPk4X/ZD9LzKl7nBfW8dLg_
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6WbjkACgkQAVBC80lX
-0GxG/wf/R3uNPjiFOwxvKw9s6xEweBqSUlfUsSkZcnja/+3R6Nc6zjmQPdMOx61Y
-1FIA02wEWtuZCfVUdIMODOjPDjGXmhVj+OHS0NKKICmPy4HSx0Fgo3drFFO0mAI0
-7Z7+SaSXwn6/QkDl6wld9qLBWMLfJQlUeq39Ibkq446Ge8hZflYZcGfi+w5d55q8
-MTCKuYIOg0RCSqVj0mLOOA9rbSFcre9La7C49YsId3LBSugL5Ru+KtRFkdPyujGH
-KuE+w1RuPYvKehEEPd8fE4CuFf6c21RZJpXkNTTqqMHIL74uWKFWkSWev4KpKkwN
-G7XkFJB6weMeE9RKQipfT1HzvxZ6Ww==
-=3H2+
------END PGP SIGNATURE-----
-
---Sig_/uPk4X/ZD9LzKl7nBfW8dLg_--
