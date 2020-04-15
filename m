@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B15EC3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:10:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D24C2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:10:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3948920737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:10:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4364E2076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:10:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586956203;
-	bh=wYLXLG27rnEwhy1UBlgPAvszNrYaMJ0woRo+YuC+rz8=;
+	s=default; t=1586956216;
+	bh=nkzQYljAqqsLT0KyQ1yxVxy4hdkqt9fzHI0OYpbHm4E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MiF2NDUurPvJFeCjRb3CCAP27Tb7pPj2xYzxpH7zEFh9nnLkTSVHbWgVAi/ZM1YWf
-	 Jj/pHAZI8j93ey+H7LbUum6eXPmWYUoOs2MYVdh0le9qX8Z8KyWEtp6DQ+zFMgLE58
-	 O2g7C76FobyPaaOkFw3L24uhnh3lEQaohQJc+a9Q=
+	b=UnkHOelpOJ7WR3V8+Z9hfuuuTobaBRf2u9o6+M+TspsVUAcxys4ItGX8D7swrzZcl
+	 cGVm6IDHsteDHEgMycqHsO0qG03E0Y11CcZSkMBEjQVdQ0lA2Juh/SpvQDtbBCdfhI
+	 w88Pdv9uZoMIIXpylRmlJmvG4oUQetKJ4ux2u4fw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504627AbgDONJ7 (ORCPT
+        id S2504192AbgDONKO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:09:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55388 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 09:10:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897081AbgDOLfr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:35:47 -0400
+        id S2897078AbgDOLfo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:35:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 344CA215A4;
-        Wed, 15 Apr 2020 11:35:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF26E21569;
+        Wed, 15 Apr 2020 11:35:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950546;
-        bh=wYLXLG27rnEwhy1UBlgPAvszNrYaMJ0woRo+YuC+rz8=;
+        s=default; t=1586950543;
+        bh=nkzQYljAqqsLT0KyQ1yxVxy4hdkqt9fzHI0OYpbHm4E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jIdszX1Of3gogdXmwZw9lyfepwrJNfSn107wTT7YWdO0fWD+Rsr2ExKUPFCv0yUH+
-         BzUTvdZ3JCFaC1UqAd9MTpX0hz7mX7bjZ18iH8Q7TRX0yJihc1UdumiPuERh8wZpqB
-         MMwlobbagRRL6wKL2RdDPekC8POBPc+xGgCba0OU=
+        b=yyBaPze295V3kVtFSGJnSFEySLBr2R6oVC78bKI8L4gZQgEcMKhkcsmwVj+CiWMM0
+         eer7Zd2Xm2OKU/k7nWwO/xIT38/V5h76NpEQpULzH/X2+9o7U00HWb8YGpoaKLBt0k
+         AHcpLCNKU9lUSYygzDfmqCVcJ/xvc6H1leJBlBCg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.6 053/129] powerpc/prom_init: Pass the "os-term" message to hypervisor
-Date:   Wed, 15 Apr 2020 07:33:28 -0400
-Message-Id: <20200415113445.11881-53-sashal@kernel.org>
+Cc:     Domenico Andreoli <domenico.andreoli@linux.com>,
+        Marian Klein <mkleinsoft@gmail.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 050/129] hibernate: Allow uswsusp to write to swap
+Date:   Wed, 15 Apr 2020 07:33:25 -0400
+Message-Id: <20200415113445.11881-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
 References: <20200415113445.11881-1-sashal@kernel.org>
@@ -59,40 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexey Kardashevskiy <aik@ozlabs.ru>
+From: Domenico Andreoli <domenico.andreoli@linux.com>
 
-[ Upstream commit 74bb84e5117146fa73eb9d01305975c53022b3c3 ]
+[ Upstream commit 56939e014a6c212b317414faa307029e2e80c3b9 ]
 
-The "os-term" RTAS calls has one argument with a message address of OS
-termination cause. rtas_os_term() already passes it but the recently
-added prom_init's version of that missed it; it also does not fill
-args correctly.
+It turns out that there is one use case for programs being able to
+write to swap devices, and that is the userspace hibernation code.
 
-This passes the message address and initializes the number of arguments.
+Quick fix: disable the S_SWAPFILE check if hibernation is configured.
 
-Fixes: 6a9c930bd775 ("powerpc/prom_init: Add the ESM call to prom_init")
-Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200312074404.87293-1-aik@ozlabs.ru
+Fixes: dc617f29dbe5 ("vfs: don't allow writes to swap files")
+Reported-by: Domenico Andreoli <domenico.andreoli@linux.com>
+Reported-by: Marian Klein <mkleinsoft@gmail.com>
+Signed-off-by: Domenico Andreoli <domenico.andreoli@linux.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/prom_init.c | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/block_dev.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/kernel/prom_init.c b/arch/powerpc/kernel/prom_init.c
-index 577345382b23f..673f13b87db13 100644
---- a/arch/powerpc/kernel/prom_init.c
-+++ b/arch/powerpc/kernel/prom_init.c
-@@ -1773,6 +1773,9 @@ static void __init prom_rtas_os_term(char *str)
- 	if (token == 0)
- 		prom_panic("Could not get token for ibm,os-term\n");
- 	os_term_args.token = cpu_to_be32(token);
-+	os_term_args.nargs = cpu_to_be32(1);
-+	os_term_args.nret = cpu_to_be32(1);
-+	os_term_args.args[0] = cpu_to_be32(__pa(str));
- 	prom_rtas_hcall((uint64_t)&os_term_args);
- }
- #endif /* CONFIG_PPC_SVM */
+diff --git a/fs/block_dev.c b/fs/block_dev.c
+index 69bf2fb6f7cda..84fe0162ff13e 100644
+--- a/fs/block_dev.c
++++ b/fs/block_dev.c
+@@ -34,6 +34,7 @@
+ #include <linux/task_io_accounting_ops.h>
+ #include <linux/falloc.h>
+ #include <linux/uaccess.h>
++#include <linux/suspend.h>
+ #include "internal.h"
+ 
+ struct bdev_inode {
+@@ -2001,7 +2002,8 @@ ssize_t blkdev_write_iter(struct kiocb *iocb, struct iov_iter *from)
+ 	if (bdev_read_only(I_BDEV(bd_inode)))
+ 		return -EPERM;
+ 
+-	if (IS_SWAPFILE(bd_inode))
++	/* uswsusp needs write permission to the swap */
++	if (IS_SWAPFILE(bd_inode) && !hibernation_available())
+ 		return -ETXTBSY;
+ 
+ 	if (!iov_iter_count(from))
 -- 
 2.20.1
 
