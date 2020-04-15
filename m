@@ -2,104 +2,165 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1622C352BE
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:54:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72765C352BE
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:56:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F2BC2072D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:54:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5202F2072D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:56:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kp+mBxf2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dyBX2dum"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391508AbgDOCyd (ORCPT
+        id S2438565AbgDOC4C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 22:54:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43922 "EHLO
+        Tue, 14 Apr 2020 22:56:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727839AbgDOCya (ORCPT
+        with ESMTP id S1732779AbgDOC4A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 22:54:30 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96DDAC061A0C;
-        Tue, 14 Apr 2020 19:54:29 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id m16so722254pls.4;
-        Tue, 14 Apr 2020 19:54:29 -0700 (PDT)
+        Tue, 14 Apr 2020 22:56:00 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BD1BC061A0C;
+        Tue, 14 Apr 2020 19:56:00 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id di6so994937qvb.10;
+        Tue, 14 Apr 2020 19:56:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=w/ObdyZe4SYG+GH7RWaWC1pUzVlokN24AFVwo6IaPaI=;
-        b=Kp+mBxf2fNINBhbwQWCKOZAD5VoFyYa7d66LOf524g5ye4u9NKUoyOc81NsFILYD/u
-         gPF8ritxsYzD9aLSGnmDeqeN66slmkDVnGqok3i2R/bJLhXRAnrFYYnRyjTCqp3gkdMZ
-         0pJv53bbzRVLVv7gFQLW7y2VnaMLadI6gRzt5KgQlnWR+i38rf2bS4Z1XsqkhoxdX0vG
-         aWlOZ9dhfgIoPFCgOpM6azK8iRONiRv5ze+lqrJ0282/hG5hmKuJRDJivo6bFytre6No
-         mnpzBUTEvuJMavD8VPgAlUIJXD0LSu0fSITiZNc0eMN1OlQ9ekbw0F5QuSWkskB1eaYW
-         EIng==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5+pk54KXVRCt6mCeYfu6u1hgghJvTphtuH45b199eug=;
+        b=dyBX2dumBT3DX60HltmnArMIt6VdxDUSG499ZJ+SRAW1GNYbaDK0TUKMeEq/aSkESG
+         ChLKmTo6et7e8BsIPVwRNLLNO9n/dw8bpcW9L9WweiHlT8y42jKTCt+AeIllZGKe76jU
+         RCJUyCb3E7/1slLwAqTMTggJnLfQCt+1pYkAtHgsu7uB3FhuoZHhbfYnkQ+I6xm8NEE6
+         FnY3Z833zX6HWbAH1HxGSB0Bo9GqexomPFByl1c6UoTg01cXsev+ZUKRSoBVimBuYroh
+         m71L7+eFHi5pdsEosfQhCxZfgq5510wDXejkW+/+V2tIAXptyqXdWbIIQX8BclLlyFL4
+         l+Mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=w/ObdyZe4SYG+GH7RWaWC1pUzVlokN24AFVwo6IaPaI=;
-        b=ocUSyidBrOYaPLdhcZ6ZZ8qYHXPfj9nennzbW7oRJ0UsFUpwC8NIGltcIxpe16tTP7
-         UJCOozvKdMpVyGsJHLtbGkn6G4vi4LO0cBz5oegCVY8XLf90k5O/mgIo51FJvGoidCkH
-         43domTGGSBeuy5e4FQQN3kbT1nDq7hjPVRNSliDI0Wvb77zwHJjGtueDWMVa+xaN+/Kk
-         2VHncG45g+oR2i+lm0Zs95vpFLRv6BT5dsKxVCnVQvU+tf3pkzYsvUHhp7WXLHPOtJqj
-         gFbXXD6QbOI8pncZV3z6iZLyrei0+jgGdx8prZpRDxl2BirOPiISyMWk9PflBkKjDXEM
-         voaA==
-X-Gm-Message-State: AGi0PuaQKsbWwWklefJptW9dk9HtgAyD/dIOwdJB9+xcm9gxRcNaoRw7
-        MbVGxYgRjdPwuXTXrDMOY0Y=
-X-Google-Smtp-Source: APiQypJnPJv53UlIGNvRX9jheZlHTaxQ05f+cPcg6FOMpCteH6TPHZwCBybS1X+TqkslpYskeJw9Jg==
-X-Received: by 2002:a17:90a:c401:: with SMTP id i1mr3513270pjt.131.1586919269043;
-        Tue, 14 Apr 2020 19:54:29 -0700 (PDT)
-Received: from localhost (89.208.244.140.16clouds.com. [89.208.244.140])
-        by smtp.gmail.com with ESMTPSA id y18sm12100818pfe.82.2020.04.14.19.54.27
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 14 Apr 2020 19:54:28 -0700 (PDT)
-Date:   Wed, 15 Apr 2020 10:54:26 +0800
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Allison Randal <allison@lohutok.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Patrice Chotard <patrice.chotard@st.com>,
-        Shah Nehal-Bakulchandra <Nehal-bakulchandra.Shah@amd.com>,
-        Tang Bin <tangbin@cmss.chinamobile.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v1] i2c: img-scb: remove duplicate dev_err()
-Message-ID: <20200415025426.GB14300@nuc8i5>
-References: <08564c03-3bbd-5518-1a9d-a40b8ca09f48@web.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5+pk54KXVRCt6mCeYfu6u1hgghJvTphtuH45b199eug=;
+        b=L+rRD0Dq3VkaVXRQ/V715wmOJNkExUXD9o2sJ+130wiHNEAasW2XckEdAWka+5KTkc
+         XXwPuKdVeM7VbAh7odPA25Yzb6KzUlwaDdv/wi0a/PVvlAnHN2I/F+Bn8co9hxeu1Gm3
+         arkGTu2FmKs7PiSFXYOCeX+3v5GBJP0ladIWYV28vV/yz97pb9SFBzetfvWx+tSARXx1
+         ma/yaOJ+ekz8Aj5QZsOZ1+2BFeHlkX5SxiB3IcqOvwSMjuQU92yfV3Wygkikki1HNEDc
+         B8kv3+5xVWraT4WlnWiYpUeSxWG8tr9xtuv+iUL6BZ1MRiuFzOvCpHwLVedxdz+E7HWU
+         +elQ==
+X-Gm-Message-State: AGi0Puag2m/kldNPsIgjAZIqXvnm+Yj+1ZdYCQhTBi2uYJmw7/40IFvg
+        1cDbyFud9LPazS0I87ESXIMMPIN/JhDo7ekcq38=
+X-Google-Smtp-Source: APiQypL6fx5Jo66bviF7emrcPPuSgkq+sExxjq0BShhEl+ej8+MVt0ZP8mIC/3uoA9xgoayPyN+s0Rj7dR5hh4U60L4=
+X-Received: by 2002:ad4:46e3:: with SMTP id h3mr3036173qvw.14.1586919359561;
+ Tue, 14 Apr 2020 19:55:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <08564c03-3bbd-5518-1a9d-a40b8ca09f48@web.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <cover.1585726761.git.shengjiu.wang@nxp.com> <68208297b49e85adfddf843bc205d154790a49de.1585726761.git.shengjiu.wang@nxp.com>
+ <20200414154643.GA29098@bogus>
+In-Reply-To: <20200414154643.GA29098@bogus>
+From:   Shengjiu Wang <shengjiu.wang@gmail.com>
+Date:   Wed, 15 Apr 2020 10:55:47 +0800
+Message-ID: <CAA+D8AP2CiRT7qkNa7yBDH0Dbd=i1eyqL4g4zobRmR-vEx4VBQ@mail.gmail.com>
+Subject: Re: [PATCH v6 6/7] ASoC: dt-bindings: fsl_easrc: Add document for EASRC
+To:     Rob Herring <robh@kernel.org>
+Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org, Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 05:48:41PM +0200, Markus Elfring wrote:
-> > it will print an error message by itself when platform_get_irq()
-> > goes wrong. so don't need dev_err() in here again.
-> 
-> I suggest to improve the change description.
-> Can you get any further inspiration by previous patches from
-> other contributors according to the presented transformation pattern?
-> 
-> Would you like to adjust any more source files in the mentioned
-> software area?
+Hi Rob
+
+On Tue, Apr 14, 2020 at 11:49 PM Rob Herring <robh@kernel.org> wrote:
 >
-Hi Markus:
+> On Wed, Apr 01, 2020 at 04:45:39PM +0800, Shengjiu Wang wrote:
+> > EASRC (Enhanced Asynchronous Sample Rate Converter) is a new
+> > IP module found on i.MX8MN.
+> >
+> > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> > ---
+> >  .../devicetree/bindings/sound/fsl,easrc.yaml  | 101 ++++++++++++++++++
+> >  1 file changed, 101 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/sound/fsl,easrc.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/sound/fsl,easrc.yaml b/Documentation/devicetree/bindings/sound/fsl,easrc.yaml
+> > new file mode 100644
+> > index 000000000000..14ea60084420
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/sound/fsl,easrc.yaml
+> > @@ -0,0 +1,101 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/sound/fsl,easrc.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: NXP Asynchronous Sample Rate Converter (ASRC) Controller
+> > +
+> > +maintainers:
+> > +  - Shengjiu Wang <shengjiu.wang@nxp.com>
+> > +
+> > +properties:
+> > +  $nodename:
+> > +    pattern: "^easrc@.*"
+> > +
+> > +  compatible:
+> > +    const: fsl,imx8mn-easrc
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    items:
+> > +      - description: Peripheral clock
+> > +
+> > +  clock-names:
+> > +    items:
+> > +      - const: mem
+> > +
+> > +  dmas:
+> > +    maxItems: 8
+> > +
+> > +  dma-names:
+> > +    items:
+> > +      - const: ctx0_rx
+> > +      - const: ctx0_tx
+> > +      - const: ctx1_rx
+> > +      - const: ctx1_tx
+> > +      - const: ctx2_rx
+> > +      - const: ctx2_tx
+> > +      - const: ctx3_rx
+> > +      - const: ctx3_tx
+> > +
+> > +  firmware-name:
+> > +    allOf:
+> > +      - $ref: /schemas/types.yaml#/definitions/string
+> > +      - const: imx/easrc/easrc-imx8mn.bin
+> > +    description: The coefficient table for the filters
+> > +
+> > +  fsl,asrc-rate:
+>
+> fsl,asrc-rate-hz
 
-Thanks for your comments, and maybe we can use coccinelle tools for
-more source files do this change in the mentioned software area.
+Can we keep "fsl,asrc-rate", because I want this property
+align with the one in fsl,asrc.txt.  These two asrc modules
+can share same property name.
 
-BR,
-Dejin
-> Regards,
-> Markus
+best regards
+wang shengjiu
