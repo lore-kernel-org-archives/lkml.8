@@ -2,92 +2,266 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE232C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C96FC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:38:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3E0D20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:38:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE9A12074F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:38:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586954287;
+	bh=dho+nqRB34fBEtZewJ7fhdKrcNy0/PfQqetIxeOIfwc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Rg4YlDSbTp3wlzRVq8h2lsSN9q08A+q0b12Hy02x9hWyQQEIHTqMnqVvM0wmXiEpT
+	 ejGNuJ8LcibTrEkj7+oyNLc8VLyQ8IByfkJfXAWsN4hum+7rY08DaM9w671xxhjt4u
+	 ej0Lx1C2nJN1SYVfPiMWTs848Ns4OrxurZT8I4qs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S369891AbgDOMhK (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:37:10 -0400
-Received: from m17618.mail.qiye.163.com ([59.111.176.18]:57479 "EHLO
-        m17618.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S369752AbgDOMe0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 08:34:26 -0400
-Received: from ubuntu.localdomain (unknown [58.251.74.226])
-        by m17618.mail.qiye.163.com (Hmail) with ESMTPA id 494524E2032;
-        Wed, 15 Apr 2020 20:34:23 +0800 (CST)
-From:   Wang Wenhu <wenhu.wang@vivo.com>
-To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        oss@buserror.net, christophe.leroy@c-s.fr,
-        linuxppc-dev@lists.ozlabs.org
-Cc:     kernel@vivo.com, Wang Wenhu <wenhu.wang@vivo.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 2/5] powerpc: sysdev: fix compile error for fsl_85xx_cache_sram
-Date:   Wed, 15 Apr 2020 05:33:43 -0700
-Message-Id: <20200415123346.116212-3-wenhu.wang@vivo.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200415123346.116212-1-wenhu.wang@vivo.com>
-References: <20200415123346.116212-1-wenhu.wang@vivo.com>
+        id S2409105AbgDOMiD (ORCPT
+        <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:38:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36568 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2897562AbgDOLoF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:44:05 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26BF5206A2;
+        Wed, 15 Apr 2020 11:44:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586951041;
+        bh=dho+nqRB34fBEtZewJ7fhdKrcNy0/PfQqetIxeOIfwc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=eHhp1I0oNF84qxX1sGI6I4lPSJKD287c7rnMQllCHnHxGTf3ZB2dEpe5oG6uE0KTB
+         FeJvloVMkbmi6QjCIiZ9+AVhsei48dQ6dEcFYD8CpeaZZKKp2UtnS2gKqTkKEbIlsd
+         8D2UptnS+bZKAxh6RhZ2IsgnXvyhjJbNLhw2I89g=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Guo Ren <guoren@linux.alibaba.com>,
+        Sasha Levin <sashal@kernel.org>, linux-csky@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 077/106] csky: Fixup cpu speculative execution to IO area
+Date:   Wed, 15 Apr 2020 07:41:57 -0400
+Message-Id: <20200415114226.13103-77-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
+References: <20200415114226.13103-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSFVLSE1LS0tLSkhITkpPT1lXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NBw6Azo4ODg2TwgrE0I*IzAW
-        ORlPFCtVSlVKTkNNQk5PS01ITUxIVTMWGhIXVQweFRMOVQwaFRw7DRINFFUYFBZFWVdZEgtZQVlO
-        Q1VJTkpVTE9VSUlNWVdZCAFZQUhKTkI3Bg++
-X-HM-Tid: 0a717dd54ecd9376kuws494524e2032
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Include linux/io.h into fsl_85xx_cache_sram.c to fix the
-implicit-declaration compile error when building Cache-Sram.
+From: Guo Ren <guoren@linux.alibaba.com>
 
-arch/powerpc/sysdev/fsl_85xx_cache_sram.c: In function ‘instantiate_cache_sram’:
-arch/powerpc/sysdev/fsl_85xx_cache_sram.c:97:26: error: implicit declaration of function ‘ioremap_coherent’; did you mean ‘bitmap_complement’? [-Werror=implicit-function-declaration]
-  cache_sram->base_virt = ioremap_coherent(cache_sram->base_phys,
-                          ^~~~~~~~~~~~~~~~
-                          bitmap_complement
-arch/powerpc/sysdev/fsl_85xx_cache_sram.c:97:24: error: assignment makes pointer from integer without a cast [-Werror=int-conversion]
-  cache_sram->base_virt = ioremap_coherent(cache_sram->base_phys,
-                        ^
-arch/powerpc/sysdev/fsl_85xx_cache_sram.c:123:2: error: implicit declaration of function ‘iounmap’; did you mean ‘roundup’? [-Werror=implicit-function-declaration]
-  iounmap(cache_sram->base_virt);
-  ^~~~~~~
-  roundup
-cc1: all warnings being treated as errors
+[ Upstream commit aefd9461d34a1b0a2acad0750c43216c1c27b9d4 ]
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-Cc: Scott Wood <oss@buserror.net>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: linuxppc-dev@lists.ozlabs.org
-Fixes: 6db92cc9d07d ("powerpc/85xx: add cache-sram support")
-Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
+For the memory size ( > 512MB, < 1GB), the MSA setting is:
+
+ - SSEG0: PHY_START        , PHY_START + 512MB
+ - SSEG1: PHY_START + 512MB, PHY_START + 1GB
+
+But the real memory is no more than 1GB, there is a gap between the
+end size of memory and border of 1GB. CPU could speculatively
+execute to that gap and if the gap of the bus couldn't respond to
+the CPU request, then the crash will happen.
+
+Now make the setting with:
+
+ - SSEG0: PHY_START        , PHY_START + 512MB (no change)
+ - SSEG1: Disabled (We use highmem to use the memory of 512MB~1GB)
+
+We also deprecated zhole_szie[] settings, it's only used by arm
+style CPUs. All memory gap should use Reserved setting of dts in
+csky system.
+
+Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/sysdev/fsl_85xx_cache_sram.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/csky/abiv1/inc/abi/entry.h |  5 +--
+ arch/csky/abiv2/inc/abi/entry.h |  7 ++--
+ arch/csky/kernel/head.S         |  5 +++
+ arch/csky/kernel/setup.c        | 63 ++++++++-------------------------
+ arch/csky/kernel/smp.c          |  3 ++
+ 5 files changed, 25 insertions(+), 58 deletions(-)
 
-diff --git a/arch/powerpc/sysdev/fsl_85xx_cache_sram.c b/arch/powerpc/sysdev/fsl_85xx_cache_sram.c
-index f6c665dac725..be3aef4229d7 100644
---- a/arch/powerpc/sysdev/fsl_85xx_cache_sram.c
-+++ b/arch/powerpc/sysdev/fsl_85xx_cache_sram.c
-@@ -17,6 +17,7 @@
- #include <linux/of_platform.h>
- #include <asm/pgtable.h>
- #include <asm/fsl_85xx_cache_sram.h>
-+#include <linux/io.h>
+diff --git a/arch/csky/abiv1/inc/abi/entry.h b/arch/csky/abiv1/inc/abi/entry.h
+index f35a9f3315ee6..5056ebb902d18 100644
+--- a/arch/csky/abiv1/inc/abi/entry.h
++++ b/arch/csky/abiv1/inc/abi/entry.h
+@@ -172,10 +172,7 @@
+ 	addi	r6, 0xe
+ 	cpwcr	r6, cpcr30
  
- #include "fsl_85xx_cache_ctlr.h"
+-	lsri	r6, 28
+-	addi	r6, 2
+-	lsli	r6, 28
+-	addi	r6, 0xe
++	movi	r6, 0
+ 	cpwcr	r6, cpcr31
+ .endm
  
+diff --git a/arch/csky/abiv2/inc/abi/entry.h b/arch/csky/abiv2/inc/abi/entry.h
+index 94a7a58765dff..111973c6c713f 100644
+--- a/arch/csky/abiv2/inc/abi/entry.h
++++ b/arch/csky/abiv2/inc/abi/entry.h
+@@ -230,11 +230,8 @@
+ 	addi	r6, 0x1ce
+ 	mtcr	r6, cr<30, 15> /* Set MSA0 */
+ 
+-	lsri	r6, 28
+-	addi	r6, 2
+-	lsli	r6, 28
+-	addi	r6, 0x1ce
+-	mtcr	r6, cr<31, 15> /* Set MSA1 */
++	movi    r6, 0
++	mtcr	r6, cr<31, 15> /* Clr MSA1 */
+ 
+ 	/* enable MMU */
+ 	mfcr    r6, cr18
+diff --git a/arch/csky/kernel/head.S b/arch/csky/kernel/head.S
+index 61989f9241c02..17ed9d2504807 100644
+--- a/arch/csky/kernel/head.S
++++ b/arch/csky/kernel/head.S
+@@ -21,6 +21,11 @@ END(_start)
+ ENTRY(_start_smp_secondary)
+ 	SETUP_MMU
+ 
++	/* copy msa1 from CPU0 */
++	lrw     r6, secondary_msa1
++	ld.w	r6, (r6, 0)
++	mtcr	r6, cr<31, 15>
++
+ 	/* set stack point */
+ 	lrw     r6, secondary_stack
+ 	ld.w	r6, (r6, 0)
+diff --git a/arch/csky/kernel/setup.c b/arch/csky/kernel/setup.c
+index 23ee604aafdb6..2c1e253abb74c 100644
+--- a/arch/csky/kernel/setup.c
++++ b/arch/csky/kernel/setup.c
+@@ -24,26 +24,9 @@ struct screen_info screen_info = {
+ };
+ #endif
+ 
+-phys_addr_t __init_memblock memblock_end_of_REG0(void)
+-{
+-	return (memblock.memory.regions[0].base +
+-		memblock.memory.regions[0].size);
+-}
+-
+-phys_addr_t __init_memblock memblock_start_of_REG1(void)
+-{
+-	return memblock.memory.regions[1].base;
+-}
+-
+-size_t __init_memblock memblock_size_of_REG1(void)
+-{
+-	return memblock.memory.regions[1].size;
+-}
+-
+ static void __init csky_memblock_init(void)
+ {
+ 	unsigned long zone_size[MAX_NR_ZONES];
+-	unsigned long zhole_size[MAX_NR_ZONES];
+ 	signed long size;
+ 
+ 	memblock_reserve(__pa(_stext), _end - _stext);
+@@ -57,54 +40,36 @@ static void __init csky_memblock_init(void)
+ 	memblock_dump_all();
+ 
+ 	memset(zone_size, 0, sizeof(zone_size));
+-	memset(zhole_size, 0, sizeof(zhole_size));
+ 
+ 	min_low_pfn = PFN_UP(memblock_start_of_DRAM());
+-	max_pfn	    = PFN_DOWN(memblock_end_of_DRAM());
+-
+-	max_low_pfn = PFN_UP(memblock_end_of_REG0());
+-	if (max_low_pfn == 0)
+-		max_low_pfn = max_pfn;
++	max_low_pfn = max_pfn = PFN_DOWN(memblock_end_of_DRAM());
+ 
+ 	size = max_pfn - min_low_pfn;
+ 
+-	if (memblock.memory.cnt > 1) {
+-		zone_size[ZONE_NORMAL]  =
+-			PFN_DOWN(memblock_start_of_REG1()) - min_low_pfn;
+-		zhole_size[ZONE_NORMAL] =
+-			PFN_DOWN(memblock_start_of_REG1()) - max_low_pfn;
++	if (size <= PFN_DOWN(SSEG_SIZE - PHYS_OFFSET_OFFSET))
++		zone_size[ZONE_NORMAL] = size;
++	else if (size < PFN_DOWN(LOWMEM_LIMIT - PHYS_OFFSET_OFFSET)) {
++		zone_size[ZONE_NORMAL] =
++				PFN_DOWN(SSEG_SIZE - PHYS_OFFSET_OFFSET);
++		max_low_pfn = min_low_pfn + zone_size[ZONE_NORMAL];
+ 	} else {
+-		if (size <= PFN_DOWN(LOWMEM_LIMIT - PHYS_OFFSET_OFFSET))
+-			zone_size[ZONE_NORMAL] = max_pfn - min_low_pfn;
+-		else {
+-			zone_size[ZONE_NORMAL] =
++		zone_size[ZONE_NORMAL] =
+ 				PFN_DOWN(LOWMEM_LIMIT - PHYS_OFFSET_OFFSET);
+-			max_low_pfn = min_low_pfn + zone_size[ZONE_NORMAL];
+-		}
++		max_low_pfn = min_low_pfn + zone_size[ZONE_NORMAL];
++		write_mmu_msa1(read_mmu_msa0() + SSEG_SIZE);
+ 	}
+ 
+ #ifdef CONFIG_HIGHMEM
+-	size = 0;
+-	if (memblock.memory.cnt > 1) {
+-		size = PFN_DOWN(memblock_size_of_REG1());
+-		highstart_pfn = PFN_DOWN(memblock_start_of_REG1());
+-	} else {
+-		size = max_pfn - min_low_pfn -
+-			PFN_DOWN(LOWMEM_LIMIT - PHYS_OFFSET_OFFSET);
+-		highstart_pfn =  min_low_pfn +
+-			PFN_DOWN(LOWMEM_LIMIT - PHYS_OFFSET_OFFSET);
+-	}
+-
+-	if (size > 0)
+-		zone_size[ZONE_HIGHMEM] = size;
++	zone_size[ZONE_HIGHMEM] = max_pfn - max_low_pfn;
+ 
+-	highend_pfn = max_pfn;
++	highstart_pfn = max_low_pfn;
++	highend_pfn   = max_pfn;
+ #endif
+ 	memblock_set_current_limit(PFN_PHYS(max_low_pfn));
+ 
+ 	dma_contiguous_reserve(0);
+ 
+-	free_area_init_node(0, zone_size, min_low_pfn, zhole_size);
++	free_area_init_node(0, zone_size, min_low_pfn, NULL);
+ }
+ 
+ void __init setup_arch(char **cmdline_p)
+diff --git a/arch/csky/kernel/smp.c b/arch/csky/kernel/smp.c
+index 0bb0954d55709..de61feb4b6df2 100644
+--- a/arch/csky/kernel/smp.c
++++ b/arch/csky/kernel/smp.c
+@@ -156,6 +156,8 @@ volatile unsigned int secondary_hint;
+ volatile unsigned int secondary_ccr;
+ volatile unsigned int secondary_stack;
+ 
++unsigned long secondary_msa1;
++
+ int __cpu_up(unsigned int cpu, struct task_struct *tidle)
+ {
+ 	unsigned long mask = 1 << cpu;
+@@ -164,6 +166,7 @@ int __cpu_up(unsigned int cpu, struct task_struct *tidle)
+ 		(unsigned int) task_stack_page(tidle) + THREAD_SIZE - 8;
+ 	secondary_hint = mfcr("cr31");
+ 	secondary_ccr  = mfcr("cr18");
++	secondary_msa1 = read_mmu_msa1();
+ 
+ 	/*
+ 	 * Because other CPUs are in reset status, we must flush data
 -- 
-2.17.1
+2.20.1
 
