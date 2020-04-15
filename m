@@ -2,129 +2,137 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F33FBC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:34:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B3CBC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:36:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D105E206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:34:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hwn9oie7"
+	by mail.kernel.org (Postfix) with ESMTP id E546920767
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:36:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1414734AbgDOPeq (ORCPT
+        id S1414764AbgDOPga (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 11:34:46 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43876 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1414720AbgDOPee (ORCPT
+        Wed, 15 Apr 2020 11:36:30 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:46889 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1414755AbgDOPg1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 11:34:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586964873;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=EOsn9WzC2Po9PCvhFuHMXouRRoh7kiQm7oVuP+zKwJQ=;
-        b=hwn9oie776lvjt1MqBo0gV5zgnVgT5cKDp/Se48IZ7faeO53EuvJl6TSEi4KMF7a7hwGMF
-        s0XV6T2W3dRJSVDCvdU0eVd1Vv6fR72U1/zeIIjH7Y4oOMuo9dELnhE3M6JyhO144YeuT2
-        1dfFW/qWB3XaFUmajZvoBuB3SmemApI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-388-4X0w2peNPB6VLyvD1vLIJg-1; Wed, 15 Apr 2020 11:34:29 -0400
-X-MC-Unique: 4X0w2peNPB6VLyvD1vLIJg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BCC2C6A6;
-        Wed, 15 Apr 2020 15:34:27 +0000 (UTC)
-Received: from madcap2.tricolour.ca (unknown [10.3.128.9])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E200560BF1;
-        Wed, 15 Apr 2020 15:34:20 +0000 (UTC)
-Date:   Wed, 15 Apr 2020 11:34:17 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Amol Grover <frextrite@gmail.com>, linux-kernel@vger.kernel.org,
-        linux-audit@redhat.com, Shuah Khan <skhan@linuxfoundation.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH v2] kernel: audit.c: Add __rcu notation to RCU pointer
-Message-ID: <20200415153417.svpbimg66vbeuk7u@madcap2.tricolour.ca>
-References: <20191128153203.GA23803@workstation-kernel-dev>
- <20191130020742.GF157739@google.com>
+        Wed, 15 Apr 2020 11:36:27 -0400
+Received: from mail-qt1-f171.google.com ([209.85.160.171]) by
+ mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1N1Oo7-1jHTtb3PEx-012mIa for <linux-kernel@vger.kernel.org>; Wed, 15 Apr
+ 2020 17:36:25 +0200
+Received: by mail-qt1-f171.google.com with SMTP id x2so13577351qtr.0
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 08:36:24 -0700 (PDT)
+X-Gm-Message-State: AGi0PubUrgJH+B8roOSSeQunEy5YpBii1s+9myXJUP7BXtnedS6CoUGY
+        0Avzwjg3fjxhCNsI9jQcFEAEWZzS7G9nwwBZExA=
+X-Google-Smtp-Source: APiQypJIUuuzcLdHHn2E9oSQH9GkrGPhjt4IZpFRZmL1irhVR/KZ+X1MWvLnL+BAuL5y8kjP6g+U6bLsXmnJCMwOAAc=
+X-Received: by 2002:aed:20e3:: with SMTP id 90mr21209126qtb.142.1586964983698;
+ Wed, 15 Apr 2020 08:36:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191130020742.GF157739@google.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+References: <cover.1586757922.git.baolin.wang7@gmail.com> <ca403b816af38eae68ca7399640c82d0345a2296.1586757922.git.baolin.wang7@gmail.com>
+In-Reply-To: <ca403b816af38eae68ca7399640c82d0345a2296.1586757922.git.baolin.wang7@gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 15 Apr 2020 17:36:07 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a06fed_WVmO84iod2VpY386_3J+V=A-M+W7yE57N04a8w@mail.gmail.com>
+Message-ID: <CAK8P3a06fed_WVmO84iod2VpY386_3J+V=A-M+W7yE57N04a8w@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 3/3] soc: sprd: Add Spreadtrum special bits
+ updating support
+To:     Baolin Wang <baolin.wang7@gmail.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Lyra Zhang <zhang.lyra@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:MQnvqLOoWwqTuhAeHc2QB61aLz/NzXqAPWq5pVuRAUy5+fSKJ5S
+ MsMTXCs9DWVAOXPA5xj4V2z9QP33FytL6zYK271HtnLtnH1bNnya0vvKcLtQqUen9olsIYU
+ iRLi2MyvRkPDt5Dcd96anlK4/wOZtkUmeB0ui00TuP5EazC1Pn/Llb1PF10PNYj5fixl5id
+ pg/X+n594Il2zKK9gwNVw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:fbRXHR7l6S4=:4cKBIH25KCcvxXWvp7z+xD
+ hYFi2KNrLLdqRiELpGfhaF9qQyK8G524b1MasvKsYpSUf0GLEMdzVjj6AOSF0FLJ9ZPQZYqr7
+ LkN5xr4TcB9szTQE3AweCXIypobUvYPE/GVgTaCV40LUUmhwfZaq/go3wqPDkiehE3R+VaoSY
+ /HESg9O7k05nP0ifcTLjVwj5EoFjI8BiCEuzf+BeBuoUo2EvUbpP1bWtbksxSlPNa/9tswqa/
+ Ia3nRPyGm7bzt+BBj+9P9VEqfk4VKYwvNhEWYx60BicIRGKVHPhPHc5GrwvZC5UgiiRMI8wdB
+ XlsoqKK1r2o9lYH9GeopBv0UKg6u4ib9HBKosDgEVXp/Mp9M9U1q0VmB+8GJfgC2di/cPxcEf
+ pO8RL1TgElmr+J775t0i5SZwb128oZqKDSQkt0LvSMP23YaUK1g0z3aYlF1YfM56ZHqLi41Ld
+ QRoqfLnhDsoONpTNFvH0PeL8rh+qFt5nuFM4PkJtINBoUHfqHGwIVVM5KJPhLcoOKomZwwhXY
+ 9ZODzLNeUWfYzr/dUKsL57uKooaXWLEyiSoWBD7ZiLOhjTPrmGUBW8WtmZK+mHK1dv6ak6fe2
+ fjT8y7B4I6UT/Mx7yD1CXvnxtU01257KjyEJguzhkLflH7tIyJAa6HNNZp6AdrXncZuuB7nsI
+ 7Ygbza32FAVZVhsycPpF/O/bo8o0bZR0FR2EMxfC5yrdhfC8b7sLGzBfi/Jz6FqNIWq43UK07
+ egJ3si3gpE2kS8eJ9n6jJHygPyYFKSkkOAQiFC9DEbhFrooaTIX3xWjxyC47rLeexY2CWboc9
+ 9O/YVWE1RgziX9xkLpBD/M/Gqdvlm0OCeiKKd2P8bCqMTZ13CE=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-11-29 21:07, Joel Fernandes wrote:
-> On Thu, Nov 28, 2019 at 09:02:03PM +0530, Amol Grover wrote:
-> > add __rcu notation to RCU protected global pointer auditd_conn
-> 
-> Again, please use proper punctuation and captilization. This is unacceptable.
-> Please put more effort into changelog.
-> 
-> Otherwise the patch diff itself looks good to me, with the above nit
-> corrected, you could add my tag to the next revision:
-> 
-> Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> 
-> thanks,
-> 
->  - Joel
-> 
-> > 
-> > Fixes multiple instances of sparse error:
-> > error: incompatible types in comparison expression
-> > (different address spaces)
+On Mon, Apr 13, 2020 at 8:14 AM Baolin Wang <baolin.wang7@gmail.com> wrote:
+>
+> The spreadtrum platform uses a special set/clear method to update
+> registers' bits, which can remove the race of updating the global
+> registers between the multiple subsystems. Thus we can register
+> a physical regmap bus into syscon core to support this.
+>
+> Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
 
-Amol or Joel: Is there a reproducer recipe for this?
+I'd hope to avoid complicating the syscon driver further for this.
+Have you tried to use something other than syscon here to
+provide the regmap?
 
-> > Signed-off-by: Amol Grover <frextrite@gmail.com>
-> > ---
-> > v2:
-> > - fix erroneous RCU pointer initialization
-> > 
-> >  kernel/audit.c | 5 +++--
-> >  1 file changed, 3 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/kernel/audit.c b/kernel/audit.c
-> > index da8dc0db5bd3..ff7cfc61f53d 100644
-> > --- a/kernel/audit.c
-> > +++ b/kernel/audit.c
-> > @@ -102,12 +102,13 @@ struct audit_net {
-> >   * This struct is RCU protected; you must either hold the RCU lock for reading
-> >   * or the associated spinlock for writing.
-> >   */
-> > -static struct auditd_connection {
-> > +struct auditd_connection {
-> >  	struct pid *pid;
-> >  	u32 portid;
-> >  	struct net *net;
-> >  	struct rcu_head rcu;
-> > -} *auditd_conn = NULL;
-> > +};
-> > +static struct auditd_connection __rcu *auditd_conn;
-> >  static DEFINE_SPINLOCK(auditd_conn_lock);
-> >  
-> >  /* If audit_rate_limit is non-zero, limit the rate of sending audit records
-> > -- 
-> > 2.24.0
+> +#define SPRD_REG_SET_OFFSET    0x1000
+> +#define SPRD_REG_CLR_OFFSET    0x2000
+> +
+> +/*
+> + * The Spreadtrum platform defines a special set/clear method to update
+> + * registers' bits, which means it can write values to the register's SET
+> + * address (offset is 0x1000) to set bits, and write values to the register's
+> + * CLEAR address (offset is 0x2000) to clear bits.
+> + *
+> + * This set/clear method can help to remove the race of accessing the global
+> + * registers between the multiple subsystems instead of using hardware
+> + * spinlocks.
+> + */
+> +static int sprd_syscon_update_bits(void *context, unsigned int reg,
+> +                                  unsigned int mask, unsigned int val)
+> +{
+> +       void __iomem *base = context;
+> +       unsigned int set, clr;
+> +
+> +       set = val & mask;
+> +       clr = ~set & mask;
+> +
+> +       if (set)
+> +               writel(set, base + reg + SPRD_REG_SET_OFFSET);
+> +
+> +       if (clr)
+> +               writel(clr, base + reg + SPRD_REG_CLR_OFFSET);
+> +
+> +       return 0;
+> +}
 
-- RGB
+Regarding the implementation: Doesn't this introduce a new race
+between setting and clearing bits if you do both at the same time?
 
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
+This may not be a problem if you never do.
 
+> +static int sprd_syscon_init(void)
+> +{
+> +       syscon_register_phys_regmap_bus(&sprd_syscon_regmap);
+> +
+> +       return 0;
+> +}
+> +core_initcall_sync(sprd_syscon_init);
+
+I don't think this part can be done at all: If you load the module on a
+generic kernel running on a random other platform, it will break as
+there is no check at all to ensure the platform is compatible.
+
+The same thing happens on a platform that may have multiple
+syscon nodes, when not all of them use the same register layout.
+
+The only sane way that I can see would be to do it based on
+properties of the syscon node itself.
+
+        Arnd
