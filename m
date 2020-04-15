@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F62C38A29
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:07:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E8BC3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDC532076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:07:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 989A920737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:07:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586956033;
-	bh=SFHvZtCLZ6EPWmNWrCEP+2BJ94BANmVoF5rF+9ZXu9Q=;
+	s=default; t=1586956047;
+	bh=SyGAg3rZ9yeFpLXHikAhy4J0bskyUaj9d3sDPWmGY00=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=14G4wxRov2kaBgKoW3GqiigDs3wtMMYa16h5pb13LYAucYn5LXpK3JuC2Rd2QwX7U
-	 L1Ul2sO4eKqtYpbxYRXJzBj7zf0+3DUAxbD9al5ODXtn1yLONNJ+DAsgvAjVH6VNP9
-	 NW1+femDRLFOmYYBT+CzvlBju5LlWREEw8HLf+9s=
+	b=CPliRdgBWPWaS+sT+8Hh1mR3aDzX9dXVdJ+L9Vwm5kJGgQYOQuv0CmvkEj1bvDHTk
+	 z9AaxiFhaXYp9cz+0C8AoN6sGDoV/4ae3D4xcluq/sQCNKb4NYKbgPg6SBUmmnhTFd
+	 GJZT7wgLoMoaA2H7SjyCZzV34i2PF92eIyRnFBwA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506030AbgDONHL (ORCPT
+        id S2505992AbgDONH0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:07:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55594 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 09:07:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897093AbgDOLf4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:35:56 -0400
+        id S2897092AbgDOLfz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:35:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22CDF20775;
-        Wed, 15 Apr 2020 11:35:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 037D820768;
+        Wed, 15 Apr 2020 11:35:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950555;
-        bh=SFHvZtCLZ6EPWmNWrCEP+2BJ94BANmVoF5rF+9ZXu9Q=;
+        s=default; t=1586950554;
+        bh=SyGAg3rZ9yeFpLXHikAhy4J0bskyUaj9d3sDPWmGY00=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zOU7y4kv7ANEYymwAl5i2SqMLeDYkUx7xBhAsn+gzyRHcqKzUeNkZxO5zOptQ8jRv
-         03Ard5zVPtm234eNCdjzyUXv7wM0rGqQW/oZrIbTy0Zgenh3Jh3E04oeGdmewcmEUG
-         RNKAG4zmYOLQ0w2/xOx7wBmqWp1mEXz/YW6d27gM=
+        b=lPrr7iYX4PjCcNxW6z300H9gFKc1/cn95fpky/uvmwxObjnGjHHkX2oMM96NDO7RO
+         r+d8BJbZEiSGX1HikV2o3sLEv024gYrSpIdgU7PiojO7/GdNHVcAL19RGktqQLYrMM
+         USIYjS8k4p4sFB3+uwP3e4y5gBTVRo/EMqhJB/zE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Long Li <longli@microsoft.com>,
-        Steve French <stfrench@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org
-Subject: [PATCH AUTOSEL 5.6 061/129] cifs: Allocate encryption header through kmalloc
-Date:   Wed, 15 Apr 2020 07:33:36 -0400
-Message-Id: <20200415113445.11881-61-sashal@kernel.org>
+Cc:     Gabriel Krisman Bertazi <krisman@collabora.com>,
+        Martyn Welch <martyn.welch@collabora.com>,
+        Richard Weinberger <richard@nod.at>,
+        Sasha Levin <sashal@kernel.org>, linux-um@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.6 060/129] um: ubd: Prevent buffer overrun on command completion
+Date:   Wed, 15 Apr 2020 07:33:35 -0400
+Message-Id: <20200415113445.11881-60-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
 References: <20200415113445.11881-1-sashal@kernel.org>
@@ -60,81 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Long Li <longli@microsoft.com>
+From: Gabriel Krisman Bertazi <krisman@collabora.com>
 
-[ Upstream commit 3946d0d04bb360acca72db5efe9ae8440012d9dc ]
+[ Upstream commit 6e682d53fc1ef73a169e2a5300326cb23abb32ee ]
 
-When encryption is used, smb2_transform_hdr is defined on the stack and is
-passed to the transport. This doesn't work with RDMA as the buffer needs to
-be DMA'ed.
+On the hypervisor side, when completing commands and the pipe is full,
+we retry writing only the entries that failed, by offsetting
+io_req_buffer, but we don't reduce the number of bytes written, which
+can cause a buffer overrun of io_req_buffer, and write garbage to the
+pipe.
 
-Fix it by using kmalloc.
-
-Signed-off-by: Long Li <longli@microsoft.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Cc: Martyn Welch <martyn.welch@collabora.com>
+Signed-off-by: Gabriel Krisman Bertazi <krisman@collabora.com>
+Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/transport.c | 28 +++++++++++++++++-----------
- 1 file changed, 17 insertions(+), 11 deletions(-)
+ arch/um/drivers/ubd_kern.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/fs/cifs/transport.c b/fs/cifs/transport.c
-index cb3ee916f5275..c97570eb2c180 100644
---- a/fs/cifs/transport.c
-+++ b/fs/cifs/transport.c
-@@ -466,7 +466,7 @@ smb_send_rqst(struct TCP_Server_Info *server, int num_rqst,
- 	      struct smb_rqst *rqst, int flags)
- {
- 	struct kvec iov;
--	struct smb2_transform_hdr tr_hdr;
-+	struct smb2_transform_hdr *tr_hdr;
- 	struct smb_rqst cur_rqst[MAX_COMPOUND];
- 	int rc;
+diff --git a/arch/um/drivers/ubd_kern.c b/arch/um/drivers/ubd_kern.c
+index 247f95da057b5..eca45ad2166c9 100644
+--- a/arch/um/drivers/ubd_kern.c
++++ b/arch/um/drivers/ubd_kern.c
+@@ -1607,7 +1607,9 @@ int io_thread(void *arg)
+ 		written = 0;
  
-@@ -476,28 +476,34 @@ smb_send_rqst(struct TCP_Server_Info *server, int num_rqst,
- 	if (num_rqst > MAX_COMPOUND - 1)
- 		return -ENOMEM;
- 
--	memset(&cur_rqst[0], 0, sizeof(cur_rqst));
--	memset(&iov, 0, sizeof(iov));
--	memset(&tr_hdr, 0, sizeof(tr_hdr));
--
--	iov.iov_base = &tr_hdr;
--	iov.iov_len = sizeof(tr_hdr);
--	cur_rqst[0].rq_iov = &iov;
--	cur_rqst[0].rq_nvec = 1;
--
- 	if (!server->ops->init_transform_rq) {
- 		cifs_server_dbg(VFS, "Encryption requested but transform "
- 				"callback is missing\n");
- 		return -EIO;
- 	}
- 
-+	tr_hdr = kmalloc(sizeof(*tr_hdr), GFP_NOFS);
-+	if (!tr_hdr)
-+		return -ENOMEM;
-+
-+	memset(&cur_rqst[0], 0, sizeof(cur_rqst));
-+	memset(&iov, 0, sizeof(iov));
-+	memset(tr_hdr, 0, sizeof(*tr_hdr));
-+
-+	iov.iov_base = tr_hdr;
-+	iov.iov_len = sizeof(*tr_hdr);
-+	cur_rqst[0].rq_iov = &iov;
-+	cur_rqst[0].rq_nvec = 1;
-+
- 	rc = server->ops->init_transform_rq(server, num_rqst + 1,
- 					    &cur_rqst[0], rqst);
- 	if (rc)
--		return rc;
-+		goto out;
- 
- 	rc = __smb_send_rqst(server, num_rqst + 1, &cur_rqst[0]);
- 	smb3_free_compound_rqst(num_rqst, &cur_rqst[1]);
-+out:
-+	kfree(tr_hdr);
- 	return rc;
- }
- 
+ 		do {
+-			res = os_write_file(kernel_fd, ((char *) io_req_buffer) + written, n);
++			res = os_write_file(kernel_fd,
++					    ((char *) io_req_buffer) + written,
++					    n - written);
+ 			if (res >= 0) {
+ 				written += res;
+ 			}
 -- 
 2.20.1
 
