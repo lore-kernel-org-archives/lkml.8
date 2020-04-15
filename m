@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 298F0C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02C6BC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:38:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFA282076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:38:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C94072076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:38:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586961529;
-	bh=ubu4hjiULVHHM3prMmCRERzF03BF6cYz4GncxGsMI94=;
+	s=default; t=1586961536;
+	bh=FPka+rsFmxvWZ6m+mCz2SuI20oaL3VrGFMjkZmRPqWA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GbjeXk7asX0uEHycar5wT3OcHG0DQppAkAVbAwf97zkpdCelzVEXAOpH1OAMdofSW
-	 pavO80FO82u5toei40nw9RDtjeCTTbY/IXsg3BDrbm1GBrU+vsoOkrAxm+3nMAhEGL
-	 P5lDmeYZRZ4ggKBo2IaJJqjDw/SqF72lvfq92FhA=
+	b=GEmcncd0PwcV/ITVLAQD4sXUFBD0o63/ELn8CXRCJ5fEAh+7A7tM2iJxC5wG3sbA6
+	 3AGwYYZO0N9iEDyNAHjHtjL8X8S9ypZiat+yiPOjxd9qE2sWsDFRUg/2eWwbbQlMu+
+	 Rcu7WA8KxIVGN/NGUm1fqkS3SnNqab0HJr5ruFUo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2636665AbgDOOiq (ORCPT
+        id S2898291AbgDOOiy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:38:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45452 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 10:38:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394079AbgDOOdD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2394082AbgDOOdD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Apr 2020 10:33:03 -0400
 Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B96121D80;
+        by mail.kernel.org (Postfix) with ESMTPSA id A5D2721D91;
         Wed, 15 Apr 2020 14:32:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1586961171;
-        bh=ubu4hjiULVHHM3prMmCRERzF03BF6cYz4GncxGsMI94=;
+        bh=FPka+rsFmxvWZ6m+mCz2SuI20oaL3VrGFMjkZmRPqWA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aur4uZ6ec9X42PYCVoMXlN9okUXumVXGG37j/RLTB+XnaeImKO5CRMCW4HScGjwE1
-         3yqj/XX3ICTq+5Jz45zdgyaSzxvBd0i9NKCVmk5NE1dlIrSAm5GgAEpVuIAz/vglby
-         Xq52Ke6Hhj+LaCUccRR0qhKakXxuUj31GocI8xY0=
+        b=gCieqvcM18mKoDH8VzwBzfbfK4QqkFaRKjqX3Ygk7nQQnKq4/3bMaaCuqLk6N6sfj
+         gSDiSZEC2adowmu5UOn4e1mDfJdrJrivA39kmhuF1h+Q+k57JphZSMlImY5hmnZsJj
+         0Hpr9BzB0hy46hHhH+bLo6vcGgGfUBxHjl9Y5k5A=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jOj5t-006kPW-Rn; Wed, 15 Apr 2020 16:32:49 +0200
+        id 1jOj5t-006kPg-UI; Wed, 15 Apr 2020 16:32:49 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH 23/34] docs: filesystems: convert path-walking.txt to ReST
-Date:   Wed, 15 Apr 2020 16:32:36 +0200
-Message-Id: <8da9284bb667d842193760c1e9cd40abbf587a5c.1586960617.git.mchehab+huawei@kernel.org>
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH 25/34] docs: filesystems: convert seq_file.txt to ReST
+Date:   Wed, 15 Apr 2020 16:32:38 +0200
+Message-Id: <a9425afed85400deadaa424571bd69e4110daf57.1586960617.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <cover.1586960617.git.mchehab+huawei@kernel.org>
 References: <cover.1586960617.git.mchehab+huawei@kernel.org>
@@ -62,9 +60,8 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 - Add a SPDX header;
-
 - Add a document title;
-- Adjust document title;
+- Adjust section titles;
 - Some whitespace fixes and new line breaks;
 - Mark literal blocks as such;
 - Add it to filesystems/index.rst.
@@ -72,252 +69,246 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
  Documentation/filesystems/index.rst           |  1 +
- .../{path-walking.txt => path-walking.rst}    | 88 ++++++++++---------
- Documentation/filesystems/porting.rst         |  2 +-
- fs/dcache.c                                   |  6 +-
- fs/namei.c                                    |  2 +-
- 5 files changed, 54 insertions(+), 45 deletions(-)
- rename Documentation/filesystems/{path-walking.txt => path-walking.rst} (91%)
+ .../{seq_file.txt => seq_file.rst}            | 61 +++++++++++--------
+ 2 files changed, 38 insertions(+), 24 deletions(-)
+ rename Documentation/filesystems/{seq_file.txt => seq_file.rst} (92%)
 
 diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
-index 4d63eafc9fbf..a35b7d6ee5bc 100644
+index 8a17f8234b86..1f3635c90632 100644
 --- a/Documentation/filesystems/index.rst
 +++ b/Documentation/filesystems/index.rst
-@@ -20,6 +20,7 @@ algorithms work.
+@@ -34,6 +34,7 @@ algorithms work.
+    mandatory-locking
+    mount_api
+    quota
++   seq_file
  
-    vfs
-    path-lookup
-+   path-walking
-    api-summary
-    splice
-    locking
-diff --git a/Documentation/filesystems/path-walking.txt b/Documentation/filesystems/path-walking.rst
-similarity index 91%
-rename from Documentation/filesystems/path-walking.txt
-rename to Documentation/filesystems/path-walking.rst
-index 9b8930f589d9..941e5e0e0eed 100644
---- a/Documentation/filesystems/path-walking.txt
-+++ b/Documentation/filesystems/path-walking.rst
-@@ -1,3 +1,6 @@
+    automount-support
+ 
+diff --git a/Documentation/filesystems/seq_file.txt b/Documentation/filesystems/seq_file.rst
+similarity index 92%
+rename from Documentation/filesystems/seq_file.txt
+rename to Documentation/filesystems/seq_file.rst
+index d412b236a9d6..fab302046b13 100644
+--- a/Documentation/filesystems/seq_file.txt
++++ b/Documentation/filesystems/seq_file.rst
+@@ -1,6 +1,11 @@
+-The seq_file interface
 +.. SPDX-License-Identifier: GPL-2.0
 +
-+====================================
- Path walking and name lookup locking
- ====================================
++======================
++The seq_file Interface
++======================
  
-@@ -64,6 +67,7 @@ mounted vfsmount. These behaviours are variously modified depending on the
- exact path walking flags.
- 
- Path walking then must, broadly, do several particular things:
+ 	Copyright 2003 Jonathan Corbet <corbet@lwn.net>
 +
- - find the start point of the walk;
- - perform permissions and validity checks on inodes;
- - perform dcache hash name lookups on (parent, name element) tuples;
-@@ -118,45 +122,45 @@ the remaining dentries on the list.
- There is no fundamental problem with walking down the wrong list, because the
- dentry comparisons will never match. However it is fatal to miss a matching
- dentry. So a seqlock is used to detect when a rename has occurred, and so the
--lookup can be retried.
-+lookup can be retried::
+ 	This file is originally from the LWN.net Driver Porting series at
+ 	http://lwn.net/Articles/driver-porting/
  
--         1      2      3
--        +---+  +---+  +---+
--hlist-->| N-+->| N-+->| N-+->
--head <--+-P |<-+-P |<-+-P |
--        +---+  +---+  +---+
-+	    1      2      3
-+	    +---+  +---+  +---+
-+    hlist-->| N-+->| N-+->| N-+->
-+    head <--+-P |<-+-P |<-+-P |
-+	    +---+  +---+  +---+
+@@ -43,7 +48,7 @@ loadable module which creates a file called /proc/sequence. The file, when
+ read, simply produces a set of increasing integer values, one per line. The
+ sequence will continue until the user loses patience and finds something
+ better to do. The file is seekable, in that one can do something like the
+-following:
++following::
  
- Rename of dentry 2 may require it deleted from the above list, and inserted
--into a new list. Deleting 2 gives the following list.
-+into a new list. Deleting 2 gives the following list::
+     dd if=/proc/sequence of=out1 count=1
+     dd if=/proc/sequence skip=1 of=out2 count=1
+@@ -55,16 +60,18 @@ wanting to see the full source for this module can find it at
+ http://lwn.net/Articles/22359/).
  
--         1             3
--        +---+         +---+     (don't worry, the longer pointers do not
--hlist-->| N-+-------->| N-+->    impose a measurable performance overhead
--head <--+-P |<--------+-P |      on modern CPUs)
--        +---+         +---+
--          ^      2      ^
--          |    +---+    |
--          |    | N-+----+
--          +----+-P |
--               +---+
-+	    1             3
-+	    +---+         +---+     (don't worry, the longer pointers do not
-+    hlist-->| N-+-------->| N-+->    impose a measurable performance overhead
-+    head <--+-P |<--------+-P |      on modern CPUs)
-+	    +---+         +---+
-+	    ^      2      ^
-+	    |    +---+    |
-+	    |    | N-+----+
-+	    +----+-P |
-+		+---+
+ Deprecated create_proc_entry
++============================
  
- This is a standard RCU-list deletion, which leaves the deleted object's
- pointers intact, so a concurrent list walker that is currently looking at
- object 2 will correctly continue to object 3 when it is time to traverse the
- next object.
+ Note that the above article uses create_proc_entry which was removed in
+-kernel 3.10. Current versions require the following update
++kernel 3.10. Current versions require the following update::
  
--However, when inserting object 2 onto a new list, we end up with this:
-+However, when inserting object 2 onto a new list, we end up with this::
+--	entry = create_proc_entry("sequence", 0, NULL);
+--	if (entry)
+--		entry->proc_fops = &ct_file_ops;
+-+	entry = proc_create("sequence", 0, NULL, &ct_file_ops);
++    -	entry = create_proc_entry("sequence", 0, NULL);
++    -	if (entry)
++    -		entry->proc_fops = &ct_file_ops;
++    +	entry = proc_create("sequence", 0, NULL, &ct_file_ops);
  
--         1             3
--        +---+         +---+
--hlist-->| N-+-------->| N-+->
--head <--+-P |<--------+-P |
--        +---+         +---+
--                 2
--               +---+
--               | N-+---->
--          <----+-P |
--               +---+
-+	    1             3
-+	    +---+         +---+
-+    hlist-->| N-+-------->| N-+->
-+    head <--+-P |<--------+-P |
-+	    +---+         +---+
-+		    2
-+		+---+
-+		| N-+---->
-+	    <----+-P |
-+		+---+
+ The iterator interface
++======================
  
- Because we didn't wait for a grace period, there may be a concurrent lookup
- still at 2. Now when it follows 2's 'next' pointer, it will walk off into
-@@ -210,7 +214,7 @@ RCU-walk path walking design
- ============================
+ Modules implementing a virtual file with seq_file must implement an
+ iterator object that allows stepping through the data of interest
+@@ -99,7 +106,7 @@ position.  The pos passed to start() will always be either zero, or
+ the most recent pos used in the previous session.
  
- Path walking code now has two distinct modes, ref-walk and rcu-walk. ref-walk
--is the traditional[*] way of performing dcache lookups using d_lock to
-+is the traditional\ [#]_ way of performing dcache lookups using d_lock to
- serialise concurrent modifications to the dentry and take a reference count on
- it. ref-walk is simple and obvious, and may sleep, take locks, etc while path
- walking is operating on each dentry. rcu-walk uses seqcount based dentry
-@@ -219,14 +223,14 @@ shared data in the dentry or inode. rcu-walk can not be applied to all cases,
- eg. if the filesystem must sleep or perform non trivial operations, rcu-walk
- must be switched to ref-walk mode.
+ For our simple sequence example,
+-the start() function looks like:
++the start() function looks like::
  
--[*] RCU is still used for the dentry hash lookup in ref-walk, but not the full
--    path walk.
-+.. [#] RCU is still used for the dentry hash lookup in ref-walk, but not the
-+       full path walk.
+ 	static void *ct_seq_start(struct seq_file *s, loff_t *pos)
+ 	{
+@@ -129,7 +136,7 @@ move the iterator forward to the next position in the sequence.  The
+ example module can simply increment the position by one; more useful
+ modules will do what is needed to step through some data structure. The
+ next() function returns a new iterator, or NULL if the sequence is
+-complete. Here's the example version:
++complete. Here's the example version::
  
--Where ref-walk uses a stable, refcounted ``parent'' to walk the remaining
-+Where ref-walk uses a stable, refcounted ``parent`` to walk the remaining
- path string, rcu-walk uses a d_seq protected snapshot. When looking up a
- child of this parent snapshot, we open d_seq critical section on the child
- before closing d_seq critical section on the parent. This gives an interlocking
--ladder of snapshots to walk down.
-+ladder of snapshots to walk down::
+ 	static void *ct_seq_next(struct seq_file *s, void *v, loff_t *pos)
+ 	{
+@@ -141,10 +148,10 @@ complete. Here's the example version:
+ The stop() function closes a session; its job, of course, is to clean
+ up. If dynamic memory is allocated for the iterator, stop() is the
+ place to free it; if a lock was taken by start(), stop() must release
+-that lock.  The value that *pos was set to by the last next() call
++that lock.  The value that ``*pos`` was set to by the last next() call
+ before stop() is remembered, and used for the first start() call of
+ the next session unless lseek() has been called on the file; in that
+-case next start() will be asked to start at position zero.
++case next start() will be asked to start at position zero::
+ 
+ 	static void ct_seq_stop(struct seq_file *s, void *v)
+ 	{
+@@ -152,7 +159,7 @@ case next start() will be asked to start at position zero.
+ 	}
+ 
+ Finally, the show() function should format the object currently pointed to
+-by the iterator for output.  The example module's show() function is:
++by the iterator for output.  The example module's show() function is::
+ 
+ 	static int ct_seq_show(struct seq_file *s, void *v)
+ 	{
+@@ -169,7 +176,7 @@ generated output before returning SEQ_SKIP, that output will be dropped.
+ 
+ We will look at seq_printf() in a moment. But first, the definition of the
+ seq_file iterator is finished by creating a seq_operations structure with
+-the four functions we have just defined:
++the four functions we have just defined::
+ 
+ 	static const struct seq_operations ct_seq_ops = {
+ 	        .start = ct_seq_start,
+@@ -194,6 +201,7 @@ other locks while the iterator is active.
  
  
-      proc 101
-@@ -240,7 +244,7 @@ ladder of snapshots to walk down.
- So when vi wants to open("/home/npiggin/test.c", O_RDWR), then it will
- start from current->fs->root, which is a pinned dentry. Alternatively,
- "./test.c" would start from cwd; both names refer to the same path in
--the context of proc101.
-+the context of proc101::
+ Formatted output
++================
  
-      dentry 0
-     +---------------------+   rcu-walk begins here, we note d_seq, check the
-@@ -288,6 +292,7 @@ these cases is fundamental for performance and scalability because blocking
- operations such as creates and unlinks are not uncommon.
+ The seq_file code manages positioning within the output created by the
+ iterator and getting it into the user's buffer. But, for that to work, that
+@@ -203,7 +211,7 @@ been defined which make this task easy.
+ Most code will simply use seq_printf(), which works pretty much like
+ printk(), but which requires the seq_file pointer as an argument.
  
- The detailed design for rcu-walk is like this:
+-For straight character output, the following functions may be used:
++For straight character output, the following functions may be used::
+ 
+ 	seq_putc(struct seq_file *m, char c);
+ 	seq_puts(struct seq_file *m, const char *s);
+@@ -213,7 +221,7 @@ The first two output a single character and a string, just like one would
+ expect. seq_escape() is like seq_puts(), except that any character in s
+ which is in the string esc will be represented in octal form in the output.
+ 
+-There are also a pair of functions for printing filenames:
++There are also a pair of functions for printing filenames::
+ 
+ 	int seq_path(struct seq_file *m, const struct path *path,
+ 		     const char *esc);
+@@ -226,8 +234,10 @@ the path relative to the current process's filesystem root.  If a different
+ root is desired, it can be used with seq_path_root().  If it turns out that
+ path cannot be reached from root, seq_path_root() returns SEQ_SKIP.
+ 
+-A function producing complicated output may want to check
++A function producing complicated output may want to check::
 +
- * LOOKUP_RCU is set in nd->flags, which distinguishes rcu-walk from ref-walk.
- * Take the RCU lock for the entire path walk, starting with the acquiring
-   of the starting path (eg. root/cwd/fd-path). So now dentry refcounts are
-@@ -315,6 +320,7 @@ The detailed design for rcu-walk is like this:
-   a better errno) to signal an rcu-walk failure.
- 
- The cases where rcu-walk cannot continue are:
+ 	bool seq_has_overflowed(struct seq_file *m);
 +
- * NULL dentry (ie. any uncached path element)
- * Following links
+ and avoid further seq_<output> calls if true is returned.
  
-@@ -345,12 +351,14 @@ element, nodentry for missing dentry, revalidate for filesystem revalidate
- routine requiring rcu drop, permission for permission check requiring drop,
- and link for symlink traversal requiring drop.
+ A true return from seq_has_overflowed means that the seq_file buffer will
+@@ -236,6 +246,7 @@ buffer and retry printing.
  
--     rcu-lookups     restart  nodentry          link  revalidate  permission
--bootup     47121           0      4624          1010       10283        7852
--dbench  25386793           0   6778659(26.7%)     55         549        1156
--kbuild   2696672          10     64442(2.3%)  108764(4.0%)     1        1590
--git diff   39605           0        28             2           0         106
--vfstest 24185492        4945    708725(2.9%) 1076136(4.4%)     0        2651
-+::
-+
-+	rcu-lookups     restart  nodentry          link  revalidate  permission
-+    bootup     47121           0      4624          1010       10283        7852
-+    dbench  25386793           0   6778659(26.7%)     55         549        1156
-+    kbuild   2696672          10     64442(2.3%)  108764(4.0%)     1        1590
-+    git diff   39605           0        28             2           0         106
-+    vfstest 24185492        4945    708725(2.9%) 1076136(4.4%)     0        2651
  
- What this shows is that failed rcu-walk lookups, ie. ones that are restarted
- entirely with ref-walk, are quite rare. Even the "vfstest" case which
-diff --git a/Documentation/filesystems/porting.rst b/Documentation/filesystems/porting.rst
-index 8f7d25acf326..55a4bc87f664 100644
---- a/Documentation/filesystems/porting.rst
-+++ b/Documentation/filesystems/porting.rst
-@@ -404,7 +404,7 @@ the callback.  It used to be necessary to clean it there, but not anymore
+ Making it all work
++==================
  
- vfs now tries to do path walking in "rcu-walk mode", which avoids
- atomic operations and scalability hazards on dentries and inodes (see
--Documentation/filesystems/path-walking.txt). d_hash and d_compare changes
-+Documentation/filesystems/path-walking.rst). d_hash and d_compare changes
- (above) are examples of the changes required to support this. For more complex
- filesystem callbacks, the vfs drops out of rcu-walk mode before the fs call, so
- no changes are required to the filesystem. However, this is costly and loses
-diff --git a/fs/dcache.c b/fs/dcache.c
-index cf8d5893bd0e..ab050262d0e6 100644
---- a/fs/dcache.c
-+++ b/fs/dcache.c
-@@ -2191,7 +2191,7 @@ static inline bool d_same_name(const struct dentry *dentry,
-  *
-  * __d_lookup_rcu is the dcache lookup function for rcu-walk name
-  * resolution (store-free path walking) design described in
-- * Documentation/filesystems/path-walking.txt.
-+ * Documentation/filesystems/path-walking.rst.
-  *
-  * This is not to be used outside core vfs.
-  *
-@@ -2239,7 +2239,7 @@ struct dentry *__d_lookup_rcu(const struct dentry *parent,
- 	 * false-negative result. d_lookup() protects against concurrent
- 	 * renames using rename_lock seqlock.
- 	 *
--	 * See Documentation/filesystems/path-walking.txt for more details.
-+	 * See Documentation/filesystems/path-walking.rst for more details.
- 	 */
- 	hlist_bl_for_each_entry_rcu(dentry, node, b, d_hash) {
- 		unsigned seq;
-@@ -2362,7 +2362,7 @@ struct dentry *__d_lookup(const struct dentry *parent, const struct qstr *name)
- 	 * false-negative result. d_lookup() protects against concurrent
- 	 * renames using rename_lock seqlock.
- 	 *
--	 * See Documentation/filesystems/path-walking.txt for more details.
-+	 * See Documentation/filesystems/path-walking.rst for more details.
- 	 */
- 	rcu_read_lock();
- 	
-diff --git a/fs/namei.c b/fs/namei.c
-index d1b53fea83d8..ae68041be7b6 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -645,7 +645,7 @@ static bool legitimize_root(struct nameidata *nd)
+ So far, we have a nice set of functions which can produce output within the
+ seq_file system, but we have not yet turned them into a file that a user
+@@ -244,7 +255,7 @@ creation of a set of file_operations which implement the operations on that
+ file. The seq_file interface provides a set of canned operations which do
+ most of the work. The virtual file author still must implement the open()
+ method, however, to hook everything up. The open function is often a single
+-line, as in the example module:
++line, as in the example module::
  
- /*
-  * Path walking has 2 modes, rcu-walk and ref-walk (see
-- * Documentation/filesystems/path-walking.txt).  In situations when we can't
-+ * Documentation/filesystems/path-walking.rst).  In situations when we can't
-  * continue in RCU mode, we attempt to drop out of rcu-walk mode and grab
-  * normal reference counts on dentries and vfsmounts to transition to ref-walk
-  * mode.  Refcounts are grabbed at the last known good point before rcu-walk
+ 	static int ct_open(struct inode *inode, struct file *file)
+ 	{
+@@ -263,7 +274,7 @@ by the iterator functions.
+ There is also a wrapper function to seq_open() called seq_open_private(). It
+ kmallocs a zero filled block of memory and stores a pointer to it in the
+ private field of the seq_file structure, returning 0 on success. The
+-block size is specified in a third parameter to the function, e.g.:
++block size is specified in a third parameter to the function, e.g.::
+ 
+ 	static int ct_open(struct inode *inode, struct file *file)
+ 	{
+@@ -273,7 +284,7 @@ block size is specified in a third parameter to the function, e.g.:
+ 
+ There is also a variant function, __seq_open_private(), which is functionally
+ identical except that, if successful, it returns the pointer to the allocated
+-memory block, allowing further initialisation e.g.:
++memory block, allowing further initialisation e.g.::
+ 
+ 	static int ct_open(struct inode *inode, struct file *file)
+ 	{
+@@ -295,7 +306,7 @@ frees the memory allocated in the corresponding open.
+ 
+ The other operations of interest - read(), llseek(), and release() - are
+ all implemented by the seq_file code itself. So a virtual file's
+-file_operations structure will look like:
++file_operations structure will look like::
+ 
+ 	static const struct file_operations ct_file_ops = {
+ 	        .owner   = THIS_MODULE,
+@@ -309,7 +320,7 @@ There is also a seq_release_private() which passes the contents of the
+ seq_file private field to kfree() before releasing the structure.
+ 
+ The final step is the creation of the /proc file itself. In the example
+-code, that is done in the initialization code in the usual way:
++code, that is done in the initialization code in the usual way::
+ 
+ 	static int ct_init(void)
+ 	{
+@@ -325,9 +336,10 @@ And that is pretty much it.
+ 
+ 
+ seq_list
++========
+ 
+ If your file will be iterating through a linked list, you may find these
+-routines useful:
++routines useful::
+ 
+ 	struct list_head *seq_list_start(struct list_head *head,
+ 	       		 		 loff_t pos);
+@@ -338,15 +350,16 @@ routines useful:
+ 
+ These helpers will interpret pos as a position within the list and iterate
+ accordingly.  Your start() and next() functions need only invoke the
+-seq_list_* helpers with a pointer to the appropriate list_head structure.
++``seq_list_*`` helpers with a pointer to the appropriate list_head structure.
+ 
+ 
+ The extra-simple version
++========================
+ 
+ For extremely simple virtual files, there is an even easier interface.  A
+ module can define only the show() function, which should create all the
+ output that the virtual file will contain. The file's open() method then
+-calls:
++calls::
+ 
+ 	int single_open(struct file *file,
+ 	                int (*show)(struct seq_file *m, void *p),
 -- 
 2.25.2
 
