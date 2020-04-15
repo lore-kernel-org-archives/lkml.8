@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CAFEC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC0AC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:02:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FC1220575
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:02:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E87420575
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:02:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586952148;
-	bh=BTQbFxGoOUZgxTG3w05vZiF3RLniuYq/Xy8xuP2C1QE=;
+	s=default; t=1586952152;
+	bh=DJX25bhZXAoYinOF72m/TtqTOSIs7bBbtLa24YaT3Kk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f0fhNmJj4hf74RPIEVz5bu5TfdFsFenz0Nf18pAnveehGpczUYUhEDL1txX7siLRI
-	 u/XG3A/NFzfArVKA4SUdk+uIjIj9fna1oAD+7MBAIrumZUGDZMWccE2pv5YB5myRMM
-	 NgpShAZx7t2Zl1e5UZGGte47sgzkHtP6j4/RXmD8=
+	b=wYSUY/vUrAYOq1RuXXyIbb9A1/Oxk3dpLma0SFz2pMkxnGtN9KZgb3EFACGFaCvb2
+	 tGGGMOthwyhZKZUwaRt9/AEAoKAzVobnEXRXqxNfIrV7kktFeHq9D4fiCKJg5VlI3F
+	 gtc5n6ULD0oUd9MkFHGd0VAujtIMPt+ZP4tN6PGw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S368202AbgDOMC0 (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:02:26 -0400
+        id S368209AbgDOMCa (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:02:30 -0400
 Received: from mail.kernel.org ([198.145.29.99]:44064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406281AbgDOLsW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:48:22 -0400
+        id S2409460AbgDOLsY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:48:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC96221582;
-        Wed, 15 Apr 2020 11:48:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 887B620775;
+        Wed, 15 Apr 2020 11:48:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951301;
-        bh=BTQbFxGoOUZgxTG3w05vZiF3RLniuYq/Xy8xuP2C1QE=;
+        s=default; t=1586951304;
+        bh=DJX25bhZXAoYinOF72m/TtqTOSIs7bBbtLa24YaT3Kk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=INdKqx1HLuhyKljyuVsktTKR75zcvwLZcJ316UcJloaCx4fzxJBKCl4T3NUXL2ymA
-         l7L0WHLEmiqT/P9VYU2XkkNeoYSB8GToRF2s4qWv6DFUxOi0eapYnvzCbuTtx1jHZV
-         1Qn3MHR2aPbs3dZl43WaalCJNh5MCG9BNHOOmMIg=
+        b=g1OdW2K99DCfuOhtLxFzFUJ1c14WAoB+/L7VZCMSAqg9eMas2u7hrxyKkiM7Sm5dt
+         988d/OBKwgesjTSu411vjQo+SsJR0uNc5dR3nZ/J2QADJvhoXw3H9DTaP0W+l7ESAN
+         rj22kJasCBCON++WKXG7BaGJX4Dp5IX5n2KGZTTY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Josh Triplett <josh@joshtriplett.org>,
-        Andreas Dilger <adilger@dilger.ca>,
-        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
-        linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 06/14] ext4: fix incorrect inodes per group in error message
-Date:   Wed, 15 Apr 2020 07:48:06 -0400
-Message-Id: <20200415114814.15954-6-sashal@kernel.org>
+Cc:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.4 08/14] net: stmmac: dwmac1000: fix out-of-bounds mac address reg setting
+Date:   Wed, 15 Apr 2020 07:48:08 -0400
+Message-Id: <20200415114814.15954-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114814.15954-1-sashal@kernel.org>
 References: <20200415114814.15954-1-sashal@kernel.org>
@@ -59,37 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Triplett <josh@joshtriplett.org>
+From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 
-[ Upstream commit b9c538da4e52a7b79dfcf4cfa487c46125066dfb ]
+[ Upstream commit 3e1221acf6a8f8595b5ce354bab4327a69d54d18 ]
 
-If ext4_fill_super detects an invalid number of inodes per group, the
-resulting error message printed the number of blocks per group, rather
-than the number of inodes per group. Fix it to print the correct value.
+Commit 9463c4455900 ("net: stmmac: dwmac1000: Clear unused address
+entries") cleared the unused mac address entries, but introduced an
+out-of bounds mac address register programming bug -- After setting
+the secondary unicast mac addresses, the "reg" value has reached
+netdev_uc_count() + 1, thus we should only clear address entries
+if (addr < perfect_addr_number)
 
-Fixes: cd6bb35bf7f6d ("ext4: use more strict checks for inodes_per_block on mount")
-Link: https://lore.kernel.org/r/8be03355983a08e5d4eed480944613454d7e2550.1585434649.git.josh@joshtriplett.org
-Reviewed-by: Andreas Dilger <adilger@dilger.ca>
-Signed-off-by: Josh Triplett <josh@joshtriplett.org>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Fixes: 9463c4455900 ("net: stmmac: dwmac1000: Clear unused address entries")
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/super.c | 2 +-
+ drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index d8b2d38d2942e..67faf147bade1 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -3661,7 +3661,7 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
- 	if (sbi->s_inodes_per_group < sbi->s_inodes_per_block ||
- 	    sbi->s_inodes_per_group > blocksize * 8) {
- 		ext4_msg(sb, KERN_ERR, "invalid inodes per group: %lu\n",
--			 sbi->s_blocks_per_group);
-+			 sbi->s_inodes_per_group);
- 		goto failed_mount;
- 	}
- 	sbi->s_itb_per_group = sbi->s_inodes_per_group /
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
+index 1df84c8de9d75..b535f6c378386 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
+@@ -188,7 +188,7 @@ static void dwmac1000_set_filter(struct mac_device_info *hw,
+ 			reg++;
+ 		}
+ 
+-		while (reg <= perfect_addr_number) {
++		while (reg < perfect_addr_number) {
+ 			writel(0, ioaddr + GMAC_ADDR_HIGH(reg));
+ 			writel(0, ioaddr + GMAC_ADDR_LOW(reg));
+ 			reg++;
 -- 
 2.20.1
 
