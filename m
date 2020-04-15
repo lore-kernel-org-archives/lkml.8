@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEDB9C3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 202A7C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:30:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C69DD21655
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:30:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEE8D2074F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:30:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586953836;
-	bh=Ovw4O+bQIjjYv0PGALGX8rJlm27Kw+SfdVJ5q442p7o=;
+	s=default; t=1586953849;
+	bh=MuIOjmunTWEFlt5HQIFx2mjqJzIGMAOGls5X8CybAR8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EHiBIo1Ls0XEoG65KEhD3YE7Bgq8JfPZHUhhjwWR94fdKcUhkN1u9nsLZevJbkXz5
-	 9B+AXY3pdfFXQ83zBvEKjGr0QyIAhd5ZjKWQVtXcalLj2d+0tsAXUir9nS6o+DHGm3
-	 210QXfvLgW30tlPLh0+JxXzaEIsHyX0IFAeS6QGo=
+	b=QF/uWZZbKmBxDm57LE0gm9T8Jj2WmlVzFQknsMRT1llp1DIv2pNkd/fnRwneftNYe
+	 rZGz9CszOk4pXbzMCw4F12pPDT6Dy8SNgbhm+c9Sp0/N206mfNXPRHJhVpdQvh9RBf
+	 YuuceWMqqwI77SHu1CuwHrN29Au/1AYEKSh2tUj4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S369492AbgDOMae (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:30:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37832 "EHLO mail.kernel.org"
+        id S369515AbgDOMap (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:30:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406152AbgDOLov (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:44:51 -0400
+        id S2406054AbgDOLou (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:44:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BB8C2078A;
-        Wed, 15 Apr 2020 11:44:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D8F820732;
+        Wed, 15 Apr 2020 11:44:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951091;
-        bh=Ovw4O+bQIjjYv0PGALGX8rJlm27Kw+SfdVJ5q442p7o=;
+        s=default; t=1586951074;
+        bh=MuIOjmunTWEFlt5HQIFx2mjqJzIGMAOGls5X8CybAR8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ailmd1g11WnGdn5Tl8BRlqGq8HY1VvMGBDfCjVhuIyI/5iP13PNk+80FqN2UHTQT+
-         D2WiAjD92Afsc38udx3qTuPKNIsoFBydu1p1DiPebnKd154O8MvdL7U1OAxvm92Ypc
-         9zK5s5TrlT8hxfexF2ZdsAlaxmQ19JDORohQcsj8=
+        b=WTSiitbuCvm4bRJ8tLkreLAgjXtnxhcXjjRJCjF6Lg73QWE0dar4qWGsGC+WtHRKA
+         jwlqSF41DjQLJrGLELZqwdAuR4dwkiGUPfDE6L4/UligcvwjDpEu2Av+lIRLwliczW
+         wNEshZ0zCqG0hB4qW1YVSdmYkxpzQ9XYAwExQDbI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johan Jonker <jbx6244@gmail.com>, Heiko Stuebner <heiko@sntech.de>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 07/84] ARM: dts: rockchip: fix vqmmc-supply property name for rk3188-bqedison2qc
-Date:   Wed, 15 Apr 2020 07:43:24 -0400
-Message-Id: <20200415114442.14166-7-sashal@kernel.org>
+Cc:     Yicheng Li <yichengli@chromium.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 106/106] platform/chrome: cros_ec: Query EC protocol version if EC transitions between RO/RW
+Date:   Wed, 15 Apr 2020 07:42:26 -0400
+Message-Id: <20200415114226.13103-106-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415114442.14166-1-sashal@kernel.org>
-References: <20200415114442.14166-1-sashal@kernel.org>
+In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
+References: <20200415114226.13103-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,59 +60,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Jonker <jbx6244@gmail.com>
+From: Yicheng Li <yichengli@chromium.org>
 
-[ Upstream commit 9cd568dc588c5d168615bf34f325fabe33b2c9a0 ]
+[ Upstream commit 42cd0ab476e2daffc23982c37822a78f9a53cdd5 ]
 
-A test with the command below does not detect all errors
-in combination with 'additionalProperties: false' and
-allOf:
-  - $ref: "synopsys-dw-mshc-common.yaml#"
-allOf:
-  - $ref: "mmc-controller.yaml#"
+RO and RW of EC may have different EC protocol version. If EC transitions
+between RO and RW, but AP does not reboot (this is true for fingerprint
+microcontroller / cros_fp, but not true for main ec / cros_ec), the AP
+still uses the protocol version queried before transition, which can
+cause problems. In the case of fingerprint microcontroller, this causes
+AP to send the wrong version of EC_CMD_GET_NEXT_EVENT to RO in the
+interrupt handler, which in turn prevents RO to clear the interrupt
+line to AP, in an infinite loop.
 
-'additionalProperties' applies to all properties that are not
-accounted-for by 'properties' or 'patternProperties' in
-the immediate schema.
+Once an EC_HOST_EVENT_INTERFACE_READY is received, we know that there
+might have been a transition between RO and RW, so re-query the protocol.
 
-First when we combine rockchip-dw-mshc.yaml,
-synopsys-dw-mshc-common.yaml and mmc-controller.yaml it gives
-this error:
-
-arch/arm/boot/dts/rk3188-bqedison2qc.dt.yaml: mmc@10218000:
-'vmmcq-supply' does not match any of the regexes:
-'^.*@[0-9]+$',
-'^clk-phase-(legacy|sd-hs|mmc-(hs|hs[24]00|ddr52)|
-uhs-(sdr(12|25|50|104)|ddr50))$',
-'pinctrl-[0-9]+'
-
-'vmmcq-supply' is not a valid property name for mmc nodes.
-Fix this error by renaming it to 'vqmmc-supply'.
-
-make ARCH=arm dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.yaml
-
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-Link: https://lore.kernel.org/r/20200307134841.13803-1-jbx6244@gmail.com
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Yicheng Li <yichengli@chromium.org>
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/rk3188-bqedison2qc.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/platform/chrome/cros_ec.c           | 30 +++++++++++++++++++++
+ include/linux/platform_data/cros_ec_proto.h |  4 +++
+ 2 files changed, 34 insertions(+)
 
-diff --git a/arch/arm/boot/dts/rk3188-bqedison2qc.dts b/arch/arm/boot/dts/rk3188-bqedison2qc.dts
-index ad1afd403052a..8afb2fd5d9f1b 100644
---- a/arch/arm/boot/dts/rk3188-bqedison2qc.dts
-+++ b/arch/arm/boot/dts/rk3188-bqedison2qc.dts
-@@ -465,7 +465,7 @@
- 	non-removable;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&sd1_clk>, <&sd1_cmd>, <&sd1_bus4>;
--	vmmcq-supply = <&vccio_wl>;
-+	vqmmc-supply = <&vccio_wl>;
- 	#address-cells = <1>;
- 	#size-cells = <0>;
- 	status = "okay";
+diff --git a/drivers/platform/chrome/cros_ec.c b/drivers/platform/chrome/cros_ec.c
+index 6d6ce86a1408a..e5e1bbb270914 100644
+--- a/drivers/platform/chrome/cros_ec.c
++++ b/drivers/platform/chrome/cros_ec.c
+@@ -137,6 +137,24 @@ static int cros_ec_sleep_event(struct cros_ec_device *ec_dev, u8 sleep_event)
+ 	return ret;
+ }
+ 
++static int cros_ec_ready_event(struct notifier_block *nb,
++			       unsigned long queued_during_suspend,
++			       void *_notify)
++{
++	struct cros_ec_device *ec_dev = container_of(nb, struct cros_ec_device,
++						     notifier_ready);
++	u32 host_event = cros_ec_get_host_event(ec_dev);
++
++	if (host_event & EC_HOST_EVENT_MASK(EC_HOST_EVENT_INTERFACE_READY)) {
++		mutex_lock(&ec_dev->lock);
++		cros_ec_query_all(ec_dev);
++		mutex_unlock(&ec_dev->lock);
++		return NOTIFY_OK;
++	}
++
++	return NOTIFY_DONE;
++}
++
+ /**
+  * cros_ec_register() - Register a new ChromeOS EC, using the provided info.
+  * @ec_dev: Device to register.
+@@ -236,6 +254,18 @@ int cros_ec_register(struct cros_ec_device *ec_dev)
+ 		dev_dbg(ec_dev->dev, "Error %d clearing sleep event to ec",
+ 			err);
+ 
++	if (ec_dev->mkbp_event_supported) {
++		/*
++		 * Register the notifier for EC_HOST_EVENT_INTERFACE_READY
++		 * event.
++		 */
++		ec_dev->notifier_ready.notifier_call = cros_ec_ready_event;
++		err = blocking_notifier_chain_register(&ec_dev->event_notifier,
++						      &ec_dev->notifier_ready);
++		if (err)
++			return err;
++	}
++
+ 	dev_info(dev, "Chrome EC device registered\n");
+ 
+ 	return 0;
+diff --git a/include/linux/platform_data/cros_ec_proto.h b/include/linux/platform_data/cros_ec_proto.h
+index 30098a5515231..e6af1b4a7cbcf 100644
+--- a/include/linux/platform_data/cros_ec_proto.h
++++ b/include/linux/platform_data/cros_ec_proto.h
+@@ -126,6 +126,9 @@ struct cros_ec_command {
+  * @host_event_wake_mask: Mask of host events that cause wake from suspend.
+  * @last_event_time: exact time from the hard irq when we got notified of
+  *     a new event.
++ * @notifier_ready: The notifier_block to let the kernel re-query EC
++ *		    communication protocol when the EC sends
++ *		    EC_HOST_EVENT_INTERFACE_READY.
+  * @ec: The platform_device used by the mfd driver to interface with the
+  *      main EC.
+  * @pd: The platform_device used by the mfd driver to interface with the
+@@ -167,6 +170,7 @@ struct cros_ec_device {
+ 	u32 host_event_wake_mask;
+ 	u32 last_resume_result;
+ 	ktime_t last_event_time;
++	struct notifier_block notifier_ready;
+ 
+ 	/* The platform devices used by the mfd driver */
+ 	struct platform_device *ec;
 -- 
 2.20.1
 
