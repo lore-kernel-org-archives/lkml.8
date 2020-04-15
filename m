@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B64FCC3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:06:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD3BC38A29
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 950BE20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:06:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3E9A20737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:06:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586955987;
-	bh=6t3+3qwmRGygDhPMOTO2+3DXzG3LvWH6rdYFk0VGngU=;
+	s=default; t=1586955994;
+	bh=ak3MKSqPh/TSr0rPK5DUxHnAyY73imxeaHdwafJvqA8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uDPI2g5hc+Tv6t587yzGjqwURzgyKQdT37N7dTzYCEdtzwqXLffLGPOfhYrV0Eb3l
-	 zonndykFs2D4lR36Ew0gNZMK3x0AV7NMspxaXQgZqkVT+okrdZQmix3zo8St8lRTFz
-	 vr8jO6kDu3uV27Iahtw+MUB040/j/DFIkbRIP6jw=
+	b=T6RaMnx57YkFCFGfLrCPpTJn4fmfWU9A/nGFF6+ud/eHUy3Bc88AmJiPkS0a3i8/+
+	 TDKHATY0DNKg86RdLg3yoYDVyRP0RUQHO4D8yiHn/Qms+JvclzJXjGpfL7kmMRBO+n
+	 NhSV+eKEZCBty4PfJK89rBJEb8MbJf/v2kxkYMr8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505952AbgDONGZ (ORCPT
+        id S2897114AbgDOLgH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:06:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55960 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 07:36:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897123AbgDOLgM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:36:12 -0400
+        id S2408863AbgDOLeu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:34:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7CFA20768;
-        Wed, 15 Apr 2020 11:36:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B148520775;
+        Wed, 15 Apr 2020 11:34:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950571;
-        bh=6t3+3qwmRGygDhPMOTO2+3DXzG3LvWH6rdYFk0VGngU=;
+        s=default; t=1586950489;
+        bh=ak3MKSqPh/TSr0rPK5DUxHnAyY73imxeaHdwafJvqA8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MBSmdsGx7a8VXkEZYXqJZMqdjm8m0JEaaJliZc1ldpB9zXeFtq4D8sk/f6nfp3/F4
-         H4Q2+TR6ald0wCEsbUq5/6O5faAENdZV+8KTjc3ggKQPAg1KR/Qnk7QiEmhaOKYLHT
-         F7+8K4Fan5J/BTnb/YJHRGDe7L7bKCKH8tleVmiI=
+        b=MTuuJMCPXcGFmeqzyPbu3QYS1Olh4swdhdl/hw/qccYmj+MDCClCElgkvZ2Wsr8Vg
+         Hgk2595dVJ/qZrFLXlf1iy3WJeXWbhHrGfs5RWg5qQar85G8xHGFoO/9BrMtBIyLkK
+         iQqvL5teSgEjemlHQl2XMhdPtMhvFpYibMM0BRX4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Will Deacon <will@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 073/129] tun: Don't put_page() for all negative return values from XDP program
-Date:   Wed, 15 Apr 2020 07:33:48 -0400
-Message-Id: <20200415113445.11881-73-sashal@kernel.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 003/129] clk: Don't cache errors from clk_ops::get_phase()
+Date:   Wed, 15 Apr 2020 07:32:38 -0400
+Message-Id: <20200415113445.11881-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
 References: <20200415113445.11881-1-sashal@kernel.org>
@@ -64,66 +61,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: Stephen Boyd <sboyd@kernel.org>
 
-[ Upstream commit bee348907d19d654e8524d3a946dcd25b693aa7e ]
+[ Upstream commit f21cf9c77ee82ef8adfeb2143adfacf21ec1d5cc ]
 
-When an XDP program is installed, tun_build_skb() grabs a reference to
-the current page fragment page if the program returns XDP_REDIRECT or
-XDP_TX. However, since tun_xdp_act() passes through negative return
-values from the XDP program, it is possible to trigger the error path by
-mistake and accidentally drop a reference to the fragments page without
-taking one, leading to a spurious free. This is believed to be the cause
-of some KASAN use-after-free reports from syzbot [1], although without a
-reproducer it is not possible to confirm whether this patch fixes the
-problem.
+We don't check for errors from clk_ops::get_phase() before storing away
+the result into the clk_core::phase member. This can lead to some fairly
+confusing debugfs information if these ops do return an error. Let's
+skip the store when this op fails to fix this. While we're here, move
+the locking outside of clk_core_get_phase() to simplify callers from
+the debugfs side.
 
-Ensure that we only drop a reference to the fragments page if the XDP
-transmit or redirect operations actually fail.
-
-[1] https://syzkaller.appspot.com/bug?id=e76a6af1be4acd727ff6bbca669833f98cbf5d95
-
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-CC: Eric Dumazet <edumazet@google.com>
-Acked-by: Jason Wang <jasowang@redhat.com>
-Fixes: 8ae1aff0b331 ("tuntap: split out XDP logic")
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: Douglas Anderson <dianders@chromium.org>
+Cc: Heiko Stuebner <heiko@sntech.de>
+Cc: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Link: https://lkml.kernel.org/r/20200205232802.29184-2-sboyd@kernel.org
+Acked-by: Jerome Brunet <jbrunet@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/tun.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/clk/clk.c | 48 +++++++++++++++++++++++++++++++----------------
+ 1 file changed, 32 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/net/tun.c b/drivers/net/tun.c
-index 650c937ed56bb..9de9b7d8aedd3 100644
---- a/drivers/net/tun.c
-+++ b/drivers/net/tun.c
-@@ -1715,8 +1715,12 @@ static struct sk_buff *tun_build_skb(struct tun_struct *tun,
- 			alloc_frag->offset += buflen;
- 		}
- 		err = tun_xdp_act(tun, xdp_prog, &xdp, act);
--		if (err < 0)
--			goto err_xdp;
-+		if (err < 0) {
-+			if (act == XDP_REDIRECT || act == XDP_TX)
-+				put_page(alloc_frag->page);
-+			goto out;
-+		}
+diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+index 95adf6c6db3db..305544b68b8a7 100644
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -2660,12 +2660,14 @@ static int clk_core_get_phase(struct clk_core *core)
+ {
+ 	int ret;
+ 
+-	clk_prepare_lock();
++	lockdep_assert_held(&prepare_lock);
++	if (!core->ops->get_phase)
++		return 0;
 +
- 		if (err == XDP_REDIRECT)
- 			xdp_do_flush();
- 		if (err != XDP_PASS)
-@@ -1730,8 +1734,6 @@ static struct sk_buff *tun_build_skb(struct tun_struct *tun,
+ 	/* Always try to update cached phase if possible */
+-	if (core->ops->get_phase)
+-		core->phase = core->ops->get_phase(core->hw);
+-	ret = core->phase;
+-	clk_prepare_unlock();
++	ret = core->ops->get_phase(core->hw);
++	if (ret >= 0)
++		core->phase = ret;
  
- 	return __tun_build_skb(tfile, alloc_frag, buf, buflen, len, pad);
+ 	return ret;
+ }
+@@ -2679,10 +2681,16 @@ static int clk_core_get_phase(struct clk_core *core)
+  */
+ int clk_get_phase(struct clk *clk)
+ {
++	int ret;
++
+ 	if (!clk)
+ 		return 0;
  
--err_xdp:
--	put_page(alloc_frag->page);
- out:
- 	rcu_read_unlock();
- 	local_bh_enable();
+-	return clk_core_get_phase(clk->core);
++	clk_prepare_lock();
++	ret = clk_core_get_phase(clk->core);
++	clk_prepare_unlock();
++
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(clk_get_phase);
+ 
+@@ -2896,13 +2904,21 @@ static struct hlist_head *orphan_list[] = {
+ static void clk_summary_show_one(struct seq_file *s, struct clk_core *c,
+ 				 int level)
+ {
+-	seq_printf(s, "%*s%-*s %7d %8d %8d %11lu %10lu %5d %6d\n",
++	int phase;
++
++	seq_printf(s, "%*s%-*s %7d %8d %8d %11lu %10lu ",
+ 		   level * 3 + 1, "",
+ 		   30 - level * 3, c->name,
+ 		   c->enable_count, c->prepare_count, c->protect_count,
+-		   clk_core_get_rate(c), clk_core_get_accuracy(c),
+-		   clk_core_get_phase(c),
+-		   clk_core_get_scaled_duty_cycle(c, 100000));
++		   clk_core_get_rate(c), clk_core_get_accuracy(c));
++
++	phase = clk_core_get_phase(c);
++	if (phase >= 0)
++		seq_printf(s, "%5d", phase);
++	else
++		seq_puts(s, "-----");
++
++	seq_printf(s, " %6d\n", clk_core_get_scaled_duty_cycle(c, 100000));
+ }
+ 
+ static void clk_summary_show_subtree(struct seq_file *s, struct clk_core *c,
+@@ -2939,6 +2955,7 @@ DEFINE_SHOW_ATTRIBUTE(clk_summary);
+ 
+ static void clk_dump_one(struct seq_file *s, struct clk_core *c, int level)
+ {
++	int phase;
+ 	unsigned long min_rate, max_rate;
+ 
+ 	clk_core_get_boundaries(c, &min_rate, &max_rate);
+@@ -2952,7 +2969,9 @@ static void clk_dump_one(struct seq_file *s, struct clk_core *c, int level)
+ 	seq_printf(s, "\"min_rate\": %lu,", min_rate);
+ 	seq_printf(s, "\"max_rate\": %lu,", max_rate);
+ 	seq_printf(s, "\"accuracy\": %lu,", clk_core_get_accuracy(c));
+-	seq_printf(s, "\"phase\": %d,", clk_core_get_phase(c));
++	phase = clk_core_get_phase(c);
++	if (phase >= 0)
++		seq_printf(s, "\"phase\": %d,", phase);
+ 	seq_printf(s, "\"duty_cycle\": %u",
+ 		   clk_core_get_scaled_duty_cycle(c, 100000));
+ }
+@@ -3434,14 +3453,11 @@ static int __clk_core_init(struct clk_core *core)
+ 		core->accuracy = 0;
+ 
+ 	/*
+-	 * Set clk's phase.
++	 * Set clk's phase by clk_core_get_phase() caching the phase.
+ 	 * Since a phase is by definition relative to its parent, just
+ 	 * query the current clock phase, or just assume it's in phase.
+ 	 */
+-	if (core->ops->get_phase)
+-		core->phase = core->ops->get_phase(core->hw);
+-	else
+-		core->phase = 0;
++	clk_core_get_phase(core);
+ 
+ 	/*
+ 	 * Set clk's duty cycle.
 -- 
 2.20.1
 
