@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C7E3C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:45:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 635DEC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:45:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32739206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:45:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31DE4206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:45:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586954703;
-	bh=/MSJmPAyZnt2p/ksWE5EYT8hkqDPx+HOjkdSGbwIEJI=;
+	s=default; t=1586954716;
+	bh=DB1F7DmshMsLEY2YqueSwvxRlGpbDWkuaDaxP+9e9Q0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lfaWNrIzJY1QN0nPKf2/jvwc+PSiTZPb9jN1v5k3bguqtIFxxbCl8qF357ZZDivGG
-	 5Qqwn1pfAE5DczsIH1qI5p7ODYMgVdesxItPgOZywRBkmpagtQDEpHfvPOjTASUKSP
-	 hquBFIg3l19B+MeTCMvjeXKNQvee/Kzz0FH1Mb0M=
+	b=o302m9eC1kYuDwOrxToPozQxCtbXeVTwlEAGlWIYgDqBouG1wALeeS4NpwNAHvVUK
+	 tQzbm62yKaky3vaic5zZe6CIfITHAvWCI0r5Uwe2ufgwd8ctxgwkVkniD/Y6yp1mFs
+	 SPlU4bwyJfAw1zJC4Knze5VyyEPWRjIEoYilSAeI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2898205AbgDOMpA (ORCPT
+        id S2408994AbgDOLnT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:45:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35290 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 07:43:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897504AbgDOLnW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:43:22 -0400
+        id S2897199AbgDOLhC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:37:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7740621556;
-        Wed, 15 Apr 2020 11:43:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 306F520737;
+        Wed, 15 Apr 2020 11:37:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951002;
-        bh=/MSJmPAyZnt2p/ksWE5EYT8hkqDPx+HOjkdSGbwIEJI=;
+        s=default; t=1586950621;
+        bh=DB1F7DmshMsLEY2YqueSwvxRlGpbDWkuaDaxP+9e9Q0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VXAdu/SzV8My89ezotGEyMZzT9LYV21C4q1r+v148giQYJHToiHfApHWjfk3Uv6vu
-         vA7sUg2QXaGiKZrSvp3WmUkufxqqXhtktPhIJkFleG8heUMgvXOLnyJao3W8fF0tkM
-         30eqOEd5fOI8NqpHho8yh7+voh+GWZmaD2nPlDFw=
+        b=gAxO4S1SJxQXDreBEWehxYJKlq01OzhfwiS+bVtTCEbqYPBqGLTRcgGFXddZ+a1Y/
+         6cLS8AyCM9C1DeVqNxsklvSCAZizhKjJGhePEwfk6KBDbz9ve069Tt6KlelpJOXH4M
+         wd4H6GzMw3FxhgL65gBGcUTVJBrefn8tOagzCRIw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Richter <tmricht@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 047/106] s390/cpum_sf: Fix wrong page count in error message
-Date:   Wed, 15 Apr 2020 07:41:27 -0400
-Message-Id: <20200415114226.13103-47-sashal@kernel.org>
+Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 5.6 113/129] f2fs: fix to account compressed blocks in f2fs_compressed_blocks()
+Date:   Wed, 15 Apr 2020 07:34:28 -0400
+Message-Id: <20200415113445.11881-113-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
-References: <20200415114226.13103-1-sashal@kernel.org>
+In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
+References: <20200415113445.11881-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,52 +59,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.ibm.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit 4141b6a5e9f171325effc36a22eb92bf961e7a5c ]
+[ Upstream commit 1a67cbe141cf991af252a88143d0fd975be2d9e7 ]
 
-When perf record -e SF_CYCLES_BASIC_DIAG runs with very high
-frequency, the samples arrive faster than the perf process can
-save them to file. Eventually, for longer running processes, this
-leads to the siutation where the trace buffers allocated by perf
-slowly fills up. At one point the auxiliary trace buffer is full
-and  the CPU Measurement sampling facility is turned off. Furthermore
-a warning is printed to the kernel log buffer:
+por_fsstress reports inconsistent status in orphan inode, the root cause
+of this is in f2fs_write_raw_pages() we decrease i_compr_blocks incorrectly
+due to wrong calculation in f2fs_compressed_blocks().
 
-cpum_sf: The AUX buffer with 0 pages for the diagnostic-sampling
-	mode is full
+So this patch exposes below two functions based on __f2fs_cluster_blocks:
+- f2fs_compressed_blocks: get count of compressed blocks in compressed cluster
+- f2fs_cluster_blocks: get count of valid blocks (including reserved blocks)
+in compressed cluster.
 
-The number of allocated pages for the auxiliary trace buffer is shown
-as zero pages. That is wrong.
+Then use f2fs_compress_blocks() to get correct compressed blocks count in
+f2fs_write_raw_pages().
 
-Fix this by saving the number of allocated pages before entering the
-work loop in the interrupt handler. When the interrupt handler processes
-the samples, it may detect the buffer full condition and stop sampling,
-reducing the buffer size to zero.
-Print the correct value in the error message:
+sanity_check_inode: inode (ino=ad80) hash inconsistent i_compr_blocks:2, i_blocks:1, run fsck to fix
 
-cpum_sf: The AUX buffer with 256 pages for the diagnostic-sampling
-	mode is full
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/perf_cpum_sf.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/f2fs/compress.c | 28 ++++++++++++++++++++++------
+ 1 file changed, 22 insertions(+), 6 deletions(-)
 
-diff --git a/arch/s390/kernel/perf_cpum_sf.c b/arch/s390/kernel/perf_cpum_sf.c
-index 77d93c534284d..af11f3e1e8588 100644
---- a/arch/s390/kernel/perf_cpum_sf.c
-+++ b/arch/s390/kernel/perf_cpum_sf.c
-@@ -1581,6 +1581,7 @@ static void hw_collect_aux(struct cpu_hw_sf *cpuhw)
- 	perf_aux_output_end(handle, size);
- 	num_sdb = aux->sfb.num_sdb;
+diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+index ad8e25a1fbc26..11b13b881ada5 100644
+--- a/fs/f2fs/compress.c
++++ b/fs/f2fs/compress.c
+@@ -536,8 +536,7 @@ static bool __cluster_may_compress(struct compress_ctx *cc)
+ 	return true;
+ }
  
-+	num_sdb = aux->sfb.num_sdb;
- 	while (!done) {
- 		/* Get an output handle */
- 		aux = perf_aux_output_begin(handle, cpuhw->event);
+-/* return # of compressed block addresses */
+-static int f2fs_compressed_blocks(struct compress_ctx *cc)
++static int __f2fs_cluster_blocks(struct compress_ctx *cc, bool compr)
+ {
+ 	struct dnode_of_data dn;
+ 	int ret;
+@@ -560,8 +559,13 @@ static int f2fs_compressed_blocks(struct compress_ctx *cc)
+ 
+ 			blkaddr = datablock_addr(dn.inode,
+ 					dn.node_page, dn.ofs_in_node + i);
+-			if (blkaddr != NULL_ADDR)
+-				ret++;
++			if (compr) {
++				if (__is_valid_data_blkaddr(blkaddr))
++					ret++;
++			} else {
++				if (blkaddr != NULL_ADDR)
++					ret++;
++			}
+ 		}
+ 	}
+ fail:
+@@ -569,6 +573,18 @@ static int f2fs_compressed_blocks(struct compress_ctx *cc)
+ 	return ret;
+ }
+ 
++/* return # of compressed blocks in compressed cluster */
++static int f2fs_compressed_blocks(struct compress_ctx *cc)
++{
++	return __f2fs_cluster_blocks(cc, true);
++}
++
++/* return # of valid blocks in compressed cluster */
++static int f2fs_cluster_blocks(struct compress_ctx *cc, bool compr)
++{
++	return __f2fs_cluster_blocks(cc, false);
++}
++
+ int f2fs_is_compressed_cluster(struct inode *inode, pgoff_t index)
+ {
+ 	struct compress_ctx cc = {
+@@ -578,7 +594,7 @@ int f2fs_is_compressed_cluster(struct inode *inode, pgoff_t index)
+ 		.cluster_idx = index >> F2FS_I(inode)->i_log_cluster_size,
+ 	};
+ 
+-	return f2fs_compressed_blocks(&cc);
++	return f2fs_cluster_blocks(&cc, false);
+ }
+ 
+ static bool cluster_may_compress(struct compress_ctx *cc)
+@@ -627,7 +643,7 @@ static int prepare_compress_overwrite(struct compress_ctx *cc,
+ 	bool prealloc;
+ 
+ retry:
+-	ret = f2fs_compressed_blocks(cc);
++	ret = f2fs_cluster_blocks(cc, false);
+ 	if (ret <= 0)
+ 		return ret;
+ 
 -- 
 2.20.1
 
