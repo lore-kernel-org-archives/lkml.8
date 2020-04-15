@@ -2,73 +2,99 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C70C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:34:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ABE3C3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:36:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88C2A206E9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:34:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AF3F206F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:36:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2636122AbgDONeb convert rfc822-to-8bit (ORCPT
+        id S2636131AbgDONgf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:34:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58488 "EHLO
+        Wed, 15 Apr 2020 09:36:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730130AbgDONe1 (ORCPT
+        by vger.kernel.org with ESMTP id S1730130AbgDONg2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 09:34:27 -0400
-X-Greylist: delayed 8508 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 15 Apr 2020 06:34:27 PDT
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07F4BC061A0C;
-        Wed, 15 Apr 2020 06:34:27 -0700 (PDT)
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1jOiBL-0002uX-Tp; Wed, 15 Apr 2020 15:34:23 +0200
-Date:   Wed, 15 Apr 2020 15:34:23 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Mike Galbraith <efault@gmx.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: 0087-rcu-Use-a-raw_spinlock_t-for-kfree-batching.patch
-Message-ID: <20200415133423.7mohynwqanoiqzkx@linutronix.de>
-References: <20200403170443.pzm24672qo4hufcm@linutronix.de>
- <1586062423.4816.15.camel@gmx.de>
+        Wed, 15 Apr 2020 09:36:28 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30B56C061A0C;
+        Wed, 15 Apr 2020 06:36:27 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: gtucker)
+        with ESMTPSA id 5DC1B2A0920
+From:   Guillaume Tucker <guillaume.tucker@collabora.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     kernel@collabora.com, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] media: Kconfig: include test_drivers with MEDIA_TEST_SUPPORT
+Date:   Wed, 15 Apr 2020 14:35:52 +0100
+Message-Id: <20200415133552.26411-1-guillaume.tucker@collabora.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <1586062423.4816.15.camel@gmx.de>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-05 06:53:43 [+0200], Mike Galbraith wrote:
-> Hi Sebastian,
-Hi Mike,
+Include test_drivers/Kconfig when MEDIA_TEST_SUPPORT is enabled rather
+than MEDIA_PLATFORM_SUPPORT.  Test drivers should not depend on
+platform drivers to be enabled.
 
-> Just a heads up wrt $subject...
-> 
-> I had done the same in my 5.6 tree, but then 5.7 came along, and I had
-> to revisit due to 34c881745549e adding an allocation under that lock
-> with irqs disabled.  The same commit that added the lock added this.
-> 
-> 	local_irq_save(flags);  // For safely calling this_cpu_ptr().
-> 
-> Whacking that instead of converting the lock cures 5.6 and 5.7 woes.
+Reported-by: "kernelci.org bot" <bot@kernelci.org>
+Fixes: 4b32216adb010 ("media: split test drivers from platform directory")
+Signed-off-by: Guillaume Tucker <guillaume.tucker@collabora.com>
+---
 
-So I think you are telling me that I made the lock raw and then they
-added in v5.7 a __get_free_page() call in
-kfree_call_rcu_add_ptr_to_bulk() which is invoked from the free path.
+Notes:
+    v2: Drop redundant "if MEDIA_TEST_SUPPORT" in test_drivers/Kconfig
 
-This is indeed not something that made me happy. Now let me think about
-this for a moment…
+ drivers/media/Kconfig              | 5 ++++-
+ drivers/media/test_drivers/Kconfig | 4 ----
+ 2 files changed, 4 insertions(+), 5 deletions(-)
 
-> 	-Mike
+diff --git a/drivers/media/Kconfig b/drivers/media/Kconfig
+index a8def1591352..d926c2603de2 100644
+--- a/drivers/media/Kconfig
++++ b/drivers/media/Kconfig
+@@ -238,10 +238,13 @@ source "drivers/media/common/Kconfig"
+ 
+ if MEDIA_PLATFORM_SUPPORT
+ source "drivers/media/platform/Kconfig"
+-source "drivers/media/test_drivers/Kconfig"
+ source "drivers/media/mmc/Kconfig"
+ endif
+ 
++if MEDIA_TEST_SUPPORT
++source "drivers/media/test_drivers/Kconfig"
++endif
++
+ source "drivers/media/firewire/Kconfig"
+ 
+ endmenu
+diff --git a/drivers/media/test_drivers/Kconfig b/drivers/media/test_drivers/Kconfig
+index 9f4a9cfbacc9..e62abec030c3 100644
+--- a/drivers/media/test_drivers/Kconfig
++++ b/drivers/media/test_drivers/Kconfig
+@@ -1,7 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ 
+-if MEDIA_TEST_SUPPORT
+-
+ menuconfig V4L_TEST_DRIVERS
+ 	bool "V4L test drivers"
+ 	depends on VIDEO_DEV
+@@ -24,5 +22,3 @@ config VIDEO_VIM2M
+ source "drivers/media/test_drivers/vicodec/Kconfig"
+ 
+ endif #V4L_TEST_DRIVERS
+-
+-endif #MEDIA_TEST_SUPPORT
+-- 
+2.20.1
 
-Sebastian
