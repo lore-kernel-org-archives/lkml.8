@@ -2,386 +2,148 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D9CC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15C61C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:52:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 710FF20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:52:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="nLe0vVLo"
+	by mail.kernel.org (Postfix) with ESMTP id E667D20857
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:52:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586969573;
+	bh=MBTHGFuyd6RkQ3mM9tXpCw5qvy6Khusn8uo3qKblggE=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=yYU5wSxXqcWVTXr8vJcgXcWdPooVhjfg2FlyFHaEyxOB6YsBz1JB2URtmYDDc4RfN
+	 gR60g3cxCAfgkCYgPxU3w3nlZ488kNhqmpGMqRISI9DIJKRDwI+tHnXdpm48d+9oSV
+	 BcyOpvb+d61m7e6o59rXVDWwTA7Om8iIL8pIxNr8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410477AbgDOQwm (ORCPT
+        id S2410490AbgDOQww (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 12:52:42 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:36174 "EHLO pegase1.c-s.fr"
+        Wed, 15 Apr 2020 12:52:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390653AbgDOQwg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 12:52:36 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 492T1G34qPz9txlF;
-        Wed, 15 Apr 2020 18:52:34 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=nLe0vVLo; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 4uNJBYzAgdll; Wed, 15 Apr 2020 18:52:34 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 492T1G1nWnz9txlC;
-        Wed, 15 Apr 2020 18:52:34 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1586969554; bh=LsLKLyYl5Xjy0u/asdU6KE2rzMETjuCz4yGERb2R7lY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=nLe0vVLokIt1HlSp6M9UgQxg29bu7rGlfUNloODZ/xYnqi8GX3qXd80cEmVZK2oXd
-         7wxh8522SWdc+6hummsiG8VuXLeWPYHtQ2FEJT6zPoC9aJTRGT9v0c333ua0bqJo4V
-         4XPlIibLV0jBMHETKyDVWmmO5/gQMMNDDuskMC4A=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3A6118BB85;
-        Wed, 15 Apr 2020 18:52:34 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 32BWtQTR5Mhd; Wed, 15 Apr 2020 18:52:34 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3D83B8BB8C;
-        Wed, 15 Apr 2020 18:52:33 +0200 (CEST)
-Subject: Re: [PATCH v2,5/5] drivers: uio: new driver for fsl_85xx_cache_sram
-To:     Wang Wenhu <wenhu.wang@vivo.com>, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, oss@buserror.net,
-        linuxppc-dev@lists.ozlabs.org
-Cc:     kernel@vivo.com, Michael Ellerman <mpe@ellerman.id.au>
-References: <20200415124929.GA3265842@kroah.com>
- <20200415152442.122873-1-wenhu.wang@vivo.com>
- <20200415152442.122873-6-wenhu.wang@vivo.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <37b6b890-e537-7424-6b26-04565681f40a@c-s.fr>
-Date:   Wed, 15 Apr 2020 18:52:24 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S2410478AbgDOQwt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 12:52:49 -0400
+Received: from localhost.localdomain (unknown [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29EED20737;
+        Wed, 15 Apr 2020 16:52:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586969568;
+        bh=MBTHGFuyd6RkQ3mM9tXpCw5qvy6Khusn8uo3qKblggE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=sZnKIEafLDe3NdRw0M16kTS1yp9wM/RpCYwALwJm6Wb4JytGDxVyhNcexnnI7Mqk9
+         CBUg1bVfYaFjIzM3hHOOTQUG5VVoiRHDBsBEF9m+kbX/KWPQff0/mDp8nEQvRC7d5L
+         UJ7vJo8xAT4lr8vpQvb0ELDatkf8ZJOLS9QPOSoY=
+From:   Will Deacon <will@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-arch@vger.kernel.org, kernel-team@android.com,
+        Will Deacon <will@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: [PATCH v3 00/12] Rework READ_ONCE() to improve codegen
+Date:   Wed, 15 Apr 2020 17:52:06 +0100
+Message-Id: <20200415165218.20251-1-will@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20200415152442.122873-6-wenhu.wang@vivo.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi everyone,
 
+This is version three of the patches I previously posted for improving
+the code generation of READ_ONCE() and moving the minimum GCC version
+to 4.8:
 
-Le 15/04/2020 à 17:24, Wang Wenhu a écrit :
-> A driver for freescale 85xx platforms to access the Cache-Sram form
-> user level. This is extremely helpful for some user-space applications
-> that require high performance memory accesses.
-> 
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-> Cc: Scott Wood <oss@buserror.net>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
-> ---
-> Changes since v1:
->   * Addressed comments of Greg K-H
->   * Moved kfree(info->name) into uio_info_free_internal()
-> ---
->   drivers/uio/Kconfig                   |   8 ++
->   drivers/uio/Makefile                  |   1 +
->   drivers/uio/uio_fsl_85xx_cache_sram.c | 182 ++++++++++++++++++++++++++
->   3 files changed, 191 insertions(+)
->   create mode 100644 drivers/uio/uio_fsl_85xx_cache_sram.c
-> 
-> diff --git a/drivers/uio/Kconfig b/drivers/uio/Kconfig
-> index 202ee81cfc2b..afd38ec13de0 100644
-> --- a/drivers/uio/Kconfig
-> +++ b/drivers/uio/Kconfig
-> @@ -105,6 +105,14 @@ config UIO_NETX
->   	  To compile this driver as a module, choose M here; the module
->   	  will be called uio_netx.
->   
-> +config UIO_FSL_85XX_CACHE_SRAM
-> +	tristate "Freescale 85xx Cache-Sram driver"
-> +	depends on FSL_85XX_CACHE_SRAM
+RFC: https://lore.kernel.org/lkml/20200110165636.28035-1-will@kernel.org
+v2:  https://lore.kernel.org/lkml/20200123153341.19947-1-will@kernel.org
 
-Is there any point having FSL_85XX_CACHE_SRAM without this ?
+Although v2 was queued up by Peter in -tip, it was found to break the
+build for m68k and sparc32. We fixed m68k during the merge window and
+I've since posted patches to fix sparc32 here:
 
-Should it be the other way round, leave FSL_85XX_CACHE_SRAM unselectable 
-by user, and this driver select FSL_85XX_CACHE_SRAM instead of depending 
-on it ?
+  https://lore.kernel.org/lkml/20200414214011.2699-1-will@kernel.org
 
-> +	help
-> +	  Generic driver for accessing the Cache-Sram form user level. This
-> +	  is extremely helpful for some user-space applications that require
-> +	  high performance memory accesses.
-> +
->   config UIO_FSL_ELBC_GPCM
->   	tristate "eLBC/GPCM driver"
->   	depends on FSL_LBC
-> diff --git a/drivers/uio/Makefile b/drivers/uio/Makefile
-> index c285dd2a4539..be2056cffc21 100644
-> --- a/drivers/uio/Makefile
-> +++ b/drivers/uio/Makefile
-> @@ -10,4 +10,5 @@ obj-$(CONFIG_UIO_NETX)	+= uio_netx.o
->   obj-$(CONFIG_UIO_PRUSS)         += uio_pruss.o
->   obj-$(CONFIG_UIO_MF624)         += uio_mf624.o
->   obj-$(CONFIG_UIO_FSL_ELBC_GPCM)	+= uio_fsl_elbc_gpcm.o
-> +obj-$(CONFIG_UIO_FSL_85XX_CACHE_SRAM)	+= uio_fsl_85xx_cache_sram.o
->   obj-$(CONFIG_UIO_HV_GENERIC)	+= uio_hv_generic.o
-> diff --git a/drivers/uio/uio_fsl_85xx_cache_sram.c b/drivers/uio/uio_fsl_85xx_cache_sram.c
-> new file mode 100644
-> index 000000000000..fb6903fdaddb
-> --- /dev/null
-> +++ b/drivers/uio/uio_fsl_85xx_cache_sram.c
-> @@ -0,0 +1,182 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2020 Vivo Communication Technology Co. Ltd.
-> + * Copyright (C) 2020 Wang Wenhu <wenhu.wang@vivo.com>
-> + * All rights reserved.
-> + */
-> +
-> +#include <linux/platform_device.h>
-> +#include <linux/uio_driver.h>
-> +#include <linux/stringify.h>
-> +#include <linux/module.h>
-> +#include <linux/kernel.h>
-> +#include <asm/fsl_85xx_cache_sram.h>
-> +
-> +#define DRIVER_NAME	"uio_fsl_85xx_cache_sram"
-> +#define UIO_NAME	"uio_cache_sram"
-> +
-> +static const struct of_device_id uio_mpc85xx_l2ctlr_of_match[] = {
-> +	{	.compatible = "uio,fsl,p2020-l2-cache-controller",	},
-> +	{	.compatible = "uio,fsl,p2010-l2-cache-controller",	},
-> +	{	.compatible = "uio,fsl,p1020-l2-cache-controller",	},
-> +	{	.compatible = "uio,fsl,p1011-l2-cache-controller",	},
-> +	{	.compatible = "uio,fsl,p1013-l2-cache-controller",	},
-> +	{	.compatible = "uio,fsl,p1022-l2-cache-controller",	},
-> +	{	.compatible = "uio,fsl,mpc8548-l2-cache-controller",	},
-> +	{	.compatible = "uio,fsl,mpc8544-l2-cache-controller",	},
-> +	{	.compatible = "uio,fsl,mpc8572-l2-cache-controller",	},
-> +	{	.compatible = "uio,fsl,mpc8536-l2-cache-controller",	},
-> +	{	.compatible = "uio,fsl,p1021-l2-cache-controller",	},
-> +	{	.compatible = "uio,fsl,p1012-l2-cache-controller",	},
-> +	{	.compatible = "uio,fsl,p1025-l2-cache-controller",	},
-> +	{	.compatible = "uio,fsl,p1016-l2-cache-controller",	},
-> +	{	.compatible = "uio,fsl,p1024-l2-cache-controller",	},
-> +	{	.compatible = "uio,fsl,p1015-l2-cache-controller",	},
-> +	{	.compatible = "uio,fsl,p1010-l2-cache-controller",	},
-> +	{	.compatible = "uio,fsl,bsc9131-l2-cache-controller",	},
-> +	{},
-> +};
-> +
-> +static void uio_info_free_internal(struct uio_info *info)
-> +{
-> +	struct uio_mem *uiomem = &info->mem[0];
-> +
-> +	while (uiomem < &info->mem[MAX_UIO_MAPS]) {
-> +		if (uiomem->size) {
-> +			mpc85xx_cache_sram_free(uiomem->internal_addr);
-> +			kfree(uiomem->name);
-> +		}
-> +		uiomem++;
-> +	}
-> +
-> +	kfree(info->name);
-> +}
-> +
-> +static int uio_fsl_85xx_cache_sram_probe(struct platform_device *pdev)
-> +{
-> +	struct device_node *parent = pdev->dev.of_node;
-> +	struct device_node *node = NULL;
-> +	struct uio_info *info;
-> +	struct uio_mem *uiomem;
-> +	const char *dt_name;
-> +	u32 mem_size;
-> +	u32 align;
+This series is a refresh on top of 5.7-rc1, the main changes being:
 
-Align is not used outside of the for loop, it should be declared in the 
-loop block.
+  * Fix another issue where 'const' is assigned to non-const via
+    WRITE_ONCE(), this time in the tls code
 
-> +	void *virt;
+  * Fix READ_ONCE_NOCHECK() abuse in arm64 checksum code
 
-Same for virt
+  * Added Reviewed-bys and Acks from v2
 
-> +	phys_addr_t phys;
+Hopefully this can be considered for 5.8, along with the sparc32 changes.
 
-Same for phys
+Cheers,
 
-> +	int ret = -ENODEV;
+Will
 
-It looks like this init value is unneeded, you should leave 'ret' 
-uninitialised (unless I missed some way out and you get a warning).
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Segher Boessenkool <segher@kernel.crashing.org>
+Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+Cc: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Peter Oberparleiter <oberpar@linux.ibm.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
 
-> +
-> +	/* alloc uio_info for one device */
-> +	info = kzalloc(sizeof(*info), GFP_KERNEL);
-> +	if (!info) {
-> +		ret = -ENOMEM;
-> +		goto err_out;
+--->8
 
-Nothing special is done at err_out, you should instead do:
+Will Deacon (12):
+  compiler/gcc: Emit build-time warning for GCC prior to version 4.8
+  netfilter: Avoid assigning 'const' pointer to non-const pointer
+  net: tls: Avoid assigning 'const' pointer to non-const pointer
+  fault_inject: Don't rely on "return value" from WRITE_ONCE()
+  arm64: csum: Disable KASAN for do_csum()
+  READ_ONCE: Simplify implementations of {READ,WRITE}_ONCE()
+  READ_ONCE: Enforce atomicity for {READ,WRITE}_ONCE() memory accesses
+  READ_ONCE: Drop pointer qualifiers when reading from scalar types
+  locking/barriers: Use '__unqual_scalar_typeof' for load-acquire macros
+  arm64: barrier: Use '__unqual_scalar_typeof' for acquire/release
+    macros
+  compiler/gcc: Raise minimum GCC version for kernel builds to 4.8
+  gcov: Remove old GCC 3.4 support
 
-	if (!info)
-		return -ENOMEM;
+ Documentation/process/changes.rst |   2 +-
+ arch/arm/crypto/Kconfig           |  12 +-
+ arch/arm64/include/asm/barrier.h  |  16 +-
+ arch/arm64/lib/csum.c             |  20 +-
+ crypto/Kconfig                    |   1 -
+ drivers/xen/time.c                |   2 +-
+ include/asm-generic/barrier.h     |  16 +-
+ include/linux/compiler-gcc.h      |   5 +-
+ include/linux/compiler.h          | 129 +++----
+ include/linux/compiler_types.h    |  21 ++
+ init/Kconfig                      |   5 +-
+ kernel/gcov/Kconfig               |  24 --
+ kernel/gcov/Makefile              |   3 +-
+ kernel/gcov/gcc_3_4.c             | 573 ------------------------------
+ lib/fault-inject.c                |   4 +-
+ net/netfilter/core.c              |   2 +-
+ net/tls/tls_main.c                |   2 +-
+ scripts/Kconfig.include           |   6 +
+ scripts/gcc-plugins/Kconfig       |   2 +-
+ 19 files changed, 126 insertions(+), 719 deletions(-)
+ delete mode 100644 kernel/gcov/gcc_3_4.c
 
-> +	}
-> +
-> +	/* get optional uio name */
-> +	if (of_property_read_string(parent, "uio_name", &dt_name))
-> +		dt_name = UIO_NAME;
-> +
-> +	info->name = kstrdup(dt_name, GFP_KERNEL);
-> +	if (!info->name) {
-> +		ret = -ENOMEM;
-> +		goto err_info_free;
-> +	}
-> +
-> +	uiomem = &info->mem[0];
+-- 
+2.26.0.110.g2183baf09c-goog
 
-I'd prefer
-	uiomem = info->mem;
-
-> +	for_each_child_of_node(parent, node) {
-> +		ret = of_property_read_u32(node, "cache-mem-size", &mem_size);
-> +		if (ret) {
-> +			ret = -EINVAL;
-> +			goto err_info_free_internel;
-> +		}
-> +
-> +		if (mem_size == 0) {
-> +			dev_err(&pdev->dev, "cache-mem-size should not be 0\n");
-> +			ret = -EINVAL;
-> +			goto err_info_free_internel;
-> +		}
-> +
-> +		align = 2;
-> +		while (align < mem_size)
-> +			align *= 2;
-
-I think ilog2() or one of it friends should be used here, maybe 
-roundup_pow_of_two()
-
-> +		virt = mpc85xx_cache_sram_alloc(mem_size, &phys, align);
-> +		if (!virt) {
-> +			/* mpc85xx_cache_sram_alloc to define the cause */
-> +			ret = -EINVAL;
-
-Should it be -ENOMEM like any allocation failure ?
-
-> +			goto err_info_free_internel;
-> +		}
-> +
-> +		uiomem->memtype = UIO_MEM_PHYS;
-> +		uiomem->addr = phys;
-> +		uiomem->size = mem_size;
-> +		uiomem->name = kstrdup(node->name, GFP_KERNEL);;
-> +		uiomem->internal_addr = virt;
-> +		++uiomem;
-
-Usually people use
-
-	uiomem++;
-
-> +
-> +		if (uiomem >= &info->mem[MAX_UIO_MAPS]) {
-
-I'd prefer
-		if (uiomem - info->mem >= MAX_UIO_MAPS) {
-
-> +			dev_warn(&pdev->dev, "more than %d uio-maps for device.\n",
-> +				 MAX_UIO_MAPS);
-> +			break;
-> +		}
-> +	}
-> +
-> +	while (uiomem < &info->mem[MAX_UIO_MAPS]) {
-
-I'd prefer
-
-	while (uiomem - info->mem < MAX_UIO_MAPS) {
-
-> +		uiomem->size = 0;
-> +		++uiomem;
-> +	}
-> +
-> +	if (info->mem[0].size == 0) {
-
-Is there any point in doing all the clearing loop above if it's to bail 
-out here ?
-
-Wouldn't it be cleaner to do the test above the clearing loop, by just 
-checking whether uiomem is still equal to info->mem ?
-
-> +		dev_err(&pdev->dev, "error no valid uio-map configured\n");
-> +		ret = -EINVAL;
-> +		goto err_info_free_internel;
-> +	}
-> +
-> +	info->version = "0.1.0";
-
-Could you define some DRIVER_VERSION in the top of the file next to 
-DRIVER_NAME instead of hard coding in the middle on a function ?
-
-> +
-> +	/* register uio device */
-> +	if (uio_register_device(&pdev->dev, info)) {
-> +		dev_err(&pdev->dev, "uio registration failed\n");
-> +		ret = -ENODEV;
-> +		goto err_info_free_internel;
-> +	}
-> +
-> +	platform_set_drvdata(pdev, info);
-> +
-> +	return 0;
-> +err_info_free_internel:
-
-Do you mean 'internal' instead of 'internel' ?
-
-> +	uio_info_free_internal(info);
-> +err_info_free:
-> +	kfree(info);
-> +err_out:
-> +	return ret;
-> +}
-> +
-> +static int uio_fsl_85xx_cache_sram_remove(struct platform_device *pdev)
-> +{
-> +	struct uio_info *info = platform_get_drvdata(pdev);
-> +
-> +	uio_unregister_device(info);
-> +
-> +	uio_info_free_internal(info);
-> +
-> +	kfree(info);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver uio_fsl_85xx_cache_sram = {
-> +	.probe = uio_fsl_85xx_cache_sram_probe,
-> +	.remove = uio_fsl_85xx_cache_sram_remove,
-> +	.driver = {
-> +		.name = DRIVER_NAME,
-> +		.owner = THIS_MODULE,
-> +		.of_match_table	= uio_mpc85xx_l2ctlr_of_match,
-> +	},
-> +};
-> +
-> +module_platform_driver(uio_fsl_85xx_cache_sram);
-> +
-> +MODULE_AUTHOR("Wang Wenhu <wenhu.wang@vivo.com>");
-> +MODULE_DESCRIPTION("Freescale MPC85xx Cache-Sram UIO Platform Driver");
-> +MODULE_ALIAS("platform:" DRIVER_NAME);
-> +MODULE_LICENSE("GPL v2");
-> 
-
-Christophe
