@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4319CC2BB55
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:52:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48877C2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:52:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1637620737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:52:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BC88206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:52:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586955168;
-	bh=WNjl3YMguWAoEvZRF+md9N2/nSrx4fqcpqzIGbtCVDw=;
+	s=default; t=1586955177;
+	bh=7XeeStrCK5kGavojARUQVC9UvgsLzqP+H2GH7ek/uyM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BvYJ0M0J8MXOh20++k+NDI/sopXsaHxfweuxp5KTohmu/aVYMQS5i0QEZolV7rd0+
-	 dVO9KvGSp5caFBxvGqnYMVRSVuUYhjdaIwpk/riFcRmjSDiIU7vA156tIsKm7JlnCS
-	 6nb5Twe3QgkGdPrLareX6ITz1+0RxNIfNn+jNAYs=
+	b=DmeYIvqFaGtYDEO4c1yAvZwgKn0vtqNSnR9NreAqNARZd13/NsV3gx7MGLaI48ku6
+	 RYV6oxe6G/6lrCFi4n+x8Mv1cXU4ipWQMVym2RvYJ9Gd1wzMzmj/0hlvXSyAnYVO0p
+	 YywUx7LGFBPVHEOhDaSnOQHqViOThIczuqkmCwnQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2897463AbgDOLmc (ORCPT
-        <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:42:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56234 "EHLO mail.kernel.org"
+        id S370555AbgDOMwy (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:52:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897147AbgDOLg2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:36:28 -0400
+        id S2897469AbgDOLme (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:42:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD39B20775;
-        Wed, 15 Apr 2020 11:36:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BB952137B;
+        Wed, 15 Apr 2020 11:42:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950587;
-        bh=WNjl3YMguWAoEvZRF+md9N2/nSrx4fqcpqzIGbtCVDw=;
+        s=default; t=1586950954;
+        bh=7XeeStrCK5kGavojARUQVC9UvgsLzqP+H2GH7ek/uyM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c9uLMChNTGiTjTX5Ecku3SZOYQH6pnnxha+OjGZ55eRrC5QyOuvk9fvkTAfMMTcZa
-         2SRDlj+RRoRM2PyWBnbqD7KqOtVIzqfPRuK7LX0SC5DkghCBmTAL4bmueO5RRgimgM
-         7AELgoWuGvFZctmGgX89qvuiowCPcI0d4D4YANmQ=
+        b=Eh6UNaTd0bAPE6LUIUA4nbKadqnaNTdP2FNFflUWVaV5bpaC6N62aD4Li9NIuYDeW
+         WC+fCHMd0q0I2yuW8QgzKVkdKR0GZ69q9nodIbF4d2jj4slw7zQ8EEyNiaWIz02u3V
+         2+iSOcX5uaCmI5IQXSrYRXZHH3lPdYRxz/Ik07xk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ricardo Ribalda Delgado <ribalda@kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>,
-        linux-leds@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 085/129] leds: core: Fix warning message when init_data
-Date:   Wed, 15 Apr 2020 07:34:00 -0400
-Message-Id: <20200415113445.11881-85-sashal@kernel.org>
+Cc:     Aya Levin <ayal@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 006/106] net/mlx5e: Enforce setting of a single FEC mode
+Date:   Wed, 15 Apr 2020 07:40:46 -0400
+Message-Id: <20200415114226.13103-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
-References: <20200415113445.11881-1-sashal@kernel.org>
+In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
+References: <20200415114226.13103-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,37 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ricardo Ribalda Delgado <ribalda@kernel.org>
+From: Aya Levin <ayal@mellanox.com>
 
-[ Upstream commit 64ed6588c2ea618d3f9ca9d8b365ae4c19f76225 ]
+[ Upstream commit 4bd9d5070b92da012f2715cf8e4859acb78b8f35 ]
 
-The warning message when a led is renamed due to name collition can fail
-to show proper original name if init_data is used. Eg:
+Ethtool command allow setting of several FEC modes in a single set
+command. The driver can only set a single FEC mode at a time. With this
+patch driver will reply not-supported on setting several FEC modes.
 
-[    9.073996] leds-gpio a0040000.leds_0: Led (null) renamed to red_led_1 due to name collision
-
-Fixes: bb4e9af0348d ("leds: core: Add support for composing LED class device names")
-Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
-Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Signed-off-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Aya Levin <ayal@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/leds/led-class.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
-index 1fc40e8af75eb..3363a6551a708 100644
---- a/drivers/leds/led-class.c
-+++ b/drivers/leds/led-class.c
-@@ -376,7 +376,7 @@ int led_classdev_register_ext(struct device *parent,
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
+index c6776f308d5e6..ce63f9bd10fa8 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
+@@ -1554,6 +1554,10 @@ static int mlx5e_set_fecparam(struct net_device *netdev,
+ 	int mode;
+ 	int err;
  
- 	if (ret)
- 		dev_warn(parent, "Led %s renamed to %s due to name collision",
--				led_cdev->name, dev_name(led_cdev->dev));
-+				proposed_name, dev_name(led_cdev->dev));
- 
- 	if (led_cdev->flags & LED_BRIGHT_HW_CHANGED) {
- 		ret = led_add_brightness_hw_changed(led_cdev);
++	if (bitmap_weight((unsigned long *)&fecparam->fec,
++			  ETHTOOL_FEC_BASER_BIT + 1) > 1)
++		return -EOPNOTSUPP;
++
+ 	for (mode = 0; mode < ARRAY_SIZE(pplm_fec_2_ethtool); mode++) {
+ 		if (!(pplm_fec_2_ethtool[mode] & fecparam->fec))
+ 			continue;
 -- 
 2.20.1
 
