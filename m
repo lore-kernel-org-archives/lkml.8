@@ -2,79 +2,118 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C921C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:50:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B61CC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:52:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAC5420787
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:50:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2420820787
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:52:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437037AbgDORuT (ORCPT
+        id S2440817AbgDORwp convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 13:50:19 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:51281 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2411506AbgDORuF (ORCPT
+        Wed, 15 Apr 2020 13:52:45 -0400
+Received: from mailoutvs60.siol.net ([185.57.226.251]:54451 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2437449AbgDORwl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 13:50:05 -0400
-Received: by mail-io1-f72.google.com with SMTP id s1so20579515iow.18
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 10:50:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=nHxID+TcYcl1NAxOyN05IyLFyVfL/SAIIcfsEnpexvY=;
-        b=OYBLR1oZ9VDGmDJkicyL6ctWgNMQ3lnQXoTSEF3v6aqDgE2gC3bvAw/IYfvhBi1cb5
-         pAgC8g49d7eN6WazOuFIzObABN+oV/qG4PEW5jejyRW/4LFoHtIHZPmID1BJ+QT7WL21
-         gHKB7uE2nz5do/nBVOicBHATTdBvJWQSqqrpYrDfsLB+un/szMxKALtDm+DOI/WuiZJo
-         FB5nTk5b5EeLr4tDg0UpyoEq81c4lRBx3Wj7cp8xpOjK10qlOyrVkQzgiy6lpqB/mm2/
-         RHDW8h/x+kbK5cKrhtMOHfNPD+kEsPHtxdw8v1bHr/ppdRT4Nuy0RhsQf7EPbYS26T+4
-         cb7w==
-X-Gm-Message-State: AGi0PubjIJYpuolnK+Td94k6wdVZ9PX7L3TohTyVaysdu8sthXzb6ijm
-        bZjWt73Y/kngqOrLiRH09n82j83u0AHZ4AjFlheSSDSwlszO
-X-Google-Smtp-Source: APiQypKCFYBPF9OFykDZd9n8d4hXnAVLQ6F+DTzMLIY+9TSrA/7PY0fhxsgiHvbNThyhKTwcCS3oyc4PK82BmuGBS5ArqpOAKflC
+        Wed, 15 Apr 2020 13:52:41 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id 7DA5B523E2D;
+        Wed, 15 Apr 2020 19:52:38 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta11.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta11.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id Mn71HVJwTzMB; Wed, 15 Apr 2020 19:52:38 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id 1B19B52389F;
+        Wed, 15 Apr 2020 19:52:38 +0200 (CEST)
+Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net [194.152.20.232])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Postfix) with ESMTPA id 832A5523E96;
+        Wed, 15 Apr 2020 19:52:34 +0200 (CEST)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/sun4i: hdmi ddc clk: Fix size of m divider
+Date:   Wed, 15 Apr 2020 19:52:28 +0200
+Message-ID: <1785843.taCxCBeP46@jernej-laptop>
+In-Reply-To: <20200415104214.ndkkxfnufkxgu53r@gilmour.lan>
+References: <20200413095457.1176754-1-jernej.skrabec@siol.net> <1742537.tdWV9SEqCh@jernej-laptop> <20200415104214.ndkkxfnufkxgu53r@gilmour.lan>
 MIME-Version: 1.0
-X-Received: by 2002:a02:7785:: with SMTP id g127mr26306155jac.134.1586973002978;
- Wed, 15 Apr 2020 10:50:02 -0700 (PDT)
-Date:   Wed, 15 Apr 2020 10:50:02 -0700
-In-Reply-To: <000000000000f8a16405a0376780@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000001c5eaa05a357f2e1@google.com>
-Subject: Re: possible deadlock in proc_pid_personality
-From:   syzbot <syzbot+d9ae59d4662c941e39c6@syzkaller.appspotmail.com>
-To:     adobriyan@gmail.com, akpm@linux-foundation.org, avagin@gmail.com,
-        bernd.edlinger@hotmail.de, christian@brauner.io,
-        ebiederm@xmission.com, guro@fb.com, kent.overstreet@gmail.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mhocko@suse.com, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de
+Content-Transfer-Encoding: 8BIT
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot suspects this bug was fixed by commit:
+Dne sreda, 15. april 2020 ob 12:42:14 CEST je Maxime Ripard napisal(a):
+> On Mon, Apr 13, 2020 at 06:09:08PM +0200, Jernej Škrabec wrote:
+> > Dne ponedeljek, 13. april 2020 ob 16:12:39 CEST je Chen-Yu Tsai 
+napisal(a):
+> > > On Mon, Apr 13, 2020 at 6:11 PM Chen-Yu Tsai <wens@csie.org> wrote:
+> > > > On Mon, Apr 13, 2020 at 5:55 PM Jernej Skrabec
+> > > > <jernej.skrabec@siol.net>
+> > 
+> > wrote:
+> > > > > m divider in DDC clock register is 4 bits wide. Fix that.
+> > > > > 
+> > > > > Fixes: 9c5681011a0c ("drm/sun4i: Add HDMI support")
+> > > > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > > > 
+> > > > Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+> > > 
+> > > Cc stable?
+> > 
+> > I don't think it's necessary:
+> > 1. It doesn't change much (anything?) for me when reading EDID. I don't
+> > think it's super important to have precise DDC clock in order to properly
+> > read EDID. 2. No matter if it has "Cc stable" tag or not, it will be
+> > eventually picked for stable due to fixes tag.
+> > 
+> > This was only small observation when I was researching EDID readout issue
+> > on A20 board, but sadly, I wasn't able to figure out why reading it
+> > sometimes fails. I noticed similar issue on SoCs with DE2 (most
+> > prominently on OrangePi PC2 - H5), but there was easy workaround - I just
+> > disabled video driver in U- Boot. However, if A20 display driver gets
+> > disabled in U-Boot, it totally breaks video output on my TV when Linux
+> > boots (no output). I guess there is more fundamental problem with clocks
+> > than just field size. I think we should add more constraints in clock
+> > driver, like preset some clock parents and not allow to change parents
+> > when setting rate, but carefully, so simplefb doesn't break. Such
+> > constraints should also solve problems with dual head setups.
+> I disagree here. Doing all sorts of special case just doesn't scale,
+> and we'll never have the special cases sorted out on all the boards
+> (and it's a nightmare to maintain).
+> 
+> Especially since it's basically putting a blanket over the actual
+> issue and looking the other way. If there's something wrong with how
+> we deal with (re)parenting, we should fix that. It impacts more than
+> just DRM, and all the SoCs.
 
-commit 2db9dbf71bf98d02a0bf33e798e5bfd2a9944696
-Author: Bernd Edlinger <bernd.edlinger@hotmail.de>
-Date:   Fri Mar 20 20:27:24 2020 +0000
+I agree with you that automatic solution would be best, but I just don't see 
+it how it would be done. Dual head display pipeline is pretty complex for 
+clock driver to get it right on it's own. There are different possible setups 
+and some of them are hot pluggable, like HDMI. And there are also SoC specific 
+quirks, like A64, where for some reason, MIPI DPHY and HDMI PHY share same 
+clock parent - PLL_VIDEO0. Technically, MIPI DPHY can be clocked from 
+PLL_PERIPH0 (fixed to 600 MHz), but that's not really helpful. I'm not even 
+sure if there is any good solution to this - certainly HDMI and MIPI can't 
+claim exclusivity and somehow best common rate must be found for PLL_VIDEO0, 
+if that's even possible. I was sure that HDMI PHY on A64 can be clocked from 
+PLL_VIDEO1, which would solve main issue, but to date, I didn't find any way to 
+do that.
 
-    proc: Use new infrastructure to fix deadlocks in execve
+That's pretty off topic, so I hope original patch can be merged as-is.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=136aea00100000
-start commit:   63623fd4 Merge tag 'for-linus' of git://git.kernel.org/pub..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=5d2e033af114153f
-dashboard link: https://syzkaller.appspot.com/bug?extid=d9ae59d4662c941e39c6
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1374670de00000
+Best regards,
+Jernej
 
-If the result looks correct, please mark the bug fixed by replying with:
 
-#syz fix: proc: Use new infrastructure to fix deadlocks in execve
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
