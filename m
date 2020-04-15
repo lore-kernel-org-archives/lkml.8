@@ -2,110 +2,173 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00780C2BB55
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:25:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8902CC2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:25:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBBCB20768
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:25:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="TiFg00+L"
+	by mail.kernel.org (Postfix) with ESMTP id 6EFAE20575
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:25:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2896939AbgDOLZB (ORCPT
+        id S2896952AbgDOLZf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:25:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38212 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2896922AbgDOLYG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:24:06 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3D19C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 04:24:03 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id l13so10084675qtr.7
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 04:24:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=wOmETXgpnR0UiiTfkrMXsqOFBsXGlBK6YD0CLMuo+FM=;
-        b=TiFg00+LOB+J3ECZHXf1hg6toq17QIQNzCBw5JV2NofPJ4885HzqlLS011N8RRjqry
-         JHrm5gPSFF43Kf55r43lWDgtWNHGhz9ongDMeQzmAitEb5B50AVgeeJwZveyL8rTyHH8
-         GHmnSqOgREGSdTq1E+fj8JqySTyiyxhUvKuxDn5T0sBne4FdayoiEvawk3KmttWfTNq6
-         CxxY5tgKjqBw/x2S6ihccX8mwsEheruVwN57zisJ+krwhxnKKLnECu/MHxFf9r8D4iAB
-         RXpEAa5k7KSEyE4W4CnbwLmkccYFkHGzGgNa2FY9e6UCHHBwqve49mz1yGxapotc1APH
-         3YpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=wOmETXgpnR0UiiTfkrMXsqOFBsXGlBK6YD0CLMuo+FM=;
-        b=YG9dKJJ58NcxRKkgtb8/l02TFWSsz0ZdRPsFeCNfSwmoiRmqlHfNIGpdlHnbdhTrBw
-         fVAtvTiu9vel6Qx0OQelsjey3/3+u2ZdSPVkL6IMS46cpkWjFZowggo3grIK+sFLxRZR
-         JP5W5fNogYlqRleQ0w0xEmzZYDpSBFvjZfdkAer6375+DynRxEfDTmmMh7HcVOIJwPXi
-         y8zVZ6kMb+fiuq6JRRAM8ZJ67mi6mqfdB/ViB92t9j0mIxcy5NlrC8LNq/WA/Qa5E+zp
-         p6BLWAFL8Ek9amZs1gc7SI7dFFkrlTmYL3o5It+Nw73xHn0OCpBJalJx5CjtN2DGMUHx
-         yqdQ==
-X-Gm-Message-State: AGi0PubQ1SSpmq23FFH6atWJGSuIS0asObYw5FM7sVJtpfLqnSEmDh46
-        TgYKDZ9T4H6tZ1Y3Zox2zlwZC5SnUljXdZaBpBBNig==
-X-Google-Smtp-Source: APiQypKw5qKWyWpvpifJcGdPqJqI988H/LRkhuc2ciFW8lVP5XCznLWbP0ZtwGPp5jnBySczmuJgdev5KDtZyuuRKJo=
-X-Received: by 2002:ac8:5209:: with SMTP id r9mr2900056qtn.57.1586949843116;
- Wed, 15 Apr 2020 04:24:03 -0700 (PDT)
+        Wed, 15 Apr 2020 07:25:35 -0400
+Received: from mga01.intel.com ([192.55.52.88]:29224 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2896922AbgDOLZK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:25:10 -0400
+IronPort-SDR: eRDIGlJRQjiH0pnsIvDJ4ClQiiMJryjClAV+M7Soj5zQIeTp3mHQu9enQWRAt69CrGNDORa+5h
+ MbqPXj46nfKA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 04:25:08 -0700
+IronPort-SDR: 4IyR2ipB0pYdd/yQryNiZ8IGlXDDKJiKdsxRxk1fS4mva48chEQCle75ccSjvdnecp+3ImSfB/
+ hLee6EGB5dzw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,386,1580803200"; 
+   d="scan'208";a="363645932"
+Received: from kuha.fi.intel.com ([10.237.72.162])
+  by fmsmga001.fm.intel.com with SMTP; 15 Apr 2020 04:25:04 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Wed, 15 Apr 2020 14:25:03 +0300
+Date:   Wed, 15 Apr 2020 14:25:03 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Brendan Higgins <brendanhiggins@google.com>, rafael@kernel.org,
+        linux-kernel@vger.kernel.org, naresh.kamboju@linaro.org,
+        sakari.ailus@linux.intel.com, andy.shevchenko@gmail.com,
+        hdegoede@redhat.com, rafael.j.wysocki@intel.com,
+        linux-kselftest@vger.kernel.org, rostedt@goodmis.org,
+        sergey.senozhatsky@gmail.com, andriy.shevchenko@linux.intel.com,
+        shuah@kernel.org, anders.roxell@linaro.org,
+        lkft-triage@lists.linaro.org, linux@rasmusvillemoes.dk
+Subject: Re: [PATCH v1] kobject: make sure parent is not released before
+ children
+Message-ID: <20200415112503.GN2828150@kuha.fi.intel.com>
+References: <20200414204240.186377-1-brendanhiggins@google.com>
+ <20200415061154.GA2496263@kroah.com>
+ <20200415084653.GM2828150@kuha.fi.intel.com>
+ <20200415092115.GA2565850@kroah.com>
 MIME-Version: 1.0
-References: <20200412013352.674506-1-aford173@gmail.com> <20200412013352.674506-2-aford173@gmail.com>
-In-Reply-To: <20200412013352.674506-2-aford173@gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 15 Apr 2020 13:23:52 +0200
-Message-ID: <CAMpxmJU0sSDPTa-YHTEsYCzX3Vpv5YJAKhOhfhf73_rbL4jYSg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] gpio: pca953x: Fix pca953x_gpio_set_config
-To:     Adam Ford <aford173@gmail.com>
-Cc:     linux-gpio <linux-gpio@vger.kernel.org>, aford@beaconembedded.com,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200415092115.GA2565850@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-niedz., 12 kwi 2020 o 03:34 Adam Ford <aford173@gmail.com> napisa=C5=82(a):
->
-> pca953x_gpio_set_config is setup to support pull-up/down
-> bias.  Currently the driver uses a variable called 'config' to
-> determine which options to use.  Unfortunately, this is incorrect.
->
-> This patch uses function pinconf_to_config_param(config), which
-> converts this 'config' parameter back to pinconfig to determine
-> which option to use.
->
-> Fixes: 15add06841a3 ("gpio: pca953x: add ->set_config implementation")
->
-> Signed-off-by: Adam Ford <aford173@gmail.com>
->
-> diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-> index 5638b4e5355f..4269ea9a817e 100644
-> --- a/drivers/gpio/gpio-pca953x.c
-> +++ b/drivers/gpio/gpio-pca953x.c
-> @@ -531,7 +531,7 @@ static int pca953x_gpio_set_config(struct gpio_chip *=
-gc, unsigned int offset,
->  {
->         struct pca953x_chip *chip =3D gpiochip_get_data(gc);
->
-> -       switch (config) {
-> +       switch (pinconf_to_config_param(config)) {
->         case PIN_CONFIG_BIAS_PULL_UP:
->         case PIN_CONFIG_BIAS_PULL_DOWN:
->                 return pca953x_gpio_set_pull_up_down(chip, offset, config=
-);
-> --
-> 2.25.1
->
+On Wed, Apr 15, 2020 at 11:21:15AM +0200, Greg KH wrote:
+> On Wed, Apr 15, 2020 at 11:46:53AM +0300, Heikki Krogerus wrote:
+> > Hi Greg,
+> > 
+> > On Wed, Apr 15, 2020 at 08:11:54AM +0200, Greg KH wrote:
+> > > > diff --git a/lib/kobject.c b/lib/kobject.c
+> > > > index 83198cb37d8d..5921e2470b46 100644
+> > > > --- a/lib/kobject.c
+> > > > +++ b/lib/kobject.c
+> > > > @@ -663,6 +663,7 @@ EXPORT_SYMBOL(kobject_get_unless_zero);
+> > > >   */
+> > > >  static void kobject_cleanup(struct kobject *kobj)
+> > > >  {
+> > > > +	struct kobject *parent = kobj->parent;
+> > > >  	struct kobj_type *t = get_ktype(kobj);
+> > > >  	const char *name = kobj->name;
+> > > >  
+> > > > @@ -680,6 +681,9 @@ static void kobject_cleanup(struct kobject *kobj)
+> > > >  		kobject_uevent(kobj, KOBJ_REMOVE);
+> > > >  	}
+> > > >  
+> > > > +	/* make sure the parent is not released before the (last) child */
+> > > > +	kobject_get(parent);
+> > > > +
+> > > >  	/* remove from sysfs if the caller did not do it */
+> > > >  	if (kobj->state_in_sysfs) {
+> > > >  		pr_debug("kobject: '%s' (%p): auto cleanup kobject_del\n",
+> > > > @@ -693,6 +697,8 @@ static void kobject_cleanup(struct kobject *kobj)
+> > > >  		t->release(kobj);
+> > > >  	}
+> > > >  
+> > > > +	kobject_put(parent);
+> > > > +
+> > > 
+> > > No, please don't do this.
+> > > 
+> > > A child device should have always incremented the parent already if it
+> > > was correctly registered.  We have had this patch been proposed multiple
+> > > times over the years, and every time it was, we said no and went and
+> > > fixed the real issue which was with the user of the interface.
+> > 
+> > The parent ref count is incremented by the child, that is not the
+> > problem. The problem is that when that child is released, if it's the
+> > last child of the parent, and there are no other users for the parent,
+> > then the parent is actually released _before_ the child. And that
+> > happens in the above function kobject_cleanup().
+> > 
+> > We can work around the problem by taking a reference to the parent
+> > separately, but we have to do that everywhere separately (which I
+> > guess is exactly what has been done so far). That workaroud still does
+> > not really fix the core problem. The core problem is still that
+> > lib/kboject.c is allowing the parent kobject to be released before the
+> > child kobject, and that quite simply should not be allowed to happen.
+> > 
+> > I don't have a problem if you want to have a better solution for this,
+> > but the solution really can't anymore be that we are always expected
+> > to separately increment the parent's ref count with every type of
+> > kobject.
+> 
+> Why is this suddenly showing up as a issue and it hasn't ever before?
+> Because of that I would argue that the problem is not in the kobject
+> core, but the use of it.
 
-Patch applied for fixes, thanks!
+The problem has showed up before, and you pointed that out yourself in
+your previous mail.
 
-Bart
+The thing is that we are going to continue to have this issue over and
+over again until the core issue is fixed.
+
+> When a child object is created, it should have already incremented the
+> parent reference count before it is registered, to ensure that the
+> parent does not go away before the child is finished being registered.
+> Then, when the child is removed, it decrements the reference count of
+> the parent as it "knows" it is done with that pointer.
+
+Please note that when you add a kobject, its parent ref count gets
+incremented (line 240 in lib/kobject.c). Are you saying here that that
+is actually not necessary, as the code that registers the new (child)
+kobject should _always_ be responsible of holding a reference to the
+parent? Because if that is the case, then we should actually cleanup
+lib/kboject.c and remove all parent reference handling. We obviously
+need to fix the documentation as well in this case.
+
+> So perhaps this new swnode code is just wrong?  Dealing with "raw"
+> kobjects is hard, and not generally recommended due to issues like this.
+> When you use the driver core, all of this logic is already handled for
+> you...
+> 
+> And I just looked at the code swnode_register() needs to increment the
+> parent kobject's reference, as it is saving a pointer to it away to be
+> used later.  That's just basic reference-counted-pointer logic here,
+> please fix the issue there.
+
+That is fair, however, it still does not fix the core problem.
+
+Even if we did not need to save the pointer to the parent, we would
+still need to increment the parents reference count, because we have
+to prevent the parent from being released before us.
+
+There are two ways we can fix the situation:
+
+1) We can make it clear that lib/kboject.c does not take any
+   responsibility over the reference counting of the parents, and
+   remove all the parent reference handling from it.
+
+2) We fix this by guaranteeing that the parent kboject can not be
+   released before its children.
+
+thanks,
+
+-- 
+heikki
