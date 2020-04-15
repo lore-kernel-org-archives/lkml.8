@@ -6,23 +6,22 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75DE1C2BB55
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99270C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:06:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B854208FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:06:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DA272076A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:06:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394192AbgDOPGZ (ORCPT
-        <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 11:06:25 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60680 "EHLO mx2.suse.de"
+        id S371237AbgDOPG5 (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 11:06:57 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60720 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394090AbgDOPGT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 11:06:19 -0400
+        id S2394095AbgDOPGV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 11:06:21 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id C85A1AFBA;
-        Wed, 15 Apr 2020 15:06:16 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id C82B1AFBB;
+        Wed, 15 Apr 2020 15:06:18 +0000 (UTC)
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 To:     saravanak@google.com,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -30,9 +29,9 @@ To:     saravanak@google.com,
         Frank Rowand <frowand.list@gmail.com>
 Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/4] of: property: Fix create device links for all child-supplier dependencies
-Date:   Wed, 15 Apr 2020 17:05:46 +0200
-Message-Id: <20200415150550.28156-2-nsaenzjulienne@suse.de>
+Subject: [PATCH 3/4] of: property: Move of_link_to_phandle()
+Date:   Wed, 15 Apr 2020 17:05:48 +0200
+Message-Id: <20200415150550.28156-4-nsaenzjulienne@suse.de>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200415150550.28156-1-nsaenzjulienne@suse.de>
 References: <20200415150550.28156-1-nsaenzjulienne@suse.de>
@@ -43,36 +42,176 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Upon adding a new platform device we scan its properties and its
-children's properties in order to create a consumer/supplier
-relationship between the device and the property supplier.
+This is done in order to simplify further changes.
 
-That said, it's possible for some of the node's children to be disabled,
-which will create links that'll never be fulfilled.
-
-To get around this, use the for_each_available_child_of_node() function
-instead of for_each_available_node() when iterating over the node's
-children.
-
-Fixes: d4387cd11741 ("of: property: Create device links for all child-supplier depencencies")
 Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 ---
- drivers/of/property.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/of/property.c | 145 +++++++++++++++++++++---------------------
+ 1 file changed, 73 insertions(+), 72 deletions(-)
 
 diff --git a/drivers/of/property.c b/drivers/of/property.c
-index b4916dcc9e725..a8c2b13521b27 100644
+index 487685ff8bb19..2c7978ef22be1 100644
 --- a/drivers/of/property.c
 +++ b/drivers/of/property.c
-@@ -1296,7 +1296,7 @@ static int of_link_to_suppliers(struct device *dev,
- 		if (of_link_property(dev, con_np, p->name))
- 			ret = -ENODEV;
+@@ -1014,78 +1014,6 @@ static bool of_is_ancestor_of(struct device_node *test_ancestor,
+ 	return false;
+ }
  
--	for_each_child_of_node(con_np, child)
-+	for_each_available_child_of_node(con_np, child)
- 		if (of_link_to_suppliers(dev, child) && !ret)
- 			ret = -EAGAIN;
+-/**
+- * of_link_to_phandle - Add device link to supplier from supplier phandle
+- * @dev: consumer device
+- * @sup_np: phandle to supplier device tree node
+- *
+- * Given a phandle to a supplier device tree node (@sup_np), this function
+- * finds the device that owns the supplier device tree node and creates a
+- * device link from @dev consumer device to the supplier device. This function
+- * doesn't create device links for invalid scenarios such as trying to create a
+- * link with a parent device as the consumer of its child device. In such
+- * cases, it returns an error.
+- *
+- * Returns:
+- * - 0 if link successfully created to supplier
+- * - -EAGAIN if linking to the supplier should be reattempted
+- * - -EINVAL if the supplier link is invalid and should not be created
+- * - -ENODEV if there is no device that corresponds to the supplier phandle
+- */
+-static int of_link_to_phandle(struct device *dev, struct device_node *sup_np,
+-			      u32 dl_flags)
+-{
+-	struct device *sup_dev;
+-	int ret = 0;
+-	struct device_node *tmp_np = sup_np;
+-	int is_populated;
+-
+-	of_node_get(sup_np);
+-	/*
+-	 * Find the device node that contains the supplier phandle.  It may be
+-	 * @sup_np or it may be an ancestor of @sup_np.
+-	 */
+-	while (sup_np && !of_find_property(sup_np, "compatible", NULL))
+-		sup_np = of_get_next_parent(sup_np);
+-	if (!sup_np) {
+-		dev_dbg(dev, "Not linking to %pOFP - No device\n", tmp_np);
+-		return -ENODEV;
+-	}
+-
+-	/* Don't allow linking a device node as consumer of a disabled node */
+-	if (!of_device_is_available(sup_np)) {
+-		dev_dbg(dev, "Not linking to %pOFP - Not available\n", sup_np);
+-		of_node_put(sup_np);
+-		return -ENODEV;
+-	}
+-
+-	/*
+-	 * Don't allow linking a device node as a consumer of one of its
+-	 * descendant nodes. By definition, a child node can't be a functional
+-	 * dependency for the parent node.
+-	 */
+-	if (of_is_ancestor_of(dev->of_node, sup_np)) {
+-		dev_dbg(dev, "Not linking to %pOFP - is descendant\n", sup_np);
+-		of_node_put(sup_np);
+-		return -EINVAL;
+-	}
+-	sup_dev = get_dev_from_fwnode(&sup_np->fwnode);
+-	is_populated = of_node_check_flag(sup_np, OF_POPULATED);
+-	of_node_put(sup_np);
+-	if (!sup_dev && is_populated) {
+-		/* Early device without struct device. */
+-		dev_dbg(dev, "Not linking to %pOFP - No struct device\n",
+-			sup_np);
+-		return -ENODEV;
+-	} else if (!sup_dev) {
+-		return -EAGAIN;
+-	}
+-	if (!device_link_add(dev, sup_dev, dl_flags))
+-		ret = -EAGAIN;
+-	put_device(sup_dev);
+-	return ret;
+-}
+-
+ /**
+  * parse_prop_cells - Property parsing function for suppliers
+  *
+@@ -1243,6 +1171,79 @@ static const struct supplier_bindings of_supplier_bindings[] = {
+ 	{}
+ };
  
++/**
++ * of_link_to_phandle - Add device link to supplier from supplier phandle
++ * @dev: consumer device
++ * @sup_np: phandle to supplier device tree node
++ *
++ * Given a phandle to a supplier device tree node (@sup_np), this function
++ * finds the device that owns the supplier device tree node and creates a
++ * device link from @dev consumer device to the supplier device. This function
++ * doesn't create device links for invalid scenarios such as trying to create a
++ * link with a parent device as the consumer of its child device. In such
++ * cases, it returns an error.
++ *
++ * Returns:
++ * - 0 if link successfully created to supplier
++ * - -EAGAIN if linking to the supplier should be reattempted
++ * - -EINVAL if the supplier link is invalid and should not be created
++ * - -ENODEV if there is no device that corresponds to the supplier phandle
++ */
++static int of_link_to_phandle(struct device *dev, struct device_node *sup_np,
++			      u32 dl_flags)
++{
++	struct device *sup_dev;
++	int ret = 0;
++	struct device_node *tmp_np = sup_np;
++	int is_populated;
++
++	of_node_get(sup_np);
++	/*
++	 * Find the device node that contains the supplier phandle.  It may be
++	 * @sup_np or it may be an ancestor of @sup_np.
++	 */
++	while (sup_np && !of_find_property(sup_np, "compatible", NULL))
++		sup_np = of_get_next_parent(sup_np);
++	if (!sup_np) {
++		dev_dbg(dev, "Not linking to %pOFP - No device\n", tmp_np);
++		return -ENODEV;
++	}
++
++	/* Don't allow linking a device node as consumer of a disabled node */
++	if (!of_device_is_available(sup_np)) {
++		dev_dbg(dev, "Not linking to %pOFP - Not available\n", sup_np);
++		of_node_put(sup_np);
++		return -ENODEV;
++	}
++
++	/*
++	 * Don't allow linking a device node as a consumer of one of its
++	 * descendant nodes. By definition, a child node can't be a functional
++	 * dependency for the parent node.
++	 */
++	if (of_is_ancestor_of(dev->of_node, sup_np)) {
++		dev_dbg(dev, "Not linking to %pOFP - is descendant\n", sup_np);
++		of_node_put(sup_np);
++		return -EINVAL;
++	}
++	sup_dev = get_dev_from_fwnode(&sup_np->fwnode);
++	is_populated = of_node_check_flag(sup_np, OF_POPULATED);
++	of_node_put(sup_np);
++	if (!sup_dev && is_populated) {
++		/* Early device without struct device. */
++		dev_dbg(dev, "Not linking to %pOFP - No struct device\n",
++			sup_np);
++		return -ENODEV;
++	} else if (!sup_dev) {
++		return -EAGAIN;
++	}
++
++	if (!device_link_add(dev, sup_dev, dl_flags))
++		ret = -EAGAIN;
++	put_device(sup_dev);
++	return ret;
++}
++
+ /**
+  * of_link_property - Create device links to suppliers listed in a property
+  * @dev: Consumer device
 -- 
 2.26.0
 
