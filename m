@@ -2,113 +2,327 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A4D0C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:02:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBB10C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:03:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1436221556
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:02:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586966559;
-	bh=e3d4LUjp8nYLchPlf9MGqps5m3topJNlB0bFbA2lpoc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TqOaWGlNjYYRhXzcVLd95LVmYYZR29ZwTDqwMsBwHXNHkDMZn7VBVZPcqUQW8SFJ0
-	 ZhS6wczHCTOq4a+hJa4+NQzy4BwDmaNZmfGYi6wBHTYi5w2FbzARfg6r3I9uhlkYuc
-	 JFC7wptZ9K/G8086IUq+8Ev3Ou6zmSQS/IXWjaWE=
+	by mail.kernel.org (Postfix) with ESMTP id AD44121569
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:03:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Eyq/VzVO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410104AbgDOQCi (ORCPT
+        id S2410114AbgDOQDC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 12:02:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54030 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2410085AbgDOQCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 12:02:21 -0400
-Received: from localhost (unknown [106.201.106.187])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 15 Apr 2020 12:03:02 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:21696 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2406161AbgDOQC5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 12:02:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586966573;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=l2EMmyfwDOhqKqegPiY43eoRXqZvWZppla3x2GSdLI4=;
+        b=Eyq/VzVORa6EOUZEVvKinPQV8DKj6McHsB2ZXzwT0xxCs3D9yo8jpGlHxXYyLItiblS6I3
+        rTRvUQ3fkC0IZvpycXGx7NDMZkcpNWd2Zq6CVZhMkVveGDyeKWaOwKJgXQHvDEutLk+TNQ
+        X6LQH6RqMaghJ4yyfnLB+Bvji7oKO24=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-49-qGT5X4sKOH6LuoScgTfedg-1; Wed, 15 Apr 2020 12:02:46 -0400
+X-MC-Unique: qGT5X4sKOH6LuoScgTfedg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21F9A21582;
-        Wed, 15 Apr 2020 16:02:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586966540;
-        bh=e3d4LUjp8nYLchPlf9MGqps5m3topJNlB0bFbA2lpoc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0teLUfV64vmTzBzSuqWQrtjIleMYu4aKKQaY7nH+Dle1urcf3gjhUaqvaaO+0Akwu
-         22j8/YCtvQqVbBbZOCYgnNo6n+R9CCrezf1p54hbCerhAs4jnb6DbI6VnOHruF3nNf
-         K47Jkdq1hxgAp52gsPMGfdi4IDMG/3cP8RQBDJZw=
-Date:   Wed, 15 Apr 2020 21:32:12 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Zhou Wang <wangzhou1@hisilicon.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Zhenfa Qiu <qiuzhenfa@hisilicon.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: hisilicon: fix PCI_MSI dependency
-Message-ID: <20200415160212.GW72691@vkoul-mobl>
-References: <20200408200559.4124238-1-arnd@arndb.de>
- <5E8E8104.5060307@hisilicon.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 921641005509;
+        Wed, 15 Apr 2020 16:02:43 +0000 (UTC)
+Received: from [10.36.115.53] (ovpn-115-53.ams2.redhat.com [10.36.115.53])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B35A211D2D9;
+        Wed, 15 Apr 2020 16:02:35 +0000 (UTC)
+Subject: Re: [PATCH v11 01/13] iommu: Introduce attach/detach_pasid_table API
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc:     eric.auger.pro@gmail.com, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        kvmarm@lists.cs.columbia.edu, will@kernel.org, joro@8bytes.org,
+        maz@kernel.org, robin.murphy@arm.com, jean-philippe@linaro.org,
+        zhangfei.gao@linaro.org, shameerali.kolothum.thodi@huawei.com,
+        alex.williamson@redhat.com, yi.l.liu@intel.com,
+        peter.maydell@linaro.org, zhangfei.gao@gmail.com, tn@semihalf.com,
+        zhangfei.gao@foxmail.com, bbhushan2@marvell.com
+References: <20200414150607.28488-1-eric.auger@redhat.com>
+ <20200414150607.28488-2-eric.auger@redhat.com>
+ <20200414151548.658a0401@jacob-builder>
+ <c781ce8d-7fe4-0fee-ba95-a1e493e003f5@redhat.com>
+ <20200415085908.0e1803b7@jacob-builder>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <e4f28607-8235-7a66-15ec-379bb559b0fd@redhat.com>
+Date:   Wed, 15 Apr 2020 18:02:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5E8E8104.5060307@hisilicon.com>
+In-Reply-To: <20200415085908.0e1803b7@jacob-builder>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09-04-20, 09:57, Zhou Wang wrote:
-> On 2020/4/9 4:05, Arnd Bergmann wrote:
-> > The dependency is phrased incorrectly, so on arm64, it is possible
-> > to build with CONFIG_PCI disabled, resulting a build failure:
-> > 
-> > drivers/dma/hisi_dma.c: In function 'hisi_dma_free_irq_vectors':
-> > drivers/dma/hisi_dma.c:138:2: error: implicit declaration of function 'pci_free_irq_vectors'; did you mean 'pci_alloc_irq_vectors'? [-Werror=implicit-function-declaration]
-> >   138 |  pci_free_irq_vectors(data);
-> >       |  ^~~~~~~~~~~~~~~~~~~~
-> >       |  pci_alloc_irq_vectors
-> > drivers/dma/hisi_dma.c: At top level:
-> > drivers/dma/hisi_dma.c:605:1: warning: data definition has no type or storage class
-> >   605 | module_pci_driver(hisi_dma_pci_driver);
-> >       | ^~~~~~~~~~~~~~~~~
-> > drivers/dma/hisi_dma.c:605:1: error: type defaults to 'int' in declaration of 'module_pci_driver' [-Werror=implicit-int]
-> > drivers/dma/hisi_dma.c:605:1: warning: parameter names (without types) in function declaration
-> > drivers/dma/hisi_dma.c:599:26: error: 'hisi_dma_pci_driver' defined but not used [-Werror=unused-variable]
-> >   599 | static struct pci_driver hisi_dma_pci_driver = {
-> > 
-> > Change it so we always depend on PCI_MSI, even on ARM64
-> > 
-> > Fixes: e9f08b65250d ("dmaengine: hisilicon: Add Kunpeng DMA engine support")
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > ---
-> >  drivers/dma/Kconfig | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-> > index 98ae15c82a30..c19e25b140c5 100644
-> > --- a/drivers/dma/Kconfig
-> > +++ b/drivers/dma/Kconfig
-> > @@ -241,7 +241,8 @@ config FSL_RAID
-> >  
-> >  config HISI_DMA
-> >  	tristate "HiSilicon DMA Engine support"
-> > -	depends on ARM64 || (COMPILE_TEST && PCI_MSI)
-> > +	depends on ARM64 || COMPILE_TEST
-> > +	depends on PCI_MSI
-> >  	select DMA_ENGINE
-> >  	select DMA_VIRTUAL_CHANNELS
-> >  	help
-> > 
+Hi Jacob,
+
+On 4/15/20 5:59 PM, Jacob Pan wrote:
+> On Wed, 15 Apr 2020 16:52:10 +0200
+> Auger Eric <eric.auger@redhat.com> wrote:
 > 
-> Hi Arnd,
+>> Hi Jacob,
+>> On 4/15/20 12:15 AM, Jacob Pan wrote:
+>>> Hi Eric,
+>>>
+>>> There are some discussions about how to size the uAPI data.
+>>> https://lkml.org/lkml/2020/4/14/939
+>>>
+>>> I think the problem with the current scheme is that when uAPI data
+>>> gets extended, if VFIO continue to use:
+>>>
+>>> minsz = offsetofend(struct vfio_iommu_type1_set_pasid_table,
+>>> config); if (copy_from_user(&spt, (void __user *)arg, minsz))
+>>>
+>>> It may copy more data from user than what was setup by the user.
+>>>
+>>> So, as suggested by Alex, we could add argsz to the IOMMU uAPI
+>>> struct. So if argsz > minsz, then fail the attach_table since
+>>> kernel might be old, doesn't know about the extra data.
+>>> If argsz <= minsz, kernel can support the attach_table but must
+>>> process the data based on flags or config.  
+>>
+>> So I guess we would need both an argsz _u32 + a new flag _u32 right?
+>>
+> Yes.
+>> I am ok with that idea. Besides how will you manage for existing IOMMU
+>> UAPIs?
+> I plan to add argsz and flags (if not already have one)
 > 
-> There was a fix from Haibing: https://lkml.org/lkml/2020/3/28/158
-> Maybe Vinod will review and take it later :)
+>> At some point you envisionned to have a getter at iommu api
+>> level to retrieve the size of a structure for a given version, right?
+>>
+> This idea is shot down. There is no version-size lookup.
+> So the current plan is for user to fill out argsz in each IOMMU uAPI
+> struct. VFIO does the copy_from_user() based on argsz (sanitized
+> against the size of current kernel struct).
+> 
+> IOMMU vendor driver process the data based on flags which indicates
+> new capability/extensions.
+OK. Sounds sensible
 
-It should be in -next tomorrow :)
+Thanks
 
+Eric
+> 
+>> Thanks
+>>
+>> Eric
+>>>
+>>> Does it make sense to you?
+>>>
+>>>
+>>> On Tue, 14 Apr 2020 17:05:55 +0200
+>>> Eric Auger <eric.auger@redhat.com> wrote:
+>>>   
+>>>> From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+>>>>
+>>>> In virtualization use case, when a guest is assigned
+>>>> a PCI host device, protected by a virtual IOMMU on the guest,
+>>>> the physical IOMMU must be programmed to be consistent with
+>>>> the guest mappings. If the physical IOMMU supports two
+>>>> translation stages it makes sense to program guest mappings
+>>>> onto the first stage/level (ARM/Intel terminology) while the host
+>>>> owns the stage/level 2.
+>>>>
+>>>> In that case, it is mandated to trap on guest configuration
+>>>> settings and pass those to the physical iommu driver.
+>>>>
+>>>> This patch adds a new API to the iommu subsystem that allows
+>>>> to set/unset the pasid table information.
+>>>>
+>>>> A generic iommu_pasid_table_config struct is introduced in
+>>>> a new iommu.h uapi header. This is going to be used by the VFIO
+>>>> user API.
+>>>>
+>>>> Signed-off-by: Jean-Philippe Brucker
+>>>> <jean-philippe.brucker@arm.com> Signed-off-by: Liu, Yi L
+>>>> <yi.l.liu@linux.intel.com> Signed-off-by: Ashok Raj
+>>>> <ashok.raj@intel.com> Signed-off-by: Jacob Pan
+>>>> <jacob.jun.pan@linux.intel.com> Signed-off-by: Eric Auger
+>>>> <eric.auger@redhat.com> Reviewed-by: Jean-Philippe Brucker
+>>>> <jean-philippe.brucker@arm.com> ---
+>>>>  drivers/iommu/iommu.c      | 19 ++++++++++++++
+>>>>  include/linux/iommu.h      | 18 ++++++++++++++
+>>>>  include/uapi/linux/iommu.h | 51
+>>>> ++++++++++++++++++++++++++++++++++++++ 3 files changed, 88
+>>>> insertions(+)
+>>>>
+>>>> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+>>>> index 2b471419e26c..b71ad56f8c99 100644
+>>>> --- a/drivers/iommu/iommu.c
+>>>> +++ b/drivers/iommu/iommu.c
+>>>> @@ -1723,6 +1723,25 @@ int iommu_sva_unbind_gpasid(struct
+>>>> iommu_domain *domain, struct device *dev, }
+>>>>  EXPORT_SYMBOL_GPL(iommu_sva_unbind_gpasid);
+>>>>  
+>>>> +int iommu_attach_pasid_table(struct iommu_domain *domain,
+>>>> +			     struct iommu_pasid_table_config *cfg)
+>>>> +{
+>>>> +	if (unlikely(!domain->ops->attach_pasid_table))
+>>>> +		return -ENODEV;
+>>>> +
+>>>> +	return domain->ops->attach_pasid_table(domain, cfg);
+>>>> +}
+>>>> +EXPORT_SYMBOL_GPL(iommu_attach_pasid_table);
+>>>> +
+>>>> +void iommu_detach_pasid_table(struct iommu_domain *domain)
+>>>> +{
+>>>> +	if (unlikely(!domain->ops->detach_pasid_table))
+>>>> +		return;
+>>>> +
+>>>> +	domain->ops->detach_pasid_table(domain);
+>>>> +}
+>>>> +EXPORT_SYMBOL_GPL(iommu_detach_pasid_table);
+>>>> +
+>>>>  static void __iommu_detach_device(struct iommu_domain *domain,
+>>>>  				  struct device *dev)
+>>>>  {
+>>>> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+>>>> index 7ef8b0bda695..3e1057c3585a 100644
+>>>> --- a/include/linux/iommu.h
+>>>> +++ b/include/linux/iommu.h
+>>>> @@ -248,6 +248,8 @@ struct iommu_iotlb_gather {
+>>>>   * @cache_invalidate: invalidate translation caches
+>>>>   * @sva_bind_gpasid: bind guest pasid and mm
+>>>>   * @sva_unbind_gpasid: unbind guest pasid and mm
+>>>> + * @attach_pasid_table: attach a pasid table
+>>>> + * @detach_pasid_table: detach the pasid table
+>>>>   * @pgsize_bitmap: bitmap of all possible supported page sizes
+>>>>   * @owner: Driver module providing these ops
+>>>>   */
+>>>> @@ -307,6 +309,9 @@ struct iommu_ops {
+>>>>  				      void *drvdata);
+>>>>  	void (*sva_unbind)(struct iommu_sva *handle);
+>>>>  	int (*sva_get_pasid)(struct iommu_sva *handle);
+>>>> +	int (*attach_pasid_table)(struct iommu_domain *domain,
+>>>> +				  struct iommu_pasid_table_config
+>>>> *cfg);
+>>>> +	void (*detach_pasid_table)(struct iommu_domain *domain);
+>>>>  
+>>>>  	int (*page_response)(struct device *dev,
+>>>>  			     struct iommu_fault_event *evt,
+>>>> @@ -446,6 +451,9 @@ extern int iommu_sva_bind_gpasid(struct
+>>>> iommu_domain *domain, struct device *dev, struct
+>>>> iommu_gpasid_bind_data *data); extern int
+>>>> iommu_sva_unbind_gpasid(struct iommu_domain *domain, struct device
+>>>> *dev, ioasid_t pasid); +extern int iommu_attach_pasid_table(struct
+>>>> iommu_domain *domain,
+>>>> +				    struct
+>>>> iommu_pasid_table_config *cfg); +extern void
+>>>> iommu_detach_pasid_table(struct iommu_domain *domain); extern
+>>>> struct iommu_domain *iommu_get_domain_for_dev(struct device *dev);
+>>>> extern struct iommu_domain *iommu_get_dma_domain(struct device
+>>>> *dev); extern int iommu_map(struct iommu_domain *domain, unsigned
+>>>> long iova, @@ -1048,6 +1056,16 @@ iommu_aux_get_pasid(struct
+>>>> iommu_domain *domain, struct device *dev) return -ENODEV; }
+>>>>  
+>>>> +static inline
+>>>> +int iommu_attach_pasid_table(struct iommu_domain *domain,
+>>>> +			     struct iommu_pasid_table_config *cfg)
+>>>> +{
+>>>> +	return -ENODEV;
+>>>> +}
+>>>> +
+>>>> +static inline
+>>>> +void iommu_detach_pasid_table(struct iommu_domain *domain) {}
+>>>> +
+>>>>  static inline struct iommu_sva *
+>>>>  iommu_sva_bind_device(struct device *dev, struct mm_struct *mm,
+>>>> void *drvdata) {
+>>>> diff --git a/include/uapi/linux/iommu.h
+>>>> b/include/uapi/linux/iommu.h index 4ad3496e5c43..8d00be10dc6d
+>>>> 100644 --- a/include/uapi/linux/iommu.h
+>>>> +++ b/include/uapi/linux/iommu.h
+>>>> @@ -321,4 +321,55 @@ struct iommu_gpasid_bind_data {
+>>>>  	};
+>>>>  };
+>>>>  
+>>>> +/**
+>>>> + * struct iommu_pasid_smmuv3 - ARM SMMUv3 Stream Table Entry
+>>>> stage 1 related
+>>>> + *     information
+>>>> + * @version: API version of this structure
+>>>> + * @s1fmt: STE s1fmt (format of the CD table: single CD, linear
+>>>> table
+>>>> + *         or 2-level table)
+>>>> + * @s1dss: STE s1dss (specifies the behavior when @pasid_bits != 0
+>>>> + *         and no PASID is passed along with the incoming
+>>>> transaction)
+>>>> + * @padding: reserved for future use (should be zero)
+>>>> + *
+>>>> + * The PASID table is referred to as the Context Descriptor (CD)
+>>>> table on ARM
+>>>> + * SMMUv3. Please refer to the ARM SMMU 3.x spec (ARM IHI 0070A)
+>>>> for full
+>>>> + * details.
+>>>> + */
+>>>> +struct iommu_pasid_smmuv3 {
+>>>> +#define PASID_TABLE_SMMUV3_CFG_VERSION_1 1
+>>>> +	__u32	version;
+>>>> +	__u8	s1fmt;
+>>>> +	__u8	s1dss;
+>>>> +	__u8	padding[2];
+>>>> +};
+>>>> +
+>>>> +/**
+>>>> + * struct iommu_pasid_table_config - PASID table data used to bind
+>>>> guest PASID
+>>>> + *     table to the host IOMMU
+>>>> + * @version: API version to prepare for future extensions
+>>>> + * @format: format of the PASID table
+>>>> + * @base_ptr: guest physical address of the PASID table
+>>>> + * @pasid_bits: number of PASID bits used in the PASID table
+>>>> + * @config: indicates whether the guest translation stage must
+>>>> + *          be translated, bypassed or aborted.
+>>>> + * @padding: reserved for future use (should be zero)
+>>>> + * @smmuv3: table information when @format is
+>>>> %IOMMU_PASID_FORMAT_SMMUV3
+>>>> + */
+>>>> +struct iommu_pasid_table_config {
+>>>> +#define PASID_TABLE_CFG_VERSION_1 1
+>>>> +	__u32	version;
+>>>> +#define IOMMU_PASID_FORMAT_SMMUV3	1
+>>>> +	__u32	format;
+>>>> +	__u64	base_ptr;
+>>>> +	__u8	pasid_bits;
+>>>> +#define IOMMU_PASID_CONFIG_TRANSLATE	1
+>>>> +#define IOMMU_PASID_CONFIG_BYPASS	2
+>>>> +#define IOMMU_PASID_CONFIG_ABORT	3
+>>>> +	__u8	config;
+>>>> +	__u8    padding[6];
+>>>> +	union {
+>>>> +		struct iommu_pasid_smmuv3 smmuv3;
+>>>> +	};
+>>>> +};
+>>>> +
+>>>>  #endif /* _UAPI_IOMMU_H */  
+>>>
+>>> [Jacob Pan]
+>>>   
+>>
+> 
+> [Jacob Pan]
+> 
 
--- 
-~Vinod
