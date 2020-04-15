@@ -2,113 +2,81 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E38FC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:03:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53103C3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:03:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CA0B21556
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:03:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="pmnOO84i"
+	by mail.kernel.org (Postfix) with ESMTP id 29BDE21556
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:03:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410128AbgDOQDP (ORCPT
+        id S2410145AbgDOQDg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 12:03:15 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:48932 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406161AbgDOQDG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 12:03:06 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 492Rw74SFZzCQ;
-        Wed, 15 Apr 2020 18:03:03 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1586966583; bh=hS64iOJBBZqYHdq9+fLkyhdl437vkr0jh4NKqFkG8CA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pmnOO84iIiXL10sycPaTPnem8P1OlLjB6vZXic9Ms5JizjPQBig63uxY5hRY/kEvY
-         gcd4RjjptB5Kc13weKFxAM75S23v2QXIEEoT5auGyia5wp9swH6f5zUIs+ctydMdxA
-         eMzW80dEc9IB4mW5yGlf9Oll0uTTUGOmjkGb6tGRE0PL5dO465c/fLm5oF6fGhF5Qv
-         9rOxbkTSAzXe0Z2mWaAw0mrvdtNcL6vwiFQSei3NdWbFjh0fFNGWjXnctdYep7LJXH
-         aPBNUjNfrM1JZKv4S7iglwImAJqcXVbO5gP+cNdIjxX0iOdJJh2iJYaJILVrP4h0ab
-         RYD3llI1IMIgg==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Wed, 15 Apr 2020 18:03:02 +0200
-From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Suneel Garapati <suneel.garapati@xilinx.com>,
-        Kevin Liu <kliu5@marvell.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
-Subject: Re: [PATCH 3/7] mmc: sdhci: fix SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN
-Message-ID: <20200415160302.GB19897@qmqm.qmqm.pl>
-References: <cover.1585827904.git.mirq-linux@rere.qmqm.pl>
- <eb105eedaa387ced14bb687e38d3aa33d4fcf70a.1585827904.git.mirq-linux@rere.qmqm.pl>
- <67dc68ce-d8ec-4486-f4f9-3fb2580d2675@intel.com>
+        Wed, 15 Apr 2020 12:03:36 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:32983 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2410121AbgDOQD1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 12:03:27 -0400
+Received: from callcc.thunk.org (pool-72-93-95-157.bstnma.fios.verizon.net [72.93.95.157])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 03FG374v005145
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 15 Apr 2020 12:03:07 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 1C73242013D; Wed, 15 Apr 2020 12:03:07 -0400 (EDT)
+Date:   Wed, 15 Apr 2020 12:03:07 -0400
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     ira.weiny@intel.com
+Cc:     linux-kernel@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH RFC 3/8] fs/ext4: Disallow encryption if inode is DAX
+Message-ID: <20200415160307.GJ90651@mit.edu>
+References: <20200414040030.1802884-1-ira.weiny@intel.com>
+ <20200414040030.1802884-4-ira.weiny@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <67dc68ce-d8ec-4486-f4f9-3fb2580d2675@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200414040030.1802884-4-ira.weiny@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 04:06:02PM +0300, Adrian Hunter wrote:
-> On 2/04/20 2:54 pm, Micha³ Miros³aw wrote:
-> > Fix returned clock rate for SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN case.
+On Mon, Apr 13, 2020 at 09:00:25PM -0700, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
 > 
-> Does this change anything, because it looks the same to me?
-
-The value of real_div is fixed this way. With previous code after
-applying the quirk you would have real_div = 1 instead of real_div = 2.
-
-Best Regards,
-Micha³ Miros³aw
-
+> Encryption and DAX are incompatible.  Changing the DAX mode due to a
+> change in Encryption mode is wrong without a corresponding
+> address_space_operations update.
 > 
-> > 
-> > Signed-off-by: Micha³ Miros³aw <mirq-linux@rere.qmqm.pl>
-> > Cc: stable@kernel.vger.org
-> > Fixes: d1955c3a9a1d ("mmc: sdhci: add quirk SDHCI_QUIRK_CLOCK_DIV_ZERO_BROKEN")
-> > ---
-> >  drivers/mmc/host/sdhci.c | 10 +++++-----
-> >  1 file changed, 5 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> > index b2dc4f1cfa5c..a043bf5e3565 100644
-> > --- a/drivers/mmc/host/sdhci.c
-> > +++ b/drivers/mmc/host/sdhci.c
-> > @@ -1807,9 +1807,12 @@ u16 sdhci_calc_clk(struct sdhci_host *host, unsigned int clock,
-> >  
-> >  		if (!host->clk_mul || switch_base_clk) {
-> >  			/* Version 3.00 divisors must be a multiple of 2. */
-> > -			if (host->max_clk <= clock)
-> > +			if (host->max_clk <= clock) {
-> >  				div = 1;
-> > -			else {
-> > +				if ((host->quirks2 & SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN)
-> > +					&& host->max_clk <= 25000000)
-> > +					div = 2;
-> > +			} else {
-> >  				for (div = 2; div < SDHCI_MAX_DIV_SPEC_300;
-> >  				     div += 2) {
-> >  					if ((host->max_clk / div) <= clock)
-> > @@ -1818,9 +1821,6 @@ u16 sdhci_calc_clk(struct sdhci_host *host, unsigned int clock,
-> >  			}
-> >  			real_div = div;
-> >  			div >>= 1;
-> > -			if ((host->quirks2 & SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN)
-> > -				&& !div && host->max_clk <= 25000000)
-> > -				div = 1;
-> >  		}
-> >  	} else {
-> >  		/* Version 2.00 divisors must be a power of 2. */
-> > 
+> Make the 2 options mutually exclusive by returning an error if DAX was
+> set first.
 > 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+
+The encryption flag is inherited from the containing directory, and
+directories can't have the DAX flag set, so anything we do in
+ext4_set_context() will be safety belt / sanity checking in nature.
+
+But we *do* need to figure out what we do with mount -o dax=always
+when the file system might have encrypted files.  My previous comments
+about the verity flag and dax flag applies here.
+
+Also note that encrypted files are read/write so we must never allow
+the combination of ENCRPYT_FL and DAX_FL.  So that may be something
+where we should teach __ext4_iget() to check for this, and declare the
+file system as corrupted if it sees this combination.  (For VERITY_FL
+&& DAX_FL that is a combo that we might want to support in the future,
+so that's probably a case where arguably, we should just ignore the
+DAX_FL for now.)
+
+					- Ted
