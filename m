@@ -2,155 +2,191 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 561EFC3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:41:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2863C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F3F1206D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:41:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D140320771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:43:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ixuMqDNX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2635231AbgDOHlx (ORCPT
+        id S2635242AbgDOHmx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 03:41:53 -0400
-Received: from mga18.intel.com ([134.134.136.126]:61786 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2635175AbgDOHls (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 03:41:48 -0400
-IronPort-SDR: /Zmg2UTnCEURGa06SdjaN2PCpDrMpgW2VrU9pZQJN8Wo8z4oSzK9unBC9W0wjSf110oulSgAdw
- AO67ZWrFkfAw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 00:41:46 -0700
-IronPort-SDR: xgNl2Gj6HE2Gw18Pl4vLDPZpmTopzDm+0O6eyyi3TvCEhbIFddpB7JlWvW9q/uchtjVyUU+/tu
- yoYiN1esP0YQ==
-X-IronPort-AV: E=Sophos;i="5.72,386,1580803200"; 
-   d="scan'208";a="427348570"
-Received: from ssolodk-mobl1.ccr.corp.intel.com (HELO localhost) ([10.252.48.37])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 00:41:40 -0700
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Alex Deucher <alexdeucher@gmail.com>,
-        Bernard Zhao <bernard@vivo.com>
-Cc:     Alex Sierra <alex.sierra@amd.com>, Oak Zeng <Oak.Zeng@amd.com>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>, David Airlie <airlied@linux.ie>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>, kernel@vivo.com,
-        Huang Rui <ray.huang@amd.com>,
-        Kent Russell <kent.russell@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Christian =?utf-8?Q?K=C3=B6nig?= <christian.koenig@amd.com>,
-        Xiaojie Yuan <xiaojie.yuan@amd.com>
-Subject: Re: [PATCH] Optimized division operation to shift operation
-In-Reply-To: <CADnq5_Phca3L-HGOQz0DPBoARHgwcJRK_a7-WmeFMPkrPWeOeg@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <1586864113-30682-1-git-send-email-bernard@vivo.com> <CADnq5_Phca3L-HGOQz0DPBoARHgwcJRK_a7-WmeFMPkrPWeOeg@mail.gmail.com>
-Date:   Wed, 15 Apr 2020 10:41:37 +0300
-Message-ID: <87lfmx5h72.fsf@intel.com>
+        Wed, 15 Apr 2020 03:42:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60116 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2635175AbgDOHmV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 03:42:21 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F0D4C061A0C;
+        Wed, 15 Apr 2020 00:42:21 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id u13so17386247wrp.3;
+        Wed, 15 Apr 2020 00:42:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NtXbCZDs7ibkcelB6jYoQjEYDWqEbd8VasJpaRXeEtw=;
+        b=ixuMqDNX+IoOhekTl1hWbPoOxx64db5GS2yOpkq13nssQ2oKhz4zBTwuSQc2VrtG6q
+         FRzkGS1LY6x9nmcWU4wN/1wrc/ulzJ7/7aylISrwfJikQ0huarxRRgqL5TCTo/g2fLhP
+         q9YVlkGzU/9QUowv859Gjx59ZxNCIBTY4gjZvG8OMAIl9xkPwD/m6XGEjpcksFQe2wd/
+         yxtNSX/gx9WNwt0VOYglCcpa9TWqhepgvNIiaaoVVh/YrXsPc4NjaImNS33+aOhWAWcG
+         12YcOOW1c0Dy3LrrUegvVjgyGgzGxJsRYOrZKXBo3qZZcy2MqxJJTqP4JeJmPHtTtQAv
+         Gcww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NtXbCZDs7ibkcelB6jYoQjEYDWqEbd8VasJpaRXeEtw=;
+        b=uacYOJYpJCFRR9o5yn9fasXhrYBqCO3vDHgKUZUWnkpoYg0dgRBoGZnVb1csjw/GOd
+         SKaOn8d/qYGBrkjI3GGbZtMsqBQfqA4A1f0bK5zSzIq3vmGacbcwX6+OTi+kN2WQNZ2u
+         SLwtH1KaWQOVvCFb6/L9T7KbvxRe+PahEfDmGw3OI6CnV8EwAIEmFkZkVaPi2Demszue
+         Am98CaKDsifWVvnJQlEbY/IJTzCcM3RbgFwK1R65ZVVNc08G7y4b+Z88DqmSNjdiOFny
+         u/2wBzwFSWVYk9Mf5EV4ef2TqN/9lXvg1fxdJpwsZ+gwj6faHBHMZ6XvQZPp4tVkHT+v
+         Mz1A==
+X-Gm-Message-State: AGi0PuaAFaVHtA3/hfO3U6P+iAwMNxKNWsp/qNB+IshT52+eDxt45cfC
+        TrAq3f4jJt8Kua9bCcGc9WU5rOMYiWObkU5rUIo=
+X-Google-Smtp-Source: APiQypLdNC089W+BRnfSD6BJAuS9Fq32ncyasRH+4xBCau93mDuIW3Mqg/0mjusEJ42V63dCpLPpL5YV+LYfdUXuDCs=
+X-Received: by 2002:a5d:4d8f:: with SMTP id b15mr6609450wru.107.1586936539667;
+ Wed, 15 Apr 2020 00:42:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200311171422.10484-1-david@redhat.com> <20200311171422.10484-9-david@redhat.com>
+In-Reply-To: <20200311171422.10484-9-david@redhat.com>
+From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Date:   Wed, 15 Apr 2020 09:42:08 +0200
+Message-ID: <CAM9Jb+iuZ4hzP1ik+RUib3Vi1ymc9y5++8_EX50=MCTBsC+1fQ@mail.gmail.com>
+Subject: Re: [PATCH v2 08/10] virtio-mem: Offline and remove completely
+ unplugged memory blocks
+To:     David Hildenbrand <david@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        virtio-dev@lists.oasis-open.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Igor Mammedov <imammedo@redhat.com>,
+        Dave Young <dyoung@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Apr 2020, Alex Deucher <alexdeucher@gmail.com> wrote:
-> On Tue, Apr 14, 2020 at 9:05 AM Bernard Zhao <bernard@vivo.com> wrote:
->>
->> On some processors, the / operate will call the compiler`s div lib,
->> which is low efficient, We can replace the / operation with shift,
->> so that we can replace the call of the division library with one
->> shift assembly instruction.
-
-This was applied already, and it's not in a driver I look after... but
-to me this feels like something that really should be
-justified. Using >> instead of / for multiples of 2 division mattered 20
-years ago, I'd be surprised if it still did on modern compilers.
-
-BR,
-Jani.
-
-
->>
->> Signed-off-by: Bernard Zhao <bernard@vivo.com>
+> Let's offline+remove memory blocks once all subblocks are unplugged. We
+> can use the new Linux MM interface for that. As no memory is in use
+> anymore, this shouldn't take a long time and shouldn't fail. There might
+> be corner cases where the offlining could still fail (especially, if
+> another notifier NACKs the offlining request).
 >
-> Applied.  thanks.
+> Cc: "Michael S. Tsirkin" <mst@redhat.com>
+> Cc: Jason Wang <jasowang@redhat.com>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Cc: Igor Mammedov <imammedo@redhat.com>
+> Cc: Dave Young <dyoung@redhat.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+> Cc: Stefan Hajnoczi <stefanha@redhat.com>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  drivers/virtio/virtio_mem.c | 47 +++++++++++++++++++++++++++++++++----
+>  1 file changed, 43 insertions(+), 4 deletions(-)
 >
-> Alex
+> diff --git a/drivers/virtio/virtio_mem.c b/drivers/virtio/virtio_mem.c
+> index 35f20232770c..aa322e7732a4 100644
+> --- a/drivers/virtio/virtio_mem.c
+> +++ b/drivers/virtio/virtio_mem.c
+> @@ -443,6 +443,28 @@ static int virtio_mem_mb_remove(struct virtio_mem *vm, unsigned long mb_id)
+>         return remove_memory(nid, addr, memory_block_size_bytes());
+>  }
 >
->> ---
->>  drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c | 4 ++--
->>  drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c | 4 ++--
->>  drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c | 4 ++--
->>  3 files changed, 6 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c b/drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c
->> index b205039..66cd078 100644
->> --- a/drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c
->> +++ b/drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c
->> @@ -175,10 +175,10 @@ static int gmc_v6_0_mc_load_microcode(struct amdgpu_device *adev)
->>         amdgpu_ucode_print_mc_hdr(&hdr->header);
->>
->>         adev->gmc.fw_version = le32_to_cpu(hdr->header.ucode_version);
->> -       regs_size = le32_to_cpu(hdr->io_debug_size_bytes) / (4 * 2);
->> +       regs_size = le32_to_cpu(hdr->io_debug_size_bytes) >> 3;
->>         new_io_mc_regs = (const __le32 *)
->>                 (adev->gmc.fw->data + le32_to_cpu(hdr->io_debug_array_offset_bytes));
->> -       ucode_size = le32_to_cpu(hdr->header.ucode_size_bytes) / 4;
->> +       ucode_size = le32_to_cpu(hdr->header.ucode_size_bytes) >> 2;
->>         new_fw_data = (const __le32 *)
->>                 (adev->gmc.fw->data + le32_to_cpu(hdr->header.ucode_array_offset_bytes));
->>
->> diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c b/drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c
->> index 9da9596..ca26d63 100644
->> --- a/drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c
->> +++ b/drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c
->> @@ -193,10 +193,10 @@ static int gmc_v7_0_mc_load_microcode(struct amdgpu_device *adev)
->>         amdgpu_ucode_print_mc_hdr(&hdr->header);
->>
->>         adev->gmc.fw_version = le32_to_cpu(hdr->header.ucode_version);
->> -       regs_size = le32_to_cpu(hdr->io_debug_size_bytes) / (4 * 2);
->> +       regs_size = le32_to_cpu(hdr->io_debug_size_bytes) >> 3;
->>         io_mc_regs = (const __le32 *)
->>                 (adev->gmc.fw->data + le32_to_cpu(hdr->io_debug_array_offset_bytes));
->> -       ucode_size = le32_to_cpu(hdr->header.ucode_size_bytes) / 4;
->> +       ucode_size = le32_to_cpu(hdr->header.ucode_size_bytes) >> 2;
->>         fw_data = (const __le32 *)
->>                 (adev->gmc.fw->data + le32_to_cpu(hdr->header.ucode_array_offset_bytes));
->>
->> diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c b/drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c
->> index 27d83204..295039c 100644
->> --- a/drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c
->> +++ b/drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c
->> @@ -318,10 +318,10 @@ static int gmc_v8_0_tonga_mc_load_microcode(struct amdgpu_device *adev)
->>         amdgpu_ucode_print_mc_hdr(&hdr->header);
->>
->>         adev->gmc.fw_version = le32_to_cpu(hdr->header.ucode_version);
->> -       regs_size = le32_to_cpu(hdr->io_debug_size_bytes) / (4 * 2);
->> +       regs_size = le32_to_cpu(hdr->io_debug_size_bytes) >> 3;
->>         io_mc_regs = (const __le32 *)
->>                 (adev->gmc.fw->data + le32_to_cpu(hdr->io_debug_array_offset_bytes));
->> -       ucode_size = le32_to_cpu(hdr->header.ucode_size_bytes) / 4;
->> +       ucode_size = le32_to_cpu(hdr->header.ucode_size_bytes) >> 2;
->>         fw_data = (const __le32 *)
->>                 (adev->gmc.fw->data + le32_to_cpu(hdr->header.ucode_array_offset_bytes));
->>
->> --
->> 2.7.4
->>
->> _______________________________________________
->> amd-gfx mailing list
->> amd-gfx@lists.freedesktop.org
->> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> +/*
+> + * Try to offline and remove a memory block from Linux.
+> + *
+> + * Must not be called with the vm->hotplug_mutex held (possible deadlock with
+> + * onlining code).
+> + *
+> + * Will not modify the state of the memory block.
+> + */
+> +static int virtio_mem_mb_offline_and_remove(struct virtio_mem *vm,
+> +                                           unsigned long mb_id)
+> +{
+> +       const uint64_t addr = virtio_mem_mb_id_to_phys(mb_id);
+> +       int nid = vm->nid;
+> +
+> +       if (nid == NUMA_NO_NODE)
+> +               nid = memory_add_physaddr_to_nid(addr);
+> +
+> +       dev_dbg(&vm->vdev->dev, "offlining and removing memory block: %lu\n",
+> +               mb_id);
+> +       return offline_and_remove_memory(nid, addr, memory_block_size_bytes());
+> +}
+> +
+>  /*
+>   * Trigger the workqueue so the device can perform its magic.
+>   */
+> @@ -535,7 +557,13 @@ static void virtio_mem_notify_offline(struct virtio_mem *vm,
+>                 break;
+>         }
+>
+> -       /* trigger the workqueue, maybe we can now unplug memory. */
+> +       /*
+> +        * Trigger the workqueue, maybe we can now unplug memory. Also,
+> +        * when we offline and remove a memory block, this will re-trigger
+> +        * us immediately - which is often nice because the removal of
+> +        * the memory block (e.g., memmap) might have freed up memory
+> +        * on other memory blocks we manage.
+> +        */
+>         virtio_mem_retry(vm);
+>  }
+>
+> @@ -1282,7 +1310,8 @@ static int virtio_mem_mb_unplug_any_sb_offline(struct virtio_mem *vm,
+>   * Unplug the desired number of plugged subblocks of an online memory block.
+>   * Will skip subblock that are busy.
+>   *
+> - * Will modify the state of the memory block.
+> + * Will modify the state of the memory block. Might temporarily drop the
+> + * hotplug_mutex.
+>   *
+>   * Note: Can fail after some subblocks were successfully unplugged. Can
+>   *       return 0 even if subblocks were busy and could not get unplugged.
+> @@ -1338,9 +1367,19 @@ static int virtio_mem_mb_unplug_any_sb_online(struct virtio_mem *vm,
+>         }
+>
+>         /*
+> -        * TODO: Once all subblocks of a memory block were unplugged, we want
+> -        * to offline the memory block and remove it.
+> +        * Once all subblocks of a memory block were unplugged, offline and
+> +        * remove it. This will usually not fail, as no memory is in use
+> +        * anymore - however some other notifiers might NACK the request.
+>          */
+> +       if (virtio_mem_mb_test_sb_unplugged(vm, mb_id, 0, vm->nb_sb_per_mb)) {
+> +               mutex_unlock(&vm->hotplug_mutex);
+> +               rc = virtio_mem_mb_offline_and_remove(vm, mb_id);
+> +               mutex_lock(&vm->hotplug_mutex);
+> +               if (!rc)
+> +                       virtio_mem_mb_set_state(vm, mb_id,
+> +                                               VIRTIO_MEM_MB_STATE_UNUSED);
+> +       }
+> +
+>         return 0;
+>  }
+>
 
--- 
-Jani Nikula, Intel Open Source Graphics Center
+Acked-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+
+> --
