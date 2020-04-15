@@ -7,47 +7,44 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33434C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:00:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A07C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:00:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 130262076C
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:00:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94A312076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:00:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586952045;
-	bh=TbiwcIT4SbpnRWuGpjEwF2Sdf+cNZ1M+hSC+FsbtTq8=;
+	s=default; t=1586952051;
+	bh=n3FIpkFU20A2sit5DXStONHFEVjMmscjr40uyQE7MYg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IQEFpAGd1gEQJPX7XDC57w4tihG4SNcygQ7gUs6cnDo6CUmypnFh+yeNNq6pLz/SL
-	 vVIuduFsRQiSon1AmL2XQDNYFVooxlzS3A35yVCqTY6+oP06za7wQ6z3dQbNB71sWY
-	 oqZ13+0M8hcmx2StB2XRoOuuxUgJB/wwnwT/b5II=
+	b=mgywTztWsFou7aElXG3iRs8PesDuhD3t6w7syQKGR94yMQMHeqvxdHlX9HMi8VswF
+	 PJR/aqBOJoouARLVDTGHPUzBsWJNABtLRnUAcBTjoiuf8lYY2fYceXk2t5COh3IrO3
+	 tqy4LBOmnohxgY4GUKGx/je3Wdb/p8RKYCEiF6iY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S368103AbgDOMAm (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:00:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42638 "EHLO mail.kernel.org"
+        id S368112AbgDOMAs (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:00:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409361AbgDOLri (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:47:38 -0400
+        id S2409364AbgDOLrl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:47:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2C94216FD;
-        Wed, 15 Apr 2020 11:47:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E5E4206A2;
+        Wed, 15 Apr 2020 11:47:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951258;
-        bh=TbiwcIT4SbpnRWuGpjEwF2Sdf+cNZ1M+hSC+FsbtTq8=;
+        s=default; t=1586951260;
+        bh=n3FIpkFU20A2sit5DXStONHFEVjMmscjr40uyQE7MYg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Nqcz1TNrHJNp9iROncKZRPLvmbnV8z8uoK/lTBOzTXbqHvsVeaJ+f6KaXwPAf/plB
-         smjRJkz//E9RTlnvoUjkmf94cm+Lm33EBHiaTxzHPVSBJrOolD66VKOll25mQ9vkOu
-         p+5HxjKJceATyEezjmNO96nA+o5yEwtf2/NSA7r8=
+        b=k9+GOQj4hH9VmB8c45CNybbIpaFnDG6c+WqVy3TF4RTSRVF9iU9QVZoFdVTeD1NPJ
+         jiq/RARGCKvUaSA5R30AAWu7JmpVVPvxRe8TJ48Mtk9lDplhUzxqq4TUEwCBcJEXJp
+         /9zdFs1Gysb4d8eSTmzV+UqpesxyKPYdChLxmm/o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 22/30] net: phy: micrel: kszphy_resume(): add delay after genphy_resume() before accessing PHY registers
-Date:   Wed, 15 Apr 2020 07:47:03 -0400
-Message-Id: <20200415114711.15381-22-sashal@kernel.org>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 24/30] NFS: Fix memory leaks in nfs_pageio_stop_mirroring()
+Date:   Wed, 15 Apr 2020 07:47:05 -0400
+Message-Id: <20200415114711.15381-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114711.15381-1-sashal@kernel.org>
 References: <20200415114711.15381-1-sashal@kernel.org>
@@ -60,66 +57,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleksij Rempel <o.rempel@pengutronix.de>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit 6110dff776f7fa65c35850ef65b41d3b39e2fac2 ]
+[ Upstream commit 862f35c94730c9270833f3ad05bd758a29f204ed ]
 
-After the power-down bit is cleared, the chip internally triggers a
-global reset. According to the KSZ9031 documentation, we have to wait at
-least 1ms for the reset to finish.
+If we just set the mirror count to 1 without first clearing out
+the mirrors, we can leak queued up requests.
 
-If the chip is accessed during reset, read will return 0xffff, while
-write will be ignored. Depending on the system performance and MDIO bus
-speed, we may or may not run in to this issue.
-
-This bug was discovered on an iMX6QP system with KSZ9031 PHY and
-attached PHY interrupt line. If IRQ was used, the link status update was
-lost. In polling mode, the link status update was always correct.
-
-The investigation showed, that during a read-modify-write access, the
-read returned 0xffff (while the chip was still in reset) and
-corresponding write hit the chip _after_ reset and triggered (due to the
-0xffff) another reset in an undocumented bit (register 0x1f, bit 1),
-resulting in the next write being lost due to the new reset cycle.
-
-This patch fixes the issue by adding a 1...2 ms sleep after the
-genphy_resume().
-
-Fixes: 836384d2501d ("net: phy: micrel: Add specific suspend")
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/micrel.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ fs/nfs/pagelist.c | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
-index eb85cf4a381a4..5be7fc354e338 100644
---- a/drivers/net/phy/micrel.c
-+++ b/drivers/net/phy/micrel.c
-@@ -29,6 +29,7 @@
- #include <linux/micrel_phy.h>
- #include <linux/of.h>
- #include <linux/clk.h>
-+#include <linux/delay.h>
+diff --git a/fs/nfs/pagelist.c b/fs/nfs/pagelist.c
+index ceb6892d9bbdc..7c01936be7c70 100644
+--- a/fs/nfs/pagelist.c
++++ b/fs/nfs/pagelist.c
+@@ -864,15 +864,6 @@ static void nfs_pageio_setup_mirroring(struct nfs_pageio_descriptor *pgio,
+ 	pgio->pg_mirror_count = mirror_count;
+ }
  
- /* Operation Mode Strap Override */
- #define MII_KSZPHY_OMSO				0x16
-@@ -727,6 +728,12 @@ static int kszphy_resume(struct phy_device *phydev)
+-/*
+- * nfs_pageio_stop_mirroring - stop using mirroring (set mirror count to 1)
+- */
+-void nfs_pageio_stop_mirroring(struct nfs_pageio_descriptor *pgio)
+-{
+-	pgio->pg_mirror_count = 1;
+-	pgio->pg_mirror_idx = 0;
+-}
+-
+ static void nfs_pageio_cleanup_mirroring(struct nfs_pageio_descriptor *pgio)
+ {
+ 	pgio->pg_mirror_count = 1;
+@@ -1301,6 +1292,14 @@ void nfs_pageio_cond_complete(struct nfs_pageio_descriptor *desc, pgoff_t index)
+ 	}
+ }
  
- 	genphy_resume(phydev);
- 
-+	/* After switching from power-down to normal mode, an internal global
-+	 * reset is automatically generated. Wait a minimum of 1 ms before
-+	 * read/write access to the PHY registers.
-+	 */
-+	usleep_range(1000, 2000);
++/*
++ * nfs_pageio_stop_mirroring - stop using mirroring (set mirror count to 1)
++ */
++void nfs_pageio_stop_mirroring(struct nfs_pageio_descriptor *pgio)
++{
++	nfs_pageio_complete(pgio);
++}
 +
- 	ret = kszphy_config_reset(phydev);
- 	if (ret)
- 		return ret;
+ int __init nfs_init_nfspagecache(void)
+ {
+ 	nfs_page_cachep = kmem_cache_create("nfs_page",
 -- 
 2.20.1
 
