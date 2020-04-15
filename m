@@ -2,107 +2,70 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3662C2BB55
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:54:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0289FC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:54:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A91A62063A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:54:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586966060;
-	bh=vnmTaBMnbWeZwBEDn7jEJ2FxWVO9YscBRgyo6TVC4A8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hiLZ49xtNrPKo3audjCuiYKrp3O/tajfIpp+NDO3tM4CUHFm9u8Wd6LHERUAXZPSZ
-	 DRsnsrF+85hu6w4tn00kgs0+hJgLf/ITy1bYrM72FbiC2+T/Zjtm5CDVs6yvCBj59/
-	 xpfGeWTL6t4xMHJDuec+JF7gRzadcmv9rVRqzvQY=
+	by mail.kernel.org (Postfix) with ESMTP id D9D1220857
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:54:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1414952AbgDOPyT (ORCPT
+        id S1414966AbgDOPye (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 11:54:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47064 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 11:54:34 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55580 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1414941AbgDOPyN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 11:54:13 -0400
-Received: from localhost (unknown [106.201.106.187])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC99E2078B;
-        Wed, 15 Apr 2020 15:54:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586966052;
-        bh=vnmTaBMnbWeZwBEDn7jEJ2FxWVO9YscBRgyo6TVC4A8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nT/1/zngd0WdQg2V/NRBkL8bMFXf+XI/Vnkjec7wJ3QbxNPL/tpLPpOp3qpNtpypf
-         4HMA3PKkSUaBIwFssoHqn2gJn3hwtAvlZG3ZikkrwSx7x6+rIJbcyr7FqaopArJPOK
-         MNy0CD4ADSnA4o5FU6R1bkvHhki0V0UPPs1IK6Cc=
-Date:   Wed, 15 Apr 2020 21:23:59 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     leonid.ravich@dell.com
-Cc:     dmaengine@vger.kernel.org, lravich@gmail.com,
+        id S1414948AbgDOPyc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 11:54:32 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 9F4A8ACA1;
+        Wed, 15 Apr 2020 15:54:29 +0000 (UTC)
+Date:   Wed, 15 Apr 2020 17:54:28 +0200
+From:   Joerg Roedel <jroedel@suse.de>
+To:     Tom Lendacky <thomas.lendacky@amd.com>
+Cc:     Mike Stunes <mstunes@vmware.com>, Joerg Roedel <joro@8bytes.org>,
+        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
         Dan Williams <dan.j.williams@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        "Alexander.Barabash@dell.com" <Alexander.Barabash@dell.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Jilayne Lovejoy <opensource@jilayne.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] dmaengine: ioat: Decreasing  allocation chunk
- size 2M -> 512K
-Message-ID: <20200415155359.GT72691@vkoul-mobl>
-References: <20200402092725.15121-2-leonid.ravich@dell.com>
- <20200402163356.9029-1-leonid.ravich@dell.com>
- <20200402163356.9029-2-leonid.ravich@dell.com>
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>
+Subject: Re: [PATCH 40/70] x86/sev-es: Setup per-cpu GHCBs for the runtime
+ handler
+Message-ID: <20200415155428.GE21899@suse.de>
+References: <20200319091407.1481-1-joro@8bytes.org>
+ <20200319091407.1481-41-joro@8bytes.org>
+ <A7DF63B4-6589-4386-9302-6B7F8BE0D9BA@vmware.com>
+ <09757a84-1d81-74d5-c425-cff241f02ab9@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200402163356.9029-2-leonid.ravich@dell.com>
+In-Reply-To: <09757a84-1d81-74d5-c425-cff241f02ab9@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02-04-20, 19:33, leonid.ravich@dell.com wrote:
-> From: Leonid Ravich <Leonid.Ravich@emc.com>
-> 
-> current IOAT driver using big (2MB) allocations chunk for its descriptors
-> therefore each ioat dma engine need 2 such chunks
-> (64k entres in ring  each entry 64B = 4MB)
-> requiring 2 * 2M * dmaengine contiguies memory chunk
-> might fail due to memory fragmention.
+On Tue, Apr 14, 2020 at 03:04:42PM -0500, Tom Lendacky wrote:
+> At that point the guest won't be able to communicate with the hypervisor,
+> too. Maybe we should BUG() here to terminate further processing?
 
-This is quite decent explanation :) pls use upto 72 chars to make it a
-better read.
+We could talk to the hypervisor, there is still the boot-GHCB in the
+bss-decrypted section. But there is nothing that could be done here
+anyway besides terminating the guest.
 
-> 
-> so we decreasing chunk size and using more chunks.
-> 
-> Acked-by: Dave Jiang <dave.jiang@intel.com>
-> Signed-off-by: Leonid Ravich <Leonid.Ravich@emc.com>
-> ---
->  drivers/dma/ioat/dma.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/dma/ioat/dma.h b/drivers/dma/ioat/dma.h
-> index 5216c6b..e6b622e 100644
-> --- a/drivers/dma/ioat/dma.h
-> +++ b/drivers/dma/ioat/dma.h
-> @@ -83,7 +83,7 @@ struct ioatdma_device {
->  
->  #define IOAT_MAX_ORDER 16
->  #define IOAT_MAX_DESCS (1 << IOAT_MAX_ORDER)
-> -#define IOAT_CHUNK_SIZE (SZ_2M)
-> +#define IOAT_CHUNK_SIZE (SZ_512K)
->  #define IOAT_DESCS_PER_CHUNK (IOAT_CHUNK_SIZE / IOAT_DESC_SZ)
->  
->  struct ioat_descs {
-> -- 
-> 1.9.3
 
--- 
-~Vinod
+Regards,
+
+	Joerg
