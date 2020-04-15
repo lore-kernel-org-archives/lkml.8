@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 835FBC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:58:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA860C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:58:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5782B2137B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:58:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C80E2078A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:58:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586951916;
-	bh=4ePs0/n5DCwcFojc0Lv1HVDePUTl7V28aT9dI6HNJt0=;
+	s=default; t=1586951921;
+	bh=k8xYy+LMBvtR9vGrgEP7ljRQZTei9c9KafyXYKHGOAA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KPO2SaJRpR4GicPxxRh9upZUdQ/5l82EwY9SzND/vP7tIqXDJIPeBTOGbG5kS43e0
-	 l6bdpv7a/yrkupwz9leOFAHpZABJkBW3YTFIQ822MIWGdqy8SGoAtFEsja4YdehRUz
-	 dkgvP0DG/Hd7pHetpY2q/Ek925ZpYgVAfZLJ+4pk=
+	b=JhjRjMnVIeJH+w5R15FfXjc5+3gft+p8dV4IF3uggF3cUTxnOsHBle1QodBpyflp4
+	 wMhASku9FPw+hQUwMB6barLSpBhqZYTSO5JMQr0qF6Bp3lbwjGj4w+K7myNvFGf4KK
+	 2m2ywcVeyTL3P7vvP8kGplyiAsQZbXpD/vXIppOs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S368011AbgDOL6e (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:58:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41888 "EHLO mail.kernel.org"
+        id S2897997AbgDOL6J (ORCPT
+        <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 07:58:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409331AbgDOLqr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:46:47 -0400
+        id S2409314AbgDOLqm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:46:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38D02206A2;
-        Wed, 15 Apr 2020 11:46:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 307E121734;
+        Wed, 15 Apr 2020 11:46:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951207;
-        bh=4ePs0/n5DCwcFojc0Lv1HVDePUTl7V28aT9dI6HNJt0=;
+        s=default; t=1586951201;
+        bh=k8xYy+LMBvtR9vGrgEP7ljRQZTei9c9KafyXYKHGOAA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YiBcyYG4mKISTUhncM0uEiAZ1n/eMKBcxtXHNjvD4cH3NmpO2YeO2nssDeVcH5gZw
-         HdQvtv64LlKA+fTgebFQ/vEvl1Z1zQFuDU8Ue9dgliDOpIjKIKy4W0wu4K6gnb+ft0
-         /OBZ/x/zqLIkZPylLHcP8SlYbTMaTbpPhZd1K2zQ=
+        b=wvd12+5pB72wixG2pSVhp0vumfO7LtxpG/vzGrdKPTUq0TmEWS9Liw5/rtpC/JXFs
+         uSSPIFDE7I8NF5NKJDtBd9pDNISrIzoUEE2OPQBBrQvE60YwJfFIBg/AeBDNnjhsW3
+         Mroi8fr8EgHz4DQ/k9HYoOLuAr0nAgJrh74R70K0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 20/40] net: dsa: bcm_sf2: Do not register slave MDIO bus with OF
-Date:   Wed, 15 Apr 2020 07:46:03 -0400
-Message-Id: <20200415114623.14972-20-sashal@kernel.org>
+Cc:     Long Li <longli@microsoft.com>,
+        Steve French <stfrench@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org
+Subject: [PATCH AUTOSEL 4.19 16/40] cifs: Allocate encryption header through kmalloc
+Date:   Wed, 15 Apr 2020 07:45:59 -0400
+Message-Id: <20200415114623.14972-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114623.14972-1-sashal@kernel.org>
 References: <20200415114623.14972-1-sashal@kernel.org>
@@ -59,55 +60,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Long Li <longli@microsoft.com>
 
-[ Upstream commit 536fab5bf5826404534a6c271f622ad2930d9119 ]
+[ Upstream commit 3946d0d04bb360acca72db5efe9ae8440012d9dc ]
 
-We were registering our slave MDIO bus with OF and doing so with
-assigning the newly created slave_mii_bus of_node to the master MDIO bus
-controller node. This is a bad thing to do for a number of reasons:
+When encryption is used, smb2_transform_hdr is defined on the stack and is
+passed to the transport. This doesn't work with RDMA as the buffer needs to
+be DMA'ed.
 
-- we are completely lying about the slave MII bus is arranged and yet we
-  still want to control which MDIO devices it probes. It was attempted
-  before to play tricks with the bus_mask to perform that:
-  https://www.spinics.net/lists/netdev/msg429420.html but the approach
-  was rightfully rejected
+Fix it by using kmalloc.
 
-- the device_node reference counting is messed up and we are effectively
-  doing a double probe on the devices we already probed using the
-  master, this messes up all resources reference counts (such as clocks)
-
-The proper fix for this as indicated by David in his reply to the
-thread above is to use a platform data style registration so as to
-control exactly which devices we probe:
-https://www.spinics.net/lists/netdev/msg430083.html
-
-By using mdiobus_register(), our slave_mii_bus->phy_mask value is used
-as intended, and all the PHY addresses that must be redirected towards
-our slave MDIO bus is happening while other addresses get redirected
-towards the master MDIO bus.
-
-Fixes: 461cd1b03e32 ("net: dsa: bcm_sf2: Register our slave MDIO bus")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Long Li <longli@microsoft.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/bcm_sf2.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/cifs/transport.c | 28 +++++++++++++++++-----------
+ 1 file changed, 17 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
-index 8c69789fbe094..b56b2eaf654e1 100644
---- a/drivers/net/dsa/bcm_sf2.c
-+++ b/drivers/net/dsa/bcm_sf2.c
-@@ -461,7 +461,7 @@ static int bcm_sf2_mdio_register(struct dsa_switch *ds)
- 	priv->slave_mii_bus->parent = ds->dev->parent;
- 	priv->slave_mii_bus->phy_mask = ~priv->indir_phy_mask;
+diff --git a/fs/cifs/transport.c b/fs/cifs/transport.c
+index 0c4df56c825ab..70412944b267d 100644
+--- a/fs/cifs/transport.c
++++ b/fs/cifs/transport.c
+@@ -392,7 +392,7 @@ smb_send_rqst(struct TCP_Server_Info *server, int num_rqst,
+ 	      struct smb_rqst *rqst, int flags)
+ {
+ 	struct kvec iov;
+-	struct smb2_transform_hdr tr_hdr;
++	struct smb2_transform_hdr *tr_hdr;
+ 	struct smb_rqst cur_rqst[MAX_COMPOUND];
+ 	int rc;
  
--	err = of_mdiobus_register(priv->slave_mii_bus, dn);
-+	err = mdiobus_register(priv->slave_mii_bus);
- 	if (err && dn)
- 		of_node_put(dn);
+@@ -402,28 +402,34 @@ smb_send_rqst(struct TCP_Server_Info *server, int num_rqst,
+ 	if (num_rqst > MAX_COMPOUND - 1)
+ 		return -ENOMEM;
+ 
+-	memset(&cur_rqst[0], 0, sizeof(cur_rqst));
+-	memset(&iov, 0, sizeof(iov));
+-	memset(&tr_hdr, 0, sizeof(tr_hdr));
+-
+-	iov.iov_base = &tr_hdr;
+-	iov.iov_len = sizeof(tr_hdr);
+-	cur_rqst[0].rq_iov = &iov;
+-	cur_rqst[0].rq_nvec = 1;
+-
+ 	if (!server->ops->init_transform_rq) {
+ 		cifs_dbg(VFS, "Encryption requested but transform callback "
+ 			 "is missing\n");
+ 		return -EIO;
+ 	}
+ 
++	tr_hdr = kmalloc(sizeof(*tr_hdr), GFP_NOFS);
++	if (!tr_hdr)
++		return -ENOMEM;
++
++	memset(&cur_rqst[0], 0, sizeof(cur_rqst));
++	memset(&iov, 0, sizeof(iov));
++	memset(tr_hdr, 0, sizeof(*tr_hdr));
++
++	iov.iov_base = tr_hdr;
++	iov.iov_len = sizeof(*tr_hdr);
++	cur_rqst[0].rq_iov = &iov;
++	cur_rqst[0].rq_nvec = 1;
++
+ 	rc = server->ops->init_transform_rq(server, num_rqst + 1,
+ 					    &cur_rqst[0], rqst);
+ 	if (rc)
+-		return rc;
++		goto out;
+ 
+ 	rc = __smb_send_rqst(server, num_rqst + 1, &cur_rqst[0]);
+ 	smb3_free_compound_rqst(num_rqst, &cur_rqst[1]);
++out:
++	kfree(tr_hdr);
+ 	return rc;
+ }
  
 -- 
 2.20.1
