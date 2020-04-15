@@ -2,164 +2,296 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5249C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7227C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC65720737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:36:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAC6B20737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:36:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S369847AbgDOMgY (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:36:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49168 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S369793AbgDOMe6 (ORCPT
+        id S369854AbgDOMgh (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:36:37 -0400
+Received: from m17618.mail.qiye.163.com ([59.111.176.18]:57949 "EHLO
+        m17618.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S369761AbgDOMek (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 08:34:58 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81DB8C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 05:34:57 -0700 (PDT)
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jOhFj-0001s4-DF; Wed, 15 Apr 2020 14:34:51 +0200
-Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jOhFi-00082N-He; Wed, 15 Apr 2020 14:34:50 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Kubecek <mkubecek@suse.cz>
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        David Jander <david@protonic.nl>, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Russell King <linux@armlinux.org.uk>, mkl@pengutronix.de,
-        Marek Vasut <marex@denx.de>
-Subject: [PATCH v1] net: phy: tja11xx: add support for master-slave configuration
-Date:   Wed, 15 Apr 2020 14:34:47 +0200
-Message-Id: <20200415123447.29769-1-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.26.0.rc2
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Wed, 15 Apr 2020 08:34:40 -0400
+Received: from ubuntu.localdomain (unknown [58.251.74.226])
+        by m17618.mail.qiye.163.com (Hmail) with ESMTPA id E2A734E24CC;
+        Wed, 15 Apr 2020 20:34:27 +0800 (CST)
+From:   Wang Wenhu <wenhu.wang@vivo.com>
+To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        oss@buserror.net, christophe.leroy@c-s.fr,
+        linuxppc-dev@lists.ozlabs.org
+Cc:     kernel@vivo.com, Wang Wenhu <wenhu.wang@vivo.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5/5] drivers: uio: new driver for fsl_85xx_cache_sram
+Date:   Wed, 15 Apr 2020 05:33:46 -0700
+Message-Id: <20200415123346.116212-6-wenhu.wang@vivo.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200415123346.116212-1-wenhu.wang@vivo.com>
+References: <20200415123346.116212-1-wenhu.wang@vivo.com>
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZT1VLQklLS0tPQ09PTU1OTllXWShZQU
+        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6ODY6Shw4CTgxSwg2OUMRIzgN
+        NgwKFDRVSlVKTkNNQk5PS01DSEJLVTMWGhIXVQweFRMOVQwaFRw7DRINFFUYFBZFWVdZEgtZQVlO
+        Q1VJTkpVTE9VSUlNWVdZCAFZQUNMTkk3Bg++
+X-HM-Tid: 0a717dd560e39376kuwse2a734e24cc
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The TJA11xx PHYs have a vendor specific Master/Slave configuration bit,
-which is not compatible with IEEE 803.2-2018 spec for 100Base-T1
-devices. So, provide a custom config_ange call back to solve this
-problem.
+A driver for freescale 85xx platforms to access the Cache-Sram form
+user level. This is extremely helpful for some user-space applications
+that require high performance memory accesses.
 
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+Cc: Scott Wood <oss@buserror.net>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: linuxppc-dev@lists.ozlabs.org
+Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
 ---
- drivers/net/phy/nxp-tja11xx.c | 39 +++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+ drivers/uio/Kconfig                   |   8 ++
+ drivers/uio/Makefile                  |   1 +
+ drivers/uio/uio_fsl_85xx_cache_sram.c | 195 ++++++++++++++++++++++++++
+ 3 files changed, 204 insertions(+)
+ create mode 100644 drivers/uio/uio_fsl_85xx_cache_sram.c
 
-diff --git a/drivers/net/phy/nxp-tja11xx.c b/drivers/net/phy/nxp-tja11xx.c
-index 2bde9386baf1f..0042ee453cbd4 100644
---- a/drivers/net/phy/nxp-tja11xx.c
-+++ b/drivers/net/phy/nxp-tja11xx.c
-@@ -30,6 +30,7 @@
- #define MII_ECTRL_WAKE_REQUEST		BIT(0)
+diff --git a/drivers/uio/Kconfig b/drivers/uio/Kconfig
+index 202ee81cfc2b..afd38ec13de0 100644
+--- a/drivers/uio/Kconfig
++++ b/drivers/uio/Kconfig
+@@ -105,6 +105,14 @@ config UIO_NETX
+ 	  To compile this driver as a module, choose M here; the module
+ 	  will be called uio_netx.
  
- #define MII_CFG1			18
-+#define MII_CFG1_MASTER_SLAVE		BIT(15)
- #define MII_CFG1_AUTO_OP		BIT(14)
- #define MII_CFG1_SLEEP_CONFIRM		BIT(6)
- #define MII_CFG1_LED_MODE_MASK		GENMASK(5, 4)
-@@ -177,6 +178,31 @@ static int tja11xx_soft_reset(struct phy_device *phydev)
- 	return genphy_soft_reset(phydev);
- }
- 
-+static int tja11xx_config_aneg(struct phy_device *phydev)
++config UIO_FSL_85XX_CACHE_SRAM
++	tristate "Freescale 85xx Cache-Sram driver"
++	depends on FSL_85XX_CACHE_SRAM
++	help
++	  Generic driver for accessing the Cache-Sram form user level. This
++	  is extremely helpful for some user-space applications that require
++	  high performance memory accesses.
++
+ config UIO_FSL_ELBC_GPCM
+ 	tristate "eLBC/GPCM driver"
+ 	depends on FSL_LBC
+diff --git a/drivers/uio/Makefile b/drivers/uio/Makefile
+index c285dd2a4539..be2056cffc21 100644
+--- a/drivers/uio/Makefile
++++ b/drivers/uio/Makefile
+@@ -10,4 +10,5 @@ obj-$(CONFIG_UIO_NETX)	+= uio_netx.o
+ obj-$(CONFIG_UIO_PRUSS)         += uio_pruss.o
+ obj-$(CONFIG_UIO_MF624)         += uio_mf624.o
+ obj-$(CONFIG_UIO_FSL_ELBC_GPCM)	+= uio_fsl_elbc_gpcm.o
++obj-$(CONFIG_UIO_FSL_85XX_CACHE_SRAM)	+= uio_fsl_85xx_cache_sram.o
+ obj-$(CONFIG_UIO_HV_GENERIC)	+= uio_hv_generic.o
+diff --git a/drivers/uio/uio_fsl_85xx_cache_sram.c b/drivers/uio/uio_fsl_85xx_cache_sram.c
+new file mode 100644
+index 000000000000..e11202dd5b93
+--- /dev/null
++++ b/drivers/uio/uio_fsl_85xx_cache_sram.c
+@@ -0,0 +1,195 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2020 Vivo Communication Technology Co. Ltd.
++ * Copyright (C) 2020 Wang Wenhu <wenhu.wang@vivo.com>
++ * All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License version 2 as published
++ * by the Free Software Foundation.
++ */
++
++#include <linux/platform_device.h>
++#include <linux/uio_driver.h>
++#include <linux/stringify.h>
++#include <linux/module.h>
++#include <linux/kernel.h>
++#include <asm/fsl_85xx_cache_sram.h>
++
++#define DRIVER_VERSION	"0.1.0"
++#define DRIVER_NAME	"uio_fsl_85xx_cache_sram"
++#define UIO_NAME	"uio_cache_sram"
++
++static const struct of_device_id uio_mpc85xx_l2ctlr_of_match[] = {
++	{	.compatible = "uio,fsl,p2020-l2-cache-controller",	},
++	{	.compatible = "uio,fsl,p2010-l2-cache-controller",	},
++	{	.compatible = "uio,fsl,p1020-l2-cache-controller",	},
++	{	.compatible = "uio,fsl,p1011-l2-cache-controller",	},
++	{	.compatible = "uio,fsl,p1013-l2-cache-controller",	},
++	{	.compatible = "uio,fsl,p1022-l2-cache-controller",	},
++	{	.compatible = "uio,fsl,mpc8548-l2-cache-controller",	},
++	{	.compatible = "uio,fsl,mpc8544-l2-cache-controller",	},
++	{	.compatible = "uio,fsl,mpc8572-l2-cache-controller",	},
++	{	.compatible = "uio,fsl,mpc8536-l2-cache-controller",	},
++	{	.compatible = "uio,fsl,p1021-l2-cache-controller",	},
++	{	.compatible = "uio,fsl,p1012-l2-cache-controller",	},
++	{	.compatible = "uio,fsl,p1025-l2-cache-controller",	},
++	{	.compatible = "uio,fsl,p1016-l2-cache-controller",	},
++	{	.compatible = "uio,fsl,p1024-l2-cache-controller",	},
++	{	.compatible = "uio,fsl,p1015-l2-cache-controller",	},
++	{	.compatible = "uio,fsl,p1010-l2-cache-controller",	},
++	{	.compatible = "uio,fsl,bsc9131-l2-cache-controller",	},
++	{},
++};
++
++static void uio_info_free_internal(struct uio_info *info)
 +{
-+	u16 ctl = 0;
-+	int ret;
++	struct uio_mem *uiomem = &info->mem[0];
 +
-+	switch (phydev->master_slave) {
-+	case PORT_MODE_MASTER:
-+		ctl |= MII_CFG1_MASTER_SLAVE;
-+		break;
-+	case PORT_MODE_SLAVE:
-+		break;
-+	case PORT_MODE_UNKNOWN:
-+		return 0;
-+	default:
-+		phydev_warn(phydev, "Unsupported Master/Slave mode\n");
-+		return -ENOTSUPP;
++	while (uiomem < &info->mem[MAX_UIO_MAPS]) {
++		if (uiomem->size) {
++			mpc85xx_cache_sram_free(uiomem->internal_addr);
++			kfree(uiomem->name);
++		}
++		uiomem++;
 +	}
-+
-+	ret = phy_modify_changed(phydev, MII_CFG1, MII_CFG1_MASTER_SLAVE, ctl);
-+	if (ret < 0)
-+		return ret;
-+
-+	return __genphy_config_aneg(phydev, ret);
 +}
 +
- static int tja11xx_config_init(struct phy_device *phydev)
- {
- 	int ret;
-@@ -245,6 +271,15 @@ static int tja11xx_read_status(struct phy_device *phydev)
- 
- 		if (!(ret & MII_COMMSTAT_LINK_UP))
- 			phydev->link = 0;
++static int uio_fsl_85xx_cache_sram_probe(struct platform_device *pdev)
++{
++	struct device_node *parent = pdev->dev.of_node;
++	struct device_node *node = NULL;
++	struct uio_info *info;
++	struct uio_mem *uiomem;
++	const char *dt_name;
++	u32 mem_size;
++	u32 align;
++	void *virt;
++	phys_addr_t phys;
++	int ret = -ENODEV;
 +
-+		ret = phy_read(phydev, MII_CFG1);
-+		if (ret < 0)
-+			return ret;
++	/* alloc uio_info for one device */
++	info = kzalloc(sizeof(*info), GFP_KERNEL);
++	if (!info) {
++		dev_err(&pdev->dev, "kzalloc uio_info failed\n");
++		ret = -ENOMEM;
++		goto err_out;
++	}
 +
-+		if (ret & MII_CFG1_MASTER_SLAVE)
-+			phydev->master_slave = PORT_MODE_MASTER;
-+		else
-+			phydev->master_slave = PORT_MODE_SLAVE;
- 	}
- 
- 	return 0;
-@@ -514,6 +549,7 @@ static struct phy_driver tja11xx_driver[] = {
- 		.features       = PHY_BASIC_T1_FEATURES,
- 		.probe		= tja11xx_probe,
- 		.soft_reset	= tja11xx_soft_reset,
-+		.config_aneg	= tja11xx_config_aneg,
- 		.config_init	= tja11xx_config_init,
- 		.read_status	= tja11xx_read_status,
- 		.suspend	= genphy_suspend,
-@@ -529,6 +565,7 @@ static struct phy_driver tja11xx_driver[] = {
- 		.features       = PHY_BASIC_T1_FEATURES,
- 		.probe		= tja11xx_probe,
- 		.soft_reset	= tja11xx_soft_reset,
-+		.config_aneg	= tja11xx_config_aneg,
- 		.config_init	= tja11xx_config_init,
- 		.read_status	= tja11xx_read_status,
- 		.suspend	= genphy_suspend,
-@@ -543,6 +580,7 @@ static struct phy_driver tja11xx_driver[] = {
- 		.features       = PHY_BASIC_T1_FEATURES,
- 		.probe		= tja1102_p0_probe,
- 		.soft_reset	= tja11xx_soft_reset,
-+		.config_aneg	= tja11xx_config_aneg,
- 		.config_init	= tja11xx_config_init,
- 		.read_status	= tja11xx_read_status,
- 		.match_phy_device = tja1102_p0_match_phy_device,
-@@ -561,6 +599,7 @@ static struct phy_driver tja11xx_driver[] = {
- 		.features       = PHY_BASIC_T1_FEATURES,
- 		/* currently no probe for Port 1 is need */
- 		.soft_reset	= tja11xx_soft_reset,
-+		.config_aneg	= tja11xx_config_aneg,
- 		.config_init	= tja11xx_config_init,
- 		.read_status	= tja11xx_read_status,
- 		.match_phy_device = tja1102_p1_match_phy_device,
++	/* get optional uio name */
++	if (of_property_read_string(parent, "uio_name", &dt_name))
++		dt_name = UIO_NAME;
++
++	info->name = kstrdup(dt_name, GFP_KERNEL);
++	if (!info->name) {
++		dev_err(&pdev->dev, "error kstrdup uio_name\n");
++		ret = -ENOMEM;
++		goto err_info_free;
++	}
++
++	uiomem = &info->mem[0];
++	for_each_child_of_node(parent, node) {
++		if (!node) {
++			dev_err(&pdev->dev, "device's OF-node is NULL\n");
++			continue;
++		}
++
++		ret = of_property_read_u32(node, "cache-mem-size", &mem_size);
++		if (ret) {
++			dev_err(&pdev->dev, "missing cache-mem-size value\n");
++			continue;
++		}
++
++		if (mem_size == 0) {
++			dev_err(&pdev->dev, "cache-mem-size should not be 0\n");
++			continue;
++		}
++
++		align = 2;
++		while (align < mem_size)
++			align *= 2;
++		virt = mpc85xx_cache_sram_alloc(mem_size, &phys, align);
++		if (!virt) {
++			dev_err(&pdev->dev, "allocate 0x%x cache-mem failed\n", mem_size);
++			continue;
++		}
++
++		uiomem->memtype = UIO_MEM_PHYS;
++		uiomem->addr = phys;
++		uiomem->size = mem_size;
++		uiomem->name = kstrdup(node->name, GFP_KERNEL);;
++		uiomem->internal_addr = virt;
++		++uiomem;
++
++		if (uiomem >= &info->mem[MAX_UIO_MAPS]) {
++			dev_warn(&pdev->dev, "device has more than "
++				 __stringify(MAX_UIO_MAPS)
++				 " I/O memory resources.\n");
++			break;
++		}
++	}
++
++	while (uiomem < &info->mem[MAX_UIO_MAPS]) {
++		uiomem->size = 0;
++		++uiomem;
++	}
++
++	if (info->mem[0].size == 0) {
++		dev_err(&pdev->dev, "error no valid uio-map configured\n");
++		ret = -EINVAL;
++		goto err_name_free;
++	}
++
++	info->version = DRIVER_VERSION;
++
++	/* register UIO device */
++	if (uio_register_device(&pdev->dev, info)) {
++		dev_err(&pdev->dev, "UIO registration failed\n");
++		ret = -ENODEV;
++		goto err_unregister;
++	}
++
++	platform_set_drvdata(pdev, info);
++
++	return 0;
++err_unregister:
++	uio_info_free_internal(info);
++err_name_free:
++	kfree(info->name);
++err_info_free:
++	kfree(info);
++err_out:
++	return ret;
++}
++
++static int uio_fsl_85xx_cache_sram_remove(struct platform_device *pdev)
++{
++	struct uio_info *info = platform_get_drvdata(pdev);
++
++	uio_unregister_device(info);
++
++	uio_info_free_internal(info);
++
++	kfree(info->name);
++
++	kfree(info);
++
++	return 0;
++}
++
++static struct platform_driver uio_fsl_85xx_cache_sram = {
++	.probe = uio_fsl_85xx_cache_sram_probe,
++	.remove = uio_fsl_85xx_cache_sram_remove,
++	.driver = {
++		.name = DRIVER_NAME,
++		.owner = THIS_MODULE,
++		.of_match_table	= uio_mpc85xx_l2ctlr_of_match,
++	},
++};
++
++module_platform_driver(uio_fsl_85xx_cache_sram);
++
++MODULE_AUTHOR("Wang Wenhu <wenhu.wang@vivo.com>");
++MODULE_DESCRIPTION("Freescale MPC85xx Cache-Sram UIO Platform Driver");
++MODULE_ALIAS("platform:" DRIVER_NAME);
++MODULE_LICENSE("GPL v2");
 -- 
-2.26.0.rc2
+2.17.1
 
