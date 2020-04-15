@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E6A1C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF4F3C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:40:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39D08206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:40:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAE4320775
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:40:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586950841;
-	bh=nSl82cjhWjTA2l0ExvViT8VlR3vIJzSYqkYo4UEfc7k=;
+	s=default; t=1586950847;
+	bh=uC9JFgoKOhfTK98rPb7jgE0oqaQzBDX/tz1p1CqrX0I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1pJ4plO3FuvJIIY/Ov99u4BdRFTC6Ro4R4/93hHCAvhqi+p19VYOm+wfMi0Y565KW
-	 Q0vRHfEMa+bYucCZvi84l08vnCMTOp296JTkwmN6xpCms3RFv5krzTK+HiTg1h3Akz
-	 zEcX9y1ICVF+u0WWwFywAjvbEDcIxpBOn6I//xWo=
+	b=CCRd/P3JSCH4qurwfC5T14IpebBBfYuoyK4DmLZWpEli9/I8dmUP3WMVvyNDkwNlV
+	 IoWEzDXCPSnSIpHf5NANbuLXaB+dP0LSrD73hMaZlQEhF1MTy8+WLYQfHzw0ZKDtxr
+	 T4D5spqb3KKVM+hwhvnwpiIXnfKq6I4/viptSXfg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2897362AbgDOLke (ORCPT
+        id S2897375AbgDOLkq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:40:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55340 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 07:40:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408893AbgDOLfu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:35:50 -0400
+        id S2897099AbgDOLf6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:35:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9006B20737;
-        Wed, 15 Apr 2020 11:35:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47B9E2078A;
+        Wed, 15 Apr 2020 11:35:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950550;
-        bh=nSl82cjhWjTA2l0ExvViT8VlR3vIJzSYqkYo4UEfc7k=;
+        s=default; t=1586950558;
+        bh=uC9JFgoKOhfTK98rPb7jgE0oqaQzBDX/tz1p1CqrX0I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LYA+w9keah0mVOldlZDFaQUHhTqPrw9o4qcpomBXibVkzAYCY4LP5xIFPx9q+F2iQ
-         TOSqTk63sE8mjc0pkCi+MbIw1oWf2zBzT5uoMp4c8ZdTyRIdc0dpTpbsWaZORG0Phh
-         WSKlO2+PjIR4s64CIr6amGNt9lF/gCxlA6tgdlAc=
+        b=KkILaa7gsvdkLsSqT7xFTSG/6ZreZ50rfR+GJLvyTPywPp2W+VmXqS3j8naKOvyoD
+         VzAw4cOv13OSA+ud1awhVGSsP0EloBtLrVqHUT5vaxhUEIgw7h1kvEmVTrDFBi+AVr
+         Qw0/aKFra7PpYLrYF13fpuYDiqgDBZppTsGz2sp8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Liwei Song <liwei.song@windriver.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 056/129] nfsroot: set tcp as the default transport protocol
-Date:   Wed, 15 Apr 2020 07:33:31 -0400
-Message-Id: <20200415113445.11881-56-sashal@kernel.org>
+Cc:     Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.6 063/129] drm/amd/display: Don't try hdcp1.4 when content_type is set to type1
+Date:   Wed, 15 Apr 2020 07:33:38 -0400
+Message-Id: <20200415113445.11881-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
 References: <20200415113445.11881-1-sashal@kernel.org>
@@ -59,36 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liwei Song <liwei.song@windriver.com>
+From: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
 
-[ Upstream commit 89c8023fd46167a41246a56b31d1b3c9a20b6970 ]
+[ Upstream commit c2850c125d919efbb3a9ab46410d23912934f585 ]
 
-UDP is disabled by default in commit b24ee6c64ca7 ("NFS: allow
-deprecation of NFS UDP protocol"), but the default mount options
-is still udp, change it to tcp to avoid the "Unsupported transport
-protocol udp" error if no protocol is specified when mount nfs.
+[Why]
+When content type property is set to 1. We should enable hdcp2.2 and if we cant
+then stop. Currently the way it works in DC is that if we fail hdcp2, we will
+try hdcp1 after.
 
-Fixes: b24ee6c64ca7 ("NFS: allow deprecation of NFS UDP protocol")
-Signed-off-by: Liwei Song <liwei.song@windriver.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+[How]
+Use link config to force disable hdcp1.4 when type1 is set.
+
+Signed-off-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Reviewed-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfsroot.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_hdcp.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfs/nfsroot.c b/fs/nfs/nfsroot.c
-index effaa4247b912..8d32788056022 100644
---- a/fs/nfs/nfsroot.c
-+++ b/fs/nfs/nfsroot.c
-@@ -88,7 +88,7 @@
- #define NFS_ROOT		"/tftpboot/%s"
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_hdcp.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_hdcp.c
+index 0acd3409dd6ce..3abeff7722e3d 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_hdcp.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_hdcp.c
+@@ -113,10 +113,13 @@ void hdcp_update_display(struct hdcp_workqueue *hdcp_work,
  
- /* Default NFSROOT mount options. */
--#define NFS_DEF_OPTIONS		"vers=2,udp,rsize=4096,wsize=4096"
-+#define NFS_DEF_OPTIONS		"vers=2,tcp,rsize=4096,wsize=4096"
+ 		if (enable_encryption) {
+ 			display->adjust.disable = 0;
+-			if (content_type == DRM_MODE_HDCP_CONTENT_TYPE0)
++			if (content_type == DRM_MODE_HDCP_CONTENT_TYPE0) {
++				hdcp_w->link.adjust.hdcp1.disable = 0;
+ 				hdcp_w->link.adjust.hdcp2.force_type = MOD_HDCP_FORCE_TYPE_0;
+-			else if (content_type == DRM_MODE_HDCP_CONTENT_TYPE1)
++			} else if (content_type == DRM_MODE_HDCP_CONTENT_TYPE1) {
++				hdcp_w->link.adjust.hdcp1.disable = 1;
+ 				hdcp_w->link.adjust.hdcp2.force_type = MOD_HDCP_FORCE_TYPE_1;
++			}
  
- /* Parameters passed from the kernel command line */
- static char nfs_root_parms[NFS_MAXPATHLEN + 1] __initdata = "";
+ 			schedule_delayed_work(&hdcp_w->property_validate_dwork,
+ 					      msecs_to_jiffies(DRM_HDCP_CHECK_PERIOD_MS));
+@@ -334,6 +337,7 @@ static void update_config(void *handle, struct cp_psp_stream_config *config)
+ 	link->dp.rev = aconnector->dc_link->dpcd_caps.dpcd_rev.raw;
+ 	display->adjust.disable = 1;
+ 	link->adjust.auth_delay = 2;
++	link->adjust.hdcp1.disable = 0;
+ 
+ 	hdcp_update_display(hdcp_work, link_index, aconnector, DRM_MODE_HDCP_CONTENT_TYPE0, false);
+ }
 -- 
 2.20.1
 
