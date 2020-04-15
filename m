@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF619C2BB55
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56273C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:13:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5394206F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:13:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30F71206F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:13:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586952822;
-	bh=1ftGPW7s24C2jbr6ck2vAVvoAxyuPjtTL4lXJBW5RAc=;
+	s=default; t=1586952831;
+	bh=c1LLBhbrJAwwupo7JMHyhMst5yAHAHagRFzm7i73bDw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eSyDW5sCUbbIO9bTXCHxzJEMAmCu6KT+JfSCqblb2bkPjiB3hHyUaFlFUlwAIMsPF
-	 Suy4eOP09NwP1lGMNT1/yWS6Myl5ndIYQBMdgh0rRcBqr8vUHge3554iW+oaf1moc4
-	 dqR50BiuSAbHuTrM8n0qjMbw5CEFN5FP24PIFa7M=
+	b=DE+72H7ywOqm9KOOhhJOI/aCydQuJ4Na3ChPauIqqvXJGm2iNeSubqkrdBbNTMQXQ
+	 aoju8s04cKauW+VPURg1EGRaDvv2ZYDaiEKnytoHD+2OIXpggvG24enI9ubVIfnphq
+	 tsJbivFUc9zxhr30S5+TJ7ufhtaNs9TrJJS6abEs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2898126AbgDOMNk (ORCPT
-        <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:13:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41934 "EHLO mail.kernel.org"
+        id S368652AbgDOMNq (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:13:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409342AbgDOLq5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:46:57 -0400
+        id S2897575AbgDOLqy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:46:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 487F721569;
-        Wed, 15 Apr 2020 11:46:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 988F1214D8;
+        Wed, 15 Apr 2020 11:46:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951217;
-        bh=1ftGPW7s24C2jbr6ck2vAVvoAxyuPjtTL4lXJBW5RAc=;
+        s=default; t=1586951213;
+        bh=c1LLBhbrJAwwupo7JMHyhMst5yAHAHagRFzm7i73bDw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Dd9A9e+qiXkN4JwU28Hd+wxqBN2Zvxtu+beIgiaZzGuMJ05xhCGSQOtvGIzR2Ol4i
-         Ungtls93eYm7SRig04uDVnClTIIQoqReRhAs7qVTbW8oFFXx//ptoCCtlokm4hTBPF
-         UjBPQmqXeo2PsdADQO4gZiv5cuBLhGGK9HDJOaxc=
+        b=weOXrZ7OkxdYv5tipwTkwD4Y/PpsUI4lpyo5+FGCOgqQao4sv1rqzEZZ11QWYpa/v
+         VZDKFRMk4hImnkEeu7k5ppTyJvocYfUJzJoBjmc/ClyEPojD6g15R0XJET6mQAN9MJ
+         FV5qDI4p4vTMnEjdF+FcprmgQ1ppHrldbhvEiBjk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jack Zhang <Jack.Zhang1@amd.com>, Nirmoy Das <nirmoy.das@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 28/40] drm/amdkfd: kfree the wrong pointer
-Date:   Wed, 15 Apr 2020 07:46:11 -0400
-Message-Id: <20200415114623.14972-28-sashal@kernel.org>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 25/40] net: dsa: bcm_sf2: Ensure correct sub-node is parsed
+Date:   Wed, 15 Apr 2020 07:46:08 -0400
+Message-Id: <20200415114623.14972-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114623.14972-1-sashal@kernel.org>
 References: <20200415114623.14972-1-sashal@kernel.org>
@@ -60,37 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jack Zhang <Jack.Zhang1@amd.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 3148a6a0ef3cf93570f30a477292768f7eb5d3c3 ]
+[ Upstream commit afa3b592953bfaecfb4f2f335ec5f935cff56804 ]
 
-Originally, it kfrees the wrong pointer for mem_obj.
-It would cause memory leak under stress test.
+When the bcm_sf2 was converted into a proper platform device driver and
+used the new dsa_register_switch() interface, we would still be parsing
+the legacy DSA node that contained all the port information since the
+platform firmware has intentionally maintained backward and forward
+compatibility to client programs. Ensure that we do parse the correct
+node, which is "ports" per the revised DSA binding.
 
-Signed-off-by: Jack Zhang <Jack.Zhang1@amd.com>
-Acked-by: Nirmoy Das <nirmoy.das@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: d9338023fb8e ("net: dsa: bcm_sf2: Make it a real platform device driver")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdkfd/kfd_device.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/dsa/bcm_sf2.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_device.c b/drivers/gpu/drm/amd/amdkfd/kfd_device.c
-index 938d0053a8208..28022d1cb0f07 100644
---- a/drivers/gpu/drm/amd/amdkfd/kfd_device.c
-+++ b/drivers/gpu/drm/amd/amdkfd/kfd_device.c
-@@ -921,9 +921,9 @@ int kfd_gtt_sa_allocate(struct kfd_dev *kfd, unsigned int size,
- 	return 0;
+diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
+index b56b2eaf654e1..ccba648452c42 100644
+--- a/drivers/net/dsa/bcm_sf2.c
++++ b/drivers/net/dsa/bcm_sf2.c
+@@ -1014,6 +1014,7 @@ static int bcm_sf2_sw_probe(struct platform_device *pdev)
+ 	const struct bcm_sf2_of_data *data;
+ 	struct b53_platform_data *pdata;
+ 	struct dsa_switch_ops *ops;
++	struct device_node *ports;
+ 	struct bcm_sf2_priv *priv;
+ 	struct b53_device *dev;
+ 	struct dsa_switch *ds;
+@@ -1077,7 +1078,11 @@ static int bcm_sf2_sw_probe(struct platform_device *pdev)
+ 	set_bit(0, priv->cfp.used);
+ 	set_bit(0, priv->cfp.unique);
  
- kfd_gtt_no_free_chunk:
--	pr_debug("Allocation failed with mem_obj = %p\n", mem_obj);
-+	pr_debug("Allocation failed with mem_obj = %p\n", *mem_obj);
- 	mutex_unlock(&kfd->gtt_sa_lock);
--	kfree(mem_obj);
-+	kfree(*mem_obj);
- 	return -ENOMEM;
- }
+-	bcm_sf2_identify_ports(priv, dn->child);
++	ports = of_find_node_by_name(dn, "ports");
++	if (ports) {
++		bcm_sf2_identify_ports(priv, ports);
++		of_node_put(ports);
++	}
  
+ 	priv->irq0 = irq_of_parse_and_map(dn, 0);
+ 	priv->irq1 = irq_of_parse_and_map(dn, 1);
 -- 
 2.20.1
 
