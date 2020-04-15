@@ -2,123 +2,136 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23C4BC2BB55
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:39:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68244C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:43:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F328320767
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:39:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kNmfCTMr"
+	by mail.kernel.org (Postfix) with ESMTP id 4B04420767
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:43:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S370727AbgDONjm (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:39:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59288 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2633377AbgDONjd (ORCPT
+        id S2633439AbgDONnL (ORCPT
+        <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 09:43:11 -0400
+Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:49077 "EHLO
+        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730647AbgDONnH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 09:39:33 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECEFCC061A10
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 06:39:32 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id m2so2644262lfo.6
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 06:39:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fYbKtTdIlAS2MrOYv3ktp5ynh9zmAurxtliyxz228HM=;
-        b=kNmfCTMrncJz3Mf/q8c7XdNw/+aM367/99PvPs2dC40uoDdbWKW1e5Ka1VrjrIIXZN
-         EWKQAeD41UH7JTlXSR2Oni+zm12n4KErP+aTQMcwUQTWszpBTKmX4onmjQL50Dec0ulk
-         Oi6VJylUjzXADIznlAe70TVHYFljOlYz5pmYHnDSHHRsshUyyxJR06c+zQkapSjGMpB2
-         GtKLORJXT3ydl4ITIvKl3QV77AjyB8MZPzxUdClUdDGnVVgideHJufH3CidXt3Wct8cI
-         VK11gylh6XQ1fno/KgxM+rHfVxV2tTg4uxUIPx6NlgWkQ/s19QJrUOzUUOsOInQ5q4B/
-         ZY+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fYbKtTdIlAS2MrOYv3ktp5ynh9zmAurxtliyxz228HM=;
-        b=m6ylZM/Frs3ANyahUiH7x9OroYsS59CCy2IsJX3cMsvH4VMKA63suj9OrSpk3cNtyz
-         AV6uj9AMV1jn6aGQsvgR4/TQRW3v2Xu9TKnzhtq8j4yQOjBo53yBRai1QLrb7yzUfs4g
-         seYQNmD5fiEQ4VIcLy63TJHZNNyhRz4IW7K9WKStrAAXUTbMG2YWXMhYjQfxpFRpjU2X
-         2z2WJvU0u8fSQfnyTTQc+1ZQXPGrCJliSwQmhtci7OFYebaIK8eFy5kwLJLTRlEcornx
-         iVawnJPNp13bD0rfZg/gtT+WGQFFI7NNLAB+jKHenrsoW/to9QhyySKZQ8JUz9Kj6ERQ
-         efDw==
-X-Gm-Message-State: AGi0PuZeZSNZcGCI7g9IakMBj8/xVVem+j6Js2MpZt3DYAA+hnFvZLcN
-        qaFzQ1qF3lkoAVJ64Qez23Q/YrG3QkjIDmwfO3XuIw==
-X-Google-Smtp-Source: APiQypKspEOb/rj3icJNNhJ9x/jVreqO36OImyQUXuDaYRNwL1zpsCDOBI49RUO4ArSUzLvFrl5EOyBzPKgoU8LVqX4=
-X-Received: by 2002:ac2:4c34:: with SMTP id u20mr3207171lfq.40.1586957969813;
- Wed, 15 Apr 2020 06:39:29 -0700 (PDT)
+        Wed, 15 Apr 2020 09:43:07 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=38;SR=0;TI=SMTPD_---0TvcmpSS_1586958174;
+Received: from IT-FVFX43SYHV2H.lan(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TvcmpSS_1586958174)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 15 Apr 2020 21:42:55 +0800
+Subject: Re: [PATCH v8 03/10] mm/lru: replace pgdat lru_lock with lruvec lock
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org,
+        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
+        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
+        yang.shi@linux.alibaba.com, willy@infradead.org,
+        shakeelb@google.com, Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Roman Gushchin <guro@fb.com>,
+        Chris Down <chris@chrisdown.name>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vlastimil Babka <vbabka@suse.cz>, Qian Cai <cai@lca.pw>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        swkhack <swkhack@gmail.com>,
+        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Colin Ian King <colin.king@canonical.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Peng Fan <peng.fan@nxp.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Yafang Shao <laoar.shao@gmail.com>
+References: <1579143909-156105-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1579143909-156105-4-git-send-email-alex.shi@linux.alibaba.com>
+ <20200116215222.GA64230@cmpxchg.org>
+ <cdcdb710-1d78-6fac-48d7-35519ddcdc6a@linux.alibaba.com>
+ <20200413180725.GA99267@cmpxchg.org>
+ <8e7bf170-2bb5-f862-c12b-809f7f7d96cb@linux.alibaba.com>
+ <20200414163114.GA136578@cmpxchg.org>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <54af0662-cbb4-88c7-7eae-f969684025dd@linux.alibaba.com>
+Date:   Wed, 15 Apr 2020 21:42:26 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <1586254255-28713-1-git-send-email-sumit.garg@linaro.org>
- <CABPxzY+hL=jD6Zy=netP3oqNXg69gDL2g0KiPe40eaXXgZBnxw@mail.gmail.com>
- <CAFA6WYMZAq6X5m++h33ySCa6jOQCq_tHL=8mUi-kPMcn4FH=jA@mail.gmail.com>
- <CAFA6WYOW9ne0iffwC1dc48a_aSaYkkxQzyHQXTV2Wkob9KOXQg@mail.gmail.com> <CA+icZUUDm=WPjmwh5ikp8t+xt7dqTgghCeB8F0+czaUh-sHXxA@mail.gmail.com>
-In-Reply-To: <CA+icZUUDm=WPjmwh5ikp8t+xt7dqTgghCeB8F0+czaUh-sHXxA@mail.gmail.com>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Wed, 15 Apr 2020 19:09:18 +0530
-Message-ID: <CAFA6WYPdJMt-h=9HrV-DcHZnO7xCu74Dh9FuRMnp16qhotyo0g@mail.gmail.com>
-Subject: Re: [PATCH v2] mac80211: fix race in ieee80211_register_hw()
-To:     sedat.dilek@gmail.com, Johannes Berg <johannes@sipsolutions.net>
-Cc:     linux-wireless <linux-wireless@vger.kernel.org>,
-        Krishna Chaitanya <chaitanya.mgit@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, kuba@kernel.org,
-        Kalle Valo <kvalo@codeaurora.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?Matthias=2DPeter_Sch=C3=B6pfer?= 
-        <matthias.schoepfer@ithinx.io>,
-        "Berg Philipp (HAU-EDS)" <Philipp.Berg@liebherr.com>,
-        "Weitner Michael (HAU-EDS)" <Michael.Weitner@liebherr.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Loic Poulain <loic.poulain@linaro.org>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200414163114.GA136578@cmpxchg.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Apr 2020 at 18:49, Sedat Dilek <sedat.dilek@gmail.com> wrote:
->
-> On Wed, Apr 15, 2020 at 3:10 PM Sumit Garg <sumit.garg@linaro.org> wrote:
->
-> [.. ]
->
-> > > In case we don't have any further comments, could you fix this nitpick
-> > > from Chaitanya while applying or would you like me to respin and send
-> > > v3?
-> >
-> > A gentle ping. Is this patch a good candidate for 5.7-rc2?
-> >
->
-> Hi Sumit,
->
-> it's in [1] (see [2]) with slightly mods by Johannes but not in Linus tree.
->
 
-Thanks Sedat for this information.
 
-> Johannes requested a pull-request means will be merged in a next step
-> in net.git and then hopefully land in Linus tree after Dave M.
-> requested a pull-request.
+在 2020/4/15 上午12:31, Johannes Weiner 写道:
+> On Tue, Apr 14, 2020 at 12:52:30PM +0800, Alex Shi wrote:
+>> 在 2020/4/14 上午2:07, Johannes Weiner 写道:
+>>> Plus, the overhead of tracking is tiny - 512k per G of swap (0.04%).
+>>>
+>>> Maybe we should just delete MEMCG_SWAP and unconditionally track swap
+>>> entry ownership when the memory controller is enabled. I don't see a
+>>> good reason not to, and it would simplify the entire swapin path, the
+>>> LRU locking, and the page->mem_cgroup stabilization rules.
+>>>
+>>
+>> Sorry for not follow you up, did you mean just remove the MEMCG_SWAP configuration
+>> and keep the feature in default memcg? 
+> 
+> Yes.
+> 
+>> That does can remove lrucare, but PageLRU lock scheme still fails since
+>> we can not isolate the page during commit_charge, is that right?
+> 
+> No, without lrucare the scheme works. Charges usually do:
+> 
+> page->mem_cgroup = new;
+> SetPageLRU(page);
+> 
+> And so if you can TestClearPageLRU(), page->mem_cgroup is stable.
+> 
+> lrucare charging is the exception: it changes page->mem_cgroup AFTER
+> PageLRU has already been set, and even when it CANNOT acquire the
+> PageLRU lock itself. It violates the rules.
+> 
+> If we make MEMCG_SWAP mandatory, we always have cgroup records for
+> swapped out pages. That means we can charge all swapin pages
+> (incl. readahead pages) directly in __read_swap_cache_async(), before
+> setting PageLRU on the new pages.
+> 
+> Then we can delete lrucare.
+> 
+> And then TestClearPageLRU() guarantees page->mem_cgroup is stable.
+> 
 
-I didn't get this PR notification as currently I am not subscribed to
-linux-wireless ML. So apologies for the noise here.
+Hi Johannes,
 
-BTW, thanks Johannes for picking up this patch.
+Thanks a lot for point out!
 
--Sumit
+Charging in __read_swap_cache_async would ask for 3 layers function arguments
+pass, that would be a bit ugly. Compare to this, could we move out the
+lru_cache add after commit_charge, like ksm copied pages?
 
->
-> Thanks for your patch.
->
-> Regards,
-> - Sedat -
->
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/jberg/mac80211.git/tag/?h=mac80211-for-net-2020-04-15
-> [2] https://git.kernel.org/pub/scm/linux/kernel/git/jberg/mac80211.git/commit/?h=mac80211-for-net-2020-04-15&id=52e04b4ce5d03775b6a78f3ed1097480faacc9fd
+That give a bit extra non lru list time, but the page just only be used only
+after add_anon_rmap setting. Could it cause troubles?
+
+I tried to track down the reason of lru_cache_add here, but no explanation
+till first git kernel commit.
+
+Thanks
+Alex 
+
