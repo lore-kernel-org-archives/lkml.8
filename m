@@ -2,105 +2,81 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17075C2BB55
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:12:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E16B2C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:12:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E712120936
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:12:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586956332;
-	bh=jO1jmMq/YmarATDf7hjoodFLJI0M50FJ/PJsvVCWaBA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yfAPXGAg9BwAt7tiu9O3c2TSZujkbjC/AS+JgOdjciPHGCAaNILLmdfeiU9LRXEl4
-	 sIFRVgMUhLlTww7X7HVQgng/RVnksy5ClGF7u2X8UZOQDOPNMWb2J3cT3Zt+apDcRs
-	 ta+doHpKZ+ZnKXQ0xoxVnaEjvFGAoOeaT0aEqO1k=
+	by mail.kernel.org (Postfix) with ESMTP id B149320936
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:12:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="JVrgbH7s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506122AbgDONMK (ORCPT
+        id S2506113AbgDONMT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:12:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55172 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 09:12:19 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:39500 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897064AbgDOLfi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:35:38 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B98DE20768;
-        Wed, 15 Apr 2020 11:35:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950535;
-        bh=jO1jmMq/YmarATDf7hjoodFLJI0M50FJ/PJsvVCWaBA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W5j9w2vv8W4i+RUlkHSrRRDj3/nReGePV7s2E4njEXJtaJ9RWuEw2Y1251ayXXiC2
-         Rsk/SfnFSXeSIxpkn1xR2Xac+n1GA1oFcXp2dFASJMQ17NKOdcHsDSfNuqp5TXXrE4
-         YROy591PkYkpOM5RQmF9cqCW9lZCNOiw4rexPwkc=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Misono Tomohiro <misono.tomohiro@jp.fujitsu.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 043/129] NFS: direct.c: Fix memory leak of dreq when nfs_get_lock_context fails
-Date:   Wed, 15 Apr 2020 07:33:18 -0400
-Message-Id: <20200415113445.11881-43-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
-References: <20200415113445.11881-1-sashal@kernel.org>
+        id S2506082AbgDONLQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 09:11:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=d/88LlrJNj/d4F115V1sgd+wWhjG+NBIkF8dbPSMqas=; b=JVrgbH7sW3JE9NF1Z62PGLkZVF
+        /srK65laMmHpoN9pXWL7MZLX2syPIyp42MB9L4RzHCghJyBGg6z7QjkWjKHXRg5A0ALyCuLgXOZgM
+        uSbkO6RV3HWzolZuxKjMZanEWE2AGJeXKw51SeuLTBwMM3dddKrHJ1mbinkNVUjxADNM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jOhom-002sd1-1u; Wed, 15 Apr 2020 15:11:04 +0200
+Date:   Wed, 15 Apr 2020 15:11:04 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michal Kubecek <mkubecek@suse.cz>,
+        David Jander <david@protonic.nl>, kernel@pengutronix.de,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Russell King <linux@armlinux.org.uk>, mkl@pengutronix.de
+Subject: Re: [PATCH v1] ethtool: provide UAPI for PHY master/slave
+ configuration.
+Message-ID: <20200415131104.GA657811@lunn.ch>
+References: <20200415121209.12197-1-o.rempel@pengutronix.de>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200415121209.12197-1-o.rempel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Misono Tomohiro <misono.tomohiro@jp.fujitsu.com>
+On Wed, Apr 15, 2020 at 02:12:09PM +0200, Oleksij Rempel wrote:
+> This UAPI is needed for BroadR-Reach 100BASE-T1 devices. Due to lack of
+> auto-negotiation support, we needed to be able to configure the
+> MASTER-SLAVE role of the port manually or from an application in user
+> space.
 
-[ Upstream commit 8605cf0e852af3b2c771c18417499dc4ceed03d5 ]
+Hi Oleksij
 
-When dreq is allocated by nfs_direct_req_alloc(), dreq->kref is
-initialized to 2. Therefore we need to call nfs_direct_req_release()
-twice to release the allocated dreq. Usually it is called in
-nfs_file_direct_{read, write}() and nfs_direct_complete().
+This is a nice way to do this.
 
-However, current code only calls nfs_direct_req_relese() once if
-nfs_get_lock_context() fails in nfs_file_direct_{read, write}().
-So, that case would result in memory leak.
+> +/* Port mode */
+> +#define PORT_MODE_MASTER	0x00
+> +#define PORT_MODE_SLAVE		0x01
+> +#define PORT_MODE_MASTER_FORCE	0x02
+> +#define PORT_MODE_SLAVE_FORCE	0x03
+> +#define PORT_MODE_UNKNOWN	0xff
 
-Fix this by adding the missing call.
+It is not clear to me what PORT_MODE_MASTER and PORT_MODE_SLAVE. Do
+these mean to negotiate master/slave? Maybe some comments, or clearer
+names?
 
-Signed-off-by: Misono Tomohiro <misono.tomohiro@jp.fujitsu.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/nfs/direct.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
-index b768a0b42e82e..ade2435551c89 100644
---- a/fs/nfs/direct.c
-+++ b/fs/nfs/direct.c
-@@ -571,6 +571,7 @@ ssize_t nfs_file_direct_read(struct kiocb *iocb, struct iov_iter *iter)
- 	l_ctx = nfs_get_lock_context(dreq->ctx);
- 	if (IS_ERR(l_ctx)) {
- 		result = PTR_ERR(l_ctx);
-+		nfs_direct_req_release(dreq);
- 		goto out_release;
- 	}
- 	dreq->l_ctx = l_ctx;
-@@ -990,6 +991,7 @@ ssize_t nfs_file_direct_write(struct kiocb *iocb, struct iov_iter *iter)
- 	l_ctx = nfs_get_lock_context(dreq->ctx);
- 	if (IS_ERR(l_ctx)) {
- 		result = PTR_ERR(l_ctx);
-+		nfs_direct_req_release(dreq);
- 		goto out_release;
- 	}
- 	dreq->l_ctx = l_ctx;
--- 
-2.20.1
-
+	Andrew
