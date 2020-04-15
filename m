@@ -2,893 +2,222 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7CD6C38A29
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:37:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB9FC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:37:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D0C320936
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:37:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586961424;
-	bh=iTCJhoshUwS+oHOg3kvyjSr4Dw0ZnnoIWAVFdK3lIgk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u+MSafdBfeVa/zkNUexuBxLEfLUvlddXc1SEs61AkaZGwg8nsA/il9yFX6VW0R/3C
-	 qwC5lBxXHgI/iWrdwrMgjjtimcA9GwN73LjLOfsVRKZsI9+ZoWMzFcKGung/QCPwT4
-	 s8DS5/WpuLl9f0MoOxbX1dV9+JWLNfNJSFN6UeKQ=
+	by mail.kernel.org (Postfix) with ESMTP id CF7602076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:37:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="POod/Q0b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2636617AbgDOOhA (ORCPT
+        id S1731581AbgDOOhO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:37:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45888 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394090AbgDOOdG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 10:33:06 -0400
-Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A730921D92;
-        Wed, 15 Apr 2020 14:32:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586961172;
-        bh=iTCJhoshUwS+oHOg3kvyjSr4Dw0ZnnoIWAVFdK3lIgk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x1zf/ab6+Dev4v+QRUEx8LCKzauXkYpiFLl58Hmtr9UTWsjbxNkH4QdKxdWJp9/1x
-         61r/f6/Tv/MV7iabCieAqG6XqWtpuaHYTiuVn8uX09lrTJoe0n30DCheuMC6O1x1mR
-         M4a7KvInIqh5V/ygCvSZhNiXsDbJxMjMzqyYrbH0=
-Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
-        (envelope-from <mchehab@kernel.org>)
-        id 1jOj5t-006kPl-VO; Wed, 15 Apr 2020 16:32:49 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH 26/34] docs: filesystems: convert sharedsubtree.txt to ReST
-Date:   Wed, 15 Apr 2020 16:32:39 +0200
-Message-Id: <1649a91892a49aa3fe3c0f16386f58323d2745e7.1586960617.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.25.2
-In-Reply-To: <cover.1586960617.git.mchehab+huawei@kernel.org>
-References: <cover.1586960617.git.mchehab+huawei@kernel.org>
+        Wed, 15 Apr 2020 10:37:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39540 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2394142AbgDOOeN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 10:34:13 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2E55C061A10
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 07:34:12 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id g12so11534666wmh.3
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 07:34:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=nxelXILmKZchPwvimzsQBENiKfTkkLiVSXLT8HCWUfg=;
+        b=POod/Q0b08ZdV+ddPjR1JrfNwY27Dbz1s3Uw84CKlljOygYkgsJnl6F56k9XPO7ZKL
+         s1ULoVzWPEUCGPSWZarKN10UO8xNNQQGNPbd3fxmKEruKRDe1MPI0E8ZXrcHUtMNAvP5
+         5VaCQvB6o8KazHI/ePiNBMCebOd8aCVJCFrXLfg9Tk+9yBdrX9OgyoRuO1f3j1FIf70T
+         4JeLPh5w61dGRcY4eVGEsjbOBVxw0sppgq3GdwmYGEV/r0huvtbplLVyg5KLy2LJHHIO
+         zuXZ1qjJDZ/9QnkTgCmxNZH3K6UEFzboHHCSf6R3e66MspBZIv7Fs6s4hph3EQbH0TFs
+         yoag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nxelXILmKZchPwvimzsQBENiKfTkkLiVSXLT8HCWUfg=;
+        b=mlpweb0HbEKFGGAOJ92bpq8q2c34F15eDyQYtpvVJmVbOv9AG4KqeTUyACsCpBuz/B
+         pBueoyM192TDpHF414692hvFEk1t8LrZIf3H3IBEAvyFoRhdoD7o2Cs4mqzngt+X2k7J
+         l111Kq4Jh9VpAkBlregjQjqvMR+QtwgXjuMGdJSH/FDHkz1lZyjTzdQi3ozIQk4+NozD
+         9JEooDryt57LU8owmFa1LLpPlxFATxCyhgyOx0ql6B7XzvShFhFEyF9jV5FIUwTNv/U9
+         5lur7j9e9XZl+ZLtx1NVtgkRoFAL5YUwIPulK4RpBiME8JWiscVG0w0G9dTEYm8PZoIx
+         /imA==
+X-Gm-Message-State: AGi0PuYIgtIBpGtNb/slwJw7EfOU9X35SU2ShE6Ot2g2DJmqWovaKifp
+        HMAYdJMu70PAfWDiHD6Xxf4LSQ==
+X-Google-Smtp-Source: APiQypKZQ8ksOeYlrdeJ8Nk3paLuV0a49yGc7LShsaCdvQV8dGeC8wnlFfMzLeyhC3ntLG7xWn/s7w==
+X-Received: by 2002:a05:600c:214b:: with SMTP id v11mr5813776wml.151.1586961250280;
+        Wed, 15 Apr 2020 07:34:10 -0700 (PDT)
+Received: from [192.168.1.5] (212-5-158-142.ip.btc-net.bg. [212.5.158.142])
+        by smtp.googlemail.com with ESMTPSA id w11sm22389148wmi.32.2020.04.15.07.34.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Apr 2020 07:34:09 -0700 (PDT)
+Subject: Re: [PATCH v4 04/12] v4l: Add source event change for bit-depth
+To:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     Vikash Garodia <vgarodia@codeaurora.org>, dikshita@codeaurora.org
+References: <20200106154929.4331-1-stanimir.varbanov@linaro.org>
+ <20200106154929.4331-5-stanimir.varbanov@linaro.org>
+ <c3b02589-1d7a-a476-7d33-7e555fbe276d@xs4all.nl>
+ <ae233eb1-69fc-6723-0224-0c1fcf786156@linaro.org>
+ <fb27b5cc-0eef-a7b4-f45b-a3986b77c4c9@xs4all.nl>
+ <988e49aa-469d-17a1-ca25-982c63536e6e@linaro.org>
+ <814252fe-6fa9-595b-92b3-8ef8ef4c0187@xs4all.nl>
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Message-ID: <8da8cb6c-4190-1670-46cf-a982481aecdf@linaro.org>
+Date:   Wed, 15 Apr 2020 17:34:01 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <814252fe-6fa9-595b-92b3-8ef8ef4c0187@xs4all.nl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-- Add a SPDX header;
-- Adjust document and section titles;
-- Some whitespace fixes and new line breaks;
-- Mark literal blocks as such;
-- Add table markups;
-- Add it to filesystems/index.rst
+Hi Hans,
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- Documentation/filesystems/index.rst           |   1 +
- Documentation/filesystems/proc.rst            |   2 +-
- .../{sharedsubtree.txt => sharedsubtree.rst}  | 394 ++++++++++--------
- 3 files changed, 227 insertions(+), 170 deletions(-)
- rename Documentation/filesystems/{sharedsubtree.txt => sharedsubtree.rst} (72%)
+On 1/15/20 5:03 PM, Hans Verkuil wrote:
+> On 1/10/20 11:54 AM, Stanimir Varbanov wrote:
+>> Hi Hans,
+>>
+>> On 1/9/20 10:57 AM, Hans Verkuil wrote:
+>>> On 1/9/20 8:41 AM, Stanimir Varbanov wrote:
+>>>> Hi Hans,
+>>>>
+>>>> On 1/8/20 6:09 PM, Hans Verkuil wrote:
+>>>>> On 1/6/20 4:49 PM, Stanimir Varbanov wrote:
+>>>>>> This event indicate that the source color bit-depth is changed
+>>>>>> during run-time. The client must get the new format and re-allocate
+>>>>>> buffers for it. This can usually happens with video decoder (encoders)
+>>>>>> when the bit-stream color bit-depth is changed from 8 to 10bits
+>>>>>> or vice versa.
+>>>>>>
+>>>>>> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+>>>>>> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+>>>>>> ---
+>>>>>>  Documentation/media/uapi/v4l/vidioc-dqevent.rst | 8 +++++++-
+>>>>>>  Documentation/media/videodev2.h.rst.exceptions  | 1 +
+>>>>>>  include/uapi/linux/videodev2.h                  | 1 +
+>>>>>>  3 files changed, 9 insertions(+), 1 deletion(-)
+>>>>>>
+>>>>>> diff --git a/Documentation/media/uapi/v4l/vidioc-dqevent.rst b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
+>>>>>> index 42659a3d1705..fad853d440cf 100644
+>>>>>> --- a/Documentation/media/uapi/v4l/vidioc-dqevent.rst
+>>>>>> +++ b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
+>>>>>> @@ -402,7 +402,13 @@ call.
+>>>>>>  	that many Video Capture devices are not able to recover from a temporary
+>>>>>>  	loss of signal and so restarting streaming I/O is required in order for
+>>>>>>  	the hardware to synchronize to the video signal.
+>>>>>> -
+>>>>>> +    * - ``V4L2_EVENT_SRC_CH_COLOR_DEPTH``
+>>>>>> +      - 0x0002
+>>>>>> +      - This event gets triggered when color bit-depth change is detected
+>>>>>> +	from a video decoder. Applications will have to query the new pixel
+>>>>>> +	format and re-negotiate the queue. In most cases the streaming must be
+>>>>>> +	stopped and restarted (:ref:`VIDIOC_STREAMOFF <VIDIOC_STREAMON>`
+>>>>>> +	followed by :ref:`VIDIOC_STREAMON <VIDIOC_STREAMON>`).
+>>>>>
+>>>>> I think this is too specific for decoders. Something similar to the
+>>>>> CH_RESOLUTION description would be more appropriate:
+>>>>>
+>>>>>       - This event gets triggered when a color bit-depth change (but not a
+>>>>> 	resolution change!) is detected	at an input. This can come from an
+>>>>
+>>>> What you mean by "but not a resolution change" here? Resolution change
+>>>> and bit-depth change cannot occur on the same time, or something else.
+>>>
+>>> What I was trying to say is that a resolution change implies a possible bit-depth
+>>> change as well, whereas V4L2_EVENT_SRC_CH_COLOR_DEPTH is only set if there is
+>>> a bit-depth change but no resolution change.
+>>>
+>>> V4L2_EVENT_SRC_CH_RESOLUTION requires that userspace does a full resync to the
+>>> new format, CH_COLOR_DEPTH implies that only the bit depth changed.
+>>
+>> CH_COLOR_DEPTH implies format re-negotiation as well. In Venus case
+>> 8->10bit change will change the format of OPB buffers (now it is not
+>> possible because of lack of v4l modifiers) and DPB buffers becomes
+>> compressed raw buffers (to optimize bandwidth).
+>>
+>>>
+>>> Which actually makes me wonder: is there a difference between the two change flags
+>>> w.r.t. userspace behavior? If there is, then that should be carefully documented,
+>>> if there isn't, then is this new flag really needed?
+>>
+>> Looking into semantics of v4l events, CH_COLOR_DEPTH makes sense because
+>> it describes what actually changed (similar to CH_RESOLUTION). I would
+>> say that v4l2_event::type V4L2_EVENT_SOURCE_CHANGE implies format
+>> re-negotiation and v4l2_event::src_change just informs userland what
+>> exactly is changed.
+>>
+>> I'll postpone this patch until we have clear vision what will be the
+>> usage in user-space.
+>>
+> 
+> My main problem regarding semantics is what should be done if you disconnect
+> and reconnect an HDMI (for example) connector. You get a V4L2_EVENT_SOURCE_CHANGE
+> when the new signal is detected, but should it just set V4L2_EVENT_SRC_CH_RESOLUTION
+> (as it does today), or also V4L2_EVENT_SRC_CH_COLOR_DEPTH?
 
-diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
-index 1f3635c90632..b65f288366f0 100644
---- a/Documentation/filesystems/index.rst
-+++ b/Documentation/filesystems/index.rst
-@@ -35,6 +35,7 @@ algorithms work.
-    mount_api
-    quota
-    seq_file
-+   sharedsubtree
- 
-    automount-support
- 
-diff --git a/Documentation/filesystems/proc.rst b/Documentation/filesystems/proc.rst
-index 38b606991065..a567bcccbb02 100644
---- a/Documentation/filesystems/proc.rst
-+++ b/Documentation/filesystems/proc.rst
-@@ -1870,7 +1870,7 @@ unbindable        mount is unbindable
- 
- For more information on mount propagation see:
- 
--  Documentation/filesystems/sharedsubtree.txt
-+  Documentation/filesystems/sharedsubtree.rst
- 
- 
- 3.6	/proc/<pid>/comm  & /proc/<pid>/task/<tid>/comm
-diff --git a/Documentation/filesystems/sharedsubtree.txt b/Documentation/filesystems/sharedsubtree.rst
-similarity index 72%
-rename from Documentation/filesystems/sharedsubtree.txt
-rename to Documentation/filesystems/sharedsubtree.rst
-index 8ccfbd55244b..d83395354250 100644
---- a/Documentation/filesystems/sharedsubtree.txt
-+++ b/Documentation/filesystems/sharedsubtree.rst
-@@ -1,7 +1,10 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+===============
- Shared Subtrees
-----------------
-+===============
- 
--Contents:
-+.. Contents:
- 	1) Overview
- 	2) Features
- 	3) Setting mount states
-@@ -41,31 +44,38 @@ replicas continue to be exactly same.
- 
- 	Here is an example:
- 
--	Let's say /mnt has a mount that is shared.
--	mount --make-shared /mnt
-+	Let's say /mnt has a mount that is shared::
-+
-+	    mount --make-shared /mnt
- 
- 	Note: mount(8) command now supports the --make-shared flag,
- 	so the sample 'smount' program is no longer needed and has been
- 	removed.
- 
--	# mount --bind /mnt /tmp
-+	::
-+
-+	    # mount --bind /mnt /tmp
-+
- 	The above command replicates the mount at /mnt to the mountpoint /tmp
- 	and the contents of both the mounts remain identical.
- 
--	#ls /mnt
--	a b c
-+	::
- 
--	#ls /tmp
--	a b c
-+	    #ls /mnt
-+	    a b c
- 
--	Now let's say we mount a device at /tmp/a
--	# mount /dev/sd0  /tmp/a
-+	    #ls /tmp
-+	    a b c
- 
--	#ls /tmp/a
--	t1 t2 t3
-+	Now let's say we mount a device at /tmp/a::
- 
--	#ls /mnt/a
--	t1 t2 t3
-+	    # mount /dev/sd0  /tmp/a
-+
-+	    #ls /tmp/a
-+	    t1 t2 t3
-+
-+	    #ls /mnt/a
-+	    t1 t2 t3
- 
- 	Note that the mount has propagated to the mount at /mnt as well.
- 
-@@ -123,14 +133,15 @@ replicas continue to be exactly same.
- 
- 2d) A unbindable mount is a unbindable private mount
- 
--	let's say we have a mount at /mnt and we make it unbindable
-+	let's say we have a mount at /mnt and we make it unbindable::
- 
--	# mount --make-unbindable /mnt
-+	    # mount --make-unbindable /mnt
- 
--	 Let's try to bind mount this mount somewhere else.
--	 # mount --bind /mnt /tmp
--	 mount: wrong fs type, bad option, bad superblock on /mnt,
--	        or too many mounted file systems
-+	 Let's try to bind mount this mount somewhere else::
-+
-+	    # mount --bind /mnt /tmp
-+	    mount: wrong fs type, bad option, bad superblock on /mnt,
-+		    or too many mounted file systems
- 
- 	Binding a unbindable mount is a invalid operation.
- 
-@@ -138,12 +149,12 @@ replicas continue to be exactly same.
- 3) Setting mount states
- 
- 	The mount command (util-linux package) can be used to set mount
--	states:
-+	states::
- 
--	mount --make-shared mountpoint
--	mount --make-slave mountpoint
--	mount --make-private mountpoint
--	mount --make-unbindable mountpoint
-+	    mount --make-shared mountpoint
-+	    mount --make-slave mountpoint
-+	    mount --make-private mountpoint
-+	    mount --make-unbindable mountpoint
- 
- 
- 4) Use cases
-@@ -154,9 +165,10 @@ replicas continue to be exactly same.
- 
- 	   Solution:
- 
--		The system administrator can make the mount at /cdrom shared
--		mount --bind /cdrom /cdrom
--		mount --make-shared /cdrom
-+		The system administrator can make the mount at /cdrom shared::
-+
-+		    mount --bind /cdrom /cdrom
-+		    mount --make-shared /cdrom
- 
- 		Now any process that clones off a new namespace will have a
- 		mount at /cdrom which is a replica of the same mount in the
-@@ -172,14 +184,14 @@ replicas continue to be exactly same.
- 	   Solution:
- 
- 		To begin with, the administrator can mark the entire mount tree
--		as shareable.
-+		as shareable::
- 
--		mount --make-rshared /
-+		    mount --make-rshared /
- 
- 		A new process can clone off a new namespace. And mark some part
--		of its namespace as slave
-+		of its namespace as slave::
- 
--		mount --make-rslave /myprivatetree
-+		    mount --make-rslave /myprivatetree
- 
- 		Hence forth any mounts within the /myprivatetree done by the
- 		process will not show up in any other namespace. However mounts
-@@ -206,13 +218,13 @@ replicas continue to be exactly same.
- 		versions of the file depending on the path used to access that
- 		file.
- 
--		An example is:
-+		An example is::
- 
--		mount --make-shared /
--		mount --rbind / /view/v1
--		mount --rbind / /view/v2
--		mount --rbind / /view/v3
--		mount --rbind / /view/v4
-+		    mount --make-shared /
-+		    mount --rbind / /view/v1
-+		    mount --rbind / /view/v2
-+		    mount --rbind / /view/v3
-+		    mount --rbind / /view/v4
- 
- 		and if /usr has a versioning filesystem mounted, then that
- 		mount appears at /view/v1/usr, /view/v2/usr, /view/v3/usr and
-@@ -224,8 +236,8 @@ replicas continue to be exactly same.
- 		filesystem is being requested and return the corresponding
- 		inode.
- 
--5) Detailed semantics:
---------------------
-+5) Detailed semantics
-+---------------------
- 	The section below explains the detailed semantics of
- 	bind, rbind, move, mount, umount and clone-namespace operations.
- 
-@@ -235,6 +247,7 @@ replicas continue to be exactly same.
- 5a) Mount states
- 
- 	A given mount can be in one of the following states
-+
- 	1) shared
- 	2) slave
- 	3) shared and slave
-@@ -252,7 +265,8 @@ replicas continue to be exactly same.
- 		A 'shared mount' is defined as a vfsmount that belongs to a
- 		'peer group'.
- 
--		For example:
-+		For example::
-+
- 			mount --make-shared /mnt
- 			mount --bind /mnt /tmp
- 
-@@ -270,7 +284,7 @@ replicas continue to be exactly same.
- 		A slave mount as the name implies has a master mount from which
- 		mount/unmount events are received. Events do not propagate from
- 		the slave mount to the master.  Only a shared mount can be made
--		a slave by executing the following command
-+		a slave by executing the following command::
- 
- 			mount --make-slave mount
- 
-@@ -290,8 +304,10 @@ replicas continue to be exactly same.
- 		peer group.
- 
- 		Only a slave vfsmount can be made as 'shared and slave' by
--		either executing the following command
-+		either executing the following command::
-+
- 			mount --make-shared mount
-+
- 		or by moving the slave vfsmount under a shared vfsmount.
- 
- 	(4) Private mount
-@@ -307,30 +323,32 @@ replicas continue to be exactly same.
- 
- 
-    	State diagram:
-+
-    	The state diagram below explains the state transition of a mount,
--	in response to various commands.
--	------------------------------------------------------------------------
--	|             |make-shared |  make-slave  | make-private |make-unbindab|
--	--------------|------------|--------------|--------------|-------------|
--	|shared	      |shared	   |*slave/private|   private	 | unbindable  |
--	|             |            |              |              |             |
--	|-------------|------------|--------------|--------------|-------------|
--	|slave	      |shared      |	**slave	  |    private   | unbindable  |
--	|             |and slave   |              |              |             |
--	|-------------|------------|--------------|--------------|-------------|
--	|shared	      |shared      |    slave	  |    private   | unbindable  |
--	|and slave    |and slave   |              |              |             |
--	|-------------|------------|--------------|--------------|-------------|
--	|private      |shared	   |  **private	  |    private   | unbindable  |
--	|-------------|------------|--------------|--------------|-------------|
--	|unbindable   |shared	   |**unbindable  |    private   | unbindable  |
--	------------------------------------------------------------------------
-+	in response to various commands::
- 
--	* if the shared mount is the only mount in its peer group, making it
--	slave, makes it private automatically. Note that there is no master to
--	which it can be slaved to.
-+	    -----------------------------------------------------------------------
-+	    |             |make-shared |  make-slave  | make-private |make-unbindab|
-+	    --------------|------------|--------------|--------------|-------------|
-+	    |shared	  |shared      |*slave/private|   private    | unbindable  |
-+	    |             |            |              |              |             |
-+	    |-------------|------------|--------------|--------------|-------------|
-+	    |slave	  |shared      | **slave      |    private   | unbindable  |
-+	    |             |and slave   |              |              |             |
-+	    |-------------|------------|--------------|--------------|-------------|
-+	    |shared       |shared      | slave        |    private   | unbindable  |
-+	    |and slave    |and slave   |              |              |             |
-+	    |-------------|------------|--------------|--------------|-------------|
-+	    |private      |shared      |  **private   |    private   | unbindable  |
-+	    |-------------|------------|--------------|--------------|-------------|
-+	    |unbindable   |shared      |**unbindable  |    private   | unbindable  |
-+	    ------------------------------------------------------------------------
- 
--	** slaving a non-shared mount has no effect on the mount.
-+	    * if the shared mount is the only mount in its peer group, making it
-+	    slave, makes it private automatically. Note that there is no master to
-+	    which it can be slaved to.
-+
-+	    ** slaving a non-shared mount has no effect on the mount.
- 
- 	Apart from the commands listed below, the 'move' operation also changes
- 	the state of a mount depending on type of the destination mount. Its
-@@ -338,31 +356,32 @@ replicas continue to be exactly same.
- 
- 5b) Bind semantics
- 
--	Consider the following command
-+	Consider the following command::
- 
--	mount --bind A/a  B/b
-+	    mount --bind A/a  B/b
- 
- 	where 'A' is the source mount, 'a' is the dentry in the mount 'A', 'B'
- 	is the destination mount and 'b' is the dentry in the destination mount.
- 
- 	The outcome depends on the type of mount of 'A' and 'B'. The table
--	below contains quick reference.
--   ---------------------------------------------------------------------------
--   |         BIND MOUNT OPERATION                                            |
--   |**************************************************************************
--   |source(A)->| shared       |       private  |       slave    | unbindable |
--   | dest(B)  |               |                |                |            |
--   |   |      |               |                |                |            |
--   |   v      |               |                |                |            |
--   |**************************************************************************
--   |  shared  | shared        |     shared     | shared & slave |  invalid   |
--   |          |               |                |                |            |
--   |non-shared| shared        |      private   |      slave     |  invalid   |
--   ***************************************************************************
-+	below contains quick reference::
-+
-+	    --------------------------------------------------------------------------
-+	    |         BIND MOUNT OPERATION                                           |
-+	    |************************************************************************|
-+	    |source(A)->| shared      |       private  |       slave    | unbindable |
-+	    | dest(B)  |              |                |                |            |
-+	    |   |      |              |                |                |            |
-+	    |   v      |              |                |                |            |
-+	    |************************************************************************|
-+	    |  shared  | shared       |     shared     | shared & slave |  invalid   |
-+	    |          |              |                |                |            |
-+	    |non-shared| shared       |      private   |      slave     |  invalid   |
-+	    **************************************************************************
- 
-      	Details:
- 
--	1. 'A' is a shared mount and 'B' is a shared mount. A new mount 'C'
-+    1. 'A' is a shared mount and 'B' is a shared mount. A new mount 'C'
- 	which is clone of 'A', is created. Its root dentry is 'a' . 'C' is
- 	mounted on mount 'B' at dentry 'b'. Also new mount 'C1', 'C2', 'C3' ...
- 	are created and mounted at the dentry 'b' on all mounts where 'B'
-@@ -371,7 +390,7 @@ replicas continue to be exactly same.
- 	'B'.  And finally the peer-group of 'C' is merged with the peer group
- 	of 'A'.
- 
--	2. 'A' is a private mount and 'B' is a shared mount. A new mount 'C'
-+    2. 'A' is a private mount and 'B' is a shared mount. A new mount 'C'
- 	which is clone of 'A', is created. Its root dentry is 'a'. 'C' is
- 	mounted on mount 'B' at dentry 'b'. Also new mount 'C1', 'C2', 'C3' ...
- 	are created and mounted at the dentry 'b' on all mounts where 'B'
-@@ -379,7 +398,7 @@ replicas continue to be exactly same.
- 	'C', 'C1', .., 'Cn' with exactly the same configuration as the
- 	propagation tree for 'B'.
- 
--	3. 'A' is a slave mount of mount 'Z' and 'B' is a shared mount. A new
-+    3. 'A' is a slave mount of mount 'Z' and 'B' is a shared mount. A new
- 	mount 'C' which is clone of 'A', is created. Its root dentry is 'a' .
- 	'C' is mounted on mount 'B' at dentry 'b'. Also new mounts 'C1', 'C2',
- 	'C3' ... are created and mounted at the dentry 'b' on all mounts where
-@@ -389,19 +408,19 @@ replicas continue to be exactly same.
- 	is made the slave of mount 'Z'.  In other words, mount 'C' is in the
- 	state 'slave and shared'.
- 
--	4. 'A' is a unbindable mount and 'B' is a shared mount. This is a
-+    4. 'A' is a unbindable mount and 'B' is a shared mount. This is a
- 	invalid operation.
- 
--	5. 'A' is a private mount and 'B' is a non-shared(private or slave or
-+    5. 'A' is a private mount and 'B' is a non-shared(private or slave or
- 	unbindable) mount. A new mount 'C' which is clone of 'A', is created.
- 	Its root dentry is 'a'. 'C' is mounted on mount 'B' at dentry 'b'.
- 
--	6. 'A' is a shared mount and 'B' is a non-shared mount. A new mount 'C'
-+    6. 'A' is a shared mount and 'B' is a non-shared mount. A new mount 'C'
- 	which is a clone of 'A' is created. Its root dentry is 'a'. 'C' is
- 	mounted on mount 'B' at dentry 'b'.  'C' is made a member of the
- 	peer-group of 'A'.
- 
--	7. 'A' is a slave mount of mount 'Z' and 'B' is a non-shared mount. A
-+    7. 'A' is a slave mount of mount 'Z' and 'B' is a non-shared mount. A
- 	new mount 'C' which is a clone of 'A' is created. Its root dentry is
- 	'a'.  'C' is mounted on mount 'B' at dentry 'b'. Also 'C' is set as a
- 	slave mount of 'Z'. In other words 'A' and 'C' are both slave mounts of
-@@ -409,7 +428,7 @@ replicas continue to be exactly same.
- 	mount/unmount on 'A' do not propagate anywhere else. Similarly
- 	mount/unmount on 'C' do not propagate anywhere else.
- 
--	8. 'A' is a unbindable mount and 'B' is a non-shared mount. This is a
-+    8. 'A' is a unbindable mount and 'B' is a non-shared mount. This is a
- 	invalid operation. A unbindable mount cannot be bind mounted.
- 
- 5c) Rbind semantics
-@@ -422,7 +441,9 @@ replicas continue to be exactly same.
- 	then the subtree under the unbindable mount is pruned in the new
- 	location.
- 
--	eg: let's say we have the following mount tree.
-+	eg:
-+
-+	  let's say we have the following mount tree::
- 
- 		A
- 	      /   \
-@@ -430,12 +451,12 @@ replicas continue to be exactly same.
- 	     / \ / \
- 	     D E F G
- 
--	     Let's say all the mount except the mount C in the tree are
--	     of a type other than unbindable.
-+	  Let's say all the mount except the mount C in the tree are
-+	  of a type other than unbindable.
- 
--	     If this tree is rbound to say Z
-+	  If this tree is rbound to say Z
- 
--	     We will have the following tree at the new location.
-+	  We will have the following tree at the new location::
- 
- 		Z
- 		|
-@@ -457,24 +478,26 @@ replicas continue to be exactly same.
- 	the dentry in the destination mount.
- 
- 	The outcome depends on the type of the mount of 'A' and 'B'. The table
--	below is a quick reference.
--   ---------------------------------------------------------------------------
--   |         		MOVE MOUNT OPERATION                                 |
--   |**************************************************************************
--   | source(A)->| shared      |       private  |       slave    | unbindable |
--   | dest(B)  |               |                |                |            |
--   |   |      |               |                |                |            |
--   |   v      |               |                |                |            |
--   |**************************************************************************
--   |  shared  | shared        |     shared     |shared and slave|  invalid   |
--   |          |               |                |                |            |
--   |non-shared| shared        |      private   |    slave       | unbindable |
--   ***************************************************************************
--	NOTE: moving a mount residing under a shared mount is invalid.
-+	below is a quick reference::
-+
-+	    ---------------------------------------------------------------------------
-+	    |         		MOVE MOUNT OPERATION                                 |
-+	    |**************************************************************************
-+	    | source(A)->| shared      |       private  |       slave    | unbindable |
-+	    | dest(B)  |               |                |                |            |
-+	    |   |      |               |                |                |            |
-+	    |   v      |               |                |                |            |
-+	    |**************************************************************************
-+	    |  shared  | shared        |     shared     |shared and slave|  invalid   |
-+	    |          |               |                |                |            |
-+	    |non-shared| shared        |      private   |    slave       | unbindable |
-+	    ***************************************************************************
-+
-+	.. Note:: moving a mount residing under a shared mount is invalid.
- 
-       Details follow:
- 
--	1. 'A' is a shared mount and 'B' is a shared mount.  The mount 'A' is
-+    1. 'A' is a shared mount and 'B' is a shared mount.  The mount 'A' is
- 	mounted on mount 'B' at dentry 'b'.  Also new mounts 'A1', 'A2'...'An'
- 	are created and mounted at dentry 'b' on all mounts that receive
- 	propagation from mount 'B'. A new propagation tree is created in the
-@@ -483,7 +506,7 @@ replicas continue to be exactly same.
- 	propagation tree is appended to the already existing propagation tree
- 	of 'A'.
- 
--	2. 'A' is a private mount and 'B' is a shared mount. The mount 'A' is
-+    2. 'A' is a private mount and 'B' is a shared mount. The mount 'A' is
- 	mounted on mount 'B' at dentry 'b'. Also new mount 'A1', 'A2'... 'An'
- 	are created and mounted at dentry 'b' on all mounts that receive
- 	propagation from mount 'B'. The mount 'A' becomes a shared mount and a
-@@ -491,7 +514,7 @@ replicas continue to be exactly same.
- 	'B'. This new propagation tree contains all the new mounts 'A1',
- 	'A2'...  'An'.
- 
--	3. 'A' is a slave mount of mount 'Z' and 'B' is a shared mount.  The
-+    3. 'A' is a slave mount of mount 'Z' and 'B' is a shared mount.  The
- 	mount 'A' is mounted on mount 'B' at dentry 'b'.  Also new mounts 'A1',
- 	'A2'... 'An' are created and mounted at dentry 'b' on all mounts that
- 	receive propagation from mount 'B'. A new propagation tree is created
-@@ -501,32 +524,32 @@ replicas continue to be exactly same.
- 	'A'.  Mount 'A' continues to be the slave mount of 'Z' but it also
- 	becomes 'shared'.
- 
--	4. 'A' is a unbindable mount and 'B' is a shared mount. The operation
-+    4. 'A' is a unbindable mount and 'B' is a shared mount. The operation
- 	is invalid. Because mounting anything on the shared mount 'B' can
- 	create new mounts that get mounted on the mounts that receive
- 	propagation from 'B'.  And since the mount 'A' is unbindable, cloning
- 	it to mount at other mountpoints is not possible.
- 
--	5. 'A' is a private mount and 'B' is a non-shared(private or slave or
-+    5. 'A' is a private mount and 'B' is a non-shared(private or slave or
- 	unbindable) mount. The mount 'A' is mounted on mount 'B' at dentry 'b'.
- 
--	6. 'A' is a shared mount and 'B' is a non-shared mount.  The mount 'A'
-+    6. 'A' is a shared mount and 'B' is a non-shared mount.  The mount 'A'
- 	is mounted on mount 'B' at dentry 'b'.  Mount 'A' continues to be a
- 	shared mount.
- 
--	7. 'A' is a slave mount of mount 'Z' and 'B' is a non-shared mount.
-+    7. 'A' is a slave mount of mount 'Z' and 'B' is a non-shared mount.
- 	The mount 'A' is mounted on mount 'B' at dentry 'b'.  Mount 'A'
- 	continues to be a slave mount of mount 'Z'.
- 
--	8. 'A' is a unbindable mount and 'B' is a non-shared mount. The mount
-+    8. 'A' is a unbindable mount and 'B' is a non-shared mount. The mount
- 	'A' is mounted on mount 'B' at dentry 'b'. Mount 'A' continues to be a
- 	unbindable mount.
- 
- 5e) Mount semantics
- 
--	Consider the following command
-+	Consider the following command::
- 
--	mount device  B/b
-+	    mount device  B/b
- 
- 	'B' is the destination mount and 'b' is the dentry in the destination
- 	mount.
-@@ -537,9 +560,9 @@ replicas continue to be exactly same.
- 
- 5f) Unmount semantics
- 
--	Consider the following command
-+	Consider the following command::
- 
--	umount A
-+	    umount A
- 
- 	where 'A' is a mount mounted on mount 'B' at dentry 'b'.
- 
-@@ -592,10 +615,12 @@ replicas continue to be exactly same.
- 
- 	A. What is the result of the following command sequence?
- 
--		mount --bind /mnt /mnt
--		mount --make-shared /mnt
--		mount --bind /mnt /tmp
--		mount --move /tmp /mnt/1
-+		::
-+
-+		    mount --bind /mnt /mnt
-+		    mount --make-shared /mnt
-+		    mount --bind /mnt /tmp
-+		    mount --move /tmp /mnt/1
- 
- 		what should be the contents of /mnt /mnt/1 /mnt/1/1 should be?
- 		Should they all be identical? or should /mnt and /mnt/1 be
-@@ -604,23 +629,27 @@ replicas continue to be exactly same.
- 
- 	B. What is the result of the following command sequence?
- 
--		mount --make-rshared /
--		mkdir -p /v/1
--		mount --rbind / /v/1
-+		::
-+
-+		    mount --make-rshared /
-+		    mkdir -p /v/1
-+		    mount --rbind / /v/1
- 
- 		what should be the content of /v/1/v/1 be?
- 
- 
- 	C. What is the result of the following command sequence?
- 
--		mount --bind /mnt /mnt
--		mount --make-shared /mnt
--		mkdir -p /mnt/1/2/3 /mnt/1/test
--		mount --bind /mnt/1 /tmp
--		mount --make-slave /mnt
--		mount --make-shared /mnt
--		mount --bind /mnt/1/2 /tmp1
--		mount --make-slave /mnt
-+		::
-+
-+		    mount --bind /mnt /mnt
-+		    mount --make-shared /mnt
-+		    mkdir -p /mnt/1/2/3 /mnt/1/test
-+		    mount --bind /mnt/1 /tmp
-+		    mount --make-slave /mnt
-+		    mount --make-shared /mnt
-+		    mount --bind /mnt/1/2 /tmp1
-+		    mount --make-slave /mnt
- 
- 		At this point we have the first mount at /tmp and
- 		its root dentry is 1. Let's call this mount 'A'
-@@ -668,7 +697,8 @@ replicas continue to be exactly same.
- 
- 		step 1:
- 		   let's say the root tree has just two directories with
--		   one vfsmount.
-+		   one vfsmount::
-+
- 				    root
- 				   /    \
- 				  tmp    usr
-@@ -676,14 +706,17 @@ replicas continue to be exactly same.
- 		    And we want to replicate the tree at multiple
- 		    mountpoints under /root/tmp
- 
--		step2:
--		      mount --make-shared /root
-+		step 2:
-+		      ::
- 
--		      mkdir -p /tmp/m1
- 
--		      mount --rbind /root /tmp/m1
-+			mount --make-shared /root
- 
--		      the new tree now looks like this:
-+			mkdir -p /tmp/m1
-+
-+			mount --rbind /root /tmp/m1
-+
-+		      the new tree now looks like this::
- 
- 				    root
- 				   /    \
-@@ -697,11 +730,13 @@ replicas continue to be exactly same.
- 
- 			  it has two vfsmounts
- 
--		step3:
-+		step 3:
-+		    ::
-+
- 			    mkdir -p /tmp/m2
- 			    mount --rbind /root /tmp/m2
- 
--			the new tree now looks like this:
-+			the new tree now looks like this::
- 
- 				      root
- 				     /    \
-@@ -724,6 +759,7 @@ replicas continue to be exactly same.
- 		       it has 6 vfsmounts
- 
- 		step 4:
-+		      ::
- 			  mkdir -p /tmp/m3
- 			  mount --rbind /root /tmp/m3
- 
-@@ -740,7 +776,8 @@ replicas continue to be exactly same.
- 
- 		step 1:
- 		   let's say the root tree has just two directories with
--		   one vfsmount.
-+		   one vfsmount::
-+
- 				    root
- 				   /    \
- 				  tmp    usr
-@@ -748,17 +785,20 @@ replicas continue to be exactly same.
- 		    How do we set up the same tree at multiple locations under
- 		    /root/tmp
- 
--		step2:
--		      mount --bind /root/tmp /root/tmp
-+		step 2:
-+		      ::
- 
--		      mount --make-rshared /root
--		      mount --make-unbindable /root/tmp
- 
--		      mkdir -p /tmp/m1
-+			mount --bind /root/tmp /root/tmp
- 
--		      mount --rbind /root /tmp/m1
-+			mount --make-rshared /root
-+			mount --make-unbindable /root/tmp
- 
--		      the new tree now looks like this:
-+			mkdir -p /tmp/m1
-+
-+			mount --rbind /root /tmp/m1
-+
-+		      the new tree now looks like this::
- 
- 				    root
- 				   /    \
-@@ -768,11 +808,13 @@ replicas continue to be exactly same.
- 			      /  \
- 			     tmp  usr
- 
--		step3:
-+		step 3:
-+		      ::
-+
- 			    mkdir -p /tmp/m2
- 			    mount --rbind /root /tmp/m2
- 
--		      the new tree now looks like this:
-+		      the new tree now looks like this::
- 
- 				    root
- 				   /    \
-@@ -782,12 +824,13 @@ replicas continue to be exactly same.
- 			      /  \     / \
- 			     tmp  usr tmp usr
- 
--		step4:
-+		step 4:
-+		      ::
- 
- 			    mkdir -p /tmp/m3
- 			    mount --rbind /root /tmp/m3
- 
--		      the new tree now looks like this:
-+		      the new tree now looks like this::
- 
- 				    	  root
- 				      /    	  \
-@@ -801,25 +844,31 @@ replicas continue to be exactly same.
- 
- 8A) Datastructure
- 
--	4 new fields are introduced to struct vfsmount
-+	4 new fields are introduced to struct vfsmount:
-+
-+	*   ->mnt_share
-+	*   ->mnt_slave_list
-+	*   ->mnt_slave
-+	*   ->mnt_master
-+
- 	->mnt_share
--	->mnt_slave_list
--	->mnt_slave
--	->mnt_master
--
--	->mnt_share links together all the mount to/from which this vfsmount
-+		links together all the mount to/from which this vfsmount
- 		send/receives propagation events.
- 
--	->mnt_slave_list links all the mounts to which this vfsmount propagates
-+	->mnt_slave_list
-+		links all the mounts to which this vfsmount propagates
- 		to.
- 
--	->mnt_slave links together all the slaves that its master vfsmount
-+	->mnt_slave
-+		links together all the slaves that its master vfsmount
- 		propagates to.
- 
--	->mnt_master points to the master vfsmount from which this vfsmount
-+	->mnt_master
-+		points to the master vfsmount from which this vfsmount
- 		receives propagation.
- 
--	->mnt_flags takes two more flags to indicate the propagation status of
-+	->mnt_flags
-+		takes two more flags to indicate the propagation status of
- 		the vfsmount.  MNT_SHARE indicates that the vfsmount is a shared
- 		vfsmount.  MNT_UNCLONABLE indicates that the vfsmount cannot be
- 		replicated.
-@@ -842,7 +891,7 @@ replicas continue to be exactly same.
- 
- 	A example propagation tree looks as shown in the figure below.
- 	[ NOTE: Though it looks like a forest, if we consider all the shared
--	mounts as a conceptual entity called 'pnode', it becomes a tree]
-+	mounts as a conceptual entity called 'pnode', it becomes a tree]::
- 
- 
- 		        A <--> B <--> C <---> D
-@@ -864,14 +913,19 @@ replicas continue to be exactly same.
- 	A's ->mnt_slave_list links with ->mnt_slave of 'E', 'K', 'F' and 'G'
- 
- 	E's ->mnt_share links with ->mnt_share of K
--	'E', 'K', 'F', 'G' have their ->mnt_master point to struct
--				vfsmount of 'A'
-+
-+	'E', 'K', 'F', 'G' have their ->mnt_master point to struct vfsmount of 'A'
-+
- 	'M', 'L', 'N' have their ->mnt_master point to struct vfsmount of 'K'
-+
- 	K's ->mnt_slave_list links with ->mnt_slave of 'M', 'L' and 'N'
- 
- 	C's ->mnt_slave_list links with ->mnt_slave of 'J' and 'K'
-+
- 	J and K's ->mnt_master points to struct vfsmount of C
-+
- 	and finally D's ->mnt_slave_list links with ->mnt_slave of 'H' and 'I'
-+
- 	'H' and 'I' have their ->mnt_master pointing to struct vfsmount of 'D'.
- 
- 
-@@ -903,6 +957,7 @@ replicas continue to be exactly same.
- 	Prepare phase:
- 
- 	for each mount in the source tree:
-+
- 		   a) Create the necessary number of mount trees to
- 		   	be attached to each of the mounts that receive
- 			propagation from the destination mount.
-@@ -929,11 +984,12 @@ replicas continue to be exactly same.
- 	Abort phase
- 		delete all the newly created trees.
- 
--	NOTE: all the propagation related functionality resides in the file
--	pnode.c
-+	.. Note::
-+	   all the propagation related functionality resides in the file pnode.c
- 
- 
- ------------------------------------------------------------------------
- 
- version 0.1  (created the initial document, Ram Pai linuxram@us.ibm.com)
-+
- version 0.2  (Incorporated comments from Al Viro)
+I think disconnect -> connect should imply that everything is changed
+i.e. source resolution, color depth and colorimetry. We cannot guess is
+it the same HDMI source or not.
+
+> 
+> In my view V4L2_EVENT_SRC_CH_COLOR_DEPTH only makes sense if the resolution
+> stays the same, but only the color depth changes.
+
+I can imagine a bitstream which changing resolution and color-depth at
+the same time. And I guess h264|265 doesn't denied this to happen.
+
+> 
+> BTW, one thing that will be added here as well in the future is a
+> V4L2_EVENT_SRC_CH_COLORIMETRY for when the colorspace etc. information changes,
+> but nothing else. In that case there is no need to renegotiate the format etc.,
+> it's just the interpretation of the video data that changes.
+
+In case of colorimetry, maybe the buffer format will not change but
+colorspace, quantization, ycbcr_encoding and transfer function will
+change. And this imply that the userspace have to streamoff -> gfmt ->
+do-some-action -> streamon ?
+
+I have to figure out what is for example Android is doing when the
+colorimentry is changed.
+If someone knows, please shed some light on that subject.
+
+> 
+> An alternative approach is to define a V4L2_EVENT_SRC_CH_ALL bit mask, OR-ing
+> all the V4L2_EVENT_SRC_CH_* defines, and change all drivers that use
+> V4L2_EVENT_SRC_CH_RESOLUTION at the moment to use V4L2_EVENT_SRC_CH_ALL instead,
+> and only drivers that detect that only one of these changes took place will
+> use a specific V4L2_EVENT_SRC_CH_ flag. This will be primarily codec drivers,
+> I believe.
+
+I can do that as an RFC.
+
+> 
+> There aren't that many of those, so this shouldn't be too difficult to do.
+> 
+> Perhaps this is the cleanest approach to this problem...
+> 
+> Regards,
+> 
+> 	Hans
+> 
+
 -- 
-2.25.2
-
+regards,
+Stan
