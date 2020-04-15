@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F2EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE62C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:19:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FCCC20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:18:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C999C2074F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:19:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586956690;
-	bh=KYVbrnZQ7AJD/sDVMLkUCoghFt+lMHOAtPcsirwNruA=;
+	s=default; t=1586956757;
+	bh=Ovw4O+bQIjjYv0PGALGX8rJlm27Kw+SfdVJ5q442p7o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FCgfGM3oBWJ1ikTjg2zk36nSGEQ0qup8Du6TwPW7EVLLPtXxTH7fq6qEtVt0onqSo
-	 GHs/AwNlOVtfzxelO4C8sk2XiL+A22pxZOQF+x3z6fNyQTI8mUuuhwZlbjmjxDHCt8
-	 eYlsBW7DKuXtwQBnZ4v+tpEX2fl+nRGWOIxr8ffI=
+	b=tnZfjBL9cRU5mWmBUdUFH5JF8rARJ+CqVyj3HrfK6cR05fufmWiIxzMJ9G3N4fRl3
+	 tgS24D3asQBRFOxkselSEQd1K4MqOYLO+TkOwpmnIqO03Gy1XjYqkEhr1FH+G0Mmyh
+	 8sw6KPBDpXGItv/osZZBxhUt5Xw83ttGf3GUCVjo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2898282AbgDONSH (ORCPT
-        <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:18:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54332 "EHLO mail.kernel.org"
+        id S370793AbgDONTK (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 09:19:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897023AbgDOLfH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:35:07 -0400
+        id S2897018AbgDOLfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:35:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DAE720737;
-        Wed, 15 Apr 2020 11:35:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 354F5208FE;
+        Wed, 15 Apr 2020 11:35:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950507;
-        bh=KYVbrnZQ7AJD/sDVMLkUCoghFt+lMHOAtPcsirwNruA=;
+        s=default; t=1586950505;
+        bh=Ovw4O+bQIjjYv0PGALGX8rJlm27Kw+SfdVJ5q442p7o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Prjyj7l3xruxhM6RL78CqDas1WmxzHzeRx/DURClwHMUri2xL0/NhAsNP0sBn9ctH
-         aSFOoXuq+huekZjnW8EoMr+bfoo4tGYAK6T/yqUshm+FgDC7o2QpO2jAPfa0Nolbpp
-         RH5TmCGa86BKO2YqzTGBDy0ZTDvl6dApna0oWQYI=
+        b=CRlI+wvQBdP2bLZNeVecuD/wbVCcNoIvIK1FAaiTaEUVlHyL6nLiKN/XQOu9GRnY0
+         Rmq+6KJpmnLZqHBGqGfz1WTB6WR8wbIPuQFONA8xQGV7WsfyaRJJ+Np/JjBAeWV8O8
+         lbp+87Zmzx6ncxqg8kYEQc48XEo9AlfxmOUhUHxY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Sasha Levin <sashal@kernel.org>, linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 018/129] memory: tegra: Correct debugfs clk rate-range on Tegra20
-Date:   Wed, 15 Apr 2020 07:32:53 -0400
-Message-Id: <20200415113445.11881-18-sashal@kernel.org>
+Cc:     Johan Jonker <jbx6244@gmail.com>, Heiko Stuebner <heiko@sntech.de>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 016/129] ARM: dts: rockchip: fix vqmmc-supply property name for rk3188-bqedison2qc
+Date:   Wed, 15 Apr 2020 07:32:51 -0400
+Message-Id: <20200415113445.11881-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
 References: <20200415113445.11881-1-sashal@kernel.org>
@@ -59,38 +59,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Johan Jonker <jbx6244@gmail.com>
 
-[ Upstream commit 2243af41115d0e36e6414df6dd2a0386e022d9f8 ]
+[ Upstream commit 9cd568dc588c5d168615bf34f325fabe33b2c9a0 ]
 
-Correctly set clk rate-range if number of available timings is zero.
-This fixes noisy "invalid range [4294967295, 0]" error messages during
-boot.
+A test with the command below does not detect all errors
+in combination with 'additionalProperties: false' and
+allOf:
+  - $ref: "synopsys-dw-mshc-common.yaml#"
+allOf:
+  - $ref: "mmc-controller.yaml#"
 
-Fixes: 8209eefa3d37 ("memory: tegra: Implement EMC debugfs interface on Tegra20")
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+'additionalProperties' applies to all properties that are not
+accounted-for by 'properties' or 'patternProperties' in
+the immediate schema.
+
+First when we combine rockchip-dw-mshc.yaml,
+synopsys-dw-mshc-common.yaml and mmc-controller.yaml it gives
+this error:
+
+arch/arm/boot/dts/rk3188-bqedison2qc.dt.yaml: mmc@10218000:
+'vmmcq-supply' does not match any of the regexes:
+'^.*@[0-9]+$',
+'^clk-phase-(legacy|sd-hs|mmc-(hs|hs[24]00|ddr52)|
+uhs-(sdr(12|25|50|104)|ddr50))$',
+'pinctrl-[0-9]+'
+
+'vmmcq-supply' is not a valid property name for mmc nodes.
+Fix this error by renaming it to 'vqmmc-supply'.
+
+make ARCH=arm dtbs_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.yaml
+
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+Link: https://lore.kernel.org/r/20200307134841.13803-1-jbx6244@gmail.com
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/memory/tegra/tegra20-emc.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm/boot/dts/rk3188-bqedison2qc.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/memory/tegra/tegra20-emc.c b/drivers/memory/tegra/tegra20-emc.c
-index 8ae474d9bfb90..b16715e9515d0 100644
---- a/drivers/memory/tegra/tegra20-emc.c
-+++ b/drivers/memory/tegra/tegra20-emc.c
-@@ -628,6 +628,11 @@ static void tegra_emc_debugfs_init(struct tegra_emc *emc)
- 			emc->debugfs.max_rate = emc->timings[i].rate;
- 	}
- 
-+	if (!emc->num_timings) {
-+		emc->debugfs.min_rate = clk_get_rate(emc->clk);
-+		emc->debugfs.max_rate = emc->debugfs.min_rate;
-+	}
-+
- 	err = clk_set_rate_range(emc->clk, emc->debugfs.min_rate,
- 				 emc->debugfs.max_rate);
- 	if (err < 0) {
+diff --git a/arch/arm/boot/dts/rk3188-bqedison2qc.dts b/arch/arm/boot/dts/rk3188-bqedison2qc.dts
+index ad1afd403052a..8afb2fd5d9f1b 100644
+--- a/arch/arm/boot/dts/rk3188-bqedison2qc.dts
++++ b/arch/arm/boot/dts/rk3188-bqedison2qc.dts
+@@ -465,7 +465,7 @@
+ 	non-removable;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&sd1_clk>, <&sd1_cmd>, <&sd1_bus4>;
+-	vmmcq-supply = <&vccio_wl>;
++	vqmmc-supply = <&vccio_wl>;
+ 	#address-cells = <1>;
+ 	#size-cells = <0>;
+ 	status = "okay";
 -- 
 2.20.1
 
