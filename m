@@ -2,412 +2,150 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE1FC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 20:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B61DC3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 20:32:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48CB120774
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 20:31:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ZDU7S0Fc"
+	by mail.kernel.org (Postfix) with ESMTP id 8109820774
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 20:32:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442044AbgDOUb3 (ORCPT
+        id S2636963AbgDOUcY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 16:31:29 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:38040 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438404AbgDOUbU (ORCPT
+        Wed, 15 Apr 2020 16:32:24 -0400
+Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:35900 "EHLO
+        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2438404AbgDOUbn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 16:31:20 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 35CF02D1;
-        Wed, 15 Apr 2020 22:31:15 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1586982675;
-        bh=BELz4vXphr08t8lphrY0ghkwE4w2DtBnvU/u2zI6FTE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZDU7S0Fc9ZTnGvAYzJSrLQbA80VrDpR8YD9sWgc1KOn9yxgaCE8nEEWWJbb3ZJS/i
-         PvqZAbgHusAyUmag5BixvbzMDExAyLrj/bn4FHQqZpAd9Z2A3GzDp6cX50UK0wcCUG
-         SbLVEkk3I+mVCI1HmNdiWF5OP/pSj4k5lSUOLjWs=
-Date:   Wed, 15 Apr 2020 23:31:03 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org,
-        narmstrong@baylibre.com, a.hajda@samsung.com,
-        spanda@codeaurora.org, jonas@kwiboo.se, bjorn.andersson@linaro.org,
-        devicetree@vger.kernel.org, jeffrey.l.hugo@gmail.com,
-        swboyd@chromium.org, jernej.skrabec@siol.net,
-        linux-arm-msm@vger.kernel.org, robdclark@chromium.org,
-        dri-devel@lists.freedesktop.org,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] dt-bindings: drm/bridge: ti-sn65dsi86: Convert to
- yaml
-Message-ID: <20200415203103.GO4758@pendragon.ideasonboard.com>
-References: <20200415084758.1.Ifcdc4ecb12742a27862744ee1e8753cb95a38a7f@changeid>
+        Wed, 15 Apr 2020 16:31:43 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07484;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TvdzT39_1586982696;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TvdzT39_1586982696)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 16 Apr 2020 04:31:39 +0800
+Subject: Re: [PATCHv3, RESEND 2/8] khugepaged: Do not stop collapse if less
+ than half PTEs are referenced
+To:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        akpm@linux-foundation.org, Andrea Arcangeli <aarcange@redhat.com>
+Cc:     Zi Yan <ziy@nvidia.com>, Ralph Campbell <rcampbell@nvidia.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        William Kucharski <william.kucharski@oracle.com>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20200413125220.663-1-kirill.shutemov@linux.intel.com>
+ <20200413125220.663-3-kirill.shutemov@linux.intel.com>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <902cad73-c3ef-c274-7483-c948167639e9@linux.alibaba.com>
+Date:   Wed, 15 Apr 2020 13:31:33 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200415084758.1.Ifcdc4ecb12742a27862744ee1e8753cb95a38a7f@changeid>
+In-Reply-To: <20200413125220.663-3-kirill.shutemov@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Douglas,
 
-Thank you for the patch.
 
-On Wed, Apr 15, 2020 at 08:48:39AM -0700, Douglas Anderson wrote:
-> This moves the bindings over, based a lot on toshiba,tc358768.yaml.
-> Unless there's someone known to be better, I've set the maintainer in
-> the yaml as the first person to submit bindings.
-
-You can also add your name ;-)
-
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+On 4/13/20 5:52 AM, Kirill A. Shutemov wrote:
+> __collapse_huge_page_swapin() checks the number of referenced PTE to
+> decide if the memory range is hot enough to justify swapin.
+>
+> We have few problems with the approach:
+>
+>   - It is way too late: we can do the check much earlier and safe time.
+>     khugepaged_scan_pmd() already knows if we have any pages to swap in
+>     and number of referenced page.
+>
+>   - It stops collapse altogether if there's not enough referenced pages,
+>     not only swappingin.
+>
+> Fix it by making the right check early. We also can avoid additional
+> page table scanning if khugepaged_scan_pmd() haven't found any swap
+> entries.
+>
+> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Fixes: 0db501f7a34c ("mm, thp: convert from optimistic swapin collapsing to conservative")
 > ---
-> 
->  .../bindings/display/bridge/ti,sn65dsi86.txt  |  87 --------
->  .../bindings/display/bridge/ti,sn65dsi86.yaml | 188 ++++++++++++++++++
->  2 files changed, 188 insertions(+), 87 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt
-> deleted file mode 100644
-> index 8ec4a7f2623a..000000000000
-> --- a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt
-> +++ /dev/null
-> @@ -1,87 +0,0 @@
-> -SN65DSI86 DSI to eDP bridge chip
-> ---------------------------------
-> -
-> -This is the binding for Texas Instruments SN65DSI86 bridge.
-> -http://www.ti.com/general/docs/lit/getliterature.tsp?genericPartNumber=sn65dsi86&fileType=pdf
-> -
-> -Required properties:
-> -- compatible: Must be "ti,sn65dsi86"
-> -- reg: i2c address of the chip, 0x2d as per datasheet
-> -- enable-gpios: gpio specification for bridge_en pin (active high)
-> -
-> -- vccio-supply: A 1.8V supply that powers up the digital IOs.
-> -- vpll-supply: A 1.8V supply that powers up the displayport PLL.
-> -- vcca-supply: A 1.2V supply that powers up the analog circuits.
-> -- vcc-supply: A 1.2V supply that powers up the digital core.
-> -
-> -Optional properties:
-> -- interrupts-extended: Specifier for the SN65DSI86 interrupt line.
-> -
-> -- gpio-controller: Marks the device has a GPIO controller.
-> -- #gpio-cells    : Should be two. The first cell is the pin number and
-> -                   the second cell is used to specify flags.
-> -                   See ../../gpio/gpio.txt for more information.
-> -- #pwm-cells : Should be one. See ../../pwm/pwm.yaml for description of
-> -               the cell formats.
-> -
-> -- clock-names: should be "refclk"
-> -- clocks: Specification for input reference clock. The reference
-> -	  clock rate must be 12 MHz, 19.2 MHz, 26 MHz, 27 MHz or 38.4 MHz.
-> -
-> -- data-lanes: See ../../media/video-interface.txt
-> -- lane-polarities: See ../../media/video-interface.txt
-> -
-> -- suspend-gpios: specification for GPIO1 pin on bridge (active low)
+>   mm/khugepaged.c | 25 ++++++++++---------------
+>   1 file changed, 10 insertions(+), 15 deletions(-)
 
-Where has suspend-gpios gone ? :-)
+Acked-by: Yang Shi <yang.shi@linux.alibaba.com>
 
-> -
-> -Required nodes:
-> -This device has two video ports. Their connections are modelled using the
-> -OF graph bindings specified in Documentation/devicetree/bindings/graph.txt.
-> -
-> -- Video port 0 for DSI input
-> -- Video port 1 for eDP output
-> -
-> -Example
-> --------
-> -
-> -edp-bridge@2d {
-> -	compatible = "ti,sn65dsi86";
-> -	#address-cells = <1>;
-> -	#size-cells = <0>;
-> -	reg = <0x2d>;
-> -
-> -	enable-gpios = <&msmgpio 33 GPIO_ACTIVE_HIGH>;
-> -	suspend-gpios = <&msmgpio 34 GPIO_ACTIVE_LOW>;
-> -
-> -	interrupts-extended = <&gpio3 4 IRQ_TYPE_EDGE_FALLING>;
-> -
-> -	vccio-supply = <&pm8916_l17>;
-> -	vcca-supply = <&pm8916_l6>;
-> -	vpll-supply = <&pm8916_l17>;
-> -	vcc-supply = <&pm8916_l6>;
-> -
-> -	clock-names = "refclk";
-> -	clocks = <&input_refclk>;
-> -
-> -	ports {
-> -		#address-cells = <1>;
-> -		#size-cells = <0>;
-> -
-> -		port@0 {
-> -			reg = <0>;
-> -
-> -			edp_bridge_in: endpoint {
-> -				remote-endpoint = <&dsi_out>;
-> -			};
-> -		};
-> -
-> -		port@1 {
-> -			reg = <1>;
-> -
-> -			edp_bridge_out: endpoint {
-> -				data-lanes = <2 1 3 0>;
-> -				lane-polarities = <0 1 0 1>;
-> -				remote-endpoint = <&edp_panel_in>;
-> -			};
-> -		};
-> -	};
-> -}
-> diff --git a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
-> new file mode 100644
-> index 000000000000..8cacc6db33a9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
-> @@ -0,0 +1,188 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/bridge/ti,sn65dsi86.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: SN65DSI86 DSI to eDP bridge chip
-> +
-> +maintainers:
-> +  - Sandeep Panda <spanda@codeaurora.org>
-> +
-> +description: |
-> +  The Texas Instruments SN65DSI86 bridge takes MIPI DSI in and outputs eDP.
-> +  http://www.ti.com/general/docs/lit/getliterature.tsp?genericPartNumber=sn65dsi86&fileType=pdf
-> +
-> +properties:
-> +  compatible:
-> +    const: ti,sn65dsi86
-> +
-> +  reg:
-> +    const: 0x2d
-> +
-> +  enable-gpios:
-> +    maxItems: 1
-> +    description: GPIO specification for bridge_en pin (active high).
-> +
-> +  vccio-supply:
-> +    description: A 1.8V supply that powers up the digital IOs.
-> +
-> +  vpll-supply:
-> +    description: A 1.8V supply that powers up the DisplayPort PLL.
-> +
-> +  vcca-supply:
-> +    description: A 1.2V supply that powers up the analog circuits.
-> +
-> +  vcc-supply:
-> +    description: A 1.2V supply that powers up the digital core.
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +    description:
-> +      Specification for input reference clock. The reference clock rate must
-> +      be 12 MHz, 19.2 MHz, 26 MHz, 27 MHz or 38.4 MHz.
-> +
-> +  clock-names:
-> +    const: refclk
-> +
-> +  gpio-controller: true
-> +  '#gpio-cells':
-> +    const: 2
-> +    description:
-> +      First cell is pin number, second cell is flags.  GPIO pin numbers are
-> +      1-based to match the datasheet.  See ../../gpio/gpio.txt for more
-> +      information.
-> +
-> +  '#pwm-cells':
-> +    const: 1
-> +    description: See ../../pwm/pwm.yaml for description of the cell formats.
-> +
-> +  data-lanes:
+Just a nit below.
 
-Should this have
+>
+> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> index 99bab7e4d05b..5968ec5ddd6b 100644
+> --- a/mm/khugepaged.c
+> +++ b/mm/khugepaged.c
+> @@ -902,11 +902,6 @@ static bool __collapse_huge_page_swapin(struct mm_struct *mm,
+>   		.pgoff = linear_page_index(vma, address),
+>   	};
+>   
+> -	/* we only decide to swapin, if there is enough young ptes */
+> -	if (referenced < HPAGE_PMD_NR/2) {
+> -		trace_mm_collapse_huge_page_swapin(mm, swapped_in, referenced, 0);
+> -		return false;
+> -	}
+>   	vmf.pte = pte_offset_map(pmd, address);
+>   	for (; vmf.address < address + HPAGE_PMD_NR*PAGE_SIZE;
+>   			vmf.pte++, vmf.address += PAGE_SIZE) {
+> @@ -946,7 +941,7 @@ static bool __collapse_huge_page_swapin(struct mm_struct *mm,
+>   static void collapse_huge_page(struct mm_struct *mm,
+>   				   unsigned long address,
+>   				   struct page **hpage,
+> -				   int node, int referenced)
+> +				   int node, int referenced, int unmapped)
+>   {
+>   	pmd_t *pmd, _pmd;
+>   	pte_t *pte;
+> @@ -1003,7 +998,8 @@ static void collapse_huge_page(struct mm_struct *mm,
+>   	 * If it fails, we release mmap_sem and jump out_nolock.
+>   	 * Continuing to collapse causes inconsistency.
+>   	 */
+> -	if (!__collapse_huge_page_swapin(mm, vma, address, pmd, referenced)) {
+> +	if (unmapped && !__collapse_huge_page_swapin(mm, vma, address,
+> +				pmd, referenced)) {
+>   		mem_cgroup_cancel_charge(new_page, memcg, true);
+>   		up_read(&mm->mmap_sem);
+>   		goto out_nolock;
+> @@ -1214,22 +1210,21 @@ static int khugepaged_scan_pmd(struct mm_struct *mm,
+>   		    mmu_notifier_test_young(vma->vm_mm, address))
+>   			referenced++;
+>   	}
+> -	if (writable) {
+> -		if (referenced) {
+> +	if (!writable) {
+> +		result = SCAN_PAGE_RO;
+> +	} else if (!referenced || (unmapped && referenced < HPAGE_PMD_NR/2)) {
+> +		result = SCAN_LACK_REFERENCED_PAGE;
+> +	} else {
+>   			result = SCAN_SUCCEED;
+>   			ret = 1;
 
-	minItems: 1
-	maxItems: 4
-	items:
-	  enum:
-	    - 0
-	    - 1
-	    - 2
-	    - 3
+Shall fix the indentation for the above two statements?
 
-> +    description: See ../../media/video-interface.txt
-> +
-> +  lane-polarities:
-> +    description: See ../../media/video-interface.txt
+> -		} else {
+> -			result = SCAN_LACK_REFERENCED_PAGE;
+> -		}
+> -	} else {
+> -		result = SCAN_PAGE_RO;
+>   	}
+>   out_unmap:
+>   	pte_unmap_unlock(pte, ptl);
+>   	if (ret) {
+>   		node = khugepaged_find_target_node();
+>   		/* collapse_huge_page will return with the mmap_sem released */
+> -		collapse_huge_page(mm, address, hpage, node, referenced);
+> +		collapse_huge_page(mm, address, hpage, node,
+> +				referenced, unmapped);
+>   	}
+>   out:
+>   	trace_mm_khugepaged_scan_pmd(mm, page, writable, referenced,
 
-And something similar here,
-
-	minItems: 1
-	maxItems: 4
-	items:
-	  enum:
-	    - 0
-	    - 1
-	uniqueItems: false
-
-I'm not entirely sure where uniqueItems should be placed. I'm also not
-sure how to specify that both data-lanes and lane-polarities need to
-have the same number of items, maybe
-
-dependencies:
-  data-lanes: [lane-polarities]
-
-> +
-> +  ports:
-> +    type: object
-> +
-> +    properties:
-> +      "#address-cells":
-> +        const: 1
-> +
-> +      "#size-cells":
-> +        const: 0
-> +
-> +      port@0:
-> +        type: object
-> +        additionalProperties: false
-> +
-> +        description:
-> +          Video port for MIPI DSI input
-> +
-> +        properties:
-> +          reg:
-> +            const: 0
-> +
-> +        patternProperties:
-> +          endpoint:
-
-If there's a single endpoint, you don't need patternProperties, it can
-be specified in properties.
-
-> +            type: object
-> +            additionalProperties: false
-> +
-> +            properties:
-> +              remote-endpoint: true
-> +
-> +        required:
-> +          - reg
-> +
-> +      port@1:
-> +        type: object
-> +        additionalProperties: false
-> +
-> +        description:
-> +          Video port for eDP output (panel or connector).
-> +
-> +        properties:
-> +          reg:
-> +            const: 1
-> +
-> +        patternProperties:
-> +          endpoint:
-
-Same here.
-
-> +            type: object
-> +            additionalProperties: false
-> +
-> +            properties:
-> +              remote-endpoint: true
-> +
-> +        required:
-> +          - reg
-> +
-> +    required:
-> +      - "#address-cells"
-> +      - "#size-cells"
-> +      - port@0
-> +      - port@1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - enable-gpios
-> +  - vccio-supply
-> +  - vpll-supply
-> +  - vcca-supply
-> +  - vcc-supply
-> +  - ports
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/qcom,rpmh.h>
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +    i2c1 {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      bridge@2d {
-> +        compatible = "ti,sn65dsi86";
-> +        reg = <0x2d>;
-> +
-> +        interrupt-parent = <&tlmm>;
-> +        interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +        enable-gpios = <&tlmm 102 GPIO_ACTIVE_HIGH>;
-> +
-> +        vpll-supply = <&src_pp1800_s4a>;
-> +        vccio-supply = <&src_pp1800_s4a>;
-> +        vcca-supply = <&src_pp1200_l2a>;
-> +        vcc-supply = <&src_pp1200_l2a>;
-> +
-> +        clocks = <&rpmhcc RPMH_LN_BB_CLK2>;
-> +        clock-names = "refclk";
-> +
-> +        ports {
-> +          #address-cells = <1>;
-> +          #size-cells = <0>;
-> +
-> +          port@0 {
-> +            reg = <0>;
-> +            endpoint {
-> +              remote-endpoint = <&dsi0_out>;
-> +            };
-> +          };
-> +
-> +          port@1 {
-> +            reg = <1>;
-> +            endpoint {
-> +              remote-endpoint = <&panel_in_edp>;
-> +            };
-> +          };
-> +        };
-> +      };
-> +    };
-> +
-
--- 
-Regards,
-
-Laurent Pinchart
