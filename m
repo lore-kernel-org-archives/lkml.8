@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 502A3C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:13:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A660C38A2B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:13:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2290C21734
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:13:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEB0121744
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:13:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586970795;
-	bh=SyWd06FhjkR3Z0iP5xh/+2dSsMuGwGzBFtzTZ213fr0=;
+	s=default; t=1586970807;
+	bh=dSo5spukq2o6ctjGLHd9O9QaqM7Pb24Hbyo2sHA/3bY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qVrHXgimxVTReIDoo3srTQalYbkhX3VH4GvF+5zBcgugr1MC8KCb1hOrKKNyODA4Q
-	 6GAxrFlKG4jGMERaTVhBGHTiheUEda6JJ803KTraxs7kCIIthgbrruBxEpVpsOGYgB
-	 GvsuNP6WKUVp9SL7hCfZm5DOkT6CIUUHGpm1KSKc=
+	b=DGcOgJ0qVuz2hcmxngMydNopahR2Nnuqn/Bxfe9RwJZP45ltgDuc3PHt8BU3kLbAv
+	 DpeHd8suh+VwP6spQnXt/y4/RjeWj45owE6MhWDkIp9LtRlxJN4Ic5mmjxBok6VzDM
+	 1jCZMaAlD4i2qHMMVcR35rF4Q1hmKW2xRFmnEOo0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1416479AbgDORNM (ORCPT
+        id S1416493AbgDORNZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 13:13:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42168 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 13:13:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2410692AbgDORK5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 13:10:57 -0400
+        id S2406325AbgDORK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 13:10:56 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84F4221841;
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F72D216FD;
         Wed, 15 Apr 2020 17:10:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1586970656;
-        bh=SyWd06FhjkR3Z0iP5xh/+2dSsMuGwGzBFtzTZ213fr0=;
+        bh=dSo5spukq2o6ctjGLHd9O9QaqM7Pb24Hbyo2sHA/3bY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tkK6AbiLKzIAoMcyJ7UIfb68jTMwhDQ/GMWbwIBP8FQFyGlO81ZIxHcQDr+XwWAXc
-         V7WpES/acymwZ8VxasMGqgfTIqrrGKVf2KTTaI0ATU0FjxMno0dWCckUjzDIMcf039
-         kaOOGq7sccjZDYXt5i0QGIIoAoRfNTE6oUZwZFqc=
+        b=x3wvq7ao8bEqM+39Kmdi9uYCNjmTtY6sG+tXlUyxv7vmzkX8DrihP6MkWCIkDTD+4
+         rCTFPcvITWUrQjK13M4lR3XnRtG1WkCh6pbffrpRjATNlpmcINGkp1XVnUJZK9rL/Z
+         LETH6GhDqxJZmNHi3AxvgXtuyMryXT6DLmcnaVkw=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 02/19] srcu: Add KCSAN stubs
-Date:   Wed, 15 Apr 2020 10:10:37 -0700
-Message-Id: <20200415171054.9013-2-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 01/19] rcu: Add KCSAN stubs
+Date:   Wed, 15 Apr 2020 10:10:36 -0700
+Message-Id: <20200415171054.9013-1-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200415171017.GA7821@paulmck-ThinkPad-P72>
 References: <20200415171017.GA7821@paulmck-ThinkPad-P72>
@@ -67,16 +67,16 @@ move ahead.
 
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/srcutree.c | 13 +++++++++++++
+ kernel/rcu/tree.c | 13 +++++++++++++
  1 file changed, 13 insertions(+)
 
-diff --git a/kernel/rcu/srcutree.c b/kernel/rcu/srcutree.c
-index 0c71505..ba2b751 100644
---- a/kernel/rcu/srcutree.c
-+++ b/kernel/rcu/srcutree.c
-@@ -29,6 +29,19 @@
- #include "rcu.h"
- #include "rcu_segcblist.h"
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 06548e2..f13130a 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -67,6 +67,19 @@
+ #endif
+ #define MODULE_PARAM_PREFIX "rcutree."
  
 +#ifndef data_race
 +#define data_race(expr)							\
@@ -91,9 +91,9 @@ index 0c71505..ba2b751 100644
 +#define ASSERT_EXCLUSIVE_ACCESS(var) do { } while (0)
 +#endif
 +
- /* Holdoff in nanoseconds for auto-expediting. */
- #define DEFAULT_SRCU_EXP_HOLDOFF (25 * 1000)
- static ulong exp_holdoff = DEFAULT_SRCU_EXP_HOLDOFF;
+ /* Data structures. */
+ 
+ /*
 -- 
 2.9.5
 
