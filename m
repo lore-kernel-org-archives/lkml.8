@@ -2,84 +2,102 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE4CC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13257C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:18:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99F5020774
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:17:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586913433;
-	bh=Z8t12Kri4dLkYoQfBj9LeTBHSVbJC29k8QLFe4WYAn0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=FyyqaCuBn9S2q+D3xNnL1wePQ0+6lY5I7uU8lQUNq/uPdCvmla+w0+nlwc+onwYB7
-	 //gIrEgaj1S3y60EhiBn9LqvrJ/aP6rLps4Ka1PM8sPfBHOS1KPBmctRfn423jGhAm
-	 vIZFzSNPu2KyV6rPl8CZJPTRASdOMPhhBNhebaH4=
+	by mail.kernel.org (Postfix) with ESMTP id DD619214D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:18:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B+V2QJhL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389106AbgDOBRM (ORCPT
+        id S2392451AbgDOBSf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 21:17:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50420 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388394AbgDOBRH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 21:17:07 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CD58206D9;
-        Wed, 15 Apr 2020 01:17:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586913426;
-        bh=Z8t12Kri4dLkYoQfBj9LeTBHSVbJC29k8QLFe4WYAn0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=trHGKNCxzakSMiiFFW7h7ipr5l5ZPqXMRMACUtk4YKpwd8Pg1RJ2PiBsRP5nCE9+1
-         fCvzyZDvGOZsZH+JWcOhF2bmZOk4UdQ9IgBloKo9E4jlYJXAc0OSn746DXLsWt7WBJ
-         s1ct6x0rSpHRCfj/HRWtfY1TDdkeieGLLTsLzoWE=
-Date:   Tue, 14 Apr 2020 18:17:05 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        William Kucharski <william.kucharski@oracle.com>
-Subject: Re: [PATCH v11 05/25] mm: Add new readahead_control API
-Message-Id: <20200414181705.bfc4c0087092051a9475141e@linux-foundation.org>
-In-Reply-To: <20200414150233.24495-6-willy@infradead.org>
-References: <20200414150233.24495-1-willy@infradead.org>
-        <20200414150233.24495-6-willy@infradead.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 14 Apr 2020 21:18:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57358 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2392448AbgDOBSY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 21:18:24 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 408FFC061A0E
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 18:18:23 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id b13so1810245oti.3
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 18:18:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=U1l2/pt2vcXJs4JHOfaqDncBBzdHatpYCeFPNCdgXmY=;
+        b=B+V2QJhLQsBm/e5lZ06FfL9w72jKW1Ok92LzH6+jMc/K7B3adM/3jfrxAccX7mEHh/
+         viSNMwIytJNitnDOPAGcYsDZ6hg1F1B2KRhSZad2SqUfaZAKtNSEHMr/KqZntR31eW9b
+         mnqU+JLn3CH43CYPUI/cvfgs7CxJv9F/MIgF7y/BSBRwSs+gOOq6SNbqr2GveCzOkz5p
+         CUScmSV7n51+5Onkqn/h6yrEICD/toxBejyWTEtaTdAfPvPPnMW8YO5SMzRY12wbQNpq
+         qrdse3QF/S6pP6v4PWXI6zy50Cg+YLM4nPIGu9iSofBzsZtwerlh6l/kv037LJENL7pz
+         wYYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=U1l2/pt2vcXJs4JHOfaqDncBBzdHatpYCeFPNCdgXmY=;
+        b=kEynsth2VEHaEOrQoU+KjxygXnGvHB1hSjzsvFzlYgdFwTt/gWvEy2W801inbdflvm
+         wFr3bb3Ybi0CdPt+budm4B5kKNeAj4YqBXoTMkOzzvoBfVB5KbBYMPM8P0erXqpjxf6F
+         pxgjUGBAEgvQoBM2elPAtimCAyRHylhMzKOloNDg+B0las3lEl/7RVChnQbUIhQirM7F
+         GOeU45/OLL3J2fS0CJIAI4BHlATa7u4/yKe0MEMZnqLlITj9OJS/cuy1f07f2OT+kN3z
+         s28uHI1LOQ8U4SyfOZph1Q7s+C9HnI3pkYzoN+XxhlQfW5X0IVLWIHgA5tgaXy8KTPHa
+         kfSg==
+X-Gm-Message-State: AGi0PuYUNqrPiessrDhooR5DtxqYRz1h+ff9hVB5P6l6+gdud8i5gcZs
+        EcSZa0WnaaNDs/Qt6xQ1MpP0YnnnxQrbyhf+oQXELw==
+X-Google-Smtp-Source: APiQypK9nKDX/Fv38V2E+Fpv1Q1bTceAzMb90oayw7n7ZzkqoIHvTjqwdd5FRXUJe5CujZpV+QwZrLgaUvSjidfYTdQ=
+X-Received: by 2002:a9d:3988:: with SMTP id y8mr11026479otb.352.1586913502446;
+ Tue, 14 Apr 2020 18:18:22 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200415104152.4d770116@canb.auug.org.au>
+In-Reply-To: <20200415104152.4d770116@canb.auug.org.au>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Tue, 14 Apr 2020 18:18:11 -0700
+Message-ID: <CALAqxLVN_MZ7XWsg99dhy1=Vde_XSCHey78mrxRuu7a_THxYYw@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the qcom tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Andy Gross <agross@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Apr 2020 08:02:13 -0700 Matthew Wilcox <willy@infradead.org> wrote:
+On Tue, Apr 14, 2020 at 5:41 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi all,
+>
+> After merging the qcom tree, today's linux-next build (x86_64
+> allmodconfig) failed like this:
+>
+> drivers/soc/qcom/rpmh-rsc.c: In function '__tcs_buffer_write':
+> drivers/soc/qcom/rpmh-rsc.c:484:3: error: implicit declaration of function 'trace_rpmh_send_msg_rcuidle'; did you mean 'trace_rpmh_send_msg_enabled'? [-Werror=implicit-function-declaration]
+>   484 |   trace_rpmh_send_msg_rcuidle(drv, tcs_id, j, msgid, cmd);
+>       |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+>       |   trace_rpmh_send_msg_enabled
+> cc1: some warnings being treated as errors
+>
+> I don't know why this error only started happening today.  However
+> reverting commit
+>
+>   1d3c6f86fd3f ("soc: qcom: rpmh: Allow RPMH driver to be loaded as a module")
+>
+> fixes the build, so I have done that for today.
 
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> 
-> Filesystems which implement the upcoming ->readahead method will get
-> their pages by calling readahead_page() or readahead_page_batch().
-> These functions support large pages, even though none of the filesystems
-> to be converted do yet.
-> 
-> +static inline struct page *readahead_page(struct readahead_control *rac)
-> +static inline unsigned int __readahead_batch(struct readahead_control *rac,
-> +		struct page **array, unsigned int array_sz)
 
-These are large functions.  Was it correct to inline them?
+Ah. I'm guessing the newly added rpmh-rsc code depends on rpmh being built in.
 
-The batching API only appears to be used by fuse?  If so, do we really
-need it?  Does it provide some functional need, or is it a performance
-thing?  If the latter, how significant is it?
+I'll take a look at it.
 
-The code adds quite a few (inlined!) VM_BUG_ONs.  Can we plan to remove
-them at some stage?  Such as, before Linus shouts at us :)
+thanks
+-john
