@@ -2,124 +2,119 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29337C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:36:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69144C2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:36:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B65420737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:36:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4476420737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:36:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586954160;
-	bh=rv4wNAEw1ezNnCn5+PHfTEYJcBetnx9fFS6c/B4AKHs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cVLTSAmAgFe39Kq86KyiTmH+vWBEpHOibCPv73jNmgYtiIb7L8z7JD74GSwvmq9NN
-	 vyZeHxlR6WNMMa55/FoEXBVdTPXRvWS+ybY0mEh1y+ZxY8+NfUSmR48171kXTRE53X
-	 96ZH75kdG2Sq7uj1CUMvutKNpBxWKMnioPeUi0Gg=
+	s=default; t=1586954170;
+	bh=U2YmseTlANKK+dbiJT/Rk72V3K1e4CYlnbGh0jjwpqM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=kKrfQbWjuBu8JKJYP2Yh+WIKRLyagA3Vb+yj4ileghkqMuYDVl1/ozAHQKcJScupJ
+	 Mq/OEF/1+8ZIsHtzlA2GtF3mcl5Iml6/PcYirAQSn4nEJkK8H7cmiqSNVuDw+9bCnc
+	 dsKF7wbuAPbM47o2dEJK3iS4ru0FK+eDD6BZE6V4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S369830AbgDOMf6 (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:35:58 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:46280 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S369768AbgDOMeh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 08:34:37 -0400
-Received: by mail-pg1-f194.google.com with SMTP id 188so1401864pgj.13;
-        Wed, 15 Apr 2020 05:34:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rcRovzoWQ44rccZ9H/a7flVu7Tih9ve+r3FKd13LlAQ=;
-        b=iyKCCZfsqg0xkZHoekMMOYD9rKj9JjHmxgHZmU1o+NpkH1lCzQKZPkQ4mgaAxdj+kq
-         IB9lEHqyRGLg4LzgKPwwLKPiYDhqLwsXLiV1TRRkPZhNNXxkIRxdViBJ3yS3K6d7U+5x
-         Ew3msygGyukvDjsHv2sIcFXuI5Asfmg7xW7GY3XQgdjkBw18ofn8Y7cFdGWG6K0yhrj9
-         mVZXfanMdzT632HdhZoBIYCdRdn6jyrad2huEo1QPmjLR+dSrZR7bLqDS2Cxipd2UI1C
-         MFtt37Hr9ZEsVae3uf0naN6jhA041uC+AIuszUo62me9feE1IM2A6wAQnAKY4WQl7ahP
-         m6dw==
-X-Gm-Message-State: AGi0PuYP6Uc1Y1haWX3woBilWZqsrYb4Ehu9c9UEzVHEz+mKKkMSv0zt
-        r0KpinT/mgLr+Z5LLkZPpgI=
-X-Google-Smtp-Source: APiQypKeqxCW3QQL5aO52Dw6wP6HdxhoJjvtMA6kum1OCbDCHdbtO6A7AQ4QxcYQpPoWr42KEAvvmg==
-X-Received: by 2002:a63:cd08:: with SMTP id i8mr22905838pgg.55.1586954076359;
-        Wed, 15 Apr 2020 05:34:36 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id o15sm12562445pgj.60.2020.04.15.05.34.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2020 05:34:35 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 1649340277; Wed, 15 Apr 2020 12:34:34 +0000 (UTC)
-Date:   Wed, 15 Apr 2020 12:34:34 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
-        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
-        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
-        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>
-Subject: Re: [PATCH 3/5] blktrace: refcount the request_queue during ioctl
-Message-ID: <20200415123434.GU11244@42.do-not-panic.com>
-References: <20200414041902.16769-1-mcgrof@kernel.org>
- <20200414041902.16769-4-mcgrof@kernel.org>
- <20200414154044.GB25765@infradead.org>
- <20200415061649.GS11244@42.do-not-panic.com>
- <20200415071425.GA21099@infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200415071425.GA21099@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S369838AbgDOMgI (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:36:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34074 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S369778AbgDOMep (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 08:34:45 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0056E206D5;
+        Wed, 15 Apr 2020 12:34:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586954084;
+        bh=U2YmseTlANKK+dbiJT/Rk72V3K1e4CYlnbGh0jjwpqM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=LK+ZCXJJXUKNwPGZh9RVn7FZyGdobbDn8uw2ITPIBJPuUrffuMUixz+GSojt3JRAh
+         4zwqnxIH++WDh3kU1JI4/A5sIAHBWBAp3LPdJrNWxcSeXmvHSWQaL7StRXV6vLlIzB
+         vFM9KjvI+wl5SQSeyiY9VB+PYStOYzVB5rfsRqBU=
+Date:   Wed, 15 Apr 2020 13:34:42 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Tang Bin <tangbin@cmss.chinamobile.com>
+Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Mark Brown <broonie@kernel.org>, nicoleotsuka@gmail.com,
+        perex@perex.cz, Shengju Zhang <zhangshengju@cmss.chinamobile.com>,
+        timur@kernel.org, tiwai@suse.com, Xiubo.Lee@gmail.com
+Subject: Applied "ASoC: fsl_micfil: Omit superfluous error message in fsl_micfil_probe()" to the asoc tree
+In-Reply-To:  <20200415044513.17492-1-tangbin@cmss.chinamobile.com>
+Message-Id:  <applied-20200415044513.17492-1-tangbin@cmss.chinamobile.com>
+X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 12:14:25AM -0700, Christoph Hellwig wrote:
-> On Wed, Apr 15, 2020 at 06:16:49AM +0000, Luis Chamberlain wrote:
-> > The BLKTRACESETUP above works on request_queue which later
-> > LOOP_CTL_DEL races on and sweeps the debugfs dir underneath us.
-> > If you use this commit alone though, this doesn't fix the race issue
-> > however, and that's because of both still the debugfs_lookup() use
-> > and that we're still using asynchronous removal at this point.
-> > 
-> > refcounting will just ensure we don't take the request_queue underneath
-> > our noses.
-> > 
-> > Should I just add this to the commit log?
-> 
-> That sounds much more useful than the trace.
-> 
-> Btw, Isn't blk_get_queue racy as well?  Shouldn't we check
-> blk_queue_dying after getting the reference and undo it if the queue is
-> indeeed dying?
+The patch
 
-Yes that race should be possible:
+   ASoC: fsl_micfil: Omit superfluous error message in fsl_micfil_probe()
 
-bool blk_get_queue(struct request_queue *q)                                     
-{                                                                               
-	if (likely(!blk_queue_dying(q))) {
-       ----------> we can get the queue to go dying here <---------
-		__blk_get_queue(q);
-		return true;
-	}                                                                       
+has been applied to the asoc tree at
 
-	return false;
-}                                                                               
-EXPORT_SYMBOL(blk_get_queue);
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
-I'll pile up a fix. I've also considered doing a full review of callers
-outside of the core block layer using it, and maybe just unexporting
-this. It was originally exported due to commit d86e0e83b ("block: export
-blk_{get,put}_queue()") to fix a scsi bug, but I can't find such
-respective fix. I suspec that using bdgrab()/bdput() seems more likely
-what drivers should be using. That would allow us to keep this
-functionality internal.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-Think that's worthy review?
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-  Luis
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 83b35f4586e235bfb785a7947b555ad8f3d96887 Mon Sep 17 00:00:00 2001
+From: Tang Bin <tangbin@cmss.chinamobile.com>
+Date: Wed, 15 Apr 2020 12:45:13 +0800
+Subject: [PATCH] ASoC: fsl_micfil: Omit superfluous error message in
+ fsl_micfil_probe()
+
+In the function fsl_micfil_probe(), when get irq failed, the function
+platform_get_irq() logs an error message, so remove redundant message here.
+
+Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+Signed-off-by: Shengju Zhang <zhangshengju@cmss.chinamobile.com>
+Link: https://lore.kernel.org/r/20200415044513.17492-1-tangbin@cmss.chinamobile.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/fsl/fsl_micfil.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/sound/soc/fsl/fsl_micfil.c b/sound/soc/fsl/fsl_micfil.c
+index f7f2d29f1bfe..e73bd6570a08 100644
+--- a/sound/soc/fsl/fsl_micfil.c
++++ b/sound/soc/fsl/fsl_micfil.c
+@@ -702,10 +702,8 @@ static int fsl_micfil_probe(struct platform_device *pdev)
+ 	for (i = 0; i < MICFIL_IRQ_LINES; i++) {
+ 		micfil->irq[i] = platform_get_irq(pdev, i);
+ 		dev_err(&pdev->dev, "GET IRQ: %d\n", micfil->irq[i]);
+-		if (micfil->irq[i] < 0) {
+-			dev_err(&pdev->dev, "no irq for node %s\n", pdev->name);
++		if (micfil->irq[i] < 0)
+ 			return micfil->irq[i];
+-		}
+ 	}
+ 
+ 	if (of_property_read_bool(np, "fsl,shared-interrupt"))
+-- 
+2.20.1
+
