@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E18ACC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:17:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF02C2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:18:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B093120575
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:17:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D67D220575
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:17:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586956673;
-	bh=vWk7gWqHU/rr1AfSECvbX+1y/08BdStuBe2bUqRvfl4=;
+	s=default; t=1586956679;
+	bh=xnctP96IABKORGoIgvVEM+OiiZ2hWkTGMixUA2d1amo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LzDBCvglNAqxcPwLI9wZsDkBtE7xqAqYLZXKvSzRLp/cP28ERgwhY3E8tPjPZaUcj
-	 6y2OkR/dxdgntMu7oPtsEyAhXdPQFbPtKhG9Sl6yAX4ta4o15WPBpDX0sI9v282a/w
-	 jOCdBPFXomS9c8I80ks0WIVPjuMDP68P1qHjixMY=
+	b=Q998xFtgHpxV2QXnrX+1aTmo3+5P1mi+bmEj8yp8y3VYFDMAVRU6nGRKBIkuaBM2J
+	 J00MTHdFl8/exeQ0wa+znyNF6gT1CB09/Ug5+7b7vt8fdrKCSmBnw2SZLd9j05PD8C
+	 yr6jZUXmH/LZb/WdOaq2YoRnkIOT0zyhK8EXEPGs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506272AbgDONRv (ORCPT
+        id S2897154AbgDONR6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:17:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54652 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 09:17:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897024AbgDOLfI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:35:08 -0400
+        id S2897019AbgDOLfG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:35:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97C6B2078A;
-        Wed, 15 Apr 2020 11:35:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6785920936;
+        Wed, 15 Apr 2020 11:35:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950508;
-        bh=vWk7gWqHU/rr1AfSECvbX+1y/08BdStuBe2bUqRvfl4=;
+        s=default; t=1586950506;
+        bh=xnctP96IABKORGoIgvVEM+OiiZ2hWkTGMixUA2d1amo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sX0UMu/D+IbuSSaW0FqEWvDktfXuEuQAWyqvxQRCklUDYo2kqr5l+WebxTBRUzWlY
-         GzJ1AnjgGl9I28FJuK3Dwug9xKQb18ZxWDkO5MTBcNkDyqBqOU9E3QqB1TkOTBsCX8
-         evsbNsQ3msJYmRG255ee+Tur9UkpKC3ZXMrAf5eM=
+        b=AJopUODkknX24E3yiKAgNzwUGy1sT4l3nA65naGYPyX6nQimsZWczvPRrhqkXY3ET
+         Akk3I6Hgt6ik6kn3JmSJqGTd0Xulyv5MTG7MkmOtpItXysmg7Ld4/humvY4poYZs5G
+         yqlrYYKaOm9VzEuKltnNiwh83lmm/I/sf2yKDPxs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Sasha Levin <sashal@kernel.org>, linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 019/129] memory: tegra: Correct debugfs clk rate-range on Tegra30
-Date:   Wed, 15 Apr 2020 07:32:54 -0400
-Message-Id: <20200415113445.11881-19-sashal@kernel.org>
+Cc:     Dave Jiang <dave.jiang@intel.com>,
+        Yixin Zhang <yixin.zhang@intel.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 017/129] dmaengine: idxd: reflect shadow copy of traffic class programming
+Date:   Wed, 15 Apr 2020 07:32:52 -0400
+Message-Id: <20200415113445.11881-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
 References: <20200415113445.11881-1-sashal@kernel.org>
@@ -59,38 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Dave Jiang <dave.jiang@intel.com>
 
-[ Upstream commit a53670e1a734ba56fac84cf2b93b838bd4a6b835 ]
+[ Upstream commit a1fcaf07ec718bb1f11e29e952c9a4cb733d57a5 ]
 
-Correctly set clk rate-range if number of available timings is zero.
-This fixes noisy "invalid range [4294967295, 0]" error messages during
-boot.
+The traffic class are set to -1 at initialization until the user programs
+them. If the user choose not to, the driver will program appropriate
+defaults. The driver also needs to update the shadowed copies of the values
+after doing the programming.
 
-Fixes: 8cee32b40040 ("memory: tegra: Implement EMC debugfs interface on Tegra30")
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Fixes: c52ca478233c ("dmaengine: idxd: add configuration component of driver")
+Reported-by: Yixin Zhang <yixin.zhang@intel.com>
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+Link: https://lore.kernel.org/r/158386263076.10898.4586509576813094559.stgit@djiang5-desk3.ch.intel.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/memory/tegra/tegra30-emc.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/dma/idxd/device.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/memory/tegra/tegra30-emc.c b/drivers/memory/tegra/tegra30-emc.c
-index e3efd9529506e..b42bdb667e853 100644
---- a/drivers/memory/tegra/tegra30-emc.c
-+++ b/drivers/memory/tegra/tegra30-emc.c
-@@ -1256,6 +1256,11 @@ static void tegra_emc_debugfs_init(struct tegra_emc *emc)
- 			emc->debugfs.max_rate = emc->timings[i].rate;
- 	}
+diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
+index ada69e722f84a..f6f49f0f6fae2 100644
+--- a/drivers/dma/idxd/device.c
++++ b/drivers/dma/idxd/device.c
+@@ -584,11 +584,11 @@ static void idxd_group_flags_setup(struct idxd_device *idxd)
+ 		struct idxd_group *group = &idxd->groups[i];
  
-+	if (!emc->num_timings) {
-+		emc->debugfs.min_rate = clk_get_rate(emc->clk);
-+		emc->debugfs.max_rate = emc->debugfs.min_rate;
-+	}
-+
- 	err = clk_set_rate_range(emc->clk, emc->debugfs.min_rate,
- 				 emc->debugfs.max_rate);
- 	if (err < 0) {
+ 		if (group->tc_a == -1)
+-			group->grpcfg.flags.tc_a = 0;
++			group->tc_a = group->grpcfg.flags.tc_a = 0;
+ 		else
+ 			group->grpcfg.flags.tc_a = group->tc_a;
+ 		if (group->tc_b == -1)
+-			group->grpcfg.flags.tc_b = 1;
++			group->tc_b = group->grpcfg.flags.tc_b = 1;
+ 		else
+ 			group->grpcfg.flags.tc_b = group->tc_b;
+ 		group->grpcfg.flags.use_token_limit = group->use_token_limit;
 -- 
 2.20.1
 
