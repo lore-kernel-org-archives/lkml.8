@@ -2,93 +2,123 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 794A1C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19957C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:28:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F9D82078A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:27:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="M4ITrRhk"
+	by mail.kernel.org (Postfix) with ESMTP id EA0862078A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:28:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586960901;
+	bh=ZB6JwYNcMXtDqUpFqr+tucEk39Yxv3CVPGoD0O1qI9k=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ffj1TJst1Lp7uP8mUTvTK7igVhjKbRdzaGYOxIT/UAstaHr72YULMFodl/eDR04q9
+	 XAHEBST4/6RK5ay+gag60FhWcu4awm/ZabKEtiyDeeVOd1oNVplGokyCSK1IHnwOun
+	 c89fVSGqOqK1xVsC/cFXLHxUdGsRSm+daDuWCfX0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393989AbgDOO1n (ORCPT
+        id S2393997AbgDOO2S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:27:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38524 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729551AbgDOO1i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 10:27:38 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1D4EC061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 07:27:37 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id s63so13193794qke.4
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 07:27:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0UT8lst5nDXa5EduKqboY813zRQkbwrz0jocGjjJQg4=;
-        b=M4ITrRhk7dfzvUeRdnL4el+TCzeHs3naP4MrWW4R1ebq1UIOWnrl93o0W9yRfnjzHy
-         NT032XMp1hFXo56VJAe4LrTAJy3eE/dHu37RBmLt2Zl5j5aNPUg7XgPdeK5Nc0z8l935
-         msisJ0cQFtktiusujfESKJ+ZOURH6tbRVKt6mnLWAQuba28l/jNyCYQCghrerFGhW0cJ
-         VrTpFPgcobc3NRi5mFK/mbFhgNMIjkl6q6wtEucefdcmM++kvP83i7hObsP1GN96TDcG
-         xrqPzBLivfZkOewyhTOIO+Hq3K1umGyG+P0qUutNW6Dm6RzqofYyRH65wS2ceiYOi19V
-         QUIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0UT8lst5nDXa5EduKqboY813zRQkbwrz0jocGjjJQg4=;
-        b=e1wEpdhKOMYnX4mc6BL6L4UgVMP58cuZGrBHSekJPa1N/YNnKUMS14kLu6bUnziLPC
-         En3d2tpYLTuiJ5ta42uFPMSaeLd3zbX5o/xmd+t3d3VxbB6nGAwloBXvACz2IyQDaK+3
-         yyRWFn5uZIQHXDBIy9aWk9JtBLew0fqFPaxlHjtG+ZQhnz12iLktQHeFJB2gero7+ywH
-         Jv+5Pelc0m6yo0NHoudnGMl0IoDeL5GJTbNnoVS1tGCSxri2mj6/DGsjrlvDoNn7oF+s
-         mvZ13ADr6iLGKrsnSfwJ5Gxk+gKGQHNw/ANldzRU9rO6u7MeTrntRxuW5XcNQifAEgfB
-         ehLw==
-X-Gm-Message-State: AGi0PubKMc0NoRHOmtK1LNULCqe/UQWUO6c0lQY1fjxAIu/kVwIIiiCC
-        7SvXup21ACGXWiRNnWEQXT4PJw==
-X-Google-Smtp-Source: APiQypLaOI+L9pCKFHu2QPiB6b7nqxtp36pMRhQOjDoNH7Il0R7qpTY/S9EZXVMsSsn12k0BoKrNtQ==
-X-Received: by 2002:a05:620a:5fc:: with SMTP id z28mr27276673qkg.346.1586960856921;
-        Wed, 15 Apr 2020 07:27:36 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id v187sm12740442qkc.29.2020.04.15.07.27.36
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 15 Apr 2020 07:27:36 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jOj0p-0005zU-UU; Wed, 15 Apr 2020 11:27:35 -0300
-Date:   Wed, 15 Apr 2020 11:27:35 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Bernard Metzler <BMT@zurich.ibm.com>
-Cc:     Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org, yuanxzhang@fudan.edu.cn,
-        kjlu@umn.edu, Xin Tan <tanxin.ctf@gmail.com>
-Subject: Re: [PATCH] RDMA/siw: Fix potential siw_mem refcnt leak in
- nr_add_node
-Message-ID: <20200415142735.GP5100@ziepe.ca>
-References: <20200415140910.GN5100@ziepe.ca>
- <1586939949-69856-1-git-send-email-xiyuyang19@fudan.edu.cn>
- <OFF7AE12D1.38AFBC66-ON0025854B.004E30DB-0025854B.004E73A2@notes.na.collabserv.com>
+        Wed, 15 Apr 2020 10:28:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35088 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729551AbgDOO2C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 10:28:02 -0400
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FE362137B;
+        Wed, 15 Apr 2020 14:28:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586960881;
+        bh=ZB6JwYNcMXtDqUpFqr+tucEk39Yxv3CVPGoD0O1qI9k=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=EdiMO3msQAgzx0TyMSchthqY2rs2o5vaaovfnRG9lP0sq2zRvSd7A5QMdCQu0XiW5
+         uXdY7A/C7z5pANdqM7vdXpHOqvF+/a1K/sl74bMMKu9+Sx9F8tCvvrpCb/AwQAy0r7
+         2owN22MwmG4CKqQ5uKU7THxXQD4eJIJx09UaBv1c=
+Received: by mail-qv1-f51.google.com with SMTP id di6so78414qvb.10;
+        Wed, 15 Apr 2020 07:28:01 -0700 (PDT)
+X-Gm-Message-State: AGi0PuaxPsZ2sH6+7fEAC4bgOx5Bb6QfaCNZ1i5DfYDOecdNR3rQtC0V
+        DVtUBF+kUf2L03+tH+JEjiEHCkTr2XgbnI845Q==
+X-Google-Smtp-Source: APiQypLsz6XmmIsYo7wzUtEP93/5Mi9D1CSe82grG2qT7IqkeUxM3r49phjnJKjx+Z5cjvQrWQxLKQ0q/vwRTjsscsU=
+X-Received: by 2002:a05:6214:a8a:: with SMTP id ev10mr4632235qvb.20.1586960880451;
+ Wed, 15 Apr 2020 07:28:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <OFF7AE12D1.38AFBC66-ON0025854B.004E30DB-0025854B.004E73A2@notes.na.collabserv.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200329161552.215075-1-david@ixit.cz> <20200329162128.218584-5-david@ixit.cz>
+ <20200410164905.GA719@bogus> <8c4ab1ce-1947-ab38-3f8c-9055406428e4@gmail.com>
+In-Reply-To: <8c4ab1ce-1947-ab38-3f8c-9055406428e4@gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 15 Apr 2020 09:27:46 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJgZaQux04vdkShX4vkmOK5T-H6tOXt7Da19jgG0P76-Q@mail.gmail.com>
+Message-ID: <CAL_JsqJgZaQux04vdkShX4vkmOK5T-H6tOXt7Da19jgG0P76-Q@mail.gmail.com>
+Subject: Re: [PATCH 4/9] dt-bindings: power: supply: Add device-tree binding
+ for Summit SMB3xx
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     David Heidelberg <david@ixit.cz>,
+        Sebastian Reichel <sre@kernel.org>,
+        Jonghwa Lee <jonghwa3.lee@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Myungjoo Ham <myungjoo.ham@samsung.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Vinay Simha BN <simhavcs@gmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        ramakrishna.pallala@intel.com,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 02:16:54PM +0000, Bernard Metzler wrote:
-> Fine with me in principle, but we would have to return
-> directly here as well - since we do not have a valid mem
-> to be put back.
+On Fri, Apr 10, 2020 at 2:02 PM Dmitry Osipenko <digetx@gmail.com> wrote:
+>
+> 10.04.2020 19:49, Rob Herring =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> ...
+> >> +  summit,max-chg-curr:
+> >> +    description: Maximum current for charging (in uA)
+> >> +    allOf:
+> >> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> >> +
+> >> +  summit,max-chg-volt:
+> >> +    description: Maximum voltage for charging (in uV)
+> >> +    allOf:
+> >> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> >> +    minimum: 3500000
+> >> +    maximum: 4500000
+> >> +
+> >> +  summit,pre-chg-curr:
+> >> +    description: Pre-charging current for charging (in uA)
+> >> +    allOf:
+> >> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> >> +
+> >> +  summit,term-curr:
+> >> +    description: Charging cycle termination current (in uA)
+> >> +    allOf:
+> >> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> ...
+> > These are all properties of the battery attached and we have standard
+> > properties for some/all of these.
+>
+> Looks like only four properties seem to be matching the properties of
+> the battery.txt binding.
+>
+> Are you suggesting that these matching properties should be renamed
+> after the properties in battery.txt?
 
-Woops, yes, thanks
+Yes, and that there should be a battery node. Possibly you should add
+new properties battery.txt. It's curious that different properties are
+needed. Ultimately, for a given battery technology I would expect
+there's a fixed set of properties needed to describe how to charge
+them. Perhaps some of these properties can just be derived from other
+properties and folks are just picking what a specific charger wants.
+Unfortunately, we have just a mess of stuff made up for each charger
+out there. I don't have the time nor the experience in this area to do
+much more than say do better.
 
-Jason
+Rob
