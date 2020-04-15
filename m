@@ -2,94 +2,180 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C4E1C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C42AC3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:54:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6516B20768
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:53:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62DE120768
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:54:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="CirdU7N6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2635366AbgDOHwi (ORCPT
+        id S2635371AbgDOHyH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 03:52:38 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2375 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2635311AbgDOHwT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 03:52:19 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 9367E530937B7EC367CF;
-        Wed, 15 Apr 2020 15:52:13 +0800 (CST)
-Received: from [127.0.0.1] (10.173.223.60) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Wed, 15 Apr 2020
- 15:52:11 +0800
-Subject: Re: [PATCH -next] bpf: remove set but not used variable 'dst_known'
-To:     Song Liu <songliubraving@fb.com>
-CC:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
-        "kpsingh@chromium.org" <kpsingh@chromium.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
-References: <20200413113703.194287-1-maowenan@huawei.com>
- <C75FACD4-8549-4AD1-BDE6-1F5B47095E4C@fb.com>
- <2b2e0060-ef9b-5541-1108-e28464b47f0a@huawei.com>
- <F68FB33A-1B98-45C1-8056-457EFA52F84F@fb.com>
-From:   maowenan <maowenan@huawei.com>
-Message-ID: <8855e82a-88d0-8d1e-e5e0-47e781f9653c@huawei.com>
-Date:   Wed, 15 Apr 2020 15:52:10 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Wed, 15 Apr 2020 03:54:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33462 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2635348AbgDOHwe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 03:52:34 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89C90C061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 00:52:32 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id t14so4682533wrw.12
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 00:52:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zA1RW0E4LHbvRiBzYVD9TW8bj9I50h1yfH2fmmj+Mvk=;
+        b=CirdU7N6WykwfPV7PkyDF1Ybr40ofovSUwAyT5PW/Ax0hL9RPrAKlpScBP5P+1ZXFb
+         MbnCIBmfjgEsWsTerE5o57V+RXcJfuS/brs68rS2AJZMYXDwxOhbLZzfUb9YPftTUGPb
+         hrf3usocc7y+ghLY1mdESXQr0ImZ1zO85bLUZ49NunQfQiGHUIlNwBpeY5TcDnvo9cLN
+         6qNhzXEFFO6xpIzuDxziQzYdNQgbFWFwfD94R9/CV0cYbMmIsOriNZmWBPVDSv9l6g2u
+         TNeuexHzNB0Pz5Ag/aWrDLqKDWOXChwpIzcOKii3Wdq2g6LjXGn0VX58MJ82/msW6QT5
+         KOjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=zA1RW0E4LHbvRiBzYVD9TW8bj9I50h1yfH2fmmj+Mvk=;
+        b=MGLbwD6p4BUAPT5MdNCULJ6aqkZdPIP+B54DgjEfadC/B3I4CwpOsPli9H+Re2MGXy
+         Yy64FPjqJ1XW7is011PYeHr0UTMZlNJQwGPGUYNFPkyJefSWFfaUbn5wuK5JrIq/eghP
+         2VSvTIS5NPJ23UmV2JXw9YMqzj8NTRzfYqANoA8XsT+W39eJ141/h01QLO/Qp+z8Sf1b
+         hjJuJlqKSleENvGhxv03FynRzb9wyano9mBy397bOz+G9Z3DSrbisXFLJ0shAE74AUbg
+         QQt8/kEtzJ5bxLnipVPYKC5GZndfcB+0kODu17oZ/qSO82EMwZWdfe6COQ2Y62WNox8Z
+         +ZDg==
+X-Gm-Message-State: AGi0PubztQsjr6e0NUULkvBcKk8vVL4ZF6TqanwLhFndCextCP6X4niH
+        O3bB2loA2E4LI88i1VNEAsb8Cg==
+X-Google-Smtp-Source: APiQypJvUOD448z0Y8+mNOfEKPlgI6V+0hgfkD6U4XBybk9YAPMSasJfzRC9jBrXNw0u9bPSdGw2kw==
+X-Received: by 2002:adf:fecd:: with SMTP id q13mr19617087wrs.12.1586937151035;
+        Wed, 15 Apr 2020 00:52:31 -0700 (PDT)
+Received: from ?IPv6:2a01:e35:2ec0:82b0:39cc:a07:8b48:cc56? ([2a01:e35:2ec0:82b0:39cc:a07:8b48:cc56])
+        by smtp.gmail.com with ESMTPSA id u17sm24626982wra.63.2020.04.15.00.52.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Apr 2020 00:52:29 -0700 (PDT)
+Subject: Re: [PATCH v5] dt-bindings: gpu: mali-utgard: Add the #cooling-cells
+ property
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        robh+dt@kernel.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org
+Cc:     linux-amlogic@lists.infradead.org, Qiang Yu <yuq825@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+References: <20200411165700.1576314-1-martin.blumenstingl@googlemail.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ BSwxi7g3Mu7u5kUByanqHyA=
+Organization: Baylibre
+Message-ID: <8f2b7074-98b3-dd17-dffd-ef0c10f6aeba@baylibre.com>
+Date:   Wed, 15 Apr 2020 09:52:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <F68FB33A-1B98-45C1-8056-457EFA52F84F@fb.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200411165700.1576314-1-martin.blumenstingl@googlemail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.173.223.60]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/4/15 15:23, Song Liu wrote:
+On 11/04/2020 18:57, Martin Blumenstingl wrote:
+> The GPU can be one of the big heat sources on a SoC. Allow the
+> "#cooling-cells" property to be specified for ARM Mali Utgard GPUs so
+> the GPU clock speeds (and voltages) can be reduced to prevent a SoC from
+> overheating.
+> 
+> Reviewed-by: Qiang Yu <yuq825@gmail.com>
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> ---
+> Changes since v4 at [0]:
+> - Added Qiang's Reviewed-by (many thanks)
+> - re-send because I missed the devicetree mailing list in v4
 > 
 > 
->> On Apr 14, 2020, at 6:37 PM, maowenan <maowenan@huawei.com> wrote:
->>
->> On 2020/4/15 6:05, Song Liu wrote:
->>>
->>>
->>>> On Apr 13, 2020, at 4:37 AM, Mao Wenan <maowenan@huawei.com> wrote:
->>>>
->>>> Fixes gcc '-Wunused-but-set-variable' warning:
->>>>
->>>> kernel/bpf/verifier.c:5603:18: warning: variable ‘dst_known’
->>>> set but not used [-Wunused-but-set-variable]
->>>>
->>>> It is not used since commit f1174f77b50c ("bpf/verifier:
->>>> rework value tracking")
->>>
->>> The fix makes sense. But I think f1174f77b50c introduced dst_known, 
->>> so this statement is not accurate. 
->>>
->> thanks for review, yes, f1174f77b50c introduced dst_known, and below commit
->> doesn't deference variable dst_known. So I send v2 later?
->> 3f50f132d840 ("bpf: Verifier, do explicit ALU32 bounds tracking")
+> [0] https://patchwork.kernel.org/patch/11448013/
 > 
-> I don't think we need to back port this to stable. So it is OK not to 
-> include Fixes tag. We can just remove this statement in the commit log.
 > 
-> bpf-next is not open yet. Please send v2 when bpf-next is open. 
+>  Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> Thanks,
-> Song
+> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
+> index f5401cc8de4a..4869258daadb 100644
+> --- a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
+> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
+> @@ -107,6 +107,9 @@ properties:
+>  
+>    operating-points-v2: true
+>  
+> +  "#cooling-cells":
+> +    const: 2
+> +
+>  required:
+>    - compatible
+>    - reg
+> @@ -164,6 +167,7 @@ examples:
+>        clocks = <&ccu 1>, <&ccu 2>;
+>        clock-names = "bus", "core";
+>        resets = <&ccu 1>;
+> +      #cooling-cells = <2>;
+>      };
+>  
+>  ...
 > 
-OK, I will do that.
 
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
