@@ -2,135 +2,115 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D4CC2BB85
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:45:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C22CCC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:45:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 214F0206D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:45:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A54C0206D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:45:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895745AbgDOJpY (ORCPT
+        id S2895784AbgDOJpd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 05:45:24 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:44126 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2895743AbgDOJpG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 05:45:06 -0400
-Received: from 185.80.35.16 (185.80.35.16) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
- id f6ab41578b3b780a; Wed, 15 Apr 2020 11:45:02 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Maxim Mikityanskiy <maxtram95@gmail.com>,
-        "5 . 3+" <stable@vger.kernel.org>
-Subject: Re: [PATCH v2] platform/x86: intel_int0002_vgpio: Only bind to the INT0002 dev when using s2idle
-Date:   Wed, 15 Apr 2020 11:45:01 +0200
-Message-ID: <4380034.KJPSqyn9gG@kreacher>
-In-Reply-To: <20200414131953.131533-1-hdegoede@redhat.com>
-References: <20200414131953.131533-1-hdegoede@redhat.com>
+        Wed, 15 Apr 2020 05:45:33 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59734 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2895721AbgDOJpU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 05:45:20 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id DE8BBAD5E;
+        Wed, 15 Apr 2020 09:45:15 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 1EB031E1250; Wed, 15 Apr 2020 11:45:16 +0200 (CEST)
+Date:   Wed, 15 Apr 2020 11:45:16 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Jules Irenge <jbi.octave@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, boqun.feng@gmail.com,
+        Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
+        "open list:FSNOTIFY: FILESYSTEM NOTIFICATION INFRASTRUCTURE" 
+        <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH v2] fsnotify: Add missing annotation for
+ fsnotify_finish_user_wait() and for fsnotify_prepare_user_wait()
+Message-ID: <20200415094516.GA6126@quack2.suse.cz>
+References: <20200413214240.15245-1-jbi.octave@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200413214240.15245-1-jbi.octave@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday, April 14, 2020 3:19:53 PM CEST Hans de Goede wrote:
-> Commit 871f1f2bcb01 ("platform/x86: intel_int0002_vgpio: Only implement
-> irq_set_wake on Bay Trail") stopped passing irq_set_wake requests on to
-> the parents IRQ because this was breaking suspend (causing immediate
-> wakeups) on an Asus E202SA.
+On Mon 13-04-20 22:42:40, Jules Irenge wrote:
+> Sparse reports warnings at fsnotify_prepare_user_wait()
+> 	and at fsnotify_finish_user_wait()
 > 
-> This workaround for this issue is mostly fine, on most Cherry Trail
-> devices where we need the INT0002 device for wakeups by e.g. USB kbds,
-> the parent IRQ is shared with the ACPI SCI and that is marked as wakeup
-> anyways.
+> warning: context imbalance in fsnotify_finish_user_wait()
+> 	- wrong count at exit
+> warning: context imbalance in fsnotify_prepare_user_wait()
+> 	- unexpected unlock
 > 
-> But not on all devices, specifically on a Medion Akoya E1239T there is
-> no SCI at all, and because the irq_set_wake request is not passed on to
-> the parent IRQ, wake up by the builtin USB kbd does not work here.
+> The root cause is the missing annotation at fsnotify_finish_user_wait()
+> 	and at fsnotify_prepare_user_wait()
+> fsnotify_prepare_user_wait() has an extra annotation __release()
+>  that only tell Sparse and not GCC to shutdown the warning
 > 
-> So the workaround for the Asus E202SA immediate wake problem is causing
-> problems elsewhere; and in hindsight it is not the correct fix,
-> the Asus E202SA uses Airmont CPU cores, but this does not mean it is a
-> Cherry Trail based device, Brasswell uses Airmont CPU cores too and this
-> actually is a Braswell device.
+> Add the missing  __acquires(&fsnotify_mark_srcu) annotation
+> Add the missing __releases(&fsnotify_mark_srcu) annotation
+> Add the __release(&fsnotify_mark_srcu) annotation.
+
+Thanks for the patch. I've added it to my tree.
+
+								Honza
+
 > 
-> Most (all?) Braswell devices use classic S3 mode suspend rather then
-> s2idle suspend and in this case directly dealing with PME events as
-> the INT0002 driver does likely is not the best idea, so that this is
-> causing issues is not surprising.
-> 
-> Replace the workaround of not passing irq_set_wake requests on to the
-> parents IRQ, by not binding to the INT0002 device when s2idle is not used.
-> This fixes USB kbd wakeups not working on some Cherry Trail devices,
-> while still avoiding mucking with the wakeup flags on the Asus E202SA
-> (and other Brasswell devices).
-> 
-> Cc: Maxim Mikityanskiy <maxtram95@gmail.com>
-> Cc: 5.3+ <stable@vger.kernel.org> # 5.3+
-> Fixes: 871f1f2bcb01 ("platform/x86: intel_int0002_vgpio: Only implement irq_set_wake on Bay Trail")
-> Tested-by: Maxim Mikityanskiy <maxtram95@gmail.com>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 > ---
-> Changes in v2:
-> - Rebase on top of 5.7-rc1
-> ---
->  drivers/platform/x86/intel_int0002_vgpio.c | 18 +++++-------------
->  1 file changed, 5 insertions(+), 13 deletions(-)
+> changes since v2
+> -include annotations for fsnotify_prepare_user_wait()
 > 
-> diff --git a/drivers/platform/x86/intel_int0002_vgpio.c b/drivers/platform/x86/intel_int0002_vgpio.c
-> index 289c6655d425..30806046b664 100644
-> --- a/drivers/platform/x86/intel_int0002_vgpio.c
-> +++ b/drivers/platform/x86/intel_int0002_vgpio.c
-> @@ -143,21 +143,9 @@ static struct irq_chip int0002_byt_irqchip = {
->  	.irq_set_wake		= int0002_irq_set_wake,
->  };
->  
-> -static struct irq_chip int0002_cht_irqchip = {
-> -	.name			= DRV_NAME,
-> -	.irq_ack		= int0002_irq_ack,
-> -	.irq_mask		= int0002_irq_mask,
-> -	.irq_unmask		= int0002_irq_unmask,
-> -	/*
-> -	 * No set_wake, on CHT the IRQ is typically shared with the ACPI SCI
-> -	 * and we don't want to mess with the ACPI SCI irq settings.
-> -	 */
-> -	.flags			= IRQCHIP_SKIP_SET_WAKE,
-> -};
-> -
->  static const struct x86_cpu_id int0002_cpu_ids[] = {
->  	X86_MATCH_INTEL_FAM6_MODEL(ATOM_SILVERMONT,	&int0002_byt_irqchip),
-> -	X86_MATCH_INTEL_FAM6_MODEL(ATOM_AIRMONT,	&int0002_cht_irqchip),
-> +	X86_MATCH_INTEL_FAM6_MODEL(ATOM_AIRMONT,	&int0002_byt_irqchip),
->  	{}
->  };
->  
-> @@ -181,6 +169,10 @@ static int int0002_probe(struct platform_device *pdev)
->  	if (!cpu_id)
->  		return -ENODEV;
->  
-> +	/* We only need to directly deal with PMEs when using s2idle */
-> +	if (!pm_suspend_default_s2idle())
-> +		return -ENODEV;
-> +
-
-What if the system supports s2idle which is not the default suspend option
-and then it is selected by user space (overriding the default)?
-
->  	irq = platform_get_irq(pdev, 0);
->  	if (irq < 0)
->  		return irq;
+>  fs/notify/mark.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 > 
-
-
-
-
+> diff --git a/fs/notify/mark.c b/fs/notify/mark.c
+> index 1d96216dffd1..8387937b9d01 100644
+> --- a/fs/notify/mark.c
+> +++ b/fs/notify/mark.c
+> @@ -325,13 +325,16 @@ static void fsnotify_put_mark_wake(struct fsnotify_mark *mark)
+>  }
+>  
+>  bool fsnotify_prepare_user_wait(struct fsnotify_iter_info *iter_info)
+> +	__releases(&fsnotify_mark_srcu)
+>  {
+>  	int type;
+>  
+>  	fsnotify_foreach_obj_type(type) {
+>  		/* This can fail if mark is being removed */
+> -		if (!fsnotify_get_mark_safe(iter_info->marks[type]))
+> +		if (!fsnotify_get_mark_safe(iter_info->marks[type])) {
+> +			__release(&fsnotify_mark_srcu);
+>  			goto fail;
+> +		}
+>  	}
+>  
+>  	/*
+> @@ -350,6 +353,7 @@ bool fsnotify_prepare_user_wait(struct fsnotify_iter_info *iter_info)
+>  }
+>  
+>  void fsnotify_finish_user_wait(struct fsnotify_iter_info *iter_info)
+> +	__acquires(&fsnotify_mark_srcu)
+>  {
+>  	int type;
+>  
+> -- 
+> 2.24.1
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
