@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCD09C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35AE6C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1BEA206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:50:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C19C206D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:50:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586951416;
-	bh=AGjX8jH2jQ+NeiGiHoUkxLgcU6FjIhrUWfrpcpKJaY8=;
+	s=default; t=1586951420;
+	bh=Le5r4ZEgqHViB7UDMuTUHMRwchWcpxKe6N8tGPIdKdI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2rIdr24bY+S41LC8sDGt/7Z5pHyrtirm6YIW6MmfHetqj8ZHq6VmEyCvW5TNajM+M
-	 fiMCrISegeHIW1TmB+diVs0dKBs+u9dPQFZcwJsZhoeFRzggjLVdDX06dFlT9hiLdO
-	 NMefWuZhbqRdAVtuTd7AhR0fHbgTbfkB9tAca7Ek=
+	b=oF5G6k1cJDgXa/hTxRCzoFTAN2QVQ09ns3J31iFUW+pt5q44sGAAT9P7D6GrZR3zm
+	 jj8OoKBSrSRByRzdtofugz7tSR9Iy3xBrext0pk+5FQBiG1QveZtmt5eMsrPnLL+Sv
+	 IWeaJReucYfxsDcMypraGZOhDE7d6QC3X+7pNTk8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409529AbgDOLuO (ORCPT
+        id S2409508AbgDOLuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:50:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35508 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 07:50:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406012AbgDOLnc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:43:32 -0400
+        id S2897518AbgDOLn3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:43:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70F1D21556;
-        Wed, 15 Apr 2020 11:43:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 418DF2078A;
+        Wed, 15 Apr 2020 11:43:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951012;
-        bh=AGjX8jH2jQ+NeiGiHoUkxLgcU6FjIhrUWfrpcpKJaY8=;
+        s=default; t=1586951008;
+        bh=Le5r4ZEgqHViB7UDMuTUHMRwchWcpxKe6N8tGPIdKdI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CmPkCklgPMyX2wvWuDd/s2yUfZjkIkZTYxqg8cP3l5A1mwVK3+LxjUI9AqvJautL3
-         DIhGl/Xt1/UyUfSB4rG20D8CAcKr+D28ZXU6bBJUpLGuO9lPCF1zxqSObUt6O8OHp8
-         Yi6tGaOljtyPxPdIam9vFqdBfcSHDWu6TTfQjVNU=
+        b=eWWAghB+N20XKezbzLQ1pEo5G4+q4R+DyHD9Ldl1O1k7/RK6NDCACdfT4Vfp5G/nT
+         Tm4LBWgecFf8RxkAiie1J8eDYkiohFAdYgnW3RdmrU2Tyhu4ZP241A/O1JBUo8xoyW
+         xh5O9W1n1rG34DZMhNn21xFVkiHWWUwfLO7yY7TE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 055/106] net: phy: at803x: fix clock sink configuration on ATH8030 and ATH8035
-Date:   Wed, 15 Apr 2020 07:41:35 -0400
-Message-Id: <20200415114226.13103-55-sashal@kernel.org>
+Cc:     Miroslav Benes <mbenes@suse.cz>, Juergen Gross <jgross@suse.com>,
+        Sasha Levin <sashal@kernel.org>, xen-devel@lists.xenproject.org
+Subject: [PATCH AUTOSEL 5.5 053/106] x86/xen: Make the boot CPU idle task reliable
+Date:   Wed, 15 Apr 2020 07:41:33 -0400
+Message-Id: <20200415114226.13103-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
 References: <20200415114226.13103-1-sashal@kernel.org>
@@ -60,45 +58,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleksij Rempel <o.rempel@pengutronix.de>
+From: Miroslav Benes <mbenes@suse.cz>
 
-[ Upstream commit b1f4c209d84057b6d40b939b6e4404854271d797 ]
+[ Upstream commit 2f62f36e62daec43aa7b9633ef7f18e042a80bed ]
 
-The masks in priv->clk_25m_reg and priv->clk_25m_mask are one-bits-set
-for the values that comprise the fields, not zero-bits-set.
+The unwinder reports the boot CPU idle task's stack on XEN PV as
+unreliable, which affects at least live patching. There are two reasons
+for this. First, the task does not follow the x86 convention that its
+stack starts at the offset right below saved pt_regs. It allows the
+unwinder to easily detect the end of the stack and verify it. Second,
+startup_xen() function does not store the return address before jumping
+to xen_start_kernel() which confuses the unwinder.
 
-This patch fixes the clock frequency configuration for ATH8030 and
-ATH8035 Atheros PHYs by removing the erroneous "~".
+Amend both issues by moving the starting point of initial stack in
+startup_xen() and storing the return address before the jump, which is
+exactly what call instruction does.
 
-To reproduce this bug, configure the PHY  with the device tree binding
-"qca,clk-out-frequency" and remove the machine specific PHY fixups.
-
-Fixes: 2f664823a47021 ("net: phy: at803x: add device tree binding")
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-Reported-by: Russell King <rmk+kernel@armlinux.org.uk>
-Reviewed-by: Russell King <rmk+kernel@armlinux.org.uk>
-Tested-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Miroslav Benes <mbenes@suse.cz>
+Reviewed-by: Juergen Gross <jgross@suse.com>
+Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/at803x.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/xen/xen-head.S | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/phy/at803x.c b/drivers/net/phy/at803x.c
-index 481cf48c9b9e4..31f731e6df720 100644
---- a/drivers/net/phy/at803x.c
-+++ b/drivers/net/phy/at803x.c
-@@ -425,8 +425,8 @@ static int at803x_parse_dt(struct phy_device *phydev)
- 		 */
- 		if (at803x_match_phy_id(phydev, ATH8030_PHY_ID) ||
- 		    at803x_match_phy_id(phydev, ATH8035_PHY_ID)) {
--			priv->clk_25m_reg &= ~AT8035_CLK_OUT_MASK;
--			priv->clk_25m_mask &= ~AT8035_CLK_OUT_MASK;
-+			priv->clk_25m_reg &= AT8035_CLK_OUT_MASK;
-+			priv->clk_25m_mask &= AT8035_CLK_OUT_MASK;
- 		}
- 	}
+diff --git a/arch/x86/xen/xen-head.S b/arch/x86/xen/xen-head.S
+index 1d0cee3163e41..d63806e1ff7ae 100644
+--- a/arch/x86/xen/xen-head.S
++++ b/arch/x86/xen/xen-head.S
+@@ -35,7 +35,11 @@ SYM_CODE_START(startup_xen)
+ 	rep __ASM_SIZE(stos)
  
+ 	mov %_ASM_SI, xen_start_info
+-	mov $init_thread_union+THREAD_SIZE, %_ASM_SP
++#ifdef CONFIG_X86_64
++	mov initial_stack(%rip), %rsp
++#else
++	mov pa(initial_stack), %esp
++#endif
+ 
+ #ifdef CONFIG_X86_64
+ 	/* Set up %gs.
+@@ -51,7 +55,7 @@ SYM_CODE_START(startup_xen)
+ 	wrmsr
+ #endif
+ 
+-	jmp xen_start_kernel
++	call xen_start_kernel
+ SYM_CODE_END(startup_xen)
+ 	__FINIT
+ #endif
 -- 
 2.20.1
 
