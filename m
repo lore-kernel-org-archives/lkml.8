@@ -2,132 +2,101 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93803C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16261C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:54:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 715C320775
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:54:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586944452;
-	bh=ko2AkkMakGqS1ar5tmN5wIgkrlEvey6E66F/2XcU/gU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=j3Z+YvyZR5rEBAx/I7ItLTGvPkOUEi04IXZgfvEyP0syr6qgKcRRYMujOnSf2OcW6
-	 S0vCGSm3Q2vr61r15pV79/TqLZnEnlLJu08f2pV1iDyArpjCUdqzfZ0o8chVLOT93J
-	 Ni1PPyNaTTO8YIDYGfKY+sHbXCPfgQRLMyBsUTTU=
+	by mail.kernel.org (Postfix) with ESMTP id EE8D4206D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:54:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408462AbgDOJyK (ORCPT
+        id S2405483AbgDOJyW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 05:54:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48700 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896071AbgDOJxM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 05:53:12 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C7E0206D9;
-        Wed, 15 Apr 2020 09:53:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586944390;
-        bh=ko2AkkMakGqS1ar5tmN5wIgkrlEvey6E66F/2XcU/gU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=H8eUu2pEaSyw3x/u0TDYVRhgfmDcHV+D2EjWN4QhsKukqQhE7B3oM6yhSzUGz9+aI
-         vZnyFVGhzadGbT7dA3lrDvQzAdAVRF1SF1lvaznFqqItoeM1ahfAVayykFQ0uChlce
-         uvODjH/JaYfnnKAT1yzRaoGC9crUUw5C5vf4+Rp0=
-Received: by pali.im (Postfix)
-        id A8D3D589; Wed, 15 Apr 2020 11:53:07 +0200 (CEST)
-Date:   Wed, 15 Apr 2020 11:53:07 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Jason Cooper <jason@lakedaemon.net>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>
-Cc:     Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH pinctrl REGRESSION] Revert "pinctrl: mvebu: armada-37xx:
- use use platform api"
-Message-ID: <20200415095307.dv4bwna32llnuy7e@pali>
-References: <20200324004413.14355-1-marek.behun@nic.cz>
- <20200324122017.GR3819@lunn.ch>
- <20200407115230.7dsepjfxwbk53x2v@pali>
+        Wed, 15 Apr 2020 05:54:22 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:38755 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2895830AbgDOJs4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 05:48:56 -0400
+X-Originating-IP: 86.202.105.35
+Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id C1B7A20007;
+        Wed, 15 Apr 2020 09:48:51 +0000 (UTC)
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        kamel.bouhara@bootlin.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH v2 5/9] clocksource/drivers/timer-atmel-tcb: rework 32khz clock selection
+Date:   Wed, 15 Apr 2020 11:48:22 +0200
+Message-Id: <20200415094826.132562-6-alexandre.belloni@bootlin.com>
+X-Mailer: git-send-email 2.25.2
+In-Reply-To: <20200415094826.132562-1-alexandre.belloni@bootlin.com>
+References: <20200415094826.132562-1-alexandre.belloni@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200407115230.7dsepjfxwbk53x2v@pali>
-User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday 07 April 2020 13:52:30 Pali Rohár wrote:
-> On Tuesday 24 March 2020 13:20:17 Andrew Lunn wrote:
-> > On Tue, Mar 24, 2020 at 01:44:13AM +0100, Marek Behún wrote:
-> > > This reverts commit 06e26b75f5e613b400116fdb7ff6206a681ab271.
-> > > 
-> > > This commit caused a regression on Armada 37xx. The pinctrl driver says
-> > >   armada-37xx-pinctrl d0013800.pinctrl: invalid or no IRQ
-> > >   armada-37xx-pinctrl d0018800.pinctrl: invalid or no IRQ
-> > > and afterwards other drivers cannot use GPIOs by this driver as IRQs.
-> > > 
-> > > Fixes: 06e26b75f5e6 ("pinctrl: mvebu: armada-37xx: use use platform...")
-> > > Signed-off-by: Marek Behún <marek.behun@nic.cz>
-> > > Cc: Peng Fan <peng.fan@nxp.com>
-> > > ---
-> > >  drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 12 +++---------
-> > >  1 file changed, 3 insertions(+), 9 deletions(-)
-> > > 
-> > > diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-> > > index 32f12a388b3c..5f125bd6279d 100644
-> > > --- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-> > > +++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-> > > @@ -15,6 +15,7 @@
-> > >  #include <linux/of.h>
-> > >  #include <linux/of_address.h>
-> > >  #include <linux/of_device.h>
-> > > +#include <linux/of_irq.h>
-> > >  #include <linux/pinctrl/pinconf-generic.h>
-> > >  #include <linux/pinctrl/pinconf.h>
-> > >  #include <linux/pinctrl/pinctrl.h>
-> > > @@ -741,14 +742,7 @@ static int armada_37xx_irqchip_register(struct platform_device *pdev,
-> > >  		return ret;
-> > >  	}
-> > >  
-> > > -	nr_irq_parent = platform_irq_count(pdev);
-> > 
-> > Hi Marek
-> > 
-> > Could you determine the value of nr_irq_parent(). Is it -EPROBE_DEFER?
-> 
-> Hello Andrew! I have tested it with 5.6 kernel and return value in
-> nr_irq_parent is in both cases zero. So it is not -EPROBE_DEFER. And
-> return value of of_irq_count(np) is 12 for d0013800.pinctrl and 5 for
-> d0018800.pinctrl.
+On all the supported SoCs, the slow clock is always ATMEL_TC_TIMER_CLOCK5,
+avoid looking it up and pass it directly to setup_clkevents.
 
-Adding Jason, Gregory and Sebastian into the loop.
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+---
+ drivers/clocksource/timer-atmel-tcb.c | 11 ++---------
+ 1 file changed, 2 insertions(+), 9 deletions(-)
 
-Could you please look at this problem? If there is no easy solution,
-I would suggest to revert problematic commit as pinctrl in current state
-is broken and unusable.
+diff --git a/drivers/clocksource/timer-atmel-tcb.c b/drivers/clocksource/timer-atmel-tcb.c
+index 7427b07495a8..b255a4a1a36b 100644
+--- a/drivers/clocksource/timer-atmel-tcb.c
++++ b/drivers/clocksource/timer-atmel-tcb.c
+@@ -346,7 +346,7 @@ static void __init tcb_setup_single_chan(struct atmel_tc *tc, int mck_divisor_id
+ 	writel(ATMEL_TC_SYNC, tcaddr + ATMEL_TC_BCR);
+ }
+ 
+-static const u8 atmel_tcb_divisors[5] = { 2, 8, 32, 128, 0, };
++static const u8 atmel_tcb_divisors[] = { 2, 8, 32, 128 };
+ 
+ static const struct of_device_id atmel_tcb_of_match[] = {
+ 	{ .compatible = "atmel,at91rm9200-tcb", .data = (void *)16, },
+@@ -362,7 +362,6 @@ static int __init tcb_clksrc_init(struct device_node *node)
+ 	u64 (*tc_sched_clock)(void);
+ 	u32 rate, divided_rate = 0;
+ 	int best_divisor_idx = -1;
+-	int clk32k_divisor_idx = -1;
+ 	int bits;
+ 	int i;
+ 	int ret;
+@@ -416,12 +415,6 @@ static int __init tcb_clksrc_init(struct device_node *node)
+ 		unsigned divisor = atmel_tcb_divisors[i];
+ 		unsigned tmp;
+ 
+-		/* remember 32 KiHz clock for later */
+-		if (!divisor) {
+-			clk32k_divisor_idx = i;
+-			continue;
+-		}
+-
+ 		tmp = rate / divisor;
+ 		pr_debug("TC: %u / %-3u [%d] --> %u\n", rate, divisor, i, tmp);
+ 		if (best_divisor_idx > 0) {
+@@ -467,7 +460,7 @@ static int __init tcb_clksrc_init(struct device_node *node)
+ 		goto err_disable_t1;
+ 
+ 	/* channel 2:  periodic and oneshot timer support */
+-	ret = setup_clkevents(&tc, clk32k_divisor_idx);
++	ret = setup_clkevents(&tc, ATMEL_TC_TIMER_CLOCK5);
+ 	if (ret)
+ 		goto err_unregister_clksrc;
+ 
+-- 
+2.25.2
 
-> So this is a clear regression introduced by that patch.
-> 
-> > This patch has removed the handling of that.
-> > 
-> > > -	if (nr_irq_parent < 0) {
-> > > -		if (nr_irq_parent != -EPROBE_DEFER)
-> > > -			dev_err(dev, "Couldn't determine irq count: %pe\n",
-> > > -				ERR_PTR(nr_irq_parent));
-> > > -		return nr_irq_parent;
-> > > -	}
-> > 
-> > Thanks
-> > 	Andrew
