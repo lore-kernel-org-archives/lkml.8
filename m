@@ -2,108 +2,172 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4D46C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A0EFC2BB85
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4D882166E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:08:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 604C5206F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:09:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BxkqQRrC"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="yHy2+tAJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410220AbgDOQIK (ORCPT
+        id S2410219AbgDOQJt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 12:08:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54194 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2406894AbgDOQIC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 12:08:02 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33F76C061A0C;
-        Wed, 15 Apr 2020 09:08:01 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id h11so157933plr.11;
-        Wed, 15 Apr 2020 09:08:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=RY+VO0/vpBKvGZZg/yALfnK+LWYtJeI8ZBtWPOM+2hQ=;
-        b=BxkqQRrCDxEs5BK9cx0OrPpukQgYyONH0rENg7DX6KVMV7F+7ig3KXZunKj2urACPl
-         okT1I2TiCGXFRnOcJY61WZDgGwAdZ03e6qDqjUch6sszRMKF7QbD7JsT8YkySmKdtv0q
-         R44onnvZ0L5JD+p78sY0ZG1YC7PWVdwJj2ACFDXuKm8IiEv6gHCfD950bngBzY5dZGum
-         Ikr+8oKsmUi2WmTc1dp7LjnnuU1e4V+Vd9ZkDihj3AxQfGuNIMojcy6OVHkO5Ymvp8Lv
-         gHLMtp9RDTK8POy5H4P26U4V4jj1FdpZCsSGpklYC1+JiSBOq4+t4buXwr0+KqhA/XZj
-         t3zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RY+VO0/vpBKvGZZg/yALfnK+LWYtJeI8ZBtWPOM+2hQ=;
-        b=niVmjbW3gLIQXk+HLINaRT4Z7TLvebRBD55ZM3q/c4+TOz6zFlc/l/9HOEdYNvJZ0i
-         pwDxVrfbsYnZZgtNAu8XsEu9QJmapNZ7dEySNMREn3YNGlSOtlG5EjJQl0esajhsY/2S
-         IA/IAvkzOLcNLMZ27DWCIk8rCZhhe4Pw0hrTupS1fdAlEUlI2RxmwzuAGmMe6L5qrRER
-         y8tPHNpdRRShlj5nJMnW1w6U3DFXWa+jFqBxC1CgfSA6aBwzpFLDSq0svmCPYa2CJpkc
-         C2dQofKePZ/BbRmNKOnffHMilwp8FKtUz7cLf8Mss3zvwEtH+tH4M+GGhKkCfnX36xUE
-         4z7Q==
-X-Gm-Message-State: AGi0Pua44NYd+WbD+Phi6bNoz1jtfjlXGNCewfEaV1QjG7dfyIfniXSx
-        0D4MmUJvL/eRXdqAqnO7WVI=
-X-Google-Smtp-Source: APiQypJXNAoQQsO32DWsS6IBTWvebYMrF983N5CkHNR0wOi2cvMtx1u2I8RVszffWbrI/R9wRYan9Q==
-X-Received: by 2002:a17:90a:f00b:: with SMTP id bt11mr7144748pjb.71.1586966880751;
-        Wed, 15 Apr 2020 09:08:00 -0700 (PDT)
-Received: from localhost (89.208.244.140.16clouds.com. [89.208.244.140])
-        by smtp.gmail.com with ESMTPSA id x63sm5912909pfx.122.2020.04.15.09.07.59
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 15 Apr 2020 09:08:00 -0700 (PDT)
-Date:   Thu, 16 Apr 2020 00:07:57 +0800
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     michal.simek@xilinx.com, wsa+renesas@sang-engineering.com,
-        pierre-yves.mordret@st.com, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, alain.volmat@st.com,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] i2c: busses: convert to
- devm_platform_get_and_ioremap_resource
-Message-ID: <20200415160757.GC17519@nuc8i5>
-References: <20200414134827.18674-1-zhengdejin5@gmail.com>
- <20200415102158.GH1141@ninjato>
+        Wed, 15 Apr 2020 12:09:49 -0400
+Received: from mga17.intel.com ([192.55.52.151]:1743 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406869AbgDOQJo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 12:09:44 -0400
+IronPort-SDR: zGKqt3C8w7ws8MNP5NCW7PnywU9OBA/uVaA8cc7OW/KRKh05CivIUcWVgYA/ul97qDWFWF0mB6
+ Gk4fHJqPLfvw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 09:09:43 -0700
+IronPort-SDR: Rf+juQm0Yt6R8lmJypCUfmc+JoYx3NpXXd7JAaHqBYrZszR0KYEpcET01tBskpX40qybNGpPA9
+ 4ufVIcsVg4ow==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,387,1580803200"; 
+   d="scan'208";a="332540198"
+Received: from orsmsx104.amr.corp.intel.com ([10.22.225.131])
+  by orsmga001.jf.intel.com with ESMTP; 15 Apr 2020 09:09:42 -0700
+Received: from orsmsx125.amr.corp.intel.com (10.22.240.125) by
+ ORSMSX104.amr.corp.intel.com (10.22.225.131) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 15 Apr 2020 09:09:42 -0700
+Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
+ ORSMSX125.amr.corp.intel.com (10.22.240.125) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 15 Apr 2020 09:09:42 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.103)
+ by edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 15 Apr 2020 09:09:28 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Sg6q9T04D9ZOQPcUrrohoYI7ZS0i88NlCmELCZxYtSxamPND1rlj4jr8lcdKoN6d7nOAgJ6GrwwG6/GKQOJXih5HEyni5sN+toljay5b/J2G/cnDXFbIFl0ZMkJY0SgxN4Ux236ZxnRT1ENHKUnjRSA1rFo+wcPpclAIA+nsc1VmCs3JVi98lAb++tdalskHtucECbxgZ/CEguuysDLjVpnwhG5qIVdXBRlczcqh5psDSaVWkvLXgqd6ZMrX0B3OkTykPK0MONblMMuIirh9iAgLp8/1NZbKaii8RS8VnwmqNHkOT/SkbGMQxr1W3/WLgdMZFvONTjIUQ1XsV4RB+Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=b/ctAZKDnxNKey5tIBTdEXj5DWNjHLcD4ElWYXDKwfQ=;
+ b=TYIPrp0DZto8hkkTzTYE405a9IY8Zhax7gRYraqn8Z/SalKJtnbo4djvOdMBGBoqOzXETqxNlTgEV2fgsrkNG1KwlmJR6ArFxiVUQZuvy27tHAdgT704jEctsPLAK5T/0709f3eGxSnmhyNnC0EdmsnsE4NDLWZb7vkCjiZ4V/MzTd90z6hOG0hd5kzTsc0vZZzOomfWjHYsnip6zekEd52y6KbKC5EesmxKQILTK+IHrSuIUIZKlBfYiD6JB/kpJfHNepanTI0SmMQU1hdIJZ2jq3q6xNG1MiqM5IH7JuSmM8Sd8mEm/uRvEt+fYnh3r9Bj9ni1ITTFLrY16RMk3g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=b/ctAZKDnxNKey5tIBTdEXj5DWNjHLcD4ElWYXDKwfQ=;
+ b=yHy2+tAJdMKC7tmqOQCNGB7DvAd7EtEh7+LDVVXdoFjDjxdj3rLopKR8UbCvdy3a785XuNDwWT81KElJbgCrWmYt8afrHQxO0N8J47btWHjesyWVk3XWZWjzGCghALs1jJ5mF5fOvBN/ctm5CkA2dRRohfWG3szMP2LYD1TSHJo=
+Received: from CY4PR11MB1719.namprd11.prod.outlook.com (2603:10b6:903:2d::23)
+ by CY4PR11MB1573.namprd11.prod.outlook.com (2603:10b6:910:c::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.26; Wed, 15 Apr
+ 2020 16:09:15 +0000
+Received: from CY4PR11MB1719.namprd11.prod.outlook.com
+ ([fe80::3853:8344:85aa:5537]) by CY4PR11MB1719.namprd11.prod.outlook.com
+ ([fe80::3853:8344:85aa:5537%5]) with mapi id 15.20.2900.028; Wed, 15 Apr 2020
+ 16:09:15 +0000
+From:   "Kaneda, Erik" <erik.kaneda@intel.com>
+To:     Jason Yan <yanaijie@huawei.com>,
+        "Moore, Robert" <robert.moore@intel.com>,
+        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "devel@acpica.org" <devel@acpica.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Hulk Robot <hulkci@huawei.com>
+Subject: RE: [PATCH] ACPICA: make acpi_protocol_lengths static
+Thread-Topic: [PATCH] ACPICA: make acpi_protocol_lengths static
+Thread-Index: AQHWEv87r4iBQd2ks0mDcH38j9TePqh6Whag
+Date:   Wed, 15 Apr 2020 16:09:15 +0000
+Message-ID: <CY4PR11MB171926DECDFC37ED7EF00623F0DB0@CY4PR11MB1719.namprd11.prod.outlook.com>
+References: <20200415084933.6251-1-yanaijie@huawei.com>
+In-Reply-To: <20200415084933.6251-1-yanaijie@huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-version: 11.2.0.6
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=erik.kaneda@intel.com; 
+x-originating-ip: [50.39.96.101]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1c0dc6ef-f556-4e9d-c5d4-08d7e1575855
+x-ms-traffictypediagnostic: CY4PR11MB1573:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CY4PR11MB1573D391B3F6114C08E97CECF0DB0@CY4PR11MB1573.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4125;
+x-forefront-prvs: 0374433C81
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR11MB1719.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(346002)(366004)(396003)(39860400002)(136003)(376002)(86362001)(6506007)(9686003)(478600001)(55016002)(7696005)(26005)(81156014)(110136005)(4326008)(53546011)(76116006)(66556008)(66446008)(316002)(64756008)(66476007)(33656002)(8936002)(66946007)(5660300002)(71200400001)(52536014)(2906002)(186003)(8676002);DIR:OUT;SFP:1102;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: M0jW/vajHaQEaU0hsCXreowLu8eJYcxMDwaxwntFDpTB+pCkJQI42yUzBKGrB/g976xXLMq1ytYUm0Y2FdWZrA46xQ2QkOYls2TbteSyrRO2MDYN6HG9wxp68HCpCjgGTLVZpEbJgxUL2LAViyo7Y1BLHeXkp9O1iEoVkqXqePoRv+GB6hyvRR3JbMR7XA04cFPhsfoKUQD3WY5W9NQkg1oCCZQQ1KxnLwBy8UlkFvXzhdKcaRsqvd68LUm9Au60GXbWeIbGtXB7cF3mpBL7R3an53xTJRr4AZuHO0o8lZqZd6VmsN5kI5951RCE2P3Agc7XIRLLTqaxAQC+103Plsmxi7Y1jyenx7jvZTxCkNsxyFCGoFlKKn0+/TMXR8EEiDnaC4fvudU+TkuXPtSOWoms5tSg4h5T+NOV/9/LE5uFuNk2BSG8xwRpWqxq2ekd
+x-ms-exchange-antispam-messagedata: jw0aTJe7O5wbyeYz/URvekcMlHuUawcRS0XaJQjXfxUf74LDNKPh4eQ7ZDA0fnc7zAqAOkaxjULKEksZbBN0w64UaMDAajFWMudQUPV8CgE0J6GNxadCEKRPNonsLYt4ggpVUukYGoLtIyXUKa9g7Q==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200415102158.GH1141@ninjato>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1c0dc6ef-f556-4e9d-c5d4-08d7e1575855
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Apr 2020 16:09:15.5185
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: BNpI1UHV93+oVDYhpWeKVeZuqC+/ZK36G86Rgz+Rw19TwQ37T8PrTw4rDnKBsBIzvxYbKg5SurdresbczRPlQQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR11MB1573
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 12:21:58PM +0200, Wolfram Sang wrote:
-> On Tue, Apr 14, 2020 at 09:48:27PM +0800, Dejin Zheng wrote:
-> > use devm_platform_get_and_ioremap_resource() to simplify code, which
-> > contains platform_get_resource() and devm_ioremap_resource(), it also
-> > get the resource for use by the following code.
-> > 
-> > Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
-> 
-> Applied to for-next, because it seems 'the new way' but...
-> 
-> > -	r_mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > -	id->membase = devm_ioremap_resource(&pdev->dev, r_mem);
-> > +	id->membase = devm_platform_get_and_ioremap_resource(pdev, 0, &r_mem);
-> 
-> ... guys, do you really think this one line reduction improves
-> readability? Oh well...
->
-Wolfram, Thank you for accepting it. From my personal point of view,
-as long as the direction is correct, even small improvements are
-worth doing. Thanks again for your tolerance.
 
-BR,
-Dejin
 
+> -----Original Message-----
+> From: Jason Yan <yanaijie@huawei.com>
+> Sent: Wednesday, April 15, 2020 1:50 AM
+> To: Moore, Robert <robert.moore@intel.com>; Kaneda, Erik
+> <erik.kaneda@intel.com>; Wysocki, Rafael J <rafael.j.wysocki@intel.com>;
+> lenb@kernel.org; linux-acpi@vger.kernel.org; devel@acpica.org; linux-
+> kernel@vger.kernel.org
+> Cc: Jason Yan <yanaijie@huawei.com>; Hulk Robot <hulkci@huawei.com>
+> Subject: [PATCH] ACPICA: make acpi_protocol_lengths static
+>=20
+> Fix the following sparse warning:
+>=20
+> drivers/acpi/acpica/exfield.c:25:10: warning: symbol 'acpi_protocol_lengt=
+hs'
+> was not declared. Should it be static?
+
+This has already been reported and I've made the appropriate fix in the ACP=
+ICA code base already. it should be available in the next ACPICA release
+
+Thanks,
+Erik
+>=20
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+> ---
+>  drivers/acpi/acpica/exfield.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/acpi/acpica/exfield.c b/drivers/acpi/acpica/exfield.=
+c index
+> e85eb31e5075..3323a2ba6a31 100644
+> --- a/drivers/acpi/acpica/exfield.c
+> +++ b/drivers/acpi/acpica/exfield.c
+> @@ -22,7 +22,7 @@ ACPI_MODULE_NAME("exfield")
+>   */
+>  #define ACPI_INVALID_PROTOCOL_ID        0x80
+>  #define ACPI_MAX_PROTOCOL_ID            0x0F
+> -const u8 acpi_protocol_lengths[] =3D {
+> +static const u8 acpi_protocol_lengths[] =3D {
+>  	ACPI_INVALID_PROTOCOL_ID,	/* 0 - reserved */
+>  	ACPI_INVALID_PROTOCOL_ID,	/* 1 - reserved */
+>  	0x00,			/* 2 - ATTRIB_QUICK */
+> --
+> 2.21.1
 
