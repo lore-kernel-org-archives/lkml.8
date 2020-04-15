@@ -4,52 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70EC3C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:18:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F66C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46F0B21582
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:18:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7802820857
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:18:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586953116;
-	bh=5Ci5tuTv9+UalY7YeLpOUErdM7aSS+N8D1vX52ppM9U=;
+	s=default; t=1586953126;
+	bh=teWoWnOgcSPlBj5vzx0uZY+S9BuzrPPocOvM7gkc/pk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JE/nXwfgmunKnc8VMbKrgEE/QtLmmx9ygR/50Bs/nSPHKHS2HQnUhM5gI4Kv9+j16
-	 DBVG6Ph6nyWqzVnMK8Wk5RquJxtwNlAyAOmoxOsDAChiCEo1DVh5JBwjDml1goU4eb
-	 O2tVk8VGmXrXKzLhkmymj7LILhOVoQsCiZIux0Jc=
+	b=haBNrw7t6PqAguTq5ApjqSH1N2YTPQOXD0dG2rqpENaQuj7aRpKhL4dDwyFoN/LJ4
+	 MPKg+HCbkjSy4TNwLU8q0yIRY48kjZu8im3qZrl1q+aYgIYTvJSE8WNZnXRl2bZPSa
+	 DGuyzJkU+R36r9pVjq4M7zDRJz3j6Guz8Hs565Yk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S368886AbgDOMSe (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:18:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40832 "EHLO mail.kernel.org"
+        id S368902AbgDOMSo (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:18:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409269AbgDOLqN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:46:13 -0400
+        id S2409266AbgDOLqM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:46:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE73120768;
-        Wed, 15 Apr 2020 11:46:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8323206A2;
+        Wed, 15 Apr 2020 11:46:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951172;
-        bh=5Ci5tuTv9+UalY7YeLpOUErdM7aSS+N8D1vX52ppM9U=;
+        s=default; t=1586951170;
+        bh=teWoWnOgcSPlBj5vzx0uZY+S9BuzrPPocOvM7gkc/pk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S9IZ5hX2Xyr+AR/q8MEK+NLwKcpGgKqKvEluETTkEFp9GQACF2UTzIfOZgXQYb8wU
-         t8YzFpcNPQ77LRbMqcXLkexrDeoS6WeUQdYkHGUBM0Sq1+dLHjO7oNvPhgpgszLAHw
-         p5gXHN+W/Iau5KfTRN2m0bECnwfFE9JGH83lEa/Q=
+        b=LMda104mlA0kTZ+N5uies7LdbxZ622DSjNjuEIyYtx+nPENJizGoOJugEcnJbdQuh
+         bq21xSAa0G3iSjjnilTvJLyPFrQQK2Q0IaLOF3/+ZbJMr6b7E0osnkfIpVGwgIfjm/
+         qjS8hYkc1Wszn+ITGTQ/tinm0CwRhLxt6tegjoRg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jan Kara <jack@suse.cz>, Randy Dunlap <rdunlap@infradead.org>,
-        Sasha Levin <sashal@kernel.org>, linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 76/84] ext2: fix debug reference to ext2_xattr_cache
-Date:   Wed, 15 Apr 2020 07:44:33 -0400
-Message-Id: <20200415114442.14166-76-sashal@kernel.org>
+Cc:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Liu Yi L <yi.l.liu@intel.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 5.4 74/84] iommu/vt-d: Fix page request descriptor size
+Date:   Wed, 15 Apr 2020 07:44:31 -0400
+Message-Id: <20200415114442.14166-74-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114442.14166-1-sashal@kernel.org>
 References: <20200415114442.14166-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -58,46 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
 
-[ Upstream commit 32302085a8d90859c40cf1a5e8313f575d06ec75 ]
+[ Upstream commit 52355fb1919ef7ed9a38e0f3de6e928de1f57217 ]
 
-Fix a debug-only build error in ext2/xattr.c:
+Intel VT-d might support PRS (Page Reqest Support) when it's
+running in the scalable mode. Each page request descriptor
+occupies 32 bytes and is 32-bytes aligned. The page request
+descriptor offset mask should be 32-bytes aligned.
 
-When building without extra debugging, (and with another patch that uses
-no_printk() instead of <empty> for the ext2-xattr debug-print macros,
-this build error happens:
-
-../fs/ext2/xattr.c: In function ‘ext2_xattr_cache_insert’:
-../fs/ext2/xattr.c:869:18: error: ‘ext2_xattr_cache’ undeclared (first use in
-this function); did you mean ‘ext2_xattr_list’?
-     atomic_read(&ext2_xattr_cache->c_entry_count));
-
-Fix the problem by removing cached entry count from the debug message
-since otherwise we'd have to export the mbcache structure just for that.
-
-Fixes: be0726d33cb8 ("ext2: convert to mbcache2")
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Jan Kara <jack@suse.cz>
+Fixes: 5b438f4ba315d ("iommu/vt-d: Support page request in scalable mode")
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext2/xattr.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/iommu/intel-svm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/ext2/xattr.c b/fs/ext2/xattr.c
-index b91f99d9482e9..62acbe27d8bf4 100644
---- a/fs/ext2/xattr.c
-+++ b/fs/ext2/xattr.c
-@@ -865,8 +865,7 @@ ext2_xattr_cache_insert(struct mb_cache *cache, struct buffer_head *bh)
- 				      true);
- 	if (error) {
- 		if (error == -EBUSY) {
--			ea_bdebug(bh, "already in cache (%d cache entries)",
--				atomic_read(&ext2_xattr_cache->c_entry_count));
-+			ea_bdebug(bh, "already in cache");
- 			error = 0;
- 		}
- 	} else
+diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
+index 3020506180c10..1d3816cd65d57 100644
+--- a/drivers/iommu/intel-svm.c
++++ b/drivers/iommu/intel-svm.c
+@@ -502,7 +502,7 @@ struct page_req_dsc {
+ 	u64 priv_data[2];
+ };
+ 
+-#define PRQ_RING_MASK ((0x1000 << PRQ_ORDER) - 0x10)
++#define PRQ_RING_MASK	((0x1000 << PRQ_ORDER) - 0x20)
+ 
+ static bool access_error(struct vm_area_struct *vma, struct page_req_dsc *req)
+ {
 -- 
 2.20.1
 
