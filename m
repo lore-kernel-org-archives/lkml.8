@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D22B6C2BB55
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:52:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4319CC2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:52:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD503206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:52:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1637620737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:52:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586955164;
-	bh=3KrexS/j433VfC9I50sqmSe8+26m5pDsfYhuO7c8zcY=;
+	s=default; t=1586955168;
+	bh=WNjl3YMguWAoEvZRF+md9N2/nSrx4fqcpqzIGbtCVDw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HfwgGhlm76nnNXH5hmCu2qi36WzsEKcDiBAHWquj2v7nZi1v+C80Vp3JBk3yKRvzR
-	 4GG/d9axDlktXnd4OvWJ5EvfyE7hQ9K2AYYFSlUEIKjtxgqAnBPZ/6PjUoZxf7DybT
-	 XHm1kmv0kBjIACeNsXbTl4mLokWrd5fCmV5Rs/mY=
+	b=BvYJ0M0J8MXOh20++k+NDI/sopXsaHxfweuxp5KTohmu/aVYMQS5i0QEZolV7rd0+
+	 dVO9KvGSp5caFBxvGqnYMVRSVuUYhjdaIwpk/riFcRmjSDiIU7vA156tIsKm7JlnCS
+	 6nb5Twe3QgkGdPrLareX6ITz1+0RxNIfNn+jNAYs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2897471AbgDOMwl (ORCPT
+        id S2897463AbgDOLmc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:52:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33940 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 07:42:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897477AbgDOLmh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:42:37 -0400
+        id S2897147AbgDOLg2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:36:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB5492166E;
-        Wed, 15 Apr 2020 11:42:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD39B20775;
+        Wed, 15 Apr 2020 11:36:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950956;
-        bh=3KrexS/j433VfC9I50sqmSe8+26m5pDsfYhuO7c8zcY=;
+        s=default; t=1586950587;
+        bh=WNjl3YMguWAoEvZRF+md9N2/nSrx4fqcpqzIGbtCVDw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n+RU3aSyAQ3DN5+1rGTtUILn1QQhlLWAuk2bfzvmAIMt4i4Er8JL626jBx0hYi/dS
-         DxnAXsIvkXF7VrVB3onAh/GjYPhVFkDWT+gi0F9fVxLTHrCc39bXaxgHSz/SlrPZA0
-         6ekws1At9wzEVFWC6Un99x6qnTcbzvN7WxRUCVMo=
+        b=c9uLMChNTGiTjTX5Ecku3SZOYQH6pnnxha+OjGZ55eRrC5QyOuvk9fvkTAfMMTcZa
+         2SRDlj+RRoRM2PyWBnbqD7KqOtVIzqfPRuK7LX0SC5DkghCBmTAL4bmueO5RRgimgM
+         7AELgoWuGvFZctmGgX89qvuiowCPcI0d4D4YANmQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sahitya Tummala <stummala@codeaurora.org>,
-        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.5 008/106] f2fs: fix the panic in do_checkpoint()
-Date:   Wed, 15 Apr 2020 07:40:48 -0400
-Message-Id: <20200415114226.13103-8-sashal@kernel.org>
+Cc:     Ricardo Ribalda Delgado <ribalda@kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-leds@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 085/129] leds: core: Fix warning message when init_data
+Date:   Wed, 15 Apr 2020 07:34:00 -0400
+Message-Id: <20200415113445.11881-85-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
-References: <20200415114226.13103-1-sashal@kernel.org>
+In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
+References: <20200415113445.11881-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,133 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sahitya Tummala <stummala@codeaurora.org>
+From: Ricardo Ribalda Delgado <ribalda@kernel.org>
 
-[ Upstream commit bf22c3cc8ce71454dddd772284773306a68031d8 ]
+[ Upstream commit 64ed6588c2ea618d3f9ca9d8b365ae4c19f76225 ]
 
-There could be a scenario where f2fs_sync_meta_pages() will not
-ensure that all F2FS_DIRTY_META pages are submitted for IO. Thus,
-resulting in the below panic in do_checkpoint() -
+The warning message when a led is renamed due to name collition can fail
+to show proper original name if init_data is used. Eg:
 
-f2fs_bug_on(sbi, get_pages(sbi, F2FS_DIRTY_META) &&
-				!f2fs_cp_error(sbi));
+[    9.073996] leds-gpio a0040000.leds_0: Led (null) renamed to red_led_1 due to name collision
 
-This can happen in a low-memory condition, where shrinker could
-also be doing the writepage operation (stack shown below)
-at the same time when checkpoint is running on another core.
-
-schedule
-down_write
-f2fs_submit_page_write -> by this time, this page in page cache is tagged
-			as PAGECACHE_TAG_WRITEBACK and PAGECACHE_TAG_DIRTY
-			is cleared, due to which f2fs_sync_meta_pages()
-			cannot sync this page in do_checkpoint() path.
-f2fs_do_write_meta_page
-__f2fs_write_meta_page
-f2fs_write_meta_page
-shrink_page_list
-shrink_inactive_list
-shrink_node_memcg
-shrink_node
-kswapd
-
-Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Fixes: bb4e9af0348d ("leds: core: Add support for composing LED class device names")
+Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
+Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Signed-off-by: Pavel Machek <pavel@ucw.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/checkpoint.c | 16 +++++++---------
- fs/f2fs/f2fs.h       |  2 +-
- fs/f2fs/super.c      |  2 +-
- 3 files changed, 9 insertions(+), 11 deletions(-)
+ drivers/leds/led-class.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-index ffdaba0c55d29..fc33fdb31c75d 100644
---- a/fs/f2fs/checkpoint.c
-+++ b/fs/f2fs/checkpoint.c
-@@ -1250,20 +1250,20 @@ static void unblock_operations(struct f2fs_sb_info *sbi)
- 	f2fs_unlock_all(sbi);
- }
+diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
+index 1fc40e8af75eb..3363a6551a708 100644
+--- a/drivers/leds/led-class.c
++++ b/drivers/leds/led-class.c
+@@ -376,7 +376,7 @@ int led_classdev_register_ext(struct device *parent,
  
--void f2fs_wait_on_all_pages_writeback(struct f2fs_sb_info *sbi)
-+void f2fs_wait_on_all_pages(struct f2fs_sb_info *sbi, int type)
- {
- 	DEFINE_WAIT(wait);
+ 	if (ret)
+ 		dev_warn(parent, "Led %s renamed to %s due to name collision",
+-				led_cdev->name, dev_name(led_cdev->dev));
++				proposed_name, dev_name(led_cdev->dev));
  
- 	for (;;) {
- 		prepare_to_wait(&sbi->cp_wait, &wait, TASK_UNINTERRUPTIBLE);
- 
--		if (!get_pages(sbi, F2FS_WB_CP_DATA))
-+		if (!get_pages(sbi, type))
- 			break;
- 
- 		if (unlikely(f2fs_cp_error(sbi)))
- 			break;
- 
--		io_schedule_timeout(5*HZ);
-+		io_schedule_timeout(HZ/50);
- 	}
- 	finish_wait(&sbi->cp_wait, &wait);
- }
-@@ -1384,8 +1384,6 @@ static int do_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
- 
- 	/* Flush all the NAT/SIT pages */
- 	f2fs_sync_meta_pages(sbi, META, LONG_MAX, FS_CP_META_IO);
--	f2fs_bug_on(sbi, get_pages(sbi, F2FS_DIRTY_META) &&
--					!f2fs_cp_error(sbi));
- 
- 	/*
- 	 * modify checkpoint
-@@ -1493,11 +1491,11 @@ static int do_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
- 
- 	/* Here, we have one bio having CP pack except cp pack 2 page */
- 	f2fs_sync_meta_pages(sbi, META, LONG_MAX, FS_CP_META_IO);
--	f2fs_bug_on(sbi, get_pages(sbi, F2FS_DIRTY_META) &&
--					!f2fs_cp_error(sbi));
-+	/* Wait for all dirty meta pages to be submitted for IO */
-+	f2fs_wait_on_all_pages(sbi, F2FS_DIRTY_META);
- 
- 	/* wait for previous submitted meta pages writeback */
--	f2fs_wait_on_all_pages_writeback(sbi);
-+	f2fs_wait_on_all_pages(sbi, F2FS_WB_CP_DATA);
- 
- 	/* flush all device cache */
- 	err = f2fs_flush_device_cache(sbi);
-@@ -1506,7 +1504,7 @@ static int do_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
- 
- 	/* barrier and flush checkpoint cp pack 2 page if it can */
- 	commit_checkpoint(sbi, ckpt, start_blk);
--	f2fs_wait_on_all_pages_writeback(sbi);
-+	f2fs_wait_on_all_pages(sbi, F2FS_WB_CP_DATA);
- 
- 	/*
- 	 * invalidate intermediate page cache borrowed from meta inode
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 5a888a063c7f1..b0e0535f7f56a 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -3196,7 +3196,7 @@ int f2fs_get_valid_checkpoint(struct f2fs_sb_info *sbi);
- void f2fs_update_dirty_page(struct inode *inode, struct page *page);
- void f2fs_remove_dirty_inode(struct inode *inode);
- int f2fs_sync_dirty_inodes(struct f2fs_sb_info *sbi, enum inode_type type);
--void f2fs_wait_on_all_pages_writeback(struct f2fs_sb_info *sbi);
-+void f2fs_wait_on_all_pages(struct f2fs_sb_info *sbi, int type);
- int f2fs_write_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc);
- void f2fs_init_ino_entry_info(struct f2fs_sb_info *sbi);
- int __init f2fs_create_checkpoint_caches(void);
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index ac01c3f8863d9..a0a2f46f450dc 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -1105,7 +1105,7 @@ static void f2fs_put_super(struct super_block *sb)
- 	/* our cp_error case, we can wait for any writeback page */
- 	f2fs_flush_merged_writes(sbi);
- 
--	f2fs_wait_on_all_pages_writeback(sbi);
-+	f2fs_wait_on_all_pages(sbi, F2FS_WB_CP_DATA);
- 
- 	f2fs_bug_on(sbi, sbi->fsync_node_num);
- 
+ 	if (led_cdev->flags & LED_BRIGHT_HW_CHANGED) {
+ 		ret = led_add_brightness_hw_changed(led_cdev);
 -- 
 2.20.1
 
