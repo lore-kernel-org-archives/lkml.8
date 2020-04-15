@@ -2,134 +2,152 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D58C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:08:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 445B0C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:09:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47146206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:08:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2442D206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:09:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="lYFU0C1y"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="hyvfWRgZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S370747AbgDOOIA (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:08:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35392 "EHLO
+        id S2636459AbgDOOJU (ORCPT
+        <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 10:09:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2636438AbgDOOHY (ORCPT
+        by vger.kernel.org with ESMTP id S2634048AbgDOOJN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 10:07:24 -0400
-Received: from mo6-p02-ob.smtp.rzone.de (mo6-p02-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5302::8])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 669BAC061A0C;
-        Wed, 15 Apr 2020 07:07:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1586959641;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=3xRYp708JzBcF+nmyzTN9euUKBZizEPeF9myzhSW4qw=;
-        b=lYFU0C1yl7Yg1aftzKRWDtB1X90kbTbFyIZirBTec/OjRV0fPx0/LRX+u6y+2cDqUz
-        XfRnO76kdQLVXdpgmk3jzDSjdxRsSe104r98FglkwJhigx/CbCRyL0fb7MFF/gLRk83V
-        ZDytu5jbBhMNlheSIgAcYUWYfI9XmhhfsdcwkfNOmoiHkIFK1sQPH1OMp86u8hPyAxja
-        hnES5zYTtCdFan+76S3o7dVioek0aQqWYdPkpmZVfXXSKdadveF0q/F9/ob5+y6vdHWC
-        IuX8vKgAlzlJueADQ9479Wb3Bufd8MATUjAqvNJIfG2e4EP7xvgWaBiwwyOokR5b4I0z
-        2EBQ==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBp5hRw/qOxWRk4dCz3b9m9rH79DVQJPCq5egpDhipvc+uRd0DTkACO"
-X-RZG-CLASS-ID: mo00
-Received: from [IPv6:2001:16b8:26b3:fd00:65ed:197b:42b7:ade5]
-        by smtp.strato.de (RZmta 46.4.0 AUTH)
-        with ESMTPSA id 6028a2w3FE7B2MX
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Wed, 15 Apr 2020 16:07:11 +0200 (CEST)
-Subject: Re: [PATCH v6 07/12] ARM: DTS: omap5: add sgx gpu child node
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+        Wed, 15 Apr 2020 10:09:13 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13D1AC061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 07:09:13 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id l78so1577951qke.7
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 07:09:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8l3fJ3svvSnnpPWSwQODVx9E9WXp25t5EtCooxlqAaI=;
+        b=hyvfWRgZ8ds04OSvqKNyo/oyMGZudplvEgKzicRUdSRA7vp3TtY92WjQnivcZ2zlVx
+         YGsqo2pSYCsL5gyfWH8KskcNoRlysYM+kZ0YMhf7DLoAEcWPb/meAwW+z9VwJ2o/zAKQ
+         Mf+CeCVpXGS0CxgIfgYWqEVHzRfJuIxFifI0IN17pIpclN6zHTtbdISuE1qxEgPYEinv
+         zriEbOBxBnvwhV/nxT6zLUvApM7+qCMNvIP3vvk6tOHIAUhKGQ7aOSziauK59XBka8Yb
+         9q5QkXsZZ8JueNWbHr7Un1tx9r6Rd7XMa3nsavZAziqQL6icouVnhboeNjAADXfnuT7U
+         u74g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8l3fJ3svvSnnpPWSwQODVx9E9WXp25t5EtCooxlqAaI=;
+        b=kXNMEQmUG1w5frLAGiF9mlBQpJ3VwWI8Oec24qNgG/OS+neSFTj7d6IuG8Tp+AmG4Q
+         4KeAD+qV50ea/qrQMz3OFy1daT2W2m/8iNJMPKbkJbS9DAaouAqzi3HvRmUop56pysVa
+         NnPV9TXlOopyWTX9ykVXJY4YNmWbYx8ACCyisvZ9EiahnFlTKS/y7hOt6MTfX0UjfBnp
+         LFqULLJVurUcqSRqndi9EO7mKGms5Ow8vj69AgpRurLEqSzxuYcYwtgmKG+rZdGvOvTY
+         cVn7x5c+etNaX8nbrzfMDBZSGhHMQsWWwfnrtkIcZ0BXkE0eTXC71m9LjyOJrxkK+0a8
+         uPRQ==
+X-Gm-Message-State: AGi0PuaAsgZlVrBqeajzn/JvkUWm1cUxWX8oTxwYhjdBb/dMHnhPqs+L
+        x7BPMS9ykEGThSGZ3ef/7eV5Dg==
+X-Google-Smtp-Source: APiQypLbb8LS8qXo73NMCiWFh1QIqqzNTocUAzDQFGF4qT8gB1BW0a9iIzLUAA/BXDJ9RXfzbpXISA==
+X-Received: by 2002:a05:620a:5fc:: with SMTP id z28mr27186371qkg.346.1586959752226;
+        Wed, 15 Apr 2020 07:09:12 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id o94sm13137882qtd.34.2020.04.15.07.09.11
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 15 Apr 2020 07:09:11 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jOij0-0005Px-OF; Wed, 15 Apr 2020 11:09:10 -0300
+Date:   Wed, 15 Apr 2020 11:09:10 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Cc:     Bernard Metzler <bmt@zurich.ibm.com>,
+        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yuanxzhang@fudan.edu.cn,
+        kjlu@umn.edu, Xin Tan <tanxin.ctf@gmail.com>
+Subject: Re: [PATCH] RDMA/siw: Fix potential siw_mem refcnt leak in
+ nr_add_node
+Message-ID: <20200415140910.GN5100@ziepe.ca>
+References: <1586939949-69856-1-git-send-email-xiyuyang19@fudan.edu.cn>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20200415134754.GB21120@kozik-lap>
-Date:   Wed, 15 Apr 2020 16:07:17 +0200
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Philipp Rossak <embed3d@gmail.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-omap@vger.kernel.org, openpvrsgx-devgroup@letux.org,
-        letux-kernel@openphoenux.org, kernel@pyra-handheld.com,
-        linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <8CC38F9F-885E-4EB9-9D36-1FFC6A86A45F@goldelico.com>
-References: <cover.1586939718.git.hns@goldelico.com> <004611c9660943759b635a87484932869927cf74.1586939718.git.hns@goldelico.com> <CAJKOXPdEkWniffmGZmf=S6E5UxWTdVGXnycqTFftXwo_45rz3w@mail.gmail.com> <EFA7F2F0-96EA-45D9-B8C8-00DC8C72344D@goldelico.com> <20200415134754.GB21120@kozik-lap>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-X-Mailer: Apple Mail (2.3124)
+Content-Disposition: inline
+In-Reply-To: <1586939949-69856-1-git-send-email-xiyuyang19@fudan.edu.cn>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Apr 15, 2020 at 04:39:08PM +0800, Xiyu Yang wrote:
+> siw_fastreg_mr() invokes siw_mem_id2obj(), which returns a local
+> reference of the siw_mem object to "mem" with increased refcnt.
+> When siw_fastreg_mr() returns, "mem" becomes invalid, so the refcount
+> should be decreased to keep refcount balanced.
+> 
+> The issue happens in one error path of siw_fastreg_mr(). When "base_mr"
+> equals to NULL but "mem" is not NULL, the function forgets to decrease
+> the refcnt increased by siw_mem_id2obj() and causes a refcnt leak.
+> 
+> Fix this issue by calling siw_mem_put() on this error path when mem is
+> not NULL.
+> 
+> Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+> Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+>  drivers/infiniband/sw/siw/siw_qp_tx.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/infiniband/sw/siw/siw_qp_tx.c b/drivers/infiniband/sw/siw/siw_qp_tx.c
+> index ae92c8080967..86044a44b83b 100644
+> +++ b/drivers/infiniband/sw/siw/siw_qp_tx.c
+> @@ -926,6 +926,8 @@ static int siw_fastreg_mr(struct ib_pd *pd, struct siw_sqe *sqe)
+>  	siw_dbg_pd(pd, "STag 0x%08x\n", sqe->rkey);
+>  
+>  	if (unlikely(!mem || !base_mr)) {
+> +		if (mem)
+> +			siw_mem_put(mem);
+>  		pr_warn("siw: fastreg: STag 0x%08x unknown\n", sqe->rkey);
+>  		return -EINVAL;
+>  	}
 
-> Am 15.04.2020 um 15:47 schrieb Krzysztof Kozlowski <krzk@kernel.org>:
->=20
-> On Wed, Apr 15, 2020 at 01:46:06PM +0200, H. Nikolaus Schaller wrote:
->> Hi Krzysztof,
->>=20
->>> Am 15.04.2020 um 13:38 schrieb Krzysztof Kozlowski =
-<krzk@kernel.org>:
->>>=20
->>> On Wed, 15 Apr 2020 at 10:36, H. Nikolaus Schaller =
-<hns@goldelico.com> wrote:
->>>>=20
->>>> and add interrupt.
->>>>=20
->>>> Tested-by: H. Nikolaus Schaller <hns@goldelico.com> # =
-Pyra-Handheld.
->>>=20
->>> Don't add your own Tested-by tags. These are implied by authorship,
->>> otherwise all patches people make should have such tag.
->>=20
->> Ok I see. AFAIR it originates in several phases of editing to report =
-on which device it was tested.
->>=20
->> Is there a canonical way of writing "tested-on: ${HARDWARE}"?
->>=20
->> E.g. would this be ok?
->>=20
->> Signed-off: H. Nikolaus Schaller <hns@goldelico.com> # tested on =
-Pyra-Handheld
->=20
-> If you think tested platform is worth mentioning in the commit msg
-> (it will stay there forever, ever, ever) then just add a line like:
->=20
-> "Add SGX GPU node. Tested on Pyra-Handheld."
->=20
-> =46rom time to time we add such information to note that only one =
-platform
-> was actually tested.
+I think I prefer this version, which is what I'll use if nobody has concerns:
 
-Yes that is what it should express.
-
->  I am not sure what benefit it brings to most
-> cases... but your commit msg is so short that adding one more sentence
-> seems reasonable. :)
-
-Ok, will queue for v7.
-
->=20
-> Best regards,
-> Krzysztof
-
-BR and thanks,
-Nikolaus
-
+diff --git a/drivers/infiniband/sw/siw/siw_qp_tx.c b/drivers/infiniband/sw/siw/siw_qp_tx.c
+index ae92c8080967c5..0580bbf535ceb7 100644
+--- a/drivers/infiniband/sw/siw/siw_qp_tx.c
++++ b/drivers/infiniband/sw/siw/siw_qp_tx.c
+@@ -920,20 +920,28 @@ static int siw_fastreg_mr(struct ib_pd *pd, struct siw_sqe *sqe)
+ {
+ 	struct ib_mr *base_mr = (struct ib_mr *)(uintptr_t)sqe->base_mr;
+ 	struct siw_device *sdev = to_siw_dev(pd->device);
+-	struct siw_mem *mem = siw_mem_id2obj(sdev, sqe->rkey  >> 8);
++	struct siw_mem *mem;
+ 	int rv = 0;
+ 
+ 	siw_dbg_pd(pd, "STag 0x%08x\n", sqe->rkey);
+ 
+-	if (unlikely(!mem || !base_mr)) {
++	if (unlikely(!base_mr)) {
+ 		pr_warn("siw: fastreg: STag 0x%08x unknown\n", sqe->rkey);
+ 		return -EINVAL;
+ 	}
++
+ 	if (unlikely(base_mr->rkey >> 8 != sqe->rkey  >> 8)) {
+ 		pr_warn("siw: fastreg: STag 0x%08x: bad MR\n", sqe->rkey);
++		return -EINVAL;
++	}
++
++	mem = siw_mem_id2obj(sdev, sqe->rkey  >> 8);
++	if (unlikely(!mem)) {
++		pr_warn("siw: fastreg: STag 0x%08x unknown\n", sqe->rkey);
+ 		rv = -EINVAL;
+ 		goto out;
+ 	}
++
+ 	if (unlikely(mem->pd != pd)) {
+ 		pr_warn("siw: fastreg: PD mismatch\n");
+ 		rv = -EINVAL;
