@@ -2,213 +2,152 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73B81C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F2BC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:35:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 481E62072D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:27:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00A4E2076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:35:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hDNDsDqr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gAq7bZEI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393010AbgDOC1B (ORCPT
+        id S2387990AbgDOCfB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 22:27:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39678 "EHLO
+        Tue, 14 Apr 2020 22:35:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387802AbgDOC0v (ORCPT
+        with ESMTP id S1728267AbgDOCez (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 22:26:51 -0400
-Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EC2EC061A0E
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 19:26:51 -0700 (PDT)
-Received: by mail-yb1-xb44.google.com with SMTP id h205so8339551ybg.6
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 19:26:51 -0700 (PDT)
+        Tue, 14 Apr 2020 22:34:55 -0400
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77904C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 19:34:54 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id k21so1945830otl.5
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 19:34:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=RVm1mdzhIQulODHe4ViIUFisQeB0C3YOnKOzD5pQ3Tg=;
-        b=hDNDsDqr3rMKp1Nc5ucKl1+B3Ge0lECWe6d0K+WqYKSJd5TMjOV4+LP3l5kvFomNJN
-         BtinqFB5MoxJK08vxD6MSgH5osxr83VCVAWGahbjoAoMFDfh4cZJ7NZNAYjMvgK0wtSr
-         k9Y3KBmgGA1VMJ3BF8wiNd3ePavyEX+mDpuo+HtDEHS8clebtMGNN8NoeCVgG9ucLvRk
-         4FPFyQHci+8OpIOC9cWP+Zo93uW2QKZlUF+B5E82a8cy0rAlVFZu8WjxGXcVzNxhMiM7
-         vI6ZTW8qvo9RGK97igtx504WMPfEDdb8TQtUyzw8EPBSGY/PudKu4kJYHYX6pt17A22c
-         0yNA==
+        bh=+7NCTHkFb8srify26v+d/R/erV2NDO4/9sUz1z6PAqU=;
+        b=gAq7bZEIZ/9CjRjLVjZoGerHRKHZ5lZD0UEPr3W5K6dHWKgFI0RUI2EGS0/qA0kTUw
+         lsxmNRQE35tSfFFbaJYBC/+Mf78NKu499iUJXp8nmBgTmwNkIKhJwSTsy7olXWffEkyH
+         p3EnyCncUWbwSj0vLUjKrSMah4fbzpL2nGSLqXvcZ2Ytfs7lOQuKHf1axLukTwlTMnFX
+         RAulLoEZoX8m19MLkVtCurokhxsqI7ujG0mNlTuRgsDJhBnTno7tQvWBZXOTKngydWPd
+         1ppY11u+tUfIosA4oVkDF5jq3dSqKxoC2vbxF9iyMg1VrTpeLo4mZfwdx1mGjr4Get5v
+         P7nQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=RVm1mdzhIQulODHe4ViIUFisQeB0C3YOnKOzD5pQ3Tg=;
-        b=PBoocxtM2b9IbjjypG9DrHN+gXdB/eYlZ6plu7Wwnj+RAfUtL/rn+JD32kej/AWn8W
-         7qR5+c8y7GRLhpNK8Y1ofUZ6DPa3Omk7xjyG1HPG015HaUzvYXWMhhr8/DPBTutOHIne
-         tJ8Lxc2V4HkvW++6Y3+fkoVjtBxzbCNzYzjgIyM5l8/uHnj0K9OPqAx4iXvpkeYwYRoB
-         Q33CCw6VbP/7ulEyniH41jpaIezzw2pxz9n13yRSE1F3kP9DbpwI9LE/xMKArYEzkiiU
-         aS+woymNaPBgqWI3RINio/q4TE/x7Fud1aT2UPrUSAozhKIq2QXr3ugcRZT7HfkySbAH
-         5yrw==
-X-Gm-Message-State: AGi0PuZlzGXJg+/Bbc7KfhVGsTSesqM6zSYNX2xO73R5n23l3TJoSvwj
-        ocFgNQZbIlw3rA/xSCtwyDgyqOIE6SGLjOkx8rXYYg==
-X-Google-Smtp-Source: APiQypJT2O6XhyztsDuWTdyDMNKdRkVRrI5/NWhiiuWdziZ4aTjiT2gEwRG+6J5mnrX1WvcJzxYRvE6IptxThQ9uWgY=
-X-Received: by 2002:a25:77d8:: with SMTP id s207mr4821189ybc.47.1586917610171;
- Tue, 14 Apr 2020 19:26:50 -0700 (PDT)
+        bh=+7NCTHkFb8srify26v+d/R/erV2NDO4/9sUz1z6PAqU=;
+        b=MqbiKAkCpQHcgLijCArQlFoy3KmMAsRlzLZi6mevCN19KUSrEmgvWRsHJNvl+pA8wN
+         J+g3CbS0gOEoKE6RGywTVICisA765d2hOYNxyCWdkifzTSaD1yks2KUi0EMEXjvlDNN3
+         2wOXjerboypWnvtUjKtkaze9fLHd6HZgQyMxcBzSowtOpXwyrkDpKUh/AiBGXb2kR3m9
+         QRfM5PstKzHhyQFaL+85xKkZBfRABHtJpVdM/ceQbkUN8sTXCxxWM0wh9UTPx+IWfugK
+         nZTRKKxyMrUQTafaL7kQbVwBwoWG9dnabdLeoMxd2gufR7LqqJ/m1/5D4SNPf0/cdETZ
+         lYBA==
+X-Gm-Message-State: AGi0PuaVKZ/wJOokpJnaRt8Ubsf51uUm3qn1aIr0IXmNxzIR76sMQNhM
+        K3SSfjPTNjEWAvN2EZGi8c7ZskNq0/Lb3rhthGI=
+X-Google-Smtp-Source: APiQypJXSb94OJlaJ/kPpGtEtQyGeMuhJGrfLugpQAzrMNJoVNcMo2W2aS8RScemfMl7aWlnWzMfDFAcbAv28eMCOAM=
+X-Received: by 2002:a9d:de2:: with SMTP id 89mr1153142ots.95.1586918093505;
+ Tue, 14 Apr 2020 19:34:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200411064248.247530-1-irogers@google.com> <CAM9d7cgOO88sWDh8F1x2Mnk2ikSF0FUCp88c1wAheW5zJ9+B0g@mail.gmail.com>
- <CAP-5=fW_5pPZTA3bXdT9d9Tt_d5aJw=4bf_fr9eqzGPfoVs3aQ@mail.gmail.com>
- <CAM9d7cgsR7mU_N3BaOz3i2XWY_GchOYWHvNh8g+=2VHTFGEm9Q@mail.gmail.com>
- <CAP-5=fU+rrpK=zNBWWDBxUMYBz6yV3FZV3uhwye7euN7m8saDg@mail.gmail.com> <CAM9d7chvpCOdSAeRH1+1vt_m+-Ecwm7jRXrN2OAjAP5yJwc=og@mail.gmail.com>
-In-Reply-To: <CAM9d7chvpCOdSAeRH1+1vt_m+-Ecwm7jRXrN2OAjAP5yJwc=og@mail.gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 14 Apr 2020 19:26:39 -0700
-Message-ID: <CAP-5=fXRV8d7yTWqR=5F2dwg-MtxrMc4BQYVd3v8gDTSMqLJKg@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] tools api: add a lightweight buffered reading api
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>, Petr Mladek <pmladek@suse.com>,
-        Andrey Zhizhikin <andrey.z@gmail.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
+References: <20200225073731.465270-1-avagin@gmail.com> <20200225073731.465270-4-avagin@gmail.com>
+ <20200414172014.GA6705@C02TD0UTHF1T.local>
+In-Reply-To: <20200414172014.GA6705@C02TD0UTHF1T.local>
+From:   Andrei Vagin <avagin@gmail.com>
+Date:   Tue, 14 Apr 2020 19:34:41 -0700
+Message-ID: <CANaxB-yBeSmYdZL6gbe-agDAaEVcYHrxUCojQ4xaWpsWinQsyA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/6] arm64/vdso: Add time napespace page
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
+        Dmitry Safonov <dima@arista.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 7:20 PM Namhyung Kim <namhyung@kernel.org> wrote:
+On Tue, Apr 14, 2020 at 10:20 AM Mark Rutland <mark.rutland@arm.com> wrote:
 >
-> On Tue, Apr 14, 2020 at 9:48 AM Ian Rogers <irogers@google.com> wrote:
+> On Mon, Feb 24, 2020 at 11:37:28PM -0800, Andrei Vagin wrote:
+> > Allocate the time namespace page among VVAR pages.  Provide
+> > __arch_get_timens_vdso_data() helper for VDSO code to get the
+> > code-relative position of VVARs on that special page.
 > >
-> > On Mon, Apr 13, 2020 at 5:16 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > >
-> > > On Tue, Apr 14, 2020 at 1:22 AM Ian Rogers <irogers@google.com> wrote:
-> > > >
-> > > > On Mon, Apr 13, 2020 at 12:29 AM Namhyung Kim <namhyung@kernel.org> wrote:
-> > > > >
-> > > > > Hi Ian,
-> > > > >
-> > > > > On Sat, Apr 11, 2020 at 3:42 PM Ian Rogers <irogers@google.com> wrote:
-> > > > > >
-> > > > > > The synthesize benchmark shows the majority of execution time going to
-> > > > > > fgets and sscanf, necessary to parse /proc/pid/maps. Add a new buffered
-> > > > > > reading library that will be used to replace these calls in a follow-up
-> > > > > > CL. Add tests for the library to perf test.
-> > > > > >
-> > > > > > v4 adds the test file missed in v3.
-> > > > > >
-> > > > > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > > > > ---
-> > > > > > +/* Read a hexadecimal value with no 0x prefix into the out argument hex. If the
-> > > > > > + * first character isn't hexadecimal returns -2, io->eof returns -1, otherwise
-> > > > > > + * returns the character after the hexadecimal value which may be -1 for eof.
-> > > > >
-> > > > > I'm not sure returning -1 is good when it actually reads something and
-> > > > > meets EOF.
-> > > > > Although it would have a valid value, users might consider it an error IMHO.
-> > > > > Why not returning 0 instead? (I'm ok with -1 for the later use of the API).
-> > > >
-> > > > Thanks for the feedback! In the code for /proc/pid/maps this is a
-> > > > hypothetical, but I think having the API right is important. I didn't
-> > > > go with 0 as you mention 0 'could' encode a character, for example,
-> > > > 7fffabcd\0 wouldn't be distinguishable from 7fffabcd<EOF>.
-> > >
-> > > Practically I don't think it matters in this case as long as we can
-> > > distinguish them in the next call (if the user wants to do).
-> > > What users want to do (I think) is whether the returned value
-> > > (in *hex) is ok to use or not.  By returning -1 on EOF, it might
-> > > be confusing for users..
+> > If a task belongs to a time namespace then the VVAR page which contains
+> > the system wide VDSO data is replaced with a namespace specific page
+> > which has the same layout as the VVAR page. That page has vdso_data->seq
+> > set to 1 to enforce the slow path and vdso_data->clock_mode set to
+> > VCLOCK_TIMENS to enforce the time namespace handling path.
 > >
-> > In the /proc/pid/maps case the code for reading an address like
-> > "00400000-00452000 " the code is:
+> > The extra check in the case that vdso_data->seq is odd, e.g. a concurrent
+> > update of the VDSO data is in progress, is not really affecting regular
+> > tasks which are not part of a time namespace as the task is spin waiting
+> > for the update to finish and vdso_data->seq to become even again.
 > >
-> > if (io__get_hex(io, start) != '-')
-> >   return false;
-> > if (io__get_hex(io, end) != ' ')
-> >   return false;
+> > If a time namespace task hits that code path, it invokes the corresponding
+> > time getter function which retrieves the real VVAR page, reads host time
+> > and then adds the offset for the requested clock which is stored in the
+> > special VVAR page.
 > >
-> > If io__get_hex doesn't return the next character it becomes:
-> >
-> > if (io__get_hex(io, start))
-> >   return false;
-> > if (io__get_char(io) != '-')
-> >   return false;
-> > if (io__get_hex(io, end))
-> >   return false;
-> > if (io__get_char(io) != ' ')
-> >   return false;
-> >
-> > Which is twice as verbose and requires that io have a rewind operation
-> > to go backward when io__get_hex and io__get_dec have gone 1 character
-> > too far.
+> > Signed-off-by: Andrei Vagin <avagin@gmail.com>
+> > ---
+> >  arch/arm64/include/asm/vdso.h                 |  6 ++++++
+> >  .../include/asm/vdso/compat_gettimeofday.h    | 11 ++++++++++
+> >  arch/arm64/include/asm/vdso/gettimeofday.h    |  8 ++++++++
+> >  arch/arm64/kernel/vdso.c                      | 20 ++++++++++++++++---
+> >  arch/arm64/kernel/vdso/vdso.lds.S             |  5 ++++-
+> >  arch/arm64/kernel/vdso32/vdso.lds.S           |  5 ++++-
+> >  include/vdso/datapage.h                       |  1 +
+> >  7 files changed, 51 insertions(+), 5 deletions(-)
 >
-> Yeah, I'm not against returning the next character - it's good.
-> The only concern was whether it should return -1 or 0 when
-> it meets EOF after parsing some digits.
+> > +#ifdef CONFIG_TIME_NS
+> > +static __always_inline const struct vdso_data *__arch_get_timens_vdso_data(void)
+> > +{
+> > +     const struct vdso_data *ret;
+> > +
+> > +     asm volatile("mov %0, %1" : "=r"(ret) : "r"(_timens_data));
+> > +
+> > +     return ret;
+> > +}
+> > +#endif
 >
-> But I think we can go with this version as there's no such case
-> when parsing /proc/pid/maps.
->
-> >
-> > > > The updated
-> > > > code distinguishes the cases as 0 meaning character \0, -1 meaning EOF
-> > > > and -2 meaning bad encoding. Your worry is that a hex number that's
-> > > > next to EOF will get a result of -1 showing the EOF came next. and
-> > > > code that does 'if ( .. < 0)' would trigger. While clunky, it'd be
-> > > > possible in those cases to change the code to 'if ( .. < -1)'.
-> > >
-> > > Yes, but it's not conventional IMHO.
-> > >
-> > >
-> > > > So my thoughts are:
-> > > > 1) being able to tell apart the 3 cases could be important - this is
-> > > > all hypothetical;
-> > > > 2) keeping EOF and error as negative numbers has a degree of consistency;
-> > > > 3) using -1 for EOF comes from get_char, it'd be nice to have one
-> > > > value mean EOF.
-> > > > Perhaps the issue is the name of the function? It isn't a standard API
-> > > > to return the next character, but it simplified things for me as I
-> > > > didn't need to add a 'rewind' operation. The function names could be
-> > > > something like io__get_hex_then_char and io__get_dec_then_char, EOF
-> > > > for the 'then_char' part would be more consistent. I'd tried to keep
-> > > > the names short and have a load bearing comment, which isn't ideal but
-> > > > generally I believe the style is that function names are kept short.
-> > > > Let me know what you think.
-> > >
-> > > I'm ok with the function name and understand your concerns.
-> > > And I don't want to insist it strongly but just sharing my thoughts.
-> > >
-> > > Thanks
-> > > Namhyung
-> >
-> > Thanks, feedback appreciated! It is useful to discuss and it is
-> > straightforward to change the API but I'm in two minds as to whether
-> > it would be better.
-> >
-> > I'd still like to land this and the next patch, as getting rid of
-> > fgets/sscanf saves 50us from event synthesis. Breaking out the io part
-> > of that change wasn't done so much with a view to replacing stdio, but
-> > just something minimal that serves the /proc/pid/maps case.
->
-> The performance gain looks nice!  Thanks for working on this.
+> What is this inline assembly for? The commit message doesn't mention it,
+> there's no explanation here, and the native version doesn't do likewise
+> so it seems rather surprising.
 
-Thanks for the feedback! I think we can keep an eye on the API, the
-idea to change to 0 isn't an unreasonable one. I have some other
-multithreaded synthesis improving patches to send from Stephane, and
-I've updated the benchmark to measure these. I'll re-send these
-patches with the new single and multi-threaded benchmark data.
+__arch_get_vdso_data is  right before this function and there is a
+comment which explains this:
+https://github.com/torvalds/linux/blob/master/arch/arm64/include/asm/vdso/compat_gettimeofday.h#L137
+
+"""
+/*
+* This simply puts &_vdso_data into ret. The reason why we don't use
+* `ret = _vdso_data` is that the compiler tends to optimize this in a
+* very suboptimal way: instead of keeping &_vdso_data in a register,
+* it goes through a relocation almost every time _vdso_data must be
+* accessed (even in subfunctions). This is both time and space
+* consuming: each relocation uses a word in the code section, and it
+* has to be loaded at runtime.
+*
+* This trick hides the assignment from the compiler. Since it cannot
+* track where the pointer comes from, it will only use one relocation
+* where __arch_get_vdso_data() is called, and then keep the result in
+* a register.
+*/
+"""
+
+I decided to not duplicate the comment because these two functions are
+very similar and close to each other.
 
 Thanks,
-Ian
-
-> Thanks
-> Namhyung
+Andrei
