@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 073B1C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:34:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD51C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:35:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2AD8208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:34:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C86DF2076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:35:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586961294;
-	bh=wgc5ZRDNb/Os5mnZGCAK3Ryr5aIheM5QZV5lEE7sBMw=;
+	s=default; t=1586961326;
+	bh=D8slo2AUpDm68B9njFif/+P52JyjqenIucYmhJxmOIY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UK1hqwZo6u36eW2QiH7ClXQettVb8wOqvMsyzVWfrGqq6f1jPDHJ78koyqmRf8yyg
-	 KFvrjE7QyXKWd4NngBKclz2vG5ORG6u1gzgPGnmJOf1xeMYaKZNJ7vz6RQwN11zYg7
-	 ZD/wKVMz+DwXeht/j6NiVMFoBBJi8WnhbxRbyNxo=
+	b=NZghvZWusdi0r+f9FASSoDDhhg952UM8ipsytmSquwID7SBX4p2JwsSvBkSd+zNOQ
+	 PtF3C7XpsOUK3bNnzx2jYBv3ZKPdavWAbipJsC+xuMWqXBAwaeCzi6t0+awTpRPvXs
+	 wK7dO+Xrl06o7GwDgLsFk/GCd9JuuuRdpJhWHvsg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394162AbgDOOer (ORCPT
+        id S2392113AbgDOOfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:34:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45458 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 10:35:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394101AbgDOOdT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 10:33:19 -0400
+        id S2394099AbgDOOdO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 10:33:14 -0400
 Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C75642076D;
-        Wed, 15 Apr 2020 14:32:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BCD6A21D95;
+        Wed, 15 Apr 2020 14:32:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586961178;
-        bh=wgc5ZRDNb/Os5mnZGCAK3Ryr5aIheM5QZV5lEE7sBMw=;
+        s=default; t=1586961172;
+        bh=D8slo2AUpDm68B9njFif/+P52JyjqenIucYmhJxmOIY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=05a2XxlqWagShzDpfT4FBP6Lw/+9REzu9U9BcGscNUMU97S9feNRDD84/ce9C85rm
-         75P3qGl8mkXNxTTDpgwSjjIMSygW7BUmp6SIdBrQkRHeGKe/QIz78ZnFcF2IgN8/ex
-         bAhzcrU3jkNltDwnSjVJyqNtYYRk9wMHHUrhZNXM=
+        b=qRERAbHwN9QerWMR9hnV3TD1nFiAwh1tqUgfehgF048FOwh1hozg/hgffygkrpdyW
+         S5cDVgCdongHDAGehvR8JbDuyGnAFogd0MWCCjB9NYpbjY4WjbsoeqBIQ9fK5zgcYO
+         8r1np4WpN40b23DmIyO881ADI3CsfSX603KLhKnY=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jOj5t-006kOy-Hw; Wed, 15 Apr 2020 16:32:49 +0200
+        id 1jOj5u-006kPq-08; Wed, 15 Apr 2020 16:32:50 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH 16/34] docs: filesystems: convert files.txt to ReST
-Date:   Wed, 15 Apr 2020 16:32:29 +0200
-Message-Id: <26a803d5200555d5104df155d9e59221c9528be8.1586960617.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 27/34] docs: filesystems: split spufs.txt into 3 separate files
+Date:   Wed, 15 Apr 2020 16:32:40 +0200
+Message-Id: <92801d45897bc5757ff82ca10756d313e9c8ac2e.1586960617.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <cover.1586960617.git.mchehab+huawei@kernel.org>
 References: <cover.1586960617.git.mchehab+huawei@kernel.org>
@@ -59,86 +59,528 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-- Add a SPDX header;
-- Adjust document title;
-- Some whitespace fixes and new line breaks;
-- Mark literal blocks as such;
-- Add it to filesystems/index.rst.
+This file has manpages for 3 different things. As we'll
+be converting it to ReST, let's fist split it into their
+individual components.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../filesystems/{files.txt => files.rst}          | 15 ++++++++++-----
- Documentation/filesystems/index.rst               |  1 +
- 2 files changed, 11 insertions(+), 5 deletions(-)
- rename Documentation/filesystems/{files.txt => files.rst} (95%)
+ .../filesystems/spufs/spu_create.txt          | 119 +++++++++
+ Documentation/filesystems/spufs/spu_run.txt   | 121 +++++++++
+ .../filesystems/{ => spufs}/spufs.txt         | 245 ------------------
+ 3 files changed, 240 insertions(+), 245 deletions(-)
+ create mode 100644 Documentation/filesystems/spufs/spu_create.txt
+ create mode 100644 Documentation/filesystems/spufs/spu_run.txt
+ rename Documentation/filesystems/{ => spufs}/spufs.txt (59%)
 
-diff --git a/Documentation/filesystems/files.txt b/Documentation/filesystems/files.rst
-similarity index 95%
-rename from Documentation/filesystems/files.txt
-rename to Documentation/filesystems/files.rst
-index 46dfc6b038c3..cbf8e57376bf 100644
---- a/Documentation/filesystems/files.txt
-+++ b/Documentation/filesystems/files.rst
-@@ -1,5 +1,8 @@
-+.. SPDX-License-Identifier: GPL-2.0
+diff --git a/Documentation/filesystems/spufs/spu_create.txt b/Documentation/filesystems/spufs/spu_create.txt
+new file mode 100644
+index 000000000000..8ede5a35340f
+--- /dev/null
++++ b/Documentation/filesystems/spufs/spu_create.txt
+@@ -0,0 +1,119 @@
++SPU_CREATE(2)              Linux Programmer's Manual             SPU_CREATE(2)
 +
-+===================================
- File management in the Linux kernel
-------------------------------------
-+===================================
- 
- This document describes how locking for files (struct file)
- and file descriptor table (struct files) works.
-@@ -34,7 +37,7 @@ appear atomic. Here are the locking rules for
- the fdtable structure -
- 
- 1. All references to the fdtable must be done through
--   the files_fdtable() macro :
-+   the files_fdtable() macro::
- 
- 	struct fdtable *fdt;
- 
-@@ -61,7 +64,8 @@ the fdtable structure -
- 4. To look up the file structure given an fd, a reader
-    must use either fcheck() or fcheck_files() APIs. These
-    take care of barrier requirements due to lock-free lookup.
--   An example :
 +
-+   An example::
- 
- 	struct file *file;
- 
-@@ -77,7 +81,7 @@ the fdtable structure -
-    of the fd (fget()/fget_light()) are lock-free, it is possible
-    that look-up may race with the last put() operation on the
-    file structure. This is avoided using atomic_long_inc_not_zero()
--   on ->f_count :
-+   on ->f_count::
- 
- 	rcu_read_lock();
- 	file = fcheck_files(files, fd);
-@@ -106,7 +110,8 @@ the fdtable structure -
-    holding files->file_lock. If ->file_lock is dropped, then
-    another thread expand the files thereby creating a new
-    fdtable and making the earlier fdtable pointer stale.
--   For example :
 +
-+   For example::
++NAME
++       spu_create - create a new spu context
++
++
++SYNOPSIS
++       #include <sys/types.h>
++       #include <sys/spu.h>
++
++       int spu_create(const char *pathname, int flags, mode_t mode);
++
++DESCRIPTION
++       The  spu_create  system call is used on PowerPC machines that implement
++       the Cell Broadband Engine Architecture in order to  access  Synergistic
++       Processor  Units (SPUs). It creates a new logical context for an SPU in
++       pathname and returns a handle to associated  with  it.   pathname  must
++       point  to  a  non-existing directory in the mount point of the SPU file
++       system (spufs).  When spu_create is successful, a directory  gets  cre-
++       ated on pathname and it is populated with files.
++
++       The  returned  file  handle can only be passed to spu_run(2) or closed,
++       other operations are not defined on it. When it is closed, all  associ-
++       ated  directory entries in spufs are removed. When the last file handle
++       pointing either inside  of  the  context  directory  or  to  this  file
++       descriptor is closed, the logical SPU context is destroyed.
++
++       The  parameter flags can be zero or any bitwise or'd combination of the
++       following constants:
++
++       SPU_RAWIO
++              Allow mapping of some of the hardware registers of the SPU  into
++              user space. This flag requires the CAP_SYS_RAWIO capability, see
++              capabilities(7).
++
++       The mode parameter specifies the permissions used for creating the  new
++       directory  in  spufs.   mode is modified with the user's umask(2) value
++       and then used for both the directory and the files contained in it. The
++       file permissions mask out some more bits of mode because they typically
++       support only read or write access. See stat(2) for a full list  of  the
++       possible mode values.
++
++
++RETURN VALUE
++       spu_create  returns a new file descriptor. It may return -1 to indicate
++       an error condition and set errno to  one  of  the  error  codes  listed
++       below.
++
++
++ERRORS
++       EACCES
++              The  current  user does not have write access on the spufs mount
++              point.
++
++       EEXIST An SPU context already exists at the given path name.
++
++       EFAULT pathname is not a valid string pointer in  the  current  address
++              space.
++
++       EINVAL pathname is not a directory in the spufs mount point.
++
++       ELOOP  Too many symlinks were found while resolving pathname.
++
++       EMFILE The process has reached its maximum open file limit.
++
++       ENAMETOOLONG
++              pathname was too long.
++
++       ENFILE The system has reached the global open file limit.
++
++       ENOENT Part of pathname could not be resolved.
++
++       ENOMEM The kernel could not allocate all resources required.
++
++       ENOSPC There  are  not  enough  SPU resources available to create a new
++              context or the user specific limit for the number  of  SPU  con-
++              texts has been reached.
++
++       ENOSYS the functionality is not provided by the current system, because
++              either the hardware does not provide SPUs or the spufs module is
++              not loaded.
++
++       ENOTDIR
++              A part of pathname is not a directory.
++
++
++
++NOTES
++       spu_create  is  meant  to  be used from libraries that implement a more
++       abstract interface to SPUs, not to be used from  regular  applications.
++       See  http://www.bsc.es/projects/deepcomputing/linuxoncell/ for the rec-
++       ommended libraries.
++
++
++FILES
++       pathname must point to a location beneath the mount point of spufs.  By
++       convention, it gets mounted in /spu.
++
++
++CONFORMING TO
++       This call is Linux specific and only implemented by the ppc64 architec-
++       ture. Programs using this system call are not portable.
++
++
++BUGS
++       The code does not yet fully implement all features lined out here.
++
++
++AUTHOR
++       Arnd Bergmann <arndb@de.ibm.com>
++
++SEE ALSO
++       capabilities(7), close(2), spu_run(2), spufs(7)
++
++
++
++Linux                             2005-09-28                     SPU_CREATE(2)
+diff --git a/Documentation/filesystems/spufs/spu_run.txt b/Documentation/filesystems/spufs/spu_run.txt
+new file mode 100644
+index 000000000000..d5c6a00d0f97
+--- /dev/null
++++ b/Documentation/filesystems/spufs/spu_run.txt
+@@ -0,0 +1,121 @@
++SPU_RUN(2)                 Linux Programmer's Manual                SPU_RUN(2)
++
++
++
++NAME
++       spu_run - execute an spu context
++
++
++SYNOPSIS
++       #include <sys/spu.h>
++
++       int spu_run(int fd, unsigned int *npc, unsigned int *event);
++
++DESCRIPTION
++       The  spu_run system call is used on PowerPC machines that implement the
++       Cell Broadband Engine Architecture in order to access Synergistic  Pro-
++       cessor  Units  (SPUs).  It  uses the fd that was returned from spu_cre-
++       ate(2) to address a specific SPU context. When the context gets  sched-
++       uled  to a physical SPU, it starts execution at the instruction pointer
++       passed in npc.
++
++       Execution of SPU code happens synchronously, meaning that spu_run  does
++       not  return  while the SPU is still running. If there is a need to exe-
++       cute SPU code in parallel with other code on either  the  main  CPU  or
++       other  SPUs,  you  need to create a new thread of execution first, e.g.
++       using the pthread_create(3) call.
++
++       When spu_run returns, the current value of the SPU instruction  pointer
++       is  written back to npc, so you can call spu_run again without updating
++       the pointers.
++
++       event can be a NULL pointer or point to an extended  status  code  that
++       gets  filled  when spu_run returns. It can be one of the following con-
++       stants:
++
++       SPE_EVENT_DMA_ALIGNMENT
++              A DMA alignment error
++
++       SPE_EVENT_SPE_DATA_SEGMENT
++              A DMA segmentation error
++
++       SPE_EVENT_SPE_DATA_STORAGE
++              A DMA storage error
++
++       If NULL is passed as the event argument, these errors will result in  a
++       signal delivered to the calling process.
++
++RETURN VALUE
++       spu_run  returns the value of the spu_status register or -1 to indicate
++       an error and set errno to one of the error  codes  listed  below.   The
++       spu_status  register  value  contains  a  bit  mask of status codes and
++       optionally a 14 bit code returned from the stop-and-signal  instruction
++       on the SPU. The bit masks for the status codes are:
++
++       0x02   SPU was stopped by stop-and-signal.
++
++       0x04   SPU was stopped by halt.
++
++       0x08   SPU is waiting for a channel.
++
++       0x10   SPU is in single-step mode.
++
++       0x20   SPU has tried to execute an invalid instruction.
++
++       0x40   SPU has tried to access an invalid channel.
++
++       0x3fff0000
++              The  bits  masked with this value contain the code returned from
++              stop-and-signal.
++
++       There are always one or more of the lower eight bits set  or  an  error
++       code is returned from spu_run.
++
++ERRORS
++       EAGAIN or EWOULDBLOCK
++              fd is in non-blocking mode and spu_run would block.
++
++       EBADF  fd is not a valid file descriptor.
++
++       EFAULT npc is not a valid pointer or status is neither NULL nor a valid
++              pointer.
++
++       EINTR  A signal occurred while spu_run was in progress.  The npc  value
++              has  been updated to the new program counter value if necessary.
++
++       EINVAL fd is not a file descriptor returned from spu_create(2).
++
++       ENOMEM Insufficient memory was available to handle a page fault result-
++              ing from an MFC direct memory access.
++
++       ENOSYS the functionality is not provided by the current system, because
++              either the hardware does not provide SPUs or the spufs module is
++              not loaded.
++
++
++NOTES
++       spu_run  is  meant  to  be  used  from  libraries that implement a more
++       abstract interface to SPUs, not to be used from  regular  applications.
++       See  http://www.bsc.es/projects/deepcomputing/linuxoncell/ for the rec-
++       ommended libraries.
++
++
++CONFORMING TO
++       This call is Linux specific and only implemented by the ppc64 architec-
++       ture. Programs using this system call are not portable.
++
++
++BUGS
++       The code does not yet fully implement all features lined out here.
++
++
++AUTHOR
++       Arnd Bergmann <arndb@de.ibm.com>
++
++SEE ALSO
++       capabilities(7), close(2), spu_create(2), spufs(7)
++
++
++
++
++Linux                             2005-09-28                        SPU_RUN(2)
+diff --git a/Documentation/filesystems/spufs.txt b/Documentation/filesystems/spufs/spufs.txt
+similarity index 59%
+rename from Documentation/filesystems/spufs.txt
+rename to Documentation/filesystems/spufs/spufs.txt
+index eb9e3aa63026..caf36aaae804 100644
+--- a/Documentation/filesystems/spufs.txt
++++ b/Documentation/filesystems/spufs/spufs.txt
+@@ -274,248 +274,3 @@ SEE ALSO
  
- 	spin_lock(&files->file_lock);
- 	fd = locate_fd(files, file, start);
-diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
-index 5514fd122619..c947df7b2a47 100644
---- a/Documentation/filesystems/index.rst
-+++ b/Documentation/filesystems/index.rst
-@@ -28,6 +28,7 @@ algorithms work.
-    devpts
-    dnotify
-    fiemap
-+   files
  
-    automount-support
- 
+ Linux                             2005-09-28                          SPUFS(2)
+-
+-------------------------------------------------------------------------------
+-
+-SPU_RUN(2)                 Linux Programmer's Manual                SPU_RUN(2)
+-
+-
+-
+-NAME
+-       spu_run - execute an spu context
+-
+-
+-SYNOPSIS
+-       #include <sys/spu.h>
+-
+-       int spu_run(int fd, unsigned int *npc, unsigned int *event);
+-
+-DESCRIPTION
+-       The  spu_run system call is used on PowerPC machines that implement the
+-       Cell Broadband Engine Architecture in order to access Synergistic  Pro-
+-       cessor  Units  (SPUs).  It  uses the fd that was returned from spu_cre-
+-       ate(2) to address a specific SPU context. When the context gets  sched-
+-       uled  to a physical SPU, it starts execution at the instruction pointer
+-       passed in npc.
+-
+-       Execution of SPU code happens synchronously, meaning that spu_run  does
+-       not  return  while the SPU is still running. If there is a need to exe-
+-       cute SPU code in parallel with other code on either  the  main  CPU  or
+-       other  SPUs,  you  need to create a new thread of execution first, e.g.
+-       using the pthread_create(3) call.
+-
+-       When spu_run returns, the current value of the SPU instruction  pointer
+-       is  written back to npc, so you can call spu_run again without updating
+-       the pointers.
+-
+-       event can be a NULL pointer or point to an extended  status  code  that
+-       gets  filled  when spu_run returns. It can be one of the following con-
+-       stants:
+-
+-       SPE_EVENT_DMA_ALIGNMENT
+-              A DMA alignment error
+-
+-       SPE_EVENT_SPE_DATA_SEGMENT
+-              A DMA segmentation error
+-
+-       SPE_EVENT_SPE_DATA_STORAGE
+-              A DMA storage error
+-
+-       If NULL is passed as the event argument, these errors will result in  a
+-       signal delivered to the calling process.
+-
+-RETURN VALUE
+-       spu_run  returns the value of the spu_status register or -1 to indicate
+-       an error and set errno to one of the error  codes  listed  below.   The
+-       spu_status  register  value  contains  a  bit  mask of status codes and
+-       optionally a 14 bit code returned from the stop-and-signal  instruction
+-       on the SPU. The bit masks for the status codes are:
+-
+-       0x02   SPU was stopped by stop-and-signal.
+-
+-       0x04   SPU was stopped by halt.
+-
+-       0x08   SPU is waiting for a channel.
+-
+-       0x10   SPU is in single-step mode.
+-
+-       0x20   SPU has tried to execute an invalid instruction.
+-
+-       0x40   SPU has tried to access an invalid channel.
+-
+-       0x3fff0000
+-              The  bits  masked with this value contain the code returned from
+-              stop-and-signal.
+-
+-       There are always one or more of the lower eight bits set  or  an  error
+-       code is returned from spu_run.
+-
+-ERRORS
+-       EAGAIN or EWOULDBLOCK
+-              fd is in non-blocking mode and spu_run would block.
+-
+-       EBADF  fd is not a valid file descriptor.
+-
+-       EFAULT npc is not a valid pointer or status is neither NULL nor a valid
+-              pointer.
+-
+-       EINTR  A signal occurred while spu_run was in progress.  The npc  value
+-              has  been updated to the new program counter value if necessary.
+-
+-       EINVAL fd is not a file descriptor returned from spu_create(2).
+-
+-       ENOMEM Insufficient memory was available to handle a page fault result-
+-              ing from an MFC direct memory access.
+-
+-       ENOSYS the functionality is not provided by the current system, because
+-              either the hardware does not provide SPUs or the spufs module is
+-              not loaded.
+-
+-
+-NOTES
+-       spu_run  is  meant  to  be  used  from  libraries that implement a more
+-       abstract interface to SPUs, not to be used from  regular  applications.
+-       See  http://www.bsc.es/projects/deepcomputing/linuxoncell/ for the rec-
+-       ommended libraries.
+-
+-
+-CONFORMING TO
+-       This call is Linux specific and only implemented by the ppc64 architec-
+-       ture. Programs using this system call are not portable.
+-
+-
+-BUGS
+-       The code does not yet fully implement all features lined out here.
+-
+-
+-AUTHOR
+-       Arnd Bergmann <arndb@de.ibm.com>
+-
+-SEE ALSO
+-       capabilities(7), close(2), spu_create(2), spufs(7)
+-
+-
+-
+-Linux                             2005-09-28                        SPU_RUN(2)
+-
+-------------------------------------------------------------------------------
+-
+-SPU_CREATE(2)              Linux Programmer's Manual             SPU_CREATE(2)
+-
+-
+-
+-NAME
+-       spu_create - create a new spu context
+-
+-
+-SYNOPSIS
+-       #include <sys/types.h>
+-       #include <sys/spu.h>
+-
+-       int spu_create(const char *pathname, int flags, mode_t mode);
+-
+-DESCRIPTION
+-       The  spu_create  system call is used on PowerPC machines that implement
+-       the Cell Broadband Engine Architecture in order to  access  Synergistic
+-       Processor  Units (SPUs). It creates a new logical context for an SPU in
+-       pathname and returns a handle to associated  with  it.   pathname  must
+-       point  to  a  non-existing directory in the mount point of the SPU file
+-       system (spufs).  When spu_create is successful, a directory  gets  cre-
+-       ated on pathname and it is populated with files.
+-
+-       The  returned  file  handle can only be passed to spu_run(2) or closed,
+-       other operations are not defined on it. When it is closed, all  associ-
+-       ated  directory entries in spufs are removed. When the last file handle
+-       pointing either inside  of  the  context  directory  or  to  this  file
+-       descriptor is closed, the logical SPU context is destroyed.
+-
+-       The  parameter flags can be zero or any bitwise or'd combination of the
+-       following constants:
+-
+-       SPU_RAWIO
+-              Allow mapping of some of the hardware registers of the SPU  into
+-              user space. This flag requires the CAP_SYS_RAWIO capability, see
+-              capabilities(7).
+-
+-       The mode parameter specifies the permissions used for creating the  new
+-       directory  in  spufs.   mode is modified with the user's umask(2) value
+-       and then used for both the directory and the files contained in it. The
+-       file permissions mask out some more bits of mode because they typically
+-       support only read or write access. See stat(2) for a full list  of  the
+-       possible mode values.
+-
+-
+-RETURN VALUE
+-       spu_create  returns a new file descriptor. It may return -1 to indicate
+-       an error condition and set errno to  one  of  the  error  codes  listed
+-       below.
+-
+-
+-ERRORS
+-       EACCES
+-              The  current  user does not have write access on the spufs mount
+-              point.
+-
+-       EEXIST An SPU context already exists at the given path name.
+-
+-       EFAULT pathname is not a valid string pointer in  the  current  address
+-              space.
+-
+-       EINVAL pathname is not a directory in the spufs mount point.
+-
+-       ELOOP  Too many symlinks were found while resolving pathname.
+-
+-       EMFILE The process has reached its maximum open file limit.
+-
+-       ENAMETOOLONG
+-              pathname was too long.
+-
+-       ENFILE The system has reached the global open file limit.
+-
+-       ENOENT Part of pathname could not be resolved.
+-
+-       ENOMEM The kernel could not allocate all resources required.
+-
+-       ENOSPC There  are  not  enough  SPU resources available to create a new
+-              context or the user specific limit for the number  of  SPU  con-
+-              texts has been reached.
+-
+-       ENOSYS the functionality is not provided by the current system, because
+-              either the hardware does not provide SPUs or the spufs module is
+-              not loaded.
+-
+-       ENOTDIR
+-              A part of pathname is not a directory.
+-
+-
+-
+-NOTES
+-       spu_create  is  meant  to  be used from libraries that implement a more
+-       abstract interface to SPUs, not to be used from  regular  applications.
+-       See  http://www.bsc.es/projects/deepcomputing/linuxoncell/ for the rec-
+-       ommended libraries.
+-
+-
+-FILES
+-       pathname must point to a location beneath the mount point of spufs.  By
+-       convention, it gets mounted in /spu.
+-
+-
+-CONFORMING TO
+-       This call is Linux specific and only implemented by the ppc64 architec-
+-       ture. Programs using this system call are not portable.
+-
+-
+-BUGS
+-       The code does not yet fully implement all features lined out here.
+-
+-
+-AUTHOR
+-       Arnd Bergmann <arndb@de.ibm.com>
+-
+-SEE ALSO
+-       capabilities(7), close(2), spu_run(2), spufs(7)
+-
+-
+-
+-Linux                             2005-09-28                     SPU_CREATE(2)
 -- 
 2.25.2
 
