@@ -2,162 +2,122 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80132C3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 363C2C3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F4FB21707
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:17:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586956626;
-	bh=ZhmmQ2uQggeQBv8vRD13OM1tsKFrpXqz7RaKpwCXUT0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hVFzexNoNeb0qlvVSom7Jt81G6p++Gz63hOiaAb3SW5pl89ejwGwHEgkTv6g8T0bp
-	 ArMffh6tkUFwyLeKBnra9RI2EtwxtVGhq3C9lG3a45h9FwdBkDokMNQtogmfDU3p04
-	 6ISqZBVrO0utdEBIFEOblh7+JhNE9N+1qUtu3+zI=
+	by mail.kernel.org (Postfix) with ESMTP id 1875220575
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:17:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506253AbgDONQs (ORCPT
-        <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:16:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54634 "EHLO mail.kernel.org"
+        id S370758AbgDONRU (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 09:17:20 -0400
+Received: from mga12.intel.com ([192.55.52.136]:35931 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897032AbgDOLfP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:35:15 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A23720737;
-        Wed, 15 Apr 2020 11:35:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950515;
-        bh=ZhmmQ2uQggeQBv8vRD13OM1tsKFrpXqz7RaKpwCXUT0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q99amnyvGewC+rN8aRmSBpPwXShqNTwpeAPuNmD2T0y7DkBi+8KH7b+0vHUiuIIxG
-         /SOt4Yonzs2kAJWu4MpAQPsKmsNXNLixOj4lEKuE6WZUTESSCfA2Hys2DBuS6Kxn45
-         lrtO528fL/lpOlny3ztP9em9OOpavAw5ufE3qKcw=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jon Hunter <jonathanh@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 025/129] arm64: tegra: Fix Tegra194 PCIe compatible string
-Date:   Wed, 15 Apr 2020 07:33:00 -0400
-Message-Id: <20200415113445.11881-25-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
-References: <20200415113445.11881-1-sashal@kernel.org>
+        id S370723AbgDONQ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 09:16:57 -0400
+IronPort-SDR: BwP8BQtRXZBOsdFpgZ7pL+msVfAGtgutK66soFYjcSXi8JLMnCtqsCUt/rBHjM1FtoQYspesKs
+ TRMqa/IDO7+A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 06:16:57 -0700
+IronPort-SDR: dxJsauTrNCBbEh9iRMOkRDojitIw6xUBlogGlmKuMR3+VcdA0n00UBJN1nw/Nb9K5gm6QZoErM
+ DBtUmoVA3EHw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,387,1580803200"; 
+   d="scan'208";a="400309880"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.87]) ([10.237.72.87])
+  by orsmga004.jf.intel.com with ESMTP; 15 Apr 2020 06:16:54 -0700
+Subject: Re: [PATCH 4/7] mmc: sdhci: move SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN
+ frequency limit
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Kevin Liu <kliu5@marvell.com>,
+        Suneel Garapati <suneel.garapati@xilinx.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
+References: <cover.1585827904.git.mirq-linux@rere.qmqm.pl>
+ <637b9bea4c28a0eeacf754d2930596b8e6673808.1585827904.git.mirq-linux@rere.qmqm.pl>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <2b111407-0f35-3c5e-f7f0-4a05a281dce2@intel.com>
+Date:   Wed, 15 Apr 2020 16:16:04 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+In-Reply-To: <637b9bea4c28a0eeacf754d2930596b8e6673808.1585827904.git.mirq-linux@rere.qmqm.pl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jon Hunter <jonathanh@nvidia.com>
+On 2/04/20 2:54 pm, Michał Mirosław wrote:
+> Move clock frequency limit for SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN where
+> it belongs.
 
-[ Upstream commit f9f711efd441ad0d22874be49986d92121862335 ]
+Did you consider getting rid of SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN and
+handling it in sdhci-of-arasan instead?
 
-If the kernel configuration option CONFIG_PCIE_DW_PLAT_HOST is enabled
-then this can cause the kernel to incorrectly probe the generic
-designware PCIe platform driver instead of the Tegra194 designware PCIe
-driver. This causes a boot failure on Tegra194 because the necessary
-configuration to access the hardware is not performed.
-
-The order in which the compatible strings are populated in Device-Tree
-is not relevant in this case, because the kernel will attempt to probe
-the device as soon as a driver is loaded and if the generic designware
-PCIe driver is loaded first, then this driver will be probed first.
-Therefore, to fix this problem, remove the "snps,dw-pcie" string from
-the compatible string as we never want this driver to be probe on
-Tegra194.
-
-Fixes: 2602c32f15e7 ("arm64: tegra: Add P2U and PCIe controller nodes to Tegra194 DT")
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- .../devicetree/bindings/pci/nvidia,tegra194-pcie.txt |  2 +-
- arch/arm64/boot/dts/nvidia/tegra194.dtsi             | 12 ++++++------
- 2 files changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
-index b739f92da58e5..1f90eb39870be 100644
---- a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
-@@ -118,7 +118,7 @@ Tegra194:
- --------
- 
- 	pcie@14180000 {
--		compatible = "nvidia,tegra194-pcie", "snps,dw-pcie";
-+		compatible = "nvidia,tegra194-pcie";
- 		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX8B>;
- 		reg = <0x00 0x14180000 0x0 0x00020000   /* appl registers (128K)      */
- 		       0x00 0x38000000 0x0 0x00040000   /* configuration space (256K) */
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-index 844e7fac30c58..a8f024662e60e 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-@@ -1208,7 +1208,7 @@
- 	};
- 
- 	pcie@14100000 {
--		compatible = "nvidia,tegra194-pcie", "snps,dw-pcie";
-+		compatible = "nvidia,tegra194-pcie";
- 		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX1A>;
- 		reg = <0x00 0x14100000 0x0 0x00020000   /* appl registers (128K)      */
- 		       0x00 0x30000000 0x0 0x00040000   /* configuration space (256K) */
-@@ -1253,7 +1253,7 @@
- 	};
- 
- 	pcie@14120000 {
--		compatible = "nvidia,tegra194-pcie", "snps,dw-pcie";
-+		compatible = "nvidia,tegra194-pcie";
- 		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX1A>;
- 		reg = <0x00 0x14120000 0x0 0x00020000   /* appl registers (128K)      */
- 		       0x00 0x32000000 0x0 0x00040000   /* configuration space (256K) */
-@@ -1298,7 +1298,7 @@
- 	};
- 
- 	pcie@14140000 {
--		compatible = "nvidia,tegra194-pcie", "snps,dw-pcie";
-+		compatible = "nvidia,tegra194-pcie";
- 		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX1A>;
- 		reg = <0x00 0x14140000 0x0 0x00020000   /* appl registers (128K)      */
- 		       0x00 0x34000000 0x0 0x00040000   /* configuration space (256K) */
-@@ -1343,7 +1343,7 @@
- 	};
- 
- 	pcie@14160000 {
--		compatible = "nvidia,tegra194-pcie", "snps,dw-pcie";
-+		compatible = "nvidia,tegra194-pcie";
- 		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX4A>;
- 		reg = <0x00 0x14160000 0x0 0x00020000   /* appl registers (128K)      */
- 		       0x00 0x36000000 0x0 0x00040000   /* configuration space (256K) */
-@@ -1388,7 +1388,7 @@
- 	};
- 
- 	pcie@14180000 {
--		compatible = "nvidia,tegra194-pcie", "snps,dw-pcie";
-+		compatible = "nvidia,tegra194-pcie";
- 		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX8B>;
- 		reg = <0x00 0x14180000 0x0 0x00020000   /* appl registers (128K)      */
- 		       0x00 0x38000000 0x0 0x00040000   /* configuration space (256K) */
-@@ -1433,7 +1433,7 @@
- 	};
- 
- 	pcie@141a0000 {
--		compatible = "nvidia,tegra194-pcie", "snps,dw-pcie";
-+		compatible = "nvidia,tegra194-pcie";
- 		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX8A>;
- 		reg = <0x00 0x141a0000 0x0 0x00020000   /* appl registers (128K)      */
- 		       0x00 0x3a000000 0x0 0x00040000   /* configuration space (256K) */
--- 
-2.20.1
+> 
+> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+> ---
+>  drivers/mmc/host/sdhci-of-arasan.c | 7 ++++---
+>  drivers/mmc/host/sdhci.c           | 3 +--
+>  2 files changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
+> index d4905c106c06..5e3b9131a631 100644
+> --- a/drivers/mmc/host/sdhci-of-arasan.c
+> +++ b/drivers/mmc/host/sdhci-of-arasan.c
+> @@ -339,7 +339,6 @@ static const struct sdhci_pltfm_data sdhci_arasan_pdata = {
+>  	.ops = &sdhci_arasan_ops,
+>  	.quirks = SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN,
+>  	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
+> -			SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN |
+>  			SDHCI_QUIRK2_STOP_WITH_TC,
+>  };
+>  
+> @@ -410,8 +409,7 @@ static const struct sdhci_ops sdhci_arasan_cqe_ops = {
+>  static const struct sdhci_pltfm_data sdhci_arasan_cqe_pdata = {
+>  	.ops = &sdhci_arasan_cqe_ops,
+>  	.quirks = SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN,
+> -	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
+> -			SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN,
+> +	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
+>  };
+>  
+>  static struct sdhci_arasan_of_data sdhci_arasan_rk3399_data = {
+> @@ -1155,6 +1153,9 @@ static int sdhci_arasan_add_host(struct sdhci_arasan_data *sdhci_arasan)
+>  	bool dma64;
+>  	int ret;
+>  
+> +	if (sdhci_pltfm_clk_get_max_clock(host) <= 25000000)
+> +		host->quirks2 |= SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN;
+> +
+>  	if (!sdhci_arasan->has_cqe)
+>  		return sdhci_add_host(host);
+>  
+> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+> index a043bf5e3565..ed88ac4e4cf3 100644
+> --- a/drivers/mmc/host/sdhci.c
+> +++ b/drivers/mmc/host/sdhci.c
+> @@ -1809,8 +1809,7 @@ u16 sdhci_calc_clk(struct sdhci_host *host, unsigned int clock,
+>  			/* Version 3.00 divisors must be a multiple of 2. */
+>  			if (host->max_clk <= clock) {
+>  				div = 1;
+> -				if ((host->quirks2 & SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN)
+> -					&& host->max_clk <= 25000000)
+> +				if (host->quirks2 & SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN)
+>  					div = 2;
+>  			} else {
+>  				for (div = 2; div < SDHCI_MAX_DIV_SPEC_300;
+> 
 
