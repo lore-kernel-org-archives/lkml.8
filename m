@@ -2,133 +2,116 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C3FC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA325C3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB0E1206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:45:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABF77206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:46:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586954766;
+	bh=BLk2zqFpRCw7XR3epSmCEKoMUV+x/8k9ijREmEOOEx4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=l3cYHlhHIeQyc/Qx1SpzQsb2f4F7zZtfkkjlJk8beJpXMIHYWSVnE7LVFg84QyB/B
+	 bP4TgFzXps/1J/9c492sCAc7dSkPKkzKDv3WVCmp21kESFsSqKf8iyEsQSmL+cgNso
+	 Jw26maFhRT5cPi17MYawe62ufF2ObvU+nTIFQJA0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2898225AbgDOMpb (ORCPT
-        <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:45:31 -0400
-Received: from foss.arm.com ([217.140.110.172]:44580 "EHLO foss.arm.com"
+        id S370201AbgDOMqC (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:46:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898196AbgDOMof (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 08:44:35 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 52E4A1063;
-        Wed, 15 Apr 2020 05:44:34 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E44413F68F;
-        Wed, 15 Apr 2020 05:44:30 -0700 (PDT)
-Date:   Wed, 15 Apr 2020 13:44:27 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Alex Belits <abelits@marvell.com>
-Cc:     "frederic@kernel.org" <frederic@kernel.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        Prasun Kapoor <pkapoor@marvell.com>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "will@kernel.org" <will@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: [PATCH v3 03/13] task_isolation: add instruction synchronization
- memory barrier
-Message-ID: <20200415124427.GB28304@C02TD0UTHF1T.local>
-References: <4473787e1b6bc3cc226067e8d122092a678b63de.camel@marvell.com>
- <aed12dd15ea2981bc9554cfa8b5e273c1342c756.camel@marvell.com>
- <07c25c246c55012981ec0296eee23e68c719333a.camel@marvell.com>
- <d995795c731d6ecceb36bdf1c1df3d72fefd023d.camel@marvell.com>
+        id S2408980AbgDOLnP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:43:15 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86DD72168B;
+        Wed, 15 Apr 2020 11:43:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586950995;
+        bh=BLk2zqFpRCw7XR3epSmCEKoMUV+x/8k9ijREmEOOEx4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=tPV6LcRc/xsxtqTgJgqQg7THKiFcp+bkI0H5NhktlA2e1bF3bQ5M8O8WpnUZZvHEQ
+         WthBOqEaXE3jRhOHxAj7mPIUI/1fu7v2Hn2KQ0Y1ZcpES2kpNDA1XrZUS8ML48WAZi
+         qnd963pNC4hEAgF0I+XTnTStq9DaHYWgphz5ii48=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Willy Wolff <willy.mh.wolff.ml@gmail.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 041/106] thermal/drivers/cpufreq_cooling: Fix return of cpufreq_set_cur_state
+Date:   Wed, 15 Apr 2020 07:41:21 -0400
+Message-Id: <20200415114226.13103-41-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
+References: <20200415114226.13103-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d995795c731d6ecceb36bdf1c1df3d72fefd023d.camel@marvell.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 09, 2020 at 03:17:40PM +0000, Alex Belits wrote:
-> Some architectures implement memory synchronization instructions for
-> instruction cache. Make a separate kind of barrier that calls them.
+From: Willy Wolff <willy.mh.wolff.ml@gmail.com>
 
-Modifying the instruction caches requries more than an ISB, and the
-'IMB' naming implies you're trying to order against memory accesses,
-which isn't what ISB (generally) does.
+[ Upstream commit ff44f672d74178b3be19d41a169b98b3e391d4ce ]
 
-What exactly do you want to use this for?
+When setting the cooling device current state from userspace via sysfs,
+the operation fails by returning an -EINVAL.
 
-As-is, I don't think this makes sense as a generic barrier.
+It appears the recent changes with the per-policy frequency QoS
+introduced a regression as reported by:
 
-Thanks,
-Mark.
+ https://lkml.org/lkml/2020/3/20/599
 
-> 
-> Signed-off-by: Alex Belits <abelits@marvell.com>
-> ---
->  arch/arm/include/asm/barrier.h   | 2 ++
->  arch/arm64/include/asm/barrier.h | 2 ++
->  include/asm-generic/barrier.h    | 4 ++++
->  3 files changed, 8 insertions(+)
-> 
-> diff --git a/arch/arm/include/asm/barrier.h b/arch/arm/include/asm/barrier.h
-> index 83ae97c049d9..6def62c95937 100644
-> --- a/arch/arm/include/asm/barrier.h
-> +++ b/arch/arm/include/asm/barrier.h
-> @@ -64,12 +64,14 @@ extern void arm_heavy_mb(void);
->  #define mb()		__arm_heavy_mb()
->  #define rmb()		dsb()
->  #define wmb()		__arm_heavy_mb(st)
-> +#define imb()		isb()
->  #define dma_rmb()	dmb(osh)
->  #define dma_wmb()	dmb(oshst)
->  #else
->  #define mb()		barrier()
->  #define rmb()		barrier()
->  #define wmb()		barrier()
-> +#define imb()		barrier()
->  #define dma_rmb()	barrier()
->  #define dma_wmb()	barrier()
->  #endif
-> diff --git a/arch/arm64/include/asm/barrier.h b/arch/arm64/include/asm/barrier.h
-> index 7d9cc5ec4971..12a7dbd68bed 100644
-> --- a/arch/arm64/include/asm/barrier.h
-> +++ b/arch/arm64/include/asm/barrier.h
-> @@ -45,6 +45,8 @@
->  #define rmb()		dsb(ld)
->  #define wmb()		dsb(st)
->  
-> +#define imb()		isb()
-> +
->  #define dma_rmb()	dmb(oshld)
->  #define dma_wmb()	dmb(oshst)
->  
-> diff --git a/include/asm-generic/barrier.h b/include/asm-generic/barrier.h
-> index 85b28eb80b11..d5a822fb3e92 100644
-> --- a/include/asm-generic/barrier.h
-> +++ b/include/asm-generic/barrier.h
-> @@ -46,6 +46,10 @@
->  #define dma_wmb()	wmb()
->  #endif
->  
-> +#ifndef imb
-> +#define imb		barrier()
-> +#endif
-> +
->  #ifndef read_barrier_depends
->  #define read_barrier_depends()		do { } while (0)
->  #endif
-> -- 
-> 2.20.1
-> 
+The function freq_qos_update_request returns 0 or 1 describing update
+effectiveness, and a negative error code on failure. However,
+cpufreq_set_cur_state returns 0 on success or an error code otherwise.
+
+Consider the QoS update as successful if the function does not return
+an error.
+
+Fixes: 3000ce3c52f8b ("cpufreq: Use per-policy frequency QoS")
+Signed-off-by: Willy Wolff <willy.mh.wolff.ml@gmail.com>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Link: https://lore.kernel.org/r/20200321092740.7vvwfxsebcrznydh@macmini.local
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/thermal/cpu_cooling.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/thermal/cpu_cooling.c b/drivers/thermal/cpu_cooling.c
+index 52569b27b426f..d679e9a515c8e 100644
+--- a/drivers/thermal/cpu_cooling.c
++++ b/drivers/thermal/cpu_cooling.c
+@@ -430,6 +430,7 @@ static int cpufreq_set_cur_state(struct thermal_cooling_device *cdev,
+ 				 unsigned long state)
+ {
+ 	struct cpufreq_cooling_device *cpufreq_cdev = cdev->devdata;
++	int ret;
+ 
+ 	/* Request state should be less than max_level */
+ 	if (WARN_ON(state > cpufreq_cdev->max_level))
+@@ -441,8 +442,9 @@ static int cpufreq_set_cur_state(struct thermal_cooling_device *cdev,
+ 
+ 	cpufreq_cdev->cpufreq_state = state;
+ 
+-	return freq_qos_update_request(&cpufreq_cdev->qos_req,
+-				get_state_freq(cpufreq_cdev, state));
++	ret = freq_qos_update_request(&cpufreq_cdev->qos_req,
++				      get_state_freq(cpufreq_cdev, state));
++	return ret < 0 ? ret : 0;
+ }
+ 
+ /* Bind cpufreq callbacks to thermal cooling device ops */
+-- 
+2.20.1
+
