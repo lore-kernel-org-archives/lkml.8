@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C58B0C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:04:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 458DEC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:04:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 971F220775
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:04:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 217872064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:04:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586955855;
-	bh=1pQapq9m3603xrXiSN4BF3wGZPcBk5uTiJAJZ3h1E+A=;
+	s=default; t=1586955863;
+	bh=8Zkwt3Nxc5a6mdUgf20I8irYrlccMGLwx42I/QawL/4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oIMFBL2hcfpzbbmzNmXePJKZOxfxj8uBvyzLh+Vcp4kORfhhWsijjCjqWRbwWQrIF
-	 tr6A2MSKRUqCeY8WD6HxQELtyB4M9lRuief7L7p936fwgHlKUzVzlhOHSGoM4VQiXG
-	 XVyqYLiLMJJAwdZTyBGqwNnMPZuYzlhJIPrC9kQQ=
+	b=OA5U4P7+APEYu4r0aj4rP9du0TQfFRNULtFgl9MxVWNk6f7XdAwJLCD5cfLCCh2zW
+	 KzHe+sYB6iz2GFcrt8Uf2z8DjD7JcMz88LikbSgl0SAfIIQhPDzZElfojN1yj1MNFZ
+	 pFq3RbE7KCwcuOtXvbYgec25M8m6Qpj1n5i1coao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505835AbgDONEL (ORCPT
+        id S2505848AbgDONEU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:04:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56204 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 09:04:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897143AbgDOLg0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2897137AbgDOLg0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Apr 2020 07:36:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E76D0208FE;
-        Wed, 15 Apr 2020 11:36:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D5C8214D8;
+        Wed, 15 Apr 2020 11:36:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950584;
-        bh=1pQapq9m3603xrXiSN4BF3wGZPcBk5uTiJAJZ3h1E+A=;
+        s=default; t=1586950580;
+        bh=8Zkwt3Nxc5a6mdUgf20I8irYrlccMGLwx42I/QawL/4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g3MkuLRURQYK3wsH+aKZbj/stfmM7GbXJu+V6qRGnmTL8hxyj1YCPuhoAwO24IsZ2
-         C0uOn9Wcwfh3P+WdRAw318CQ5bxQccLpfHXvXvT7VPnJ0NUmh6psWgfM59XoSSPIew
-         OjO2guO7scPxidOXGG09Smd/ikxxeOPf61tzLs9k=
+        b=retB1e2Kycd123sySla2MnFKGUfESh9xdhLr7BJN0IB9knB6QlCs2H3HAPBP4fBfH
+         qj1tvQld0j8J6Ba6F03y1QoxPCV6pBP4gssr6krTQpnz74xaLDI7pndDxICluPymYJ
+         Fvf3ZkyhsV/0uq7e8/sI2H/2ey8ZePIh5N+SbxUg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Hildenbrand <david@redhat.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 083/129] KVM: s390: vsie: Fix possible race when shadowing region 3 tables
-Date:   Wed, 15 Apr 2020 07:33:58 -0400
-Message-Id: <20200415113445.11881-83-sashal@kernel.org>
+Cc:     Qian Cai <cai@lca.pw>, Andrew Morton <akpm@linux-foundation.org>,
+        Marco Elver <elver@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 080/129] percpu_counter: fix a data race at vm_committed_as
+Date:   Wed, 15 Apr 2020 07:33:55 -0400
+Message-Id: <20200415113445.11881-80-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
 References: <20200415113445.11881-1-sashal@kernel.org>
@@ -61,50 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Hildenbrand <david@redhat.com>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit 1493e0f944f3c319d11e067c185c904d01c17ae5 ]
+[ Upstream commit 7e2345200262e4a6056580f0231cccdaffc825f3 ]
 
-We have to properly retry again by returning -EINVAL immediately in case
-somebody else instantiated the table concurrently. We missed to add the
-goto in this function only. The code now matches the other, similar
-shadowing functions.
+"vm_committed_as.count" could be accessed concurrently as reported by
+KCSAN,
 
-We are overwriting an existing region 2 table entry. All allocated pages
-are added to the crst_list to be freed later, so they are not lost
-forever. However, when unshadowing the region 2 table, we wouldn't trigger
-unshadowing of the original shadowed region 3 table that we replaced. It
-would get unshadowed when the original region 3 table is modified. As it's
-not connected to the page table hierarchy anymore, it's not going to get
-used anymore. However, for a limited time, this page table will stick
-around, so it's in some sense a temporary memory leak.
+ BUG: KCSAN: data-race in __vm_enough_memory / percpu_counter_add_batch
 
-Identified by manual code inspection. I don't think this classifies as
-stable material.
+ write to 0xffffffff9451c538 of 8 bytes by task 65879 on cpu 35:
+  percpu_counter_add_batch+0x83/0xd0
+  percpu_counter_add_batch at lib/percpu_counter.c:91
+  __vm_enough_memory+0xb9/0x260
+  dup_mm+0x3a4/0x8f0
+  copy_process+0x2458/0x3240
+  _do_fork+0xaa/0x9f0
+  __do_sys_clone+0x125/0x160
+  __x64_sys_clone+0x70/0x90
+  do_syscall_64+0x91/0xb05
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-Fixes: 998f637cc4b9 ("s390/mm: avoid races on region/segment/page table shadowing")
-Signed-off-by: David Hildenbrand <david@redhat.com>
-Link: https://lore.kernel.org/r/20200403153050.20569-4-david@redhat.com
-Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+ read to 0xffffffff9451c538 of 8 bytes by task 66773 on cpu 19:
+  __vm_enough_memory+0x199/0x260
+  percpu_counter_read_positive at include/linux/percpu_counter.h:81
+  (inlined by) __vm_enough_memory at mm/util.c:839
+  mmap_region+0x1b2/0xa10
+  do_mmap+0x45c/0x700
+  vm_mmap_pgoff+0xc0/0x130
+  ksys_mmap_pgoff+0x6e/0x300
+  __x64_sys_mmap+0x33/0x40
+  do_syscall_64+0x91/0xb05
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The read is outside percpu_counter::lock critical section which results in
+a data race.  Fix it by adding a READ_ONCE() in
+percpu_counter_read_positive() which could also service as the existing
+compiler memory barrier.
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Marco Elver <elver@google.com>
+Link: http://lkml.kernel.org/r/1582302724-2804-1-git-send-email-cai@lca.pw
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/mm/gmap.c | 1 +
- 1 file changed, 1 insertion(+)
+ include/linux/percpu_counter.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/s390/mm/gmap.c b/arch/s390/mm/gmap.c
-index edcdca97e85ee..06d602c5ec7b7 100644
---- a/arch/s390/mm/gmap.c
-+++ b/arch/s390/mm/gmap.c
-@@ -1840,6 +1840,7 @@ int gmap_shadow_r3t(struct gmap *sg, unsigned long saddr, unsigned long r3t,
- 		goto out_free;
- 	} else if (*table & _REGION_ENTRY_ORIGIN) {
- 		rc = -EAGAIN;		/* Race with shadow */
-+		goto out_free;
- 	}
- 	crst_table_init(s_r3t, _REGION3_ENTRY_EMPTY);
- 	/* mark as invalid as long as the parent table is not protected */
+diff --git a/include/linux/percpu_counter.h b/include/linux/percpu_counter.h
+index 4f052496cdfd7..0a4f54dd4737b 100644
+--- a/include/linux/percpu_counter.h
++++ b/include/linux/percpu_counter.h
+@@ -78,9 +78,9 @@ static inline s64 percpu_counter_read(struct percpu_counter *fbc)
+  */
+ static inline s64 percpu_counter_read_positive(struct percpu_counter *fbc)
+ {
+-	s64 ret = fbc->count;
++	/* Prevent reloads of fbc->count */
++	s64 ret = READ_ONCE(fbc->count);
+ 
+-	barrier();		/* Prevent reloads of fbc->count */
+ 	if (ret >= 0)
+ 		return ret;
+ 	return 0;
 -- 
 2.20.1
 
