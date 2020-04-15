@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FB73C2BA19
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7CD6C38A29
 	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:37:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8069E2076D
+	by mail.kernel.org (Postfix) with ESMTP id 9D0C320936
 	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:37:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1586961424;
-	bh=6GT3w41hn966DMyFfp0vsF/LFh19lPhK+l5rxKUUk5Y=;
+	bh=iTCJhoshUwS+oHOg3kvyjSr4Dw0ZnnoIWAVFdK3lIgk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C+64qlRKlugO8DHpmvAGVW96GNc8KTo9o0FqsA0Ger0UH30E7+rSO4cTDLsvWm4II
-	 Oru4Y+OBYu458wBznDdEYh3rUoDEQd6hWy0ktMulTuUfbg/5g0Hm/ydeE/ZdfynQde
-	 iTBe4T1q9nvie30n7LwHPmFd9YxuLokuLVnzIeNU=
+	b=u+MSafdBfeVa/zkNUexuBxLEfLUvlddXc1SEs61AkaZGwg8nsA/il9yFX6VW0R/3C
+	 qwC5lBxXHgI/iWrdwrMgjjtimcA9GwN73LjLOfsVRKZsI9+ZoWMzFcKGung/QCPwT4
+	 s8DS5/WpuLl9f0MoOxbX1dV9+JWLNfNJSFN6UeKQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2636598AbgDOOgh (ORCPT
+        id S2636617AbgDOOhA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:36:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45414 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 10:37:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394095AbgDOOdH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 10:33:07 -0400
+        id S2394090AbgDOOdG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 10:33:06 -0400
 Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8177221F6;
+        by mail.kernel.org (Postfix) with ESMTPSA id A730921D92;
         Wed, 15 Apr 2020 14:32:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1586961172;
-        bh=6GT3w41hn966DMyFfp0vsF/LFh19lPhK+l5rxKUUk5Y=;
+        bh=iTCJhoshUwS+oHOg3kvyjSr4Dw0ZnnoIWAVFdK3lIgk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=slDrz/GqaVbF6kU/Xe8zRxwajE+AZVpN0x36xM3BMtH5XVS74kWwRCNie59CMMBmR
-         e1d9caRv16rejnN1s4hAp481415EZvjek0tCuvKQMqRSEhAAZ3jhIt3pj8hXcFhtW8
-         sHPgKVlVRO6HRC0pdOdZqolficq9JS9vnDQncZgE=
+        b=x1zf/ab6+Dev4v+QRUEx8LCKzauXkYpiFLl58Hmtr9UTWsjbxNkH4QdKxdWJp9/1x
+         61r/f6/Tv/MV7iabCieAqG6XqWtpuaHYTiuVn8uX09lrTJoe0n30DCheuMC6O1x1mR
+         M4a7KvInIqh5V/ygCvSZhNiXsDbJxMjMzqyYrbH0=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jOj5u-006kQA-5d; Wed, 15 Apr 2020 16:32:50 +0200
+        id 1jOj5t-006kPl-VO; Wed, 15 Apr 2020 16:32:49 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH 31/34] docs: filesystems: convert sysfs-pci.txt to ReST
-Date:   Wed, 15 Apr 2020 16:32:44 +0200
-Message-Id: <07b7cf662d3552f78c01c096b4845121113a581d.1586960617.git.mchehab+huawei@kernel.org>
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH 26/34] docs: filesystems: convert sharedsubtree.txt to ReST
+Date:   Wed, 15 Apr 2020 16:32:39 +0200
+Message-Id: <1649a91892a49aa3fe3c0f16386f58323d2745e7.1586960617.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <cover.1586960617.git.mchehab+huawei@kernel.org>
 References: <cover.1586960617.git.mchehab+huawei@kernel.org>
@@ -60,113 +62,833 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 - Add a SPDX header;
-- Adjust document title;
+- Adjust document and section titles;
 - Some whitespace fixes and new line breaks;
 - Mark literal blocks as such;
 - Add table markups;
-- Add it to filesystems/index.rst.
+- Add it to filesystems/index.rst
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/filesystems/index.rst           |  1 +
- .../{sysfs-pci.txt => sysfs-pci.rst}          | 23 ++++++++++++-------
- 2 files changed, 16 insertions(+), 8 deletions(-)
- rename Documentation/filesystems/{sysfs-pci.txt => sysfs-pci.rst} (92%)
+ Documentation/filesystems/index.rst           |   1 +
+ Documentation/filesystems/proc.rst            |   2 +-
+ .../{sharedsubtree.txt => sharedsubtree.rst}  | 394 ++++++++++--------
+ 3 files changed, 227 insertions(+), 170 deletions(-)
+ rename Documentation/filesystems/{sharedsubtree.txt => sharedsubtree.rst} (72%)
 
 diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
-index 6c5c312b8188..34d5f53931e7 100644
+index 1f3635c90632..b65f288366f0 100644
 --- a/Documentation/filesystems/index.rst
 +++ b/Documentation/filesystems/index.rst
-@@ -36,6 +36,7 @@ algorithms work.
+@@ -35,6 +35,7 @@ algorithms work.
+    mount_api
     quota
     seq_file
-    sharedsubtree
-+   sysfs-pci
++   sharedsubtree
  
     automount-support
  
-diff --git a/Documentation/filesystems/sysfs-pci.txt b/Documentation/filesystems/sysfs-pci.rst
-similarity index 92%
-rename from Documentation/filesystems/sysfs-pci.txt
-rename to Documentation/filesystems/sysfs-pci.rst
-index 06f1d64c6f70..a265f3e2cc80 100644
---- a/Documentation/filesystems/sysfs-pci.txt
-+++ b/Documentation/filesystems/sysfs-pci.rst
-@@ -1,8 +1,11 @@
+diff --git a/Documentation/filesystems/proc.rst b/Documentation/filesystems/proc.rst
+index 38b606991065..a567bcccbb02 100644
+--- a/Documentation/filesystems/proc.rst
++++ b/Documentation/filesystems/proc.rst
+@@ -1870,7 +1870,7 @@ unbindable        mount is unbindable
+ 
+ For more information on mount propagation see:
+ 
+-  Documentation/filesystems/sharedsubtree.txt
++  Documentation/filesystems/sharedsubtree.rst
+ 
+ 
+ 3.6	/proc/<pid>/comm  & /proc/<pid>/task/<tid>/comm
+diff --git a/Documentation/filesystems/sharedsubtree.txt b/Documentation/filesystems/sharedsubtree.rst
+similarity index 72%
+rename from Documentation/filesystems/sharedsubtree.txt
+rename to Documentation/filesystems/sharedsubtree.rst
+index 8ccfbd55244b..d83395354250 100644
+--- a/Documentation/filesystems/sharedsubtree.txt
++++ b/Documentation/filesystems/sharedsubtree.rst
+@@ -1,7 +1,10 @@
 +.. SPDX-License-Identifier: GPL-2.0
 +
-+============================================
- Accessing PCI device resources through sysfs
----------------------------------------------
-+============================================
++===============
+ Shared Subtrees
+----------------
++===============
  
- sysfs, usually mounted at /sys, provides access to PCI resources on platforms
--that support it.  For example, a given bus might look like this:
-+that support it.  For example, a given bus might look like this::
+-Contents:
++.. Contents:
+ 	1) Overview
+ 	2) Features
+ 	3) Setting mount states
+@@ -41,31 +44,38 @@ replicas continue to be exactly same.
  
-      /sys/devices/pci0000:17
-      |-- 0000:17:00.0
-@@ -30,8 +33,9 @@ This bus contains a single function device in slot 0.  The domain and bus
- numbers are reproduced for convenience.  Under the device directory are several
- files, each with their own function.
+ 	Here is an example:
  
-+       =================== =====================================================
-        file		   function
--       ----		   --------
-+       =================== =====================================================
-        class		   PCI class (ascii, ro)
-        config		   PCI config space (binary, rw)
-        device		   PCI device (ascii, ro)
-@@ -40,13 +44,16 @@ files, each with their own function.
-        local_cpus	   nearby CPU mask (cpumask, ro)
-        remove		   remove device from kernel's list (ascii, wo)
-        resource		   PCI resource host addresses (ascii, ro)
--       resource0..N	   PCI resource N, if present (binary, mmap, rw[1])
-+       resource0..N	   PCI resource N, if present (binary, mmap, rw\ [1]_)
-        resource0_wc..N_wc  PCI WC map resource N, if prefetchable (binary, mmap)
-        revision		   PCI revision (ascii, ro)
-        rom		   PCI ROM resource, if present (binary, ro)
-        subsystem_device	   PCI subsystem device (ascii, ro)
-        subsystem_vendor	   PCI subsystem vendor (ascii, ro)
-        vendor		   PCI vendor (ascii, ro)
-+       =================== =====================================================
+-	Let's say /mnt has a mount that is shared.
+-	mount --make-shared /mnt
++	Let's say /mnt has a mount that is shared::
 +
-+::
++	    mount --make-shared /mnt
  
-   ro - read only file
-   rw - file is readable and writable
-@@ -56,7 +63,7 @@ files, each with their own function.
-   binary - file contains binary data
-   cpumask - file contains a cpumask type
+ 	Note: mount(8) command now supports the --make-shared flag,
+ 	so the sample 'smount' program is no longer needed and has been
+ 	removed.
  
--[1] rw for RESOURCE_IO (I/O port) regions only
-+.. [1] rw for RESOURCE_IO (I/O port) regions only
+-	# mount --bind /mnt /tmp
++	::
++
++	    # mount --bind /mnt /tmp
++
+ 	The above command replicates the mount at /mnt to the mountpoint /tmp
+ 	and the contents of both the mounts remain identical.
  
- The read only files are informational, writes to them will be ignored, with
- the exception of the 'rom' file.  Writable files can be used to perform
-@@ -67,11 +74,11 @@ don't support mmapping of certain resources, so be sure to check the return
- value from any attempted mmap.  The most notable of these are I/O port
- resources, which also provide read/write access.
+-	#ls /mnt
+-	a b c
++	::
  
--The 'enable' file provides a counter that indicates how many times the device 
-+The 'enable' file provides a counter that indicates how many times the device
- has been enabled.  If the 'enable' file currently returns '4', and a '1' is
- echoed into it, it will then return '5'.  Echoing a '0' into it will decrease
- the count.  Even when it returns to 0, though, some of the initialisation
--may not be reversed.  
-+may not be reversed.
+-	#ls /tmp
+-	a b c
++	    #ls /mnt
++	    a b c
  
- The 'rom' file is special in that it provides read-only access to the device's
- ROM file, if available.  It's disabled by default, however, so applications
-@@ -93,7 +100,7 @@ Accessing legacy resources through sysfs
+-	Now let's say we mount a device at /tmp/a
+-	# mount /dev/sd0  /tmp/a
++	    #ls /tmp
++	    a b c
  
- Legacy I/O port and ISA memory resources are also provided in sysfs if the
- underlying platform supports them.  They're located in the PCI class hierarchy,
--e.g.
-+e.g.::
+-	#ls /tmp/a
+-	t1 t2 t3
++	Now let's say we mount a device at /tmp/a::
  
- 	/sys/class/pci_bus/0000:17/
- 	|-- bridge -> ../../../devices/pci0000:17
+-	#ls /mnt/a
+-	t1 t2 t3
++	    # mount /dev/sd0  /tmp/a
++
++	    #ls /tmp/a
++	    t1 t2 t3
++
++	    #ls /mnt/a
++	    t1 t2 t3
+ 
+ 	Note that the mount has propagated to the mount at /mnt as well.
+ 
+@@ -123,14 +133,15 @@ replicas continue to be exactly same.
+ 
+ 2d) A unbindable mount is a unbindable private mount
+ 
+-	let's say we have a mount at /mnt and we make it unbindable
++	let's say we have a mount at /mnt and we make it unbindable::
+ 
+-	# mount --make-unbindable /mnt
++	    # mount --make-unbindable /mnt
+ 
+-	 Let's try to bind mount this mount somewhere else.
+-	 # mount --bind /mnt /tmp
+-	 mount: wrong fs type, bad option, bad superblock on /mnt,
+-	        or too many mounted file systems
++	 Let's try to bind mount this mount somewhere else::
++
++	    # mount --bind /mnt /tmp
++	    mount: wrong fs type, bad option, bad superblock on /mnt,
++		    or too many mounted file systems
+ 
+ 	Binding a unbindable mount is a invalid operation.
+ 
+@@ -138,12 +149,12 @@ replicas continue to be exactly same.
+ 3) Setting mount states
+ 
+ 	The mount command (util-linux package) can be used to set mount
+-	states:
++	states::
+ 
+-	mount --make-shared mountpoint
+-	mount --make-slave mountpoint
+-	mount --make-private mountpoint
+-	mount --make-unbindable mountpoint
++	    mount --make-shared mountpoint
++	    mount --make-slave mountpoint
++	    mount --make-private mountpoint
++	    mount --make-unbindable mountpoint
+ 
+ 
+ 4) Use cases
+@@ -154,9 +165,10 @@ replicas continue to be exactly same.
+ 
+ 	   Solution:
+ 
+-		The system administrator can make the mount at /cdrom shared
+-		mount --bind /cdrom /cdrom
+-		mount --make-shared /cdrom
++		The system administrator can make the mount at /cdrom shared::
++
++		    mount --bind /cdrom /cdrom
++		    mount --make-shared /cdrom
+ 
+ 		Now any process that clones off a new namespace will have a
+ 		mount at /cdrom which is a replica of the same mount in the
+@@ -172,14 +184,14 @@ replicas continue to be exactly same.
+ 	   Solution:
+ 
+ 		To begin with, the administrator can mark the entire mount tree
+-		as shareable.
++		as shareable::
+ 
+-		mount --make-rshared /
++		    mount --make-rshared /
+ 
+ 		A new process can clone off a new namespace. And mark some part
+-		of its namespace as slave
++		of its namespace as slave::
+ 
+-		mount --make-rslave /myprivatetree
++		    mount --make-rslave /myprivatetree
+ 
+ 		Hence forth any mounts within the /myprivatetree done by the
+ 		process will not show up in any other namespace. However mounts
+@@ -206,13 +218,13 @@ replicas continue to be exactly same.
+ 		versions of the file depending on the path used to access that
+ 		file.
+ 
+-		An example is:
++		An example is::
+ 
+-		mount --make-shared /
+-		mount --rbind / /view/v1
+-		mount --rbind / /view/v2
+-		mount --rbind / /view/v3
+-		mount --rbind / /view/v4
++		    mount --make-shared /
++		    mount --rbind / /view/v1
++		    mount --rbind / /view/v2
++		    mount --rbind / /view/v3
++		    mount --rbind / /view/v4
+ 
+ 		and if /usr has a versioning filesystem mounted, then that
+ 		mount appears at /view/v1/usr, /view/v2/usr, /view/v3/usr and
+@@ -224,8 +236,8 @@ replicas continue to be exactly same.
+ 		filesystem is being requested and return the corresponding
+ 		inode.
+ 
+-5) Detailed semantics:
+--------------------
++5) Detailed semantics
++---------------------
+ 	The section below explains the detailed semantics of
+ 	bind, rbind, move, mount, umount and clone-namespace operations.
+ 
+@@ -235,6 +247,7 @@ replicas continue to be exactly same.
+ 5a) Mount states
+ 
+ 	A given mount can be in one of the following states
++
+ 	1) shared
+ 	2) slave
+ 	3) shared and slave
+@@ -252,7 +265,8 @@ replicas continue to be exactly same.
+ 		A 'shared mount' is defined as a vfsmount that belongs to a
+ 		'peer group'.
+ 
+-		For example:
++		For example::
++
+ 			mount --make-shared /mnt
+ 			mount --bind /mnt /tmp
+ 
+@@ -270,7 +284,7 @@ replicas continue to be exactly same.
+ 		A slave mount as the name implies has a master mount from which
+ 		mount/unmount events are received. Events do not propagate from
+ 		the slave mount to the master.  Only a shared mount can be made
+-		a slave by executing the following command
++		a slave by executing the following command::
+ 
+ 			mount --make-slave mount
+ 
+@@ -290,8 +304,10 @@ replicas continue to be exactly same.
+ 		peer group.
+ 
+ 		Only a slave vfsmount can be made as 'shared and slave' by
+-		either executing the following command
++		either executing the following command::
++
+ 			mount --make-shared mount
++
+ 		or by moving the slave vfsmount under a shared vfsmount.
+ 
+ 	(4) Private mount
+@@ -307,30 +323,32 @@ replicas continue to be exactly same.
+ 
+ 
+    	State diagram:
++
+    	The state diagram below explains the state transition of a mount,
+-	in response to various commands.
+-	------------------------------------------------------------------------
+-	|             |make-shared |  make-slave  | make-private |make-unbindab|
+-	--------------|------------|--------------|--------------|-------------|
+-	|shared	      |shared	   |*slave/private|   private	 | unbindable  |
+-	|             |            |              |              |             |
+-	|-------------|------------|--------------|--------------|-------------|
+-	|slave	      |shared      |	**slave	  |    private   | unbindable  |
+-	|             |and slave   |              |              |             |
+-	|-------------|------------|--------------|--------------|-------------|
+-	|shared	      |shared      |    slave	  |    private   | unbindable  |
+-	|and slave    |and slave   |              |              |             |
+-	|-------------|------------|--------------|--------------|-------------|
+-	|private      |shared	   |  **private	  |    private   | unbindable  |
+-	|-------------|------------|--------------|--------------|-------------|
+-	|unbindable   |shared	   |**unbindable  |    private   | unbindable  |
+-	------------------------------------------------------------------------
++	in response to various commands::
+ 
+-	* if the shared mount is the only mount in its peer group, making it
+-	slave, makes it private automatically. Note that there is no master to
+-	which it can be slaved to.
++	    -----------------------------------------------------------------------
++	    |             |make-shared |  make-slave  | make-private |make-unbindab|
++	    --------------|------------|--------------|--------------|-------------|
++	    |shared	  |shared      |*slave/private|   private    | unbindable  |
++	    |             |            |              |              |             |
++	    |-------------|------------|--------------|--------------|-------------|
++	    |slave	  |shared      | **slave      |    private   | unbindable  |
++	    |             |and slave   |              |              |             |
++	    |-------------|------------|--------------|--------------|-------------|
++	    |shared       |shared      | slave        |    private   | unbindable  |
++	    |and slave    |and slave   |              |              |             |
++	    |-------------|------------|--------------|--------------|-------------|
++	    |private      |shared      |  **private   |    private   | unbindable  |
++	    |-------------|------------|--------------|--------------|-------------|
++	    |unbindable   |shared      |**unbindable  |    private   | unbindable  |
++	    ------------------------------------------------------------------------
+ 
+-	** slaving a non-shared mount has no effect on the mount.
++	    * if the shared mount is the only mount in its peer group, making it
++	    slave, makes it private automatically. Note that there is no master to
++	    which it can be slaved to.
++
++	    ** slaving a non-shared mount has no effect on the mount.
+ 
+ 	Apart from the commands listed below, the 'move' operation also changes
+ 	the state of a mount depending on type of the destination mount. Its
+@@ -338,31 +356,32 @@ replicas continue to be exactly same.
+ 
+ 5b) Bind semantics
+ 
+-	Consider the following command
++	Consider the following command::
+ 
+-	mount --bind A/a  B/b
++	    mount --bind A/a  B/b
+ 
+ 	where 'A' is the source mount, 'a' is the dentry in the mount 'A', 'B'
+ 	is the destination mount and 'b' is the dentry in the destination mount.
+ 
+ 	The outcome depends on the type of mount of 'A' and 'B'. The table
+-	below contains quick reference.
+-   ---------------------------------------------------------------------------
+-   |         BIND MOUNT OPERATION                                            |
+-   |**************************************************************************
+-   |source(A)->| shared       |       private  |       slave    | unbindable |
+-   | dest(B)  |               |                |                |            |
+-   |   |      |               |                |                |            |
+-   |   v      |               |                |                |            |
+-   |**************************************************************************
+-   |  shared  | shared        |     shared     | shared & slave |  invalid   |
+-   |          |               |                |                |            |
+-   |non-shared| shared        |      private   |      slave     |  invalid   |
+-   ***************************************************************************
++	below contains quick reference::
++
++	    --------------------------------------------------------------------------
++	    |         BIND MOUNT OPERATION                                           |
++	    |************************************************************************|
++	    |source(A)->| shared      |       private  |       slave    | unbindable |
++	    | dest(B)  |              |                |                |            |
++	    |   |      |              |                |                |            |
++	    |   v      |              |                |                |            |
++	    |************************************************************************|
++	    |  shared  | shared       |     shared     | shared & slave |  invalid   |
++	    |          |              |                |                |            |
++	    |non-shared| shared       |      private   |      slave     |  invalid   |
++	    **************************************************************************
+ 
+      	Details:
+ 
+-	1. 'A' is a shared mount and 'B' is a shared mount. A new mount 'C'
++    1. 'A' is a shared mount and 'B' is a shared mount. A new mount 'C'
+ 	which is clone of 'A', is created. Its root dentry is 'a' . 'C' is
+ 	mounted on mount 'B' at dentry 'b'. Also new mount 'C1', 'C2', 'C3' ...
+ 	are created and mounted at the dentry 'b' on all mounts where 'B'
+@@ -371,7 +390,7 @@ replicas continue to be exactly same.
+ 	'B'.  And finally the peer-group of 'C' is merged with the peer group
+ 	of 'A'.
+ 
+-	2. 'A' is a private mount and 'B' is a shared mount. A new mount 'C'
++    2. 'A' is a private mount and 'B' is a shared mount. A new mount 'C'
+ 	which is clone of 'A', is created. Its root dentry is 'a'. 'C' is
+ 	mounted on mount 'B' at dentry 'b'. Also new mount 'C1', 'C2', 'C3' ...
+ 	are created and mounted at the dentry 'b' on all mounts where 'B'
+@@ -379,7 +398,7 @@ replicas continue to be exactly same.
+ 	'C', 'C1', .., 'Cn' with exactly the same configuration as the
+ 	propagation tree for 'B'.
+ 
+-	3. 'A' is a slave mount of mount 'Z' and 'B' is a shared mount. A new
++    3. 'A' is a slave mount of mount 'Z' and 'B' is a shared mount. A new
+ 	mount 'C' which is clone of 'A', is created. Its root dentry is 'a' .
+ 	'C' is mounted on mount 'B' at dentry 'b'. Also new mounts 'C1', 'C2',
+ 	'C3' ... are created and mounted at the dentry 'b' on all mounts where
+@@ -389,19 +408,19 @@ replicas continue to be exactly same.
+ 	is made the slave of mount 'Z'.  In other words, mount 'C' is in the
+ 	state 'slave and shared'.
+ 
+-	4. 'A' is a unbindable mount and 'B' is a shared mount. This is a
++    4. 'A' is a unbindable mount and 'B' is a shared mount. This is a
+ 	invalid operation.
+ 
+-	5. 'A' is a private mount and 'B' is a non-shared(private or slave or
++    5. 'A' is a private mount and 'B' is a non-shared(private or slave or
+ 	unbindable) mount. A new mount 'C' which is clone of 'A', is created.
+ 	Its root dentry is 'a'. 'C' is mounted on mount 'B' at dentry 'b'.
+ 
+-	6. 'A' is a shared mount and 'B' is a non-shared mount. A new mount 'C'
++    6. 'A' is a shared mount and 'B' is a non-shared mount. A new mount 'C'
+ 	which is a clone of 'A' is created. Its root dentry is 'a'. 'C' is
+ 	mounted on mount 'B' at dentry 'b'.  'C' is made a member of the
+ 	peer-group of 'A'.
+ 
+-	7. 'A' is a slave mount of mount 'Z' and 'B' is a non-shared mount. A
++    7. 'A' is a slave mount of mount 'Z' and 'B' is a non-shared mount. A
+ 	new mount 'C' which is a clone of 'A' is created. Its root dentry is
+ 	'a'.  'C' is mounted on mount 'B' at dentry 'b'. Also 'C' is set as a
+ 	slave mount of 'Z'. In other words 'A' and 'C' are both slave mounts of
+@@ -409,7 +428,7 @@ replicas continue to be exactly same.
+ 	mount/unmount on 'A' do not propagate anywhere else. Similarly
+ 	mount/unmount on 'C' do not propagate anywhere else.
+ 
+-	8. 'A' is a unbindable mount and 'B' is a non-shared mount. This is a
++    8. 'A' is a unbindable mount and 'B' is a non-shared mount. This is a
+ 	invalid operation. A unbindable mount cannot be bind mounted.
+ 
+ 5c) Rbind semantics
+@@ -422,7 +441,9 @@ replicas continue to be exactly same.
+ 	then the subtree under the unbindable mount is pruned in the new
+ 	location.
+ 
+-	eg: let's say we have the following mount tree.
++	eg:
++
++	  let's say we have the following mount tree::
+ 
+ 		A
+ 	      /   \
+@@ -430,12 +451,12 @@ replicas continue to be exactly same.
+ 	     / \ / \
+ 	     D E F G
+ 
+-	     Let's say all the mount except the mount C in the tree are
+-	     of a type other than unbindable.
++	  Let's say all the mount except the mount C in the tree are
++	  of a type other than unbindable.
+ 
+-	     If this tree is rbound to say Z
++	  If this tree is rbound to say Z
+ 
+-	     We will have the following tree at the new location.
++	  We will have the following tree at the new location::
+ 
+ 		Z
+ 		|
+@@ -457,24 +478,26 @@ replicas continue to be exactly same.
+ 	the dentry in the destination mount.
+ 
+ 	The outcome depends on the type of the mount of 'A' and 'B'. The table
+-	below is a quick reference.
+-   ---------------------------------------------------------------------------
+-   |         		MOVE MOUNT OPERATION                                 |
+-   |**************************************************************************
+-   | source(A)->| shared      |       private  |       slave    | unbindable |
+-   | dest(B)  |               |                |                |            |
+-   |   |      |               |                |                |            |
+-   |   v      |               |                |                |            |
+-   |**************************************************************************
+-   |  shared  | shared        |     shared     |shared and slave|  invalid   |
+-   |          |               |                |                |            |
+-   |non-shared| shared        |      private   |    slave       | unbindable |
+-   ***************************************************************************
+-	NOTE: moving a mount residing under a shared mount is invalid.
++	below is a quick reference::
++
++	    ---------------------------------------------------------------------------
++	    |         		MOVE MOUNT OPERATION                                 |
++	    |**************************************************************************
++	    | source(A)->| shared      |       private  |       slave    | unbindable |
++	    | dest(B)  |               |                |                |            |
++	    |   |      |               |                |                |            |
++	    |   v      |               |                |                |            |
++	    |**************************************************************************
++	    |  shared  | shared        |     shared     |shared and slave|  invalid   |
++	    |          |               |                |                |            |
++	    |non-shared| shared        |      private   |    slave       | unbindable |
++	    ***************************************************************************
++
++	.. Note:: moving a mount residing under a shared mount is invalid.
+ 
+       Details follow:
+ 
+-	1. 'A' is a shared mount and 'B' is a shared mount.  The mount 'A' is
++    1. 'A' is a shared mount and 'B' is a shared mount.  The mount 'A' is
+ 	mounted on mount 'B' at dentry 'b'.  Also new mounts 'A1', 'A2'...'An'
+ 	are created and mounted at dentry 'b' on all mounts that receive
+ 	propagation from mount 'B'. A new propagation tree is created in the
+@@ -483,7 +506,7 @@ replicas continue to be exactly same.
+ 	propagation tree is appended to the already existing propagation tree
+ 	of 'A'.
+ 
+-	2. 'A' is a private mount and 'B' is a shared mount. The mount 'A' is
++    2. 'A' is a private mount and 'B' is a shared mount. The mount 'A' is
+ 	mounted on mount 'B' at dentry 'b'. Also new mount 'A1', 'A2'... 'An'
+ 	are created and mounted at dentry 'b' on all mounts that receive
+ 	propagation from mount 'B'. The mount 'A' becomes a shared mount and a
+@@ -491,7 +514,7 @@ replicas continue to be exactly same.
+ 	'B'. This new propagation tree contains all the new mounts 'A1',
+ 	'A2'...  'An'.
+ 
+-	3. 'A' is a slave mount of mount 'Z' and 'B' is a shared mount.  The
++    3. 'A' is a slave mount of mount 'Z' and 'B' is a shared mount.  The
+ 	mount 'A' is mounted on mount 'B' at dentry 'b'.  Also new mounts 'A1',
+ 	'A2'... 'An' are created and mounted at dentry 'b' on all mounts that
+ 	receive propagation from mount 'B'. A new propagation tree is created
+@@ -501,32 +524,32 @@ replicas continue to be exactly same.
+ 	'A'.  Mount 'A' continues to be the slave mount of 'Z' but it also
+ 	becomes 'shared'.
+ 
+-	4. 'A' is a unbindable mount and 'B' is a shared mount. The operation
++    4. 'A' is a unbindable mount and 'B' is a shared mount. The operation
+ 	is invalid. Because mounting anything on the shared mount 'B' can
+ 	create new mounts that get mounted on the mounts that receive
+ 	propagation from 'B'.  And since the mount 'A' is unbindable, cloning
+ 	it to mount at other mountpoints is not possible.
+ 
+-	5. 'A' is a private mount and 'B' is a non-shared(private or slave or
++    5. 'A' is a private mount and 'B' is a non-shared(private or slave or
+ 	unbindable) mount. The mount 'A' is mounted on mount 'B' at dentry 'b'.
+ 
+-	6. 'A' is a shared mount and 'B' is a non-shared mount.  The mount 'A'
++    6. 'A' is a shared mount and 'B' is a non-shared mount.  The mount 'A'
+ 	is mounted on mount 'B' at dentry 'b'.  Mount 'A' continues to be a
+ 	shared mount.
+ 
+-	7. 'A' is a slave mount of mount 'Z' and 'B' is a non-shared mount.
++    7. 'A' is a slave mount of mount 'Z' and 'B' is a non-shared mount.
+ 	The mount 'A' is mounted on mount 'B' at dentry 'b'.  Mount 'A'
+ 	continues to be a slave mount of mount 'Z'.
+ 
+-	8. 'A' is a unbindable mount and 'B' is a non-shared mount. The mount
++    8. 'A' is a unbindable mount and 'B' is a non-shared mount. The mount
+ 	'A' is mounted on mount 'B' at dentry 'b'. Mount 'A' continues to be a
+ 	unbindable mount.
+ 
+ 5e) Mount semantics
+ 
+-	Consider the following command
++	Consider the following command::
+ 
+-	mount device  B/b
++	    mount device  B/b
+ 
+ 	'B' is the destination mount and 'b' is the dentry in the destination
+ 	mount.
+@@ -537,9 +560,9 @@ replicas continue to be exactly same.
+ 
+ 5f) Unmount semantics
+ 
+-	Consider the following command
++	Consider the following command::
+ 
+-	umount A
++	    umount A
+ 
+ 	where 'A' is a mount mounted on mount 'B' at dentry 'b'.
+ 
+@@ -592,10 +615,12 @@ replicas continue to be exactly same.
+ 
+ 	A. What is the result of the following command sequence?
+ 
+-		mount --bind /mnt /mnt
+-		mount --make-shared /mnt
+-		mount --bind /mnt /tmp
+-		mount --move /tmp /mnt/1
++		::
++
++		    mount --bind /mnt /mnt
++		    mount --make-shared /mnt
++		    mount --bind /mnt /tmp
++		    mount --move /tmp /mnt/1
+ 
+ 		what should be the contents of /mnt /mnt/1 /mnt/1/1 should be?
+ 		Should they all be identical? or should /mnt and /mnt/1 be
+@@ -604,23 +629,27 @@ replicas continue to be exactly same.
+ 
+ 	B. What is the result of the following command sequence?
+ 
+-		mount --make-rshared /
+-		mkdir -p /v/1
+-		mount --rbind / /v/1
++		::
++
++		    mount --make-rshared /
++		    mkdir -p /v/1
++		    mount --rbind / /v/1
+ 
+ 		what should be the content of /v/1/v/1 be?
+ 
+ 
+ 	C. What is the result of the following command sequence?
+ 
+-		mount --bind /mnt /mnt
+-		mount --make-shared /mnt
+-		mkdir -p /mnt/1/2/3 /mnt/1/test
+-		mount --bind /mnt/1 /tmp
+-		mount --make-slave /mnt
+-		mount --make-shared /mnt
+-		mount --bind /mnt/1/2 /tmp1
+-		mount --make-slave /mnt
++		::
++
++		    mount --bind /mnt /mnt
++		    mount --make-shared /mnt
++		    mkdir -p /mnt/1/2/3 /mnt/1/test
++		    mount --bind /mnt/1 /tmp
++		    mount --make-slave /mnt
++		    mount --make-shared /mnt
++		    mount --bind /mnt/1/2 /tmp1
++		    mount --make-slave /mnt
+ 
+ 		At this point we have the first mount at /tmp and
+ 		its root dentry is 1. Let's call this mount 'A'
+@@ -668,7 +697,8 @@ replicas continue to be exactly same.
+ 
+ 		step 1:
+ 		   let's say the root tree has just two directories with
+-		   one vfsmount.
++		   one vfsmount::
++
+ 				    root
+ 				   /    \
+ 				  tmp    usr
+@@ -676,14 +706,17 @@ replicas continue to be exactly same.
+ 		    And we want to replicate the tree at multiple
+ 		    mountpoints under /root/tmp
+ 
+-		step2:
+-		      mount --make-shared /root
++		step 2:
++		      ::
+ 
+-		      mkdir -p /tmp/m1
+ 
+-		      mount --rbind /root /tmp/m1
++			mount --make-shared /root
+ 
+-		      the new tree now looks like this:
++			mkdir -p /tmp/m1
++
++			mount --rbind /root /tmp/m1
++
++		      the new tree now looks like this::
+ 
+ 				    root
+ 				   /    \
+@@ -697,11 +730,13 @@ replicas continue to be exactly same.
+ 
+ 			  it has two vfsmounts
+ 
+-		step3:
++		step 3:
++		    ::
++
+ 			    mkdir -p /tmp/m2
+ 			    mount --rbind /root /tmp/m2
+ 
+-			the new tree now looks like this:
++			the new tree now looks like this::
+ 
+ 				      root
+ 				     /    \
+@@ -724,6 +759,7 @@ replicas continue to be exactly same.
+ 		       it has 6 vfsmounts
+ 
+ 		step 4:
++		      ::
+ 			  mkdir -p /tmp/m3
+ 			  mount --rbind /root /tmp/m3
+ 
+@@ -740,7 +776,8 @@ replicas continue to be exactly same.
+ 
+ 		step 1:
+ 		   let's say the root tree has just two directories with
+-		   one vfsmount.
++		   one vfsmount::
++
+ 				    root
+ 				   /    \
+ 				  tmp    usr
+@@ -748,17 +785,20 @@ replicas continue to be exactly same.
+ 		    How do we set up the same tree at multiple locations under
+ 		    /root/tmp
+ 
+-		step2:
+-		      mount --bind /root/tmp /root/tmp
++		step 2:
++		      ::
+ 
+-		      mount --make-rshared /root
+-		      mount --make-unbindable /root/tmp
+ 
+-		      mkdir -p /tmp/m1
++			mount --bind /root/tmp /root/tmp
+ 
+-		      mount --rbind /root /tmp/m1
++			mount --make-rshared /root
++			mount --make-unbindable /root/tmp
+ 
+-		      the new tree now looks like this:
++			mkdir -p /tmp/m1
++
++			mount --rbind /root /tmp/m1
++
++		      the new tree now looks like this::
+ 
+ 				    root
+ 				   /    \
+@@ -768,11 +808,13 @@ replicas continue to be exactly same.
+ 			      /  \
+ 			     tmp  usr
+ 
+-		step3:
++		step 3:
++		      ::
++
+ 			    mkdir -p /tmp/m2
+ 			    mount --rbind /root /tmp/m2
+ 
+-		      the new tree now looks like this:
++		      the new tree now looks like this::
+ 
+ 				    root
+ 				   /    \
+@@ -782,12 +824,13 @@ replicas continue to be exactly same.
+ 			      /  \     / \
+ 			     tmp  usr tmp usr
+ 
+-		step4:
++		step 4:
++		      ::
+ 
+ 			    mkdir -p /tmp/m3
+ 			    mount --rbind /root /tmp/m3
+ 
+-		      the new tree now looks like this:
++		      the new tree now looks like this::
+ 
+ 				    	  root
+ 				      /    	  \
+@@ -801,25 +844,31 @@ replicas continue to be exactly same.
+ 
+ 8A) Datastructure
+ 
+-	4 new fields are introduced to struct vfsmount
++	4 new fields are introduced to struct vfsmount:
++
++	*   ->mnt_share
++	*   ->mnt_slave_list
++	*   ->mnt_slave
++	*   ->mnt_master
++
+ 	->mnt_share
+-	->mnt_slave_list
+-	->mnt_slave
+-	->mnt_master
+-
+-	->mnt_share links together all the mount to/from which this vfsmount
++		links together all the mount to/from which this vfsmount
+ 		send/receives propagation events.
+ 
+-	->mnt_slave_list links all the mounts to which this vfsmount propagates
++	->mnt_slave_list
++		links all the mounts to which this vfsmount propagates
+ 		to.
+ 
+-	->mnt_slave links together all the slaves that its master vfsmount
++	->mnt_slave
++		links together all the slaves that its master vfsmount
+ 		propagates to.
+ 
+-	->mnt_master points to the master vfsmount from which this vfsmount
++	->mnt_master
++		points to the master vfsmount from which this vfsmount
+ 		receives propagation.
+ 
+-	->mnt_flags takes two more flags to indicate the propagation status of
++	->mnt_flags
++		takes two more flags to indicate the propagation status of
+ 		the vfsmount.  MNT_SHARE indicates that the vfsmount is a shared
+ 		vfsmount.  MNT_UNCLONABLE indicates that the vfsmount cannot be
+ 		replicated.
+@@ -842,7 +891,7 @@ replicas continue to be exactly same.
+ 
+ 	A example propagation tree looks as shown in the figure below.
+ 	[ NOTE: Though it looks like a forest, if we consider all the shared
+-	mounts as a conceptual entity called 'pnode', it becomes a tree]
++	mounts as a conceptual entity called 'pnode', it becomes a tree]::
+ 
+ 
+ 		        A <--> B <--> C <---> D
+@@ -864,14 +913,19 @@ replicas continue to be exactly same.
+ 	A's ->mnt_slave_list links with ->mnt_slave of 'E', 'K', 'F' and 'G'
+ 
+ 	E's ->mnt_share links with ->mnt_share of K
+-	'E', 'K', 'F', 'G' have their ->mnt_master point to struct
+-				vfsmount of 'A'
++
++	'E', 'K', 'F', 'G' have their ->mnt_master point to struct vfsmount of 'A'
++
+ 	'M', 'L', 'N' have their ->mnt_master point to struct vfsmount of 'K'
++
+ 	K's ->mnt_slave_list links with ->mnt_slave of 'M', 'L' and 'N'
+ 
+ 	C's ->mnt_slave_list links with ->mnt_slave of 'J' and 'K'
++
+ 	J and K's ->mnt_master points to struct vfsmount of C
++
+ 	and finally D's ->mnt_slave_list links with ->mnt_slave of 'H' and 'I'
++
+ 	'H' and 'I' have their ->mnt_master pointing to struct vfsmount of 'D'.
+ 
+ 
+@@ -903,6 +957,7 @@ replicas continue to be exactly same.
+ 	Prepare phase:
+ 
+ 	for each mount in the source tree:
++
+ 		   a) Create the necessary number of mount trees to
+ 		   	be attached to each of the mounts that receive
+ 			propagation from the destination mount.
+@@ -929,11 +984,12 @@ replicas continue to be exactly same.
+ 	Abort phase
+ 		delete all the newly created trees.
+ 
+-	NOTE: all the propagation related functionality resides in the file
+-	pnode.c
++	.. Note::
++	   all the propagation related functionality resides in the file pnode.c
+ 
+ 
+ ------------------------------------------------------------------------
+ 
+ version 0.1  (created the initial document, Ram Pai linuxram@us.ibm.com)
++
+ version 0.2  (Incorporated comments from Al Viro)
 -- 
 2.25.2
 
