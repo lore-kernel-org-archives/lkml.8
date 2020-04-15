@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06120C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CAFEC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDC5A20575
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:02:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FC1220575
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:02:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586952141;
-	bh=Ohz8aThqvX1NBM5Mz0A+jU9WKKsOhrId6ATYf0piSOA=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=GoaMyBsF8d8CYQUuJgmutZ6u4MY14JcP7B3vGyBoG46TXplE9oyaj+Nw0ZmxooAJl
-	 ZbAt6wypRvCTQo8XlqAvDZxGc9K7d6CBxpHBltK/Ci+wkYBG2dYmAsn4q/bDpPTIhJ
-	 kENYruSRimBOeT0EYV4gPZubR810KbgIbPP8v3so=
+	s=default; t=1586952148;
+	bh=BTQbFxGoOUZgxTG3w05vZiF3RLniuYq/Xy8xuP2C1QE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=f0fhNmJj4hf74RPIEVz5bu5TfdFsFenz0Nf18pAnveehGpczUYUhEDL1txX7siLRI
+	 u/XG3A/NFzfArVKA4SUdk+uIjIj9fna1oAD+7MBAIrumZUGDZMWccE2pv5YB5myRMM
+	 NgpShAZx7t2Zl1e5UZGGte47sgzkHtP6j4/RXmD8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409724AbgDOMCT (ORCPT
-        <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:02:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44000 "EHLO mail.kernel.org"
+        id S368202AbgDOMC0 (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:02:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409444AbgDOLsQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:48:16 -0400
+        id S2406281AbgDOLsW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:48:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B5F1214D8;
-        Wed, 15 Apr 2020 11:48:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC96221582;
+        Wed, 15 Apr 2020 11:48:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951296;
-        bh=Ohz8aThqvX1NBM5Mz0A+jU9WKKsOhrId6ATYf0piSOA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=qtnurdzGQikUV13C3LUyrXzCK6Mf2hta0D+hUXSwC6fSHqP6M5BQccBZW4HcOwiG7
-         lk2nTr93KDjwqjtLWI4w3dt74Z2sOXoIaYdBymbcoJpsAQQ/2WM9qJF7va5CDaxoMl
-         GVc/AIy0aXvc6cLcnaOqjbw+X8A7qqIAVUr+WKBI=
+        s=default; t=1586951301;
+        bh=BTQbFxGoOUZgxTG3w05vZiF3RLniuYq/Xy8xuP2C1QE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=INdKqx1HLuhyKljyuVsktTKR75zcvwLZcJ316UcJloaCx4fzxJBKCl4T3NUXL2ymA
+         l7L0WHLEmiqT/P9VYU2XkkNeoYSB8GToRF2s4qWv6DFUxOi0eapYnvzCbuTtx1jHZV
+         1Qn3MHR2aPbs3dZl43WaalCJNh5MCG9BNHOOmMIg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.4 01/14] clk: at91: usb: continue if clk_hw_round_rate() return zero
-Date:   Wed, 15 Apr 2020 07:48:01 -0400
-Message-Id: <20200415114814.15954-1-sashal@kernel.org>
+Cc:     Josh Triplett <josh@joshtriplett.org>,
+        Andreas Dilger <adilger@dilger.ca>,
+        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
+        linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 06/14] ext4: fix incorrect inodes per group in error message
+Date:   Wed, 15 Apr 2020 07:48:06 -0400
+Message-Id: <20200415114814.15954-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200415114814.15954-1-sashal@kernel.org>
+References: <20200415114814.15954-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,47 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Claudiu Beznea <claudiu.beznea@microchip.com>
+From: Josh Triplett <josh@joshtriplett.org>
 
-[ Upstream commit b0ecf1c6c6e82da4847900fad0272abfd014666d ]
+[ Upstream commit b9c538da4e52a7b79dfcf4cfa487c46125066dfb ]
 
-clk_hw_round_rate() may call round rate function of its parents. In case
-of SAM9X60 two of USB parrents are PLLA and UPLL. These clocks are
-controlled by clk-sam9x60-pll.c driver. The round rate function for this
-driver is sam9x60_pll_round_rate() which call in turn
-sam9x60_pll_get_best_div_mul(). In case the requested rate is not in the
-proper range (rate < characteristics->output[0].min &&
-rate > characteristics->output[0].max) the sam9x60_pll_round_rate() will
-return a negative number to its caller (called by
-clk_core_round_rate_nolock()). clk_hw_round_rate() will return zero in
-case a negative number is returned by clk_core_round_rate_nolock(). With
-this, the USB clock will continue its rate computation even caller of
-clk_hw_round_rate() returned an error. With this, the USB clock on SAM9X60
-may not chose the best parent. I detected this after a suspend/resume
-cycle on SAM9X60.
+If ext4_fill_super detects an invalid number of inodes per group, the
+resulting error message printed the number of blocks per group, rather
+than the number of inodes per group. Fix it to print the correct value.
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-Link: https://lkml.kernel.org/r/1579261009-4573-2-git-send-email-claudiu.beznea@microchip.com
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Fixes: cd6bb35bf7f6d ("ext4: use more strict checks for inodes_per_block on mount")
+Link: https://lore.kernel.org/r/8be03355983a08e5d4eed480944613454d7e2550.1585434649.git.josh@joshtriplett.org
+Reviewed-by: Andreas Dilger <adilger@dilger.ca>
+Signed-off-by: Josh Triplett <josh@joshtriplett.org>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/at91/clk-usb.c | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/ext4/super.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/at91/clk-usb.c b/drivers/clk/at91/clk-usb.c
-index 8ab8502778a28..55e09641b491b 100644
---- a/drivers/clk/at91/clk-usb.c
-+++ b/drivers/clk/at91/clk-usb.c
-@@ -79,6 +79,9 @@ static int at91sam9x5_clk_usb_determine_rate(struct clk_hw *hw,
- 			tmp_parent_rate = req->rate * div;
- 			tmp_parent_rate = clk_hw_round_rate(parent,
- 							   tmp_parent_rate);
-+			if (!tmp_parent_rate)
-+				continue;
-+
- 			tmp_rate = DIV_ROUND_CLOSEST(tmp_parent_rate, div);
- 			if (tmp_rate < req->rate)
- 				tmp_diff = req->rate - tmp_rate;
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index d8b2d38d2942e..67faf147bade1 100644
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -3661,7 +3661,7 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
+ 	if (sbi->s_inodes_per_group < sbi->s_inodes_per_block ||
+ 	    sbi->s_inodes_per_group > blocksize * 8) {
+ 		ext4_msg(sb, KERN_ERR, "invalid inodes per group: %lu\n",
+-			 sbi->s_blocks_per_group);
++			 sbi->s_inodes_per_group);
+ 		goto failed_mount;
+ 	}
+ 	sbi->s_itb_per_group = sbi->s_inodes_per_group /
 -- 
 2.20.1
 
