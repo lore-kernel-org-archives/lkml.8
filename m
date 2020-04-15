@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9936C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 18:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F788C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 18:20:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7C792076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 18:20:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE27D2076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 18:20:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586974841;
-	bh=3fdVTnSi8comzUB1gb25PxrIATOeQNlocOtrX8eRTQw=;
+	s=default; t=1586974848;
+	bh=T8ZpnoFPTorEfwySTOpXKyiisPDpDzNaQhys7ajKGgc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jmKkwqnWNh92G7kXFCI8EpQwYgymr121d1N0Z3R3npSD9Dajfm+JVHhHitZoSX8gD
-	 I5h04TVjzje2Gzn2f3UN8S3Pz4ozlidagTGAVlwlhBJTPOWt3h3SnOkFmkaFo3OVlR
-	 34ycNBLzFwzP+Pgj1QDxkln4OjneMUBdkhXXW2Uc=
+	b=ptZPZbfR+2KZqD0wHYKUfd4WUssq0XIArwHdh2CWCsgLZsL53/wtJajhGjq2ShPIA
+	 lbE9zoPmGEiymyTv4pPuXVU2P+q8ucbXGcw5Glkib6gNQvh4CoK8dCgonWzsyUQHZH
+	 t0t+epkxAyGde1Lhsc/8xqUJ5jkCyhpkUsq9REEE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2898360AbgDOSUj (ORCPT
+        id S2441445AbgDOSUr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 14:20:39 -0400
+        Wed, 15 Apr 2020 14:20:47 -0400
 Received: from mail.kernel.org ([198.145.29.99]:37482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441379AbgDOSTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 14:19:53 -0400
+        id S2441400AbgDOST5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 14:19:57 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09F2521841;
-        Wed, 15 Apr 2020 18:19:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0053721D95;
+        Wed, 15 Apr 2020 18:19:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586974790;
-        bh=3fdVTnSi8comzUB1gb25PxrIATOeQNlocOtrX8eRTQw=;
+        s=default; t=1586974796;
+        bh=T8ZpnoFPTorEfwySTOpXKyiisPDpDzNaQhys7ajKGgc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ROcFl8/t1yRIkNW8wNgiVnV2fxDeMY/pYPbOUjw+jqQTzymfTRN+DOs0DtpUnr5rl
-         COKoxkA2FLgMQo0U/mMXaLrr3DM8KLGiMZeKQA+NeBmVv/RgapV6wMY/vyRyrfxL2p
-         P3Z7jCDpJHBfAnfCMN4QFDUKPvnPqKxwWOiHU+Qo=
+        b=o2wSORErAfhN0V4vLKRBdePJTsXjKq0mAaU1YhlkVwzwawSjXfnlkG9Qp+oswriuf
+         QURzzdX7BzWHGvyZ+CzZgWxDesqijaCV6T56+gxHIRqXZT9ItpXkb+OB1dDPAWPKnk
+         Tue9dEzVQ9HsqOZUyuY31a0l1rPL6WkUvPkF1GnQ=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH v4 tip/core/rcu 19/38] rcu-tasks: Add RCU tasks to rcutorture writer stall output
-Date:   Wed, 15 Apr 2020 11:19:22 -0700
-Message-Id: <20200415181941.11653-19-paulmck@kernel.org>
+Subject: [PATCH v4 tip/core/rcu 36/38] rcu-tasks: Allow standalone use of TASKS_{TRACE_,}RCU
+Date:   Wed, 15 Apr 2020 11:19:39 -0700
+Message-Id: <20200415181941.11653-36-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200415181856.GA11037@paulmck-ThinkPad-P72>
 References: <20200415181856.GA11037@paulmck-ThinkPad-P72>
@@ -61,123 +61,116 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-This commit adds state for each RCU-tasks flavor to the rcutorture
-writer stall output.  The initial state is minimal, but you have to
-start somewhere.
+This commit allows TASKS_TRACE_RCU to be used independently of TASKS_RCU
+and vice versa.
 
+[ paulmck: Fix conditional compilation per kbuild test robot feedback. ]
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-[ paulmck: Fixes based on feedback from kbuild test robot. ]
 ---
- kernel/rcu/rcu.h        |  1 +
- kernel/rcu/tasks.h      | 45 +++++++++++++++++++++++++++++++++++++++++++--
- kernel/rcu/tree_stall.h |  2 +-
- 3 files changed, 45 insertions(+), 3 deletions(-)
+ kernel/rcu/tasks.h | 54 ++++++++++++++++++++++++++++++------------------------
+ 1 file changed, 30 insertions(+), 24 deletions(-)
 
-diff --git a/kernel/rcu/rcu.h b/kernel/rcu/rcu.h
-index 72903867..e1089fd 100644
---- a/kernel/rcu/rcu.h
-+++ b/kernel/rcu/rcu.h
-@@ -431,6 +431,7 @@ bool rcu_gp_is_expedited(void);  /* Internal RCU use. */
- void rcu_expedite_gp(void);
- void rcu_unexpedite_gp(void);
- void rcupdate_announce_bootup_oddness(void);
-+void show_rcu_tasks_gp_kthreads(void);
- void rcu_request_urgent_qs_task(struct task_struct *t);
- #endif /* #else #ifdef CONFIG_TINY_RCU */
- 
 diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
-index d65a97f..cd220a4 100644
+index e600d29..234847f 100644
 --- a/kernel/rcu/tasks.h
 +++ b/kernel/rcu/tasks.h
-@@ -219,6 +219,16 @@ static void __init rcu_tasks_bootup_oddness(void)
- 
- #endif /* #ifndef CONFIG_TINY_RCU */
- 
-+/* Dump out rcutorture-relevant state common to all RCU-tasks flavors. */
-+static void show_rcu_tasks_generic_gp_kthread(struct rcu_tasks *rtp, char *s)
-+{
-+	pr_info("%s %c%c %s\n",
-+		rtp->kname,
-+		".k"[!!data_race(rtp->kthread_ptr)],
-+		".C"[!!data_race(rtp->cbs_head)],
-+		s);
-+}
-+
- #ifdef CONFIG_TASKS_RCU
- 
- ////////////////////////////////////////////////////////////////////////
-@@ -482,7 +492,14 @@ static int __init rcu_spawn_tasks_kthread(void)
+@@ -244,27 +244,6 @@ static void __init rcu_spawn_tasks_kthread_generic(struct rcu_tasks *rtp)
+ 	smp_mb(); /* Ensure others see full kthread. */
  }
- core_initcall(rcu_spawn_tasks_kthread);
  
--#endif /* #ifdef CONFIG_TASKS_RCU */
-+static void show_rcu_tasks_classic_gp_kthread(void)
-+{
-+	show_rcu_tasks_generic_gp_kthread(&rcu_tasks, "");
-+}
-+
-+#else /* #ifdef CONFIG_TASKS_RCU */
-+static void show_rcu_tasks_classic_gp_kthread(void) { }
-+#endif /* #else #ifdef CONFIG_TASKS_RCU */
+-/* Do the srcu_read_lock() for the above synchronize_srcu().  */
+-void exit_tasks_rcu_start(void) __acquires(&tasks_rcu_exit_srcu)
+-{
+-	preempt_disable();
+-	current->rcu_tasks_idx = __srcu_read_lock(&tasks_rcu_exit_srcu);
+-	preempt_enable();
+-}
+-
+-static void exit_tasks_rcu_finish_trace(struct task_struct *t);
+-
+-/* Do the srcu_read_unlock() for the above synchronize_srcu().  */
+-void exit_tasks_rcu_finish(void) __releases(&tasks_rcu_exit_srcu)
+-{
+-	struct task_struct *t = current;
+-
+-	preempt_disable();
+-	__srcu_read_unlock(&tasks_rcu_exit_srcu, t->rcu_tasks_idx);
+-	preempt_enable();
+-	exit_tasks_rcu_finish_trace(t);
+-}
+-
+ #ifndef CONFIG_TINY_RCU
  
- #ifdef CONFIG_TASKS_RUDE_RCU
- 
-@@ -578,7 +595,14 @@ static int __init rcu_spawn_tasks_rude_kthread(void)
+ /*
+@@ -303,7 +282,9 @@ static void show_rcu_tasks_generic_gp_kthread(struct rcu_tasks *rtp, char *s)
+ 		s);
  }
- core_initcall(rcu_spawn_tasks_rude_kthread);
  
--#endif /* #ifdef CONFIG_TASKS_RUDE_RCU */
-+static void show_rcu_tasks_rude_gp_kthread(void)
-+{
-+	show_rcu_tasks_generic_gp_kthread(&rcu_tasks_rude, "");
-+}
+-#ifdef CONFIG_TASKS_RCU
++static void exit_tasks_rcu_finish_trace(struct task_struct *t);
 +
-+#else /* #ifdef CONFIG_TASKS_RUDE_RCU */
-+static void show_rcu_tasks_rude_gp_kthread(void) {}
-+#endif /* #else #ifdef CONFIG_TASKS_RUDE_RCU */
++#if defined(CONFIG_TASKS_RCU) || defined(CONFIG_TASKS_TRACE_RCU)
  
  ////////////////////////////////////////////////////////////////////////
  //
-@@ -978,10 +1002,27 @@ static int __init rcu_spawn_tasks_trace_kthread(void)
+@@ -374,6 +355,10 @@ static void rcu_tasks_wait_gp(struct rcu_tasks *rtp)
+ 	rtp->postgp_func(rtp);
  }
- core_initcall(rcu_spawn_tasks_trace_kthread);
  
-+static void show_rcu_tasks_trace_gp_kthread(void)
-+{
-+	char buf[32];
++#endif /* #if defined(CONFIG_TASKS_RCU) || defined(CONFIG_TASKS_TRACE_RCU) */
 +
-+	sprintf(buf, "N%d", atomic_read(&trc_n_readers_need_end));
-+	show_rcu_tasks_generic_gp_kthread(&rcu_tasks_trace, buf);
++#ifdef CONFIG_TASKS_RCU
++
+ ////////////////////////////////////////////////////////////////////////
+ //
+ // Simple variant of RCU whose quiescent states are voluntary context
+@@ -577,8 +562,29 @@ static void show_rcu_tasks_classic_gp_kthread(void)
+ 	show_rcu_tasks_generic_gp_kthread(&rcu_tasks, "");
+ }
+ 
++/* Do the srcu_read_lock() for the above synchronize_srcu().  */
++void exit_tasks_rcu_start(void) __acquires(&tasks_rcu_exit_srcu)
++{
++	preempt_disable();
++	current->rcu_tasks_idx = __srcu_read_lock(&tasks_rcu_exit_srcu);
++	preempt_enable();
 +}
 +
++/* Do the srcu_read_unlock() for the above synchronize_srcu().  */
++void exit_tasks_rcu_finish(void) __releases(&tasks_rcu_exit_srcu)
++{
++	struct task_struct *t = current;
++
++	preempt_disable();
++	__srcu_read_unlock(&tasks_rcu_exit_srcu, t->rcu_tasks_idx);
++	preempt_enable();
++	exit_tasks_rcu_finish_trace(t);
++}
++
+ #else /* #ifdef CONFIG_TASKS_RCU */
+ static void show_rcu_tasks_classic_gp_kthread(void) { }
++void exit_tasks_rcu_start(void) { }
++void exit_tasks_rcu_finish(void) { exit_tasks_rcu_finish_trace(current); }
+ #endif /* #else #ifdef CONFIG_TASKS_RCU */
+ 
+ #ifdef CONFIG_TASKS_RUDE_RCU
+@@ -1071,7 +1077,7 @@ static void rcu_tasks_trace_postgp(struct rcu_tasks *rtp)
+ }
+ 
+ /* Report any needed quiescent state for this exiting task. */
+-void exit_tasks_rcu_finish_trace(struct task_struct *t)
++static void exit_tasks_rcu_finish_trace(struct task_struct *t)
+ {
+ 	WRITE_ONCE(t->trc_reader_checked, true);
+ 	WARN_ON_ONCE(t->trc_reader_nesting);
+@@ -1166,7 +1172,7 @@ static void show_rcu_tasks_trace_gp_kthread(void)
+ }
+ 
  #else /* #ifdef CONFIG_TASKS_TRACE_RCU */
- void exit_tasks_rcu_finish_trace(struct task_struct *t) { }
-+static inline void show_rcu_tasks_trace_gp_kthread(void) {}
+-void exit_tasks_rcu_finish_trace(struct task_struct *t) { }
++static void exit_tasks_rcu_finish_trace(struct task_struct *t) { }
+ static inline void show_rcu_tasks_trace_gp_kthread(void) {}
  #endif /* #else #ifdef CONFIG_TASKS_TRACE_RCU */
- 
-+void show_rcu_tasks_gp_kthreads(void)
-+{
-+	show_rcu_tasks_classic_gp_kthread();
-+	show_rcu_tasks_rude_gp_kthread();
-+	show_rcu_tasks_trace_gp_kthread();
-+}
-+
- #else /* #ifdef CONFIG_TASKS_RCU_GENERIC */
- static inline void rcu_tasks_bootup_oddness(void) {}
-+void show_rcu_tasks_gp_kthreads(void) {}
- #endif /* #else #ifdef CONFIG_TASKS_RCU_GENERIC */
-diff --git a/kernel/rcu/tree_stall.h b/kernel/rcu/tree_stall.h
-index c65c975..e1c68a7 100644
---- a/kernel/rcu/tree_stall.h
-+++ b/kernel/rcu/tree_stall.h
-@@ -649,7 +649,7 @@ void show_rcu_gp_kthreads(void)
- 		if (rcu_segcblist_is_offloaded(&rdp->cblist))
- 			show_rcu_nocb_state(rdp);
- 	}
--	/* sched_show_task(rcu_state.gp_kthread); */
-+	show_rcu_tasks_gp_kthreads();
- }
- EXPORT_SYMBOL_GPL(show_rcu_gp_kthreads);
  
 -- 
 2.9.5
