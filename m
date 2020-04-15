@@ -2,223 +2,211 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDCCEC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CFF4C3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:14:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90F6B20768
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:14:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05105206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:14:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="F0ocN5+J"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Ow9I7iEN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441700AbgDOTOJ (ORCPT
+        id S2441706AbgDOTOX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 15:14:09 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:6621 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1416876AbgDOSxx (ORCPT
+        Wed, 15 Apr 2020 15:14:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52132 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1416883AbgDOSzr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 14:53:53 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e9758060000>; Wed, 15 Apr 2020 11:52:54 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 15 Apr 2020 11:53:53 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 15 Apr 2020 11:53:53 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Apr
- 2020 18:53:52 +0000
-Received: from [10.2.171.241] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Apr
- 2020 18:53:51 +0000
-Subject: Re: [RFC PATCH v7 6/9] media: tegra: Add Tegra210 Video input driver
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1586919463-30542-1-git-send-email-skomatineni@nvidia.com>
- <1586919463-30542-7-git-send-email-skomatineni@nvidia.com>
- <4118112f-f865-5460-6319-d71271fd78d1@gmail.com>
- <a69a8b34-beea-3ad0-e08e-f7df8b9e7047@nvidia.com>
- <6afa951e-d904-f3c0-053f-82a02fb18979@nvidia.com>
- <b1c78827-13ea-0c94-a575-97b5afc0ede1@nvidia.com>
- <5954a7e1-910e-7f48-56d3-e671b56ead74@nvidia.com>
- <d6a9e07c-474a-a076-8313-32f5f4ca8d64@nvidia.com>
-Message-ID: <786949a9-8507-7723-f29b-b91a216bfd28@nvidia.com>
-Date:   Wed, 15 Apr 2020 11:53:50 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 15 Apr 2020 14:55:47 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE772C061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 11:55:45 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id j3so4458681ljg.8
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 11:55:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=D78ezzgr1zyOlgwKH7QLX+Li2SBqz2uUlzuC9KV6jFg=;
+        b=Ow9I7iEN9+wJS6FF5B8WBHiyCZox0Z40+SBu0cl9K6E7AztZehjLEUTLvT4cBrYzk2
+         gzX2BI+vld43OaOpaFYJlg3UzWF/jzyNYMCshoLQ43XncVa6WOFhKDvf+/N1kyPs1ZMA
+         Pliy2KCXpOEgNmv3NVrZbBO0WzqBHWAEnLKXa+CGUxiZT3ecGVJm2dcDiZ/noHGiJnYd
+         HqwI9SiEx5LfvmZDyF/9S+TZETw7hS32v7OcxEfeA+uciipy/kC/oVjVPBT6zw+Z8PpO
+         Iyn5m7ncmw/RE2M+LxaMdTxTsZWohK3yfoRWTin8+HrGrYpNraEDEL4UGU0g5w9mHDTS
+         nkYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=D78ezzgr1zyOlgwKH7QLX+Li2SBqz2uUlzuC9KV6jFg=;
+        b=dxdmbIRMV7CXSNkBPKVw6l8OhlsjgpGDzVXCfF24fLjbgm9wpRGT31cqm5kAvnr9Bk
+         uCUh/R+1f7psWvvDgYl0mAUuOEqb6CyAmRHF7bWTQR5V2nncNdryYqbE+t+f5rqyrGsj
+         FkjTR4jH8mjtgFRlk81o4+GYeZeUSo7iQRWP9shis8T3lXqcGKsk/dJ+kCDqL4Mi6cKA
+         xPZI3kp4SRGjpERto5skIFmJIqvmMI96PG/+eZWLnqCGKCwq1/l/nwOpAcCt7OaqhNuy
+         0CRcA+nxeO5RUvUx5lrbo3P67WitcZL93EFqPn8MgsdqpuO4hR1R0lQbInSB7lXEZa4y
+         RyOA==
+X-Gm-Message-State: AGi0Puahm+KkwUtsyro+HWmc0JZftd1Xf0N6sQjN2JpTUNYGx7/UpkXY
+        JrvyEzI2Hj+qhFXnDxTgk5Oe8NoF7wPk3tNRyer4Tw==
+X-Google-Smtp-Source: APiQypJXYNw4SDoKStFsU+56gq4FbE8anC1c48YFT200EteZlNxxTaQJtHbqWPO3STrbxva2wApkW5sioh8lhqP8s0Q=
+X-Received: by 2002:a2e:3e15:: with SMTP id l21mr4074589lja.251.1586976944036;
+ Wed, 15 Apr 2020 11:55:44 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <d6a9e07c-474a-a076-8313-32f5f4ca8d64@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1586976774; bh=SfIrbeIJ0Y7jZYhtTExZYIBHwkMpVtO0fMxSlIp8gmA=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=F0ocN5+Jv7SpG4hrBdRsUNb7Rccm7mDixvbpsyrM751MjhMbIDaBUbQuVVzqvBDrP
-         ERBR9Mihzk1PcYJU1+iaqtxWQFEzUCn+JB9tosp3/DcnnEIuUhAe6vfflfsBzS/Iiz
-         TGDgnUCbtTJM9JUivmMdAODCwJU2Ii3KLMJLO5ZdrZeMZfkmR9/ygEDdLFicpN376T
-         406MQt5xnhu1rhW1f58Tg+Qh5ypBwa2h2Hl/EYlIytnwV1hLCZb+oXim22AGvcrLkQ
-         RF4yUyMBXgYUnSPRZOd75IBKC4TIVS6CNxEzFoLM+jQ4XpNkKsImfcUQbUp56nje9R
-         q0FrM4cA+NUBg==
+References: <1586916464-27727-1-git-send-email-alan.mikhak@sifive.com>
+ <DM5PR12MB1276CB8FA4457D4CDCE3137EDADB0@DM5PR12MB1276.namprd12.prod.outlook.com>
+ <CABEDWGwYmO52g6cqvQdWb6HXWEHaMA1rcf96aUqv0f32tJZT-g@mail.gmail.com> <DM5PR12MB1276E09460BD4DB7E70EAF91DADB0@DM5PR12MB1276.namprd12.prod.outlook.com>
+In-Reply-To: <DM5PR12MB1276E09460BD4DB7E70EAF91DADB0@DM5PR12MB1276.namprd12.prod.outlook.com>
+From:   Alan Mikhak <alan.mikhak@sifive.com>
+Date:   Wed, 15 Apr 2020 11:55:32 -0700
+Message-ID: <CABEDWGw0OyQNppLpDaNgMedfB0Ci=kZVKm+h4T-LJoZYmbSgqA@mail.gmail.com>
+Subject: Re: [PATCH RFC] dmaengine: dw-edma: Decouple dw-edma-core.c from
+ struct pci_dev
+To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+Cc:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "kishon@ti.com" <kishon@ti.com>,
+        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Apr 15, 2020 at 11:17 AM Gustavo Pimentel
+<Gustavo.Pimentel@synopsys.com> wrote:
+>
+> Hi Alan,
+>
+> > > I like your approach, it separates the PCIe glue logic from the eDMA
+> > > itself.
+> > > I would suggest that pcitest would have multiple options that could be
+> > > triggered, for instance:
+> > >  1 - Execute Endpoint DMA (read/write) remotely with Linked List feature
+> > > (from the Root Complex side)
+> > >  2 - Execute Endpoint DMA (read/write) remotely without Linked List
+> > > feature (from the Root Complex side)
+> > >  3 - Execute Endpoint DMA (read/write) locally with Linked List feature
+> > >  4 - Execute Endpoint DMA (read/write) locally without Linked List
+> > > feature
+> > >
+> >
+> > I have all of the above four use cases in mind as well. At the moment,
+> > only #4 is possible with pcitest.
+> >
+> > Use case #3 would need a new command line option for pcitest such as -L
+> > to let its user specify linked list operationwhen used with dma in
+> > conjunction with the existing -D option.
+> >
+> > Use cases #1 and #2 would need another new command line option such as -R
+> > to specify remotely initiated dma operation in conjunction with -D option.
+> >
+> > New code in pci-epf-test and pci_endpoint_test drivers would be needed
+> > to support use cases #1, #2, and #3. However, use case #4 should be
+> > possible without modification to pci-epf-test or pci_endpoint_test as long
+> > as the dmaengine channels become available on the endpoint side.
+>
+> I would suggest something like this:
+>
+> -L option, local DMA triggering
+> -R option, remote DMA triggering
+> -W <n> option, to select the DMA write channel n => (0 ... 7) to be
+> used
+> -R <n> option, to select the DMA read channel n => (0 ... 7) to be
+> used
+> -K option, to use or not the linked list feature (K presence enables
+> the LL use)
+> -T <n> option, to select which type of DMA transfer to be used => (n = 0
+> - scatter-gather mode, 1 - cyclic mode)
+> -N <n> option, to define the number of cyclic transfers to perform in
+> total
+> -C <n> option, to define the size of each chunk to be used
+> -t <time> option, to define a timeout for the DMA operation
 
-On 4/15/20 11:39 AM, Sowjanya Komatineni wrote:
+That looks like a more complete set of command line options.
+
 >
-> On 4/15/20 10:48 AM, Sowjanya Komatineni wrote:
->>
->> On 4/15/20 10:47 AM, Sowjanya Komatineni wrote:
->>>
->>> On 4/15/20 10:21 AM, Sowjanya Komatineni wrote:
->>>>
->>>> On 4/15/20 9:54 AM, Sowjanya Komatineni wrote:
->>>>>
->>>>> On 4/15/20 7:22 AM, Dmitry Osipenko wrote:
->>>>>> External email: Use caution opening links or attachments
->>>>>>
->>>>>>
->>>>>> 15.04.2020 05:57, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82=
-:
->>>>>>> +static int tegra_csi_remove(struct platform_device *pdev)
->>>>>>> +{
->>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 struct tegra_csi *csi =3D platform_get_dr=
-vdata(pdev);
->>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 int err;
->>>>>>> +
->>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 err =3D host1x_client_unregister(&csi->cl=
-ient);
->>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 if (err < 0) {
->>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 dev_err(csi->dev,
->>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "failed to unregiste=
-r host1x client:=20
->>>>>>> %d\n", err);
->>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 return err;
->>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>>>>> +
->>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 pm_runtime_disable(csi->dev);
->>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 kfree(csi);
->>>>>> IIRC, the driver removal is invoked on the unbinding. Hence, I'm not
->>>>>> sure how moving away from the resource-managed API helps here.=20
->>>>>> Could you
->>>>>> please explain in a more details?
->>>>>>
->>>>>> Have you tried to test this driver under KASAN? I suspect that=20
->>>>>> you just
->>>>>> masked the problem, instead of fixing it.
-Tested with kmemleak scan and did not see any memory leaks
->>>>> Using devm_kzalloc for vi/csi structures based on prior feedback=20
->>>>> request to switch to use kzalloc all over this driver.
->>>>>
->>>>> Hi Hans,
->>>>>
->>>>> video devices lifetime is till video device nodes are released.=20
->>>>> So, v4l2 device release callback does the release of tegra channel=20
->>>>> allocation which hold video device.
->>>>>
->>>>> Below are the 3 possible cases of unbind/unload,
->>>>>
->>>>> 1. during tegra-video module unload, if v4l2 device refcnt is not=20
->>>>> 0 which is the case when any of video device node handle is kept=20
->>>>> opened then unloading module will not happen and module refcnt is=20
->>>>> also non-zero and unloading tegra-video module reports module in use.
-> v4l2 device is associated with host1x device where during=20
-> v4l2_device_register get_device causes refcnt of tegra video host1x=20
-> device to increase and prevents allowing module unload/load till v4l2=20
-> device release happens.
+> Also, the use of this options (especially when using the remote DMA
+> option) should be checked through the pci_epc_get_features(), which means
+> probably we need to pass the EP features capabilities to the
+> pci_endpoint_test Driver, perhaps using some sets of registers on located
+> on BAR0 or other.
+
+That is a great point. There may be changes required below pci-epf-test
+in the endpoint framework stack.
+
+>
+> > At the moment, pci-epf-test grabs the first available dma channel on the
+> > endpoint side and uses it for either read, write, or copy operation. it is not
+> > possible at the moment to specify which dma channel to use on the pcitest
+> > command line. This may be possible by modifying the command line option
+> > -D to also specify the name of one or more dma channels.
+>
+> I'm assuming that behavior is due to your code, right? I'm not seen that
+> behavior on the Kernel tree.
+> Check my previous suggestion, it should be something similar to what is
+> been done while you select the MSI/MSI-X interrupt to trigger.
+
+I believe this behavior exists in the kernel tree because the call to
+dma_request_chan_by_mask() always specifies channel zero. The user
+of pcitest has no way of specifying which one of the available dma channels
+to use.
+
+>
+> > Also, pci-epf-test grabs the dma channel at bind time and holds on to it
+> > until unloaded. This denies the use of the dma channel to others on the
+> > endpoint side. However, it seems possible to grab and release the dma
+> > channel only for the duration of each read, write, or copy test. These are
+> > improvements that can come over time. It is great that pci-epf-test was
+> > recently updated to include support for dma operations which makes such
+> > improvements possible.
+>
+> Check my previous suggestion. I think by having a timeout for the DMA
+> operation we can provide a way to release the dma channel.
+> Or we could provide some kind of heart beat, once again through some
+> register in a BAR.
+
+I believe this behavior exists in the kernel tree because the call to
+dma_request_chan_by_mask() happens during the execution of
+pci_epf_test_bind() and the call to dma_release_channel() happens
+during the execution of pci_epf_test_unbind(). As long as pci-epf-test
+is bound, I cannot use another program such as dmatest from the
+endpoint-side command prompt to exercise the same channel.
+
+What I was suggesting is perhaps pci-epf-test can be modified to
+acquire and release the channel on each call to pci_epf_test_read(),
+...write(), or ...copy() when the pcitest user specifies -D option.
+
+>
+> > > Relative to the implementation of the options 3 and 4, I wonder if the
+> > > linked list memory space and size could be set through the DT or by the
+> > > configfs available on the pci-epf-test driver.
+> > >
+> >
+> > Although these options could be set through DT or by configfs, another
+> > option is to enable the user of pcitest to specify such parameters on
+> > the command line when invoking each test from the host side.
+>
+> That would be an easy and quick solution, but so far as I know there is a
+> movement in the Kernel to avoid any configuration through module
+> parameters. So I'm afraid that you have to choose by DT or configfs
+> strategy. Kishon can help you on this matter, by telling you what he
+> prefers.
+
+Thanks for that reminder. I will check before getting too invested in a
+specific implementation. Just to clarify, I was suggesting giving the
+user of pcitest a way to specify which one of the available dma channel to
+use on each invocation of pcitest, not what dma channels are available on
+the endpoint side. I assumed the strategy for which dma channels do
+become present and available on endpoint would be by DT or configfs.
+
+>
+> Regards,
+> Gustavo
 >
 >
->>>>> 2. during tegra-video driver unbind, tegra-video driver removal=20
->>>>> will do vi/csi clients exit ops which unregisters video device=20
->>>>> allocated memory during release callback of v4l2 device. vi/csi=20
->>>>> structure allocation remains same as vi/csi driver removal will=20
->>>>> not happen in this case.
->>>>>
->>>>>
->>>>> 3. during direct host1x client drivers vi/csi unbind, both=20
->>>>> host1x_clients vi/csi gets unregistered, deletes host1x logical=20
->>>>> device which executes tegra-video driver removal() -> vi/csi=20
->>>>> exit() before vi/csi memory gets freed in vi/csi driver remove().
->>>>>
->>>>> So, any active streaming will stop and video devices are=20
->>>>> unregistered during direct client driver unbind prior to freeing=20
->>>>> vi/csi memory.
->>>>>
->>>>> Also vi/csi driver remove does explicit free vi/csi as its=20
->>>>> allocated with kzalloc. So not sure how using kzalloc is different=20
->>>>> to devm_kzalloc for vi/csi structure in terms of when vi/csi=20
->>>>> memory gets freed?
->>>>>
->>>>> Except for channel allocation which holds video device and as=20
->>>>> video device life time is beyond tegra-video module unbind->vi=20
->>>>> exit(), looks like we can use devm_kzalloc for vi/csi.
->>>>>
->>>>>
->>>>> Can you please comment if you still think we need to use kzalloc=20
->>>>> rather than devm_kzalloc for vi/csi structure allocation?
->>>>>
->>>>> Thanks
->>>>>
->>>>> Sowjanya
->>>>>
->>>> One more case is when video device node is kept opened with=20
->>>> v4l2-ctl sleep (rather than streaming), where it will keep device=20
->>>> node open for specified time and if direct vi client driver unbind=20
->>>> happens then vi driver remove() will free vi memory before v4l2=20
->>>> device release happens.
->>>>
->>>> But I don't see any crash or errors with this case.
->
-> In the above case, channels allocated memory release may not happen in=20
-> this case as list head pointer will be gone when vi memory is freed=20
-> during direct client unbind and by the time v4l2 device release=20
-> callback gets executed vi channels list head is gone.
->
-> Also, freeing vi structure memory can't be done in v4l2 device release=20
-> callback either.
->
->>>>
->>>> Also if we allow direct client driver unbind, then vi structure=20
->>>> memory lifetime should also be till v4l2 device release happens.
->>>>
->>>> But we can free vi in v4l2 device release callback as in case when=20
->>>> device node is not kept opened, video device release happens=20
->>>> immediate and we cant free vi that early.
->>>
->>> typo fix:
->>>
->>> But we can't free vi structure memory allocation in v4l2 device=20
->>> release callback as in case when device node is not kept opened,=20
->>> device release happens immediate and we can't free vi structure=20
->>> memory that early.
->>>
->
->>>> Hans/Thierry, Can you please comment on this case?
->>>>
->>>> Thanks
->>>>
->>>> Sowjanya
->>>>
->> Also, Can you please help explain on cases where we do/need direct=20
->> host1x clients vi/csi drivers unbind?
