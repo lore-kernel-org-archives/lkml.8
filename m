@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 995E5C3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D225C2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:40:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 734672076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:39:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 662FA208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:40:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586961593;
-	bh=23W1yG2qd23ktTEijZVV4o1Pn9RiSi+sd+ontuQcaUo=;
+	s=default; t=1586961625;
+	bh=8XWaSPQEn2foEpJeuRzmwtKfRSy0jcH1jiL1DK6qlto=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0tOwHIptmQlyCP5PS0G9S4ju9bXtf+Qh74MuX9SZILzeX9rN5pTnSya4sp6ctWAs3
-	 CiItsdGud4EJOZMK7/BiR4uFXI7XoHKItlyNT/YtpO575fY1JsEhMZ3WuLp2B/F4uF
-	 dy9tQyXRZahE41prR1fGjZnnZMf7fAfd9lE0SPMI=
+	b=xRQQKufBESzxA35X/3DJCy2e7FF+I+DKyIxSWak26ABDphU27u89FJ9j3xcXDaXe8
+	 yutvaY8i65myr6mm+Z68X2AhbxDfSGl98l0O8Pdb2ub59/YhMXtHhbwDHQwjcNMTIa
+	 WFMcgv4AS07vD6QHboy90xK/4cID2XYJnl2c7RPI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S370812AbgDOOjv (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:39:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45448 "EHLO mail.kernel.org"
+        id S2636733AbgDOOkS (ORCPT
+        <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 10:40:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394081AbgDOOdD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2394080AbgDOOdD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Apr 2020 10:33:03 -0400
 Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 989B821D7F;
+        by mail.kernel.org (Postfix) with ESMTPSA id 9150121D7E;
         Wed, 15 Apr 2020 14:32:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1586961171;
-        bh=23W1yG2qd23ktTEijZVV4o1Pn9RiSi+sd+ontuQcaUo=;
+        bh=8XWaSPQEn2foEpJeuRzmwtKfRSy0jcH1jiL1DK6qlto=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d/6Ky7ulpaMQzAvg6L1uWqpqwxH1ebX+25NRicM8wfSkZivdFaRd3rqI4zkp7pxtN
-         eUUGumB8pAiNPQoY9tOGNR+gaL41mvffwk3TH4RiGaRce/zuapmqpGag+vQmmAcG/Z
-         dONKFtid4G8rVbhAe5CGmG6IBZsqeVlNjttMakXc=
+        b=AP+f0GmvQ6G0JBFmdKJqZshPjHodSus0vbl5J9sBS9owW+n7b0zrdxk8xFyNAesV5
+         h+xIAakhmIVrieT1xjBycxZzwICap5J9XK9ksadIen6XF85K70JTbLtXmKazT593He
+         r7jVCWLjqIEsinUQiPR5uZO5srTuMjowi/fCqq0A=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jOj5t-006kPR-QP; Wed, 15 Apr 2020 16:32:49 +0200
+        id 1jOj5t-006kOe-DB; Wed, 15 Apr 2020 16:32:49 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH 22/34] docs: filesystems: rename path-lookup.txt file
-Date:   Wed, 15 Apr 2020 16:32:35 +0200
-Message-Id: <ddee231f968fcf8a9558ff39f251fdd7b2357ff2.1586960617.git.mchehab+huawei@kernel.org>
+        Jan Kara <jack@suse.com>, linux-ext4@vger.kernel.org
+Subject: [PATCH 12/34] docs: filesystems: convert dax.txt to ReST
+Date:   Wed, 15 Apr 2020 16:32:25 +0200
+Message-Id: <71b1f910b2c3569a9fdaa8778378dd734f4f0091.1586960617.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <cover.1586960617.git.mchehab+huawei@kernel.org>
 References: <cover.1586960617.git.mchehab+huawei@kernel.org>
@@ -60,83 +60,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are two files called "patch-lookup", with different contents:
-one is a ReST file, the other one is the text.
-
-As we'll be finishing the conversion of filesystem documents,
-let's fist rename the text one, in order to avoid messing with
-the existing ReST file.
+- Add a SPDX header;
+- Adjust document title;
+- Some whitespace fixes and new line breaks;
+- Add it to filesystems/index.rst.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../filesystems/{path-lookup.txt => path-walking.txt}       | 0
- Documentation/filesystems/porting.rst                       | 2 +-
- fs/dcache.c                                                 | 6 +++---
- fs/namei.c                                                  | 2 +-
- 4 files changed, 5 insertions(+), 5 deletions(-)
- rename Documentation/filesystems/{path-lookup.txt => path-walking.txt} (100%)
+ Documentation/admin-guide/ext4.rst             | 2 +-
+ Documentation/filesystems/{dax.txt => dax.rst} | 9 +++++++--
+ Documentation/filesystems/ext2.rst             | 2 +-
+ Documentation/filesystems/index.rst            | 1 +
+ 4 files changed, 10 insertions(+), 4 deletions(-)
+ rename Documentation/filesystems/{dax.txt => dax.rst} (97%)
 
-diff --git a/Documentation/filesystems/path-lookup.txt b/Documentation/filesystems/path-walking.txt
-similarity index 100%
-rename from Documentation/filesystems/path-lookup.txt
-rename to Documentation/filesystems/path-walking.txt
-diff --git a/Documentation/filesystems/porting.rst b/Documentation/filesystems/porting.rst
-index 26c093969573..8f7d25acf326 100644
---- a/Documentation/filesystems/porting.rst
-+++ b/Documentation/filesystems/porting.rst
-@@ -404,7 +404,7 @@ the callback.  It used to be necessary to clean it there, but not anymore
+diff --git a/Documentation/admin-guide/ext4.rst b/Documentation/admin-guide/ext4.rst
+index 9443fcef1876..103bcc345bad 100644
+--- a/Documentation/admin-guide/ext4.rst
++++ b/Documentation/admin-guide/ext4.rst
+@@ -392,7 +392,7 @@ When mounting an ext4 filesystem, the following option are accepted:
  
- vfs now tries to do path walking in "rcu-walk mode", which avoids
- atomic operations and scalability hazards on dentries and inodes (see
--Documentation/filesystems/path-lookup.txt). d_hash and d_compare changes
-+Documentation/filesystems/path-walking.txt). d_hash and d_compare changes
- (above) are examples of the changes required to support this. For more complex
- filesystem callbacks, the vfs drops out of rcu-walk mode before the fs call, so
- no changes are required to the filesystem. However, this is costly and loses
-diff --git a/fs/dcache.c b/fs/dcache.c
-index b280e07e162b..cf8d5893bd0e 100644
---- a/fs/dcache.c
-+++ b/fs/dcache.c
-@@ -2191,7 +2191,7 @@ static inline bool d_same_name(const struct dentry *dentry,
-  *
-  * __d_lookup_rcu is the dcache lookup function for rcu-walk name
-  * resolution (store-free path walking) design described in
-- * Documentation/filesystems/path-lookup.txt.
-+ * Documentation/filesystems/path-walking.txt.
-  *
-  * This is not to be used outside core vfs.
-  *
-@@ -2239,7 +2239,7 @@ struct dentry *__d_lookup_rcu(const struct dentry *parent,
- 	 * false-negative result. d_lookup() protects against concurrent
- 	 * renames using rename_lock seqlock.
- 	 *
--	 * See Documentation/filesystems/path-lookup.txt for more details.
-+	 * See Documentation/filesystems/path-walking.txt for more details.
- 	 */
- 	hlist_bl_for_each_entry_rcu(dentry, node, b, d_hash) {
- 		unsigned seq;
-@@ -2362,7 +2362,7 @@ struct dentry *__d_lookup(const struct dentry *parent, const struct qstr *name)
- 	 * false-negative result. d_lookup() protects against concurrent
- 	 * renames using rename_lock seqlock.
- 	 *
--	 * See Documentation/filesystems/path-lookup.txt for more details.
-+	 * See Documentation/filesystems/path-walking.txt for more details.
- 	 */
- 	rcu_read_lock();
- 	
-diff --git a/fs/namei.c b/fs/namei.c
-index a320371899cf..d1b53fea83d8 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -645,7 +645,7 @@ static bool legitimize_root(struct nameidata *nd)
+   dax
+         Use direct access (no page cache).  See
+-        Documentation/filesystems/dax.txt.  Note that this option is
++        Documentation/filesystems/dax.rst.  Note that this option is
+         incompatible with data=journal.
  
- /*
-  * Path walking has 2 modes, rcu-walk and ref-walk (see
-- * Documentation/filesystems/path-lookup.txt).  In situations when we can't
-+ * Documentation/filesystems/path-walking.txt).  In situations when we can't
-  * continue in RCU mode, we attempt to drop out of rcu-walk mode and grab
-  * normal reference counts on dentries and vfsmounts to transition to ref-walk
-  * mode.  Refcounts are grabbed at the last known good point before rcu-walk
+ Data Mode
+diff --git a/Documentation/filesystems/dax.txt b/Documentation/filesystems/dax.rst
+similarity index 97%
+rename from Documentation/filesystems/dax.txt
+rename to Documentation/filesystems/dax.rst
+index 735f3859b19f..5838144f80f0 100644
+--- a/Documentation/filesystems/dax.txt
++++ b/Documentation/filesystems/dax.rst
+@@ -1,5 +1,8 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++=======================
+ Direct Access for files
+------------------------
++=======================
+ 
+ Motivation
+ ----------
+@@ -46,6 +49,7 @@ stall the CPU for an extended period, you should also not attempt to
+ implement direct_access.
+ 
+ These block devices may be used for inspiration:
++
+ - brd: RAM backed block device driver
+ - dcssblk: s390 dcss block device driver
+ - pmem: NVDIMM persistent memory driver
+@@ -55,6 +59,7 @@ Implementation Tips for Filesystem Writers
+ ------------------------------------------
+ 
+ Filesystem support consists of
++
+ - adding support to mark inodes as being DAX by setting the S_DAX flag in
+   i_flags
+ - implementing ->read_iter and ->write_iter operations which use dax_iomap_rw()
+@@ -127,6 +132,6 @@ by adding optional struct page support for pages under the control of
+ the driver (see CONFIG_NVDIMM_PFN in drivers/nvdimm for an example of
+ how to do this). In the non struct page cases O_DIRECT reads/writes to
+ those memory ranges from a non-DAX file will fail (note that O_DIRECT
+-reads/writes _of a DAX file_ do work, it is the memory that is being
++reads/writes _of a DAX ``file_`` do work, it is the memory that is being
+ accessed that is key here).  Other things that will not work in the
+ non struct page case include RDMA, sendfile() and splice().
+diff --git a/Documentation/filesystems/ext2.rst b/Documentation/filesystems/ext2.rst
+index d83dbbb162e2..fa416b7a5802 100644
+--- a/Documentation/filesystems/ext2.rst
++++ b/Documentation/filesystems/ext2.rst
+@@ -24,7 +24,7 @@ check=none, nocheck	(*)	Don't do extra checking of bitmaps on mount
+ 				(check=normal and check=strict options removed)
+ 
+ dax				Use direct access (no page cache).  See
+-				Documentation/filesystems/dax.txt.
++				Documentation/filesystems/dax.rst.
+ 
+ debug				Extra debugging information is sent to the
+ 				kernel syslog.  Useful for developers.
+diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
+index c4f95f76ba6a..8e3ccb4ed483 100644
+--- a/Documentation/filesystems/index.rst
++++ b/Documentation/filesystems/index.rst
+@@ -24,6 +24,7 @@ algorithms work.
+    splice
+    locking
+    directory-locking
++   dax
+ 
+    automount-support
+ 
 -- 
 2.25.2
 
