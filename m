@@ -2,189 +2,130 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75890C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 20:25:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CFA3C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 20:27:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48E012076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 20:25:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l1JPPwS/"
+	by mail.kernel.org (Postfix) with ESMTP id C19572076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 20:27:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442019AbgDOUZN (ORCPT
+        id S2437876AbgDOU1A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 16:25:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37736 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2442001AbgDOUZD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 16:25:03 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD0B1C061A0C;
-        Wed, 15 Apr 2020 13:25:02 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id j20so6764020edj.0;
-        Wed, 15 Apr 2020 13:25:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc:content-transfer-encoding;
-        bh=TG84DAM+ZvzWT1WjDaPyx3Y8pzSbrP4EyNOH4w1Vf2Y=;
-        b=l1JPPwS/D7e1Rxn1TxQe+CD0VuProMofkSe7CHsvHc7yfSLMPjRPPSqs9OolRsMu7N
-         HDioibypXMJQfwAhsRnOG13Bny2s2UxLDTFe08wrySheWpE0gRMOWIoPCJ4ZU9KbP3Yc
-         Amdmk/+9+ddBVRxA/2BATUTsIzzqfsY9KhPxG3tDz6seN0AEzOFRcOt3hrTlouyOlKYo
-         Fpqw29lFhnwNMnYiG83Xp5BFqB/t66cVLhYFMBfNey30aqdxV87bBPUWcYXncgBQaez9
-         Eqgzwe8H3qJkYZeY+iOcxqKiyIGKtXTK3HT9jk5wIKrM25INIagjci504yO7UongG3dc
-         /sDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc:content-transfer-encoding;
-        bh=TG84DAM+ZvzWT1WjDaPyx3Y8pzSbrP4EyNOH4w1Vf2Y=;
-        b=O1fWxIu10eVk6zEALITUr8mQ4i2ng/qaxBhObSdhQ2PddfWtEoRSKKJroiWjTFYITh
-         tUu3eUmArWvuBdd5KFmInqmQ7Iv0/e4X0tYaEypg0wElqnozm7ALy492p7oIj6w5fGLt
-         MQEK+R7i9U2dFnZpj4v/UiNHTFcp+y+p5AIfBdaucR2uundqhUhU7DVYpL72lFTHOvlA
-         fPGyxfD0dEgoIwax7imqM4LjYU2mr7PtS3zILjkxPgIELtFMarwkOam8mmq4pUUJxnMG
-         BN0vNqyX4344hjn+Ekid1l4GzsOQ2nCGg0eBiNbz3tb8JTL9NdcurfFJ0IjJ9zAq7tqR
-         FgFQ==
-X-Gm-Message-State: AGi0Pua8DFMsh+9c1Qb4ZfMDCnGt8NgtG9xp8TN9AS+pH8RsKurbDkL/
-        cUek+mL6EXBdPRoNj2PjsjKYJqluAkhau4kMzq0=
-X-Google-Smtp-Source: APiQypKrpiRQDp+uevm4TMFo8xjLOpCqzM1jBIP63ImHO0yiIu0dgaaLktBqHiyj0911kGTBxyMRqicR4Glm/FiTkx0=
-X-Received: by 2002:a05:6402:16da:: with SMTP id r26mr12259794edx.375.1586982301317;
- Wed, 15 Apr 2020 13:25:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200202151907.23587-1-cyphar@cyphar.com> <20200202151907.23587-3-cyphar@cyphar.com>
- <1567baea-5476-6d21-4f03-142def0f62e3@gmail.com> <20200331143911.lokfoq3lqfri2mgy@yavin.dot.cyphar.com>
- <cd3a6aad-b906-ee57-1b5b-5939b9602ad0@gmail.com> <20200412164943.imwpdj5qgtyfn5de@yavin.dot.cyphar.com>
- <cd1438ab-cfc6-b286-849e-d7de0d5c7258@gmail.com> <20200414103524.wjhyfobzpjk236o7@yavin.dot.cyphar.com>
-In-Reply-To: <20200414103524.wjhyfobzpjk236o7@yavin.dot.cyphar.com>
-Reply-To: mtk.manpages@gmail.com
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Date:   Wed, 15 Apr 2020 22:24:00 +0200
-Message-ID: <CAKgNAkhCE0BHjHzc7My1shieDvohCRb-n3AL_E9P49EEsz5upA@mail.gmail.com>
-Subject: Re: [PATCH man-pages v2 2/2] openat2.2: document new openat2(2) syscall
-To:     Aleksa Sarai <asarai@suse.de>
-Cc:     Aleksa Sarai <cyphar@cyphar.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        linux-man <linux-man@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 15 Apr 2020 16:27:00 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:54462 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406376AbgDOU03 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 16:26:29 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id C6DDC1A0A1B;
+        Wed, 15 Apr 2020 22:26:23 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id AF7A71A0A17;
+        Wed, 15 Apr 2020 22:26:23 +0200 (CEST)
+Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id D3E4420506;
+        Wed, 15 Apr 2020 22:26:22 +0200 (CEST)
+From:   Iuliana Prodan <iuliana.prodan@nxp.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Corentin Labbe <clabbe.montjoie@gmail.com>,
+        Horia Geanta <horia.geanta@nxp.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Ripard <mripard@kernel.org>
+Cc:     Aymen Sghaier <aymen.sghaier@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Silvano Di Ninno <silvano.dininno@nxp.com>,
+        Franck Lenormand <franck.lenormand@nxp.com>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-imx <linux-imx@nxp.com>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>
+Subject: [PATCH v5 0/3] crypto: engine - support for parallel and batch requests
+Date:   Wed, 15 Apr 2020 23:26:12 +0300
+Message-Id: <1586982375-18710-1-git-send-email-iuliana.prodan@nxp.com>
+X-Mailer: git-send-email 2.1.0
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Aleksa,
+Added support for executing multiple, independent or not, requests
+for crypto engine based on a retry mechanism. If hardware was unable
+to execute a backlog request, enqueue it back in front of crypto-engine
+queue, to keep the order of requests.
 
-On Tue, 14 Apr 2020 at 12:35, Aleksa Sarai <asarai@suse.de> wrote:
+Now do_one_request() returns:
+>= 0: hardware executed the request successfully;
+< 0: this is the old error path. If hardware has support for retry
+mechanism, the backlog request is put back in front of crypto-engine
+queue. For backwards compatibility, if the retry support is not available,
+the crypto-engine will work as before. 
+Only MAY_BACKLOG requests are enqueued back into crypto-engine's queue,
+since the others can be dropped.
 
-[...]
+If hardware supports batch requests, crypto-engine can handle this use-case
+through do_batch_requests callback.
 
-> > >> I must admit that I'm still confused. There's only the briefest of
-> > >> mentions of magic links in symlink(7). Perhaps that needs to be fixe=
-d?
-> > >
-> > > It wouldn't hurt to add a longer description of magic-links in
-> > > symlink(7). I'll send you a small patch to beef up the description (I
-> > > had planned to include a longer rewrite with the O_EMPTYPATH patches =
-but
-> > > those require quite a bit more work to land).
-> >
-> > That would be great. Thank you!
->
-> I'll cook something up later this week.
+Since, these new features, cannot be supported by all hardware,
+the crypto-engine framework is backward compatible:
+- by using the crypto_engine_alloc_init function, to initialize
+crypto-engine, the new callback is NULL and retry mechanism is
+disabled, so crypto-engine will work as before these changes;
+- to support multiple requests, in parallel, retry_support variable
+must be set on true, in driver. 
+- to support batch requests, do_batch_requests callback must be
+implemented in driver, to execute a batch of requests. The link
+between the requests, is expected to be done in driver, in
+do_one_request(). 
 
-Thank you!
+---
+Changes since V4:
+- added, in algapi a function to add a request in front of queue;
+- added a retry mechanism: if hardware is unable to execute
+a backlog request, enqueue it back in front of crypto-engine
+queue, to keep the order of requests.
 
-[...]
+Changes since V3:
+- removed can_enqueue_hardware callback and added a start-stop
+mechanism based on the on the return value of do_one_request().
 
-> > I've reworked the text on RESOLVE_NO_MAGICLINKS substantially:
-> >
-> >        RESOLVE_NO_MAGICLINKS
-> >               Disallow all magic-link resolution during path reso=E2=80=
-=90
-> >               lution.
-> >
-> >               Magic links are symbolic link-like objects that  are
-> >               most  notably  found  in  proc(5);  examples include
-> >               /proc/[pid]/exe  and  /proc/[pid]/fd/*.   (See  sym=E2=80=
-=90
-> >               link(7) for more details.)
-> >
-> >               Unknowingly  opening  magic  links  can be risky for
-> >               some applications.  Examples of such  risks  include
-> >               the following:
-> >
-> >               =C2=B7 If the process opening a pathname is a controlling
-> >                 process that currently has no controlling terminal
-> >                 (see  credentials(7)),  then  opening a magic link
-> >                 inside /proc/[pid]/fd that happens to refer  to  a
-> >                 terminal would cause the process to acquire a con=E2=80=
-=90
-> >                 trolling terminal.
-> >
-> >               =C2=B7 In  a  containerized  environment,  a  magic  link
-> >                 inside  /proc  may  refer to an object outside the
-> >                 container, and thus may provide a means to  escape
-> >                 from the container.
-> >
-> > [The above example derives from https://lwn.net/Articles/796868/]
-> >
-> >               Because  of such risks, an application may prefer to
-> >               disable   magic   link    resolution    using    the
-> >               RESOLVE_NO_MAGICLINKS flag.
-> >
-> >               If  the trailing component (i.e., basename) of path=E2=80=
-=90
-> >               name is a magic link, and  how.flags  contains  both
-> >               O_PATH  and O_NOFOLLOW, then an O_PATH file descrip=E2=80=
-=90
-> >               tor referencing the magic link will be returned.
-> >
-> > How does the above look?
->
-> The changes look correct, though you could end up going through procfs
-> even if you weren't resolving a path inside proc directly (since you can
-> bind-mount symlinks or have a symlink to procfs). But I'm not sure if
-> it's necessary to outline all the ways a program could be tricked into
-> doing something unintended.
+Changes since V2:
+- readded cur_req in crypto-engine, to keep, the exact behavior as before
+these changes, if can_enqueue_more is not implemented: send requests
+to hardware, _one-by-one_, on crypto_pump_requests, and complete it,
+on crypto_finalize_request, and so on.
+- do_batch_requests is available only with can_enqueue_more.
 
-Yes, indeed. These paragraphs are merely intended to give the reader
-some ideas about what the issues are.
+Changes since V1:
+- changed the name of can_enqueue_hardware callback to can_enqueue_more, and
+the argument of this callback to crypto_engine structure (for cases when more
+than ore crypto-engine is used).
+- added a new patch with support for batch requests.
 
-> > Also, regarding the last paragraph, I  have a question.  The
-> > text doesn't seem quite to relate to the rest of the discussion.
-> > Should it be saying something like:
-> >
-> > If the trailing component (i.e., basename) of pathname is a magic link,
-> > **how.resolve contains RESOLVE_NO_MAGICLINKS,**
-> > and how.flags contains both O_PATH and O_NOFOLLOW, then an O_PATH
-> > file descriptor referencing the magic link will be returned.
-> >
-> > ?
->
-> Yes, that is what I meant to write --
+Changes since V0 (RFC):
+- removed max_no_req and no_req, as the number of request that can be
+processed in parallel;
+- added a new callback, can_enqueue_more, to check whether the hardware
+can process a new request.
 
-Good. Fixed.
 
-> and I believe that the
-> RESOLVE_NO_SYMLINKS section is missing similar text in the second
-> paragraph (except it should refer to RESOLVE_NO_SYMLINKS, obviously).
+Iuliana Prodan (3):
+  crypto: algapi - create function to add request in front of queue
+  crypto: engine - support for parallel requests based on retry
+    mechanism
+  crypto: engine - support for batch requests
 
-Also fixed.
+ crypto/algapi.c         |  11 +++
+ crypto/crypto_engine.c  | 165 ++++++++++++++++++++++++++++++++--------
+ include/crypto/algapi.h |   2 +
+ include/crypto/engine.h |  15 +++-
+ 4 files changed, 161 insertions(+), 32 deletions(-)
 
-Thanks,
+-- 
+2.17.1
 
-Michael
-
---=20
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/[...]
