@@ -2,110 +2,132 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84291C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 22:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B3BFC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 22:05:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 404C92076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 22:00:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="jIMfPtI6"
+	by mail.kernel.org (Postfix) with ESMTP id E839220784
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 22:05:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586988310;
+	bh=LcmVk+AMRQ3I615QuE9bZzomRfxqsLPUOgb5U3DaVgs=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=BZk3E3Bc/rNmg1JRnjTfzqK/7e3MwPKe686gCCTt2QSEwPb7RL5nnsdnPJXxJGmg0
+	 DJCzjXOSrgCAk6dL9T+Bmv+N0fefD0rZbSgm/CHFVcaALMI1oOVP37wIJKd5XrZrAA
+	 lCctS3kH1FTArnkz+8BTqC2ULco5Y5iezZ5oFgeM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729535AbgDOWAA (ORCPT
+        id S1730072AbgDOWFE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 18:00:00 -0400
-Received: from ozlabs.org ([203.11.71.1]:52543 "EHLO ozlabs.org"
+        Wed, 15 Apr 2020 18:05:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730785AbgDOV7y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 17:59:54 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1727839AbgDOWFA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 18:05:00 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 492bqq6Kdxz9s71;
-        Thu, 16 Apr 2020 07:59:51 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1586987992;
-        bh=f9ffZL059DRbr5MCmSZnq70759kgBOjqq5bBazpkPXc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=jIMfPtI6pUIWFFs67hckV5OtsECRmmTYhbAvr15L+tyZR2g8YkMlorVMfFEmP8Rfp
-         u7ZPdRtPVmjLCA0k/ZBnYRyD0kBrJqECLMfkEdXlwKvYgVzS/OJEiSRv6XJuYuvwM+
-         Y6qly4j7xb/+HjrmmhIT8wWxZzXVKj89zMkRU2hhjTLROL7OL4IAmbDXEbXlBqxcJd
-         RhW0sUXkTxY0kQRvmBz1lgQiU5Soma1LIM1JKMJ1QmW8T+zjMIO7qV7PQBVUN0W2OE
-         yUAhxt3bJhXfin4wlFruSlJaIRuEUxzQWqw1ShfkrBqlK5v3z5NpGEYTyYBCcys3tZ
-         lY3j3cnw2jBcg==
-Date:   Thu, 16 Apr 2020 07:59:50 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Namjae Jeon <linkinjeon@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next inclusion request : exfat filesystem
-Message-ID: <20200416075950.4c1b81fd@canb.auug.org.au>
-In-Reply-To: <CAKYAXd9O4F3Y11zAV5MGxhsTgCQNTL-9suKR0AZi08=bXDT5AA@mail.gmail.com>
-References: <CAKYAXd9O4F3Y11zAV5MGxhsTgCQNTL-9suKR0AZi08=bXDT5AA@mail.gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id E234C2076D;
+        Wed, 15 Apr 2020 22:04:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586988299;
+        bh=LcmVk+AMRQ3I615QuE9bZzomRfxqsLPUOgb5U3DaVgs=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=TyTN6XRS19bqHCa2oJwjj/9dUpcAIHXqxkUXY/MydHuKsrpWcd1URLwQ+9Rb6Du1x
+         bv7FKcYyXo8ni7d66CDtmw009qFCygHv+gXEDGdpsLbqGRMnjOyXwL2o1F4WfDvXRU
+         +D+jhl2fzbppuITiTnMA9gcco1sulGduam7so11M=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id AE8F53522AD1; Wed, 15 Apr 2020 15:04:59 -0700 (PDT)
+Date:   Wed, 15 Apr 2020 15:04:59 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Todd Kjos <tkjos@google.com>, Stephen Boyd <sboyd@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: On trace_*_rcuidle functions in modules
+Message-ID: <20200415220459.GE17661@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <CALAqxLV4rM74wuzuZ+BkUi+keccxkAxv30N4vrFO7CVQ5vnT1A@mail.gmail.com>
+ <20200415085348.5511a5fe@gandalf.local.home>
+ <CALAqxLV1A6sOC1GWpFYXeBoDff0+AJgoOYK7NktcTdvX3kvAeg@mail.gmail.com>
+ <20200415161424.584d07d3@gandalf.local.home>
+ <CALAqxLU26PVFPSza5GceSF6gTVdzo_2D3G0dBp0KZXvAWFUktA@mail.gmail.com>
+ <20200415164116.40564f2c@gandalf.local.home>
+ <CALAqxLW6jqr38bk8pp-Hom2=MLm3coTmzCP8MMfrDvMfx388=Q@mail.gmail.com>
+ <20200415174918.154a86d0@gandalf.local.home>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/sn2IfJh2UtkZPTiJgOtMU/.";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200415174918.154a86d0@gandalf.local.home>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/sn2IfJh2UtkZPTiJgOtMU/.
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Apr 15, 2020 at 05:49:18PM -0400, Steven Rostedt wrote:
+> On Wed, 15 Apr 2020 14:02:04 -0700
+> John Stultz <john.stultz@linaro.org> wrote:
+> 
+> > 
+> > So in my case your concerns may not be a problem, but I guess
+> > generally it might. Though I'd hope the callback would be unregistered
+> > (and whatever waiting for the grace period to complete be done) before
+> > the module removal is complete. But maybe I'm still missing your
+> > point?
+> 
+> Hmm, you may have just brought up a problem here...
+> 
+> You're saying that cpu_pm_register_notifier() callers are called from non
+> RCU watching context? If that's the case, we have this:
+> 
+> int cpu_pm_unregister_notifier(struct notifier_block *nb)
+> {
+> 	return atomic_notifier_chain_unregister(&cpu_pm_notifier_chain, nb);
+> }
+> 
+> And this:
+> 
+> int atomic_notifier_chain_unregister(struct atomic_notifier_head *nh,
+> 		struct notifier_block *n)
+> {
+> 	unsigned long flags;
+> 	int ret;
+> 
+> 	spin_lock_irqsave(&nh->lock, flags);
+> 	ret = notifier_chain_unregister(&nh->head, n);
+> 	spin_unlock_irqrestore(&nh->lock, flags);
+> 	synchronize_rcu();
+> 	return ret;
+> }
+> 
+> Which means that if something registered a cpu_pm notifier, then
+> unregistered it, and freed whatever the notifier accesses, then there's a
+> chance that the synchronize_rcu() can return before the called notifier
+> finishes, and anything that notifier accesses could have been freed.
+> 
+> I believe that module code should not be able to be run in RCU non watching
+> context, and neither should notifiers. I think we just stumbled on a bug.
+> 
+> Paul?
 
-Hi,
+Or we say that such modules cannot be unloaded.  Or that such modules'
+exit handlers, after disentangling themselves from the idle loop, must
+invoke synchronize_rcu_rude() or similar, just as modules that use
+call_rcu() are currently required to invoke rcu_barrier().
 
-On Wed, 15 Apr 2020 09:03:58 +0900 Namjae Jeon <linkinjeon@kernel.org> wrot=
-e:
->
-> Could you please add exfat -dev tree to linux-next ?
->=20
-> git://git.kernel.org/pub/scm/linux/kernel/git/linkinjeon/exfat.git dev
+Or is it possible to upgrade the protection that modules use?
 
-Added from today.
+My guess is that invoking rcu_irq_enter() and rcu_irq_exit() around every
+potential call into module code out of the PM code is a non-starter,
+but I cannot prove that either way.
 
-Thanks for adding your subsystem tree as a participant of linux-next.  As
-you may know, this is not a judgement of your code.  The purpose of
-linux-next is for integration testing and to lower the impact of
-conflicts between subsystems in the next merge window.=20
-
-You will need to ensure that the patches/commits in your tree/series have
-been:
-     * submitted under GPL v2 (or later) and include the Contributor's
-        Signed-off-by,
-     * posted to the relevant mailing list,
-     * reviewed by you (or another maintainer of your subsystem tree),
-     * successfully unit tested, and=20
-     * destined for the current or next Linux merge window.
-
-Basically, this should be just what you would send to Linus (or ask him
-to fetch).  It is allowed to be rebased if you deem it necessary.
-
---=20
-Cheers,
-Stephen Rothwell=20
-sfr@canb.auug.org.au
-
---Sig_/sn2IfJh2UtkZPTiJgOtMU/.
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6Xg9YACgkQAVBC80lX
-0GxCMAgApCcb7ghe/8ufjr1hYylz55Wy4QXURzW+eCwijvtMDQX52RlWREqlrIXU
-kw9b+TR76d14uRnlfGVGv2TzM9dLL28elJLJJ0i2OU1wEzesCgXxVumNK2Mxo8LZ
-MXKlbBroZNQxT+uSwLeEcfjsW1RW+b/wTt2oMFeygG/cd81WVQBrBwdOnj2GG9WD
-2WtLqXSIlnE5sSsZdgGkHje5COG6GMQOu02lN5/Ns1cPy+U6z/gqSkkVIF2j4TOv
-74tUDOKqDyBPqv3AmbCJ1OQu6IT4sGnG8UMic0zW7+SOt9vdnCoojVm+kOtBgpV9
-Q538wsTStaDvr2DbL13xe7Xnt1kanQ==
-=7NG1
------END PGP SIGNATURE-----
-
---Sig_/sn2IfJh2UtkZPTiJgOtMU/.--
+							Thanx, Paul
