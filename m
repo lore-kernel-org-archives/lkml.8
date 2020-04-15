@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D864EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C8F6C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:01:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B411321556
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:01:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3660A21582
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:01:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586966511;
-	bh=Whr+LkPvddPEdlzax+7iuEmKEeTaxYdFoa0JhjAYMp0=;
+	s=default; t=1586966518;
+	bh=46RjzSt2lZ7zcuoUcDDNbTHTfazol2LogceQfxy51Hs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0/CGZRmib0YV/TmUM4L4ASbjTDJ2aaQRcclDrbaOuwmmYy4e6MR372EhpzlalPrjW
-	 5OrRLDqEDr1YbjCTLdhHUXxwdQIoU8JGtBWwKzED15ZU+dsBg/FVRZ1+g1m5rkOVtA
-	 SMM54eEnufe5j2Q0vEKH6F4NM7olCItySWzC1bjo=
+	b=B40eqc/az8fACWsveuPeDV7RQMOE8sMCizdre8eWE+OZhI/0ztfc2JQvh64g09hwg
+	 /5dWvUs+9yhAJJ7eEzDwPLK+n/Cc0MBkBuZmVquTehvEiz8I9+S9t1CcvhplClvPvQ
+	 OH35cnyRr+Q4S+PlpFB3C7HsElIfednfddUUEr/w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410051AbgDOQBt (ORCPT
+        id S2406155AbgDOQB5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 12:01:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52290 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 12:01:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52504 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1415142AbgDOQB0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 12:01:26 -0400
+        id S1415145AbgDOQB2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 12:01:28 -0400
 Received: from pali.im (pali.im [31.31.79.79])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECE3D208FE;
-        Wed, 15 Apr 2020 16:01:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 418C620936;
+        Wed, 15 Apr 2020 16:01:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586966486;
-        bh=Whr+LkPvddPEdlzax+7iuEmKEeTaxYdFoa0JhjAYMp0=;
+        s=default; t=1586966488;
+        bh=46RjzSt2lZ7zcuoUcDDNbTHTfazol2LogceQfxy51Hs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I+6fg/CJTctkQzt5X9MhH3chom+dZFcBbS3wXE82ZJD9pbWepWuch9jt7R1BpISBE
-         2f0wyE+t78HFjA2s5qxZAyXjFiyaLADrDwiy7r2vPTIFfIMrmrG+cj2fWNrXw+qXuo
-         xEw9Ez+PiABBxv8f10yKG5VcEFDyL0isUG/kp4cQ=
+        b=xzJPJVkZxfwtu/a2eSdGtHTO119qdoyaejCCTJcaANPSKNcsyNk//UNMozna2NgCU
+         f1vJxc7greQtfZUSTTd3tI+nORw6CeEItOAdA9t2MuBe3/roNbapKvpqqkpG7tZ4OF
+         1MQNU3Q83fYjfrQ283eHQokIIdm4FTZZ2rpOLc+k=
 Received: by pali.im (Postfix)
-        id 4FA4958E; Wed, 15 Apr 2020 18:01:24 +0200 (CEST)
+        id 673C058E; Wed, 15 Apr 2020 18:01:26 +0200 (CEST)
 From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
 To:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
         Gregory Clement <gregory.clement@bootlin.com>,
@@ -56,9 +56,9 @@ To:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
         Xogium <contact@xogium.me>
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-pci@vger.kernel.org
-Subject: [PATCH 2/8] dts: espressobin: Define max-link-speed for pcie0
-Date:   Wed, 15 Apr 2020 18:00:48 +0200
-Message-Id: <20200415160054.951-3-pali@kernel.org>
+Subject: [PATCH 4/8] PCI: aardvark: Do not overwrite Link Status register and ASPM Control bits in Link Control register
+Date:   Wed, 15 Apr 2020 18:00:50 +0200
+Message-Id: <20200415160054.951-5-pali@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415160054.951-1-pali@kernel.org>
 References: <20200415160054.951-1-pali@kernel.org>
@@ -70,30 +70,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Previously aardvark PCI controller set speed to gen2. Now it reads speed
-from Device Tree and as default use maximal possible speed which is gen3.
+Trying to overwrite or change Link Status register does not have any
+effect as this is read-only register. Trying to overwrite bits for
+Negotiated Link Width value in Link Status register does not make sense.
+So remove code which is doing it.
 
-Because Espressobin has advertised only PCI Express 2.0 capability and
-previous value was gen2, define max-link-speed to 2, so there would not be
-any configuration change.
+In future proper change of link width can be done via Lane Count Select
+bits in PCIe Control 0 register.
+
+Trying to unconditionally enable ASPM L0s via ASPM Control bits in Link
+Control register is wrong. There should be at least some detection if
+endpoint supports L0s as support for it is not mandatory.
+
+Moreover ASPM Control bits in Link Control register are controlled by
+pcie/aspm.c code which sets it according to system ASPM settings,
+immediately after aardvark driver probe callback finish. So setting these
+bits by aardvark driver has no long running effect.
+
+So remove code which touches ASPM L0s bits from aardvark driver and let
+kernel's ASPM implementation to set ASPM state properly.
+
+Some users are reporting issues that this code which unconditionally set
+ASPM L0s bits in Link Control register is problematic for some Intel wifi
+cards. And disabling that code fixes support for those cards. See e.g.:
+https://bugzilla.kernel.org/show_bug.cgi?id=196339
+
+If problem with Intel wifi cards occur also after this commit then driver
+independent pcie/aspm.c code could be modified / hooked to not enable ASPM
+L0s state for affected problematic cards.
 
 Signed-off-by: Pali Rohár <pali@kernel.org>
 ---
- arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pci/controller/pci-aardvark.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi
-index 42e992f9c8a5..6705618162d5 100644
---- a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi
-@@ -47,6 +47,7 @@
- 	phys = <&comphy1 0>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pcie_reset_pins &pcie_clkreq_pins>;
-+	max-link-speed = <2>;
- };
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index 756b31c4d20b..02c69fc9aadf 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -380,10 +380,6 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
  
- /* J6 */
+ 	advk_pcie_wait_for_link(pcie);
+ 
+-	reg = PCIE_CORE_LINK_L0S_ENTRY |
+-		(1 << PCIE_CORE_LINK_WIDTH_SHIFT);
+-	advk_writel(pcie, reg, PCIE_CORE_LINK_CTRL_STAT_REG);
+-
+ 	reg = advk_readl(pcie, PCIE_CORE_CMD_STATUS_REG);
+ 	reg |= PCIE_CORE_CMD_MEM_ACCESS_EN |
+ 		PCIE_CORE_CMD_IO_ACCESS_EN |
 -- 
 2.20.1
 
