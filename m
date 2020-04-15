@@ -2,136 +2,255 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC5AC2BB85
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:35:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F305C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:36:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECE222074F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:35:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="A1ZwyGSo"
+	by mail.kernel.org (Postfix) with ESMTP id E5D2A2074F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:36:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895651AbgDOJf4 (ORCPT
+        id S2895667AbgDOJgP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 05:35:56 -0400
-Received: from mout.web.de ([212.227.17.12]:37303 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2895613AbgDOJfu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 05:35:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1586943301;
-        bh=ezw4TLO8n8l15GvUg+iOtElfoPwFhfpISR9wA5pB/EM=;
-        h=X-UI-Sender-Class:Cc:Subject:To:From:Date;
-        b=A1ZwyGSoLP7tROnrOqdHfWgLWbN7cDdFDml42VlKT23D/YhkXOUPrtYyIdgZp+xzS
-         tq+u2avCm2pEIYFG/ECQKdHP+TC3+UQZTUSjUr3y5pGCDPtmbiU9jo/rhVZAu6hCGp
-         XEgcgg/dHLQPjTB6/x9nd6p4S2Zh83F5f0ITVPk4=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([78.48.133.192]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MBkPj-1jW6hm2ghb-00Ap6c; Wed, 15
- Apr 2020 11:35:01 +0200
-Cc:     linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jon Maloy <jmaloy@redhat.com>, Kangjie Lu <kjlu@umn.edu>,
-        Ying Xue <ying.xue@windriver.com>,
-        Yuan Zhang <yuanxzhang@fudan.edu.cn>
-Subject: Re: [PATCH] tipc: Fix potential tipc_node refcnt leak in tipc_rcv
-To:     Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>, netdev@vger.kernel.org,
-        tipc-discussion@lists.sourceforge.net
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <53bb4a56-0bd2-3964-7cfb-b5745a8ba25c@web.de>
-Date:   Wed, 15 Apr 2020 11:34:54 +0200
+        Wed, 15 Apr 2020 05:36:15 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:54734 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2895613AbgDOJgK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 05:36:10 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: gtucker)
+        with ESMTPSA id 6BA7C260F10
+Subject: Re: media/master bisection: v4l2-compliance-vivid.device-presence on
+ qemu_x86_64
+From:   Guillaume Tucker <guillaume.tucker@collabora.com>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@collabora.com
+References: <5e960bf5.1c69fb81.8a349.6851@mx.google.com>
+ <24564393-f229-6e29-7883-9605ed0d48b4@collabora.com>
+ <20200414233347.2a844b85@coco.lan>
+ <86feeb83-37ac-cbd6-b792-b81d17d559c9@collabora.com>
+ <2f32345d-a818-8ec4-afd6-2b9cd9dcdf4a@collabora.com>
+Message-ID: <a99d49d9-656d-6c5c-4953-6e7c56c0beba@collabora.com>
+Date:   Wed, 15 Apr 2020 10:36:04 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+ Thunderbird/68.6.0
 MIME-Version: 1.0
+In-Reply-To: <2f32345d-a818-8ec4-afd6-2b9cd9dcdf4a@collabora.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:u4noMxXZAQN29VZ7DnfQnHQpVDgs3OBGHH3ZaHfbT9kBadItvZd
- KED8KsZy3rlOCi3E1qWLwTq4Qm/GSd2mVVbfEjEQGzQGzneyI/6Mz7Xq9vXAc9ggl2cGhqx
- FWPR1BlUfk0PAa+SAZlROMT3xWQ5X2mkLlI93PyPdoNyi5J7Cw6iEJdSZxqUkCalcKfHpj6
- 8lZoQCGMIVzvUCMIKsEBA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:bjgr2cNAAqY=:L58s1mb6zQFpPqznJqp/a4
- dhj5iRsiALqRrokVlj6LYOrzVn3jhdvDxi9LR8LqE893BYk5gA7nDc7I2Ho+mW1oap0wa97bg
- SZOdQ1ly1PB0J1IQlvheWxzBrQ5/dSNwclmxTtgDRI/Ut9eVK5G5NKOn+Bt4VGdOpZqk1Ev+M
- W1vtEGQGLNZ9RAIETMrpXw9PWw7MpEbBsfOHuxnZemiojP0qEolndEhhKSqw7rl6Fg7EicKHE
- jhFDJiPOj1WQaoWOLg+t4nOK2+S1BMj4GC9j/Q3hJEFFoLSRh2z90vpTXcc0tFOqzt5oa9/8e
- n9Su10KKpONicLrH1F8cj6qHbAneYCTlTZ2xsj+1nIBIXJs9f0LuJWg54iuA89Wxeg8k/uzTn
- megLTVAq4aokTv9tLdPDf3/ZmzAkXyzk+SDMOw289Cv4nyPSpKW+kPqVKiXnvtmWDZbnarEpb
- 1X52LQW5paTTmYdbf/dumXyAjrbpfZP+KvIo7o2XoiYNKfVRPe6kseo4jHBPgeesWkNizi12/
- iibCUDkGFjFfJxOEr0BTBFpJPtCApfpfeR+L91g5lncvwYJHYbsObjSD2e8pRhqwcfoOUJ79Q
- xf8emjO4ihAZoT65neBKp+dK39354am7GvHTvH1Mg3QarqBxvDR63SmYbvtk3diBryW16bb6q
- joC75Qcq88RG9L04o6DojqZJLRxyAJbVczFqAzNbs3j+yYyd5c75zcxUsuWvDQcOwiUP4AMyw
- kfD9o71ZK+ulyNjuu0TCFmRm21wQdw+1WUqlMg8kZDmtcWF1/0jaStnxOW1lhZb7RQ89KxSP9
- ZY8e3Z2y8OpUrFGUDE6RDkHxsrdVS+fmpwuROMP39RzyO0JeYGlV0eQ4brtubdvensuNcDOHw
- P0Eox/+m3EFqxIqAbYwPEz2CsMHCiuSZlxyr4DyztE4HMHnVBVrUJRWyxOJshcqlwHdZHCEUJ
- XNWv/lpKuyVHrRlG6JFPAFp/BWfsmJtT3/B6/vuASYymRsDQpEsdmFmWcjz8cdcvdXQN1piyZ
- b9ivLBoCIQD43WOMQKeYWJdEn+GK6kDFjUGUpvCuCOPDu2q7HZEkghqT7FXEZSWC7r1uwNQAr
- AklkQVvwau9YahSIenR4I/mKNSY3fJQsHFEPceeS9cGoGIwXPHSVT+4g/KhxbbTGTlHUmK6hp
- eQ5Rd2945QVjtgO8ssVQ2OvXgjjhrj2QH6vZGcS+TVmHTsJzzmPbrI/CX2dx93vm7rwzRQpvc
- Y2w8+sFa5B/k3g+46
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> The issue happens in some paths of tipc_rcv(), which forget to decrease
-> the refcnt increased by tipc_node_find() and will cause a refcnt leak.
+On 15/04/2020 10:28, Guillaume Tucker wrote:
+> On 14/04/2020 22:43, Guillaume Tucker wrote:
+>> On 14/04/2020 22:33, Mauro Carvalho Chehab wrote:
+>>> Em Tue, 14 Apr 2020 22:23:52 +0100
+>>> Guillaume Tucker <guillaume.tucker@collabora.com> escreveu:
+>>>
+>>>> Please see the bisection report below about absence of the vivid
+>>>> driver, which caused v4l2-compliance to fail to run.
+>>>>
+>>>> Presumably we need to update the configuration fragment used by
+>>>> kernelci.org to enable platform drivers.  Until now we've been
+>>>> using this:
+>>>>
+>>>>     CONFIG_MEDIA_SUPPORT=y
+>>>>     CONFIG_MEDIA_CAMERA_SUPPORT=y
+>>>>     CONFIG_VIDEO_DEV=y
+>>>>     CONFIG_VIDEO_V4L2=y
+>>>>     CONFIG_V4L_TEST_DRIVERS=y
+>>>>     CONFIG_VIDEO_VIVID=y
+>>>>     CONFIG_VIDEO_VIVID_MAX_DEVS=64
+>>>>
+>>>> Do we simply need to add this one in v5.7 onwards?
+>>>>
+>>>>     CONFIG_MEDIA_PLATFORM_SUPPORT=y
+>>>
+>>> No, this shouldn't be needed.
+>>>
+>>> Helen sent us a patch that should likely fix it:
+>>>
+>>> 	https://git.linuxtv.org/media_tree.git/commit/?id=860b511766a3d95308a942ac09a34e4d1839e706
+>>>
+>>> Could you please check if this solves the issue?
+>>
+>> I see, thanks.  This revision is being built and tested at the
+>> moment, I'll check the results when they land in my inbox.
+> 
+> Helen's patch was needed, but there were still a couple of
+> issues.  First we need to enable this extra option now in the
+> config fragment:
+> 
+>     CONFIG_MEDIA_TEST_SUPPORT=y
+> 
+> as test_drivers/Kconfig starts with "if MEDIA_TEST_SUPPORT".
 
-How do you think about to mention the term =E2=80=9Creference counting=E2=
-=80=9D in
-the commit message?
+Actually, this "if" seems redundant now in test_drivers/Kconfig
+with my patch to include the file conditionally...  Please let me
+know if we should also drop it and I'll send a v2, or if this
+should be fixed in a different way.
 
-Would you like to add the tag =E2=80=9CFixes=E2=80=9D to the change descri=
-ption?
+Guillaume
 
-Regards,
-Markus
+> Then this Kconfig was included when MEDIA_PLATFORM_SUPPORT was
+> enabled rather than MEDIA_TEST_SUPPORT in media/Kconfig.  So I've
+> just sent a patch to fix this dependency, and now it appears to
+> be generating the correct config.  I did a full v4l2-compliance
+> run with the vivid driver on my local setup and it all passed.
+> 
+> Guillaume
+> 
+>>>> On 14/04/2020 20:16, kernelci.org bot wrote:
+>>>>> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+>>>>> * This automated bisection report was sent to you on the basis  *
+>>>>> * that you may be involved with the breaking commit it has      *
+>>>>> * found.  No manual investigation has been done to verify it,   *
+>>>>> * and the root cause of the problem may be somewhere else.      *
+>>>>> *                                                               *
+>>>>> * If you do send a fix, please include this trailer:            *
+>>>>> *   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
+>>>>> *                                                               *
+>>>>> * Hope this helps!                                              *
+>>>>> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+>>>>>
+>>>>> media/master bisection: v4l2-compliance-vivid.device-presence on qemu_x86_64
+>>>>>
+>>>>> Summary:
+>>>>>   Start:      ba445b7ff43b3 media: dt-bindings: rockchip-vpu: Convert bindings to json-schema
+>>>>>   Plain log:  https://storage.kernelci.org//media/master/v5.7-rc1-63-gba445b7ff43b/x86_64/x86_64_defconfig+virtualvideo/gcc-8/lab-collabora/v4l2-compliance-vivid-qemu_x86_64.txt
+>>>>>   HTML log:   https://storage.kernelci.org//media/master/v5.7-rc1-63-gba445b7ff43b/x86_64/x86_64_defconfig+virtualvideo/gcc-8/lab-collabora/v4l2-compliance-vivid-qemu_x86_64.html
+>>>>>   Result:     06b93644f4d10 media: Kconfig: add an option to filter in/out platform drivers
+>>>>>
+>>>>> Checks:
+>>>>>   revert:     PASS
+>>>>>   verify:     PASS
+>>>>>
+>>>>> Parameters:
+>>>>>   Tree:       media
+>>>>>   URL:        https://git.linuxtv.org/media_tree.git
+>>>>>   Branch:     master
+>>>>>   Target:     qemu_x86_64
+>>>>>   CPU arch:   x86_64
+>>>>>   Lab:        lab-collabora
+>>>>>   Compiler:   gcc-8
+>>>>>   Config:     x86_64_defconfig+virtualvideo
+>>>>>   Test case:  v4l2-compliance-vivid.device-presence
+>>>>>
+>>>>> Breaking commit found:
+>>>>>
+>>>>> -------------------------------------------------------------------------------
+>>>>> commit 06b93644f4d102bdfc297159121acc1de794d68d
+>>>>> Author: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+>>>>> Date:   Tue Mar 24 10:27:15 2020 +0100
+>>>>>
+>>>>>     media: Kconfig: add an option to filter in/out platform drivers
+>>>>>     
+>>>>>     Most systems don't need support for those, while others only
+>>>>>     need those, instead of the others.
+>>>>>     
+>>>>>     So, add an option to filter in/out platform drivers.
+>>>>>     
+>>>>>     Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+>>>>>
+>>>>> diff --git a/drivers/media/Kconfig b/drivers/media/Kconfig
+>>>>> index 9dfea5c4b6ab7..2b6ea8beb9199 100644
+>>>>> --- a/drivers/media/Kconfig
+>>>>> +++ b/drivers/media/Kconfig
+>>>>> @@ -87,6 +87,18 @@ config MEDIA_CEC_SUPPORT
+>>>>>  	  Say Y when you have an HDMI receiver, transmitter or a USB CEC
+>>>>>  	  adapter that supports HDMI CEC.
+>>>>>  
+>>>>> +config MEDIA_PLATFORM_SUPPORT
+>>>>> +	bool "Platform-specific devices support"
+>>>>> +	help
+>>>>> +	  Enable support for complex cameras, codecs, and other hardware
+>>>>> +	  that are integrated at the CPU, GPU or on Image Signalling Processor
+>>>>> +	  and don't use PCI, USB or Firewire buses.
+>>>>> +
+>>>>> +	  This is found on Embedded hardware (SoC), on V4L2 codecs and
+>>>>> +	  on some GPU and newer CPU chipsets.
+>>>>> +
+>>>>> +	  Say Y when you want to be able so see such devices.
+>>>>> +
+>>>>>  source "drivers/media/cec/Kconfig"
+>>>>>  
+>>>>>  source "drivers/media/mc/Kconfig"
+>>>>> @@ -161,15 +173,14 @@ source "drivers/media/dvb-core/Kconfig"
+>>>>>  
+>>>>>  comment "Media drivers"
+>>>>>  
+>>>>> -#
+>>>>> -# V4L platform/mem2mem drivers
+>>>>> -#
+>>>>> -
+>>>>>  source "drivers/media/usb/Kconfig"
+>>>>>  source "drivers/media/pci/Kconfig"
+>>>>> +source "drivers/media/radio/Kconfig"
+>>>>> +
+>>>>> +if MEDIA_PLATFORM_SUPPORT
+>>>>>  source "drivers/media/platform/Kconfig"
+>>>>>  source "drivers/media/mmc/Kconfig"
+>>>>> -source "drivers/media/radio/Kconfig"
+>>>>> +endif
+>>>>>  
+>>>>>  comment "Supported FireWire (IEEE 1394) Adapters"
+>>>>>  	depends on DVB_CORE && FIREWIRE
+>>>>> -------------------------------------------------------------------------------
+>>>>>
+>>>>>
+>>>>> Git bisection log:
+>>>>>
+>>>>> -------------------------------------------------------------------------------
+>>>>> git bisect start
+>>>>> # good: [2632e7b618a7730969f9782593c29ca53553aa22] media: venus: firmware: Ignore secure call error on first resume
+>>>>> git bisect good 2632e7b618a7730969f9782593c29ca53553aa22
+>>>>> # bad: [ba445b7ff43b3e45836a9a290efdc3a36ea63941] media: dt-bindings: rockchip-vpu: Convert bindings to json-schema
+>>>>> git bisect bad ba445b7ff43b3e45836a9a290efdc3a36ea63941
+>>>>> # good: [29d9f30d4ce6c7a38745a54a8cddface10013490] Merge git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next
+>>>>> git bisect good 29d9f30d4ce6c7a38745a54a8cddface10013490
+>>>>> # good: [e109f506074152b7241bcbd3949a099e776cb802] Merge tag 'mtd/for-5.7' of git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux
+>>>>> git bisect good e109f506074152b7241bcbd3949a099e776cb802
+>>>>> # good: [aa1a8ce533324d12696a9f4b71dbc5eb561a2e04] Merge tag 'trace-v5.7' of git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace
+>>>>> git bisect good aa1a8ce533324d12696a9f4b71dbc5eb561a2e04
+>>>>> # good: [c7b6a566b98524baea6a244186e665d22b633545] mm/gup: Mark lock taken only after a successful retake
+>>>>> git bisect good c7b6a566b98524baea6a244186e665d22b633545
+>>>>> # good: [e4da01d8333e500e15a674d75885a9dfcfd31e77] Merge tag 'powerpc-5.7-2' of git://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux
+>>>>> git bisect good e4da01d8333e500e15a674d75885a9dfcfd31e77
+>>>>> # good: [6900433e0fbca146d8170bdf876271cdf3053021] Merge tag 'for-linus-5.7-1' of git://github.com/cminyard/linux-ipmi
+>>>>> git bisect good 6900433e0fbca146d8170bdf876271cdf3053021
+>>>>> # good: [b753101a4ac0b906064a72feec43f5b80a1fe2e5] Merge tag 'kbuild-v5.7-2' of git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild
+>>>>> git bisect good b753101a4ac0b906064a72feec43f5b80a1fe2e5
+>>>>> # bad: [4b32216adb010a364f23a055c45e06e839b089f9] media: split test drivers from platform directory
+>>>>> git bisect bad 4b32216adb010a364f23a055c45e06e839b089f9
+>>>>> # good: [20e2aa812620439d010a3f78ba4e05bc0b3e2861] Merge tag 'perf-urgent-2020-04-12' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+>>>>> git bisect good 20e2aa812620439d010a3f78ba4e05bc0b3e2861
+>>>>> # good: [0785249f8b93836986e9d1bdeefd2a2c13f160af] Merge tag 'timers-urgent-2020-04-12' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+>>>>> git bisect good 0785249f8b93836986e9d1bdeefd2a2c13f160af
+>>>>> # good: [3b50142d8528e1efc1c07f69c540f926c58ab3ad] MAINTAINERS: sort field names for all entries
+>>>>> git bisect good 3b50142d8528e1efc1c07f69c540f926c58ab3ad
+>>>>> # bad: [06b93644f4d102bdfc297159121acc1de794d68d] media: Kconfig: add an option to filter in/out platform drivers
+>>>>> git bisect bad 06b93644f4d102bdfc297159121acc1de794d68d
+>>>>> # good: [d9d6e1f3d5bbca799910072b2110963250e0b9c6] media: dvb-usb: auto-select CYPRESS_FIRMWARE
+>>>>> git bisect good d9d6e1f3d5bbca799910072b2110963250e0b9c6
+>>>>> # first bad commit: [06b93644f4d102bdfc297159121acc1de794d68d] media: Kconfig: add an option to filter in/out platform drivers
+>>>>> -------------------------------------------------------------------------------
+>>>>>   
+>>>>
+>>>
+>>>
+>>>
+>>> Thanks,
+>>> Mauro
+>>>
+>>
+> 
+> 
+
