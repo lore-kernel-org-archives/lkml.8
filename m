@@ -2,118 +2,82 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F38C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 03:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E02CC2BB85
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 03:55:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD5D120857
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 03:47:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFB0E2078B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 03:55:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HDhJ/nf4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RAfqyGIO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390662AbgDODrj (ORCPT
+        id S2393056AbgDODzR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 23:47:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52076 "EHLO
+        Tue, 14 Apr 2020 23:55:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1733225AbgDODrc (ORCPT
+        by vger.kernel.org with ESMTP id S1733225AbgDODzO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 23:47:32 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEC42C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 20:47:30 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id x11so2058946otp.6
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 20:47:30 -0700 (PDT)
+        Tue, 14 Apr 2020 23:55:14 -0400
+Received: from mail-qt1-x82f.google.com (mail-qt1-x82f.google.com [IPv6:2607:f8b0:4864:20::82f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B019C061A0C;
+        Tue, 14 Apr 2020 20:55:14 -0700 (PDT)
+Received: by mail-qt1-x82f.google.com with SMTP id x2so12221126qtr.0;
+        Tue, 14 Apr 2020 20:55:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2wERzDe7tATVzriZTxnBR4nHZ60TDhiwZrL9xlX9mHs=;
-        b=HDhJ/nf4Up5M9CCU7JjmE304j+3W8NeaC6jtzDoPx6NEYqkP2DIslze8nxUDffVPJp
-         a2foi7GtIijOSXfGrwx9zau7WJ0tiHA3SUfodElxVTj3C3ZL0SB/rNnTo2I0AXsXHjGl
-         wCQo6KqHQl2+K9yelicZTRCQe/lKZwcehZX1NgVI9fsa19F4LVS2bA4WAhP9HF/91LN+
-         UscuIzifN5TQTICFsURIjThyK/y56+Dgg+dmBvC+f2m9QFkdXiZpI8ti7SqbGlv8MgRQ
-         ScEacQiI5/NGZcQLDqj0uL83mqgDVgmTxoK1YmhUnARTEEnA1LVmfvLZIXbJ+iIIuinL
-         lHhA==
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=4k8kfX6jIEgDhdAPsrHcln1Ddwi4D7YyK+0yUrDlqSg=;
+        b=RAfqyGIOObyvOPi3F4NT32FtHzHYlWzY/aqw7ooP/b65kZSkZU8Db+XlmbpQ1+wixo
+         znKhltePa+CqaSMni4OgcdV1iESyIoA4OoRmZf8ZJdKkQmcNcbb1/kXukLBKxRU4snuz
+         ZiAKh+Poyyf6Q1LsaC4a78ZaOC0+Tb7+q6OFqOVTBPo9yqZMz+6HBcbJI1QpE4ukR1wd
+         UwUlI3AxMx6cNTnDP9WNT96npeqF+MpGxaAqF4Trvg42Y4KtmP0vn2lICuQNF9ZdRmVB
+         R6bim1DomCYqoibTgJEhU736pMc1PqEtUwNpJons1XfsjzolG0VQwkuHj5KHem532+KG
+         wiUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2wERzDe7tATVzriZTxnBR4nHZ60TDhiwZrL9xlX9mHs=;
-        b=lWyOvxpfquFVYNIzv0jh3keB+Np/Ful2uWx3AYIVNUf2LoHIyhWFKjXwWNU4Fho+IX
-         mhd8x9/8IGbmVN1NY/4W+1GTb9NrJpQpa4KcGBauOFPssdSvOMtJik4bouEt5RTNVLN+
-         ZEwkpvJwZlsrUuuQnzrjrqgflNVZD4LBTnRTgmtXv2+FM1b2k2wd7v5/iHBb2iwyii9G
-         A2l3MeZoQXPfYLLt8ciYStx7eiZuqPlwIrKz4Cnl0DYwFzDlRO0pAlqnYT0UGVic76ra
-         3zh7bppf6tpMOyV9tio5SJakgwLM1iZCkSEGfSeaPb2hVZ3nCsBdMUe1GeYA3gJO9ugR
-         cHjQ==
-X-Gm-Message-State: AGi0PuYdeAQUCnKBk74vSLYNd1+PjwC7DIdVyOpk/Q2SE6dlcYY/aH2b
-        CG7YoMA4a6XQ6cpwMu+d9gL1ToTcqV6h9Ig90mvqRA==
-X-Google-Smtp-Source: APiQypLBqkH/k+r0Q+P5XNNT728lPCjEj5EOjBDRWHqwzMc/XrznT4MoI59oI4gyP6knbyxsIiRIqt59dcHKgpsAbFQ=
-X-Received: by 2002:a4a:df05:: with SMTP id i5mr21515417oou.9.1586922450019;
- Tue, 14 Apr 2020 20:47:30 -0700 (PDT)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=4k8kfX6jIEgDhdAPsrHcln1Ddwi4D7YyK+0yUrDlqSg=;
+        b=LWKnuocMnnVxHrlIZ/WTSIZCAIc/szjfQwN6T1eCCPQfDQGDRt1CMHHeji6TI/KE0P
+         zWo50yueIYQDZPyQLcGLR/aw/b+Kg2jxvg3kqAiNGySlb2W6ZZiso9SrS3mPTu/9gkDY
+         lu1cWuZY6jrBbUV4JtKgCRZhOwgXFcqdUoP4gWmioiH/v5vC1raeydCpo4cBS5Gtv2CA
+         QlawObwF3SJCbqJv6x96BW/s2RBsrLOvHKGRActgHi1KzJzk7DGIgT602NUcC4xc2aIi
+         fscTmjFEe2KkZbspu71dx34Pip3NbaJ2Yr4nIoAQV2bqMmbhD1TtnZp6DOpH9cbmKuCE
+         GSaQ==
+X-Gm-Message-State: AGi0PubW/W9qyqLrqYojQzIpWOlohjAZBBUPrD6YaciggSChRI54ZDhX
+        YsprcyLutDdCaROuFbWODhpyf+k6sszYRA+L1EHS5jPV
+X-Google-Smtp-Source: APiQypKVUr53Ap6X1FAFbvhxyuOhMjonhg5K2CaIS54M/pn4KBL5/M5iMESMu3/e4Tlp1RZatobKR+o+1gzvEI3MX/8=
+X-Received: by 2002:ac8:4e45:: with SMTP id e5mr19662711qtw.101.1586922913095;
+ Tue, 14 Apr 2020 20:55:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <CALAqxLV4rM74wuzuZ+BkUi+keccxkAxv30N4vrFO7CVQ5vnT1A@mail.gmail.com>
- <20200415025748.GV17661@paulmck-ThinkPad-P72>
-In-Reply-To: <20200415025748.GV17661@paulmck-ThinkPad-P72>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Tue, 14 Apr 2020 20:47:18 -0700
-Message-ID: <CALAqxLVsRboF+ABFttCj-kv6yNoAGLw9BaFkggSiGC+Me08gHQ@mail.gmail.com>
-Subject: Re: On trace_*_rcuidle functions in modules
-To:     paulmck@kernel.org
-Cc:     Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Todd Kjos <tkjos@google.com>, Stephen Boyd <sboyd@kernel.org>
+From:   rishi gupta <gupt21@gmail.com>
+Date:   Wed, 15 Apr 2020 09:25:02 +0530
+Message-ID: <CALUj-gsRgkEyRe3vubEeWx8ENwEyE+Fzv4bKKDZ+iq3urRG0BA@mail.gmail.com>
+Subject: Correct place to put the new doc for "How to use this driver"
+To:     linux-doc@vger.kernel.org, corbet@lwn.net
+Cc:     lkml <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 7:57 PM Paul E. McKenney <paulmck@kernel.org> wrote:
->
-> On Tue, Apr 14, 2020 at 07:20:01PM -0700, John Stultz wrote:
-> > Hey folks,
-> >   So recently I was looking at converting some drivers to be loadable
-> > modules instead of built-in only, and one of my patches just landed in
-> > -next and started getting build error reports.
-> >
-> > It ends up, recently in the merge window, the driver I was converting
-> > to module switched a trace_*() function to trace_*_rcuidle() to fix a
-> > bug.  Now when building as a module, if tracing is configured on, it
-> > can't seem to find the trace_*_rcuidle() symbol.
-> >
-> > This is because, as you are aware, we don't declare trace_*_rcuidle
-> > functions in modules - and haven't for quite some time:
-> >   https://lore.kernel.org/lkml/20120905062306.GA14756@leaf/
-> >
-> > I wanted to better understand the background rationale for that patch,
-> > to understand if not exporting the rcu_idle_exit and rcu_idle_enter,
-> > calls was because they weren't used or if it was a more intentional
-> > decision to avoid allowing modules to use them.
-> >
-> > Would it be reasonable to revisit that patch? Or is there some
-> > recommended alternative solution?
->
-> I will defer to Steven and Josh on the rationale.  (Cowardly of me,
-> I know!)
->
-> What I do is to maintain a wrapper for tracepoints within a built-in
-> portion of RCU, export the wrapper, and invoke the wrapper from the
-> rcutorture module.  Maybe you can do something similar?
+Hi Team,
 
-That feels a little hackish, but I guess if there isn't a better option...
+I need to add a documentation file to let users know "how to use this driver".
+Specifically this one (tty-ttyvs.rst): https://lkml.org/lkml/2020/2/15/153
 
-> But why would a module be invoked from the idle loop?  Is the module
-> supplying an idle driver or some such?
+(1) I am unable to find any directory where it will fit. This driver
+belongs to Virtual TTY device category.
+Any suggestions where to put it?
 
-The driver (qcom rpmh driver) registers a cpu_pm notifier callback,
-which gets called when entering idle.
+(2) After putting it is it mandatory to link it to
+Documentation/index.rst as suggested here
+https://www.kernel.org/doc/html/latest/doc-guide/index.html
 
-thanks
--john
+Regards,
+Rishi
