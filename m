@@ -2,77 +2,108 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06D04C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 04:43:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5508C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 04:45:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD9432078B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 04:43:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C2FD20784
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 04:45:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NAdFfQim"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393093AbgDOEny (ORCPT
+        id S2393098AbgDOEpS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 00:43:54 -0400
-Received: from cmccmta3.chinamobile.com ([221.176.66.81]:2383 "EHLO
-        cmccmta3.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727993AbgDOEny (ORCPT
+        Wed, 15 Apr 2020 00:45:18 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:10776 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2393097AbgDOEpQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 00:43:54 -0400
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.11]) by rmmx-syy-dmz-app10-12010 (RichMail) with SMTP id 2eea5e9690f5da2-6200d; Wed, 15 Apr 2020 12:43:34 +0800 (CST)
-X-RM-TRANSID: 2eea5e9690f5da2-6200d
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from localhost.localdomain (unknown[112.25.154.146])
-        by rmsmtp-syy-appsvr06-12006 (RichMail) with SMTP id 2ee65e9690f3a89-00121;
-        Wed, 15 Apr 2020 12:43:33 +0800 (CST)
-X-RM-TRANSID: 2ee65e9690f3a89-00121
-From:   Tang Bin <tangbin@cmss.chinamobile.com>
-To:     broonie@kernel.org, timur@kernel.org, nicoleotsuka@gmail.com,
-        Xiubo.Lee@gmail.com, perex@perex.cz, tiwai@suse.com
-Cc:     alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org,
-        Tang Bin <tangbin@cmss.chinamobile.com>,
-        Shengju Zhang <zhangshengju@cmss.chinamobile.com>
-Subject: [PATCH] ASoC: fsl_micfil: Omit superfluous error message in fsl_micfil_probe()
-Date:   Wed, 15 Apr 2020 12:45:13 +0800
-Message-Id: <20200415044513.17492-1-tangbin@cmss.chinamobile.com>
-X-Mailer: git-send-email 2.20.1.windows.1
+        Wed, 15 Apr 2020 00:45:16 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586925915; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=q3gCiDnOZN7/IwndjJlLd8ej2L8L2thGpNW3oLnTOB4=; b=NAdFfQimVeg8xXZI/qMyLU7zJsT9MsJXo5kYByN9qJ/y6pemm2Nt/TAXNXoVsJuPxDvA48Ad
+ z23NTXe/cXIhhNjVh1G6r/o4TVycD4VaX7iSbm77c68sm7Z3dwDT7Crc/e8LZLSZz3YH120V
+ IJN8SkeHE6dSEV5dAZhhBsbqnuE=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e969157.7efdfb48ec38-smtp-out-n03;
+ Wed, 15 Apr 2020 04:45:11 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E65A6C432C2; Wed, 15 Apr 2020 04:45:10 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C927BC433BA;
+        Wed, 15 Apr 2020 04:45:08 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C927BC433BA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Larry Finger <Larry.Finger@lwfinger.net>,
+        Wireless <linux-wireless@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: Fixes tag needs some work in the wireless-drivers-next tree
+References: <20200415080827.30c2c9c1@canb.auug.org.au>
+        <5b17fefe-f99d-2e4c-ded2-93fd3554687c@lwfinger.net>
+        <20200415110649.39e26be3@canb.auug.org.au>
+Date:   Wed, 15 Apr 2020 07:45:06 +0300
+In-Reply-To: <20200415110649.39e26be3@canb.auug.org.au> (Stephen Rothwell's
+        message of "Wed, 15 Apr 2020 11:06:49 +1000")
+Message-ID: <87tv1ls6gd.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the function fsl_micfil_probe(), when get irq failed, the function 
-platform_get_irq() logs an error message, so remove redundant message here.
+Stephen Rothwell <sfr@canb.auug.org.au> writes:
 
-Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
-Signed-off-by: Shengju Zhang <zhangshengju@cmss.chinamobile.com>
----
- sound/soc/fsl/fsl_micfil.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+> Hi Larry,
+>
+> On Tue, 14 Apr 2020 19:36:28 -0500 Larry Finger <Larry.Finger@lwfinger.net> wrote:
+>>
+>> On 4/14/20 5:08 PM, Stephen Rothwell wrote:
+>> > 
+>> > In commit
+>> > 
+>> >    ec4d3e3a0545 ("b43legacy: Fix case where channel status is corrupted")
+>> > 
+>> > Fixes tag
+>> > 
+>> >    Fixes: 75388acd0cd8 ("add mac80211-based driver for legacy BCM43xx devices")
+>> > 
+>> > has these problem(s):
+>> > 
+>> >    - Subject does not match target commit subject
+>> >      Just use
+>> > 	git log -1 --format='Fixes: %h ("%s")'
+>> 
+>> I do not understand what you want here. The subject describes what was fixed. 
+>> The error has been in the driver since it was merged. The Fixes: line is a 
+>> description of the commit that introduced the driver file with the error.
+>
+> The subject I was referring to is the subject quoted in the Fixes tag,
+> not the subject of the fixing commit.  So:
+>
+> Fixes: 75388acd0cd8 ("[B43LEGACY]: add mac80211-based driver for
+> legacy BCM43xx devices")
+>
+> Its not very important, just a consistency thing - I wouldn't bother
+> rebasing just to fix this, just for the future ...
 
-diff --git a/sound/soc/fsl/fsl_micfil.c b/sound/soc/fsl/fsl_micfil.c
-index f7f2d29f1..e73bd6570 100644
---- a/sound/soc/fsl/fsl_micfil.c
-+++ b/sound/soc/fsl/fsl_micfil.c
-@@ -702,10 +702,8 @@ static int fsl_micfil_probe(struct platform_device *pdev)
- 	for (i = 0; i < MICFIL_IRQ_LINES; i++) {
- 		micfil->irq[i] = platform_get_irq(pdev, i);
- 		dev_err(&pdev->dev, "GET IRQ: %d\n", micfil->irq[i]);
--		if (micfil->irq[i] < 0) {
--			dev_err(&pdev->dev, "no irq for node %s\n", pdev->name);
-+		if (micfil->irq[i] < 0)
- 			return micfil->irq[i];
--		}
- 	}
- 
- 	if (of_property_read_bool(np, "fsl,shared-interrupt"))
+Yeah, I don't normally rebase wireless-drivers-next so this has to be
+like this. But hopefully some time in the future I'll end up adding a
+check for this in my patchwork script.
+
 -- 
-2.20.1.windows.1
-
-
-
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
