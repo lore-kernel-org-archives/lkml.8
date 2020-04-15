@@ -2,293 +2,218 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E782BC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:26:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7708AC3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:26:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C011020771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:26:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="caooqgVO"
+	by mail.kernel.org (Postfix) with ESMTP id 5CF3820768
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:26:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895483AbgDOJ0G (ORCPT
+        id S2895510AbgDOJ06 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 05:26:06 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:36187 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2895464AbgDOJ0C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 05:26:02 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 492H5z5J9xz9tyhP;
-        Wed, 15 Apr 2020 11:25:59 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=caooqgVO; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id kBycoh46IrJf; Wed, 15 Apr 2020 11:25:59 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 492H5z4D9qz9tyhL;
-        Wed, 15 Apr 2020 11:25:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1586942759; bh=jCpxvczM71sn8Azp6qeNjlE7psKDaCPGFaX6QgvzGx0=;
-        h=From:Subject:To:Cc:Date:From;
-        b=caooqgVOJ+rDrRs50lcWq5fpgCJLKuTOUfebOPgPE5wImF41Jk7+OxoxHud1hS/QB
-         b0zKfR1QPqn2gCrE07LNRkh2Dwq+qkFU2x94X/wAN1wmScffTBolqvQF8LVvxreenn
-         wwOvScoLI3yGu30zy85H+OZAB2ZNSCJlu1o4xWvo=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8B4B78B933;
-        Wed, 15 Apr 2020 11:26:00 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id ASgRXOUP5tVO; Wed, 15 Apr 2020 11:26:00 +0200 (CEST)
-Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3B32C8B92E;
-        Wed, 15 Apr 2020 11:26:00 +0200 (CEST)
-Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id C6E7E65788; Wed, 15 Apr 2020 09:25:59 +0000 (UTC)
-Message-Id: <c9abd91e9bb0b3dd6e3470015e92b98bc2483780.1586942304.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v2] powerpc/uaccess: Implement unsafe_put_user() using 'asm
- goto'
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, npiggin@gmail.com,
-        segher@kernel.crashing.org
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Wed, 15 Apr 2020 09:25:59 +0000 (UTC)
+        Wed, 15 Apr 2020 05:26:58 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:7830 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2895484AbgDOJ0x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 05:26:53 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03F94e4T000539
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 05:26:52 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30dnmgefpa-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 05:26:52 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <imbrenda@linux.ibm.com>;
+        Wed, 15 Apr 2020 10:26:09 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 15 Apr 2020 10:26:05 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03F9QiTZ20185188
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 Apr 2020 09:26:44 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5C9CD42049;
+        Wed, 15 Apr 2020 09:26:44 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A2FD742042;
+        Wed, 15 Apr 2020 09:26:43 +0000 (GMT)
+Received: from p-imbrenda (unknown [9.145.12.13])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 15 Apr 2020 09:26:43 +0000 (GMT)
+Date:   Wed, 15 Apr 2020 11:26:39 +0200
+From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     linux-next@vger.kernel.org, akpm@linux-foundation.org,
+        jack@suse.cz, kirill@shutemov.name, borntraeger@de.ibm.com,
+        david@redhat.com, aarcange@redhat.com, linux-mm@kvack.org,
+        frankja@linux.ibm.com, sfr@canb.auug.org.au, jhubbard@nvidia.com,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        Will Deacon <will@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: Re: [PATCH v4 2/2] mm/gup/writeback: add callbacks for inaccessible
+ pages
+In-Reply-To: <93dc9885-adb4-8b9d-a62a-e40301053551@intel.com>
+References: <20200306132537.783769-1-imbrenda@linux.ibm.com>
+        <20200306132537.783769-3-imbrenda@linux.ibm.com>
+        <11dc928d-60b4-f04f-1ebf-f4cffb337a6c@intel.com>
+        <20200414180300.52640444@p-imbrenda>
+        <93dc9885-adb4-8b9d-a62a-e40301053551@intel.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20041509-0020-0000-0000-000003C82C68
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20041509-0021-0000-0000-000022210D3B
+Message-Id: <20200415112639.525e25bc@p-imbrenda>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-15_01:2020-04-14,2020-04-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ mlxlogscore=999 phishscore=0 lowpriorityscore=0 adultscore=0
+ impostorscore=0 spamscore=0 malwarescore=0 clxscore=1015 mlxscore=0
+ bulkscore=0 priorityscore=1501 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2003020000 definitions=main-2004150066
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-unsafe_put_user() is designed to take benefit of 'asm goto'.
+On Tue, 14 Apr 2020 11:50:16 -0700
+Dave Hansen <dave.hansen@intel.com> wrote:
 
-Instead of using the standard __put_user() approach and branch
-based on the returned error, use 'asm goto' and make the
-exception code branch directly to the error label. There is
-no code anymore in the fixup section.
+> On 4/14/20 9:03 AM, Claudio Imbrenda wrote:
+> > On Mon, 13 Apr 2020 13:22:24 -0700
+> > Dave Hansen <dave.hansen@intel.com> wrote:
+> >   
+> >> On 3/6/20 5:25 AM, Claudio Imbrenda wrote:  
+> >>> On s390x the function is not supposed to fail, so it is ok to use
+> >>> a WARN_ON on failure. If we ever need some more finegrained
+> >>> handling we can tackle this when we know the details.    
+> >>
+> >> Could you explain a bit why the function can't fail?  
+> > 
+> > the concept of "making accessible" is only to make sure that
+> > accessing the page will not trigger faults or I/O or DMA errors. in
+> > general it does not mean freely accessing the content of the page
+> > in cleartext. 
+> > 
+> > on s390x, protected guest pages can be shared. the guest has to
+> > actively share its pages, and in that case those pages are both
+> > part of the protected VM and freely accessible by the host.  
+> 
+> Oh, that's interesting.
+> 
+> It sounds like there are three separate concepts:
+> 1. Protection
+> 2. Sharing
+> 3. Accessibility
+> 
+> Protected pages may be shared and the request of the guest.
+> Shared pages' plaintext can be accessed by the host.  For unshared
+> pages, the host can only see ciphertext.
+> 
+> I wonder if Documentation/virt/kvm/s390-pv.rst can be beefed up with
+> some of this information.  It seems a bit sparse on this topic.
 
-This change significantly simplifies functions using
-unsafe_put_user()
+that is definitely something that can be fixed.
 
-Small exemple of the benefit with the following code:
+I will improve the documentation and make sure it properly explains
+all the details of how protected VMs work on s390x.
 
-struct test {
-	u32 item1;
-	u16 item2;
-	u8 item3;
-	u64 item4;
-};
+> As it stands, if I were modifying generic code, I don't think I'd have
+> even a chance of getting an arch_make_page_accessible() in the right
+> spot.
+> 
+> > in our case "making the page accessible" means:  
+> ...
+> >  - if the page was not shared, first encrypt it and then make it
+> >    accessible to the host (both operations performed securely and
+> >    atomically by the hardware)  
+> 
+> What happens to the guest's view of the page when this happens?  Does
+> it keep seeing plaintext?
+> 
+> > then the page can be swapped out, or used for direct I/O (obviously
+> > if you do I/O on a page that was not shared, you cannot expect good
+> > things to happen, since you basically corrupt the memory of the
+> > guest).  
+> 
+> So why even allow access to the encrypted contents if the host can't
+> do anything useful with it?  Is there some reason for going to the
+> trouble of encrypting it and exposing it to the host?
 
-int set_test_to_user(struct test __user *test, u32 item1, u16 item2, u8 item3, u64 item4)
-{
-	unsafe_put_user(item1, &test->item1, failed);
-	unsafe_put_user(item2, &test->item2, failed);
-	unsafe_put_user(item3, &test->item3, failed);
-	unsafe_put_user(item4, &test->item4, failed);
-	return 0;
-failed:
-	return -EFAULT;
-}
+you should not overwrite it, but you can/should write it out verbatim,
+e.g. for swap
 
-Before the patch:
+> > on s390x performing I/O directly on protected pages results in (in
+> > practice) unrecoverable I/O errors, so we want to avoid it at all
+> > costs.  
+> 
+> This is understandable, but we usually steer I/O operations in places
+> like the DMA API, not in the core VM.
+> 
+> We *have* the concept of pages to which I/O can't be done.  There are
+> plenty of crippled devices where we have to bounce data into a low
+> buffer before it can go where we really want it to.  I think the AMD
+> SEV patches do this, for instance.
+> 
+> > accessing protected pages from the CPU triggers an exception that
+> > can be handled (and we do handle it, in fact)
+> > 
+> > now imagine a buggy or malicious qemu process crashing the whole
+> > machine just because it did I/O to/from a protected page. we
+> > clearly don't want that.  
+> 
+> Is DMA disallowed to *all* protected pages?  Even pages which the
+> guest has explicitly shared with the host?
+> 
+> 
+> >>> @@ -2807,6 +2807,13 @@ int __test_set_page_writeback(struct page
+> >>> *page, bool keep_write) inc_zone_page_state(page,
+> >>> NR_ZONE_WRITE_PENDING); }
+> >>>  	unlock_page_memcg(page);
+> >>> +	access_ret = arch_make_page_accessible(page);
+> >>> +	/*
+> >>> +	 * If writeback has been triggered on a page that cannot
+> >>> be made
+> >>> +	 * accessible, it is too late to recover here.
+> >>> +	 */
+> >>> +	VM_BUG_ON_PAGE(access_ret != 0, page);
+> >>> +
+> >>>  	return ret;
+> >>>  
+> >>>  }    
+> >>
+> >> This seems like a really odd place to do this.  Writeback is
+> >> specific to block I/O.  I would have thought there were other
+> >> kinds of devices that matter, not just block devices.  
+> > 
+> > well, yes and no. for writeback (block I/O and swap) this is the
+> > right place. at this point we know that the page is present and
+> > nobody else has started doing I/O yet, and I/O will happen
+> > soon-ish. so we make the page accessible. there is no turning back
+> > here, unlike pinning. we are not allowed to fail, we can't   
+> 
+> This description sounds really incomplete to me.
+> 
+> Not all swap involved device I/O.  For instance, zswap doesn't involve
+> any devices.  Would zswap need this hook?
 
-00000be8 <set_test_to_user>:
- be8:	39 20 00 00 	li      r9,0
- bec:	90 83 00 00 	stw     r4,0(r3)
- bf0:	2f 89 00 00 	cmpwi   cr7,r9,0
- bf4:	40 9e 00 38 	bne     cr7,c2c <set_test_to_user+0x44>
- bf8:	b0 a3 00 04 	sth     r5,4(r3)
- bfc:	2f 89 00 00 	cmpwi   cr7,r9,0
- c00:	40 9e 00 2c 	bne     cr7,c2c <set_test_to_user+0x44>
- c04:	98 c3 00 06 	stb     r6,6(r3)
- c08:	2f 89 00 00 	cmpwi   cr7,r9,0
- c0c:	40 9e 00 20 	bne     cr7,c2c <set_test_to_user+0x44>
- c10:	90 e3 00 08 	stw     r7,8(r3)
- c14:	91 03 00 0c 	stw     r8,12(r3)
- c18:	21 29 00 00 	subfic  r9,r9,0
- c1c:	7d 29 49 10 	subfe   r9,r9,r9
- c20:	38 60 ff f2 	li      r3,-14
- c24:	7d 23 18 38 	and     r3,r9,r3
- c28:	4e 80 00 20 	blr
- c2c:	38 60 ff f2 	li      r3,-14
- c30:	4e 80 00 20 	blr
+please feel free to write to me privately if you have any further
+questions or doubts :)
 
-00000000 <.fixup>:
-	...
-  b8:	39 20 ff f2 	li      r9,-14
-  bc:	48 00 00 00 	b       bc <.fixup+0xbc>
-			bc: R_PPC_REL24	.text+0xbf0
-  c0:	39 20 ff f2 	li      r9,-14
-  c4:	48 00 00 00 	b       c4 <.fixup+0xc4>
-			c4: R_PPC_REL24	.text+0xbfc
-  c8:	39 20 ff f2 	li      r9,-14
-  cc:	48 00 00 00 	b       cc <.fixup+0xcc>
-			cc: R_PPC_REL24	.text+0xc08
-  d0:	39 20 ff f2 	li      r9,-14
-  d4:	48 00 00 00 	b       d4 <.fixup+0xd4>
-			d4: R_PPC_REL24	.text+0xc18
 
-00000000 <__ex_table>:
-	...
-			a0: R_PPC_REL32	.text+0xbec
-			a4: R_PPC_REL32	.fixup+0xb8
-			a8: R_PPC_REL32	.text+0xbf8
-			ac: R_PPC_REL32	.fixup+0xc0
-			b0: R_PPC_REL32	.text+0xc04
-			b4: R_PPC_REL32	.fixup+0xc8
-			b8: R_PPC_REL32	.text+0xc10
-			bc: R_PPC_REL32	.fixup+0xd0
-			c0: R_PPC_REL32	.text+0xc14
-			c4: R_PPC_REL32	.fixup+0xd0
+best regards,
 
-After the patch:
-
-00000be8 <set_test_to_user>:
- be8:	90 83 00 00 	stw     r4,0(r3)
- bec:	b0 a3 00 04 	sth     r5,4(r3)
- bf0:	98 c3 00 06 	stb     r6,6(r3)
- bf4:	90 e3 00 08 	stw     r7,8(r3)
- bf8:	91 03 00 0c 	stw     r8,12(r3)
- bfc:	38 60 00 00 	li      r3,0
- c00:	4e 80 00 20 	blr
- c04:	38 60 ff f2 	li      r3,-14
- c08:	4e 80 00 20 	blr
-
-00000000 <__ex_table>:
-	...
-			a0: R_PPC_REL32	.text+0xbe8
-			a4: R_PPC_REL32	.text+0xc04
-			a8: R_PPC_REL32	.text+0xbec
-			ac: R_PPC_REL32	.text+0xc04
-			b0: R_PPC_REL32	.text+0xbf0
-			b4: R_PPC_REL32	.text+0xc04
-			b8: R_PPC_REL32	.text+0xbf4
-			bc: R_PPC_REL32	.text+0xc04
-			c0: R_PPC_REL32	.text+0xbf8
-			c4: R_PPC_REL32	.text+0xc04
-
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
-v2:
-- Grouped most __goto() macros together
-- Removed stuff in .fixup section, referencing the error label
-directly from the extable
-- Using more flexible addressing in asm.
----
- arch/powerpc/include/asm/uaccess.h | 61 +++++++++++++++++++++++++-----
- 1 file changed, 52 insertions(+), 9 deletions(-)
-
-diff --git a/arch/powerpc/include/asm/uaccess.h b/arch/powerpc/include/asm/uaccess.h
-index dee71e9c7618..5d323e4f2ce1 100644
---- a/arch/powerpc/include/asm/uaccess.h
-+++ b/arch/powerpc/include/asm/uaccess.h
-@@ -93,12 +93,12 @@ static inline int __access_ok(unsigned long addr, unsigned long size,
- #define __get_user(x, ptr) \
- 	__get_user_nocheck((x), (ptr), sizeof(*(ptr)), true)
- #define __put_user(x, ptr) \
--	__put_user_nocheck((__typeof__(*(ptr)))(x), (ptr), sizeof(*(ptr)), true)
-+	__put_user_nocheck((__typeof__(*(ptr)))(x), (ptr), sizeof(*(ptr)))
-+#define __put_user_goto(x, ptr, label) \
-+	__put_user_nocheck_goto((__typeof__(*(ptr)))(x), (ptr), sizeof(*(ptr)), label)
- 
- #define __get_user_allowed(x, ptr) \
- 	__get_user_nocheck((x), (ptr), sizeof(*(ptr)), false)
--#define __put_user_allowed(x, ptr) \
--	__put_user_nocheck((__typeof__(*(ptr)))(x), (ptr), sizeof(*(ptr)), false)
- 
- #define __get_user_inatomic(x, ptr) \
- 	__get_user_nosleep((x), (ptr), sizeof(*(ptr)))
-@@ -162,17 +162,14 @@ do {								\
- 	prevent_write_to_user(ptr, size);			\
- } while (0)
- 
--#define __put_user_nocheck(x, ptr, size, do_allow)			\
-+#define __put_user_nocheck(x, ptr, size)			\
- ({								\
- 	long __pu_err;						\
- 	__typeof__(*(ptr)) __user *__pu_addr = (ptr);		\
- 	if (!is_kernel_addr((unsigned long)__pu_addr))		\
- 		might_fault();					\
- 	__chk_user_ptr(ptr);					\
--	if (do_allow)								\
--		__put_user_size((x), __pu_addr, (size), __pu_err);		\
--	else									\
--		__put_user_size_allowed((x), __pu_addr, (size), __pu_err);	\
-+	__put_user_size((x), __pu_addr, (size), __pu_err);		\
- 	__pu_err;						\
- })
- 
-@@ -196,6 +193,52 @@ do {								\
- })
- 
- 
-+#define __put_user_asm_goto(x, addr, label, op)			\
-+	asm volatile goto(					\
-+		"1:	" op "%U1%X1 %0,%1	# put_user\n"	\
-+		EX_TABLE(1b, %l2)				\
-+		:						\
-+		: "r" (x), "m" (*addr)				\
-+		:						\
-+		: label)
-+
-+#ifdef __powerpc64__
-+#define __put_user_asm2_goto(x, ptr, label)			\
-+	__put_user_asm_goto(x, ptr, label, "std")
-+#else /* __powerpc64__ */
-+#define __put_user_asm2_goto(x, addr, label)			\
-+	asm volatile goto(					\
-+		"1:	stw%U1%X1 %0, %1\n"			\
-+		"2:	stw%U1%X1 %L0, %L1\n"			\
-+		EX_TABLE(1b, %l2)				\
-+		EX_TABLE(2b, %l2)				\
-+		:						\
-+		: "r" (x), "m" (*addr)				\
-+		:						\
-+		: label)
-+#endif /* __powerpc64__ */
-+
-+#define __put_user_size_goto(x, ptr, size, label)		\
-+do {								\
-+	switch (size) {						\
-+	case 1: __put_user_asm_goto(x, ptr, label, "stb"); break;	\
-+	case 2: __put_user_asm_goto(x, ptr, label, "sth"); break;	\
-+	case 4: __put_user_asm_goto(x, ptr, label, "stw"); break;	\
-+	case 8: __put_user_asm2_goto(x, ptr, label); break;	\
-+	default: __put_user_bad();				\
-+	}							\
-+} while (0)
-+
-+#define __put_user_nocheck_goto(x, ptr, size, label)		\
-+do {								\
-+	__typeof__(*(ptr)) __user *__pu_addr = (ptr);		\
-+	if (!is_kernel_addr((unsigned long)__pu_addr))		\
-+		might_fault();					\
-+	__chk_user_ptr(ptr);					\
-+	__put_user_size_goto((x), __pu_addr, (size), label);	\
-+} while (0)
-+
-+
- extern long __get_user_bad(void);
- 
- /*
-@@ -470,7 +513,7 @@ static __must_check inline bool user_access_begin(const void __user *ptr, size_t
- 
- #define unsafe_op_wrap(op, err) do { if (unlikely(op)) goto err; } while (0)
- #define unsafe_get_user(x, p, e) unsafe_op_wrap(__get_user_allowed(x, p), e)
--#define unsafe_put_user(x, p, e) unsafe_op_wrap(__put_user_allowed(x, p), e)
-+#define unsafe_put_user(x, p, e) __put_user_goto(x, p, e)
- #define unsafe_copy_to_user(d, s, l, e) \
- 	unsafe_op_wrap(raw_copy_to_user_allowed(d, s, l), e)
- 
--- 
-2.25.0
+Claudio Imbrenda
 
