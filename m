@@ -2,130 +2,126 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4399BC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:30:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC34C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17B9920732
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:30:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586979012;
-	bh=HcxMWDYswwSk16CJXI7QG7JgXa8lgyRgaEpGjU1zGT0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=19XTjhfVtqXBiBuP8Ii6E+sh5c+6S7/ES40p+BdiTAfSbCKp4qYYNq8WXbTvNmjU7
-	 0AiWpx44fy7Ar2gefGvMYlr71ecOpncN/3dXw9h2V6pdShDRrqGZhCYsVnAxaWWOaO
-	 FpylimUlCOPylJdI2aMtKOGzeV9LtYigwN67EbIU=
+	by mail.kernel.org (Postfix) with ESMTP id 307B720732
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:30:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441790AbgDOTaK (ORCPT
+        id S2441798AbgDOTaO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 15:30:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55134 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437842AbgDOT37 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 15:29:59 -0400
-Received: from localhost (unknown [213.57.247.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF1C520774;
-        Wed, 15 Apr 2020 19:29:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586978998;
-        bh=HcxMWDYswwSk16CJXI7QG7JgXa8lgyRgaEpGjU1zGT0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=18LdT+B4dO4XKOdbgBT1rE8jARtHpNmRaiCUmOgAu7rk7jVGCFxtr+tTfUMqwFGMb
-         ZwOKmWfXgpuNviXjE3qZRnMwSGRgYlnHg58T1M11d7ZNU+5XtsnBJ2aZm+ICz2SDNL
-         E2mRQsg8FYQQ6dpMXrqfeg6ciZ+MBeHYlRos5IFY=
-Date:   Wed, 15 Apr 2020 22:29:52 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Ralph Campbell <rcampbell@nvidia.com>
-Cc:     Jason Gunthorpe <jgg@mellanox.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>, linux-rdma@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v8 0/3] mm/hmm/test: add self tests for HMM
-Message-ID: <20200415192952.GA1309273@unreal>
-References: <20200321003108.22941-1-rcampbell@nvidia.com>
- <20200415144125.GU11945@mellanox.com>
- <6d7adb28-96a0-5dc5-e85e-68fca2db403a@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6d7adb28-96a0-5dc5-e85e-68fca2db403a@nvidia.com>
+        Wed, 15 Apr 2020 15:30:14 -0400
+Received: from baldur.buserror.net ([165.227.176.147]:35686 "EHLO
+        baldur.buserror.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2441787AbgDOTaI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 15:30:08 -0400
+Received: from [2601:449:8480:af0:12bf:48ff:fe84:c9a0]
+        by baldur.buserror.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <oss@buserror.net>)
+        id 1jOnhQ-0007A4-KH; Wed, 15 Apr 2020 14:27:52 -0500
+Message-ID: <f2a1f91f92c0fe4bce46c28222dea355d96e2090.camel@buserror.net>
+From:   Scott Wood <oss@buserror.net>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Wang Wenhu <wenhu.wang@vivo.com>, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Cc:     kernel@vivo.com, Michael Ellerman <mpe@ellerman.id.au>
+Date:   Wed, 15 Apr 2020 14:27:51 -0500
+In-Reply-To: <37b6b890-e537-7424-6b26-04565681f40a@c-s.fr>
+References: <20200415124929.GA3265842@kroah.com>
+         <20200415152442.122873-1-wenhu.wang@vivo.com>
+         <20200415152442.122873-6-wenhu.wang@vivo.com>
+         <37b6b890-e537-7424-6b26-04565681f40a@c-s.fr>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2601:449:8480:af0:12bf:48ff:fe84:c9a0
+X-SA-Exim-Rcpt-To: christophe.leroy@c-s.fr, wenhu.wang@vivo.com, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, kernel@vivo.com, mpe@ellerman.id.au
+X-SA-Exim-Mail-From: oss@buserror.net
+Subject: Re: [PATCH v2,5/5] drivers: uio: new driver for fsl_85xx_cache_sram
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on baldur.buserror.net)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 10:28:23AM -0700, Ralph Campbell wrote:
->
-> On 4/15/20 7:41 AM, Jason Gunthorpe wrote:
-> > On Fri, Mar 20, 2020 at 05:31:05PM -0700, Ralph Campbell wrote:
-> > > This series adds basic self tests for HMM and are intended for Jason
-> > > Gunthorpe's rdma tree which has a number of HMM patches applied.
-> >
-> > Here are some hunks I noticed while testing this:
-> >
-> > --- a/lib/Kconfig.debug
-> > +++ b/lib/Kconfig.debug
-> > @@ -2201,7 +2201,8 @@ config TEST_MEMINIT
-> >   config TEST_HMM
-> >   	tristate "Test HMM (Heterogeneous Memory Management)"
-> > -	depends on DEVICE_PRIVATE
-> > +	depends on TRANSPARENT_HUGEPAGE
-> > +	select DEVICE_PRIVATE
-> >   	select HMM_MIRROR
-> >   	select MMU_NOTIFIER
-> >   	help
-> >
-> > It fails testing if TRANSPARENT_HUGEPAGE is not on
-> >
-> > @@ -1097,6 +1071,7 @@ static int dmirror_device_init(struct dmirror_device *mdevice, int id)
-> >   	spin_lock_init(&mdevice->lock);
-> >   	cdev_init(&mdevice->cdevice, &dmirror_fops);
-> > +	mdevice->cdevice.owner = THIS_MODULE;
-> >   	ret = cdev_add(&mdevice->cdevice, dev, 1);
-> >   	if (ret)
-> >   		return ret;
-> >
-> > The use of cdev without a struct device is super weird, but it still
-> > needs this
-> >
-> > diff --git a/tools/testing/selftests/vm/test_hmm.sh b/tools/testing/selftests/vm/test_hmm.sh
-> > index 461e4a99a362cf..0647b525a62564 100755
-> > --- a/tools/testing/selftests/vm/test_hmm.sh
-> > +++ b/tools/testing/selftests/vm/test_hmm.sh
-> > @@ -59,7 +59,7 @@ run_smoke()
-> >   	echo "Running smoke test. Note, this test provides basic coverage."
-> >   	load_driver
-> > -	./hmm-tests
-> > +	$(dirname "${BASH_SOURCE[0]}")/hmm-tests
-> >   	unload_driver
-> >   }
-> >
-> > Make it runnably reliably
-> >
-> > Jason
->
-> Thanks for the fixes. I'll apply these and send a v9.
-> I will also add missing calls to release_mem_region() to free the reserved device private
-> addresses.
+On Wed, 2020-04-15 at 18:52 +0200, Christophe Leroy wrote:
+> 
+> Le 15/04/2020 à 17:24, Wang Wenhu a écrit :
+> > +
+> > +		if (uiomem >= &info->mem[MAX_UIO_MAPS]) {
+> 
+> I'd prefer
+> 		if (uiomem - info->mem >= MAX_UIO_MAPS) {
+> 
+> > +			dev_warn(&pdev->dev, "more than %d uio-maps for
+> > device.\n",
+> > +				 MAX_UIO_MAPS);
+> > +			break;
+> > +		}
+> > +	}
+> > +
+> > +	while (uiomem < &info->mem[MAX_UIO_MAPS]) {
+> 
+> I'd prefer
+> 
+> 	while (uiomem - info->mem < MAX_UIO_MAPS) {
+> 
 
-If you decide to ignore my request to avoid addition of special header
-file to UAPI, at least don't copy and install that file without some
-special CONFIG option (TEST_HMM ???) requested by the users. It also
-will be good to get Acked-by on this change from HMM people.
+I wouldn't.  You're turning a simple comparison into a division and a
+comparison (if the compiler doesn't optimize it back into the original form),
+and making it less clear in the process.
 
-However, I still think that include/uapi/linux/test_hmm.h opens
-pandora box of having UAPI files without real promise to keep it
-backward compatible.
+Of course, working with array indices to begin with instead of incrementing a
+pointer would be more idiomatic.
 
-Thanks
+> > +		uiomem->size = 0;
+> > +		++uiomem;
+> > +	}
+> > +
+> > +	if (info->mem[0].size == 0) {
+> 
+> Is there any point in doing all the clearing loop above if it's to bail 
+> out here ?
+> 
+> Wouldn't it be cleaner to do the test above the clearing loop, by just 
+> checking whether uiomem is still equal to info->mem ?
 
->
+There's no point doing the clearing at all, since the array was allocated with
+kzalloc().
+
+> > +		dev_err(&pdev->dev, "error no valid uio-map configured\n");
+> > +		ret = -EINVAL;
+> > +		goto err_info_free_internel;
+> > +	}
+> > +
+> > +	info->version = "0.1.0";
+> 
+> Could you define some DRIVER_VERSION in the top of the file next to 
+> DRIVER_NAME instead of hard coding in the middle on a function ?
+
+That's what v1 had, and Greg KH said to remove it.  I'm guessing that he
+thought it was the common-but-pointless practice of having the driver print a
+version number that never gets updated, rather than something the UIO API
+(unfortunately, compared to a feature query interface) expects.  That said,
+I'm not sure what the value is of making it a macro since it should only be
+used once, that use is self documenting, it isn't tunable, etc.  Though if
+this isn't a macro, UIO_NAME also shouldn't be (and if it is made a macro
+again, it should be UIO_VERSION, not DRIVER_VERSION).
+
+Does this really need a three-part version scheme?  What's wrong with a
+version of "1", to be changed to "2" in the hopefully-unlikely event that the
+userspace API changes?  Assuming UIO is used for this at all, which doesn't
+seem like a great fit to me.
+
+-Scott
+
+
