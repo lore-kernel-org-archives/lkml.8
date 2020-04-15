@@ -2,97 +2,117 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F433C2BB55
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:05:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C9EC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:06:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3A1B20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:05:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2103420737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:06:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fudan.edu.cn header.i=@fudan.edu.cn header.b="jMjJteDB"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dqWbXVjd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2896732AbgDOLF2 (ORCPT
+        id S2896738AbgDOLGU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:05:28 -0400
-Received: from mail.fudan.edu.cn ([202.120.224.73]:56524 "EHLO fudan.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2408845AbgDOLEO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:04:14 -0400
+        Wed, 15 Apr 2020 07:06:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35002 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2408836AbgDOLDI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:03:08 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FBDBC061A10
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 04:03:06 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id a25so18603702wrd.0
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 04:03:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fudan.edu.cn; s=dkim; h=Received:Date:From:To:Cc:Subject:
-        Message-ID:References:MIME-Version:Content-Type:
-        Content-Disposition:In-Reply-To; bh=EQJkaChu07Wb5zNeSc4Q2eAuqN9B
-        /MkelX8i1XndZjM=; b=jMjJteDBHiV26NRygYKv2+f1aO25a/Jmf6v70ZNRfyIS
-        RM7fBjQAWWEGsDc9XBZsKpD4JAncQ9ifL5l0Lh/GjMIox6KkO3MYIXTPAPKCb2BU
-        +9pQXiV0CcNDjI7YTfJtW1Inm0s2X79JIiKsMWvE+O34ugmSLtsi8HoPB2zhQv4=
-Received: from localhost (unknown [61.129.42.58])
-        by app2 (Coremail) with SMTP id XQUFCgC3mV4D6pZe0LRaAA--.5091S2;
-        Wed, 15 Apr 2020 19:03:31 +0800 (CST)
-Date:   Wed, 15 Apr 2020 19:03:30 +0800
-From:   Xiyu Yang <xiyuyang19@fudan.edu.cn>
-To:     Sven Eckelmann <sven@narfation.org>
-Cc:     Marek Lindner <mareklindner@neomailbox.ch>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
-        Antonio Quartulli <a@unstable.cc>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        b.a.t.m.a.n@lists.open-mesh.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, yuanxzhang@fudan.edu.cn,
-        kjlu@umn.edu, Xin Tan <tanxin.ctf@gmail.com>
-Subject: Re: [PATCH] batman-adv: Fix refcnt leak in
- batadv_show_throughput_override
-Message-ID: <20200415110330.GA71449@sherlly>
-References: <1586939510-69461-1-git-send-email-xiyuyang19@fudan.edu.cn>
- <28340414.QPzbqP6r4N@bentobox>
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=63+Kapds64fF8VnH8kQ6DVrjXzlI9XalKF9fI3VjpmQ=;
+        b=dqWbXVjdQwjBJE5+Q3mHBZLR/g7DBUYdxPAhik4lttLfusKXdE3xujCQIyupg7KdMP
+         dsIMIE4q+Y2QWiBRiCvMHGnmtt67QMsXzGA61zJTcRh9B4zDJMTkhTsIpuqYd8xu8Ic1
+         oFOhzdxHgH4SVcC4CpHuLpKTwG04jAS3jmdZhu6+59ccN/3+93tDntZr84WxtSh/eXr2
+         AjloNumg87+LMov24pYo37U8ZbVEVk/hESCzRniMAP9EAQvjfcFGZO1Q4on5Bqc5As9z
+         te8spmsxZspjB1Vv2c1wDR5vpRY5J7EfcxjTyZD7x4k0XQjPYb52aY2cX5yyixhgVm97
+         gFSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=63+Kapds64fF8VnH8kQ6DVrjXzlI9XalKF9fI3VjpmQ=;
+        b=D2WrlprRMRC+t7pM4IxQNAJi+2KvCwaiZX/poDDQ/7NPz50q6VWn23CshnrM7WaLYv
+         LGgVQYOoUliYWvXZGFFZ1+9i/DHp0uTt3LfacewOvYz8VErKgrENFgq9z8liWdkDODPB
+         uhSkAdeprGrJNqXf3x6PPQ69wxX+fanK5NzOxJsKE4b7qtZv5gcvadW/0FEtm+p1dSq+
+         209pyS1UYrY/Goz46aRHAYIb1NNUxHnm6x1Jd+Z3aizsQtoMGlHMG3t7UTonjHz+F0XS
+         NiXpylOWV+Us+4e7Hfmu2UsF0JbVgd7n4oNUlIjNA0fp+xzNON7WGbYKG4kaG7DB7+rm
+         8jrg==
+X-Gm-Message-State: AGi0Pua++G8LprO3ZwPSGKS9bOmbd/5pw7iPGzVMuGzLbbiRt1uFj5yE
+        JdsuOa5AzCgc4Mj1ibMYPW0VJQ==
+X-Google-Smtp-Source: APiQypLdt898OWc/sug/xv0mEQBtfTQQ07gc4gV91+6KybjmQja5SFIZ+jv8Lm+nIZQPUI/bU+3R+w==
+X-Received: by 2002:adf:8149:: with SMTP id 67mr29872018wrm.60.1586948585205;
+        Wed, 15 Apr 2020 04:03:05 -0700 (PDT)
+Received: from dell ([95.149.164.124])
+        by smtp.gmail.com with ESMTPSA id q17sm14179579wmj.45.2020.04.15.04.03.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2020 04:03:04 -0700 (PDT)
+Date:   Wed, 15 Apr 2020 12:04:05 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mfd: rohm-bdXXX - switch to use i2c probe_new
+Message-ID: <20200415110405.GJ2167633@dell>
+References: <20200326064852.GA23265@localhost.localdomain>
+ <20200415095052.GI2167633@dell>
+ <a4b45b01e78c37e23cc4e464ec07d2364e02e379.camel@fi.rohmeurope.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <28340414.QPzbqP6r4N@bentobox>
-X-CM-TRANSID: XQUFCgC3mV4D6pZe0LRaAA--.5091S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrurW7Xw1UGr17tw4UZF47urg_yoW3KFbE9F
-        s3urykKa4vkF4UA398WFWrJF43GayrXr17Jw10vry3JF95ur15uF93CFn7GF1FyFZ2q3Z8
-        ArnrZ3s8Jwna9jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUb-8YjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I
-        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
-        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0
-        cI8IcVCY1x0267AKxVWxJr0_GcWl84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4
-        A2jsIEc7CjxVAFwI0_GcCE3s1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28I
-        cVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx
-        0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACI402
-        YVCY1x02628vn2kIc2xKxwCY02Avz4vE14v_Gw4l42xK82IYc2Ij64vIr41l4I8I3I0E4I
-        kC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWU
-        WwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr
-        0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWr
-        Zr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr
-        1UYxBIdaVFxhVjvjDU0xZFpf9x07jzbyZUUUUU=
-X-CM-SenderInfo: irzsiiysuqikmy6i3vldqovvfxof0/
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a4b45b01e78c37e23cc4e464ec07d2364e02e379.camel@fi.rohmeurope.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 11:04:02AM +0200, Sven Eckelmann wrote:
-> On Wednesday, 15 April 2020 10:31:50 CEST Xiyu Yang wrote:
-> [...]
-> > Fix this issue by calling batadv_hardif_put() before the
-> [...]
-> 
-> Thanks, fixes for batadv_store_throughput_override [1] and 
-> batadv_show_throughput_override [2] were applied. I've also added the missing 
-> Fixes: line to both patches.
-> 
-> May I ask whether you are still a user of the deprecated sysfs interface or 
-> did you find this in an automated fashion?
-> 
-> Thanks,
-> 	Sven
-> 
-> [1] https://git.open-mesh.org/linux-merge.git/commit/cd339d8b14cd895d8333d94d832b05f67f00eefc
-> [2] https://git.open-mesh.org/linux-merge.git/commit/3d3e548f74fe51aee9a3c9e297518a2655dbc642
+On Wed, 15 Apr 2020, Vaittinen, Matti wrote:
 
-Thanks for your confirmation! We are looking for some automated ways to find this kind of bug.
+> Hello Lee,
+> 
+> On Wed, 2020-04-15 at 10:50 +0100, Lee Jones wrote:
+> > On Thu, 26 Mar 2020, Matti Vaittinen wrote:
+> > 
+> > > ROHM BD70528 and BD718x7 drivers do not utilize the I2C id.
+> > > Do the trivial conversion and make them to use probe_new
+> > > instead of probe.
+> > 
+> > Not sure I understand the purpose of the patch.
+> > 
+> > The only reason to switch to probe_new is to aid the removal of the
+> > compulsory I2C tables.  However, neither of these drivers have them.
+> 
+> Maybe I have misunderstood the probe_new. My understanding was that the
+> probe_new is what should become the standard - Eg. eventually all I2C
+> drivers would use probe which is not getting the ID tables as argument
+> - and the old probe could be removed. Thus I thought conversion of
+> probe to probe_new would be required in order to get rid of the old
+> probe. I think I got this understanding when I submitted driver for
+> BD71828 - and I think it was you who suggested me to switch to
+> probe_new as 'id' was unused. But if please just drop this patch if
+> this change is not needed!
 
+Some I2C drivers do make use of 'id' though.  So the standard probe
+will probably never go away.  I wrote probe_new for drivers that
+wished to omit the I2C table.  A better use of your time would be to
+go through the original probe users and figure out which I2C tables
+can be removed.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
