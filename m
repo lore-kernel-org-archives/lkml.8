@@ -7,34 +7,36 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95CBCC2BB85
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24FC9C3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:23:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D02320784
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:23:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FA4820784
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:23:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2635890AbgDOIXY (ORCPT
+        id S2894385AbgDOIX3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 04:23:24 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2376 "EHLO huawei.com"
+        Wed, 15 Apr 2020 04:23:29 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:59446 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2635867AbgDOIXS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 04:23:18 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 1DF0D655974E4098D7B1;
-        Wed, 15 Apr 2020 16:23:16 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Wed, 15 Apr 2020
- 16:23:05 +0800
+        id S2635882AbgDOIXW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 04:23:22 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 04D32D7354590BD9E99B;
+        Wed, 15 Apr 2020 16:23:20 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Wed, 15 Apr 2020
+ 16:23:12 +0800
 From:   Jason Yan <yanaijie@huawei.com>
-To:     <robert.moore@intel.com>, <erik.kaneda@intel.com>,
-        <rafael.j.wysocki@intel.com>, <lenb@kernel.org>,
-        <linux-acpi@vger.kernel.org>, <devel@acpica.org>,
+To:     <pbonzini@redhat.com>, <sean.j.christopherson@intel.com>,
+        <vkuznets@redhat.com>, <wanpengli@tencent.com>,
+        <jmattson@google.com>, <joro@8bytes.org>, <tglx@linutronix.de>,
+        <mingo@redhat.com>, <bp@alien8.de>, <x86@kernel.org>,
+        <hpa@zytor.com>, <kvm@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
 CC:     Jason Yan <yanaijie@huawei.com>, Hulk Robot <hulkci@huawei.com>
-Subject: [PATCH] ACPICA: make acpi_protocol_lengths static
-Date:   Wed, 15 Apr 2020 16:49:33 +0800
-Message-ID: <20200415084933.6251-1-yanaijie@huawei.com>
+Subject: [PATCH] x86/kvm: make steal_time static
+Date:   Wed, 15 Apr 2020 16:49:39 +0800
+Message-ID: <20200415084939.6367-1-yanaijie@huawei.com>
 X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
@@ -48,28 +50,28 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Fix the following sparse warning:
 
-drivers/acpi/acpica/exfield.c:25:10: warning: symbol
-'acpi_protocol_lengths' was not declared. Should it be static?
+arch/x86/kernel/kvm.c:58:1: warning: symbol '__pcpu_scope_steal_time'
+was not declared. Should it be static?
 
 Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: Jason Yan <yanaijie@huawei.com>
 ---
- drivers/acpi/acpica/exfield.c | 2 +-
+ arch/x86/kernel/kvm.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/acpi/acpica/exfield.c b/drivers/acpi/acpica/exfield.c
-index e85eb31e5075..3323a2ba6a31 100644
---- a/drivers/acpi/acpica/exfield.c
-+++ b/drivers/acpi/acpica/exfield.c
-@@ -22,7 +22,7 @@ ACPI_MODULE_NAME("exfield")
-  */
- #define ACPI_INVALID_PROTOCOL_ID        0x80
- #define ACPI_MAX_PROTOCOL_ID            0x0F
--const u8 acpi_protocol_lengths[] = {
-+static const u8 acpi_protocol_lengths[] = {
- 	ACPI_INVALID_PROTOCOL_ID,	/* 0 - reserved */
- 	ACPI_INVALID_PROTOCOL_ID,	/* 1 - reserved */
- 	0x00,			/* 2 - ATTRIB_QUICK */
+diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+index 6efe0410fb72..f75010cde5d5 100644
+--- a/arch/x86/kernel/kvm.c
++++ b/arch/x86/kernel/kvm.c
+@@ -55,7 +55,7 @@ static int __init parse_no_stealacc(char *arg)
+ early_param("no-steal-acc", parse_no_stealacc);
+ 
+ static DEFINE_PER_CPU_DECRYPTED(struct kvm_vcpu_pv_apf_data, apf_reason) __aligned(64);
+-DEFINE_PER_CPU_DECRYPTED(struct kvm_steal_time, steal_time) __aligned(64) __visible;
++static DEFINE_PER_CPU_DECRYPTED(struct kvm_steal_time, steal_time) __aligned(64) __visible;
+ static int has_steal_clock = 0;
+ 
+ /*
 -- 
 2.21.1
 
