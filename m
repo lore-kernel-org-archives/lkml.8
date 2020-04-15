@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8EF1C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:33:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC52C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:33:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 953FD2076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:33:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 623922076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:33:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586972023;
-	bh=NBTRHQwpI7VXKcRnKdEPYNRajSRwZhec2cc7h/2DMFI=;
+	s=default; t=1586972032;
+	bh=Kb43s7UcY0gAmb1E2JqIB0n+FpVohSNuM0G4HK1hwZ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GxhBDVhBGDEhdMkPq32OiEMdGyXA9Xrv9WyCUjVab1ka9TSwsQiKZeA4BWORimjl2
-	 b8uA7IkTCcaK705osRT8Rlg9ewQhD4TF1tzhU8KXayx6i6tF8U8rBQ8bVG1B3RsdZs
-	 cY/Gtf8W4RvSqsr5UorzBMyZWayT0YDQtrB7XODc=
+	b=eoydtdwspSJSvEmmpBqhMfHmbCTFaKbmmSR18Qs2sz4aoUotzKjxWt4JzxSII9jdI
+	 n7mPlmvYa9nq6VRPWrVAqUJgHGBjrKQeFD4Uq27hd3kD9cKAv2746U7sKNLO2aoWDz
+	 SnyLGSxJCVg3/jyv4Yd1i4gTyhxrkMuWW5q+2ybk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2411327AbgDORdl (ORCPT
+        id S2411336AbgDORds (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 13:33:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46300 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 13:33:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2411129AbgDORbH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2411127AbgDORbH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Apr 2020 13:31:07 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC7022166E;
-        Wed, 15 Apr 2020 17:31:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D10521775;
+        Wed, 15 Apr 2020 17:31:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586971865;
-        bh=NBTRHQwpI7VXKcRnKdEPYNRajSRwZhec2cc7h/2DMFI=;
+        s=default; t=1586971866;
+        bh=Kb43s7UcY0gAmb1E2JqIB0n+FpVohSNuM0G4HK1hwZ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BsOLXdPU4wF6JQAVNEfprum5HraFwCgzukUOc5Rz7U4SaJX162GW8NevpyFH7h96Q
-         03+jBryn3rttYxGWeoUDudmKKWeaiFSDnKLH5OoRMNy3ABVOSf2m/FbgtvOsCj0YUo
-         CUPXEdQ63c6cuLnnpVA4l36/huZNifR4xw8xXmIA=
+        b=rukd+V7jBcswJRqHLk/W2/9i6Fdw6wNaCIVJQNZWF9oUxpBA+j/3Web5kPfzb3kPc
+         LigHe5kEyPJqm2bQyfyxtY1xHiPFI9si3sQs4OgQ5IVgrE050QqFLGl1wO2eKCdOHj
+         v3mMp08AQhI2KO2y4cCawUDrHEs8egQ16CHQ77Wk=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 10/18] torture: Make --kcsan argument also create a summary
-Date:   Wed, 15 Apr 2020 10:30:52 -0700
-Message-Id: <20200415173100.9927-10-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 14/18] torture: Allow --kconfig options to override --kcsan defaults
+Date:   Wed, 15 Apr 2020 10:30:56 -0700
+Message-Id: <20200415173100.9927-14-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200415173037.GA9768@paulmck-ThinkPad-P72>
 References: <20200415173037.GA9768@paulmck-ThinkPad-P72>
@@ -61,84 +61,59 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-The KCSAN tool emits a great many warnings for current kernels, for
-example, a one-hour run of the full set of rcutorture scenarios results
-in no fewer than 3252 such warnings, many of which are duplicates
-or are otherwise closely related.  This commit therefore introduces
-a kcsan-collapse.sh script that maps these warnings down to a set of
-function pairs (22 of them given the 3252 individual warnings), placing
-the resulting list in decreasing order of frequency of occurrence into
-a kcsan.sum file.  If any KCSAN warnings were produced, the pathname of
-this file is emitted at the end of the summary of the rcutorture runs.
+Currently, attempting to override a --kcsan default with a --kconfig
+option might or might not work.  However, it would be good to allow the
+user to adjust the --kcsan defaults, for example, to specify a different
+time for CONFIG_KCSAN_REPORT_ONCE_IN_MS.  This commit therefore uses the
+new config_override_param() bash function to apply the --kcsan defaults
+and then apply the --kconfig options, which allows this overriding
+to occur.
 
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- .../selftests/rcutorture/bin/kcsan-collapse.sh     | 22 ++++++++++++++++++++++
- .../selftests/rcutorture/bin/kvm-recheck.sh        |  9 +++++++++
- tools/testing/selftests/rcutorture/bin/kvm.sh      |  1 +
- 3 files changed, 32 insertions(+)
- create mode 100755 tools/testing/selftests/rcutorture/bin/kcsan-collapse.sh
+ tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh | 7 ++++---
+ tools/testing/selftests/rcutorture/bin/kvm.sh            | 3 ---
+ 2 files changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/tools/testing/selftests/rcutorture/bin/kcsan-collapse.sh b/tools/testing/selftests/rcutorture/bin/kcsan-collapse.sh
-new file mode 100755
-index 0000000..e5cc6b2
---- /dev/null
-+++ b/tools/testing/selftests/rcutorture/bin/kcsan-collapse.sh
-@@ -0,0 +1,22 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0+
-+#
-+# If this was a KCSAN run, collapse the reports in the various console.log
-+# files onto pairs of functions.
-+#
-+# Usage: kcsan-collapse.sh resultsdir
-+#
-+# Copyright (C) 2020 Facebook, Inc.
-+#
-+# Authors: Paul E. McKenney <paulmck@kernel.org>
-+
-+if test -z "$TORTURE_KCONFIG_KCSAN_ARG"
-+then
-+	exit 0
-+fi
-+cat $1/*/console.log |
-+	grep "BUG: KCSAN: " |
-+	sed -e 's/^\[[^]]*] //' |
-+	sort |
-+	uniq -c |
-+	sort -k1nr > $1/kcsan.sum
-diff --git a/tools/testing/selftests/rcutorture/bin/kvm-recheck.sh b/tools/testing/selftests/rcutorture/bin/kvm-recheck.sh
-index 0326f4a..736f047 100755
---- a/tools/testing/selftests/rcutorture/bin/kvm-recheck.sh
-+++ b/tools/testing/selftests/rcutorture/bin/kvm-recheck.sh
-@@ -70,6 +70,15 @@ do
- 			fi
- 		fi
- 	done
-+	if test -f "$rd/kcsan.sum"
-+	then
-+		if test -s "$rd/kcsan.sum"
-+		then
-+			echo KCSAN summary in $rd/kcsan.sum
-+		else
-+			echo Clean KCSAN run in $rd
-+		fi
-+	fi
- done
- EDITOR=echo kvm-find-errors.sh "${@: -1}" > $T 2>&1
- ret=$?
+diff --git a/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh b/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh
+index 1801b06..b7296f1 100755
+--- a/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh
++++ b/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh
+@@ -73,8 +73,9 @@ else
+ fi
+ echo " --- $config_template" >> $resdir/ConfigFragment.input
+ cat $config_template >> $resdir/ConfigFragment.input
+-config_override_param "--kconfig argument" Kc1 Kc2 "$TORTURE_KCONFIG_ARG"
+-cp $T/Kc2 $resdir/ConfigFragment
++config_override_param "--kcsan options" Kc1 Kc2 "$TORTURE_KCONFIG_KCSAN_ARG"
++config_override_param "--kconfig argument" Kc2 Kc3 "$TORTURE_KCONFIG_ARG"
++cp $T/Kc3 $resdir/ConfigFragment
+ 
+ base_resdir=`echo $resdir | sed -e 's/\.[0-9]\+$//'`
+ if test "$base_resdir" != "$resdir" -a -f $base_resdir/bzImage -a -f $base_resdir/vmlinux
+@@ -87,7 +88,7 @@ then
+ 	ln -s $base_resdir/.config $resdir  # for kvm-recheck.sh
+ 	# Arch-independent indicator
+ 	touch $resdir/builtkernel
+-elif kvm-build.sh $T/Kc2 $resdir
++elif kvm-build.sh $T/Kc3 $resdir
+ then
+ 	# Had to build a kernel for this test.
+ 	QEMU="`identify_qemu vmlinux`"
 diff --git a/tools/testing/selftests/rcutorture/bin/kvm.sh b/tools/testing/selftests/rcutorture/bin/kvm.sh
-index 34b368d..75ae8e3 100755
+index 75ae8e3..e001fc4 100755
 --- a/tools/testing/selftests/rcutorture/bin/kvm.sh
 +++ b/tools/testing/selftests/rcutorture/bin/kvm.sh
-@@ -472,6 +472,7 @@ echo
- echo
- echo " --- `date` Test summary:"
- echo Results directory: $resdir/$ds
-+kcsan-collapse.sh $resdir/$ds
- kvm-recheck.sh $resdir/$ds
- ___EOF___
+@@ -205,9 +205,6 @@ else
+ 	exit 1
+ fi
  
+-TORTURE_KCONFIG_ARG="${TORTURE_KCONFIG_ARG} ${TORTURE_KCONFIG_KCSAN_ARG}"
+-TORTURE_KCONFIG_ARG="`echo ${TORTURE_KCONFIG_ARG} | sed -e 's/^ *//' -e 's/ *$//'`"
+-
+ CONFIGFRAG=${KVM}/configs/${TORTURE_SUITE}; export CONFIGFRAG
+ 
+ defaultconfigs="`tr '\012' ' ' < $CONFIGFRAG/CFLIST`"
 -- 
 2.9.5
 
