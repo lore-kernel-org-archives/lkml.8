@@ -2,74 +2,103 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1151C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:35:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17155C2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:35:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BF5520767
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:35:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E20FE2078B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:35:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586954139;
+	bh=/irDkQP3S01BEZbw9nCn3Y6bK2sKx+ShTIuFgYre9FA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=GMeRvpvMEKKv1nE2lS5vQsB7c47zhuZkARQHIir/dRDrwdwW3FDXswHKTbdnb/c43
+	 ngeCAEK4UZ7KGvmBoBgCF1RmoraYnEWTDKPI0/wfAm97WGC9SuTAvZp5W6eOqlrQjN
+	 3Cpb+x1qjy0oC4mSIf5C7UPzHcoL1g4wmtt1YvTA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S369802AbgDOMfP (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:35:15 -0400
-Received: from m177134.mail.qiye.163.com ([123.58.177.134]:2551 "EHLO
-        m177134.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S369745AbgDOMeX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 08:34:23 -0400
-Received: from ubuntu.localdomain (unknown [58.251.74.226])
-        by m17618.mail.qiye.163.com (Hmail) with ESMTPA id A5EC54E23DF;
-        Wed, 15 Apr 2020 20:34:16 +0800 (CST)
-From:   Wang Wenhu <wenhu.wang@vivo.com>
-To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        oss@buserror.net, christophe.leroy@c-s.fr,
-        linuxppc-dev@lists.ozlabs.org
-Cc:     kernel@vivo.com, Wang Wenhu <wenhu.wang@vivo.com>
-Subject: [PATCH 0/5] drivers: uio: new driver uio_fsl_85xx_cache_sram
-Date:   Wed, 15 Apr 2020 05:33:41 -0700
-Message-Id: <20200415123346.116212-1-wenhu.wang@vivo.com>
-X-Mailer: git-send-email 2.17.1
+        id S369781AbgDOMet (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:34:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36768 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2409063AbgDOLoM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:44:12 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 461AA214AF;
+        Wed, 15 Apr 2020 11:44:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586951052;
+        bh=/irDkQP3S01BEZbw9nCn3Y6bK2sKx+ShTIuFgYre9FA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=VqftkIhNL8i79/4Dwad+1yjvM63LLMvw25gLlTTKZQ7u8gioypnq/2+uCFI1wTZGD
+         zRS6qliz316dvK8k4TV2Y5D9PvyHl0o3pmrByiwKqeTBbHKI0zKsqTCkggcQJdpV25
+         rFTLITUNwSxODdEbiMgP+Vqp0uq12665oJWnfFVQ=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Alan Maguire <alan.maguire@oracle.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Richard Weinberger <richard@nod.at>,
+        Sasha Levin <sashal@kernel.org>, linux-um@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.5 086/106] um: falloc.h needs to be directly included for older libc
+Date:   Wed, 15 Apr 2020 07:42:06 -0400
+Message-Id: <20200415114226.13103-86-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
+References: <20200415114226.13103-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUlXWQgYFAkeWUFZTVVPTklLS0tKT0pKT0hDWVdZKFlBSE
-        83V1ktWUFJV1kJDhceCFlBWTU0KTY6NyQpLjc#WQY+
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MjI6KSo*CTgzQwgDA0I5IzQc
-        MzMKCQxVSlVKTkNNQk5PS05CS0tMVTMWGhIXVQweFRMOVQwaFRw7DRINFFUYFBZFWVdZEgtZQVlO
-        Q1VJTkpVTE9VSUlNWVdZCAFZQUlKSk43Bg++
-X-HM-Tid: 0a717dd534d09376kuwsa5ec54e23df
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series add a new uio driver for freescale 85xx platforms to
-access the Cache-Sram form user level. This is extremely helpful
-for the user-space applications that require high performance memory
-accesses.
+From: Alan Maguire <alan.maguire@oracle.com>
 
-It fixes the compile errors and warning of the hardware level drivers
-and implements the uio driver in uio_fsl_85xx_cache_sram.c.
+[ Upstream commit 35f3401317a3b26aa01fde8facfd320f2628fdcc ]
 
-Wang Wenhu (5):
-  powerpc: 85xx: make FSL_85XX_CACHE_SRAM configurable
-  powerpc: sysdev: fix compile error for fsl_85xx_cache_sram
-  powerpc: sysdev: fix compile warning for fsl_85xx_cache_sram
-  powerpc: sysdev: fix compile error for fsl_85xx_l2ctlr
-  drivers: uio: new driver for fsl_85xx_cache_sram
+When building UML with glibc 2.17 installed, compilation
+of arch/um/os-Linux/file.c fails due to failure to find
+FALLOC_FL_PUNCH_HOLE and FALLOC_FL_KEEP_SIZE definitions.
 
- arch/powerpc/platforms/85xx/Kconfig       |   2 +-
- arch/powerpc/platforms/Kconfig.cputype    |   5 +-
- arch/powerpc/sysdev/fsl_85xx_cache_sram.c |   3 +-
- arch/powerpc/sysdev/fsl_85xx_l2ctlr.c     |   1 +
- drivers/uio/Kconfig                       |   8 +
- drivers/uio/Makefile                      |   1 +
- drivers/uio/uio_fsl_85xx_cache_sram.c     | 195 ++++++++++++++++++++++
- 7 files changed, 211 insertions(+), 4 deletions(-)
- create mode 100644 drivers/uio/uio_fsl_85xx_cache_sram.c
+It appears that /usr/include/bits/fcntl-linux.h (indirectly
+included by /usr/include/fcntl.h) does not include falloc.h
+with an older glibc, whereas a more up-to-date version
+does.
 
+Adding the direct include to file.c resolves the issue
+and does not cause problems for more recent glibc.
+
+Fixes: 50109b5a03b4 ("um: Add support for DISCARD in the UBD Driver")
+Cc: Brendan Higgins <brendanhiggins@google.com>
+Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+Acked-By: Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Signed-off-by: Richard Weinberger <richard@nod.at>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/um/os-Linux/file.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/um/os-Linux/file.c b/arch/um/os-Linux/file.c
+index 5133e3afb96f7..3996937e2c0dd 100644
+--- a/arch/um/os-Linux/file.c
++++ b/arch/um/os-Linux/file.c
+@@ -8,6 +8,7 @@
+ #include <errno.h>
+ #include <fcntl.h>
+ #include <signal.h>
++#include <linux/falloc.h>
+ #include <sys/ioctl.h>
+ #include <sys/mount.h>
+ #include <sys/socket.h>
 -- 
-2.17.1
+2.20.1
 
