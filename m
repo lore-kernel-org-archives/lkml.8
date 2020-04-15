@@ -2,404 +2,94 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1111BC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:19:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2AECC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:20:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6544F2072D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:19:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE11F2072D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:20:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="o50zeO4q"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ev9CSshm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392946AbgDOCTn (ORCPT
+        id S2407896AbgDOCU2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 22:19:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38524 "EHLO
+        Tue, 14 Apr 2020 22:20:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392934AbgDOCTY (ORCPT
+        with ESMTP id S2392934AbgDOCUM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 22:19:24 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63563C061A0C;
-        Tue, 14 Apr 2020 19:19:24 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 6F2032D1;
-        Wed, 15 Apr 2020 04:19:20 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1586917160;
-        bh=tCMsVdkuBTSbuG7qe/D7439fgOuKvf3pWe38yt2askU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=o50zeO4qyxrwgUTYWstmx1eDr+CAlNSTP2/NiSOJfIPnOmSkv+SlIVvT371fZARqC
-         4zIjXj3sJCYSDvQzEsKvP+5+Baw6xQKDD7FR/RQ1+TCav8euezJcqBp/rKaAtokOax
-         hD7KAwe4UJsWDzYcZ4ZENZ+YAprPDA4osxNqGGPU=
-Date:   Wed, 15 Apr 2020 05:19:08 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Guido =?utf-8?Q?G=C3=BCnther?= <agx@sigxcpu.org>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Robert Chiras <robert.chiras@nxp.com>,
-        Sam Ravnborg <sam@ravnborg.org>, Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v11 1/2] dt-bindings: display/bridge: Add binding for NWL
- mipi dsi host controller
-Message-ID: <20200415021908.GH19819@pendragon.ideasonboard.com>
-References: <cover.1586427783.git.agx@sigxcpu.org>
- <147ffc1e4dee3a623e5dca25d84565d386a34112.1586427783.git.agx@sigxcpu.org>
- <20200410112342.GB4751@pendragon.ideasonboard.com>
- <20200410124516.GA27532@bogon.m.sigxcpu.org>
- <20200410125732.GE4751@pendragon.ideasonboard.com>
- <20200412163835.GB4007@bogon.m.sigxcpu.org>
+        Tue, 14 Apr 2020 22:20:12 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC8B1C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 19:20:12 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id i22so1863197otp.12
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 19:20:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=YgPSbyNGvVAoCuqxUNRN4NpvxLHfZUZwSYt/tFcW1eg=;
+        b=ev9CSshmpd288OI2RySLh2q2mgmSffhzS/LnOCL38PGI3ZsMqiL0rPSGgnbtmlw5EL
+         NhkILugezD7xMSKBJ+PJPlDo3aYyXF1RieA0dXPDz7eQd/KzXyd30KRray7Zvb2NCK03
+         YoHqTRD4A8BV+iPiReVBaXpzabySWyCuWb+NOm6ywm1NO39EFOFp9ePDBmwI8J7MkQow
+         ZyIPIoai6Jm2JypvCm9HBfBehqlu/kmhUqH5YN8S6c5CRTjE9R3STlMNFCJNCbs8XE8g
+         JQ2TSRlQtEWSTd1bnG0ttffyDPzTyXvqw+mqwJ9J9hZqgU53tLybMP7oJHn46lZaj5FB
+         dIKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=YgPSbyNGvVAoCuqxUNRN4NpvxLHfZUZwSYt/tFcW1eg=;
+        b=Jrfs68OAYbd672gl/X439RhAPX47pTDejHrs70aIRBF859n1NSnOIRbb0kFdp/fjfk
+         DoW4o34k6F8Szyc09W3Sq+XbdBOG3WRvfbBsvstDe0GZUCn3lITd3GwMquHxgpnJRFOg
+         hbw9PBKugL7KKC7qpO9EEnBtgfCp9qJHD+H95s78P7QgAd1+qZQV2wJ4g4efiQtJVhh+
+         LHmZ7r2tbo3oEYzsGDvMwR/AjEOi7vH5j412L84ZPS9eUYB5VC/2Q7DiGhJcF3UFt/wp
+         HHyJbHWfWvzwN7st8Li/JEZLYJUA4lrXZGRB1v24b2mGCwkDX1o1HELzKxtf67kUY2oC
+         svjg==
+X-Gm-Message-State: AGi0PuYRv5Ebzqunj7jvgErNQKT0HKz2kQQCmjmy0RAGNGwoXW0c0SBa
+        ZUJhBmOcM3I2kE217cLGXkdcjYMxcxaZPW8S35qA3w==
+X-Google-Smtp-Source: APiQypJbJVHBMOgHcTS4BGuutJMmdrlcohkCbUpyNWvmKFjsa0z87Ut3vCJXMeOUxLX1dxAeBEhNt3o7rl9Rl5rMcE4=
+X-Received: by 2002:a9d:3988:: with SMTP id y8mr11164280otb.352.1586917212201;
+ Tue, 14 Apr 2020 19:20:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200412163835.GB4007@bogon.m.sigxcpu.org>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Tue, 14 Apr 2020 19:20:01 -0700
+Message-ID: <CALAqxLV4rM74wuzuZ+BkUi+keccxkAxv30N4vrFO7CVQ5vnT1A@mail.gmail.com>
+Subject: On trace_*_rcuidle functions in modules
+To:     paulmck@kernel.org, Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Todd Kjos <tkjos@google.com>, Stephen Boyd <sboyd@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Guido,
+Hey folks,
+  So recently I was looking at converting some drivers to be loadable
+modules instead of built-in only, and one of my patches just landed in
+-next and started getting build error reports.
 
-On Sun, Apr 12, 2020 at 06:38:35PM +0200, Guido Günther wrote:
-> On Fri, Apr 10, 2020 at 03:57:32PM +0300, Laurent Pinchart wrote:
-> > On Fri, Apr 10, 2020 at 02:45:16PM +0200, Guido Günther wrote:
-> >> On Fri, Apr 10, 2020 at 02:23:42PM +0300, Laurent Pinchart wrote:
-> >>> On Thu, Apr 09, 2020 at 12:42:01PM +0200, Guido Günther wrote:
-> >>>> The Northwest Logic MIPI DSI IP core can be found in NXPs i.MX8 SoCs.
-> >>>> 
-> >>>> Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> >>>> Tested-by: Robert Chiras <robert.chiras@nxp.com>
-> >>>> Reviewed-by: Rob Herring <robh@kernel.org>
-> >>>> Acked-by: Sam Ravnborg <sam@ravnborg.org>
-> >>>> Reviewed-by: Fabio Estevam <festevam@gmail.com>
-> >>>> ---
-> >>>>  .../bindings/display/bridge/nwl-dsi.yaml      | 226 ++++++++++++++++++
-> >>>>  1 file changed, 226 insertions(+)
-> >>>>  create mode 100644 Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
-> >>>> 
-> >>>> diff --git a/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
-> >>>> new file mode 100644
-> >>>> index 000000000000..8aff2d68fc33
-> >>>> --- /dev/null
-> >>>> +++ b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
-> >>>> @@ -0,0 +1,226 @@
-> >>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> >>>> +%YAML 1.2
-> >>>> +---
-> >>>> +$id: http://devicetree.org/schemas/display/bridge/nwl-dsi.yaml#
-> >>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >>>> +
-> >>>> +title: Northwest Logic MIPI-DSI controller on i.MX SoCs
-> >>>> +
-> >>>> +maintainers:
-> >>>> +  - Guido Gúnther <agx@sigxcpu.org>
-> >>>> +  - Robert Chiras <robert.chiras@nxp.com>
-> >>>> +
-> >>>> +description: |
-> >>>> +  NWL MIPI-DSI host controller found on i.MX8 platforms. This is a dsi bridge for
-> >>>> +  the SOCs NWL MIPI-DSI host controller.
-> >>>> +
-> >>>> +properties:
-> >>>> +  compatible:
-> >>>> +    const: fsl,imx8mq-nwl-dsi
-> >>>> +
-> >>>> +  reg:
-> >>>> +    maxItems: 1
-> >>>> +
-> >>>> +  interrupts:
-> >>>> +    maxItems: 1
-> >>>> +
-> >>>> +  '#address-cells':
-> >>>> +    const: 1
-> >>>> +
-> >>>> +  '#size-cells':
-> >>>> +    const: 0
-> >>>> +
-> >>>> +  clocks:
-> >>>> +    items:
-> >>>> +      - description: DSI core clock
-> >>>> +      - description: RX_ESC clock (used in escape mode)
-> >>>> +      - description: TX_ESC clock (used in escape mode)
-> >>>> +      - description: PHY_REF clock
-> >>>> +      - description: LCDIF clock
-> >>>> +
-> >>>> +  clock-names:
-> >>>> +    items:
-> >>>> +      - const: core
-> >>>> +      - const: rx_esc
-> >>>> +      - const: tx_esc
-> >>>> +      - const: phy_ref
-> >>>> +      - const: lcdif
-> >>>> +
-> >>>> +  mux-controls:
-> >>>> +    description:
-> >>>> +      mux controller node to use for operating the input mux
-> >>>> +
-> >>>> +  phys:
-> >>>> +    maxItems: 1
-> >>>> +    description:
-> >>>> +      A phandle to the phy module representing the DPHY
-> >>>> +
-> >>>> +  phy-names:
-> >>>> +    items:
-> >>>> +      - const: dphy
-> >>>> +
-> >>>> +  power-domains:
-> >>>> +    maxItems: 1
-> >>>> +
-> >>>> +  resets:
-> >>>> +    items:
-> >>>> +      - description: dsi byte reset line
-> >>>> +      - description: dsi dpi reset line
-> >>>> +      - description: dsi esc reset line
-> >>>> +      - description: dsi pclk reset line
-> >>>> +
-> >>>> +  reset-names:
-> >>>> +    items:
-> >>>> +      - const: byte
-> >>>> +      - const: dpi
-> >>>> +      - const: esc
-> >>>> +      - const: pclk
-> >>>> +
-> >>>> +  ports:
-> >>>> +    type: object
-> >>>> +    description:
-> >>>> +      A node containing DSI input & output port nodes with endpoint
-> >>>> +      definitions as documented in
-> >>>> +      Documentation/devicetree/bindings/graph.txt.
-> >>>> +    properties:
-> >>>> +      port@0:
-> >>>> +        type: object
-> >>>> +        description:
-> >>>> +          Input port node to receive pixel data from the
-> >>>> +          display controller. Exactly one endpoint must be
-> >>>> +          specified.
-> >>>> +        properties:
-> >>>> +          '#address-cells':
-> >>>> +            const: 1
-> >>>> +
-> >>>> +          '#size-cells':
-> >>>> +            const: 0
-> >>>> +
-> >>>> +          endpoint@0:
-> >>>> +            description: sub-node describing the input from LCDIF
-> >>>> +            type: object
-> >>>> +
-> >>>> +          endpoint@1:
-> >>>> +            description: sub-node describing the input from DCSS
-> >>>> +            type: object
-> >>> 
-> >>> This models the two inputs to the IP core, that are connected to a mux
-> >>> internally, controlled through mux-controls, right ? Why is a single
-> >>> endpoint supported then, if there are two connections at the hardware
-> >>> level, and why is this using endpoints instead of ports as there are
-> >>> really two input ports ?
-> >> 
-> >> That came out of
-> >> 
-> >> https://lore.kernel.org/linux-arm-kernel/c86b7ca2-7799-eafd-c380-e4b551520837@samsung.com/
-> >> 
-> >> # If the ip has separate lines for DCSS and LCDIF you should distinguish
-> >> # by port number. If they are shared
-> >> # you can use endpoint number to specify DCSS or LCDIF, in both cases
-> >> # bindings should be adjusted.
-> >> 
-> >> I read that as
-> >> 
-> >> - distinguish by endpoint number:
-> >> 
-> >>     eLCDIF--\    |
-> >>              ----| nwl
-> >>     DCSS----/    |
-> >> 
-> >> - distinguish by port number:
-> >> 
-> >>     eLCDIF-------|
-> >>                  | nwl
-> >>     DCSS --------|
-> > 
-> > I fully agree with you here, but in the first case I would expect the
-> > mux to be outside of the NWL, while in the second case it would be
-> > inside. If I understand the issue correctly, the mux is not part of the
-> > NWL, right ? The endpoint model would then be good, but leaves the issue
-> > Documentation/devicetree/bindings/media/video-mux.txt, but that would
-> > require some support on the driver side. Do you think it would be a good
-> > way forward ?
-> 
-> Binding wise that looks like a good fit. I then thought about the
-> implementation and figured we'd end up with something like a bridge that
-> basically muxes inputs - or did you have something different in mind? That
-> sounds generally useful when we e.g. look at runtime switching the input
-> display controller.
+It ends up, recently in the merge window, the driver I was converting
+to module switched a trace_*() function to trace_*_rcuidle() to fix a
+bug.  Now when building as a module, if tracing is configured on, it
+can't seem to find the trace_*_rcuidle() symbol.
 
-That's exactly what I have in mind. There's a video-mux driver in V4L2
-that does exactly this, we would need something similar for DRM/KMS.
-There's an additional challenge in that bridges are supposed to have a
-single input and a single output at the moment, so API extensions would
-be needed, which could take some time to get right. Shortcuts may be
-possible to achieve a first implementation that would hardcode a
-particular input, as long as the DT bindings are fine.
+This is because, as you are aware, we don't declare trace_*_rcuidle
+functions in modules - and haven't for quite some time:
+  https://lore.kernel.org/lkml/20120905062306.GA14756@leaf/
 
-> > The alternative is to consider the mux + NWL as one device (more or less
-> > an i.MX8M-specific integration wrapper of the NWL), but in that case
-> > there should be two ports I believe.
-> 
-> I'd go with that for the moment and fold in the above at a later
-> point if needed. I'm happy to work on that but would like to work on
-> some parts of the imx8mq display stack first.
+I wanted to better understand the background rationale for that patch,
+to understand if not exporting the rcu_idle_exit and rcu_idle_enter,
+calls was because they weren't used or if it was a more intentional
+decision to avoid allowing modules to use them.
 
-There's no specific urgency on my side, if not for the fact that DT
-bindings are supposed to be a stable ABI. If we have to change this, it
-would be best to do it before v5.7-rc6 in order to get the changes in
-v5.8. A delay until v5.8-rcX may still be acceptable as this could be
-considered as a fix, but the more we wait, the bigger the risk is.
+Would it be reasonable to revisit that patch? Or is there some
+recommended alternative solution?
 
-> >> From the imx8mq ref manual i didn't see separate input lines for DCSS vs
-> >> eLCDIF the the NWL IP so i went with endpoints instead of ports.  I'm
-> >> happy to change that if i got it wrong.
-> >> 
-> >>> Apart from that the bindings look ok to me.
-> >>> 
-> >>>> +
-> >>>> +          reg:
-> >>>> +            const: 0
-> >>>> +
-> >>>> +        required:
-> >>>> +          - '#address-cells'
-> >>>> +          - '#size-cells'
-> >>>> +          - reg
-> >>>> +
-> >>>> +        oneOf:
-> >>>> +          - required:
-> >>>> +              - endpoint@0
-> >>>> +          - required:
-> >>>> +              - endpoint@1
-> >>>> +
-> >>>> +        additionalProperties: false
-> >>>> +
-> >>>> +      port@1:
-> >>>> +        type: object
-> >>>> +        description:
-> >>>> +          DSI output port node to the panel or the next bridge
-> >>>> +          in the chain
-> >>>> +
-> >>>> +      '#address-cells':
-> >>>> +        const: 1
-> >>>> +
-> >>>> +      '#size-cells':
-> >>>> +        const: 0
-> >>>> +
-> >>>> +    required:
-> >>>> +      - '#address-cells'
-> >>>> +      - '#size-cells'
-> >>>> +      - port@0
-> >>>> +      - port@1
-> >>>> +
-> >>>> +    additionalProperties: false
-> >>>> +
-> >>>> +patternProperties:
-> >>>> +  "^panel@[0-9]+$":
-> >>>> +    type: object
-> >>>> +
-> >>>> +required:
-> >>>> +  - '#address-cells'
-> >>>> +  - '#size-cells'
-> >>>> +  - clock-names
-> >>>> +  - clocks
-> >>>> +  - compatible
-> >>>> +  - interrupts
-> >>>> +  - mux-controls
-> >>>> +  - phy-names
-> >>>> +  - phys
-> >>>> +  - ports
-> >>>> +  - reg
-> >>>> +  - reset-names
-> >>>> +  - resets
-> >>>> +
-> >>>> +additionalProperties: false
-> >>>> +
-> >>>> +examples:
-> >>>> + - |
-> >>>> +
-> >>>> +   #include <dt-bindings/clock/imx8mq-clock.h>
-> >>>> +   #include <dt-bindings/interrupt-controller/arm-gic.h>
-> >>>> +   #include <dt-bindings/reset/imx8mq-reset.h>
-> >>>> +
-> >>>> +   mipi_dsi: mipi_dsi@30a00000 {
-> >>>> +              #address-cells = <1>;
-> >>>> +              #size-cells = <0>;
-> >>>> +              compatible = "fsl,imx8mq-nwl-dsi";
-> >>>> +              reg = <0x30A00000 0x300>;
-> >>>> +              clocks = <&clk IMX8MQ_CLK_DSI_CORE>,
-> >>>> +                       <&clk IMX8MQ_CLK_DSI_AHB>,
-> >>>> +                       <&clk IMX8MQ_CLK_DSI_IPG_DIV>,
-> >>>> +                       <&clk IMX8MQ_CLK_DSI_PHY_REF>,
-> >>>> +                       <&clk IMX8MQ_CLK_LCDIF_PIXEL>;
-> >>>> +              clock-names = "core", "rx_esc", "tx_esc", "phy_ref", "lcdif";
-> >>>> +              interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
-> >>>> +              mux-controls = <&mux 0>;
-> >>>> +              power-domains = <&pgc_mipi>;
-> >>>> +              resets = <&src IMX8MQ_RESET_MIPI_DSI_RESET_BYTE_N>,
-> >>>> +                       <&src IMX8MQ_RESET_MIPI_DSI_DPI_RESET_N>,
-> >>>> +                       <&src IMX8MQ_RESET_MIPI_DSI_ESC_RESET_N>,
-> >>>> +                       <&src IMX8MQ_RESET_MIPI_DSI_PCLK_RESET_N>;
-> >>>> +              reset-names = "byte", "dpi", "esc", "pclk";
-> >>>> +              phys = <&dphy>;
-> >>>> +              phy-names = "dphy";
-> >>>> +
-> >>>> +              panel@0 {
-> >>>> +                      #address-cells = <1>;
-> >>>> +                      #size-cells = <0>;
-> >>>> +                      compatible = "rocktech,jh057n00900";
-> >>>> +                      reg = <0>;
-> >>>> +                      port@0 {
-> >>>> +                           reg = <0>;
-> >>>> +                           panel_in: endpoint {
-> >>>> +                                     remote-endpoint = <&mipi_dsi_out>;
-> >>>> +                           };
-> >>>> +                      };
-> >>>> +              };
-> >>>> +
-> >>>> +              ports {
-> >>>> +                    #address-cells = <1>;
-> >>>> +                    #size-cells = <0>;
-> >>>> +
-> >>>> +                    port@0 {
-> >>>> +                           #size-cells = <0>;
-> >>>> +                           #address-cells = <1>;
-> >>>> +                           reg = <0>;
-> >>>> +                           mipi_dsi_in: endpoint@0 {
-> >>>> +                                        reg = <0>;
-> >>>> +                                        remote-endpoint = <&lcdif_mipi_dsi>;
-> >>>> +                           };
-> >>>> +                    };
-> >>>> +                    port@1 {
-> >>>> +                           reg = <1>;
-> >>>> +                           mipi_dsi_out: endpoint {
-> >>>> +                                         remote-endpoint = <&panel_in>;
-> >>>> +                           };
-> >>>> +                    };
-> >>>> +              };
-> >>>> +      };
-
--- 
-Regards,
-
-Laurent Pinchart
+thanks
+-john
