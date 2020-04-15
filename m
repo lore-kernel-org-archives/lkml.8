@@ -2,166 +2,95 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE04DC38A2D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:07:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F75CC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9709C206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:07:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE2A0206F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:07:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586952464;
-	bh=T8pZkTaDHImqwJ86Evn/kitbk35NPo627KNyM6vX0gI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=jgTExSOJZ9KN4W70fk2uKE3JXLsfiNADwYMLns47xMVtGO2evU9L9nfe+FKAvRdcj
-	 Ob8p4UQGe+pAhDCwrfbPnlVX8s4RTINMsypiW+V2ZUOnwQAFAdv+O1JaEc5B/RmCS9
-	 U5iJyhCQXBeYbe6/9XRKuf9GC8ugU/xtvXyCUt9g=
+	s=default; t=1586952470;
+	bh=f5sXH50ovBTDYKJ5G08mWzS6k9zbA0nqGBjSKTcdi+Q=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Uj3cGw9eZYEBrmD7hYVCroB4sR2Sw7Ja1kkbw9gqNAkgpufbiTticmxjr+zVjsnRF
+	 DfVdN27Lbc3P6Ui4Lli47GVESPxKIo+FQfEx6apYVOwOIsTUAgUV/43D1fFyCIXGwn
+	 3cy84t9P9qGYKAHQvmkqU406wlfKPPQ7qMC5xfxU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441232AbgDOMHn (ORCPT
+        id S2439550AbgDOMHs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:07:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53846 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 08:07:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S368114AbgDOMAu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 08:00:50 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2409362AbgDOLrk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:47:40 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8186120737;
-        Wed, 15 Apr 2020 12:00:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E122421582;
+        Wed, 15 Apr 2020 11:47:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586952049;
-        bh=T8pZkTaDHImqwJ86Evn/kitbk35NPo627KNyM6vX0gI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=mptKzifq+PHSnyWRuMEP8eVpvVICk394IDrONGAn8Ee8ZDXY7EYoee35akOJnVBIe
-         L0tfKKifvRBouewAIAOEkSQZ9pcAr0SiptUCu8LW5oWckKpL9TEDX7HPANyuJXCDhk
-         SpJjyRX0HwmT3r2q3L6liRw0TooblHJcDvjPqmDw=
-Date:   Wed, 15 Apr 2020 13:00:46 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     alsa-devel@alsa-project.org, Fabio Estevam <festevam@gmail.com>,
-        kernel@collabora.com, Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: sgtl5000: Fix VAG power-on handling" to the asoc tree
-In-Reply-To:  <20200414181140.145825-1-sebastian.reichel@collabora.com>
-Message-Id:  <applied-20200414181140.145825-1-sebastian.reichel@collabora.com>
-X-Patchwork-Hint: ignore
+        s=default; t=1586951259;
+        bh=f5sXH50ovBTDYKJ5G08mWzS6k9zbA0nqGBjSKTcdi+Q=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=HdWBFMlDvzB9mvAoEJjVfYPaiOb2nVUmnHEpLIxUfP9gvpZbE7SFGi7MqVtie845/
+         XJYWxsr2+VEyYTdiKpqmtMo54+UOLVIrphs0QrS0b/DwceNYRUGVRu5Xo2Q6wMWe/k
+         xwoAwmivm3+d2dNN4s6kVTw9D58MCppDSFe4YRqI=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Jack Zhang <Jack.Zhang1@amd.com>, Nirmoy Das <nirmoy.das@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.14 23/30] drm/amdkfd: kfree the wrong pointer
+Date:   Wed, 15 Apr 2020 07:47:04 -0400
+Message-Id: <20200415114711.15381-23-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200415114711.15381-1-sashal@kernel.org>
+References: <20200415114711.15381-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+From: Jack Zhang <Jack.Zhang1@amd.com>
 
-   ASoC: sgtl5000: Fix VAG power-on handling
+[ Upstream commit 3148a6a0ef3cf93570f30a477292768f7eb5d3c3 ]
 
-has been applied to the asoc tree at
+Originally, it kfrees the wrong pointer for mem_obj.
+It would cause memory leak under stress test.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From aa7812737f2877e192d57626cbe8825cc7cf6de9 Mon Sep 17 00:00:00 2001
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-Date: Tue, 14 Apr 2020 20:11:40 +0200
-Subject: [PATCH] ASoC: sgtl5000: Fix VAG power-on handling
-
-As mentioned slightly out of patch context in the code, there
-is no reset routine for the chip. On boards where the chip is
-supplied by a fixed regulator, it might not even be resetted
-during (e.g. watchdog) reboot and can be in any state.
-
-If the device is probed with VAG enabled, the driver's probe
-routine will generate a loud pop sound when ANA_POWER is
-being programmed. Avoid this by properly disabling just the
-VAG bit and waiting the required power down time.
-
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Reviewed-by: Fabio Estevam <festivem@gmail.com>
-Link: https://lore.kernel.org/r/20200414181140.145825-1-sebastian.reichel@collabora.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Jack Zhang <Jack.Zhang1@amd.com>
+Acked-by: Nirmoy Das <nirmoy.das@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/sgtl5000.c | 34 ++++++++++++++++++++++++++++++++++
- sound/soc/codecs/sgtl5000.h |  1 +
- 2 files changed, 35 insertions(+)
+ drivers/gpu/drm/amd/amdkfd/kfd_device.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/codecs/sgtl5000.c b/sound/soc/codecs/sgtl5000.c
-index d5130193b4a2..e8a8bf7b4ffe 100644
---- a/sound/soc/codecs/sgtl5000.c
-+++ b/sound/soc/codecs/sgtl5000.c
-@@ -1653,6 +1653,40 @@ static int sgtl5000_i2c_probe(struct i2c_client *client,
- 		dev_err(&client->dev,
- 			"Error %d initializing CHIP_CLK_CTRL\n", ret);
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_device.c b/drivers/gpu/drm/amd/amdkfd/kfd_device.c
+index 61fff25b4ce7d..ecd4eba221c0a 100644
+--- a/drivers/gpu/drm/amd/amdkfd/kfd_device.c
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_device.c
+@@ -550,9 +550,9 @@ int kfd_gtt_sa_allocate(struct kfd_dev *kfd, unsigned int size,
+ 	return 0;
  
-+	/* Mute everything to avoid pop from the following power-up */
-+	ret = regmap_write(sgtl5000->regmap, SGTL5000_CHIP_ANA_CTRL,
-+			   SGTL5000_CHIP_ANA_CTRL_DEFAULT);
-+	if (ret) {
-+		dev_err(&client->dev,
-+			"Error %d muting outputs via CHIP_ANA_CTRL\n", ret);
-+		goto disable_clk;
-+	}
-+
-+	/*
-+	 * If VAG is powered-on (e.g. from previous boot), it would be disabled
-+	 * by the write to ANA_POWER in later steps of the probe code. This
-+	 * may create a loud pop even with all outputs muted. The proper way
-+	 * to circumvent this is disabling the bit first and waiting the proper
-+	 * cool-down time.
-+	 */
-+	ret = regmap_read(sgtl5000->regmap, SGTL5000_CHIP_ANA_POWER, &value);
-+	if (ret) {
-+		dev_err(&client->dev, "Failed to read ANA_POWER: %d\n", ret);
-+		goto disable_clk;
-+	}
-+	if (value & SGTL5000_VAG_POWERUP) {
-+		ret = regmap_update_bits(sgtl5000->regmap,
-+					 SGTL5000_CHIP_ANA_POWER,
-+					 SGTL5000_VAG_POWERUP,
-+					 0);
-+		if (ret) {
-+			dev_err(&client->dev, "Error %d disabling VAG\n", ret);
-+			goto disable_clk;
-+		}
-+
-+		msleep(SGTL5000_VAG_POWERDOWN_DELAY);
-+	}
-+
- 	/* Follow section 2.2.1.1 of AN3663 */
- 	ana_pwr = SGTL5000_ANA_POWER_DEFAULT;
- 	if (sgtl5000->num_supplies <= VDDD) {
-diff --git a/sound/soc/codecs/sgtl5000.h b/sound/soc/codecs/sgtl5000.h
-index a4bf4bca95bf..56ec5863f250 100644
---- a/sound/soc/codecs/sgtl5000.h
-+++ b/sound/soc/codecs/sgtl5000.h
-@@ -233,6 +233,7 @@
- /*
-  * SGTL5000_CHIP_ANA_CTRL
-  */
-+#define SGTL5000_CHIP_ANA_CTRL_DEFAULT		0x0133
- #define SGTL5000_LINE_OUT_MUTE			0x0100
- #define SGTL5000_HP_SEL_MASK			0x0040
- #define SGTL5000_HP_SEL_SHIFT			6
+ kfd_gtt_no_free_chunk:
+-	pr_debug("Allocation failed with mem_obj = %p\n", mem_obj);
++	pr_debug("Allocation failed with mem_obj = %p\n", *mem_obj);
+ 	mutex_unlock(&kfd->gtt_sa_lock);
+-	kfree(mem_obj);
++	kfree(*mem_obj);
+ 	return -ENOMEM;
+ }
+ 
 -- 
 2.20.1
 
