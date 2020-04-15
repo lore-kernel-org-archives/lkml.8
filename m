@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B05CC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:57:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61AD4C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:57:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEB652137B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:57:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27E4F2078A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:57:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586951858;
-	bh=l7ekFKtaYoWG4FL2fqCcuTI64us+m53O/B1Hpmin2sw=;
+	s=default; t=1586951875;
+	bh=HU/GdBiMlDMvSbuewd+uk2TybK/WQ246JBS0V4zB6xg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bNj5W80UXaBkVjwKf33t8X+9JG5R67hmxpKuK1o4hgmJ8yeO09dscSBhNSazlBM25
-	 p3zpTWM4+MgLUWa518eo4rSbf6nzk3HRTDpLwVNmu9ycF0BcoK9j0HZqXQBO1NPN3F
-	 5s6w0+HayRAqckmJK9pX4p52BYF7LpgTW7bvmUFw=
+	b=pRYl/DYak1+qaALLex+PZh8SrHkxs2H/wSiw7GB+bCufY3jB2ZxIGdrAlnKsWCPaP
+	 3/170rAvTh0evlvkw/4P1WgHJAac1Yq3zjTYIrkVLEzmHgKO192uDU5BQJOCQC4w6k
+	 9dVjlBcgaWvUJeQUiAtSeHFKMh/a368wfPBvUjqE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409675AbgDOL5h (ORCPT
+        id S2409700AbgDOL5v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:57:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40876 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 07:57:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409283AbgDOLqU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:46:20 -0400
+        id S2409310AbgDOLqk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:46:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86D8720732;
-        Wed, 15 Apr 2020 11:46:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0CE5214D8;
+        Wed, 15 Apr 2020 11:46:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951180;
-        bh=l7ekFKtaYoWG4FL2fqCcuTI64us+m53O/B1Hpmin2sw=;
+        s=default; t=1586951199;
+        bh=HU/GdBiMlDMvSbuewd+uk2TybK/WQ246JBS0V4zB6xg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HPA6ShFvVBcit+w+QDFIAQPVLNtYd1x5YPn8MsyDR5eHvg0UJ9g/ZaNFZqixilSMg
-         2ab5plHWoqCv6XE/304zzvD+XMDHSB8mO1UoiIlem3KSkhEUAcFyA734NkjFBOvowi
-         Z3iKkFHv1SVzS1BwIPD6E1WPnRmzQD27QJtqH9BE=
+        b=pJHEQmTvY7WKf1OVD/72wyIG57w0a5qGalq2vQdafWVUAoPirJBfYK97tki00+/NE
+         ucoAhcg56KjFfHsakrD8AW4IuwtkyLCtjAIvuLGm7nIFKwBcryKUQ06hfowk5kM8dm
+         qIQBnLrfxc/pQJqZw1yPKPCsYMv5E4B42A3aBOSE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Adrian Huang <ahuang12@lenovo.com>, Joerg Roedel <jroedel@suse.de>,
-        Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 5.4 83/84] iommu/amd: Fix the configuration of GCR3 table root pointer
-Date:   Wed, 15 Apr 2020 07:44:40 -0400
-Message-Id: <20200415114442.14166-83-sashal@kernel.org>
+Cc:     Josh Triplett <josh@joshtriplett.org>,
+        Andreas Dilger <adilger@dilger.ca>,
+        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
+        linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 14/40] ext4: fix incorrect inodes per group in error message
+Date:   Wed, 15 Apr 2020 07:45:57 -0400
+Message-Id: <20200415114623.14972-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415114442.14166-1-sashal@kernel.org>
-References: <20200415114442.14166-1-sashal@kernel.org>
+In-Reply-To: <20200415114623.14972-1-sashal@kernel.org>
+References: <20200415114623.14972-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,36 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Huang <ahuang12@lenovo.com>
+From: Josh Triplett <josh@joshtriplett.org>
 
-[ Upstream commit c20f36534666e37858a14e591114d93cc1be0d34 ]
+[ Upstream commit b9c538da4e52a7b79dfcf4cfa487c46125066dfb ]
 
-The SPA of the GCR3 table root pointer[51:31] masks 20 bits. However,
-this requires 21 bits (Please see the AMD IOMMU specification).
-This leads to the potential failure when the bit 51 of SPA of
-the GCR3 table root pointer is 1'.
+If ext4_fill_super detects an invalid number of inodes per group, the
+resulting error message printed the number of blocks per group, rather
+than the number of inodes per group. Fix it to print the correct value.
 
-Signed-off-by: Adrian Huang <ahuang12@lenovo.com>
-Fixes: 52815b75682e2 ("iommu/amd: Add support for IOMMUv2 domain mode")
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Fixes: cd6bb35bf7f6d ("ext4: use more strict checks for inodes_per_block on mount")
+Link: https://lore.kernel.org/r/8be03355983a08e5d4eed480944613454d7e2550.1585434649.git.josh@joshtriplett.org
+Reviewed-by: Andreas Dilger <adilger@dilger.ca>
+Signed-off-by: Josh Triplett <josh@joshtriplett.org>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/amd_iommu_types.h | 2 +-
+ fs/ext4/super.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/amd_iommu_types.h b/drivers/iommu/amd_iommu_types.h
-index daeabd98c60e2..0679896b9e2e1 100644
---- a/drivers/iommu/amd_iommu_types.h
-+++ b/drivers/iommu/amd_iommu_types.h
-@@ -348,7 +348,7 @@
- 
- #define DTE_GCR3_VAL_A(x)	(((x) >> 12) & 0x00007ULL)
- #define DTE_GCR3_VAL_B(x)	(((x) >> 15) & 0x0ffffULL)
--#define DTE_GCR3_VAL_C(x)	(((x) >> 31) & 0xfffffULL)
-+#define DTE_GCR3_VAL_C(x)	(((x) >> 31) & 0x1fffffULL)
- 
- #define DTE_GCR3_INDEX_A	0
- #define DTE_GCR3_INDEX_B	1
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index 3c2990116f8a6..326f0bafad92f 100644
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -4032,7 +4032,7 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
+ 	if (sbi->s_inodes_per_group < sbi->s_inodes_per_block ||
+ 	    sbi->s_inodes_per_group > blocksize * 8) {
+ 		ext4_msg(sb, KERN_ERR, "invalid inodes per group: %lu\n",
+-			 sbi->s_blocks_per_group);
++			 sbi->s_inodes_per_group);
+ 		goto failed_mount;
+ 	}
+ 	sbi->s_itb_per_group = sbi->s_inodes_per_group /
 -- 
 2.20.1
 
