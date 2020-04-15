@@ -2,167 +2,129 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6EA8C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C34C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:28:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80FD9206F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:28:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAF40206F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:28:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="G/nt7PIU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kgYC/Nzu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1416015AbgDOQ2t (ORCPT
+        id S1416022AbgDOQ24 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 12:28:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57450 "EHLO
+        Wed, 15 Apr 2020 12:28:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1415989AbgDOQ22 (ORCPT
+        by vger.kernel.org with ESMTP id S1415915AbgDOQ2M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 12:28:28 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9756BC061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 09:28:28 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id d17so557693wrg.11
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 09:28:28 -0700 (PDT)
+        Wed, 15 Apr 2020 12:28:12 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16755C061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 09:28:12 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id q19so4342660ljp.9
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 09:28:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
+        d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=76FV3ox/3TPbATAAAJw9w7kb0H0TlBYb5fVvS13JcLY=;
-        b=G/nt7PIUIjDbbyNK0gIoeOLcY8ZJ6ogrh7xIpJK5ptEMrpyqCvnEq1Gpc5ntN7Nohb
-         FbLVbkv/SqyxTIKPSI8ArbB3aQC2cnsW7CNY285Nq6a2PjxHNIr/8pFYAG+7EVv0mbSo
-         E9pam/kjTQC+Xto1u4FPAB7uQLe+D9C1L1s3I=
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=YVnJHMzMX4zea+T2RwyrRODXUlwOsF2FdlsCZVHk+oo=;
+        b=kgYC/NzubYiLAa6kaXJ4bjDzEtBuG4wQ+FjtTCgn9wj25YfXSiFb/4XypzMVgiuvnB
+         v6FwIp8E0EtRxWKEWEjFCgdimullb21rQl/7OFdqhwvDwYA1RwWXtH1tJa1W0k38dqxp
+         VYFKX8SXqzlIlCJouxs7cvVdrx80p6dQdVvAOMlN52FrkxxSAY9wJ8v2BvWgVuhXGCvh
+         +dNtiAA8Olr/D02x3XYacqD3kAiOB7sCEWRHq0VUiqLf37SLmaixRE/g3Z6L4yo5P42r
+         DBUnhBLHOJ5zyVGo3L9RKpNtwUcGlBAoPNbxL9HIYb+GA9q32gKFgP1CkorAJnEe8oPp
+         WMQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=76FV3ox/3TPbATAAAJw9w7kb0H0TlBYb5fVvS13JcLY=;
-        b=seDoYeiOBohqSzYeFkPsWbMyRZza6EOLEpe9ATpOpc64nj4htFNL+6UfnTfnQbtF9Q
-         NsjWuco3wZfWXy12v8UtqawFITb7qjB0NZmRTP11vFoL7sNYTCNiPMJzInlszeDxTzqQ
-         yGMObepFqcQh/yXulQtjPEIQmOFJq+HoDhIQD+RebcTOLpRNpgLFZpYyzvg3+NgIFQ1a
-         o8ifleR8wTQPUz19EjuppyCkbG2bK1Scny9UBuwgX0I3ILnhhqfwC2iTxER+Sbys12oy
-         WtjuZYy6enyiAckjri8zWaoJuQ0PByPSkMfvKMq5VI9raUW20JnZgd4kaTONve7gWHEt
-         87Xw==
-X-Gm-Message-State: AGi0PuYn33UR7UarqpXKIp8dwlzMxTqUVjrXAt0b6e/f/H4HJvIp6yId
-        2/hLLuhpSpmOJSDDln6pcRBx0w==
-X-Google-Smtp-Source: APiQypKNypW8de1wzfd0hzKcNgFo6MjAP9f8TaX90Pu8qjLQ0NPRPLlzR/MtI88oH6r++vBFgaj4EQ==
-X-Received: by 2002:a5d:5742:: with SMTP id q2mr29365255wrw.414.1586968107226;
-        Wed, 15 Apr 2020 09:28:27 -0700 (PDT)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id h2sm5682392wro.9.2020.04.15.09.28.21
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YVnJHMzMX4zea+T2RwyrRODXUlwOsF2FdlsCZVHk+oo=;
+        b=pN+u+Qd1J/J/72Ab/Q0spwcZbHxgpUqX9crj2JxXZXBDDFrhJ+WMNjfOumzzSwp8JN
+         v7edoodKmCfCTYoCpUrnkIEClgmw19jRm2/D71PswWFFh5gut1H1Ar1NA+6+1o6sO5Kj
+         EcEusSSqU7ZkipLtxqazLKH03QJEhsE/cjTrmXEWC9rn20hJCJTrnIkHLWh6RYIPiyGC
+         3qTHNvZwXAEAhkEzmnoE/iVFNsx04auOtvADRBOr/hp31pn6tlAXKe2Bx296qaZfU5OG
+         JcRbb5MpCPBDCNd71bM9WHO2qruiEil5T7LEnUA/N7PVEAOQXjrJsv8PX0DX7kWiqdAl
+         0bHw==
+X-Gm-Message-State: AGi0PualGhQPB/Qr+PHIpn4GM8fkbhh4ad5PkkWEgiKvRqwtzafUHXC4
+        gsFUxuCIU52+ZcopUUptN1XoSlky
+X-Google-Smtp-Source: APiQypKl/fUg0WTlkFu5qkcnzx/jvwxvDUVKWbkC0unYzPiM/9O/T7aeBG8UEwFm1a4e3kN0cGfOJA==
+X-Received: by 2002:a05:651c:102f:: with SMTP id w15mr3601309ljm.5.1586968090308;
+        Wed, 15 Apr 2020 09:28:10 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id s10sm12089253ljp.87.2020.04.15.09.28.09
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Apr 2020 09:28:26 -0700 (PDT)
-Subject: Re: [PATCH] test_firmware: remove unnecessary test_fw_mutex in
- test_dev_config_show_xxx
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
-        Andy Gross <agross@kernel.org>
-References: <20200415002517.4328-1-scott.branden@broadcom.com>
- <202004142010.C0847F5@keescook>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <e2b95fde-0ab7-c0d1-2c64-cceffc458673@broadcom.com>
-Date:   Wed, 15 Apr 2020 09:28:18 -0700
+        Wed, 15 Apr 2020 09:28:09 -0700 (PDT)
+Subject: Re: [PATCH] regulator: use consumer->supply_name in
+ debugfs/regulator_summary
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+References: <731a4b299c6ae0ee9d8995157600a3477f21a36c.1585959068.git.mirq-linux@rere.qmqm.pl>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <606b7ddd-0c9b-2ba1-f873-8507377fdc4e@gmail.com>
+Date:   Wed, 15 Apr 2020 19:28:09 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <202004142010.C0847F5@keescook>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <731a4b299c6ae0ee9d8995157600a3477f21a36c.1585959068.git.mirq-linux@rere.qmqm.pl>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kees,
+04.04.2020 03:11, Michał Mirosław пишет:
+> Make it easier to identify regulator consumers when consumer device
+> uses more than one supply.
+> 
+> Before:
+> 
+>   regulator                      ena use open bypass voltage current min     max
+>  -----------------------------------------------------------------------------------
+>   regulator-dummy                  1   0    2      0     0mV     0mA 0mV     0mV
+>      1-0010                                                          0mV     0mV
+>      1-0010                                                          0mV     0mV
+> 
+> After:
+> 
+>   regulator                      ena use open bypass voltage current min     max
+>  -----------------------------------------------------------------------------------
+>   regulator-dummy                  1   0    2      0     0mV     0mA 0mV     0mV
+>      1-0010-vccio                                                    0mV     0mV
+>      1-0010-vcc33                                                    0mV     0mV
+> 
+> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+> ---
+>  drivers/regulator/core.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+> index c340505150b6..ad143004c32b 100644
+> --- a/drivers/regulator/core.c
+> +++ b/drivers/regulator/core.c
+> @@ -5496,6 +5496,7 @@ static void regulator_summary_show_subtree(struct seq_file *s,
+>  		seq_printf(s, "%*s%-*s ",
+>  			   (level + 1) * 3 + 1, "",
+>  			   30 - (level + 1) * 3,
+> +			   consumer->supply_name ? consumer->supply_name :
+>  			   consumer->dev ? dev_name(consumer->dev) : "deviceless");
+>  
+>  		switch (rdev->desc->type) {
+> 
 
-On 2020-04-14 8:10 p.m., Kees Cook wrote:
-> On Tue, Apr 14, 2020 at 05:25:17PM -0700, Scott Branden wrote:
->> Remove unnecessary use of test_fw_mutex in test_dev_config_show_xxx
->> functions that show simple bool, int, and u8.
-> I would expect at least a READ_ONCE(), yes?
-I don't understand why you need a READ_ONCE when removing a mutex around 
-an assignment
-of a parameter passed into a function being assigned to a local variable.
+Hello Michał,
 
-Could you please explain your expectations.
->
->> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
->> ---
->>   lib/test_firmware.c | 26 +++-----------------------
->>   1 file changed, 3 insertions(+), 23 deletions(-)
->>
->> diff --git a/lib/test_firmware.c b/lib/test_firmware.c
->> index 0c7fbcf07ac5..9fee2b93a8d1 100644
->> --- a/lib/test_firmware.c
->> +++ b/lib/test_firmware.c
->> @@ -310,27 +310,13 @@ static int test_dev_config_update_bool(const char *buf, size_t size,
->>   	return ret;
->>   }
->>   
->> -static ssize_t
->> -test_dev_config_show_bool(char *buf,
->> -			  bool config)
->> +static ssize_t test_dev_config_show_bool(char *buf, bool val)
->>   {
->> -	bool val;
->> -
->> -	mutex_lock(&test_fw_mutex);
->> -	val = config;
->> -	mutex_unlock(&test_fw_mutex);
->> -
->>   	return snprintf(buf, PAGE_SIZE, "%d\n", val);
->>   }
->>   
->> -static ssize_t test_dev_config_show_int(char *buf, int cfg)
->> +static ssize_t test_dev_config_show_int(char *buf, int val)
->>   {
->> -	int val;
->> -
->> -	mutex_lock(&test_fw_mutex);
->> -	val = cfg;
->> -	mutex_unlock(&test_fw_mutex);
->> -
->>   	return snprintf(buf, PAGE_SIZE, "%d\n", val);
->>   }
->>   
->> @@ -354,14 +340,8 @@ static int test_dev_config_update_u8(const char *buf, size_t size, u8 *cfg)
->>   	return size;
->>   }
->>   
->> -static ssize_t test_dev_config_show_u8(char *buf, u8 cfg)
->> +static ssize_t test_dev_config_show_u8(char *buf, u8 val)
->>   {
->> -	u8 val;
->> -
->> -	mutex_lock(&test_fw_mutex);
->> -	val = cfg;
->> -	mutex_unlock(&test_fw_mutex);
->> -
->>   	return snprintf(buf, PAGE_SIZE, "%u\n", val);
->>   }
->>   
->> -- 
->> 2.17.1
->>
+This is a very nice improvement, I like it!
 
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Tested-by: Dmitry Osipenko <digetx@gmail.com>
