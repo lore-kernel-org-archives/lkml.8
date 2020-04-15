@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D8BC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2163C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:21:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E42BE208FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:20:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7F2521707
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:21:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586953241;
-	bh=YJ7bYUlf7zCEYnR/9VYmjs8WvAL+Z+tSHxOOEZvYn5s=;
+	s=default; t=1586953267;
+	bh=cBk92c6nBULUxUTVafmDFD/ihP1iNDRokzEmXGn7xkk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZzIedzaVL+dX+uDoFZ16sYv+D7A6QLi5kIhDD83UoY8Q3nLmLyGNAg0VWNoM7ASNq
-	 fBFNO7J3h1MVkJlzG2rkIAaMkosX4nqyfB6xiTTQ+xjryPSoWtbMBQtp6EDzXCrlia
-	 gruzCA/Q7wPKHM5oGPr/L5noQ4oqluE6ihW1dqrA=
+	b=02lac0XUK+uwWe0GPWdDmi7+fSzzd1Rax+mluk7+PaRgqCmfPmnRdn3WWtEsi7O/T
+	 F99p+vL8wM1pJZ1FRsPDuMcyz0T7r1lWBt/lD/I13ILixEuugYbueC8+pmfdT53q4A
+	 YFMzUFgWLVO/zKdfTCMa0kLEIuBqhAhW0sj1cXJw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S369041AbgDOMUi (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:20:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40340 "EHLO mail.kernel.org"
+        id S2406209AbgDOLpz (ORCPT
+        <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 07:45:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33812 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409237AbgDOLp6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:45:58 -0400
+        id S2897464AbgDOLmc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:42:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5A5720732;
-        Wed, 15 Apr 2020 11:45:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A4C4214D8;
+        Wed, 15 Apr 2020 11:42:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951158;
-        bh=YJ7bYUlf7zCEYnR/9VYmjs8WvAL+Z+tSHxOOEZvYn5s=;
+        s=default; t=1586950951;
+        bh=cBk92c6nBULUxUTVafmDFD/ihP1iNDRokzEmXGn7xkk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WfkhBvoR6cnJo3SgTa0EzZQ1qV+UtpY+c5Zm4GQO/gAsT0LGUZr17lnQGx0AD6mQz
-         VxM8Y9PnN46KxuX7FrNV534TD9t40Ui6meFhaByNmq4HEknYhsK9qpdnwWexjLERaL
-         CDU5sPEhsmsy8Rlh4NaUnPPR5ww0smn7I27x9ZPY=
+        b=AaGBAvTlX+qhoBDx+8hDQBJCQH2z95hGEJGiQpDcS1aRQfjWK4rgJAkuD5v/etAv+
+         TER0iFRAvrQJBs0Zbzh7o10V3t1jJMV8B54ekZRpJQmxwIBFfkALuO4Gw8Bmpgu27D
+         NTV1dC0XP7wXNv1g7lX7RAtXFHWZvlteO0fZUsSE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.4 64/84] f2fs: fix NULL pointer dereference in f2fs_write_begin()
-Date:   Wed, 15 Apr 2020 07:44:21 -0400
-Message-Id: <20200415114442.14166-64-sashal@kernel.org>
+Cc:     Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.5 004/106] clk: at91: usb: continue if clk_hw_round_rate() return zero
+Date:   Wed, 15 Apr 2020 07:40:44 -0400
+Message-Id: <20200415114226.13103-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415114442.14166-1-sashal@kernel.org>
-References: <20200415114442.14166-1-sashal@kernel.org>
+In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
+References: <20200415114226.13103-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,75 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Claudiu Beznea <claudiu.beznea@microchip.com>
 
-[ Upstream commit 62f63eea291b50a5677ae7503ac128803174698a ]
+[ Upstream commit b0ecf1c6c6e82da4847900fad0272abfd014666d ]
 
-BUG: kernel NULL pointer dereference, address: 0000000000000000
-RIP: 0010:f2fs_write_begin+0x823/0xb90 [f2fs]
-Call Trace:
- f2fs_quota_write+0x139/0x1d0 [f2fs]
- write_blk+0x36/0x80 [quota_tree]
- get_free_dqblk+0x42/0xa0 [quota_tree]
- do_insert_tree+0x235/0x4a0 [quota_tree]
- do_insert_tree+0x26e/0x4a0 [quota_tree]
- do_insert_tree+0x26e/0x4a0 [quota_tree]
- do_insert_tree+0x26e/0x4a0 [quota_tree]
- qtree_write_dquot+0x70/0x190 [quota_tree]
- v2_write_dquot+0x43/0x90 [quota_v2]
- dquot_acquire+0x77/0x100
- f2fs_dquot_acquire+0x2f/0x60 [f2fs]
- dqget+0x310/0x450
- dquot_transfer+0x7e/0x120
- f2fs_setattr+0x11a/0x4a0 [f2fs]
- notify_change+0x349/0x480
- chown_common+0x168/0x1c0
- do_fchownat+0xbc/0xf0
- __x64_sys_fchownat+0x20/0x30
- do_syscall_64+0x5f/0x220
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+clk_hw_round_rate() may call round rate function of its parents. In case
+of SAM9X60 two of USB parrents are PLLA and UPLL. These clocks are
+controlled by clk-sam9x60-pll.c driver. The round rate function for this
+driver is sam9x60_pll_round_rate() which call in turn
+sam9x60_pll_get_best_div_mul(). In case the requested rate is not in the
+proper range (rate < characteristics->output[0].min &&
+rate > characteristics->output[0].max) the sam9x60_pll_round_rate() will
+return a negative number to its caller (called by
+clk_core_round_rate_nolock()). clk_hw_round_rate() will return zero in
+case a negative number is returned by clk_core_round_rate_nolock(). With
+this, the USB clock will continue its rate computation even caller of
+clk_hw_round_rate() returned an error. With this, the USB clock on SAM9X60
+may not chose the best parent. I detected this after a suspend/resume
+cycle on SAM9X60.
 
-Passing fsdata parameter to .write_{begin,end} in f2fs_quota_write(),
-so that if quota file is compressed one, we can avoid above NULL
-pointer dereference when updating quota content.
-
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Link: https://lkml.kernel.org/r/1579261009-4573-2-git-send-email-claudiu.beznea@microchip.com
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/super.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/clk/at91/clk-usb.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 94caf26901e0b..5e1d4d9243a95 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -1826,6 +1826,7 @@ static ssize_t f2fs_quota_write(struct super_block *sb, int type,
- 	int offset = off & (sb->s_blocksize - 1);
- 	size_t towrite = len;
- 	struct page *page;
-+	void *fsdata = NULL;
- 	char *kaddr;
- 	int err = 0;
- 	int tocopy;
-@@ -1835,7 +1836,7 @@ static ssize_t f2fs_quota_write(struct super_block *sb, int type,
- 								towrite);
- retry:
- 		err = a_ops->write_begin(NULL, mapping, off, tocopy, 0,
--							&page, NULL);
-+							&page, &fsdata);
- 		if (unlikely(err)) {
- 			if (err == -ENOMEM) {
- 				congestion_wait(BLK_RW_ASYNC, HZ/50);
-@@ -1851,7 +1852,7 @@ static ssize_t f2fs_quota_write(struct super_block *sb, int type,
- 		flush_dcache_page(page);
- 
- 		a_ops->write_end(NULL, mapping, off, tocopy, tocopy,
--						page, NULL);
-+						page, fsdata);
- 		offset = 0;
- 		towrite -= tocopy;
- 		off += tocopy;
+diff --git a/drivers/clk/at91/clk-usb.c b/drivers/clk/at91/clk-usb.c
+index 22aede42a3362..3c0bd7e51b09d 100644
+--- a/drivers/clk/at91/clk-usb.c
++++ b/drivers/clk/at91/clk-usb.c
+@@ -75,6 +75,9 @@ static int at91sam9x5_clk_usb_determine_rate(struct clk_hw *hw,
+ 			tmp_parent_rate = req->rate * div;
+ 			tmp_parent_rate = clk_hw_round_rate(parent,
+ 							   tmp_parent_rate);
++			if (!tmp_parent_rate)
++				continue;
++
+ 			tmp_rate = DIV_ROUND_CLOSEST(tmp_parent_rate, div);
+ 			if (tmp_rate < req->rate)
+ 				tmp_diff = req->rate - tmp_rate;
 -- 
 2.20.1
 
