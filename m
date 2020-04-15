@@ -2,140 +2,184 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9238AC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2EB2C3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:57:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B1C7208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:55:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCEE4208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:57:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="F6cQpa1O"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="m0OikrsD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1416335AbgDOQzF (ORCPT
+        id S1416348AbgDOQ5t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 12:55:05 -0400
-Received: from forward104p.mail.yandex.net ([77.88.28.107]:58809 "EHLO
-        forward104p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2410578AbgDOQy4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 12:54:56 -0400
-X-Greylist: delayed 467 seconds by postgrey-1.27 at vger.kernel.org; Wed, 15 Apr 2020 12:54:53 EDT
-Received: from mxback25o.mail.yandex.net (mxback25o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::76])
-        by forward104p.mail.yandex.net (Yandex) with ESMTP id 222C94B00595;
-        Wed, 15 Apr 2020 19:47:04 +0300 (MSK)
-Received: from myt4-ee976ce519ac.qloud-c.yandex.net (myt4-ee976ce519ac.qloud-c.yandex.net [2a02:6b8:c00:1da4:0:640:ee97:6ce5])
-        by mxback25o.mail.yandex.net (mxback/Yandex) with ESMTP id rPLI4hiMtm-l3a49ZBR;
-        Wed, 15 Apr 2020 19:47:04 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail; t=1586969224;
-        bh=pV1WydyKA+XCWko5RRCDyTFmRt0Y3b8ovuRq4rF/XCY=;
-        h=In-Reply-To:Subject:To:From:Cc:References:Date:Message-ID;
-        b=F6cQpa1Oth5oeBz3unOr51yrR0dk4njRhZgQqv6MFhy3sIssiSNSFTG15Tm4FpP7m
-         uzmg3hPvCBIua9AK5xNmDOFe03RhS77ySVD21ReofIyvCLV7gsw2ec8LLcqx+8tnpe
-         Wn0tE0U25JJgsfk8FPfRl3zfvexZXvT+cz22t3sA=
-Authentication-Results: mxback25o.mail.yandex.net; dkim=pass header.i=@yandex.ru
-Received: by myt4-ee976ce519ac.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id UBsARPRcxV-l32KeXOk;
-        Wed, 15 Apr 2020 19:47:03 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-From:   Konstantin Kharlamov <hi-angel@yandex.ru>
-To:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf stat: Honour --timeout for forked workloads
-Date:   Wed, 15 Apr 2020 19:46:57 +0300
-Message-ID: <2996611.mvXUDI8C0e@constantine-n61ja>
-In-Reply-To: <20200415153803.GB20324@kernel.org>
-References: <20200415153803.GB20324@kernel.org>
+        Wed, 15 Apr 2020 12:57:49 -0400
+Received: from mail-db8eur05on2086.outbound.protection.outlook.com ([40.107.20.86]:6045
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1416336AbgDOQ5p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 12:57:45 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OMwdD/g/g4ofbxc8CqDaF/4KUrg09nWZU1RcPY+uuQJtwlpUXiNINesBWKZwM2nHk3BWrsETnk8z7o/uwVahFj74eaw7DBOafMSDc+FZMQubglNSMj+GnOvp/fYg4V6NK08RgxJ3QJu4WR0/9MC1KuteplHeVcIJvCjLrUdDKxGx7ZHNQtDKY9FJyXwlGhkdTzsBVasqoD+vOTvI5yiqLBOjdJ+iPsNYUIXoyaKrnB+Sn4QnByP+QrwEPix6MT7jkxLMT6kpY0HgLtVw0/vt4YuQYeM64UYOgVZGOgYS653ORSOHMHtHCrEVWVCXc4lLNZpe9Jfi3crPUPJ3XCy5cA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4uiJAnAt3Zl/mTOT9ytV+2KEBbFreL5o0Ha78CUVw9A=;
+ b=Rr7SSwIuZzSrRaFG5DLZ3zUvrh5W6Ll1pvgTewIQ2rU/lSbruK3mVxFB/ltLGfDCEj1ii76geVlNEd7IPqtCfHjBQqyf8JKiLRdfVggticsfZBkndS0HRgPstKoQg6I6YVEWVzt2cBfO+myWrOvMyV8RX5pl2mAcccFxMX4gkHpkL6ECtb8WPAjYbm3AG0yBmBljPOTubSpmjlAyPZHF9YRYAmzcR7NtK9fOrsj2vtmcC0jqqmTiNMcQF7V10ZfLnXV3O2/9OybBsza4Q5AbMd49qmjuJqkOJpCJyL1Y35n0Ek2XIYq1h0A0BI1/6AzHEyyDqkZNrjm4ugyuvE+dxQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4uiJAnAt3Zl/mTOT9ytV+2KEBbFreL5o0Ha78CUVw9A=;
+ b=m0OikrsD0QbMwlkxO4QnQiPM8RUihLcW1HR76/f6B9U8atNbBWosQuhA5xwWcHlJsFD/1u1rDuk19datJIlU1e5KC5BBu8o6RLtDruAJ9IzUTglXxf7Uvrcjy1abA8EJ/kkuy/t9LUbeXTGZEWqHrs500R9YHZpBHMGC0jgv4AY=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=horia.geanta@nxp.com; 
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (2603:10a6:803:7::25)
+ by VI1PR0402MB2910.eurprd04.prod.outlook.com (2603:10a6:800:b6::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.26; Wed, 15 Apr
+ 2020 16:57:40 +0000
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::751e:7e8d:ed4:ef5f]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::751e:7e8d:ed4:ef5f%7]) with mapi id 15.20.2900.028; Wed, 15 Apr 2020
+ 16:57:40 +0000
+Subject: Re: [PATCH v2 6/6] Input: snvs_pwrkey - only IRQ_HANDLED for our own
+ events
+From:   =?UTF-8?Q?Horia_Geant=c4=83?= <horia.geanta@nxp.com>
+To:     Adam Ford <aford173@gmail.com>,
+        =?UTF-8?Q?Andr=c3=a9_Draszik?= <git@andred.net>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Robin Gong <yibin.gong@nxp.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
+References: <20200225161201.1975-1-git@andred.net>
+ <20200225161201.1975-6-git@andred.net>
+ <VI1PR0402MB3485A743C94442533B6840F298E70@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+ <CAHCN7x+NJLaKF9SfHw9sDpw6zDUGs_TuD_co7USjQ5hgFDeaHg@mail.gmail.com>
+ <fd36d0ae-f3fa-6608-9179-3e7562068433@nxp.com>
+Message-ID: <ad07da3c-19c4-67cd-b819-63cf3746caf6@nxp.com>
+Date:   Wed, 15 Apr 2020 19:57:36 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+In-Reply-To: <fd36d0ae-f3fa-6608-9179-3e7562068433@nxp.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: AM0P190CA0005.EURP190.PROD.OUTLOOK.COM
+ (2603:10a6:208:190::15) To VI1PR0402MB3485.eurprd04.prod.outlook.com
+ (2603:10a6:803:7::25)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.0.129] (84.117.251.185) by AM0P190CA0005.EURP190.PROD.OUTLOOK.COM (2603:10a6:208:190::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.16 via Frontend Transport; Wed, 15 Apr 2020 16:57:38 +0000
+X-Originating-IP: [84.117.251.185]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 5913c546-319c-417f-d52a-08d7e15e1b79
+X-MS-TrafficTypeDiagnostic: VI1PR0402MB2910:|VI1PR0402MB2910:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR0402MB29109A9D9D64EFBBD112F7B298DB0@VI1PR0402MB2910.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:826;
+X-Forefront-PRVS: 0374433C81
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(39860400002)(366004)(136003)(376002)(346002)(396003)(16576012)(53546011)(966005)(478600001)(16526019)(26005)(7416002)(4326008)(81156014)(31686004)(36756003)(86362001)(8676002)(66556008)(6486002)(8936002)(66946007)(66476007)(5660300002)(2906002)(956004)(2616005)(6636002)(316002)(31696002)(54906003)(186003)(52116002)(110136005);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: r8rfUuqtdyQIwPzA6+bw+IMYavnOs1FssBjHp/b09AxxLDzOxjimnh5DiS/31cRGNIMEf/nwEKIf5LC/XBohe0hTZcbX7t0xalv0tWW1FL+JgxVgOwq75mQdk8Z1GCibTsm+bXSigOqAe1XyBSRBvl50PPNTzYpk6nqfm8MVpHMMzVEoeWXLVxW9+caYbhOUndZP2mmo2mkDMcMmFdNy2Hxsd/W8kp4alBRtSkJn4aBovdpvCACSLE4h7Ahm908xhUgsQFos3XB3ad13DWdbew5pPRi6WzPzMIGkfYBOj95uNr8QJZwBE09JyMMYYztbaYbu5wu9MRz85mPWYuETio/wW/bpmyaKF4+FHA82j5/DcTzIGgT2kX7V6fLytFHiBYRMQfl+aMSZZz8mw3aISgftxkGxx0g4nkcqjcqa4LSO1EjFyUhkeb//1R/p85mo+JbaH7ppJ3BqGoLejWsZsEbDbRjo4xWQWRmahiJAI3RE6IcEVIya9Ap4tjveSh4c4/XjgoGpCI9xNh/HIezwcw==
+X-MS-Exchange-AntiSpam-MessageData: 04n3zeKF2X3sjudQLttXVQAMC9CIJmHsDn4222SluwsMvB8da/tpQt0hjmQD+zvyD+VyXW5XJPO+4+yaWkvJXhAooldyM/Zj81JG6Ri0VO0NFnFgqp9N+nZzf/fpz2tVAIqAK4A7kyiZ6UdzAghn7w==
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5913c546-319c-417f-d52a-08d7e15e1b79
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2020 16:57:40.4426
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: N/6yRHg1XJd/R2RMBwAWGvOfe6WO2jmfNZI1Xft2DYPKZ8JDpqoX22Zditk+5PMLfZIwA2AThE5AkRibqxwI2A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2910
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tested-by: Konstantin Kharlamov <hi-angel@yandex.ru>
+Hi Herbert, Dmitry,
 
-On =D1=81=D1=80=D0=B5=D0=B4=D0=B0, 15 =D0=B0=D0=BF=D1=80=D0=B5=D0=BB=D1=8F =
-2020 =D0=B3. 18:38:03 MSK Arnaldo Carvalho de Melo wrote:
-> Hi guys,
->=20
-> 	Please take a look and give this your acks, Tested-by, etc.
->=20
-> Thanks,
->=20
-> - Arnaldo
->=20
-> ----
->=20
-> When --timeout is used and a workload is specified to be started by
-> 'perf stat', i.e.
->=20
->   $ perf stat --timeout 1000 sleep 1h
->=20
-> The --timeout wasn't being honoured, i.e. the workload, 'sleep 1h' in
-> the above example, should be terminated after 1000ms, but it wasn't,
-> 'perf stat' was waiting for it to finish.
->=20
-> Fix it by sending a SIGTERM when the timeout expires.
->=20
-> Now it works:
->=20
->   # perf stat -e cycles --timeout 1234 sleep 1h
->   sleep: Terminated
->=20
->    Performance counter stats for 'sleep 1h':
->=20
->            1,066,692      cycles
->=20
->          1.234314838 seconds time elapsed
->=20
->          0.000750000 seconds user
->          0.000000000 seconds sys
->=20
->   #
->=20
-> Reported-by: Konstantin Kharlamov <hi-angel@yandex.ru>
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=3D207243
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> ---
->  tools/perf/builtin-stat.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->=20
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index ec053dc1e35c..9207b6c45475 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -686,8 +686,11 @@ static int __run_perf_stat(int argc, const char **ar=
-gv,
-> int run_idx) break;
->  			}
->  		}
-> -		if (child_pid !=3D -1)
-> +		if (child_pid !=3D -1) {
-> +			if (timeout)
-> +				kill(child_pid, SIGTERM);
->  			wait4(child_pid, &status, 0,=20
-&stat_config.ru_data);
-> +		}
->=20
->  		if (workload_exec_errno) {
->  			const char *emsg =3D=20
-str_error_r(workload_exec_errno, msg, sizeof(msg));
+On 4/1/2020 11:58 AM, Horia Geanta wrote:
+> On 3/28/2020 5:43 AM, Adam Ford wrote:
+>> On Mon, Mar 2, 2020 at 3:22 AM Horia Geanta <horia.geanta@nxp.com> wrote:
+>>>
+>>> On 2/25/2020 6:12 PM, André Draszik wrote:
+>>>> The snvs_pwrkey shares the SNVS LPSR status register with the snvs_rtc.
+>>>>
+>>>> This driver here should only return IRQ_HANDLED if the status register
+>>>> indicates that the event we're handling in the irq handler was genuinely
+>>>> intended for this driver. Otheriwse the interrupt subsystem will
+>>>> assume the interrupt was handled successfully even though it wasn't
+>>>> at all.
+>>>>
+>>>> Signed-off-by: André Draszik <git@andred.net>
+>>>> Cc: "Horia Geantă" <horia.geanta@nxp.com>
+>>>> Cc: Aymen Sghaier <aymen.sghaier@nxp.com>
+>>>> Cc: Herbert Xu <herbert@gondor.apana.org.au>
+>>>> Cc: "David S. Miller" <davem@davemloft.net>
+>>>> Cc: Rob Herring <robh+dt@kernel.org>
+>>>> Cc: Mark Rutland <mark.rutland@arm.com>
+>>>> Cc: Shawn Guo <shawnguo@kernel.org>
+>>>> Cc: Sascha Hauer <s.hauer@pengutronix.de>
+>>>> Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+>>>> Cc: Fabio Estevam <festevam@gmail.com>
+>>>> Cc: NXP Linux Team <linux-imx@nxp.com>
+>>>> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+>>>> Cc: Anson Huang <Anson.Huang@nxp.com>
+>>>> Cc: Robin Gong <yibin.gong@nxp.com>
+>>>> Cc: linux-crypto@vger.kernel.org
+>>>> Cc: devicetree@vger.kernel.org
+>>>> Cc: linux-arm-kernel@lists.infradead.org
+>>>> Cc: linux-input@vger.kernel.org
+>>> For patches 2-6:
+>>> Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
+>>>
+>>> Also imx8mn.dtsi and imx8mp.dtsi will have to be updated.
+>>
+>> Is there an update coming for the 8mn family?  I am seeing it not wake
+>> from the power key, and I was hoping to resolve that before i make a
+>> push to submit a new 8MN board for review.
+>>
+> Starting with linux-next next-20200320, there's commit
+> arm64: dts: imx8mn: Add snvs clock to powerkey
+> 
+> Could you confirm you've tested with a tree including it?
+> 
+Seems that from this series:
+https://lore.kernel.org/linux-crypto/20200225161201.1975-5-git@andred.net/T/
+only DT patches (2,3,4) were applied.
 
+Would it be ok to go via crypto tree with:
+[PATCH v2 1/6] dt-bindings: crypto: fsl-sec4: add snvs clock to pwrkey
 
-=2D-=20
-=D0=98=D0=BD=D0=B6=D0=B5=D0=BD=D0=B5=D1=80-=D1=80=D0=B0=D0=B7=D1=80=D0=B0=
-=D0=B1=D0=BE=D1=82=D1=87=D0=B8=D0=BA =D0=9A=D0=BE=D0=BD=D1=81=D1=82=D0=B0=
-=D0=BD=D1=82=D0=B8=D0=BD =D0=A5=D0=B0=D1=80=D0=BB=D0=B0=D0=BC=D0=BE=D0=B2
+and via input tree with:
+[PATCH v2 5/6] Input: snvs_pwrkey - enable snvs clock as needed
+[PATCH v2 6/6] Input: snvs_pwrkey - only IRQ_HANDLED for our own events
+?
 
-
+Thanks,
+Horia
