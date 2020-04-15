@@ -2,56 +2,42 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC85C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B82C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D33EF20857
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:43:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586961794;
-	bh=MiIvbtHL1OOpkMTzHlJyILRiWhj8sVsuaKqqb675qZ4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VAP11FeFmd/bAfFkGBjAhHsEN2oIMpFATla0lqfzrVCm650joWt/83q9bF5nRUMDW
-	 QJkJKdcW9OBoM4hFtvTeqhbdC2qW0FzMeCf5s7zCNykZ3C/ZEFgdl0qRL2iW/j6Z0A
-	 ms6wdlDUA1jN8aLfRDM918syVayRbZuZIZRD360w=
+	by mail.kernel.org (Postfix) with ESMTP id 336192076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:43:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634603AbgDOOnL (ORCPT
+        id S2636766AbgDOOnX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:43:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45448 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 10:43:23 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51804 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394042AbgDOOc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 10:32:58 -0400
-Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 161FD2168B;
-        Wed, 15 Apr 2020 14:32:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586961171;
-        bh=MiIvbtHL1OOpkMTzHlJyILRiWhj8sVsuaKqqb675qZ4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=edQAPFixUEwxFA1DMbFuOpVW6etWZM5+/X34ROZRkwbwBV6gP5c7JgT5CqUdKdGfQ
-         cvUyKyo1ryZgXTL9JkXTxixoZ4TRx4KHsKZicoP6rfSIQ0f9GfNP15I9fObk6fbRCm
-         IlB16LK+3RHhOmhAZJmzRuDVdD69MJMsrBJ43tjs=
-Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
-        (envelope-from <mchehab@kernel.org>)
-        id 1jOj5t-006kOU-AF; Wed, 15 Apr 2020 16:32:49 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH 10/34] docs: filesystems: convert automount-support.txt to ReST
-Date:   Wed, 15 Apr 2020 16:32:23 +0200
-Message-Id: <677813b103b87ad5dc714d88f3b0e6b9175aa393.1586960617.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.25.2
-In-Reply-To: <cover.1586960617.git.mchehab+huawei@kernel.org>
-References: <cover.1586960617.git.mchehab+huawei@kernel.org>
+        id S2636745AbgDOOml (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 10:42:41 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 6BFEDAC6D;
+        Wed, 15 Apr 2020 14:42:38 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Eric Anholt <eric@anholt.net>
+Cc:     linux-rpi-kernel@lists.infradead.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: dts: bcm283x: Disable dsi0 node
+Date:   Wed, 15 Apr 2020 16:42:33 +0200
+Message-Id: <20200415144233.23274-1-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -59,105 +45,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-- Add a SPDX header;
-- Add a document title;
-- Adjust section titles;
-- Mark literal blocks as such;
-- Add it to filesystems/index.rst.
+Since its inception the module was meant to be disabled by default, but
+the original commit failed to add the relevant property.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Fixes: 4aba4cf82054 ("ARM: dts: bcm2835: Add the DSI module nodes and clocks")
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 ---
- ...ount-support.txt => automount-support.rst} | 23 +++++++++++--------
- Documentation/filesystems/index.rst           |  2 ++
- 2 files changed, 16 insertions(+), 9 deletions(-)
- rename Documentation/filesystems/{automount-support.txt => automount-support.rst} (92%)
+ arch/arm/boot/dts/bcm283x.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/filesystems/automount-support.txt b/Documentation/filesystems/automount-support.rst
-similarity index 92%
-rename from Documentation/filesystems/automount-support.txt
-rename to Documentation/filesystems/automount-support.rst
-index 7d9f82607562..430f0b40796b 100644
---- a/Documentation/filesystems/automount-support.txt
-+++ b/Documentation/filesystems/automount-support.rst
-@@ -1,3 +1,10 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=================
-+Automount Support
-+=================
-+
-+
- Support is available for filesystems that wish to do automounting
- support (such as kAFS which can be found in fs/afs/ and NFS in
- fs/nfs/). This facility includes allowing in-kernel mounts to be
-@@ -5,13 +12,12 @@ performed and mountpoint degradation to be requested. The latter can
- also be requested by userspace.
+diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
+index e1abe8c730cef..b83a864e2e8ba 100644
+--- a/arch/arm/boot/dts/bcm283x.dtsi
++++ b/arch/arm/boot/dts/bcm283x.dtsi
+@@ -372,6 +372,7 @@ dsi0: dsi@7e209000 {
+ 					     "dsi0_ddr2",
+ 					     "dsi0_ddr";
  
++			status = "disabled";
+ 		};
  
--======================
--IN-KERNEL AUTOMOUNTING
-+In-Kernel Automounting
- ======================
- 
- See section "Mount Traps" of  Documentation/filesystems/autofs.rst
- 
--Then from userspace, you can just do something like:
-+Then from userspace, you can just do something like::
- 
- 	[root@andromeda root]# mount -t afs \#root.afs. /afs
- 	[root@andromeda root]# ls /afs
-@@ -21,7 +27,7 @@ Then from userspace, you can just do something like:
- 	[root@andromeda root]# ls /afs/cambridge/afsdoc/
- 	ChangeLog  html  LICENSE  pdf  RELNOTES-1.2.2
- 
--And then if you look in the mountpoint catalogue, you'll see something like:
-+And then if you look in the mountpoint catalogue, you'll see something like::
- 
- 	[root@andromeda root]# cat /proc/mounts
- 	...
-@@ -30,8 +36,7 @@ And then if you look in the mountpoint catalogue, you'll see something like:
- 	#afsdoc. /afs/cambridge.redhat.com/afsdoc afs rw 0 0
- 
- 
--===========================
--AUTOMATIC MOUNTPOINT EXPIRY
-+Automatic Mountpoint Expiry
- ===========================
- 
- Automatic expiration of mountpoints is easy, provided you've mounted the
-@@ -43,7 +48,8 @@ To do expiration, you need to follow these steps:
-      hung.
- 
-  (2) When a new mountpoint is created in the ->d_automount method, add
--     the mnt to the list using mnt_set_expiry()
-+     the mnt to the list using mnt_set_expiry()::
-+
-              mnt_set_expiry(newmnt, &afs_vfsmounts);
- 
-  (3) When you want mountpoints to be expired, call mark_mounts_for_expiry()
-@@ -70,8 +76,7 @@ and the copies of those that are on an expiration list will be added to the
- same expiration list.
- 
- 
--=======================
--USERSPACE DRIVEN EXPIRY
-+Userspace Driven Expiry
- =======================
- 
- As an alternative, it is possible for userspace to request expiry of any
-diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
-index 5f4ba0e40e72..fc566c68a458 100644
---- a/Documentation/filesystems/index.rst
-+++ b/Documentation/filesystems/index.rst
-@@ -25,6 +25,8 @@ algorithms work.
-    locking
-    directory-locking
- 
-+   automount-support
-+
-    caching/index
- 
-    porting
+ 		aux: aux@7e215000 {
 -- 
-2.25.2
+2.26.0
 
