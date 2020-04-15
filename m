@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB771C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:04:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58AA7C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:04:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACC0320575
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:04:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25EC720575
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:04:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586952241;
-	bh=E9XZ9BrGQSUNlRWB7yT8u7DDr9GHOmO7fcQFiY12/oY=;
+	s=default; t=1586952252;
+	bh=diZCH/Mg8n9hXnJ0WhmZgAaGP/vFOO2uGKOad9Enxpw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rWaXuyFkOP6HflekUm52FZWZkbzfFW5Yk8nQ7VUAzfH3q5FSFugVh6A4JffOYyEgS
-	 nBYudsvp0Q6szmNQ/WW8jvT3yI35lDvB/YlkJPd8Iqxsq94aN/apMGRkZyWcwTQr2R
-	 7sqAzLqKDussC1hNBKnQxxGeeKiIka4qxXedZL60=
+	b=PDKONOImy7NTTZIBqLAsd429ftl7Y8z2gi59McBttTsAONIWIU/x5uqasstsFIpkA
+	 6zW6c92GGoSmqICayf1X/z4NjZ/FeK1Cwnc01KSK2Rkb73cwdH8c+6hVCZ4hj4vA1w
+	 MuZDMYDjzK7xyWyxx0zthZBKzoXZTxy6Oc5UmQ5E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S368290AbgDOMEA (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:04:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44044 "EHLO mail.kernel.org"
+        id S368299AbgDOMEJ (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:04:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406458AbgDOLsU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:48:20 -0400
+        id S2409448AbgDOLsR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:48:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EDB420732;
-        Wed, 15 Apr 2020 11:48:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65C1020775;
+        Wed, 15 Apr 2020 11:48:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951299;
-        bh=E9XZ9BrGQSUNlRWB7yT8u7DDr9GHOmO7fcQFiY12/oY=;
+        s=default; t=1586951297;
+        bh=diZCH/Mg8n9hXnJ0WhmZgAaGP/vFOO2uGKOad9Enxpw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CWkGAMZZW8xwZ5WmrG87DHY/+C6snZzuBF0Z1rHlwH74MJRBVCNNVuEqFzPgiI0PS
-         vpUoJQstCpjCx1A9eZU4Uh0HlOxDKDZybDGsOtnO6i6ezfV47cdxJfwf4dluXzt2wk
-         +UDJERjqECltECYv93CLGDZxoSryigJf7ABueaAg=
+        b=TDqNr59t4PMHxAz3NxIhbJp01/dK3UoOPI+47yYK8/NcXPy3VVlKSLA9Xm6JsFrLq
+         EbdWxPxPgtvZYLt1qLWeDshJKwHVuTlUtRiRgQ3WKi1BGsZ/JzeZNtBGEdbdj9S4sj
+         uZxSBe0g+h5HxKyXdh0q1AIp3+lFuLs8DFowJgfY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Sandeen <sandeen@redhat.com>,
-        Ritesh Harjani <riteshh@linux.ibm.com>,
-        Andreas Dilger <adilger@dilger.ca>,
-        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
-        linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 04/14] ext4: do not commit super on read-only bdev
-Date:   Wed, 15 Apr 2020 07:48:04 -0400
-Message-Id: <20200415114814.15954-4-sashal@kernel.org>
+Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 02/14] clk: tegra: Fix Tegra PMC clock out parents
+Date:   Wed, 15 Apr 2020 07:48:02 -0400
+Message-Id: <20200415114814.15954-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114814.15954-1-sashal@kernel.org>
 References: <20200415114814.15954-1-sashal@kernel.org>
@@ -60,48 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Sandeen <sandeen@redhat.com>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
 
-[ Upstream commit c96e2b8564adfb8ac14469ebc51ddc1bfecb3ae2 ]
+[ Upstream commit 6fe38aa8cac3a5db38154331742835a4d9740788 ]
 
-Under some circumstances we may encounter a filesystem error on a
-read-only block device, and if we try to save the error info to the
-superblock and commit it, we'll wind up with a noisy error and
-backtrace, i.e.:
+Tegra PMC clocks clk_out_1, clk_out_2, and clk_out_3 supported parents
+are osc, osc_div2, osc_div4 and extern clock.
 
-[ 3337.146838] EXT4-fs error (device pmem1p2): ext4_get_journal_inode:4634: comm mount: inode #0: comm mount: iget: illegal inode #
-------------[ cut here ]------------
-generic_make_request: Trying to write to read-only block-device pmem1p2 (partno 2)
-WARNING: CPU: 107 PID: 115347 at block/blk-core.c:788 generic_make_request_checks+0x6b4/0x7d0
-...
+Clock driver is using incorrect parents clk_m, clk_m_div2, clk_m_div4
+for PMC clocks.
 
-To avoid this, commit the error info in the superblock only if the
-block device is writable.
+This patch fixes this.
 
-Reported-by: Ritesh Harjani <riteshh@linux.ibm.com>
-Signed-off-by: Eric Sandeen <sandeen@redhat.com>
-Reviewed-by: Andreas Dilger <adilger@dilger.ca>
-Link: https://lore.kernel.org/r/4b6e774d-cc00-3469-7abb-108eb151071a@sandeen.net
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Tested-by: Dmitry Osipenko <digetx@gmail.com>
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/super.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/clk/tegra/clk-tegra-pmc.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index f2e0220b00c36..cb96d343993f7 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -313,7 +313,8 @@ static void save_error_info(struct super_block *sb, const char *func,
- 			    unsigned int line)
- {
- 	__save_error_info(sb, func, line);
--	ext4_commit_super(sb, 1);
-+	if (!bdev_read_only(sb->s_bdev))
-+		ext4_commit_super(sb, 1);
- }
+diff --git a/drivers/clk/tegra/clk-tegra-pmc.c b/drivers/clk/tegra/clk-tegra-pmc.c
+index 91377abfefa19..17a04300f93bf 100644
+--- a/drivers/clk/tegra/clk-tegra-pmc.c
++++ b/drivers/clk/tegra/clk-tegra-pmc.c
+@@ -60,16 +60,16 @@ struct pmc_clk_init_data {
  
- /*
+ static DEFINE_SPINLOCK(clk_out_lock);
+ 
+-static const char *clk_out1_parents[] = { "clk_m", "clk_m_div2",
+-	"clk_m_div4", "extern1",
++static const char *clk_out1_parents[] = { "osc", "osc_div2",
++	"osc_div4", "extern1",
+ };
+ 
+-static const char *clk_out2_parents[] = { "clk_m", "clk_m_div2",
+-	"clk_m_div4", "extern2",
++static const char *clk_out2_parents[] = { "osc", "osc_div2",
++	"osc_div4", "extern2",
+ };
+ 
+-static const char *clk_out3_parents[] = { "clk_m", "clk_m_div2",
+-	"clk_m_div4", "extern3",
++static const char *clk_out3_parents[] = { "osc", "osc_div2",
++	"osc_div4", "extern3",
+ };
+ 
+ static struct pmc_clk_init_data pmc_clks[] = {
 -- 
 2.20.1
 
