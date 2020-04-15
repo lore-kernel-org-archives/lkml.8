@@ -2,117 +2,127 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25F31C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 20:35:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8AD6C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 20:36:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBB70206E9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 20:35:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B534206E9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 20:36:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442069AbgDOUfy (ORCPT
+        id S2442078AbgDOUgE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 16:35:54 -0400
-Received: from mga17.intel.com ([192.55.52.151]:20838 "EHLO mga17.intel.com"
+        Wed, 15 Apr 2020 16:36:04 -0400
+Received: from mga06.intel.com ([134.134.136.31]:47253 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S371299AbgDOUe7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 16:34:59 -0400
-IronPort-SDR: y7o8XkezhRGj1e+d1v50ARKuh3Dmy0h85Pdw3CwgUtdMVWTnGxlFDLBkV/NsVnEIKKvgHBE9K5
- ML5xRYoOHJyw==
+        id S2442057AbgDOUfr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 16:35:47 -0400
+IronPort-SDR: v2jzf+uZCIhhwil2OtdLqgKtlqGdIXa/vgh3xh4fWHLxA6IwhKdoPHqVXd/EsfJgErqcLvmFq1
+ ZWAgLrv9GNlQ==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 13:34:58 -0700
-IronPort-SDR: PieuOQJVnX4L+D6jP1Al+ggQIAA1Zccw2BbUfRFvBKLcHg7peFhqK4LW/tquq2yor0OhTm7YIN
- Wd2gtns0lxlA==
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 13:35:45 -0700
+IronPort-SDR: /55+O5N/UbItG3G97jMjCRmgjrO6760jL2891MlOgBl73B9Ign+1Bxjt8KEJp/URH6OJVIh6Ra
+ cVUrFMAToMQw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,388,1580803200"; 
-   d="scan'208";a="288657647"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga002.fm.intel.com with ESMTP; 15 Apr 2020 13:34:57 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 3/5] KVM: nVMX: Drop manual clearing of segment cache on nested VMCS switch
-Date:   Wed, 15 Apr 2020 13:34:52 -0700
-Message-Id: <20200415203454.8296-4-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200415203454.8296-1-sean.j.christopherson@intel.com>
-References: <20200415203454.8296-1-sean.j.christopherson@intel.com>
+   d="scan'208";a="454056534"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by fmsmga005.fm.intel.com with ESMTP; 15 Apr 2020 13:35:44 -0700
+Date:   Wed, 15 Apr 2020 13:35:44 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Jan Kara <jack@suse.cz>
+Cc:     linux-kernel@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH RFC 3/8] fs/ext4: Disallow encryption if inode is DAX
+Message-ID: <20200415203544.GC2309605@iweiny-DESK2.sc.intel.com>
+References: <20200414040030.1802884-1-ira.weiny@intel.com>
+ <20200414040030.1802884-4-ira.weiny@intel.com>
+ <20200415120241.GF6126@quack2.suse.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200415120241.GF6126@quack2.suse.cz>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drop the call to vmx_segment_cache_clear() in vmx_switch_vmcs() now that
-the entire register cache is reset when switching the active VMCS, e.g.
-vmx_segment_cache_test_set() will reset the segment cache due to
-VCPU_EXREG_SEGMENTS being unavailable.
+On Wed, Apr 15, 2020 at 02:02:41PM +0200, Jan Kara wrote:
+> On Mon 13-04-20 21:00:25, ira.weiny@intel.com wrote:
+> > From: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > Encryption and DAX are incompatible.  Changing the DAX mode due to a
+> > change in Encryption mode is wrong without a corresponding
+> > address_space_operations update.
+> > 
+> > Make the 2 options mutually exclusive by returning an error if DAX was
+> > set first.
+> > 
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> > ---
+> >  fs/ext4/super.c | 10 +---------
+> >  1 file changed, 1 insertion(+), 9 deletions(-)
+> > 
+> > diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+> > index 0c7c4adb664e..b14863058115 100644
+> > --- a/fs/ext4/super.c
+> > +++ b/fs/ext4/super.c
+> > @@ -1325,7 +1325,7 @@ static int ext4_set_context(struct inode *inode, const void *ctx, size_t len,
+> >  	if (inode->i_ino == EXT4_ROOT_INO)
+> >  		return -EPERM;
+> >  
+> > -	if (WARN_ON_ONCE(IS_DAX(inode) && i_size_read(inode)))
+> > +	if (WARN_ON_ONCE(IS_DAX(inode)))
+> 
+> Also here I don't think WARN_ON_ONCE() is warranted once we allow per-inode
+> setting of DAX. It will then become a regular error condition...
 
-Move vmx_segment_cache_clear() to vmx.c now that it's no longer invoked
-by the nested code.
+Removed.
+Ira
 
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/x86/kvm/vmx/nested.c | 1 -
- arch/x86/kvm/vmx/vmx.c    | 5 +++++
- arch/x86/kvm/vmx/vmx.h    | 5 -----
- 3 files changed, 5 insertions(+), 6 deletions(-)
-
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 91f04fb4f614..979d66fe0c0e 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -308,7 +308,6 @@ static void vmx_switch_vmcs(struct kvm_vcpu *vcpu, struct loaded_vmcs *vmcs)
- 	put_cpu();
- 
- 	vmx_register_cache_reset(vcpu);
--	vmx_segment_cache_clear(vmx);
- }
- 
- /*
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index d1c16385904c..9709a6dbeebc 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -437,6 +437,11 @@ static const struct kvm_vmx_segment_field {
- 	VMX_SEGMENT_FIELD(LDTR),
- };
- 
-+static inline void vmx_segment_cache_clear(struct vcpu_vmx *vmx)
-+{
-+	vmx->segment_cache.bitmask = 0;
-+}
-+
- static unsigned long host_idt_base;
- 
- /*
-diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-index 6b668b604898..78c99a60fa49 100644
---- a/arch/x86/kvm/vmx/vmx.h
-+++ b/arch/x86/kvm/vmx/vmx.h
-@@ -443,11 +443,6 @@ BUILD_CONTROLS_SHADOW(pin, PIN_BASED_VM_EXEC_CONTROL)
- BUILD_CONTROLS_SHADOW(exec, CPU_BASED_VM_EXEC_CONTROL)
- BUILD_CONTROLS_SHADOW(secondary_exec, SECONDARY_VM_EXEC_CONTROL)
- 
--static inline void vmx_segment_cache_clear(struct vcpu_vmx *vmx)
--{
--	vmx->segment_cache.bitmask = 0;
--}
--
- static inline void vmx_register_cache_reset(struct kvm_vcpu *vcpu)
- {
- 	vcpu->arch.regs_avail = ~((1 << VCPU_REGS_RIP) | (1 << VCPU_REGS_RSP)
--- 
-2.26.0
-
+> 
+> 								Honza
+> 
+> >  		return -EINVAL;
+> >  
+> >  	res = ext4_convert_inline_data(inode);
+> > @@ -1349,10 +1349,6 @@ static int ext4_set_context(struct inode *inode, const void *ctx, size_t len,
+> >  			ext4_set_inode_flag(inode, EXT4_INODE_ENCRYPT);
+> >  			ext4_clear_inode_state(inode,
+> >  					EXT4_STATE_MAY_INLINE_DATA);
+> > -			/*
+> > -			 * Update inode->i_flags - S_ENCRYPTED will be enabled,
+> > -			 * S_DAX may be disabled
+> > -			 */
+> >  			ext4_set_inode_flags(inode);
+> >  		}
+> >  		return res;
+> > @@ -1376,10 +1372,6 @@ static int ext4_set_context(struct inode *inode, const void *ctx, size_t len,
+> >  				    ctx, len, 0);
+> >  	if (!res) {
+> >  		ext4_set_inode_flag(inode, EXT4_INODE_ENCRYPT);
+> > -		/*
+> > -		 * Update inode->i_flags - S_ENCRYPTED will be enabled,
+> > -		 * S_DAX may be disabled
+> > -		 */
+> >  		ext4_set_inode_flags(inode);
+> >  		res = ext4_mark_inode_dirty(handle, inode);
+> >  		if (res)
+> > -- 
+> > 2.25.1
+> > 
+> -- 
+> Jan Kara <jack@suse.com>
+> SUSE Labs, CR
