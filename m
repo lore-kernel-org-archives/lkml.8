@@ -7,42 +7,43 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43082C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:52:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06331C2BB85
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20D2D206D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:52:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF749206D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:53:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2896053AbgDOJwv (ORCPT
+        id S2896061AbgDOJw6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 05:52:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51890 "EHLO
+        Wed, 15 Apr 2020 05:52:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2895893AbgDOJtz (ORCPT
+        by vger.kernel.org with ESMTP id S2895887AbgDOJtx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 05:49:55 -0400
+        Wed, 15 Apr 2020 05:49:53 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FB60C03C1A6;
-        Wed, 15 Apr 2020 02:49:54 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28B5EC061A10;
+        Wed, 15 Apr 2020 02:49:53 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jOeg2-0005tc-Lx; Wed, 15 Apr 2020 11:49:50 +0200
+        id 1jOeg0-0005rv-Py; Wed, 15 Apr 2020 11:49:48 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4D73C1C03A9;
-        Wed, 15 Apr 2020 11:49:50 +0200 (CEST)
-Date:   Wed, 15 Apr 2020 09:49:49 -0000
-From:   "tip-bot2 for Borislav Petkov" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6A0431C03A9;
+        Wed, 15 Apr 2020 11:49:48 +0200 (CEST)
+Date:   Wed, 15 Apr 2020 09:49:48 -0000
+From:   "tip-bot2 for Tony Luck" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: ras/core] x86/mce/amd, edac: Remove report_gart_errors
-Cc:     Borislav Petkov <bp@suse.de>, Tony Luck <tony.luck@intel.com>,
+Subject: [tip: ras/core] x86/mce: Fix all mce notifiers to update the
+ mce->kflags bitmask
+Cc:     Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@suse.de>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200407163414.18058-2-bp@alien8.de>
-References: <20200407163414.18058-2-bp@alien8.de>
+In-Reply-To: <20200214222720.13168-5-tony.luck@intel.com>
+References: <20200214222720.13168-5-tony.luck@intel.com>
 MIME-Version: 1.0
-Message-ID: <158694418990.28353.15548445324761477732.tip-bot2@tip-bot2>
+Message-ID: <158694418803.28353.3640626332771354859.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -58,175 +59,252 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the ras/core branch of tip:
 
-Commit-ID:     3e0fdec858d82c829774f271e88b5ceb17051551
-Gitweb:        https://git.kernel.org/tip/3e0fdec858d82c829774f271e88b5ceb17051551
-Author:        Borislav Petkov <bp@suse.de>
-AuthorDate:    Tue, 07 Apr 2020 09:55:10 +02:00
+Commit-ID:     23ba710a0864108910c7531dc4c73ef65eca5568
+Gitweb:        https://git.kernel.org/tip/23ba710a0864108910c7531dc4c73ef65eca5568
+Author:        Tony Luck <tony.luck@intel.com>
+AuthorDate:    Fri, 14 Feb 2020 14:27:17 -08:00
 Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Tue, 14 Apr 2020 15:53:46 +02:00
+CommitterDate: Tue, 14 Apr 2020 15:59:26 +02:00
 
-x86/mce/amd, edac: Remove report_gart_errors
+x86/mce: Fix all mce notifiers to update the mce->kflags bitmask
 
-... because no one should be interested in spurious MCEs anyway. Make
-the filtering unconditional and move it to amd_filter_mce().
+If the handler took any action to log or deal with the error, set a bit
+in mce->kflags so that the default handler on the end of the machine
+check chain can see what has been done.
 
+Get rid of NOTIFY_STOP returns. Make the EDAC and dev-mcelog handlers
+skip over errors already processed by CEC.
+
+Signed-off-by: Tony Luck <tony.luck@intel.com>
 Signed-off-by: Borislav Petkov <bp@suse.de>
 Tested-by: Tony Luck <tony.luck@intel.com>
-Link: https://lkml.kernel.org/r/20200407163414.18058-2-bp@alien8.de
+Link: https://lkml.kernel.org/r/20200214222720.13168-5-tony.luck@intel.com
 ---
- arch/x86/include/asm/mce.h    |  3 ++-
- arch/x86/kernel/cpu/mce/amd.c |  9 +++++++--
- drivers/edac/amd64_edac.c     |  8 --------
- drivers/edac/mce_amd.c        | 24 ------------------------
- drivers/edac/mce_amd.h        |  2 --
- 5 files changed, 9 insertions(+), 37 deletions(-)
+ arch/x86/kernel/cpu/mce/core.c       |  4 +++-
+ arch/x86/kernel/cpu/mce/dev-mcelog.c |  5 +++++
+ drivers/acpi/acpi_extlog.c           |  5 +++--
+ drivers/acpi/nfit/mce.c              |  1 +
+ drivers/edac/i7core_edac.c           |  5 +++--
+ drivers/edac/mce_amd.c               |  6 +++++-
+ drivers/edac/pnd2_edac.c             |  5 +++--
+ drivers/edac/sb_edac.c               |  5 ++++-
+ drivers/edac/skx_common.c            |  4 ++++
+ drivers/ras/cec.c                    |  9 ++++++---
+ 10 files changed, 37 insertions(+), 12 deletions(-)
 
-diff --git a/arch/x86/include/asm/mce.h b/arch/x86/include/asm/mce.h
-index f9cea08..83b6dda 100644
---- a/arch/x86/include/asm/mce.h
-+++ b/arch/x86/include/asm/mce.h
-@@ -127,6 +127,8 @@
- #define MSR_AMD64_SMCA_MCx_DEADDR(x)	(MSR_AMD64_SMCA_MC0_DEADDR + 0x10*(x))
- #define MSR_AMD64_SMCA_MCx_MISCy(x, y)	((MSR_AMD64_SMCA_MC0_MISC1 + y) + (0x10*(x)))
+diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+index b033b35..5666a48 100644
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -581,8 +581,10 @@ static int uc_decode_notifier(struct notifier_block *nb, unsigned long val,
+ 		return NOTIFY_DONE;
  
-+#define XEC(x, mask)			(((x) >> 16) & mask)
-+
- /*
-  * This structure contains all data related to the MCE log.  Also
-  * carries a signature to make it easier to find from external
-@@ -347,5 +349,4 @@ umc_normaddr_to_sysaddr(u64 norm_addr, u16 nid, u8 umc, u64 *sys_addr)	{ return 
- #endif
- 
- static inline void mce_hygon_feature_init(struct cpuinfo_x86 *c)	{ return mce_amd_feature_init(c); }
--
- #endif /* _ASM_X86_MCE_H */
-diff --git a/arch/x86/kernel/cpu/mce/amd.c b/arch/x86/kernel/cpu/mce/amd.c
-index 15c87b8..ea3cf71 100644
---- a/arch/x86/kernel/cpu/mce/amd.c
-+++ b/arch/x86/kernel/cpu/mce/amd.c
-@@ -577,14 +577,19 @@ bool amd_filter_mce(struct mce *m)
- {
- 	enum smca_bank_types bank_type = smca_get_bank_type(m->bank);
- 	struct cpuinfo_x86 *c = &boot_cpu_data;
--	u8 xec = (m->status >> 16) & 0x3F;
- 
- 	/* See Family 17h Models 10h-2Fh Erratum #1114. */
- 	if (c->x86 == 0x17 &&
- 	    c->x86_model >= 0x10 && c->x86_model <= 0x2F &&
--	    bank_type == SMCA_IF && xec == 10)
-+	    bank_type == SMCA_IF && XEC(m->status, 0x3f) == 10)
- 		return true;
- 
-+	/* NB GART TLB error reporting is disabled by default. */
-+	if (c->x86 < 0x17) {
-+		if (m->bank == 4 && XEC(m->status, 0x1f) == 0x5)
-+			return true;
+ 	pfn = mce->addr >> PAGE_SHIFT;
+-	if (!memory_failure(pfn, 0))
++	if (!memory_failure(pfn, 0)) {
+ 		set_mce_nospec(pfn);
++		mce->kflags |= MCE_HANDLED_UC;
 +	}
+ 
+ 	return NOTIFY_OK;
+ }
+diff --git a/arch/x86/kernel/cpu/mce/dev-mcelog.c b/arch/x86/kernel/cpu/mce/dev-mcelog.c
+index d089567..c033e7e 100644
+--- a/arch/x86/kernel/cpu/mce/dev-mcelog.c
++++ b/arch/x86/kernel/cpu/mce/dev-mcelog.c
+@@ -39,6 +39,9 @@ static int dev_mce_log(struct notifier_block *nb, unsigned long val,
+ 	struct mce *mce = (struct mce *)data;
+ 	unsigned int entry;
+ 
++	if (mce->kflags & MCE_HANDLED_CEC)
++		return NOTIFY_DONE;
 +
- 	return false;
+ 	mutex_lock(&mce_chrdev_read_mutex);
+ 
+ 	entry = mcelog->next;
+@@ -56,6 +59,7 @@ static int dev_mce_log(struct notifier_block *nb, unsigned long val,
+ 
+ 	memcpy(mcelog->entry + entry, mce, sizeof(struct mce));
+ 	mcelog->entry[entry].finished = 1;
++	mcelog->entry[entry].kflags = 0;
+ 
+ 	/* wake processes polling /dev/mcelog */
+ 	wake_up_interruptible(&mce_chrdev_wait);
+@@ -63,6 +67,7 @@ static int dev_mce_log(struct notifier_block *nb, unsigned long val,
+ unlock:
+ 	mutex_unlock(&mce_chrdev_read_mutex);
+ 
++	mce->kflags |= MCE_HANDLED_MCELOG;
+ 	return NOTIFY_OK;
  }
  
-diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
-index f91f3bc..6bdc5bb 100644
---- a/drivers/edac/amd64_edac.c
-+++ b/drivers/edac/amd64_edac.c
-@@ -4,9 +4,6 @@
+diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
+index 8596a10..9cc3c1f 100644
+--- a/drivers/acpi/acpi_extlog.c
++++ b/drivers/acpi/acpi_extlog.c
+@@ -146,7 +146,7 @@ static int extlog_print(struct notifier_block *nb, unsigned long val,
+ 	static u32 err_seq;
  
- static struct edac_pci_ctl_info *pci_ctl;
+ 	estatus = extlog_elog_entry_check(cpu, bank);
+-	if (estatus == NULL)
++	if (estatus == NULL || (mce->kflags & MCE_HANDLED_CEC))
+ 		return NOTIFY_DONE;
  
--static int report_gart_errors;
--module_param(report_gart_errors, int, 0644);
--
- /*
-  * Set by command line parameter. If BIOS has enabled the ECC, this override is
-  * cleared to prevent re-enabling the hardware by this driver.
-@@ -3681,9 +3678,6 @@ static int __init amd64_edac_init(void)
+ 	memcpy(elog_buf, (void *)estatus, ELOG_ENTRY_LEN);
+@@ -176,7 +176,8 @@ static int extlog_print(struct notifier_block *nb, unsigned long val,
  	}
  
- 	/* register stuff with EDAC MCE */
--	if (report_gart_errors)
--		amd_report_gart_errors(true);
--
- 	if (boot_cpu_data.x86 >= 0x17)
- 		amd_register_ecc_decoder(decode_umc_error);
- 	else
-@@ -3718,8 +3712,6 @@ static void __exit amd64_edac_exit(void)
- 		edac_pci_release_generic_ctl(pci_ctl);
- 
- 	/* unregister from EDAC MCE */
--	amd_report_gart_errors(false);
--
- 	if (boot_cpu_data.x86 >= 0x17)
- 		amd_unregister_ecc_decoder(decode_umc_error);
- 	else
-diff --git a/drivers/edac/mce_amd.c b/drivers/edac/mce_amd.c
-index 8874b77..e58644d 100644
---- a/drivers/edac/mce_amd.c
-+++ b/drivers/edac/mce_amd.c
-@@ -10,15 +10,8 @@ static struct amd_decoder_ops fam_ops;
- 
- static u8 xec_mask	 = 0xf;
- 
--static bool report_gart_errors;
- static void (*decode_dram_ecc)(int node_id, struct mce *m);
- 
--void amd_report_gart_errors(bool v)
--{
--	report_gart_errors = v;
--}
--EXPORT_SYMBOL_GPL(amd_report_gart_errors);
--
- void amd_register_ecc_decoder(void (*f)(int, struct mce *))
- {
- 	decode_dram_ecc = f;
-@@ -1030,20 +1023,6 @@ static inline void amd_decode_err_code(u16 ec)
- 	pr_cont("\n");
+ out:
+-	return NOTIFY_STOP;
++	mce->kflags |= MCE_HANDLED_EXTLOG;
++	return NOTIFY_OK;
  }
  
--/*
-- * Filter out unwanted MCE signatures here.
-- */
--static bool ignore_mce(struct mce *m)
--{
--	/*
--	 * NB GART TLB error reporting is disabled by default.
--	 */
--	if (m->bank == 4 && XEC(m->status, 0x1f) == 0x5 && !report_gart_errors)
--		return true;
--
--	return false;
--}
--
- static const char *decode_error_status(struct mce *m)
- {
- 	if (m->status & MCI_STATUS_UC) {
-@@ -1067,9 +1046,6 @@ amd_decode_mce(struct notifier_block *nb, unsigned long val, void *data)
+ static bool __init extlog_get_l1addr(void)
+diff --git a/drivers/acpi/nfit/mce.c b/drivers/acpi/nfit/mce.c
+index f0ae485..ee8d997 100644
+--- a/drivers/acpi/nfit/mce.c
++++ b/drivers/acpi/nfit/mce.c
+@@ -76,6 +76,7 @@ static int nfit_handle_mce(struct notifier_block *nb, unsigned long val,
+ 			 */
+ 			acpi_nfit_ars_rescan(acpi_desc, 0);
+ 		}
++		mce->kflags |= MCE_HANDLED_NFIT;
+ 		break;
+ 	}
+ 
+diff --git a/drivers/edac/i7core_edac.c b/drivers/edac/i7core_edac.c
+index b3135b2..5860ca4 100644
+--- a/drivers/edac/i7core_edac.c
++++ b/drivers/edac/i7core_edac.c
+@@ -1815,7 +1815,7 @@ static int i7core_mce_check_error(struct notifier_block *nb, unsigned long val,
+ 	struct mem_ctl_info *mci;
+ 
+ 	i7_dev = get_i7core_dev(mce->socketid);
+-	if (!i7_dev)
++	if (!i7_dev || (mce->kflags & MCE_HANDLED_CEC))
+ 		return NOTIFY_DONE;
+ 
+ 	mci = i7_dev->mci;
+@@ -1834,7 +1834,8 @@ static int i7core_mce_check_error(struct notifier_block *nb, unsigned long val,
+ 	i7core_check_error(mci, mce);
+ 
+ 	/* Advise mcelog that the errors were handled */
+-	return NOTIFY_STOP;
++	mce->kflags |= MCE_HANDLED_EDAC;
++	return NOTIFY_OK;
+ }
+ 
+ static struct notifier_block i7_mce_dec = {
+diff --git a/drivers/edac/mce_amd.c b/drivers/edac/mce_amd.c
+index e58644d..2b5401d 100644
+--- a/drivers/edac/mce_amd.c
++++ b/drivers/edac/mce_amd.c
+@@ -1046,6 +1046,9 @@ amd_decode_mce(struct notifier_block *nb, unsigned long val, void *data)
  	unsigned int fam = x86_family(m->cpuid);
  	int ecc;
  
--	if (ignore_mce(m))
--		return NOTIFY_STOP;
--
++	if (m->kflags & MCE_HANDLED_CEC)
++		return NOTIFY_DONE;
++
  	pr_emerg(HW_ERR "%s\n", decode_error_status(m));
  
  	pr_emerg(HW_ERR "CPU:%d (%x:%x:%x) MC%d_STATUS[%s|%s|%s|%s|%s",
-diff --git a/drivers/edac/mce_amd.h b/drivers/edac/mce_amd.h
-index 4e9c5e5..4811b18 100644
---- a/drivers/edac/mce_amd.h
-+++ b/drivers/edac/mce_amd.h
-@@ -7,7 +7,6 @@
- #include <asm/mce.h>
+@@ -1146,7 +1149,8 @@ amd_decode_mce(struct notifier_block *nb, unsigned long val, void *data)
+  err_code:
+ 	amd_decode_err_code(m->status & 0xffff);
  
- #define EC(x)				((x) & 0xffff)
--#define XEC(x, mask)			(((x) >> 16) & mask)
+-	return NOTIFY_STOP;
++	m->kflags |= MCE_HANDLED_EDAC;
++	return NOTIFY_OK;
+ }
  
- #define LOW_SYNDROME(x)			(((x) >> 15) & 0xff)
- #define HIGH_SYNDROME(x)		(((x) >> 24) & 0xff)
-@@ -77,7 +76,6 @@ struct amd_decoder_ops {
- 	bool (*mc2_mce)(u16, u8);
- };
+ static struct notifier_block amd_mce_dec_nb = {
+diff --git a/drivers/edac/pnd2_edac.c b/drivers/edac/pnd2_edac.c
+index bc47328..1929a5d 100644
+--- a/drivers/edac/pnd2_edac.c
++++ b/drivers/edac/pnd2_edac.c
+@@ -1400,7 +1400,7 @@ static int pnd2_mce_check_error(struct notifier_block *nb, unsigned long val, vo
+ 		return NOTIFY_DONE;
  
--void amd_report_gart_errors(bool);
- void amd_register_ecc_decoder(void (*f)(int, struct mce *));
- void amd_unregister_ecc_decoder(void (*f)(int, struct mce *));
+ 	mci = pnd2_mci;
+-	if (!mci)
++	if (!mci || (mce->kflags & MCE_HANDLED_CEC))
+ 		return NOTIFY_DONE;
  
+ 	/*
+@@ -1429,7 +1429,8 @@ static int pnd2_mce_check_error(struct notifier_block *nb, unsigned long val, vo
+ 	pnd2_mce_output_error(mci, mce, &daddr);
+ 
+ 	/* Advice mcelog that the error were handled */
+-	return NOTIFY_STOP;
++	mce->kflags |= MCE_HANDLED_EDAC;
++	return NOTIFY_OK;
+ }
+ 
+ static struct notifier_block pnd2_mce_dec = {
+diff --git a/drivers/edac/sb_edac.c b/drivers/edac/sb_edac.c
+index 7d51c82..f790f7d 100644
+--- a/drivers/edac/sb_edac.c
++++ b/drivers/edac/sb_edac.c
+@@ -3136,6 +3136,8 @@ static int sbridge_mce_check_error(struct notifier_block *nb, unsigned long val,
+ 
+ 	if (edac_get_report_status() == EDAC_REPORTING_DISABLED)
+ 		return NOTIFY_DONE;
++	if (mce->kflags & MCE_HANDLED_CEC)
++		return NOTIFY_DONE;
+ 
+ 	/*
+ 	 * Just let mcelog handle it if the error is
+@@ -3183,7 +3185,8 @@ static int sbridge_mce_check_error(struct notifier_block *nb, unsigned long val,
+ 	sbridge_mce_output_error(mci, mce);
+ 
+ 	/* Advice mcelog that the error were handled */
+-	return NOTIFY_STOP;
++	mce->kflags |= MCE_HANDLED_EDAC;
++	return NOTIFY_OK;
+ }
+ 
+ static struct notifier_block sbridge_mce_dec = {
+diff --git a/drivers/edac/skx_common.c b/drivers/edac/skx_common.c
+index 99bbaf6..6f08a12 100644
+--- a/drivers/edac/skx_common.c
++++ b/drivers/edac/skx_common.c
+@@ -577,6 +577,9 @@ int skx_mce_check_error(struct notifier_block *nb, unsigned long val,
+ 	if (edac_get_report_status() == EDAC_REPORTING_DISABLED)
+ 		return NOTIFY_DONE;
+ 
++	if (mce->kflags & MCE_HANDLED_CEC)
++		return NOTIFY_DONE;
++
+ 	/* ignore unless this is memory related with an address */
+ 	if ((mce->status & 0xefff) >> 7 != 1 || !(mce->status & MCI_STATUS_ADDRV))
+ 		return NOTIFY_DONE;
+@@ -616,6 +619,7 @@ int skx_mce_check_error(struct notifier_block *nb, unsigned long val,
+ 
+ 	skx_mce_output_error(mci, mce, &res);
+ 
++	mce->kflags |= MCE_HANDLED_EDAC;
+ 	return NOTIFY_DONE;
+ }
+ 
+diff --git a/drivers/ras/cec.c b/drivers/ras/cec.c
+index 6b42040..569d9ad 100644
+--- a/drivers/ras/cec.c
++++ b/drivers/ras/cec.c
+@@ -538,9 +538,12 @@ static int cec_notifier(struct notifier_block *nb, unsigned long val,
+ 	/* We eat only correctable DRAM errors with usable addresses. */
+ 	if (mce_is_memory_error(m) &&
+ 	    mce_is_correctable(m)  &&
+-	    mce_usable_address(m))
+-		if (!cec_add_elem(m->addr >> PAGE_SHIFT))
+-			return NOTIFY_STOP;
++	    mce_usable_address(m)) {
++		if (!cec_add_elem(m->addr >> PAGE_SHIFT)) {
++			m->kflags |= MCE_HANDLED_CEC;
++			return NOTIFY_OK;
++		}
++	}
+ 
+ 	return NOTIFY_DONE;
+ }
