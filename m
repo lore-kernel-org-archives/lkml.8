@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 820C8C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:20:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F693C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BB2F2076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:20:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F128420784
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:20:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586971210;
-	bh=IyE3J/aTncSnyBZoBTczzrzsDLGlsCLLRR03z4J6/vo=;
+	s=default; t=1586971216;
+	bh=be2U4y9+gOVVkKwTC3XgKDurLicjPH5cAUkU9PQjbE0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XVHtoHiuF0mrUSQ699r7QfUR1bzZEvlt6qaRCVtPHQGZD7KMDjsD5rAuRKo2ydqM8
-	 CQbmUKHKo1euIj+xS07H6WuLD8rr9NuAIOPvuiScRjw143NG4FA1uXkDZNBmjJj7/U
-	 m060B/ctKjZrMbxMchs6xdgFM2/z+8hZmanxwEeM=
+	b=QpBhGx0ok80MV4rUmieoO/wIztx7TsnJAhJkLe/KkKykjNlDKzmepyVUWDyQNioOE
+	 zT4oIPlthsA8AdqMxzTX68bsO1TSO8MlhZ8gTus2teBB44D+21tDMjW2IF2Sgqm1A1
+	 SDH2VH/v4HkzW39UzQvAmTlppgDHTxpOm7etRdlk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410811AbgDORUJ (ORCPT
+        id S2410820AbgDORUO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 13:20:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33428 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 13:20:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406325AbgDORTy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2404701AbgDORTy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Apr 2020 13:19:54 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2C9A21582;
-        Wed, 15 Apr 2020 17:19:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA01C2084D;
+        Wed, 15 Apr 2020 17:19:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1586971193;
-        bh=IyE3J/aTncSnyBZoBTczzrzsDLGlsCLLRR03z4J6/vo=;
+        bh=be2U4y9+gOVVkKwTC3XgKDurLicjPH5cAUkU9PQjbE0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m+IUYiHk0oQMGWvA/pp771ct6T/H8yTvm8u3NRf7e311xflhb3NujVALTBRSwAgmL
-         trb20dupx0l5hAbWl+wSNDdetOo7CA8JwPoo5x4ydpYAa0xUzNwFfNJrWrYgxSJyPp
-         NBZg1GD9kKcx6o3jaeCA+HpLbCKOsDOAqDkv5bUs=
+        b=vsyd/qcSrkatdiqV2ZGQhL4/ZiqPqZto1yBABJiSdqi0NGEQWAEhp9aR/WitWCm6w
+         zgjuWu+guQoKY2fPwJcUYc+DzmVtUgPd43Ff6cmPRvnK56AtpuiQ0I6DWoIlHyYKiG
+         OcfV/wvyBYRXxkobO7QoEFMWfCB2V+TkPVfbxAJY=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -47,11 +47,10 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Uladzislau Rezki <urezki@gmail.com>
-Subject: [PATCH tip/core/rcu 4/4] rcu: Add rcu_gp_might_be_stalled()
-Date:   Wed, 15 Apr 2020 10:19:50 -0700
-Message-Id: <20200415171950.9424-4-paulmck@kernel.org>
+        urezki@gmail.com, "Paul E . McKenney" <paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 2/4] rcu/tree: Add a shrinker to prevent OOM due to kfree_rcu() batching
+Date:   Wed, 15 Apr 2020 10:19:48 -0700
+Message-Id: <20200415171950.9424-2-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200415171924.GA9270@paulmck-ThinkPad-P72>
 References: <20200415171924.GA9270@paulmck-ThinkPad-P72>
@@ -60,124 +59,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Paul E. McKenney" <paulmck@kernel.org>
+From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
 
-This commit adds rcu_gp_might_be_stalled(), which returns true if there
-is some reason to believe that the RCU grace period is stalled.  The use
-case is where an RCU free-memory path needs to allocate memory in order
-to free it, a situation that should be avoided where possible.
+To reduce grace periods and improve kfree() performance, we have done
+batching recently dramatically bringing down the number of grace periods
+while giving us the ability to use kfree_bulk() for efficient kfree'ing.
 
-But where it is necessary, there is always the alternative of using
-synchronize_rcu() to wait for a grace period in order to avoid the
-allocation.  And if the grace period is stalled, allocating memory to
-asynchronously wait for it is a bad idea of epic proportions: Far better
-to let others use the memory, because these others might actually be
-able to free that memory before the grace period ends.
+However, this has increased the likelihood of OOM condition under heavy
+kfree_rcu() flood on small memory systems. This patch introduces a
+shrinker which starts grace periods right away if the system is under
+memory pressure due to existence of objects that have still not started
+a grace period.
 
-Thus, rcu_gp_might_be_stalled() can be used to help decide whether
-allocating memory on an RCU free path is a semi-reasonable course
-of action.
+With this patch, I do not observe an OOM anymore on a system with 512MB
+RAM and 8 CPUs, with the following rcuperf options:
 
-Cc: Joel Fernandes <joel@joelfernandes.org>
-Cc: Uladzislau Rezki <urezki@gmail.com>
+rcuperf.kfree_loops=20000 rcuperf.kfree_alloc_num=8000
+rcuperf.kfree_rcu_test=1 rcuperf.kfree_mult=2
+
+Otherwise it easily OOMs with the above parameters.
+
+NOTE:
+1. On systems with no memory pressure, the patch has no effect as intended.
+2. In the future, we can use this same mechanism to prevent grace periods
+   from happening even more, by relying on shrinkers carefully.
+
+Cc: urezki@gmail.com
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- include/linux/rcutiny.h |  1 +
- include/linux/rcutree.h |  1 +
- kernel/rcu/tree_stall.h | 40 ++++++++++++++++++++++++++++++++++++----
- 3 files changed, 38 insertions(+), 4 deletions(-)
+ kernel/rcu/tree.c | 60 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
 
-diff --git a/include/linux/rcutiny.h b/include/linux/rcutiny.h
-index 045c28b..dbf5ac4 100644
---- a/include/linux/rcutiny.h
-+++ b/include/linux/rcutiny.h
-@@ -87,6 +87,7 @@ static inline bool rcu_inkernel_boot_has_ended(void) { return true; }
- static inline bool rcu_is_watching(void) { return true; }
- static inline void rcu_momentary_dyntick_idle(void) { }
- static inline void kfree_rcu_scheduler_running(void) { }
-+static inline bool rcu_gp_might_be_stalled(void) { return false; }
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index f13130a..05dcbf8 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -2824,6 +2824,8 @@ struct kfree_rcu_cpu {
+ 	struct delayed_work monitor_work;
+ 	bool monitor_todo;
+ 	bool initialized;
++	// Number of objects for which GP not started
++	int count;
+ };
  
- /* Avoid RCU read-side critical sections leaking across. */
- static inline void rcu_all_qs(void) { barrier(); }
-diff --git a/include/linux/rcutree.h b/include/linux/rcutree.h
-index 45f3f66..fbc2627 100644
---- a/include/linux/rcutree.h
-+++ b/include/linux/rcutree.h
-@@ -39,6 +39,7 @@ void rcu_barrier(void);
- bool rcu_eqs_special_set(int cpu);
- void rcu_momentary_dyntick_idle(void);
- void kfree_rcu_scheduler_running(void);
-+bool rcu_gp_might_be_stalled(void);
- unsigned long get_state_synchronize_rcu(void);
- void cond_synchronize_rcu(unsigned long oldstate);
+ static DEFINE_PER_CPU(struct kfree_rcu_cpu, krc);
+@@ -2937,6 +2939,8 @@ static inline bool queue_kfree_rcu_work(struct kfree_rcu_cpu *krcp)
+ 				krcp->head = NULL;
+ 			}
  
-diff --git a/kernel/rcu/tree_stall.h b/kernel/rcu/tree_stall.h
-index 119ed6a..4dede00 100644
---- a/kernel/rcu/tree_stall.h
-+++ b/kernel/rcu/tree_stall.h
-@@ -15,10 +15,12 @@
- int sysctl_panic_on_rcu_stall __read_mostly;
- 
- #ifdef CONFIG_PROVE_RCU
--#define RCU_STALL_DELAY_DELTA	       (5 * HZ)
-+#define RCU_STALL_DELAY_DELTA		(5 * HZ)
- #else
--#define RCU_STALL_DELAY_DELTA	       0
-+#define RCU_STALL_DELAY_DELTA		0
- #endif
-+#define RCU_STALL_MIGHT_DIV		8
-+#define RCU_STALL_MIGHT_MIN		(2 * HZ)
- 
- /* Limit-check stall timeouts specified at boottime and runtime. */
- int rcu_jiffies_till_stall_check(void)
-@@ -40,6 +42,36 @@ int rcu_jiffies_till_stall_check(void)
- }
- EXPORT_SYMBOL_GPL(rcu_jiffies_till_stall_check);
- 
-+/**
-+ * rcu_gp_might_be_stalled - Is it likely that the grace period is stalled?
-+ *
-+ * Returns @true if the current grace period is sufficiently old that
-+ * it is reasonable to assume that it might be stalled.  This can be
-+ * useful when deciding whether to allocate memory to enable RCU-mediated
-+ * freeing on the one hand or just invoking synchronize_rcu() on the other.
-+ * The latter is preferable when the grace period is stalled.
-+ *
-+ * Note that sampling of the .gp_start and .gp_seq fields must be done
-+ * carefully to avoid false positives at the beginnings and ends of
-+ * grace periods.
-+ */
-+bool rcu_gp_might_be_stalled(void)
-+{
-+	unsigned long d = rcu_jiffies_till_stall_check() / RCU_STALL_MIGHT_DIV;
-+	unsigned long j = jiffies;
++			krcp->count = 0;
 +
-+	if (d < RCU_STALL_MIGHT_MIN)
-+		d = RCU_STALL_MIGHT_MIN;
-+	smp_mb(); // jiffies before .gp_seq to avoid false positives.
-+	if (!rcu_gp_in_progress())
-+		return false;
-+	// Long delays at this point avoids false positive, but a delay
-+	// of ULONG_MAX/4 jiffies voids your no-false-positive warranty.
-+	smp_mb(); // .gp_seq before second .gp_start
-+	// And ditto here.
-+	return !time_before(j, READ_ONCE(rcu_state.gp_start) + d);
+ 			/*
+ 			 * One work is per one batch, so there are two "free channels",
+ 			 * "bhead_free" and "head_free" the batch can handle. It can be
+@@ -3073,6 +3077,8 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+ 		krcp->head = head;
+ 	}
+ 
++	krcp->count++;
++
+ 	// Set timer to drain after KFREE_DRAIN_JIFFIES.
+ 	if (rcu_scheduler_active == RCU_SCHEDULER_RUNNING &&
+ 	    !krcp->monitor_todo) {
+@@ -3087,6 +3093,58 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+ }
+ EXPORT_SYMBOL_GPL(kfree_call_rcu);
+ 
++static unsigned long
++kfree_rcu_shrink_count(struct shrinker *shrink, struct shrink_control *sc)
++{
++	int cpu;
++	unsigned long flags, count = 0;
++
++	/* Snapshot count of all CPUs */
++	for_each_online_cpu(cpu) {
++		struct kfree_rcu_cpu *krcp = per_cpu_ptr(&krc, cpu);
++
++		spin_lock_irqsave(&krcp->lock, flags);
++		count += krcp->count;
++		spin_unlock_irqrestore(&krcp->lock, flags);
++	}
++
++	return count;
 +}
 +
- /* Don't do RCU CPU stall warnings during long sysrq printouts. */
- void rcu_sysrq_start(void)
++static unsigned long
++kfree_rcu_shrink_scan(struct shrinker *shrink, struct shrink_control *sc)
++{
++	int cpu, freed = 0;
++	unsigned long flags;
++
++	for_each_online_cpu(cpu) {
++		int count;
++		struct kfree_rcu_cpu *krcp = per_cpu_ptr(&krc, cpu);
++
++		count = krcp->count;
++		spin_lock_irqsave(&krcp->lock, flags);
++		if (krcp->monitor_todo)
++			kfree_rcu_drain_unlock(krcp, flags);
++		else
++			spin_unlock_irqrestore(&krcp->lock, flags);
++
++		sc->nr_to_scan -= count;
++		freed += count;
++
++		if (sc->nr_to_scan <= 0)
++			break;
++	}
++
++	return freed;
++}
++
++static struct shrinker kfree_rcu_shrinker = {
++	.count_objects = kfree_rcu_shrink_count,
++	.scan_objects = kfree_rcu_shrink_scan,
++	.batch = 0,
++	.seeks = DEFAULT_SEEKS,
++};
++
+ void __init kfree_rcu_scheduler_running(void)
  {
-@@ -104,8 +136,8 @@ static void record_gp_stall_check_time(void)
- 
- 	WRITE_ONCE(rcu_state.gp_start, j);
- 	j1 = rcu_jiffies_till_stall_check();
--	/* Record ->gp_start before ->jiffies_stall. */
--	smp_store_release(&rcu_state.jiffies_stall, j + j1); /* ^^^ */
-+	smp_mb(); // ->gp_start before ->jiffies_stall and caller's ->gp_seq.
-+	WRITE_ONCE(rcu_state.jiffies_stall, j + j1);
- 	rcu_state.jiffies_resched = j + j1 / 2;
- 	rcu_state.n_force_qs_gpstart = READ_ONCE(rcu_state.n_force_qs);
+ 	int cpu;
+@@ -4007,6 +4065,8 @@ static void __init kfree_rcu_batch_init(void)
+ 		INIT_DELAYED_WORK(&krcp->monitor_work, kfree_rcu_monitor);
+ 		krcp->initialized = true;
+ 	}
++	if (register_shrinker(&kfree_rcu_shrinker))
++		pr_err("Failed to register kfree_rcu() shrinker!\n");
  }
+ 
+ void __init rcu_init(void)
 -- 
 2.9.5
 
