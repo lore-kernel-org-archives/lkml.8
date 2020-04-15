@@ -2,259 +2,64 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0955DC38A2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:16:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC94DC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:16:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D080820656
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:16:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cpcikAIF"
+	by mail.kernel.org (Postfix) with ESMTP id 93124206F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:16:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586967379;
+	bh=QB4mrJlnOHdWx6xcWQ3bgKLDC0djAowm6CN2swhUgAU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1ifnPOCawUWuTgQEicUwSRnKsk+1NP6xlur5zEws8WEzI/Afs8q00BvRlPDB5BZTL
+	 X+sN4fOukadFhnU3jiy16427eZIoBxgWhPPj4J/7rWMyhq1hq70LO9gPzIKyJDqk3q
+	 0OoutLELHRVGYDxBdr/XwOanCr0wW6VxvNefAlbE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1415476AbgDOQP6 (ORCPT
+        id S1415482AbgDOQQR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 12:15:58 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:22294 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1415204AbgDOQMW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 12:12:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586967139;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Mv9YA2m75EYzFmUAbMrQPFP314ZNb88wltZTyC27b4E=;
-        b=cpcikAIF+WAZTycGsL1kPI3h2cB6IT0MFReH5pJj1pPEgUf4X3zfiqmwpTg9VOg6meDUXo
-        krsrV2zmjhzieTneBFeE3TQCx/d/ccaSziKQwKX+Q6dlLNulOKLIK7lVScSOft+33EiAs7
-        yRT26Idsu9MAypTS6AOvtqA79qkWxJk=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-198--dwTOcnQPbKq4opoet4Ogw-1; Wed, 15 Apr 2020 12:12:14 -0400
-X-MC-Unique: -dwTOcnQPbKq4opoet4Ogw-1
-Received: by mail-qt1-f198.google.com with SMTP id n89so16246268qte.15
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 09:12:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Mv9YA2m75EYzFmUAbMrQPFP314ZNb88wltZTyC27b4E=;
-        b=CkkGp/ibc+r3duZHKIr7lLMa2v73dqBTbjt06Jkn6lTJvt6DoEkI3l0t01Gg/RnY2K
-         hPy6wfHtP1UxkdzvYMhcK2xt2F08Q/bXZ7YWuWz8DhpxFXMIbQSCzNquJf28iTr9gSDI
-         3goQC+Lc49S6A7egBIqw3AT99hzHLEakJpol5ryfQuCij9JoSBTGVtv0xPRczCVcPRx/
-         YlBmHqcojYJ7aZOfCY4fo19W/JWv/BdwHPy+fx3UBLFyPP9zIqeRX1eAPo/EBEuqwhrh
-         h7JiYDqmyASEgNtTeXyOJgINUZxN1Rk+nfiiC4XQ9HD2OO5x7WXDXgDiGaL0ODJVO0DG
-         srQw==
-X-Gm-Message-State: AGi0Puboaedq/H+dI8+iPsg4DTP3UegZCccWn2Lzwy93CUZKGKvdHT1y
-        TYivBEiydxF8fE0JnqSF/jAsOIVirdQAyUpcd4zB0+fk4RDLG7u+WqFNCn90EV5hu/aNbSn3lJb
-        Qg1yeX3Ol+ypSndRM9AC03EdB5aPIeyO9KrY7jBIb
-X-Received: by 2002:a37:9b0f:: with SMTP id d15mr15707293qke.62.1586967131510;
-        Wed, 15 Apr 2020 09:12:11 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLoETwcvu72/DFo++b6OpDCehy7qLAHOH0i0rvrjp7Z+YqxMfS+Eb/JmjOkhPMj+ZIQVxJAZa62zL5VHxYGGyU=
-X-Received: by 2002:a37:9b0f:: with SMTP id d15mr15707269qke.62.1586967131214;
- Wed, 15 Apr 2020 09:12:11 -0700 (PDT)
+        Wed, 15 Apr 2020 12:16:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33800 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1415030AbgDOQQI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 12:16:08 -0400
+Received: from localhost (unknown [106.201.106.187])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37523206F9;
+        Wed, 15 Apr 2020 16:16:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586967368;
+        bh=QB4mrJlnOHdWx6xcWQ3bgKLDC0djAowm6CN2swhUgAU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CUA5ezWyshgzOZhu8futGHv425Kc4sK7tph+I65jlqCAnNOBN27id/xh4f9c0+iTk
+         cC427/zhcBlwWTuupq6M3+4ovf2dUx+vCFCLk0xaEwBL2+BKV8CBh3NCehpKMKxD4n
+         2EQKEchO5L8JGeI9gcvFZ5LsWbke8LwC6kX7BRnI=
+Date:   Wed, 15 Apr 2020 21:45:59 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Maciej Grochowski <maciek.grochowski@gmail.com>
+Cc:     dan.j.williams@intel.com,
+        Maciej Grochowski <maciej.grochowski@pm.me>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] include/linux/dmaengine: Typos fixes in API documentation
+Message-ID: <20200415161559.GZ72691@vkoul-mobl>
+References: <20200414041703.6661-1-maciek.grochowski@gmail.com>
 MIME-Version: 1.0
-References: <20200415113445.11881-1-sashal@kernel.org> <20200415113445.11881-84-sashal@kernel.org>
-In-Reply-To: <20200415113445.11881-84-sashal@kernel.org>
-From:   Karol Herbst <kherbst@redhat.com>
-Date:   Wed, 15 Apr 2020 18:11:10 +0200
-Message-ID: <CACO55ttpvfoyt1p_5Y-Q1=+5NruF5kMoug85jE9y+jG+FW=HGw@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 5.6 084/129] drm/nouveau: workaround runpm fail by
- disabling PCI power management on certain intel bridges
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lyude Paul <lyude@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mika Westerberg <mika.westerberg@intel.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        Ben Skeggs <bskeggs@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200414041703.6661-1-maciek.grochowski@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-in addition to that 028a12f5aa829 "drm/nouveau/gr/gp107,gp108:
-implement workaround for HW hanging during init" should probably get
-picked as well as it's fixing some runtime pm related issue on a
-handful of additional GPUs. I have a laptop myself which requires both
-of those patches.
+On 14-04-20, 00:17, Maciej Grochowski wrote:
+> From: Maciej Grochowski <maciej.grochowski@pm.me>
 
-Applies to 5.5 and 5..4 as well.
+Applied, thanks
 
-And both commits should probably get applied to older trees as well.
-but I didn't get to it yet to see if they apply and work as expected.
-
-
-On Wed, Apr 15, 2020 at 1:36 PM Sasha Levin <sashal@kernel.org> wrote:
->
-> From: Karol Herbst <kherbst@redhat.com>
->
-> [ Upstream commit 434fdb51513bf3057ac144d152e6f2f2b509e857 ]
->
-> Fixes the infamous 'runtime PM' bug many users are facing on Laptops with
-> Nvidia Pascal GPUs by skipping said PCI power state changes on the GPU.
->
-> Depending on the used kernel there might be messages like those in demsg:
->
-> "nouveau 0000:01:00.0: Refused to change power state, currently in D3"
-> "nouveau 0000:01:00.0: can't change power state from D3cold to D0 (config
-> space inaccessible)"
-> followed by backtraces of kernel crashes or timeouts within nouveau.
->
-> It's still unkown why this issue exists, but this is a reliable workaroun=
-d
-> and solves a very annoying issue for user having to choose between a
-> crashing kernel or higher power consumption of their Laptops.
->
-> Signed-off-by: Karol Herbst <kherbst@redhat.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Lyude Paul <lyude@redhat.com>
-> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-> Cc: Mika Westerberg <mika.westerberg@intel.com>
-> Cc: linux-pci@vger.kernel.org
-> Cc: linux-pm@vger.kernel.org
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: nouveau@lists.freedesktop.org
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=3D205623
-> Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  drivers/gpu/drm/nouveau/nouveau_drm.c | 63 +++++++++++++++++++++++++++
->  drivers/gpu/drm/nouveau/nouveau_drv.h |  2 +
->  2 files changed, 65 insertions(+)
->
-> diff --git a/drivers/gpu/drm/nouveau/nouveau_drm.c b/drivers/gpu/drm/nouv=
-eau/nouveau_drm.c
-> index b65ae817eabf5..2d4c899e1f8b9 100644
-> --- a/drivers/gpu/drm/nouveau/nouveau_drm.c
-> +++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
-> @@ -618,6 +618,64 @@ nouveau_drm_device_fini(struct drm_device *dev)
->         kfree(drm);
->  }
->
-> +/*
-> + * On some Intel PCIe bridge controllers doing a
-> + * D0 -> D3hot -> D3cold -> D0 sequence causes Nvidia GPUs to not reappe=
-ar.
-> + * Skipping the intermediate D3hot step seems to make it work again. Thi=
-s is
-> + * probably caused by not meeting the expectation the involved AML code =
-has
-> + * when the GPU is put into D3hot state before invoking it.
-> + *
-> + * This leads to various manifestations of this issue:
-> + *  - AML code execution to power on the GPU hits an infinite loop (as t=
-he
-> + *    code waits on device memory to change).
-> + *  - kernel crashes, as all PCI reads return -1, which most code isn't =
-able
-> + *    to handle well enough.
-> + *
-> + * In all cases dmesg will contain at least one line like this:
-> + * 'nouveau 0000:01:00.0: Refused to change power state, currently in D3=
-'
-> + * followed by a lot of nouveau timeouts.
-> + *
-> + * In the \_SB.PCI0.PEG0.PG00._OFF code deeper down writes bit 0x80 to t=
-he not
-> + * documented PCI config space register 0x248 of the Intel PCIe bridge
-> + * controller (0x1901) in order to change the state of the PCIe link bet=
-ween
-> + * the PCIe port and the GPU. There are alternative code paths using oth=
-er
-> + * registers, which seem to work fine (executed pre Windows 8):
-> + *  - 0xbc bit 0x20 (publicly available documentation claims 'reserved')
-> + *  - 0xb0 bit 0x10 (link disable)
-> + * Changing the conditions inside the firmware by poking into the releva=
-nt
-> + * addresses does resolve the issue, but it seemed to be ACPI private me=
-mory
-> + * and not any device accessible memory at all, so there is no portable =
-way of
-> + * changing the conditions.
-> + * On a XPS 9560 that means bits [0,3] on \CPEX need to be cleared.
-> + *
-> + * The only systems where this behavior can be seen are hybrid graphics =
-laptops
-> + * with a secondary Nvidia Maxwell, Pascal or Turing GPU. It's unclear w=
-hether
-> + * this issue only occurs in combination with listed Intel PCIe bridge
-> + * controllers and the mentioned GPUs or other devices as well.
-> + *
-> + * documentation on the PCIe bridge controller can be found in the
-> + * "7th Generation Intel=C2=AE Processor Families for H Platforms Datash=
-eet Volume 2"
-> + * Section "12 PCI Express* Controller (x16) Registers"
-> + */
-> +
-> +static void quirk_broken_nv_runpm(struct pci_dev *pdev)
-> +{
-> +       struct drm_device *dev =3D pci_get_drvdata(pdev);
-> +       struct nouveau_drm *drm =3D nouveau_drm(dev);
-> +       struct pci_dev *bridge =3D pci_upstream_bridge(pdev);
-> +
-> +       if (!bridge || bridge->vendor !=3D PCI_VENDOR_ID_INTEL)
-> +               return;
-> +
-> +       switch (bridge->device) {
-> +       case 0x1901:
-> +               drm->old_pm_cap =3D pdev->pm_cap;
-> +               pdev->pm_cap =3D 0;
-> +               NV_INFO(drm, "Disabling PCI power management to avoid bug=
-\n");
-> +               break;
-> +       }
-> +}
-> +
->  static int nouveau_drm_probe(struct pci_dev *pdev,
->                              const struct pci_device_id *pent)
->  {
-> @@ -699,6 +757,7 @@ static int nouveau_drm_probe(struct pci_dev *pdev,
->         if (ret)
->                 goto fail_drm_dev_init;
->
-> +       quirk_broken_nv_runpm(pdev);
->         return 0;
->
->  fail_drm_dev_init:
-> @@ -734,7 +793,11 @@ static void
->  nouveau_drm_remove(struct pci_dev *pdev)
->  {
->         struct drm_device *dev =3D pci_get_drvdata(pdev);
-> +       struct nouveau_drm *drm =3D nouveau_drm(dev);
->
-> +       /* revert our workaround */
-> +       if (drm->old_pm_cap)
-> +               pdev->pm_cap =3D drm->old_pm_cap;
->         nouveau_drm_device_remove(dev);
->         pci_disable_device(pdev);
->  }
-> diff --git a/drivers/gpu/drm/nouveau/nouveau_drv.h b/drivers/gpu/drm/nouv=
-eau/nouveau_drv.h
-> index c2c332fbde979..2a6519737800c 100644
-> --- a/drivers/gpu/drm/nouveau/nouveau_drv.h
-> +++ b/drivers/gpu/drm/nouveau/nouveau_drv.h
-> @@ -140,6 +140,8 @@ struct nouveau_drm {
->
->         struct list_head clients;
->
-> +       u8 old_pm_cap;
-> +
->         struct {
->                 struct agp_bridge_data *bridge;
->                 u32 base;
-> --
-> 2.20.1
->
-
+-- 
+~Vinod
