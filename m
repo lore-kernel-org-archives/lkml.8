@@ -2,364 +2,153 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B300C3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:34:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E3FC2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25851206D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:34:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E666120784
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:34:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="Y90gRVEA"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="ZhrtLTbX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408712AbgDOKe0 (ORCPT
+        id S2408705AbgDOKek (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 06:34:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58460 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408660AbgDOKcH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 06:32:07 -0400
-Received: from mo6-p04-ob.smtp.rzone.de (mo6-p04-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5304::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07989C061A0C;
-        Wed, 15 Apr 2020 03:32:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1586946725;
-        s=strato-dkim-0002; d=chronox.de;
-        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=u6xlOooibfE9v+VmKfACjmHTfW5komSO8oNdl0Cm6pY=;
-        b=Y90gRVEAuV1YtRJx3J38XhJsSF2WHQf+XBuZ1kX/HLHCzbIJ5xVYempxfQF0BhU+g7
-        Wh8P/f19jPqP5j3n5Cyvb9ydHUVoEj+qpIJBfXjLODbMqSVrUROpW5TsuLk/m63iTdc0
-        m8xnEZyeFcIcrhrpoNXZIITE7HO03dBudowpquuIfDINSBmRKkRoKZVQArSF7jNF1Yo5
-        2O7iH6isl/UEi73AYBA9FyqE/mQiqBTX73r3bFNTwe7XkQ539pE3bXoLZeP7aad2xbaS
-        SjqK0bK9Z307fj8/3upGGEgDLKmiFh7cdeK6YbraYkQ3OkgdLPC2nqn5tJiLDVVoO6cA
-        TNaw==
-X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzGHXPZIvSaiyU="
-X-RZG-CLASS-ID: mo00
-Received: from positron.chronox.de
-        by smtp.strato.de (RZmta 46.4.0 DYNA|AUTH)
-        with ESMTPSA id 404ef0w3FAJu12B
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Wed, 15 Apr 2020 12:19:56 +0200 (CEST)
-From:   Stephan =?ISO-8859-1?Q?M=FCller?= <smueller@chronox.de>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Nicolai Stange <nstange@suse.de>,
-        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
-        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
-        Roman Drahtmueller <draht@schaltsekun.de>,
-        Neil Horman <nhorman@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Julia Lawall <julia.lawall@inria.fr>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [PATCH v30 03/12] LRNG - sysctls and /proc interface
-Date:   Wed, 15 Apr 2020 12:11:15 +0200
-Message-ID: <6193794.JRBo1frAlU@positron.chronox.de>
-In-Reply-To: <11836144.hkEK2qVKZC@positron.chronox.de>
-References: <11836144.hkEK2qVKZC@positron.chronox.de>
+        Wed, 15 Apr 2020 06:34:40 -0400
+Received: from mail-mw2nam12on2049.outbound.protection.outlook.com ([40.107.244.49]:10881
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2408582AbgDOKZG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 06:25:06 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AdOunWCpJ/LF371FP7EnWw3ZyeTbnwQ2V10oo/4YEWypIWm3ukFqJoCWAv6vOGRc1Ucnf02YcUu1e6X782noM49zzN0NlxhKminVf5NusZnOXqsQCCEpsTxnYLj5FZKgd+9bf4UsN8jhmL9bHlzpxxZG0RLsm5NlOa6tLLUvnrFiBRGB1pE1bF07b5yMV5kIsmBkYwdR5zqax3Iw/Z+uIrysItpbXuE0efmj08fh7dO29kuEy47ZvL7U/xvrmqw1kwBleIm2DUj445nvVUJ5tvrOc2n6lKystr39qs2lKCv5kpBV+uddL3Vsw/p9NOFVcVqOFerpN697HQRfN1GLKw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ry2gX4wI243Spew8GBjHdN6kWvF2qrKVqDEmaVAf5BA=;
+ b=bCsyKaNyqEFQp+uXdGrGlcs0iOb6eb1UGedSoUMvS28cBsdqMaNFP72uWbGjL/xmHK1Dj3EOP7ii38/IEOC6Xxt6gbxQRszz0IAkfQTOKC1pIlUg98mPqDiVfulsFO8U6KtoDoGkMfK7Qpy1cpn6ZTdu7d+Ds7grMxzUnsleYqqICzAM3YCmbwvR6GGdCycTECfwUKouTKwGlYqUGA5wue5Ekp7Y2px+BmoVhY0KEqgDNujYnVljLtyEddLb3kMAvppDb6MXNxlSEiAyQI6TnqjWY81bbMnO2OnNTBl8vaQ8KBch8OmakKyGrddsNZ5L/p/OINt2b02AQy6DHTRLmQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=gmail.com smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ry2gX4wI243Spew8GBjHdN6kWvF2qrKVqDEmaVAf5BA=;
+ b=ZhrtLTbXxdw85Bw1cAoZr+VrDVpgolZMoKElx99hzXW3VOplp4cliz1ADf4IECs6wGggmcuxx6teXHcr0fCLfBPmGJcLlHbz/Wrs7emxLWhs9YDs91mxV9wPDYhKR2+7hVC34nD1jBrdnTh8wL14lzaxTBMUjEc8pikQ5yktDWw=
+Received: from SN4PR0201CA0021.namprd02.prod.outlook.com
+ (2603:10b6:803:2b::31) by SN4PR0201MB3615.namprd02.prod.outlook.com
+ (2603:10b6:803:45::25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.24; Wed, 15 Apr
+ 2020 10:25:03 +0000
+Received: from SN1NAM02FT021.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:803:2b:cafe::c7) by SN4PR0201CA0021.outlook.office365.com
+ (2603:10b6:803:2b::31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.25 via Frontend
+ Transport; Wed, 15 Apr 2020 10:25:03 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ SN1NAM02FT021.mail.protection.outlook.com (10.152.72.144) with Microsoft SMTP
+ Server id 15.20.2921.25 via Frontend Transport; Wed, 15 Apr 2020 10:25:03
+ +0000
+Received: from [149.199.38.66] (port=57986 helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
+        (envelope-from <nava.manne@xilinx.com>)
+        id 1jOfDP-0002ou-Ux; Wed, 15 Apr 2020 03:24:19 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <nava.manne@xilinx.com>)
+        id 1jOfE6-0000Qx-NJ; Wed, 15 Apr 2020 03:25:02 -0700
+Received: from xsj-pvapsmtp01 (maildrop.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 03FAOuln018310;
+        Wed, 15 Apr 2020 03:24:56 -0700
+Received: from [10.140.6.6] (helo=xhdappanad40.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <nava.manne@xilinx.com>)
+        id 1jOfDz-0000Kb-PR; Wed, 15 Apr 2020 03:24:56 -0700
+From:   Nava kishore Manne <nava.manne@xilinx.com>
+To:     mdf@kernel.org, michal.simek@xilinx.com,
+        linux-fpga@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, chinnikishore369@gmail.com
+Cc:     Nava kishore Manne <nava.manne@xilinx.com>
+Subject: [PATCH 1/2] fpga: doc: Add binding doc for the afi config driver
+Date:   Wed, 15 Apr 2020 15:54:49 +0530
+Message-Id: <1586946290-7280-1-git-send-email-nava.manne@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(396003)(376002)(39860400002)(136003)(346002)(46966005)(81156014)(356005)(70206006)(8936002)(8676002)(82740400003)(2906002)(107886003)(70586007)(186003)(426003)(81166007)(6666004)(7696005)(5660300002)(9786002)(36756003)(336012)(2616005)(478600001)(26005)(4326008)(47076004)(316002);DIR:OUT;SFP:1101;
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 56f7ca4d-a555-4342-f7b1-08d7e127426e
+X-MS-TrafficTypeDiagnostic: SN4PR0201MB3615:
+X-Microsoft-Antispam-PRVS: <SN4PR0201MB36150FDC5A13A551311E0FB9C2DB0@SN4PR0201MB3615.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
+X-Forefront-PRVS: 0374433C81
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Nfn7yI1hIEqdKkH4xbfIW6ursuLQrIEyMht+RrrKf464f9ttNQP9Whvz7uWNh8DufyThH4kQJjENzG90OST4i0fz99an8MIeRizyZV9beFFhFqPSXxj3Z+zcdC3lWA1l7wcl/LFmaxvxxsws92a3BIp1uVDZaHlbKzat5mAuzig/bCC3P0fllLT6LF4wGJJgnPRQHvtx6+r0z+6uxkAnBceiDwTBJ8niTAsMWqOA0/2ppgjVkSdtv+t+v5zqd8arp9+wzx0DcYXnJhemlJl1PQXbpIRRwn0TXaTjoVQ+gbeDA8ooEZ0MIBKeSX32DnM60jwDsVf9ugbZ90NVYc4+kz2rcsWhCYAUV2Q3QOn6BJ1YkQtICTM29xVXfkn8xZJe8pTssWEHKqtkQNKSlmP+szMFiP2JJ+oEIiYG1sPMW2iEEMHxr+VWecUSKBAabaaps2v2BhNQThGoN7VHypePTlavkodYatH+tXqo8/PzwfPNVwS975lOkC/Bqg/NoWEq9UwgeCIOWQR4hHfybCOKUA==
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2020 10:25:03.0677
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 56f7ca4d-a555-4342-f7b1-08d7e127426e
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR0201MB3615
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The LRNG sysctl interface provides the same controls as the existing
-/dev/random implementation. These sysctls behave identically and are
-implemented identically. The goal is to allow a possible merge of the
-existing /dev/random implementation with this implementation which
-implies that this patch tries have a very close similarity. Yet, all
-sysctls are documented at [1].
+This patch adds the binding document for the afi
+config driver.
 
-In addition, it provides the file lrng_type which provides details about
-the LRNG:
+Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
+---
+ .../devicetree/bindings/fpga/xlnx,zynq-afi-fpga.txt   | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/fpga/xlnx,zynq-afi-fpga.txt
 
-=2D the name of the DRNG that produces the random numbers for /dev/random,
-/dev/urandom, getrandom(2)
-
-=2D the hash used to produce random numbers from the entropy pool
-
-=2D the number of secondary DRNG instances
-
-=2D indicator whether the LRNG operates SP800-90B compliant
-
-=2D indicator whether a high-resolution timer is identified - only with a
-high-resolution timer the interrupt noise source will deliver sufficient
-entropy
-
-=2D indicator whether the LRNG has been minimally seeded (i.e. is the
-secondary DRNG seeded with at least 128 bits of of entropy)
-
-=2D indicator whether the LRNG has been fully seeded (i.e. is the
-secondary DRNG seeded with at least 256 bits of entropy)
-
-[1] https://www.chronox.de/lrng.html
-
-CC: "Eric W. Biederman" <ebiederm@xmission.com>
-CC: "Alexander E. Patrakov" <patrakov@gmail.com>
-CC: "Ahmed S. Darwish" <darwish.07@gmail.com>
-CC: "Theodore Y. Ts'o" <tytso@mit.edu>
-CC: Willy Tarreau <w@1wt.eu>
-CC: Matthew Garrett <mjg59@srcf.ucam.org>
-CC: Vito Caputo <vcaputo@pengaru.com>
-CC: Andreas Dilger <adilger.kernel@dilger.ca>
-CC: Jan Kara <jack@suse.cz>
-CC: Ray Strode <rstrode@redhat.com>
-CC: William Jon McCann <mccann@jhu.edu>
-CC: zhangjs <zachary@baishancloud.com>
-CC: Andy Lutomirski <luto@kernel.org>
-CC: Florian Weimer <fweimer@redhat.com>
-CC: Lennart Poettering <mzxreary@0pointer.de>
-CC: Nicolai Stange <nstange@suse.de>
-Reviewed-by: Marcelo Henrique Cerri <marcelo.cerri@canonical.com>
-Reviewed-by: Roman Drahtmueller <draht@schaltsekun.de>
-Tested-by: Roman Drahtm=FCller <draht@schaltsekun.de>
-Tested-by: Marcelo Henrique Cerri <marcelo.cerri@canonical.com>
-Tested-by: Neil Horman <nhorman@redhat.com>
-Signed-off-by: Stephan Mueller <smueller@chronox.de>
-=2D--
- drivers/char/lrng/Makefile          |   1 +
- drivers/char/lrng/lrng_interfaces.c |   1 -
- drivers/char/lrng/lrng_internal.h   |   4 +
- drivers/char/lrng/lrng_proc.c       | 163 ++++++++++++++++++++++++++++
- 4 files changed, 168 insertions(+), 1 deletion(-)
- create mode 100644 drivers/char/lrng/lrng_proc.c
-
-diff --git a/drivers/char/lrng/Makefile b/drivers/char/lrng/Makefile
-index 0a32f22c2c1a..e69c176f0161 100644
-=2D-- a/drivers/char/lrng/Makefile
-+++ b/drivers/char/lrng/Makefile
-@@ -9,3 +9,4 @@ obj-y				+=3D lrng_pool.o lrng_aux.o \
- 				   lrng_interfaces.o \
-=20
- obj-$(CONFIG_NUMA)		+=3D lrng_numa.o
-+obj-$(CONFIG_SYSCTL)		+=3D lrng_proc.o
-diff --git a/drivers/char/lrng/lrng_interfaces.c b/drivers/char/lrng/lrng_i=
-nterfaces.c
-index 57e9a68e69bd..79a502517ccd 100644
-=2D-- a/drivers/char/lrng/lrng_interfaces.c
-+++ b/drivers/char/lrng/lrng_interfaces.c
-@@ -34,7 +34,6 @@ static DECLARE_WAIT_QUEUE_HEAD(lrng_write_wait);
- static DECLARE_WAIT_QUEUE_HEAD(lrng_init_wait);
- static struct fasync_struct *fasync;
-=20
-=2Dstruct ctl_table random_table[];
- /********************************** Helper *******************************=
-****/
-=20
- /* Is the DRNG seed level too low? */
-diff --git a/drivers/char/lrng/lrng_internal.h b/drivers/char/lrng/lrng_int=
-ernal.h
-index ecb0a7ad5e7e..f65fc6647e8a 100644
-=2D-- a/drivers/char/lrng/lrng_internal.h
-+++ b/drivers/char/lrng/lrng_internal.h
-@@ -116,7 +116,11 @@ void lrng_cc20_init_state(struct chacha20_state *state=
-);
-=20
- /********************************** /proc ********************************=
-*****/
-=20
-+#ifdef CONFIG_SYSCTL
-+void lrng_pool_inc_numa_node(void);
-+#else
- static inline void lrng_pool_inc_numa_node(void) { }
-+#endif
-=20
- /****************************** LRNG interfaces **************************=
-*****/
-=20
-diff --git a/drivers/char/lrng/lrng_proc.c b/drivers/char/lrng/lrng_proc.c
+diff --git a/Documentation/devicetree/bindings/fpga/xlnx,zynq-afi-fpga.txt b/Documentation/devicetree/bindings/fpga/xlnx,zynq-afi-fpga.txt
 new file mode 100644
-index 000000000000..f4ee01f61925
-=2D-- /dev/null
-+++ b/drivers/char/lrng/lrng_proc.c
-@@ -0,0 +1,163 @@
-+// SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
-+/*
-+ * LRNG proc and sysctl interfaces
-+ *
-+ * Copyright (C) 2016 - 2020, Stephan Mueller <smueller@chronox.de>
-+ */
+index 0000000..e00942c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/fpga/xlnx,zynq-afi-fpga.txt
+@@ -0,0 +1,19 @@
++Xilinx Zynq AFI interface Manager
 +
-+#include <linux/lrng.h>
-+#include <linux/proc_fs.h>
-+#include <linux/seq_file.h>
-+#include <linux/sysctl.h>
-+#include <linux/uuid.h>
++The Zynq Processing System core provides access from PL masters to PS
++internal peripherals, and memory through AXI FIFO interface
++(AFI) interfaces.
 +
-+#include "lrng_internal.h"
++Required properties:
++-compatible:	Should contain "xlnx,zynq-afi-fpga"
++-reg:	Physical base address and size of the controller's register area.
++-xlnx,afi-buswidth :	Size of the afi bus width.
++			0: 64-bit AXI data width,
++			1: 32-bit AXI data width,
 +
-+/*
-+ * This function is used to return both the bootid UUID, and random
-+ * UUID.  The difference is in whether table->data is NULL; if it is,
-+ * then a new UUID is generated and returned to the user.
-+ *
-+ * If the user accesses this via the proc interface, the UUID will be
-+ * returned as an ASCII string in the standard UUID format; if via the
-+ * sysctl system call, as 16 bytes of binary data.
-+ */
-+static int lrng_proc_do_uuid(struct ctl_table *table, int write,
-+			     void __user *buffer, size_t *lenp, loff_t *ppos)
-+{
-+	struct ctl_table fake_table;
-+	unsigned char buf[64], tmp_uuid[16], *uuid;
-+
-+	uuid =3D table->data;
-+	if (!uuid) {
-+		uuid =3D tmp_uuid;
-+		generate_random_uuid(uuid);
-+	} else {
-+		static DEFINE_SPINLOCK(bootid_spinlock);
-+
-+		spin_lock(&bootid_spinlock);
-+		if (!uuid[8])
-+			generate_random_uuid(uuid);
-+		spin_unlock(&bootid_spinlock);
-+	}
-+
-+	sprintf(buf, "%pU", uuid);
-+
-+	fake_table.data =3D buf;
-+	fake_table.maxlen =3D sizeof(buf);
-+
-+	return proc_dostring(&fake_table, write, buffer, lenp, ppos);
-+}
-+
-+static int lrng_proc_do_entropy(struct ctl_table *table, int write,
-+				void __user *buffer, size_t *lenp, loff_t *ppos)
-+{
-+	struct ctl_table fake_table;
-+	int entropy_count;
-+
-+	entropy_count =3D lrng_avail_entropy();
-+
-+	fake_table.data =3D &entropy_count;
-+	fake_table.maxlen =3D sizeof(entropy_count);
-+
-+	return proc_dointvec(&fake_table, write, buffer, lenp, ppos);
-+}
-+
-+static int lrng_sysctl_poolsize =3D LRNG_POOL_SIZE_BITS;
-+static int lrng_min_write_thresh;
-+static int lrng_max_write_thresh =3D LRNG_POOL_SIZE_BITS;
-+static char lrng_sysctl_bootid[16];
-+static int lrng_drng_reseed_max_min;
-+
-+struct ctl_table random_table[] =3D {
-+	{
-+		.procname	=3D "poolsize",
-+		.data		=3D &lrng_sysctl_poolsize,
-+		.maxlen		=3D sizeof(int),
-+		.mode		=3D 0444,
-+		.proc_handler	=3D proc_dointvec,
-+	},
-+	{
-+		.procname	=3D "entropy_avail",
-+		.maxlen		=3D sizeof(int),
-+		.mode		=3D 0444,
-+		.proc_handler	=3D lrng_proc_do_entropy,
-+	},
-+	{
-+		.procname	=3D "write_wakeup_threshold",
-+		.data		=3D &lrng_write_wakeup_bits,
-+		.maxlen		=3D sizeof(int),
-+		.mode		=3D 0644,
-+		.proc_handler	=3D proc_dointvec_minmax,
-+		.extra1		=3D &lrng_min_write_thresh,
-+		.extra2		=3D &lrng_max_write_thresh,
-+	},
-+	{
-+		.procname	=3D "boot_id",
-+		.data		=3D &lrng_sysctl_bootid,
-+		.maxlen		=3D 16,
-+		.mode		=3D 0444,
-+		.proc_handler	=3D lrng_proc_do_uuid,
-+	},
-+	{
-+		.procname	=3D "uuid",
-+		.maxlen		=3D 16,
-+		.mode		=3D 0444,
-+		.proc_handler	=3D lrng_proc_do_uuid,
-+	},
-+	{
-+		.procname       =3D "urandom_min_reseed_secs",
-+		.data           =3D &lrng_drng_reseed_max_time,
-+		.maxlen         =3D sizeof(int),
-+		.mode           =3D 0644,
-+		.proc_handler   =3D proc_dointvec,
-+		.extra1		=3D &lrng_drng_reseed_max_min,
-+	},
-+	{ }
++Example:
++afi0: afi0 {
++	compatible = "xlnx,zynq-afi-fpga";
++	reg = <0xf8008000 0x1000>;
++	xlnx,afi-buswidth = <1>;
 +};
-+
-+/* Number of online DRNGs */
-+static u32 numa_drngs =3D 1;
-+
-+void lrng_pool_inc_numa_node(void)
-+{
-+	numa_drngs++;
-+}
-+
-+static int lrng_proc_type_show(struct seq_file *m, void *v)
-+{
-+	struct lrng_drng *lrng_drng_init =3D lrng_drng_init_instance();
-+	unsigned long flags =3D 0;
-+	unsigned char buf[300];
-+
-+	lrng_drng_lock(lrng_drng_init, &flags);
-+	snprintf(buf, sizeof(buf),
-+		 "DRNG name: %s\n"
-+		 "Hash for reading entropy pool: %s\n"
-+		 "DRNG security strength: %d bits\n"
-+		 "number of DRNG instances: %u\n"
-+		 "SP800-90B compliance: %s\n"
-+		 "High-resolution timer: %s\n"
-+		 "LRNG minimally seeded: %s\n"
-+		 "LRNG fully seeded: %s\n",
-+		 lrng_drng_init->crypto_cb->lrng_drng_name(),
-+		 lrng_drng_init->crypto_cb->lrng_hash_name(),
-+		 LRNG_DRNG_SECURITY_STRENGTH_BITS, numa_drngs,
-+		 lrng_sp80090b_compliant() ? "true" : "false",
-+		 lrng_pool_highres_timer() ? "true" : "false",
-+		 lrng_state_min_seeded() ? "true" : "false",
-+		 lrng_state_fully_seeded() ? "true" : "false");
-+	lrng_drng_unlock(lrng_drng_init, &flags);
-+
-+	seq_write(m, buf, strlen(buf));
-+
-+	return 0;
-+}
-+
-+static int __init lrng_proc_type_init(void)
-+{
-+	proc_create_single("lrng_type", 0444, NULL, &lrng_proc_type_show);
-+	return 0;
-+}
-+
-+module_init(lrng_proc_type_init);
-=2D-=20
-2.25.2
-
-
-
+-- 
+2.7.4
 
