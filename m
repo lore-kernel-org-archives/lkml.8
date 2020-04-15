@@ -2,101 +2,96 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 766ECC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:28:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C565C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:28:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52843206E9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:28:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22CA0206E9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:28:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="k8fQPFJ1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2894529AbgDOI2D (ORCPT
+        id S2408044AbgDOI2Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 04:28:03 -0400
-Received: from sauhun.de ([88.99.104.3]:49304 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2894461AbgDOI1O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 04:27:14 -0400
-Received: from localhost (p54B33507.dip0.t-ipconnect.de [84.179.53.7])
-        by pokefinder.org (Postfix) with ESMTPSA id 956F72C1F58;
-        Wed, 15 Apr 2020 10:27:12 +0200 (CEST)
-Date:   Wed, 15 Apr 2020 10:27:12 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-i3c@lists.infradead.org,
-        Kieran Bingham <kieran@ksquared.org.uk>,
-        Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        Luca Ceresoli <luca@lucaceresoli.net>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Vladimir Zapolskiy <vz@mleia.com>, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v2 0/6] i2c: of: reserve unknown and ancillary
- addresses
-Message-ID: <20200415082712.GD1141@ninjato>
-References: <20200318150059.21714-1-wsa+renesas@sang-engineering.com>
+        Wed, 15 Apr 2020 04:28:24 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:4522 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2894455AbgDOI1R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 04:27:17 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e96c4a00000>; Wed, 15 Apr 2020 01:24:00 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 15 Apr 2020 01:25:49 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 15 Apr 2020 01:25:49 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Apr
+ 2020 08:25:49 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 15 Apr 2020 08:25:48 +0000
+Received: from nkristam-ubuntu.nvidia.com (Not Verified[10.19.67.128]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5e96c5090002>; Wed, 15 Apr 2020 01:25:48 -0700
+From:   Nagarjuna Kristam <nkristam@nvidia.com>
+To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <mark.rutland@arm.com>, <robh+dt@kernel.org>, <kishon@ti.com>
+CC:     <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Nagarjuna Kristam <nkristam@nvidia.com>
+Subject: [PATCH V2 8/8] phy: tegra: xusb: Enable charger detect for Tegra210
+Date:   Wed, 15 Apr 2020 13:55:08 +0530
+Message-ID: <1586939108-10075-9-git-send-email-nkristam@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1586939108-10075-1-git-send-email-nkristam@nvidia.com>
+References: <1586939108-10075-1-git-send-email-nkristam@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="DiL7RhKs8rK9YGuF"
-Content-Disposition: inline
-In-Reply-To: <20200318150059.21714-1-wsa+renesas@sang-engineering.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1586939040; bh=055RAzmaGHUjBmQF8JPysR26eaww2SCbnUqbBC+ZFk4=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=k8fQPFJ192XnwKkG4g9GVom7Z04W0MGP1M9gcjdJGRYEEIMkcAhs5WcelJNpK2QWQ
+         dMYVctTvIAq2wvH3ck9xdxgX2S7ekzH1iaq2NNH2gr0RKbUNFvsawkzThv69Mh3Rcq
+         VuGlhccCLB7dHhz4JxNLQDi73iwBsDPLnE04aojmyD2MqB27BnZtzj/vv7SiqDJx19
+         lEU8a3la3weiHi3xDEevptnouoODmOn/Ufd1DUjKNktJmHK10QUAKMBMf3Pi7DhrXk
+         6CkkPtNLZLNt6P0c4k2maXC2P2AIrq09Wplv0wUUDXN888E2s7SD6XT20REbNI80rd
+         jJM3YP8Y/PUaQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Tegra210 SoC supports charger detect, set corresponding soc flag.
 
---DiL7RhKs8rK9YGuF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+---
+V2:
+ - Patch re-based.
+---
+ drivers/phy/tegra/xusb-tegra210.c | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/drivers/phy/tegra/xusb-tegra210.c b/drivers/phy/tegra/xusb-tegra210.c
+index 7d84f1a..2be5201 100644
+--- a/drivers/phy/tegra/xusb-tegra210.c
++++ b/drivers/phy/tegra/xusb-tegra210.c
+@@ -2352,6 +2352,7 @@ const struct tegra_xusb_padctl_soc tegra210_xusb_padctl_soc = {
+ 	.supply_names = tegra210_xusb_padctl_supply_names,
+ 	.num_supplies = ARRAY_SIZE(tegra210_xusb_padctl_supply_names),
+ 	.need_fake_usb3_port = true,
++	.charger_detect = true,
+ };
+ EXPORT_SYMBOL_GPL(tegra210_xusb_padctl_soc);
+ 
+-- 
+2.7.4
 
-Status update on this series:
-
-> TODO: make sure there are no concurrency issues in patch 6 when handling
-> the struct i2c_client.
-
-This turns out to be annoying. How to make sure that we don't modify the
-i2c_client while the adapter it is sitting on just gets removed. AFAICS
-we need a new locking scheme just for that and I am not convinced this
-is the way forward.
-
-Also, there is still this small room for regressing when there are DTs
-having multiple addresses specified in the DT and the drivers use
-i2c_new_dummy_client on these addresses. I have verified that no in-tree
-users of i2c_new_dummy (and friends) do work on extra addresses but
-still I'd like to completely avoid this potential regression.
-
-One solution to both problems would be to unregister the reserved device
-when its address is requested. I am working on this prototype currently.
-However, I am not sure yet if one issue might make this approach messy:
-re-registering the reserved device when the probe of the requested
-address fails.
-
-We will see...
-
-
---DiL7RhKs8rK9YGuF
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6WxWAACgkQFA3kzBSg
-Kbae9w//RJrz6RPLZSRlLMCbftnMujapFw1Mb4d6vzU283/gdeAkzuz/C38XWPA8
-xcUJsFWpHCDYOhaXdav0Jf7UL5KssTT2XdrdWneLKmn/QN/8NdeOkiROzTq2pavX
-lcQhC9V9tjGe09MfRlpyg6mZDti/09vxJ6QZbOVpHyJg5chqht1NgwjYtAVCwsby
-Fd3ucuyN5r1rPwyRXuVVnXQ0D/itOsacyLzpAfA3BQNlLPWe71fsytlCrlPX31Ys
-+yh7z+0BAprWcPNNXLVrOG87+Agi7p426lpV94D5BsoEbSbdMC97vLShzooOVFBS
-BXhziJ66I1btW/yaXBYO9RWcm0bPH/yN0NTFE9X3H7OqTcVh9TFin33oGR/PEZF0
-gkvDnFLOfCUWLO/697U8x+Km0bN/rsOcdapGkjZaeSxZF/QQ3vWGo4S3AibS9GPA
-scR//jSVYL+iphxlOa08YRqSfPd2L32vDirk4iTsKTt45850jzGcilFkrEKx4uUm
-UTp5VmQkIoVj0CO+E7ByjkM+5yG2o9CTNZHY5X5kLsaiETjGCD0yH4SNrADpiY4o
-F13eHJvBFVGtjR969TuiT4tpAzRh+xKAuJNfC3Z8yRyT/uKSS+RAajfc2SCKoWxC
-6iSF2T57Tclts7MFdaBCeYN5f16uSvyQR5UTSFezGHb1qd642wI=
-=blKZ
------END PGP SIGNATURE-----
-
---DiL7RhKs8rK9YGuF--
