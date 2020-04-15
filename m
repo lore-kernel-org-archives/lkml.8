@@ -2,95 +2,91 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF7A5C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:27:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EF69C2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:27:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AED40208FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:27:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586953631;
-	bh=U8iZwEvvcEiETgEnpw128hyH9fq1RpHbCkQl1Gv9xrU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PSwRd5g9cvKrnM0O/t1gTOqQssPqNIPyWfl1rC0a+hPieyhcXppmlmpcLfmp1EfTh
-	 cug0zqZge8XN5+qXvS2IodsYnEJCCe9xAejZNcvRvXkKT4y1ZCO3H7ZqW7tf5aWGuk
-	 AsTaJQWTdnmBKzOPf5um9J2Gui/sQbyDVH5baidE=
+	by mail.kernel.org (Postfix) with ESMTP id 0B82D20936
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:27:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409871AbgDOM1I (ORCPT
+        id S2409879AbgDOM1R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:27:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38940 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 08:27:17 -0400
+Received: from mga09.intel.com ([134.134.136.24]:61376 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409167AbgDOLpX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:45:23 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DFF520768;
-        Wed, 15 Apr 2020 11:45:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951123;
-        bh=U8iZwEvvcEiETgEnpw128hyH9fq1RpHbCkQl1Gv9xrU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nylwdm0Nm3LFV4KbZaQ+xmw7ox2RhbhV4dens6uskoM0wDrJCOWdgXTpftq8lTkrg
-         6TVkOEPO92qexi5wnW9ILsIi3CvnPV2OfPY/1xYeHJa8DaVCs+YoTTMISTZ8YUn24z
-         Xzme7xlpg7jDHUoSo3w3G7rwkdnKStZRkFy4dJ3o=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Josh Triplett <josh@joshtriplett.org>,
-        Andreas Dilger <adilger@dilger.ca>,
-        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
-        linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 36/84] ext4: fix incorrect inodes per group in error message
-Date:   Wed, 15 Apr 2020 07:43:53 -0400
-Message-Id: <20200415114442.14166-36-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415114442.14166-1-sashal@kernel.org>
-References: <20200415114442.14166-1-sashal@kernel.org>
+        id S2409850AbgDOM0s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 08:26:48 -0400
+IronPort-SDR: 5bJ7U6SeDIVyBLtowxZF96Jj/UpGs+hzm04CObueHbTO2OtLQIK6oBdykosymwkS1qw5vzJG+9
+ J3FdRoTu4Kcg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 05:26:45 -0700
+IronPort-SDR: h9oBrlVuMfihHlm+c7RReoucOSid7EY9BIvBcCULrmmStw1b50KZcCYstK6IciHld7GaviMPoZ
+ ZVX8WeOr083g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,386,1580803200"; 
+   d="scan'208";a="400298276"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.87]) ([10.237.72.87])
+  by orsmga004.jf.intel.com with ESMTP; 15 Apr 2020 05:26:42 -0700
+Subject: Re: [PATCH 1/7] mmc: sdhci: fix base clock usage in preset value
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kevin Liu <kliu5@marvell.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Suneel Garapati <suneel.garapati@xilinx.com>
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1585827904.git.mirq-linux@rere.qmqm.pl>
+ <23c3fe72b0ff0eabdbf3a45023a76da1b18a7e90.1585827904.git.mirq-linux@rere.qmqm.pl>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <218dd61b-48cc-a161-240f-b3823e8f48cb@intel.com>
+Date:   Wed, 15 Apr 2020 15:25:52 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+In-Reply-To: <23c3fe72b0ff0eabdbf3a45023a76da1b18a7e90.1585827904.git.mirq-linux@rere.qmqm.pl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Triplett <josh@joshtriplett.org>
+On 2/04/20 2:54 pm, Michał Mirosław wrote:
+> Fixed commit added an unnecessary read of CLOCK_CONTROL. The value read
+> is overwritten for programmable clock preset, but is carried over for
+> divided clock preset. This can confuse sdhci_enable_clk() if the register
+> has enable bits set for some reason at time time of clock calculation.
+> value to be ORed with enable flags. Remove the read.
 
-[ Upstream commit b9c538da4e52a7b79dfcf4cfa487c46125066dfb ]
+The read is not needed, but drivers usually manage the enable bits,
+especially disabling the clock before changing the frequency.  What driver
+is it?
 
-If ext4_fill_super detects an invalid number of inodes per group, the
-resulting error message printed the number of blocks per group, rather
-than the number of inodes per group. Fix it to print the correct value.
-
-Fixes: cd6bb35bf7f6d ("ext4: use more strict checks for inodes_per_block on mount")
-Link: https://lore.kernel.org/r/8be03355983a08e5d4eed480944613454d7e2550.1585434649.git.josh@joshtriplett.org
-Reviewed-by: Andreas Dilger <adilger@dilger.ca>
-Signed-off-by: Josh Triplett <josh@joshtriplett.org>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/ext4/super.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index 855b36d77f4fd..e9845c6fbd199 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -4110,7 +4110,7 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
- 	if (sbi->s_inodes_per_group < sbi->s_inodes_per_block ||
- 	    sbi->s_inodes_per_group > blocksize * 8) {
- 		ext4_msg(sb, KERN_ERR, "invalid inodes per group: %lu\n",
--			 sbi->s_blocks_per_group);
-+			 sbi->s_inodes_per_group);
- 		goto failed_mount;
- 	}
- 	sbi->s_itb_per_group = sbi->s_inodes_per_group /
--- 
-2.20.1
+> 
+> Fixes: 52983382c74f ("mmc: sdhci: enhance preset value function")
+> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+> ---
+>  drivers/mmc/host/sdhci.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+> index 3f716466fcfd..9aa3af5826df 100644
+> --- a/drivers/mmc/host/sdhci.c
+> +++ b/drivers/mmc/host/sdhci.c
+> @@ -1765,7 +1765,6 @@ u16 sdhci_calc_clk(struct sdhci_host *host, unsigned int clock,
+>  		if (host->preset_enabled) {
+>  			u16 pre_val;
+>  
+> -			clk = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
+>  			pre_val = sdhci_get_preset_value(host);
+>  			div = FIELD_GET(SDHCI_PRESET_SDCLK_FREQ_MASK, pre_val);
+>  			if (host->clk_mul &&
+> 
 
