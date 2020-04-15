@@ -2,125 +2,293 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA890C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:07:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67F2AC2BB85
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:07:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82DAA2166E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:07:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="iRUvs+9r"
+	by mail.kernel.org (Postfix) with ESMTP id 3E4FB21734
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:07:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586966861;
+	bh=/y2ckExWdTI7UWOJbRtNhepJOM6jaoJcFWCX20lgdY8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LunTL+h+r6kRwfx7WSzy8ByEWWrm6KHgruzjvQevc6C/Z8Xl4apj1G7Xb6nrBLaNM
+	 QCXr7XfHfYs9Y8rPHt1A63k47fSjPHSfqQj5fMIcJaXtnMVRy15p/llrzAHIo52MrA
+	 Pf0aOdKUZlzC1/RSoFnOq6LtTmlrvZLbHn2jZCRg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410204AbgDOQHP (ORCPT
+        id S2410212AbgDOQHj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 12:07:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54058 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729190AbgDOQHI (ORCPT
+        Wed, 15 Apr 2020 12:07:39 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:33358 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729190AbgDOQHd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 12:07:08 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9AA1C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 09:07:07 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id ca21so5579810edb.7
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 09:07:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0MLjDM9KsRvMVgG43FusnRuA/V1fF1PP6aJDpeifgKM=;
-        b=iRUvs+9ratAYYazdxRWQjGbETjt7wPo7elXFoTo9rRkgbMtlx6glo20cP0xHh5oOQZ
-         zeoBKppefNbtAwADYvNW3aaQHFPhaLgG/Xr22tvPeRHjK9+7Lyft492IH+Uz68AA0Gbf
-         zqfhAgSiEtudIo8NwOetfiGetxDJK77hkLLlYH2OSU/8PD/p49nlLiWiLFLVB7Hh7AxM
-         nfv4YUwHvsKfaT4aK+FtqtDlH/ue9Hr3nZo/z18/Q1Q9UCMNvr3lEpFhTUOD7YwXNffF
-         6eeTGYZRTZHX/FIaDU7P8mPNGvESLOspPGAVRPqDizrEjlxZGcsWThQ+kr2XY6oaO4dm
-         dHZw==
+        Wed, 15 Apr 2020 12:07:33 -0400
+Received: by mail-oi1-f195.google.com with SMTP id m14so13932753oic.0;
+        Wed, 15 Apr 2020 09:07:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0MLjDM9KsRvMVgG43FusnRuA/V1fF1PP6aJDpeifgKM=;
-        b=OwwoD0WNQUDBGfdEzzvE5kHzOVONuMrvDojK6yWleRoIcWZV/UePA8awZk6p7pN2Jd
-         c/y5wJ76yRkf9tmWSPxY9W1v2RYXLNHQYOjnzDHsRZOHmNqd/QI+5VjBD/TS3fDvCUjE
-         FCxkqhtkrFOQW+SSKWO6L1T6NJACQ6AmyRsfb+6go1b6MnS9/h2pFmymvLJDc01cBnDH
-         Lo6Hz2kYAONWHwN67d5DHF8b2V6qZuOLk+HBxOFRTrMNr0yzOEivW51JBJalxLDR2hl6
-         nwr/K4ZvGJAAZDm7uMFltjW8Xidh8b1xmVYH43sbrbbDBEsXTatl22zZLXhC03drb2Qc
-         h1Aw==
-X-Gm-Message-State: AGi0PubCk6SfnJLSI1zXvDFS/RcI7iTg2SqWHQU83i3IFaYvr6CXr1QY
-        aswOAICX0jfv4S2AuTcfUcChuQF9zh1fYxdfFhRO
-X-Google-Smtp-Source: APiQypLP8COjvsdYHv4oXFXwMf6J6TP99ygaMw9PYLf1PRivCLwn52/dEdrcmQ4/gmtocLU0XDdyhTYcQV/snRujxWw=
-X-Received: by 2002:a05:6402:1d1c:: with SMTP id dg28mr23779746edb.135.1586966826498;
- Wed, 15 Apr 2020 09:07:06 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=uYhwLEgK1Ycm8Hcmrx9CbYR8tRwlULjhiPmaER/B1xU=;
+        b=YMjU3GwPPTmOVexmtrHoeg0K822S+qfc9UHJgVHxeYBLReaCRcd4NvRs16A6S/5G1k
+         1Pmkd+jJF6yRBglgDqUFNaKAwbNZXGt7UaZDkIMwxZQLReEVHFznvC00Uuwqp5np9deZ
+         l7gQeifdD/f9QDA/0C8mZgYwMZQsLX+D9+oX/c35KZxJKVQGTdYQvLcpgdf+EMLvQjSz
+         cMIH2hof6QngCZtaJul+Q2LxEUPH2n9Gf4+iEpTOZDTpq1AKNcIBmFwiGjrqseoO/goH
+         z4IDYd8J0y6ysAvdmnw1PfPShsMT7zRQJsGcuUJZzCsEKJq98zE2NA4mokvq2QByFmhd
+         B+Kw==
+X-Gm-Message-State: AGi0PuYMSTDe+nSnRD+j212dlKTcrkcn9fCD1e/C4GhWVObzTFER5nyE
+        n/nqtx7rLytvDx4hLtaFzQ==
+X-Google-Smtp-Source: APiQypKfMH0XUPx9NA0nmEjS5pXKHMvADDOnF1WUquydnNa3O0PCH3lvfFxqU/W7sCEPDnP0HxvTvg==
+X-Received: by 2002:aca:34c6:: with SMTP id b189mr19137555oia.63.1586966851608;
+        Wed, 15 Apr 2020 09:07:31 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id l7sm4249117oii.26.2020.04.15.09.07.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2020 09:07:30 -0700 (PDT)
+Received: (nullmailer pid 9753 invoked by uid 1000);
+        Wed, 15 Apr 2020 16:07:29 -0000
+Date:   Wed, 15 Apr 2020 11:07:29 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Robert Foss <robert.foss@linaro.org>
+Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Maxime Ripard <maxime@cerno.tech>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v7 1/3] media: dt-bindings: ov8856: Document YAML bindings
+Message-ID: <20200415160729.GA4438@bogus>
+References: <20200408110816.2712841-1-robert.foss@linaro.org>
+ <20200408110816.2712841-2-robert.foss@linaro.org>
 MIME-Version: 1.0
-References: <20191128153203.GA23803@workstation-kernel-dev>
- <20191130020742.GF157739@google.com> <20200415153417.svpbimg66vbeuk7u@madcap2.tricolour.ca>
-In-Reply-To: <20200415153417.svpbimg66vbeuk7u@madcap2.tricolour.ca>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Wed, 15 Apr 2020 12:06:55 -0400
-Message-ID: <CAHC9VhTdfkxdiEwCZu-JCQGxJ_DNr0b_Ukm40VEUxq=Lc-zx1g@mail.gmail.com>
-Subject: Re: [PATCH v2] kernel: audit.c: Add __rcu notation to RCU pointer
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Shuah Khan <skhan@linuxfoundation.org>, linux-audit@redhat.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org, Amol Grover <frextrite@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200408110816.2712841-2-robert.foss@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 11:34 AM Richard Guy Briggs <rgb@redhat.com> wrote:
-> On 2019-11-29 21:07, Joel Fernandes wrote:
-> > On Thu, Nov 28, 2019 at 09:02:03PM +0530, Amol Grover wrote:
-> > > add __rcu notation to RCU protected global pointer auditd_conn
-> >
-> > Again, please use proper punctuation and captilization. This is unacceptable.
-> > Please put more effort into changelog.
-> >
-> > Otherwise the patch diff itself looks good to me, with the above nit
-> > corrected, you could add my tag to the next revision:
-> >
-> > Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> >
-> > thanks,
-> >
-> >  - Joel
-> >
-> > >
-> > > Fixes multiple instances of sparse error:
-> > > error: incompatible types in comparison expression
-> > > (different address spaces)
->
-> Amol or Joel: Is there a reproducer recipe for this?
+On Wed, Apr 08, 2020 at 01:08:14PM +0200, Robert Foss wrote:
+> From: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> 
+> This patch adds documentation of device tree in YAML schema for the
+> OV8856 CMOS image sensor.
+> 
+> Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> Signed-off-by: Robert Foss <robert.foss@linaro.org>
+> ---
+> 
+> - Changes since v6:
+>   * Marco: remove qcom specifics from DT example
+>    
+> - Changes since v5:
+>   * Add assigned-clocks and assigned-clock-rates
+>   * robher: dt-schema errors
+> 
+> - Changes since v4:
+>   * Fabio: Change reset-gpio to GPIO_ACTIVE_LOW, explain in description
+>   * Add clock-lanes property to example
+>   * robher: Fix syntax error in devicetree example
+> 
+> - Changes since v3:
+>   * robher: Fix syntax error
+>   * robher: Removed maxItems
+>   * Fixes yaml 'make dt-binding-check' errors
+> 
+> - Changes since v2:
+>   Fixes comments from from Andy, Tomasz, Sakari, Rob.
+>   * Convert text documentation to YAML schema.
+> 
+> - Changes since v1:
+>   Fixes comments from Sakari, Tomasz
+>   * Add clock-frequency and link-frequencies in DT
+> 
+>  .../devicetree/bindings/media/i2c/ov8856.yaml | 143 ++++++++++++++++++
+>  MAINTAINERS                                   |   1 +
+>  2 files changed, 144 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov8856.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ov8856.yaml b/Documentation/devicetree/bindings/media/i2c/ov8856.yaml
+> new file mode 100644
+> index 000000000000..96bef5403d7e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/ov8856.yaml
+> @@ -0,0 +1,143 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright (c) 2019 MediaTek Inc.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/media/i2c/ov8856.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Omnivision OV8856 CMOS Sensor Device Tree Bindings
+> +
+> +maintainers:
+> +  - Ben Kao <ben.kao@intel.com>
+> +  - Dongchun Zhu <dongchun.zhu@mediatek.com>
+> +
+> +description: |-
+> +  The Omnivision OV8856 is a high performance, 1/4-inch, 8 megapixel, CMOS
+> +  image sensor that delivers 3264x2448 at 30fps. It provides full-frame,
+> +  sub-sampled, and windowed 10-bit MIPI images in various formats via the
+> +  Serial Camera Control Bus (SCCB) interface. This chip is programmable
+> +  through I2C and two-wire SCCB. The sensor output is available via CSI-2
+> +  serial data output (up to 4-lane).
+> +
+> +properties:
+> +  compatible:
+> +    const: ovti,ov8856
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    description:
+> +      Input clock for the sensor.
+> +    items:
+> +      - const: xvclk
+> +
+> +  assigned-clocks:
+> +    description:
+> +      Input clock for the sensor.
+> +
+> +  assigned-clock-rates:
+> +    description:
+> +      Frequency of the xvclk clock in Hertz.
 
-The commit which was merged has a slightly better description which may help.
+These 2 should have a 'maxItems: 1'
 
-  commit cb5172d96d16df72db8b55146b0ec00bfd97f079
-  Author: Amol Grover <frextrite@gmail.com>
-  Date:   Mon Dec 2 00:03:48 2019 +0530
+> +
+> +  dovdd-supply:
+> +    description:
+> +      Definition of the regulator used as interface power supply.
+> +
+> +  avdd-supply:
+> +    description:
+> +      Definition of the regulator used as analog power supply.
+> +
+> +  dvdd-supply:
+> +    description:
+> +      Definition of the regulator used as digital power supply.
+> +
+> +  reset-gpios:
+> +    description:
+> +      The phandle and specifier for the GPIO that controls sensor reset.
+> +      This corresponds to the hardware pin XSHUTDOWN which is physically
+> +      active low.
+> +
+> +  port:
+> +    type: object
+> +    additionalProperties: false
+> +    description:
+> +      A node containing input and output port nodes with endpoint definitions
 
-   audit: Add __rcu annotation to RCU pointer
+Only an output, right?
 
-   Add __rcu annotation to RCU-protected global pointer auditd_conn.
+> +      as documented in
+> +      Documentation/devicetree/bindings/media/video-interfaces.txt
+> +
+> +    properties:
+> +      endpoint:
+> +        type: object
+> +
+> +        properties:
+> +          clock-lanes:
+> +            maxItems: 1
+> +
+> +          data-lanes:
+> +            maxItems: 1
+> +
+> +          remote-endpoint: true
+> +
+> +        required:
+> +          - clock-lanes
+> +          - data-lanes
+> +          - remote-endpoint
+> +
+> +    required:
+> +      - endpoint
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - assigned-clocks
+> +  - assigned-clock-rates
+> +  - dovdd-supply
+> +  - avdd-supply
+> +  - dvdd-supply
+> +  - reset-gpios
+> +  - port
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        ov8856: camera@10 {
+> +            compatible = "ovti,ov8856";
+> +            reg = <0x10>;
+> +
+> +            reset-gpios = <&pio 111 GPIO_ACTIVE_LOW>;
+> +            pinctrl-names = "default";
+> +            pinctrl-0 = <&clk_24m_cam>;
+> +
+> +            clocks = <&cam_osc>;
+> +            clock-names = "xvclk";
+> +            assigned-clocks = <&cam_osc>;
+> +            assigned-clock-rates = <19200000>;
+> +
+> +            avdd-supply = <&mt6358_vcama2_reg>;
+> +            dvdd-supply = <&mt6358_vcamd_reg>;
+> +            dovdd-supply = <&mt6358_vcamio_reg>;
+> +
+> +            port {
+> +                wcam_out: endpoint {
+> +                    remote-endpoint = <&mipi_in_wcam>;
+> +                    clock-lanes = <0>;
+> +                    data-lanes = <1 2 3 4>;
+> +                    link-frequencies = /bits/ 64 <360000000 180000000>;
+> +                };
+> +            };
+> +        };
+> +    };
+> +...
+> \ No newline at end of file
 
-   auditd_conn is an RCU-protected global pointer,i.e., accessed
-   via RCU methods rcu_dereference() and rcu_assign_pointer(),
-   hence it must be annotated with __rcu for sparse to report
-   warnings/errors correctly.
+^^^
 
-   Fix multiple instances of the sparse error:
-   error: incompatible types in comparison expression
-   (different address spaces)
-
-   Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-   Signed-off-by: Amol Grover <frextrite@gmail.com>
-   [PM: tweak subject line]
-   Signed-off-by: Paul Moore <paul@paul-moore.com>
-
--- 
-paul moore
-www.paul-moore.com
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 534a8dc4f84a..3f35c6e9700a 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -12465,6 +12465,7 @@ L:	linux-media@vger.kernel.org
+>  T:	git git://linuxtv.org/media_tree.git
+>  S:	Maintained
+>  F:	drivers/media/i2c/ov8856.c
+> +F:	Documentation/devicetree/bindings/media/i2c/ov8856.yaml
+>  
+>  OMNIVISION OV9650 SENSOR DRIVER
+>  M:	Sakari Ailus <sakari.ailus@linux.intel.com>
+> -- 
+> 2.25.1
+> 
