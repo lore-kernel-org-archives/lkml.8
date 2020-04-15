@@ -2,63 +2,196 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADFD0C2BB55
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 23:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35644C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 23:27:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9482420732
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 23:22:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0659320784
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 23:27:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Er0LS+1q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389193AbgDOXWl (ORCPT
+        id S2389338AbgDOX0t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 19:22:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37042 "EHLO
+        Wed, 15 Apr 2020 19:26:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388747AbgDOXWe (ORCPT
+        with ESMTP id S2389268AbgDOX0p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 19:22:34 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C963C061A0C;
-        Wed, 15 Apr 2020 16:22:34 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 6CA85120ED569;
-        Wed, 15 Apr 2020 16:22:33 -0700 (PDT)
-Date:   Wed, 15 Apr 2020 16:22:32 -0700 (PDT)
-Message-Id: <20200415.162232.1194362016278310196.davem@davemloft.net>
-To:     yanaijie@huawei.com
-Cc:     snelson@pensando.io, kuba@kernel.org, hkallweit1@gmail.com,
-        leon@kernel.org, mst@redhat.com, netdev@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hulkci@huawei.com
-Subject: Re: [PATCH] net: tulip: make early_486_chipsets static
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200415084248.24378-1-yanaijie@huawei.com>
-References: <20200415084248.24378-1-yanaijie@huawei.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 15 Apr 2020 16:22:34 -0700 (PDT)
+        Wed, 15 Apr 2020 19:26:45 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B4B6C061A10
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 16:26:43 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id j14so4118287lfg.9
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 16:26:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=L1IlX2IpSQEMdDjEJKh5CMpEL+4kcWoPfApz2jdxM08=;
+        b=Er0LS+1q+NZt2g0tIsdiUQ0aIqzQIX/d5/FQVosexWpAB2ylC02jbt5wiQStKD20Nt
+         WlSa0W7tvpOL75ueuetXJprO1qcmES76gksNQSurpvagjbP2NHp3W5sVL2qB+nr8hOn6
+         0+wLxHxtkoYcFvB4NkKiPqxWZ1omKz27UtCLOH1RDwNZCrwkQN8KpY3s9U/IBk8M+D7S
+         bcGAcyzswBqYfxArH3Pp0AppQK4Z0ocT7vqGEpd+/m+8KDoTaXFdy+/V9sSDjznXrP7f
+         sIRojXk/AhQ36ij8wJZLT7brr6d3m6HkJijaqBmnUACRKYJ2HLHopiQ/HcE3wdu0YfPD
+         yxew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=L1IlX2IpSQEMdDjEJKh5CMpEL+4kcWoPfApz2jdxM08=;
+        b=tXXcnTTJYfXtDj7Wf3Lolcfrz3ElDGsGN6pgTADIf/e/e7xZOD46Gwne3swhWZwcJb
+         PUNjdaIsk612ZmRuLhG7gWlzEbTcz47c7DQvpyI91dUEKeF+oR0K4By2Q8QtVkAwER0q
+         wQf/ALCccp5xxkBVCeN3wMcafmmqdwNDVp3DtX1ldbVetWWdjKuNdOvh/CkVSgH8reLr
+         R271c/IPRnv469duAPp5q1iob1+TgRU5JTvfJbO2Xm5KrZSNFe50nOPKTAOiHugJlsmr
+         521eqItmwkCLGSlRZaAqjAmpHYm1P7aR73ouMqKdZrU8f8hH6nUT7WebZ9FqZEwqKcZx
+         l/VA==
+X-Gm-Message-State: AGi0PubwE55loiTTw3WKF82I9gOSNH8z1+hlO2uWZYVsuVchpHUnLfjP
+        G4H+XA35lRm/f1FVNHSHrqVjO3b2WGNjiTrSDyO56g==
+X-Google-Smtp-Source: APiQypKaR4aNmabWaJXpkSEHfUib4Yuak4mqveufOwk320FKg6kY6n/SP8qHWQ52HwXA+qkOZ4P0De+awzrTbAnhEmw=
+X-Received: by 2002:a19:dc05:: with SMTP id t5mr4319328lfg.73.1586993201362;
+ Wed, 15 Apr 2020 16:26:41 -0700 (PDT)
+MIME-Version: 1.0
+References: <1586916464-27727-1-git-send-email-alan.mikhak@sifive.com>
+ <DM5PR12MB1276CB8FA4457D4CDCE3137EDADB0@DM5PR12MB1276.namprd12.prod.outlook.com>
+ <CABEDWGwYmO52g6cqvQdWb6HXWEHaMA1rcf96aUqv0f32tJZT-g@mail.gmail.com>
+ <DM5PR12MB1276E09460BD4DB7E70EAF91DADB0@DM5PR12MB1276.namprd12.prod.outlook.com>
+ <CABEDWGw0OyQNppLpDaNgMedfB0Ci=kZVKm+h4T-LJoZYmbSgqA@mail.gmail.com>
+ <DM5PR12MB127673CFDCA38A47E6F6F4DBDADB0@DM5PR12MB1276.namprd12.prod.outlook.com>
+ <CABEDWGyUfq4c65K+btmKBcGLv59h6PFVUkSD_52kOw9R0Rtynw@mail.gmail.com>
+In-Reply-To: <CABEDWGyUfq4c65K+btmKBcGLv59h6PFVUkSD_52kOw9R0Rtynw@mail.gmail.com>
+From:   Alan Mikhak <alan.mikhak@sifive.com>
+Date:   Wed, 15 Apr 2020 16:26:30 -0700
+Message-ID: <CABEDWGz1KLGmQBWU_kcKF7zxjnP02x=0vbXghsZMKNWeExF+rA@mail.gmail.com>
+Subject: Re: [PATCH RFC] dmaengine: dw-edma: Decouple dw-edma-core.c from
+ struct pci_dev
+To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+Cc:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "kishon@ti.com" <kishon@ti.com>,
+        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Yan <yanaijie@huawei.com>
-Date: Wed, 15 Apr 2020 16:42:48 +0800
+On Wed, Apr 15, 2020 at 2:23 PM Alan Mikhak <alan.mikhak@sifive.com> wrote:
+>
+> On Wed, Apr 15, 2020 at 1:58 PM Gustavo Pimentel
+> <Gustavo.Pimentel@synopsys.com> wrote:
+> >
+> > Hi Alan,
+> >
+> > > > > At the moment, pci-epf-test grabs the first available dma channel on the
+> > > > > endpoint side and uses it for either read, write, or copy operation. it is not
+> > > > > possible at the moment to specify which dma channel to use on the pcitest
+> > > > > command line. This may be possible by modifying the command line option
+> > > > > -D to also specify the name of one or more dma channels.
+> > > >
+> > > > I'm assuming that behavior is due to your code, right? I'm not seen that
+> > > > behavior on the Kernel tree.
+> > > > Check my previous suggestion, it should be something similar to what is
+> > > > been done while you select the MSI/MSI-X interrupt to trigger.
+> > >
+> > > I believe this behavior exists in the kernel tree because the call to
+> > > dma_request_chan_by_mask() always specifies channel zero. The user
+> > > of pcitest has no way of specifying which one of the available dma channels
+> > > to use.
+> >
+> > I think we were discussing different things. I was referring to the
+> > pci-epf-test code, that I wasn't being able to find any instruction to
+> > call the DMA driver which had the described behavior.
+> >
+> > I think you can do it by doing this:
+> >
+> > Pseudo code:
+> >
+> > #define EDMA_TEST_CHANNEL_NAME                  "dma%uchan%u"
+> >
+> > static bool dw_edma_test_filter(struct dma_chan *chan, void *filter)
+> > {
+> >         if (strcmp(dev_name(chan->device->dev), EDMA_TEST_DEVICE_NAME) ||
+> > strcmp(dma_chan_name(chan), filter))
+> >                 return false;
+> >
+> >         return true;
+> > }
+> >
+> > static void dw_edma_test_thread_create(int id, int channel)
+> > {
+> >         struct dma_chan *chan;
+> >         dma_cap_mask_t mask;
+> >         char filter[20];
+> >
+> >         dma_cap_zero(mask);
+> >         dma_cap_set(DMA_SLAVE, mask);
+> >         dma_cap_set(DMA_CYCLIC, mask);
+> >
+> >         snprintf(filter, sizeof(filter), EDMA_TEST_CHANNEL_NAME, id,
+> > channel);
+> >         chan = dma_request_channel(mask, dw_edma_test_filter, filter);
+> >
+> >         [..]
+> > }
+>
+> Thanks Gustavo, This pseudo code is very useful. Now I know how to do
+> that part of the change.
+>
+> What I have further in mind is to enable the pcitest user to specify some
+> arbitrary string with -D option to select one or more of the dma channels
+> that are available on the endpoint side. Since the user executes pcitest
+> from host-side command prompt and pci-epf-test executes in kernel on the
+> endpoint side, the messaging between userspace pcitest and kernel-space
+> pci_endpoint_test as well as the messaging across the bus between
+> pci_endpoint_test and pci-epf-test needs to be expanded to pass the user
+> string from the host to the endpoint. Upon receiving each read, write, or
+> copy message, pci-epf-test could then try to acquire the specified dma
+> channel and execute the user command or fail it if no such channel is
+> available at that moment.
+>
+> >
+> > > I believe this behavior exists in the kernel tree because the call to
+> > > dma_request_chan_by_mask() happens during the execution of
+> > > pci_epf_test_bind() and the call to dma_release_channel() happens
+> > > during the execution of pci_epf_test_unbind(). As long as pci-epf-test
+> > > is bound, I cannot use another program such as dmatest from the
+> > > endpoint-side command prompt to exercise the same channel.
+> >
+> > Ok, I understood it now. Right, you can't use the dmatest here, even
+> > because, as far as I know, it is only MEM TO MEM operations and we need
+> > DEVICE_TO_MEM and vice-versa.
+> >
 
-> Fix the following sparse warning:
-> 
-> drivers/net/ethernet/dec/tulip/tulip_core.c:1280:28: warning: symbol
-> 'early_486_chipsets' was not declared. Should it be static?
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+On the platforms that I have this in mind for, I may not only have embedded
+dma channels inside the PCIe controller but also platform dma channels. Either
+type of dma channel can be used by pcitest whereas dmatest can only use
+the type that can do MEM to MEM as you said. Either of these types can
+be used to transfer data to or from the PCIe bus. I need to use both kinds
+with pcitest to make sure the PCIe subsystem is ok.
 
-Applied, thanks.
+> > >
+> > > What I was suggesting is perhaps pci-epf-test can be modified to
+> > > acquire and release the channel on each call to pci_epf_test_read(),
+> > > ...write(), or ...copy() when the pcitest user specifies -D option.
+> >
+> > Right, you are on the right track.
+> > Perhaps you could take a look at patch [1] that I have done some time ago
+> > for testing the eDMA, I think you have all the tools/guideline there to
+> > do this adaption.
+> > Another thing,
+> >
+> > [1] https://patchwork.kernel.org/patch/10760521/
+>
+> Thanks for the guidance and reference code patch [1]. I will definitely
+> take a close look at [1].
+>
+> >
+> >
+> >
