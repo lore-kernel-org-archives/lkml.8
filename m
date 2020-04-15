@@ -2,90 +2,353 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF0BC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:24:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1255C3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:24:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBA9D20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:24:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586971468;
-	bh=ce0/MOFaWROP/28uCZGVwEiWJofn9fNNRJUP1FcJJSo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kt/y2AeC41dFPcHEtZh3Dl2veARxaylcZ/bKqexa5tiSY6tAvo5pYZt4RtVHC9sOX
-	 FhOai3Bb7IKsRKqMTyFWE7PsmMKOvMDyoIwYPRdg/bynBr61p5q69RDcU8vUUzfz+z
-	 B+wOQhD8mExeANzaUY0sjWQFojLYSZPe3vpM60Y0=
+	by mail.kernel.org (Postfix) with ESMTP id 86FA120784
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:24:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="LsL/Pmp6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410955AbgDORYX (ORCPT
+        id S2410971AbgDORYs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 13:24:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37984 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2410926AbgDORYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 13:24:06 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C78B6215A4;
-        Wed, 15 Apr 2020 17:24:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586971446;
-        bh=ce0/MOFaWROP/28uCZGVwEiWJofn9fNNRJUP1FcJJSo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FGrA3+8ccJ5VD5tLp1pOT3P4Rlt6igp5YmOlHvSz0fnH6Qo91G+N+ueaMFXZFWyjI
-         tS6sPSaNUvzd7V8ZooB1Go7Xq1fksMgJtIadzjF8gRnvRgpF8vKn0PtB3WhlYfSjMf
-         sVd/wQaZn8JBNdwtqGcH2VQpFJBtDRZzvSowF81g=
-From:   paulmck@kernel.org
-To:     rcu@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 3/3] rcu: Remove self-stack-trace when all quiescent states seen
-Date:   Wed, 15 Apr 2020 10:24:03 -0700
-Message-Id: <20200415172403.9647-3-paulmck@kernel.org>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20200415172341.GA9519@paulmck-ThinkPad-P72>
-References: <20200415172341.GA9519@paulmck-ThinkPad-P72>
+        Wed, 15 Apr 2020 13:24:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37958 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2410958AbgDORYg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 13:24:36 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCB07C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 10:24:35 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id m19so3218904lfq.13
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 10:24:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vzSrcTTUqeoY62i4J1mjiP7l96KU8srXilqydnIieMw=;
+        b=LsL/Pmp6QjNEMTOmbK4hXkJQq1MXL/X3coHxqtSzTnMwY8CBIFWwecpQTj8Aa/Y2nm
+         HXZUL7LaHaDWToozWEBYqdfIHtJMcVOgjpc/B4S9mJ0WsnrpsOgqC3Ycyp5QopluTySx
+         eONN7k3kJ/SBQKRhxh+QRUWWfsLDM2xvK1j6w5uYAc00JZgz4QQkNACFa19BBoyk/52k
+         ye8zSvTdCgJ0JavKWhj097J/l+k8ZLqXeeL8PrJ+7WesiZHe3+xojJoRsuTKcgFb0pQB
+         WikS7LoozINvaMqWs/HVLlNztYhJHYEIMkm+viwOsPxfG8CSgqOk5ic76Rlu2h3bvkiO
+         cS9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vzSrcTTUqeoY62i4J1mjiP7l96KU8srXilqydnIieMw=;
+        b=iBKYr29APwmS3a3CEwJBqIK8BMRNzGqwnlepm6FYG0ATNEeURcWTIJIrlvTTDt6RRA
+         nNvN0rBUdJly0P4iJrDODIYYlpK6jCCJeI/q1pSnw0HTP/bW3H8aFTVRsXcmvsWHb0Bq
+         1Ch/AzSpqJMbFW8f+AfcqeioJut89VsTu8hbLG9S1Njfm0fR703I1GlqlU5o5jiwjCgA
+         ldQoEnhy7uORmRTQV1O+oWGg6ZgmT92XbZjYtXIpPPTgZ97GmByPzuWHrzmnh/ueu7Rv
+         Gp06hqawkajV7PpGSEGFA84ZsnGy/NTx0SKNw61MOPWxjjiFFwWZNrdzUDGlaclypj86
+         mJBA==
+X-Gm-Message-State: AGi0PubaJfgBPeozTYRcuXydJjSkTGo4ahv0/r7bXmg+DxlT6Aams+0y
+        loDuDVcQ4zLVgHpcCYrVSpGk0yYFkYRWWmlSoRuxpRH9QoM=
+X-Google-Smtp-Source: APiQypISs/FNWs18LwWUrV/trZVCnKxXVyMZ7glhu+lx18t4xKDgxOhBgHZsI39yf8ey6jtp34Ot9/xs2ui2zJWC+qw=
+X-Received: by 2002:ac2:5e26:: with SMTP id o6mr3540660lfg.49.1586971474025;
+ Wed, 15 Apr 2020 10:24:34 -0700 (PDT)
+MIME-Version: 1.0
+References: <1586916464-27727-1-git-send-email-alan.mikhak@sifive.com> <DM5PR12MB1276CB8FA4457D4CDCE3137EDADB0@DM5PR12MB1276.namprd12.prod.outlook.com>
+In-Reply-To: <DM5PR12MB1276CB8FA4457D4CDCE3137EDADB0@DM5PR12MB1276.namprd12.prod.outlook.com>
+From:   Alan Mikhak <alan.mikhak@sifive.com>
+Date:   Wed, 15 Apr 2020 10:24:22 -0700
+Message-ID: <CABEDWGwYmO52g6cqvQdWb6HXWEHaMA1rcf96aUqv0f32tJZT-g@mail.gmail.com>
+Subject: Re: [PATCH RFC] dmaengine: dw-edma: Decouple dw-edma-core.c from
+ struct pci_dev
+To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+Cc:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "kishon@ti.com" <kishon@ti.com>,
+        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Paul E. McKenney" <paulmck@kernel.org>
+On Wed, Apr 15, 2020 at 5:13 AM Gustavo Pimentel
+<Gustavo.Pimentel@synopsys.com> wrote:
+>
+> Hi Alan,
 
-When all quiescent states have been seen, it is normally the grace-period
-kthread that is in trouble.  Although the existing stack trace from
-the current CPU might possibly provide useful information, experience
-indicates that there is too much noise for this to be worthwhile.
+Hi Gustavo,
 
-This commit therefore removes this stack trace from the output.
+Thank you for all your comments and feedback.
 
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
----
- kernel/rcu/tree_stall.h | 2 --
- 1 file changed, 2 deletions(-)
+>
+> On Wed, Apr 15, 2020 at 3:7:44, Alan Mikhak <alan.mikhak@sifive.com>
+> wrote:
+>
+> > From: Alan Mikhak <alan.mikhak@sifive.com>
+> >
+> > While reviewing the Synopsys Designware eDMA PCIe driver, I came across
+>
+> s/Designware/DesignWare
 
-diff --git a/kernel/rcu/tree_stall.h b/kernel/rcu/tree_stall.h
-index 4da41a6..535762b 100644
---- a/kernel/rcu/tree_stall.h
-+++ b/kernel/rcu/tree_stall.h
-@@ -440,8 +440,6 @@ static void print_other_cpu_stall(unsigned long gp_seq)
- 			       rcu_state.name, j - gpa, j, gpa,
- 			       READ_ONCE(jiffies_till_next_fqs),
- 			       rcu_get_root()->qsmask);
--			/* In this case, the current CPU might be at fault. */
--			sched_show_task(current);
- 		}
- 	}
- 	/* Rewrite if needed in case of slow consoles. */
--- 
-2.9.5
+Corrected in v2 patch description.
 
+>
+> > the following field of struct dw_edma in dw-edma-core.h:
+> >
+> > const struct dw_edma_core_ops *ops;
+> >
+> > I was unable to find a definition for struct dw_edma_core_ops. It was
+> > surprising that the kernel would build without failure even though the
+> > dw-edma driver was enabled with what seems to be an undefined struct.
+>
+> Initially, that struct was aimed to have a set of function callbacks that
+> would allow being set differently according to the eDMA version. At the
+> time it was expected to have multiple cores that would need to execute
+> different code sequences.
+>
+> However, this approach was requested to be postponed on the patch review
+> because at that time and even now there isn't an extra core that would
+> justify this.
+>
+> You caught some residue of that initial approach.
+>
+> > The reason I was reviewing the dw-edma driver was to see if I could
+> > integrate it with pcitest to initiate dma operations from endpoint side.
+>
+> Great! That task was on my backlog for a very long time that I wasn't
+> able to develop due the lack of time.
+>
+> > As I understand from reviewing the dw-edma code, it is designed to run
+> > on the host side of PCIe link to initiate DMA operations remotely using
+> > eDMA channels of PCIe controller on the endpoint side. I am not sure if
+> > my understanding is correct. I infer this from seeing that dw-edma uses
+> > struct pci_dev and accesses hardware registers of dma channels across the
+> > bus using BAR0 and BAR2.
+>
+> You're correct.
+>
+> > I was exploring what would need to change in dw-edma to integrate it with
+> > pci-epf-test to initiate dma operations locally from the endpoint side.
+> > One barrier I see is dw_edma_probe() and other functions in dw-edma-core.c
+> > depend on struct pci_dev. Hence, instead of posting a patch to remove the
+> > undefined and unused ops field, I would like to define the struct and use
+> > it to decouple dw-edma-core.c from struct pci_dev.
+> >
+> > To my surprise, the kernel still builds without error even after defining
+> > struct dw_edma_core_ops in dw-edma-core.h and using it as in this patch.
+> >
+> > I would appreciate any comments on my observations about the 'ops' field,
+> > decoupling dw-edma-core.c from struct pci_dev, and how best to use
+> > dw-edma with pcitest.
+>
+> I like your approach, it separates the PCIe glue logic from the eDMA
+> itself.
+> I would suggest that pcitest would have multiple options that could be
+> triggered, for instance:
+>  1 - Execute Endpoint DMA (read/write) remotely with Linked List feature
+> (from the Root Complex side)
+>  2 - Execute Endpoint DMA (read/write) remotely without Linked List
+> feature (from the Root Complex side)
+>  3 - Execute Endpoint DMA (read/write) locally with Linked List feature
+>  4 - Execute Endpoint DMA (read/write) locally without Linked List
+> feature
+>
+
+I have all of the above four use cases in mind as well. At the moment,
+only #4 is possible with pcitest.
+
+Use case #3 would need a new command line option for pcitest such as -L
+to let its user specify linked list operationwhen used with dma in
+conjunction with the existing -D option.
+
+Use cases #1 and #2 would need another new command line option such as -R
+to specify remotely initiated dma operation in conjunction with -D option.
+
+New code in pci-epf-test and pci_endpoint_test drivers would be needed
+to support use cases #1, #2, and #3. However, use case #4 should be
+possible without modification to pci-epf-test or pci_endpoint_test as long
+as the dmaengine channels become available on the endpoint side.
+
+> Also, don't forget the DMA has of having multiple channels for reading
+> and writing (depending on the design) that can be triggered
+> simultaneously.
+>
+
+At the moment, pci-epf-test grabs the first available dma channel on the
+endpoint side and uses it for either read, write, or copy operation. it is not
+possible at the moment to specify which dma channel to use on the pcitest
+command line. This may be possible by modifying the command line option
+-D to also specify the name of one or more dma channels.
+
+Also, pci-epf-test grabs the dma channel at bind time and holds on to it
+until unloaded. This denies the use of the dma channel to others on the
+endpoint side. However, it seems possible to grab and release the dma
+channel only for the duration of each read, write, or copy test. These are
+improvements that can come over time. It is great that pci-epf-test was
+recently updated to include support for dma operations which makes such
+improvements possible.
+
+> Relative to the implementation of the options 3 and 4, I wonder if the
+> linked list memory space and size could be set through the DT or by the
+> configfs available on the pci-epf-test driver.
+>
+
+Although these options could be set through DT or by configfs, another
+option is to enable the user of pcitest to specify such parameters on
+the command line when invoking each test from the host side.
+
+> >
+> > Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
+> > ---
+> >  drivers/dma/dw-edma/dw-edma-core.c | 17 ++++++++++-------
+> >  drivers/dma/dw-edma/dw-edma-core.h |  4 ++++
+> >  drivers/dma/dw-edma/dw-edma-pcie.c | 10 ++++++++++
+> >  3 files changed, 24 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+> > index ff392c01bad1..9417a5feabbf 100644
+> > --- a/drivers/dma/dw-edma/dw-edma-core.c
+> > +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> > @@ -14,7 +14,7 @@
+> >  #include <linux/err.h>
+> >  #include <linux/interrupt.h>
+> >  #include <linux/dma/edma.h>
+> > -#include <linux/pci.h>
+> > +#include <linux/dma-mapping.h>
+> >
+> >  #include "dw-edma-core.h"
+> >  #include "dw-edma-v0-core.h"
+> > @@ -781,7 +781,7 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
+> >
+> >       if (dw->nr_irqs == 1) {
+> >               /* Common IRQ shared among all channels */
+> > -             err = request_irq(pci_irq_vector(to_pci_dev(dev), 0),
+> > +             err = request_irq(dw->ops->irq_vector(dev, 0),
+> >                                 dw_edma_interrupt_common,
+> >                                 IRQF_SHARED, dw->name, &dw->irq[0]);
+> >               if (err) {
+> > @@ -789,7 +789,7 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
+> >                       return err;
+> >               }
+> >
+> > -             get_cached_msi_msg(pci_irq_vector(to_pci_dev(dev), 0),
+> > +             get_cached_msi_msg(dw->ops->irq_vector(dev, 0),
+> >                                  &dw->irq[0].msi);
+> >       } else {
+> >               /* Distribute IRQs equally among all channels */
+> > @@ -804,7 +804,7 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
+> >               dw_edma_add_irq_mask(&rd_mask, *rd_alloc, dw->rd_ch_cnt);
+> >
+> >               for (i = 0; i < (*wr_alloc + *rd_alloc); i++) {
+> > -                     err = request_irq(pci_irq_vector(to_pci_dev(dev), i),
+> > +                     err = request_irq(dw->ops->irq_vector(dev, i),
+> >                                         i < *wr_alloc ?
+> >                                               dw_edma_interrupt_write :
+> >                                               dw_edma_interrupt_read,
+> > @@ -815,7 +815,7 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
+> >                               return err;
+> >                       }
+> >
+> > -                     get_cached_msi_msg(pci_irq_vector(to_pci_dev(dev), i),
+> > +                     get_cached_msi_msg(dw->ops->irq_vector(dev, i),
+> >                                          &dw->irq[i].msi);
+> >               }
+> >
+> > @@ -833,6 +833,9 @@ int dw_edma_probe(struct dw_edma_chip *chip)
+> >       u32 rd_alloc = 0;
+> >       int i, err;
+> >
+> > +     if (!dw->ops || !dw->ops->irq_vector)
+> > +             return -EINVAL;
+> > +
+>
+> I would suggest adding dw pointer check as well.
+
+Thanks for this suggestion. I added the dw pointer check in v2 patch as
+well as some others just to make sure. Since dw_edma_probe() is an
+EXPORT_SYMBOL, I may call it from my platform_device driver to bring
+up dma channels dynamically or based on DT information at kernel boot
+time. I added checks to make sure all the required pointers are provided
+by the caller.
+
+>
+> >       raw_spin_lock_init(&dw->lock);
+> >
+> >       /* Find out how many write channels are supported by hardware */
+> > @@ -884,7 +887,7 @@ int dw_edma_probe(struct dw_edma_chip *chip)
+> >
+> >  err_irq_free:
+> >       for (i = (dw->nr_irqs - 1); i >= 0; i--)
+> > -             free_irq(pci_irq_vector(to_pci_dev(dev), i), &dw->irq[i]);
+> > +             free_irq(dw->ops->irq_vector(dev, i), &dw->irq[i]);
+> >
+> >       dw->nr_irqs = 0;
+> >
+> > @@ -904,7 +907,7 @@ int dw_edma_remove(struct dw_edma_chip *chip)
+> >
+> >       /* Free irqs */
+> >       for (i = (dw->nr_irqs - 1); i >= 0; i--)
+> > -             free_irq(pci_irq_vector(to_pci_dev(dev), i), &dw->irq[i]);
+> > +             free_irq(dw->ops->irq_vector(dev, i), &dw->irq[i]);
+> >
+> >       /* Power management */
+> >       pm_runtime_disable(dev);
+> > diff --git a/drivers/dma/dw-edma/dw-edma-core.h b/drivers/dma/dw-edma/dw-edma-core.h
+> > index 4e5f9f6e901b..31fc50d31792 100644
+> > --- a/drivers/dma/dw-edma/dw-edma-core.h
+> > +++ b/drivers/dma/dw-edma/dw-edma-core.h
+> > @@ -103,6 +103,10 @@ struct dw_edma_irq {
+> >       struct dw_edma                  *dw;
+> >  };
+> >
+> > +struct dw_edma_core_ops {
+> > +     int     (*irq_vector)(struct device *dev, unsigned int nr);
+> > +};
+> > +
+> >  struct dw_edma {
+> >       char                            name[20];
+> >
+> > diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
+> > index dc85f55e1bb8..1eafc602e17e 100644
+> > --- a/drivers/dma/dw-edma/dw-edma-pcie.c
+> > +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
+> > @@ -54,6 +54,15 @@ static const struct dw_edma_pcie_data snps_edda_data = {
+> >       .irqs                           = 1,
+> >  };
+> >
+> > +static int dw_edma_pcie_irq_vector(struct device *dev, unsigned int nr)
+> > +{
+> > +     return pci_irq_vector(to_pci_dev(dev), nr);
+> > +}
+> > +
+> > +static const struct dw_edma_core_ops dw_edma_pcie_core_ops = {
+> > +     .irq_vector = dw_edma_pcie_irq_vector,
+> > +};
+> > +
+> >  static int dw_edma_pcie_probe(struct pci_dev *pdev,
+> >                             const struct pci_device_id *pid)
+> >  {
+> > @@ -151,6 +160,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+> >       dw->version = pdata->version;
+> >       dw->mode = pdata->mode;
+> >       dw->nr_irqs = nr_irqs;
+> > +     dw->ops = &dw_edma_pcie_core_ops;
+> >
+> >       /* Debug info */
+> >       pci_dbg(pdev, "Version:\t%u\n", dw->version);
+> > --
+> > 2.7.4
+>
+> In overall, nice patch, please fix that detail and I'll give my ACK.
+
+Thanks in advance for your ACK and all the review comments.
+
+>
+> Regards,
+> Gustavo
