@@ -2,82 +2,135 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEFF5C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94EF2C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:09:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B08222051A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:08:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71118206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:09:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="WZ/854G9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2635512AbgDOIGi (ORCPT
+        id S2393803AbgDOIJl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 04:06:38 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:46826 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408046AbgDOID1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 04:03:27 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 0CAE92007AF;
-        Wed, 15 Apr 2020 10:03:08 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 004382007BC;
-        Wed, 15 Apr 2020 10:03:08 +0200 (CEST)
-Received: from fsr-ub1664-175.ea.freescale.net (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 5CF45202B0;
-        Wed, 15 Apr 2020 10:03:07 +0200 (CEST)
-From:   Abel Vesa <abel.vesa@nxp.com>
-To:     Lee Jones <lee.jones@linaro.org>, Shawn Guo <shawnguo@kernel.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Anson Huang <anson.huang@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>
-Cc:     NXP Linux Team <linux-imx@nxp.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, Abel Vesa <abel.vesa@nxp.com>
-Subject: [PATCH v3 04/13] arm64: dts: imx8mp: Add audiomix node
-Date:   Wed, 15 Apr 2020 11:02:44 +0300
-Message-Id: <1586937773-5836-5-git-send-email-abel.vesa@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1586937773-5836-1-git-send-email-abel.vesa@nxp.com>
-References: <1586937773-5836-1-git-send-email-abel.vesa@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Wed, 15 Apr 2020 04:09:41 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:33842 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727933AbgDOIJe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 04:09:34 -0400
+Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 687D42D1;
+        Wed, 15 Apr 2020 10:09:32 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1586938172;
+        bh=0M0sxbl5iAtIUwwTWGS+6Es0MSqO8PrYDHJ+hWBnTkg=;
+        h=Subject:To:Cc:References:Reply-To:From:Date:In-Reply-To:From;
+        b=WZ/854G9YuTrymYtHbFXpQrUkdQ2q3ZiB+UAszByRERfHLpH489og3N1CNxbl+UuZ
+         eA7KtivXXJ0zrqiTyV1XBAXCUOAQPXxa4T1qkkCfzuUwk45o4507K4aDwJ1Eio7Ax6
+         OnD1tN3cmzFt8gyPQWMgCiq/EX3ZKahVyZBMbIuQ=
+Subject: Re: [RFC PATCH v2 1/6] i2c: use DEFINE for the dummy driver name
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-i2c@vger.kernel.org
+Cc:     linux-renesas-soc@vger.kernel.org, linux-i3c@lists.infradead.org,
+        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
+        Luca Ceresoli <luca@lucaceresoli.net>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+References: <20200318150059.21714-1-wsa+renesas@sang-engineering.com>
+ <20200318150059.21714-2-wsa+renesas@sang-engineering.com>
+Reply-To: kieran.bingham+renesas@ideasonboard.com
+From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Organization: Ideas on Board
+Message-ID: <fb32a47b-50e0-aac2-7e25-fbaa3f578931@ideasonboard.com>
+Date:   Wed, 15 Apr 2020 09:09:29 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
+MIME-Version: 1.0
+In-Reply-To: <20200318150059.21714-2-wsa+renesas@sang-engineering.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Audiomix is a mix of multiple functionalities controlled by the audio IPs.
-In order to split the functionality between the rightfull drivers, it
-will be probled by the imx-mix MFD driver.
+Hi Wolfram,
 
-Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8mp.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+On 18/03/2020 15:00, Wolfram Sang wrote:
+> We use it in multiple places, so make sure it is consistent whenever we
+> need to change it.
+> 
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-index c08156f..3e4c376 100644
---- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-@@ -655,6 +655,11 @@
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges;
-+
-+			audiomix: audiomix@30e20000 {
-+				compatible = "fsl,imx8mp-mix";
-+				reg = <0x30e20000 0x10000>;
-+			};
- 		};
- 
- 		gic: interrupt-controller@38800000 {
--- 
-2.7.4
+Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+
+> ---
+>  drivers/i2c/i2c-core-base.c | 8 ++++----
+>  drivers/i2c/i2c-core.h      | 2 ++
+>  2 files changed, 6 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+> index cefad0881942..3d7b8a00a7d9 100644
+> --- a/drivers/i2c/i2c-core-base.c
+> +++ b/drivers/i2c/i2c-core-base.c
+> @@ -853,7 +853,7 @@ EXPORT_SYMBOL_GPL(i2c_unregister_device);
+>  
+>  
+>  static const struct i2c_device_id dummy_id[] = {
+> -	{ "dummy", 0 },
+> +	{ I2C_DUMMY_DRV_NAME, 0 },
+>  	{ },
+>  };
+>  
+> @@ -869,7 +869,7 @@ static int dummy_remove(struct i2c_client *client)
+>  }
+>  
+>  static struct i2c_driver dummy_driver = {
+> -	.driver.name	= "dummy",
+> +	.driver.name	= I2C_DUMMY_DRV_NAME,
+>  	.probe		= dummy_probe,
+>  	.remove		= dummy_remove,
+>  	.id_table	= dummy_id,
+> @@ -896,7 +896,7 @@ static struct i2c_driver dummy_driver = {
+>  struct i2c_client *i2c_new_dummy_device(struct i2c_adapter *adapter, u16 address)
+>  {
+>  	struct i2c_board_info info = {
+> -		I2C_BOARD_INFO("dummy", address),
+> +		I2C_BOARD_INFO(I2C_DUMMY_DRV_NAME, address),
+>  	};
+>  
+>  	return i2c_new_client_device(adapter, &info);
+> @@ -1487,7 +1487,7 @@ static void i2c_do_del_adapter(struct i2c_driver *driver,
+>  static int __unregister_client(struct device *dev, void *dummy)
+>  {
+>  	struct i2c_client *client = i2c_verify_client(dev);
+> -	if (client && strcmp(client->name, "dummy"))
+> +	if (client && strcmp(client->name, I2C_DUMMY_DRV_NAME))
+>  		i2c_unregister_device(client);
+>  	return 0;
+>  }
+> diff --git a/drivers/i2c/i2c-core.h b/drivers/i2c/i2c-core.h
+> index 517d98be68d2..fb89fabf84d3 100644
+> --- a/drivers/i2c/i2c-core.h
+> +++ b/drivers/i2c/i2c-core.h
+> @@ -22,6 +22,8 @@ int i2c_check_7bit_addr_validity_strict(unsigned short addr);
+>  int i2c_dev_irq_from_resources(const struct resource *resources,
+>  			       unsigned int num_resources);
+>  
+> +#define I2C_DUMMY_DRV_NAME "dummy"
+> +
+>  /*
+>   * We only allow atomic transfers for very late communication, e.g. to send
+>   * the powerdown command to a PMIC. Atomic transfers are a corner case and not
+> 
 
