@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F51C3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 05:29:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA06C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 05:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 885952078B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 05:29:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1753D20575
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 05:29:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389925AbgDOF3k (ORCPT
+        id S2393288AbgDOF3p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 01:29:40 -0400
-Received: from mga18.intel.com ([134.134.136.126]:30113 "EHLO mga18.intel.com"
+        Wed, 15 Apr 2020 01:29:45 -0400
+Received: from mga18.intel.com ([134.134.136.126]:30107 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407966AbgDOF3N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 01:29:13 -0400
-IronPort-SDR: 7sKv+fdyfWmA9l2ujVoAqyvQHK4I3VupdYSGWmB9UcHoniQ/uk2xYcD/y2BMWndR+S1yRoa5Cg
- X+bH6hKo3Xbg==
+        id S2407943AbgDOF3J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 01:29:09 -0400
+IronPort-SDR: VXREnu7J2pEwjojH6gByQnSH43eYqVWmUtuRAwRG+Sy/Cgh8sr61gzyVtVpreq6krSGferIWoE
+ BkodrgWqlYgA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 22:29:11 -0700
-IronPort-SDR: OvGXTUQb+261zgqu8bzjekwJmZRxO24/QbIUFrvkzaQne/dE1loragWUFJmhevrzmCZiLCO0zI
- h2g10tL18iCQ==
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 22:29:08 -0700
+IronPort-SDR: lZptZbeLJ/ybw+uhzFCzSGbQufLCXiwkzbvL5IIHL/oGma7iYjzbDYC0b7xDqSTzZgKzXyn3WI
+ FgLFgmwxdyaw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,385,1580803200"; 
-   d="scan'208";a="277504218"
+   d="scan'208";a="277504213"
 Received: from allen-box.sh.intel.com ([10.239.159.139])
-  by fmsmga004.fm.intel.com with ESMTP; 14 Apr 2020 22:29:09 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 14 Apr 2020 22:29:06 -0700
 From:   Lu Baolu <baolu.lu@linux.intel.com>
 To:     Joerg Roedel <joro@8bytes.org>
 Cc:     ashok.raj@intel.com, jacob.jun.pan@linux.intel.com,
         Liu Yi L <yi.l.liu@intel.com>, kevin.tian@intel.com,
         iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
         Lu Baolu <baolu.lu@linux.intel.com>
-Subject: [PATCH v2 5/7] iommu/vt-d: Save prq descriptors in an internal list
-Date:   Wed, 15 Apr 2020 13:25:40 +0800
-Message-Id: <20200415052542.30421-6-baolu.lu@linux.intel.com>
+Subject: [PATCH v2 4/7] iommu/vt-d: Refactor prq_event_thread()
+Date:   Wed, 15 Apr 2020 13:25:39 +0800
+Message-Id: <20200415052542.30421-5-baolu.lu@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200415052542.30421-1-baolu.lu@linux.intel.com>
 References: <20200415052542.30421-1-baolu.lu@linux.intel.com>
@@ -50,167 +50,297 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, the page request interrupt thread handles the page
-requests in the queue in this way:
-
-- Clear PPR bit to ensure new interrupt could come in;
-- Read and record the head and tail registers;
-- Handle all descriptors between head and tail;
-- Write tail to head register.
-
-This might cause some descriptors to be handles multiple times.
-An example sequence:
-
-- Thread A got scheduled with PRQ_1 and PRQ_2 in the queue;
-- Thread A clear the PPR bit and record the head and tail;
-- A new PRQ_3 comes and Thread B gets scheduled;
-- Thread B record the head and tail which includes PRQ_1
-  and PRQ_2.
-
-As the result, PRQ_1 and PRQ_2 are handled twice in Thread_A and
-Thread_B.
-
-       Thread_A            Thread_B
-      .--------.          .--------.
-      |        |          |        |
-      .--------.          .--------.
-  head| PRQ_1  |      head| PRQ_1  |
-      .--------.          .--------.
-      | PRQ_2  |          | PRQ_2  |
-      .--------.          .--------.
-  tail|        |          | PRQ_3  |
-      .--------.          .--------.
-      |        |      tail|        |
-      '--------'          '--------'
-
-To avoid this, probably, we need to apply a spinlock to ensure
-that PRQs are handled in a serialized way. But that means the
-intel_svm_process_prq() will be called with a spinlock held.
-This causes extra complexities in intel_svm_process_prq().
-
-This aims to make PRQ descriptors to be handled in a serialized
-way while remove the requirement of holding the spin lock in
-intel_svm_process_prq() by saving the descriptors in a list.
+Move the software processing page request descriptors part from
+prq_event_thread() into a separated function. No any functional
+changes.
 
 Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
 ---
- drivers/iommu/intel-svm.c   | 58 ++++++++++++++++++++++++++++++-------
- include/linux/intel-iommu.h |  2 ++
- 2 files changed, 49 insertions(+), 11 deletions(-)
+ drivers/iommu/intel-svm.c | 256 ++++++++++++++++++++------------------
+ 1 file changed, 135 insertions(+), 121 deletions(-)
 
 diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
-index a1921b462783..05aeb8ea51c4 100644
+index 83dc4319f661..a1921b462783 100644
 --- a/drivers/iommu/intel-svm.c
 +++ b/drivers/iommu/intel-svm.c
-@@ -50,6 +50,8 @@ int intel_svm_enable_prq(struct intel_iommu *iommu)
- 		return ret;
- 	}
- 	iommu->pr_irq = irq;
-+	INIT_LIST_HEAD(&iommu->prq_list);
-+	spin_lock_init(&iommu->prq_lock);
- 
- 	snprintf(iommu->prq_name, sizeof(iommu->prq_name), "dmar%d-prq", iommu->seq_id);
- 
-@@ -698,6 +700,14 @@ struct page_req_dsc {
- 
- #define PRQ_RING_MASK	((0x1000 << PRQ_ORDER) - 0x20)
- 
-+struct page_req {
-+	struct list_head list;
-+	struct page_req_dsc desc;
-+	unsigned int processing:1;
-+	unsigned int drained:1;
-+	unsigned int completed:1;
-+};
-+
- static bool access_error(struct vm_area_struct *vma, struct page_req_dsc *req)
- {
- 	unsigned long requested = 0;
-@@ -842,34 +852,60 @@ static void process_single_prq(struct intel_iommu *iommu,
- 	}
+@@ -722,142 +722,156 @@ static bool is_canonical_address(u64 addr)
+ 	return (((saddr << shift) >> shift) == saddr);
  }
  
--static void intel_svm_process_prq(struct intel_iommu *iommu,
--				  struct page_req_dsc *prq,
--				  int head, int tail)
-+static void intel_svm_process_prq(struct intel_iommu *iommu)
+-static irqreturn_t prq_event_thread(int irq, void *d)
++static void process_single_prq(struct intel_iommu *iommu,
++			       struct page_req_dsc *req)
  {
--	struct page_req_dsc *req;
+-	struct intel_iommu *iommu = d;
+-	struct intel_svm *svm = NULL;
+-	int head, tail, handled = 0;
 -
+-	/* Clear PPR bit before reading head/tail registers, to
+-	 * ensure that we get a new interrupt if needed. */
+-	writel(DMA_PRS_PPR, iommu->reg + DMAR_PRS_REG);
+-
+-	tail = dmar_readq(iommu->reg + DMAR_PQT_REG) & PRQ_RING_MASK;
+-	head = dmar_readq(iommu->reg + DMAR_PQH_REG) & PRQ_RING_MASK;
 -	while (head != tail) {
--		req = &iommu->prq[head / sizeof(*req)];
--		process_single_prq(iommu, req);
--		head = (head + sizeof(*req)) & PRQ_RING_MASK;
-+	struct page_req *req;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&iommu->prq_lock, flags);
-+	while (!list_empty(&iommu->prq_list)) {
-+		req = list_first_entry(&iommu->prq_list, struct page_req, list);
-+		if (!req->processing) {
-+			req->processing = true;
-+			spin_unlock_irqrestore(&iommu->prq_lock, flags);
-+			process_single_prq(iommu, &req->desc);
-+			spin_lock_irqsave(&iommu->prq_lock, flags);
-+			req->completed = true;
-+		} else if (req->completed) {
-+			list_del(&req->list);
-+			kfree(req);
-+		} else {
-+			break;
-+		}
- 	}
-+	spin_unlock_irqrestore(&iommu->prq_lock, flags);
- }
- 
- static irqreturn_t prq_event_thread(int irq, void *d)
- {
- 	struct intel_iommu *iommu = d;
-+	unsigned long flags;
- 	int head, tail;
- 
-+	spin_lock_irqsave(&iommu->prq_lock, flags);
- 	/*
- 	 * Clear PPR bit before reading head/tail registers, to
- 	 * ensure that we get a new interrupt if needed.
- 	 */
- 	writel(DMA_PRS_PPR, iommu->reg + DMAR_PRS_REG);
+-		struct intel_svm_dev *sdev;
+-		struct vm_area_struct *vma;
+-		struct page_req_dsc *req;
+-		struct qi_desc resp;
+-		int result;
+-		vm_fault_t ret;
+-		u64 address;
 -
- 	tail = dmar_readq(iommu->reg + DMAR_PQT_REG) & PRQ_RING_MASK;
- 	head = dmar_readq(iommu->reg + DMAR_PQH_REG) & PRQ_RING_MASK;
--	intel_svm_process_prq(iommu, iommu->prq, head, tail);
-+	while (head != tail) {
-+		struct page_req_dsc *dsc;
-+		struct page_req *req;
+-		handled = 1;
+-
+-		req = &iommu->prq[head / sizeof(*req)];
++	int result = QI_RESP_FAILURE;
++	struct intel_svm_dev *sdev;
++	struct vm_area_struct *vma;
++	struct intel_svm *svm;
++	struct qi_desc resp;
++	vm_fault_t ret;
++	u64 address;
 +
-+		dsc = &iommu->prq[head / sizeof(*dsc)];
-+		req = kzalloc(sizeof (*req), GFP_ATOMIC);
-+		if (!req)
-+			break;
-+		req->desc = *dsc;
-+		list_add_tail(&req->list, &iommu->prq_list);
-+		head = (head + sizeof(*dsc)) & PRQ_RING_MASK;
++	address = (u64)req->addr << VTD_PAGE_SHIFT;
++	if (!req->pasid_present) {
++		pr_err("%s: Page request without PASID: %08llx %08llx\n",
++		       iommu->name, ((unsigned long long *)req)[0],
++		       ((unsigned long long *)req)[1]);
++		goto no_pasid;
 +	}
- 	dmar_writeq(iommu->reg + DMAR_PQH_REG, tail);
-+	spin_unlock_irqrestore(&iommu->prq_lock, flags);
-+
-+	intel_svm_process_prq(iommu);
  
- 	return IRQ_RETVAL(1);
+-		result = QI_RESP_FAILURE;
+-		address = (u64)req->addr << VTD_PAGE_SHIFT;
+-		if (!req->pasid_present) {
+-			pr_err("%s: Page request without PASID: %08llx %08llx\n",
+-			       iommu->name, ((unsigned long long *)req)[0],
+-			       ((unsigned long long *)req)[1]);
+-			goto no_pasid;
+-		}
++	rcu_read_lock();
++	svm = ioasid_find(NULL, req->pasid, NULL);
++	/*
++	 * It *can't* go away, because the driver is not permitted
++	 * to unbind the mm while any page faults are outstanding.
++	 * So we only need RCU to protect the internal idr code.
++	 */
++	rcu_read_unlock();
+ 
+-		if (!svm || svm->pasid != req->pasid) {
+-			rcu_read_lock();
+-			svm = ioasid_find(NULL, req->pasid, NULL);
+-			/* It *can't* go away, because the driver is not permitted
+-			 * to unbind the mm while any page faults are outstanding.
+-			 * So we only need RCU to protect the internal idr code. */
+-			rcu_read_unlock();
+-			if (IS_ERR_OR_NULL(svm)) {
+-				pr_err("%s: Page request for invalid PASID %d: %08llx %08llx\n",
+-				       iommu->name, req->pasid, ((unsigned long long *)req)[0],
+-				       ((unsigned long long *)req)[1]);
+-				goto no_pasid;
+-			}
+-		}
++	if (IS_ERR_OR_NULL(svm)) {
++		pr_err("%s: Page request for invalid PASID %d: %08llx %08llx\n",
++		       iommu->name, req->pasid, ((unsigned long long *)req)[0],
++		       ((unsigned long long *)req)[1]);
++		goto no_pasid;
++	}
+ 
+-		result = QI_RESP_INVALID;
+-		/* Since we're using init_mm.pgd directly, we should never take
+-		 * any faults on kernel addresses. */
+-		if (!svm->mm)
+-			goto bad_req;
++	result = QI_RESP_INVALID;
++	/* Since we're using init_mm.pgd directly, we should never take
++	 * any faults on kernel addresses. */
++	if (!svm->mm)
++		goto bad_req;
++
++	/* If address is not canonical, return invalid response */
++	if (!is_canonical_address(address))
++		goto bad_req;
++
++	/* If the mm is already defunct, don't handle faults. */
++	if (!mmget_not_zero(svm->mm))
++		goto bad_req;
++
++	down_read(&svm->mm->mmap_sem);
++	vma = find_extend_vma(svm->mm, address);
++	if (!vma || address < vma->vm_start)
++		goto invalid;
++
++	if (access_error(vma, req))
++		goto invalid;
++
++	ret = handle_mm_fault(vma, address,
++			      req->wr_req ? FAULT_FLAG_WRITE : 0);
++	if (ret & VM_FAULT_ERROR)
++		goto invalid;
++
++	result = QI_RESP_SUCCESS;
++invalid:
++	up_read(&svm->mm->mmap_sem);
++	mmput(svm->mm);
++bad_req:
++	/* Accounting for major/minor faults? */
++	rcu_read_lock();
++	list_for_each_entry_rcu(sdev, &svm->devs, list) {
++		if (sdev->sid == req->rid)
++			break;
++	}
+ 
+-		/* If address is not canonical, return invalid response */
+-		if (!is_canonical_address(address))
+-			goto bad_req;
++	/* Other devices can go away, but the drivers are not permitted
++	 * to unbind while any page faults might be in flight. So it's
++	 * OK to drop the 'lock' here now we have it. */
++	rcu_read_unlock();
+ 
+-		/* If the mm is already defunct, don't handle faults. */
+-		if (!mmget_not_zero(svm->mm))
+-			goto bad_req;
++	if (WARN_ON(&sdev->list == &svm->devs))
++		sdev = NULL;
+ 
+-		down_read(&svm->mm->mmap_sem);
+-		vma = find_extend_vma(svm->mm, address);
+-		if (!vma || address < vma->vm_start)
+-			goto invalid;
++	if (sdev && sdev->ops && sdev->ops->fault_cb) {
++		int rwxp = (req->rd_req << 3) | (req->wr_req << 2) |
++			(req->exe_req << 1) | (req->pm_req);
++		sdev->ops->fault_cb(sdev->dev, req->pasid, req->addr,
++				    req->priv_data, rwxp, result);
++	}
+ 
+-		if (access_error(vma, req))
+-			goto invalid;
++	/* We get here in the error case where the PASID lookup failed,
++	   and these can be NULL. Do not use them below this point! */
++	sdev = NULL;
++	svm = NULL;
++no_pasid:
++	if (req->lpig || req->priv_data_present) {
++		/*
++		 * Per VT-d spec. v3.0 ch7.7, system software must
++		 * respond with page group response if private data
++		 * is present (PDP) or last page in group (LPIG) bit
++		 * is set. This is an additional VT-d feature beyond
++		 * PCI ATS spec.
++		 */
++		resp.qw0 = QI_PGRP_PASID(req->pasid) |
++			QI_PGRP_DID(req->rid) |
++			QI_PGRP_PASID_P(req->pasid_present) |
++			QI_PGRP_PDP(req->pasid_present) |
++			QI_PGRP_RESP_CODE(result) |
++			QI_PGRP_RESP_TYPE;
++		resp.qw1 = QI_PGRP_IDX(req->prg_index) |
++			QI_PGRP_LPIG(req->lpig);
++
++		if (req->priv_data_present)
++			memcpy(&resp.qw2, req->priv_data,
++			       sizeof(req->priv_data));
++		resp.qw2 = 0;
++		resp.qw3 = 0;
++		qi_submit_sync(iommu, &resp, 1, 0);
++	}
++}
+ 
+-		ret = handle_mm_fault(vma, address,
+-				      req->wr_req ? FAULT_FLAG_WRITE : 0);
+-		if (ret & VM_FAULT_ERROR)
+-			goto invalid;
++static void intel_svm_process_prq(struct intel_iommu *iommu,
++				  struct page_req_dsc *prq,
++				  int head, int tail)
++{
++	struct page_req_dsc *req;
+ 
+-		result = QI_RESP_SUCCESS;
+-	invalid:
+-		up_read(&svm->mm->mmap_sem);
+-		mmput(svm->mm);
+-	bad_req:
+-		/* Accounting for major/minor faults? */
+-		rcu_read_lock();
+-		list_for_each_entry_rcu(sdev, &svm->devs, list) {
+-			if (sdev->sid == req->rid)
+-				break;
+-		}
+-		/* Other devices can go away, but the drivers are not permitted
+-		 * to unbind while any page faults might be in flight. So it's
+-		 * OK to drop the 'lock' here now we have it. */
+-		rcu_read_unlock();
+-
+-		if (WARN_ON(&sdev->list == &svm->devs))
+-			sdev = NULL;
+-
+-		if (sdev && sdev->ops && sdev->ops->fault_cb) {
+-			int rwxp = (req->rd_req << 3) | (req->wr_req << 2) |
+-				(req->exe_req << 1) | (req->pm_req);
+-			sdev->ops->fault_cb(sdev->dev, req->pasid, req->addr,
+-					    req->priv_data, rwxp, result);
+-		}
+-		/* We get here in the error case where the PASID lookup failed,
+-		   and these can be NULL. Do not use them below this point! */
+-		sdev = NULL;
+-		svm = NULL;
+-	no_pasid:
+-		if (req->lpig || req->priv_data_present) {
+-			/*
+-			 * Per VT-d spec. v3.0 ch7.7, system software must
+-			 * respond with page group response if private data
+-			 * is present (PDP) or last page in group (LPIG) bit
+-			 * is set. This is an additional VT-d feature beyond
+-			 * PCI ATS spec.
+-			 */
+-			resp.qw0 = QI_PGRP_PASID(req->pasid) |
+-				QI_PGRP_DID(req->rid) |
+-				QI_PGRP_PASID_P(req->pasid_present) |
+-				QI_PGRP_PDP(req->pasid_present) |
+-				QI_PGRP_RESP_CODE(result) |
+-				QI_PGRP_RESP_TYPE;
+-			resp.qw1 = QI_PGRP_IDX(req->prg_index) |
+-				QI_PGRP_LPIG(req->lpig);
+-
+-			if (req->priv_data_present)
+-				memcpy(&resp.qw2, req->priv_data,
+-				       sizeof(req->priv_data));
+-			resp.qw2 = 0;
+-			resp.qw3 = 0;
+-			qi_submit_sync(iommu, &resp, 1, 0);
+-		}
++	while (head != tail) {
++		req = &iommu->prq[head / sizeof(*req)];
++		process_single_prq(iommu, req);
+ 		head = (head + sizeof(*req)) & PRQ_RING_MASK;
+ 	}
++}
++
++static irqreturn_t prq_event_thread(int irq, void *d)
++{
++	struct intel_iommu *iommu = d;
++	int head, tail;
+ 
++	/*
++	 * Clear PPR bit before reading head/tail registers, to
++	 * ensure that we get a new interrupt if needed.
++	 */
++	writel(DMA_PRS_PPR, iommu->reg + DMAR_PRS_REG);
++
++	tail = dmar_readq(iommu->reg + DMAR_PQT_REG) & PRQ_RING_MASK;
++	head = dmar_readq(iommu->reg + DMAR_PQH_REG) & PRQ_RING_MASK;
++	intel_svm_process_prq(iommu, iommu->prq, head, tail);
+ 	dmar_writeq(iommu->reg + DMAR_PQH_REG, tail);
+ 
+-	return IRQ_RETVAL(handled);
++	return IRQ_RETVAL(1);
  }
-diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
-index cca1e5f9aeaa..80715a59491c 100644
---- a/include/linux/intel-iommu.h
-+++ b/include/linux/intel-iommu.h
-@@ -590,6 +590,8 @@ struct intel_iommu {
- #ifdef CONFIG_INTEL_IOMMU_SVM
- 	struct page_req_dsc *prq;
- 	unsigned char prq_name[16];    /* Name for PRQ interrupt */
-+	struct list_head prq_list;	/* pending page request list */
-+	spinlock_t prq_lock;		/* protect above pending list */
- 	struct ioasid_allocator_ops pasid_allocator; /* Custom allocator for PASIDs */
- #endif
- 	struct q_inval  *qi;            /* Queued invalidation info */
+ 
+ #define to_intel_svm_dev(handle) container_of(handle, struct intel_svm_dev, sva)
 -- 
 2.17.1
 
