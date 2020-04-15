@@ -2,125 +2,264 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F5FCC3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 22:19:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CA21C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 22:20:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8502C206E9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 22:19:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C56D206E9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 22:20:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731869AbgDOWTv (ORCPT
+        id S1732277AbgDOWUq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 18:19:51 -0400
-Received: from smtp.gentoo.org ([140.211.166.183]:46544 "EHLO smtp.gentoo.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729180AbgDOWTi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 18:19:38 -0400
-Received: from sf (tunnel547699-pt.tunnel.tserv1.lon2.ipv6.he.net [IPv6:2001:470:1f1c:3e6::2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: slyfox)
-        by smtp.gentoo.org (Postfix) with ESMTPSA id 0D3C834F114;
-        Wed, 15 Apr 2020 22:19:33 +0000 (UTC)
-Date:   Wed, 15 Apr 2020 23:19:30 +0100
-From:   Sergei Trofimovich <slyfox@gentoo.org>
-To:     Michael Matz <matz@suse.de>
-Cc:     Borislav Petkov <bp@alien8.de>, Jakub Jelinek <jakub@redhat.com>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org
-Subject: Re: [PATCH v2] x86: fix early boot crash on gcc-10
-Message-ID: <20200415231930.19755bc7@sf>
-In-Reply-To: <alpine.LSU.2.21.2004151445520.11688@wotan.suse.de>
-References: <20200326223501.GK11398@zn.tnic>
-        <20200328084858.421444-1-slyfox@gentoo.org>
-        <20200413163540.GD3772@zn.tnic>
-        <alpine.LSU.2.21.2004141343370.11688@wotan.suse.de>
-        <20200415074842.GA31016@zn.tnic>
-        <alpine.LSU.2.21.2004151445520.11688@wotan.suse.de>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 15 Apr 2020 18:20:46 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:43926 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726506AbgDOWUk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 18:20:40 -0400
+Received: from 185.80.35.16 (185.80.35.16) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
+ id 8701ae94ebb8b663; Thu, 16 Apr 2020 00:20:35 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        USB list <linux-usb@vger.kernel.org>,
+        Linux-pm mailing list <linux-pm@vger.kernel.org>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Subject: Re: lockdep warning in urb.c:363 usb_submit_urb
+Date:   Thu, 16 Apr 2020 00:20:35 +0200
+Message-ID: <1998412.Cp2JyuGtSI@kreacher>
+In-Reply-To: <Pine.LNX.4.44L0.2004141150590.12758-100000@netrider.rowland.org>
+References: <Pine.LNX.4.44L0.2004141150590.12758-100000@netrider.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Apr 2020 14:53:45 +0000 (UTC)
-Michael Matz <matz@suse.de> wrote:
+On Tuesday, April 14, 2020 7:47:35 PM CEST Alan Stern wrote:
+> On Tue, 14 Apr 2020, Rafael J. Wysocki wrote:
+> 
+> > Note to self: avoid replying to technical messages late in the night ...
+> > 
+> > On Mon, Apr 13, 2020 at 11:32 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> > >
+> > > On Saturday, April 11, 2020 4:41:14 AM CEST Alan Stern wrote:
+> > > > Okay, this is my attempt to summarize what we have been discussing.
+> > > > But first: There is a dev_pm_skip_resume() helper routine which
+> > > > subsystems can call to see whether resume-side _early and _noirq driver
+> > > > callbacks should be skipped.  But there is no corresponding
+> > > > dev_pm_skip_suspend() helper routine.  Let's add one, or rename
+> > > > dev_pm_smart_suspend_and_suspended() to dev_pm_skip_suspend().
+> > >
+> > > OK
+> > >
+> > > > Given that, here's my understanding of what should happen.  (I'm
+> > > > assuming the direct_complete mechanism is not being used.)  This tries
+> > > > to describe what we _want_ to happen, which is not always the same as
+> > > > what the current code actually _does_.
+> > >
+> > > OK
+> > >
+> > > >       During the suspend side, for each of the
+> > > >       {suspend,freeze,poweroff}_{late,noirq} phases: If
+> > > >       dev_pm_skip_suspend() returns true then the subsystem should
+> > > >       not invoke the driver's callback, and if there is no subsystem
+> > > >       callback then the core will not invoke the driver's callback.
+> > > >
+> > > >       During the resume side, for each of the
+> > > >       {resume,thaw,restore}_{early,noirq} phases: If
+> > > >       dev_pm_skip_resume() returns true then the subsystem should
+> > > >       not invoke the driver's callback, and if there is no subsystem
+> > > >       callback then the core will not invoke the driver's callback.
+> > > >
+> > > >       dev_pm_skip_suspend() will return "true" if SMART_SUSPEND is
+> > > >       set and the device's runtime status is "suspended".
+> > >
+> > > Agreed with the above.
+> > >
+> > > >       power.must_resume gets set following the suspend-side _noirq
+> > > >       phase if power.usage_count > 1 (indicating the device was
+> > > >       in active use before the start of the sleep transition) or
+> > > >       power.must_resume is set for any of the device's dependents.
+> > >
+> > > Or MAY_SKIP_RESUME is unset (which means that the driver does not
+> > > allow its resume callbacks to be skipped), or power.may_skip_resume
+> > > is unset (which means that the subsystem does not allow the
+> > > driver callbacks to be skipped).
+> 
+> Are you certain about that?  It contradicts what you said earlier, that
+> MAY_SKIP_RESUME doesn't affect THAW transitions.
 
-> Hello,
-> 
-> On Wed, 15 Apr 2020, Borislav Petkov wrote:
-> 
-> > On Tue, Apr 14, 2020 at 01:50:29PM +0000, Michael Matz wrote:  
-> > > So this part expects that the caller (!) of trace_hardirqs_on was compiled
-> > > with a frame pointer (in %ebp).  
-> > 
-> > /me looks at the .s file...
-> > 
-> > options passed comment at the top has -fno-omit-frame-pointer
-> >   
-> > > Obviously that's not the case as you traced above. Is start_secondary
-> > > the immediate caller in the above case?  
-> > 
-> > Yes, start_secondary() is the function which is marked as
-> > __attribute__((optimize("-fno-stack-protector"))) and it does:
-> > 
-> > # arch/x86/kernel/smpboot.c:264:        local_irq_enable();
-> >         call    trace_hardirqs_on       #
-> > 
-> > (the local_irq_enable() is a macro which has the call to
-> > trace_hardirqs_on().
-> >   
-> > > Look at it's disassembly.  If it doesn't have the usual push
-> > > %ebp/mov%esp,%ebp prologue it probably doesn't use a frame pointer.  
-> > 
-> > Here's the preamble:
-> > 
-> >         .text
-> >         .p2align 4
-> >         .type   start_secondary, @function
-> > start_secondary:
-> >         pushl   %esi    #
-> >         pushl   %ebx    #  
-> 
-> Right.  So meanwhile it became clear: the optimize function attribute 
-> doesn't work cumulative but rather replaces all cmdline args (the 
-> optimization ones, but that roughly translates to -fxxx options).  In this 
-> case an 'optimize("-fno-stack-protector")' also disables the crucial 
-> -fno-omit-frame-pointer, reverting to the compilers default, which, 
-> depending on version, is also to omit the frame pointer on 32bit.  You 
-> could fix that by adding ',-fno-omit-frame-pointer' to the attribute 
-> string.  But that quickly gets out of hand, considering all the options 
-> you carefully need to set in Makefiles to get the right behaviour.  (Note 
-> that e.g. the optimization level is reset to -O0 as well!).
-> 
-> (I'll admit that I was somewhat surprised by this behaviour, even though 
-> it makes sense in the abstract; resetting to a clean slate and 
-> everything).
-> 
-> I think in its current form the optimize attribute is not useful for the 
-> purposes you need, and you're better off to disable the stack protector 
-> for the whole compilation unit from the Makefile.
-> 
-> (That attribute is also documented as "not suitable in production code", 
-> so go figure ;-) )
-> 
-> I think it will be possible to make that attribute a bit more useful 
-> in the future, but for the time being I think you'll just want to live 
-> without it.
+Yes, MAY_SKIP_RESUME, as well as power.may_skip_resume for that matter, really
+should not affect the THAW transition at all.  I overlooked that when I was
+writing the above (and earlier).
 
-Ah, that makes sense. Borislav, should I send a fix forward against
-x86 tree to move -fno-stack-protector as it was in v1 patch?
-Or you'll revert v2 and apply v1 ~as is? Or should I send those myself?
+This means that the dev_pm_skip_resume() logic really is relatively
+straightforward:
+ - If the current transition is RESTORE, return "false".
+ - Otherwise, if the current transition is THAW, return the return value
+   of dev_pm_skip_suspend().
+ - Otherwise (so the current transition is RESUME which is the only remaining
+   case), return the logical negation of power.must_resume.
 
--- 
+> Also, it would mean 
+> that a device whose subsystem doesn't know about power.may_skip_resume 
+> would never be allowed to stay in runtime suspend.
 
-  Sergei
+Not really, because I want the core to set power.may_skip_resume for the
+devices for which dev_pm_skip_suspend() returns "true" if the "suspend_late"
+subsystem-level callback is not present.  [It might be more consistent
+to simply set it for all devices for which dev_pm_skip_suspend() returns
+"true" and let the subsystems update it should they want to?  IOW, the
+default value of power.may_skip_resume could be the return value of
+dev_pm_skip_suspend()?]
+
+> > > >       dev_pm_skip_resume() will return "false" if the current
+> > > >       transition is RESTORE or power.must_resume is set.  Otherwise:
+> > > >       It will return true if the current transition is THAW,
+> > > >       SMART_SUSPEND is set, and the device's runtime status is
+> > > >       "suspended".
+> > >
+> > > The other way around.  That is:
+> > >
+> > > dev_pm_skip_resume() will return "true" if the current transition is
+> > > THAW and dev_pm_skip_suspend() returns "true" for that device (so
+> > > SMART_SUSPEND is set, and the device's runtime status is "suspended",
+> > > as per the definition of that function above).
+> > 
+> > The above is what I wanted to say ->
+> 
+> So for THAW, dev_pm_skip_resume() can return "true" even if 
+> power.must_resume is set?  That doesn't seem right.
+
+But it cannot be the other way around.
+
+For example, invoking ->thaw_early() from the driver without the corresponding
+->freeze_late() would be a bug in general, unless they point to the same
+routines as ->runtime_resume() and ->runtime_suspend() (or equivalent),
+respectively, but that need not be the case.
+
+> > > Otherwise, it will return "true" if the current transition is RESTORE
+> > > (which means that all devices are resumed) or power.must_resume is not
+> > > set (so this particular device need not be resumed).
+> > 
+> > -> but this isn't.  In particular, I messed up the RESTORE part, so it
+> > should read:
+> > 
+> > Otherwise, it will return "true" if the current transition is *not*
+> > RESTORE (in which case all devices would be resumed) *and*
+> > power.must_resume is not set (so this particular device need not be
+> > resumed).
+> > 
+> > Sorry about that.
+> 
+> For the RESTORE and THAW cases that is exactly the same as what I 
+> wrote, apart from the THAW issue noted above.
+
+OK then.
+
+> > > >  It will return "true" if the current transition is
+> > > >       RESUME, SMART_SUSPEND and MAY_SKIP_RESUME are both set, and
+> > > >       the device's runtime status is "suspended".
+> > >
+> > > Unless MAY_SKIP_RESUME is unset for at least one of its descendants (or
+> > > dependent devices).
+> > 
+> > That should include the power.may_skip_resume flag, so as to read as follows:
+> > 
+> > Unless MAY_SKIP_RESUME is unset or power.may_skip_resume is unset for
+> > at least one of its descendants (or dependent devices).
+> 
+> What about the runtime PM usage counter?
+
+Yes, it applies to that too.
+
+Of course, if dev_pm_skip_suspend() returns "true", the usage counter cannot
+be greater than 1 (for the given device as well as for any dependent devices).
+
+> > > >       For a RESUME
+> > > >       transition, it will also return "true" if MAY_SKIP_RESUME and
+> > > >       power.may_skip_resume are both set, regardless of
+> > > >       SMART_SUSPEND or the current runtime status.
+> > >
+> > > And if the device was not in active use before suspend (as per its usage
+> > > counter) or MAY_SKIP_RESUME is unset for at least one of its descendants (or
+> > > dependent devices in general).
+> > 
+> > And analogously here, so what I really should have written is:
+> > 
+> > And if the device was not in active use before suspend (as per its
+> > usage counter) or MAY_SKIP_RESUME or power.may_skip_resume is unset
+> > for at least one of its descendants (or dependent devices in general).
+> 
+> In other words, for RESUME transitions you want the MAY_SKIP_RESUME and
+> power.may_skip_resume restrictions to propagate up from dependent
+> devices.
+
+Yes, I do.
+
+> And of course, the way to do that is by adding them into the
+> power.must_resume flag.
+
+Right.
+
+> How do you want to handle the usage counter restriction.  
+> Should that also propagate upward?
+
+Yes, it should.
+
+> And how should the result of dev_pm_skip_resume() be affected by 
+> SMART_SUSPEND for RESUME transitions?
+
+Not directly, just through power.must_resume.
+
+> Maybe this is getting confusing because of the way I organized it.  
+> Let's try like this:
+> 
+> Transition   Conditions for dev_pm_skip_resume() to return "true"
+> ----------   ----------------------------------------------------
+> 
+> RESTORE      Never
+
+Right.
+
+> THAW         power.must_resume is clear (which requires
+>                MAY_SKIP_RESUME and power.may_skip_resume to be set and 
+>                the runtime usage counter to be = 1, and which 
+>                propagates up from dependent devices)
+>              SMART_SUSPEND is set,
+>              runtime status is "suspended"
+
+Like I said above:
+
+ THAW			dev_pm_skip_suspend() returns "true".
+
+> 
+> RESUME       Same as THAW?  Or maybe don't require SMART_SUSPEND?
+>                (But if SMART_SUSPEND is clear, how could the runtime 
+>                status be "suspended"?)
+
+ RESUME		power.must_resume is clear (which requires
+				  MAY_SKIP_RESUME and power.may_skip_resume to be set and
+				  the runtime usage counter to be = 1, and which 
+				  propagates up from dependent devices)
+
+Nothing else is really strictly required IMO.
+
+> 
+> I can't really tell what you want, because your comments at various 
+> times have been inconsistent.
+
+Sorry for the inconsistencies, I hope that it's more clear now.
+
+Cheers!
+
+
+
