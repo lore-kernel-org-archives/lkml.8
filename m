@@ -2,98 +2,170 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83EAFC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:15:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 470BDC3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:16:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5929E206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:15:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qTeA4cQ4"
+	by mail.kernel.org (Postfix) with ESMTP id 2E456206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:16:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2411832AbgDOTLP (ORCPT
+        id S2441778AbgDOTQ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 15:11:15 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:5949 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1416838AbgDOSjM (ORCPT
+        Wed, 15 Apr 2020 15:16:57 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:40171 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2440357AbgDOTHg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 14:39:12 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e9754950001>; Wed, 15 Apr 2020 11:38:13 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 15 Apr 2020 11:39:12 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 15 Apr 2020 11:39:12 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Apr
- 2020 18:39:11 +0000
-Received: from rcampbell-dev.nvidia.com (172.20.13.39) by
- DRHQMAIL107.nvidia.com (10.27.9.16) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3; Wed, 15 Apr 2020 18:39:11 +0000
-Subject: Re: [PATCH] mm: Fix a typo in comment "strucure"->"structure"
-To:     Ethon Paul <ethp@qq.com>, <akpm@linux-foundation.org>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
-References: <20200411064723.15855-1-ethp@qq.com>
-X-Nvconfidentiality: public
-From:   Ralph Campbell <rcampbell@nvidia.com>
-Message-ID: <67e122e5-53ff-e04c-9c38-53eab9701f01@nvidia.com>
-Date:   Wed, 15 Apr 2020 11:39:11 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 15 Apr 2020 15:07:36 -0400
+Received: from mail-qv1-f52.google.com ([209.85.219.52]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1M9nlN-1jJ0U50zTR-005qez; Wed, 15 Apr 2020 21:07:32 +0200
+Received: by mail-qv1-f52.google.com with SMTP id v38so694771qvf.6;
+        Wed, 15 Apr 2020 12:07:31 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYqovIjqXz2qd1he3wjA1+p9EOIVHRC83vREbjlypu5Eij56d+6
+        aukOuawtA0X3gF5w3edRrX0Hr6K5E3UxaRccKh8=
+X-Google-Smtp-Source: APiQypJX6+zh0Hk9cZgHIA/HI7dJ0HZA699mCplxjoSE0/kbYbrN5LgCPWe0a2KpM5wIklHmQkE+zGG0ajKUcBeJ1kM=
+X-Received: by 2002:a0c:9e2f:: with SMTP id p47mr6000391qve.211.1586977650774;
+ Wed, 15 Apr 2020 12:07:30 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200411064723.15855-1-ethp@qq.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1586975893; bh=HIEJfqDa6z36CFLcM5FjNWWhspU6i61JZSNWRpLc+iA=;
-        h=X-PGP-Universal:Subject:To:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=qTeA4cQ4rBx4zeyaqTIowFatNac376KFePSltMkFaDS5ctV5+b9WK5ZQFPDdF+fla
-         CfaD1Ok2tRrDyWFnAWngIOS0/xhBE6XTY+Z/OnjawvXKslz64JSb82jt1ZMxk1Z40C
-         F29tGgj6cPE+ZzwtqvUsFtA258R182lwrGjuTy/seukzL5D8MPuaygPUjGC22GpT6Y
-         9/B7JfotboCEQDrZnZLNvP2wgQu+6m9N28+oOjA2BgLOyL3d6lY008zO859+m2BKJt
-         vqoTo5kQ7DGP0MxYFdKQTJ/NGxZtv57kc2iRoSlJtJmJOYQa6Ap8p2s19TeF7tfHCs
-         oPaJJocYX2Irw==
+References: <20200408202711.1198966-1-arnd@arndb.de> <20200408202711.1198966-6-arnd@arndb.de>
+ <20200414201739.GJ19819@pendragon.ideasonboard.com> <CAK8P3a0hd5bsezrJS3+GV2nRMui4P5yeD2Rk7wQpJsAZeOCOUg@mail.gmail.com>
+ <20200414205158.GM19819@pendragon.ideasonboard.com> <CAK8P3a1PZbwdvdH_Gi9UQVUz2+_a8QDxKuWLqPtjhK1stxzMBQ@mail.gmail.com>
+ <CAMuHMdUb=XXucGUbxt26tZ1xu9pdyVUB8RVsfB2SffURVVXwSg@mail.gmail.com> <CAK8P3a1uasBFg9dwvPEcokrRhYE2qh6iwOMW1fDTY+LBZMrTjg@mail.gmail.com>
+In-Reply-To: <CAK8P3a1uasBFg9dwvPEcokrRhYE2qh6iwOMW1fDTY+LBZMrTjg@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 15 Apr 2020 21:07:14 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a0CoPUTSJp6ddDnmabo59iE73pugGSYayoeB5N57az9_w@mail.gmail.com>
+Message-ID: <CAK8P3a0CoPUTSJp6ddDnmabo59iE73pugGSYayoeB5N57az9_w@mail.gmail.com>
+Subject: Re: [RFC 5/6] drm/rcar-du: fix selection of CMM driver
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:4b8EYsOhlpxPK7pigxEr6ENytFkJTUlOn65DgSqaoGVE4mhFOVD
+ QcxKAXWkIC/EjC2fjH2zFctAHyK6mjXQANuW5qhqhnOrB39r8JJVSe68xBi7ZSFf2mjAGxs
+ VV9iaKU3flgC991QNdyH9+oukWipUW9v1tTl5jlCwT9gVLYyC/THngPjyw40G8b8DKccp41
+ EebvW/ikBPYtAFWcBr6DQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:s1iU6JwyX0k=:qF3wmkBt4XF94HD66/LOjx
+ QQaUujg7RD8vwUT7IA4urdkYEgskCcbP4QA7rFWrrMbi8eKCfOezI/5sFlLCN5MXk10ru0rll
+ GkGCENRfsLJbRHh/e4Wr2JzDuotT4oNh0K4KaiNl7aEi4rLRnSoET5mH20dC1zL0vpjtMNBfh
+ /Q4ks7R/2rW+lgPXQnE2xO8L6uEqEiU+Xs1QqmhSBQTLsm0WGie40UfcmfYUII8FiWRsVR0xq
+ kFA905uOMsrS6oJtJINFvcdEq6flmEFPaMMgG2xY7FT/CwxdYzCuU23LKWdw1SDwCg1KW4/sR
+ SGSirwbzqoHKqhvoJ82BpZYql/nQ2kIqzF/0L1e6ghinNBQA0z5Rbq5m1sAUim6bODATFlAO2
+ a0ol9rIZ6lihW9det7W0z5ZptW42n1EZlcNgvMyFnMGHtrzAv5iyLtltrQyYbFITEZpoPAm0Z
+ Zk7v4JwxtEZB+Os2TJztAcEpPpQig7/6m45cqhvTRNodywOKzAqkew5B6MsTQXnaApA06i0Ov
+ A8A6o2AypYt2VK0Nm/PZSeIrtX9y2yN0TEn5+BVk4+VKW2Qfro6gvtWWzo1jVjSltcF48WM55
+ Tn/X8udAui6asxFoxR6D1WOADi7hCI0rCZK1Cd7N8J+9KLFSoT8u0kbIJT8p79CYpAsZCWnn4
+ 2a+3NlqlITmkuSoIG+6kmlf61ktRhkr7S8Rca0bKhovGraT4PmQI9oKzSb3IJ+Z5UBNX7bCF2
+ VEwbPF6SvmUq3yOeYOu/WvuBUYTIqU7xL2JRi/aEytq3iOyBTA9m0pZt42g4tFKwMp148zBj0
+ +I7nj2DBc+euzSDrJvK0rBWrq6cA96QuD7Iv98+JEVNqHeJqnU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Apr 15, 2020 at 5:18 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Wed, Apr 15, 2020 at 4:13 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > On Wed, Apr 15, 2020 at 3:47 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> > > On Tue, Apr 14, 2020 at 10:52 PM Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
+> > > > Doesn't "imply" mean it gets selected by default but can be manually
+> > > > disabled ?
+> > >
+> > > That may be what it means now (I still don't understand how it's defined
+> > > as of v5.7-rc1), but traditionally it was more like a 'select if all
+> > > dependencies are met'.
+> >
+> > That's still what it is supposed to mean right now ;-)
+> > Except that now it should correctly handle the modular case, too.
+>
+> Then there is a bug. If I run 'make menuconfig' now on a mainline kernel
+> and enable CONFIG_DRM_RCAR_DU, I can set
+> DRM_RCAR_CMM and DRM_RCAR_LVDS to 'y', 'n' or 'm' regardless
+> of whether CONFIG_DRM_RCAR_DU is 'm' or 'y'. The 'implies'
+> statement seems to be ignored entirely, except as reverse 'default'
+> setting.
 
-On 4/10/20 11:47 PM, Ethon Paul wrote:
-> There is a typo in comment, fix it.
-> 
-> Signed-off-by: Ethon Paul <ethp@qq.com>
+Here is another version that should do what we want and is only
+half-ugly. I can send that as a proper patch if it passes my testing
+and nobody hates it too much.
 
-Reviewed-by: Ralph Campbell <rcampbell@nvidia.com>
+       Arnd
 
-> ---
->   mm/internal.h | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/internal.h b/mm/internal.h
-> index b5634e78f01d..7e998459f887 100644
-> --- a/mm/internal.h
-> +++ b/mm/internal.h
-> @@ -130,7 +130,7 @@ extern pmd_t *mm_find_pmd(struct mm_struct *mm, unsigned long address);
->    *
->    * zonelist, preferred_zone and classzone_idx are set first in
->    * __alloc_pages_nodemask() for the fast path, and might be later changed
-> - * in __alloc_pages_slowpath(). All other functions pass the whole strucure
-> + * in __alloc_pages_slowpath(). All other functions pass the whole structure
->    * by a const pointer.
->    */
->   struct alloc_context {
-> 
+diff --git a/drivers/gpu/drm/rcar-du/Kconfig b/drivers/gpu/drm/rcar-du/Kconfig
+index 0919f1f159a4..d2fcec807dfa 100644
+--- a/drivers/gpu/drm/rcar-du/Kconfig
++++ b/drivers/gpu/drm/rcar-du/Kconfig
+@@ -4,8 +4,6 @@ config DRM_RCAR_DU
+        depends on DRM && OF
+        depends on ARM || ARM64
+        depends on ARCH_RENESAS || COMPILE_TEST
+-       imply DRM_RCAR_CMM
+-       imply DRM_RCAR_LVDS
+        select DRM_KMS_HELPER
+        select DRM_KMS_CMA_HELPER
+        select DRM_GEM_CMA_HELPER
+@@ -14,13 +12,17 @@ config DRM_RCAR_DU
+          Choose this option if you have an R-Car chipset.
+          If M is selected the module will be called rcar-du-drm.
+
+-config DRM_RCAR_CMM
+-       tristate "R-Car DU Color Management Module (CMM) Support"
+-       depends on DRM && OF
++config DRM_RCAR_USE_CMM
++       bool "R-Car DU Color Management Module (CMM) Support"
+        depends on DRM_RCAR_DU
++       default DRM_RCAR_DU
+        help
+          Enable support for R-Car Color Management Module (CMM).
+
++config DRM_RCAR_CMM
++       def_tristate DRM_RCAR_DU
++       depends on DRM_RCAR_USE_CMM
++
+ config DRM_RCAR_DW_HDMI
+        tristate "R-Car DU Gen3 HDMI Encoder Support"
+        depends on DRM && OF
+@@ -28,15 +30,20 @@ config DRM_RCAR_DW_HDMI
+        help
+          Enable support for R-Car Gen3 internal HDMI encoder.
+
+-config DRM_RCAR_LVDS
+-       tristate "R-Car DU LVDS Encoder Support"
+-       depends on DRM && DRM_BRIDGE && OF
++config DRM_RCAR_USE_LVDS
++       bool "R-Car DU LVDS Encoder Support"
++       depends on DRM_BRIDGE && OF
++       default DRM_RCAR_DU
+        select DRM_PANEL
+        select OF_FLATTREE
+        select OF_OVERLAY
+        help
+          Enable support for the R-Car Display Unit embedded LVDS encoders.
+
++config DRM_RCAR_LVDS
++       def_tristate DRM_RCAR_DU
++       depends on DRM_RCAR_USE_LVDS
++
+ config DRM_RCAR_VSP
+        bool "R-Car DU VSP Compositor Support" if ARM
+        default y if ARM64
