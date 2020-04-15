@@ -2,146 +2,199 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD02DC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:12:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F47BC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:12:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E10420857
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:12:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="N2C3mdw6"
+	by mail.kernel.org (Postfix) with ESMTP id 1ADD920857
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:12:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586963565;
+	bh=tIhwo4Av+Ko1GexPfUE5H1cXeGMDMCxzkLiqEIVxS+8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=npW2jJmO5Yt7xMfk0LUrD8VcZiwABFvjog10t2EPGSe14M7PHiRH4ike5OcokVt5W
+	 f7bz+Ldu8NUtJAizMO6i5y9LqbrwwNTZLr1mvorlu3PUDIayDZAFNJGffi3isGCwWg
+	 rK6bbmpRSGdjNpSUNkl2QvQpkzEEqOyq5DIhJbFk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1414596AbgDOPM3 (ORCPT
+        id S2393268AbgDOPMo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 11:12:29 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:49962 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393131AbgDOPMZ (ORCPT
+        Wed, 15 Apr 2020 11:12:44 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:34670 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393194AbgDOPMl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 11:12:25 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03FF3ZLU073190;
-        Wed, 15 Apr 2020 15:12:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=bzoZo+HKoo6uH2xvfSZWTuYXjrlhv0Ys9g4w0SsHvfo=;
- b=N2C3mdw6mSJwafPY53rlrzVsmllU/2P1ZsA+JMDy7YOBt4Up1rXV4ITmVwOtQRDu3BAU
- /FVBQaflG1XjbpGTaICOWShSk5G8hde2yD6AfVTd6ada0Arvr9dZCViAM2o9rGYsx6Yn
- vKYxOGWvx6PLW3wSiD8p61yEStlioVBkLRnhNF4d3dqkwyofknQX86kWRj/GXquS9q5l
- //LmaYbd9WiYUkmr+dGFFX8y2NvAiDdHIWlcppzOay/sbdFK7idOirfGRIszKS2ZVGXG
- mRYmNxTX3lD8arSw54wr7Mc5dS61YTRhbwejWodQEwakJA86uRpbn1K82UJy9vUWxZNs TA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 30e0aa1hdn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Apr 2020 15:12:12 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03FF7MQG186295;
-        Wed, 15 Apr 2020 15:12:11 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 30dn8wdeee-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Apr 2020 15:12:11 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03FFC9Ni030716;
-        Wed, 15 Apr 2020 15:12:09 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 15 Apr 2020 08:12:09 -0700
-Date:   Wed, 15 Apr 2020 08:12:07 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     ira.weiny@intel.com
-Cc:     linux-kernel@vger.kernel.org, Dave Chinner <dchinner@redhat.com>,
-        Jan Kara <jack@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH V8 01/11] fs/xfs: Remove unnecessary initialization of
- i_rwsem
-Message-ID: <20200415151207.GN6742@magnolia>
-References: <20200415064523.2244712-1-ira.weiny@intel.com>
- <20200415064523.2244712-2-ira.weiny@intel.com>
+        Wed, 15 Apr 2020 11:12:41 -0400
+Received: by mail-ot1-f66.google.com with SMTP id m2so255639otr.1;
+        Wed, 15 Apr 2020 08:12:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZFCMh2H9Eh+ryRXkXK/V7+2w4B+PUgVzUEm1sj08lm0=;
+        b=Fm98cqyhkL7XLrDgNy/rlEpq9O/WJzzMDc30kjJPiRADv6woHOk6VQzx8mDS08ElmK
+         /22vou22tx5SGdhNo359jmILyph0DaoL+fSP5wO7+Vzwpqrjqo1aEQDAxPXKpBg7KupY
+         YtWiNumrL/doriIm1x8M1iI0/Nk7LGdOzCBNXN6vmxxlhxtO962usoGidE0D2lgo74T4
+         6cuTxRS/RMhr5hEfWhupz0p3IXjzuBAIhl7zQIxnHdrWEqJJGYQW2FugGDCq8BWaJy7D
+         f2e4qiTwBrZ9UlIMCT5UacEoPe58XLLkNsinAvje0mWjdCCqKsMocgaMytqnYN4gwRB9
+         8VjA==
+X-Gm-Message-State: AGi0PuaFshGLSjumyzPbpAIBwdC7FmhsxN5RvH2MVyIODqsGKhyzxrrK
+        esiZQHoj6FMV6W/EpbO0Dw==
+X-Google-Smtp-Source: APiQypIKxwXtUrjwfyuCqVzzKfMogJVdKDlcIeltnelwgqKhG6bH+DblCsEbrigze1USzStBxtor4A==
+X-Received: by 2002:a9d:4102:: with SMTP id o2mr22206640ote.98.1586963559689;
+        Wed, 15 Apr 2020 08:12:39 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id r205sm6395829oih.47.2020.04.15.08.12.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2020 08:12:35 -0700 (PDT)
+Received: (nullmailer pid 30324 invoked by uid 1000);
+        Wed, 15 Apr 2020 15:12:34 -0000
+Date:   Wed, 15 Apr 2020 10:12:34 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Kiran Gunda <kgunda@codeaurora.org>
+Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
+        lee.jones@linaro.org, b.zolnierkie@samsung.com,
+        dri-devel@lists.freedesktop.org, daniel.thompson@linaro.org,
+        jacek.anaszewski@gmail.com, pavel@ucw.cz, mark.rutland@arm.com,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
+        linux-arm-msm@vger.kernel.org,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>
+Subject: Re: [PATCH V5 3/4] backlight: qcom-wled: Add WLED5 bindings
+Message-ID: <20200415151234.GA25862@bogus>
+References: <1586274430-28402-1-git-send-email-kgunda@codeaurora.org>
+ <1586274430-28402-4-git-send-email-kgunda@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200415064523.2244712-2-ira.weiny@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9591 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999
- suspectscore=1 malwarescore=0 spamscore=0 phishscore=0 adultscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004150112
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9591 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 clxscore=1015
- impostorscore=0 mlxlogscore=999 mlxscore=0 lowpriorityscore=0
- suspectscore=1 adultscore=0 spamscore=0 malwarescore=0 phishscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004150112
+In-Reply-To: <1586274430-28402-4-git-send-email-kgunda@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 11:45:13PM -0700, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
+On Tue, Apr 07, 2020 at 09:17:09PM +0530, Kiran Gunda wrote:
+> Add WLED5 specific bindings.
 > 
-> An earlier call of xfs_reinit_inode() from xfs_iget_cache_hit() already
-> handles initialization of i_rwsem.
-> 
-> Doing so again is unneeded.
-> 
-> Reviewed-by: Dave Chinner <dchinner@redhat.com>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
-Still looks ok,
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+checkpatch.pl complains about some trailing whitespace. The previous 
+patch too.
 
---D
-
-> 
+> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+> Signed-off-by: Subbaraman Narayanamurthy <subbaram@codeaurora.org>
 > ---
-> Changes from V4:
-> 	Update commit message to make it clear the xfs_iget_cache_hit()
-> 	is actually doing the initialization via xfs_reinit_inode()
+>  .../bindings/leds/backlight/qcom-wled.yaml         | 60 ++++++++++++++++++++--
+>  1 file changed, 57 insertions(+), 3 deletions(-)
 > 
-> New for V4:
-> 
-> NOTE: This was found while ensuring the new i_aops_sem was properly
-> handled.  It seems like this is a layering violation so I think it is
-> worth cleaning up so as to not confuse others.
-> ---
->  fs/xfs/xfs_icache.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-> index 8dc2e5414276..836a1f09be03 100644
-> --- a/fs/xfs/xfs_icache.c
-> +++ b/fs/xfs/xfs_icache.c
-> @@ -419,6 +419,7 @@ xfs_iget_cache_hit(
->  		spin_unlock(&ip->i_flags_lock);
->  		rcu_read_unlock();
+> diff --git a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
+> index 770e780..5714631 100644
+> --- a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
+> +++ b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
+> @@ -21,6 +21,7 @@ properties:
+>        - qcom,pm8941-wled
+>        - qcom,pmi8998-wled
+>        - qcom,pm660l-wled
+> +      - qcom,pm8150l-wled
 >  
-> +		ASSERT(!rwsem_is_locked(&inode->i_rwsem));
->  		error = xfs_reinit_inode(mp, inode);
->  		if (error) {
->  			bool wake;
-> @@ -452,9 +453,6 @@ xfs_iget_cache_hit(
->  		ip->i_sick = 0;
->  		ip->i_checked = 0;
+>    reg:
+>      maxItems: 1
+> @@ -28,12 +29,13 @@ properties:
+>    default-brightness:
+>      description:
+>        brightness value on boot.
+> -    minimum: 0
+> -    maximum: 4095
+> -    default: 2048
 >  
-> -		ASSERT(!rwsem_is_locked(&inode->i_rwsem));
-> -		init_rwsem(&inode->i_rwsem);
-> -
->  		spin_unlock(&ip->i_flags_lock);
->  		spin_unlock(&pag->pag_ici_lock);
->  	} else {
+>    label: true
+>  
+> +  max-brightness:
+> +    description:
+> +      Maximum brightness level.
+> +
+>    qcom,cs-out:
+>      description:
+>        enable current sink output.
+> @@ -130,6 +132,31 @@ properties:
+>        This feature is not supported for WLED3.
+>      type: boolean
+>  
+> +  qcom,modulator-sel:
+> +    description:
+
+Need a '|' at the end to preserve formatting.
+
+> +      Selects the modulator used for brightness modulation.
+> +      Allowed values are,
+> +           0 - Modulator A
+> +           1 - Modulator B
+> +      This property is applicable only to WLED5 peripheral.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - enum: [ 0, 1 ]
+> +      - default: 0
+> +
+> +  qcom,cabc-sel:
+> +    description:
+
+Need a '|'.
+
+> +      Selects the CABC pin signal used for brightness modulation.
+> +      Allowed values are,
+> +           0 - CABC disabled
+> +           1 - CABC 1
+> +           2 - CABC 2
+> +           3 - External signal (e.g. LPG) is used for dimming
+> +      This property is applicable only to WLED5 peripheral.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - enum: [ 0, 1, 2, 3 ]
+> +
+>  allOf:
+>    - if:
+>        properties:
+> @@ -179,6 +206,33 @@ allOf:
+>              - const: ovp
+>              - const: short
+>  
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - qcom,pm8150l-wled
+> +
+> +    then:
+> +      properties:
+> +        default-brightness:
+> +          minimum: 0
+> +          maximum: 32767
+> +        
+> +        max-brightness:
+> +          minimum: 0
+> +          maximum: 32767
+> +
+> +    else:
+> +      properties:
+> +        default-brightness:
+> +            minimum: 0
+> +            maximum: 4095
+
+Wrong indentation.
+
+> +        
+> +        max-brightness:
+> +          minimum: 0
+> +          maximum: 4095
+> +
+>  required:
+>    - compatible
+>    - reg
 > -- 
-> 2.25.1
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+>  a Linux Foundation Collaborative Project
 > 
