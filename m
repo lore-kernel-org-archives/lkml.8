@@ -2,103 +2,108 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17155C2BB55
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:35:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31A68C3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E20FE2078B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:35:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586954139;
-	bh=/irDkQP3S01BEZbw9nCn3Y6bK2sKx+ShTIuFgYre9FA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GMeRvpvMEKKv1nE2lS5vQsB7c47zhuZkARQHIir/dRDrwdwW3FDXswHKTbdnb/c43
-	 ngeCAEK4UZ7KGvmBoBgCF1RmoraYnEWTDKPI0/wfAm97WGC9SuTAvZp5W6eOqlrQjN
-	 3Cpb+x1qjy0oC4mSIf5C7UPzHcoL1g4wmtt1YvTA=
+	by mail.kernel.org (Postfix) with ESMTP id 1134D20737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:35:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S369781AbgDOMet (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:34:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36768 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409063AbgDOLoM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:44:12 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 461AA214AF;
-        Wed, 15 Apr 2020 11:44:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951052;
-        bh=/irDkQP3S01BEZbw9nCn3Y6bK2sKx+ShTIuFgYre9FA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VqftkIhNL8i79/4Dwad+1yjvM63LLMvw25gLlTTKZQ7u8gioypnq/2+uCFI1wTZGD
-         zRS6qliz316dvK8k4TV2Y5D9PvyHl0o3pmrByiwKqeTBbHKI0zKsqTCkggcQJdpV25
-         rFTLITUNwSxODdEbiMgP+Vqp0uq12665oJWnfFVQ=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alan Maguire <alan.maguire@oracle.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Richard Weinberger <richard@nod.at>,
-        Sasha Levin <sashal@kernel.org>, linux-um@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.5 086/106] um: falloc.h needs to be directly included for older libc
-Date:   Wed, 15 Apr 2020 07:42:06 -0400
-Message-Id: <20200415114226.13103-86-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
-References: <20200415114226.13103-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        id S369810AbgDOMfe (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:35:34 -0400
+Received: from m17618.mail.qiye.163.com ([59.111.176.18]:57149 "EHLO
+        m17618.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S369749AbgDOMeY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 08:34:24 -0400
+Received: from ubuntu.localdomain (unknown [58.251.74.226])
+        by m17618.mail.qiye.163.com (Hmail) with ESMTPA id 26B094E207B;
+        Wed, 15 Apr 2020 20:34:21 +0800 (CST)
+From:   Wang Wenhu <wenhu.wang@vivo.com>
+To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        oss@buserror.net, christophe.leroy@c-s.fr,
+        linuxppc-dev@lists.ozlabs.org
+Cc:     kernel@vivo.com, Wang Wenhu <wenhu.wang@vivo.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 1/5] powerpc: 85xx: make FSL_85XX_CACHE_SRAM configurable
+Date:   Wed, 15 Apr 2020 05:33:42 -0700
+Message-Id: <20200415123346.116212-2-wenhu.wang@vivo.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200415123346.116212-1-wenhu.wang@vivo.com>
+References: <20200415123346.116212-1-wenhu.wang@vivo.com>
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSFVMQk5LS0tLTE1JQkhCTllXWShZQU
+        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PQg6Nxw*PDg8Qwg6KU0TIzAQ
+        Dh8aCy9VSlVKTkNNQk5PS01KTkhIVTMWGhIXVQweFRMOVQwaFRw7DRINFFUYFBZFWVdZEgtZQVlO
+        Q1VJTkpVTE9VSUlNWVdZCAFZQUlCSk83Bg++
+X-HM-Tid: 0a717dd5466a9376kuws26b094e207b
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Maguire <alan.maguire@oracle.com>
+Enable FSL_85XX_CACHE_SRAM selection. On e500 platforms, the cache
+could be configured and used as a piece of SRAM which is hignly
+friendly for some user level application performances.
 
-[ Upstream commit 35f3401317a3b26aa01fde8facfd320f2628fdcc ]
-
-When building UML with glibc 2.17 installed, compilation
-of arch/um/os-Linux/file.c fails due to failure to find
-FALLOC_FL_PUNCH_HOLE and FALLOC_FL_KEEP_SIZE definitions.
-
-It appears that /usr/include/bits/fcntl-linux.h (indirectly
-included by /usr/include/fcntl.h) does not include falloc.h
-with an older glibc, whereas a more up-to-date version
-does.
-
-Adding the direct include to file.c resolves the issue
-and does not cause problems for more recent glibc.
-
-Fixes: 50109b5a03b4 ("um: Add support for DISCARD in the UBD Driver")
-Cc: Brendan Higgins <brendanhiggins@google.com>
-Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
-Acked-By: Anton Ivanov <anton.ivanov@cambridgegreys.com>
-Signed-off-by: Richard Weinberger <richard@nod.at>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+Cc: Scott Wood <oss@buserror.net>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: linuxppc-dev@lists.ozlabs.org
+Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
 ---
- arch/um/os-Linux/file.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/powerpc/platforms/85xx/Kconfig    | 2 +-
+ arch/powerpc/platforms/Kconfig.cputype | 5 +++--
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/arch/um/os-Linux/file.c b/arch/um/os-Linux/file.c
-index 5133e3afb96f7..3996937e2c0dd 100644
---- a/arch/um/os-Linux/file.c
-+++ b/arch/um/os-Linux/file.c
-@@ -8,6 +8,7 @@
- #include <errno.h>
- #include <fcntl.h>
- #include <signal.h>
-+#include <linux/falloc.h>
- #include <sys/ioctl.h>
- #include <sys/mount.h>
- #include <sys/socket.h>
+diff --git a/arch/powerpc/platforms/85xx/Kconfig b/arch/powerpc/platforms/85xx/Kconfig
+index fa3d29dcb57e..6debb4f1b9cc 100644
+--- a/arch/powerpc/platforms/85xx/Kconfig
++++ b/arch/powerpc/platforms/85xx/Kconfig
+@@ -17,7 +17,7 @@ if FSL_SOC_BOOKE
+ if PPC32
+ 
+ config FSL_85XX_CACHE_SRAM
+-	bool
++	bool "Freescale 85xx Cache-Sram"
+ 	select PPC_LIB_RHEAP
+ 	help
+ 	  When selected, this option enables cache-sram support
+diff --git a/arch/powerpc/platforms/Kconfig.cputype b/arch/powerpc/platforms/Kconfig.cputype
+index 0c3c1902135c..1921e9a573e8 100644
+--- a/arch/powerpc/platforms/Kconfig.cputype
++++ b/arch/powerpc/platforms/Kconfig.cputype
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ config PPC32
+-	bool
++	bool "32-bit kernel"
+ 	default y if !PPC64
+ 	select KASAN_VMALLOC if KASAN && MODULES
+ 
+@@ -15,6 +15,7 @@ config PPC_BOOK3S_32
+ 	bool
+ 
+ menu "Processor support"
++
+ choice
+ 	prompt "Processor Type"
+ 	depends on PPC32
+@@ -211,9 +212,9 @@ config PPC_BOOK3E
+ 	depends on PPC_BOOK3E_64
+ 
+ config E500
++	bool "e500 Support"
+ 	select FSL_EMB_PERFMON
+ 	select PPC_FSL_BOOK3E
+-	bool
+ 
+ config PPC_E500MC
+ 	bool "e500mc Support"
 -- 
-2.20.1
+2.17.1
 
