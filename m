@@ -2,196 +2,147 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35644C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 23:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 670E2C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 23:28:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0659320784
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 23:27:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4542A20732
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 23:28:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Er0LS+1q"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="B7RqrbPG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389338AbgDOX0t (ORCPT
+        id S2389436AbgDOX2x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 19:26:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37686 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389268AbgDOX0p (ORCPT
+        Wed, 15 Apr 2020 19:28:53 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:3970 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389251AbgDOX2r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 19:26:45 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B4B6C061A10
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 16:26:43 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id j14so4118287lfg.9
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 16:26:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=L1IlX2IpSQEMdDjEJKh5CMpEL+4kcWoPfApz2jdxM08=;
-        b=Er0LS+1q+NZt2g0tIsdiUQ0aIqzQIX/d5/FQVosexWpAB2ylC02jbt5wiQStKD20Nt
-         WlSa0W7tvpOL75ueuetXJprO1qcmES76gksNQSurpvagjbP2NHp3W5sVL2qB+nr8hOn6
-         0+wLxHxtkoYcFvB4NkKiPqxWZ1omKz27UtCLOH1RDwNZCrwkQN8KpY3s9U/IBk8M+D7S
-         bcGAcyzswBqYfxArH3Pp0AppQK4Z0ocT7vqGEpd+/m+8KDoTaXFdy+/V9sSDjznXrP7f
-         sIRojXk/AhQ36ij8wJZLT7brr6d3m6HkJijaqBmnUACRKYJ2HLHopiQ/HcE3wdu0YfPD
-         yxew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=L1IlX2IpSQEMdDjEJKh5CMpEL+4kcWoPfApz2jdxM08=;
-        b=tXXcnTTJYfXtDj7Wf3Lolcfrz3ElDGsGN6pgTADIf/e/e7xZOD46Gwne3swhWZwcJb
-         PUNjdaIsk612ZmRuLhG7gWlzEbTcz47c7DQvpyI91dUEKeF+oR0K4By2Q8QtVkAwER0q
-         wQf/ALCccp5xxkBVCeN3wMcafmmqdwNDVp3DtX1ldbVetWWdjKuNdOvh/CkVSgH8reLr
-         R271c/IPRnv469duAPp5q1iob1+TgRU5JTvfJbO2Xm5KrZSNFe50nOPKTAOiHugJlsmr
-         521eqItmwkCLGSlRZaAqjAmpHYm1P7aR73ouMqKdZrU8f8hH6nUT7WebZ9FqZEwqKcZx
-         l/VA==
-X-Gm-Message-State: AGi0PubwE55loiTTw3WKF82I9gOSNH8z1+hlO2uWZYVsuVchpHUnLfjP
-        G4H+XA35lRm/f1FVNHSHrqVjO3b2WGNjiTrSDyO56g==
-X-Google-Smtp-Source: APiQypKaR4aNmabWaJXpkSEHfUib4Yuak4mqveufOwk320FKg6kY6n/SP8qHWQ52HwXA+qkOZ4P0De+awzrTbAnhEmw=
-X-Received: by 2002:a19:dc05:: with SMTP id t5mr4319328lfg.73.1586993201362;
- Wed, 15 Apr 2020 16:26:41 -0700 (PDT)
+        Wed, 15 Apr 2020 19:28:47 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e9798a00000>; Wed, 15 Apr 2020 16:28:32 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 15 Apr 2020 16:28:45 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 15 Apr 2020 16:28:45 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Apr
+ 2020 23:28:44 +0000
+Received: from [10.2.171.241] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Apr
+ 2020 23:28:43 +0000
+Subject: Re: [RFC PATCH v7 6/9] media: tegra: Add Tegra210 Video input driver
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <frankc@nvidia.com>, <hverkuil@xs4all.nl>, <sakari.ailus@iki.fi>,
+        <helen.koike@collabora.com>, <sboyd@kernel.org>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1586919463-30542-1-git-send-email-skomatineni@nvidia.com>
+ <1586919463-30542-7-git-send-email-skomatineni@nvidia.com>
+ <4118112f-f865-5460-6319-d71271fd78d1@gmail.com>
+ <a69a8b34-beea-3ad0-e08e-f7df8b9e7047@nvidia.com>
+ <6afa951e-d904-f3c0-053f-82a02fb18979@nvidia.com>
+ <b1c78827-13ea-0c94-a575-97b5afc0ede1@nvidia.com>
+ <5954a7e1-910e-7f48-56d3-e671b56ead74@nvidia.com>
+ <d6a9e07c-474a-a076-8313-32f5f4ca8d64@nvidia.com>
+ <786949a9-8507-7723-f29b-b91a216bfd28@nvidia.com>
+ <f831408b-bbf4-3047-20e3-5bebfa9fc1ad@gmail.com>
+ <2ad9352f-cb65-1643-e540-a21f9c570266@nvidia.com>
+ <31924f2b-8f85-d28d-4f5d-4e232bff94a5@nvidia.com>
+Message-ID: <c95cd2b6-8036-8c0a-25f3-6ea3fe35334a@nvidia.com>
+Date:   Wed, 15 Apr 2020 16:28:42 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <1586916464-27727-1-git-send-email-alan.mikhak@sifive.com>
- <DM5PR12MB1276CB8FA4457D4CDCE3137EDADB0@DM5PR12MB1276.namprd12.prod.outlook.com>
- <CABEDWGwYmO52g6cqvQdWb6HXWEHaMA1rcf96aUqv0f32tJZT-g@mail.gmail.com>
- <DM5PR12MB1276E09460BD4DB7E70EAF91DADB0@DM5PR12MB1276.namprd12.prod.outlook.com>
- <CABEDWGw0OyQNppLpDaNgMedfB0Ci=kZVKm+h4T-LJoZYmbSgqA@mail.gmail.com>
- <DM5PR12MB127673CFDCA38A47E6F6F4DBDADB0@DM5PR12MB1276.namprd12.prod.outlook.com>
- <CABEDWGyUfq4c65K+btmKBcGLv59h6PFVUkSD_52kOw9R0Rtynw@mail.gmail.com>
-In-Reply-To: <CABEDWGyUfq4c65K+btmKBcGLv59h6PFVUkSD_52kOw9R0Rtynw@mail.gmail.com>
-From:   Alan Mikhak <alan.mikhak@sifive.com>
-Date:   Wed, 15 Apr 2020 16:26:30 -0700
-Message-ID: <CABEDWGz1KLGmQBWU_kcKF7zxjnP02x=0vbXghsZMKNWeExF+rA@mail.gmail.com>
-Subject: Re: [PATCH RFC] dmaengine: dw-edma: Decouple dw-edma-core.c from
- struct pci_dev
-To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Cc:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "kishon@ti.com" <kishon@ti.com>,
-        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <31924f2b-8f85-d28d-4f5d-4e232bff94a5@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1586993312; bh=ICREte8mX5YUPIFrhY1710Iw4rpBoVPzTv3ozhTn9IQ=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=B7RqrbPG3SxfbK/LMSLj3LRx5OE7G4VnGv/9K9BbpYBLlc/c02latfD7klMQQPpsW
+         DmK2qBDQKXnxZJaj2iBMOIwxaoouNqh9xnFAPa3t++oo3qFYKg7yCbiNFtFZInI6vV
+         86Pu5hHJwoW3NyGu4pUHDdZ3YqsjGuaz/WevEHFlh/FYN8W4UMSsO7cd6YORRROL1C
+         umfret7nuupHVgHkJzBEO/wbs6cE819Nips86flhMuaDD2E3wdXYjNpEFk1+cdTPG0
+         0Xn6EHqr+5WbRkj8XtpqiniD3lXxL/cckKNArjHhx4Yd1WiTCrDBHffmFUBPODdPXN
+         fMIj6L5A/Hh3A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 2:23 PM Alan Mikhak <alan.mikhak@sifive.com> wrote:
->
-> On Wed, Apr 15, 2020 at 1:58 PM Gustavo Pimentel
-> <Gustavo.Pimentel@synopsys.com> wrote:
-> >
-> > Hi Alan,
-> >
-> > > > > At the moment, pci-epf-test grabs the first available dma channel on the
-> > > > > endpoint side and uses it for either read, write, or copy operation. it is not
-> > > > > possible at the moment to specify which dma channel to use on the pcitest
-> > > > > command line. This may be possible by modifying the command line option
-> > > > > -D to also specify the name of one or more dma channels.
-> > > >
-> > > > I'm assuming that behavior is due to your code, right? I'm not seen that
-> > > > behavior on the Kernel tree.
-> > > > Check my previous suggestion, it should be something similar to what is
-> > > > been done while you select the MSI/MSI-X interrupt to trigger.
-> > >
-> > > I believe this behavior exists in the kernel tree because the call to
-> > > dma_request_chan_by_mask() always specifies channel zero. The user
-> > > of pcitest has no way of specifying which one of the available dma channels
-> > > to use.
-> >
-> > I think we were discussing different things. I was referring to the
-> > pci-epf-test code, that I wasn't being able to find any instruction to
-> > call the DMA driver which had the described behavior.
-> >
-> > I think you can do it by doing this:
-> >
-> > Pseudo code:
-> >
-> > #define EDMA_TEST_CHANNEL_NAME                  "dma%uchan%u"
-> >
-> > static bool dw_edma_test_filter(struct dma_chan *chan, void *filter)
-> > {
-> >         if (strcmp(dev_name(chan->device->dev), EDMA_TEST_DEVICE_NAME) ||
-> > strcmp(dma_chan_name(chan), filter))
-> >                 return false;
-> >
-> >         return true;
-> > }
-> >
-> > static void dw_edma_test_thread_create(int id, int channel)
-> > {
-> >         struct dma_chan *chan;
-> >         dma_cap_mask_t mask;
-> >         char filter[20];
-> >
-> >         dma_cap_zero(mask);
-> >         dma_cap_set(DMA_SLAVE, mask);
-> >         dma_cap_set(DMA_CYCLIC, mask);
-> >
-> >         snprintf(filter, sizeof(filter), EDMA_TEST_CHANNEL_NAME, id,
-> > channel);
-> >         chan = dma_request_channel(mask, dw_edma_test_filter, filter);
-> >
-> >         [..]
-> > }
->
-> Thanks Gustavo, This pseudo code is very useful. Now I know how to do
-> that part of the change.
->
-> What I have further in mind is to enable the pcitest user to specify some
-> arbitrary string with -D option to select one or more of the dma channels
-> that are available on the endpoint side. Since the user executes pcitest
-> from host-side command prompt and pci-epf-test executes in kernel on the
-> endpoint side, the messaging between userspace pcitest and kernel-space
-> pci_endpoint_test as well as the messaging across the bus between
-> pci_endpoint_test and pci-epf-test needs to be expanded to pass the user
-> string from the host to the endpoint. Upon receiving each read, write, or
-> copy message, pci-epf-test could then try to acquire the specified dma
-> channel and execute the user command or fail it if no such channel is
-> available at that moment.
->
-> >
-> > > I believe this behavior exists in the kernel tree because the call to
-> > > dma_request_chan_by_mask() happens during the execution of
-> > > pci_epf_test_bind() and the call to dma_release_channel() happens
-> > > during the execution of pci_epf_test_unbind(). As long as pci-epf-test
-> > > is bound, I cannot use another program such as dmatest from the
-> > > endpoint-side command prompt to exercise the same channel.
-> >
-> > Ok, I understood it now. Right, you can't use the dmatest here, even
-> > because, as far as I know, it is only MEM TO MEM operations and we need
-> > DEVICE_TO_MEM and vice-versa.
-> >
+Sorry please ignore.
 
-On the platforms that I have this in mind for, I may not only have embedded
-dma channels inside the PCIe controller but also platform dma channels. Either
-type of dma channel can be used by pcitest whereas dmatest can only use
-the type that can do MEM to MEM as you said. Either of these types can
-be used to transfer data to or from the PCIe bus. I need to use both kinds
-with pcitest to make sure the PCIe subsystem is ok.
+We can't free vi during v4l2 device release as when no device nodes are=20
+opened, vi free happens right away during host1x_video_remove.
 
-> > >
-> > > What I was suggesting is perhaps pci-epf-test can be modified to
-> > > acquire and release the channel on each call to pci_epf_test_read(),
-> > > ...write(), or ...copy() when the pcitest user specifies -D option.
-> >
-> > Right, you are on the right track.
-> > Perhaps you could take a look at patch [1] that I have done some time ago
-> > for testing the eDMA, I think you have all the tools/guideline there to
-> > do this adaption.
-> > Another thing,
-> >
-> > [1] https://patchwork.kernel.org/patch/10760521/
+With this tegra-video driver unbind ->bind will not work as vi memory=20
+allocated during vi_probe gets freed during v4l2 device release so=20
+during bind init() callback execution will crash as vi got freed while=20
+vi driver is still bound to device.
+
+Will wait for Hans/Thierry comments as I see dependency depending on=20
+where unbind/bind happens.
+
+
+On 4/15/20 4:08 PM, Sowjanya Komatineni wrote:
+> With minor change of not using vi reference after=20
+> host1x_client_unregister and freeing vi during v4l2 device release works.
 >
-> Thanks for the guidance and reference code patch [1]. I will definitely
-> take a close look at [1].
+> For csi, we can use devm_kzalloc for now untill we decide later if we=20
+> want to expose async subdev nodes during sensor support.
 >
-> >
-> >
-> >
+> Will have this fix in v8 with a comment in vi_remove to make sure not=20
+> to use vi reference after host1x_client_unregister.
+>
+> Will test more and will release v8 with above fix to allow direct=20
+> host1x client driver unbind.
+>
+> Thanks
+>
+> sowjanya
+>
+>
+> On 4/15/20 12:51 PM, Sowjanya Komatineni wrote:
+>>
+>> On 4/15/20 12:21 PM, Dmitry Osipenko wrote:
+>>> External email: Use caution opening links or attachments
+>>>
+>>>
+>>> 15.04.2020 21:53, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>> ...
+>>>>>>>>>> Have you tried to test this driver under KASAN? I suspect that
+>>>>>>>>>> you just
+>>>>>>>>>> masked the problem, instead of fixing it.
+>>>> Tested with kmemleak scan and did not see any memory leaks
+>>> You should get use-after-free and not memleak.
+>> I don't see use-after-free bugs during the testing.
+>>
+>> But as mentioned when direct vi/csi client driver unbind happens=20
+>> while video device node is kept opened, vi driver remove will free vi=20
+>> structure memory but actual video device memory which is part of=20
+>> channels remains but list head gets lost when vi structure is freed.
+>>
+>> So, when device node is released and executes release callback as=20
+>> list head is lost it can't free allocated channels which is not good.
+>>
+>> This happens only with direct host1x client vi/csi driver unbind.
+>>
+>> Need to find better place to free host1x client driver data structure=20
+>> to allow direct client driver unbind->bind.
+>>
