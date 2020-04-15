@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96BF4C2BB55
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:18:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70EC3C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:18:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EEF82078A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:18:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46F0B21582
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:18:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586953105;
-	bh=5woW1Hev8PR1JzsTaygw1uSfdpUK6kXSaG0IuUcIShw=;
+	s=default; t=1586953116;
+	bh=5Ci5tuTv9+UalY7YeLpOUErdM7aSS+N8D1vX52ppM9U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LP9+HxWusVmiYlflbMkh7A8rriZsar4EkFnBatxRjplBkY2zrnSdy4I37qSed9oD8
-	 7sCIx6McyRu9xiMRrNuocGxqgCXpN+6Tz/wjfrGZ0bkIuHQKddc3P54IVhTb1q7DtU
-	 PQ00GBwNTwp22jBLnraBvDhX/ITGPZ/0tavxh7kg=
+	b=JE/nXwfgmunKnc8VMbKrgEE/QtLmmx9ygR/50Bs/nSPHKHS2HQnUhM5gI4Kv9+j16
+	 DBVG6Ph6nyWqzVnMK8Wk5RquJxtwNlAyAOmoxOsDAChiCEo1DVh5JBwjDml1goU4eb
+	 O2tVk8VGmXrXKzLhkmymj7LILhOVoQsCiZIux0Jc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S368859AbgDOMSO (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:18:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40876 "EHLO mail.kernel.org"
+        id S368886AbgDOMSe (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:18:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409276AbgDOLqR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:46:17 -0400
+        id S2409269AbgDOLqN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:46:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61BED20732;
-        Wed, 15 Apr 2020 11:46:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE73120768;
+        Wed, 15 Apr 2020 11:46:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951176;
-        bh=5woW1Hev8PR1JzsTaygw1uSfdpUK6kXSaG0IuUcIShw=;
+        s=default; t=1586951172;
+        bh=5Ci5tuTv9+UalY7YeLpOUErdM7aSS+N8D1vX52ppM9U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TZMxyD0KcVaZwORHeAM4dlMq7T91Ln6WmDZTqUT9uM23GPD0QnsHXAbC3n47J1xPd
-         ds6pNF3x7PfByW8XViW6YkYWfQGdYG8cDs9HlZimIqavI+HzA8mmcUwDqx5FE0rQmv
-         9x0hU+u/Ls5BaZJ6EjIj28gndMt8i/GCW2KLOs6E=
+        b=S9IZ5hX2Xyr+AR/q8MEK+NLwKcpGgKqKvEluETTkEFp9GQACF2UTzIfOZgXQYb8wU
+         t8YzFpcNPQ77LRbMqcXLkexrDeoS6WeUQdYkHGUBM0Sq1+dLHjO7oNvPhgpgszLAHw
+         p5gXHN+W/Iau5KfTRN2m0bECnwfFE9JGH83lEa/Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pi-Hsun Shih <pihsun@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 80/84] platform/chrome: cros_ec_rpmsg: Fix race with host event
-Date:   Wed, 15 Apr 2020 07:44:37 -0400
-Message-Id: <20200415114442.14166-80-sashal@kernel.org>
+Cc:     Jan Kara <jack@suse.cz>, Randy Dunlap <rdunlap@infradead.org>,
+        Sasha Levin <sashal@kernel.org>, linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 76/84] ext2: fix debug reference to ext2_xattr_cache
+Date:   Wed, 15 Apr 2020 07:44:33 -0400
+Message-Id: <20200415114442.14166-76-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114442.14166-1-sashal@kernel.org>
 References: <20200415114442.14166-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -58,68 +58,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pi-Hsun Shih <pihsun@chromium.org>
+From: Jan Kara <jack@suse.cz>
 
-[ Upstream commit f775ac78fcfc6bdc96bdda07029d11f2a5e84869 ]
+[ Upstream commit 32302085a8d90859c40cf1a5e8313f575d06ec75 ]
 
-Host event can be sent by remoteproc by any time, and
-cros_ec_rpmsg_callback would be called after cros_ec_rpmsg_create_ept.
-But the cros_ec_device is initialized after that, which cause host event
-handler to use cros_ec_device that are not initialized properly yet.
+Fix a debug-only build error in ext2/xattr.c:
 
-Fix this by don't schedule host event handler before cros_ec_register
-returns. Instead, remember that we have a pending host event, and
-schedule host event handler after cros_ec_register.
+When building without extra debugging, (and with another patch that uses
+no_printk() instead of <empty> for the ext2-xattr debug-print macros,
+this build error happens:
 
-Fixes: 71cddb7097e2 ("platform/chrome: cros_ec_rpmsg: Fix race with host command when probe failed.")
-Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+../fs/ext2/xattr.c: In function ‘ext2_xattr_cache_insert’:
+../fs/ext2/xattr.c:869:18: error: ‘ext2_xattr_cache’ undeclared (first use in
+this function); did you mean ‘ext2_xattr_list’?
+     atomic_read(&ext2_xattr_cache->c_entry_count));
+
+Fix the problem by removing cached entry count from the debug message
+since otherwise we'd have to export the mbcache structure just for that.
+
+Fixes: be0726d33cb8 ("ext2: convert to mbcache2")
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/chrome/cros_ec_rpmsg.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ fs/ext2/xattr.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/platform/chrome/cros_ec_rpmsg.c b/drivers/platform/chrome/cros_ec_rpmsg.c
-index 0c3738c3244d8..aa2059b33ba56 100644
---- a/drivers/platform/chrome/cros_ec_rpmsg.c
-+++ b/drivers/platform/chrome/cros_ec_rpmsg.c
-@@ -42,6 +42,8 @@ struct cros_ec_rpmsg {
- 	struct completion xfer_ack;
- 	struct work_struct host_event_work;
- 	struct rpmsg_endpoint *ept;
-+	bool has_pending_host_event;
-+	bool probe_done;
- };
- 
- /**
-@@ -186,7 +188,14 @@ static int cros_ec_rpmsg_callback(struct rpmsg_device *rpdev, void *data,
- 		memcpy(ec_dev->din, resp->data, len);
- 		complete(&ec_rpmsg->xfer_ack);
- 	} else if (resp->type == HOST_EVENT_MARK) {
--		schedule_work(&ec_rpmsg->host_event_work);
-+		/*
-+		 * If the host event is sent before cros_ec_register is
-+		 * finished, queue the host event.
-+		 */
-+		if (ec_rpmsg->probe_done)
-+			schedule_work(&ec_rpmsg->host_event_work);
-+		else
-+			ec_rpmsg->has_pending_host_event = true;
- 	} else {
- 		dev_warn(ec_dev->dev, "rpmsg received invalid type = %d",
- 			 resp->type);
-@@ -249,6 +258,11 @@ static int cros_ec_rpmsg_probe(struct rpmsg_device *rpdev)
- 		return ret;
- 	}
- 
-+	ec_rpmsg->probe_done = true;
-+
-+	if (ec_rpmsg->has_pending_host_event)
-+		schedule_work(&ec_rpmsg->host_event_work);
-+
- 	return 0;
- }
- 
+diff --git a/fs/ext2/xattr.c b/fs/ext2/xattr.c
+index b91f99d9482e9..62acbe27d8bf4 100644
+--- a/fs/ext2/xattr.c
++++ b/fs/ext2/xattr.c
+@@ -865,8 +865,7 @@ ext2_xattr_cache_insert(struct mb_cache *cache, struct buffer_head *bh)
+ 				      true);
+ 	if (error) {
+ 		if (error == -EBUSY) {
+-			ea_bdebug(bh, "already in cache (%d cache entries)",
+-				atomic_read(&ext2_xattr_cache->c_entry_count));
++			ea_bdebug(bh, "already in cache");
+ 			error = 0;
+ 		}
+ 	} else
 -- 
 2.20.1
 
