@@ -2,94 +2,135 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9CCAC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:21:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B015DC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:22:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 898BE208FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:21:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 899CE20857
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:22:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586953309;
-	bh=9d6dIVVW/eoJFIE97fA3VAir62eKBHLtOhBqUlU/lXE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xGiJG9o3ZggcygzZWeEmAg1aBHmRH2YdLqPGNW7O1qfIss6fRIj1JeWNqYBBlFJYN
-	 pZDU/6oy1K4ItOEVwHOM9nRa/R7QlZA19R5+kh5qs8k54eSPVWtn66f6O9q1mYzZtk
-	 41pf9xmgF1jpzlfDAuvn0Q7R7KwMYID18DzQCcqs=
+	s=default; t=1586953340;
+	bh=NmutImGHJVt0bKoK4LeZCIkUpQBYzciAGLQ7TLAkGaU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=XRv8bP7WL4CSvW7sKRhjctLizBal2RjsqRuRDVa3Hln+xI6jcM6joVZ+QevSM2m6S
+	 Mkow+7GCMfd0WFcsAIKySbmceVOwQvjGFYIQg2WEdxBHsBuwRG/jR8Z/LLonBI5D9K
+	 YzmILXCj+vckgaoR9Haioo0UxGoEem6lUTtgeGqc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S369091AbgDOMVi (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:21:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40196 "EHLO mail.kernel.org"
+        id S369116AbgDOMWJ (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:22:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409228AbgDOLpz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:45:55 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S369099AbgDOMVw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 08:21:52 -0400
+Received: from coco.lan (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85A3C20737;
-        Wed, 15 Apr 2020 11:45:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A52E6206F9;
+        Wed, 15 Apr 2020 12:21:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951155;
-        bh=9d6dIVVW/eoJFIE97fA3VAir62eKBHLtOhBqUlU/lXE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bnIqSCUJdJG17hHudCB+VlDBNO9ULAT+mfBF7LOLD5KBzU2N+kupVcHpKxcmCRNZy
-         B1+SOtFRrIOcgQHecCrxRIIl9KRmN0di1F6XYflAIz2dSAIUOe8rCFvL64vrZjS2Ed
-         9SsMwWRfWtTBxEBSRqgvk+yj4wQULegUIhd7AZXU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jack Zhang <Jack.Zhang1@amd.com>, Nirmoy Das <nirmoy.das@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 61/84] drm/amdkfd: kfree the wrong pointer
-Date:   Wed, 15 Apr 2020 07:44:18 -0400
-Message-Id: <20200415114442.14166-61-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415114442.14166-1-sashal@kernel.org>
-References: <20200415114442.14166-1-sashal@kernel.org>
+        s=default; t=1586953311;
+        bh=NmutImGHJVt0bKoK4LeZCIkUpQBYzciAGLQ7TLAkGaU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=tNtE7vP9LAUju3LtYOyPIr9UvRPulibjevCYdz67uRMQ8pQj/N1CIpyQ+9SflaBx5
+         JiZpMQ8qglMMnbK/JnrukbdHJez326rHvucOKvsrqvkFgBMNsXjiw3z9V6u369hCmj
+         eGVFxWySDOHTKjx2XKZjxSGkkOGyYSoiDdeA7abc=
+Date:   Wed, 15 Apr 2020 14:21:47 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Guillaume Tucker <guillaume.tucker@collabora.com>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@collabora.com
+Subject: Re: media/master bisection: v4l2-compliance-vivid.device-presence
+ on qemu_x86_64
+Message-ID: <20200415142147.1ed3487e@coco.lan>
+In-Reply-To: <a99d49d9-656d-6c5c-4953-6e7c56c0beba@collabora.com>
+References: <5e960bf5.1c69fb81.8a349.6851@mx.google.com>
+        <24564393-f229-6e29-7883-9605ed0d48b4@collabora.com>
+        <20200414233347.2a844b85@coco.lan>
+        <86feeb83-37ac-cbd6-b792-b81d17d559c9@collabora.com>
+        <2f32345d-a818-8ec4-afd6-2b9cd9dcdf4a@collabora.com>
+        <a99d49d9-656d-6c5c-4953-6e7c56c0beba@collabora.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jack Zhang <Jack.Zhang1@amd.com>
+Em Wed, 15 Apr 2020 10:36:04 +0100
+Guillaume Tucker <guillaume.tucker@collabora.com> escreveu:
 
-[ Upstream commit 3148a6a0ef3cf93570f30a477292768f7eb5d3c3 ]
+> On 15/04/2020 10:28, Guillaume Tucker wrote:
+> > On 14/04/2020 22:43, Guillaume Tucker wrote:  
+> >> On 14/04/2020 22:33, Mauro Carvalho Chehab wrote:  
+> >>> Em Tue, 14 Apr 2020 22:23:52 +0100
+> >>> Guillaume Tucker <guillaume.tucker@collabora.com> escreveu:
+> >>>  
+> >>>> Please see the bisection report below about absence of the vivid
+> >>>> driver, which caused v4l2-compliance to fail to run.
+> >>>>
+> >>>> Presumably we need to update the configuration fragment used by
+> >>>> kernelci.org to enable platform drivers.  Until now we've been
+> >>>> using this:
+> >>>>
+> >>>>     CONFIG_MEDIA_SUPPORT=y
+> >>>>     CONFIG_MEDIA_CAMERA_SUPPORT=y
+> >>>>     CONFIG_VIDEO_DEV=y
+> >>>>     CONFIG_VIDEO_V4L2=y
+> >>>>     CONFIG_V4L_TEST_DRIVERS=y
+> >>>>     CONFIG_VIDEO_VIVID=y
+> >>>>     CONFIG_VIDEO_VIVID_MAX_DEVS=64
+> >>>>
+> >>>> Do we simply need to add this one in v5.7 onwards?
+> >>>>
+> >>>>     CONFIG_MEDIA_PLATFORM_SUPPORT=y  
+> >>>
+> >>> No, this shouldn't be needed.
+> >>>
+> >>> Helen sent us a patch that should likely fix it:
+> >>>
+> >>> 	https://git.linuxtv.org/media_tree.git/commit/?id=860b511766a3d95308a942ac09a34e4d1839e706
+> >>>
+> >>> Could you please check if this solves the issue?  
+> >>
+> >> I see, thanks.  This revision is being built and tested at the
+> >> moment, I'll check the results when they land in my inbox.  
+> > 
+> > Helen's patch was needed, but there were still a couple of
+> > issues.  First we need to enable this extra option now in the
+> > config fragment:
+> > 
+> >     CONFIG_MEDIA_TEST_SUPPORT=y
 
-Originally, it kfrees the wrong pointer for mem_obj.
-It would cause memory leak under stress test.
+Yes.
 
-Signed-off-by: Jack Zhang <Jack.Zhang1@amd.com>
-Acked-by: Nirmoy Das <nirmoy.das@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/amd/amdkfd/kfd_device.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Another option would be to do:
 
-diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_device.c b/drivers/gpu/drm/amd/amdkfd/kfd_device.c
-index 0dc1084b5e829..ad9483b9eea32 100644
---- a/drivers/gpu/drm/amd/amdkfd/kfd_device.c
-+++ b/drivers/gpu/drm/amd/amdkfd/kfd_device.c
-@@ -1112,9 +1112,9 @@ int kfd_gtt_sa_allocate(struct kfd_dev *kfd, unsigned int size,
- 	return 0;
- 
- kfd_gtt_no_free_chunk:
--	pr_debug("Allocation failed with mem_obj = %p\n", mem_obj);
-+	pr_debug("Allocation failed with mem_obj = %p\n", *mem_obj);
- 	mutex_unlock(&kfd->gtt_sa_lock);
--	kfree(mem_obj);
-+	kfree(*mem_obj);
- 	return -ENOMEM;
- }
- 
--- 
-2.20.1
+	# MEDIA_SUPPORT_FILTER is not set
 
+With this option (enabled by default if EMBEDDED or EXPERT),
+all CONFIG_MEDIA_*_SUPPORT will be selected[1].
+
+[1] except for CONFIG_MEDIA_CEC_SUPPORT. This doesn't
+    depend on MEDIA_SUPPORT anymore.
+
+> > 
+> > as test_drivers/Kconfig starts with "if MEDIA_TEST_SUPPORT".  
+> 
+> Actually, this "if" seems redundant now in test_drivers/Kconfig
+> with my patch to include the file conditionally...  Please let me
+> know if we should also drop it and I'll send a v2, or if this
+> should be fixed in a different way.
+
+Just one "if MEDIA_TEST_SUPPORT" at the main media/Kconfig
+should be enough.
+
+Feel free to send a v2.
+
+Thanks,
+Mauro
