@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3EE5C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:51:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61192C3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:51:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3E6120737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:51:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 424B2206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:51:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586955068;
-	bh=oooFEStGUZHNuhXxGFvK4GTwAIxHao8rhtCGvyKcdGo=;
+	s=default; t=1586955075;
+	bh=VyOZnvDN6v7p/4EWitshi6AaubiDqI05pzbnVO4r8mA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DdXISDyR4U8ggLhsEhzEcIwrnnF1d+LB3/SNrn2XdUlANVAIrI/6QQjSEf6sQ+wV8
-	 zarFhuYgLFXp77tmmfpRlwmFj0gSO33gfw4e9DwaupiUKlIWpc4rsec7msp9EB9VyJ
-	 LJEq+AmjNALezMdLltNdGE+pz7GgLBlCs4eMi82Q=
+	b=YRo5TytXf40bS8Wd0yi5GSB3AhbOWijQEuuaU9dV8iEx80O90WtFxp1tafR3G3XNC
+	 IY1jqAvl6x0sXNlU23Za+ih0HsEjrHJDirUpBK709CZZdN2cyRKjWAmGY3Rp/s6CQu
+	 qv+CiqVh2NqI2mD7OxeTBAimbq6fizXJq5butT2U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S370457AbgDOMvG (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:51:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34424 "EHLO mail.kernel.org"
+        id S2408953AbgDOMvL (ORCPT
+        <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:51:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408927AbgDOLmy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2408921AbgDOLmy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Apr 2020 07:42:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDBD920768;
-        Wed, 15 Apr 2020 11:42:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB81E20936;
+        Wed, 15 Apr 2020 11:42:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950972;
-        bh=oooFEStGUZHNuhXxGFvK4GTwAIxHao8rhtCGvyKcdGo=;
+        s=default; t=1586950971;
+        bh=VyOZnvDN6v7p/4EWitshi6AaubiDqI05pzbnVO4r8mA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=An62GPDx/H6S+dKeEU5uxW74KlZUlpdjX+UL0zGJJ5munUEztdnHSGaMA2Eqs7xMX
-         ACRsaccnlHEcIArDNAH2pqaCI4ttLyhv78pE/+q27NVJo9p5Q8gF7D28ROCLO/n5Lc
-         s7cT1WBK/s4ozJB8Smsr0eEE5FrMRbHngXiYfU2c=
+        b=iX7dPB623rPbvtHBk2KsU27CecUgvfazqs2xOjcJKJ5xO7wZdGowv2/0OlwqJeL2m
+         9KO1l/eXqdUHmHv5HBS7EpqOM6f1E3N6XhjyHGD1pUIModeRYxbp2I0AVi92QzPMjC
+         jYU4zYAL1APBUObqEoTtpFsHJBo5KV6XrkM9AgAg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
-        Baruch Siach <baruch@tkos.co.il>,
+Cc:     Tomasz Maciej Nowak <tmn505@gmail.com>,
         Gregory CLEMENT <gregory.clement@bootlin.com>,
         Sasha Levin <sashal@kernel.org>,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 021/106] arm64: dts: clearfog-gt-8k: set gigabit PHY reset deassert delay
-Date:   Wed, 15 Apr 2020 07:41:01 -0400
-Message-Id: <20200415114226.13103-21-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 020/106] arm64: dts: marvell: espressobin: add ethernet alias
+Date:   Wed, 15 Apr 2020 07:41:00 -0400
+Message-Id: <20200415114226.13103-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
 References: <20200415114226.13103-1-sashal@kernel.org>
@@ -60,42 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Tomasz Maciej Nowak <tmn505@gmail.com>
 
-[ Upstream commit 46f94c7818e7ab82758fca74935ef3d454340b4e ]
+[ Upstream commit 5253cb8c00a6f4356760efb38bca0e0393aa06de ]
 
-If the mv88e6xxx DSA driver is built as a module, it causes the
-ethernet driver to re-probe when it's loaded. This in turn causes
-the gigabit PHY to be momentarily reset and reprogrammed. However,
-we attempt to reprogram the PHY immediately after deasserting reset,
-and the PHY ignores the writes.
+The maker of this board and its variants, stores MAC address in U-Boot
+environment. Add alias for bootloader to recognise, to which ethernet
+node inject the factory MAC address.
 
-This results in the PHY operating in the wrong mode, and the copper
-link states down.
-
-Set a reset deassert delay of 10ms for the gigabit PHY to avoid this.
-
-Fixes: babc5544c293 ("arm64: dts: clearfog-gt-8k: 1G eth PHY reset signal")
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Acked-by: Baruch Siach <baruch@tkos.co.il>
+Signed-off-by: Tomasz Maciej Nowak <tmn505@gmail.com>
 Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts b/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
-index a211a046b2f2f..b90d78a5724b2 100644
---- a/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
-+++ b/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
-@@ -367,6 +367,7 @@
- 		pinctrl-0 = <&cp0_copper_eth_phy_reset>;
- 		reset-gpios = <&cp0_gpio2 11 GPIO_ACTIVE_LOW>;
- 		reset-assert-us = <10000>;
-+		reset-deassert-us = <10000>;
- 	};
+diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi
+index 53b8ac55a7f3d..e5262dab28f58 100644
+--- a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi
+@@ -13,6 +13,12 @@
+ #include "armada-372x.dtsi"
  
- 	switch0: switch0@4 {
+ / {
++	aliases {
++		ethernet0 = &eth0;
++		serial0 = &uart0;
++		serial1 = &uart1;
++	};
++
+ 	chosen {
+ 		stdout-path = "serial0:115200n8";
+ 	};
 -- 
 2.20.1
 
