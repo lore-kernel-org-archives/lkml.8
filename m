@@ -7,52 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB3C2C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A95C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:52:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 923B4206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:51:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83003206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:52:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586955116;
-	bh=u+ZK0QjmPA3ERKqb6bXhhJqFb/fnt7rrc/MvdpraFAQ=;
+	s=default; t=1586955124;
+	bh=Ovw4O+bQIjjYv0PGALGX8rJlm27Kw+SfdVJ5q442p7o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BVEOUkSp/yhuyz8FOJkEUWaf8WT8vu/K0mpPjxlnC7fh657xVWuxgCfH3iUDlQWja
-	 kf1sTS3UYz2qIMoOCXpGdvjdyMCMcYDtQvfX6yl/W8iI9O834S5u2rc97N5RUdM7dZ
-	 vWwMY/DKvzqhxfNFszgMHHAjapPfB4eHi/ExeRKc=
+	b=Jk3kfW+2YjSs8XiZFhh22O8I2EkCf+ZkxwE2IS36yjxmcitYd4lKdgaALssplJ7Ly
+	 YN2Fo2BKWcC+1V+LDwT0XagyObHIH+VYUmwiSLZIqb0iEMcJFRzaTa6nU8nY+sFs9X
+	 IKnE4ON7t0sH1BnkWLEnrFEjTBUy9ILVt/yc0oIs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S370498AbgDOMvz (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:51:55 -0400
+        id S370364AbgDOMwA (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:52:00 -0400
 Received: from mail.kernel.org ([198.145.29.99]:34128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405910AbgDOLmo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:42:44 -0400
+        id S2897496AbgDOLmm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:42:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3752720857;
-        Wed, 15 Apr 2020 11:42:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D41AA20737;
+        Wed, 15 Apr 2020 11:42:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950964;
-        bh=u+ZK0QjmPA3ERKqb6bXhhJqFb/fnt7rrc/MvdpraFAQ=;
+        s=default; t=1586950961;
+        bh=Ovw4O+bQIjjYv0PGALGX8rJlm27Kw+SfdVJ5q442p7o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UiPqjxwh7JmNCdNITUunyqp2ACo3w9a91vMY5bheYJbxG0qjOlLTFHNNfYGOGnmYe
-         8O3mnl2oZnQiNDmb73debipGONCZsay7u2+ODdM73TMWb+iCDWRtVco75zH+vSm+ls
-         /MGqRIWPs38hCJgQ64D4DS1MZM1jZyGLWcQS/amU=
+        b=aNbLJbzxl5I9eaQ+dQvSZ0RvzNDRbw2fsYNA0Erq3EgAEhF3k9O7UZXflVvEHBHyK
+         6e8ZVELdk5CXCcBA1NwaSSjhv7gJ7L/S3QUaPfQcy3cgN2PH66ypCZNmsfO8uRFRpw
+         u55B73db5NzLgfLqtzWbJImNNXfakp5v9rCN91SQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dmitry Osipenko <digetx@gmail.com>,
-        "Andrew F . Davis" <afd@ti.com>,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 014/106] power: supply: bq27xxx_battery: Silence deferred-probe error
-Date:   Wed, 15 Apr 2020 07:40:54 -0400
-Message-Id: <20200415114226.13103-14-sashal@kernel.org>
+Cc:     Johan Jonker <jbx6244@gmail.com>, Heiko Stuebner <heiko@sntech.de>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 012/106] ARM: dts: rockchip: fix vqmmc-supply property name for rk3188-bqedison2qc
+Date:   Wed, 15 Apr 2020 07:40:52 -0400
+Message-Id: <20200415114226.13103-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
 References: <20200415114226.13103-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,40 +59,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Johan Jonker <jbx6244@gmail.com>
 
-[ Upstream commit 583b53ece0b0268c542a1eafadb62e3d4b0aab8c ]
+[ Upstream commit 9cd568dc588c5d168615bf34f325fabe33b2c9a0 ]
 
-The driver fails to probe with -EPROBE_DEFER if battery's power supply
-(charger driver) isn't ready yet and this results in a bit noisy error
-message in KMSG during kernel's boot up. Let's silence the harmless
-error message.
+A test with the command below does not detect all errors
+in combination with 'additionalProperties: false' and
+allOf:
+  - $ref: "synopsys-dw-mshc-common.yaml#"
+allOf:
+  - $ref: "mmc-controller.yaml#"
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Reviewed-by: Andrew F. Davis <afd@ti.com>
-Reviewed-by: Pali Rohár <pali@kernel.org>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+'additionalProperties' applies to all properties that are not
+accounted-for by 'properties' or 'patternProperties' in
+the immediate schema.
+
+First when we combine rockchip-dw-mshc.yaml,
+synopsys-dw-mshc-common.yaml and mmc-controller.yaml it gives
+this error:
+
+arch/arm/boot/dts/rk3188-bqedison2qc.dt.yaml: mmc@10218000:
+'vmmcq-supply' does not match any of the regexes:
+'^.*@[0-9]+$',
+'^clk-phase-(legacy|sd-hs|mmc-(hs|hs[24]00|ddr52)|
+uhs-(sdr(12|25|50|104)|ddr50))$',
+'pinctrl-[0-9]+'
+
+'vmmcq-supply' is not a valid property name for mmc nodes.
+Fix this error by renaming it to 'vqmmc-supply'.
+
+make ARCH=arm dtbs_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.yaml
+
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+Link: https://lore.kernel.org/r/20200307134841.13803-1-jbx6244@gmail.com
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/power/supply/bq27xxx_battery.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/rk3188-bqedison2qc.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/power/supply/bq27xxx_battery.c b/drivers/power/supply/bq27xxx_battery.c
-index 195c18c2f426e..664e50103eaaf 100644
---- a/drivers/power/supply/bq27xxx_battery.c
-+++ b/drivers/power/supply/bq27xxx_battery.c
-@@ -1885,7 +1885,10 @@ int bq27xxx_battery_setup(struct bq27xxx_device_info *di)
- 
- 	di->bat = power_supply_register_no_ws(di->dev, psy_desc, &psy_cfg);
- 	if (IS_ERR(di->bat)) {
--		dev_err(di->dev, "failed to register battery\n");
-+		if (PTR_ERR(di->bat) == -EPROBE_DEFER)
-+			dev_dbg(di->dev, "failed to register battery, deferring probe\n");
-+		else
-+			dev_err(di->dev, "failed to register battery\n");
- 		return PTR_ERR(di->bat);
- 	}
- 
+diff --git a/arch/arm/boot/dts/rk3188-bqedison2qc.dts b/arch/arm/boot/dts/rk3188-bqedison2qc.dts
+index ad1afd403052a..8afb2fd5d9f1b 100644
+--- a/arch/arm/boot/dts/rk3188-bqedison2qc.dts
++++ b/arch/arm/boot/dts/rk3188-bqedison2qc.dts
+@@ -465,7 +465,7 @@
+ 	non-removable;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&sd1_clk>, <&sd1_cmd>, <&sd1_bus4>;
+-	vmmcq-supply = <&vccio_wl>;
++	vqmmc-supply = <&vccio_wl>;
+ 	#address-cells = <1>;
+ 	#size-cells = <0>;
+ 	status = "okay";
 -- 
 2.20.1
 
