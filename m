@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 228A9C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:24:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78183C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:24:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 018132074F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:24:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49D202076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:24:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586957044;
-	bh=pTRJi42QLtD8XK1UmP7p1s0Jn8MlwflehEJVP2yAQXA=;
+	s=default; t=1586957055;
+	bh=cBk92c6nBULUxUTVafmDFD/ihP1iNDRokzEmXGn7xkk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Of1vJxgymFGtYhPuunlR+zfeetrypi+DMM63/kvMFpoEDWZABrN7HhWzHPLbusUxi
-	 ONzVJp+3MgHH0IkD61VxqHrtyTOo3p2HTTQKfscJhperiWsHzr2J8zDxO22kzQ53sd
-	 YHegyiQilOWcuj9NqBqQVJzhhJo0Z1cRCw3PvcnI=
+	b=oPmcLRObEebI1/8tl5knns0TgxWOuzJIltQiYW9ld7eT8pPtuNGirXl43tI7zc44k
+	 fv3fUSQVghdsJVUH1MBEk7BAEIVb2brJflYzSEQ+6y9GFPjhIowUlITZ6+5gx756+u
+	 E+T0DT0KBjMIbp409mQeQC/pZzYymcdzeZ2+AB3Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2636058AbgDONX7 (ORCPT
+        id S2636069AbgDONYM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:23:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54378 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 09:24:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408866AbgDOLey (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:34:54 -0400
+        id S2408864AbgDOLev (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:34:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B44820737;
-        Wed, 15 Apr 2020 11:34:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F287D20768;
+        Wed, 15 Apr 2020 11:34:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950493;
-        bh=pTRJi42QLtD8XK1UmP7p1s0Jn8MlwflehEJVP2yAQXA=;
+        s=default; t=1586950490;
+        bh=cBk92c6nBULUxUTVafmDFD/ihP1iNDRokzEmXGn7xkk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HcJRPp521puyS88Av9tFWxfBDXv8GEQmQdeH9gpAQU0MlNEzy+pIDojrJxn/Y6sUP
-         Y37qgQtVqAFrB0qdUntkgRwPAwbAEP27oL0PL15G5j7y/YZrRRZrqt0N4xGGIUHce3
-         m5+VO6PzqV/lb4hJp3pSygDE+B955WY68OSw9HDE=
+        b=KDoUCdS4L2RiHtyR3f8jKeRDOaH2fWsBFLyCY44blbQvXqCKraDyzha+1vdwnb/a2
+         YkoRhM0Wc7GDFQwJpwPNYHDR5xwoczytqyf7xxSPn8V9SR3Jl6DwFXR6uq7mMbNC/S
+         S3kTgEwazXT08Y6e7BSC+hYfQEpkMbEwUtA5R9Es=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eneas U de Queiroz <cotequeiroz@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 006/129] crypto: qce - use cryptlen when adding extra sgl
-Date:   Wed, 15 Apr 2020 07:32:41 -0400
-Message-Id: <20200415113445.11881-6-sashal@kernel.org>
+Cc:     Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.6 004/129] clk: at91: usb: continue if clk_hw_round_rate() return zero
+Date:   Wed, 15 Apr 2020 07:32:39 -0400
+Message-Id: <20200415113445.11881-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
 References: <20200415113445.11881-1-sashal@kernel.org>
@@ -59,101 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eneas U de Queiroz <cotequeiroz@gmail.com>
+From: Claudiu Beznea <claudiu.beznea@microchip.com>
 
-[ Upstream commit d6364b8128439a8c0e381f80c38667de9f15eef8 ]
+[ Upstream commit b0ecf1c6c6e82da4847900fad0272abfd014666d ]
 
-The qce crypto driver appends an extra entry to the dst sgl, to maintain
-private state information.
+clk_hw_round_rate() may call round rate function of its parents. In case
+of SAM9X60 two of USB parrents are PLLA and UPLL. These clocks are
+controlled by clk-sam9x60-pll.c driver. The round rate function for this
+driver is sam9x60_pll_round_rate() which call in turn
+sam9x60_pll_get_best_div_mul(). In case the requested rate is not in the
+proper range (rate < characteristics->output[0].min &&
+rate > characteristics->output[0].max) the sam9x60_pll_round_rate() will
+return a negative number to its caller (called by
+clk_core_round_rate_nolock()). clk_hw_round_rate() will return zero in
+case a negative number is returned by clk_core_round_rate_nolock(). With
+this, the USB clock will continue its rate computation even caller of
+clk_hw_round_rate() returned an error. With this, the USB clock on SAM9X60
+may not chose the best parent. I detected this after a suspend/resume
+cycle on SAM9X60.
 
-When the gcm driver sends requests to the ctr skcipher, it passes the
-authentication tag after the actual crypto payload, but it must not be
-touched.
-
-Commit 1336c2221bee ("crypto: qce - save a sg table slot for result
-buf") limited the destination sgl to avoid overwriting the
-authentication tag but it assumed the tag would be in a separate sgl
-entry.
-
-This is not always the case, so it is better to limit the length of the
-destination buffer to req->cryptlen before appending the result buf.
-
-Signed-off-by: Eneas U de Queiroz <cotequeiroz@gmail.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Link: https://lkml.kernel.org/r/1579261009-4573-2-git-send-email-claudiu.beznea@microchip.com
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/qce/dma.c      | 11 ++++++-----
- drivers/crypto/qce/dma.h      |  2 +-
- drivers/crypto/qce/skcipher.c |  5 +++--
- 3 files changed, 10 insertions(+), 8 deletions(-)
+ drivers/clk/at91/clk-usb.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/crypto/qce/dma.c b/drivers/crypto/qce/dma.c
-index 7da893dc00e73..46db5bf366b44 100644
---- a/drivers/crypto/qce/dma.c
-+++ b/drivers/crypto/qce/dma.c
-@@ -48,9 +48,10 @@ void qce_dma_release(struct qce_dma_data *dma)
- 
- struct scatterlist *
- qce_sgtable_add(struct sg_table *sgt, struct scatterlist *new_sgl,
--		int max_ents)
-+		unsigned int max_len)
- {
- 	struct scatterlist *sg = sgt->sgl, *sg_last = NULL;
-+	unsigned int new_len;
- 
- 	while (sg) {
- 		if (!sg_page(sg))
-@@ -61,13 +62,13 @@ qce_sgtable_add(struct sg_table *sgt, struct scatterlist *new_sgl,
- 	if (!sg)
- 		return ERR_PTR(-EINVAL);
- 
--	while (new_sgl && sg && max_ents) {
--		sg_set_page(sg, sg_page(new_sgl), new_sgl->length,
--			    new_sgl->offset);
-+	while (new_sgl && sg && max_len) {
-+		new_len = new_sgl->length > max_len ? max_len : new_sgl->length;
-+		sg_set_page(sg, sg_page(new_sgl), new_len, new_sgl->offset);
- 		sg_last = sg;
- 		sg = sg_next(sg);
- 		new_sgl = sg_next(new_sgl);
--		max_ents--;
-+		max_len -= new_len;
- 	}
- 
- 	return sg_last;
-diff --git a/drivers/crypto/qce/dma.h b/drivers/crypto/qce/dma.h
-index ed25a0d9829e5..7864021693608 100644
---- a/drivers/crypto/qce/dma.h
-+++ b/drivers/crypto/qce/dma.h
-@@ -43,6 +43,6 @@ void qce_dma_issue_pending(struct qce_dma_data *dma);
- int qce_dma_terminate_all(struct qce_dma_data *dma);
- struct scatterlist *
- qce_sgtable_add(struct sg_table *sgt, struct scatterlist *sg_add,
--		int max_ents);
-+		unsigned int max_len);
- 
- #endif /* _DMA_H_ */
-diff --git a/drivers/crypto/qce/skcipher.c b/drivers/crypto/qce/skcipher.c
-index 4217b745f1242..63ae75809cb70 100644
---- a/drivers/crypto/qce/skcipher.c
-+++ b/drivers/crypto/qce/skcipher.c
-@@ -97,13 +97,14 @@ qce_skcipher_async_req_handle(struct crypto_async_request *async_req)
- 
- 	sg_init_one(&rctx->result_sg, qce->dma.result_buf, QCE_RESULT_BUF_SZ);
- 
--	sg = qce_sgtable_add(&rctx->dst_tbl, req->dst, rctx->dst_nents - 1);
-+	sg = qce_sgtable_add(&rctx->dst_tbl, req->dst, req->cryptlen);
- 	if (IS_ERR(sg)) {
- 		ret = PTR_ERR(sg);
- 		goto error_free;
- 	}
- 
--	sg = qce_sgtable_add(&rctx->dst_tbl, &rctx->result_sg, 1);
-+	sg = qce_sgtable_add(&rctx->dst_tbl, &rctx->result_sg,
-+			     QCE_RESULT_BUF_SZ);
- 	if (IS_ERR(sg)) {
- 		ret = PTR_ERR(sg);
- 		goto error_free;
+diff --git a/drivers/clk/at91/clk-usb.c b/drivers/clk/at91/clk-usb.c
+index 22aede42a3362..3c0bd7e51b09d 100644
+--- a/drivers/clk/at91/clk-usb.c
++++ b/drivers/clk/at91/clk-usb.c
+@@ -75,6 +75,9 @@ static int at91sam9x5_clk_usb_determine_rate(struct clk_hw *hw,
+ 			tmp_parent_rate = req->rate * div;
+ 			tmp_parent_rate = clk_hw_round_rate(parent,
+ 							   tmp_parent_rate);
++			if (!tmp_parent_rate)
++				continue;
++
+ 			tmp_rate = DIV_ROUND_CLOSEST(tmp_parent_rate, div);
+ 			if (tmp_rate < req->rate)
+ 				tmp_diff = req->rate - tmp_rate;
 -- 
 2.20.1
 
