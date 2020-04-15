@@ -2,113 +2,179 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 808F8C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:04:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D8BC2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:04:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51F6E206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:04:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586952263;
-	bh=9WyvV04rLgQ0yebrNVGdbfNtGMFSfW1avJLli87N90Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=psnYiwznY08pOl99eWa+W6LOYH5uyehFINEd6DOh2Fntsxv90sTsOZX2xPwZQXQ6V
-	 mDOjv6NHRaCoZm6ltWhRg+N1nBSDLkYM4lJas2ll31W3L5AU/zuKMUmjV6slyjmOKy
-	 ru7MM4D46N3b1owT4iU6WtKcLNeY9YF45Y4M/z9c=
+	by mail.kernel.org (Postfix) with ESMTP id 52DEC20575
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:04:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409751AbgDOMEV (ORCPT
-        <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:04:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43824 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409430AbgDOLsK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:48:10 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 870A820775;
-        Wed, 15 Apr 2020 11:48:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951290;
-        bh=9WyvV04rLgQ0yebrNVGdbfNtGMFSfW1avJLli87N90Y=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uPQKRYm5KUKOEAuKCtuGOtqm3VU+ZirnpG4uHTZDyJ2JssmruqaWXHB7bf2MbVxpL
-         KazUxaeq7+RVzYe7paOSnL6bZ7o3jEauqc92kXfB3tuF+QFicIeywqMcIjoKy1Ch4g
-         Nby00Su3cCks2j1bSY40AnXN1WE5EF3wd9FS7Ul4=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Randy Dunlap <rdunlap@infradead.org>, Jan Kara <jack@suse.com>,
-        linux-ext4@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 18/21] ext2: fix empty body warnings when -Wextra is used
-Date:   Wed, 15 Apr 2020 07:47:45 -0400
-Message-Id: <20200415114748.15713-18-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415114748.15713-1-sashal@kernel.org>
-References: <20200415114748.15713-1-sashal@kernel.org>
+        id S368158AbgDOMEb (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:04:31 -0400
+Received: from mail-sz.amlogic.com ([211.162.65.117]:23884 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2897860AbgDOLyT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:54:19 -0400
+Received: from [10.28.39.241] (10.28.39.241) by mail-sz.amlogic.com
+ (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Wed, 15 Apr 2020
+ 19:54:57 +0800
+Subject: Re: [PATCH v2 0/2] Add a watchdog driver that uses ARM Secure Monitor
+ Calls.
+From:   Xingyu Chen <xingyu.chen@amlogic.com>
+To:     Evan Benn <evanbenn@google.com>,
+        LKML <linux-kernel@vger.kernel.org>
+CC:     Julius Werner <jwerner@chromium.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Vinod Koul <vkoul@kernel.org>, Will Deacon <will@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Yonghui Yu <yonghui.yu@amlogic.com>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        Xingyu Chen <xingyu.chen@amlogic.com>
+References: <20200403052900.258855-1-evanbenn@chromium.org>
+ <CAKz_xw0gV+w_gMkLfB4qUBdULLfFoiv1TBWp9_PHy33wP_XWyA@mail.gmail.com>
+ <890948ef-7276-fdae-d270-eb30eff3eab2@amlogic.com>
+Message-ID: <243e107c-35c1-2d14-5285-c9e13744963c@amlogic.com>
+Date:   Wed, 15 Apr 2020 19:54:57 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
+In-Reply-To: <890948ef-7276-fdae-d270-eb30eff3eab2@amlogic.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.28.39.241]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+Hi,Evan
 
-[ Upstream commit 44a52022e7f15cbaab957df1c14f7a4f527ef7cf ]
+On 2020/4/11 23:06, Xingyu Chen wrote:
+> Hi, Evan
+> 
+> On 2020/4/3 14:04, Evan Benn wrote:
+>> Apologies I forgot to add this note to my cover letter.
+>>
+>> Xingyu do you mind seeing if you can modify your ATF firmware to match 
+>> this driver?
+>> We can add a compatible or make other changes to suit you.
+> Thanks for your patch [0],  I will test this patch on the meson-A1 
+> platform, but It looks more
+> convenient to be compatible with other platforms if using the compatible 
+> strings to correlate
+> platform differences include function ID and wdt_ops.
+> 
+> [0]: https://patchwork.kernel.org/patch/11471829/
 
-When EXT2_ATTR_DEBUG is not defined, modify the 2 debug macros
-to use the no_printk() macro instead of <nothing>.
-This fixes gcc warnings when -Wextra is used:
+I have tested your patch on the meson-A1, but I use the compatible 
+strings to correlate the following platform differences，it works normally.
 
-../fs/ext2/xattr.c:252:42: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
-../fs/ext2/xattr.c:258:42: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
-../fs/ext2/xattr.c:330:42: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
-../fs/ext2/xattr.c:872:45: warning: suggest braces around empty body in an ‘else’ statement [-Wempty-body]
+static const struct smcwd_data smcwd_mtk_data = {
+	.func_id = 0x82003d06,
+	.ops     = &smcwd_ops,
+}
 
-I have verified that the only object code change (with gcc 7.5.0) is
-the reversal of some instructions from 'cmp a,b' to 'cmp b,a'.
+static const struct smcwd_data smcwd_meson_data = {
+	.func_id = 0x82000086,
+	.ops     = &smcwd_timeleft_ops,
+}
 
-Link: https://lore.kernel.org/r/e18a7395-61fb-2093-18e8-ed4f8cf56248@infradead.org
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Jan Kara <jack@suse.com>
-Cc: linux-ext4@vger.kernel.org
-Signed-off-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/ext2/xattr.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+In addition, It looks more reasonable to use the "msec" as the unit of 
+timeout parameter for the ATF fw interface with SMCWD_SET_TIMEOUT:
 
-diff --git a/fs/ext2/xattr.c b/fs/ext2/xattr.c
-index babef30d440b1..a54037df2c8a8 100644
---- a/fs/ext2/xattr.c
-+++ b/fs/ext2/xattr.c
-@@ -55,6 +55,7 @@
- 
- #include <linux/buffer_head.h>
- #include <linux/init.h>
-+#include <linux/printk.h>
- #include <linux/slab.h>
- #include <linux/mbcache.h>
- #include <linux/quotaops.h>
-@@ -83,8 +84,8 @@
- 		printk("\n"); \
- 	} while (0)
- #else
--# define ea_idebug(f...)
--# define ea_bdebug(f...)
-+# define ea_idebug(inode, f...)	no_printk(f)
-+# define ea_bdebug(bh, f...)	no_printk(f)
- #endif
- 
- static int ext2_xattr_set2(struct inode *, struct buffer_head *,
--- 
-2.20.1
+- The fw interface will compatible with the uboot generic watchdog 
+interface at [0], and there is no need to convert timeout from msec
+to sec.
 
+- Some vendor's watchdog may be not support the "wdt_trigger_reset" 
+reset operation, but they can use the method below to reset the system
+by the watchdog right now.
+
+watchdog_set_time(1);  //1ms
+watchdog_enable();
+
+[0]: 
+https://gitlab.denx.de/u-boot/u-boot/-/blob/master/drivers/watchdog/wdt-uclass.c
+
+Best Regards
+>> Thanks
+>>
+>> On Fri, Apr 3, 2020 at 4:29 PM Evan Benn <evanbenn@chromium.org 
+>> <mailto:evanbenn@chromium.org>> wrote:
+>>
+>>     This is currently supported in firmware deployed on oak, hana and
+>>     elm mt8173
+>>     chromebook devices. The kernel driver is written to be a generic SMC
+>>     watchdog driver.
+>>
+>>     Arm Trusted Firmware upstreaming review:
+>>     https://review.trustedfirmware.org/c/TF-A/trusted-firmware-a/+/3405
+>>
+>>     Patch to add oak, hana, elm device tree:
+>>     https://lore.kernel.org/linux-arm-kernel/20200110073730.213789-1-hsinyi@chromium.org/
+>>     I would like to add the device tree support after the above patch is
+>>     accepted.
+>>
+>>     Changes in v3:
+>>     - Change name back to arm
+>>     - Add optional get_timeleft op
+>>     - change name to arm_smc_wdt
+>>
+>>     Changes in v2:
+>>     - Change name arm > mt8173
+>>     - use watchdog_stop_on_reboot
+>>     - use watchdog_stop_on_unregister
+>>     - use devm_watchdog_register_device
+>>     - remove smcwd_shutdown, smcwd_remove
+>>     - change error codes
+>>
+>>     Evan Benn (1):
+>>       dt-bindings: watchdog: Add ARM smc wdt for mt8173 watchdog
+>>
+>>     Julius Werner (1):
+>>       watchdog: Add new arm_smd_wdt watchdog driver
+>>
+>>      .../bindings/watchdog/arm-smc-wdt.yaml        |  30 +++
+>>      MAINTAINERS                                   |   7 +
+>>      arch/arm64/configs/defconfig                  |   1 +
+>>      drivers/watchdog/Kconfig                      |  13 ++
+>>      drivers/watchdog/Makefile                     |   1 +
+>>      drivers/watchdog/arm_smc_wdt.c                | 181
+>>     ++++++++++++++++++
+>>      6 files changed, 233 insertions(+)
+>>      create mode 100644
+>>     Documentation/devicetree/bindings/watchdog/arm-smc-wdt.yaml
+>>      create mode 100644 drivers/watchdog/arm_smc_wdt.c
+>>
+>>     -- 
+>>     2.26.0.292.g33ef6b2f38-goog
+>>
