@@ -2,107 +2,163 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F378C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A62C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:58:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29AE1208E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:58:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586973506;
-	bh=D8ed2PhUR/zT6L02123gyeYZA8qQ3iGfhTtELgeSi6I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qUfpfGKTvVkCEjdLGD8eIH5VAwV8HP5qA7uyfFlYwbw7UMDfKaRiSj4JTYN/yPa0b
-	 c3weG+cuykw8S8Bgu6Ti72txk6+xOLcZfqbjK06Yclak2erGCKRXnSgsN1r3WM2AAW
-	 ZytBVeHc8d7yqonPjdpTHMIxPsC11qKnzGanR0lo=
+	by mail.kernel.org (Postfix) with ESMTP id 0ACB6208E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:58:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lT/jtIdH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2411584AbgDOR6U (ORCPT
+        id S2411594AbgDOR6h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 13:58:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49054 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1416569AbgDOR4R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 13:56:17 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3426221556;
-        Wed, 15 Apr 2020 17:56:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586973377;
-        bh=D8ed2PhUR/zT6L02123gyeYZA8qQ3iGfhTtELgeSi6I=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I6qddKPvqYR+uuApYtZRklP30Cxtd6Umr2TqMifcUsavOEAfbh68D8drKu6dgD9mx
-         hiYpLtaakKvjFkjTOI0D0uDD6deZT7hZ0xGwu7Ki5w7HQs7oNORpX3oOTRFIiuKo/l
-         +WcqiQ5x5inpUb29jF7hFMe/vX6i4YLVipYgvSfE=
-From:   paulmck@kernel.org
-To:     rcu@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        Lai Jiangshan <laijs@linux.alibaba.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 3/6] rcu: Don't set nesting depth negative in rcu_preempt_deferred_qs()
-Date:   Wed, 15 Apr 2020 10:56:11 -0700
-Message-Id: <20200415175614.10837-3-paulmck@kernel.org>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20200415175543.GA10416@paulmck-ThinkPad-P72>
-References: <20200415175543.GA10416@paulmck-ThinkPad-P72>
+        Wed, 15 Apr 2020 13:58:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42836 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2441096AbgDORz7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 13:55:59 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B830C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 10:55:58 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id q22so4743504ljg.0
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 10:55:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wnna/6OnfA+ZY6dFpwQADy6VF1hPNJpTLuPWcjrS+9o=;
+        b=lT/jtIdHqRmRii6Mhp0kxfUeDNI5rGqofv9QErcLovXn4eP3jZocb3Bpl2WPwsG8BE
+         KS3mM5EpSs+Uu+Tf56iJssZM4HvTeyjXO2moUDIzsOf3sraCA477lBpkK08LxtZKFHuR
+         M6ScyxD+ddeekgfX79R9iCS71aGqv658euPY0EYzrWu4mk1S98xVzeYIyffvlQ1RCd39
+         NEcluG9VClepTW+ECpxn/bGQQUo0oE2EWe9hncZ2MkRMOR/fVeT+5thwm9CPeJ+mIV2w
+         XfcJFIzjYpuM0ZVVd+xatRdOe8sG3Vj/ANuev2T5NAzhy0SJwiNCNHeEHiRKGctan+R+
+         DFgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wnna/6OnfA+ZY6dFpwQADy6VF1hPNJpTLuPWcjrS+9o=;
+        b=GoU6/a2izE84aslTAUCBlBL2hqwy8cOWCZGf/artHOtHI9t0MpdjXavYyPgxS7d46e
+         kH6LIC9DOhOJRDHW8EmnbKvI28dMffg0iprB1LJXKZ+dB+p10MePSkyX0K0QGwMZ02B8
+         Q4jirCQrMy+hQHIWII9KSusv/qN9vvSQeJzk+auVNkplZgkno8FfeMsykJqB1ohFBmz1
+         Nd4WrmvsTFRb2gpKE+Zs1B2rtkYyvJXWoF2WDuydQXF/MnLm7ILni5pZusfv/5lu60x1
+         aX9oWStuzmaNfRUB+QzNm5/tQKVJGFX8pZN+a3m8U83nJaMSX6hrtVznsX0CBfwrBGay
+         Yrng==
+X-Gm-Message-State: AGi0Pubrkz/dNpVZJ7ixTwEl0Nd5tEwjnbby/8Y+4+m4LLgQMOLRK1Wh
+        K/xMhL5aB19673AU2dW7cv+x9B5N3IYWnSwAGopZjQ==
+X-Google-Smtp-Source: APiQypIAX9TwClluLsNWlpVGtTbHrq5zHPu1eJSAJi8mSv7889eeJU3EbUg3C4LKaPOzQf5ye9c0nsPcuwjNkmygnO4=
+X-Received: by 2002:a2e:6c05:: with SMTP id h5mr3968173ljc.217.1586973356820;
+ Wed, 15 Apr 2020 10:55:56 -0700 (PDT)
+MIME-Version: 1.0
+References: <1583886030-11339-1-git-send-email-skomatineni@nvidia.com>
+In-Reply-To: <1583886030-11339-1-git-send-email-skomatineni@nvidia.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 15 Apr 2020 23:25:45 +0530
+Message-ID: <CA+G9fYvreAv5HmZg0O4VvLvf_PYSvzD1rp08XONNQGExctgQ0Q@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] sdhci: tegra: Implement Tegra specific set_timeout callback
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>, baolin.wang@linaro.org,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>, bradleybolen@gmail.com,
+        thierry.reding@gmail.com, Jon Hunter <jonathanh@nvidia.com>,
+        anrao@nvidia.com, linux-tegra <linux-tegra@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-mmc@vger.kernel.org, lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lai Jiangshan <laijs@linux.alibaba.com>
+On Fri, 13 Mar 2020 at 06:41, Sowjanya Komatineni
+<skomatineni@nvidia.com> wrote:
+>
+> Tegra host supports HW busy detection and timeouts based on the
+> count programmed in SDHCI_TIMEOUT_CONTROL register and max busy
+> timeout it supports is 11s in finite busy wait mode.
+>
+> Some operations like SLEEP_AWAKE, ERASE and flush cache through
+> SWITCH commands take longer than 11s and Tegra host supports
+> infinite HW busy wait mode where HW waits forever till the card
+> is busy without HW timeout.
+>
+> This patch implements Tegra specific set_timeout sdhci_ops to allow
+> switching between finite and infinite HW busy detection wait modes
+> based on the device command expected operation time.
+>
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  drivers/mmc/host/sdhci-tegra.c | 31 +++++++++++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>
+> diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
+> index a25c3a4..fa8f6a4 100644
+> --- a/drivers/mmc/host/sdhci-tegra.c
+> +++ b/drivers/mmc/host/sdhci-tegra.c
+> @@ -45,6 +45,7 @@
+>  #define SDHCI_TEGRA_CAP_OVERRIDES_DQS_TRIM_SHIFT       8
+>
+>  #define SDHCI_TEGRA_VENDOR_MISC_CTRL                   0x120
+> +#define SDHCI_MISC_CTRL_ERASE_TIMEOUT_LIMIT            BIT(0)
+>  #define SDHCI_MISC_CTRL_ENABLE_SDR104                  0x8
 
-Now that RCU flavors have been consolidated, an RCU-preempt
-rcu_read_unlock() in an interrupt or softirq handler cannot possibly
-end the RCU read-side critical section.  Consider the old vulnerability
-involving rcu_preempt_deferred_qs() being invoked within such a handler
-that interrupted an extended RCU read-side critical section, in which
-a wakeup might be invoked with a scheduler lock held.  Because
-rcu_read_unlock_special() no longer does wakeups in such situations,
-it is no longer necessary for rcu_preempt_deferred_qs() to set the
-nesting level negative.
+>  #define SDHCI_MISC_CTRL_ENABLE_SDR50                   0x10
+>  #define SDHCI_MISC_CTRL_ENABLE_SDHCI_SPEC_300          0x20
+> @@ -1227,6 +1228,34 @@ static u32 sdhci_tegra_cqhci_irq(struct sdhci_host *host, u32 intmask)
+>         return 0;
+>  }
+>
+> +static void tegra_sdhci_set_timeout(struct sdhci_host *host,
+> +                                   struct mmc_command *cmd)
+> +{
+> +       u32 val;
+> +
+> +       /*
+> +        * HW busy detection timeout is based on programmed data timeout
+> +        * counter and maximum supported timeout is 11s which may not be
+> +        * enough for long operations like cache flush, sleep awake, erase.
+> +        *
+> +        * ERASE_TIMEOUT_LIMIT bit of VENDOR_MISC_CTRL register allows
+> +        * host controller to wait for busy state until the card is busy
+> +        * without HW timeout.
+> +        *
+> +        * So, use infinite busy wait mode for operations that may take
+> +        * more than maximum HW busy timeout of 11s otherwise use finite
+> +        * busy wait mode.
+> +        */
+> +       val = sdhci_readl(host, SDHCI_TEGRA_VENDOR_MISC_CTRL);
+> +       if (cmd && cmd->busy_timeout >= 11 * HZ)
+> +               val |= SDHCI_MISC_CTRL_ERASE_TIMEOUT_LIMIT;
+> +       else
+> +               val &= ~SDHCI_MISC_CTRL_ERASE_TIMEOUT_LIMIT;
+> +       sdhci_writel(host, val, SDHCI_TEGRA_VENDOR_MISC_CTRL);
+> +
+> +       __sdhci_set_timeout(host, cmd);
 
-This commit therfore removes this recursion-protection code from
-rcu_preempt_deferred_qs().
+kernel build on arm and arm64 architecture failed on stable-rc 4.19
+(arm), 5.4 (arm64) and 5.5 (arm64)
 
-Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-[ paulmck: Fix typo in commit log per Steve Rostedt. ]
----
- kernel/rcu/tree_plugin.h | 5 -----
- 1 file changed, 5 deletions(-)
+drivers/mmc/host/sdhci-tegra.c: In function 'tegra_sdhci_set_timeout':
+drivers/mmc/host/sdhci-tegra.c:1256:2: error: implicit declaration of
+function '__sdhci_set_timeout'; did you mean
+'tegra_sdhci_set_timeout'? [-Werror=implicit-function-declaration]
+  __sdhci_set_timeout(host, cmd);
+  ^~~~~~~~~~~~~~~~~~~
+  tegra_sdhci_set_timeout
 
-diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-index ccad776..263c766 100644
---- a/kernel/rcu/tree_plugin.h
-+++ b/kernel/rcu/tree_plugin.h
-@@ -569,16 +569,11 @@ static bool rcu_preempt_need_deferred_qs(struct task_struct *t)
- static void rcu_preempt_deferred_qs(struct task_struct *t)
- {
- 	unsigned long flags;
--	bool couldrecurse = rcu_preempt_depth() >= 0;
- 
- 	if (!rcu_preempt_need_deferred_qs(t))
- 		return;
--	if (couldrecurse)
--		rcu_preempt_depth_set(rcu_preempt_depth() - RCU_NEST_BIAS);
- 	local_irq_save(flags);
- 	rcu_preempt_deferred_qs_irqrestore(t, flags);
--	if (couldrecurse)
--		rcu_preempt_depth_set(rcu_preempt_depth() + RCU_NEST_BIAS);
- }
- 
- /*
--- 
-2.9.5
+Full build log,
+https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-stable-rc-5.5/DISTRO=lkft,MACHINE=am57xx-evm,label=docker-lkft/83/consoleText
+https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-stable-rc-5.4/DISTRO=lkft,MACHINE=juno,label=docker-lkft/158/consoleText
+https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-stable-rc-4.19/DISTRO=lkft,MACHINE=am57xx-evm,label=docker-lkft/511/consoleText
 
+- Naresh
