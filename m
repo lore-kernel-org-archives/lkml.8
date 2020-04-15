@@ -2,97 +2,104 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E8BC3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F09F8C2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 989A920737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:07:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586956047;
-	bh=SyGAg3rZ9yeFpLXHikAhy4J0bskyUaj9d3sDPWmGY00=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CPliRdgBWPWaS+sT+8Hh1mR3aDzX9dXVdJ+L9Vwm5kJGgQYOQuv0CmvkEj1bvDHTk
-	 z9AaxiFhaXYp9cz+0C8AoN6sGDoV/4ae3D4xcluq/sQCNKb4NYKbgPg6SBUmmnhTFd
-	 GJZT7wgLoMoaA2H7SjyCZzV34i2PF92eIyRnFBwA=
+	by mail.kernel.org (Postfix) with ESMTP id DAC7A20737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:07:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505992AbgDONH0 (ORCPT
+        id S2506038AbgDONHW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:07:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55562 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 09:07:22 -0400
+Received: from mga18.intel.com ([134.134.136.126]:12616 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897092AbgDOLfz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:35:55 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 037D820768;
-        Wed, 15 Apr 2020 11:35:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950554;
-        bh=SyGAg3rZ9yeFpLXHikAhy4J0bskyUaj9d3sDPWmGY00=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lPrr7iYX4PjCcNxW6z300H9gFKc1/cn95fpky/uvmwxObjnGjHHkX2oMM96NDO7RO
-         r+d8BJbZEiSGX1HikV2o3sLEv024gYrSpIdgU7PiojO7/GdNHVcAL19RGktqQLYrMM
-         USIYjS8k4p4sFB3+uwP3e4y5gBTVRo/EMqhJB/zE=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gabriel Krisman Bertazi <krisman@collabora.com>,
-        Martyn Welch <martyn.welch@collabora.com>,
-        Richard Weinberger <richard@nod.at>,
-        Sasha Levin <sashal@kernel.org>, linux-um@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.6 060/129] um: ubd: Prevent buffer overrun on command completion
-Date:   Wed, 15 Apr 2020 07:33:35 -0400
-Message-Id: <20200415113445.11881-60-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
-References: <20200415113445.11881-1-sashal@kernel.org>
+        id S2503911AbgDONGz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 09:06:55 -0400
+IronPort-SDR: U5qlzJyLxtMK43nMYAjQ/ZWsmVyQdhXr0JepVrLFKt/fpihuyLy4+bAszaJ5q3Cn4rdbRrRzbX
+ 5jWPPi9bg6nA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 06:06:53 -0700
+IronPort-SDR: X0FV4juNS/j6mhVgSKyGzTWkLMQfq/EdlDRtnBYd9XoCMXDaq1clfbOdrKq8BA0ui9WyQaW9cV
+ LSg0XpREzEWA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,386,1580803200"; 
+   d="scan'208";a="400307602"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.87]) ([10.237.72.87])
+  by orsmga004.jf.intel.com with ESMTP; 15 Apr 2020 06:06:51 -0700
+Subject: Re: [PATCH 3/7] mmc: sdhci: fix SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Suneel Garapati <suneel.garapati@xilinx.com>,
+        Kevin Liu <kliu5@marvell.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
+References: <cover.1585827904.git.mirq-linux@rere.qmqm.pl>
+ <eb105eedaa387ced14bb687e38d3aa33d4fcf70a.1585827904.git.mirq-linux@rere.qmqm.pl>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <67dc68ce-d8ec-4486-f4f9-3fb2580d2675@intel.com>
+Date:   Wed, 15 Apr 2020 16:06:02 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+In-Reply-To: <eb105eedaa387ced14bb687e38d3aa33d4fcf70a.1585827904.git.mirq-linux@rere.qmqm.pl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gabriel Krisman Bertazi <krisman@collabora.com>
+On 2/04/20 2:54 pm, Michał Mirosław wrote:
+> Fix returned clock rate for SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN case.
 
-[ Upstream commit 6e682d53fc1ef73a169e2a5300326cb23abb32ee ]
+Does this change anything, because it looks the same to me?
 
-On the hypervisor side, when completing commands and the pipe is full,
-we retry writing only the entries that failed, by offsetting
-io_req_buffer, but we don't reduce the number of bytes written, which
-can cause a buffer overrun of io_req_buffer, and write garbage to the
-pipe.
-
-Cc: Martyn Welch <martyn.welch@collabora.com>
-Signed-off-by: Gabriel Krisman Bertazi <krisman@collabora.com>
-Signed-off-by: Richard Weinberger <richard@nod.at>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/um/drivers/ubd_kern.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/arch/um/drivers/ubd_kern.c b/arch/um/drivers/ubd_kern.c
-index 247f95da057b5..eca45ad2166c9 100644
---- a/arch/um/drivers/ubd_kern.c
-+++ b/arch/um/drivers/ubd_kern.c
-@@ -1607,7 +1607,9 @@ int io_thread(void *arg)
- 		written = 0;
- 
- 		do {
--			res = os_write_file(kernel_fd, ((char *) io_req_buffer) + written, n);
-+			res = os_write_file(kernel_fd,
-+					    ((char *) io_req_buffer) + written,
-+					    n - written);
- 			if (res >= 0) {
- 				written += res;
- 			}
--- 
-2.20.1
+> 
+> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+> Cc: stable@kernel.vger.org
+> Fixes: d1955c3a9a1d ("mmc: sdhci: add quirk SDHCI_QUIRK_CLOCK_DIV_ZERO_BROKEN")
+> ---
+>  drivers/mmc/host/sdhci.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+> index b2dc4f1cfa5c..a043bf5e3565 100644
+> --- a/drivers/mmc/host/sdhci.c
+> +++ b/drivers/mmc/host/sdhci.c
+> @@ -1807,9 +1807,12 @@ u16 sdhci_calc_clk(struct sdhci_host *host, unsigned int clock,
+>  
+>  		if (!host->clk_mul || switch_base_clk) {
+>  			/* Version 3.00 divisors must be a multiple of 2. */
+> -			if (host->max_clk <= clock)
+> +			if (host->max_clk <= clock) {
+>  				div = 1;
+> -			else {
+> +				if ((host->quirks2 & SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN)
+> +					&& host->max_clk <= 25000000)
+> +					div = 2;
+> +			} else {
+>  				for (div = 2; div < SDHCI_MAX_DIV_SPEC_300;
+>  				     div += 2) {
+>  					if ((host->max_clk / div) <= clock)
+> @@ -1818,9 +1821,6 @@ u16 sdhci_calc_clk(struct sdhci_host *host, unsigned int clock,
+>  			}
+>  			real_div = div;
+>  			div >>= 1;
+> -			if ((host->quirks2 & SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN)
+> -				&& !div && host->max_clk <= 25000000)
+> -				div = 1;
+>  		}
+>  	} else {
+>  		/* Version 2.00 divisors must be a power of 2. */
+> 
 
