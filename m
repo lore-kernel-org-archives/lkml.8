@@ -2,118 +2,106 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CAFFC2BA19
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB83AC3815B
 	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:52:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7839206F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:52:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CA82206F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:52:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="kOKoxbSy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895170AbgDOIwy (ORCPT
+        id S2895145AbgDOIwe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 04:52:54 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47854 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2505548AbgDOIwU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 04:52:20 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 58DA8AFB1;
-        Wed, 15 Apr 2020 08:52:16 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 2D9361E1250; Wed, 15 Apr 2020 10:52:16 +0200 (CEST)
-Date:   Wed, 15 Apr 2020 10:52:16 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     ira.weiny@intel.com
-Cc:     linux-kernel@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Jan Kara <jack@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH V8 08/11] fs: Define I_DONTCACNE in VFS layer
-Message-ID: <20200415085216.GE501@quack2.suse.cz>
-References: <20200415064523.2244712-1-ira.weiny@intel.com>
- <20200415064523.2244712-9-ira.weiny@intel.com>
+        Wed, 15 Apr 2020 04:52:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42782 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2895134AbgDOIv5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 04:51:57 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8C05C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 01:51:57 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id b13so2662682oti.3
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 01:51:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kZ8PEt8ilO1F7s0PZB2jEBFLypOtSGmLv+9HjFoznC8=;
+        b=kOKoxbSySQFWV4DTsd8hMXuUPciY0YdJjmtqavGBNtg6fmNgGRASTGJqeImXO941zR
+         i1ioZxDpnblsfXu/NTRnbq1hVPlN8Y8FI480+4TFTWPRH7dfkOIDCzMk7lt076WbZPqt
+         5wxioDQYlIOyq6EGcFZL7xQyuz7wtOotPGfIv0VTg1MyRrWMWFubIoc38+chQ05Zxtqh
+         8Ni72FCrRzrVxYw0tUSc73VaFeqsgCg4bIEV01XtO2N8/38ozd/AX979JOcZLH3WzrxR
+         tS71hzw1aGgyWSZDMKu9jyzo0tjsKGvGEG1j+zOF8bmZJPnE0/BUPC6ljQfSV4Y/eg6f
+         cwEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kZ8PEt8ilO1F7s0PZB2jEBFLypOtSGmLv+9HjFoznC8=;
+        b=dDzQtbo6yrHmWexlzcPjyZfXYurrw4x3Mi2JmD6zGSUstFzpM4T2HSM/pdH+dMX3Dt
+         86lZ12Nsy80K4whG0zWEgqi3Od2mRRGKgtZ3XT8MvuyBVDYXvYxudC8DgNPniCHIt9vf
+         7eU/CJ2nGQEqF2U3uEKxJAXzG/OeJkYKe4GotFZATO/61FC2zjTLNUWPjNmgFttXroB0
+         WtBjvN8z/3td6B45lIAMcqNyE58Nz5OcQ1AWQWvZY76ao6oILZEtyyESufhwpxCuKYyE
+         3SCXU2sP5t1tk7CjYO5F8gE4SG3NFXKdw23hYHT/MXUk6Efdl6r/VVlPSz+gSe29AyJR
+         WR6g==
+X-Gm-Message-State: AGi0PubGHVWAhBunohPRbDsXEtVZvRQk+4qluEPczXjYKX+kPxEEz2po
+        9EXCFUVbcnVNpG1obBURNgtRN5DYqtYBhIo7xW/QnQ==
+X-Google-Smtp-Source: APiQypJv9QyoDLeyzwLnHZJawTduDHOVTKjxTKzUFB3jLIOo6iaZRWcW/QaOxtRbC16DF6GTDfN9Pm4nKSu8DpTh2bg=
+X-Received: by 2002:a9d:ef8:: with SMTP id 111mr21981983otj.94.1586940716871;
+ Wed, 15 Apr 2020 01:51:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200415064523.2244712-9-ira.weiny@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200414181012.114905-1-robert.marko@sartura.hr>
+ <20200414181012.114905-3-robert.marko@sartura.hr> <076e0e54-ad3a-8cb7-d96d-8a83fc315b28@gmail.com>
+In-Reply-To: <076e0e54-ad3a-8cb7-d96d-8a83fc315b28@gmail.com>
+From:   Robert Marko <robert.marko@sartura.hr>
+Date:   Wed, 15 Apr 2020 10:51:45 +0200
+Message-ID: <CA+HBbNFm8PG87dBicYjfrvXjdBEyPzoy5vhrQuzSCsZL3o57Gw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] dts: ipq4019: add MDIO node
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>, linux@armlinux.org.uk,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        Christian Lamparter <chunkeey@gmail.com>,
+        Luka Perkov <luka.perkov@sartura.hr>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There's a typo in the subject - I_DONTCACNE.
-
-On Tue 14-04-20 23:45:20, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> DAX effective mode changes (setting of S_DAX) require inode eviction.
-> 
-> Define a flag which can be set to inform the VFS layer that inodes
-> should not be cached.  This will expedite the eviction of those nodes
-> requiring reload.
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> ---
->  include/linux/fs.h | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index a818ced22961..e2db71d150c3 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -2151,6 +2151,8 @@ static inline void kiocb_clone(struct kiocb *kiocb, struct kiocb *kiocb_src,
->   *
->   * I_CREATING		New object's inode in the middle of setting up.
->   *
-> + * I_DONTCACHE		Do not cache the inode
-> + *
-
-Maybe, I'd be more specific here and write: "Evict inode as soon as it is
-not used anymore"?
-
-Otherwise the patch looks good to me so feel free to add:
-
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-Also it would be good to CC Al Viro on this one (and the dentry flag) I
-guess.
-
-								Honza
-
->   * Q: What is the difference between I_WILL_FREE and I_FREEING?
->   */
->  #define I_DIRTY_SYNC		(1 << 0)
-> @@ -2173,6 +2175,7 @@ static inline void kiocb_clone(struct kiocb *kiocb, struct kiocb *kiocb_src,
->  #define I_WB_SWITCH		(1 << 13)
->  #define I_OVL_INUSE		(1 << 14)
->  #define I_CREATING		(1 << 15)
-> +#define I_DONTCACHE		(1 << 16)
->  
->  #define I_DIRTY_INODE (I_DIRTY_SYNC | I_DIRTY_DATASYNC)
->  #define I_DIRTY (I_DIRTY_INODE | I_DIRTY_PAGES)
-> @@ -3042,7 +3045,8 @@ extern int inode_needs_sync(struct inode *inode);
->  extern int generic_delete_inode(struct inode *inode);
->  static inline int generic_drop_inode(struct inode *inode)
->  {
-> -	return !inode->i_nlink || inode_unhashed(inode);
-> +	return !inode->i_nlink || inode_unhashed(inode) ||
-> +		(inode->i_state & I_DONTCACHE);
->  }
->  
->  extern struct inode *ilookup5_nowait(struct super_block *sb,
-> -- 
-> 2.25.1
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+On Tue, Apr 14, 2020 at 11:13 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
+>
+>
+>
+> On 4/14/2020 11:10 AM, Robert Marko wrote:
+> > This patch adds the necessary MDIO interface node
+> > to the Qualcomm IPQ4019 DTSI.
+> >
+> > Built-in QCA8337N switch is managed using it,
+> > and since we have a driver for it lets add it.
+> >
+> > Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+> > Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+> > Cc: Luka Perkov <luka.perkov@sartura.hr>
+> > ---
+> >  arch/arm/boot/dts/qcom-ipq4019.dtsi | 28 ++++++++++++++++++++++++++++
+> >  1 file changed, 28 insertions(+)
+>
+> Earlier contributions to that file seem to suggest that the preferred
+> subject is:
+>
+> ARM: dts: qcom: <subject>
+Will be changed in v3.
+Thanks
+> --
+> Florian
