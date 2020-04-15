@@ -2,97 +2,123 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DED0C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:59:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FD26C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:02:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 053F420737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:59:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC554206E9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:02:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408227AbgDOI6x (ORCPT
+        id S2408231AbgDOJCB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 04:58:53 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:41521 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405268AbgDOI6f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 04:58:35 -0400
-Authenticated-By: 
-X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 03F8wAq55024222, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexmb06.realtek.com.tw[172.21.6.99])
-        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 03F8wAq55024222
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Wed, 15 Apr 2020 16:58:10 +0800
-Received: from RTEXMB05.realtek.com.tw (172.21.6.98) by
- RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 15 Apr 2020 16:58:09 +0800
-Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
- RTEXMB05.realtek.com.tw (172.21.6.98) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 15 Apr 2020 16:58:09 +0800
-Received: from RTEXMB03.realtek.com.tw ([fe80::71dc:5fb1:bef0:757d]) by
- RTEXMB03.realtek.com.tw ([fe80::71dc:5fb1:bef0:757d%8]) with mapi id
- 15.01.1779.005; Wed, 15 Apr 2020 16:58:09 +0800
-From:   =?utf-8?B?SmFtZXMgVGFpIFvmiLTlv5fls7Bd?= <james.tai@realtek.com>
-To:     =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
-CC:     "linux-realtek-soc@lists.infradead.org" 
-        <linux-realtek-soc@lists.infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: RE: [PATCH v3 1/2] dt-bindings: arm: realtek: Document RTD1319 and Realtek PymParticle EVB
-Thread-Topic: [PATCH v3 1/2] dt-bindings: arm: realtek: Document RTD1319 and
- Realtek PymParticle EVB
-Thread-Index: AQHV22q6vab9CDECFUe3xrmWUlkzCah2FMYAgAQvoVA=
-Date:   Wed, 15 Apr 2020 08:58:09 +0000
-Message-ID: <a9685d4560a6445d81c4919b2a323f68@realtek.com>
-References: <20200204145207.28622-1-james.tai@realtek.com>
- <20200204145207.28622-2-james.tai@realtek.com>
- <bf55ccbe-cbdf-7ba7-d701-aa84c20204e3@suse.de>
-In-Reply-To: <bf55ccbe-cbdf-7ba7-d701-aa84c20204e3@suse.de>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.21.190.154]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 15 Apr 2020 05:02:01 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53082 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405260AbgDOJB4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 05:01:56 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 60116AF92;
+        Wed, 15 Apr 2020 09:01:53 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 6A4291E1250; Wed, 15 Apr 2020 11:01:53 +0200 (CEST)
+Date:   Wed, 15 Apr 2020 11:01:53 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     ira.weiny@intel.com
+Cc:     linux-kernel@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V8 09/11] fs: Introduce DCACHE_DONTCACHE
+Message-ID: <20200415090153.GF501@quack2.suse.cz>
+References: <20200415064523.2244712-1-ira.weiny@intel.com>
+ <20200415064523.2244712-10-ira.weiny@intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200415064523.2244712-10-ira.weiny@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQW5kcmVhcywNCg0KVGhhbmtzIGZvciB5b3VyIHJldmlldyENCg0KPg0KPiA+IGRpZmYgLS1n
-aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL3JlYWx0ZWsueWFtbA0K
-PiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9yZWFsdGVrLnlhbWwN
-Cj4gPiBpbmRleCA4NDVmOWM3NmQ2ZjcuLjNiNDhhZTcxZmRkOCAxMDA2NDQNCj4gPiAtLS0gYS9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL3JlYWx0ZWsueWFtbA0KPiA+ICsr
-KyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vcmVhbHRlay55YW1sDQo+
-ID4gQEAgLTQyLDYgKzQyLDEyIEBAIHByb3BlcnRpZXM6DQo+ID4gICAgICAgICAgICAgICAgIC0g
-c3lub2xvZ3ksZHM0MTggIyBTeW5vbG9neSBEaXNrU3RhdGlvbiBEUzQxOA0KPiA+ICAgICAgICAg
-ICAgIC0gY29uc3Q6IHJlYWx0ZWsscnRkMTI5Ng0KPiA+DQo+ID4gKyAgICAgICMgUlREMTMxOSBT
-b0MgYmFzZWQgYm9hcmRzDQo+ID4gKyAgICAgIC0gaXRlbXM6DQo+ID4gKyAgICAgICAgICAtIGVu
-dW06DQo+ID4gKyAgICAgICAgICAgICAgLSByZWFsdGVrLHB5bXBhcnRpY2xlICMgUmVhbHRlayBQ
-eW1QYXJ0aWNsZSBFVkINCj4gDQo+IFRoZSBib2FyZCBzZWVtcyBsYWJlbGxlZCAiUFlNX1BBUlRJ
-Q0xFUyIuDQo+IA0KPiBXaGlsZSBXaWtpcGVkaWEgaGFzIG5vdGhpbmcgb24gdGhhdCwgSSBmb3Vu
-ZCB0aGlzIGV4cGxhbmF0aW9uOg0KPiBodHRwczovL21hcnZlbC5mYW5kb20uY29tL3dpa2kvUHlt
-X1BhcnRpY2xlcw0KPiANCj4gU28sIGFyZSB5b3Ugc3VyZSBpdCdzIFB5bVBhcnRpY2xlIGFuZCBu
-b3QgIlB5bSBQYXJ0aWNsZSIgd2l0aCBzcGFjZSBvciAiUHltDQo+IFBhcnRpY2xlcyIgd2l0aCBz
-cGFjZSBhbmQgcGx1cmFsIFM/IFRoZSBTIHdvdWxkIGFmZmVjdCBhbHNvIHRoZSAuZHRzIGZpbGVu
-YW1lLg0KPg0KSSBzaG91bGQgY2hhbmdlIHRoZSBzdHJpbmcgdG8gIlB5bSBQYXJ0aWNsZXMiLg0K
-DQo+IEZvciB0aGUgY29tcGF0aWJsZSBzdHJpbmcgdGhlIHF1ZXN0aW9uIGlzIHB5bXBhcnRpY2xl
-IG9yIHB5bS1wYXJ0aWNsZS4NCj4gDQpUaGUgY29tcGF0aWJsZSBzdHJpbmcgaXMgInB5bS1wYXJ0
-aWNsZXMiLg0KDQo+IEJ5IGNvbXBhcmlzb24sIExJT04tU0tJTiB3YXMgbmFtZWQgbGlvbi1za2lu
-IGluIHRoZSBjb21wYXRpYmxlIGFuZCBzcGVsbGVkDQo+IExpb24gU2tpbiBpbiB0ZXh0dWFsIGZv
-cm0uIElmIHlvdSBiZWxpZXZlIHRoYXQgc2hvdWxkIGJlIGZpeGVkLCBub3cgd291bGQgYmUgdGhl
-DQo+IHRpbWUgdG8gcmV2aXNpdCB0aG9zZSBwYXRjaGVzIHRoYXQgZGlkbid0IG1ha2UgdjUuNy4N
-Cj4gDQpJJ2xsIGNoZWNrIHRob3NlIHJlbGV2YW50IHBhdGNoZXMuDQoNClRoYW5rIHlvdS4NCg0K
-UmVnYXJkcywNCkphbWVzDQoNCg0K
+On Tue 14-04-20 23:45:21, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> DCACHE_DONTCACHE indicates a dentry should not be cached on final
+> dput().
+> 
+> Also add a helper function which will flag I_DONTCACHE as well ad
+> DCACHE_DONTCACHE on all dentries point to a specified inode.
+
+I think this sentence needs more work :). Like: Also add a helper function
+which will mark the inode with I_DONTCACHE flag and also mark all dentries
+pointing to a specified inode as DCACHE_DONTCACHE.
+
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> 
+> ---
+> Changes from V7:
+> 	new patch
+> ---
+>  fs/dcache.c            |  4 ++++
+>  fs/inode.c             | 15 +++++++++++++++
+>  include/linux/dcache.h |  2 ++
+>  include/linux/fs.h     |  1 +
+>  4 files changed, 22 insertions(+)
+
+...
+
+> diff --git a/fs/inode.c b/fs/inode.c
+> index 93d9252a00ab..b8b1917a324e 100644
+> --- a/fs/inode.c
+> +++ b/fs/inode.c
+> @@ -1526,6 +1526,21 @@ int generic_delete_inode(struct inode *inode)
+>  }
+>  EXPORT_SYMBOL(generic_delete_inode);
+>  
+> +void flag_inode_dontcache(struct inode *inode)
+
+mark_inode_dontcache?
+
+> +{
+> +	struct dentry *dent;
+
+This is really nitpicking but dentry variables are usually called 'de' or
+'dentry' :)
+
+> +
+> +	rcu_read_lock();
+
+I don't think this list is safe to traverse under RCU. E.g.
+dentry_unlink_inode() does hlist_del_init(&dentry->d_u.d_alias). Usually,
+we traverse this list under inode->i_lock protection AFAICS.
+
+								Honza
+
+> +	hlist_for_each_entry(dent, &inode->i_dentry, d_u.d_alias) {
+> +		spin_lock(&dent->d_lock);
+> +		dent->d_flags |= DCACHE_DONTCACHE;
+> +		spin_unlock(&dent->d_lock);
+> +	}
+> +	rcu_read_unlock();
+> +	inode->i_state |= I_DONTCACHE;
+> +}
+> +EXPORT_SYMBOL(flag_inode_dontcache);
+> +
+>  /*
+>   * Called when we're dropping the last reference
+>   * to an inode.
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
