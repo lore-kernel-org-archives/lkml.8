@@ -6,23 +6,24 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF7ADC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:23:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96B77C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B66D720732
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:23:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78FD820732
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:23:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442392AbgDOVXf (ORCPT
+        id S2442398AbgDOVXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 17:23:35 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:59015 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438917AbgDOVXL (ORCPT
+        Wed, 15 Apr 2020 17:23:51 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:27701 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438905AbgDOVXL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Apr 2020 17:23:11 -0400
+X-Originating-IP: 86.202.105.35
 Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id C7B2C200004;
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 1768124000C;
         Wed, 15 Apr 2020 21:23:07 +0000 (UTC)
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     Jonathan Cameron <jic23@kernel.org>
@@ -32,9 +33,9 @@ Cc:     Hartmut Knaack <knaack.h@gmx.de>,
         Gregory CLEMENT <gregory.clement@bootlin.com>,
         linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 3/3] iio: adc: ti-ads8344: optimize consumption
-Date:   Wed, 15 Apr 2020 23:22:57 +0200
-Message-Id: <20200415212257.161238-4-alexandre.belloni@bootlin.com>
+Subject: [PATCH 2/3] iio: adc: ti-ads8344: remove tx_buf from driver data
+Date:   Wed, 15 Apr 2020 23:22:56 +0200
+Message-Id: <20200415212257.161238-3-alexandre.belloni@bootlin.com>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200415212257.161238-1-alexandre.belloni@bootlin.com>
 References: <20200415212257.161238-1-alexandre.belloni@bootlin.com>
@@ -45,57 +46,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Set the clock mode only once, at probe time and then keep the ADC powered
-down between conversions.
+There is no need to keep tx_buf around, it is only used for the conversion.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/iio/adc/ti-ads8344.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/iio/adc/ti-ads8344.c | 18 ++++++------------
+ 1 file changed, 6 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/iio/adc/ti-ads8344.c b/drivers/iio/adc/ti-ads8344.c
-index 9b2d3a8ea6bd..0804650d8d8a 100644
+index 6da50ea35217..9b2d3a8ea6bd 100644
 --- a/drivers/iio/adc/ti-ads8344.c
 +++ b/drivers/iio/adc/ti-ads8344.c
-@@ -65,7 +65,7 @@ static const struct iio_chan_spec ads8344_channels[] = {
+@@ -22,13 +22,7 @@
+ struct ads8344 {
+ 	struct spi_device *spi;
+ 	struct regulator *reg;
+-	/*
+-	 * Lock protecting access to adc->tx_buff and rx_buff,
+-	 * especially from concurrent read on sysfs file.
+-	 */
+-	struct mutex lock;
+-
+-	u8 tx_buf ____cacheline_aligned;
++	struct mutex lock; /* protect from concurrent conversions */
  };
  
- static int ads8344_adc_conversion(struct ads8344 *adc, int channel,
--				  bool differential)
-+				  bool differential, u8 clock)
- {
- 	struct spi_device *spi = adc->spi;
+ #define ADS8344_VOLTAGE_CHANNEL(chan, si)				\
+@@ -77,13 +71,13 @@ static int ads8344_adc_conversion(struct ads8344 *adc, int channel,
  	int ret;
-@@ -75,7 +75,7 @@ static int ads8344_adc_conversion(struct ads8344 *adc, int channel,
- 	if (!differential)
- 		buf[0] |= ADS8344_SINGLE_END;
- 	buf[0] |= ADS8344_CHANNEL(channel);
--	buf[0] |= ADS8344_CLOCK_INTERNAL;
-+	buf[0] |= clock;
+ 	u8 buf[3];
  
- 	ret = spi_write(spi, buf, 1);
- 	if (ret)
-@@ -100,7 +100,7 @@ static int ads8344_read_raw(struct iio_dev *iio,
- 	case IIO_CHAN_INFO_RAW:
- 		mutex_lock(&adc->lock);
- 		*value = ads8344_adc_conversion(adc, channel->scan_index,
--						channel->differential);
-+						channel->differential, 0);
- 		mutex_unlock(&adc->lock);
- 		if (*value < 0)
- 			return *value;
-@@ -155,6 +155,11 @@ static int ads8344_probe(struct spi_device *spi)
+-	adc->tx_buf = ADS8344_START;
++	buf[0] = ADS8344_START;
+ 	if (!differential)
+-		adc->tx_buf |= ADS8344_SINGLE_END;
+-	adc->tx_buf |= ADS8344_CHANNEL(channel);
+-	adc->tx_buf |= ADS8344_CLOCK_INTERNAL;
++		buf[0] |= ADS8344_SINGLE_END;
++	buf[0] |= ADS8344_CHANNEL(channel);
++	buf[0] |= ADS8344_CLOCK_INTERNAL;
+ 
+-	ret = spi_write(spi, &adc->tx_buf, 1);
++	ret = spi_write(spi, buf, 1);
  	if (ret)
  		return ret;
  
-+	/* Do a dummy read and set external clock mode */
-+	ret = ads8344_adc_conversion(adc, 0, 0, ADS8344_CLOCK_INTERNAL);
-+	if (ret < 0)
-+		return ret;
-+
- 	spi_set_drvdata(spi, indio_dev);
- 
- 	ret = iio_device_register(indio_dev);
 -- 
 2.25.2
 
