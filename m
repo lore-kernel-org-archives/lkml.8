@@ -2,195 +2,92 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5460C2BB85
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:33:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80B2BC2BB85
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0DA12074F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:33:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 627DF206F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:34:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="RT3bIBBA"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="JvK+aVzG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895597AbgDOJdz (ORCPT
+        id S2895625AbgDOJeq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 05:33:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49404 "EHLO
+        Wed, 15 Apr 2020 05:34:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2895596AbgDOJdw (ORCPT
+        by vger.kernel.org with ESMTP id S2895596AbgDOJen (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 05:33:52 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D494C061A0C;
-        Wed, 15 Apr 2020 02:33:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=CB95q0U4UuPiM6nQZ5HbjcNj7VGPk6sg9SK/YZr2Y2A=; b=RT3bIBBAPMnHkIktW9eMa8cCC
-        uqGjonEHM4JQhPX8TijjW5fTPAiQE/gKV+86By4YCpaLk4Pn8RlfkMW+TJYSSS0dCh2cQyjp3AVlI
-        j+82uCSHhgMXY9esoIyugbb0rhbz+am8ST9FTMSADQCaYq8v8QrXyRTk78QVaSd8OSz8baHju7z27
-        SQDQzGOhUfWqO9s8mWGnidG/0ltIGk7ZlP2/PmUs3rp3NpWYTz/KOOEgHPIunESnM9olMoPK92TOW
-        VDOEYWKU53tLn7YkQg11KOZ1LnHU5EmvOHlnC+JHUh/VPtW12LUhnqdyQoXMESG87YF8WlHXh1iIn
-        hWWAbwcCg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:50358)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jOeQP-0005Sy-Kx; Wed, 15 Apr 2020 10:33:41 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jOeQI-0000nm-SM; Wed, 15 Apr 2020 10:33:34 +0100
-Date:   Wed, 15 Apr 2020 10:33:34 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Robert Marko <robert.marko@sartura.hr>
-Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Christian Lamparter <chunkeey@gmail.com>,
-        Luka Perkov <luka.perkov@sartura.hr>
-Subject: Re: [PATCH v2 1/3] net: phy: mdio: add IPQ40xx MDIO driver
-Message-ID: <20200415093334.GC25745@shell.armlinux.org.uk>
-References: <20200414181012.114905-1-robert.marko@sartura.hr>
+        Wed, 15 Apr 2020 05:34:43 -0400
+X-Greylist: delayed 74824 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 15 Apr 2020 02:34:43 PDT
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A3D7C061A0C;
+        Wed, 15 Apr 2020 02:34:43 -0700 (PDT)
+Received: from zn.tnic (p200300EC2F095B00CCE44E2D0BBEAA22.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:5b00:cce4:4e2d:bbe:aa22])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 688AF1EC023E;
+        Wed, 15 Apr 2020 11:34:40 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1586943280;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=nK8dvKIqVYUhAJd6oqKW6VjurEo84N9556yRIds465Q=;
+        b=JvK+aVzGoildkCKgeNpB3lnEIbz1LdtyX6ndyihNEipz6zFuNvzEo2bBYx2GJRt6usUCik
+        9Onmjyjy2H0ucWMKvhLGq8odEtnQO+vzkjf5PPlr2xNQgChydpTZOXK4qu/WjiJJTP1agP
+        iUepE5JMT9QxaETXcNEK7LAoCwzt5lw=
+Date:   Wed, 15 Apr 2020 11:34:35 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Christoph Hellwig <hch@lst.de>, Borislav Petkov <bp@suse.de>,
+        Yash Shah <yash.shah@sifive.com>, linux-edac@vger.kernel.org,
+        Sebastian Duda <sebastian.duda@fau.de>,
+        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] MAINTAINERS: place sifive_l2_cache.c only in SIFIVE
+ DRIVERS
+Message-ID: <20200415093435.GC31016@zn.tnic>
+References: <20200413115255.7100-1-lukas.bulwahn@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200414181012.114905-1-robert.marko@sartura.hr>
+In-Reply-To: <20200413115255.7100-1-lukas.bulwahn@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 08:10:11PM +0200, Robert Marko wrote:
-> diff --git a/drivers/net/phy/mdio-ipq40xx.c b/drivers/net/phy/mdio-ipq40xx.c
-> new file mode 100644
-> index 000000000000..d8c11c621f20
-> --- /dev/null
-> +++ b/drivers/net/phy/mdio-ipq40xx.c
-> @@ -0,0 +1,176 @@
-> +// SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
-> +/* Copyright (c) 2015, The Linux Foundation. All rights reserved. */
-> +/* Copyright (c) 2020 Sartura Ltd. */
-> +
-> +#include <linux/delay.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/io.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_mdio.h>
-> +#include <linux/phy.h>
-> +#include <linux/platform_device.h>
-> +
+On Mon, Apr 13, 2020 at 01:52:55PM +0200, Lukas Bulwahn wrote:
+> Commit 9209fb51896f ("riscv: move sifive_l2_cache.c to drivers/soc") moved
+> arch/riscv/mm/sifive_l2_cache.c to drivers/soc/sifive/sifive_l2_cache.c
+> and adjusted the MAINTAINERS EDAC-SIFIVE entry but slipped in a mistake.
+> 
+> Since then, ./scripts/get_maintainer.pl --self-test complains:
+> 
+>   warning: no file matches F: drivers/soc/sifive_l2_cache.c
+> 
+> Boris suggested that sifive_l2_cache.c is considered part of the SIFIVE
+> DRIVERS, not part of EDAC-SIFIVE. So, we can simply drop this entry, and
+> by the sifive keyword pattern in SIFIVE PATTERNS, it is automatically part
+> of the SIFIVE DRIVERS.
+> 
+> Suggested-by: Borislav Petkov <bp@alien8.de>
+> Co-developed-by: Sebastian Duda <sebastian.duda@fau.de>
+> Signed-off-by: Sebastian Duda <sebastian.duda@fau.de>
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+> ---
 
-Looking at how these registers are used, they could be renamed:
-
-> +#define MDIO_CTRL_0_REG		0x40
-
-This seems to be unused.
-
-> +#define MDIO_CTRL_1_REG		0x44
-
-MDIO_ADDR_REG
-
-> +#define MDIO_CTRL_2_REG		0x48
-
-MDIO_DATA_WRITE_REG
-
-> +#define MDIO_CTRL_3_REG		0x4c
-
-MDIO_DATA_READ_REG
-
-> +#define MDIO_CTRL_4_REG		0x50
-> +#define MDIO_CTRL_4_ACCESS_BUSY		BIT(16)
-> +#define MDIO_CTRL_4_ACCESS_START		BIT(8)
-> +#define MDIO_CTRL_4_ACCESS_CODE_READ		0
-> +#define MDIO_CTRL_4_ACCESS_CODE_WRITE	1
-
-MDIO_CMD_* ?
-
-> +
-> +#define IPQ40XX_MDIO_RETRY	1000
-> +#define IPQ40XX_MDIO_DELAY	10
-> +
-> +struct ipq40xx_mdio_data {
-> +	void __iomem	*membase;
-> +};
-> +
-> +static int ipq40xx_mdio_wait_busy(struct mii_bus *bus)
-> +{
-> +	struct ipq40xx_mdio_data *priv = bus->priv;
-> +	int i;
-> +
-> +	for (i = 0; i < IPQ40XX_MDIO_RETRY; i++) {
-> +		unsigned int busy;
-> +
-> +		busy = readl(priv->membase + MDIO_CTRL_4_REG) &
-> +			MDIO_CTRL_4_ACCESS_BUSY;
-> +		if (!busy)
-> +			return 0;
-> +
-> +		/* BUSY might take to be cleard by 15~20 times of loop */
-> +		udelay(IPQ40XX_MDIO_DELAY);
-> +	}
-> +
-> +	dev_err(bus->parent, "MDIO operation timed out\n");
-> +
-> +	return -ETIMEDOUT;
-> +}
-> +
-> +static int ipq40xx_mdio_read(struct mii_bus *bus, int mii_id, int regnum)
-> +{
-> +	struct ipq40xx_mdio_data *priv = bus->priv;
-> +	int value = 0;
-> +	unsigned int cmd = 0;
-
-No need to initialise either of these, and you can eliminate "value"
-which will then satisfy davem's requirement for reverse-christmas-tree
-ordering of variable declarations.
-
-> +
-> +	/* Reject clause 45 */
-> +	if (regnum & MII_ADDR_C45)
-> +		return -EOPNOTSUPP;
-> +
-> +	if (ipq40xx_mdio_wait_busy(bus))
-> +		return -ETIMEDOUT;
-> +
-> +	/* issue the phy address and reg */
-> +	writel((mii_id << 8) | regnum, priv->membase + MDIO_CTRL_1_REG);
-> +
-> +	cmd = MDIO_CTRL_4_ACCESS_START | MDIO_CTRL_4_ACCESS_CODE_READ;
-> +
-> +	/* issue read command */
-> +	writel(cmd, priv->membase + MDIO_CTRL_4_REG);
-> +
-> +	/* Wait read complete */
-> +	if (ipq40xx_mdio_wait_busy(bus))
-> +		return -ETIMEDOUT;
-> +
-> +	/* Read data */
-> +	value = readl(priv->membase + MDIO_CTRL_3_REG);
-> +
-> +	return value;
-> +}
-> +
-> +static int ipq40xx_mdio_write(struct mii_bus *bus, int mii_id, int regnum,
-> +							 u16 value)
-> +{
-> +	struct ipq40xx_mdio_data *priv = bus->priv;
-> +	unsigned int cmd = 0;
-
-No need to initialise cmd.
+Applied, thanks.
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
