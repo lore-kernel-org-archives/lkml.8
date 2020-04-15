@@ -2,125 +2,95 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC9BC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:06:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B4FEC38A29
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:13:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C75212072D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:06:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0853B20732
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:13:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="tr5GK7dA"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="tudRCOWc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388393AbgDOBG5 (ORCPT
+        id S2388574AbgDOBNf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 21:06:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55578 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1733242AbgDOBGy (ORCPT
+        Tue, 14 Apr 2020 21:13:35 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:8627 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2388395AbgDOBNc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 21:06:54 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD7D7C061A0C;
-        Tue, 14 Apr 2020 18:06:53 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4924240ZcPz9sSm;
-        Wed, 15 Apr 2020 11:06:52 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1586912812;
-        bh=N93VbRgWkP+7p9le9DrxWLyxRR0fhGdzDtwKbqMiNXY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=tr5GK7dA3Qd+dTHalq3ZKHlsSI0/jteCi1bIsq87S5PF8Dm0QoVPe9CUDu7XlTbj7
-         C0XR8lMeE/3+WIKJSs2gDtKpJal4iYRX3YWLkrotbT6lLMMrXMLBRgsEynmIFkXhFQ
-         tV/qKdRNwktH3Z6uAIgIDLgiAkcx7fK12o1Hd9NHfuMUIOu/o82El+Ob8aZSiQ4h6R
-         ylbxNErCgRQWYOkGhQfZzdUFgrSCXZ9l3Khuz+i+A+lGrU4IJ5YgMSgw+aC/jIKRoN
-         vUVxm40nfhO9Iwpkxw80q6QQxPKolZvZiCTN3izuS+C7taekh6M5DUP43JzbYhaQjl
-         O7JOH+t2H+CZg==
-Date:   Wed, 15 Apr 2020 11:06:49 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Larry Finger <Larry.Finger@lwfinger.net>
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        Wireless <linux-wireless@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: Fixes tag needs some work in the
- wireless-drivers-next tree
-Message-ID: <20200415110649.39e26be3@canb.auug.org.au>
-In-Reply-To: <5b17fefe-f99d-2e4c-ded2-93fd3554687c@lwfinger.net>
-References: <20200415080827.30c2c9c1@canb.auug.org.au>
-        <5b17fefe-f99d-2e4c-ded2-93fd3554687c@lwfinger.net>
+        Tue, 14 Apr 2020 21:13:32 -0400
+X-UUID: 70736340d81e496583dd8dbb1851b30c-20200415
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=nO2lhFsFTjN3a8s+w5ZBw2IIxzBf8mtfZDk0MhET6LE=;
+        b=tudRCOWc91CaWwBzUKK/c0qOSUjruaP2pvC+O8N8SGZ4BKdT7CnbeN8d9zVIG1eJsB+IHIze101XYvwtZxpCU7sDwdLumsZ74MQnJnCjQWEQfbgeqPj9No4u+rZGyU4hRbFJZf3WWxDYXW40MrDB81mDgklafPidJJj1xWCIQxk=;
+X-UUID: 70736340d81e496583dd8dbb1851b30c-20200415
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <jitao.shi@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 642352115; Wed, 15 Apr 2020 09:13:24 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33N1.mediatek.inc
+ (172.27.4.75) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 15 Apr
+ 2020 09:13:22 +0800
+Received: from mszsdaap41.gcn.mediatek.inc (10.16.6.141) by
+ MTKCAS36.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
+ 15.0.1497.2 via Frontend Transport; Wed, 15 Apr 2020 09:13:21 +0800
+From:   Jitao Shi <jitao.shi@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+CC:     <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>, <yingjoe.chen@mediatek.com>,
+        <eddie.huang@mediatek.com>, <cawa.cheng@mediatek.com>,
+        <bibby.hsieh@mediatek.com>, <ck.hu@mediatek.com>,
+        <stonea168@163.com>, <huijuan.xie@mediatek.com>,
+        Jitao Shi <jitao.shi@mediatek.com>
+Subject: [PATCH v15 1/3] dt-bindings: display: mediatek: control dpi pins mode to avoid leakage
+Date:   Wed, 15 Apr 2020 09:13:17 +0800
+Message-ID: <20200415011319.25559-2-jitao.shi@mediatek.com>
+X-Mailer: git-send-email 2.12.5
+In-Reply-To: <20200415011319.25559-1-jitao.shi@mediatek.com>
+References: <20200415011319.25559-1-jitao.shi@mediatek.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/EtE4TBJ0sj/5b6yW=ZpHMT3";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 9899C9B523F3F3B15CB65ED031246E6D74C76EFC8F4B91273DA2E99FED1ABD0D2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/EtE4TBJ0sj/5b6yW=ZpHMT3
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+QWRkIHByb3BlcnR5ICJwaW5jdHJsLW5hbWVzIiB0byBzd2FwIHBpbiBtb2RlIGJldHdlZW4gZ3Bp
+byBhbmQgZHBpIG1vZGUuIFNldA0KdGhlIGRwaSBwaW5zIHRvIGdwaW8gbW9kZSBhbmQgb3V0cHV0
+LWxvdyB0byBhdm9pZCBsZWFrYWdlIGN1cnJlbnQgd2hlbiBkcGkNCmRpc2FibGVkLg0KDQpBY2tl
+ZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4NClJldmlld2VkLWJ5OiBDaHVuLUt1
+YW5nIEh1IDxjaHVua3VhbmcuaHVAa2VybmVsLm9yZz4NClNpZ25lZC1vZmYtYnk6IEppdGFvIFNo
+aSA8aml0YW8uc2hpQG1lZGlhdGVrLmNvbT4NCi0tLQ0KIERvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kaXNwbGF5L21lZGlhdGVrL21lZGlhdGVrLGRwaS50eHQgfCA2ICsrKysrKw0K
+IDEgZmlsZSBjaGFuZ2VkLCA2IGluc2VydGlvbnMoKykNCg0KZGlmZiAtLWdpdCBhL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21lZGlhdGVrL21lZGlhdGVrLGRwaS50
+eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tZWRpYXRlay9t
+ZWRpYXRlayxkcGkudHh0DQppbmRleCA1ODkxNGNmNjgxYjguLjc3ZGVmNDQ1NjcwNiAxMDA2NDQN
+Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21lZGlhdGVr
+L21lZGlhdGVrLGRwaS50eHQNCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kaXNwbGF5L21lZGlhdGVrL21lZGlhdGVrLGRwaS50eHQNCkBAIC0xNyw2ICsxNyw5IEBAIFJl
+cXVpcmVkIHByb3BlcnRpZXM6DQogICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+Z3JhcGgudHh0LiBUaGlzIHBvcnQgc2hvdWxkIGJlIGNvbm5lY3RlZA0KICAgdG8gdGhlIGlucHV0
+IHBvcnQgb2YgYW4gYXR0YWNoZWQgSERNSSBvciBMVkRTIGVuY29kZXIgY2hpcC4NCiANCitPcHRp
+b25hbCBwcm9wZXJ0aWVzOg0KKy0gcGluY3RybC1uYW1lczogQ29udGFpbiAiZGVmYXVsdCIgYW5k
+ICJzbGVlcCIuDQorDQogRXhhbXBsZToNCiANCiBkcGkwOiBkcGlAMTQwMWQwMDAgew0KQEAgLTI3
+LDYgKzMwLDkgQEAgZHBpMDogZHBpQDE0MDFkMDAwIHsNCiAJCSA8Jm1tc3lzIENMS19NTV9EUElf
+RU5HSU5FPiwNCiAJCSA8JmFwbWl4ZWRzeXMgQ0xLX0FQTUlYRURfVFZEUExMPjsNCiAJY2xvY2st
+bmFtZXMgPSAicGl4ZWwiLCAiZW5naW5lIiwgInBsbCI7DQorCXBpbmN0cmwtbmFtZXMgPSAiZGVm
+YXVsdCIsICJzbGVlcCI7DQorCXBpbmN0cmwtMCA9IDwmZHBpX3Bpbl9mdW5jPjsNCisJcGluY3Ry
+bC0xID0gPCZkcGlfcGluX2lkbGU+Ow0KIA0KIAlwb3J0IHsNCiAJCWRwaTBfb3V0OiBlbmRwb2lu
+dCB7DQotLSANCjIuMTIuNQ0K
 
-Hi Larry,
-
-On Tue, 14 Apr 2020 19:36:28 -0500 Larry Finger <Larry.Finger@lwfinger.net>=
- wrote:
->
-> On 4/14/20 5:08 PM, Stephen Rothwell wrote:
-> >=20
-> > In commit
-> >=20
-> >    ec4d3e3a0545 ("b43legacy: Fix case where channel status is corrupted=
-")
-> >=20
-> > Fixes tag
-> >=20
-> >    Fixes: 75388acd0cd8 ("add mac80211-based driver for legacy BCM43xx d=
-evices")
-> >=20
-> > has these problem(s):
-> >=20
-> >    - Subject does not match target commit subject
-> >      Just use
-> > 	git log -1 --format=3D'Fixes: %h ("%s")'
->=20
-> I do not understand what you want here. The subject describes what was fi=
-xed.=20
-> The error has been in the driver since it was merged. The Fixes: line is =
-a=20
-> description of the commit that introduced the driver file with the error.
-
-The subject I was referring to is the subject quoted in the Fixes tag,
-not the subject of the fixing commit.  So:
-
-Fixes: 75388acd0cd8 ("[B43LEGACY]: add mac80211-based driver for legacy BCM=
-43xx devices")
-
-Its not very important, just a consistency thing - I wouldn't bother
-rebasing just to fix this, just for the future ...
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/EtE4TBJ0sj/5b6yW=ZpHMT3
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6WXikACgkQAVBC80lX
-0Gyk3wf9FQAMSjeEO5pTA/utCKN7T+qLef2SQ1Z9wmAh+MfY93X1DdOOwTYe+ekp
-HWr+mpM6g2W6nPnyJ/rVyg2FPldXwQ/KWQ5Nk28K9ic9E2i7fLKX9lP9Hg9gs7uf
-cPlfulp5/M5YCQ8MChuEnf1zPOJl2mmq4JP7BCzNi9eTKhY3L9mt0R22/kVWkYVx
-v+9MID8ZD1vrYmz9pzQTufWxyKLpRJZGlIdjZvfEnWsM1FTWUX9fdmfo1vzrdMRJ
-cTh6WwCQDa5GSYxHhcFfUEqK22NrWa9gG2ZRre2LIObdodrBaZ+GgtgvRdc5x8yV
-5RhCDelxcFPT99iUbfJvbdIzUbLu2Q==
-=ospa
------END PGP SIGNATURE-----
-
---Sig_/EtE4TBJ0sj/5b6yW=ZpHMT3--
