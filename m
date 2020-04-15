@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E62FC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:41:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 722D2C2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BA6A206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:41:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C00E206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:41:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586950873;
-	bh=AGjX8jH2jQ+NeiGiHoUkxLgcU6FjIhrUWfrpcpKJaY8=;
+	s=default; t=1586950906;
+	bh=QItUvrmXwIFKGdPCDEj7r8GOfAZVsrSX1tBNdR0g2UM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wmC0FqXJS9bvei0VMYrtzsCjSUj3epokPXHaMVVnDF8XM1h49pXnJbr3Bqf0bbO2j
-	 gPak8hQ/r6V9b3KAdPTYH5pG9ldp04hb10FJV/A8zREwL6YcNVXSlB0riDTAnqYlg8
-	 SjgZWjh8ZKtCf73jrLkfoR+eG1P+zu43i9mP61LI=
+	b=y45DajztvJCwNyhK6ld48YlaNJR50Is4rG8UzZT1qvfyyXMPKx6AhwLGbVC/avN6l
+	 sXGnatkNU6lNXTVrH5wKA8zxhdjKrBIMmvSXpV+1NFCFR5ybJKnqetNtSlNk5aaHVT
+	 dBApU7wi/fJRJoBLEX3Xyle4smX5E38uxvY5SrZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2897387AbgDOLlG (ORCPT
+        id S2897406AbgDOLln (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:41:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54800 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 07:41:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897105AbgDOLgC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:36:02 -0400
+        id S2897107AbgDOLgF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:36:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FFA620737;
-        Wed, 15 Apr 2020 11:36:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A429820768;
+        Wed, 15 Apr 2020 11:36:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950562;
-        bh=AGjX8jH2jQ+NeiGiHoUkxLgcU6FjIhrUWfrpcpKJaY8=;
+        s=default; t=1586950564;
+        bh=QItUvrmXwIFKGdPCDEj7r8GOfAZVsrSX1tBNdR0g2UM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PY1VjGmN83HD+9DTnXzmndCj10DRNaeIMAe51k4tlNio6ySbkZCUJyIgbKKDF5ezO
-         7K/OKqXtxNpnR82v2gCjd4jrJUdGoabK5De8LDHKdlxrSGcbhYynrnr8ky8UgBUTk4
-         MEJbwLiP7QrxLXQJSawVmS7RHEBgSHeOf5FthIds=
+        b=eP14yyjbNg71sh1iph3pITO3WXHN7hEcc++sK4Ov86VDMTngHS7gDFT1B2s8pa8M7
+         CniFHlH1Ow3II0UeBvPZKumLcXvnSYk+kCgNmRzVFOYHdwgbFgkCRHHLD0pJ0LxLwx
+         pIwRyFo6dSlK/CFYtt4y6aM6ih73dzIUl8oUwqKA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 066/129] net: phy: at803x: fix clock sink configuration on ATH8030 and ATH8035
-Date:   Wed, 15 Apr 2020 07:33:41 -0400
-Message-Id: <20200415113445.11881-66-sashal@kernel.org>
+Cc:     Richard Palethorpe <rpalethorpe@suse.com>,
+        Kees Cook <keescook@chromium.org>, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org, security@kernel.org, wg@grandegger.com,
+        mkl@pengutronix.de, davem@davemloft.net,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 068/129] slcan: Don't transmit uninitialized stack data in padding
+Date:   Wed, 15 Apr 2020 07:33:43 -0400
+Message-Id: <20200415113445.11881-68-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
 References: <20200415113445.11881-1-sashal@kernel.org>
@@ -60,45 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleksij Rempel <o.rempel@pengutronix.de>
+From: Richard Palethorpe <rpalethorpe@suse.com>
 
-[ Upstream commit b1f4c209d84057b6d40b939b6e4404854271d797 ]
+[ Upstream commit b9258a2cece4ec1f020715fe3554bc2e360f6264 ]
 
-The masks in priv->clk_25m_reg and priv->clk_25m_mask are one-bits-set
-for the values that comprise the fields, not zero-bits-set.
+struct can_frame contains some padding which is not explicitly zeroed in
+slc_bump. This uninitialized data will then be transmitted if the stack
+initialization hardening feature is not enabled (CONFIG_INIT_STACK_ALL).
 
-This patch fixes the clock frequency configuration for ATH8030 and
-ATH8035 Atheros PHYs by removing the erroneous "~".
+This commit just zeroes the whole struct including the padding.
 
-To reproduce this bug, configure the PHY  with the device tree binding
-"qca,clk-out-frequency" and remove the machine specific PHY fixups.
-
-Fixes: 2f664823a47021 ("net: phy: at803x: add device tree binding")
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-Reported-by: Russell King <rmk+kernel@armlinux.org.uk>
-Reviewed-by: Russell King <rmk+kernel@armlinux.org.uk>
-Tested-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Richard Palethorpe <rpalethorpe@suse.com>
+Fixes: a1044e36e457 ("can: add slcan driver for serial/USB-serial CAN adapters")
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Cc: linux-can@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Cc: security@kernel.org
+Cc: wg@grandegger.com
+Cc: mkl@pengutronix.de
+Cc: davem@davemloft.net
+Acked-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/at803x.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/can/slcan.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/net/phy/at803x.c b/drivers/net/phy/at803x.c
-index 481cf48c9b9e4..31f731e6df720 100644
---- a/drivers/net/phy/at803x.c
-+++ b/drivers/net/phy/at803x.c
-@@ -425,8 +425,8 @@ static int at803x_parse_dt(struct phy_device *phydev)
- 		 */
- 		if (at803x_match_phy_id(phydev, ATH8030_PHY_ID) ||
- 		    at803x_match_phy_id(phydev, ATH8035_PHY_ID)) {
--			priv->clk_25m_reg &= ~AT8035_CLK_OUT_MASK;
--			priv->clk_25m_mask &= ~AT8035_CLK_OUT_MASK;
-+			priv->clk_25m_reg &= AT8035_CLK_OUT_MASK;
-+			priv->clk_25m_mask &= AT8035_CLK_OUT_MASK;
- 		}
- 	}
+diff --git a/drivers/net/can/slcan.c b/drivers/net/can/slcan.c
+index a3664281a33fc..4dfa459ef5c73 100644
+--- a/drivers/net/can/slcan.c
++++ b/drivers/net/can/slcan.c
+@@ -148,7 +148,7 @@ static void slc_bump(struct slcan *sl)
+ 	u32 tmpid;
+ 	char *cmd = sl->rbuff;
  
+-	cf.can_id = 0;
++	memset(&cf, 0, sizeof(cf));
+ 
+ 	switch (*cmd) {
+ 	case 'r':
+@@ -187,8 +187,6 @@ static void slc_bump(struct slcan *sl)
+ 	else
+ 		return;
+ 
+-	*(u64 *) (&cf.data) = 0; /* clear payload */
+-
+ 	/* RTR frames may have a dlc > 0 but they never have any data bytes */
+ 	if (!(cf.can_id & CAN_RTR_FLAG)) {
+ 		for (i = 0; i < cf.can_dlc; i++) {
 -- 
 2.20.1
 
