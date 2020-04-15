@@ -2,94 +2,97 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E62C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:14:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA4EC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:14:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 213ED206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:14:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ED9D20771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:14:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437852AbgDOTOb (ORCPT
+        id S2441722AbgDOTOh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 15:14:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46638 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1416884AbgDOSzy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 14:55:54 -0400
-Received: from home.goodmis.org (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0196020732;
-        Wed, 15 Apr 2020 18:55:52 +0000 (UTC)
-Date:   Wed, 15 Apr 2020 14:55:45 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: linux-next: Tree for Apr 10 (lib/test_printf.ko)
-Message-ID: <20200415185545.GA1632@home.goodmis.org>
-References: <20200410132706.170811b7@canb.auug.org.au>
- <27c212c4-b522-561d-411c-e74dc0ff0b74@infradead.org>
- <CAHk-=wjhsM-n_NzSh=cSdpThX+62-x3EmyKjhMqGHFYEyG0nPg@mail.gmail.com>
- <2b0f5d2e-3fe5-10c9-2a9a-9a0b341a52d5@infradead.org>
- <CAHk-=wjXZSPPWzPs=KBDsLZWuq8qO=9qWfiKHw=yV10fFrDv9Q@mail.gmail.com>
- <bfbcaa67-9656-3a80-fc66-c937297c8be0@infradead.org>
- <CAHk-=whpvCqcCYvy=_v_F6NTtBSeQbXZ0iLr_smV2NJLT+XACw@mail.gmail.com>
- <CA+G9fYu47hpXjYtAr32p9yJ97KZqTry+ioAY1S2TqtiKztCYRg@mail.gmail.com>
- <f90fc906-395b-79be-8f44-3807586766f7@infradead.org>
- <CAFd5g46ZaEVoMb2hO94A41Z=YH6ntTdXstZUhHu67mwOKY+QsA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFd5g46ZaEVoMb2hO94A41Z=YH6ntTdXstZUhHu67mwOKY+QsA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 15 Apr 2020 15:14:37 -0400
+Received: from baldur.buserror.net ([165.227.176.147]:35596 "EHLO
+        baldur.buserror.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1416885AbgDOS4E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 14:56:04 -0400
+Received: from [2601:449:8480:af0:12bf:48ff:fe84:c9a0]
+        by baldur.buserror.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <oss@buserror.net>)
+        id 1jOnAT-0006xw-Sc; Wed, 15 Apr 2020 13:53:50 -0500
+Message-ID: <36961f9d8c533d8b576043a2c6fc4859accfd9f1.camel@buserror.net>
+From:   Scott Wood <oss@buserror.net>
+To:     Wang Wenhu <wenhu.wang@vivo.com>, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, christophe.leroy@c-s.fr,
+        linuxppc-dev@lists.ozlabs.org
+Cc:     kernel@vivo.com, Michael Ellerman <mpe@ellerman.id.au>
+Date:   Wed, 15 Apr 2020 13:53:48 -0500
+In-Reply-To: <20200415152442.122873-2-wenhu.wang@vivo.com>
+References: <20200415124929.GA3265842@kroah.com>
+         <20200415152442.122873-1-wenhu.wang@vivo.com>
+         <20200415152442.122873-2-wenhu.wang@vivo.com>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2601:449:8480:af0:12bf:48ff:fe84:c9a0
+X-SA-Exim-Rcpt-To: wenhu.wang@vivo.com, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, christophe.leroy@c-s.fr, linuxppc-dev@lists.ozlabs.org, kernel@vivo.com, mpe@ellerman.id.au
+X-SA-Exim-Mail-From: oss@buserror.net
+Subject: Re: [PATCH v2,1/5] powerpc: 85xx: make FSL_85XX_CACHE_SRAM
+ configurable
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on baldur.buserror.net)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 12:26:29PM -0700, Brendan Higgins wrote:
-> On Sat, Apr 11, 2020 at 11:22 PM Randy Dunlap <rdunlap@infradead.org> wrote:
-> >
-> > On 4/11/20 10:36 PM, Naresh Kamboju wrote:
-> > > FYI,
-> > >
-> > > Is this problem related to,
-> > >
-> > > Regression reported on Linux next 5.6.0-rc4-next-20200305 on x86_64,
-> > > i386, arm and arm64. The steps to reproduce is running kselftests lib
-> > > printf.sh test case.
-> > > Which is doing modprobe operations.
-> > >
-> > > BUG: kernel NULL pointer dereference, address: 00 - ida_free+0x76/0x140
-> > >
-> > > https://lore.kernel.org/linux-kselftest/CAFd5g46Bwd8HS9-xjHLh_rB59Nfw8iAnM6aFe0QPcveewDUT6g@mail.gmail.com/T/
-> > >
-> >
-> > Looks similar. Lots of fwnode, software_node, ida stuff there.
+On Wed, 2020-04-15 at 08:24 -0700, Wang Wenhu wrote:
+> Enable FSL_85XX_CACHE_SRAM selection. On e500 platforms, the cache
+> could be configured and used as a piece of SRAM which is hignly
+> friendly for some user level application performances.
 > 
-> Sorry for the late reply, I was out.
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+> Cc: Scott Wood <oss@buserror.net>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
+> ---
+> Changes since v1:
+>  * None
+> ---
+>  arch/powerpc/platforms/85xx/Kconfig    | 2 +-
+>  arch/powerpc/platforms/Kconfig.cputype | 5 +++--
+>  2 files changed, 4 insertions(+), 3 deletions(-)
 > 
-> Yeah, I am pretty sure it is the same. Heikki proposed a fix that I am
-> going to try.
+> diff --git a/arch/powerpc/platforms/85xx/Kconfig
+> b/arch/powerpc/platforms/85xx/Kconfig
+> index fa3d29dcb57e..6debb4f1b9cc 100644
+> --- a/arch/powerpc/platforms/85xx/Kconfig
+> +++ b/arch/powerpc/platforms/85xx/Kconfig
+> @@ -17,7 +17,7 @@ if FSL_SOC_BOOKE
+>  if PPC32
+>  
+>  config FSL_85XX_CACHE_SRAM
+> -	bool
+> +	bool "Freescale 85xx Cache-Sram"
+>  	select PPC_LIB_RHEAP
+>  	help
+>  	  When selected, this option enables cache-sram support
 
-My test suite just tripped over this bug. Is this the patch that you think
-fixes it?
+NACK
 
-https://lore.kernel.org/linux-kselftest/20200414081513.GD2828150@kuha.fi.intel.com
+As discussed before, the driver that uses this API should "select" this
+symbol.
 
-I'll add it to see if I can continue my testing.
+-Scott
 
--- Steve
 
