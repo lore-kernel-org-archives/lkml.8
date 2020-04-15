@@ -2,270 +2,129 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D885C38A2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 180CBC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:22:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CE54208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:22:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="MTTjB7zb";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VW+8LawD"
+	by mail.kernel.org (Postfix) with ESMTP id E24E5206F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:22:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586967759;
+	bh=5W2f+v9XZr0qP/kIWQkjbbEgQ09ZuCIq5zRy2H1Fv6w=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=u9SPo3To8EpdrYD2uqI+FcxJ+Y6cSMIimlz5PZSEzwit8dkQGR5BoRuUEGSw7V1wL
+	 Msw4iu1QPrbIAGPsfLBuvlqovIbHe9W5rymEbACOmtqGq7GydbFFIWFbxMO5d1JgU/
+	 pWaa0K8BF6kLWinDNqIDLFsaZr04gJSE1vCiMbYM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1415687AbgDOQWF (ORCPT
+        id S1415700AbgDOQWh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 12:22:05 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:53755 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1415627AbgDOQV5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 12:21:57 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 3E027580133;
-        Wed, 15 Apr 2020 12:21:55 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 15 Apr 2020 12:21:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=u9scvMZX0d04Kn3R0y+CYoy7IVW
-        oF9BUIBhBMZ7xTQ4=; b=MTTjB7zbrBmqyMSWXv7QRhsmX2Q1vGgqO+YM7nHlyCz
-        C1LNlyMorpxShEuJf2md4RxGK5nIGMKIcj6UroWHCoPMTZu2UZ1ZyWBcak71X57N
-        bkCkS/SzxYxu3YP7dvK+R7C4J5j9sDlloifFD2Uny8p2t05p2OeyYQuMmppF80qv
-        8UFAjNPuLiqCbBTrsY9wM/Oftztaw+6yI00noEzhHgbKDGIfLJI/fTLSQCkOLg0N
-        Po90TKLlEJpDqyWTPaq+V3LPX1g3IGW0DSwranqmS4w0rr2q1hm3UUsTUIFYTmj1
-        MPFdzeC65CKFW7CG3Z4SZ2PxMA3aOgLiGdShESqWBhA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=u9scvM
-        ZX0d04Kn3R0y+CYoy7IVWoF9BUIBhBMZ7xTQ4=; b=VW+8LawDZdtk7jKnlusa8f
-        0j0jUmRLsYCwbK6kqpfjHSPVbujw7FvpOjCiVzfg8PRdVY2igHyC0ffQ8Qs9CXI1
-        6MaPtRW2y/VN1k1eKp7tX/503/m4whChKErTvNnwmlCB0qxBCt28TKnKE8Q5LBCD
-        AJo4Zkfww+08FJ1kXQ6Tr1CdcxiWGRqCHfaLGfPy4HtRjpsW4a8y5cvzgZuNHYUM
-        ufmUGKTz/SbpHvcomPx07lVUa06GkJnL73PjwH5CbRzCgZQwpkucTecpCPop1SEz
-        X5ooxv+wfX+XCW7vHwMyz4i8+sgtAwql3AW++j2ZS1UpvvGggsD/54zLlNumMO/g
-        ==
-X-ME-Sender: <xms:oTSXXoIWnMvlqGVy8AaStKXEUhQPrkvTcQ86pmg8HWSqUs3uANtqTg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrfeefgdeltdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:oTSXXsZWqwp5ohe7OpVmOzP-_EQI_bDpXSWr2pKmZzhJrg7nq6Qo7Q>
-    <xmx:oTSXXjvDHO9_QmqdCkTjvg2-Zj78oQPE0lPP4iy7yWuuzc3-0kQdkw>
-    <xmx:oTSXXpsrCdreATG0MCLBoDdeITl5U9d7Josa7Th3OY0r4Lnm0pgXKw>
-    <xmx:ozSXXtSsjCJYztWsp3i-3gOwsHTwJ-4VBerx14NJRu-GtrkbjDF6bw>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id D563D3280066;
-        Wed, 15 Apr 2020 12:21:52 -0400 (EDT)
-Date:   Wed, 15 Apr 2020 18:21:51 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        David Airlie <airlied@linux.ie>,
-        James Hogan <jhogan@kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-mips@vger.kernel.org,
-        Paul Cercueil <paul@crapouillou.net>,
-        linux-samsung-soc@vger.kernel.org, letux-kernel@openphoenux.org,
-        Paul Burton <paulburton@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Tony Lindgren <tony@atomide.com>, Chen-Yu Tsai <wens@csie.org>,
-        Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Philipp Rossak <embed3d@gmail.com>,
-        openpvrsgx-devgroup@letux.org, linux-kernel@vger.kernel.org,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Daniel Vetter <daniel@ffwll.ch>, kernel@pyra-handheld.com
-Subject: Re: [PATCH v6 01/12] dt-bindings: add img, pvrsgx.yaml for
- Imagination GPUs
-Message-ID: <20200415162151.rwym4ioqz27migfn@gilmour.lan>
-References: <cover.1586939718.git.hns@goldelico.com>
- <06fb6569259bb9183d0a0d0fe70ec4f3033b8aab.1586939718.git.hns@goldelico.com>
- <20200415101251.o3wi5t6xvf56xmhq@gilmour.lan>
- <72919514-0657-4B71-902F-3E775E528F64@goldelico.com>
- <f4fdca8a-d18c-a8d2-7f51-d1ebbbab3647@baylibre.com>
- <535CAEBE-F43E-4BFC-B989-612C81F0D7EF@goldelico.com>
- <20200415142124.yzfh6mtqq7cdq22e@gilmour.lan>
- <DC0A2DE2-3D77-46F8-8DE1-55050FDACC9B@goldelico.com>
+        Wed, 15 Apr 2020 12:22:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37062 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1415627AbgDOQWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 12:22:30 -0400
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15BB720737;
+        Wed, 15 Apr 2020 16:22:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586967750;
+        bh=5W2f+v9XZr0qP/kIWQkjbbEgQ09ZuCIq5zRy2H1Fv6w=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=WJUQ8ieGLmlGLrey/1gl+9cKf1orwABumVzG+ZVsi5cy7RnBGl0XQ4psiRRGb2GBh
+         FrKZQAHQzUvHQrGQxI8A08EPAumadauxzV9Tc48BExxmXmHc4a62vfKO2Xlzj4G4Y4
+         vKUO6nz0Pz3hnSTT7GPVVr3J2qfGi+gPg7ZgKP2A=
+Message-ID: <b4161f1df3436d7371ab7e88709169e9a391f15d.camel@kernel.org>
+Subject: Re: [PATCH v5 2/2] buffer: record blockdev write errors in
+ super_block that it backs
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Jan Kara <jack@suse.cz>
+Cc:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        andres@anarazel.de, willy@infradead.org, dhowells@redhat.com,
+        hch@infradead.org, akpm@linux-foundation.org, david@fromorbit.com
+Date:   Wed, 15 Apr 2020 12:22:27 -0400
+In-Reply-To: <20200415140642.GK6126@quack2.suse.cz>
+References: <20200415121300.228017-1-jlayton@kernel.org>
+         <20200415121300.228017-3-jlayton@kernel.org>
+         <20200415140642.GK6126@quack2.suse.cz>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="tfobgrwcfdirkzal"
-Content-Disposition: inline
-In-Reply-To: <DC0A2DE2-3D77-46F8-8DE1-55050FDACC9B@goldelico.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 2020-04-15 at 16:06 +0200, Jan Kara wrote:
+> On Wed 15-04-20 08:13:00, Jeff Layton wrote:
+> > From: Jeff Layton <jlayton@redhat.com>
+> > 
+> > When syncing out a block device (a'la __sync_blockdev), any error
+> > encountered will only be recorded in the bd_inode's mapping. When the
+> > blockdev contains a filesystem however, we'd like to also record the
+> > error in the super_block that's stored there.
+> > 
+> > Make mark_buffer_write_io_error also record the error in the
+> > corresponding super_block when a writeback error occurs and the block
+> > device contains a mounted superblock.
+> > 
+> > Since superblocks are RCU freed, hold the rcu_read_lock to ensure
+> > that the superblock doesn't go away while we're marking it.
+> > 
+> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > ---
+> >  fs/buffer.c | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> > 
+> > diff --git a/fs/buffer.c b/fs/buffer.c
+> > index f73276d746bb..2a4a5cc20418 100644
+> > --- a/fs/buffer.c
+> > +++ b/fs/buffer.c
+> > @@ -1154,12 +1154,19 @@ EXPORT_SYMBOL(mark_buffer_dirty);
+> >  
+> >  void mark_buffer_write_io_error(struct buffer_head *bh)
+> >  {
+> > +	struct super_block *sb;
+> > +
+> >  	set_buffer_write_io_error(bh);
+> >  	/* FIXME: do we need to set this in both places? */
+> >  	if (bh->b_page && bh->b_page->mapping)
+> >  		mapping_set_error(bh->b_page->mapping, -EIO);
+> >  	if (bh->b_assoc_map)
+> >  		mapping_set_error(bh->b_assoc_map, -EIO);
+> > +	rcu_read_lock();
+> > +	sb = bh->b_bdev->bd_super;
+> 
+> You still need READ_ONCE() here. Otherwise the dereference below can still
+> result in refetch and NULL ptr deref.
+> 
+> 								Honza
+> 
 
---tfobgrwcfdirkzal
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Huh? That seems like a really suspicious thing for the compiler/arch to
+do. We are checking that sb isn't NULL before we dereference it. Doesn't
+that imply a data dependency? How could the value of "sb" change after
+that?
 
-On Wed, Apr 15, 2020 at 05:09:45PM +0200, H. Nikolaus Schaller wrote:
-> Hi Maxime,
->
-> > Am 15.04.2020 um 16:21 schrieb Maxime Ripard <maxime@cerno.tech>:
-> >
-> >>
-> >> Well we could add clocks and resets as optional but that would
-> >> allow to wrongly define omap.
-> >>
-> >> Or delegate them to a parent "simple-pm-bus" node.
-> >>
-> >> I have to study that material more to understand what you seem
-> >> to expect.
-> >
-> > The thing is, once that binding is in, it has to be backward
-> > compatible. So every thing that you leave out is something that you'll
-> > need to support in the driver eventually.
->
-> >
-> > If you don't want it to be a complete nightmare, you'll want to figure
-> > out as much as possible on how the GPU is integrated and make a
-> > binding out of that.
->
-> Hm. Yes. We know that there likely are clocks and maybe reset
-> but for some SoC this seems to be undocumented and the reset
-> line the VHDL of the sgx gpu provides may be permanently tied
-> to "inactive".
->
-> So if clocks are optional and not provided, a driver simply can assume
-> they are enabled somewhere else and does not have to care about. If
-> they are specified, the driver can enable/disable them.
+I'm also not sure I understand how using READ_ONCE really helps there if
+we can't count on the value of a local variable not changing.
 
-Except that at the hardware level, the clock is always going to be
-there. You can't control it, but it's there.
+> > +	if (sb)
+> > +		errseq_set(&sb->s_wb_err, -EIO);
+> > +	rcu_read_unlock();
+> >  }
+> >  EXPORT_SYMBOL(mark_buffer_write_io_error);
+> >  
+> > -- 
+> > 2.25.2
+> > 
 
-> > If OMAP is too much of a pain, you can also make
-> > a separate binding for it, and a generic one for the rest of us.
->
-> No, omap isn't any pain at all.
->
-> The pain is that some other SoC are most easily defined by clocks in
-> the gpu node which the omap doesn't need to explicitly specify.
->
-> I would expect a much bigger nightmare if we split this into two
-> bindings variants.
->
-> > I'd say that it's pretty unlikely that the clocks, interrupts (and
-> > even regulators) are optional. It might be fixed on some SoCs, but
-> > that's up to the DT to express that using fixed clocks / regulators,
-> > not the GPU binding itself.
->
-> omap already has these defined them not to be part of the GPU binding.
-> The reason seems to be that this needs special clock gating control
-> especially for idle states which is beyond simple clock-enable.
->
-> This sysc target-module@56000000 node is already merged and therefore
-> we are only adding the gpu child node. Without defining clocks.
->
-> For example:
->
-> 		sgx_module: target-module@56000000 {
-> 			compatible = "ti,sysc-omap4", "ti,sysc";
-> 			reg = <0x5600fe00 0x4>,
-> 			      <0x5600fe10 0x4>;
-> 			reg-names = "rev", "sysc";
-> 			ti,sysc-midle = <SYSC_IDLE_FORCE>,
-> 					<SYSC_IDLE_NO>,
-> 					<SYSC_IDLE_SMART>;
-> 			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-> 					<SYSC_IDLE_NO>,
-> 					<SYSC_IDLE_SMART>;
-> 			clocks = <&gpu_clkctrl OMAP5_GPU_CLKCTRL 0>;
-> 			clock-names = "fck";
-> 			#address-cells = <1>;
-> 			#size-cells = <1>;
-> 			ranges = <0 0x56000000 0x2000000>;
->
-> 			gpu: gpu@0 {
-> 				compatible = "ti,omap5-sgx544-116", "img,sgx544-116", "img,sgx544";
-> 				reg = <0x0 0x10000>;
-> 				interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
-> 			};
-> 		};
->
-> The jz4780 example will like this:
->
-> 	gpu: gpu@13040000 {
-> 		compatible = "ingenic,jz4780-sgx540-130", "img,sgx540-130", "img,sgx540";
-> 		reg = <0x13040000 0x4000>;
->
-> 		clocks = <&cgu JZ4780_CLK_GPU>;
-> 		clock-names = "gpu";
->
-> 		interrupt-parent = <&intc>;
-> 		interrupts = <63>;
-> 	};
->
-> So the question is which one is "generic for the rest of us"?
+-- 
+Jeff Layton <jlayton@kernel.org>
 
-I'd say the latter.
-
-> And how can we make a single binding for the sgx. Not one for each
-> special SoC variant that may exist.
->
-> IMHO the best answer is to make clocks an optional property.
-> Or if we do not want to define them explicitly, we use
-> additionalProperties: true.
-
-If your clock is optional, then you define it but don't mandate
-it. Not documenting it will only result in a mess where everyone will
-put some clock into it, possibly with different semantics each and
-every time.
-
-> An alternative could be to use a simple-pm-bus like:
->
-> 	sgx_module: sgx_module@13040000 {
-> 		compatible = "simple-pm-bus";
->
-> 		clocks = <&cgu JZ4780_CLK_GPU>;
-> 		clock-names = "gpu";
->
-> 		#address-cells = <1>;
-> 		#size-cells = <1>;
-> 		ranges = <0 0x13040000 0x10000>;
->
-> 		gpu: gpu@0 {
-> 			compatible = "ingenic,jz4780-sgx540-130", "img,sgx540-130", "img,sgx540";
-> 			reg = <0x0 0x4000>;
->
-> 			interrupt-parent = <&intc>;
-> 			interrupts = <63>;
-> 		};
-> 	};
->
-> This gets rid of any clock, reset and pm definitions for the sgx bindings.
-> But how this is done is outside this sgx bindings.
->
-> With such a scheme, the binding I propose here would be complete and fully
-> generic. We can even add additionalProperties: false.
-
-This has nothing to do with the binding being complete. And if you use
-a binding like this one, you'll be severely limited when you'll want
-to implement things like DVFS.
-
-Maxime
-
---tfobgrwcfdirkzal
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXpc0nwAKCRDj7w1vZxhR
-xUDXAQCc7y/+vAoavZRmglq4lR2jquJFLRkH7PYZvWPuzBNdAAD/cb0ol1cdNUpA
-oCJwB2WILZ+2E78cCeIXmjyL7nqW6AA=
-=GQ1H
------END PGP SIGNATURE-----
-
---tfobgrwcfdirkzal--
