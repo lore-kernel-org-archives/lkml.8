@@ -2,104 +2,115 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB8F4C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:59:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B6BC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:02:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9717D20775
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:59:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O+a6HRSY"
+	by mail.kernel.org (Postfix) with ESMTP id 840D720775
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:02:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586944921;
+	bh=DVGdggIgrHK2evBhp/QfmN+Z347bupNDRDqFz3LeO5M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=S9XGEDCIxiqLbCc110pYBIFJ5Ib3cjrKuARkO0QMK2z0S6OqMi1Y90mXeQp6Elngw
+	 9zg8w1Lr8LC12obSYfk7VOYpkE6lcdxB79FHQ8ZphV9aCtCqFLhxPCTo4rocvtlCVi
+	 NvkLgyoSc4K+khbfQvYWuMyXT1llF25H98oUDBgM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895885AbgDOJ7m (ORCPT
+        id S2896102AbgDOKB7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 05:59:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53378 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2408508AbgDOJ7f (ORCPT
+        Wed, 15 Apr 2020 06:01:59 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55613 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2895955AbgDOKBu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 05:59:35 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B638DC061A0C;
-        Wed, 15 Apr 2020 02:59:34 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id l11so2156283lfc.5;
-        Wed, 15 Apr 2020 02:59:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=63vRFQmPky+5Sun2Opkz9FUwUHHMbnn+8rcnJyfbXrg=;
-        b=O+a6HRSYtexYUcRf2vogJPvF/gD1KELnuZj6kV7IzsLHhvD1ryxo8ZXyhMxj9oja2I
-         T3mKdn9yFI5+RKfmhbvG/nbjMxrVSpPhpXgZJAboj11pvYuLsGQSReYdnaLgOCHE6G70
-         bM789lHrYlz91lpKf5MMGdPttYhx6aCoBWj482d6qI2D++FdHz0GPAOhRJOhGqw84OjZ
-         GL+AOHaLE9BipLjl54B36Jn9AdGtgJE0TeS6xZnq3WKfUPqz+/Me09yAa5zw2gjZIE5s
-         2Dw/JWCO54aVJPPX7f6DTt9e3njJ9IJIkxbexcOSKvXRgIdiO6mFVGSiO6BvJNNAfsKe
-         1IXw==
+        Wed, 15 Apr 2020 06:01:50 -0400
+Received: by mail-wm1-f66.google.com with SMTP id e26so16700737wmk.5;
+        Wed, 15 Apr 2020 03:01:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=63vRFQmPky+5Sun2Opkz9FUwUHHMbnn+8rcnJyfbXrg=;
-        b=TAghxwsHOqiKeKKSd8AT+pNpqZJRCMRaX4m9DQfsjuFRAUxi5lE5Q+cOGaD9GIOz7B
-         jWSNwLq1d1S0tV6INvlP2SMPemdC84fxKRgkxtZ9cExPLGEP3XN/+a0Xs0+mUzBpMs6I
-         FP3DgK5dC4ESxZ3oUt3Uxz9+XYu/itUCIAnELag/MI9J5yeWpoyH4A4ey8aRMd6Avvd1
-         +PcdyLf9eOcr0qp9xYfAQihCIIvNbMoSm/3SON6H3eObLRt5IumdjdKSIDfiEySgkUKQ
-         kvG1SCi9DebQ41cyTZNokScN2Eshkgxlcfei/lD0v38esWhM+Sh6Q+n3ULBHB/xuIE4g
-         ZKnA==
-X-Gm-Message-State: AGi0Puai0MLHseKk7BcaCrpT3wJST2RSbi8+kwAHAnUfs26mFK46NNXn
-        Rx/AHBolCloCYhF2P2R+cVU=
-X-Google-Smtp-Source: APiQypKvCI1atszqVmdui44gkRzNjRuvl0XeDay9w1RcX0HQfX4ZxaC9Ip6qE2cjuqz9J8NIMZa19g==
-X-Received: by 2002:a05:6512:304e:: with SMTP id b14mr2479583lfb.119.1586944773169;
-        Wed, 15 Apr 2020 02:59:33 -0700 (PDT)
-Received: from localhost.localdomain ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id m13sm12290424lfk.12.2020.04.15.02.59.30
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Ik9SzoJG23HyWV3EJZBDw9KnoLZv3eWb0eYaCp2cs4I=;
+        b=YGaPNOVt6IA3KnoXCM3zXS55D4HzzWJBbGHn9eorupAT6wY0Z0lpwUNM/e2N1lGGrm
+         D1nwmd2a2tMgDrHQg9QFdJy3KZ4HoABciG3wtw16qnLBHKuW4VoRUMZJ/ok9+BFd6LFY
+         QTtHs76ObpZxxSMcHu8CMbOtAPngw8DUsj1gCM+Nya2uGQWUNmb3HcZ4UepBnsVJIh41
+         ov2AYhOK2jVQQAF8PuoW4aXnUhi6Akqbyuc2nkDCAZ4P8vxZ+0DfrFwpQDIk4vyyxGV1
+         XoUfyc4XJ3PcjesRpLi3NZBWmOT0S9nAE/8Mk6a8tJD7Zn/hcNLp9SH7hcN4i0oTHOAM
+         gQ7A==
+X-Gm-Message-State: AGi0PuaWciEnYj21oRvokxyY43G66LLAn5bOIWuKdxjY8k2B88iBNO1Y
+        iyeIJw/Vq+7w7yLD9yv6nKI=
+X-Google-Smtp-Source: APiQypKJVaGGm0WlX/P9D+5uZGAAwOwvoL0TgNtVED/ZyGRV1UePRP4N+INs4Ka7TCh9PUHB/SON9w==
+X-Received: by 2002:a1c:3d83:: with SMTP id k125mr4767806wma.177.1586944909281;
+        Wed, 15 Apr 2020 03:01:49 -0700 (PDT)
+Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
+        by smtp.gmail.com with ESMTPSA id 1sm21770489wmi.0.2020.04.15.03.01.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2020 02:59:32 -0700 (PDT)
-From:   chewitt <christianshewitt@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH] arm64: dts: meson-g12b-khadas-vim3: fix missing frddr_a node
-Date:   Wed, 15 Apr 2020 09:59:27 +0000
-Message-Id: <20200415095927.3780-1-christianshewitt@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 15 Apr 2020 03:01:48 -0700 (PDT)
+Date:   Wed, 15 Apr 2020 12:01:46 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
+        David Rientjes <rientjes@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: Re: [PATCH v2 0/3] support setting sysctl parameters from kernel
+ command line
+Message-ID: <20200415100146.GC4629@dhcp22.suse.cz>
+References: <20200414113222.16959-1-vbabka@suse.cz>
+ <20200415122359.939364e2c54c389c6b3f6457@kernel.org>
+ <3fc1303a-cb57-b96e-ce77-7ff6407ab538@suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3fc1303a-cb57-b96e-ce77-7ff6407ab538@suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Hewitt <christianshewitt@gmail.com>
+On Wed 15-04-20 10:56:35, Vlastimil Babka wrote:
+> On 4/15/20 5:23 AM, Masami Hiramatsu wrote:
+> > Hi Vlastimil,
+> > 
+> > On Tue, 14 Apr 2020 13:32:19 +0200
+> > Vlastimil Babka <vbabka@suse.cz> wrote:
+> > 
+> >> This series adds support for something that seems like many people always
+> >> wanted but nobody added it yet, so here's the ability to set sysctl parameters
+> >> via kernel command line options in the form of sysctl.vm.something=1
+> > 
+> > Sounds good. And would you consider to use the bootconfig instead of (or
+> > in addition to) the kernel command line, because it is too short to describe
+> > the sysctl options?
+> 
+> "Instead of" - no, as that would defeat the scenario of "I just want to set this
+> one sysctl in grub  (possibly interactively) and not update initrd for that". If
+> constructing bootconfig is of similar effort of loading sysctl.conf from initrd,
+> then I see little benefit?
+> 
+> "in addition to" - sure! but I hoped that's what already happens as it seemed to
+> me that options from bootconfig are appended to the command line that's then
+> parsed by everyone else, no? But I'll try it to be sure.
 
-The frddr_a node was accidently deleted when creating a common dtsi for the
-Khadas VIM3/VIM3L boards, preventing audio from working on the VIM3.
+Completely agreed!
 
-Fixes: 4f26cc1c96c9 ("arm64: dts: khadas-vim3: move common nodes into meson-khadas-vim3.dtsi")
-Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
----
- arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+Btw. patches look sensible to me so feel free to add
+Acked-by: Michal Hocko <mhocko@suse.com>
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
-index c33e85fbdaba..c6c8caed8327 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
-@@ -154,6 +154,10 @@
- 	clock-latency = <50000>;
- };
- 
-+&frddr_a {
-+	status = "okay";
-+};
-+
- &frddr_b {
- 	status = "okay";
- };
 -- 
-2.17.1
-
+Michal Hocko
+SUSE Labs
