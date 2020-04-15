@@ -2,140 +2,283 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BFF1C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:22:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92BE2C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:22:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B4ED20732
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:22:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72A4520732
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:22:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442376AbgDOVWk (ORCPT
+        id S2438959AbgDOVWd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 17:22:40 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:36329 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438888AbgDOVWa (ORCPT
+        Wed, 15 Apr 2020 17:22:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46650 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2438867AbgDOVW0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 17:22:30 -0400
-Received: from mail-qt1-f177.google.com ([209.85.160.177]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1N1Oft-1jHQcr3hHv-012qsn; Wed, 15 Apr 2020 23:22:27 +0200
-Received: by mail-qt1-f177.google.com with SMTP id f13so14596167qti.5;
+        Wed, 15 Apr 2020 17:22:26 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C87AC061A0C;
         Wed, 15 Apr 2020 14:22:26 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZ/kP3WUi2Zz6ULx+o2pAu96VKtRUBR8fUCGcJY7ystCJZsMkRw
-        zrxJ/j/RyhHK86Nl0vfliQkJrBXBrW0FVZE0QIg=
-X-Google-Smtp-Source: APiQypINvvbbsDvc+K5sPwo+K7MzKlFLIqVVyQJIWMYe8UMUC3pk7MCSaMVSsYr2RgizX7z/824mZq3G5jLNLnmv4G8=
-X-Received: by 2002:ac8:6757:: with SMTP id n23mr10344447qtp.304.1586985745338;
- Wed, 15 Apr 2020 14:22:25 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jOpU4-0002H8-2s; Wed, 15 Apr 2020 23:22:12 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 7123B100C47; Wed, 15 Apr 2020 23:22:11 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Xiaoyao Li <xiaoyao.li@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>
+Subject: Re: [PATCH v8 4/4] kvm: vmx: virtualize split lock detection
+In-Reply-To: <20200415191802.GE30627@linux.intel.com>
+References: <20200414063129.133630-5-xiaoyao.li@intel.com> <871rooodad.fsf@nanos.tec.linutronix.de> <20200415191802.GE30627@linux.intel.com>
+Date:   Wed, 15 Apr 2020 23:22:11 +0200
+Message-ID: <87tv1kmol8.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <20200408202711.1198966-1-arnd@arndb.de> <20200408202711.1198966-6-arnd@arndb.de>
- <20200414201739.GJ19819@pendragon.ideasonboard.com> <CAK8P3a0hd5bsezrJS3+GV2nRMui4P5yeD2Rk7wQpJsAZeOCOUg@mail.gmail.com>
- <20200414205158.GM19819@pendragon.ideasonboard.com> <CAK8P3a1PZbwdvdH_Gi9UQVUz2+_a8QDxKuWLqPtjhK1stxzMBQ@mail.gmail.com>
- <CAMuHMdUb=XXucGUbxt26tZ1xu9pdyVUB8RVsfB2SffURVVXwSg@mail.gmail.com>
- <CAK8P3a1uasBFg9dwvPEcokrRhYE2qh6iwOMW1fDTY+LBZMrTjg@mail.gmail.com>
- <CAK8P3a0CoPUTSJp6ddDnmabo59iE73pugGSYayoeB5N57az9_w@mail.gmail.com> <20200415211220.GQ4758@pendragon.ideasonboard.com>
-In-Reply-To: <20200415211220.GQ4758@pendragon.ideasonboard.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 15 Apr 2020 23:22:08 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1rDZO4cuL6VAXgu9sOiedcHqOSL7ELhpvULz+YYRaGbA@mail.gmail.com>
-Message-ID: <CAK8P3a1rDZO4cuL6VAXgu9sOiedcHqOSL7ELhpvULz+YYRaGbA@mail.gmail.com>
-Subject: Re: [RFC 5/6] drm/rcar-du: fix selection of CMM driver
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:Hl+rud1vypg7WIK8rDk9bs6uEnKqs/OlTWu3wzR5saWRjBD2o1i
- sL9990cHNVajheAgk5GS3bAYMQUtGpvsvpjtOzaElo36GexxoCKsxoZeKWIVzFmAhQUCtWH
- lUMDSZh8/C5w7dTadNUhv4YFRrIsngQEXk4iG6am1FbeMtT7/JNWXNTCzMQRJ69ZkORLyh9
- ntoyAIuVbcm+InOBYwqFQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:qOHnPyy+am0=:uITFvpA/Fajo3jltuWYdlR
- GaZr+ZFb1wAIjLmDNChn3eRBDUUyw3bYQjjMM0a+H6bWI6gobydrADxfR1wMfEZsx56vkqcV9
- v6VqiF/LJdqtVfxs4dullK+MquZ9JjSGa7HNzpoGZ2Ls1VwPZdvTOThRpuJcX2EI4c02LFRTJ
- +T906lbY7T151zn3rUEwnkMZpFpc5HcE3DuClNb82b3yY3bSuaEYoAODAsyuGDiZh6aRxPwwI
- RXeuoSqQITjA/YEthYZVnfc6wOKPOY/tAoUsjNuxjte6QqTJF7UoPtTKnHK/f37T9FPqa+owN
- Xh5u/6sn6A4EN4ZGQ7ODxa+WRaDbqnVjtRiX8vlqtDqIPs7bCYltuFtOB+oAvwMyYGAENMwem
- C//9cwWQvOSuUJEjt7o6noKtcn0fBQsHZ8W7vaqPgS2pToyFSUoC4V9A1cIieKxb6ZOIcP97i
- PxR1Ock7v6EEetygPWimJAPhEUI7qGcpDb9FW9LVpFIE6WcBG8EH89mUJwwUhf7hNA9PVjSWo
- NpU02HU0u+yHyHIRFfgijTEvi1FNZgk1BcHE/vA0ZgNnuvRvWHeMXcBYK1iGEfbYvs322+ApI
- /CqNjVekqJuozSqmFlETgm7YeWa4mMIa4RLVNoDmG0MX0BGVyqZdh5u5X9pT4bqiONlPT4opr
- rjJdgb7QDas1d1Srz9yW49g9w+IlTqwj0MnR2kQgItr740zsUoHvj7g4JII+3cn/Fq0Xb3NT7
- suepIOWTjOcWbOTpnUN6hEhI6COhr8TXYhYKlY34hqdH7ocHCRHCBskSA0yOleXmlEPsEpZ6m
- 3j4Iyc/qhvz9nt9djkgQqgZYWejrCE2nvcUix0tZcSnWfFGVwE=
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 11:12 PM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
-> On Wed, Apr 15, 2020 at 09:07:14PM +0200, Arnd Bergmann wrote:
-> > On Wed, Apr 15, 2020 at 5:18 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > > On Wed, Apr 15, 2020 at 4:13 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > > On Wed, Apr 15, 2020 at 3:47 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > > > > On Tue, Apr 14, 2020 at 10:52 PM Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
-> > > > > > Doesn't "imply" mean it gets selected by default but can be manually
-> > > > > > disabled ?
-> > > > >
-> > > > > That may be what it means now (I still don't understand how it's defined
-> > > > > as of v5.7-rc1), but traditionally it was more like a 'select if all
-> > > > > dependencies are met'.
-> > > >
-> > > > That's still what it is supposed to mean right now ;-)
-> > > > Except that now it should correctly handle the modular case, too.
-> > >
-> > > Then there is a bug. If I run 'make menuconfig' now on a mainline kernel
-> > > and enable CONFIG_DRM_RCAR_DU, I can set
-> > > DRM_RCAR_CMM and DRM_RCAR_LVDS to 'y', 'n' or 'm' regardless
-> > > of whether CONFIG_DRM_RCAR_DU is 'm' or 'y'. The 'implies'
-> > > statement seems to be ignored entirely, except as reverse 'default'
-> > > setting.
-> >
-> > Here is another version that should do what we want and is only
-> > half-ugly. I can send that as a proper patch if it passes my testing
-> > and nobody hates it too much.
+Sean,
+
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
+> On Wed, Apr 15, 2020 at 07:43:22PM +0200, Thomas Gleixner wrote:
+>> Xiaoyao Li <xiaoyao.li@intel.com> writes:
+>> > +static inline void vmx_update_sld(struct kvm_vcpu *vcpu, bool on)
+>> > +{
+>> > +	/*
+>> > +	 * Toggle SLD if the guest wants it enabled but its been disabled for
+>> > +	 * the userspace VMM, and vice versa.  Note, TIF_SLD is true if SLD has
+>> > +	 * been turned off.  Yes, it's a terrible name.
+>> 
+>> Instead of writing that useless blurb you could have written a patch
+>> which changes TIF_SLD to TIF_SLD_OFF to make it clear.
 >
-> This may be a stupid question, but doesn't this really call for fixing
-> Kconfig ? This seems to be such a common pattern that requiring
-> constructs similar to the ones below will be a never-ending chase of
-> offenders.
+> Hah, that's my comment, though I must admit I didn't fully intend for the
+> editorial at the end to get submitted upstream.
+>
+> Anyways, I _did_ point out that TIF_SLD is a terrible name[1][2], and my
+> feedback got ignored/overlooked.  I'd be more than happy to write a
+> patch, I didn't do so because I assumed that people wanted TIF_SLD as the name for
+> whatever reason.
 
-Maybe, I suppose the hardest part here would be to come up with
-an appropriate name for the keyword ;-)
+I somehow missed that in the maze of mails regarding this stuff. I've
+already written a patch to rename it to TIF_SLD_DISABLED which is pretty
+self explaining. But see below.
 
-Any suggestions?
+>> > +	 */
+>> > +	if (sld_state == sld_warn && guest_cpu_has_feature_sld(vcpu) &&
+>> > +	    on == test_thread_flag(TIF_SLD)) {
+>> > +		    sld_update_msr(on);
+>> > +		    update_thread_flag(TIF_SLD, !on);
+>> 
+>> Of course you completely fail to explain why TIF_SLD needs to be fiddled
+>> with.
+>
+> Ya, that comment should be something like:
+>
+> 	* Toggle SLD if the guest wants it enabled but its been disabled for
+> 	* the userspace VMM, and vice versa, so that the flag and MSR state
+> 	* are consistent, i.e. its handling during task switches naturally does
+> 	* the right thing if KVM is preempted with guest state loaded.
 
-This specific issue is fairly rare though, in most cases the dependencies
-are in the right order so a Kconfig symbol 'depends on' a second one
-when the corresponding loadable module uses symbols from that second
-module. The problem here is that the two are mixed up.
+Something to that effect.
 
-The much more common problem is the one where one needs to
-wrong
+>> > @@ -1188,6 +1217,10 @@ void vmx_prepare_switch_to_guest(struct kvm_vcpu *vcpu)
+>> >  #endif
+>> >
+>> > 	vmx_set_host_fs_gs(host_state, fs_sel, gs_sel, fs_base, gs_base);
+>> > +
+>> > +	vmx->host_sld_on = !test_thread_flag(TIF_SLD);
+>> 
+>> This inverted storage is non-intuitive. What's wrong with simply
+>> reflecting the TIF_SLD state?
+>
+> So that the guest/host tracking use the same polairy, and IMO it makes
+> the restoration code more intuitive, e.g.:
+>
+> 	vmx_update_sld(&vmx->vcpu, vmx->host_sld_on);
+> vs
+> 	vmx_update_sld(&vmx->vcpu, !vmx->host_tif_sld);
+>
+> I.e. the inversion needs to happen somewhere.
 
-config FOO
-       depends on BAR || !BAR
+Correct, but we can make it consistently use the 'disabled' convention.
 
-To ensure the dependency is either met or BAR is disabled, but
-not FOO=y with BAR=m. If you have any suggestions for a keyword
-for that thing, we can clean up hundreds of such instances.
+I briefly thought about renaming the flag to TIF_SLD_ENABLED, set it by
+default and update the 5 places where it is used. But that's
+inconsistent as well simply because it does not make any sense to set
+that flag when detection is not available or disabled on the command
+line.
 
-        Arnd
+>> > @@ -1226,6 +1259,9 @@ static void vmx_prepare_switch_to_host(struct vcpu_vmx *vmx)
+>> > 	wrmsrl(MSR_KERNEL_GS_BASE, vmx->msr_host_kernel_gs_base);
+>> >  #endif
+>> > 	load_fixmap_gdt(raw_smp_processor_id());
+>> > +
+>> > +	vmx_update_sld(&vmx->vcpu, vmx->host_sld_on);
+>> > +
+>> 
+>> vmx_prepare_switch_to_guest() is called via:
+>> 
+>> kvm_arch_vcpu_ioctl_run()
+>>   vcpu_run()
+>>     vcpu_enter_guest()
+>>       preempt_disable();
+>>       kvm_x86_ops.prepare_guest_switch(vcpu);
+>> 
+>> but vmx_prepare_switch_to_host() is invoked at the very end of:
+>> 
+>> kvm_arch_vcpu_ioctl_run()
+>>   .....
+>>   vcpu_run()
+>>   .....
+>>   vcpu_put()
+>>     vmx_vcpu_put()
+>>       vmx_prepare_switch_to_host();
+>> 
+>> That asymmetry does not make any sense without an explanation.
+>
+> Deferring the "switch to host" until the vCPU is put allows KVM to keep
+> certain guest state loaded when staying in the vCPU run loop, e.g.
+> MSR_KERNEL_GS_BASE can be exposed to the guest without having to save and
+> restore it on every VM-Enter/VM-Exit.
+
+I know why this is done (after staring at the callchains for a while),
+but 5 lines of explanation at least in the changelog would have saved my
+time.
+
+>> What's even worse is that vmx_prepare_switch_to_host() is invoked with
+>> preemption enabled, so MSR state and TIF_SLD state can get out of sync
+>> on preemption/migration.
+>
+> It shouldn't be (called with preempation enabled):
+>
+> void vcpu_put(struct kvm_vcpu *vcpu)
+> {
+> 	preempt_disable();
+> 	kvm_arch_vcpu_put(vcpu); <-- leads to vmx_prepare_switch_to_host()
+> 	preempt_notifier_unregister(&vcpu->preempt_notifier);
+> 	__this_cpu_write(kvm_running_vcpu, NULL);
+> 	preempt_enable();
+> }
+
+Ooops. How did I miss that?
+
+>> > @@ -1946,9 +1992,15 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>> > 
+>> > 	switch (msr_index) {
+>> > 	case MSR_TEST_CTRL:
+>> > -		if (data)
+>> > +		if (data & ~vmx_msr_test_ctrl_valid_bits(vcpu))
+>> > 			return 1;
+>> > 
+>> > +		vmx->msr_test_ctrl = data;
+>> > +
+>> > +		preempt_disable();
+>> 
+>> This preempt_disable/enable() lacks explanation as well.
+>
+> Is an explanation still needed if it's made clear (somewhere) that
+> interacting with guest_state_loaded needs to be done with preemption
+> disabled?
+
+Well, the thing is that finding that explanation somewhere is not always
+trivial. Aside of that this really is the wrong place to do that. That
+wants to be inside a function which is invoked from here and that
+function should have the appropriate commentry
+  
+>> > +		if (vmx->guest_state_loaded)
+>> > +			vmx_update_sld(vcpu, guest_cpu_sld_on(vmx));
+>> > +		preempt_enable();
+>> 
+>> How is updating msr_test_ctrl valid if this is invoked from the IOCTL,
+>> i.e. host_initiated == true?
+>
+> Not sure I understand the underlying question.  The host is always allowed
+> to manipulate guest state, including MSRs.
+
+Fair enough.
+
+> I'm pretty sure guest_state_loaded should always be false if host_initiated
+> is true, e.g. we could technically do a WARN on guest_state_loaded and
+> host_initiated, but the ioctl() is obviously not a hot path and nothing
+> will break if the assumption doesn't hold.
+
+You'd create inconsistent state because the guest internal state cache
+is not updated, but if you can updated it with !loaded then you can do
+that anyway. Shrug.
+
+>> That said, I also hate the fact that you export both the low level MSR
+>> function _and_ the state variable. Having all these details including the
+>> TIF mangling in the VMX code is just wrong.
+>
+> I'm not a fan of exporting the low level state either, but IIRC trying to
+> hide the low level details while achieving the same resulting functionality
+> was even messier.
+>
+> I don't see any way to avoid having KVM differentiate between sld_warn and
+> sld_fatal.  Even if KVM is able to virtualize SLD in sld_fatal mode, e.g.
+> by telling the guest it must not try to disable SLD, KVM would still need
+> to know the kernel is sld_fatal so that it can forward that information to
+> the guest.
+
+Huch? There is absolutely zero code like that. The only place where
+sld_state is used is:
+
++ static inline void vmx_update_sld(struct kvm_vcpu *vcpu, bool on)
++ {
++	if (sld_state == sld_warn && guest_cpu_has_feature_sld(vcpu) &&
++	    on == test_thread_flag(TIF_SLD)) {
++		    sld_update_msr(on);
++		    update_thread_flag(TIF_SLD, !on);
++	}
+
+You might have some faint memories from the previous trainwrecks :)
+
+The fatal mode emulation which is used in this patch set is simply that
+the guest can 'write' to the MSR but it's not propagated to the real
+MSR. It's just stored in the guest state. There is no way that you can
+tell the guest that the MSR is there but fake.
+
+The alternative solution is to prevent the exposure of SLD to the guest
+in fatal mode. But that does not buy anything.
+
+The detection is anyway incomplete. If the SLD #AC is raised in guest's
+user mode and the guest has user #AC enabled then the exception is
+injected into the guest unconditionally and independent of the host's
+and guest's SLD state. That's entirely correct because a SLD #AC in user
+mode is also a user mode alignment violation; it's not distinguishable.
+
+You could of course analyse the offending instruction and check for a
+lock prefix and a cache line overlap, but that still does not prevent
+false positives. When the guest is non-malicious and has proper user #AC
+handling in place then it would be wrong or at least very surprising to
+kill it just because the detection code decided that it is a dangerous
+split lock attempt.
+
+So we can go with the proposed mode of allowing the write but not
+propagating it. If the resulting split lock #AC originates from CPL != 3
+then the guest will be killed with SIGBUS. If it originates from CPL ==
+3 and the guest has user #AC disabled then it will be killed as well.
+
+Thanks,
+
+        tglx
+
+
