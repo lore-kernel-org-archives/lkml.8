@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 632C0C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C7E3C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:45:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32DED20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:44:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32739206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:45:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586954690;
-	bh=ZGYe20mJoQzycxAYk9OTE2qqIIK1qWUHJXIKff/rfkY=;
+	s=default; t=1586954703;
+	bh=/MSJmPAyZnt2p/ksWE5EYT8hkqDPx+HOjkdSGbwIEJI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CeAFzUH4MjGl2+Fj9fgdONE8zr3uS+SnKbs4jj9EPV1IJ1L7K90flG0QqCQNGY9hu
-	 9k4dnG9WR7nh0itF3am2Gr79bzNMYLD/4FOw5qe0O9WVp18r4htDCtFtpGVUy7oz5G
-	 KGY7zLFZDalGSnwnFjNPhAhRsUPT3wI8DO0W6o8w=
+	b=lfaWNrIzJY1QN0nPKf2/jvwc+PSiTZPb9jN1v5k3bguqtIFxxbCl8qF357ZZDivGG
+	 5Qqwn1pfAE5DczsIH1qI5p7ODYMgVdesxItPgOZywRBkmpagtQDEpHfvPOjTASUKSP
+	 hquBFIg3l19B+MeTCMvjeXKNQvee/Kzz0FH1Mb0M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S370173AbgDOMoo (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:44:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35346 "EHLO mail.kernel.org"
+        id S2898205AbgDOMpA (ORCPT
+        <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:45:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897511AbgDOLnY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:43:24 -0400
+        id S2897504AbgDOLnW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:43:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB33E20936;
-        Wed, 15 Apr 2020 11:43:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7740621556;
+        Wed, 15 Apr 2020 11:43:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951004;
-        bh=ZGYe20mJoQzycxAYk9OTE2qqIIK1qWUHJXIKff/rfkY=;
+        s=default; t=1586951002;
+        bh=/MSJmPAyZnt2p/ksWE5EYT8hkqDPx+HOjkdSGbwIEJI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lTH1yyDXbOLMlhW4CPIjezGLoDsUpCBn1NeQhh3lC0PkahN9quQkWOWDlVFMYx1Bm
-         Gy6y6+huA5hNlXbrCQVjFXe1YUgAQ9TAnSTWfWxGd3Brb5Du8C43Ah4UALV9gMAUXl
-         W4Yaj6uUGiE+AKSiWuewtyhAWqeCs8cfTUcth1ZQ=
+        b=VXAdu/SzV8My89ezotGEyMZzT9LYV21C4q1r+v148giQYJHToiHfApHWjfk3Uv6vu
+         vA7sUg2QXaGiKZrSvp3WmUkufxqqXhtktPhIJkFleG8heUMgvXOLnyJao3W8fF0tkM
+         30eqOEd5fOI8NqpHho8yh7+voh+GWZmaD2nPlDFw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Josh Triplett <josh@joshtriplett.org>,
-        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
-        linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 049/106] ext4: fix incorrect group count in ext4_fill_super error message
-Date:   Wed, 15 Apr 2020 07:41:29 -0400
-Message-Id: <20200415114226.13103-49-sashal@kernel.org>
+Cc:     Thomas Richter <tmricht@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 047/106] s390/cpum_sf: Fix wrong page count in error message
+Date:   Wed, 15 Apr 2020 07:41:27 -0400
+Message-Id: <20200415114226.13103-47-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
 References: <20200415114226.13103-1-sashal@kernel.org>
@@ -58,41 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Triplett <josh@joshtriplett.org>
+From: Thomas Richter <tmricht@linux.ibm.com>
 
-[ Upstream commit df41460a21b06a76437af040d90ccee03888e8e5 ]
+[ Upstream commit 4141b6a5e9f171325effc36a22eb92bf961e7a5c ]
 
-ext4_fill_super doublechecks the number of groups before mounting; if
-that check fails, the resulting error message prints the group count
-from the ext4_sb_info sbi, which hasn't been set yet. Print the freshly
-computed group count instead (which at that point has just been computed
-in "blocks_count").
+When perf record -e SF_CYCLES_BASIC_DIAG runs with very high
+frequency, the samples arrive faster than the perf process can
+save them to file. Eventually, for longer running processes, this
+leads to the siutation where the trace buffers allocated by perf
+slowly fills up. At one point the auxiliary trace buffer is full
+and  the CPU Measurement sampling facility is turned off. Furthermore
+a warning is printed to the kernel log buffer:
 
-Signed-off-by: Josh Triplett <josh@joshtriplett.org>
-Fixes: 4ec1102813798 ("ext4: Add sanity checks for the superblock before mounting the filesystem")
-Link: https://lore.kernel.org/r/8b957cd1513fcc4550fe675c10bcce2175c33a49.1585431964.git.josh@joshtriplett.org
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+cpum_sf: The AUX buffer with 0 pages for the diagnostic-sampling
+	mode is full
+
+The number of allocated pages for the auxiliary trace buffer is shown
+as zero pages. That is wrong.
+
+Fix this by saving the number of allocated pages before entering the
+work loop in the interrupt handler. When the interrupt handler processes
+the samples, it may detect the buffer full condition and stop sampling,
+reducing the buffer size to zero.
+Print the correct value in the error message:
+
+cpum_sf: The AUX buffer with 256 pages for the diagnostic-sampling
+	mode is full
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/super.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/s390/kernel/perf_cpum_sf.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index f59c587faccb5..3b4fc5036d91b 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -4242,9 +4242,9 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
- 			EXT4_BLOCKS_PER_GROUP(sb) - 1);
- 	do_div(blocks_count, EXT4_BLOCKS_PER_GROUP(sb));
- 	if (blocks_count > ((uint64_t)1<<32) - EXT4_DESC_PER_BLOCK(sb)) {
--		ext4_msg(sb, KERN_WARNING, "groups count too large: %u "
-+		ext4_msg(sb, KERN_WARNING, "groups count too large: %llu "
- 		       "(block count %llu, first data block %u, "
--		       "blocks per group %lu)", sbi->s_groups_count,
-+		       "blocks per group %lu)", blocks_count,
- 		       ext4_blocks_count(es),
- 		       le32_to_cpu(es->s_first_data_block),
- 		       EXT4_BLOCKS_PER_GROUP(sb));
+diff --git a/arch/s390/kernel/perf_cpum_sf.c b/arch/s390/kernel/perf_cpum_sf.c
+index 77d93c534284d..af11f3e1e8588 100644
+--- a/arch/s390/kernel/perf_cpum_sf.c
++++ b/arch/s390/kernel/perf_cpum_sf.c
+@@ -1581,6 +1581,7 @@ static void hw_collect_aux(struct cpu_hw_sf *cpuhw)
+ 	perf_aux_output_end(handle, size);
+ 	num_sdb = aux->sfb.num_sdb;
+ 
++	num_sdb = aux->sfb.num_sdb;
+ 	while (!done) {
+ 		/* Get an output handle */
+ 		aux = perf_aux_output_begin(handle, cpuhw->event);
 -- 
 2.20.1
 
