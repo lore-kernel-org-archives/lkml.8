@@ -2,289 +2,134 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C42C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:07:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D58C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:08:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B84A9206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:07:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47146206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:08:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="lYFU0C1y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2636421AbgDOOHk (ORCPT
-        <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:07:40 -0400
-Received: from m17618.mail.qiye.163.com ([59.111.176.18]:53877 "EHLO
-        m17618.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2636412AbgDOOHU (ORCPT
+        id S370747AbgDOOIA (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 10:08:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35392 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2636438AbgDOOHY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 10:07:20 -0400
-Received: from ubuntu.localdomain (unknown [58.251.74.226])
-        by m17618.mail.qiye.163.com (Hmail) with ESMTPA id A82594E151F;
-        Wed, 15 Apr 2020 22:07:09 +0800 (CST)
-From:   Wang Wenhu <wenhu.wang@vivo.com>
-To:     gregkh@linuxfoundation.org
-Cc:     christophe.leroy@c-s.fr, kernel@vivo.com,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        mpe@ellerman.id.au, oss@buserror.net, wenhu.wang@vivo.com
-Subject: Re: [PATCH 5/5] drivers: uio: new driver for fsl_85xx_cache_sram>On Wed, Apr 15, 2020 at 05:33:46AM -0700, Wang Wenhu wrote:
-Date:   Wed, 15 Apr 2020 07:07:05 -0700
-Message-Id: <20200415140705.116850-1-wenhu.wang@vivo.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200415124929.GA3265842@kroah.com>
-References: <20200415124929.GA3265842@kroah.com>
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSFVMQk1LS0tLS0hDSk9MWVdZKFlBSE
-        83V1ktWUFJV1kJDhceCFlBWTU0KTY6NyQpLjc#WQY+
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Nhg6Eio6Mzg6NAgqKA4iTC40
-        CxEaCR5VSlVKTkNNQk5CTUhJSkhNVTMWGhIXVQweFRMOVQwaFRw7DRINFFUYFBZFWVdZEgtZQVlO
-        Q1VJTkpVTE9VSUlNWVdZCAFZQUJLQ003Bg++
-X-HM-Tid: 0a717e2a3e919376kuwsa82594e151f
+        Wed, 15 Apr 2020 10:07:24 -0400
+Received: from mo6-p02-ob.smtp.rzone.de (mo6-p02-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5302::8])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 669BAC061A0C;
+        Wed, 15 Apr 2020 07:07:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1586959641;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=3xRYp708JzBcF+nmyzTN9euUKBZizEPeF9myzhSW4qw=;
+        b=lYFU0C1yl7Yg1aftzKRWDtB1X90kbTbFyIZirBTec/OjRV0fPx0/LRX+u6y+2cDqUz
+        XfRnO76kdQLVXdpgmk3jzDSjdxRsSe104r98FglkwJhigx/CbCRyL0fb7MFF/gLRk83V
+        ZDytu5jbBhMNlheSIgAcYUWYfI9XmhhfsdcwkfNOmoiHkIFK1sQPH1OMp86u8hPyAxja
+        hnES5zYTtCdFan+76S3o7dVioek0aQqWYdPkpmZVfXXSKdadveF0q/F9/ob5+y6vdHWC
+        IuX8vKgAlzlJueADQ9479Wb3Bufd8MATUjAqvNJIfG2e4EP7xvgWaBiwwyOokR5b4I0z
+        2EBQ==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBp5hRw/qOxWRk4dCz3b9m9rH79DVQJPCq5egpDhipvc+uRd0DTkACO"
+X-RZG-CLASS-ID: mo00
+Received: from [IPv6:2001:16b8:26b3:fd00:65ed:197b:42b7:ade5]
+        by smtp.strato.de (RZmta 46.4.0 AUTH)
+        with ESMTPSA id 6028a2w3FE7B2MX
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Wed, 15 Apr 2020 16:07:11 +0200 (CEST)
+Subject: Re: [PATCH v6 07/12] ARM: DTS: omap5: add sgx gpu child node
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=us-ascii
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20200415134754.GB21120@kozik-lap>
+Date:   Wed, 15 Apr 2020 16:07:17 +0200
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Philipp Rossak <embed3d@gmail.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-omap@vger.kernel.org, openpvrsgx-devgroup@letux.org,
+        letux-kernel@openphoenux.org, kernel@pyra-handheld.com,
+        linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <8CC38F9F-885E-4EB9-9D36-1FFC6A86A45F@goldelico.com>
+References: <cover.1586939718.git.hns@goldelico.com> <004611c9660943759b635a87484932869927cf74.1586939718.git.hns@goldelico.com> <CAJKOXPdEkWniffmGZmf=S6E5UxWTdVGXnycqTFftXwo_45rz3w@mail.gmail.com> <EFA7F2F0-96EA-45D9-B8C8-00DC8C72344D@goldelico.com> <20200415134754.GB21120@kozik-lap>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Greg k-h!
-Thank you for you fast reply. All the comments will
-be addressed with v2 soon. Detailed explanations are
-just below specific comment.
 
->> A driver for freescale 85xx platforms to access the Cache-Sram form
->> user level. This is extremely helpful for some user-space applications
->> that require high performance memory accesses.
->> 
->> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
->> Cc: Scott Wood <oss@buserror.net>
->> Cc: Michael Ellerman <mpe@ellerman.id.au>
->> Cc: linuxppc-dev@lists.ozlabs.org
->> Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
->> ---
->>  drivers/uio/Kconfig                   |   8 ++
->>  drivers/uio/Makefile                  |   1 +
->>  drivers/uio/uio_fsl_85xx_cache_sram.c | 195 ++++++++++++++++++++++++++
->>  3 files changed, 204 insertions(+)
->>  create mode 100644 drivers/uio/uio_fsl_85xx_cache_sram.c
->> 
->> diff --git a/drivers/uio/Kconfig b/drivers/uio/Kconfig
->> index 202ee81cfc2b..afd38ec13de0 100644
->> --- a/drivers/uio/Kconfig
->> +++ b/drivers/uio/Kconfig
->> @@ -105,6 +105,14 @@ config UIO_NETX
->>  	  To compile this driver as a module, choose M here; the module
->>  	  will be called uio_netx.
->>  
->> +config UIO_FSL_85XX_CACHE_SRAM
->> +	tristate "Freescale 85xx Cache-Sram driver"
->> +	depends on FSL_85XX_CACHE_SRAM
->> +	help
->> +	  Generic driver for accessing the Cache-Sram form user level. This
->> +	  is extremely helpful for some user-space applications that require
->> +	  high performance memory accesses.
->> +
->>  config UIO_FSL_ELBC_GPCM
->>  	tristate "eLBC/GPCM driver"
->>  	depends on FSL_LBC
->> diff --git a/drivers/uio/Makefile b/drivers/uio/Makefile
->> index c285dd2a4539..be2056cffc21 100644
->> --- a/drivers/uio/Makefile
->> +++ b/drivers/uio/Makefile
->> @@ -10,4 +10,5 @@ obj-$(CONFIG_UIO_NETX)	+= uio_netx.o
->>  obj-$(CONFIG_UIO_PRUSS)         += uio_pruss.o
->>  obj-$(CONFIG_UIO_MF624)         += uio_mf624.o
->>  obj-$(CONFIG_UIO_FSL_ELBC_GPCM)	+= uio_fsl_elbc_gpcm.o
->> +obj-$(CONFIG_UIO_FSL_85XX_CACHE_SRAM)	+= uio_fsl_85xx_cache_sram.o
->>  obj-$(CONFIG_UIO_HV_GENERIC)	+= uio_hv_generic.o
->> diff --git a/drivers/uio/uio_fsl_85xx_cache_sram.c b/drivers/uio/uio_fsl_85xx_cache_sram.c
->> new file mode 100644
->> index 000000000000..e11202dd5b93
->> --- /dev/null
->> +++ b/drivers/uio/uio_fsl_85xx_cache_sram.c
->> @@ -0,0 +1,195 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (C) 2020 Vivo Communication Technology Co. Ltd.
->> + * Copyright (C) 2020 Wang Wenhu <wenhu.wang@vivo.com>
->> + * All rights reserved.
->> + *
->> + * This program is free software; you can redistribute it and/or modify it
->> + * under the terms of the GNU General Public License version 2 as published
->> + * by the Free Software Foundation.
->
->Nit, you don't need this sentance anymore now that you have the SPDX
->line above
->
-Got, I will delete it with v2.
->> + */
->> +
->> +#include <linux/platform_device.h>
->> +#include <linux/uio_driver.h>
->> +#include <linux/stringify.h>
->> +#include <linux/module.h>
->> +#include <linux/kernel.h>
->> +#include <asm/fsl_85xx_cache_sram.h>
->> +
->> +#define DRIVER_VERSION	"0.1.0"
->
->Don't do DRIVER_VERSIONs, they never work once the code is in the kernel
->tree.
->
->> +#define DRIVER_NAME	"uio_fsl_85xx_cache_sram"
->
->KBUILD_MODNAME?
+> Am 15.04.2020 um 15:47 schrieb Krzysztof Kozlowski <krzk@kernel.org>:
+>=20
+> On Wed, Apr 15, 2020 at 01:46:06PM +0200, H. Nikolaus Schaller wrote:
+>> Hi Krzysztof,
+>>=20
+>>> Am 15.04.2020 um 13:38 schrieb Krzysztof Kozlowski =
+<krzk@kernel.org>:
+>>>=20
+>>> On Wed, 15 Apr 2020 at 10:36, H. Nikolaus Schaller =
+<hns@goldelico.com> wrote:
+>>>>=20
+>>>> and add interrupt.
+>>>>=20
+>>>> Tested-by: H. Nikolaus Schaller <hns@goldelico.com> # =
+Pyra-Handheld.
+>>>=20
+>>> Don't add your own Tested-by tags. These are implied by authorship,
+>>> otherwise all patches people make should have such tag.
+>>=20
+>> Ok I see. AFAIR it originates in several phases of editing to report =
+on which device it was tested.
+>>=20
+>> Is there a canonical way of writing "tested-on: ${HARDWARE}"?
+>>=20
+>> E.g. would this be ok?
+>>=20
+>> Signed-off: H. Nikolaus Schaller <hns@goldelico.com> # tested on =
+Pyra-Handheld
+>=20
+> If you think tested platform is worth mentioning in the commit msg
+> (it will stay there forever, ever, ever) then just add a line like:
+>=20
+> "Add SGX GPU node. Tested on Pyra-Handheld."
+>=20
+> =46rom time to time we add such information to note that only one =
+platform
+> was actually tested.
 
-Yes, and sorry for that I did not get what should have been done?
+Yes that is what it should express.
 
->
->> +#define UIO_NAME	"uio_cache_sram"
->> +
->> +static const struct of_device_id uio_mpc85xx_l2ctlr_of_match[] = {
->> +	{	.compatible = "uio,fsl,p2020-l2-cache-controller",	},
->> +	{	.compatible = "uio,fsl,p2010-l2-cache-controller",	},
->> +	{	.compatible = "uio,fsl,p1020-l2-cache-controller",	},
->> +	{	.compatible = "uio,fsl,p1011-l2-cache-controller",	},
->> +	{	.compatible = "uio,fsl,p1013-l2-cache-controller",	},
->> +	{	.compatible = "uio,fsl,p1022-l2-cache-controller",	},
->> +	{	.compatible = "uio,fsl,mpc8548-l2-cache-controller",	},
->> +	{	.compatible = "uio,fsl,mpc8544-l2-cache-controller",	},
->> +	{	.compatible = "uio,fsl,mpc8572-l2-cache-controller",	},
->> +	{	.compatible = "uio,fsl,mpc8536-l2-cache-controller",	},
->> +	{	.compatible = "uio,fsl,p1021-l2-cache-controller",	},
->> +	{	.compatible = "uio,fsl,p1012-l2-cache-controller",	},
->> +	{	.compatible = "uio,fsl,p1025-l2-cache-controller",	},
->> +	{	.compatible = "uio,fsl,p1016-l2-cache-controller",	},
->> +	{	.compatible = "uio,fsl,p1024-l2-cache-controller",	},
->> +	{	.compatible = "uio,fsl,p1015-l2-cache-controller",	},
->> +	{	.compatible = "uio,fsl,p1010-l2-cache-controller",	},
->> +	{	.compatible = "uio,fsl,bsc9131-l2-cache-controller",	},
->> +	{},
->> +};
->> +
->> +static void uio_info_free_internal(struct uio_info *info)
->> +{
->> +	struct uio_mem *uiomem = &info->mem[0];
->> +
->> +	while (uiomem < &info->mem[MAX_UIO_MAPS]) {
->> +		if (uiomem->size) {
->> +			mpc85xx_cache_sram_free(uiomem->internal_addr);
->> +			kfree(uiomem->name);
->> +		}
->> +		uiomem++;
->> +	}
->> +}
->> +
->> +static int uio_fsl_85xx_cache_sram_probe(struct platform_device *pdev)
->> +{
->> +	struct device_node *parent = pdev->dev.of_node;
->> +	struct device_node *node = NULL;
->> +	struct uio_info *info;
->> +	struct uio_mem *uiomem;
->> +	const char *dt_name;
->> +	u32 mem_size;
->> +	u32 align;
->> +	void *virt;
->> +	phys_addr_t phys;
->> +	int ret = -ENODEV;
->> +
->> +	/* alloc uio_info for one device */
->> +	info = kzalloc(sizeof(*info), GFP_KERNEL);
->> +	if (!info) {
->> +		dev_err(&pdev->dev, "kzalloc uio_info failed\n");
->
->kzalloc already says this.
->
+>  I am not sure what benefit it brings to most
+> cases... but your commit msg is so short that adding one more sentence
+> seems reasonable. :)
 
-Surely, I will delete with v2.
+Ok, will queue for v7.
 
->> +		ret = -ENOMEM;
->> +		goto err_out;
->> +	}
->> +
->> +	/* get optional uio name */
->> +	if (of_property_read_string(parent, "uio_name", &dt_name))
->> +		dt_name = UIO_NAME;
->> +
->> +	info->name = kstrdup(dt_name, GFP_KERNEL);
->> +	if (!info->name) {
->> +		dev_err(&pdev->dev, "error kstrdup uio_name\n");
->
->kstrdup should have given you an error string already, right?
->
+>=20
+> Best regards,
+> Krzysztof
 
-Surely, I will delete with v2.
+BR and thanks,
+Nikolaus
 
->> +		ret = -ENOMEM;
->> +		goto err_info_free;
->> +	}
->> +
->> +	uiomem = &info->mem[0];
->> +	for_each_child_of_node(parent, node) {
->> +		if (!node) {
->> +			dev_err(&pdev->dev, "device's OF-node is NULL\n");
->
->How can this happen?
->
-My fault, this would never happen. I will address it in v2.
->> +			continue;
->
->Why not error out?
->
->> +		}
->> +
->> +		ret = of_property_read_u32(node, "cache-mem-size", &mem_size);
->> +		if (ret) {
->> +			dev_err(&pdev->dev, "missing cache-mem-size value\n");
->
->You don't exit?
->
->> +			continue;
->> +		}
->> +
->> +		if (mem_size == 0) {
->> +			dev_err(&pdev->dev, "cache-mem-size should not be 0\n");
->
->Again, you don't exit?
->
->> +			continue;
->> +		}
->> +
->> +		align = 2;
->> +		while (align < mem_size)
->> +			align *= 2;
->> +		virt = mpc85xx_cache_sram_alloc(mem_size, &phys, align);
->> +		if (!virt) {
->> +			dev_err(&pdev->dev, "allocate 0x%x cache-mem failed\n", mem_size);
->
->You don't exit?
->
-
-Actual all these situations should error out. For the continue branches,
-we got a situation that we accept all the possibly correct child node
-configurations, and it works. But it is not the common circumstance.
-I have tested all these situations and I will change all these to error
-out processes with v2.
-
->> +			continue;
->> +		}
->> +
->> +		uiomem->memtype = UIO_MEM_PHYS;
->> +		uiomem->addr = phys;
->> +		uiomem->size = mem_size;
->> +		uiomem->name = kstrdup(node->name, GFP_KERNEL);;
->> +		uiomem->internal_addr = virt;
->> +		++uiomem;
->> +
->> +		if (uiomem >= &info->mem[MAX_UIO_MAPS]) {
->> +			dev_warn(&pdev->dev, "device has more than "
->> +				 __stringify(MAX_UIO_MAPS)
->> +				 " I/O memory resources.\n");
->
->What can someone do with that?
->
-
-Surely it should be more friendly. I will address it with v2.
-
->thanks,
->
->greg k-h
