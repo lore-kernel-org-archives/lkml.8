@@ -2,168 +2,133 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72713C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:43:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD2DC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:44:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C4D120784
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:43:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63F2C2051A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:44:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586972682;
+	bh=ar+BseC/NUaksDxsNT8Js037zkG7MGCUU7MyLp15PF0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fEifuUoXQ9792HFoaGU10JTNHqMnkmljm8su1soJ0mMkVfMYi2xnfKL+Q7q0dP7Lo
+	 axb88F8rPV9RTqnfwTylTAGi2ZWX0wOT4YyvObHZ1uil80uAf5Rj/ivwM3Aw+ydJZV
+	 WaGvTFnwipR33s7kmfCqxQke2cXjRED50CVbZpwY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2411448AbgDORnw (ORCPT
+        id S2411455AbgDORok (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 13:43:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40932 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2411346AbgDORnl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 13:43:41 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F68DC061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 10:43:41 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jOm4K-0007zn-AM; Wed, 15 Apr 2020 19:43:24 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id B228C100C47; Wed, 15 Apr 2020 19:43:22 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Xiaoyao Li <xiaoyao.li@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: Re: [PATCH v8 4/4] kvm: vmx: virtualize split lock detection
-In-Reply-To: <20200414063129.133630-5-xiaoyao.li@intel.com>
-Date:   Wed, 15 Apr 2020 19:43:22 +0200
-Message-ID: <871rooodad.fsf@nanos.tec.linutronix.de>
+        Wed, 15 Apr 2020 13:44:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60716 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2411453AbgDORod (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 13:44:33 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8A472051A;
+        Wed, 15 Apr 2020 17:44:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586972672;
+        bh=ar+BseC/NUaksDxsNT8Js037zkG7MGCUU7MyLp15PF0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WuP7E8ug4V4q3A4Wg8x0XzHqcW34rw7cTsV2U3f59ayerrH6TXzUJ2k62aOz9KZDF
+         ctWUPcHDLB8wmwcuVOAVqcB6D4brPBrycDzLN7nhJcsyGmcXp6ZxcPFPK6daEnd/XO
+         m0fzm/ee2QVsCtBGOWQCKXkOz6Yp6rHWjvQIjhfQ=
+Date:   Wed, 15 Apr 2020 19:44:30 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     Lucas Stach <l.stach@pengutronix.de>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        Sasha Levin <sashal@kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        linux- stable <stable@vger.kernel.org>,
+        Russell King <linux+etnaviv@armlinux.org.uk>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, etnaviv@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, lkft-triage@lists.linaro.org
+Subject: Re: [PATCH v2] drm/etnaviv: rework perfmon query infrastructure
+Message-ID: <20200415174430.GA3665836@kroah.com>
+References: <20200228103752.1944629-1-christian.gmeiner@gmail.com>
+ <4a5436201ff4345194f64aac1553f9656887203a.camel@pengutronix.de>
+ <CA+G9fYvVC8TYk1u-B98MvABqQUuG6hEB6Y7AYd0Qnzs0=-pFUw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYvVC8TYk1u-B98MvABqQUuG6hEB6Y7AYd0Qnzs0=-pFUw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Xiaoyao Li <xiaoyao.li@intel.com> writes:
-> +/*
-> + * Note: for guest, feature split lock detection can only be enumerated through
-> + * MSR_IA32_CORE_CAPABILITIES bit. The FMS enumeration is unsupported.
-
-That comment is confusing at best.
-
-> + */
-> +static inline bool guest_cpu_has_feature_sld(struct kvm_vcpu *vcpu)
-> +{
-> +	return vcpu->arch.core_capabilities &
-> +	       MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT;
-> +}
-> +
-> +static inline bool guest_cpu_sld_on(struct vcpu_vmx *vmx)
-> +{
-> +	return vmx->msr_test_ctrl & MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
-> +}
-> +
-> +static inline void vmx_update_sld(struct kvm_vcpu *vcpu, bool on)
-> +{
-> +	/*
-> +	 * Toggle SLD if the guest wants it enabled but its been disabled for
-> +	 * the userspace VMM, and vice versa.  Note, TIF_SLD is true if SLD has
-> +	 * been turned off.  Yes, it's a terrible name.
-
-Instead of writing that useless blurb you could have written a patch
-which changes TIF_SLD to TIF_SLD_OFF to make it clear.
-
-> +	 */
-> +	if (sld_state == sld_warn && guest_cpu_has_feature_sld(vcpu) &&
-> +	    on == test_thread_flag(TIF_SLD)) {
-> +		    sld_update_msr(on);
-> +		    update_thread_flag(TIF_SLD, !on);
-
-Of course you completely fail to explain why TIF_SLD needs to be fiddled
-with.
-
-> @@ -1188,6 +1217,10 @@ void vmx_prepare_switch_to_guest(struct kvm_vcpu *vcpu)
->  #endif
->
-> 	vmx_set_host_fs_gs(host_state, fs_sel, gs_sel, fs_base, gs_base);
-> +
-> +	vmx->host_sld_on = !test_thread_flag(TIF_SLD);
-
-This inverted storage is non-intuitive. What's wrong with simply
-reflecting the TIF_SLD state?
-
-> +	vmx_update_sld(vcpu, guest_cpu_sld_on(vmx));
-> +
->	vmx->guest_state_loaded = true;
-> }
->
-> @@ -1226,6 +1259,9 @@ static void vmx_prepare_switch_to_host(struct vcpu_vmx *vmx)
-> 	wrmsrl(MSR_KERNEL_GS_BASE, vmx->msr_host_kernel_gs_base);
->  #endif
-> 	load_fixmap_gdt(raw_smp_processor_id());
-> +
-> +	vmx_update_sld(&vmx->vcpu, vmx->host_sld_on);
-> +
-
-vmx_prepare_switch_to_guest() is called via:
-
-kvm_arch_vcpu_ioctl_run()
-  vcpu_run()
-    vcpu_enter_guest()
-      preempt_disable();
-      kvm_x86_ops.prepare_guest_switch(vcpu);
-
-but vmx_prepare_switch_to_host() is invoked at the very end of:
-
-kvm_arch_vcpu_ioctl_run()
-  .....
-  vcpu_run()
-  .....
-  vcpu_put()
-    vmx_vcpu_put()
-      vmx_prepare_switch_to_host();
-
-That asymmetry does not make any sense without an explanation.
-
-What's even worse is that vmx_prepare_switch_to_host() is invoked with
-preemption enabled, so MSR state and TIF_SLD state can get out of sync
-on preemption/migration.
-
-> @@ -1946,9 +1992,15 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+On Wed, Apr 15, 2020 at 11:08:13PM +0530, Naresh Kamboju wrote:
+> On Tue, 3 Mar 2020 at 17:19, Lucas Stach <l.stach@pengutronix.de> wrote:
+> >
+> > On Fr, 2020-02-28 at 11:37 +0100, Christian Gmeiner wrote:
+> > > Report the correct perfmon domains and signals depending
+> > > on the supported feature flags.
+> > >
+> > > Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+> > > Fixes: 9e2c2e273012 ("drm/etnaviv: add infrastructure to query perf counter")
+> > > Cc: stable@vger.kernel.org
+> > > Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
+> >
+> > Thanks, applied to etnaviv/next.
+> >
+> > Regards,
+> > Lucas
+> >
+> > >
+> > > ---
+> > > Changes V1 -> V2:
+> > >   - Handle domain == NULL case better to get rid of BUG_ON(..) usage.
+> > > ---
+> > >  drivers/gpu/drm/etnaviv/etnaviv_perfmon.c | 59 ++++++++++++++++++++---
+> > >  1 file changed, 52 insertions(+), 7 deletions(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
+> > > index 8adbf2861bff..e6795bafcbb9 100644
+> > > --- a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
+> > > +++ b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
+> > > @@ -32,6 +32,7 @@ struct etnaviv_pm_domain {
+> > >  };
+> > >
+> > >  struct etnaviv_pm_domain_meta {
+> > > +     unsigned int feature;
+> > >       const struct etnaviv_pm_domain *domains;
+> > >       u32 nr_domains;
+> > >  };
+> > > @@ -410,36 +411,78 @@ static const struct etnaviv_pm_domain doms_vg[] = {
+> > >
+> > >  static const struct etnaviv_pm_domain_meta doms_meta[] = {
+> > >       {
+> > > +             .feature = chipFeatures_PIPE_3D,
 > 
-> 	switch (msr_index) {
-> 	case MSR_TEST_CTRL:
-> -		if (data)
-> +		if (data & ~vmx_msr_test_ctrl_valid_bits(vcpu))
-> 			return 1;
+> make modules failed for arm architecture on stable rc 4.19 branch.
 > 
-> +		vmx->msr_test_ctrl = data;
-> +
-> +		preempt_disable();
+> drivers/gpu/drm/etnaviv/etnaviv_perfmon.c:392:14: error:
+> 'chipFeatures_PIPE_3D' undeclared here (not in a function)
+>    .feature = chipFeatures_PIPE_3D,
+>               ^~~~~~~~~~~~~~~~~~~~
+> drivers/gpu/drm/etnaviv/etnaviv_perfmon.c:397:14: error:
+> 'chipFeatures_PIPE_2D' undeclared here (not in a function); did you
+> mean 'chipFeatures_PIPE_3D'?
+>    .feature = chipFeatures_PIPE_2D,
+>               ^~~~~~~~~~~~~~~~~~~~
+>               chipFeatures_PIPE_3D
+> drivers/gpu/drm/etnaviv/etnaviv_perfmon.c:402:14: error:
+> 'chipFeatures_PIPE_VG' undeclared here (not in a function); did you
+> mean 'chipFeatures_PIPE_2D'?
+>    .feature = chipFeatures_PIPE_VG,
+>               ^~~~~~~~~~~~~~~~~~~~
+>               chipFeatures_PIPE_2D
 
-This preempt_disable/enable() lacks explanation as well.
+Looks like I need to include a .h file for this backport, I'll go do
+that now, thanks.
 
-> +		if (vmx->guest_state_loaded)
-> +			vmx_update_sld(vcpu, guest_cpu_sld_on(vmx));
-> +		preempt_enable();
-
-How is updating msr_test_ctrl valid if this is invoked from the IOCTL,
-i.e. host_initiated == true?
-
-That said, I also hate the fact that you export both the low level MSR
-function _and_ the state variable. Having all these details including the
-TIF mangling in the VMX code is just wrong.
-
-Thanks,
-
-        tglx
+greg k-h
