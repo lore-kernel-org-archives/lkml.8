@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6F5AC38A29
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3EE5C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:51:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F17520737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:51:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3E6120737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:51:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586955061;
-	bh=2OzrXsnZI6VeFmjEUumNOJf3tK1Ls686mWfBeZijVvc=;
+	s=default; t=1586955068;
+	bh=oooFEStGUZHNuhXxGFvK4GTwAIxHao8rhtCGvyKcdGo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gFATt9PNhXMRi26/ioQjb/bvaePH29yPmyfe4eEhVDyWy/dd33umlJhfi0tQ3pFqL
-	 8b05etSuwkuKZjylk8efdZ9MJN6AXG65S+ynvSGA1OuYx7sH/h4kf0IX3APp2KqecQ
-	 CpRfKtQeB5xJ/w8XjT03t0kn6M5xQUCJZhN4oYxU=
+	b=DdXISDyR4U8ggLhsEhzEcIwrnnF1d+LB3/SNrn2XdUlANVAIrI/6QQjSEf6sQ+wV8
+	 zarFhuYgLFXp77tmmfpRlwmFj0gSO33gfw4e9DwaupiUKlIWpc4rsec7msp9EB9VyJ
+	 LJEq+AmjNALezMdLltNdGE+pz7GgLBlCs4eMi82Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S370452AbgDOMvA (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:51:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34456 "EHLO mail.kernel.org"
+        id S370457AbgDOMvG (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:51:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408929AbgDOLmy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2408927AbgDOLmy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Apr 2020 07:42:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1795F20737;
-        Wed, 15 Apr 2020 11:42:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CDBD920768;
+        Wed, 15 Apr 2020 11:42:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950973;
-        bh=2OzrXsnZI6VeFmjEUumNOJf3tK1Ls686mWfBeZijVvc=;
+        s=default; t=1586950972;
+        bh=oooFEStGUZHNuhXxGFvK4GTwAIxHao8rhtCGvyKcdGo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IQ9xDvyuS1GP5fq7hVmKzMxReRi0rrmImiwzGBI//XZu1simA2aS4V5AC/j9g82fQ
-         9eMc28J2wOTr+Yw0qHvZRVODA9NkgBDaM541W2LvdxH4faPeNvXiU7m6HcQyhGsW/u
-         2sVGQHkAo0V4uQ+Kl6ZOA9vp1rDOHSKW6vX7HYg0=
+        b=An62GPDx/H6S+dKeEU5uxW74KlZUlpdjX+UL0zGJJ5munUEztdnHSGaMA2Eqs7xMX
+         ACRsaccnlHEcIArDNAH2pqaCI4ttLyhv78pE/+q27NVJo9p5Q8gF7D28ROCLO/n5Lc
+         s7cT1WBK/s4ozJB8Smsr0eEE5FrMRbHngXiYfU2c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Amit Kucheria <amit.kucheria@linaro.org>,
+Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
+        Baruch Siach <baruch@tkos.co.il>,
         Gregory CLEMENT <gregory.clement@bootlin.com>,
         Sasha Levin <sashal@kernel.org>,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 022/106] arm64: dts: marvell: Fix cpu compatible for AP807-quad
-Date:   Wed, 15 Apr 2020 07:41:02 -0400
-Message-Id: <20200415114226.13103-22-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 021/106] arm64: dts: clearfog-gt-8k: set gigabit PHY reset deassert delay
+Date:   Wed, 15 Apr 2020 07:41:01 -0400
+Message-Id: <20200415114226.13103-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
 References: <20200415114226.13103-1-sashal@kernel.org>
@@ -59,124 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amit Kucheria <amit.kucheria@linaro.org>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit d136d2588b21b1a07515632ed61120c9f262909b ]
+[ Upstream commit 46f94c7818e7ab82758fca74935ef3d454340b4e ]
 
-make -k ARCH=arm64 dtbs_check shows the following errors. Fix them by
-removing the "arm,armv8" compatible.
+If the mv88e6xxx DSA driver is built as a module, it causes the
+ethernet driver to re-probe when it's loaded. This in turn causes
+the gigabit PHY to be momentarily reset and reprogrammed. However,
+we attempt to reprogram the PHY immediately after deasserting reset,
+and the PHY ignores the writes.
 
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9130-db.dt.yaml:
-cpu@0: compatible: Additional items are not allowed ('arm,armv8' was
-unexpected)
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9130-db.dt.yaml:
-cpu@0: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long CHECK
-arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-ex.dt.yaml
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9130-db.dt.yaml:
-cpu@1: compatible: Additional items are not allowed ('arm,armv8' was
-unexpected)
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9130-db.dt.yaml:
-cpu@1: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9130-db.dt.yaml:
-cpu@100: compatible: Additional items are not allowed ('arm,armv8' was
-unexpected)
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9130-db.dt.yaml:
-cpu@100: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9130-db.dt.yaml:
-cpu@101: compatible: Additional items are not allowed ('arm,armv8' was
-unexpected)
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9130-db.dt.yaml:
-cpu@101: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
+This results in the PHY operating in the wrong mode, and the copper
+link states down.
 
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9131-db.dt.yaml:
-cpu@0: compatible: Additional items are not allowed ('arm,armv8' was
-unexpected)
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9131-db.dt.yaml:
-cpu@0: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9131-db.dt.yaml:
-cpu@1: compatible: Additional items are not allowed ('arm,armv8' was
-unexpected)
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9131-db.dt.yaml:
-cpu@1: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9131-db.dt.yaml:
-cpu@100: compatible: Additional items are not allowed ('arm,armv8' was
-unexpected)
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9131-db.dt.yaml:
-cpu@100: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9131-db.dt.yaml:
-cpu@101: compatible: Additional items are not allowed ('arm,armv8' was
-unexpected)
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9131-db.dt.yaml:
-cpu@101: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
+Set a reset deassert delay of 10ms for the gigabit PHY to avoid this.
 
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9132-db.dt.yaml:
-cpu@0: compatible: Additional items are not allowed ('arm,armv8' was
-unexpected)
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9132-db.dt.yaml:
-cpu@0: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9132-db.dt.yaml:
-cpu@1: compatible: Additional items are not allowed ('arm,armv8' was
-unexpected)
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9132-db.dt.yaml:
-cpu@1: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9132-db.dt.yaml:
-cpu@100: compatible: Additional items are not allowed ('arm,armv8' was
-unexpected)
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9132-db.dt.yaml:
-cpu@100: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9132-db.dt.yaml:
-cpu@101: compatible: Additional items are not allowed ('arm,armv8' was
-unexpected)
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9132-db.dt.yaml:
-cpu@101: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
-
-Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+Fixes: babc5544c293 ("arm64: dts: clearfog-gt-8k: 1G eth PHY reset signal")
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Acked-by: Baruch Siach <baruch@tkos.co.il>
 Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/marvell/armada-ap807-quad.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-ap807-quad.dtsi b/arch/arm64/boot/dts/marvell/armada-ap807-quad.dtsi
-index 840466e143b47..68782f161f122 100644
---- a/arch/arm64/boot/dts/marvell/armada-ap807-quad.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-ap807-quad.dtsi
-@@ -17,7 +17,7 @@
+diff --git a/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts b/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
+index a211a046b2f2f..b90d78a5724b2 100644
+--- a/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
++++ b/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
+@@ -367,6 +367,7 @@
+ 		pinctrl-0 = <&cp0_copper_eth_phy_reset>;
+ 		reset-gpios = <&cp0_gpio2 11 GPIO_ACTIVE_LOW>;
+ 		reset-assert-us = <10000>;
++		reset-deassert-us = <10000>;
+ 	};
  
- 		cpu0: cpu@0 {
- 			device_type = "cpu";
--			compatible = "arm,cortex-a72", "arm,armv8";
-+			compatible = "arm,cortex-a72";
- 			reg = <0x000>;
- 			enable-method = "psci";
- 			#cooling-cells = <2>;
-@@ -32,7 +32,7 @@
- 		};
- 		cpu1: cpu@1 {
- 			device_type = "cpu";
--			compatible = "arm,cortex-a72", "arm,armv8";
-+			compatible = "arm,cortex-a72";
- 			reg = <0x001>;
- 			enable-method = "psci";
- 			#cooling-cells = <2>;
-@@ -47,7 +47,7 @@
- 		};
- 		cpu2: cpu@100 {
- 			device_type = "cpu";
--			compatible = "arm,cortex-a72", "arm,armv8";
-+			compatible = "arm,cortex-a72";
- 			reg = <0x100>;
- 			enable-method = "psci";
- 			#cooling-cells = <2>;
-@@ -62,7 +62,7 @@
- 		};
- 		cpu3: cpu@101 {
- 			device_type = "cpu";
--			compatible = "arm,cortex-a72", "arm,armv8";
-+			compatible = "arm,cortex-a72";
- 			reg = <0x101>;
- 			enable-method = "psci";
- 			#cooling-cells = <2>;
+ 	switch0: switch0@4 {
 -- 
 2.20.1
 
