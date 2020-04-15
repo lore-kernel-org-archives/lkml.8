@@ -2,138 +2,188 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DFF8C3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42F25C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:19:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E9002076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:19:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="tSk0cJVb"
+	by mail.kernel.org (Postfix) with ESMTP id 1A1DC2074F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:19:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586956781;
+	bh=LEL33VKBAyGDpQqhvfb57O55DGVCVVNGlkrbacc127E=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=vp/I2Az5TNpjKkHhDSd66xHnueNko+tm5Pdj0rTXbDQTKBX0xQsrE5bEzKA9AhHbl
+	 gataVmjpaOKYgEz9HDh5u9aXnfKx8goaEfmwl66oIsK7lkDDycrbvTxs89MWSGd6V4
+	 jz596pfCeseqbwqCwFm813CScux2RB45wsxLWo+w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S370779AbgDONSe (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:18:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55902 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2506263AbgDONRr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 09:17:47 -0400
-Received: from mo6-p03-ob.smtp.rzone.de (mo6-p03-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5303::8])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB773C061A0C;
-        Wed, 15 Apr 2020 06:17:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1586956665;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=ggeVHX1ECoHuxb0UgkenFd/4IT/OkoIPA4CW4OSiH4U=;
-        b=tSk0cJVb5H6mQx63QImPqo27RrhaPv2mCMy/yhh3brjy8By+psy+Q0bbn3JXTtkz4X
-        q4tfGCwNiaca/V/WUG837rYs+lHilJIWpBxoPA+FK+fjl6ETB8/UqiALsVMUaM6MAGDV
-        bngvkgzNa6QOlwnd1/iLmIkh2Y0rgsSqYlJIFpMlWPmxUu/4PJfI4mUZ9CAVpb+fjqkI
-        I2u5BiZPGWJfZus5K6ekldodYXIYrcSDWARM+hIeQAxG3Zvk1dXxL0Mt5gt0u+5nFtVu
-        u/KYQCpSXmJz2uCmyZWaq8zaRh02wg8OXjtpoCE1MVlsrap/37j6djKWd5M0b7CeD7zO
-        cK/A==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/PtwDConyM="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.4.0 DYNA|AUTH)
-        with ESMTPSA id 6028a2w3FDHP26i
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Wed, 15 Apr 2020 15:17:25 +0200 (CEST)
-Subject: Re: [PATCH v6 01/12] dt-bindings: add img, pvrsgx.yaml for Imagination GPUs
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <f4fdca8a-d18c-a8d2-7f51-d1ebbbab3647@baylibre.com>
-Date:   Wed, 15 Apr 2020 15:17:25 +0200
-Cc:     Maxime Ripard <maxime@cerno.tech>,
-        Mark Rutland <mark.rutland@arm.com>,
-        David Airlie <airlied@linux.ie>,
-        James Hogan <jhogan@kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-mips@vger.kernel.org,
-        Paul Cercueil <paul@crapouillou.net>,
-        linux-samsung-soc@vger.kernel.org, letux-kernel@openphoenux.org,
-        Paul Burton <paulburton@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Tony Lindgren <tony@atomide.com>, Chen-Yu Tsai <wens@csie.org>,
-        Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org,
-        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Philipp Rossak <embed3d@gmail.com>,
-        openpvrsgx-devgroup@letux.org, linux-kernel@vger.kernel.org,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Daniel Vetter <daniel@ffwll.ch>, kernel@pyra-handheld.com
-Content-Transfer-Encoding: 7bit
-Message-Id: <535CAEBE-F43E-4BFC-B989-612C81F0D7EF@goldelico.com>
-References: <cover.1586939718.git.hns@goldelico.com> <06fb6569259bb9183d0a0d0fe70ec4f3033b8aab.1586939718.git.hns@goldelico.com> <20200415101251.o3wi5t6xvf56xmhq@gilmour.lan> <72919514-0657-4B71-902F-3E775E528F64@goldelico.com> <f4fdca8a-d18c-a8d2-7f51-d1ebbbab3647@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-X-Mailer: Apple Mail (2.3124)
+        id S2505217AbgDONTd (ORCPT
+        <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 09:19:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54652 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2897028AbgDOLfO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:35:14 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42B822076D;
+        Wed, 15 Apr 2020 11:35:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586950514;
+        bh=LEL33VKBAyGDpQqhvfb57O55DGVCVVNGlkrbacc127E=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=IpuO19Tjt+nrv9ceGE645z4TTah2la8H5wFysf3HFwLzs0/ir4Mu1Q4djWNpOBpc3
+         hr2L+V4mUJDDJYdwB/cXTSKx9MPTgd+atdcT5dq0yVir6YvA7LYhyJudd1z9ZTkfGX
+         qbgbxcXjKTzdzc1zRtxJlap3udX6C5K7V4AH9T1o=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Vidya Sagar <vidyas@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 024/129] arm64: tegra: Add PCIe endpoint controllers nodes for Tegra194
+Date:   Wed, 15 Apr 2020 07:32:59 -0400
+Message-Id: <20200415113445.11881-24-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
+References: <20200415113445.11881-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Neil,
+From: Vidya Sagar <vidyas@nvidia.com>
 
-> Am 15.04.2020 um 14:54 schrieb Neil Armstrong <narmstrong@baylibre.com>:
-> 
-> Hi,
-> 
-> On 15/04/2020 14:43, H. Nikolaus Schaller wrote:
->> 
->>> Am 15.04.2020 um 12:12 schrieb Maxime Ripard <maxime@cerno.tech>:
->>> 
->>> Hi,
->>> 
->>> On Wed, Apr 15, 2020 at 10:35:08AM +0200, H. Nikolaus Schaller wrote:
->>>> The Imagination PVR/SGX GPU is part of several SoC from
->>>> multiple vendors, e.g. TI OMAP, Ingenic JZ4780, Intel Poulsbo,
->>>> Allwinner A83 and others.
->>>> 
->>>> With this binding, we describe how the SGX processor is
->>>> interfaced to the SoC (registers, interrupt etc.).
->>>> 
->>>> In most cases, Clock, Reset and power management is handled
->>>> by a parent node or elsewhere (e.g. code in the driver).
->>> 
->>> Wouldn't the "code in the driver" still require the clock / reset /
->>> power domain to be set in the DT?
->> 
->> Well, some SoC seem to use existing clocks and have no reset.
->> Or, although not recommended, they may have the io-address range
->> hard-coded.
-> 
-> The possible clocks and resets should be added, even if optional.
-> 
-> Please look at the arm utgard, midgard and bifrost bindings.
+[ Upstream commit 0c988b731e6430f0081991fdb4f63f7fc837df9a ]
 
-Interesting to compare to. Maybe we should also add the
-$nodename: pattern: '^gpu@[a-f0-9]+$'
+Add endpoint mode controllers nodes for the dual mode PCIe controllers
+present in Tegra194 SoC.
 
-But the sgx binding is difficult to grasp here. Some SoC like the
-omap series have their own ti,sysc based target modules and the
-gpu nodes is a child of it lacking any clock and reset references
-for purpose.
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi | 99 ++++++++++++++++++++++++
+ 1 file changed, 99 insertions(+)
 
-The jz4780 and some other need a clocks definition, but no reset.
-Having a reset seems to be an option for the SoC designer and
-not mandated by img. So is it part of the pvrsgx bindings or the
-SoC?
-
-Well we could add clocks and resets as optional but that would
-allow to wrongly define omap.
-
-Or delegate them to a parent "simple-pm-bus" node.
-
-I have to study that material more to understand what you seem
-to expect.
-
-BR and thanks,
-Nikolaus Schaller
-
+diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+index ccac43be12acc..844e7fac30c58 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+@@ -1481,6 +1481,105 @@
+ 			  0x82000000 0x0  0x40000000 0x1f 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
+ 	};
+ 
++	pcie_ep@14160000 {
++		compatible = "nvidia,tegra194-pcie-ep", "snps,dw-pcie-ep";
++		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX4A>;
++		reg = <0x00 0x14160000 0x0 0x00020000   /* appl registers (128K)      */
++		       0x00 0x36040000 0x0 0x00040000   /* iATU_DMA reg space (256K)  */
++		       0x00 0x36080000 0x0 0x00040000   /* DBI reg space (256K)       */
++		       0x14 0x00000000 0x4 0x00000000>; /* Address Space (16G)        */
++		reg-names = "appl", "atu_dma", "dbi", "addr_space";
++
++		status = "disabled";
++
++		num-lanes = <4>;
++		num-ib-windows = <2>;
++		num-ob-windows = <8>;
++
++		clocks = <&bpmp TEGRA194_CLK_PEX0_CORE_4>;
++		clock-names = "core";
++
++		resets = <&bpmp TEGRA194_RESET_PEX0_CORE_4_APB>,
++			 <&bpmp TEGRA194_RESET_PEX0_CORE_4>;
++		reset-names = "apb", "core";
++
++		interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;	/* controller interrupt */
++		interrupt-names = "intr";
++
++		nvidia,bpmp = <&bpmp 4>;
++
++		nvidia,aspm-cmrt-us = <60>;
++		nvidia,aspm-pwr-on-t-us = <20>;
++		nvidia,aspm-l0s-entrance-latency-us = <3>;
++	};
++
++	pcie_ep@14180000 {
++		compatible = "nvidia,tegra194-pcie-ep", "snps,dw-pcie-ep";
++		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX8B>;
++		reg = <0x00 0x14180000 0x0 0x00020000   /* appl registers (128K)      */
++		       0x00 0x38040000 0x0 0x00040000   /* iATU_DMA reg space (256K)  */
++		       0x00 0x38080000 0x0 0x00040000   /* DBI reg space (256K)       */
++		       0x18 0x00000000 0x4 0x00000000>; /* Address Space (16G)        */
++		reg-names = "appl", "atu_dma", "dbi", "addr_space";
++
++		status = "disabled";
++
++		num-lanes = <8>;
++		num-ib-windows = <2>;
++		num-ob-windows = <8>;
++
++		clocks = <&bpmp TEGRA194_CLK_PEX0_CORE_0>;
++		clock-names = "core";
++
++		resets = <&bpmp TEGRA194_RESET_PEX0_CORE_0_APB>,
++			 <&bpmp TEGRA194_RESET_PEX0_CORE_0>;
++		reset-names = "apb", "core";
++
++		interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;	/* controller interrupt */
++		interrupt-names = "intr";
++
++		nvidia,bpmp = <&bpmp 0>;
++
++		nvidia,aspm-cmrt-us = <60>;
++		nvidia,aspm-pwr-on-t-us = <20>;
++		nvidia,aspm-l0s-entrance-latency-us = <3>;
++	};
++
++	pcie_ep@141a0000 {
++		compatible = "nvidia,tegra194-pcie-ep", "snps,dw-pcie-ep";
++		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX8A>;
++		reg = <0x00 0x141a0000 0x0 0x00020000   /* appl registers (128K)      */
++		       0x00 0x3a040000 0x0 0x00040000   /* iATU_DMA reg space (256K)  */
++		       0x00 0x3a080000 0x0 0x00040000   /* DBI reg space (256K)       */
++		       0x1c 0x00000000 0x4 0x00000000>; /* Address Space (16G)        */
++		reg-names = "appl", "atu_dma", "dbi", "addr_space";
++
++		status = "disabled";
++
++		num-lanes = <8>;
++		num-ib-windows = <2>;
++		num-ob-windows = <8>;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&clkreq_c5_bi_dir_state>;
++
++		clocks = <&bpmp TEGRA194_CLK_PEX1_CORE_5>;
++		clock-names = "core";
++
++		resets = <&bpmp TEGRA194_RESET_PEX1_CORE_5_APB>,
++			 <&bpmp TEGRA194_RESET_PEX1_CORE_5>;
++		reset-names = "apb", "core";
++
++		interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;	/* controller interrupt */
++		interrupt-names = "intr";
++
++		nvidia,bpmp = <&bpmp 5>;
++
++		nvidia,aspm-cmrt-us = <60>;
++		nvidia,aspm-pwr-on-t-us = <20>;
++		nvidia,aspm-l0s-entrance-latency-us = <3>;
++	};
++
+ 	sysram@40000000 {
+ 		compatible = "nvidia,tegra194-sysram", "mmio-sram";
+ 		reg = <0x0 0x40000000 0x0 0x50000>;
+-- 
+2.20.1
 
