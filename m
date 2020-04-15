@@ -2,113 +2,114 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F12C3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:08:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB74C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:08:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1EC6206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:08:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586952499;
-	bh=kPuYz+x66mnO8Bd+2a9Rx3mEP4MAbIx/RUKWkxGi07U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OQBsXZvBMR8XaQtvQk0qhX8D4CBPVJaj4TRSBNKBijSL6Y+R/UatX6n1PYoxy9l9a
-	 FueVAd8Edfti60gUzs1sdAIyfwYe6WtA7AtQ0VnNSYD7s6TWkV+Ujw1+lvAjcJQODL
-	 ns108Llsx20j0MSL+ONTfb/bIJQAD84YAs2p9mE8=
+	by mail.kernel.org (Postfix) with ESMTP id 6709E206F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:08:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441258AbgDOMIS (ORCPT
+        id S2441270AbgDOMI3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:08:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42784 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 08:08:29 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36694 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409347AbgDOLrf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:47:35 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31D8E20775;
-        Wed, 15 Apr 2020 11:47:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951248;
-        bh=kPuYz+x66mnO8Bd+2a9Rx3mEP4MAbIx/RUKWkxGi07U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oPjXhTM1UH+ntKeocrsU1rIzfOhmJdMwEfsKri9f+O8Ao+fvH/Xud7u09pzMFc+Qt
-         1ZW8guaQrHN9+9biOcPjylA66ZWcM08KTtDjlF/pXz1HPUm9JldKq51rXVRGoPn4Su
-         7zqzPNfzOzQosSHVUfz1rY8ZCMLPBH7b6FIbmnto=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Richard Palethorpe <rpalethorpe@suse.com>,
-        Kees Cook <keescook@chromium.org>, linux-can@vger.kernel.org,
-        netdev@vger.kernel.org, security@kernel.org, wg@grandegger.com,
-        mkl@pengutronix.de, davem@davemloft.net,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 14/30] slcan: Don't transmit uninitialized stack data in padding
-Date:   Wed, 15 Apr 2020 07:46:55 -0400
-Message-Id: <20200415114711.15381-14-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415114711.15381-1-sashal@kernel.org>
-References: <20200415114711.15381-1-sashal@kernel.org>
+        id S2409739AbgDOMCn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 08:02:43 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 20792AED8;
+        Wed, 15 Apr 2020 12:02:41 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 146861E1250; Wed, 15 Apr 2020 14:02:41 +0200 (CEST)
+Date:   Wed, 15 Apr 2020 14:02:41 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     ira.weiny@intel.com
+Cc:     linux-kernel@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH RFC 3/8] fs/ext4: Disallow encryption if inode is DAX
+Message-ID: <20200415120241.GF6126@quack2.suse.cz>
+References: <20200414040030.1802884-1-ira.weiny@intel.com>
+ <20200414040030.1802884-4-ira.weiny@intel.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200414040030.1802884-4-ira.weiny@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Richard Palethorpe <rpalethorpe@suse.com>
+On Mon 13-04-20 21:00:25, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> Encryption and DAX are incompatible.  Changing the DAX mode due to a
+> change in Encryption mode is wrong without a corresponding
+> address_space_operations update.
+> 
+> Make the 2 options mutually exclusive by returning an error if DAX was
+> set first.
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> ---
+>  fs/ext4/super.c | 10 +---------
+>  1 file changed, 1 insertion(+), 9 deletions(-)
+> 
+> diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+> index 0c7c4adb664e..b14863058115 100644
+> --- a/fs/ext4/super.c
+> +++ b/fs/ext4/super.c
+> @@ -1325,7 +1325,7 @@ static int ext4_set_context(struct inode *inode, const void *ctx, size_t len,
+>  	if (inode->i_ino == EXT4_ROOT_INO)
+>  		return -EPERM;
+>  
+> -	if (WARN_ON_ONCE(IS_DAX(inode) && i_size_read(inode)))
+> +	if (WARN_ON_ONCE(IS_DAX(inode)))
 
-[ Upstream commit b9258a2cece4ec1f020715fe3554bc2e360f6264 ]
+Also here I don't think WARN_ON_ONCE() is warranted once we allow per-inode
+setting of DAX. It will then become a regular error condition...
 
-struct can_frame contains some padding which is not explicitly zeroed in
-slc_bump. This uninitialized data will then be transmitted if the stack
-initialization hardening feature is not enabled (CONFIG_INIT_STACK_ALL).
+								Honza
 
-This commit just zeroes the whole struct including the padding.
-
-Signed-off-by: Richard Palethorpe <rpalethorpe@suse.com>
-Fixes: a1044e36e457 ("can: add slcan driver for serial/USB-serial CAN adapters")
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Cc: linux-can@vger.kernel.org
-Cc: netdev@vger.kernel.org
-Cc: security@kernel.org
-Cc: wg@grandegger.com
-Cc: mkl@pengutronix.de
-Cc: davem@davemloft.net
-Acked-by: Marc Kleine-Budde <mkl@pengutronix.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/can/slcan.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/drivers/net/can/slcan.c b/drivers/net/can/slcan.c
-index 7c37b96ff22a7..c5a616395c490 100644
---- a/drivers/net/can/slcan.c
-+++ b/drivers/net/can/slcan.c
-@@ -147,7 +147,7 @@ static void slc_bump(struct slcan *sl)
- 	u32 tmpid;
- 	char *cmd = sl->rbuff;
- 
--	cf.can_id = 0;
-+	memset(&cf, 0, sizeof(cf));
- 
- 	switch (*cmd) {
- 	case 'r':
-@@ -186,8 +186,6 @@ static void slc_bump(struct slcan *sl)
- 	else
- 		return;
- 
--	*(u64 *) (&cf.data) = 0; /* clear payload */
--
- 	/* RTR frames may have a dlc > 0 but they never have any data bytes */
- 	if (!(cf.can_id & CAN_RTR_FLAG)) {
- 		for (i = 0; i < cf.can_dlc; i++) {
+>  		return -EINVAL;
+>  
+>  	res = ext4_convert_inline_data(inode);
+> @@ -1349,10 +1349,6 @@ static int ext4_set_context(struct inode *inode, const void *ctx, size_t len,
+>  			ext4_set_inode_flag(inode, EXT4_INODE_ENCRYPT);
+>  			ext4_clear_inode_state(inode,
+>  					EXT4_STATE_MAY_INLINE_DATA);
+> -			/*
+> -			 * Update inode->i_flags - S_ENCRYPTED will be enabled,
+> -			 * S_DAX may be disabled
+> -			 */
+>  			ext4_set_inode_flags(inode);
+>  		}
+>  		return res;
+> @@ -1376,10 +1372,6 @@ static int ext4_set_context(struct inode *inode, const void *ctx, size_t len,
+>  				    ctx, len, 0);
+>  	if (!res) {
+>  		ext4_set_inode_flag(inode, EXT4_INODE_ENCRYPT);
+> -		/*
+> -		 * Update inode->i_flags - S_ENCRYPTED will be enabled,
+> -		 * S_DAX may be disabled
+> -		 */
+>  		ext4_set_inode_flags(inode);
+>  		res = ext4_mark_inode_dirty(handle, inode);
+>  		if (res)
+> -- 
+> 2.25.1
+> 
 -- 
-2.20.1
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
