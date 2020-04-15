@@ -2,115 +2,106 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD33C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:24:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 207C7C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:25:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7863F20575
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:24:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF86820575
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:25:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586957143;
+	bh=2NWtP2cNZMrKlgOZdBrmPsy6fRqnD5tJXXFFLb6xOmA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Yd64OZejVYu1NY48sYHVt46hafYe9ppvoh48bVBmPXVzPRgz5Y49bfvVvs9oXEsEU
+	 iVd0k0IVEcQEsQfG4mCOc3Ni44jjb/OQJV98y4BQWg5emjqtShFy9c4yTXyTJErjv6
+	 2COmNu4opBsiBzN447xmAP8V0wmXdBk+M6kCKcL8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2636089AbgDONYY (ORCPT
+        id S2636096AbgDONZk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:24:24 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2331 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2636065AbgDONYN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 09:24:13 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 19845F6C67779E3BA95F;
-        Wed, 15 Apr 2020 21:24:10 +0800 (CST)
-Received: from localhost (10.173.223.234) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Wed, 15 Apr 2020
- 21:24:00 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <b.zolnierkie@samsung.com>, <allison@lohutok.net>
-CC:     <linux-omap@vger.kernel.org>, <linux-fbdev@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] omapfb/dss: remove unused varible 'venc_config_pal_bdghi'
-Date:   Wed, 15 Apr 2020 21:23:50 +0800
-Message-ID: <20200415132350.33088-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Wed, 15 Apr 2020 09:25:40 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:38242 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2636090AbgDONZG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 09:25:06 -0400
+Received: by mail-pj1-f68.google.com with SMTP id t40so6672649pjb.3;
+        Wed, 15 Apr 2020 06:25:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VxzOHBakm6zWRy000AuKfccE4q5d/hsyCc04Zt0DJtg=;
+        b=IRZ0H8DcQ2OaXUc/yZtJgNL6K8Kx4uKT+N1omloeQ5Up8gtBfHz0pMmHPOFIh+KY0o
+         BLvYaaZG0Y2X2gf9vclLe4Mzc9kAv1m27aqljqlzq9vVMY3IDG7egZC1nER4qWu8nhxc
+         Rq2s83bupsK0AEKNwJlvCbrCH6er9+Qk9kXZh2V87xjycZBldqU0qQn35bGY868GaOUF
+         sE7yOONXD7QbWLOAkDKIy1GAUmr09Ux+sldzykA9CrL+BnCtt58M6d7hsFAnEJQqB9mL
+         ZOEmNUBQw05vKN6I3gJugVn+640CJZ3DPO82S8kHbTnWUjkKpSpBXL82fREbQCwwDkcX
+         L1Dw==
+X-Gm-Message-State: AGi0PuYsxlMo9zy/2c/lHHWifFBbmK/8GOuIX4Ith2NBS9NcTIMWtFN4
+        K7rqaEK7DmIqk3di2nObq1A=
+X-Google-Smtp-Source: APiQypLzsjEy5ye1O+lv4UjZnyAkJCntXBLPPdDHpWm50UQu9/3cAd14/acJ8Zmqjk3bVWJOaNRWQw==
+X-Received: by 2002:a17:902:8608:: with SMTP id f8mr4959948plo.110.1586957105130;
+        Wed, 15 Apr 2020 06:25:05 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id z63sm13828068pfb.20.2020.04.15.06.25.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2020 06:25:04 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 757A040277; Wed, 15 Apr 2020 13:25:03 +0000 (UTC)
+Date:   Wed, 15 Apr 2020 13:25:03 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
+        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
+        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
+        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Michal Hocko <mhocko@kernel.org>
+Subject: Re: [PATCH 3/5] blktrace: refcount the request_queue during ioctl
+Message-ID: <20200415132503.GX11244@42.do-not-panic.com>
+References: <20200414041902.16769-1-mcgrof@kernel.org>
+ <20200414041902.16769-4-mcgrof@kernel.org>
+ <20200414154044.GB25765@infradead.org>
+ <20200415061649.GS11244@42.do-not-panic.com>
+ <20200415071425.GA21099@infradead.org>
+ <20200415123434.GU11244@42.do-not-panic.com>
+ <20200415123925.GA14925@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.173.223.234]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200415123925.GA14925@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drivers/video/fbdev/omap2/omapfb/dss/venc.c:212:33:
- warning: ‘venc_config_pal_bdghi’ defined but not used [-Wunused-const-variable=]
- static const struct venc_config venc_config_pal_bdghi = {
-                                 ^~~~~~~~~~~~~~~~~~~~~
+On Wed, Apr 15, 2020 at 05:39:25AM -0700, Christoph Hellwig wrote:
+> On Wed, Apr 15, 2020 at 12:34:34PM +0000, Luis Chamberlain wrote:
+> > I'll pile up a fix. I've also considered doing a full review of callers
+> > outside of the core block layer using it, and maybe just unexporting
+> > this. It was originally exported due to commit d86e0e83b ("block: export
+> > blk_{get,put}_queue()") to fix a scsi bug, but I can't find such
+> > respective fix. I suspec that using bdgrab()/bdput() seems more likely
+> > what drivers should be using. That would allow us to keep this
+> > functionality internal.
+> > 
+> > Think that's worthy review?
+> 
+> Probably.  I did in fact very quickly look into that but then gave
+> up due to the fair amount of modular users.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/video/fbdev/omap2/omapfb/dss/venc.c | 43 ---------------------
- 1 file changed, 43 deletions(-)
+Alright, then might as well then verify if the existing practice of
+bdgrab()/bdput() is indeed valid logic, as otherwise we'd be puting
+the atomic context / sleep concern to bdput(). As noted earlier I
+am able to confirm easily that bdgrab() can be called in atomic contex,
+however I cannot easily yet vet for *why* this was a safe assumption for
+bdput().
 
-diff --git a/drivers/video/fbdev/omap2/omapfb/dss/venc.c b/drivers/video/fbdev/omap2/omapfb/dss/venc.c
-index f81e2a46366d..d5404d56c922 100644
---- a/drivers/video/fbdev/omap2/omapfb/dss/venc.c
-+++ b/drivers/video/fbdev/omap2/omapfb/dss/venc.c
-@@ -209,49 +209,6 @@ static const struct venc_config venc_config_ntsc_trm = {
- 	.gen_ctrl				= 0x00F90000,
- };
- 
--static const struct venc_config venc_config_pal_bdghi = {
--	.f_control				= 0,
--	.vidout_ctrl				= 0,
--	.sync_ctrl				= 0,
--	.hfltr_ctrl				= 0,
--	.x_color				= 0,
--	.line21					= 0,
--	.ln_sel					= 21,
--	.htrigger_vtrigger			= 0,
--	.tvdetgp_int_start_stop_x		= 0x00140001,
--	.tvdetgp_int_start_stop_y		= 0x00010001,
--	.gen_ctrl				= 0x00FB0000,
--
--	.llen					= 864-1,
--	.flens					= 625-1,
--	.cc_carr_wss_carr			= 0x2F7625ED,
--	.c_phase				= 0xDF,
--	.gain_u					= 0x111,
--	.gain_v					= 0x181,
--	.gain_y					= 0x140,
--	.black_level				= 0x3e,
--	.blank_level				= 0x3e,
--	.m_control				= 0<<2 | 1<<1,
--	.bstamp_wss_data			= 0x42,
--	.s_carr					= 0x2a098acb,
--	.l21__wc_ctl				= 0<<13 | 0x16<<8 | 0<<0,
--	.savid__eavid				= 0x06A70108,
--	.flen__fal				= 23<<16 | 624<<0,
--	.lal__phase_reset			= 2<<17 | 310<<0,
--	.hs_int_start_stop_x			= 0x00920358,
--	.hs_ext_start_stop_x			= 0x000F035F,
--	.vs_int_start_x				= 0x1a7<<16,
--	.vs_int_stop_x__vs_int_start_y		= 0x000601A7,
--	.vs_int_stop_y__vs_ext_start_x		= 0x01AF0036,
--	.vs_ext_stop_x__vs_ext_start_y		= 0x27101af,
--	.vs_ext_stop_y				= 0x05,
--	.avid_start_stop_x			= 0x03530082,
--	.avid_start_stop_y			= 0x0270002E,
--	.fid_int_start_x__fid_int_start_y	= 0x0005008A,
--	.fid_int_offset_y__fid_ext_start_x	= 0x002E0138,
--	.fid_ext_start_y__fid_ext_offset_y	= 0x01380005,
--};
--
- const struct omap_video_timings omap_dss_pal_timings = {
- 	.x_res		= 720,
- 	.y_res		= 574,
--- 
-2.17.1
-
-
+  Luis
