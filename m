@@ -2,150 +2,136 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A85C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:32:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8FA4C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DAAF206F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:32:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2CF6206F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:32:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fg67SeEr"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="BgG/bb/D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1416122AbgDOQcN (ORCPT
+        id S1416131AbgDOQcb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 12:32:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58014 "EHLO
+        Wed, 15 Apr 2020 12:32:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58070 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1416090AbgDOQcE (ORCPT
+        by vger.kernel.org with ESMTP id S1416090AbgDOQcX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 12:32:04 -0400
-Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B1BAC061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 09:32:02 -0700 (PDT)
-Received: by mail-ua1-x944.google.com with SMTP id a10so1542691uad.7
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 09:32:02 -0700 (PDT)
+        Wed, 15 Apr 2020 12:32:23 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 377D1C061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 09:32:23 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id b62so17899441qkf.6
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 09:32:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qmoc5zikups2YB0r+vesjserrrGc5wDVV4y8pgXM4+w=;
-        b=fg67SeErN3cfY6wJJvBR9ZhgLtFwBcITGGWV1dtc22ncPaPxfoSqiLZ7qVBsuGFM+w
-         ZUz497QbcxmBk3Y/B5BKVINvOOAlgqaTT07aYRt2JjtgruP7lpq1ooFfq4zcdOwy4q2C
-         9Id82wAk2bBqnJ9ezgMnECpedABRDfcUEtgdM=
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=haVZ1diiI4tJLpHyfasNhTx2/UrZNUjDa5tNyppMayk=;
+        b=BgG/bb/DIPCtlyVG5VITN6kN+tBoGWOeqqiaspBkklPPu2weo+AZZ1jtX4JOrEfU32
+         pIulksZPTY8j3lrfPuWQBS6tlXlMo/3inTg+9CalmI89VlumEFSbTGwnG59v8Tl6ZLU2
+         DJ/CV5a1A9fghyjFADWXnvZLFnV8ux7nJofY4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qmoc5zikups2YB0r+vesjserrrGc5wDVV4y8pgXM4+w=;
-        b=MjWLMFA74O2f/C8je45YGZJ4PoQm33sK4vsENN6SVCQqgozFM/QCuFmphBeGvT2Qfo
-         Hl2nUHaVtwrKAf1aU9NaA3Zuiv7BJJXmHfRGfXTq8laocTgYtxCVIUxRvpGiHkqYAGsy
-         C4mj9E/X5na0d49aXnUWPLtEaSg0aXLLva5EERDiUVSwvNEKV04we995SyalELjB0PhP
-         BJ8+ndQ6XAWwwmh145zMrQocZqaAbsTfPHdT+GikkU+C87eVmHGpsxmaP9y96cSPh+/q
-         dRntMXmUceKHjip+wrX67vNZ9dQBPzH4RciH0CppDs2X3mfDrDJE+Hc6adj+xz2xKlBo
-         L08Q==
-X-Gm-Message-State: AGi0PuYrzLHDmL7GLoRozcTsXIwhkj5Ue5Sq9PJVP/6mLJoNo+EfmSK4
-        yRnuNeJMZJiM2mIOz1Tk7Hyqt+DCwmM=
-X-Google-Smtp-Source: APiQypJtK3VBpec75sy6s+fb5cfNrwWaSxcmGyHo3xNaSEqV1hzxWKU/vkFOL6y0NV5/PIZFa2PxmQ==
-X-Received: by 2002:ab0:b13:: with SMTP id b19mr5177776uak.91.1586968320884;
-        Wed, 15 Apr 2020 09:32:00 -0700 (PDT)
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com. [209.85.217.44])
-        by smtp.gmail.com with ESMTPSA id r188sm2211440vsb.20.2020.04.15.09.31.59
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Apr 2020 09:32:00 -0700 (PDT)
-Received: by mail-vs1-f44.google.com with SMTP id k19so251788vsm.6
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 09:31:59 -0700 (PDT)
-X-Received: by 2002:a67:7141:: with SMTP id m62mr5268042vsc.73.1586968319284;
- Wed, 15 Apr 2020 09:31:59 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=haVZ1diiI4tJLpHyfasNhTx2/UrZNUjDa5tNyppMayk=;
+        b=WIPtblLs1w1KEVVwxUIu9PUalQnnIsr3tfqnbyfyXoW97SXFqThnBHRlAvCFDiYgX7
+         i56krs75nTP9sOIoerJ0w+n7xgWL5wnP7q+Yz0w35+XeAsSmeoqlkpLlFcB1r91P535p
+         G9MEw9muvf5oaDk77oYwXLc+EE/+fyEhs7rYhJacabPy6NWB1laKsFQOSWaG38x5GHz/
+         f/zkJWoNF/bzOWCw5jChylhRcBm9emcaCtX3a55w2BRiAlDi0e2vdw0CeKmaxa8nUhVb
+         Hd0mQc8aMe+MdGMDGXeZhuZ0ZkkkFBcIgqsA1oBPDfq4EnrEfQAuTm11WgMP7JXzerVk
+         dKYQ==
+X-Gm-Message-State: AGi0PuaRU79qXniOpuVSsH8IdD660aKaJg7x18OB8HbBtO8cYHE/1ZzM
+        n6Z/mJb3mGivIipRp314Cv7BJY+JDL0=
+X-Google-Smtp-Source: APiQypIFNAwigG22UR9KYcOUTyWl0QwOWjrQlhbTzmhWZQiKZtH/gwULAvskpwkSvZLjUMXw5JRMgg==
+X-Received: by 2002:a37:54e:: with SMTP id 75mr27324741qkf.257.1586968342298;
+        Wed, 15 Apr 2020 09:32:22 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id e6sm11718109qti.40.2020.04.15.09.32.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2020 09:32:21 -0700 (PDT)
+Date:   Wed, 15 Apr 2020 12:32:20 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     vpillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
+        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org,
+        linux-kernel@vger.kernel.org, fweisbec@gmail.com,
+        keescook@chromium.org, kerrnel@google.com,
+        Phil Auld <pauld@redhat.com>, Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>, aubrey.li@linux.intel.com,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [RFC PATCH 00/13] Core scheduling v5
+Message-ID: <20200415163220.GA180518@google.com>
+References: <cover.1583332764.git.vpillai@digitalocean.com>
+ <20200414142152.GV20730@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <20200414161320.251897-1-qperret@google.com> <CAD=FV=Vo4h43vS1K1+ziAJhQ3UG+Zrx8JN8Q1tkMWU1Oh6OavA@mail.gmail.com>
- <20200415082001.GA256573@google.com>
-In-Reply-To: <20200415082001.GA256573@google.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 15 Apr 2020 09:31:47 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=UB7OZzQO46dV7KOHGqRkgbtaSgLfq55yddyx0L_e37Fg@mail.gmail.com>
-Message-ID: <CAD=FV=UB7OZzQO46dV7KOHGqRkgbtaSgLfq55yddyx0L_e37Fg@mail.gmail.com>
-Subject: Re: [PATCH] sched/core: Fix reset-on-fork from RT with uclamp
-To:     Quentin Perret <qperret@google.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>, juri.lelli@redhat.com,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        dietmar.eggemann@arm.com, Steven Rostedt <rostedt@goodmis.org>,
-        Benjamin Segall <bsegall@google.com>, mgorman@suse.de,
-        ctheegal@codeaurora.org, patrick.bellasi@matbug.net,
-        valentin.schneider@arm.com, qais.yousef@arm.com,
-        LKML <linux-kernel@vger.kernel.org>, kernel-team@android.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200414142152.GV20730@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Apr 14, 2020 at 04:21:52PM +0200, Peter Zijlstra wrote:
+> On Wed, Mar 04, 2020 at 04:59:50PM +0000, vpillai wrote:
+> > TODO
+> > ----
+> > - Work on merging patches that are ready to be merged
+> > - Decide on the API for exposing the feature to userland
+> > - Experiment with adding synchronization points in VMEXIT to mitigate
+> >   the VM-to-host-kernel leaking
+> 
+> VMEXIT is too late, you need to hook irq_enter(), which is what makes
+> the whole thing so horrible.
 
-On Wed, Apr 15, 2020 at 1:20 AM Quentin Perret <qperret@google.com> wrote:
->
-> Hi Doug,
->
-> On Tuesday 14 Apr 2020 at 13:45:03 (-0700), Doug Anderson wrote:
-> > Hi,
-> >
-> > On Tue, Apr 14, 2020 at 9:13 AM Quentin Perret <qperret@google.com> wrote:
-> > >
-> > > uclamp_fork() resets the uclamp values to their default when the
-> > > reset-on-fork flag is set. It also checks whether the task has a RT
-> > > policy, and sets its uclamp.min to 1024 accordingly. However, during
-> > > reset-on-fork, the task's policy is lowered to SCHED_NORMAL right after,
-> > > hence leading to an erroneous uclamp.min setting for the new task if it
-> > > was forked from RT.
-> > >
-> > > Fix this by removing the unnecessary check on rt_policy() in
-> > > uclamp_fork() as this doesn't make sense if the reset-on-fork flag is
-> > > set.
-> > >
-> > > Reported-by: Chitti Babu Theegala <ctheegal@codeaurora.org>
-> > > Signed-off-by: Quentin Perret <qperret@google.com>
-> > > ---
-> > >  kernel/sched/core.c | 4 ----
-> > >  1 file changed, 4 deletions(-)
-> > >
-> > > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> > > index 3a61a3b8eaa9..9ea3e484eea2 100644
-> > > --- a/kernel/sched/core.c
-> > > +++ b/kernel/sched/core.c
-> > > @@ -1234,10 +1234,6 @@ static void uclamp_fork(struct task_struct *p)
-> > >         for_each_clamp_id(clamp_id) {
-> > >                 unsigned int clamp_value = uclamp_none(clamp_id);
-> > >
-> > > -               /* By default, RT tasks always get 100% boost */
-> > > -               if (unlikely(rt_task(p) && clamp_id == UCLAMP_MIN))
-> > > -                       clamp_value = uclamp_none(UCLAMP_MAX);
-> > > -
-> > >                 uclamp_se_set(&p->uclamp_req[clamp_id], clamp_value, false);
-> >
-> > The local variable "clamp_value" doesn't have a lot of value anymore,
-> > does it?  (Pun intended).
->
-> :)
->
-> > Remove it?
->
-> Right, but I figured the generated code should be similar, and
-> 'uclamp_se_set(&p->uclamp_req[clamp_id], uclamp_none(clamp_id), false);'
-> doesn't fit in 80 cols at this identation level, so I kept the local
-> var. No strong opinion, though.
+We came up with a patch to do this as well. Currently testing it more and it
+looks clean, will share it soon.
 
-OK.  It's definitely a bikeshed color issue and since you'll spend
-more time in this bikeshed than I will I'll leave it to you to pick
-the color.
+> > - Investigate the source of the overhead even when no tasks are tagged:
+> >   https://lkml.org/lkml/2019/10/29/242
+> 
+>  - explain why we're all still doing this ....
+> 
+> Seriously, what actual problems does it solve? The patch-set still isn't
+> L1TF complete and afaict it does exactly nothing for MDS.
 
-I'm not at all an expert on this code but it sure looks sane to me.
-If you think my review tag is worth anything in this context feel free
-to add it, but since you already have Patrick's mine probably adds
-very little value.
+The L1TF incompleteness is because of cross-HT attack from Guest vCPU
+attacker to an interrupt/softirq executing on the other sibling correct? The
+IRQ enter pausing the other sibling should fix that (which we will share in
+a future series revision after adequate testing).
 
--Doug
+> Like I've written many times now, back when the world was simpler and
+> all we had to worry about was L1TF, core-scheduling made some sense, but
+> how does it make sense today?
+
+For ChromeOS we're planning to tag each and every task seperately except for
+trusted processes, so we are isolating untrusted tasks even from each other.
+
+Sorry if this sounds like pushing my usecase, but we do get parallelism
+advantage for the trusted tasks while still solving all security issues (for
+ChromeOS). I agree that cross-HT user <-> kernel MDS is still an issue if
+untrusted (tagged) tasks execute together on same core, but we are not
+planning to do that on our setup at least.
+
+> It's cute that this series sucks less than it did before, but what are
+> we trading that performance for?
+
+AIUI, the performance improves vs noht in the recent series. I am told that
+is the case in recent postings of the series.
+
+thanks,
+
+ - Joel
+
