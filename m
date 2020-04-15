@@ -2,258 +2,250 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC55DC3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2397BC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:42:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6A4420737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:41:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDD9020737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:42:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gUpoSEeb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="GIxKv/5i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393897AbgDOKlv (ORCPT
+        id S2896485AbgDOKmg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 06:41:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57234 "EHLO
+        Wed, 15 Apr 2020 06:42:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2408536AbgDOKYU (ORCPT
+        by vger.kernel.org with ESMTP id S2896489AbgDOKXv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 06:24:20 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05838C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 03:24:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=D67l6ZrBlbjgqm81fdLUU6QzODyFsUdr+ktwMeHypO4=; b=gUpoSEebGSj3l7vjKUnUekc+RV
-        0l5beNce78Gpg6mslD2nRFNhy0MTORuiFP9mnrQ0GIeALgKaazntpCPBLrF78SB0FOdD+lx90FWFc
-        PbgfCdLmH05zIm/8qvAmOXpTvEHDukwh6rruhMm9lC7w1u8FPHTt5xW9bzXMvW92XPXGKbwFrJXcQ
-        sbw9Xptahk90YIG8aAIjBo3EebbQyRe3HfNY3DRcoCNkh2j8lhwDzpPigNbPs1Cw47ovTB7WtiB2O
-        yzMXR6tPlHZvFBl/5PUqkF7Ws2V0Lzu0hMuBJzWFvOh9ooKFTP0fhMuyW4lt5K/Y3qKyfNPq3sQuY
-        Ahwjwttg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jOfCp-0007KT-GR; Wed, 15 Apr 2020 10:23:43 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 73A223006E0;
-        Wed, 15 Apr 2020 12:23:40 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 5DB3B2BC6F2DD; Wed, 15 Apr 2020 12:23:40 +0200 (CEST)
-Date:   Wed, 15 Apr 2020 12:23:40 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     CodyYao-oc <CodyYao-oc@zhaoxin.com>
-Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, tglx@linutronix.de, bp@alien8.de,
-        x86@kernel.org, hpa@zytor.com, linux-kernel@vger.kernel.org,
-        cooperyan@zhaoxin.com, codyyao@zhaoxin.com
-Subject: Re: [PATCH] x86/perf: Add hardware performance events support for
- Zhaoxin CPU.
-Message-ID: <20200415102340.GB20730@hirez.programming.kicks-ass.net>
-References: <1586747669-4827-1-git-send-email-CodyYao-oc@zhaoxin.com>
+        Wed, 15 Apr 2020 06:23:51 -0400
+Received: from mo6-p03-ob.smtp.rzone.de (mo6-p03-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5303::6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F1F7C03C1AB;
+        Wed, 15 Apr 2020 03:22:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1586946176;
+        s=strato-dkim-0002; d=chronox.de;
+        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=UsEDbLiAgf2IAri8d26iHU8c22m1vnVqWvSP369qGBo=;
+        b=GIxKv/5i/9ho7vJ/xmygrtVIbDJWQ7HhWwCNGK5/c36FZpSMmeY5Wj7xfNvfTzBPIG
+        HVN7c1CN4MJMFvfPWQqn9UsHcuQRCVLvYOYc3qNCq4a8j5BLsuKRNDgLSCQ2SAevtvv6
+        3q6t4hpHy2xXNMcZ7vVaWfmmohe49UoSWf3R/JS2Ndbjgejp82OKi09Rs2LEokvnxhZC
+        cGrwXOyGnVucmQAaARE+ePoK+zSkX9Eae9/itn2OOaggIBBxtWHV1ieM7UZW40oC7RSn
+        40dVdCRRTOgzSOTMgTMiSPAOWtFSVDQsKofjDclBEVjaLSaWSxqpgZeP6UKM0HMfDl8q
+        hFpA==
+X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzGHXPZIvSaiyU="
+X-RZG-CLASS-ID: mo00
+Received: from positron.chronox.de
+        by smtp.strato.de (RZmta 46.4.0 DYNA|AUTH)
+        with ESMTPSA id 404ef0w3FAJl122
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Wed, 15 Apr 2020 12:19:47 +0200 (CEST)
+From:   Stephan =?ISO-8859-1?Q?M=FCller?= <smueller@chronox.de>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-api@vger.kernel.org,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        Nicolai Stange <nstange@suse.de>,
+        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
+        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
+        Roman Drahtmueller <draht@schaltsekun.de>,
+        Neil Horman <nhorman@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Julia Lawall <julia.lawall@inria.fr>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [PATCH v30 09/12] LRNG - add Jitter RNG fast noise source
+Date:   Wed, 15 Apr 2020 12:13:57 +0200
+Message-ID: <6523697.NaLa7ryNbq@positron.chronox.de>
+In-Reply-To: <11836144.hkEK2qVKZC@positron.chronox.de>
+References: <11836144.hkEK2qVKZC@positron.chronox.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1586747669-4827-1-git-send-email-CodyYao-oc@zhaoxin.com>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 11:14:29AM +0800, CodyYao-oc wrote:
-> Zhaoxin CPU has provided facilities for monitoring performance
-> via PMU(Performance Monitor Unit), but the functionality is unused so far.
-> Therefore, add support for zhaoxin pmu to make performance related
-> hardware events available.
-> 
-> Signed-off-by: CodyYao-oc <CodyYao-oc@zhaoxin.com>
-> Reported-by: kbuild test robot <lkp@intel.com>
+The Jitter RNG fast noise source implemented as part of the kernel
+crypto API is queried for 256 bits of entropy at the time the seed
+buffer managed by the LRNG is about to be filled.
 
-What's that reported-by thing? Did the robot complain you didn't have a
-PMU implementation?
+CC: "Eric W. Biederman" <ebiederm@xmission.com>
+CC: "Alexander E. Patrakov" <patrakov@gmail.com>
+CC: "Ahmed S. Darwish" <darwish.07@gmail.com>
+CC: "Theodore Y. Ts'o" <tytso@mit.edu>
+CC: Willy Tarreau <w@1wt.eu>
+CC: Matthew Garrett <mjg59@srcf.ucam.org>
+CC: Vito Caputo <vcaputo@pengaru.com>
+CC: Andreas Dilger <adilger.kernel@dilger.ca>
+CC: Jan Kara <jack@suse.cz>
+CC: Ray Strode <rstrode@redhat.com>
+CC: William Jon McCann <mccann@jhu.edu>
+CC: zhangjs <zachary@baishancloud.com>
+CC: Andy Lutomirski <luto@kernel.org>
+CC: Florian Weimer <fweimer@redhat.com>
+CC: Lennart Poettering <mzxreary@0pointer.de>
+CC: Nicolai Stange <nstange@suse.de>
+Reviewed-by: Marcelo Henrique Cerri <marcelo.cerri@canonical.com>
+Reviewed-by: Roman Drahtmueller <draht@schaltsekun.de>
+Tested-by: Roman Drahtm=FCller <draht@schaltsekun.de>
+Tested-by: Marcelo Henrique Cerri <marcelo.cerri@canonical.com>
+Tested-by: Neil Horman <nhorman@redhat.com>
+Signed-off-by: Stephan Mueller <smueller@chronox.de>
+=2D--
+ drivers/char/lrng/Kconfig     | 12 +++++
+ drivers/char/lrng/Makefile    |  1 +
+ drivers/char/lrng/lrng_jent.c | 88 +++++++++++++++++++++++++++++++++++
+ 3 files changed, 101 insertions(+)
+ create mode 100644 drivers/char/lrng/lrng_jent.c
 
-Anyway, I've made the below changes to the patch.
-
----
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -618,6 +618,7 @@ struct x86_pmu {
- 
- 	/* PMI handler bits */
- 	unsigned int	late_ack		:1,
-+			enabled_ack		:1,
- 			counter_freezing	:1;
- 	/*
- 	 * sysfs attrs
---- a/arch/x86/events/zhaoxin/core.c
-+++ b/arch/x86/events/zhaoxin/core.c
-@@ -357,10 +357,9 @@ static int zhaoxin_pmu_handle_irq(struct
- {
- 	struct perf_sample_data data;
- 	struct cpu_hw_events *cpuc;
--	int bit;
--	u64 status;
--	bool is_zxc = false;
- 	int handled = 0;
-+	u64 status;
-+	int bit;
- 
- 	cpuc = this_cpu_ptr(&cpu_hw_events);
- 	apic_write(APIC_LVTPC, APIC_DM_NMI);
-@@ -369,14 +368,8 @@ static int zhaoxin_pmu_handle_irq(struct
- 	if (!status)
- 		goto done;
- 
--	if (boot_cpu_data.x86 == 0x06 &&
--		(boot_cpu_data.x86_model == 0x0f ||
--			boot_cpu_data.x86_model == 0x19))
--		is_zxc = true;
- again:
--
--	/*Clearing status works only if the global control is enable on zxc.*/
--	if (is_zxc)
-+	if (x86_pmu.enabled_ack)
- 		zxc_pmu_ack_status(status);
- 	else
- 		zhaoxin_pmu_ack_status(status);
-@@ -504,12 +497,10 @@ static __init void zhaoxin_arch_events_q
- 	int bit;
- 
- 	/* disable event that reported as not presend by cpuid */
--	for_each_set_bit(bit, x86_pmu.events_mask,
--			ARRAY_SIZE(zx_arch_events_map)) {
--
-+	for_each_set_bit(bit, x86_pmu.events_mask, ARRAY_SIZE(zx_arch_events_map)) {
- 		zx_pmon_event_map[zx_arch_events_map[bit].id] = 0;
- 		pr_warn("CPUID marked event: \'%s\' unavailable\n",
--				zx_arch_events_map[bit].name);
-+			zx_arch_events_map[bit].name);
- 	}
- }
- 
-@@ -534,12 +525,12 @@ __init int zhaoxin_pmu_init(void)
- 		return -ENODEV;
- 
- 	version = eax.split.version_id;
--	if (version == 2) {
--		x86_pmu = zhaoxin_pmu;
--		pr_info("Version check pass!\n");
--	} else
-+	if (version != 2)
- 		return -ENODEV;
- 
-+	x86_pmu = zhaoxin_pmu;
-+	pr_info("Version check pass!\n");
+diff --git a/drivers/char/lrng/Kconfig b/drivers/char/lrng/Kconfig
+index 7afc965a4d52..4684e838f011 100644
+=2D-- a/drivers/char/lrng/Kconfig
++++ b/drivers/char/lrng/Kconfig
+@@ -94,4 +94,16 @@ config LRNG_KCAPI
+ 	  provided by the selected kernel crypto API RNG.
+ endif # LRNG_DRNG_SWITCH
+=20
++config LRNG_JENT
++	bool "Enable Jitter RNG as LRNG Seed Source"
++	depends on CRYPTO
++	select CRYPTO_JITTERENTROPY
++	help
++	  The Linux RNG may use the Jitter RNG as noise source. Enabling
++	  this option enables the use of the Jitter RNG. Its default
++	  entropy level is 16 bits of entropy per 256 data bits delivered
++	  by the Jitter RNG. This entropy level can be changed at boot
++	  time or at runtime with the lrng_base.jitterrng configuration
++	  variable.
 +
- 	x86_pmu.version			= version;
- 	x86_pmu.num_counters		= eax.split.num_counters;
- 	x86_pmu.cntval_bits		= eax.split.bit_width;
-@@ -552,11 +543,13 @@ __init int zhaoxin_pmu_init(void)
- 
- 	switch (boot_cpu_data.x86) {
- 	case 0x06:
--		if (boot_cpu_data.x86_model == 0x0f ||
--			boot_cpu_data.x86_model == 0x19) {
-+		if (boot_cpu_data.x86_model == 0x0f || boot_cpu_data.x86_model == 0x19) {
- 
- 			x86_pmu.max_period = x86_pmu.cntval_mask >> 1;
- 
-+			/* Clearing status works only if the global control is enable on zxc. */
-+			x86_pmu.enabled_ack = 1;
+ endif # LRNG
+diff --git a/drivers/char/lrng/Makefile b/drivers/char/lrng/Makefile
+index 94b2dfb2dfdb..4f5b6f38f0c4 100644
+=2D-- a/drivers/char/lrng/Makefile
++++ b/drivers/char/lrng/Makefile
+@@ -13,3 +13,4 @@ obj-$(CONFIG_SYSCTL)		+=3D lrng_proc.o
+ obj-$(CONFIG_LRNG_DRNG_SWITCH)	+=3D lrng_switch.o
+ obj-$(CONFIG_LRNG_DRBG)		+=3D lrng_drbg.o
+ obj-$(CONFIG_LRNG_KCAPI)	+=3D lrng_kcapi.o
++obj-$(CONFIG_LRNG_JENT)		+=3D lrng_jent.o
+diff --git a/drivers/char/lrng/lrng_jent.c b/drivers/char/lrng/lrng_jent.c
+new file mode 100644
+index 000000000000..225505271fcb
+=2D-- /dev/null
++++ b/drivers/char/lrng/lrng_jent.c
+@@ -0,0 +1,88 @@
++// SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
++/*
++ * LRNG Fast Noise Source: Jitter RNG
++ *
++ * Copyright (C) 2016 - 2020, Stephan Mueller <smueller@chronox.de>
++ */
 +
- 			x86_pmu.event_constraints = zxc_event_constraints;
- 			zx_pmon_event_map[PERF_COUNT_HW_INSTRUCTIONS] = 0;
- 			zx_pmon_event_map[PERF_COUNT_HW_CACHE_REFERENCES] = 0;
-@@ -564,40 +557,37 @@ __init int zhaoxin_pmu_init(void)
- 			zx_pmon_event_map[PERF_COUNT_HW_BUS_CYCLES] = 0;
- 
- 			pr_cont("ZXC events, ");
--		} else
--			return -ENODEV;
--		break;
-+			break;
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
++#include <linux/types.h>
++#include <crypto/internal/jitterentropy.h>
++
++#include "lrng_internal.h"
++
++/*
++ * Estimated entropy of data is a 16th of LRNG_DRNG_SECURITY_STRENGTH_BITS.
++ * Albeit a full entropy assessment is provided for the noise source indic=
+ating
++ * that it provides high entropy rates and considering that it deactivates
++ * when it detects insufficient hardware, the chosen under estimation of
++ * entropy is considered to be acceptable to all reviewers.
++ */
++static u32 jitterrng =3D LRNG_DRNG_SECURITY_STRENGTH_BITS>>4;
++module_param(jitterrng, uint, 0644);
++MODULE_PARM_DESC(jitterrng, "Entropy in bits of 256 data bits from Jitter =
+RNG noise source");
++
++/**
++ * lrng_get_jent() - Get Jitter RNG entropy
++ *
++ * @outbuf: buffer to store entropy
++ * @outbuflen: length of buffer
++ *
++ * Return:
++ * * > 0 on success where value provides the added entropy in bits
++ * * 0 if no fast source was available
++ */
++static struct rand_data *lrng_jent_state;
++
++u32 lrng_get_jent(u8 *outbuf, unsigned int outbuflen)
++{
++	int ret;
++	u32 ent_bits =3D jitterrng;
++	unsigned long flags;
++	static DEFINE_SPINLOCK(lrng_jent_lock);
++	static int lrng_jent_initialized =3D 0;
++
++	spin_lock_irqsave(&lrng_jent_lock, flags);
++
++	if (!ent_bits || (lrng_jent_initialized =3D=3D -1)) {
++		spin_unlock_irqrestore(&lrng_jent_lock, flags);
++		return 0;
++	}
++
++	if (!lrng_jent_initialized) {
++		lrng_jent_state =3D jent_lrng_entropy_collector();
++		if (!lrng_jent_state) {
++			jitterrng =3D 0;
++			lrng_jent_initialized =3D -1;
++			spin_unlock_irqrestore(&lrng_jent_lock, flags);
++			pr_info("Jitter RNG unusable on current system\n");
++			return 0;
 +		}
-+		return -ENODEV;
++		lrng_jent_initialized =3D 1;
++		pr_debug("Jitter RNG working on current system\n");
++	}
++	ret =3D jent_read_entropy(lrng_jent_state, outbuf, outbuflen);
++	spin_unlock_irqrestore(&lrng_jent_lock, flags);
 +
- 	case 0x07:
- 		zx_pmon_event_map[PERF_COUNT_HW_STALLED_CYCLES_FRONTEND] =
--		X86_CONFIG(.event = 0x01, .umask = 0x01, .inv = 0x01, .cmask = 0x01);
-+			X86_CONFIG(.event = 0x01, .umask = 0x01, .inv = 0x01, .cmask = 0x01);
- 
- 		zx_pmon_event_map[PERF_COUNT_HW_STALLED_CYCLES_BACKEND] =
--		X86_CONFIG(.event = 0x0f, .umask = 0x04, .inv = 0, .cmask = 0);
-+			X86_CONFIG(.event = 0x0f, .umask = 0x04, .inv = 0, .cmask = 0);
- 
- 		switch (boot_cpu_data.x86_model) {
- 		case 0x1b:
- 			memcpy(hw_cache_event_ids, zxd_hw_cache_event_ids,
--				sizeof(hw_cache_event_ids));
-+			       sizeof(hw_cache_event_ids));
- 
- 			x86_pmu.event_constraints = zxd_event_constraints;
- 
--			zx_pmon_event_map[PERF_COUNT_HW_BRANCH_INSTRUCTIONS]
--				= 0x0700;
--			zx_pmon_event_map[PERF_COUNT_HW_BRANCH_MISSES]
--				= 0x0709;
-+			zx_pmon_event_map[PERF_COUNT_HW_BRANCH_INSTRUCTIONS] = 0x0700;
-+			zx_pmon_event_map[PERF_COUNT_HW_BRANCH_MISSES] = 0x0709;
- 
- 			pr_cont("ZXD events, ");
- 			break;
- 		case 0x3b:
- 			memcpy(hw_cache_event_ids, zxe_hw_cache_event_ids,
--				sizeof(hw_cache_event_ids));
-+			       sizeof(hw_cache_event_ids));
- 
- 			x86_pmu.event_constraints = zxd_event_constraints;
- 
--			zx_pmon_event_map[PERF_COUNT_HW_BRANCH_INSTRUCTIONS]
--				= 0x0028;
--			zx_pmon_event_map[PERF_COUNT_HW_BRANCH_MISSES]
--				= 0x0029;
-+			zx_pmon_event_map[PERF_COUNT_HW_BRANCH_INSTRUCTIONS] = 0x0028;
-+			zx_pmon_event_map[PERF_COUNT_HW_BRANCH_MISSES] = 0x0029;
- 
- 			pr_cont("ZXE events, ");
- 			break;
-@@ -605,13 +595,13 @@ __init int zhaoxin_pmu_init(void)
- 			return -ENODEV;
- 		}
- 		break;
++	if (ret) {
++		pr_debug("Jitter RNG failed with %d\n", ret);
++		return 0;
++	}
 +
- 	default:
- 		return -ENODEV;
- 	}
- 
- 	x86_pmu.intel_ctrl = (1 << (x86_pmu.num_counters)) - 1;
--	x86_pmu.intel_ctrl |=
--		((1LL << x86_pmu.num_counters_fixed)-1) << INTEL_PMC_IDX_FIXED;
-+	x86_pmu.intel_ctrl |= ((1LL << x86_pmu.num_counters_fixed)-1) << INTEL_PMC_IDX_FIXED;
- 
- 	if (x86_pmu.event_constraints) {
- 		for_each_event_constraint(c, x86_pmu.event_constraints) {
---- a/arch/x86/kernel/cpu/perfctr-watchdog.c
-+++ b/arch/x86/kernel/cpu/perfctr-watchdog.c
-@@ -63,6 +63,7 @@ static inline unsigned int nmi_perfctr_m
- 		case 15:
- 			return msr - MSR_P4_BPU_PERFCTR0;
- 		}
-+		fallthrough;
- 	case X86_VENDOR_ZHAOXIN:
- 	case X86_VENDOR_CENTAUR:
- 		return msr - MSR_ARCH_PERFMON_PERFCTR0;
-@@ -95,6 +96,7 @@ static inline unsigned int nmi_evntsel_m
- 		case 15:
- 			return msr - MSR_P4_BSU_ESCR0;
- 		}
-+		fallthrough;
- 	case X86_VENDOR_ZHAOXIN:
- 	case X86_VENDOR_CENTAUR:
- 		return msr - MSR_ARCH_PERFMON_EVENTSEL0;
++	/* Obtain entropy statement */
++	if (outbuflen !=3D LRNG_DRNG_SECURITY_STRENGTH_BYTES)
++		ent_bits =3D (ent_bits * outbuflen<<3) /
++			   LRNG_DRNG_SECURITY_STRENGTH_BITS;
++	/* Cap entropy to buffer size in bits */
++	ent_bits =3D min_t(u32, ent_bits, outbuflen<<3);
++	pr_debug("obtained %u bits of entropy from Jitter RNG noise source\n",
++		 ent_bits);
++
++	return ent_bits;
++}
++
++u32 lrng_jent_entropylevel(void)
++{
++	return min_t(u32, jitterrng, LRNG_DRNG_SECURITY_STRENGTH_BITS);
++}
+=2D-=20
+2.25.2
+
+
+
+
