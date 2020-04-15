@@ -2,146 +2,198 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8845C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 18:08:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB3D8C3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 18:10:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FCE4206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 18:08:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 956C8206D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 18:10:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DzHggght"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uyR3zgTo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2411698AbgDOSIQ (ORCPT
+        id S2411705AbgDOSKr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 14:08:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44738 "EHLO
+        Wed, 15 Apr 2020 14:10:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2405877AbgDOSIK (ORCPT
+        by vger.kernel.org with ESMTP id S2405880AbgDOSKl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 14:08:10 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66089C061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 11:08:10 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id r25so4416670oij.4
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 11:08:10 -0700 (PDT)
+        Wed, 15 Apr 2020 14:10:41 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B577FC061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 11:10:41 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id 201so357912pfv.2
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 11:10:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Hj+w2b8MlzXiZplgu3jb4eTtjZmFrNnBBz27RkzElPo=;
-        b=DzHggghtb9lsQ0Q5rBTqUiusLkpGRDErRwTCQaNB7sZoQf5TAYp0xUiSksirx/4JsR
-         m7Apwvq72YGO9sUcFLt6/dyDGwdBmW2m2599IIObTzfKOD0FDWT6kbJ+ekPD6sXSG2xf
-         AVP4hGdSZeM5wQ4RHQ5dfxMHkcYaboDyrJO1L8M3CiVBb4n12/jlgzn+zg4tuVPI8vZt
-         eyDJmgSj0sCige7YQ6ntjy35dEfEh5FsmqVl0Miqj7owZ49B+kREg/rLwtz/zlj80g++
-         glY+vLySWV0GRC0blaC7+OKeq+DDghUZ4SYNDZlxXkMNvRyrbBHg10WQPxiR8JKOmgbF
-         bJeA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=yOYBo8OjxgFUtMIRY6LWGA61eRM9SefgAlvGVD6yLNE=;
+        b=uyR3zgToYS8mKENYz2nWMYAMB/GuEttq4rdHLh72Oogd0C9iaqdiY+zZ+YwXHTxJww
+         R5kmMnjaktd+YRbiCzCC4BbARWPsJOeRydzeCsJWJgTsd3c+ZtrK8ZrpeHSZoBNSYQ5G
+         jCbxh5+SPvtgYxzE2yLKx7r3YO+deFbwHqEuUlNKhFyymhIRiP0kasFWvNLGddCTtDh1
+         ODAQGq35qmLcM+g3/MNFmMGqG2IfVqgZXw5GgLPA6kfU8hYkneMF4ujTiSPkgg8kn2xF
+         9tQO0dZXU1vFQvqllbJNdEc6gbmXJW57lkYwwkdoG2MeCAKzd21VviQxqYLR38PykAeR
+         r/Ag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Hj+w2b8MlzXiZplgu3jb4eTtjZmFrNnBBz27RkzElPo=;
-        b=n/jNne4KxGkL6T/F41zX4kQSpnaO7SCIKga8ee9fRzQZKRyx7PZphhzeqqoeVtf5g/
-         r7WmNUXOPUckuh1jj+ZcGdkYFG8VKrb+p8LloX+0i5WzoI+58M+zjU1tc+kGG3Hf2LBP
-         Km8oQY8D2quWjVYhitz3nZT5WeGCD15oS903GfdllTzFhnwX03imj7bakrMdXTTx9joj
-         fsaGcpT36lO8kAnj/EDsA3VyZXKHp5DCdTu2KuzSADU/rHb/RK+hOnBNKHzqYPljrlKc
-         ZrHgyc5KbSzVamqL/W9tc1MDrYY3nWPqtgjJm7wGhMoL3B1tEQ98b8hb6Hc39mHE29Tn
-         P9QA==
-X-Gm-Message-State: AGi0PuarF9dgyn/lH48BFXi0rD1jdldSU4AqECuZw1vILgba8MYHYsFu
-        v2PrVgqPl72Rx2npTeXDzJJWQOEFmSvmENKdJp5khg==
-X-Google-Smtp-Source: APiQypLxNn+xKlz0LPCMbXE2SC11pDSOPtYcU6PNJY5ioAXG6B9257iqvNLz+mr50JDvbTk8i5s8S9BNWoZ5hgkfMHo=
-X-Received: by 2002:a05:6808:4e:: with SMTP id v14mr385130oic.70.1586974089086;
- Wed, 15 Apr 2020 11:08:09 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=yOYBo8OjxgFUtMIRY6LWGA61eRM9SefgAlvGVD6yLNE=;
+        b=Sn8UPKj3ES8ukG1h3o2lD6i36QfYWY9Wq6Eh1Rn2uUu3wehwSbQ3zXgNXs0qXzZNeT
+         T1/gOatwFhOrYVr47dZfZsgqkKLUzpJMB6XvoVlCNszmMA2Z1+TUxr+m3XbpgNliiGpl
+         BnOpS9TOpYLrUEwSuOfl2VRKoUFQDtr9BMIB3cZdijFZw3rz0Y5pxA/i5AtNUmmOkRpr
+         2XbxkG8k6/sVUrTc+/tJMNfirxZRwuNKfCLkekv7yKnVkeT4cFwFzpMDZWM/gYc/flGo
+         L4IqfY26caWuBcX3HQbMcQhfseJOJi46ONtz+a6o+t3BNbNZjdzT8QBJP1lq9TevqDsj
+         5bhw==
+X-Gm-Message-State: AGi0PubhnVtVoBSgV22NYuRnwJI+Wd6Ry7/0VEGULe2P2JDzyVFPZZ2i
+        jNm9iyXjICiIrSf+NtEFUTepWw==
+X-Google-Smtp-Source: APiQypJ6qJ39VM0kUmNEVlXtvEwbTTfiXrQq1kKfK78aoE4KVf394jbk0vwvHXBhxKyQYNlGu08xgQ==
+X-Received: by 2002:a62:dd48:: with SMTP id w69mr18468228pff.86.1586974241107;
+        Wed, 15 Apr 2020 11:10:41 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id 198sm14741291pfa.87.2020.04.15.11.10.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2020 11:10:40 -0700 (PDT)
+Date:   Wed, 15 Apr 2020 12:10:38 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Siddharth Gupta <sidgup@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, ohad@wizery.com,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, tsoni@codeaurora.org,
+        psodagud@codeaurora.org, rishabhb@codeaurora.org
+Subject: Re: [PATCH v2 6/6] remoteproc: qcom: Add notification types to SSR
+Message-ID: <20200415181038.GE16583@xps15>
+References: <1586389003-26675-1-git-send-email-sidgup@codeaurora.org>
+ <1586389003-26675-7-git-send-email-sidgup@codeaurora.org>
 MIME-Version: 1.0
-References: <202004151054.BD695840@keescook>
-In-Reply-To: <202004151054.BD695840@keescook>
-From:   Marco Elver <elver@google.com>
-Date:   Wed, 15 Apr 2020 20:07:57 +0200
-Message-ID: <CANpmjNPORrwPkqByhtKgVoh5=KHkpYHM0zRv6O1RgONmx3ZqOg@mail.gmail.com>
-Subject: Re: [PATCH] slub: Avoid redzone when choosing freepointer location
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1586389003-26675-7-git-send-email-sidgup@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Apr 2020 at 19:55, Kees Cook <keescook@chromium.org> wrote:
->
-> Marco Elver reported system crashes when booting with "slub_debug=Z".
-> The freepointer location (s->offset) was not taking into account that
-> the "inuse" size that includes the redzone area should not be used by
-> the freelist pointer. Change the calculation to save the area of the
-> object that an inline freepointer may be written into.
->
-> Reported-by: Marco Elver <elver@google.com>
-> Link: https://lore.kernel.org/linux-mm/20200415164726.GA234932@google.com
-> Fixes: 3202fa62fb43 ("slub: relocate freelist pointer to middle of object")
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-
-Works for me, thank you!
-
-Tested-by: Marco Elver <elver@google.com>
-
+On Wed, Apr 08, 2020 at 04:36:43PM -0700, Siddharth Gupta wrote:
+> The SSR subdevice only adds callback for the unprepare event. Add callbacks
+> for unprepare, start and prepare events. The client driver for a particular
+> remoteproc might be interested in knowing the status of the remoteproc
+> while undergoing SSR, not just when the remoteproc has finished shutting
+> down.
+> 
+> Signed-off-by: Siddharth Gupta <sidgup@codeaurora.org>
 > ---
->  mm/slub.c | 12 ++++++++++--
->  1 file changed, 10 insertions(+), 2 deletions(-)
->
-> diff --git a/mm/slub.c b/mm/slub.c
-> index 332d4b459a90..9bf44955c4f1 100644
-> --- a/mm/slub.c
-> +++ b/mm/slub.c
-> @@ -3533,6 +3533,7 @@ static int calculate_sizes(struct kmem_cache *s, int forced_order)
+>  drivers/remoteproc/qcom_common.c | 39 +++++++++++++++++++++++++++++++++++----
+>  include/linux/remoteproc.h       | 15 +++++++++++++++
+>  2 files changed, 50 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/remoteproc/qcom_common.c b/drivers/remoteproc/qcom_common.c
+> index 56b0c3e..06611f2 100644
+> --- a/drivers/remoteproc/qcom_common.c
+> +++ b/drivers/remoteproc/qcom_common.c
+> @@ -183,9 +183,9 @@ EXPORT_SYMBOL_GPL(qcom_remove_smd_subdev);
+>   *
+>   * Returns pointer to srcu notifier head on success, ERR_PTR on failure.
+>   *
+> - * This registers the @notify function as handler for restart notifications. As
+> - * remote processors are stopped this function will be called, with the rproc
+> - * pointer passed as a parameter.
+> + * This registers the @notify function as handler for powerup/shutdown
+> + * notifications. This function will be invoked inside the callbacks registered
+> + * for the ssr subdevice, with the rproc pointer passed as a parameter.
+>   */
+>  void *qcom_register_ssr_notifier(struct rproc *rproc, struct notifier_block *nb)
 >  {
->         slab_flags_t flags = s->flags;
->         unsigned int size = s->object_size;
-> +       unsigned int freepointer_area;
->         unsigned int order;
->
->         /*
-> @@ -3541,6 +3542,13 @@ static int calculate_sizes(struct kmem_cache *s, int forced_order)
->          * the possible location of the free pointer.
->          */
->         size = ALIGN(size, sizeof(void *));
-> +       /*
-> +        * This is the area of the object where a freepointer can be
-> +        * safely written. If redzoning adds more to the inuse size, we
-> +        * can't use that portion for writing the freepointer, so
-> +        * s->offset must be limited within this for the general case.
-> +        */
-> +       freepointer_area = size;
->
->  #ifdef CONFIG_SLUB_DEBUG
->         /*
-> @@ -3582,13 +3590,13 @@ static int calculate_sizes(struct kmem_cache *s, int forced_order)
->                  */
->                 s->offset = size;
->                 size += sizeof(void *);
-> -       } else if (size > sizeof(void *)) {
-> +       } else if (freepointer_area > sizeof(void *)) {
->                 /*
->                  * Store freelist pointer near middle of object to keep
->                  * it away from the edges of the object to avoid small
->                  * sized over/underflows from neighboring allocations.
->                  */
-> -               s->offset = ALIGN(size / 2, sizeof(void *));
-> +               s->offset = ALIGN(freepointer_area / 2, sizeof(void *));
->         }
->
->  #ifdef CONFIG_SLUB_DEBUG
-> --
-> 2.20.1
->
->
-> --
-> Kees Cook
+> @@ -227,11 +227,39 @@ int qcom_unregister_ssr_notifier(void *notify, struct notifier_block *nb)
+>  }
+>  EXPORT_SYMBOL_GPL(qcom_unregister_ssr_notifier);
+>  
+> +static int ssr_notify_prepare(struct rproc_subdev *subdev)
+> +{
+> +	struct qcom_rproc_ssr *ssr = to_ssr_subdev(subdev);
+> +
+> +	srcu_notifier_call_chain(ssr->rproc_notif_list,
+> +				 RPROC_BEFORE_POWERUP, (void *)ssr->name);
+> +	return 0;
+> +}
+> +
+> +static int ssr_notify_start(struct rproc_subdev *subdev)
+> +{
+> +	struct qcom_rproc_ssr *ssr = to_ssr_subdev(subdev);
+> +
+> +	srcu_notifier_call_chain(ssr->rproc_notif_list,
+> +				 RPROC_AFTER_POWERUP, (void *)ssr->name);
+> +	return 0;
+> +}
+> +
+> +static void ssr_notify_stop(struct rproc_subdev *subdev, bool crashed)
+> +{
+> +	struct qcom_rproc_ssr *ssr = to_ssr_subdev(subdev);
+> +
+> +	srcu_notifier_call_chain(ssr->rproc_notif_list,
+> +				 RPROC_BEFORE_SHUTDOWN, (void *)ssr->name);
+> +}
+> +
+> +
+>  static void ssr_notify_unprepare(struct rproc_subdev *subdev)
+>  {
+>  	struct qcom_rproc_ssr *ssr = to_ssr_subdev(subdev);
+>  
+> -	srcu_notifier_call_chain(ssr->rproc_notif_list, 0, (void *)ssr->name);
+> +	srcu_notifier_call_chain(ssr->rproc_notif_list,
+> +				 RPROC_AFTER_SHUTDOWN, (void *)ssr->name);
+>  }
+>  
+>  /**
+> @@ -248,6 +276,9 @@ void qcom_add_ssr_subdev(struct rproc *rproc, struct qcom_rproc_ssr *ssr,
+>  {
+>  	ssr->name = ssr_name;
+>  	ssr->subdev.name = kstrdup("ssr_notifs", GFP_KERNEL);
+> +	ssr->subdev.prepare = ssr_notify_prepare;
+> +	ssr->subdev.start = ssr_notify_start;
+> +	ssr->subdev.stop = ssr_notify_stop;
+>  	ssr->subdev.unprepare = ssr_notify_unprepare;
+>  	ssr->rproc_notif_list = kzalloc(sizeof(struct srcu_notifier_head),
+>  								GFP_KERNEL);
+> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+> index 687e1eb..facadb07 100644
+> --- a/include/linux/remoteproc.h
+> +++ b/include/linux/remoteproc.h
+> @@ -452,6 +452,21 @@ struct rproc_dump_segment {
+>  };
+>  
+>  /**
+> + * enum rproc_notif_type - Different stages of remoteproc notifications
+> + * @RPROC_BEFORE_SHUTDOWN:	unprepare stage of  remoteproc
+> + * @RPROC_AFTER_SHUTDOWN:	stop stage of  remoteproc
+> + * @RPROC_BEFORE_POWERUP:	prepare stage of  remoteproc
+> + * @RPROC_AFTER_POWERUP:	start stage of  remoteproc
+> + */
+> +enum rproc_notif_type {
+> +	RPROC_BEFORE_SHUTDOWN,
+> +	RPROC_AFTER_SHUTDOWN,
+> +	RPROC_BEFORE_POWERUP,
+> +	RPROC_AFTER_POWERUP,
+> +	RPROC_MAX
+
+Not sure why you have a RPROC_MAX here...  It is not needed in this set but it
+might be in some downstream or upcoming code. 
+
+Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+
+> +};
+> +
+> +/**
+>   * struct rproc - represents a physical remote processor device
+>   * @node: list node of this rproc object
+>   * @domain: iommu domain
+> -- 
+> Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
