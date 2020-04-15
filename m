@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A20B2C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 00:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D362C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 00:15:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7282620774
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 00:14:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 169F62072D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 00:15:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586909656;
-	bh=DDPko3qzftraw9JGNnT2damoPH954XYBiL7tnFM7Aug=;
+	s=default; t=1586909706;
+	bh=E3lqc6yFCVNuZKv0A7m/xGbVOhzCfARPpSX+MtPd388=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=klo6LZns75WGODAj8p8vC4r8bzYe2Na/RJa9qtmIXbZDic0qnypuzRRKI2mEvn1gR
-	 l7YcavQb5jDoZDjylpalWEKuNzP0btVRWXkPPZL3Cpco9tGsRxNHUHfcCnSpUUjqa4
-	 VH0DouLLqKOxhyoQByUKXasIL25cYxtUfOlzVtb8=
+	b=r5U2p5gSaabC7rTfvJjNINeKPF9Yyv+WUxpogtSF1zlx+pIfe7UV7Lq4Q0V9l90IR
+	 R71HrUfPyty19hgwKxg2impaPD3DnyIJZyVv4LMUxz6XuS20UQZyEGgtcdFBhwCAni
+	 reDIFS23BCPzP/+GfUztkCT21LBBpvneIQ5l9lgI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634568AbgDOAN7 (ORCPT
+        id S2392330AbgDOAOh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 20:13:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36998 "EHLO mail.kernel.org"
+        Tue, 14 Apr 2020 20:14:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392315AbgDOANX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 20:13:23 -0400
+        id S2392316AbgDOANZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 20:13:25 -0400
 Received: from localhost (mobile-166-175-184-103.mycingular.net [166.175.184.103])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97B9720774;
-        Wed, 15 Apr 2020 00:13:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C740E20787;
+        Wed, 15 Apr 2020 00:13:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586909597;
-        bh=DDPko3qzftraw9JGNnT2damoPH954XYBiL7tnFM7Aug=;
+        s=default; t=1586909605;
+        bh=E3lqc6yFCVNuZKv0A7m/xGbVOhzCfARPpSX+MtPd388=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mNjblSYHzwMejKzDZbezJEHTEOJkIpAk5fxnaWdnPwTuXPiXd8kc9yqDvzdlhXgD/
-         WVsT2zCRlGHzS9cUBWmbEgc4XN3yscP/1EkpUBD/PMN0gVn2H7yzKlHQt+Gxf9VAi8
-         AsFF4OZFCSPHUUBuy+5byaSJ+L6HPjaZfJhGZWXM=
+        b=1JOgjLhWE5zpQDqPA8sPGXSHxAKTkOVOze9NtEpQ48DrqT0ckXMwffVj7OpkcqOeq
+         tn0TI/1xYQnmw/Gs5pftyNQLbHDtmxYQhdd1bIO+XAALJh/ZOT3sx9Lh2Yzdotk+BK
+         hvRLgnGXBdSgc+YVfHw5rf4tFcagTZYtBtD/9IE4=
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     linux-pci@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 2/4] PCI: keystone: Don't select CONFIG_PCI_KEYSTONE_HOST by default
-Date:   Tue, 14 Apr 2020 19:12:42 -0500
-Message-Id: <20200415001244.144623-3-helgaas@kernel.org>
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: [PATCH 4/4] PCI/ASPM: Don't select CONFIG_PCIEASPM by default
+Date:   Tue, 14 Apr 2020 19:12:44 -0500
+Message-Id: <20200415001244.144623-5-helgaas@kernel.org>
 X-Mailer: git-send-email 2.26.0.110.g2183baf09c-goog
 In-Reply-To: <20200415001244.144623-1-helgaas@kernel.org>
 References: <20200415001244.144623-1-helgaas@kernel.org>
@@ -59,30 +58,29 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bjorn Helgaas <bhelgaas@google.com>
 
-Drivers should not be selected by default because that bloats the kernel
-for people who don't need them.
+PCIe Active State Power Management (ASPM) is optional and there's no need
+for it to be selected by default.
 
-Remove the "default y" for CONFIG_PCI_KEYSTONE_HOST.
+Remove the "default y" for CONFIG_PCIEASPM.
 
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Murali Karicheri <m-karicheri2@ti.com>
-Cc: linux-arm-kernel@lists.infradead.org
+Cc: Heiner Kallweit <hkallweit1@gmail.com>
 ---
- drivers/pci/controller/dwc/Kconfig | 1 -
+ drivers/pci/pcie/Kconfig | 1 -
  1 file changed, 1 deletion(-)
 
-diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-index ea335ee7ca8e..695f754b2110 100644
---- a/drivers/pci/controller/dwc/Kconfig
-+++ b/drivers/pci/controller/dwc/Kconfig
-@@ -110,7 +110,6 @@ config PCI_KEYSTONE_HOST
- 	depends on PCI_MSI_IRQ_DOMAIN
- 	select PCIE_DW_HOST
- 	select PCI_KEYSTONE
+diff --git a/drivers/pci/pcie/Kconfig b/drivers/pci/pcie/Kconfig
+index 9cd31331aee9..5b7b460a8a98 100644
+--- a/drivers/pci/pcie/Kconfig
++++ b/drivers/pci/pcie/Kconfig
+@@ -62,7 +62,6 @@ config PCIE_ECRC
+ #
+ config PCIEASPM
+ 	bool "PCI Express ASPM control" if EXPERT
 -	default y
  	help
- 	  Enables support for the PCIe controller in the Keystone SoC to
- 	  work in host mode. The PCI controller on Keystone is based on
+ 	  This enables OS control over PCI Express ASPM (Active State
+ 	  Power Management) and Clock Power Management. ASPM supports
 -- 
 2.26.0.110.g2183baf09c-goog
 
