@@ -2,171 +2,79 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D2D5C2BB85
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:44:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF13C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:45:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E4A1206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:44:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EwXM2PRV"
+	by mail.kernel.org (Postfix) with ESMTP id 2FDFA20737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:45:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1416194AbgDOQoj (ORCPT
+        id S1416205AbgDOQpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 12:44:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59972 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1416183AbgDOQof (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 12:44:35 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60117C061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 09:44:34 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id a22so78051pjk.5
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 09:44:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=pdVhlXTVp5GfPwUXj6VUlKKGPig0Mq5LnblaVWQhsNw=;
-        b=EwXM2PRVYwopCctyukNi1Jy9/hg/z0XO7R6ERA5H8lQeF+oXDnWxXzaBvG4/tpnaJk
-         EUS2ZH0ou2TLvBuWGGsNknwi3M1uPK00CvyRUMX/rprb0NidhH4cb7OvpZxH10W+Osnk
-         G83vC8Ey8RWVcyBCcgTMDej9RphYZAOY/eHB8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=pdVhlXTVp5GfPwUXj6VUlKKGPig0Mq5LnblaVWQhsNw=;
-        b=QNI/8lQP0XX/l7AwuQtah2esDDV7Zo0jgrCohPX8suk7ZEaGz/lUhRhIg/LhxJO5cB
-         WDH/UzYBY67eQl84SZHm51xLgNz5k1mZ/5XMJ3FT4z/aKoz3ZWPVmLGiTN2kdTSySxaP
-         rQKYasJjSBc9XINVoRWOQlfvO+2LVjUCbWNAvK5oNuYb2i6qo2hFDXiC0oxr8dWe/D6i
-         o6D+SRL9G1vyKnF+POjZFA/UFf+5CzsyIAzgNoCeGhTwaRVCYmK4KJojwunU/2Xe2QKc
-         DLsAf6ic3QtfmUtE34JRCSOAwInJUmlofz354ZnjBUSoH/aLQuk91+7yqTZ5iKNxNPTz
-         2skw==
-X-Gm-Message-State: AGi0PuarnxMdpEQ3oekn9QIDULq0CpD8UbVpixT+vguuApeGhgvEIhfx
-        0tpgsDROoI4Sdkml5WLkmm08+g==
-X-Google-Smtp-Source: APiQypJgMZ6xJFMYuPvklbyB28ygbw+op9ku2YKu7rWsqqyQB/c5p+WB+5D1gw/9Ht/E/DrwxvRBRA==
-X-Received: by 2002:a17:90a:dac2:: with SMTP id g2mr139955pjx.112.1586969073762;
-        Wed, 15 Apr 2020 09:44:33 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id q70sm14494021pfc.206.2020.04.15.09.44.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2020 09:44:32 -0700 (PDT)
-Date:   Wed, 15 Apr 2020 09:44:31 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Scott Branden <scott.branden@broadcom.com>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
+        Wed, 15 Apr 2020 12:45:11 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44200 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1416181AbgDOQpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 12:45:05 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 6C043ABC7;
+        Wed, 15 Apr 2020 16:45:02 +0000 (UTC)
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
-        Andy Gross <agross@kernel.org>
-Subject: Re: [PATCH] test_firmware: remove unnecessary test_fw_mutex in
- test_dev_config_show_xxx
-Message-ID: <202004150943.01DF9E85@keescook>
-References: <20200415002517.4328-1-scott.branden@broadcom.com>
- <202004142010.C0847F5@keescook>
- <e2b95fde-0ab7-c0d1-2c64-cceffc458673@broadcom.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e2b95fde-0ab7-c0d1-2c64-cceffc458673@broadcom.com>
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] firmware: Drop unused pages field from struct firmware
+Date:   Wed, 15 Apr 2020 18:45:00 +0200
+Message-Id: <20200415164500.28749-1-tiwai@suse.de>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 09:28:18AM -0700, Scott Branden wrote:
-> Hi Kees,
-> 
-> On 2020-04-14 8:10 p.m., Kees Cook wrote:
-> > On Tue, Apr 14, 2020 at 05:25:17PM -0700, Scott Branden wrote:
-> > > Remove unnecessary use of test_fw_mutex in test_dev_config_show_xxx
-> > > functions that show simple bool, int, and u8.
-> > I would expect at least a READ_ONCE(), yes?
-> I don't understand why you need a READ_ONCE when removing a mutex around an
-> assignment
-> of a parameter passed into a function being assigned to a local variable.
-> 
-> Could you please explain your expectations.
+The struct firmware contains a page table pointer that was used only
+internally in the past.  Since the actual page tables are referred
+from struct fw_priv and should be never from struct firmware, we can
+drop this unused field gracefully.
 
-Oops, yes, you're right. I misread and was thinking this was reading
-from a global. This looks fine.
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+---
+ drivers/base/firmware_loader/main.c | 3 ---
+ include/linux/firmware.h            | 1 -
+ 2 files changed, 4 deletions(-)
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
--Kees
-
-> > 
-> > > Signed-off-by: Scott Branden <scott.branden@broadcom.com>
-> > > ---
-> > >   lib/test_firmware.c | 26 +++-----------------------
-> > >   1 file changed, 3 insertions(+), 23 deletions(-)
-> > > 
-> > > diff --git a/lib/test_firmware.c b/lib/test_firmware.c
-> > > index 0c7fbcf07ac5..9fee2b93a8d1 100644
-> > > --- a/lib/test_firmware.c
-> > > +++ b/lib/test_firmware.c
-> > > @@ -310,27 +310,13 @@ static int test_dev_config_update_bool(const char *buf, size_t size,
-> > >   	return ret;
-> > >   }
-> > > -static ssize_t
-> > > -test_dev_config_show_bool(char *buf,
-> > > -			  bool config)
-> > > +static ssize_t test_dev_config_show_bool(char *buf, bool val)
-> > >   {
-> > > -	bool val;
-> > > -
-> > > -	mutex_lock(&test_fw_mutex);
-> > > -	val = config;
-> > > -	mutex_unlock(&test_fw_mutex);
-> > > -
-> > >   	return snprintf(buf, PAGE_SIZE, "%d\n", val);
-> > >   }
-> > > -static ssize_t test_dev_config_show_int(char *buf, int cfg)
-> > > +static ssize_t test_dev_config_show_int(char *buf, int val)
-> > >   {
-> > > -	int val;
-> > > -
-> > > -	mutex_lock(&test_fw_mutex);
-> > > -	val = cfg;
-> > > -	mutex_unlock(&test_fw_mutex);
-> > > -
-> > >   	return snprintf(buf, PAGE_SIZE, "%d\n", val);
-> > >   }
-> > > @@ -354,14 +340,8 @@ static int test_dev_config_update_u8(const char *buf, size_t size, u8 *cfg)
-> > >   	return size;
-> > >   }
-> > > -static ssize_t test_dev_config_show_u8(char *buf, u8 cfg)
-> > > +static ssize_t test_dev_config_show_u8(char *buf, u8 val)
-> > >   {
-> > > -	u8 val;
-> > > -
-> > > -	mutex_lock(&test_fw_mutex);
-> > > -	val = cfg;
-> > > -	mutex_unlock(&test_fw_mutex);
-> > > -
-> > >   	return snprintf(buf, PAGE_SIZE, "%u\n", val);
-> > >   }
-> > > -- 
-> > > 2.17.1
-> > > 
-> 
-
+diff --git a/drivers/base/firmware_loader/main.c b/drivers/base/firmware_loader/main.c
+index 76f79913916d..5296aaca35cf 100644
+--- a/drivers/base/firmware_loader/main.c
++++ b/drivers/base/firmware_loader/main.c
+@@ -548,9 +548,6 @@ static void firmware_free_data(const struct firmware *fw)
+ static void fw_set_page_data(struct fw_priv *fw_priv, struct firmware *fw)
+ {
+ 	fw->priv = fw_priv;
+-#ifdef CONFIG_FW_LOADER_USER_HELPER
+-	fw->pages = fw_priv->pages;
+-#endif
+ 	fw->size = fw_priv->size;
+ 	fw->data = fw_priv->data;
+ 
+diff --git a/include/linux/firmware.h b/include/linux/firmware.h
+index 4bbd0afd91b7..cb3e2c06ed8a 100644
+--- a/include/linux/firmware.h
++++ b/include/linux/firmware.h
+@@ -12,7 +12,6 @@
+ struct firmware {
+ 	size_t size;
+ 	const u8 *data;
+-	struct page **pages;
+ 
+ 	/* firmware loader private fields */
+ 	void *priv;
 -- 
-Kees Cook
+2.25.0
+
