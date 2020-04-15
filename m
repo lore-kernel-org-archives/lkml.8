@@ -2,94 +2,101 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9044AC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:43:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1552FC2BB85
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:43:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D50920656
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:43:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E00D72078A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:43:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="HNfL3in5"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="YpVMeTaN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2894886AbgDOIm5 (ORCPT
+        id S2894899AbgDOIny (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 04:42:57 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:35413 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2894871AbgDOImu (ORCPT
+        Wed, 15 Apr 2020 04:43:54 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:44583 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2894890AbgDOInn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 04:42:50 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586940170; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=QKDw62bpMO1wwchuPEun25pneBt8hRj+Wno/6nm/b3Q=;
- b=HNfL3in5xnTM20oXevtdWKKdBEI/yb2Qw+9sxBXUKKCvMz3sjPw9vNubQFWiIfkDFp+fL4g+
- p2hpDporpnxMTG7g4P0h9KkzjUR6j7rhp8Xq6nRSNrVb0kSdcfIILXYYg3M4ieQXYmuvpbta
- I5syFK0+BnMZvYjSYW8ZYdjXukM=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e96c908.7ff158d1c768-smtp-out-n02;
- Wed, 15 Apr 2020 08:42:48 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id CD050C433CB; Wed, 15 Apr 2020 08:42:47 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2D3F5C433F2;
-        Wed, 15 Apr 2020 08:42:44 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2D3F5C433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH 3/9] hostap: Add missing annotations for
- prism2_bss_list_proc_start() and prism2_bss_list_proc_stop
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200411001933.10072-4-jbi.octave@gmail.com>
-References: <20200411001933.10072-4-jbi.octave@gmail.com>
-To:     Jules Irenge <jbi.octave@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, boqun.feng@gmail.com,
-        Jouni Malinen <j@w1.fi>,
-        "David S. Miller" <davem@davemloft.net>,
-        zhong jiang <zhongjiang@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        linux-wireless@vger.kernel.org (open list:HOST AP DRIVER),
-        netdev@vger.kernel.org (open list:NETWORKING DRIVERS)
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20200415084247.CD050C433CB@smtp.codeaurora.org>
-Date:   Wed, 15 Apr 2020 08:42:47 +0000 (UTC)
+        Wed, 15 Apr 2020 04:43:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1586940224; x=1618476224;
+  h=from:to:cc:subject:date:message-id;
+  bh=EMYtFdH844Gy8q0zDObO0i3soKGeCT1N6ZnKHQH7qjI=;
+  b=YpVMeTaNDlyWXaEGzRXJHbA5fd09GUaZXNZeXWeUn1jvHe4aEmt4A6gn
+   0ewqO9G+QaLh3Dbu1n65G8oE9lCmYDY/ZMeDr5W9pM9N3XtinosAhBhlJ
+   /OxY4T0oOJMKRS2Kc09heUsbfa2fXgMrlTrxYNAIo8eiqIIUjioNfaber
+   I=;
+IronPort-SDR: sh/mYkNm0w7U8qD8vmxXEf50rvhX5vgl8boba5UFNT+Gie7eTRc2Nu1whcyXfttLtiJVNkb6Bf
+ 2HJbI0RIxMHQ==
+X-IronPort-AV: E=Sophos;i="5.72,386,1580774400"; 
+   d="scan'208";a="37157160"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-98acfc19.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 15 Apr 2020 08:43:42 +0000
+Received: from u8ac3f2494b6e5c.ant.amazon.com (iad7-ws-svc-lb50-vlan2.amazon.com [10.0.93.210])
+        by email-inbound-relay-1d-98acfc19.us-east-1.amazon.com (Postfix) with ESMTPS id F023DA218E;
+        Wed, 15 Apr 2020 08:43:37 +0000 (UTC)
+Received: from u8ac3f2494b6e5c.ant.amazon.com (localhost [127.0.0.1])
+        by u8ac3f2494b6e5c.ant.amazon.com (8.15.2/8.15.2/Debian-3) with ESMTPS id 03F8hZjA007973
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+        Wed, 15 Apr 2020 10:43:35 +0200
+Received: (from giangyi@localhost)
+        by u8ac3f2494b6e5c.ant.amazon.com (8.15.2/8.15.2/Submit) id 03F8hYvM007966;
+        Wed, 15 Apr 2020 10:43:34 +0200
+From:   Jiang Yi <giangyi@amazon.com>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Jiang Yi <giangyi@amazon.com>, James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] KVM: arm/arm64: release kvm->mmu_lock in loop to prevent starvation
+Date:   Wed, 15 Apr 2020 10:42:29 +0200
+Message-Id: <20200415084229.29992-1-giangyi@amazon.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jules Irenge <jbi.octave@gmail.com> wrote:
+Do cond_resched_lock() in stage2_flush_memslot() like what is done in
+unmap_stage2_range() and other places holding mmu_lock while processing
+a possibly large range of memory.
 
-> Sparse reports warnings at prism2_bss_list_proc_start() and prism2_bss_list_proc_stop()
-> 
-> warning: context imbalance in prism2_wds_proc_stop() - unexpected unlock
-> warning: context imbalance in prism2_bss_list_proc_start() - wrong count at exit
-> 
-> The root cause is the missing annotations at prism2_bss_list_proc_start()
-> 
-> Add the missing __acquires(&local->lock) annotation
-> Add the missing __releases(&local->lock) annotation
-> 
-> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
+Signed-off-by: Jiang Yi <giangyi@amazon.com>
+---
+ virt/kvm/arm/mmu.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Patch applied to wireless-drivers-next.git, thanks.
-
-1c0e3c73e98d hostap: Add missing annotations for prism2_bss_list_proc_start() and prism2_bss_list_proc_stop
-
+diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
+index e3b9ee268823..7315af2c52f8 100644
+--- a/virt/kvm/arm/mmu.c
++++ b/virt/kvm/arm/mmu.c
+@@ -417,16 +417,19 @@ static void stage2_flush_memslot(struct kvm *kvm,
+ 	phys_addr_t next;
+ 	pgd_t *pgd;
+ 
+ 	pgd = kvm->arch.pgd + stage2_pgd_index(kvm, addr);
+ 	do {
+ 		next = stage2_pgd_addr_end(kvm, addr, end);
+ 		if (!stage2_pgd_none(kvm, *pgd))
+ 			stage2_flush_puds(kvm, pgd, addr, next);
++
++		if (next != end)
++			cond_resched_lock(&kvm->mmu_lock);
+ 	} while (pgd++, addr = next, addr != end);
+ }
+ 
+ /**
+  * stage2_flush_vm - Invalidate cache for pages mapped in stage 2
+  * @kvm: The struct kvm pointer
+  *
+  * Go through the stage 2 page tables and invalidate any cache lines
 -- 
-https://patchwork.kernel.org/patch/11483853/
+2.17.1
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
