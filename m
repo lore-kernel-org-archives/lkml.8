@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9FC6C3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68AB9C38A29
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:49:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4659206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:48:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FF5A206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:49:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586954937;
-	bh=HJVDu28gY1/bAP0E/D5bAYl4WxLMLzNvno4dmyQIw/E=;
+	s=default; t=1586954948;
+	bh=RgLLwNK5+pFXHOHmYUgGmzQE3WjnTG/qYUCJPa6BMcg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=da6cKWw9lcWv2mAVBwJtb1ZCiJR2TLOFj6L2uFYTTJ0nVH/eVlV8JgYqG4HXiVP3f
-	 Ha420DHEQQyDS3s39ZC99BS7Sx5jzSQzkYTF7QYf1udCZlfdXUA1GlzKSRciSUWwms
-	 jPeJaZ+28bssvwoDNIopk0lq/pm2x3IEFcaKqvd4=
+	b=MGZUoSm8suPXPliu5p1Oupb5EvkLuVll0EONj9Hd+bXF1MEL1/Tl5dF30Wu/QmJ6k
+	 j/FNUmSOCDfx0R6l/4WpZhEHQlte3NgX6EUppjlbgAbK0/ElsWIW2KzFZGsbtqocOk
+	 nUSwlZQ2+xFrRxkTNi93fXYGsU2qPGSJZZDmpom8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S370313AbgDOMs4 (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:48:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34760 "EHLO mail.kernel.org"
+        id S370330AbgDOMtG (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:49:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408952AbgDOLnE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:43:04 -0400
+        id S2408947AbgDOLnC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:43:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBB9220737;
-        Wed, 15 Apr 2020 11:43:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B45BD20857;
+        Wed, 15 Apr 2020 11:43:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950983;
-        bh=HJVDu28gY1/bAP0E/D5bAYl4WxLMLzNvno4dmyQIw/E=;
+        s=default; t=1586950982;
+        bh=RgLLwNK5+pFXHOHmYUgGmzQE3WjnTG/qYUCJPa6BMcg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GUsjGYYSA7PFGrQ71q4iLSe54PdeSDF8/M8IJaL+MdnB02mwJRw6D5aCdGuDc3WAJ
-         pSKizkrG/QhSOFguE2tSN8ktLArPpM/fV9Q9XHgHe19s6WE4f4KjjlH9tAJowSQ08j
-         fRXEnVCW5abwRDqNPEf2FoVnbgbWweNpBmLFBavU=
+        b=lddvriWoKjfDbtOgIg6LTEN8hzJQfvSqR3V3LW1DqK7iPiWEO6ADzpHxCfbK2x9Yi
+         Y/YcvzKW1IPnpwu7l2kzYANl+qJzL+WPcKzs4E2dirxSyhQj1PjspVDN/gHE3FrdGW
+         QsCBF3XCiD37QpevD28MQwQmH1vsaN5c+qzQgWsY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Roth <mdroth@linux.vnet.ibm.com>, linuxppc-dev@ozlabs.org,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Sasha Levin <sashal@kernel.org>, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.5 031/106] KVM: PPC: Book3S HV: Fix H_CEDE return code for nested guests
-Date:   Wed, 15 Apr 2020 07:41:11 -0400
-Message-Id: <20200415114226.13103-31-sashal@kernel.org>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Brian Foster <bfoster@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 030/106] xfs: fix incorrect test in xfs_alloc_ag_vextent_lastblock
+Date:   Wed, 15 Apr 2020 07:41:10 -0400
+Message-Id: <20200415114226.13103-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
 References: <20200415114226.13103-1-sashal@kernel.org>
@@ -60,65 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Roth <mdroth@linux.vnet.ibm.com>
+From: "Darrick J. Wong" <darrick.wong@oracle.com>
 
-[ Upstream commit 1f50cc1705350a4697923203fedd7d8fb1087fe2 ]
+[ Upstream commit 77ca1eed5a7d2bf0905562eb1a15aac76bc19fe4 ]
 
-The h_cede_tm kvm-unit-test currently fails when run inside an L1 guest
-via the guest/nested hypervisor.
+When I lifted the code in xfs_alloc_ag_vextent_lastblock out of a loop,
+I forgot to convert all the accesses to len to be pointer dereferences.
 
-  ./run-tests.sh -v
-  ...
-  TESTNAME=h_cede_tm TIMEOUT=90s ACCEL= ./powerpc/run powerpc/tm.elf -smp 2,threads=2 -machine cap-htm=on -append "h_cede_tm"
-  FAIL h_cede_tm (2 tests, 1 unexpected failures)
-
-While the test relates to transactional memory instructions, the actual
-failure is due to the return code of the H_CEDE hypercall, which is
-reported as 224 instead of 0. This happens even when no TM instructions
-are issued.
-
-224 is the value placed in r3 to execute a hypercall for H_CEDE, and r3
-is where the caller expects the return code to be placed upon return.
-
-In the case of guest running under a nested hypervisor, issuing H_CEDE
-causes a return from H_ENTER_NESTED. In this case H_CEDE is
-specially-handled immediately rather than later in
-kvmppc_pseries_do_hcall() as with most other hcalls, but we forget to
-set the return code for the caller, hence why kvm-unit-test sees the
-224 return code and reports an error.
-
-Guest kernels generally don't check the return value of H_CEDE, so
-that likely explains why this hasn't caused issues outside of
-kvm-unit-tests so far.
-
-Fix this by setting r3 to 0 after we finish processing the H_CEDE.
-
-RHBZ: 1778556
-
-Fixes: 4bad77799fed ("KVM: PPC: Book3S HV: Handle hypercalls correctly when nested")
-Cc: linuxppc-dev@ozlabs.org
-Cc: David Gibson <david@gibson.dropbear.id.au>
-Cc: Paul Mackerras <paulus@ozlabs.org>
-Signed-off-by: Michael Roth <mdroth@linux.vnet.ibm.com>
-Reviewed-by: David Gibson <david@gibson.dropbear.id.au>
-Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
+Coverity-id: 1457918
+Fixes: 5113f8ec3753ed ("xfs: clean up weird while loop in xfs_alloc_ag_vextent_near")
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Brian Foster <bfoster@redhat.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kvm/book3s_hv.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/xfs/libxfs/xfs_alloc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
-index ef6aa63b071b3..a1d793b96d2b7 100644
---- a/arch/powerpc/kvm/book3s_hv.c
-+++ b/arch/powerpc/kvm/book3s_hv.c
-@@ -3628,6 +3628,7 @@ int kvmhv_p9_guest_entry(struct kvm_vcpu *vcpu, u64 time_limit,
- 		if (trap == BOOK3S_INTERRUPT_SYSCALL && !vcpu->arch.nested &&
- 		    kvmppc_get_gpr(vcpu, 3) == H_CEDE) {
- 			kvmppc_nested_cede(vcpu);
-+			kvmppc_set_gpr(vcpu, 3, 0);
- 			trap = 0;
- 		}
- 	} else {
+diff --git a/fs/xfs/libxfs/xfs_alloc.c b/fs/xfs/libxfs/xfs_alloc.c
+index fc93fd88ec89f..5b0c20a0d7f2f 100644
+--- a/fs/xfs/libxfs/xfs_alloc.c
++++ b/fs/xfs/libxfs/xfs_alloc.c
+@@ -1515,7 +1515,7 @@ xfs_alloc_ag_vextent_lastblock(
+ 	 * maxlen, go to the start of this block, and skip all those smaller
+ 	 * than minlen.
+ 	 */
+-	if (len || args->alignment > 1) {
++	if (*len || args->alignment > 1) {
+ 		acur->cnt->bc_ptrs[0] = 1;
+ 		do {
+ 			error = xfs_alloc_get_rec(acur->cnt, bno, len, &i);
 -- 
 2.20.1
 
