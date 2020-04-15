@@ -2,284 +2,97 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D668C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:20:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C1FFC3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:21:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D491020768
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:20:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="FM7IwaxA"
+	by mail.kernel.org (Postfix) with ESMTP id E9DC620768
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:21:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408406AbgDOJUt (ORCPT
+        id S2405289AbgDOJU7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 05:20:49 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:53594 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2895334AbgDOJU2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 05:20:28 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 492GzZ0PJNz9txYk;
-        Wed, 15 Apr 2020 11:20:26 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=FM7IwaxA; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id E8EYgGbt1l53; Wed, 15 Apr 2020 11:20:25 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 492GzY6FJRz9txYP;
-        Wed, 15 Apr 2020 11:20:25 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1586942425; bh=Zx/m7cX70Qco3IdgO2OxDCiZ5LszHX6htR1zAIB9hVA=;
-        h=From:Subject:To:Cc:Date:From;
-        b=FM7IwaxAf7QV+Yl778qcQ1H8k50Q5pC5C466U4BkhK6Sok/ghqGAbu2bspftQMLse
-         PWlTTG3rUrp98AUlKIAOU1efGw6PvjmP960hynKetpgx4/RPoUED3l9khKXaxVFtpl
-         P94wQ+qT11bM6DPrQ2GWJeoRInKzrjjWw4DuFzXg=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id E8E3E8B924;
-        Wed, 15 Apr 2020 11:20:26 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id vOAMJDbS8irH; Wed, 15 Apr 2020 11:20:26 +0200 (CEST)
-Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9854B8B91F;
-        Wed, 15 Apr 2020 11:20:26 +0200 (CEST)
-Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 5E95765788; Wed, 15 Apr 2020 09:20:26 +0000 (UTC)
-Message-Id: <4fdc2aba6f5e51887d1cd0fee94be0989eada2cd.1586942312.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH] powerpc/uaccess: Use flexible addressing with
- __put_user()/__get_user()
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, npiggin@gmail.com,
-        segher@kernel.crashing.org
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Wed, 15 Apr 2020 09:20:26 +0000 (UTC)
+        Wed, 15 Apr 2020 05:20:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47264 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2408392AbgDOJUl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 05:20:41 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA989C061A0C;
+        Wed, 15 Apr 2020 02:20:41 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jOeDf-0005Hv-04; Wed, 15 Apr 2020 11:20:31 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 7CB441C0081;
+        Wed, 15 Apr 2020 11:20:30 +0200 (CEST)
+Date:   Wed, 15 Apr 2020 09:20:30 -0000
+From:   "tip-bot2 for Jason Yan" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/umip: Make umip_insns static
+Cc:     Hulk Robot <hulkci@huawei.com>, Jason Yan <yanaijie@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200413082213.22934-1-yanaijie@huawei.com>
+References: <20200413082213.22934-1-yanaijie@huawei.com>
+MIME-Version: 1.0
+Message-ID: <158694243002.28353.9318430528577109181.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-At the time being, __put_user()/__get_user() and friends only use
-register indirect with immediate index addressing, with the index
-set to 0. Ex:
+The following commit has been merged into the x86/urgent branch of tip:
 
-	lwz	reg1, 0(reg2)
+Commit-ID:     b0e387c3ec0170b429f15c53b6183fe1c691403b
+Gitweb:        https://git.kernel.org/tip/b0e387c3ec0170b429f15c53b6183fe1c691403b
+Author:        Jason Yan <yanaijie@huawei.com>
+AuthorDate:    Mon, 13 Apr 2020 16:22:13 +08:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Wed, 15 Apr 2020 11:13:12 +02:00
 
-Give the compiler the opportunity to use other adressing modes
-whenever possible, to get more optimised code.
+x86/umip: Make umip_insns static
 
-Hereunder is a small exemple:
+Fix the following sparse warning:
+  arch/x86/kernel/umip.c:84:12: warning: symbol 'umip_insns' was not declared.
+  Should it be static?
 
-struct test {
-	u32 item1;
-	u16 item2;
-	u8 item3;
-	u64 item4;
-};
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Jason Yan <yanaijie@huawei.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Link: https://lkml.kernel.org/r/20200413082213.22934-1-yanaijie@huawei.com
 
-int set_test_user(struct test __user *from, struct test __user *to, int idx)
-{
-	int err;
-	u32 item1;
-	u16 item2;
-	u8 item3;
-	u64 item4;
-
-	err = __get_user(item1, &from->item1);
-	err |= __get_user(item2, &from->item2);
-	err |= __get_user(item3, &from->item3);
-	err |= __get_user(item4, &from->item4);
-
-	err |= __put_user(item1, &to->item1);
-	err |= __put_user(item2, &to->item2);
-	err |= __put_user(item3, &to->item3);
-	err |= __put_user(item4, &to->item4);
-
-	return err;
-}
-
-Before the patch:
-
-00000df0 <set_test_user>:
- df0:	94 21 ff f0 	stwu    r1,-16(r1)
- df4:	39 40 00 00 	li      r10,0
- df8:	93 c1 00 08 	stw     r30,8(r1)
- dfc:	93 e1 00 0c 	stw     r31,12(r1)
- e00:	7d 49 53 78 	mr      r9,r10
- e04:	80 a3 00 00 	lwz     r5,0(r3)
- e08:	38 e3 00 04 	addi    r7,r3,4
- e0c:	7d 46 53 78 	mr      r6,r10
- e10:	a0 e7 00 00 	lhz     r7,0(r7)
- e14:	7d 29 33 78 	or      r9,r9,r6
- e18:	39 03 00 06 	addi    r8,r3,6
- e1c:	7d 46 53 78 	mr      r6,r10
- e20:	89 08 00 00 	lbz     r8,0(r8)
- e24:	7d 29 33 78 	or      r9,r9,r6
- e28:	38 63 00 08 	addi    r3,r3,8
- e2c:	7d 46 53 78 	mr      r6,r10
- e30:	83 c3 00 00 	lwz     r30,0(r3)
- e34:	83 e3 00 04 	lwz     r31,4(r3)
- e38:	7d 29 33 78 	or      r9,r9,r6
- e3c:	7d 43 53 78 	mr      r3,r10
- e40:	90 a4 00 00 	stw     r5,0(r4)
- e44:	7d 29 1b 78 	or      r9,r9,r3
- e48:	38 c4 00 04 	addi    r6,r4,4
- e4c:	7d 43 53 78 	mr      r3,r10
- e50:	b0 e6 00 00 	sth     r7,0(r6)
- e54:	7d 29 1b 78 	or      r9,r9,r3
- e58:	38 e4 00 06 	addi    r7,r4,6
- e5c:	7d 43 53 78 	mr      r3,r10
- e60:	99 07 00 00 	stb     r8,0(r7)
- e64:	7d 23 1b 78 	or      r3,r9,r3
- e68:	38 84 00 08 	addi    r4,r4,8
- e6c:	93 c4 00 00 	stw     r30,0(r4)
- e70:	93 e4 00 04 	stw     r31,4(r4)
- e74:	7c 63 53 78 	or      r3,r3,r10
- e78:	83 c1 00 08 	lwz     r30,8(r1)
- e7c:	83 e1 00 0c 	lwz     r31,12(r1)
- e80:	38 21 00 10 	addi    r1,r1,16
- e84:	4e 80 00 20 	blr
-
-After the patch:
-
-00000dbc <set_test_user>:
- dbc:	39 40 00 00 	li      r10,0
- dc0:	7d 49 53 78 	mr      r9,r10
- dc4:	80 03 00 00 	lwz     r0,0(r3)
- dc8:	7d 48 53 78 	mr      r8,r10
- dcc:	a1 63 00 04 	lhz     r11,4(r3)
- dd0:	7d 29 43 78 	or      r9,r9,r8
- dd4:	7d 48 53 78 	mr      r8,r10
- dd8:	88 a3 00 06 	lbz     r5,6(r3)
- ddc:	7d 29 43 78 	or      r9,r9,r8
- de0:	7d 48 53 78 	mr      r8,r10
- de4:	80 c3 00 08 	lwz     r6,8(r3)
- de8:	80 e3 00 0c 	lwz     r7,12(r3)
- dec:	7d 29 43 78 	or      r9,r9,r8
- df0:	7d 43 53 78 	mr      r3,r10
- df4:	90 04 00 00 	stw     r0,0(r4)
- df8:	7d 29 1b 78 	or      r9,r9,r3
- dfc:	7d 43 53 78 	mr      r3,r10
- e00:	b1 64 00 04 	sth     r11,4(r4)
- e04:	7d 29 1b 78 	or      r9,r9,r3
- e08:	7d 43 53 78 	mr      r3,r10
- e0c:	98 a4 00 06 	stb     r5,6(r4)
- e10:	7d 23 1b 78 	or      r3,r9,r3
- e14:	90 c4 00 08 	stw     r6,8(r4)
- e18:	90 e4 00 0c 	stw     r7,12(r4)
- e1c:	7c 63 53 78 	or      r3,r3,r10
- e20:	4e 80 00 20 	blr
-
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/include/asm/uaccess.h | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+ arch/x86/kernel/umip.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/include/asm/uaccess.h b/arch/powerpc/include/asm/uaccess.h
-index 2f500debae21..dee71e9c7618 100644
---- a/arch/powerpc/include/asm/uaccess.h
-+++ b/arch/powerpc/include/asm/uaccess.h
-@@ -114,7 +114,7 @@ extern long __put_user_bad(void);
-  */
- #define __put_user_asm(x, addr, err, op)			\
- 	__asm__ __volatile__(					\
--		"1:	" op " %1,0(%2)	# put_user\n"		\
-+		"1:	" op "%U2%X2 %1,%2	# put_user\n"	\
- 		"2:\n"						\
- 		".section .fixup,\"ax\"\n"			\
- 		"3:	li %0,%3\n"				\
-@@ -122,7 +122,7 @@ extern long __put_user_bad(void);
- 		".previous\n"					\
- 		EX_TABLE(1b, 3b)				\
- 		: "=r" (err)					\
--		: "r" (x), "b" (addr), "i" (-EFAULT), "0" (err))
-+		: "r" (x), "m" (*addr), "i" (-EFAULT), "0" (err))
+diff --git a/arch/x86/kernel/umip.c b/arch/x86/kernel/umip.c
+index 4d732a4..8d5cbe1 100644
+--- a/arch/x86/kernel/umip.c
++++ b/arch/x86/kernel/umip.c
+@@ -81,7 +81,7 @@
+ #define	UMIP_INST_SLDT  3       /* 0F 00 /0 */
+ #define	UMIP_INST_STR   4       /* 0F 00 /1 */
  
- #ifdef __powerpc64__
- #define __put_user_asm2(x, ptr, retval)				\
-@@ -130,8 +130,8 @@ extern long __put_user_bad(void);
- #else /* __powerpc64__ */
- #define __put_user_asm2(x, addr, err)				\
- 	__asm__ __volatile__(					\
--		"1:	stw %1,0(%2)\n"				\
--		"2:	stw %1+1,4(%2)\n"			\
-+		"1:	stw%U2%X2 %1,%2\n"			\
-+		"2:	stw%U2%X2 %L1,%L2\n"			\
- 		"3:\n"						\
- 		".section .fixup,\"ax\"\n"			\
- 		"4:	li %0,%3\n"				\
-@@ -140,7 +140,7 @@ extern long __put_user_bad(void);
- 		EX_TABLE(1b, 4b)				\
- 		EX_TABLE(2b, 4b)				\
- 		: "=r" (err)					\
--		: "r" (x), "b" (addr), "i" (-EFAULT), "0" (err))
-+		: "r" (x), "m" (*addr), "i" (-EFAULT), "0" (err))
- #endif /* __powerpc64__ */
- 
- #define __put_user_size_allowed(x, ptr, size, retval)		\
-@@ -217,7 +217,7 @@ extern long __get_user_bad(void);
- 
- #define __get_user_asm(x, addr, err, op)		\
- 	__asm__ __volatile__(				\
--		"1:	"op" %1,0(%2)	# get_user\n"	\
-+		"1:	"op"%U2%X2 %1, %2	# get_user\n"	\
- 		"2:\n"					\
- 		".section .fixup,\"ax\"\n"		\
- 		"3:	li %0,%3\n"			\
-@@ -226,7 +226,7 @@ extern long __get_user_bad(void);
- 		".previous\n"				\
- 		EX_TABLE(1b, 3b)			\
- 		: "=r" (err), "=r" (x)			\
--		: "b" (addr), "i" (-EFAULT), "0" (err))
-+		: "m" (*addr), "i" (-EFAULT), "0" (err))
- 
- #ifdef __powerpc64__
- #define __get_user_asm2(x, addr, err)			\
-@@ -234,8 +234,8 @@ extern long __get_user_bad(void);
- #else /* __powerpc64__ */
- #define __get_user_asm2(x, addr, err)			\
- 	__asm__ __volatile__(				\
--		"1:	lwz %1,0(%2)\n"			\
--		"2:	lwz %1+1,4(%2)\n"		\
-+		"1:	lwz%U2%X2 %1, %2\n"			\
-+		"2:	lwz%U2%X2 %L1, %L2\n"		\
- 		"3:\n"					\
- 		".section .fixup,\"ax\"\n"		\
- 		"4:	li %0,%3\n"			\
-@@ -246,7 +246,7 @@ extern long __get_user_bad(void);
- 		EX_TABLE(1b, 4b)			\
- 		EX_TABLE(2b, 4b)			\
- 		: "=r" (err), "=&r" (x)			\
--		: "b" (addr), "i" (-EFAULT), "0" (err))
-+		: "m" (*addr), "i" (-EFAULT), "0" (err))
- #endif /* __powerpc64__ */
- 
- #define __get_user_size_allowed(x, ptr, size, retval)		\
-@@ -256,10 +256,10 @@ do {								\
- 	if (size > sizeof(x))					\
- 		(x) = __get_user_bad();				\
- 	switch (size) {						\
--	case 1: __get_user_asm(x, ptr, retval, "lbz"); break;	\
--	case 2: __get_user_asm(x, ptr, retval, "lhz"); break;	\
--	case 4: __get_user_asm(x, ptr, retval, "lwz"); break;	\
--	case 8: __get_user_asm2(x, ptr, retval);  break;	\
-+	case 1: __get_user_asm(x, (u8 __user *)ptr, retval, "lbz"); break;	\
-+	case 2: __get_user_asm(x, (u16 __user *)ptr, retval, "lhz"); break;	\
-+	case 4: __get_user_asm(x, (u32 __user *)ptr, retval, "lwz"); break;	\
-+	case 8: __get_user_asm2(x, (u64 __user *)ptr, retval);  break;	\
- 	default: (x) = __get_user_bad();			\
- 	}							\
- } while (0)
--- 
-2.25.0
-
+-const char * const umip_insns[5] = {
++static const char * const umip_insns[5] = {
+ 	[UMIP_INST_SGDT] = "SGDT",
+ 	[UMIP_INST_SIDT] = "SIDT",
+ 	[UMIP_INST_SMSW] = "SMSW",
