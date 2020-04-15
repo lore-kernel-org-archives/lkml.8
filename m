@@ -2,93 +2,97 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F28C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:06:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE83C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:06:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8835B206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:06:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586952390;
-	bh=GsyKNma1DJuNZ9EnsM2L3f5UdpZOBpe52VGFy1KVTS0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p3cprnpz8rEb7ZEP9yJYWX8f6vDocXIswITTNtNQpSbGzhfah/N6U9X/rydAdUqpZ
-	 WkJlx0TW0+e1w1/8DKPBMEO4xM+fl9SJzmK2JSsi5VoSvih2/m+RI/+YD/OAFeWXXy
-	 OHynGdexKAUdbbIwquYoabq1P1AdZh116C0qiDcc=
+	by mail.kernel.org (Postfix) with ESMTP id 78947206F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:06:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409353AbgDOLrb (ORCPT
-        <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:47:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34298 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408917AbgDOLmt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:42:49 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5832520768;
-        Wed, 15 Apr 2020 11:42:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950969;
-        bh=GsyKNma1DJuNZ9EnsM2L3f5UdpZOBpe52VGFy1KVTS0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KhIgLj7Io77GzlwykMOYabC8uE2GcB06wCDeTRGhg9YIypTwQMTQDyCuuCne5Sq+P
-         03KJS7r0133xGWqAMcgJbtBMEVqG9w1aY3KFtT6vQKz5YnHo+Qon7xbCe9WgHAcAH8
-         NS35hRNCNeggtwllhtWTpZM/mU8vgyu+A/VTjjg8=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 018/106] xfs: fix use-after-free when aborting corrupt attr inactivation
-Date:   Wed, 15 Apr 2020 07:40:58 -0400
-Message-Id: <20200415114226.13103-18-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
-References: <20200415114226.13103-1-sashal@kernel.org>
+        id S368422AbgDOMGa (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:06:30 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:36096 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2409684AbgDOL5n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:57:43 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id CCB38869BAD155A7B79A;
+        Wed, 15 Apr 2020 19:57:40 +0800 (CST)
+Received: from [127.0.0.1] (10.173.220.183) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Wed, 15 Apr 2020
+ 19:57:32 +0800
+To:     <agk@redhat.com>, <snitzer@redhat.com>, <dm-devel@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     linfeilong <linfeilong@huawei.com>,
+        Mingfangsen <mingfangsen@huawei.com>,
+        "wubo (T)" <wubo40@huawei.com>, Yanxiaodan <yanxiaodan@huawei.com>
+From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Subject: [PATCH] md/persistent-data: exit_ro_spine func return void
+Message-ID: <a7643d1a-940b-c8a8-686e-a660f0feeb96@huawei.com>
+Date:   Wed, 15 Apr 2020 19:57:31 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.220.183]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Darrick J. Wong" <darrick.wong@oracle.com>
+From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
 
-[ Upstream commit 496b9bcd62b0b3a160be61e3265a086f97adcbd3 ]
+In commit 4c7da06f5a78 ("dm persistent data: eliminate unnecessary return values"),
+r value in exit_ro_spine will not changes, so exit_ro_spine donot need
+to return values.
 
-Log the corrupt buffer before we release the buffer.
-
-Fixes: a5155b870d687 ("xfs: always log corruption errors")
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
 ---
- fs/xfs/xfs_attr_inactive.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/md/persistent-data/dm-btree-internal.h | 2 +-
+ drivers/md/persistent-data/dm-btree-spine.c    | 6 ++----
+ 2 files changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/fs/xfs/xfs_attr_inactive.c b/fs/xfs/xfs_attr_inactive.c
-index 5ff49523d8ea1..c135bd5b2e61a 100644
---- a/fs/xfs/xfs_attr_inactive.c
-+++ b/fs/xfs/xfs_attr_inactive.c
-@@ -208,8 +208,8 @@ xfs_attr3_node_inactive(
- 	 * Since this code is recursive (gasp!) we must protect ourselves.
- 	 */
- 	if (level > XFS_DA_NODE_MAXDEPTH) {
--		xfs_trans_brelse(*trans, bp);	/* no locks for later trans */
- 		xfs_buf_corruption_error(bp);
-+		xfs_trans_brelse(*trans, bp);	/* no locks for later trans */
- 		return -EFSCORRUPTED;
+diff --git a/drivers/md/persistent-data/dm-btree-internal.h b/drivers/md/persistent-data/dm-btree-internal.h
+index a240990a7f33..55a4096f1334 100644
+--- a/drivers/md/persistent-data/dm-btree-internal.h
++++ b/drivers/md/persistent-data/dm-btree-internal.h
+@@ -68,7 +68,7 @@ struct ro_spine {
+ };
+
+ void init_ro_spine(struct ro_spine *s, struct dm_btree_info *info);
+-int exit_ro_spine(struct ro_spine *s);
++void exit_ro_spine(struct ro_spine *s);
+ int ro_step(struct ro_spine *s, dm_block_t new_child);
+ void ro_pop(struct ro_spine *s);
+ struct btree_node *ro_node(struct ro_spine *s);
+diff --git a/drivers/md/persistent-data/dm-btree-spine.c b/drivers/md/persistent-data/dm-btree-spine.c
+index b27b8091a1ca..e03cb9e48773 100644
+--- a/drivers/md/persistent-data/dm-btree-spine.c
++++ b/drivers/md/persistent-data/dm-btree-spine.c
+@@ -132,15 +132,13 @@ void init_ro_spine(struct ro_spine *s, struct dm_btree_info *info)
+ 	s->nodes[1] = NULL;
+ }
+
+-int exit_ro_spine(struct ro_spine *s)
++void exit_ro_spine(struct ro_spine *s)
+ {
+-	int r = 0, i;
++	int i;
+
+ 	for (i = 0; i < s->count; i++) {
+ 		unlock_block(s->info, s->nodes[i]);
  	}
- 
+-
+-	return r;
+ }
+
+ int ro_step(struct ro_spine *s, dm_block_t new_child)
 -- 
-2.20.1
+2.19.1
 
