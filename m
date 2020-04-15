@@ -2,102 +2,166 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEAC5C3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B0D1C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:41:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 942FF2064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:35:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58BBC2064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:41:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W82pyamZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1416161AbgDOQfK (ORCPT
+        id S2410373AbgDOQlM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 12:35:10 -0400
-Received: from foss.arm.com ([217.140.110.172]:49794 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1416090AbgDOQfG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 12:35:06 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 725901FB;
-        Wed, 15 Apr 2020 09:35:03 -0700 (PDT)
-Received: from [10.37.9.9] (unknown [10.37.9.9])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 430EC3F6C4;
-        Wed, 15 Apr 2020 09:35:02 -0700 (PDT)
-Subject: Re: [PATCH v2 0/6] arm64: add the time namespace support
-To:     Andrei Vagin <avagin@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dmitry Safonov <dima@arista.com>
-References: <20200225073731.465270-1-avagin@gmail.com>
- <1c1ab662-5475-9d8b-038b-8411b060202a@arm.com>
- <CANaxB-xUYOrVnfLPRYVBiASzCH89sZkD6vTdy8EFjT16ZJhLfg@mail.gmail.com>
- <1d9c4c56-af16-e54f-08ca-76c6570b2d53@arm.com>
- <CANaxB-w+_4BUOYb-5+w1xBPoZGOzBh-LYOFCY-WSysgbAAcn_w@mail.gmail.com>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <5f60bff9-0fe1-7f1f-2dcc-2a7363801897@arm.com>
-Date:   Wed, 15 Apr 2020 17:35:51 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 15 Apr 2020 12:41:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59438 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404524AbgDOQlJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 12:41:09 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69186C061A0C;
+        Wed, 15 Apr 2020 09:41:06 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id 7so24838pjo.0;
+        Wed, 15 Apr 2020 09:41:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8fY6HIScFUhUnoCuOazyJ7I6i4IwGnwhNXDcGExeiw8=;
+        b=W82pyamZdYLII/DxDYCS0WiQMhoC57ijsJiJaNdq0w9QZtaxYZ8DQpLzBeGon5V3IU
+         zIO7yIVanbnWEQ/3mkzdwk2y0Dhy9jttKsD6kAci8bl0rCc+uzJ6uFXcLVB6Nkxp3Cri
+         HjXoyMsqEi8Oyb20fyNbtGfYvxCWH1Qiir9BPI0p76Q1u5QMz+2x06LmSUUYtbqOBsWl
+         ypBhp3VHH/OvXt1aNYpP5uO3C9A4USa/AZqSUY19AbcZ4wUTvL3O5dvkzQpXi5ZeRfKU
+         L1ku4GKTuaVbaYD6ySQC+o4mOfD1LsBadjFprlLV6smV0NWnhVPBTbRuenmf90hS4Wmr
+         vJ3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8fY6HIScFUhUnoCuOazyJ7I6i4IwGnwhNXDcGExeiw8=;
+        b=mV4VDqHBu6gnYvieY/DNhhQkcmH2WY2CxsvkJRDCTnEi9mh3m5MIkAIP42l+7yAQg6
+         KsNxvqfsyQrv5DwldRf2cDfDX+l/HtFkidMrgRENRBz2wGatCJ4x9d3t2vbzCouWUHwi
+         CBkOgwzxoR962mtuzsietn5f0YnZ/JZDeq6e12KoLFnArTUv1dF7Z24Aq+r8QgLLSz79
+         OHGwZZ6f9KmfXuqBkOEmpLCct9PW1F2F53Zpps4FgiHhZvU/R5BErD3BhcFLGRt171eW
+         ofaQ9GAtD7qr2w4YnVY1YEl930YuFBBt4okAdFIdUav0RwbxjlDCQ7GIyVhhnYmDLv0l
+         bjMQ==
+X-Gm-Message-State: AGi0PualvDZL266589rGFZbxgV7QL8U2zO92haMDoPOrz2c+1wXJdL9L
+        OdEun1ksb5/4IcKBFPjvCrr7E6As2N52vqGzm14=
+X-Google-Smtp-Source: APiQypLpQ4BROYdkU/nhbjPTGt2JOPmF/DEXW5LmQFkYYyuvsNmnZbJZcRNBJoHz5G5fpiRtiT7hy0mb14znCc2fFY0=
+X-Received: by 2002:a17:902:aa09:: with SMTP id be9mr5868784plb.18.1586968865614;
+ Wed, 15 Apr 2020 09:41:05 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CANaxB-w+_4BUOYb-5+w1xBPoZGOzBh-LYOFCY-WSysgbAAcn_w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200415162030.16414-1-sravanhome@gmail.com>
+In-Reply-To: <20200415162030.16414-1-sravanhome@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 15 Apr 2020 19:40:58 +0300
+Message-ID: <CAHp75VerGG0_J+fHrZfwJRa3EHtGuz-pJbD7zwoXN2jfO7dszA@mail.gmail.com>
+Subject: Re: [PATCH v9 0/6] Add battery charger driver support for MP2629
+To:     Saravanan Sekar <sravanhome@gmail.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald <pmeerw@pmeerw.net>,
+        Sebastian Reichel <sre@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrei,
-
-On 4/15/20 5:14 PM, Andrei Vagin wrote:
-> On Tue, Apr 14, 2020 at 2:02 AM Vincenzo Frascino
-> <vincenzo.frascino@arm.com> wrote:
->>
->> Hi Andrei,
->>
->> On 4/11/20 8:33 AM, Andrei Vagin wrote:
->>> On Thu, Apr 9, 2020 at 6:23 AM Vincenzo Frascino
->>> <vincenzo.frascino@arm.com> wrote:
->>>>
->>>> I have though a question on something I encountered during the testing of the
->>>> patches: I noticed that all the tests related to CLOCK_BOOTTIME_ALARM fail on
->>>> arm64 (please find the results below the scissors). Is this expected?
->>>
->>> static int alarm_clock_get_timespec(clockid_t which_clock, struct
->>> timespec64 *tp)
->>> {
->>>         struct alarm_base *base = &alarm_bases[clock2alarm(which_clock)];
->>>
->>>         if (!alarmtimer_get_rtcdev())
->>>                 return -EINVAL;
->>>
->>> It is probably that you get EINVAL from here ^^^. I will send a
->>> separate patch to handle this case in tests properly.
->>>
->>
->> This makes sense :) Please let me know when you post the fix so I can test it again.
-> 
-> I have sent this fix: https://lkml.org/lkml/2020/4/15/72
+On Wed, Apr 15, 2020 at 7:20 PM Saravanan Sekar <sravanhome@gmail.com> wrote:
+>
+> changes in v9:
+>  - fixed review comments in mp2629 power supply such as resource based
+>    iio channel, replace workqueue by threaded irq, irq get with "_optional"
 >
 
-That's good, I will try it by the end of this week or beginning of next and let
-you know the results.
+May I ask you why you are ignoring my tag?
+If you don't want to have your patches reviewed / applied, just don't send them.
 
->>
->> Are you planning as well to rebase this set?>
-> What is the right tree to rebase on?
-> 
-
-I guess master, I was asking because it would make easier my testing :)
-
+> changes in v8:
+>  - fixed order of call in probe/remove in iio adc
+>  - add ABI documentation for mp2629 power supply
+>
+> changes in v7:
+>  - fixed probe/remove order, managed and unmanaged call mix use in adc.
+>  - Documentation dual license, i2c node with controller address
+>
+> Overall looks good to me, FWIW,
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+>
+> One question though in reply to patch 4.
+>
+> changes in v6:
+>  - removed includes types.h in mfd, of_device.h in adc.
+>  - fixed review comments parentheses, err check, kstrtouint
+>
+> changes in v5:
+>  - removed platfrom data stored in mfd and directly accessed mfd struct in child
+>  - fixed spell check and capitalization in mfd and documentation
+>
+> changes in v4:
+>  - fixed capitalization in mfg Kconfig and documentation
+>
+> changes in v3:
+>  - regmap for children passed using platform data and remove mfd driver info
+>    access directly from children
+>
+> changes in v2:
+>  - removed EXPORT_SYMBOL of register set/get helper
+>  - regmap bit filed used, fixed other review comments
+>
+> This patch series add support for Battery charger control driver for Monolithic
+> Power System's MP2629 chipset, includes MFD driver for ADC battery & input
+> power supply measurement and battery charger control driver.
+>
 > Thanks,
-> Andrei
-> 
+> Saravanan
+>
+> Saravanan Sekar (6):
+>   dt-bindings: mfd: add document bindings for mp2629
+>   mfd: mp2629: Add support for mps battery charger
+>   iio: adc: mp2629: Add support for mp2629 ADC driver
+>   power: supply: Add support for mps mp2629 battery charger
+>   power: supply: mp2629: Add impedance compenstation config
+>   MAINTAINERS: Add entry for mp2629 Battery Charger driver
+>
+>  .../ABI/testing/sysfs-class-power-mp2629      |   8 +
+>  .../devicetree/bindings/mfd/mps,mp2629.yaml   |  60 ++
+>  MAINTAINERS                                   |   5 +
+>  drivers/iio/adc/Kconfig                       |  10 +
+>  drivers/iio/adc/Makefile                      |   1 +
+>  drivers/iio/adc/mp2629_adc.c                  | 208 ++++++
+>  drivers/mfd/Kconfig                           |   9 +
+>  drivers/mfd/Makefile                          |   2 +
+>  drivers/mfd/mp2629.c                          |  86 +++
+>  drivers/power/supply/Kconfig                  |  10 +
+>  drivers/power/supply/Makefile                 |   1 +
+>  drivers/power/supply/mp2629_charger.c         | 667 ++++++++++++++++++
+>  include/linux/mfd/mp2629.h                    |  28 +
+>  13 files changed, 1095 insertions(+)
+>  create mode 100644 Documentation/ABI/testing/sysfs-class-power-mp2629
+>  create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+>  create mode 100644 drivers/iio/adc/mp2629_adc.c
+>  create mode 100644 drivers/mfd/mp2629.c
+>  create mode 100644 drivers/power/supply/mp2629_charger.c
+>  create mode 100644 include/linux/mfd/mp2629.h
+>
+> --
+> 2.17.1
+>
+
 
 -- 
-Regards,
-Vincenzo
+With Best Regards,
+Andy Shevchenko
