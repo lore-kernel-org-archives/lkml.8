@@ -2,129 +2,99 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B2BC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:17:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3583C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:17:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70B3C2078A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:17:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C932C208FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:17:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586953063;
-	bh=+jucFbYHNTBjfBHyf2TJUVs+1ZxU4nG5DSOgtr/+avY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=tBT4OJeyRNq7qurM0Vx9bmeDbRwYKpxLugRv4hA3obpzlhMPEUOIBmDSusaug7S8u
-	 jmftrgBYkOeThN38TU931Us/BNRBNFNo5Klg9q+2Qe1E2wF62sRh/Oh/KqDEUGQm9a
-	 CvYoCgJtsXEqpYHmiSZIugw+FTfJb1+mrWLpUEC8=
+	s=default; t=1586953067;
+	bh=czNOZ/O19Y/a5rd/bkVz1OVazGaWvhmfaQGyVFf4l9s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=El/CFx/xrEaxKC42owZtRm77rWft4ZIbE+Dic901k4hwA/H/g1UjS7tCqqYgjh5+A
+	 tY7OuFCpNi4z8gLo9UBglb2fKiRkf7lV/imXukp5ZHzpL4ph4hrXcBgL0rFrzHsYvg
+	 fCwskdWEpcrTXNfN05mrTHhCmM6DzhNOGZd6gNGI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S368808AbgDOMRm (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:17:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33962 "EHLO mail.kernel.org"
+        id S368816AbgDOMRp (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:17:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S368760AbgDOMRH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 08:17:07 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2406546AbgDOLq1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:46:27 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50A202078A;
-        Wed, 15 Apr 2020 12:17:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC63820775;
+        Wed, 15 Apr 2020 11:46:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586953026;
-        bh=+jucFbYHNTBjfBHyf2TJUVs+1ZxU4nG5DSOgtr/+avY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=pc+9dmZxMz1ccJ+60fMMhKKxaHDgs+A+7ox7PV+5Z1CeUv1qn3a8WqYVbr5IphBZv
-         irrZ9xREG9Vrdi5ksJpN6hhBFJLEn5xVO82tMvQ9gR0f7GeMR0U4Qs0/5X2R1Q2oX8
-         SeLrlgeg3gbauanCRs4tKRnX9xdo2PSDS5urlFNY=
-Date:   Wed, 15 Apr 2020 13:17:04 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: Applied "regulator: qcom-rpmh: Fix typos in pm8150 and pm8150l" to the regulator tree
-In-Reply-To:  <20200415053708.717623-1-bjorn.andersson@linaro.org>
-Message-Id:  <applied-20200415053708.717623-1-bjorn.andersson@linaro.org>
-X-Patchwork-Hint: ignore
+        s=default; t=1586951186;
+        bh=czNOZ/O19Y/a5rd/bkVz1OVazGaWvhmfaQGyVFf4l9s=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1HHVNO6VWPK03en7PlBzbOT5yDFxYNxfyuhc15uHwhDlAQ0t1NTTWHbGqM5VJ77Ku
+         HJnqh4P8AD6wQ7cXQr4Uw3MSF3nb9ymo05hr9oXwaw7C/ThUILXLablyboU31WHxa6
+         oWkE88QOCs1TKn+dlgNMr8DmvIo+Nyhw178AL0o0=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        "Andrew F . Davis" <afd@ti.com>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 02/40] power: supply: bq27xxx_battery: Silence deferred-probe error
+Date:   Wed, 15 Apr 2020 07:45:45 -0400
+Message-Id: <20200415114623.14972-2-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200415114623.14972-1-sashal@kernel.org>
+References: <20200415114623.14972-1-sashal@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+From: Dmitry Osipenko <digetx@gmail.com>
 
-   regulator: qcom-rpmh: Fix typos in pm8150 and pm8150l
+[ Upstream commit 583b53ece0b0268c542a1eafadb62e3d4b0aab8c ]
 
-has been applied to the regulator tree at
+The driver fails to probe with -EPROBE_DEFER if battery's power supply
+(charger driver) isn't ready yet and this results in a bit noisy error
+message in KMSG during kernel's boot up. Let's silence the harmless
+error message.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 906746ba26d0b45688f4c3b730c35f765dc958ba Mon Sep 17 00:00:00 2001
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Date: Tue, 14 Apr 2020 22:37:08 -0700
-Subject: [PATCH] regulator: qcom-rpmh: Fix typos in pm8150 and pm8150l
-
-Fix typos in pm8150 l13/l16/l17 and pm8150l ldo8 supplies.
-
-Fixes: 06369bcc15a1 ("regulator: qcom-rpmh: Add support for SM8150")
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Tested-by: Vinod Koul <vkoul@kernel.org>
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
-Link: https://lore.kernel.org/r/20200415053708.717623-1-bjorn.andersson@linaro.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Reviewed-by: Andrew F. Davis <afd@ti.com>
+Reviewed-by: Pali Rohár <pali@kernel.org>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/qcom-rpmh-regulator.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/power/supply/bq27xxx_battery.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/qcom-rpmh-regulator.c b/drivers/regulator/qcom-rpmh-regulator.c
-index c86ad40015ce..c88cfa8952d6 100644
---- a/drivers/regulator/qcom-rpmh-regulator.c
-+++ b/drivers/regulator/qcom-rpmh-regulator.c
-@@ -832,11 +832,11 @@ static const struct rpmh_vreg_init_data pm8150_vreg_data[] = {
- 	RPMH_VREG("ldo10",  "ldo%s10", &pmic5_pldo,      "vdd-l2-l10"),
- 	RPMH_VREG("ldo11",  "ldo%s11", &pmic5_nldo,      "vdd-l1-l8-l11"),
- 	RPMH_VREG("ldo12",  "ldo%s12", &pmic5_pldo_lv,   "vdd-l7-l12-l14-l15"),
--	RPMH_VREG("ldo13",  "ldo%s13", &pmic5_pldo,      "vdd-l13-l6-l17"),
-+	RPMH_VREG("ldo13",  "ldo%s13", &pmic5_pldo,      "vdd-l13-l16-l17"),
- 	RPMH_VREG("ldo14",  "ldo%s14", &pmic5_pldo_lv,   "vdd-l7-l12-l14-l15"),
- 	RPMH_VREG("ldo15",  "ldo%s15", &pmic5_pldo_lv,   "vdd-l7-l12-l14-l15"),
--	RPMH_VREG("ldo16",  "ldo%s16", &pmic5_pldo,      "vdd-l13-l6-l17"),
--	RPMH_VREG("ldo17",  "ldo%s17", &pmic5_pldo,      "vdd-l13-l6-l17"),
-+	RPMH_VREG("ldo16",  "ldo%s16", &pmic5_pldo,      "vdd-l13-l16-l17"),
-+	RPMH_VREG("ldo17",  "ldo%s17", &pmic5_pldo,      "vdd-l13-l16-l17"),
- 	RPMH_VREG("ldo18",  "ldo%s18", &pmic5_nldo,      "vdd-l3-l4-l5-l18"),
- 	{},
- };
-@@ -857,7 +857,7 @@ static const struct rpmh_vreg_init_data pm8150l_vreg_data[] = {
- 	RPMH_VREG("ldo5",   "ldo%s5",  &pmic5_pldo,      "vdd-l4-l5-l6"),
- 	RPMH_VREG("ldo6",   "ldo%s6",  &pmic5_pldo,      "vdd-l4-l5-l6"),
- 	RPMH_VREG("ldo7",   "ldo%s7",  &pmic5_pldo,      "vdd-l7-l11"),
--	RPMH_VREG("ldo8",   "ldo%s8",  &pmic5_pldo_lv,   "vdd-l1-l8-l11"),
-+	RPMH_VREG("ldo8",   "ldo%s8",  &pmic5_pldo_lv,   "vdd-l1-l8"),
- 	RPMH_VREG("ldo9",   "ldo%s9",  &pmic5_pldo,      "vdd-l9-l10"),
- 	RPMH_VREG("ldo10",  "ldo%s10", &pmic5_pldo,      "vdd-l9-l10"),
- 	RPMH_VREG("ldo11",  "ldo%s11", &pmic5_pldo,      "vdd-l7-l11"),
+diff --git a/drivers/power/supply/bq27xxx_battery.c b/drivers/power/supply/bq27xxx_battery.c
+index f022e1b550dfe..ff02a917556a9 100644
+--- a/drivers/power/supply/bq27xxx_battery.c
++++ b/drivers/power/supply/bq27xxx_battery.c
+@@ -1887,7 +1887,10 @@ int bq27xxx_battery_setup(struct bq27xxx_device_info *di)
+ 
+ 	di->bat = power_supply_register_no_ws(di->dev, psy_desc, &psy_cfg);
+ 	if (IS_ERR(di->bat)) {
+-		dev_err(di->dev, "failed to register battery\n");
++		if (PTR_ERR(di->bat) == -EPROBE_DEFER)
++			dev_dbg(di->dev, "failed to register battery, deferring probe\n");
++		else
++			dev_err(di->dev, "failed to register battery\n");
+ 		return PTR_ERR(di->bat);
+ 	}
+ 
 -- 
 2.20.1
 
