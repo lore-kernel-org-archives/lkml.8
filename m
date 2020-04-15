@@ -2,123 +2,247 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C803EC2BB55
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07C0DC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:54:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A32222076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:54:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D07612054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:54:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U6gwro6x"
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="Sb4XyPfy";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="j4nkaoQx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409951AbgDOOyG (ORCPT
-        <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:54:06 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:46215 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2407940AbgDOOx6 (ORCPT
+        id S371072AbgDOOyV (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 10:54:21 -0400
+Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:24640 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2407940AbgDOOyR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 10:53:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586962436;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=36E4N7q+94RvweaZXTmr5UhjWWpdGRQf/CnIVV4HQ7Q=;
-        b=U6gwro6xiU9eCgTCwQJRAK62K7jqZAL1m+2IQ0sSeLzDk6LQZSaViUIYykVrU+i8s1qKsS
-        ALuoGPdoillUDzf07rZjmvrGkwxs2JJntzBD1YGRq5PEszDKhpujsNQ7mbkcKUmA9LBwM3
-        zglDD0Y/uFz2jTRh157oJh3XBZFJsFI=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-364--J2YLDMYOearMlPirHaDnA-1; Wed, 15 Apr 2020 10:53:54 -0400
-X-MC-Unique: -J2YLDMYOearMlPirHaDnA-1
-Received: by mail-wm1-f72.google.com with SMTP id u11so2787881wmc.7
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 07:53:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=36E4N7q+94RvweaZXTmr5UhjWWpdGRQf/CnIVV4HQ7Q=;
-        b=L0asS7BOJP8K6/pjUJ9QJSjfMVPE+DvYoj61htvJRQZhIJ84e/fO1aXUArwL8cYchq
-         oCYLE3cFjNfdAvme0PdkjsoJCvCR9h+LDQCKb6oVmzWhTMujVzNPkDF6MkdYgVZuiIUG
-         GYxOUx9iTnG2+XeoEkyUzh5dh6vkajBbl5C2juIAZy9vYEAwbw5eI2JRplqe1JJWmuEG
-         yvLAN9LrZ/gLeGpKa1LuOu4Vm8reLXJOuRtr/cCLxkCXsmEctwqGUcFNKLH9ooBh+rtr
-         KL84R8grDJujO5csUb7AfCZ2b0TQE3Pqts8oVmCw6S0PQom6LDzrnAnyk/1LmaSPOORv
-         /D+A==
-X-Gm-Message-State: AGi0PuZtG7RxdLM5M0r/1PCIKOZSXkrNgBYHXh8RuwR/Ba1cFDu8k93W
-        M7eegp2R7cvNdXJ7zTE5Oc18eeB+t/arNuqEIEQjTAR+s9CIeJfRyr6072dlf1t8cnKzCnfe22T
-        0CFA10z6Y02af2YBpHU4teyCH
-X-Received: by 2002:adf:904a:: with SMTP id h68mr27495438wrh.291.1586962433427;
-        Wed, 15 Apr 2020 07:53:53 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJ/cAvGQw1YkBGC6okX7zE61HyLuQq2hlX8Pbvb6qNBrcmDX5EvBomqGUFPNgHPYY5OVR7fYQ==
-X-Received: by 2002:adf:904a:: with SMTP id h68mr27495417wrh.291.1586962433189;
-        Wed, 15 Apr 2020 07:53:53 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:9066:4f2:9fbd:f90e? ([2001:b07:6468:f312:9066:4f2:9fbd:f90e])
-        by smtp.gmail.com with ESMTPSA id t2sm16563569wmt.15.2020.04.15.07.53.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Apr 2020 07:53:52 -0700 (PDT)
-Subject: Re: [PATCH] KVM: SVM: Fix build error due to missing release_pages()
- include
-To:     Borislav Petkov <bp@alien8.de>, Joerg Roedel <joro@8bytes.org>
-Cc:     KVM <kvm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-References: <20200411160927.27954-1-bp@alien8.de>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <26c86223-6e5b-169b-7967-a406a3b1678b@redhat.com>
-Date:   Wed, 15 Apr 2020 16:53:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <20200411160927.27954-1-bp@alien8.de>
-Content-Type: text/plain; charset=utf-8
+        Wed, 15 Apr 2020 10:54:17 -0400
+Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
+        by mx0a-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03FEq27g002592;
+        Wed, 15 Apr 2020 07:54:02 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=proofpoint;
+ bh=4Fqc+5SBnjdzjN4AU4z/KoWDhnB0Y14SiQPORLX0whs=;
+ b=Sb4XyPfyNJ4ErkgZaolm6ksPcv7Vrk8Bh2gvjE85E3GmOGKR1VN3Cbrtmohw5bg4bpmD
+ mjoczWScmnCfmxaMs12sK9vVvdsRqO4dTG9dz7GfYofYwBw92NBz5B36T3V653+gYXIa
+ 0rCAd5cBfFV0R9hMnjBqrK9mDqacAkddIZ08xlX64C0Licgfc1D3uqOC2S2nuRZAvlTL
+ HinfOE9syPk6slqLPPWcqujH7JDNOBkGkvOFpBlKtOPDoUQ+r7dz77Xm55zc+KNEDTvP
+ d/FZySYnK+AhTINBqDIa4Exq3e1kh4JRDA6+X3OxqRvp/2B8q70TjJyXrYHbVnEw6GWy Hg== 
+Received: from nam04-bn3-obe.outbound.protection.outlook.com (mail-bn3nam04lp2050.outbound.protection.outlook.com [104.47.46.50])
+        by mx0a-0014ca01.pphosted.com with ESMTP id 30dn95u5xs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 15 Apr 2020 07:54:02 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=j9gjhfpk7Dz3VwYRDuQ/fDLpDc5OqeDzfObkqKzIKaRxH5sNqWOY6PbqQ8qHex/T3SY+9K/0FOOjHIweFOsj6gcRFaoetq+9abMQ5uQuY1KDl1v0OikO08/VKYWEogKC424HLqNhpFUER/+W+h9BHnL6flGvQW/M7xtBgeDo3OWqw/iE1cz91n69cFoZLBnfhfwvFjU7E3PIN62+v4r7clV7W+2C/E5lPufBayECCsXRctPk8zZ3nvReQQflB0ljSnVT1m0iDu7w5ii85tvxXFBWlVB08T1PlJaJsREGuSu/xM8emOGugHLzQKoqEmitTSMTMmmWp93g6X5Hf+OAPA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4Fqc+5SBnjdzjN4AU4z/KoWDhnB0Y14SiQPORLX0whs=;
+ b=GAHhJDx6OqUWI8bXxMAEd7uzy4VI42bGpanMDO5L7G++2sj1N0VSXrjkzofFH3BQ6bVui5Wo/Mx2BQtrBo0E/Biimceq6HuotyW1Uav5L+QS1pWqmMLxxx2rHlz3bskqUZU+e9TyW8o5Ge7M4AK2TUUL/R3s8hqDVKu5v+H31TiAscNP6vKQtaC6RJtnGkqQM7l1+u29bf1MiMV9D4mVh1iREawAjtp+9UjNev3KT9VEFcjym2JYl0Wlyksze6qyuWaaM8C6zUwymUaqFQSKCZ8ipMGDaWVPddnAsB4bvsYn2XwG+QFP48C7c6K77WYQBacVaMzqlR+/vFvoynlCeg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cadence.com; dmarc=pass action=none header.from=cadence.com;
+ dkim=pass header.d=cadence.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4Fqc+5SBnjdzjN4AU4z/KoWDhnB0Y14SiQPORLX0whs=;
+ b=j4nkaoQxwf43bTXcxRw2Un0heEQMpY4Ar+CR3E0iUUZTD9zD7A7SMlQG9vDQ7yym/VNSAF4+M7fe7c9kQc9Y9snmsg+JVq6OVHXJ92GCIIywBLMhgJBBFodrcbtTiYhMl0PHvMTQZPqIjAOzvyYVvEc2Nai1xQR7zKVYiwsZJ7A=
+Received: from CH2PR07MB7190.namprd07.prod.outlook.com (2603:10b6:610:a6::9)
+ by CH2PR07MB6646.namprd07.prod.outlook.com (2603:10b6:610:2a::32) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.26; Wed, 15 Apr
+ 2020 14:54:00 +0000
+Received: from CH2PR07MB7190.namprd07.prod.outlook.com
+ ([fe80::54cc:7e45:34a4:dead]) by CH2PR07MB7190.namprd07.prod.outlook.com
+ ([fe80::54cc:7e45:34a4:dead%5]) with mapi id 15.20.2900.026; Wed, 15 Apr 2020
+ 14:54:00 +0000
+From:   Dhananjay Vilasrao Kangude <dkangude@cadence.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Milind Parab <mparab@cadence.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: RE: [PATCH v3 1/2] dt-bindings: edac: Add cadence ddr mc support
+Thread-Topic: [PATCH v3 1/2] dt-bindings: edac: Add cadence ddr mc support
+Thread-Index: AQHWDBU2kEqZVlE2RUO5NQk0ZDbUU6h5VpeAgAD7uFA=
+Date:   Wed, 15 Apr 2020 14:54:00 +0000
+Message-ID: <CH2PR07MB719089038FB19B7FAEF23ED1CDDB0@CH2PR07MB7190.namprd07.prod.outlook.com>
+References: <20200406131341.1253-1-dkangude@cadence.com>
+ <20200406131341.1253-2-dkangude@cadence.com> <20200414234947.GA24554@bogus>
+In-Reply-To: <20200414234947.GA24554@bogus>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcZGthbmd1ZGVcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy1lZDY3YzRlYS03ZjI4LTExZWEtYWU4Ny1hNDRjYzg0ZmJjNTNcYW1lLXRlc3RcZWQ2N2M0ZWMtN2YyOC0xMWVhLWFlODctYTQ0Y2M4NGZiYzUzYm9keS50eHQiIHN6PSIzODA3IiB0PSIxMzIzMTQzNjAzNTY4Mjg2MDAiIGg9ImJqYWtBa0xUcGxvNitiSHFjVS9BUUYvaDQ1az0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
+x-dg-rorf: true
+x-originating-ip: [59.145.174.78]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c3a3a492-10e9-4736-3e4f-08d7e14cd4ec
+x-ms-traffictypediagnostic: CH2PR07MB6646:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CH2PR07MB664662762F84C6093CC279F9CDDB0@CH2PR07MB6646.namprd07.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0374433C81
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR07MB7190.namprd07.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(39860400002)(136003)(396003)(346002)(366004)(36092001)(186003)(33656002)(76116006)(8936002)(5660300002)(71200400001)(86362001)(66946007)(9686003)(52536014)(6916009)(4326008)(81156014)(478600001)(26005)(8676002)(6506007)(2906002)(66446008)(64756008)(53546011)(54906003)(66476007)(66556008)(7696005)(55016002)(316002);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: cadence.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: dLqcBcRJ+hIhJ7wgr/J34+3A4Eu0QhZtcpOogRpxv6y1tACiXCLhgZU/0J8gU+pcczZS5uPNU//HVOWxBoRBpNvWMJdhBxcFXEplL090H3PbqHuJJzNbQ8WwWtwtC8VjHRhkSusUNH6Vc8IyXebIkO2BHZe2Y3b/5kb+jZn1St0mjol/XzNT/CF3WKqJiZBaXFWITOIRrvwncVETqpeFpi3lJZ59BW5J7XvMKnh6I513VaaWeIBYYLJYzYTUVAUWWD5a4Z5m07BX5w297m5U8LMYytxJQXrgN0hOhQdIC11UwQ92lHtl/tKjaowzPcgPHPiZJdziOZgPfZFM7VM0WsqvoTio7TCEDphV0TzoctQgDWugq3VEsFj0rTKXp2g0i63aVXbPisabYDaKAfL04U6ekOy2svinnbAqVDCZ2VYYML8/oO98GNvsCBmHx228OlmzAnxgkNyenr1kiTsYK3qRCstdLUx+Ua9AJMWQBw0NaYsZrxwxruYSktc/2uTWWTundnk9eVqlvZePP05bNV8qWadSeoiWibZUhpD3CeoObuU7bz8SGKhyKHFop8cmeqrGv04oJ/Dx0Tln95FzYg==
+x-ms-exchange-antispam-messagedata: ghRTzivRW3Wmn5dzV7zKI9f/IvdEaZWWZL48kYRrXAZjwgrjEMxRVoq68VhyTngoJWWCzXQDVVMT81SlDgHtkUBHcKOrUcQGUci6AmrwfOWmeZsiDfc0WrbN1wJtBX2HFdbSzrYjRiaHqc0tkaGYKg==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c3a3a492-10e9-4736-3e4f-08d7e14cd4ec
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Apr 2020 14:54:00.0767
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: mCOYUNpPj4wvTL6Zo0Qo+5FQzhL8bZs/35C0U7WiXbDI6TRWR36sW5KoBz3JrfUj8+hqSLelQMdMt4HxgojrvmJa7OZl5jeAtIadM/JLdp0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR07MB6646
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-15_05:2020-04-14,2020-04-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 mlxscore=0
+ impostorscore=0 bulkscore=0 clxscore=1011 lowpriorityscore=0
+ mlxlogscore=999 suspectscore=0 adultscore=0 phishscore=0
+ priorityscore=1501 malwarescore=0 spamscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004150111
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/04/20 18:09, Borislav Petkov wrote:
-> From: Borislav Petkov <bp@suse.de>
-> 
-> Fix:
-> 
->   arch/x86/kvm/svm/sev.c: In function ‘sev_pin_memory’:
->   arch/x86/kvm/svm/sev.c:360:3: error: implicit declaration of function ‘release_pages’;\
-> 	  did you mean ‘reclaim_pages’? [-Werror=implicit-function-declaration]
->     360 |   release_pages(pages, npinned);
->         |   ^~~~~~~~~~~~~
->         |   reclaim_pages
-> 
-> because svm.c includes pagemap.h but the carved out sev.c needs it too.
-> Triggered by a randconfig build.
-> 
-> Fixes: eaf78265a4ab ("KVM: SVM: Move SEV code to separate file")
-> Signed-off-by: Borislav Petkov <bp@suse.de>
-> ---
->  arch/x86/kvm/svm/sev.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-> index 0e3fc311d7da..0208ab2179d5 100644
-> --- a/arch/x86/kvm/svm/sev.c
-> +++ b/arch/x86/kvm/svm/sev.c
-> @@ -12,6 +12,7 @@
->  #include <linux/kernel.h>
->  #include <linux/highmem.h>
->  #include <linux/psp-sev.h>
-> +#include <linux/pagemap.h>
->  #include <linux/swap.h>
->  
->  #include "x86.h"
-> 
 
-Queued, thanks.
 
-Paolo
+> -----Original Message-----
+> From: Rob Herring <robh@kernel.org>
+> Sent: Wednesday, April 15, 2020 5:20 AM
+> To: Dhananjay Vilasrao Kangude <dkangude@cadence.com>
+> Cc: linux-edac@vger.kernel.org; bp@alien8.de; mchehab@kernel.org;
+> tony.luck@intel.com; james.morse@arm.com; linux-kernel@vger.kernel.org;
+> Milind Parab <mparab@cadence.com>; devicetree@vger.kernel.org
+> Subject: Re: [PATCH v3 1/2] dt-bindings: edac: Add cadence ddr mc support
+>=20
+> EXTERNAL MAIL
+>=20
+>=20
+> On Mon, Apr 06, 2020 at 03:13:40PM +0200, Dhananjay Kangude wrote:
+> > Add documentation for cadence ddr memory controller EDAC DTS bindings
+> >
+> > Signed-off-by: Dhananjay Kangude <dkangude@cadence.com>
+> > ---
+> >  .../devicetree/bindings/edac/cdns,ddr-edac.yaml    |   47
+> ++++++++++++++++++++
+> >  1 files changed, 47 insertions(+), 0 deletions(-)  create mode 100644
+> > Documentation/devicetree/bindings/edac/cdns,ddr-edac.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/edac/cdns,ddr-edac.yaml
+> > b/Documentation/devicetree/bindings/edac/cdns,ddr-edac.yaml
+> > new file mode 100644
+> > index 0000000..30ea757
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/edac/cdns,ddr-edac.yaml
+> > @@ -0,0 +1,47 @@
+> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause) %YAML 1.2
+> > +---
+> > +$id:
+> > +https://urldefense.com/v3/__http://devicetree.org/schemas/edac/cdns,d
+> > +dr-
+> edac.yaml*__;Iw!!EHscmS1ygiU1lA!T49K56JzhGnA7nxu4mq55aDfl80QsXPj-l
+> > +Egtf_PILMzq2Np6NqhLRXeTNuBLx0$
+> > +$schema:
+> > +https://urldefense.com/v3/__http://devicetree.org/meta-schemas/core.y
+> > +aml*__;Iw!!EHscmS1ygiU1lA!T49K56JzhGnA7nxu4mq55aDfl80QsXPj-
+> lEgtf_PILM
+> > +zq2Np6NqhLRXe69d40qY$
+> > +
+> > +title: Cadence DDR IP with ECC support (EDAC)
+> > +
+> > +description:
+> > +  This binding describes the Cadence DDR/LPDDR IP with ECC feature
+> > +enabled
+> > +  to detect and correct CE/UE errors.
+> > +
+> > +maintainers:
+> > +  - Dhananjay Kangdue <dkangude@cadence.com>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - cdns,ddr4-mc
+>=20
+> Surely there's more than 1 version?
 
+[Dhananjay Kangude] No, as of now we have only one version of hardware modu=
+le.=20
+I will change the property with items instead of enum.
+>=20
+> > +
+> > +  reg:
+> > +    minItems: 1
+> > +    maxItems: 2
+> > +    items:
+> > +      - description:
+> > +          Register block of DDR/LPDDR apb registers up to mapped area.
+> > +          Mapped area contains the register set for memory controller,
+> > +          phy and PI module register set doesn't part of this mapping.
+>=20
+> doesn't part of this mapping?
+>=20
+[Dhananjay Kangude] In case of combo IP, controller and phy module are toge=
+ther.=20
+But ecc doesn't have any dependencies on phy module so we can exclude phy m=
+odule .
+> Need a description for the 2nd region.
+
+[Dhananjay Kangude] Removed maxItems property. We don't have another region=
+ to access.
+fix will release in next version
+>=20
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - interrupts
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    edac: edac@fd100000 {
+>=20
+> memory-controller@
+[Dhananjay Kangude] ] memory-controller might not the appropriate name.=20
+the driver module is only focused on ecc not on actual memory-controller fu=
+nctionality.
+>=20
+> > +        compatible =3D "cdns,ddr4-mc-edac";
+>=20
+> Doesn't match.
+[Dhananjay Kangude] fixed. Changes will be part of next version.
+>=20
+> > +        reg =3D <0xfd100000 0x4000>;
+> > +        interrupts =3D <0x00 0x01 0x04>;
+> > +    };
+> > +...
+> > --
+> > 1.7.1
+> >
