@@ -2,129 +2,130 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3719FC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:03:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F09C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:03:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 175C820575
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:03:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6030620575
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:03:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586952198;
-	bh=aS6rCUp0LQwVhHJsV5uUa9qCEMgITqc2OzijRDMUb+0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=teI87x9r3yKnNb6BbzGurnNt+UGG6HRcgHwG47rw7fjEorDqbfFSI3rsZJhP9NmOf
-	 m1G0Li98M1nDBpzT0ENTaJu78KIXA3202AwHepRL0DKrVdx2aZG13AZDgUvTbRyv6h
-	 8N4Uneqt4kH5OakWLye+FwBRn5xul0fWexXAXr7A=
+	s=default; t=1586952208;
+	bh=wuXS7RCUYgyS51p4SeDx49zy51VkJGb5/qdr8yBZ0d4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=kLa5ueD6clyavv4bKM+Zii9ZX2Tov4xSgvUmcmaMavXJoLT+HGQykyva6nuBlnC7j
+	 1bc876+1JxrN9eKi+R7g8nUAIdr3rR3HKeUCZ9RHFCt5JenZtEqsDA5fVia67KXFCG
+	 HqyNfKHnElTlBVil200e4ZXZNY6A+YGcINTtxtBg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S368241AbgDOMDO (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:03:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44178 "EHLO mail.kernel.org"
+        id S368248AbgDOMDZ (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:03:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409452AbgDOLs1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:48:27 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        id S2406447AbgDOLt6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:49:58 -0400
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D408F2137B;
-        Wed, 15 Apr 2020 11:48:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4691F21744;
+        Wed, 15 Apr 2020 11:49:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951307;
-        bh=aS6rCUp0LQwVhHJsV5uUa9qCEMgITqc2OzijRDMUb+0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tFhtEAL4WK1SQf1f5uAhdTokXOM/dRcTqL80zFQVEg7TqSDCYhPIlVpM3SoohKtym
-         3KL3VVQEANxJghnV4li/SPJn+ViNlbCu92WOoYJGuwjspO8YCGWSh+Ba+eKR4q6OO3
-         afmrYY7uqQhBhuQKUdp/geE1GBTW8uSYQ0WIfsXM=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vegard Nossum <vegard.nossum@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Daniel Santos <daniel.santos@pobox.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Ian Abbott <abbotti@mev.co.uk>, Joe Perches <joe@perches.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-sparse@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 10/14] compiler.h: fix error in BUILD_BUG_ON() reporting
-Date:   Wed, 15 Apr 2020 07:48:10 -0400
-Message-Id: <20200415114814.15954-10-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415114814.15954-1-sashal@kernel.org>
-References: <20200415114814.15954-1-sashal@kernel.org>
+        s=default; t=1586951397;
+        bh=wuXS7RCUYgyS51p4SeDx49zy51VkJGb5/qdr8yBZ0d4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=xeYP5cgafRPn6YhT6fu/+txsms6Rtv2DIovKV6n2lrE++374gHweZw442o4eW6zsC
+         0QPce/mOtpt2CYbuX3ZFAnyYNI2ZEwjJnhtikf8CEIIN6kqNvsnWY7Mv65g7qt/ye7
+         uxrNjWBorfjR3nRfrgurBt9sUOOix1lQMqGuSVeE=
+Received: by mail-lj1-f172.google.com with SMTP id l14so3320926ljj.5;
+        Wed, 15 Apr 2020 04:49:57 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZjsKu6zf8LL5CFFTykBFz9Ow4IvwbcDnVlR60DqUO+zLPg55Wi
+        Mn3f2JxQvMpWmfYUIWCrwd9HLJrKBdE/jlykFDA=
+X-Google-Smtp-Source: APiQypJ6JgZvNxuPA2SlFZq3seBA6kaFPbk0RkqFDGIpIMdWvmYwpqEO8cmLBYYdZ/c1p1IHSS++MGMZGzTZDC6zHHI=
+X-Received: by 2002:a2e:9845:: with SMTP id e5mr3131512ljj.201.1586951395296;
+ Wed, 15 Apr 2020 04:49:55 -0700 (PDT)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <cover.1586939718.git.hns@goldelico.com> <b6733f80546bf3e6b3799f716b9c8e0f407de03d.1586939718.git.hns@goldelico.com>
+In-Reply-To: <b6733f80546bf3e6b3799f716b9c8e0f407de03d.1586939718.git.hns@goldelico.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Wed, 15 Apr 2020 13:49:44 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPcb9KWNAem-CAx_zCS+sZoEHYc0J8x0nk1xjY9hD4-M4w@mail.gmail.com>
+Message-ID: <CAJKOXPcb9KWNAem-CAx_zCS+sZoEHYc0J8x0nk1xjY9hD4-M4w@mail.gmail.com>
+Subject: Re: [PATCH v6 08/12] arm: dts: s5pv210: Add G3D node
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Philipp Rossak <embed3d@gmail.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-omap@vger.kernel.org, openpvrsgx-devgroup@letux.org,
+        letux-kernel@openphoenux.org, kernel@pyra-handheld.com,
+        linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        Jonathan Bakker <xc-racer2@live.ca>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vegard Nossum <vegard.nossum@oracle.com>
+On Wed, 15 Apr 2020 at 10:36, H. Nikolaus Schaller <hns@goldelico.com> wrote:
+>
+> From: Jonathan Bakker <xc-racer2@live.ca>
+>
+> to add support for SGX540 GPU.
 
-[ Upstream commit af9c5d2e3b355854ff0e4acfbfbfadcd5198a349 ]
+Do not continue the subject in commit msg like it is one sentence.
+These are two separate sentences, so commit msg starts with capital
+letter and it is sentence by itself.
 
-compiletime_assert() uses __LINE__ to create a unique function name.  This
-means that if you have more than one BUILD_BUG_ON() in the same source
-line (which can happen if they appear e.g.  in a macro), then the error
-message from the compiler might output the wrong condition.
+> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> ---
+>  arch/arm/boot/dts/s5pv210.dtsi | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/s5pv210.dtsi b/arch/arm/boot/dts/s5pv210.dtsi
+> index 2ad642f51fd9..e7fc709c0cca 100644
+> --- a/arch/arm/boot/dts/s5pv210.dtsi
+> +++ b/arch/arm/boot/dts/s5pv210.dtsi
+> @@ -512,6 +512,21 @@ vic3: interrupt-controller@f2300000 {
+>                         #interrupt-cells = <1>;
+>                 };
+>
+> +               g3d: g3d@f3000000 {
+> +                       compatible = "samsung,s5pv210-sgx540-120";
+> +                       reg = <0xf3000000 0x10000>;
+> +                       interrupt-parent = <&vic2>;
+> +                       interrupts = <10>;
+> +                       clock-names = "sclk";
+> +                       clocks = <&clocks CLK_G3D>;
 
-For this source file:
+Not part of bindings, please remove or add to the bindings.
 
-	#include <linux/build_bug.h>
+> +
+> +                       power-domains = <&pd S5PV210_PD_G3D>;
 
-	#define macro() \
-		BUILD_BUG_ON(1); \
-		BUILD_BUG_ON(0);
+Ditto
 
-	void foo()
-	{
-		macro();
-	}
+> +
+> +                       assigned-clocks = <&clocks MOUT_G3D>, <&clocks DOUT_G3D>;
+> +                       assigned-clock-rates = <0>, <66700000>;
+> +                       assigned-clock-parents = <&clocks MOUT_MPLL>;
 
-gcc would output:
+Probably this should have status disabled because you do not set
+regulator supply.
 
-./include/linux/compiler.h:350:38: error: call to `__compiletime_assert_9' declared with attribute error: BUILD_BUG_ON failed: 0
-  _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
-
-However, it was not the BUILD_BUG_ON(0) that failed, so it should say 1
-instead of 0. With this patch, we use __COUNTER__ instead of __LINE__, so
-each BUILD_BUG_ON() gets a different function name and the correct
-condition is printed:
-
-./include/linux/compiler.h:350:38: error: call to `__compiletime_assert_0' declared with attribute error: BUILD_BUG_ON failed: 1
-  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-
-Signed-off-by: Vegard Nossum <vegard.nossum@oracle.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Reviewed-by: Daniel Santos <daniel.santos@pobox.com>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Ian Abbott <abbotti@mev.co.uk>
-Cc: Joe Perches <joe@perches.com>
-Link: http://lkml.kernel.org/r/20200331112637.25047-1-vegard.nossum@oracle.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- include/linux/compiler.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-index 5508011cc0c79..5f8749440c6af 100644
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -502,7 +502,7 @@ static __always_inline void __write_once_size(volatile void *p, void *res, int s
-  * compiler has support to do so.
-  */
- #define compiletime_assert(condition, msg) \
--	_compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
-+	_compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
- 
- #define compiletime_assert_atomic_type(t)				\
- 	compiletime_assert(__native_word(t),				\
--- 
-2.20.1
-
+Best regards,
+Krzysztof
