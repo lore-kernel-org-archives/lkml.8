@@ -2,81 +2,104 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AC94C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C431FC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:24:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A1BA2084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:23:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93AB12084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:24:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586971429;
-	bh=D7TBTILX71mxJ/G39+SJi/LEpI7HgDThUM+arZejPt0=;
-	h=Date:From:To:Cc:Subject:Reply-To:List-ID:From;
-	b=hboFUwEifct43EAt32frZ0O+zCE6loxcI3PaBRsKgrxrq2PMZqJNWnMJaVAZ9P18T
-	 907HO+kJfUDaTmMZojtMNmr/qH8afPAY8Uq8FFMJeeIc64661BR0uEbrNVFC8B+S+M
-	 2XVYPP6lfj4zh0ub9TWGjNZFYhukPSka+yey7arI=
+	s=default; t=1586971454;
+	bh=Ze4jnx2Vzf6V3iemk5t65kRGUKjcmimAP2gSWAbUpLs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=XuQfPI10xI+DdH7Sdxl/itAlW8JKO8TEIjQEYYKJNx8i8IoRBAPLHwUAdfIb6JA9m
+	 4OUIr9JL9Z7vIRVKDjiKyqyYdM5lnM8LDNkKa/N6MFGvvi+MJGqagL/IVXWOiTgPEd
+	 IiFeAmmWTMqsjtM8+EFRFuTLX0UaxKaJkralRIvI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410921AbgDORXq (ORCPT
+        id S2410939AbgDORYM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 13:23:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37332 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 13:24:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2410909AbgDORXm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 13:23:42 -0400
+        id S2410924AbgDORYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 13:24:05 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E167920784;
-        Wed, 15 Apr 2020 17:23:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3025320784;
+        Wed, 15 Apr 2020 17:24:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586971421;
-        bh=D7TBTILX71mxJ/G39+SJi/LEpI7HgDThUM+arZejPt0=;
-        h=Date:From:To:Cc:Subject:Reply-To:From;
-        b=ce0dVEwRUjcdQa1AQhypGcCw6AtRqrLvsPgK1G4m69dT+ZCRvRtBcBlSDL8EGjFov
-         q51xfev0LwMONCNaF9lc+wr/p2vP+5iruosviI867n0k+WRxy3bWD7+GfA4nzvnYW2
-         c0q5M7QfDi+zPbTOCDW4Ml7DZIzt4kkkkHx7CEjw=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id B39053522AD1; Wed, 15 Apr 2020 10:23:41 -0700 (PDT)
-Date:   Wed, 15 Apr 2020 10:23:41 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
+        s=default; t=1586971445;
+        bh=Ze4jnx2Vzf6V3iemk5t65kRGUKjcmimAP2gSWAbUpLs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=snvfrSo/E/BkGNsbNyGip7QCT1X43qrVrwFz6NPR23pAQbh6Ttc7TdAjlfkWPl2Pb
+         cZ4czog4a1GW4qE5auentFXq9xvVCJEvc/BEwpq6cW1+Spnv1mf+hjK6lq/JS65Msu
+         vGcJP4KoM3q+tMIOqaYcE+XQcxiSXiKpa5e8EiJ8=
+From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         jiangshanlai@gmail.com, dipankar@in.ibm.com,
         akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
         josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org
-Subject: [PATCH tip/core/rcu 0/3] RCU stall-warning updates for v5.8
-Message-ID: <20200415172341.GA9519@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
+        "Paul E. McKenney" <paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 1/3] rcu: Use data_race() for RCU expedited CPU stall-warning prints
+Date:   Wed, 15 Apr 2020 10:24:01 -0700
+Message-Id: <20200415172403.9647-1-paulmck@kernel.org>
+X-Mailer: git-send-email 2.9.5
+In-Reply-To: <20200415172341.GA9519@paulmck-ThinkPad-P72>
+References: <20200415172341.GA9519@paulmck-ThinkPad-P72>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+From: "Paul E. McKenney" <paulmck@kernel.org>
 
-This series provides a few updates to RCU CPU stall-warning messages.
+Although the accesses used to determine whether or not an expedited
+stall should be printed are an integral part of the concurrency algorithm
+governing use of the corresponding variables, the values that are simply
+printed are ancillary.  As such, it is best to use data_race() for these
+accesses in order to provide the greatest latitude in the use of KCSAN
+for the other accesses that are an integral part of the algorithm.  This
+commit therefore changes the relevant uses of READ_ONCE() to data_race().
 
-1.	Use data_race() for RCU expedited CPU stall-warning prints.
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+---
+ kernel/rcu/tree_exp.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-2.	When GP kthread is starved, tag idle threads as false positives.
-	After all, it is not the idle threads' fault that the GP
-	kthread hasn't reported their extended quiescent states!
+diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
+index 1a617b9..e1a7986 100644
+--- a/kernel/rcu/tree_exp.h
++++ b/kernel/rcu/tree_exp.h
+@@ -542,8 +542,8 @@ static void synchronize_rcu_expedited_wait(void)
+ 		}
+ 		pr_cont(" } %lu jiffies s: %lu root: %#lx/%c\n",
+ 			jiffies - jiffies_start, rcu_state.expedited_sequence,
+-			READ_ONCE(rnp_root->expmask),
+-			".T"[!!rnp_root->exp_tasks]);
++			data_race(rnp_root->expmask),
++			".T"[!!data_race(rnp_root->exp_tasks)]);
+ 		if (ndetected) {
+ 			pr_err("blocking rcu_node structures:");
+ 			rcu_for_each_node_breadth_first(rnp) {
+@@ -553,8 +553,8 @@ static void synchronize_rcu_expedited_wait(void)
+ 					continue;
+ 				pr_cont(" l=%u:%d-%d:%#lx/%c",
+ 					rnp->level, rnp->grplo, rnp->grphi,
+-					READ_ONCE(rnp->expmask),
+-					".T"[!!rnp->exp_tasks]);
++					data_race(rnp->expmask),
++					".T"[!!data_race(rnp->exp_tasks)]);
+ 			}
+ 			pr_cont("\n");
+ 		}
+-- 
+2.9.5
 
-3.	Remove self-stack-trace when all quiescent states seen.
-
-							Thanx, Paul
-
-------------------------------------------------------------------------
-
- tree_exp.h   |    8 ++++----
- tree_stall.h |   26 +++++++++++++++++++-------
- 2 files changed, 23 insertions(+), 11 deletions(-)
