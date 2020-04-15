@@ -3,79 +3,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1963CC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:29:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A675FC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:30:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3C652076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:29:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82D8C2076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:30:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394015AbgDOO3y (ORCPT
+        id S2394023AbgDOOaZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:29:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38862 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729358AbgDOO3t (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 10:29:49 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B044C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 07:29:49 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id D6E452A0156
-Subject: Re: [PATCH v4 0/3] platform/chrome: typec: Add port partner
- registration
-To:     Prashant Malani <pmalani@chromium.org>,
-        linux-kernel@vger.kernel.org
-Cc:     heikki.krogerus@linux.intel.com,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>
-References: <20200415052943.93009-1-pmalani@chromium.org>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <3279b538-3f68-c2f4-814b-ad64969b29e4@collabora.com>
-Date:   Wed, 15 Apr 2020 16:29:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 15 Apr 2020 10:30:25 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47646 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729358AbgDOOaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 10:30:19 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 241A6AA7C;
+        Wed, 15 Apr 2020 14:30:15 +0000 (UTC)
+Date:   Wed, 15 Apr 2020 16:30:15 +0200 (CEST)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+cc:     Peter Zijlstra <peterz@infradead.org>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jessica Yu <jeyu@kernel.org>
+Subject: Re: [PATCH 1/7] livepatch: Apply vmlinux-specific KLP relocations
+ early
+In-Reply-To: <20200414193150.iqw224itgpedpltm@treble>
+Message-ID: <alpine.LSU.2.21.2004151627100.13470@pobox.suse.cz>
+References: <cover.1586881704.git.jpoimboe@redhat.com> <8c3af42719fe0add37605ede634c7035a90f9acc.1586881704.git.jpoimboe@redhat.com> <20200414174406.GC2483@worktop.programming.kicks-ass.net> <20200414180109.da4v2b4ifpixuzn3@treble>
+ <20200414193150.iqw224itgpedpltm@treble>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20200415052943.93009-1-pmalani@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prashant,
+On Tue, 14 Apr 2020, Josh Poimboeuf wrote:
 
-On 15/4/20 7:29, Prashant Malani wrote:
-> The following series adds port-partner registration when
-> connects/disconnects are detected. In order to do that, we also register
-> a listener for the cros-usbpd-notifier, which will inform the driver of
-> EC PD events. While we are here, separate out the Type C port data
-> objects into a separate struct.
+> On Tue, Apr 14, 2020 at 01:01:09PM -0500, Josh Poimboeuf wrote:
+> > On Tue, Apr 14, 2020 at 07:44:06PM +0200, Peter Zijlstra wrote:
+> > > On Tue, Apr 14, 2020 at 11:28:37AM -0500, Josh Poimboeuf wrote:
+> > > > KLP relocations are livepatch-specific relocations which are applied to
+> > > >   1) vmlinux-specific KLP relocation sections
+> > > > 
+> > > >      .klp.rela.vmlinux.{sec}
+> > > > 
+> > > >      These are relocations (applied to the KLP module) which reference
+> > > >      unexported vmlinux symbols.
+> > > > 
+> > > >   2) module-specific KLP relocation sections
+> > > > 
+> > > >      .klp.rela.{module}.{sec}:
+> > > > 
+> > > >      These are relocations (applied to the KLP module) which reference
+> > > >      unexported or exported module symbols.
+> > > 
+> > > Is there something that disallows a module from being called 'vmlinux' ?
+> > > If not, we might want to enforce this somewhere.
+> > 
+> > I'm pretty sure we don't have a check for that anywhere, though the KLP
+> > module would almost certainly fail during the module load when it
+> > couldn't find the vmlinux.ko symbols it needed.
+> > 
+> > It wouldn't hurt to add a check somewhere though.  Maybe in
+> > klp_module_coming() since the restriction only applies to
+> > CONFIG_LIVEPATCH...
 > 
-> v3: https://lkml.org/lkml/2020/4/9/868
-> v2: https://lkml.org/lkml/2020/4/9/861
-> v1: https://lkml.org/lkml/2020/4/6/1155
+> From: Josh Poimboeuf <jpoimboe@redhat.com>
+> Subject: [PATCH] livepatch: Disallow vmlinux.ko
 > 
-> Changes in v4:
-> - Modified typec_register_partner() error check.
-> 
-> Prashant Malani (3):
->   platform/chrome: typec: Use notifier for updates
->   platform/chrome: typec: Add struct for port data
->   platform/chrome: typec: Register port partner
-> 
->  drivers/platform/chrome/Kconfig         |   1 +
->  drivers/platform/chrome/cros_ec_typec.c | 119 ++++++++++++++++++++----
->  2 files changed, 103 insertions(+), 17 deletions(-)
-> 
+> This is purely a theoretical issue, but if there were a module named
 
-Queued all the patches for 5.8
+OT: "if there were"... subjunctive?
 
-Thanks,
- Enric
+> vmlinux.ko, the livepatch relocation code wouldn't be able to
+> distinguish between vmlinux-specific and vmlinux.o-specific KLP
+> relocations.
+> 
+> If CONFIG_LIVEPATCH is enabled, don't allow a module named vmlinux.ko.
+
+Yup, there is no such check nowadays. I always struggle to find the right 
+balance between being overprotective and letting the user shoot themselves 
+in their foot if they want to. But it does not hurt, so ack to that.
+
+Miroslav
