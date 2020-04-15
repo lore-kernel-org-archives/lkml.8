@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7DABC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA5E2C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A23AD20768
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:11:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2EF520768
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:11:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586977890;
-	bh=CbY2F3LfZp/8PhR4hXRU/7Ytt7h8LlhQM+094/Tri6g=;
+	s=default; t=1586977897;
+	bh=Iqy7olmWTGFsAB7j1jAOyQi0betLtkAJ66NGYId1SDc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CEImFt3Bf0uw+2mGvtds6byC1t/y2wrstrbkRaXbUkE3Vyt5y2gx+7if4LK8RNtL+
-	 Gwah6VseC7BtfKckxcxYzO/Roas2xXRLb4blRseY4zzhaWJ9GjvTSphllRLJwDw8bC
-	 fhy4I31+EuPhu97/Eh+i+Pmrd3ixvxxZQeR2jc10=
+	b=qZiz5G/txJ00GadAajgutYgcC5uQC8tExEnX92Acfe7jIo8NE3UwUBBktjs0ME9rg
+	 DX+8szLG0Xi3ltWXpQ6cmAfGwoM/wfx7fXUHAQvxmroiKMKM2G0XM+fLC/fiMwuVZJ
+	 GDTJI/cQHzAhoHrrwpfVL5ZjCAHL47SHr3k1DoYE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2411862AbgDOTL3 (ORCPT
+        id S2504532AbgDOTLd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 15:11:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45838 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 15:11:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1416857AbgDOStr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 14:49:47 -0400
+        id S1416860AbgDOSts (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 14:49:48 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCA5B206A2;
-        Wed, 15 Apr 2020 18:49:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2B3321569;
+        Wed, 15 Apr 2020 18:49:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586976587;
-        bh=CbY2F3LfZp/8PhR4hXRU/7Ytt7h8LlhQM+094/Tri6g=;
+        s=default; t=1586976588;
+        bh=Iqy7olmWTGFsAB7j1jAOyQi0betLtkAJ66NGYId1SDc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bTffqt2BSqXzPdiCYN36Djm6IX9xVHL481VkweXzkJRnvUSF4JTMZJf8Xy9er7sFF
-         Ag1bI40vCwBRlH9hbVygYLORO2n5nxGrfpKWhhNyECN6Myq4oC1fj2O4PzIzDUvqoa
-         jUNGiBbicXY+FnJPNmf+2X80Gm+6qlmeDj6cgbMA=
+        b=QwQ6eDPRXqiq474j0FH2lAMcFRsLU7qsbtLZtPR0KiLFnFvvJ9Ezn9n+yQC7WWI0J
+         +/ItFIGgTsEoagfUmqmYgv+b7Ci9aJ8Bs5uCtvlHcuigaQeHZzM87yj7gutF3Tr+4I
+         rQa2RjPhLz17mW/eZrcP9mX3xiYEIoovlJKc4K4s=
 From:   paulmck@kernel.org
 To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
         kernel-team@fb.com, mingo@kernel.org
 Cc:     stern@rowland.harvard.edu, parri.andrea@gmail.com, will@kernel.org,
         peterz@infradead.org, boqun.feng@gmail.com, npiggin@gmail.com,
         dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
-        akiyks@gmail.com, "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH lkmm tip/core/rcu 01/10] tools/memory-model: Add recent references
-Date:   Wed, 15 Apr 2020 11:49:36 -0700
-Message-Id: <20200415184945.16487-1-paulmck@kernel.org>
+        akiyks@gmail.com,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>
+Subject: [PATCH lkmm tip/core/rcu 04/10] Documentation: LKMM: Add litmus test for RCU GP guarantee where updater frees object
+Date:   Wed, 15 Apr 2020 11:49:39 -0700
+Message-Id: <20200415184945.16487-4-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200415183343.GA12265@paulmck-ThinkPad-P72>
 References: <20200415183343.GA12265@paulmck-ThinkPad-P72>
@@ -57,60 +59,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Paul E. McKenney" <paulmck@kernel.org>
+From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
 
-This commit updates the list of LKMM-related publications in
-Documentation/references.txt.
+This adds an example for the important RCU grace period guarantee, which
+shows an RCU reader can never span a grace period.
 
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 Acked-by: Andrea Parri <parri.andrea@gmail.com>
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- tools/memory-model/Documentation/references.txt | 21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
+ .../litmus-tests/rcu/RCU+sync+free.litmus          | 42 ++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
+ create mode 100644 Documentation/litmus-tests/rcu/RCU+sync+free.litmus
 
-diff --git a/tools/memory-model/Documentation/references.txt b/tools/memory-model/Documentation/references.txt
-index b177f3e..ecbbaa5 100644
---- a/tools/memory-model/Documentation/references.txt
-+++ b/tools/memory-model/Documentation/references.txt
-@@ -73,6 +73,18 @@ o	Christopher Pulte, Shaked Flur, Will Deacon, Jon French,
- Linux-kernel memory model
- =========================
- 
-+o	Jade Alglave, Will Deacon, Boqun Feng, David Howells, Daniel
-+	Lustig, Luc Maranget, Paul E. McKenney, Andrea Parri, Nicholas
-+	Piggin, Alan Stern, Akira Yokosawa, and Peter Zijlstra.
-+	2019. "Calibrating your fear of big bad optimizing compilers"
-+	Linux Weekly News.  https://lwn.net/Articles/799218/
+diff --git a/Documentation/litmus-tests/rcu/RCU+sync+free.litmus b/Documentation/litmus-tests/rcu/RCU+sync+free.litmus
+new file mode 100644
+index 0000000..4ee67e1
+--- /dev/null
++++ b/Documentation/litmus-tests/rcu/RCU+sync+free.litmus
+@@ -0,0 +1,42 @@
++C RCU+sync+free
 +
-+o	Jade Alglave, Will Deacon, Boqun Feng, David Howells, Daniel
-+	Lustig, Luc Maranget, Paul E. McKenney, Andrea Parri, Nicholas
-+	Piggin, Alan Stern, Akira Yokosawa, and Peter Zijlstra.
-+	2019. "Who's afraid of a big bad optimizing compiler?"
-+	Linux Weekly News.  https://lwn.net/Articles/793253/
++(*
++ * Result: Never
++ *
++ * This litmus test demonstrates that an RCU reader can never see a write that
++ * follows a grace period, if it did not see writes that precede that grace
++ * period.
++ *
++ * This is a typical pattern of RCU usage, where the write before the grace
++ * period assigns a pointer, and the writes following the grace period destroy
++ * the object that the pointer used to point to.
++ *
++ * This is one implication of the RCU grace-period guarantee, which says (among
++ * other things) that an RCU read-side critical section cannot span a grace period.
++ *)
 +
- o	Jade Alglave, Luc Maranget, Paul E. McKenney, Andrea Parri, and
- 	Alan Stern.  2018. "Frightening small children and disconcerting
- 	grown-ups: Concurrency in the Linux kernel". In Proceedings of
-@@ -88,6 +100,11 @@ o	Jade Alglave, Luc Maranget, Paul E. McKenney, Andrea Parri, and
- 	Alan Stern.  2017.  "A formal kernel memory-ordering model (part 2)"
- 	Linux Weekly News.  https://lwn.net/Articles/720550/
- 
-+o	Jade Alglave, Luc Maranget, Paul E. McKenney, Andrea Parri, and
-+	Alan Stern.  2017-2019.  "A Formal Model of Linux-Kernel Memory
-+	Ordering" (backup material for the LWN articles)
-+	https://mirrors.edge.kernel.org/pub/linux/kernel/people/paulmck/LWNLinuxMM/
++{
++int x = 1;
++int *y = &x;
++int z = 1;
++}
 +
- 
- Memory-model tooling
- ====================
-@@ -110,5 +127,5 @@ Memory-model comparisons
- ========================
- 
- o	Paul E. McKenney, Ulrich Weigand, Andrea Parri, and Boqun
--	Feng. 2016. "Linux-Kernel Memory Model". (6 June 2016).
--	http://open-std.org/JTC1/SC22/WG21/docs/papers/2016/p0124r2.html.
-+	Feng. 2018. "Linux-Kernel Memory Model". (27 September 2018).
-+	http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2018/p0124r6.html.
++P0(int *x, int *z, int **y)
++{
++	int *r0;
++	int r1;
++
++	rcu_read_lock();
++	r0 = rcu_dereference(*y);
++	r1 = READ_ONCE(*r0);
++	rcu_read_unlock();
++}
++
++P1(int *x, int *z, int **y)
++{
++	rcu_assign_pointer(*y, z);
++	synchronize_rcu();
++	WRITE_ONCE(*x, 0);
++}
++
++exists (0:r0=x /\ 0:r1=0)
 -- 
 2.9.5
 
