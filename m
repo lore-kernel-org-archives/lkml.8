@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F7F5C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:03:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6463C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:03:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7307320575
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:03:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4EBD20737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:03:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586952231;
-	bh=YAjB2sHGtTpMKpHyVaKkXJWfs47xXB9KBtYdIXiACn4=;
+	s=default; t=1586952236;
+	bh=JPbhoqeFUPHJpXc+rO/mAZalsSq5l5AOvG/Eb06Qy8o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kOg039jVaCCBJXlvu1l3L0FPTGXUdSQ4YLO/pfRlvkE5MiPHzEUOYfG/9avu5l5Yc
-	 IqY86DEUZdTRfRpTTzJ9rhliZ5Tu3avhUI0WFKhUKuJhkhoInqgYAKgQ5ZdtYnbJVY
-	 DOaoLWbLDjS1tM7/MzW3cz+90Fprj2KiNrYiXL78=
+	b=bic4p+kLCgmEjFfzuwJfJRm9nRl9lKwf7eznt30rZ/1OXPThDXkrXRHIkR/JGFt4Z
+	 GF3QNx9EF67gZ0izFvN/C/eBlpIM8ZK8Jk8le4hkV6E+8k6OAuMvAnnBGi4soMQo0C
+	 p/s6WEDLpOG2PBugHHPP8iN5UkKj0cN09LuwQS4w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S368163AbgDOMDu (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:03:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44058 "EHLO mail.kernel.org"
+        id S368280AbgDOMDx (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:03:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409453AbgDOLsV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:48:21 -0400
+        id S2409450AbgDOLsU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:48:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1C8521569;
-        Wed, 15 Apr 2020 11:48:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 988512137B;
+        Wed, 15 Apr 2020 11:48:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951300;
-        bh=YAjB2sHGtTpMKpHyVaKkXJWfs47xXB9KBtYdIXiACn4=;
+        s=default; t=1586951298;
+        bh=JPbhoqeFUPHJpXc+rO/mAZalsSq5l5AOvG/Eb06Qy8o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=viSYZpZLqjLpIz2zSCV2DEmeSb7RH7wupjhTjcdmfHsPjH0GJxa6h0deSiF0cn6Kk
-         lH2gIPwDObRbG9JzL0YtJitHVOotL4M6bNeOMspszeptRX7McTj/ou6UwejpV6SkFx
-         QXo3JqSuIkrwIB0DAMNrbC8mU/7W1yuPEj9ORvo4=
+        b=RmaRB2C0Gj3jnumoF09ojCr/TS+/F/XEJynsTXdeInZCeB0ytpSGNQ8wgqV2w1aX5
+         0op5pnon53nHcnLftOm+nWW+Me+n62U3RsI46JRp7KDlF5/F5mXdU2kr+qxRkBy5Y4
+         jHt4mtOMmOGKG5SaK8zznUDypSBXc++c5rpNv9HI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Josh Triplett <josh@joshtriplett.org>,
-        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
-        linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 05/14] ext4: fix incorrect group count in ext4_fill_super error message
-Date:   Wed, 15 Apr 2020 07:48:05 -0400
-Message-Id: <20200415114814.15954-5-sashal@kernel.org>
+Cc:     Misono Tomohiro <misono.tomohiro@jp.fujitsu.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 03/14] NFS: direct.c: Fix memory leak of dreq when nfs_get_lock_context fails
+Date:   Wed, 15 Apr 2020 07:48:03 -0400
+Message-Id: <20200415114814.15954-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114814.15954-1-sashal@kernel.org>
 References: <20200415114814.15954-1-sashal@kernel.org>
@@ -58,41 +58,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Triplett <josh@joshtriplett.org>
+From: Misono Tomohiro <misono.tomohiro@jp.fujitsu.com>
 
-[ Upstream commit df41460a21b06a76437af040d90ccee03888e8e5 ]
+[ Upstream commit 8605cf0e852af3b2c771c18417499dc4ceed03d5 ]
 
-ext4_fill_super doublechecks the number of groups before mounting; if
-that check fails, the resulting error message prints the group count
-from the ext4_sb_info sbi, which hasn't been set yet. Print the freshly
-computed group count instead (which at that point has just been computed
-in "blocks_count").
+When dreq is allocated by nfs_direct_req_alloc(), dreq->kref is
+initialized to 2. Therefore we need to call nfs_direct_req_release()
+twice to release the allocated dreq. Usually it is called in
+nfs_file_direct_{read, write}() and nfs_direct_complete().
 
-Signed-off-by: Josh Triplett <josh@joshtriplett.org>
-Fixes: 4ec1102813798 ("ext4: Add sanity checks for the superblock before mounting the filesystem")
-Link: https://lore.kernel.org/r/8b957cd1513fcc4550fe675c10bcce2175c33a49.1585431964.git.josh@joshtriplett.org
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+However, current code only calls nfs_direct_req_relese() once if
+nfs_get_lock_context() fails in nfs_file_direct_{read, write}().
+So, that case would result in memory leak.
+
+Fix this by adding the missing call.
+
+Signed-off-by: Misono Tomohiro <misono.tomohiro@jp.fujitsu.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/super.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/nfs/direct.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index cb96d343993f7..d8b2d38d2942e 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -3792,9 +3792,9 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
- 			EXT4_BLOCKS_PER_GROUP(sb) - 1);
- 	do_div(blocks_count, EXT4_BLOCKS_PER_GROUP(sb));
- 	if (blocks_count > ((uint64_t)1<<32) - EXT4_DESC_PER_BLOCK(sb)) {
--		ext4_msg(sb, KERN_WARNING, "groups count too large: %u "
-+		ext4_msg(sb, KERN_WARNING, "groups count too large: %llu "
- 		       "(block count %llu, first data block %u, "
--		       "blocks per group %lu)", sbi->s_groups_count,
-+		       "blocks per group %lu)", blocks_count,
- 		       ext4_blocks_count(es),
- 		       le32_to_cpu(es->s_first_data_block),
- 		       EXT4_BLOCKS_PER_GROUP(sb));
+diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
+index 88cb8e0d60149..7789f0b9b999e 100644
+--- a/fs/nfs/direct.c
++++ b/fs/nfs/direct.c
+@@ -605,6 +605,7 @@ ssize_t nfs_file_direct_read(struct kiocb *iocb, struct iov_iter *iter,
+ 	l_ctx = nfs_get_lock_context(dreq->ctx);
+ 	if (IS_ERR(l_ctx)) {
+ 		result = PTR_ERR(l_ctx);
++		nfs_direct_req_release(dreq);
+ 		goto out_release;
+ 	}
+ 	dreq->l_ctx = l_ctx;
+@@ -1015,6 +1016,7 @@ ssize_t nfs_file_direct_write(struct kiocb *iocb, struct iov_iter *iter)
+ 	l_ctx = nfs_get_lock_context(dreq->ctx);
+ 	if (IS_ERR(l_ctx)) {
+ 		result = PTR_ERR(l_ctx);
++		nfs_direct_req_release(dreq);
+ 		goto out_release;
+ 	}
+ 	dreq->l_ctx = l_ctx;
 -- 
 2.20.1
 
