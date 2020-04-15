@@ -7,182 +7,111 @@ X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4605AC2BB85
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53756C2BB85
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:07:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2464220737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:05:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 266BE20737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:07:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ug3NRXJ3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DW/aynPd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410665AbgDORFY (ORCPT
+        id S2405974AbgDORHl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 13:05:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34974 "EHLO
+        Wed, 15 Apr 2020 13:07:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2410659AbgDORFU (ORCPT
+        with ESMTP id S1416349AbgDORHi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 13:05:20 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1561C061A0C;
-        Wed, 15 Apr 2020 10:05:20 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id d17so214597pgo.0;
-        Wed, 15 Apr 2020 10:05:20 -0700 (PDT)
+        Wed, 15 Apr 2020 13:07:38 -0400
+Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CAC2C061A0C;
+        Wed, 15 Apr 2020 10:07:38 -0700 (PDT)
+Received: by mail-yb1-xb42.google.com with SMTP id a9so375288ybc.8;
+        Wed, 15 Apr 2020 10:07:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=0AyhE+CJcuvLJxqL2z6J7uq4KCxVwXM0hQdDcmyUWAY=;
-        b=Ug3NRXJ3oZy5EhH7W93/FDpaX87Chj7NImU0fkg87IHrQy0MjCi1Z4Ll8TUe6lH+GX
-         UcqSYM51MRv0vg4XWl8oJVDg89eAgIq/IpA431B5CYegYHxv5RIFHXGEWaPjwsOPZwSb
-         fY7obQZ8vWsitSjpfWrMzFKYdv2k3Fcx8SZt7p+F/QKMhANwcUS2xnM6cH/IghaL2ITF
-         YXikU/OXSxp0kIQf9Zckk4KXTLhYgv8es/6kZ1MwvN5OW5pfAN1xjGxFaozBmKDWN51G
-         3PZkhT8MXZmccU/DvzqMi/+TXieOWKrMNaYUF85NbZPArwj9sW5moAF4CkW3HBzWRGf7
-         MHpQ==
+        bh=mEawja+POkeWDhdeSb2n3JPPbIrc1MBf0BcSpr4jXiw=;
+        b=DW/aynPdwuOV0UulG8/7DG2OSJ6ky7m4cHJ+Gz21nR6FRRF2vhyh16CWluwim3SoYH
+         Sa3l3B3FzcLzAWMfA6xNlEZa48cJ9CxVyXx9wg8ieAy8Y5M9yIqLVmci0t7KahDzEp3+
+         0TqZwO9P5Molcs7XpM8HUylYXdhNKpm1l4A7g2qFfA3vk8FbXmQZ1hXFuN1x1RAhqt7v
+         FwAoYkOyjNfRiOoUzhrbnRB1KWQFZ4mT1YcaV5pjQKptgjzp1AtP5iy5Tg2xG69PKdwT
+         tTojddkg9JdojP/Tpl3xBs1VsghOKLCz4A+73Z27B3CA1QGRd0/CftSCiv79EQSHLi++
+         fpfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=0AyhE+CJcuvLJxqL2z6J7uq4KCxVwXM0hQdDcmyUWAY=;
-        b=XiLOv0L/21MM/GKHpRAZJhs/JKxNHavuVRrjO27Zc1/bbB5yp8rulXpELvsp8Cnyjz
-         IPctUEtoUMRVp463MekoSNEotuNPl6SlsJH4AQ323dPTDXWMIFKrTaAHxW1yC4oPgNZV
-         +aTqLOTSHAOdyxy1/70hpzpUfDoMosfl+33cFaUpOFQd/ilY6IWYKWRWYLxWLy2TYLb9
-         +AmniLWVHmhRM3odEhsLzSZICzxTj80n6WAkp084sklhxhUP8MEyNJDE49kdnCUdwrGL
-         pX8YOyG9fJECXpmalsvgi4Imi7yWEVRtdhOPqf96k9O8SU8Cj2dAX268r3OiFmRHd0hC
-         t8dQ==
-X-Gm-Message-State: AGi0Pua5kPXl5HbiwieBy8MNpZjm/BFFfC30eJk6GXFCWY0H1jkK02TE
-        4fwO4QXYNgLRpTvOCLaqQlttD8w5N5v6koqH1H0=
-X-Google-Smtp-Source: APiQypJwxVjH6YxiBycXKhEmsD67Wygk8gI1cdUWc3aOnIwtjqPxeiQTzcTh9wWXd9hwUNhlgdFZ/mE2eqmlEkQdNPk=
-X-Received: by 2002:a63:1d4:: with SMTP id 203mr26556401pgb.74.1586970320093;
- Wed, 15 Apr 2020 10:05:20 -0700 (PDT)
+        bh=mEawja+POkeWDhdeSb2n3JPPbIrc1MBf0BcSpr4jXiw=;
+        b=N8j0bZXCFcUIH/gk1jPyGQ+F6ktrC3LQ8dZ21CB70LUexUDNj1mivlSbtn8lwq+9XB
+         fI7kOPyP2mRbz1WIzZf4Rn8R63EDf4JvV2FCy37yogdTGzq+vgSx67q23XH+d3OIuAaO
+         1+r4kH2AwS8HWH8vF0SBjxfii0QGoTxkn9RK6TiX+OSc7ikg0jJma8i3+bHhplib7TkF
+         68VT4dmeAK1r4xWYOPEPfc7p5RicvX713rn9d2G6YgIy/Dl+HKsBu/EIuQN59QizLnpH
+         FGXm0yse3u78rVRQwTB+vEEDW3HACpwReRhmaeOf1cgsFQuQRJlpwP93oowJO5S2QP7l
+         gycA==
+X-Gm-Message-State: AGi0PuYlV1gzJ3HoO2JpjNrjeCx9B441KlnIXhwuhEP1PeGgwgG1XNtr
+        hEaY0ayS/qdRS+OOAfdJRoreQFdBx6l+uEIbryY=
+X-Google-Smtp-Source: APiQypIUYnCqlboeLXX498mvDUEkiFizMnzOWoFRqJIN9jX23XsZO6pmKNshpPPzZLdtasP8OYlYcSo7oKRRSZZK1Gc=
+X-Received: by 2002:a25:cf12:: with SMTP id f18mr9443585ybg.167.1586970457348;
+ Wed, 15 Apr 2020 10:07:37 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200415162030.16414-1-sravanhome@gmail.com> <CAHp75VerGG0_J+fHrZfwJRa3EHtGuz-pJbD7zwoXN2jfO7dszA@mail.gmail.com>
- <dea1d71e-af5d-356a-79c0-38f343f54dfd@gmail.com>
-In-Reply-To: <dea1d71e-af5d-356a-79c0-38f343f54dfd@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 15 Apr 2020 20:05:12 +0300
-Message-ID: <CAHp75VeHxPFah+02Rj4efziM5bkwbe086aEQOJoHQed0jZmCHw@mail.gmail.com>
-Subject: Re: [PATCH v9 0/6] Add battery charger driver support for MP2629
-To:     saravanan sekar <sravanhome@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        Sebastian Reichel <sre@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
+References: <3865908.1586874010@warthog.procyon.org.uk> <e751977dac616d93806d98f4ad3ce144bb1eb244.camel@kernel.org>
+In-Reply-To: <e751977dac616d93806d98f4ad3ce144bb1eb244.camel@kernel.org>
+From:   Steve French <smfrench@gmail.com>
+Date:   Wed, 15 Apr 2020 12:07:26 -0500
+Message-ID: <CAH2r5mvj7GF3i8AE6E=+5f_Vigtb3uw=665F2uuBOgGzUhHObQ@mail.gmail.com>
+Subject: Re: What's a good default TTL for DNS keys in the kernel
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>, linux-afs@lists.infradead.org,
+        ceph-devel@vger.kernel.org, keyrings@vger.kernel.org,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, fweimer@redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 7:53 PM saravanan sekar <sravanhome@gmail.com> wrote:
+On Wed, Apr 15, 2020 at 8:22 AM Jeff Layton <jlayton@kernel.org> wrote:
 >
-> Hi Andy,
->
-> On 15/04/20 6:40 pm, Andy Shevchenko wrote:
-> > On Wed, Apr 15, 2020 at 7:20 PM Saravanan Sekar <sravanhome@gmail.com> wrote:
-> >> changes in v9:
-> >>   - fixed review comments in mp2629 power supply such as resource based
-> >>     iio channel, replace workqueue by threaded irq, irq get with "_optional"
-> >>
-> > May I ask you why you are ignoring my tag?
-> > If you don't want to have your patches reviewed / applied, just don't send them.
->
->
-> Sorry last time it was by mistake. But now I have added in below, if
-> suppose to added in top its my ignorance
-
-Ah, I see now. The idea of the tag given against cover letter that it
-applies to entire series (if doesn't say otherwise).
-It means, if you don't do any (drastic) changes to the patches, the
-tag is still valid and you simple add it to each patch in the series
-inside the commit message (usually after your SoB tag).
-
-> >> changes in v8:
-> >>   - fixed order of call in probe/remove in iio adc
-> >>   - add ABI documentation for mp2629 power supply
-> >>
-> >> changes in v7:
-> >>   - fixed probe/remove order, managed and unmanaged call mix use in adc.
-> >>   - Documentation dual license, i2c node with controller address
-> >>
-> >> Overall looks good to me, FWIW,
-> >> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> >>
-> >> One question though in reply to patch 4.
->
->
-> Please see here, this is first experience of tag in cover letter so just
-> kept here as you gave against v7
->
-> >>
-> >> changes in v6:
-> >>   - removed includes types.h in mfd, of_device.h in adc.
-> >>   - fixed review comments parentheses, err check, kstrtouint
-> >>
-> >> changes in v5:
-> >>   - removed platfrom data stored in mfd and directly accessed mfd struct in child
-> >>   - fixed spell check and capitalization in mfd and documentation
-> >>
-> >> changes in v4:
-> >>   - fixed capitalization in mfg Kconfig and documentation
-> >>
-> >> changes in v3:
-> >>   - regmap for children passed using platform data and remove mfd driver info
-> >>     access directly from children
-> >>
-> >> changes in v2:
-> >>   - removed EXPORT_SYMBOL of register set/get helper
-> >>   - regmap bit filed used, fixed other review comments
-> >>
-> >> This patch series add support for Battery charger control driver for Monolithic
-> >> Power System's MP2629 chipset, includes MFD driver for ADC battery & input
-> >> power supply measurement and battery charger control driver.
-> >>
-> >> Thanks,
-> >> Saravanan
-> >>
-> >> Saravanan Sekar (6):
-> >>    dt-bindings: mfd: add document bindings for mp2629
-> >>    mfd: mp2629: Add support for mps battery charger
-> >>    iio: adc: mp2629: Add support for mp2629 ADC driver
-> >>    power: supply: Add support for mps mp2629 battery charger
-> >>    power: supply: mp2629: Add impedance compenstation config
-> >>    MAINTAINERS: Add entry for mp2629 Battery Charger driver
-> >>
-> >>   .../ABI/testing/sysfs-class-power-mp2629      |   8 +
-> >>   .../devicetree/bindings/mfd/mps,mp2629.yaml   |  60 ++
-> >>   MAINTAINERS                                   |   5 +
-> >>   drivers/iio/adc/Kconfig                       |  10 +
-> >>   drivers/iio/adc/Makefile                      |   1 +
-> >>   drivers/iio/adc/mp2629_adc.c                  | 208 ++++++
-> >>   drivers/mfd/Kconfig                           |   9 +
-> >>   drivers/mfd/Makefile                          |   2 +
-> >>   drivers/mfd/mp2629.c                          |  86 +++
-> >>   drivers/power/supply/Kconfig                  |  10 +
-> >>   drivers/power/supply/Makefile                 |   1 +
-> >>   drivers/power/supply/mp2629_charger.c         | 667 ++++++++++++++++++
-> >>   include/linux/mfd/mp2629.h                    |  28 +
-> >>   13 files changed, 1095 insertions(+)
-> >>   create mode 100644 Documentation/ABI/testing/sysfs-class-power-mp2629
-> >>   create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
-> >>   create mode 100644 drivers/iio/adc/mp2629_adc.c
-> >>   create mode 100644 drivers/mfd/mp2629.c
-> >>   create mode 100644 drivers/power/supply/mp2629_charger.c
-> >>   create mode 100644 include/linux/mfd/mp2629.h
-> >>
-> >> --
-> >> 2.17.1
-> >>
+> On Tue, 2020-04-14 at 15:20 +0100, David Howells wrote:
+> > Since key.dns_resolver isn't given a TTL for the address information obtained
+> > for getaddrinfo(), no expiry is set on dns_resolver keys in the kernel for
+> > NFS, CIFS or Ceph.  AFS gets one if it looks up a cell SRV or AFSDB record
+> > because that is looked up in the DNS directly, but it doesn't look up A or
+> > AAAA records, so doesn't get an expiry for the addresses themselves.
 > >
+> > I've previously asked the libc folks if there's a way to get this information
+> > exposed in struct addrinfo, but I don't think that ended up going anywhere -
+> > and, in any case, would take a few years to work through the system.
+> >
+> > For the moment, I think I should put a default on any dns_resolver keys and
+> > have it applied either by the kernel (configurable with a /proc/sys/ setting)
+> > or by the key.dnf_resolver program (configurable with an /etc file).
+> >
+> > Any suggestion as to the preferred default TTL?  10 minutes?
+> >
+>
+> Typical DNS TTL values are on the order of a day but it can vary widely.
+> There's really no correct answer for this, since you have no way to tell
+> how long the entry has been sitting in the DNS server's cache before you
+> queried for it.
+>
+> So, you're probably down to just finding some value that doesn't hammer
+> the DNS server too much, but that allows you to get new entries in a
+> reasonable amount of time.
+>
+> 10 mins sounds like a reasonable default to me.
 
+I would lean toward slightly longer (20 minutes?) but aren't there
+usually different timeouts for 'static' vs. 'dynamic' DNS records (so
+static records would have longer timeouts)?
 
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Thanks,
+
+Steve
