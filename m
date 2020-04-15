@@ -2,107 +2,93 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F0D1C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:39:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9BE6C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:40:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5589A2074F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:39:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C217E2074F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:40:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Y9S0dV0t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895728AbgDOJju (ORCPT
+        id S2895738AbgDOJkY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 05:39:50 -0400
-Received: from foss.arm.com ([217.140.110.172]:40752 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2895721AbgDOJjk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 05:39:40 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E1F8E1063;
-        Wed, 15 Apr 2020 02:39:39 -0700 (PDT)
-Received: from [192.168.1.19] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 365CF3F68F;
-        Wed, 15 Apr 2020 02:39:37 -0700 (PDT)
-Subject: Re: [PATCH 3/4] sched/deadline: Make DL capacity-aware
-To:     Juri Lelli <juri.lelli@redhat.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Luca Abeni <luca.abeni@santannapisa.it>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Wei Wang <wvw@google.com>, Quentin Perret <qperret@google.com>,
-        Alessio Balsini <balsini@google.com>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Qais Yousef <qais.yousef@arm.com>, linux-kernel@vger.kernel.org
-References: <20200408095012.3819-1-dietmar.eggemann@arm.com>
- <20200408095012.3819-4-dietmar.eggemann@arm.com>
- <20200410125253.GE14300@localhost.localdomain>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <f0e74500-77d7-a42c-410e-bc5d4d2ecdfb@arm.com>
+        Wed, 15 Apr 2020 05:40:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50394 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2895721AbgDOJkP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 05:40:15 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0347EC061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 02:40:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=XM1Z8cdaxW1gEH8XQB3f7fNbxixDQWXVOYGx3dfIihk=; b=Y9S0dV0t/YeSgy4L/RLwRlkYiv
+        Z7Fkjr/gFed11uPUOn+zTOtYFinIXW3jjeriZ4DmvbNf5dPzO1zvMREfDakzTlBAe2kAO+wbrXSU8
+        LSPa+qM7Q/HlIaPOV8ikP27M49+ldf8TwaySmcpqKsslmMH3H0pIbQthSp7jugwllyZCJ4OD7uvHq
+        ySVc6Mkaz9eQxhJ9lUy1LIItSvlJDP+VO6zekMTJpYU5zCfY1SWpmheQnuSZWcPblt2ht5H646P3T
+        WsaMS5bfYk/ZdAtBVdJY4WyhnNyR5yTBAymiRRFh1wT1IIiYFr/rdhtPDiZI5JKH14YuOQha6Rqri
+        z4/fiwOA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jOeW9-0006G1-1l; Wed, 15 Apr 2020 09:39:37 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 50D3C30066E;
+        Wed, 15 Apr 2020 11:39:35 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 336532BC6F2D8; Wed, 15 Apr 2020 11:39:35 +0200 (CEST)
 Date:   Wed, 15 Apr 2020 11:39:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Valentin Schneider <valentin.schneider@arm.com>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Yury Norov <yury.norov@gmail.com>,
+        Paul Turner <pjt@google.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Josh Don <joshdon@google.com>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/4] sched/rt: Distribute tasks in find_lowest_rq()
+Message-ID: <20200415093935.GA20730@hirez.programming.kicks-ass.net>
+References: <20200414150556.10920-1-qais.yousef@arm.com>
+ <jhjh7xlvqqe.mognet@arm.com>
+ <20200414162742.0ef4d9ee@gandalf.local.home>
 MIME-Version: 1.0
-In-Reply-To: <20200410125253.GE14300@localhost.localdomain>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200414162742.0ef4d9ee@gandalf.local.home>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10.04.20 14:52, Juri Lelli wrote:
-> Hi,
+On Tue, Apr 14, 2020 at 04:27:42PM -0400, Steven Rostedt wrote:
+> On Tue, 14 Apr 2020 19:58:49 +0100
+> Valentin Schneider <valentin.schneider@arm.com> wrote:
 > 
-> On 08/04/20 11:50, Dietmar Eggemann wrote:
->> From: Luca Abeni <luca.abeni@santannapisa.it>
-
-[...]
-
->> @@ -1623,10 +1624,19 @@ select_task_rq_dl(struct task_struct *p, int cpu, int sd_flag, int flags)
->>  	 * other hand, if it has a shorter deadline, we
->>  	 * try to make it stay here, it might be important.
->>  	 */
->> -	if (unlikely(dl_task(curr)) &&
->> -	    (curr->nr_cpus_allowed < 2 ||
->> -	     !dl_entity_preempt(&p->dl, &curr->dl)) &&
->> -	    (p->nr_cpus_allowed > 1)) {
->> +	select_rq = unlikely(dl_task(curr)) &&
->> +		    (curr->nr_cpus_allowed < 2 ||
->> +		     !dl_entity_preempt(&p->dl, &curr->dl)) &&
->> +		    p->nr_cpus_allowed > 1;
->> +
->> +	/*
->> +	 * We take into account the capacity of the CPU to
->> +	 * ensure it fits the requirement of the task.
->> +	 */
->> +	if (static_branch_unlikely(&sched_asym_cpucapacity))
->> +		select_rq |= !dl_task_fits_capacity(p, cpu);
+> > To move this forward, I would suggest renaming the current cpumask_any_*()
+> > into cpumask_first_*(), and THEN introduce the new pseudo-random
+> > ones. People are then free to hand-fix specific locations if it makes sense
+> > there, like you're doing for RT.
 > 
-> I'm thinking that, while dl_task_fits_capacity() works well when
-> selecting idle cpus, in this case we should consider the fact that curr
-> might be deadline as well and already consuming some of the rq capacity.
-> 
-> Do you think we should try to take that into account, maybe using
-> dl_rq->this_bw ?
+> Or leave "cpumask_any()" as is, and create a new "cpumask_random()" for
+> this purpose.
 
-So you're saying that cpudl_find(..., later_mask) could return 1 (w/
-best_cpu (cp->elements[0].cpu) in later_mask).
-
-And that this best_cpu could be a non-fitting CPU for p.
-
-This could happen if cp->free_cpus is empty (no idle CPUs) so we take
-cpudl_find()'s else path and in case p's deadline < cp->elements[0]
-deadline.
-
-We could condition the 'return 1' on best_cpu fitting p.
-
-But should we do this for cpudl_find(..., NULL) calls from
-check_preempt_equal_dl() as well or will this break GEDF?
+Well, that's just twisting words, not sure I like that. 'Any' really
+means 'any'. So in order to preserve long term sanity, I'd vote for
+Valentin's approach of converting existing users over to first.
