@@ -2,98 +2,79 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A660C38A2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:13:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 732CCC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:13:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEB0121744
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:13:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586970807;
-	bh=dSo5spukq2o6ctjGLHd9O9QaqM7Pb24Hbyo2sHA/3bY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DGcOgJ0qVuz2hcmxngMydNopahR2Nnuqn/Bxfe9RwJZP45ltgDuc3PHt8BU3kLbAv
-	 DpeHd8suh+VwP6spQnXt/y4/RjeWj45owE6MhWDkIp9LtRlxJN4Ic5mmjxBok6VzDM
-	 1jCZMaAlD4i2qHMMVcR35rF4Q1hmKW2xRFmnEOo0=
+	by mail.kernel.org (Postfix) with ESMTP id 51BE821835
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:13:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1416493AbgDORNZ (ORCPT
+        id S1416502AbgDORNd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 13:13:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42130 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 13:13:33 -0400
+Received: from muru.com ([72.249.23.125]:49644 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406325AbgDORK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 13:10:56 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F72D216FD;
-        Wed, 15 Apr 2020 17:10:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586970656;
-        bh=dSo5spukq2o6ctjGLHd9O9QaqM7Pb24Hbyo2sHA/3bY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x3wvq7ao8bEqM+39Kmdi9uYCNjmTtY6sG+tXlUyxv7vmzkX8DrihP6MkWCIkDTD+4
-         rCTFPcvITWUrQjK13M4lR3XnRtG1WkCh6pbffrpRjATNlpmcINGkp1XVnUJZK9rL/Z
-         LETH6GhDqxJZmNHi3AxvgXtuyMryXT6DLmcnaVkw=
-From:   paulmck@kernel.org
-To:     rcu@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 01/19] rcu: Add KCSAN stubs
-Date:   Wed, 15 Apr 2020 10:10:36 -0700
-Message-Id: <20200415171054.9013-1-paulmck@kernel.org>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20200415171017.GA7821@paulmck-ThinkPad-P72>
-References: <20200415171017.GA7821@paulmck-ThinkPad-P72>
+        id S1416483AbgDORNS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 13:13:18 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 54633810E;
+        Wed, 15 Apr 2020 17:13:52 +0000 (UTC)
+Date:   Wed, 15 Apr 2020 10:13:00 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Maxime Ripard <maxime@cerno.tech>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        David Airlie <airlied@linux.ie>,
+        James Hogan <jhogan@kernel.org>,
+        dri-devel@lists.freedesktop.org, linux-mips@vger.kernel.org,
+        Paul Cercueil <paul@crapouillou.net>,
+        linux-samsung-soc@vger.kernel.org, letux-kernel@openphoenux.org,
+        Paul Burton <paulburton@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Kukjin Kim <kgene@kernel.org>,
+        devicetree@vger.kernel.org,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Philipp Rossak <embed3d@gmail.com>,
+        openpvrsgx-devgroup@letux.org, linux-kernel@vger.kernel.org,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Daniel Vetter <daniel@ffwll.ch>, kernel@pyra-handheld.com
+Subject: Re: [PATCH v6 01/12] dt-bindings: add img, pvrsgx.yaml for
+ Imagination GPUs
+Message-ID: <20200415171300.GG37466@atomide.com>
+References: <cover.1586939718.git.hns@goldelico.com>
+ <06fb6569259bb9183d0a0d0fe70ec4f3033b8aab.1586939718.git.hns@goldelico.com>
+ <20200415101251.o3wi5t6xvf56xmhq@gilmour.lan>
+ <72919514-0657-4B71-902F-3E775E528F64@goldelico.com>
+ <f4fdca8a-d18c-a8d2-7f51-d1ebbbab3647@baylibre.com>
+ <535CAEBE-F43E-4BFC-B989-612C81F0D7EF@goldelico.com>
+ <20200415142124.yzfh6mtqq7cdq22e@gilmour.lan>
+ <DC0A2DE2-3D77-46F8-8DE1-55050FDACC9B@goldelico.com>
+ <20200415162151.rwym4ioqz27migfn@gilmour.lan>
+ <45F411C0-150B-4FBA-A0E1-B863B3F36DF6@goldelico.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <45F411C0-150B-4FBA-A0E1-B863B3F36DF6@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Paul E. McKenney" <paulmck@kernel.org>
+* H. Nikolaus Schaller <hns@goldelico.com> [200415 16:43]:
+> If you agree I can add the clocks/clock-names property as an
+> optional property. This should solve omap and all others.
 
-This commit adds stubs for KCSAN's data_race(), ASSERT_EXCLUSIVE_WRITER(),
-and ASSERT_EXCLUSIVE_ACCESS() macros to allow code using these macros to
-move ahead.
+Yes the clock can be optional property no problem. If we have
+a clock, we just enable/disable it from the pvr_runtime_suspend()
+and pvr_runtime_resume() we alaready have in pvr-drv.c.
 
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
----
- kernel/rcu/tree.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+Regards,
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 06548e2..f13130a 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -67,6 +67,19 @@
- #endif
- #define MODULE_PARAM_PREFIX "rcutree."
- 
-+#ifndef data_race
-+#define data_race(expr)							\
-+	({								\
-+		expr;							\
-+	})
-+#endif
-+#ifndef ASSERT_EXCLUSIVE_WRITER
-+#define ASSERT_EXCLUSIVE_WRITER(var) do { } while (0)
-+#endif
-+#ifndef ASSERT_EXCLUSIVE_ACCESS
-+#define ASSERT_EXCLUSIVE_ACCESS(var) do { } while (0)
-+#endif
-+
- /* Data structures. */
- 
- /*
--- 
-2.9.5
-
+Tony
