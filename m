@@ -2,99 +2,163 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F06DC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5AEDC2BB85
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:21:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B49F206F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:20:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91F7E206F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:21:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linumiz.com header.i=@linumiz.com header.b="WCImM79P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2635108AbgDOHUb (ORCPT
+        id S2635120AbgDOHVJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 03:20:31 -0400
-Received: from mga18.intel.com ([134.134.136.126]:60518 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441149AbgDOHUT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 03:20:19 -0400
-IronPort-SDR: PaqZ+AhgjoUOcGbCRQoi83QTU4wBFrb6vn7ucmDOHh4+mEW/e2QutXMHLyEq3d0RtZxtoBDSVZ
- pstsBaGYkw5A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 00:20:17 -0700
-IronPort-SDR: filQrUmefFZnsuI2X6HjURYn2GJAKFaqJdDUHDl1jbs6NDIyk22jUx+7DXjhQrFwuoD9Str+50
- oTIdIdhXOLog==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,386,1580803200"; 
-   d="scan'208";a="244032687"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.87]) ([10.237.72.87])
-  by fmsmga007.fm.intel.com with ESMTP; 15 Apr 2020 00:20:14 -0700
-Subject: Re: [PATCH 1/2] mmc: sdhci: move SDHCI_CAPABILITIES_1 to a more
- suitable place
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-mmc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
-        masahiroy@kernel.org
-References: <20200408072105.422-1-yamada.masahiro@socionext.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <af02a837-c5a9-4d0a-34a4-534e155ac968@intel.com>
-Date:   Wed, 15 Apr 2020 10:19:24 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 15 Apr 2020 03:21:09 -0400
+Received: from gproxy6-pub.mail.unifiedlayer.com ([67.222.39.168]:37747 "EHLO
+        gproxy6-pub.mail.unifiedlayer.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2635110AbgDOHVE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 03:21:04 -0400
+X-Greylist: delayed 1483 seconds by postgrey-1.27 at vger.kernel.org; Wed, 15 Apr 2020 03:21:03 EDT
+Received: from cmgw14.unifiedlayer.com (unknown [10.9.0.14])
+        by gproxy6.mail.unifiedlayer.com (Postfix) with ESMTP id BD6CA1E06AB
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 00:56:19 -0600 (MDT)
+Received: from md-in-79.webhostbox.net ([43.225.55.182])
+        by cmsmtp with ESMTP
+        id Oby5jqmlvKxvrOby6jqAhn; Wed, 15 Apr 2020 00:56:19 -0600
+X-Authority-Reason: nr=8
+X-Authority-Analysis: v=2.3 cv=F7Z5iJpN c=1 sm=1 tr=0
+ a=LfuyaZh/8e9VOkaVZk0aRw==:117 a=LfuyaZh/8e9VOkaVZk0aRw==:17
+ a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
+ a=IkcTkHD0fZMA:10:nop_charset_1 a=cl8xLZFz6L8A:10:nop_rcvd_month_year
+ a=oz0wMknONp8A:10:endurance_base64_authed_username_1 a=vU9dKmh3AAAA:8
+ a=gEfo2CItAAAA:8 a=U4Au-FSsymrcop1UMgkA:9 a=QEXdDO2ut3YA:10:nop_charset_2
+ a=rsP06fVo5MYu2ilr0aT5:22 a=sptkURWiP4Gy88Gu7hUp:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=linumiz.com
+        ; s=default; h=Content-Transfer-Encoding:Content-Type:MIME-Version:References
+        :In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=X2B7aPP2kdHP7aujtR/egVU9s9GpCl7KgjeAdg09/e8=; b=WCImM79Pgj6n03ThsIO7QoGQ2A
+        Pm6w2noBKICzBHtvCLS1cnYdAWDZTJboaIXUcAT7u6YAVQgk1GjU9RGKj5H3oFmdmuNzwWqLgVOPN
+        3Mp23GldFh2FjWb2HaODkZ/uS3HTPv91a15sESouyTPGTuME7UFhMhvfVGZSVhQ8PkwYRG5Un4QoV
+        jlX4erOR3vKuhcRHwLFC2Cb+spf6jKlh5/F3M9d03iO9KzkKFbbTBhZIhrmlzCZRnSvDuEm4EAVbW
+        Jmo3wfDsWXxz/dstOxChzoHgsbjZhMqYdhkRz4W2RdXIeoZtn1TydW3zke9M2G1lKXcklOTeMHzHz
+        QqDK8OgQ==;
+Received: from p5b3f6ccc.dip0.t-ipconnect.de ([91.63.108.204]:49262 helo=localhost.localdomain)
+        by md-in-79.webhostbox.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <saravanan@linumiz.com>)
+        id 1jOby3-0000eI-Sg; Wed, 15 Apr 2020 06:56:16 +0000
+From:   Saravanan Sekar <saravanan@linumiz.com>
+To:     robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, broonie@kernel.org,
+        lgirdwood@gmail.com, saravanan@linumiz.com
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org
+Subject: [PATCH 2/4] dt-bindings: iio: add document bindings for wsen-itds accel sensor
+Date:   Wed, 15 Apr 2020 08:55:33 +0200
+Message-Id: <20200415065535.7753-3-saravanan@linumiz.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200415065535.7753-1-saravanan@linumiz.com>
+References: <20200415065535.7753-1-saravanan@linumiz.com>
 MIME-Version: 1.0
-In-Reply-To: <20200408072105.422-1-yamada.masahiro@socionext.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - md-in-79.webhostbox.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - linumiz.com
+X-BWhitelist: no
+X-Source-IP: 91.63.108.204
+X-Source-L: No
+X-Exim-ID: 1jOby3-0000eI-Sg
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: p5b3f6ccc.dip0.t-ipconnect.de (localhost.localdomain) [91.63.108.204]:49262
+X-Source-Auth: saravanan@linumiz.com
+X-Email-Count: 22
+X-Source-Cap: bGludW1jbWM7aG9zdGdhdG9yO21kLWluLTc5LndlYmhvc3Rib3gubmV0
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/04/20 10:21 am, Masahiro Yamada wrote:
-> In the SDHCI specification, the Capabilities Register (Offset 0x40h)
-> is the 64-bit width register, but in Linux, it is represented as two
-> registers, SDHCI_CAPABILITIES and SDHCI_CAPABILITIES_1 so that drivers
-> can use 32-bit register accessors.
-> 
-> The upper 32-bit field is associated with SDHCI_CAPABILITIES_1.
-> 
-> Move the definition of SDHCI_CAPABILITIES_1 to the correct place.
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Add device tree binding information for wsen-itds accel sensor driver.
 
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Saravanan Sekar <saravanan@linumiz.com>
+---
+ .../bindings/iio/accel/we,wsen-itds.yaml      | 53 +++++++++++++++++++
+ 1 file changed, 53 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/accel/we,wsen-itds.yaml
 
-> ---
-> 
->  drivers/mmc/host/sdhci.h | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-> index 79dffbb731d3..b786b68e0302 100644
-> --- a/drivers/mmc/host/sdhci.h
-> +++ b/drivers/mmc/host/sdhci.h
-> @@ -220,6 +220,7 @@
->  #define  SDHCI_CAN_64BIT_V4	0x08000000
->  #define  SDHCI_CAN_64BIT	0x10000000
->  
-> +#define SDHCI_CAPABILITIES_1	0x44
->  #define  SDHCI_SUPPORT_SDR50	0x00000001
->  #define  SDHCI_SUPPORT_SDR104	0x00000002
->  #define  SDHCI_SUPPORT_DDR50	0x00000004
-> @@ -236,8 +237,6 @@
->  #define  SDHCI_CAN_DO_ADMA3	0x08000000
->  #define  SDHCI_SUPPORT_HS400	0x80000000 /* Non-standard */
->  
-> -#define SDHCI_CAPABILITIES_1	0x44
-> -
->  #define SDHCI_MAX_CURRENT		0x48
->  #define  SDHCI_MAX_CURRENT_LIMIT	0xFF
->  #define  SDHCI_MAX_CURRENT_330_MASK	0x0000FF
-> 
+diff --git a/Documentation/devicetree/bindings/iio/accel/we,wsen-itds.yaml b/Documentation/devicetree/bindings/iio/accel/we,wsen-itds.yaml
+new file mode 100644
+index 000000000000..165cdf71966d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/accel/we,wsen-itds.yaml
+@@ -0,0 +1,53 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/accel/we,wsen-itds.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Würth Elektronik WSEN-ITDS triaxial acceleration sensor
++
++maintainers:
++  - Saravanan Sekar <saravanan@linumiz.com>
++
++description: |
++  Acceleration and temperature iio sensors with an i2c interface.
++  The sensor provies additional application specific features like
++  tap detection, 6D Orinetation, Free-fall, Motion and Activity.
++
++properties:
++  compatible:
++    enum:
++      - we,wsen-itds
++
++  reg:
++    maxItems: 1
++
++  vdd-supply:
++    description: phandle to the regulator that provides power to the accelerometer
++
++  vddio-supply:
++    description: phandle to the regulator that provides power to the sensor's IO
++
++  interrupts:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++    i2c {
++      #address-cells = <1>;
++      #size-cells = <0>;
++      accelerometer@18 {
++        compatible = "we,wsen-itds";
++        reg = <0x18>;
++        vdd-supply = <&vdd>;
++        vddio-supply = <&vddio>;
++        interrupt-parent = <&gpio0>;
++        interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
++      };
++    };
+-- 
+2.17.1
 
