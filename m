@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B81C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:44:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A5DC3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:45:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CC04206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:44:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61BCC206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:45:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586951094;
-	bh=oK4kqRGGJPW2CAwiNXBLNogWEszRqkKuvhC/5JUXd5c=;
+	s=default; t=1586951120;
+	bh=DancS/jE/qVPq2YgrwJDoEAbIRcgJGeQhXOSY2s0B1o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PBjk8eAIZIHvXwxQx5MJUTP+FeqNP0T1dqv/np1XequORJefxQtrX4+7w5uvCHpAU
-	 jelNpq68gO0s2Z4fhvC0ayU9Jb/hJd9hjJyiZxxfs4ZCTXLupE1Izl9tmKitBZ1tu3
-	 maBeQbLP9o5qTZBDijYvyexdn6900tvc1yHoBjrE=
+	b=X9pH3u/yKZhCZr2mKEh0WbjMTurX84ciGJkGf/kGF89W/RrqNCDxm8Egjgy5ICdgP
+	 Q+yhHBLPTpxXTtLazBwudquBLNTibQ+KYLFWBsgFpeTAYAuxhXz0lWZzyy08XE1maB
+	 g/nsfzuDewVu4jUrt41NDNvRuQEJwKogr5YdmgXc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409094AbgDOLon (ORCPT
+        id S2406151AbgDOLpR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:44:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57504 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 07:45:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897229AbgDOLhU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:37:20 -0400
+        id S2897226AbgDOLhR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:37:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A4912166E;
-        Wed, 15 Apr 2020 11:37:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AA1921569;
+        Wed, 15 Apr 2020 11:37:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950639;
-        bh=oK4kqRGGJPW2CAwiNXBLNogWEszRqkKuvhC/5JUXd5c=;
+        s=default; t=1586950636;
+        bh=DancS/jE/qVPq2YgrwJDoEAbIRcgJGeQhXOSY2s0B1o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xGTfU2hsHjGY0QLhElESfBBCBKFddo0cDMAt0xK+hnYAexW7V5//RksXbTtwkag+b
-         3NMiA30K1lv/zOTTamZdwE9Zvm+peBK7lrI1/cc1BFWoUw4CMUPNKlbN+2vFdb/uUG
-         BkalmNauLxoZZNaBXQiQJvQvN7GMm9/8vDXcx2Jk=
+        b=p2oTCfO/77ijyoVR9Qz6c7dv2nnXmYhFBunD9dEHJ0IdqUV1YWvqn19zogM0CUNs7
+         f8F2ZXrad1tJlV2ma1dHGrOoL3EP4fTdMU9cRzu4DwbyALfANQOVlaqoYgTky2dlEI
+         7184QNPJghciq7zKK8wtQCXcFI3GG34lvl7fCzCU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yicheng Li <yichengli@chromium.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.6 129/129] platform/chrome: cros_ec: Query EC protocol version if EC transitions between RO/RW
-Date:   Wed, 15 Apr 2020 07:34:44 -0400
-Message-Id: <20200415113445.11881-129-sashal@kernel.org>
+Cc:     Eric Biggers <ebiggers@google.com>, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 5.6 127/129] f2fs: fix leaking uninitialized memory in compressed clusters
+Date:   Wed, 15 Apr 2020 07:34:42 -0400
+Message-Id: <20200415113445.11881-127-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
 References: <20200415113445.11881-1-sashal@kernel.org>
@@ -61,102 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yicheng Li <yichengli@chromium.org>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit 42cd0ab476e2daffc23982c37822a78f9a53cdd5 ]
+[ Upstream commit 7fa6d59816e7d81cfd4f854468c477c12b85c789 ]
 
-RO and RW of EC may have different EC protocol version. If EC transitions
-between RO and RW, but AP does not reboot (this is true for fingerprint
-microcontroller / cros_fp, but not true for main ec / cros_ec), the AP
-still uses the protocol version queried before transition, which can
-cause problems. In the case of fingerprint microcontroller, this causes
-AP to send the wrong version of EC_CMD_GET_NEXT_EVENT to RO in the
-interrupt handler, which in turn prevents RO to clear the interrupt
-line to AP, in an infinite loop.
+When the compressed data of a cluster doesn't end on a page boundary,
+the remainder of the last page must be zeroed in order to avoid leaking
+uninitialized memory to disk.
 
-Once an EC_HOST_EVENT_INTERFACE_READY is received, we know that there
-might have been a transition between RO and RW, so re-query the protocol.
-
-Signed-off-by: Yicheng Li <yichengli@chromium.org>
-Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Fixes: 4c8ff7095bef ("f2fs: support data compression")
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/chrome/cros_ec.c           | 30 +++++++++++++++++++++
- include/linux/platform_data/cros_ec_proto.h |  4 +++
- 2 files changed, 34 insertions(+)
+ fs/f2fs/compress.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/chrome/cros_ec.c b/drivers/platform/chrome/cros_ec.c
-index 6fc8f2c3ac517..7ee43b2e0654a 100644
---- a/drivers/platform/chrome/cros_ec.c
-+++ b/drivers/platform/chrome/cros_ec.c
-@@ -138,6 +138,24 @@ static int cros_ec_sleep_event(struct cros_ec_device *ec_dev, u8 sleep_event)
- 	return ret;
- }
+diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+index 11b13b881ada5..837e14b7ef523 100644
+--- a/fs/f2fs/compress.c
++++ b/fs/f2fs/compress.c
+@@ -385,11 +385,15 @@ static int f2fs_compress_pages(struct compress_ctx *cc)
+ 	for (i = 0; i < COMPRESS_DATA_RESERVED_SIZE; i++)
+ 		cc->cbuf->reserved[i] = cpu_to_le32(0);
  
-+static int cros_ec_ready_event(struct notifier_block *nb,
-+			       unsigned long queued_during_suspend,
-+			       void *_notify)
-+{
-+	struct cros_ec_device *ec_dev = container_of(nb, struct cros_ec_device,
-+						     notifier_ready);
-+	u32 host_event = cros_ec_get_host_event(ec_dev);
++	nr_cpages = DIV_ROUND_UP(cc->clen + COMPRESS_HEADER_SIZE, PAGE_SIZE);
 +
-+	if (host_event & EC_HOST_EVENT_MASK(EC_HOST_EVENT_INTERFACE_READY)) {
-+		mutex_lock(&ec_dev->lock);
-+		cros_ec_query_all(ec_dev);
-+		mutex_unlock(&ec_dev->lock);
-+		return NOTIFY_OK;
-+	}
++	/* zero out any unused part of the last page */
++	memset(&cc->cbuf->cdata[cc->clen], 0,
++	       (nr_cpages * PAGE_SIZE) - (cc->clen + COMPRESS_HEADER_SIZE));
 +
-+	return NOTIFY_DONE;
-+}
-+
- /**
-  * cros_ec_register() - Register a new ChromeOS EC, using the provided info.
-  * @ec_dev: Device to register.
-@@ -237,6 +255,18 @@ int cros_ec_register(struct cros_ec_device *ec_dev)
- 		dev_dbg(ec_dev->dev, "Error %d clearing sleep event to ec",
- 			err);
+ 	vunmap(cc->cbuf);
+ 	vunmap(cc->rbuf);
  
-+	if (ec_dev->mkbp_event_supported) {
-+		/*
-+		 * Register the notifier for EC_HOST_EVENT_INTERFACE_READY
-+		 * event.
-+		 */
-+		ec_dev->notifier_ready.notifier_call = cros_ec_ready_event;
-+		err = blocking_notifier_chain_register(&ec_dev->event_notifier,
-+						      &ec_dev->notifier_ready);
-+		if (err)
-+			return err;
-+	}
-+
- 	dev_info(dev, "Chrome EC device registered\n");
- 
- 	return 0;
-diff --git a/include/linux/platform_data/cros_ec_proto.h b/include/linux/platform_data/cros_ec_proto.h
-index ba59147701918..3832433266762 100644
---- a/include/linux/platform_data/cros_ec_proto.h
-+++ b/include/linux/platform_data/cros_ec_proto.h
-@@ -125,6 +125,9 @@ struct cros_ec_command {
-  * @host_event_wake_mask: Mask of host events that cause wake from suspend.
-  * @last_event_time: exact time from the hard irq when we got notified of
-  *     a new event.
-+ * @notifier_ready: The notifier_block to let the kernel re-query EC
-+ *		    communication protocol when the EC sends
-+ *		    EC_HOST_EVENT_INTERFACE_READY.
-  * @ec: The platform_device used by the mfd driver to interface with the
-  *      main EC.
-  * @pd: The platform_device used by the mfd driver to interface with the
-@@ -166,6 +169,7 @@ struct cros_ec_device {
- 	u32 host_event_wake_mask;
- 	u32 last_resume_result;
- 	ktime_t last_event_time;
-+	struct notifier_block notifier_ready;
- 
- 	/* The platform devices used by the mfd driver */
- 	struct platform_device *ec;
+-	nr_cpages = DIV_ROUND_UP(cc->clen + COMPRESS_HEADER_SIZE, PAGE_SIZE);
+-
+ 	for (i = nr_cpages; i < cc->nr_cpages; i++) {
+ 		f2fs_put_compressed_page(cc->cpages[i]);
+ 		cc->cpages[i] = NULL;
 -- 
 2.20.1
 
