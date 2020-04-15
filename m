@@ -2,204 +2,181 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80354C38A2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 06:58:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5776DC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 672AA20771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 06:58:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B60520771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:00:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403942AbgDOG6U (ORCPT
+        id S2404011AbgDOHAi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 02:58:20 -0400
-Received: from mga04.intel.com ([192.55.52.120]:56149 "EHLO mga04.intel.com"
+        Wed, 15 Apr 2020 03:00:38 -0400
+Received: from smtp.gentoo.org ([140.211.166.183]:41282 "EHLO smtp.gentoo.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403878AbgDOG6R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 02:58:17 -0400
-IronPort-SDR: zgZ8lwsorwe64oYs1MRMeWgTOxijZME1fK83fpRF7T5Mt4rCz479qekoMU4dKk9J18ASAk06iA
- k99Td4yIIlUg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 23:58:17 -0700
-IronPort-SDR: BMdpj2SHxf1RtzrB9dSirnQO7I/coXxGNfia+jS+5NoX6yBD1FKk0rzg8EONtUk0S211iAcYtQ
- kQgIv8R7L6wQ==
-X-IronPort-AV: E=Sophos;i="5.72,386,1580803200"; 
-   d="scan'208";a="427335418"
-Received: from ssolodk-mobl1.ccr.corp.intel.com (HELO localhost) ([10.252.48.37])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 23:58:10 -0700
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Daniel Vetter <daniel@ffwll.ch>, Arnd Bergmann <arnd@arndb.de>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Leon Romanovsky <leon@kernel.org>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        David Airlie <airlied@linux.ie>,
-        Networking <netdev@vger.kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-rdma <linux-rdma@vger.kernel.org>
-Subject: Re: [RFC 4/6] drm/bridge/sii8620: fix extcon dependency
-In-Reply-To: <CAKMK7uGpRkPsNqFR=taD68dT8T2tnEhias380ayGnjMH1b09xg@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20200408202711.1198966-1-arnd@arndb.de> <CGME20200408202802eucas1p13a369a5c584245a1affee35d2c8cad32@eucas1p1.samsung.com> <20200408202711.1198966-5-arnd@arndb.de> <ff7809b6-f566-9c93-1838-610be5d22431@samsung.com> <CAK8P3a2BXZAiHh83RZJ-v9HvoE1gSED59j8k0ydJKCnHzwYz=w@mail.gmail.com> <CAKMK7uGpRkPsNqFR=taD68dT8T2tnEhias380ayGnjMH1b09xg@mail.gmail.com>
-Date:   Wed, 15 Apr 2020 09:58:08 +0300
-Message-ID: <87tv1l5j7j.fsf@intel.com>
+        id S2403948AbgDOHAf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 03:00:35 -0400
+Received: from sf.home (tunnel547699-pt.tunnel.tserv1.lon2.ipv6.he.net [IPv6:2001:470:1f1c:3e6::2])
+        (using TLSv1 with cipher ECDHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: slyfox)
+        by smtp.gentoo.org (Postfix) with ESMTPSA id BD55D34F326;
+        Wed, 15 Apr 2020 07:00:32 +0000 (UTC)
+Received: by sf.home (Postfix, from userid 1000)
+        id DF8E75A22061; Wed, 15 Apr 2020 08:00:03 +0100 (BST)
+From:   Sergei Trofimovich <slyfox@gentoo.org>
+To:     linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Sergei Trofimovich <slyfox@gentoo.org>,
+        Sergey Kvachonok <ravenexp@gmail.com>,
+        Tony Vroon <chainsaw@gentoo.org>
+Subject: [PATCH] umh: always return error when helper was not called
+Date:   Wed, 15 Apr 2020 07:59:40 +0100
+Message-Id: <20200415065940.4103990-1-slyfox@gentoo.org>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Apr 2020, Daniel Vetter <daniel@ffwll.ch> wrote:
-> On Tue, Apr 14, 2020 at 5:05 PM Arnd Bergmann <arnd@arndb.de> wrote:
->>
->> On Fri, Apr 10, 2020 at 8:56 AM Andrzej Hajda <a.hajda@samsung.com> wrote:
->> >
->> >
->> > On 08.04.2020 22:27, Arnd Bergmann wrote:
->> > > Using 'imply' does not work here, it still cause the same build
->> > > failure:
->> > >
->> > > arm-linux-gnueabi-ld: drivers/gpu/drm/bridge/sil-sii8620.o: in function `sii8620_remove':
->> > > sil-sii8620.c:(.text+0x1b8): undefined reference to `extcon_unregister_notifier'
->> > > arm-linux-gnueabi-ld: drivers/gpu/drm/bridge/sil-sii8620.o: in function `sii8620_probe':
->> > > sil-sii8620.c:(.text+0x27e8): undefined reference to `extcon_find_edev_by_node'
->> > > arm-linux-gnueabi-ld: sil-sii8620.c:(.text+0x2870): undefined reference to `extcon_register_notifier'
->> > > arm-linux-gnueabi-ld: drivers/gpu/drm/bridge/sil-sii8620.o: in function `sii8620_extcon_work':
->> > > sil-sii8620.c:(.text+0x2908): undefined reference to `extcon_get_state'
->> > >
->> > > I tried the usual 'depends on EXTCON || !EXTCON' logic, but that caused
->> > > a circular Kconfig dependency. Using IS_REACHABLE() is ugly but works.
->> >
->> > 'depends on EXTCON || !EXTCON' seems to be proper solution, maybe would be better to try to solve circular dependencies issue.
->>
->> I agree that would be nice, but I failed to come to a proper solution
->> here. FWIW, there
->> is one circular dependency that I managed to avoid by changing all
->> drivers that select FB_DDC
->> to depend on I2C rather than selecting it:
->>
->> drivers/i2c/Kconfig:8:error: recursive dependency detected!
->> drivers/i2c/Kconfig:8: symbol I2C is selected by FB_DDC
->> drivers/video/fbdev/Kconfig:63: symbol FB_DDC depends on FB
->> drivers/video/fbdev/Kconfig:12: symbol FB is selected by DRM_KMS_FB_HELPER
->> drivers/gpu/drm/Kconfig:80: symbol DRM_KMS_FB_HELPER depends on DRM_KMS_HELPER
->> drivers/gpu/drm/Kconfig:74: symbol DRM_KMS_HELPER is selected by DRM_SIL_SII8620
->> drivers/gpu/drm/bridge/Kconfig:89: symbol DRM_SIL_SII8620 depends on EXTCON
->> drivers/extcon/Kconfig:2: symbol EXTCON is selected by CHARGER_MANAGER
->> drivers/power/supply/Kconfig:482: symbol CHARGER_MANAGER depends on POWER_SUPPLY
->> drivers/power/supply/Kconfig:2: symbol POWER_SUPPLY is selected by
->> HID_BATTERY_STRENGTH
->> drivers/hid/Kconfig:29: symbol HID_BATTERY_STRENGTH depends on HID
->> drivers/hid/Kconfig:8: symbol HID is selected by I2C_HID
->> drivers/hid/i2c-hid/Kconfig:5: symbol I2C_HID depends on I2C
->>
->> After that, Kconfig crashes with a segfault:
->>
->> drivers/video/fbdev/Kconfig:12:error: recursive dependency detected!
->> drivers/video/fbdev/Kconfig:12: symbol FB is selected by DRM_KMS_FB_HELPER
->> drivers/gpu/drm/Kconfig:80: symbol DRM_KMS_FB_HELPER depends on DRM_KMS_HELPER
->> drivers/gpu/drm/Kconfig:74: symbol DRM_KMS_HELPER is selected by DRM_SIL_SII8620
->> drivers/gpu/drm/bridge/Kconfig:89: symbol DRM_SIL_SII8620 depends on EXTCON
->> drivers/extcon/Kconfig:2: symbol EXTCON is selected by CHARGER_MANAGER
->> drivers/power/supply/Kconfig:482: symbol CHARGER_MANAGER depends on POWER_SUPPLY
->> drivers/power/supply/Kconfig:2: symbol POWER_SUPPLY is selected by HID_ASUS
->> drivers/hid/Kconfig:150: symbol HID_ASUS depends on LEDS_CLASS
->> drivers/leds/Kconfig:17: symbol LEDS_CLASS depends on NEW_LEDS
->> drivers/leds/Kconfig:9: symbol NEW_LEDS is selected by SENSORS_APPLESMC
->> drivers/hwmon/Kconfig:327: symbol SENSORS_APPLESMC depends on HWMON
->> drivers/hwmon/Kconfig:6: symbol HWMON is selected by EEEPC_LAPTOP
->> drivers/platform/x86/Kconfig:260: symbol EEEPC_LAPTOP depends on ACPI_VIDEO
->> make[3]: *** [/git/arm-soc/scripts/kconfig/Makefile:71: randconfig]
->> Segmentation fault (core dumped)
->>
->> After changing EEEPC_LAPTOP and THINKPAD_ACPI to 'depends on HWMON' instead of
->> 'select HWMON', I get this one:
->>
->> drivers/video/fbdev/Kconfig:12:error: recursive dependency detected!
->> drivers/video/fbdev/Kconfig:12: symbol FB is selected by DRM_KMS_FB_HELPER
->> drivers/gpu/drm/Kconfig:80: symbol DRM_KMS_FB_HELPER depends on DRM_KMS_HELPER
->> drivers/gpu/drm/Kconfig:74: symbol DRM_KMS_HELPER is selected by DRM_SIL_SII8620
->> drivers/gpu/drm/bridge/Kconfig:89: symbol DRM_SIL_SII8620 depends on EXTCON
->> drivers/extcon/Kconfig:2: symbol EXTCON is selected by CHARGER_MANAGER
->> drivers/power/supply/Kconfig:482: symbol CHARGER_MANAGER depends on POWER_SUPPLY
->> drivers/power/supply/Kconfig:2: symbol POWER_SUPPLY is selected by HID_ASUS
->> drivers/hid/Kconfig:150: symbol HID_ASUS depends on LEDS_CLASS
->> drivers/leds/Kconfig:17: symbol LEDS_CLASS depends on NEW_LEDS
->> drivers/leds/Kconfig:9: symbol NEW_LEDS is selected by BACKLIGHT_ADP8860
->> drivers/video/backlight/Kconfig:316: symbol BACKLIGHT_ADP8860 depends
->> on BACKLIGHT_CLASS_DEVICE
->> drivers/video/backlight/Kconfig:143: symbol BACKLIGHT_CLASS_DEVICE is
->> selected by FB_BACKLIGHT
->> drivers/video/fbdev/Kconfig:187: symbol FB_BACKLIGHT depends on FB
->>
->> Changing all drivers that select 'FB_BACKLIGHT' or 'BACKLIGHT_CLASS_DEVICE' to
->> 'depends on BACKLIGHT_CLASS_DEVICE' gets it to build.
->>
->> The steps each seem reasonable, in particular since they mostly clean
->> up the legacy
->> fbdev drivers to what they should have done anyway, but it is quite
->> invasive in the end.
->> Any other ideas?
->
-> Adding Jani, since iirc he looked at the entire backlight Kconfig
-> story before. I think there's some nonsense going on where in some
-> cases you don't get reasonable dummy functions where it just doesn't
-> make sense. Or something like that.
->
-> At least the entire select vs depends on backlight sounds eerily familiar.
+Before this change on a system with the following setup crashed kernel:
 
-TL;DR I'd ack a patch switching to depends.
+```
+CONFIG_STATIC_USERMODEHELPER=y
+CONFIG_STATIC_USERMODEHELPER_PATH=""
+kernel.core_pattern = |/usr/lib/systemd/systemd-coredump %P %u %g %s %t %c %h %e
+```
 
-I'm all for switching to "depends on BACKLIGHT_CLASS_DEVICE" throughout,
-and I've sent patches to do just that years ago. Alas it was met with
-opposition because if you have BACKLIGHT_CLASS_DEVICE=n as a starting
-point, you won't even see your driver that depends on it in menuconfig.
+The crash happens when a core dump is attempted:
 
-I do think the menuconfig usability issue is a big part of the problem
-here. You can't find and enable the options you want easily if the
-dependencies aren't met. And you can't easily enable the dependencies
-either. Select is an answer to that question. It's the wrong answer, but
-it's *an* answer.
+```
+[    2.819676] BUG: kernel NULL pointer dereference, address: 0000000000000020
+[    2.819859] #PF: supervisor read access in kernel mode
+[    2.820035] #PF: error_code(0x0000) - not-present page
+[    2.820188] PGD 0 P4D 0
+[    2.820305] Oops: 0000 [#1] SMP PTI
+[    2.820436] CPU: 2 PID: 89 Comm: a Not tainted 5.7.0-rc1+ #7
+[    2.820680] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20190711_202441-buildvm-armv7-10.arm.fedoraproject.org-2.fc31 04/01/2014
+[    2.821150] RIP: 0010:do_coredump+0xd80/0x1060
+[    2.821385] Code: e8 95 11 ed ff 48 c7 c6 cc a7 b4 81 48 8d bd 28 ff ff ff 89 c2 e8 70 f1 ff ff 41 89 c2 85 c0 0f 84 72 f7 ff ff e9 b4 fe ff ff <48> 8b 57 20 0f b7 02 66 25 00 f0 66 3d 00 8
+0 0f 84 9c 01 00 00 44
+[    2.822014] RSP: 0000:ffffc9000029bcb8 EFLAGS: 00010246
+[    2.822339] RAX: 0000000000000000 RBX: ffff88803f860000 RCX: 000000000000000a
+[    2.822746] RDX: 0000000000000009 RSI: 0000000000000282 RDI: 0000000000000000
+[    2.823141] RBP: ffffc9000029bde8 R08: 0000000000000000 R09: ffffc9000029bc00
+[    2.823508] R10: 0000000000000001 R11: ffff88803dec90be R12: ffffffff81c39da0
+[    2.823902] R13: ffff88803de84400 R14: 0000000000000000 R15: 0000000000000000
+[    2.824285] FS:  00007fee08183540(0000) GS:ffff88803e480000(0000) knlGS:0000000000000000
+[    2.824767] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    2.825111] CR2: 0000000000000020 CR3: 000000003f856005 CR4: 0000000000060ea0
+[    2.825479] Call Trace:
+[    2.825790]  get_signal+0x11e/0x720
+[    2.826087]  do_signal+0x1d/0x670
+[    2.826361]  ? force_sig_info_to_task+0xc1/0xf0
+[    2.826691]  ? force_sig_fault+0x3c/0x40
+[    2.826996]  ? do_trap+0xc9/0x100
+[    2.827179]  exit_to_usermode_loop+0x49/0x90
+[    2.827359]  prepare_exit_to_usermode+0x77/0xb0
+[    2.827559]  ? invalid_op+0xa/0x30
+[    2.827747]  ret_from_intr+0x20/0x20
+[    2.827921] RIP: 0033:0x55e2c76d2129
+[    2.828107] Code: 2d ff ff ff e8 68 ff ff ff 5d c6 05 18 2f 00 00 01 c3 0f 1f 80 00 00 00 00 c3 0f 1f 80 00 00 00 00 e9 7b ff ff ff 55 48 89 e5 <0f> 0b b8 00 00 00 00 5d c3 66 2e 0f 1f 84 0
+0 00 00 00 00 0f 1f 40
+[    2.828603] RSP: 002b:00007fffeba5e080 EFLAGS: 00010246
+[    2.828801] RAX: 000055e2c76d2125 RBX: 0000000000000000 RCX: 00007fee0817c718
+[    2.829034] RDX: 00007fffeba5e188 RSI: 00007fffeba5e178 RDI: 0000000000000001
+[    2.829257] RBP: 00007fffeba5e080 R08: 0000000000000000 R09: 00007fee08193c00
+[    2.829482] R10: 0000000000000009 R11: 0000000000000000 R12: 000055e2c76d2040
+[    2.829727] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+[    2.829964] CR2: 0000000000000020
+[    2.830149] ---[ end trace ceed83d8c68a1bf1 ]---
+```
 
-On another level, a lot of the problems could be avoided if we took heed
-of the note in Documentation/kbuild/kconfig-language.rst:
+Here is the sequence of events why it happens:
+fs/coredump.c:do_coredump():
+1. create 'coredump_params = { .file = NULL }'
+2. detect pipe mode
+3. `call_usermodehelper_setup(..., umh_pipe_setup, ...)`
+4. `call_usermodehelper_exec()`
+5. (if both succeeded) `file_start_write(cprm.file);`
 
-  Note:
-	select should be used with care. select will force
-	a symbol to a value without visiting the dependencies.
-	By abusing select you are able to select a symbol FOO even
-	if FOO depends on BAR that is not set.
-	In general use select only for non-visible symbols
-	(no prompts anywhere) and for symbols with no dependencies.
-	That will limit the usefulness but on the other hand avoid
-	the illegal configurations all over.
+Here crash happens at [5.] as `cprm.file` is still NULL.
 
-Another part of the problem is that there is no warning or lint option
-or anything to warn about this usage in config. You can easily add more
-of these, and it'll break later in subtle ways. And we'll just keep
-repeating the same discussion over and over again, some folks fixing
-issues in kconfig, some folks using IS_REACHABLE() and eventually
-hitting different kinds of problems. (Personally, I wouldn't very easily
-accept a patch adding IS_REACHABLE() use in i915.)
+Normally it works because `fs/coredump.c:umh_pipe_setup()` is called
+successfully and populates `.file` field (or returns the error):
 
+```
+static int umh_pipe_setup(struct subprocess_info *info, struct cred *new)
+{
+        //...
+        struct coredump_params *cp = (struct coredump_params *)info->data;
+        // ...
+        cp->file = files[1];
+        // ...
+}
+```
 
-BR,
-Jani.
+But in our case neither happens because `kernel/umh.c:call_usermodehelper_exec()`
+has a special case:
 
+```
+int call_usermodehelper_exec(struct subprocess_info *sub_info, int wait)
+{
+    int retval = 0;
+    // ...
+    /*
+     * If there is no binary for us to call, then just return and get out of
+     * here.  This allows us to set STATIC_USERMODEHELPER_PATH to "" and
+     * disable all call_usermodehelper() calls.
+     */
+    if (strlen(sub_info->path) == 0)
+        goto out;
+    ...
+    out:
+        // ...
+        return retval;
 
+```
+
+This breaks assumption of `do_coredump()`: "either helper was called successfully
+and created a file to dump core to or it failed".
+
+This change converts this special case to `-EPERM` error.
+
+This way we notify user that helper call was not successful
+and don't attempt to act on uninitialized `.file` field.
+
+User gets `"Core dump to |%s pipe failed\n` dmesg entry.
+
+Reported-by: Sergey Kvachonok <ravenexp@gmail.com>
+Reported-by: Tony Vroon <chainsaw@gentoo.org>
+Bug: https://bugzilla.kernel.org/show_bug.cgi?id=199795
+Signed-off-by: Sergei Trofimovich <slyfox@gentoo.org>
+CC: Luis Chamberlain <mcgrof@kernel.org>
+---
+ kernel/umh.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/umh.c b/kernel/umh.c
+index 7f255b5a8845..66b02634a9ba 100644
+--- a/kernel/umh.c
++++ b/kernel/umh.c
+@@ -565,8 +565,10 @@ int call_usermodehelper_exec(struct subprocess_info *sub_info, int wait)
+ 	 * here.  This allows us to set STATIC_USERMODEHELPER_PATH to "" and
+ 	 * disable all call_usermodehelper() calls.
+ 	 */
+-	if (strlen(sub_info->path) == 0)
++	if (strlen(sub_info->path) == 0) {
++		retval = -EPERM;
+ 		goto out;
++	}
+ 
+ 	/*
+ 	 * Set the completion pointer only if there is a waiter.
 -- 
-Jani Nikula, Intel Open Source Graphics Center
+2.26.1
+
