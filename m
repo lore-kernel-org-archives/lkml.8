@@ -2,130 +2,170 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A554C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3609C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:36:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D39F2078A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:36:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEB092078A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:36:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gAg7IFfD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hO45c4hR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2635177AbgDOHgN (ORCPT
+        id S2635192AbgDOHgk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 03:36:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59032 "EHLO
+        Wed, 15 Apr 2020 03:36:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2635160AbgDOHfP (ORCPT
+        with ESMTP id S2635170AbgDOHft (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 03:35:15 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A477DC061A0C;
-        Wed, 15 Apr 2020 00:35:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Spel49OH3kq+f0h1cQE64vdlWjbJubQE7iWfCRxff4E=; b=gAg7IFfDoCtoS3lw9q5kB7iF3u
-        8et/F09oG1/mSQ6pPTclzNQTE0cp8m3Op/n5PXekX9gKp8drR/EOoquZq8CxWmZf7V7Jf3DzEuR2i
-        n/Pjcy9rylY/B9Pzm6lE+HeVM9aA70RBJaPI+Xh2WHG9ltoFE5PE9tiI0ca7GPILuSYolnYEXemrM
-        HbJ2xOXJO++cxn7bICbx6AmSvGj3DcBvix1wjr9CZOTy6K4xGYnKxxEVDZjnVk9utgN+ON8fztiIR
-        dt2c/xCo4N9YwqeWs6P00Lb0FTUAwdUIr5EoB8A3LR1ocdCwEm2Gg3yAOmjFRmx11RaYsO0uBbVWk
-        LaUyIZgQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jOcZH-0000l3-Ho; Wed, 15 Apr 2020 07:34:43 +0000
-Date:   Wed, 15 Apr 2020 00:34:43 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Alan Jenkins <alan.christopher.jenkins@gmail.com>,
-        axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
-        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
-        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
-        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>
-Subject: Re: [PATCH 4/5] mm/swapfile: refcount block and queue before using
- blkcg_schedule_throttle()
-Message-ID: <20200415073443.GA21036@infradead.org>
-References: <20200414041902.16769-1-mcgrof@kernel.org>
- <20200414041902.16769-5-mcgrof@kernel.org>
- <20200414154447.GC25765@infradead.org>
- <20200415054234.GQ11244@42.do-not-panic.com>
- <20200415072712.GB21099@infradead.org>
+        Wed, 15 Apr 2020 03:35:49 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC003C061A0C;
+        Wed, 15 Apr 2020 00:35:48 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id a201so17289193wme.1;
+        Wed, 15 Apr 2020 00:35:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2PnPX+IXLMxHQhocmFsN9EnKpVsBEOL6jEKQXmubIZY=;
+        b=hO45c4hR06tLylAL0NdxMtKX35mMSKm39HNyEbJ4X+oT9vzdlZ3GkfntRR6LqspePR
+         IKc8WMTCwA3E5qPQbITy7bcS3eZ3ZzSXLF9he3yEgXJmUb1bS8OiyFSoVVYJe8vmZ4xv
+         v+JaYUie5vpK2l31zccuEjSZrXkWiSj9grh8aLtKyyDUNM6z9Z3QRcxuolDT1LV8JFTx
+         IR5O+n0hmqmjmRfvV2Am/ZjblhoR+TK8ETJW3YSq2K+zSeM1Z8rXHYecelaCLFHOr2Lk
+         ksBtf2ry9h38/GD4NjzaJudx4c1jMY13R7S3eZuQpHR2+lI3l17b8PXOsMLKBxGRoXKZ
+         n0IQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2PnPX+IXLMxHQhocmFsN9EnKpVsBEOL6jEKQXmubIZY=;
+        b=f2P/O4ZnXpYKlH7KvP7z8xB4GnvPzslyA3LMgWN6dtRFC5xOR2SZewiIiedd38nZne
+         mHJTdJKzLmbSXn4ijuUYxREywRBUEOZFoTr8fyauyJG8QuwGo4j3sDXPmQ2SdPwQoN5s
+         R04UQEJO0u4fpA7mTUiOhuTesf5UMSkrpy3xlCpekcq8uSUoFo6sUaZfoEb/GgfX8mUd
+         tdYGUjSGo6FvZ+r7XMPZBtUj9tPaINBEpKPtjExXrQYkOtPSOZ6PZC9gEx1PpY3/B6Xm
+         2YFVdzTKSwLxt7BTh5Jkk5cKBtoPaO3KnD03kQ4O2+oQ/QdYr1ynBHFC8hNQW1OQsEM6
+         QYyw==
+X-Gm-Message-State: AGi0Pub+0VV36dqu81oEEcJD5FoSmTFWnbT9H38P5t5BHhPE546heEZZ
+        CUUTorO5Q3Raq3LNmSqPKWWES3Yq8U0AKo6Z5LOn7IHK
+X-Google-Smtp-Source: APiQypJhqfNm57B+b/xSyUfGm2xCR/5dvLHapQPwkX1JccEyHbvzfEx+m92Sfd2KvGn9ToRfL2WDrcR4vVHPnQiJyyc=
+X-Received: by 2002:a7b:c20f:: with SMTP id x15mr3638234wmi.2.1586936147523;
+ Wed, 15 Apr 2020 00:35:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200415072712.GB21099@infradead.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <20200311171422.10484-1-david@redhat.com> <20200311171422.10484-8-david@redhat.com>
+In-Reply-To: <20200311171422.10484-8-david@redhat.com>
+From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Date:   Wed, 15 Apr 2020 09:35:36 +0200
+Message-ID: <CAM9Jb+iz+meQ-fR+ZAHNeNFefTcoujCgEaSHLO6SJ6C6eTLLXg@mail.gmail.com>
+Subject: Re: [PATCH v2 07/10] mm/memory_hotplug: Introduce offline_and_remove_memory()
+To:     David Hildenbrand <david@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        virtio-dev@lists.oasis-open.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Oscar Salvador <osalvador@suse.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>, Qian Cai <cai@lca.pw>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 12:27:12AM -0700, Christoph Hellwig wrote:
-> On Wed, Apr 15, 2020 at 05:42:34AM +0000, Luis Chamberlain wrote:
-> > > I don't understand the atomic part of the comment.  How does
-> > > bdgrab/bdput help us there?
-> > 
-> > The commit log above did a better job at explaining this in terms of our
-> > goal to use the request_queue and how this use would prevent the risk of
-> > releasing the request_queue, which could sleep.
-> 
-> So bdput eventually does and iput, but what leads to an out of context
-> offload?
-> 
-> But anyway, isn't the original problem better solved by simply not
-> releasing the queue from atomic context to start with?  There isn't
-> really any good reason we keep holding the spinlock once we have a
-> reference on the queue, so something like this (not even compile tested)
-> should do the work:
+> virtio-mem wants to offline and remove a memory block once it unplugged
+> all subblocks (e.g., using alloc_contig_range()). Let's provide
+> an interface to do that from a driver. virtio-mem already supports to
+> offline partially unplugged memory blocks. Offlining a fully unplugged
+> memory block will not require to migrate any pages. All unplugged
+> subblocks are PageOffline() and have a reference count of 0 - so
+> offlining code will simply skip them.
+>
+> All we need is an interface to offline and remove the memory from kernel
+> module context, where we don't have access to the memory block devices
+> (esp. find_memory_block() and device_offline()) and the device hotplug
+> lock.
+>
+> To keep things simple, allow to only work on a single memory block.
+>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Oscar Salvador <osalvador@suse.com>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+> Cc: Wei Yang <richard.weiyang@gmail.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Qian Cai <cai@lca.pw>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  include/linux/memory_hotplug.h |  1 +
+>  mm/memory_hotplug.c            | 37 ++++++++++++++++++++++++++++++++++
+>  2 files changed, 38 insertions(+)
+>
+> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+> index f4d59155f3d4..a98aa16dbfa1 100644
+> --- a/include/linux/memory_hotplug.h
+> +++ b/include/linux/memory_hotplug.h
+> @@ -311,6 +311,7 @@ extern void try_offline_node(int nid);
+>  extern int offline_pages(unsigned long start_pfn, unsigned long nr_pages);
+>  extern int remove_memory(int nid, u64 start, u64 size);
+>  extern void __remove_memory(int nid, u64 start, u64 size);
+> +extern int offline_and_remove_memory(int nid, u64 start, u64 size);
+>
+>  #else
+>  static inline bool is_mem_section_removable(unsigned long pfn,
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index ab1c31e67fd1..d0d337918a15 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -1818,4 +1818,41 @@ int remove_memory(int nid, u64 start, u64 size)
+>         return rc;
+>  }
+>  EXPORT_SYMBOL_GPL(remove_memory);
+> +
+> +/*
+> + * Try to offline and remove a memory block. Might take a long time to
+> + * finish in case memory is still in use. Primarily useful for memory devices
+> + * that logically unplugged all memory (so it's no longer in use) and want to
+> + * offline + remove the memory block.
+> + */
+> +int offline_and_remove_memory(int nid, u64 start, u64 size)
+> +{
+> +       struct memory_block *mem;
+> +       int rc = -EINVAL;
+> +
+> +       if (!IS_ALIGNED(start, memory_block_size_bytes()) ||
+> +           size != memory_block_size_bytes())
+> +               return rc;
+> +
+> +       lock_device_hotplug();
+> +       mem = find_memory_block(__pfn_to_section(PFN_DOWN(start)));
+> +       if (mem)
+> +               rc = device_offline(&mem->dev);
+> +       /* Ignore if the device is already offline. */
+> +       if (rc > 0)
+> +               rc = 0;
+> +
+> +       /*
+> +        * In case we succeeded to offline the memory block, remove it.
+> +        * This cannot fail as it cannot get onlined in the meantime.
+> +        */
+> +       if (!rc) {
+> +               rc = try_remove_memory(nid, start, size);
+> +               WARN_ON_ONCE(rc);
+> +       }
+> +       unlock_device_hotplug();
+> +
+> +       return rc;
+> +}
+> +EXPORT_SYMBOL_GPL(offline_and_remove_memory);
+>  #endif /* CONFIG_MEMORY_HOTREMOVE */
 
-Actually - mem_cgroup_throttle_swaprate already checks for a non-NULL
-current->throttle_queue above, so we should never even call
-blk_put_queue here.  Was this found by code inspection, or was there
-a real report?
-
-In the latter case we need to figure out what protects >throttle_queue,
-as the way blkcg_schedule_throttle first put the reference and only then
-assign a value to it already looks like it introduces a tiny race
-window.
-
-Otherwise just open coding the applicable part ofblkcg_schedule_throttle
-in mem_cgroup_throttle_swaprate seems easiest:
-
-diff --git a/mm/swapfile.c b/mm/swapfile.c
-index 5871a2aa86a5..e16051ef074c 100644
---- a/mm/swapfile.c
-+++ b/mm/swapfile.c
-@@ -3761,15 +3761,20 @@ void mem_cgroup_throttle_swaprate(struct mem_cgroup *memcg, int node,
- 	 */
- 	if (current->throttle_queue)
- 		return;
-+	if (unlikely(current->flags & PF_KTHREAD))
-+		return;
- 
- 	spin_lock(&swap_avail_lock);
- 	plist_for_each_entry_safe(si, next, &swap_avail_heads[node],
- 				  avail_lists[node]) {
--		if (si->bdev) {
--			blkcg_schedule_throttle(bdev_get_queue(si->bdev),
--						true);
--			break;
-+		if (!si->bdev)
-+			continue;
-+		if (blk_get_queue(dev_get_queue(si->bdev))) {
-+			current->throttle_queue = dev_get_queue(si->bdev);
-+			current->use_memdelay = true;
-+			set_notify_resume(current);
- 		}
-+		break;
- 	}
- 	spin_unlock(&swap_avail_lock);
- }
+Acked-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
