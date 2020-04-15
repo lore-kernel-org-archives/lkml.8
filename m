@@ -2,114 +2,153 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A51CC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:22:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3CE6C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB11520771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:22:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A43CA206F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:25:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linumiz.com header.i=@linumiz.com header.b="QURp4N+8"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="KT6hcGvw";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="GNfrtgy3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393663AbgDOHV5 (ORCPT
+        id S2403920AbgDOHY0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 03:21:57 -0400
-Received: from gproxy4-pub.mail.unifiedlayer.com ([69.89.23.142]:42668 "EHLO
-        gproxy4-pub.mail.unifiedlayer.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2635134AbgDOHVj (ORCPT
+        Wed, 15 Apr 2020 03:24:26 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:50862 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2393666AbgDOHYL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 03:21:39 -0400
-Received: from cmgw10.unifiedlayer.com (unknown [10.9.0.10])
-        by gproxy4.mail.unifiedlayer.com (Postfix) with ESMTP id 1E288176E9A
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 00:56:11 -0600 (MDT)
-Received: from md-in-79.webhostbox.net ([43.225.55.182])
-        by cmsmtp with ESMTP
-        id ObxwjdXlNxgMWObxyjNfSB; Wed, 15 Apr 2020 00:56:11 -0600
-X-Authority-Reason: nr=8
-X-Authority-Analysis: v=2.3 cv=Pc3ReBpd c=1 sm=1 tr=0
- a=LfuyaZh/8e9VOkaVZk0aRw==:117 a=LfuyaZh/8e9VOkaVZk0aRw==:17
- a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=IkcTkHD0fZMA:10:nop_charset_1
- a=cl8xLZFz6L8A:10:nop_rcvd_month_year
- a=oz0wMknONp8A:10:endurance_base64_authed_username_1 a=iGRvdBzYb-_JTU_o6kgA:9
- a=QEXdDO2ut3YA:10:nop_charset_2
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=linumiz.com
-        ; s=default; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-Id
-        :Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:Content-Description:
-        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=ALV3zzlDkukeDYnEo1NPcnPQetl1UF6t3xq2o+loRlk=; b=QURp4N+8jazK9kQG9PESkXsDQA
-        b2enx04j9CT+C1fHKkwwUt4o9HLxj2BflmXiY83vnfk0vgcS0uAaKcLN1a26MNrfHR4NETXARaqi2
-        ih84tBHgLD2lwD4W6EaQOz10dv8CfN/t3qfsJmpmUXQ37xk01FyuaAn1jsc4QjpCFnDz0c9Yfwdtu
-        vMxFGZbpTYYCFBTJk6WAi9nfManbgxeLpUlq9sMxrvH5yx9Yt8ja5O5TyMy+tVAKwLRKchxjNK9BX
-        MNhdSdHjJUVK9qnhhxieVrtI0rsiTxyFbvjv5NZeLnqzrIDhnY0B01gvrie+VOavCxHHBow8M/WEE
-        EZykbnvA==;
-Received: from p5b3f6ccc.dip0.t-ipconnect.de ([91.63.108.204]:49262 helo=localhost.localdomain)
-        by md-in-79.webhostbox.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <saravanan@linumiz.com>)
-        id 1jObxv-0000eI-91; Wed, 15 Apr 2020 06:56:07 +0000
-From:   Saravanan Sekar <saravanan@linumiz.com>
-To:     robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, broonie@kernel.org,
-        lgirdwood@gmail.com, saravanan@linumiz.com
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org
-Subject: [PATCH 0/4] Add driver for wsen-itds accelerometer sensor
-Date:   Wed, 15 Apr 2020 08:55:31 +0200
-Message-Id: <20200415065535.7753-1-saravanan@linumiz.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 15 Apr 2020 03:24:11 -0400
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+        by m0089730.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 03F7JcSM032030;
+        Wed, 15 Apr 2020 00:23:04 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=J7TaB5vagR4jLlR65xt6qo1UL50Z0IdhpExPg7JYQBM=;
+ b=KT6hcGvwqv2uihIRuB8SQZDGXXXyIDL7oFKiTduVXlMuLaMw2TlV1y+16K5IxWbkd5Rp
+ UxCPfaQ2bu0YsqyCGXskDr0dBsU7ZWnHriuPObMkchBlptrEauocGyXamITaLOsD6bPg
+ IAl1qHZr/ZRFWESUv5BjpCNTA0ZFxh03i00= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by m0089730.ppops.net with ESMTP id 30dn85k4cw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Wed, 15 Apr 2020 00:23:03 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Wed, 15 Apr 2020 00:23:03 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Yx/oGt68jaNIqPnyipClaRx7ORNOhWxwdjtZUP3B2GWExjHxmweHr/6bGTz+QgUoKOvSllt/O96GyJKRu8VuOHSXrYMuePFI153kcH/axG11ETz9xjj1r2LamEeUxN6bSz3wIwS4VKaKApfBbtlMTvRNdExmDkc3Fv97SkiwmkOkjO6GJqC6lR/qbNK46/0s6ws+oHCKLj/pczMYxrmG3/Dl34s//B/RUJfMZMCQZ4RdtWt7Z33Qqh05/coVwdr1zgKAIqPeWFBLAl7pd2axS1GZgCGwZGs5geBwVMJJTLu1X+/Lr87vJ+e5XRrUayqzndcQi89bG+aMFbC162IPUw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=J7TaB5vagR4jLlR65xt6qo1UL50Z0IdhpExPg7JYQBM=;
+ b=F3Bubt/vePvf7+Eqdqaz7dL9FIkewiMs9Ng7B5DUtvo09N0BlllH+HheLZUQMb8Kyldh/nz9UfhfJ0EVPnKatc+yL9btUX8Jingk8tyJxxZ9IPy9l1wdMyHC/SLpM1DuCenJF14tJaf4VbdHfWUJaVWammbxIYhvO7NEB9Z0uabBWDPe9TI0gtMwGnd2QFPZa6Wao6py2Xi2YkRFTHGlj6HMRFpUk+SclMCI0QhXLR4//ZRNoj0lve9nQlJorbiyAWJHo17LEPyFzK+y7m06gfrUsZ6T2td1hydedMVBOj9UcmBOvV3cw+GyzXTNVRDVsUYRBT9yizwIutQejTVBLQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=J7TaB5vagR4jLlR65xt6qo1UL50Z0IdhpExPg7JYQBM=;
+ b=GNfrtgy3nnawCoxq0JNlPYve8i6G3PC08TIsDGpy6B7tdmdl5hWEFMyM7/L6MU+evJVrpCogtNcpHkzPpzZrJwxu1eAQxd13GNyJ+51nd99tRb03SGmjG1udOFazWfstsQqeDnzQXejRHQrSp4ZNunO4CMoPpdxpLLqZhaFdqr4=
+Received: from BYAPR15MB2999.namprd15.prod.outlook.com (2603:10b6:a03:fa::12)
+ by BYAPR15MB3207.namprd15.prod.outlook.com (2603:10b6:a03:101::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.26; Wed, 15 Apr
+ 2020 07:23:02 +0000
+Received: from BYAPR15MB2999.namprd15.prod.outlook.com
+ ([fe80::bdf1:da56:867d:f8a2]) by BYAPR15MB2999.namprd15.prod.outlook.com
+ ([fe80::bdf1:da56:867d:f8a2%7]) with mapi id 15.20.2900.028; Wed, 15 Apr 2020
+ 07:23:02 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     maowenan <maowenan@huawei.com>
+CC:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
+        "kpsingh@chromium.org" <kpsingh@chromium.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
+Subject: Re: [PATCH -next] bpf: remove set but not used variable 'dst_known'
+Thread-Topic: [PATCH -next] bpf: remove set but not used variable 'dst_known'
+Thread-Index: AQHWEYedD4qyQaRcJ0KQTxqzapbMNqh5LnoAgAA7NwCAAGCjgA==
+Date:   Wed, 15 Apr 2020 07:23:02 +0000
+Message-ID: <F68FB33A-1B98-45C1-8056-457EFA52F84F@fb.com>
+References: <20200413113703.194287-1-maowenan@huawei.com>
+ <C75FACD4-8549-4AD1-BDE6-1F5B47095E4C@fb.com>
+ <2b2e0060-ef9b-5541-1108-e28464b47f0a@huawei.com>
+In-Reply-To: <2b2e0060-ef9b-5541-1108-e28464b47f0a@huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3608.60.0.2.5)
+x-originating-ip: [2620:10d:c090:400::5:9d3e]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ce916dea-7c7a-4936-c4df-08d7e10dd53e
+x-ms-traffictypediagnostic: BYAPR15MB3207:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR15MB3207CF7CCC4CFF3DC9AEB5F6B3DB0@BYAPR15MB3207.namprd15.prod.outlook.com>
+x-fb-source: Internal
+x-ms-oob-tlc-oobclassifiers: OLM:1079;
+x-forefront-prvs: 0374433C81
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB2999.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(39860400002)(396003)(376002)(346002)(366004)(136003)(6506007)(2616005)(8936002)(71200400001)(8676002)(81156014)(6486002)(53546011)(186003)(86362001)(478600001)(4744005)(64756008)(6512007)(6916009)(66556008)(66476007)(91956017)(54906003)(316002)(5660300002)(36756003)(4326008)(33656002)(66446008)(66946007)(76116006)(2906002);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: YWByupRWF4kGojZXlQhX6ivhMK+M8f2WwjBKqXdH5bSbmxUVd3R3A6SPhRL72oxp69vEO8ZiPU8aZk/k3pVMLEbesYjmR4yoOJ3gZYBBJAJaLxeK/yTQAL9b9UB8spbKKXT26V4RmLFQFh82JUJX18uWbn2/WGGErIF5DFFJ09YNcOM6r2lE73qJBhYkhQXxkTZ1+s8UKSGsJYTDOO1ofczwtHdNJ3mjcmCEJmv0fCKGWqYCS/lBkR64apWQNt96hPLYvY+AMb39Ci5BBzLUUKI8w7P74ppoSvHlxytDCaZPrF/WtgAxGK9ALdZMln3nqnvBbBMC08BhAOgV+irWG9GR8rnbDa/LUTggRXjZNhBUZ5LQV78fPxD1gmdCXcb/FyFc1OTGISy4AASoz/++yJH4GqolEH3Pp6eVbcDjErTQW+ipSbPLopF0HzHvFEQO
+x-ms-exchange-antispam-messagedata: pA9OQXPB5JQxenlF2JA/OQ5VX1yz+oIcEJEZi/5r3g8wIVlHyzCAd5Dv13LNHELzCCnjFH0AuyqqoruoGbNmD3q8I2xET8r0KrigrFQYr4DBqJB4uSpibkQWvR4kMc2TfOBiHj9UdJMurTMe9TT0zKf2rAqhadivxvzpEnVX4VdE5eOI7T88WWUEAV5KHT+W
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <2A092136805AC6468CE9721CECDD0999@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - md-in-79.webhostbox.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - linumiz.com
-X-BWhitelist: no
-X-Source-IP: 91.63.108.204
-X-Source-L: No
-X-Exim-ID: 1jObxv-0000eI-91
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: p5b3f6ccc.dip0.t-ipconnect.de (localhost.localdomain) [91.63.108.204]:49262
-X-Source-Auth: saravanan@linumiz.com
-X-Email-Count: 2
-X-Source-Cap: bGludW1jbWM7aG9zdGdhdG9yO21kLWluLTc5LndlYmhvc3Rib3gubmV0
-X-Local-Domain: yes
+X-MS-Exchange-CrossTenant-Network-Message-Id: ce916dea-7c7a-4936-c4df-08d7e10dd53e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Apr 2020 07:23:02.2750
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: nN2MF/Te28mxpmTmIaGYIV/CB5DcR1ciwfGQ6gqtJ7czYFz4I+5cQa6BU+bk18oc9IxmtcRfkqm4H7IblX5Rtw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3207
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-15_01:2020-04-14,2020-04-15 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 bulkscore=0 phishscore=0
+ lowpriorityscore=0 mlxlogscore=999 mlxscore=0 malwarescore=0
+ suspectscore=0 spamscore=0 impostorscore=0 adultscore=0 clxscore=1011
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004150056
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch series add support for wurth elektronic wsen-itds 3-axis
-accelerometer. Driver supports the acceleration, temperature data reading and
-supports configuring of output data rate, operating mode and scale.
-
-Thanks,
-Saravanan
-
-Saravanan Sekar (4):
-  dt-bindings: Add an entry for Würth Elektronik, we
-  dt-bindings: iio: add document bindings for wsen-itds accel sensor
-  iio: accel: Add driver for wsen-itds accelerometer sensor
-  MAINTAINERS: Add entry for wsen-itds accelerometer sensor
-
- .../bindings/iio/accel/we,wsen-itds.yaml      |  53 +
- .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
- MAINTAINERS                                   |   6 +
- drivers/iio/accel/Kconfig                     |  14 +
- drivers/iio/accel/Makefile                    |   1 +
- drivers/iio/accel/wsen-itds.c                 | 978 ++++++++++++++++++
- 6 files changed, 1054 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/accel/we,wsen-itds.yaml
- create mode 100644 drivers/iio/accel/wsen-itds.c
-
--- 
-2.17.1
-
+DQoNCj4gT24gQXByIDE0LCAyMDIwLCBhdCA2OjM3IFBNLCBtYW93ZW5hbiA8bWFvd2VuYW5AaHVh
+d2VpLmNvbT4gd3JvdGU6DQo+IA0KPiBPbiAyMDIwLzQvMTUgNjowNSwgU29uZyBMaXUgd3JvdGU6
+DQo+PiANCj4+IA0KPj4+IE9uIEFwciAxMywgMjAyMCwgYXQgNDozNyBBTSwgTWFvIFdlbmFuIDxt
+YW93ZW5hbkBodWF3ZWkuY29tPiB3cm90ZToNCj4+PiANCj4+PiBGaXhlcyBnY2MgJy1XdW51c2Vk
+LWJ1dC1zZXQtdmFyaWFibGUnIHdhcm5pbmc6DQo+Pj4gDQo+Pj4ga2VybmVsL2JwZi92ZXJpZmll
+ci5jOjU2MDM6MTg6IHdhcm5pbmc6IHZhcmlhYmxlIOKAmGRzdF9rbm93buKAmQ0KPj4+IHNldCBi
+dXQgbm90IHVzZWQgWy1XdW51c2VkLWJ1dC1zZXQtdmFyaWFibGVdDQo+Pj4gDQo+Pj4gSXQgaXMg
+bm90IHVzZWQgc2luY2UgY29tbWl0IGYxMTc0Zjc3YjUwYyAoImJwZi92ZXJpZmllcjoNCj4+PiBy
+ZXdvcmsgdmFsdWUgdHJhY2tpbmciKQ0KPj4gDQo+PiBUaGUgZml4IG1ha2VzIHNlbnNlLiBCdXQg
+SSB0aGluayBmMTE3NGY3N2I1MGMgaW50cm9kdWNlZCBkc3Rfa25vd24sIA0KPj4gc28gdGhpcyBz
+dGF0ZW1lbnQgaXMgbm90IGFjY3VyYXRlLiANCj4+IA0KPiB0aGFua3MgZm9yIHJldmlldywgeWVz
+LCBmMTE3NGY3N2I1MGMgaW50cm9kdWNlZCBkc3Rfa25vd24sIGFuZCBiZWxvdyBjb21taXQNCj4g
+ZG9lc24ndCBkZWZlcmVuY2UgdmFyaWFibGUgZHN0X2tub3duLiBTbyBJIHNlbmQgdjIgbGF0ZXI/
+DQo+IDNmNTBmMTMyZDg0MCAoImJwZjogVmVyaWZpZXIsIGRvIGV4cGxpY2l0IEFMVTMyIGJvdW5k
+cyB0cmFja2luZyIpDQoNCkkgZG9uJ3QgdGhpbmsgd2UgbmVlZCB0byBiYWNrIHBvcnQgdGhpcyB0
+byBzdGFibGUuIFNvIGl0IGlzIE9LIG5vdCB0byANCmluY2x1ZGUgRml4ZXMgdGFnLiBXZSBjYW4g
+anVzdCByZW1vdmUgdGhpcyBzdGF0ZW1lbnQgaW4gdGhlIGNvbW1pdCBsb2cuDQoNCmJwZi1uZXh0
+IGlzIG5vdCBvcGVuIHlldC4gUGxlYXNlIHNlbmQgdjIgd2hlbiBicGYtbmV4dCBpcyBvcGVuLiAN
+Cg0KVGhhbmtzLA0KU29uZw0KDQo=
