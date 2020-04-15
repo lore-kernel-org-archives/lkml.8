@@ -2,95 +2,85 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E07A4C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2848C2BB85
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:33:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDB4C2076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:32:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C56072078B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:33:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ZIUZ6YrL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2411284AbgDORcq (ORCPT
+        id S2411184AbgDORdA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 13:32:46 -0400
-Received: from mga07.intel.com ([134.134.136.100]:2222 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2411254AbgDORcX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 13:32:23 -0400
-IronPort-SDR: wvHLy714rTSlYcNhNlv+aRA5aHOerVTU7dJQbUch7nE3n99YpLYvKoOKz7fK7tI78g8g28zIiP
- jFDC2ytqc2FQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 10:32:21 -0700
-IronPort-SDR: UPm9YQA1HstvxIqgWlU3zNpxyUt+ZwupuVkwia5v26qAtu66LLTG2cj0kvhRT5lV/Dwn4+r2AP
- c2pza6vfIk6Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,387,1580803200"; 
-   d="scan'208";a="363732914"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga001.fm.intel.com with ESMTP; 15 Apr 2020 10:32:21 -0700
-Date:   Wed, 15 Apr 2020 10:32:21 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Jon Cargille <jcargill@google.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Eric Northup <digitaleric@gmail.com>,
-        Eric Northup <digitaleric@google.com>
-Subject: Re: [PATCH 1/1] KVM: pass through CPUID(0x80000006)
-Message-ID: <20200415173221.GC30627@linux.intel.com>
-References: <20200415012320.236065-1-jcargill@google.com>
- <20200415023726.GD12547@linux.intel.com>
- <20200415025105.GE12547@linux.intel.com>
- <CANxmayh4P5hhbJPxAnA2nvbzZC9EwFPeVCxDrkHzu8h6Y7JPPQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANxmayh4P5hhbJPxAnA2nvbzZC9EwFPeVCxDrkHzu8h6Y7JPPQ@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Wed, 15 Apr 2020 13:33:00 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:63753 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2411235AbgDORcF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 13:32:05 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586971925; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=ocW1P/xBje/KUcO2hdCh72zNLVQhBCvlT1Qs7OrvvKU=; b=ZIUZ6YrLkN4hkEAV0VB3+po73pi74mU+nzwFgFbBWSCzeIB8TyU3FXhhnGdnWGdAt28DuFnh
+ F8QeeN31UDzukZeXchtO+gbYsSt6cJystNyztExfPy3KTBn0+oiZbX1sRl64zkzByG2BnBMn
+ YupDW130t3FuzQcCtGDkptxgzSQ=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e974509.7fe91348edc0-smtp-out-n01;
+ Wed, 15 Apr 2020 17:31:53 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C627BC433BA; Wed, 15 Apr 2020 17:31:53 +0000 (UTC)
+Received: from pillair-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: pillair)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5A7B9C433CB;
+        Wed, 15 Apr 2020 17:31:50 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5A7B9C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
+From:   Rakesh Pillai <pillair@codeaurora.org>
+To:     ath10k@lists.infradead.org
+Cc:     linux-wireless@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Rakesh Pillai <pillair@codeaurora.org>
+Subject: [PATCH v3 0/3] Add support to handle targets without TrustZone
+Date:   Wed, 15 Apr 2020 23:01:43 +0530
+Message-Id: <1586971906-20985-1-git-send-email-pillair@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 10:22:16AM -0700, Jon Cargille wrote:
-> > I assume you want to say something like:
-> 
-> That's a much better commit message--thank you, Sean!
-> 
-> > Jim's tag is unnecessary, unless he was a middleman between Eric and Jon,
-> 
-> I appreciate the feedback; I was trying to capture that Jim "was in the
-> patch's delivery path." (per submitting-patches.rst), but it sounds like that
-> is intended for a more explicit middle-man relationship than I had
-> understood.
+The iommu mapping for S2 SIDs are taken care by TrustZone.
+For the targets which does not have the support of TrustZone,
+these mappings need to be created in the driver using an
+iommu domain.
 
-Yep, exactly.
+Leaving these SIDs unconfigured will result in a global
+smmu fault. Hence configuring them for Non-TrustZone targets
+is mandatory.
 
-> Jim reviewed it internally before sending, which sounds like it should be
-> expressed as an "Acked-by" instead; is that accurate?
+Changes from v2:
+- Correct the name of the firmware structure added in ath10k
 
-Or Reviewed-by.  The proper (and easiest) way to handle this is to use
-whatever tag Jim (or any other reviewer) provides, e.g. submitting-patches
-states, under 12) When to use Acked-by:, Cc:, and Co-developed-by:, states:
+Rakesh Pillai (3):
+  dt-bindings: ath10k: Add wifi-firmware subnode for wifi node
+  ath10k: Setup the msa resources before qmi init
+  ath10k: Add support for targets without trustzone
 
-  If a person has had the opportunity to comment on a patch, but has not
-  provided such comments, you may optionally add a ``Cc:`` tag to the patch.
-  This is the only tag which might be added without an explicit action by the
-  person it names
+ .../bindings/net/wireless/qcom,ath10k.txt          |  14 ++
+ drivers/net/wireless/ath/ath10k/core.h             |   5 +
+ drivers/net/wireless/ath/ath10k/qmi.c              |  61 +------
+ drivers/net/wireless/ath/ath10k/qmi.h              |   3 -
+ drivers/net/wireless/ath/ath10k/snoc.c             | 182 ++++++++++++++++++++-
+ drivers/net/wireless/ath/ath10k/snoc.h             |   7 +
+ 6 files changed, 208 insertions(+), 64 deletions(-)
 
-I.e. all *-by tags are only supposed to be used with explicit permission
-from the named person.  This doesn't mean the person has to literally write
-Reviewed-by or whatever (though that's usually the case), but it does mean
-you should confirm it's ok to add a tag, e.g. if someone replies "LGTM" and
-you want to interpret that as a Reviewed-by or Acked-by, explicitly ask if
-it's ok to add the tag.
+-- 
+2.7.4
