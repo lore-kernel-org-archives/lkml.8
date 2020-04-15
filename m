@@ -2,255 +2,169 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F305C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:36:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EFF0C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:36:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5D2A2074F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:36:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0735A20771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:36:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895667AbgDOJgP (ORCPT
+        id S2895675AbgDOJgV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 05:36:15 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:54734 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2895613AbgDOJgK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 05:36:10 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: gtucker)
-        with ESMTPSA id 6BA7C260F10
-Subject: Re: media/master bisection: v4l2-compliance-vivid.device-presence on
- qemu_x86_64
-From:   Guillaume Tucker <guillaume.tucker@collabora.com>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com
-References: <5e960bf5.1c69fb81.8a349.6851@mx.google.com>
- <24564393-f229-6e29-7883-9605ed0d48b4@collabora.com>
- <20200414233347.2a844b85@coco.lan>
- <86feeb83-37ac-cbd6-b792-b81d17d559c9@collabora.com>
- <2f32345d-a818-8ec4-afd6-2b9cd9dcdf4a@collabora.com>
-Message-ID: <a99d49d9-656d-6c5c-4953-6e7c56c0beba@collabora.com>
-Date:   Wed, 15 Apr 2020 10:36:04 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 15 Apr 2020 05:36:21 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52868 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2895653AbgDOJgL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 05:36:11 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 8EEC0AE48;
+        Wed, 15 Apr 2020 09:36:08 +0000 (UTC)
+From:   Jiri Slaby <jslaby@suse.cz>
+To:     gregkh@linuxfoundation.org
+Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jiri Slaby <jslaby@suse.cz>
+Subject: [PATCH 1/2] vt: selection, split __set_selection_kernel
+Date:   Wed, 15 Apr 2020 11:36:07 +0200
+Message-Id: <20200415093608.10348-1-jslaby@suse.cz>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-In-Reply-To: <2f32345d-a818-8ec4-afd6-2b9cd9dcdf4a@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/04/2020 10:28, Guillaume Tucker wrote:
-> On 14/04/2020 22:43, Guillaume Tucker wrote:
->> On 14/04/2020 22:33, Mauro Carvalho Chehab wrote:
->>> Em Tue, 14 Apr 2020 22:23:52 +0100
->>> Guillaume Tucker <guillaume.tucker@collabora.com> escreveu:
->>>
->>>> Please see the bisection report below about absence of the vivid
->>>> driver, which caused v4l2-compliance to fail to run.
->>>>
->>>> Presumably we need to update the configuration fragment used by
->>>> kernelci.org to enable platform drivers.  Until now we've been
->>>> using this:
->>>>
->>>>     CONFIG_MEDIA_SUPPORT=y
->>>>     CONFIG_MEDIA_CAMERA_SUPPORT=y
->>>>     CONFIG_VIDEO_DEV=y
->>>>     CONFIG_VIDEO_V4L2=y
->>>>     CONFIG_V4L_TEST_DRIVERS=y
->>>>     CONFIG_VIDEO_VIVID=y
->>>>     CONFIG_VIDEO_VIVID_MAX_DEVS=64
->>>>
->>>> Do we simply need to add this one in v5.7 onwards?
->>>>
->>>>     CONFIG_MEDIA_PLATFORM_SUPPORT=y
->>>
->>> No, this shouldn't be needed.
->>>
->>> Helen sent us a patch that should likely fix it:
->>>
->>> 	https://git.linuxtv.org/media_tree.git/commit/?id=860b511766a3d95308a942ac09a34e4d1839e706
->>>
->>> Could you please check if this solves the issue?
->>
->> I see, thanks.  This revision is being built and tested at the
->> moment, I'll check the results when they land in my inbox.
-> 
-> Helen's patch was needed, but there were still a couple of
-> issues.  First we need to enable this extra option now in the
-> config fragment:
-> 
->     CONFIG_MEDIA_TEST_SUPPORT=y
-> 
-> as test_drivers/Kconfig starts with "if MEDIA_TEST_SUPPORT".
+Handle these actions:
+* poking console
+* TIOCL_SELCLEAR
+* TIOCL_SELMOUSEREPORT
+* start/end precomputation
+* clear_selection if the console changed
+in a separate function, thus making __set_selection_kernel way shorter
+and more readable. The function still needs dissection, but we are
+approaching.
 
-Actually, this "if" seems redundant now in test_drivers/Kconfig
-with my patch to include the file conditionally...  Please let me
-know if we should also drop it and I'll send a v2, or if this
-should be fixed in a different way.
+This includes introduction of vc_selection and renaming
+__set_selection_kernel to vc_do_selection.
 
-Guillaume
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+---
+ drivers/tty/vt/selection.c | 80 ++++++++++++++++++++------------------
+ 1 file changed, 43 insertions(+), 37 deletions(-)
 
-> Then this Kconfig was included when MEDIA_PLATFORM_SUPPORT was
-> enabled rather than MEDIA_TEST_SUPPORT in media/Kconfig.  So I've
-> just sent a patch to fix this dependency, and now it appears to
-> be generating the correct config.  I did a full v4l2-compliance
-> run with the vivid driver on my local setup and it all passed.
-> 
-> Guillaume
-> 
->>>> On 14/04/2020 20:16, kernelci.org bot wrote:
->>>>> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
->>>>> * This automated bisection report was sent to you on the basis  *
->>>>> * that you may be involved with the breaking commit it has      *
->>>>> * found.  No manual investigation has been done to verify it,   *
->>>>> * and the root cause of the problem may be somewhere else.      *
->>>>> *                                                               *
->>>>> * If you do send a fix, please include this trailer:            *
->>>>> *   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
->>>>> *                                                               *
->>>>> * Hope this helps!                                              *
->>>>> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
->>>>>
->>>>> media/master bisection: v4l2-compliance-vivid.device-presence on qemu_x86_64
->>>>>
->>>>> Summary:
->>>>>   Start:      ba445b7ff43b3 media: dt-bindings: rockchip-vpu: Convert bindings to json-schema
->>>>>   Plain log:  https://storage.kernelci.org//media/master/v5.7-rc1-63-gba445b7ff43b/x86_64/x86_64_defconfig+virtualvideo/gcc-8/lab-collabora/v4l2-compliance-vivid-qemu_x86_64.txt
->>>>>   HTML log:   https://storage.kernelci.org//media/master/v5.7-rc1-63-gba445b7ff43b/x86_64/x86_64_defconfig+virtualvideo/gcc-8/lab-collabora/v4l2-compliance-vivid-qemu_x86_64.html
->>>>>   Result:     06b93644f4d10 media: Kconfig: add an option to filter in/out platform drivers
->>>>>
->>>>> Checks:
->>>>>   revert:     PASS
->>>>>   verify:     PASS
->>>>>
->>>>> Parameters:
->>>>>   Tree:       media
->>>>>   URL:        https://git.linuxtv.org/media_tree.git
->>>>>   Branch:     master
->>>>>   Target:     qemu_x86_64
->>>>>   CPU arch:   x86_64
->>>>>   Lab:        lab-collabora
->>>>>   Compiler:   gcc-8
->>>>>   Config:     x86_64_defconfig+virtualvideo
->>>>>   Test case:  v4l2-compliance-vivid.device-presence
->>>>>
->>>>> Breaking commit found:
->>>>>
->>>>> -------------------------------------------------------------------------------
->>>>> commit 06b93644f4d102bdfc297159121acc1de794d68d
->>>>> Author: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
->>>>> Date:   Tue Mar 24 10:27:15 2020 +0100
->>>>>
->>>>>     media: Kconfig: add an option to filter in/out platform drivers
->>>>>     
->>>>>     Most systems don't need support for those, while others only
->>>>>     need those, instead of the others.
->>>>>     
->>>>>     So, add an option to filter in/out platform drivers.
->>>>>     
->>>>>     Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
->>>>>
->>>>> diff --git a/drivers/media/Kconfig b/drivers/media/Kconfig
->>>>> index 9dfea5c4b6ab7..2b6ea8beb9199 100644
->>>>> --- a/drivers/media/Kconfig
->>>>> +++ b/drivers/media/Kconfig
->>>>> @@ -87,6 +87,18 @@ config MEDIA_CEC_SUPPORT
->>>>>  	  Say Y when you have an HDMI receiver, transmitter or a USB CEC
->>>>>  	  adapter that supports HDMI CEC.
->>>>>  
->>>>> +config MEDIA_PLATFORM_SUPPORT
->>>>> +	bool "Platform-specific devices support"
->>>>> +	help
->>>>> +	  Enable support for complex cameras, codecs, and other hardware
->>>>> +	  that are integrated at the CPU, GPU or on Image Signalling Processor
->>>>> +	  and don't use PCI, USB or Firewire buses.
->>>>> +
->>>>> +	  This is found on Embedded hardware (SoC), on V4L2 codecs and
->>>>> +	  on some GPU and newer CPU chipsets.
->>>>> +
->>>>> +	  Say Y when you want to be able so see such devices.
->>>>> +
->>>>>  source "drivers/media/cec/Kconfig"
->>>>>  
->>>>>  source "drivers/media/mc/Kconfig"
->>>>> @@ -161,15 +173,14 @@ source "drivers/media/dvb-core/Kconfig"
->>>>>  
->>>>>  comment "Media drivers"
->>>>>  
->>>>> -#
->>>>> -# V4L platform/mem2mem drivers
->>>>> -#
->>>>> -
->>>>>  source "drivers/media/usb/Kconfig"
->>>>>  source "drivers/media/pci/Kconfig"
->>>>> +source "drivers/media/radio/Kconfig"
->>>>> +
->>>>> +if MEDIA_PLATFORM_SUPPORT
->>>>>  source "drivers/media/platform/Kconfig"
->>>>>  source "drivers/media/mmc/Kconfig"
->>>>> -source "drivers/media/radio/Kconfig"
->>>>> +endif
->>>>>  
->>>>>  comment "Supported FireWire (IEEE 1394) Adapters"
->>>>>  	depends on DVB_CORE && FIREWIRE
->>>>> -------------------------------------------------------------------------------
->>>>>
->>>>>
->>>>> Git bisection log:
->>>>>
->>>>> -------------------------------------------------------------------------------
->>>>> git bisect start
->>>>> # good: [2632e7b618a7730969f9782593c29ca53553aa22] media: venus: firmware: Ignore secure call error on first resume
->>>>> git bisect good 2632e7b618a7730969f9782593c29ca53553aa22
->>>>> # bad: [ba445b7ff43b3e45836a9a290efdc3a36ea63941] media: dt-bindings: rockchip-vpu: Convert bindings to json-schema
->>>>> git bisect bad ba445b7ff43b3e45836a9a290efdc3a36ea63941
->>>>> # good: [29d9f30d4ce6c7a38745a54a8cddface10013490] Merge git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next
->>>>> git bisect good 29d9f30d4ce6c7a38745a54a8cddface10013490
->>>>> # good: [e109f506074152b7241bcbd3949a099e776cb802] Merge tag 'mtd/for-5.7' of git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux
->>>>> git bisect good e109f506074152b7241bcbd3949a099e776cb802
->>>>> # good: [aa1a8ce533324d12696a9f4b71dbc5eb561a2e04] Merge tag 'trace-v5.7' of git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace
->>>>> git bisect good aa1a8ce533324d12696a9f4b71dbc5eb561a2e04
->>>>> # good: [c7b6a566b98524baea6a244186e665d22b633545] mm/gup: Mark lock taken only after a successful retake
->>>>> git bisect good c7b6a566b98524baea6a244186e665d22b633545
->>>>> # good: [e4da01d8333e500e15a674d75885a9dfcfd31e77] Merge tag 'powerpc-5.7-2' of git://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux
->>>>> git bisect good e4da01d8333e500e15a674d75885a9dfcfd31e77
->>>>> # good: [6900433e0fbca146d8170bdf876271cdf3053021] Merge tag 'for-linus-5.7-1' of git://github.com/cminyard/linux-ipmi
->>>>> git bisect good 6900433e0fbca146d8170bdf876271cdf3053021
->>>>> # good: [b753101a4ac0b906064a72feec43f5b80a1fe2e5] Merge tag 'kbuild-v5.7-2' of git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild
->>>>> git bisect good b753101a4ac0b906064a72feec43f5b80a1fe2e5
->>>>> # bad: [4b32216adb010a364f23a055c45e06e839b089f9] media: split test drivers from platform directory
->>>>> git bisect bad 4b32216adb010a364f23a055c45e06e839b089f9
->>>>> # good: [20e2aa812620439d010a3f78ba4e05bc0b3e2861] Merge tag 'perf-urgent-2020-04-12' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
->>>>> git bisect good 20e2aa812620439d010a3f78ba4e05bc0b3e2861
->>>>> # good: [0785249f8b93836986e9d1bdeefd2a2c13f160af] Merge tag 'timers-urgent-2020-04-12' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
->>>>> git bisect good 0785249f8b93836986e9d1bdeefd2a2c13f160af
->>>>> # good: [3b50142d8528e1efc1c07f69c540f926c58ab3ad] MAINTAINERS: sort field names for all entries
->>>>> git bisect good 3b50142d8528e1efc1c07f69c540f926c58ab3ad
->>>>> # bad: [06b93644f4d102bdfc297159121acc1de794d68d] media: Kconfig: add an option to filter in/out platform drivers
->>>>> git bisect bad 06b93644f4d102bdfc297159121acc1de794d68d
->>>>> # good: [d9d6e1f3d5bbca799910072b2110963250e0b9c6] media: dvb-usb: auto-select CYPRESS_FIRMWARE
->>>>> git bisect good d9d6e1f3d5bbca799910072b2110963250e0b9c6
->>>>> # first bad commit: [06b93644f4d102bdfc297159121acc1de794d68d] media: Kconfig: add an option to filter in/out platform drivers
->>>>> -------------------------------------------------------------------------------
->>>>>   
->>>>
->>>
->>>
->>>
->>> Thanks,
->>> Mauro
->>>
->>
-> 
-> 
+diff --git a/drivers/tty/vt/selection.c b/drivers/tty/vt/selection.c
+index d54a549c5892..a9693c0e8d04 100644
+--- a/drivers/tty/vt/selection.c
++++ b/drivers/tty/vt/selection.c
+@@ -185,47 +185,16 @@ int set_selection_user(const struct tiocl_selection __user *sel,
+ 	return set_selection_kernel(&v, tty);
+ }
+ 
+-static int __set_selection_kernel(struct tiocl_selection *v, struct tty_struct *tty)
++static int vc_do_selection(struct vc_data *vc, unsigned short mode, int ps,
++		int pe)
+ {
+-	struct vc_data *vc = vc_cons[fg_console].d;
+ 	int new_sel_start, new_sel_end, spc;
+ 	char *bp, *obp;
+-	int i, ps, pe;
+ 	u32 c;
+-	int ret = 0;
+-	bool unicode;
+-
+-	poke_blanked_console();
+-
+-	v->xs = min_t(u16, v->xs - 1, vc->vc_cols - 1);
+-	v->ys = min_t(u16, v->ys - 1, vc->vc_rows - 1);
+-	v->xe = min_t(u16, v->xe - 1, vc->vc_cols - 1);
+-	v->ye = min_t(u16, v->ye - 1, vc->vc_rows - 1);
+-	ps = v->ys * vc->vc_size_row + (v->xs << 1);
+-	pe = v->ye * vc->vc_size_row + (v->xe << 1);
+-
+-	if (v->sel_mode == TIOCL_SELCLEAR) {
+-		/* useful for screendump without selection highlights */
+-		clear_selection();
+-		return 0;
+-	}
+-
+-	if (mouse_reporting() && (v->sel_mode & TIOCL_SELMOUSEREPORT)) {
+-		mouse_report(tty, v->sel_mode & TIOCL_SELBUTTONMASK, v->xs,
+-			     v->ys);
+-		return 0;
+-	}
++	int i, ret = 0;
++	bool unicode = vt_do_kdgkbmode(fg_console) == K_UNICODE;
+ 
+-	if (ps > pe)	/* make vc_sel.start <= vc_sel.end */
+-		swap(ps, pe);
+-
+-	if (vc_sel.cons != vc_cons[fg_console].d) {
+-		clear_selection();
+-		vc_sel.cons = vc_cons[fg_console].d;
+-	}
+-	unicode = vt_do_kdgkbmode(fg_console) == K_UNICODE;
+-
+-	switch (v->sel_mode) {
++	switch (mode) {
+ 	case TIOCL_SELCHAR:	/* character-by-character selection */
+ 		new_sel_start = ps;
+ 		new_sel_end = pe;
+@@ -339,13 +308,50 @@ static int __set_selection_kernel(struct tiocl_selection *v, struct tty_struct *
+ 	return ret;
+ }
+ 
++static int vc_selection(struct vc_data *vc, struct tiocl_selection *v,
++		struct tty_struct *tty)
++{
++	int ps, pe;
++
++	poke_blanked_console();
++
++	if (v->sel_mode == TIOCL_SELCLEAR) {
++		/* useful for screendump without selection highlights */
++		clear_selection();
++		return 0;
++	}
++
++	v->xs = min_t(u16, v->xs - 1, vc->vc_cols - 1);
++	v->ys = min_t(u16, v->ys - 1, vc->vc_rows - 1);
++	v->xe = min_t(u16, v->xe - 1, vc->vc_cols - 1);
++	v->ye = min_t(u16, v->ye - 1, vc->vc_rows - 1);
++
++	if (mouse_reporting() && (v->sel_mode & TIOCL_SELMOUSEREPORT)) {
++		mouse_report(tty, v->sel_mode & TIOCL_SELBUTTONMASK, v->xs,
++			     v->ys);
++		return 0;
++	}
++
++	ps = v->ys * vc->vc_size_row + (v->xs << 1);
++	pe = v->ye * vc->vc_size_row + (v->xe << 1);
++	if (ps > pe)	/* make vc_sel.start <= vc_sel.end */
++		swap(ps, pe);
++
++	if (vc_sel.cons != vc) {
++		clear_selection();
++		vc_sel.cons = vc;
++	}
++
++	return vc_do_selection(vc, v->sel_mode, ps, pe);
++}
++
+ int set_selection_kernel(struct tiocl_selection *v, struct tty_struct *tty)
+ {
+ 	int ret;
+ 
+ 	mutex_lock(&vc_sel.lock);
+ 	console_lock();
+-	ret = __set_selection_kernel(v, tty);
++	ret = vc_selection(vc_cons[fg_console].d, v, tty);
+ 	console_unlock();
+ 	mutex_unlock(&vc_sel.lock);
+ 
+-- 
+2.26.1
 
