@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9749EC3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:47:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B317C3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 748232137B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:47:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47C902173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:48:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586951269;
-	bh=cV2r83eP8e/jucUSXYvFnWLjmbcZKhtPCDO2eIQor/o=;
+	s=default; t=1586951280;
+	bh=DJq3kiVid+PEWn5WE6VUYAktHgMxGYUpiygRCvaI3+Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R0fzb9zL27VkJx4DCvAX+RT+6D7bBnEd+uv8sV2/3U+PsJApaPjJpKlTiegCaexGj
-	 KDCNI9ARwFwQeCwnYyqHwVg5EC/DLKuAscZMsV5/RLsqzed/MKHg6TvfNDZKVOuSh0
-	 oFby/aWZSJzxDTHAVXKNiHUmILaXRJ4bHOTNDwB0=
+	b=ryo48W7XL9LCC4ADO6jjQvETjagZORvlm3vqNguzh09pmATfdBUVUmbNRTANatrQI
+	 e+h+aSf0tLcPIR+hE9XqooG5J4wRxrTOvSdHiFfaGenJIAGEpqRGayxkCvgur30iSD
+	 W2YAd+js1PMWwFtS9wMJprsGUVu43fbIPNWTijT0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409389AbgDOLrq (ORCPT
+        id S2406210AbgDOLrz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:47:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34498 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 07:47:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408932AbgDOLmz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:42:55 -0400
+        id S2408938AbgDOLm7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:42:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41964206A2;
-        Wed, 15 Apr 2020 11:42:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A33D20775;
+        Wed, 15 Apr 2020 11:42:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950974;
-        bh=cV2r83eP8e/jucUSXYvFnWLjmbcZKhtPCDO2eIQor/o=;
+        s=default; t=1586950979;
+        bh=DJq3kiVid+PEWn5WE6VUYAktHgMxGYUpiygRCvaI3+Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cpy9uLAE2pqP90ZVVtwIBnLWp1Ge/X59UKgazrYPINV9qf2aF6JH4GhrLu6fjxRO4
-         GbWfMx0OU76VqbllZBy934fLDe6fKxI7sIAFsjTTon4IomwZf5y+Oa9EcUIJaQwLzd
-         R+Vk5eFR5NajFqdG2941HdQss/AHTEvVilSqvwb4=
+        b=FGT/xGDWIiZbVRjEsJE9aGeUmfMYwl8iMbeE36IP9yCBWaLXJg3EdlDJ/i2D2VwIR
+         HH9n3g+l7bbCq1OW3tFedklpue3oh+yhZQnqoN9gfgvi3wy14YTIFpuQmuvsFlYODq
+         lCRI9Meut1DW9ftP1hTz0YTaEawM4IyoNqGE7DeQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lucas Stach <l.stach@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.5 023/106] soc: imx: gpc: fix power up sequencing
-Date:   Wed, 15 Apr 2020 07:41:03 -0400
-Message-Id: <20200415114226.13103-23-sashal@kernel.org>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 027/106] NFSv4/pnfs: Return valid stateids in nfs_layout_find_inode_by_stateid()
+Date:   Wed, 15 Apr 2020 07:41:07 -0400
+Message-Id: <20200415114226.13103-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
 References: <20200415114226.13103-1-sashal@kernel.org>
@@ -60,76 +58,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lucas Stach <l.stach@pengutronix.de>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit e0ea2d11f8a08ba7066ff897e16c5217215d1e68 ]
+[ Upstream commit d911c57a19551c6bef116a3b55c6b089901aacb0 ]
 
-Currently we wait only until the PGC inverts the isolation setting
-before disabling the peripheral clocks. This doesn't ensure that the
-reset is properly propagated through the peripheral devices in the
-power domain.
+Make sure to test the stateid for validity so that we catch instances
+where the server may have been reusing stateids in
+nfs_layout_find_inode_by_stateid().
 
-Wait until the PGC signals that the power up request is done and
-wait a bit for resets to propagate before disabling the clocks.
-
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Fixes: 7b410d9ce460 ("pNFS: Delay getting the layout header in CB_LAYOUTRECALL handlers")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/imx/gpc.c | 24 +++++++++++++-----------
- 1 file changed, 13 insertions(+), 11 deletions(-)
+ fs/nfs/callback_proc.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/soc/imx/gpc.c b/drivers/soc/imx/gpc.c
-index 98b9d9a902ae3..90a8b2c0676ff 100644
---- a/drivers/soc/imx/gpc.c
-+++ b/drivers/soc/imx/gpc.c
-@@ -87,8 +87,8 @@ static int imx6_pm_domain_power_off(struct generic_pm_domain *genpd)
- static int imx6_pm_domain_power_on(struct generic_pm_domain *genpd)
- {
- 	struct imx_pm_domain *pd = to_imx_pm_domain(genpd);
--	int i, ret, sw, sw2iso;
--	u32 val;
-+	int i, ret;
-+	u32 val, req;
+diff --git a/fs/nfs/callback_proc.c b/fs/nfs/callback_proc.c
+index cd4c6bc81caed..40d31024b72d1 100644
+--- a/fs/nfs/callback_proc.c
++++ b/fs/nfs/callback_proc.c
+@@ -128,6 +128,8 @@ static struct inode *nfs_layout_find_inode_by_stateid(struct nfs_client *clp,
  
- 	if (pd->supply) {
- 		ret = regulator_enable(pd->supply);
-@@ -107,17 +107,18 @@ static int imx6_pm_domain_power_on(struct generic_pm_domain *genpd)
- 	regmap_update_bits(pd->regmap, pd->reg_offs + GPC_PGC_CTRL_OFFS,
- 			   0x1, 0x1);
- 
--	/* Read ISO and ISO2SW power up delays */
--	regmap_read(pd->regmap, pd->reg_offs + GPC_PGC_PUPSCR_OFFS, &val);
--	sw = val & 0x3f;
--	sw2iso = (val >> 8) & 0x3f;
--
- 	/* Request GPC to power up domain */
--	val = BIT(pd->cntr_pdn_bit + 1);
--	regmap_update_bits(pd->regmap, GPC_CNTR, val, val);
-+	req = BIT(pd->cntr_pdn_bit + 1);
-+	regmap_update_bits(pd->regmap, GPC_CNTR, req, req);
- 
--	/* Wait ISO + ISO2SW IPG clock cycles */
--	udelay(DIV_ROUND_UP(sw + sw2iso, pd->ipg_rate_mhz));
-+	/* Wait for the PGC to handle the request */
-+	ret = regmap_read_poll_timeout(pd->regmap, GPC_CNTR, val, !(val & req),
-+				       1, 50);
-+	if (ret)
-+		pr_err("powerup request on domain %s timed out\n", genpd->name);
-+
-+	/* Wait for reset to propagate through peripherals */
-+	usleep_range(5, 10);
- 
- 	/* Disable reset clocks for all devices in the domain */
- 	for (i = 0; i < pd->num_clks; i++)
-@@ -343,6 +344,7 @@ static const struct regmap_config imx_gpc_regmap_config = {
- 	.rd_table = &access_table,
- 	.wr_table = &access_table,
- 	.max_register = 0x2ac,
-+	.fast_io = true,
- };
- 
- static struct generic_pm_domain *imx_gpc_onecell_domains[] = {
+ 	list_for_each_entry_rcu(server, &clp->cl_superblocks, client_link) {
+ 		list_for_each_entry(lo, &server->layouts, plh_layouts) {
++			if (!pnfs_layout_is_valid(lo))
++				continue;
+ 			if (stateid != NULL &&
+ 			    !nfs4_stateid_match_other(stateid, &lo->plh_stateid))
+ 				continue;
 -- 
 2.20.1
 
