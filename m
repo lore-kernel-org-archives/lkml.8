@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E446C3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F18ECC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:05:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63A462078B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:05:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6387206F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:05:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586952325;
-	bh=XsbHWB2fzAjBy9zC+9FurmC3XfqC+AFSHn+V4bj4/cw=;
+	s=default; t=1586952329;
+	bh=OifP4P5hXxTkzT+ICeJO7lVltwiShd+rSRZd7Y6s+aI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Tctz7FR4zpDzCmP5aJHWzEs8gDJYWipj6v17g/Hn833FJP9d17ym2YPXVGz8g2ILM
-	 F/hpbX3NV27SKvChKstf5jHx7biDW0cWHvAU4HkSFKTPB8/t/YZoCzlt9NoKtkcY+6
-	 hk08wPp/+DW08dbkPRdDw1DJYBld3DpUv6JIpnKk=
+	b=wdRUsg1FQ/8RwJdFgVdxOEZwpOv6FINKk2XUFRfltYBwhCWxoNEahrh/QYbx44+Tv
+	 8yv9iQzdLb6AO2gCGDi29h5sIU28gyHXKGCEGNy908gUf2gE6ss2x2DwRv59AA0y8I
+	 N82j8d7oKiUadQw9jmvzlRexIsc2nbcMCvi2vICM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S368352AbgDOMFU (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:05:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43232 "EHLO mail.kernel.org"
+        id S368361AbgDOMF2 (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:05:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409397AbgDOLr5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:47:57 -0400
+        id S2409403AbgDOLrz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:47:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F7FF2168B;
-        Wed, 15 Apr 2020 11:47:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BDD7216FD;
+        Wed, 15 Apr 2020 11:47:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951277;
-        bh=XsbHWB2fzAjBy9zC+9FurmC3XfqC+AFSHn+V4bj4/cw=;
+        s=default; t=1586951274;
+        bh=OifP4P5hXxTkzT+ICeJO7lVltwiShd+rSRZd7Y6s+aI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FhLZ1YGodOZldL1sVltM84AWCdkFGUxMiPslspFhv5vTalXIt1KDQuT0BHu3kawIP
-         bhhWdgxrz3J35VyfvsgBxYOo7rS35Ml5GCbyWvwmgGYtZTKyLwMA8ZNgwbEuYsATVK
-         hsHjju9GpOs1wuZ8E8WJ1ilpOKVf1FQf1TRt7Q7w=
+        b=xxnWuLdpKVU1j+OZHI7ee007X25BHhIZfiRoL9Y2KidG7K/DkMFcyKYxS76jNcXlW
+         TmmOyPp+DJGKLy/o4GcOVuCYIZ4KQFgOliRfssSLpE8ZyoUBGWO2xYLMhx3uYL+2iE
+         lisvcr9rlD2i1VH0FLmwqNGLJ2HA0Utzzt/yW7Co=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Sandeen <sandeen@redhat.com>,
-        Ritesh Harjani <riteshh@linux.ibm.com>,
-        Andreas Dilger <adilger@dilger.ca>,
-        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
-        linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 07/21] ext4: do not commit super on read-only bdev
-Date:   Wed, 15 Apr 2020 07:47:34 -0400
-Message-Id: <20200415114748.15713-7-sashal@kernel.org>
+Cc:     Alexander Gordeev <agordeev@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 05/21] s390/cpuinfo: fix wrong output when CPU0 is offline
+Date:   Wed, 15 Apr 2020 07:47:32 -0400
+Message-Id: <20200415114748.15713-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114748.15713-1-sashal@kernel.org>
 References: <20200415114748.15713-1-sashal@kernel.org>
@@ -60,48 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Sandeen <sandeen@redhat.com>
+From: Alexander Gordeev <agordeev@linux.ibm.com>
 
-[ Upstream commit c96e2b8564adfb8ac14469ebc51ddc1bfecb3ae2 ]
+[ Upstream commit 872f27103874a73783aeff2aac2b41a489f67d7c ]
 
-Under some circumstances we may encounter a filesystem error on a
-read-only block device, and if we try to save the error info to the
-superblock and commit it, we'll wind up with a noisy error and
-backtrace, i.e.:
+/proc/cpuinfo should not print information about CPU 0 when it is offline.
 
-[ 3337.146838] EXT4-fs error (device pmem1p2): ext4_get_journal_inode:4634: comm mount: inode #0: comm mount: iget: illegal inode #
-------------[ cut here ]------------
-generic_make_request: Trying to write to read-only block-device pmem1p2 (partno 2)
-WARNING: CPU: 107 PID: 115347 at block/blk-core.c:788 generic_make_request_checks+0x6b4/0x7d0
-...
-
-To avoid this, commit the error info in the superblock only if the
-block device is writable.
-
-Reported-by: Ritesh Harjani <riteshh@linux.ibm.com>
-Signed-off-by: Eric Sandeen <sandeen@redhat.com>
-Reviewed-by: Andreas Dilger <adilger@dilger.ca>
-Link: https://lore.kernel.org/r/4b6e774d-cc00-3469-7abb-108eb151071a@sandeen.net
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Fixes: 281eaa8cb67c ("s390/cpuinfo: simplify locking and skip offline cpus early")
+Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
+Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+[heiko.carstens@de.ibm.com: shortened commit message]
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/super.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/s390/kernel/processor.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index 75f71e52ffc77..508995e7e31d8 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -344,7 +344,8 @@ static void save_error_info(struct super_block *sb, const char *func,
- 			    unsigned int line)
+diff --git a/arch/s390/kernel/processor.c b/arch/s390/kernel/processor.c
+index d856263fd7687..737e22cf09728 100644
+--- a/arch/s390/kernel/processor.c
++++ b/arch/s390/kernel/processor.c
+@@ -139,8 +139,9 @@ static void show_cpu_mhz(struct seq_file *m, unsigned long n)
+ static int show_cpuinfo(struct seq_file *m, void *v)
  {
- 	__save_error_info(sb, func, line);
--	ext4_commit_super(sb, 1);
-+	if (!bdev_read_only(sb->s_bdev))
-+		ext4_commit_super(sb, 1);
+ 	unsigned long n = (unsigned long) v - 1;
++	unsigned long first = cpumask_first(cpu_online_mask);
+ 
+-	if (!n)
++	if (n == first)
+ 		show_cpu_summary(m, v);
+ 	if (!machine_has_cpu_mhz)
+ 		return 0;
+@@ -153,6 +154,8 @@ static inline void *c_update(loff_t *pos)
+ {
+ 	if (*pos)
+ 		*pos = cpumask_next(*pos - 1, cpu_online_mask);
++	else
++		*pos = cpumask_first(cpu_online_mask);
+ 	return *pos < nr_cpu_ids ? (void *)*pos + 1 : NULL;
  }
  
- /*
 -- 
 2.20.1
 
