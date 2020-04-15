@@ -7,51 +7,55 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D450C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:51:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E595BC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:51:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1991C20732
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:51:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC726206D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:51:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586951463;
-	bh=/KnOurnx6Etk4y412/BZj+JikJrWXkN0RDnFDDfh8k0=;
+	s=default; t=1586951480;
+	bh=PXxlVk0aAEea5k6TpIzN1612LLubxTEmTIQU4OPjeI8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fAe78A6LjKWf7E3SuPwOK5rPw+YNvDe1BAAxcoCVbaJuEJrvxvNnih5TudMyWLCns
-	 s8hCMYIfIhobUuxV+cBYNyfL8LhRfSwby2QnNj6UJOjwAvy8OH3+2o1Oyc/8wimp2b
-	 zr2uBAPdOLhSIpysWu+5PQpp4p0487Riz+ppioW4=
+	b=05FNFfz6gyCHGTRG2XpUXllEE/f6ZsUPKZMj7bHtWWjw+JAnAMgJuCUgpORmMp0uw
+	 aUyCK8zBlvK+pIjvGqQKihCBLkZj1UnXxpHchkC4jIIeNlO0zTt+cscNPgBidpGo42
+	 fV9sH0zftMiUI8KPT4uTURc2xjBuvWo0oVktKWY0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409589AbgDOLvA (ORCPT
+        id S2897518AbgDOLvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:51:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36126 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 07:51:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409038AbgDOLnx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:43:53 -0400
+        id S2406125AbgDOLnw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:43:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9936206A2;
-        Wed, 15 Apr 2020 11:43:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED77A20768;
+        Wed, 15 Apr 2020 11:43:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951032;
-        bh=/KnOurnx6Etk4y412/BZj+JikJrWXkN0RDnFDDfh8k0=;
+        s=default; t=1586951031;
+        bh=PXxlVk0aAEea5k6TpIzN1612LLubxTEmTIQU4OPjeI8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SjjA1ah5ILyjFhi03RE14ilQTJMByihrpyrC0dXlleKnai47vz+vIE1TLr37zX9Ra
-         B3x5XCgkyk5MvDiV1744XJNQzol2v2/3+0NgaRKW5VcLD7ba9FZ8cnLJatDDiDNaa3
-         KMfNUsNjBU2qA92vvgp5pExk5XGkAKQTMjojaLbs=
+        b=qbmUyOro77KyFS1P2cwzpxLiLLxuL5JqhdXaEjDgfNwXa3LrID32Eg6J+lEF1UWx8
+         w9hOARc3WxvJwT7WsWkNX4R7GpVGlJvQDl5ZXpuyK4F/BIBv+H8eM0garsCEEASkzD
+         ma6Yd9Ig2wot28ZFIJ0rgSOqSaPMYbeAiutF7c4E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vegard Nossum <vegard.nossum@oracle.com>,
+Cc:     Rikard Falkeborn <rikard.falkeborn@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Daniel Santos <daniel.santos@pobox.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Ian Abbott <abbotti@mev.co.uk>, Joe Perches <joe@perches.com>,
+        Kees Cook <keescook@chromium.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Haren Myneni <haren@us.ibm.com>, Joe Perches <joe@perches.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-sparse@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 070/106] compiler.h: fix error in BUILD_BUG_ON() reporting
-Date:   Wed, 15 Apr 2020 07:41:50 -0400
-Message-Id: <20200415114226.13103-70-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 069/106] linux/bits.h: add compile time sanity check of GENMASK inputs
+Date:   Wed, 15 Apr 2020 07:41:49 -0400
+Message-Id: <20200415114226.13103-69-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
 References: <20200415114226.13103-1-sashal@kernel.org>
@@ -64,68 +68,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vegard Nossum <vegard.nossum@oracle.com>
+From: Rikard Falkeborn <rikard.falkeborn@gmail.com>
 
-[ Upstream commit af9c5d2e3b355854ff0e4acfbfbfadcd5198a349 ]
+[ Upstream commit 295bcca84916cb5079140a89fccb472bb8d1f6e2 ]
 
-compiletime_assert() uses __LINE__ to create a unique function name.  This
-means that if you have more than one BUILD_BUG_ON() in the same source
-line (which can happen if they appear e.g.  in a macro), then the error
-message from the compiler might output the wrong condition.
+GENMASK() and GENMASK_ULL() are supposed to be called with the high bit as
+the first argument and the low bit as the second argument.  Mixing them
+will return a mask with zero bits set.
 
-For this source file:
+Recent commits show getting this wrong is not uncommon, see e.g.  commit
+aa4c0c9091b0 ("net: stmmac: Fix misuses of GENMASK macro") and commit
+9bdd7bb3a844 ("clocksource/drivers/npcm: Fix misuse of GENMASK macro").
 
-	#include <linux/build_bug.h>
+To prevent such mistakes from appearing again, add compile time sanity
+checking to the arguments of GENMASK() and GENMASK_ULL().  If both
+arguments are known at compile time, and the low bit is higher than the
+high bit, break the build to detect the mistake immediately.
 
-	#define macro() \
-		BUILD_BUG_ON(1); \
-		BUILD_BUG_ON(0);
+Since GENMASK() is used in declarations, BUILD_BUG_ON_ZERO() must be used
+instead of BUILD_BUG_ON().
 
-	void foo()
-	{
-		macro();
-	}
+__builtin_constant_p does not evaluate is argument, it only checks if it
+is a constant or not at compile time, and __builtin_choose_expr does not
+evaluate the expression that is not chosen.  Therefore, GENMASK(x++, 0)
+does only evaluate x++ once.
 
-gcc would output:
+Commit 95b980d62d52 ("linux/bits.h: make BIT(), GENMASK(), and friends
+available in assembly") made the macros in linux/bits.h available in
+assembly.  Since BUILD_BUG_OR_ZERO() is not asm compatible, disable the
+checks if the file is included in an asm file.
 
-./include/linux/compiler.h:350:38: error: call to `__compiletime_assert_9' declared with attribute error: BUILD_BUG_ON failed: 0
-  _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
+Due to bugs in GCC versions before 4.9 [0], disable the check if building
+with a too old GCC compiler.
 
-However, it was not the BUILD_BUG_ON(0) that failed, so it should say 1
-instead of 0. With this patch, we use __COUNTER__ instead of __LINE__, so
-each BUILD_BUG_ON() gets a different function name and the correct
-condition is printed:
+[0]: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=19449
 
-./include/linux/compiler.h:350:38: error: call to `__compiletime_assert_0' declared with attribute error: BUILD_BUG_ON failed: 1
-  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-
-Signed-off-by: Vegard Nossum <vegard.nossum@oracle.com>
+Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Reviewed-by: Daniel Santos <daniel.santos@pobox.com>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Ian Abbott <abbotti@mev.co.uk>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Haren Myneni <haren@us.ibm.com>
 Cc: Joe Perches <joe@perches.com>
-Link: http://lkml.kernel.org/r/20200331112637.25047-1-vegard.nossum@oracle.com
+Cc: Johannes Berg <johannes@sipsolutions.net>
+Cc: lkml <linux-kernel@vger.kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lkml.kernel.org/r/20200308193954.2372399-1-rikard.falkeborn@gmail.com
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/compiler.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/bits.h | 22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-index 5e88e7e33abec..034b0a644efcc 100644
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -347,7 +347,7 @@ static inline void *offset_to_ptr(const int *off)
-  * compiler has support to do so.
+diff --git a/include/linux/bits.h b/include/linux/bits.h
+index 669d69441a625..f108302a3121c 100644
+--- a/include/linux/bits.h
++++ b/include/linux/bits.h
+@@ -18,12 +18,30 @@
+  * position @h. For example
+  * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
   */
- #define compiletime_assert(condition, msg) \
--	_compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
-+	_compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+-#define GENMASK(h, l) \
++#if !defined(__ASSEMBLY__) && \
++	(!defined(CONFIG_CC_IS_GCC) || CONFIG_GCC_VERSION >= 49000)
++#include <linux/build_bug.h>
++#define GENMASK_INPUT_CHECK(h, l) \
++	(BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
++		__builtin_constant_p((l) > (h)), (l) > (h), 0)))
++#else
++/*
++ * BUILD_BUG_ON_ZERO is not available in h files included from asm files,
++ * disable the input check if that is the case.
++ */
++#define GENMASK_INPUT_CHECK(h, l) 0
++#endif
++
++#define __GENMASK(h, l) \
+ 	(((~UL(0)) - (UL(1) << (l)) + 1) & \
+ 	 (~UL(0) >> (BITS_PER_LONG - 1 - (h))))
++#define GENMASK(h, l) \
++	(GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
  
- #define compiletime_assert_atomic_type(t)				\
- 	compiletime_assert(__native_word(t),				\
+-#define GENMASK_ULL(h, l) \
++#define __GENMASK_ULL(h, l) \
+ 	(((~ULL(0)) - (ULL(1) << (l)) + 1) & \
+ 	 (~ULL(0) >> (BITS_PER_LONG_LONG - 1 - (h))))
++#define GENMASK_ULL(h, l) \
++	(GENMASK_INPUT_CHECK(h, l) + __GENMASK_ULL(h, l))
+ 
+ #endif	/* __LINUX_BITS_H */
 -- 
 2.20.1
 
