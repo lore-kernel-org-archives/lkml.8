@@ -2,133 +2,189 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AA5EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:26:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8990C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C84A208FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:26:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586953571;
-	bh=Fb5r/XOVrXihGT7UJi2/W3a1v9RW/SP/vpu9XGfwCTQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Gd+K5Y66dw3lUA9GBXBf8d0uaT55cCqYBeFd/wz78kQfxArvWPiIyYLa5qmbhGTD7
-	 E5K9XN4+daqWUMc4idaCRLd8m8en9bBsVIHWtLKdOXrqqQpYX7eSGimATvOYvuu3OL
-	 jdMLc7qbCL73D2AFqCWFennAdwdXK0akk8Uz3k4o=
+	by mail.kernel.org (Postfix) with ESMTP id 8217020936
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:26:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hDPG2ZP6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S369246AbgDOM0J (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:26:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39282 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409176AbgDOLpb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:45:31 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 604F92166E;
-        Wed, 15 Apr 2020 11:45:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951129;
-        bh=Fb5r/XOVrXihGT7UJi2/W3a1v9RW/SP/vpu9XGfwCTQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z1DikP5+DhMxh++QP4lTk/zOFZN28GzPDGlV28VB2OZT1vjVjPV4CxoDY0hnc/EmE
-         xcRehmXpP0eiyClwn7xB9uImHKOQBKdgwTyUOKQt44MN2v3Psq4XDhJvpoI4qvejT8
-         AJOoHYnSozUzJ0uWFuKv6DIDcAOV1jpuvJgeQT38=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
-        Alex Elder <elder@linaro.org>,
-        Sean Tranchetti <stranche@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 41/84] net: qualcomm: rmnet: Allow configuration updates to existing devices
-Date:   Wed, 15 Apr 2020 07:43:58 -0400
-Message-Id: <20200415114442.14166-41-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415114442.14166-1-sashal@kernel.org>
-References: <20200415114442.14166-1-sashal@kernel.org>
+        id S369255AbgDOM0U (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:26:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47804 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S369235AbgDOM0D (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 08:26:03 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8A71C061A0C;
+        Wed, 15 Apr 2020 05:26:02 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id g12so10924149wmh.3;
+        Wed, 15 Apr 2020 05:26:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:references:in-reply-to:subject:date:message-id
+         :mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=skeYTYKzmzw0IuNoRhgN9uuu5AMw+zDWRV9qTkZ9/wo=;
+        b=hDPG2ZP6hRayOhxEl9bl96wKYSY4jI3Pl4DzEBF/myeQDcEbcS9vgku/khXjehcANC
+         7rTxMn9Jf8keGqwZ3Ou/eVkjpFx6lskO/XH1+ypIrr+hFPRpEQdPE5CKnnMWCmKNYmtj
+         WX9g+PPxXeqn9ci5LhVNWQx8SfNXT0AV5I9eAVw/VGrbekPpaiHbHJgO+XiWsqtHVxZv
+         yCGIJ/4jAId0wNWXvYVHMr44yXGQB/E7W9jzwzQGa5w4zovl7M3oSsk2L/i2sAlHLPX/
+         HsSb+MdwIW6WPr6Wh4GOx2qwOkXrwBafKhOqxNNGr32WTjkakff0USOZ7nOZTqiSeGTN
+         ziDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
+         :message-id:mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=skeYTYKzmzw0IuNoRhgN9uuu5AMw+zDWRV9qTkZ9/wo=;
+        b=Kabw1x+ouHCuIw/2eAk7qsSjo4OLiSjYPMAK+n1sNdo81M4QwkYEcafPxqMN6o+oDf
+         RC83FRONjeynxw5KL2lYZ/vfZVzAgErxBkWPHPE1GAuNLo7Cc1djEnmKb8LgsrMDAMxv
+         zMu8KGsaOAX1/Ymr3fPYNFFvH7hzCmrdmgHSuSEt3jhzmYlfOFBjs28eJigBOVrKABt7
+         F/L7LcO1vbfgyo/7gBvCkAuSQfQq13EdWBJnR5SxNmJoGIfspCxs3pn8do/gizX2NKfP
+         +RVQ+mt2kSaADJsGslqF2fYPX34tY5/Zj+Dx3iB23+xbI3/0fbE6OruVpUpW2sFJFnAe
+         VhSw==
+X-Gm-Message-State: AGi0PubitDKhCN6gKn+mdieUsULTFPY+Zk8Fsqj0q9BQM6YyrsbY+1E7
+        zttyMiiCgpBAlOCyCmwt2cc=
+X-Google-Smtp-Source: APiQypJMJYcnfbVBUme6jDVi8ODCrKszURt7owpXGAMirtadx3ULLtgfHaIuqV50q7p41kabgFStgA==
+X-Received: by 2002:a7b:c759:: with SMTP id w25mr5489166wmk.68.1586953561420;
+        Wed, 15 Apr 2020 05:26:01 -0700 (PDT)
+Received: from AnsuelXPS (host93-255-dynamic.47-79-r.retail.telecomitalia.it. [79.47.255.93])
+        by smtp.gmail.com with ESMTPSA id j68sm23853010wrj.32.2020.04.15.05.25.59
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 15 Apr 2020 05:26:00 -0700 (PDT)
+From:   <ansuelsmth@gmail.com>
+To:     "'Rob Herring'" <robh@kernel.org>
+Cc:     "'Andy Gross'" <agross@kernel.org>,
+        "'Bjorn Andersson'" <bjorn.andersson@linaro.org>,
+        "'Kishon Vijay Abraham I'" <kishon@ti.com>,
+        "'Mark Rutland'" <mark.rutland@arm.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <20200403002608.946-1-ansuelsmth@gmail.com> <20200403002608.946-2-ansuelsmth@gmail.com> <20200414173838.GA29176@bogus>
+In-Reply-To: <20200414173838.GA29176@bogus>
+Subject: R: [PATCH 2/2] devicetree: bindings: phy: Document dwc3 qcom phy
+Date:   Wed, 15 Apr 2020 14:25:58 +0200
+Message-ID: <00bb01d61321$05bf9b20$113ed160$@gmail.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: it
+Thread-Index: AQHTPQd2IBqR3z6CHNBmVjX+r+AcmAGqTdeSAYw2ek+oZhM/sA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>
+> On Fri, Apr 03, 2020 at 02:26:05AM +0200, Ansuel Smith wrote:
+> > Document dwc3 qcom phy hs and ss phy bindings needed to correctly
+> > inizialize and use usb on ipq806x SoC
+> >
+> > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> > ---
+> >  .../bindings/phy/qcom,dwc3-hs-usb-phy.yaml    | 65
+> +++++++++++++++++++
+> >  .../bindings/phy/qcom,dwc3-ss-usb-phy.yaml    | 65
+> +++++++++++++++++++
+> >  2 files changed, 130 insertions(+)
+> >  create mode 100644
+> Documentation/devicetree/bindings/phy/qcom,dwc3-hs-usb-phy.yaml
+> >  create mode 100644
+> Documentation/devicetree/bindings/phy/qcom,dwc3-ss-usb-phy.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/phy/qcom,dwc3-hs-usb-
+> phy.yaml b/Documentation/devicetree/bindings/phy/qcom,dwc3-hs-usb-
+> phy.yaml
+> > new file mode 100644
+> > index 000000000000..0bb59e3c2ab8
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/phy/qcom,dwc3-hs-usb-
+> phy.yaml
+> > @@ -0,0 +1,65 @@
+> > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/phy/qcom,dwc3-hs-usb-phy.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Qualcomm DWC3 HS PHY CONTROLLER
+> > +
+> > +maintainers:
+> > +  - Ansuel Smith <ansuelsmth@gmail.com>
+> > +
+> > +description:
+> > +  DWC3 PHY nodes are defined to describe on-chip Synopsis Physical
+> layer
+> > +  controllers. Each DWC3 PHY controller should have its own node.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: qcom,dwc3-hs-usb-phy
+> > +
+> > +  "#phy-cells":
+> > +    const: 0
+> > +
+> > +  regmap:
+> > +    maxItems: 1
+> > +    description: phandle to usb3 dts definition
+> > +
+> > +  clocks:
+> > +    minItems: 1
+> > +    maxItems: 2
+> > +
+> > +  clock-names:
+> > +    minItems: 1
+> > +    maxItems: 2
+> > +    description: |
+> > +      - "ref" Is required
+> > +      - "xo"	Optional external reference clock
+> > +    items:
+> > +      - const: ref
+> > +      - const: xo
+> > +
+> > +required:
+> > +  - compatible
+> > +  - "#phy-cells"
+> > +  - regmap
+> > +  - clocks
+> > +  - clock-names
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
+> > +
+> > +    hs_phy_0: hs_phy_0 {
+> > +      compatible = "qcom,dwc3-hs-usb-phy";
+> > +      regmap = <&usb3_0>;
+> 
+> If the registers for the phy are part of 'qcom,dwc3' then make this node
+> a child of it.
+> 
 
-[ Upstream commit 2abb5792387eb188b12051337d5dcd2cba615cb0 ]
+Making this node a child of qcom,dwc3 cause malfunction of the driver.
 
-This allows the changelink operation to succeed if the mux_id was
-specified as an argument. Note that the mux_id must match the
-existing mux_id of the rmnet device or should be an unused mux_id.
-
-Fixes: 1dc49e9d164c ("net: rmnet: do not allow to change mux id if mux id is duplicated")
-Reported-and-tested-by: Alex Elder <elder@linaro.org>
-Signed-off-by: Sean Tranchetti <stranche@codeaurora.org>
-Signed-off-by: Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- .../ethernet/qualcomm/rmnet/rmnet_config.c    | 31 ++++++++++++-------
- 1 file changed, 19 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c b/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
-index fbf4cbcf1a654..02cdbb22d3355 100644
---- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
-+++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
-@@ -279,7 +279,6 @@ static int rmnet_changelink(struct net_device *dev, struct nlattr *tb[],
- {
- 	struct rmnet_priv *priv = netdev_priv(dev);
- 	struct net_device *real_dev;
--	struct rmnet_endpoint *ep;
- 	struct rmnet_port *port;
- 	u16 mux_id;
- 
-@@ -294,19 +293,27 @@ static int rmnet_changelink(struct net_device *dev, struct nlattr *tb[],
- 
- 	if (data[IFLA_RMNET_MUX_ID]) {
- 		mux_id = nla_get_u16(data[IFLA_RMNET_MUX_ID]);
--		if (rmnet_get_endpoint(port, mux_id)) {
--			NL_SET_ERR_MSG_MOD(extack, "MUX ID already exists");
--			return -EINVAL;
--		}
--		ep = rmnet_get_endpoint(port, priv->mux_id);
--		if (!ep)
--			return -ENODEV;
- 
--		hlist_del_init_rcu(&ep->hlnode);
--		hlist_add_head_rcu(&ep->hlnode, &port->muxed_ep[mux_id]);
-+		if (mux_id != priv->mux_id) {
-+			struct rmnet_endpoint *ep;
-+
-+			ep = rmnet_get_endpoint(port, priv->mux_id);
-+			if (!ep)
-+				return -ENODEV;
- 
--		ep->mux_id = mux_id;
--		priv->mux_id = mux_id;
-+			if (rmnet_get_endpoint(port, mux_id)) {
-+				NL_SET_ERR_MSG_MOD(extack,
-+						   "MUX ID already exists");
-+				return -EINVAL;
-+			}
-+
-+			hlist_del_init_rcu(&ep->hlnode);
-+			hlist_add_head_rcu(&ep->hlnode,
-+					   &port->muxed_ep[mux_id]);
-+
-+			ep->mux_id = mux_id;
-+			priv->mux_id = mux_id;
-+		}
- 	}
- 
- 	if (data[IFLA_RMNET_FLAGS]) {
--- 
-2.20.1
+> > +      clocks = <&gcc USB30_0_UTMI_CLK>;
+> > +      clock-names = "ref";
+> > +      #phy-cells = <0>;
+> > +    };
+> > +
+> > +    usb3_0: usb3@110f8800 {
+> > +      compatible = "qcom,dwc3", "syscon";
+> > +      reg = <0x110f8800 0x8000>;
+> > +
+> > +      /* ... */
+> 
+> Incomplete examples should or will fail validation.
+> 
+> > +    };
 
