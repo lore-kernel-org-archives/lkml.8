@@ -2,89 +2,123 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 458E6C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4887DC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:28:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E0CC20787
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:27:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 204D820787
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:28:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I1dbtE9s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408607AbgDOK1Z (ORCPT
+        id S2408612AbgDOK2L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 06:27:25 -0400
-Received: from sauhun.de ([88.99.104.3]:51666 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896454AbgDOKW5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 06:22:57 -0400
-Received: from localhost (p54B33507.dip0.t-ipconnect.de [84.179.53.7])
-        by pokefinder.org (Postfix) with ESMTPSA id 450FF2C1FF1;
-        Wed, 15 Apr 2020 12:21:59 +0200 (CEST)
-Date:   Wed, 15 Apr 2020 12:21:58 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Dejin Zheng <zhengdejin5@gmail.com>
-Cc:     michal.simek@xilinx.com, wsa+renesas@sang-engineering.com,
-        pierre-yves.mordret@st.com, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, alain.volmat@st.com,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] i2c: busses: convert to
- devm_platform_get_and_ioremap_resource
-Message-ID: <20200415102158.GH1141@ninjato>
-References: <20200414134827.18674-1-zhengdejin5@gmail.com>
+        Wed, 15 Apr 2020 06:28:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56944 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2896469AbgDOKW4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 06:22:56 -0400
+Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FB62C061A10
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 03:22:24 -0700 (PDT)
+Received: by mail-vs1-xe43.google.com with SMTP id 1so1861869vsl.9
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 03:22:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LzzdfLUwUBzFYRmKpHR/vr/78mFa7TyklDw5HVocAjI=;
+        b=I1dbtE9seuOpci5uQnbnkHGkhrAmN7qweG/vSXEJ+2myJ/NjuLIUlEfkNHUjh4c506
+         zro/TedmPpqbKelc/XCRAl09Wa8x+VaDI0YYGZVY//z91gFTicnWaWts+nl51WTgi/+g
+         r71FKwUhBsACCxTvdrB0i6mFkQ3wN725EOPkf2QLLNsMx41xy5t88cY35K1hVQMmM47o
+         gWnoEZ0hkPslJw8N4RHFLRHvkhQfQd7Hy/62YzyrlMTgk8djWbsqjYJjoV3oQCLc5rVJ
+         eu2ofYdKv9gfotYwHAKdkfxcF5FGrl7n/ZSU6rm26UeH6CHXsDsKMinqTZcFXfTOtjZX
+         I/EQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LzzdfLUwUBzFYRmKpHR/vr/78mFa7TyklDw5HVocAjI=;
+        b=EH7d8qy/9tkGClQTg9rpdMvbuXcs2AvonwddRXooo2JJ97HgqN5eAhMcN/OMRLEvSO
+         wjs8gGzeameRrmq9ZGipSuAtMRI6EQxloIhakqL1x3Kznlyeb+BLuytGh75d2ZiywPyc
+         epKNQ7UVZrhkK5YkEFbjlGzYR7E+RG0rK5xsnrumq2oh0COe0rJ0iwtxVMW6mV0owjZi
+         td56IjGrmu6E9Et/UUuZ5wCaQ6gJgoOpVE1IkRSTnhWi+nb6xda9m8m8DhQup+WFUqfh
+         LoW/qxtFH79PBUK96EpmKljIbenrJkI36/Jz655ubpfEcdQt61GXLRttJCobaCUQDoF7
+         dIdw==
+X-Gm-Message-State: AGi0PuYQEmutglsnU0hnlDDv2mBFs2widcBducxr5cASKPKOtsW1LRzY
+        1zC1p3/mEvxnP7rcWlynDAz82opTCBnrGl12iG9rjQ==
+X-Google-Smtp-Source: APiQypKN37l7EKhD4x9xU2qvhkdIXUITkcuPG/U10KjhSNKj8LctO0ixQTgpDqbrESAV0BJVwQJ2C2CFXWsYVjybbzI=
+X-Received: by 2002:a67:8b09:: with SMTP id n9mr3621500vsd.191.1586946143715;
+ Wed, 15 Apr 2020 03:22:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="4LFBTxd4L5NLO6ly"
-Content-Disposition: inline
-In-Reply-To: <20200414134827.18674-1-zhengdejin5@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200408072105.422-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20200408072105.422-1-yamada.masahiro@socionext.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 15 Apr 2020 12:21:47 +0200
+Message-ID: <CAPDyKFrQkyBk2Xizu8_e-aHj=EzmFbg5TSaYvs66VDaE3hY_fA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] mmc: sdhci: move SDHCI_CAPABILITIES_1 to a more
+ suitable place
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        masahiroy@kernel.org, Adrian Hunter <adrian.hunter@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 8 Apr 2020 at 09:21, Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> In the SDHCI specification, the Capabilities Register (Offset 0x40h)
+> is the 64-bit width register, but in Linux, it is represented as two
+> registers, SDHCI_CAPABILITIES and SDHCI_CAPABILITIES_1 so that drivers
+> can use 32-bit register accessors.
+>
+> The upper 32-bit field is associated with SDHCI_CAPABILITIES_1.
+>
+> Move the definition of SDHCI_CAPABILITIES_1 to the correct place.
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
---4LFBTxd4L5NLO6ly
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Applied for next, thanks!
 
-On Tue, Apr 14, 2020 at 09:48:27PM +0800, Dejin Zheng wrote:
-> use devm_platform_get_and_ioremap_resource() to simplify code, which
-> contains platform_get_resource() and devm_ioremap_resource(), it also
-> get the resource for use by the following code.
->=20
-> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
-
-Applied to for-next, because it seems 'the new way' but...
-
-> -	r_mem =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	id->membase =3D devm_ioremap_resource(&pdev->dev, r_mem);
-> +	id->membase =3D devm_platform_get_and_ioremap_resource(pdev, 0, &r_mem);
-
-=2E.. guys, do you really think this one line reduction improves
-readability? Oh well...
+Kind regards
+Uffe
 
 
---4LFBTxd4L5NLO6ly
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6W4EIACgkQFA3kzBSg
-KbamCA/+PjnvKJsZh5zv3h9+f+/+k1RNX3gHTRtOpPy+Mq9fWzySA//u0arFuTEo
-fneK30U2oflrSd1cDLiX7rE3/BI9EArmZR2hfFM7TSd1/j77Tx67y12ZP+MfndNH
-I59kfBFQACoJ9QgSrClcTVVwEBUMe/kf2zpHKeXw/ly9eirKQab5hnX4f83nQI3R
-5BtIv/tnyDwvUrKB9vSiUHORa1/5ObvOmgOdwv5peyHBDyjTrkFAsmJoIwZD+iKV
-jX5K3SoBluFaxOIhw23/NwrZv0EfDLEVT6bX9Eo5Yz4ip3WiDrO2JOJiVgAelduW
-WvrIQQIlOs9RPYua8BliSYTfr8lXUESelA5Z5N50g89+ozfH/swHtm6IiubUtW4T
-q36yAh7fuZSwBwWwEO3wvu6z0moIFqw0ZecRA8ucoSRmGOBtlxQsfitJgO6O7Pi3
-6HPJN7l4ZI6DZfTz1yEOOA2TET1UH02n+5exQHJIOecj6v/cg/eUV0MumkDWQ43z
-3eyEuF1ZJT3S9HPbzinCgSms1a7CzeAyyVlJkNwthpI8W8jg1fOXvBRqb4GF4NHL
-koP5MoMDOq7wohB+8P6EIADcQ9TD5pYrc6wt0kqzRbxOIhg3h9nNs0CgPcfF4FQp
-Dqu5c1aMoa9UVSGkhIIMbIW0jBJXEV5fw1CA8LDNLC32kdhCYXw=
-=uSZW
------END PGP SIGNATURE-----
-
---4LFBTxd4L5NLO6ly--
+> ---
+>
+>  drivers/mmc/host/sdhci.h | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+> index 79dffbb731d3..b786b68e0302 100644
+> --- a/drivers/mmc/host/sdhci.h
+> +++ b/drivers/mmc/host/sdhci.h
+> @@ -220,6 +220,7 @@
+>  #define  SDHCI_CAN_64BIT_V4    0x08000000
+>  #define  SDHCI_CAN_64BIT       0x10000000
+>
+> +#define SDHCI_CAPABILITIES_1   0x44
+>  #define  SDHCI_SUPPORT_SDR50   0x00000001
+>  #define  SDHCI_SUPPORT_SDR104  0x00000002
+>  #define  SDHCI_SUPPORT_DDR50   0x00000004
+> @@ -236,8 +237,6 @@
+>  #define  SDHCI_CAN_DO_ADMA3    0x08000000
+>  #define  SDHCI_SUPPORT_HS400   0x80000000 /* Non-standard */
+>
+> -#define SDHCI_CAPABILITIES_1   0x44
+> -
+>  #define SDHCI_MAX_CURRENT              0x48
+>  #define  SDHCI_MAX_CURRENT_LIMIT       0xFF
+>  #define  SDHCI_MAX_CURRENT_330_MASK    0x0000FF
+> --
+> 2.17.1
+>
