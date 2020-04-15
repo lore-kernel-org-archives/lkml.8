@@ -2,95 +2,89 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 874D3C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0304C2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 626FB2054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:57:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="K+4GfYRW"
+	by mail.kernel.org (Postfix) with ESMTP id A42172054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:57:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586962671;
+	bh=j0TEGO+vMv7fuqHKMcY5KbWia6FmU4cvzX/dty5UFEk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hlbZmKNj0cW/jZZfgKFWxIYacVLYgfHEInHSINm7i3yJKabFcbHqlVpD59SiXgYay
+	 nYYgs0T9L1bGDaNp1bVRslyrEc5aGr81nJqg1js1qz02XZYikRkvemvMoZsYTiSUjd
+	 uYUn3RVEHSpfZl62BWcyDFEglrfegGz4SWL4P5ZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392769AbgDOO5c (ORCPT
+        id S2394036AbgDOO5u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:57:32 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:53661 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390410AbgDOO5O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 10:57:14 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 492QS61xD1z9v13t;
-        Wed, 15 Apr 2020 16:57:10 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=K+4GfYRW; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id l7_0scJaQh56; Wed, 15 Apr 2020 16:57:10 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 492QS60phYz9v13r;
-        Wed, 15 Apr 2020 16:57:10 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1586962630; bh=1Xb7ETTN09xsr/258GQZjtHOSSD6VgHkXQ6yunhYxr8=;
-        h=From:Subject:To:Cc:Date:From;
-        b=K+4GfYRWGpfU2GiiSNnqBM6cOtyEfZMohzRvwcz+6rYZ1mvFtIh8UtmpW1x1GJO6n
-         UtWLVXsYPMY2wURgbUiSDVcc86+3acIZ+S2EdpNXT8mrsrEE9Doiz9hPsQVKBdvg1H
-         5dPpa32TC8c5gFI9XS5lj20WbeDFn9UFbKiryqY4=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7E2918BB6C;
-        Wed, 15 Apr 2020 16:57:11 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id kOjgO8qiAm7j; Wed, 15 Apr 2020 16:57:11 +0200 (CEST)
-Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2F59F8B931;
-        Wed, 15 Apr 2020 16:57:11 +0200 (CEST)
-Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 05A9E6578F; Wed, 15 Apr 2020 14:57:11 +0000 (UTC)
-Message-Id: <1492bb150c1aaa53d99a604b49992e60ea20cd5f.1586962582.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH] powerpc/uaccess: Don't set KUEP by default on book3s/32
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Wed, 15 Apr 2020 14:57:11 +0000 (UTC)
+        Wed, 15 Apr 2020 10:57:50 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:45913 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392861AbgDOO5m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 10:57:42 -0400
+Received: by mail-ot1-f65.google.com with SMTP id i22so120205otp.12;
+        Wed, 15 Apr 2020 07:57:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Md07fNLqLIHZrcf6yHruBR5stSBvgH18ECgUZmAAWJc=;
+        b=d3XITQ+HoGkH1S3Epjy1JdyjDvXCBX1ErKJKnUv9C/4AT377XNOiRF6VCU9FxM2M8y
+         mhg6Wiyp/zOWR7wsvKvlw3y+Iw3LWtOAn4UE9qydtdo/9TmcFYomsgYMba4TnRClGbDS
+         dxnRSF7XJvOVOr65QF2nzRnlRo63fGSs+P56+4TOZDmcbnNLizirWBLwJ3XCcxCWafJP
+         H53coGRSryQkIttnElVznAPKqjqqUN9uZEc+yHZEWdea6b3L0s8yTResCEpanfnK/P9U
+         8Bxj8hBqsWA0vxUeQMyIlYivStCuvw80nI3PWVO1rk5X5E/UpIPK51Ie/o2XXw0FVvSL
+         5udw==
+X-Gm-Message-State: AGi0PuZTVw6KAoq11S4lis004h3nNorTfoCSzs5ydY/SPsUZF8crmQfc
+        NjWRz14c5koMZpae5TMP3w==
+X-Google-Smtp-Source: APiQypI+K9Fe9kS2hXHo19Qwp7IVK/mV6pz5Na84hA37jXreGi0sZ498aqbZYHTX0TIMHMh8Pw/pUQ==
+X-Received: by 2002:a05:6830:1185:: with SMTP id u5mr5502347otq.54.1586962661357;
+        Wed, 15 Apr 2020 07:57:41 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id k13sm5232247oou.27.2020.04.15.07.57.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2020 07:57:40 -0700 (PDT)
+Received: (nullmailer pid 8889 invoked by uid 1000);
+        Wed, 15 Apr 2020 14:57:39 -0000
+Date:   Wed, 15 Apr 2020 09:57:39 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Tobias Schramm <t.schramm@manjaro.org>
+Cc:     Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tobias Schramm <t.schramm@manjaro.org>
+Subject: Re: [RESEND v6 2/3] dt-bindings: power: supply: add cw2015_battery
+ bindings
+Message-ID: <20200415145739.GA7406@bogus>
+References: <20200414125208.1091989-1-t.schramm@manjaro.org>
+ <20200414125208.1091989-3-t.schramm@manjaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200414125208.1091989-3-t.schramm@manjaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On book3s/32, KUEP is an heavy process as it requires to
-set/unset the NX bit in each of the 12 user segments
-everytime the kernel is entered/exited from/to user space.
+On Tue, 14 Apr 2020 14:52:07 +0200, Tobias Schramm wrote:
+> This patch adds the dts binding schema for the cw2015 fuel gauge.
+> 
+> Signed-off-by: Tobias Schramm <t.schramm@manjaro.org>
+> ---
+>  .../bindings/power/supply/cw2015_battery.yaml | 82 +++++++++++++++++++
+>  1 file changed, 82 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/cw2015_battery.yaml
+> 
 
-Don't select KUEP by default on book3s/32.
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- arch/powerpc/platforms/Kconfig.cputype | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/powerpc/platforms/Kconfig.cputype b/arch/powerpc/platforms/Kconfig.cputype
-index 0c7151c98b56..11412078e732 100644
---- a/arch/powerpc/platforms/Kconfig.cputype
-+++ b/arch/powerpc/platforms/Kconfig.cputype
-@@ -377,7 +377,7 @@ config PPC_HAVE_KUEP
- config PPC_KUEP
- 	bool "Kernel Userspace Execution Prevention"
- 	depends on PPC_HAVE_KUEP
--	default y
-+	default y if !PPC_BOOK3S_32
- 	help
- 	  Enable support for Kernel Userspace Execution Prevention (KUEP)
- 
--- 
-2.25.0
-
+If a tag was not added on purpose, please state why and what changed.
