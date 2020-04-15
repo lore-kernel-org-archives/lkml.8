@@ -2,263 +2,95 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46A35C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:22:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF83CC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:22:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25EE82084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:22:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7B0420857
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:22:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="TX8yNEUF";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="u9iuXcN8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410885AbgDORWr (ORCPT
+        id S2410900AbgDORW6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 13:22:47 -0400
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:49966 "EHLO
-        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2406316AbgDORWl (ORCPT
+        Wed, 15 Apr 2020 13:22:58 -0400
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:50063 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2410883AbgDORWs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 13:22:41 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=bo.liu@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TvdP111_1586971349;
-Received: from rsjd01523.et2sqa(mailfrom:bo.liu@linux.alibaba.com fp:SMTPD_---0TvdP111_1586971349)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 16 Apr 2020 01:22:35 +0800
-Date:   Thu, 16 Apr 2020 01:22:29 +0800
-From:   Liu Bo <bo.liu@linux.alibaba.com>
-To:     Vivek Goyal <vgoyal@redhat.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, virtio-fs@redhat.com, miklos@szeredi.hu,
-        stefanha@redhat.com, dgilbert@redhat.com, mst@redhat.com
-Subject: Re: [PATCH 20/20] fuse,virtiofs: Add logic to free up a memory range
-Message-ID: <20200415172229.GA121484@rsjd01523.et2sqa>
-Reply-To: bo.liu@linux.alibaba.com
-References: <20200304165845.3081-1-vgoyal@redhat.com>
- <20200304165845.3081-21-vgoyal@redhat.com>
- <20200326000904.GA34937@rsjd01523.et2sqa>
- <20200327140114.GB32717@redhat.com>
- <20200327220606.GA119028@rsjd01523.et2sqa>
- <20200414193045.GB210453@redhat.com>
+        Wed, 15 Apr 2020 13:22:48 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 5AE2958054D;
+        Wed, 15 Apr 2020 13:22:46 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Wed, 15 Apr 2020 13:22:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=+9pS+Lww9pp81wlpMSHXf6JJJqt
+        59DLNDjOv+mJX+Fo=; b=TX8yNEUFAVsOBedp5kU71xNy5+dKTRS3wK32rA9LmoR
+        JkRDf3NgmwfdNo0HWR65mMXUGxEUpy+ehRRpGkQvQJQNCM1EbKxVoLD7qkwB5tXq
+        foNdXnpB/cwC+MBwvD0uuUsZJ9ryvE8OsX6aDQY3kSD8+2+jCWkMysHt3hDjdmJ3
+        HL2Rs+9Wgmhjlj27diaPrvX8h8MeSiGxuoIZ6qCVjubERN7zoQnUULn+hclNfzme
+        ovM2AIZ0jKP7BWwUtDemy4YEAyHeD/tS4IVw3/ouAblZm08LIfkDWu+LHiacXZcB
+        cfhhYMf/xsN63UgRJfWIX92odxu16b+73lzuRz+RsGg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=+9pS+L
+        ww9pp81wlpMSHXf6JJJqt59DLNDjOv+mJX+Fo=; b=u9iuXcN8qiB7ininjhOfQN
+        L2ND+zrAz0I3vdOhLul7STU3IpQoYs6QxyfkILTWP3fzskU1Qj7qEFTSSg7QScsG
+        50ffkwXcLUGAhTCeJTRgiT1fjbjhe7efz3l7f36YTDzIelWP95YQ3rJbbapkmf/A
+        7UD2v8LycpqMC9S3t700yzC7A7RA7r9gXPHxHsR9wnpd+HcPCQdNGx0FjuWTQ1M0
+        vhMaF6WQWgUduEksaJVBcWUhM3fh8AnD4sd9JATOBUQ/rLk8TqNukFafCz2Sbjf6
+        4n3GjuXpXoqEvX0UH6m+QKm6Tih/2j1ASWRcTn3b6aAUw5ETS+h2xPmGJSr28oHw
+        ==
+X-ME-Sender: <xms:5UKXXsPHVwV25eeKv6wAPxK6kuYfWuK31vQSugDFMSR0v0asgCGdkw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrfeefgddutdefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrddutd
+    ejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepghhr
+    vghgsehkrhhorghhrdgtohhm
+X-ME-Proxy: <xmx:5UKXXkg8pC5dMvc1k9xcjLEOTDYYiJ13H6H3hqSshYYQ8_e7spMJDg>
+    <xmx:5UKXXplBQuQaKW-VRAnippP3GHrkpTOcYeXqK3EveX-8p3RspPDNVA>
+    <xmx:5UKXXgid11FN-OACi0LpvSrCMSrk9f-1G8GEGvqpIaZojX2nTGSjWA>
+    <xmx:5kKXXsAbo-aeGlWQR78SNMQsgTTyyDCigVuQko-r6KC_H56Ev2dJOA>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id C69EA3280067;
+        Wed, 15 Apr 2020 13:22:44 -0400 (EDT)
+Date:   Wed, 15 Apr 2020 19:22:43 +0200
+From:   Greg KH <greg@kroah.com>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, Richard Palethorpe <rpalethorpe@suse.com>,
+        Kees Cook <keescook@chromium.org>, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org, security@kernel.org, wg@grandegger.com,
+        mkl@pengutronix.de, davem@davemloft.net
+Subject: Re: [PATCH AUTOSEL 5.6 068/129] slcan: Don't transmit uninitialized
+ stack data in padding
+Message-ID: <20200415172243.GA3661754@kroah.com>
+References: <20200415113445.11881-1-sashal@kernel.org>
+ <20200415113445.11881-68-sashal@kernel.org>
+ <87h7xkisln.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200414193045.GB210453@redhat.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <87h7xkisln.fsf@x220.int.ebiederm.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 03:30:45PM -0400, Vivek Goyal wrote:
-> On Sat, Mar 28, 2020 at 06:06:06AM +0800, Liu Bo wrote:
-> > On Fri, Mar 27, 2020 at 10:01:14AM -0400, Vivek Goyal wrote:
-> > > On Thu, Mar 26, 2020 at 08:09:05AM +0800, Liu Bo wrote:
-> > > 
-> > > [..]
-> > > > > +/*
-> > > > > + * Find first mapping in the tree and free it and return it. Do not add
-> > > > > + * it back to free pool. If fault == true, this function should be called
-> > > > > + * with fi->i_mmap_sem held.
-> > > > > + */
-> > > > > +static struct fuse_dax_mapping *inode_reclaim_one_dmap(struct fuse_conn *fc,
-> > > > > +							 struct inode *inode,
-> > > > > +							 bool fault)
-> > > > > +{
-> > > > > +	struct fuse_inode *fi = get_fuse_inode(inode);
-> > > > > +	struct fuse_dax_mapping *dmap;
-> > > > > +	int ret;
-> > > > > +
-> > > > > +	if (!fault)
-> > > > > +		down_write(&fi->i_mmap_sem);
-> > > > > +
-> > > > > +	/*
-> > > > > +	 * Make sure there are no references to inode pages using
-> > > > > +	 * get_user_pages()
-> > > > > +	 */
-> > > > > +	ret = fuse_break_dax_layouts(inode, 0, 0);
-> > > > 
-> > > > Hi Vivek,
-> > > > 
-> > > > This patch is enabling inline reclaim for fault path, but fault path
-> > > > has already holds a locked exceptional entry which I believe the above
-> > > > fuse_break_dax_layouts() needs to wait for, can you please elaborate
-> > > > on how this can be avoided?
-> > > > 
-> > > 
-> > > Hi Liubo,
-> > > 
-> > > Can you please point to the exact lock you are referring to. I will
-> > > check it out. Once we got rid of needing to take inode lock in
-> > > reclaim path, that opended the door to do inline reclaim in fault
-> > > path as well. But I was not aware of this exceptional entry lock.
-> > 
-> > Hi Vivek,
-> > 
-> > dax_iomap_{pte,pmd}_fault has called grab_mapping_entry to get a
-> > locked entry, when this fault gets into inline reclaim, would
-> > fuse_break_dax_layouts wait for the locked exceptional entry which is
-> > locked in dax_iomap_{pte,pmd}_fault?
+On Wed, Apr 15, 2020 at 12:09:08PM -0500, Eric W. Biederman wrote:
 > 
-> Hi Liu Bo,
-> 
-> This is a good point. Indeed it can deadlock the way code is written
-> currently.
->
+> How does this differ from Greg's backports of this patches?
 
-It's 100% reproducible on 4.19, but not on 5.x which has xarray for
-dax_layout_busy_page.
+His tool didn't catch that they are already in a merged tree, it's a few
+steps later that this happens :)
 
-It was weird that on 5.x kernel the deadlock is gone, it turned out
-that xarray search in dax_layout_busy_page simply skips the empty
-locked exceptional entry, I didn't get deeper to find out whether it's
-reasonable, but with that 5.x doesn't run to deadlock.
-
-thanks,
-liubo
-
-> Currently we are calling fuse_break_dax_layouts() on the whole file
-> in memory inline reclaim path. I am thinking of changing that. Instead,
-> find a mapped memory range and file offset and call
-> fuse_break_dax_layouts() only on that range (2MB). This should ensure
-> that we don't try to break dax layout in the range where we are holding
-> exceptional entry lock and avoid deadlock possibility.
-> 
-> This also has added benefit that we don't have to unmap the whole
-> file in an attempt to reclaim one memory range. We will unmap only
-> a portion of file and that should be good from performance point of
-> view.
-> 
-> Here is proof of concept patch which applies on top of my internal 
-> tree.
-> 
-> ---
->  fs/fuse/file.c |   72 +++++++++++++++++++++++++++++++++++++++------------------
->  1 file changed, 50 insertions(+), 22 deletions(-)
-> 
-> Index: redhat-linux/fs/fuse/file.c
-> ===================================================================
-> --- redhat-linux.orig/fs/fuse/file.c	2020-04-14 13:47:19.493780528 -0400
-> +++ redhat-linux/fs/fuse/file.c	2020-04-14 14:58:26.814079643 -0400
-> @@ -4297,13 +4297,13 @@ static int fuse_break_dax_layouts(struct
->          return ret;
->  }
->  
-> -/* Find first mapping in the tree and free it. */
-> -static struct fuse_dax_mapping *
-> -inode_reclaim_one_dmap_locked(struct fuse_conn *fc, struct inode *inode)
-> +/* Find first mapped dmap for an inode and return file offset. Caller needs
-> + * to hold inode->i_dmap_sem lock either shared or exclusive. */
-> +static struct fuse_dax_mapping *inode_lookup_first_dmap(struct fuse_conn *fc,
-> +							struct inode *inode)
->  {
->  	struct fuse_inode *fi = get_fuse_inode(inode);
->  	struct fuse_dax_mapping *dmap;
-> -	int ret;
->  
->  	for (dmap = fuse_dax_interval_tree_iter_first(&fi->dmap_tree, 0, -1);
->  	     dmap;
-> @@ -4312,18 +4312,6 @@ inode_reclaim_one_dmap_locked(struct fus
->  		if (refcount_read(&dmap->refcnt) > 1)
->  			continue;
->  
-> -		ret = reclaim_one_dmap_locked(fc, inode, dmap);
-> -		if (ret < 0)
-> -			return ERR_PTR(ret);
-> -
-> -		/* Clean up dmap. Do not add back to free list */
-> -		dmap_remove_busy_list(fc, dmap);
-> -		dmap->inode = NULL;
-> -		dmap->start = dmap->end = 0;
-> -
-> -		pr_debug("fuse: %s: reclaimed memory range. inode=%px,"
-> -			 " window_offset=0x%llx, length=0x%llx\n", __func__,
-> -			 inode, dmap->window_offset, dmap->length);
->  		return dmap;
->  	}
->  
-> @@ -4335,30 +4323,70 @@ inode_reclaim_one_dmap_locked(struct fus
->   * it back to free pool. If fault == true, this function should be called
->   * with fi->i_mmap_sem held.
->   */
-> -static struct fuse_dax_mapping *inode_reclaim_one_dmap(struct fuse_conn *fc,
-> -							 struct inode *inode,
-> -							 bool fault)
-> +static struct fuse_dax_mapping *
-> +inode_inline_reclaim_one_dmap(struct fuse_conn *fc, struct inode *inode,
-> +			      bool fault)
->  {
->  	struct fuse_inode *fi = get_fuse_inode(inode);
->  	struct fuse_dax_mapping *dmap;
-> +	u64 dmap_start, dmap_end;
->  	int ret;
->  
->  	if (!fault)
->  		down_write(&fi->i_mmap_sem);
->  
-> +	/* Lookup a dmap and corresponding file offset to reclaim. */
-> +	down_read(&fi->i_dmap_sem);
-> +	dmap = inode_lookup_first_dmap(fc, inode);
-> +	if (dmap) {
-> +		dmap_start = dmap->start;
-> +		dmap_end = dmap->end;
-> +	}
-> +	up_read(&fi->i_dmap_sem);
-> +
-> +	if (!dmap)
-> +		goto out_mmap_sem;
->  	/*
->  	 * Make sure there are no references to inode pages using
->  	 * get_user_pages()
->  	 */
-> -	ret = fuse_break_dax_layouts(inode, 0, 0);
-> +	ret = fuse_break_dax_layouts(inode, dmap_start, dmap_end);
->  	if (ret) {
->  		printk("virtio_fs: fuse_break_dax_layouts() failed. err=%d\n",
->  		       ret);
->  		dmap = ERR_PTR(ret);
->  		goto out_mmap_sem;
->  	}
-> +
->  	down_write(&fi->i_dmap_sem);
-> -	dmap = inode_reclaim_one_dmap_locked(fc, inode);
-> +	dmap = fuse_dax_interval_tree_iter_first(&fi->dmap_tree, dmap_start,
-> +						 dmap_start);
-> +	/* Range already got reclaimed by somebody else */
-> +	if (!dmap)
-> +		goto out_write_dmap_sem;
-> +
-> +	/* still in use. */
-> +	if (refcount_read(&dmap->refcnt) > 1) {
-> +		dmap = NULL;
-> +		goto out_write_dmap_sem;
-> +	}
-> +
-> +	ret = reclaim_one_dmap_locked(fc, inode, dmap);
-> +	if (ret < 0) {
-> +		dmap = NULL;
-> +		goto out_write_dmap_sem;
-> +	}
-> +
-> +	/* Clean up dmap. Do not add back to free list */
-> +	dmap_remove_busy_list(fc, dmap);
-> +	dmap->inode = NULL;
-> +	dmap->start = dmap->end = 0;
-> +
-> +	pr_debug("fuse: %s: inline reclaimed memory range. inode=%px,"
-> +		 " window_offset=0x%llx, length=0x%llx\n", __func__,
-> +		 inode, dmap->window_offset, dmap->length);
-> +
-> +out_write_dmap_sem:
->  	up_write(&fi->i_dmap_sem);
->  out_mmap_sem:
->  	if (!fault)
-> @@ -4379,7 +4407,7 @@ static struct fuse_dax_mapping *alloc_da
->  			return dmap;
->  
->  		if (fi->nr_dmaps) {
-> -			dmap = inode_reclaim_one_dmap(fc, inode, fault);
-> +			dmap = inode_inline_reclaim_one_dmap(fc, inode, fault);
->  			if (dmap)
->  				return dmap;
->  			/* If we could not reclaim a mapping because it
-> 
+greg k-h
