@@ -2,98 +2,89 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AA7EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:00:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 939CFC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:00:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3111B206F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:00:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7339020784
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:00:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586970041;
+	bh=MgOckoa6oaXylsn5YDxRnw+SO2S8/uU9ZQM4CMMYhm0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ErWIsGdNwTA8yOq8rNW7wncpqeHR2p4/aN3j/ZcMt3Co43rCB8vJ9N+uNQUKifnDC
+	 MeLG35tMEiGAPyFwwgeDA1yFO9H1/G9D6YKB9l6VTsBRyCp921e1+RRnTFtfoXu44g
+	 W8DuUd+cW/L6zuiVPPou27dtF4UkFyolLXolyWBk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410581AbgDORAG (ORCPT
+        id S2410589AbgDORAk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 13:00:06 -0400
-Received: from mga02.intel.com ([134.134.136.20]:49709 "EHLO mga02.intel.com"
+        Wed, 15 Apr 2020 13:00:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728755AbgDORAC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 13:00:02 -0400
-IronPort-SDR: 1Fw8VJjsP4yX0PKZVR8VJEJ6N+UBQbVhC2Sjg1PNkToRaCFBzAVVK00F3hWw2zEKGGfWfkmgV4
- qOW8VodAhMYQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 09:59:59 -0700
-IronPort-SDR: WTJJO6LeACN+mktwEZNgLHesc6i3gOBVsV+8y3ibNLMoskZ/2JKT/XtqTDBWMfL3X9hABISSOb
- UNK5AuNfFKog==
-X-IronPort-AV: E=Sophos;i="5.72,387,1580803200"; 
-   d="scan'208";a="453993581"
-Received: from spandruv-mobl.amr.corp.intel.com ([10.254.190.90])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 09:59:56 -0700
-Message-ID: <12612c48b9d00d10350d5e07587d90ae3759101f.camel@linux.intel.com>
-Subject: Re: [PATCH] tools/power/x86/intel-speed-select: Fix CLX-N package
- information output
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Prarit Bhargava <prarit@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Date:   Wed, 15 Apr 2020 09:59:53 -0700
-In-Reply-To: <20200415161043.GU185537@smile.fi.intel.com>
-References: <20200402180732.24684-1-prarit@redhat.com>
-         <20200415161043.GU185537@smile.fi.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
+        id S1728755AbgDORAf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 13:00:35 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0AE31206F9;
+        Wed, 15 Apr 2020 17:00:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586970034;
+        bh=MgOckoa6oaXylsn5YDxRnw+SO2S8/uU9ZQM4CMMYhm0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cp7XRASHgNQMYStqM9ccE+H4cbmpnvWsouW1/UcDJzRy7Tj4nwWnYlg5nCtAE246T
+         bvnQx6CzbbqsPvaDF8ASoMzrXi3scNKrNh/PmIe+hw+3dcNqI/VHdWiAfYOEXE8JtC
+         JaG0B9RXKq7wg2MukI0p2o4VLkjDuFNms4+4269M=
+Date:   Wed, 15 Apr 2020 18:00:29 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-kernel@vger.kernel.org,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Doug Anderson <dianders@chromium.org>, kernel-team@android.com
+Subject: Re: [PATCH 3/8] arm64: cpufeature: Add CPU capability for AArch32
+ EL1 support
+Message-ID: <20200415170029.GA19615@willie-the-truck>
+References: <20200414213114.2378-1-will@kernel.org>
+ <20200414213114.2378-4-will@kernel.org>
+ <1b76993491176577567a0960a435dac0@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1b76993491176577567a0960a435dac0@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-04-15 at 19:10 +0300, Andy Shevchenko wrote:
-> On Thu, Apr 02, 2020 at 02:07:32PM -0400, Prarit Bhargava wrote:
-> > On CLX-N the perf-profile output is missing the package, die, and
-> > cpu
-> > output.  On CLX-N the pkg_dev struct will never be evaluated by the
-> > core
-> > code so pkg_dev.processed is always 0 and the package, die, and cpu
-> > information is never output.
+Hi Marc,
+
+On Wed, Apr 15, 2020 at 09:55:57AM +0100, Marc Zyngier wrote:
+> On 2020-04-14 22:31, Will Deacon wrote:
+> > Although we emit a "SANITY CHECK" warning and taint the kernel if we
+> > detect a CPU mismatch for AArch32 support at EL1, we still online the
+> > CPU with disastrous consequences for any running 32-bit VMs.
 > > 
-> > Set the pkg_dev.processed flag to 1 for CLX-N processors.
+> > Introduce a capability for AArch32 support at EL1 so that late onlining
+> > of incompatible CPUs is forbidden.
+> > 
+> > Signed-off-by: Will Deacon <will@kernel.org>
 > 
-Sorry Prarit. It took long to respond. The patch is fine. I am applying
-to my tree.
+> Definitely an improvement over the current situation, as the direct read
+> of ID_AA64PFR0 was always a bit dodgy. Given that I'm pretty sure these new
+> braindead SoCs are going to run an older version of the kernel, should we
+> Cc stable for this?
 
--Srinivas
+I don't think there's a real need for -stable given that we do at least
+taint the kernel. That's likely to annoy vendors enough to backport this
+themselves ;)
 
-> I will accept this with PR from Srinivas whenever he sends one to
-> public mailing list.
-> 
-> > Signed-off-by: Prarit Bhargava <prarit@redhat.com>
-> > Cc: andriy.shevchenko@linux.intel.com
-> > Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> > Cc: platform-driver-x86@vger.kernel.org
-> > ---
-> >  tools/power/x86/intel-speed-select/isst-config.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/tools/power/x86/intel-speed-select/isst-config.c
-> > b/tools/power/x86/intel-speed-select/isst-config.c
-> > index d1ac57be0cbd..2e64b9b6eb2e 100644
-> > --- a/tools/power/x86/intel-speed-select/isst-config.c
-> > +++ b/tools/power/x86/intel-speed-select/isst-config.c
-> > @@ -1169,6 +1169,7 @@ static void dump_clx_n_config_for_cpu(int
-> > cpu, void *arg1, void *arg2,
-> >  
-> >  		ctdp_level = &clx_n_pkg_dev.ctdp_level[0];
-> >  		pbf_info = &ctdp_level->pbf_info;
-> > +		clx_n_pkg_dev.processed = 1;
-> >  		isst_ctdp_display_information(cpu, outf, tdp_level,
-> > &clx_n_pkg_dev);
-> >  		free_cpu_set(ctdp_level->core_cpumask);
-> >  		free_cpu_set(pbf_info->core_cpumask);
-> > -- 
-> > 2.18.2
-> > 
-
+Will
