@@ -4,56 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D5AEC38A29
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:50:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3081EC3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:50:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DD8120768
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:50:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07196214D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:50:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586951442;
-	bh=bAx5Or30BfCKbM8xEMpMFaAUAIE+mVrnhEslkPnmQIM=;
+	s=default; t=1586951449;
+	bh=N7LuhKTX+VkNhecOFLMEu4r6U60EoVLmEHzq4lL3Zqk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NScNMDw6Cvn9qbFkiw45/EiPGeNJQuwfHUQ5GcA+XhGsNa79LCAr5SKEkAQfRYgQj
-	 c14W3/sZsopS7MPCErI4nxMHvPzkgYqlo7J5wj8yD+gnZL5K75bXiZPDXyRMVe4sQR
-	 veCncX/uPnOOnayr4acwjIxyLeb4R1iKE7i3V9JQ=
+	b=RMBXoc56W9yDozfAr00FlzzaIyiVoYnn8hplMwN8nHPK25TWK5ZBbvxgsZooaqctr
+	 EG1Zh8UK9cu/MEYioSMPL6yDB/JFwAXgXimVUgCg0/Q/y83OQj+M03+6oowYx+mQah
+	 pHINZM0XCmvim7FI6I1Ode+ZU7WiJwFV4VDXt7nw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409555AbgDOLul (ORCPT
+        id S2409567AbgDOLur (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:50:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35684 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 07:50:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409022AbgDOLni (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:43:38 -0400
+        id S2897539AbgDOLnr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:43:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A207420768;
-        Wed, 15 Apr 2020 11:43:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57FD721582;
+        Wed, 15 Apr 2020 11:43:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951018;
-        bh=bAx5Or30BfCKbM8xEMpMFaAUAIE+mVrnhEslkPnmQIM=;
+        s=default; t=1586951027;
+        bh=N7LuhKTX+VkNhecOFLMEu4r6U60EoVLmEHzq4lL3Zqk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HUj82P+aDn9Prxcsfgh9DQBcau1WYfqbbK2RiwAen9TZVSwy2iHQMTVkLCb2i+O+i
-         qzKM3py3/UFaGPn8akqFptJXR/oVaxA6noVpi3Z80lps/WcpUtF4/ZcVaegZX43yip
-         Urb7FRfDHG+q/zJDQfIQhlNBDYB/E3HqznnzS0jM=
+        b=1Q3TAYTIu9MjYhcz8SmHlpcF2IKiQLs7/2yNBBLxjjma4jAjhCp74udz41pitvBQh
+         HGXK9k5kOPDb7QTrm93yEWqBBhVJHtC8MbXZ/K1Dt4aezNYVrYjPf72ffjf6TZO1hf
+         JbjsVN2dFReDFVUZ6dbHpm/+5MbXBmnxFiPWaUa0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        kbuild test robot <lkp@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Baoquan He <bhe@redhat.com>,
-        Nishanth Aravamudan <nacc@us.ibm.com>,
-        Nick Piggin <npiggin@suse.de>, Adam Litke <agl@us.ibm.com>,
-        Andi Kleen <ak@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 5.5 059/106] mm/hugetlb: fix build failure with HUGETLB_PAGE but not HUGEBTLBFS
-Date:   Wed, 15 Apr 2020 07:41:39 -0400
-Message-Id: <20200415114226.13103-59-sashal@kernel.org>
+Cc:     Ralph Campbell <rcampbell@nvidia.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.5 066/106] drm/nouveau/svm: fix vma range check for migration
+Date:   Wed, 15 Apr 2020 07:41:46 -0400
+Message-Id: <20200415114226.13103-66-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
 References: <20200415114226.13103-1-sashal@kernel.org>
@@ -66,93 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Ralph Campbell <rcampbell@nvidia.com>
 
-[ Upstream commit bb297bb2de517e41199185021f043bbc5d75b377 ]
+[ Upstream commit b92103b559c77abc5f8b7bec269230a219c880b7 ]
 
-When CONFIG_HUGETLB_PAGE is set but not CONFIG_HUGETLBFS, the following
-build failure is encoutered:
+find_vma_intersection(mm, start, end) only guarantees that end is greater
+than or equal to vma->vm_start but doesn't guarantee that start is
+greater than or equal to vma->vm_start. The calculation for the
+intersecting range in nouveau_svmm_bind() isn't accounting for this and
+can call migrate_vma_setup() with a starting address less than
+vma->vm_start. This results in migrate_vma_setup() returning -EINVAL for
+the range instead of nouveau skipping that part of the range and migrating
+the rest.
 
-  In file included from arch/powerpc/mm/fault.c:33:0:
-  include/linux/hugetlb.h: In function 'hstate_inode':
-  include/linux/hugetlb.h:477:9: error: implicit declaration of function 'HUGETLBFS_SB' [-Werror=implicit-function-declaration]
-    return HUGETLBFS_SB(i->i_sb)->hstate;
-           ^
-  include/linux/hugetlb.h:477:30: error: invalid type argument of '->' (have 'int')
-    return HUGETLBFS_SB(i->i_sb)->hstate;
-                                ^
-
-Gate hstate_inode() with CONFIG_HUGETLBFS instead of CONFIG_HUGETLB_PAGE.
-
-Fixes: a137e1cc6d6e ("hugetlbfs: per mount huge page sizes")
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Nishanth Aravamudan <nacc@us.ibm.com>
-Cc: Nick Piggin <npiggin@suse.de>
-Cc: Adam Litke <agl@us.ibm.com>
-Cc: Andi Kleen <ak@suse.de>
-Link: http://lkml.kernel.org/r/7e8c3a3c9a587b9cd8a2f146df32a421b961f3a2.1584432148.git.christophe.leroy@c-s.fr
-Link: https://patchwork.ozlabs.org/patch/1255548/#2386036
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/hugetlb.h | 19 ++++++++-----------
- 1 file changed, 8 insertions(+), 11 deletions(-)
+ drivers/gpu/drm/nouveau/nouveau_svm.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-index 31d4920994b93..423fcbb0526c4 100644
---- a/include/linux/hugetlb.h
-+++ b/include/linux/hugetlb.h
-@@ -390,7 +390,10 @@ static inline bool is_file_hugepages(struct file *file)
- 	return is_file_shm_hugepages(file);
- }
+diff --git a/drivers/gpu/drm/nouveau/nouveau_svm.c b/drivers/gpu/drm/nouveau/nouveau_svm.c
+index 3ec5da025bea7..c567526b75b83 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_svm.c
++++ b/drivers/gpu/drm/nouveau/nouveau_svm.c
+@@ -184,6 +184,7 @@ nouveau_svmm_bind(struct drm_device *dev, void *data,
+ 		if (!vma)
+ 			break;
  
--
-+static inline struct hstate *hstate_inode(struct inode *i)
-+{
-+	return HUGETLBFS_SB(i->i_sb)->hstate;
-+}
- #else /* !CONFIG_HUGETLBFS */
- 
- #define is_file_hugepages(file)			false
-@@ -402,6 +405,10 @@ hugetlb_file_setup(const char *name, size_t size, vm_flags_t acctflag,
- 	return ERR_PTR(-ENOSYS);
- }
- 
-+static inline struct hstate *hstate_inode(struct inode *i)
-+{
-+	return NULL;
-+}
- #endif /* !CONFIG_HUGETLBFS */
- 
- #ifdef HAVE_ARCH_HUGETLB_UNMAPPED_AREA
-@@ -471,11 +478,6 @@ extern unsigned int default_hstate_idx;
- 
- #define default_hstate (hstates[default_hstate_idx])
- 
--static inline struct hstate *hstate_inode(struct inode *i)
--{
--	return HUGETLBFS_SB(i->i_sb)->hstate;
--}
--
- static inline struct hstate *hstate_file(struct file *f)
- {
- 	return hstate_inode(file_inode(f));
-@@ -728,11 +730,6 @@ static inline struct hstate *hstate_vma(struct vm_area_struct *vma)
- 	return NULL;
- }
- 
--static inline struct hstate *hstate_inode(struct inode *i)
--{
--	return NULL;
--}
--
- static inline struct hstate *page_hstate(struct page *page)
- {
- 	return NULL;
++		addr = max(addr, vma->vm_start);
+ 		next = min(vma->vm_end, end);
+ 		/* This is a best effort so we ignore errors */
+ 		nouveau_dmem_migrate_vma(cli->drm, vma, addr, next);
 -- 
 2.20.1
 
