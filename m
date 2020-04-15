@@ -2,35 +2,36 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C91C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 20:35:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D35C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 20:35:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBD7920787
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 20:35:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BB2B2078A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 20:35:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S371314AbgDOUfC (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 16:35:02 -0400
-Received: from mga17.intel.com ([192.55.52.151]:20837 "EHLO mga17.intel.com"
+        id S371324AbgDOUfH (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 16:35:07 -0400
+Received: from mga17.intel.com ([192.55.52.151]:20838 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S371264AbgDOUe6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S371297AbgDOUe6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Apr 2020 16:34:58 -0400
-IronPort-SDR: DP5nnSE+MmmAeKfpA0yX+bamlUS0wVBXYZ+QRIjdlsucDxXKT06zbkqlkb6oq9HLuBkug0dznu
- i9SBaY47Hn2A==
+IronPort-SDR: M6R5/OYKeXGN+WzQH8EPjQ+aZgo7p2YATvbJ5zZvvvwMHWaYR4M1p0Gb7boARTCdRwztcTrlyk
+ ST7xaDCLV+Cg==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
   by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 13:34:57 -0700
-IronPort-SDR: +eCiecRj5JwTD4XQ78Xz6RJ7HDntOl0+gxxtmn2Hag9EQuNFUnoGbbzTmLeZb+XnnCeFMoktER
- gVqknUIC4bkQ==
+IronPort-SDR: 6WxqyeFfB0AbcZJKdvVLxSCZzx/AXNSTa0fEiaRTR5IgViZlXt/IUvtyjBHLWEhwAZ2kEOSDWE
+ LxX/JBOf7lbw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,388,1580803200"; 
-   d="scan'208";a="288657636"
+   d="scan'208";a="288657640"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga002.fm.intel.com with ESMTP; 15 Apr 2020 13:34:56 -0700
+  by fmsmga002.fm.intel.com with ESMTP; 15 Apr 2020 13:34:57 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -39,10 +40,12 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 0/5] KVM: VMX: Add caching of EXIT_QUAL and INTR_INFO
-Date:   Wed, 15 Apr 2020 13:34:49 -0700
-Message-Id: <20200415203454.8296-1-sean.j.christopherson@intel.com>
+Subject: [PATCH 1/5] KVM: nVMX: Invoke ept_save_pdptrs() if and only if PAE paging is enabled
+Date:   Wed, 15 Apr 2020 13:34:50 -0700
+Message-Id: <20200415203454.8296-2-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200415203454.8296-1-sean.j.christopherson@intel.com>
+References: <20200415203454.8296-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -50,39 +53,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Patches 4-5 are the focus of this series, adding caching of
-vmcs.EXIT_QUALIFICATION and proper caching of vmcs.INTR_INFO (instead of
-caching it with ad hoc rules about when it's available).  Patches 1-3
-are prep work to clean up the register caching to ensure correctness when
-switching between vmcs01 and vmcs02.
+Invoke ept_save_pdptrs() when restoring L1's host state on a "late"
+VM-Fail if and only if PAE paging is enabled.  This saves a CALL in the
+common case where L1 is a 64-bit host, and avoids incorrectly marking
+the PDPTRs as dirty.
 
-The idea for this came about when working on the "unionize exit_reason"
-series.  The nested VM-Exit logic looks at both fields multiple times,
-which is ok-ish when everything is crammed into one or two functions, but
-incurs multiple VMREADs when split up.  I really didn't want to solve that
-issue by piling on more cases where vmx->exit_intr_info would be valid, or
-by duplicating that fragile pattern for exit_qualification.
+WARN if ept_save_pdptrs() is called with PAE disabled now that the
+nested usage pre-checks is_pae_paging().  Barring a bug in KVM's MMU,
+attempting to read the PDPTRs with PAE disabled is now impossible.
 
-Paolo, this will conflict with the "unionize exit_reason" series, though
-the conflict resolution is all mechnical in nature.  Let me know if you
-want me to respin one on top of the other, send a single series, etc...
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
+ arch/x86/kvm/vmx/nested.c |  2 +-
+ arch/x86/kvm/vmx/vmx.c    | 13 +++++++------
+ 2 files changed, 8 insertions(+), 7 deletions(-)
 
-Sean Christopherson (5):
-  KVM: nVMX: Invoke ept_save_pdptrs() if and only if PAE paging is
-    enabled
-  KVM: nVMX: Reset register cache (available and dirty masks) on VMCS
-    switch
-  KVM: nVMX: Drop manual clearing of segment cache on nested VMCS switch
-  KVM: VMX: Cache vmcs.EXIT_QUALIFICATION using arch avail_reg flags
-  KVM: VMX: Cache vmcs.EXIT_INTR_INFO using arch avail_reg flags
-
- arch/x86/include/asm/kvm_host.h |  2 +
- arch/x86/kvm/vmx/nested.c       | 29 +++++++------
- arch/x86/kvm/vmx/nested.h       |  4 +-
- arch/x86/kvm/vmx/vmx.c          | 73 ++++++++++++++++-----------------
- arch/x86/kvm/vmx/vmx.h          | 35 +++++++++++++++-
- 5 files changed, 86 insertions(+), 57 deletions(-)
-
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index aca57d8da400..f9ae42209d78 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -4250,7 +4250,7 @@ static void nested_vmx_restore_host_state(struct kvm_vcpu *vcpu)
+ 	 * VMFail, like everything else we just need to ensure our
+ 	 * software model is up-to-date.
+ 	 */
+-	if (enable_ept)
++	if (enable_ept && is_pae_paging(vcpu))
+ 		ept_save_pdptrs(vcpu);
+ 
+ 	kvm_mmu_reset_context(vcpu);
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index aa1b8cf7c915..7da83325ace3 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -2937,12 +2937,13 @@ void ept_save_pdptrs(struct kvm_vcpu *vcpu)
+ {
+ 	struct kvm_mmu *mmu = vcpu->arch.walk_mmu;
+ 
+-	if (is_pae_paging(vcpu)) {
+-		mmu->pdptrs[0] = vmcs_read64(GUEST_PDPTR0);
+-		mmu->pdptrs[1] = vmcs_read64(GUEST_PDPTR1);
+-		mmu->pdptrs[2] = vmcs_read64(GUEST_PDPTR2);
+-		mmu->pdptrs[3] = vmcs_read64(GUEST_PDPTR3);
+-	}
++	if (WARN_ON_ONCE(!is_pae_paging(vcpu)))
++		return;
++
++	mmu->pdptrs[0] = vmcs_read64(GUEST_PDPTR0);
++	mmu->pdptrs[1] = vmcs_read64(GUEST_PDPTR1);
++	mmu->pdptrs[2] = vmcs_read64(GUEST_PDPTR2);
++	mmu->pdptrs[3] = vmcs_read64(GUEST_PDPTR3);
+ 
+ 	kvm_register_mark_dirty(vcpu, VCPU_EXREG_PDPTR);
+ }
 -- 
 2.26.0
 
