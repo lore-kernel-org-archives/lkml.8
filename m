@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72318C2BB55
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:45:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 485BBC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:46:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CEFD2078B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:45:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C1C1208FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:46:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586961959;
-	bh=Tgx8bhgHklE3FDZN9i6EsAGZk7UfLJB3Oy+zSTpJTjQ=;
+	s=default; t=1586961965;
+	bh=QkaWjqtoLGkvp2WJ5RnsK/6VjKwgfJVizCADZA1WQTs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CZK/zx/Z2YQjinSAObe2ozhtVPhbqa1oxm269UzfaZZ4Jn61sZN8E3ez2HH2aAcnv
-	 9ji2nYlqSNrC8OU+/YU+4onllx5azXfxMQTodF8ot8GJ7//2WQm58vShPhvu6RLyJn
-	 aPExP23MARcKkuM6cDEt0NMtx4+RPv17dnCQ8i74=
+	b=AZZiJWzM2yeD8Uznemy0b+JWpWc+CmO/sIoHtp0GPdPBrVuaJSaZqJWiJsg21S7K5
+	 HFSzvZAtlJL8t//Nz+gYpgahBS3OiLNrGdfZOibud9yXyPkbEjWSPEjAhZn93GNCVF
+	 CRI7vti0DyilOnHUBH+uk9iXRW3H/RCyZTm8UD2I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S370932AbgDOOp4 (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:45:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40254 "EHLO mail.kernel.org"
+        id S2636817AbgDOOqC (ORCPT
+        <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 10:46:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2636795AbgDOOpd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2636791AbgDOOpd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Apr 2020 10:45:33 -0400
 Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46D72218AC;
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B6FC21775;
         Wed, 15 Apr 2020 14:45:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1586961929;
-        bh=Tgx8bhgHklE3FDZN9i6EsAGZk7UfLJB3Oy+zSTpJTjQ=;
+        bh=QkaWjqtoLGkvp2WJ5RnsK/6VjKwgfJVizCADZA1WQTs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qy38bo6tXyunOd7fssISCteEmQC1jwS+lxtVXlNgBuwUsCE1XBnGqltK8LvvfU38O
-         N2qgx9t7zxpsbTrfhqCb2N3TorkMRnTTDQBaX02kYlJNP+Rn28JogIJyaA5xT8Wmdw
-         hjai+vMqj0Mhhi6NEwCsGQmds4IRE5GmSuy6ng84=
+        b=t2dl/o1vyomKNq6Ky9P+qJvh/9SFHDwb/ZlF96siQtQ9TDKPw/ovKnsxOf4xtkk24
+         YeWuhk45l8nE8QOeeuoEXqRvKJRGZkpYYxs4OmyOrkouzRJHrQeZiAyskH1B/hJkjl
+         7HkizQsoUYbHCdwGiWdzpA0I6sJop5vhVP1nT3vc=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jOjI7-006ka3-I8; Wed, 15 Apr 2020 16:45:27 +0200
+        id 1jOjI7-006kZp-E5; Wed, 15 Apr 2020 16:45:27 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH v3 12/12] docs: dt: convert writing-bindings.txt to ReST
-Date:   Wed, 15 Apr 2020 16:45:26 +0200
-Message-Id: <f2fb27f86a12c16d4b20d9051dec405d4f29a2bb.1586961793.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v3 09/12] docs: dt: minor adjustments at writing-schema.rst
+Date:   Wed, 15 Apr 2020 16:45:23 +0200
+Message-Id: <fe816c483db6e31359687c29a59622b54bd07b29.1586961793.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <cover.1586961793.git.mchehab+huawei@kernel.org>
 References: <cover.1586961793.git.mchehab+huawei@kernel.org>
@@ -59,67 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-- Add a SPDX header;
-- Adjust document and section titles;
-- Mark literal blocks as such;
-- Add it to bindings/index.rst.
+There are two literal blocks that aren't mark as such. Mark them,
+in order to make the document to produce a better html output.
+
+While here, also add a SPDX header to it.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/devicetree/bindings/index.rst                | 1 +
- .../{writing-bindings.txt => writing-bindings.rst}         | 7 +++++++
- 2 files changed, 8 insertions(+)
- rename Documentation/devicetree/bindings/{writing-bindings.txt => writing-bindings.rst} (92%)
+ Documentation/devicetree/writing-schema.rst | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/index.rst b/Documentation/devicetree/bindings/index.rst
-index 6b87875a049c..3837b17c234f 100644
---- a/Documentation/devicetree/bindings/index.rst
-+++ b/Documentation/devicetree/bindings/index.rst
-@@ -9,3 +9,4 @@ Device Tree
- 
-    ABI
-    submitting-patches
-+   writing-bindings
-diff --git a/Documentation/devicetree/bindings/writing-bindings.txt b/Documentation/devicetree/bindings/writing-bindings.rst
-similarity index 92%
-rename from Documentation/devicetree/bindings/writing-bindings.txt
-rename to Documentation/devicetree/bindings/writing-bindings.rst
-index ca024b9c7433..45ff426d0019 100644
---- a/Documentation/devicetree/bindings/writing-bindings.txt
-+++ b/Documentation/devicetree/bindings/writing-bindings.rst
-@@ -1,4 +1,8 @@
+diff --git a/Documentation/devicetree/writing-schema.rst b/Documentation/devicetree/writing-schema.rst
+index 220cf464ed77..8c74a99f95e2 100644
+--- a/Documentation/devicetree/writing-schema.rst
++++ b/Documentation/devicetree/writing-schema.rst
+@@ -1,4 +1,4 @@
+-:orphan:
 +.. SPDX-License-Identifier: GPL-2.0
+ 
+ Writing DeviceTree Bindings in json-schema
+ ==========================================
+@@ -124,9 +124,12 @@ dtc must also be built with YAML output support enabled. This requires that
+ libyaml and its headers be installed on the host system. For some distributions
+ that involves installing the development package, such as:
+ 
+-Debian:
++Debian::
 +
-+============================================================
- DOs and DON'Ts for designing and writing Devicetree bindings
-+============================================================
+   apt-get install libyaml-dev
+-Fedora:
++
++Fedora::
++
+   dnf -y install libyaml-devel
  
- This is a list of common review feedback items focused on binding design. With
- every rule, there are exceptions and bindings have many gray areas.
-@@ -8,6 +12,7 @@ Documentation/devicetree/bindings/submitting-patches.rst
- 
- 
- Overall design
-+==============
- 
- - DO attempt to make bindings complete even if a driver doesn't support some
-   features. For example, if a device has an interrupt, then include the
-@@ -32,6 +37,7 @@ Overall design
- 
- 
- Properties
-+==========
- 
- - DO make 'compatible' properties specific. DON'T use wildcards in compatible
-   strings. DO use fallback compatibles when devices are the same as or a subset
-@@ -53,6 +59,7 @@ Properties
- 
- 
- Board/SoC .dts Files
-+====================
- 
- - DO put all MMIO devices under a bus node and not at the top-level.
- 
+ Running checks
 -- 
 2.25.2
 
