@@ -2,114 +2,129 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F153DC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:18:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D67BC352BE
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:19:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C38F820774
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:18:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="b6QEUePW"
+	by mail.kernel.org (Postfix) with ESMTP id 656F5206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:19:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392923AbgDOCSV (ORCPT
+        id S2392935AbgDOCTY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 22:18:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38352 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732702AbgDOCSQ (ORCPT
+        Tue, 14 Apr 2020 22:19:24 -0400
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:54149 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732702AbgDOCTO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 22:18:16 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5A68C061A0C;
-        Tue, 14 Apr 2020 19:18:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=9KHPxu7QAhV1u3S2ZqCIoyxy4Ym3v0RLTChLW2Oikv4=; b=b6QEUePWGS20adBA91jd/5eoL3
-        1qB1boh/lSdpZeSbJhBYeTpNJWWSCLq/Ywu3dBodJxi69s/hE26m1v0lWCZh7exlrHGttrDxBld0R
-        o0U22RBR4IM2REf02o5LLzkjtrvAsrb1SUhVA+XUN1jZuoZiPyNDNgaCQZNFu+XzGieExeS3WoTq2
-        HzrFZ6dcg3d7xLfboVDKIEwwlftwgdF2HBHdSLAnbd4RZD6VJwLdDQuDS9fhums2rjg8iZoJwG8r3
-        xi29XIpXU8O6p96+bY4jKHquY1oQY/ApSWHiG2HS0U86jqAf8CD/BieGTpXmH+rAb1cb1EZx8mhzT
-        VkdvlHpQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jOXcu-0000tf-4k; Wed, 15 Apr 2020 02:18:11 +0000
-Date:   Tue, 14 Apr 2020 19:18:08 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        William Kucharski <william.kucharski@oracle.com>
-Subject: Re: [PATCH v11 05/25] mm: Add new readahead_control API
-Message-ID: <20200415021808.GA5820@bombadil.infradead.org>
-References: <20200414150233.24495-1-willy@infradead.org>
- <20200414150233.24495-6-willy@infradead.org>
- <20200414181705.bfc4c0087092051a9475141e@linux-foundation.org>
+        Tue, 14 Apr 2020 22:19:14 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04357;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0TvZsw-x_1586917144;
+Received: from 30.27.118.45(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0TvZsw-x_1586917144)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 15 Apr 2020 10:19:05 +0800
+Subject: Re: [PATCH] KVM: Optimize kvm_arch_vcpu_ioctl_run function
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com, sean.j.christopherson@intel.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, maz@kernel.org, james.morse@arm.com,
+        julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com
+References: <20200413034523.110548-1-tianjia.zhang@linux.alibaba.com>
+ <875ze2ywhy.fsf@vitty.brq.redhat.com>
+From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+Message-ID: <cc29ce22-4c70-87d1-d7aa-9d38438ba8a5@linux.alibaba.com>
+Date:   Wed, 15 Apr 2020 10:19:04 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200414181705.bfc4c0087092051a9475141e@linux-foundation.org>
+In-Reply-To: <875ze2ywhy.fsf@vitty.brq.redhat.com>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 06:17:05PM -0700, Andrew Morton wrote:
-> On Tue, 14 Apr 2020 08:02:13 -0700 Matthew Wilcox <willy@infradead.org> wrote:
-> > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> > 
-> > Filesystems which implement the upcoming ->readahead method will get
-> > their pages by calling readahead_page() or readahead_page_batch().
-> > These functions support large pages, even though none of the filesystems
-> > to be converted do yet.
-> > 
-> > +static inline struct page *readahead_page(struct readahead_control *rac)
-> > +static inline unsigned int __readahead_batch(struct readahead_control *rac,
-> > +		struct page **array, unsigned int array_sz)
+
+
+On 2020/4/14 22:26, Vitaly Kuznetsov wrote:
+> Tianjia Zhang <tianjia.zhang@linux.alibaba.com> writes:
 > 
-> These are large functions.  Was it correct to inline them?
+>> kvm_arch_vcpu_ioctl_run() is only called in the file kvm_main.c,
+>> where vcpu->run is the kvm_run parameter, so it has been replaced.
+>>
+>> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+>> ---
+>>   arch/x86/kvm/x86.c | 8 ++++----
+>>   virt/kvm/arm/arm.c | 2 +-
+>>   2 files changed, 5 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+>> index 3bf2ecafd027..70e3f4abbd4d 100644
+>> --- a/arch/x86/kvm/x86.c
+>> +++ b/arch/x86/kvm/x86.c
+>> @@ -8726,18 +8726,18 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+>>   		r = -EAGAIN;
+>>   		if (signal_pending(current)) {
+>>   			r = -EINTR;
+>> -			vcpu->run->exit_reason = KVM_EXIT_INTR;
+>> +			kvm_run->exit_reason = KVM_EXIT_INTR;
+> 
+> I have a more generic question: why do we need to pass 'kvm_run' to
+> kvm_arch_vcpu_ioctl_run() if it can be extracted from 'struct kvm_vcpu'?
+> The only call site looks like
+> 
+> virt/kvm/kvm_main.c:            r = kvm_arch_vcpu_ioctl_run(vcpu, vcpu->run);
+> 
 
-Hmm.  They don't seem that big to me.
+In the earlier version, kvm_run is used to pass parameters with user 
+mode and is not included in the vcpu structure, so it has been retained 
+until now.
 
-readahead_page, stripped of its sanity checks:
+Thanks,
+Tianjia
 
-+       rac->_nr_pages -= rac->_batch_count;
-+       rac->_index += rac->_batch_count;
-+       if (!rac->_nr_pages) {
-+               rac->_batch_count = 0;
-+               return NULL;
-+       }
-+       page = xa_load(&rac->mapping->i_pages, rac->_index);
-+       rac->_batch_count = hpage_nr_pages(page);
-
-__readahead_batch is much bigger, but it's only used by btrfs and fuse,
-and it seemed unfair to make everybody pay the cost for a function only
-used by two filesystems.
-
-> The batching API only appears to be used by fuse?  If so, do we really
-> need it?  Does it provide some functional need, or is it a performance
-> thing?  If the latter, how significant is it?
-
-I must confess to not knowing the performance impact.  If the code uses
-xa_load() repeatedly, it costs O(log n) each time as we walk down the tree
-(mitigated to a large extent by cache, of course).  Using xas_for_each()
-keeps us at the bottom of the tree and each iteration is O(1).
-I'm interested to see if filesystem maintainers start to use the batch
-function or if they're happier sticking with the individual lookups.
-
-The batch API was originally written for use with btrfs, but it was a
-significant simplification to convert fuse to use it.
-
-> The code adds quite a few (inlined!) VM_BUG_ONs.  Can we plan to remove
-> them at some stage?  Such as, before Linus shouts at us :)
-
-I'd be happy to remove them.  Various reviewers said things like "are you
-sure this can't happen?"
-
+>>   			++vcpu->stat.signal_exits;
+>>   		}
+>>   		goto out;
+>>   	}
+>>   
+>> -	if (vcpu->run->kvm_valid_regs & ~KVM_SYNC_X86_VALID_FIELDS) {
+>> +	if (kvm_run->kvm_valid_regs & ~KVM_SYNC_X86_VALID_FIELDS) {
+>>   		r = -EINVAL;
+>>   		goto out;
+>>   	}
+>>   
+>> -	if (vcpu->run->kvm_dirty_regs) {
+>> +	if (kvm_run->kvm_dirty_regs) {
+>>   		r = sync_regs(vcpu);
+>>   		if (r != 0)
+>>   			goto out;
+>> @@ -8767,7 +8767,7 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+>>   
+>>   out:
+>>   	kvm_put_guest_fpu(vcpu);
+>> -	if (vcpu->run->kvm_valid_regs)
+>> +	if (kvm_run->kvm_valid_regs)
+>>   		store_regs(vcpu);
+>>   	post_kvm_run_save(vcpu);
+>>   	kvm_sigset_deactivate(vcpu);
+>> diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
+>> index 48d0ec44ad77..ab9d7966a4c8 100644
+>> --- a/virt/kvm/arm/arm.c
+>> +++ b/virt/kvm/arm/arm.c
+>> @@ -659,7 +659,7 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *run)
+>>   		return ret;
+>>   
+>>   	if (run->exit_reason == KVM_EXIT_MMIO) {
+>> -		ret = kvm_handle_mmio_return(vcpu, vcpu->run);
+>> +		ret = kvm_handle_mmio_return(vcpu, run);
+>>   		if (ret)
+>>   			return ret;
+>>   	}
+> 
