@@ -2,129 +2,90 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1311C3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E99C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:08:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D08D5206F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:08:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF766206F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:08:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W2aiBz4u"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="UeOoK6zh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2635619AbgDOIIY (ORCPT
+        id S2635622AbgDOIIe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 04:08:24 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:44277 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2635561AbgDOIHM (ORCPT
+        Wed, 15 Apr 2020 04:08:34 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:33816 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2635591AbgDOIIF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 04:07:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586938028;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=EDdYfSg43KpYWuuPakF4B4tcdGZPYljqQUL9gLxwyrs=;
-        b=W2aiBz4ualxEo/496vq76TreYWhNzLmc3EAetuqeGhLNdcNJPmw+A/CPTI6Jg6XcLu1qnN
-        SaQX4AN0ZHp+WR2jiwJGwhwgEhxxbAYUbjzkG+Oa8x6g9EiqWWkZF6mzADyyGrGNf1s7TZ
-        UFGA0r2SvIA+yYr7Gn2SF8GILNjhYlc=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-215-P9wXlSKWOL-EXoRNtwSBLA-1; Wed, 15 Apr 2020 04:07:06 -0400
-X-MC-Unique: P9wXlSKWOL-EXoRNtwSBLA-1
-Received: by mail-wr1-f72.google.com with SMTP id q10so3643767wrv.10
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 01:07:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=EDdYfSg43KpYWuuPakF4B4tcdGZPYljqQUL9gLxwyrs=;
-        b=fv1KvyLktcwNM0VapT4jRzOEOiic93+5WwxMsPFTakokmW3yl7UnFMHAn6fWz8Ip4u
-         C2BQ/wmNMWDXWIz3sazPyaahnQcydTtqhwtrfEemGoC7jaHmI0iQbAsSEsUecILm9rTa
-         aD6OcOFXuuG1SixBQVBs+TB8dH6UZCFAEt8ilP4UVZFZU46bS8VwpHUcPF1tzLMoaos6
-         EQBrFTgbPBxMGuvbqz2dTWqOxKEQWzB0d+L6u67MxNqunMFskOlrVSQG5MFo74rkKPmz
-         3SnWdbpYf8lOjRktBUiZPQF8bvMnxcsk95tEs9fYsars61JuYELwbr1W7DtuN6TET0GV
-         feRg==
-X-Gm-Message-State: AGi0PubX+5Mp2zh+XX46pFtE5UYT81eNxmhNsPnsmB+XDk1ehVJY9m4e
-        +Lfz03WpYE6g/YJz6HhCMfvKipxY1vgohQflQ+2boSNvVcFHsyK0lmJDQZ0m4gSDsiBS+YB9Sb4
-        WIwpRh74HV1KDKKv44BzRX+41
-X-Received: by 2002:a1c:2b06:: with SMTP id r6mr4163561wmr.25.1586938025008;
-        Wed, 15 Apr 2020 01:07:05 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLM8/guNljwdxt33+rGLqxJ5oJ/t0p2TiWjT5KUdTEEF6BNudkLy+55c9aOC9WA4m3vasp/fw==
-X-Received: by 2002:a1c:2b06:: with SMTP id r6mr4163541wmr.25.1586938024762;
-        Wed, 15 Apr 2020 01:07:04 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id m14sm20326145wrs.76.2020.04.15.01.07.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Apr 2020 01:07:04 -0700 (PDT)
-Subject: Re: [PATCH] power: supply: axp288_charger: Omit superfluous error
- message
-To:     Tang Bin <tangbin@cmss.chinamobile.com>, sre@kernel.org,
-        wens@csie.org
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Shengju Zhang <zhangshengju@cmss.chinamobile.com>
-References: <20200415042727.13496-1-tangbin@cmss.chinamobile.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <8f9ae92b-9aab-34a2-dc15-a9c3514c7ca8@redhat.com>
-Date:   Wed, 15 Apr 2020 10:07:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 15 Apr 2020 04:08:05 -0400
+Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 9D67E2D1;
+        Wed, 15 Apr 2020 10:07:58 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1586938079;
+        bh=d3cM3Q3qHFbLBztwm4kDpHyKueuNUZD1Tu5L0584nsY=;
+        h=Subject:To:Cc:References:Reply-To:From:Date:In-Reply-To:From;
+        b=UeOoK6zhCEGPmWLfhjDbfahqvS6Qzqp2JDYPHFhNseng8pD8GWoA8LBLcfgqV8B0d
+         FgdG8w1Y9HRgqoqn2TiLL/xE0BFME9xvY4VZWRmo4zLoJ2Z+SGoMKKSGLBNy4sGABS
+         bcUJCRW8hGIv5gCmFr39QrbNGoYsl5bInOrGZepM=
+Subject: Re: [RFC PATCH v2 2/6] i2c: allow DT nodes without 'compatible'
+To:     Wolfram Sang <wsa@the-dreams.de>,
+        Luca Ceresoli <luca@lucaceresoli.net>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-i3c@lists.infradead.org,
+        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Rob Herring <robh@kernel.org>
+References: <20200318150059.21714-1-wsa+renesas@sang-engineering.com>
+ <20200318150059.21714-3-wsa+renesas@sang-engineering.com>
+ <11ca7487-ac07-f714-8573-20d1a0040212@lucaceresoli.net>
+ <20200415075911.GA1141@ninjato>
+Reply-To: kieran.bingham+renesas@ideasonboard.com
+From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Organization: Ideas on Board
+Message-ID: <8937e466-fe3f-3686-98a9-8013990bc3f9@ideasonboard.com>
+Date:   Wed, 15 Apr 2020 09:07:56 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-In-Reply-To: <20200415042727.13496-1-tangbin@cmss.chinamobile.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
+In-Reply-To: <20200415075911.GA1141@ninjato>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Wolfram,
 
-On 4/15/20 6:27 AM, Tang Bin wrote:
-> In the axp288_charger_probe(), when get irq failed, the function
-> platform_get_irq() logs an error message, so remove redundant
-> message here.
+On 15/04/2020 08:59, Wolfram Sang wrote:
 > 
-> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
-> Signed-off-by: Shengju Zhang <zhangshengju@cmss.chinamobile.com>
-
-Thank you for this nice cleanup patch:
-
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-Regards,
-
-Hans
-
-
-
-> ---
->   drivers/power/supply/axp288_charger.c | 5 ++---
->   1 file changed, 2 insertions(+), 3 deletions(-)
+>> As I said in the reply to v1, I think we should reserve addresses also
+>> when there is a compatible string but no matching driver, but this is
+>> another story and can be handled separately.
 > 
-> diff --git a/drivers/power/supply/axp288_charger.c b/drivers/power/supply/axp288_charger.c
-> index 1bbba6bba..16fb4ae1c 100644
-> --- a/drivers/power/supply/axp288_charger.c
-> +++ b/drivers/power/supply/axp288_charger.c
-> @@ -825,10 +825,9 @@ static int axp288_charger_probe(struct platform_device *pdev)
->   	/* Register charger interrupts */
->   	for (i = 0; i < CHRG_INTR_END; i++) {
->   		pirq = platform_get_irq(info->pdev, i);
-> -		if (pirq < 0) {
-> -			dev_err(&pdev->dev, "Failed to get IRQ: %d\n", pirq);
-> +		if (pirq < 0)
->   			return pirq;
-> -		}
-> +
->   		info->irq[i] = regmap_irq_get_virq(info->regmap_irqc, pirq);
->   		if (info->irq[i] < 0) {
->   			dev_warn(&info->pdev->dev,
-> 
+> Unless I misunderstand you, I think they do already. Note that
+> only 'i2cdetect' shows a device as busy *IFF* there is a driver bound to
+> it. The internal 'i2c_check_addr_busy' does not care about a driver
+> being bound. You can check this by trying to use
+> i2c_new_ancillary_device() with an address which is already described in
+> DT but which driver is disabled.
+
+Aha, is it easy enough to distinguish that difference in user-space so
+that we can present a specific character to indicate this in i2cdetect?
+Or is that not so easy?
+
+--
+Kieran
+
 
