@@ -2,117 +2,71 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F999C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7704C3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:10:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3D1C20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:10:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586956227;
-	bh=Y1oOwpvRztHomKDGyowfxLsgFTMmRI5+HPm22BtDbKY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F6z9EElnc08GO7+8JylXy1NP9G4ueuPrkY8q2W9bOGmv+kEyo661KtfjR3j87miIF
-	 C5m1qAdKk4NHR2e2r3HWU2XAkrvsXh4rSQH2iUHye/KcDr3s+e6NhyM7RiP8XuDO8L
-	 A/UdP6pNrIn1hZ+FunPVs5Iy9ujudtBgRuII7YoQ=
+	by mail.kernel.org (Postfix) with ESMTP id D36962076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:10:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506045AbgDONKZ (ORCPT
+        id S2504164AbgDONKd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:10:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55294 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897073AbgDOLfm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:35:42 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A9CB21556;
-        Wed, 15 Apr 2020 11:35:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950542;
-        bh=Y1oOwpvRztHomKDGyowfxLsgFTMmRI5+HPm22BtDbKY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2Uxs3E1jkHkXM5o4aBDgwh4Ttruw+9A5vreZnxk90DvSmXOlGUf7GsM+FvreowS9/
-         xakO4NEOMP6mTzDCtbwRVHk7Jtwi5dowTNiy6tr/eCrsZUoCbd5tnVckAJil4QcpU+
-         y6Q/vPdVPKWLQ0L2gAqM3sgwnPwFclGcnfExDhfI=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Willy Wolff <willy.mh.wolff.ml@gmail.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 049/129] thermal/drivers/cpufreq_cooling: Fix return of cpufreq_set_cur_state
-Date:   Wed, 15 Apr 2020 07:33:24 -0400
-Message-Id: <20200415113445.11881-49-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
-References: <20200415113445.11881-1-sashal@kernel.org>
+        Wed, 15 Apr 2020 09:10:33 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:50276 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2505981AbgDONKL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 09:10:11 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 9B3CF165915F79B5C852;
+        Wed, 15 Apr 2020 21:10:07 +0800 (CST)
+Received: from [127.0.0.1] (10.173.221.195) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Wed, 15 Apr 2020
+ 21:09:57 +0800
+Subject: Re: [PATCH] PCI: dwc: intel: make intel_pcie_cpu_addr() static
+To:     Andy Shevchenko <andriy.shevchenko@intel.com>
+CC:     <lorenzo.pieralisi@arm.com>, <amurray@thegoodpenguin.co.uk>,
+        <bhelgaas@google.com>, <p.zabel@pengutronix.de>,
+        <gustavo.pimentel@synopsys.com>, <eswara.kota@linux.intel.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Hulk Robot <hulkci@huawei.com>
+References: <20200415084953.6533-1-yanaijie@huawei.com>
+ <20200415100742.GR34613@smile.fi.intel.com>
+From:   Jason Yan <yanaijie@huawei.com>
+Message-ID: <29bc09ef-6e81-9411-302c-50ee9314764b@huawei.com>
+Date:   Wed, 15 Apr 2020 21:09:56 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+In-Reply-To: <20200415100742.GR34613@smile.fi.intel.com>
+Content-Type: text/plain; charset="gbk"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.173.221.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Willy Wolff <willy.mh.wolff.ml@gmail.com>
+ÔÚ 2020/4/15 18:07, Andy Shevchenko Ð´µÀ:
+> On Wed, Apr 15, 2020 at 04:49:53PM +0800, Jason Yan wrote:
+>> Fix the following sparse warning:
+>>
+>> drivers/pci/controller/dwc/pcie-intel-gw.c:456:5: warning: symbol
+>> 'intel_pcie_cpu_addr' was not declared. Should it be static?
+> 
+> Please, learn how to use get_maintainers.pl to avoid spamming people.
+> Hint:
+> 	scripts/get_maintainer.pl --git --git-min-percent=67
+> would give advantage, though it still requires a common sense to be applied.
+> 
 
-[ Upstream commit ff44f672d74178b3be19d41a169b98b3e391d4ce ]
+I'm so sorry to bother you with this. I will be more careful when I'm
+sending patches.
 
-When setting the cooling device current state from userspace via sysfs,
-the operation fails by returning an -EINVAL.
+Thanks,
 
-It appears the recent changes with the per-policy frequency QoS
-introduced a regression as reported by:
-
- https://lkml.org/lkml/2020/3/20/599
-
-The function freq_qos_update_request returns 0 or 1 describing update
-effectiveness, and a negative error code on failure. However,
-cpufreq_set_cur_state returns 0 on success or an error code otherwise.
-
-Consider the QoS update as successful if the function does not return
-an error.
-
-Fixes: 3000ce3c52f8b ("cpufreq: Use per-policy frequency QoS")
-Signed-off-by: Willy Wolff <willy.mh.wolff.ml@gmail.com>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20200321092740.7vvwfxsebcrznydh@macmini.local
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/thermal/cpufreq_cooling.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/thermal/cpufreq_cooling.c b/drivers/thermal/cpufreq_cooling.c
-index fe83d7a210d47..af55ac08e1bd5 100644
---- a/drivers/thermal/cpufreq_cooling.c
-+++ b/drivers/thermal/cpufreq_cooling.c
-@@ -431,6 +431,7 @@ static int cpufreq_set_cur_state(struct thermal_cooling_device *cdev,
- 				 unsigned long state)
- {
- 	struct cpufreq_cooling_device *cpufreq_cdev = cdev->devdata;
-+	int ret;
- 
- 	/* Request state should be less than max_level */
- 	if (WARN_ON(state > cpufreq_cdev->max_level))
-@@ -442,8 +443,9 @@ static int cpufreq_set_cur_state(struct thermal_cooling_device *cdev,
- 
- 	cpufreq_cdev->cpufreq_state = state;
- 
--	return freq_qos_update_request(&cpufreq_cdev->qos_req,
--				get_state_freq(cpufreq_cdev, state));
-+	ret = freq_qos_update_request(&cpufreq_cdev->qos_req,
-+				      get_state_freq(cpufreq_cdev, state));
-+	return ret < 0 ? ret : 0;
- }
- 
- /* Bind cpufreq callbacks to thermal cooling device ops */
--- 
-2.20.1
+Jason
 
