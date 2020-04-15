@@ -2,110 +2,89 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14908C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:38:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A082C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:40:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E28CA206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:38:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZMdvS3NO"
+	by mail.kernel.org (Postfix) with ESMTP id E45E9206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:40:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392671AbgDOBiK (ORCPT
+        id S2392683AbgDOBkg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 21:38:10 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32503 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2392662AbgDOBiC (ORCPT
+        Tue, 14 Apr 2020 21:40:36 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:17049 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2392662AbgDOBkb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 21:38:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586914679;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=fIWtMyX8c5MoqTW+BlKGqQRxu6g3sju/Rr3geYHo7PQ=;
-        b=ZMdvS3NOVi83AXxIkaN5NA+UkgNJSQ8v5q6O0GQBX/UKi8gEeJGGKTu5nJBwVCEYsroNhK
-        nXkwFfgK7nkDzflMXV0ZjWqup/9OiepEDcdQVXMAfRyW7//VABsCT5qbZsJw5R3p4pq9BX
-        GexAn9reaOk76kmw7TzgplGiMK2oCxw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-110-VIbLDIcNNQCwSYiVOSsotQ-1; Tue, 14 Apr 2020 21:37:56 -0400
-X-MC-Unique: VIbLDIcNNQCwSYiVOSsotQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4B4FC18B9FC2;
-        Wed, 15 Apr 2020 01:37:55 +0000 (UTC)
-Received: from [10.3.112.171] (ovpn-112-171.phx2.redhat.com [10.3.112.171])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A3EF2116D92;
-        Wed, 15 Apr 2020 01:37:54 +0000 (UTC)
-Subject: Re: [PATCH 0/7] livepatch,module: Remove .klp.arch and
- module_disable_ro()
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jessica Yu <jeyu@kernel.org>
-References: <cover.1586881704.git.jpoimboe@redhat.com>
- <187a2ccd-1d04-54db-2fd3-8c4ca6872830@redhat.com>
- <20200415013117.rc7vlidmo4okzypl@treble>
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-Message-ID: <10594420-de7b-bfab-d3cd-1e73d2f20af2@redhat.com>
-Date:   Tue, 14 Apr 2020 21:37:53 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 14 Apr 2020 21:40:31 -0400
+X-IronPort-AV: E=Sophos;i="5.72,385,1580745600"; 
+   d="scan'208";a="89043254"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 15 Apr 2020 09:40:28 +0800
+Received: from G08CNEXMBPEKD06.g08.fujitsu.local (unknown [10.167.33.206])
+        by cn.fujitsu.com (Postfix) with ESMTP id AA7D9406AB15;
+        Wed, 15 Apr 2020 09:29:53 +0800 (CST)
+Received: from [10.167.220.69] (10.167.220.69) by
+ G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.2; Wed, 15 Apr 2020 09:40:22 +0800
+Message-ID: <5E966604.1020400@cn.fujitsu.com>
+Date:   Wed, 15 Apr 2020 09:40:20 +0800
+From:   Xiao Yang <yangx.jy@cn.fujitsu.com>
+User-Agent: Mozilla/5.0 (Windows; U; Windows NT 6.2; zh-CN; rv:1.9.2.18) Gecko/20110616 Thunderbird/3.1.11
 MIME-Version: 1.0
-In-Reply-To: <20200415013117.rc7vlidmo4okzypl@treble>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+To:     Markus Elfring <Markus.Elfring@web.de>
+CC:     <linux-kselftest@vger.kernel.org>,
+        <linux-trace-devel@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Xiao Yang <ice_yangxiao@163.com>
+Subject: Re: [PATCH v2] tracing: Fix the race between registering 'snapshot'
+ event trigger and triggering 'snapshot' operation
+References: <f4e4614b-e3df-e255-42d0-1148e39b3f8a@web.de>
+In-Reply-To: <f4e4614b-e3df-e255-42d0-1148e39b3f8a@web.de>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.167.220.69]
+X-ClientProxiedBy: G08CNEXCHPEKD05.g08.fujitsu.local (10.167.33.203) To
+ G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206)
+X-yoursite-MailScanner-ID: AA7D9406AB15.AD627
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: yangx.jy@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/14/20 9:31 PM, Josh Poimboeuf wrote:
-> On Tue, Apr 14, 2020 at 08:57:15PM -0400, Joe Lawrence wrote:
->> On 4/14/20 12:28 PM, Josh Poimboeuf wrote:
->>> Better late than never, these patches add simplifications and
->>> improvements for some issues Peter found six months ago, as part of his
->>> non-writable text code (W^X) cleanups.
->>>
->>> Highlights:
->>>
->>> - Remove the livepatch arch-specific .klp.arch sections, which were used
->>>     to do paravirt patching and alternatives patching for livepatch
->>>     replacement code.
->>>
->>> - Add support for jump labels in patched code.
->>
->> Re: jump labels and late-module patching support...
->>
->> Is there still an issue of a non-exported static key defined in a
->> to-be-patched module referenced and resolved via klp-relocation when the
->> livepatch module is loaded first?  (Basically the same case I asked Petr
->> about in his split livepatch module PoC. [1])
->>
->> Or should we declare this an invalid klp-relocation use case and force the
->> livepatch author to use static_key_enabled()?
->>
->> [1] https://lore.kernel.org/lkml/20200407205740.GA17061@redhat.com/
-> 
-> Right, if the static key lives in a module, then it's still not possible
-> for a jump label to use it.  I added a check in kpatch-build to block
-> that case and suggest static_key_enabled() instead.
-> 
+On 2020/4/14 15:54, Markus Elfring wrote:
+>> Traced event can trigger 'snapshot' operation(i.e. calls snapshot_trigger()
+>
+> I suggest to improve the change description.
+>
+> * Adjustment:
+>    … operation (i. e. …
+Hi Markus,
 
-Ok good.  I didn't see a negative test case for this, so I wanted to 
-make sure that kpatch-build wouldn't accidentally create unsupported 
-klp-relocations for them.  I'll try to review those changes over on 
-github tomorrow.
+Which part of description do you want to change or could you provide an 
+example for reference?
 
--- Joe
+>
+> * Will the tag “Fixes” become relevant?
+
+Do you mean to add the following "Fixes" tag?
+Fixes: 93e31ffbf417 "tracing: Add 'snapshot' event trigger command"
+
+Thanks,
+Xiao Yang
+>
+> Regards,
+> Markus
+>
+>
+> .
+>
+
+
 
