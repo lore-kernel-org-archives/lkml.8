@@ -2,224 +2,57 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0726C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:40:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 454D4C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:40:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE34D20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:40:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586954431;
-	bh=9comZy+VKV018j2KhxsEbXwamZKAXU7+CY3v7/ohlVE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E8oRrAUTo6kk/yOYlaNCI/YuNfYuSLt0ita1Y1ky58eEqjdyS3T+lTjYSI6kLWBnp
-	 0T7DffbnNWy+xTLfd+lseGK1wGmjEfSCAil5LyzUOenBzypAaxgOJO4N5Sv2Rk+CAl
-	 kD+9rYRGiqfl1qgx/DKq/yG5QqygtdKss4sg6lxc=
+	by mail.kernel.org (Postfix) with ESMTP id 2CAD320767
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:40:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S369977AbgDOMk3 (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:40:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36378 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897551AbgDOLoA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:44:00 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7939621569;
-        Wed, 15 Apr 2020 11:43:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951039;
-        bh=9comZy+VKV018j2KhxsEbXwamZKAXU7+CY3v7/ohlVE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=URi9KTg4lQaIeVAP7qfFuRzpH0Wv5zHqMRQ/Q+xz40kddKeLIxzYWL9Gl5xiRMV3e
-         RJD06wumjFdlt2XAKjZniJwe9bBlHtXIolt46QILCvEkBTn9eBJDNxOuZHiulaH2GB
-         m2J8V++Yxw7mw3SstsZYu+FrD43iP/ABoVR1aZK4=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qian Cai <cai@lca.pw>, Borislav Petkov <bp@suse.de>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org,
-        linux-acpi@vger.kernel.org, devel@acpica.org
-Subject: [PATCH AUTOSEL 5.5 075/106] x86: ACPI: fix CPU hotplug deadlock
-Date:   Wed, 15 Apr 2020 07:41:55 -0400
-Message-Id: <20200415114226.13103-75-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
-References: <20200415114226.13103-1-sashal@kernel.org>
+        id S369968AbgDOMkV (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:40:21 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:60786 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2898155AbgDOMjX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 08:39:23 -0400
+Received: from ip5f5bd698.dynamic.kabel-deutschland.de ([95.91.214.152] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jOhJq-0004id-9r; Wed, 15 Apr 2020 12:39:06 +0000
+Date:   Wed, 15 Apr 2020 14:39:05 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Eugene Syromiatnikov <esyr@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Christian Brauner <christian@brauner.io>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Dmitry V. Levin" <ldv@altlinux.org>
+Subject: Re: [PATCH] clone3: add a check for the user struct size if
+ CLONE_INTO_CGROUP is set
+Message-ID: <20200415123905.subot6cdtvbie4ze@wittgenstein>
+References: <20200412203123.GA5869@asgard.redhat.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200412203123.GA5869@asgard.redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+On Sun, Apr 12, 2020 at 10:31:23PM +0200, Eugene Syromiatnikov wrote:
+> Passing CLONE_INTO_CGROUP with an under-sized structure (that doesn't
+> properly contain cgroup field) seems like garbage input, especially
+> considering the fact that fd 0 is a valid descriptor.
+> 
+> Signed-off-by: Eugene Syromiatnikov <esyr@redhat.com>
+> Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
 
-[ Upstream commit 696ac2e3bf267f5a2b2ed7d34e64131f2287d0ad ]
-
-Similar to commit 0266d81e9bf5 ("acpi/processor: Prevent cpu hotplug
-deadlock") except this is for acpi_processor_ffh_cstate_probe():
-
-"The problem is that the work is scheduled on the current CPU from the
-hotplug thread associated with that CPU.
-
-It's not required to invoke these functions via the workqueue because
-the hotplug thread runs on the target CPU already.
-
-Check whether current is a per cpu thread pinned on the target CPU and
-invoke the function directly to avoid the workqueue."
-
- WARNING: possible circular locking dependency detected
- ------------------------------------------------------
- cpuhp/1/15 is trying to acquire lock:
- ffffc90003447a28 ((work_completion)(&wfc.work)){+.+.}-{0:0}, at: __flush_work+0x4c6/0x630
-
- but task is already holding lock:
- ffffffffafa1c0e8 (cpuidle_lock){+.+.}-{3:3}, at: cpuidle_pause_and_lock+0x17/0x20
-
- which lock already depends on the new lock.
-
- the existing dependency chain (in reverse order) is:
-
- -> #1 (cpu_hotplug_lock){++++}-{0:0}:
- cpus_read_lock+0x3e/0xc0
- irq_calc_affinity_vectors+0x5f/0x91
- __pci_enable_msix_range+0x10f/0x9a0
- pci_alloc_irq_vectors_affinity+0x13e/0x1f0
- pci_alloc_irq_vectors_affinity at drivers/pci/msi.c:1208
- pqi_ctrl_init+0x72f/0x1618 [smartpqi]
- pqi_pci_probe.cold.63+0x882/0x892 [smartpqi]
- local_pci_probe+0x7a/0xc0
- work_for_cpu_fn+0x2e/0x50
- process_one_work+0x57e/0xb90
- worker_thread+0x363/0x5b0
- kthread+0x1f4/0x220
- ret_from_fork+0x27/0x50
-
- -> #0 ((work_completion)(&wfc.work)){+.+.}-{0:0}:
- __lock_acquire+0x2244/0x32a0
- lock_acquire+0x1a2/0x680
- __flush_work+0x4e6/0x630
- work_on_cpu+0x114/0x160
- acpi_processor_ffh_cstate_probe+0x129/0x250
- acpi_processor_evaluate_cst+0x4c8/0x580
- acpi_processor_get_power_info+0x86/0x740
- acpi_processor_hotplug+0xc3/0x140
- acpi_soft_cpu_online+0x102/0x1d0
- cpuhp_invoke_callback+0x197/0x1120
- cpuhp_thread_fun+0x252/0x2f0
- smpboot_thread_fn+0x255/0x440
- kthread+0x1f4/0x220
- ret_from_fork+0x27/0x50
-
- other info that might help us debug this:
-
- Chain exists of:
- (work_completion)(&wfc.work) --> cpuhp_state-up --> cpuidle_lock
-
- Possible unsafe locking scenario:
-
- CPU0                    CPU1
- ----                    ----
- lock(cpuidle_lock);
-                         lock(cpuhp_state-up);
-                         lock(cpuidle_lock);
- lock((work_completion)(&wfc.work));
-
- *** DEADLOCK ***
-
- 3 locks held by cpuhp/1/15:
- #0: ffffffffaf51ab10 (cpu_hotplug_lock){++++}-{0:0}, at: cpuhp_thread_fun+0x69/0x2f0
- #1: ffffffffaf51ad40 (cpuhp_state-up){+.+.}-{0:0}, at: cpuhp_thread_fun+0x69/0x2f0
- #2: ffffffffafa1c0e8 (cpuidle_lock){+.+.}-{3:3}, at: cpuidle_pause_and_lock+0x17/0x20
-
- Call Trace:
- dump_stack+0xa0/0xea
- print_circular_bug.cold.52+0x147/0x14c
- check_noncircular+0x295/0x2d0
- __lock_acquire+0x2244/0x32a0
- lock_acquire+0x1a2/0x680
- __flush_work+0x4e6/0x630
- work_on_cpu+0x114/0x160
- acpi_processor_ffh_cstate_probe+0x129/0x250
- acpi_processor_evaluate_cst+0x4c8/0x580
- acpi_processor_get_power_info+0x86/0x740
- acpi_processor_hotplug+0xc3/0x140
- acpi_soft_cpu_online+0x102/0x1d0
- cpuhp_invoke_callback+0x197/0x1120
- cpuhp_thread_fun+0x252/0x2f0
- smpboot_thread_fn+0x255/0x440
- kthread+0x1f4/0x220
- ret_from_fork+0x27/0x50
-
-Signed-off-by: Qian Cai <cai@lca.pw>
-Tested-by: Borislav Petkov <bp@suse.de>
-[ rjw: Subject ]
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/kernel/acpi/cstate.c       | 3 ++-
- drivers/acpi/processor_throttling.c | 7 -------
- include/acpi/processor.h            | 8 ++++++++
- 3 files changed, 10 insertions(+), 8 deletions(-)
-
-diff --git a/arch/x86/kernel/acpi/cstate.c b/arch/x86/kernel/acpi/cstate.c
-index caf2edccbad2e..49ae4e1ac9cd8 100644
---- a/arch/x86/kernel/acpi/cstate.c
-+++ b/arch/x86/kernel/acpi/cstate.c
-@@ -161,7 +161,8 @@ int acpi_processor_ffh_cstate_probe(unsigned int cpu,
- 
- 	/* Make sure we are running on right CPU */
- 
--	retval = work_on_cpu(cpu, acpi_processor_ffh_cstate_probe_cpu, cx);
-+	retval = call_on_cpu(cpu, acpi_processor_ffh_cstate_probe_cpu, cx,
-+			     false);
- 	if (retval == 0) {
- 		/* Use the hint in CST */
- 		percpu_entry->states[cx->index].eax = cx->address;
-diff --git a/drivers/acpi/processor_throttling.c b/drivers/acpi/processor_throttling.c
-index 532a1ae3595a7..a0bd56ece3ff5 100644
---- a/drivers/acpi/processor_throttling.c
-+++ b/drivers/acpi/processor_throttling.c
-@@ -897,13 +897,6 @@ static long __acpi_processor_get_throttling(void *data)
- 	return pr->throttling.acpi_processor_get_throttling(pr);
- }
- 
--static int call_on_cpu(int cpu, long (*fn)(void *), void *arg, bool direct)
--{
--	if (direct || (is_percpu_thread() && cpu == smp_processor_id()))
--		return fn(arg);
--	return work_on_cpu(cpu, fn, arg);
--}
--
- static int acpi_processor_get_throttling(struct acpi_processor *pr)
- {
- 	if (!pr)
-diff --git a/include/acpi/processor.h b/include/acpi/processor.h
-index 47805172e73d8..683e124ad517d 100644
---- a/include/acpi/processor.h
-+++ b/include/acpi/processor.h
-@@ -297,6 +297,14 @@ static inline void acpi_processor_ffh_cstate_enter(struct acpi_processor_cx
- }
- #endif
- 
-+static inline int call_on_cpu(int cpu, long (*fn)(void *), void *arg,
-+			      bool direct)
-+{
-+	if (direct || (is_percpu_thread() && cpu == smp_processor_id()))
-+		return fn(arg);
-+	return work_on_cpu(cpu, fn, arg);
-+}
-+
- /* in processor_perflib.c */
- 
- #ifdef CONFIG_CPU_FREQ
--- 
-2.20.1
-
+Applied, thanks!
+Christian
