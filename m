@@ -2,27 +2,27 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6FBAC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:02:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B007C3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:04:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8977520737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:02:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1957420737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:04:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393922AbgDOLCe (ORCPT
+        id S2408846AbgDOLED (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:02:34 -0400
-Received: from sauhun.de ([88.99.104.3]:52498 "EHLO pokefinder.org"
+        Wed, 15 Apr 2020 07:04:03 -0400
+Received: from sauhun.de ([88.99.104.3]:52524 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896698AbgDOLBf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:01:35 -0400
+        id S2896701AbgDOLBy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:01:54 -0400
 Received: from localhost (p54B33507.dip0.t-ipconnect.de [84.179.53.7])
-        by pokefinder.org (Postfix) with ESMTPSA id 2CE8D2C1FF1;
-        Wed, 15 Apr 2020 13:01:02 +0200 (CEST)
-Date:   Wed, 15 Apr 2020 13:01:01 +0200
+        by pokefinder.org (Postfix) with ESMTPSA id DB0512C1FF1;
+        Wed, 15 Apr 2020 13:01:45 +0200 (CEST)
+Date:   Wed, 15 Apr 2020 13:01:45 +0200
 From:   Wolfram Sang <wsa@the-dreams.de>
 To:     Alain Volmat <alain.volmat@st.com>
 Cc:     pierre-yves.mordret@st.com, alexandre.torgue@st.com,
@@ -30,14 +30,14 @@ Cc:     pierre-yves.mordret@st.com, alexandre.torgue@st.com,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         fabrice.gasnier@st.com
-Subject: Re: [PATCH] i2c: i2c-stm32f7: improve nack debug message
-Message-ID: <20200415110101.GM1141@ninjato>
-References: <1584642115-15378-1-git-send-email-alain.volmat@st.com>
+Subject: Re: [PATCH] i2c: stm32: don't print an error on probe deferral
+Message-ID: <20200415110145.GN1141@ninjato>
+References: <1584642136-15418-1-git-send-email-alain.volmat@st.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="oiL9LJXJsdjS5rzq"
+        protocol="application/pgp-signature"; boundary="ggdAeHltlv4tpqCr"
 Content-Disposition: inline
-In-Reply-To: <1584642115-15378-1-git-send-email-alain.volmat@st.com>
+In-Reply-To: <1584642136-15418-1-git-send-email-alain.volmat@st.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -45,41 +45,53 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---oiL9LJXJsdjS5rzq
+--ggdAeHltlv4tpqCr
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 19, 2020 at 07:21:55PM +0100, Alain Volmat wrote:
-> From: Fabrice Gasnier <fabrice.gasnier@st.com>
->=20
-> Add information on slave addr in the nack debug message.
->=20
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> Signed-off-by: Alain Volmat <alain.volmat@st.com>
+>  	if (IS_ERR(dma->chan_tx)) {
+> -		dev_dbg(dev, "can't request DMA tx channel\n");
+>  		ret =3D PTR_ERR(dma->chan_tx);
+> +		if (ret !=3D -EPROBE_DEFER)
+> +			dev_dbg(dev, "can't request DMA tx channel\n");
 
-Applied to for-next, thanks! (I'd drop the __func__, though; doesn't
-add information, does it?)
+dev_dbg for tx...
+
+>  		goto fail_al;
+>  	}
+> =20
+> @@ -44,8 +45,10 @@ struct stm32_i2c_dma *stm32_i2c_dma_request(struct dev=
+ice *dev,
+>  	/* Request and configure I2C RX dma channel */
+>  	dma->chan_rx =3D dma_request_chan(dev, "rx");
+>  	if (IS_ERR(dma->chan_rx)) {
+> -		dev_err(dev, "can't request DMA rx channel\n");
+>  		ret =3D PTR_ERR(dma->chan_rx);
+> +		if (ret !=3D -EPROBE_DEFER)
+> +			dev_err(dev, "can't request DMA rx channel\n");
+
+=2E.. and dev_err for rx? Intentional?
 
 
---oiL9LJXJsdjS5rzq
+--ggdAeHltlv4tpqCr
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6W6W0ACgkQFA3kzBSg
-KbbB7A/9EmAD4ef/5loAXglkahpH2UJci8WgDL5JIyHmGpZKPB2FhoVScwPzkz/B
-DflvRJg4S7nQBvVe5o1ewFgNW5mH4M0QTAEA8tyE7irUfAxZR0FH7C6ub95v8JKs
-eakWVl4yeoDOkQMJRQZEF5yq0ra0ASjFAt3b0YgxLGJ3TRuC1AGJ0Iwm9GyFAaK9
-7jhntL11lD24Thyw+NhYbK4a4VZNFZMDemq4+5ZtlKVHUs6NjrhAY2E6panB5BBd
-nANADQQv/hXHgxEscLqtGrCx5CTfVvYd3+v78q+ALi2Sj1pVBie4wUvT8Ev5EA35
-t8V9MGWNS4R5K9+7qU78vkNzbm59xteR7zYJOzOQYFOofsbWR9t/l90w0vxT2VKv
-7OyQ6S1V2doz+oaIGQaGXBdl9t9ObXAyZfOvyDpER4Ot6D8hToO7FavQJ15o0Rm0
-uahzgFBdufsWy/ltSSIio0HdjNT9mWP2YWlc2HsLrx6GtzQ7epdTVCjQ72q33kDC
-9QAeJ77rN/BVfZmKsaq1RjtP6A9LFSy/hVIqLnBl4uVDoHTx1bBCTexiVVXOROEu
-TBEpcU57cwC1wZ39KfJh74lyV1JAnOhPw81e5C0Rd6wyEm07DBhvpAhcfzR5T4R/
-NcF6tc6ANE8t8lGsPoYwwlcTgNrxh+BBKwy5yFERn6bHYOV71DI=
-=52zH
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6W6ZkACgkQFA3kzBSg
+KbaJ5g//Z4m5gD84GPP6vg6sSjL/LyJ6CZd/w08+hP95Uk1K82LELeWPmlaK1ibg
+vSJRO8GeZLYFOYY8LgLc7rzQkHpkvB9xN2TW1wzZlAycvsjBvQtg5Ka1hHfASRuW
+vR90ZA8G9eV5x8mpjEzNLEshHh4vkQlQjzgoO80v/r9ssHKHLDCwn0LAVr0hUEtR
+ewHUTG8UwBsUguxGbnOwmiSdICGw/F46P2i+9LHLgp/2r6QYnjA7f31dWZ8hTOsR
+HExpW9MoEmA9Kz4WeiNrSof/YXKh8I2z1ONzyeRDk+0IuBpHdF9MmY/Lb3wuQB2t
+k9Vx4MF+2uBYS8R/Tv2ivxjxFmh74Zo2tCMXAj1P/AXhXlMtABXTCWNnmREyz4pe
+lgskBVxJtwgybB+2r9RjWBE1uysnlG6GEJe82JP+yhPZfA8huDIGSG63+t5KVE5Y
+LpcWFfEtXiPio2dvsOYCif4kHaCM0eARpY+83NwAokleUbIsovR2jDvvX3IJMtRt
+SZWbMsW99eClAhSfLpxxA24OpgJoXRyhrhKqLPPil9/NucxWNgU1SbRqdmaA4LK2
+inY4gaMa7Nixi1+4efMZYKl+Jqm6z2ayVhjZqONCu57lpoHFx9/wzQtLoOihyBT/
+kObtfYnDh30/N8/6Btj9vpb5pA3NBMLuOKacj9sKZXdA5ipEGNQ=
+=mwAo
 -----END PGP SIGNATURE-----
 
---oiL9LJXJsdjS5rzq--
+--ggdAeHltlv4tpqCr--
