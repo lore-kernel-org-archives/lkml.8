@@ -4,47 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C76D6C2BB55
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:01:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C871C2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:02:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 956B721569
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:01:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B16E20575
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:02:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586952119;
-	bh=GaNAlxoIcuufHCy0GFgNzN8L5z5nlk6PDPiyXYSP6Ag=;
+	s=default; t=1586952130;
+	bh=vqyA98ISkgtNizDCDh4+BfcOp+FH3LtWJpuHIiV0s3U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zfkgpnk0ijnNTWmpqRAObwWarO3p0om4jp85auIrQ3L8scvvmCmoptnVOv00CeUKR
-	 8nbxtPnIwyoK0geih3j1RoBpdmJ5B7onV8LWknZ6sJsJmF/WEhLfQk9YJB9LpSUT6B
-	 dCtAh+tM4EWYEYTHK5q6JBdTKeJrwrL6QMdm1V3I=
+	b=M8KyUxj3c12RQnivcci6aWsHniDxxbmuLtVO2ZaO3AEK9GmXtCE/oQJTDKGBx7b/Q
+	 r10zyugRVs8MHKsR3Ctl+GxcDkUBfGU+I4GjzF9WoXkMMGNVgvEWw9OyfyAp6OT+0y
+	 OP8ejKMtROAi+SZEPRzn0o/lFhSfCSX8T2gkDdVY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S368190AbgDOMB4 (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:01:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43824 "EHLO mail.kernel.org"
+        id S2409709AbgDOMCJ (ORCPT
+        <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:02:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409424AbgDOLsI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:48:08 -0400
+        id S2406606AbgDOLsN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:48:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7542621569;
-        Wed, 15 Apr 2020 11:48:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADDE8214D8;
+        Wed, 15 Apr 2020 11:48:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951288;
-        bh=GaNAlxoIcuufHCy0GFgNzN8L5z5nlk6PDPiyXYSP6Ag=;
+        s=default; t=1586951293;
+        bh=vqyA98ISkgtNizDCDh4+BfcOp+FH3LtWJpuHIiV0s3U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bP6zF7zTQdLC8mjCqjDt55UVqMFc77oYbyIKfIO+bZRuEO+cyc1CE0lx0VjCw0ke3
-         yIfpyYbMWUPPJ70aiZQll3IT0qdleupEzyHy5r18PDplvHn4xSvUzwN4gRR1DDdXos
-         dGWiUj/Dbp7VN/JT/tLxvvYlJjiHVzV2stZMgFbc=
+        b=ASsmYYe5N9wnTqx1IMb1+9hwoan8SLNB5f1tbl/8VXwCvvGOWeyQkluVAWubjLtZX
+         o9OUN5DwADLFAufJYEi6WVSDsuR2+N8jsy9SHYLByKE3nKKE8A87NQKm0X3NL9Syv+
+         4JCPNJ69JETo/sUIPygXL4a2qjJEBMTz4SwqdC+g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 16/21] NFS: Fix memory leaks in nfs_pageio_stop_mirroring()
-Date:   Wed, 15 Apr 2020 07:47:43 -0400
-Message-Id: <20200415114748.15713-16-sashal@kernel.org>
+Cc:     Adrian Huang <ahuang12@lenovo.com>, Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 4.9 21/21] iommu/amd: Fix the configuration of GCR3 table root pointer
+Date:   Wed, 15 Apr 2020 07:47:48 -0400
+Message-Id: <20200415114748.15713-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114748.15713-1-sashal@kernel.org>
 References: <20200415114748.15713-1-sashal@kernel.org>
@@ -57,54 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Adrian Huang <ahuang12@lenovo.com>
 
-[ Upstream commit 862f35c94730c9270833f3ad05bd758a29f204ed ]
+[ Upstream commit c20f36534666e37858a14e591114d93cc1be0d34 ]
 
-If we just set the mirror count to 1 without first clearing out
-the mirrors, we can leak queued up requests.
+The SPA of the GCR3 table root pointer[51:31] masks 20 bits. However,
+this requires 21 bits (Please see the AMD IOMMU specification).
+This leads to the potential failure when the bit 51 of SPA of
+the GCR3 table root pointer is 1'.
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Adrian Huang <ahuang12@lenovo.com>
+Fixes: 52815b75682e2 ("iommu/amd: Add support for IOMMUv2 domain mode")
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/pagelist.c | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
+ drivers/iommu/amd_iommu_types.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/nfs/pagelist.c b/fs/nfs/pagelist.c
-index b6e25126a0b0f..529f3a5762637 100644
---- a/fs/nfs/pagelist.c
-+++ b/fs/nfs/pagelist.c
-@@ -851,15 +851,6 @@ static int nfs_pageio_setup_mirroring(struct nfs_pageio_descriptor *pgio,
- 	return 0;
- }
+diff --git a/drivers/iommu/amd_iommu_types.h b/drivers/iommu/amd_iommu_types.h
+index 0d91785ebdc34..da3fbf82d1cf4 100644
+--- a/drivers/iommu/amd_iommu_types.h
++++ b/drivers/iommu/amd_iommu_types.h
+@@ -329,7 +329,7 @@
  
--/*
-- * nfs_pageio_stop_mirroring - stop using mirroring (set mirror count to 1)
-- */
--void nfs_pageio_stop_mirroring(struct nfs_pageio_descriptor *pgio)
--{
--	pgio->pg_mirror_count = 1;
--	pgio->pg_mirror_idx = 0;
--}
--
- static void nfs_pageio_cleanup_mirroring(struct nfs_pageio_descriptor *pgio)
- {
- 	pgio->pg_mirror_count = 1;
-@@ -1285,6 +1276,14 @@ void nfs_pageio_cond_complete(struct nfs_pageio_descriptor *desc, pgoff_t index)
- 	}
- }
+ #define DTE_GCR3_VAL_A(x)	(((x) >> 12) & 0x00007ULL)
+ #define DTE_GCR3_VAL_B(x)	(((x) >> 15) & 0x0ffffULL)
+-#define DTE_GCR3_VAL_C(x)	(((x) >> 31) & 0xfffffULL)
++#define DTE_GCR3_VAL_C(x)	(((x) >> 31) & 0x1fffffULL)
  
-+/*
-+ * nfs_pageio_stop_mirroring - stop using mirroring (set mirror count to 1)
-+ */
-+void nfs_pageio_stop_mirroring(struct nfs_pageio_descriptor *pgio)
-+{
-+	nfs_pageio_complete(pgio);
-+}
-+
- int __init nfs_init_nfspagecache(void)
- {
- 	nfs_page_cachep = kmem_cache_create("nfs_page",
+ #define DTE_GCR3_INDEX_A	0
+ #define DTE_GCR3_INDEX_B	1
 -- 
 2.20.1
 
