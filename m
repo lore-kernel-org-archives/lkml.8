@@ -2,171 +2,113 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AED0C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A4D0C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:02:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31D1F21556
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:02:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1436221556
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:02:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586966551;
-	bh=F5rqYV9PFe7xx1HsmWsqK7hbyCJm0A+bMEzA6UyTwv0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=DYWO+IS9iiIXnRJxHLD6RyMZtFrCejKCwd95+YlriEDo8SkM9CtoPXt0sQihFythr
-	 +FZjWNPncS5ae5EFUSXXi4dpAP5AdQqxt7+6PZjuMxCweSFh1ItEj69Bey1wSNXi4r
-	 RoxNeui65lGq5K9iMIxAROH9EO5yH3FpUPfj3/P4=
+	s=default; t=1586966559;
+	bh=e3d4LUjp8nYLchPlf9MGqps5m3topJNlB0bFbA2lpoc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TqOaWGlNjYYRhXzcVLd95LVmYYZR29ZwTDqwMsBwHXNHkDMZn7VBVZPcqUQW8SFJ0
+	 ZhS6wczHCTOq4a+hJa4+NQzy4BwDmaNZmfGYi6wBHTYi5w2FbzARfg6r3I9uhlkYuc
+	 JFC7wptZ9K/G8086IUq+8Ev3Ou6zmSQS/IXWjaWE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410095AbgDOQCa (ORCPT
+        id S2410104AbgDOQCi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 12:02:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53270 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2410064AbgDOQCB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 12:02:01 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E81DFC061A0C;
-        Wed, 15 Apr 2020 09:02:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description;
-        bh=lInS3yd0u5ULGdaW04d0ps6JgPraHG4nqfTF9eszVgA=; b=SuO8JeDYYwWBCoAciAdoSEwK66
-        ylvG7tjsynS3i9KsQ91jqO2s2shMqz7d0FVR9Dxu/5x9QmOyb3pWzgjIi02NBrm1Oifjc5hHCZL5a
-        uqYtqeA+YEmLT48s8/SMpQ/2ZwXVgh8SRVrIufPBPuByC9T2nFSQC3FGdn9HA9SRmSV6i6M1FyhFu
-        AzFDM3BN+fCY1hyblne6dh3j/5c4QWxtVGDQ8GXllLTZXvzHpn7weeOrwpuQc4U4c79o2QST3YUK/
-        xxtmzsTi1IiHKGoXZakhm2jfH8I9xqmGga3lscOrQL0MNer1LZ04hSR5fJ12uTbgTww3Ip/PcLtoq
-        YHF2/KGw==;
-Received: from ip5f5ad4d8.dynamic.kabel-deutschland.de ([95.90.212.216] helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jOkUB-0008Ss-7z; Wed, 15 Apr 2020 16:01:59 +0000
-Date:   Wed, 15 Apr 2020 18:01:54 +0200
-From:   Mauro Carvalho Chehab <mchehab@kernel.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-media <linux-media@vger.kernel.org>
-Subject: Re: linux-next: Tree for Apr 15 (MEDIA Kconfig symbols)
-Message-ID: <20200415180154.4a340e3e@coco.lan>
-In-Reply-To: <8e4b7065-75c4-8bcf-8ad2-ed21463c494c@infradead.org>
-References: <20200415152240.2422e06c@canb.auug.org.au>
-        <8e4b7065-75c4-8bcf-8ad2-ed21463c494c@infradead.org>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 15 Apr 2020 12:02:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54030 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2410085AbgDOQCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 12:02:21 -0400
+Received: from localhost (unknown [106.201.106.187])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21F9A21582;
+        Wed, 15 Apr 2020 16:02:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586966540;
+        bh=e3d4LUjp8nYLchPlf9MGqps5m3topJNlB0bFbA2lpoc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0teLUfV64vmTzBzSuqWQrtjIleMYu4aKKQaY7nH+Dle1urcf3gjhUaqvaaO+0Akwu
+         22j8/YCtvQqVbBbZOCYgnNo6n+R9CCrezf1p54hbCerhAs4jnb6DbI6VnOHruF3nNf
+         K47Jkdq1hxgAp52gsPMGfdi4IDMG/3cP8RQBDJZw=
+Date:   Wed, 15 Apr 2020 21:32:12 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Zhou Wang <wangzhou1@hisilicon.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Zhenfa Qiu <qiuzhenfa@hisilicon.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: hisilicon: fix PCI_MSI dependency
+Message-ID: <20200415160212.GW72691@vkoul-mobl>
+References: <20200408200559.4124238-1-arnd@arndb.de>
+ <5E8E8104.5060307@hisilicon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5E8E8104.5060307@hisilicon.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HI Randy,
-
-Em Wed, 15 Apr 2020 08:39:00 -0700
-Randy Dunlap <rdunlap@infradead.org> escreveu:
-
-> On 4/14/20 10:22 PM, Stephen Rothwell wrote:
-> > Hi all,
+On 09-04-20, 09:57, Zhou Wang wrote:
+> On 2020/4/9 4:05, Arnd Bergmann wrote:
+> > The dependency is phrased incorrectly, so on arm64, it is possible
+> > to build with CONFIG_PCI disabled, resulting a build failure:
 > > 
-> > Changes since 20200414:
+> > drivers/dma/hisi_dma.c: In function 'hisi_dma_free_irq_vectors':
+> > drivers/dma/hisi_dma.c:138:2: error: implicit declaration of function 'pci_free_irq_vectors'; did you mean 'pci_alloc_irq_vectors'? [-Werror=implicit-function-declaration]
+> >   138 |  pci_free_irq_vectors(data);
+> >       |  ^~~~~~~~~~~~~~~~~~~~
+> >       |  pci_alloc_irq_vectors
+> > drivers/dma/hisi_dma.c: At top level:
+> > drivers/dma/hisi_dma.c:605:1: warning: data definition has no type or storage class
+> >   605 | module_pci_driver(hisi_dma_pci_driver);
+> >       | ^~~~~~~~~~~~~~~~~
+> > drivers/dma/hisi_dma.c:605:1: error: type defaults to 'int' in declaration of 'module_pci_driver' [-Werror=implicit-int]
+> > drivers/dma/hisi_dma.c:605:1: warning: parameter names (without types) in function declaration
+> > drivers/dma/hisi_dma.c:599:26: error: 'hisi_dma_pci_driver' defined but not used [-Werror=unused-variable]
+> >   599 | static struct pci_driver hisi_dma_pci_driver = {
 > > 
-> > My fixes tree contains:
+> > Change it so we always depend on PCI_MSI, even on ARM64
 > > 
-> >   6b038bdcd3d1 sh: mm: Fix build error
+> > Fixes: e9f08b65250d ("dmaengine: hisilicon: Add Kunpeng DMA engine support")
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > ---
+> >  drivers/dma/Kconfig | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
 > > 
-> > The qcom tree gained a build failure for which I reverted a commit.
+> > diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+> > index 98ae15c82a30..c19e25b140c5 100644
+> > --- a/drivers/dma/Kconfig
+> > +++ b/drivers/dma/Kconfig
+> > @@ -241,7 +241,8 @@ config FSL_RAID
+> >  
+> >  config HISI_DMA
+> >  	tristate "HiSilicon DMA Engine support"
+> > -	depends on ARM64 || (COMPILE_TEST && PCI_MSI)
+> > +	depends on ARM64 || COMPILE_TEST
+> > +	depends on PCI_MSI
+> >  	select DMA_ENGINE
+> >  	select DMA_VIRTUAL_CHANNELS
+> >  	help
 > > 
-> > The drm-misc tree gained conflicts against Linus' and the drm-intel trees.
-> > 
-> > The sound-asoc tree gained build failures so I used the version from
-> > next-20200414.
-> > 
-> > Non-merge commits (relative to Linus' tree): 1793
-> >  2505 files changed, 50786 insertions(+), 22669 deletions(-)
-> > 
-> > ----------------------------------------------------------------------------
-> > 
-> > I have created today's linux-next tree at
-> > git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-> > (patches at http://www.kernel.org/pub/linux/kernel/next/ ).  If you
-> > are tracking the linux-next tree using git, you should not use "git pull"
-> > to do so as that will try to merge the new linux-next release with the
-> > old one.  You should use "git fetch" and checkout or reset to the new
-> > master.
-> > 
-> > You can see which trees have been included by looking in the Next/Trees
-> > file in the source.  There are also quilt-import.log and merge.log
-> > files in the Next directory.  Between each merge, the tree was built
-> > with a ppc64_defconfig for powerpc, an allmodconfig for x86_64, a
-> > multi_v7_defconfig for arm and a native build of tools/perf. After
-> > the final fixups (if any), I do an x86_64 modules_install followed by
-> > builds for x86_64 allnoconfig, powerpc allnoconfig (32 and 64 bit),
-> > ppc44x_defconfig, allyesconfig and pseries_le_defconfig and i386, sparc
-> > and sparc64 defconfig and htmldocs. And finally, a simple boot test
-> > of the powerpc pseries_le_defconfig kernel in qemu (with and without
-> > kvm enabled).
-> > 
-> > Below is a summary of the state of the merge.
-> > 
-> > I am currently merging 317 trees (counting Linus' and 78 trees of bug
-> > fix patches pending for the current merge release).
-> > 
-> > Stats about the size of the tree over time can be seen at
-> > http://neuling.org/linux-next-size.html .
-> > 
-> > Status of my local build tests will be at
-> > http://kisskb.ellerman.id.au/linux-next .  If maintainers want to give
-> > advice about cross compilers/configs that work, we are always open to add
-> > more builds.
-> > 
-> > Thanks to Randy Dunlap for doing many randconfig builds.  And to Paul
-> > Gortmaker for triage and bug fixes.
-> >   
 > 
-> on i386 or x86_64:
+> Hi Arnd,
 > 
-> WARNING: unmet direct dependencies detected for CEC_NOTIFIER
->   Depends on [n]: MEDIA_SUPPORT [=n]
->   Selected by [y]:
->   - DRM_I2C_NXP_TDA9950 [=y] && HAS_IOMEM [=y] && DRM [=y] && DRM_KMS_HELPER [=y] && I2C [=y]
->   - DRM_DW_HDMI_CEC [=y] && HAS_IOMEM [=y] && DRM [=y] && DRM_BRIDGE [=y] && DRM_DW_HDMI [=y]
-> 
-> WARNING: unmet direct dependencies detected for CEC_CORE
->   Depends on [n]: MEDIA_SUPPORT [=n]
->   Selected by [y]:
->   - DRM_I915 [=y] && HAS_IOMEM [=y] && DRM [=y] && X86 [=y] && PCI [=y] && CEC_NOTIFIER [=y]
->   - DRM_I2C_NXP_TDA998X [=y] && HAS_IOMEM [=y] && DRM [=y] && DRM_KMS_HELPER [=y] && I2C [=y] && CEC_NOTIFIER [=y]
->   - DRM_I2C_NXP_TDA9950 [=y] && HAS_IOMEM [=y] && DRM [=y] && DRM_KMS_HELPER [=y] && I2C [=y]
->   - DRM_DW_HDMI [=y] && HAS_IOMEM [=y] && DRM [=y] && DRM_BRIDGE [=y] && CEC_NOTIFIER [=y]
->   - DRM_DW_HDMI_CEC [=y] && HAS_IOMEM [=y] && DRM [=y] && DRM_BRIDGE [=y] && DRM_DW_HDMI [=y]
-> 
-> WARNING: unmet direct dependencies detected for CEC_NOTIFIER
->   Depends on [n]: MEDIA_SUPPORT [=n]
->   Selected by [y]:
->   - DRM_I2C_NXP_TDA9950 [=y] && HAS_IOMEM [=y] && DRM [=y] && DRM_KMS_HELPER [=y] && I2C [=y]
->   - DRM_DW_HDMI_CEC [=y] && HAS_IOMEM [=y] && DRM [=y] && DRM_BRIDGE [=y] && DRM_DW_HDMI [=y]
-> 
-> WARNING: unmet direct dependencies detected for CEC_CORE
->   Depends on [n]: MEDIA_SUPPORT [=n]
->   Selected by [y]:
->   - DRM_I915 [=y] && HAS_IOMEM [=y] && DRM [=y] && X86 [=y] && PCI [=y] && CEC_NOTIFIER [=y]
->   - DRM_I2C_NXP_TDA998X [=y] && HAS_IOMEM [=y] && DRM [=y] && DRM_KMS_HELPER [=y] && I2C [=y] && CEC_NOTIFIER [=y]
->   - DRM_I2C_NXP_TDA9950 [=y] && HAS_IOMEM [=y] && DRM [=y] && DRM_KMS_HELPER [=y] && I2C [=y]
->   - DRM_DW_HDMI [=y] && HAS_IOMEM [=y] && DRM [=y] && DRM_BRIDGE [=y] && CEC_NOTIFIER [=y]
->   - DRM_DW_HDMI_CEC [=y] && HAS_IOMEM [=y] && DRM [=y] && DRM_BRIDGE [=y] && DRM_DW_HDMI [=y]
+> There was a fix from Haibing: https://lkml.org/lkml/2020/3/28/158
+> Maybe Vinod will review and take it later :)
 
-Those should be fixed upstream.  DVB_CORE should not depend on MEDIA_SUPPORT.
-The patch that changed it was reverted:
+It should be in -next tomorrow :)
 
-	https://git.linuxtv.org/media_tree.git/commit/?id=9393d050c860a8f03f1e04d380653d23c7911c90
 
-Yet, as we did a major rework at Kconfig, I don't doubt that some random
-config may still cause issues there.
-
-Regards,
-Mauro
+-- 
+~Vinod
