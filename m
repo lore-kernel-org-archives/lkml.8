@@ -2,110 +2,147 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40FCCC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A2A4C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:12:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 276B720768
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:12:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73BF720768
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:12:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jRHh+oFA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2896331AbgDOKMO (ORCPT
+        id S2896313AbgDOKMf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 06:12:14 -0400
-Received: from mga14.intel.com ([192.55.52.115]:60792 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896300AbgDOKLi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 06:11:38 -0400
-IronPort-SDR: qsBTHdaAPCyvsuoeCvISygRkRQAlcKEqKpyNPlfcwi4YKHnZZ075j354YrmLBbMYyVfJ0MiOLe
- uqCTvBhZ77Gw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 03:11:37 -0700
-IronPort-SDR: i9IDSbBaHPzIj3hFf5CVpxlDGRv0opyNYzjbqRgTqg09fwyP5fiqUGEmEy92pzcW4adyiqw6Sh
- +ci/B1NBczWg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,386,1580803200"; 
-   d="scan'208";a="253483294"
-Received: from yilunxu-optiplex-7050.sh.intel.com ([10.239.159.141])
-  by orsmga003.jf.intel.com with ESMTP; 15 Apr 2020 03:11:35 -0700
-From:   Xu Yilun <yilun.xu@intel.com>
-To:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     trix@redhat.com, bhu@redhat.com, Xu Yilun <yilun.xu@intel.com>,
-        Luwei Kang <luwei.kang@intel.com>, Wu Hao <hao.wu@intel.com>
-Subject: [PATCH v4 7/7] Documentation: fpga: dfl: add descriptions for interrupt related interfaces.
-Date:   Wed, 15 Apr 2020 18:07:35 +0800
-Message-Id: <1586945255-30823-8-git-send-email-yilun.xu@intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1586945255-30823-1-git-send-email-yilun.xu@intel.com>
-References: <1586945255-30823-1-git-send-email-yilun.xu@intel.com>
+        Wed, 15 Apr 2020 06:12:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55224 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2896235AbgDOKL3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 06:11:29 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB029C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 03:11:28 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id f13so18398617wrm.13
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 03:11:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=30de/AlaqjlX2SQ6sRQq6eEEGq+Ce5SXtlCKnRfiafQ=;
+        b=jRHh+oFAJV8Tgx5k7HU8HwVLEOIdROElftVnkovMBaV0dYnaGaI26lfUn/Rltxvqw1
+         IrTzQFim4nimJ6tDEDZFwMfbSKq0gIawHT6Z6IvUOEYIaj7Ay81Vnz4gwWNIpTPjOtPk
+         czVljyjYsxvuFUPAWIuDeVPGa2fIFL+SRSUw2CtkR6aGqnoBU5+Qsx1LEJgmZvJOQ70E
+         zB/NPJpD6Ck87Rr2cygLCbpbiM/lRvmB7n5OYtiaKQt/ASJZUrdqqC8Asb6E+y/jCICV
+         /JkQlg4fC4uF+OoaWM1Lya1oXpqG867D9dg2LD0bcXQyKXy02xyt0S8eL7whlZ3rc1Mr
+         KvZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=30de/AlaqjlX2SQ6sRQq6eEEGq+Ce5SXtlCKnRfiafQ=;
+        b=iBd0azRfD63D7g4Q69uiO4yMHbaWwijr1UGpdN0JpucH6empii5+Z7f56C1Xcm2sRN
+         6yRpORMJOccIfbpHo38yYkmMSBAdG0OTLYWIFtb2RJ2jq1Y19Pk4C+5kdZCTI6craFdR
+         1/4wpg/R7spvdzyTK1fzk1LzgQSY4v2KfHjf2Lf9NG9+KOy5rp4AVNK37veBRvW95uLl
+         qkzpVKMIa/ZbHWVz+Sz0+N/TTCdUasLmrVFKK7KNJh5DGIpunTpD2ER/odr7/4hKAaF1
+         hsz1DoDUreM4A0yo1H/yK4uC07y9yh+XbovAFAH8UMeLtWmdzjIxuflPYmFsYL6jvDpZ
+         WPoA==
+X-Gm-Message-State: AGi0PuaG7iBEHg+ILRy3Ah2tuaqXvwT6v739mFrC1e5j69JZiHue1ok2
+        rOHQXT/8X4pLTRyZy/3H4vpS/g==
+X-Google-Smtp-Source: APiQypITjl8sl8rPg8i/DwZP4DdcaJAmWeApCTCpntNLn88ytBpJQ3R0bUll0FQH9UWGZ2HxNOUElA==
+X-Received: by 2002:adf:9d4a:: with SMTP id o10mr26328854wre.99.1586945487115;
+        Wed, 15 Apr 2020 03:11:27 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
+        by smtp.gmail.com with ESMTPSA id x132sm17945135wmg.33.2020.04.15.03.11.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2020 03:11:26 -0700 (PDT)
+Date:   Wed, 15 Apr 2020 11:11:22 +0100
+From:   Quentin Perret <qperret@google.com>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default
+ boost value
+Message-ID: <20200415101122.GA14447@google.com>
+References: <20200403123020.13897-1-qais.yousef@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200403123020.13897-1-qais.yousef@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds introductions of interrupt related interfaces for FME
-error reporting, port error reporting and AFU user interrupts features.
+Hi Qais,
 
-Signed-off-by: Luwei Kang <luwei.kang@intel.com>
-Signed-off-by: Wu Hao <hao.wu@intel.com>
-Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-----
-v2: Update Documents cause change of irq ioctl interfaces.
-v3: No change
-v4: Update interrupt support part.
----
- Documentation/fpga/dfl.rst | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+On Friday 03 Apr 2020 at 13:30:19 (+0100), Qais Yousef wrote:
+<snip>
+> +	/*
+> +	 * The new value will be applied to all RT tasks the next time they
+> +	 * wakeup, assuming the task is using the system default and not a user
+> +	 * specified value. In the latter we shall leave the value as the user
+> +	 * requested.
+> +	 */
+>  	if (sysctl_sched_uclamp_util_min > sysctl_sched_uclamp_util_max ||
+>  	    sysctl_sched_uclamp_util_max > SCHED_CAPACITY_SCALE) {
+>  		result = -EINVAL;
+>  		goto undo;
+>  	}
+>  
+> +	if (sysctl_sched_rt_default_uclamp_util_min > SCHED_CAPACITY_SCALE) {
+> +		result = -EINVAL;
+> +		goto undo;
+> +	}
 
-diff --git a/Documentation/fpga/dfl.rst b/Documentation/fpga/dfl.rst
-index 094fc8a..702bf62 100644
---- a/Documentation/fpga/dfl.rst
-+++ b/Documentation/fpga/dfl.rst
-@@ -89,6 +89,8 @@ The following functions are exposed through ioctls:
- - Program bitstream (DFL_FPGA_FME_PORT_PR)
- - Assign port to PF (DFL_FPGA_FME_PORT_ASSIGN)
- - Release port from PF (DFL_FPGA_FME_PORT_RELEASE)
-+- Get number of irqs of FME global error (DFL_FPGA_FME_ERR_GET_IRQ_NUM)
-+- Set interrupt trigger for FME error (DFL_FPGA_FME_ERR_SET_IRQ)
- 
- More functions are exposed through sysfs
- (/sys/class/fpga_region/regionX/dfl-fme.n/):
-@@ -144,6 +146,10 @@ The following functions are exposed through ioctls:
- - Map DMA buffer (DFL_FPGA_PORT_DMA_MAP)
- - Unmap DMA buffer (DFL_FPGA_PORT_DMA_UNMAP)
- - Reset AFU (DFL_FPGA_PORT_RESET)
-+- Get number of irqs of port error (DFL_FPGA_PORT_ERR_GET_IRQ_NUM)
-+- Set interrupt trigger for port error (DFL_FPGA_PORT_ERR_SET_IRQ)
-+- Get number of irqs of UINT (DFL_FPGA_PORT_UINT_GET_IRQ_NUM)
-+- Set interrupt trigger for UINT (DFL_FPGA_PORT_UINT_SET_IRQ)
- 
- DFL_FPGA_PORT_RESET:
-   reset the FPGA Port and its AFU. Userspace can do Port
-@@ -378,6 +384,19 @@ The device nodes used for ioctl() or mmap() can be referenced through::
- 	/sys/class/fpga_region/<regionX>/<dfl-port.n>/dev
- 
- 
-+Interrupt support
-+=================
-+Some FME and AFU private features are able to generate interrupts. As mentioned
-+above, users could call ioctl (DFL_FPGA_*_GET_IRQ_NUM) to know whether or how
-+many interrupts are supported for this private feature. Drivers also implement
-+an eventfd based interrupt handling mechanism for users to get notified when
-+interrupt happens. Users could set eventfds to driver via
-+ioctl (DFL_FPGA_*_SET_IRQ), and then poll/select on these eventfds waiting for
-+notification.
-+In Current DFL, 3 sub features (Port error, FME global error and AFU interrupt)
-+support interrupts.
-+
-+
- Add new FIUs support
- ====================
- It's possible that developers made some new function blocks (FIUs) under this
--- 
-2.7.4
+Hmm, checking:
 
+	if (sysctl_sched_rt_default_uclamp_util_min > sysctl_sched_uclamp_util_min)
+
+would probably make sense too, but then that would make writing in
+sysctl_sched_uclamp_util_min cumbersome for sysadmins as they'd need to
+lower the rt default first. Is that the reason for checking against
+SCHED_CAPACITY_SCALE? That might deserve a comment or something.
+
+<snip>
+> @@ -1241,9 +1293,13 @@ static void uclamp_fork(struct task_struct *p)
+>  	for_each_clamp_id(clamp_id) {
+>  		unsigned int clamp_value = uclamp_none(clamp_id);
+>  
+> -		/* By default, RT tasks always get 100% boost */
+> +		/*
+> +		 * By default, RT tasks always get 100% boost, which the admins
+> +		 * are allowed to change via
+> +		 * sysctl_sched_rt_default_uclamp_util_min knob.
+> +		 */
+>  		if (unlikely(rt_task(p) && clamp_id == UCLAMP_MIN))
+> -			clamp_value = uclamp_none(UCLAMP_MAX);
+> +			clamp_value = sysctl_sched_rt_default_uclamp_util_min;
+>  
+>  		uclamp_se_set(&p->uclamp_req[clamp_id], clamp_value, false);
+>  	}
+
+And that, as per 20200414161320.251897-1-qperret@google.com, should not
+be there :)
+
+Otherwise the patch pretty looks good to me!
+
+Thanks,
+Quentin
