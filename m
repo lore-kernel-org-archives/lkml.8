@@ -2,108 +2,96 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D31C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:52:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CCDAC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:53:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAC6320737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:52:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 782A120737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:53:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="FUUAvjfw"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="pGa7f6AE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392764AbgDOBwQ (ORCPT
+        id S2392772AbgDOBxk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 21:52:16 -0400
-Received: from ozlabs.org ([203.11.71.1]:40947 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387766AbgDOBwI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 21:52:08 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49252G1V8jz9s71;
-        Wed, 15 Apr 2020 11:52:06 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1586915526;
-        bh=fV1TG65RHgW5mIIIywIzh+2jkntYkoQhdhBIuj+ePD0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=FUUAvjfwRzKEGTbuUm4Y1r7k7qnFRNUM2MLeVhoodY3Ji61ZSmq6NwbBmJW8G99ap
-         M+9fugTMZoHdjjTBdES84Gthquced4zaLFGk9TbkqpMoJnjdTWRvlMVEycVcPc08ju
-         QDYtjX3BOHNa3k/gCmFhKhDZN2aQnFsd+WnqsSHAlGL6hToPU8cyJR7DYkEnZ4i3Wu
-         6Ve3qH3UDtLPHqT4eXewLm1MD7aEhRNiPIj+D+rpnPXjzYbBlQo6sIl9wH3fVmI5R7
-         rMlnwRYpDkFf2/WE1Na/ro0hL2n1AyX8kzzHkDmomMRMyjwz/wI9PyjZj0TReKawN1
-         3pIUwlmDtnMGA==
-Date:   Wed, 15 Apr 2020 11:52:04 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Lyude Paul <lyude@redhat.com>,
-        Ville =?UTF-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
-Subject: linux-next: manual merge of the drm-misc tree with the drm-intel
- tree
-Message-ID: <20200415115204.4929f663@canb.auug.org.au>
+        Tue, 14 Apr 2020 21:53:40 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:28129 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2387766AbgDOBxe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 21:53:34 -0400
+X-UUID: 73b05dc708bd4681a1b45d44c43761df-20200415
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=bIUc1LatWTPrRy0d0hIMzrPytsvlDok1S2YutEMtvpY=;
+        b=pGa7f6AEhu0gFbZjS5Z0LX1aSJhT3HT0Cja7zjbk0vTDLL//95+yFUEg8ffasW8J+1Ry83bWL3fX2eN4jba/jmWE6FIKKKHZjB5B3p0dLakeRiTvKzZbKE0Mk7kOj5LwhshWnKUYnrWhbs2NsOtddI8dFHlnrMHpTMqyKJkOTR8=;
+X-UUID: 73b05dc708bd4681a1b45d44c43761df-20200415
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        (envelope-from <miles.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1100836088; Wed, 15 Apr 2020 09:53:27 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 15 Apr 2020 09:53:26 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 15 Apr 2020 09:53:25 +0800
+Message-ID: <1586915606.5647.5.camel@mtkswgap22>
+Subject: Re: [PATCH] mm/gup: fix null pointer dereference detected by
+ coverity
+From:   Miles Chen <miles.chen@mediatek.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
+        Peter Xu <peterx@redhat.com>
+Date:   Wed, 15 Apr 2020 09:53:26 +0800
+In-Reply-To: <20200414170827.d32fc1fc12a33b140b740b94@linux-foundation.org>
+References: <20200407095107.1988-1-miles.chen@mediatek.com>
+         <20200414170827.d32fc1fc12a33b140b740b94@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/hn/Ojf3YwBFqzq4+MhBG6XU";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/hn/Ojf3YwBFqzq4+MhBG6XU
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+T24gVHVlLCAyMDIwLTA0LTE0IGF0IDE3OjA4IC0wNzAwLCBBbmRyZXcgTW9ydG9uIHdyb3RlOg0K
+PiBPbiBUdWUsIDcgQXByIDIwMjAgMTc6NTE6MDcgKzA4MDAgTWlsZXMgQ2hlbiA8bWlsZXMuY2hl
+bkBtZWRpYXRlay5jb20+IHdyb3RlOg0KPiANCj4gPiBJbiBmaXh1cF91c2VyX2ZhdWx0KCksIGl0
+IGlzIHBvc3NpYmxlIHRoYXQgdW5sb2NrZWQgaXMgTlVMTCwNCj4gPiBzbyB3ZSBzaG91bGQgdGVz
+dCB1bmxvY2tlZCBiZWZvcmUgdXNpbmcgaXQuDQo+ID4gDQo+ID4gRm9yIGV4YW1wbGUsIGluIGFy
+Y2gvYXJjL2tlcm5lbC9wcm9jZXNzLmMsIE5VTEwgaXMgcGFzc2VkDQo+ID4gdG8gZml4dXBfdXNl
+cl9mYXVsdCgpLg0KPiA+IA0KPiA+IFNZU0NBTExfREVGSU5FMyhhcmNfdXNyX2NtcHhjaGcsIGlu
+dCAqLCB1YWRkciwgaW50LCBleHBlY3RlZCwgaW50LCBuZXcpDQo+ID4gew0KPiA+IC4uLg0KPiA+
+IAlyZXQgPSBmaXh1cF91c2VyX2ZhdWx0KGN1cnJlbnQsIGN1cnJlbnQtPm1tLCAodW5zaWduZWQg
+bG9uZykgdWFkZHIsDQo+ID4gCQkJICAgICAgIEZBVUxUX0ZMQUdfV1JJVEUsIE5VTEwpOw0KPiA+
+IC4uLg0KPiA+IH0NCj4gDQo+IChjYyBQZXRlcikNCj4gDQo+ID4gLS0tIGEvbW0vZ3VwLmMNCj4g
+PiArKysgYi9tbS9ndXAuYw0KPiA+IEBAIC0xMjMwLDcgKzEyMzAsOCBAQCBpbnQgZml4dXBfdXNl
+cl9mYXVsdChzdHJ1Y3QgdGFza19zdHJ1Y3QgKnRzaywgc3RydWN0IG1tX3N0cnVjdCAqbW0sDQo+
+ID4gIAlpZiAocmV0ICYgVk1fRkFVTFRfUkVUUlkpIHsNCj4gPiAgCQlkb3duX3JlYWQoJm1tLT5t
+bWFwX3NlbSk7DQo+ID4gIAkJaWYgKCEoZmF1bHRfZmxhZ3MgJiBGQVVMVF9GTEFHX1RSSUVEKSkg
+ew0KPiA+IC0JCQkqdW5sb2NrZWQgPSB0cnVlOw0KPiA+ICsJCQlpZiAodW5sb2NrZWQpDQo+ID4g
+KwkJCQkqdW5sb2NrZWQgPSB0cnVlOw0KPiA+ICAJCQlmYXVsdF9mbGFncyB8PSBGQVVMVF9GTEFH
+X1RSSUVEOw0KPiA+ICAJCQlnb3RvIHJldHJ5Ow0KPiA+ICAJCX0NCj4gDQo+IE5vdCBzdXJlLiAg
+SWYgdGhlIGNhbGxlciBwYXNzZXMgRkFVTFRfRkxBR19BTExPV19SRVRSWSB0aGVuIHRoZXkgbXVz
+dA0KPiBhbHNvIHBhc3MgaW4gYSB2YWxpZCBub24tTlVMTCBgdW5sb2NrZWQnLiAgSWYgdGhlIGNh
+bGxlciBwYXNzZWQNCj4gRkFVTFRfRkxBR19BTExPV19SRVRSWSBhbmQgdW5sb2NrZWQ9PU5VTEwg
+dGhlbiB0aGUgcmVzdWx0aW5nIG9vcHMgaXMgYW4NCj4gYXBwcm9wcmlhdGUgd2F5IG9mIHJlcG9y
+dGluZyB0aGlzIG1pc3Rha2UuICBJIHRoaW5rPw0KPiANCkFncmVlLiBIb3cgYWJvdXQgcHV0ICJ1
+bmxvY2tlZD09TlVMTCBtdXN0IG5vdCBiZSB1c2VkIHdpdGgNCkZBVUxUX0ZMQUdfQUxMT1dfUkVU
+UlkuIiBpbiB0aGUgY29tbWVudD8gTWFrZSBpdCBlYXNpZXIgdG8gdW5kZXJzdGFuZA0KdGhlIG9v
+cHMuDQoNCmUuZy4sIA0KDQotLS0gYS9tbS9ndXAuYw0KKysrIGIvbW0vZ3VwLmMNCkBAIC0xMTc2
+LDcgKzExNzYsOCBAQCBzdGF0aWMgYm9vbCB2bWFfcGVybWl0c19mYXVsdChzdHJ1Y3QNCnZtX2Fy
+ZWFfc3RydWN0ICp2bWEsDQogICogQGFkZHJlc3M6ICAgdXNlciBhZGRyZXNzDQogICogQGZhdWx0
+X2ZsYWdzOmZsYWdzIHRvIHBhc3MgZG93biB0byBoYW5kbGVfbW1fZmF1bHQoKQ0KICAqIEB1bmxv
+Y2tlZDogIGRpZCB3ZSB1bmxvY2sgdGhlIG1tYXBfc2VtIHdoaWxlIHJldHJ5aW5nLCBtYXliZSBO
+VUxMIGlmDQpjYWxsZXINCi0gKiAgICAgICAgICAgICBkb2VzIG5vdCBhbGxvdyByZXRyeQ0KKyAq
+ICAgICAgICAgICAgIGRvZXMgbm90IGFsbG93IHJldHJ5LiBJZiBOVUxMLCB0aGUgY2FsbGVyIG11
+c3QgZ3VhcmFudGVlDQorICogICAgICAgICAgICAgdGhlIGZhdWx0X2ZsYWdzIGRvZXMgbm90IGNv
+bnRhaW4gRkFVTFRfRkxBR19BTExPV19SRVRSWS4NCg0KDQo=
 
-Hi all,
-
-Today's linux-next merge of the drm-misc tree got a conflict in:
-
-  drivers/gpu/drm/i915/display/intel_dp_mst.c
-
-between commit:
-
-  743acd115070 ("drm/i915: Get rid of silly void* from MST code")
-
-from the drm-intel tree and commit:
-
-  20c22ad32957 ("drm/dp_mst: Remove drm_dp_mst_has_audio()")
-
-from the drm-misc tree.
-
-I fixed it up (I just used the latter version) and can carry the fix as
-necessary. This is now fixed as far as linux-next is concerned, but any
-non trivial conflicts should be mentioned to your upstream maintainer
-when your tree is submitted for merging.  You may also want to consider
-cooperating with the maintainer of the conflicting tree to minimise any
-particularly complex conflicts.
-
-
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/hn/Ojf3YwBFqzq4+MhBG6XU
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6WaMQACgkQAVBC80lX
-0GzpcQf8CYjcwn/7zvb9NfTafo2jJWZDi0WdDDL19Jt/R0k+404h9D2DL44+bf1v
-8892nWITiUWZmjrnjM/D6J4Q86CVyTVavZ8Fb0rdmxKWBm5EjjZV7//aV4hphYt3
-24y37cVvGpxeWvLHlWq7NR5sBs1yRZjzACsw4mKxGuJcVdHD22jJhcPqF09QKTq/
-53CJvOc4i/czFo6GwaUoKzpAmYdl0pbrfwglzooNWZBhKZp6HcVogLQ0nmLSKR2B
-zd0+Tx69+zThCSfO1ZCo7sr1xn4cCJuXvtqn3cUuV1epxMi0ve/Ty6XCk24XIqmx
-TYX+mwcJrKasdiy3kYV6TUsVa+Lo7A==
-=mYXD
------END PGP SIGNATURE-----
-
---Sig_/hn/Ojf3YwBFqzq4+MhBG6XU--
