@@ -2,114 +2,69 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79768C2BB55
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 592E5C3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:56:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 602B020857
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:55:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 369222063A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:56:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586966166;
+	bh=hKBCNbY++gSUF8C6MzS7oYSuPjm9L12r9tFRC1Z+Qzo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZvJgCsWyizxMcEde6E9b6xbmzQMzD0HD1oaY79NgAqzc6JvIcC8LYyJmTe+adY3Li
+	 5txe4uuono9CM9NoAUt6qkkYcM4foErDoFz4ihBN/tBfwPTQHln4POyvkjQzGnXTy1
+	 w9E/VueOdC/iALiwZvNLSURLrfT7hG2Dorx2eBdc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1414982AbgDOPzz (ORCPT
+        id S1414994AbgDOP4D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 11:55:55 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:59571 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1414948AbgDOPzr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 11:55:47 -0400
-Received: from callcc.thunk.org (pool-72-93-95-157.bstnma.fios.verizon.net [72.93.95.157])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 03FFtPQK002015
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 Apr 2020 11:55:26 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 4E92242013D; Wed, 15 Apr 2020 11:55:25 -0400 (EDT)
-Date:   Wed, 15 Apr 2020 11:55:25 -0400
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Jan Kara <jack@suse.cz>
-Cc:     ira.weiny@intel.com, linux-kernel@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH RFC 2/8] fs/ext4: Disallow verity if inode is DAX
-Message-ID: <20200415155525.GI90651@mit.edu>
-References: <20200414040030.1802884-1-ira.weiny@intel.com>
- <20200414040030.1802884-3-ira.weiny@intel.com>
- <20200415120002.GE6126@quack2.suse.cz>
+        Wed, 15 Apr 2020 11:56:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47668 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1414948AbgDOPz4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 11:55:56 -0400
+Received: from localhost (unknown [106.201.106.187])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13B942063A;
+        Wed, 15 Apr 2020 15:55:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586966156;
+        bh=hKBCNbY++gSUF8C6MzS7oYSuPjm9L12r9tFRC1Z+Qzo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=g3dCAsNYI8407bssRxUBT+YpVz46WOXKGtlM8Xi0ksim6oHj3999hgADUmBJN7f0a
+         G3LTL1MUcpj/XmguK79mlW+rORo5UXiSH7WhiHBCbFDrGafff0KkIYdxnSSJ6DXXr0
+         XJCSxdODBHYtFbsFnbwoQmNSLj1dUt4VLUMbtUAU=
+Date:   Wed, 15 Apr 2020 21:25:42 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dan.j.williams@intel.com, torvalds@linux-foundation.org
+Subject: Re: [PATCH] dmaengine: ti: k3-udma: Drop COMPILE_TEST for the
+ drivers for now
+Message-ID: <20200415155542.GU72691@vkoul-mobl>
+References: <20200403141950.9359-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200415120002.GE6126@quack2.suse.cz>
+In-Reply-To: <20200403141950.9359-1-peter.ujfalusi@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 02:00:02PM +0200, Jan Kara wrote:
-> On Mon 13-04-20 21:00:24, ira.weiny@intel.com wrote:
-> > From: Ira Weiny <ira.weiny@intel.com>
-> > 
-> > Verity and DAX are incompatible.  Changing the DAX mode due to a verity
-> > flag change is wrong without a corresponding address_space_operations
-> > update.
-> > 
-> > Make the 2 options mutually exclusive by returning an error if DAX was
-> > set first.
-> > 
-> > (Setting DAX is already disabled if Verity is set first.)
-> > 
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > ---
-> >  fs/ext4/verity.c | 3 +++
-> >  1 file changed, 3 insertions(+)
-> > 
-> > diff --git a/fs/ext4/verity.c b/fs/ext4/verity.c
-> > index dc5ec724d889..ce3f9a198d3b 100644
-> > --- a/fs/ext4/verity.c
-> > +++ b/fs/ext4/verity.c
-> > @@ -113,6 +113,9 @@ static int ext4_begin_enable_verity(struct file *filp)
-> >  	handle_t *handle;
-> >  	int err;
-> >  
-> > +	if (WARN_ON_ONCE(IS_DAX(inode)))
-> > +		return -EINVAL;
-> > +
+On 03-04-20, 17:19, Peter Ujfalusi wrote:
+> It is not possible to compile test the UDMA stack right now due to
+> dependencies to T_SCI_PROTOCOL and TI_SCI_INTA_IRQCHIP and their
+> dependencies.
 > 
-> Hum, one question, is there a reason for WARN_ON_ONCE()? If I understand
-> correctly, user could normally trigger this, couldn't he?
+> Remove the COMPILE_TEST until it is actually possible to compile test the
+> drivers.
 
-Tes, the WARN_ON_ONCE isn't appropriate here.  We should also disallow
-setting the DAX flag if the inode has the verity flag set already.
+Applied, thanks
 
-And if we need to decide what to if the file system is mounted with
-"-o dax=always" and the verity file system feature is enabled.  We
-could either (a) reject the mount with if the mount option is given
-and the file system can have verity files, or (b) make "-o dax=always"
-mean "-o dax=mostly_always" and treat verity files as not using dax
-even when dax=always is selected.
-
-Also, in theory, we *could* support dax and verity files, but
-verifying the crypto checksums of all of the pages when the file is
-first accessed, and then marking that in a flag in the in-inode flag.
-Or we could have a per-page flag stored somewhere that indicates that
-the page has been verified, so that we can on-demand verify the
-integrity of the page.  Given that verity files are read-only, the
-main reason why someone might want to use dax && verity would be to
-reduce page cache overhead of system files; if executing out of dax
-pages doesn't have significant performance impacts, this might be
-something which might be a nice-to-have.  I don't think we need to
-worry about this for now; if there are use cases where mobile devices
-want to use dax && verity, we can let them figure out how to make it
-work.  I'm just pointing out that it's not really a completely insane
-combination.
-
-Cheers,
-
-						- Ted
+-- 
+~Vinod
