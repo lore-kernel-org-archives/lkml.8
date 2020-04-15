@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F177C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56EADC2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAB43215A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:36:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27CAE20768
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:37:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586950614;
-	bh=P04iBLwJn0vDXHqxsvdHNKZ9hXQfsXc2NSGvEKJvR4Q=;
+	s=default; t=1586950660;
+	bh=LAlumWBbhcpTjkD/toI7vK0NLtLMCH6P3F0H4xaGuv0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nT2UdVRa/T2ghW0elwg9z50w3Ps1xZjXtCWk9F1cy3gbfcgVW49PY0c/Ei+qksLKr
-	 +o8cJ02379kiuJknV/iT7tLlz+wZrDuArdx7i/o943Gq4DjYBjEfaxLjjrC5SVLpzo
-	 6MOU3SclVXuF4y3CT66TtEJrCMwBDFqkGElYdqZI=
+	b=aErpouP+6M5iPMH7vchZQr4qNl6pXwwAhGu1xdEnf4o8WJDMeSCAa/geY1RNwkrM0
+	 IKAlp63p+tXs33LcUOMqJ7ADktIaYiqKyABkBKEKL3xgrx7qe9XY2wDpAjDD+jYCPY
+	 n/n71wwxLV0Nq/2I/e2t+EvO4menH9iAG2H9wOAM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2897179AbgDOLgm (ORCPT
+        id S2897231AbgDOLhU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:36:42 -0400
+        Wed, 15 Apr 2020 07:37:20 -0400
 Received: from mail.kernel.org ([198.145.29.99]:54364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408865AbgDOLew (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:34:52 -0400
+        id S2408872AbgDOLe4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:34:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B68620857;
-        Wed, 15 Apr 2020 11:34:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E10D720775;
+        Wed, 15 Apr 2020 11:34:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950492;
-        bh=P04iBLwJn0vDXHqxsvdHNKZ9hXQfsXc2NSGvEKJvR4Q=;
+        s=default; t=1586950496;
+        bh=LAlumWBbhcpTjkD/toI7vK0NLtLMCH6P3F0H4xaGuv0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zSWS3TgHFL5j7cDYIkDdqA7peZDpEyGB3rHouiLCTMyGpinY9PQMY3PXra0LUy4wh
-         GSVtCT6dc97Ab+rTsQfwEx3QD3vQDVUdc0VwCLiu5Y84t2zA34d7NL5TueQWwKlIns
-         sXc9K3v8wKXT1F5wSoTl+8bONLYpb/+imc7wUzpw=
+        b=oam/UDOW6vbCldWDmSSIfr7NggccawTJORCMuGi+iF5J8NSWtUocKzhl/ywo2RXqC
+         O5ppnlEcKMqVXGjRCGvTeT7m+DAuCTWKwJHSRNU5Kz69rwOcPqROE9ZMGxw0YSPtMl
+         WShrRV9b9odEZD6tQgckwpvF5yCeXarugx6/vaOg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anson Huang <Anson.Huang@nxp.com>, Peng Fan <peng.fan@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.6 005/129] clk: imx: pll14xx: Add new frequency entries for pll1443x table
-Date:   Wed, 15 Apr 2020 07:32:40 -0400
-Message-Id: <20200415113445.11881-5-sashal@kernel.org>
+Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 5.6 009/129] f2fs: fix to avoid potential deadlock
+Date:   Wed, 15 Apr 2020 07:32:44 -0400
+Message-Id: <20200415113445.11881-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
 References: <20200415113445.11881-1-sashal@kernel.org>
@@ -60,36 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit 57795654fb553a78f07a9f92d87fb2582379cd93 ]
+[ Upstream commit df77fbd8c5b222c680444801ffd20e8bbc90a56e ]
 
-Add new frequency entries to pll1443x table to meet different
-display settings requirement.
+Using f2fs_trylock_op() in f2fs_write_compressed_pages() to avoid potential
+deadlock like we did in f2fs_write_single_data_page().
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reviewed-by: Peng Fan <peng.fan@nxp.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/imx/clk-pll14xx.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/f2fs/compress.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/clk/imx/clk-pll14xx.c b/drivers/clk/imx/clk-pll14xx.c
-index 5b0519a81a7af..37e311e1d0586 100644
---- a/drivers/clk/imx/clk-pll14xx.c
-+++ b/drivers/clk/imx/clk-pll14xx.c
-@@ -55,8 +55,10 @@ static const struct imx_pll14xx_rate_table imx_pll1416x_tbl[] = {
- };
+diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+index d8a64be90a501..c847523ab4a2e 100644
+--- a/fs/f2fs/compress.c
++++ b/fs/f2fs/compress.c
+@@ -772,7 +772,6 @@ static int f2fs_write_compressed_pages(struct compress_ctx *cc,
+ 		.encrypted_page = NULL,
+ 		.compressed_page = NULL,
+ 		.submitted = false,
+-		.need_lock = LOCK_RETRY,
+ 		.io_type = io_type,
+ 		.io_wbc = wbc,
+ 		.encrypted = f2fs_encrypted_file(cc->inode),
+@@ -785,9 +784,10 @@ static int f2fs_write_compressed_pages(struct compress_ctx *cc,
+ 	loff_t psize;
+ 	int i, err;
  
- static const struct imx_pll14xx_rate_table imx_pll1443x_tbl[] = {
-+	PLL_1443X_RATE(1039500000U, 173, 2, 1, 16384),
- 	PLL_1443X_RATE(650000000U, 325, 3, 2, 0),
- 	PLL_1443X_RATE(594000000U, 198, 2, 2, 0),
-+	PLL_1443X_RATE(519750000U, 173, 2, 2, 16384),
- 	PLL_1443X_RATE(393216000U, 262, 2, 3, 9437),
- 	PLL_1443X_RATE(361267200U, 361, 3, 3, 17511),
- };
+-	set_new_dnode(&dn, cc->inode, NULL, NULL, 0);
++	if (!f2fs_trylock_op(sbi))
++		return -EAGAIN;
+ 
+-	f2fs_lock_op(sbi);
++	set_new_dnode(&dn, cc->inode, NULL, NULL, 0);
+ 
+ 	err = f2fs_get_dnode_of_data(&dn, start_idx, LOOKUP_NODE);
+ 	if (err)
 -- 
 2.20.1
 
