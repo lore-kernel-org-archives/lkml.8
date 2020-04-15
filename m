@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B09C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 505FAC3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:31:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69AE42074F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:31:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2277C20767
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:31:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586953868;
-	bh=7XeeStrCK5kGavojARUQVC9UvgsLzqP+H2GH7ek/uyM=;
+	s=default; t=1586953876;
+	bh=x3s5st2H0lALnwOPZGbSBw57FqPK0nzULfLkX85UHk8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Al6UAuooOaYoO+s3K1HKPE04oaUmUBoVgiMIrDKRydcnAK4vWPvsdRGpVol3k1pai
-	 TOS1qsvS61isS1khmMBuSEAjScaR/y6o+7/fHusAarfYPCn5nbsk8oVcixCwfJBm2q
-	 eWrN8Cd4eQW1Ulxfu0g9pkpgl+bySw+fCCzU07Oc=
+	b=F1JtYQuBGSxCHrUTyr/GNRl3/FB+tgcqsIveMFc1849rMNhjGEiY91Bj7ptcKP7Oq
+	 I7Gvh/tzAU/MX/0lsxLk03qzxqdFnqT8kIrhur9iw2CwpC7aWIvewtpV02i4QtQyDt
+	 k4F3v0/elEdaGyICl4zyxFWkf70kfpdtnFhfF60k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S369543AbgDOMbG (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:31:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37802 "EHLO mail.kernel.org"
+        id S369552AbgDOMbO (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:31:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409104AbgDOLou (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2409106AbgDOLou (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Apr 2020 07:44:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1A9820737;
-        Wed, 15 Apr 2020 11:44:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDA7C217D8;
+        Wed, 15 Apr 2020 11:44:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951087;
-        bh=7XeeStrCK5kGavojARUQVC9UvgsLzqP+H2GH7ek/uyM=;
+        s=default; t=1586951089;
+        bh=x3s5st2H0lALnwOPZGbSBw57FqPK0nzULfLkX85UHk8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qlfe7J/NcvT4OzRyBOy1dJejv1E1XiP8///BmeDwf7MtTIJt8mmhOxaMLgaZjhRXJ
-         2yG8Kwp/F/+Xs5PD6Sorx9SGdDnrVOfujDrAvQTm/hjYOJ24LJ26tSFQ25VCemzfym
-         FSemuJ2Apr/cdLrQkj+IC5KgVH5svv4qqqG6ECk4=
+        b=0UBoi2eRYqNvCwzO3tdaNoLAjVRvfCXTRBkaCFp+IqKJrYWO0GOG6coAMwFRDo4fb
+         jrUoqnicsUeuXCJ23P9bZxrkbfUYdQ45DVCWeLwtCopFEtxLxsfv14BUD0UyFaYOph
+         jRQDZX3N+45DOjLGDrCjWmiVRFu+eec5TIpPEUdU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aya Levin <ayal@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 04/84] net/mlx5e: Enforce setting of a single FEC mode
-Date:   Wed, 15 Apr 2020 07:43:21 -0400
-Message-Id: <20200415114442.14166-4-sashal@kernel.org>
+Cc:     "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Martin Kepplinger <martin.kepplinger@puri.sm>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 06/84] arm64: dts: librem5-devkit: add a vbus supply to usb0
+Date:   Wed, 15 Apr 2020 07:43:23 -0400
+Message-Id: <20200415114442.14166-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114442.14166-1-sashal@kernel.org>
 References: <20200415114442.14166-1-sashal@kernel.org>
@@ -59,36 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aya Levin <ayal@mellanox.com>
+From: "Angus Ainslie (Purism)" <angus@akkea.ca>
 
-[ Upstream commit 4bd9d5070b92da012f2715cf8e4859acb78b8f35 ]
+[ Upstream commit dde061b865598ad91f50140760e1d224e5045db9 ]
 
-Ethtool command allow setting of several FEC modes in a single set
-command. The driver can only set a single FEC mode at a time. With this
-patch driver will reply not-supported on setting several FEC modes.
+Without a VBUS supply the dwc3 driver won't go into otg mode.
 
-Signed-off-by: Aya Levin <ayal@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Fixes: eb4ea0857c83 ("arm64: dts: fsl: librem5: Add a device tree for the Librem5 devkit")
+Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
-index c6776f308d5e6..ce63f9bd10fa8 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
-@@ -1554,6 +1554,10 @@ static int mlx5e_set_fecparam(struct net_device *netdev,
- 	int mode;
- 	int err;
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+index 98cfe67b7db7b..19b427f68dad2 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+@@ -743,6 +743,7 @@
+ };
  
-+	if (bitmap_weight((unsigned long *)&fecparam->fec,
-+			  ETHTOOL_FEC_BASER_BIT + 1) > 1)
-+		return -EOPNOTSUPP;
-+
- 	for (mode = 0; mode < ARRAY_SIZE(pplm_fec_2_ethtool); mode++) {
- 		if (!(pplm_fec_2_ethtool[mode] & fecparam->fec))
- 			continue;
+ &usb3_phy0 {
++	vbus-supply = <&reg_5v_p>;
+ 	status = "okay";
+ };
+ 
 -- 
 2.20.1
 
