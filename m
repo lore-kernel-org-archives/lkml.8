@@ -2,84 +2,126 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2CA7C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:18:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11A0AC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:18:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 751D82078B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:18:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586963920;
-	bh=hfI1YAAeH1YLsyJL8AT3fmW+XOyfksoJnz+ksoISptA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XZdltxCK3LEdpGy9qfTfijil+0TP7BlYWxFi2nXCn+sDJ9dfJGpawlRp/kUwX+u8d
-	 jt0IyT3EMmo9hTb8Hi51QbSGrjgKSiYzEXT1QgRBEDif1qvtT6YULapIxCXOJqdfV7
-	 qN1p4xLs+KsbUxRGa9vfIhM+3+BcGVb8Icu72L+s=
+	by mail.kernel.org (Postfix) with ESMTP id EC26D20936
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:18:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1414656AbgDOPSj (ORCPT
+        id S1414671AbgDOPSq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 11:18:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34322 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1414618AbgDOPSb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 11:18:31 -0400
-Received: from linux-8ccs.fritz.box (p3EE2C7AC.dip0.t-ipconnect.de [62.226.199.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 036222078B;
-        Wed, 15 Apr 2020 15:18:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586963910;
-        bh=hfI1YAAeH1YLsyJL8AT3fmW+XOyfksoJnz+ksoISptA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CzRRiIHrXJVUaxJE1LN1SoTAInBxGPM/shexq+6nTJhWCl5TtWc9fz+RP4yZpTO5I
-         m4BW0njHHuENU3tpoL2BIKMq3p1CEJVBdoNbYON16d5r5iAuuJBrooZgk6yK7O6gYu
-         BQI2Hu3fwte/2jdJB5jUC1zQjqBYzqvcG6Kv2lJw=
-Date:   Wed, 15 Apr 2020 17:18:26 +0200
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH 2/7] livepatch: Remove .klp.arch
-Message-ID: <20200415151825.GB6164@linux-8ccs.fritz.box>
-References: <cover.1586881704.git.jpoimboe@redhat.com>
- <eb58cdddfd5d132c4d782978160d49764b09c764.1586881704.git.jpoimboe@redhat.com>
+        Wed, 15 Apr 2020 11:18:46 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:56625 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1414655AbgDOPSl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 11:18:41 -0400
+Received: from mail-qk1-f181.google.com ([209.85.222.181]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1Mi23L-1il1DD0uZt-00e37A; Wed, 15 Apr 2020 17:18:38 +0200
+Received: by mail-qk1-f181.google.com with SMTP id c63so17606965qke.2;
+        Wed, 15 Apr 2020 08:18:37 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYQ7iQhk/BikuN6BKO+BL3lPwjdOlvL37MtOvCFqqOG4wui5OGn
+        0cIjB+fYfemUFnWfZ5APRYOtoJstcXL1jjQMy9o=
+X-Google-Smtp-Source: APiQypKR0HaZQKe1NU2qEEDNoosGf+Eiif2YA3+bZv4o1jlLLMUkDmtAFRquqje/5krjrQpj3uXRFFr+JLm/a3RbNKI=
+X-Received: by 2002:a37:ba47:: with SMTP id k68mr15682834qkf.394.1586963916750;
+ Wed, 15 Apr 2020 08:18:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <eb58cdddfd5d132c4d782978160d49764b09c764.1586881704.git.jpoimboe@redhat.com>
-X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200408202711.1198966-1-arnd@arndb.de> <20200408202711.1198966-6-arnd@arndb.de>
+ <20200414201739.GJ19819@pendragon.ideasonboard.com> <CAK8P3a0hd5bsezrJS3+GV2nRMui4P5yeD2Rk7wQpJsAZeOCOUg@mail.gmail.com>
+ <20200414205158.GM19819@pendragon.ideasonboard.com> <CAK8P3a1PZbwdvdH_Gi9UQVUz2+_a8QDxKuWLqPtjhK1stxzMBQ@mail.gmail.com>
+ <CAMuHMdUb=XXucGUbxt26tZ1xu9pdyVUB8RVsfB2SffURVVXwSg@mail.gmail.com>
+In-Reply-To: <CAMuHMdUb=XXucGUbxt26tZ1xu9pdyVUB8RVsfB2SffURVVXwSg@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 15 Apr 2020 17:18:20 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1uasBFg9dwvPEcokrRhYE2qh6iwOMW1fDTY+LBZMrTjg@mail.gmail.com>
+Message-ID: <CAK8P3a1uasBFg9dwvPEcokrRhYE2qh6iwOMW1fDTY+LBZMrTjg@mail.gmail.com>
+Subject: Re: [RFC 5/6] drm/rcar-du: fix selection of CMM driver
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:LcT7bwGznqc8gtfgF2bfiglIsjD0HReWu/nHchEwDxrf+9vm5BH
+ rmdjTk0uOUNkmKoP4TP/efPp6Sd4lGmapqbt1l63xHODdE9k8x8ilzOIS4zVIE7rJAwPgP9
+ nv14ZKTD64pSJNEWvMGnfnTFEl7qLpGkCgk1VSBIzOAG5FvyjqcFClevQUtWagaxdqe70Vi
+ puR68X7pu8N6lETJMiAIw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:rJ5/p8u5JGQ=:gVqEX27W8WlhhlVVuppYhw
+ JyqF3pScGR9U4BjvZeVFBDID+rUE2rQ0KuPuwkLy+zaw8dkwKT5TBF2enfoMg5vPY7VwZWvP9
+ vfupHu/mPvuaiLi1AKTCDKPzUSIdaiApiIOh3cEMybo46gLRfZmBqZ/J/hZSqRsIS+vLmPuwg
+ sMXQ7c2s00DUvGHbdT3j7a7Rgn0/+wtM0hti3hxDOh+gKrjqemtVQKhCFesKpkAKm1YdytiX0
+ 0hhKtlq0AQmQdMh1tQ7lU1agyr75LwPnoXOO9VBvFEe3k1xMXZDde8z9s7EQSyBan6D4m2tVf
+ 6L1x0HOk2oRxloiZEceJ4uwAnbk2RyNEa52eKzpKWAIjAElLRCIM+vt8eQx7KsVVGoT+v/LfR
+ ed2ShkBR9f75Jdr81/tnXf9pVh6q8aG3m+0qvRHX4Bl0vVLFJO08jbmWUqOkNLEF7zMTXcajM
+ upeHDmBLR0mWFlBJ3j6dNwuzla/nOE5IC0pjp9HzM7062i2ioS8SK6Ymzs/QcOrJ9mq8aAH+h
+ AHk8r/ZfXxAZpMf8LASeNLo+0cluDkYIgGv2USXQEYAF8Dd1/ke3ZE+YhDbXlm2r5HDaDJHzx
+ pfnDCCgLnHJFCfiuJeoydljGjjVg6Ke3S9NWPk74dJgsTLy4SfNVJ6GHEwKVtmu6fcmV/+KGv
+ YiEUm4b0yF9GbqOytoeONWGo/bbkaH4BkXZjHbHSGjbKv6YLJKWFoghy7b/Hwd6TZNdOUH8nh
+ L9XmRJrRDca56ZO3dVfd8ZYxPOMI0iCDISUZ4RCvho8beBrx9uaeU/i+QvlIcN3QhP25d1+Aj
+ YWRg42iGcwguhIE/rxMHGkxFeTHXMtCrANnjYw5JzNGBBef0rg=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Josh Poimboeuf [14/04/20 11:28 -0500]:
-[snip]
->diff --git a/Documentation/livepatch/module-elf-format.rst b/Documentation/livepatch/module-elf-format.rst
->index 2a591e6f8e6c..629ef7ffb6cf 100644
->--- a/Documentation/livepatch/module-elf-format.rst
->+++ b/Documentation/livepatch/module-elf-format.rst
->@@ -298,17 +298,7 @@ Examples:
->   Note that the 'Ndx' (Section index) for these symbols is SHN_LIVEPATCH (0xff20).
->   "OS" means OS-specific.
+On Wed, Apr 15, 2020 at 4:13 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> On Wed, Apr 15, 2020 at 3:47 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> > On Tue, Apr 14, 2020 at 10:52 PM Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
+> > > Doesn't "imply" mean it gets selected by default but can be manually
+> > > disabled ?
+> >
+> > That may be what it means now (I still don't understand how it's defined
+> > as of v5.7-rc1), but traditionally it was more like a 'select if all
+> > dependencies are met'.
 >
->-5. Architecture-specific sections
->-=================================
->-Architectures may override arch_klp_init_object_loaded() to perform
->-additional arch-specific tasks when a target module loads, such as applying
->-arch-specific sections. On x86 for example, we must apply per-object
->-.altinstructions and .parainstructions sections when a target module loads.
->-These sections must be prefixed with ".klp.arch.$objname." so that they can
->-be easily identified when iterating through a patch module's Elf sections
->-(See arch/x86/kernel/livepatch.c for a complete example).
->-
->-6. Symbol table and Elf section access
->+5. Symbol table and Elf section access
+> That's still what it is supposed to mean right now ;-)
+> Except that now it should correctly handle the modular case, too.
 
-Nit: I think we need to fix the numbering in the Table of Contents too.
+Then there is a bug. If I run 'make menuconfig' now on a mainline kernel
+and enable CONFIG_DRM_RCAR_DU, I can set
+DRM_RCAR_CMM and DRM_RCAR_LVDS to 'y', 'n' or 'm' regardless
+of whether CONFIG_DRM_RCAR_DU is 'm' or 'y'. The 'implies'
+statement seems to be ignored entirely, except as reverse 'default'
+setting.
+
+> >
+> > In that case, a Makefile trick could also work, doing
+> >
+> > ifdef CONFIG_DRM_RCAR_CMM
+> > obj-$(CONFIG_DRM_RCAR_DU) += rcar-cmm.o
+> > endif
+> >
+> > Thereby making the cmm module have the same state (y or m) as
+> > the du module whenever the option is enabled.
+>
+> What about dropping the "imply DRM_RCAR_CMM", but defaulting to
+> enable CMM if DU is enabled?
+>
+>     config DRM_RCAR_CMM
+>             tristate "R-Car DU Color Management Module (CMM) Support"
+>             depends on DRM_RCAR_DU && OF
+>             default DRM_RCAR_DU
+
+That doesn't work because it allows DRM_RCAR_DU=y with
+DRM_RCAR_CMM=m, which causes a link failure.
+
+         Arnd
