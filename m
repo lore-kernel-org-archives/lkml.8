@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F73C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:38:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73217C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2ACAD20775
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:38:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4904820775
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:39:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586950727;
-	bh=BcOsfOkxn0Z2bJhhSJhfv3P9uJjbhL86MgsL5pVv5F8=;
+	s=default; t=1586950743;
+	bh=LvKT9IZJFoDqch09JWfp7jN4pO1lzW0qd658CKnycSo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OPMzWNaXYrmfK1xSCQR9Ez0tKA0eHJchKCak0vOljmEhG4thH3odqGwloeedJMLLP
-	 yRsvqRIMxxZLxQ/dzFMMX6b6JQ9kZinPvxld6tRRKksADMMnmeALgqRGj27NxHpmYf
-	 LjRs8+laQ8NgV6HsQzi317QNSlDLiz4xaV3lQ70Y=
+	b=eQFKQq0vRtngzoV56rr2s/Go2wzpEuqB0rMT183TB71oxVNOW/Mwo2XZ4m2SX/CMT
+	 Fz9ZYjWuojAj9L+RCQzCYvoR7zUc3/6eyS2jLEDzIS+BxUywaJYWUZ/IUaDw1YGFSA
+	 ky6ytUsj/smZ7ZNtdtE72SuhiYomU/IRnHwoViEo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2897270AbgDOLio (ORCPT
+        id S2897283AbgDOLiy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:38:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54332 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 07:38:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408884AbgDOLfC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:35:02 -0400
+        id S2897026AbgDOLfJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:35:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF0AC2076D;
-        Wed, 15 Apr 2020 11:35:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE45C2137B;
+        Wed, 15 Apr 2020 11:35:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950501;
-        bh=BcOsfOkxn0Z2bJhhSJhfv3P9uJjbhL86MgsL5pVv5F8=;
+        s=default; t=1586950509;
+        bh=LvKT9IZJFoDqch09JWfp7jN4pO1lzW0qd658CKnycSo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RG4DVKgu5x3F5gwNOpN5hd5r2JAXV85qnIRtQZIqw6FpSF/HhBKLvcn0kGW2icWko
-         wYXsppxNLImgtLZmXnlNK+D2WIoGoQe3G8jC2zO+2RezHSCWa+n59khT6ZuwD97JrH
-         DsNINEtYqzJGjojD97tTNFjL7yEhWfCwQKtL7Xbo=
+        b=LOlxj6IcAYkLFqaTd6iq910g2t+ECKwtGODnrEHQW22nqwrUas8ZaW9pHP0dn6K4k
+         Mu7m8mofxq+G3SItX/riRDCMJw28Z+WLqk0Osj3WA2i/U3fGeoWdDJYNDu2PwjSZWX
+         QqKO5/cX1llmHvODenjN/gSsnjtcEGUktzDpi9yQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jaegeuk Kim <jaegeuk@kernel.org>,
-        Daniel Rosenberg <drosen@google.com>, kernel-team@android.com,
-        Chao Yu <yuchao0@huawei.com>, Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.6 013/129] f2fs: fix wrong check on F2FS_IOC_FSSETXATTR
-Date:   Wed, 15 Apr 2020 07:32:48 -0400
-Message-Id: <20200415113445.11881-13-sashal@kernel.org>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>, linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 020/129] memory: tegra: Correct debugfs clk rate-range on Tegra124
+Date:   Wed, 15 Apr 2020 07:32:55 -0400
+Message-Id: <20200415113445.11881-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
 References: <20200415113445.11881-1-sashal@kernel.org>
@@ -60,66 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jaegeuk Kim <jaegeuk@kernel.org>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-[ Upstream commit 99eabb914e0f870445d065e83e857507f9728a33 ]
+[ Upstream commit 141267bffd1dc19a76e4d50e3e4829f85a806875 ]
 
-This fixes the incorrect failure when enabling project quota on casefold-enabled
-file.
+Correctly set clk rate-range if number of available timings is zero.
+This fixes noisy "invalid range [4294967295, 0]" error messages during
+boot.
 
-Cc: Daniel Rosenberg <drosen@google.com>
-Cc: kernel-team@android.com
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Fixes: 6b9acd935546 ("memory: tegra: Refashion EMC debugfs interface on Tegra124")
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/file.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ drivers/memory/tegra/tegra124-emc.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index 0d4da644df3bc..a41c633ac6cfe 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -1787,12 +1787,15 @@ static int f2fs_file_flush(struct file *file, fl_owner_t id)
- static int f2fs_setflags_common(struct inode *inode, u32 iflags, u32 mask)
- {
- 	struct f2fs_inode_info *fi = F2FS_I(inode);
-+	u32 masked_flags = fi->i_flags & mask;
+diff --git a/drivers/memory/tegra/tegra124-emc.c b/drivers/memory/tegra/tegra124-emc.c
+index 21f05240682b8..33b8216bac30c 100644
+--- a/drivers/memory/tegra/tegra124-emc.c
++++ b/drivers/memory/tegra/tegra124-emc.c
+@@ -1158,6 +1158,11 @@ static void emc_debugfs_init(struct device *dev, struct tegra_emc *emc)
+ 			emc->debugfs.max_rate = emc->timings[i].rate;
+ 	}
+ 
++	if (!emc->num_timings) {
++		emc->debugfs.min_rate = clk_get_rate(emc->clk);
++		emc->debugfs.max_rate = emc->debugfs.min_rate;
++	}
 +
-+	f2fs_bug_on(F2FS_I_SB(inode), (iflags & ~mask));
- 
- 	/* Is it quota file? Do not allow user to mess with it */
- 	if (IS_NOQUOTA(inode))
- 		return -EPERM;
- 
--	if ((iflags ^ fi->i_flags) & F2FS_CASEFOLD_FL) {
-+	if ((iflags ^ masked_flags) & F2FS_CASEFOLD_FL) {
- 		if (!f2fs_sb_has_casefold(F2FS_I_SB(inode)))
- 			return -EOPNOTSUPP;
- 		if (!f2fs_empty_dir(inode))
-@@ -1806,9 +1809,9 @@ static int f2fs_setflags_common(struct inode *inode, u32 iflags, u32 mask)
- 			return -EINVAL;
- 	}
- 
--	if ((iflags ^ fi->i_flags) & F2FS_COMPR_FL) {
-+	if ((iflags ^ masked_flags) & F2FS_COMPR_FL) {
- 		if (S_ISREG(inode->i_mode) &&
--			(fi->i_flags & F2FS_COMPR_FL || i_size_read(inode) ||
-+			(masked_flags & F2FS_COMPR_FL || i_size_read(inode) ||
- 						F2FS_HAS_BLOCKS(inode)))
- 			return -EINVAL;
- 		if (iflags & F2FS_NOCOMP_FL)
-@@ -1825,8 +1828,8 @@ static int f2fs_setflags_common(struct inode *inode, u32 iflags, u32 mask)
- 			set_compress_context(inode);
- 		}
- 	}
--	if ((iflags ^ fi->i_flags) & F2FS_NOCOMP_FL) {
--		if (fi->i_flags & F2FS_COMPR_FL)
-+	if ((iflags ^ masked_flags) & F2FS_NOCOMP_FL) {
-+		if (masked_flags & F2FS_COMPR_FL)
- 			return -EINVAL;
- 	}
- 
+ 	err = clk_set_rate_range(emc->clk, emc->debugfs.min_rate,
+ 				 emc->debugfs.max_rate);
+ 	if (err < 0) {
 -- 
 2.20.1
 
