@@ -2,160 +2,183 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 815D6C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 23:43:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB223C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 23:49:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BD0F20787
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 23:43:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89BF120768
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 23:49:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="JbbZZbFV"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="6awfTXYL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733250AbgDOXnx (ORCPT
+        id S2389473AbgDOXtB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 19:43:53 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:26364 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728103AbgDOXnt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 19:43:49 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200415234345epoutp034ab696b0df81c4a51267c4a96336d543~GItbvp6cX2600626006epoutp03o
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 23:43:45 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200415234345epoutp034ab696b0df81c4a51267c4a96336d543~GItbvp6cX2600626006epoutp03o
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1586994225;
-        bh=Fk9CvL4cU0mn+lERG4HsulBmjZUnfRyM/M+ZU517FjA=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=JbbZZbFVxHItr08sK+QyofAzyULaXXb32j9CG9BZI3+WylSUrk3YL38iVprsDV06M
-         8V1sjQgM+IJ0OKbx0HV63dVTC9xgFIhecWjaqBKRCUlYdMaV5pzwIBgvHrS3eKl+uH
-         vRL68lLQOZgvBNaBJzxZ11jgFJnMn9mypKZMUJgU=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20200415234344epcas1p45e9ae83c712933e981e69c8171a0a0e8~GItax9WD80924109241epcas1p4p;
-        Wed, 15 Apr 2020 23:43:44 +0000 (GMT)
-Received: from epsmges1p5.samsung.com (unknown [182.195.40.166]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 492f7g1kbyzMqYkZ; Wed, 15 Apr
-        2020 23:43:43 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
-        FF.D2.04658.D2C979E5; Thu, 16 Apr 2020 08:43:41 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200415234341epcas1p18e65d727f10ebbde8331928fd5d8a688~GItX8WHjw3137931379epcas1p1x;
-        Wed, 15 Apr 2020 23:43:41 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200415234341epsmtrp10fe293d9e4fcb605a03847dd2037017f~GItX7uVqU0171001710epsmtrp1t;
-        Wed, 15 Apr 2020 23:43:41 +0000 (GMT)
-X-AuditID: b6c32a39-fc7b99e000001232-52-5e979c2d7106
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        BA.09.04158.D2C979E5; Thu, 16 Apr 2020 08:43:41 +0900 (KST)
-Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200415234341epsmtip289f0c6a6727ba00a0dc4716f731b5b5b~GItX1Be5C0847908479epsmtip2W;
-        Wed, 15 Apr 2020 23:43:41 +0000 (GMT)
-From:   "Namjae Jeon" <namjae.jeon@samsung.com>
-To:     =?utf-8?Q?'Pali_Roh=C3=A1r'?= <pali@kernel.org>
-Cc:     <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "'Sungjong Seo'" <sj1557.seo@samsung.com>,
-        "'Alexander Viro'" <viro@zeniv.linux.org.uk>
-In-Reply-To: <20200415080138.fvmviqavjtyqyi65@pali>
-Subject: RE: [PATCH 0/4] Fixes for exfat driver
-Date:   Thu, 16 Apr 2020 08:43:40 +0900
-Message-ID: <000101d6137f$b1504350$13f0c9f0$@samsung.com>
+        Wed, 15 Apr 2020 19:49:01 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:40504 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733274AbgDOXs4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 19:48:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=xNSi6HaGmscxmARt5mgNwzUpQcF/jonukO+FRnCwvvs=; b=6awfTXYL7Q73QbBZWCu8TLLwdj
+        odPxj6TI1yu/dT28BW340Acs8rG0u+HHboan/FDBlg2TH1RBzjer3dkrw5ckXCGh/kGlzKkMzs0ss
+        ukBZAC/xlNhAHW4ham4rWvQqg8ig64WGQlrKmbdUF4HMZOsLA6u6KrXS5k+S4q/mBKhA=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jOrls-002yQt-F4; Thu, 16 Apr 2020 01:48:44 +0200
+Date:   Thu, 16 Apr 2020 01:48:44 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Robert Marko <robert.marko@sartura.hr>
+Cc:     f.fainelli@gmail.com, hkallweit1@gmail.com, linux@armlinux.org.uk,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Christian Lamparter <chunkeey@gmail.com>,
+        Luka Perkov <luka.perkov@sartura.hr>
+Subject: Re: [PATCH v3 1/3] net: phy: mdio: add IPQ40xx MDIO driver
+Message-ID: <20200415234844.GH611399@lunn.ch>
+References: <20200415150244.2737206-1-robert.marko@sartura.hr>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQFfV5+WSZBMDydYf2i5chUPdrlJhwHCHd20AsohPpcA/tShGqk79V5g
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUhTURjHOd6XbeLsOjUP9sK66Aetuc05neIiSGThIqk+9WF2dTeV7l7Y
-        nZIZUhDaLNIItZbSJLQQfFtmaoriS0sSLSNf6kMJWr5kpaESmXS3q+S333n+/+f8z3POESKS
-        SjxcmGu20zYzxZC4P9o+ECWXyaqrDIq3HXGa7p5hVPOuqxrXuLpf45q2rUFMM/bXgx3DdO4G
-        B6673dYAdL/cB3Xu2WW/dPQck5xDU0baJqXNWRZjrjlbS6adyTieoY5XKGXKRE0CKTVTJlpL
-        pujTZam5DJdLSvMpJo8rpVMsS8qPJtsseXZammNh7VqSthoZq1JhjWEpE5tnzo7JspiSlApF
-        rJpznmdyGr+1A2tF4CWPc1xwFXQGlAKREBJxcPDZGFYK/IUSogPARy+6Ea8gIVYBnBhL44V1
-        AKfuPvfb6ZirWxbwQg+A059WAL9YALDqyyjudeGEDG5t9vo4hFDBsg+NqNeEEC4AW91DmFcQ
-        ccL0mw2Bl4MJOWz2OHwRKBEJm67VoF4WE4mw3rGF8BwEh+/P+uoIcRjW1y4h/JGk8PdcPcaH
-        pcKP5Z8FvCcEPnAUI95gSEzisHZkCucbUuBjz9I2B8NFT5uA53C4UFbMsZDjQrjSu73/DQDn
-        N7Q8c2dubsG8FoSIgs1dcr58CHb+qQF8bCD8vnYL43cRwxvFEt4SCW+PD2xf4j5YWvJTUA5I
-        567BnLsGc+4awPk/zAXQBrCXtrKmbJpVWtW7H9sNfH8yOrEDvBzV9wNCCMgAsWKh0iDBqHy2
-        wNQPoBAhQ8Qdp6oMErGRKrhM2ywZtjyGZvuBmrv3O0h4aJaF++Fme4ZSHatSqTRx8QnxahUZ
-        Jq6YZAwSIpuy0xdp2krbdvr8hKLwqyCzVzZkdR0ZDXGFWZ4yp2f3Z4qXUiIIt00fJJ5M23Pg
-        fo9jbuRVa8zqp/fzTEmL6Fro4om0j/ObV2ZQKZpPVxQ+qZvZLNU+ZJOm+yXlZ3+sVK916W8V
-        LfSRyTV9s+sn5RETy3jX9SYBduIe85XJauu+UH8THF0rU6OKIr3On0TZHEoZjdhY6h+HvwRU
-        qQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpkkeLIzCtJLcpLzFFi42LZdlhJXld3zvQ4g/N/2Cz27D3JYnF51xw2
-        iwV7TrNZbPl3hNXi/N/jrA6sHptWdbJ59G1ZxejxeZOcx6Ynb5kCWKK4bFJSczLLUov07RK4
-        MqZOMi/Yyl3R+3I3cwPjdY4uRk4OCQETiadL37J3MXJxCAnsZpSYu28yC0RCWuLYiTPMXYwc
-        QLawxOHDxRA1zxklljbeBathE9CV+PdnPxuILSJgLNF/ay0LSBGzwCJGic/bd7JAdNxmlFj8
-        oResihOo6uaF7+wgtrCAvsT6451MIDaLgKrEusa5YFN5BSwllnX+Y4awBSVOznwCFmcW0JZ4
-        evMpnL1s4WtmiEsVJH4+XcYKcYWbxO0JD9ghakQkZne2MU9gFJ6FZNQsJKNmIRk1C0nLAkaW
-        VYySqQXFuem5xYYFRnmp5XrFibnFpXnpesn5uZsYwRGjpbWD8cSJ+EOMAhyMSjy8Ha+nxQmx
-        JpYVV+YeYpTgYFYS4d3hPz1OiDclsbIqtSg/vqg0J7X4EKM0B4uSOK98/rFIIYH0xJLU7NTU
-        gtQimCwTB6dUA6Pd6uwvem7Hlgnwhf8psDPNquJjTFqbnGw+5+6kiyusuuZ433ZcMvX7kt2H
-        n7z1vqnl9OFl+YfioxeajKKFE6+fzBHvFv4723T1qX2Ry7P2XLXaf+Jr56KGuffPyucxHJPY
-        VXbwrZTC0Tlzej/Jlh24fjigdtJTztutboGHmavXfD3dctcnZEqjEktxRqKhFnNRcSIApMNH
-        6pQCAAA=
-X-CMS-MailID: 20200415234341epcas1p18e65d727f10ebbde8331928fd5d8a688
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200317222604epcas1p1559308b0199c5320a9c77f5ad9f033a2
-References: <CGME20200317222604epcas1p1559308b0199c5320a9c77f5ad9f033a2@epcas1p1.samsung.com>
-        <20200317222555.29974-1-pali@kernel.org>
-        <000101d5fcb2$96ec6270$c4c52750$@samsung.com>
-        <20200415080138.fvmviqavjtyqyi65@pali>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200415150244.2737206-1-robert.marko@sartura.hr>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Wednesday 18 March 2020 08:20:04 Namjae Jeon wrote:
-> > > This patch series contains small fixes for exfat driver. It removes
-> > > conversion from UTF-16 to UTF-16 at two places where it is not
-> > > needed and fixes discard support.
-> > Looks good to me.
-> > Acked-by: Namjae Jeon <namjae.jeon=40samsung.com>
-> >
-> > Hi Al,
-> >
-> > Could you please push these patches into your =23for-next ?
-> > Thanks=21
->=20
-> Al, could you please take this patch series? Based on feedback current
-> hashing code is good enough. And we do not want to have broken discard
-> support in upcoming Linux kernel version.
-Hi Pali,
+Hi Robert
 
-I will push them to exfat git tree.
+I should of said this earlier. With a patch set, you should include a
+cover note, patch 0 of X, explaining the big picture of what the
+patches do.
 
-Thanks for your work=21
->=20
-> > >
-> > > Patches are also in my exfat branch:
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/pali/linux.git/log/?
-> > > h=3Dexfa
-> > > t
-> > >
-> > > Pali Roh=C3=A1r=20(4):=0D=0A>=20>=20>=20=20=20exfat:=20Simplify=20exf=
-at_utf8_d_hash()=20for=20code=20points=20above=20U+FFFF=0D=0A>=20>=20>=20=
-=20=20exfat:=20Simplify=20exfat_utf8_d_cmp()=20for=20code=20points=20above=
-=20U+FFFF=0D=0A>=20>=20>=20=20=20exfat:=20Remove=20unused=20functions=20exf=
-at_high_surrogate()=20and=0D=0A>=20>=20>=20=20=20=20=20exfat_low_surrogate(=
-)=0D=0A>=20>=20>=20=20=20exfat:=20Fix=20discard=20support=0D=0A>=20>=20>=0D=
-=0A>=20>=20>=20=20fs/exfat/exfat_fs.h=20=7C=20=202=20--=0D=0A>=20>=20>=20=
-=20fs/exfat/namei.c=20=20=20=20=7C=2019=20++++---------------=0D=0A>=20>=20=
->=20=20fs/exfat/nls.c=20=20=20=20=20=20=7C=2013=20-------------=0D=0A>=20>=
-=20>=20=20fs/exfat/super.c=20=20=20=20=7C=20=205=20+++--=0D=0A>=20>=20>=20=
-=204=20files=20changed,=207=20insertions(+),=2032=20deletions(-)=0D=0A>=20>=
-=20>=0D=0A>=20>=20>=20--=0D=0A>=20>=20>=202.20.1=0D=0A>=20>=0D=0A>=20>=0D=
-=0A>=20>=0D=0A=0D=0A
+Also, for network patches, the subject line should indicate which tree
+these patches are for. So
+
+[PATCH net-next v3 0/3] 
+
+On Wed, Apr 15, 2020 at 05:02:43PM +0200, Robert Marko wrote:
+> This patch adds the driver for the MDIO interface
+> inside of Qualcomm IPQ40xx series SoC-s.
+> 
+> Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+> Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+> Cc: Luka Perkov <luka.perkov@sartura.hr>
+> ---
+> Changes from v2 to v3:
+> * Rename registers
+> * Remove unnecessary variable initialisations
+> * Switch to readl_poll_timeout() instead of custom solution
+> * Drop unused header
+> 
+> Changes from v1 to v2:
+> * Remove magic default value
+> * Remove lockdep_assert_held
+> * Add C45 check
+> * Simplify the driver
+> * Drop device and mii_bus structs from private struct
+> * Use devm_mdiobus_alloc_size()
+> 
+>  drivers/net/phy/Kconfig        |   7 ++
+>  drivers/net/phy/Makefile       |   1 +
+>  drivers/net/phy/mdio-ipq40xx.c | 160 +++++++++++++++++++++++++++++++++
+>  3 files changed, 168 insertions(+)
+>  create mode 100644 drivers/net/phy/mdio-ipq40xx.c
+> 
+> diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+> index 3fa33d27eeba..23bb5db033e3 100644
+> --- a/drivers/net/phy/Kconfig
+> +++ b/drivers/net/phy/Kconfig
+> @@ -157,6 +157,13 @@ config MDIO_I2C
+>  
+>  	  This is library mode.
+>  
+> +config MDIO_IPQ40XX
+> +	tristate "Qualcomm IPQ40xx MDIO interface"
+> +	depends on HAS_IOMEM && OF_MDIO
+> +	help
+> +	  This driver supports the MDIO interface found in Qualcomm
+> +	  IPQ40xx series Soc-s.
+> +
+>  config MDIO_IPQ8064
+>  	tristate "Qualcomm IPQ8064 MDIO interface support"
+>  	depends on HAS_IOMEM && OF_MDIO
+> diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
+> index 2f5c7093a65b..36aafc6128c4 100644
+> --- a/drivers/net/phy/Makefile
+> +++ b/drivers/net/phy/Makefile
+> @@ -37,6 +37,7 @@ obj-$(CONFIG_MDIO_CAVIUM)	+= mdio-cavium.o
+>  obj-$(CONFIG_MDIO_GPIO)		+= mdio-gpio.o
+>  obj-$(CONFIG_MDIO_HISI_FEMAC)	+= mdio-hisi-femac.o
+>  obj-$(CONFIG_MDIO_I2C)		+= mdio-i2c.o
+> +obj-$(CONFIG_MDIO_IPQ40XX)	+= mdio-ipq40xx.o
+>  obj-$(CONFIG_MDIO_IPQ8064)	+= mdio-ipq8064.o
+>  obj-$(CONFIG_MDIO_MOXART)	+= mdio-moxart.o
+>  obj-$(CONFIG_MDIO_MSCC_MIIM)	+= mdio-mscc-miim.o
+> diff --git a/drivers/net/phy/mdio-ipq40xx.c b/drivers/net/phy/mdio-ipq40xx.c
+> new file mode 100644
+> index 000000000000..acf1230341bd
+> --- /dev/null
+> +++ b/drivers/net/phy/mdio-ipq40xx.c
+> @@ -0,0 +1,160 @@
+> +// SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
+> +/* Copyright (c) 2015, The Linux Foundation. All rights reserved. */
+> +/* Copyright (c) 2020 Sartura Ltd. */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/io.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_mdio.h>
+> +#include <linux/phy.h>
+> +#include <linux/platform_device.h>
+> +
+> +#define MDIO_ADDR_REG				0x44
+> +#define MDIO_DATA_WRITE_REG			0x48
+> +#define MDIO_DATA_READ_REG			0x4c
+> +#define MDIO_CMD_REG				0x50
+> +#define MDIO_CMD_ACCESS_BUSY		BIT(16)
+> +#define MDIO_CMD_ACCESS_START		BIT(8)
+> +#define MDIO_CMD_ACCESS_CODE_READ	0
+> +#define MDIO_CMD_ACCESS_CODE_WRITE	1
+> +
+> +#define IPQ40XX_MDIO_TIMEOUT	10000
+> +#define IPQ40XX_MDIO_SLEEP		10
+> +
+> +struct ipq40xx_mdio_data {
+> +	void __iomem	*membase;
+> +};
+> +
+> +static int ipq40xx_mdio_wait_busy(struct mii_bus *bus)
+> +{
+> +	struct ipq40xx_mdio_data *priv = bus->priv;
+> +	unsigned int busy;
+> +
+> +	return readl_poll_timeout(priv->membase + MDIO_CMD_REG, busy,
+> +				  (busy & MDIO_CMD_ACCESS_BUSY) == 0, 
+> +				  IPQ40XX_MDIO_SLEEP, IPQ40XX_MDIO_TIMEOUT);
+
+Do you have any documentation about _START and _BUSY? You are making
+the assumption that the next read after writing the START bit will
+have the BUSY bit set. That the hardware reacts that fast. It is not
+an unreasonable assumption, but i've seen more designed where the
+START bit is also the BUSY bit, so the write implicitly sets the busy
+bit, and the hardware needs to clear it when it is done.
+
+As i said, this is not unreasonable, so:
+
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+
+    Andrew
+
