@@ -2,143 +2,233 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3709CC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F9E5C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:12:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D1D820732
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:12:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 441542076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:12:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vvcS/23m"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qbZFV3Bl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2896776AbgDOLL6 (ORCPT
+        id S2896788AbgDOLM0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:11:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36014 "EHLO
+        Wed, 15 Apr 2020 07:12:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408845AbgDOLJp (ORCPT
+        with ESMTP id S2896758AbgDOLLA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:09:45 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91134C061A10
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 04:09:45 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id g74so16633042qke.13
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 04:09:45 -0700 (PDT)
+        Wed, 15 Apr 2020 07:11:00 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D01CC061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 04:10:25 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id x11so2965833otp.6
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 04:10:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=21hC42/qRxZDmqiUxEvzYQPrDZOJ/smRvBWWoE1k9hQ=;
-        b=vvcS/23mH11jORzDN8BGcCfZvJeI826FrnG3u+asgYZjL616yu62DIXvN4L4mHRN8v
-         L2mwkXiEwhvpvYYvranvuYpbFBlaCiS8JdywVkE8pyyDLAjZV2wrfEMNqxN5F6hA0JFM
-         xPzIB9ihc+EQwh1lRf3VNQ4yqgX22zDAy2N0mLLHpo2AKkrhB2yb+1FqDaCjdl+fdhRa
-         pzHxRoJ8HK6zqNP7CPtKx6+xSPvQ+EXt5RhNSKjPhGMfC0HC0Yv+a5M555lQPbKJ1eNL
-         5Gs9DoTHmumKvr5bql4j8pBdlxxsCWamObMWPWeyLIuHNTd+ixwU/w0jqHNzja8sHO9/
-         9WPA==
+        bh=7VVkEWhFDrQp1FEX/xgl0zHsV0VTqPDsyKWDKAx8HhU=;
+        b=qbZFV3BlewRqWWzxURbMbQyWSKBolKHBMmxFyRO94vFBV6mxHqqIfEqv7TQ+iFMsv1
+         1nR6ZF1eviwKR/cFpxfubIZegHBYf5A9fKZpT/SD1eypiranG1RGxGa8bt/mztgvzH0O
+         lRdJSE8wksvgW1oflK34Dfw86IJu+n2MDsOLG0TmbOw2qYhXqvI5YLUl90jjXi2+BoGD
+         5Ut/KoR5fHbvxYX9jIBvCVED3OAVRGVpkDIiMqTnmGTVfvt3RHx9SzNS965hXOLgSJ6w
+         c0FdkNtJt+PbSfJK0R4rHF+gUW0tMZYaPGv8NNqx/nUOY1FtoYN0ozthEOySpYMU6rY9
+         K+6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=21hC42/qRxZDmqiUxEvzYQPrDZOJ/smRvBWWoE1k9hQ=;
-        b=ZL2F0dp2ZbWqCLXzu199QmF2zHM8kHg5fK0rwR66F7IxrML1tTK3lZ1JuqjORJ/JlK
-         LLqsqb/fGm3JyRUc7gphZTsYrq1Jqkwc+zVSUJYnBR/BBIpb1eHuGdzOdKv2nDRbxjh3
-         PANEmhgxLW93uPn2cVclfKeylWWlw093AMaSZ1ql/+H3+x1e4y8B+SXxfHHrnf0xqgjn
-         13mJelhNweczg+AizgH+nkqykLH/QODDW2vzbz79mqOS3TwMv2yUm5VYfvEKYHZuRB8y
-         Aw0yCCV+MgLwKtBDOwVd+x9PM36HGug0QpTbpmkxn/6tcfC0KPtvTbPheLk8OzPy986X
-         XRPA==
-X-Gm-Message-State: AGi0PuYqL8yV91FlnynpSYmXqzPzs4c/cN7R9C4Pf2jpSbidUZJ1rq3f
-        dXKFrCEdPbu+2b7Lv9ODwK5yPZHOq/CH4upnb/JLVQ==
-X-Google-Smtp-Source: APiQypJSkEadODH65efJa5blZDKvd61WTzbxiNRypvYGvovsgxcszhaNwzUEHkGlzlvJ9T6bppZZezWw5Pk7EPbYV2s=
-X-Received: by 2002:a37:8d86:: with SMTP id p128mr26303566qkd.250.1586948984176;
- Wed, 15 Apr 2020 04:09:44 -0700 (PDT)
+        bh=7VVkEWhFDrQp1FEX/xgl0zHsV0VTqPDsyKWDKAx8HhU=;
+        b=D1plGz95ROW6Mp71aVfve2+nrx6NNo8xjiV0lykpuS1G115EjTX1uO+vbE89VPIi7R
+         hvpZwa9PDlgqJN8LPR8oWek6QpCFpbg2HDmLgTiS2GeSYP7eVlTO8aM0z8nHnP5T5G/X
+         11zJcBaibUVOOklZj8hd6qpLg8WybBPRnsBy6RF/GSZdLEZ4Dd+IUSuAZBV4XJxm6t/j
+         5hhL1PQV0bjhnmzdieCbI9sMNNspPQNj1BtfTGt38SDEl7w8oSG7V9n3sVJh8H3zhqKq
+         q/v+vQ19VaoyG9jyUeKzDtEx79HdKfZH+XaVFAVV/3GHEkp+wV1ePMZ6dQcmNCdUt9AZ
+         N9nw==
+X-Gm-Message-State: AGi0Pubr6pE01y5IVV/uWufT6Fe1sto6pjjU7LB1Farni/6PtQKgqTSf
+        5BEqr7+37DYR6uO+9ykLPvqCM4PP3NrhInBcwl4CWg==
+X-Google-Smtp-Source: APiQypKrS72Nlq041eBAW9UAVyqi65PxH6uWOvyYyKbEtQStukn4+Tv0Z3Kt2Jd1GG4lYlHXm0r71jFbO/ZLPXrEEI0=
+X-Received: by 2002:a05:6830:1e4e:: with SMTP id e14mr3795854otj.91.1586949024721;
+ Wed, 15 Apr 2020 04:10:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200408014010.80428-1-peterx@redhat.com> <20200408174732.bc448bbe41d190bfe5cc252e@linux-foundation.org>
- <CACT4Y+bhQVcpSkSh_OZ5ZanfFZUqn2iypLhG_Z-nWKTkaYr1jw@mail.gmail.com>
- <CAHk-=wgjGgfUfVm_DpTay5TS03pLCgUWqRpQS++90fSE2V-e=g@mail.gmail.com>
- <20200410092951.6db32bfe@canb.auug.org.au> <7325374A-6072-44E4-85EE-F97FC7E8565F@lca.pw>
- <CACT4Y+ZE1XhYpTsjP1J1PyUsEHYKvchww71aHb7UnSk5=4xUrw@mail.gmail.com> <20200414192840.4yp3zqbe2tgtesve@xps.therub.org>
-In-Reply-To: <20200414192840.4yp3zqbe2tgtesve@xps.therub.org>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Wed, 15 Apr 2020 13:09:32 +0200
-Message-ID: <CACT4Y+bi9jFKR5vHY37-RoojUiVkX6Pu69X-2F+ibo6pSCA==Q@mail.gmail.com>
-Subject: Re: [PATCH 0/2] mm: Two small fixes for recent syzbot reports
-To:     Dan Rue <dan.rue@linaro.org>
-Cc:     Qian Cai <cai@lca.pw>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Xu <peterx@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>, Jens Axboe <axboe@kernel.dk>,
-        Christoph Lameter <cl@linux.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        syzkaller <syzkaller@googlegroups.com>
+References: <20200407123232.ktvaifhqntgzvkap@gilmour.lan> <CAG3jFysSrZJRE2TvL0bWoRFNnscgDGj8yGr-iwWBm4=1wMbJ9A@mail.gmail.com>
+ <20200407163916.GL6127@valkosipuli.retiisi.org.uk> <CAAFQd5BGFB5znb9QyyPVL47kc809Ktu33bssvqg5eA-WwvMgOw@mail.gmail.com>
+ <20200407172035.GM6127@valkosipuli.retiisi.org.uk> <20200408122127.i27hrmjh3pbjeulk@gilmour.lan>
+ <CAAFQd5DNyQra-XksVaSfT_FCkOHTzm9mbn+tMd1vACV=pb9_8g@mail.gmail.com>
+ <20200408134315.a7cemmto6bi26arg@gilmour.lan> <20200408152857.GO6127@valkosipuli.retiisi.org.uk>
+ <20200408153051.GP6127@valkosipuli.retiisi.org.uk> <20200415101827.owf5babnigev2vit@gilmour.lan>
+In-Reply-To: <20200415101827.owf5babnigev2vit@gilmour.lan>
+From:   Robert Foss <robert.foss@linaro.org>
+Date:   Wed, 15 Apr 2020 13:10:13 +0200
+Message-ID: <CAG3jFyuqjg5Hcj0ftANE5BzgfSpFKEgnq-AiuT1t=Y5k0AXtMg@mail.gmail.com>
+Subject: Re: [PATCH v6 1/3] media: dt-bindings: ov8856: Document YAML bindings
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Sakari Ailus <sakari.ailus@iki.fi>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 9:28 PM Dan Rue <dan.rue@linaro.org> wrote:
+On Wed, 15 Apr 2020 at 12:18, Maxime Ripard <maxime@cerno.tech> wrote:
 >
-> On Tue, Apr 14, 2020 at 01:12:50PM +0200, Dmitry Vyukov wrote:
-> > On Tue, Apr 14, 2020 at 12:06 AM Qian Cai <cai@lca.pw> wrote:
-> > > Well, there are other CI's beyond syzbot.
-> > > On the other hand, this makes me worry who is testing on linux-next every day.
+> On Wed, Apr 08, 2020 at 06:30:51PM +0300, Sakari Ailus wrote:
+> > Cc'ing Laurent as well.
 > >
-> > How do these use-after-free's and locking bugs get past the
-> > unit-testing systems (which syzbot is not) and remain unnoticed for so
-> > long?...
-> > syzbot uses the dumbest VMs (GCE), so everything it triggers during
-> > boot should be triggerable pretty much everywhere.
-> > It seems to be an action point for the testing systems. "Boot to ssh"
-> > is not the best criteria. Again if there is a LOCKDEP error, we are
-> > not catching any more LOCKDEP errors during subsequent testing. If
-> > there is a use-after-free, that's a serious error on its own and KASAN
-> > produces only 1 error by default as well. And as far as I understand,
-> > lots of kernel testing systems don't even enable KASAN, which is very
-> > wrong.
-> > I've talked to +Dan Rue re this few days ago. Hopefully LKFT will
-> > start catching these as part of unit testing. Which should help with
-> > syzbot testing as well.
+> > On Wed, Apr 08, 2020 at 06:28:57PM +0300, Sakari Ailus wrote:
+> > > Hi Maxime,
+> > >
+> > > On Wed, Apr 08, 2020 at 03:43:15PM +0200, Maxime Ripard wrote:
+> > > > On Wed, Apr 08, 2020 at 02:35:28PM +0200, Tomasz Figa wrote:
+> > > > > On Wed, Apr 8, 2020 at 2:21 PM Maxime Ripard <maxime@cerno.tech> wrote:
+> > > > > > On Tue, Apr 07, 2020 at 08:20:35PM +0300, Sakari Ailus wrote:
+> > > > > > > On Tue, Apr 07, 2020 at 06:46:06PM +0200, Tomasz Figa wrote:
+> > > > > > > > On Tue, Apr 7, 2020 at 6:40 PM Sakari Ailus <sakari.ailus@iki.fi> wrote:
+> > > > > > > > >
+> > > > > > > > > On Tue, Apr 07, 2020 at 05:47:41PM +0200, Robert Foss wrote:
+> > > > > > > > > > On Tue, 7 Apr 2020 at 14:32, Maxime Ripard <maxime@cerno.tech> wrote:
+> > > > > > > > > > >
+> > > > > > > > > > > Hi Robert,
+> > > > > > > > > > >
+> > > > > > > > > > > On Tue, Apr 07, 2020 at 01:29:05PM +0200, Robert Foss wrote:
+> > > > > > > > > > > > On Tue, 7 Apr 2020 at 10:36, Maxime Ripard <maxime@cerno.tech> wrote:
+> > > > > > > > > > > > > On Mon, Apr 06, 2020 at 11:35:07AM +0300, Sakari Ailus wrote:
+> > > > > > > > > > > > > > > But that 19.2MHz is not a limitation of the device itself, it's a
+> > > > > > > > > > > > > > > limitation of our implementation, so we can instead implement
+> > > > > > > > > > > > > > > something equivalent in Linux using a clk_set_rate to 19.2MHz (to make
+> > > > > > > > > > > > > > > sure that our parent clock is configured at the right rate) and the
+> > > > > > > > > > > > > > > clk_get_rate and compare that to 19.2MHz (to make sure that it's not
+> > > > > > > > > > > > > > > been rounded too far apart from the frequency we expect).
+> > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > This is doing exactly the same thing, except that we don't encode our
+> > > > > > > > > > > > > > > implementation limitations in the DT, but in the driver instead.
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > What I really wanted to say that a driver that doesn't get the clock
+> > > > > > > > > > > > > > frequency from DT but still sets that frequency is broken.
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > This frequency is highly system specific, and in many cases only a certain
+> > > > > > > > > > > > > > frequency is usable, for a few reasons: On many SoCs, not all common
+> > > > > > > > > > > > > > frequencies can be used (e.g. 9,6 MHz, 19,2 MHz and 24 MHz; while others
+> > > > > > > > > > > > > > are being used as well), and then that frequency affects the usable CSI-2
+> > > > > > > > > > > > > > bus frequencies directly --- and of those, only safe, known-good ones
+> > > > > > > > > > > > > > should be used. IOW, getting the external clock frequency wrong typically
+> > > > > > > > > > > > > > has an effect that that none of the known-good CSI-2 bus clock frequencies
+> > > > > > > > > > > > > > are available.
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > So clock-frequency is not about the "Frequency of the xvclk clock in
+> > > > > > > > > > > > > Hertz", but the frequency at which that clock must run on this
+> > > > > > > > > > > > > particular SoC / board to be functional?
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > If so, then yeah, we should definitely keep it, but the documentation
+> > > > > > > > > > > > > of the binding should be made clearer as well.
+> > > > > > > > > > > >
+> > > > > > > > > > > > Alright so, let me summarise the desired approach then.
+> > > > > > > > > > >
+> > > > > > > > > > > There's a separate discussion on the same topic here:
+> > > > > > > > > > > https://lore.kernel.org/linux-media/20200407122106.GD4751@pendragon.ideasonboard.com/
+> > > > > > > > > >
+> > > > > > > > > > Thanks for the link.
+> > > > > > > > > >
+> > > > > > > > > > >
+> > > > > > > > > > > > ACPI:
+> > > > > > > > > > > >   - Fetch the "clock-frequency" property
+> > > > > > > > > > > >   - Verify it to be 19.2Mhz
+> > > > > > > > > > > >
+> > > > > > > > > > > > DT:
+> > > > > > > > > > > >   - Fetch the "clock-frequency" property
+> > > > > > > > > > > >   - Verify it to be 19.2Mhz
+> > > > > > > > > > > >   - Get xvclk clock
+> > > > > > > > > > > >   - Get xvclk clock rate
+> > > > > > > > > > > >   - Verify xvclk clock rate to be 19.2Mhz
+> > > > > > > > > > >
+> > > > > > > > > > > The current status is that you should
+> > > > > > > > > > > 's/clock-frequency/link-frequencies/', and in order to replace
+> > > > > > > > > > > assigned-clock-rates, you'll want to have a clk_set_rate to 19.2MHz
+> > > > > > > > > > > between steps 3 and 4
+> > > > > > > > > >
+> > > > > > > > > > Would we want to 's/clock-frequency/link-frequencies/' for ACPI too?
+> > > > > > > > > > I imagine that would cause some breakage.
+> > > > > > > > >
+> > > > > > > > > It would, yes, and it would be no more correct on DT either.
+> > > > > > > > >
+> > > > > > > > > There are basically two possibilities here; either use the clock-frequency
+> > > > > > > > > property and set the frequency, or rely on assigned-clock-rates, and get
+> > > > > > > > > the frequency instead.
+> > > > > > > > >
+> > > > > > > > > The latter, while I understand it is generally preferred, comes with having
+> > > > > > > > > to figure out the register list set that closest matches the frequency
+> > > > > > > > > obtained. The former generally gets around this silently by the clock
+> > > > > > > > > driver setting the closest frequency it can support.
+> > > > > > > >
+> > > > > > > > Wouldn't the former actually cause problems, because the closest
+> > > > > > > > frequency the clock driver can support could be pretty far from the
+> > > > > > > > one requested? (E.g. 19.2 MHz vs 24 MHz) The driver needs to check the
+> > > > > > > > resulting frequency anyway.
+> > > > > > >
+> > > > > > > That's possible, yes; in this case there wouldn't be a guarantee the
+> > > > > > > frequency wouldn't be far off.
+> > > > > >
+> > > > > > assigned-clock-rates is really fragile... There's zero guarantee on
+> > > > > > how far the actual rate is going to be from the asked one, but more
+> > > > > > importantly you have zero guarantee on the time frame that rate is
+> > > > > > going to be enforced for.
+> > > > >
+> > > > > Is there such a guarantee if clk_set_rate() is called?
+> > > >
+> > > > with clk_set_rate itself, no, but...
+> > > >
+> > > > > > It's simply going to change the rate as a one-off thing, and if
+> > > > > > there's the next millisecond someone else is going to change its rate
+> > > > > > one way or another, it's going to do so and you won't have any
+> > > > > > notification.
+> > > >
+> > > > You can get notified, and you can use clk_set_rate_exclusive if you
+> > > > *really* want to enforce it.
+> > >
+> > > Is the conclusion then we should go back to relying on the clock-frequency
+> > > property?
 >
-> LKFT has recently added testing with KASAN enabled and improved the
-> kernel log parsing to catch more of this class of errors while
-> performing our regular functional testing.
->
-> Incidentally, -next was also broken for us from March 25 through April 5
-> due to a perf build failure[0], which eventually made itself all the way
-> down into v5.6 release and I believe the first two 5.6.x stable
-> releases.
->
-> For -next, LKFT's gap is primarily reporting. We do build and run over
-> 30k tests on every -next daily release, but we send out issues manually
-> when we see them because triaging is still a manual effort. We're
-> working to build better automated reporting. If anyone is interested in
-> watching LKFT's -next results more closely (warning, it's a bit noisy),
-> please let me know. Watching the results at https://lkft.linaro.org
-> provides some overall health indications, but again, it gets pretty
-> difficult to figure out signal from noise once you start drilling down
-> without sufficient context of the system.
+> clock-frequency or link-frequencies. link-frequencies seems to be a
+> better fit here, but we don't really have the choice for older
+> bindings.
 
-What kind of failures and noise do you get? Is it flaky tests?
-I would assume build failures are ~0% flaky/noisy. And boot failures
-are maybe ~1% flaky/noisy due to some infra issues.
+Alright, so since this is a new binding, let's aim for link-frequencies then.
 
-I can't find any actual test failure logs in the UI. I've got to this page:
-https://qa-reports.linaro.org/lkft/linux-mainline-oe/build/v5.7-rc1-24-g8632e9b5645b/testrun/1363280/suite/kselftest/tests/
-which seem to contain failed tests on mainline. But I still can't find
-the actual test failure logs.
+I don't think I understand what they look like on the driver side.
+Do you know an example of what a link-frequencies based driver would look like?
 
-
-> Dan
 >
-> [0] https://lore.kernel.org/stable/CA+G9fYsZjmf34pQT1DeLN_DDwvxCWEkbzBfF0q2VERHb25dfZQ@mail.gmail.com/
+> > > This has been discussed multiple times over the years, and I don't really
+> > > disagree with the above. The frequency is typically indeed hand-picked for
+> > > the hardware, and no other frequency should be used in any circumstances.
+> > >
+> > > No sensor driver I've seen has used clk_set_rate_exclusive() but I guess
+> > > they should. The absence of practical problems has been probably because of
+> > > two factors; firstly, these are typically clocks dedicated to the sensors
+> > > and secondly, good luck.
 >
-> --
-> Linaro LKFT
-> https://lkft.linaro.org
+> My point was that at least with handling the clock rate within the
+> driver (as opposed to assigned-clock-rates) you have multiple options
+> in dealing with changing colck rates / parents (Modelling the sensor
+> clock as a clock itself, using clk_set_rate_exclusive, using a
+> notifier, etc).. Some are more intrusive to the rest of the system
+> than others (especially clk_set_rate_exclusive), so I'm not really
+> advocating for any here, but we should make sure we have them in the
+> first place.
+>
+> Maxime
