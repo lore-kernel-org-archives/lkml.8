@@ -2,299 +2,140 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B56FEC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA7C6C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:13:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9457220732
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:12:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EC3220732
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:13:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="YNf8jj4p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2896801AbgDOLMy convert rfc822-to-8bit (ORCPT
+        id S2896774AbgDOLNK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:12:54 -0400
-Received: from mga05.intel.com ([192.55.52.43]:4674 "EHLO mga05.intel.com"
+        Wed, 15 Apr 2020 07:13:10 -0400
+Received: from mout.web.de ([217.72.192.78]:37689 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896760AbgDOLLQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:11:16 -0400
-IronPort-SDR: lp4vgQfzitq+QnIdNsjtn7q3whmxBfDuJaXmDocUUqXPPzFDZhQyIVBx2GnqWLzyMms0xnIhHC
- FzN37Ou/0/Uw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 04:10:29 -0700
-IronPort-SDR: 0pF2sy3bPnfqaZwBlOTt10X/IMftkiardGKGwHN8D8bpg0GetyRDG70uKPLEjvFzXYVS5YaFss
- fAcOUU7O8qOQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,386,1580803200"; 
-   d="scan'208";a="298964942"
-Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
-  by FMSMGA003.fm.intel.com with ESMTP; 15 Apr 2020 04:10:29 -0700
-Received: from fmsmsx151.amr.corp.intel.com (10.18.125.4) by
- FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 15 Apr 2020 04:10:29 -0700
-Received: from shsmsx154.ccr.corp.intel.com (10.239.6.54) by
- FMSMSX151.amr.corp.intel.com (10.18.125.4) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 15 Apr 2020 04:10:28 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
- SHSMSX154.ccr.corp.intel.com ([169.254.7.214]) with mapi id 14.03.0439.000;
- Wed, 15 Apr 2020 19:10:26 +0800
-From:   "Tian, Kevin" <kevin.tian@intel.com>
-To:     Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>
-CC:     "Raj, Ashok" <ashok.raj@intel.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2 6/7] iommu/vt-d: Add page request draining support
-Thread-Topic: [PATCH v2 6/7] iommu/vt-d: Add page request draining support
-Thread-Index: AQHWEubS8xobodm1XE6sOT1OPN2bNqh579Xg
-Date:   Wed, 15 Apr 2020 11:10:26 +0000
-Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D8209CE@SHSMSX104.ccr.corp.intel.com>
-References: <20200415052542.30421-1-baolu.lu@linux.intel.com>
- <20200415052542.30421-7-baolu.lu@linux.intel.com>
-In-Reply-To: <20200415052542.30421-7-baolu.lu@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        id S2896759AbgDOLLp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:11:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1586949015;
+        bh=Uyc/JgUYUF0x93fiBIrjjRttso5hxJiBBi8LdmVxlcM=;
+        h=X-UI-Sender-Class:Cc:Subject:To:From:Date;
+        b=YNf8jj4pPjHUp43E/roe/4iEoezLUctJcdCTPTbJuiGJqjPUF3zowchK7rDdzn4F2
+         soLcUY4wT7xFPRUXFVQZ8wxZtmNclVe+r9ign2TDcqIlShL0B57Z66bIUpANwfvCA+
+         gPLoteEf//PfdLyjqqznywLG+p5ynS/a9DO+TODI=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.3] ([78.48.133.192]) by smtp.web.de (mrweb103
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0Lmcf9-1ip3rh3cbD-00aHGp; Wed, 15
+ Apr 2020 13:10:15 +0200
+Cc:     linux-kernel@vger.kernel.org, Antonio Quartulli <a@unstable.cc>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, Kangjie Lu <kjlu@umn.edu>,
+        Marek Lindner <mareklindner@neomailbox.ch>,
+        Simon Wunderlich <sw@simonwunderlich.de>,
+        Sven Eckelmann <sven@narfation.org>,
+        Yuan Zhang <yuanxzhang@fudan.edu.cn>
+Subject: Re: [PATCH] batman-adv: Fix refcnt leak in
+ batadv_store_throughput_override
+To:     Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        b.a.t.m.a.n@lists.open-mesh.org, netdev@vger.kernel.org
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <afea6694-36c6-bbae-dcfd-f6f6efedb05a@web.de>
+Date:   Wed, 15 Apr 2020 13:10:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:mkQolI8XcWr8+vLOs8HJMBFqXy5OGBb4+jUbWRZrMI+YPsOlT27
+ 9ENpzFA7j1QixKKBIScLqTaDF1sCyTXitvqjgLV8jJ3Pophih2rDY2v/UTyZUkGEsDWnMCi
+ ha8JaLFOxXSpmNWcZ166r0wvfJuSYk7bw8OPotc7PVL32UN83YeSsqU9gVdYF6rDqTdhr6w
+ 2d5WY7liDt4XZM7YGUbxQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:fhXCi2r++Kk=:KbI2y5i2O4NtAa6CBoD/zo
+ O9LDdK7GcbDHvcWMKVhtWTSYyQPpleAvQHrdGfW3zFc7UKGaq9HSyahaHucn9vcnHOTFtY9zX
+ IHoS5BLQ2XR+DTOq1fHdOi2gnEURUb6tKR+50DxOQ4ODANGk7oLQ0KTGOOTuv/qsBYkz6WDHx
+ MXKTx7rYG4eed0Z+6I7ui2muCO76adlmbxbbqPPURE4NFe44a5QF3fMNsPVMh9p+co+0wIwSF
+ sj5M7WNKhyfwoOE4krSrbrxv9Lh1LNTZ+nmJCEcDX0TKWPYMIJQfi83j7WpYLJ++se+ZxmaEo
+ nCi82UvHwGYMoNNeRZux1bKB/+O+8wplVPHIDMZOMRSlmsuP/lpor4dUA/psskbR2A4T2FQip
+ EeMQPoLVZevB7O5BmU/E3cSxrLQsUFWxrAwfl1/F9B0sBxC0B/COctVNq49ZJyaqrVKYvXtf7
+ qSDo9rWpoNgnuCq/e2UM8eu9fje0CiiEeeL6xMyAB+6m5ac4DNAgmjGOmsMLyV9PYdF55/BCm
+ tr9TBpkKVbtnpVQOZrmtoPzClFkE8jX4bI3xmkGKbixV8RQNF2jbDWl+RhoDA2qfQIiAoht9H
+ ql3wQ9+KznRQShXxL5O+CwZi26fppJh+8Zcd04pylloUghVWrgfWGiCJjLtKRj1qzA/y2jfmT
+ 2TLMQ5Na2TBjL8rIHVXK0EQpTdG3G4G98emywocsQ75LW0jzmFgbdxhatmbu5VjO+PjjJ3pbq
+ 3bWRevmauA92U44OHV0pNP5zw+nGgdmudatXXovCp7jKnylg3guUyISNgzHGSpZ7eVn65VaPW
+ HESzwHLYvTuWRwJP/yvd9r//ziYU/fFGac+MI10QoUeJMjzzysJMxtKtgOwDDAzNHZTlWoegJ
+ znsT4hcbj8VZe0EJfy34qUoD3j2wl9fSr9/NfzNMNdHcLbthpiWbz/5HTUL3S2zLrmM+JrjfP
+ /cq9igjlnAxUnN3vfeenKmgEhrjOCKmjb9qrOhzFCnbAKE0uUC/ScEu7+x7d8eubgUnkBOnp5
+ wkHhuv959dMia/nABilKGt1fbfRH3ii3o3IZ/J9sCcmJoZNZRHQmQp9/MwnCmYgRrxScs/CVr
+ 3zksueJO3qnJJ3nPmdrTAAZbY4Ke8oIqH60nrMmUDtQivkY/7vjFkXBIZ0osaMTtFjO+biyfn
+ MSxNnFTrApfUWeAZyeFZ1UwXej4gov5zejFRz6DfrhIrIFlOHKzcyDC7Y2BnT0TK6rcbe8aix
+ BNPEWGUvKVvmhbvks
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Lu Baolu <baolu.lu@linux.intel.com>
-> Sent: Wednesday, April 15, 2020 1:26 PM
-> 
-> When a PASID is stopped or terminated, there can be pending
-> PRQs (requests that haven't received responses) in remapping
-> hardware. This adds the interface to drain page requests and
-> call it when a PASID is terminated.
-> 
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-> ---
->  drivers/iommu/intel-svm.c   | 90 ++++++++++++++++++++++++++++++++++---
->  include/linux/intel-iommu.h |  1 +
->  2 files changed, 86 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
-> index 05aeb8ea51c4..736dd39fb52b 100644
-> --- a/drivers/iommu/intel-svm.c
-> +++ b/drivers/iommu/intel-svm.c
-> @@ -23,6 +23,7 @@
->  #include "intel-pasid.h"
-> 
->  static irqreturn_t prq_event_thread(int irq, void *d);
-> +static void intel_svm_drain_prq(struct device *dev, int pasid);
-> 
->  #define PRQ_ORDER 0
-> 
-> @@ -210,6 +211,7 @@ static void intel_mm_release(struct mmu_notifier
-> *mn, struct mm_struct *mm)
->  	rcu_read_lock();
->  	list_for_each_entry_rcu(sdev, &svm->devs, list) {
->  		intel_pasid_tear_down_entry(svm->iommu, sdev->dev, svm-
-> >pasid);
-> +		intel_svm_drain_prq(sdev->dev, svm->pasid);
+> The issue happens in one error path of
+> batadv_store_throughput_override(). When batadv_parse_throughput()
+> returns NULL, the refcnt increased by batadv_hardif_get_by_netdev() is
+> not decreased, causing a refcnt leak.
 
-I feel there is a problem here. If you clear the PASID entry before draining,
-in-fly requests will hit unrecoverable fault instead, due to invalid PASID
-entry.
+How do you think about to mention the terms =E2=80=9Cexception handling=E2=
+=80=9D
+and =E2=80=9Creference counting=E2=80=9D in the commit message?
 
->  		intel_flush_svm_range_dev(svm, sdev, 0, -1, 0);
->  	}
->  	rcu_read_unlock();
-> @@ -403,12 +405,8 @@ int intel_svm_unbind_gpasid(struct device *dev, int
-> pasid)
->  		if (!sdev->users) {
->  			list_del_rcu(&sdev->list);
->  			intel_pasid_tear_down_entry(iommu, dev, svm-
-> >pasid);
-> +			intel_svm_drain_prq(dev, svm->pasid);
->  			intel_flush_svm_range_dev(svm, sdev, 0, -1, 0);
-> -			/* TODO: Drain in flight PRQ for the PASID since it
-> -			 * may get reused soon, we don't want to
-> -			 * confuse with its previous life.
-> -			 * intel_svm_drain_prq(dev, pasid);
-> -			 */
->  			kfree_rcu(sdev, rcu);
-> 
->  			if (list_empty(&svm->devs)) {
-> @@ -646,6 +644,7 @@ int intel_svm_unbind_mm(struct device *dev, int
-> pasid)
->  			 * large and has to be physically contiguous. So it's
->  			 * hard to be as defensive as we might like. */
->  			intel_pasid_tear_down_entry(iommu, dev, svm-
-> >pasid);
-> +			intel_svm_drain_prq(dev, svm->pasid);
->  			intel_flush_svm_range_dev(svm, sdev, 0, -1, 0);
->  			kfree_rcu(sdev, rcu);
-> 
-> @@ -703,6 +702,7 @@ struct page_req_dsc {
->  struct page_req {
->  	struct list_head list;
->  	struct page_req_dsc desc;
-> +	struct completion complete;
->  	unsigned int processing:1;
->  	unsigned int drained:1;
->  	unsigned int completed:1;
-> @@ -732,9 +732,83 @@ static bool is_canonical_address(u64 addr)
->  	return (((saddr << shift) >> shift) == saddr);
->  }
-> 
-> +/**
-> + * intel_svm_drain_prq:
-> + *
-> + * Drain all pending page requests related to a specific pasid in both
-> + * software and hardware. The caller must guarantee that no more page
-> + * requests related to this pasid coming.
-> + */
-> +static void intel_svm_drain_prq(struct device *dev, int pasid)
-> +{
-> +	struct device_domain_info *info;
-> +	struct dmar_domain *domain;
-> +	struct intel_iommu *iommu;
-> +	struct qi_desc desc[3];
-> +	struct pci_dev *pdev;
-> +	struct page_req *req;
-> +	unsigned long flags;
-> +	u16 sid, did;
-> +	int qdep;
-> +
-> +	info = get_domain_info(dev);
-> +	if (WARN_ON(!info || !dev_is_pci(dev)))
-> +		return;
-> +
-> +	iommu = info->iommu;
-> +	domain = info->domain;
-> +	pdev = to_pci_dev(dev);
-> +
-> +	/* Mark all related pending requests drained. */
-> +	spin_lock_irqsave(&iommu->prq_lock, flags);
-> +	list_for_each_entry(req, &iommu->prq_list, list)
-> +		if (req->desc.pasid_present && req->desc.pasid == pasid)
-> +			req->drained = true;
-> +	spin_unlock_irqrestore(&iommu->prq_lock, flags);
-> +
-> +	/* Wait until all related pending requests complete. */
-> +retry:
-> +	spin_lock_irqsave(&iommu->prq_lock, flags);
-> +	list_for_each_entry(req, &iommu->prq_list, list) {
-> +		if (req->desc.pasid_present &&
-> +		    req->desc.pasid == pasid &&
-> +		    !req->completed) {
-> +			spin_unlock_irqrestore(&iommu->prq_lock, flags);
-> +			wait_for_completion_timeout(&req->complete, 5 *
-> HZ);
-> +			goto retry;
-> +		}
-> +	}
-> +	spin_unlock_irqrestore(&iommu->prq_lock, flags);
-> +
-> +	/*
-> +	 * Perform steps described in VT-d spec CH7.10 to drain page
-> +	 * request and responses in hardware.
-> +	 */
-> +	sid = PCI_DEVID(info->bus, info->devfn);
-> +	did = domain->iommu_did[iommu->seq_id];
-> +	qdep = pci_ats_queue_depth(pdev);
-> +
-> +	memset(desc, 0, sizeof(desc));
-> +	desc[0].qw0 = QI_IWD_STATUS_DATA(QI_DONE) |
-> +			QI_IWD_FENCE |
-> +			QI_IWD_TYPE;
-> +	desc[1].qw0 = QI_EIOTLB_PASID(pasid) |
-> +			QI_EIOTLB_DID(did) |
-> +			QI_EIOTLB_GRAN(QI_GRAN_NONG_PASID) |
-> +			QI_EIOTLB_TYPE;
-> +	desc[2].qw0 = QI_DEV_EIOTLB_PASID(pasid) |
-> +			QI_DEV_EIOTLB_SID(sid) |
-> +			QI_DEV_EIOTLB_QDEP(qdep) |
-> +			QI_DEIOTLB_TYPE |
-> +			QI_DEV_IOTLB_PFSID(info->pfsid);
-> +
-> +	qi_submit_sync(iommu, desc, 3, QI_OPT_WAIT_DRAIN);
+Would you like to add the tag =E2=80=9CFixes=E2=80=9D to the change descri=
+ption?
 
-the completion of above sequence ensures that previous queued
-page group responses are sent out and received by the endpoint
-and vice versa all in-fly page requests from the endpoint are queued
-in iommu page request queue. Then comes a problem - you didn't
-wait for completion of those newly-queued requests and their
-responses.
-
-According to VT-d spec 7.10, step (d) mentions when queue overflow
-happens, software needs to repeat the above draining sequence to
-drain auto-responses.
-
-According to VT-d spec 7.11, the device driver must be notified to
-revoke the PASID before this draining sequence happens. When 
-does that happen? Possibly can add some comment to explain such
-background.
-
-Thanks
-Kevin
-
-> +}
-> +
->  static void process_single_prq(struct intel_iommu *iommu,
->  			       struct page_req_dsc *req)
->  {
-> +	struct page_req *p_req = container_of(req, struct page_req, desc);
->  	int result = QI_RESP_FAILURE;
->  	struct intel_svm_dev *sdev;
->  	struct vm_area_struct *vma;
-> @@ -768,6 +842,10 @@ static void process_single_prq(struct intel_iommu
-> *iommu,
->  	}
-> 
->  	result = QI_RESP_INVALID;
-> +
-> +	if (p_req->drained)
-> +		goto bad_req;
-> +
->  	/* Since we're using init_mm.pgd directly, we should never take
->  	 * any faults on kernel addresses. */
->  	if (!svm->mm)
-> @@ -868,6 +946,7 @@ static void intel_svm_process_prq(struct
-> intel_iommu *iommu)
->  			req->completed = true;
->  		} else if (req->completed) {
->  			list_del(&req->list);
-> +			complete(&req->complete);
->  			kfree(req);
->  		} else {
->  			break;
-> @@ -899,6 +978,7 @@ static irqreturn_t prq_event_thread(int irq, void *d)
->  		if (!req)
->  			break;
->  		req->desc = *dsc;
-> +		init_completion(&req->complete);
->  		list_add_tail(&req->list, &iommu->prq_list);
->  		head = (head + sizeof(*dsc)) & PRQ_RING_MASK;
->  	}
-> diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
-> index 80715a59491c..714a0df3d879 100644
-> --- a/include/linux/intel-iommu.h
-> +++ b/include/linux/intel-iommu.h
-> @@ -333,6 +333,7 @@ enum {
-> 
->  #define QI_IWD_STATUS_DATA(d)	(((u64)d) << 32)
->  #define QI_IWD_STATUS_WRITE	(((u64)1) << 5)
-> +#define QI_IWD_FENCE		(((u64)1) << 6)
->  #define QI_IWD_PRQ_DRAIN	(((u64)1) << 7)
-> 
->  #define QI_IOTLB_DID(did) 	(((u64)did) << 16)
-> --
-> 2.17.1
-
+Regards,
+Markus
