@@ -2,57 +2,109 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0B28C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:03:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C4EC3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:03:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C66F120737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:03:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD38920737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:03:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586955830;
+	bh=JK538BeIo0coNiSuk8GXKuTZYWW8UsZlmT3Hs5VaTMk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Y1l5i3OIrcN38MJ6U7fphEJik7sA+WGsOnZkKRwNSb7MwKA0BFYfCA1tQCW9JEGKV
+	 93vwK4/jXxlI0x3jlwCiBSzNdrFZmC1ig3tcXNqG9z4PP58OJZ+/yoGKCXxnz6b5W+
+	 XcNBm/w5xNCzr1CDgvhFnYhFalnnVQ5n7pjJZA1w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505797AbgDONDi (ORCPT
+        id S2503492AbgDONDs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:03:38 -0400
-Received: from baliza.dreformarra.com ([134.73.232.212]:3820 "HELO
-        elitetorrent1.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with SMTP id S2897150AbgDOLgd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:36:33 -0400
-X-Greylist: delayed 77242 seconds by postgrey-1.27 at vger.kernel.org; Wed, 15 Apr 2020 07:36:33 EDT
-Received: from smtp4.cyberemailings.com [113.51.137.130] by smtp.mixedthings.net with ASMTP; Wed, 15 Apr 2020 05:35:31 -0600
-Received: from mx03.listsystemsf.net [157.113.44.9] by relay-x.misswldrs.com with LOCAL; Wed, 15 Apr 2020 05:18:33 -0600
-Message-ID: <6F1167EB.5E48090F@elitetorrent1.com>
-Date:   Wed, 15 Apr 2020 05:00:51 -0600
-Reply-To: "elitetorrent1.com" <info@elitetorrent1.com>
-From:   "elitetorrent1.com" <info@elitetorrent1.com>
-User-Agent: Mozilla/5.0 (Macintosh; U; Intel Mac OS X; en-US; rv:1.8.1.18) Gecko/20081105 Thunderbird/2.0.0.18
+        Wed, 15 Apr 2020 09:03:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56272 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2897148AbgDOLg3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:36:29 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0821920768;
+        Wed, 15 Apr 2020 11:36:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586950588;
+        bh=JK538BeIo0coNiSuk8GXKuTZYWW8UsZlmT3Hs5VaTMk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Yq/AGrN7kje987MUJprhBd+S1/qDyaoB4qRkMG0GC2eh8nCyzv22cy1BjWhtLNSOo
+         tzNsI8QdB6r0msUQvcniE50ctRGjf9FifDoRxF/kZq9nfsmPLF8KnBbbLZjf2dxfr3
+         HytyreYpKLfwnku4q8RivYgfCCJ/vq8JBIVsKXc8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 086/129] net: dsa: bcm_sf2: Ensure correct sub-node is parsed
+Date:   Wed, 15 Apr 2020 07:34:01 -0400
+Message-Id: <20200415113445.11881-86-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
+References: <20200415113445.11881-1-sashal@kernel.org>
 MIME-Version: 1.0
-To:     <linux-kernel@vger.kernel.org>
-Subject: Download latest movies from elitetorrent1.com
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-While sitting home during the lock out, why not watch some nice movies. 
+[ Upstream commit afa3b592953bfaecfb4f2f335ec5f935cff56804 ]
 
-All for free, makes sense?
+When the bcm_sf2 was converted into a proper platform device driver and
+used the new dsa_register_switch() interface, we would still be parsing
+the legacy DSA node that contained all the port information since the
+platform firmware has intentionally maintained backward and forward
+compatibility to client programs. Ensure that we do parse the correct
+node, which is "ports" per the revised DSA binding.
 
-visit us now
-https://elitetorrent1.com/
+Fixes: d9338023fb8e ("net: dsa: bcm_sf2: Make it a real platform device driver")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/dsa/bcm_sf2.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-
-
-
-
-Unsubscribe from our database here
-https://forms.icann.org/en/resources/compliance/complaints/registrars/stand
-ards-complaint-form
-
+diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
+index 4481afd323a97..e93c81c4062ed 100644
+--- a/drivers/net/dsa/bcm_sf2.c
++++ b/drivers/net/dsa/bcm_sf2.c
+@@ -1069,6 +1069,7 @@ static int bcm_sf2_sw_probe(struct platform_device *pdev)
+ 	const struct bcm_sf2_of_data *data;
+ 	struct b53_platform_data *pdata;
+ 	struct dsa_switch_ops *ops;
++	struct device_node *ports;
+ 	struct bcm_sf2_priv *priv;
+ 	struct b53_device *dev;
+ 	struct dsa_switch *ds;
+@@ -1136,7 +1137,11 @@ static int bcm_sf2_sw_probe(struct platform_device *pdev)
+ 	set_bit(0, priv->cfp.used);
+ 	set_bit(0, priv->cfp.unique);
+ 
+-	bcm_sf2_identify_ports(priv, dn->child);
++	ports = of_find_node_by_name(dn, "ports");
++	if (ports) {
++		bcm_sf2_identify_ports(priv, ports);
++		of_node_put(ports);
++	}
+ 
+ 	priv->irq0 = irq_of_parse_and_map(dn, 0);
+ 	priv->irq1 = irq_of_parse_and_map(dn, 1);
+-- 
+2.20.1
 
