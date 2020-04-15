@@ -2,152 +2,276 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46C56C38A29
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A865C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:50:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2399220737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:50:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="X5QYqljn"
+	by mail.kernel.org (Postfix) with ESMTP id 67188206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:50:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586955023;
+	bh=YudaV565w6btpCVfkDa53B7k9IwUOjEJzRGtCM4oZpg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=s1tDZaLJfmYLDSRoKfWpWDRK+6glrR7kpJT0BGV4L9bVsaXgBdTkhnJWekXTOX6S5
+	 WBvhDfUrrv1D9HzrrrcUopvH2qx7bqNkY8MixzoZwQUvkG3OkuxfryIoabZajEy/OE
+	 O/LuG0lbvYnSwPGFTvHvSnU1IMR1YB22FlBZfw6Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S370398AbgDOMuJ (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:50:09 -0400
-Received: from mail-vi1eur05on2055.outbound.protection.outlook.com ([40.107.21.55]:6154
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S370338AbgDOMtP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 08:49:15 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=A06RtMnieG7I1kIm8ygYH1RBJ2vPyMk6xhh777qb/RRdooFGwCALISG4GSppqJ5rMyrFfzBunRMrr0PRlY7JBuF4CJgAyJkmA+XR2WFGXC/BBuL+Xyrpc/v6zGLKHJzyZjGAYmBVQAB7WKufYPTMnOAPVXv+CxhH/pt6ehfcYSyfzQ355xFMDeuMULnr8yLQhcYjA/YC1Fhs4BwsY+60EDHhGtE6jGMCrlaVVnmYg73l5jamfi8AKC8yPY55REnW+bSJCbjAvjTj3tKYMLngXBFq7U4yZ/6a50xeX9oJcEea9jAvUbhDPIdobNhLwJgJf5itYDHxMllQ8ko5eKf1xw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0dByjc0tAMfIXhOiJhJHOqIaqT4YU/kTo4Kdenzn1qY=;
- b=CcMXu9RtLqcGQmK7/URTQaIniwI2XC552/Kwwn6Aa2wOH+UitP3gA/pz4j1L4vFGv9DNlfCdyKqJHqPXMMBPZ3cMES0qnbw0E0xc2CfqAwXl6q0Ng3umCrFBzjyADUAV1sTgU5nXU7nlkGOqpkUBLxgNioqM79IxOejxk3uPuLvW8BB7JZ17mZkkbSN2IAfWVciMz7M1ebfZQLFNb2NQrUGHmGxwIGZcejnXgdqOUBXvtSZsXVBq1U2eO69Ot9jnHoz0LMxOhlo9WKp4X/tvrEIURWlpRte4foGkp5d7mRSLc9TtwPEj9m7hmXJFsA3XIiYJILuiMpkK+SbO1p3y5w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0dByjc0tAMfIXhOiJhJHOqIaqT4YU/kTo4Kdenzn1qY=;
- b=X5QYqljn4jGb5WbuiQHcLNNWfDbd1brkp++LYZx9cdEVPeKJp7Gm/okTqIe+jSAc96WY0sg8dcgofXKHsZbUiKKFMzEsI+kL9TxQzt6QUgKX6Nvegjj9zq/QPLPynb2Y/0RvUtz8pNXZB1Lza6tvXiFQ/oxDU9bDCGzXfVcEt3A=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
- by DB6PR0402MB2856.eurprd04.prod.outlook.com (2603:10a6:4:9a::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.15; Wed, 15 Apr
- 2020 12:49:09 +0000
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::d17b:d767:19c3:b871]) by DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::d17b:d767:19c3:b871%6]) with mapi id 15.20.2900.028; Wed, 15 Apr 2020
- 12:49:09 +0000
-From:   peng.fan@nxp.com
-To:     shawnguo@kernel.org, s.hauer@pengutronix.de, sboyd@kernel.org,
-        robh+dt@kernel.org
-Cc:     kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        Anson.Huang@nxp.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, abel.vesa@nxp.com,
-        Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH V4 1/4] dt-bindings: fsl: add i.MX7ULP PMC binding doc
-Date:   Wed, 15 Apr 2020 20:40:46 +0800
-Message-Id: <1586954449-17463-2-git-send-email-peng.fan@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1586954449-17463-1-git-send-email-peng.fan@nxp.com>
-References: <1586954449-17463-1-git-send-email-peng.fan@nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR02CA0098.apcprd02.prod.outlook.com
- (2603:1096:4:92::14) To DB6PR0402MB2760.eurprd04.prod.outlook.com
- (2603:10a6:4:a1::14)
+        id S370410AbgDOMuW (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:50:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58904 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S370362AbgDOMtd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 08:49:33 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74B43206D5;
+        Wed, 15 Apr 2020 12:49:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586954971;
+        bh=YudaV565w6btpCVfkDa53B7k9IwUOjEJzRGtCM4oZpg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MvhzHoXnZd6QsEJ4Yfy+sgm47S1WPqDVf1yFwRKpePmQvWl9nCqRzzu8sP0obG5Ai
+         ltjkVY5rOF4O4jAREviY8DLKNSCmqh0MTbT5+vhOgcJqI3VVapO0j0VbBDrLQR9qk4
+         rw4ybt0VHtSEBrlVHXCViFBAeSMRpMweThfY9JRo=
+Date:   Wed, 15 Apr 2020 14:49:29 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Wang Wenhu <wenhu.wang@vivo.com>
+Cc:     linux-kernel@vger.kernel.org, oss@buserror.net,
+        christophe.leroy@c-s.fr, linuxppc-dev@lists.ozlabs.org,
+        kernel@vivo.com, Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH 5/5] drivers: uio: new driver for fsl_85xx_cache_sram
+Message-ID: <20200415124929.GA3265842@kroah.com>
+References: <20200415123346.116212-1-wenhu.wang@vivo.com>
+ <20200415123346.116212-6-wenhu.wang@vivo.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (119.31.174.67) by SG2PR02CA0098.apcprd02.prod.outlook.com (2603:1096:4:92::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2900.17 via Frontend Transport; Wed, 15 Apr 2020 12:49:05 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [119.31.174.67]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 6140373a-d7b6-4320-8fb7-08d7e13b63d2
-X-MS-TrafficTypeDiagnostic: DB6PR0402MB2856:|DB6PR0402MB2856:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DB6PR0402MB28560CACB99C9A80C0C9987388DB0@DB6PR0402MB2856.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:243;
-X-Forefront-PRVS: 0374433C81
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(39860400002)(376002)(346002)(366004)(396003)(136003)(6486002)(66946007)(26005)(186003)(52116002)(16526019)(6506007)(956004)(5660300002)(2616005)(6512007)(4326008)(6666004)(2906002)(316002)(8936002)(966005)(69590400007)(66556008)(9686003)(36756003)(81156014)(8676002)(478600001)(86362001)(66476007);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: hoekhTfE4jsnEr6cPOcSdUI0DZRfBNhWN7pDR/GR3qA6jqAks4rKW4WLDdrxFLWv+FlImisBFG9pilXN4zcONSKTXygMobIrnI/DV3BMthfY6Lg2rRSPgsbndJ38waTQsAP+qHOw624P2TKHhz4+YLGNV2sgdIIiQAef4tiF4cKd8HExdsRYskLgVTXo1FlW8bBu+O/uhvGL7YujwHvOKSQKbNbIyNckuMfpB5LFXy/Tcy5UpRnX/56aIrErsoWAHd7l9GkqrzkYK8pXKmPEgMu8f4a9A+kkyouwTkmo45nMO0k4Qb+sByU7KVGoorcIPDIv/AdKzrcj1q2QlX1/CiKdCJaTnQ08KmlgQS4McRJixDGPc18WX+hllVB/KnUjuWB6pgkYnf9neiSdbiKDyUSg0B9E4FdOzKgGtnFcrGuYWq+L8bS/8+wLgTSVl4g4i9BUr1Vyamc2/tnSSSsPo5QiovxwTGPqFXDGtcoYWgn7pELf0PNzX7uvTM2jjhSBBKr3RqaikPtiaki+eJxfgt3Hazc85oJW0t/kPebeeMdPmGQF6DZ07tlz9terGcUNo5PpYijkynzD93GgTMLaHA==
-X-MS-Exchange-AntiSpam-MessageData: 1DDFCWNXnI/iz78KZakS19QrwunLvlUfIR1rn0E2O3PU8ZGp9iiRtWqKF+peu48GZRTACDKcgEjMtw6xcODSiOqa511+/5nGZ89S2exTzOJRevLqbi6KiZqHJae+N+UCAABnwcIlSz9rCqgndEJK3w==
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6140373a-d7b6-4320-8fb7-08d7e13b63d2
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2020 12:49:09.3196
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: rYTJlCG+5K2LCEoO+6dyshEYyIaWHKP3ad8dC9EcW1sYUDK9nNFImyUY9+7EvBUbiNOM575zo0pKGRmkSwTcOA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0402MB2856
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200415123346.116212-6-wenhu.wang@vivo.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+On Wed, Apr 15, 2020 at 05:33:46AM -0700, Wang Wenhu wrote:
+> A driver for freescale 85xx platforms to access the Cache-Sram form
+> user level. This is extremely helpful for some user-space applications
+> that require high performance memory accesses.
+> 
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+> Cc: Scott Wood <oss@buserror.net>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
+> ---
+>  drivers/uio/Kconfig                   |   8 ++
+>  drivers/uio/Makefile                  |   1 +
+>  drivers/uio/uio_fsl_85xx_cache_sram.c | 195 ++++++++++++++++++++++++++
+>  3 files changed, 204 insertions(+)
+>  create mode 100644 drivers/uio/uio_fsl_85xx_cache_sram.c
+> 
+> diff --git a/drivers/uio/Kconfig b/drivers/uio/Kconfig
+> index 202ee81cfc2b..afd38ec13de0 100644
+> --- a/drivers/uio/Kconfig
+> +++ b/drivers/uio/Kconfig
+> @@ -105,6 +105,14 @@ config UIO_NETX
+>  	  To compile this driver as a module, choose M here; the module
+>  	  will be called uio_netx.
+>  
+> +config UIO_FSL_85XX_CACHE_SRAM
+> +	tristate "Freescale 85xx Cache-Sram driver"
+> +	depends on FSL_85XX_CACHE_SRAM
+> +	help
+> +	  Generic driver for accessing the Cache-Sram form user level. This
+> +	  is extremely helpful for some user-space applications that require
+> +	  high performance memory accesses.
+> +
+>  config UIO_FSL_ELBC_GPCM
+>  	tristate "eLBC/GPCM driver"
+>  	depends on FSL_LBC
+> diff --git a/drivers/uio/Makefile b/drivers/uio/Makefile
+> index c285dd2a4539..be2056cffc21 100644
+> --- a/drivers/uio/Makefile
+> +++ b/drivers/uio/Makefile
+> @@ -10,4 +10,5 @@ obj-$(CONFIG_UIO_NETX)	+= uio_netx.o
+>  obj-$(CONFIG_UIO_PRUSS)         += uio_pruss.o
+>  obj-$(CONFIG_UIO_MF624)         += uio_mf624.o
+>  obj-$(CONFIG_UIO_FSL_ELBC_GPCM)	+= uio_fsl_elbc_gpcm.o
+> +obj-$(CONFIG_UIO_FSL_85XX_CACHE_SRAM)	+= uio_fsl_85xx_cache_sram.o
+>  obj-$(CONFIG_UIO_HV_GENERIC)	+= uio_hv_generic.o
+> diff --git a/drivers/uio/uio_fsl_85xx_cache_sram.c b/drivers/uio/uio_fsl_85xx_cache_sram.c
+> new file mode 100644
+> index 000000000000..e11202dd5b93
+> --- /dev/null
+> +++ b/drivers/uio/uio_fsl_85xx_cache_sram.c
+> @@ -0,0 +1,195 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2020 Vivo Communication Technology Co. Ltd.
+> + * Copyright (C) 2020 Wang Wenhu <wenhu.wang@vivo.com>
+> + * All rights reserved.
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU General Public License version 2 as published
+> + * by the Free Software Foundation.
 
-Add i.MX7ULP Power Management Controller binding doc
-pmc0 is used by M4, pmc1 is used by A7, they have different
-register name and usage.
+Nit, you don't need this sentance anymore now that you have the SPDX
+line above
 
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
- .../bindings/arm/freescale/imx7ulp_pmc.yaml        | 32 ++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/freescale/imx7ulp_pmc.yaml
+> + */
+> +
+> +#include <linux/platform_device.h>
+> +#include <linux/uio_driver.h>
+> +#include <linux/stringify.h>
+> +#include <linux/module.h>
+> +#include <linux/kernel.h>
+> +#include <asm/fsl_85xx_cache_sram.h>
+> +
+> +#define DRIVER_VERSION	"0.1.0"
 
-diff --git a/Documentation/devicetree/bindings/arm/freescale/imx7ulp_pmc.yaml b/Documentation/devicetree/bindings/arm/freescale/imx7ulp_pmc.yaml
-new file mode 100644
-index 000000000000..c60903039718
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/freescale/imx7ulp_pmc.yaml
-@@ -0,0 +1,32 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/arm/freescale/imx7ulp_pmc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: i.MX7ULP Power Management Controller(PMC) Device Tree Bindings
-+
-+maintainers:
-+  - Peng Fan <peng.fan@nxp.com>
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - fsl,imx7ulp-pmc0
-+          - fsl,imx7ulp-pmc1
-+
-+  reg:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    pmc0: pmc0@410a1000 {
-+        compatible = "fsl,imx7ulp-pmc0";
-+        reg = <0x410a1000 0x1000>;
-+    };
-+...
--- 
-2.16.4
+Don't do DRIVER_VERSIONs, they never work once the code is in the kernel
+tree.
 
+> +#define DRIVER_NAME	"uio_fsl_85xx_cache_sram"
+
+KBUILD_MODNAME?
+
+> +#define UIO_NAME	"uio_cache_sram"
+> +
+> +static const struct of_device_id uio_mpc85xx_l2ctlr_of_match[] = {
+> +	{	.compatible = "uio,fsl,p2020-l2-cache-controller",	},
+> +	{	.compatible = "uio,fsl,p2010-l2-cache-controller",	},
+> +	{	.compatible = "uio,fsl,p1020-l2-cache-controller",	},
+> +	{	.compatible = "uio,fsl,p1011-l2-cache-controller",	},
+> +	{	.compatible = "uio,fsl,p1013-l2-cache-controller",	},
+> +	{	.compatible = "uio,fsl,p1022-l2-cache-controller",	},
+> +	{	.compatible = "uio,fsl,mpc8548-l2-cache-controller",	},
+> +	{	.compatible = "uio,fsl,mpc8544-l2-cache-controller",	},
+> +	{	.compatible = "uio,fsl,mpc8572-l2-cache-controller",	},
+> +	{	.compatible = "uio,fsl,mpc8536-l2-cache-controller",	},
+> +	{	.compatible = "uio,fsl,p1021-l2-cache-controller",	},
+> +	{	.compatible = "uio,fsl,p1012-l2-cache-controller",	},
+> +	{	.compatible = "uio,fsl,p1025-l2-cache-controller",	},
+> +	{	.compatible = "uio,fsl,p1016-l2-cache-controller",	},
+> +	{	.compatible = "uio,fsl,p1024-l2-cache-controller",	},
+> +	{	.compatible = "uio,fsl,p1015-l2-cache-controller",	},
+> +	{	.compatible = "uio,fsl,p1010-l2-cache-controller",	},
+> +	{	.compatible = "uio,fsl,bsc9131-l2-cache-controller",	},
+> +	{},
+> +};
+> +
+> +static void uio_info_free_internal(struct uio_info *info)
+> +{
+> +	struct uio_mem *uiomem = &info->mem[0];
+> +
+> +	while (uiomem < &info->mem[MAX_UIO_MAPS]) {
+> +		if (uiomem->size) {
+> +			mpc85xx_cache_sram_free(uiomem->internal_addr);
+> +			kfree(uiomem->name);
+> +		}
+> +		uiomem++;
+> +	}
+> +}
+> +
+> +static int uio_fsl_85xx_cache_sram_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *parent = pdev->dev.of_node;
+> +	struct device_node *node = NULL;
+> +	struct uio_info *info;
+> +	struct uio_mem *uiomem;
+> +	const char *dt_name;
+> +	u32 mem_size;
+> +	u32 align;
+> +	void *virt;
+> +	phys_addr_t phys;
+> +	int ret = -ENODEV;
+> +
+> +	/* alloc uio_info for one device */
+> +	info = kzalloc(sizeof(*info), GFP_KERNEL);
+> +	if (!info) {
+> +		dev_err(&pdev->dev, "kzalloc uio_info failed\n");
+
+kzalloc already says this.
+
+> +		ret = -ENOMEM;
+> +		goto err_out;
+> +	}
+> +
+> +	/* get optional uio name */
+> +	if (of_property_read_string(parent, "uio_name", &dt_name))
+> +		dt_name = UIO_NAME;
+> +
+> +	info->name = kstrdup(dt_name, GFP_KERNEL);
+> +	if (!info->name) {
+> +		dev_err(&pdev->dev, "error kstrdup uio_name\n");
+
+kstrdup should have given you an error string already, right?
+
+> +		ret = -ENOMEM;
+> +		goto err_info_free;
+> +	}
+> +
+> +	uiomem = &info->mem[0];
+> +	for_each_child_of_node(parent, node) {
+> +		if (!node) {
+> +			dev_err(&pdev->dev, "device's OF-node is NULL\n");
+
+How can this happen?
+
+> +			continue;
+
+Why not error out?
+
+> +		}
+> +
+> +		ret = of_property_read_u32(node, "cache-mem-size", &mem_size);
+> +		if (ret) {
+> +			dev_err(&pdev->dev, "missing cache-mem-size value\n");
+
+You don't exit?
+
+> +			continue;
+> +		}
+> +
+> +		if (mem_size == 0) {
+> +			dev_err(&pdev->dev, "cache-mem-size should not be 0\n");
+
+Again, you don't exit?
+
+> +			continue;
+> +		}
+> +
+> +		align = 2;
+> +		while (align < mem_size)
+> +			align *= 2;
+> +		virt = mpc85xx_cache_sram_alloc(mem_size, &phys, align);
+> +		if (!virt) {
+> +			dev_err(&pdev->dev, "allocate 0x%x cache-mem failed\n", mem_size);
+
+You don't exit?
+
+> +			continue;
+> +		}
+> +
+> +		uiomem->memtype = UIO_MEM_PHYS;
+> +		uiomem->addr = phys;
+> +		uiomem->size = mem_size;
+> +		uiomem->name = kstrdup(node->name, GFP_KERNEL);;
+> +		uiomem->internal_addr = virt;
+> +		++uiomem;
+> +
+> +		if (uiomem >= &info->mem[MAX_UIO_MAPS]) {
+> +			dev_warn(&pdev->dev, "device has more than "
+> +				 __stringify(MAX_UIO_MAPS)
+> +				 " I/O memory resources.\n");
+
+What can someone do with that?
+
+thanks,
+
+greg k-h
