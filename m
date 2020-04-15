@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA51C3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ECA2C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:47:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 523792076A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:47:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18D8420737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:47:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586969242;
-	bh=nW/NXjxV5QNJrjXT4qUpuz5u1u1T9YPuhqx8tTcJGgQ=;
+	s=default; t=1586969251;
+	bh=3LgAEXzg3hin+aaY948zanpI6w0MQHNo1PfMx6VlC7w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T+O5AS54fi24ARZdPqxTz4CvFF8c5FxxOYjw5BhASBhlAGgBngNL3HbhJ0CydkYdT
-	 W20w/fM2XwRQ0GeMepPc5aow2xTOKb9MIpk9oRzADEOEU/DAz5PPslWmetJkZGU2z7
-	 MT4usRRaPAra7h8ZwLT2Jo8SPjdKIxKZ9Mzq7hr8=
+	b=TWg9I4Gc7nCTsrZyBtY2wiBNjnLgHBIdVeES0eeeO96I8blsbGBYRnz+QWhmHqLus
+	 RrgBjEM5W6G/QDD5dTJH+Y4zbGGyIAk4RMcAXDd/UznX4oAC+RAhRpYwmCg+7CWcDy
+	 YDLBYZrJHPZuJN9nNSeJl4aL3GCK6AeXhujVIE/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1416255AbgDOQrD (ORCPT
+        id S2410437AbgDOQr3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 12:47:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47158 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 12:47:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1416231AbgDOQqy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 12:46:54 -0400
+        id S1416219AbgDOQq4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 12:46:56 -0400
 Received: from localhost.localdomain (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F04C12137B;
-        Wed, 15 Apr 2020 16:46:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C2D121556;
+        Wed, 15 Apr 2020 16:46:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586969213;
-        bh=nW/NXjxV5QNJrjXT4qUpuz5u1u1T9YPuhqx8tTcJGgQ=;
+        s=default; t=1586969215;
+        bh=3LgAEXzg3hin+aaY948zanpI6w0MQHNo1PfMx6VlC7w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Knb5uNzN6czVBI0EzjItE7O1Pjgzb932dBVR8zfJYxYRSPws+P7R9fFUawQNm4tYP
-         cJ7dR5S5YlIMKLUczgmKsZv3xIByknBAf+oJtiI971eYbzJja0byVsTelxnt4M89rR
-         GZKAbBx+DWgI273FXszwKYIUQQzDLsL+2UuoH474=
+        b=LWysdhMx1OPkv8LstjduIfPlHM+DFSeHnCLWTj/SUfEBpgoihDLdbt4O0FGOSYpJ5
+         XEkj9pta4WAMpTNwXD2qmUtbTS3xpeU6fBsF2FiI+E1hpH731QWfbQ8gbVvR/NQCeL
+         7mstKQEnzAHBGQAVzQqHuzRjbpyQOxCj+DGM1iTg=
 From:   Dinh Nguyen <dinguyen@kernel.org>
 To:     linux-clk@vger.kernel.org
 Cc:     dinguyen@kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, sboyd@kernel.org,
         mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com
-Subject: [PATCHv7 2/5] clk: socfpga: remove clk_ops enable/disable methods
-Date:   Wed, 15 Apr 2020 11:46:39 -0500
-Message-Id: <20200415164642.29382-3-dinguyen@kernel.org>
+Subject: [PATCHv7 4/5] dt-bindings: documentation: add clock bindings information for Agilex
+Date:   Wed, 15 Apr 2020 11:46:41 -0500
+Message-Id: <20200415164642.29382-5-dinguyen@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200415164642.29382-1-dinguyen@kernel.org>
 References: <20200415164642.29382-1-dinguyen@kernel.org>
@@ -57,62 +57,158 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The enable/disable clock ops are already defined in the standard clock
-ops, so we don't need to assign them.
+Document the Agilex clock bindings, and add the clock header file. The
+clock header is an enumeration of all the different clocks on the Agilex
+platform.
 
 Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
 ---
-v7: no changes
-v6: no changes
-v5: no changes
-v4: no changes
-v3: no changes
-v2: created
+v7: Fix license to be "(GPL-2.0-only OR BSD-2-Clause)"
+v6: fix build error by adding descriptions for clocks and reg in
+    properties
+v5: update license to GPL-2.0-only
+    Add additionalProperties
+    Add clock input for clkmgr
+v4: really fix build error(comment formatting was wrong)
+v3: address comments from Stephen Boyd
+    fix build error(tab removed in line 37)
+    renamed to intel,agilex.yaml
+v2: convert original document to YAML
 ---
- drivers/clk/socfpga/clk-pll-a10.c | 2 --
- drivers/clk/socfpga/clk-pll-s10.c | 2 --
- drivers/clk/socfpga/clk-pll.c     | 2 --
- 3 files changed, 6 deletions(-)
+ .../bindings/clock/intel,agilex.yaml          | 46 ++++++++++++
+ include/dt-bindings/clock/agilex-clock.h      | 70 +++++++++++++++++++
+ 2 files changed, 116 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/intel,agilex.yaml
+ create mode 100644 include/dt-bindings/clock/agilex-clock.h
 
-diff --git a/drivers/clk/socfpga/clk-pll-a10.c b/drivers/clk/socfpga/clk-pll-a10.c
-index 3816fc04b274..6d9395106c0c 100644
---- a/drivers/clk/socfpga/clk-pll-a10.c
-+++ b/drivers/clk/socfpga/clk-pll-a10.c
-@@ -102,8 +102,6 @@ static struct clk * __init __socfpga_pll_init(struct device_node *node,
- 	pll_clk->hw.hw.init = &init;
- 
- 	pll_clk->hw.bit_idx = SOCFPGA_PLL_EXT_ENA;
--	clk_pll_ops.enable = clk_gate_ops.enable;
--	clk_pll_ops.disable = clk_gate_ops.disable;
- 
- 	clk = clk_register(NULL, &pll_clk->hw.hw);
- 	if (WARN_ON(IS_ERR(clk))) {
-diff --git a/drivers/clk/socfpga/clk-pll-s10.c b/drivers/clk/socfpga/clk-pll-s10.c
-index bcd3f14e9145..9faa80ff3b53 100644
---- a/drivers/clk/socfpga/clk-pll-s10.c
-+++ b/drivers/clk/socfpga/clk-pll-s10.c
-@@ -138,8 +138,6 @@ struct clk *s10_register_pll(const struct stratix10_pll_clock *clks,
- 	pll_clk->hw.hw.init = &init;
- 
- 	pll_clk->hw.bit_idx = SOCFPGA_PLL_POWER;
--	clk_pll_ops.enable = clk_gate_ops.enable;
--	clk_pll_ops.disable = clk_gate_ops.disable;
- 
- 	clk = clk_register(NULL, &pll_clk->hw.hw);
- 	if (WARN_ON(IS_ERR(clk))) {
-diff --git a/drivers/clk/socfpga/clk-pll.c b/drivers/clk/socfpga/clk-pll.c
-index dc65cc0fd3bd..a001641b2f42 100644
---- a/drivers/clk/socfpga/clk-pll.c
-+++ b/drivers/clk/socfpga/clk-pll.c
-@@ -105,8 +105,6 @@ static __init struct clk *__socfpga_pll_init(struct device_node *node,
- 	pll_clk->hw.hw.init = &init;
- 
- 	pll_clk->hw.bit_idx = SOCFPGA_PLL_EXT_ENA;
--	clk_pll_ops.enable = clk_gate_ops.enable;
--	clk_pll_ops.disable = clk_gate_ops.disable;
- 
- 	clk = clk_register(NULL, &pll_clk->hw.hw);
- 	if (WARN_ON(IS_ERR(clk))) {
+diff --git a/Documentation/devicetree/bindings/clock/intel,agilex.yaml b/Documentation/devicetree/bindings/clock/intel,agilex.yaml
+new file mode 100644
+index 000000000000..cf5a9eb803e6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/intel,agilex.yaml
+@@ -0,0 +1,46 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/clock/intel,agilex.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Intel SoCFPGA Agilex platform clock controller binding
++
++maintainers:
++  - Dinh Nguyen <dinguyen@kernel.org>
++
++description:
++  The Intel Agilex Clock controller is an integrated clock controller, which
++  generates and supplies to all modules.
++
++properties:
++  compatible:
++    const: intel,agilex-clkmgr
++
++  '#clock-cells':
++    const: 1
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - '#clock-cells'
++
++additionalProperties: false
++
++examples:
++  # Clock controller node:
++  - |
++    clkmgr: clock-controller@ffd10000 {
++      compatible = "intel,agilex-clkmgr";
++      reg = <0xffd10000 0x1000>;
++      clocks = <&osc1>;
++      #clock-cells = <1>;
++    };
++...
+diff --git a/include/dt-bindings/clock/agilex-clock.h b/include/dt-bindings/clock/agilex-clock.h
+new file mode 100644
+index 000000000000..f19cf8ccbdd2
+--- /dev/null
++++ b/include/dt-bindings/clock/agilex-clock.h
+@@ -0,0 +1,70 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (C) 2019, Intel Corporation
++ */
++
++#ifndef __AGILEX_CLOCK_H
++#define __AGILEX_CLOCK_H
++
++/* fixed rate clocks */
++#define AGILEX_OSC1			0
++#define AGILEX_CB_INTOSC_HS_DIV2_CLK	1
++#define AGILEX_CB_INTOSC_LS_CLK		2
++#define AGILEX_L4_SYS_FREE_CLK		3
++#define AGILEX_F2S_FREE_CLK		4
++
++/* PLL clocks */
++#define AGILEX_MAIN_PLL_CLK		5
++#define AGILEX_MAIN_PLL_C0_CLK		6
++#define AGILEX_MAIN_PLL_C1_CLK		7
++#define AGILEX_MAIN_PLL_C2_CLK		8
++#define AGILEX_MAIN_PLL_C3_CLK		9
++#define AGILEX_PERIPH_PLL_CLK		10
++#define AGILEX_PERIPH_PLL_C0_CLK	11
++#define AGILEX_PERIPH_PLL_C1_CLK	12
++#define AGILEX_PERIPH_PLL_C2_CLK	13
++#define AGILEX_PERIPH_PLL_C3_CLK	14
++#define AGILEX_MPU_FREE_CLK		15
++#define AGILEX_MPU_CCU_CLK		16
++#define AGILEX_BOOT_CLK			17
++
++/* fixed factor clocks */
++#define AGILEX_L3_MAIN_FREE_CLK		18
++#define AGILEX_NOC_FREE_CLK		19
++#define AGILEX_S2F_USR0_CLK		20
++#define AGILEX_NOC_CLK			21
++#define AGILEX_EMAC_A_FREE_CLK		22
++#define AGILEX_EMAC_B_FREE_CLK		23
++#define AGILEX_EMAC_PTP_FREE_CLK	24
++#define AGILEX_GPIO_DB_FREE_CLK		25
++#define AGILEX_SDMMC_FREE_CLK		26
++#define AGILEX_S2F_USER0_FREE_CLK	27
++#define AGILEX_S2F_USER1_FREE_CLK	28
++#define AGILEX_PSI_REF_FREE_CLK		29
++
++/* Gate clocks */
++#define AGILEX_MPU_CLK			30
++#define AGILEX_MPU_L2RAM_CLK		31
++#define AGILEX_MPU_PERIPH_CLK		32
++#define AGILEX_L4_MAIN_CLK		33
++#define AGILEX_L4_MP_CLK		34
++#define AGILEX_L4_SP_CLK		35
++#define AGILEX_CS_AT_CLK		36
++#define AGILEX_CS_TRACE_CLK		37
++#define AGILEX_CS_PDBG_CLK		38
++#define AGILEX_CS_TIMER_CLK		39
++#define AGILEX_S2F_USER0_CLK		40
++#define AGILEX_EMAC0_CLK		41
++#define AGILEX_EMAC1_CLK		43
++#define AGILEX_EMAC2_CLK		44
++#define AGILEX_EMAC_PTP_CLK		45
++#define AGILEX_GPIO_DB_CLK		46
++#define AGILEX_NAND_CLK			47
++#define AGILEX_PSI_REF_CLK		48
++#define AGILEX_S2F_USER1_CLK		49
++#define AGILEX_SDMMC_CLK		50
++#define AGILEX_SPI_M_CLK		51
++#define AGILEX_USB_CLK			52
++#define AGILEX_NUM_CLKS			53
++
++#endif	/* __AGILEX_CLOCK_H */
 -- 
 2.25.1
 
