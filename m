@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B99FC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:03:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31366C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F420520575
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:03:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F395E20575
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:03:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586952181;
-	bh=UumA21lU9T2cM3PJ+RxWCkO1Rk/std/qt+SozyD2f4c=;
+	s=default; t=1586952194;
+	bh=3h2z9IDbzxVQV+fUdUOCvqUsPvo+eOXmgmiUdyvpTDk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xL+EaelU8yAlCQjXwNyqEdh2HW1C5/4k+x4hbdRljfDDbl0hAH/NdZZrh6YzL4mrD
-	 t4EEeyvnaH75WDXVbwrAmcinge4VwqRIuxLo3wQbQwMHA11OOyzRagwDUFie/adcue
-	 bQGSb/BANbznxH8rUrRCjkavmoZ8iBvMIqJ3gQjM=
+	b=Om4oX1nfeyj9ZuiwITca2ZnpCTHyPxdTcY/wt9UAovtWb0105vMlx/0PU7OVPSq9n
+	 CZmr7wFHYx3U3rPrP5bwSxEfpo1DRnLpGgZwHs0a4D96RYmdnnDRdpxRE5JmZqTkFL
+	 6SmL2t2glH3kVHnCNNrkMLmrGaOUZyqPJfQxAD/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S368234AbgDOMC6 (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:02:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44204 "EHLO mail.kernel.org"
+        id S368200AbgDOMB6 (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:01:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406755AbgDOLs2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:48:28 -0400
+        id S2409429AbgDOLsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:48:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62E1021569;
-        Wed, 15 Apr 2020 11:48:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 691B020732;
+        Wed, 15 Apr 2020 11:48:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951308;
-        bh=UumA21lU9T2cM3PJ+RxWCkO1Rk/std/qt+SozyD2f4c=;
+        s=default; t=1586951289;
+        bh=3h2z9IDbzxVQV+fUdUOCvqUsPvo+eOXmgmiUdyvpTDk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aiq8DjuO1AMesJfX68rmbC/XD7JxuM6XFayGjG6LX+EBp55aKTpVHfj9RZ0plxQMl
-         3n0N6NrH2ZZ0EffgDL/ls/egm1fB/a5pY7cTwScM58cLxuBUgo7mozfgFMbB6U+Etb
-         kztqpw7sGvbXKejdbny1OXuSqNsTB63O9z18ArOQ=
+        b=dzwC7zi+7qWhkTiyOCke7qRJW3JgUO2YekNBDEOry8xzHMYzKkiBW4y2jU5GaC1xV
+         02SX3kxwVLfELFOb24xtFCYFw6nJ/K16llGkDQCpTB1YpYvlMvf5SrZzoA40Ueq6eL
+         Y2eNXmXbgUG2CXYfZJ2riQql5neUc4OQZ9/z2Op0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 11/14] NFS: Fix memory leaks in nfs_pageio_stop_mirroring()
-Date:   Wed, 15 Apr 2020 07:48:11 -0400
-Message-Id: <20200415114814.15954-11-sashal@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Oliver Neukum <oneukum@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 17/21] mfd: dln2: Fix sanity checking for endpoints
+Date:   Wed, 15 Apr 2020 07:47:44 -0400
+Message-Id: <20200415114748.15713-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415114814.15954-1-sashal@kernel.org>
-References: <20200415114814.15954-1-sashal@kernel.org>
+In-Reply-To: <20200415114748.15713-1-sashal@kernel.org>
+References: <20200415114748.15713-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -57,54 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit 862f35c94730c9270833f3ad05bd758a29f204ed ]
+[ Upstream commit fb945c95a482200876993977008b67ea658bd938 ]
 
-If we just set the mirror count to 1 without first clearing out
-the mirrors, we can leak queued up requests.
+While the commit 2b8bd606b1e6 ("mfd: dln2: More sanity checking for endpoints")
+tries to harden the sanity checks it made at the same time a regression,
+i.e.  mixed in and out endpoints. Obviously it should have been not tested on
+real hardware at that time, but unluckily it didn't happen.
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+So, fix above mentioned typo and make device being enumerated again.
+
+While here, introduce an enumerator for magic values to prevent similar issue
+to happen in the future.
+
+Fixes: 2b8bd606b1e6 ("mfd: dln2: More sanity checking for endpoints")
+Cc: Oliver Neukum <oneukum@suse.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/pagelist.c | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
+ drivers/mfd/dln2.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfs/pagelist.c b/fs/nfs/pagelist.c
-index af1bb7353792c..f5de58c5773f6 100644
---- a/fs/nfs/pagelist.c
-+++ b/fs/nfs/pagelist.c
-@@ -886,15 +886,6 @@ static int nfs_pageio_setup_mirroring(struct nfs_pageio_descriptor *pgio,
- 	return 0;
- }
+diff --git a/drivers/mfd/dln2.c b/drivers/mfd/dln2.c
+index 95d0f2df0ad42..672831d5ee32e 100644
+--- a/drivers/mfd/dln2.c
++++ b/drivers/mfd/dln2.c
+@@ -93,6 +93,11 @@ struct dln2_mod_rx_slots {
+ 	spinlock_t lock;
+ };
  
--/*
-- * nfs_pageio_stop_mirroring - stop using mirroring (set mirror count to 1)
-- */
--void nfs_pageio_stop_mirroring(struct nfs_pageio_descriptor *pgio)
--{
--	pgio->pg_mirror_count = 1;
--	pgio->pg_mirror_idx = 0;
--}
--
- static void nfs_pageio_cleanup_mirroring(struct nfs_pageio_descriptor *pgio)
- {
- 	pgio->pg_mirror_count = 1;
-@@ -1287,6 +1278,14 @@ void nfs_pageio_cond_complete(struct nfs_pageio_descriptor *desc, pgoff_t index)
- 	}
- }
- 
-+/*
-+ * nfs_pageio_stop_mirroring - stop using mirroring (set mirror count to 1)
-+ */
-+void nfs_pageio_stop_mirroring(struct nfs_pageio_descriptor *pgio)
-+{
-+	nfs_pageio_complete(pgio);
-+}
++enum dln2_endpoint {
++	DLN2_EP_OUT	= 0,
++	DLN2_EP_IN	= 1,
++};
 +
- int __init nfs_init_nfspagecache(void)
- {
- 	nfs_page_cachep = kmem_cache_create("nfs_page",
+ struct dln2_dev {
+ 	struct usb_device *usb_dev;
+ 	struct usb_interface *interface;
+@@ -740,10 +745,10 @@ static int dln2_probe(struct usb_interface *interface,
+ 	    hostif->desc.bNumEndpoints < 2)
+ 		return -ENODEV;
+ 
+-	epin = &hostif->endpoint[0].desc;
+-	epout = &hostif->endpoint[1].desc;
++	epout = &hostif->endpoint[DLN2_EP_OUT].desc;
+ 	if (!usb_endpoint_is_bulk_out(epout))
+ 		return -ENODEV;
++	epin = &hostif->endpoint[DLN2_EP_IN].desc;
+ 	if (!usb_endpoint_is_bulk_in(epin))
+ 		return -ENODEV;
+ 
 -- 
 2.20.1
 
