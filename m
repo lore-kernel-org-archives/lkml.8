@@ -2,200 +2,136 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F444C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:20:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52EAAC2BB85
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:20:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4819720775
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:20:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A7B420784
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:20:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="KkhyMUNn";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="nADR2rgu"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EQaEFEvL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2635819AbgDOIT6 (ORCPT
+        id S2635828AbgDOIUX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 04:19:58 -0400
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:53603 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2635807AbgDOITi (ORCPT
+        Wed, 15 Apr 2020 04:20:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37806 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2635575AbgDOIUH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 04:19:38 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id A23FA580371;
-        Wed, 15 Apr 2020 04:19:32 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 15 Apr 2020 04:19:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=c0+mwcl7MBFk9Sv+S+plTQlxlIQ
-        dL7tFQ04GXjKv5tI=; b=KkhyMUNnh36NOj3Nnul7Fa6JQEYClOglTowhdfLcTQT
-        UG+TIem4dU5tbEfbL7zSQQ0JH1LSDHJP4/u4tUJ3fdM6vcMYOZoprKIRButDou8S
-        mRz+Yb6jltNsysr3vKQDG9UyW3XelLp8J79GfukjDe9mmjKZwJcwcTrLcebUMzVO
-        5F1bYekHk87UOYjw6MldtKZCzB7lY4GdYUljAXshgLql9yPplMwdu59Jgw1kSZuI
-        j41n8sjx6ECWLbewMLZYhgrFT5lfKiyicFj4aoeonW60gIcrVcpgvu7e0ye1PJkq
-        31N2a6cCpSVsoR7PSdUKtdeaHetSmxKiDaS8bQGtAHg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=c0+mwc
-        l7MBFk9Sv+S+plTQlxlIQdL7tFQ04GXjKv5tI=; b=nADR2rguZ7s4c+kE2oDF56
-        DXXKNWlQ/iQ/09LmaBuw3YX4mxfbEJCIOkbr43cXTz9MGQ6vv6m+CrJosyQpBxoy
-        pFAQnaegbUJr0Z9IgYlVGQf+Ni3oDYp7wC9WxtY1zqrN+oTta4iHY+0PJh/HfqGi
-        x95RLlsKpaucI6hoyB9yM1sVTG86xtd9VnoXYW+4F2MbQI9d5En186anXGMGjBX5
-        XTRhm0XCIPIDUlv71RvBGgsB/eCGYH8dEbxvY25Vq1S9brucbdULzmnwhwrCJ+0P
-        WvtJ1c9iZVYq8+0+8uCZ69bypVW6BoMfDzShfAARidpLBLkmV0X9h4KYY1iHmTsw
-        ==
-X-ME-Sender: <xms:k8OWXuE1nsq17RoGqaLMh63BpT8nUCJzeaAuy8Kn2Ih8AagawAnYNA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrfeefgddtvdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:k8OWXqN-ll_sbO6qIK-6AvySogJ9BplzTTsx4ZUMXFlyqCqP2-vs5w>
-    <xmx:k8OWXpE9Jm-DBZGkPAj5NR4XAstQPpZd0i6X2LUtBFoBSK-bkFMgGQ>
-    <xmx:k8OWXvHaGilhPc0H75v92cRANlgRYGo04b1fIrPWsqDHGij2P_YH-g>
-    <xmx:lMOWXnHH2kpnmtvbldbHTFYZYP3J8SQ-6a-GPg_rnsgrVhqgyWBsrg>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 1AC523280069;
-        Wed, 15 Apr 2020 04:19:31 -0400 (EDT)
-Date:   Wed, 15 Apr 2020 10:19:29 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH v5 2/5] media: i2c: ov5645: Drop reading clock-frequency
- dt-property
-Message-ID: <20200415081929.pijnlycz6p2esfjq@gilmour.lan>
-References: <1586191361-16598-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1586191361-16598-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200406165108.GA7646@kekkonen.localdomain>
- <20200406173234.GD16885@pendragon.ideasonboard.com>
- <20200407062241.GA8883@kekkonen.localdomain>
- <20200407122106.GD4751@pendragon.ideasonboard.com>
- <20200407151401.GA5206@paasikivi.fi.intel.com>
- <20200414205552.GN19819@pendragon.ideasonboard.com>
+        Wed, 15 Apr 2020 04:20:07 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05425C061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 01:20:06 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id z6so17857583wml.2
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 01:20:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=tI6bF5NlaH6VP+qupCyijc9MdFpBjDaskO3oNma/yVo=;
+        b=EQaEFEvL8a8nS0NGknzoERg+UJatb0uLaxOlI4m8PDNNa9XN/UJ77yfywyfYDxZb9M
+         RYPtUHGszY/AwYsfORLlo/bwtANsiGcjTWV/4E3S4gtUIMjtEM96yILnaAOl7xCt4VFQ
+         IcJOK13Rbx4DhYG1fdKPJvYb+5PDVnKFiKGtCXrFwVZ7RaJD5Gxmug26QuGkEDqV0Mdr
+         WFiMGPM9i5S9s0dg5XrSQyPfDy89PFOjeP1FPFvyYifIZbXrelFNfGBc5p630xGyPFWC
+         PpwLG8kxNrr96Avfa+Kr+JZhVEM4qDqnVrDbJyydYKH4CTNe8hK7DRbWaruR7ePh51jn
+         VNqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=tI6bF5NlaH6VP+qupCyijc9MdFpBjDaskO3oNma/yVo=;
+        b=Lcv2QH4zd+cEDU91n54sNUdEYPjJPkmG2RsapIZ0za1Bo0TydcYyDKQgd5Ydy4x76p
+         N7A/bBU5GYNfjdda4vfmq2zUbdW8+ilpwQ31xXCUuLYePjSj9htBPxoUmQkDnzakmADz
+         mwfgAWWX3U3YMwDwKnUl+DD4to++E2da362PwrMaiSdGO1rBRxc07hqasNt3sZrDyFls
+         dfHB/LwLYmk8eYzyDzpFfjng5p7olyORNsEaFvOmLifRIt5OvSc107e5toz3/IoO6plk
+         uOdLN3qFPGEkuoVALnnaUlnvMamgGuoUixoLHpu8s9U+DA8Fla4P7gu1YEJHEOotw2kl
+         M2xA==
+X-Gm-Message-State: AGi0PuYo/eqVQlJU12wfmIj6KVkzDGveIGMlzsE5sFT4cjZCD2XLUAvC
+        x5rpcn3WIDjGOR5avjnOBNZz2Q==
+X-Google-Smtp-Source: APiQypLfCVgV0tOWD0TIjssd9/GA8YX2l0BlHT490ZXW6wAL/ti9Z2T/rtGZQ9qeywYAilxhL40vWA==
+X-Received: by 2002:a1c:4d18:: with SMTP id o24mr3721578wmh.141.1586938805319;
+        Wed, 15 Apr 2020 01:20:05 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
+        by smtp.gmail.com with ESMTPSA id f2sm22280970wro.59.2020.04.15.01.20.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2020 01:20:04 -0700 (PDT)
+Date:   Wed, 15 Apr 2020 09:20:01 +0100
+From:   Quentin Perret <qperret@google.com>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>, juri.lelli@redhat.com,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        dietmar.eggemann@arm.com, Steven Rostedt <rostedt@goodmis.org>,
+        bsegall@google.com, mgorman@suse.de, ctheegal@codeaurora.org,
+        patrick.bellasi@matbug.net, valentin.schneider@arm.com,
+        qais.yousef@arm.com, LKML <linux-kernel@vger.kernel.org>,
+        kernel-team@android.com
+Subject: Re: [PATCH] sched/core: Fix reset-on-fork from RT with uclamp
+Message-ID: <20200415082001.GA256573@google.com>
+References: <20200414161320.251897-1-qperret@google.com>
+ <CAD=FV=Vo4h43vS1K1+ziAJhQ3UG+Zrx8JN8Q1tkMWU1Oh6OavA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="uookw37fazu2qid4"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200414205552.GN19819@pendragon.ideasonboard.com>
+In-Reply-To: <CAD=FV=Vo4h43vS1K1+ziAJhQ3UG+Zrx8JN8Q1tkMWU1Oh6OavA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Doug,
 
---uookw37fazu2qid4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Tue, Apr 14, 2020 at 11:55:52PM +0300, Laurent Pinchart wrote:
-> Hi Sakari,
->
-> On Tue, Apr 07, 2020 at 06:14:01PM +0300, Sakari Ailus wrote:
-> > On Tue, Apr 07, 2020 at 03:21:06PM +0300, Laurent Pinchart wrote:
-> > > On Tue, Apr 07, 2020 at 09:22:41AM +0300, Sakari Ailus wrote:
-> > >> On Mon, Apr 06, 2020 at 08:32:34PM +0300, Laurent Pinchart wrote:
-> > >>> On Mon, Apr 06, 2020 at 07:51:08PM +0300, Sakari Ailus wrote:
-> > >>>> On Mon, Apr 06, 2020 at 05:42:38PM +0100, Lad Prabhakar wrote:
-> > >>>>> Modes in the driver are based on xvclk frequency fixed to 24MHz, but where
-> > >>>>> as the OV5645 sensor can support the xvclk frequency ranging from 6MHz to
-> > >>>>> 24MHz. So instead making clock-frequency as dt-property just let the
-> > >>>>> driver enforce the required clock frequency.
-> > >>>>
-> > >>>> Even if some current systems where the driver is used are using 24 MHz
-> > >>>> clock, that doesn't mean there wouldn't be systems using another frequency
-> > >>>> that the driver does not support right now.
-> > >>>>
-> > >>>> The driver really should not set the frequency unless it gets it from DT,
-> > >>>> but I think the preferred means is to use assigned-clock-rates instead, and
-> > >>>> not to involve the driver with setting the frequency.
-> > >>>>
-> > >>>> Otherwise we'll make it impossible to support other frequencies, at least
-> > >>>> without more or less random defaults.
-> > >>>
-> > >>> We're running in circles here.
-> > >>>
-> > >>> As the driver only supports 24MHz at the moment, the frequency should be
-> > >>> set by the driver, as it's a driver limitation. We can then work on
-> > >>> supporting additional frequencies, which will require DT to provide a
-> > >>> list of supported frequencies for the system, but that can be done on
-> > >>> top.
-> > >>
-> > >> I guess it would be possible to use different external clock frequencies on
-> > >> a sensor in a given system but that seems to be a bit far fetched, to the
-> > >> extent I've never seen anyone doing that in practice.
-> > >>
-> > >> Originally, the driver set the frequency based on the clock-frequency
-> > >> property. If we're removing that but use a fixed frequency instead, then
-> > >> how is that going to work going forward when someone adds support for other
-> > >> frequencies in the driver and has a system requiring that, while there are
-> > >> some other platforms relying on the driver setting a particular frequency?
-> > >
-> > > The standard property for this is link-frequencies, not clock-frequency.
-> > > Deprecating clock-frequency now paves the way to use the standard
-> > > property later when/if someone implements support for additional
-> > > frequencies.
+On Tuesday 14 Apr 2020 at 13:45:03 (-0700), Doug Anderson wrote:
+> Hi,
+> 
+> On Tue, Apr 14, 2020 at 9:13 AM Quentin Perret <qperret@google.com> wrote:
 > >
-> > The external clock frequency and link frequency are different indeed, but
-> > they are related. The link frequency has been selected in a way that it is
-> > possible to generate that exact frequency using the chosen external clock
-> > frequency. If you change the external clock frequency, chances are good
-> > there is no PLL configuration to generate that link frequency.
->
-> But aren't we supposed to pick the clock frequency based on the link
-> frequency specified in DT ?
->
-> In any case, this policy needs to be carefully documented.
->
-> > >> Although, if you're saying that this driver only needs to work with DT that
-> > >> comes with the kernel and you don't care about DT binary compatibility,
-> > >> this would be fine.
-> > >
-> > > I believe this series to not break backward compatibility, as the driver
-> > > only works with a 24MHz clock, so I expect all DTs to specify that.
+> > uclamp_fork() resets the uclamp values to their default when the
+> > reset-on-fork flag is set. It also checks whether the task has a RT
+> > policy, and sets its uclamp.min to 1024 accordingly. However, during
+> > reset-on-fork, the task's policy is lowered to SCHED_NORMAL right after,
+> > hence leading to an erroneous uclamp.min setting for the new task if it
+> > was forked from RT.
 > >
-> > What you're still doing here is defining the DT bindings based on the
-> > current driver implementation, not the device properties.
->
-> Quite the contrary, the device doesn't require any particular input
-> clock frequency, so we're removing that from DT :-) Specifying the clock
-> frequency in DT is in my opinion a manual workaround for not computing
-> it at runtime based on the desired link frequency, while the link
-> frequency is a property of the system as it specifies the range of link
-> frequencies that are safe to use from an EMC point of view.
+> > Fix this by removing the unnecessary check on rt_policy() in
+> > uclamp_fork() as this doesn't make sense if the reset-on-fork flag is
+> > set.
+> >
+> > Reported-by: Chitti Babu Theegala <ctheegal@codeaurora.org>
+> > Signed-off-by: Quentin Perret <qperret@google.com>
+> > ---
+> >  kernel/sched/core.c | 4 ----
+> >  1 file changed, 4 deletions(-)
+> >
+> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> > index 3a61a3b8eaa9..9ea3e484eea2 100644
+> > --- a/kernel/sched/core.c
+> > +++ b/kernel/sched/core.c
+> > @@ -1234,10 +1234,6 @@ static void uclamp_fork(struct task_struct *p)
+> >         for_each_clamp_id(clamp_id) {
+> >                 unsigned int clamp_value = uclamp_none(clamp_id);
+> >
+> > -               /* By default, RT tasks always get 100% boost */
+> > -               if (unlikely(rt_task(p) && clamp_id == UCLAMP_MIN))
+> > -                       clamp_value = uclamp_none(UCLAMP_MAX);
+> > -
+> >                 uclamp_se_set(&p->uclamp_req[clamp_id], clamp_value, false);
+> 
+> The local variable "clamp_value" doesn't have a lot of value anymore,
+> does it?  (Pun intended).
 
-I 100% agree with this.
+:)
 
-Maxime
+> Remove it?
 
---uookw37fazu2qid4
-Content-Type: application/pgp-signature; name="signature.asc"
+Right, but I figured the generated code should be similar, and
+'uclamp_se_set(&p->uclamp_req[clamp_id], uclamp_none(clamp_id), false);'
+doesn't fit in 80 cols at this identation level, so I kept the local
+var. No strong opinion, though.
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXpbDkQAKCRDj7w1vZxhR
-xTu3AP4zRe3CyeaoVdSz5mN1PaQe1gzY8JJb8T2PC0y14N/mTAD/aB2f/I5JIh07
-wglUb0GJggeJUp064hFN3uwBKf7OZA4=
-=8n6u
------END PGP SIGNATURE-----
-
---uookw37fazu2qid4--
+Thanks,
+Quentin
