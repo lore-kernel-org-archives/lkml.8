@@ -2,121 +2,87 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75CF7C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:43:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEFA3C3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:44:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55CCA206E9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:43:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 964E12168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:44:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729830AbgDOVn3 (ORCPT
+        id S1730243AbgDOVo1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 17:43:29 -0400
-Received: from mga11.intel.com ([192.55.52.93]:9571 "EHLO mga11.intel.com"
+        Wed, 15 Apr 2020 17:44:27 -0400
+Received: from mga02.intel.com ([134.134.136.20]:2384 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727857AbgDOVnV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 17:43:21 -0400
-IronPort-SDR: I4LH1FEHBptE5b8N46LWHcWLxgUiTllkEr0LvlG9gZe8Qt3dD+01ROkf7Y7sVvZJwxanWjbKIP
- StzjQCBw6d0Q==
+        id S1727857AbgDOVoQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 17:44:16 -0400
+IronPort-SDR: 0lqUjT+DyiL+wFhzy3nN5S0EBfcpRPuJixEy+8dY/2e1SOgVwgBmQIvFz+b2CN19PiKZ3n7hFF
+ hZQsHb4h8q+Q==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 14:43:19 -0700
-IronPort-SDR: kx6QiFpOyjGzocJB/ShKm3geMyUxKR01fZFLb3v5KAWCylDDv9K6QNIEbeliIV3Zt+gFwsYllu
- K8jnOVZWs72A==
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 14:44:15 -0700
+IronPort-SDR: yeKwic9N8U6AnBAd+/yrXJjyKqEm4GeAUcuTcCxW3sjUiDgZWI3mSbul7ednoPy89yhVrHeCVg
+ HpwD+NLgRynQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,388,1580803200"; 
-   d="scan'208";a="245797253"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga008.fm.intel.com with ESMTP; 15 Apr 2020 14:43:18 -0700
-Date:   Wed, 15 Apr 2020 14:43:18 -0700
+   d="scan'208";a="427584255"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
+  by orsmga005.jf.intel.com with ESMTP; 15 Apr 2020 14:44:15 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Xiaoyao Li <xiaoyao.li@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>
-Subject: Re: [PATCH v8 4/4] kvm: vmx: virtualize split lock detection
-Message-ID: <20200415214318.GH30627@linux.intel.com>
-References: <20200414063129.133630-5-xiaoyao.li@intel.com>
- <871rooodad.fsf@nanos.tec.linutronix.de>
- <20200415191802.GE30627@linux.intel.com>
- <87tv1kmol8.fsf@nanos.tec.linutronix.de>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>
+Subject: [PATCH 1/2] KVM: x86/mmu: Set @writable to false for non-visible accesses by L2
+Date:   Wed, 15 Apr 2020 14:44:13 -0700
+Message-Id: <20200415214414.10194-2-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200415214414.10194-1-sean.j.christopherson@intel.com>
+References: <20200415214414.10194-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87tv1kmol8.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 11:22:11PM +0200, Thomas Gleixner wrote:
-> Sean Christopherson <sean.j.christopherson@intel.com> writes:
-> > I don't see any way to avoid having KVM differentiate between sld_warn and
-> > sld_fatal.  Even if KVM is able to virtualize SLD in sld_fatal mode, e.g.
-> > by telling the guest it must not try to disable SLD, KVM would still need
-> > to know the kernel is sld_fatal so that it can forward that information to
-> > the guest.
-> 
-> Huch? There is absolutely zero code like that. The only place where
-> sld_state is used is:
-> 
-> + static inline void vmx_update_sld(struct kvm_vcpu *vcpu, bool on)
-> + {
-> +	if (sld_state == sld_warn && guest_cpu_has_feature_sld(vcpu) &&
-> +	    on == test_thread_flag(TIF_SLD)) {
-> +		    sld_update_msr(on);
-> +		    update_thread_flag(TIF_SLD, !on);
-> +	}
-> 
-> You might have some faint memories from the previous trainwrecks :)
+Explicitly set @writable to false in try_async_pf() if the GFN->PFN
+translation is short-circuited due to the requested GFN not being
+visible to L2.
 
-Yeah, I was thinking SLD was only being exposed if the host is sld_warn.
-I'll work with Xiaoyao to figure out a cleaner interface for this code.
+Leaving @writable ('map_writable' in the callers) uninitialized is ok
+in that it's never actually consumed, but one has to track it all the
+way through set_spte() being short-circuited by set_mmio_spte() to
+understand that the uninitialized variable is benign, and relying on
+@writable being ignored is an unnecessary risk.  Explicitly setting
+@writable also aligns try_async_pf() with __gfn_to_pfn_memslot().
 
-> The fatal mode emulation which is used in this patch set is simply that
-> the guest can 'write' to the MSR but it's not propagated to the real
-> MSR. It's just stored in the guest state. There is no way that you can
-> tell the guest that the MSR is there but fake.
->
-> The alternative solution is to prevent the exposure of SLD to the guest
-> in fatal mode. But that does not buy anything.
-> 
-> The detection is anyway incomplete. If the SLD #AC is raised in guest's
-> user mode and the guest has user #AC enabled then the exception is
-> injected into the guest unconditionally and independent of the host's
-> and guest's SLD state. That's entirely correct because a SLD #AC in user
-> mode is also a user mode alignment violation; it's not distinguishable.
-> 
-> You could of course analyse the offending instruction and check for a
-> lock prefix and a cache line overlap, but that still does not prevent
-> false positives. When the guest is non-malicious and has proper user #AC
-> handling in place then it would be wrong or at least very surprising to
-> kill it just because the detection code decided that it is a dangerous
-> split lock attempt.
-> 
-> So we can go with the proposed mode of allowing the write but not
-> propagating it. If the resulting split lock #AC originates from CPL != 3
-> then the guest will be killed with SIGBUS. If it originates from CPL ==
-> 3 and the guest has user #AC disabled then it will be killed as well.
+Jim Mattson <jmattson@google.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
+ arch/x86/kvm/mmu/mmu.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-An idea that's been floated around to avoid killing the guest on a CPL==3
-split-lock #AC is to add a STICKY bit to MSR_TEST_CTRL that KVM can
-virtualize to tell the guest that attempting to disable SLD is futile,
-e.g. so that the guest can kill its misbehaving userspace apps instead of
-trying to disable SLD and getting killed by the host.
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index c6ea6032c222..6d6cb9416179 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -4090,6 +4090,7 @@ static bool try_async_pf(struct kvm_vcpu *vcpu, bool prefault, gfn_t gfn,
+ 	 */
+ 	if (is_guest_mode(vcpu) && !kvm_is_visible_gfn(vcpu->kvm, gfn)) {
+ 		*pfn = KVM_PFN_NOSLOT;
++		*writable = false;
+ 		return false;
+ 	}
+ 
+-- 
+2.26.0
 
-I've discussed it with a few folks internally and it sounds like getting
-such a bit added to the SDM would be doable, even if Intel never ships
-hardware that supports the bit.  The thought is that getting the STICKY
-bit architecturally defined would give KVM/Linux leverage to persuade guest
-kernels to add support for the bit.  But anything that touches the SDM
-doesn't exactly happen quickly :-/.
