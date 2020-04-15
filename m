@@ -2,135 +2,109 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B015DC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:22:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA6DDC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:23:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 899CE20857
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:22:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDE12206F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:23:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586953340;
-	bh=NmutImGHJVt0bKoK4LeZCIkUpQBYzciAGLQ7TLAkGaU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=XRv8bP7WL4CSvW7sKRhjctLizBal2RjsqRuRDVa3Hln+xI6jcM6joVZ+QevSM2m6S
-	 Mkow+7GCMfd0WFcsAIKySbmceVOwQvjGFYIQg2WEdxBHsBuwRG/jR8Z/LLonBI5D9K
-	 YzmILXCj+vckgaoR9Haioo0UxGoEem6lUTtgeGqc=
+	s=default; t=1586953414;
+	bh=Lk6ebpaBji/nxzIYQ5JNX9Gi0XyEraR7whY8U2kyI+0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=yZKrpxxiWgso9ExxsSZsuBJpP7G5tnDxH9da4b2462721VpHytQThHifNL90jnFsu
+	 /bBeoiuAMX91GqDSMH7fA18JH3BipLMqTPrKUvdJ/Xroo1yI5nID7vRsTdcIP85j1f
+	 8Yn2DUz7S1oS5Mb8tnW+2gHv4S4PZXUifU/M0NmQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S369116AbgDOMWJ (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:22:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40780 "EHLO mail.kernel.org"
+        id S1732245AbgDOMX1 (ORCPT
+        <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:23:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S369099AbgDOMVw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 08:21:52 -0400
-Received: from coco.lan (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2409224AbgDOLpv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:45:51 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A52E6206F9;
-        Wed, 15 Apr 2020 12:21:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2E2220768;
+        Wed, 15 Apr 2020 11:45:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586953311;
-        bh=NmutImGHJVt0bKoK4LeZCIkUpQBYzciAGLQ7TLAkGaU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=tNtE7vP9LAUju3LtYOyPIr9UvRPulibjevCYdz67uRMQ8pQj/N1CIpyQ+9SflaBx5
-         JiZpMQ8qglMMnbK/JnrukbdHJez326rHvucOKvsrqvkFgBMNsXjiw3z9V6u369hCmj
-         eGVFxWySDOHTKjx2XKZjxSGkkOGyYSoiDdeA7abc=
-Date:   Wed, 15 Apr 2020 14:21:47 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Guillaume Tucker <guillaume.tucker@collabora.com>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com
-Subject: Re: media/master bisection: v4l2-compliance-vivid.device-presence
- on qemu_x86_64
-Message-ID: <20200415142147.1ed3487e@coco.lan>
-In-Reply-To: <a99d49d9-656d-6c5c-4953-6e7c56c0beba@collabora.com>
-References: <5e960bf5.1c69fb81.8a349.6851@mx.google.com>
-        <24564393-f229-6e29-7883-9605ed0d48b4@collabora.com>
-        <20200414233347.2a844b85@coco.lan>
-        <86feeb83-37ac-cbd6-b792-b81d17d559c9@collabora.com>
-        <2f32345d-a818-8ec4-afd6-2b9cd9dcdf4a@collabora.com>
-        <a99d49d9-656d-6c5c-4953-6e7c56c0beba@collabora.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        s=default; t=1586951150;
+        bh=Lk6ebpaBji/nxzIYQ5JNX9Gi0XyEraR7whY8U2kyI+0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Is+AYgwFou1uKyCz8zwfkCF0fNn458pu56Pn+v3JO7Kh4fyQ2FFfN8FBskVSReSOv
+         7Da5De2YobvYIxblLC/ke1uPF+cwRv2ML6cKNzS2mZDO1IOxsUb7D3J7PDvTCXBoHd
+         fOYvcpDSJ1crtb3XPOT9yd316LNBZQaPe74Wd0ro=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 57/84] net: dsa: bcm_sf2: Ensure correct sub-node is parsed
+Date:   Wed, 15 Apr 2020 07:44:14 -0400
+Message-Id: <20200415114442.14166-57-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200415114442.14166-1-sashal@kernel.org>
+References: <20200415114442.14166-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, 15 Apr 2020 10:36:04 +0100
-Guillaume Tucker <guillaume.tucker@collabora.com> escreveu:
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-> On 15/04/2020 10:28, Guillaume Tucker wrote:
-> > On 14/04/2020 22:43, Guillaume Tucker wrote:  
-> >> On 14/04/2020 22:33, Mauro Carvalho Chehab wrote:  
-> >>> Em Tue, 14 Apr 2020 22:23:52 +0100
-> >>> Guillaume Tucker <guillaume.tucker@collabora.com> escreveu:
-> >>>  
-> >>>> Please see the bisection report below about absence of the vivid
-> >>>> driver, which caused v4l2-compliance to fail to run.
-> >>>>
-> >>>> Presumably we need to update the configuration fragment used by
-> >>>> kernelci.org to enable platform drivers.  Until now we've been
-> >>>> using this:
-> >>>>
-> >>>>     CONFIG_MEDIA_SUPPORT=y
-> >>>>     CONFIG_MEDIA_CAMERA_SUPPORT=y
-> >>>>     CONFIG_VIDEO_DEV=y
-> >>>>     CONFIG_VIDEO_V4L2=y
-> >>>>     CONFIG_V4L_TEST_DRIVERS=y
-> >>>>     CONFIG_VIDEO_VIVID=y
-> >>>>     CONFIG_VIDEO_VIVID_MAX_DEVS=64
-> >>>>
-> >>>> Do we simply need to add this one in v5.7 onwards?
-> >>>>
-> >>>>     CONFIG_MEDIA_PLATFORM_SUPPORT=y  
-> >>>
-> >>> No, this shouldn't be needed.
-> >>>
-> >>> Helen sent us a patch that should likely fix it:
-> >>>
-> >>> 	https://git.linuxtv.org/media_tree.git/commit/?id=860b511766a3d95308a942ac09a34e4d1839e706
-> >>>
-> >>> Could you please check if this solves the issue?  
-> >>
-> >> I see, thanks.  This revision is being built and tested at the
-> >> moment, I'll check the results when they land in my inbox.  
-> > 
-> > Helen's patch was needed, but there were still a couple of
-> > issues.  First we need to enable this extra option now in the
-> > config fragment:
-> > 
-> >     CONFIG_MEDIA_TEST_SUPPORT=y
+[ Upstream commit afa3b592953bfaecfb4f2f335ec5f935cff56804 ]
 
-Yes.
+When the bcm_sf2 was converted into a proper platform device driver and
+used the new dsa_register_switch() interface, we would still be parsing
+the legacy DSA node that contained all the port information since the
+platform firmware has intentionally maintained backward and forward
+compatibility to client programs. Ensure that we do parse the correct
+node, which is "ports" per the revised DSA binding.
 
-Another option would be to do:
+Fixes: d9338023fb8e ("net: dsa: bcm_sf2: Make it a real platform device driver")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/dsa/bcm_sf2.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-	# MEDIA_SUPPORT_FILTER is not set
+diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
+index 4878400584c23..9502db66092eb 100644
+--- a/drivers/net/dsa/bcm_sf2.c
++++ b/drivers/net/dsa/bcm_sf2.c
+@@ -1053,6 +1053,7 @@ static int bcm_sf2_sw_probe(struct platform_device *pdev)
+ 	const struct bcm_sf2_of_data *data;
+ 	struct b53_platform_data *pdata;
+ 	struct dsa_switch_ops *ops;
++	struct device_node *ports;
+ 	struct bcm_sf2_priv *priv;
+ 	struct b53_device *dev;
+ 	struct dsa_switch *ds;
+@@ -1115,7 +1116,11 @@ static int bcm_sf2_sw_probe(struct platform_device *pdev)
+ 	set_bit(0, priv->cfp.used);
+ 	set_bit(0, priv->cfp.unique);
+ 
+-	bcm_sf2_identify_ports(priv, dn->child);
++	ports = of_find_node_by_name(dn, "ports");
++	if (ports) {
++		bcm_sf2_identify_ports(priv, ports);
++		of_node_put(ports);
++	}
+ 
+ 	priv->irq0 = irq_of_parse_and_map(dn, 0);
+ 	priv->irq1 = irq_of_parse_and_map(dn, 1);
+-- 
+2.20.1
 
-With this option (enabled by default if EMBEDDED or EXPERT),
-all CONFIG_MEDIA_*_SUPPORT will be selected[1].
-
-[1] except for CONFIG_MEDIA_CEC_SUPPORT. This doesn't
-    depend on MEDIA_SUPPORT anymore.
-
-> > 
-> > as test_drivers/Kconfig starts with "if MEDIA_TEST_SUPPORT".  
-> 
-> Actually, this "if" seems redundant now in test_drivers/Kconfig
-> with my patch to include the file conditionally...  Please let me
-> know if we should also drop it and I'll send a v2, or if this
-> should be fixed in a different way.
-
-Just one "if MEDIA_TEST_SUPPORT" at the main media/Kconfig
-should be enough.
-
-Feel free to send a v2.
-
-Thanks,
-Mauro
