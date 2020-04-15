@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1166C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 05:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C475C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 05:41:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71ACA206D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 05:41:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF6092074F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 05:41:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gVrNuKD/"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MyyoxkE4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408011AbgDOFlg (ORCPT
+        id S2393373AbgDOFlu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 01:41:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41372 "EHLO
+        Wed, 15 Apr 2020 01:41:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2393363AbgDOFlB (ORCPT
+        by vger.kernel.org with ESMTP id S2393366AbgDOFlF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 01:41:01 -0400
-Received: from mail-pf1-x449.google.com (mail-pf1-x449.google.com [IPv6:2607:f8b0:4864:20::449])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49A11C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 22:41:00 -0700 (PDT)
-Received: by mail-pf1-x449.google.com with SMTP id e18so1946707pfl.17
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 22:41:00 -0700 (PDT)
+        Wed, 15 Apr 2020 01:41:05 -0400
+Received: from mail-pj1-x104a.google.com (mail-pj1-x104a.google.com [IPv6:2607:f8b0:4864:20::104a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A999C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 22:41:05 -0700 (PDT)
+Received: by mail-pj1-x104a.google.com with SMTP id x6so7223048pjg.5
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 22:41:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=c7+W7OYNvwVSNgXY3eNe6fCfBf5xGmJ1r13LW66pCnw=;
-        b=gVrNuKD/jlzd46wibqv3phUsUGHkwRDhFzEKDzKWtBO5xNwAQc5m2EtWSYI18PUJSe
-         P2SSha9NVpcvlPgbN3NJahvBC+rpcFL+LdsHiLmNvaqKUhNxrNtL0HEf+u/CTPqvt2y0
-         wQOYHluhPYGgNmrqWaDJ8asar4G+UaYImncKI0zMuH1okLgXgx2SWfC48FPzGt4Z33+m
-         P3kw2kbJEGWIz7M7b5Bt6Z+hCpsxUqTh/ennxXJVspxfMJJQCKtyo8t9pJsAnVIwrGI1
-         kcqa3AHGE1T7EFRM/ca1Yds2JfjSMQm06rWooCj2Meao4w4rvmVpEMZTqxstFh+t+wmE
-         tQ9A==
+        bh=zcSOEJ0YcJVVjySOtzo8rhml9rHIFC8051EBtxpXHQQ=;
+        b=MyyoxkE4J+p6swxNxZ/OqEUhyZ4UKGBFDxSRrAym8DVNzgnGIEEwlv3X1bDOilEI+6
+         SwW9H9Ht4KN5DKp4/4DX+RKni4g0KnmpXE4m8RPDfQmd+Cjn7OTFEmzhcrfk66YxIsuD
+         3kNg91UsTDou+IrpxGtM8jXzr+NTUZh9gwNS2LuuFr++8NtALygdHrjnXUERaJwlAE/3
+         ye3tVw69XGm7rAPlgtprmMqhcORpjNwT6CPNgxyi9Hwkjfwg3XY0H5heYH9coq8uWlKn
+         XWftTRXuCYlrYjyrSvHMkMRdgtiqgINUx2Bd2pC2jNxPI1+VV33nXBrNjoVZWPJAuQJh
+         liiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=c7+W7OYNvwVSNgXY3eNe6fCfBf5xGmJ1r13LW66pCnw=;
-        b=oR3TMS+PDT0SqCZYKa/BcGkcLIdcnV8NC8FyWRNSUNPnzc7R0lOUctUZwqeeatL/v3
-         dqQp+nf+Vx/vZz8rIjkuI+76GVixA0zkjCQYgZHO8U94SvSorboLIqhUuxKvSLa4aJnz
-         yQHVqnNLF2ML0aeYo1j8v++QXxUxIGUOS3gEfQcDP8uLFeXuh3WT69UtbfsdWjV7ty34
-         dyGUEqOW2/MN9oWQGaoxQzP3Oj1TrART5Wl6FwT54ehD3iM0VCLhxenwuzYXoLOXhDYW
-         QHmy65QCmHUw6CJjxGzWjsK2wjEGEC1RAOURSI+Tt8chQ3Yhc4bLjDn/spDAjEGxR+5/
-         UhDg==
-X-Gm-Message-State: AGi0PuZRt2iylVWd/ThCr4Wkj33JWyyT8e3iykbVwN68nD1V6tkbtbBI
-        aew7k9epTxZcXGrIn06XCoYODueiz6Nk
-X-Google-Smtp-Source: APiQypLQOqPTRJc54v7X1TF6C3YRufjhJKSMYop2YEruvo9EAqxEsyo8kOp2S1XY0waRgujhfcWHrVacpb8x
-X-Received: by 2002:a17:90b:109:: with SMTP id p9mr4329677pjz.18.1586929259800;
- Tue, 14 Apr 2020 22:40:59 -0700 (PDT)
-Date:   Tue, 14 Apr 2020 22:40:48 -0700
+        bh=zcSOEJ0YcJVVjySOtzo8rhml9rHIFC8051EBtxpXHQQ=;
+        b=I6yKf+un2qzNz16FmX8faikB6wiaYCeK5e8YBEulgg2mS96Ko5Eu8UrTT1KiLcNF4a
+         Sm3pLvNKKUr4ecB3Ib8Xvs+c2eXWtoGzaDCjKH1clz1SmnQqwV4yCK/fb2r89YzUG7gH
+         jnXus15iNQKPvVBSqXYBvuYMxXokvaaMUfCL6KLdr40Wcu0lmkucWuMKCkIHiPJB3s+h
+         Mrlq7L3TMoOgDhbVFpnsRUHhwuk89Sm3Nu8mG+u5DtK1urzPRQA+as5D4MV2NvUiElNd
+         HgXxChobjkRNM9M5mk0BPaRTiDXjZ1Mmq2uZJQZKleT6mCPaB+AQ1cn5a8V0CmJk2F7z
+         0h7Q==
+X-Gm-Message-State: AGi0PuaTUvRIocXXMmVkED9JO/PU+rQSv0ls0vUvZh3StxPkvewwTa+1
+        ByeEh3T8L35xcjmZAopUQXUNKV7veNn3
+X-Google-Smtp-Source: APiQypIF1NJIPzatvJUWJphrlwuxt9Xj9upvji9L/PUjV451nsfhbtUyLfAp5swH36J/ZIXjyiRf/rEG4d0d
+X-Received: by 2002:a17:90a:266c:: with SMTP id l99mr3888402pje.186.1586929264665;
+ Tue, 14 Apr 2020 22:41:04 -0700 (PDT)
+Date:   Tue, 14 Apr 2020 22:40:50 -0700
 In-Reply-To: <20200415054050.31645-1-irogers@google.com>
-Message-Id: <20200415054050.31645-2-irogers@google.com>
+Message-Id: <20200415054050.31645-4-irogers@google.com>
 Mime-Version: 1.0
 References: <20200415054050.31645-1-irogers@google.com>
 X-Mailer: git-send-email 2.26.0.110.g2183baf09c-goog
-Subject: [PATCH v5 1/3] perf bench: add a multi-threaded synthesize benchmark
+Subject: [PATCH v5 3/3] perf synthetic events: Remove use of sscanf from /proc reading
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -84,293 +84,293 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-By default this isn't run as it reads /proc and may not have access.
-For consistency, modify the single threaded benchmark to compute an
-average time per event.
+The synthesize benchmark, run on a single process and thread, shows
+perf_event__synthesize_mmap_events as the hottest function with fgets
+and sscanf taking the majority of execution time. fscanf performs
+similarly well. Replace the scanf call with manual reading of each field
+of the /proc/pid/maps line, and remove some unnecessary buffering.
+This change also addresses potential, but unlikely, buffer overruns for
+the string values read by scanf.
+
+Performance before is:
+$ sudo perf bench internals synthesize -m 16 -M 16 -s -t
+\# Running 'internals/synthesize' benchmark:
+Computing performance of single threaded perf event synthesis by
+synthesizing events on the perf process itself:
+  Average synthesis took: 102.810 usec (+- 0.027 usec)
+  Average num. events: 17.000 (+- 0.000)
+  Average time per event 6.048 usec
+  Average data synthesis took: 106.325 usec (+- 0.018 usec)
+  Average num. events: 89.000 (+- 0.000)
+  Average time per event 1.195 usec
+Computing performance of multi threaded perf event synthesis by
+synthesizing events on CPU 0:
+  Number of synthesis threads: 16
+    Average synthesis took: 68103.100 usec (+- 441.234 usec)
+    Average num. events: 30703.000 (+- 0.730)
+    Average time per event 2.218 usec
+
+And after is:
+$ sudo perf bench internals synthesize -m 16 -M 16 -s -t
+\# Running 'internals/synthesize' benchmark:
+Computing performance of single threaded perf event synthesis by
+synthesizing events on the perf process itself:
+  Average synthesis took: 50.388 usec (+- 0.031 usec)
+  Average num. events: 17.000 (+- 0.000)
+  Average time per event 2.964 usec
+  Average data synthesis took: 52.693 usec (+- 0.020 usec)
+  Average num. events: 89.000 (+- 0.000)
+  Average time per event 0.592 usec
+Computing performance of multi threaded perf event synthesis by
+synthesizing events on CPU 0:
+  Number of synthesis threads: 16
+    Average synthesis took: 45022.400 usec (+- 552.740 usec)
+    Average num. events: 30624.200 (+- 10.037)
+    Average time per event 1.470 usec
+
+On a Intel Xeon 6154 compiling with Debian gcc 9.2.1.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/bench/synthesize.c | 211 ++++++++++++++++++++++++++++++----
- 1 file changed, 186 insertions(+), 25 deletions(-)
+ tools/perf/util/synthetic-events.c | 157 +++++++++++++++++++----------
+ 1 file changed, 105 insertions(+), 52 deletions(-)
 
-diff --git a/tools/perf/bench/synthesize.c b/tools/perf/bench/synthesize.c
-index 6291257bc9c9..8d624aea1c5e 100644
---- a/tools/perf/bench/synthesize.c
-+++ b/tools/perf/bench/synthesize.c
-@@ -10,60 +10,105 @@
- #include "bench.h"
- #include "../util/debug.h"
- #include "../util/session.h"
-+#include "../util/stat.h"
- #include "../util/synthetic-events.h"
- #include "../util/target.h"
- #include "../util/thread_map.h"
- #include "../util/tool.h"
-+#include "../util/util.h"
-+#include <linux/atomic.h>
- #include <linux/err.h>
- #include <linux/time64.h>
- #include <subcmd/parse-options.h>
- 
--static unsigned int iterations = 10000;
-+static unsigned int min_threads = 1;
-+static unsigned int max_threads = UINT_MAX;
-+static unsigned int single_iterations = 10000;
-+static unsigned int multi_iterations = 10;
-+static bool run_st;
-+static bool run_mt;
- 
- static const struct option options[] = {
--	OPT_UINTEGER('i', "iterations", &iterations,
--		"Number of iterations used to compute average"),
-+	OPT_BOOLEAN('s', "st", &run_st, "Run single threaded benchmark"),
-+	OPT_BOOLEAN('t', "mt", &run_mt, "Run multi-threaded benchmark"),
-+	OPT_UINTEGER('m', "min-threads", &min_threads,
-+		"Minimum number of threads in multithreaded bench"),
-+	OPT_UINTEGER('M', "max-threads", &max_threads,
-+		"Maximum number of threads in multithreaded bench"),
-+	OPT_UINTEGER('i', "single-iterations", &single_iterations,
-+		"Number of iterations used to compute single-threaded average"),
-+	OPT_UINTEGER('I', "multi-iterations", &multi_iterations,
-+		"Number of iterations used to compute multi-threaded average"),
- 	OPT_END()
- };
- 
--static const char *const usage[] = {
-+static const char *const bench_usage[] = {
- 	"perf bench internals synthesize <options>",
- 	NULL
- };
- 
-+static atomic_t event_count;
- 
--static int do_synthesize(struct perf_session *session,
--			struct perf_thread_map *threads,
--			struct target *target, bool data_mmap)
-+static int process_synthesized_event(struct perf_tool *tool __maybe_unused,
-+				     union perf_event *event __maybe_unused,
-+				     struct perf_sample *sample __maybe_unused,
-+				     struct machine *machine __maybe_unused)
-+{
-+	atomic_inc(&event_count);
-+	return 0;
-+}
-+
-+static int do_run_single_threaded(struct perf_session *session,
-+				struct perf_thread_map *threads,
-+				struct target *target, bool data_mmap)
- {
- 	const unsigned int nr_threads_synthesize = 1;
- 	struct timeval start, end, diff;
- 	u64 runtime_us;
- 	unsigned int i;
--	double average;
-+	double time_average, time_stddev, event_average, event_stddev;
- 	int err;
-+	struct stats time_stats, event_stats;
- 
--	gettimeofday(&start, NULL);
--	for (i = 0; i < iterations; i++) {
--		err = machine__synthesize_threads(&session->machines.host,
--						target, threads, data_mmap,
-+	init_stats(&time_stats);
-+	init_stats(&event_stats);
-+
-+	for (i = 0; i < single_iterations; i++) {
-+		atomic_set(&event_count, 0);
-+		gettimeofday(&start, NULL);
-+		err = __machine__synthesize_threads(&session->machines.host,
-+						NULL,
-+						target, threads,
-+						process_synthesized_event,
-+						data_mmap,
- 						nr_threads_synthesize);
- 		if (err)
- 			return err;
-+
-+		gettimeofday(&end, NULL);
-+		timersub(&end, &start, &diff);
-+		runtime_us = diff.tv_sec * USEC_PER_SEC + diff.tv_usec;
-+		update_stats(&time_stats, runtime_us);
-+		update_stats(&event_stats, atomic_read(&event_count));
- 	}
- 
--	gettimeofday(&end, NULL);
--	timersub(&end, &start, &diff);
--	runtime_us = diff.tv_sec * USEC_PER_SEC + diff.tv_usec;
--	average = (double)runtime_us/(double)iterations;
--	printf("Average %ssynthesis took: %f usec\n",
--		data_mmap ? "data " : "", average);
-+	time_average = avg_stats(&time_stats);
-+	time_stddev = stddev_stats(&time_stats);
-+	printf("  Average %ssynthesis took: %.3f usec (+- %.3f usec)\n",
-+		data_mmap ? "data " : "", time_average, time_stddev);
-+
-+	event_average = avg_stats(&event_stats);
-+	event_stddev = stddev_stats(&event_stats);
-+	printf("  Average num. events: %.3f (+- %.3f)\n",
-+		event_average, event_stddev);
-+
-+	printf("  Average time per event %.3f usec\n",
-+		time_average / event_average);
+diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+index 9d4aa951eaa6..1ea9adaef9c7 100644
+--- a/tools/perf/util/synthetic-events.c
++++ b/tools/perf/util/synthetic-events.c
+@@ -37,6 +37,7 @@
+ #include <string.h>
+ #include <uapi/linux/mman.h> /* To get things like MAP_HUGETLB even on older libc headers */
+ #include <api/fs/fs.h>
++#include <api/io.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <fcntl.h>
+@@ -273,6 +274,79 @@ static int perf_event__synthesize_fork(struct perf_tool *tool,
  	return 0;
  }
  
--int bench_synthesize(int argc, const char **argv)
-+static int run_single_threaded(void)
- {
--	struct perf_tool tool;
- 	struct perf_session *session;
- 	struct target target = {
- 		.pid = "self",
-@@ -71,8 +116,7 @@ int bench_synthesize(int argc, const char **argv)
- 	struct perf_thread_map *threads;
- 	int err;
- 
--	argc = parse_options(argc, argv, options, usage, 0);
--
-+	perf_set_singlethreaded();
- 	session = perf_session__new(NULL, false, NULL);
- 	if (IS_ERR(session)) {
- 		pr_err("Session creation failed.\n");
-@@ -84,13 +128,16 @@ int bench_synthesize(int argc, const char **argv)
- 		err = -ENOMEM;
- 		goto err_out;
- 	}
--	perf_tool__fill_defaults(&tool);
- 
--	err = do_synthesize(session, threads, &target, false);
-+	puts(
-+"Computing performance of single threaded perf event synthesis by\n"
-+"synthesizing events on the perf process itself:");
-+
-+	err = do_run_single_threaded(session, threads, &target, false);
- 	if (err)
- 		goto err_out;
- 
--	err = do_synthesize(session, threads, &target, true);
-+	err = do_run_single_threaded(session, threads, &target, true);
- 
- err_out:
- 	if (threads)
-@@ -99,3 +146,117 @@ int bench_synthesize(int argc, const char **argv)
- 	perf_session__delete(session);
- 	return err;
- }
-+
-+static int do_run_multi_threaded(struct target *target,
-+				unsigned int nr_threads_synthesize)
++static bool read_proc_maps_line(struct io *io, __u64 *start, __u64 *end,
++				u32 *prot, u32 *flags, __u64 *offset,
++				u32 *maj, u32 *min,
++				__u64 *inode,
++				ssize_t pathname_size, char *pathname)
 +{
-+	struct timeval start, end, diff;
-+	u64 runtime_us;
-+	unsigned int i;
-+	double time_average, time_stddev, event_average, event_stddev;
-+	int err;
-+	struct stats time_stats, event_stats;
-+	struct perf_session *session;
++	__u64 temp;
++	int ch;
++	char *start_pathname = pathname;
 +
-+	init_stats(&time_stats);
-+	init_stats(&event_stats);
-+	for (i = 0; i < multi_iterations; i++) {
-+		session = perf_session__new(NULL, false, NULL);
-+		if (!session)
-+			return -ENOMEM;
++	if (io__get_hex(io, start) != '-')
++		return false;
++	if (io__get_hex(io, end) != ' ')
++		return false;
 +
-+		atomic_set(&event_count, 0);
-+		gettimeofday(&start, NULL);
-+		err = __machine__synthesize_threads(&session->machines.host,
-+						NULL,
-+						target, NULL,
-+						process_synthesized_event,
-+						false,
-+						nr_threads_synthesize);
-+		if (err) {
-+			perf_session__delete(session);
-+			return err;
++	/* map protection and flags bits */
++	*prot = 0;
++	ch = io__get_char(io);
++	if (ch == 'r')
++		*prot |= PROT_READ;
++	else if (ch != '-')
++		return false;
++	ch = io__get_char(io);
++	if (ch == 'w')
++		*prot |= PROT_WRITE;
++	else if (ch != '-')
++		return false;
++	ch = io__get_char(io);
++	if (ch == 'x')
++		*prot |= PROT_EXEC;
++	else if (ch != '-')
++		return false;
++	ch = io__get_char(io);
++	if (ch == 's')
++		*flags = MAP_SHARED;
++	else if (ch == 'p')
++		*flags = MAP_PRIVATE;
++	else
++		return false;
++	if (io__get_char(io) != ' ')
++		return false;
++
++	if (io__get_hex(io, offset) != ' ')
++		return false;
++
++	if (io__get_hex(io, &temp) != ':')
++		return false;
++	*maj = temp;
++	if (io__get_hex(io, &temp) != ' ')
++		return false;
++	*min = temp;
++
++	ch = io__get_dec(io, inode);
++	if (ch != ' ') {
++		*pathname = '\0';
++		return ch == '\n';
++	}
++	do {
++		ch = io__get_char(io);
++	} while (ch == ' ');
++	while (true) {
++		if (ch < 0)
++			return false;
++		if (ch == '\0' || ch == '\n' ||
++		    (pathname + 1 - start_pathname) >= pathname_size) {
++			*pathname = '\0';
++			return true;
 +		}
-+
-+		gettimeofday(&end, NULL);
-+		timersub(&end, &start, &diff);
-+		runtime_us = diff.tv_sec * USEC_PER_SEC + diff.tv_usec;
-+		update_stats(&time_stats, runtime_us);
-+		update_stats(&event_stats, atomic_read(&event_count));
-+		perf_session__delete(session);
++		*pathname++ = ch;
++		ch = io__get_char(io);
 +	}
-+
-+	time_average = avg_stats(&time_stats);
-+	time_stddev = stddev_stats(&time_stats);
-+	printf("    Average synthesis took: %.3f usec (+- %.3f usec)\n",
-+		time_average, time_stddev);
-+
-+	event_average = avg_stats(&event_stats);
-+	event_stddev = stddev_stats(&event_stats);
-+	printf("    Average num. events: %.3f (+- %.3f)\n",
-+		event_average, event_stddev);
-+
-+	printf("    Average time per event %.3f usec\n",
-+		time_average / event_average);
-+	return 0;
 +}
 +
-+static int run_multi_threaded(void)
-+{
-+	struct target target = {
-+		.cpu_list = "0"
-+	};
-+	unsigned int nr_threads_synthesize;
-+	int err;
+ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
+ 				       union perf_event *event,
+ 				       pid_t pid, pid_t tgid,
+@@ -280,9 +354,9 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
+ 				       struct machine *machine,
+ 				       bool mmap_data)
+ {
+-	FILE *fp;
+ 	unsigned long long t;
+ 	char bf[BUFSIZ];
++	struct io io;
+ 	bool truncation = false;
+ 	unsigned long long timeout = proc_map_timeout * 1000000ULL;
+ 	int rc = 0;
+@@ -295,28 +369,39 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
+ 	snprintf(bf, sizeof(bf), "%s/proc/%d/task/%d/maps",
+ 		machine->root_dir, pid, pid);
+ 
+-	fp = fopen(bf, "r");
+-	if (fp == NULL) {
++	io.fd = open(bf, O_RDONLY, 0);
++	if (io.fd < 0) {
+ 		/*
+ 		 * We raced with a task exiting - just return:
+ 		 */
+ 		pr_debug("couldn't open %s\n", bf);
+ 		return -1;
+ 	}
++	io__init(&io, io.fd, bf, sizeof(bf));
+ 
+ 	event->header.type = PERF_RECORD_MMAP2;
+ 	t = rdclock();
+ 
+-	while (1) {
+-		char prot[5];
+-		char execname[PATH_MAX];
+-		char anonstr[] = "//anon";
+-		unsigned int ino;
++	while (!io.eof) {
++		static const char anonstr[] = "//anon";
+ 		size_t size;
+-		ssize_t n;
+ 
+-		if (fgets(bf, sizeof(bf), fp) == NULL)
+-			break;
++		/* ensure null termination since stack will be reused. */
++		event->mmap2.filename[0] = '\0';
 +
-+	if (max_threads == UINT_MAX)
-+		max_threads = sysconf(_SC_NPROCESSORS_ONLN);
-+
-+	puts(
-+"Computing performance of multi threaded perf event synthesis by\n"
-+"synthesizing events on CPU 0:");
-+
-+	for (nr_threads_synthesize = min_threads;
-+	     nr_threads_synthesize <= max_threads;
-+	     nr_threads_synthesize++) {
-+		if (nr_threads_synthesize == 1)
-+			perf_set_singlethreaded();
-+		else
-+			perf_set_multithreaded();
-+
-+		printf("  Number of synthesis threads: %u\n",
-+			nr_threads_synthesize);
-+
-+		err = do_run_multi_threaded(&target, nr_threads_synthesize);
-+		if (err)
-+			return err;
-+	}
-+	perf_set_singlethreaded();
-+	return 0;
-+}
-+
-+int bench_synthesize(int argc, const char **argv)
-+{
-+	int err = 0;
-+
-+	argc = parse_options(argc, argv, options, bench_usage, 0);
-+	if (argc) {
-+		usage_with_options(bench_usage, options);
-+		exit(EXIT_FAILURE);
-+	}
-+
-+	/*
-+	 * If neither single threaded or multi-threaded are specified, default
-+	 * to running just single threaded.
-+	 */
-+	if (!run_st && !run_mt)
-+		run_st = true;
-+
-+	if (run_st)
-+		err = run_single_threaded();
-+
-+	if (!err && run_mt)
-+		err = run_multi_threaded();
-+
-+	return err;
-+}
++		/* 00400000-0040c000 r-xp 00000000 fd:01 41038  /bin/cat */
++		if (!read_proc_maps_line(&io,
++					&event->mmap2.start,
++					&event->mmap2.len,
++					&event->mmap2.prot,
++					&event->mmap2.flags,
++					&event->mmap2.pgoff,
++					&event->mmap2.maj,
++					&event->mmap2.min,
++					&event->mmap2.ino,
++					sizeof(event->mmap2.filename),
++					event->mmap2.filename))
++			continue;
+ 
+ 		if ((rdclock() - t) > timeout) {
+ 			pr_warning("Reading %s/proc/%d/task/%d/maps time out. "
+@@ -327,23 +412,6 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
+ 			goto out;
+ 		}
+ 
+-		/* ensure null termination since stack will be reused. */
+-		strcpy(execname, "");
+-
+-		/* 00400000-0040c000 r-xp 00000000 fd:01 41038  /bin/cat */
+-		n = sscanf(bf, "%"PRI_lx64"-%"PRI_lx64" %s %"PRI_lx64" %x:%x %u %[^\n]\n",
+-		       &event->mmap2.start, &event->mmap2.len, prot,
+-		       &event->mmap2.pgoff, &event->mmap2.maj,
+-		       &event->mmap2.min,
+-		       &ino, execname);
+-
+-		/*
+- 		 * Anon maps don't have the execname.
+- 		 */
+-		if (n < 7)
+-			continue;
+-
+-		event->mmap2.ino = (u64)ino;
+ 		event->mmap2.ino_generation = 0;
+ 
+ 		/*
+@@ -354,23 +422,8 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
+ 		else
+ 			event->header.misc = PERF_RECORD_MISC_GUEST_USER;
+ 
+-		/* map protection and flags bits */
+-		event->mmap2.prot = 0;
+-		event->mmap2.flags = 0;
+-		if (prot[0] == 'r')
+-			event->mmap2.prot |= PROT_READ;
+-		if (prot[1] == 'w')
+-			event->mmap2.prot |= PROT_WRITE;
+-		if (prot[2] == 'x')
+-			event->mmap2.prot |= PROT_EXEC;
+-
+-		if (prot[3] == 's')
+-			event->mmap2.flags |= MAP_SHARED;
+-		else
+-			event->mmap2.flags |= MAP_PRIVATE;
+-
+-		if (prot[2] != 'x') {
+-			if (!mmap_data || prot[0] != 'r')
++		if ((event->mmap2.prot & PROT_EXEC) == 0) {
++			if (!mmap_data || (event->mmap2.prot & PROT_READ) == 0)
+ 				continue;
+ 
+ 			event->header.misc |= PERF_RECORD_MISC_MMAP_DATA;
+@@ -380,17 +433,17 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
+ 		if (truncation)
+ 			event->header.misc |= PERF_RECORD_MISC_PROC_MAP_PARSE_TIMEOUT;
+ 
+-		if (!strcmp(execname, ""))
+-			strcpy(execname, anonstr);
++		if (!strcmp(event->mmap2.filename, ""))
++			strcpy(event->mmap2.filename, anonstr);
+ 
+ 		if (hugetlbfs_mnt_len &&
+-		    !strncmp(execname, hugetlbfs_mnt, hugetlbfs_mnt_len)) {
+-			strcpy(execname, anonstr);
++		    !strncmp(event->mmap2.filename, hugetlbfs_mnt,
++			     hugetlbfs_mnt_len)) {
++			strcpy(event->mmap2.filename, anonstr);
+ 			event->mmap2.flags |= MAP_HUGETLB;
+ 		}
+ 
+-		size = strlen(execname) + 1;
+-		memcpy(event->mmap2.filename, execname, size);
++		size = strlen(event->mmap2.filename) + 1;
+ 		size = PERF_ALIGN(size, sizeof(u64));
+ 		event->mmap2.len -= event->mmap.start;
+ 		event->mmap2.header.size = (sizeof(event->mmap2) -
+@@ -409,7 +462,7 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
+ 			break;
+ 	}
+ 
+-	fclose(fp);
++	close(io.fd);
+ 	return rc;
+ }
+ 
 -- 
 2.26.0.110.g2183baf09c-goog
 
