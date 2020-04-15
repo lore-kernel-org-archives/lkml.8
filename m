@@ -2,183 +2,110 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E60EFC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:10:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E902C2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:10:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1CB820768
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:10:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Ov/r13gv";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="XCrhzL/X"
+	by mail.kernel.org (Postfix) with ESMTP id E7D7120784
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:10:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2896237AbgDOKKj (ORCPT
+        id S2896254AbgDOKKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 06:10:39 -0400
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:54639 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2896152AbgDOKKQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 06:10:16 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 62196580375;
-        Wed, 15 Apr 2020 06:10:13 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 15 Apr 2020 06:10:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=tiwnh7t3J9dCc6nvhOkiy49H6Ti
-        N6hjDJXDgkFXp10U=; b=Ov/r13gv/FzeqiK7EXa2MVeWNvbtGoln8v1lZeNVTDo
-        d/OBMcFNmf93rYl1dCE1+t8hxGIcBvwQn1digYa/muGYf7q0QPqzHkNxIrfTvAC5
-        tOh+VmGGScNRPukR67X3s70Aaxb+m3l57KrJbUGZjPSpm1PHG5zaKEypCDS6Jzbf
-        zcaXRlSFpb60fySXUEgbzV1gECrM87+2LNevWftl3sL0+W9p8Fhjx6MAEda4JGxo
-        2jXL2xrhs95ybDu2qfjPAvTQtYXUljlb0vtPswczOxmkqAcFgD3JwLc6TChCwIum
-        37fgD3VAhGbEFg2XQa1P7XfklKkVnMWkJL3YUqsc2TA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=tiwnh7
-        t3J9dCc6nvhOkiy49H6TiN6hjDJXDgkFXp10U=; b=XCrhzL/Xe6ze4BgUhH61Sd
-        8T4PZhQ5yllJD1PxNmKHkEWWP7xApPJG12ii/tljCURwuQeB1KjLvAxx6b8wXcqW
-        9Gy47bQoLliDjRVR8/t7x3NnG4zsZ/cAnTOIBxhdc7KXJYLVYeNbWtzbieH2hiyw
-        uPfCPPkRVoe+KFOvDrqzuE9uWqtGmHABy6xIM6h1jKLLKVelBWk9s11yjmRJVI6Y
-        OcNkemPNftLCWhOaoPV3gFTaab8hRa+0Vd+EfjQyZbjY4u4sMOfWF+eKkHljqP1c
-        9lM0B58UTX/I6NxoBLvbWMCYCs4aRH8IBRUxJOC5ewLgoFDHglS80fZvTNbdRmFQ
-        ==
-X-ME-Sender: <xms:gt2WXnImK0S9xi3AqSCkzOFDvgdNet3Kkr6Vn01_cxH_u_hDqsKq2w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrfeefgddugecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:gt2WXoiiH3RLarjfPLHQ89zKsXtEVIU2fDv1eDj90V1IMXnSM3kd3A>
-    <xmx:gt2WXnDb4Hsh0ws82UIxfQqGZt0NnEmLFSogaEeqXcPk7GvYkVBJ2Q>
-    <xmx:gt2WXq535ML7IV_YSCHAHCRK2WpKKG6MhBYv3IlvKdn-hD4R3r3gCg>
-    <xmx:hd2WXrM1KZACbLXcsL4KatHHzZI3aT0OIxW_WxpKcDuk9zkIasNyaw>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id D579F3280066;
-        Wed, 15 Apr 2020 06:10:09 -0400 (EDT)
-Date:   Wed, 15 Apr 2020 12:10:08 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Philipp Rossak <embed3d@gmail.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: Re: [PATCH v6 00/12] ARM/MIPS: DTS: add child nodes describing the
- PVRSGX GPU present in some OMAP SoC and JZ4780 (and many more)
-Message-ID: <20200415101008.zxzxca2vlfsefpdv@gilmour.lan>
-References: <cover.1586939718.git.hns@goldelico.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="spbhycqlgpxqdc65"
-Content-Disposition: inline
-In-Reply-To: <cover.1586939718.git.hns@goldelico.com>
+        Wed, 15 Apr 2020 06:10:50 -0400
+Received: from mga03.intel.com ([134.134.136.65]:27969 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2896221AbgDOKKS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 06:10:18 -0400
+IronPort-SDR: 7Uewr7cbYjd3+VfwGxh2UPNtlKM9Th2Mv8OMRO/vxxSe6dgNw/suE8ILHROXRKs+KP6KQ7qgU5
+ AoTzBNAGg1jg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 03:10:16 -0700
+IronPort-SDR: aId59wJtQvTdJVURjpuzjsl1e0DTZ33paKQgcXPpmz6CSWPmo9nLWko1C0YtQI/B5nMddxu6ib
+ qYokxNtlvjKA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,386,1580803200"; 
+   d="scan'208";a="253482866"
+Received: from yilunxu-optiplex-7050.sh.intel.com ([10.239.159.141])
+  by orsmga003.jf.intel.com with ESMTP; 15 Apr 2020 03:10:14 -0700
+From:   Xu Yilun <yilun.xu@intel.com>
+To:     mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     trix@redhat.com, bhu@redhat.com, Xu Yilun <yilun.xu@intel.com>
+Subject: [PATCH v4 0/7] Add interrupt support to FPGA DFL drivers
+Date:   Wed, 15 Apr 2020 18:07:28 +0800
+Message-Id: <1586945255-30823-1-git-send-email-yilun.xu@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patchset add interrupt support to FPGA DFL drivers.
 
---spbhycqlgpxqdc65
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+With these patches, DFL driver will parse and assign interrupt resources
+for enumerated feature devices and their sub features.
 
-Hi,
+This patchset also introduces a set of APIs for user to monitor DFL
+interrupts. Three sub features (DFL FME error, DFL AFU error and user
+interrupt) drivers now support these APIs.
 
-On Wed, Apr 15, 2020 at 10:35:07AM +0200, H. Nikolaus Schaller wrote:
-> * rebased to v5.7-rc1
-> * added DTS for for a31, a31s, a83t - by Philipp Rossak <embed3d@gmail.com>
-> * added DTS for "samsung,s5pv210-sgx540-120" - by Jonathan Bakker <xc-racer2@live.ca>
-> * bindings.yaml fixes:
->   - added a31, a31
->   - fixes for omap4470
->   - jz4780 contains an sgx540-130 and not -120
->   - a83t contains an sgx544-115 and not -116
->   - removed "additionalProperties: false" because some SoC may need additional properties
->
-> PATCH V5 2020-03-29 19:38:32:
-> * reworked YAML bindings to pass dt_binding_check and be better grouped
-> * rename all nodes to "gpu: gpu@<address>"
-> * removed "img,sgx5" from example - suggested by Rob Herring <robh+dt@kernel.org>
->
-> PATCH V4 2019-12-17 19:02:11:
-> * MIPS: DTS: jz4780: removed "img,sgx5" from bindings
-> * YAML bindings: updated according to suggestions by Rob Herring
-> * MIPS: DTS: jz4780: insert-sorted gpu node by register address - suggested by Paul Cercueil
->
-> PATCH V3 2019-11-24 12:40:33:
-> * reworked YAML format with help by Rob Herring
-> * removed .txt binding document
-> * change compatible "ti,am335x-sgx" to "ti,am3352-sgx" - suggested by Tony Lindgren
->
-> PATCH V2 2019-11-07 12:06:17:
-> * tried to convert bindings to YAML format - suggested by Rob Herring
-> * added JZ4780 DTS node (proven to load the driver)
-> * removed timer and img,cores properties until we know we really need them - suggested by Rob Herring
->
-> PATCH V1 2019-10-18 20:46:35:
->
-> This patch series defines child nodes for the SGX5xx interface inside
-> different SoC so that a driver can be found and probed by the
-> compatible strings and can retrieve information about the SGX revision
-> that is included in a specific SoC. It also defines the interrupt number
-> to be used by the SGX driver.
->
-> There is currently no mainline driver for these GPUs, but a project
-> [1] is ongoing with the goal to get the open-source part as provided
-> by TI/IMG and others into drivers/gpu/drm/pvrsgx.
+Patch #1: DFL framework change. Accept interrupt info input from DFL bus
+          driver, and add interrupt parsing and assignment for feature
+          sub devices.
+Patch #2: DFL pci driver change, add interrupt info on DFL enumeration.
+Patch #3: DFL framework change. Add helper functions for feature sub
+          device drivers to handle interrupt and notify users.
+Patch #4: Add interrupt support for AFU error reporting sub feature.
+Patch #5: Add interrupt support for FME global error reporting sub
+          feature.
+Patch #6: Add interrupt support for a new sub feature, to handle user
+          interrupts implemented in AFU.
+Patch #7: Documentation for DFL interrupt handling.
 
-Just a heads up, DRM requires an open-source user-space, so if your
-plan is to move the open-source kernel driver while using the
-closed-source library (as that page seem to suggest), that might
-change a few things.
+Main changes from v1:
+ - Early validating irq table for each feature in parse_feature_irq()
+   in Patch #1.
+ - Changes IOCTL interfaces. use DFL_FPGA_FME/PORT_XXX_GET_IRQ_NUM
+   instead of DFL_FPGA_FME/PORT_XXX_GET_INFO, delete flag field for
+   DFL_FPGA_FME/PORT_XXX_SET_IRQ param
 
-> The kernel modules built from this project have successfully
-> demonstrated to work with the DTS definitions from this patch set on
-> AM335x BeagleBone Black, DM3730 and OMAP5 Pyra and Droid 4. They
-> partially work on OMAP3530 and PandaBoard ES but that is likely a
-> problem in the kernel driver or the (non-free) user-space libraries
-> and binaries.
->
-> Wotk for JZ4780 (CI20 board) is in progress and there is potential
-> to extend this work to e.g. BananaPi-M3 (A83) and some Intel Poulsbo
-> and CedarView devices.
+Main changes from v2:
+ - put parse_feature_irqs() inside create_feature_instance().
+ - refines code for dfl_fpga_set_irq_triggers, delete local variable j.
+ - put_user() instead of copy_to_user() for DFL_FPGA_XXX_GET_IRQ_NUM IOCTL
 
-If it's not been tested on any Allwinner board yet, I'll leave it
-aside until it's been properly shown to work.
+Main changes from v3:
+ - rebased to 5.7-rc1.
+ - fail the dfl enumeration when irq parsing error happens.
+ - Add 2 helper functions in dfl.c to handle generic irq ioctls in feature
+   drivers.
 
-Maxime
+Xu Yilun (7):
+  fpga: dfl: parse interrupt info for feature devices on enumeration
+  fpga: dfl: pci: add irq info for feature devices enumeration
+  fpga: dfl: introduce interrupt trigger setting API
+  fpga: dfl: afu: add interrupt support for port error reporting
+  fpga: dfl: fme: add interrupt support for global error reporting
+  fpga: dfl: afu: add AFU interrupt support
+  Documentation: fpga: dfl: add descriptions for interrupt related
+    interfaces.
 
---spbhycqlgpxqdc65
-Content-Type: application/pgp-signature; name="signature.asc"
+ Documentation/fpga/dfl.rst    |  19 +++
+ drivers/fpga/dfl-afu-error.c  |  22 +++
+ drivers/fpga/dfl-afu-main.c   |  36 +++++
+ drivers/fpga/dfl-fme-error.c  |  23 ++++
+ drivers/fpga/dfl-fme-main.c   |   6 +
+ drivers/fpga/dfl-pci.c        |  80 +++++++++--
+ drivers/fpga/dfl.c            | 311 ++++++++++++++++++++++++++++++++++++++++++
+ drivers/fpga/dfl.h            |  57 ++++++++
+ include/uapi/linux/fpga-dfl.h |  82 +++++++++++
+ 9 files changed, 627 insertions(+), 9 deletions(-)
 
------BEGIN PGP SIGNATURE-----
+-- 
+2.7.4
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXpbdgAAKCRDj7w1vZxhR
-xfFrAP93okt+UedPkk9I3Q8d4NjjJQupvTn5SXqE9t4DNT4cOAD/UrA0Qy0Kn9Tr
-R9ol+rlZA6+bkgWLM1ddBT4uVccQmQw=
-=uJBG
------END PGP SIGNATURE-----
-
---spbhycqlgpxqdc65--
