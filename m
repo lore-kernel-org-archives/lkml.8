@@ -2,90 +2,106 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B37BC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 05:59:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB74C2BB85
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 06:02:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3A1A206E9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 05:59:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JcWcWuiD"
+	by mail.kernel.org (Postfix) with ESMTP id 5535E206E9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 06:02:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441064AbgDOF7r (ORCPT
+        id S2441082AbgDOGCS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 01:59:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44258 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2441062AbgDOF7m (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 01:59:42 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD0D8C061A0C;
-        Tue, 14 Apr 2020 22:59:41 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id i10so17579603wrv.10;
-        Tue, 14 Apr 2020 22:59:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bsdw+AlvxpaYVY8Lcjiqb5lWVO+/dV7fKji2stjWQoM=;
-        b=JcWcWuiDWGrat7PLbbGGpy+VPCwZm+B8+b6wIR5Qlxfxy+BWIl7W3IQIkJhpT9dMQ/
-         KHWM043X+68VVMlKeKimAMxZXIuFAWaKNOyTQ7mygKJZirRFrXpLfga5nca6/yN7sb7m
-         JeQn2eTsJoY0SsenEcw6+1hEASroKswAcE4X35r0YOiPZ5jGBKQApmHqFZ4sq4gHjKdG
-         Y3n6+YfWWVguF7/onY60Kqj/u2fjv8erG23gS8RGAkzk0bQHYB1BDVnfjrHaE8CS5aSt
-         Rjr7k+3et5/Y/3dqyE09ehmdQNqJPeeYs/kLKup/xCUwjwdd68D89T8FnDTSl+XL6fb+
-         smZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bsdw+AlvxpaYVY8Lcjiqb5lWVO+/dV7fKji2stjWQoM=;
-        b=daNe2Lm+Is6pfWmordGgi+Cxl+3yMz9wigDI7lbCmY7hs6nBsKZORcwYYw63CRJ6ja
-         oHOPSZML964TT0S9kiQlG8gohW6Bcvv4JOWTp0nZ4KXuKFuUJcFp9udKmnMr+/BkpR7o
-         7H1Nd1GvsFVa52dulJRhddNnCu1EcWBeUZUw7f8n4QrCdWe2MZrzMNlx6cFQFFOIq9ok
-         +A4U8XtexsXPrt6PFhQGhgTcT4xpYCWWMqoH2bUG53vfcQ0c04xDIBWJSBbkSBCIMtd7
-         +xzl/W4z+P9BaQm7ri2W89HhK4HC1XqBoWoH2t8Q6OU3Umo5nym9xbCM2qy4Dg/mZadZ
-         QaFA==
-X-Gm-Message-State: AGi0Pub6l2ehgXKpJyn4uGnY1dznb+JpzCeGnE4peFmHlYpEc5rD7GIF
-        pGTfLc+wBR8N6c+jHrB/QSRHTT5C2g2zq3ZdGso=
-X-Google-Smtp-Source: APiQypLIUSKaAEG1Gvkn2HdyUu7XOJ1Ks6l0f/YpHQQasnkp1D78E3DW2NpedLoUJjzQcwbl8mvUogTsn+2/TeKZq4Y=
-X-Received: by 2002:adf:db4d:: with SMTP id f13mr6637560wrj.289.1586930380463;
- Tue, 14 Apr 2020 22:59:40 -0700 (PDT)
+        Wed, 15 Apr 2020 02:02:18 -0400
+Received: from mga12.intel.com ([192.55.52.136]:32283 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2441080AbgDOGCF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 02:02:05 -0400
+IronPort-SDR: Xdzih+kU46ceIYw9T+hfpavmsDBJtylee84zd1JoMTUPmUKaBaMClpq5IwBw5vNC6cXwo9y7He
+ oBhBrXAEO65g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 23:02:03 -0700
+IronPort-SDR: XI465BG+7j67qXFLT9dIcHvFNQBQDHurw6IfghYezG/NpWEdYCVIsNDT2k6ZC1QusTyPJdtTbR
+ h6Ep06sJKl6g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,385,1580803200"; 
+   d="scan'208";a="332402681"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga001.jf.intel.com with ESMTP; 14 Apr 2020 23:02:03 -0700
+Received: from [10.214.160.145] (unknown [10.214.160.145])
+        by linux.intel.com (Postfix) with ESMTP id 218755802C9;
+        Tue, 14 Apr 2020 23:01:56 -0700 (PDT)
+Subject: Re: [PATCH v1 2/2] mtd: rawnand: Add NAND controller support on Intel
+ LGM SoC
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org, miquel.raynal@bootlin.com,
+        richard@nod.at, vigneshr@ti.com, arnd@arndb.de,
+        brendanhiggins@google.com, tglx@linutronix.de,
+        anders.roxell@linaro.org, masonccyang@mxic.com.tw,
+        piotrs@cadence.com, robh+dt@kernel.org,
+        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
+        cheol.yong.kim@intel.com
+References: <20200414022433.36622-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200414022433.36622-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200414092132.525053f1@collabora.com>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <bb9d2f29-acef-cc1b-8606-bbb38b488cce@linux.intel.com>
+Date:   Wed, 15 Apr 2020 14:01:52 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20200311171422.10484-1-david@redhat.com> <20200311171422.10484-2-david@redhat.com>
-In-Reply-To: <20200311171422.10484-2-david@redhat.com>
-From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Date:   Wed, 15 Apr 2020 07:59:28 +0200
-Message-ID: <CAM9Jb+ic2e3A9uaD3whMB9G+dXfeX877vtjF7TgiPKhwZ2nvzQ@mail.gmail.com>
-Subject: Re: [PATCH v2 01/10] virtio-mem: Paravirtualized memory hotplug
-To:     David Hildenbrand <david@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        virtio-dev@lists.oasis-open.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Igor Mammedov <imammedo@redhat.com>,
-        Dave Young <dyoung@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200414092132.525053f1@collabora.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I spent quite some time to review and also tested this driver.
-This looks good to me. Feel free to add.
+Hi Boris,
 
-Reviewed-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+     Thank you so much for review comments and your time...
+
+On 14/4/2020 3:21 pm, Boris Brezillon wrote:
+> Hello Ramuthevar,
+>
+> On Tue, 14 Apr 2020 10:24:33 +0800
+> "Ramuthevar,Vadivel MuruganX"
+> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+>
+>> +	lgm_host->chip.legacy.read_byte = lgm_read_byte;
+>> +	lgm_host->chip.legacy.read_buf = lgm_read_buf;
+>> +	lgm_host->chip.legacy.write_buf = lgm_write_buf;
+>> +	lgm_host->chip.legacy.select_chip = lgm_select_chip;
+>> +	lgm_host->chip.legacy.dev_ready = lgm_dev_ready;
+>> +	lgm_host->chip.legacy.cmd_ctrl = lgm_cmd_ctrl;
+>> +	lgm_host->chip.legacy.chip_delay = 30;
+>> +	lgm_host->chip.legacy.dummy_controller.ops = &lgm_nand_controller_ops;
+>> +
+> Seriously, what's not clear in [1]? Okay, let's say you overlooked this
+> comment, isn't the name of the field explicit enough? We received a
+> few other drivers implementing the legacy interface in the last few
+> months so maybe there's something to improve on our end (update the
+> doc, move legacy drivers to a legacy sub-dir?).
+Understood the legacy to latest implementation based ->exec_op(), Thanks!
+>
+> Back to more constructive comment now: please implement ->exec_op() to
+> replace those legacy hooks.
+
+Agreed, will do the implementation of exec_op() hook and update the patches.
+
+Regards
+Vadivel
+>
+> Regards,
+>
+> Boris
+>
+> [1]https://elixir.bootlin.com/linux/v5.7-rc1/source/include/linux/mtd/rawnand.h#L987
