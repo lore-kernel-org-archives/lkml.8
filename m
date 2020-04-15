@@ -2,126 +2,135 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F112C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FA2DC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:58:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6157720768
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:57:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5199D20768
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:58:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393731AbgDOH5M convert rfc822-to-8bit (ORCPT
+        id S2393746AbgDOH5P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 03:57:12 -0400
-Received: from mga06.intel.com ([134.134.136.31]:5698 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390630AbgDOH5L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 03:57:11 -0400
-IronPort-SDR: E5ev1TVf2mM0mIZ3SfO8nWm4pmtssxmJkhxC7r5IPNu4O83TgkV3KKIjIGTaayJmz1J3oJU/KD
- qWuLPK/YXYbw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 00:57:11 -0700
-IronPort-SDR: duupAcieAe2PFajTeb6R5W3wjVPdK9W9u9YT+zNk5DnJXl7l7cdULN187mGQvvosYMdxM1nNL+
- PisPjyxt6mjA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,386,1580803200"; 
-   d="scan'208";a="453838877"
-Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
-  by fmsmga005.fm.intel.com with ESMTP; 15 Apr 2020 00:57:11 -0700
-Received: from fmsmsx120.amr.corp.intel.com (10.18.124.208) by
- FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 15 Apr 2020 00:57:10 -0700
-Received: from shsmsx108.ccr.corp.intel.com (10.239.4.97) by
- fmsmsx120.amr.corp.intel.com (10.18.124.208) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 15 Apr 2020 00:57:10 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
- SHSMSX108.ccr.corp.intel.com ([169.254.8.7]) with mapi id 14.03.0439.000;
- Wed, 15 Apr 2020 15:57:08 +0800
-From:   "Tian, Kevin" <kevin.tian@intel.com>
-To:     Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>
-CC:     "Raj, Ashok" <ashok.raj@intel.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2 0/7] iommu/vt-d: Add page request draining support
-Thread-Topic: [PATCH v2 0/7] iommu/vt-d: Add page request draining support
-Thread-Index: AQHWEubGFdWwTRJ930mQo8Wb1/6Ng6h5z/pA
-Date:   Wed, 15 Apr 2020 07:57:07 +0000
-Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D820475@SHSMSX104.ccr.corp.intel.com>
-References: <20200415052542.30421-1-baolu.lu@linux.intel.com>
-In-Reply-To: <20200415052542.30421-1-baolu.lu@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Wed, 15 Apr 2020 03:57:15 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:47070 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390630AbgDOH5O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 03:57:14 -0400
+Received: by mail-ot1-f66.google.com with SMTP id w12so2455342otm.13;
+        Wed, 15 Apr 2020 00:57:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xXgXhC8bKKq0YWfVxUBiOfk11sjnb4Yq0MYMcyVOwhk=;
+        b=uoRzIelpJOTD6ZMbglgalFC1WQ7NtrSv/dpsZvfNxOanIKcMSPGRLm9a01/nBUdJQb
+         /TmmaGPZ018SqBsUwqOfz9Jiih/A9k2N/qJsU/3fo5jdX9/1j675K558ZVOd+Utu/Ra2
+         BwnY5ZzLTMa6m9ZJ3yCEPeIakUT8ekJDHq8w0kNQdtgg+/QB0/DXGCv5yhpxb7sSYo0V
+         777dEvkHEp+EOiMA0cEeGkAJUe6dNvTFn51WRs0I3dc5FvunKRxlLvXhW9DMQsQubUsM
+         PzqqUYDVNyuisd9pUR5bH0T20vZNr6O91WpibclaqN3zxKBJlSlvGl/3e6em5I5vXgx0
+         Nt9g==
+X-Gm-Message-State: AGi0PuYe6Qaj3tLkRTIlPAtmmtA5hBTRUWNfePMMNOXLAOfSbaQuP7eC
+        dMRVoQywdpVEjh9/Re5hp9We2capVCZKgaapDc0=
+X-Google-Smtp-Source: APiQypKtWgKI9+I/2zP/6rCs2aq7ytVskKsUD6aBuiS8gkRwKYf9/0AjV7QdalaJStUWOljfr92SzqIOyeuZJ1rcCx4=
+X-Received: by 2002:a9d:76c7:: with SMTP id p7mr20923391otl.145.1586937432508;
+ Wed, 15 Apr 2020 00:57:12 -0700 (PDT)
 MIME-Version: 1.0
+References: <20200413204253.84991-1-john.stultz@linaro.org> <20200413204253.84991-3-john.stultz@linaro.org>
+In-Reply-To: <20200413204253.84991-3-john.stultz@linaro.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 15 Apr 2020 09:57:01 +0200
+Message-ID: <CAMuHMdUMB2oMMk3dArA1s-VWWmhv0BKQq0=9k_u7t09tqiRJ-w@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] driver core: Ensure wait_for_device_probe() waits
+ until the deferred_probe_timeout fires
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Rob Herring <robh@kernel.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        netdev <netdev@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Lu Baolu <baolu.lu@linux.intel.com>
-> Sent: Wednesday, April 15, 2020 1:26 PM
-> 
-> When a PASID is stopped or terminated, there can be pending PRQs
-> (requests that haven't received responses) in the software and
-> remapping hardware. The pending page requests must be drained
-> so that the pasid could be reused. The register level interface
-> for page request draining is defined in 7.11 of the VT-d spec.
-> This series adds the support for page requests draining.
+On Mon, Apr 13, 2020 at 10:43 PM John Stultz <john.stultz@linaro.org> wrote:
+> In commit c8c43cee29f6 ("driver core: Fix
+> driver_deferred_probe_check_state() logic"), we set the default
+> driver_deferred_probe_timeout value to 30 seconds to allow for
+> drivers that are missing dependencies to have some time so that
+> the dependency may be loaded from userland after initcalls_done
+> is set.
+>
+> However, Yoshihiro Shimoda reported that on his device that
+> expects to have unmet dependencies (due to "optional links" in
+> its devicetree), was failing to mount the NFS root.
+>
+> In digging further, it seemed the problem was that while the
+> device properly probes after waiting 30 seconds for any missing
+> modules to load, the ip_auto_config() had already failed,
+> resulting in NFS to fail. This was due to ip_auto_config()
+> calling wait_for_device_probe() which doesn't wait for the
+> driver_deferred_probe_timeout to fire.
+>
+> This patch tries to fix the issue by creating a waitqueue
+> for the driver_deferred_probe_timeout, and calling wait_event()
+> to make sure driver_deferred_probe_timeout is zero in
+> wait_for_device_probe() to make sure all the probing is
+> finished.
+>
+> The downside to this solution is that kernel functionality that
+> uses wait_for_device_probe(), will block until the
+> driver_deferred_probe_timeout fires, regardless of if there is
+> any missing dependencies.
+>
+> However, the previous patch reverts the default timeout value to
+> zero, so this side-effect will only affect users who specify a
+> driver_deferred_probe_timeout= value as a boot argument, where
+> the additional delay would be beneficial to allow modules to
+> load later during boot.
+>
+> Thanks to Geert for chasing down that ip_auto_config was why NFS
+> was failing in this case!
+>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>
+> Cc: Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+> Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Cc: netdev <netdev@vger.kernel.org>
+> Cc: linux-pm@vger.kernel.org
+> Reported-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Tested-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Fixes: c8c43cee29f6 ("driver core: Fix driver_deferred_probe_check_state() logic")
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
 
-7.11 doesn't include register-level interface. It just talks about
-the general requirements on system software, endpoint device
-and its driver.
+Works fine with all four combinations (CONFIG_IPMMU_VMSA=y/n and
+CONFIG_MODULES=y/n)  on Renesas Salvator-X(S) with R-Car Gen3.
 
-Thanks
-Kevin
+Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-> 
-> This includes two parts:
->  - PATCH 1/7 ~ 3/7: refactor the qi_submit_sync() to support
->    multiple descriptors per submission which will be used by
->    PATCH 6/7.
->  - PATCH 4/7 ~ 7/7: add page request drain support after a
->    pasid entry is torn down due to an unbind operation.
-> 
-> Please help to review.
-> 
-> Best regards,
-> baolu
-> 
-> Change log:
->  v1->v2:
->   - Fix race between multiple prq handling threads
-> 
-> Lu Baolu (7):
->   iommu/vt-d: Refactor parameters for qi_submit_sync()
->   iommu/vt-d: Multiple descriptors per qi_submit_sync()
->   iommu/vt-d: debugfs: Add support to show inv queue internals
->   iommu/vt-d: Refactor prq_event_thread()
->   iommu/vt-d: Save prq descriptors in an internal list
->   iommu/vt-d: Add page request draining support
->   iommu/vt-d: Remove redundant IOTLB flush
-> 
->  drivers/iommu/dmar.c                |  63 +++--
->  drivers/iommu/intel-iommu-debugfs.c |  62 +++++
->  drivers/iommu/intel-pasid.c         |   4 +-
->  drivers/iommu/intel-svm.c           | 383 ++++++++++++++++++----------
->  drivers/iommu/intel_irq_remapping.c |   2 +-
->  include/linux/intel-iommu.h         |  12 +-
->  6 files changed, 369 insertions(+), 157 deletions(-)
-> 
-> --
-> 2.17.1
+Gr{oetje,eeting}s,
 
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
