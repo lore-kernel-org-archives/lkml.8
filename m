@@ -2,124 +2,97 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0020FC3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEB23C3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D03232078B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:16:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PQEZoTss"
+	by mail.kernel.org (Postfix) with ESMTP id CEBB02078B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:17:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393368AbgDOPQq (ORCPT
+        id S1414616AbgDOPRE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 11:16:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46224 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2393356AbgDOPQm (ORCPT
+        Wed, 15 Apr 2020 11:17:04 -0400
+Received: from m17618.mail.qiye.163.com ([59.111.176.18]:55441 "EHLO
+        m17618.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393356AbgDOPRB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 11:16:42 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40C0AC061A0F
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 08:16:42 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id j4so17521300qkc.11
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 08:16:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2qQPAGL2IMZ0eMjrwtJCIRCLqfeX6RhiXaeITvmueB4=;
-        b=PQEZoTsslxtO2VG1gZ9IEXJ+x1EGsPSa5w+d4wjTJVgOduX5sEJ6HZoJfJRBbXRsU9
-         EXHzIHgdRzFaKGGE+fT3peXwkYEIAHFi3cdXG68+ylSdKhZL8gWe9zBXPqhUeWc2cNdF
-         gsEt61yr3z2YAwQghdQbDx6ZcQjhSEnozaayKcy7LJF75jqkrlpPlsnvR009mnmOtVmq
-         rjYjjR2c7Z1XHNg9dZbS7hATI88O0Qk6m97LJX9sd2Ky24Y2RfKkcTujsfHYrgtSzudc
-         op08cFDcPhGoabbs8CyIn+yDkK6oWBZ58w+VvEJ/gPs6yUnaHhv7LTvRu4+UHccln//R
-         Fm6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2qQPAGL2IMZ0eMjrwtJCIRCLqfeX6RhiXaeITvmueB4=;
-        b=Au2IgUCszhwPR/ABUV6bVa8tDjt8aRnyurs9TF5JqYtHdTCDOptRyzbdQIJcyvNHHm
-         bNLj/VxtW0tcInCVfDt0rPCDzF2cSblv5RbcnOchmcrWnL4oC+/sf5clhsz+t/L0MMJy
-         pj6YPs0Dig1pxUJ0UYgSGt1ANIMJYJ+K44Cbu4ZEbR7Bp5LGq1evGrYRkzI5/BUwZtwq
-         fY9BH5oHdtPQ8o4oxSmwKt/wQeH+ak8acryifhRM4m9ahe8ewyr0YU9zfgU8sGKdtukM
-         MHyxB+pzI8R5nwDpJbBuddHK5SD2eXkjbVtmCLxlhKZSBxRfFkqQZ8Aq59bIxYKZPZGs
-         dUPw==
-X-Gm-Message-State: AGi0PuZAsMwQkT2Rk9wq5Qj9pxbAshLR+EgDCiBH0X+Kn+QNCbaYgLTw
-        GdUvrEInEz+jCO6Bh7SYlXOinz0XO14Aejltg4U+bw==
-X-Google-Smtp-Source: APiQypJF3rrWtTJifwbFr2yPhwI9Guj+09QRJ+ZSsnlVpgr82MOSMQpPk7+ZCYHIQZ3xMrt25PXwdxnh13N+LBZi64Q=
-X-Received: by 2002:a37:8d86:: with SMTP id p128mr27408591qkd.250.1586963800654;
- Wed, 15 Apr 2020 08:16:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <000000000000cb517b05a32c917b@google.com> <ed2b00dfda5b6ce46a2c2a33093ee56f77af6a8f.camel@sipsolutions.net>
-In-Reply-To: <ed2b00dfda5b6ce46a2c2a33093ee56f77af6a8f.camel@sipsolutions.net>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Wed, 15 Apr 2020 17:16:28 +0200
-Message-ID: <CACT4Y+YtT4_An1wtzNWe3_=kMAF3Yhj+pr=GM5ZYOJ9TN3ryXA@mail.gmail.com>
-Subject: Re: WARNING in hwsim_new_radio_nl
-To:     Johannes Berg <johannes@sipsolutions.net>,
-        syzkaller <syzkaller@googlegroups.com>
-Cc:     syzbot <syzbot+a4aee3f42d7584d76761@syzkaller.appspotmail.com>,
-        David Miller <davem@davemloft.net>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-wireless@vger.kernel.org, mathew.j.martineau@linux.intel.com,
-        matthieu.baerts@tessares.net, netdev <netdev@vger.kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 15 Apr 2020 11:17:01 -0400
+Received: from ubuntu.localdomain (unknown [58.251.74.226])
+        by m17618.mail.qiye.163.com (Hmail) with ESMTPA id 021814E16BB;
+        Wed, 15 Apr 2020 23:16:55 +0800 (CST)
+From:   Wang Wenhu <wenhu.wang@vivo.com>
+To:     bjorn.andersson@linaro.org
+Cc:     agross@kernel.org, gregkh@linuxfoundation.org, kernel@vivo.com,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, ohad@wizery.com,
+        rdunlap@infradead.org, wenhu.wang@vivo.com
+Subject: Re: [PATCH v3,0/3] drivers: rpmon: new driver Remote Processor Monitor
+Date:   Wed, 15 Apr 2020 08:16:49 -0700
+Message-Id: <20200415151649.122787-1-wenhu.wang@vivo.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200414225823.GH892431@yoga>
+References: <20200414225823.GH892431@yoga>
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSlVNTkNCQkJCSkJDQkpITVlXWShZQU
+        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PDY6MAw*PzgxKAgvETVNAy5L
+        Dg5PFBpVSlVKTkNNQk1IQ0pDT0xNVTMWGhIXVQweFRMOVQwaFRw7DRINFFUYFBZFWVdZEgtZQVlO
+        Q1VJTkpVTE9VSUlNWVdZCAFZQUhKSUI3Bg++
+X-HM-Tid: 0a717e6a1fab9376kuws021814e16bb
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 12:41 PM Johannes Berg
-<johannes@sipsolutions.net> wrote:
->
-> Hi syzbot keepers,
->
-> On Mon, 2020-04-13 at 07:05 -0700, syzbot wrote:
-> > syzbot has bisected this bug to:
-> >
-> > commit 01cacb00b35cb62b139f07d5f84bcf0eeda8eff6
-> > Author: Paolo Abeni <pabeni@redhat.com>
-> > Date:   Fri Mar 27 21:48:51 2020 +0000
-> >
-> >     mptcp: add netlink-based PM
-> >
-> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10225bb3e00000
->
-> This is, fairly obviously, incorrect. Same with the bisection for
-> 6693adf1698864d21734, which is really the same underlying problem as
-> this one (though at a different code site).
->
-> However, it stands out that this was bisected to a commit that adds a
-> new generic netlink family in both cases.
->
-> This makes sense - the reproducer identifies the family by *number*, but
-> that number isn't stable, generic netlink families should be identified
-> by *name*.
->
-> Perhaps somehow syzbot could be taught that, so that the bisection is
-> stable across kernels with different generic netlink families
-> registered?
->
-> Alternatively, we _could_ add some kind of stable ID mode, but I'm not
-> sure we really want to ... since that would mean people start hardcoding
-> IDs?
+Hi Bjorn,
+Mainly two aspects:
+ - Different message drivers modularly added to support different platforms.
+   Currently, RPMON_QMI is available, and further maybe mailbox or so.
+ - Different events to be notified and different actions to be taken out.
+   Currently, connection check action is available, and remote endpoint's
+   registeration event would be notified.
 
-+syzkaller mailing list
+I hope the Remote Porcessor Monitor would eventually do something more
+and be used by more users and platforms, and more actions and events
+would be added as enhancement. At the same time, it is better to support
+different SoC platforms. So I wrote the codes in kernel.
 
-Hi Johannes,
+Thanks,
+Wenhu
 
-syzkaller has a pseudo-syscall to map string genetlink family ID to
-int ID. If that syscall would have been used, then I assume it should
-have worked. However in this case, it managed to trigger the bug with
-a plain opaque blob with no knowledge about the blob contents
-whatsoever. I don't see any realistic way to preserve family ID in
-this case.
+>> Changes since v1:
+>>  - Addressed review comments from Randy
+>> Changes since v2:
+>>  - Added Cc list
+>>  - Commit log typo fixing
+>>  - Use the ARRAY_SIZE instead of calculations of multiple sizeof()
+>>  - Use micros for qmi message tly_type fields
+>> 
+>> Wang Wenhu (3):
+>>   driver: rpmon: new driver Remote Processor Monitor
+>>   driver: rpmon: qmi message version 01
+>>   driver: rpmon: add rpmon_qmi driver
+>> 
+>>  drivers/Kconfig                  |   2 +
+>>  drivers/Makefile                 |   1 +
+>>  drivers/rpmon/Kconfig            |  54 ++++
+>>  drivers/rpmon/Makefile           |   3 +
+>>  drivers/rpmon/rpmon.c            | 506 +++++++++++++++++++++++++++++++
+>>  drivers/rpmon/rpmon_qmi.c        | 431 ++++++++++++++++++++++++++
+>>  drivers/rpmon/rpmon_qmi.h        |  76 +++++
+>>  drivers/rpmon/rpmon_qmi_msg_v1.c | 258 ++++++++++++++++
+>>  include/linux/rpmon.h            |  68 +++++
+>>  9 files changed, 1399 insertions(+)
+>>  create mode 100644 drivers/rpmon/Kconfig
+>>  create mode 100644 drivers/rpmon/Makefile
+>>  create mode 100644 drivers/rpmon/rpmon.c
+>>  create mode 100644 drivers/rpmon/rpmon_qmi.c
+>>  create mode 100644 drivers/rpmon/rpmon_qmi.h
+>>  create mode 100644 drivers/rpmon/rpmon_qmi_msg_v1.c
+>>  create mode 100644 include/linux/rpmon.h
+>> 
+>> -- 
+>> 2.17.1
+>> 
