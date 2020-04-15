@@ -2,148 +2,259 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A56C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:15:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0955DC38A2B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:16:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E86720656
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:15:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D080820656
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:16:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="abQmF4Ft"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cpcikAIF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410330AbgDOQPq (ORCPT
+        id S1415476AbgDOQP6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 12:15:46 -0400
-Received: from mail-eopbgr700077.outbound.protection.outlook.com ([40.107.70.77]:38433
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1415208AbgDOQMW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 12:15:58 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:22294 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1415204AbgDOQMW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Apr 2020 12:12:22 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Iv+v3roAq2CxG1em9YkenbvLrO1QCzl4VM2GbhKrxGxOeywNYmw5H8qD+aTfcCzIPFT+oA4TgAu6gdRu4kO0FFktVRu5RSnxnOTHQtomjiFoZkRAqjhyX+jueh5bdXJmUeoCrwHXzDKyS6jUX3nauM3JRocJwFhQgHWBNA/h7YawkBTejDQ3zjXhRnWG4Hy+Neg2gJp1a0NTPpSMWO309OyE1AWQxy5P11OQMJqWfNqYLDwvh0bzlRql9/RLxfumetIfSrCZ5B+sGAyNm9CYBfOYFKAwzvsxIey1dtnMfwqmbcsla7q0K3yjETUu/fjtJxA4JBbN8jl4nSQvkpoNaw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bxulB34wil+80Clk2MTntwTOBSVESVKF8em79hHSyRA=;
- b=gjZRvSx1v7V0nInKsou2kLFcV/JTLwolWQSdGac8lplL0W6a3Yk3a3/RYJZWcTMZD8d+cUSukiOKTes0CBR+UYU+visAVl5oFk35jgYtZojCyNB+7qgJDDC3Na19Vzt6pgdn1he3jZHuf+tXSOBl5ZuMoIcJNvJbJq1LBM0PdufTfZSBbscjfxREDwlvbUfoT1F1jg85OpLet14SMVP7aOIyFrSYqvQHjIstpocMbVXJb+rIcEMmDfGCYmeBLreTN+ac9qwGeCZF+16L/BICEYYFn6vQm0pujhESQoSmb1h0PsfBCK+MHYE7t5sCWqsVHN+JgtRrjxgOmIfu83CsUg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
- dkim=pass header.d=silabs.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bxulB34wil+80Clk2MTntwTOBSVESVKF8em79hHSyRA=;
- b=abQmF4FtVdGncQt0iJsAhKuVkXbzRpMQPg3xUWYUymKzd1ib+MX6/Ln2v0AbRPmi06Jz19eJmHl09a+QaMl3uJu+gvufyCJmovbMiYb52m81ht4/3vcg0ZRzUvtOYOQ9VnQM8dRpjQwEVi691anxMVdRM3s5L7aHzUnX3oxJgiE=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Jerome.Pouiller@silabs.com; 
-Received: from MWHPR11MB1775.namprd11.prod.outlook.com (2603:10b6:300:10e::14)
- by MWHPR11MB1408.namprd11.prod.outlook.com (2603:10b6:300:24::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.25; Wed, 15 Apr
- 2020 16:12:18 +0000
-Received: from MWHPR11MB1775.namprd11.prod.outlook.com
- ([fe80::81d5:b62b:3770:ffbe]) by MWHPR11MB1775.namprd11.prod.outlook.com
- ([fe80::81d5:b62b:3770:ffbe%10]) with mapi id 15.20.2921.024; Wed, 15 Apr
- 2020 16:12:18 +0000
-From:   Jerome Pouiller <Jerome.Pouiller@silabs.com>
-To:     devel@driverdev.osuosl.org, linux-wireless@vger.kernel.org
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= 
-        <jerome.pouiller@silabs.com>
-Subject: [PATCH 03/20] staging: wfx: rework wfx_configure_filter()
-Date:   Wed, 15 Apr 2020 18:11:30 +0200
-Message-Id: <20200415161147.69738-4-Jerome.Pouiller@silabs.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200415161147.69738-1-Jerome.Pouiller@silabs.com>
-References: <20200415161147.69738-1-Jerome.Pouiller@silabs.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
-X-ClientProxiedBy: PR1PR01CA0027.eurprd01.prod.exchangelabs.com
- (2603:10a6:102::40) To MWHPR11MB1775.namprd11.prod.outlook.com
- (2603:10b6:300:10e::14)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586967139;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Mv9YA2m75EYzFmUAbMrQPFP314ZNb88wltZTyC27b4E=;
+        b=cpcikAIF+WAZTycGsL1kPI3h2cB6IT0MFReH5pJj1pPEgUf4X3zfiqmwpTg9VOg6meDUXo
+        krsrV2zmjhzieTneBFeE3TQCx/d/ccaSziKQwKX+Q6dlLNulOKLIK7lVScSOft+33EiAs7
+        yRT26Idsu9MAypTS6AOvtqA79qkWxJk=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-198--dwTOcnQPbKq4opoet4Ogw-1; Wed, 15 Apr 2020 12:12:14 -0400
+X-MC-Unique: -dwTOcnQPbKq4opoet4Ogw-1
+Received: by mail-qt1-f198.google.com with SMTP id n89so16246268qte.15
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 09:12:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Mv9YA2m75EYzFmUAbMrQPFP314ZNb88wltZTyC27b4E=;
+        b=CkkGp/ibc+r3duZHKIr7lLMa2v73dqBTbjt06Jkn6lTJvt6DoEkI3l0t01Gg/RnY2K
+         hPy6wfHtP1UxkdzvYMhcK2xt2F08Q/bXZ7YWuWz8DhpxFXMIbQSCzNquJf28iTr9gSDI
+         3goQC+Lc49S6A7egBIqw3AT99hzHLEakJpol5ryfQuCij9JoSBTGVtv0xPRczCVcPRx/
+         YlBmHqcojYJ7aZOfCY4fo19W/JWv/BdwHPy+fx3UBLFyPP9zIqeRX1eAPo/EBEuqwhrh
+         h7JiYDqmyASEgNtTeXyOJgINUZxN1Rk+nfiiC4XQ9HD2OO5x7WXDXgDiGaL0ODJVO0DG
+         srQw==
+X-Gm-Message-State: AGi0Puboaedq/H+dI8+iPsg4DTP3UegZCccWn2Lzwy93CUZKGKvdHT1y
+        TYivBEiydxF8fE0JnqSF/jAsOIVirdQAyUpcd4zB0+fk4RDLG7u+WqFNCn90EV5hu/aNbSn3lJb
+        Qg1yeX3Ol+ypSndRM9AC03EdB5aPIeyO9KrY7jBIb
+X-Received: by 2002:a37:9b0f:: with SMTP id d15mr15707293qke.62.1586967131510;
+        Wed, 15 Apr 2020 09:12:11 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLoETwcvu72/DFo++b6OpDCehy7qLAHOH0i0rvrjp7Z+YqxMfS+Eb/JmjOkhPMj+ZIQVxJAZa62zL5VHxYGGyU=
+X-Received: by 2002:a37:9b0f:: with SMTP id d15mr15707269qke.62.1586967131214;
+ Wed, 15 Apr 2020 09:12:11 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from pc-42.home (2a01:e35:2435:66a0:544b:f17b:7ae8:fb7) by PR1PR01CA0027.eurprd01.prod.exchangelabs.com (2603:10a6:102::40) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.25 via Frontend Transport; Wed, 15 Apr 2020 16:12:15 +0000
-X-Mailer: git-send-email 2.25.1
-X-Originating-IP: [2a01:e35:2435:66a0:544b:f17b:7ae8:fb7]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 8bcf12df-12b1-474e-2b9d-08d7e157c529
-X-MS-TrafficTypeDiagnostic: MWHPR11MB1408:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MWHPR11MB1408F80691AED952593DDB0393DB0@MWHPR11MB1408.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:873;
-X-Forefront-PRVS: 0374433C81
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB1775.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(136003)(396003)(376002)(346002)(39850400004)(366004)(8886007)(8936002)(5660300002)(2906002)(6666004)(86362001)(8676002)(478600001)(81156014)(66574012)(1076003)(4326008)(52116002)(316002)(54906003)(107886003)(186003)(16526019)(66556008)(66476007)(36756003)(2616005)(6512007)(6486002)(6506007)(66946007);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: silabs.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 3jW8jBz2bc3zjS7i30fOOJKmxbe40tKGxhDT2INm46/CvzL5hmlh3Yi31lNhJDTrRit3eqTRitWjBZLvNbc2/uCWxRsXKLuQ9MGp1RDpLbSme6WpRuBX9Um/9yPCchZIaIwUWopNd0SmC3SyAlP+A0mFiYJDxbIC9sth/aDzgwmrQnS8DdnkfS42nKfgNx25p6IExMpC9FFSwlggduz0mf4gv+SbjFgjD8Efel2C+EVdYJoepRnLPkGEzi0FtWa0gkP9ZTI+Pwclc0G/CnDNewNUqMtO2cH4gBWDbtJ4bszDOQjANINS4rprxJUAtQS2oaQeSD+pLPC3n2r5/eHKjbMBGlxqFY2VtwmXSkpIwVrngXE9OPoJL3l3RZx6669hV92clr8uLI4uV3/OS/XnCxj/cTA4wlcFVKuQskPkwxmH5O10WUBrGh/QlZnROzFV
-X-MS-Exchange-AntiSpam-MessageData: mnGDHs53Gvntec9HGDU3dQuM+0jYy/8e9t/LV/vkTlOieokFL1aTkxYdxQJj249JrSL3Q3TV8S06qe5IfEg9SWh+GgCIPKzlIOCKzKIEya3bqO0e73vACN6+to1mW0VQ98xtShBJC/gNiglCe6AnaahdDqw89yzkdjGkZeuHBmAEkCRNHmcp0hex+V9by5PeVkFQeJuBblwjDR4RW4grRA==
-X-OriginatorOrg: silabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8bcf12df-12b1-474e-2b9d-08d7e157c529
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2020 16:12:18.6646
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 54dbd822-5231-4b20-944d-6f4abcd541fb
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: eCeFJX0oHHdaL95xgoQMdEovtvEBtEiOh22nJrHM8bQsjQb+6JgyUb4No4b6qduGD721s5nAW2HUAAybLCGp7Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1408
+References: <20200415113445.11881-1-sashal@kernel.org> <20200415113445.11881-84-sashal@kernel.org>
+In-Reply-To: <20200415113445.11881-84-sashal@kernel.org>
+From:   Karol Herbst <kherbst@redhat.com>
+Date:   Wed, 15 Apr 2020 18:11:10 +0200
+Message-ID: <CACO55ttpvfoyt1p_5Y-Q1=+5NruF5kMoug85jE9y+jG+FW=HGw@mail.gmail.com>
+Subject: Re: [PATCH AUTOSEL 5.6 084/129] drm/nouveau: workaround runpm fail by
+ disabling PCI power management on certain intel bridges
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lyude Paul <lyude@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Mika Westerberg <mika.westerberg@intel.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        Ben Skeggs <bskeggs@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogSsOpcsO0bWUgUG91aWxsZXIgPGplcm9tZS5wb3VpbGxlckBzaWxhYnMuY29tPgoKd2Z4
-X2NvbmZpZ3VyZV9maWx0ZXIoKSBsYWNrcyBvZiBjb2hlcmVuY3kuIEluIGFkZCwgc29tZSBjb3Ju
-ZXIgY2FzZXMKc2VlbXMgdG8gbm90IGJlZW4gaGFuZGxlZCBwcm9wZXJseS4gUmV3b3JrIHRoZSB3
-aG9sZSBmdW5jdGlvbigpLgoKU2lnbmVkLW9mZi1ieTogSsOpcsO0bWUgUG91aWxsZXIgPGplcm9t
-ZS5wb3VpbGxlckBzaWxhYnMuY29tPgotLS0KIGRyaXZlcnMvc3RhZ2luZy93Zngvc3RhLmMgfCA0
-MSArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKystLS0tLS0KIDEgZmlsZSBjaGFuZ2Vk
-LCAzNSBpbnNlcnRpb25zKCspLCA2IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-c3RhZ2luZy93Zngvc3RhLmMgYi9kcml2ZXJzL3N0YWdpbmcvd2Z4L3N0YS5jCmluZGV4IDE0ZTJm
-MTA2YjA0Mi4uZWM5NDljZTBiMjU2IDEwMDY0NAotLS0gYS9kcml2ZXJzL3N0YWdpbmcvd2Z4L3N0
-YS5jCisrKyBiL2RyaXZlcnMvc3RhZ2luZy93Zngvc3RhLmMKQEAgLTIwMyw3ICsyMDMsNiBAQCB1
-NjQgd2Z4X3ByZXBhcmVfbXVsdGljYXN0KHN0cnVjdCBpZWVlODAyMTFfaHcgKmh3LAogCQkJCQlo
-YS0+YWRkcik7CiAJCQlpKys7CiAJCX0KLQkJd3ZpZi0+bWNhc3RfZmlsdGVyLmVuYWJsZSA9IHRy
-dWU7CiAJCXd2aWYtPm1jYXN0X2ZpbHRlci5udW1fYWRkcmVzc2VzID0gY291bnQ7CiAJfQogCkBA
-IC0yMTgsMTYgKzIxNyw0NiBAQCB2b2lkIHdmeF9jb25maWd1cmVfZmlsdGVyKHN0cnVjdCBpZWVl
-ODAyMTFfaHcgKmh3LAogCXN0cnVjdCB3ZnhfdmlmICp3dmlmID0gTlVMTDsKIAlzdHJ1Y3Qgd2Z4
-X2RldiAqd2RldiA9IGh3LT5wcml2OwogCi0JKnRvdGFsX2ZsYWdzICY9IEZJRl9PVEhFUl9CU1Mg
-fCBGSUZfRkNTRkFJTCB8IEZJRl9QUk9CRV9SRVE7CisJLy8gTm90ZXM6CisJLy8gICAtIFByb2Jl
-IHJlc3BvbnNlcyAoRklGX0JDTl9QUkJSRVNQX1BST01JU0MpIGFyZSBuZXZlciBmaWx0ZXJlZAor
-CS8vICAgLSBQUy1Qb2xsIChGSUZfUFNQT0xMKSBhcmUgbmV2ZXIgZmlsdGVyZWQKKwkvLyAgIC0g
-UlRTLCBDVFMgYW5kIEFjayAoRklGX0NPTlRST0wpIGFyZSBhbHdheXMgZmlsdGVyZWQKKwkvLyAg
-IC0gQnJva2VuIGZyYW1lcyAoRklGX0ZDU0ZBSUwgYW5kIEZJRl9QTENQRkFJTCkgYXJlIGFsd2F5
-cyBmaWx0ZXJlZAorCS8vICAgLSBGaXJtd2FyZSBkb2VzICh5ZXQpIGFsbG93IHRvIGZvcndhcmQg
-dW5pY2FzdCB0cmFmZmljIHNlbnQgdG8KKwkvLyAgICAgb3RoZXIgc3RhdGlvbnMgKGFrYS4gcHJv
-bWlzY3VvdXMgbW9kZSkKKwkqdG90YWxfZmxhZ3MgJj0gRklGX0JDTl9QUkJSRVNQX1BST01JU0Mg
-fCBGSUZfQUxMTVVMVEkgfCBGSUZfT1RIRVJfQlNTIHwKKwkJCUZJRl9QUk9CRV9SRVEgfCBGSUZf
-UFNQT0xMOwogCiAJbXV0ZXhfbG9jaygmd2Rldi0+Y29uZl9tdXRleCk7CiAJd2hpbGUgKCh3dmlm
-ID0gd3ZpZl9pdGVyYXRlKHdkZXYsIHd2aWYpKSAhPSBOVUxMKSB7CiAJCW11dGV4X2xvY2soJnd2
-aWYtPnNjYW5fbG9jayk7Ci0JCXd2aWYtPmZpbHRlcl9ic3NpZCA9ICgqdG90YWxfZmxhZ3MgJgot
-CQkJCSAgICAgIChGSUZfT1RIRVJfQlNTIHwgRklGX1BST0JFX1JFUSkpID8gMCA6IDE7Ci0JCXd2
-aWYtPmRpc2FibGVfYmVhY29uX2ZpbHRlciA9ICEoKnRvdGFsX2ZsYWdzICYgRklGX1BST0JFX1JF
-USk7Ci0JCXdmeF9md2RfcHJvYmVfcmVxKHd2aWYsIHRydWUpOworCisJCS8vIE5vdGU6IEZJRl9C
-Q05fUFJCUkVTUF9QUk9NSVNDIGNvdmVycyBwcm9iZSByZXNwb25zZSBhbmQKKwkJLy8gYmVhY29u
-cyBmcm9tIG90aGVyIEJTUworCQlpZiAoKnRvdGFsX2ZsYWdzICYgRklGX0JDTl9QUkJSRVNQX1BS
-T01JU0MpCisJCQl3dmlmLT5kaXNhYmxlX2JlYWNvbl9maWx0ZXIgPSB0cnVlOworCQllbHNlCisJ
-CQl3dmlmLT5kaXNhYmxlX2JlYWNvbl9maWx0ZXIgPSBmYWxzZTsKKworCQlpZiAoKnRvdGFsX2Zs
-YWdzICYgRklGX0FMTE1VTFRJKSB7CisJCQl3dmlmLT5tY2FzdF9maWx0ZXIuZW5hYmxlID0gZmFs
-c2U7CisJCX0gZWxzZSBpZiAoIXd2aWYtPm1jYXN0X2ZpbHRlci5udW1fYWRkcmVzc2VzKSB7CisJ
-CQlkZXZfZGJnKHdkZXYtPmRldiwgImRpc2FibGluZyB1bmNvbmZpZ3VyZWQgbXVsdGljYXN0IGZp
-bHRlciIpOworCQkJd3ZpZi0+bWNhc3RfZmlsdGVyLmVuYWJsZSA9IGZhbHNlOworCQl9IGVsc2Ug
-eworCQkJd3ZpZi0+bWNhc3RfZmlsdGVyLmVuYWJsZSA9IHRydWU7CisJCX0KIAkJd2Z4X3VwZGF0
-ZV9maWx0ZXJpbmcod3ZpZik7CisKKwkJaWYgKCp0b3RhbF9mbGFncyAmIEZJRl9PVEhFUl9CU1Mp
-CisJCQl3dmlmLT5maWx0ZXJfYnNzaWQgPSBmYWxzZTsKKwkJZWxzZQorCQkJd3ZpZi0+ZmlsdGVy
-X2Jzc2lkID0gdHJ1ZTsKKworCQlpZiAoKnRvdGFsX2ZsYWdzICYgRklGX1BST0JFX1JFUSkKKwkJ
-CXdmeF9md2RfcHJvYmVfcmVxKHd2aWYsIHRydWUpOworCQllbHNlCisJCQl3ZnhfZndkX3Byb2Jl
-X3JlcSh3dmlmLCBmYWxzZSk7CiAJCW11dGV4X3VubG9jaygmd3ZpZi0+c2Nhbl9sb2NrKTsKIAl9
-CiAJbXV0ZXhfdW5sb2NrKCZ3ZGV2LT5jb25mX211dGV4KTsKLS0gCjIuMjUuMQoK
+in addition to that 028a12f5aa829 "drm/nouveau/gr/gp107,gp108:
+implement workaround for HW hanging during init" should probably get
+picked as well as it's fixing some runtime pm related issue on a
+handful of additional GPUs. I have a laptop myself which requires both
+of those patches.
+
+Applies to 5.5 and 5..4 as well.
+
+And both commits should probably get applied to older trees as well.
+but I didn't get to it yet to see if they apply and work as expected.
+
+
+On Wed, Apr 15, 2020 at 1:36 PM Sasha Levin <sashal@kernel.org> wrote:
+>
+> From: Karol Herbst <kherbst@redhat.com>
+>
+> [ Upstream commit 434fdb51513bf3057ac144d152e6f2f2b509e857 ]
+>
+> Fixes the infamous 'runtime PM' bug many users are facing on Laptops with
+> Nvidia Pascal GPUs by skipping said PCI power state changes on the GPU.
+>
+> Depending on the used kernel there might be messages like those in demsg:
+>
+> "nouveau 0000:01:00.0: Refused to change power state, currently in D3"
+> "nouveau 0000:01:00.0: can't change power state from D3cold to D0 (config
+> space inaccessible)"
+> followed by backtraces of kernel crashes or timeouts within nouveau.
+>
+> It's still unkown why this issue exists, but this is a reliable workaroun=
+d
+> and solves a very annoying issue for user having to choose between a
+> crashing kernel or higher power consumption of their Laptops.
+>
+> Signed-off-by: Karol Herbst <kherbst@redhat.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Lyude Paul <lyude@redhat.com>
+> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+> Cc: Mika Westerberg <mika.westerberg@intel.com>
+> Cc: linux-pci@vger.kernel.org
+> Cc: linux-pm@vger.kernel.org
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: nouveau@lists.freedesktop.org
+> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=3D205623
+> Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  drivers/gpu/drm/nouveau/nouveau_drm.c | 63 +++++++++++++++++++++++++++
+>  drivers/gpu/drm/nouveau/nouveau_drv.h |  2 +
+>  2 files changed, 65 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/nouveau/nouveau_drm.c b/drivers/gpu/drm/nouv=
+eau/nouveau_drm.c
+> index b65ae817eabf5..2d4c899e1f8b9 100644
+> --- a/drivers/gpu/drm/nouveau/nouveau_drm.c
+> +++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
+> @@ -618,6 +618,64 @@ nouveau_drm_device_fini(struct drm_device *dev)
+>         kfree(drm);
+>  }
+>
+> +/*
+> + * On some Intel PCIe bridge controllers doing a
+> + * D0 -> D3hot -> D3cold -> D0 sequence causes Nvidia GPUs to not reappe=
+ar.
+> + * Skipping the intermediate D3hot step seems to make it work again. Thi=
+s is
+> + * probably caused by not meeting the expectation the involved AML code =
+has
+> + * when the GPU is put into D3hot state before invoking it.
+> + *
+> + * This leads to various manifestations of this issue:
+> + *  - AML code execution to power on the GPU hits an infinite loop (as t=
+he
+> + *    code waits on device memory to change).
+> + *  - kernel crashes, as all PCI reads return -1, which most code isn't =
+able
+> + *    to handle well enough.
+> + *
+> + * In all cases dmesg will contain at least one line like this:
+> + * 'nouveau 0000:01:00.0: Refused to change power state, currently in D3=
+'
+> + * followed by a lot of nouveau timeouts.
+> + *
+> + * In the \_SB.PCI0.PEG0.PG00._OFF code deeper down writes bit 0x80 to t=
+he not
+> + * documented PCI config space register 0x248 of the Intel PCIe bridge
+> + * controller (0x1901) in order to change the state of the PCIe link bet=
+ween
+> + * the PCIe port and the GPU. There are alternative code paths using oth=
+er
+> + * registers, which seem to work fine (executed pre Windows 8):
+> + *  - 0xbc bit 0x20 (publicly available documentation claims 'reserved')
+> + *  - 0xb0 bit 0x10 (link disable)
+> + * Changing the conditions inside the firmware by poking into the releva=
+nt
+> + * addresses does resolve the issue, but it seemed to be ACPI private me=
+mory
+> + * and not any device accessible memory at all, so there is no portable =
+way of
+> + * changing the conditions.
+> + * On a XPS 9560 that means bits [0,3] on \CPEX need to be cleared.
+> + *
+> + * The only systems where this behavior can be seen are hybrid graphics =
+laptops
+> + * with a secondary Nvidia Maxwell, Pascal or Turing GPU. It's unclear w=
+hether
+> + * this issue only occurs in combination with listed Intel PCIe bridge
+> + * controllers and the mentioned GPUs or other devices as well.
+> + *
+> + * documentation on the PCIe bridge controller can be found in the
+> + * "7th Generation Intel=C2=AE Processor Families for H Platforms Datash=
+eet Volume 2"
+> + * Section "12 PCI Express* Controller (x16) Registers"
+> + */
+> +
+> +static void quirk_broken_nv_runpm(struct pci_dev *pdev)
+> +{
+> +       struct drm_device *dev =3D pci_get_drvdata(pdev);
+> +       struct nouveau_drm *drm =3D nouveau_drm(dev);
+> +       struct pci_dev *bridge =3D pci_upstream_bridge(pdev);
+> +
+> +       if (!bridge || bridge->vendor !=3D PCI_VENDOR_ID_INTEL)
+> +               return;
+> +
+> +       switch (bridge->device) {
+> +       case 0x1901:
+> +               drm->old_pm_cap =3D pdev->pm_cap;
+> +               pdev->pm_cap =3D 0;
+> +               NV_INFO(drm, "Disabling PCI power management to avoid bug=
+\n");
+> +               break;
+> +       }
+> +}
+> +
+>  static int nouveau_drm_probe(struct pci_dev *pdev,
+>                              const struct pci_device_id *pent)
+>  {
+> @@ -699,6 +757,7 @@ static int nouveau_drm_probe(struct pci_dev *pdev,
+>         if (ret)
+>                 goto fail_drm_dev_init;
+>
+> +       quirk_broken_nv_runpm(pdev);
+>         return 0;
+>
+>  fail_drm_dev_init:
+> @@ -734,7 +793,11 @@ static void
+>  nouveau_drm_remove(struct pci_dev *pdev)
+>  {
+>         struct drm_device *dev =3D pci_get_drvdata(pdev);
+> +       struct nouveau_drm *drm =3D nouveau_drm(dev);
+>
+> +       /* revert our workaround */
+> +       if (drm->old_pm_cap)
+> +               pdev->pm_cap =3D drm->old_pm_cap;
+>         nouveau_drm_device_remove(dev);
+>         pci_disable_device(pdev);
+>  }
+> diff --git a/drivers/gpu/drm/nouveau/nouveau_drv.h b/drivers/gpu/drm/nouv=
+eau/nouveau_drv.h
+> index c2c332fbde979..2a6519737800c 100644
+> --- a/drivers/gpu/drm/nouveau/nouveau_drv.h
+> +++ b/drivers/gpu/drm/nouveau/nouveau_drv.h
+> @@ -140,6 +140,8 @@ struct nouveau_drm {
+>
+>         struct list_head clients;
+>
+> +       u8 old_pm_cap;
+> +
+>         struct {
+>                 struct agp_bridge_data *bridge;
+>                 u32 base;
+> --
+> 2.20.1
+>
+
