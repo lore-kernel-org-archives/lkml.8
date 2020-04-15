@@ -2,426 +2,101 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 085BDC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:23:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D58FC3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:24:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC24F20771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:23:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="NKrIbRq+"
+	by mail.kernel.org (Postfix) with ESMTP id 3BAD120768
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:24:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586942671;
+	bh=LS0uQLnHMVy4AMxkdi2AlWnlRLFdbw8UiT5yCRx/SjQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=m9XPvbrLLSwdDzMt2J3DlZ2XRYWwK7Zut2WSLR2GxxGrpEvCFPrc2nb+qHrtCSioM
+	 aJ0OU/beI8ZOphxKkjrH7mDjOxNGo4MCsxz6Gjfxw6/k7/RTOghMvhYSnSpNKk9ryF
+	 plT0j45zfVGEJOhmz6NXJuZ/hde0x+rsHar/zHLs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895433AbgDOJXn (ORCPT
+        id S2895452AbgDOJY3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 05:23:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47764 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2895415AbgDOJXR (ORCPT
+        Wed, 15 Apr 2020 05:24:29 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:37026 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2895441AbgDOJYV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 05:23:17 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41273C03C1A8
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 02:23:17 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id x18so13948478wrq.2
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 02:23:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=CApeDRpcs9y+uCevURcB1yZFuinPxngxdJkSfuMz9fI=;
-        b=NKrIbRq+Wjezmr4hGGzkZpN7sVNcX9hTOeTpauatjwswGyGUwAucUfTAcxCJEY7R4+
-         4UDL3a84Z/nVeY6XG7YFk5EoywqreuFus1NBx9+FCmFBYhySzc1fBNxLK83LZx3496kn
-         6sX3xXbD+rIFWqkd7lFfblpfgQYXR+DjNb0lVVHfsOq5rfb0yPVAqD7vDUuFrnkhA6CT
-         1MlcL9QyKapIokjGT+lcxUB3OpMd91/1kOEe786QoMCuwL+lRMiFA7F09fVCHkRA9ecr
-         eAweQmxTWpnEP6yoBBj9fwyhjxnh3NKMzN3+CWXbR5fYwxeK2BBznIigWk4Xf92eIEal
-         N3qA==
+        Wed, 15 Apr 2020 05:24:21 -0400
+Received: by mail-oi1-f195.google.com with SMTP id r25so3058376oij.4;
+        Wed, 15 Apr 2020 02:24:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=CApeDRpcs9y+uCevURcB1yZFuinPxngxdJkSfuMz9fI=;
-        b=X3y1joHY//EnIx+vWpsqpaKWpKBrlhXyIaC60GcfJBPid5rF+hX9a+a7PM4/ZhgHCq
-         k4mTkb4pd46DSrmpMbLT9wV3w9kWipZByCf+ZtmDhcrUX0R/Ic8vSkPTJ1dHV+nN3Cu+
-         F5HqmX+xMOlfZQUwyuWlKf7YXTIoF15QtyEvB+wRUTJGB7eO13utqmlJtesKLpw8PWqe
-         9rKirhOfqWmuV4GyHlr2kX9pVQRdcQY40aepIHygMv5LwENXDCAiRfPOxZp8YHGQQGra
-         0txRSJLJ9c9aAi1U89F4ZycvAaGPjzUFADJNBzdnKXpp0UcFxdYLVU8OduXj4lDluqOM
-         mt+w==
-X-Gm-Message-State: AGi0PuYGLF/M7X1O8OK3ySs/LXVQfC9vOGAajlI9e4lxsYgPD0jmTirY
-        8blQMBxdHSnRTiszoCHR+lWc
-X-Google-Smtp-Source: APiQypKcLuWvxFyyKt6DFypvvMYHNC8RQewVp4BQXCKk/0ksMREsq+z9FQ9ZdPdI1/arknLfPX98DQ==
-X-Received: by 2002:adf:ff82:: with SMTP id j2mr16670188wrr.96.1586942595693;
-        Wed, 15 Apr 2020 02:23:15 -0700 (PDT)
-Received: from dkxps.fkb.profitbricks.net (dslb-002-204-231-072.002.204.pools.vodafone-ip.de. [2.204.231.72])
-        by smtp.gmail.com with ESMTPSA id v7sm22534615wmg.3.2020.04.15.02.23.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2020 02:23:15 -0700 (PDT)
-From:   Danil Kipnis <danil.kipnis@cloud.ionos.com>
-To:     linux-block@vger.kernel.org, linux-rdma@vger.kernel.org
-Cc:     axboe@kernel.dk, hch@infradead.org, sagi@grimberg.me,
-        bvanassche@acm.org, leon@kernel.org, dledford@redhat.com,
-        jgg@ziepe.ca, danil.kipnis@cloud.ionos.com,
-        jinpu.wang@cloud.ionos.com, pankaj.gupta@cloud.ionos.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v12 24/25] block/rnbd: a bit of documentation
-Date:   Wed, 15 Apr 2020 11:20:44 +0200
-Message-Id: <20200415092045.4729-25-danil.kipnis@cloud.ionos.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415092045.4729-1-danil.kipnis@cloud.ionos.com>
-References: <20200415092045.4729-1-danil.kipnis@cloud.ionos.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PeBwwUHexbq/B0mllpXl205PmqHG/3tGbcfB95WXpZk=;
+        b=IWlILqMAoTKQSWSI8IDWMp6nVligMUztlOrGi0xClI07bE/qiBqpScu11d6QwI7hLT
+         UzwElrqEz5Cez2IehCwiejPGUSRczWvUGxjEmGrqO5MCnzptk6vJUfol8YT6yCL/jaIL
+         2IbAQnZsZVbxeOOZsA7ocEPp7KeaJsGeReC2MsQryWwlrQyztN8DV/DnsDlO5N8pK5w/
+         tIiyzP2XElF9eIOOIdtC/mM3i/LT0Z3gTH3j8ZQKHsUDyv5kU14E8T/RX46l6mDztMFD
+         FQ8T2/OGJcGs5gKJ5P8rm3VozfKuu8HQ5Dx1J2BYM06/fwD+OsjRBsQWjcZqwOHfqwbC
+         F0IA==
+X-Gm-Message-State: AGi0PuaPiwbjl7p2vW85Ay8h1lRCkPw8mfjm45IkIxtCECdN8k3MyyeY
+        YPdFoNKnlOX059X4ZU31TBCPLH2F9+v1h181dYY=
+X-Google-Smtp-Source: APiQypJZrPtk9CTp5eBsivxylrSi0zfKsT9ogsSyvEIjXIEYZWQOgAkgP4CZqwUp9bBm3A0h4TeoQrnfXPtaDIa1khU=
+X-Received: by 2002:a05:6808:81:: with SMTP id s1mr559297oic.68.1586942660307;
+ Wed, 15 Apr 2020 02:24:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200415084933.6251-1-yanaijie@huawei.com>
+In-Reply-To: <20200415084933.6251-1-yanaijie@huawei.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 15 Apr 2020 11:24:09 +0200
+Message-ID: <CAJZ5v0ie67VHR40GjHnnAmW3fnO0V3ypLvsy9HSnq9_zR1bEMA@mail.gmail.com>
+Subject: Re: [PATCH] ACPICA: make acpi_protocol_lengths static
+To:     Jason Yan <yanaijie@huawei.com>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>
+Cc:     Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Len Brown <lenb@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hulk Robot <hulkci@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jack Wang <jinpu.wang@cloud.ionos.com>
+On Wed, Apr 15, 2020 at 10:23 AM Jason Yan <yanaijie@huawei.com> wrote:
+>
+> Fix the following sparse warning:
+>
+> drivers/acpi/acpica/exfield.c:25:10: warning: symbol
+> 'acpi_protocol_lengths' was not declared. Should it be static?
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
 
-README with description of major sysfs entries, sysfs documentation
-are moved to ABI dir as Bart suggested.
+Erik, Bob, this one is yours. :-)
 
-Signed-off-by: Danil Kipnis <danil.kipnis@cloud.ionos.com>
-Signed-off-by: Jack Wang <jinpu.wang@cloud.ionos.com>
-Cc: linux-kernel@vger.kernel.org
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
----
- Documentation/ABI/testing/sysfs-block-rnbd    |  46 ++++++++
- .../ABI/testing/sysfs-class-rnbd-client       | 111 ++++++++++++++++++
- .../ABI/testing/sysfs-class-rnbd-server       |  50 ++++++++
- drivers/block/rnbd/README                     |  92 +++++++++++++++
- 4 files changed, 299 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-block-rnbd
- create mode 100644 Documentation/ABI/testing/sysfs-class-rnbd-client
- create mode 100644 Documentation/ABI/testing/sysfs-class-rnbd-server
- create mode 100644 drivers/block/rnbd/README
-
-diff --git a/Documentation/ABI/testing/sysfs-block-rnbd b/Documentation/ABI/testing/sysfs-block-rnbd
-new file mode 100644
-index 000000000000..8f070b47f361
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-block-rnbd
-@@ -0,0 +1,46 @@
-+What:		/sys/block/rnbd<N>/rnbd/unmap_device
-+Date:		Feb 2020
-+KernelVersion:	5.7
-+Contact:	Jack Wang <jinpu.wang@cloud.ionos.com> Danil Kipnis <danil.kipnis@cloud.ionos.com>
-+Description:	To unmap a volume, "normal" or "force" has to be written to:
-+		/sys/block/rnbd<N>/rnbd/unmap_device
-+
-+		When "normal" is used, the operation will fail with EBUSY if any process
-+		is using the device.  When "force" is used, the device is also unmapped
-+		when device is in use.  All I/Os that are in progress will fail.
-+
-+		Example:
-+
-+		# echo "normal" > /sys/block/rnbd0/rnbd/unmap_device
-+
-+What:		/sys/block/rnbd<N>/rnbd/state
-+Date:		Feb 2020
-+KernelVersion:	5.7
-+Contact:	Jack Wang <jinpu.wang@cloud.ionos.com> Danil Kipnis <danil.kipnis@cloud.ionos.com>
-+Description:	The file contains the current state of the block device. The state file
-+		returns "open" when the device is successfully mapped from the server
-+		and accepting I/O requests. When the connection to the server gets
-+		disconnected in case of an error (e.g. link failure), the state file
-+		returns "closed" and all I/O requests submitted to it will fail with -EIO.
-+
-+What:		/sys/block/rnbd<N>/rnbd/session
-+Date:		Feb 2020
-+KernelVersion:	5.7
-+Contact:	Jack Wang <jinpu.wang@cloud.ionos.com> Danil Kipnis <danil.kipnis@cloud.ionos.com>
-+Description:	RNBD uses RTRS session to transport the data between client and
-+		server.  The entry "session" contains the name of the session, that
-+		was used to establish the RTRS session.  It's the same name that
-+		was passed as server parameter to the map_device entry.
-+
-+What:		/sys/block/rnbd<N>/rnbd/mapping_path
-+Date:		Feb 2020
-+KernelVersion:	5.7
-+Contact:	Jack Wang <jinpu.wang@cloud.ionos.com> Danil Kipnis <danil.kipnis@cloud.ionos.com>
-+Description:	Contains the path that was passed as "device_path" to the map_device
-+		operation.
-+
-+What:		/sys/block/rnbd<N>/rnbd/access_mode
-+Date:		Feb 2020
-+KernelVersion:	5.7
-+Contact:	Jack Wang <jinpu.wang@cloud.ionos.com> Danil Kipnis <danil.kipnis@cloud.ionos.com>
-+Description:	Contains the device access mode: ro, rw or migration.
-diff --git a/Documentation/ABI/testing/sysfs-class-rnbd-client b/Documentation/ABI/testing/sysfs-class-rnbd-client
-new file mode 100644
-index 000000000000..c084f203b41e
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-class-rnbd-client
-@@ -0,0 +1,111 @@
-+What:		/sys/class/rnbd-client
-+Date:		Feb 2020
-+KernelVersion:	5.7
-+Contact:	Jack Wang <jinpu.wang@cloud.ionos.com> Danil Kipnis <danil.kipnis@cloud.ionos.com>
-+Description:	Provide information about RNBD-client.
-+		All sysfs files that are not read-only provide the usage information on read:
-+
-+		Example:
-+		# cat /sys/class/rnbd-client/ctl/map_device
-+
-+		> Usage: echo "sessname=<name of the rtrs session> path=<[srcaddr,]dstaddr>
-+		> [path=<[srcaddr,]dstaddr>] device_path=<full path on remote side>
-+		> [access_mode=<ro|rw|migration>] > map_device
-+		>
-+		> addr ::= [ ip:<ipv4> | ip:<ipv6> | gid:<gid> ]
-+
-+What:		/sys/class/rnbd-client/ctl/map_device
-+Date:		Feb 2020
-+KernelVersion:	5.7
-+Contact:	Jack Wang <jinpu.wang@cloud.ionos.com> Danil Kipnis <danil.kipnis@cloud.ionos.com>
-+Description:	Expected format is the following:
-+
-+		sessname=<name of the rtrs session>
-+		path=<[srcaddr,]dstaddr> [path=<[srcaddr,]dstaddr> ...]
-+		device_path=<full path on remote side>
-+		[access_mode=<ro|rw|migration>]
-+
-+		Where:
-+
-+		sessname: accepts a string not bigger than 256 chars, which identifies
-+		a given session on the client and on the server.
-+		I.e. "clt_hostname-srv_hostname" could be a natural choice.
-+
-+		path:     describes a connection between the client and the server by
-+		specifying destination and, when required, the source address.
-+		The addresses are to be provided in the following format:
-+
-+		ip:<IPv6>
-+		ip:<IPv4>
-+		gid:<GID>
-+
-+		for example:
-+
-+		path=ip:10.0.0.66
-+		The single addr is treated as the destination.
-+		The connection will be established to this server from any client IP address.
-+
-+		path=ip:10.0.0.66,ip:10.0.1.66
-+		First addr is the source address and the second is the destination.
-+
-+		If multiple "path=" options are specified multiple connection
-+		will be established and data will be sent according to
-+		the selected multipath policy (see RTRS mp_policy sysfs entry description).
-+
-+		device_path: Path to the block device on the server side. Path is specified
-+		relative to the directory on server side configured in the
-+		'dev_search_path' module parameter of the rnbd_server.
-+		The rnbd_server prepends the <device_path> received from client
-+		with <dev_search_path> and tries to open the
-+		<dev_search_path>/<device_path> block device.  On success,
-+		a /dev/rnbd<N> device file, a /sys/block/rnbd_client/rnbd<N>/
-+		directory and an entry in /sys/class/rnbd-client/ctl/devices
-+		will be created.
-+
-+		If 'dev_search_path' contains '%SESSNAME%', then each session can
-+		have different devices namespace, e.g. server was configured with
-+		the following parameter "dev_search_path=/run/rnbd-devs/%SESSNAME%",
-+		client has this string "sessname=blya device_path=sda", then server
-+		will try to open: /run/rnbd-devs/blya/sda.
-+
-+		access_mode: the access_mode parameter specifies if the device is to be
-+		mapped as "ro" read-only or "rw" read-write. The server allows
-+		a device to be exported in rw mode only once. The "migration"
-+		access mode has to be specified if a second mapping in read-write
-+		mode is desired.
-+
-+		By default "rw" is used.
-+
-+		Exit Codes:
-+
-+		If the device is already mapped it will fail with EEXIST. If the input
-+		has an invalid format it will return EINVAL. If the device path cannot
-+		be found on the server, it will fail with ENOENT.
-+
-+		Finding device file after mapping
-+		---------------------------------
-+
-+		After mapping, the device file can be found by:
-+		o  The symlink /sys/class/rnbd-client/ctl/devices/<device_id>
-+		points to /sys/block/<dev-name>. The last part of the symlink destination
-+		is the same as the device name.  By extracting the last part of the
-+		path the path to the device /dev/<dev-name> can be build.
-+
-+		o /dev/block/$(cat /sys/class/rnbd-client/ctl/devices/<device_id>/dev)
-+
-+		How to find the <device_id> of the device is described on the next
-+		section.
-+
-+What:		/sys/class/rnbd-client/ctl/devices/
-+Date:		Feb 2020
-+KernelVersion:	5.7
-+Contact:	Jack Wang <jinpu.wang@cloud.ionos.com> Danil Kipnis <danil.kipnis@cloud.ionos.com>
-+Description:	For each device mapped on the client a new symbolic link is created as
-+		/sys/class/rnbd-client/ctl/devices/<device_id>, which points
-+		to the block device created by rnbd (/sys/block/rnbd<N>/).
-+		The <device_id> of each device is created as follows:
-+
-+		- If the 'device_path' provided during mapping contains slashes ("/"),
-+		they are replaced by exclamation mark ("!") and used as as the
-+		<device_id>. Otherwise, the <device_id> will be the same as the
-+		"device_path" provided.
-diff --git a/Documentation/ABI/testing/sysfs-class-rnbd-server b/Documentation/ABI/testing/sysfs-class-rnbd-server
-new file mode 100644
-index 000000000000..ba60a90c0e45
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-class-rnbd-server
-@@ -0,0 +1,50 @@
-+What:		/sys/class/rnbd-server
-+Date:		Feb 2020
-+KernelVersion:	5.7
-+Contact:	Jack Wang <jinpu.wang@cloud.ionos.com> Danil Kipnis <danil.kipnis@cloud.ionos.com>
-+Description:	provide information about RNBD-server.
-+
-+What:		/sys/class/rnbd-server/ctl/
-+Date:		Feb 2020
-+KernelVersion:	5.7
-+Contact:	Jack Wang <jinpu.wang@cloud.ionos.com> Danil Kipnis <danil.kipnis@cloud.ionos.com>
-+Description:	When a client maps a device, a directory entry with the name of the
-+		block device is created under /sys/class/rnbd-server/ctl/devices/.
-+
-+What:		/sys/class/rnbd-server/ctl/devices/<device_name>/block_dev
-+Date:		Feb 2020
-+KernelVersion:	5.7
-+Contact:	Jack Wang <jinpu.wang@cloud.ionos.com> Danil Kipnis <danil.kipnis@cloud.ionos.com>
-+Description:	Is a symlink to the sysfs entry of the exported device.
-+
-+		Example:
-+		block_dev -> ../../../../class/block/ram0
-+
-+What:		/sys/class/rnbd-server/ctl/devices/<device_name>/sessions/
-+Date:		Feb 2020
-+KernelVersion:	5.7
-+Contact:	Jack Wang <jinpu.wang@cloud.ionos.com> Danil Kipnis <danil.kipnis@cloud.ionos.com>
-+Description:	For each client a particular device is exported to, following directory will be
-+		created:
-+
-+		/sys/class/rnbd-server/ctl/devices/<device_name>/sessions/<session-name>/
-+
-+		When the device is unmapped by that client, the directory will be removed.
-+
-+What:		/sys/class/rnbd-server/ctl/devices/<device_name>/sessions/<session-name>/read_only
-+Date:		Feb 2020
-+KernelVersion:	5.7
-+Contact:	Jack Wang <jinpu.wang@cloud.ionos.com> Danil Kipnis <danil.kipnis@cloud.ionos.com>
-+Description:	Contains '1' if device is mapped read-only, otherwise '0'.
-+
-+What:		/sys/class/rnbd-server/ctl/devices/<device_name>/sessions/<session-name>/mapping_path
-+Date:		Feb 2020
-+KernelVersion:	5.7
-+Contact:	Jack Wang <jinpu.wang@cloud.ionos.com> Danil Kipnis <danil.kipnis@cloud.ionos.com>
-+Description:	Contains the relative device path provided by the user during mapping.
-+
-+What:		/sys/class/rnbd-server/ctl/devices/<device_name>/sessions/<session-name>/access_mode
-+Date:		Feb 2020
-+KernelVersion:	5.7
-+Contact:	Jack Wang <jinpu.wang@cloud.ionos.com> Danil Kipnis <danil.kipnis@cloud.ionos.com>
-+Description:	Contains the device access mode: ro, rw or migration.
-diff --git a/drivers/block/rnbd/README b/drivers/block/rnbd/README
-new file mode 100644
-index 000000000000..1773c0aa0bd4
---- /dev/null
-+++ b/drivers/block/rnbd/README
-@@ -0,0 +1,92 @@
-+********************************
-+RDMA Network Block Device (RNBD)
-+********************************
-+
-+Introduction
-+------------
-+
-+RNBD (RDMA Network Block Device) is a pair of kernel modules
-+(client and server) that allow for remote access of a block device on
-+the server over RTRS protocol using the RDMA (InfiniBand, RoCE, iWARP)
-+transport. After being mapped, the remote block devices can be accessed
-+on the client side as local block devices.
-+
-+I/O is transferred between client and server by the RTRS transport
-+modules. The administration of RNBD and RTRS modules is done via
-+sysfs entries.
-+
-+Requirements
-+------------
-+
-+  RTRS kernel modules
-+
-+Quick Start
-+-----------
-+
-+Server side:
-+  # modprobe rnbd_server
-+
-+Client side:
-+  # modprobe rnbd_client
-+  # echo "sessname=blya path=ip:10.50.100.66 device_path=/dev/ram0" > \
-+            /sys/devices/virtual/rnbd-client/ctl/map_device
-+
-+  Where "sessname=" is a session name, a string to identify the session
-+  on client and on server sides; "path=" is a destination IP address or
-+  a pair of a source and a destination IPs, separated by comma.  Multiple
-+  "path=" options can be specified in order to use multipath  (see RTRS
-+  description for details); "device_path=" is the block device to be
-+  mapped from the server side. After the session to the server machine is
-+  established, the mapped device will appear on the client side under
-+  /dev/rnbd<N>.
-+
-+
-+RNBD-Server Module Parameters
-+=============================
-+
-+dev_search_path
-+---------------
-+
-+When a device is mapped from the client, the server generates the path
-+to the block device on the server side by concatenating dev_search_path
-+and the "device_path" that was specified in the map_device operation.
-+
-+The default dev_search_path is: "/".
-+
-+dev_search_path option can also contain %SESSNAME% in order to provide
-+different device namespaces for different sessions.  See "device_path"
-+option for details.
-+
-+============================
-+Protocol (rnbd/rnbd-proto.h)
-+============================
-+
-+1. Before mapping first device from a given server, client sends an
-+RNBD_MSG_SESS_INFO to the server. Server responds with
-+RNBD_MSG_SESS_INFO_RSP. Currently the messages only contain the protocol
-+version for backward compatibility.
-+
-+2. Client requests to open a device by sending RNBD_MSG_OPEN message. This
-+contains the path to the device and access mode (read-only or writable).
-+Server responds to the message with RNBD_MSG_OPEN_RSP. This contains
-+a 32 bit device id to be used for  IOs and device "geometry" related
-+information: side, max_hw_sectors, etc.
-+
-+3. Client attaches RNBD_MSG_IO to each IO message send to a device. This
-+message contains device id, provided by server in his rnbd_msg_open_rsp,
-+sector to be accessed, read-write flags and bi_size.
-+
-+4. Client closes a device by sending RNBD_MSG_CLOSE which contains only the
-+device id provided by the server.
-+
-+=========================================
-+Contributors List(in alphabetical order)
-+=========================================
-+Danil Kipnis <danil.kipnis@profitbricks.com>
-+Fabian Holler <mail@fholler.de>
-+Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-+Jack Wang <jinpu.wang@profitbricks.com>
-+Kleber Souza <kleber.souza@profitbricks.com>
-+Lutz Pogrell <lutz.pogrell@cloud.ionos.com>
-+Milind Dumbare <Milind.dumbare@gmail.com>
-+Roman Penyaev <roman.penyaev@profitbricks.com>
--- 
-2.20.1
-
+> ---
+>  drivers/acpi/acpica/exfield.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/acpi/acpica/exfield.c b/drivers/acpi/acpica/exfield.c
+> index e85eb31e5075..3323a2ba6a31 100644
+> --- a/drivers/acpi/acpica/exfield.c
+> +++ b/drivers/acpi/acpica/exfield.c
+> @@ -22,7 +22,7 @@ ACPI_MODULE_NAME("exfield")
+>   */
+>  #define ACPI_INVALID_PROTOCOL_ID        0x80
+>  #define ACPI_MAX_PROTOCOL_ID            0x0F
+> -const u8 acpi_protocol_lengths[] = {
+> +static const u8 acpi_protocol_lengths[] = {
+>         ACPI_INVALID_PROTOCOL_ID,       /* 0 - reserved */
+>         ACPI_INVALID_PROTOCOL_ID,       /* 1 - reserved */
+>         0x00,                   /* 2 - ATTRIB_QUICK */
+> --
+> 2.21.1
+>
