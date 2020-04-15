@@ -2,137 +2,161 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28B28C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:16:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6942AC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:16:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 047FB20575
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:16:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586956566;
-	bh=JTDIwijcZwHGMxB9O0aoixYI7r3ZtbL2U0goW3aJfk4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HYWiNqsONyw/3qDpY77WO3kljBH9pb3LzpWb7oE6A3eRW7+lAyDSbAS9w2FlBZKCp
-	 cv2jd4n4xe5gY+nersLHvFAJeU8K1y5jD0eOCCU1Uwi50Sfpkf9ZbCoiHSgNoW599t
-	 QdA3kLVYhk7isjZzwGdmEDDSFmzxoUJuIIWYlauA=
+	by mail.kernel.org (Postfix) with ESMTP id 4E76A20575
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:16:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506219AbgDONQC (ORCPT
-        <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:16:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54826 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897040AbgDOLfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:35:18 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E85EE214D8;
-        Wed, 15 Apr 2020 11:35:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950517;
-        bh=JTDIwijcZwHGMxB9O0aoixYI7r3ZtbL2U0goW3aJfk4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=00+0c5g4WLQcaOpqbHIozN1Iv1y8TV7OMtftSrL4vRoth1xeTLUOcGyK82p2Ex1CN
-         dzifD3ti/AAaAYdKJwGacRuJqZ3GlkmFXI9ofvEj1kCbUxOzaVv1tYK0EXRFa4rjUD
-         6KOfhNeTuRUTOnuuaZApqyG+p5sVIM9KXGdQD/ss=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tommi Rantala <tommi.t.rantala@nokia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 027/129] xfs: fix regression in "cleanup xfs_dir2_block_getdents"
-Date:   Wed, 15 Apr 2020 07:33:02 -0400
-Message-Id: <20200415113445.11881-27-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
-References: <20200415113445.11881-1-sashal@kernel.org>
+        id S370695AbgDONQX (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 09:16:23 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:50823 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2506191AbgDONOs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 09:14:48 -0400
+Received: from uno.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 64C4324000C;
+        Wed, 15 Apr 2020 13:14:34 +0000 (UTC)
+Date:   Wed, 15 Apr 2020 15:17:39 +0200
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Roman Kovalivskyi <roman.kovalivskyi@globallogic.com>
+Cc:     linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Luis Oliveira <lolivei@synopsys.com>,
+        Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        Michael Rodin <mrodin@de.adit-jv.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Hugues Fruchet <hugues.fruchet@st.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Adam Ford <aford173@gmail.com>,
+        Todor Tomov <todor.tomov@linaro.org>,
+        Suresh Udipi <sudipi@jp.adit-jv.com>,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Dave Stevenson <dave.stevenson@raspberrypi.org>
+Subject: Re: [PATCH 3/4] media: ov5647: Add support for non-continuous clock
+ mode
+Message-ID: <20200415131739.pfc2g5siakpagsim@uno.localdomain>
+References: <cover.1586759968.git.roman.kovalivskyi@globallogic.com>
+ <c3189c80ac27d67e814509d44a864f8164971efb.1586759968.git.roman.kovalivskyi@globallogic.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <c3189c80ac27d67e814509d44a864f8164971efb.1586759968.git.roman.kovalivskyi@globallogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tommi Rantala <tommi.t.rantala@nokia.com>
+Hi Roman,
 
-[ Upstream commit 3d28e7e278913a267b1de360efcd5e5274065ce2 ]
+On Mon, Apr 13, 2020 at 12:17:46PM +0300, Roman Kovalivskyi wrote:
+> From: Dave Stevenson <dave.stevenson@raspberrypi.org>
+>
+> The driver was only supporting continuous clock mode
+> although this was not stated anywhere.
+> Non-continuous clock saves a small amount of power and
+> on some SoCs is easier to interface with.
 
-Commit 263dde869bd09 ("xfs: cleanup xfs_dir2_block_getdents") introduced
-a getdents regression, when it converted the pointer arithmetics to
-offset calculations: offset is updated in the loop already for the next
-iteration, but the updated offset value is used incorrectly in two
-places, where we should have used the not-yet-updated value.
+As per the previous patch, you should update bindings reporting this
+property is now optionally supported
 
-This caused for example "git clean -ffdx" failures to cleanup certain
-directory structures when running in a container.
+>
+> Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.org>
+> Signed-off-by: Roman Kovalivskyi <roman.kovalivskyi@globallogic.com>
+> ---
+>  drivers/media/i2c/ov5647.c | 17 ++++++++++++++---
+>  1 file changed, 14 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/media/i2c/ov5647.c b/drivers/media/i2c/ov5647.c
+> index c39e3d20e3ef..8a1a515388e0 100644
+> --- a/drivers/media/i2c/ov5647.c
+> +++ b/drivers/media/i2c/ov5647.c
+> @@ -44,6 +44,7 @@
+>  #define PWDN_ACTIVE_DELAY_MS	20
+>
+>  #define MIPI_CTRL00_CLOCK_LANE_GATE		BIT(5)
+> +#define MIPI_CTRL00_LINE_SYNC_ENABLE		BIT(4)
+>  #define MIPI_CTRL00_BUS_IDLE			BIT(2)
+>  #define MIPI_CTRL00_CLOCK_LANE_DISABLE		BIT(0)
+>
+> @@ -95,6 +96,7 @@ struct ov5647 {
+>  	int				power_count;
+>  	struct clk			*xclk;
+>  	struct gpio_desc		*pwdn;
+> +	unsigned int			flags;
+>  };
+>
+>  static inline struct ov5647 *to_state(struct v4l2_subdev *sd)
+> @@ -269,9 +271,15 @@ static int ov5647_set_virtual_channel(struct v4l2_subdev *sd, int channel)
+>
+>  static int ov5647_stream_on(struct v4l2_subdev *sd)
+>  {
+> +	struct ov5647 *ov5647 = to_state(sd);
+> +	u8 val = MIPI_CTRL00_BUS_IDLE;
+>  	int ret;
+>
+> -	ret = ov5647_write(sd, OV5647_REG_MIPI_CTRL00, MIPI_CTRL00_BUS_IDLE);
+> +	if (ov5647->flags & V4L2_MBUS_CSI2_NONCONTINUOUS_CLOCK)
+> +		val |= MIPI_CTRL00_CLOCK_LANE_GATE |
+> +		       MIPI_CTRL00_LINE_SYNC_ENABLE;
+> +
+> +	ret = ov5647_write(sd, OV5647_REG_MIPI_CTRL00, val);
+>  	if (ret < 0)
+>  		return ret;
+>
+> @@ -568,7 +576,7 @@ static const struct v4l2_subdev_internal_ops ov5647_subdev_internal_ops = {
+>  	.open = ov5647_open,
+>  };
+>
+> -static int ov5647_parse_dt(struct device_node *np)
+> +static int ov5647_parse_dt(struct device_node *np, struct ov5647 *sensor)
 
-Fix the regression by making sure we use proper offset in the loop body.
-Thanks to Christoph Hellwig for suggestion how to best fix the code.
+nit: I would provide the driver structure first
 
-Cc: Christoph Hellwig <hch@lst.de>
-Fixes: 263dde869bd09 ("xfs: cleanup xfs_dir2_block_getdents")
-Signed-off-by: Tommi Rantala <tommi.t.rantala@nokia.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/xfs/xfs_dir2_readdir.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+>  {
+>  	struct v4l2_fwnode_endpoint bus_cfg = { .bus_type = 0 };
+>  	struct device_node *ep;
+> @@ -581,6 +589,9 @@ static int ov5647_parse_dt(struct device_node *np)
+>
+>  	ret = v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep), &bus_cfg);
+>
+> +	if (!ret)
+> +		sensor->flags = bus_cfg.bus.mipi_csi2.flags;
+> +
 
-diff --git a/fs/xfs/xfs_dir2_readdir.c b/fs/xfs/xfs_dir2_readdir.c
-index 0d3b640cf1cce..871ec22c9aee9 100644
---- a/fs/xfs/xfs_dir2_readdir.c
-+++ b/fs/xfs/xfs_dir2_readdir.c
-@@ -147,7 +147,7 @@ xfs_dir2_block_getdents(
- 	xfs_off_t		cook;
- 	struct xfs_da_geometry	*geo = args->geo;
- 	int			lock_mode;
--	unsigned int		offset;
-+	unsigned int		offset, next_offset;
- 	unsigned int		end;
- 
- 	/*
-@@ -173,9 +173,10 @@ xfs_dir2_block_getdents(
- 	 * Loop over the data portion of the block.
- 	 * Each object is a real entry (dep) or an unused one (dup).
- 	 */
--	offset = geo->data_entry_offset;
- 	end = xfs_dir3_data_end_offset(geo, bp->b_addr);
--	while (offset < end) {
-+	for (offset = geo->data_entry_offset;
-+	     offset < end;
-+	     offset = next_offset) {
- 		struct xfs_dir2_data_unused	*dup = bp->b_addr + offset;
- 		struct xfs_dir2_data_entry	*dep = bp->b_addr + offset;
- 		uint8_t filetype;
-@@ -184,14 +185,15 @@ xfs_dir2_block_getdents(
- 		 * Unused, skip it.
- 		 */
- 		if (be16_to_cpu(dup->freetag) == XFS_DIR2_DATA_FREE_TAG) {
--			offset += be16_to_cpu(dup->length);
-+			next_offset = offset + be16_to_cpu(dup->length);
- 			continue;
- 		}
- 
- 		/*
- 		 * Bump pointer for the next iteration.
- 		 */
--		offset += xfs_dir2_data_entsize(dp->i_mount, dep->namelen);
-+		next_offset = offset +
-+			xfs_dir2_data_entsize(dp->i_mount, dep->namelen);
- 
- 		/*
- 		 * The entry is before the desired starting point, skip it.
--- 
-2.20.1
+There is a huge space for improvements here, this function didn't do
+anything before this.
 
+I would:
+        check the v4l2_fwnode_endpoint_parse() return value, and
+        put(np) and fail loudly
+
+        make sure the detected bus type is CSI-2
+
+        cache the flags as you're doing here. As you're only
+        interested in clock continuous you could store only that
+        information in your driver structure.
+
+>  	of_node_put(ep);
+>  	return ret;
+>  }
+> @@ -599,7 +610,7 @@ static int ov5647_probe(struct i2c_client *client)
+>  		return -ENOMEM;
+>
+>  	if (IS_ENABLED(CONFIG_OF) && np) {
+> -		ret = ov5647_parse_dt(np);
+> +		ret = ov5647_parse_dt(np, sensor);
+>  		if (ret) {
+>  			dev_err(dev, "DT parsing error: %d\n", ret);
+>  			return ret;
+> --
+> 2.17.1
+>
