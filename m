@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A849CC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DC98C3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:53:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7852E206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:53:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5111C206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:53:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586951606;
-	bh=PXaOv0pa7SYg7uqpUX7Vx5OsF7uktHKosvPTWaBldIk=;
+	s=default; t=1586951620;
+	bh=f+MIyflL7PoUCPvmXSbksyJDbP3lDfOTiJtP3BLlWqs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SDTv1ys7vPG9DIljBAFrKvytOeG/3nr7BVq7TmWu0kxTczDzYi6tVkvifBoMNC80/
-	 kG6jkqT5CYEIpw/sIWfSVa61df8UFZkFJPfAr4dZkdBSLdyTPmMBs3V566a+rcJTcR
-	 Qeu7yrOV7FGaz/x9WOB6BD8rNHjekuc6UkZFRUlQ=
+	b=FEYr1uC/PYBIiVQDR4vWKyHr2VUkANMtt+o/rkrenGDkfBY+OarNH7T61YrrVEFeX
+	 opPv0FsL773tA+SOOBpAWyPjORU/L53hr7tSsfHAWGPBfxcYXEJep+M//RDrszn4MJ
+	 Yms7s9/cZ3kuzYBchaSU1dWHaBHmgW4n74iND8i4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2897813AbgDOLxY (ORCPT
+        id S2897822AbgDOLxf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:53:24 -0400
+        Wed, 15 Apr 2020 07:53:35 -0400
 Received: from mail.kernel.org ([198.145.29.99]:37406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409141AbgDOLpL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:45:11 -0400
+        id S2406162AbgDOLpQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:45:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC0D6206A2;
-        Wed, 15 Apr 2020 11:45:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A52E820737;
+        Wed, 15 Apr 2020 11:45:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951110;
-        bh=PXaOv0pa7SYg7uqpUX7Vx5OsF7uktHKosvPTWaBldIk=;
+        s=default; t=1586951116;
+        bh=f+MIyflL7PoUCPvmXSbksyJDbP3lDfOTiJtP3BLlWqs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MUDwrySGzWtPQ8N1dIbgDzeE04EaS3WwQoUGsHYRB3DiCFiEShJJ0rTW1nMVeMImi
-         Nr6efAydZ566Iallin7rmR55kdCNUSFAZtb1jO9seS6Gv3VzCo5qDVIxyYjQDoMAGo
-         WHq+++Rif8kAioNATPn2CRuRu66GUgJpXVeAstgg=
+        b=AVKZvrjzvZKjfyxuV31HsD/pSiG7pCGZ03jzwkZ4o0wiftoAP1a3CU6rfqrNumRZZ
+         w9TC8dPkVPrfkWAKwXlokfDJcyFXZraNeZqWn9TwA/a5O0zQzGzivFye5hDx7TYMBe
+         t1XgEWipX14jNd1MYQRFN+CmTtIvunHjrisjq1rw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sahitya Tummala <stummala@codeaurora.org>,
-        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.4 25/84] f2fs: Fix mount failure due to SPO after a successful online resize FS
-Date:   Wed, 15 Apr 2020 07:43:42 -0400
-Message-Id: <20200415114442.14166-25-sashal@kernel.org>
+Cc:     Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 30/84] btrfs: add RCU locks around block group initialization
+Date:   Wed, 15 Apr 2020 07:43:47 -0400
+Message-Id: <20200415114442.14166-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114442.14166-1-sashal@kernel.org>
 References: <20200415114442.14166-1-sashal@kernel.org>
@@ -60,50 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sahitya Tummala <stummala@codeaurora.org>
+From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-[ Upstream commit 682756827501dc52593bf490f2d437c65ec9efcb ]
+[ Upstream commit 29566c9c773456467933ee22bbca1c2b72a3506c ]
 
-Even though online resize is successfully done, a SPO immediately
-after resize, still causes below error in the next mount.
+The space_info list is normally RCU protected and should be traversed
+with rcu_read_lock held. There's a warning
 
-[   11.294650] F2FS-fs (sda8): Wrong user_block_count: 2233856
-[   11.300272] F2FS-fs (sda8): Failed to get valid F2FS checkpoint
+  [29.104756] WARNING: suspicious RCU usage
+  [29.105046] 5.6.0-rc4-next-20200305 #1 Not tainted
+  [29.105231] -----------------------------
+  [29.105401] fs/btrfs/block-group.c:2011 RCU-list traversed in non-reader section!!
 
-This is because after FS metadata is updated in update_fs_metadata()
-if the SBI_IS_DIRTY is not dirty, then CP will not be done to reflect
-the new user_block_count.
+pointing out that the locking is missing in btrfs_read_block_groups.
+However this is not necessary as the list traversal happens at mount
+time when there's no other thread potentially accessing the list.
 
-Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+To fix the warning and for consistency let's add the RCU lock/unlock,
+the code won't be affected much as it's doing some lightweight
+operations.
+
+Reported-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/gc.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ fs/btrfs/block-group.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
-index 5877bd7296896..e611d768efde3 100644
---- a/fs/f2fs/gc.c
-+++ b/fs/f2fs/gc.c
-@@ -1532,11 +1532,17 @@ int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
- 		goto out;
+diff --git a/fs/btrfs/block-group.c b/fs/btrfs/block-group.c
+index 7dcfa7d7632a1..95330f40f998c 100644
+--- a/fs/btrfs/block-group.c
++++ b/fs/btrfs/block-group.c
+@@ -1829,6 +1829,7 @@ int btrfs_read_block_groups(struct btrfs_fs_info *info)
+ 		}
  	}
  
-+	mutex_lock(&sbi->cp_mutex);
- 	update_fs_metadata(sbi, -secs);
- 	clear_sbi_flag(sbi, SBI_IS_RESIZEFS);
-+	set_sbi_flag(sbi, SBI_IS_DIRTY);
-+	mutex_unlock(&sbi->cp_mutex);
-+
- 	err = f2fs_sync_fs(sbi->sb, 1);
- 	if (err) {
-+		mutex_lock(&sbi->cp_mutex);
- 		update_fs_metadata(sbi, secs);
-+		mutex_unlock(&sbi->cp_mutex);
- 		update_sb_metadata(sbi, secs);
- 		f2fs_commit_super(sbi, false);
++	rcu_read_lock();
+ 	list_for_each_entry_rcu(space_info, &info->space_info, list) {
+ 		if (!(btrfs_get_alloc_profile(info, space_info->flags) &
+ 		      (BTRFS_BLOCK_GROUP_RAID10 |
+@@ -1849,6 +1850,7 @@ int btrfs_read_block_groups(struct btrfs_fs_info *info)
+ 				list)
+ 			inc_block_group_ro(cache, 1);
  	}
++	rcu_read_unlock();
+ 
+ 	btrfs_init_global_block_rsv(info);
+ 	ret = check_chunk_block_group_mappings(info);
 -- 
 2.20.1
 
