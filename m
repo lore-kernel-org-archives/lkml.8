@@ -2,160 +2,104 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7942AC352BE
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B61AC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:31:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 601E92084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:31:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D222220737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:31:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="axbnrEX4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392590AbgDOBbD (ORCPT
+        id S2392643AbgDOBbk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 21:31:03 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:50072 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728332AbgDOBbA (ORCPT
+        Tue, 14 Apr 2020 21:31:40 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:30865 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2392633AbgDOBbd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 21:31:00 -0400
-Received: from floko.floko.floko (unknown [IPv6:2804:431:e7cc:79a2:b6f7:4033:5775:cc3a])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Tue, 14 Apr 2020 21:31:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586914292;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=1gQDebgdhfevaZB94Up55P4Eie+YbxHp+6IgQaQXMeo=;
+        b=axbnrEX4wjiSgX3FpuY7uyySZQhZrWSFvefMNEMKePAswm2grep1p1gAAJaiSN0H5CX2L/
+        tiqvRwPxT6MkC85GX+Rj0TlNkbaudpHEFNY9XZJBmHlxdUtK0BGzZv0VR79QC/25v5VQGT
+        ZK3uVX1SOaCdivzoKioxB4S+bCnh/+Y=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-132-6Z9TQ_sIPqS5vnz00oax3Q-1; Tue, 14 Apr 2020 21:31:25 -0400
+X-MC-Unique: 6Z9TQ_sIPqS5vnz00oax3Q-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: koike)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id ACFE62A1BC8;
-        Wed, 15 Apr 2020 02:30:54 +0100 (BST)
-From:   Helen Koike <helen.koike@collabora.com>
-To:     linux-media@vger.kernel.org
-Cc:     kernel@collabora.com, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, hans.verkuil@cisco.com,
-        skhan@linuxfoundation.org, niklas.soderlund@ragnatech.se,
-        mchehab@kernel.org, Helen Koike <helen.koike@collabora.com>
-Subject: [PATCH v3 0/4] media: add v4l2_pipeline_stream_{enable,disable} helpers
-Date:   Tue, 14 Apr 2020 22:30:40 -0300
-Message-Id: <20200415013044.1778572-1-helen.koike@collabora.com>
-X-Mailer: git-send-email 2.26.0
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BB363107ACC7;
+        Wed, 15 Apr 2020 01:31:24 +0000 (UTC)
+Received: from treble (ovpn-116-146.rdu2.redhat.com [10.10.116.146])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B3F7B9F9BB;
+        Wed, 15 Apr 2020 01:31:20 +0000 (UTC)
+Date:   Tue, 14 Apr 2020 20:31:17 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Joe Lawrence <joe.lawrence@redhat.com>
+Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>
+Subject: Re: [PATCH 0/7] livepatch,module: Remove .klp.arch and
+ module_disable_ro()
+Message-ID: <20200415013117.rc7vlidmo4okzypl@treble>
+References: <cover.1586881704.git.jpoimboe@redhat.com>
+ <187a2ccd-1d04-54db-2fd3-8c4ca6872830@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <187a2ccd-1d04-54db-2fd3-8c4ca6872830@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Apr 14, 2020 at 08:57:15PM -0400, Joe Lawrence wrote:
+> On 4/14/20 12:28 PM, Josh Poimboeuf wrote:
+> > Better late than never, these patches add simplifications and
+> > improvements for some issues Peter found six months ago, as part of his
+> > non-writable text code (W^X) cleanups.
+> > 
+> > Highlights:
+> > 
+> > - Remove the livepatch arch-specific .klp.arch sections, which were used
+> >    to do paravirt patching and alternatives patching for livepatch
+> >    replacement code.
+> > 
+> > - Add support for jump labels in patched code.
+> 
+> Re: jump labels and late-module patching support...
+> 
+> Is there still an issue of a non-exported static key defined in a
+> to-be-patched module referenced and resolved via klp-relocation when the
+> livepatch module is loaded first?  (Basically the same case I asked Petr
+> about in his split livepatch module PoC. [1])
+> 
+> Or should we declare this an invalid klp-relocation use case and force the
+> livepatch author to use static_key_enabled()?
+> 
+> [1] https://lore.kernel.org/lkml/20200407205740.GA17061@redhat.com/
 
-Media drivers need to iterate through the pipeline and call .s_stream()
-callbacks in the subdevices.
+Right, if the static key lives in a module, then it's still not possible
+for a jump label to use it.  I added a check in kpatch-build to block
+that case and suggest static_key_enabled() instead.
 
-Instead of repeating code, add helpers for this.
+I don't know what the solution is, other than getting rid of late module
+patching.
 
-These helpers will go walk through the pipeline only visiting entities
-that participates in the stream, i.e. it follows links from sink to source
-(and not the opposite).
-
-Which means that in a topology like this https://bit.ly/3b2MxjI
-calling v4l2_pipeline_stream_enable() from rkisp1_mainpath won't call
-.s_stream(true) for rkisp1_resizer_selfpath.
-
-stream_count variable was added in v4l2_subdevice to handle nested calls
-to the helpers.
-This is useful when the driver allows streaming from more then one
-capture device sharing subdevices.
-
-This patch came from the error I was facing when multistreaming from
-rkisp1 driver, where stoping one capture would call s_stream(false) in
-the pipeline, causing a stall in the second capture device.
-
-Also, the vimc patch https://patchwork.kernel.org/patch/10948833/ won't
-be required with this patchset.
-
-This patchset was tested on rkisp1 and vimc drivers.
-
-Other cleanup might be possible (but I won't add in this patchset as I
-don't have the hw to test):
-	https://git.linuxtv.org/media_tree.git/tree/drivers/media/platform/qcom/camss/camss-video.c#n430
-	https://git.linuxtv.org/media_tree.git/tree/drivers/media/platform/omap3isp/isp.c#n697
-	https://git.linuxtv.org/media_tree.git/tree/drivers/media/platform/stm32/stm32-dcmi.c#n680
-	https://git.linuxtv.org/media_tree.git/tree/drivers/media/platform/xilinx/xilinx-dma.c#n97
-
-Changes in V3:
-====================
-Following up Niklas' comments in V2 https://patchwork.kernel.org/patch/11473681/#23270823
-
-* I removed the limitation in topologies with entities with multiple enabled
-links to its sink pads in the topology.
-Now it enables all subdevs in the pipeline that have an enabled link going
-from sink to source while walking from the video device, so it can be
-also useful for rcar-vin driver.
-
-To implement this, I added back in the series the patch from v1:
-    "media: mc-entity.c: add media_graph_walk_next_stream()"
-
-* "size" was renamed to "max_size" in function v4l2_pipeline_subdevs_get()
-to reflect the maximum number of elements that can fit in the subdevs array,
-with proper documentation.
-
-* v4l2_pipeline_subdevs_get() returns a negative number for error, instead
-of returning 0 and printing a warning.
-
-* I also add if defined(CONFIG_MEDIA_CONTROLLER) around helpers to avoid
-compiling errors.
-
-Overview of patches in V3:
---------------------------
-
-Patch 1/4 adds a new iterator function to follow links from sink to
-source only.
-
-Path 2/4 adds the helpers in v4l2-common.c, allowing nested calls by
-adding stream_count in the subdevice struct.
-
-Patch 3/4 cleanup rkisp1 driver to use the helpers.
-
-Patch 4/4 cleanup vimc driver to use the helpers.
-
-Changes in V2:
-====================
-The first version was calling the s_stream() callbacks from sensor to
-capture.
-
-This was generating errors in the Scarlet Chromebook, when the sensor
-was being enabled before the ISP.
-
-It make sense to enable subdevices from capture to sensor instead (which
-is what most drivers do already).
-
-This v2 drops the changes from mc-entity.c, and re-implement helpers in
-v4l2-common.c
-
-Overview of patches in V2:
---------------------------
-
-Path 1/3 adds the helpers in v4l2-common.c, allowing nested calls by
-adding stream_count in the subdevice struct.
-
-Patch 2/3 cleanup rkisp1 driver to use the helpers.
-
-Patch 3/3 cleanup vimc driver to use the helpers.
-
-Helen Koike (4):
-  media: mc-entity.c: add media_graph_walk_next_stream()
-  media: v4l2-common: add helper functions to call s_stream() callbacks
-  media: staging: rkisp1: use v4l2_pipeline_stream_{enable,disable}
-    helpers
-  media: vimc: use v4l2_pipeline_stream_{enable,disable} helpers
-
- drivers/media/mc/mc-entity.c                  |  34 ++++-
- .../media/test_drivers/vimc/vimc-capture.c    |  28 ++--
- .../media/test_drivers/vimc/vimc-streamer.c   |  49 +------
- drivers/media/v4l2-core/v4l2-common.c         | 125 ++++++++++++++++++
- drivers/staging/media/rkisp1/rkisp1-capture.c |  76 +----------
- include/media/media-entity.h                  |  15 +++
- include/media/v4l2-common.h                   |  43 ++++++
- include/media/v4l2-subdev.h                   |   2 +
- 8 files changed, 242 insertions(+), 130 deletions(-)
+I confess I haven't looked at Petr's patches due to other distractions,
+but I plan to soon.
 
 -- 
-2.26.0
+Josh
 
