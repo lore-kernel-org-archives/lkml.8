@@ -2,307 +2,241 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2DCDC2BB55
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:21:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43FE0C2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:25:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB6A8208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:21:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1729E2076A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:25:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TaFr7Q2S"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CoVjpaL7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2636870AbgDOPVf (ORCPT
+        id S2634904AbgDOPY7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 11:21:35 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:57626 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730523AbgDOPV1 (ORCPT
+        Wed, 15 Apr 2020 11:24:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47462 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730523AbgDOPYu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 11:21:27 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03FFJc9k100210;
-        Wed, 15 Apr 2020 15:21:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=EdqX8TxniOimG4o/YwfRZ05YBfX2iVKTfStuhIZp9Ow=;
- b=TaFr7Q2SWTO2u+LvDbZvvmnN1sS2VD1hU1rZIHD98eKbxIfAHdkHz2Lk9rRISG5mOzv6
- 7iwYt+9dIahu7lfA9bVCxlJddngnTVGlYYKgZN5DBvhRrtzOIrgjQMGeIun9xNO8qydw
- t4a2J4UmQeNyDfbpVnqetNeF2Lxq9ax62UE9N9fObusLJb2KcmLFPBOfQIeL+U8zRIEc
- kmflDr0tbPu4AZ07rg7ycjIX9QjhGOGb+dwMbY2ETwj0GcPQL4qhlivtQCmy/oCpI/ZJ
- rLtEj8hP0MZAkZ2I6TIK32DOI4vnV99KwdRxxYiOFqHuhgsy7CohqK3rzvBxuBh0pkVM 6g== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 30e0aa1k6g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Apr 2020 15:21:16 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03FFHq8O039357;
-        Wed, 15 Apr 2020 15:21:15 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 30dynvswfn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Apr 2020 15:21:15 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03FFLEZZ003216;
-        Wed, 15 Apr 2020 15:21:14 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 15 Apr 2020 08:21:13 -0700
-Date:   Wed, 15 Apr 2020 08:21:12 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     ira.weiny@intel.com
-Cc:     linux-kernel@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH V8 10/11] fs/xfs: Change
- xfs_ioctl_setattr_dax_invalidate()
-Message-ID: <20200415152112.GR6742@magnolia>
-References: <20200415064523.2244712-1-ira.weiny@intel.com>
- <20200415064523.2244712-11-ira.weiny@intel.com>
+        Wed, 15 Apr 2020 11:24:50 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2854C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 08:24:49 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id a43so5382957edf.6
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 08:24:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=pzKk8PABoQG7wxQ0I283s43OGXBvRZpR46etYCk2nJU=;
+        b=CoVjpaL7NhBMMoCKRoBevTXuzAspL3V4ErYXBJm9TiToXUe8cQJHrpnoCHIa4AVPOP
+         22SNO4CZcW7Pej3gTKD3qsfUjk9kWDt3X49fR0xlMwwnJmBns4++0UAecEIJX42G1nS0
+         7BHgK0y763Koy91FUVMXMtqg74WH0WnS5Bol/OClpF48WAeRCNEE7Qp6ypih0XyJBKMf
+         qEraQNWyF79oLwiN5gCjYDK3pr15xcptOnm5A4J0UU1I2ZcWxU/sws/b3QN3LhjA3Oia
+         Yt1PuKW0pIfusr21cgFZwR7Nd3vWemhKph1sn+GkuoFUeUVDSY4UZUzY/iP3q+NBJcY6
+         P+yw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=pzKk8PABoQG7wxQ0I283s43OGXBvRZpR46etYCk2nJU=;
+        b=SJSnXcJvKYaQkn+StQKapw32mOSICuVfJjkMWut1w8f5EzqE67KimcV/mlbiyCg6NF
+         ziqxZXyYPwCgV7Dxdn6kNBAHc+JSjfTEORyhKbH1/cRTmtTckXtLJDahMdvUqV2UNPzz
+         /77ft64Oc8eX80Ei7xEdJGHYg+MMjmic+EvPc5iWSz/URsPIB3hw42Wv/iByu1Soiti7
+         51d35mMdth1lt314SQBbIyMkxU+YXlPzkAvpHYLuX3Ay8ekMeMnV2E2kpfd+lGZtQQGg
+         AQFnFVjDQGetD9wMEwb/iqTvZlqf5QzrIEFImSKq3DCV57MZJbI2W+oPD2eaOTmgOcGn
+         7bvg==
+X-Gm-Message-State: AGi0Pubse+60OKp6EgrGrXMjfmDR+ZIP8fpTuuGyd+BWKCWHARbvGBpb
+        pYRNDTnZj5IBEciWmu/wuN/d3vwXgrpES3daMLLdYA==
+X-Google-Smtp-Source: APiQypLYa6qsYZA8UJ9jL6B2Nmt1xK63nCmfDBXxC1o9zNfeIVmU0Lb1H12gXdVVE3znzyupzUc3CQwEYF2Iaq2PLqg=
+X-Received: by 2002:a17:906:32d8:: with SMTP id k24mr5732495ejk.2.1586964288072;
+ Wed, 15 Apr 2020 08:24:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200415064523.2244712-11-ira.weiny@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9592 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 suspectscore=3
- malwarescore=0 phishscore=0 spamscore=0 adultscore=0 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004150114
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9592 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 clxscore=1015
- impostorscore=0 mlxlogscore=999 mlxscore=0 lowpriorityscore=0
- suspectscore=3 adultscore=0 spamscore=0 malwarescore=0 phishscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004150114
+References: <20200221174248.244748-1-bgeffon@google.com> <20200221174248.244748-3-bgeffon@google.com>
+ <b5a4c54d-c358-7b54-c038-c79185330742@gmail.com>
+In-Reply-To: <b5a4c54d-c358-7b54-c038-c79185330742@gmail.com>
+From:   Brian Geffon <bgeffon@google.com>
+Date:   Wed, 15 Apr 2020 08:24:11 -0700
+Message-ID: <CADyq12zchEvZ=veJfQXJ3Bvek810OH4qVc0nETURrOzWxWZ=yw@mail.gmail.com>
+Subject: Re: [PATCH v7] mremap.2: Add information for MREMAP_DONTUNMAP.
+To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Deacon <will@kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Yu Zhao <yuzhao@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        linux-man@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 11:45:22PM -0700, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> We only support changing FS_XFLAG_DAX on directories.  Files get their
-> flag from the parent directory on creation only.  So no data
-> invalidation needs to happen.
-> 
-> Alter the xfs_ioctl_setattr_dax_invalidate() to be
-> xfs_ioctl_setattr_dax_validate().  xfs_ioctl_setattr_dax_validate() now
-> validates that any FS_XFLAG_DAX change is ok.
-> 
-> This also allows use to remove the join_flags logic.
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> 
-> ---
-> Changes from V7:
-> 	Use new flag_inode_dontcache()
-> 	Skip don't cache if mount over ride is active.
-> 
-> Changes from v6:
-> 	Fix completely broken implementation and update commit message.
-> 	Use the new VFS layer I_DONTCACHE to facilitate inode eviction
-> 	and S_DAX changing on drop_caches
-> 
-> Changes from v5:
-> 	New patch
-> ---
->  fs/xfs/xfs_ioctl.c | 105 +++++++++------------------------------------
->  1 file changed, 20 insertions(+), 85 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-> index c6cd92ef4a05..75d4a830ef38 100644
-> --- a/fs/xfs/xfs_ioctl.c
-> +++ b/fs/xfs/xfs_ioctl.c
-> @@ -1145,63 +1145,28 @@ xfs_ioctl_setattr_xflags(
->  }
->  
->  /*
-> - * If we are changing DAX flags, we have to ensure the file is clean and any
-> - * cached objects in the address space are invalidated and removed. This
-> - * requires us to lock out other IO and page faults similar to a truncate
-> - * operation. The locks need to be held until the transaction has been committed
-> - * so that the cache invalidation is atomic with respect to the DAX flag
-> - * manipulation.
-> + * Mark inodes with a changing FS_XFLAG_DAX, I_DONTCACHE
->   */
-> -static int
-> +static void
->  xfs_ioctl_setattr_dax_invalidate(
->  	struct xfs_inode	*ip,
-> -	struct fsxattr		*fa,
-> -	int			*join_flags)
-> +	struct fsxattr		*fa)
->  {
-> -	struct inode		*inode = VFS_I(ip);
-> -	struct super_block	*sb = inode->i_sb;
-> -	int			error;
-> -
-> -	*join_flags = 0;
-> -
-> -	/*
-> -	 * It is only valid to set the DAX flag on regular files and
-> -	 * directories on filesystems where the block size is equal to the page
-> -	 * size. On directories it serves as an inherited hint so we don't
-> -	 * have to check the device for dax support or flush pagecache.
-> -	 */
-> -	if (fa->fsx_xflags & FS_XFLAG_DAX) {
-> -		struct xfs_buftarg	*target = xfs_inode_buftarg(ip);
-> -
-> -		if (!bdev_dax_supported(target->bt_bdev, sb->s_blocksize))
-> -			return -EINVAL;
-> -	}
-> -
-> -	/* If the DAX state is not changing, we have nothing to do here. */
-> -	if ((fa->fsx_xflags & FS_XFLAG_DAX) && IS_DAX(inode))
-> -		return 0;
-> -	if (!(fa->fsx_xflags & FS_XFLAG_DAX) && !IS_DAX(inode))
-> -		return 0;
-> +	struct xfs_mount	*mp = ip->i_mount;
-> +	struct inode            *inode = VFS_I(ip);
->  
->  	if (S_ISDIR(inode->i_mode))
-> -		return 0;
-> -
-> -	/* lock, flush and invalidate mapping in preparation for flag change */
-> -	xfs_ilock(ip, XFS_MMAPLOCK_EXCL | XFS_IOLOCK_EXCL);
-> -	error = filemap_write_and_wait(inode->i_mapping);
-> -	if (error)
-> -		goto out_unlock;
-> -	error = invalidate_inode_pages2(inode->i_mapping);
-> -	if (error)
-> -		goto out_unlock;
-> +		return;
->  
-> -	*join_flags = XFS_MMAPLOCK_EXCL | XFS_IOLOCK_EXCL;
-> -	return 0;
-> -
-> -out_unlock:
-> -	xfs_iunlock(ip, XFS_MMAPLOCK_EXCL | XFS_IOLOCK_EXCL);
-> -	return error;
-> +	if (mp->m_flags & XFS_MOUNT_DAX_ALWAYS ||
-> +	    mp->m_flags & XFS_MOUNT_DAX_NEVER)
+Hi Michael,
+I'll make those changes and start a new thread.
 
-This ought to have parentheses around the two bit manipulation
-operations to avoid complaints from picky/stupid compilers.
+Thanks for the feedback,
+Brian
 
---D
-
-> +		return;
->  
-> +	if (((fa->fsx_xflags & FS_XFLAG_DAX) &&
-> +	    !(ip->i_d.di_flags2 & XFS_DIFLAG2_DAX)) ||
-> +	    (!(fa->fsx_xflags & FS_XFLAG_DAX) &&
-> +	     (ip->i_d.di_flags2 & XFS_DIFLAG2_DAX)))
-> +		flag_inode_dontcache(inode);
->  }
->  
->  /*
-> @@ -1209,17 +1174,10 @@ xfs_ioctl_setattr_dax_invalidate(
->   * have permission to do so. On success, return a clean transaction and the
->   * inode locked exclusively ready for further operation specific checks. On
->   * failure, return an error without modifying or locking the inode.
-> - *
-> - * The inode might already be IO locked on call. If this is the case, it is
-> - * indicated in @join_flags and we take full responsibility for ensuring they
-> - * are unlocked from now on. Hence if we have an error here, we still have to
-> - * unlock them. Otherwise, once they are joined to the transaction, they will
-> - * be unlocked on commit/cancel.
->   */
->  static struct xfs_trans *
->  xfs_ioctl_setattr_get_trans(
-> -	struct xfs_inode	*ip,
-> -	int			join_flags)
-> +	struct xfs_inode	*ip)
->  {
->  	struct xfs_mount	*mp = ip->i_mount;
->  	struct xfs_trans	*tp;
-> @@ -1236,8 +1194,7 @@ xfs_ioctl_setattr_get_trans(
->  		goto out_unlock;
->  
->  	xfs_ilock(ip, XFS_ILOCK_EXCL);
-> -	xfs_trans_ijoin(tp, ip, XFS_ILOCK_EXCL | join_flags);
-> -	join_flags = 0;
-> +	xfs_trans_ijoin(tp, ip, XFS_ILOCK_EXCL);
->  
->  	/*
->  	 * CAP_FOWNER overrides the following restrictions:
-> @@ -1258,8 +1215,6 @@ xfs_ioctl_setattr_get_trans(
->  out_cancel:
->  	xfs_trans_cancel(tp);
->  out_unlock:
-> -	if (join_flags)
-> -		xfs_iunlock(ip, join_flags);
->  	return ERR_PTR(error);
->  }
->  
-> @@ -1386,7 +1341,6 @@ xfs_ioctl_setattr(
->  	struct xfs_dquot	*pdqp = NULL;
->  	struct xfs_dquot	*olddquot = NULL;
->  	int			code;
-> -	int			join_flags = 0;
->  
->  	trace_xfs_ioctl_setattr(ip);
->  
-> @@ -1410,18 +1364,9 @@ xfs_ioctl_setattr(
->  			return code;
->  	}
->  
-> -	/*
-> -	 * Changing DAX config may require inode locking for mapping
-> -	 * invalidation. These need to be held all the way to transaction commit
-> -	 * or cancel time, so need to be passed through to
-> -	 * xfs_ioctl_setattr_get_trans() so it can apply them to the join call
-> -	 * appropriately.
-> -	 */
-> -	code = xfs_ioctl_setattr_dax_invalidate(ip, fa, &join_flags);
-> -	if (code)
-> -		goto error_free_dquots;
-> +	xfs_ioctl_setattr_dax_invalidate(ip, fa);
->  
-> -	tp = xfs_ioctl_setattr_get_trans(ip, join_flags);
-> +	tp = xfs_ioctl_setattr_get_trans(ip);
->  	if (IS_ERR(tp)) {
->  		code = PTR_ERR(tp);
->  		goto error_free_dquots;
-> @@ -1552,7 +1497,6 @@ xfs_ioc_setxflags(
->  	struct fsxattr		fa;
->  	struct fsxattr		old_fa;
->  	unsigned int		flags;
-> -	int			join_flags = 0;
->  	int			error;
->  
->  	if (copy_from_user(&flags, arg, sizeof(flags)))
-> @@ -1569,18 +1513,9 @@ xfs_ioc_setxflags(
->  	if (error)
->  		return error;
->  
-> -	/*
-> -	 * Changing DAX config may require inode locking for mapping
-> -	 * invalidation. These need to be held all the way to transaction commit
-> -	 * or cancel time, so need to be passed through to
-> -	 * xfs_ioctl_setattr_get_trans() so it can apply them to the join call
-> -	 * appropriately.
-> -	 */
-> -	error = xfs_ioctl_setattr_dax_invalidate(ip, &fa, &join_flags);
-> -	if (error)
-> -		goto out_drop_write;
-> +	xfs_ioctl_setattr_dax_invalidate(ip, &fa);
->  
-> -	tp = xfs_ioctl_setattr_get_trans(ip, join_flags);
-> +	tp = xfs_ioctl_setattr_get_trans(ip);
->  	if (IS_ERR(tp)) {
->  		error = PTR_ERR(tp);
->  		goto out_drop_write;
-> -- 
-> 2.25.1
-> 
+On Tue, Apr 14, 2020 at 11:41 PM Michael Kerrisk (man-pages)
+<mtk.manpages@gmail.com> wrote:
+>
+> Hello Brian,
+>
+> I see that MREMAP_DONTUNMAP has been merged. Thanks for the
+> patch below.
+>
+> In addition to Vlastimil's comments, could you please take a look
+> at my comments below.
+>
+> On 2/21/20 6:42 PM, Brian Geffon wrote:
+> > Signed-off-by: Brian Geffon <bgeffon@google.com>
+> > ---
+> >  man2/mremap.2 | 30 +++++++++++++++++++++++++++++-
+> >  1 file changed, 29 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/man2/mremap.2 b/man2/mremap.2
+> > index d73fb64fa..54ec67b20 100644
+> > --- a/man2/mremap.2
+> > +++ b/man2/mremap.2
+> > @@ -26,7 +26,8 @@
+> >  .\" 1996-04-12 Tom Bjorkholm <tomb@mydata.se>
+> >  .\"            Update for Linux 1.3.87 and later
+> >  .\" 2005-10-11 mtk: Added NOTES for MREMAP_FIXED; revised EINVAL text.
+> > -.\"
+> > +.\" 2020-02-05 Brian Geffon <bgeffon@google.com>
+> > +.\"            Update for MREMAP_DONTUNMAP.
+>
+> No need to add this piece. This info is maintained
+> via the Git log these days.
+>
+> >  .TH MREMAP 2 2019-03-06 "Linux" "Linux Programmer's Manual"
+> >  .SH NAME
+> >  mremap \- remap a virtual memory address
+> > @@ -129,6 +130,13 @@ If
+> >  is specified, then
+> >  .B MREMAP_MAYMOVE
+> >  must also be specified.
+> > +.TP
+> > +.BR MREMAP_DONTUNMAP " (since Linux 5.7)"
+> > +This flag which must be used in conjuction with
+>
+> s/conjuction/conjunction/
+>
+> > +.B MREMAP_MAYMOVE
+> > +remaps a mapping to a new address and it does not unmap the mapping at=
+ \fIold_address\fP. This flag can only be used with private anonymous mappi=
+ngs. Any access to the range specified at \fIold_address\fP after completio=
+n will result in a page fault. If a
+>
+> Please wrap source lines to no more than about 75 columns.
+> Also, always start new sentences on new lines ("Semantic newlines").
+>
+> As a general rule, I prefer formatting to be done like this:
+>
+> .BR old_address .
+>
+> rather than:
+>
+> \fIold_address\fP.
+>
+> (Yes, I know there's plenty of existing text that goes the other
+> way, but I try to avoid the \fX...\fP style for new text.
+>
+> Re the "Any access to the range ... will result in a page fault", I think
+> it would be helpful to be more explicit. I presume that if we
+> access the range at old_address the mapping is repopulated with
+> zero-filled pages, right? It would be good to note that explicitly,
+>
+> > +.BR userfaultfd (2)
+> > +was registered on the mapping specified by \fIold_address\fP it will c=
+ontinue to watch that mapping for faults.
+>
+> (See comments above re wrapping and formatting.)
+>
+> Perhaps it would be nice to have a short paragraph on use cases?
+>
+> >  .PP
+> >  If the memory segment specified by
+> >  .I old_address
+> > @@ -176,6 +184,8 @@ a value other than
+> >  .B MREMAP_MAYMOVE
+> >  or
+> >  .B MREMAP_FIXED
+> > +or
+> > +.B MREMAP_DONTUNMAP
+> >  was specified in
+> >  .IR flags ;
+> >  .IP *
+> > @@ -197,9 +207,17 @@ and
+> >  .IR old_size ;
+> >  .IP *
+> >  .B MREMAP_FIXED
+> > +or
+> > +.B MREMAP_DONTUNMAP
+> >  was specified without also specifying
+> >  .BR MREMAP_MAYMOVE ;
+> >  .IP *
+> > +.B MREMAP_DONTUNMAP
+> > +was specified with an \fIold_address\fP that was not private anonymous=
+;
+> > +.IP *
+> > +.B MREMAP_DONTUNMAP
+> > +was specified and \fIold_size\fP was not equal to \fInew_size\fP;
+> > +.IP *
+> >  \fIold_size\fP was zero and \fIold_address\fP does not refer to a
+> >  shareable mapping (but see BUGS);
+> >  .IP *
+> > @@ -209,10 +227,20 @@ flag was not specified.
+> >  .RE
+> >  .TP
+> >  .B ENOMEM
+> > +Not enough memory was available to complete the operation.
+> > +Possible causes are:
+> > +.RS
+> > +.IP * 3
+> >  The memory area cannot be expanded at the current virtual address, and=
+ the
+> >  .B MREMAP_MAYMOVE
+> >  flag is not set in \fIflags\fP.
+> >  Or, there is not enough (virtual) memory available.
+> > +.IP *
+> > +.B MREMAP_DONTUNMAP
+> > +was used without
+> > +.B MREMAP_FIXED
+> > +causing a new mapping to be created that would exceed the virtual memo=
+ry available or it would exceed the maximum number of allowed mappings.
+>
+> (See comments above re wrapping.)
+>
+> > +.RE
+> >  .SH CONFORMING TO
+> >  This call is Linux-specific, and should not be used in programs
+> >  intended to be portable.
+>
+>
+> Thanks,
+>
+> Michael
+>
+>
+> --
+> Michael Kerrisk
+> Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+> Linux/UNIX System Programming Training: http://man7.org/training/
