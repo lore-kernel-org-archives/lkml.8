@@ -2,234 +2,194 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18944C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7349C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:54:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E85E120767
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:54:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586955277;
-	bh=rI3d2YA9aZuRLd7E17D8Cdw174lWSEQaOukM4bC5a0o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pm0otlv6PokQL5dLMlfZBK2x6jjLCUlg38b3ma7QWuUKkqLBAKc1nNmC4u6US1Wl0
-	 hZp6q1As2+RO4DrSd1UylpQ0ogDoc9LVEw6m/jO4BropDZD4cYWFIYpLt/dpd/W3eb
-	 cNLoQ2R/qKgT3ZFo6Wf/HJAYnbpX5T1OGdg8Y7tA=
+	by mail.kernel.org (Postfix) with ESMTP id C3CD6206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:54:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="gHiMFG6J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S370637AbgDOMyf (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:54:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57196 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897211AbgDOLhJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:37:09 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8945121655;
-        Wed, 15 Apr 2020 11:37:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950628;
-        bh=rI3d2YA9aZuRLd7E17D8Cdw174lWSEQaOukM4bC5a0o=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oJ89LTHQZLaWOMXZsnClK7jP3H+0+Ut8qjWjVRyzODAlxVcM7OfC6qqZrBCV/oAfo
-         KByPXrix4poR3vSpQA+4LcNGxWWo7t3INyF2j1GqMkgBPEAn8WfoE+ydRw3QzKUPe7
-         1TFDW13mv34PLw8hF6EqoaacZdis8J7MRi6sCeno=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
-        Benjamin Coddington <bcodding@redhat.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 119/129] sunrpc: Fix gss_unwrap_resp_integ() again
-Date:   Wed, 15 Apr 2020 07:34:34 -0400
-Message-Id: <20200415113445.11881-119-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
-References: <20200415113445.11881-1-sashal@kernel.org>
+        id S370640AbgDOMys (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:54:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52232 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S370626AbgDOMyZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 08:54:25 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10320C061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 05:54:25 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id d77so17301234wmd.3
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 05:54:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=gMusnBiq0kgTDrpsrPDkgFe/p/9TlpUBGWfRPHTqHeY=;
+        b=gHiMFG6JrTjZo9dkSdah4baL1TKY6zn8dgqqjhx9KlClWT65Kta6zhWHlcNm7Q9N2/
+         AjW2VSTjJtR26Jb9jbjMCcXyTFqlPmicw9xIKD/GX6XIOGOkchdhS4pl3rH+vg5s4gw5
+         AYq6Y8XKrfaSAK4bYNekAHsbIO65aLIiWZA76sSA7kf4A+1ABc9e4y63ObGstHMjiAP4
+         OHHwoq5r4qBtEe5ttjDUKYre1VfXxAFIBPoJ1t6tljCaRVyBt/sVxsbjuoPs+b03IGPR
+         vCk7S/Df1FerRG27MEQ3YFhFF+fpnbiajjvheTSLGCKPjqraV9VLiu8TuCrXrUyO0OaZ
+         fgKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=gMusnBiq0kgTDrpsrPDkgFe/p/9TlpUBGWfRPHTqHeY=;
+        b=l/IR5vf54YKqfZzhc2JZzko1/cAPbc7FC+jBv4Wnc+DnUZrdgQ1d2HaXdbuugBBYG8
+         c/76EIfhQObAvcSIg2/KMmw4kXTyIaQVLSPc73+8tlRKmYOyf5nnpCnV/yCEWovJvBeO
+         XhPnlslgbfoyas/mPp6jQhQrThOBxI2egkdPI83/VZoeoqvm0D33pVmlvGMzdQ4ap2pI
+         aOafuzAUKKJk6OzFzPN61Y0TMElbXgP+HwzpPHU3NIFdGEQb49koxkugi8xNfn7i90Is
+         Itr/bgUTX0GbIhZFYbHegGQFAi6WTWANSOnOSf0m4IJrBkrvS47PS7XNrHWRqslkDI2U
+         RKyw==
+X-Gm-Message-State: AGi0PuZwYeGP97daINCwEH7d0a4HDCmOkvZqGCMhg742KQK3FPvYCn00
+        cnkZzucPnEWnFfEJkgosJDv3Rg==
+X-Google-Smtp-Source: APiQypLMKBGPhfHLyqMorjw7AJr8PA6vGRu8xG+UF78Eg7uanluyeFylavuUVqpQLJKBeGIwXi+r6w==
+X-Received: by 2002:a1c:4956:: with SMTP id w83mr4958282wma.43.1586955263636;
+        Wed, 15 Apr 2020 05:54:23 -0700 (PDT)
+Received: from ?IPv6:2a01:e35:2ec0:82b0:39cc:a07:8b48:cc56? ([2a01:e35:2ec0:82b0:39cc:a07:8b48:cc56])
+        by smtp.gmail.com with ESMTPSA id x18sm21955582wmi.29.2020.04.15.05.54.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Apr 2020 05:54:22 -0700 (PDT)
+Subject: Re: [PATCH v6 01/12] dt-bindings: add img, pvrsgx.yaml for
+ Imagination GPUs
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Maxime Ripard <maxime@cerno.tech>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        David Airlie <airlied@linux.ie>,
+        James Hogan <jhogan@kernel.org>,
+        dri-devel@lists.freedesktop.org, linux-mips@vger.kernel.org,
+        Paul Cercueil <paul@crapouillou.net>,
+        linux-samsung-soc@vger.kernel.org, letux-kernel@openphoenux.org,
+        Paul Burton <paulburton@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Tony Lindgren <tony@atomide.com>, Chen-Yu Tsai <wens@csie.org>,
+        Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org,
+        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Philipp Rossak <embed3d@gmail.com>,
+        openpvrsgx-devgroup@letux.org, linux-kernel@vger.kernel.org,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Daniel Vetter <daniel@ffwll.ch>, kernel@pyra-handheld.com
+References: <cover.1586939718.git.hns@goldelico.com>
+ <06fb6569259bb9183d0a0d0fe70ec4f3033b8aab.1586939718.git.hns@goldelico.com>
+ <20200415101251.o3wi5t6xvf56xmhq@gilmour.lan>
+ <72919514-0657-4B71-902F-3E775E528F64@goldelico.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ BSwxi7g3Mu7u5kUByanqHyA=
+Organization: Baylibre
+Message-ID: <f4fdca8a-d18c-a8d2-7f51-d1ebbbab3647@baylibre.com>
+Date:   Wed, 15 Apr 2020 14:54:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <72919514-0657-4B71-902F-3E775E528F64@goldelico.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+Hi,
 
-[ Upstream commit 4047aa909c4a40fceebc36fff708d465a4d3c6e2 ]
+On 15/04/2020 14:43, H. Nikolaus Schaller wrote:
+> 
+>> Am 15.04.2020 um 12:12 schrieb Maxime Ripard <maxime@cerno.tech>:
+>>
+>> Hi,
+>>
+>> On Wed, Apr 15, 2020 at 10:35:08AM +0200, H. Nikolaus Schaller wrote:
+>>> The Imagination PVR/SGX GPU is part of several SoC from
+>>> multiple vendors, e.g. TI OMAP, Ingenic JZ4780, Intel Poulsbo,
+>>> Allwinner A83 and others.
+>>>
+>>> With this binding, we describe how the SGX processor is
+>>> interfaced to the SoC (registers, interrupt etc.).
+>>>
+>>> In most cases, Clock, Reset and power management is handled
+>>> by a parent node or elsewhere (e.g. code in the driver).
+>>
+>> Wouldn't the "code in the driver" still require the clock / reset /
+>> power domain to be set in the DT?
+> 
+> Well, some SoC seem to use existing clocks and have no reset.
+> Or, although not recommended, they may have the io-address range
+> hard-coded.
 
-xdr_buf_read_mic() tries to find unused contiguous space in a
-received xdr_buf in order to linearize the checksum for the call
-to gss_verify_mic. However, the corner cases in this code are
-numerous and we seem to keep missing them. I've just hit yet
-another buffer overrun related to it.
+The possible clocks and resets should be added, even if optional.
 
-This overrun is at the end of xdr_buf_read_mic():
+Please look at the arm utgard, midgard and bifrost bindings.
 
-1284         if (buf->tail[0].iov_len != 0)
-1285                 mic->data = buf->tail[0].iov_base + buf->tail[0].iov_len;
-1286         else
-1287                 mic->data = buf->head[0].iov_base + buf->head[0].iov_len;
-1288         __read_bytes_from_xdr_buf(&subbuf, mic->data, mic->len);
-1289         return 0;
+Neil
 
-This logic assumes the transport has set the length of the tail
-based on the size of the received message. base + len is then
-supposed to be off the end of the message but still within the
-actual buffer.
-
-In fact, the length of the tail is set by the upper layer when the
-Call is encoded so that the end of the tail is actually the end of
-the allocated buffer itself. This causes the logic above to set
-mic->data to point past the end of the receive buffer.
-
-The "mic->data = head" arm of this if statement is no less fragile.
-
-As near as I can tell, this has been a problem forever. I'm not sure
-that minimizing au_rslack recently changed this pathology much.
-
-So instead, let's use a more straightforward approach: kmalloc a
-separate buffer to linearize the checksum. This is similar to
-how gss_validate() currently works.
-
-Coming back to this code, I had some trouble understanding what
-was going on. So I've cleaned up the variable naming and added
-a few comments that point back to the XDR definition in RFC 2203
-to help guide future spelunkers, including myself.
-
-As an added clean up, the functionality that was in
-xdr_buf_read_mic() is folded directly into gss_unwrap_resp_integ(),
-as that is its only caller.
-
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/sunrpc/auth_gss/auth_gss.c | 77 +++++++++++++++++++++++++---------
- 1 file changed, 58 insertions(+), 19 deletions(-)
-
-diff --git a/net/sunrpc/auth_gss/auth_gss.c b/net/sunrpc/auth_gss/auth_gss.c
-index d6cd2a519d9fb..2dc740acb3bf3 100644
---- a/net/sunrpc/auth_gss/auth_gss.c
-+++ b/net/sunrpc/auth_gss/auth_gss.c
-@@ -1935,35 +1935,69 @@ gss_unwrap_resp_auth(struct rpc_cred *cred)
- 	return 0;
- }
- 
-+/*
-+ * RFC 2203, Section 5.3.2.2
-+ *
-+ *	struct rpc_gss_integ_data {
-+ *		opaque databody_integ<>;
-+ *		opaque checksum<>;
-+ *	};
-+ *
-+ *	struct rpc_gss_data_t {
-+ *		unsigned int seq_num;
-+ *		proc_req_arg_t arg;
-+ *	};
-+ */
- static int
- gss_unwrap_resp_integ(struct rpc_task *task, struct rpc_cred *cred,
- 		      struct gss_cl_ctx *ctx, struct rpc_rqst *rqstp,
- 		      struct xdr_stream *xdr)
- {
--	struct xdr_buf integ_buf, *rcv_buf = &rqstp->rq_rcv_buf;
--	u32 data_offset, mic_offset, integ_len, maj_stat;
-+	struct xdr_buf gss_data, *rcv_buf = &rqstp->rq_rcv_buf;
- 	struct rpc_auth *auth = cred->cr_auth;
-+	u32 len, offset, seqno, maj_stat;
- 	struct xdr_netobj mic;
--	__be32 *p;
-+	int ret;
- 
--	p = xdr_inline_decode(xdr, 2 * sizeof(*p));
--	if (unlikely(!p))
-+	ret = -EIO;
-+	mic.data = NULL;
-+
-+	/* opaque databody_integ<>; */
-+	if (xdr_stream_decode_u32(xdr, &len))
- 		goto unwrap_failed;
--	integ_len = be32_to_cpup(p++);
--	if (integ_len & 3)
-+	if (len & 3)
- 		goto unwrap_failed;
--	data_offset = (u8 *)(p) - (u8 *)rcv_buf->head[0].iov_base;
--	mic_offset = integ_len + data_offset;
--	if (mic_offset > rcv_buf->len)
-+	offset = rcv_buf->len - xdr_stream_remaining(xdr);
-+	if (xdr_stream_decode_u32(xdr, &seqno))
- 		goto unwrap_failed;
--	if (be32_to_cpup(p) != rqstp->rq_seqno)
-+	if (seqno != rqstp->rq_seqno)
- 		goto bad_seqno;
-+	if (xdr_buf_subsegment(rcv_buf, &gss_data, offset, len))
-+		goto unwrap_failed;
- 
--	if (xdr_buf_subsegment(rcv_buf, &integ_buf, data_offset, integ_len))
-+	/*
-+	 * The xdr_stream now points to the beginning of the
-+	 * upper layer payload, to be passed below to
-+	 * rpcauth_unwrap_resp_decode(). The checksum, which
-+	 * follows the upper layer payload in @rcv_buf, is
-+	 * located and parsed without updating the xdr_stream.
-+	 */
-+
-+	/* opaque checksum<>; */
-+	offset += len;
-+	if (xdr_decode_word(rcv_buf, offset, &len))
-+		goto unwrap_failed;
-+	offset += sizeof(__be32);
-+	if (offset + len > rcv_buf->len)
- 		goto unwrap_failed;
--	if (xdr_buf_read_mic(rcv_buf, &mic, mic_offset))
-+	mic.len = len;
-+	mic.data = kmalloc(len, GFP_NOFS);
-+	if (!mic.data)
-+		goto unwrap_failed;
-+	if (read_bytes_from_xdr_buf(rcv_buf, offset, mic.data, mic.len))
- 		goto unwrap_failed;
--	maj_stat = gss_verify_mic(ctx->gc_gss_ctx, &integ_buf, &mic);
-+
-+	maj_stat = gss_verify_mic(ctx->gc_gss_ctx, &gss_data, &mic);
- 	if (maj_stat == GSS_S_CONTEXT_EXPIRED)
- 		clear_bit(RPCAUTH_CRED_UPTODATE, &cred->cr_flags);
- 	if (maj_stat != GSS_S_COMPLETE)
-@@ -1971,16 +2005,21 @@ gss_unwrap_resp_integ(struct rpc_task *task, struct rpc_cred *cred,
- 
- 	auth->au_rslack = auth->au_verfsize + 2 + 1 + XDR_QUADLEN(mic.len);
- 	auth->au_ralign = auth->au_verfsize + 2;
--	return 0;
-+	ret = 0;
-+
-+out:
-+	kfree(mic.data);
-+	return ret;
-+
- unwrap_failed:
- 	trace_rpcgss_unwrap_failed(task);
--	return -EIO;
-+	goto out;
- bad_seqno:
--	trace_rpcgss_bad_seqno(task, rqstp->rq_seqno, be32_to_cpup(p));
--	return -EIO;
-+	trace_rpcgss_bad_seqno(task, rqstp->rq_seqno, seqno);
-+	goto out;
- bad_mic:
- 	trace_rpcgss_verify_mic(task, maj_stat);
--	return -EIO;
-+	goto out;
- }
- 
- static int
--- 
-2.20.1
+> 
+> BR,
+> Nikolaus
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
 
