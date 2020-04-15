@@ -2,173 +2,121 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4AD6C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 05:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E3BC3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 05:25:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 772952076A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 05:24:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=jgottula-com.20150623.gappssmtp.com header.i=@jgottula-com.20150623.gappssmtp.com header.b="jDnPnIgi"
+	by mail.kernel.org (Postfix) with ESMTP id 7D4A52076A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 05:25:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393276AbgDOFYw (ORCPT
+        id S2405076AbgDOFY6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 01:24:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38838 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2389365AbgDOFYp (ORCPT
+        Wed, 15 Apr 2020 01:24:58 -0400
+Received: from h1.fbrelay.privateemail.com ([131.153.2.42]:45201 "EHLO
+        h1.fbrelay.privateemail.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389364AbgDOFYp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Apr 2020 01:24:45 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8454BC061A0E
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 22:24:43 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id r7so1508428vso.2
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 22:24:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jgottula-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=CjsNluhDo6fii/3wuLR0y0/drIzNQWBRrY6KxvovKTQ=;
-        b=jDnPnIgi7FFitiIZ8LbcTGZwv9agTPLMLv2ivenUIbh5qdeAbnOQwcSdYlcK41IrGL
-         /sUcePO+BF/BiiWpgdjxBHB0NHiqtFuTtRo2EPBN7eh7iBxtSffRUr1/igweyng3ffhn
-         +GqPqMKKV0S48gRa2B/h6fFWtGhb5cFrUpKlD+Re1OkUEwocS8u7VBovDftc/0vCfC9g
-         L7SYN2MMIKb0go4htOsrNbXHfS6H3QeEH8FEaFlie9s2YfHqkwJquuTf6SBL+Rq/zJFK
-         148j0XmJh6nypq7hsQNHk8H1wEb9XtuiokbeZaAE3WABugYFNvtMI9ajTSP4VRYQpRa1
-         ADbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=CjsNluhDo6fii/3wuLR0y0/drIzNQWBRrY6KxvovKTQ=;
-        b=ep70e1zN+1ORytQURBV45gsxQcvxIBarhjc0ShuhDlba03XOxjFB+Z79sUqIvXga71
-         et82iv9g830PZDphenvTO+2TFjGZRNuPiQ0r1ZbZPLWVCds8kJp1Q9xBuU9amsOh/mqn
-         UXMa6myAp0wQOwfugvPz+pPThr/h3LqeGoD1QzRh6hrXzGnnnx712a8Z609cKmnG50wt
-         78/8jS9itp+awQKJT8O+LfjHxtnko8y/wA7iz68RjISb93/GudT6vEeSj7PreczF8AQF
-         y67jk9e6D3SbqgvmblqPlbc/hSthX/Gs8xe6Uuew6OXPdlBWOcIejZVOIDyXHQnUfxSa
-         sHQg==
-X-Gm-Message-State: AGi0PubAjkP/LI2YegyaKPaShPs4V8jQJTw6iC6NKARe6CLVLHRQRYf2
-        awNRBtSxg/3LSEddwhmx1WrfbmA0AYBnXbRS0gOy8lmPHCceGQ==
-X-Google-Smtp-Source: APiQypKiW+5K0iIExgtZmen2x20OqxZ63I0VRkzalxonLHEZYX6mBfSp24X+mssKwRT5Rz35YF2TSuEg/IGVr/32UbA=
-X-Received: by 2002:a05:6102:a01:: with SMTP id t1mr2866733vsa.108.1586928282467;
- Tue, 14 Apr 2020 22:24:42 -0700 (PDT)
+X-Greylist: delayed 467 seconds by postgrey-1.27 at vger.kernel.org; Wed, 15 Apr 2020 01:24:44 EDT
+Received: from MTA-06-3.privateemail.com (mta-06.privateemail.com [68.65.122.16])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by h1.fbrelay.privateemail.com (Postfix) with ESMTPS id E865680684
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 01:16:56 -0400 (EDT)
+Received: from MTA-06.privateemail.com (localhost [127.0.0.1])
+        by MTA-06.privateemail.com (Postfix) with ESMTP id 0DD256003F;
+        Wed, 15 Apr 2020 01:16:55 -0400 (EDT)
+Received: from APP-05 (unknown [10.20.147.155])
+        by MTA-06.privateemail.com (Postfix) with ESMTPA id DFD0F6003D;
+        Wed, 15 Apr 2020 05:16:54 +0000 (UTC)
+Date:   Wed, 15 Apr 2020 00:16:54 -0500 (CDT)
+From:   Christopher M Riedl <cmr@informatik.wtf>
+Reply-To: Christopher M Riedl <cmr@informatik.wtf>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Message-ID: <581069710.188209.1586927814880@privateemail.com>
+In-Reply-To: <c88b13ede49744d81fdab32e037a7ae10f0b241f.1585233657.git.christophe.leroy@c-s.fr>
+References: <c88b13ede49744d81fdab32e037a7ae10f0b241f.1585233657.git.christophe.leroy@c-s.fr>
+Subject: Re: [RFC PATCH] powerpc/lib: Fixing use a temporary mm for code
+ patching
 MIME-Version: 1.0
-From:   Justin Gottula <justin@jgottula.com>
-Date:   Tue, 14 Apr 2020 22:24:18 -0700
-Message-ID: <CAKuMfTUPzPjuNk+T_GQMCKoB9ssh2arr6xRiu6VODwwB0PMdZw@mail.gmail.com>
-Subject: [PATCH] zram: fix writeback_store returning zero in most situations
-To:     Minchan Kim <minchan@kernel.org>, Nitin Gupta <ngupta@vflare.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+Importance: Normal
+X-Mailer: Open-Xchange Mailer v7.10.2-Rev24
+X-Originating-Client: open-xchange-appsuite
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 3b82a051c101 ("zram: fix error return codes not being returned in
-writeback_store") altered the return value logic in writeback_store such
-that ret = len is done at the beginning of the function, which alleviated
-an issue where the -EIO and -ENOSPC break-outs from the for-loop would
-unintentionally hit the ret = len previously located at the end of the
-function. That change in itself was largely fine; however, it exposed
-another return value logic problem.
+> On March 26, 2020 9:42 AM Christophe Leroy <christophe.leroy@c-s.fr> wrote:
+> 
+>  
+> This patch fixes the RFC series identified below.
+> It fixes three points:
+> - Failure with CONFIG_PPC_KUAP
+> - Failure to write do to lack of DIRTY bit set on the 8xx
+> - Inadequaly complex WARN post verification
+> 
+> However, it has an impact on the CPU load. Here is the time
+> needed on an 8xx to run the ftrace selftests without and
+> with this series:
+> - Without CONFIG_STRICT_KERNEL_RWX		==> 38 seconds
+> - With CONFIG_STRICT_KERNEL_RWX			==> 40 seconds
+> - With CONFIG_STRICT_KERNEL_RWX + this series	==> 43 seconds
+> 
+> Link: https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=166003
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> ---
+>  arch/powerpc/lib/code-patching.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/powerpc/lib/code-patching.c b/arch/powerpc/lib/code-patching.c
+> index f156132e8975..4ccff427592e 100644
+> --- a/arch/powerpc/lib/code-patching.c
+> +++ b/arch/powerpc/lib/code-patching.c
+> @@ -97,6 +97,7 @@ static int map_patch(const void *addr, struct patch_mapping *patch_mapping)
+>  	}
+>  
+>  	pte = mk_pte(page, pgprot);
+> +	pte = pte_mkdirty(pte);
+>  	set_pte_at(patching_mm, patching_addr, ptep, pte);
+>  
+>  	init_temp_mm(&patch_mapping->temp_mm, patching_mm);
+> @@ -168,7 +169,9 @@ static int do_patch_instruction(unsigned int *addr, unsigned int instr)
+>  			(offset_in_page((unsigned long)addr) /
+>  				sizeof(unsigned int));
+>  
+> +	allow_write_to_user(patch_addr, sizeof(instr));
+>  	__patch_instruction(addr, instr, patch_addr);
+> +	prevent_write_to_user(patch_addr, sizeof(instr));
+> 
 
-Currently, when the writeback_store for-loop does _not_ encounter the -EIO
-or -ENOSPC situations, and _does_ attempt to write at least one block to
-the backing device, the function will simply return whatever the most
-recent submit_bio_wait return value was. This means that if at least one
-block write is attempted, the function will never actually return len; and,
-if the last written block's call to submit_bio_wait was successful, then
-the function will actually return _zero_. (Prior to the above-mentioned
-patch, this situation was masked by the fact that the ret = len assignment
-occurred _after_ all calls to submit_bio_wait.)
+On radix we can map the page with PAGE_KERNEL protection which ends up
+setting EAA[0] in the radix PTE. This means the KUAP (AMR) protection is
+ignored (ISA v3.0b Fig. 35) since we are accessing the page from MSR[PR]=0.
 
-So, if writeback of one or more blocks is attempted, and the last
-submit_bio_wait is successful (which will usually be the case), userspace
-programs performing write(3) syscalls to /sys/block/zramN/writeback will
-receive a return value of zero. Well-written programs use non-negative
-return values from write(3) to determine if a partial write occurred, and
-in that circumstance, they generally add the value to their buffer pointer
-and call write(3) again. Programs written this way will, as a result,
-effectively spin in a loop calling write(3) forever (or at least until an
-actual error value does finally crop up), repeatedly writing the entire
-string buffer ("huge" or "idle") to the writeback file and getting the
-false impression that no forward progress is being made, since zero bytes
-of the buffer are apparently being consumed with each syscall.
-
-I came across this problem while adding a new parameter to the zramctl
-program, in a personal fork of the util-linux suite, that would allow the
-user to easily request writeback on a zram device. In zramctl (and the
-util-linux programs in general), sysfs writes are typically done via
-ul_path_write_string, which invokes write_all. The write_all utility
-function is written in such a way that write(3) return values _not greater
-than zero_ are treated as error conditions; upon which, any errno value
-other than EINTR or EAGAIN will cause the function to bail out and indicate
-an error. A return value of zero is indeed greater than zero; and an errno
-value of zero is neither EINTR nor EAGAIN; so write_all bails and indicates
-an error. (And thanks to automatic strerror-based printout functions, this
-of course produces the message "error: Success", a personal favorite of
-mine.)
-
-The writeback_store return value problem is addressed by storing the
-submit_bio_wait result in a separate local variable, which is only assigned
-to ret if it is actually an errno value.
-
-The behavior should now be that, if an error arises from one or more of the
-calls to submit_bio_wait during writeback_store, and none of the other
-explicit error cases in the function are triggered, then the most recent
-submit_bio_wait error will be returned. Otherwise, the function will return
-len.
-
-Fixes: a939888ec38b ("zram: support idle/huge page writeback")
-Signed-off-by: Justin Gottula <justin@jgottula.com>
----
-Side Note: My understanding of whether a return value of zero from
-write(3) is actually even valid--given a nonzero length parameter--became a
-whole lot murkier when I took a really close look at the Linux and POSIX
-man pages, as well as Internet discussions on the topic. Initially I was
-sure that a zero return value indicated that no error had occurred, but
-that no forward progress on the write had been made either; and that as
-such, the implementation of write_all in util-linux was faulty. But now
-I've come to understand that apparently some historical implementations of
-write(3) have actually returned zero as an indication that a non-blocking
-write on certain special files would block (though modern POSIX specifies
-returning -1 and setting errno to EAGAIN for this case); and that a return
-value of zero may apparently be used as an EOF indication. So perhaps
-treating a zero result as an error in write_all, implicit and accidental
-though it may have appeared, was actually intentional and well-founded all
-along; I don't entirely know. In any case, though, it's clear that the zram
-driver shouldn't be returning 0 in this circumstance.
-
- drivers/block/zram/zram_drv.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
-index 1bf4a908a0bd..e55330a615c2 100644
---- a/drivers/block/zram/zram_drv.c
-+++ b/drivers/block/zram/zram_drv.c
-@@ -627,6 +627,7 @@ static ssize_t writeback_store(struct device *dev,
-    struct bio_vec bio_vec;
-    struct page *page;
-    ssize_t ret = len;
-+   int bio_ret;
-    int mode;
-    unsigned long blk_idx = 0;
-
-@@ -719,8 +720,9 @@ static ssize_t writeback_store(struct device *dev,
-         * XXX: A single page IO would be inefficient for write
-         * but it would be not bad as starter.
-         */
--       ret = submit_bio_wait(&bio);
--       if (ret) {
-+       bio_ret = submit_bio_wait(&bio);
-+       if (bio_ret) {
-+           ret = bio_ret;
-            zram_slot_lock(zram, index);
-            zram_clear_flag(zram, index, ZRAM_UNDER_WB);
-            zram_clear_flag(zram, index, ZRAM_IDLE);
---
-2.25.1
+Can we employ a similar approach on the 8xx? I would prefer *not* to wrap
+the __patch_instruction() with the allow_/prevent_write_to_user() KUAP things
+because this is a temporary kernel mapping which really isn't userspace in
+the usual sense.
+ 
+>  	err = unmap_patch(&patch_mapping);
+>  	if (err)
+> @@ -179,7 +182,7 @@ static int do_patch_instruction(unsigned int *addr, unsigned int instr)
+>  	 * think we just wrote.
+>  	 * XXX: BUG_ON() instead?
+>  	 */
+> -	WARN_ON(memcmp(addr, &instr, sizeof(instr)));
+> +	WARN_ON(*addr != instr);
+>  
+>  out:
+>  	local_irq_restore(flags);
+> -- 
+> 2.25.0
