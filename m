@@ -2,142 +2,89 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E39ECC38A2C
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:27:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23C44C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:27:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAAD4206F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:27:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E33BE206F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:27:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wo1kcmGu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406227AbgDOT1M (ORCPT
+        id S2406703AbgDOT1v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 15:27:12 -0400
-Received: from foss.arm.com ([217.140.110.172]:51634 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404592AbgDOT0s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 15:26:48 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0A2A3C14;
-        Wed, 15 Apr 2020 12:26:47 -0700 (PDT)
-Received: from [192.168.1.123] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EDBA73F73D;
-        Wed, 15 Apr 2020 12:26:44 -0700 (PDT)
-Subject: Re: [PATCH v3 05/12] arm64: csum: Disable KASAN for do_csum()
-To:     Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org
-Cc:     linux-arch@vger.kernel.org, kernel-team@android.com,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Mark Rutland <mark.rutland@arm.com>
-References: <20200415165218.20251-1-will@kernel.org>
- <20200415165218.20251-6-will@kernel.org>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <4d31aca5-56dd-2ca5-d1b8-f754ad184b04@arm.com>
-Date:   Wed, 15 Apr 2020 20:26:43 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 15 Apr 2020 15:27:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57058 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2404592AbgDOT1a (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 15:27:30 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31A7FC061A0F;
+        Wed, 15 Apr 2020 12:27:30 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id v9so4958783ljk.12;
+        Wed, 15 Apr 2020 12:27:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=47rQ3+FA2D3LJs/1g842b1siYUlXkXN6VqdcwjogJq4=;
+        b=Wo1kcmGuq3Ni6b11dpMKa6BWqZWI7iFPQlOO6XuZ3kg2OCLqLnmtNfu/sPcqyQWleQ
+         4kwKK+VMgYzFYdxJ4QOKV1lSoP5aiyMIxTt1Z4+BHUQSigz2EvLFOQ236TFdusZts2ds
+         q5Lvj/WIu4fTVBFN9XqTbFE7NFuT0ZH8UFj+g2N4AqQpg7WE2r2PubGJJgFxnTUFSmID
+         WXmSW3k0PfGfoHcO8D2QISDIfsCoPmKaCbNaWwQf4vfqmqkPHofAM85BoL8eQcsSqdAc
+         npOQPuniuxgTHrChKAuUdhvgl3qrCt1b6ukw5j2mIEa3myXxAd7/+N7aeHKUn7xr2pI3
+         1BvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=47rQ3+FA2D3LJs/1g842b1siYUlXkXN6VqdcwjogJq4=;
+        b=XmY56cq8oIEkirdIyvGRnrYMwabfdcGYRWh5IiDB0w7EvCiel8pHV/02OVAE2IHSs4
+         Gq4drUeBmI3LSBw/Uni+qHbWSVMAMFRFrsWdVR4AC64l2lp3p4ABZK5NKYKSvV6gMMS1
+         CLtXl9Bm8s/awL9iL/IRedTWMwtKkojMIUcb0/5hKuySenewKJopaol20nfe3kyNtari
+         ijSAe/nsaOTf/vsyPe47lLg1UhRthW9rmWstr+YS8WYsM5JSA7qm4b990pLQkFvRqMHJ
+         ma3L+plt4dC2c/HqbwTtlsg/ilIsGzUYgPM06ETAD+rPhpDEmcztkacd3KM02CcSNnQP
+         KQ3w==
+X-Gm-Message-State: AGi0PuYjFp/OIvhpnnwov5T9MuL5srvJcvKJ7jEOEkUJZB0nTd3kOfU1
+        Ng+AhoEDa/kHoCOni0JJySYgY1uv8X4lfbkK/tU=
+X-Google-Smtp-Source: APiQypJfKLCHWzDvZAs+sC93xTgAqt8ibneXwnMKrWfuDDNeT8PGQvOG6N7qZNWFRwp0sNft7o5NTBLjkEGHEpe+nNI=
+X-Received: by 2002:a2e:9b4a:: with SMTP id o10mr4114274ljj.117.1586978848666;
+ Wed, 15 Apr 2020 12:27:28 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200415165218.20251-6-will@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20200415185941.13956-1-mporter@konsulko.com>
+In-Reply-To: <20200415185941.13956-1-mporter@konsulko.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Wed, 15 Apr 2020 16:27:52 -0300
+Message-ID: <CAOMZO5Ct+cpdvfTEvk1PtQpScJM4iyoMFyChbtGromvuAV291w@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: imx8mm: specify #sound-dai-cells for SAI nodes
+To:     Matt Porter <mporter@konsulko.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-15 5:52 pm, Will Deacon wrote:
-> do_csum() over-reads the source buffer and therefore abuses
-> READ_ONCE_NOCHECK() to avoid tripping up KASAN. In preparation for
-> READ_ONCE_NOCHECK() becoming a macro, and therefore losing its
-> '__no_sanitize_address' annotation, just annotate do_csum() explicitly
-> and fall back to normal loads.
+Hi Matt,
 
-FWIW with most compilers I played with, the read-once-ness *was* also 
-important to ensure the uint128_t accesses compose to nice efficient 
-LDPs rather than being split into a motley mess of individual LDRs.
+On Wed, Apr 15, 2020 at 4:00 PM Matt Porter <mporter@konsulko.com> wrote:
+>
+> Add #sound-dai-cells properties to SAI nodes.
+>
+> Signed-off-by: Matt Porter <mporter@konsulko.com>
 
-The buffer loads that aren't the first or potentially the last didn't 
-strictly need to be nocheck, however since the whole range gets 
-explicitly checked up-front they may as well avoid further unnecessary 
-KASAN penalty, plus it made things look nice and consistent :)
-
-Robin.
-
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Robin Murphy <robin.murphy@arm.com>
-> Signed-off-by: Will Deacon <will@kernel.org>
-> ---
->   arch/arm64/lib/csum.c | 20 ++++++++++++--------
->   1 file changed, 12 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/arm64/lib/csum.c b/arch/arm64/lib/csum.c
-> index 60eccae2abad..78b87a64ca0a 100644
-> --- a/arch/arm64/lib/csum.c
-> +++ b/arch/arm64/lib/csum.c
-> @@ -14,7 +14,11 @@ static u64 accumulate(u64 sum, u64 data)
->   	return tmp + (tmp >> 64);
->   }
->   
-> -unsigned int do_csum(const unsigned char *buff, int len)
-> +/*
-> + * We over-read the buffer and this makes KASAN unhappy. Instead, disable
-> + * instrumentation and call kasan explicitly.
-> + */
-> +unsigned int __no_sanitize_address do_csum(const unsigned char *buff, int len)
->   {
->   	unsigned int offset, shift, sum;
->   	const u64 *ptr;
-> @@ -42,7 +46,7 @@ unsigned int do_csum(const unsigned char *buff, int len)
->   	 * odd/even alignment, and means we can ignore it until the very end.
->   	 */
->   	shift = offset * 8;
-> -	data = READ_ONCE_NOCHECK(*ptr++);
-> +	data = *ptr++;
->   #ifdef __LITTLE_ENDIAN
->   	data = (data >> shift) << shift;
->   #else
-> @@ -58,10 +62,10 @@ unsigned int do_csum(const unsigned char *buff, int len)
->   	while (unlikely(len > 64)) {
->   		__uint128_t tmp1, tmp2, tmp3, tmp4;
->   
-> -		tmp1 = READ_ONCE_NOCHECK(*(__uint128_t *)ptr);
-> -		tmp2 = READ_ONCE_NOCHECK(*(__uint128_t *)(ptr + 2));
-> -		tmp3 = READ_ONCE_NOCHECK(*(__uint128_t *)(ptr + 4));
-> -		tmp4 = READ_ONCE_NOCHECK(*(__uint128_t *)(ptr + 6));
-> +		tmp1 = *(__uint128_t *)ptr;
-> +		tmp2 = *(__uint128_t *)(ptr + 2);
-> +		tmp3 = *(__uint128_t *)(ptr + 4);
-> +		tmp4 = *(__uint128_t *)(ptr + 6);
->   
->   		len -= 64;
->   		ptr += 8;
-> @@ -85,7 +89,7 @@ unsigned int do_csum(const unsigned char *buff, int len)
->   		__uint128_t tmp;
->   
->   		sum64 = accumulate(sum64, data);
-> -		tmp = READ_ONCE_NOCHECK(*(__uint128_t *)ptr);
-> +		tmp = *(__uint128_t *)ptr;
->   
->   		len -= 16;
->   		ptr += 2;
-> @@ -100,7 +104,7 @@ unsigned int do_csum(const unsigned char *buff, int len)
->   	}
->   	if (len > 0) {
->   		sum64 = accumulate(sum64, data);
-> -		data = READ_ONCE_NOCHECK(*ptr);
-> +		data = *ptr;
->   		len -= 8;
->   	}
->   	/*
-> 
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
