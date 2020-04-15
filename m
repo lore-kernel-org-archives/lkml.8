@@ -2,450 +2,149 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 870A8C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:44:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB1AAC2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:45:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AAD2206F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:44:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B877D20737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:45:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="GL2ETJs5"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CgqLhOqr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2896548AbgDOKoS (ORCPT
+        id S2896557AbgDOKpA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 06:44:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57146 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2896479AbgDOKXi (ORCPT
+        Wed, 15 Apr 2020 06:45:00 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22140 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2896512AbgDOKnV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 06:23:38 -0400
-Received: from mo6-p02-ob.smtp.rzone.de (mo6-p02-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5302::6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2745C03C1AA;
-        Wed, 15 Apr 2020 03:22:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1586946170;
-        s=strato-dkim-0002; d=chronox.de;
-        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=hwS+x/N5sydmJA2FCwk6A+EN+suF8ZGXBUS8yhutk64=;
-        b=GL2ETJs5cI6/lzkYaFA383WdxmnDNqDkpAKRyfZNZAUNcpBW9sLCd2IypAIlfQLHVv
-        NQlWkOhQfebDu5pvDOQDkb8O1mmn6RZs/a+iygQMQBdG9Li0sbdPw/YtuiC32UAC+sAp
-        5G5/PzcN8wVvEH8AukvoyJAg4B+PVKh0+dd9jHFoKhOAngK8OQIZKtcYUO1QRgKh7Mon
-        ZOO+/2augkM39wCTOB6En8QghL9VJiIP1ke4SBvgwJSFD92Xx1sr12GzNDcuDm1VKb4i
-        vePmFEFyIgzocxY5/kiQLrGTB3kH84/t/MVdABV6TsnA85g+c70nFaPb20flnRRIdov3
-        eOEQ==
-X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzGHXPZIvSaiyU="
-X-RZG-CLASS-ID: mo00
-Received: from positron.chronox.de
-        by smtp.strato.de (RZmta 46.4.0 DYNA|AUTH)
-        with ESMTPSA id 404ef0w3FAJj11z
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Wed, 15 Apr 2020 12:19:45 +0200 (CEST)
-From:   Stephan =?ISO-8859-1?Q?M=FCller?= <smueller@chronox.de>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Nicolai Stange <nstange@suse.de>,
-        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
-        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
-        Roman Drahtmueller <draht@schaltsekun.de>,
-        Neil Horman <nhorman@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Julia Lawall <julia.lawall@inria.fr>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [PATCH v30 11/12] LRNG - add interface for gathering of raw entropy
-Date:   Wed, 15 Apr 2020 12:14:49 +0200
-Message-ID: <4946330.IVaNDfpqxB@positron.chronox.de>
-In-Reply-To: <11836144.hkEK2qVKZC@positron.chronox.de>
-References: <11836144.hkEK2qVKZC@positron.chronox.de>
+        Wed, 15 Apr 2020 06:43:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586947393;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=pNKRF/g9GTKiJfx6XpsmKFnQkmViCDbB0eElZUOgBB0=;
+        b=CgqLhOqrbnMMezak2sKFn18s5x0Kcq6icvuywJyhDihesf7VlG0UNyie89meGUPV4SioKH
+        tQbWU0WdDo77v3cJJvbgKUj7+YsdN7QxxQuVCPNHfPxZ39Jo58av7nbDybDUZPtQt6H9is
+        qDlozoTgZpywGtG682a84L6d8vLDxxc=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-288-5F2ZtMycPQaTNZtQLbx7zQ-1; Wed, 15 Apr 2020 06:43:12 -0400
+X-MC-Unique: 5F2ZtMycPQaTNZtQLbx7zQ-1
+Received: by mail-wr1-f70.google.com with SMTP id p16so7568087wro.16
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 03:43:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=pNKRF/g9GTKiJfx6XpsmKFnQkmViCDbB0eElZUOgBB0=;
+        b=WnWhTYKn8hDv7jG89xxaA76c5o1ZXMCFMwTxIn86ZvGuX1FuacJM9D0ezfRhzhHC3x
+         QMeQ3WH+rO1RPdPJOZRx8WvOfh/gbFzHA/YPP0z5GUVbR1a2S/wNwdxqP2H9y4s5I3xv
+         KqPZ6repno3ALTrLubf1iu99UyHQdAsm0gxPDMCXOWyOxRAqKgyFw1FT0h6nRiI583xA
+         5bhDDFYZwqWP/jroxxeQSzzMkZ3ls9jbs86i8bDh2e1Z5vF26BqDa+emPCGRmy3A+jl6
+         p0q4MzR/FjgIcJ1R6mqnoWpuUxOq8f3JxPZ+ssEioMn3qv6tMhaXFpAfhrBzqbz83Dzl
+         +x0g==
+X-Gm-Message-State: AGi0PuaIlwuOzccGBwX/W6ugpRe4WebpjV6xzIstS7FD+KBBVY03/YKC
+        Rrn7F41XU65HdUJDL2E5vfPvJE5kn+p74jU+y0Uu661lQzQ8E7wAjFgLU1yi7Yr1W+fsGSszPpS
+        C2MJre6nURfdXEoDk52PpvHtP
+X-Received: by 2002:a1c:9cc6:: with SMTP id f189mr4456052wme.75.1586947390579;
+        Wed, 15 Apr 2020 03:43:10 -0700 (PDT)
+X-Google-Smtp-Source: APiQypKhnKuWPRttaxxiCUXsxLxq1NvxVDqGPZoJ9Xtcgg2zFz4OAoyXX13siir7frpyClDWevEokw==
+X-Received: by 2002:a1c:9cc6:: with SMTP id f189mr4456039wme.75.1586947390362;
+        Wed, 15 Apr 2020 03:43:10 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id h2sm22873378wmf.34.2020.04.15.03.43.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2020 03:43:09 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Colin Ian King <colin.king@canonical.com>
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH][next] drivers: hv: remove redundant assignment to pointer primary_channel
+In-Reply-To: <606c442c-1923-77d4-c350-e06878172c44@canonical.com>
+References: <20200414152343.243166-1-colin.king@canonical.com> <87d08axb7k.fsf@vitty.brq.redhat.com> <606c442c-1923-77d4-c350-e06878172c44@canonical.com>
+Date:   Wed, 15 Apr 2020 12:43:08 +0200
+Message-ID: <87wo6hvxkz.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The test interface allows a privileged process to capture the raw
-unconditioned noise that is collected by the LRNG for statistical
-analysis. Such testing allows the analysis how much entropy
-the interrupt noise source provides on a given platform.
-Extracted noise data is not used to seed the LRNG. This
-is a test interface and not appropriate for production systems.
-Yet, the interface is considered to be sufficiently secured for
-production systems.
+Colin Ian King <colin.king@canonical.com> writes:
 
-Access to the data is given through the lrng_raw debugfs file. The
-data buffer should be multiples of sizeof(u32) to fill the entire
-buffer. Using the option lrng_testing.boot_test=3D1 the raw noise of
-the first 1000 entropy events since boot can be sampled.
+> On 14/04/2020 17:51, Vitaly Kuznetsov wrote:
+>> Colin King <colin.king@canonical.com> writes:
+>> 
+>>> From: Colin Ian King <colin.king@canonical.com>
+>>>
+>>> The pointer primary_channel is being assigned with a value that is never,
+>>> The assignment is redundant and can be removed.
+>>>
+>>> Addresses-Coverity: ("Unused value")
+>>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+>>> ---
+>>>  drivers/hv/channel_mgmt.c | 2 --
+>>>  1 file changed, 2 deletions(-)
+>>>
+>>> diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
+>>> index ffd7fffa5f83..f7bbb8dc4b0f 100644
+>>> --- a/drivers/hv/channel_mgmt.c
+>>> +++ b/drivers/hv/channel_mgmt.c
+>>> @@ -425,8 +425,6 @@ void hv_process_channel_removal(struct vmbus_channel *channel)
+>>>  
+>>>  	if (channel->primary_channel == NULL) {
+>>>  		list_del(&channel->listentry);
+>>> -
+>>> -		primary_channel = channel;
+>>>  	} else {
+>>>  		primary_channel = channel->primary_channel;
+>>>  		spin_lock_irqsave(&primary_channel->lock, flags);
+>> 
+>> If I'm looking at the right source (5.7-rc1) it *is* beeing used:
+>> 
+>> 	if (channel->primary_channel == NULL) {
+>> 		list_del(&channel->listentry);
+>> 
+>> 		primary_channel = channel;
+>> 	} else {
+>> 		primary_channel = channel->primary_channel;
+>> 		spin_lock_irqsave(&primary_channel->lock, flags);
+>> 		list_del(&channel->sc_list);
+>> 		spin_unlock_irqrestore(&primary_channel->lock, flags);
+>> 	}
+>> 
+>> 	/*
+>> 	 * We need to free the bit for init_vp_index() to work in the case
+>> 	 * of sub-channel, when we reload drivers like hv_netvsc.
+>> 	 */
+>> 	if (channel->affinity_policy == HV_LOCALIZED)
+>> 		cpumask_clear_cpu(channel->target_cpu,
+>> 				  &primary_channel->alloced_cpus_in_node);
+>>                                    ^^^^^ HERE ^^^^^
+>> 
+>
+> I was basing my change on linux-next that has removed a hunk of code:
+>
+> commit bcefa400900739310e8ef0cb34cbe029c404455c
+> Author: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
+> Date:   Mon Apr 6 02:15:11 2020 +0200
+>
+>     Drivers: hv: vmbus: Remove the unused HV_LOCALIZED channel affinity
+> logic
+>
 
-This test interface allows generating the data required for
-analysis whether the LRNG is in compliance with SP800-90B
-sections 3.1.3 and 3.1.4.
+Ah, please add the right 'Fixes:' tag then.
 
-CC: "Eric W. Biederman" <ebiederm@xmission.com>
-CC: "Alexander E. Patrakov" <patrakov@gmail.com>
-CC: "Ahmed S. Darwish" <darwish.07@gmail.com>
-CC: "Theodore Y. Ts'o" <tytso@mit.edu>
-CC: Willy Tarreau <w@1wt.eu>
-CC: Matthew Garrett <mjg59@srcf.ucam.org>
-CC: Vito Caputo <vcaputo@pengaru.com>
-CC: Andreas Dilger <adilger.kernel@dilger.ca>
-CC: Jan Kara <jack@suse.cz>
-CC: Ray Strode <rstrode@redhat.com>
-CC: William Jon McCann <mccann@jhu.edu>
-CC: zhangjs <zachary@baishancloud.com>
-CC: Andy Lutomirski <luto@kernel.org>
-CC: Florian Weimer <fweimer@redhat.com>
-CC: Lennart Poettering <mzxreary@0pointer.de>
-CC: Nicolai Stange <nstange@suse.de>
-Reviewed-by: Roman Drahtmueller <draht@schaltsekun.de>
-Tested-by: Roman Drahtm=FCller <draht@schaltsekun.de>
-Tested-by: Marcelo Henrique Cerri <marcelo.cerri@canonical.com>
-Tested-by: Neil Horman <nhorman@redhat.com>
-Signed-off-by: Stephan Mueller <smueller@chronox.de>
-=2D--
- drivers/char/lrng/Kconfig        |  16 ++
- drivers/char/lrng/Makefile       |   1 +
- drivers/char/lrng/lrng_testing.c | 269 +++++++++++++++++++++++++++++++
- 3 files changed, 286 insertions(+)
- create mode 100644 drivers/char/lrng/lrng_testing.c
-
-diff --git a/drivers/char/lrng/Kconfig b/drivers/char/lrng/Kconfig
-index 323c657f7005..014ee82df79a 100644
-=2D-- a/drivers/char/lrng/Kconfig
-+++ b/drivers/char/lrng/Kconfig
-@@ -162,4 +162,20 @@ config LRNG_APT_CUTOFF
- 	default 325 if !LRNG_APT_BROKEN
- 	default 32 if LRNG_APT_BROKEN
-=20
-+config LRNG_TESTING
-+	bool "Enable entropy test interface to LRNG noise source"
-+	depends on DEBUG_FS
-+	help
-+	  The test interface allows a privileged process to capture
-+	  the raw unconditioned noise that is collected by the LRNG
-+	  for statistical analysis. Extracted noise data is not used
-+	  to seed the LRNG.
-+
-+	  The raw noise data can be obtained using the lrng_raw
-+	  debugfs file. Using the option lrng_testing.boot_test=3D1
-+	  the raw noise of the first 1000 entropy events since boot
-+	  can be sampled.
-+
-+	  If unsure, say N.
-+
- endif # LRNG
-diff --git a/drivers/char/lrng/Makefile b/drivers/char/lrng/Makefile
-index c3008763dd14..b2ce1979dc4b 100644
-=2D-- a/drivers/char/lrng/Makefile
-+++ b/drivers/char/lrng/Makefile
-@@ -15,3 +15,4 @@ obj-$(CONFIG_LRNG_DRBG)		+=3D lrng_drbg.o
- obj-$(CONFIG_LRNG_KCAPI)	+=3D lrng_kcapi.o
- obj-$(CONFIG_LRNG_JENT)		+=3D lrng_jent.o
- obj-$(CONFIG_LRNG_HEALTH_TESTS)	+=3D lrng_health.o
-+obj-$(CONFIG_LRNG_TESTING)	+=3D lrng_testing.o
-diff --git a/drivers/char/lrng/lrng_testing.c b/drivers/char/lrng/lrng_test=
-ing.c
-new file mode 100644
-index 000000000000..996fc665a0a0
-=2D-- /dev/null
-+++ b/drivers/char/lrng/lrng_testing.c
-@@ -0,0 +1,269 @@
-+// SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
-+/*
-+ * Linux Random Number Generator (LRNG) Raw entropy collection tool
-+ *
-+ * Copyright (C) 2019 - 2020, Stephan Mueller <smueller@chronox.de>
-+ */
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/atomic.h>
-+#include <linux/bug.h>
-+#include <linux/debugfs.h>
-+#include <linux/module.h>
-+#include <linux/sched.h>
-+#include <linux/sched/signal.h>
-+#include <linux/slab.h>
-+#include <linux/string.h>
-+#include <linux/types.h>
-+#include <linux/uaccess.h>
-+#include <linux/workqueue.h>
-+#include <asm/errno.h>
-+
-+#include "lrng_internal.h"
-+
-+#define LRNG_TESTING_RINGBUFFER_SIZE	1024
-+#define LRNG_TESTING_RINGBUFFER_MASK	(LRNG_TESTING_RINGBUFFER_SIZE - 1)
-+
-+static u32 lrng_testing_rb[LRNG_TESTING_RINGBUFFER_SIZE];
-+static u32 lrng_rb_reader =3D 0;
-+static u32 lrng_rb_writer =3D 0;
-+static atomic_t lrng_testing_enabled =3D ATOMIC_INIT(0);
-+
-+static DECLARE_WAIT_QUEUE_HEAD(lrng_raw_read_wait);
-+static DEFINE_SPINLOCK(lrng_raw_lock);
-+
-+/*
-+ * 0 =3D=3D> No boot test, gathering of runtime data allowed
-+ * 1 =3D=3D> Boot test enabled and ready for collecting data, gathering ru=
-ntime
-+ *	 data is disabled
-+ * 2 =3D=3D> Boot test completed and disabled, gathering of runtime data is
-+ *	 disabled
-+ */
-+static u32 boot_test =3D 0;
-+module_param(boot_test, uint, 0644);
-+MODULE_PARM_DESC(boot_test, "Enable gathering boot time entropy of the fir=
-st entropy events");
-+
-+static inline void lrng_raw_entropy_reset(void)
-+{
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&lrng_raw_lock, flags);
-+	lrng_rb_reader =3D 0;
-+	lrng_rb_writer =3D 0;
-+	spin_unlock_irqrestore(&lrng_raw_lock, flags);
-+}
-+
-+static void lrng_raw_entropy_init(void)
-+{
-+	/*
-+	 * The boot time testing implies we have a running test. If the
-+	 * caller wants to clear it, he has to unset the boot_test flag
-+	 * at runtime via sysfs to enable regular runtime testing
-+	 */
-+	if (boot_test)
-+		return;
-+
-+	lrng_raw_entropy_reset();
-+	atomic_set(&lrng_testing_enabled, 1);
-+	pr_warn("Enabling raw entropy collection\n");
-+}
-+
-+static void lrng_raw_entropy_fini(void)
-+{
-+	if (boot_test)
-+		return;
-+
-+	atomic_set(&lrng_testing_enabled, 0);
-+	lrng_raw_entropy_reset();
-+	pr_warn("Disabling raw entropy collection\n");
-+}
-+
-+bool lrng_raw_entropy_store(u32 value)
-+{
-+	unsigned long flags;
-+
-+	if (!atomic_read(&lrng_testing_enabled) && (boot_test !=3D 1))
-+		return false;
-+
-+	spin_lock_irqsave(&lrng_raw_lock, flags);
-+
-+	/*
-+	 * Disable entropy testing for boot time testing after ring buffer
-+	 * is filled.
-+	 */
-+	if (boot_test) {
-+		if (lrng_rb_writer > LRNG_TESTING_RINGBUFFER_SIZE) {
-+			boot_test =3D 2;
-+			pr_warn_once("Boot time entropy collection test disabled\n");
-+			spin_unlock_irqrestore(&lrng_raw_lock, flags);
-+			return false;
-+		}
-+
-+		if (lrng_rb_writer =3D=3D 1)
-+			pr_warn("Boot time entropy collection test enabled\n");
-+	}
-+
-+	lrng_testing_rb[lrng_rb_writer & LRNG_TESTING_RINGBUFFER_MASK] =3D value;
-+	lrng_rb_writer++;
-+
-+	spin_unlock_irqrestore(&lrng_raw_lock, flags);
-+
-+	if (wq_has_sleeper(&lrng_raw_read_wait))
-+		wake_up_interruptible(&lrng_raw_read_wait);
-+
-+	return true;
-+}
-+
-+static inline bool lrng_raw_have_data(void)
-+{
-+	return ((lrng_rb_writer & LRNG_TESTING_RINGBUFFER_MASK) !=3D
-+		 (lrng_rb_reader & LRNG_TESTING_RINGBUFFER_MASK));
-+}
-+
-+static int lrng_raw_entropy_reader(u8 *outbuf, u32 outbuflen)
-+{
-+	unsigned long flags;
-+	int collected_data =3D 0;
-+
-+	lrng_raw_entropy_init();
-+
-+	while (outbuflen) {
-+		spin_lock_irqsave(&lrng_raw_lock, flags);
-+
-+		/* We have no data or reached the writer. */
-+		if (!lrng_rb_writer || (lrng_rb_writer =3D=3D lrng_rb_reader)) {
-+
-+			spin_unlock_irqrestore(&lrng_raw_lock, flags);
-+
-+			/*
-+			 * Now we gathered all boot data, enable regular data
-+			 * collection.
-+			 */
-+			if (boot_test) {
-+				boot_test =3D 0;
-+				goto out;
-+			}
-+
-+			wait_event_interruptible(lrng_raw_read_wait,
-+						 lrng_raw_have_data());
-+			if (signal_pending(current)) {
-+				collected_data =3D -ERESTARTSYS;
-+				goto out;
-+			}
-+
-+			continue;
-+		}
-+
-+		/* We copy out word-wise */
-+		if (outbuflen < sizeof(u32)) {
-+			spin_unlock_irqrestore(&lrng_raw_lock, flags);
-+			goto out;
-+		}
-+
-+		memcpy(outbuf, &lrng_testing_rb[lrng_rb_reader], sizeof(u32));
-+		lrng_rb_reader++;
-+
-+		spin_unlock_irqrestore(&lrng_raw_lock, flags);
-+
-+		outbuf +=3D sizeof(u32);
-+		outbuflen -=3D sizeof(u32);
-+		collected_data +=3D sizeof(u32);
-+	}
-+
-+out:
-+	lrng_raw_entropy_fini();
-+	return collected_data;
-+}
-+
-+/**************************************************************************
-+ * Debugfs interface
-+ *************************************************************************=
-*/
-+static int lrng_raw_extract_user(char __user *buf, size_t nbytes)
-+{
-+	u8 *tmp, *tmp_aligned;
-+	int ret =3D 0, large_request =3D (nbytes > 256);
-+
-+	/*
-+	 * The intention of this interface is for collecting at least
-+	 * 1000 samples due to the SP800-90B requirements. So, we make no
-+	 * effort in avoiding allocating more memory that actually needed
-+	 * by the user. Hence, we allocate sufficient memory to always hold
-+	 * that amount of data.
-+	 */
-+	tmp =3D kmalloc(LRNG_TESTING_RINGBUFFER_SIZE + sizeof(u32), GFP_KERNEL);
-+	if (!tmp)
-+		return -ENOMEM;
-+
-+	tmp_aligned =3D PTR_ALIGN(tmp, sizeof(u32));
-+
-+	while (nbytes) {
-+		int i;
-+
-+		if (large_request && need_resched()) {
-+			if (signal_pending(current)) {
-+				if (ret =3D=3D 0)
-+					ret =3D -ERESTARTSYS;
-+				break;
-+			}
-+			schedule();
-+		}
-+
-+		i =3D min_t(int, nbytes, LRNG_TESTING_RINGBUFFER_SIZE);
-+		i =3D lrng_raw_entropy_reader(tmp_aligned, i);
-+		if (i <=3D 0) {
-+			if (i < 0)
-+				ret =3D i;
-+			break;
-+		}
-+		if (copy_to_user(buf, tmp_aligned, i)) {
-+			ret =3D -EFAULT;
-+			break;
-+		}
-+
-+		nbytes -=3D i;
-+		buf +=3D i;
-+		ret +=3D i;
-+	}
-+
-+	kzfree(tmp);
-+	return ret;
-+}
-+
-+/* DebugFS operations and definition of the debugfs files */
-+static ssize_t lrng_raw_read(struct file *file, char __user *to,
-+			     size_t count, loff_t *ppos)
-+{
-+	loff_t pos =3D *ppos;
-+	int ret;
-+
-+	if (!count)
-+		return 0;
-+
-+	ret =3D lrng_raw_extract_user(to, count);
-+	if (ret < 0)
-+		return ret;
-+
-+	count -=3D ret;
-+	*ppos =3D pos + count;
-+
-+	return ret;
-+}
-+
-+static const struct file_operations lrng_raw_name_fops =3D {
-+	.owner =3D THIS_MODULE,
-+	.read =3D lrng_raw_read,
-+};
-+
-+static int __init lrng_raw_init(void)
-+{
-+	struct dentry *lrng_raw_debugfs_root;
-+
-+	lrng_raw_debugfs_root =3D debugfs_create_dir(KBUILD_MODNAME, NULL);
-+	debugfs_create_file_unsafe("lrng_raw", 0400, lrng_raw_debugfs_root,
-+				   NULL, &lrng_raw_name_fops);
-+
-+	return 0;
-+}
-+
-+module_init(lrng_raw_init);
-=2D-=20
-2.25.2
-
-
-
+-- 
+Vitaly
 
