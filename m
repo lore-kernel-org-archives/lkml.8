@@ -2,84 +2,165 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55EECC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:15:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4823BC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:16:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BC9A206F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:15:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26F99206F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:16:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FmMuX+Ji"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="I5FyN30Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441120AbgDOHPD (ORCPT
+        id S2441131AbgDOHQs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 03:15:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55878 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390559AbgDOHO6 (ORCPT
+        Wed, 15 Apr 2020 03:16:48 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:57913 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731776AbgDOHQp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 03:14:58 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77E15C061A0C;
-        Wed, 15 Apr 2020 00:14:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=JzUzg/mW68+ufFV5qcTuM5sEEYmvYc+6RGs1lG03lg0=; b=FmMuX+JibdIFYgAXEY1r2PHZfA
-        B6B5zj7G5Q0xig3P+EqdOp9okOT/6pUfs/hJ6jp3mokJUa2kVkgxvL0o268Dmm//QdY3sCehn9W/M
-        8LBFnKP6FW+f4rCqJG2SKKOW4szpZ30CA8uej5/nzN9v4V8w1eMM78y7m5L1w0jwgoVaMQaGE+PIA
-        mc5Xhco0YqAsDEootkgKFBn8fqXCExSnuOm+EFhD0RGpSTbBaXunYLtrlVqd6nSEPpnIsaxcgCNP1
-        nyLiRlxsxPNphoVRfgE/zZY6hPfr9yvrzGiWBcrqSxNt7F4sXyMllwf8EIYvlgdEtNmnFLJN4JVvC
-        RLvFKpzw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jOcFd-0004Uk-AU; Wed, 15 Apr 2020 07:14:25 +0000
-Date:   Wed, 15 Apr 2020 00:14:25 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Christoph Hellwig <hch@infradead.org>, axboe@kernel.dk,
-        viro@zeniv.linux.org.uk, bvanassche@acm.org,
-        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
-        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
-        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>
-Subject: Re: [PATCH 3/5] blktrace: refcount the request_queue during ioctl
-Message-ID: <20200415071425.GA21099@infradead.org>
-References: <20200414041902.16769-1-mcgrof@kernel.org>
- <20200414041902.16769-4-mcgrof@kernel.org>
- <20200414154044.GB25765@infradead.org>
- <20200415061649.GS11244@42.do-not-panic.com>
+        Wed, 15 Apr 2020 03:16:45 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586935004; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=r0ASbx76zEYcIvIxWCRR1An50JcQx/PpRvNppB/eEmM=; b=I5FyN30YogrJAiTnfMT3qigGEEgZVx5V2OH5GLhO4tLBbFnfKo2weuJNBLyBvwuDiqSj0xFh
+ 2G5HfKiXgoQlqNWoXiVOnOCWSOCeCv/zXrn7O1kfOiXCqxhLZlJp39w0AGD7SghpkWZZJ0SN
+ lx8GmZ20dc/BewEUAxsTYELObyw=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e96b4db.7fabf31fd730-smtp-out-n04;
+ Wed, 15 Apr 2020 07:16:43 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 5B5E0C43636; Wed, 15 Apr 2020 07:16:42 +0000 (UTC)
+Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2B3C5C433CB;
+        Wed, 15 Apr 2020 07:16:37 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2B3C5C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     bjorn.andersson@linaro.org
+Cc:     agross@kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        ohad@wizery.com, evgreen@chromium.org,
+        Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH v2 1/2] remoteproc: qcom_q6v5_mss: map/unmap mpss segments before/after use
+Date:   Wed, 15 Apr 2020 12:46:18 +0530
+Message-Id: <20200415071619.6052-1-sibis@codeaurora.org>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200415061649.GS11244@42.do-not-panic.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 06:16:49AM +0000, Luis Chamberlain wrote:
-> The BLKTRACESETUP above works on request_queue which later
-> LOOP_CTL_DEL races on and sweeps the debugfs dir underneath us.
-> If you use this commit alone though, this doesn't fix the race issue
-> however, and that's because of both still the debugfs_lookup() use
-> and that we're still using asynchronous removal at this point.
-> 
-> refcounting will just ensure we don't take the request_queue underneath
-> our noses.
-> 
-> Should I just add this to the commit log?
+The application processor accessing the mpss region when the Q6 modem is
+running will lead to an XPU violation. Fix this by un-mapping the mpss
+segments post copy during mpss authentication and coredumps.
 
-That sounds much more useful than the trace.
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+---
 
-Btw, Isn't blk_get_queue racy as well?  Shouldn't we check
-blk_queue_dying after getting the reference and undo it if the queue is
-indeeed dying?
+V2:
+ * use ioremap_wc/iounmap instead of the devm_ variants
+ * with mpss_region no longer relevant leave rproc_da_to_va unused
+
+ drivers/remoteproc/qcom_q6v5_mss.c | 31 +++++++++++++++++++-----------
+ 1 file changed, 20 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
+index ce49c3236ff7c..b781fc8de3597 100644
+--- a/drivers/remoteproc/qcom_q6v5_mss.c
++++ b/drivers/remoteproc/qcom_q6v5_mss.c
+@@ -1156,7 +1156,13 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
+ 			goto release_firmware;
+ 		}
+ 
+-		ptr = qproc->mpss_region + offset;
++		ptr = ioremap_wc(qproc->mpss_phys + offset, phdr->p_memsz);
++		if (!ptr) {
++			dev_err(qproc->dev,
++				"unable to map memory region: %pa+%zx-%x\n",
++				&qproc->mpss_phys, offset, phdr->p_memsz);
++			goto release_firmware;
++		}
+ 
+ 		if (phdr->p_filesz && phdr->p_offset < fw->size) {
+ 			/* Firmware is large enough to be non-split */
+@@ -1165,6 +1171,7 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
+ 					"failed to load segment %d from truncated file %s\n",
+ 					i, fw_name);
+ 				ret = -EINVAL;
++				iounmap(ptr);
+ 				goto release_firmware;
+ 			}
+ 
+@@ -1175,6 +1182,7 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
+ 			ret = request_firmware(&seg_fw, fw_name, qproc->dev);
+ 			if (ret) {
+ 				dev_err(qproc->dev, "failed to load %s\n", fw_name);
++				iounmap(ptr);
+ 				goto release_firmware;
+ 			}
+ 
+@@ -1187,6 +1195,7 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
+ 			memset(ptr + phdr->p_filesz, 0,
+ 			       phdr->p_memsz - phdr->p_filesz);
+ 		}
++		iounmap(ptr);
+ 		size += phdr->p_memsz;
+ 
+ 		code_length = readl(qproc->rmb_base + RMB_PMI_CODE_LENGTH_REG);
+@@ -1236,7 +1245,8 @@ static void qcom_q6v5_dump_segment(struct rproc *rproc,
+ 	int ret = 0;
+ 	struct q6v5 *qproc = rproc->priv;
+ 	unsigned long mask = BIT((unsigned long)segment->priv);
+-	void *ptr = rproc_da_to_va(rproc, segment->da, segment->size);
++	int offset = segment->da - qproc->mpss_reloc;
++	void *ptr = NULL;
+ 
+ 	/* Unlock mba before copying segments */
+ 	if (!qproc->dump_mba_loaded) {
+@@ -1250,10 +1260,15 @@ static void qcom_q6v5_dump_segment(struct rproc *rproc,
+ 		}
+ 	}
+ 
+-	if (!ptr || ret)
+-		memset(dest, 0xff, segment->size);
+-	else
++	if (!ret)
++		ptr = ioremap_wc(qproc->mpss_phys + offset, segment->size);
++
++	if (ptr) {
+ 		memcpy(dest, ptr, segment->size);
++		iounmap(ptr);
++	} else {
++		memset(dest, 0xff, segment->size);
++	}
+ 
+ 	qproc->dump_segment_mask |= mask;
+ 
+@@ -1595,12 +1610,6 @@ static int q6v5_alloc_memory_region(struct q6v5 *qproc)
+ 
+ 	qproc->mpss_phys = qproc->mpss_reloc = r.start;
+ 	qproc->mpss_size = resource_size(&r);
+-	qproc->mpss_region = devm_ioremap_wc(qproc->dev, qproc->mpss_phys, qproc->mpss_size);
+-	if (!qproc->mpss_region) {
+-		dev_err(qproc->dev, "unable to map memory region: %pa+%zx\n",
+-			&r.start, qproc->mpss_size);
+-		return -EBUSY;
+-	}
+ 
+ 	return 0;
+ }
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
