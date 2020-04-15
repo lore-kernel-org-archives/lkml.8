@@ -2,76 +2,104 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75813C352BE
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:53:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1622C352BE
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:54:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 567D02072D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:53:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F2BC2072D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:54:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kp+mBxf2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393020AbgDOCxT (ORCPT
+        id S2391508AbgDOCyd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 22:53:19 -0400
-Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:34352 "EHLO
-        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727839AbgDOCxO (ORCPT
+        Tue, 14 Apr 2020 22:54:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43922 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727839AbgDOCya (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 22:53:14 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07425;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0Tva36kW_1586919187;
-Received: from 30.27.118.45(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0Tva36kW_1586919187)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 15 Apr 2020 10:53:08 +0800
-Subject: Re: [PATCH] ima: optimize ima_pcr_extend function by asynchronous
-To:     Ken Goldman <kgold@linux.ibm.com>, zohar@linux.ibm.com,
-        dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com,
-        zhangliguang@linux.alibaba.com, zhang.jia@linux.alibaba.com
-Cc:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200414115020.99288-1-tianjia.zhang@linux.alibaba.com>
- <0fdd1c13-51c6-e65c-1ca5-38621fa21f53@linux.ibm.com>
-From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Message-ID: <7335613b-0a18-1c28-9b65-687d0b44d01f@linux.alibaba.com>
-Date:   Wed, 15 Apr 2020 10:53:06 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 14 Apr 2020 22:54:30 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96DDAC061A0C;
+        Tue, 14 Apr 2020 19:54:29 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id m16so722254pls.4;
+        Tue, 14 Apr 2020 19:54:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=w/ObdyZe4SYG+GH7RWaWC1pUzVlokN24AFVwo6IaPaI=;
+        b=Kp+mBxf2fNINBhbwQWCKOZAD5VoFyYa7d66LOf524g5ye4u9NKUoyOc81NsFILYD/u
+         gPF8ritxsYzD9aLSGnmDeqeN66slmkDVnGqok3i2R/bJLhXRAnrFYYnRyjTCqp3gkdMZ
+         0pJv53bbzRVLVv7gFQLW7y2VnaMLadI6gRzt5KgQlnWR+i38rf2bS4Z1XsqkhoxdX0vG
+         aWlOZ9dhfgIoPFCgOpM6azK8iRONiRv5ze+lqrJ0282/hG5hmKuJRDJivo6bFytre6No
+         mnpzBUTEvuJMavD8VPgAlUIJXD0LSu0fSITiZNc0eMN1OlQ9ekbw0F5QuSWkskB1eaYW
+         EIng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=w/ObdyZe4SYG+GH7RWaWC1pUzVlokN24AFVwo6IaPaI=;
+        b=ocUSyidBrOYaPLdhcZ6ZZ8qYHXPfj9nennzbW7oRJ0UsFUpwC8NIGltcIxpe16tTP7
+         UJCOozvKdMpVyGsJHLtbGkn6G4vi4LO0cBz5oegCVY8XLf90k5O/mgIo51FJvGoidCkH
+         43domTGGSBeuy5e4FQQN3kbT1nDq7hjPVRNSliDI0Wvb77zwHJjGtueDWMVa+xaN+/Kk
+         2VHncG45g+oR2i+lm0Zs95vpFLRv6BT5dsKxVCnVQvU+tf3pkzYsvUHhp7WXLHPOtJqj
+         gFbXXD6QbOI8pncZV3z6iZLyrei0+jgGdx8prZpRDxl2BirOPiISyMWk9PflBkKjDXEM
+         voaA==
+X-Gm-Message-State: AGi0PuaQKsbWwWklefJptW9dk9HtgAyD/dIOwdJB9+xcm9gxRcNaoRw7
+        MbVGxYgRjdPwuXTXrDMOY0Y=
+X-Google-Smtp-Source: APiQypJnPJv53UlIGNvRX9jheZlHTaxQ05f+cPcg6FOMpCteH6TPHZwCBybS1X+TqkslpYskeJw9Jg==
+X-Received: by 2002:a17:90a:c401:: with SMTP id i1mr3513270pjt.131.1586919269043;
+        Tue, 14 Apr 2020 19:54:29 -0700 (PDT)
+Received: from localhost (89.208.244.140.16clouds.com. [89.208.244.140])
+        by smtp.gmail.com with ESMTPSA id y18sm12100818pfe.82.2020.04.14.19.54.27
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 14 Apr 2020 19:54:28 -0700 (PDT)
+Date:   Wed, 15 Apr 2020 10:54:26 +0800
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Allison Randal <allison@lohutok.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        Shah Nehal-Bakulchandra <Nehal-bakulchandra.Shah@amd.com>,
+        Tang Bin <tangbin@cmss.chinamobile.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v1] i2c: img-scb: remove duplicate dev_err()
+Message-ID: <20200415025426.GB14300@nuc8i5>
+References: <08564c03-3bbd-5518-1a9d-a40b8ca09f48@web.de>
 MIME-Version: 1.0
-In-Reply-To: <0fdd1c13-51c6-e65c-1ca5-38621fa21f53@linux.ibm.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <08564c03-3bbd-5518-1a9d-a40b8ca09f48@web.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Apr 14, 2020 at 05:48:41PM +0200, Markus Elfring wrote:
+> > it will print an error message by itself when platform_get_irq()
+> > goes wrong. so don't need dev_err() in here again.
+> 
+> I suggest to improve the change description.
+> Can you get any further inspiration by previous patches from
+> other contributors according to the presented transformation pattern?
+> 
+> Would you like to adjust any more source files in the mentioned
+> software area?
+>
+Hi Markus:
 
+Thanks for your comments, and maybe we can use coccinelle tools for
+more source files do this change in the mentioned software area.
 
-On 2020/4/15 2:07, Ken Goldman wrote:
-> I wonder if there's a different issue?  I just ran selftest with 
-> fullTest = yes in two different TPM vendors.
-> 
-> One took 230 msec, the other 320 msec.
-> 
-> I've never seen anything near 10 seconds.
-> 
-> Note that this is worse than the worst case because it's forcing a full 
-> retest.  The TPM typically starts its self test immediately at power up 
-> and could be complete by the time the OS starts to boot.
-> 
-> When I run selftest with fullTest = no, I get 30 msec, probably
-> because it's not doing anything.
-> 
-> On 4/14/2020 7:50 AM, Tianjia Zhang wrote:
->> Because ima_pcr_extend() to operate the TPM chip, this process is
->> very time-consuming, for IMA, this is a blocking action, especially
->> when the TPM is in self test state, this process will block for up
->> to ten seconds.
-> 
-
-Ten seconds is an extreme scenario, and I haven't seen this worst case, 
-but the TPM driver will fail to return in this scenario.
-
-Thanks and best,
-Tianjia
+BR,
+Dejin
+> Regards,
+> Markus
