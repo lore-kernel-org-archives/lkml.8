@@ -2,144 +2,149 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F8AC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08063C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1A1E20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:54:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586969661;
-	bh=M1IJP0gAs2rDWtl8dKvQIBB457xteM7tQuHYur3nbLw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TMT3IsAgfzdKUnXMPbi9LDOmHb9pGzRxrOLTi4Vx0iiFZc6Un+fxAVeX4hg5zIkRt
-	 Jj4+ro/TEQypSx3hr9SFoTm/j7QfurJjY0rwQm6EohZ8HuoVnrQalUs0G1G4YmvW87
-	 Wv8DvagahCYHDIgvrubrPBt6jyeOQRCYpn5e+7vs=
+	by mail.kernel.org (Postfix) with ESMTP id D690C208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:54:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="rH/1dp3D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1416318AbgDOQyU (ORCPT
+        id S1416328AbgDOQyp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 12:54:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54936 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2410503AbgDOQxE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 12:53:04 -0400
-Received: from localhost.localdomain (unknown [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8992208E4;
-        Wed, 15 Apr 2020 16:53:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586969583;
-        bh=M1IJP0gAs2rDWtl8dKvQIBB457xteM7tQuHYur3nbLw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QlKWbvLBlB75mLad2sWFwcuzAF+67jq5IeFjJ/NVFBqRrya7feDn15FvpG4zy7VQM
-         HPVmm4tXqSjAchV7sMLJF4Edcc+5UM52IzXkXGeZXnoYZgf4H4lR8koxLbq8TwFYLe
-         CFfpntB40+iSKJUq4oWGEXZGgCKCuTlLPD7mW7Ow=
-From:   Will Deacon <will@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-arch@vger.kernel.org, kernel-team@android.com,
-        Will Deacon <will@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Subject: [PATCH v3 05/12] arm64: csum: Disable KASAN for do_csum()
-Date:   Wed, 15 Apr 2020 17:52:11 +0100
-Message-Id: <20200415165218.20251-6-will@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415165218.20251-1-will@kernel.org>
-References: <20200415165218.20251-1-will@kernel.org>
+        Wed, 15 Apr 2020 12:54:45 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:9536 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2410503AbgDOQyk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 12:54:40 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e973c150000>; Wed, 15 Apr 2020 09:53:41 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 15 Apr 2020 09:54:39 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 15 Apr 2020 09:54:39 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Apr
+ 2020 16:54:39 +0000
+Received: from [10.2.171.241] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Apr
+ 2020 16:54:36 +0000
+Subject: Re: [RFC PATCH v7 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1586919463-30542-1-git-send-email-skomatineni@nvidia.com>
+ <1586919463-30542-7-git-send-email-skomatineni@nvidia.com>
+ <4118112f-f865-5460-6319-d71271fd78d1@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <a69a8b34-beea-3ad0-e08e-f7df8b9e7047@nvidia.com>
+Date:   Wed, 15 Apr 2020 09:54:35 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <4118112f-f865-5460-6319-d71271fd78d1@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1586969621; bh=qoQMVbOMXWlnzPj6qRnxRISwVee7/CHgjWqtqRqD2To=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=rH/1dp3DfCTqvWOIb14CzYUIoOBvbHu6es5/YeDMq1vuUKzUsaP0ZogLcKxkaCTAK
+         siGgltClP2My3W8nCnSEhAz2rKh7Ms+MCFFBzBAy3OIcIYBeFcdNM+YC1jUfChofDV
+         6tGaIcsi5WiscfbsyhITxWJ+y7CFhtsNYhNwHJpK5t8kMyRTEz1wd0SI+elcl9Oroa
+         KnIx9MhujgyDZa6x4zPTCoFNAkUYJY6l6UpKddVaY2VSI/igFIy8JwN5iUujfLIGOo
+         DV1m9qtkcf53op6YPF9MvP0x84DSESxCuVxJftskbTv74WWeziFineswTyvu6iVHiD
+         Jy32J1en+B5eg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-do_csum() over-reads the source buffer and therefore abuses
-READ_ONCE_NOCHECK() to avoid tripping up KASAN. In preparation for
-READ_ONCE_NOCHECK() becoming a macro, and therefore losing its
-'__no_sanitize_address' annotation, just annotate do_csum() explicitly
-and fall back to normal loads.
 
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Will Deacon <will@kernel.org>
----
- arch/arm64/lib/csum.c | 20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
+On 4/15/20 7:22 AM, Dmitry Osipenko wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> 15.04.2020 05:57, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> +static int tegra_csi_remove(struct platform_device *pdev)
+>> +{
+>> +     struct tegra_csi *csi =3D platform_get_drvdata(pdev);
+>> +     int err;
+>> +
+>> +     err =3D host1x_client_unregister(&csi->client);
+>> +     if (err < 0) {
+>> +             dev_err(csi->dev,
+>> +                     "failed to unregister host1x client: %d\n", err);
+>> +             return err;
+>> +     }
+>> +
+>> +     pm_runtime_disable(csi->dev);
+>> +     kfree(csi);
+> IIRC, the driver removal is invoked on the unbinding. Hence, I'm not
+> sure how moving away from the resource-managed API helps here. Could you
+> please explain in a more details?
+>
+> Have you tried to test this driver under KASAN? I suspect that you just
+> masked the problem, instead of fixing it.
+Using devm_kzalloc for vi/csi structures based on prior feedback request=20
+to switch to use kzalloc all over this driver.
 
-diff --git a/arch/arm64/lib/csum.c b/arch/arm64/lib/csum.c
-index 60eccae2abad..78b87a64ca0a 100644
---- a/arch/arm64/lib/csum.c
-+++ b/arch/arm64/lib/csum.c
-@@ -14,7 +14,11 @@ static u64 accumulate(u64 sum, u64 data)
- 	return tmp + (tmp >> 64);
- }
- 
--unsigned int do_csum(const unsigned char *buff, int len)
-+/*
-+ * We over-read the buffer and this makes KASAN unhappy. Instead, disable
-+ * instrumentation and call kasan explicitly.
-+ */
-+unsigned int __no_sanitize_address do_csum(const unsigned char *buff, int len)
- {
- 	unsigned int offset, shift, sum;
- 	const u64 *ptr;
-@@ -42,7 +46,7 @@ unsigned int do_csum(const unsigned char *buff, int len)
- 	 * odd/even alignment, and means we can ignore it until the very end.
- 	 */
- 	shift = offset * 8;
--	data = READ_ONCE_NOCHECK(*ptr++);
-+	data = *ptr++;
- #ifdef __LITTLE_ENDIAN
- 	data = (data >> shift) << shift;
- #else
-@@ -58,10 +62,10 @@ unsigned int do_csum(const unsigned char *buff, int len)
- 	while (unlikely(len > 64)) {
- 		__uint128_t tmp1, tmp2, tmp3, tmp4;
- 
--		tmp1 = READ_ONCE_NOCHECK(*(__uint128_t *)ptr);
--		tmp2 = READ_ONCE_NOCHECK(*(__uint128_t *)(ptr + 2));
--		tmp3 = READ_ONCE_NOCHECK(*(__uint128_t *)(ptr + 4));
--		tmp4 = READ_ONCE_NOCHECK(*(__uint128_t *)(ptr + 6));
-+		tmp1 = *(__uint128_t *)ptr;
-+		tmp2 = *(__uint128_t *)(ptr + 2);
-+		tmp3 = *(__uint128_t *)(ptr + 4);
-+		tmp4 = *(__uint128_t *)(ptr + 6);
- 
- 		len -= 64;
- 		ptr += 8;
-@@ -85,7 +89,7 @@ unsigned int do_csum(const unsigned char *buff, int len)
- 		__uint128_t tmp;
- 
- 		sum64 = accumulate(sum64, data);
--		tmp = READ_ONCE_NOCHECK(*(__uint128_t *)ptr);
-+		tmp = *(__uint128_t *)ptr;
- 
- 		len -= 16;
- 		ptr += 2;
-@@ -100,7 +104,7 @@ unsigned int do_csum(const unsigned char *buff, int len)
- 	}
- 	if (len > 0) {
- 		sum64 = accumulate(sum64, data);
--		data = READ_ONCE_NOCHECK(*ptr);
-+		data = *ptr;
- 		len -= 8;
- 	}
- 	/*
--- 
-2.26.0.110.g2183baf09c-goog
+Hi Hans,
+
+video devices lifetime is till video device nodes are released. So, v4l2=20
+device release callback does the release of tegra channel allocation=20
+which hold video device.
+
+Below are the 3 possible cases of unbind/unload,
+
+1. during tegra-video module unload, if v4l2 device refcnt is not 0=20
+which is the case when any of video device node handle is kept opened=20
+then unloading module will not happen and module refcnt is also non-zero=20
+and unloading tegra-video module reports module in use.
+
+2. during tegra-video driver unbind, tegra-video driver removal will do=20
+vi/csi clients exit ops which unregisters video device allocated memory=20
+during release callback of v4l2 device. vi/csi structure allocation=20
+remains same as vi/csi driver removal will not happen in this case.
+
+
+3. during direct host1x client drivers vi/csi unbind, both=20
+host1x_clients vi/csi gets unregistered, deletes host1x logical device=20
+which executes tegra-video driver removal() -> vi/csi exit() before=20
+vi/csi memory gets freed in vi/csi driver remove().
+
+So, any active streaming will stop and video devices are unregistered=20
+during direct client driver unbind prior to freeing vi/csi memory.
+
+Also vi/csi driver remove does explicit free vi/csi as its allocated=20
+with kzalloc. So not sure how using kzalloc is different to devm_kzalloc=20
+for vi/csi structure in terms of when vi/csi memory gets freed?
+
+Except for channel allocation which holds video device and as video=20
+device life time is beyond tegra-video module unbind->vi exit(), looks=20
+like we can use devm_kzalloc for vi/csi.
+
+
+Can you please comment if you still think we need to use kzalloc rather=20
+than devm_kzalloc for vi/csi structure allocation?
+
+Thanks
+
+Sowjanya
 
