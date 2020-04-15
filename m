@@ -2,82 +2,194 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ABEAC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:43:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8FBBC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:46:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E93E5206D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:43:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFB5A20732
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:46:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="P2fAxpTD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392704AbgDOBnH (ORCPT
+        id S2392720AbgDOBqg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 21:43:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57842 "EHLO mail.kernel.org"
+        Tue, 14 Apr 2020 21:46:36 -0400
+Received: from ozlabs.org ([203.11.71.1]:35367 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392682AbgDOBnE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 21:43:04 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2392682AbgDOBqb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 21:46:31 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B080C206D5;
-        Wed, 15 Apr 2020 01:43:02 +0000 (UTC)
-Date:   Tue, 14 Apr 2020 21:43:01 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Garrett <mjg59@google.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jiri Slaby <jslaby@suse.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] Add kernel config option for tweaking kernel
- behavior.
-Message-ID: <20200414214301.126ada20@oasis.local.home>
-In-Reply-To: <CAHk-=wjLfHaF8F-L9axpYcNtECa=Rw_LWJ98GP6ByUB+O98tAQ@mail.gmail.com>
-References: <20200413063317.7164-1-penguin-kernel@I-love.SAKURA.ne.jp>
-        <CAHk-=wgbMi2+VBN0SCEw9GeoiWgui034AOBwbt_dW9tdCa3Nig@mail.gmail.com>
-        <f2b9ef2a-8449-72fc-4f87-8bf65d713800@i-love.sakura.ne.jp>
-        <6e3864f5-fdaf-874a-b326-1c79816d7141@i-love.sakura.ne.jp>
-        <CAHk-=wjLfHaF8F-L9axpYcNtECa=Rw_LWJ98GP6ByUB+O98tAQ@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4924vh236Hz9s71;
+        Wed, 15 Apr 2020 11:46:23 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1586915187;
+        bh=AZwhKCRiMMV9G2odRXf4T0pjybHzWXSzQe/OjKDzQlE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=P2fAxpTDVV9pgSO12pTS8+KiEfDLpJ270TLCgGmr7fSBqvGQE2HdrMHf0Xn6CDB/0
+         LhXAHQdPrMTKtHYdC7grh5wV97U8PIcBBgLEjEnTao8evhE683P0aLfWZvSpJ6ch/K
+         ECpADd1sfpo3WFuw2cRZpkozMPQtlNhB1q0YY8IChACT7eTcD5i1I9IR04tS5uFi9B
+         J3VaAvwCqP9L5+Xfddb6UF1odjAAklJFVLApfLHfhRkBPKowfHxyzKmo0Gm86E8p4T
+         0qYrAPH25Qg/nYOmUuKVzmJ994J19waCNFtIneuZAzQIJSrksnuV43VzYQ1OIqQ+iZ
+         X6rpFMZiDF0Yw==
+Date:   Wed, 15 Apr 2020 11:46:20 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        DRI <dri-devel@lists.freedesktop.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Joe Perches <joe@perches.com>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Sam Ravnborg <sam@ravnborg.org>
+Subject: linux-next: manual merge of the drm-misc tree with Linus' tree
+Message-ID: <20200415114620.0657d62c@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/+CkTOH=5qhaT9s/HIUbzqRo";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Apr 2020 18:14:51 -0700
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+--Sig_/+CkTOH=5qhaT9s/HIUbzqRo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> If that WARN_ON() is a problem, then the people behind it should be
-> appraised of it, and it should probably be removed. I'm assuming it
-> was some kind of "I don't think this can happen, so if it does, I want
-> to see how it happened" WARN_ON.
+Hi all,
 
-What I do (and feel everyone should too), is I only add a WARN_ON()
-when I check something that I believe *can't* happen. If the WARN_ON()
-triggers, it either means that there's a bug in the code (and needs a
-fix), or the code design changed, in which case the WARN_ON() should be
-either removed, or that code updated to handle the new change.
+Today's linux-next merge of the drm-misc tree got a conflict in:
 
-In any case, a WARN_ON() should always be investigated when hit.
+  MAINTAINERS
 
-The only time I've had issues with people is when I have some hardware
-(i915) that triggers a WARN_ON() and I'm told that my hardware is buggy
-(or I need a firmware update). In which case, I just manually remove
-the WARN_ON() because the machine that triggers it is a test machine I
-don't have the time to waste updating firmware on.
+between commitis:
 
--- Steve
+  4400b7d68f6e ("MAINTAINERS: sort entries by entry name")
+  3b50142d8528 ("MAINTAINERS: sort field names for all entries")
+
+from Linus' tree and commits:
+
+  8edb69970739 ("MAINTAINERS: Better regex for dma_buf|fence|resv")
+  7fd9681e8fd0 ("MAINTAINERS: Update feiyang,st7701 panel bindings converte=
+d as YAML")
+
+from the drm-misc tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc MAINTAINERS
+index c3cd17dbcb88,50b068f3580a..000000000000
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@@ -5037,14 -5019,32 +5037,14 @@@ M:	Sumit Semwal <sumit.semwal@linaro.or
+  L:	linux-media@vger.kernel.org
+  L:	dri-devel@lists.freedesktop.org
+  L:	linaro-mm-sig@lists.linaro.org (moderated for non-subscribers)
+ +S:	Maintained
+ +T:	git git://anongit.freedesktop.org/drm/drm-misc
+ +F:	Documentation/driver-api/dma-buf.rst
+  F:	drivers/dma-buf/
+ +F:	include/linux/*fence.h
+  F:	include/linux/dma-buf*
+  F:	include/linux/dma-resv.h
+- K:	dma_(buf|fence|resv)
+ -F:	include/linux/*fence.h
+ -F:	Documentation/driver-api/dma-buf.rst
++ K:	\bdma_(?:buf|fence|resv)\b
+ -T:	git git://anongit.freedesktop.org/drm/drm-misc
+ -
+ -DMA-BUF HEAPS FRAMEWORK
+ -M:	Sumit Semwal <sumit.semwal@linaro.org>
+ -R:	Andrew F. Davis <afd@ti.com>
+ -R:	Benjamin Gaignard <benjamin.gaignard@linaro.org>
+ -R:	Liam Mark <lmark@codeaurora.org>
+ -R:	Laura Abbott <labbott@redhat.com>
+ -R:	Brian Starkey <Brian.Starkey@arm.com>
+ -R:	John Stultz <john.stultz@linaro.org>
+ -S:	Maintained
+ -L:	linux-media@vger.kernel.org
+ -L:	dri-devel@lists.freedesktop.org
+ -L:	linaro-mm-sig@lists.linaro.org (moderated for non-subscribers)
+ -F:	include/uapi/linux/dma-heap.h
+ -F:	include/linux/dma-heap.h
+ -F:	drivers/dma-buf/dma-heap.c
+ -F:	drivers/dma-buf/heaps/*
+ -T:	git git://anongit.freedesktop.org/drm/drm-misc
+ =20
+  DMA GENERIC OFFLOAD ENGINE SUBSYSTEM
+  M:	Vinod Koul <vkoul@kernel.org>
+@@@ -5301,8 -5272,8 +5301,8 @@@ F:	drivers/gpu/drm/panel/panel-feixin-k
+  DRM DRIVER FOR FEIYANG FY07024DI26A30-D MIPI-DSI LCD PANELS
+  M:	Jagan Teki <jagan@amarulasolutions.com>
+  S:	Maintained
+- F:	Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30=
+d.txt
+ -F:	drivers/gpu/drm/panel/panel-feiyang-fy07024di26a30d.c
++ F:	Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30=
+d.yaml
+ +F:	drivers/gpu/drm/panel/panel-feiyang-fy07024di26a30d.c
+ =20
+  DRM DRIVER FOR GRAIN MEDIA GM12U320 PROJECTORS
+  M:	Hans de Goede <hdegoede@redhat.com>
+@@@ -5441,18 -5412,18 +5441,18 @@@ S:	Orphan / Obsolet
+  F:	drivers/gpu/drm/sis/
+  F:	include/uapi/drm/sis_drm.h
+ =20
+ -DRM DRIVER FOR SITRONIX ST7701 PANELS
+ -M:	Jagan Teki <jagan@amarulasolutions.com>
+ -S:	Maintained
+ -F:	drivers/gpu/drm/panel/panel-sitronix-st7701.c
+ -F:	Documentation/devicetree/bindings/display/panel/sitronix,st7701.yaml
+ -
+  DRM DRIVER FOR SITRONIX ST7586 PANELS
+  M:	David Lechner <david@lechnology.com>
+ -T:	git git://anongit.freedesktop.org/drm/drm-misc
+  S:	Maintained
+ -F:	drivers/gpu/drm/tiny/st7586.c
+ +T:	git git://anongit.freedesktop.org/drm/drm-misc
+  F:	Documentation/devicetree/bindings/display/sitronix,st7586.txt
+ +F:	drivers/gpu/drm/tiny/st7586.c
+ +
+ +DRM DRIVER FOR SITRONIX ST7701 PANELS
+ +M:	Jagan Teki <jagan@amarulasolutions.com>
+ +S:	Maintained
+- F:	Documentation/devicetree/bindings/display/panel/sitronix,st7701.txt
+++F:	Documentation/devicetree/bindings/display/panel/sitronix,st7701.yaml
+ +F:	drivers/gpu/drm/panel/panel-sitronix-st7701.c
+ =20
+  DRM DRIVER FOR SITRONIX ST7735R PANELS
+  M:	David Lechner <david@lechnology.com>
+
+--Sig_/+CkTOH=5qhaT9s/HIUbzqRo
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6WZ20ACgkQAVBC80lX
+0GzLFAf/SMZKAtp0iebrAlMGrp5RRDHWLgz+i/gN17fxYppZbAHYIweHp5h81PWS
+85/0MihZnwU378qLKc1FqASC8cuKgCA1mbKyZXeJSlRjxj9bkGg1/pyyDHmfS2Cj
+a9qqkt7t5pXR9Ws8VKGHPnvIA0BY+17I5AFI1T33pXW1R52vHwxH/dQYVws+t/O+
+p0Ti2JuBSY3mZXYSBHKTb0c/hJoq8LgSCa1thsTEyqnpItQ0Oh9abazGWyQy4OyO
+OQ1R1fnv275TUIHLXNzsNuioEPH7C/9EfMk98PZZLl7Ao6WSYglE9Og989aAMOig
+b30mYtPk4B29mGj5yNJnAJ1YVtaLqg==
+=eIsG
+-----END PGP SIGNATURE-----
+
+--Sig_/+CkTOH=5qhaT9s/HIUbzqRo--
