@@ -2,196 +2,99 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 354EAC38A29
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:01:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E689C3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:01:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FD2C21556
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:01:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hh+ZM3Vf"
+	by mail.kernel.org (Postfix) with ESMTP id 138DB21556
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:01:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586966505;
+	bh=HtmYGm9rwoS1yuOpLorCoobfvar2sayOeSxcIlUCURM=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=UVhHsB+siL2UkZMO1nIZcKqpWTNOwB5cCrDF384c8p5o6oMm4ZmhjeLp8sDMT90CR
+	 y98oDwH/ncFMV+v2jgrhLoxPmjME1jbVDaqcKmkbaAHPJ/YVT/zheVJzdEJqG362H8
+	 9npQIwxQpMmDStYil6fP806DdQ46GmNoN2hTJE4s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1415153AbgDOQBd (ORCPT
+        id S1415161AbgDOQBj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 12:01:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53154 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1415130AbgDOQBR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 12:01:17 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35AB1C061A0C;
-        Wed, 15 Apr 2020 09:01:16 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id r26so191026wmh.0;
-        Wed, 15 Apr 2020 09:01:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:references:in-reply-to:subject:date:message-id
-         :mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=zQEYCWsK2VTVhTYcIOH6YHb5daB8HSEQISlOJ5S/ctM=;
-        b=hh+ZM3VfQ/V83XzD//GKCPRGEdlxc5BXb/YYgewaAUGBo+/t38V8qZbVfjJkKR0uNP
-         Z36V/wdCdUozeucUKKPQ4ajpkXwd9b39/h2FkM47FhNTu9A1SByQCDEVMtmrVrGUaqt/
-         Mp8xrXCgqOfdRFZ4+M5Q82lcyynzolMqfDJ1FoC9/DiDJCGzZncayMykj1+LH1xLucZu
-         mRqPxn7EohqFPxtLEHLbeijK+7boHuIgbH3laQX5nsrM4CMtpcQzO0Zu5nOMPg0rJhxu
-         PssFdBgGpHV6wffIe8goL/8QwilACF0z8TnC/rDth/KOXQDoZSi7AU450C/Qy4C0GH3L
-         Kjwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
-         :message-id:mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=zQEYCWsK2VTVhTYcIOH6YHb5daB8HSEQISlOJ5S/ctM=;
-        b=U+HRowcrTVo72BKEg6dV40cdC5kdFfbKYQrvsPyMx9n45+8e96fhLSXHjS3ClV0V6A
-         WH7PyQkbEMeag1F5qSUhJLGZOdkGLsnR9n8ZUW09CbniNdlm+yrrB9Mt8BzFmFXlcBJ7
-         k3BPWRRNiZBeNe3si/C7Mg6XCHmOCPbRrp09q2EiNut57Ks8z1TXS4bSnpWwTnnh8cwI
-         ZhtVzs0a0l6tBgAS3vpEL/A20jYnOiJqCVR7IsVM5XZ2Qk6NwRAd5shWCi/xN0UsmNMh
-         MG+6wTkgbqf7Y2029J1qoBPaHQ97/OlCpVz2WilzkRR9JRPif05psPCbeBg50VESwy0Y
-         /r0g==
-X-Gm-Message-State: AGi0PuZFnFsFYGQuX2RDbnDUIH9d30eXjas9mTapwDg4bB2Cq/rvVSzZ
-        KIDdKrW4vX+ADoHB4IyAOaM=
-X-Google-Smtp-Source: APiQypKM6YMefRd6/LPjmQwg9BlaBWlr+762eFtEBIDXPoEVX6g3PQYHa4o9YcPz8OC1jtbOk1NIcQ==
-X-Received: by 2002:a1c:4b0a:: with SMTP id y10mr5749163wma.24.1586966473620;
-        Wed, 15 Apr 2020 09:01:13 -0700 (PDT)
-Received: from AnsuelXPS (host93-255-dynamic.47-79-r.retail.telecomitalia.it. [79.47.255.93])
-        by smtp.gmail.com with ESMTPSA id v10sm11768209wrq.45.2020.04.15.09.01.11
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 15 Apr 2020 09:01:12 -0700 (PDT)
-From:   <ansuelsmth@gmail.com>
-To:     "'Rob Herring'" <robh@kernel.org>
-Cc:     "'Andy Gross'" <agross@kernel.org>,
-        "'Bjorn Andersson'" <bjorn.andersson@linaro.org>,
-        "'Kishon Vijay Abraham I'" <kishon@ti.com>,
-        "'Mark Rutland'" <mark.rutland@arm.com>,
-        "'linux-arm-msm'" <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20200403002608.946-1-ansuelsmth@gmail.com> <20200403002608.946-2-ansuelsmth@gmail.com> <20200414173838.GA29176@bogus> <00bb01d61321$05bf9b20$113ed160$@gmail.com> <CAL_JsqLyEy_++q5+JsUmg=gpgh=xkSP7XiQrDvje7tiUHzB8KQ@mail.gmail.com>
-In-Reply-To: <CAL_JsqLyEy_++q5+JsUmg=gpgh=xkSP7XiQrDvje7tiUHzB8KQ@mail.gmail.com>
-Subject: R: [PATCH 2/2] devicetree: bindings: phy: Document dwc3 qcom phy
-Date:   Wed, 15 Apr 2020 18:01:10 +0200
-Message-ID: <00e301d6133f$15efc1f0$41cf45d0$@gmail.com>
+        Wed, 15 Apr 2020 12:01:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51980 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1415132AbgDOQBT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 12:01:19 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0C7A206F9;
+        Wed, 15 Apr 2020 16:01:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586966478;
+        bh=HtmYGm9rwoS1yuOpLorCoobfvar2sayOeSxcIlUCURM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=X3mn1rSyk1+FHEiTjmAk5CWv5wKT+oPgBNud+agJZ4Pamj6To3NuosaiNu3U6Dto7
+         NL8V5hO1Zhfc+GHdHTdmKh/Qib3L0Ra7DzVOcQU7sP+r4ylAZkFdALh+8n6ggNIoaf
+         d+PIzzbqO0u1W/lsURHLBB0bSZH8X+qIJaKNAr0w=
+Received: by pali.im (Postfix)
+        id C080C58E; Wed, 15 Apr 2020 18:01:15 +0200 (CEST)
+From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+To:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Remi Pommarel <repk@triplefau.lt>,
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Xogium <contact@xogium.me>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH 0/8] PCI: aardvark: Fix support for Turris MOX and Compex wifi cards
+Date:   Wed, 15 Apr 2020 18:00:46 +0200
+Message-Id: <20200415160054.951-1-pali@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: it
-Thread-Index: AQHTPQd2IBqR3z6CHNBmVjX+r+AcmAGqTdeSAYw2ek8CRq9kSAFT2oxuqEl6H+A=
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Wed, Apr 15, 2020 at 7:26 AM <ansuelsmth@gmail.com> wrote:
-> >
-> > > On Fri, Apr 03, 2020 at 02:26:05AM +0200, Ansuel Smith wrote:
-> > > > Document dwc3 qcom phy hs and ss phy bindings needed to =
-correctly
-> > > > inizialize and use usb on ipq806x SoC
-> > > >
-> > > > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> > > > ---
-> > > >  .../bindings/phy/qcom,dwc3-hs-usb-phy.yaml    | 65
-> > > +++++++++++++++++++
-> > > >  .../bindings/phy/qcom,dwc3-ss-usb-phy.yaml    | 65
-> > > +++++++++++++++++++
-> > > >  2 files changed, 130 insertions(+)
-> > > >  create mode 100644
-> > > Documentation/devicetree/bindings/phy/qcom,dwc3-hs-usb-phy.yaml
-> > > >  create mode 100644
-> > > Documentation/devicetree/bindings/phy/qcom,dwc3-ss-usb-phy.yaml
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/phy/qcom,dwc3-hs-
-> usb-
-> > > phy.yaml b/Documentation/devicetree/bindings/phy/qcom,dwc3-hs-
-> usb-
-> > > phy.yaml
-> > > > new file mode 100644
-> > > > index 000000000000..0bb59e3c2ab8
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/phy/qcom,dwc3-hs-usb-
-> > > phy.yaml
-> > > > @@ -0,0 +1,65 @@
-> > > > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> > > > +%YAML 1.2
-> > > > +---
-> > > > +$id: http://devicetree.org/schemas/phy/qcom,dwc3-hs-usb-
-> phy.yaml#
-> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > +
-> > > > +title: Qualcomm DWC3 HS PHY CONTROLLER
-> > > > +
-> > > > +maintainers:
-> > > > +  - Ansuel Smith <ansuelsmth@gmail.com>
-> > > > +
-> > > > +description:
-> > > > +  DWC3 PHY nodes are defined to describe on-chip Synopsis =
-Physical
-> > > layer
-> > > > +  controllers. Each DWC3 PHY controller should have its own =
-node.
-> > > > +
-> > > > +properties:
-> > > > +  compatible:
-> > > > +    const: qcom,dwc3-hs-usb-phy
-> > > > +
-> > > > +  "#phy-cells":
-> > > > +    const: 0
-> > > > +
-> > > > +  regmap:
-> > > > +    maxItems: 1
-> > > > +    description: phandle to usb3 dts definition
-> > > > +
-> > > > +  clocks:
-> > > > +    minItems: 1
-> > > > +    maxItems: 2
-> > > > +
-> > > > +  clock-names:
-> > > > +    minItems: 1
-> > > > +    maxItems: 2
-> > > > +    description: |
-> > > > +      - "ref" Is required
-> > > > +      - "xo"       Optional external reference clock
-> > > > +    items:
-> > > > +      - const: ref
-> > > > +      - const: xo
-> > > > +
-> > > > +required:
-> > > > +  - compatible
-> > > > +  - "#phy-cells"
-> > > > +  - regmap
-> > > > +  - clocks
-> > > > +  - clock-names
-> > > > +
-> > > > +examples:
-> > > > +  - |
-> > > > +    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
-> > > > +
-> > > > +    hs_phy_0: hs_phy_0 {
-> > > > +      compatible =3D "qcom,dwc3-hs-usb-phy";
-> > > > +      regmap =3D <&usb3_0>;
-> > >
-> > > If the registers for the phy are part of 'qcom,dwc3' then make =
-this node
-> > > a child of it.
-> > >
-> >
-> > Making this node a child of qcom,dwc3 cause malfunction of the =
-driver.
->=20
-> Fix the driver then.
->=20
-> Rob
+This patch series fixes PCI aardvark controller to work on Turris MOX
+with Compex WLE900VX (and also other ath10k) wifi cards.
 
-Sorry if i bother you but I checked every other usb driver that also =
-needs
-phy node. I use regmap phandle here just for the fact that it's the
-same reg of dwc3. Others use directly the same reg and are outside their
-dwc3 usb node. I think I will follow this path and respin this.
-I really hope you are good with this.
+Patches are available also in my git repository in branch pci-aardvark:
+https://git.kernel.org/pub/scm/linux/kernel/git/pali/linux.git/log/?h=pci-aardvark
 
+Pali Rohár (8):
+  PCI: aardvark: Set controller speed from Device Tree max-link-speed
+  dts: espressobin: Define max-link-speed for pcie0
+  PCI: aardvark: Start link training immediately after enabling link
+    training
+  PCI: aardvark: Do not overwrite Link Status register and ASPM Control
+    bits in Link Control register
+  PCI: aardvark: Set final controller speed based on negotiated link
+    speed
+  PCI: aardvark: Add support for issuing PERST via GPIO
+  dts: aardvark: Route pcie reset pin to gpio function and define
+    reset-gpios for pcie
+  PCI: aardvark: Add FIXME for code which access
+    PCIE_CORE_CMD_STATUS_REG
+
+ .../dts/marvell/armada-3720-espressobin.dtsi  |   2 +
+ .../dts/marvell/armada-3720-turris-mox.dts    |   4 -
+ arch/arm64/boot/dts/marvell/armada-37xx.dtsi  |   2 +-
+ drivers/pci/controller/pci-aardvark.c         | 118 +++++++++++++++---
+ 4 files changed, 106 insertions(+), 20 deletions(-)
+
+-- 
+2.20.1
 
