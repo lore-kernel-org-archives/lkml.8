@@ -2,166 +2,68 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3AF5C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D78AC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:05:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA3292166E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:04:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1242221707
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:05:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586966740;
+	bh=Eon/kODku4B5cB6+FzYwFxrHvEHuLXWbf464ab57/ss=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lmsGwWPp9TZMVLwgY3AxdTYgwR06Zimi4VJUOZeEbYHkjdIG3h53JtARn5NP2/ssw
+	 95ILtB8Uq57hE1vwpiHdBA1QZ0vW2bki2/nW9Mmxoq1IErlQ22CkWLfYei6Erq6joK
+	 0vtCv+0JB/m9jDo1iK86eyb+kpCEG5LqqZg3BDpo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410189AbgDOQEw (ORCPT
+        id S2410193AbgDOQFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 12:04:52 -0400
-Received: from foss.arm.com ([217.140.110.172]:47910 "EHLO foss.arm.com"
+        Wed, 15 Apr 2020 12:05:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2410177AbgDOQEe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 12:04:34 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BD6FF1FB;
-        Wed, 15 Apr 2020 09:04:33 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 38A133F6C4;
-        Wed, 15 Apr 2020 09:04:31 -0700 (PDT)
-Date:   Wed, 15 Apr 2020 17:04:25 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org,
-        robin.murphy@arm.com, ard.biesheuvel@linaro.org,
-        ioana.ciornei@nxp.com, diana.craciun@oss.nxp.com, maz@kernel.org,
-        jon@solid-run.com, pankaj.bansal@nxp.com, makarand.pawagi@nxp.com,
-        calvin.johnson@nxp.com, V.Sethi@nxp.com, cristian.sovaiala@nxp.com,
-        Stuart.Yoder@arm.com, jeremy.linton@arm.com, joro@8bytes.org,
-        tglx@linutronix.de, jason@lakedaemon.net
-Subject: Re: [RFC PATCH 1/4] bus: fsl-mc: add custom .dma_configure
- implementation
-Message-ID: <20200415160425.GA6436@e121166-lin.cambridge.arm.com>
-References: <20200227100542.13819-1-laurentiu.tudor@nxp.com>
- <20200325125109.GA5430@red-moon.cambridge.arm.com>
- <499fbf9a-416f-d7c7-0655-881d92138a6c@nxp.com>
- <20200414143211.GA14905@red-moon.cambridge.arm.com>
- <d37ca4e3-58cb-9d6f-3a98-5e4a21ca948b@nxp.com>
+        id S2406742AbgDOQFe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 12:05:34 -0400
+Received: from localhost (unknown [106.201.106.187])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E3822166E;
+        Wed, 15 Apr 2020 16:05:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586966732;
+        bh=Eon/kODku4B5cB6+FzYwFxrHvEHuLXWbf464ab57/ss=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MYhWL3GFqyivUyvIaZmO4yuG4loQCi3kVFJBVgBAxQpnz1QUDuhEtU52Agsvhh654
+         tLlm35JWq25Ca+Q+Safov5zorpriyWBTBnAJW+5ibrc3zuOgl5cy3o8IIp3rQBk3CZ
+         d+EfcXmLliXGrWIHiU6qPmxzS1ASfjGjKPWRojT0=
+Date:   Wed, 15 Apr 2020 21:35:21 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        dmaengine@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>,
+        linux-kernel@vger.kernel.org,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] dmaengine: ti: k3-psil: fix deadlock on error path
+Message-ID: <20200415160521.GX72691@vkoul-mobl>
+References: <20200408185501.30776-1-grygorii.strashko@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d37ca4e3-58cb-9d6f-3a98-5e4a21ca948b@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200408185501.30776-1-grygorii.strashko@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 06:44:37PM +0300, Laurentiu Tudor wrote:
-> 
-> 
-> On 4/14/2020 5:32 PM, Lorenzo Pieralisi wrote:
-> > On Wed, Mar 25, 2020 at 06:48:55PM +0200, Laurentiu Tudor wrote:
-> >> Hi Lorenzo,
-> >>
-> >> On 3/25/2020 2:51 PM, Lorenzo Pieralisi wrote:
-> >>> On Thu, Feb 27, 2020 at 12:05:39PM +0200, laurentiu.tudor@nxp.com wrote:
-> >>>> From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
-> >>>>
-> >>>> The devices on this bus are not discovered by way of device tree
-> >>>> but by queries to the firmware. It makes little sense to trick the
-> >>>> generic of layer into thinking that these devices are of related so
-> >>>> that we can get our dma configuration. Instead of doing that, add
-> >>>> our custom dma configuration implementation.
-> >>>>
-> >>>> Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
-> >>>> ---
-> >>>>  drivers/bus/fsl-mc/fsl-mc-bus.c | 31 ++++++++++++++++++++++++++++++-
-> >>>>  1 file changed, 30 insertions(+), 1 deletion(-)
-> >>>>
-> >>>> diff --git a/drivers/bus/fsl-mc/fsl-mc-bus.c b/drivers/bus/fsl-mc/fsl-mc-bus.c
-> >>>> index 36eb25f82c8e..eafaa0e0b906 100644
-> >>>> --- a/drivers/bus/fsl-mc/fsl-mc-bus.c
-> >>>> +++ b/drivers/bus/fsl-mc/fsl-mc-bus.c
-> >>>> @@ -132,11 +132,40 @@ static int fsl_mc_bus_uevent(struct device *dev, struct kobj_uevent_env *env)
-> >>>>  static int fsl_mc_dma_configure(struct device *dev)
-> >>>>  {
-> >>>>  	struct device *dma_dev = dev;
-> >>>> +	struct iommu_fwspec *fwspec;
-> >>>> +	const struct iommu_ops *iommu_ops;
-> >>>> +	struct fsl_mc_device *mc_dev = to_fsl_mc_device(dev);
-> >>>> +	int ret;
-> >>>> +	u32 icid;
-> >>>>  
-> >>>>  	while (dev_is_fsl_mc(dma_dev))
-> >>>>  		dma_dev = dma_dev->parent;
-> >>>>  
-> >>>> -	return of_dma_configure(dev, dma_dev->of_node, 0);
-> >>>> +	fwspec = dev_iommu_fwspec_get(dma_dev);
-> >>>> +	if (!fwspec)
-> >>>> +		return -ENODEV;
-> >>>> +	iommu_ops = iommu_ops_from_fwnode(fwspec->iommu_fwnode);
-> >>>> +	if (!iommu_ops)
-> >>>> +		return -ENODEV;
-> >>>> +
-> >>>> +	ret = iommu_fwspec_init(dev, fwspec->iommu_fwnode, iommu_ops);
-> >>>> +	if (ret)
-> >>>> +		return ret;
-> >>>> +
-> >>>> +	icid = mc_dev->icid;
-> >>>> +	ret = iommu_fwspec_add_ids(dev, &icid, 1);
-> >>>
-> >>> I see. So with this patch we would use the MC named component only to
-> >>> retrieve the iommu_ops
-> >>
-> >> Right. I'd also add that the implementation tries to follow the existing
-> >> standard .dma_configure implementations, e.g. of_dma_configure +
-> >> of_iommu_configure. I'd also note that similarly to the ACPI case, this
-> >> MC FW device is probed as a platform device in the DT scenario, binding
-> >> here [1].
-> >> A similar approach is used for the retrieval of the msi irq domain, see
-> >> following patch.
-> >>
-> >>> - the streamid are injected directly here bypassing OF/IORT bindings translations altogether. 
-> >>
-> >> Actually I've submitted a v2 [2] that calls into .of_xlate() to allow
-> >> the smmu driver to do some processing on the raw streamid coming from
-> >> the firmware. I have not yet tested this with ACPI but expect it to
-> >> work, however, it's debatable how valid is this approach in the context
-> >> of ACPI.
-> > 
-> > Actually, what I think you need is of_map_rid() (and an IORT
-> > equivalent, that I am going to write - generalizing iort_msi_map_rid()).
-> > 
-> > Would that be enough to enable IORT "normal" mappings in the MC bus
-> > named components ?
-> > 
-> 
-> At a first glance, looks like this could very well fix the ACPI
-> scenario, but I have some unclarities on the approach:
->  * are we going to rely in DT and ACPI generic layers even if these
-> devices are not published / enumerated through DT or ACPI tables?
->  * the firmware manages and provides discrete streamids for the devices
-> it exposes so there's no translation involved. There's no
->    requestor_id / input_id involved but it seems that we would still do
-> some kind of translation relying for this on the DT/ACPI functions.
->  * MC firmware has its own stream_id (e.g. on some chips 0x4000, others
-> 0xf00, so outside the range of stream_ids used for the mc devices)
->    while for the devices on this bus, MC allocates stream_ids from a
-> range (e.g. 0x17 - 0x3f). Is it possible to describe this in the IORT table?
->  * Regarding the of_map_rid() use you mentioned, I was planning to
-> decouple the mc bus from the DT layer by dropping the use of
-> of_map_rid(), see patch 4.
-> I briefly glanced over the iort code and spotted this static function:
-> iort_iommu_xlate(). Wouldn't it also help, of course after making it public?
+On 08-04-20, 21:55, Grygorii Strashko wrote:
+> The mutex_unlock() is missed on error path of psil_get_ep_config()
+> which causes deadlock, so add missed mutex_unlock().
 
-Guys I have lost you honestly. I don't understand what you really need
-to do with DT and ACPI here. Are they needed to describe what you need
-or not ? If the MC dma configure function does not need any DT/ACPI
-bindings that's fine by me, I don't understand though why you are still
-asking how to represent MC in ACPI then, what for.
+Applied, thanks
 
-Can you talk between *yourselves* please and decide what you need ?
-
-What's the problem ?
-
-Thanks,
-Lorenzo
+-- 
+~Vinod
