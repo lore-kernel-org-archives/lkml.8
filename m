@@ -2,136 +2,91 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 758E2C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:49:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A69EC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:50:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F29A20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:49:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586947741;
-	bh=HnbCLVccnltKcSSZedL2CQZAK2TgY1Sbggx+zC543GY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xFSnDahPmbQ2lIHOZF4XmiKIMejrBFn0jrFnntrM6vRnAk7cIMyxeKn9ES29kFbYX
-	 hCoVDGrRea0bcNDtoR6PL0U3e50Nl0pjgQEEOqsp1V9OezQXm6tbdwwoAC7PFFzcrv
-	 IeS5e0ahir+gsOTiMYvhg9GoUWF7xyNGTv6qdQKw=
+	by mail.kernel.org (Postfix) with ESMTP id 5ECD920737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:50:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2896640AbgDOKsw (ORCPT
+        id S2895040AbgDOKuc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 06:48:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40622 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896436AbgDOKsC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 06:48:02 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD15620737;
-        Wed, 15 Apr 2020 10:47:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586947681;
-        bh=HnbCLVccnltKcSSZedL2CQZAK2TgY1Sbggx+zC543GY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vmDrvJumX7U4le53pGKjBrr2FhNVnQba1z1kLq52haEuy5GrM5awH1/ElXic1ZLC0
-         Oh7NXNU+t5PKOYaPI1cLgdB+3NAFHrAq374CLyxZRTdB85poPdJp0cKh/DP/KUbuta
-         z/klilXZlHdmW+czzWkq59ztl3oT1IXuEHLhkdow=
-Date:   Wed, 15 Apr 2020 11:47:56 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Nicholas Piggin <npiggin@gmail.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH v2 4/4] mm/vmalloc: Hugepage vmalloc mappings
-Message-ID: <20200415104755.GD12621@willie-the-truck>
-References: <20200413125303.423864-1-npiggin@gmail.com>
- <20200413125303.423864-5-npiggin@gmail.com>
+        Wed, 15 Apr 2020 06:50:32 -0400
+Received: from mailgate1.rohmeurope.com ([87.129.152.131]:52276 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2896654AbgDOKuJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 06:50:09 -0400
+X-AuditID: c0a8fbf4-473ff70000004419-ea-5e96e6dd6fa1
+Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 91.20.17433.DD6E69E5; Wed, 15 Apr 2020 12:50:05 +0200 (CEST)
+Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
+ WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
+ 14.03.0487.000; Wed, 15 Apr 2020 12:49:59 +0200
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "lee.jones@linaro.org" <lee.jones@linaro.org>
+CC:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mfd: rohm-bdXXX - switch to use i2c probe_new
+Thread-Topic: [PATCH] mfd: rohm-bdXXX - switch to use i2c probe_new
+Thread-Index: AQHWAzqhn2Sg7V5pBEqGkrHrcsfhsqh57rYAgAAQigA=
+Date:   Wed, 15 Apr 2020 10:49:59 +0000
+Message-ID: <a4b45b01e78c37e23cc4e464ec07d2364e02e379.camel@fi.rohmeurope.com>
+References: <20200326064852.GA23265@localhost.localdomain>
+         <20200415095052.GI2167633@dell>
+In-Reply-To: <20200415095052.GI2167633@dell>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [62.78.225.252]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <068E9DAB13930A43885DBCFC424D130E@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200413125303.423864-5-npiggin@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrEKsWRmVeSWpSXmKPExsVyYMXvjbp3n02LM/i4T8zi/tejjBaXd81h
+        s5iz9ASLA7PHzll32T3uXNvD5vF5k1wAcxS3TVJiSVlwZnqevl0Cd0ZH4w22gj18FVf7VBoY
+        e/i6GDk5JARMJHpnT2TuYuTiEBK4xijRceUHG0hCSOAEo8T9YxpdjBwcbAI2El032UHCIgKG
+        EktOPGUBsZkFqiTunmoEs4UFnCS+te5mgqhxlrj9aS0zhG0l0dP3jA1kDIuAqsTNk7UgYV4B
+        P4n2rvWMEJtiJU6f3gu2lVNAR+Lx2pVgIxkFZCU6G94xQawSl9j07DsrxMkCEkv2nGeGsEUl
+        Xj7+BxVXlNj+fR0LyCpmAU2J9bv0IVodJCY8XgA1RlFiSvdDdogTBCVOznzCMoFRbBaSDbMQ
+        umch6Z6FpHsWku4FjKyrGCVyEzNz0hNLUg31ilJL9YryM3KBVHJ+7iZGSJx92cH4/5DnIUYm
+        DsZDjJIcTEqivK1Pp8UJ8SXlp1RmJBZnxBeV5qQWH2KU4GBWEuFdnzs1Tog3JbGyKrUoHyYl
+        zcGiJM6r/nBirJAAyK7s1NSC1CKYrAwHh5IEr+kToKGCRanpqRVpmTklCGkmDk6Q4VxSIsWp
+        eSmpRYmlJRnxoLQRXwxMHCApHqC9BiA38RYXJOYCRSFaTzFqc0x4OXcRM8eRuUsXMQux5OXn
+        pUqJ81oC06CQAEhpRmke3KJXjOIcjErCvCtA7uABJly4Oa+AVjABrSjwmQyyoiQRISXVwKgv
+        1aOx6HBpeeN9W+5zK7nV8/a2t81UX/54l/FTiVrvhEnhXaxBblwKM1+d+KbI+fVt4Z8c/eMX
+        djXsYxG7nDDvkuyBb+u9fr/NTC4r8/q5Lv/4IWaPUk9Juzd97D93X6lXvWz60mHW6YJPfPWh
+        PhUzYhIfrOVKev/00r+nng8enZyp8K1KY7YSS3FGoqEWc1FxIgA1Alp3dQMAAA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nick,
-
-On Mon, Apr 13, 2020 at 10:53:03PM +1000, Nicholas Piggin wrote:
-> For platforms that define HAVE_ARCH_HUGE_VMAP and support PMD vmap mappings,
-> have vmalloc attempt to allocate PMD-sized pages first, before falling back
-> to small pages. Allocations which use something other than PAGE_KERNEL
-> protections are not permitted to use huge pages yet, not all callers expect
-> this (e.g., module allocations vs strict module rwx).
-> 
-> This gives a 6x reduction in dTLB misses for a `git diff` (of linux), from
-> 45600 to 6500 and a 2.2% reduction in cycles on a 2-node POWER9.
-
-I wonder if it's worth extending vmap() to handle higher order pages in
-a similar way? That might be helpful for tracing PMUs such as Arm SPE,
-where the CPU streams tracing data out to a virtually addressed buffer
-(see rb_alloc_aux_page()).
-
-> This can result in more internal fragmentation and memory overhead for a
-> given allocation. It can also cause greater NUMA unbalance on hashdist
-> allocations.
-> 
-> There may be other callers that expect small pages under vmalloc but use
-> PAGE_KERNEL, I'm not sure if it's feasible to catch them all. An
-> alternative would be a new function or flag which enables large mappings,
-> and use that in callers.
-> 
-> Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
-> ---
->  include/linux/vmalloc.h |   2 +
->  mm/vmalloc.c            | 135 +++++++++++++++++++++++++++++-----------
->  2 files changed, 102 insertions(+), 35 deletions(-)
-> 
-> diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
-> index 291313a7e663..853b82eac192 100644
-> --- a/include/linux/vmalloc.h
-> +++ b/include/linux/vmalloc.h
-> @@ -24,6 +24,7 @@ struct notifier_block;		/* in notifier.h */
->  #define VM_UNINITIALIZED	0x00000020	/* vm_struct is not fully initialized */
->  #define VM_NO_GUARD		0x00000040      /* don't add guard page */
->  #define VM_KASAN		0x00000080      /* has allocated kasan shadow memory */
-> +#define VM_HUGE_PAGES		0x00000100	/* may use huge pages */
-
-Please can you add a check for this in the arm64 change_memory_common()
-code? Other architectures might need something similar, but we need to
-forbid changing memory attributes for portions of the huge page.
-
-In general, I'm a bit wary of software table walkers tripping over this.
-For example, I don't think apply_to_existing_page_range() can handle
-huge mappings at all, but the one user (KASAN) only ever uses page mappings
-so it's ok there.
-
-> @@ -2325,9 +2356,11 @@ static struct vm_struct *__get_vm_area_node(unsigned long size,
->  	if (unlikely(!size))
->  		return NULL;
->  
-> -	if (flags & VM_IOREMAP)
-> -		align = 1ul << clamp_t(int, get_count_order_long(size),
-> -				       PAGE_SHIFT, IOREMAP_MAX_ORDER);
-> +	if (flags & VM_IOREMAP) {
-> +		align = max(align,
-> +			    1ul << clamp_t(int, get_count_order_long(size),
-> +					   PAGE_SHIFT, IOREMAP_MAX_ORDER));
-> +	}
-
-
-I don't follow this part. Please could you explain why you're potentially
-aligning above IOREMAP_MAX_ORDER? It doesn't seem to follow from the rest
-of the patch.
-
-Cheers,
-
-Will
+SGVsbG8gTGVlLA0KDQpPbiBXZWQsIDIwMjAtMDQtMTUgYXQgMTA6NTAgKzAxMDAsIExlZSBKb25l
+cyB3cm90ZToNCj4gT24gVGh1LCAyNiBNYXIgMjAyMCwgTWF0dGkgVmFpdHRpbmVuIHdyb3RlOg0K
+PiANCj4gPiBST0hNIEJENzA1MjggYW5kIEJENzE4eDcgZHJpdmVycyBkbyBub3QgdXRpbGl6ZSB0
+aGUgSTJDIGlkLg0KPiA+IERvIHRoZSB0cml2aWFsIGNvbnZlcnNpb24gYW5kIG1ha2UgdGhlbSB0
+byB1c2UgcHJvYmVfbmV3DQo+ID4gaW5zdGVhZCBvZiBwcm9iZS4NCj4gDQo+IE5vdCBzdXJlIEkg
+dW5kZXJzdGFuZCB0aGUgcHVycG9zZSBvZiB0aGUgcGF0Y2guDQo+IA0KPiBUaGUgb25seSByZWFz
+b24gdG8gc3dpdGNoIHRvIHByb2JlX25ldyBpcyB0byBhaWQgdGhlIHJlbW92YWwgb2YgdGhlDQo+
+IGNvbXB1bHNvcnkgSTJDIHRhYmxlcy4gIEhvd2V2ZXIsIG5laXRoZXIgb2YgdGhlc2UgZHJpdmVy
+cyBoYXZlIHRoZW0uDQoNCk1heWJlIEkgaGF2ZSBtaXN1bmRlcnN0b29kIHRoZSBwcm9iZV9uZXcu
+IE15IHVuZGVyc3RhbmRpbmcgd2FzIHRoYXQgdGhlDQpwcm9iZV9uZXcgaXMgd2hhdCBzaG91bGQg
+YmVjb21lIHRoZSBzdGFuZGFyZCAtIEVnLiBldmVudHVhbGx5IGFsbCBJMkMNCmRyaXZlcnMgd291
+bGQgdXNlIHByb2JlIHdoaWNoIGlzIG5vdCBnZXR0aW5nIHRoZSBJRCB0YWJsZXMgYXMgYXJndW1l
+bnQNCi0gYW5kIHRoZSBvbGQgcHJvYmUgY291bGQgYmUgcmVtb3ZlZC4gVGh1cyBJIHRob3VnaHQg
+Y29udmVyc2lvbiBvZg0KcHJvYmUgdG8gcHJvYmVfbmV3IHdvdWxkIGJlIHJlcXVpcmVkIGluIG9y
+ZGVyIHRvIGdldCByaWQgb2YgdGhlIG9sZA0KcHJvYmUuIEkgdGhpbmsgSSBnb3QgdGhpcyB1bmRl
+cnN0YW5kaW5nIHdoZW4gSSBzdWJtaXR0ZWQgZHJpdmVyIGZvcg0KQkQ3MTgyOCAtIGFuZCBJIHRo
+aW5rIGl0IHdhcyB5b3Ugd2hvIHN1Z2dlc3RlZCBtZSB0byBzd2l0Y2ggdG8NCnByb2JlX25ldyBh
+cyAnaWQnIHdhcyB1bnVzZWQuIEJ1dCBpZiBwbGVhc2UganVzdCBkcm9wIHRoaXMgcGF0Y2ggaWYN
+CnRoaXMgY2hhbmdlIGlzIG5vdCBuZWVkZWQhDQoNClRoYW5rcyBmb3IgdGFraW5nIGEgbG9vayBh
+dCB0aGlzIDopDQoNCkJlc3QgUmVnYXJkcw0KICAgIC0tTWF0dGkNCg0KPiANCj4gPiBTaWduZWQt
+b2ZmLWJ5OiBNYXR0aSBWYWl0dGluZW4gPG1hdHRpLnZhaXR0aW5lbkBmaS5yb2htZXVyb3BlLmNv
+bT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9tZmQvcm9obS1iZDcwNTI4LmMgfCA1ICsrLS0tDQo+
+ID4gIGRyaXZlcnMvbWZkL3JvaG0tYmQ3MTh4Ny5jIHwgNSArKy0tLQ0KPiA+ICAyIGZpbGVzIGNo
+YW5nZWQsIDQgaW5zZXJ0aW9ucygrKSwgNiBkZWxldGlvbnMoLSkNCg0K
