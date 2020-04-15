@@ -2,113 +2,125 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8396C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:26:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FCFAC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B791D20768
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:26:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1623220575
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:26:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="BufMhBhR"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="CtHkHYlC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2896963AbgDOLZw (ORCPT
+        id S2896972AbgDOL0X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:25:52 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:11983 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2896948AbgDOLZa (ORCPT
+        Wed, 15 Apr 2020 07:26:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38432 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2896945AbgDOLZ1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:25:30 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e96ef1c0000>; Wed, 15 Apr 2020 04:25:16 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 15 Apr 2020 04:25:29 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 15 Apr 2020 04:25:29 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Apr
- 2020 11:25:28 +0000
-Received: from [10.24.37.103] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Apr
- 2020 11:25:17 +0000
-Subject: Re: [TEGRA194_CPUFREQ Patch 2/3] cpufreq: Add Tegra194 cpufreq driver
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-CC:     <rjw@rjwysocki.net>, <catalin.marinas@arm.com>, <will@kernel.org>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <talho@nvidia.com>, <linux-pm@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <bbasu@nvidia.com>,
-        <mperttunen@nvidia.com>
-References: <20200326115023.xy3n5bl7uetuw7mx@vireshk-i7>
- <d233b26b-6b50-7d41-9f33-a5dc151e0e7d@nvidia.com>
- <20200406025549.qfwzlk3745y3r274@vireshk-i7>
- <3ab4136c-8cca-c2f9-d286-b82dac23e720@nvidia.com>
- <20200408055301.jhvu5bc2luu3b5qr@vireshk-i7>
- <08307e54-0e14-14a3-7d6a-d59e1e04a683@nvidia.com>
- <20200409074415.twpzu2n4frqlde7b@vireshk-i7>
- <00390070-38a1-19aa-ca59-42c4658bee7e@nvidia.com>
- <20200413062141.a6hmwipexhv3sctq@vireshk-i7>
- <64b609f1-efb1-425f-a91a-27a492bd3ec4@nvidia.com>
- <20200414054504.e3qn2cnxqur4sclw@vireshk-i7>
-From:   Sumit Gupta <sumitg@nvidia.com>
-Message-ID: <d6e0eed6-4267-fca9-59e1-02d16e17ff34@nvidia.com>
-Date:   Wed, 15 Apr 2020 16:55:53 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 15 Apr 2020 07:25:27 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E34CEC061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 04:25:26 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id y24so18527060wma.4
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 04:25:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=apXLkj8/Y6/Je/J3pw9VYIeGtZznbEDSTaodMw9SIP8=;
+        b=CtHkHYlCnlsa+tUc8/F7g7a0/P6u8ejT1ayfSACtu0kpWhs3EFaqXHsG66HdK2TqVO
+         1YepPve4g/tteoWGzn/BId3gVqa0gSrcAXKoX7yewG/1H0vQN4Qe2Pn7YxQ/IdDn6tw3
+         UgUpHRyZ0gelkfNm/V6/st91NhPu8ozpGjQpo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=apXLkj8/Y6/Je/J3pw9VYIeGtZznbEDSTaodMw9SIP8=;
+        b=OVDf7P4YhIVcWJ2BAsxr9fxDfnQW+E7fGbtHd4QdB8u8jRYMKy/9fzfpSKpRKXn3T6
+         5BMCJHWLKtk0hFYC0shufr5qdJxRZH7zXFOaeOVAY5Fq29KvytmdZRx1Nme9+d9jRFg4
+         Xw0Fsu0K6EsDyyoL6HTYIQw6aI88ph53bYaeI9HuTGNNj264S2xferp4Na5f1+2GVcjk
+         AR6vhmXdu5lCG8sN1NPhKGt0fnbWFJfT6os3bTOIWInlOESya5KPUGn6JT0sAqPDH6vH
+         XhEV79i2kIhfWHXApsr6OoQrXDOEEOIfhywJs+A5R5dcod9zoNwPqT/V5+9nw2GmUY7j
+         I55A==
+X-Gm-Message-State: AGi0PuY3Pggs1nEJRt0PPaV+/etL896h4YDT0YRLMkoIGR0cnNZmBIRe
+        oIRJsEfbF4Gn/cMFluYone31oA==
+X-Google-Smtp-Source: APiQypLPhakDBiE4HRC90MnW5/bRC2vpIu2AQD3Xvb6Y3wPK7412N1qq31ytrTaUWKirLB1NJ1AesQ==
+X-Received: by 2002:a1c:7c13:: with SMTP id x19mr4706062wmc.124.1586949925687;
+        Wed, 15 Apr 2020 04:25:25 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id w3sm4358429wrc.18.2020.04.15.04.25.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2020 04:25:25 -0700 (PDT)
+Date:   Wed, 15 Apr 2020 13:25:23 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Sandy Huang <hjc@rock-chips.com>,
+        Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] drm/rockchip: fix spelling mistake "modifer" ->
+ "modifier"
+Message-ID: <20200415112523.GA3456981@phenom.ffwll.local>
+Mail-Followup-To: Colin King <colin.king@canonical.com>,
+        Sandy Huang <hjc@rock-chips.com>,
+        Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>,
+        David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200415083420.366279-1-colin.king@canonical.com>
 MIME-Version: 1.0
-In-Reply-To: <20200414054504.e3qn2cnxqur4sclw@vireshk-i7>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1586949916; bh=eXKsl5AwjUrhoGQdcNjptVpYoo1UjOgc5wmqJgrcC5Q=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=BufMhBhRaHC5kGcUpG2IkNn/Bfg4VQWvgSaQNbxoHn0VvAvRLQsl7xjWkgBtNJ7Kh
-         t2ipKJv2gpkrMXWf0a8+Ok30Adzu+bjmHntEskmxM78ojT6yDs3Va1eAN41kin2EQB
-         W+EPOcwvBy5bflyNRl0ZUZerXfolh7aB+8mr7Vx+u3MtYcKh9Es5gkcD8UvlpU2LkP
-         5m2FgGLBadbB6U4ySZHwUGPeFcU3Dfd6MhmIDTxqDa51lUqqbxBSRxwc1cFSXF+Ool
-         VPAofppZofnYUY//2D9agcpOmHfefVFjPxzlCoajeCWLbuFHF8tPKE3VTuS9GST+Lw
-         3w3Q2+kkG0IeA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200415083420.366279-1-colin.king@canonical.com>
+X-Operating-System: Linux phenom 5.3.0-3-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Apr 15, 2020 at 09:34:20AM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> There is a spelling mistake in a DRM_DEBUG_KMS debug message. Fix it.
+> 
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
+Queued for 5.8, thanks for your patch.
+-Daniel
 
-On 14/04/20 11:15 AM, Viresh Kumar wrote:
-> External email: Use caution opening links or attachments
+> ---
+>  drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
+> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+> index b87d22eb6ae1..33463b79a37b 100644
+> --- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+> @@ -769,7 +769,7 @@ static bool rockchip_mod_supported(struct drm_plane *plane,
+>  		return true;
+>  
+>  	if (!rockchip_afbc(modifier)) {
+> -		DRM_DEBUG_KMS("Unsupported format modifer 0x%llx\n", modifier);
+> +		DRM_DEBUG_KMS("Unsupported format modifier 0x%llx\n", modifier);
+>  
+>  		return false;
+>  	}
+> -- 
+> 2.25.1
 > 
-> On 13-04-20, 17:50, Sumit Gupta wrote:
->> This was done considering long delay value as explained previously.
->> Do you think that smp_call_function_single() would be better than work queue
->> here?
-> 
-> Don't work with assumptions, you should test both and see which one
-> works better. Workqueue should never be faster than
-> smp_call_function_single() with my understanding.
-Checked the time taken and its almost same in both cases.
-Earlier we used smp_call_function_single(), but delay time period was 
-small in that SOC. In T194, the time period was more. So, this is an 
-optimization done because using work queue has advantage as interrupts 
-will not be disabled for that period.
-If you think work queue is not required, then can remove it. The 
-functionality works fine in both cases.
 
-> 
-> --
-> viresh
-> 
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
