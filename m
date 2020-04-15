@@ -2,176 +2,492 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62102C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C92D7C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:28:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43211206F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:28:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E64A206F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:28:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="YQeaa8nC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1415962AbgDOQ2I (ORCPT
+        id S1415982AbgDOQ2U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 12:28:08 -0400
-Received: from mga03.intel.com ([134.134.136.65]:47706 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1415915AbgDOQ1e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 12:27:34 -0400
-IronPort-SDR: uW+unV75qdgb2U3L5czKZHvzFBcd+OVz2xdv1KqZvh/+6GDzdW8MNMCQSEhJZcPlI6TZAlltid
- WwtLZa9AIqqQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 09:27:32 -0700
-IronPort-SDR: 5eJIAnbaBUkT7vmvZkQM8f4n6QiHLKkUwZB9EHJFNVj+7PpXC3EXfK7UzRjNtMHYpKIkPPTApK
- LtRhGUpSvepA==
-X-IronPort-AV: E=Sophos;i="5.72,387,1580803200"; 
-   d="scan'208";a="256907570"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 09:27:25 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id C6B5D20606; Wed, 15 Apr 2020 19:27:22 +0300 (EEST)
-Date:   Wed, 15 Apr 2020 19:27:22 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        Maxime Ripard <maxime@cerno.tech>
-Subject: Re: [PATCH v5 2/5] media: i2c: ov5645: Drop reading clock-frequency
- dt-property
-Message-ID: <20200415162722.GG27762@paasikivi.fi.intel.com>
-References: <1586191361-16598-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1586191361-16598-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200406165108.GA7646@kekkonen.localdomain>
- <20200406173234.GD16885@pendragon.ideasonboard.com>
- <20200407062241.GA8883@kekkonen.localdomain>
- <20200407122106.GD4751@pendragon.ideasonboard.com>
- <20200407151401.GA5206@paasikivi.fi.intel.com>
- <20200414205552.GN19819@pendragon.ideasonboard.com>
+        Wed, 15 Apr 2020 12:28:20 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:49144 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1415790AbgDOQ0A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 12:26:00 -0400
+Received: from dede-linux.corp.microsoft.com (unknown [131.107.147.242])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 4F0BC20BC5EB;
+        Wed, 15 Apr 2020 09:25:57 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4F0BC20BC5EB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1586967957;
+        bh=F03SrsU1ortusmnywFZQsfRqdTVis7HUV3FMhbERjiw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=YQeaa8nCSOVmm8KIVRJDRgtL8hFamb7Ky6yq1HRm5+alXhAgzzz4OmBKcYYEgBecb
+         i9djDLtjDTN6dorEpgPqk4DEuBTpwn290mXEE5LkP9d9+uVKTt2SeYNSnMb4/1JFJe
+         jN64N5enXZipGDK6vWfHEkRRKu36vtcrfD9uQA/k=
+From:   deven.desai@linux.microsoft.com
+To:     agk@redhat.com, axboe@kernel.dk, snitzer@redhat.com,
+        jmorris@namei.org, serge@hallyn.com, zohar@linux.ibm.com,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, dm-devel@redhat.com,
+        linux-block@vger.kernel.org, jannh@google.com
+Cc:     tyhicks@linux.microsoft.com, pasha.tatashin@soleen.com,
+        sashal@kernel.org, jaskarankhurana@linux.microsoft.com,
+        nramas@linux.microsoft.com, mdsakib@linux.microsoft.com,
+        linux-kernel@vger.kernel.org, corbet@lwn.net
+Subject: [RFC PATCH v3 06/12] dm-verity: move signature check after tree validation
+Date:   Wed, 15 Apr 2020 09:25:44 -0700
+Message-Id: <20200415162550.2324-7-deven.desai@linux.microsoft.com>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200415162550.2324-1-deven.desai@linux.microsoft.com>
+References: <20200415162550.2324-1-deven.desai@linux.microsoft.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200414205552.GN19819@pendragon.ideasonboard.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent,
+From: Deven Bowers <deven.desai@linux.microsoft.com>
 
-On Tue, Apr 14, 2020 at 11:55:52PM +0300, Laurent Pinchart wrote:
-> Hi Sakari,
-> 
-> On Tue, Apr 07, 2020 at 06:14:01PM +0300, Sakari Ailus wrote:
-> > On Tue, Apr 07, 2020 at 03:21:06PM +0300, Laurent Pinchart wrote:
-> > > On Tue, Apr 07, 2020 at 09:22:41AM +0300, Sakari Ailus wrote:
-> > >> On Mon, Apr 06, 2020 at 08:32:34PM +0300, Laurent Pinchart wrote:
-> > >>> On Mon, Apr 06, 2020 at 07:51:08PM +0300, Sakari Ailus wrote:
-> > >>>> On Mon, Apr 06, 2020 at 05:42:38PM +0100, Lad Prabhakar wrote:
-> > >>>>> Modes in the driver are based on xvclk frequency fixed to 24MHz, but where
-> > >>>>> as the OV5645 sensor can support the xvclk frequency ranging from 6MHz to
-> > >>>>> 24MHz. So instead making clock-frequency as dt-property just let the
-> > >>>>> driver enforce the required clock frequency.
-> > >>>> 
-> > >>>> Even if some current systems where the driver is used are using 24 MHz
-> > >>>> clock, that doesn't mean there wouldn't be systems using another frequency
-> > >>>> that the driver does not support right now.
-> > >>>> 
-> > >>>> The driver really should not set the frequency unless it gets it from DT,
-> > >>>> but I think the preferred means is to use assigned-clock-rates instead, and
-> > >>>> not to involve the driver with setting the frequency.
-> > >>>> 
-> > >>>> Otherwise we'll make it impossible to support other frequencies, at least
-> > >>>> without more or less random defaults.
-> > >>> 
-> > >>> We're running in circles here.
-> > >>> 
-> > >>> As the driver only supports 24MHz at the moment, the frequency should be
-> > >>> set by the driver, as it's a driver limitation. We can then work on
-> > >>> supporting additional frequencies, which will require DT to provide a
-> > >>> list of supported frequencies for the system, but that can be done on
-> > >>> top.
-> > >> 
-> > >> I guess it would be possible to use different external clock frequencies on
-> > >> a sensor in a given system but that seems to be a bit far fetched, to the
-> > >> extent I've never seen anyone doing that in practice.
-> > >> 
-> > >> Originally, the driver set the frequency based on the clock-frequency
-> > >> property. If we're removing that but use a fixed frequency instead, then
-> > >> how is that going to work going forward when someone adds support for other
-> > >> frequencies in the driver and has a system requiring that, while there are
-> > >> some other platforms relying on the driver setting a particular frequency?
-> > > 
-> > > The standard property for this is link-frequencies, not clock-frequency.
-> > > Deprecating clock-frequency now paves the way to use the standard
-> > > property later when/if someone implements support for additional
-> > > frequencies.
-> > 
-> > The external clock frequency and link frequency are different indeed, but
-> > they are related. The link frequency has been selected in a way that it is
-> > possible to generate that exact frequency using the chosen external clock
-> > frequency. If you change the external clock frequency, chances are good
-> > there is no PLL configuration to generate that link frequency.
-> 
-> But aren't we supposed to pick the clock frequency based on the link
-> frequency specified in DT ?
+The CONFIG_DM_VERITY_VERIFY_ROOTHASH_SIG introduced by Jaskaran was
+intended to be used to allow an LSM to enforce verifications for all
+dm-verity volumes.
 
-No. In a general case there is no reliable way to come up with an external
-clock frequency based on another, different if related, frequency.
+However, with it's current implementation, this signature verification
+occurs after the merkel-tree is validated, as a result the signature can
+pass initial verification by passing a matching root-hash and signature.
+This results in an unreadable block_device, but that has passed signature
+validation (and subsequently, would be marked as verified).
 
-> 
-> In any case, this policy needs to be carefully documented.
+This change moves the signature verification to after the merkel-tree has
+finished validation.
 
-I thought after ten or so years this would be already an established
-practice. :-)
+Signed-off-by: Deven Bowers <deven.desai@linux.microsoft.com>
+---
+ drivers/md/dm-verity-target.c     |  42 ++++-----
+ drivers/md/dm-verity-verify-sig.c | 140 ++++++++++++++++++++++--------
+ drivers/md/dm-verity-verify-sig.h |  20 ++---
+ drivers/md/dm-verity.h            |   2 +-
+ 4 files changed, 132 insertions(+), 72 deletions(-)
 
-I agree it should be documented. We don't seem to have specific
-documentation for camera sensor drivers at the moment. I can submit a
-patch...
-
-> 
-> > >> Although, if you're saying that this driver only needs to work with DT that
-> > >> comes with the kernel and you don't care about DT binary compatibility,
-> > >> this would be fine.
-> > > 
-> > > I believe this series to not break backward compatibility, as the driver
-> > > only works with a 24MHz clock, so I expect all DTs to specify that.
-> > 
-> > What you're still doing here is defining the DT bindings based on the
-> > current driver implementation, not the device properties.
-> 
-> Quite the contrary, the device doesn't require any particular input
-> clock frequency, so we're removing that from DT :-) Specifying the clock
-> frequency in DT is in my opinion a manual workaround for not computing
-> it at runtime based on the desired link frequency, while the link
-> frequency is a property of the system as it specifies the range of link
-> frequencies that are safe to use from an EMC point of view.
-
-The external clock frequency is significantly lower than the link frequency
-(usually), but it still comes out of the SoC (or a PMIC chip). The clock
-signal track on PCB as well as wiring may also be rather long, depending on
-where the camera sensor is --- quite possibly tens of centimetres.
-Therefore I wouldn't categorically rule out possible EMC issues with that
-one either.
-
-The bottom line is: use a known-good, safe frequency.
-
+diff --git a/drivers/md/dm-verity-target.c b/drivers/md/dm-verity-target.c
+index eec9f252e935..c507f3a4e237 100644
+--- a/drivers/md/dm-verity-target.c
++++ b/drivers/md/dm-verity-target.c
+@@ -471,9 +471,9 @@ static int verity_verify_io(struct dm_verity_io *io)
+ 	struct bvec_iter start;
+ 	unsigned b;
+ 	struct crypto_wait wait;
++	int r;
+ 
+ 	for (b = 0; b < io->n_blocks; b++) {
+-		int r;
+ 		sector_t cur_block = io->block + b;
+ 		struct ahash_request *req = verity_io_hash_req(v, io);
+ 
+@@ -530,6 +530,16 @@ static int verity_verify_io(struct dm_verity_io *io)
+ 			return -EIO;
+ 	}
+ 
++	/*
++	 * At this point, the merkel tree has finished validating.
++	 * if signature was specified, validate the signature here.
++	 */
++	r = verity_verify_root_hash(v);
++	if (r < 0) {
++		DMERR_LIMIT("signature mismatch");
++		return r;
++	}
++
+ 	return 0;
+ }
+ 
+@@ -728,7 +738,7 @@ static void verity_status(struct dm_target *ti, status_type_t type,
+ 			args++;
+ 		if (v->validated_blocks)
+ 			args++;
+-		if (v->signature_key_desc)
++		if (v->sig)
+ 			args += DM_VERITY_ROOT_HASH_VERIFICATION_OPTS;
+ 		if (!args)
+ 			return;
+@@ -751,9 +761,9 @@ static void verity_status(struct dm_target *ti, status_type_t type,
+ 		if (v->validated_blocks)
+ 			DMEMIT(" " DM_VERITY_OPT_AT_MOST_ONCE);
+ 		sz = verity_fec_status_table(v, sz, result, maxlen);
+-		if (v->signature_key_desc)
++		if (v->sig)
+ 			DMEMIT(" " DM_VERITY_ROOT_HASH_VERIFICATION_OPT_SIG_KEY
+-				" %s", v->signature_key_desc);
++				" %s", v->sig->signature_key_desc);
+ 		break;
+ 	}
+ }
+@@ -819,7 +829,7 @@ static void verity_dtr(struct dm_target *ti)
+ 
+ 	verity_fec_dtr(v);
+ 
+-	kfree(v->signature_key_desc);
++	verity_verify_dtr(v);
+ 
+ 	kfree(v);
+ }
+@@ -876,8 +886,7 @@ static int verity_alloc_zero_digest(struct dm_verity *v)
+ 	return r;
+ }
+ 
+-static int verity_parse_opt_args(struct dm_arg_set *as, struct dm_verity *v,
+-				 struct dm_verity_sig_opts *verify_args)
++static int verity_parse_opt_args(struct dm_arg_set *as, struct dm_verity *v)
+ {
+ 	int r;
+ 	unsigned argc;
+@@ -927,9 +936,7 @@ static int verity_parse_opt_args(struct dm_arg_set *as, struct dm_verity *v,
+ 				return r;
+ 			continue;
+ 		} else if (verity_verify_is_sig_opt_arg(arg_name)) {
+-			r = verity_verify_sig_parse_opt_args(as, v,
+-							     verify_args,
+-							     &argc, arg_name);
++			r = verity_verify_sig_parse_opt_args(as, v, &argc);
+ 			if (r)
+ 				return r;
+ 			continue;
+@@ -960,7 +967,6 @@ static int verity_parse_opt_args(struct dm_arg_set *as, struct dm_verity *v,
+ static int verity_ctr(struct dm_target *ti, unsigned argc, char **argv)
+ {
+ 	struct dm_verity *v;
+-	struct dm_verity_sig_opts verify_args = {0};
+ 	struct dm_arg_set as;
+ 	unsigned int num;
+ 	unsigned long long num_ll;
+@@ -1128,20 +1134,11 @@ static int verity_ctr(struct dm_target *ti, unsigned argc, char **argv)
+ 		as.argc = argc;
+ 		as.argv = argv;
+ 
+-		r = verity_parse_opt_args(&as, v, &verify_args);
++		r = verity_parse_opt_args(&as, v);
+ 		if (r < 0)
+ 			goto bad;
+ 	}
+ 
+-	/* Root hash signature is  a optional parameter*/
+-	r = verity_verify_root_hash(root_hash_digest_to_validate,
+-				    strlen(root_hash_digest_to_validate),
+-				    verify_args.sig,
+-				    verify_args.sig_size);
+-	if (r < 0) {
+-		ti->error = "Root hash verification failed";
+-		goto bad;
+-	}
+ 	v->hash_per_block_bits =
+ 		__fls((1 << v->hash_dev_block_bits) / v->digest_size);
+ 
+@@ -1207,13 +1204,10 @@ static int verity_ctr(struct dm_target *ti, unsigned argc, char **argv)
+ 	ti->per_io_data_size = roundup(ti->per_io_data_size,
+ 				       __alignof__(struct dm_verity_io));
+ 
+-	verity_verify_sig_opts_cleanup(&verify_args);
+-
+ 	return 0;
+ 
+ bad:
+ 
+-	verity_verify_sig_opts_cleanup(&verify_args);
+ 	verity_dtr(ti);
+ 
+ 	return r;
+diff --git a/drivers/md/dm-verity-verify-sig.c b/drivers/md/dm-verity-verify-sig.c
+index 614e43db93aa..27dac8aa2e5a 100644
+--- a/drivers/md/dm-verity-verify-sig.c
++++ b/drivers/md/dm-verity-verify-sig.c
+@@ -22,6 +22,16 @@ MODULE_PARM_DESC(require_signatures,
+ #define DM_VERITY_IS_SIG_FORCE_ENABLED() \
+ 	(require_signatures != false)
+ 
++static void destroy_verity_sig(struct dm_verity_sig *sig_info)
++{
++	if (!sig_info)
++		return;
++
++	kfree(sig_info->sig);
++	kfree(sig_info->signature_key_desc);
++	kfree(sig_info);
++}
++
+ bool verity_verify_is_sig_opt_arg(const char *arg_name)
+ {
+ 	return (!strcasecmp(arg_name,
+@@ -29,7 +39,7 @@ bool verity_verify_is_sig_opt_arg(const char *arg_name)
+ }
+ 
+ static int verity_verify_get_sig_from_key(const char *key_desc,
+-					struct dm_verity_sig_opts *sig_opts)
++					  struct dm_verity_sig  *sig_info)
+ {
+ 	struct key *key;
+ 	const struct user_key_payload *ukp;
+@@ -48,14 +58,14 @@ static int verity_verify_get_sig_from_key(const char *key_desc,
+ 		goto end;
+ 	}
+ 
+-	sig_opts->sig = kmalloc(ukp->datalen, GFP_KERNEL);
+-	if (!sig_opts->sig) {
++	sig_info->sig = kmalloc(ukp->datalen, GFP_KERNEL);
++	if (!sig_info->sig) {
+ 		ret = -ENOMEM;
+ 		goto end;
+ 	}
+-	sig_opts->sig_size = ukp->datalen;
++	sig_info->sig_size = ukp->datalen;
+ 
+-	memcpy(sig_opts->sig, ukp->data, sig_opts->sig_size);
++	memcpy(sig_info->sig, ukp->data, sig_info->sig_size);
+ 
+ end:
+ 	up_read(&key->sem);
+@@ -64,70 +74,128 @@ static int verity_verify_get_sig_from_key(const char *key_desc,
+ 	return ret;
+ }
+ 
++/**
++ * Parse any signature verification arguments.
++ *	This function will populate v->sig, it is the caller's
++ *	responsibility to free this structure via verity_verify_dtr
++ *
++ * @as: argument set passed in to parse
++ * @v: verity context structure. Should have a NULL v->sig member.
++ * @argc: current argument number
++ */
+ int verity_verify_sig_parse_opt_args(struct dm_arg_set *as,
+ 				     struct dm_verity *v,
+-				     struct dm_verity_sig_opts *sig_opts,
+-				     unsigned int *argc,
+-				     const char *arg_name)
++				     unsigned int *argc)
+ {
+ 	struct dm_target *ti = v->ti;
++	struct dm_verity_sig *sig_info = NULL;
+ 	int ret = 0;
+ 	const char *sig_key = NULL;
+ 
+ 	if (!*argc) {
+ 		ti->error = DM_VERITY_VERIFY_ERR("Signature key not specified");
+-		return -EINVAL;
++		ret = -EINVAL;
++		goto cleanup;
++	}
++
++	sig_info = kzalloc(sizeof(*sig_info), GFP_KERNEL);
++	if (!sig_info) {
++		ret = -ENOMEM;
++		goto cleanup;
+ 	}
+ 
+ 	sig_key = dm_shift_arg(as);
+ 	(*argc)--;
+ 
+-	ret = verity_verify_get_sig_from_key(sig_key, sig_opts);
+-	if (ret < 0)
++	ret = verity_verify_get_sig_from_key(sig_key, sig_info);
++	if (ret < 0) {
+ 		ti->error = DM_VERITY_VERIFY_ERR("Invalid key specified");
++		goto cleanup;
++	}
+ 
+-	v->signature_key_desc = kstrdup(sig_key, GFP_KERNEL);
+-	if (!v->signature_key_desc)
+-		return -ENOMEM;
++	sig_info->signature_key_desc = kstrdup(sig_key, GFP_KERNEL);
++	if (!sig_info->signature_key_desc) {
++		ret = -ENOMEM;
++		goto cleanup;
++	}
+ 
++	v->sig = sig_info;
++	sig_info = NULL;
++cleanup:
++	if (sig_info)
++		destroy_verity_sig(sig_info);
+ 	return ret;
+ }
+ 
+-/*
++/**
+  * verify_verify_roothash - Verify the root hash of the verity hash device
+  *			     using builtin trusted keys.
+  *
+- * @root_hash: For verity, the roothash/data to be verified.
+- * @root_hash_len: Size of the roothash/data to be verified.
+- * @sig_data: The trusted signature that verifies the roothash/data.
+- * @sig_len: Size of the signature.
++ * @v: dm_verity structure containing all context for the dm_verity
++ *	operation.
+  *
+  */
+-int verity_verify_root_hash(const void *root_hash, size_t root_hash_len,
+-			    const void *sig_data, size_t sig_len)
++int verity_verify_root_hash(const struct dm_verity *v)
+ {
+-	int ret;
++	int ret = 0;
++	char *root_hash = NULL;
++	size_t root_hash_size = 0;
++	struct dm_verity_sig *sig_target = NULL;
++
++	if (!v || !v->ti || !v->root_digest || v->digest_size == 0) {
++		ret = -EINVAL;
++		goto cleanup;
++	}
++
++	sig_target = v->sig;
++
++	if (!sig_target || !sig_target->sig || sig_target->sig_size == 0) {
++		if (DM_VERITY_IS_SIG_FORCE_ENABLED()) {
++			ret = -ENOKEY;
++			goto cleanup;
++		} else {
++			goto cleanup;
++		}
++	}
+ 
+-	if (!root_hash || root_hash_len == 0)
+-		return -EINVAL;
++	/*
++	 * If signature has passed validation once, assume
++	 * that future signatures will pass.
++	 */
++	if (sig_target->passed)
++		goto cleanup;
+ 
+-	if (!sig_data  || sig_len == 0) {
+-		if (DM_VERITY_IS_SIG_FORCE_ENABLED())
+-			return -ENOKEY;
+-		else
+-			return 0;
++	root_hash_size = v->digest_size * 2;
++	root_hash = kzalloc(root_hash_size, GFP_KERNEL);
++	if (!root_hash) {
++		ret = -ENOMEM;
++		goto cleanup;
+ 	}
+ 
+-	ret = verify_pkcs7_signature(root_hash, root_hash_len, sig_data,
+-				sig_len, NULL, VERIFYING_UNSPECIFIED_SIGNATURE,
+-				NULL, NULL);
++	bin2hex(root_hash, v->root_digest, v->digest_size);
++
++	ret = verify_pkcs7_signature(root_hash, root_hash_size, v->sig->sig,
++				     v->sig->sig_size, NULL,
++				     VERIFYING_UNSPECIFIED_SIGNATURE, NULL,
++				     NULL);
++	if (ret != 0)
++		goto cleanup;
+ 
++	sig_target->passed = true;
++cleanup:
++	kfree(root_hash);
+ 	return ret;
+ }
+ 
+-void verity_verify_sig_opts_cleanup(struct dm_verity_sig_opts *sig_opts)
++/**
++ * Performs destruction / cleanup of a valid dm_verity_sig struct
++ *
++ * @v: dm_verity structure containing the dm_verity_sig struct to
++ *	be freed.
++ */
++
++void verity_verify_dtr(struct dm_verity *v)
+ {
+-	kfree(sig_opts->sig);
+-	sig_opts->sig = NULL;
+-	sig_opts->sig_size = 0;
++	destroy_verity_sig(v->sig);
++	v->sig = NULL;
+ }
+diff --git a/drivers/md/dm-verity-verify-sig.h b/drivers/md/dm-verity-verify-sig.h
+index 19b1547aa741..81158d7702a3 100644
+--- a/drivers/md/dm-verity-verify-sig.h
++++ b/drivers/md/dm-verity-verify-sig.h
+@@ -11,31 +11,30 @@
+ #define DM_VERITY_ROOT_HASH_VERIFICATION "DM Verity Sig Verification"
+ #define DM_VERITY_ROOT_HASH_VERIFICATION_OPT_SIG_KEY "root_hash_sig_key_desc"
+ 
+-struct dm_verity_sig_opts {
++struct dm_verity_sig {
++	char *signature_key_desc;
+ 	unsigned int sig_size;
+ 	u8 *sig;
++	bool passed;
+ };
+ 
+ #ifdef CONFIG_DM_VERITY_VERIFY_ROOTHASH_SIG
+ 
+ #define DM_VERITY_ROOT_HASH_VERIFICATION_OPTS 2
+ 
+-int verity_verify_root_hash(const void *data, size_t data_len,
+-			    const void *sig_data, size_t sig_len);
++int verity_verify_root_hash(const struct dm_verity *v);
+ bool verity_verify_is_sig_opt_arg(const char *arg_name);
+ 
+ int verity_verify_sig_parse_opt_args(struct dm_arg_set *as, struct dm_verity *v,
+-				    struct dm_verity_sig_opts *sig_opts,
+-				    unsigned int *argc, const char *arg_name);
++				    unsigned int *argc);
+ 
+-void verity_verify_sig_opts_cleanup(struct dm_verity_sig_opts *sig_opts);
++void verity_verify_dtr(struct dm_verity *v);
+ 
+ #else
+ 
+ #define DM_VERITY_ROOT_HASH_VERIFICATION_OPTS 0
+ 
+-int verity_verify_root_hash(const void *data, size_t data_len,
+-			    const void *sig_data, size_t sig_len)
++int verity_verify_root_hash(const struct dm_verity *v)
+ {
+ 	return 0;
+ }
+@@ -46,13 +45,12 @@ bool verity_verify_is_sig_opt_arg(const char *arg_name)
+ }
+ 
+ int verity_verify_sig_parse_opt_args(struct dm_arg_set *as, struct dm_verity *v,
+-				    struct dm_verity_sig_opts *sig_opts,
+-				    unsigned int *argc, const char *arg_name)
++				    unsigned int *argc)
+ {
+ 	return -EINVAL;
+ }
+ 
+-void verity_verify_sig_opts_cleanup(struct dm_verity_sig_opts *sig_opts)
++void verity_verify_dtr(struct dm_verity *v)
+ {
+ }
+ 
+diff --git a/drivers/md/dm-verity.h b/drivers/md/dm-verity.h
+index 641b9e3a399b..995c495decad 100644
+--- a/drivers/md/dm-verity.h
++++ b/drivers/md/dm-verity.h
+@@ -64,7 +64,7 @@ struct dm_verity {
+ 	struct dm_verity_fec *fec;	/* forward error correction */
+ 	unsigned long *validated_blocks; /* bitset blocks validated */
+ 
+-	char *signature_key_desc; /* signature keyring reference */
++	struct dm_verity_sig *sig; /* signature verification */
+ };
+ 
+ struct dm_verity_io {
 -- 
-Regards,
+2.26.0
 
-Sakari Ailus
