@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6775BC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:38:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6C60C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43BBB20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:38:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B18A220737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:38:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586954315;
-	bh=OTum/8fGcEQAFUxcS0A1Vb92+pICUIgnAe39RUn/eMU=;
+	s=default; t=1586954330;
+	bh=ZhDvk/Tm3Lrjc0LYu1kvazjKCu/HCv2q8Flw3W0Jvf8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wcp7Kl4ZPAU7Xr1rOfPJ4O7TgCjvM9pNFjcLjV3eEl1FVwIedwZmkMdjDT2Ctx8W/
-	 JKen0AUvY/xNDbb/OxJiOblSYIw4+cN94Gnbv07BdE1SvvEK1giVz8DeJ9LZPrqQ2m
-	 nSwRuEe5IDfcyPLF/ik6m8t8oefCAXZsofyIPjsQ=
+	b=eGNxw998wj5YQwwx6aZRCIpJtMNGf9HN3YOIs0eLWpYajD2ktoiRzFU+dewKGc7VJ
+	 hY5fO+YqjzAPX0xNBwYvPTt/CXSBmp8MpvooKd8JmYJ0LwGykjnttlqv+M/A17vv6S
+	 eDEgOO1lPPnbZ9ty5vb787J76CYGOEXS6rIi9d/M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2898149AbgDOMia (ORCPT
-        <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:38:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36578 "EHLO mail.kernel.org"
+        id S369931AbgDOMim (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:38:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897563AbgDOLoF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2897560AbgDOLoF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Apr 2020 07:44:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9AFCC20768;
-        Wed, 15 Apr 2020 11:44:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 559FC21734;
+        Wed, 15 Apr 2020 11:44:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951045;
-        bh=OTum/8fGcEQAFUxcS0A1Vb92+pICUIgnAe39RUn/eMU=;
+        s=default; t=1586951044;
+        bh=ZhDvk/Tm3Lrjc0LYu1kvazjKCu/HCv2q8Flw3W0Jvf8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YwHDKe0XVJoRet30SSXe3p5398gbHuJscTOWHPSQdml4iQSIF+CCefXibnjqq/b94
-         ZSyWqFS9Y1ED87dgCaTe8CMXYoFUBm0K2LPNBTiL6ZrERVuyTnEHDwc+evAgOorXIR
-         ykqip1lJiTC/72QxaPKzd1B0PVuMFfI5M8RxXkU8=
+        b=qHSQv6/lSrihoCjQ6+FVoQS9l7avYm/s900iS042nmvcVPuLzj+IhgNFcgXGaNNoD
+         Etj3WQlDrRn5Q525Q/6+eNyEmxZsO7V0H9sZgRAcvOe0dHI5ioSL7vsNHviaHrKekb
+         ras4Visrh3ObpfAiTtyCQ2ZBKHzQ5tTG3BEIChVY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 080/106] cxgb4: free MQPRIO resources in shutdown path
-Date:   Wed, 15 Apr 2020 07:42:00 -0400
-Message-Id: <20200415114226.13103-80-sashal@kernel.org>
+Cc:     Jack Zhang <Jack.Zhang1@amd.com>, Nirmoy Das <nirmoy.das@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.5 079/106] drm/amdkfd: kfree the wrong pointer
+Date:   Wed, 15 Apr 2020 07:41:59 -0400
+Message-Id: <20200415114226.13103-79-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
 References: <20200415114226.13103-1-sashal@kernel.org>
@@ -59,91 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+From: Jack Zhang <Jack.Zhang1@amd.com>
 
-[ Upstream commit cef8dac96bc108633f5090bb3a9988d734dc1ee0 ]
+[ Upstream commit 3148a6a0ef3cf93570f30a477292768f7eb5d3c3 ]
 
-Perform missing MQPRIO resource cleanup in PCI shutdown path. Also,
-fix MQPRIO MSIX bitmap leak in resource cleanup.
+Originally, it kfrees the wrong pointer for mem_obj.
+It would cause memory leak under stress test.
 
-Fixes: b1396c2bd675 ("cxgb4: parse and configure TC-MQPRIO offload")
-Signed-off-by: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Jack Zhang <Jack.Zhang1@amd.com>
+Acked-by: Nirmoy Das <nirmoy.das@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/chelsio/cxgb4/cxgb4_main.c   |  4 ++++
- .../ethernet/chelsio/cxgb4/cxgb4_tc_mqprio.c  | 23 +++++++++++++++++++
- .../ethernet/chelsio/cxgb4/cxgb4_tc_mqprio.h  |  1 +
- 3 files changed, 28 insertions(+)
+ drivers/gpu/drm/amd/amdkfd/kfd_device.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
-index 9934c8b0f0b07..a2fa4b1fd4435 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
-@@ -6651,6 +6651,10 @@ static void shutdown_one(struct pci_dev *pdev)
- 			if (adapter->port[i]->reg_state == NETREG_REGISTERED)
- 				cxgb_close(adapter->port[i]);
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_device.c b/drivers/gpu/drm/amd/amdkfd/kfd_device.c
+index 4fa8834ce7cb0..fb22a58ce99b5 100644
+--- a/drivers/gpu/drm/amd/amdkfd/kfd_device.c
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_device.c
+@@ -1086,9 +1086,9 @@ int kfd_gtt_sa_allocate(struct kfd_dev *kfd, unsigned int size,
+ 	return 0;
  
-+		rtnl_lock();
-+		cxgb4_mqprio_stop_offload(adapter);
-+		rtnl_unlock();
-+
- 		if (is_uld(adapter)) {
- 			detach_ulds(adapter);
- 			t4_uld_clean_up(adapter);
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_mqprio.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_mqprio.c
-index ec3eb45ee3b48..e6af4906d6743 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_mqprio.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_mqprio.c
-@@ -301,6 +301,7 @@ static void cxgb4_mqprio_free_hw_resources(struct net_device *dev)
- 			cxgb4_clear_msix_aff(eorxq->msix->vec,
- 					     eorxq->msix->aff_mask);
- 			free_irq(eorxq->msix->vec, &eorxq->rspq);
-+			cxgb4_free_msix_idx_in_bmap(adap, eorxq->msix->idx);
- 		}
- 
- 		free_rspq_fl(adap, &eorxq->rspq, &eorxq->fl);
-@@ -611,6 +612,28 @@ int cxgb4_setup_tc_mqprio(struct net_device *dev,
- 	return ret;
+ kfd_gtt_no_free_chunk:
+-	pr_debug("Allocation failed with mem_obj = %p\n", mem_obj);
++	pr_debug("Allocation failed with mem_obj = %p\n", *mem_obj);
+ 	mutex_unlock(&kfd->gtt_sa_lock);
+-	kfree(mem_obj);
++	kfree(*mem_obj);
+ 	return -ENOMEM;
  }
  
-+void cxgb4_mqprio_stop_offload(struct adapter *adap)
-+{
-+	struct cxgb4_tc_port_mqprio *tc_port_mqprio;
-+	struct net_device *dev;
-+	u8 i;
-+
-+	if (!adap->tc_mqprio || !adap->tc_mqprio->port_mqprio)
-+		return;
-+
-+	for_each_port(adap, i) {
-+		dev = adap->port[i];
-+		if (!dev)
-+			continue;
-+
-+		tc_port_mqprio = &adap->tc_mqprio->port_mqprio[i];
-+		if (!tc_port_mqprio->mqprio.qopt.num_tc)
-+			continue;
-+
-+		cxgb4_mqprio_disable_offload(dev);
-+	}
-+}
-+
- int cxgb4_init_tc_mqprio(struct adapter *adap)
- {
- 	struct cxgb4_tc_port_mqprio *tc_port_mqprio, *port_mqprio;
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_mqprio.h b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_mqprio.h
-index c532f1ef84517..ff8794132b22b 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_mqprio.h
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_mqprio.h
-@@ -38,6 +38,7 @@ struct cxgb4_tc_mqprio {
- 
- int cxgb4_setup_tc_mqprio(struct net_device *dev,
- 			  struct tc_mqprio_qopt_offload *mqprio);
-+void cxgb4_mqprio_stop_offload(struct adapter *adap);
- int cxgb4_init_tc_mqprio(struct adapter *adap);
- void cxgb4_cleanup_tc_mqprio(struct adapter *adap);
- #endif /* __CXGB4_TC_MQPRIO_H__ */
 -- 
 2.20.1
 
