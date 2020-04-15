@@ -2,113 +2,115 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 106E2C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 04:36:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA54BC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 04:39:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7B102078B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 04:36:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9338206F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 04:39:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="ohUd4Clm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393070AbgDOEgR (ORCPT
+        id S2393079AbgDOEjS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 00:36:17 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:53465 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388430AbgDOEgN (ORCPT
+        Wed, 15 Apr 2020 00:39:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60044 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388614AbgDOEjO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 00:36:13 -0400
-Received: from callcc.thunk.org (pool-72-93-95-157.bstnma.fios.verizon.net [72.93.95.157])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 03F4ZrA8004305
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 Apr 2020 00:35:54 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id C36DD42013D; Wed, 15 Apr 2020 00:35:53 -0400 (EDT)
-Date:   Wed, 15 Apr 2020 00:35:53 -0400
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     syzbot <syzbot+bca9799bf129256190da@syzkaller.appspotmail.com>
-Cc:     adilger.kernel@dilger.ca, akpm@linux-foundation.org,
-        dan.j.williams@intel.com, jack@suse.cz, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: BUG: unable to handle kernel NULL pointer dereference in
- generic_perform_write (2)
-Message-ID: <20200415043553.GH90651@mit.edu>
-References: <00000000000016a67305a33a11f7@google.com>
+        Wed, 15 Apr 2020 00:39:14 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65698C061A0E
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 21:39:14 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id f13so12133170qti.5
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 21:39:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=T0ov2Qm19NGfhDx7kb+Qpp+SBwZz53FIlhxAVVfKxI4=;
+        b=ohUd4ClmbLBtja20CTalUO+WoLl1ve/CYr2CKbobL6GFJjNAc/LB440d9rYAIaczm+
+         Kh1RiX35n8e3voiqIitcaGFBnH91SfJlcl57iEyZB4hlEhvesoMX2eOXRdntSRzr+hkH
+         dOgBVJDAi3bFtryful1Kxe6qHJjkhz8LI+/jrG88Tceh+0BEVEYbpFpYF0ghcHG85Bds
+         xGbea9oZ/UqbxOf2r/VOb2z4UXNriOnt8vLpgXJTQ3e/vG7ky2SV4TLQSwKYnh7deLwR
+         oAwhiU7x7YTEH6UiJ6nFbWPhGeJ7/i28lQNYphRYEI0IgJ7Lpo8+wtqijJbG7rp5t8sG
+         Io+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=T0ov2Qm19NGfhDx7kb+Qpp+SBwZz53FIlhxAVVfKxI4=;
+        b=oKFYgYVL2LVQ1g7GuHwiDbkepz0EQmKwbnr0nlwVdOUa86azxYy0U9xaT7HCOjdIS/
+         N2y4nZWLcKbmDJxZDkLwzFefJTePR3j8sJCZzpvze8Gf2CHWUzHw7xtboAUrWKpduVfh
+         klw4fo2RH7mRv8kcwgZ98hXhGJdfaWuhb6Cp+XKAbCOLMbjM2aXHlX6xHIM9jJp4gUF/
+         5EXFDias8Z0SFdwsMvcAPpdchVpSdP+mz38N946sG6NehJlPsi6sQ/kRaDt8dkfwSafB
+         phuT7522tVtk05bLrWnMRh//VFd9Ny2N3UgTrkQXK3BzAPZy7+8MvJEJqihvouGlMwD8
+         hr5Q==
+X-Gm-Message-State: AGi0PuaanJ5ti4raC0sZbIa7EFdLfkDL7M0JV09+JUluqu2pHVariMXa
+        T/h3ggglkxVb6G2U6vNBAiWguw==
+X-Google-Smtp-Source: APiQypIM5GoBSgbWbxjSMNs5ZNvz31Ab4J1vE8UwPpZfVZ7JsFAzFEaxoKJVsfy/rFJmxjNa4l9+dw==
+X-Received: by 2002:ac8:543:: with SMTP id c3mr18876077qth.8.1586925553554;
+        Tue, 14 Apr 2020 21:39:13 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::e623])
+        by smtp.gmail.com with ESMTPSA id i56sm5581998qte.6.2020.04.14.21.39.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2020 21:39:12 -0700 (PDT)
+Date:   Wed, 15 Apr 2020 00:39:11 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Chris Down <chris@chrisdown.name>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Jakub Kicinski <kuba@kernel.org>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH] mm, memcg: Do not high throttle allocators based on
+ wraparound
+Message-ID: <20200415043911.GA147015@cmpxchg.org>
+References: <20200331152424.GA1019937@chrisdown.name>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <00000000000016a67305a33a11f7@google.com>
+In-Reply-To: <20200331152424.GA1019937@chrisdown.name>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-#syz test: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 5b8b9d0c6d0e0f1993c6c56deaf9646942c49d94
+On Tue, Mar 31, 2020 at 04:24:24PM +0100, Chris Down wrote:
+> From: Jakub Kicinski <kuba@kernel.org>
+> 
+> If a cgroup violates its memory.high constraints, we may end
+> up unduly penalising it. For example, for the following hierarchy:
+> 
+> A:   max high, 20 usage
+> A/B: 9 high, 10 usage
+> A/C: max high, 10 usage
+> 
+> We would end up doing the following calculation below when calculating
+> high delay for A/B:
+> 
+> A/B: 10 - 9 = 1...
+> A:   20 - PAGE_COUNTER_MAX = 21, so set max_overage to 21.
+> 
+> This gets worse with higher disparities in usage in the parent.
+> 
+> I have no idea how this disappeared from the final version of the patch,
+> but it is certainly Not Good(tm). This wasn't obvious in testing
+> because, for a simple cgroup hierarchy with only one child, the result
+> is usually roughly the same. It's only in more complex hierarchies that
+> things go really awry (although still, the effects are limited to a
+> maximum of 2 seconds in schedule_timeout_killable at a maximum).
+> 
+> [chris@chrisdown.name: changelog]
+> 
+> Fixes: e26733e0d0ec ("mm, memcg: throttle allocators based on ancestral memory.high")
+> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+> Signed-off-by: Chris Down <chris@chrisdown.name>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: stable@vger.kernel.org # 5.4.x
 
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index 9728e7b0e84f..e44fee317965 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -1728,6 +1728,7 @@ static int clear_qf_name(struct super_block *sb, int qtype)
- #define MOPT_NO_EXT3	0x0200
- #define MOPT_EXT4_ONLY	(MOPT_NO_EXT2 | MOPT_NO_EXT3)
- #define MOPT_STRING	0x0400
-+#define MOPT_NO_REMOUNT 0x0800
- 
- static const struct mount_opts {
- 	int	token;
-@@ -1777,7 +1778,7 @@ static const struct mount_opts {
- 	{Opt_min_batch_time, 0, MOPT_GTE0},
- 	{Opt_inode_readahead_blks, 0, MOPT_GTE0},
- 	{Opt_init_itable, 0, MOPT_GTE0},
--	{Opt_dax, EXT4_MOUNT_DAX, MOPT_SET},
-+	{Opt_dax, EXT4_MOUNT_DAX, MOPT_SET | MOPT_NO_REMOUNT},
- 	{Opt_stripe, 0, MOPT_GTE0},
- 	{Opt_resuid, 0, MOPT_GTE0},
- 	{Opt_resgid, 0, MOPT_GTE0},
-@@ -1819,7 +1820,7 @@ static const struct mount_opts {
- 	{Opt_jqfmt_vfsv1, QFMT_VFS_V1, MOPT_QFMT},
- 	{Opt_max_dir_size_kb, 0, MOPT_GTE0},
- 	{Opt_test_dummy_encryption, 0, MOPT_GTE0},
--	{Opt_nombcache, EXT4_MOUNT_NO_MBCACHE, MOPT_SET},
-+	{Opt_nombcache, EXT4_MOUNT_NO_MBCACHE, MOPT_SET | MOPT_NO_REMOUNT},
- 	{Opt_err, 0, 0}
- };
- 
-@@ -1917,6 +1918,12 @@ static int handle_mount_opt(struct super_block *sb, char *opt, int token,
- 			 "Mount option \"%s\" incompatible with ext3", opt);
- 		return -1;
- 	}
-+	if ((m->flags & MOPT_NO_REMOUNT) && is_remount) {
-+		ext4_msg(sb, KERN_ERR,
-+			 "Mount option \"%s\" not supported when remounting",
-+			 opt);
-+		return -1;
-+	}
- 
- 	if (args->from && !(m->flags & MOPT_STRING) && match_int(args, &arg))
- 		return -1;
-@@ -5429,18 +5436,6 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
- 		}
- 	}
- 
--	if ((sbi->s_mount_opt ^ old_opts.s_mount_opt) & EXT4_MOUNT_NO_MBCACHE) {
--		ext4_msg(sb, KERN_ERR, "can't enable nombcache during remount");
--		err = -EINVAL;
--		goto restore_opts;
--	}
--
--	if ((sbi->s_mount_opt ^ old_opts.s_mount_opt) & EXT4_MOUNT_DAX) {
--		ext4_msg(sb, KERN_WARNING, "warning: refusing change of "
--			"dax flag with busy inodes while remounting");
--		sbi->s_mount_opt ^= EXT4_MOUNT_DAX;
--	}
--
- 	if (sbi->s_mount_flags & EXT4_MF_FS_ABORTED)
- 		ext4_abort(sb, EXT4_ERR_ESHUTDOWN, "Abort forced by user");
- 
+Oops.
+
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
