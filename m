@@ -2,79 +2,225 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F857C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:11:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9369CC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:13:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59EB22051A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:11:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62E5A2051A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:13:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=bingham-xyz.20150623.gappssmtp.com header.i=@bingham-xyz.20150623.gappssmtp.com header.b="m9HUIq5H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2635656AbgDOILg (ORCPT
+        id S2635679AbgDOIN2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 04:11:36 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:40863 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2635647AbgDOILJ (ORCPT
+        Wed, 15 Apr 2020 04:13:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36726 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2635597AbgDOINV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 04:11:09 -0400
-Received: from mail-qv1-f43.google.com ([209.85.219.43]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1Mf0Jg-1imZYP3BAQ-00gWyZ; Wed, 15 Apr 2020 10:11:07 +0200
-Received: by mail-qv1-f43.google.com with SMTP id 37so1233072qvc.8;
-        Wed, 15 Apr 2020 01:11:07 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZ4DUDKc8jENFcGiCUoFwydTP6QkmgYFQ9tgtv+xF1bW1110Xth
-        NTpdRO1nAGndDFzwbQtZXqltTdeqfSv8jkeX3kM=
-X-Google-Smtp-Source: APiQypKbcr9mNZith4L1LqQGcBZRroQaZgRKQ5zyJLhw+epylMCiDLECTAHbnS4VN3DF3oujdEWN0Dl+LFcKSHTwNBs=
-X-Received: by 2002:a0c:eb11:: with SMTP id j17mr318223qvp.197.1586938266531;
- Wed, 15 Apr 2020 01:11:06 -0700 (PDT)
+        Wed, 15 Apr 2020 04:13:21 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A0B1C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 01:13:21 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id k1so10755042wrx.4
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 01:13:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bingham-xyz.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=LkJy1QzawqhjFU7Ju2mePtspWxjtg9KAS6B4M0eMNdU=;
+        b=m9HUIq5H+oLIX2WC1BdZc/+CaqnS09MKSv702r41ixSbnu6dII7McQQOZnDsxKkm8j
+         5atEvh0mJi2JmQV8o6X9KZ9sY14Ei8LNscSoOLiD5uYV8Gx86FZFW4HviHRGDB+NJHPP
+         +se3bh/MfXbs5bu1nS8ujaKCM1Rg8q2c+O3XOFLVL9Un5bVs4IrWLL5Iw6X4ZXSN/vKu
+         KbRanE8tCncfNTQ9jFOwu6Hgtw8p5zSVHQ4+lMODAbYutEURV3PHfKhX9VgXZsWGl12G
+         vwYqIBxkkvvsbjjwsc7RUSgcppwdYO2CIEI+uhY0BWFGwu1GM8nm3ioMITveHTRSlVpB
+         C0/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=LkJy1QzawqhjFU7Ju2mePtspWxjtg9KAS6B4M0eMNdU=;
+        b=MbXNN3vvsKgVVFn3MamQZqt4MUuL+rgZGR/L197pX5LzhLz3YJ9QgUlQNfQt+2EGjW
+         htiBu5d98xkkA1czHrKCviwiOJb3NX+uhGr71jo4sjAmhRu+XWiQseO/S6XfWARO2N58
+         n/n3X9jUSGz+O35eKkmLd16T2M3KtZSUJLzq+guHjXx5wOMayh8ovtZT62ik16f/4Ylj
+         mN3lor/3bVcDx+ynMGtMVI1NgH2n4WpHtjfXfObLo0HQptFvRJMAcPzLSHyRFmtkrMdQ
+         1YEhVT/BFC0vTU9KW7Hc/QP5he3Z0XjqFg+QL3n4JNxEWOU75Cy0raCkgsbFxfn2N0GH
+         ILiw==
+X-Gm-Message-State: AGi0PuZqrrenhb1Kq7bdPjuOqqhYIsAmfruaPlZ/x2c0UPD2aR1GNkrA
+        V4L4T2ZWjvyt3Y9ec2wc4LWFNA==
+X-Google-Smtp-Source: APiQypLXLpjm+jS1Epc7+Y97OpuX6dRuEM1+IHfEN7ZGnv4H1zPYyEbLzHb4vQSNVrR6FJ3J1/N5Og==
+X-Received: by 2002:a5d:69c9:: with SMTP id s9mr28118889wrw.307.1586938399681;
+        Wed, 15 Apr 2020 01:13:19 -0700 (PDT)
+Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net. [86.31.129.233])
+        by smtp.gmail.com with ESMTPSA id v1sm17867775wrv.19.2020.04.15.01.13.17
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 15 Apr 2020 01:13:18 -0700 (PDT)
+Subject: Re: [RFC PATCH v2 3/6] i2c: of: remove superfluous parameter from
+ exported function
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-i2c@vger.kernel.org
+Cc:     linux-renesas-soc@vger.kernel.org, linux-i3c@lists.infradead.org,
+        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
+        Luca Ceresoli <luca@lucaceresoli.net>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+References: <20200318150059.21714-1-wsa+renesas@sang-engineering.com>
+ <20200318150059.21714-4-wsa+renesas@sang-engineering.com>
+From:   Kieran Bingham <kieran@ksquared.org.uk>
+Openpgp: preference=signencrypt
+Autocrypt: addr=kieran@bingham.xyz; keydata=
+ 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
+ QglrIkyNWSZm4Hhw98VxYDwOwmYhoXmAFg==
+Message-ID: <24725e14-232c-49be-3b11-dc8afe685c43@bingham.xyz>
+Date:   Wed, 15 Apr 2020 09:13:16 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-References: <20200414221222.23996-1-chris.packham@alliedtelesis.co.nz>
-In-Reply-To: <20200414221222.23996-1-chris.packham@alliedtelesis.co.nz>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 15 Apr 2020 10:10:50 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1Ktqne6vB0kFR+CuRgFjsRDCoXsndo-G9JSRaCv_qHfQ@mail.gmail.com>
-Message-ID: <CAK8P3a1Ktqne6vB0kFR+CuRgFjsRDCoXsndo-G9JSRaCv_qHfQ@mail.gmail.com>
-Subject: Re: [PATCH] docs: timekeeping: Use correct prototype for deprecated functions
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:+j8ZxrtrwrE0HspVLQUwA9R6mb/wIIWYgWe/VnER3zNvDohVPlN
- lIUySd+nJz/tN8JnmEo85oLfNrlobTDPY1Igtb8wBar3Dg+csv8iyMERvtWPV2b3L6R1k9F
- fq3lMxquJ9TZHtSYmLTqtOtQRK/cJvVKCH+XAXuAqmtErtaHo5jdEnNowciaq1621wfXHRE
- 8fjQ6YoimTok3x2Jy4YWg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:RQNTkg/HTLs=:/7d7Ml3N60wGhARTFONyxb
- IvVDN/nQ15wzJlU3UKBewEDrDb+HIlukzCHen2mVkLmrBW5czEnqW23J+BVeI7A01kPEmp2Fj
- S0DDNeid9hVVaOV3Cmv5j2fJ/lDaEoDHcgLtpopR9Q/NHDvkI1M2zk3njSWYvFHm3xk9DXlGS
- mfqNZCAOcZt3sIu5dIOfSsiNdQZQKnzMAyIr/Ub+BiSC+TFqBgVwJ3t50PqS8aYTxqX720h+r
- tUg2n8d9aKdtW0IDpTE6EqgGJqUtXwBtv9FVtfQ5vavcgAO8t1O2n+RVVD9tBaHjYoYRg9bVb
- sOlHCofCVuTFdakSd9M7slnPt876jPhWqbFrr6b/ohkBtAUXtWgQaCA3Wbap8hBi3/n7wFUAz
- CivmxDOuI5TfBRBGTzUIn0SXJUGoQn2wrlxZXzl9CFOQh/JGqE9iESNzBe/wi3DfMTMWM9Fya
- Dst1PFlEeDxmobA0ZtK8IHRu76aRdvTnYZH/tru3MjIFhoxkdxrFb7Nux3QXB6v3NwEh9Rczc
- Ax89qy/reaw2yGdS2mT4e6it5BfF7eN6+8TUWro4fXrkN6F+3AjnqWECeGdHvYt5fl7ULIute
- PjLJhZwzyX2PcDQkySi7tYdbaDgn5re37rXOdZSjAlm5+ggauiCB9jv+P4WTVwi2R12EWIxqE
- maG9PfedrbamfZqPPqXkiNqSi/bA0EtS6EsOppDlQxJYG4fgEhDqb+putYt+2Sce0vDPbdgMW
- 9ahR2dRCEn0BcafN4k1ihYGN/sEu2g+a+91FTbqUchG0mPnnn+iO4xsr75rAk0pjmPTG7QuvP
- 5Nvl6x8vAwqsCez5GJas7r7wXkB7gKnY4XJcYHRweTtJvvDO4A=
+In-Reply-To: <20200318150059.21714-4-wsa+renesas@sang-engineering.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 12:12 AM Chris Packham
-<chris.packham@alliedtelesis.co.nz> wrote:
->
-> Use the correct prototypes for do_gettimeofday(), getnstimeofday() and
-> getnstimeofday64(). All of these returned void and passed the return
-> value by reference. This should make the documentation of their
-> deprecation and replacements easier to search for.
->
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Hi Wolfram,
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+On 18/03/2020 15:00, Wolfram Sang wrote:
+> 'dev' is only used for printing an error message. However, that
+> information is not needed because '%pOF' fully describes the location of
+> the error. Drop the 'dev' and remove the superfluous parameter.
+> 
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Reviewed-by: Luca Ceresoli <luca@lucaceresoli.net>
+
+Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+
+> ---
+>  drivers/i2c/i2c-core-of.c | 7 +++----
+>  drivers/i3c/master.c      | 2 +-
+>  include/linux/i2c.h       | 6 ++----
+>  3 files changed, 6 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/i2c/i2c-core-of.c b/drivers/i2c/i2c-core-of.c
+> index d8d111ad6c85..710704cd583e 100644
+> --- a/drivers/i2c/i2c-core-of.c
+> +++ b/drivers/i2c/i2c-core-of.c
+> @@ -19,8 +19,7 @@
+>  
+>  #include "i2c-core.h"
+>  
+> -int of_i2c_get_board_info(struct device *dev, struct device_node *node,
+> -			  struct i2c_board_info *info)
+> +int of_i2c_get_board_info(struct device_node *node, struct i2c_board_info *info)
+>  {
+>  	u32 addr;
+>  	int ret;
+> @@ -29,7 +28,7 @@ int of_i2c_get_board_info(struct device *dev, struct device_node *node,
+>  
+>  	ret = of_property_read_u32(node, "reg", &addr);
+>  	if (ret) {
+> -		dev_err(dev, "of_i2c: invalid reg on %pOF\n", node);
+> +		pr_err("of_i2c: invalid reg on %pOF\n", node);
+>  		return ret;
+>  	}
+>  
+> @@ -69,7 +68,7 @@ static struct i2c_client *of_i2c_register_device(struct i2c_adapter *adap,
+>  
+>  	dev_dbg(&adap->dev, "of_i2c: register %pOF\n", node);
+>  
+> -	ret = of_i2c_get_board_info(&adap->dev, node, &info);
+> +	ret = of_i2c_get_board_info(node, &info);
+>  	if (ret)
+>  		return ERR_PTR(ret);
+>  
+> diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
+> index 7f8f896fa0c3..cc0549a9fc64 100644
+> --- a/drivers/i3c/master.c
+> +++ b/drivers/i3c/master.c
+> @@ -1943,7 +1943,7 @@ of_i3c_master_add_i2c_boardinfo(struct i3c_master_controller *master,
+>  	if (!boardinfo)
+>  		return -ENOMEM;
+>  
+> -	ret = of_i2c_get_board_info(dev, node, &boardinfo->base);
+> +	ret = of_i2c_get_board_info(node, &boardinfo->base);
+>  	if (ret)
+>  		return ret;
+>  
+> diff --git a/include/linux/i2c.h b/include/linux/i2c.h
+> index f834687989f7..d84aaf0d83d5 100644
+> --- a/include/linux/i2c.h
+> +++ b/include/linux/i2c.h
+> @@ -942,8 +942,7 @@ const struct of_device_id
+>  *i2c_of_match_device(const struct of_device_id *matches,
+>  		     struct i2c_client *client);
+>  
+> -int of_i2c_get_board_info(struct device *dev, struct device_node *node,
+> -			  struct i2c_board_info *info);
+> +int of_i2c_get_board_info(struct device_node *node, struct i2c_board_info *info);
+>  
+>  #else
+>  
+> @@ -969,8 +968,7 @@ static inline const struct of_device_id
+>  	return NULL;
+>  }
+>  
+> -static inline int of_i2c_get_board_info(struct device *dev,
+> -					struct device_node *node,
+> +static inline int of_i2c_get_board_info(struct device_node *node,
+>  					struct i2c_board_info *info)
+>  {
+>  	return -ENOTSUPP;
+> 
+
