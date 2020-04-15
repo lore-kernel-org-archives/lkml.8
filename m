@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23824C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:59:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3FFFC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 003CA20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:59:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8934206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:59:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586955549;
-	bh=FQLCavUo/9H+bwWjXvVXMibQQ4dnU0g9B7kxhkUSxHw=;
+	s=default; t=1586955566;
+	bh=sscrRof2T2gOXm1DhhLMfhcfPs75brf/YmFVxd4ypA8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fWmdwbpTPdreFJE2OMcfy5hVoUingCkWSwdrkuPOgNsqRZa+BkZu70wewIl11op9b
-	 Zf4BCJbzWZGNnrP9iRv0sJ0Yw5U7i917bJ28ftx/j+mrqjCq2A46Du45XofdMtFYI9
-	 3DPycnZq2gHLhTksfVGfxph4LnGeMkIqzcFsRC70=
+	b=PIpyAyHW3ZqnW7RlakCQBpXCz9MhP6NdZ6AFoIWZQcucpfkEELno+I2YQNi2bzWg1
+	 v5lMPhI5oFM7Nu5CToGZkNRTTgeu1HMzbwwS2HnE3/LQtW6OfpNfj4Xe1fdJubbBK+
+	 VkOgG0zmTE5zmzwBKhSp/Rctvuw2rEbdYNQsMMkw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505654AbgDOM7C (ORCPT
+        id S2505664AbgDOM7U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:59:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56408 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 08:59:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408865AbgDOLgr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2897175AbgDOLgr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Apr 2020 07:36:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 714F52078A;
-        Wed, 15 Apr 2020 11:36:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB628214AF;
+        Wed, 15 Apr 2020 11:36:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950605;
-        bh=FQLCavUo/9H+bwWjXvVXMibQQ4dnU0g9B7kxhkUSxHw=;
+        s=default; t=1586950599;
+        bh=sscrRof2T2gOXm1DhhLMfhcfPs75brf/YmFVxd4ypA8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pX6ZNXzzvyC4n9oAajk4C0ugYl+aI73vo42dOJYA1229NSq61DGJrPZqcP3cYxPiM
-         YnnHW/tF8xuMNv/L9z8RwBABOBAHanheLhuaKjiNq+jTvpeZT+8qT82luj/K0ze0hA
-         ZTBQKbjIqsAhwD+atTMfWeK4bhqI7/6p0f2Qbveo=
+        b=H9+cYo1gC+HFDkn4IvRu04Ys0wI0hZfzpP2i7G/dPDOmi0+sI8lgiamg2MjIyZZU9
+         AgiS2OMmkZKkU4Vb4S+KF6bS8cRW4xe6sqnfLGoBKFf3vb1od0arZxIDnEuWakCTiU
+         C3WJ88SZQ+W8QPVD01BiZODjTz5DmOLfaYUH/py8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.6 100/129] f2fs: fix potential deadlock on compressed quota file
-Date:   Wed, 15 Apr 2020 07:34:15 -0400
-Message-Id: <20200415113445.11881-100-sashal@kernel.org>
+Cc:     Guo Ren <guoren@linux.alibaba.com>,
+        Sasha Levin <sashal@kernel.org>, linux-csky@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 095/129] csky: Fixup get wrong psr value from phyical reg
+Date:   Wed, 15 Apr 2020 07:34:10 -0400
+Message-Id: <20200415113445.11881-95-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
 References: <20200415113445.11881-1-sashal@kernel.org>
@@ -59,145 +58,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Guo Ren <guoren@linux.alibaba.com>
 
-[ Upstream commit 466357dc9b5ff555d16b7f9a0ff264eb9d5d908b ]
+[ Upstream commit 9c0e343d7654a329d1f9b53d253cbf7fb6eff85d ]
 
-generic/232 reports below deadlock:
+We should get psr value from regs->psr in stack, not directly get
+it from phyiscal register then save the vector number in
+tsk->trap_no.
 
-fsstress        D    0 96980  96969 0x00084000
-Call Trace:
- schedule+0x4a/0xb0
- io_schedule+0x12/0x40
- __lock_page+0x127/0x1d0
- pagecache_get_page+0x1d8/0x250
- prepare_compress_overwrite+0xe0/0x490 [f2fs]
- f2fs_prepare_compress_overwrite+0x5d/0x80 [f2fs]
- f2fs_write_begin+0x833/0xb90 [f2fs]
- f2fs_quota_write+0x145/0x1e0 [f2fs]
- write_blk+0x36/0x80 [quota_tree]
- do_insert_tree+0x2ac/0x4a0 [quota_tree]
- do_insert_tree+0x26e/0x4a0 [quota_tree]
- qtree_write_dquot+0x70/0x190 [quota_tree]
- v2_write_dquot+0x43/0x90 [quota_v2]
- dquot_acquire+0x77/0x100
- f2fs_dquot_acquire+0x2f/0x60 [f2fs]
- dqget+0x310/0x450
- dquot_transfer+0xb2/0x120
- f2fs_setattr+0x11a/0x4a0 [f2fs]
- notify_change+0x349/0x480
- chown_common+0x168/0x1c0
- do_fchownat+0xbc/0xf0
- __x64_sys_lchown+0x21/0x30
- do_syscall_64+0x5f/0x220
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-  task                        PC stack   pid father
-kworker/u256:0  D    0 103444      2 0x80084000
-Workqueue: writeback wb_workfn (flush-251:1)
-Call Trace:
- schedule+0x4a/0xb0
- schedule_timeout+0x15e/0x2f0
- io_schedule_timeout+0x19/0x40
- congestion_wait+0x7e/0x120
- f2fs_write_multi_pages+0x12a/0x840 [f2fs]
- f2fs_write_cache_pages+0x48f/0x790 [f2fs]
- f2fs_write_data_pages+0x2db/0x330 [f2fs]
- do_writepages+0x1a/0x60
- __writeback_single_inode+0x3d/0x340
- writeback_sb_inodes+0x225/0x4a0
- wb_writeback+0xf7/0x320
- wb_workfn+0xba/0x470
- process_one_work+0x16c/0x3f0
- worker_thread+0x4c/0x440
- kthread+0xf8/0x130
- ret_from_fork+0x35/0x40
-
-fsstress        D    0  5277   5266 0x00084000
-Call Trace:
- schedule+0x4a/0xb0
- rwsem_down_write_slowpath+0x29d/0x540
- block_operations+0x105/0x360 [f2fs]
- f2fs_write_checkpoint+0x101/0x1010 [f2fs]
- f2fs_sync_fs+0xa8/0x130 [f2fs]
- f2fs_do_sync_file+0x1ad/0x890 [f2fs]
- do_fsync+0x38/0x60
- __x64_sys_fdatasync+0x13/0x20
- do_syscall_64+0x5f/0x220
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-The root cause is there is potential deadlock between quota data
-update and writeback.
-
-Kworker					Thread B			Thread C
-- f2fs_write_cache_pages
- - lock whole cluster	--- A
- - f2fs_write_multi_pages
-  - f2fs_write_raw_pages
-   - f2fs_write_single_data_page
-    - f2fs_do_write_data_page
-					- f2fs_setattr
-					 - f2fs_lock_op	--- B
-									- f2fs_write_checkpoint
-									 - block_operations
-									  - f2fs_lock_all --- B
-					 - dquot_transfer
-					  - f2fs_quota_write
-					   - f2fs_prepare_compress_overwrite
-					    - pagecache_get_page --- A
-     - f2fs_trylock_op failed	--- B
-  - congestion_wait
-  - goto rewrite
-
-To fix this issue, during quota file writeback, just redirty all pages
-left in cluster rather holding pages' lock in cluster and looping retrying
-lock cp_rwsem.
-
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/compress.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ arch/csky/include/asm/processor.h |  1 +
+ arch/csky/kernel/traps.c          | 11 ++++++++++-
+ arch/csky/mm/fault.c              |  7 +++++++
+ 3 files changed, 18 insertions(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
-index eb84c13c1182c..ad8e25a1fbc26 100644
---- a/fs/f2fs/compress.c
-+++ b/fs/f2fs/compress.c
-@@ -988,6 +988,15 @@ static int f2fs_write_raw_pages(struct compress_ctx *cc,
- 				unlock_page(cc->rpages[i]);
- 				ret = 0;
- 			} else if (ret == -EAGAIN) {
-+				/*
-+				 * for quota file, just redirty left pages to
-+				 * avoid deadlock caused by cluster update race
-+				 * from foreground operation.
-+				 */
-+				if (IS_NOQUOTA(cc->inode)) {
-+					err = 0;
-+					goto out_err;
-+				}
- 				ret = 0;
- 				cond_resched();
- 				congestion_wait(BLK_RW_ASYNC, HZ/50);
-@@ -996,16 +1005,12 @@ static int f2fs_write_raw_pages(struct compress_ctx *cc,
- 				goto retry_write;
- 			}
- 			err = ret;
--			goto out_fail;
-+			goto out_err;
- 		}
+diff --git a/arch/csky/include/asm/processor.h b/arch/csky/include/asm/processor.h
+index 21e0bd5293dde..c6bcd7f7c720b 100644
+--- a/arch/csky/include/asm/processor.h
++++ b/arch/csky/include/asm/processor.h
+@@ -43,6 +43,7 @@ extern struct cpuinfo_csky cpu_data[];
+ struct thread_struct {
+ 	unsigned long  ksp;       /* kernel stack pointer */
+ 	unsigned long  sr;        /* saved status register */
++	unsigned long  trap_no;   /* saved status register */
  
- 		*submitted += _submitted;
+ 	/* FPU regs */
+ 	struct user_fp __aligned(16) user_fp;
+diff --git a/arch/csky/kernel/traps.c b/arch/csky/kernel/traps.c
+index b057480e7463c..63715cb90ee99 100644
+--- a/arch/csky/kernel/traps.c
++++ b/arch/csky/kernel/traps.c
+@@ -115,8 +115,9 @@ asmlinkage void trap_c(struct pt_regs *regs)
+ 	int sig;
+ 	unsigned long vector;
+ 	siginfo_t info;
++	struct task_struct *tsk = current;
+ 
+-	vector = (mfcr("psr") >> 16) & 0xff;
++	vector = (regs->sr >> 16) & 0xff;
+ 
+ 	switch (vector) {
+ 	case VEC_ZERODIV:
+@@ -129,6 +130,7 @@ asmlinkage void trap_c(struct pt_regs *regs)
+ 		sig = SIGTRAP;
+ 		break;
+ 	case VEC_ILLEGAL:
++		tsk->thread.trap_no = vector;
+ 		die_if_kernel("Kernel mode ILLEGAL", regs, vector);
+ #ifndef CONFIG_CPU_NO_USER_BKPT
+ 		if (*(uint16_t *)instruction_pointer(regs) != USR_BKPT)
+@@ -146,16 +148,20 @@ asmlinkage void trap_c(struct pt_regs *regs)
+ 		sig = SIGTRAP;
+ 		break;
+ 	case VEC_ACCESS:
++		tsk->thread.trap_no = vector;
+ 		return buserr(regs);
+ #ifdef CONFIG_CPU_NEED_SOFTALIGN
+ 	case VEC_ALIGN:
++		tsk->thread.trap_no = vector;
+ 		return csky_alignment(regs);
+ #endif
+ #ifdef CONFIG_CPU_HAS_FPU
+ 	case VEC_FPE:
++		tsk->thread.trap_no = vector;
+ 		die_if_kernel("Kernel mode FPE", regs, vector);
+ 		return fpu_fpe(regs);
+ 	case VEC_PRIV:
++		tsk->thread.trap_no = vector;
+ 		die_if_kernel("Kernel mode PRIV", regs, vector);
+ 		if (fpu_libc_helper(regs))
+ 			return;
+@@ -164,5 +170,8 @@ asmlinkage void trap_c(struct pt_regs *regs)
+ 		sig = SIGSEGV;
+ 		break;
  	}
- 	return 0;
--
--out_fail:
--	/* TODO: revoke partially updated block addresses */
--	BUG_ON(compr_blocks);
- out_err:
- 	for (++i; i < cc->cluster_size; i++) {
- 		if (!cc->rpages[i])
++
++	tsk->thread.trap_no = vector;
++
+ 	send_sig(sig, current, 0);
+ }
+diff --git a/arch/csky/mm/fault.c b/arch/csky/mm/fault.c
+index f76618b630f91..562c7f7087490 100644
+--- a/arch/csky/mm/fault.c
++++ b/arch/csky/mm/fault.c
+@@ -179,11 +179,14 @@ asmlinkage void do_page_fault(struct pt_regs *regs, unsigned long write,
+ bad_area_nosemaphore:
+ 	/* User mode accesses just cause a SIGSEGV */
+ 	if (user_mode(regs)) {
++		tsk->thread.trap_no = (regs->sr >> 16) & 0xff;
+ 		force_sig_fault(SIGSEGV, si_code, (void __user *)address);
+ 		return;
+ 	}
+ 
+ no_context:
++	tsk->thread.trap_no = (regs->sr >> 16) & 0xff;
++
+ 	/* Are we prepared to handle this kernel fault? */
+ 	if (fixup_exception(regs))
+ 		return;
+@@ -198,6 +201,8 @@ asmlinkage void do_page_fault(struct pt_regs *regs, unsigned long write,
+ 	die_if_kernel("Oops", regs, write);
+ 
+ out_of_memory:
++	tsk->thread.trap_no = (regs->sr >> 16) & 0xff;
++
+ 	/*
+ 	 * We ran out of memory, call the OOM killer, and return the userspace
+ 	 * (which will retry the fault, or kill us if we got oom-killed).
+@@ -206,6 +211,8 @@ asmlinkage void do_page_fault(struct pt_regs *regs, unsigned long write,
+ 	return;
+ 
+ do_sigbus:
++	tsk->thread.trap_no = (regs->sr >> 16) & 0xff;
++
+ 	up_read(&mm->mmap_sem);
+ 
+ 	/* Kernel mode? Handle exceptions or die */
 -- 
 2.20.1
 
