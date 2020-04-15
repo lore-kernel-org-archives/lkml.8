@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F9EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:48:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB14C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:48:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE98A206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:48:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35595206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:48:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586954923;
-	bh=G7KxnwoLgLdPJXOkgOpWzhaL/rwPD/wpMyKVXu5Bt9U=;
+	s=default; t=1586954929;
+	bh=SLx+8Doplj29R1VJ6jV+nfPg3iJ+iqYQ9SdTzhFzqJ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KjJ4QpYB8xEKd9lBbiSRyiuRGzKM45CiQPbapQ8JhUDJUu5jsVT1FOv+YId/f2Mke
-	 GlugVijGoll2F0UvKgMVqFZosgoko+RaQARqJxmbdJjxDb0VHPYF1RAuV5mDs1KMEe
-	 0dpj/K23Xxa3rxg7WzR/ZtqZ3fLmum2v5/wvp+JA=
+	b=Y3vk5/bo9Y/Z1bpf/kvJf5dLi+aiR+Ef2jOwyQNWtvyym/WuYzTuiTnMm/6JXQhlf
+	 hp1yg12qGYyguxIb1VWXK4H2QaiJQR0IFj151lX5bqpWsKESZvK9ySb8Zg7gF5Y+Xq
+	 boPbXn2QTAfBJ1gpeOhQMgVWT19ABrNAOCFkEf54=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S370295AbgDOMsa (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:48:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34792 "EHLO mail.kernel.org"
+        id S370308AbgDOMsr (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:48:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408957AbgDOLnG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:43:06 -0400
+        id S2408953AbgDOLnF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:43:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45A90214AF;
-        Wed, 15 Apr 2020 11:43:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35C6D20775;
+        Wed, 15 Apr 2020 11:43:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950986;
-        bh=G7KxnwoLgLdPJXOkgOpWzhaL/rwPD/wpMyKVXu5Bt9U=;
+        s=default; t=1586950984;
+        bh=SLx+8Doplj29R1VJ6jV+nfPg3iJ+iqYQ9SdTzhFzqJ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ULb1wmvB/kXcy0Wk4dJSWiA82rRcYa1DYYs36KkqYWbSZD759gltPYpaWsFD7QxTR
-         grDha1sr+2okBedBMsii4giAN8OWEXvDWCfbtmfQ9iA4S0foBVZD5demAHhdQzsMlW
-         WAcLhVOC/qyLKcuECPuWesos8XKtZIyzQamOx7Sg=
+        b=qJ9ysCC3jZV5gYmbcGWgo+Gc/PDOoyGN6xs9t9P3j5NyiYtL/2/Ry2byzOVXCFAZX
+         hQudjNDI/W1Nz68VjyIAhct5WXTzMhIthWEycPAoD7e/5iqMPtfbjQYZOanX2hXpuk
+         ioUWre9XwnRUUcrXTLUorE27aTTCd/fZoOlRzl54=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Amit Kucheria <amit.kucheria@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 033/106] drivers: thermal: tsens: Release device in success path
-Date:   Wed, 15 Apr 2020 07:41:13 -0400
-Message-Id: <20200415114226.13103-33-sashal@kernel.org>
+Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 5.5 032/106] f2fs: fix to show norecovery mount option
+Date:   Wed, 15 Apr 2020 07:41:12 -0400
+Message-Id: <20200415114226.13103-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
 References: <20200415114226.13103-1-sashal@kernel.org>
@@ -60,60 +58,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amit Kucheria <amit.kucheria@linaro.org>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit f22a3bf0d2225fba438c46a25d3ab8823585a5e0 ]
+[ Upstream commit a9117eca1de6b738e713d2142126db2cfbf6fb36 ]
 
-We don't currently call put_device in case of successfully initialising
-the device. So we hold the reference and keep the device pinned forever.
+Previously, 'norecovery' mount option will be shown as
+'disable_roll_forward', fix to show original option name correctly.
 
-Allow control to fall through so we can use same code for success and
-error paths to put_device.
-
-As a part of this fixup, change devm_ioremap_resource to act on the same
-device pointer as that used to allocate regmap memory. That ensures that
-we are free to release op->dev after examining its resources.
-
-Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/d3996667e9f976bb30e97e301585cb1023be422e.1584015867.git.amit.kucheria@linaro.org
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thermal/qcom/tsens-common.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ fs/f2fs/f2fs.h  | 1 +
+ fs/f2fs/super.c | 7 +++++--
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/thermal/qcom/tsens-common.c b/drivers/thermal/qcom/tsens-common.c
-index c8d57ee0a5bb2..2cc276cdfcdb1 100644
---- a/drivers/thermal/qcom/tsens-common.c
-+++ b/drivers/thermal/qcom/tsens-common.c
-@@ -602,7 +602,7 @@ int __init init_common(struct tsens_priv *priv)
- 		/* DT with separate SROT and TM address space */
- 		priv->tm_offset = 0;
- 		res = platform_get_resource(op, IORESOURCE_MEM, 1);
--		srot_base = devm_ioremap_resource(&op->dev, res);
-+		srot_base = devm_ioremap_resource(dev, res);
- 		if (IS_ERR(srot_base)) {
- 			ret = PTR_ERR(srot_base);
- 			goto err_put_device;
-@@ -620,7 +620,7 @@ int __init init_common(struct tsens_priv *priv)
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index b0e0535f7f56a..647f8b31b268b 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -100,6 +100,7 @@ extern const char *f2fs_fault_name[FAULT_MAX];
+ #define F2FS_MOUNT_INLINE_XATTR_SIZE	0x00800000
+ #define F2FS_MOUNT_RESERVE_ROOT		0x01000000
+ #define F2FS_MOUNT_DISABLE_CHECKPOINT	0x02000000
++#define F2FS_MOUNT_NORECOVERY		0x04000000
+ 
+ #define F2FS_OPTION(sbi)	((sbi)->mount_opt)
+ #define clear_opt(sbi, option)	(F2FS_OPTION(sbi).opt &= ~F2FS_MOUNT_##option)
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index a0a2f46f450dc..b2f8b934d8fc5 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -439,7 +439,7 @@ static int parse_options(struct super_block *sb, char *options)
+ 			break;
+ 		case Opt_norecovery:
+ 			/* this option mounts f2fs with ro */
+-			set_opt(sbi, DISABLE_ROLL_FORWARD);
++			set_opt(sbi, NORECOVERY);
+ 			if (!f2fs_readonly(sb))
+ 				return -EINVAL;
+ 			break;
+@@ -1348,6 +1348,8 @@ static int f2fs_show_options(struct seq_file *seq, struct dentry *root)
  	}
+ 	if (test_opt(sbi, DISABLE_ROLL_FORWARD))
+ 		seq_puts(seq, ",disable_roll_forward");
++	if (test_opt(sbi, NORECOVERY))
++		seq_puts(seq, ",norecovery");
+ 	if (test_opt(sbi, DISCARD))
+ 		seq_puts(seq, ",discard");
+ 	else
+@@ -3499,7 +3501,8 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
+ 		goto reset_checkpoint;
  
- 	res = platform_get_resource(op, IORESOURCE_MEM, 0);
--	tm_base = devm_ioremap_resource(&op->dev, res);
-+	tm_base = devm_ioremap_resource(dev, res);
- 	if (IS_ERR(tm_base)) {
- 		ret = PTR_ERR(tm_base);
- 		goto err_put_device;
-@@ -687,8 +687,6 @@ int __init init_common(struct tsens_priv *priv)
- 	tsens_enable_irq(priv);
- 	tsens_debug_init(op);
- 
--	return 0;
--
- err_put_device:
- 	put_device(&op->dev);
- 	return ret;
+ 	/* recover fsynced data */
+-	if (!test_opt(sbi, DISABLE_ROLL_FORWARD)) {
++	if (!test_opt(sbi, DISABLE_ROLL_FORWARD) &&
++			!test_opt(sbi, NORECOVERY)) {
+ 		/*
+ 		 * mount should be failed, when device has readonly mode, and
+ 		 * previous checkpoint was not done by clean system shutdown.
 -- 
 2.20.1
 
