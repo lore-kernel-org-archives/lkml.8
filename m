@@ -2,134 +2,142 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B57C3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:31:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 718B9C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:32:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B47EB2074F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:31:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="GNSluS5O";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="hwb/YdCW"
+	by mail.kernel.org (Postfix) with ESMTP id 5418C2074F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:32:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895584AbgDOJbr (ORCPT
+        id S2895592AbgDOJcf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 05:31:47 -0400
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:1226 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2895569AbgDOJbp (ORCPT
+        Wed, 15 Apr 2020 05:32:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49190 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2895564AbgDOJc3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 05:31:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1586943104; x=1618479104;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
-  b=GNSluS5O2fxuKBm7YMGsZPKm/Tun+xSl3ZXl/y8WoTKjkafd0XrwPJax
-   XvRCc9B/wJqvbFvWAtEVbTadB4B7iAGTSyFTUJsxdB+E380q1ms4hH9hl
-   /2awXRpT/N5dLSIflpfY/14Hqsp7fhEDoaRyQyVPLF04SgAkIEq9YLy0j
-   f26afNbbEidHOctHK6DrWRMAVkhMqvnNSmtnvwn7Zy9iSpx4G1qcd2gsw
-   EnTLY3246vOMC0q5MU7UGC3UURQyYgpGz+9uQWgGLP0c+WKS8yzfQ/afU
-   vwSyO5cEC8eVsd13E/eq/bOjT4ILv5AHEQr1gdtUmJxROmscLAznStrni
-   Q==;
-IronPort-SDR: BaKMqZV9U5WwLXYLi2bhk+5+q/kczDr3LpXzfn7QKUGKGZwJ+Z2lMl45zbsrCxFFB3YsGvgPF3
- 0awmKBcRWsjYUiL9wkbjpdvSzlq95ReIZHksdr5mrFXp32cC+j/qqO/EKjTmKFBgwF3Cdx0JKO
- MJuMoZJlhXgZkfneMA7ImtTlxOFv3FON6ftwuV10BFuUI6acyzvINNEnWa5gELI6J6K3CvrsGM
- /Gh/gHo5tj4TYTIcu1STx9WVbWLRv10K9qwyY+uvY/AMHBY6Kb7S1I/Csg9XPzji/fFqjEE2V6
- f2s=
-X-IronPort-AV: E=Sophos;i="5.72,386,1580745600"; 
-   d="scan'208";a="135687648"
-Received: from mail-bn8nam12lp2177.outbound.protection.outlook.com (HELO NAM12-BN8-obe.outbound.protection.outlook.com) ([104.47.55.177])
-  by ob1.hgst.iphmx.com with ESMTP; 15 Apr 2020 17:31:43 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gcN/9qDPigqmT4t80y1LS4Lo8J+cCbPodoI5uigttACKwDa8iZAhwINaWJz+bn2LSAtBkqzrrUwyoWeL9Z9XNIZq2RiEZvYvPU8d+3GvuvrtofggPMBHE7UGTMa0bFIlb5o0DjcPKQDc6OPrHEMGcyEKien4D0J0doJqiIqoYacWHAGqd3iME0IMgQ+8e1jObpewLd3JhFqvsIDKAOQjBKS1WrFUqRxgQ+qcoKy6q+y8+x+ZAwj830xT0k67dhplwThYCaTpT+RQxFFY3HmmaYVk5dpfOUQ2TcfSFZyxOItgp/H2gF/Y28DN8/UhlPj9+nlcYWSHxNbSxVBKPwAkMg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
- b=G+7mI2LzIZxFQ6brPHCumndJaOOp2YmouiNRVwflpSUYbO+uHlC2NC3HklqGYehs5JS/X6HoLM6ZobAEceKJmv2/I3oTofpV3WtbNfnhM0rsjZQOUGdQbJ4cVkLpymMes1yWagWZ1nP62/GG0+wBfH9+kfBO7EcVd4suGLrDmnWc7mPtC9II3fK+5V75kmjwTucd1XMwEGjThypizD5tLPYFZbyG4k17oY/JmH4FhLCEPTaX21Q3eZGu/z96b4dR5PY7T9+VaUn8r+UNJElYzCESnyfoQxp4tGIt/3faV/8rJt2A05hfCdCt4Y9iTCLJhEK+PSjmaHU84AIoNSU0sQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
- b=hwb/YdCWaxODp0n2WC5QXONs2fAy31FfPnYVYyx9zVCG/yIeSxu29NwqQm2cIsluf+z8y+jP5UzJrOQrS6apw8HyhBPl7qvv6drPZ9c+R2/2JFQFHdchJPzcI0VrbRo4B02d7ZyI9EYoQyNwPRwtpWWk4IPnYSY7uh5Jmc9Zvsg=
-Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
- (2603:10b6:803:47::21) by SN4PR0401MB3632.namprd04.prod.outlook.com
- (2603:10b6:803:46::20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.26; Wed, 15 Apr
- 2020 09:31:41 +0000
-Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
- ([fe80::9854:2bc6:1ad2:f655]) by SN4PR0401MB3598.namprd04.prod.outlook.com
- ([fe80::9854:2bc6:1ad2:f655%4]) with mapi id 15.20.2900.028; Wed, 15 Apr 2020
- 09:31:41 +0000
-From:   Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
-To:     Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-CC:     "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
-        "linux-erofs@lists.ozlabs.org" <linux-erofs@lists.ozlabs.org>,
-        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
-        "linux-f2fs-devel@lists.sourceforge.net" 
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        "cluster-devel@redhat.com" <cluster-devel@redhat.com>,
-        "ocfs2-devel@oss.oracle.com" <ocfs2-devel@oss.oracle.com>,
-        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        William Kucharski <william.kucharski@oracle.com>
-Subject: Re: [PATCH v11 08/25] mm: rename readahead loop variable to 'i'
-Thread-Topic: [PATCH v11 08/25] mm: rename readahead loop variable to 'i'
-Thread-Index: AQHWEnBXN8jjeMVDnk++wod6vaQDSA==
-Date:   Wed, 15 Apr 2020 09:31:40 +0000
-Message-ID: <SN4PR0401MB3598372581D036EF768DFA4D9BDB0@SN4PR0401MB3598.namprd04.prod.outlook.com>
-References: <20200414150233.24495-1-willy@infradead.org>
- <20200414150233.24495-9-willy@infradead.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Johannes.Thumshirn@wdc.com; 
-x-originating-ip: [129.253.240.72]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 4a7f4252-07f1-4865-3c86-08d7e11fcde8
-x-ms-traffictypediagnostic: SN4PR0401MB3632:
-x-microsoft-antispam-prvs: <SN4PR0401MB3632C5115C84F1A1787AA3629BDB0@SN4PR0401MB3632.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:1728;
-x-forefront-prvs: 0374433C81
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0401MB3598.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(376002)(366004)(136003)(396003)(39860400002)(346002)(33656002)(19618925003)(9686003)(81156014)(55016002)(8676002)(8936002)(478600001)(4270600006)(71200400001)(52536014)(2906002)(558084003)(86362001)(4326008)(66476007)(7696005)(66446008)(26005)(64756008)(76116006)(316002)(66556008)(54906003)(7416002)(66946007)(5660300002)(110136005)(6506007)(91956017)(186003);DIR:OUT;SFP:1102;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 9unlhB9zbhKeOGqZX91AELl9VJzJqA95l7GkPq8ATcgXaeXp/8Jcs8m7QAcefGYVwrF1AwISC+Gsv8segtTkCc7ksUjVLYfKxoeO4G27VZIJqWeMOgym4ewfOwgCGykZe998NeRInbIbJ5lELWmcsg7wXy6w8dZP11mjR7z1g7v6Fs/0bmfuCaayUW5zKduGWBTmTb23iL+PP0WVBCGN1A6vIwIEh10m+KVGCsoYWCuylH92XVIZqhIi2j+D/vrNGBoSxO7HCwmvm4Ywc8znf7ZPSL9k9YEEx3LzZpGOMUQr08LKQw6pED4ekRs3EDiqL8oAlQtf0q9n6fOK3dPQ41+cyDKZ4sJjAz9w+EDY7wTjLUuPzb4qOXn5/grqirRGLLwxt04moOAi4dRSeD69vOKQfwn8wz6CbXRGMqjZFmdXxZUz6t+G/gJP5gl3gKUK
-x-ms-exchange-antispam-messagedata: uhQbOw6ZKaMUhGwm83KjCA/tI43ywZ17Yb7d+ofiLSyFC4Av+1/BjYHUgs9Si4olcDzwJY6apykh1yIp/Nq3zqtS/C+BY8HXfmEifgjowQwaMRdaQB5YJQV8Bq9mgo88QjrcsNLj9LjbCT++LncnyQ==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 15 Apr 2020 05:32:29 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84F9BC061A0C;
+        Wed, 15 Apr 2020 02:32:29 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jOePB-0005Xm-66; Wed, 15 Apr 2020 11:32:25 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B31131C0081;
+        Wed, 15 Apr 2020 11:32:24 +0200 (CEST)
+Date:   Wed, 15 Apr 2020 09:32:24 -0000
+From:   "tip-bot2 for Kairui Song" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/cleanups] crash_dump: Remove no longer used saved_max_pfn
+Cc:     Kairui Song <kasong@redhat.com>, Borislav Petkov <bp@suse.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200330181544.1595733-1-kasong@redhat.com>
+References: <20200330181544.1595733-1-kasong@redhat.com>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4a7f4252-07f1-4865-3c86-08d7e11fcde8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Apr 2020 09:31:40.9600
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: qQpPVAPFWC51jmm2IphX52KtHY+a4IBt1a1VTBDjiMNS9WcYTo+ZllYTiF18EqbofEF+GUeemwhKFbVB54AohdffwC4b1kYlT6jjz318XJM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR0401MB3632
+Message-ID: <158694314428.28353.3558515515241070907.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks good,=0A=
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>=0A=
+The following commit has been merged into the x86/cleanups branch of tip:
+
+Commit-ID:     4c5b566c2193e2af82c891daa5303c8899e61044
+Gitweb:        https://git.kernel.org/tip/4c5b566c2193e2af82c891daa5303c8899e61044
+Author:        Kairui Song <kasong@redhat.com>
+AuthorDate:    Tue, 31 Mar 2020 02:15:44 +08:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Wed, 15 Apr 2020 11:21:54 +02:00
+
+crash_dump: Remove no longer used saved_max_pfn
+
+saved_max_pfn was originally introduced in commit
+
+  92aa63a5a1bf ("[PATCH] kdump: Retrieve saved max pfn")
+
+It used to make sure that the user does not try to read the physical memory
+beyond saved_max_pfn. But since commit
+
+  921d58c0e699 ("vmcore: remove saved_max_pfn check")
+
+it's no longer used for the check. This variable doesn't have any users
+anymore so just remove it.
+
+ [ bp: Drop the Calgary IOMMU reference from the commit message. ]
+
+Signed-off-by: Kairui Song <kasong@redhat.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Link: https://lkml.kernel.org/r/20200330181544.1595733-1-kasong@redhat.com
+---
+ arch/x86/kernel/e820.c     | 8 --------
+ include/linux/crash_dump.h | 2 --
+ kernel/crash_dump.c        | 6 ------
+ 3 files changed, 16 deletions(-)
+
+diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
+index c5399e8..4d13c57 100644
+--- a/arch/x86/kernel/e820.c
++++ b/arch/x86/kernel/e820.c
+@@ -910,14 +910,6 @@ static int __init parse_memmap_one(char *p)
+ 		return -EINVAL;
+ 
+ 	if (!strncmp(p, "exactmap", 8)) {
+-#ifdef CONFIG_CRASH_DUMP
+-		/*
+-		 * If we are doing a crash dump, we still need to know
+-		 * the real memory size before the original memory map is
+-		 * reset.
+-		 */
+-		saved_max_pfn = e820__end_of_ram_pfn();
+-#endif
+ 		e820_table->nr_entries = 0;
+ 		userdef = 1;
+ 		return 0;
+diff --git a/include/linux/crash_dump.h b/include/linux/crash_dump.h
+index 4664fc1..bc15628 100644
+--- a/include/linux/crash_dump.h
++++ b/include/linux/crash_dump.h
+@@ -97,8 +97,6 @@ extern void unregister_oldmem_pfn_is_ram(void);
+ static inline bool is_kdump_kernel(void) { return 0; }
+ #endif /* CONFIG_CRASH_DUMP */
+ 
+-extern unsigned long saved_max_pfn;
+-
+ /* Device Dump information to be filled by drivers */
+ struct vmcoredd_data {
+ 	char dump_name[VMCOREDD_MAX_NAME_BYTES]; /* Unique name of the dump */
+diff --git a/kernel/crash_dump.c b/kernel/crash_dump.c
+index 9c23ae0..92da322 100644
+--- a/kernel/crash_dump.c
++++ b/kernel/crash_dump.c
+@@ -6,12 +6,6 @@
+ #include <linux/export.h>
+ 
+ /*
+- * If we have booted due to a crash, max_pfn will be a very low value. We need
+- * to know the amount of memory that the previous kernel used.
+- */
+-unsigned long saved_max_pfn;
+-
+-/*
+  * stores the physical address of elf header of crash image
+  *
+  * Note: elfcorehdr_addr is not just limited to vmcore. It is also used by
