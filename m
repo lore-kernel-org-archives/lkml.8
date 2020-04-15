@@ -7,89 +7,201 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4980C3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C81C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7603206F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:23:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC477206F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:24:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586953437;
-	bh=yaliotJxvLNaSp02wuihbJu/1ZddBCwFTwSf8FxJC0c=;
+	s=default; t=1586953442;
+	bh=+J1rnpev1mWG2DjbDUlUXV/sV3CYW4t3iOt9gosTfsA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A6X5fh6/rk5cEOF9QXo5aJL+awbERQEHQ1jtZuOIm2Bqg/KQjY61Xzb8O44FTEGeA
-	 HZdQjwYDB3J5faK6qzyGYUJsmB1jKZu84MmYmIRE1apf4mLj2XudD7xSnHz7jMNzun
-	 PPwMMao64JU8ZgQutBh4XB4zQSB+aLhqfzjRZXQw=
+	b=vqUD7Bwe3Dd/PyNHTwQMC+xmTutvyi2T1zoAkawCWpTme6ffygGmPlMFHLJU0QQ00
+	 9ofuDqsEnLh07veUvjEGbJKFywNf8JQbSrtieJ9/cQcZDduA0AmzPLFlXUJjmRD1VE
+	 Gokx69WjSi5iPuZbkPrtOexK3Bf5lU778jXBnY+g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S369177AbgDOMXz (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:23:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40196 "EHLO mail.kernel.org"
+        id S369184AbgDOMYA (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:24:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897229AbgDOLpt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2409222AbgDOLpt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Apr 2020 07:45:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A51A821582;
-        Wed, 15 Apr 2020 11:45:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0EC6D20775;
+        Wed, 15 Apr 2020 11:45:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951149;
-        bh=yaliotJxvLNaSp02wuihbJu/1ZddBCwFTwSf8FxJC0c=;
+        s=default; t=1586951148;
+        bh=+J1rnpev1mWG2DjbDUlUXV/sV3CYW4t3iOt9gosTfsA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jNeH36HjSXR9Unl8qY/dZBoYALMzZ0oJn8XRVGYx/Zyl3I5N3O3Fu7tEwGiybKYQ9
-         ZPf6efll4U8VxCcOsnS5+rdmxdLbC5jRS1Te8SqbC0DKerf+KwJngUqeXsXWvvB3is
-         5ucSH3M3kk6ecXNb+ORdDIcWFICtHz6H+N28EAsU=
+        b=WbMNizmO/SrHqDVT3DGUhz8T1XvrHbaZIi1UuWIgmcfQ1Kx6wAXHEuJQv31f9JYOP
+         x/Va64ODSJ+i5/NFQsF3PffY8mgj8KFUT3fe8s/jQpzLvvvaK2zRzZq1R5c1EdFNDw
+         vWEHsgqPHlIeMAQisX2jHqPFXBhUsU6ZmGVzYvhI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ricardo Ribalda Delgado <ribalda@kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>,
-        linux-leds@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 56/84] leds: core: Fix warning message when init_data
-Date:   Wed, 15 Apr 2020 07:44:13 -0400
-Message-Id: <20200415114442.14166-56-sashal@kernel.org>
+Cc:     Karol Herbst <kherbst@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lyude Paul <lyude@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Mika Westerberg <mika.westerberg@intel.com>,
+        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 55/84] drm/nouveau: workaround runpm fail by disabling PCI power management on certain intel bridges
+Date:   Wed, 15 Apr 2020 07:44:12 -0400
+Message-Id: <20200415114442.14166-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114442.14166-1-sashal@kernel.org>
 References: <20200415114442.14166-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ricardo Ribalda Delgado <ribalda@kernel.org>
+From: Karol Herbst <kherbst@redhat.com>
 
-[ Upstream commit 64ed6588c2ea618d3f9ca9d8b365ae4c19f76225 ]
+[ Upstream commit 434fdb51513bf3057ac144d152e6f2f2b509e857 ]
 
-The warning message when a led is renamed due to name collition can fail
-to show proper original name if init_data is used. Eg:
+Fixes the infamous 'runtime PM' bug many users are facing on Laptops with
+Nvidia Pascal GPUs by skipping said PCI power state changes on the GPU.
 
-[    9.073996] leds-gpio a0040000.leds_0: Led (null) renamed to red_led_1 due to name collision
+Depending on the used kernel there might be messages like those in demsg:
 
-Fixes: bb4e9af0348d ("leds: core: Add support for composing LED class device names")
-Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
-Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Signed-off-by: Pavel Machek <pavel@ucw.cz>
+"nouveau 0000:01:00.0: Refused to change power state, currently in D3"
+"nouveau 0000:01:00.0: can't change power state from D3cold to D0 (config
+space inaccessible)"
+followed by backtraces of kernel crashes or timeouts within nouveau.
+
+It's still unkown why this issue exists, but this is a reliable workaround
+and solves a very annoying issue for user having to choose between a
+crashing kernel or higher power consumption of their Laptops.
+
+Signed-off-by: Karol Herbst <kherbst@redhat.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Lyude Paul <lyude@redhat.com>
+Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+Cc: Mika Westerberg <mika.westerberg@intel.com>
+Cc: linux-pci@vger.kernel.org
+Cc: linux-pm@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org
+Cc: nouveau@lists.freedesktop.org
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=205623
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/leds/led-class.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/nouveau/nouveau_drm.c | 63 +++++++++++++++++++++++++++
+ drivers/gpu/drm/nouveau/nouveau_drv.h |  2 +
+ 2 files changed, 65 insertions(+)
 
-diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
-index 647b1263c5794..d3e83c33783e5 100644
---- a/drivers/leds/led-class.c
-+++ b/drivers/leds/led-class.c
-@@ -281,7 +281,7 @@ int led_classdev_register_ext(struct device *parent,
+diff --git a/drivers/gpu/drm/nouveau/nouveau_drm.c b/drivers/gpu/drm/nouveau/nouveau_drm.c
+index 2cd83849600f3..b1beed40e746a 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_drm.c
++++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
+@@ -618,6 +618,64 @@ nouveau_drm_device_fini(struct drm_device *dev)
+ 	kfree(drm);
+ }
  
++/*
++ * On some Intel PCIe bridge controllers doing a
++ * D0 -> D3hot -> D3cold -> D0 sequence causes Nvidia GPUs to not reappear.
++ * Skipping the intermediate D3hot step seems to make it work again. This is
++ * probably caused by not meeting the expectation the involved AML code has
++ * when the GPU is put into D3hot state before invoking it.
++ *
++ * This leads to various manifestations of this issue:
++ *  - AML code execution to power on the GPU hits an infinite loop (as the
++ *    code waits on device memory to change).
++ *  - kernel crashes, as all PCI reads return -1, which most code isn't able
++ *    to handle well enough.
++ *
++ * In all cases dmesg will contain at least one line like this:
++ * 'nouveau 0000:01:00.0: Refused to change power state, currently in D3'
++ * followed by a lot of nouveau timeouts.
++ *
++ * In the \_SB.PCI0.PEG0.PG00._OFF code deeper down writes bit 0x80 to the not
++ * documented PCI config space register 0x248 of the Intel PCIe bridge
++ * controller (0x1901) in order to change the state of the PCIe link between
++ * the PCIe port and the GPU. There are alternative code paths using other
++ * registers, which seem to work fine (executed pre Windows 8):
++ *  - 0xbc bit 0x20 (publicly available documentation claims 'reserved')
++ *  - 0xb0 bit 0x10 (link disable)
++ * Changing the conditions inside the firmware by poking into the relevant
++ * addresses does resolve the issue, but it seemed to be ACPI private memory
++ * and not any device accessible memory at all, so there is no portable way of
++ * changing the conditions.
++ * On a XPS 9560 that means bits [0,3] on \CPEX need to be cleared.
++ *
++ * The only systems where this behavior can be seen are hybrid graphics laptops
++ * with a secondary Nvidia Maxwell, Pascal or Turing GPU. It's unclear whether
++ * this issue only occurs in combination with listed Intel PCIe bridge
++ * controllers and the mentioned GPUs or other devices as well.
++ *
++ * documentation on the PCIe bridge controller can be found in the
++ * "7th Generation Intel® Processor Families for H Platforms Datasheet Volume 2"
++ * Section "12 PCI Express* Controller (x16) Registers"
++ */
++
++static void quirk_broken_nv_runpm(struct pci_dev *pdev)
++{
++	struct drm_device *dev = pci_get_drvdata(pdev);
++	struct nouveau_drm *drm = nouveau_drm(dev);
++	struct pci_dev *bridge = pci_upstream_bridge(pdev);
++
++	if (!bridge || bridge->vendor != PCI_VENDOR_ID_INTEL)
++		return;
++
++	switch (bridge->device) {
++	case 0x1901:
++		drm->old_pm_cap = pdev->pm_cap;
++		pdev->pm_cap = 0;
++		NV_INFO(drm, "Disabling PCI power management to avoid bug\n");
++		break;
++	}
++}
++
+ static int nouveau_drm_probe(struct pci_dev *pdev,
+ 			     const struct pci_device_id *pent)
+ {
+@@ -699,6 +757,7 @@ static int nouveau_drm_probe(struct pci_dev *pdev,
  	if (ret)
- 		dev_warn(parent, "Led %s renamed to %s due to name collision",
--				led_cdev->name, dev_name(led_cdev->dev));
-+				proposed_name, dev_name(led_cdev->dev));
+ 		goto fail_drm_dev_init;
  
- 	if (led_cdev->flags & LED_BRIGHT_HW_CHANGED) {
- 		ret = led_add_brightness_hw_changed(led_cdev);
++	quirk_broken_nv_runpm(pdev);
+ 	return 0;
+ 
+ fail_drm_dev_init:
+@@ -736,7 +795,11 @@ static void
+ nouveau_drm_remove(struct pci_dev *pdev)
+ {
+ 	struct drm_device *dev = pci_get_drvdata(pdev);
++	struct nouveau_drm *drm = nouveau_drm(dev);
+ 
++	/* revert our workaround */
++	if (drm->old_pm_cap)
++		pdev->pm_cap = drm->old_pm_cap;
+ 	nouveau_drm_device_remove(dev);
+ }
+ 
+diff --git a/drivers/gpu/drm/nouveau/nouveau_drv.h b/drivers/gpu/drm/nouveau/nouveau_drv.h
+index 70f34cacc552c..8104e3806499d 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_drv.h
++++ b/drivers/gpu/drm/nouveau/nouveau_drv.h
+@@ -138,6 +138,8 @@ struct nouveau_drm {
+ 
+ 	struct list_head clients;
+ 
++	u8 old_pm_cap;
++
+ 	struct {
+ 		struct agp_bridge_data *bridge;
+ 		u32 base;
 -- 
 2.20.1
 
