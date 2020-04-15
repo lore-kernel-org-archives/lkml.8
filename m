@@ -2,148 +2,91 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7874C3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:16:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD9B5C2BB85
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:19:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B601D2076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:16:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vTyEIRCF"
+	by mail.kernel.org (Postfix) with ESMTP id AE97B20784
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:19:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586971171;
+	bh=1zWOuMcANkwMvPuhTGi4zdHmCsARxtLLlEWSWYI+/9c=;
+	h=Date:From:To:Cc:Subject:Reply-To:List-ID:From;
+	b=NkzWse6UoP/vjnq7r4nqBeZoSWcLeK1wXsDhqi0xhwCwfcd0AdwU2EPJD0ygGuW7T
+	 lModcwpRNtYUVBTHpOUp3H/T+zpCTWkl75Bd+saIFYwZUFQWdp18WX6PSWuQTYBuK6
+	 0H8APVnxGR8ydJq5Q/HZtveny0Cy7+xZUsysyijQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1416518AbgDORQ2 (ORCPT
+        id S2404699AbgDORTa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 13:16:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36658 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1416503AbgDORQY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 13:16:24 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03673C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 10:16:24 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id g32so215301pgb.6
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 10:16:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Izg8ue8YhxY7H2kruJlEEdGPr0daRyfDG5yf987D9nU=;
-        b=vTyEIRCFkbm/7cTNcpVWop+cR+0/QClCSDkUDVPtYAu7XEXkE2QPRNxHxymFQZR2Nj
-         EKtN6f2MwtzpKVWkII8qfFECUdlvef4AtBgQbIx+cw1AFwa0hxhBN/Ckhipus8m1r0y0
-         PaDtt5Ep1oV8ZTtV9liF/XKuf+IuBz9xw/1OaShQJUJgYNcgZmpkRQ9z3MfzdKp8pUFA
-         CzIul5KZNqOShlWKg7nCWkAaK0nzehFlLHH4ZJ2j+3kjaeBKqiOryjcuyOIPTR5WuaAH
-         +G1FYIft7HFjwx1EHCPl+YG7c+MqiVSo6sIKmtckJSVtzNh/8LRxxcj9nLSpNQIjWBfs
-         PLgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Izg8ue8YhxY7H2kruJlEEdGPr0daRyfDG5yf987D9nU=;
-        b=SGszWiuu3Rpvftoq84w2mFcq50IciliDt9DzoNFRmyMpobeuVY6MEhU3LXCG0T7MsU
-         SPqBPUl4w2mhnYiAa5OxkyLMVbqoGgyrgwoOAy8PZEcr7UHIFQm1UNY2LVodFAeSJANB
-         3X/biabRtiCkX0F0WEGNgMXh7ETQdjMqaKOGagmQDT3lpv6GOq4OnT+noForqfZRGgrm
-         tvZJwztKoyaD6EDh3ZOY1tDusvNNXiH0OC6qJkwDax1Nt7EiobRrCor9id84iEC6Y1MM
-         X6SuPCQTlMteodjPpEjvStiqv5FdiuVFxdwgEfphttnl8/U0mSPXiB0V/3J1Ag2McnLu
-         9KaA==
-X-Gm-Message-State: AGi0PuZKnBUlCEPAXQG5iMD3fJhtKRmJcN+nkaYLHUwf9J3CDs7FOTXR
-        XReLIjHPt41xadjIJv+HbYf7WA==
-X-Google-Smtp-Source: APiQypIp+tAuF/KpVGiXjJ/mXx6QMkfcSDg3akdI4diIPizZMvKY5qs0xrcxJMuI9kMP22k4IMHCKA==
-X-Received: by 2002:a63:2057:: with SMTP id r23mr28157163pgm.232.1586970983425;
-        Wed, 15 Apr 2020 10:16:23 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id x27sm14559225pfj.74.2020.04.15.10.16.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2020 10:16:22 -0700 (PDT)
-Date:   Wed, 15 Apr 2020 11:16:20 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Siddharth Gupta <sidgup@codeaurora.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, ohad@wizery.com,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, tsoni@codeaurora.org,
-        psodagud@codeaurora.org, rishabhb@codeaurora.org
-Subject: Re: [PATCH v2 3/6] remoteproc: sysmon: Inform current rproc about
- all active rprocs
-Message-ID: <20200415171620.GC16583@xps15>
-References: <1586389003-26675-1-git-send-email-sidgup@codeaurora.org>
- <1586389003-26675-4-git-send-email-sidgup@codeaurora.org>
+        Wed, 15 Apr 2020 13:19:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60676 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404505AbgDORT0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 13:19:26 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 329982076D;
+        Wed, 15 Apr 2020 17:19:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586971165;
+        bh=1zWOuMcANkwMvPuhTGi4zdHmCsARxtLLlEWSWYI+/9c=;
+        h=Date:From:To:Cc:Subject:Reply-To:From;
+        b=o1tP4q9g0TSM0PpKe9WdHxSx11Ak0Ua/xag7w3zsdsNt8FMEB0KcIDAu5DEkGKbIT
+         yTyJHZCW0IOgbt6/I/rucsQO1xa9SWq00Tpope8AwQ1B7yBKWPLUm6JGCe14pmxCGe
+         mWv0oDFWLSRUJPGPZKl/MoKMM2x0DvCGEIWNQUTk=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id F2B3B3522AD1; Wed, 15 Apr 2020 10:19:24 -0700 (PDT)
+Date:   Wed, 15 Apr 2020 10:19:24 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     rcu@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
+        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
+        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org
+Subject: [PATCH tip/core/rcu 0/4] kfree_rcu() updates for v5.8
+Message-ID: <20200415171924.GA9270@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1586389003-26675-4-git-send-email-sidgup@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 04:36:40PM -0700, Siddharth Gupta wrote:
-> Clients/services running on a remoteproc that booted up might need to be
-> aware of the state of already running remoteprocs. When a remoteproc boots
-> up (fresh or after recovery) it is not aware of the remoteprocs that booted
-> before it, i.e., the system state is incomplete. So to keep track of it we
-> send sysmon on behalf of all 'ONLINE' remoteprocs.
-> 
-> Signed-off-by: Siddharth Gupta <sidgup@codeaurora.org>
-> ---
->  drivers/remoteproc/qcom_sysmon.c | 25 +++++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
-> 
-> diff --git a/drivers/remoteproc/qcom_sysmon.c b/drivers/remoteproc/qcom_sysmon.c
-> index 851664e..8d8996d 100644
-> --- a/drivers/remoteproc/qcom_sysmon.c
-> +++ b/drivers/remoteproc/qcom_sysmon.c
-> @@ -453,10 +453,20 @@ static int sysmon_prepare(struct rproc_subdev *subdev)
->  	return 0;
->  }
->  
-> +/**
-> + * sysmon_start() - start callback for the sysmon remoteproc subdevice
-> + * @subdev:	instance of the sysmon subdevice
-> + *
-> + * Inform all the listners of sysmon notifications that the rproc associated
-> + * to @subdev has booted up. The rproc that booted up also needs to know
-> + * which rprocs are already up and running, so send start notifications
-> + * on behalf of all the online rprocs.
-> + */
->  static int sysmon_start(struct rproc_subdev *subdev)
->  {
->  	struct qcom_sysmon *sysmon = container_of(subdev, struct qcom_sysmon,
->  						  subdev);
-> +	struct qcom_sysmon *target;
->  	struct sysmon_event event = {
->  		.subsys_name = sysmon->name,
->  		.ssr_event = SSCTL_SSR_EVENT_AFTER_POWERUP
-> @@ -464,6 +474,21 @@ static int sysmon_start(struct rproc_subdev *subdev)
->  
->  	blocking_notifier_call_chain(&sysmon_notifiers, 0, (void *)&event);
->  
-> +	mutex_lock(&sysmon_lock);
-> +	list_for_each_entry(target, &sysmon_list, node) {
-> +		if (target == sysmon ||
-> +		    target->rproc->state != RPROC_RUNNING)
-> +			continue;
-> +
-> +		event.subsys_name = target->name;
-> +
-> +		if (sysmon->ssctl_version == 2)
-> +			ssctl_send_event(sysmon, &event);
-> +		else if (sysmon->ept)
-> +			sysmon_send_event(sysmon, &event);
-> +	}
-> +	mutex_unlock(&sysmon_lock);
-> +
+Hello!
 
-Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+This series updates kfree_rcu() testing and OOM handling.  It also
+provides a rcu_gp_might_be_stalled() function that judges whether or
+not RCU is being stalled.
 
->  	return 0;
->  }
->  
-> -- 
-> Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+1.	Add ability to increase object allocation size, courtesy
+	of Joel Fernandes.
+
+2.	rcu/tree: Add a shrinker to prevent OOM due to kfree_rcu()
+	batching, courtesy of Joel Fernandes.
+
+3.	rcu/tree: Count number of batched kfree_rcu() locklessly,
+	courtesy of Joel Fernandes.
+
+4.	Add rcu_gp_might_be_stalled() to indicate whether or not there
+	is currently a good chance that the current RCU grace period
+	is being stalled.
+
+							Thanx, Paul
+
+------------------------------------------------------------------------
+
+ include/linux/rcutiny.h |    1 
+ include/linux/rcutree.h |    1 
+ kernel/rcu/rcuperf.c    |    5 ++-
+ kernel/rcu/tree.c       |   70 +++++++++++++++++++++++++++++++++++++++++++-----
+ kernel/rcu/tree_stall.h |   40 ++++++++++++++++++++++++---
+ 5 files changed, 106 insertions(+), 11 deletions(-)
