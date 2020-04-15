@@ -2,120 +2,114 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83742C2BB55
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:04:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B9F2C2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:04:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DE7520732
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:04:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586955877;
-	bh=9NXEEyNPle9buOD5PAzi2advwivMFIPGG4uNAn1qRVs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0KNgM9NQyJvlheR55P8UZdb7JVK6h4G3AQ/NgK63Bay5fwHzzjjA5XVB88QWN6gTb
-	 4b/7iSsSxhq78n1JGI+rh183Pi7z5PvF3LD2m/lv/e7G+ASei9JZdSWUzjkkfNPRKD
-	 Mi/Li/XZeB45cdcZqKVJ3An+qUjahVn3XWhHfeRg=
+	by mail.kernel.org (Postfix) with ESMTP id DF57920737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:04:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="F+hKm3C3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505866AbgDONEf (ORCPT
+        id S2505875AbgDONEm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:04:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56074 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897135AbgDOLg0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:36:26 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14EE72078A;
-        Wed, 15 Apr 2020 11:36:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950579;
-        bh=9NXEEyNPle9buOD5PAzi2advwivMFIPGG4uNAn1qRVs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uz8xXU4iXfTmYdF9jPuacxWLGjOraH93i6FrBGUYx+jV48M/ahe54fJpTpLlHZ9U+
-         cHvUtw6ThP6hwqiAbs2Z4g7prva5r4IYmMuuPikd3SLSrCeynqnxT1CcLhZcAAFMo7
-         aEo8f0dY5Tez166gspxb4nl3LpdMdvzICOsU2WkI=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Steven Price <steven.price@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.6 079/129] include/linux/swapops.h: correct guards for non_swap_entry()
-Date:   Wed, 15 Apr 2020 07:33:54 -0400
-Message-Id: <20200415113445.11881-79-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
-References: <20200415113445.11881-1-sashal@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        Wed, 15 Apr 2020 09:04:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53792 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2505845AbgDONES (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 09:04:18 -0400
+Received: from mo6-p03-ob.smtp.rzone.de (mo6-p03-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5303::12])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3063C061A0C;
+        Wed, 15 Apr 2020 06:04:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1586955856;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=CdHAABA4O4WBpGafReQS38iVaIL+NYE+i3qxsiPxeAo=;
+        b=F+hKm3C3XOqEnTBDZBXnjx3O3HH1Va/Qp8roEBX1UbgZttATFHbN4Z6n8DeoxdWTID
+        LJW0Tz+xqOF5eiUenpEg39HyhB4YVGuKG7nPH45zfd6e5co8uV9GDaIUvxSqHnV7Lmlh
+        cqmyt+YYneMN4Z/MXySw4m6Z8JTipneBQhEUNqz/lDMoys2y7p4jo4kQ+G1LeM4UCk7g
+        J0bv6y19KvyWs0lg2w9Mm8jSTCVwDIufJQuC/bxYXJ9b7awJva1WNigZ2mPoa065vCYb
+        7MFcCXXaquEqHUM44jLoxQ0oTVu3cvh0WGOeJKKuifCM/taOOuJFEufUSGelk+cpm6V8
+        06oQ==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/PtwDConyM="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.4.0 DYNA|AUTH)
+        with ESMTPSA id 6028a2w3FD47231
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Wed, 15 Apr 2020 15:04:07 +0200 (CEST)
+Subject: Re: [PATCH v6 00/12] ARM/MIPS: DTS: add child nodes describing the PVRSGX GPU present in some OMAP SoC and JZ4780 (and many more)
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=us-ascii
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20200415130233.rgn7xrtwqicptke2@gilmour.lan>
+Date:   Wed, 15 Apr 2020 15:04:07 +0200
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        OpenPVRSGX Linux Driver Group <openpvrsgx-devgroup@letux.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com,
+        linux-mips@vger.kernel.org,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Message-Id: <C589D06E-435E-4316-AD0A-8498325039E3@goldelico.com>
+References: <cover.1586939718.git.hns@goldelico.com> <20200415101008.zxzxca2vlfsefpdv@gilmour.lan> <2E3401F1-A106-4396-8FE6-51CAB72926A4@goldelico.com> <20200415130233.rgn7xrtwqicptke2@gilmour.lan>
+To:     Maxime Ripard <maxime@cerno.tech>,
+        Philipp Rossak <embed3d@gmail.com>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Price <steven.price@arm.com>
 
-[ Upstream commit 3f3673d7d324d872d9d8ddb73b3e5e47fbf12e0d ]
+> Am 15.04.2020 um 15:02 schrieb Maxime Ripard <maxime@cerno.tech>:
+> 
+> On Wed, Apr 15, 2020 at 02:41:52PM +0200, H. Nikolaus Schaller wrote:
+>>>> The kernel modules built from this project have successfully
+>>>> demonstrated to work with the DTS definitions from this patch set on
+>>>> AM335x BeagleBone Black, DM3730 and OMAP5 Pyra and Droid 4. They
+>>>> partially work on OMAP3530 and PandaBoard ES but that is likely a
+>>>> problem in the kernel driver or the (non-free) user-space libraries
+>>>> and binaries.
+>>>> 
+>>>> Wotk for JZ4780 (CI20 board) is in progress and there is potential
+>>>> to extend this work to e.g. BananaPi-M3 (A83) and some Intel Poulsbo
+>>>> and CedarView devices.
+>>> 
+>>> If it's not been tested on any Allwinner board yet, I'll leave it
+>>> aside until it's been properly shown to work.
+>> 
+>> Phillip has tested something on a83.
+> 
+> I'm a bit skeptical on that one since it doesn't even list the
+> interrupts connected to the GPU that the binding mandates.
 
-If CONFIG_DEVICE_PRIVATE is defined, but neither CONFIG_MEMORY_FAILURE nor
-CONFIG_MIGRATION, then non_swap_entry() will return 0, meaning that the
-condition (non_swap_entry(entry) && is_device_private_entry(entry)) in
-zap_pte_range() will never be true even if the entry is a device private
-one.
+I think he left it out for a future update.
+But best he comments himself.
 
-Equally any other code depending on non_swap_entry() will not function as
-expected.
-
-I originally spotted this just by looking at the code, I haven't actually
-observed any problems.
-
-Looking a bit more closely it appears that actually this situation
-(currently at least) cannot occur:
-
-DEVICE_PRIVATE depends on ZONE_DEVICE
-ZONE_DEVICE depends on MEMORY_HOTREMOVE
-MEMORY_HOTREMOVE depends on MIGRATION
-
-Fixes: 5042db43cc26 ("mm/ZONE_DEVICE: new type of ZONE_DEVICE for unaddressable memory")
-Signed-off-by: Steven Price <steven.price@arm.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Jérôme Glisse <jglisse@redhat.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: John Hubbard <jhubbard@nvidia.com>
-Link: http://lkml.kernel.org/r/20200305130550.22693-1-steven.price@arm.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- include/linux/swapops.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/include/linux/swapops.h b/include/linux/swapops.h
-index 877fd239b6fff..3208a520d0be3 100644
---- a/include/linux/swapops.h
-+++ b/include/linux/swapops.h
-@@ -348,7 +348,8 @@ static inline void num_poisoned_pages_inc(void)
- }
- #endif
- 
--#if defined(CONFIG_MEMORY_FAILURE) || defined(CONFIG_MIGRATION)
-+#if defined(CONFIG_MEMORY_FAILURE) || defined(CONFIG_MIGRATION) || \
-+    defined(CONFIG_DEVICE_PRIVATE)
- static inline int non_swap_entry(swp_entry_t entry)
- {
- 	return swp_type(entry) >= MAX_SWAPFILES;
--- 
-2.20.1
+BR and thanks,
+Nikolaus
 
