@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0743DC3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA3DC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1CBA20936
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:28:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E0A820936
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:29:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586953732;
-	bh=a+GnE5fjJanhytnMSWobgz08WY8xeM5hUkfKKeBAIG8=;
+	s=default; t=1586953742;
+	bh=yZRJLnU4ErUB6W+jl5bb662sTl3GJZbnFAsMghgK1O4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wa1gzF72fiX0x9S0FhtVv0cmeDj1VVl11VBs1PbRLh9r791WHv5ur+00WXaNoe3IV
-	 GNh2IiQw+w2SYH3ena8Lg8TlNwZYftxluSoNLQ7HeLHaCG9X+WBRF5vrQ4J7apVYvd
-	 wF2Dp1W+6WjKqZYat92TR7hFsB/oa0+ulFtZm0xc=
+	b=0vU/5ARyo/A2YtrOq09QlhdkQiOb8a1iU99KArTmqtqU+bzKvBrBQZOuIEBhNd2lC
+	 S2B4teLsusKSficFevkAmjzsbI3/IsgHplf5qCUjcMdZ2nRu732DVsi420eTLzms0e
+	 j+bpF9Uybc/84NRz8ojcK7tY8cUFPPGZEOCwg09M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409126AbgDOLpG (ORCPT
-        <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:45:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57482 "EHLO mail.kernel.org"
+        id S369377AbgDOM3A (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:29:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897228AbgDOLhS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:37:18 -0400
+        id S2409125AbgDOLpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:45:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57DE921582;
-        Wed, 15 Apr 2020 11:37:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D4C02137B;
+        Wed, 15 Apr 2020 11:45:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950638;
-        bh=a+GnE5fjJanhytnMSWobgz08WY8xeM5hUkfKKeBAIG8=;
+        s=default; t=1586951105;
+        bh=yZRJLnU4ErUB6W+jl5bb662sTl3GJZbnFAsMghgK1O4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eqplRrVd1IEWbUhNR05uRalj1WI7lJztrB7D0vCxY4XVT02EropWz0iE6rxrrudcu
-         thZeCjvJr4yndyhkm4Uje8IoeRp+HmONrbtWAhIPGR34FLog49DvC1eADrjlK98GxD
-         ls82uo7+XuHcK18NWts+OfCHDM6q/QEjzKhvONII=
+        b=JhD9O9eD8hK7vfx3CuZwgXPgHLg++G45LFXntPY1DCLU9Oz+e3ZQgje0H+sxuJRRJ
+         D5mCzK6WnEPnn1hlITuBC7FJTgHhwzWA4+MrxSpbh894Q08Y1QXaUQ5Dbd6Tqoz/Wg
+         0CkFoTChmuay/OcukbaUcH57sfMegUeeYpX2sKCY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+Cc:     Johan Jonker <jbx6244@gmail.com>, Heiko Stuebner <heiko@sntech.de>,
         Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.6 128/129] f2fs: fix to wait all node page writeback
-Date:   Wed, 15 Apr 2020 07:34:43 -0400
-Message-Id: <20200415113445.11881-128-sashal@kernel.org>
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 20/84] ARM: dts: rockchip: fix lvds-encoder ports subnode for rk3188-bqedison2qc
+Date:   Wed, 15 Apr 2020 07:43:37 -0400
+Message-Id: <20200415114442.14166-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
-References: <20200415113445.11881-1-sashal@kernel.org>
+In-Reply-To: <20200415114442.14166-1-sashal@kernel.org>
+References: <20200415114442.14166-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,56 +59,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Johan Jonker <jbx6244@gmail.com>
 
-[ Upstream commit dc5a941223edd803f476a153abd950cc3a83c3e1 ]
+[ Upstream commit 1a7e99599dffd836fcb720cdc0eaf3cd43d7af4a ]
 
-There is a race condition that we may miss to wait for all node pages
-writeback, fix it.
+A test with the command below gives this error:
 
-- fsync()				- shrink
- - f2fs_do_sync_file
-					 - __write_node_page
-					  - set_page_writeback(page#0)
-					  : remove DIRTY/TOWRITE flag
-  - f2fs_fsync_node_pages
-  : won't find page #0 as TOWRITE flag was removeD
-  - f2fs_wait_on_node_pages_writeback
-  : wont' wait page #0 writeback as it was not in fsync_node_list list.
-					   - f2fs_add_fsync_node_entry
+arch/arm/boot/dts/rk3188-bqedison2qc.dt.yaml: lvds-encoder:
+'ports' is a required property
 
-Fixes: 50fa53eccf9f ("f2fs: fix to avoid broken of dnode block list")
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Fix error by adding a ports wrapper for port@0 and port@1
+inside the 'lvds-encoder' node for rk3188-bqedison2qc.
+
+make ARCH=arm dtbs_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/
+bridge/lvds-codec.yaml
+
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+Link: https://lore.kernel.org/r/20200316174647.5598-1-jbx6244@gmail.com
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/node.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/rk3188-bqedison2qc.dts | 27 ++++++++++++++----------
+ 1 file changed, 16 insertions(+), 11 deletions(-)
 
-diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
-index 9d02cdcdbb073..e58c4c6288346 100644
---- a/fs/f2fs/node.c
-+++ b/fs/f2fs/node.c
-@@ -1562,15 +1562,16 @@ static int __write_node_page(struct page *page, bool atomic, bool *submitted,
- 	if (atomic && !test_opt(sbi, NOBARRIER))
- 		fio.op_flags |= REQ_PREFLUSH | REQ_FUA;
+diff --git a/arch/arm/boot/dts/rk3188-bqedison2qc.dts b/arch/arm/boot/dts/rk3188-bqedison2qc.dts
+index 8afb2fd5d9f1b..66a0ff196eb1f 100644
+--- a/arch/arm/boot/dts/rk3188-bqedison2qc.dts
++++ b/arch/arm/boot/dts/rk3188-bqedison2qc.dts
+@@ -58,20 +58,25 @@
  
--	set_page_writeback(page);
--	ClearPageError(page);
--
-+	/* should add to global list before clearing PAGECACHE status */
- 	if (f2fs_in_warm_node_list(sbi, page)) {
- 		seq = f2fs_add_fsync_node_entry(sbi, page);
- 		if (seq_id)
- 			*seq_id = seq;
- 	}
+ 	lvds-encoder {
+ 		compatible = "ti,sn75lvds83", "lvds-encoder";
+-		#address-cells = <1>;
+-		#size-cells = <0>;
  
-+	set_page_writeback(page);
-+	ClearPageError(page);
+-		port@0 {
+-			reg = <0>;
+-			lvds_in_vop0: endpoint {
+-				remote-endpoint = <&vop0_out_lvds>;
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
 +
- 	fio.old_blkaddr = ni.blk_addr;
- 	f2fs_do_write_node_page(nid, &fio);
- 	set_node_addr(sbi, &ni, fio.new_blkaddr, is_fsync_dnode(page));
++			port@0 {
++				reg = <0>;
++
++				lvds_in_vop0: endpoint {
++					remote-endpoint = <&vop0_out_lvds>;
++				};
+ 			};
+-		};
+ 
+-		port@1 {
+-			reg = <1>;
+-			lvds_out_panel: endpoint {
+-				remote-endpoint = <&panel_in_lvds>;
++			port@1 {
++				reg = <1>;
++
++				lvds_out_panel: endpoint {
++					remote-endpoint = <&panel_in_lvds>;
++				};
+ 			};
+ 		};
+ 	};
 -- 
 2.20.1
 
