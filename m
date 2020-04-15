@@ -2,239 +2,109 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FAE7C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:08:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1CC2C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:09:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 355DC20732
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:08:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="XCsJXqiL"
+	by mail.kernel.org (Postfix) with ESMTP id 9847020732
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:09:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392852AbgDOCIE (ORCPT
+        id S2392856AbgDOCJr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 22:08:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36700 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392842AbgDOCH4 (ORCPT
+        Tue, 14 Apr 2020 22:09:47 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:40080 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387800AbgDOCJi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 22:07:56 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72285C061A0E
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 19:07:55 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id a22so1664411pjk.5
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 19:07:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=u2+cGS1cRmAclSEhKu1ZjnWLakz4YOOfQzuWAv57OAM=;
-        b=XCsJXqiLpCpNyksP4j7p6/CF+p6B1Z/TWHZg7DYLvgKLnFfZq6jrVa0Ro2XOLyq05O
-         Mr2GOMBFAVcJ8mb9nIaT/cRwsrBdMOmCPZiD4j4d4XM0LBomAJuXe9CBFklYjV6y6OqR
-         fi9MYbiUUFCczPMZtvUkoM0WNzpjX6SaWp5aI43UP3oJEz8Dd7gmaO/EW1ki3BqssLRt
-         xhfQWS0+otSmtaf3zBU9higbiMsGbWY5+ZnKVPzaMJ4MisDEr0FJCZGddqcnNcXvjz4v
-         8K+WD/WTG+iCjEUSYbmflqi4H2UTd1n0MUtnG5iOpJ95qIE4wnAyDWCwCv4sqth7tgwY
-         pvbQ==
+        Tue, 14 Apr 2020 22:09:38 -0400
+Received: by mail-pf1-f194.google.com with SMTP id x3so841094pfp.7
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 19:09:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=u2+cGS1cRmAclSEhKu1ZjnWLakz4YOOfQzuWAv57OAM=;
-        b=ZVBL6g49LHfPcr3aN34Ww7khX0GmMLTXTahKkJTN7G9tCqzwSIpgiHMhae4lYxInEJ
-         sQkjR29kHuM0BZuK5u4LCQCn50urk45q+ZrRlCnk1AllYnMD6c4bvspUFuN7iNJTtXIC
-         M7dX9WKUqp/eRK/8UoghaZ47FDNoYA6HD5kFMuoJMf3pYy5iLwq9GftE4LZM8tOm6res
-         uKe2HIRr6CkZW68UO1+S+DD4StPMuNmISQiVldlSc5eb9V87wMFaHMFe1P9uNTDzNv8B
-         b/SYK7ciFzgXomJCHGJOU2/f7j1K8nNj37nP0y+QDZdmmR2Tot4fUO/C9wSksRrKByfK
-         72xA==
-X-Gm-Message-State: AGi0Pub4LLoy9+2WhAjnA2/6AH/ijii9F1rAQS6kPNZrE/qLus3wvgZr
-        QMYawNhyK4cYlqNrXcuokIZNIg==
-X-Google-Smtp-Source: APiQypLwDxz25fW2RMa28aKt7qbLdqWW2OpYsgjIwGZ1SibtL9mtqYRYEgVoOjKKUJ2gK5kWcRBTRg==
-X-Received: by 2002:a17:902:a503:: with SMTP id s3mr2821309plq.303.1586916474702;
-        Tue, 14 Apr 2020 19:07:54 -0700 (PDT)
-Received: from nuc7.sifive.com (c-24-5-48-146.hsd1.ca.comcast.net. [24.5.48.146])
-        by smtp.gmail.com with ESMTPSA id v67sm8362776pfb.83.2020.04.14.19.07.53
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 Apr 2020 19:07:53 -0700 (PDT)
-From:   Alan Mikhak <alan.mikhak@sifive.com>
-X-Google-Original-From: Alan Mikhak < alan.mikhak@sifive.com >
-To:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, gustavo.pimentel@synopsys.com,
-        dan.j.williams@intel.com, vkoul@kernel.org, kishon@ti.com,
-        paul.walmsley@sifive.com
-Cc:     Alan Mikhak <alan.mikhak@sifive.com>
-Subject: [PATCH RFC] dmaengine: dw-edma: Decouple dw-edma-core.c from struct pci_dev
-Date:   Tue, 14 Apr 2020 19:07:44 -0700
-Message-Id: <1586916464-27727-1-git-send-email-alan.mikhak@sifive.com>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=tr5twKza5uks5edzAznFN80I06R+2ta5GJDnpgzqtnU=;
+        b=eGS2xXNzfwKkZ0IIB0lYx5LAVeva7sapWtUuETZI4OnVsAYzbqxqxq6NgZqMq9zYxH
+         PvZYX4y30RSZYWuO2EaHXCKc+I2ZDsOX0sHYh9go7wcBM5LiZk5bGFR1QrxRQGQ85Os6
+         bzJ6ZlBEpQqK3+eKvQYEhAOqDxDaFkQ1fkO8RkRXYImEt84cwP6R5x4ExUYYTV1AVYY3
+         o7BtSJFgk4Jem2y2GU6EaIisgdy6dX3Knxyr27eg6nQTsRA2KBKzc1j0fu+g6aUmPRd3
+         hiFwImdVFEApFp65uagTpH2iviRV1hxLnfY92Hz7JFQvBWfa3C2bdg5xQ690OPMRoKR7
+         GM6g==
+X-Gm-Message-State: AGi0PuZ7wRb6poJtiL8/MNSqVAiQzRvLEPrK1CX84vDT2ZSpnXxfMwCE
+        NTtg6SSlSKr3Squ34dX0E8M=
+X-Google-Smtp-Source: APiQypLs9wZRyBTkb80xPDKWPp4wiSuy+EGXasInkBTTJ7UcE/ElJr6zaZT/N4JajgGPrLI7fPwLGw==
+X-Received: by 2002:a62:6385:: with SMTP id x127mr19524738pfb.276.1586916576584;
+        Tue, 14 Apr 2020 19:09:36 -0700 (PDT)
+Received: from ?IPv6:2601:647:4000:d7:3d9e:6f43:1883:92f0? ([2601:647:4000:d7:3d9e:6f43:1883:92f0])
+        by smtp.gmail.com with ESMTPSA id g22sm5282215pju.21.2020.04.14.19.09.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Apr 2020 19:09:35 -0700 (PDT)
+Subject: Re: Compilation error for target liblockdep
+To:     Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
+        Zhengyuan Liu <liuzhengyuan@kylinos.cn>,
+        mingo <mingo@kernel.org>,
+        "alexander.levin" <alexander.levin@microsoft.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+References: <tencent_221B7250536E082573770ABA@qq.com>
+ <SN4PR0401MB359876ED2A2D503638658A679B1A0@SN4PR0401MB3598.namprd04.prod.outlook.com>
+ <2ec4aed8-a03a-aa1a-3e01-719f3c2b161d@acm.org>
+ <SN4PR0401MB35983B3ACED57F66634CF90E9BDA0@SN4PR0401MB3598.namprd04.prod.outlook.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <825bc318-cde1-f80c-972c-436a4fef4ecf@acm.org>
+Date:   Tue, 14 Apr 2020 19:09:34 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <SN4PR0401MB35983B3ACED57F66634CF90E9BDA0@SN4PR0401MB3598.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Mikhak <alan.mikhak@sifive.com>
+On 2020-04-14 06:08, Johannes Thumshirn wrote:
+> These files aren't unit tests for lockdep, so they can't be converted to 
+> KUnit. liblockdep is a stand alone library bringing lockdep's 
+> functionallity to pthread via LDPRELOAD, see also:
+> https://lwn.net/Articles/536363/
 
-While reviewing the Synopsys Designware eDMA PCIe driver, I came across
-the following field of struct dw_edma in dw-edma-core.h:
+How big is the user base of liblockdep? How many alternatives exist for
+liblockdep? Are these alternatives better or worse than liblockdep? See
+also:
+* https://clang.llvm.org/docs/ThreadSafetyAnalysis.html
+* https://github.com/google/sanitizers/wiki/ThreadSanitizerCppManual
+* http://valgrind.org/docs/manual/hg-manual.html
 
-const struct dw_edma_core_ops	*ops;
+Bart.
 
-I was unable to find a definition for struct dw_edma_core_ops. It was
-surprising that the kernel would build without failure even though the
-dw-edma driver was enabled with what seems to be an undefined struct.
-
-The reason I was reviewing the dw-edma driver was to see if I could
-integrate it with pcitest to initiate dma operations from endpoint side.
-
-As I understand from reviewing the dw-edma code, it is designed to run
-on the host side of PCIe link to initiate DMA operations remotely using
-eDMA channels of PCIe controller on the endpoint side. I am not sure if
-my understanding is correct. I infer this from seeing that dw-edma uses
-struct pci_dev and accesses hardware registers of dma channels across the
-bus using BAR0 and BAR2.
-
-I was exploring what would need to change in dw-edma to integrate it with
-pci-epf-test to initiate dma operations locally from the endpoint side.
-One barrier I see is dw_edma_probe() and other functions in dw-edma-core.c
-depend on struct pci_dev. Hence, instead of posting a patch to remove the
-undefined and unused ops field, I would like to define the struct and use
-it to decouple dw-edma-core.c from struct pci_dev.
-
-To my surprise, the kernel still builds without error even after defining
-struct dw_edma_core_ops in dw-edma-core.h and using it as in this patch.
-
-I would appreciate any comments on my observations about the 'ops' field,
-decoupling dw-edma-core.c from struct pci_dev, and how best to use
-dw-edma with pcitest.
-
-Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
----
- drivers/dma/dw-edma/dw-edma-core.c | 17 ++++++++++-------
- drivers/dma/dw-edma/dw-edma-core.h |  4 ++++
- drivers/dma/dw-edma/dw-edma-pcie.c | 10 ++++++++++
- 3 files changed, 24 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-index ff392c01bad1..9417a5feabbf 100644
---- a/drivers/dma/dw-edma/dw-edma-core.c
-+++ b/drivers/dma/dw-edma/dw-edma-core.c
-@@ -14,7 +14,7 @@
- #include <linux/err.h>
- #include <linux/interrupt.h>
- #include <linux/dma/edma.h>
--#include <linux/pci.h>
-+#include <linux/dma-mapping.h>
- 
- #include "dw-edma-core.h"
- #include "dw-edma-v0-core.h"
-@@ -781,7 +781,7 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
- 
- 	if (dw->nr_irqs == 1) {
- 		/* Common IRQ shared among all channels */
--		err = request_irq(pci_irq_vector(to_pci_dev(dev), 0),
-+		err = request_irq(dw->ops->irq_vector(dev, 0),
- 				  dw_edma_interrupt_common,
- 				  IRQF_SHARED, dw->name, &dw->irq[0]);
- 		if (err) {
-@@ -789,7 +789,7 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
- 			return err;
- 		}
- 
--		get_cached_msi_msg(pci_irq_vector(to_pci_dev(dev), 0),
-+		get_cached_msi_msg(dw->ops->irq_vector(dev, 0),
- 				   &dw->irq[0].msi);
- 	} else {
- 		/* Distribute IRQs equally among all channels */
-@@ -804,7 +804,7 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
- 		dw_edma_add_irq_mask(&rd_mask, *rd_alloc, dw->rd_ch_cnt);
- 
- 		for (i = 0; i < (*wr_alloc + *rd_alloc); i++) {
--			err = request_irq(pci_irq_vector(to_pci_dev(dev), i),
-+			err = request_irq(dw->ops->irq_vector(dev, i),
- 					  i < *wr_alloc ?
- 						dw_edma_interrupt_write :
- 						dw_edma_interrupt_read,
-@@ -815,7 +815,7 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
- 				return err;
- 			}
- 
--			get_cached_msi_msg(pci_irq_vector(to_pci_dev(dev), i),
-+			get_cached_msi_msg(dw->ops->irq_vector(dev, i),
- 					   &dw->irq[i].msi);
- 		}
- 
-@@ -833,6 +833,9 @@ int dw_edma_probe(struct dw_edma_chip *chip)
- 	u32 rd_alloc = 0;
- 	int i, err;
- 
-+	if (!dw->ops || !dw->ops->irq_vector)
-+		return -EINVAL;
-+
- 	raw_spin_lock_init(&dw->lock);
- 
- 	/* Find out how many write channels are supported by hardware */
-@@ -884,7 +887,7 @@ int dw_edma_probe(struct dw_edma_chip *chip)
- 
- err_irq_free:
- 	for (i = (dw->nr_irqs - 1); i >= 0; i--)
--		free_irq(pci_irq_vector(to_pci_dev(dev), i), &dw->irq[i]);
-+		free_irq(dw->ops->irq_vector(dev, i), &dw->irq[i]);
- 
- 	dw->nr_irqs = 0;
- 
-@@ -904,7 +907,7 @@ int dw_edma_remove(struct dw_edma_chip *chip)
- 
- 	/* Free irqs */
- 	for (i = (dw->nr_irqs - 1); i >= 0; i--)
--		free_irq(pci_irq_vector(to_pci_dev(dev), i), &dw->irq[i]);
-+		free_irq(dw->ops->irq_vector(dev, i), &dw->irq[i]);
- 
- 	/* Power management */
- 	pm_runtime_disable(dev);
-diff --git a/drivers/dma/dw-edma/dw-edma-core.h b/drivers/dma/dw-edma/dw-edma-core.h
-index 4e5f9f6e901b..31fc50d31792 100644
---- a/drivers/dma/dw-edma/dw-edma-core.h
-+++ b/drivers/dma/dw-edma/dw-edma-core.h
-@@ -103,6 +103,10 @@ struct dw_edma_irq {
- 	struct dw_edma			*dw;
- };
- 
-+struct dw_edma_core_ops {
-+	int	(*irq_vector)(struct device *dev, unsigned int nr);
-+};
-+
- struct dw_edma {
- 	char				name[20];
- 
-diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
-index dc85f55e1bb8..1eafc602e17e 100644
---- a/drivers/dma/dw-edma/dw-edma-pcie.c
-+++ b/drivers/dma/dw-edma/dw-edma-pcie.c
-@@ -54,6 +54,15 @@ static const struct dw_edma_pcie_data snps_edda_data = {
- 	.irqs				= 1,
- };
- 
-+static int dw_edma_pcie_irq_vector(struct device *dev, unsigned int nr)
-+{
-+	return pci_irq_vector(to_pci_dev(dev), nr);
-+}
-+
-+static const struct dw_edma_core_ops dw_edma_pcie_core_ops = {
-+	.irq_vector = dw_edma_pcie_irq_vector,
-+};
-+
- static int dw_edma_pcie_probe(struct pci_dev *pdev,
- 			      const struct pci_device_id *pid)
- {
-@@ -151,6 +160,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
- 	dw->version = pdata->version;
- 	dw->mode = pdata->mode;
- 	dw->nr_irqs = nr_irqs;
-+	dw->ops = &dw_edma_pcie_core_ops;
- 
- 	/* Debug info */
- 	pci_dbg(pdev, "Version:\t%u\n", dw->version);
--- 
-2.7.4
 
