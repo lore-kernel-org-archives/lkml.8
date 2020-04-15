@@ -2,182 +2,199 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 142F6C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6D96C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:43:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E720C2137B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:43:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586950995;
-	bh=5KeCAVtoMwPKXDT6A0LjaClAan+jh+idXoAY0C6EKHk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Etx1NSL6lKRa+qtnIOoZtKmEQ7OC5yUEq6xTPmgbO6UQZ39ebK+4twrp2PGvzNL/s
-	 FOAqy79YYKBNIi0j8/XQ10Al0CIVsO6G7jnKjEn8qBbZEFr6bX7wmpsZkkygVel3jT
-	 TvOPbQAmLg0EgyrUekMucd5KO3AWFTcS9FzDnbUk=
+	by mail.kernel.org (Postfix) with ESMTP id C8A68214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:43:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408975AbgDOLnM (ORCPT
+        id S2409021AbgDOLni convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:43:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56938 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897191AbgDOLg6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:36:58 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3067D20936;
-        Wed, 15 Apr 2020 11:36:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950618;
-        bh=5KeCAVtoMwPKXDT6A0LjaClAan+jh+idXoAY0C6EKHk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zjd5mGFnUPF/gRqXr4D3UMYjrHWAoJF4huiMSGwitJpaSHT4rZEMIDpPe7+8zVA9J
-         5Z0id42S/foXjyyHyfEPLlZGA6XLC3x3MOl/i00+1W1vrH3npoFXjJqZIbpsc11qFQ
-         E7pHMltYc6UREb4t/jnUNfK/shB03XT6hU+v15fw=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Olga Kornievskaia <olga.kornievskaia@gmail.com>,
-        Olga Kornievskaia <kolga@netapp.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 110/129] SUNRPC: fix krb5p mount to provide large enough buffer in rq_rcvsize
-Date:   Wed, 15 Apr 2020 07:34:25 -0400
-Message-Id: <20200415113445.11881-110-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
-References: <20200415113445.11881-1-sashal@kernel.org>
+        Wed, 15 Apr 2020 07:43:38 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:17146 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2408908AbgDOLht (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:37:49 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03FBXhH1124539
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 07:37:32 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30dse2n9xx-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 07:37:32 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <imbrenda@linux.ibm.com>;
+        Wed, 15 Apr 2020 12:37:02 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 15 Apr 2020 12:36:56 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03FBbMGa54264042
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 Apr 2020 11:37:22 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 25EB911C054;
+        Wed, 15 Apr 2020 11:37:22 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 29D7C11C04C;
+        Wed, 15 Apr 2020 11:37:21 +0000 (GMT)
+Received: from p-imbrenda (unknown [9.145.12.13])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 15 Apr 2020 11:37:21 +0000 (GMT)
+Date:   Wed, 15 Apr 2020 13:37:18 +0200
+From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
+To:     Emanuele Giuseppe Esposito <eesposit@redhat.com>
+Cc:     Philippe =?UTF-8?B?TWF0aGlldS1EYXVkw6k=?= <f4bug@amsat.org>,
+        kvm@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: Re: [PATCH v2] kvm_host: unify VM_STAT and VCPU_STAT definitions in
+ a single place
+In-Reply-To: <992ede27-3eae-f2da-ad38-1d3498853ad2@redhat.com>
+References: <20200414155625.20559-1-eesposit@redhat.com>
+        <b479e7ff-4534-5ced-e19b-2a2914905a8b@amsat.org>
+        <992ede27-3eae-f2da-ad38-1d3498853ad2@redhat.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-TM-AS-GCONF: 00
+x-cbid: 20041511-0008-0000-0000-00000371193C
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20041511-0009-0000-0000-00004A92CCDF
+Message-Id: <20200415133718.2db57666@p-imbrenda>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-15_02:2020-04-14,2020-04-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1015
+ priorityscore=1501 impostorscore=0 mlxscore=0 malwarescore=0
+ suspectscore=0 lowpriorityscore=0 phishscore=0 spamscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004150084
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olga Kornievskaia <olga.kornievskaia@gmail.com>
+On Wed, 15 Apr 2020 10:30:06 +0200
+Emanuele Giuseppe Esposito <eesposit@redhat.com> wrote:
 
-[ Upstream commit df513a7711712758b9cb1a48d86712e7e1ee03f4 ]
+> On 4/15/20 8:36 AM, Philippe Mathieu-Daudé wrote:
+> > On 4/14/20 5:56 PM, Emanuele Giuseppe Esposito wrote:  
+> >> The macros VM_STAT and VCPU_STAT are redundantly implemented in
+> >> multiple files, each used by a different architecure to initialize
+> >> the debugfs entries for statistics. Since they all have the same
+> >> purpose, they can be unified in a single common definition in
+> >> include/linux/kvm_host.h
+> >>
+> >> Signed-off-by: Emanuele Giuseppe Esposito <eesposit@redhat.com>
+> >> ---
+> >>   arch/arm64/kvm/guest.c    |  23 ++---
+> >>   arch/mips/kvm/mips.c      |  61 ++++++------
+> >>   arch/powerpc/kvm/book3s.c |  61 ++++++------
+> >>   arch/powerpc/kvm/booke.c  |  41 ++++----
+> >>   arch/s390/kvm/kvm-s390.c  | 203
+> >> +++++++++++++++++++------------------- arch/x86/kvm/x86.c        |
+> >>  80 +++++++-------- include/linux/kvm_host.h  |   5 +
+> >>   7 files changed, 231 insertions(+), 243 deletions(-)
+> >>
+> >> diff --git a/arch/arm64/kvm/guest.c b/arch/arm64/kvm/guest.c
+> >> index 23ebe51410f0..8417b200bec9 100644
+> >> --- a/arch/arm64/kvm/guest.c
+> >> +++ b/arch/arm64/kvm/guest.c
+> >> @@ -29,20 +29,17 @@
+> >>   
+> >>   #include "trace.h"
+> >>   
+> >> -#define VM_STAT(x) { #x, offsetof(struct kvm, stat.x),
+> >> KVM_STAT_VM } -#define VCPU_STAT(x) { #x, offsetof(struct
+> >> kvm_vcpu, stat.x), KVM_STAT_VCPU } -
+> >>   struct kvm_stats_debugfs_item debugfs_entries[] = {
+> >> -	VCPU_STAT(halt_successful_poll),
+> >> -	VCPU_STAT(halt_attempted_poll),
+> >> -	VCPU_STAT(halt_poll_invalid),
+> >> -	VCPU_STAT(halt_wakeup),
+> >> -	VCPU_STAT(hvc_exit_stat),
+> >> -	VCPU_STAT(wfe_exit_stat),
+> >> -	VCPU_STAT(wfi_exit_stat),
+> >> -	VCPU_STAT(mmio_exit_user),
+> >> -	VCPU_STAT(mmio_exit_kernel),
+> >> -	VCPU_STAT(exits),
+> >> +	VCPU_STAT("halt_successful_poll", halt_successful_poll),
+> >> +	VCPU_STAT("halt_attempted_poll", halt_attempted_poll),
+> >> +	VCPU_STAT("halt_poll_invalid", halt_poll_invalid),
+> >> +	VCPU_STAT("halt_wakeup", halt_wakeup),
+> >> +	VCPU_STAT("hvc_exit_stat", hvc_exit_stat),
+> >> +	VCPU_STAT("wfe_exit_stat", wfe_exit_stat),
+> >> +	VCPU_STAT("wfi_exit_stat", wfi_exit_stat),
+> >> +	VCPU_STAT("mmio_exit_user", mmio_exit_user),
+> >> +	VCPU_STAT("mmio_exit_kernel", mmio_exit_kernel),
+> >> +	VCPU_STAT("exits", exits),
+> >>   	{ NULL }
+> >>   };  
+> > 
+> > Patch easily reviewed with --word-diff.
+> > 
+> > [...]  
+> >> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> >> index 6d58beb65454..2e6ead872957 100644
+> >> --- a/include/linux/kvm_host.h
+> >> +++ b/include/linux/kvm_host.h
+> >> @@ -1130,6 +1130,11 @@ struct kvm_stats_debugfs_item {
+> >>   #define KVM_DBGFS_GET_MODE(dbgfs_item)
+> >>               \ ((dbgfs_item)->mode ? (dbgfs_item)->mode : 0644)
+> >>   
+> >> +#define VM_STAT(n, x, ...)
+> >> 									   \
+> >> +	{ n, offsetof(struct kvm, stat.x), KVM_STAT_VM, ##
+> >> __VA_ARGS__ } +#define VCPU_STAT(n, x, ...)
+> >> 									   \
+> >>  
+> > 
+> > Not sure while you use so many whitespaces here... (maybe Paolo can
+> > strip some when applying?).  
+> 
+> I honestly am not sure why it added few more spaces than I wanted,
+> but the idea was to follow the KVM_DBGFS_GET_MODE macro above and put
+> the backslash at the end of the line (80th char).
 
-Ever since commit 2c94b8eca1a2 ("SUNRPC: Use au_rslack when computing
-reply buffer size"). It changed how "req->rq_rcvsize" is calculated. It
-used to use au_cslack value which was nice and large and changed it to
-au_rslack value which turns out to be too small.
+once the whitespace issues are fixed, you can also add
 
-Since 5.1, v3 mount with sec=krb5p fails against an Ontap server
-because client's receive buffer it too small.
-
-For gss krb5p, we need to account for the mic token in the verifier,
-and the wrap token in the wrap token.
-
-RFC 4121 defines:
-mic token
-Octet no   Name        Description
-         --------------------------------------------------------------
-         0..1     TOK_ID     Identification field.  Tokens emitted by
-                             GSS_GetMIC() contain the hex value 04 04
-                             expressed in big-endian order in this
-                             field.
-         2        Flags      Attributes field, as described in section
-                             4.2.2.
-         3..7     Filler     Contains five octets of hex value FF.
-         8..15    SND_SEQ    Sequence number field in clear text,
-                             expressed in big-endian order.
-         16..last SGN_CKSUM  Checksum of the "to-be-signed" data and
-                             octet 0..15, as described in section 4.2.4.
-
-that's 16bytes (GSS_KRB5_TOK_HDR_LEN) + chksum
-
-wrap token
-Octet no   Name        Description
-         --------------------------------------------------------------
-          0..1     TOK_ID    Identification field.  Tokens emitted by
-                             GSS_Wrap() contain the hex value 05 04
-                             expressed in big-endian order in this
-                             field.
-          2        Flags     Attributes field, as described in section
-                             4.2.2.
-          3        Filler    Contains the hex value FF.
-          4..5     EC        Contains the "extra count" field, in big-
-                             endian order as described in section 4.2.3.
-          6..7     RRC       Contains the "right rotation count" in big-
-                             endian order, as described in section
-                             4.2.5.
-          8..15    SND_SEQ   Sequence number field in clear text,
-                             expressed in big-endian order.
-          16..last Data      Encrypted data for Wrap tokens with
-                             confidentiality, or plaintext data followed
-                             by the checksum for Wrap tokens without
-                             confidentiality, as described in section
-                             4.2.4.
-
-Also 16bytes of header (GSS_KRB5_TOK_HDR_LEN), encrypted data, and cksum
-(other things like padding)
-
-RFC 3961 defines known cksum sizes:
-Checksum type              sumtype        checksum         section or
-                                value            size         reference
-   ---------------------------------------------------------------------
-   CRC32                            1               4           6.1.3
-   rsa-md4                          2              16           6.1.2
-   rsa-md4-des                      3              24           6.2.5
-   des-mac                          4              16           6.2.7
-   des-mac-k                        5               8           6.2.8
-   rsa-md4-des-k                    6              16           6.2.6
-   rsa-md5                          7              16           6.1.1
-   rsa-md5-des                      8              24           6.2.4
-   rsa-md5-des3                     9              24             ??
-   sha1 (unkeyed)                  10              20             ??
-   hmac-sha1-des3-kd               12              20            6.3
-   hmac-sha1-des3                  13              20             ??
-   sha1 (unkeyed)                  14              20             ??
-   hmac-sha1-96-aes128             15              20         [KRB5-AES]
-   hmac-sha1-96-aes256             16              20         [KRB5-AES]
-   [reserved]                  0x8003               ?         [GSS-KRB5]
-
-Linux kernel now mainly supports type 15,16 so max cksum size is 20bytes.
-(GSS_KRB5_MAX_CKSUM_LEN)
-
-Re-use already existing define of GSS_KRB5_MAX_SLACK_NEEDED that's used
-for encoding the gss_wrap tokens (same tokens are used in reply).
-
-Fixes: 2c94b8eca1a2 ("SUNRPC: Use au_rslack when computing reply buffer size")
-Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-Reviewed-by: Chuck Lever <chuck.lever@oracle.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/sunrpc/auth_gss/auth_gss.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/net/sunrpc/auth_gss/auth_gss.c b/net/sunrpc/auth_gss/auth_gss.c
-index 24ca861815b1d..d6cd2a519d9fb 100644
---- a/net/sunrpc/auth_gss/auth_gss.c
-+++ b/net/sunrpc/auth_gss/auth_gss.c
-@@ -20,6 +20,7 @@
- #include <linux/sunrpc/clnt.h>
- #include <linux/sunrpc/auth.h>
- #include <linux/sunrpc/auth_gss.h>
-+#include <linux/sunrpc/gss_krb5.h>
- #include <linux/sunrpc/svcauth_gss.h>
- #include <linux/sunrpc/gss_err.h>
- #include <linux/workqueue.h>
-@@ -1050,7 +1051,7 @@ gss_create_new(const struct rpc_auth_create_args *args, struct rpc_clnt *clnt)
- 		goto err_put_mech;
- 	auth = &gss_auth->rpc_auth;
- 	auth->au_cslack = GSS_CRED_SLACK >> 2;
--	auth->au_rslack = GSS_VERF_SLACK >> 2;
-+	auth->au_rslack = GSS_KRB5_MAX_SLACK_NEEDED >> 2;
- 	auth->au_verfsize = GSS_VERF_SLACK >> 2;
- 	auth->au_ralign = GSS_VERF_SLACK >> 2;
- 	auth->au_flags = 0;
--- 
-2.20.1
+Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+ 
+> > 
+> > Otherwise it looks nicer that v1, thanks.
+> > 
+> > Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
+> >   
+> >> +	{ n, offsetof(struct kvm_vcpu, stat.x), KVM_STAT_VCPU, ##
+> >> __VA_ARGS__ } +
+> >>   extern struct kvm_stats_debugfs_item debugfs_entries[];
+> >>   extern struct dentry *kvm_debugfs_dir;
+> >>   
+> >>  
+> >   
+> 
 
