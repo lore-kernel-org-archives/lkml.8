@@ -2,168 +2,249 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B689C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 05:55:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B637C3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 05:57:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6CA420CC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 05:55:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D8E2206F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 05:57:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441054AbgDOFzT (ORCPT
+        id S2393470AbgDOF5c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 01:55:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43576 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2389655AbgDOFzL (ORCPT
+        Wed, 15 Apr 2020 01:57:32 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:51904 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389655AbgDOF5a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 01:55:11 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 022B3C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 22:55:10 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jOb0p-0007PS-AL; Wed, 15 Apr 2020 07:55:03 +0200
-Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jOb0o-0004zR-LO; Wed, 15 Apr 2020 07:55:02 +0200
-Date:   Wed, 15 Apr 2020 07:55:02 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     peng.fan@nxp.com
-Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de,
-        jassisinghbrar@gmail.com, leonard.crestez@nxp.com,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        Anson.Huang@nxp.com, aisheng.dong@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2] mailbox: imx-mailbox: fix scu msg header size check
-Message-ID: <20200415055502.zc2su6snnpkrq2v7@pengutronix.de>
-References: <1586870475-32532-1-git-send-email-peng.fan@nxp.com>
+        Wed, 15 Apr 2020 01:57:30 -0400
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03F5qEfB010280;
+        Wed, 15 Apr 2020 01:57:29 -0400
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 30dn9a91jf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 15 Apr 2020 01:57:29 -0400
+Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 03F5vROb063672
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Wed, 15 Apr 2020 01:57:28 -0400
+Received: from SCSQCASHYB7.ad.analog.com (10.77.17.133) by
+ SCSQMBX11.ad.analog.com (10.77.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Tue, 14 Apr 2020 22:57:26 -0700
+Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
+ SCSQCASHYB7.ad.analog.com (10.77.17.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Tue, 14 Apr 2020 22:57:26 -0700
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Tue, 14 Apr 2020 22:57:26 -0700
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 03F5vNqc029221;
+        Wed, 15 Apr 2020 01:57:24 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <alexandru.tachici@analog.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH v4 1/2] iio: adc: ad7192: fix null pointer de-reference crash during probe
+Date:   Wed, 15 Apr 2020 08:58:03 +0300
+Message-ID: <20200415055804.17971-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="zdjfy7h2qmazbiyv"
-Content-Disposition: inline
-In-Reply-To: <1586870475-32532-1-git-send-email-peng.fan@nxp.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 07:52:13 up 151 days, 21:10, 164 users,  load average: 0.14, 0.08,
- 0.02
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-15_01:2020-04-14,2020-04-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 phishscore=0
+ impostorscore=0 bulkscore=0 malwarescore=0 mlxlogscore=999 clxscore=1015
+ mlxscore=0 priorityscore=1501 suspectscore=0 adultscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004150044
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+When the 'spi_device_id' table was removed, it omitted to cleanup/fix the
+assignment:
+   'indio_dev->name = spi_get_device_id(spi)->name;'
 
---zdjfy7h2qmazbiyv
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+After that patch 'spi_get_device_id(spi)' returns NULL, so this crashes
+during probe with null de-ref.
 
-On Tue, Apr 14, 2020 at 09:21:15PM +0800, peng.fan@nxp.com wrote:
-> From: Peng Fan <peng.fan@nxp.com>
->=20
-> The i.MX8 SCU message header size is the number of "u32" elements,
-> not "u8", so fix the check.
->=20
-> Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
-> Addresses-Coverity-ID: 1461658 ("Memory - corruptions")
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+This change fixes this by introducing an ad7192_chip_info struct, and
+defines all part-names [that should be assigned to indio_dev->name] in a
+'ad7192_chip_info_tbl' table.
 
-Acked-by: Oleksij Rempel <o.rempel@pengutronix.de>
+With this change, the old 'st->devid' is also moved to be a
+'chip_info->chip_id'. And the old 'ID_AD719X' macros have been renamed to
+'CHIPID_AD719X'. Tld identifiers have been re-purposed to be enum/index
+values in the new 'ad7192_chip_info_tbl'.
 
-Measuring size in mailboxes instead of bytes is really challenging :) I
-would expect similar issues on other places as well.
+This should fix the bug, and maintain the ABI for the 'indio_dev->name'
+field.
 
-Regards,
-Oleksij
+Fixes: 66614ab2be38 ("staging: iio: adc: ad7192: removed spi_device_id")
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
 
-> ---
->=20
-> V2:
->  Drop parenthesis, add comment, update err msg.
->=20
->  drivers/mailbox/imx-mailbox.c | 14 +++++++++-----
->  1 file changed, 9 insertions(+), 5 deletions(-)
->=20
-> diff --git a/drivers/mailbox/imx-mailbox.c b/drivers/mailbox/imx-mailbox.c
-> index 7906624a731c..fd3a9a60416d 100644
-> --- a/drivers/mailbox/imx-mailbox.c
-> +++ b/drivers/mailbox/imx-mailbox.c
-> @@ -154,12 +154,17 @@ static int imx_mu_scu_tx(struct imx_mu_priv *priv,
-> =20
->  	switch (cp->type) {
->  	case IMX_MU_TYPE_TX:
-> -		if (msg->hdr.size > sizeof(*msg)) {
-> +		/*
-> +		 * msg->hdr.size specifies the number of u32 words while
-> +		 * sizeof yields bytes.
-> +		 */
-> +
-> +		if (msg->hdr.size > sizeof(*msg) / 4) {
->  			/*
->  			 * The real message size can be different to
->  			 * struct imx_sc_rpc_msg_max size
->  			 */
-> -			dev_err(priv->dev, "Exceed max msg size (%zu) on TX, got: %i\n", size=
-of(*msg), msg->hdr.size);
-> +			dev_err(priv->dev, "Maximal message size (%zu bytes) exceeded on TX; =
-got: %i bytes\n", sizeof(*msg), msg->hdr.size << 2);
->  			return -EINVAL;
->  		}
-> =20
-> @@ -198,9 +203,8 @@ static int imx_mu_scu_rx(struct imx_mu_priv *priv,
->  	imx_mu_xcr_rmw(priv, 0, IMX_MU_xCR_RIEn(0));
->  	*data++ =3D imx_mu_read(priv, priv->dcfg->xRR[0]);
-> =20
-> -	if (msg.hdr.size > sizeof(msg)) {
-> -		dev_err(priv->dev, "Exceed max msg size (%zu) on RX, got: %i\n",
-> -			sizeof(msg), msg.hdr.size);
-> +	if (msg.hdr.size > sizeof(msg) / 4) {
-> +		dev_err(priv->dev, "Maximal message size (%zu bytes) exceeded on RX; g=
-ot: %i bytes\n", sizeof(msg), msg.hdr.size << 2);
->  		return -EINVAL;
->  	}
-> =20
-> --=20
-> 2.16.4
->=20
->=20
+Changelog v3 -> v4:
+ * renamed ID_AD7193 -> CHIPIP_AD7193 in ad7192_channels_config();
+   noticed by Jeremy Fertic <jeremyfertic@gmail.com>
+ * did another sweep of the ID_AD719X -> CHIPID_AD719X rename to make
+   sure nothing else slipped
 
---=20
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Changelog v2 -> v3:
+ * reworked patch to introduce a chip_info struct for the part-name
+ * added 2nd patch to move of-table closer to the end of the file; this
+   patch is more cosmetic; has no fixes tag, but is on top of the previous
+ 
+Changelog v1 -> v2:
+ * fix colon for Fixes tag
+ * updated commit title a bit; to make it longer
 
---zdjfy7h2qmazbiyv
-Content-Type: application/pgp-signature; name="signature.asc"
+ drivers/iio/adc/ad7192.c | 63 ++++++++++++++++++++++++++++++----------
+ 1 file changed, 47 insertions(+), 16 deletions(-)
 
------BEGIN PGP SIGNATURE-----
+diff --git a/drivers/iio/adc/ad7192.c b/drivers/iio/adc/ad7192.c
+index 8ec28aa8fa8a..1431f555daa6 100644
+--- a/drivers/iio/adc/ad7192.c
++++ b/drivers/iio/adc/ad7192.c
+@@ -125,10 +125,10 @@
+ #define AD7193_CH_AINCOM	0x600 /* AINCOM - AINCOM */
+ 
+ /* ID Register Bit Designations (AD7192_REG_ID) */
+-#define ID_AD7190		0x4
+-#define ID_AD7192		0x0
+-#define ID_AD7193		0x2
+-#define ID_AD7195		0x6
++#define CHIPID_AD7190		0x4
++#define CHIPID_AD7192		0x0
++#define CHIPID_AD7193		0x2
++#define CHIPID_AD7195		0x6
+ #define AD7192_ID_MASK		0x0F
+ 
+ /* GPOCON Register Bit Designations (AD7192_REG_GPOCON) */
+@@ -161,7 +161,20 @@ enum {
+    AD7192_SYSCALIB_FULL_SCALE,
+ };
+ 
++enum {
++	ID_AD7190,
++	ID_AD7192,
++	ID_AD7193,
++	ID_AD7195,
++};
++
++struct ad7192_chip_info {
++	unsigned int			chip_id;
++	const char			*name;
++};
++
+ struct ad7192_state {
++	const struct ad7192_chip_info	*chip_info;
+ 	struct regulator		*avdd;
+ 	struct regulator		*dvdd;
+ 	struct clk			*mclk;
+@@ -172,7 +185,6 @@ struct ad7192_state {
+ 	u32				conf;
+ 	u32				scale_avail[8][2];
+ 	u8				gpocon;
+-	u8				devid;
+ 	u8				clock_sel;
+ 	struct mutex			lock;	/* protect sensor state */
+ 	u8				syscalib_mode[8];
+@@ -348,7 +360,7 @@ static int ad7192_setup(struct ad7192_state *st, struct device_node *np)
+ 
+ 	id &= AD7192_ID_MASK;
+ 
+-	if (id != st->devid)
++	if (id != st->chip_info->chip_id)
+ 		dev_warn(&st->sd.spi->dev, "device ID query failed (0x%X)\n",
+ 			 id);
+ 
+@@ -363,7 +375,7 @@ static int ad7192_setup(struct ad7192_state *st, struct device_node *np)
+ 		st->mode |= AD7192_MODE_REJ60;
+ 
+ 	refin2_en = of_property_read_bool(np, "adi,refin2-pins-enable");
+-	if (refin2_en && st->devid != ID_AD7195)
++	if (refin2_en && st->chip_info->chip_id != CHIPID_AD7195)
+ 		st->conf |= AD7192_CONF_REFSEL;
+ 
+ 	st->conf &= ~AD7192_CONF_CHOP;
+@@ -859,12 +871,31 @@ static const struct iio_chan_spec ad7193_channels[] = {
+ 	IIO_CHAN_SOFT_TIMESTAMP(14),
+ };
+ 
++static const struct ad7192_chip_info ad7192_chip_info_tbl[] = {
++	[ID_AD7190] = {
++		.chip_id = CHIPID_AD7190,
++		.name = "ad7190",
++	},
++	[ID_AD7192] = {
++		.chip_id = CHIPID_AD7192,
++		.name = "ad7192",
++	},
++	[ID_AD7193] = {
++		.chip_id = CHIPID_AD7193,
++		.name = "ad7193",
++	},
++	[ID_AD7195] = {
++		.chip_id = CHIPID_AD7195,
++		.name = "ad7195",
++	},
++};
++
+ static int ad7192_channels_config(struct iio_dev *indio_dev)
+ {
+ 	struct ad7192_state *st = iio_priv(indio_dev);
+ 
+-	switch (st->devid) {
+-	case ID_AD7193:
++	switch (st->chip_info->chip_id) {
++	case CHIPID_AD7193:
+ 		indio_dev->channels = ad7193_channels;
+ 		indio_dev->num_channels = ARRAY_SIZE(ad7193_channels);
+ 		break;
+@@ -878,10 +909,10 @@ static int ad7192_channels_config(struct iio_dev *indio_dev)
+ }
+ 
+ static const struct of_device_id ad7192_of_match[] = {
+-	{ .compatible = "adi,ad7190", .data = (void *)ID_AD7190 },
+-	{ .compatible = "adi,ad7192", .data = (void *)ID_AD7192 },
+-	{ .compatible = "adi,ad7193", .data = (void *)ID_AD7193 },
+-	{ .compatible = "adi,ad7195", .data = (void *)ID_AD7195 },
++	{ .compatible = "adi,ad7190", .data = &ad7192_chip_info_tbl[ID_AD7190] },
++	{ .compatible = "adi,ad7192", .data = &ad7192_chip_info_tbl[ID_AD7192] },
++	{ .compatible = "adi,ad7193", .data = &ad7192_chip_info_tbl[ID_AD7193] },
++	{ .compatible = "adi,ad7195", .data = &ad7192_chip_info_tbl[ID_AD7195] },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, ad7192_of_match);
+@@ -938,16 +969,16 @@ static int ad7192_probe(struct spi_device *spi)
+ 	}
+ 
+ 	spi_set_drvdata(spi, indio_dev);
+-	st->devid = (unsigned long)of_device_get_match_data(&spi->dev);
++	st->chip_info = of_device_get_match_data(&spi->dev);
+ 	indio_dev->dev.parent = &spi->dev;
+-	indio_dev->name = spi_get_device_id(spi)->name;
++	indio_dev->name = st->chip_info->name;
+ 	indio_dev->modes = INDIO_DIRECT_MODE;
+ 
+ 	ret = ad7192_channels_config(indio_dev);
+ 	if (ret < 0)
+ 		goto error_disable_dvdd;
+ 
+-	if (st->devid == ID_AD7195)
++	if (st->chip_info->chip_id == CHIPID_AD7195)
+ 		indio_dev->info = &ad7195_info;
+ 	else
+ 		indio_dev->info = &ad7192_info;
+-- 
+2.17.1
 
-iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl6WobYACgkQ4omh9DUa
-UbP8/w//YHbDbL+u9ngJfXC53iYK9a1Z+a530z3UfwOPd43Olx8jR6v3nh7e8sfp
-ddDpI/9zXnF9+3KyI+TLh6opJSClkzmHblBQHvZ6aizkyUd71Z+yed5Q4pYQpSy0
-Vd24FYELjK93pOVHA5WH0UztRXLno+U0ltTvrEDO6hsniSiEsK6dg3YnrvwPGZxi
-wdnf8URhfTZCsfAEpM/qJMLA6Zfuwyp7wRKOVmWfOwdiuRdK66ku3zd9QcbE1eLZ
-Ekqhl1i9tvLPSX65NOYdAoF2D7+cra/8rPKDJZUWaBtgUDpFzuEi4FH+oIp6RLsD
-o+s442kAj3cuYJAWPV2pSFcSZ7EfGSzLlSmp3If5cQIKuA99ZBwChCNcwzE1ZPI1
-eK1CZ5zAb2jCtFigUSselV58ioh7ruH7SkDIBN2PbfG6cY74MRnWMw7AmfnWjI79
-G7oqcigebW79R7CL9dbjS+ieRYK6siZ4Ko7KnUrpUxhLfrYEpCU7ZKJzTHvHeaXf
-63sXp3z5GrDZn3PoTDJfI+nRPtxrODPn0hWep872KE4KUE2cP09p9ETUuXAzaQ/W
-Dnt077vPavUXym08Soeqjy/FerzgzZIDYIRA53Z7ClxU4wqpzC0Fls9lbx9lZIK+
-7uyP6aLKBziUFgen/f27+bW+bd1VKpEhG+zYObmwDNTZNNijkhU=
-=M2ls
------END PGP SIGNATURE-----
-
---zdjfy7h2qmazbiyv--
