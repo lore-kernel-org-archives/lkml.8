@@ -2,107 +2,114 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1048C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37891C3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE2E121655
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:48:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="lNs6HWuc"
+	by mail.kernel.org (Postfix) with ESMTP id 0B5E0206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:48:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586954900;
+	bh=hTRxnYZ1co6Pn1/bWbg7KuCbkL9xS1F43IkbvJiqbr8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=u9R/ApsrQoT0N4VrYWlaOCCOPE1Yvvuo0CqeMyvvlw0HZv+kdYyiMh+N/pAEGCWBw
+	 ydTx5d1kL+Tdn96qlzHZDIu6KSWMyMjyITT1oUmGB/llshTUqFgpn7Fepu+6aiKzml
+	 KP5xJWT+JYUEciFs2jLhT2VkY/L+FLoI8J2I9IYU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S370278AbgDOMsF (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:48:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51106 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S370242AbgDOMrJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 08:47:09 -0400
-Received: from mo6-p02-ob.smtp.rzone.de (mo6-p02-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5302::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EC4BC061A0C;
-        Wed, 15 Apr 2020 05:47:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1586954825;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=6/o2eUBt4iN9I0U74c2I8jHNfikxj7yqfISGp3x31ZE=;
-        b=lNs6HWucThpy3Ne1/nN6kfg7hfbpHhjXSde+1bdtjW3wQqRp1cvazGDuvc3fhe2NzZ
-        iLP4AMbcSbM074ClW6SKnXojI9Sg1fuOqNEcfx1L/JAoiPzK9a1KrJWwNcVBDzo8vtFs
-        cNFiftqcZuFF0kq2tE0oF2HXXRtN8M/I0zM3/pr7MHFQAX3pOoui7zrIGv6WfKJnTo1e
-        pVwJjGNEQ/MbNyeydyj2yzKCv6FJPmN/fQR/LR1qQBJ7Kg5nqhLURx9qT9K18rU1uHbl
-        H1raH6FCY2ZuQduRe07zuOEZdR1dwGYmFebMlJuTXeh4sjvhf7vKrNU4lHaIkNHw3vtX
-        Lbzw==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBp5hRw/qOxWRk4dCz3b9m9rH79DVZTKLB3vWvm2T1hRBz6in0C9d6y"
-X-RZG-CLASS-ID: mo00
-Received: from [IPv6:2001:16b8:26b3:fd00:4058:8a66:740e:2249]
-        by smtp.strato.de (RZmta 46.4.0 AUTH)
-        with ESMTPSA id 6028a2w3FCkp1ws
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Wed, 15 Apr 2020 14:46:51 +0200 (CEST)
-Subject: Re: [PATCH v6 07/12] ARM: DTS: omap5: add sgx gpu child node
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <CAJKOXPdEkWniffmGZmf=S6E5UxWTdVGXnycqTFftXwo_45rz3w@mail.gmail.com>
-Date:   Wed, 15 Apr 2020 13:46:06 +0200
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Philipp Rossak <embed3d@gmail.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-omap@vger.kernel.org, openpvrsgx-devgroup@letux.org,
-        letux-kernel@openphoenux.org, kernel@pyra-handheld.com,
-        linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <EFA7F2F0-96EA-45D9-B8C8-00DC8C72344D@goldelico.com>
-References: <cover.1586939718.git.hns@goldelico.com> <004611c9660943759b635a87484932869927cf74.1586939718.git.hns@goldelico.com> <CAJKOXPdEkWniffmGZmf=S6E5UxWTdVGXnycqTFftXwo_45rz3w@mail.gmail.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-X-Mailer: Apple Mail (2.3124)
+        id S370287AbgDOMsS (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:48:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34884 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2408963AbgDOLnJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:43:09 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9916F20936;
+        Wed, 15 Apr 2020 11:43:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586950989;
+        bh=hTRxnYZ1co6Pn1/bWbg7KuCbkL9xS1F43IkbvJiqbr8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=o0lA0kIPPz7CW97jnwF097bOd5rsyywi/F4nCqOnEKr9eYQqLpwC9Qw0XjJGSzEHs
+         kcPrtZ4/kmG9GSQTd3PduBX/tDj/97Ex0pg2RNu1Kkgprh5XlYmQQQWU4urb4ceJrU
+         csICgW4R0jwex1ARmoeWgfkwKR1IoolhMy7BJqH8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 5.5 036/106] f2fs: fix to update f2fs_super_block fields under sb_lock
+Date:   Wed, 15 Apr 2020 07:41:16 -0400
+Message-Id: <20200415114226.13103-36-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
+References: <20200415114226.13103-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Krzysztof,
+From: Chao Yu <yuchao0@huawei.com>
 
-> Am 15.04.2020 um 13:38 schrieb Krzysztof Kozlowski <krzk@kernel.org>:
->=20
-> On Wed, 15 Apr 2020 at 10:36, H. Nikolaus Schaller <hns@goldelico.com> =
-wrote:
->>=20
->> and add interrupt.
->>=20
->> Tested-by: H. Nikolaus Schaller <hns@goldelico.com> # Pyra-Handheld.
->=20
-> Don't add your own Tested-by tags. These are implied by authorship,
-> otherwise all patches people make should have such tag.
+[ Upstream commit a4ba5dfc5c88e49bb03385abfdd28c5a0acfbb54 ]
 
-Ok I see. AFAIR it originates in several phases of editing to report on =
-which device it was tested.
+Fields in struct f2fs_super_block should be updated under coverage
+of sb_lock, fix to adjust update_sb_metadata() for that rule.
 
-Is there a canonical way of writing "tested-on: ${HARDWARE}"?
+Fixes: 04f0b2eaa3b3 ("f2fs: ioctl for removing a range from F2FS")
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/f2fs/gc.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
-E.g. would this be ok?
-
-Signed-off: H. Nikolaus Schaller <hns@goldelico.com> # tested on =
-Pyra-Handheld
-
-BR and thanks,
-Nikolaus Schaller
+diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+index b3d3996232901..d6705ded0141a 100644
+--- a/fs/f2fs/gc.c
++++ b/fs/f2fs/gc.c
+@@ -1432,12 +1432,19 @@ static int free_segment_range(struct f2fs_sb_info *sbi, unsigned int start,
+ static void update_sb_metadata(struct f2fs_sb_info *sbi, int secs)
+ {
+ 	struct f2fs_super_block *raw_sb = F2FS_RAW_SUPER(sbi);
+-	int section_count = le32_to_cpu(raw_sb->section_count);
+-	int segment_count = le32_to_cpu(raw_sb->segment_count);
+-	int segment_count_main = le32_to_cpu(raw_sb->segment_count_main);
+-	long long block_count = le64_to_cpu(raw_sb->block_count);
++	int section_count;
++	int segment_count;
++	int segment_count_main;
++	long long block_count;
+ 	int segs = secs * sbi->segs_per_sec;
+ 
++	down_write(&sbi->sb_lock);
++
++	section_count = le32_to_cpu(raw_sb->section_count);
++	segment_count = le32_to_cpu(raw_sb->segment_count);
++	segment_count_main = le32_to_cpu(raw_sb->segment_count_main);
++	block_count = le64_to_cpu(raw_sb->block_count);
++
+ 	raw_sb->section_count = cpu_to_le32(section_count + secs);
+ 	raw_sb->segment_count = cpu_to_le32(segment_count + segs);
+ 	raw_sb->segment_count_main = cpu_to_le32(segment_count_main + segs);
+@@ -1451,6 +1458,8 @@ static void update_sb_metadata(struct f2fs_sb_info *sbi, int secs)
+ 		raw_sb->devs[last_dev].total_segments =
+ 						cpu_to_le32(dev_segs + segs);
+ 	}
++
++	up_write(&sbi->sb_lock);
+ }
+ 
+ static void update_fs_metadata(struct f2fs_sb_info *sbi, int secs)
+-- 
+2.20.1
 
