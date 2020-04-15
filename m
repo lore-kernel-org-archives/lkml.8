@@ -2,119 +2,90 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02967C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 05:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B37BC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 05:59:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDA7C206F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 05:57:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3A1A206E9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 05:59:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JcWcWuiD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441061AbgDOF5i (ORCPT
+        id S2441064AbgDOF7r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 01:57:38 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:52438 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389657AbgDOF5b (ORCPT
+        Wed, 15 Apr 2020 01:59:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44258 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2441062AbgDOF7m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 01:57:31 -0400
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03F5tBwk022530;
-        Wed, 15 Apr 2020 01:57:30 -0400
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 30dn7uh1tf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 Apr 2020 01:57:30 -0400
-Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 03F5vS7N063676
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Wed, 15 Apr 2020 01:57:29 -0400
-Received: from SCSQCASHYB7.ad.analog.com (10.77.17.133) by
- SCSQMBX11.ad.analog.com (10.77.17.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Tue, 14 Apr 2020 22:57:27 -0700
-Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by
- SCSQCASHYB7.ad.analog.com (10.77.17.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Tue, 14 Apr 2020 22:57:27 -0700
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Tue, 14 Apr 2020 22:57:27 -0700
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 03F5vNqd029221;
-        Wed, 15 Apr 2020 01:57:25 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <alexandru.tachici@analog.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v4 2/2] iio: adc: ad7192: move ad7192_of_match table closer to the end of the file
-Date:   Wed, 15 Apr 2020 08:58:04 +0300
-Message-ID: <20200415055804.17971-2-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200415055804.17971-1-alexandru.ardelean@analog.com>
-References: <20200415055804.17971-1-alexandru.ardelean@analog.com>
+        Wed, 15 Apr 2020 01:59:42 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD0D8C061A0C;
+        Tue, 14 Apr 2020 22:59:41 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id i10so17579603wrv.10;
+        Tue, 14 Apr 2020 22:59:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bsdw+AlvxpaYVY8Lcjiqb5lWVO+/dV7fKji2stjWQoM=;
+        b=JcWcWuiDWGrat7PLbbGGpy+VPCwZm+B8+b6wIR5Qlxfxy+BWIl7W3IQIkJhpT9dMQ/
+         KHWM043X+68VVMlKeKimAMxZXIuFAWaKNOyTQ7mygKJZirRFrXpLfga5nca6/yN7sb7m
+         JeQn2eTsJoY0SsenEcw6+1hEASroKswAcE4X35r0YOiPZ5jGBKQApmHqFZ4sq4gHjKdG
+         Y3n6+YfWWVguF7/onY60Kqj/u2fjv8erG23gS8RGAkzk0bQHYB1BDVnfjrHaE8CS5aSt
+         Rjr7k+3et5/Y/3dqyE09ehmdQNqJPeeYs/kLKup/xCUwjwdd68D89T8FnDTSl+XL6fb+
+         smZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bsdw+AlvxpaYVY8Lcjiqb5lWVO+/dV7fKji2stjWQoM=;
+        b=daNe2Lm+Is6pfWmordGgi+Cxl+3yMz9wigDI7lbCmY7hs6nBsKZORcwYYw63CRJ6ja
+         oHOPSZML964TT0S9kiQlG8gohW6Bcvv4JOWTp0nZ4KXuKFuUJcFp9udKmnMr+/BkpR7o
+         7H1Nd1GvsFVa52dulJRhddNnCu1EcWBeUZUw7f8n4QrCdWe2MZrzMNlx6cFQFFOIq9ok
+         +A4U8XtexsXPrt6PFhQGhgTcT4xpYCWWMqoH2bUG53vfcQ0c04xDIBWJSBbkSBCIMtd7
+         +xzl/W4z+P9BaQm7ri2W89HhK4HC1XqBoWoH2t8Q6OU3Umo5nym9xbCM2qy4Dg/mZadZ
+         QaFA==
+X-Gm-Message-State: AGi0Pub6l2ehgXKpJyn4uGnY1dznb+JpzCeGnE4peFmHlYpEc5rD7GIF
+        pGTfLc+wBR8N6c+jHrB/QSRHTT5C2g2zq3ZdGso=
+X-Google-Smtp-Source: APiQypLIUSKaAEG1Gvkn2HdyUu7XOJ1Ks6l0f/YpHQQasnkp1D78E3DW2NpedLoUJjzQcwbl8mvUogTsn+2/TeKZq4Y=
+X-Received: by 2002:adf:db4d:: with SMTP id f13mr6637560wrj.289.1586930380463;
+ Tue, 14 Apr 2020 22:59:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-15_01:2020-04-14,2020-04-15 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- priorityscore=1501 lowpriorityscore=0 spamscore=0 clxscore=1015
- phishscore=0 impostorscore=0 malwarescore=0 adultscore=0 mlxlogscore=999
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004150045
+References: <20200311171422.10484-1-david@redhat.com> <20200311171422.10484-2-david@redhat.com>
+In-Reply-To: <20200311171422.10484-2-david@redhat.com>
+From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Date:   Wed, 15 Apr 2020 07:59:28 +0200
+Message-ID: <CAM9Jb+ic2e3A9uaD3whMB9G+dXfeX877vtjF7TgiPKhwZ2nvzQ@mail.gmail.com>
+Subject: Re: [PATCH v2 01/10] virtio-mem: Paravirtualized memory hotplug
+To:     David Hildenbrand <david@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        virtio-dev@lists.oasis-open.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Igor Mammedov <imammedo@redhat.com>,
+        Dave Young <dyoung@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The change is more cosmetic. There is no need to reference this table in
-the probe function since 'of_device_get_match_data' is used, which obtains
-this information from the driver object.
+I spent quite some time to review and also tested this driver.
+This looks good to me. Feel free to add.
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- drivers/iio/adc/ad7192.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/iio/adc/ad7192.c b/drivers/iio/adc/ad7192.c
-index 1431f555daa6..fd89a5115c55 100644
---- a/drivers/iio/adc/ad7192.c
-+++ b/drivers/iio/adc/ad7192.c
-@@ -908,15 +908,6 @@ static int ad7192_channels_config(struct iio_dev *indio_dev)
- 	return 0;
- }
- 
--static const struct of_device_id ad7192_of_match[] = {
--	{ .compatible = "adi,ad7190", .data = &ad7192_chip_info_tbl[ID_AD7190] },
--	{ .compatible = "adi,ad7192", .data = &ad7192_chip_info_tbl[ID_AD7192] },
--	{ .compatible = "adi,ad7193", .data = &ad7192_chip_info_tbl[ID_AD7193] },
--	{ .compatible = "adi,ad7195", .data = &ad7192_chip_info_tbl[ID_AD7195] },
--	{}
--};
--MODULE_DEVICE_TABLE(of, ad7192_of_match);
--
- static int ad7192_probe(struct spi_device *spi)
- {
- 	struct ad7192_state *st;
-@@ -1050,6 +1041,15 @@ static int ad7192_remove(struct spi_device *spi)
- 	return 0;
- }
- 
-+static const struct of_device_id ad7192_of_match[] = {
-+	{ .compatible = "adi,ad7190", .data = &ad7192_chip_info_tbl[ID_AD7190] },
-+	{ .compatible = "adi,ad7192", .data = &ad7192_chip_info_tbl[ID_AD7192] },
-+	{ .compatible = "adi,ad7193", .data = &ad7192_chip_info_tbl[ID_AD7193] },
-+	{ .compatible = "adi,ad7195", .data = &ad7192_chip_info_tbl[ID_AD7195] },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, ad7192_of_match);
-+
- static struct spi_driver ad7192_driver = {
- 	.driver = {
- 		.name	= "ad7192",
--- 
-2.17.1
-
+Reviewed-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
