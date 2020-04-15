@@ -2,184 +2,112 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D15C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB607C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:25:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C48220784
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:25:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C62E22076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:25:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="N0VtjTbS"
+	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="fKNpbLbn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729603AbgDOVZD (ORCPT
+        id S2439080AbgDOVZM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 17:25:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46910 "EHLO
+        Wed, 15 Apr 2020 17:25:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2442400AbgDOVYJ (ORCPT
+        by vger.kernel.org with ESMTP id S2438998AbgDOVYn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 17:24:09 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88174C061A10
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 14:24:04 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id y4so5412209ljn.7
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 14:24:04 -0700 (PDT)
+        Wed, 15 Apr 2020 17:24:43 -0400
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59ABEC061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 14:24:42 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id m2so1345003otr.1
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 14:24:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
+        d=digitalocean.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=zUiwPngCjCOT149YM1CpaUAyMcgHTCV4FZO5uSdXs+4=;
-        b=N0VtjTbSPmMQI+RlTx1yObqj6x91R6W/fup4bZ4ZAA+dHBABtXgciXtch5GcEGhoHH
-         JmpIDKEpx4dr8jnrsQA60GzCYrlGW1Im7DMFGyc+RQhpSKlgA1M3aP69+t2Ip2Dqd4Qm
-         cEOqAB/oeDbu0bTlvmUdRScVlX+VDAHyy4VjpGfwHVHPml+4gftSkW+dnlvSr7e6+z6K
-         fDyudV/9jxQQ+0tlIrcRokGYM4WOiJjnPRZKJTpxln1seAqdLqi+lqYzf/JdgR32fPD+
-         1W0RZJJw1XOxnLJtjsatcvivLOwJtvEPGPqvG+kdDzn390e0JVGwfXJrIfTR1sKBmDuj
-         2Vtw==
+        bh=NxU2EAet1tn2ZKgYk7KLjPbGkAJNTRyOlp80JE9Vobo=;
+        b=fKNpbLbnplbjAmd7tX3Tt7+9GboeLayjSU2crm8qh0/T2uz6k2lAXU1z4cPNJWyrOz
+         k/DHv2zmyf2oX1lpjweTMuVdNaUuYq1hDmzXyZs8x6BvxwuO/3lRnGYMzgTIEmBWTFpr
+         3GQOr5ICDJ49h077iX6ZiqNJ1Ii8wS1woQ96k=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=zUiwPngCjCOT149YM1CpaUAyMcgHTCV4FZO5uSdXs+4=;
-        b=jUvjETmqxUsYf1rtm37td+7x89vgusxYMBvAihCRQafyMp0qpryZhC/1VnYDxPZpQz
-         IsHDSiqaiIuACjiXuKYHmoeuZhDI+Dgopz83wQdfe5cc/I6U5QPsOIWCCDxrKKE3HATj
-         aA+82VKZ9mf44mpn0vn52zMwR9mhbkVGx35tSWyHsQoSxvoSaeEgOOsekfiZnEPMyuEt
-         iJ9igBd5te5KEIl+btGwz1BaJxLbXKCEhlcuMmuwMAszVV4k/3yRdDcmkAql3Uf80aMz
-         2khJgyNnWmQS40J6BhbjRcg8Y4yjWoc/h9N39Drtfwffqu/wrYbtSmhfp0JCyI+iijPN
-         oTnA==
-X-Gm-Message-State: AGi0PuYcUA2im8+Yk8b95rM/+6fEgG4B+gI73tL6abY9Yjb5qL4MZgMx
-        YzYD0e9c7P06hz4jIzinQsc7j2LTYR9z6HIWTK2vZA==
-X-Google-Smtp-Source: APiQypIOBCwRkWiDlV64pN+RvUzocju2VTLfH55G/LdorNT2T1+BVYwjjGnn2AsvN+E5sbPB+MNiKYSe4EI4Mugszi4=
-X-Received: by 2002:a2e:8056:: with SMTP id p22mr4614252ljg.266.1586985842846;
- Wed, 15 Apr 2020 14:24:02 -0700 (PDT)
+        bh=NxU2EAet1tn2ZKgYk7KLjPbGkAJNTRyOlp80JE9Vobo=;
+        b=livlAn0YHZx+h7pOnrZ6wjHNDZ08mTfe1cGedhe0IkVC+E66wwLptVUUPb5PjYxFKk
+         4INTXY8YF6iEGlCKJFCpbZbE+GXDukdTH+zS+bAyWSj8AA5Avh/cSQnLQiiwXUk+gvl0
+         txLbGcvweI0xoq4Qvkl1h3HeElSU8/8ccgqUyXkKnpAwtBJhYWiLAdU0NuuADDn7muyN
+         aSiG4ccHisX5snYzv0mS9xY5ZByLGR9H0oUbEbM/BDh2EeeLN0ajjQiCz14zHCsTVUIM
+         Ni4mUtLw+f3a08Pryr/YVApt4KiFuAFMeCrEBYkIseHsHYYsLG3ZDsiS/95zUtNyRQ5C
+         a++Q==
+X-Gm-Message-State: AGi0PuZYt45sTkzaMbqaQEAwTyt+e+0KB5cmhXSUy3nj2J62R4FhhKXr
+        CUvLFF5x2Y50HQ7SAt2x2iidkRjMreYuUc8sH5AdUA==
+X-Google-Smtp-Source: APiQypI0v5fyAQ0m+BqzAwSG7gMuAqEy1A/2DGkdaIQolUPjqQS4D9DpSp+2Mk8ETKhrmjRQ/rZYGhenkUqKl5F8m0U=
+X-Received: by 2002:a9d:6252:: with SMTP id i18mr2486405otk.33.1586985881637;
+ Wed, 15 Apr 2020 14:24:41 -0700 (PDT)
 MIME-Version: 1.0
-References: <1586916464-27727-1-git-send-email-alan.mikhak@sifive.com>
- <DM5PR12MB1276CB8FA4457D4CDCE3137EDADB0@DM5PR12MB1276.namprd12.prod.outlook.com>
- <CABEDWGwYmO52g6cqvQdWb6HXWEHaMA1rcf96aUqv0f32tJZT-g@mail.gmail.com>
- <DM5PR12MB1276E09460BD4DB7E70EAF91DADB0@DM5PR12MB1276.namprd12.prod.outlook.com>
- <CABEDWGw0OyQNppLpDaNgMedfB0Ci=kZVKm+h4T-LJoZYmbSgqA@mail.gmail.com> <DM5PR12MB127673CFDCA38A47E6F6F4DBDADB0@DM5PR12MB1276.namprd12.prod.outlook.com>
-In-Reply-To: <DM5PR12MB127673CFDCA38A47E6F6F4DBDADB0@DM5PR12MB1276.namprd12.prod.outlook.com>
-From:   Alan Mikhak <alan.mikhak@sifive.com>
-Date:   Wed, 15 Apr 2020 14:23:51 -0700
-Message-ID: <CABEDWGyUfq4c65K+btmKBcGLv59h6PFVUkSD_52kOw9R0Rtynw@mail.gmail.com>
-Subject: Re: [PATCH RFC] dmaengine: dw-edma: Decouple dw-edma-core.c from
- struct pci_dev
-To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Cc:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "kishon@ti.com" <kishon@ti.com>,
-        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>
+References: <cover.1583332764.git.vpillai@digitalocean.com>
+ <2f83d888890cec14be3a7aead0859dceebb4012f.1583332765.git.vpillai@digitalocean.com>
+ <20200414135624.GU20730@hirez.programming.kicks-ass.net> <20200415033408.GA168322@ziqianlu-desktop.localdomain>
+ <20200415040741.GA169001@ziqianlu-desktop.localdomain>
+In-Reply-To: <20200415040741.GA169001@ziqianlu-desktop.localdomain>
+From:   Vineeth Remanan Pillai <vpillai@digitalocean.com>
+Date:   Wed, 15 Apr 2020 17:24:30 -0400
+Message-ID: <CANaguZAXsjD=X-bB7dvQZ3FSqLioiZU=YREHH_7JqiFsZCTxHA@mail.gmail.com>
+Subject: Re: [RFC PATCH 09/13] sched/fair: core wide vruntime comparison
+To:     Aaron Lu <aaron.lwe@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Aaron Lu <aaron.lu@linux.alibaba.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        "Li, Aubrey" <aubrey.li@linux.intel.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 1:58 PM Gustavo Pimentel
-<Gustavo.Pimentel@synopsys.com> wrote:
->
-> Hi Alan,
->
-> > > > At the moment, pci-epf-test grabs the first available dma channel on the
-> > > > endpoint side and uses it for either read, write, or copy operation. it is not
-> > > > possible at the moment to specify which dma channel to use on the pcitest
-> > > > command line. This may be possible by modifying the command line option
-> > > > -D to also specify the name of one or more dma channels.
-> > >
-> > > I'm assuming that behavior is due to your code, right? I'm not seen that
-> > > behavior on the Kernel tree.
-> > > Check my previous suggestion, it should be something similar to what is
-> > > been done while you select the MSI/MSI-X interrupt to trigger.
+> > > You forgot the time complexity analysis.
 > >
-> > I believe this behavior exists in the kernel tree because the call to
-> > dma_request_chan_by_mask() always specifies channel zero. The user
-> > of pcitest has no way of specifying which one of the available dma channels
-> > to use.
+> > This is a mistake and the adjust should be needed only once when core
+> > scheduling is initially enabled. It is an initialization thing and there
+> > is no reason to do it in every invocation of coresched_adjust_vruntime().
 >
-> I think we were discussing different things. I was referring to the
-> pci-epf-test code, that I wasn't being able to find any instruction to
-> call the DMA driver which had the described behavior.
->
-> I think you can do it by doing this:
->
-> Pseudo code:
->
-> #define EDMA_TEST_CHANNEL_NAME                  "dma%uchan%u"
->
-> static bool dw_edma_test_filter(struct dma_chan *chan, void *filter)
-> {
->         if (strcmp(dev_name(chan->device->dev), EDMA_TEST_DEVICE_NAME) ||
-> strcmp(dma_chan_name(chan), filter))
->                 return false;
->
->         return true;
-> }
->
-> static void dw_edma_test_thread_create(int id, int channel)
-> {
->         struct dma_chan *chan;
->         dma_cap_mask_t mask;
->         char filter[20];
->
->         dma_cap_zero(mask);
->         dma_cap_set(DMA_SLAVE, mask);
->         dma_cap_set(DMA_CYCLIC, mask);
->
->         snprintf(filter, sizeof(filter), EDMA_TEST_CHANNEL_NAME, id,
-> channel);
->         chan = dma_request_channel(mask, dw_edma_test_filter, filter);
->
->         [..]
-> }
+> Correction...
+> I meant there is no need to call coresched_adjust_vruntime() in every
+> invocation of update_core_cfs_rq_min_vruntime().
 
-Thanks Gustavo, This pseudo code is very useful. Now I know how to do
-that part of the change.
+Due to the checks in place, update_core_cfs_rq_min_vruntime should
+not be calling coresched_adjust_vruntime more than once between a
+coresched enable/disable. Once the min_vruntime is adjusted, we depend
+only on rq->core and the other sibling's min_vruntime will not grow
+until coresched disable.
 
-What I have further in mind is to enable the pcitest user to specify some
-arbitrary string with -D option to select one or more of the dma channels
-that are available on the endpoint side. Since the user executes pcitest
-from host-side command prompt and pci-epf-test executes in kernel on the
-endpoint side, the messaging between userspace pcitest and kernel-space
-pci_endpoint_test as well as the messaging across the bus between
-pci_endpoint_test and pci-epf-test needs to be expanded to pass the user
-string from the host to the endpoint. Upon receiving each read, write, or
-copy message, pci-epf-test could then try to acquire the specified dma
-channel and execute the user command or fail it if no such channel is
-available at that moment.
+I did some micro benchmark tests today to verify this and observed
+that coresched_adjust_vruntime called at most once between a coresched
+enable/disable.
 
->
-> > I believe this behavior exists in the kernel tree because the call to
-> > dma_request_chan_by_mask() happens during the execution of
-> > pci_epf_test_bind() and the call to dma_release_channel() happens
-> > during the execution of pci_epf_test_unbind(). As long as pci-epf-test
-> > is bound, I cannot use another program such as dmatest from the
-> > endpoint-side command prompt to exercise the same channel.
->
-> Ok, I understood it now. Right, you can't use the dmatest here, even
-> because, as far as I know, it is only MEM TO MEM operations and we need
-> DEVICE_TO_MEM and vice-versa.
->
-> >
-> > What I was suggesting is perhaps pci-epf-test can be modified to
-> > acquire and release the channel on each call to pci_epf_test_read(),
-> > ...write(), or ...copy() when the pcitest user specifies -D option.
->
-> Right, you are on the right track.
-> Perhaps you could take a look at patch [1] that I have done some time ago
-> for testing the eDMA, I think you have all the tools/guideline there to
-> do this adaption.
-> Another thing,
->
-> [1] https://patchwork.kernel.org/patch/10760521/
-
-Thanks for the guidance and reference code patch [1]. I will definitely
-take a close look at [1].
-
->
->
->
+Thanks,
+Vineeth
