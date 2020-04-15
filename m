@@ -2,107 +2,119 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3509AC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 22:26:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0896DC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 22:27:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FED1206E9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 22:26:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D67FF20784
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 22:27:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="2zIRqCMn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ogbq48oE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732021AbgDOW00 (ORCPT
+        id S1732099AbgDOW1R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 18:26:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56576 "EHLO
+        Wed, 15 Apr 2020 18:27:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731967AbgDOW0P (ORCPT
+        by vger.kernel.org with ESMTP id S1727993AbgDOW1H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 18:26:15 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57785C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 15:26:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=b9F4BdIxe6qjhLUpVkXmq95ni4gC5HWLpSiA/A8w8L4=; b=2zIRqCMnzqAW2UBfRln+N04zcU
-        HMSK+FUQfTLziLe+Dd7z2SKH3jhxN4EFGOgp5+xKNMOgCEOnvwzZgDeivYkPoYfRYeA6MKR/BwKaX
-        NdwmTb2Ee0Hp5eVKVEae6/Q5ahTjAcYp7l6sA47xSLGQe2dJITJawF9FIeVHpVvNj/SoWXgDBn0QQ
-        +0JXJi0KibH876hpeFmDgDAEx1S94/ciSE/ZTsiTMjvDNT3GSco2q8zFu0TaNkAuxRkF92rkIjaqe
-        /dkXUW2vl6Cni4Qau1u3Jtg/ND8Hub9/h+etECL0Sze82MQFYMSnz2oMnsuzRyggw9a3tOG8K5B8r
-        rah6DDnA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jOqTb-0001Pu-0K; Wed, 15 Apr 2020 22:25:47 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6ED46981086; Thu, 16 Apr 2020 00:25:45 +0200 (CEST)
-Date:   Thu, 16 Apr 2020 00:25:45 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Jules Irenge <jbi.octave@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, boqun.feng@gmail.com,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>, Qian Cai <cai@lca.pw>,
-        Eiichi Tsukata <devel@etsukata.com>,
-        Pavankumar Kondeti <pkondeti@codeaurora.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Tyler Hicks <tyhicks@canonical.com>
-Subject: Re: [PATCH 1/1] cpu: Add annotation inside clear_tasks_mm_cpumask()
-Message-ID: <20200415222545.GN2483@worktop.programming.kicks-ass.net>
-References: <20200415184937.32373-1-jbi.octave@gmail.com>
- <20200415184937.32373-2-jbi.octave@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200415184937.32373-2-jbi.octave@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 15 Apr 2020 18:27:07 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D283C061A0C;
+        Wed, 15 Apr 2020 15:27:07 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id z6so2067572wml.2;
+        Wed, 15 Apr 2020 15:27:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=zg3ob5dFIHsdWUyPt1RU43xeZYyJjlIPkOiX/f8YR84=;
+        b=ogbq48oEXKMvuX6Wqc6V76/Y7aYtAhaE3UxZLBIRfJWjqKTFOGiMRkVg03+/9opHA0
+         Nq6JVFRzLkJTSiWD4gAsFBQEX7eFyrNMHD7B3XftHASOHKXdIzeVyv4D7j69sC1bLwIe
+         aPFXb+CYlnhKrsIqHb2AXECHd6qlZ4mH4rZ4cEhZQ9ZnNOHzycXeSdFC0KuJMtcuhINR
+         UO5jtzUV+dpWuVz/6KV/c6mIHKpGO8vTqMFIxRaN5d9gy+mtTGct+2KDKgvJQCCs3Fvy
+         QpYmYrE3jVGqaF+PyeEh8uOYzopcs35jPRrF1Ac2l3N3RQDta9L8/ERN881JxIBhXm0X
+         OBhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=zg3ob5dFIHsdWUyPt1RU43xeZYyJjlIPkOiX/f8YR84=;
+        b=scLId3iEV3u4iyy+5md9kBsHOJ168jni7pinyGawwapuGY7VQd1qehZ6J60gshiRxP
+         faWnpUndNbTLQV6c1MgglQwU/JpuavQjAa1YgbJ0yNlIF0um+UH+AMBkNUVyOR2ukL9N
+         sLasdSeelGafspvuRHnNEgsH4PvslZ0mikxadN2A3csW1+qlgMyiNgnB6sTPROijglkE
+         9XA8DprLrv9Pw3qjcBlzsrvdd7qDX2A1OCyDISRhBNUn5dy+sMpDUt1gSA9Au9ju525i
+         p12JOYkcX709CEfpf5NBnXQD0i3T/uYLh2qOEnjrVfnjfqrtGytnBj+pTzQuwYfx40Ln
+         8RUQ==
+X-Gm-Message-State: AGi0PuZ8ddYhVP8nHyBafBbSUZMFy26owqzRU4XahPfz7xQ1GNq8eh7m
+        VQ8IBzAYumBzD+zdxUxWiQ8=
+X-Google-Smtp-Source: APiQypJ4nk4y/NIUuy7cNNsNj4JyK9eMcuHuy+sY0Q3j/CR3sPw4tKyyX94iSUliU+33fV8kivTCDw==
+X-Received: by 2002:a1c:1d4b:: with SMTP id d72mr1421501wmd.19.1586989626211;
+        Wed, 15 Apr 2020 15:27:06 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id b4sm20105151wrv.42.2020.04.15.15.27.05
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 15 Apr 2020 15:27:05 -0700 (PDT)
+From:   Wei Yang <richard.weiyang@gmail.com>
+To:     paulmck@kernel.org, josh@joshtriplett.org
+Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Wei Yang <richard.weiyang@gmail.com>
+Subject: [PATCH] rcu: init and destroy rcu_synchronize when necessary
+Date:   Wed, 15 Apr 2020 22:26:55 +0000
+Message-Id: <20200415222655.9006-1-richard.weiyang@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 07:49:37PM +0100, Jules Irenge wrote:
-> Sparse reports a warning
-> 
-> warning: context imbalance in clear_tasks_mm_cpumask() - different lock contexts for basic block
+We would skip the rcu_synchronize if it is a duplicate call back function.
 
-Does this sparse crap actually ever catch a real problem, or does it
-only result in horrible code like this?
+This is not necessary to init and destroy for them.
 
-> The root cause is the missing annotation inside clear_tasks_mm_cpumask()
-> 
-> Add the missing __acquire(&t->alloc_lock) annotation.
+Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
+---
+ kernel/rcu/update.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-That's just wrong; the actual cause is find_lock_task_mm() not being
-annotated, and the reason for that is because __cond_lock() is a
-horrible piece of crap.
+diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
+index 6c4b862f57d6..91e44b527aad 100644
+--- a/kernel/rcu/update.c
++++ b/kernel/rcu/update.c
+@@ -353,13 +353,14 @@ void __wait_rcu_gp(bool checktiny, int n, call_rcu_func_t *crcu_array,
+ 			might_sleep();
+ 			continue;
+ 		}
+-		init_rcu_head_on_stack(&rs_array[i].head);
+-		init_completion(&rs_array[i].completion);
+ 		for (j = 0; j < i; j++)
+ 			if (crcu_array[j] == crcu_array[i])
+ 				break;
+-		if (j == i)
++		if (j == i) {
++			init_rcu_head_on_stack(&rs_array[i].head);
++			init_completion(&rs_array[i].completion);
+ 			(crcu_array[i])(&rs_array[i].head, wakeme_after_rcu);
++		}
+ 	}
+ 
+ 	/* Wait for all callbacks to be invoked. */
+@@ -370,9 +371,10 @@ void __wait_rcu_gp(bool checktiny, int n, call_rcu_func_t *crcu_array,
+ 		for (j = 0; j < i; j++)
+ 			if (crcu_array[j] == crcu_array[i])
+ 				break;
+-		if (j == i)
++		if (j == i) {
+ 			wait_for_completion(&rs_array[i].completion);
+-		destroy_rcu_head_on_stack(&rs_array[i].head);
++			destroy_rcu_head_on_stack(&rs_array[i].head);
++		}
+ 	}
+ }
+ EXPORT_SYMBOL_GPL(__wait_rcu_gp);
+-- 
+2.23.0
 
-Barring any evidence that these annotations actually help anybody, can't
-we just remove it all instead of making an ever bigger mess of things?
-
-> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
-> ---
->  kernel/cpu.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/kernel/cpu.c b/kernel/cpu.c
-> index 9c706af713fb..d8c452a8dd09 100644
-> --- a/kernel/cpu.c
-> +++ b/kernel/cpu.c
-> @@ -834,6 +834,7 @@ void clear_tasks_mm_cpumask(int cpu)
->  		t = find_lock_task_mm(p);
->  		if (!t)
->  			continue;
-> +		__acquire(&t->alloc_lock);
->  		cpumask_clear_cpu(cpu, mm_cpumask(t->mm));
->  		task_unlock(t);
->  	}
-> -- 
-> 2.24.1
-> 
