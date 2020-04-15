@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E17C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91127C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:07:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BC902076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:07:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75A222076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:07:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728874AbgDOVHV (ORCPT
+        id S2392214AbgDOVHf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 17:07:21 -0400
-Received: from foss.arm.com ([217.140.110.172]:52590 "EHLO foss.arm.com"
+        Wed, 15 Apr 2020 17:07:35 -0400
+Received: from foss.arm.com ([217.140.110.172]:52586 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2442238AbgDOVFs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2442236AbgDOVFs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Apr 2020 17:05:48 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 321F31424;
-        Wed, 15 Apr 2020 14:05:35 -0700 (PDT)
-Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4DD403F6C4;
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1A43513D5;
         Wed, 15 Apr 2020 14:05:34 -0700 (PDT)
+Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 35D723F6C4;
+        Wed, 15 Apr 2020 14:05:33 -0700 (PDT)
 From:   Valentin Schneider <valentin.schneider@arm.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
         dietmar.eggemann@arm.com
-Subject: [PATCH v3 9/9] sched/topology: Define and use shortcut pointers for wakeup sd_flag scan
-Date:   Wed, 15 Apr 2020 22:05:12 +0100
-Message-Id: <20200415210512.805-10-valentin.schneider@arm.com>
+Subject: [PATCH v3 8/9] sched/fair: Split select_task_rq_fair want_affine logic
+Date:   Wed, 15 Apr 2020 22:05:11 +0100
+Message-Id: <20200415210512.805-9-valentin.schneider@arm.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20200415210512.805-1-valentin.schneider@arm.com>
 References: <20200415210512.805-1-valentin.schneider@arm.com>
@@ -42,109 +42,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reworking select_task_rq_fair()'s domain walk exposed that !want_affine
-wakeups only look for highest sched_domain with the required sd_flag
-set. This is something we can cache at sched domain build time to slightly
-optimize select_task_rq_fair(). Note that this isn't a "free" optimization:
-it costs us 3 pointers per CPU.
+The domain loop within select_task_rq_fair() depends on a few bits of
+input, namely the SD flag we're looking for and whether we want_affine.
 
-Add cached per-CPU pointers for the highest domains with SD_BALANCE_WAKE,
-SD_BALANCE_EXEC and SD_BALANCE_FORK. Use them in select_task_rq_fair().
+For !want_affine, the domain loop will walk up the hierarchy to reach the
+highest domain with the requested sd_flag (SD_BALANCE_{WAKE, FORK, EXEC})
+set. In other words, that's a call to highest_flag_domain().
+Note that this is a static information wrt a given SD hierarchy, so we can
+cache that - but that comes in a later patch to ease reviewing.
+
+For want_affine, we'll walk up the hierarchy to reach the first domain with
+SD_LOAD_BALANCE, SD_WAKE_AFFINE, and that spans the tasks's prev_cpu.  We
+still save a pointer to the last visited domain that had the requested
+sd_flag set, which means that if we fail to go through the affine
+condition (e.g. no domain had SD_WAKE_AFFINE) we'll use the same SD as we
+would have found if we had !want_affine.
+
+Split the domain loop in !want_affine and want_affine paths. As it is,
+this leads to two domain walks instead of a single one, but stay tuned for
+the next patch.
 
 Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
 ---
- kernel/sched/fair.c     | 25 +++++++++++++------------
- kernel/sched/sched.h    |  3 +++
- kernel/sched/topology.c | 12 ++++++++++++
- 3 files changed, 28 insertions(+), 12 deletions(-)
+ kernel/sched/fair.c | 29 ++++++++++++++++++-----------
+ 1 file changed, 18 insertions(+), 11 deletions(-)
 
 diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 6f8cdb99f4a0..db4fb29a88d9 100644
+index f20e5cd6515c..6f8cdb99f4a0 100644
 --- a/kernel/sched/fair.c
 +++ b/kernel/sched/fair.c
-@@ -6631,17 +6631,6 @@ select_task_rq_fair(struct task_struct *p, int prev_cpu, int wake_flags)
- 	int want_affine = 0;
- 	int sd_flag;
- 
--	switch (wake_flags & (WF_TTWU | WF_FORK | WF_EXEC)) {
--	case WF_TTWU:
--		sd_flag = SD_BALANCE_WAKE;
--		break;
--	case WF_FORK:
--		sd_flag = SD_BALANCE_FORK;
--		break;
--	default:
--		sd_flag = SD_BALANCE_EXEC;
--	}
--
- 	if (wake_flags & WF_TTWU) {
- 		record_wakee(p);
- 
-@@ -6657,7 +6646,19 @@ select_task_rq_fair(struct task_struct *p, int prev_cpu, int wake_flags)
+@@ -6656,26 +6656,33 @@ select_task_rq_fair(struct task_struct *p, int prev_cpu, int wake_flags)
+ 	}
  
  	rcu_read_lock();
- 
--	sd = highest_flag_domain(cpu, sd_flag);
-+	switch (wake_flags & (WF_TTWU | WF_FORK | WF_EXEC)) {
-+	case WF_TTWU:
-+		sd_flag = SD_BALANCE_WAKE;
-+		sd = rcu_dereference(per_cpu(sd_balance_wake, cpu));
-+		break;
-+	case WF_FORK:
-+		sd_flag = SD_BALANCE_FORK;
-+		sd = rcu_dereference(per_cpu(sd_balance_fork, cpu));
-+		break;
-+	default:
-+		sd_flag = SD_BALANCE_EXEC;
-+		sd = rcu_dereference(per_cpu(sd_balance_exec, cpu));
-+	}
- 
- 	/*
- 	 * If !want_affine, we just look for the highest domain where
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 448f5d630544..4b014103affb 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -1423,6 +1423,9 @@ DECLARE_PER_CPU(int, sd_llc_size);
- DECLARE_PER_CPU(int, sd_llc_id);
- DECLARE_PER_CPU(struct sched_domain_shared __rcu *, sd_llc_shared);
- DECLARE_PER_CPU(struct sched_domain __rcu *, sd_numa);
-+DECLARE_PER_CPU(struct sched_domain __rcu *, sd_balance_wake);
-+DECLARE_PER_CPU(struct sched_domain __rcu *, sd_balance_fork);
-+DECLARE_PER_CPU(struct sched_domain __rcu *, sd_balance_exec);
- DECLARE_PER_CPU(struct sched_domain __rcu *, sd_asym_packing);
- DECLARE_PER_CPU(struct sched_domain __rcu *, sd_asym_cpucapacity);
- extern struct static_key_false sched_asym_cpucapacity;
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index 1d7b446fac7d..66763c539bbd 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -618,6 +618,9 @@ DEFINE_PER_CPU(int, sd_llc_size);
- DEFINE_PER_CPU(int, sd_llc_id);
- DEFINE_PER_CPU(struct sched_domain_shared __rcu *, sd_llc_shared);
- DEFINE_PER_CPU(struct sched_domain __rcu *, sd_numa);
-+DEFINE_PER_CPU(struct sched_domain __rcu *, sd_balance_wake);
-+DEFINE_PER_CPU(struct sched_domain __rcu *, sd_balance_fork);
-+DEFINE_PER_CPU(struct sched_domain __rcu *, sd_balance_exec);
- DEFINE_PER_CPU(struct sched_domain __rcu *, sd_asym_packing);
- DEFINE_PER_CPU(struct sched_domain __rcu *, sd_asym_cpucapacity);
- DEFINE_STATIC_KEY_FALSE(sched_asym_cpucapacity);
-@@ -644,6 +647,15 @@ static void update_top_cache_domain(int cpu)
- 	sd = lowest_flag_domain(cpu, SD_NUMA);
- 	rcu_assign_pointer(per_cpu(sd_numa, cpu), sd);
- 
-+	sd = highest_flag_domain(cpu, SD_BALANCE_WAKE);
-+	rcu_assign_pointer(per_cpu(sd_balance_wake, cpu), sd);
 +
-+	sd = highest_flag_domain(cpu, SD_BALANCE_FORK);
-+	rcu_assign_pointer(per_cpu(sd_balance_fork, cpu), sd);
++	sd = highest_flag_domain(cpu, sd_flag);
 +
-+	sd = highest_flag_domain(cpu, SD_BALANCE_EXEC);
-+	rcu_assign_pointer(per_cpu(sd_balance_exec, cpu), sd);
++	/*
++	 * If !want_affine, we just look for the highest domain where
++	 * sd_flag is set.
++	 */
++	if (!want_affine)
++		goto scan;
 +
- 	sd = highest_flag_domain(cpu, SD_ASYM_PACKING);
- 	rcu_assign_pointer(per_cpu(sd_asym_packing, cpu), sd);
++	/*
++	 * Otherwise we look for the lowest domain with SD_WAKE_AFFINE and that
++	 * spans both 'cpu' and 'prev_cpu'.
++	 */
+ 	for_each_domain(cpu, tmp) {
+-		/*
+-		 * If both 'cpu' and 'prev_cpu' are part of this domain,
+-		 * cpu is a valid SD_WAKE_AFFINE target.
+-		 */
+-		if (want_affine && (tmp->flags & SD_WAKE_AFFINE) &&
++		if ((tmp->flags & SD_WAKE_AFFINE) &&
+ 		    cpumask_test_cpu(prev_cpu, sched_domain_span(tmp))) {
+ 			if (cpu != prev_cpu)
+ 				new_cpu = wake_affine(tmp, p, cpu, prev_cpu, sync);
  
+-			sd = NULL; /* Prefer wake_affine over balance flags */
++			/* Prefer wake_affine over SD lookup */
++			sd = NULL;
+ 			break;
+ 		}
+-
+-		if (tmp->flags & sd_flag)
+-			sd = tmp;
+-		else if (!want_affine)
+-			break;
+ 	}
+ 
++scan:
+ 	if (unlikely(sd)) {
+ 		/* Slow path */
+ 		new_cpu = find_idlest_cpu(sd, p, cpu, prev_cpu, sd_flag);
 -- 
 2.24.0
 
