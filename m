@@ -2,117 +2,137 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D849EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:43:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92797C3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:43:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B09212076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:43:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7116D20857
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:43:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X/VB/KtI"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Rzm5dxhT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S370858AbgDOOne (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:43:34 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:30215 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1733249AbgDOOmf (ORCPT
+        id S370902AbgDOOnv (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 10:43:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40808 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2634584AbgDOOmW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 10:42:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586961751;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=jcswj4fMIzy1VSkpe0j3kCHXPaYoyRFwnxHUU0e019I=;
-        b=X/VB/KtIlPs8RqKvLkqQYahNrzV16JhtmeJ1N037/IwNDMekMuzIvmYShQlgwGbBj1Yx+d
-        j5AprWri9WbEf9UdvBoVRRtGrMwkqSf8RkadhSi/MqjeX7Nz0VBu9xU2DxGLOHJTXuyaPT
-        YON+/iJQe1STB9nSPqNq6CXVbChqNho=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-421-Y1KEESK7MoaD85yEUkY4iQ-1; Wed, 15 Apr 2020 10:42:30 -0400
-X-MC-Unique: Y1KEESK7MoaD85yEUkY4iQ-1
-Received: by mail-wr1-f69.google.com with SMTP id d17so1832wrr.17
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 07:42:29 -0700 (PDT)
+        Wed, 15 Apr 2020 10:42:22 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86E69C061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 07:42:22 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id 188so1565364pgj.13
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 07:42:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=TrCr8YaKtrXKuZI1mDLlJ9OwmvLg/1PUlN/6+Ie7Iy0=;
+        b=Rzm5dxhTeaUONGsH972GQ1cAaKsulUeSHXueDBEsqI8cmXTh3SCPNcNqjQ5CFDTa5h
+         EBQ9soIZStcseclUh0yP5zlUIowfh0ce0sZYGy/PfzX/U+/NGIrjEh3eABab7h+60/hz
+         pgsokVn1zTw/hG3mJPqkplXu3r554x7uKaTXB0r0q3T6r1ELTx5v9wViytUbbto8Q8Ip
+         dpym/NWKqOLMvWLZOorTFDWkgr536ve61EELqLbC0ALfHW0VWLJHXG9ZAzadzRLExZCW
+         X2qP2xQy66PsBltBjdCkqzG3vbqeK2UOlflEoG9zaYgGLAsb6H997UH8MDClWBTP/Uka
+         +rlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=jcswj4fMIzy1VSkpe0j3kCHXPaYoyRFwnxHUU0e019I=;
-        b=DOD6N+df8FtQivuPmrR7AJrc1a9v9JEOHOePb9m1iF5VSRn9nP9vjKp6fvN+hPXJ7A
-         oWL4bnt7rp1lQPCKd4NALEX5nG01lidf3yw30xnpScpEn7yd4O2+wSCSbM4RQrlH1Gll
-         R/VIDOPh3dDZrL/TN0iAz7baUDgnvkkBZ8YGKRNnMMCAwNXEZbwqX5Wokya5MBChZ9/t
-         s8dudcyPBCVvXTO/NovPVsQ1Qa52LNhokrhyyqYYdmARA9GKwQLPHFDh5MVU36wwsW26
-         cHjQo76M0ppBHe7cdeiCLvryYgY5SkW/qm8o52UOHoIDiRZkyEMeo5zQxIKjjoJsiFIj
-         iIjA==
-X-Gm-Message-State: AGi0PuYnkNxfzn8nqsa8mRSRzaa+KBLcPbLoJk1gWpkB0FUDAezwfilu
-        OctdrFqyvPlrH9hb1IrrXUObZgFK9LnX8VEJ/dciY1/7P2WggDs3nwE8/2dj3UB0a9MXRJh3NPJ
-        X4QD9h7+dGmnLT4msiMhucUDZ
-X-Received: by 2002:a5d:51c6:: with SMTP id n6mr23228102wrv.314.1586961748851;
-        Wed, 15 Apr 2020 07:42:28 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLhnFTufVnEV7mvMNC3KmCyW/b8aBHad2cdYj8UeBTDu5XbSSHNUq+WhQ9qWV0NLZkASnsJHg==
-X-Received: by 2002:a5d:51c6:: with SMTP id n6mr23228081wrv.314.1586961748565;
-        Wed, 15 Apr 2020 07:42:28 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:9066:4f2:9fbd:f90e? ([2001:b07:6468:f312:9066:4f2:9fbd:f90e])
-        by smtp.gmail.com with ESMTPSA id j11sm2090904wrr.62.2020.04.15.07.42.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Apr 2020 07:42:27 -0700 (PDT)
-Subject: Re: [PATCH] x86/kvm: make steal_time static
-To:     Jason Yan <yanaijie@huawei.com>, sean.j.christopherson@intel.com,
-        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
-        joro@8bytes.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, x86@kernel.org, hpa@zytor.com, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Hulk Robot <hulkci@huawei.com>
-References: <20200415084939.6367-1-yanaijie@huawei.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <d1700173-29c1-2e7c-46bd-471876d96762@redhat.com>
-Date:   Wed, 15 Apr 2020 16:42:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=TrCr8YaKtrXKuZI1mDLlJ9OwmvLg/1PUlN/6+Ie7Iy0=;
+        b=aqJed+NzxvdDqPV2KGI2bsUQnL8O1DJVi6XPlG6jnb91ukKA0bHR0yNX+AwzuR/pMz
+         8QMO9whsBjOVIgHlOQwM82eNO4xlBkjnH4tWHIR6P8aOJmTf69LZUBlDwOZiXESCuIy8
+         JdI/9sbyG2//BFp5mhQLZihrQwjZRn/8aj2lFmqz7BBEZjaXZ8S+ou36jQevvhRbOQgi
+         U5bTI8i5qXKCpv09YYXCjpZR5XtXvSK3NWXHmc6VtAXlAlgV4J74J/DM30XvQUghvO5i
+         9wxGH35wi4qTckCqeKvEtWE3iQL9h8Ne4nPnYpudF+hzNyWuDmhczOWe370EK3j3inQp
+         OZFg==
+X-Gm-Message-State: AGi0PuaXLw/YlnbxL/EzO4XskUOJozoaq9tbv18RCWDXbhkn90D2ca9f
+        dQxxqcLdp78xLiBVmacTxWirWw==
+X-Google-Smtp-Source: APiQypKrD/31MKHUWmycbWqZm3NAXgiF4vyGNvf1olANylF0PjsMdQ5ZiArHj6E665hYlxTSD05JxQ==
+X-Received: by 2002:aa7:8d97:: with SMTP id i23mr27432269pfr.325.1586961741436;
+        Wed, 15 Apr 2020 07:42:21 -0700 (PDT)
+Received: from google.com ([2620:15c:2ce:0:9efe:9f1:9267:2b27])
+        by smtp.gmail.com with ESMTPSA id i15sm2199851pfo.195.2020.04.15.07.42.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2020 07:42:20 -0700 (PDT)
+Date:   Wed, 15 Apr 2020 07:42:17 -0700
+From:   Fangrui Song <maskray@google.com>
+To:     Ilie Halip <ilie.halip@gmail.com>
+Cc:     linux-riscv@lists.infradead.org,
+        Jordan Rupprecht <rupprecht@google.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mao Han <han_mao@c-sky.com>, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH v2] riscv: fix vdso build with lld
+Message-ID: <20200415144217.cxxdfeeepzgikp4n@google.com>
+References: <20200415142959.25673-1-ilie.halip@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200415084939.6367-1-yanaijie@huawei.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200415142959.25673-1-ilie.halip@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/04/20 10:49, Jason Yan wrote:
-> Fix the following sparse warning:
-> 
-> arch/x86/kernel/kvm.c:58:1: warning: symbol '__pcpu_scope_steal_time'
-> was not declared. Should it be static?
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
-> ---
->  arch/x86/kernel/kvm.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-> index 6efe0410fb72..f75010cde5d5 100644
-> --- a/arch/x86/kernel/kvm.c
-> +++ b/arch/x86/kernel/kvm.c
-> @@ -55,7 +55,7 @@ static int __init parse_no_stealacc(char *arg)
->  early_param("no-steal-acc", parse_no_stealacc);
->  
->  static DEFINE_PER_CPU_DECRYPTED(struct kvm_vcpu_pv_apf_data, apf_reason) __aligned(64);
-> -DEFINE_PER_CPU_DECRYPTED(struct kvm_steal_time, steal_time) __aligned(64) __visible;
-> +static DEFINE_PER_CPU_DECRYPTED(struct kvm_steal_time, steal_time) __aligned(64) __visible;
->  static int has_steal_clock = 0;
->  
->  /*
-> 
+On 2020-04-15, Ilie Halip wrote:
+>When building with the LLVM linker this error occurrs:
+>    LD      arch/riscv/kernel/vdso/vdso-syms.o
+>  ld.lld: error: no input files
+>
+>This happens because the lld treats -R as an alias to -rpath, as opposed
+>to ld where -R means --just-symbols.
+>
+>Use the long option name for compatibility between the two.
+>
+>Link: https://github.com/ClangBuiltLinux/linux/issues/805
+>Reported-by: Dmitry Golovin <dima@golovin.in>
+>Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+>Signed-off-by: Ilie Halip <ilie.halip@gmail.com>
+>
+>---
+>Changed in v2:
+>  * a comment line dropped, another one slightly reworded
+>  * added Nick's Reviewed-by
+>---
+> arch/riscv/kernel/vdso/Makefile | 6 +++---
+> 1 file changed, 3 insertions(+), 3 deletions(-)
+>
+>diff --git a/arch/riscv/kernel/vdso/Makefile b/arch/riscv/kernel/vdso/Makefile
+>index 33b16f4212f7..a4ee3a0e7d20 100644
+>--- a/arch/riscv/kernel/vdso/Makefile
+>+++ b/arch/riscv/kernel/vdso/Makefile
+>@@ -33,15 +33,15 @@ $(obj)/vdso.so.dbg: $(src)/vdso.lds $(obj-vdso) FORCE
+> 	$(call if_changed,vdsold)
+>
+> # We also create a special relocatable object that should mirror the symbol
+>-# table and layout of the linked DSO.  With ld -R we can then refer to
+>-# these symbols in the kernel code rather than hand-coded addresses.
+>+# table and layout of the linked DSO. With ld --just-symbols we can then
+>+# refer to these symbols in the kernel code rather than hand-coded addresses.
+>
+> SYSCFLAGS_vdso.so.dbg = -shared -s -Wl,-soname=linux-vdso.so.1 \
+> 	-Wl,--build-id -Wl,--hash-style=both
+> $(obj)/vdso-dummy.o: $(src)/vdso.lds $(obj)/rt_sigreturn.o FORCE
+> 	$(call if_changed,vdsold)
+>
+>-LDFLAGS_vdso-syms.o := -r -R
+>+LDFLAGS_vdso-syms.o := -r --just-symbols
+> $(obj)/vdso-syms.o: $(obj)/vdso-dummy.o FORCE
+> 	$(call if_changed,ld)
+>
+>-- 
+>2.17.1
 
-Queued, thanks.
+https://lore.kernel.org/linux-riscv/20200402175354.pzhzhumlqsjk66nu@google.com/
 
-Paolo
-
+Reviewed-by: Fangrui Song <maskray@google.com>
