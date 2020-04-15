@@ -2,98 +2,93 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB204C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35AEAC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:27:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B61452137B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:27:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586953648;
-	bh=9k+lY/X2o3OmoK9PfH0p755wlKlqh+FXHcCPhQShekw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1mulqjQdFDeVLCopIHvZ6MnRQm2BID3hMIAb5BvjwcRkro8RMuU7IGph7gGcjnnc9
-	 vWtU+cjtESZHYgsR7GXcLLdaZl31bJFfwVn9r2Wh5J2pvOGh9nWLqiiFrVBOv1MF4x
-	 ZHg+wcPm61MSAJZpW6+WLQmSAORsET+jdUVORglw=
+	by mail.kernel.org (Postfix) with ESMTP id 0F9D52137B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:27:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409898AbgDOM11 (ORCPT
-        <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:27:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38902 "EHLO mail.kernel.org"
+        id S369284AbgDOM1d (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:27:33 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56536 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409164AbgDOLpX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:45:23 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 567D620775;
-        Wed, 15 Apr 2020 11:45:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951122;
-        bh=9k+lY/X2o3OmoK9PfH0p755wlKlqh+FXHcCPhQShekw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tUV07UZv0Hp3C/XRYcjFAWzjsx7x4AODZgufyTuIJQ2nMvKYtfJZpZlOb1PhvIS8N
-         1msNbb5Y6ogJ4sNSvjceXetwRmmDWagN9Zapd/g8dvNuvVuxEhEzT9NAKPJ+hdxZO1
-         jLlyYr+t6emfrLItRHr2Zj2SIy2Nj6It6YkrAP2s=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Josh Triplett <josh@joshtriplett.org>,
-        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
-        linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 35/84] ext4: fix incorrect group count in ext4_fill_super error message
-Date:   Wed, 15 Apr 2020 07:43:52 -0400
-Message-Id: <20200415114442.14166-35-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415114442.14166-1-sashal@kernel.org>
-References: <20200415114442.14166-1-sashal@kernel.org>
+        id S2409161AbgDOLpW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:45:22 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 79949ACD8;
+        Wed, 15 Apr 2020 11:45:19 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 5DB121E1250; Wed, 15 Apr 2020 13:45:18 +0200 (CEST)
+Date:   Wed, 15 Apr 2020 13:45:18 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     ira.weiny@intel.com
+Cc:     linux-kernel@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH RFC 1/8] fs/ext4: Narrow scope of DAX check in setflags
+Message-ID: <20200415114518.GC6126@quack2.suse.cz>
+References: <20200414040030.1802884-1-ira.weiny@intel.com>
+ <20200414040030.1802884-2-ira.weiny@intel.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200414040030.1802884-2-ira.weiny@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Triplett <josh@joshtriplett.org>
+On Mon 13-04-20 21:00:23, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> When preventing DAX and journaling on an inode.  Use the effective DAX
+> check rather than the mount option.
+> 
+> This will be required to support per inode DAX flags.
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
-[ Upstream commit df41460a21b06a76437af040d90ccee03888e8e5 ]
+Looks good to me. You can add:
 
-ext4_fill_super doublechecks the number of groups before mounting; if
-that check fails, the resulting error message prints the group count
-from the ext4_sb_info sbi, which hasn't been set yet. Print the freshly
-computed group count instead (which at that point has just been computed
-in "blocks_count").
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-Signed-off-by: Josh Triplett <josh@joshtriplett.org>
-Fixes: 4ec1102813798 ("ext4: Add sanity checks for the superblock before mounting the filesystem")
-Link: https://lore.kernel.org/r/8b957cd1513fcc4550fe675c10bcce2175c33a49.1585431964.git.josh@joshtriplett.org
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/ext4/super.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+								Honza
 
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index ff3f300dbd642..855b36d77f4fd 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -4239,9 +4239,9 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
- 			EXT4_BLOCKS_PER_GROUP(sb) - 1);
- 	do_div(blocks_count, EXT4_BLOCKS_PER_GROUP(sb));
- 	if (blocks_count > ((uint64_t)1<<32) - EXT4_DESC_PER_BLOCK(sb)) {
--		ext4_msg(sb, KERN_WARNING, "groups count too large: %u "
-+		ext4_msg(sb, KERN_WARNING, "groups count too large: %llu "
- 		       "(block count %llu, first data block %u, "
--		       "blocks per group %lu)", sbi->s_groups_count,
-+		       "blocks per group %lu)", blocks_count,
- 		       ext4_blocks_count(es),
- 		       le32_to_cpu(es->s_first_data_block),
- 		       EXT4_BLOCKS_PER_GROUP(sb));
+> ---
+>  fs/ext4/ioctl.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/ext4/ioctl.c b/fs/ext4/ioctl.c
+> index a0ec750018dd..ee3401a32e79 100644
+> --- a/fs/ext4/ioctl.c
+> +++ b/fs/ext4/ioctl.c
+> @@ -405,9 +405,9 @@ static int ext4_ioctl_setflags(struct inode *inode,
+>  	if ((jflag ^ oldflags) & (EXT4_JOURNAL_DATA_FL)) {
+>  		/*
+>  		 * Changes to the journaling mode can cause unsafe changes to
+> -		 * S_DAX if we are using the DAX mount option.
+> +		 * S_DAX if the inode is DAX
+>  		 */
+> -		if (test_opt(inode->i_sb, DAX)) {
+> +		if (IS_DAX(inode)) {
+>  			err = -EBUSY;
+>  			goto flags_out;
+>  		}
+> -- 
+> 2.25.1
+> 
 -- 
-2.20.1
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
