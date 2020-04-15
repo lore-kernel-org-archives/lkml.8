@@ -2,101 +2,127 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0462C3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:40:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79230C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D142C2078A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:40:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fudan.edu.cn header.i=@fudan.edu.cn header.b="FnaY+mLz"
+	by mail.kernel.org (Postfix) with ESMTP id 5DB102078A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:40:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2894736AbgDOIkM (ORCPT
+        id S2894775AbgDOIkT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 04:40:12 -0400
-Received: from mail.fudan.edu.cn ([202.120.224.73]:34343 "EHLO fudan.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2894712AbgDOIjx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 04:39:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fudan.edu.cn; s=dkim; h=Received:From:To:Cc:Subject:Date:
-        Message-Id; bh=GWmYcw7XC7IjlHTJ0QntyeskKodgxjd4VQ4vyq5j3uk=; b=F
-        naY+mLzuCCin6qplnrO94qV3Zz9GPzZjGt5ZldrFuBd6nsUUebK0ki5ZGn5l8ql5
-        JhX8SQqLRoWtiW5UJUV4SfIUY7ugi/IjVgnPQdNsHSRMx6+hpyjHoVTFxc0qVrkJ
-        fJAWqqT4h4u+saFlo0JuiK3xrzqOXxAsxlmOHroKWU=
-Received: from localhost.localdomain (unknown [120.229.255.108])
-        by app2 (Coremail) with SMTP id XQUFCgCXnoJPyJZe7FhZAA--.847S3;
-        Wed, 15 Apr 2020 16:39:44 +0800 (CST)
-From:   Xiyu Yang <xiyuyang19@fudan.edu.cn>
-To:     Bernard Metzler <bmt@zurich.ibm.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
-        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>
-Subject: [PATCH] RDMA/siw: Fix potential siw_mem refcnt leak in nr_add_node
-Date:   Wed, 15 Apr 2020 16:39:08 +0800
-Message-Id: <1586939949-69856-1-git-send-email-xiyuyang19@fudan.edu.cn>
-X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID: XQUFCgCXnoJPyJZe7FhZAA--.847S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7Cry3tF4DWw1xWF15uFyrCrg_yoW8JFy3p3
-        y7Jw4qyF1UJFW7Gw4ftayq9FZ7ta93W34UK39xta45uFn3X3yY9wn8tr17WryDJry8CF4I
-        qryFva9YkFZ8GaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvq14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26rxl
-        6s0DM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-        0DM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8Jw
-        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAG
-        YxC7MxkIecxEwVAFwVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8Jw
-        C20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAF
-        wI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjx
-        v20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r4j6FyUMIIF0xvEx4A2
-        jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0x
-        ZFpf9x0JU6Hq7UUUUU=
-X-CM-SenderInfo: irzsiiysuqikmy6i3vldqovvfxof0/
+        Wed, 15 Apr 2020 04:40:19 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38172 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2894750AbgDOIj5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 04:39:57 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id EC966ADBE;
+        Wed, 15 Apr 2020 08:39:54 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id A34E01E0E47; Wed, 15 Apr 2020 10:39:54 +0200 (CEST)
+Date:   Wed, 15 Apr 2020 10:39:54 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Xing Zhengjun <zhengjun.xing@linux.intel.com>
+Cc:     Jan Kara <jack@suse.cz>, Rong Chen <rong.a.chen@intel.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Matthew Bobrowski <mbobrowski@mbobrowski.org>,
+        Ritesh Harjani <riteshh@linux.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        lkp@lists.01.org
+Subject: Re: [LKP] Re: [ext4] b1b4705d54: filebench.sum_bytes_mb/s -20.2%
+ regression
+Message-ID: <20200415083954.GD501@quack2.suse.cz>
+References: <20191224005915.GW2760@shao2-debian>
+ <20200107134106.GD25547@quack2.suse.cz>
+ <20200107165708.GA3619@mit.edu>
+ <20200107172824.GK25547@quack2.suse.cz>
+ <fde1ad11-c9b0-4393-a123-3f7625c819fa@intel.com>
+ <7ec6b078-7b09-fb87-8ad2-a328e96c5bf9@linux.intel.com>
+ <49a59199-53af-206f-d07c-5c8c45f498b3@linux.intel.com>
+ <20200325143102.GJ28951@quack2.suse.cz>
+ <309baa89-9f69-0545-946e-4b3624f83e60@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <309baa89-9f69-0545-946e-4b3624f83e60@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-siw_fastreg_mr() invokes siw_mem_id2obj(), which returns a local
-reference of the siw_mem object to "mem" with increased refcnt.
-When siw_fastreg_mr() returns, "mem" becomes invalid, so the refcount
-should be decreased to keep refcount balanced.
+On Wed 15-04-20 15:55:09, Xing Zhengjun wrote:
+> 
+> 
+> On 3/25/2020 10:31 PM, Jan Kara wrote:
+> > On Wed 25-03-20 13:50:09, Xing Zhengjun wrote:
+> > > ping...
+> > > The issue still exists in v5.6-rc7.
+> > 
+> > So I have tried again to reproduce this so that I can look into the
+> > regression. When observing what is actually happening in the system I have
+> > to say that this workfile (or actually its implementation in filebench) is
+> > pretty dubious. The problem is that filebench first creates the files by
+> > writing them through ordinary write(2). Then it immediately starts reading
+> > the files with direct IO read. So what happens is that by the time direct
+> > IO read is running, the system is still writing back the create files and
+> > depending on how read vs writes get scheduled, you get different results.
+> > Also direct IO read will first flush the range it is going to read from the
+> > page cache so to some extent this is actually parallel small ranged
+> > fsync(2) benchmark. Finally differences in how we achieve integrity of
+> > direct IO reads with dirty page cache are going to impact this benchmark.
+> > 
+> 
+> Sounds reasonable!  Thanks for the clarification!
+> 
+> > So overall can now see why this commit makes a difference but the workload
+> > is IMHO largely irrelevant. What would make sense is to run filebench once,
+> > then unmount & mount the fs to force files to disk and clear page cache and
+> > then run it again. Filebench will reuse the files in this case and then
+> > parallel direct IO readers without page cache are a sensible workload. But
+> > I didn't see any difference in that (even with rotating disk) on my
+> > machines.
+> > 
+> We do a test per your suggestion, run "filebench" once during setup stage,
+> then do a "sync",  after that run "filebench" again, from the attached test
+> result "compare", "filebench.sum_bytes_mb/s" regression is disappeared.
 
-The issue happens in one error path of siw_fastreg_mr(). When "base_mr"
-equals to NULL but "mem" is not NULL, the function forgets to decrease
-the refcnt increased by siw_mem_id2obj() and causes a refcnt leak.
+Cool. Thanks for improving the testcase! I'd just note that if you only do
+sync(2) between the setup and benchmark phase, you'll still have files
+cached in the page cache and so direct IO will go through the slow path
+when it has to evict pages from the page cache. The standard (and optimized
+for) situation for direct IO is that there is no page cache for the files
+direct IO is performed to. That's why I suggested remounting the
+filesystem, not just calling sync(2)...
 
-Fix this issue by calling siw_mem_put() on this error path when mem is
-not NULL.
+								Honza
 
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
----
- drivers/infiniband/sw/siw/siw_qp_tx.c | 2 ++
- 1 file changed, 2 insertions(+)
+> =========================================================================================
+> tbox_group/testcase/rootfs/kconfig/compiler/debug-setup/disk/fs/test/cpufreq_governor/ucode:
+>   lkp-hsw-d01/filebench/debian-x86_64-20191114.cgz/x86_64-rhel-7.6/gcc-7/test2/1HDD/ext4/fivestreamreaddirect.f/performance/0x27
+> 
+> commit: 
+>   b1b4705d54abedfd69dcdf42779c521aa1e0fbd3
+>   09edf4d381957b144440bac18a4769c53063b943
+>   v5.5
+>   v5.7-rc1
+> 
+> b1b4705d54abedfd 09edf4d381957b144440bac18a4                        v5.5                    v5.7-rc1 
+> ---------------- --------------------------- --------------------------- --------------------------- 
+>          %stddev     %change         %stddev     %change         %stddev     %change         %stddev
+>              \          |                \          |                \          |                \  
+>      59.40            +0.0%      59.40            -0.8%      58.93            -1.0%      58.80        filebench.sum_bytes_mb/s
+>       3570            +0.0%       3570            -0.8%       3541            -1.0%       3533        filebench.sum_operations
+>      59.50            +0.0%      59.50            -0.8%      59.02            -1.0%      58.89        filebench.sum_operations/s
+>      59.33            +0.0%      59.33            +0.0%      59.33            -0.6%      59.00        filebench.sum_reads/s
+>      83.98            -1.5%      82.75            +0.8%      84.62            +1.0%      84.84        filebench.sum_time_ms/op
 
-diff --git a/drivers/infiniband/sw/siw/siw_qp_tx.c b/drivers/infiniband/sw/siw/siw_qp_tx.c
-index ae92c8080967..86044a44b83b 100644
---- a/drivers/infiniband/sw/siw/siw_qp_tx.c
-+++ b/drivers/infiniband/sw/siw/siw_qp_tx.c
-@@ -926,6 +926,8 @@ static int siw_fastreg_mr(struct ib_pd *pd, struct siw_sqe *sqe)
- 	siw_dbg_pd(pd, "STag 0x%08x\n", sqe->rkey);
- 
- 	if (unlikely(!mem || !base_mr)) {
-+		if (mem)
-+			siw_mem_put(mem);
- 		pr_warn("siw: fastreg: STag 0x%08x unknown\n", sqe->rkey);
- 		return -EINVAL;
- 	}
 -- 
-2.7.4
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
