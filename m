@@ -2,307 +2,134 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B00FBC3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:19:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A0EC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:21:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93C6F206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:19:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72FB8206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:21:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="T/IbR7gK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2636588AbgDOOTT (ORCPT
+        id S2391691AbgDOOVC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:19:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37206 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2636576AbgDOOTN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 10:19:13 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACDA9C061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 07:19:12 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jOisT-0008Kf-GZ; Wed, 15 Apr 2020 16:18:57 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jOisS-0008E9-SS; Wed, 15 Apr 2020 16:18:56 +0200
-Date:   Wed, 15 Apr 2020 16:18:56 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Sandipan Patra <spatra@nvidia.com>
-Cc:     Thierry Reding <treding@nvidia.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Bibek Basu <bbasu@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] pwm: tegra: dynamic clk freq configuration by PWM driver
-Message-ID: <20200415141856.ck3w3gtae4bsxyfl@pengutronix.de>
-References: <1585917303-10573-1-git-send-email-spatra@nvidia.com>
- <20200403151050.nh2mrffkqdqtkozq@pengutronix.de>
- <BYAPR12MB3014C0178A7360662C6FA8B7ADDB0@BYAPR12MB3014.namprd12.prod.outlook.com>
+        Wed, 15 Apr 2020 10:21:02 -0400
+Received: from mail-eopbgr750041.outbound.protection.outlook.com ([40.107.75.41]:46340
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732547AbgDOOUw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 10:20:52 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=m/aDA3TNUudg7b1hiIgupytxTV1iDjIaBHZEV72SWeq+9V0DL/aB/W/ggMgwkKTNWQ93scf3cY2uVskSGlkwd8sAKPq7jHBRpKc4e9JgKnKe/ovl8pi1X7TPbWXAzBS9Vx4gtzEC9T1vl6Ziw7ES+VovWpUb/aW+GyON3ZETb4WHCRuWL4ROMuY8z91afH6jqYyE8PN1LTI1NKm/BCgvy2V/Tq/CdHo9zV5WzabgbnOL9y6vTcsAMa0fch8yYsVYCR9YCnHn954RnmcoWKIzqL99me3cOqDYiZwBmKHwB04i0GDFIr22Neyvd3pmOkB4gEjdpg6aEikTh4jsejk/JA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FL+jzdl8rTh5LL7dq+s4TeX25tRK+uLwfWGt38KkSJg=;
+ b=L+RH63z7bbQh2d66Zu1PTXD129HFOFn8z4VeubigzeNzrfbiaDVg6lBgG5Hs1hJGBUpR5gEhBMV2+DJVdd4j+eZ5dnE3ffW8SueOis8N1if1fTFZARd8WQYUDwMSzOnjpWtvf0/QWNnwBDFzTSc+y6CXigFve8TEy9L3CtZkMZsqMLpILLtwi/oxFgmPvBYIwGhYPNinkDYG8TgOn0z1DQnpvemtsP1fU1BaUULMRpqjrr4nFpBT+Opc06JduU90Q29YCu+boa1qwvrpjgaQLodHKbSPMTo0NNrV1NaoMlb2qMU5SM/BqTfho1TTwfA6w1FQv+frTd17MUdXbDUf/w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=gmail.com smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FL+jzdl8rTh5LL7dq+s4TeX25tRK+uLwfWGt38KkSJg=;
+ b=T/IbR7gKiQW0qVZEPUX+Z/4nXvI1hwZRVuQ9lmj91Ov7tBCWRXxDa4ghxQgWqZwOhsmsc8FaFidr+vWmAeik7erldPvaWFMSFEDBKwRs+s0xAricDLakDlBkG/1LYxMvyy3NARt3vGPKE7E/2lHBXvnkuKUMgWc96BFYUrMtPRk=
+Received: from CY4PR1201CA0023.namprd12.prod.outlook.com
+ (2603:10b6:910:16::33) by BL0PR02MB4804.namprd02.prod.outlook.com
+ (2603:10b6:208:5f::10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.28; Wed, 15 Apr
+ 2020 14:20:49 +0000
+Received: from CY1NAM02FT009.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:910:16:cafe::2a) by CY4PR1201CA0023.outlook.office365.com
+ (2603:10b6:910:16::33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.25 via Frontend
+ Transport; Wed, 15 Apr 2020 14:20:49 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ CY1NAM02FT009.mail.protection.outlook.com (10.152.75.12) with Microsoft SMTP
+ Server id 15.20.2921.25 via Frontend Transport; Wed, 15 Apr 2020 14:20:48
+ +0000
+Received: from [149.199.38.66] (port=51885 helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1jOitZ-0007H5-7J; Wed, 15 Apr 2020 07:20:05 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1jOiuG-0004bP-Fr; Wed, 15 Apr 2020 07:20:48 -0700
+Received: from [172.30.17.109]
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <michals@xilinx.com>)
+        id 1jOiuB-0004ZC-3K; Wed, 15 Apr 2020 07:20:43 -0700
+Subject: Re: [PATCH v2] i2c: cadence: Added slave support
+To:     Wolfram Sang <wsa@the-dreams.de>,
+        Radu Pirea <radu_nicolae.pirea@upb.ro>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, michal.simek@xilinx.com,
+        shubhrajyoti.datta@gmail.com,
+        Chirag Parekh <chirag.parekh@xilinx.com>
+References: <20200106104336.101987-1-radu_nicolae.pirea@upb.ro>
+ <20200415125850.GD910@ninjato>
+From:   Michal Simek <michal.simek@xilinx.com>
+Message-ID: <d7bbb013-aba1-6623-f656-46b3f5689834@xilinx.com>
+Date:   Wed, 15 Apr 2020 16:20:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <BYAPR12MB3014C0178A7360662C6FA8B7ADDB0@BYAPR12MB3014.namprd12.prod.outlook.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20200415125850.GD910@ninjato>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(136003)(346002)(39860400002)(376002)(396003)(46966005)(2616005)(44832011)(356005)(47076004)(81156014)(336012)(31696002)(426003)(8936002)(81166007)(8676002)(4744005)(70206006)(478600001)(186003)(9786002)(82740400003)(70586007)(36756003)(316002)(26005)(5660300002)(107886003)(110136005)(31686004)(4326008)(2906002);DIR:OUT;SFP:1101;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: e3ecc3fe-ddc2-4294-8560-08d7e14831ee
+X-MS-TrafficTypeDiagnostic: BL0PR02MB4804:
+X-Microsoft-Antispam-PRVS: <BL0PR02MB48046042AC69EBE82D6DC979C6DB0@BL0PR02MB4804.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:4125;
+X-Forefront-PRVS: 0374433C81
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: slt19jyWq6lm1eKpxfml/o371VMS1QpJgRxOsceFAyPFROwkbRoCs/HY9snkPNO3BG+veoEGFXrJlhqUT0JJYpwL1CJ+mKsdKZ+BNz85bivUSxh0nmnUD2zQ/x3hzzcY3dnHivbUlmrICwdpSyquD9saP41bElwZuJOQsb3bsJPecbwI87WwX7Q0fsEJRG8MAnPA2Gr3EazTFUEJHjL7qAlaHOsXF+Ibo9z4MbPq2Tb5zHo+6H0BbNdyZb+vwdIr034XwQg4q9TwSKQts4MbilTY9jNuK/rcjDjWL38ovZrTAvNIJukwoSFqfkpziCe/BxJXTcfZ5tTq/oU9Eq8Ka0ZXHLgTgPGubjuQIuch8kEBUmWhVJJV79yURV1s6RgCZlEmA7R8M4/bVDUT+YiMkfVpz3seSYuSXqrSdMAVRcErnOMXmU/+RT2biCkTCXNKO5JPEUNnkD21fkVFNDnsMEC6wIqOoI+jkZFYkgkyVrWh7nqBDt2EzPzfJW/lOttxmXRO3OkufG/J+j1Tkq2+4g==
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2020 14:20:48.7724
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e3ecc3fe-ddc2-4294-8560-08d7e14831ee
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR02MB4804
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-On Wed, Apr 15, 2020 at 09:03:35AM +0000, Sandipan Patra wrote:
-> Thank you Uwe for reviewing the changes.
-> And sorry for the delay in my response.
-
-No problem, I didn't held my breath :-)
-
-> > -----Original Message-----
-> > From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> > Sent: Friday, April 3, 2020 8:41 PM
-> > To: Sandipan Patra <spatra@nvidia.com>
-> > Cc: Thierry Reding <treding@nvidia.com>; robh+dt@kernel.org; Jonathan
-> > Hunter <jonathanh@nvidia.com>; Bibek Basu <bbasu@nvidia.com>; Laxman
-> > Dewangan <ldewangan@nvidia.com>; linux-pwm@vger.kernel.org;
-> > devicetree@vger.kernel.org; linux-tegra@vger.kernel.org; linux-
-> > kernel@vger.kernel.org
-> > Subject: Re: [PATCH] pwm: tegra: dynamic clk freq configuration by PWM driver
-> > 
-> > External email: Use caution opening links or attachments
-> > 
-> > 
-> > On Fri, Apr 03, 2020 at 06:05:03PM +0530, Sandipan Patra wrote:
-> > > Added support for dynamic clock freq configuration in pwm kernel driver.
-> > > Earlier the pwm driver used to cache boot time clock rate by pwm clock
-> > > parent during probe. Hence dynamically changing pwm frequency was not
-> > > possible for all the possible ranges. With this change, dynamic
-> > > calculation is enabled and it is able to set the requested period from
-> > > sysfs knob provided the value is supported by clock source.
-> > 
-> > Without having looked closely at the patch (yet), just for my
-> > understanding: If the PWM is running and the frequency changes, the output
-> > changes, too, right? If so, do we need a notifier that prevents a frequency
-> > change when the PWM is running?
+On 15. 04. 20 14:58, Wolfram Sang wrote:
+> On Mon, Jan 06, 2020 at 12:43:36PM +0200, Radu Pirea wrote:
+>> Added support for I2C slave functionality
+>>
+>> Signed-off-by: Chirag Parekh <chirag.parekh@xilinx.com>
+>> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+>> Signed-off-by: Radu Pirea <radu_nicolae.pirea@upb.ro>
 > 
-> Yes, frequency can be changed anytime but by the same process who has 
-> acquired the channel. So if a process is already running/using the channel,
-> same process can only modify the frequency.
+> Michal, do you want a second look or is your SoB good as-is?
 
-How is this enforced? Does some other peripheral get its input clock
-from the clock in question? What is the motivation to modify the
-frequency other than modifying the PWM output?
- 
-> > And slightly orthogonal to this patch: The tegra driver needs some love to make
-> > it use the atomic callback .apply() instead of
-> > .config()/.enable()/.disable() and a .get_state() implementation.
-> 
-> Understood to upgrade pwm-tegra driver with using .apply()
-> I will work on this with a new change request soon.
+It should be good to go.
 
-That's great (but still not holding my breath :-)
-
-> > > Changes mainly have 2 parts:
-> > >   - T186 and later chips [1]
-> > >   - T210 and prior chips [2]
-> > >
-> > > For [1] - Changes implemented to set pwm period dynamically and
-> > >           also checks added to allow only if requested period(ns) is
-> > >           below or equals to higher range.
-> > >
-> > > For [2] - Only checks if the requested period(ns) is below or equals
-> > >           to higher range defined by max clock limit. The limitation
-> > >           in T210 or prior chips are due to the reason of having only
-> > >           one pwm-controller supporting multiple channels. But later
-> > >           chips have multiple pwm controller instances each having
-> > >         single channel support.
-> > >
-> > > Signed-off-by: Sandipan Patra <spatra@nvidia.com>
-> > > ---
-> > >  drivers/pwm/pwm-tegra.c | 45
-> > > +++++++++++++++++++++++++++++++++++++++++++--
-> > >  1 file changed, 43 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/pwm/pwm-tegra.c b/drivers/pwm/pwm-tegra.c index
-> > > aa12fb3..d3ba33c 100644
-> > > --- a/drivers/pwm/pwm-tegra.c
-> > > +++ b/drivers/pwm/pwm-tegra.c
-> > > @@ -4,7 +4,7 @@
-> > >   *
-> > >   * Tegra pulse-width-modulation controller driver
-> > >   *
-> > > - * Copyright (c) 2010, NVIDIA Corporation.
-> > > + * Copyright (c) 2010-2020, NVIDIA Corporation.
-> > >   * Based on arch/arm/plat-mxc/pwm.c by Sascha Hauer <s.hauer@pengutronix.de>
-> > >   */
-> > >
-> > > @@ -83,10 +83,51 @@ static int tegra_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
-> > >       val = (u32)c << PWM_DUTY_SHIFT;
-> > >
-> > >       /*
-> > > +      * Its okay to ignore the fraction part since we will be trying to set
-> > > +      * slightly lower value to rate than the actual required rate
-> > 
-> > s/actual/actually/
-> 
-> Noted. I will update in the follow up patch.
-
-Just spotted: s/Its/It's/
-
-> > > +     /*
-> > > +      *  Period in nano second has to be <= highest allowed period
-> > > +      *  based on the max clock rate of the pwm controller.
-> > > +      *
-> > > +      *  higher limit = max clock limit >> PWM_DUTY_WIDTH
-> > > +      */
-> > > +     if (rate > (pc->soc->max_frequency >> PWM_DUTY_WIDTH))
-> > > +             return -EINVAL;
-> > 
-> > Related to my question above: What happens if the rate increases after this
-> > check?
-> 
-> Discussed above with my understanding. Please help me understand if 
-> you are referring to any other possibilities that rate can be changed. 
-
-The goal to reach is: The only way to modify the PWM output should be to call
-pwm_apply_state() (or its legacy relatives).
-
-> > Also the division above is just done to compare the requested period value with
-> > the allowed range.
-> > 
-> > Your check is:
-> > 
-> >         NSEC_PER_SEC / period_ns > (max_frequency >> PWM_DUTY_WIDTH)
-> > 
-> > This is equivalent to
-> > 
-> >         period_ns <= NSEC_PER_SEC / (max_frequency >> PWM_DUTY_WIDTH)
-> > 
-> > where the right side is constant per PWM type. (Rounding might need
-> > addressing.)
-> 
-> I will update this calculation in the probe since max_frequency value is
-> Different for each chip. Also please note that at this point the rate is not
-> the actual pwm output rate. It's just a reference for what should be the
-> source clock rate and then requested with clk_set_rate();
-> Actual rounding is required while setting pwm controller output rate is
-> done later down in same function. 
-
-I think I understood. Will check again in your next patch round.
-
-> > > +              * clk_set_rate() can not be called again in config because
-> > > +              * T210 or any prior chip supports one pwm-controller and
-> > > +              * multiple channels. Hence in this case cached clock rate
-> > > +              * will be considered which was stored during probe.
-> > 
-> > I don't understand that. If
-> 
-> The if part is for SoCs which have single channel per pwm instance. i.e. T186, 
-> T194 etc. For controllers with single channel, dynamic clock rate configuration
-> is possible. The other part is for legacy controller which has multiple channels
-> for single pwm instance. The pwm controllers having multiple channels share
-> the source clock. So it does not allow dynamic clock configuration since it
-> will affect users on the other channels.
-
-The usual approach here is to allow changes iff all other channels are
-off or unused.
-
-> > > +              */
-> > > +             rate = pc->clk_rate >> PWM_DUTY_WIDTH;
-> > > +     }
-> > >
-> > >       /* Consider precision in PWM_SCALE_WIDTH rate calculation */
-> > >       hz = DIV_ROUND_CLOSEST_ULL(100ULL * NSEC_PER_SEC, period_ns);
-> > 
-> > I took a deeper look into the driver now. Just to ensure, I understood the PWMs
-> > behaviour right:
-> > 
-> > There is an ENABLE bit (with obvious semantics), a 13-bit SCALE value and an 8-
-> > bit DUTY value. There is an internal counter incrementing by one each (SCALE +
-> > 1) clock cycles and resets at 256. The counter going from 0 to 256 defines the
-> > period length. On counter reset the output gets active and on reaching DUTY the
-> > output gets inactive.
-> > 
-> > So we have:
-> > 
-> >         .period = 256 * (SCALE + 1) / clkrate
-> >         .duty_cycle = DUTY * (SCALE + 1) / clkrate
-> > 
-> > Right?
-> 
-> Yes. Right.
-
-Ideally this would be described in a code comment.
-
-> >  - When .duty_ns == .period the assignment of DUTY overflows.
-> >    (Can the PWM provide 100% duty cycle at all?)
-> 
-> Yes, PWM controller is capable to provide 100% duty cycle.
-> Bits 30:16 are dedicated for pulse width out of which only 24:16 (9 bits)
-> are used. Only 8 bits are usable [23:16] for varying pulse width.
-> To achieve 100% duty cycle, Bit [24] needs to be programmed of this
-> register to 1'b1.
-
-This needs to be documented in a driver comment to be understandable for
-people being interested in this driver later.
-
-If Bit[24] is 1, should [23:16] be zero, or is it "don't care" then?
-
-> >  - The comment "Since the actual PWM divider is the register's frequency
-> >    divider field minus 1, we need to decrement to get the correct value
-> >    to write to the register." seems wrong. If I understand correctly, we
-> >    need to do s/minus/plus/. If the register holds a 0, the divider
-> >    isn't -1 for sure?!
-> 
-> Yes, you are right. The comment needs a correction. It will be plus 1 
-> instead of minus 1. I will update the comment in the follow up patch.
-> Otherwise the calculation is correct.
-> rate = DIV_ROUND_CLOSEST_ULL(100ULL * rate, hz);
-> here rate is the divider value to be set.
-
-If a certain duty+period is requested the driver is supposed to provide
-an output such that:
-
-	implemented_period = max{ possible periods <= requested period }
-	implemented_duty = max{ possible duty <= requested duty }
-
-so I think DIV_ROUND_CLOSEST_ULL is wrong.
-(If the driver provided the modern callback instead of
-.config/.enable/.disable CONFIG_PWM_DEBUG would help you here.)
- 
-> > How does the PWM behave when it gets disabled? Does it complete the
-> > currently running period? Does the output stop at the inactive level, or where it
-> > just happens to be? How does a running PWM behave when the register is
-> > updated? Does it complete the currently running period?
->
-> Yes, it allows to write the bit during any active and inactive time of the
-> width. Hence the pwm gets disabled as soon as the enable bit is set to 0.
-
-OK, so the output stops oscillating as soon as the PWM_ENABLE bit is
-cleared in hardware. How does the output behave then? (Does the output
-become inactive? Or does it drive the output level where it just happens
-to be?) I assume that the register write in tegra_pwm_config() also
-results in aborting the currently running period and start of a new one
-with the new settings?
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Thanks,
+Michal
