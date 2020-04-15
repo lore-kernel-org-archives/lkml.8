@@ -2,150 +2,160 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 623C5C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC52C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:51:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FEE120737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:48:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53CEE20737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:51:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392746AbgDOBsy (ORCPT
+        id S2392755AbgDOBvn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 21:48:54 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:44796 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387766AbgDOBsi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 21:48:38 -0400
-Received: from [10.130.0.79] (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxv97uZ5ZehAIoAA--.9S3;
-        Wed, 15 Apr 2020 09:48:32 +0800 (CST)
-Subject: Re: [PATCH v2] MIPS: Limit check_bugs32() to affected platform
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-References: <1586488859-18715-1-git-send-email-yangtiezhu@loongson.cn>
- <c60f62cb-62e8-be13-f551-c9a13abc7f94@gmail.com>
- <181cf95e-c5f6-3899-e8eb-3f8847ec86d9@loongson.cn>
- <20200414173208.GA22802@alpha.franken.de>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <5e575f15-4efc-7bf7-e266-d01aca094bbc@loongson.cn>
-Date:   Wed, 15 Apr 2020 09:48:30 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Tue, 14 Apr 2020 21:51:43 -0400
+Received: from mga11.intel.com ([192.55.52.93]:4241 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387766AbgDOBvl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 21:51:41 -0400
+IronPort-SDR: 6NHwnvVpa4O27Yb1dCn5zYOD+7WpuHTbptzvqEz9Xdfx9bqVt74CjwkBqMtSSFVfZzcdLpYx1A
+ NZcLZ0CP2vJA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 18:51:40 -0700
+IronPort-SDR: oNyv8pcwMJmynapfKtQ0XsbFivhe1B0qmEbjepMC1qvn4eCXwy6Ki4qR6KZypWCVy2mi8zrETg
+ d/N11J3ZPtDQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,385,1580803200"; 
+   d="scan'208";a="288403966"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga002.fm.intel.com with ESMTP; 14 Apr 2020 18:51:39 -0700
+Received: from [10.213.147.143] (thiphuo2-mobl4.ccr.corp.intel.com [10.213.147.143])
+        by linux.intel.com (Postfix) with ESMTP id 2640E5802C9;
+        Tue, 14 Apr 2020 18:51:23 -0700 (PDT)
+Subject: Re: [PATCH v1 1/2] dt-bindings: mtd: Add YAML for Nand Flash
+ Controller support
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org, miquel.raynal@bootlin.com,
+        richard@nod.at, vigneshr@ti.com, arnd@arndb.de,
+        brendanhiggins@google.com, tglx@linutronix.de,
+        anders.roxell@linaro.org, masonccyang@mxic.com.tw,
+        piotrs@cadence.com, robh+dt@kernel.org,
+        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
+        cheol.yong.kim@intel.com
+References: <20200414022433.36622-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200414022433.36622-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200414090459.3c37c961@collabora.com>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <9b638a65-04b7-5708-ea00-0e6dd47bab8c@linux.intel.com>
+Date:   Wed, 15 Apr 2020 09:51:22 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200414173208.GA22802@alpha.franken.de>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf9Dxv97uZ5ZehAIoAA--.9S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxWw4rGw1xKr17Zw4fGrWkXrb_yoW5Xr1fpF
-        Wqga1vqF4kCFyjyFySyw4kXryrt34DGrs8WryjgFW8AF1YqFn8GFn5Kr45CF97XFySqa4I
-        9FZ2qFySvr42yaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvj14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-        6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
-        4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2Wl
-        Yx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbV
-        WUJVW8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07Al
-        zVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
-        0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1l
-        IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxV
-        AFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_
-        Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjfU5W
-        lkUUUUU
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+In-Reply-To: <20200414090459.3c37c961@collabora.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/15/2020 01:32 AM, Thomas Bogendoerfer wrote:
-> On Sat, Apr 11, 2020 at 10:32:02AM +0800, Tiezhu Yang wrote:
->> On 04/11/2020 12:25 AM, Florian Fainelli wrote:
->>> On 4/9/2020 8:20 PM, Tiezhu Yang wrote:
->>>> In the current code, check_bugs32() only handles MIPS32 CPU type CPU_34K,
->>>> it is better to build and call it on the affected platform.
->>>>
->>>> Move check_bugs32() to the new added 34k-bugs32.c to indicate the fact that
->>>> the code is specific to the 34k CPU, and also add CONFIG_CPU_34K_BUGS32 to
->>>> control whether or not check the bugs.
->>>>
->>>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
->>> This is not a whole lot of code, so moving this to a separate
->>> translation unit seems a bit heavy handed, also file renames, albeit
->>> tracked properly by git are always a challenge when doing back ports.
->> Hi Florian,
->>
->> There exists the following three ways to do it, I'm fine either way,
->> maybe the first way looks better. Let us wait for the MIPS maintainer
->> to say what he prefer.
->>
->> Hi Thomas,
->>
->> What is your opinion?
-> I don't see a reason for doing that at all. The 34K workaround is only
-> compiled in if CONFIG_SYS_HAS_CPU_MIPS32_R2 is defined.
+Hi Boris,
 
-Hi Thomas,
+     Thank you so much for the review comments and your time...
 
-Thanks for your reply. My initial thought is to build and call check_bugs32() only for 34K CPU,
-because it is useless for other CPU types.
-
-Do you mean to use the following modification?
-
-diff --git a/arch/mips/include/asm/bugs.h b/arch/mips/include/asm/bugs.h
-index d72dc6e..743604f 100644
---- a/arch/mips/include/asm/bugs.h
-+++ b/arch/mips/include/asm/bugs.h
-@@ -35,7 +35,9 @@ static inline void check_bugs(void)
-          unsigned int cpu = smp_processor_id();
-
-          cpu_data[cpu].udelay_val = loops_per_jiffy;
--       check_bugs32();
-+
-+       if (IS_ENABLED(CONFIG_CPU_MIPS32_R2))
-+               check_bugs32();
-
-          if (IS_ENABLED(CONFIG_CPU_R4X00_BUGS64))
-                  check_bugs64();
-diff --git a/arch/mips/kernel/cpu-probe.c b/arch/mips/kernel/cpu-probe.c
-index 6ab6b03..383500b 100644
---- a/arch/mips/kernel/cpu-probe.c
-+++ b/arch/mips/kernel/cpu-probe.c
-@@ -461,7 +461,8 @@ static inline void cpu_set_mt_per_tc_perf(struct
-cpuinfo_mips *c)
-                  c->options |= MIPS_CPU_MT_PER_TC_PERF_COUNTERS;
-   }
-
--static inline void check_errata(void)
-+#ifdef CONFIG_CPU_MIPS32_R2
-+static inline void check_errata32(void)
-   {
-          struct cpuinfo_mips *c = &current_cpu_data;
-
-@@ -482,8 +483,9 @@ static inline void check_errata(void)
-
-   void __init check_bugs32(void)
-   {
--       check_errata();
-+       check_errata32();
-   }
-+#endif /* CONFIG_CPU_MIPS32_R2 */
-
-   /*
-    * Probe whether cpu has config register by trying to play with
-
-
-Thanks,
-
-Tiezhu Yang
-
-
+On 1 4/4/2020 3:04 pm, Boris Brezillon wrote:
+> On Tue, 14 Apr 2020 10:24:32 +0800
+> "Ramuthevar,Vadivel MuruganX"
+> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
 >
-> Thomas.
->
+>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>
+>> Add YAML file for dt-bindings to support NAND Flash Controller
+>> on Intel's Lightning Mountain SoC.
+>>
+>> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>> ---
+>>   .../devicetree/bindings/mtd/intel,lgm-nand.yaml    | 61 ++++++++++++++++++++++
+>>   1 file changed, 61 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml b/Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
+>> new file mode 100644
+>> index 000000000000..361e5051c602
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
+>> @@ -0,0 +1,61 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/mtd/intel,lgm-nand.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Intel LGM SoC NAND Controller Device Tree Bindings
+>> +
+>> +allOf:
+>> +  - $ref: "nand-controller.yaml"
+>> +
+>> +maintainers:
+>> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: intel,lgm-nand
+> intel,lgm-nand-controller
 
+Noted, will update in the next patch.
+
+Regards
+Vadivel
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    maxItems: 1
+>> +
+>> +  dmas:
+>> +    maxItems: 2
+>> +
+>> +  dma-names:
+>> +    enum:
+>> +      - rx
+>> +      - tx
+>> +
+>> +  pinctrl-names: true
+>> +
+>> +patternProperties:
+>> +  "^pinctrl-[0-9]+$": true
+>> +
+>> +  "^nand@[a-f0-9]+$":
+>> +    type: object
+>> +    properties:
+>> +      reg:
+>> +        minimum: 0
+>> +        maximum: 7
+>> +
+>> +      nand-ecc-mode: true
+>> +
+>> +      nand-ecc-algo:
+>> +        const: hw
+>> +
+>> +    additionalProperties: false
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - clocks
+>> +  - clock-names
+>> +  - dmas
+>> +
+>> +additionalProperties: false
+>> +
+>> +...
