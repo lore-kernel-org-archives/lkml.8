@@ -2,141 +2,266 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A8A8C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:03:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 558F3C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF0B920737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:03:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="CkV6dsPc";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="S9h1/Q+p"
+	by mail.kernel.org (Postfix) with ESMTP id 2B9C220737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:03:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586955796;
+	bh=2e/h/Ew2FT6YxkhcyqA5l/vscu6FfJBLw5RMx7TCaoY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Ww/NhAaGBD89wEN8kLeBaZObsgr5OE8VJu7dvQDpWhnlr0Kmq0ohCl75j7EJvgEqy
+	 qy332cboHZDTugMycteekQ8R6GGWK8vnPJFVunA+Pt8Ibux37s6s3d4H6XhhsZHk4i
+	 dC5U6vLuf4rrUjwhT+476HnSlQ07PNnBhVs9U+ew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505767AbgDONDA (ORCPT
+        id S2505775AbgDONDL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:03:00 -0400
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:59003 "EHLO
-        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2897195AbgDONCp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 09:02:45 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id BBB2A580395;
-        Wed, 15 Apr 2020 09:02:41 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 15 Apr 2020 09:02:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=039DxBF+ah5v0vg8ROQIv9FjG5q
-        WhfMw1SLvfcd04OU=; b=CkV6dsPcz9Y8idW+hVEyDm6mSV+pUN9Xres8bMKvdRL
-        VALjfsC9aI3bhfwoujPhd7EQWqTFMM3MpY0CXMnqitTCS8Fof1sumtKs+1noHkck
-        0zy18sJCCWvRsROIXMI80ldSbi7DqI7VYqCLs/1mdKw9zI/NcBitSAQbREvT7L8g
-        D4/NJhFvTCxTM7g/tnjms6irqeB7SlILFscWcV0Ce03qvfwgv9/2EatxXaqwDpOt
-        //I1mYI1uCDy9IhEch95UxPJJ+Kv4Kn4Nyja93nWS05Egy1qnFDulfPzV8LpPw3s
-        DonUZNuI0Jhy6aVgp2M7WLectakQApnHU18B32D9UPQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=039DxB
-        F+ah5v0vg8ROQIv9FjG5qWhfMw1SLvfcd04OU=; b=S9h1/Q+pWQGqd+nltx7U9q
-        EtiyPyF6+ndcxfpEsE8fKQDJuXpfo16gmVbpfrTLMpDeNmvuN9vlkr4FPoAkLMQm
-        9IqswPbsY1N2m95yuHAtlQw3clcmF8saECBneO0wNSjOMXxIqltgpA+y6ONjUj68
-        AFBBsJvEeWG3Z9Of09J8HkEnMLsZVx3GogUvVVpEWD6E4MNaS5HjS01rkaGt9TXi
-        y9HyZu0mKxSdRDvuzEDI5liYqgvTHXR63Zht+ftr8lzaAYk9NXUHyw5RG9uZYXSu
-        CkvJHJDRd/moF8rMWHtNLJ9EyLR2y9cj02+vehqJfB8HMOv8YWoOxKAJDN9M3DVQ
-        ==
-X-ME-Sender: <xms:7AWXXh82Tz9QrgxCYXxwiUQuqvXNIYslbCEeOSB8EK9jqYSp_7Z4Aw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrfeefgdegkecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:7AWXXjHxvIxxyP6a2yvja6_mj0wSrBN48QEe3Nw1WyoqXA1cLZ-20A>
-    <xmx:7AWXXkrlPi5zXv3NYFVpM8E20gPMRRwOXPqTkM0T5VGb043_hRT93A>
-    <xmx:7AWXXgAfYxDQc7ACxpWBH6yA5fa2JTCRXbHr-EPSPe_jpeeWde-k-w>
-    <xmx:8QWXXipi434smJv24Fiv-djdHGL_1nvMAm8dctLyIRDrtTUu2D9z5g>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 9C9A93280066;
-        Wed, 15 Apr 2020 09:02:35 -0400 (EDT)
-Date:   Wed, 15 Apr 2020 15:02:33 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Philipp Rossak <embed3d@gmail.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: Re: [PATCH v6 00/12] ARM/MIPS: DTS: add child nodes describing the
- PVRSGX GPU present in some OMAP SoC and JZ4780 (and many more)
-Message-ID: <20200415130233.rgn7xrtwqicptke2@gilmour.lan>
-References: <cover.1586939718.git.hns@goldelico.com>
- <20200415101008.zxzxca2vlfsefpdv@gilmour.lan>
- <2E3401F1-A106-4396-8FE6-51CAB72926A4@goldelico.com>
+        Wed, 15 Apr 2020 09:03:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56354 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2897153AbgDOLge (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:36:34 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 011D0214AF;
+        Wed, 15 Apr 2020 11:36:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586950592;
+        bh=2e/h/Ew2FT6YxkhcyqA5l/vscu6FfJBLw5RMx7TCaoY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=pOmdJdNjrBZ9pgQAFT7drf2POxJXCpLrj8wY0o72qFcL06AIiqxvqPCgIU5WFj+4R
+         2rtWugRhopk2ra1pFZbjwsBfrWvZXmuiNgHOHZncFSVPw4lTqpqcstJFyMEIxVv1Lt
+         9cR5dCMUAkO7vMOrCXtFPhLKOVdlaaDV8flwsKSE=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Guo Ren <guoren@linux.alibaba.com>,
+        Sasha Levin <sashal@kernel.org>, linux-csky@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 089/129] csky: Fixup cpu speculative execution to IO area
+Date:   Wed, 15 Apr 2020 07:34:04 -0400
+Message-Id: <20200415113445.11881-89-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
+References: <20200415113445.11881-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="il2lli6whdapbh2d"
-Content-Disposition: inline
-In-Reply-To: <2E3401F1-A106-4396-8FE6-51CAB72926A4@goldelico.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Guo Ren <guoren@linux.alibaba.com>
 
---il2lli6whdapbh2d
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+[ Upstream commit aefd9461d34a1b0a2acad0750c43216c1c27b9d4 ]
 
-On Wed, Apr 15, 2020 at 02:41:52PM +0200, H. Nikolaus Schaller wrote:
-> >> The kernel modules built from this project have successfully
-> >> demonstrated to work with the DTS definitions from this patch set on
-> >> AM335x BeagleBone Black, DM3730 and OMAP5 Pyra and Droid 4. They
-> >> partially work on OMAP3530 and PandaBoard ES but that is likely a
-> >> problem in the kernel driver or the (non-free) user-space libraries
-> >> and binaries.
-> >>
-> >> Wotk for JZ4780 (CI20 board) is in progress and there is potential
-> >> to extend this work to e.g. BananaPi-M3 (A83) and some Intel Poulsbo
-> >> and CedarView devices.
-> >
-> > If it's not been tested on any Allwinner board yet, I'll leave it
-> > aside until it's been properly shown to work.
->
-> Phillip has testes something on a83.
+For the memory size ( > 512MB, < 1GB), the MSA setting is:
 
-I'm a bit skeptical on that one since it doesn't even list the
-interrupts connected to the GPU that the binding mandates.
+ - SSEG0: PHY_START        , PHY_START + 512MB
+ - SSEG1: PHY_START + 512MB, PHY_START + 1GB
 
-Maxime
+But the real memory is no more than 1GB, there is a gap between the
+end size of memory and border of 1GB. CPU could speculatively
+execute to that gap and if the gap of the bus couldn't respond to
+the CPU request, then the crash will happen.
 
---il2lli6whdapbh2d
-Content-Type: application/pgp-signature; name="signature.asc"
+Now make the setting with:
 
------BEGIN PGP SIGNATURE-----
+ - SSEG0: PHY_START        , PHY_START + 512MB (no change)
+ - SSEG1: Disabled (We use highmem to use the memory of 512MB~1GB)
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXpcF6QAKCRDj7w1vZxhR
-xTUIAP9UGzsDJo2NmFuuOEh6FQ/3E2jykOavlFl7nNEkbp/76QEAgh0UD8HzNN4c
-lB61sBbeDdFaPvEy3tOwvQ2UnCbWKAA=
-=cHXH
------END PGP SIGNATURE-----
+We also deprecated zhole_szie[] settings, it's only used by arm
+style CPUs. All memory gap should use Reserved setting of dts in
+csky system.
 
---il2lli6whdapbh2d--
+Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/csky/abiv1/inc/abi/entry.h |  5 +--
+ arch/csky/abiv2/inc/abi/entry.h |  7 ++--
+ arch/csky/kernel/head.S         |  5 +++
+ arch/csky/kernel/setup.c        | 63 ++++++++-------------------------
+ arch/csky/kernel/smp.c          |  3 ++
+ 5 files changed, 25 insertions(+), 58 deletions(-)
+
+diff --git a/arch/csky/abiv1/inc/abi/entry.h b/arch/csky/abiv1/inc/abi/entry.h
+index f35a9f3315ee6..5056ebb902d18 100644
+--- a/arch/csky/abiv1/inc/abi/entry.h
++++ b/arch/csky/abiv1/inc/abi/entry.h
+@@ -172,10 +172,7 @@
+ 	addi	r6, 0xe
+ 	cpwcr	r6, cpcr30
+ 
+-	lsri	r6, 28
+-	addi	r6, 2
+-	lsli	r6, 28
+-	addi	r6, 0xe
++	movi	r6, 0
+ 	cpwcr	r6, cpcr31
+ .endm
+ 
+diff --git a/arch/csky/abiv2/inc/abi/entry.h b/arch/csky/abiv2/inc/abi/entry.h
+index 94a7a58765dff..111973c6c713f 100644
+--- a/arch/csky/abiv2/inc/abi/entry.h
++++ b/arch/csky/abiv2/inc/abi/entry.h
+@@ -230,11 +230,8 @@
+ 	addi	r6, 0x1ce
+ 	mtcr	r6, cr<30, 15> /* Set MSA0 */
+ 
+-	lsri	r6, 28
+-	addi	r6, 2
+-	lsli	r6, 28
+-	addi	r6, 0x1ce
+-	mtcr	r6, cr<31, 15> /* Set MSA1 */
++	movi    r6, 0
++	mtcr	r6, cr<31, 15> /* Clr MSA1 */
+ 
+ 	/* enable MMU */
+ 	mfcr    r6, cr18
+diff --git a/arch/csky/kernel/head.S b/arch/csky/kernel/head.S
+index 61989f9241c02..17ed9d2504807 100644
+--- a/arch/csky/kernel/head.S
++++ b/arch/csky/kernel/head.S
+@@ -21,6 +21,11 @@ END(_start)
+ ENTRY(_start_smp_secondary)
+ 	SETUP_MMU
+ 
++	/* copy msa1 from CPU0 */
++	lrw     r6, secondary_msa1
++	ld.w	r6, (r6, 0)
++	mtcr	r6, cr<31, 15>
++
+ 	/* set stack point */
+ 	lrw     r6, secondary_stack
+ 	ld.w	r6, (r6, 0)
+diff --git a/arch/csky/kernel/setup.c b/arch/csky/kernel/setup.c
+index 3821e55742f46..819a9a7bf786d 100644
+--- a/arch/csky/kernel/setup.c
++++ b/arch/csky/kernel/setup.c
+@@ -24,26 +24,9 @@ struct screen_info screen_info = {
+ };
+ #endif
+ 
+-phys_addr_t __init_memblock memblock_end_of_REG0(void)
+-{
+-	return (memblock.memory.regions[0].base +
+-		memblock.memory.regions[0].size);
+-}
+-
+-phys_addr_t __init_memblock memblock_start_of_REG1(void)
+-{
+-	return memblock.memory.regions[1].base;
+-}
+-
+-size_t __init_memblock memblock_size_of_REG1(void)
+-{
+-	return memblock.memory.regions[1].size;
+-}
+-
+ static void __init csky_memblock_init(void)
+ {
+ 	unsigned long zone_size[MAX_NR_ZONES];
+-	unsigned long zhole_size[MAX_NR_ZONES];
+ 	signed long size;
+ 
+ 	memblock_reserve(__pa(_stext), _end - _stext);
+@@ -54,54 +37,36 @@ static void __init csky_memblock_init(void)
+ 	memblock_dump_all();
+ 
+ 	memset(zone_size, 0, sizeof(zone_size));
+-	memset(zhole_size, 0, sizeof(zhole_size));
+ 
+ 	min_low_pfn = PFN_UP(memblock_start_of_DRAM());
+-	max_pfn	    = PFN_DOWN(memblock_end_of_DRAM());
+-
+-	max_low_pfn = PFN_UP(memblock_end_of_REG0());
+-	if (max_low_pfn == 0)
+-		max_low_pfn = max_pfn;
++	max_low_pfn = max_pfn = PFN_DOWN(memblock_end_of_DRAM());
+ 
+ 	size = max_pfn - min_low_pfn;
+ 
+-	if (memblock.memory.cnt > 1) {
+-		zone_size[ZONE_NORMAL]  =
+-			PFN_DOWN(memblock_start_of_REG1()) - min_low_pfn;
+-		zhole_size[ZONE_NORMAL] =
+-			PFN_DOWN(memblock_start_of_REG1()) - max_low_pfn;
++	if (size <= PFN_DOWN(SSEG_SIZE - PHYS_OFFSET_OFFSET))
++		zone_size[ZONE_NORMAL] = size;
++	else if (size < PFN_DOWN(LOWMEM_LIMIT - PHYS_OFFSET_OFFSET)) {
++		zone_size[ZONE_NORMAL] =
++				PFN_DOWN(SSEG_SIZE - PHYS_OFFSET_OFFSET);
++		max_low_pfn = min_low_pfn + zone_size[ZONE_NORMAL];
+ 	} else {
+-		if (size <= PFN_DOWN(LOWMEM_LIMIT - PHYS_OFFSET_OFFSET))
+-			zone_size[ZONE_NORMAL] = max_pfn - min_low_pfn;
+-		else {
+-			zone_size[ZONE_NORMAL] =
++		zone_size[ZONE_NORMAL] =
+ 				PFN_DOWN(LOWMEM_LIMIT - PHYS_OFFSET_OFFSET);
+-			max_low_pfn = min_low_pfn + zone_size[ZONE_NORMAL];
+-		}
++		max_low_pfn = min_low_pfn + zone_size[ZONE_NORMAL];
++		write_mmu_msa1(read_mmu_msa0() + SSEG_SIZE);
+ 	}
+ 
+ #ifdef CONFIG_HIGHMEM
+-	size = 0;
+-	if (memblock.memory.cnt > 1) {
+-		size = PFN_DOWN(memblock_size_of_REG1());
+-		highstart_pfn = PFN_DOWN(memblock_start_of_REG1());
+-	} else {
+-		size = max_pfn - min_low_pfn -
+-			PFN_DOWN(LOWMEM_LIMIT - PHYS_OFFSET_OFFSET);
+-		highstart_pfn =  min_low_pfn +
+-			PFN_DOWN(LOWMEM_LIMIT - PHYS_OFFSET_OFFSET);
+-	}
+-
+-	if (size > 0)
+-		zone_size[ZONE_HIGHMEM] = size;
++	zone_size[ZONE_HIGHMEM] = max_pfn - max_low_pfn;
+ 
+-	highend_pfn = max_pfn;
++	highstart_pfn = max_low_pfn;
++	highend_pfn   = max_pfn;
+ #endif
+ 	memblock_set_current_limit(PFN_PHYS(max_low_pfn));
+ 
+ 	dma_contiguous_reserve(0);
+ 
+-	free_area_init_node(0, zone_size, min_low_pfn, zhole_size);
++	free_area_init_node(0, zone_size, min_low_pfn, NULL);
+ }
+ 
+ void __init setup_arch(char **cmdline_p)
+diff --git a/arch/csky/kernel/smp.c b/arch/csky/kernel/smp.c
+index 0bb0954d55709..de61feb4b6df2 100644
+--- a/arch/csky/kernel/smp.c
++++ b/arch/csky/kernel/smp.c
+@@ -156,6 +156,8 @@ volatile unsigned int secondary_hint;
+ volatile unsigned int secondary_ccr;
+ volatile unsigned int secondary_stack;
+ 
++unsigned long secondary_msa1;
++
+ int __cpu_up(unsigned int cpu, struct task_struct *tidle)
+ {
+ 	unsigned long mask = 1 << cpu;
+@@ -164,6 +166,7 @@ int __cpu_up(unsigned int cpu, struct task_struct *tidle)
+ 		(unsigned int) task_stack_page(tidle) + THREAD_SIZE - 8;
+ 	secondary_hint = mfcr("cr31");
+ 	secondary_ccr  = mfcr("cr18");
++	secondary_msa1 = read_mmu_msa1();
+ 
+ 	/*
+ 	 * Because other CPUs are in reset status, we must flush data
+-- 
+2.20.1
+
