@@ -2,134 +2,194 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A0EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:21:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 180FDC3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:21:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72FB8206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:21:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECA72206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:21:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="T/IbR7gK"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="waLFJKVz";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ZiCvEuIi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391691AbgDOOVC (ORCPT
+        id S2636591AbgDOOVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:21:02 -0400
-Received: from mail-eopbgr750041.outbound.protection.outlook.com ([40.107.75.41]:46340
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732547AbgDOOUw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 10:20:52 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=m/aDA3TNUudg7b1hiIgupytxTV1iDjIaBHZEV72SWeq+9V0DL/aB/W/ggMgwkKTNWQ93scf3cY2uVskSGlkwd8sAKPq7jHBRpKc4e9JgKnKe/ovl8pi1X7TPbWXAzBS9Vx4gtzEC9T1vl6Ziw7ES+VovWpUb/aW+GyON3ZETb4WHCRuWL4ROMuY8z91afH6jqYyE8PN1LTI1NKm/BCgvy2V/Tq/CdHo9zV5WzabgbnOL9y6vTcsAMa0fch8yYsVYCR9YCnHn954RnmcoWKIzqL99me3cOqDYiZwBmKHwB04i0GDFIr22Neyvd3pmOkB4gEjdpg6aEikTh4jsejk/JA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FL+jzdl8rTh5LL7dq+s4TeX25tRK+uLwfWGt38KkSJg=;
- b=L+RH63z7bbQh2d66Zu1PTXD129HFOFn8z4VeubigzeNzrfbiaDVg6lBgG5Hs1hJGBUpR5gEhBMV2+DJVdd4j+eZ5dnE3ffW8SueOis8N1if1fTFZARd8WQYUDwMSzOnjpWtvf0/QWNnwBDFzTSc+y6CXigFve8TEy9L3CtZkMZsqMLpILLtwi/oxFgmPvBYIwGhYPNinkDYG8TgOn0z1DQnpvemtsP1fU1BaUULMRpqjrr4nFpBT+Opc06JduU90Q29YCu+boa1qwvrpjgaQLodHKbSPMTo0NNrV1NaoMlb2qMU5SM/BqTfho1TTwfA6w1FQv+frTd17MUdXbDUf/w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=gmail.com smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FL+jzdl8rTh5LL7dq+s4TeX25tRK+uLwfWGt38KkSJg=;
- b=T/IbR7gKiQW0qVZEPUX+Z/4nXvI1hwZRVuQ9lmj91Ov7tBCWRXxDa4ghxQgWqZwOhsmsc8FaFidr+vWmAeik7erldPvaWFMSFEDBKwRs+s0xAricDLakDlBkG/1LYxMvyy3NARt3vGPKE7E/2lHBXvnkuKUMgWc96BFYUrMtPRk=
-Received: from CY4PR1201CA0023.namprd12.prod.outlook.com
- (2603:10b6:910:16::33) by BL0PR02MB4804.namprd02.prod.outlook.com
- (2603:10b6:208:5f::10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.28; Wed, 15 Apr
- 2020 14:20:49 +0000
-Received: from CY1NAM02FT009.eop-nam02.prod.protection.outlook.com
- (2603:10b6:910:16:cafe::2a) by CY4PR1201CA0023.outlook.office365.com
- (2603:10b6:910:16::33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.25 via Frontend
- Transport; Wed, 15 Apr 2020 14:20:49 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT009.mail.protection.outlook.com (10.152.75.12) with Microsoft SMTP
- Server id 15.20.2921.25 via Frontend Transport; Wed, 15 Apr 2020 14:20:48
- +0000
-Received: from [149.199.38.66] (port=51885 helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1jOitZ-0007H5-7J; Wed, 15 Apr 2020 07:20:05 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1jOiuG-0004bP-Fr; Wed, 15 Apr 2020 07:20:48 -0700
-Received: from [172.30.17.109]
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <michals@xilinx.com>)
-        id 1jOiuB-0004ZC-3K; Wed, 15 Apr 2020 07:20:43 -0700
-Subject: Re: [PATCH v2] i2c: cadence: Added slave support
-To:     Wolfram Sang <wsa@the-dreams.de>,
-        Radu Pirea <radu_nicolae.pirea@upb.ro>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, michal.simek@xilinx.com,
-        shubhrajyoti.datta@gmail.com,
-        Chirag Parekh <chirag.parekh@xilinx.com>
-References: <20200106104336.101987-1-radu_nicolae.pirea@upb.ro>
- <20200415125850.GD910@ninjato>
-From:   Michal Simek <michal.simek@xilinx.com>
-Message-ID: <d7bbb013-aba1-6623-f656-46b3f5689834@xilinx.com>
-Date:   Wed, 15 Apr 2020 16:20:40 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 15 Apr 2020 10:21:45 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:58249 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732547AbgDOOVd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 10:21:33 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 5D5B5580480;
+        Wed, 15 Apr 2020 10:21:28 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Wed, 15 Apr 2020 10:21:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=w57xZePTsGqsUDOlfC/90iLeGpy
+        1FlxyNG+H0a7Xz8A=; b=waLFJKVzJ1gz4Hh3SifRoYfFdJNEt2qRDGZPEgQiRVv
+        6jkzESd3CY6Oc3i2ZpPdobWyw0ab8WfQvnFKUO56Sbm6//6u+mKmbexyjoJ0cnOw
+        RF93kgS+2GuBfrdB0KUCXmBg0YpKtxYRvgMIwGCyomGynx+2KCN7Em0XOYCnFkgw
+        J1mWDeIQOgD9hZisI227UvtFdsCvTBD+nzUGW7lALcRLymCqmau213LfjSVNHmv+
+        59dc1QnftSXXZQOuRHjvVKnCK1b8Vl+tyMf+cu9KYr9EA/oYnetVcCSLLiMhiKJg
+        9owal3XtjQVIIYpYooAWJa48xaWPZrUjg/pnuC0Chqg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=w57xZe
+        PTsGqsUDOlfC/90iLeGpy1FlxyNG+H0a7Xz8A=; b=ZiCvEuIistCq+I4LcQwEfW
+        Qyg/X1liF2iY4Y79UN8i/5imy6gN2PUlGkr+jvw+PLzd5hDoC1DhIB2+Rqr6UCTI
+        o0bm44HtOGdwnZ4+w2oevQESQ+PpjeSubBsQxEE633xb56bf/Ou1Go+xV4y+XL61
+        eqCtbaaUaUnxCNBHFOyo4KdeTlAMIH2CBW7WJ8eXnppGRAR6HFGK4pzcoz9Ohoe5
+        MUxrYnCV6uzhOrFjysQdB68Qf8n5Af/nhXTCLK5LoAUCdha/qTawAHb2hjHJUpPY
+        lizQ3xv4NnOPWVGq6lc4q2/vA93sP8RVeBn9PT3F9hOjzKVIBJUSO8dWAywaBOMw
+        ==
+X-ME-Sender: <xms:ZhiXXnmhOKw4K1AOTYHdnTUQEbMU7bg_a5FoSDsaU2t4-IMnTxxvpg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrfeefgdeihecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
+    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
+    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:ZhiXXpmUnYfgmUXjZWNNqgX47hkEI1-ZFNVCI7wWEZYYnRfYegrX1Q>
+    <xmx:ZhiXXtNDAwIfZe76drexh9IE-OGHGS2aS5UFo-B-yEis7tg0VAEMNg>
+    <xmx:ZhiXXp64DuzBVqKn0BtAgkhnuT1ce2TcjxPp_Qx9I7HZtoreOUfJRA>
+    <xmx:aBiXXvtNHYQJhIMBsiVAXeZCa6iOafIjCoTJluOekGcBbk5EM_-hGQ>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 08B123280064;
+        Wed, 15 Apr 2020 10:21:26 -0400 (EDT)
+Date:   Wed, 15 Apr 2020 16:21:24 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        David Airlie <airlied@linux.ie>,
+        James Hogan <jhogan@kernel.org>,
+        dri-devel@lists.freedesktop.org, linux-mips@vger.kernel.org,
+        Paul Cercueil <paul@crapouillou.net>,
+        linux-samsung-soc@vger.kernel.org, letux-kernel@openphoenux.org,
+        Paul Burton <paulburton@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Tony Lindgren <tony@atomide.com>, Chen-Yu Tsai <wens@csie.org>,
+        Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Philipp Rossak <embed3d@gmail.com>,
+        openpvrsgx-devgroup@letux.org, linux-kernel@vger.kernel.org,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Daniel Vetter <daniel@ffwll.ch>, kernel@pyra-handheld.com
+Subject: Re: [PATCH v6 01/12] dt-bindings: add img, pvrsgx.yaml for
+ Imagination GPUs
+Message-ID: <20200415142124.yzfh6mtqq7cdq22e@gilmour.lan>
+References: <cover.1586939718.git.hns@goldelico.com>
+ <06fb6569259bb9183d0a0d0fe70ec4f3033b8aab.1586939718.git.hns@goldelico.com>
+ <20200415101251.o3wi5t6xvf56xmhq@gilmour.lan>
+ <72919514-0657-4B71-902F-3E775E528F64@goldelico.com>
+ <f4fdca8a-d18c-a8d2-7f51-d1ebbbab3647@baylibre.com>
+ <535CAEBE-F43E-4BFC-B989-612C81F0D7EF@goldelico.com>
 MIME-Version: 1.0
-In-Reply-To: <20200415125850.GD910@ninjato>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(136003)(346002)(39860400002)(376002)(396003)(46966005)(2616005)(44832011)(356005)(47076004)(81156014)(336012)(31696002)(426003)(8936002)(81166007)(8676002)(4744005)(70206006)(478600001)(186003)(9786002)(82740400003)(70586007)(36756003)(316002)(26005)(5660300002)(107886003)(110136005)(31686004)(4326008)(2906002);DIR:OUT;SFP:1101;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: e3ecc3fe-ddc2-4294-8560-08d7e14831ee
-X-MS-TrafficTypeDiagnostic: BL0PR02MB4804:
-X-Microsoft-Antispam-PRVS: <BL0PR02MB48046042AC69EBE82D6DC979C6DB0@BL0PR02MB4804.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:4125;
-X-Forefront-PRVS: 0374433C81
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: slt19jyWq6lm1eKpxfml/o371VMS1QpJgRxOsceFAyPFROwkbRoCs/HY9snkPNO3BG+veoEGFXrJlhqUT0JJYpwL1CJ+mKsdKZ+BNz85bivUSxh0nmnUD2zQ/x3hzzcY3dnHivbUlmrICwdpSyquD9saP41bElwZuJOQsb3bsJPecbwI87WwX7Q0fsEJRG8MAnPA2Gr3EazTFUEJHjL7qAlaHOsXF+Ibo9z4MbPq2Tb5zHo+6H0BbNdyZb+vwdIr034XwQg4q9TwSKQts4MbilTY9jNuK/rcjDjWL38ovZrTAvNIJukwoSFqfkpziCe/BxJXTcfZ5tTq/oU9Eq8Ka0ZXHLgTgPGubjuQIuch8kEBUmWhVJJV79yURV1s6RgCZlEmA7R8M4/bVDUT+YiMkfVpz3seSYuSXqrSdMAVRcErnOMXmU/+RT2biCkTCXNKO5JPEUNnkD21fkVFNDnsMEC6wIqOoI+jkZFYkgkyVrWh7nqBDt2EzPzfJW/lOttxmXRO3OkufG/J+j1Tkq2+4g==
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2020 14:20:48.7724
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e3ecc3fe-ddc2-4294-8560-08d7e14831ee
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR02MB4804
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="oowgclrabb5rh4qg"
+Content-Disposition: inline
+In-Reply-To: <535CAEBE-F43E-4BFC-B989-612C81F0D7EF@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15. 04. 20 14:58, Wolfram Sang wrote:
-> On Mon, Jan 06, 2020 at 12:43:36PM +0200, Radu Pirea wrote:
->> Added support for I2C slave functionality
->>
->> Signed-off-by: Chirag Parekh <chirag.parekh@xilinx.com>
->> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
->> Signed-off-by: Radu Pirea <radu_nicolae.pirea@upb.ro>
-> 
-> Michal, do you want a second look or is your SoB good as-is?
 
-It should be good to go.
+--oowgclrabb5rh4qg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thanks,
-Michal
+On Wed, Apr 15, 2020 at 03:17:25PM +0200, H. Nikolaus Schaller wrote:
+> Hi Neil,
+>
+> > Am 15.04.2020 um 14:54 schrieb Neil Armstrong <narmstrong@baylibre.com>:
+> >
+> > Hi,
+> >
+> > On 15/04/2020 14:43, H. Nikolaus Schaller wrote:
+> >>
+> >>> Am 15.04.2020 um 12:12 schrieb Maxime Ripard <maxime@cerno.tech>:
+> >>>
+> >>> Hi,
+> >>>
+> >>> On Wed, Apr 15, 2020 at 10:35:08AM +0200, H. Nikolaus Schaller wrote:
+> >>>> The Imagination PVR/SGX GPU is part of several SoC from
+> >>>> multiple vendors, e.g. TI OMAP, Ingenic JZ4780, Intel Poulsbo,
+> >>>> Allwinner A83 and others.
+> >>>>
+> >>>> With this binding, we describe how the SGX processor is
+> >>>> interfaced to the SoC (registers, interrupt etc.).
+> >>>>
+> >>>> In most cases, Clock, Reset and power management is handled
+> >>>> by a parent node or elsewhere (e.g. code in the driver).
+> >>>
+> >>> Wouldn't the "code in the driver" still require the clock / reset /
+> >>> power domain to be set in the DT?
+> >>
+> >> Well, some SoC seem to use existing clocks and have no reset.
+> >> Or, although not recommended, they may have the io-address range
+> >> hard-coded.
+> >
+> > The possible clocks and resets should be added, even if optional.
+> >
+> > Please look at the arm utgard, midgard and bifrost bindings.
+>
+> Interesting to compare to. Maybe we should also add the
+> $nodename: pattern: '^gpu@[a-f0-9]+$'
+>
+> But the sgx binding is difficult to grasp here. Some SoC like the
+> omap series have their own ti,sysc based target modules and the
+> gpu nodes is a child of it lacking any clock and reset references
+> for purpose.
+>
+> The jz4780 and some other need a clocks definition, but no reset.
+> Having a reset seems to be an option for the SoC designer and
+> not mandated by img. So is it part of the pvrsgx bindings or the
+> SoC?
+>
+> Well we could add clocks and resets as optional but that would
+> allow to wrongly define omap.
+>
+> Or delegate them to a parent "simple-pm-bus" node.
+>
+> I have to study that material more to understand what you seem
+> to expect.
+
+The thing is, once that binding is in, it has to be backward
+compatible. So every thing that you leave out is something that you'll
+need to support in the driver eventually.
+
+If you don't want it to be a complete nightmare, you'll want to figure
+out as much as possible on how the GPU is integrated and make a
+binding out of that. If OMAP is too much of a pain, you can also make
+a separate binding for it, and a generic one for the rest of us.
+
+I'd say that it's pretty unlikely that the clocks, interrupts (and
+even regulators) are optional. It might be fixed on some SoCs, but
+that's up to the DT to express that using fixed clocks / regulators,
+not the GPU binding itself.
+
+Maxime
+
+--oowgclrabb5rh4qg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXpcYZAAKCRDj7w1vZxhR
+xT0JAQCiWOePc99saTFkub5XKNoxg+0OWfORXzWEdHfaNN9pAQD6ApKRwjY9uv1z
+NzDdNQ4q1aRrmR/SI1oU48l8V/B3kg0=
+=Apgq
+-----END PGP SIGNATURE-----
+
+--oowgclrabb5rh4qg--
