@@ -2,173 +2,113 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8902CC2BB55
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:25:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8396C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:26:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EFAE20575
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:25:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B791D20768
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:26:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="BufMhBhR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2896952AbgDOLZf (ORCPT
+        id S2896963AbgDOLZw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:25:35 -0400
-Received: from mga01.intel.com ([192.55.52.88]:29224 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896922AbgDOLZK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:25:10 -0400
-IronPort-SDR: eRDIGlJRQjiH0pnsIvDJ4ClQiiMJryjClAV+M7Soj5zQIeTp3mHQu9enQWRAt69CrGNDORa+5h
- MbqPXj46nfKA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 04:25:08 -0700
-IronPort-SDR: 4IyR2ipB0pYdd/yQryNiZ8IGlXDDKJiKdsxRxk1fS4mva48chEQCle75ccSjvdnecp+3ImSfB/
- hLee6EGB5dzw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,386,1580803200"; 
-   d="scan'208";a="363645932"
-Received: from kuha.fi.intel.com ([10.237.72.162])
-  by fmsmga001.fm.intel.com with SMTP; 15 Apr 2020 04:25:04 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Wed, 15 Apr 2020 14:25:03 +0300
-Date:   Wed, 15 Apr 2020 14:25:03 +0300
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Brendan Higgins <brendanhiggins@google.com>, rafael@kernel.org,
-        linux-kernel@vger.kernel.org, naresh.kamboju@linaro.org,
-        sakari.ailus@linux.intel.com, andy.shevchenko@gmail.com,
-        hdegoede@redhat.com, rafael.j.wysocki@intel.com,
-        linux-kselftest@vger.kernel.org, rostedt@goodmis.org,
-        sergey.senozhatsky@gmail.com, andriy.shevchenko@linux.intel.com,
-        shuah@kernel.org, anders.roxell@linaro.org,
-        lkft-triage@lists.linaro.org, linux@rasmusvillemoes.dk
-Subject: Re: [PATCH v1] kobject: make sure parent is not released before
- children
-Message-ID: <20200415112503.GN2828150@kuha.fi.intel.com>
-References: <20200414204240.186377-1-brendanhiggins@google.com>
- <20200415061154.GA2496263@kroah.com>
- <20200415084653.GM2828150@kuha.fi.intel.com>
- <20200415092115.GA2565850@kroah.com>
+        Wed, 15 Apr 2020 07:25:52 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:11983 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2896948AbgDOLZa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:25:30 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e96ef1c0000>; Wed, 15 Apr 2020 04:25:16 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 15 Apr 2020 04:25:29 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 15 Apr 2020 04:25:29 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Apr
+ 2020 11:25:28 +0000
+Received: from [10.24.37.103] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Apr
+ 2020 11:25:17 +0000
+Subject: Re: [TEGRA194_CPUFREQ Patch 2/3] cpufreq: Add Tegra194 cpufreq driver
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+CC:     <rjw@rjwysocki.net>, <catalin.marinas@arm.com>, <will@kernel.org>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <talho@nvidia.com>, <linux-pm@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <bbasu@nvidia.com>,
+        <mperttunen@nvidia.com>
+References: <20200326115023.xy3n5bl7uetuw7mx@vireshk-i7>
+ <d233b26b-6b50-7d41-9f33-a5dc151e0e7d@nvidia.com>
+ <20200406025549.qfwzlk3745y3r274@vireshk-i7>
+ <3ab4136c-8cca-c2f9-d286-b82dac23e720@nvidia.com>
+ <20200408055301.jhvu5bc2luu3b5qr@vireshk-i7>
+ <08307e54-0e14-14a3-7d6a-d59e1e04a683@nvidia.com>
+ <20200409074415.twpzu2n4frqlde7b@vireshk-i7>
+ <00390070-38a1-19aa-ca59-42c4658bee7e@nvidia.com>
+ <20200413062141.a6hmwipexhv3sctq@vireshk-i7>
+ <64b609f1-efb1-425f-a91a-27a492bd3ec4@nvidia.com>
+ <20200414054504.e3qn2cnxqur4sclw@vireshk-i7>
+From:   Sumit Gupta <sumitg@nvidia.com>
+Message-ID: <d6e0eed6-4267-fca9-59e1-02d16e17ff34@nvidia.com>
+Date:   Wed, 15 Apr 2020 16:55:53 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200415092115.GA2565850@kroah.com>
+In-Reply-To: <20200414054504.e3qn2cnxqur4sclw@vireshk-i7>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1586949916; bh=eXKsl5AwjUrhoGQdcNjptVpYoo1UjOgc5wmqJgrcC5Q=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=BufMhBhRaHC5kGcUpG2IkNn/Bfg4VQWvgSaQNbxoHn0VvAvRLQsl7xjWkgBtNJ7Kh
+         t2ipKJv2gpkrMXWf0a8+Ok30Adzu+bjmHntEskmxM78ojT6yDs3Va1eAN41kin2EQB
+         W+EPOcwvBy5bflyNRl0ZUZerXfolh7aB+8mr7Vx+u3MtYcKh9Es5gkcD8UvlpU2LkP
+         5m2FgGLBadbB6U4ySZHwUGPeFcU3Dfd6MhmIDTxqDa51lUqqbxBSRxwc1cFSXF+Ool
+         VPAofppZofnYUY//2D9agcpOmHfefVFjPxzlCoajeCWLbuFHF8tPKE3VTuS9GST+Lw
+         3w3Q2+kkG0IeA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 11:21:15AM +0200, Greg KH wrote:
-> On Wed, Apr 15, 2020 at 11:46:53AM +0300, Heikki Krogerus wrote:
-> > Hi Greg,
-> > 
-> > On Wed, Apr 15, 2020 at 08:11:54AM +0200, Greg KH wrote:
-> > > > diff --git a/lib/kobject.c b/lib/kobject.c
-> > > > index 83198cb37d8d..5921e2470b46 100644
-> > > > --- a/lib/kobject.c
-> > > > +++ b/lib/kobject.c
-> > > > @@ -663,6 +663,7 @@ EXPORT_SYMBOL(kobject_get_unless_zero);
-> > > >   */
-> > > >  static void kobject_cleanup(struct kobject *kobj)
-> > > >  {
-> > > > +	struct kobject *parent = kobj->parent;
-> > > >  	struct kobj_type *t = get_ktype(kobj);
-> > > >  	const char *name = kobj->name;
-> > > >  
-> > > > @@ -680,6 +681,9 @@ static void kobject_cleanup(struct kobject *kobj)
-> > > >  		kobject_uevent(kobj, KOBJ_REMOVE);
-> > > >  	}
-> > > >  
-> > > > +	/* make sure the parent is not released before the (last) child */
-> > > > +	kobject_get(parent);
-> > > > +
-> > > >  	/* remove from sysfs if the caller did not do it */
-> > > >  	if (kobj->state_in_sysfs) {
-> > > >  		pr_debug("kobject: '%s' (%p): auto cleanup kobject_del\n",
-> > > > @@ -693,6 +697,8 @@ static void kobject_cleanup(struct kobject *kobj)
-> > > >  		t->release(kobj);
-> > > >  	}
-> > > >  
-> > > > +	kobject_put(parent);
-> > > > +
-> > > 
-> > > No, please don't do this.
-> > > 
-> > > A child device should have always incremented the parent already if it
-> > > was correctly registered.  We have had this patch been proposed multiple
-> > > times over the years, and every time it was, we said no and went and
-> > > fixed the real issue which was with the user of the interface.
-> > 
-> > The parent ref count is incremented by the child, that is not the
-> > problem. The problem is that when that child is released, if it's the
-> > last child of the parent, and there are no other users for the parent,
-> > then the parent is actually released _before_ the child. And that
-> > happens in the above function kobject_cleanup().
-> > 
-> > We can work around the problem by taking a reference to the parent
-> > separately, but we have to do that everywhere separately (which I
-> > guess is exactly what has been done so far). That workaroud still does
-> > not really fix the core problem. The core problem is still that
-> > lib/kboject.c is allowing the parent kobject to be released before the
-> > child kobject, and that quite simply should not be allowed to happen.
-> > 
-> > I don't have a problem if you want to have a better solution for this,
-> > but the solution really can't anymore be that we are always expected
-> > to separately increment the parent's ref count with every type of
-> > kobject.
+
+
+On 14/04/20 11:15 AM, Viresh Kumar wrote:
+> External email: Use caution opening links or attachments
 > 
-> Why is this suddenly showing up as a issue and it hasn't ever before?
-> Because of that I would argue that the problem is not in the kobject
-> core, but the use of it.
-
-The problem has showed up before, and you pointed that out yourself in
-your previous mail.
-
-The thing is that we are going to continue to have this issue over and
-over again until the core issue is fixed.
-
-> When a child object is created, it should have already incremented the
-> parent reference count before it is registered, to ensure that the
-> parent does not go away before the child is finished being registered.
-> Then, when the child is removed, it decrements the reference count of
-> the parent as it "knows" it is done with that pointer.
-
-Please note that when you add a kobject, its parent ref count gets
-incremented (line 240 in lib/kobject.c). Are you saying here that that
-is actually not necessary, as the code that registers the new (child)
-kobject should _always_ be responsible of holding a reference to the
-parent? Because if that is the case, then we should actually cleanup
-lib/kboject.c and remove all parent reference handling. We obviously
-need to fix the documentation as well in this case.
-
-> So perhaps this new swnode code is just wrong?  Dealing with "raw"
-> kobjects is hard, and not generally recommended due to issues like this.
-> When you use the driver core, all of this logic is already handled for
-> you...
 > 
-> And I just looked at the code swnode_register() needs to increment the
-> parent kobject's reference, as it is saving a pointer to it away to be
-> used later.  That's just basic reference-counted-pointer logic here,
-> please fix the issue there.
+> On 13-04-20, 17:50, Sumit Gupta wrote:
+>> This was done considering long delay value as explained previously.
+>> Do you think that smp_call_function_single() would be better than work queue
+>> here?
+> 
+> Don't work with assumptions, you should test both and see which one
+> works better. Workqueue should never be faster than
+> smp_call_function_single() with my understanding.
+Checked the time taken and its almost same in both cases.
+Earlier we used smp_call_function_single(), but delay time period was 
+small in that SOC. In T194, the time period was more. So, this is an 
+optimization done because using work queue has advantage as interrupts 
+will not be disabled for that period.
+If you think work queue is not required, then can remove it. The 
+functionality works fine in both cases.
 
-That is fair, however, it still does not fix the core problem.
-
-Even if we did not need to save the pointer to the parent, we would
-still need to increment the parents reference count, because we have
-to prevent the parent from being released before us.
-
-There are two ways we can fix the situation:
-
-1) We can make it clear that lib/kboject.c does not take any
-   responsibility over the reference counting of the parents, and
-   remove all the parent reference handling from it.
-
-2) We fix this by guaranteeing that the parent kboject can not be
-   released before its children.
-
-thanks,
-
--- 
-heikki
+> 
+> --
+> viresh
+> 
