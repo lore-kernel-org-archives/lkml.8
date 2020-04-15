@@ -2,442 +2,312 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,LOTS_OF_MONEY,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7915C38A2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A72C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:33:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3B6920784
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:31:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dfgOfpc+"
+	by mail.kernel.org (Postfix) with ESMTP id 8FE3D20775
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:33:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2635157AbgDOHbP (ORCPT
+        id S2393688AbgDOHdF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 03:31:15 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:21672 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387396AbgDOHbG (ORCPT
+        Wed, 15 Apr 2020 03:33:05 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:52211 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728645AbgDOHc4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 03:31:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586935861;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=wq4PnsZgQ2G24Tjq97vpI5F2ndNze8Wd6Dp4iuNzDEg=;
-        b=dfgOfpc++lyNXEhbk3ykqr4siNU09Z/NaHKSz09uNZOq70pmPw3pP+YRfAUUNXEueBaUXr
-        InVWTcMoIOP7JdfqYxWp7ZVEPl9kW9DZ2LuTOA4GkMaTzxDwuZ7YYj8VQ5pl7E+k2eRVk3
-        zcaDmvzECq96DiChXNG8k5hCui8EgKs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-505-G5cDUwQsPCGDTDJeZalDaw-1; Wed, 15 Apr 2020 03:29:10 -0400
-X-MC-Unique: G5cDUwQsPCGDTDJeZalDaw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D786718CA250;
-        Wed, 15 Apr 2020 07:29:06 +0000 (UTC)
-Received: from sturgeon (unknown [10.40.192.200])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9DF311001281;
-        Wed, 15 Apr 2020 07:28:53 +0000 (UTC)
-Date:   Wed, 15 Apr 2020 09:28:51 +0200
-From:   Erik Skultety <eskultet@redhat.com>
-To:     Yan Zhao <yan.y.zhao@intel.com>
-Cc:     intel-gvt-dev@lists.freedesktop.org, cjia@nvidia.com,
-        kvm@vger.kernel.org, linux-doc@vger.kernel.org,
-        libvir-list@redhat.com, Zhengxiao.zx@alibaba-inc.com,
-        shuangtai.tst@alibaba-inc.com, qemu-devel@nongnu.org,
-        kwankhede@nvidia.com, eauger@redhat.com, corbet@lwn.net,
-        yi.l.liu@intel.com, ziye.yang@intel.com, mlevitsk@redhat.com,
-        pasic@linux.ibm.com, aik@ozlabs.ru, felipe@nutanix.com,
-        Ken.Xue@amd.com, kevin.tian@intel.com, xin.zeng@intel.com,
-        dgilbert@redhat.com, zhenyuw@linux.intel.com, dinechin@redhat.com,
-        changpeng.liu@intel.com, cohuck@redhat.com,
-        linux-kernel@vger.kernel.org, zhi.a.wang@intel.com,
-        jonathan.davies@nutanix.com, shaopeng.he@intel.com
-Subject: Re: [PATCH v5 1/4] vfio/mdev: add migration_version attribute for
- mdev (under mdev_type node)
-Message-ID: <20200415072851.GJ269314@sturgeon>
-References: <20200413055201.27053-1-yan.y.zhao@intel.com>
- <20200413055403.27203-1-yan.y.zhao@intel.com>
+        Wed, 15 Apr 2020 03:32:56 -0400
+Received: from mail-wr1-f71.google.com ([209.85.221.71])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <andrea.righi@canonical.com>)
+        id 1jOcXQ-0006Xs-J1
+        for linux-kernel@vger.kernel.org; Wed, 15 Apr 2020 07:32:48 +0000
+Received: by mail-wr1-f71.google.com with SMTP id y1so10133951wrp.5
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 00:32:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=MSC60tp9kRd115xx89W68VO0yl8bIwuRKlWrEsoTLMQ=;
+        b=Q25Hqgv5HlWSyd9Mx51U5Lnv0O+SPutzZYuhhzZsgx1bEBbtSWYVWJs529YwQ4cybl
+         TFX8DHNEcEQqrA9OMnpqNgTB6azxwTHDthmY4U9eQpb3OSqkH+ZJSG1A/F3PoPX4VTai
+         sYJPogeFgl10UULEDuyDkGEFAS40eFeLkuYxQJB6hwFel+Hn5zng0nLYYpptemKDfXIv
+         +5R99RiXY6U6sCnOGUvduMZI+2GDFCgsk6NLp9YF0kqAqzR0rJUpCu+i8YIlbsessjME
+         8McNY8dL5D6DfIDmSZ/Ud5RfaEug6iDBMdjWbfeGo+5DvgLS2RNT6EtMayxv3lS46cOR
+         kfgg==
+X-Gm-Message-State: AGi0Pub0qw55XrT0We8Fgzph00SxW2lesJu/OLDQ7eBE3CGCOTiKfY+w
+        io13BfBTuG/gTJ1r1c+aos7gAFzr+xcflBiPoTeIoalPhMKP9laCTWR/lZDqLSFLpG0meUMdp6I
+        Mu9sR7MslgWuNLYrtjDA1/kctFoq2mN4Aja5xLmcs2w==
+X-Received: by 2002:a1c:9e42:: with SMTP id h63mr3557296wme.115.1586935968037;
+        Wed, 15 Apr 2020 00:32:48 -0700 (PDT)
+X-Google-Smtp-Source: APiQypIq2o9IWjIecgbO+YQxf8WgBa5+rervdLrHwanzlQECdmRrsV8iWg62F1DNCc/1lVmdyXXMtg==
+X-Received: by 2002:a1c:9e42:: with SMTP id h63mr3557260wme.115.1586935967606;
+        Wed, 15 Apr 2020 00:32:47 -0700 (PDT)
+Received: from localhost ([79.36.127.123])
+        by smtp.gmail.com with ESMTPSA id y16sm22085240wrp.78.2020.04.15.00.32.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2020 00:32:47 -0700 (PDT)
+Date:   Wed, 15 Apr 2020 09:32:39 +0200
+From:   Andrea Righi <andrea.righi@canonical.com>
+To:     "Huang, Ying" <ying.huang@intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Minchan Kim <minchan@kernel.org>,
+        Anchal Agarwal <anchalag@amazon.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] mm: swap: use fixed-size readahead during swapoff
+Message-ID: <20200415073239.GG810380@xps-13>
+References: <20200413111810.GA801367@xps-13>
+ <87a73f7d71.fsf@yhuang-dev.intel.com>
+ <20200413133150.GA810380@xps-13>
+ <87wo6i6efn.fsf@yhuang-dev.intel.com>
+ <20200414130520.GF810380@xps-13>
+ <87v9m1zd83.fsf@yhuang-dev.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200413055403.27203-1-yan.y.zhao@intel.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <87v9m1zd83.fsf@yhuang-dev.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 01:54:03AM -0400, Yan Zhao wrote:
-> migration_version attribute is used to check migration compatibility
-> between two mdev devices of the same mdev type.
-> The key is that it's rw and its data is opaque to userspace.
->
-> Userspace reads migration_version of mdev device at source side and
-> writes the value to migration_version attribute of mdev device at targe=
-t
-> side. It judges migration compatibility according to whether the read
-> and write operations succeed or fail.
->
-> Currently, it is able to read/write migration_version attribute under t=
-wo
-> places:
->
-> (1) under mdev_type node
-> userspace is able to know whether two mdev devices are compatible befor=
-e
-> a mdev device is created.
->
-> userspace also needs to check whether the two mdev devices are of the s=
-ame
-> mdev type before checking the migration_version attribute. It also need=
-s
-> to check device creation parameters if aggregation is supported in futu=
-re.
->
-> (2) under mdev device node
-> userspace is able to know whether two mdev devices are compatible after
-> they are all created. But it does not need to check mdev type and devic=
-e
-> creation parameter for aggregation as device vendor driver would have
-> incorporated those information into the migration_version attribute.
->
->              __    userspace
->               /\              \
->              /                 \write
->             / read              \
->    ________/__________       ___\|/_____________
->   | migration_version |     | migration_version |-->check migration
->   ---------------------     ---------------------   compatibility
->     mdev device A               mdev device B
->
-> This patch is for mdev documentation about the first place (under
-> mdev_type node)
->
-> Cc: Alex Williamson <alex.williamson@redhat.com>
-> Cc: Erik Skultety <eskultet@redhat.com>
-> Cc: "Dr. David Alan Gilbert" <dgilbert@redhat.com>
-> Cc: Cornelia Huck <cohuck@redhat.com>
-> Cc: "Tian, Kevin" <kevin.tian@intel.com>
-> Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
-> Cc: "Wang, Zhi A" <zhi.a.wang@intel.com>
-> Cc: Neo Jia <cjia@nvidia.com>
-> Cc: Kirti Wankhede <kwankhede@nvidia.com>
-> Cc: Daniel P. Berrang=C3=A9 <berrange@redhat.com>
-> Cc: Christophe de Dinechin <dinechin@redhat.com>
->
-> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-> Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
->
-> ---
-> v5:
-> updated commit message a little to indicate this patch is for
-> migration_version attribute under mdev_type node
->
-> v4:
-> fixed a typo. (Cornelia Huck)
->
-> v3:
-> 1. renamed version to migration_version
-> (Christophe de Dinechin, Cornelia Huck, Alex Williamson)
-> 2. let errno to be freely defined by vendor driver
-> (Alex Williamson, Erik Skultety, Cornelia Huck, Dr. David Alan Gilbert)
-> 3. let checking mdev_type be prerequisite of migration compatibility
-> check. (Alex Williamson)
-> 4. reworded example usage section.
-> (most of this section came from Alex Williamson)
-> 5. reworded attribute intention section (Cornelia Huck)
->
-> v2:
-> 1. added detailed intent and usage
-> 2. made definition of version string completely private to vendor drive=
-r
->    (Alex Williamson)
-> 3. abandoned changes to sample mdev drivers (Alex Williamson)
-> 4. mandatory --> optional (Cornelia Huck)
-> 5. added description for errno (Cornelia Huck)
-> ---
->  .../driver-api/vfio-mediated-device.rst       | 113 ++++++++++++++++++
->  1 file changed, 113 insertions(+)
->
-> diff --git a/Documentation/driver-api/vfio-mediated-device.rst b/Docume=
-ntation/driver-api/vfio-mediated-device.rst
-> index 25eb7d5b834b..2d1f3c0f3c8f 100644
-> --- a/Documentation/driver-api/vfio-mediated-device.rst
-> +++ b/Documentation/driver-api/vfio-mediated-device.rst
-> @@ -202,6 +202,7 @@ Directories and files under the sysfs for Each Phys=
-ical Device
->    |     |   |--- available_instances
->    |     |   |--- device_api
->    |     |   |--- description
-> +  |     |   |--- migration_version
->    |     |   |--- [devices]
->    |     |--- [<type-id>]
->    |     |   |--- create
-> @@ -209,6 +210,7 @@ Directories and files under the sysfs for Each Phys=
-ical Device
->    |     |   |--- available_instances
->    |     |   |--- device_api
->    |     |   |--- description
-> +  |     |   |--- migration_version
->    |     |   |--- [devices]
->    |     |--- [<type-id>]
->    |          |--- create
-> @@ -216,6 +218,7 @@ Directories and files under the sysfs for Each Phys=
-ical Device
->    |          |--- available_instances
->    |          |--- device_api
->    |          |--- description
-> +  |          |--- migration_version
->    |          |--- [devices]
->
->  * [mdev_supported_types]
-> @@ -246,6 +249,116 @@ Directories and files under the sysfs for Each Ph=
-ysical Device
->    This attribute should show the number of devices of type <type-id> t=
-hat can be
->    created.
+On Wed, Apr 15, 2020 at 10:37:00AM +0800, Huang, Ying wrote:
+> Andrea Righi <andrea.righi@canonical.com> writes:
+> 
+> > On Tue, Apr 14, 2020 at 09:31:24AM +0800, Huang, Ying wrote:
+> >> Andrea Righi <andrea.righi@canonical.com> writes:
+> >> 
+> >> > On Mon, Apr 13, 2020 at 09:00:34PM +0800, Huang, Ying wrote:
+> >> >> Andrea Righi <andrea.righi@canonical.com> writes:
+> >> >> 
+> >> >> [snip]
+> >> >> 
+> >> >> > diff --git a/mm/swap_state.c b/mm/swap_state.c
+> >> >> > index ebed37bbf7a3..c71abc8df304 100644
+> >> >> > --- a/mm/swap_state.c
+> >> >> > +++ b/mm/swap_state.c
+> >> >> > @@ -20,6 +20,7 @@
+> >> >> >  #include <linux/migrate.h>
+> >> >> >  #include <linux/vmalloc.h>
+> >> >> >  #include <linux/swap_slots.h>
+> >> >> > +#include <linux/oom.h>
+> >> >> >  #include <linux/huge_mm.h>
+> >> >> >  
+> >> >> >  #include <asm/pgtable.h>
+> >> >> > @@ -507,6 +508,14 @@ static unsigned long swapin_nr_pages(unsigned long offset)
+> >> >> >  	max_pages = 1 << READ_ONCE(page_cluster);
+> >> >> >  	if (max_pages <= 1)
+> >> >> >  		return 1;
+> >> >> > +	/*
+> >> >> > +	 * If current task is using too much memory or swapoff is running
+> >> >> > +	 * simply use the max readahead size. Since we likely want to load a
+> >> >> > +	 * lot of pages back into memory, using a fixed-size max readhaead can
+> >> >> > +	 * give better performance in this case.
+> >> >> > +	 */
+> >> >> > +	if (oom_task_origin(current))
+> >> >> > +		return max_pages;
+> >> >> >  
+> >> >> >  	hits = atomic_xchg(&swapin_readahead_hits, 0);
+> >> >> >  	pages = __swapin_nr_pages(prev_offset, offset, hits, max_pages,
+> >> >> 
+> >> >> Thinks this again.  If my understanding were correct, the accessing
+> >> >> pattern during swapoff is sequential, why swap readahead doesn't work?
+> >> >> If so, can you root cause that firstly?
+> >> >
+> >> > Theoretically if the pattern is sequential the current heuristic should
+> >> > already select a big readahead size, but apparently it's not doing that.
+> >> >
+> >> > I'll repeat my tests tracing the readahead size during swapoff to see
+> >> > exactly what's going on here.
+> >> 
+> >> I haven't verify it.  It may be helpful to call lookup_swap_cache()
+> >> before swapin_readahead() in unuse_pte_range().  The theory behind it is
+> >> to update the swap readahead statistics via lookup_swap_cache().
+> >
+> > I did more tests trying to collect some useful information.
+> >
+> > In particular I've been focusing at tracing the distribution of the
+> > values returned by swapin_nr_pages() in different scenarios.
+> >
+> > To do so I made swapin_nr_pages() trace-able and I used the following
+> > bcc command to measure the distrubution of the returned values:
+> >
+> >  # argdist-bpfcc -c -C 'r::swapin_nr_pages(unsigned long offset):unsigned long:$retval'
+> >
+> > I've collected this metric in the following scenarios:
+> >   - 5.6 vanilla
+> >   - 5.6 + lookup_swap_cache() before swapin_readahead() in
+> >     unuse_pte_range()
+> >   - 5.6 + atomic_inc(&swapin_readahead_hits) before swapin_readahead()
+> >     in unuse_pte_range()
+> >   - 5.6 + swapin_readahead_hits=last_readahead_pages (in the atomic way)
+> >     before swapin_readahead() in unuse_pte_range()
+> >
+> > Each kernel has been tested both with swappiness=0 and swappiness=60.
+> > Results are pretty much identical changing the swappiness, so I'm just
+> > reporting the default case here (w/ swappiness=60).
+> >
+> > Result
+> > ======
+> >
+> >  = swapoff performance (elapsed time) =
+> >
+> >  vanilla                 22.09s
+> >  lookup_swap_cache()     23.87s
+> >  hits++                  16.10s
+> >  hits=last_ra_pages       8.81s
+> >
+> >  = swapin_nr_pages() $retval distribution =
+> >
+> > 5.6 vanilla:
+> > r::swapin_nr_pages(unsigned long offset):unsigned long:$retval
+> > 	COUNT      EVENT
+> > 	36948      $retval = 8
+> > 	44151      $retval = 4
+> > 	49290      $retval = 1
+> > 	527771     $retval = 2
+> >
+> > 5.6 lookup_swap_cache() before swapin_readahead():
+> > r::swapin_nr_pages(unsigned long offset):unsigned long:$retval
+> > 	COUNT      EVENT
+> > 	13093      $retval = 1
+> > 	56703      $retval = 8
+> > 	123067     $retval = 2
+> > 	366118     $retval = 4
+> >
+> > 5.6 atomic_inc(&swapin_readahead_hits) before swapin_readahead():
+> > r::swapin_nr_pages(unsigned long offset):unsigned long:$retval
+> > 	COUNT      EVENT
+> > 	2589       $retval = 1
+> > 	8016       $retval = 2
+> > 	40021      $retval = 8
+> > 	566038     $retval = 4
+> >
+> > 5.6 swapin_readahead_hits=last_readahead_pages before swapin_readahead():
+> > r::swapin_nr_pages(unsigned long offset):unsigned long:$retval
+> > 	COUNT      EVENT
+> > 	785        $retval = 2
+> > 	1072       $retval = 1
+> > 	21844      $retval = 4
+> > 	644168     $retval = 8
+> >
+> > In the vanilla case, the readahead heuristic seems to choose 2 pages
+> > most of the time. This is because we are not properly considering the
+> > hits (hits are always 0 in the swapoff code path) and, as you correctly
+> > pointed out, we can fix this by calling lookup_swap_cache() in
+> > unuse_pte_range() before calling swapin_readahead().
+> >
+> > With this change the distribution of the readahead size moves more
+> > toward 4 pages, but we still have some 2s. That looks good, however it
+> > doesn't seem to speed up swapoff very much... maybe because calling
+> > lookup_swap_cache() introduces a small overhead? (still need to
+> > investigate about this theory).
+> >
+> > In the next test I've tried to always increment hits by 1 before calling
+> > swapin_readahead() in unuse_pte_range(). This is basically cheating,
+> > because I'm faking the hit ratio, forcing the heuristic to use a larger
+> > readahead size; in fact, the readahead size moves even more toward 4
+> > pages and swapoff performance are a little better now.
+> >
+> > Pushing even more the "cheating" I can pretend that the previous
+> > readahead was all hits (swapin_readahead_hits=last_readahead_pages), so
+> > I'm forcing the heuristic to move toward the max size and keep using it.
+> > The result here is pretty much identical to my fixed-size patch, because
+> > swapin_nr_pages() returns the max readahead size pretty much all the
+> > time during swapoff (8 pages or, more in general, vm.page-cluster).
+> >
+> > Personally I don't like very much forcing the heuristic in this way,
+> > it'd be nice if it would just work by accounting the proper hit ratio
+> > (so just by adding lookup_swap_cache() as you correctly suggested), but
+> > this solution doesn't seem to improve performance in reality. For this
+> > reason I still think we should consider the swapoff scenario like a
+> > special one and somehow bypass the readahead heuristic and always return
+> > the max readahead size.
+> >
+> > Looking at the hits of the previous step in the swapoff case just
+> > doesn't work, because we may have some misses, but they will become hits
+> > very soon, since we are reading all the swapped out pages back into
+> > memory. This is why using the max readahead size gives better
+> > swapoff performance.
+> >
+> > What do you think?
+> 
+> >From your description, it appears that you are using cluster readahead
+> instead of vma readahead.  Can you verify this via,
+> 
+> # cat /sys/kernel/mm/swap/vma_ra_enabled
 
-I've got only a few suggestions to improve to wording in the documentatio=
-n
-(feel free to disagree):
+# cat /sys/kernel/mm/swap/vma_ra_enabled
+true
 
->
-> +* migration_version
-> +
-> +  This attribute is rw, and is optional.
+However, it's still using the cluster readahead because I'm using a
+swap file and nr_rotate_swap=1, so, according to the following, it's
+never using the vma readahead:
 
-IMO better wording: "This is an optional, RW attribute."
+ static inline bool swap_use_vma_readahead(void)
+ {
+         return READ_ONCE(enable_vma_readahead) && !atomic_read(&nr_rotate_swap);
+ }
 
-> +  It is used to check migration compatibility between two mdev devices=
- of the
-> +  same mdev type. Absence of this attribute means the device of type <=
-type-id>
-> +  does not support migration.
-> +  This attribute provides a way to check migration compatibility betwe=
-en two
-> +  mdev devices from userspace even before device creation. The intende=
-d usage is
+I'll investigate more on this, I think there's no reason to prevent the
+usage of vma readahead if the underlying device is non-rotational.
 
-^This sentence essentially duplicates the information from the first sent=
-ence,
-can we condense it into something like:
+> 
+> And if it returns false, you can enable it via,
+> 
+> # echo 1 > /sys/kernel/mm/swap/vma_ra_enabled
+> 
+> Because now swapoff code swapin pages in the page table order instead of
+> the swap entry order.  But this will turn the sequential disk read to
+> random disk read too.  Let's see the performance results.
+> 
+> And please make sure that in unuse_pte_range(), after
+> lookup_swap_cache() returns non-NULL page, it's unnecessary to call
+> swapin_readahead().
 
-"It is used to check the migration compatibility between two mdev devices=
- of the
-same mdev type. Typically, the target device has not been created yet at =
-the
-time of userspace using this attribute to check the migration compatibili=
-ty."
+This is what I was missing! Sorry about that, I was still calling
+swapin_readahead() even if the page was already in case, that was
+unnecessary overhead and it was messing up the hit ratio!
 
-> +  for userspace to read the migration_version attribute from one mdev =
-device and
-> +  then writing that value to the migration_version attribute of the ot=
-her mdev
-> +  device. The second mdev device indicates compatibility via the retur=
-n code of
-> +  the write operation. This makes compatibility between mdev devices c=
-ompletely
-> +  vendor-defined and opaque to userspace. Userspace should do nothing =
-more
-> +  than verify the mdev types match and then use the migration_version =
-attribute
-> +  to confirm source to target compatibility.
+With lookup_swap_cache() applied properly eveything looks way better:
 
-I'd rephrase the ^last sentence differently:
-"Therefore, userspace is only expected to verify that the mdev types of t=
-he
-respective devices match and then use the migration_version attribute to
-confirm migration compatibility between the source and target mdev device=
-s."
+r::swapin_nr_pages(unsigned long offset):unsigned long:$retval
+	COUNT      EVENT
+	378        $retval = 1
+	2138       $retval = 2
+	25365      $retval = 4
+	105314     $retval = 8
 
-> +
-> +  Reading/Writing Attribute Data:
-> +  read(2) will fail if device of type <type-id> does not support migra=
-tion and
-> +          otherwise succeed and return migration_version string of the=
- device of
+swapof time: 9.87s
 
-"returns a migration_version string of the device on success, fails with =
-an
-errno if the device doesn't support migration"
+So, basically it gives the same performance result of my fixed-size
+approach, but it's definitely a better and cleaner solution.
 
-> +          type <type-id>.
-> +
-> +          This migration_version string is vendor defined and opaque t=
-o the
-> +          userspace. Vendor is free to include whatever they feel is r=
-elevant.
-> +          e.g. <pciid of parent device>-<software version>.
-> +
-> +          Restrictions on this migration_version string:
-> +            1. It should only contain ascii characters
-> +            2. MAX Length is PATH_MAX (4096)
-> +
-> +  write(2) expects migration_version string of source mdev device, and=
- will
-> +          succeed if it is determined to be compatible and otherwise f=
-ail with
-> +          vendor specific errno.
+Just to make it clear, here's the patch that I applied (if it looks good
+to you I can send another version with a better description):
 
-"expects a migration_version string of the source mdev device, succeeds i=
-f the
-two mdev devices are migration compatible, otherwise fails with and errno=
-"
+ mm/swapfile.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-> +
-> +  Errno:
-> +  -An errno on read(2) indicates the device of type <type-id> does not=
- support
-> +  migration;
-> +  -An errno on write(2) indicates the devices are incompatible or the =
-target
-> +  doesn't support migration.
-> +  Vendor driver is free to define specific errno and is suggested to
-> +  print detailed error in syslog for diagnose purpose.
-> +
-> +  Userspace should treat ANY of below conditions as two mdev devices n=
-ot
+diff --git a/mm/swapfile.c b/mm/swapfile.c
+index 9fd47e6f7a86..cb9eb517178d 100644
+--- a/mm/swapfile.c
++++ b/mm/swapfile.c
+@@ -1944,7 +1944,9 @@ static int unuse_pte_range(struct vm_area_struct *vma, pmd_t *pmd,
+ 		vmf.pmd = pmd;
+ 		last_ra = atomic_read(&last_readahead_pages);
+ 		atomic_set(&swapin_readahead_hits, last_ra);
+-		page = swapin_readahead(entry, GFP_HIGHUSER_MOVABLE, &vmf);
++		page = lookup_swap_cache(entry, vma, addr);
++		if (!page)
++			page = swapin_readahead(entry, GFP_HIGHUSER_MOVABLE, &vmf);
+ 		if (!page) {
+ 			if (*swap_map == 0 || *swap_map == SWAP_MAP_BAD)
+ 				goto try_next;
 
-Userspace should treat any of the below conditions as an indication of mi=
-gration
-incompatibility between two mdev devices.
-
-> +  compatible:
-> +  (0) The mdev devices are not of the same type
-> +  (1) any one of the two mdev devices does not have a migration_versio=
-n
-> +  attribute
-
-any of the two mdev devices is missing the migration_version attribute
-
-> +  (2) error when reading from migration_version attribute of one mdev =
-device
-
-when reading the source mdev's migration_version attribute
-
-> +  (3) error when writing migration_version string of one mdev device t=
-o
-> +  migration_version attribute of the other mdev device
-
-when writing the source mdev migration_version string to the target mdev
-device's migration_version attribute
-
-> +
-> +  Userspace should regard two mdev devices compatible when ALL of belo=
-w
-> +  conditions are met:
-
-Userspace can consider the two mdev devices to be compatible when all of =
-the
-below conditions are met:
-
-> +  (0) The mdev devices are of the same type
-> +  (1) success when reading from migration_version attribute of one mde=
-v device.
-
-reading the migration_version attribute of the source succeeds
-
-> +  (2) success when writing migration_version string of one mdev device=
- to
-> +  migration_version attribute of the other mdev device.
-
-writing the migration_version string to the target mdev's migration_versi=
-on
-attribute succeeds
-
-> +
-> +  Example Usage:
-> +  (1) Compare mdev types:
-
-Comparing two mdev types:
-
-> +
-> +  The mdev type of an instantiated device can be read from the mdev_ty=
-pe link
-> +  within the device instance in sysfs, for example:
-> +
-> +  # basename $(readlink -f /sys/bus/mdev/devices/$MDEV_UUID/mdev_type/=
-)
-> +
-> +  The mdev types available on a given host system can also be found th=
-rough
-> +  /sys/class/mdev_bus, for example:
-> +
-> +  # ls /sys/class/mdev_bus/*/mdev_supported_types/
-> +
-> +  Migration is only possible between devices of the same mdev type.
-> +
-> +  (2) Retrieve the mdev source migration_version:
-> +
-> +  The migration_version information can either be read from the mdev_t=
-ype link
-> +  on an instantiated device:
-
-s/information/string
-
-> +
-> +  # cat /sys/bus/mdev/devices/$UUID1/mdev_type/migration_version
-> +
-> +  Or it can be read from the mdev type definition, for example:
-> +
-> +  # cat /sys/class/mdev_bus/*/mdev_supported_types/$MDEV_TYPE/migratio=
-n_version
-> +
-> +  If reading the source migration_version generates an error, migratio=
-n is not
-> +  possible.
-> +  NB, there might be several parent devices for a given mdev type on a=
- host
-> +  system, each may support or expose different migration_versions.
-> +  Matching the specific mdev type to a parent may become important in =
-such
-> +  configurations.
-> +
-> +  (3) Test source migration_version at target:
-> +
-> +  Given a migration_version as outlined above, its compatibility to an
-> +  instantiated device of the same mdev type can be tested as:
-> +  # echo $VERSION > /sys/bus/mdev/devices/$UUID2/mdev_type/migration_v=
-ersion
-> +
-> +  If this write fails, the source and target migration versions are no=
-t
-> +  compatible or the target does not support migration.
-> +
-> +  Compatibility can also be tested prior to target device creation usi=
-ng the
-
-prior to creation of the target device
-
-> +  mdev type definition for a parent device with a previously found mat=
-ching mdev
-> +  type, for example:
-
-using the migration_version attribute present inside a specific mdev type
-directory for a given physical parent device.
-
-> +
-> +  # echo $VERSION > \
-> +  /sys/class/mdev_bus/$PARENT/mdev_supported_types/$MDEV_TYPE/migratio=
-n_version
-> +
-> +  Again, an error writing the migration_version indicates that an inst=
-ance of
-> +  this mdev type would not support a migration from the provided migra=
-tion
-> +  version.
-
-would not support migration from the source.
-
---
-Erik Skultety
-
+Thanks!
+-Andrea
