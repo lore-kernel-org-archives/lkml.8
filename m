@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68AB9C38A29
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F186C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:49:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FF5A206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:49:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EC32206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:49:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586954948;
-	bh=RgLLwNK5+pFXHOHmYUgGmzQE3WjnTG/qYUCJPa6BMcg=;
+	s=default; t=1586954962;
+	bh=yZRJLnU4ErUB6W+jl5bb662sTl3GJZbnFAsMghgK1O4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MGZUoSm8suPXPliu5p1Oupb5EvkLuVll0EONj9Hd+bXF1MEL1/Tl5dF30Wu/QmJ6k
-	 j/FNUmSOCDfx0R6l/4WpZhEHQlte3NgX6EUppjlbgAbK0/ElsWIW2KzFZGsbtqocOk
-	 nUSwlZQ2+xFrRxkTNi93fXYGsU2qPGSJZZDmpom8=
+	b=P29a0CmhgYDIq45qcyUV3ylUr+w7hGIfhzy9H8k2wKYQmCEakkmHpoyw3nN9eH7If
+	 B0RwE+nL1YqwgVfNxqa15xyxa+R5Ey+26cY21UtxKEo2uWKxBNFdMUmvlOF85hrKkD
+	 W1sS05Mldcsw4z4Ag8q+xz2LHQtltbTToVU1ZfQI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S370330AbgDOMtG (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:49:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34498 "EHLO mail.kernel.org"
+        id S370341AbgDOMtV (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:49:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408947AbgDOLnC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:43:02 -0400
+        id S2408945AbgDOLnB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:43:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B45BD20857;
-        Wed, 15 Apr 2020 11:43:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7193C206A2;
+        Wed, 15 Apr 2020 11:43:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950982;
-        bh=RgLLwNK5+pFXHOHmYUgGmzQE3WjnTG/qYUCJPa6BMcg=;
+        s=default; t=1586950981;
+        bh=yZRJLnU4ErUB6W+jl5bb662sTl3GJZbnFAsMghgK1O4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lddvriWoKjfDbtOgIg6LTEN8hzJQfvSqR3V3LW1DqK7iPiWEO6ADzpHxCfbK2x9Yi
-         Y/YcvzKW1IPnpwu7l2kzYANl+qJzL+WPcKzs4E2dirxSyhQj1PjspVDN/gHE3FrdGW
-         QsCBF3XCiD37QpevD28MQwQmH1vsaN5c+qzQgWsY=
+        b=oPMxqEFSN6W8/xv/LoymzbM2FBBS7DI767JB0/3NdORgkdGbM32CSFi1gkYi4N187
+         EAA1h01VfElfDRbd0Ptw7P/xhSnuoJoO6HhMCrk4QZAeGAs9lHO9D2Tsh9A8EjksMw
+         E8+7uzdY7sQyVHqQHAyrNdqHhkp0fm0egTh3K5RM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Brian Foster <bfoster@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 030/106] xfs: fix incorrect test in xfs_alloc_ag_vextent_lastblock
-Date:   Wed, 15 Apr 2020 07:41:10 -0400
-Message-Id: <20200415114226.13103-30-sashal@kernel.org>
+Cc:     Johan Jonker <jbx6244@gmail.com>, Heiko Stuebner <heiko@sntech.de>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 029/106] ARM: dts: rockchip: fix lvds-encoder ports subnode for rk3188-bqedison2qc
+Date:   Wed, 15 Apr 2020 07:41:09 -0400
+Message-Id: <20200415114226.13103-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
 References: <20200415114226.13103-1-sashal@kernel.org>
@@ -59,36 +59,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Darrick J. Wong" <darrick.wong@oracle.com>
+From: Johan Jonker <jbx6244@gmail.com>
 
-[ Upstream commit 77ca1eed5a7d2bf0905562eb1a15aac76bc19fe4 ]
+[ Upstream commit 1a7e99599dffd836fcb720cdc0eaf3cd43d7af4a ]
 
-When I lifted the code in xfs_alloc_ag_vextent_lastblock out of a loop,
-I forgot to convert all the accesses to len to be pointer dereferences.
+A test with the command below gives this error:
 
-Coverity-id: 1457918
-Fixes: 5113f8ec3753ed ("xfs: clean up weird while loop in xfs_alloc_ag_vextent_near")
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Brian Foster <bfoster@redhat.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+arch/arm/boot/dts/rk3188-bqedison2qc.dt.yaml: lvds-encoder:
+'ports' is a required property
+
+Fix error by adding a ports wrapper for port@0 and port@1
+inside the 'lvds-encoder' node for rk3188-bqedison2qc.
+
+make ARCH=arm dtbs_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/
+bridge/lvds-codec.yaml
+
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+Link: https://lore.kernel.org/r/20200316174647.5598-1-jbx6244@gmail.com
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/libxfs/xfs_alloc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/rk3188-bqedison2qc.dts | 27 ++++++++++++++----------
+ 1 file changed, 16 insertions(+), 11 deletions(-)
 
-diff --git a/fs/xfs/libxfs/xfs_alloc.c b/fs/xfs/libxfs/xfs_alloc.c
-index fc93fd88ec89f..5b0c20a0d7f2f 100644
---- a/fs/xfs/libxfs/xfs_alloc.c
-+++ b/fs/xfs/libxfs/xfs_alloc.c
-@@ -1515,7 +1515,7 @@ xfs_alloc_ag_vextent_lastblock(
- 	 * maxlen, go to the start of this block, and skip all those smaller
- 	 * than minlen.
- 	 */
--	if (len || args->alignment > 1) {
-+	if (*len || args->alignment > 1) {
- 		acur->cnt->bc_ptrs[0] = 1;
- 		do {
- 			error = xfs_alloc_get_rec(acur->cnt, bno, len, &i);
+diff --git a/arch/arm/boot/dts/rk3188-bqedison2qc.dts b/arch/arm/boot/dts/rk3188-bqedison2qc.dts
+index 8afb2fd5d9f1b..66a0ff196eb1f 100644
+--- a/arch/arm/boot/dts/rk3188-bqedison2qc.dts
++++ b/arch/arm/boot/dts/rk3188-bqedison2qc.dts
+@@ -58,20 +58,25 @@
+ 
+ 	lvds-encoder {
+ 		compatible = "ti,sn75lvds83", "lvds-encoder";
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+ 
+-		port@0 {
+-			reg = <0>;
+-			lvds_in_vop0: endpoint {
+-				remote-endpoint = <&vop0_out_lvds>;
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++
++				lvds_in_vop0: endpoint {
++					remote-endpoint = <&vop0_out_lvds>;
++				};
+ 			};
+-		};
+ 
+-		port@1 {
+-			reg = <1>;
+-			lvds_out_panel: endpoint {
+-				remote-endpoint = <&panel_in_lvds>;
++			port@1 {
++				reg = <1>;
++
++				lvds_out_panel: endpoint {
++					remote-endpoint = <&panel_in_lvds>;
++				};
+ 			};
+ 		};
+ 	};
 -- 
 2.20.1
 
