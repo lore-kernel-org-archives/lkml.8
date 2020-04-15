@@ -2,158 +2,161 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53034C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:51:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE3DC2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:51:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E892206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:51:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="gGbsDyoh"
+	by mail.kernel.org (Postfix) with ESMTP id ED53B206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:51:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586955098;
+	bh=jj+n4cVYzfXD5WkI24w4Q0E7n1bzv+HT304nlg3hHMs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=n0N9xNRm8VT5nMAiwu2tTVeSurbsAHCZOSTne7ljYEJ3o3Rt366L/r3gU5LF6ECrj
+	 Tqmyqg1B7w5TAMp+zJK3Bewq2UuYelS+5Hezf5+cDsiWaE+yukl0TuUllwNagQ9mki
+	 F0A8pLiYNNSxuD4auEDQHTZ+fxcYz0ZE/vV++Zas=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S370477AbgDOMv1 (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:51:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51692 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S370440AbgDOMux (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 08:50:53 -0400
-Received: from mo6-p03-ob.smtp.rzone.de (mo6-p03-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5303::7])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16CD6C061A0C;
-        Wed, 15 Apr 2020 05:50:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1586955050;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=ZWPeQuNZym8qIi2cOZDzlHwaDAs+LcskJtN8sCgQ/rk=;
-        b=gGbsDyohBd13qIMXzzowNNR9YtVfQZBRB6oeIhs3SNPyi9FVwYzbYeh1+AFY2NamuV
-        QtyXfz2bviGYNw1Wg5cAPWSSsYdp2u+x2AwmbKZcNNMedXx7IoAaUOV7mfdHrbBdPRD2
-        tZDao3W7Jpb08vKwlIVDi1KI4VG0ubRyXx11EwfWEXUbVlmXmmIlAYjMjB4ABMtDxop8
-        u4JH3igeM6AMK/dJLiHta7bzLWfGMwTUVdeKCacvdxrxYeyD1KUeOprm4/Va4537vUnv
-        aF73KY4sOIBFN9AM4JouZo+RQ8fzZQaMQ9PAmkXp2m1cJiEIOgFANtEAI+g72aR09rnW
-        OV/Q==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/PtwDConyM="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.4.0 DYNA|AUTH)
-        with ESMTPSA id 6028a2w3FCoV1xp
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Wed, 15 Apr 2020 14:50:31 +0200 (CEST)
-Subject: Re: [PATCH v6 08/12] arm: dts: s5pv210: Add G3D node
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <CAJKOXPcb9KWNAem-CAx_zCS+sZoEHYc0J8x0nk1xjY9hD4-M4w@mail.gmail.com>
-Date:   Wed, 15 Apr 2020 14:50:31 +0200
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Philipp Rossak <embed3d@gmail.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-omap@vger.kernel.org, openpvrsgx-devgroup@letux.org,
-        letux-kernel@openphoenux.org, kernel@pyra-handheld.com,
-        linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        Jonathan Bakker <xc-racer2@live.ca>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <AB9B8741-CFF7-414D-9489-D381B539538D@goldelico.com>
-References: <cover.1586939718.git.hns@goldelico.com> <b6733f80546bf3e6b3799f716b9c8e0f407de03d.1586939718.git.hns@goldelico.com> <CAJKOXPcb9KWNAem-CAx_zCS+sZoEHYc0J8x0nk1xjY9hD4-M4w@mail.gmail.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Jonathan Bakker <xc-racer2@live.ca>
-X-Mailer: Apple Mail (2.3124)
+        id S370485AbgDOMvg (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:51:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34262 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405947AbgDOLms (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:42:48 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20DF820737;
+        Wed, 15 Apr 2020 11:42:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586950967;
+        bh=jj+n4cVYzfXD5WkI24w4Q0E7n1bzv+HT304nlg3hHMs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=RjfpRPL5RexMW0l5qbgr8JblHceNcbljcsE2qMqe7FVZdIxuOW5WFTxguFB2WNCJ+
+         XOFBJu7S9RUG1DAj+41bl6S64a0sHq/myPa8MkLjkpe1Z/DzIxhXYibr0C5Wn4onT4
+         UNrrLOeDsQ4N9zQ5oH06ukEyPY/vNmOyUkyChnmg=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Jon Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 017/106] arm64: tegra: Fix Tegra194 PCIe compatible string
+Date:   Wed, 15 Apr 2020 07:40:57 -0400
+Message-Id: <20200415114226.13103-17-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
+References: <20200415114226.13103-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Jon Hunter <jonathanh@nvidia.com>
 
-> Am 15.04.2020 um 13:49 schrieb Krzysztof Kozlowski <krzk@kernel.org>:
->=20
-> On Wed, 15 Apr 2020 at 10:36, H. Nikolaus Schaller <hns@goldelico.com> =
-wrote:
->>=20
->> From: Jonathan Bakker <xc-racer2@live.ca>
->>=20
->> to add support for SGX540 GPU.
->=20
-> Do not continue the subject in commit msg like it is one sentence.
-> These are two separate sentences, so commit msg starts with capital
-> letter and it is sentence by itself.
->=20
->> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
->> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->> ---
->> arch/arm/boot/dts/s5pv210.dtsi | 15 +++++++++++++++
->> 1 file changed, 15 insertions(+)
->>=20
->> diff --git a/arch/arm/boot/dts/s5pv210.dtsi =
-b/arch/arm/boot/dts/s5pv210.dtsi
->> index 2ad642f51fd9..e7fc709c0cca 100644
->> --- a/arch/arm/boot/dts/s5pv210.dtsi
->> +++ b/arch/arm/boot/dts/s5pv210.dtsi
->> @@ -512,6 +512,21 @@ vic3: interrupt-controller@f2300000 {
->>                        #interrupt-cells =3D <1>;
->>                };
->>=20
->> +               g3d: g3d@f3000000 {
->> +                       compatible =3D "samsung,s5pv210-sgx540-120";
->> +                       reg =3D <0xf3000000 0x10000>;
->> +                       interrupt-parent =3D <&vic2>;
->> +                       interrupts =3D <10>;
->> +                       clock-names =3D "sclk";
->> +                       clocks =3D <&clocks CLK_G3D>;
->=20
-> Not part of bindings, please remove or add to the bindings.
+[ Upstream commit f9f711efd441ad0d22874be49986d92121862335 ]
 
-Well, the bindings should describe what is common for all SoC
-and they are quite different in what they need in addition.
+If the kernel configuration option CONFIG_PCIE_DW_PLAT_HOST is enabled
+then this can cause the kernel to incorrectly probe the generic
+designware PCIe platform driver instead of the Tegra194 designware PCIe
+driver. This causes a boot failure on Tegra194 because the necessary
+configuration to access the hardware is not performed.
 
-Thererfore we have no "additionalProperties: false" in the
-bindings [PATCH v6 01/12].
+The order in which the compatible strings are populated in Device-Tree
+is not relevant in this case, because the kernel will attempt to probe
+the device as soon as a driver is loaded and if the generic designware
+PCIe driver is loaded first, then this driver will be probed first.
+Therefore, to fix this problem, remove the "snps,dw-pcie" string from
+the compatible string as we never want this driver to be probe on
+Tegra194.
 
->=20
->> +
->> +                       power-domains =3D <&pd S5PV210_PD_G3D>;
->=20
-> Ditto
+Fixes: 2602c32f15e7 ("arm64: tegra: Add P2U and PCIe controller nodes to Tegra194 DT")
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ .../devicetree/bindings/pci/nvidia,tegra194-pcie.txt |  2 +-
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi             | 12 ++++++------
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
-In this case it might be possible to add the clock/power-domains
-etc. to a wrapper node compatible to "simple-pm-bus" or similar
-and make the gpu a child of it.
-
-@Jontahan: can you please give it a try?
-
-
->=20
->> +
->> +                       assigned-clocks =3D <&clocks MOUT_G3D>, =
-<&clocks DOUT_G3D>;
->> +                       assigned-clock-rates =3D <0>, <66700000>;
->> +                       assigned-clock-parents =3D <&clocks =
-MOUT_MPLL>;
->=20
-> Probably this should have status disabled because you do not set
-> regulator supply.
->=20
-> Best regards,
-> Krzysztof
-
-BR and thanks,
-Nikolaus
+diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+index b739f92da58e5..1f90eb39870be 100644
+--- a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+@@ -118,7 +118,7 @@ Tegra194:
+ --------
+ 
+ 	pcie@14180000 {
+-		compatible = "nvidia,tegra194-pcie", "snps,dw-pcie";
++		compatible = "nvidia,tegra194-pcie";
+ 		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX8B>;
+ 		reg = <0x00 0x14180000 0x0 0x00020000   /* appl registers (128K)      */
+ 		       0x00 0x38000000 0x0 0x00040000   /* configuration space (256K) */
+diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+index 2c8fae854a23e..2b6f0b9aaf902 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+@@ -1152,7 +1152,7 @@
+ 	};
+ 
+ 	pcie@14100000 {
+-		compatible = "nvidia,tegra194-pcie", "snps,dw-pcie";
++		compatible = "nvidia,tegra194-pcie";
+ 		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX1A>;
+ 		reg = <0x00 0x14100000 0x0 0x00020000   /* appl registers (128K)      */
+ 		       0x00 0x30000000 0x0 0x00040000   /* configuration space (256K) */
+@@ -1197,7 +1197,7 @@
+ 	};
+ 
+ 	pcie@14120000 {
+-		compatible = "nvidia,tegra194-pcie", "snps,dw-pcie";
++		compatible = "nvidia,tegra194-pcie";
+ 		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX1A>;
+ 		reg = <0x00 0x14120000 0x0 0x00020000   /* appl registers (128K)      */
+ 		       0x00 0x32000000 0x0 0x00040000   /* configuration space (256K) */
+@@ -1242,7 +1242,7 @@
+ 	};
+ 
+ 	pcie@14140000 {
+-		compatible = "nvidia,tegra194-pcie", "snps,dw-pcie";
++		compatible = "nvidia,tegra194-pcie";
+ 		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX1A>;
+ 		reg = <0x00 0x14140000 0x0 0x00020000   /* appl registers (128K)      */
+ 		       0x00 0x34000000 0x0 0x00040000   /* configuration space (256K) */
+@@ -1287,7 +1287,7 @@
+ 	};
+ 
+ 	pcie@14160000 {
+-		compatible = "nvidia,tegra194-pcie", "snps,dw-pcie";
++		compatible = "nvidia,tegra194-pcie";
+ 		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX4A>;
+ 		reg = <0x00 0x14160000 0x0 0x00020000   /* appl registers (128K)      */
+ 		       0x00 0x36000000 0x0 0x00040000   /* configuration space (256K) */
+@@ -1332,7 +1332,7 @@
+ 	};
+ 
+ 	pcie@14180000 {
+-		compatible = "nvidia,tegra194-pcie", "snps,dw-pcie";
++		compatible = "nvidia,tegra194-pcie";
+ 		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX8B>;
+ 		reg = <0x00 0x14180000 0x0 0x00020000   /* appl registers (128K)      */
+ 		       0x00 0x38000000 0x0 0x00040000   /* configuration space (256K) */
+@@ -1377,7 +1377,7 @@
+ 	};
+ 
+ 	pcie@141a0000 {
+-		compatible = "nvidia,tegra194-pcie", "snps,dw-pcie";
++		compatible = "nvidia,tegra194-pcie";
+ 		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX8A>;
+ 		reg = <0x00 0x141a0000 0x0 0x00020000   /* appl registers (128K)      */
+ 		       0x00 0x3a000000 0x0 0x00040000   /* configuration space (256K) */
+-- 
+2.20.1
 
