@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8024C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDBFC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:33:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94EEE2074F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:33:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4A94214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:33:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586953988;
-	bh=CPSe29ViT0r704qAM5xHTZXfN6dqqCW5YxUuPD2sLW4=;
+	s=default; t=1586953994;
+	bh=5Ci5tuTv9+UalY7YeLpOUErdM7aSS+N8D1vX52ppM9U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Al/mP3i18E9dMlUDQUDNoCqLF9sP2AOk5gFLUfc1ctOGyNuzAE1/TVTMcm1oBXh5T
-	 WhrrG7vLNnd4rm87c9BaIp3604+6+kZB1n+AwdtI4Bh1VgrcxGNXUcvr6Y4ivz6pT1
-	 w3ZJhQ4mbpJDLN05uyOXlG4AVnne0a1wvVyWDlKY=
+	b=r+YscsVrLD7QdFguzpuSfFrDhBZH+aa9Y9D+tQJWuz9n+sZ+IyayrltJ2qI+Fu3WC
+	 w8gT+kEa2HLP4QBHIJcKtY3hEz44MDqhvatpD+Q7aiJKqaH+VeMaACzQP0ohbtloBH
+	 X0AxHnuiuP5wKkJQLC54XzFUqjyM6k1yYHagpSVA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S369677AbgDOMdG (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:33:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37406 "EHLO mail.kernel.org"
+        id S369687AbgDOMdM (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:33:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409081AbgDOLob (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2409082AbgDOLob (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Apr 2020 07:44:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D882B21707;
-        Wed, 15 Apr 2020 11:44:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B12F2166E;
+        Wed, 15 Apr 2020 11:44:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951069;
-        bh=CPSe29ViT0r704qAM5xHTZXfN6dqqCW5YxUuPD2sLW4=;
+        s=default; t=1586951065;
+        bh=5Ci5tuTv9+UalY7YeLpOUErdM7aSS+N8D1vX52ppM9U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Dtgi+IyDH09eSTsmALyjLP39BkLnbrQE+xco/FR8bCW1e9dOKdtBx8aSPSjjHk3RV
-         T/UfYpoGpqHWtiH4vV1mdnq3dQEqaGBcVbBp+uaNqiooT1LfmWbznTvzjsWzIcSi3/
-         hmMiIglARfQbTi2gG8ShJSkgMnVYGEr2cRGPO7PY=
+        b=I0aPBOD0ZqE02K2hiIcwLySFOv65z34ausKFQhMrZSzoxxLVEqu1Ehvt+GLJ1fjeC
+         GmzKepYLdbvvytgVW/nEw9MFW1eWwFrB1tb6jHGE+KQ3BcFIFMNvQmo78ePOqzqJUx
+         POZ07s62NGTN3S5QWCEcl1LlT15WFKztA+DeXbdM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pi-Hsun Shih <pihsun@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.5 101/106] platform/chrome: cros_ec_rpmsg: Fix race with host event
-Date:   Wed, 15 Apr 2020 07:42:21 -0400
-Message-Id: <20200415114226.13103-101-sashal@kernel.org>
+Cc:     Jan Kara <jack@suse.cz>, Randy Dunlap <rdunlap@infradead.org>,
+        Sasha Levin <sashal@kernel.org>, linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 097/106] ext2: fix debug reference to ext2_xattr_cache
+Date:   Wed, 15 Apr 2020 07:42:17 -0400
+Message-Id: <20200415114226.13103-97-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
 References: <20200415114226.13103-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -58,68 +58,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pi-Hsun Shih <pihsun@chromium.org>
+From: Jan Kara <jack@suse.cz>
 
-[ Upstream commit f775ac78fcfc6bdc96bdda07029d11f2a5e84869 ]
+[ Upstream commit 32302085a8d90859c40cf1a5e8313f575d06ec75 ]
 
-Host event can be sent by remoteproc by any time, and
-cros_ec_rpmsg_callback would be called after cros_ec_rpmsg_create_ept.
-But the cros_ec_device is initialized after that, which cause host event
-handler to use cros_ec_device that are not initialized properly yet.
+Fix a debug-only build error in ext2/xattr.c:
 
-Fix this by don't schedule host event handler before cros_ec_register
-returns. Instead, remember that we have a pending host event, and
-schedule host event handler after cros_ec_register.
+When building without extra debugging, (and with another patch that uses
+no_printk() instead of <empty> for the ext2-xattr debug-print macros,
+this build error happens:
 
-Fixes: 71cddb7097e2 ("platform/chrome: cros_ec_rpmsg: Fix race with host command when probe failed.")
-Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+../fs/ext2/xattr.c: In function ‘ext2_xattr_cache_insert’:
+../fs/ext2/xattr.c:869:18: error: ‘ext2_xattr_cache’ undeclared (first use in
+this function); did you mean ‘ext2_xattr_list’?
+     atomic_read(&ext2_xattr_cache->c_entry_count));
+
+Fix the problem by removing cached entry count from the debug message
+since otherwise we'd have to export the mbcache structure just for that.
+
+Fixes: be0726d33cb8 ("ext2: convert to mbcache2")
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/chrome/cros_ec_rpmsg.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ fs/ext2/xattr.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/platform/chrome/cros_ec_rpmsg.c b/drivers/platform/chrome/cros_ec_rpmsg.c
-index bd068afe43b53..1b38bc8e164c3 100644
---- a/drivers/platform/chrome/cros_ec_rpmsg.c
-+++ b/drivers/platform/chrome/cros_ec_rpmsg.c
-@@ -42,6 +42,8 @@ struct cros_ec_rpmsg {
- 	struct completion xfer_ack;
- 	struct work_struct host_event_work;
- 	struct rpmsg_endpoint *ept;
-+	bool has_pending_host_event;
-+	bool probe_done;
- };
- 
- /**
-@@ -175,7 +177,14 @@ static int cros_ec_rpmsg_callback(struct rpmsg_device *rpdev, void *data,
- 		memcpy(ec_dev->din, resp->data, len);
- 		complete(&ec_rpmsg->xfer_ack);
- 	} else if (resp->type == HOST_EVENT_MARK) {
--		schedule_work(&ec_rpmsg->host_event_work);
-+		/*
-+		 * If the host event is sent before cros_ec_register is
-+		 * finished, queue the host event.
-+		 */
-+		if (ec_rpmsg->probe_done)
-+			schedule_work(&ec_rpmsg->host_event_work);
-+		else
-+			ec_rpmsg->has_pending_host_event = true;
- 	} else {
- 		dev_warn(ec_dev->dev, "rpmsg received invalid type = %d",
- 			 resp->type);
-@@ -238,6 +247,11 @@ static int cros_ec_rpmsg_probe(struct rpmsg_device *rpdev)
- 		return ret;
- 	}
- 
-+	ec_rpmsg->probe_done = true;
-+
-+	if (ec_rpmsg->has_pending_host_event)
-+		schedule_work(&ec_rpmsg->host_event_work);
-+
- 	return 0;
- }
- 
+diff --git a/fs/ext2/xattr.c b/fs/ext2/xattr.c
+index b91f99d9482e9..62acbe27d8bf4 100644
+--- a/fs/ext2/xattr.c
++++ b/fs/ext2/xattr.c
+@@ -865,8 +865,7 @@ ext2_xattr_cache_insert(struct mb_cache *cache, struct buffer_head *bh)
+ 				      true);
+ 	if (error) {
+ 		if (error == -EBUSY) {
+-			ea_bdebug(bh, "already in cache (%d cache entries)",
+-				atomic_read(&ext2_xattr_cache->c_entry_count));
++			ea_bdebug(bh, "already in cache");
+ 			error = 0;
+ 		}
+ 	} else
 -- 
 2.20.1
 
