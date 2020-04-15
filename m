@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1740BC3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B223C2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE69D206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:57:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A8962078B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:57:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586955449;
-	bh=9MuFwxxC8Pv8lBN+xAEYmxkgbMWo88rf4NjeAGyZiEQ=;
+	s=default; t=1586955469;
+	bh=VyeAYrSuj5Nu9IZdaUdo5Y5eQ7ucFMmf8JRnu3917n8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aPkuuZMrHHg+aO1zhcXtwuEs+DVvLMXPgwIWA5OO1axb2uc5lFUG5WAs8vvL6zbqn
-	 wjo+4OWOf5I4eWxRc4KSSQeVzzHkuQ74Ht54WapX42B29NVkt3DCE34iJLI782T6rT
-	 Qvg81cPhBHspkpc/XJ4mSzG4IRKH/qieOSQe3Ufg=
+	b=SvO3+RDNxvQekuHGf0ogu5nFGSIrtNh+U6uGqj5Fmm4BDZPKX6xTZmmk7L7OXCwCa
+	 m/Vw/ZBibG7msK0t5xm8pCr+30gWu+4AZRm32UXDfVhJmVaKWU/qbAPC7UNZqZMBjZ
+	 1w84apwGo49EMg5DFi4ljoQ3uB76FCDyray/Pl4Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505570AbgDOM50 (ORCPT
+        id S2505607AbgDOM5q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:57:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56666 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 08:57:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897185AbgDOLgv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:36:51 -0400
+        id S2897187AbgDOLgy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:36:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C05C9208FE;
-        Wed, 15 Apr 2020 11:36:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A77F20768;
+        Wed, 15 Apr 2020 11:36:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950611;
-        bh=9MuFwxxC8Pv8lBN+xAEYmxkgbMWo88rf4NjeAGyZiEQ=;
+        s=default; t=1586950614;
+        bh=VyeAYrSuj5Nu9IZdaUdo5Y5eQ7ucFMmf8JRnu3917n8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1gbjDZVHqHHmFrOyzfCvIW6FNtAxoxzMzFoYPWXQmJjZOtIlKE3vJ4KyY7tTFJQ3J
-         qpgLs+CmsuFUa9RQPg58gNu2+pYKab5B0QryeABfiISQCCWW1masduXMbb8l5yLU+S
-         m2eUGBHpseMgMnNXleBuKBSleunyfOXOlFGVLWzM=
+        b=GL5CxGvvtYxDs+OWKEKJqSyOvmrN4rS7an+zqCiEwfR9IyIbotKrAYzJ9pNGQgacz
+         YWDkPH5FttgWHXeYJ/LPSWsC9nT5WBmd1sy7wzHWmC3XeY1H5GE6oBa9OVimnTi1tE
+         tQIh4TF65Ld4kcCHI7Nc4lRVlxZcm8sFHc2YlpxE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alan Maguire <alan.maguire@oracle.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Richard Weinberger <richard@nod.at>,
-        Sasha Levin <sashal@kernel.org>, linux-um@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.6 105/129] um: falloc.h needs to be directly included for older libc
-Date:   Wed, 15 Apr 2020 07:34:20 -0400
-Message-Id: <20200415113445.11881-105-sashal@kernel.org>
+Cc:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 5.6 107/129] iommu/virtio: Fix freeing of incomplete domains
+Date:   Wed, 15 Apr 2020 07:34:22 -0400
+Message-Id: <20200415113445.11881-107-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
 References: <20200415113445.11881-1-sashal@kernel.org>
@@ -61,45 +63,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Maguire <alan.maguire@oracle.com>
+From: Jean-Philippe Brucker <jean-philippe@linaro.org>
 
-[ Upstream commit 35f3401317a3b26aa01fde8facfd320f2628fdcc ]
+[ Upstream commit 7062af3ed2ba451029e3733d9f677c68f5ea9e77 ]
 
-When building UML with glibc 2.17 installed, compilation
-of arch/um/os-Linux/file.c fails due to failure to find
-FALLOC_FL_PUNCH_HOLE and FALLOC_FL_KEEP_SIZE definitions.
+Calling viommu_domain_free() on a domain that hasn't been finalised (not
+attached to any device, for example) can currently cause an Oops,
+because we attempt to call ida_free() on ID 0, which may either be
+unallocated or used by another domain.
 
-It appears that /usr/include/bits/fcntl-linux.h (indirectly
-included by /usr/include/fcntl.h) does not include falloc.h
-with an older glibc, whereas a more up-to-date version
-does.
+Only initialise the vdomain->viommu pointer, which denotes a finalised
+domain, at the end of a successful viommu_domain_finalise().
 
-Adding the direct include to file.c resolves the issue
-and does not cause problems for more recent glibc.
-
-Fixes: 50109b5a03b4 ("um: Add support for DISCARD in the UBD Driver")
-Cc: Brendan Higgins <brendanhiggins@google.com>
-Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
-Acked-By: Anton Ivanov <anton.ivanov@cambridgegreys.com>
-Signed-off-by: Richard Weinberger <richard@nod.at>
+Fixes: edcd69ab9a32 ("iommu: Add virtio-iommu driver")
+Reported-by: Eric Auger <eric.auger@redhat.com>
+Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+Link: https://lore.kernel.org/r/20200326093558.2641019-3-jean-philippe@linaro.org
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/um/os-Linux/file.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/iommu/virtio-iommu.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
-diff --git a/arch/um/os-Linux/file.c b/arch/um/os-Linux/file.c
-index fbda10535dab0..5c819f89b8c21 100644
---- a/arch/um/os-Linux/file.c
-+++ b/arch/um/os-Linux/file.c
-@@ -8,6 +8,7 @@
- #include <errno.h>
- #include <fcntl.h>
- #include <signal.h>
-+#include <linux/falloc.h>
- #include <sys/ioctl.h>
- #include <sys/mount.h>
- #include <sys/socket.h>
+diff --git a/drivers/iommu/virtio-iommu.c b/drivers/iommu/virtio-iommu.c
+index cce329d71fbad..5eed75cd121f1 100644
+--- a/drivers/iommu/virtio-iommu.c
++++ b/drivers/iommu/virtio-iommu.c
+@@ -613,18 +613,20 @@ static int viommu_domain_finalise(struct viommu_dev *viommu,
+ 	int ret;
+ 	struct viommu_domain *vdomain = to_viommu_domain(domain);
+ 
+-	vdomain->viommu		= viommu;
+-	vdomain->map_flags	= viommu->map_flags;
++	ret = ida_alloc_range(&viommu->domain_ids, viommu->first_domain,
++			      viommu->last_domain, GFP_KERNEL);
++	if (ret < 0)
++		return ret;
++
++	vdomain->id		= (unsigned int)ret;
+ 
+ 	domain->pgsize_bitmap	= viommu->pgsize_bitmap;
+ 	domain->geometry	= viommu->geometry;
+ 
+-	ret = ida_alloc_range(&viommu->domain_ids, viommu->first_domain,
+-			      viommu->last_domain, GFP_KERNEL);
+-	if (ret >= 0)
+-		vdomain->id = (unsigned int)ret;
++	vdomain->map_flags	= viommu->map_flags;
++	vdomain->viommu		= viommu;
+ 
+-	return ret > 0 ? 0 : ret;
++	return 0;
+ }
+ 
+ static void viommu_domain_free(struct iommu_domain *domain)
 -- 
 2.20.1
 
