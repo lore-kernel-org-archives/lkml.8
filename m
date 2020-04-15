@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E51C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51282C3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:31:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DADC820857
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:31:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 322F22076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:31:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586971874;
-	bh=Utyg9ngIx0ziDdQ3mpsqWdXEIHJ4s2ZMjUBM8EJtyOM=;
+	s=default; t=1586971880;
+	bh=x/pRCLer6rp72HqNGGnkhkYJNBCXT47lhuBfzel1ReA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KjOiYyPiQR3aS7tD7yxykRCEBePWMekvIeiIk3CjGvWGbOpfjzjYe4vUaoPAPT4Pb
-	 5o2lq6upIec9cMhVRHMzFSpaX+UTlumthbONLih8lOFppVdXaV0huXbjAdFKrc4rey
-	 VyWvXHQsK69QcNCRy+Wmj4w3i+S9ffNFzFBQHGdY=
+	b=jAaradDOiAyBajHBBYYS6VxT4aMwTySTLJfesvdo5+46GgzXPK7rgF3yvIQfDs9mh
+	 x/zH3TZUIgOa+O7Ve1u5SwhuVuBCs2IScGCgRtiID5sxM72gSSG+lv/IOocFCmGN8R
+	 AJjQsOlbw9d8eOV71AE2Rt+CMSLionAhcQ9lC+ps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2411144AbgDORbN (ORCPT
+        id S2411153AbgDORbT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 13:31:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45734 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 13:31:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2411102AbgDORbC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 13:31:02 -0400
+        id S2411119AbgDORbE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 13:31:04 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE7F22076D;
-        Wed, 15 Apr 2020 17:31:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33E2121582;
+        Wed, 15 Apr 2020 17:31:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586971862;
-        bh=Utyg9ngIx0ziDdQ3mpsqWdXEIHJ4s2ZMjUBM8EJtyOM=;
+        s=default; t=1586971863;
+        bh=x/pRCLer6rp72HqNGGnkhkYJNBCXT47lhuBfzel1ReA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SzC0EPsOWpvCHvZxXMVJEgnfWqqP3WdYq5XDEAiHLbNuAgQPkqqKsbAji5Q8yQf31
-         n/KBKyhObpLNFxEoAza8XBaaKMIJpRzHBSUby8U6o5aL1PKFGLlfLMbFS/eQf92wJd
-         DukB79Uw2uqcHsm1PrYSjQw/WbghHlGrmN7JGh5g=
+        b=JRaME366xHhkbOa4vrmnf8LgP30PHZEkKj7TQTE3z4oFc8Zfj3fQbINwQRqRyPF7L
+         9208qVZHFcOK/sa6vEq6p9Sb9iZ7nj4wNXCHY7tc1O6vygLKdjcQrkHC4DBVbI3d9w
+         74Z59IYkC3L6wl1gv+trddZ8piR5hwo/qYaH1qxM=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -47,10 +47,12 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 01/18] rcutorture: Add KCSAN stubs
-Date:   Wed, 15 Apr 2020 10:30:43 -0700
-Message-Id: <20200415173100.9927-1-paulmck@kernel.org>
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        Amol Grover <frextrite@gmail.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 05/18] Default enable RCU list lockdep debugging with PROVE_RCU
+Date:   Wed, 15 Apr 2020 10:30:47 -0700
+Message-Id: <20200415173100.9927-5-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200415173037.GA9768@paulmck-ThinkPad-P72>
 References: <20200415173037.GA9768@paulmck-ThinkPad-P72>
@@ -59,40 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Paul E. McKenney" <paulmck@kernel.org>
+From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-This commit adds stubs for KCSAN's data_race(), ASSERT_EXCLUSIVE_WRITER(),
-and ASSERT_EXCLUSIVE_ACCESS() macros to allow code using these macros to
-move ahead.
+This patch default enables CONFIG_PROVE_RCU_LIST option with
+CONFIG_PROVE_RCU for RCU list lockdep debugging.
 
+With this change, RCU list lockdep debugging will be default
+enabled in CONFIG_PROVE_RCU=y kernels.
+
+Most of the RCU users (in core kernel/, drivers/, and net/
+subsystem) have already been modified to include lockdep
+expressions hence RCU list debugging can be enabled by
+default.
+
+However, there are still chances of enountering
+false-positive lockdep splats because not everything is converted,
+in case RCU list primitives are used in non-RCU read-side critical
+section but under the protection of a lock. It would be okay to
+have a few false-positives, as long as bugs are identified, since this
+patch only affects debugging kernels.
+
+Co-developed-by: Amol Grover <frextrite@gmail.com>
+Signed-off-by: Amol Grover <frextrite@gmail.com>
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Acked-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/rcutorture.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ kernel/rcu/Kconfig.debug | 11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
 
-diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-index 5453bd5..7e2ea0c5 100644
---- a/kernel/rcu/rcutorture.c
-+++ b/kernel/rcu/rcutorture.c
-@@ -51,6 +51,18 @@
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Paul E. McKenney <paulmck@linux.ibm.com> and Josh Triplett <josh@joshtriplett.org>");
+diff --git a/kernel/rcu/Kconfig.debug b/kernel/rcu/Kconfig.debug
+index 4aa02ee..ec4bb6c 100644
+--- a/kernel/rcu/Kconfig.debug
++++ b/kernel/rcu/Kconfig.debug
+@@ -9,15 +9,10 @@ config PROVE_RCU
+ 	def_bool PROVE_LOCKING
  
-+#ifndef data_race
-+#define data_race(expr)							\
-+	({								\
-+		expr;							\
-+	})
-+#endif
-+#ifndef ASSERT_EXCLUSIVE_WRITER
-+#define ASSERT_EXCLUSIVE_WRITER(var) do { } while (0)
-+#endif
-+#ifndef ASSERT_EXCLUSIVE_ACCESS
-+#define ASSERT_EXCLUSIVE_ACCESS(var) do { } while (0)
-+#endif
+ config PROVE_RCU_LIST
+-	bool "RCU list lockdep debugging"
+-	depends on PROVE_RCU && RCU_EXPERT
+-	default n
++	def_bool PROVE_RCU
+ 	help
+-	  Enable RCU lockdep checking for list usages. By default it is
+-	  turned off since there are several list RCU users that still
+-	  need to be converted to pass a lockdep expression. To prevent
+-	  false-positive splats, we keep it default disabled but once all
+-	  users are converted, we can remove this config option.
++	  Enable RCU lockdep checking for list usages. It is default
++	  enabled with CONFIG_PROVE_RCU.
  
- /* Bits for ->extendables field, extendables param, and related definitions. */
- #define RCUTORTURE_RDR_SHIFT	 8	/* Put SRCU index in upper bits. */
+ config TORTURE_TEST
+ 	tristate
 -- 
 2.9.5
 
