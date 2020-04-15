@@ -2,163 +2,96 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 590A1C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 00:49:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E156C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 00:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E72F20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 00:49:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A1C620737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 00:57:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Eb5X25fg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634715AbgDOAtI (ORCPT
+        id S1733272AbgDOA53 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 20:49:08 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:57138 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392429AbgDOAsc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 20:48:32 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 6F22C200675;
-        Wed, 15 Apr 2020 02:48:22 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 49A35200651;
-        Wed, 15 Apr 2020 02:48:17 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 15CB1402B4;
-        Wed, 15 Apr 2020 08:48:11 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     wim@linux-watchdog.org, linux@roeck-us.net, robh+dt@kernel.org,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux-watchdog@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V2 2/2] dt-bindings: watchdog: Convert i.MX7ULP to json-schema
-Date:   Wed, 15 Apr 2020 08:40:11 +0800
-Message-Id: <1586911211-1141-2-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1586911211-1141-1-git-send-email-Anson.Huang@nxp.com>
-References: <1586911211-1141-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 14 Apr 2020 20:57:29 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50900 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1733242AbgDOA50 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 20:57:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586912243;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=INu02MFWkvXpu23KW+Iy6RseGgVn0wutAQ1sHDlj8rA=;
+        b=Eb5X25fg2qPjpqtyALLvAqdGjBP05473TZLWsVOJf3/MRM/Acyggy82IAug4WUOv8ytFT+
+        ASneXL5Ao6JOPqXq4saSb0IRIezcEKyxHC13W3hxhWvO2Hl+MqjVWDquoKB/bGR/KHiDuZ
+        AwuY0haM+B+BfK7q6sxOyA6gDK2DpN4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-318-J6xstRbGMJC1mcBzvi2yPw-1; Tue, 14 Apr 2020 20:57:18 -0400
+X-MC-Unique: J6xstRbGMJC1mcBzvi2yPw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C8FB58017F5;
+        Wed, 15 Apr 2020 00:57:17 +0000 (UTC)
+Received: from [10.3.112.171] (ovpn-112-171.phx2.redhat.com [10.3.112.171])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3FB8760BE0;
+        Wed, 15 Apr 2020 00:57:17 +0000 (UTC)
+Subject: Re: [PATCH 0/7] livepatch,module: Remove .klp.arch and
+ module_disable_ro()
+To:     Josh Poimboeuf <jpoimboe@redhat.com>, live-patching@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>
+References: <cover.1586881704.git.jpoimboe@redhat.com>
+From:   Joe Lawrence <joe.lawrence@redhat.com>
+Message-ID: <187a2ccd-1d04-54db-2fd3-8c4ca6872830@redhat.com>
+Date:   Tue, 14 Apr 2020 20:57:15 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <cover.1586881704.git.jpoimboe@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the i.MX7ULP watchdog binding to DT schema format using json-schema.
+On 4/14/20 12:28 PM, Josh Poimboeuf wrote:
+> Better late than never, these patches add simplifications and
+> improvements for some issues Peter found six months ago, as part of his
+> non-writable text code (W^X) cleanups.
+> 
+> Highlights:
+> 
+> - Remove the livepatch arch-specific .klp.arch sections, which were used
+>    to do paravirt patching and alternatives patching for livepatch
+>    replacement code.
+> 
+> - Add support for jump labels in patched code.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-Changes since V1:
-	- Add 'timeout-sec' property to avoid build error.
----
- .../bindings/watchdog/fsl-imx7ulp-wdt.txt          | 22 --------
- .../bindings/watchdog/fsl-imx7ulp-wdt.yaml         | 65 ++++++++++++++++++++++
- 2 files changed, 65 insertions(+), 22 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt
- create mode 100644 Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.yaml
+Re: jump labels and late-module patching support...
 
-diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt b/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt
-deleted file mode 100644
-index f902508..0000000
---- a/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt
-+++ /dev/null
-@@ -1,22 +0,0 @@
--* Freescale i.MX7ULP Watchdog Timer (WDT) Controller
--
--Required properties:
--- compatible : Should be "fsl,imx7ulp-wdt"
--- reg : Should contain WDT registers location and length
--- interrupts : Should contain WDT interrupt
--- clocks: Should contain a phandle pointing to the gated peripheral clock.
--
--Optional properties:
--- timeout-sec : Contains the watchdog timeout in seconds
--
--Examples:
--
--wdog1: watchdog@403d0000 {
--	compatible = "fsl,imx7ulp-wdt";
--	reg = <0x403d0000 0x10000>;
--	interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
--	clocks = <&pcc2 IMX7ULP_CLK_WDG1>;
--	assigned-clocks = <&pcc2 IMX7ULP_CLK_WDG1>;
--	assigned-clocks-parents = <&scg1 IMX7ULP_CLK_FIRC_BUS_CLK>;
--	timeout-sec = <40>;
--};
-diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.yaml b/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.yaml
-new file mode 100644
-index 0000000..86b4d93
---- /dev/null
-+++ b/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.yaml
-@@ -0,0 +1,65 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/watchdog/fsl-imx7ulp-wdt.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale i.MX7ULP Watchdog Timer (WDT) Controller
-+
-+maintainers:
-+  - Anson Huang <Anson.Huang@nxp.com>
-+
-+allOf:
-+  - $ref: "watchdog.yaml#"
-+
-+properties:
-+  compatible:
-+    enum:
-+      - fsl,imx7ulp-wdt
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    description: |
-+      Watchdog's clock source.
-+    maxItems: 1
-+
-+  assigned-clocks:
-+    maxItems: 1
-+
-+  assigned-clocks-parents:
-+    maxItems: 1
-+
-+  timeout-sec:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: |
-+      Contains the watchdog timeout in seconds.
-+
-+required:
-+  - compatible
-+  - interrupts
-+  - reg
-+  - clocks
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/clock/imx7ulp-clock.h>
-+
-+    wdog1: watchdog@403d0000 {
-+        compatible = "fsl,imx7ulp-wdt";
-+        reg = <0x403d0000 0x10000>;
-+        interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
-+        clocks = <&pcc2 IMX7ULP_CLK_WDG1>;
-+        assigned-clocks = <&pcc2 IMX7ULP_CLK_WDG1>;
-+        assigned-clocks-parents = <&scg1 IMX7ULP_CLK_FIRC_BUS_CLK>;
-+        timeout-sec = <40>;
-+    };
-+
-+...
--- 
-2.7.4
+Is there still an issue of a non-exported static key defined in a 
+to-be-patched module referenced and resolved via klp-relocation when the 
+livepatch module is loaded first?  (Basically the same case I asked Petr 
+about in his split livepatch module PoC. [1])
+
+Or should we declare this an invalid klp-relocation use case and force 
+the livepatch author to use static_key_enabled()?
+
+[1] https://lore.kernel.org/lkml/20200407205740.GA17061@redhat.com/
+
+-- Joe
 
