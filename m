@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE029C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DCEAC3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:13:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B893120936
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:13:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46834206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:13:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586952785;
-	bh=QeP+z2py5zehTf5cGkwbpGZ5Yi83zG6RPJpUo8i2+no=;
+	s=default; t=1586952803;
+	bh=jTuUCyPuJOG1nAdrPAoxt4PboG749EAUEnTxsfy/RmE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ld9ophgAqbbvop8wRwqfxw9w62ashEoGy/OJQu8zgkgFbHbYWqstTHzlKhpWUuTck
-	 eMVREoXW7OJk4BRHTG1LvVHTJvwsEJiaeT97gG7kuYMytuCYa66MlLmlmd7c3tF1yX
-	 aEfMeLlEoIbwGAgkx7PlGPq77pnhXJnfj0Xbabik=
+	b=CRZrEij/4zxTiQ6Topf1gciQuspVz3Fbi7VVyrVaxVHhKTQuYEDdqLiCGjH4a2eJM
+	 Z8vi/v+sqdJB6IBXXUKGQDk593FRVLxZj5lFRvpNa734OKHBtNdFxLPPBCRh05lV7S
+	 C00dmGSkqZSIcGNXYuDv5gUjevxxJJr5AEwvkEK0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2898106AbgDOMNA (ORCPT
-        <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:13:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42096 "EHLO mail.kernel.org"
+        id S368635AbgDOMNV (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:13:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897588AbgDOLrC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2897586AbgDOLrC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Apr 2020 07:47:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7C2220775;
-        Wed, 15 Apr 2020 11:47:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 927452137B;
+        Wed, 15 Apr 2020 11:47:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951222;
-        bh=QeP+z2py5zehTf5cGkwbpGZ5Yi83zG6RPJpUo8i2+no=;
+        s=default; t=1586951221;
+        bh=jTuUCyPuJOG1nAdrPAoxt4PboG749EAUEnTxsfy/RmE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0edQKSTePlHU5yjwqBPUd5I7w4gt6Rk06DLudGU4LL9OaikHjEX4TraueWvyeOiSi
-         w/X83xDvbZVwF7/zfwZkskJ7S7P6YCNGKw9jeHBiL1LsTgvz899nTDxXHJ5+pKA/op
-         odOv33m44napsig7wiZzMbMRcXr1gatODoHbcS00=
+        b=rq2e1ALTMuFNPoTdMXlRkynQr97OAQTVAHLaTDGVK91nVJu8E33pRCz32wG4x4PQ2
+         PfaRfhBk6W0AI+Bx5OiRmKqMeF4gWhE0ruOWAVkmXO43T8leYJyOkNAwXvu1dxqHM/
+         CnDDx3vOFMLKbg08OSD6mRRZZiXRPOs57d/PyMsc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>,
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Maxime Ripard <maxime@cerno.tech>,
         Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 4.19 33/40] iommu/vt-d: Fix mm reference leak
-Date:   Wed, 15 Apr 2020 07:46:16 -0400
-Message-Id: <20200415114623.14972-33-sashal@kernel.org>
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 32/40] drm/vc4: Fix HDMI mode validation
+Date:   Wed, 15 Apr 2020 07:46:15 -0400
+Message-Id: <20200415114623.14972-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114623.14972-1-sashal@kernel.org>
 References: <20200415114623.14972-1-sashal@kernel.org>
@@ -61,45 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
-[ Upstream commit 902baf61adf6b187f0a6b789e70d788ea71ff5bc ]
+[ Upstream commit b1e7396a1d0e6af6806337fdaaa44098d6b3343c ]
 
-Move canonical address check before mmget_not_zero() to avoid mm
-reference leak.
+Current mode validation impedes setting up some video modes which should
+be supported otherwise. Namely 1920x1200@60Hz.
 
-Fixes: 9d8c3af31607 ("iommu/vt-d: IOMMU Page Request needs to check if address is canonical.")
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Fix this by lowering the minimum HDMI state machine clock to pixel clock
+ratio allowed.
+
+Fixes: 32e823c63e90 ("drm/vc4: Reject HDMI modes with too high of clocks.")
+Reported-by: Stefan Wahren <stefan.wahren@i2se.com>
+Suggested-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200326122001.22215-1-nsaenzjulienne@suse.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/intel-svm.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/vc4/vc4_hdmi.c | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
-index 5944d3b4dca37..ef3aadec980ee 100644
---- a/drivers/iommu/intel-svm.c
-+++ b/drivers/iommu/intel-svm.c
-@@ -620,14 +620,15 @@ static irqreturn_t prq_event_thread(int irq, void *d)
- 		 * any faults on kernel addresses. */
- 		if (!svm->mm)
- 			goto bad_req;
--		/* If the mm is already defunct, don't handle faults. */
--		if (!mmget_not_zero(svm->mm))
--			goto bad_req;
+diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
+index fd5522fd179e5..86b98856756d9 100644
+--- a/drivers/gpu/drm/vc4/vc4_hdmi.c
++++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
+@@ -698,11 +698,23 @@ static enum drm_mode_status
+ vc4_hdmi_encoder_mode_valid(struct drm_encoder *crtc,
+ 			    const struct drm_display_mode *mode)
+ {
+-	/* HSM clock must be 108% of the pixel clock.  Additionally,
+-	 * the AXI clock needs to be at least 25% of pixel clock, but
+-	 * HSM ends up being the limiting factor.
++	/*
++	 * As stated in RPi's vc4 firmware "HDMI state machine (HSM) clock must
++	 * be faster than pixel clock, infinitesimally faster, tested in
++	 * simulation. Otherwise, exact value is unimportant for HDMI
++	 * operation." This conflicts with bcm2835's vc4 documentation, which
++	 * states HSM's clock has to be at least 108% of the pixel clock.
++	 *
++	 * Real life tests reveal that vc4's firmware statement holds up, and
++	 * users are able to use pixel clocks closer to HSM's, namely for
++	 * 1920x1200@60Hz. So it was decided to have leave a 1% margin between
++	 * both clocks. Which, for RPi0-3 implies a maximum pixel clock of
++	 * 162MHz.
++	 *
++	 * Additionally, the AXI clock needs to be at least 25% of
++	 * pixel clock, but HSM ends up being the limiting factor.
+ 	 */
+-	if (mode->clock > HSM_CLOCK_FREQ / (1000 * 108 / 100))
++	if (mode->clock > HSM_CLOCK_FREQ / (1000 * 101 / 100))
+ 		return MODE_CLOCK_HIGH;
  
- 		/* If address is not canonical, return invalid response */
- 		if (!is_canonical_address(address))
- 			goto bad_req;
- 
-+		/* If the mm is already defunct, don't handle faults. */
-+		if (!mmget_not_zero(svm->mm))
-+			goto bad_req;
-+
- 		down_read(&svm->mm->mmap_sem);
- 		vma = find_extend_vma(svm->mm, address);
- 		if (!vma || address < vma->vm_start)
+ 	return MODE_OK;
 -- 
 2.20.1
 
