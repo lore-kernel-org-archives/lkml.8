@@ -2,196 +2,167 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA51C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:39:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8DEAC3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:39:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B3C02076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:39:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A6052076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:39:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586961580;
+	bh=J2VLKHFfGYVorzlk/8UwKCJP0drKzZlIAdlBq85Rcx8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=2v9OLNu8ACCRXrvONoN0n5gPF10gLUsPg0qyvprLGT8BpCgCXGwf+OJhk4kJC5sUc
+	 Cp1HbxO74e6PzlHDPHEyZRIJQQ+ivz45tVZEwgLRZn5DCe96RLRt+ack/cQNF6x3xO
+	 1m+Oy0/buFO1MJJQTpwOv8VKIUf8EHy2cP9C/Mws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S370794AbgDOOjE (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:39:04 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:33429 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2634316AbgDOOgJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 10:36:09 -0400
-Received: from methusalix.internal.home.lespocky.de ([92.117.44.186]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis)
- id 1MSKq0-1jrQ5p0Ebw-00ShhZ; Wed, 15 Apr 2020 16:35:29 +0200
-Received: from falbala.internal.home.lespocky.de ([192.168.243.94])
-        by methusalix.internal.home.lespocky.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.92.3)
-        (envelope-from <post@lespocky.de>)
-        id 1jOj8M-0000YX-Nj; Wed, 15 Apr 2020 16:35:26 +0200
-Date:   Wed, 15 Apr 2020 16:35:21 +0200
-From:   Alexander Dahl <post@lespocky.de>
-To:     x86@kernel.org
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Alan Jenkins <alan.christopher.jenkins@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Florian Wolters <florian@florian-wolters.de>,
-        Alexander Dahl <post@lespocky.de>
-Subject: Re: [PATCH v2] dma: Fix max PFN arithmetic overflow on 32 bit systems
-Message-ID: <20200415143519.iev6r4llqs3hwtgz@falbala.internal.home.lespocky.de>
-Mail-Followup-To: x86@kernel.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org,
-        Alan Jenkins <alan.christopher.jenkins@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Florian Wolters <florian@florian-wolters.de>
-References: <20200319153154.usbqsk6uspegw5pr@falbala.internal.home.lespocky.de>
- <20200321182823.1912-1-post@lespocky.de>
+        id S370805AbgDOOjg (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 10:39:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45410 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2394078AbgDOOdD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 10:33:03 -0400
+Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 764D221D7A;
+        Wed, 15 Apr 2020 14:32:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586961171;
+        bh=J2VLKHFfGYVorzlk/8UwKCJP0drKzZlIAdlBq85Rcx8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=kEXCq8egdQ1CKEBOz9gAN5XiwALqK5M3P3qyK3Vgogo/eS3VUMtSqMKvcNX1rTSq7
+         Us9SbcQnW5+nYHNUZiaW2Dkrm0D/zkkRszoRs6VnpqecvPm5YRGpEdBvkrQzKgPoqi
+         RTaYAjUpVWw69LM7W3NYM2vtqMNB6RMo+4V5Bwu0=
+Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
+        (envelope-from <mchehab@kernel.org>)
+        id 1jOj5t-006kPH-NH; Wed, 15 Apr 2020 16:32:49 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH 20/34] docs: filesystems: convert mandatory-locking.txt to ReST
+Date:   Wed, 15 Apr 2020 16:32:33 +0200
+Message-Id: <289e82f172907dedabc67f3a5124840544f87b22.1586960617.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.25.2
+In-Reply-To: <cover.1586960617.git.mchehab+huawei@kernel.org>
+References: <cover.1586960617.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ahhticrbe2tikgv5"
-Content-Disposition: inline
-In-Reply-To: <20200321182823.1912-1-post@lespocky.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Scan-Signature: da85ea8975133f28083df41d042c8ce6
-X-Provags-ID: V03:K1:IVw6I1Kpwa21fkaHCKwXojjV4/ttMR/aUvFUOzfL6qppUNnSm/b
- UOdZ95kulgEkWlmiCSwgMdour6+Xv+i2p8MV8SEK3zkp+1lqYiGp8hlNfWswyh69gW3vtVI
- mriMwnD7dgb+d9KcTN/AFzj+b1T7QGV88jn7/JZwq0CdnukucuS7MczDc7i5LE7J46w4bxK
- J31vvASfiEIOJjjq+PeJA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:38CJH6+4tJU=:sbqlGgtb9QRA8SmwEjQnUt
- 0/9BGzpd/YLLHpDLnuSR9wokBVkVI3gbEUeW1FumvI7RwHg3Mvkxu7fXAppyto5l4qQS7+IwX
- OoXfEX6sGSzVMPTTdnQllS3l6sVHTshwbUv+Z4fEmbV1JhPxe3JmnKx/3X+93KRA3oVh93ihY
- YhaL9yYWRcA+rddzxZMXr865rT2gCMrr515MOrseLaboI/0vesg8WFN5qcfwJwkQjRbImr0u3
- COJcYoV2Lg2s044wTg1wj3eQ0aOq1YqiyI9q/dg+ZChcip0D8N7IIbSHm00Uk0bHH1wpROrW3
- +/U4K64rvuQ4p/uYu5YBUHvfEHnjdIbaFZrph1l8Cb8V9wokdy81da0i0vXeXRDcy5nRgiyQ+
- 9ZHTNmKXjiHELFKjRA0rpzrVdR4yLiJMXDnCr4PTKm4zWn+hkS/4XvGTuw6Buqrh939ZEbE6x
- S6TJr3Fgt80SmR87vHpkHqFkisty7jeKdm7T1U61VZXPscz7LRmterhRdNknMPRh5lgnIvOeW
- gse+ZgqgLSYc1kDTG6A/8964M6Il6BQFXHNWOc27ahFWMKy0/KEilmc0FghjLRA26wvAqUPcL
- GplUXb+Rh03iEEYr8/GAfve0PZfi2xzls5KwdyHnBTYbvBnVK1yfl7PswA5jpB9LtO1DJ2vQg
- XfWelXTM09gDIwC4sXMFTndqbQs0NrY5akjoTD8KesMAD9ohzxP+m8g4noU2QOzfeteBFisCx
- VOpi71/ridCEWDBz2hnN7eeP/pBCKwWhAtM5/YmqwXlU6IIrvlgJ9gCsFzyWuMQCs6c2NXDEw
- IrRmrpWt5jTVO6zV78m4waZQ3WKI7kAzJN+Ed1Us2Bl0ieWI6BoUH1jbnKBXFqaM+mANAJJ
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+- Add a SPDX header;
+- Adjust document title;
+- Some whitespace fixes and new line breaks;
+- Use notes markups;
+- Add it to filesystems/index.rst.
 
---ahhticrbe2tikgv5
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ Documentation/filesystems/index.rst           |  1 +
+ Documentation/filesystems/locks.rst           |  2 +-
+ ...tory-locking.txt => mandatory-locking.rst} | 25 ++++++++++++-------
+ fs/locks.c                                    |  2 +-
+ 4 files changed, 19 insertions(+), 11 deletions(-)
+ rename Documentation/filesystems/{mandatory-locking.txt => mandatory-locking.rst} (91%)
 
-Hello,
+diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
+index 40cdc4ce2ffc..32759666a0be 100644
+--- a/Documentation/filesystems/index.rst
++++ b/Documentation/filesystems/index.rst
+@@ -30,6 +30,7 @@ algorithms work.
+    fiemap
+    files
+    locks
++   mandatory-locking
+ 
+    automount-support
+ 
+diff --git a/Documentation/filesystems/locks.rst b/Documentation/filesystems/locks.rst
+index 10f67fb9ce07..c5ae858b1aac 100644
+--- a/Documentation/filesystems/locks.rst
++++ b/Documentation/filesystems/locks.rst
+@@ -58,7 +58,7 @@ fcntl(), with all the problems that implies.
+ ---------------------------------------
+ 
+ Mandatory locking, as described in
+-'Documentation/filesystems/mandatory-locking.txt' was prior to this release a
++'Documentation/filesystems/mandatory-locking.rst' was prior to this release a
+ general configuration option that was valid for all mounted filesystems.  This
+ had a number of inherent dangers, not the least of which was the ability to
+ freeze an NFS server by asking it to read a file for which a mandatory lock
+diff --git a/Documentation/filesystems/mandatory-locking.txt b/Documentation/filesystems/mandatory-locking.rst
+similarity index 91%
+rename from Documentation/filesystems/mandatory-locking.txt
+rename to Documentation/filesystems/mandatory-locking.rst
+index a251ca33164a..9ce73544a8f0 100644
+--- a/Documentation/filesystems/mandatory-locking.txt
++++ b/Documentation/filesystems/mandatory-locking.rst
+@@ -1,8 +1,13 @@
+-	Mandatory File Locking For The Linux Operating System
++.. SPDX-License-Identifier: GPL-2.0
++
++=====================================================
++Mandatory File Locking For The Linux Operating System
++=====================================================
+ 
+ 		Andy Walker <andy@lysaker.kvaerner.no>
+ 
+ 			   15 April 1996
++
+ 		     (Updated September 2007)
+ 
+ 0. Why you should avoid mandatory locking
+@@ -53,15 +58,17 @@ possible on existing user code. The scheme is based on marking individual files
+ as candidates for mandatory locking, and using the existing fcntl()/lockf()
+ interface for applying locks just as if they were normal, advisory locks.
+ 
+-Note 1: In saying "file" in the paragraphs above I am actually not telling
+-the whole truth. System V locking is based on fcntl(). The granularity of
+-fcntl() is such that it allows the locking of byte ranges in files, in addition
+-to entire files, so the mandatory locking rules also have byte level
+-granularity.
++.. Note::
+ 
+-Note 2: POSIX.1 does not specify any scheme for mandatory locking, despite
+-borrowing the fcntl() locking scheme from System V. The mandatory locking
+-scheme is defined by the System V Interface Definition (SVID) Version 3.
++   1. In saying "file" in the paragraphs above I am actually not telling
++      the whole truth. System V locking is based on fcntl(). The granularity of
++      fcntl() is such that it allows the locking of byte ranges in files, in
++      addition to entire files, so the mandatory locking rules also have byte
++      level granularity.
++
++   2. POSIX.1 does not specify any scheme for mandatory locking, despite
++      borrowing the fcntl() locking scheme from System V. The mandatory locking
++      scheme is defined by the System V Interface Definition (SVID) Version 3.
+ 
+ 2. Marking a file for mandatory locking
+ ---------------------------------------
+diff --git a/fs/locks.c b/fs/locks.c
+index b8a31c1c4fff..1d4f4d5da704 100644
+--- a/fs/locks.c
++++ b/fs/locks.c
+@@ -61,7 +61,7 @@
+  *
+  *  Initial implementation of mandatory locks. SunOS turned out to be
+  *  a rotten model, so I implemented the "obvious" semantics.
+- *  See 'Documentation/filesystems/mandatory-locking.txt' for details.
++ *  See 'Documentation/filesystems/mandatory-locking.rst' for details.
+  *  Andy Walker (andy@lysaker.kvaerner.no), April 06, 1996.
+  *
+  *  Don't allow mandatory locks on mmap()'ed files. Added simple functions to
+-- 
+2.25.2
 
-now after v5.7-rc1 is out, I would kindly ask, if anyone had time to
-review this one line patch? Is anything wrong with that fix?
-
-(I added the current fli4l kernel package maintainer Florian to Cc to
-let him know I'm still having an eye on this.)
-
-Greets
-Alex
-
-On Sat, Mar 21, 2020 at 07:28:23PM +0100, Alexander Dahl wrote:
-> For ARCH=3Dx86 (32 bit) when you set CONFIG_IOMMU_INTEL since c5a5dc4cbbf4
-> ("iommu/vt-d: Don't switch off swiotlb if bounce page is used") there's
-> a dependency on CONFIG_SWIOTLB, which was not necessarily active before.
->=20
-> The init code for swiotlb in 'pci_swiotlb_detect_4gb()' compares
-> something against MAX_DMA32_PFN to decide if it should be active.
-> However that define suffers from an arithmetic overflow since
-> 1b7e03ef7570 ("x86, NUMA: Enable emulation on 32bit too") when it was
-> first made visible to x86_32.
->=20
-> The effect is at boot time 64 MiB (default size) were allocated for
-> bounce buffers now, which is a noticeable amount of memory on small
-> systems. We noticed this effect on the fli4l Linux distribution when
-> migrating from kernel v4.19 (LTS) to v5.4 (LTS) on boards like pcengines
-> ALIX 2D3 with 256 MiB memory for example:
->=20
->   Linux version 5.4.22 (buildroot@buildroot) (gcc version 7.3.0 (Buildroo=
-t 2018.02.8)) #1 SMP Mon Nov 26 23:40:00 CET 2018
->   =E2=80=A6
->   Memory: 183484K/261756K available (4594K kernel code, 393K rwdata, 1660=
-K rodata, 536K init, 456K bss , 78272K reserved, 0K cma-reserved, 0K highme=
-m)
->   =E2=80=A6
->   PCI-DMA: Using software bounce buffering for IO (SWIOTLB)
->   software IO TLB: mapped [mem 0x0bb78000-0x0fb78000] (64MB)
->=20
-> The initial analysis and the suggested fix was done by user 'sourcejedi'
-> at stackoverflow and explicitly marked as GPLv2 for inclusion in the
-> Linux kernel:
->=20
->   https://unix.stackexchange.com/a/520525/50007
->=20
-> The actual calculation however is the same as for arch/mips now as
-> suggested by Robin Murphy.
->=20
-> Fixes: https://web.nettworks.org/bugs/browse/FFL-2560
-> Fixes: https://unix.stackexchange.com/q/520065/50007
-> Reported-by: Alan Jenkins <alan.christopher.jenkins@gmail.com>
-> Suggested-by: Robin Murphy <robin.murphy@arm.com>
-> Signed-off-by: Alexander Dahl <post@lespocky.de>
-> ---
->=20
-> Notes:
->     v1 -> v2:
->       - use the same calculation as with arch/mips (Robin Murphy)
->=20
->  arch/x86/include/asm/dma.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/arch/x86/include/asm/dma.h b/arch/x86/include/asm/dma.h
-> index 00f7cf45e699..8e95aa4b0d17 100644
-> --- a/arch/x86/include/asm/dma.h
-> +++ b/arch/x86/include/asm/dma.h
-> @@ -74,7 +74,7 @@
->  #define MAX_DMA_PFN   ((16UL * 1024 * 1024) >> PAGE_SHIFT)
-> =20
->  /* 4GB broken PCI/AGP hardware bus master zone */
-> -#define MAX_DMA32_PFN ((4UL * 1024 * 1024 * 1024) >> PAGE_SHIFT)
-> +#define MAX_DMA32_PFN (1UL << (32 - PAGE_SHIFT))
-> =20
->  #ifdef CONFIG_X86_32
->  /* The maximum address that we can perform a DMA transfer to on this pla=
-tform */
-> --=20
-> 2.20.1
->=20
-> _______________________________________________
-> iommu mailing list
-> iommu@lists.linux-foundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/iommu
-
---=20
-/"\ ASCII RIBBON | =C2=BBWith the first link, the chain is forged. The first
-\ / CAMPAIGN     | speech censured, the first thought forbidden, the
- X  AGAINST      | first freedom denied, chains us all irrevocably.=C2=AB
-/ \ HTML MAIL    | (Jean-Luc Picard, quoting Judge Aaron Satie)
-
---ahhticrbe2tikgv5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEwo7muQJjlc+Prwj6NK3NAHIhXMYFAl6XG6IACgkQNK3NAHIh
-XMbmog//e9M196yeEg88JKJH2mpdtfl60nTuzTfAj+jq/iuzzPTdrzfyBPqIhR97
-DoG+nyi5M9OoBHtRNbruPAicBCjJGoiAvF7kI8fJkdbppDbxxIK4SwZfvB9SBTn9
-YfW0l16y7OaAtTU8tGkiHpIl+D/uvEjlvoaxsYj12fZA5m/3V0FV5yCLPOAaUvMC
-dJZ2Jhyyqk56M/6uCJsoYixeFnKZplOJE9RoNlSQVgFnjVPQVzJn+vgBpyBPpuLM
-qNxxFFv8oA6tZD7coxL25Dkse9r/qTiT4aox+k9OtoHD0aLJBeBUBuQxXHCSuzOq
-+ubisc0GxSIasuLlQzi2PshoxpUPgzTAAYSPmJs/fUFMCKz8YuMRRZiZdOWD9RRi
-AZ5S5t7/A0AodDQEMDJ235xtAXIVQgF5yMdn7ihwhrtjeQkhFaCjFkMwkXs7ezwY
-1fOmETmU8wJRsiKYgjsRpG47oX0wXquhJ6wCJNDvAE1V42ZfARGAtquG+i3D5XFU
-Z3rav+9lc+ezeKX+Wb7e98GYL2v7FqT+G8U75A4otq+hZSUeD7gfhzNCKPqwzi5K
-m2+9jchVeWaHyD+h0wYIiEUSS0snv//bw9I8iUhaNmtOC7obnGuRLaRC6r53TZeR
-VhSG72hOG9MBVDfXp+abOL4PmBaziGcAN973BwGrtO3STpxKVbw=
-=PSc6
------END PGP SIGNATURE-----
-
---ahhticrbe2tikgv5--
