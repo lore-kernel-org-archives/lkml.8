@@ -2,81 +2,94 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C53B6C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C852AC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9439B20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:40:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YkgiKgPb"
+	by mail.kernel.org (Postfix) with ESMTP id 93EA120737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:41:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586954509;
+	bh=GXGSjA7NBdSmlJIINRF+Qb+9W7TC8itEn3s06VY5gPk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=IMfu8ZTxFtOEmsdd4YlZy4IyBpHkvmxK7vnljUoUAhIPWmIHNivpwEexSgBmR0n+n
+	 xAXWmQQnIsn9MJJwQ2ESWku7lxVLVcaYiCk4vzWftqrIMyiMyvMxgCZCyN1z7Xn+z8
+	 61yic1YTh75oJLwCz3rtJk/pQJYBcaDxG/Y6koyY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S369983AbgDOMks (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:40:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49980 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S369948AbgDOMkB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 08:40:01 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F07DC061A0E;
-        Wed, 15 Apr 2020 05:40:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=OpYwUgGG4Pb20qcOBAt9KPUOd70RO1ILur2iFtvmRqE=; b=YkgiKgPbP6RXmASVdUYPElgM1K
-        wh7Q9Qd8VUh+tLGVrguFfnCnNMjrl6Gg7XisbTiLxn28tQ9Nafj2cL6wQwMFeWyjTX+6fBCH2TJo0
-        THcXpmVieX15bdY2SWWLDhR6NCNnH5TwkEPhKnenSkHvOHUp3JhUvfYyV1M3QbC5zyrFd/ul9mY74
-        f2Sp2AUuIVC7GsONZyhaMW7TxPElmmVZolhuNu4HjoL5n9ubLsaNxIouvLtgxg90T5x5trn277hnS
-        7RUzKq7oK4xcL1V6VYNqJgl2Fx8/YMwX6FraWQDMSaFx9ApXvXOPDoPfXTIO/NQ33YHpjaI7TJ0NU
-        /bwLwcAg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jOhK9-0003yq-Tg; Wed, 15 Apr 2020 12:39:25 +0000
-Date:   Wed, 15 Apr 2020 05:39:25 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Christoph Hellwig <hch@infradead.org>, axboe@kernel.dk,
-        viro@zeniv.linux.org.uk, bvanassche@acm.org,
-        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
-        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
-        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>
-Subject: Re: [PATCH 3/5] blktrace: refcount the request_queue during ioctl
-Message-ID: <20200415123925.GA14925@infradead.org>
-References: <20200414041902.16769-1-mcgrof@kernel.org>
- <20200414041902.16769-4-mcgrof@kernel.org>
- <20200414154044.GB25765@infradead.org>
- <20200415061649.GS11244@42.do-not-panic.com>
- <20200415071425.GA21099@infradead.org>
- <20200415123434.GU11244@42.do-not-panic.com>
+        id S370008AbgDOMlr (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:41:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36228 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2409046AbgDOLn5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:43:57 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28B3F20775;
+        Wed, 15 Apr 2020 11:43:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586951036;
+        bh=GXGSjA7NBdSmlJIINRF+Qb+9W7TC8itEn3s06VY5gPk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=uHzZ5gD4oggPaqTdvxm1MArkNm+vEviVCy8BgyEOLtU51AWJ3ztDQqP95F67seA7d
+         QoL1WMRP3djO4zcFrVcB5uTPkTfyh6WCK40S9CDEFaiZ2Zxr2W7REncMKdLHq7xjlU
+         uRXtiuucug2hj8M80DKgNWTkN1v8TDP/kSktOm+4=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Ricardo Ribalda Delgado <ribalda@kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-leds@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 073/106] leds: core: Fix warning message when init_data
+Date:   Wed, 15 Apr 2020 07:41:53 -0400
+Message-Id: <20200415114226.13103-73-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
+References: <20200415114226.13103-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200415123434.GU11244@42.do-not-panic.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 12:34:34PM +0000, Luis Chamberlain wrote:
-> I'll pile up a fix. I've also considered doing a full review of callers
-> outside of the core block layer using it, and maybe just unexporting
-> this. It was originally exported due to commit d86e0e83b ("block: export
-> blk_{get,put}_queue()") to fix a scsi bug, but I can't find such
-> respective fix. I suspec that using bdgrab()/bdput() seems more likely
-> what drivers should be using. That would allow us to keep this
-> functionality internal.
-> 
-> Think that's worthy review?
+From: Ricardo Ribalda Delgado <ribalda@kernel.org>
 
-Probably.  I did in fact very quickly look into that but then gave
-up due to the fair amount of modular users.
+[ Upstream commit 64ed6588c2ea618d3f9ca9d8b365ae4c19f76225 ]
+
+The warning message when a led is renamed due to name collition can fail
+to show proper original name if init_data is used. Eg:
+
+[    9.073996] leds-gpio a0040000.leds_0: Led (null) renamed to red_led_1 due to name collision
+
+Fixes: bb4e9af0348d ("leds: core: Add support for composing LED class device names")
+Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
+Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Signed-off-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/leds/led-class.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
+index 438774315e6c4..183de3cf6ef68 100644
+--- a/drivers/leds/led-class.c
++++ b/drivers/leds/led-class.c
+@@ -281,7 +281,7 @@ int led_classdev_register_ext(struct device *parent,
+ 
+ 	if (ret)
+ 		dev_warn(parent, "Led %s renamed to %s due to name collision",
+-				led_cdev->name, dev_name(led_cdev->dev));
++				proposed_name, dev_name(led_cdev->dev));
+ 
+ 	if (led_cdev->flags & LED_BRIGHT_HW_CHANGED) {
+ 		ret = led_add_brightness_hw_changed(led_cdev);
+-- 
+2.20.1
+
