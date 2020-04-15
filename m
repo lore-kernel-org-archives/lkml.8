@@ -2,122 +2,94 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 363C2C3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:17:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89249C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:17:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1875220575
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:17:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D6EA2074F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:17:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586956665;
+	bh=UCBTEmjPwfYxedLpiloHCMhgXUjd7KM5HX10MVfS7vk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=wzlHFBG0FfpubvxJx+geJgsf8BppZVt0TP5aPtHP8qR5rmI85dsoSbun9Za786oM0
+	 WhVcAJMc/rUjn5Zv2sHnlPkV0S24/mc7ScFGjF+B9uJpu125aQNMPpWgPSb78plcLl
+	 qITf/FsxSr9GfQz+rfZVX8fCYlNETdO5E++UCW70=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S370758AbgDONRU (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:17:20 -0400
-Received: from mga12.intel.com ([192.55.52.136]:35931 "EHLO mga12.intel.com"
+        id S2505242AbgDONRm (ORCPT
+        <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 09:17:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S370723AbgDONQ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 09:16:57 -0400
-IronPort-SDR: BwP8BQtRXZBOsdFpgZ7pL+msVfAGtgutK66soFYjcSXi8JLMnCtqsCUt/rBHjM1FtoQYspesKs
- TRMqa/IDO7+A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 06:16:57 -0700
-IronPort-SDR: dxJsauTrNCBbEh9iRMOkRDojitIw6xUBlogGlmKuMR3+VcdA0n00UBJN1nw/Nb9K5gm6QZoErM
- DBtUmoVA3EHw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,387,1580803200"; 
-   d="scan'208";a="400309880"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.87]) ([10.237.72.87])
-  by orsmga004.jf.intel.com with ESMTP; 15 Apr 2020 06:16:54 -0700
-Subject: Re: [PATCH 4/7] mmc: sdhci: move SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN
- frequency limit
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Kevin Liu <kliu5@marvell.com>,
-        Suneel Garapati <suneel.garapati@xilinx.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
-References: <cover.1585827904.git.mirq-linux@rere.qmqm.pl>
- <637b9bea4c28a0eeacf754d2930596b8e6673808.1585827904.git.mirq-linux@rere.qmqm.pl>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <2b111407-0f35-3c5e-f7f0-4a05a281dce2@intel.com>
-Date:   Wed, 15 Apr 2020 16:16:04 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S2897027AbgDOLfK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:35:10 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B71E3214D8;
+        Wed, 15 Apr 2020 11:35:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586950510;
+        bh=UCBTEmjPwfYxedLpiloHCMhgXUjd7KM5HX10MVfS7vk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Cg6v5sLZIM6nlpkjFylP30jN9FKAqXxumwJgiEdTO3NhlRIH7dLbdqf4fDPU63gTM
+         Wy7ULLdDfy/GHyr82AQFWjLTfgtJB+7gtboeiHZvAgEKbmOUi/to/7H8kfm6crVyiu
+         5dgWscbXERpWP4mugubF34Qvi47reRKtf+PKXt5w=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
+        Chen-Yu Tsai <wens@csie.org>, Sasha Levin <sashal@kernel.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.6 021/129] arm64: dts: allwinner: a64: Fix display clock register range
+Date:   Wed, 15 Apr 2020 07:32:56 -0400
+Message-Id: <20200415113445.11881-21-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
+References: <20200415113445.11881-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <637b9bea4c28a0eeacf754d2930596b8e6673808.1585827904.git.mirq-linux@rere.qmqm.pl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/04/20 2:54 pm, Michał Mirosław wrote:
-> Move clock frequency limit for SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN where
-> it belongs.
+From: Jernej Skrabec <jernej.skrabec@siol.net>
 
-Did you consider getting rid of SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN and
-handling it in sdhci-of-arasan instead?
+[ Upstream commit 3e9a1a8b7f811de3eb1445d72f68766b704ad17c ]
 
-> 
-> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-> ---
->  drivers/mmc/host/sdhci-of-arasan.c | 7 ++++---
->  drivers/mmc/host/sdhci.c           | 3 +--
->  2 files changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
-> index d4905c106c06..5e3b9131a631 100644
-> --- a/drivers/mmc/host/sdhci-of-arasan.c
-> +++ b/drivers/mmc/host/sdhci-of-arasan.c
-> @@ -339,7 +339,6 @@ static const struct sdhci_pltfm_data sdhci_arasan_pdata = {
->  	.ops = &sdhci_arasan_ops,
->  	.quirks = SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN,
->  	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
-> -			SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN |
->  			SDHCI_QUIRK2_STOP_WITH_TC,
->  };
->  
-> @@ -410,8 +409,7 @@ static const struct sdhci_ops sdhci_arasan_cqe_ops = {
->  static const struct sdhci_pltfm_data sdhci_arasan_cqe_pdata = {
->  	.ops = &sdhci_arasan_cqe_ops,
->  	.quirks = SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN,
-> -	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
-> -			SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN,
-> +	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
->  };
->  
->  static struct sdhci_arasan_of_data sdhci_arasan_rk3399_data = {
-> @@ -1155,6 +1153,9 @@ static int sdhci_arasan_add_host(struct sdhci_arasan_data *sdhci_arasan)
->  	bool dma64;
->  	int ret;
->  
-> +	if (sdhci_pltfm_clk_get_max_clock(host) <= 25000000)
-> +		host->quirks2 |= SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN;
-> +
->  	if (!sdhci_arasan->has_cqe)
->  		return sdhci_add_host(host);
->  
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index a043bf5e3565..ed88ac4e4cf3 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -1809,8 +1809,7 @@ u16 sdhci_calc_clk(struct sdhci_host *host, unsigned int clock,
->  			/* Version 3.00 divisors must be a multiple of 2. */
->  			if (host->max_clk <= clock) {
->  				div = 1;
-> -				if ((host->quirks2 & SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN)
-> -					&& host->max_clk <= 25000000)
-> +				if (host->quirks2 & SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN)
->  					div = 2;
->  			} else {
->  				for (div = 2; div < SDHCI_MAX_DIV_SPEC_300;
-> 
+Register range of display clocks is 0x10000, as it can be seen from
+DE2 documentation.
+
+Fix it.
+
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+Fixes: 2c796fc8f5dbd ("arm64: dts: allwinner: a64: add necessary device tree nodes for DE2 CCU")
+[wens@csie.org: added fixes tag]
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index 862b47dc9dc90..baa6f08dc1087 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -264,7 +264,7 @@
+ 
+ 			display_clocks: clock@0 {
+ 				compatible = "allwinner,sun50i-a64-de2-clk";
+-				reg = <0x0 0x100000>;
++				reg = <0x0 0x10000>;
+ 				clocks = <&ccu CLK_BUS_DE>,
+ 					 <&ccu CLK_DE>;
+ 				clock-names = "bus",
+-- 
+2.20.1
 
