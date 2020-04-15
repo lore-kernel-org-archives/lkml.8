@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64B5FC2BB55
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:54:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FF99C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:54:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 379B020737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:54:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D35420737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:54:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586951685;
-	bh=xBEgba53mTyEABUlkIImud5TWQpeouQiE1ppnBXI4wc=;
+	s=default; t=1586951693;
+	bh=2+/dJ4gHYaq3bNj/O1pI8tN/f6TAMbkW0u8kUJjb+oU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=imRDQzLgjB4g9lSItKSfIS1qVdCQG6xsuBhr7eBfGlMjTp5S6PkKnEpyCl2aA1GWd
-	 MpW8txWhnLhTk5GeDT0tRY/aHLLzua+to0uDDPlhYcm8ypp4No3E/46GsK0Mv86JqD
-	 q8C7We0NugNQ1novD8v5R4/3QUOlng/q5kxVOmpo=
+	b=zhmNnQMq6Doy4kWNVnN1tKCEqu8THvzsIPdyp5TZ7euJvz10QrwEJXTSh5KW9FGJw
+	 U9/XgdtsT4qVVBf1ZtRPJmYzA3/U7oUPePrvHTcocCpbEW5KwK11MUPYJR/6SX4SyP
+	 kjzpZPqVSDqyNu0JVlR9jlwfnf+NwbNO4IGjna7M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409602AbgDOLyl (ORCPT
+        id S2897876AbgDOLyv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:54:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39364 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 07:54:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409179AbgDOLpc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:45:32 -0400
+        id S2409182AbgDOLpf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:45:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54831216FD;
-        Wed, 15 Apr 2020 11:45:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04029206A2;
+        Wed, 15 Apr 2020 11:45:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951132;
-        bh=xBEgba53mTyEABUlkIImud5TWQpeouQiE1ppnBXI4wc=;
+        s=default; t=1586951135;
+        bh=2+/dJ4gHYaq3bNj/O1pI8tN/f6TAMbkW0u8kUJjb+oU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=luh1KEAahIua7LIrYROE3DtNShFYkIgkZqrG3QL7Usk2Gwqk7ABBJSBqVJp0ARI8g
-         +HJhJIlC1I8Bbj3yzoM3CgTV6aWofqAozlobxf5WPniAvTAg7WEQfLhSW9VPm1mz+K
-         PKi3PccLvyEpriK4nV8mfNzp9hOSm7w9ZpcZnO0s=
+        b=Lj9zKv1jrbUc/gnc5qaMpWhtaJ/Z/0ZkB9ik0NEnlG1C1oEoyyUepppQ1JzV6Ov8K
+         kcN9P/fsc2zwWaGRJRZTAS8QtBnwqnnsNlaISPcHb8wANC6DiQKTjY8AihltLHP0Lx
+         oekTrjMUgQi72QdGofvlOrCthr6DBS/arRSX/fUo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Will Deacon <will@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jason Wang <jasowang@redhat.com>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 43/84] net: stmmac: dwmac1000: fix out-of-bounds mac address reg setting
-Date:   Wed, 15 Apr 2020 07:44:00 -0400
-Message-Id: <20200415114442.14166-43-sashal@kernel.org>
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 45/84] tun: Don't put_page() for all negative return values from XDP program
+Date:   Wed, 15 Apr 2020 07:44:02 -0400
+Message-Id: <20200415114442.14166-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114442.14166-1-sashal@kernel.org>
 References: <20200415114442.14166-1-sashal@kernel.org>
@@ -61,38 +64,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+From: Will Deacon <will@kernel.org>
 
-[ Upstream commit 3e1221acf6a8f8595b5ce354bab4327a69d54d18 ]
+[ Upstream commit bee348907d19d654e8524d3a946dcd25b693aa7e ]
 
-Commit 9463c4455900 ("net: stmmac: dwmac1000: Clear unused address
-entries") cleared the unused mac address entries, but introduced an
-out-of bounds mac address register programming bug -- After setting
-the secondary unicast mac addresses, the "reg" value has reached
-netdev_uc_count() + 1, thus we should only clear address entries
-if (addr < perfect_addr_number)
+When an XDP program is installed, tun_build_skb() grabs a reference to
+the current page fragment page if the program returns XDP_REDIRECT or
+XDP_TX. However, since tun_xdp_act() passes through negative return
+values from the XDP program, it is possible to trigger the error path by
+mistake and accidentally drop a reference to the fragments page without
+taking one, leading to a spurious free. This is believed to be the cause
+of some KASAN use-after-free reports from syzbot [1], although without a
+reproducer it is not possible to confirm whether this patch fixes the
+problem.
 
-Fixes: 9463c4455900 ("net: stmmac: dwmac1000: Clear unused address entries")
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Ensure that we only drop a reference to the fragments page if the XDP
+transmit or redirect operations actually fail.
+
+[1] https://syzkaller.appspot.com/bug?id=e76a6af1be4acd727ff6bbca669833f98cbf5d95
+
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+CC: Eric Dumazet <edumazet@google.com>
+Acked-by: Jason Wang <jasowang@redhat.com>
+Fixes: 8ae1aff0b331 ("tuntap: split out XDP logic")
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/tun.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
-index 43a785f86c69d..bc9b01376e807 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
-@@ -209,7 +209,7 @@ static void dwmac1000_set_filter(struct mac_device_info *hw,
- 			reg++;
+diff --git a/drivers/net/tun.c b/drivers/net/tun.c
+index 69f553a028eee..16f5cb249ed59 100644
+--- a/drivers/net/tun.c
++++ b/drivers/net/tun.c
+@@ -1715,8 +1715,12 @@ static struct sk_buff *tun_build_skb(struct tun_struct *tun,
+ 			alloc_frag->offset += buflen;
  		}
+ 		err = tun_xdp_act(tun, xdp_prog, &xdp, act);
+-		if (err < 0)
+-			goto err_xdp;
++		if (err < 0) {
++			if (act == XDP_REDIRECT || act == XDP_TX)
++				put_page(alloc_frag->page);
++			goto out;
++		}
++
+ 		if (err == XDP_REDIRECT)
+ 			xdp_do_flush_map();
+ 		if (err != XDP_PASS)
+@@ -1730,8 +1734,6 @@ static struct sk_buff *tun_build_skb(struct tun_struct *tun,
  
--		while (reg <= perfect_addr_number) {
-+		while (reg < perfect_addr_number) {
- 			writel(0, ioaddr + GMAC_ADDR_HIGH(reg));
- 			writel(0, ioaddr + GMAC_ADDR_LOW(reg));
- 			reg++;
+ 	return __tun_build_skb(tfile, alloc_frag, buf, buflen, len, pad);
+ 
+-err_xdp:
+-	put_page(alloc_frag->page);
+ out:
+ 	rcu_read_unlock();
+ 	local_bh_enable();
 -- 
 2.20.1
 
