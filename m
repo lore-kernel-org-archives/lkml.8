@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7998C2BB55
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:58:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B228C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:58:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A80DD2078A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:58:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E119C2078A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:58:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586951901;
-	bh=FfZTrTAQWZOYAYeC8thZIHv1xnBtUA14Cu7/XK0URJA=;
+	s=default; t=1586951908;
+	bh=dv2tGa7oBR3Ndx5yj/9PBwKQi3aXbOwvi6Bg6mpOi6o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Pkwz4OY/+Yge2p4WdUouqtF8Ohc4g25eEnAKjwGP1LgjHp+b8T4tMK7g595862VlA
-	 OtcvRJXX3hii8FPTWIHxE+zH8RofuT7BzL+ZF3V57gLiWVVJNJyngSklAIVRdd4E5p
-	 pyoard78sEGH3/Ibv9bcj1xdbACToXH2OwgCj8K4=
+	b=iM8ig+803gij6ucD6T/b+kVBQB+h3BzBm/sQkkTQXG5c1GfHt5BgrCdXjb1fzSnxB
+	 VC4gsbhUD/gsj58rIV1od18gVSQ5HRStiwi3PRhwEqvUZVaAtQDRWgukUGldD1SL1D
+	 FZ66MrqZenGpNLB8+00hEO4LYRF5Yjc8wUOyljhY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S367993AbgDOL6U (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:58:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41848 "EHLO mail.kernel.org"
+        id S368002AbgDOL6Z (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 07:58:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409321AbgDOLqp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:46:45 -0400
+        id S2409326AbgDOLqq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:46:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5690214D8;
-        Wed, 15 Apr 2020 11:46:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04F9E20775;
+        Wed, 15 Apr 2020 11:46:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951204;
-        bh=FfZTrTAQWZOYAYeC8thZIHv1xnBtUA14Cu7/XK0URJA=;
+        s=default; t=1586951205;
+        bh=dv2tGa7oBR3Ndx5yj/9PBwKQi3aXbOwvi6Bg6mpOi6o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rof7X8OvOFcOrPH2Zq1IsdXSSsXE7ZKR0jfk28Xh4IdAoeKTEH/x9fMPASGV2SU7y
-         SCnsgUiW95sJfXajLZyynKTxWD027pQ8g2kIGWUmVapWFtXE8CBBtnRaStD3PaopGa
-         ZOyR3ujsGalRPoU1QKC6m6Z/C80BAR63V1leldPg=
+        b=rCO7KyTtHsFTDtey6x9DXWkLEdQZqZz/x2TV5dcmXZHSdY95NaQXHzC1NsHTVl+MI
+         juj+9GwfsAxw3YolT4l0xL/L5A+VaVIIB3mSN+1X2jWyFoWDGABxtisSWkDozqQ9XB
+         mKoa5w0MCypc1pwdW8cB3yhrIty6IklEv9JjlaTo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
-        Alex Elder <elder@linaro.org>,
-        Sean Tranchetti <stranche@codeaurora.org>,
+Cc:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 18/40] net: qualcomm: rmnet: Allow configuration updates to existing devices
-Date:   Wed, 15 Apr 2020 07:46:01 -0400
-Message-Id: <20200415114623.14972-18-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 19/40] net: stmmac: dwmac1000: fix out-of-bounds mac address reg setting
+Date:   Wed, 15 Apr 2020 07:46:02 -0400
+Message-Id: <20200415114623.14972-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114623.14972-1-sashal@kernel.org>
 References: <20200415114623.14972-1-sashal@kernel.org>
@@ -60,75 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>
+From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 
-[ Upstream commit 2abb5792387eb188b12051337d5dcd2cba615cb0 ]
+[ Upstream commit 3e1221acf6a8f8595b5ce354bab4327a69d54d18 ]
 
-This allows the changelink operation to succeed if the mux_id was
-specified as an argument. Note that the mux_id must match the
-existing mux_id of the rmnet device or should be an unused mux_id.
+Commit 9463c4455900 ("net: stmmac: dwmac1000: Clear unused address
+entries") cleared the unused mac address entries, but introduced an
+out-of bounds mac address register programming bug -- After setting
+the secondary unicast mac addresses, the "reg" value has reached
+netdev_uc_count() + 1, thus we should only clear address entries
+if (addr < perfect_addr_number)
 
-Fixes: 1dc49e9d164c ("net: rmnet: do not allow to change mux id if mux id is duplicated")
-Reported-and-tested-by: Alex Elder <elder@linaro.org>
-Signed-off-by: Sean Tranchetti <stranche@codeaurora.org>
-Signed-off-by: Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>
+Fixes: 9463c4455900 ("net: stmmac: dwmac1000: Clear unused address entries")
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../ethernet/qualcomm/rmnet/rmnet_config.c    | 31 ++++++++++++-------
- 1 file changed, 19 insertions(+), 12 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c b/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
-index 37786affa9750..7389648d0feaf 100644
---- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
-+++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
-@@ -288,7 +288,6 @@ static int rmnet_changelink(struct net_device *dev, struct nlattr *tb[],
- {
- 	struct rmnet_priv *priv = netdev_priv(dev);
- 	struct net_device *real_dev;
--	struct rmnet_endpoint *ep;
- 	struct rmnet_port *port;
- 	u16 mux_id;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
+index 7b2a84320aabd..e4e9a7591efe9 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
+@@ -218,7 +218,7 @@ static void dwmac1000_set_filter(struct mac_device_info *hw,
+ 			reg++;
+ 		}
  
-@@ -303,19 +302,27 @@ static int rmnet_changelink(struct net_device *dev, struct nlattr *tb[],
- 
- 	if (data[IFLA_RMNET_MUX_ID]) {
- 		mux_id = nla_get_u16(data[IFLA_RMNET_MUX_ID]);
--		if (rmnet_get_endpoint(port, mux_id)) {
--			NL_SET_ERR_MSG_MOD(extack, "MUX ID already exists");
--			return -EINVAL;
--		}
--		ep = rmnet_get_endpoint(port, priv->mux_id);
--		if (!ep)
--			return -ENODEV;
- 
--		hlist_del_init_rcu(&ep->hlnode);
--		hlist_add_head_rcu(&ep->hlnode, &port->muxed_ep[mux_id]);
-+		if (mux_id != priv->mux_id) {
-+			struct rmnet_endpoint *ep;
-+
-+			ep = rmnet_get_endpoint(port, priv->mux_id);
-+			if (!ep)
-+				return -ENODEV;
- 
--		ep->mux_id = mux_id;
--		priv->mux_id = mux_id;
-+			if (rmnet_get_endpoint(port, mux_id)) {
-+				NL_SET_ERR_MSG_MOD(extack,
-+						   "MUX ID already exists");
-+				return -EINVAL;
-+			}
-+
-+			hlist_del_init_rcu(&ep->hlnode);
-+			hlist_add_head_rcu(&ep->hlnode,
-+					   &port->muxed_ep[mux_id]);
-+
-+			ep->mux_id = mux_id;
-+			priv->mux_id = mux_id;
-+		}
- 	}
- 
- 	if (data[IFLA_RMNET_FLAGS]) {
+-		while (reg <= perfect_addr_number) {
++		while (reg < perfect_addr_number) {
+ 			writel(0, ioaddr + GMAC_ADDR_HIGH(reg));
+ 			writel(0, ioaddr + GMAC_ADDR_LOW(reg));
+ 			reg++;
 -- 
 2.20.1
 
