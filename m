@@ -2,389 +2,278 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B79F8C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:40:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81536C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 873152076C
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:40:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5347520CC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:42:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EKqQjNFd"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="iuHVvLQJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392996AbgDOCk4 (ORCPT
+        id S2407919AbgDOCmp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 22:40:56 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:32558 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2392982AbgDOCkm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 22:40:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586918440;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZzXqQupdcEVzrxLeJPdjg5a4wdvji8UTh98rlK08KT4=;
-        b=EKqQjNFdYLRPcRsVDncNA5yNjEGRWxzG3cJs6YkJHEkJTApBxCRuvuPTo//y0gJm/maJOg
-        XFOQzGiDyneqz754TohofoIjmDa7SwJvBgmrfW9ThrSHfUHh4/qfEtgxTO8GpmJ2AkcyXD
-        cMO1vTGnzXdcXtnwcDqpfQPaTAXNIcU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-334-hDb6UCXEMeyJufD6v45JYg-1; Tue, 14 Apr 2020 22:40:17 -0400
-X-MC-Unique: hDb6UCXEMeyJufD6v45JYg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6618A107ACC7;
-        Wed, 15 Apr 2020 02:40:15 +0000 (UTC)
-Received: from [10.72.12.184] (ovpn-12-184.pek2.redhat.com [10.72.12.184])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4653A5C1B0;
-        Wed, 15 Apr 2020 02:40:04 +0000 (UTC)
-Subject: Re: [PATCH] vhost: do not enable VHOST_MENU by default
-To:     kbuild test robot <lkp@intel.com>, mst@redhat.com,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, geert@linux-m68k.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     kbuild-all@lists.01.org
-References: <20200414024438.19103-1-jasowang@redhat.com>
- <202004150530.wxnpDMSc%lkp@intel.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <9561fec3-1a50-3a87-4012-e9761e677708@redhat.com>
-Date:   Wed, 15 Apr 2020 10:40:02 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <202004150530.wxnpDMSc%lkp@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+        Tue, 14 Apr 2020 22:42:45 -0400
+Received: from mail-db8eur05on2076.outbound.protection.outlook.com ([40.107.20.76]:6369
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388214AbgDOCmh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 22:42:37 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BjAl34XhCuiLTgbHZP+Y1m0HZL7a4wv+C45i11B49sZCrBSk8i3CtTvAAqvGHBx2y/1/ySTzgI1rlSEx3jFSXCaYKpY1zvFhSvhkW1vRxWJtJe5AgLF2arc6NIJifLiK2sZE9JBqXh2t/KWzNk4erYFdkg98xKRMoeGe2tnEeAiXC0weeKPyFiyHso9BOvD8cB+HxDYplUV/Oam41IA8XeEnJ5CTqu7Uh64ArJFXwfiWGwwYzzy8JVmar74eQOtWCFwQkz9a2+HRo8bpHB/TesChyl9tkAVnHQs8WJy1TbP1z1cLHFZZcLBQ0n5d3O9J9xXzp4b7O3nYMMObNmgcAA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gtFjWj1YucLUeoKjFAhlC/kjmEtosOXKWzmGv9cI8CE=;
+ b=hwxVATyNwO7gnf0vBLjZiTj+x0lkDfIFTpbAhTIzFsrnIbXwnde+vOPT/69T+CKxgkBBu/CW0EAH2o21s5lQfYvoCTJFMDg8xili8EC9BP6cWnatTcCATfFrcY7Q0uAbhWpWaLJFBhwD6UMZU7pwEvWomQRJjuo5aUvzKUv/YZ+oNj1BcWtJzn3oUWDV3/04QaZT4UROUvvVzVj06TUkbz9LzPhqBYsz+6m2WunDE2qgdcMUAzCoaav+svuuuQgtLxTi6s/tJKRd1o1zifbecYFY8NLIyDS+KfPMon/nJUtY0IP/ClXiSivHPoHGMmWSUV5X/Qv6WaDBjtCqWXdbSQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gtFjWj1YucLUeoKjFAhlC/kjmEtosOXKWzmGv9cI8CE=;
+ b=iuHVvLQJ7SJmaxRRlon4KtALNpSARcW86sVHzHbWkbcgXa2Lt8FpEKALBfiyvwc7NsR5CCjhdMC8x87WCbkBbZyOLOAQGBx+8og6obhbFPy0APIPsf/HmGX5vdIhXfQ1nc9rT03FJazbycKnvd8sq4RYOAZkSu1IqKpulNIEg8E=
+Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
+ by DB6PR0402MB2695.eurprd04.prod.outlook.com (2603:10a6:4:95::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.26; Wed, 15 Apr
+ 2020 02:42:32 +0000
+Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com
+ ([fe80::d17b:d767:19c3:b871]) by DB6PR0402MB2760.eurprd04.prod.outlook.com
+ ([fe80::d17b:d767:19c3:b871%6]) with mapi id 15.20.2900.028; Wed, 15 Apr 2020
+ 02:42:32 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     "nikita.shubin@maquefel.me" <nikita.shubin@maquefel.me>
+CC:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2 0/3] remoteproc: imx_rproc: add virtio support
+Thread-Topic: [PATCH v2 0/3] remoteproc: imx_rproc: add virtio support
+Thread-Index: AQHWDAb+JdgObafwAkG5FGKUl9Xnrah5hqFQ
+Date:   Wed, 15 Apr 2020 02:42:32 +0000
+Message-ID: <DB6PR0402MB27603D39E31D30AA28D6893A88DB0@DB6PR0402MB2760.eurprd04.prod.outlook.com>
+References: <20200304142628.8471-1-NShubin@topcon.com>
+ <20200406113310.3041-1-nikita.shubin@maquefel.me>
+In-Reply-To: <20200406113310.3041-1-nikita.shubin@maquefel.me>
+Accept-Language: en-US
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-originating-ip: [119.31.174.71]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: de760fa7-0c26-4bf9-0fc8-08d7e0e6a5e7
+x-ms-traffictypediagnostic: DB6PR0402MB2695:|DB6PR0402MB2695:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB6PR0402MB269562743D7977329228622F88DB0@DB6PR0402MB2695.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0374433C81
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(346002)(366004)(39860400002)(376002)(396003)(136003)(8676002)(6916009)(76116006)(66556008)(966005)(8936002)(316002)(7416002)(66446008)(64756008)(5660300002)(66946007)(55016002)(9686003)(66476007)(44832011)(81156014)(478600001)(54906003)(186003)(7696005)(6506007)(4326008)(52536014)(71200400001)(33656002)(26005)(2906002)(86362001)(505234006);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Uv8CnEOS8qMeLmlJKtDH0WjIKiXocqebxmyKKRYXPd4P2qLN4G4xLzGvWHqwy37INwXnX+HH7hyDAELqG6YiqAA48nBRFvYIKOq1ihTssT9RZ70jsoWJ31CTuRyvCh7cHIcS6CVmnTXGQm2URAyamoPIqNWWJo6sWodfMNFJNOYji2N9NGnzvLnRzRDc5DfLgknQMhChqW66uiwtMuBOZbmoxoKWp9QXtXj2uzCBl0WJ2A9Y1CIJLddN9sjKF6kHD5E5+oItIj1ApspjdLPVQmMu/cdjSk0FugYN6862DbktEykIlww9AlDEylSeEG8gv6oPyrAUaNIW4V0lv2WzCi1csdIuVHlcN5vH4XufJ0DonlDxM+F0uvWUkivsj9jJ8X8ytK7slYgKZo04vZ3LTyvmEtBQhUKZaBWtu4mrnPJErtJpRq6yYOCEInQBpfNRVDiT9hcWADZHUxBctLri3USza0hY6UkWX0YIPGsnX7edyMQkYug1l8BiA9cLG3Ds4y9qRV4AJk7Y9RwX0Xxm2ZUWDJk7R2eGc6ofeL9KwkMWSbfRsWkk+fZngf/09p7PBxeG8woJTAYnqs7x1s5pGg==
+x-ms-exchange-antispam-messagedata: Iu/bQsl1Rr4KTCWbz59s/ZknJXYLKMLgyG9pJz6lg5a7o5Avo13SIs1cJxEbxrH6QCrEcfw7zE0uqAAgsCIGDjau/QjkrKvvMxw2Eaw8uBBTpjMOP/XfHOHMrGyeOk74xH1XwyWVr9FruzO/DBdqGg==
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: de760fa7-0c26-4bf9-0fc8-08d7e0e6a5e7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Apr 2020 02:42:32.5388
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 6TAbGj87zyHa1h9LU/mv8Te/18qIxLbo0fapHSR8Y2kRA570hwmzmU+AhhEaCaEg+POyLl2kU7g5nRKiPIQtGQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0402MB2695
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> Subject: [PATCH v2 0/3] remoteproc: imx_rproc: add virtio support
 
-On 2020/4/15 =E4=B8=8A=E5=8D=885:15, kbuild test robot wrote:
-> Hi Jason,
->
-> I love your patch! Yet something to improve:
->
-> [auto build test ERROR on vhost/linux-next]
-> [also build test ERROR on next-20200414]
-> [cannot apply to powerpc/next s390/features v5.7-rc1]
-> [if your patch is applied to the wrong git tree, please drop us a note =
-to help
-> improve the system. BTW, we also suggest to use '--base' option to spec=
-ify the
-> base tree in git format-patch, please see https://stackoverflow.com/a/3=
-7406982]
->
-> url:    https://github.com/0day-ci/linux/commits/Jason-Wang/vhost-do-no=
-t-enable-VHOST_MENU-by-default/20200414-110807
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git l=
-inux-next
-> config: ia64-randconfig-a001-20200415 (attached as .config)
-> compiler: ia64-linux-gcc (GCC) 9.3.0
-> reproduce:
->          wget https://raw.githubusercontent.com/intel/lkp-tests/master/=
-sbin/make.cross -O ~/bin/make.cross
->          chmod +x ~/bin/make.cross
->          # save the attached .config to linux build tree
->          GCC_VERSION=3D9.3.0 make.cross ARCH=3Dia64
->
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kbuild test robot <lkp@intel.com>
->
-> All error/warnings (new ones prefixed by >>):
->
->     drivers/vhost/vhost.c: In function 'vhost_vring_ioctl':
->>> drivers/vhost/vhost.c:1577:33: error: implicit declaration of functio=
-n 'eventfd_fget'; did you mean 'eventfd_signal'? [-Werror=3Dimplicit-func=
-tion-declaration]
->      1577 |   eventfp =3D f.fd =3D=3D -1 ? NULL : eventfd_fget(f.fd);
->           |                                 ^~~~~~~~~~~~
->           |                                 eventfd_signal
->>> drivers/vhost/vhost.c:1577:31: warning: pointer/integer type mismatch=
- in conditional expression
+Have you ever see https://patchwork.kernel.org/cover/11390477/?
 
+I have been waiting for Mathieu's rproc sync state patch, then
+rebase.
 
-Forget to make VHOST depend on EVENTFD.
+Thanks,
+Peng.
 
-Will send v2.
-
-Thanks
-
-
->      1577 |   eventfp =3D f.fd =3D=3D -1 ? NULL : eventfd_fget(f.fd);
->           |                               ^
->     cc1: some warnings being treated as errors
->
-> vim +1577 drivers/vhost/vhost.c
->
-> feebcaeac79ad8 Jason Wang         2019-05-24  1493
-> feebcaeac79ad8 Jason Wang         2019-05-24  1494  static long vhost_v=
-ring_set_num_addr(struct vhost_dev *d,
-> feebcaeac79ad8 Jason Wang         2019-05-24  1495  				     struct vho=
-st_virtqueue *vq,
-> feebcaeac79ad8 Jason Wang         2019-05-24  1496  				     unsigned i=
-nt ioctl,
-> feebcaeac79ad8 Jason Wang         2019-05-24  1497  				     void __use=
-r *argp)
-> feebcaeac79ad8 Jason Wang         2019-05-24  1498  {
-> feebcaeac79ad8 Jason Wang         2019-05-24  1499  	long r;
-> feebcaeac79ad8 Jason Wang         2019-05-24  1500
-> feebcaeac79ad8 Jason Wang         2019-05-24  1501  	mutex_lock(&vq->mu=
-tex);
-> feebcaeac79ad8 Jason Wang         2019-05-24  1502
-> feebcaeac79ad8 Jason Wang         2019-05-24  1503  	switch (ioctl) {
-> feebcaeac79ad8 Jason Wang         2019-05-24  1504  	case VHOST_SET_VRI=
-NG_NUM:
-> feebcaeac79ad8 Jason Wang         2019-05-24  1505  		r =3D vhost_vring=
-_set_num(d, vq, argp);
-> feebcaeac79ad8 Jason Wang         2019-05-24  1506  		break;
-> feebcaeac79ad8 Jason Wang         2019-05-24  1507  	case VHOST_SET_VRI=
-NG_ADDR:
-> feebcaeac79ad8 Jason Wang         2019-05-24  1508  		r =3D vhost_vring=
-_set_addr(d, vq, argp);
-> feebcaeac79ad8 Jason Wang         2019-05-24  1509  		break;
-> feebcaeac79ad8 Jason Wang         2019-05-24  1510  	default:
-> feebcaeac79ad8 Jason Wang         2019-05-24  1511  		BUG();
-> feebcaeac79ad8 Jason Wang         2019-05-24  1512  	}
-> feebcaeac79ad8 Jason Wang         2019-05-24  1513
-> feebcaeac79ad8 Jason Wang         2019-05-24  1514  	mutex_unlock(&vq->=
-mutex);
-> feebcaeac79ad8 Jason Wang         2019-05-24  1515
-> feebcaeac79ad8 Jason Wang         2019-05-24  1516  	return r;
-> feebcaeac79ad8 Jason Wang         2019-05-24  1517  }
-> 26b36604523f4a Sonny Rao          2018-03-14  1518  long vhost_vring_io=
-ctl(struct vhost_dev *d, unsigned int ioctl, void __user *argp)
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1519  {
-> cecb46f194460d Al Viro            2012-08-27  1520  	struct file *event=
-fp, *filep =3D NULL;
-> cecb46f194460d Al Viro            2012-08-27  1521  	bool pollstart =3D=
- false, pollstop =3D false;
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1522  	struct eventfd_ctx=
- *ctx =3D NULL;
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1523  	u32 __user *idxp =3D=
- argp;
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1524  	struct vhost_virtq=
-ueue *vq;
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1525  	struct vhost_vring=
-_state s;
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1526  	struct vhost_vring=
-_file f;
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1527  	u32 idx;
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1528  	long r;
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1529
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1530  	r =3D get_user(idx=
-, idxp);
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1531  	if (r < 0)
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1532  		return r;
-> 0f3d9a17469d71 Krishna Kumar      2010-05-25  1533  	if (idx >=3D d->nv=
-qs)
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1534  		return -ENOBUFS;
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1535
-> ff002269a4ee9c Jason Wang         2018-10-30  1536  	idx =3D array_inde=
-x_nospec(idx, d->nvqs);
-> 3ab2e420ec1caf Asias He           2013-04-27  1537  	vq =3D d->vqs[idx]=
-;
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1538
-> feebcaeac79ad8 Jason Wang         2019-05-24  1539  	if (ioctl =3D=3D V=
-HOST_SET_VRING_NUM ||
-> feebcaeac79ad8 Jason Wang         2019-05-24  1540  	    ioctl =3D=3D V=
-HOST_SET_VRING_ADDR) {
-> feebcaeac79ad8 Jason Wang         2019-05-24  1541  		return vhost_vrin=
-g_set_num_addr(d, vq, ioctl, argp);
-> feebcaeac79ad8 Jason Wang         2019-05-24  1542  	}
-> feebcaeac79ad8 Jason Wang         2019-05-24  1543
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1544  	mutex_lock(&vq->mu=
-tex);
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1545
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1546  	switch (ioctl) {
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1547  	case VHOST_SET_VRI=
-NG_BASE:
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1548  		/* Moving base wi=
-th an active backend?
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1549  		 * You don't want=
- to do that. */
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1550  		if (vq->private_d=
-ata) {
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1551  			r =3D -EBUSY;
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1552  			break;
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1553  		}
-> 7ad9c9d2704854 Takuya Yoshikawa   2010-05-27  1554  		if (copy_from_use=
-r(&s, argp, sizeof s)) {
-> 7ad9c9d2704854 Takuya Yoshikawa   2010-05-27  1555  			r =3D -EFAULT;
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1556  			break;
-> 7ad9c9d2704854 Takuya Yoshikawa   2010-05-27  1557  		}
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1558  		if (s.num > 0xfff=
-f) {
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1559  			r =3D -EINVAL;
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1560  			break;
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1561  		}
-> 8d65843c44269c Jason Wang         2017-07-27  1562  		vq->last_avail_id=
-x =3D s.num;
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1563  		/* Forget the cac=
-hed index value. */
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1564  		vq->avail_idx =3D=
- vq->last_avail_idx;
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1565  		break;
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1566  	case VHOST_GET_VRI=
-NG_BASE:
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1567  		s.index =3D idx;
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1568  		s.num =3D vq->las=
-t_avail_idx;
-> 7ad9c9d2704854 Takuya Yoshikawa   2010-05-27  1569  		if (copy_to_user(=
-argp, &s, sizeof s))
-> 7ad9c9d2704854 Takuya Yoshikawa   2010-05-27  1570  			r =3D -EFAULT;
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1571  		break;
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1572  	case VHOST_SET_VRI=
-NG_KICK:
-> 7ad9c9d2704854 Takuya Yoshikawa   2010-05-27  1573  		if (copy_from_use=
-r(&f, argp, sizeof f)) {
-> 7ad9c9d2704854 Takuya Yoshikawa   2010-05-27  1574  			r =3D -EFAULT;
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1575  			break;
-> 7ad9c9d2704854 Takuya Yoshikawa   2010-05-27  1576  		}
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14 @1577  		eventfp =3D f.fd =
-=3D=3D -1 ? NULL : eventfd_fget(f.fd);
-> 535297a6ae4c3b Michael S. Tsirkin 2010-03-17  1578  		if (IS_ERR(eventf=
-p)) {
-> 535297a6ae4c3b Michael S. Tsirkin 2010-03-17  1579  			r =3D PTR_ERR(ev=
-entfp);
-> 535297a6ae4c3b Michael S. Tsirkin 2010-03-17  1580  			break;
-> 535297a6ae4c3b Michael S. Tsirkin 2010-03-17  1581  		}
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1582  		if (eventfp !=3D =
-vq->kick) {
-> cecb46f194460d Al Viro            2012-08-27  1583  			pollstop =3D (fi=
-lep =3D vq->kick) !=3D NULL;
-> cecb46f194460d Al Viro            2012-08-27  1584  			pollstart =3D (v=
-q->kick =3D eventfp) !=3D NULL;
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1585  		} else
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1586  			filep =3D eventf=
-p;
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1587  		break;
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1588  	case VHOST_SET_VRI=
-NG_CALL:
-> 7ad9c9d2704854 Takuya Yoshikawa   2010-05-27  1589  		if (copy_from_use=
-r(&f, argp, sizeof f)) {
-> 7ad9c9d2704854 Takuya Yoshikawa   2010-05-27  1590  			r =3D -EFAULT;
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1591  			break;
-> 7ad9c9d2704854 Takuya Yoshikawa   2010-05-27  1592  		}
-> e050c7d93f4adb Eric Biggers       2018-01-06  1593  		ctx =3D f.fd =3D=3D=
- -1 ? NULL : eventfd_ctx_fdget(f.fd);
-> e050c7d93f4adb Eric Biggers       2018-01-06  1594  		if (IS_ERR(ctx)) =
-{
-> e050c7d93f4adb Eric Biggers       2018-01-06  1595  			r =3D PTR_ERR(ct=
-x);
-> 535297a6ae4c3b Michael S. Tsirkin 2010-03-17  1596  			break;
-> 535297a6ae4c3b Michael S. Tsirkin 2010-03-17  1597  		}
-> e050c7d93f4adb Eric Biggers       2018-01-06  1598  		swap(ctx, vq->cal=
-l_ctx);
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1599  		break;
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1600  	case VHOST_SET_VRI=
-NG_ERR:
-> 7ad9c9d2704854 Takuya Yoshikawa   2010-05-27  1601  		if (copy_from_use=
-r(&f, argp, sizeof f)) {
-> 7ad9c9d2704854 Takuya Yoshikawa   2010-05-27  1602  			r =3D -EFAULT;
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1603  			break;
-> 7ad9c9d2704854 Takuya Yoshikawa   2010-05-27  1604  		}
-> 09f332a589232f Eric Biggers       2018-01-06  1605  		ctx =3D f.fd =3D=3D=
- -1 ? NULL : eventfd_ctx_fdget(f.fd);
-> 09f332a589232f Eric Biggers       2018-01-06  1606  		if (IS_ERR(ctx)) =
-{
-> 09f332a589232f Eric Biggers       2018-01-06  1607  			r =3D PTR_ERR(ct=
-x);
-> 535297a6ae4c3b Michael S. Tsirkin 2010-03-17  1608  			break;
-> 535297a6ae4c3b Michael S. Tsirkin 2010-03-17  1609  		}
-> 09f332a589232f Eric Biggers       2018-01-06  1610  		swap(ctx, vq->err=
-or_ctx);
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1611  		break;
-> 2751c9882b9472 Greg Kurz          2015-04-24  1612  	case VHOST_SET_VRI=
-NG_ENDIAN:
-> 2751c9882b9472 Greg Kurz          2015-04-24  1613  		r =3D vhost_set_v=
-ring_endian(vq, argp);
-> 2751c9882b9472 Greg Kurz          2015-04-24  1614  		break;
-> 2751c9882b9472 Greg Kurz          2015-04-24  1615  	case VHOST_GET_VRI=
-NG_ENDIAN:
-> 2751c9882b9472 Greg Kurz          2015-04-24  1616  		r =3D vhost_get_v=
-ring_endian(vq, idx, argp);
-> 2751c9882b9472 Greg Kurz          2015-04-24  1617  		break;
-> 03088137246065 Jason Wang         2016-03-04  1618  	case VHOST_SET_VRI=
-NG_BUSYLOOP_TIMEOUT:
-> 03088137246065 Jason Wang         2016-03-04  1619  		if (copy_from_use=
-r(&s, argp, sizeof(s))) {
-> 03088137246065 Jason Wang         2016-03-04  1620  			r =3D -EFAULT;
-> 03088137246065 Jason Wang         2016-03-04  1621  			break;
-> 03088137246065 Jason Wang         2016-03-04  1622  		}
-> 03088137246065 Jason Wang         2016-03-04  1623  		vq->busyloop_time=
-out =3D s.num;
-> 03088137246065 Jason Wang         2016-03-04  1624  		break;
-> 03088137246065 Jason Wang         2016-03-04  1625  	case VHOST_GET_VRI=
-NG_BUSYLOOP_TIMEOUT:
-> 03088137246065 Jason Wang         2016-03-04  1626  		s.index =3D idx;
-> 03088137246065 Jason Wang         2016-03-04  1627  		s.num =3D vq->bus=
-yloop_timeout;
-> 03088137246065 Jason Wang         2016-03-04  1628  		if (copy_to_user(=
-argp, &s, sizeof(s)))
-> 03088137246065 Jason Wang         2016-03-04  1629  			r =3D -EFAULT;
-> 03088137246065 Jason Wang         2016-03-04  1630  		break;
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1631  	default:
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1632  		r =3D -ENOIOCTLCM=
-D;
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1633  	}
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1634
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1635  	if (pollstop && vq=
-->handle_kick)
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1636  		vhost_poll_stop(&=
-vq->poll);
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1637
-> e050c7d93f4adb Eric Biggers       2018-01-06  1638  	if (!IS_ERR_OR_NUL=
-L(ctx))
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1639  		eventfd_ctx_put(c=
-tx);
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1640  	if (filep)
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1641  		fput(filep);
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1642
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1643  	if (pollstart && v=
-q->handle_kick)
-> 2b8b328b61c799 Jason Wang         2013-01-28  1644  		r =3D vhost_poll_=
-start(&vq->poll, vq->kick);
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1645
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1646  	mutex_unlock(&vq->=
-mutex);
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1647
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1648  	if (pollstop && vq=
-->handle_kick)
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1649  		vhost_poll_flush(=
-&vq->poll);
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1650  	return r;
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1651  }
-> 6ac1afbf6132df Asias He           2013-05-06  1652  EXPORT_SYMBOL_GPL(v=
-host_vring_ioctl);
-> 3a4d5c94e95935 Michael S. Tsirkin 2010-01-14  1653
->
-> :::::: The code at line 1577 was first introduced by commit
-> :::::: 3a4d5c94e959359ece6d6b55045c3f046677f55c vhost_net: a kernel-lev=
-el virtio server
->
-> :::::: TO: Michael S. Tsirkin <mst@redhat.com>
-> :::::: CC: David S. Miller <davem@davemloft.net>
->
-> ---
-> 0-DAY CI Kernel Test Service, Intel Corporation
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
-
+>=20
+> This patch set introduces virtio support for imx7d-m4 communication:
+>=20
+> - support booting loaded vim imx-rproc firmware
+> - implement .kick method support using mailbox in imx-processor
+> - parse vdev0vring0, vdev0vring1, vdev0buffer memory regions required for
+> virtio_rpmsg_bus initialization
+>=20
+> Regarding imx7d-m4 boot proccess
+>=20
+> Citing ARM documentation:
+>=20
+> At Reset, Cortex-M3 and Cortex-M4 processors always boot from a vector
+> table at address zero.
+>=20
+> "With uninitialized memory at address zero (for example, unprogrammed
+> Flash or uninitialized RAM), the processor will read a spurious initial M=
+ain
+> Stack Pointer value from address zero and a spurious code entry point (Re=
+set
+> vector) from address 0x4, possibly containing an illegal instruction set =
+state
+> specifier (ESPR.T bit) in bit[0]."
+>=20
+> So to successfully boot m4 coproc we need to write Stack Pointer and
+> Program counter, i see no obvious to get Stack Pointer value, so two ways
+> exist ethier form a special elf section:
+>=20
+> "
+> .loader :
+>   {
+>     LONG(__StackTop);
+>     LONG(Reset_Handler + 1);
+>   } > m_start
+> "
+>=20
+> and put it at 0x0 address:
+>=20
+> "
+> m_start               (RX)  : ORIGIN =3D 0x00000000, LENGTH =3D
+> 0x00008000
+> "
+>=20
+> Or (the way i've chosen) only put Entry Point at 0x04 and set stack as fi=
+rst
+> instruction:
+>=20
+> "
+> Reset_Handler:
+> 	ldr   sp, =3D__stack      /* set stack pointer */
+> "
+>=20
+> Regarding mailboxes and memory regions :
+>=20
+> This code is heavily derived from stm32-rproc (i.e. copy pasted) and this=
+ fact
+> needs to reflected in commits, please tell me how to emphasize this fact.
+>=20
+> Attaching succesful trace booting m4 (with Add rpmsg tty driver applied) =
+:
+>=20
+> [  143.240616] remoteproc remoteproc0: powering up imx-rproc
+> [  143.251768] remoteproc remoteproc0: Booting fw image huginn.elf, size
+> 466876 [  143.251786] imx-rproc imx7d-cm4: iommu not present
+> [  143.251825] remoteproc remoteproc0: rsc: type 3 [  143.251837]
+> remoteproc remoteproc0: vdev rsc: id 7, dfeatures 0x1, cfg len 0, 2 vring=
+s
+> [  143.251924] remoteproc remoteproc0: vdev rsc: vring0: da 0xffffffff, q=
+sz
+> 16, align 16 [  143.251935] remoteproc remoteproc0: vdev rsc: vring1: da
+> 0xffffffff, qsz 16, align 16 [  143.251955] imx-rproc imx7d-cm4: map memo=
+ry:
+> 0x00900000+20000 [  143.251987] imx-rproc imx7d-cm4: map memory:
+> 0x00920000+2000 [  143.252003] imx-rproc imx7d-cm4: map memory:
+> 0x00922000+2000 [  143.252020] remoteproc remoteproc0: phdr: type 1 da
+> 0x20200000 memsz 0x240 filesz 0x240 [  143.252032] remoteproc
+> remoteproc0: da =3D 0x20200000 len =3D 0x240 va =3D 0x(ptrval) [  143.252=
+043]
+> remoteproc remoteproc0: phdr: type 1 da 0x20200240 memsz 0x5b38 filesz
+> 0x5b38 [  143.252053] remoteproc remoteproc0: da =3D 0x20200240 len =3D
+> 0x5b38 va =3D 0x(ptrval) [  143.252105] remoteproc remoteproc0: phdr: typ=
+e
+> 1 da 0x20205d78 memsz 0x4b58 filesz 0x758 [  143.252115] remoteproc
+> remoteproc0: da =3D 0x20205d78 len =3D 0x4b58 va =3D 0x(ptrval) [  143.25=
+2159]
+> remoteproc remoteproc0: da =3D 0x200006cc len =3D 0x8c va =3D 0x(ptrval)
+> [  143.252176] remoteproc remoteproc0: Started from 0x202002f5
+> [  143.252211]  imx7d-cm4#vdev0buffer: assigned reserved memory node
+> vdev0buffer@00924000 [  143.252232] virtio virtio0: reset !
+> [  143.252241] virtio virtio0: status: 1 [  143.260567] virtio_rpmsg_bus
+> virtio0: status: 3 [  143.260598] remoteproc remoteproc0: vring0: va
+> c083c000 qsz 16 notifyid 0 [  143.260614] remoteproc remoteproc0: vring1:
+> va c0872000 qsz 16 notifyid 1 [  143.260651] virtio_rpmsg_bus virtio0:
+> buffers: va c0894000, dma 0x00924000 [  143.260666] Added buffer head 0
+> to (ptrval) [  143.260674] Added buffer head 1 to (ptrval) [  143.260680]
+> Added buffer head 2 to (ptrval) [  143.260686] Added buffer head 3 to (pt=
+rval)
+> [  143.260692] Added buffer head 4 to (ptrval) [  143.260697] Added buffe=
+r
+> head 5 to (ptrval) [  143.260703] Added buffer head 6 to (ptrval)
+> [  143.260709] Added buffer head 7 to (ptrval) [  143.260715] Added buffe=
+r
+> head 8 to (ptrval) [  143.260721] Added buffer head 9 to (ptrval)
+> [  143.260727] Added buffer head 10 to (ptrval) [  143.260733] Added
+> buffer head 11 to (ptrval) [  143.260738] Added buffer head 12 to (ptrval=
+)
+> [  143.260744] Added buffer head 13 to (ptrval) [  143.260750] Added
+> buffer head 14 to (ptrval) [  143.260756] Added buffer head 15 to (ptrval=
+)
+> [  143.260771] virtio_rpmsg_bus virtio0: status: 7 [  143.260779]
+> remoteproc remoteproc0: kicking vq index: 0 [  143.260788] remoteproc
+> remoteproc0: sending message : vqid =3D 0 [  143.260802] imx_mu
+> 30aa0000.mailbox: Send data on wrong channel type: 1 [  143.260810]
+> virtio_rpmsg_bus virtio0: rpmsg host is online [  143.261680]
+> imx7d-cm4#vdev0buffer: registered virtio0 (type 7) [  143.261694]
+> remoteproc remoteproc0: remote processor imx-rproc is now up
+> [  143.354880] remoteproc remoteproc0: vq index 0 is interrupted
+> [  143.354895] virtqueue callback for (ptrval) ((ptrval)) [  143.354912]
+> virtio_rpmsg_bus virtio0: From: 0x0, To: 0x35, Len: 40, Flags: 0, Reserve=
+d: 0
+> [  143.354924] rpmsg_virtio RX: 00 00 00 00 35 00 00 00 00 00 00 00 28 00
+> 00 00  ....5.......(...
+> [  143.354932] rpmsg_virtio RX: 72 70 6d 73 67 2d 74 74 79 2d 72 61 77 00
+> 00 00  rpmsg-tty-raw...
+> [  143.354939] rpmsg_virtio RX: 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> 00 00  ................
+> [  143.354945] rpmsg_virtio RX: 00 00 00 00 00 00 00
+> 00                          ........
+> [  143.354956] NS announcement: 72 70 6d 73 67 2d 74 74 79 2d 72 61 77
+> 00 00 00  rpmsg-tty-raw...
+> [  143.354963] NS announcement: 00 00 00 00 00 00 00 00 00 00 00 00 00
+> 00 00 00  ................
+> [  143.354969] NS announcement: 00 00 00 00 00 00 00
+> 00                          ........
+> [  143.354980] virtio_rpmsg_bus virtio0: creating channel rpmsg-tty-raw
+> addr 0x0 [  143.356584] rpmsg_tty virtio0.rpmsg-tty-raw.-1.0: new channel=
+:
+> 0x400 -> 0x0 : ttyRPMSG0 [  143.356651] Added buffer head 0 to (ptrval)
+> [  143.356658] No more buffers in queue [  143.356667] virtio_rpmsg_bus
+> virtio0: Received 1 messages [  143.404302] remoteproc remoteproc0: vq
+> index 0 is interrupted [  143.404319] virtqueue callback for (ptrval) ((p=
+trval))
+> [  143.404337] virtio_rpmsg_bus virtio0: From: 0x1, To: 0x35, Len: 40, Fl=
+ags:
+> 0, Reserved: 0 [  143.404350] rpmsg_virtio RX: 01 00 00 00 35 00 00 00 00
+> 00 00 00 28 00 00 00  ....5.......(...
+> [  143.404391] rpmsg_virtio RX: 72 70 6d 73 67 2d 74 74 79 2d 72 61 77 00
+> 00 00  rpmsg-tty-raw...
+> [  143.404399] rpmsg_virtio RX: 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> 00 00  ................
+> [  143.404405] rpmsg_virtio RX: 01 00 00 00 00 00 00
+> 00                          ........
+> [  143.404417] NS announcement: 72 70 6d 73 67 2d 74 74 79 2d 72 61 77
+> 00 00 00  rpmsg-tty-raw...
+> [  143.404424] NS announcement: 00 00 00 00 00 00 00 00 00 00 00 00 00
+> 00 00 00  ................
+> [  143.404430] NS announcement: 01 00 00 00 00 00 00
+> 00                          ........
+> [  143.404441] virtio_rpmsg_bus virtio0: creating channel rpmsg-tty-raw
+> addr 0x1 [  143.411114] rpmsg_tty virtio0.rpmsg-tty-raw.-1.1: new channel=
+:
+> 0x401 -> 0x1 : ttyRPMSG1
