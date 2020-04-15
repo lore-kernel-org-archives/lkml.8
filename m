@@ -2,836 +2,499 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F218EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:33:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DAAFC3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:33:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C03CB206D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:33:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB0AC2078A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:33:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YClPuaLz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="JhIQTW06"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406111AbgDOKcj (ORCPT
+        id S2408685AbgDOKdS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 06:32:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58422 "EHLO
+        Wed, 15 Apr 2020 06:33:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58434 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408649AbgDOKbz (ORCPT
+        with ESMTP id S2408650AbgDOKb6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 06:31:55 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18AFDC061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 03:31:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=4fhU/GP6InfHomurwz6ovTurFS0AMpyLweR/GVL6wAU=; b=YClPuaLzyWwtvgZWLKG+qD81iq
-        M/IHQCZePl3GVG+B4CrtjXSNwrTekp+Vo3Rta5cczNsA9W1UJHU1A7OjB49Q04DbCAUtRrvbrN6KH
-        UX8U6c/dYV1vIP8dKyGc4OZ3bm3K3Xm5GPwvZzbCzsrK7okTFi4DYc17mH32OSpaiqZ8fXpgyI1Gf
-        wFHni0k+0tbkWK7unaZssaDrwhW82/WA3ZrrFofIyx7AcnjlKrwp2Le7goI7/8OWOznRR7fuqJwOo
-        Xhli+a4mrieohPK9uaPLL/NOmu8FoelB0TNPWungtanHtHyhguyoi3LdUVfGDIY2onOlZiRrg9YT7
-        UVp0rCIw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jOfKZ-0001oj-EK; Wed, 15 Apr 2020 10:31:43 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 20E3F304D2B;
-        Wed, 15 Apr 2020 12:31:41 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 0975F2BC6F2FF; Wed, 15 Apr 2020 12:31:41 +0200 (CEST)
-Date:   Wed, 15 Apr 2020 12:31:41 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     CodyYao-oc <CodyYao-oc@zhaoxin.com>
-Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, tglx@linutronix.de, bp@alien8.de,
-        x86@kernel.org, hpa@zytor.com, linux-kernel@vger.kernel.org,
-        cooperyan@zhaoxin.com, codyyao@zhaoxin.com
-Subject: Re: [PATCH] x86/perf: Add hardware performance events support for
- Zhaoxin CPU.
-Message-ID: <20200415103141.GS20760@hirez.programming.kicks-ass.net>
-References: <1586747669-4827-1-git-send-email-CodyYao-oc@zhaoxin.com>
- <20200415102340.GB20730@hirez.programming.kicks-ass.net>
+        Wed, 15 Apr 2020 06:31:58 -0400
+Received: from mo6-p04-ob.smtp.rzone.de (mo6-p04-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5304::5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26048C061A0E;
+        Wed, 15 Apr 2020 03:31:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1586946715;
+        s=strato-dkim-0002; d=chronox.de;
+        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=YtRq+tuwe24/NjfUkCdq+M38mnhObIJciU+aa5VCGrI=;
+        b=JhIQTW06Key+6JR6Cbwro/5tX5XqRf4qtqt9mjIaglCPAr+G4VWnG5Smm0K19HU6V0
+        H33yP+NLku/R2iU+6rCnfnn+ae+681Fv+r3L9C5UPBoR+RICm/eIj8rK8tudV2RehUIb
+        6xt7o4mW6L9VRKVJQYzDkiUqPeHkwyoDWKlHj79dQMCR6aEbtoPkYuw/NvV1Uh0Cr12T
+        THopiN1dRcKAbVuqt2X9J+xTZU1TXon81RBMyPt3QExrrLwdWQ6ynwm7K4USOeY8on2y
+        vYjgeYG7gzUp8grO4K24b54QgYtzXQkkF+o23FNKvkUvU8SPvawpJLw7TkBVLHa9QkyA
+        MUTg==
+X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzGHXPZIvSaiyU="
+X-RZG-CLASS-ID: mo00
+Received: from positron.chronox.de
+        by smtp.strato.de (RZmta 46.4.0 DYNA|AUTH)
+        with ESMTPSA id 404ef0w3FAJo124
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Wed, 15 Apr 2020 12:19:50 +0200 (CEST)
+From:   Stephan =?ISO-8859-1?Q?M=FCller?= <smueller@chronox.de>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-api@vger.kernel.org,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        Nicolai Stange <nstange@suse.de>,
+        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
+        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
+        Roman Drahtmueller <draht@schaltsekun.de>,
+        Neil Horman <nhorman@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Julia Lawall <julia.lawall@inria.fr>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [PATCH v30 07/12] LRNG - add kernel crypto API PRNG extension
+Date:   Wed, 15 Apr 2020 12:12:57 +0200
+Message-ID: <5653065.bq6f04LJXL@positron.chronox.de>
+In-Reply-To: <11836144.hkEK2qVKZC@positron.chronox.de>
+References: <11836144.hkEK2qVKZC@positron.chronox.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200415102340.GB20730@hirez.programming.kicks-ass.net>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 12:23:40PM +0200, Peter Zijlstra wrote:
-> On Mon, Apr 13, 2020 at 11:14:29AM +0800, CodyYao-oc wrote:
-> > Zhaoxin CPU has provided facilities for monitoring performance
-> > via PMU(Performance Monitor Unit), but the functionality is unused so far.
-> > Therefore, add support for zhaoxin pmu to make performance related
-> > hardware events available.
-> > 
-> > Signed-off-by: CodyYao-oc <CodyYao-oc@zhaoxin.com>
-> > Reported-by: kbuild test robot <lkp@intel.com>
-> 
-> What's that reported-by thing? Did the robot complain you didn't have a
-> PMU implementation?
-> 
-> Anyway, I've made the below changes to the patch.
+Add runtime-pluggable support for all PRNGs that are accessible via
+the kernel crypto API, including hardware PRNGs. The PRNG is selected
+with the module parameter drng_name where the name must be one that the
+kernel crypto API can resolve into an RNG.
 
-In whole, the patch now looks like this. I've also added that event
-table you provided last time to the Changelog.
+This allows using of the kernel crypto API PRNG implementations that
+provide an interface to hardware PRNGs. Using this extension,
+the LRNG uses the hardware PRNGs to generate random numbers. An
+example is the S390 CPACF support providing such a PRNG.
 
----
-Subject: x86/perf: Add hardware performance events support for Zhaoxin CPU.
-From: CodyYao-oc <CodyYao-oc@zhaoxin.com>
-Date: Mon, 13 Apr 2020 11:14:29 +0800
+The hash is provided by a kernel crypto API SHASH whose digest size
+complies with the seedsize of the PRNG.
 
-From: CodyYao-oc <CodyYao-oc@zhaoxin.com>
+CC: "Eric W. Biederman" <ebiederm@xmission.com>
+CC: "Alexander E. Patrakov" <patrakov@gmail.com>
+CC: "Ahmed S. Darwish" <darwish.07@gmail.com>
+CC: "Theodore Y. Ts'o" <tytso@mit.edu>
+CC: Willy Tarreau <w@1wt.eu>
+CC: Matthew Garrett <mjg59@srcf.ucam.org>
+CC: Vito Caputo <vcaputo@pengaru.com>
+CC: Andreas Dilger <adilger.kernel@dilger.ca>
+CC: Jan Kara <jack@suse.cz>
+CC: Ray Strode <rstrode@redhat.com>
+CC: William Jon McCann <mccann@jhu.edu>
+CC: zhangjs <zachary@baishancloud.com>
+CC: Andy Lutomirski <luto@kernel.org>
+CC: Florian Weimer <fweimer@redhat.com>
+CC: Lennart Poettering <mzxreary@0pointer.de>
+CC: Nicolai Stange <nstange@suse.de>
+Reviewed-by: Marcelo Henrique Cerri <marcelo.cerri@canonical.com>
+Reviewed-by: Roman Drahtmueller <draht@schaltsekun.de>
+Tested-by: Roman Drahtm=FCller <draht@schaltsekun.de>
+Tested-by: Marcelo Henrique Cerri <marcelo.cerri@canonical.com>
+Tested-by: Neil Horman <nhorman@redhat.com>
+Signed-off-by: Stephan Mueller <smueller@chronox.de>
+=2D--
+ drivers/char/lrng/Kconfig      |  11 ++
+ drivers/char/lrng/Makefile     |   1 +
+ drivers/char/lrng/lrng_kcapi.c | 321 +++++++++++++++++++++++++++++++++
+ 3 files changed, 333 insertions(+)
+ create mode 100644 drivers/char/lrng/lrng_kcapi.c
 
-Zhaoxin CPU has provided facilities for monitoring performance
-via PMU (Performance Monitor Unit), but the functionality is unused so far.
-Therefore, add support for zhaoxin pmu to make performance related
-hardware events available.
-
-The PMU is mostly an Intel Architectural PerfMon-v2 with a novel
-errata for the ZXC line. It supports the following events:
-
-  -----------------------------------------------------------------------------------------------------------------------------------
-  Event                      | Event  | Umask |          Description
-			     | Select |       |
-  -----------------------------------------------------------------------------------------------------------------------------------
-  cpu-cycles                 |  82h   |  00h  | unhalt core clock
-  instructions               |  00h   |  00h  | number of instructions at retirement.
-  cache-references           |  15h   |  05h  | number of fillq pushs at the current cycle.
-  cache-misses               |  1ah   |  05h  | number of l2 miss pushed by fillq.
-  branch-instructions        |  28h   |  00h  | counts the number of branch instructions retired.
-  branch-misses              |  29h   |  00h  | mispredicted branch instructions at retirement.
-  bus-cycles                 |  83h   |  00h  | unhalt bus clock
-  stalled-cycles-frontend    |  01h   |  01h  | Increments each cycle the # of Uops issued by the RAT to RS.
-  stalled-cycles-backend     |  0fh   |  04h  | RS0/1/2/3/45 empty
-  L1-dcache-loads            |  68h   |  05h  | number of retire/commit load.
-  L1-dcache-load-misses      |  4bh   |  05h  | retired load uops whose data source followed an L1 miss.
-  L1-dcache-stores           |  69h   |  06h  | number of retire/commit Store,no LEA
-  L1-dcache-store-misses     |  62h   |  05h  | cache lines in M state evicted out of L1D due to Snoop HitM or dirty line replacement.
-  L1-icache-loads            |  00h   |  03h  | number of l1i cache access for valid normal fetch,including un-cacheable access.
-  L1-icache-load-misses      |  01h   |  03h  | number of l1i cache miss for valid normal fetch,including un-cacheable miss.
-  L1-icache-prefetches       |  0ah   |  03h  | number of prefetch.
-  L1-icache-prefetch-misses  |  0bh   |  03h  | number of prefetch miss.
-  dTLB-loads                 |  68h   |  05h  | number of retire/commit load
-  dTLB-load-misses           |  2ch   |  05h  | number of load operations miss all level tlbs and cause a tablewalk.
-  dTLB-stores                |  69h   |  06h  | number of retire/commit Store,no LEA
-  dTLB-store-misses          |  30h   |  05h  | number of store operations miss all level tlbs and cause a tablewalk.
-  dTLB-prefetches            |  64h   |  05h  | number of hardware pte prefetch requests dispatched out of the prefetch FIFO.
-  dTLB-prefetch-misses       |  65h   |  05h  | number of hardware pte prefetch requests miss the l1d data cache.
-  iTLB-load                  |  00h   |  00h  | actually counter instructions.
-  iTLB-load-misses           |  34h   |  05h  | number of code operations miss all level tlbs and cause a tablewalk.
-  -----------------------------------------------------------------------------------------------------------------------------------
-
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: CodyYao-oc <CodyYao-oc@zhaoxin.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/1586747669-4827-1-git-send-email-CodyYao-oc@zhaoxin.com
----
- arch/x86/events/Makefile               |    2 
- arch/x86/events/core.c                 |    4 
- arch/x86/events/perf_event.h           |   10 
- arch/x86/events/zhaoxin/Makefile       |    2 
- arch/x86/events/zhaoxin/core.c         |  613 +++++++++++++++++++++++++++++++++
- arch/x86/kernel/cpu/perfctr-watchdog.c |    8 
- 6 files changed, 639 insertions(+)
- create mode 100644 arch/x86/events/zhaoxin/Makefile
- create mode 100644 arch/x86/events/zhaoxin/core.c
-
---- a/arch/x86/events/Makefile
-+++ b/arch/x86/events/Makefile
-@@ -3,3 +3,5 @@ obj-y					+= core.o probe.o
- obj-y					+= amd/
- obj-$(CONFIG_X86_LOCAL_APIC)            += msr.o
- obj-$(CONFIG_CPU_SUP_INTEL)		+= intel/
-+obj-$(CONFIG_CPU_SUP_CENTAUR)		+= zhaoxin/
-+obj-$(CONFIG_CPU_SUP_ZHAOXIN)		+= zhaoxin/
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -1839,6 +1839,10 @@ static int __init init_hw_perf_events(vo
- 		err = amd_pmu_init();
- 		x86_pmu.name = "HYGON";
- 		break;
-+	case X86_VENDOR_ZHAOXIN:
-+	case X86_VENDOR_CENTAUR:
-+		err = zhaoxin_pmu_init();
-+		break;
- 	default:
- 		err = -ENOTSUPP;
- 	}
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -618,6 +618,7 @@ struct x86_pmu {
- 
- 	/* PMI handler bits */
- 	unsigned int	late_ack		:1,
-+			enabled_ack		:1,
- 			counter_freezing	:1;
- 	/*
- 	 * sysfs attrs
-@@ -1133,3 +1134,12 @@ static inline int is_ht_workaround_enabl
- 	return 0;
- }
- #endif /* CONFIG_CPU_SUP_INTEL */
+diff --git a/drivers/char/lrng/Kconfig b/drivers/char/lrng/Kconfig
+index b32442484823..7afc965a4d52 100644
+=2D-- a/drivers/char/lrng/Kconfig
++++ b/drivers/char/lrng/Kconfig
+@@ -81,6 +81,17 @@ config LRNG_DRBG
+ 	  Enable the SP800-90A DRBG support for the LRNG. Once the
+ 	  module is loaded, output from /dev/random, /dev/urandom,
+ 	  getrandom(2), or get_random_bytes is provided by a DRBG.
 +
-+#if ((defined CONFIG_CPU_SUP_CENTAUR) || (defined CONFIG_CPU_SUP_ZHAOXIN))
-+int zhaoxin_pmu_init(void);
-+#else
-+static inline int zhaoxin_pmu_init(void)
-+{
-+	return 0;
-+}
-+#endif /*CONFIG_CPU_SUP_CENTAUR or CONFIG_CPU_SUP_ZHAOXIN*/
---- /dev/null
-+++ b/arch/x86/events/zhaoxin/Makefile
-@@ -0,0 +1,2 @@
-+# SPDX-License-Identifier: GPL-2.0
-+obj-y	+= core.o
---- /dev/null
-+++ b/arch/x86/events/zhaoxin/core.c
-@@ -0,0 +1,613 @@
-+// SPDX-License-Identifier: GPL-2.0-only
++config LRNG_KCAPI
++	tristate "Kernel Crypto API support for the LRNG"
++	depends on CRYPTO
++	select CRYPTO_RNG
++	help
++	  Enable the support for generic pseudo-random number
++	  generators offered by the kernel crypto API with the
++	  LRNG. Once the module is loaded, output from /dev/random,
++	  /dev/urandom, getrandom(2), or get_random_bytes is
++	  provided by the selected kernel crypto API RNG.
+ endif # LRNG_DRNG_SWITCH
+=20
+ endif # LRNG
+diff --git a/drivers/char/lrng/Makefile b/drivers/char/lrng/Makefile
+index 0d320fcb7b9e..94b2dfb2dfdb 100644
+=2D-- a/drivers/char/lrng/Makefile
++++ b/drivers/char/lrng/Makefile
+@@ -12,3 +12,4 @@ obj-$(CONFIG_NUMA)		+=3D lrng_numa.o
+ obj-$(CONFIG_SYSCTL)		+=3D lrng_proc.o
+ obj-$(CONFIG_LRNG_DRNG_SWITCH)	+=3D lrng_switch.o
+ obj-$(CONFIG_LRNG_DRBG)		+=3D lrng_drbg.o
++obj-$(CONFIG_LRNG_KCAPI)	+=3D lrng_kcapi.o
+diff --git a/drivers/char/lrng/lrng_kcapi.c b/drivers/char/lrng/lrng_kcapi.c
+new file mode 100644
+index 000000000000..482f31627422
+=2D-- /dev/null
++++ b/drivers/char/lrng/lrng_kcapi.c
+@@ -0,0 +1,321 @@
++// SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
 +/*
-+ * Zhoaxin PMU; like Intel Architectural PerfMon-v2
++ * Backend for the LRNG providing the cryptographic primitives using the
++ * kernel crypto API.
++ *
++ * Copyright (C) 2018 - 2020, Stephan Mueller <smueller@chronox.de>
 + */
 +
 +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 +
-+#include <linux/stddef.h>
-+#include <linux/types.h>
++#include <crypto/hash.h>
++#include <crypto/rng.h>
 +#include <linux/init.h>
-+#include <linux/slab.h>
-+#include <linux/export.h>
-+#include <linux/nmi.h>
++#include <linux/module.h>
++#include <linux/lrng.h>
 +
-+#include <asm/cpufeature.h>
-+#include <asm/hardirq.h>
-+#include <asm/apic.h>
++static char *drng_name =3D NULL;
++module_param(drng_name, charp, 0444);
++MODULE_PARM_DESC(drng_name, "Kernel crypto API name of DRNG");
 +
-+#include "../perf_event.h"
++static char *pool_hash =3D "sha512";
++module_param(pool_hash, charp, 0444);
++MODULE_PARM_DESC(pool_hash,
++		 "Kernel crypto API name of hash or keyed message digest to read the ent=
+ropy pool");
 +
-+/*
-+ * Zhaoxin PerfMon, used on zxc and later.
-+ */
-+static u64 zx_pmon_event_map[PERF_COUNT_HW_MAX] __read_mostly = {
++static char *seed_hash =3D NULL;
++module_param(seed_hash, charp, 0444);
++MODULE_PARM_DESC(seed_hash,
++		 "Kernel crypto API name of hash with output size equal to seedsize of D=
+RNG to bring seed string to the size required by the DRNG");
 +
-+	[PERF_COUNT_HW_CPU_CYCLES]        = 0x0082,
-+	[PERF_COUNT_HW_INSTRUCTIONS]      = 0x00c0,
-+	[PERF_COUNT_HW_CACHE_REFERENCES]  = 0x0515,
-+	[PERF_COUNT_HW_CACHE_MISSES]      = 0x051a,
-+	[PERF_COUNT_HW_BUS_CYCLES]        = 0x0083,
++struct lrng_hash_info {
++	struct shash_desc shash;
++	char ctx[];
 +};
 +
-+static struct event_constraint zxc_event_constraints[] __read_mostly = {
-+
-+	FIXED_EVENT_CONSTRAINT(0x0082, 1), /* unhalted core clock cycles */
-+	EVENT_CONSTRAINT_END
++struct lrng_drng_info {
++	struct crypto_rng *kcapi_rng;
++	struct lrng_hash_info *lrng_hash;
 +};
 +
-+static struct event_constraint zxd_event_constraints[] __read_mostly = {
-+
-+	FIXED_EVENT_CONSTRAINT(0x00c0, 0), /* retired instructions */
-+	FIXED_EVENT_CONSTRAINT(0x0082, 1), /* unhalted core clock cycles */
-+	FIXED_EVENT_CONSTRAINT(0x0083, 2), /* unhalted bus clock cycles */
-+	EVENT_CONSTRAINT_END
-+};
-+
-+static __initconst const u64 zxd_hw_cache_event_ids
-+				[PERF_COUNT_HW_CACHE_MAX]
-+				[PERF_COUNT_HW_CACHE_OP_MAX]
-+				[PERF_COUNT_HW_CACHE_RESULT_MAX] = {
-+[C(L1D)] = {
-+	[C(OP_READ)] = {
-+		[C(RESULT_ACCESS)] = 0x0042,
-+		[C(RESULT_MISS)] = 0x0538,
-+	},
-+	[C(OP_WRITE)] = {
-+		[C(RESULT_ACCESS)] = 0x0043,
-+		[C(RESULT_MISS)] = 0x0562,
-+	},
-+	[C(OP_PREFETCH)] = {
-+		[C(RESULT_ACCESS)] = -1,
-+		[C(RESULT_MISS)] = -1,
-+	},
-+},
-+[C(L1I)] = {
-+	[C(OP_READ)] = {
-+		[C(RESULT_ACCESS)] = 0x0300,
-+		[C(RESULT_MISS)] = 0x0301,
-+	},
-+	[C(OP_WRITE)] = {
-+		[C(RESULT_ACCESS)] = -1,
-+		[C(RESULT_MISS)] = -1,
-+	},
-+	[C(OP_PREFETCH)] = {
-+		[C(RESULT_ACCESS)] = 0x030a,
-+		[C(RESULT_MISS)] = 0x030b,
-+	},
-+},
-+[C(LL)] = {
-+	[C(OP_READ)] = {
-+		[C(RESULT_ACCESS)] = -1,
-+		[C(RESULT_MISS)] = -1,
-+	},
-+	[C(OP_WRITE)] = {
-+		[C(RESULT_ACCESS)] = -1,
-+		[C(RESULT_MISS)] = -1,
-+	},
-+	[C(OP_PREFETCH)] = {
-+		[C(RESULT_ACCESS)] = -1,
-+		[C(RESULT_MISS)] = -1,
-+	},
-+},
-+[C(DTLB)] = {
-+	[C(OP_READ)] = {
-+		[C(RESULT_ACCESS)] = 0x0042,
-+		[C(RESULT_MISS)] = 0x052c,
-+	},
-+	[C(OP_WRITE)] = {
-+		[C(RESULT_ACCESS)] = 0x0043,
-+		[C(RESULT_MISS)] = 0x0530,
-+	},
-+	[C(OP_PREFETCH)] = {
-+		[C(RESULT_ACCESS)] = 0x0564,
-+		[C(RESULT_MISS)] = 0x0565,
-+	},
-+},
-+[C(ITLB)] = {
-+	[C(OP_READ)] = {
-+		[C(RESULT_ACCESS)] = 0x00c0,
-+		[C(RESULT_MISS)] = 0x0534,
-+	},
-+	[C(OP_WRITE)] = {
-+		[C(RESULT_ACCESS)] = -1,
-+		[C(RESULT_MISS)] = -1,
-+	},
-+	[C(OP_PREFETCH)] = {
-+		[C(RESULT_ACCESS)] = -1,
-+		[C(RESULT_MISS)] = -1,
-+	},
-+},
-+[C(BPU)] = {
-+	[C(OP_READ)] = {
-+		[C(RESULT_ACCESS)] = 0x0700,
-+		[C(RESULT_MISS)] = 0x0709,
-+	},
-+	[C(OP_WRITE)] = {
-+		[C(RESULT_ACCESS)] = -1,
-+		[C(RESULT_MISS)] = -1,
-+	},
-+	[C(OP_PREFETCH)] = {
-+		[C(RESULT_ACCESS)] = -1,
-+		[C(RESULT_MISS)] = -1,
-+	},
-+},
-+[C(NODE)] = {
-+	[C(OP_READ)] = {
-+		[C(RESULT_ACCESS)] = -1,
-+		[C(RESULT_MISS)] = -1,
-+	},
-+	[C(OP_WRITE)] = {
-+		[C(RESULT_ACCESS)] = -1,
-+		[C(RESULT_MISS)] = -1,
-+	},
-+	[C(OP_PREFETCH)] = {
-+		[C(RESULT_ACCESS)] = -1,
-+		[C(RESULT_MISS)] = -1,
-+	},
-+},
-+};
-+
-+static __initconst const u64 zxe_hw_cache_event_ids
-+				[PERF_COUNT_HW_CACHE_MAX]
-+				[PERF_COUNT_HW_CACHE_OP_MAX]
-+				[PERF_COUNT_HW_CACHE_RESULT_MAX] = {
-+[C(L1D)] = {
-+	[C(OP_READ)] = {
-+		[C(RESULT_ACCESS)] = 0x0568,
-+		[C(RESULT_MISS)] = 0x054b,
-+	},
-+	[C(OP_WRITE)] = {
-+		[C(RESULT_ACCESS)] = 0x0669,
-+		[C(RESULT_MISS)] = 0x0562,
-+	},
-+	[C(OP_PREFETCH)] = {
-+		[C(RESULT_ACCESS)] = -1,
-+		[C(RESULT_MISS)] = -1,
-+	},
-+},
-+[C(L1I)] = {
-+	[C(OP_READ)] = {
-+		[C(RESULT_ACCESS)] = 0x0300,
-+		[C(RESULT_MISS)] = 0x0301,
-+	},
-+	[C(OP_WRITE)] = {
-+		[C(RESULT_ACCESS)] = -1,
-+		[C(RESULT_MISS)] = -1,
-+	},
-+	[C(OP_PREFETCH)] = {
-+		[C(RESULT_ACCESS)] = 0x030a,
-+		[C(RESULT_MISS)] = 0x030b,
-+	},
-+},
-+[C(LL)] = {
-+	[C(OP_READ)] = {
-+		[C(RESULT_ACCESS)] = 0x0,
-+		[C(RESULT_MISS)] = 0x0,
-+	},
-+	[C(OP_WRITE)] = {
-+		[C(RESULT_ACCESS)] = 0x0,
-+		[C(RESULT_MISS)] = 0x0,
-+	},
-+	[C(OP_PREFETCH)] = {
-+		[C(RESULT_ACCESS)] = 0x0,
-+		[C(RESULT_MISS)] = 0x0,
-+	},
-+},
-+[C(DTLB)] = {
-+	[C(OP_READ)] = {
-+		[C(RESULT_ACCESS)] = 0x0568,
-+		[C(RESULT_MISS)] = 0x052c,
-+	},
-+	[C(OP_WRITE)] = {
-+		[C(RESULT_ACCESS)] = 0x0669,
-+		[C(RESULT_MISS)] = 0x0530,
-+	},
-+	[C(OP_PREFETCH)] = {
-+		[C(RESULT_ACCESS)] = 0x0564,
-+		[C(RESULT_MISS)] = 0x0565,
-+	},
-+},
-+[C(ITLB)] = {
-+	[C(OP_READ)] = {
-+		[C(RESULT_ACCESS)] = 0x00c0,
-+		[C(RESULT_MISS)] = 0x0534,
-+	},
-+	[C(OP_WRITE)] = {
-+		[C(RESULT_ACCESS)] = -1,
-+		[C(RESULT_MISS)] = -1,
-+	},
-+	[C(OP_PREFETCH)] = {
-+		[C(RESULT_ACCESS)] = -1,
-+		[C(RESULT_MISS)] = -1,
-+	},
-+},
-+[C(BPU)] = {
-+	[C(OP_READ)] = {
-+		[C(RESULT_ACCESS)] = 0x0028,
-+		[C(RESULT_MISS)] = 0x0029,
-+	},
-+	[C(OP_WRITE)] = {
-+		[C(RESULT_ACCESS)] = -1,
-+		[C(RESULT_MISS)] = -1,
-+	},
-+	[C(OP_PREFETCH)] = {
-+		[C(RESULT_ACCESS)] = -1,
-+		[C(RESULT_MISS)] = -1,
-+	},
-+},
-+[C(NODE)] = {
-+	[C(OP_READ)] = {
-+		[C(RESULT_ACCESS)] = -1,
-+		[C(RESULT_MISS)] = -1,
-+	},
-+	[C(OP_WRITE)] = {
-+		[C(RESULT_ACCESS)] = -1,
-+		[C(RESULT_MISS)] = -1,
-+	},
-+	[C(OP_PREFETCH)] = {
-+		[C(RESULT_ACCESS)] = -1,
-+		[C(RESULT_MISS)] = -1,
-+	},
-+},
-+};
-+
-+static void zhaoxin_pmu_disable_all(void)
++static struct lrng_hash_info *_lrng_kcapi_hash_alloc(const char *name)
 +{
-+	wrmsrl(MSR_CORE_PERF_GLOBAL_CTRL, 0);
-+}
++	struct lrng_hash_info *lrng_hash;
++	struct crypto_shash *tfm;
++	int size;
 +
-+static void zhaoxin_pmu_enable_all(int added)
-+{
-+	wrmsrl(MSR_CORE_PERF_GLOBAL_CTRL, x86_pmu.intel_ctrl);
-+}
-+
-+static inline u64 zhaoxin_pmu_get_status(void)
-+{
-+	u64 status;
-+
-+	rdmsrl(MSR_CORE_PERF_GLOBAL_STATUS, status);
-+
-+	return status;
-+}
-+
-+static inline void zhaoxin_pmu_ack_status(u64 ack)
-+{
-+	wrmsrl(MSR_CORE_PERF_GLOBAL_OVF_CTRL, ack);
-+}
-+
-+static inline void zxc_pmu_ack_status(u64 ack)
-+{
-+	/*
-+	 * ZXC needs global control enabled in order to clear status bits.
-+	 */
-+	zhaoxin_pmu_enable_all(0);
-+	zhaoxin_pmu_ack_status(ack);
-+	zhaoxin_pmu_disable_all();
-+}
-+
-+static void zhaoxin_pmu_disable_fixed(struct hw_perf_event *hwc)
-+{
-+	int idx = hwc->idx - INTEL_PMC_IDX_FIXED;
-+	u64 ctrl_val, mask;
-+
-+	mask = 0xfULL << (idx * 4);
-+
-+	rdmsrl(hwc->config_base, ctrl_val);
-+	ctrl_val &= ~mask;
-+	wrmsrl(hwc->config_base, ctrl_val);
-+}
-+
-+static void zhaoxin_pmu_disable_event(struct perf_event *event)
-+{
-+	struct hw_perf_event *hwc = &event->hw;
-+
-+	if (unlikely(hwc->config_base == MSR_ARCH_PERFMON_FIXED_CTR_CTRL)) {
-+		zhaoxin_pmu_disable_fixed(hwc);
-+		return;
++	if (!name) {
++		pr_err("Hash name missing\n");
++		return ERR_PTR(-EINVAL);
 +	}
 +
-+	x86_pmu_disable_event(event);
-+}
-+
-+static void zhaoxin_pmu_enable_fixed(struct hw_perf_event *hwc)
-+{
-+	int idx = hwc->idx - INTEL_PMC_IDX_FIXED;
-+	u64 ctrl_val, bits, mask;
-+
-+	/*
-+	 * Enable IRQ generation (0x8),
-+	 * and enable ring-3 counting (0x2) and ring-0 counting (0x1)
-+	 * if requested:
-+	 */
-+	bits = 0x8ULL;
-+	if (hwc->config & ARCH_PERFMON_EVENTSEL_USR)
-+		bits |= 0x2;
-+	if (hwc->config & ARCH_PERFMON_EVENTSEL_OS)
-+		bits |= 0x1;
-+
-+	bits <<= (idx * 4);
-+	mask = 0xfULL << (idx * 4);
-+
-+	rdmsrl(hwc->config_base, ctrl_val);
-+	ctrl_val &= ~mask;
-+	ctrl_val |= bits;
-+	wrmsrl(hwc->config_base, ctrl_val);
-+}
-+
-+static void zhaoxin_pmu_enable_event(struct perf_event *event)
-+{
-+	struct hw_perf_event *hwc = &event->hw;
-+
-+	if (unlikely(hwc->config_base == MSR_ARCH_PERFMON_FIXED_CTR_CTRL)) {
-+		zhaoxin_pmu_enable_fixed(hwc);
-+		return;
++	tfm =3D crypto_alloc_shash(name, 0, 0);
++	if (IS_ERR(tfm)) {
++		pr_err("could not allocate hash %s\n", name);
++		return ERR_CAST(tfm);
 +	}
 +
-+	__x86_pmu_enable_event(hwc, ARCH_PERFMON_EVENTSEL_ENABLE);
-+}
-+
-+/*
-+ * This handler is triggered by the local APIC, so the APIC IRQ handling
-+ * rules apply:
-+ */
-+static int zhaoxin_pmu_handle_irq(struct pt_regs *regs)
-+{
-+	struct perf_sample_data data;
-+	struct cpu_hw_events *cpuc;
-+	int handled = 0;
-+	u64 status;
-+	int bit;
-+
-+	cpuc = this_cpu_ptr(&cpu_hw_events);
-+	apic_write(APIC_LVTPC, APIC_DM_NMI);
-+	zhaoxin_pmu_disable_all();
-+	status = zhaoxin_pmu_get_status();
-+	if (!status)
-+		goto done;
-+
-+again:
-+	if (x86_pmu.enabled_ack)
-+		zxc_pmu_ack_status(status);
-+	else
-+		zhaoxin_pmu_ack_status(status);
-+
-+	inc_irq_stat(apic_perf_irqs);
-+
-+	/*
-+	 * CondChgd bit 63 doesn't mean any overflow status. Ignore
-+	 * and clear the bit.
-+	 */
-+	if (__test_and_clear_bit(63, (unsigned long *)&status)) {
-+		if (!status)
-+			goto done;
++	size =3D sizeof(struct lrng_hash_info) + crypto_shash_descsize(tfm);
++	lrng_hash =3D kmalloc(size, GFP_KERNEL);
++	if (!lrng_hash) {
++		crypto_free_shash(tfm);
++		return ERR_PTR(-ENOMEM);
 +	}
 +
-+	for_each_set_bit(bit, (unsigned long *)&status, X86_PMC_IDX_MAX) {
-+		struct perf_event *event = cpuc->events[bit];
++	lrng_hash->shash.tfm =3D tfm;
 +
-+		handled++;
++	return lrng_hash;
++}
 +
-+		if (!test_bit(bit, cpuc->active_mask))
-+			continue;
++static inline u32 _lrng_kcapi_hash_digestsize(struct lrng_hash_info *lrng_=
+hash)
++{
++	struct shash_desc *shash =3D &lrng_hash->shash;
++	struct crypto_shash *tfm =3D shash->tfm;
 +
-+		x86_perf_event_update(event);
-+		perf_sample_data_init(&data, 0, event->hw.last_period);
++	return crypto_shash_digestsize(tfm);
++}
 +
-+		if (!x86_perf_event_set_period(event))
-+			continue;
++static inline void _lrng_kcapi_hash_free(struct lrng_hash_info *lrng_hash)
++{
++	struct shash_desc *shash =3D &lrng_hash->shash;
++	struct crypto_shash *tfm =3D shash->tfm;
 +
-+		if (perf_event_overflow(event, &data, regs))
-+			x86_pmu_stop(event, 0);
++	crypto_free_shash(tfm);
++	kfree(lrng_hash);
++}
++
++static void *lrng_kcapi_hash_alloc(const u8 *key, u32 keylen)
++{
++	struct lrng_hash_info *lrng_hash;
++	int ret;
++
++	lrng_hash =3D _lrng_kcapi_hash_alloc(pool_hash);
++	if (IS_ERR(lrng_hash))
++		return ERR_CAST(lrng_hash);
++
++	/* If the used hash is no MAC, ignore the ENOSYS return code */
++	ret =3D crypto_shash_setkey(lrng_hash->shash.tfm, key, keylen);
++	if (ret && ret !=3D -ENOSYS) {
++		pr_err("could not set the key for MAC\n");
++		_lrng_kcapi_hash_free(lrng_hash);
++		return ERR_PTR(ret);
 +	}
 +
-+	/*
-+	 * Repeat if there is more work to be done:
-+	 */
-+	status = zhaoxin_pmu_get_status();
-+	if (status)
-+		goto again;
++	pr_info("Hash %s allocated\n", pool_hash);
 +
-+done:
-+	zhaoxin_pmu_enable_all(0);
-+	return handled;
++	return lrng_hash;
 +}
 +
-+static u64 zhaoxin_pmu_event_map(int hw_event)
++static void lrng_kcapi_hash_dealloc(void *hash)
 +{
-+	return zx_pmon_event_map[hw_event];
++	struct lrng_hash_info *lrng_hash =3D (struct lrng_hash_info *)hash;
++
++	_lrng_kcapi_hash_free(lrng_hash);
++	pr_info("Hash %s deallocated\n", pool_hash);
 +}
 +
-+static struct event_constraint *
-+zhaoxin_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
-+			struct perf_event *event)
++static u32 lrng_kcapi_hash_digestsize(void *hash)
 +{
-+	struct event_constraint *c;
++	struct lrng_hash_info *lrng_hash =3D (struct lrng_hash_info *)hash;
 +
-+	if (x86_pmu.event_constraints) {
-+		for_each_event_constraint(c, x86_pmu.event_constraints) {
-+			if ((event->hw.config & c->cmask) == c->code)
-+				return c;
++	return _lrng_kcapi_hash_digestsize(lrng_hash);
++}
++
++static int lrng_kcapi_hash_buffer(void *hash, const u8 *inbuf, u32 inbufle=
+n,
++				  u8 *digest)
++{
++	struct lrng_hash_info *lrng_hash =3D (struct lrng_hash_info *)hash;
++	struct shash_desc *shash =3D &lrng_hash->shash;
++
++	return crypto_shash_digest(shash, inbuf, inbuflen, digest);
++}
++
++static int lrng_kcapi_drng_seed_helper(void *drng, const u8 *inbuf,
++				       u32 inbuflen)
++{
++	struct lrng_drng_info *lrng_drng_info =3D (struct lrng_drng_info *)drng;
++	struct crypto_rng *kcapi_rng =3D lrng_drng_info->kcapi_rng;
++	struct lrng_hash_info *lrng_hash =3D lrng_drng_info->lrng_hash;
++
++	if (lrng_hash) {
++		struct shash_desc *shash =3D &lrng_hash->shash;
++		u32 digestsize =3D _lrng_kcapi_hash_digestsize(lrng_hash);
++		u8 digest[64] __aligned(8);
++		int ret;
++
++		BUG_ON(digestsize > sizeof(digest));
++
++		ret =3D crypto_shash_digest(shash, inbuf, inbuflen, digest);
++		if (ret)
++			return ret;
++
++		ret =3D crypto_rng_reset(kcapi_rng, digest, digestsize);
++		if (ret)
++			return ret;
++
++		memzero_explicit(digest, digestsize);
++
++		return 0;
++	} else {
++		return crypto_rng_reset(kcapi_rng, inbuf, inbuflen);
++	}
++}
++
++static int lrng_kcapi_drng_generate_helper(void *drng, u8 *outbuf,
++					   u32 outbuflen)
++{
++	struct lrng_drng_info *lrng_drng_info =3D (struct lrng_drng_info *)drng;
++	struct crypto_rng *kcapi_rng =3D lrng_drng_info->kcapi_rng;
++	int ret =3D crypto_rng_get_bytes(kcapi_rng, outbuf, outbuflen);
++
++	if (ret < 0)
++		return ret;
++
++	return outbuflen;
++}
++
++static void *lrng_kcapi_drng_alloc(u32 sec_strength)
++{
++	struct lrng_drng_info *lrng_drng_info;
++	struct crypto_rng *kcapi_rng;
++	int seedsize;
++	void *ret =3D  ERR_PTR(-ENOMEM);
++
++	if (!drng_name) {
++		pr_err("DRNG name missing\n");
++		return ERR_PTR(-EINVAL);
++	}
++
++	if (!memcmp(drng_name, "drbg", 4)) {
++		pr_err("SP800-90A DRBG cannot be allocated using lrng_kcapi backend, use=
+ lrng_drbg backend instead\n");
++		return ERR_PTR(-EINVAL);
++	}
++
++	if (!memcmp(drng_name, "stdrng", 6)) {
++		pr_err("stdrng cannot be allocated using lrng_kcapi backend, it is too u=
+nspecific and potentially may allocate the DRBG\n");
++		return ERR_PTR(-EINVAL);
++	}
++
++	lrng_drng_info =3D kmalloc(sizeof(*lrng_drng_info), GFP_KERNEL);
++	if (!lrng_drng_info)
++		return ERR_PTR(-ENOMEM);
++
++	kcapi_rng =3D crypto_alloc_rng(drng_name, 0, 0);
++	if (IS_ERR(kcapi_rng)) {
++		pr_err("DRNG %s cannot be allocated\n", drng_name);
++		ret =3D ERR_CAST(kcapi_rng);
++		goto free;
++	}
++	lrng_drng_info->kcapi_rng =3D kcapi_rng;
++
++	seedsize =3D  crypto_rng_seedsize(kcapi_rng);
++
++	if (sec_strength > seedsize)
++		pr_info("Seedsize DRNG (%u bits) lower than security strength of LRNG no=
+ise source (%u bits)\n",
++			crypto_rng_seedsize(kcapi_rng) * 8, sec_strength * 8);
++
++	if (seedsize) {
++		struct lrng_hash_info *lrng_hash;
++
++		if (!seed_hash) {
++			switch (seedsize) {
++			case 32:
++				seed_hash =3D "sha256";
++				break;
++			case 48:
++				seed_hash =3D "sha384";
++				break;
++			case 64:
++				seed_hash =3D "sha512";
++				break;
++			default:
++				pr_err("Seed size %d cannot be processed\n",
++				       seedsize);
++				goto dealloc;
++				break;
++			}
 +		}
++
++		lrng_hash =3D _lrng_kcapi_hash_alloc(seed_hash);
++		if (IS_ERR(lrng_hash)) {
++			ret =3D ERR_CAST(lrng_hash);
++			goto dealloc;
++		}
++
++		if (seedsize !=3D _lrng_kcapi_hash_digestsize(lrng_hash)) {
++			pr_err("Seed hash output size not equal to DRNG seed size\n");
++			_lrng_kcapi_hash_free(lrng_hash);
++			ret =3D ERR_PTR(-EINVAL);
++			goto dealloc;
++		}
++
++		lrng_drng_info->lrng_hash =3D lrng_hash;
++
++		pr_info("Seed hash %s allocated\n", seed_hash);
++	} else {
++		lrng_drng_info->lrng_hash =3D NULL;
 +	}
 +
-+	return &unconstrained;
++	pr_info("Kernel crypto API DRNG %s allocated\n", drng_name);
++
++	return lrng_drng_info;
++
++dealloc:
++	crypto_free_rng(kcapi_rng);
++free:
++	kfree(lrng_drng_info);
++	return ret;
 +}
 +
-+PMU_FORMAT_ATTR(event,	"config:0-7");
-+PMU_FORMAT_ATTR(umask,	"config:8-15");
-+PMU_FORMAT_ATTR(edge,	"config:18");
-+PMU_FORMAT_ATTR(inv,	"config:23");
-+PMU_FORMAT_ATTR(cmask,	"config:24-31");
++static void lrng_kcapi_drng_dealloc(void *drng)
++{
++	struct lrng_drng_info *lrng_drng_info =3D (struct lrng_drng_info *)drng;
++	struct crypto_rng *kcapi_rng =3D lrng_drng_info->kcapi_rng;
++	struct lrng_hash_info *lrng_hash =3D lrng_drng_info->lrng_hash;
 +
-+static struct attribute *zx_arch_formats_attr[] = {
-+	&format_attr_event.attr,
-+	&format_attr_umask.attr,
-+	&format_attr_edge.attr,
-+	&format_attr_inv.attr,
-+	&format_attr_cmask.attr,
-+	NULL,
++	crypto_free_rng(kcapi_rng);
++	if (lrng_hash) {
++		_lrng_kcapi_hash_free(lrng_hash);
++		pr_info("Seed hash %s deallocated\n", seed_hash);
++	}
++	kfree(lrng_drng_info);
++	pr_info("DRNG %s deallocated\n", drng_name);
++}
++
++static const char *lrng_kcapi_drng_name(void)
++{
++	return drng_name;
++}
++
++static const char *lrng_kcapi_pool_hash(void)
++{
++	return pool_hash;
++}
++
++const static struct lrng_crypto_cb lrng_kcapi_crypto_cb =3D {
++	.lrng_drng_name			=3D lrng_kcapi_drng_name,
++	.lrng_hash_name			=3D lrng_kcapi_pool_hash,
++	.lrng_drng_alloc		=3D lrng_kcapi_drng_alloc,
++	.lrng_drng_dealloc		=3D lrng_kcapi_drng_dealloc,
++	.lrng_drng_seed_helper		=3D lrng_kcapi_drng_seed_helper,
++	.lrng_drng_generate_helper	=3D lrng_kcapi_drng_generate_helper,
++	.lrng_hash_alloc		=3D lrng_kcapi_hash_alloc,
++	.lrng_hash_dealloc		=3D lrng_kcapi_hash_dealloc,
++	.lrng_hash_digestsize		=3D lrng_kcapi_hash_digestsize,
++	.lrng_hash_buffer		=3D lrng_kcapi_hash_buffer,
 +};
 +
-+static ssize_t zhaoxin_event_sysfs_show(char *page, u64 config)
++static int __init lrng_kcapi_init(void)
 +{
-+	u64 event = (config & ARCH_PERFMON_EVENTSEL_EVENT);
-+
-+	return x86_event_sysfs_show(page, config, event);
++	return lrng_set_drng_cb(&lrng_kcapi_crypto_cb);
++}
++static void __exit lrng_kcapi_exit(void)
++{
++	lrng_set_drng_cb(NULL);
 +}
 +
-+static const struct x86_pmu zhaoxin_pmu __initconst = {
-+	.name			= "zhaoxin",
-+	.handle_irq		= zhaoxin_pmu_handle_irq,
-+	.disable_all		= zhaoxin_pmu_disable_all,
-+	.enable_all		= zhaoxin_pmu_enable_all,
-+	.enable			= zhaoxin_pmu_enable_event,
-+	.disable		= zhaoxin_pmu_disable_event,
-+	.hw_config		= x86_pmu_hw_config,
-+	.schedule_events	= x86_schedule_events,
-+	.eventsel		= MSR_ARCH_PERFMON_EVENTSEL0,
-+	.perfctr		= MSR_ARCH_PERFMON_PERFCTR0,
-+	.event_map		= zhaoxin_pmu_event_map,
-+	.max_events		= ARRAY_SIZE(zx_pmon_event_map),
-+	.apic			= 1,
-+	/*
-+	 * For zxd/zxe, read/write operation for PMCx MSR is 48 bits.
-+	 */
-+	.max_period		= (1ULL << 47) - 1,
-+	.get_event_constraints	= zhaoxin_get_event_constraints,
-+
-+	.format_attrs		= zx_arch_formats_attr,
-+	.events_sysfs_show	= zhaoxin_event_sysfs_show,
-+};
-+
-+static const struct { int id; char *name; } zx_arch_events_map[] __initconst = {
-+	{ PERF_COUNT_HW_CPU_CYCLES, "cpu cycles" },
-+	{ PERF_COUNT_HW_INSTRUCTIONS, "instructions" },
-+	{ PERF_COUNT_HW_BUS_CYCLES, "bus cycles" },
-+	{ PERF_COUNT_HW_CACHE_REFERENCES, "cache references" },
-+	{ PERF_COUNT_HW_CACHE_MISSES, "cache misses" },
-+	{ PERF_COUNT_HW_BRANCH_INSTRUCTIONS, "branch instructions" },
-+	{ PERF_COUNT_HW_BRANCH_MISSES, "branch misses" },
-+};
-+
-+static __init void zhaoxin_arch_events_quirk(void)
-+{
-+	int bit;
-+
-+	/* disable event that reported as not presend by cpuid */
-+	for_each_set_bit(bit, x86_pmu.events_mask, ARRAY_SIZE(zx_arch_events_map)) {
-+		zx_pmon_event_map[zx_arch_events_map[bit].id] = 0;
-+		pr_warn("CPUID marked event: \'%s\' unavailable\n",
-+			zx_arch_events_map[bit].name);
-+	}
-+}
-+
-+__init int zhaoxin_pmu_init(void)
-+{
-+	union cpuid10_edx edx;
-+	union cpuid10_eax eax;
-+	union cpuid10_ebx ebx;
-+	struct event_constraint *c;
-+	unsigned int unused;
-+	int version;
-+
-+	pr_info("Welcome to zhaoxin pmu!\n");
-+
-+	/*
-+	 * Check whether the Architectural PerfMon supports
-+	 * hw_event or not.
-+	 */
-+	cpuid(10, &eax.full, &ebx.full, &unused, &edx.full);
-+
-+	if (eax.split.mask_length < ARCH_PERFMON_EVENTS_COUNT - 1)
-+		return -ENODEV;
-+
-+	version = eax.split.version_id;
-+	if (version != 2)
-+		return -ENODEV;
-+
-+	x86_pmu = zhaoxin_pmu;
-+	pr_info("Version check pass!\n");
-+
-+	x86_pmu.version			= version;
-+	x86_pmu.num_counters		= eax.split.num_counters;
-+	x86_pmu.cntval_bits		= eax.split.bit_width;
-+	x86_pmu.cntval_mask		= (1ULL << eax.split.bit_width) - 1;
-+	x86_pmu.events_maskl		= ebx.full;
-+	x86_pmu.events_mask_len		= eax.split.mask_length;
-+
-+	x86_pmu.num_counters_fixed = edx.split.num_counters_fixed;
-+	x86_add_quirk(zhaoxin_arch_events_quirk);
-+
-+	switch (boot_cpu_data.x86) {
-+	case 0x06:
-+		if (boot_cpu_data.x86_model == 0x0f || boot_cpu_data.x86_model == 0x19) {
-+
-+			x86_pmu.max_period = x86_pmu.cntval_mask >> 1;
-+
-+			/* Clearing status works only if the global control is enable on zxc. */
-+			x86_pmu.enabled_ack = 1;
-+
-+			x86_pmu.event_constraints = zxc_event_constraints;
-+			zx_pmon_event_map[PERF_COUNT_HW_INSTRUCTIONS] = 0;
-+			zx_pmon_event_map[PERF_COUNT_HW_CACHE_REFERENCES] = 0;
-+			zx_pmon_event_map[PERF_COUNT_HW_CACHE_MISSES] = 0;
-+			zx_pmon_event_map[PERF_COUNT_HW_BUS_CYCLES] = 0;
-+
-+			pr_cont("ZXC events, ");
-+			break;
-+		}
-+		return -ENODEV;
-+
-+	case 0x07:
-+		zx_pmon_event_map[PERF_COUNT_HW_STALLED_CYCLES_FRONTEND] =
-+			X86_CONFIG(.event = 0x01, .umask = 0x01, .inv = 0x01, .cmask = 0x01);
-+
-+		zx_pmon_event_map[PERF_COUNT_HW_STALLED_CYCLES_BACKEND] =
-+			X86_CONFIG(.event = 0x0f, .umask = 0x04, .inv = 0, .cmask = 0);
-+
-+		switch (boot_cpu_data.x86_model) {
-+		case 0x1b:
-+			memcpy(hw_cache_event_ids, zxd_hw_cache_event_ids,
-+			       sizeof(hw_cache_event_ids));
-+
-+			x86_pmu.event_constraints = zxd_event_constraints;
-+
-+			zx_pmon_event_map[PERF_COUNT_HW_BRANCH_INSTRUCTIONS] = 0x0700;
-+			zx_pmon_event_map[PERF_COUNT_HW_BRANCH_MISSES] = 0x0709;
-+
-+			pr_cont("ZXD events, ");
-+			break;
-+		case 0x3b:
-+			memcpy(hw_cache_event_ids, zxe_hw_cache_event_ids,
-+			       sizeof(hw_cache_event_ids));
-+
-+			x86_pmu.event_constraints = zxd_event_constraints;
-+
-+			zx_pmon_event_map[PERF_COUNT_HW_BRANCH_INSTRUCTIONS] = 0x0028;
-+			zx_pmon_event_map[PERF_COUNT_HW_BRANCH_MISSES] = 0x0029;
-+
-+			pr_cont("ZXE events, ");
-+			break;
-+		default:
-+			return -ENODEV;
-+		}
-+		break;
-+
-+	default:
-+		return -ENODEV;
-+	}
-+
-+	x86_pmu.intel_ctrl = (1 << (x86_pmu.num_counters)) - 1;
-+	x86_pmu.intel_ctrl |= ((1LL << x86_pmu.num_counters_fixed)-1) << INTEL_PMC_IDX_FIXED;
-+
-+	if (x86_pmu.event_constraints) {
-+		for_each_event_constraint(c, x86_pmu.event_constraints) {
-+			c->idxmsk64 |= (1ULL << x86_pmu.num_counters) - 1;
-+			c->weight += x86_pmu.num_counters;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
---- a/arch/x86/kernel/cpu/perfctr-watchdog.c
-+++ b/arch/x86/kernel/cpu/perfctr-watchdog.c
-@@ -63,6 +63,10 @@ static inline unsigned int nmi_perfctr_m
- 		case 15:
- 			return msr - MSR_P4_BPU_PERFCTR0;
- 		}
-+		fallthrough;
-+	case X86_VENDOR_ZHAOXIN:
-+	case X86_VENDOR_CENTAUR:
-+		return msr - MSR_ARCH_PERFMON_PERFCTR0;
- 	}
- 	return 0;
- }
-@@ -92,6 +96,10 @@ static inline unsigned int nmi_evntsel_m
- 		case 15:
- 			return msr - MSR_P4_BSU_ESCR0;
- 		}
-+		fallthrough;
-+	case X86_VENDOR_ZHAOXIN:
-+	case X86_VENDOR_CENTAUR:
-+		return msr - MSR_ARCH_PERFMON_EVENTSEL0;
- 	}
- 	return 0;
- 
++late_initcall(lrng_kcapi_init);
++module_exit(lrng_kcapi_exit);
++MODULE_LICENSE("Dual BSD/GPL");
++MODULE_AUTHOR("Stephan Mueller <smueller@chronox.de>");
++MODULE_DESCRIPTION("Linux Random Number Generator - kernel crypto API DRNG=
+ backend");
+=2D-=20
+2.25.2
+
+
+
+
