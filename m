@@ -2,194 +2,77 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8FBBC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:46:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB72C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:47:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFB5A20732
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:46:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="P2fAxpTD"
+	by mail.kernel.org (Postfix) with ESMTP id 6454220737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:47:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392720AbgDOBqg (ORCPT
+        id S2392731AbgDOBrD convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 21:46:36 -0400
-Received: from ozlabs.org ([203.11.71.1]:35367 "EHLO ozlabs.org"
+        Tue, 14 Apr 2020 21:47:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392682AbgDOBqb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 21:46:31 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S2392682AbgDOBqp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 21:46:45 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4924vh236Hz9s71;
-        Wed, 15 Apr 2020 11:46:23 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1586915187;
-        bh=AZwhKCRiMMV9G2odRXf4T0pjybHzWXSzQe/OjKDzQlE=;
-        h=Date:From:To:Cc:Subject:From;
-        b=P2fAxpTDVV9pgSO12pTS8+KiEfDLpJ270TLCgGmr7fSBqvGQE2HdrMHf0Xn6CDB/0
-         LhXAHQdPrMTKtHYdC7grh5wV97U8PIcBBgLEjEnTao8evhE683P0aLfWZvSpJ6ch/K
-         ECpADd1sfpo3WFuw2cRZpkozMPQtlNhB1q0YY8IChACT7eTcD5i1I9IR04tS5uFi9B
-         J3VaAvwCqP9L5+Xfddb6UF1odjAAklJFVLApfLHfhRkBPKowfHxyzKmo0Gm86E8p4T
-         0qYrAPH25Qg/nYOmUuKVzmJ994J19waCNFtIneuZAzQIJSrksnuV43VzYQ1OIqQ+iZ
-         X6rpFMZiDF0Yw==
-Date:   Wed, 15 Apr 2020 11:46:20 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Joe Perches <joe@perches.com>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Sam Ravnborg <sam@ravnborg.org>
-Subject: linux-next: manual merge of the drm-misc tree with Linus' tree
-Message-ID: <20200415114620.0657d62c@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 9277C20732;
+        Wed, 15 Apr 2020 01:46:44 +0000 (UTC)
+Date:   Tue, 14 Apr 2020 21:46:42 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Xiao Yang <yangx.jy@cn.fujitsu.com>
+Cc:     Markus Elfring <Markus.Elfring@web.de>,
+        <linux-kselftest@vger.kernel.org>,
+        <linux-trace-devel@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Xiao Yang <ice_yangxiao@163.com>
+Subject: Re: [PATCH v2] tracing: Fix the race between registering 'snapshot'
+ event trigger and triggering 'snapshot' operation
+Message-ID: <20200414214643.2e14ac76@oasis.local.home>
+In-Reply-To: <5E966604.1020400@cn.fujitsu.com>
+References: <f4e4614b-e3df-e255-42d0-1148e39b3f8a@web.de>
+        <5E966604.1020400@cn.fujitsu.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/+CkTOH=5qhaT9s/HIUbzqRo";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/+CkTOH=5qhaT9s/HIUbzqRo
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, 15 Apr 2020 09:40:20 +0800
+Xiao Yang <yangx.jy@cn.fujitsu.com> wrote:
 
-Hi all,
+> On 2020/4/14 15:54, Markus Elfring wrote:
+> >> Traced event can trigger 'snapshot' operation(i.e. calls snapshot_trigger()  
+> >
+> > I suggest to improve the change description.
+> >
+> > * Adjustment:
+> >    … operation (i. e. …  
+> Hi Markus,
+> 
+> Which part of description do you want to change or could you provide an 
+> example for reference?
 
-Today's linux-next merge of the drm-misc tree got a conflict in:
+That part is fine for me.
 
-  MAINTAINERS
+> 
+> >
+> > * Will the tag “Fixes” become relevant?  
+> 
+> Do you mean to add the following "Fixes" tag?
+> Fixes: 93e31ffbf417 "tracing: Add 'snapshot' event trigger command"
+> 
 
-between commitis:
+Yeah, that fixes tag is appropriate. But I usually add those myself, you
+don't need to resend.
 
-  4400b7d68f6e ("MAINTAINERS: sort entries by entry name")
-  3b50142d8528 ("MAINTAINERS: sort field names for all entries")
-
-from Linus' tree and commits:
-
-  8edb69970739 ("MAINTAINERS: Better regex for dma_buf|fence|resv")
-  7fd9681e8fd0 ("MAINTAINERS: Update feiyang,st7701 panel bindings converte=
-d as YAML")
-
-from the drm-misc tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc MAINTAINERS
-index c3cd17dbcb88,50b068f3580a..000000000000
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@@ -5037,14 -5019,32 +5037,14 @@@ M:	Sumit Semwal <sumit.semwal@linaro.or
-  L:	linux-media@vger.kernel.org
-  L:	dri-devel@lists.freedesktop.org
-  L:	linaro-mm-sig@lists.linaro.org (moderated for non-subscribers)
- +S:	Maintained
- +T:	git git://anongit.freedesktop.org/drm/drm-misc
- +F:	Documentation/driver-api/dma-buf.rst
-  F:	drivers/dma-buf/
- +F:	include/linux/*fence.h
-  F:	include/linux/dma-buf*
-  F:	include/linux/dma-resv.h
-- K:	dma_(buf|fence|resv)
- -F:	include/linux/*fence.h
- -F:	Documentation/driver-api/dma-buf.rst
-+ K:	\bdma_(?:buf|fence|resv)\b
- -T:	git git://anongit.freedesktop.org/drm/drm-misc
- -
- -DMA-BUF HEAPS FRAMEWORK
- -M:	Sumit Semwal <sumit.semwal@linaro.org>
- -R:	Andrew F. Davis <afd@ti.com>
- -R:	Benjamin Gaignard <benjamin.gaignard@linaro.org>
- -R:	Liam Mark <lmark@codeaurora.org>
- -R:	Laura Abbott <labbott@redhat.com>
- -R:	Brian Starkey <Brian.Starkey@arm.com>
- -R:	John Stultz <john.stultz@linaro.org>
- -S:	Maintained
- -L:	linux-media@vger.kernel.org
- -L:	dri-devel@lists.freedesktop.org
- -L:	linaro-mm-sig@lists.linaro.org (moderated for non-subscribers)
- -F:	include/uapi/linux/dma-heap.h
- -F:	include/linux/dma-heap.h
- -F:	drivers/dma-buf/dma-heap.c
- -F:	drivers/dma-buf/heaps/*
- -T:	git git://anongit.freedesktop.org/drm/drm-misc
- =20
-  DMA GENERIC OFFLOAD ENGINE SUBSYSTEM
-  M:	Vinod Koul <vkoul@kernel.org>
-@@@ -5301,8 -5272,8 +5301,8 @@@ F:	drivers/gpu/drm/panel/panel-feixin-k
-  DRM DRIVER FOR FEIYANG FY07024DI26A30-D MIPI-DSI LCD PANELS
-  M:	Jagan Teki <jagan@amarulasolutions.com>
-  S:	Maintained
-- F:	Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30=
-d.txt
- -F:	drivers/gpu/drm/panel/panel-feiyang-fy07024di26a30d.c
-+ F:	Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30=
-d.yaml
- +F:	drivers/gpu/drm/panel/panel-feiyang-fy07024di26a30d.c
- =20
-  DRM DRIVER FOR GRAIN MEDIA GM12U320 PROJECTORS
-  M:	Hans de Goede <hdegoede@redhat.com>
-@@@ -5441,18 -5412,18 +5441,18 @@@ S:	Orphan / Obsolet
-  F:	drivers/gpu/drm/sis/
-  F:	include/uapi/drm/sis_drm.h
- =20
- -DRM DRIVER FOR SITRONIX ST7701 PANELS
- -M:	Jagan Teki <jagan@amarulasolutions.com>
- -S:	Maintained
- -F:	drivers/gpu/drm/panel/panel-sitronix-st7701.c
- -F:	Documentation/devicetree/bindings/display/panel/sitronix,st7701.yaml
- -
-  DRM DRIVER FOR SITRONIX ST7586 PANELS
-  M:	David Lechner <david@lechnology.com>
- -T:	git git://anongit.freedesktop.org/drm/drm-misc
-  S:	Maintained
- -F:	drivers/gpu/drm/tiny/st7586.c
- +T:	git git://anongit.freedesktop.org/drm/drm-misc
-  F:	Documentation/devicetree/bindings/display/sitronix,st7586.txt
- +F:	drivers/gpu/drm/tiny/st7586.c
- +
- +DRM DRIVER FOR SITRONIX ST7701 PANELS
- +M:	Jagan Teki <jagan@amarulasolutions.com>
- +S:	Maintained
-- F:	Documentation/devicetree/bindings/display/panel/sitronix,st7701.txt
-++F:	Documentation/devicetree/bindings/display/panel/sitronix,st7701.yaml
- +F:	drivers/gpu/drm/panel/panel-sitronix-st7701.c
- =20
-  DRM DRIVER FOR SITRONIX ST7735R PANELS
-  M:	David Lechner <david@lechnology.com>
-
---Sig_/+CkTOH=5qhaT9s/HIUbzqRo
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6WZ20ACgkQAVBC80lX
-0GzLFAf/SMZKAtp0iebrAlMGrp5RRDHWLgz+i/gN17fxYppZbAHYIweHp5h81PWS
-85/0MihZnwU378qLKc1FqASC8cuKgCA1mbKyZXeJSlRjxj9bkGg1/pyyDHmfS2Cj
-a9qqkt7t5pXR9Ws8VKGHPnvIA0BY+17I5AFI1T33pXW1R52vHwxH/dQYVws+t/O+
-p0Ti2JuBSY3mZXYSBHKTb0c/hJoq8LgSCa1thsTEyqnpItQ0Oh9abazGWyQy4OyO
-OQ1R1fnv275TUIHLXNzsNuioEPH7C/9EfMk98PZZLl7Ao6WSYglE9Og989aAMOig
-b30mYtPk4B29mGj5yNJnAJ1YVtaLqg==
-=eIsG
------END PGP SIGNATURE-----
-
---Sig_/+CkTOH=5qhaT9s/HIUbzqRo--
+-- Steve
