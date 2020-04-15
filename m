@@ -2,112 +2,104 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A7EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:12:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6048C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D95921744
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:12:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 979CC21734
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:12:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586970769;
+	bh=KYD8+W5IgD2AkDof0MwUojG9ZeSTMNtc3XO6QSao+aQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=yKYXwmN0a50/sAgpI8rCts7hwqIM457ImP2vcfzCg4VZlDyCJYHGcZ6Wij5KwqeNp
+	 ux88n8QAyzJxwyW+mQ5tBLZ0oBGUGh7hjuhBv7lXRnqhcewsBZQpyqpAV1rulRT2a7
+	 JoJyoOVdzq/Cl4TPDn1wY2mIl7ryeIxsq9jEVacA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1416454AbgDORMh (ORCPT
+        id S1416462AbgDORMs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 13:12:37 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:56942 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1416415AbgDORMQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 13:12:16 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jOla5-0004e6-JQ; Wed, 15 Apr 2020 11:12:09 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jOla3-0001gx-82; Wed, 15 Apr 2020 11:12:09 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Richard Palethorpe <rpalethorpe@suse.com>,
-        Kees Cook <keescook@chromium.org>, linux-can@vger.kernel.org,
-        netdev@vger.kernel.org, security@kernel.org, wg@grandegger.com,
-        mkl@pengutronix.de, davem@davemloft.net
-References: <20200415113445.11881-1-sashal@kernel.org>
-        <20200415113445.11881-68-sashal@kernel.org>
-Date:   Wed, 15 Apr 2020 12:09:08 -0500
-In-Reply-To: <20200415113445.11881-68-sashal@kernel.org> (Sasha Levin's
-        message of "Wed, 15 Apr 2020 07:33:43 -0400")
-Message-ID: <87h7xkisln.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jOla3-0001gx-82;;;mid=<87h7xkisln.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+wxNH2X5oEIwUT5tCdku1C684p3kocAA0=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH AUTOSEL 5.6 068/129] slcan: Don't transmit uninitialized stack data in padding
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+        Wed, 15 Apr 2020 13:12:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42438 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2410717AbgDORK7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 13:10:59 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7AF221D7B;
+        Wed, 15 Apr 2020 17:10:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586970658;
+        bh=KYD8+W5IgD2AkDof0MwUojG9ZeSTMNtc3XO6QSao+aQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Ru+f9t05X4n9+3mdyIXkqozhH+Tm1/f1qN9rnA8gIUCGCMoSTEukkKbgwWZs7nk6c
+         Tp48kioSedWjOSopHRfuBZBhlhltJvUkQz+Gi5HYk9kmmLD6c/+vXeag8MXgGVcaiq
+         cSRpZGoJT194BBuYjisb8sgzqDp5dFFDjbYvBSwc=
+From:   paulmck@kernel.org
+To:     rcu@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
+        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
+        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
+        "Paul E. McKenney" <paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 06/19] srcu: Add data_race() to ->srcu_lock_count and ->srcu_unlock_count arrays
+Date:   Wed, 15 Apr 2020 10:10:41 -0700
+Message-Id: <20200415171054.9013-6-paulmck@kernel.org>
+X-Mailer: git-send-email 2.9.5
+In-Reply-To: <20200415171017.GA7821@paulmck-ThinkPad-P72>
+References: <20200415171017.GA7821@paulmck-ThinkPad-P72>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: "Paul E. McKenney" <paulmck@kernel.org>
 
-How does this differ from Greg's backports of this patches?
+The srcu_data structure's ->srcu_lock_count and ->srcu_unlock_count arrays
+are read and written locklessly, so this commit adds the data_race()
+to the diagnostic-print loads from these arrays in order mark them as
+known and approved data-racy accesses.
 
-Sasha Levin <sashal@kernel.org> writes:
+This data race was reported by KCSAN. Not appropriate for backporting due
+to failure being unlikely and due to this being used only by rcutorture.
 
-> From: Richard Palethorpe <rpalethorpe@suse.com>
->
-> [ Upstream commit b9258a2cece4ec1f020715fe3554bc2e360f6264 ]
->
-> struct can_frame contains some padding which is not explicitly zeroed in
-> slc_bump. This uninitialized data will then be transmitted if the stack
-> initialization hardening feature is not enabled (CONFIG_INIT_STACK_ALL).
->
-> This commit just zeroes the whole struct including the padding.
->
-> Signed-off-by: Richard Palethorpe <rpalethorpe@suse.com>
-> Fixes: a1044e36e457 ("can: add slcan driver for serial/USB-serial CAN adapters")
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Cc: linux-can@vger.kernel.org
-> Cc: netdev@vger.kernel.org
-> Cc: security@kernel.org
-> Cc: wg@grandegger.com
-> Cc: mkl@pengutronix.de
-> Cc: davem@davemloft.net
-> Acked-by: Marc Kleine-Budde <mkl@pengutronix.de>
-> Signed-off-by: David S. Miller <davem@davemloft.net>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  drivers/net/can/slcan.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
->
-> diff --git a/drivers/net/can/slcan.c b/drivers/net/can/slcan.c
-> index a3664281a33fc..4dfa459ef5c73 100644
-> --- a/drivers/net/can/slcan.c
-> +++ b/drivers/net/can/slcan.c
-> @@ -148,7 +148,7 @@ static void slc_bump(struct slcan *sl)
->  	u32 tmpid;
->  	char *cmd = sl->rbuff;
->  
-> -	cf.can_id = 0;
-> +	memset(&cf, 0, sizeof(cf));
->  
->  	switch (*cmd) {
->  	case 'r':
-> @@ -187,8 +187,6 @@ static void slc_bump(struct slcan *sl)
->  	else
->  		return;
->  
-> -	*(u64 *) (&cf.data) = 0; /* clear payload */
-> -
->  	/* RTR frames may have a dlc > 0 but they never have any data bytes */
->  	if (!(cf.can_id & CAN_RTR_FLAG)) {
->  		for (i = 0; i < cf.can_dlc; i++) {
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+---
+ kernel/rcu/srcutree.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/rcu/srcutree.c b/kernel/rcu/srcutree.c
+index ba2b751..6d3ef70 100644
+--- a/kernel/rcu/srcutree.c
++++ b/kernel/rcu/srcutree.c
+@@ -1281,8 +1281,8 @@ void srcu_torture_stats_print(struct srcu_struct *ssp, char *tt, char *tf)
+ 		struct srcu_data *sdp;
+ 
+ 		sdp = per_cpu_ptr(ssp->sda, cpu);
+-		u0 = sdp->srcu_unlock_count[!idx];
+-		u1 = sdp->srcu_unlock_count[idx];
++		u0 = data_race(sdp->srcu_unlock_count[!idx]);
++		u1 = data_race(sdp->srcu_unlock_count[idx]);
+ 
+ 		/*
+ 		 * Make sure that a lock is always counted if the corresponding
+@@ -1290,8 +1290,8 @@ void srcu_torture_stats_print(struct srcu_struct *ssp, char *tt, char *tf)
+ 		 */
+ 		smp_rmb();
+ 
+-		l0 = sdp->srcu_lock_count[!idx];
+-		l1 = sdp->srcu_lock_count[idx];
++		l0 = data_race(sdp->srcu_lock_count[!idx]);
++		l1 = data_race(sdp->srcu_lock_count[idx]);
+ 
+ 		c0 = l0 - u0;
+ 		c1 = l1 - u1;
+-- 
+2.9.5
+
