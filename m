@@ -2,96 +2,85 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D84D2C352BE
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:18:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C290C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:20:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B724A20784
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:18:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65B202087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:20:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="S/fPuJfr"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dkEeBnsh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392476AbgDOBSt (ORCPT
+        id S2392492AbgDOBUG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 21:18:49 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:44032 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392461AbgDOBSf (ORCPT
+        Tue, 14 Apr 2020 21:20:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57616 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2392479AbgDOBUD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 21:18:35 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03F1Eo7M069531;
-        Wed, 15 Apr 2020 01:18:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2020-01-29;
- bh=V+FGQ+Fp0ENCqGAxNIY9AUsRPmrf+3JeOdO7ro1QI18=;
- b=S/fPuJfr5OwO+QZS2ihclKnrLDCuTIUxMOp12UfyrmSXy+7qB+ebQoHrr1bwtdgkvc3O
- 8NGPXclIqZ405TpmkDwVwcPwU3ya3WcIMRoMFPbIIFtmOlAup6jRENFeTeKNGbzqV1eh
- YuCL5WD8abIDwTcatZmlNEN0hpbXMHPAZK3L38q5A71NNi9pEFl5CfloljaYOQw5ej6F
- Fj/VqvlaF4D5m6DND6A1q5G8GFYDC4h/xzIDxODgybRbNYl0iqe3OohQCC9FdcSJiQgE
- Ez9FBYiWFJCRAkbesW9zHbXVjMFO9zqYR4CedqOEgOphnO47/BuVKaYe9E85D4nO4lL1 SA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 30dn95gjjd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Apr 2020 01:18:24 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03F1CxFm020563;
-        Wed, 15 Apr 2020 01:18:23 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 30dn8sd7aj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Apr 2020 01:18:23 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03F1IKVS031963;
-        Wed, 15 Apr 2020 01:18:21 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 14 Apr 2020 18:18:20 -0700
-To:     Wu Bo <wubo40@huawei.com>
-Cc:     Doug Gilbert <dgilbert@interlog.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <liuzhiqiang26@huawei.com>, <linfeilong@huawei.com>
-Subject: Re: [PATCH] scsi:sg: add sg_remove_request in sg_write
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <610618d9-e983-fd56-ed0f-639428343af7@huawei.com>
-Date:   Tue, 14 Apr 2020 21:18:18 -0400
-In-Reply-To: <610618d9-e983-fd56-ed0f-639428343af7@huawei.com> (Wu Bo's
-        message of "Tue, 14 Apr 2020 10:13:28 +0800")
-Message-ID: <yq1pnc9r1gl.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Tue, 14 Apr 2020 21:20:03 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6DD1C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 18:20:02 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id b8so788069pfp.8
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 18:20:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TrrpbbPwJAr8kyteNcvoZB2BPcqO+NKCa20U7yB2R10=;
+        b=dkEeBnshSPERc7o2ljrwrCS5c3w6V5JeyZ1SWZ4bxSJHqp+RtYf69d2Or1PLlJUTHd
+         IYW4G2DzmVjU6Pc8mVbOP5o/3yseehMtOB5C7jM5I9zYshJu2ML471uRB4XjnFClN6j7
+         FLE8lC+sY1gC/UF7YGOKOwjtc6mNn9zuRiAwmkUSxU91t+DZtQ9dZ6BhnOCvSOHvL+f9
+         5RmUZzyubiTyhvua6LZxOQNZddWmU67Flw8q7JSUgnb5cbzXhpGRSdDVACCrtN+1E2/j
+         e0U+YUn9M74i51At0N7WCsFJS2CDC1rxpgjCdoEkCSM/iN8W/990KuSOn69xYz/DGoy2
+         kHxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TrrpbbPwJAr8kyteNcvoZB2BPcqO+NKCa20U7yB2R10=;
+        b=NMJSvWv8HpqIs53YSu/B9AOdEK7+Y+W/HyFGuxqyEzr/o1Egh361t/EqwVGSrDJmxB
+         CnirU5WiethUDEm1mAv1If1wozuJF336SHvtvUg2M3NM3IPEdbKrslYqwP5XQFngUKXJ
+         qNQdM8b7hejdfOr9msH+zbhtcZM1BbI4NGVMyhzg5U+ZixmXh3TgdVIj2mLIqT3pAKfO
+         Ac77g8Ryv4coiRLZn79KtpHv3vEMnDvzB2vRn1Krmdbkpff7XdXVaQIMPQFmLgzdDu0s
+         9dfERbdO3Q6OtlCWYeKL4n5CWBL7QXTZTWOYB4vVH6/YjTXTMXiXPGOVugVKZdOhkiw1
+         lypg==
+X-Gm-Message-State: AGi0PuZn7ZgsZ1Y++0m+Uoym1CUyQpkP3fvIHGOfBKIY/dxgAqligV44
+        rJPICosAa5vE4n+FBLPGRR753RvC16H1mzF5PKck5g==
+X-Google-Smtp-Source: APiQypL1f0xDNqRsCbQhV1fCyIUtHEZERlcQ2pLpCcqFT9UQ8H0t8GsJ2OLer+AH91XIVyPKPZIwVMglEhr6RZ5xgQo=
+X-Received: by 2002:a63:cc0c:: with SMTP id x12mr25910799pgf.0.1586913601923;
+ Tue, 14 Apr 2020 18:20:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9591 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=854 suspectscore=0
- bulkscore=0 malwarescore=0 phishscore=0 adultscore=0 mlxscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004150005
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9591 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 clxscore=1015
- malwarescore=0 bulkscore=0 priorityscore=1501 lowpriorityscore=0
- mlxscore=0 phishscore=0 spamscore=0 impostorscore=0 suspectscore=0
- mlxlogscore=929 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004150005
+References: <20200414195638.156123-1-gbiv@google.com> <20200414170006.10f70d361bfd085f3e846939@linux-foundation.org>
+In-Reply-To: <20200414170006.10f70d361bfd085f3e846939@linux-foundation.org>
+From:   George Burgess <gbiv@google.com>
+Date:   Tue, 14 Apr 2020 18:19:25 -0700
+Message-ID: <CA+rzOEmBYOBKUHYZNn3yvaFz00-tsmYKurQjTMY1-Vye_GLfEA@mail.gmail.com>
+Subject: Re: [PATCH] tools/build: tweak unused value workaround
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Apr 14, 2020 at 5:00 PM Andrew Morton <akpm@linux-foundation.org> wrote:
+> What does "disabled by default" mean?  Presumably it should now be
+> enabled, but I don't think this disabling happens in the mainline
+> kernel tree?
 
-Wu,
+Disabled when `perf` does its configure-ish checks. Concretely,
 
-> If the __copy_from_user function return failed, it should call
-> sg_remove_request in sg_write.
-
-Applied to 5.7/scsi-fixes (by hand, another mangled patch). Thanks.
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
+```
+~/linux/tools/perf $ make V=1 VF=1 CC=$clang -f Makefile.perf notarget \
+    |& grep 'Auto-detecting\|sync-compare-and-swap'
+Auto-detecting system features:
+...         sync-compare-and-swap: [ OFF ]
+```
