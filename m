@@ -2,160 +2,272 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F365C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:33:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1692CC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:34:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E70F1208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:33:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAB6F206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:34:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2636947AbgDOPdE (ORCPT
+        id S1414714AbgDOPeZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 11:33:04 -0400
-Received: from mga18.intel.com ([134.134.136.126]:21425 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2636913AbgDOPdB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 11:33:01 -0400
-IronPort-SDR: +piYAfB5wZUFMed7asrhRsz5LZ4YC4NMH3x8lavBf3veRvIHjhqF4kqGKeuKDQbNAcxoBi4/iU
- Gyo8DCc1pK+w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 08:32:59 -0700
-IronPort-SDR: zAszhCrP0cBmRUBK375yX4GljVs7Z18jsJ86HFuEIjlqxcIX/EPEnOkPYGrkiVj40CsJOWBRfI
- 9ZxQ4i8L2FjQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,387,1580803200"; 
-   d="scan'208";a="332530368"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga001.jf.intel.com with ESMTP; 15 Apr 2020 08:32:59 -0700
-Date:   Wed, 15 Apr 2020 08:38:54 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        "Lu Baolu" <baolu.lu@linux.intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v2 1/3] iommu/uapi: Define uapi version and capabilities
-Message-ID: <20200415083854.6fefac01@jacob-builder>
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D81F901@SHSMSX104.ccr.corp.intel.com>
-References: <1585178227-17061-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <20200326092316.GA31648@infradead.org>
-        <20200326094442.5be042ce@jacob-builder>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D7ECB45@SHSMSX104.ccr.corp.intel.com>
-        <20200327074702.GA27959@infradead.org>
-        <20200327165335.397f24a3@jacob-builder>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D7FE150@SHSMSX104.ccr.corp.intel.com>
-        <20200330090746.23c5599c@jacob-builder>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D8011A9@SHSMSX104.ccr.corp.intel.com>
-        <20200331085444.44bee0bb@jacob-builder>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D803AFF@SHSMSX104.ccr.corp.intel.com>
-        <20200402113604.6eea1e6f@jacob-builder>
-        <20200413134157.395981a6@jacob-builder>
-        <20200413162129.313b3b5a@w520.home>
-        <20200413220515.25a107b6@jacob-builder>
-        <20200414101358.3ae66ac5@w520.home>
-        <20200414101304.27e587eb@jacob-builder>
-        <20200414153226.30d8cab3@jacob-builder>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D81F901@SHSMSX104.ccr.corp.intel.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 15 Apr 2020 11:34:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48908 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2636948AbgDOPeT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 11:34:19 -0400
+Received: from michel.telenet-ops.be (michel.telenet-ops.be [IPv6:2a02:1800:110:4::f00:18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3E98C061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 08:34:18 -0700 (PDT)
+Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:914e:4085:6cfb:e960])
+        by michel.telenet-ops.be with bizsmtp
+        id T3aB2200D3Hq6Dg063aBPZ; Wed, 15 Apr 2020 17:34:15 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jOk3H-0004tg-5J; Wed, 15 Apr 2020 17:34:11 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jOk3H-0007qP-2Q; Wed, 15 Apr 2020 17:34:11 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Eric Miao <eric.miao@nvidia.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v5] ARM: boot: Obtain start of physical memory from DTB
+Date:   Wed, 15 Apr 2020 17:34:09 +0200
+Message-Id: <20200415153409.30112-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Apr 2020 23:47:40 +0000
-"Tian, Kevin" <kevin.tian@intel.com> wrote:
+Currently, the start address of physical memory is obtained by masking
+the program counter with a fixed mask of 0xf8000000.  This mask value
+was chosen as a balance between the requirements of different platforms.
+However, this does require that the start address of physical memory is
+a multiple of 128 MiB, precluding booting Linux on platforms where this
+requirement is not fulfilled.
 
-> > From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > Sent: Wednesday, April 15, 2020 6:32 AM
-> > 
-> > On Tue, 14 Apr 2020 10:13:04 -0700
-> > Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
-> >   
-> > > > > >  In any of the proposed solutions, the
-> > > > > > IOMMU driver is ultimately responsible for validating the
-> > > > > > user data, so do we want vfio performing the
-> > > > > > copy_from_user() to an object that could later be assumed
-> > > > > > to be sanitized, or should vfio just pass a user pointer to
-> > > > > > make it obvious that the consumer is responsible for all
-> > > > > > the user protections?  Seems like the latter.  
-> > > > > I like the latter as well.
-> > > > >  
-> > On a second thought, I think the former is better. Two reasons:
-> > 
-> > 1. IOMMU API such as page_response is also used in baremetal. So it
-> > is not suitable to pass a __user *.
-> > https://www.spinics.net/lists/arm-kernel/msg798677.html  
-> 
-> You can have a wrapped version accepting a __user* and an internal
-> version for kernel pointers.
-> 
-I have thought about that also but the problem is that some of the
-flags are processed in the vendor IOMMU ops so it is hard to do that in
-a generic wrapper.
+Fix this limitation by obtaining the start address from the DTB instead,
+if available (either explicitly passed, or appended to the kernel).
+Fall back to the traditional method when needed.
 
-> > 
-> > 2. Some data are in the mandatory (fixed offset, never removed or
-> > extended) portion of the uAPI structure. It is simpler for VFIO to
-> > extract that and pass it to IOMMU API. For example, the PASID value
-> > used for unbind_gpasid(). VFIO also need to sanitize the PASID
-> > value to make sure it belongs to the same VM that did the
-> > allocation.  
-> 
-> I don't think this makes much difference. If anyway you still plan to
-> let IOMMU driver parse some user pointers, why not making a clear
-> split to have it sparse all IOMMU specific fields?
->
-The plan is not to have IOMMU driver parse user pointers. This is the
-"former" case in Alex's comment. I.e. vfio performing the
-copy_from_user based on argsz in IOMMU uAPI.
+This allows to boot Linux on r7s9210/rza2mevb using the 64 MiB of SDRAM
+on the RZA2MEVB sub board, which is located at 0x0C000000 (CS3 space),
+i.e. not at a multiple of 128 MiB.
+
+Suggested-by: Nicolas Pitre <nico@fluxnic.net>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Nicolas Pitre <nico@fluxnic.net>
+Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Tested-by: Dmitry Osipenko <digetx@gmail.com>
+---
+v5:
+  - Add Tested-by, Reviewed-by,
+  - Round up start of memory to satisfy 16 MiB alignment rule,
+
+v4:
+  - Fix stack location after commit 184bf653a7a452c1 ("ARM:
+    decompressor: factor out routine to obtain the inflated image
+    size"),
+
+v3:
+  - Add Reviewed-by,
+  - Fix ATAGs with appended DTB,
+  - Add Tested-by,
+
+v2:
+  - Use "cmp r0, #-1", instead of "cmn r0, #1",
+  - Add missing stack setup,
+  - Support appended DTB.
+---
+ arch/arm/boot/compressed/Makefile            |  6 ++-
+ arch/arm/boot/compressed/fdt_get_mem_start.c | 57 ++++++++++++++++++++
+ arch/arm/boot/compressed/head.S              | 54 ++++++++++++++++++-
+ 3 files changed, 115 insertions(+), 2 deletions(-)
+ create mode 100644 arch/arm/boot/compressed/fdt_get_mem_start.c
+
+diff --git a/arch/arm/boot/compressed/Makefile b/arch/arm/boot/compressed/Makefile
+index 9c11e7490292f0e0..82e4cee97cb5d905 100644
+--- a/arch/arm/boot/compressed/Makefile
++++ b/arch/arm/boot/compressed/Makefile
+@@ -86,12 +86,15 @@ libfdt_objs	:= $(addsuffix .o, $(basename $(libfdt)))
+ $(addprefix $(obj)/,$(libfdt) $(libfdt_hdrs)): $(obj)/%: $(srctree)/scripts/dtc/libfdt/%
+ 	$(call cmd,shipped)
  
-> Thanks
-> Kevin
-> 
-> > 
-> >   
-> > > > > >  That still really
-> > > > > > doesn't address what's in that user data blob yet, but the
-> > > > > > vfio interface could be:
-> > > > > >
-> > > > > > struct {
-> > > > > > 	__u32 argsz;
-> > > > > > 	__u32 flags;
-> > > > > > 	__u8  data[];
-> > > > > > }
-> > > > > >
-> > > > > > Where flags might be partitioned like we do for
-> > > > > > DEVICE_FEATURE to indicate the format of data and what vfio
-> > > > > > should do with it, and data might simply be defined as a
-> > > > > > (__u64 __user *). 
-> > > > > So, __user * will be passed to IOMMU driver if VFIO checks
-> > > > > minsz include flags and they are valid.
-> > > > > IOMMU driver can copy the rest based on the mandatory
-> > > > > version/minsz and flags in the IOMMU uAPI structs.
-> > > > > Does it sound right? This is really choice #2.  
-> > > >
-> > > > Sounds like each IOMMU UAPI struct just needs to have an
-> > > > embedded size and flags field, but yes.
-> > > >  
-> > > Yes, an argsz field can be added to each UAPI. There are already
-> > > flags or the equivalent. IOMMU driver can process the __user *
-> > > based on the argsz, flags, check argsz against
-> > > offsetofend(iommu_uapi_struct, last_element), etc.;  
+-$(addprefix $(obj)/,$(libfdt_objs) atags_to_fdt.o): \
++$(addprefix $(obj)/,$(libfdt_objs) atags_to_fdt.o fdt_get_mem_start.o): \
+ 	$(addprefix $(obj)/,$(libfdt_hdrs))
+ 
+ ifeq ($(CONFIG_ARM_ATAG_DTB_COMPAT),y)
+ OBJS	+= $(libfdt_objs) atags_to_fdt.o
+ endif
++ifeq ($(CONFIG_USE_OF),y)
++OBJS	+= $(libfdt_objs) fdt_get_mem_start.o
++endif
+ 
+ targets       := vmlinux vmlinux.lds piggy_data piggy.o \
+ 		 lib1funcs.o ashldi3.o bswapsdi2.o \
+@@ -115,6 +118,7 @@ CFLAGS_fdt.o := $(nossp-flags-y)
+ CFLAGS_fdt_ro.o := $(nossp-flags-y)
+ CFLAGS_fdt_rw.o := $(nossp-flags-y)
+ CFLAGS_fdt_wip.o := $(nossp-flags-y)
++CFLAGS_fdt_get_mem_start.o := $(nossp-flags-y)
+ 
+ ccflags-y := -fpic $(call cc-option,-mno-single-pic-base,) -fno-builtin \
+ 	     -I$(obj) $(DISABLE_ARM_SSP_PER_TASK_PLUGIN)
+diff --git a/arch/arm/boot/compressed/fdt_get_mem_start.c b/arch/arm/boot/compressed/fdt_get_mem_start.c
+new file mode 100644
+index 0000000000000000..e29caa4cbfecb36a
+--- /dev/null
++++ b/arch/arm/boot/compressed/fdt_get_mem_start.c
+@@ -0,0 +1,57 @@
++// SPDX-License-Identifier: GPL-2.0-only
++
++#include <linux/kernel.h>
++#include <linux/sizes.h>
++
++#include <libfdt.h>
++
++static const void *getprop(const void *fdt, const char *node_path,
++			   const char *property)
++{
++	int offset = fdt_path_offset(fdt, node_path);
++
++	if (offset == -FDT_ERR_NOTFOUND)
++		return NULL;
++
++	return fdt_getprop(fdt, offset, property, NULL);
++}
++
++static uint32_t get_addr_size(const void *fdt)
++{
++	const __be32 *addr_len = getprop(fdt, "/", "#address-cells");
++
++	if (!addr_len) {
++		/* default */
++		return 1;
++	}
++
++	return fdt32_to_cpu(*addr_len);
++}
++
++/*
++ * Get the start of physical memory
++ */
++
++unsigned long fdt_get_mem_start(const void *fdt)
++{
++	uint32_t addr_size, mem_start;
++	const __be32 *memory;
++
++	if (!fdt)
++		return -1;
++
++	if (*(__be32 *)fdt != cpu_to_fdt32(FDT_MAGIC))
++		return -1;
++
++	/* Find the first memory node */
++	memory = getprop(fdt, "/memory", "reg");
++	if (!memory)
++		return -1;
++
++	/* There may be multiple cells on LPAE platforms */
++	addr_size = get_addr_size(fdt);
++
++	mem_start = fdt32_to_cpu(memory[addr_size - 1]);
++	/* Must be a multiple of 16 MiB for phys/virt patching */
++	return round_up(mem_start, SZ_16M);
++}
+diff --git a/arch/arm/boot/compressed/head.S b/arch/arm/boot/compressed/head.S
+index cabdd8f4a2482e2b..2d2a42865b3974da 100644
+--- a/arch/arm/boot/compressed/head.S
++++ b/arch/arm/boot/compressed/head.S
+@@ -254,8 +254,58 @@ not_angel:
+ 		.text
+ 
+ #ifdef CONFIG_AUTO_ZRELADDR
++#ifdef CONFIG_USE_OF
+ 		/*
+-		 * Find the start of physical memory.  As we are executing
++		 * Find the start of physical memory.
++		 * Try the DTB first, if available.
++		 */
++		adr	r0, LC0
++		ldr	r1, [r0]	@ get absolute LC0
++		ldr	sp, [r0, #24]	@ get stack location
++		sub	r1, r0, r1	@ compute relocation offset
++		add	sp, sp, r1	@ apply relocation
++
++#ifdef CONFIG_ARM_APPENDED_DTB
++		/*
++		 * Look for an appended DTB. If found, use it and
++		 * move stack away from it.
++		 */
++		ldr	r6, [r0, #12]	@ get &_edata
++		add	r6, r6, r1	@ relocate it
++		ldmia	r6, {r0, r5}	@ get DTB signature and size
++#ifndef __ARMEB__
++		ldr	r1, =0xedfe0dd0	@ sig is 0xd00dfeed big endian
++		/* convert DTB size to little endian */
++		eor	r2, r5, r5, ror #16
++		bic	r2, r2, #0x00ff0000
++		mov	r5, r5, ror #8
++		eor	r5, r5, r2, lsr #8
++#else
++		ldr	r1, =0xd00dfeed
++#endif
++		cmp	r0, r1		@ do we have a DTB there?
++		bne	1f
++
++		/* preserve 64-bit alignment */
++		add	r5, r5, #7
++		bic	r5, r5, #7
++		add	sp, sp, r5	@ if so, move stack above DTB
++		mov	r0, r6		@ and extract memory start from DTB
++		b	2f
++
++1:
++#endif /* CONFIG_ARM_APPENDED_DTB */
++
++		mov	r0, r8
++2:
++		bl	fdt_get_mem_start
++		mov	r4, r0
++		cmp	r0, #-1
++		bne	1f
++#endif /* CONFIG_USE_OF */
++
++		/*
++		 * Fall back to the traditional method.  As we are executing
+ 		 * without the MMU on, we are in the physical address space.
+ 		 * We just need to get rid of any offset by aligning the
+ 		 * address.
+@@ -273,6 +323,8 @@ not_angel:
+ 		 */
+ 		mov	r4, pc
+ 		and	r4, r4, #0xf8000000
++
++1:
+ 		/* Determine final kernel image address. */
+ 		add	r4, r4, #TEXT_OFFSET
+ #else
+-- 
+2.17.1
 
-[Jacob Pan]
