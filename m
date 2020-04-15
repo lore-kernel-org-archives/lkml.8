@@ -2,118 +2,118 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54BD3C38A29
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:13:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA71C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:15:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34B0D2076C
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:13:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="u9F4vImH"
+	by mail.kernel.org (Postfix) with ESMTP id 8AC7A206D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 01:15:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586913325;
+	bh=t9v8alPADht3kqfJgyOTX6aPTTIZgHS4KawwBUO3Szc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=coDaP7dtVuQ6P5P7hvuk+ipiX31pkA95cNbHlUJUxeP0ycFxFnHLZzQYi+R1rSc+B
+	 nMxYq1oRDRMTrJffuY0p7LNnDtexca1Q4+lfjAiZNhoscKQezuPzWacTUa2n1P0Cep
+	 SRMFpScVFUMBs4W9CFFSfJ3CGdhvvIpWygdl03zQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389022AbgDOBNz (ORCPT
+        id S2389048AbgDOBPW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 21:13:55 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:17859 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388394AbgDOBNe (ORCPT
+        Tue, 14 Apr 2020 21:15:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56876 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388394AbgDOBPM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 21:13:34 -0400
-X-UUID: 6b2547368f62461696c9d15b020bfc5c-20200415
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=jaJQuh8fvp6T9Be9ipJU3hsADftSb0W/4ALoBtZp+2k=;
-        b=u9F4vImHJ9YxND0bBd3lhYXXSUqIqcZYHsgEpM7eimTaJzH11WJmQV60u5CG16ZWgVkexXX8qzJXu/jJWbS/o9NHld0dJkAwCyc2Jb+pI8egfiDJUspn9NmY0qU/bJujeb1Ux2CsW8fp+D9o+Rva87PtPdVt+JKlrqRHhYJeCIs=;
-X-UUID: 6b2547368f62461696c9d15b020bfc5c-20200415
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <jitao.shi@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1741448416; Wed, 15 Apr 2020 09:13:26 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33N2.mediatek.inc
- (172.27.4.76) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 15 Apr
- 2020 09:13:26 +0800
-Received: from mszsdaap41.gcn.mediatek.inc (10.16.6.141) by
- MTKCAS36.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
- 15.0.1497.2 via Frontend Transport; Wed, 15 Apr 2020 09:13:23 +0800
-From:   Jitao Shi <jitao.shi@mediatek.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-CC:     <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, <yingjoe.chen@mediatek.com>,
-        <eddie.huang@mediatek.com>, <cawa.cheng@mediatek.com>,
-        <bibby.hsieh@mediatek.com>, <ck.hu@mediatek.com>,
-        <stonea168@163.com>, <huijuan.xie@mediatek.com>,
-        Jitao Shi <jitao.shi@mediatek.com>
-Subject: [PATCH v15 3/3] drm/mediatek: set dpi pin mode to gpio low to avoid leakage current
-Date:   Wed, 15 Apr 2020 09:13:19 +0800
-Message-ID: <20200415011319.25559-4-jitao.shi@mediatek.com>
-X-Mailer: git-send-email 2.12.5
-In-Reply-To: <20200415011319.25559-1-jitao.shi@mediatek.com>
-References: <20200415011319.25559-1-jitao.shi@mediatek.com>
+        Tue, 14 Apr 2020 21:15:12 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CF38C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 18:15:12 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id m19so1253067lfq.13
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 18:15:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pvbuSscSXBsGL/GmoZ2Ki3V2n2IzYZiY8+qGcDMzfRE=;
+        b=OAv1tYuOYW1pWzWjNqoVgXCzHoJ19qAn4sLhF0FL2MHW5t5O+p5PVM2/lrIDnET29J
+         BVqxgncza4Pc2CQi/JyDk/zwHCjeYzn9IwtV8jXQnE7y2JPDGjW/ZXk9W82DYaHt+ex5
+         FqIlpKRRfxCel0V469hcJFwVAi+/x9f9UVjFI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pvbuSscSXBsGL/GmoZ2Ki3V2n2IzYZiY8+qGcDMzfRE=;
+        b=Z05twHILne7MXBcJgCetXMxVWg+tf24y6yhPjFEp6zQJQ8c2KtceVfMDskYfyn/UQK
+         pBCSOJFafYa+oggvaqc0PwWn3Mb5C4E+j50Dht8HC386R6kYxuWWUxWP0HEggLlNYMDb
+         v518ZicAEa0AJ8LdqdPnuKIvkR2Y+rrjRXY+McV0rxWXpxNphG2q837QeL8YhxzN2UT2
+         K5xruTKgLgtEAkJS7jHdFnofWJDA/XcN2c3P0anPuFs+fGBHQyiE2LqjEk3Q6f68Flna
+         wLPLeXqn6jKs9hTwKT4Lh3+PqZLQINrZfarjzoOnIAS1QOt1TATi5efHfENMFgkkXPXd
+         ckBw==
+X-Gm-Message-State: AGi0PuZSy2VYpj9L5721d849QjIZJmOx6I/0uQAD0Sg7/Q2bwoi963Tn
+        QAfVQjNs7tu/irSOvXiwN8fU+0ofOZY=
+X-Google-Smtp-Source: APiQypIfuo6gziLXwqWIdP8BTcaHsByFsBiCF9e7/CLHTv/KUJzUzM0UBGR5Uz0udKihGWRnV7WjfQ==
+X-Received: by 2002:ac2:5684:: with SMTP id 4mr1428801lfr.88.1586913309773;
+        Tue, 14 Apr 2020 18:15:09 -0700 (PDT)
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
+        by smtp.gmail.com with ESMTPSA id w1sm8231456ljw.48.2020.04.14.18.15.08
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Apr 2020 18:15:08 -0700 (PDT)
+Received: by mail-lj1-f179.google.com with SMTP id l14so1864779ljj.5
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 18:15:08 -0700 (PDT)
+X-Received: by 2002:a05:651c:50e:: with SMTP id o14mr1624159ljp.241.1586913307698;
+ Tue, 14 Apr 2020 18:15:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: C3AD1FEB0857C1B01CAC2862F68CBFD9E7616DEFBCFC35987262C8A2BEE0528C2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20200413063317.7164-1-penguin-kernel@I-love.SAKURA.ne.jp>
+ <CAHk-=wgbMi2+VBN0SCEw9GeoiWgui034AOBwbt_dW9tdCa3Nig@mail.gmail.com>
+ <f2b9ef2a-8449-72fc-4f87-8bf65d713800@i-love.sakura.ne.jp> <6e3864f5-fdaf-874a-b326-1c79816d7141@i-love.sakura.ne.jp>
+In-Reply-To: <6e3864f5-fdaf-874a-b326-1c79816d7141@i-love.sakura.ne.jp>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 14 Apr 2020 18:14:51 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjLfHaF8F-L9axpYcNtECa=Rw_LWJ98GP6ByUB+O98tAQ@mail.gmail.com>
+Message-ID: <CAHk-=wjLfHaF8F-L9axpYcNtECa=Rw_LWJ98GP6ByUB+O98tAQ@mail.gmail.com>
+Subject: Re: [PATCH v3] Add kernel config option for tweaking kernel behavior.
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jiri Slaby <jslaby@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Q29uZmlnIGRwaSBwaW5zIG1vZGUgdG8gb3V0cHV0IGFuZCBwdWxsIGxvdyB3aGVuIGRwaSBpcyBk
-aXNhYmxlZC4NCkFvdmlkIGxlYWthZ2UgY3VycmVudCBmcm9tIHNvbWUgZHBpIHBpbnMgKEhzeW5j
-IFZzeW5jIERFIC4uLiApLg0KDQpSZXZpZXdlZC1ieTogQ2h1bi1LdWFuZyBIdSA8Y2h1bmt1YW5n
-Lmh1QGtlcm5lbC5vcmc+DQpTaWduZWQtb2ZmLWJ5OiBKaXRhbyBTaGkgPGppdGFvLnNoaUBtZWRp
-YXRlay5jb20+DQotLS0NCiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RwaS5jIHwgMzEg
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KIDEgZmlsZSBjaGFuZ2VkLCAzMSBpbnNl
-cnRpb25zKCspDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Rw
-aS5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcGkuYw0KaW5kZXggMDg3ZjVjZTcz
-MmUxLi4xZTAxMjU0Nzg4ZDkgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsv
-bXRrX2RwaS5jDQorKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RwaS5jDQpAQCAt
-MTAsNyArMTAsOSBAQA0KICNpbmNsdWRlIDxsaW51eC9rZXJuZWwuaD4NCiAjaW5jbHVkZSA8bGlu
-dXgvb2YuaD4NCiAjaW5jbHVkZSA8bGludXgvb2ZfZGV2aWNlLmg+DQorI2luY2x1ZGUgPGxpbnV4
-L29mX2dwaW8uaD4NCiAjaW5jbHVkZSA8bGludXgvb2ZfZ3JhcGguaD4NCisjaW5jbHVkZSA8bGlu
-dXgvcGluY3RybC9jb25zdW1lci5oPg0KICNpbmNsdWRlIDxsaW51eC9wbGF0Zm9ybV9kZXZpY2Uu
-aD4NCiAjaW5jbHVkZSA8bGludXgvdHlwZXMuaD4NCiANCkBAIC03NCw2ICs3Niw5IEBAIHN0cnVj
-dCBtdGtfZHBpIHsNCiAJZW51bSBtdGtfZHBpX291dF95Y19tYXAgeWNfbWFwOw0KIAllbnVtIG10
-a19kcGlfb3V0X2JpdF9udW0gYml0X251bTsNCiAJZW51bSBtdGtfZHBpX291dF9jaGFubmVsX3N3
-YXAgY2hhbm5lbF9zd2FwOw0KKwlzdHJ1Y3QgcGluY3RybCAqcGluY3RybDsNCisJc3RydWN0IHBp
-bmN0cmxfc3RhdGUgKnBpbnNfZ3BpbzsNCisJc3RydWN0IHBpbmN0cmxfc3RhdGUgKnBpbnNfZHBp
-Ow0KIAlpbnQgcmVmY291bnQ7DQogfTsNCiANCkBAIC0zNzksNiArMzg0LDkgQEAgc3RhdGljIHZv
-aWQgbXRrX2RwaV9wb3dlcl9vZmYoc3RydWN0IG10a19kcGkgKmRwaSkNCiAJaWYgKC0tZHBpLT5y
-ZWZjb3VudCAhPSAwKQ0KIAkJcmV0dXJuOw0KIA0KKwlpZiAoZHBpLT5waW5jdHJsICYmIGRwaS0+
-cGluc19ncGlvKQ0KKwkJcGluY3RybF9zZWxlY3Rfc3RhdGUoZHBpLT5waW5jdHJsLCBkcGktPnBp
-bnNfZ3Bpbyk7DQorDQogCW10a19kcGlfZGlzYWJsZShkcGkpOw0KIAljbGtfZGlzYWJsZV91bnBy
-ZXBhcmUoZHBpLT5waXhlbF9jbGspOw0KIAljbGtfZGlzYWJsZV91bnByZXBhcmUoZHBpLT5lbmdp
-bmVfY2xrKTsNCkBAIC00MDMsNiArNDExLDkgQEAgc3RhdGljIGludCBtdGtfZHBpX3Bvd2VyX29u
-KHN0cnVjdCBtdGtfZHBpICpkcGkpDQogCQlnb3RvIGVycl9waXhlbDsNCiAJfQ0KIA0KKwlpZiAo
-ZHBpLT5waW5jdHJsICYmIGRwaS0+cGluc19kcGkpDQorCQlwaW5jdHJsX3NlbGVjdF9zdGF0ZShk
-cGktPnBpbmN0cmwsIGRwaS0+cGluc19kcGkpOw0KKw0KIAltdGtfZHBpX2VuYWJsZShkcGkpOw0K
-IAlyZXR1cm4gMDsNCiANCkBAIC03MDUsNiArNzE2LDI2IEBAIHN0YXRpYyBpbnQgbXRrX2RwaV9w
-cm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KIAlkcGktPmRldiA9IGRldjsNCiAJ
-ZHBpLT5jb25mID0gKHN0cnVjdCBtdGtfZHBpX2NvbmYgKilvZl9kZXZpY2VfZ2V0X21hdGNoX2Rh
-dGEoZGV2KTsNCiANCisJZHBpLT5waW5jdHJsID0gZGV2bV9waW5jdHJsX2dldCgmcGRldi0+ZGV2
-KTsNCisJaWYgKElTX0VSUihkcGktPnBpbmN0cmwpKSB7DQorCQlkcGktPnBpbmN0cmwgPSBOVUxM
-Ow0KKwkJZGV2X2RiZygmcGRldi0+ZGV2LCAiQ2Fubm90IGZpbmQgcGluY3RybCFcbiIpOw0KKwl9
-DQorCWlmIChkcGktPnBpbmN0cmwpIHsNCisJCWRwaS0+cGluc19ncGlvID0gcGluY3RybF9sb29r
-dXBfc3RhdGUoZHBpLT5waW5jdHJsLCAic2xlZXAiKTsNCisJCWlmIChJU19FUlIoZHBpLT5waW5z
-X2dwaW8pKSB7DQorCQkJZHBpLT5waW5zX2dwaW8gPSBOVUxMOw0KKwkJCWRldl9kYmcoJnBkZXYt
-PmRldiwgIkNhbm5vdCBmaW5kIHBpbmN0cmwgaWRsZSFcbiIpOw0KKwkJfQ0KKwkJaWYgKGRwaS0+
-cGluc19ncGlvKQ0KKwkJCXBpbmN0cmxfc2VsZWN0X3N0YXRlKGRwaS0+cGluY3RybCwgZHBpLT5w
-aW5zX2dwaW8pOw0KKw0KKwkJZHBpLT5waW5zX2RwaSA9IHBpbmN0cmxfbG9va3VwX3N0YXRlKGRw
-aS0+cGluY3RybCwgImRlZmF1bHQiKTsNCisJCWlmIChJU19FUlIoZHBpLT5waW5zX2RwaSkpIHsN
-CisJCQlkcGktPnBpbnNfZHBpID0gTlVMTDsNCisJCQlkZXZfZGJnKCZwZGV2LT5kZXYsICJDYW5u
-b3QgZmluZCBwaW5jdHJsIGFjdGl2ZSFcbiIpOw0KKwkJfQ0KKwl9DQogCW1lbSA9IHBsYXRmb3Jt
-X2dldF9yZXNvdXJjZShwZGV2LCBJT1JFU09VUkNFX01FTSwgMCk7DQogCWRwaS0+cmVncyA9IGRl
-dm1faW9yZW1hcF9yZXNvdXJjZShkZXYsIG1lbSk7DQogCWlmIChJU19FUlIoZHBpLT5yZWdzKSkg
-ew0KLS0gDQoyLjEyLjUNCg==
+On Tue, Apr 14, 2020 at 5:06 PM Tetsuo Handa
+<penguin-kernel@i-love.sakura.ne.jp> wrote:
+>
+> I can't judge whether this WARN_ON() makes sense outside of syzkaller.
+> But I'd like to suppress this WARN_ON() under testing by syzkaller so that
+> syzkaller can spend resource for seeking for different bugs (assuming that
+> suppressing this WARN_ON() is harmless).
 
+That's crazy talk.
+
+Either that WARN_ON() is valid, or it's not. It doesn't matter if it's
+syzcaller, and we would never change the behavior of it depending on a
+flag - compile-time or dynamic.
+
+There's no way we'd accept that as some "#ifndef CONFIG_FUZZER" thing either.
+
+If that WARN_ON() is a problem, then the people behind it should be
+appraised of it, and it should probably be removed. I'm assuming it
+was some kind of "I don't think this can happen, so if it does, I want
+to see how it happened" WARN_ON.
+
+                Linus
