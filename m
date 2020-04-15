@@ -2,53 +2,54 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A00A9C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:51:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C4DFC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:52:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 721D221655
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:51:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27B29214D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:52:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586951512;
-	bh=mhBjTDI4vCH59s+ziiF3tVpz1mt1i8VO8riopu5unnc=;
+	s=default; t=1586951521;
+	bh=t1DBQxiAr0GxJmvl5zDymw1nsafoLVXr/o62vIsXjDA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R97VagKfMVNbprT6QzSAulE5LSzghc/ljDc8eNfbu1dAv0baoa0CUiIL5ax65I3dG
-	 2FxbjRuz4YQIeiuOnfHsRVbwRZmT3q5CQgU24+KnLLImm5W7qJALo3/CaZ0dRd6vvy
-	 PcSiuf0zBqTsCvcMk/QzXLvuT3bbr7XIuqtD6AnA=
+	b=KIWJsT/gxfvRH6qtnaCxFP9e6lI0L/68oq9lac82g21IFkX9RbflhG6cAx6/At6SR
+	 4V5iFZTQnzBg04E5Ncd8HPkQXIM4VuZSzKBB75OS52eWb2tds3ePVqutV7DslOQuWY
+	 WK0u0ou6nP9uNdlF2uRvdQlUm224O8Aaa2I8eCHQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2897721AbgDOLvu (ORCPT
+        id S2897728AbgDOLv6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:51:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36578 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 07:51:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409053AbgDOLoL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:44:11 -0400
+        id S2409064AbgDOLoN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:44:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E904520768;
-        Wed, 15 Apr 2020 11:44:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7880720732;
+        Wed, 15 Apr 2020 11:44:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951049;
-        bh=mhBjTDI4vCH59s+ziiF3tVpz1mt1i8VO8riopu5unnc=;
+        s=default; t=1586951053;
+        bh=t1DBQxiAr0GxJmvl5zDymw1nsafoLVXr/o62vIsXjDA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pNpZ7+pFoSVJ4rIW6nTCtLo4V+9jZu7jKPhDddzST5QyaCgGzpQUkH+ONjgOPLYyK
-         eEUDxrJsMMKWVGPvtrr8RZa6DujxHvSr9TxhsEb2JgzoF6tNZ1abgosGTuxmmLPLWw
-         iZuumKuX1R56ofog3jXm/rq5JKoHZEhkwwnye14o=
+        b=d0SuoBGy8YsDZyIqItRNbeLyoQUNAc26iEwHAFt40ThYa/JB5C2pSycnfC4mG6vEp
+         A2h+J7ZEkY8o3ECtM+7Grel3FpqzMqg6NpHkT/s1FTkZMBbuyFdvqP6sz2RIOKt8vW
+         w5RcqimOj+IvXBqtlKMx13cOKsfajzKxkjXybM/I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bob Moore <robert.moore@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org,
-        devel@acpica.org
-Subject: [PATCH AUTOSEL 5.5 084/106] ACPICA: Fixes for acpiExec namespace init file
-Date:   Wed, 15 Apr 2020 07:42:04 -0400
-Message-Id: <20200415114226.13103-84-sashal@kernel.org>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.5 087/106] drm/vc4: Fix HDMI mode validation
+Date:   Wed, 15 Apr 2020 07:42:07 -0400
+Message-Id: <20200415114226.13103-87-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
 References: <20200415114226.13103-1-sashal@kernel.org>
@@ -61,297 +62,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bob Moore <robert.moore@intel.com>
+From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
-[ Upstream commit 9a1ae80412dcaa67a29eecf19de44f32b5f1c357 ]
+[ Upstream commit b1e7396a1d0e6af6806337fdaaa44098d6b3343c ]
 
-This is the result of squashing the following ACPICA commit ID's:
-6803997e5b4f3635cea6610b51ff69e29d251de3
-f31cdf8bfda22fe265c1a176d0e33d311c82a7f7
+Current mode validation impedes setting up some video modes which should
+be supported otherwise. Namely 1920x1200@60Hz.
 
-This change fixes several problems with the support for the
-acpi_exec namespace init file (-fi option). Specifically, it
-fixes AE_ALREADY_EXISTS errors, as well as various seg faults.
+Fix this by lowering the minimum HDMI state machine clock to pixel clock
+ratio allowed.
 
-Link: https://github.com/acpica/acpica/commit/f31cdf8b
-Link: https://github.com/acpica/acpica/commit/6803997e
-Signed-off-by: Bob Moore <robert.moore@intel.com>
-Signed-off-by: Erik Kaneda <erik.kaneda@intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fixes: 32e823c63e90 ("drm/vc4: Reject HDMI modes with too high of clocks.")
+Reported-by: Stefan Wahren <stefan.wahren@i2se.com>
+Suggested-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200326122001.22215-1-nsaenzjulienne@suse.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/acpica/acnamesp.h |  2 ++
- drivers/acpi/acpica/dbinput.c  | 16 +++++++---------
- drivers/acpi/acpica/dswexec.c  | 33 ++++++++++++++++++++++++++++++++
- drivers/acpi/acpica/dswload.c  |  2 --
- drivers/acpi/acpica/dswload2.c | 35 ++++++++++++++++++++++++++++++++++
- drivers/acpi/acpica/nsnames.c  |  6 +-----
- drivers/acpi/acpica/utdelete.c |  9 +++++----
- 7 files changed, 83 insertions(+), 20 deletions(-)
+ drivers/gpu/drm/vc4/vc4_hdmi.c | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/acpi/acpica/acnamesp.h b/drivers/acpi/acpica/acnamesp.h
-index 7da1864798a0e..ecaa28733dc61 100644
---- a/drivers/acpi/acpica/acnamesp.h
-+++ b/drivers/acpi/acpica/acnamesp.h
-@@ -256,6 +256,8 @@ u32
- acpi_ns_build_normalized_path(struct acpi_namespace_node *node,
- 			      char *full_path, u32 path_size, u8 no_trailing);
- 
-+void acpi_ns_normalize_pathname(char *original_path);
-+
- char *acpi_ns_get_normalized_pathname(struct acpi_namespace_node *node,
- 				      u8 no_trailing);
- 
-diff --git a/drivers/acpi/acpica/dbinput.c b/drivers/acpi/acpica/dbinput.c
-index e1632b340182b..c0b8342513fa2 100644
---- a/drivers/acpi/acpica/dbinput.c
-+++ b/drivers/acpi/acpica/dbinput.c
-@@ -468,16 +468,14 @@ char *acpi_db_get_next_token(char *string,
- 		return (NULL);
- 	}
- 
--	/* Remove any spaces at the beginning */
-+	/* Remove any spaces at the beginning, ignore blank lines */
- 
--	if (*string == ' ') {
--		while (*string && (*string == ' ')) {
--			string++;
--		}
-+	while (*string && isspace(*string)) {
-+		string++;
-+	}
- 
--		if (!(*string)) {
--			return (NULL);
--		}
-+	if (!(*string)) {
-+		return (NULL);
- 	}
- 
- 	switch (*string) {
-@@ -570,7 +568,7 @@ char *acpi_db_get_next_token(char *string,
- 
- 		/* Find end of token */
- 
--		while (*string && (*string != ' ')) {
-+		while (*string && !isspace(*string)) {
- 			string++;
- 		}
- 		break;
-diff --git a/drivers/acpi/acpica/dswexec.c b/drivers/acpi/acpica/dswexec.c
-index d75aae3045958..a68237b97c4c8 100644
---- a/drivers/acpi/acpica/dswexec.c
-+++ b/drivers/acpi/acpica/dswexec.c
-@@ -16,6 +16,9 @@
- #include "acinterp.h"
- #include "acnamesp.h"
- #include "acdebug.h"
-+#ifdef ACPI_EXEC_APP
-+#include "aecommon.h"
-+#endif
- 
- #define _COMPONENT          ACPI_DISPATCHER
- ACPI_MODULE_NAME("dswexec")
-@@ -329,6 +332,10 @@ acpi_status acpi_ds_exec_end_op(struct acpi_walk_state *walk_state)
- 	u32 op_class;
- 	union acpi_parse_object *next_op;
- 	union acpi_parse_object *first_arg;
-+#ifdef ACPI_EXEC_APP
-+	char *namepath;
-+	union acpi_operand_object *obj_desc;
-+#endif
- 
- 	ACPI_FUNCTION_TRACE_PTR(ds_exec_end_op, walk_state);
- 
-@@ -537,6 +544,32 @@ acpi_status acpi_ds_exec_end_op(struct acpi_walk_state *walk_state)
- 
- 			status =
- 			    acpi_ds_eval_buffer_field_operands(walk_state, op);
-+			if (ACPI_FAILURE(status)) {
-+				break;
-+			}
-+#ifdef ACPI_EXEC_APP
-+			/*
-+			 * acpi_exec support for namespace initialization file (initialize
-+			 * buffer_fields in this code.)
-+			 */
-+			namepath =
-+			    acpi_ns_get_external_pathname(op->common.node);
-+			status = ae_lookup_init_file_entry(namepath, &obj_desc);
-+			if (ACPI_SUCCESS(status)) {
-+				status =
-+				    acpi_ex_write_data_to_field(obj_desc,
-+								op->common.
-+								node->object,
-+								NULL);
-+				if ACPI_FAILURE
-+					(status) {
-+					ACPI_EXCEPTION((AE_INFO, status,
-+							"While writing to buffer field"));
-+					}
-+			}
-+			ACPI_FREE(namepath);
-+			status = AE_OK;
-+#endif
- 			break;
- 
- 		case AML_TYPE_CREATE_OBJECT:
-diff --git a/drivers/acpi/acpica/dswload.c b/drivers/acpi/acpica/dswload.c
-index 4bcf15bf03ded..6cf93fae4d07f 100644
---- a/drivers/acpi/acpica/dswload.c
-+++ b/drivers/acpi/acpica/dswload.c
-@@ -14,7 +14,6 @@
- #include "acdispat.h"
- #include "acinterp.h"
- #include "acnamesp.h"
--
- #ifdef ACPI_ASL_COMPILER
- #include "acdisasm.h"
- #endif
-@@ -399,7 +398,6 @@ acpi_status acpi_ds_load1_end_op(struct acpi_walk_state *walk_state)
- 	union acpi_parse_object *op;
- 	acpi_object_type object_type;
- 	acpi_status status = AE_OK;
--
- #ifdef ACPI_ASL_COMPILER
- 	u8 param_count;
- #endif
-diff --git a/drivers/acpi/acpica/dswload2.c b/drivers/acpi/acpica/dswload2.c
-index 935a8e2623e4b..15d92bf15f0b6 100644
---- a/drivers/acpi/acpica/dswload2.c
-+++ b/drivers/acpi/acpica/dswload2.c
-@@ -15,6 +15,9 @@
- #include "acinterp.h"
- #include "acnamesp.h"
- #include "acevents.h"
-+#ifdef ACPI_EXEC_APP
-+#include "aecommon.h"
-+#endif
- 
- #define _COMPONENT          ACPI_DISPATCHER
- ACPI_MODULE_NAME("dswload2")
-@@ -373,6 +376,10 @@ acpi_status acpi_ds_load2_end_op(struct acpi_walk_state *walk_state)
- 	struct acpi_namespace_node *new_node;
- 	u32 i;
- 	u8 region_space;
-+#ifdef ACPI_EXEC_APP
-+	union acpi_operand_object *obj_desc;
-+	char *namepath;
-+#endif
- 
- 	ACPI_FUNCTION_TRACE(ds_load2_end_op);
- 
-@@ -466,6 +473,11 @@ acpi_status acpi_ds_load2_end_op(struct acpi_walk_state *walk_state)
- 		 * be evaluated later during the execution phase
- 		 */
- 		status = acpi_ds_create_buffer_field(op, walk_state);
-+		if (ACPI_FAILURE(status)) {
-+			ACPI_EXCEPTION((AE_INFO, status,
-+					"CreateBufferField failure"));
-+			goto cleanup;
-+			}
- 		break;
- 
- 	case AML_TYPE_NAMED_FIELD:
-@@ -604,6 +616,29 @@ acpi_status acpi_ds_load2_end_op(struct acpi_walk_state *walk_state)
- 		case AML_NAME_OP:
- 
- 			status = acpi_ds_create_node(walk_state, node, op);
-+			if (ACPI_FAILURE(status)) {
-+				goto cleanup;
-+			}
-+#ifdef ACPI_EXEC_APP
-+			/*
-+			 * acpi_exec support for namespace initialization file (initialize
-+			 * Name opcodes in this code.)
-+			 */
-+			namepath = acpi_ns_get_external_pathname(node);
-+			status = ae_lookup_init_file_entry(namepath, &obj_desc);
-+			if (ACPI_SUCCESS(status)) {
-+
-+				/* Detach any existing object, attach new object */
-+
-+				if (node->object) {
-+					acpi_ns_detach_object(node);
-+				}
-+				acpi_ns_attach_object(node, obj_desc,
-+						      obj_desc->common.type);
-+			}
-+			ACPI_FREE(namepath);
-+			status = AE_OK;
-+#endif
- 			break;
- 
- 		case AML_METHOD_OP:
-diff --git a/drivers/acpi/acpica/nsnames.c b/drivers/acpi/acpica/nsnames.c
-index 370bbc8677453..c717fff7d9b57 100644
---- a/drivers/acpi/acpica/nsnames.c
-+++ b/drivers/acpi/acpica/nsnames.c
-@@ -13,9 +13,6 @@
- #define _COMPONENT          ACPI_NAMESPACE
- ACPI_MODULE_NAME("nsnames")
- 
--/* Local Prototypes */
--static void acpi_ns_normalize_pathname(char *original_path);
--
- /*******************************************************************************
-  *
-  * FUNCTION:    acpi_ns_get_external_pathname
-@@ -30,7 +27,6 @@ static void acpi_ns_normalize_pathname(char *original_path);
-  *              for error and debug statements.
-  *
-  ******************************************************************************/
--
- char *acpi_ns_get_external_pathname(struct acpi_namespace_node *node)
+diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
+index 1c62c6c9244b7..568953898ce6b 100644
+--- a/drivers/gpu/drm/vc4/vc4_hdmi.c
++++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
+@@ -678,11 +678,23 @@ static enum drm_mode_status
+ vc4_hdmi_encoder_mode_valid(struct drm_encoder *crtc,
+ 			    const struct drm_display_mode *mode)
  {
- 	char *name_buffer;
-@@ -411,7 +407,7 @@ char *acpi_ns_build_prefixed_pathname(union acpi_generic_state *prefix_scope,
-  *
-  ******************************************************************************/
+-	/* HSM clock must be 108% of the pixel clock.  Additionally,
+-	 * the AXI clock needs to be at least 25% of pixel clock, but
+-	 * HSM ends up being the limiting factor.
++	/*
++	 * As stated in RPi's vc4 firmware "HDMI state machine (HSM) clock must
++	 * be faster than pixel clock, infinitesimally faster, tested in
++	 * simulation. Otherwise, exact value is unimportant for HDMI
++	 * operation." This conflicts with bcm2835's vc4 documentation, which
++	 * states HSM's clock has to be at least 108% of the pixel clock.
++	 *
++	 * Real life tests reveal that vc4's firmware statement holds up, and
++	 * users are able to use pixel clocks closer to HSM's, namely for
++	 * 1920x1200@60Hz. So it was decided to have leave a 1% margin between
++	 * both clocks. Which, for RPi0-3 implies a maximum pixel clock of
++	 * 162MHz.
++	 *
++	 * Additionally, the AXI clock needs to be at least 25% of
++	 * pixel clock, but HSM ends up being the limiting factor.
+ 	 */
+-	if (mode->clock > HSM_CLOCK_FREQ / (1000 * 108 / 100))
++	if (mode->clock > HSM_CLOCK_FREQ / (1000 * 101 / 100))
+ 		return MODE_CLOCK_HIGH;
  
--static void acpi_ns_normalize_pathname(char *original_path)
-+void acpi_ns_normalize_pathname(char *original_path)
- {
- 	char *input_path = original_path;
- 	char *new_path_buffer;
-diff --git a/drivers/acpi/acpica/utdelete.c b/drivers/acpi/acpica/utdelete.c
-index eee263cb7beb0..c365faf4e6cd4 100644
---- a/drivers/acpi/acpica/utdelete.c
-+++ b/drivers/acpi/acpica/utdelete.c
-@@ -452,13 +452,13 @@ acpi_ut_update_ref_count(union acpi_operand_object *object, u32 action)
-  *
-  * FUNCTION:    acpi_ut_update_object_reference
-  *
-- * PARAMETERS:  object              - Increment ref count for this object
-- *                                    and all sub-objects
-+ * PARAMETERS:  object              - Increment or decrement the ref count for
-+ *                                    this object and all sub-objects
-  *              action              - Either REF_INCREMENT or REF_DECREMENT
-  *
-  * RETURN:      Status
-  *
-- * DESCRIPTION: Increment the object reference count
-+ * DESCRIPTION: Increment or decrement the object reference count
-  *
-  * Object references are incremented when:
-  * 1) An object is attached to a Node (namespace object)
-@@ -492,7 +492,7 @@ acpi_ut_update_object_reference(union acpi_operand_object *object, u16 action)
- 		}
- 
- 		/*
--		 * All sub-objects must have their reference count incremented
-+		 * All sub-objects must have their reference count updated
- 		 * also. Different object types have different subobjects.
- 		 */
- 		switch (object->common.type) {
-@@ -559,6 +559,7 @@ acpi_ut_update_object_reference(union acpi_operand_object *object, u16 action)
- 					break;
- 				}
- 			}
-+
- 			next_object = NULL;
- 			break;
- 
+ 	return MODE_OK;
 -- 
 2.20.1
 
