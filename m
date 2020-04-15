@@ -2,147 +2,186 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A2A4C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:12:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD87C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:12:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73BF720768
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:12:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jRHh+oFA"
+	by mail.kernel.org (Postfix) with ESMTP id 0634620775
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:12:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2896313AbgDOKMf (ORCPT
+        id S2896347AbgDOKMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 06:12:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55224 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2896235AbgDOKL3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 06:12:49 -0400
+Received: from mga14.intel.com ([192.55.52.115]:60792 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2896290AbgDOKL3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Apr 2020 06:11:29 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB029C061A0F
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 03:11:28 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id f13so18398617wrm.13
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 03:11:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=30de/AlaqjlX2SQ6sRQq6eEEGq+Ce5SXtlCKnRfiafQ=;
-        b=jRHh+oFAJV8Tgx5k7HU8HwVLEOIdROElftVnkovMBaV0dYnaGaI26lfUn/Rltxvqw1
-         IrTzQFim4nimJ6tDEDZFwMfbSKq0gIawHT6Z6IvUOEYIaj7Ay81Vnz4gwWNIpTPjOtPk
-         czVljyjYsxvuFUPAWIuDeVPGa2fIFL+SRSUw2CtkR6aGqnoBU5+Qsx1LEJgmZvJOQ70E
-         zB/NPJpD6Ck87Rr2cygLCbpbiM/lRvmB7n5OYtiaKQt/ASJZUrdqqC8Asb6E+y/jCICV
-         /JkQlg4fC4uF+OoaWM1Lya1oXpqG867D9dg2LD0bcXQyKXy02xyt0S8eL7whlZ3rc1Mr
-         KvZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=30de/AlaqjlX2SQ6sRQq6eEEGq+Ce5SXtlCKnRfiafQ=;
-        b=iBd0azRfD63D7g4Q69uiO4yMHbaWwijr1UGpdN0JpucH6empii5+Z7f56C1Xcm2sRN
-         6yRpORMJOccIfbpHo38yYkmMSBAdG0OTLYWIFtb2RJ2jq1Y19Pk4C+5kdZCTI6craFdR
-         1/4wpg/R7spvdzyTK1fzk1LzgQSY4v2KfHjf2Lf9NG9+KOy5rp4AVNK37veBRvW95uLl
-         qkzpVKMIa/ZbHWVz+Sz0+N/TTCdUasLmrVFKK7KNJh5DGIpunTpD2ER/odr7/4hKAaF1
-         hsz1DoDUreM4A0yo1H/yK4uC07y9yh+XbovAFAH8UMeLtWmdzjIxuflPYmFsYL6jvDpZ
-         WPoA==
-X-Gm-Message-State: AGi0PuaG7iBEHg+ILRy3Ah2tuaqXvwT6v739mFrC1e5j69JZiHue1ok2
-        rOHQXT/8X4pLTRyZy/3H4vpS/g==
-X-Google-Smtp-Source: APiQypITjl8sl8rPg8i/DwZP4DdcaJAmWeApCTCpntNLn88ytBpJQ3R0bUll0FQH9UWGZ2HxNOUElA==
-X-Received: by 2002:adf:9d4a:: with SMTP id o10mr26328854wre.99.1586945487115;
-        Wed, 15 Apr 2020 03:11:27 -0700 (PDT)
-Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
-        by smtp.gmail.com with ESMTPSA id x132sm17945135wmg.33.2020.04.15.03.11.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2020 03:11:26 -0700 (PDT)
-Date:   Wed, 15 Apr 2020 11:11:22 +0100
-From:   Quentin Perret <qperret@google.com>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default
- boost value
-Message-ID: <20200415101122.GA14447@google.com>
-References: <20200403123020.13897-1-qais.yousef@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200403123020.13897-1-qais.yousef@arm.com>
+IronPort-SDR: m3Ys2O/1zjKhKb/M7NElHH/8Ut6y45tvJ5TVx0Oi4rWzbDFFzNtEopZvaDlqH2kuE9i8rnWrPD
+ B3F/+0WkKIzA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 03:11:29 -0700
+IronPort-SDR: HxTXjTRRVGSfVXDFNkYDob1a5Q5Ddw40F4WfgZ9gzRZKCJZFc+QycE4xjsI87HowCEmMKls8jo
+ ZH7ajW/6olaA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,386,1580803200"; 
+   d="scan'208";a="253483267"
+Received: from yilunxu-optiplex-7050.sh.intel.com ([10.239.159.141])
+  by orsmga003.jf.intel.com with ESMTP; 15 Apr 2020 03:11:27 -0700
+From:   Xu Yilun <yilun.xu@intel.com>
+To:     mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     trix@redhat.com, bhu@redhat.com, Xu Yilun <yilun.xu@intel.com>,
+        Luwei Kang <luwei.kang@intel.com>, Wu Hao <hao.wu@intel.com>
+Subject: [PATCH v4 5/7] fpga: dfl: fme: add interrupt support for global error reporting
+Date:   Wed, 15 Apr 2020 18:07:33 +0800
+Message-Id: <1586945255-30823-6-git-send-email-yilun.xu@intel.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1586945255-30823-1-git-send-email-yilun.xu@intel.com>
+References: <1586945255-30823-1-git-send-email-yilun.xu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Qais,
+Error reporting interrupt is very useful to notify users that some
+errors are detected by the hardware. Once users are notified, they
+could query hardware logged error states, no need to continuously
+poll on these states.
 
-On Friday 03 Apr 2020 at 13:30:19 (+0100), Qais Yousef wrote:
-<snip>
-> +	/*
-> +	 * The new value will be applied to all RT tasks the next time they
-> +	 * wakeup, assuming the task is using the system default and not a user
-> +	 * specified value. In the latter we shall leave the value as the user
-> +	 * requested.
-> +	 */
->  	if (sysctl_sched_uclamp_util_min > sysctl_sched_uclamp_util_max ||
->  	    sysctl_sched_uclamp_util_max > SCHED_CAPACITY_SCALE) {
->  		result = -EINVAL;
->  		goto undo;
->  	}
->  
-> +	if (sysctl_sched_rt_default_uclamp_util_min > SCHED_CAPACITY_SCALE) {
-> +		result = -EINVAL;
-> +		goto undo;
-> +	}
+This patch adds interrupt support for fme global error reporting sub
+feature. It follows the common DFL interrupt notification and handling
+mechanism. And it implements two ioctls below for user to query
+number of irqs supported, and set/unset interrupt triggers.
 
-Hmm, checking:
+ Ioctls:
+ * DFL_FPGA_FME_ERR_GET_IRQ_NUM
+   get the number of irqs, which is used to determine whether/how many
+   interrupts fme error reporting feature supports.
 
-	if (sysctl_sched_rt_default_uclamp_util_min > sysctl_sched_uclamp_util_min)
+ * DFL_FPGA_FME_ERR_SET_IRQ
+   set/unset given eventfds as fme error reporting interrupt triggers.
 
-would probably make sense too, but then that would make writing in
-sysctl_sched_uclamp_util_min cumbersome for sysadmins as they'd need to
-lower the rt default first. Is that the reason for checking against
-SCHED_CAPACITY_SCALE? That might deserve a comment or something.
+Signed-off-by: Luwei Kang <luwei.kang@intel.com>
+Signed-off-by: Wu Hao <hao.wu@intel.com>
+Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+----
+v2: use DFL_FPGA_FME_ERR_GET_IRQ_NUM instead of
+    DFL_FPGA_FME_ERR_GET_INFO
+    Delete flags field for DFL_FPGA_FME_ERR_SET_IRQ
+v3: put_user() instead of copy_to_user()
+    improves comments
+v4: use common functions to handle irq ioctls
+---
+ drivers/fpga/dfl-fme-error.c  | 23 +++++++++++++++++++++++
+ drivers/fpga/dfl-fme-main.c   |  6 ++++++
+ include/uapi/linux/fpga-dfl.h | 23 +++++++++++++++++++++++
+ 3 files changed, 52 insertions(+)
 
-<snip>
-> @@ -1241,9 +1293,13 @@ static void uclamp_fork(struct task_struct *p)
->  	for_each_clamp_id(clamp_id) {
->  		unsigned int clamp_value = uclamp_none(clamp_id);
->  
-> -		/* By default, RT tasks always get 100% boost */
-> +		/*
-> +		 * By default, RT tasks always get 100% boost, which the admins
-> +		 * are allowed to change via
-> +		 * sysctl_sched_rt_default_uclamp_util_min knob.
-> +		 */
->  		if (unlikely(rt_task(p) && clamp_id == UCLAMP_MIN))
-> -			clamp_value = uclamp_none(UCLAMP_MAX);
-> +			clamp_value = sysctl_sched_rt_default_uclamp_util_min;
->  
->  		uclamp_se_set(&p->uclamp_req[clamp_id], clamp_value, false);
->  	}
+diff --git a/drivers/fpga/dfl-fme-error.c b/drivers/fpga/dfl-fme-error.c
+index f897d41..a4cbf8c 100644
+--- a/drivers/fpga/dfl-fme-error.c
++++ b/drivers/fpga/dfl-fme-error.c
+@@ -16,6 +16,7 @@
+  */
+ 
+ #include <linux/uaccess.h>
++#include <linux/fpga-dfl.h>
+ 
+ #include "dfl.h"
+ #include "dfl-fme.h"
+@@ -348,6 +349,27 @@ static void fme_global_err_uinit(struct platform_device *pdev,
+ 	fme_err_mask(&pdev->dev, true);
+ }
+ 
++static long
++fme_global_error_ioctl(struct platform_device *pdev,
++		       struct dfl_feature *feature,
++		       unsigned int cmd, unsigned long arg)
++{
++	long ret = -ENODEV;
++
++	switch (cmd) {
++	case DFL_FPGA_FME_ERR_GET_IRQ_NUM:
++		ret = dfl_feature_ioctl_get_num_irqs(pdev, feature, arg);
++		break;
++	case DFL_FPGA_FME_ERR_SET_IRQ:
++		ret = dfl_feature_ioctl_set_irq(pdev, feature, arg);
++		break;
++	default:
++		dev_dbg(&pdev->dev, "%x cmd not handled", cmd);
++	}
++
++	return ret;
++}
++
+ const struct dfl_feature_id fme_global_err_id_table[] = {
+ 	{.id = FME_FEATURE_ID_GLOBAL_ERR,},
+ 	{0,}
+@@ -356,4 +378,5 @@ const struct dfl_feature_id fme_global_err_id_table[] = {
+ const struct dfl_feature_ops fme_global_err_ops = {
+ 	.init = fme_global_err_init,
+ 	.uinit = fme_global_err_uinit,
++	.ioctl = fme_global_error_ioctl,
+ };
+diff --git a/drivers/fpga/dfl-fme-main.c b/drivers/fpga/dfl-fme-main.c
+index 56d720c..ab3722d 100644
+--- a/drivers/fpga/dfl-fme-main.c
++++ b/drivers/fpga/dfl-fme-main.c
+@@ -616,11 +616,17 @@ static int fme_release(struct inode *inode, struct file *filp)
+ {
+ 	struct dfl_feature_platform_data *pdata = filp->private_data;
+ 	struct platform_device *pdev = pdata->dev;
++	struct dfl_feature *feature;
+ 
+ 	dev_dbg(&pdev->dev, "Device File Release\n");
+ 
+ 	mutex_lock(&pdata->lock);
+ 	dfl_feature_dev_use_end(pdata);
++
++	if (!dfl_feature_dev_use_count(pdata))
++		dfl_fpga_dev_for_each_feature(pdata, feature)
++			dfl_fpga_set_irq_triggers(feature, 0,
++						  feature->nr_irqs, NULL);
+ 	mutex_unlock(&pdata->lock);
+ 
+ 	return 0;
+diff --git a/include/uapi/linux/fpga-dfl.h b/include/uapi/linux/fpga-dfl.h
+index fbe1e99..9e12fff 100644
+--- a/include/uapi/linux/fpga-dfl.h
++++ b/include/uapi/linux/fpga-dfl.h
+@@ -230,4 +230,27 @@ struct dfl_fpga_fme_port_pr {
+  */
+ #define DFL_FPGA_FME_PORT_ASSIGN     _IOW(DFL_FPGA_MAGIC, DFL_FME_BASE + 2, int)
+ 
++/**
++ * DFL_FPGA_FME_ERR_GET_IRQ_NUM - _IOR(DFL_FPGA_MAGIC, DFL_FME_BASE + 3,
++ *							__u32 num_irqs)
++ *
++ * Get the number of irqs supported by the fpga fme error reporting private
++ * feature. Currently hardware supports up to 1 irq.
++ * Return: 0 on success, -errno on failure.
++ */
++#define DFL_FPGA_FME_ERR_GET_IRQ_NUM	_IOR(DFL_FPGA_MAGIC,	\
++					     DFL_FME_BASE + 3, __u32)
++
++/**
++ * DFL_FPGA_FME_ERR_SET_IRQ - _IOW(DFL_FPGA_MAGIC, DFL_FME_BASE + 4,
++ *						struct dfl_fpga_irq_set)
++ *
++ * Set fpga fme error reporting interrupt trigger if evtfds[n] is valid.
++ * Unset related interrupt trigger if evtfds[n] is a negative value.
++ * Return: 0 on success, -errno on failure.
++ */
++#define DFL_FPGA_FME_ERR_SET_IRQ	_IOW(DFL_FPGA_MAGIC,	\
++					     DFL_FME_BASE + 4,	\
++					     struct dfl_fpga_irq_set)
++
+ #endif /* _UAPI_LINUX_FPGA_DFL_H */
+-- 
+2.7.4
 
-And that, as per 20200414161320.251897-1-qperret@google.com, should not
-be there :)
-
-Otherwise the patch pretty looks good to me!
-
-Thanks,
-Quentin
