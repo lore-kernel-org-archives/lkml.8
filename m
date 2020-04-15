@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89249C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E18ACC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:17:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D6EA2074F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:17:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B093120575
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:17:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586956665;
-	bh=UCBTEmjPwfYxedLpiloHCMhgXUjd7KM5HX10MVfS7vk=;
+	s=default; t=1586956673;
+	bh=vWk7gWqHU/rr1AfSECvbX+1y/08BdStuBe2bUqRvfl4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wzlHFBG0FfpubvxJx+geJgsf8BppZVt0TP5aPtHP8qR5rmI85dsoSbun9Za786oM0
-	 WhVcAJMc/rUjn5Zv2sHnlPkV0S24/mc7ScFGjF+B9uJpu125aQNMPpWgPSb78plcLl
-	 qITf/FsxSr9GfQz+rfZVX8fCYlNETdO5E++UCW70=
+	b=LzDBCvglNAqxcPwLI9wZsDkBtE7xqAqYLZXKvSzRLp/cP28ERgwhY3E8tPjPZaUcj
+	 6y2OkR/dxdgntMu7oPtsEyAhXdPQFbPtKhG9Sl6yAX4ta4o15WPBpDX0sI9v282a/w
+	 jOCdBPFXomS9c8I80ks0WIVPjuMDP68P1qHjixMY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505242AbgDONRm (ORCPT
+        id S2506272AbgDONRv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:17:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54384 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 09:17:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897027AbgDOLfK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:35:10 -0400
+        id S2897024AbgDOLfI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:35:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B71E3214D8;
-        Wed, 15 Apr 2020 11:35:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97C6B2078A;
+        Wed, 15 Apr 2020 11:35:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950510;
-        bh=UCBTEmjPwfYxedLpiloHCMhgXUjd7KM5HX10MVfS7vk=;
+        s=default; t=1586950508;
+        bh=vWk7gWqHU/rr1AfSECvbX+1y/08BdStuBe2bUqRvfl4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cg6v5sLZIM6nlpkjFylP30jN9FKAqXxumwJgiEdTO3NhlRIH7dLbdqf4fDPU63gTM
-         Wy7ULLdDfy/GHyr82AQFWjLTfgtJB+7gtboeiHZvAgEKbmOUi/to/7H8kfm6crVyiu
-         5dgWscbXERpWP4mugubF34Qvi47reRKtf+PKXt5w=
+        b=sX0UMu/D+IbuSSaW0FqEWvDktfXuEuQAWyqvxQRCklUDYo2kqr5l+WebxTBRUzWlY
+         GzJ1AnjgGl9I28FJuK3Dwug9xKQb18ZxWDkO5MTBcNkDyqBqOU9E3QqB1TkOTBsCX8
+         evsbNsQ3msJYmRG255ee+Tur9UkpKC3ZXMrAf5eM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
-        Chen-Yu Tsai <wens@csie.org>, Sasha Levin <sashal@kernel.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.6 021/129] arm64: dts: allwinner: a64: Fix display clock register range
-Date:   Wed, 15 Apr 2020 07:32:56 -0400
-Message-Id: <20200415113445.11881-21-sashal@kernel.org>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>, linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 019/129] memory: tegra: Correct debugfs clk rate-range on Tegra30
+Date:   Wed, 15 Apr 2020 07:32:54 -0400
+Message-Id: <20200415113445.11881-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
 References: <20200415113445.11881-1-sashal@kernel.org>
@@ -59,37 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jernej Skrabec <jernej.skrabec@siol.net>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-[ Upstream commit 3e9a1a8b7f811de3eb1445d72f68766b704ad17c ]
+[ Upstream commit a53670e1a734ba56fac84cf2b93b838bd4a6b835 ]
 
-Register range of display clocks is 0x10000, as it can be seen from
-DE2 documentation.
+Correctly set clk rate-range if number of available timings is zero.
+This fixes noisy "invalid range [4294967295, 0]" error messages during
+boot.
 
-Fix it.
-
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-Fixes: 2c796fc8f5dbd ("arm64: dts: allwinner: a64: add necessary device tree nodes for DE2 CCU")
-[wens@csie.org: added fixes tag]
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Fixes: 8cee32b40040 ("memory: tegra: Implement EMC debugfs interface on Tegra30")
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/memory/tegra/tegra30-emc.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index 862b47dc9dc90..baa6f08dc1087 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -264,7 +264,7 @@
+diff --git a/drivers/memory/tegra/tegra30-emc.c b/drivers/memory/tegra/tegra30-emc.c
+index e3efd9529506e..b42bdb667e853 100644
+--- a/drivers/memory/tegra/tegra30-emc.c
++++ b/drivers/memory/tegra/tegra30-emc.c
+@@ -1256,6 +1256,11 @@ static void tegra_emc_debugfs_init(struct tegra_emc *emc)
+ 			emc->debugfs.max_rate = emc->timings[i].rate;
+ 	}
  
- 			display_clocks: clock@0 {
- 				compatible = "allwinner,sun50i-a64-de2-clk";
--				reg = <0x0 0x100000>;
-+				reg = <0x0 0x10000>;
- 				clocks = <&ccu CLK_BUS_DE>,
- 					 <&ccu CLK_DE>;
- 				clock-names = "bus",
++	if (!emc->num_timings) {
++		emc->debugfs.min_rate = clk_get_rate(emc->clk);
++		emc->debugfs.max_rate = emc->debugfs.min_rate;
++	}
++
+ 	err = clk_set_rate_range(emc->clk, emc->debugfs.min_rate,
+ 				 emc->debugfs.max_rate);
+ 	if (err < 0) {
 -- 
 2.20.1
 
