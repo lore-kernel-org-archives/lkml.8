@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC7FEC3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:32:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF71C2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:32:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC05B20857
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:32:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32893208FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:32:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586953952;
-	bh=2qPNIb5KmlO0oacho3IP77Yk/ManbrQU4GWchRduLz8=;
+	s=default; t=1586953964;
+	bh=6zGuVlsnnAF2MBnoLbzHZy4QBMSzi7A2hpbIrg/pvyI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qOPqrbDyZfgkbBn+V/643Ur6WUF+5RWi6c/VzZ9Bw/4s3GHu8g5WRhq5fiUBLhgPX
-	 8w02HWBndEnPoIcusfGoOLPbMsM58yhBzAfv2kZWK8RCaF2Z+UUiSd47iYgpVEVCGP
-	 MvFCaxEpjlAM14lG151c/GDIxP0eMO63v8zfNbww=
+	b=pnsARCjZGlRdmmaYGboWzt949BOF1ljlxCXe11qutSezUqi0/w/taRb3OX22xHIBv
+	 tdptxdUujeTB2mc/Vrr6hhoDf4rhLjNnjLb9E+kk9FIZlZ9r9b5woIGIy1tiyflRNu
+	 /NVQMAk7y5r2iBbeTyxNQ33lysV0elcR8bUwfmb8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409102AbgDOMca (ORCPT
-        <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:32:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37398 "EHLO mail.kernel.org"
+        id S369642AbgDOMci (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:32:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409080AbgDOLoc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2409086AbgDOLoc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Apr 2020 07:44:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 746612168B;
-        Wed, 15 Apr 2020 11:44:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1C1A216FD;
+        Wed, 15 Apr 2020 11:44:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951066;
-        bh=2qPNIb5KmlO0oacho3IP77Yk/ManbrQU4GWchRduLz8=;
+        s=default; t=1586951071;
+        bh=6zGuVlsnnAF2MBnoLbzHZy4QBMSzi7A2hpbIrg/pvyI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tP9y9RhJtq6D4/UT283rPr68N6T0x5hnN1bWLx4vDdzgMJ762IeMrMiMxMYDw3VTV
-         CMhOv8794jqWbA5FOLRXX7crh9hKXc1BSLsz1VE/8+pA6wf0EYbTs+V03d98+dG1D0
-         eogAnZ7sXQX7pKaJN2mnKnCK+N6NfavyRev02jpo=
+        b=h/bIQWZ6zb8el5iW4Gi+SHAy9M7yvqHWhMPlcobTJwADnAFydw6t2ndGNRfLnwjPv
+         PipWwkbR4xlHGIFw0/XybixSzu+05MxqksNuCGoHWgbTrZhi+Qj1glAEjtFDrrymCj
+         BGH4/2X1q/KWBWjvd+bxDwjCF8PKmlNbvkgs/3Cs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
-        Benjamin Coddington <bcodding@redhat.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 098/106] sunrpc: Fix gss_unwrap_resp_integ() again
-Date:   Wed, 15 Apr 2020 07:42:18 -0400
-Message-Id: <20200415114226.13103-98-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nvdimm@lists.01.org,
+        linux-acpi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 103/106] acpi/nfit: improve bounds checking for 'func'
+Date:   Wed, 15 Apr 2020 07:42:23 -0400
+Message-Id: <20200415114226.13103-103-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
 References: <20200415114226.13103-1-sashal@kernel.org>
@@ -61,176 +59,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 4047aa909c4a40fceebc36fff708d465a4d3c6e2 ]
+[ Upstream commit 01091c496f920e634ea84b689f480c39016752a8 ]
 
-xdr_buf_read_mic() tries to find unused contiguous space in a
-received xdr_buf in order to linearize the checksum for the call
-to gss_verify_mic. However, the corner cases in this code are
-numerous and we seem to keep missing them. I've just hit yet
-another buffer overrun related to it.
+The 'func' variable can come from the user in the __nd_ioctl().  If it's
+too high then the (1 << func) shift in acpi_nfit_clear_to_send() is
+undefined.  In acpi_nfit_ctl() we pass 'func' to test_bit(func, &dsm_mask)
+which could result in an out of bounds access.
 
-This overrun is at the end of xdr_buf_read_mic():
+To fix these issues, I introduced the NVDIMM_CMD_MAX (31) define and
+updated nfit_dsm_revid() to use that define as well instead of magic
+numbers.
 
-1284         if (buf->tail[0].iov_len != 0)
-1285                 mic->data = buf->tail[0].iov_base + buf->tail[0].iov_len;
-1286         else
-1287                 mic->data = buf->head[0].iov_base + buf->head[0].iov_len;
-1288         __read_bytes_from_xdr_buf(&subbuf, mic->data, mic->len);
-1289         return 0;
-
-This logic assumes the transport has set the length of the tail
-based on the size of the received message. base + len is then
-supposed to be off the end of the message but still within the
-actual buffer.
-
-In fact, the length of the tail is set by the upper layer when the
-Call is encoded so that the end of the tail is actually the end of
-the allocated buffer itself. This causes the logic above to set
-mic->data to point past the end of the receive buffer.
-
-The "mic->data = head" arm of this if statement is no less fragile.
-
-As near as I can tell, this has been a problem forever. I'm not sure
-that minimizing au_rslack recently changed this pathology much.
-
-So instead, let's use a more straightforward approach: kmalloc a
-separate buffer to linearize the checksum. This is similar to
-how gss_validate() currently works.
-
-Coming back to this code, I had some trouble understanding what
-was going on. So I've cleaned up the variable naming and added
-a few comments that point back to the XDR definition in RFC 2203
-to help guide future spelunkers, including myself.
-
-As an added clean up, the functionality that was in
-xdr_buf_read_mic() is folded directly into gss_unwrap_resp_integ(),
-as that is its only caller.
-
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Fixes: 11189c1089da ("acpi/nfit: Fix command-supported detection")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+Link: https://lore.kernel.org/r/20200225161927.hvftuq7kjn547fyj@kili.mountain
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sunrpc/auth_gss/auth_gss.c | 77 +++++++++++++++++++++++++---------
- 1 file changed, 58 insertions(+), 19 deletions(-)
+ drivers/acpi/nfit/core.c | 10 ++++++----
+ drivers/acpi/nfit/nfit.h |  1 +
+ 2 files changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/net/sunrpc/auth_gss/auth_gss.c b/net/sunrpc/auth_gss/auth_gss.c
-index f9e1a7e61eda0..ff5fcb3e12084 100644
---- a/net/sunrpc/auth_gss/auth_gss.c
-+++ b/net/sunrpc/auth_gss/auth_gss.c
-@@ -1935,35 +1935,69 @@ gss_unwrap_resp_auth(struct rpc_cred *cred)
- 	return 0;
- }
+diff --git a/drivers/acpi/nfit/core.c b/drivers/acpi/nfit/core.c
+index a3320f93616de..d0090f71585c4 100644
+--- a/drivers/acpi/nfit/core.c
++++ b/drivers/acpi/nfit/core.c
+@@ -360,7 +360,7 @@ static union acpi_object *acpi_label_info(acpi_handle handle)
  
-+/*
-+ * RFC 2203, Section 5.3.2.2
-+ *
-+ *	struct rpc_gss_integ_data {
-+ *		opaque databody_integ<>;
-+ *		opaque checksum<>;
-+ *	};
-+ *
-+ *	struct rpc_gss_data_t {
-+ *		unsigned int seq_num;
-+ *		proc_req_arg_t arg;
-+ *	};
-+ */
- static int
- gss_unwrap_resp_integ(struct rpc_task *task, struct rpc_cred *cred,
- 		      struct gss_cl_ctx *ctx, struct rpc_rqst *rqstp,
- 		      struct xdr_stream *xdr)
+ static u8 nfit_dsm_revid(unsigned family, unsigned func)
  {
--	struct xdr_buf integ_buf, *rcv_buf = &rqstp->rq_rcv_buf;
--	u32 data_offset, mic_offset, integ_len, maj_stat;
-+	struct xdr_buf gss_data, *rcv_buf = &rqstp->rq_rcv_buf;
- 	struct rpc_auth *auth = cred->cr_auth;
-+	u32 len, offset, seqno, maj_stat;
- 	struct xdr_netobj mic;
--	__be32 *p;
-+	int ret;
+-	static const u8 revid_table[NVDIMM_FAMILY_MAX+1][32] = {
++	static const u8 revid_table[NVDIMM_FAMILY_MAX+1][NVDIMM_CMD_MAX+1] = {
+ 		[NVDIMM_FAMILY_INTEL] = {
+ 			[NVDIMM_INTEL_GET_MODES] = 2,
+ 			[NVDIMM_INTEL_GET_FWINFO] = 2,
+@@ -386,7 +386,7 @@ static u8 nfit_dsm_revid(unsigned family, unsigned func)
  
--	p = xdr_inline_decode(xdr, 2 * sizeof(*p));
--	if (unlikely(!p))
-+	ret = -EIO;
-+	mic.data = NULL;
-+
-+	/* opaque databody_integ<>; */
-+	if (xdr_stream_decode_u32(xdr, &len))
- 		goto unwrap_failed;
--	integ_len = be32_to_cpup(p++);
--	if (integ_len & 3)
-+	if (len & 3)
- 		goto unwrap_failed;
--	data_offset = (u8 *)(p) - (u8 *)rcv_buf->head[0].iov_base;
--	mic_offset = integ_len + data_offset;
--	if (mic_offset > rcv_buf->len)
-+	offset = rcv_buf->len - xdr_stream_remaining(xdr);
-+	if (xdr_stream_decode_u32(xdr, &seqno))
- 		goto unwrap_failed;
--	if (be32_to_cpup(p) != rqstp->rq_seqno)
-+	if (seqno != rqstp->rq_seqno)
- 		goto bad_seqno;
-+	if (xdr_buf_subsegment(rcv_buf, &gss_data, offset, len))
-+		goto unwrap_failed;
+ 	if (family > NVDIMM_FAMILY_MAX)
+ 		return 0;
+-	if (func > 31)
++	if (func > NVDIMM_CMD_MAX)
+ 		return 0;
+ 	id = revid_table[family][func];
+ 	if (id == 0)
+@@ -492,7 +492,8 @@ int acpi_nfit_ctl(struct nvdimm_bus_descriptor *nd_desc, struct nvdimm *nvdimm,
+ 	 * Check for a valid command.  For ND_CMD_CALL, we also have to
+ 	 * make sure that the DSM function is supported.
+ 	 */
+-	if (cmd == ND_CMD_CALL && !test_bit(func, &dsm_mask))
++	if (cmd == ND_CMD_CALL &&
++	    (func > NVDIMM_CMD_MAX || !test_bit(func, &dsm_mask)))
+ 		return -ENOTTY;
+ 	else if (!test_bit(cmd, &cmd_mask))
+ 		return -ENOTTY;
+@@ -3492,7 +3493,8 @@ static int acpi_nfit_clear_to_send(struct nvdimm_bus_descriptor *nd_desc,
+ 	if (nvdimm && cmd == ND_CMD_CALL &&
+ 			call_pkg->nd_family == NVDIMM_FAMILY_INTEL) {
+ 		func = call_pkg->nd_command;
+-		if ((1 << func) & NVDIMM_INTEL_SECURITY_CMDMASK)
++		if (func > NVDIMM_CMD_MAX ||
++		    (1 << func) & NVDIMM_INTEL_SECURITY_CMDMASK)
+ 			return -EOPNOTSUPP;
+ 	}
  
--	if (xdr_buf_subsegment(rcv_buf, &integ_buf, data_offset, integ_len))
-+	/*
-+	 * The xdr_stream now points to the beginning of the
-+	 * upper layer payload, to be passed below to
-+	 * rpcauth_unwrap_resp_decode(). The checksum, which
-+	 * follows the upper layer payload in @rcv_buf, is
-+	 * located and parsed without updating the xdr_stream.
-+	 */
-+
-+	/* opaque checksum<>; */
-+	offset += len;
-+	if (xdr_decode_word(rcv_buf, offset, &len))
-+		goto unwrap_failed;
-+	offset += sizeof(__be32);
-+	if (offset + len > rcv_buf->len)
- 		goto unwrap_failed;
--	if (xdr_buf_read_mic(rcv_buf, &mic, mic_offset))
-+	mic.len = len;
-+	mic.data = kmalloc(len, GFP_NOFS);
-+	if (!mic.data)
-+		goto unwrap_failed;
-+	if (read_bytes_from_xdr_buf(rcv_buf, offset, mic.data, mic.len))
- 		goto unwrap_failed;
--	maj_stat = gss_verify_mic(ctx->gc_gss_ctx, &integ_buf, &mic);
-+
-+	maj_stat = gss_verify_mic(ctx->gc_gss_ctx, &gss_data, &mic);
- 	if (maj_stat == GSS_S_CONTEXT_EXPIRED)
- 		clear_bit(RPCAUTH_CRED_UPTODATE, &cred->cr_flags);
- 	if (maj_stat != GSS_S_COMPLETE)
-@@ -1971,16 +2005,21 @@ gss_unwrap_resp_integ(struct rpc_task *task, struct rpc_cred *cred,
+diff --git a/drivers/acpi/nfit/nfit.h b/drivers/acpi/nfit/nfit.h
+index 24241941181ce..b317f4043705f 100644
+--- a/drivers/acpi/nfit/nfit.h
++++ b/drivers/acpi/nfit/nfit.h
+@@ -34,6 +34,7 @@
+ 		| ACPI_NFIT_MEM_NOT_ARMED | ACPI_NFIT_MEM_MAP_FAILED)
  
- 	auth->au_rslack = auth->au_verfsize + 2 + 1 + XDR_QUADLEN(mic.len);
- 	auth->au_ralign = auth->au_verfsize + 2;
--	return 0;
-+	ret = 0;
-+
-+out:
-+	kfree(mic.data);
-+	return ret;
-+
- unwrap_failed:
- 	trace_rpcgss_unwrap_failed(task);
--	return -EIO;
-+	goto out;
- bad_seqno:
--	trace_rpcgss_bad_seqno(task, rqstp->rq_seqno, be32_to_cpup(p));
--	return -EIO;
-+	trace_rpcgss_bad_seqno(task, rqstp->rq_seqno, seqno);
-+	goto out;
- bad_mic:
- 	trace_rpcgss_verify_mic(task, maj_stat);
--	return -EIO;
-+	goto out;
- }
+ #define NVDIMM_FAMILY_MAX NVDIMM_FAMILY_HYPERV
++#define NVDIMM_CMD_MAX 31
  
- static int
+ #define NVDIMM_STANDARD_CMDMASK \
+ (1 << ND_CMD_SMART | 1 << ND_CMD_SMART_THRESHOLD | 1 << ND_CMD_DIMM_FLAGS \
 -- 
 2.20.1
 
