@@ -2,207 +2,269 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57AF8C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:42:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B737BC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:42:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34A8220737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:42:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85EFF20737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:42:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586950942;
-	bh=uzrTWlHs53ZPHHMtK8nctjkf4SsWJpLaX73oQPd1U6o=;
+	s=default; t=1586950970;
+	bh=W3JfxGtuYZ3e4P6WQe47wolTMldvgQkjlDJEiIf6qR8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q/yumNLAvh7j+wf+ZtW/GIvbkgn+H3jy26RRL/s6u+Z1OS79HEmFL/E7nshfWabsO
-	 0sP/UzmdhgwzPaxPQfZMY0KKxkYioD+duzTRWALMa24nTuGIBneqHwNFvChj+yL4WK
-	 1mpvJAyMstbSw34xDwhkHUGxH1PzzAz95y1wt86A=
+	b=zX6SJbXx3v6lY5C2156aJST0SZIkJf0azubft9G8p/4KUenM3v+PMFa9Mv2iqUkgN
+	 Xs1E+ciwaPpU56OVsATcRqwBDGetskTRtuW2uZ/hbnm7Cm1PxOChuUeNAJmqMGANah
+	 A5nBB3VtnHRcD9dYUqkpdaTQAHjmbF2/20nLD/1w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408883AbgDOLmT (ORCPT
+        id S2408916AbgDOLms (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:42:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56216 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 07:42:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897146AbgDOLg1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:36:27 -0400
+        id S2897178AbgDOLgo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:36:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3155E20936;
-        Wed, 15 Apr 2020 11:36:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2031A20768;
+        Wed, 15 Apr 2020 11:36:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950586;
-        bh=uzrTWlHs53ZPHHMtK8nctjkf4SsWJpLaX73oQPd1U6o=;
+        s=default; t=1586950601;
+        bh=W3JfxGtuYZ3e4P6WQe47wolTMldvgQkjlDJEiIf6qR8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XZ+zctC+OfUdDpBBo2epCowzjjIo28p/EGVq5WMWiYNzQnKogzI6NF5Zcgf/XIZ1p
-         MegKQ8RtFByhf4PQuZlGEQstLWoH4E6qSGZVhr7H7KKFyXuBWCOrRl8QyxagWpDncb
-         0EpZlWc8FI8nmZQuJYBqJjWecsSamww/hKTJKl7A=
+        b=YKCF3yiXIU73mMRcpdO3nCXtsbmvMuI2s9j1qUcHaMgZvK2YfyXgDMvI6DKx8wJ8b
+         /1t3QP29G25vbqzEcnrUEf1kmPchwuT4sUVZvGOCvjjclC/KDORu7aCc237YpLT8ZC
+         HDZVxI6PNR1tLf4HD3PdRSMlCCupOXuyfEGbW6q4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Karol Herbst <kherbst@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lyude Paul <lyude@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mika Westerberg <mika.westerberg@intel.com>,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.6 084/129] drm/nouveau: workaround runpm fail by disabling PCI power management on certain intel bridges
-Date:   Wed, 15 Apr 2020 07:33:59 -0400
-Message-Id: <20200415113445.11881-84-sashal@kernel.org>
+Cc:     Chao Yu <yuchao0@huawei.com>, Ondrej Jirman <megous@megous.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 5.6 097/129] f2fs: fix potential .flags overflow on 32bit architecture
+Date:   Wed, 15 Apr 2020 07:34:12 -0400
+Message-Id: <20200415113445.11881-97-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
 References: <20200415113445.11881-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Karol Herbst <kherbst@redhat.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit 434fdb51513bf3057ac144d152e6f2f2b509e857 ]
+[ Upstream commit 7653b9d87516ed65e112d2273c65eca6f97d0a27 ]
 
-Fixes the infamous 'runtime PM' bug many users are facing on Laptops with
-Nvidia Pascal GPUs by skipping said PCI power state changes on the GPU.
+f2fs_inode_info.flags is unsigned long variable, it has 32 bits
+in 32bit architecture, since we introduced FI_MMAP_FILE flag
+when we support data compression, we may access memory cross
+the border of .flags field, corrupting .i_sem field, result in
+below deadlock.
 
-Depending on the used kernel there might be messages like those in demsg:
+To fix this issue, let's expand .flags as an array to grab enough
+space to store new flags.
 
-"nouveau 0000:01:00.0: Refused to change power state, currently in D3"
-"nouveau 0000:01:00.0: can't change power state from D3cold to D0 (config
-space inaccessible)"
-followed by backtraces of kernel crashes or timeouts within nouveau.
+Call Trace:
+ __schedule+0x8d0/0x13fc
+ ? mark_held_locks+0xac/0x100
+ schedule+0xcc/0x260
+ rwsem_down_write_slowpath+0x3ab/0x65d
+ down_write+0xc7/0xe0
+ f2fs_drop_nlink+0x3d/0x600 [f2fs]
+ f2fs_delete_inline_entry+0x300/0x440 [f2fs]
+ f2fs_delete_entry+0x3a1/0x7f0 [f2fs]
+ f2fs_unlink+0x500/0x790 [f2fs]
+ vfs_unlink+0x211/0x490
+ do_unlinkat+0x483/0x520
+ sys_unlink+0x4a/0x70
+ do_fast_syscall_32+0x12b/0x683
+ entry_SYSENTER_32+0xaa/0x102
 
-It's still unkown why this issue exists, but this is a reliable workaround
-and solves a very annoying issue for user having to choose between a
-crashing kernel or higher power consumption of their Laptops.
-
-Signed-off-by: Karol Herbst <kherbst@redhat.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Lyude Paul <lyude@redhat.com>
-Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-Cc: Mika Westerberg <mika.westerberg@intel.com>
-Cc: linux-pci@vger.kernel.org
-Cc: linux-pm@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org
-Cc: nouveau@lists.freedesktop.org
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=205623
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Fixes: 4c8ff7095bef ("f2fs: support data compression")
+Tested-by: Ondrej Jirman <megous@megous.com>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nouveau_drm.c | 63 +++++++++++++++++++++++++++
- drivers/gpu/drm/nouveau/nouveau_drv.h |  2 +
- 2 files changed, 65 insertions(+)
+ fs/f2fs/f2fs.h  | 99 ++++++++++++++++++++++++-------------------------
+ fs/f2fs/inode.c |  2 +-
+ 2 files changed, 50 insertions(+), 51 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_drm.c b/drivers/gpu/drm/nouveau/nouveau_drm.c
-index b65ae817eabf5..2d4c899e1f8b9 100644
---- a/drivers/gpu/drm/nouveau/nouveau_drm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
-@@ -618,6 +618,64 @@ nouveau_drm_device_fini(struct drm_device *dev)
- 	kfree(drm);
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 64caa46f0c8bd..71801a1709f0f 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -676,6 +676,44 @@ enum {
+ 	MAX_GC_FAILURE
+ };
+ 
++/* used for f2fs_inode_info->flags */
++enum {
++	FI_NEW_INODE,		/* indicate newly allocated inode */
++	FI_DIRTY_INODE,		/* indicate inode is dirty or not */
++	FI_AUTO_RECOVER,	/* indicate inode is recoverable */
++	FI_DIRTY_DIR,		/* indicate directory has dirty pages */
++	FI_INC_LINK,		/* need to increment i_nlink */
++	FI_ACL_MODE,		/* indicate acl mode */
++	FI_NO_ALLOC,		/* should not allocate any blocks */
++	FI_FREE_NID,		/* free allocated nide */
++	FI_NO_EXTENT,		/* not to use the extent cache */
++	FI_INLINE_XATTR,	/* used for inline xattr */
++	FI_INLINE_DATA,		/* used for inline data*/
++	FI_INLINE_DENTRY,	/* used for inline dentry */
++	FI_APPEND_WRITE,	/* inode has appended data */
++	FI_UPDATE_WRITE,	/* inode has in-place-update data */
++	FI_NEED_IPU,		/* used for ipu per file */
++	FI_ATOMIC_FILE,		/* indicate atomic file */
++	FI_ATOMIC_COMMIT,	/* indicate the state of atomical committing */
++	FI_VOLATILE_FILE,	/* indicate volatile file */
++	FI_FIRST_BLOCK_WRITTEN,	/* indicate #0 data block was written */
++	FI_DROP_CACHE,		/* drop dirty page cache */
++	FI_DATA_EXIST,		/* indicate data exists */
++	FI_INLINE_DOTS,		/* indicate inline dot dentries */
++	FI_DO_DEFRAG,		/* indicate defragment is running */
++	FI_DIRTY_FILE,		/* indicate regular/symlink has dirty pages */
++	FI_NO_PREALLOC,		/* indicate skipped preallocated blocks */
++	FI_HOT_DATA,		/* indicate file is hot */
++	FI_EXTRA_ATTR,		/* indicate file has extra attribute */
++	FI_PROJ_INHERIT,	/* indicate file inherits projectid */
++	FI_PIN_FILE,		/* indicate file should not be gced */
++	FI_ATOMIC_REVOKE_REQUEST, /* request to drop atomic data */
++	FI_VERITY_IN_PROGRESS,	/* building fs-verity Merkle tree */
++	FI_COMPRESSED_FILE,	/* indicate file's data can be compressed */
++	FI_MMAP_FILE,		/* indicate file was mmapped */
++	FI_MAX,			/* max flag, never be used */
++};
++
+ struct f2fs_inode_info {
+ 	struct inode vfs_inode;		/* serve a vfs inode */
+ 	unsigned long i_flags;		/* keep an inode flags for ioctl */
+@@ -688,7 +726,7 @@ struct f2fs_inode_info {
+ 	umode_t i_acl_mode;		/* keep file acl mode temporarily */
+ 
+ 	/* Use below internally in f2fs*/
+-	unsigned long flags;		/* use to pass per-file flags */
++	unsigned long flags[BITS_TO_LONGS(FI_MAX)];	/* use to pass per-file flags */
+ 	struct rw_semaphore i_sem;	/* protect fi info */
+ 	atomic_t dirty_pages;		/* # of dirty pages */
+ 	f2fs_hash_t chash;		/* hash value of given file name */
+@@ -2498,43 +2536,6 @@ static inline __u32 f2fs_mask_flags(umode_t mode, __u32 flags)
+ 		return flags & F2FS_OTHER_FLMASK;
  }
  
-+/*
-+ * On some Intel PCIe bridge controllers doing a
-+ * D0 -> D3hot -> D3cold -> D0 sequence causes Nvidia GPUs to not reappear.
-+ * Skipping the intermediate D3hot step seems to make it work again. This is
-+ * probably caused by not meeting the expectation the involved AML code has
-+ * when the GPU is put into D3hot state before invoking it.
-+ *
-+ * This leads to various manifestations of this issue:
-+ *  - AML code execution to power on the GPU hits an infinite loop (as the
-+ *    code waits on device memory to change).
-+ *  - kernel crashes, as all PCI reads return -1, which most code isn't able
-+ *    to handle well enough.
-+ *
-+ * In all cases dmesg will contain at least one line like this:
-+ * 'nouveau 0000:01:00.0: Refused to change power state, currently in D3'
-+ * followed by a lot of nouveau timeouts.
-+ *
-+ * In the \_SB.PCI0.PEG0.PG00._OFF code deeper down writes bit 0x80 to the not
-+ * documented PCI config space register 0x248 of the Intel PCIe bridge
-+ * controller (0x1901) in order to change the state of the PCIe link between
-+ * the PCIe port and the GPU. There are alternative code paths using other
-+ * registers, which seem to work fine (executed pre Windows 8):
-+ *  - 0xbc bit 0x20 (publicly available documentation claims 'reserved')
-+ *  - 0xb0 bit 0x10 (link disable)
-+ * Changing the conditions inside the firmware by poking into the relevant
-+ * addresses does resolve the issue, but it seemed to be ACPI private memory
-+ * and not any device accessible memory at all, so there is no portable way of
-+ * changing the conditions.
-+ * On a XPS 9560 that means bits [0,3] on \CPEX need to be cleared.
-+ *
-+ * The only systems where this behavior can be seen are hybrid graphics laptops
-+ * with a secondary Nvidia Maxwell, Pascal or Turing GPU. It's unclear whether
-+ * this issue only occurs in combination with listed Intel PCIe bridge
-+ * controllers and the mentioned GPUs or other devices as well.
-+ *
-+ * documentation on the PCIe bridge controller can be found in the
-+ * "7th Generation Intel® Processor Families for H Platforms Datasheet Volume 2"
-+ * Section "12 PCI Express* Controller (x16) Registers"
-+ */
-+
-+static void quirk_broken_nv_runpm(struct pci_dev *pdev)
-+{
-+	struct drm_device *dev = pci_get_drvdata(pdev);
-+	struct nouveau_drm *drm = nouveau_drm(dev);
-+	struct pci_dev *bridge = pci_upstream_bridge(pdev);
-+
-+	if (!bridge || bridge->vendor != PCI_VENDOR_ID_INTEL)
-+		return;
-+
-+	switch (bridge->device) {
-+	case 0x1901:
-+		drm->old_pm_cap = pdev->pm_cap;
-+		pdev->pm_cap = 0;
-+		NV_INFO(drm, "Disabling PCI power management to avoid bug\n");
-+		break;
-+	}
-+}
-+
- static int nouveau_drm_probe(struct pci_dev *pdev,
- 			     const struct pci_device_id *pent)
+-/* used for f2fs_inode_info->flags */
+-enum {
+-	FI_NEW_INODE,		/* indicate newly allocated inode */
+-	FI_DIRTY_INODE,		/* indicate inode is dirty or not */
+-	FI_AUTO_RECOVER,	/* indicate inode is recoverable */
+-	FI_DIRTY_DIR,		/* indicate directory has dirty pages */
+-	FI_INC_LINK,		/* need to increment i_nlink */
+-	FI_ACL_MODE,		/* indicate acl mode */
+-	FI_NO_ALLOC,		/* should not allocate any blocks */
+-	FI_FREE_NID,		/* free allocated nide */
+-	FI_NO_EXTENT,		/* not to use the extent cache */
+-	FI_INLINE_XATTR,	/* used for inline xattr */
+-	FI_INLINE_DATA,		/* used for inline data*/
+-	FI_INLINE_DENTRY,	/* used for inline dentry */
+-	FI_APPEND_WRITE,	/* inode has appended data */
+-	FI_UPDATE_WRITE,	/* inode has in-place-update data */
+-	FI_NEED_IPU,		/* used for ipu per file */
+-	FI_ATOMIC_FILE,		/* indicate atomic file */
+-	FI_ATOMIC_COMMIT,	/* indicate the state of atomical committing */
+-	FI_VOLATILE_FILE,	/* indicate volatile file */
+-	FI_FIRST_BLOCK_WRITTEN,	/* indicate #0 data block was written */
+-	FI_DROP_CACHE,		/* drop dirty page cache */
+-	FI_DATA_EXIST,		/* indicate data exists */
+-	FI_INLINE_DOTS,		/* indicate inline dot dentries */
+-	FI_DO_DEFRAG,		/* indicate defragment is running */
+-	FI_DIRTY_FILE,		/* indicate regular/symlink has dirty pages */
+-	FI_NO_PREALLOC,		/* indicate skipped preallocated blocks */
+-	FI_HOT_DATA,		/* indicate file is hot */
+-	FI_EXTRA_ATTR,		/* indicate file has extra attribute */
+-	FI_PROJ_INHERIT,	/* indicate file inherits projectid */
+-	FI_PIN_FILE,		/* indicate file should not be gced */
+-	FI_ATOMIC_REVOKE_REQUEST, /* request to drop atomic data */
+-	FI_VERITY_IN_PROGRESS,	/* building fs-verity Merkle tree */
+-	FI_COMPRESSED_FILE,	/* indicate file's data can be compressed */
+-	FI_MMAP_FILE,		/* indicate file was mmapped */
+-};
+-
+ static inline void __mark_inode_dirty_flag(struct inode *inode,
+ 						int flag, bool set)
  {
-@@ -699,6 +757,7 @@ static int nouveau_drm_probe(struct pci_dev *pdev,
- 	if (ret)
- 		goto fail_drm_dev_init;
+@@ -2556,20 +2557,18 @@ static inline void __mark_inode_dirty_flag(struct inode *inode,
  
-+	quirk_broken_nv_runpm(pdev);
- 	return 0;
- 
- fail_drm_dev_init:
-@@ -734,7 +793,11 @@ static void
- nouveau_drm_remove(struct pci_dev *pdev)
+ static inline void set_inode_flag(struct inode *inode, int flag)
  {
- 	struct drm_device *dev = pci_get_drvdata(pdev);
-+	struct nouveau_drm *drm = nouveau_drm(dev);
- 
-+	/* revert our workaround */
-+	if (drm->old_pm_cap)
-+		pdev->pm_cap = drm->old_pm_cap;
- 	nouveau_drm_device_remove(dev);
- 	pci_disable_device(pdev);
+-	if (!test_bit(flag, &F2FS_I(inode)->flags))
+-		set_bit(flag, &F2FS_I(inode)->flags);
++	test_and_set_bit(flag, F2FS_I(inode)->flags);
+ 	__mark_inode_dirty_flag(inode, flag, true);
  }
-diff --git a/drivers/gpu/drm/nouveau/nouveau_drv.h b/drivers/gpu/drm/nouveau/nouveau_drv.h
-index c2c332fbde979..2a6519737800c 100644
---- a/drivers/gpu/drm/nouveau/nouveau_drv.h
-+++ b/drivers/gpu/drm/nouveau/nouveau_drv.h
-@@ -140,6 +140,8 @@ struct nouveau_drm {
  
- 	struct list_head clients;
+ static inline int is_inode_flag_set(struct inode *inode, int flag)
+ {
+-	return test_bit(flag, &F2FS_I(inode)->flags);
++	return test_bit(flag, F2FS_I(inode)->flags);
+ }
  
-+	u8 old_pm_cap;
-+
- 	struct {
- 		struct agp_bridge_data *bridge;
- 		u32 base;
+ static inline void clear_inode_flag(struct inode *inode, int flag)
+ {
+-	if (test_bit(flag, &F2FS_I(inode)->flags))
+-		clear_bit(flag, &F2FS_I(inode)->flags);
++	test_and_clear_bit(flag, F2FS_I(inode)->flags);
+ 	__mark_inode_dirty_flag(inode, flag, false);
+ }
+ 
+@@ -2660,19 +2659,19 @@ static inline void get_inline_info(struct inode *inode, struct f2fs_inode *ri)
+ 	struct f2fs_inode_info *fi = F2FS_I(inode);
+ 
+ 	if (ri->i_inline & F2FS_INLINE_XATTR)
+-		set_bit(FI_INLINE_XATTR, &fi->flags);
++		set_bit(FI_INLINE_XATTR, fi->flags);
+ 	if (ri->i_inline & F2FS_INLINE_DATA)
+-		set_bit(FI_INLINE_DATA, &fi->flags);
++		set_bit(FI_INLINE_DATA, fi->flags);
+ 	if (ri->i_inline & F2FS_INLINE_DENTRY)
+-		set_bit(FI_INLINE_DENTRY, &fi->flags);
++		set_bit(FI_INLINE_DENTRY, fi->flags);
+ 	if (ri->i_inline & F2FS_DATA_EXIST)
+-		set_bit(FI_DATA_EXIST, &fi->flags);
++		set_bit(FI_DATA_EXIST, fi->flags);
+ 	if (ri->i_inline & F2FS_INLINE_DOTS)
+-		set_bit(FI_INLINE_DOTS, &fi->flags);
++		set_bit(FI_INLINE_DOTS, fi->flags);
+ 	if (ri->i_inline & F2FS_EXTRA_ATTR)
+-		set_bit(FI_EXTRA_ATTR, &fi->flags);
++		set_bit(FI_EXTRA_ATTR, fi->flags);
+ 	if (ri->i_inline & F2FS_PIN_FILE)
+-		set_bit(FI_PIN_FILE, &fi->flags);
++		set_bit(FI_PIN_FILE, fi->flags);
+ }
+ 
+ static inline void set_raw_inline(struct inode *inode, struct f2fs_inode *ri)
+diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
+index 78c3f1d70f1dc..901e9f4ce12b5 100644
+--- a/fs/f2fs/inode.c
++++ b/fs/f2fs/inode.c
+@@ -345,7 +345,7 @@ static int do_read_inode(struct inode *inode)
+ 	fi->i_flags = le32_to_cpu(ri->i_flags);
+ 	if (S_ISREG(inode->i_mode))
+ 		fi->i_flags &= ~F2FS_PROJINHERIT_FL;
+-	fi->flags = 0;
++	bitmap_zero(fi->flags, FI_MAX);
+ 	fi->i_advise = ri->i_advise;
+ 	fi->i_pino = le32_to_cpu(ri->i_pino);
+ 	fi->i_dir_level = ri->i_dir_level;
 -- 
 2.20.1
 
