@@ -2,150 +2,133 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67D3FC38A2C
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C3FC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:45:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46636206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:45:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586954718;
-	bh=5D9GczrhsgcqaRMt/zuHZZcdP2g+4HoM3usyp9z2034=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zlgD8eeSIS9mVXL+8c0G/9yd+jkxfGwmcayu5l+sbuwPcA+6EVCS6i2j0LjlJ8cEM
-	 PrC3CzKxuG7PjEhVKZ/vpFgEiOCz68Sxwb//PmUna9VP/2xQqrXrf2xkP7/rGS1WTh
-	 ut/xzzRLZ283M99pqqNw8BDdXbFzaV6t5+uRfado=
+	by mail.kernel.org (Postfix) with ESMTP id CB0E1206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:45:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2898215AbgDOMpP (ORCPT
+        id S2898225AbgDOMpb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:45:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35264 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 08:45:31 -0400
+Received: from foss.arm.com ([217.140.110.172]:44580 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897181AbgDOLnV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:43:21 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28307214D8;
-        Wed, 15 Apr 2020 11:43:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951001;
-        bh=5D9GczrhsgcqaRMt/zuHZZcdP2g+4HoM3usyp9z2034=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o/Mw9USWr953RXlZRqp031AVVGnuUCSOimYDwGh4jvrODh96dWhShTAYtKtbdzqdA
-         B8tz3YHZYddLvSfMT1V7Z4GFuoJAsmVJa9c/wg/hWndWRebfEuPHmPym87P53B+QqI
-         UvywUn3CBlGn+hY1Ye85pb3nNhMWoqWJpflZHyrM=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Ilie Halip <ilie.halip@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 5.5 046/106] powerpc/maple: Fix declaration made after definition
-Date:   Wed, 15 Apr 2020 07:41:26 -0400
-Message-Id: <20200415114226.13103-46-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
-References: <20200415114226.13103-1-sashal@kernel.org>
+        id S2898196AbgDOMof (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 08:44:35 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 52E4A1063;
+        Wed, 15 Apr 2020 05:44:34 -0700 (PDT)
+Received: from C02TD0UTHF1T.local (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E44413F68F;
+        Wed, 15 Apr 2020 05:44:30 -0700 (PDT)
+Date:   Wed, 15 Apr 2020 13:44:27 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Alex Belits <abelits@marvell.com>
+Cc:     "frederic@kernel.org" <frederic@kernel.org>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        Prasun Kapoor <pkapoor@marvell.com>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "will@kernel.org" <will@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [PATCH v3 03/13] task_isolation: add instruction synchronization
+ memory barrier
+Message-ID: <20200415124427.GB28304@C02TD0UTHF1T.local>
+References: <4473787e1b6bc3cc226067e8d122092a678b63de.camel@marvell.com>
+ <aed12dd15ea2981bc9554cfa8b5e273c1342c756.camel@marvell.com>
+ <07c25c246c55012981ec0296eee23e68c719333a.camel@marvell.com>
+ <d995795c731d6ecceb36bdf1c1df3d72fefd023d.camel@marvell.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d995795c731d6ecceb36bdf1c1df3d72fefd023d.camel@marvell.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+On Thu, Apr 09, 2020 at 03:17:40PM +0000, Alex Belits wrote:
+> Some architectures implement memory synchronization instructions for
+> instruction cache. Make a separate kind of barrier that calls them.
 
-[ Upstream commit af6cf95c4d003fccd6c2ecc99a598fb854b537e7 ]
+Modifying the instruction caches requries more than an ISB, and the
+'IMB' naming implies you're trying to order against memory accesses,
+which isn't what ISB (generally) does.
 
-When building ppc64 defconfig, Clang errors (trimmed for brevity):
+What exactly do you want to use this for?
 
-  arch/powerpc/platforms/maple/setup.c:365:1: error: attribute declaration
-  must precede definition [-Werror,-Wignored-attributes]
-  machine_device_initcall(maple, maple_cpc925_edac_setup);
-  ^
+As-is, I don't think this makes sense as a generic barrier.
 
-machine_device_initcall expands to __define_machine_initcall, which in
-turn has the macro machine_is used in it, which declares mach_##name
-with an __attribute__((weak)). define_machine actually defines
-mach_##name, which in this file happens before the declaration, hence
-the warning.
+Thanks,
+Mark.
 
-To fix this, move define_machine after machine_device_initcall so that
-the declaration occurs before the definition, which matches how
-machine_device_initcall and define_machine work throughout
-arch/powerpc.
-
-While we're here, remove some spaces before tabs.
-
-Fixes: 8f101a051ef0 ("edac: cpc925 MC platform device setup")
-Reported-by: Nick Desaulniers <ndesaulniers@google.com>
-Suggested-by: Ilie Halip <ilie.halip@gmail.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200323222729.15365-1-natechancellor@gmail.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/powerpc/platforms/maple/setup.c | 34 ++++++++++++++--------------
- 1 file changed, 17 insertions(+), 17 deletions(-)
-
-diff --git a/arch/powerpc/platforms/maple/setup.c b/arch/powerpc/platforms/maple/setup.c
-index 9cd6f3e1000b3..09a0594350b69 100644
---- a/arch/powerpc/platforms/maple/setup.c
-+++ b/arch/powerpc/platforms/maple/setup.c
-@@ -294,23 +294,6 @@ static int __init maple_probe(void)
- 	return 1;
- }
- 
--define_machine(maple) {
--	.name			= "Maple",
--	.probe			= maple_probe,
--	.setup_arch		= maple_setup_arch,
--	.init_IRQ		= maple_init_IRQ,
--	.pci_irq_fixup		= maple_pci_irq_fixup,
--	.pci_get_legacy_ide_irq	= maple_pci_get_legacy_ide_irq,
--	.restart		= maple_restart,
--	.halt			= maple_halt,
--       	.get_boot_time		= maple_get_boot_time,
--       	.set_rtc_time		= maple_set_rtc_time,
--       	.get_rtc_time		= maple_get_rtc_time,
--      	.calibrate_decr		= generic_calibrate_decr,
--	.progress		= maple_progress,
--	.power_save		= power4_idle,
--};
--
- #ifdef CONFIG_EDAC
- /*
-  * Register a platform device for CPC925 memory controller on
-@@ -367,3 +350,20 @@ static int __init maple_cpc925_edac_setup(void)
- }
- machine_device_initcall(maple, maple_cpc925_edac_setup);
- #endif
-+
-+define_machine(maple) {
-+	.name			= "Maple",
-+	.probe			= maple_probe,
-+	.setup_arch		= maple_setup_arch,
-+	.init_IRQ		= maple_init_IRQ,
-+	.pci_irq_fixup		= maple_pci_irq_fixup,
-+	.pci_get_legacy_ide_irq	= maple_pci_get_legacy_ide_irq,
-+	.restart		= maple_restart,
-+	.halt			= maple_halt,
-+	.get_boot_time		= maple_get_boot_time,
-+	.set_rtc_time		= maple_set_rtc_time,
-+	.get_rtc_time		= maple_get_rtc_time,
-+	.calibrate_decr		= generic_calibrate_decr,
-+	.progress		= maple_progress,
-+	.power_save		= power4_idle,
-+};
--- 
-2.20.1
-
+> 
+> Signed-off-by: Alex Belits <abelits@marvell.com>
+> ---
+>  arch/arm/include/asm/barrier.h   | 2 ++
+>  arch/arm64/include/asm/barrier.h | 2 ++
+>  include/asm-generic/barrier.h    | 4 ++++
+>  3 files changed, 8 insertions(+)
+> 
+> diff --git a/arch/arm/include/asm/barrier.h b/arch/arm/include/asm/barrier.h
+> index 83ae97c049d9..6def62c95937 100644
+> --- a/arch/arm/include/asm/barrier.h
+> +++ b/arch/arm/include/asm/barrier.h
+> @@ -64,12 +64,14 @@ extern void arm_heavy_mb(void);
+>  #define mb()		__arm_heavy_mb()
+>  #define rmb()		dsb()
+>  #define wmb()		__arm_heavy_mb(st)
+> +#define imb()		isb()
+>  #define dma_rmb()	dmb(osh)
+>  #define dma_wmb()	dmb(oshst)
+>  #else
+>  #define mb()		barrier()
+>  #define rmb()		barrier()
+>  #define wmb()		barrier()
+> +#define imb()		barrier()
+>  #define dma_rmb()	barrier()
+>  #define dma_wmb()	barrier()
+>  #endif
+> diff --git a/arch/arm64/include/asm/barrier.h b/arch/arm64/include/asm/barrier.h
+> index 7d9cc5ec4971..12a7dbd68bed 100644
+> --- a/arch/arm64/include/asm/barrier.h
+> +++ b/arch/arm64/include/asm/barrier.h
+> @@ -45,6 +45,8 @@
+>  #define rmb()		dsb(ld)
+>  #define wmb()		dsb(st)
+>  
+> +#define imb()		isb()
+> +
+>  #define dma_rmb()	dmb(oshld)
+>  #define dma_wmb()	dmb(oshst)
+>  
+> diff --git a/include/asm-generic/barrier.h b/include/asm-generic/barrier.h
+> index 85b28eb80b11..d5a822fb3e92 100644
+> --- a/include/asm-generic/barrier.h
+> +++ b/include/asm-generic/barrier.h
+> @@ -46,6 +46,10 @@
+>  #define dma_wmb()	wmb()
+>  #endif
+>  
+> +#ifndef imb
+> +#define imb		barrier()
+> +#endif
+> +
+>  #ifndef read_barrier_depends
+>  #define read_barrier_depends()		do { } while (0)
+>  #endif
+> -- 
+> 2.20.1
+> 
