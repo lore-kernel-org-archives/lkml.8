@@ -2,90 +2,65 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B1EEC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 308D6C2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:09:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39F7420775
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:08:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1670F20768
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:09:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2896195AbgDOKIK (ORCPT
+        id S2896209AbgDOKJO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 06:08:10 -0400
-Received: from smtpbgsg2.qq.com ([54.254.200.128]:52673 "EHLO smtpbgsg2.qq.com"
+        Wed, 15 Apr 2020 06:09:14 -0400
+Received: from foss.arm.com ([217.140.110.172]:41362 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896152AbgDOKHf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 06:07:35 -0400
-X-QQ-mid: bizesmtp17t1586945230twufz7zk
-Received: from localhost.localdomain (unknown [183.62.170.245])
-        by esmtp6.qq.com (ESMTP) with 
-        id ; Wed, 15 Apr 2020 18:06:49 +0800 (CST)
-X-QQ-SSF: 01400000008000Z0ZM30000A0000000
-X-QQ-FEAT: ChTsRoALjQBfGj9zU5LZU0Z8J70ngs1Dqbnbxv1X3e7fotTsF3nzzaSKVq54f
-        1XyB4APyvSgejfGKeQjgAWxsrnZt7ckPVQ72hoAuYEL61aHZqGSQGh34giikNa3uZ3WEET1
-        0ROhL8McFjYDzzzrzKL/eJHEbLVJnUPh5Vt559JDIOXIdSRP8m9rmu/dP5mqrGR6IcH7dwP
-        nb7POpp+TCWw3agJgQF1SXpaUmV8zAPrxuZL+6GKNSqwAScdSG+ejRUb3EQn5MAo/C8BN/v
-        H6h9AaA52DQG9nLLijKSb8QEexOI94URw+dnuHhZXKKyf1PLbILM++Ex/qfWHNapYh/ME3J
-        UeIpRa5r5bTQ4pOzoI=
-X-QQ-GoodBg: 2
-From:   wuxy@bitland.com.cn
-To:     akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Cc:     wuxy@bitland.com.cn, wuxy <wuxy@bitland.corp-partner.google.com>
-Subject: [PATCH] mtd: spi-nor: winbond: add 1.8v SPI NOR Flash IDs
-Date:   Wed, 15 Apr 2020 18:06:46 +0800
-Message-Id: <20200415100646.26015-1-wuxy@bitland.com.cn>
-X-Mailer: git-send-email 2.20.1
+        id S2896152AbgDOKJI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 06:09:08 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BE24F1063;
+        Wed, 15 Apr 2020 03:09:07 -0700 (PDT)
+Received: from [10.37.12.1] (unknown [10.37.12.1])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7E07D3F68F;
+        Wed, 15 Apr 2020 03:09:05 -0700 (PDT)
+Subject: Re: [PATCH 3/8] arm64: cpufeature: Add CPU capability for AArch32 EL1
+ support
+To:     will@kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu
+Cc:     linux-kernel@vger.kernel.org, mark.rutland@arm.com, maz@kernel.org,
+        anshuman.khandual@arm.com, catalin.marinas@arm.com,
+        saiprakash.ranjan@codeaurora.org, dianders@chromium.org,
+        kernel-team@android.com
+References: <20200414213114.2378-1-will@kernel.org>
+ <20200414213114.2378-4-will@kernel.org>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <a83a19eb-9051-0a43-0bac-353f67d93d79@arm.com>
+Date:   Wed, 15 Apr 2020 11:13:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:bitland.com.cn:qybgforeign:qybgforeign6
-X-QQ-Bgrelay: 1
+In-Reply-To: <20200414213114.2378-4-will@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: wuxy <wuxy@bitland.corp-partner.google.com>
+On 04/14/2020 10:31 PM, Will Deacon wrote:
+> Although we emit a "SANITY CHECK" warning and taint the kernel if we
+> detect a CPU mismatch for AArch32 support at EL1, we still online the
+> CPU with disastrous consequences for any running 32-bit VMs.
+> 
+> Introduce a capability for AArch32 support at EL1 so that late onlining
+> of incompatible CPUs is forbidden.
+> 
+> Signed-off-by: Will Deacon <will@kernel.org>
 
-Winbond has new 1.8V SPI NOR Flash IDs,we need to use the SPI
-flash ID in kukui series,this patch can support the new flash IDs.
+One of the other important missing sanity check for KVM is the VMID 
+width check. I will code something up.
 
-TEST=boot to shell,get the spi information from 'dmesg'.
-
-Signed-off-by: Xingyu Wu <wuxy@bitland.corp-partner.google.com>
----
- drivers/mtd/spi-nor/winbond.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/drivers/mtd/spi-nor/winbond.c b/drivers/mtd/spi-nor/winbond.c
-index 17deabad57e1..1ec518d9b78d 100644
---- a/drivers/mtd/spi-nor/winbond.c
-+++ b/drivers/mtd/spi-nor/winbond.c
-@@ -61,6 +61,18 @@ static const struct flash_info winbond_parts[] = {
- 			     SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
- 	{ "w25m512jv", INFO(0xef7119, 0, 64 * 1024, 1024,
- 			    SECT_4K | SPI_NOR_QUAD_READ | SPI_NOR_DUAL_READ) },
-+	{ "w25q32jwxxIM", INFO(0xef8016, 0, 64 * 1024,  64,
-+			    SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
-+			    SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB) },
-+	{ "w25q64jwxxIM", INFO(0xef8017, 0, 64 * 1024, 128,
-+			    SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
-+			    SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB) },
-+	{ "w25q128jwxxIM", INFO(0xef8018, 0, 64 * 1024, 256,
-+			    SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
-+			    SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB) },
-+	{ "w25q256jwxxIM", INFO(0xef8019, 0, 64 * 1024, 512,
-+			    SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
-+			    SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB) },
- };
- 
- /**
--- 
-2.20.1
-
-
-
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
