@@ -2,35 +2,36 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EFFBC3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 06:48:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE62C3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 06:48:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A36D20771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 06:48:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3038E206D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 06:48:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2635062AbgDOGr6 (ORCPT
+        id S1728669AbgDOGsO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 02:47:58 -0400
+        Wed, 15 Apr 2020 02:48:14 -0400
 Received: from mga01.intel.com ([192.55.52.88]:14277 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2634950AbgDOGpk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 02:45:40 -0400
-IronPort-SDR: +MAQBkzTvp0oaSjFAhbiQ5OnAH1JKwqbnFK4kJO+GuQFmam1vDtSly0dMY/lMdnZ38R2i53Vp7
- kT5cSH8TAxCw==
+        id S2393637AbgDOGpi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 02:45:38 -0400
+IronPort-SDR: aBJ7x5zs02ro+yl1j3znZQeKnut/vQhVct8DXRigzisscmpUaAZB67gySislqdaA3deRPg8iJR
+ /oQ51duRNKYw==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 23:45:39 -0700
-IronPort-SDR: A7i4o9IbrOUSWc681IRvz18LPos3fH52r3gyAhrwkMjSMiLeW7d7UcPZgohIdeCelOGUqrqQBU
- hKslnzUw/oKw==
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 23:45:37 -0700
+IronPort-SDR: /mQA8trEp4JWRxm37OaMEiPgNUAOEX1tin4upa7GLcH6w5rRnSU614Qw8fGzqOuWiufLwh0k76
+ 3N6Ctu7vvXmw==
 X-IronPort-AV: E=Sophos;i="5.72,386,1580803200"; 
-   d="scan'208";a="272467285"
+   d="scan'208";a="244025774"
 Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 23:45:38 -0700
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 23:45:36 -0700
 From:   ira.weiny@intel.com
 To:     linux-kernel@vger.kernel.org,
         "Darrick J. Wong" <darrick.wong@oracle.com>
@@ -41,9 +42,9 @@ Cc:     Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
         "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
         linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
         linux-fsdevel@vger.kernel.org
-Subject: [PATCH V8 07/11] fs/xfs: Combine xfs_diflags_to_linux() and xfs_diflags_to_iflags()
-Date:   Tue, 14 Apr 2020 23:45:19 -0700
-Message-Id: <20200415064523.2244712-8-ira.weiny@intel.com>
+Subject: [PATCH V8 05/11] fs/xfs: Make DAX mount option a tri-state
+Date:   Tue, 14 Apr 2020 23:45:17 -0700
+Message-Id: <20200415064523.2244712-6-ira.weiny@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200415064523.2244712-1-ira.weiny@intel.com>
 References: <20200415064523.2244712-1-ira.weiny@intel.com>
@@ -56,170 +57,140 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ira Weiny <ira.weiny@intel.com>
 
-The functionality in xfs_diflags_to_linux() and xfs_diflags_to_iflags() are
-nearly identical.  The only difference is that *_to_linux() is called after
-inode setup and disallows changing the DAX flag.
+As agreed upon[1].  We make the dax mount option a tri-state.  '-o dax'
+continues to operate the same.  We add 'always', 'never', and 'inode'
+(default).
 
-Combining them can be done with a flag which indicates if this is the initial
-setup to allow the DAX flag to be properly set only at init time.
+[1] https://lore.kernel.org/lkml/20200405061945.GA94792@iweiny-DESK2.sc.intel.com/
 
-So remove xfs_diflags_to_linux() and call the modified xfs_diflags_to_iflags()
-directly.
-
-While we are here simplify xfs_diflags_to_iflags() to take struct xfs_inode and
-use xfs_ip2xflags() to ensure future diflags are included correctly.
-
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
 ---
-Changes from V7:
-	Clarify with a comment the reason for leaving S_DAX out of the
-	mask
+Changes from v7:
+	Change to XFS_MOUNT_DAX_NEVER
 
-Changes from V6:
-	Move unrelated hunk to previous patch.
-	Change logic for better code generation.
+Changes from v6:
+	Use 2 flag bits rather than a field.
+	change iflag to inode
 
-Changes from V5:
-	The functions are no longer identical so we can only combine
-	them rather than deleting one completely.  This is reflected in
-	the new init parameter.
+Changes from v5:
+	New Patch
 ---
- fs/xfs/xfs_inode.h |  1 +
- fs/xfs/xfs_ioctl.c | 33 +--------------------------------
- fs/xfs/xfs_iops.c  | 46 +++++++++++++++++++++++++++-------------------
- 3 files changed, 29 insertions(+), 51 deletions(-)
+ fs/xfs/xfs_mount.h |  3 ++-
+ fs/xfs/xfs_super.c | 44 ++++++++++++++++++++++++++++++++++++++++----
+ 2 files changed, 42 insertions(+), 5 deletions(-)
 
-diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
-index 492e53992fa9..e76ed9ca17f7 100644
---- a/fs/xfs/xfs_inode.h
-+++ b/fs/xfs/xfs_inode.h
-@@ -466,6 +466,7 @@ int	xfs_break_layouts(struct inode *inode, uint *iolock,
- /* from xfs_iops.c */
- extern void xfs_setup_inode(struct xfs_inode *ip);
- extern void xfs_setup_iops(struct xfs_inode *ip);
-+extern void xfs_diflags_to_iflags(struct xfs_inode *ip, bool init);
+diff --git a/fs/xfs/xfs_mount.h b/fs/xfs/xfs_mount.h
+index 54bd74088936..2e88c30642e3 100644
+--- a/fs/xfs/xfs_mount.h
++++ b/fs/xfs/xfs_mount.h
+@@ -233,7 +233,8 @@ typedef struct xfs_mount {
+ 						   allocator */
+ #define XFS_MOUNT_NOATTR2	(1ULL << 25)	/* disable use of attr2 format */
+ 
+-#define XFS_MOUNT_DAX_ALWAYS	(1ULL << 62)	/* TEST ONLY! */
++#define XFS_MOUNT_DAX_ALWAYS	(1ULL << 62)
++#define XFS_MOUNT_DAX_NEVER	(1ULL << 63)
  
  /*
-  * When setting up a newly allocated inode, we need to call
-diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-index d42de92cb283..c6cd92ef4a05 100644
---- a/fs/xfs/xfs_ioctl.c
-+++ b/fs/xfs/xfs_ioctl.c
-@@ -1100,37 +1100,6 @@ xfs_flags2diflags2(
- 	return di_flags2;
- }
+  * Max and min values for mount-option defined I/O
+diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+index 3863f41757d2..142e5d03566f 100644
+--- a/fs/xfs/xfs_super.c
++++ b/fs/xfs/xfs_super.c
+@@ -47,6 +47,32 @@ static struct kset *xfs_kset;		/* top-level xfs sysfs dir */
+ static struct xfs_kobj xfs_dbg_kobj;	/* global debug sysfs attrs */
+ #endif
  
--STATIC void
--xfs_diflags_to_linux(
--	struct xfs_inode	*ip)
--{
--	struct inode		*inode = VFS_I(ip);
--	unsigned int		xflags = xfs_ip2xflags(ip);
--
--	if (xflags & FS_XFLAG_IMMUTABLE)
--		inode->i_flags |= S_IMMUTABLE;
--	else
--		inode->i_flags &= ~S_IMMUTABLE;
--	if (xflags & FS_XFLAG_APPEND)
--		inode->i_flags |= S_APPEND;
--	else
--		inode->i_flags &= ~S_APPEND;
--	if (xflags & FS_XFLAG_SYNC)
--		inode->i_flags |= S_SYNC;
--	else
--		inode->i_flags &= ~S_SYNC;
--	if (xflags & FS_XFLAG_NOATIME)
--		inode->i_flags |= S_NOATIME;
--	else
--		inode->i_flags &= ~S_NOATIME;
--#if 0	/* disabled until the flag switching races are sorted out */
--	if (xflags & FS_XFLAG_DAX)
--		inode->i_flags |= S_DAX;
--	else
--		inode->i_flags &= ~S_DAX;
--#endif
--}
--
- static int
- xfs_ioctl_setattr_xflags(
- 	struct xfs_trans	*tp,
-@@ -1168,7 +1137,7 @@ xfs_ioctl_setattr_xflags(
- 	ip->i_d.di_flags = xfs_flags2diflags(ip, fa->fsx_xflags);
- 	ip->i_d.di_flags2 = di_flags2;
- 
--	xfs_diflags_to_linux(ip);
-+	xfs_diflags_to_iflags(ip, false);
- 	xfs_trans_ichgtime(tp, ip, XFS_ICHGTIME_CHG);
- 	xfs_trans_log_inode(tp, ip, XFS_ILOG_CORE);
- 	XFS_STATS_INC(mp, xs_ig_attrchg);
-diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-index 2ecc2b2050ab..d0c83e0fbf46 100644
---- a/fs/xfs/xfs_iops.c
-+++ b/fs/xfs/xfs_iops.c
-@@ -1276,26 +1276,34 @@ xfs_inode_enable_dax(
- 	return false;
- }
- 
--STATIC void
-+void
- xfs_diflags_to_iflags(
--	struct inode		*inode,
--	struct xfs_inode	*ip)
-+	struct xfs_inode	*ip,
-+	bool init)
- {
--	uint16_t		flags = ip->i_d.di_flags;
--
--	inode->i_flags &= ~(S_IMMUTABLE | S_APPEND | S_SYNC |
--			    S_NOATIME | S_DAX);
--
--	if (flags & XFS_DIFLAG_IMMUTABLE)
--		inode->i_flags |= S_IMMUTABLE;
--	if (flags & XFS_DIFLAG_APPEND)
--		inode->i_flags |= S_APPEND;
--	if (flags & XFS_DIFLAG_SYNC)
--		inode->i_flags |= S_SYNC;
--	if (flags & XFS_DIFLAG_NOATIME)
--		inode->i_flags |= S_NOATIME;
--	if (xfs_inode_enable_dax(ip))
--		inode->i_flags |= S_DAX;
-+	struct inode            *inode = VFS_I(ip);
-+	unsigned int            xflags = xfs_ip2xflags(ip);
-+	unsigned int            flags = 0;
++enum {
++	XFS_DAX_INODE = 0,
++	XFS_DAX_ALWAYS = 1,
++	XFS_DAX_NEVER = 2,
++};
 +
-+	ASSERT(!(IS_DAX(inode) && init));
++static void xfs_mount_set_dax_mode(struct xfs_mount *mp, u32 val)
++{
++	if (val == XFS_DAX_INODE) {
++		mp->m_flags &= ~(XFS_MOUNT_DAX_ALWAYS | XFS_MOUNT_DAX_NEVER);
++	} else if (val == XFS_DAX_ALWAYS) {
++		mp->m_flags |= XFS_MOUNT_DAX_ALWAYS;
++		mp->m_flags &= ~XFS_MOUNT_DAX_NEVER;
++	} else if (val == XFS_DAX_NEVER) {
++		mp->m_flags |= XFS_MOUNT_DAX_NEVER;
++		mp->m_flags &= ~XFS_MOUNT_DAX_ALWAYS;
++	}
++}
 +
-+	if (xflags & FS_XFLAG_IMMUTABLE)
-+		flags |= S_IMMUTABLE;
-+	if (xflags & FS_XFLAG_APPEND)
-+		flags |= S_APPEND;
-+	if (xflags & FS_XFLAG_SYNC)
-+		flags |= S_SYNC;
-+	if (xflags & FS_XFLAG_NOATIME)
-+		flags |= S_NOATIME;
-+	if (init && xfs_inode_enable_dax(ip))
-+		flags |= S_DAX;
++static const struct constant_table dax_param_enums[] = {
++	{"inode",	XFS_DAX_INODE },
++	{"always",	XFS_DAX_ALWAYS },
++	{"never",	XFS_DAX_NEVER },
++	{}
++};
 +
-+	/*
-+	 * S_DAX can only be set during inode initialization and is never set by
-+	 * the VFS, so we cannot mask off S_DAX in i_flags.
-+	 */
-+	inode->i_flags &= ~(S_IMMUTABLE | S_APPEND | S_SYNC | S_NOATIME);
-+	inode->i_flags |= flags;
- }
- 
  /*
-@@ -1324,7 +1332,7 @@ xfs_setup_inode(
- 	inode->i_gid    = xfs_gid_to_kgid(ip->i_d.di_gid);
+  * Table driven mount option parser.
+  */
+@@ -59,7 +85,7 @@ enum {
+ 	Opt_filestreams, Opt_quota, Opt_noquota, Opt_usrquota, Opt_grpquota,
+ 	Opt_prjquota, Opt_uquota, Opt_gquota, Opt_pquota,
+ 	Opt_uqnoenforce, Opt_gqnoenforce, Opt_pqnoenforce, Opt_qnoenforce,
+-	Opt_discard, Opt_nodiscard, Opt_dax,
++	Opt_discard, Opt_nodiscard, Opt_dax, Opt_dax_enum,
+ };
  
- 	i_size_write(inode, ip->i_d.di_size);
--	xfs_diflags_to_iflags(inode, ip);
-+	xfs_diflags_to_iflags(ip, true);
+ static const struct fs_parameter_spec xfs_fs_parameters[] = {
+@@ -103,6 +129,7 @@ static const struct fs_parameter_spec xfs_fs_parameters[] = {
+ 	fsparam_flag("discard",		Opt_discard),
+ 	fsparam_flag("nodiscard",	Opt_nodiscard),
+ 	fsparam_flag("dax",		Opt_dax),
++	fsparam_enum("dax",		Opt_dax_enum, dax_param_enums),
+ 	{}
+ };
  
- 	if (S_ISDIR(inode->i_mode)) {
- 		/*
+@@ -129,7 +156,6 @@ xfs_fs_show_options(
+ 		{ XFS_MOUNT_GRPID,		",grpid" },
+ 		{ XFS_MOUNT_DISCARD,		",discard" },
+ 		{ XFS_MOUNT_LARGEIO,		",largeio" },
+-		{ XFS_MOUNT_DAX_ALWAYS,		",dax" },
+ 		{ 0, NULL }
+ 	};
+ 	struct xfs_mount	*mp = XFS_M(root->d_sb);
+@@ -185,6 +211,13 @@ xfs_fs_show_options(
+ 	if (!(mp->m_qflags & XFS_ALL_QUOTA_ACCT))
+ 		seq_puts(m, ",noquota");
+ 
++	if (mp->m_flags & XFS_MOUNT_DAX_ALWAYS)
++		seq_puts(m, ",dax=always");
++	else if (mp->m_flags & XFS_MOUNT_DAX_NEVER)
++		seq_puts(m, ",dax=never");
++	else
++		seq_puts(m, ",dax=inode");
++
+ 	return 0;
+ }
+ 
+@@ -1244,7 +1277,10 @@ xfs_fc_parse_param(
+ 		return 0;
+ #ifdef CONFIG_FS_DAX
+ 	case Opt_dax:
+-		mp->m_flags |= XFS_MOUNT_DAX_ALWAYS;
++		xfs_mount_set_dax_mode(mp, XFS_DAX_ALWAYS);
++		return 0;
++	case Opt_dax_enum:
++		xfs_mount_set_dax_mode(mp, result.uint_32);
+ 		return 0;
+ #endif
+ 	default:
+@@ -1451,7 +1487,7 @@ xfs_fc_fill_super(
+ 		if (!rtdev_is_dax && !datadev_is_dax) {
+ 			xfs_alert(mp,
+ 			"DAX unsupported by block device. Turning off DAX.");
+-			mp->m_flags &= ~XFS_MOUNT_DAX_ALWAYS;
++			xfs_mount_set_dax_mode(mp, XFS_DAX_NEVER);
+ 		}
+ 		if (xfs_sb_version_hasreflink(&mp->m_sb)) {
+ 			xfs_alert(mp,
 -- 
 2.25.1
 
