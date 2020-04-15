@@ -2,118 +2,96 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A073C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:07:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C95DC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D8B520768
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:07:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42D1520784
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:08:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2896179AbgDOKHv (ORCPT
+        id S2896188AbgDOKH7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 06:07:51 -0400
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:33840 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2896154AbgDOKHc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 06:07:32 -0400
-Received: from [88.147.20.223] (port=52218 helo=[192.168.77.62])
-        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1jOex2-009Eu1-UU; Wed, 15 Apr 2020 12:07:24 +0200
-Subject: Re: [RFC PATCH v2 6/6] i2c: core: hand over reserved devices when
- requesting ancillary addresses
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-i2c@vger.kernel.org
-Cc:     linux-renesas-soc@vger.kernel.org, linux-i3c@lists.infradead.org,
-        Kieran Bingham <kieran@ksquared.org.uk>,
-        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Vladimir Zapolskiy <vz@mleia.com>, linux-kernel@vger.kernel.org
-References: <20200318150059.21714-1-wsa+renesas@sang-engineering.com>
- <20200318150059.21714-7-wsa+renesas@sang-engineering.com>
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-Message-ID: <610bbd01-e245-3320-c315-7a5c945a700d@lucaceresoli.net>
-Date:   Wed, 15 Apr 2020 12:07:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 15 Apr 2020 06:07:59 -0400
+Received: from mga02.intel.com ([134.134.136.20]:26938 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2896168AbgDOKHm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 06:07:42 -0400
+IronPort-SDR: ygNsGP78gNK4RB0HRw8sUDmSvzMEJKY0vwPEdzRcxA/3CTJzToExOkAJ+SnFADnGHC0lgMouee
+ y/tHgHX9Nu2Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 03:07:42 -0700
+IronPort-SDR: EebCVhxBJNMGFCCIJUcJimG8dbFy8SUtdHsZNe9cSASoYoSg7Qs3kyDlU5J/tctuXl4/esOHUE
+ NHVUWyDjuO5g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,386,1580803200"; 
+   d="scan'208";a="253481850"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003.jf.intel.com with ESMTP; 15 Apr 2020 03:07:39 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1jOexK-000kMO-2q; Wed, 15 Apr 2020 13:07:42 +0300
+Date:   Wed, 15 Apr 2020 13:07:42 +0300
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Jason Yan <yanaijie@huawei.com>
+Cc:     lorenzo.pieralisi@arm.com, amurray@thegoodpenguin.co.uk,
+        bhelgaas@google.com, p.zabel@pengutronix.de,
+        gustavo.pimentel@synopsys.com, eswara.kota@linux.intel.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Hulk Robot <hulkci@huawei.com>
+Subject: Re: [PATCH] PCI: dwc: intel: make intel_pcie_cpu_addr() static
+Message-ID: <20200415100742.GR34613@smile.fi.intel.com>
+References: <20200415084953.6533-1-yanaijie@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20200318150059.21714-7-wsa+renesas@sang-engineering.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200415084953.6533-1-yanaijie@huawei.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 18/03/20 16:00, Wolfram Sang wrote:
-> With i2c_new_ancillary_address, we can check if the intended driver is
-> requesting a reserved address. Update the function to do these checks.
-> If the check passes, the "reserved" device will become a regular "dummy"
-> device.
+On Wed, Apr 15, 2020 at 04:49:53PM +0800, Jason Yan wrote:
+> Fix the following sparse warning:
 > 
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> drivers/pci/controller/dwc/pcie-intel-gw.c:456:5: warning: symbol
+> 'intel_pcie_cpu_addr' was not declared. Should it be static?
+
+Please, learn how to use get_maintainers.pl to avoid spamming people.
+Hint:
+	scripts/get_maintainer.pl --git --git-min-percent=67
+would give advantage, though it still requires a common sense to be applied.
+
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
 > ---
->  drivers/i2c/i2c-core-base.c | 24 ++++++++++++++++++++++--
->  1 file changed, 22 insertions(+), 2 deletions(-)
+>  drivers/pci/controller/dwc/pcie-intel-gw.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-> index 84464e439df5..81fb320de28d 100644
-> --- a/drivers/i2c/i2c-core-base.c
-> +++ b/drivers/i2c/i2c-core-base.c
-> @@ -974,7 +974,9 @@ struct i2c_client *i2c_new_ancillary_device(struct i2c_client *client,
->  						const char *name,
->  						u16 default_addr)
+> diff --git a/drivers/pci/controller/dwc/pcie-intel-gw.c b/drivers/pci/controller/dwc/pcie-intel-gw.c
+> index fc2a12212dec..2d8dbb318087 100644
+> --- a/drivers/pci/controller/dwc/pcie-intel-gw.c
+> +++ b/drivers/pci/controller/dwc/pcie-intel-gw.c
+> @@ -453,7 +453,7 @@ static int intel_pcie_msi_init(struct pcie_port *pp)
+>  	return 0;
+>  }
+>  
+> -u64 intel_pcie_cpu_addr(struct dw_pcie *pcie, u64 cpu_addr)
+> +static u64 intel_pcie_cpu_addr(struct dw_pcie *pcie, u64 cpu_addr)
 >  {
-> -	struct device_node *np = client->dev.of_node;
-> +	struct device_node *reserved_np, *np = client->dev.of_node;
-> +	struct device *reserved_dev, *adapter_dev = &client->adapter->dev;
-> +	struct i2c_client *reserved_client = NULL;
->  	u32 addr = default_addr;
->  	int i;
->  
-> @@ -984,7 +986,25 @@ struct i2c_client *i2c_new_ancillary_device(struct i2c_client *client,
->  			of_property_read_u32_index(np, "reg", i, &addr);
->  	}
->  
-> -	dev_dbg(&client->adapter->dev, "Address for %s : 0x%x\n", name, addr);
-> +	dev_info(adapter_dev, "Address for %s : 0x%x\n", name, addr);
-
-Here if we have two identical chips on the same bus, they probably will
-both add an ancillary device with the same name. Then a message like:
-
-  i2c i2c-0: ds90ub954-q1: Address for rxport0: 0x40
-
-won't tell which ds90ub954-q1 device is using that address. I'd rather
-disambiguate using something like:
-
-  dev_info(adapter_dev, "%s: Address for %s: 0x%x\n",
-           dev_name(&client->dev), name, addr);
-
-Sure, this issue did exist before this patch, but since the line is
-being promoted from dbg to info (which is OK), it's probably a good idea
-to improve the content, perhaps in a separate patch.
-
-Except for that, I tested the patch and it's working fine.
+>  	return cpu_addr + BUS_IATU_OFFSET;
+>  }
+> -- 
+> 2.21.1
+> 
 
 -- 
-Luca
+With Best Regards,
+Andy Shevchenko
+
+
