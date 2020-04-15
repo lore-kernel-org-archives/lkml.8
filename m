@@ -2,52 +2,79 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB389C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17269C2BB85
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D152D206E9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:07:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8445206E9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:08:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Jx2FDyTW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408278AbgDOJH6 (ORCPT
+        id S2408291AbgDOJIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 05:07:58 -0400
-Received: from mga03.intel.com ([134.134.136.65]:25045 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408269AbgDOJHx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 05:07:53 -0400
-IronPort-SDR: mcDPuQ8ZC2YWJwiaZaEe7oX4/W6f0bJCaPwY07F8R+QzbMd1Dw/VHInAhiX6l0P3VB4u1DZfHT
- Z2dzdWN3riqg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 02:07:52 -0700
-IronPort-SDR: dIcvUqmm8vkltmzBbRt7swG9EIHcpliBK18dHSes44YOxPl9GSHu+CpHbMxzexYHs+shu+VVQy
- da/XylUQ7VEQ==
-X-IronPort-AV: E=Sophos;i="5.72,386,1580803200"; 
-   d="scan'208";a="427370602"
-Received: from ssolodk-mobl1.ccr.corp.intel.com (HELO localhost) ([10.252.48.37])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 02:07:47 -0700
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Colin Ian King <colin.king@canonical.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>, kbuild@lists.01.org
-Cc:     lkp@intel.com, kbuild-all@lists.01.org,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/i915/gt: remove redundant assignment to variable x
-In-Reply-To: <43eb0cbb-9bf0-c99a-470d-8121c3108a5e@canonical.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20200414092359.GC1163@kadam> <43eb0cbb-9bf0-c99a-470d-8121c3108a5e@canonical.com>
-Date:   Wed, 15 Apr 2020 12:07:44 +0300
-Message-ID: <87blnt5d7j.fsf@intel.com>
+        Wed, 15 Apr 2020 05:08:09 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22374 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2408269AbgDOJIA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 05:08:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586941679;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=lisOMIPYzGEOUKW/w9q538cTmyUuHd07/Sojgyr8MlQ=;
+        b=Jx2FDyTWiVDSj+TGOWOlb6Tpt+VTUEEy0yd9fpRMKl7rQKOY871ngDkQGOjhAC8N+d7SY0
+        Bs4Q8EQdCr8SzcYu4yqzOh5h22g90k72oCAFQQ0KvtupPEZo/SY0pBdzJTkbeMQmNX+mlb
+        qi4WIYZbc8j89wpMCMzWuylFT++B45o=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-215-rIEPXwd8Nc-T0FjIs46uOw-1; Wed, 15 Apr 2020 05:07:57 -0400
+X-MC-Unique: rIEPXwd8Nc-T0FjIs46uOw-1
+Received: by mail-wm1-f70.google.com with SMTP id h184so1896162wmf.5
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 02:07:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=lisOMIPYzGEOUKW/w9q538cTmyUuHd07/Sojgyr8MlQ=;
+        b=ANaGpkGukQskXo2Dfqa6PT+49hcz5Qe526yTFpDEFNGgbN3WAGHN7COFSDYj/BBOsf
+         hK2jDpm2HJJG4eGSM2wrScYAhONti6y1RjR3HlmfqpkyUQMgMcLcRSXTb9Yo5iRFhNVq
+         jc9d8S8Qcs5LJrSp8lud9tfrlFQAOElD9T6WCMcMJYiuIn4syIKtooXfeOHPpnFJSHxy
+         /kj8aPS/lKI2ZkzCyvmzFpoySnynHmCXbkOUpdZxL3mxr3H6yi0kdHVZocfE8ilCSs3j
+         uxn0COZKJOmqx1uqa9oECIhMubBRjWAr7gKBIWiED98pbSG9elJAeiCrxF364BGNnZvp
+         N52Q==
+X-Gm-Message-State: AGi0PuaNdih1fPVJKRJ7+gOxfljp9POyddKY+g+WIdVlQO6PyOQhqgr9
+        NWdM1VobpQq45v0/HVbJBbnhx2K9GKlZkRCtib3dqrKQGO+T6x1UVEnWW2kb7GkCLIG5e4a4EL0
+        jlVNPDOay/bk9CZ1WXhfEQfzM
+X-Received: by 2002:a5d:6841:: with SMTP id o1mr27977386wrw.412.1586941676332;
+        Wed, 15 Apr 2020 02:07:56 -0700 (PDT)
+X-Google-Smtp-Source: APiQypIXD/p9LNlXg20pn+U/yQCcvvORh177d5YZbgu7SsoqIprQYNJ2FhjSis/HsfEJeQMW+4tCHg==
+X-Received: by 2002:a5d:6841:: with SMTP id o1mr27977353wrw.412.1586941676047;
+        Wed, 15 Apr 2020 02:07:56 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id e5sm23214697wru.92.2020.04.15.02.07.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2020 02:07:55 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+Cc:     kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com, sean.j.christopherson@intel.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, maz@kernel.org, james.morse@arm.com,
+        julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com
+Subject: Re: [PATCH] KVM: Optimize kvm_arch_vcpu_ioctl_run function
+In-Reply-To: <cc29ce22-4c70-87d1-d7aa-9d38438ba8a5@linux.alibaba.com>
+References: <20200413034523.110548-1-tianjia.zhang@linux.alibaba.com> <875ze2ywhy.fsf@vitty.brq.redhat.com> <cc29ce22-4c70-87d1-d7aa-9d38438ba8a5@linux.alibaba.com>
+Date:   Wed, 15 Apr 2020 11:07:53 +0200
+Message-ID: <87a73dxgk6.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
@@ -55,84 +82,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Apr 2020, Colin Ian King <colin.king@canonical.com> wrote:
-> Hi Dan,
->
-> I'd post a revert, but I don't seem to see an upstream commit for this
-> this to revert against. What's the revert policy in these cases? Or can
-> the patch be just ignored by the maintainers so it's not applied?
+Tianjia Zhang <tianjia.zhang@linux.alibaba.com> writes:
 
-It has not been applied, and will be ignored, in part thanks to the
-report.
-
-However I think Dan's report is misleading in that it looks like it's
-about a commit while I think it should emphasize that it's a pre-merge
-report on the patch on the mailing list.
-
-BR,
-Jani.
-
-
-
->
-> Colin
->
->
-> On 14/04/2020 10:23, Dan Carpenter wrote:
->> Hi Colin,
+> On 2020/4/14 22:26, Vitaly Kuznetsov wrote:
+>> Tianjia Zhang <tianjia.zhang@linux.alibaba.com> writes:
 >> 
->> url:    https://github.com/0day-ci/linux/commits/Colin-King/drm-i915-gt-remove-redundant-assignment-to-variable-x/20200411-032731
->> base:   git://anongit.freedesktop.org/drm-intel for-linux-next
+>>> kvm_arch_vcpu_ioctl_run() is only called in the file kvm_main.c,
+>>> where vcpu->run is the kvm_run parameter, so it has been replaced.
+>>>
+>>> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+>>> ---
+>>>   arch/x86/kvm/x86.c | 8 ++++----
+>>>   virt/kvm/arm/arm.c | 2 +-
+>>>   2 files changed, 5 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+>>> index 3bf2ecafd027..70e3f4abbd4d 100644
+>>> --- a/arch/x86/kvm/x86.c
+>>> +++ b/arch/x86/kvm/x86.c
+>>> @@ -8726,18 +8726,18 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+>>>   		r = -EAGAIN;
+>>>   		if (signal_pending(current)) {
+>>>   			r = -EINTR;
+>>> -			vcpu->run->exit_reason = KVM_EXIT_INTR;
+>>> +			kvm_run->exit_reason = KVM_EXIT_INTR;
 >> 
->> If you fix the issue, kindly add following tag as appropriate
->> Reported-by: kbuild test robot <lkp@intel.com>
->> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+>> I have a more generic question: why do we need to pass 'kvm_run' to
+>> kvm_arch_vcpu_ioctl_run() if it can be extracted from 'struct kvm_vcpu'?
+>> The only call site looks like
 >> 
->> smatch warnings:
->> drivers/gpu/drm/i915/gt/intel_engine_cs.c:1210 print_request() error: uninitialized symbol 'x'.
->> 
->> # https://github.com/0day-ci/linux/commit/6ee08d455bba0066e8f5f276dcd43d9e3e594dc5
->> git remote add linux-review https://github.com/0day-ci/linux
->> git remote update linux-review
->> git checkout 6ee08d455bba0066e8f5f276dcd43d9e3e594dc5
->> vim +/x +1210 drivers/gpu/drm/i915/gt/intel_engine_cs.c
->> 
->> f636edb214a5ff drivers/gpu/drm/i915/intel_engine_cs.c    Chris Wilson   2017-10-09  1202  static void print_request(struct drm_printer *m,
->> e61e0f51ba7974 drivers/gpu/drm/i915/intel_engine_cs.c    Chris Wilson   2018-02-21  1203  			  struct i915_request *rq,
->> f636edb214a5ff drivers/gpu/drm/i915/intel_engine_cs.c    Chris Wilson   2017-10-09  1204  			  const char *prefix)
->> f636edb214a5ff drivers/gpu/drm/i915/intel_engine_cs.c    Chris Wilson   2017-10-09  1205  {
->> ab2681512b4c10 drivers/gpu/drm/i915/intel_engine_cs.c    Chris Wilson   2018-03-14  1206  	const char *name = rq->fence.ops->get_timeline_name(&rq->fence);
->> 96d4f03c20d04c drivers/gpu/drm/i915/intel_engine_cs.c    Chris Wilson   2018-05-17  1207  	char buf[80] = "";
->> 6ee08d455bba00 drivers/gpu/drm/i915/gt/intel_engine_cs.c Colin Ian King 2020-04-10  1208  	int x;
->>                                                                                                 ^^^^^
->> 
->> 247870ac8ea729 drivers/gpu/drm/i915/intel_engine_cs.c    Chris Wilson   2018-04-24  1209  
->> 247870ac8ea729 drivers/gpu/drm/i915/intel_engine_cs.c    Chris Wilson   2018-04-24 @1210  	x = print_sched_attr(rq->i915, &rq->sched.attr, buf, x, sizeof(buf));
->>                                                                                                                                                      ^
->> Uninitialized variable
->> 
->> ab2681512b4c10 drivers/gpu/drm/i915/intel_engine_cs.c    Chris Wilson   2018-03-14  1211  
->> b300fde8965fdd drivers/gpu/drm/i915/intel_engine_cs.c    Chris Wilson   2019-02-26  1212  	drm_printf(m, "%s %llx:%llx%s%s %s @ %dms: %s\n",
->> b7268c5eed0ab4 drivers/gpu/drm/i915/intel_engine_cs.c    Chris Wilson   2018-04-18  1213  		   prefix,
->> b300fde8965fdd drivers/gpu/drm/i915/intel_engine_cs.c    Chris Wilson   2019-02-26  1214  		   rq->fence.context, rq->fence.seqno,
->> 8547444137ec61 drivers/gpu/drm/i915/intel_engine_cs.c    Chris Wilson   2019-01-29  1215  		   i915_request_completed(rq) ? "!" :
->> 8547444137ec61 drivers/gpu/drm/i915/intel_engine_cs.c    Chris Wilson   2019-01-29  1216  		   i915_request_started(rq) ? "*" :
->> 8547444137ec61 drivers/gpu/drm/i915/intel_engine_cs.c    Chris Wilson   2019-01-29  1217  		   "",
->> 8c334f24e3b448 drivers/gpu/drm/i915/gt/intel_engine_cs.c Chris Wilson   2019-05-01  1218  		   test_bit(DMA_FENCE_FLAG_SIGNALED_BIT,
->> 8c334f24e3b448 drivers/gpu/drm/i915/gt/intel_engine_cs.c Chris Wilson   2019-05-01  1219  			    &rq->fence.flags) ? "+" :
->> 52c0fdb25c7c91 drivers/gpu/drm/i915/intel_engine_cs.c    Chris Wilson   2019-01-29  1220  		   test_bit(DMA_FENCE_FLAG_ENABLE_SIGNAL_BIT,
->> 8c334f24e3b448 drivers/gpu/drm/i915/gt/intel_engine_cs.c Chris Wilson   2019-05-01  1221  			    &rq->fence.flags) ? "-" :
->> 8c334f24e3b448 drivers/gpu/drm/i915/gt/intel_engine_cs.c Chris Wilson   2019-05-01  1222  		   "",
->> 247870ac8ea729 drivers/gpu/drm/i915/intel_engine_cs.c    Chris Wilson   2018-04-24  1223  		   buf,
->> f636edb214a5ff drivers/gpu/drm/i915/intel_engine_cs.c    Chris Wilson   2017-10-09  1224  		   jiffies_to_msecs(jiffies - rq->emitted_jiffies),
->> ab2681512b4c10 drivers/gpu/drm/i915/intel_engine_cs.c    Chris Wilson   2018-03-14  1225  		   name);
->> f636edb214a5ff drivers/gpu/drm/i915/intel_engine_cs.c    Chris Wilson   2017-10-09  1226  }
->> 
->> ---
->> 0-DAY CI Kernel Test Service, Intel Corporation
->> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+>> virt/kvm/kvm_main.c:            r = kvm_arch_vcpu_ioctl_run(vcpu, vcpu->run);
 >> 
 >
+> In the earlier version, kvm_run is used to pass parameters with user 
+> mode and is not included in the vcpu structure, so it has been retained 
+> until now.
+>
+
+In case this is no longer needed I'd suggest we drop 'kvm_run' parameter
+and extract it from 'struct kvm_vcpu' when needed. This looks like a
+natural add-on to your cleanup patch.
 
 -- 
-Jani Nikula, Intel Open Source Graphics Center
+Vitaly
+
