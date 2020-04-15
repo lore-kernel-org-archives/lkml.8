@@ -2,117 +2,154 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D224CC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6382CC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:39:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B68292076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:36:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AC142076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:39:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="G8tE/bID"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441815AbgDOTgh (ORCPT
+        id S2441823AbgDOTj5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 15:36:37 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:48332 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438316AbgDOTgd (ORCPT
+        Wed, 15 Apr 2020 15:39:57 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:7973 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438414AbgDOTju (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 15:36:33 -0400
-Received: from ip5f5bd698.dynamic.kabel-deutschland.de ([95.91.214.152] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jOnpV-0005cE-GL; Wed, 15 Apr 2020 19:36:13 +0000
-Date:   Wed, 15 Apr 2020 21:36:12 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     syzbot <syzbot+d9ae59d4662c941e39c6@syzkaller.appspotmail.com>,
-        adobriyan@gmail.com, akpm@linux-foundation.org, avagin@gmail.com,
-        bernd.edlinger@hotmail.de, christian@brauner.io, guro@fb.com,
-        kent.overstreet@gmail.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mhocko@suse.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
-        Alexey Gladkov <gladkov.alexey@gmail.com>
-Subject: Re: [PATCH] proc: Handle umounts cleanly
-Message-ID: <20200415193612.7cmmbwfpof6pvsqv@wittgenstein>
-References: <0000000000001c5eaa05a357f2e1@google.com>
- <878siwioxj.fsf@x220.int.ebiederm.org>
+        Wed, 15 Apr 2020 15:39:50 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e9762f70000>; Wed, 15 Apr 2020 12:39:35 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 15 Apr 2020 12:39:48 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 15 Apr 2020 12:39:48 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Apr
+ 2020 19:39:48 +0000
+Received: from rcampbell-dev.nvidia.com (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Apr
+ 2020 19:39:45 +0000
+Subject: Re: [PATCH v8 0/3] mm/hmm/test: add self tests for HMM
+To:     Leon Romanovsky <leon@kernel.org>
+CC:     Jason Gunthorpe <jgg@mellanox.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Andrew Morton" <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <linux-kselftest@vger.kernel.org>
+References: <20200321003108.22941-1-rcampbell@nvidia.com>
+ <20200415144125.GU11945@mellanox.com>
+ <6d7adb28-96a0-5dc5-e85e-68fca2db403a@nvidia.com>
+ <20200415192952.GA1309273@unreal>
+From:   Ralph Campbell <rcampbell@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <1b94e41d-2335-0cb4-9605-cf9f404900c9@nvidia.com>
+Date:   Wed, 15 Apr 2020 12:39:45 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <878siwioxj.fsf@x220.int.ebiederm.org>
+In-Reply-To: <20200415192952.GA1309273@unreal>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1586979576; bh=CdwI3TE7mjxq3Xc5avzMiLVH9J/fDrvWtdvamz5cGWs=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=G8tE/bID65F9EsfeKZ8G28VAMO3LtN+g9x5yin4doG9IcneSAWmCCsnD3fbqhtr/f
+         S4pf0Z21NzvjFYRSlWSsLTTHkTSU6apnjP+DC0NkcJFaef0vV8zx2LF8YANXfsXV1a
+         jBvjjFTQ2ce0UC00L2OX+HRt1UGvpLti9fJoKCezjOUPo0iaZ0OP+c0iPB3DYHNSOY
+         3theRn7BAu6deEEZAXw49I3MgR4Ld2hKXHlxOQBZM2eekpET8umEcCeg4MoJ8z+fXu
+         eixnTA1GBUVdGyrdBh362h8YZ03CRPl8kD7Zegx536S67u38diFxKDZ94Ir5Dg8QgN
+         tcE8AYOottc0Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 01:28:24PM -0500, Eric W. Biederman wrote:
-> syzbot writes:
-> > KASAN: use-after-free Read in dput (2)
-> >
-> > proc_fill_super: allocate dentry failed
-> > ==================================================================
-> > BUG: KASAN: use-after-free in fast_dput fs/dcache.c:727 [inline]
-> > BUG: KASAN: use-after-free in dput+0x53e/0xdf0 fs/dcache.c:846
-> > Read of size 4 at addr ffff88808a618cf0 by task syz-executor.0/8426
-> >
-> > CPU: 0 PID: 8426 Comm: syz-executor.0 Not tainted 5.6.0-next-20200412-syzkaller #0
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> > Call Trace:
-> >  __dump_stack lib/dump_stack.c:77 [inline]
-> >  dump_stack+0x188/0x20d lib/dump_stack.c:118
-> >  print_address_description.constprop.0.cold+0xd3/0x315 mm/kasan/report.c:382
-> >  __kasan_report.cold+0x35/0x4d mm/kasan/report.c:511
-> >  kasan_report+0x33/0x50 mm/kasan/common.c:625
-> >  fast_dput fs/dcache.c:727 [inline]
-> >  dput+0x53e/0xdf0 fs/dcache.c:846
-> >  proc_kill_sb+0x73/0xf0 fs/proc/root.c:195
-> >  deactivate_locked_super+0x8c/0xf0 fs/super.c:335
-> >  vfs_get_super+0x258/0x2d0 fs/super.c:1212
-> >  vfs_get_tree+0x89/0x2f0 fs/super.c:1547
-> >  do_new_mount fs/namespace.c:2813 [inline]
-> >  do_mount+0x1306/0x1b30 fs/namespace.c:3138
-> >  __do_sys_mount fs/namespace.c:3347 [inline]
-> >  __se_sys_mount fs/namespace.c:3324 [inline]
-> >  __x64_sys_mount+0x18f/0x230 fs/namespace.c:3324
-> >  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
-> >  entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> > RIP: 0033:0x45c889
-> > Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-> > RSP: 002b:00007ffc1930ec48 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-> > RAX: ffffffffffffffda RBX: 0000000001324914 RCX: 000000000045c889
-> > RDX: 0000000020000140 RSI: 0000000020000040 RDI: 0000000000000000
-> > RBP: 000000000076bf00 R08: 0000000000000000 R09: 0000000000000000
-> > R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000003
-> > R13: 0000000000000749 R14: 00000000004ca15a R15: 0000000000000013
-> 
-> Looking at the code now that it the internal mount of proc is no
-> longer used it is possible to unmount proc.   If proc is unmounted
-> the fields of the pid namespace that were used for filesystem
-> specific state are not reinitialized.
-> 
-> Which means that proc_self and proc_thread_self can be pointers to
-> already freed dentries.
-> 
-> The reported user after free appears to be from mounting and
-> unmounting proc followed by mounting proc again and using error
-> injection to cause the new root dentry allocation to fail.  This in
-> turn results in proc_kill_sb running with proc_self and
-> proc_thread_self still retaining their values from the previous mount
-> of proc.  Then calling dput on either proc_self of proc_thread_self
-> will result in double put.  Which KASAN sees as a use after free.
-> 
-> Solve this by always reinitializing the filesystem state stored
-> in the struct pid_namespace, when proc is unmounted.
-> 
-> Reported-by: syzbot+72868dd424eb66c6b95f@syzkaller.appspotmail.com
-> Fixes: 69879c01a0c3 ("proc: Remove the now unnecessary internal mount of proc")
-> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 
-Was looking at that earlier right before eod briefly here as well.
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+On 4/15/20 12:29 PM, Leon Romanovsky wrote:
+> On Wed, Apr 15, 2020 at 10:28:23AM -0700, Ralph Campbell wrote:
+>>
+>> On 4/15/20 7:41 AM, Jason Gunthorpe wrote:
+>>> On Fri, Mar 20, 2020 at 05:31:05PM -0700, Ralph Campbell wrote:
+>>>> This series adds basic self tests for HMM and are intended for Jason
+>>>> Gunthorpe's rdma tree which has a number of HMM patches applied.
+>>>
+>>> Here are some hunks I noticed while testing this:
+>>>
+>>> --- a/lib/Kconfig.debug
+>>> +++ b/lib/Kconfig.debug
+>>> @@ -2201,7 +2201,8 @@ config TEST_MEMINIT
+>>>    config TEST_HMM
+>>>    	tristate "Test HMM (Heterogeneous Memory Management)"
+>>> -	depends on DEVICE_PRIVATE
+>>> +	depends on TRANSPARENT_HUGEPAGE
+>>> +	select DEVICE_PRIVATE
+>>>    	select HMM_MIRROR
+>>>    	select MMU_NOTIFIER
+>>>    	help
+>>>
+>>> It fails testing if TRANSPARENT_HUGEPAGE is not on
+>>>
+>>> @@ -1097,6 +1071,7 @@ static int dmirror_device_init(struct dmirror_device *mdevice, int id)
+>>>    	spin_lock_init(&mdevice->lock);
+>>>    	cdev_init(&mdevice->cdevice, &dmirror_fops);
+>>> +	mdevice->cdevice.owner = THIS_MODULE;
+>>>    	ret = cdev_add(&mdevice->cdevice, dev, 1);
+>>>    	if (ret)
+>>>    		return ret;
+>>>
+>>> The use of cdev without a struct device is super weird, but it still
+>>> needs this
+>>>
+>>> diff --git a/tools/testing/selftests/vm/test_hmm.sh b/tools/testing/selftests/vm/test_hmm.sh
+>>> index 461e4a99a362cf..0647b525a62564 100755
+>>> --- a/tools/testing/selftests/vm/test_hmm.sh
+>>> +++ b/tools/testing/selftests/vm/test_hmm.sh
+>>> @@ -59,7 +59,7 @@ run_smoke()
+>>>    	echo "Running smoke test. Note, this test provides basic coverage."
+>>>    	load_driver
+>>> -	./hmm-tests
+>>> +	$(dirname "${BASH_SOURCE[0]}")/hmm-tests
+>>>    	unload_driver
+>>>    }
+>>>
+>>> Make it runnably reliably
+>>>
+>>> Jason
+>>
+>> Thanks for the fixes. I'll apply these and send a v9.
+>> I will also add missing calls to release_mem_region() to free the reserved device private
+>> addresses.
+> 
+> If you decide to ignore my request to avoid addition of special header
+> file to UAPI, at least don't copy and install that file without some
+> special CONFIG option (TEST_HMM ???) requested by the users. It also
+> will be good to get Acked-by on this change from HMM people.
+> 
+> However, I still think that include/uapi/linux/test_hmm.h opens
+> pandora box of having UAPI files without real promise to keep it
+> backward compatible.
+> 
+> Thanks
 
-Thanks!
-Christian
+I think that is a valid point. I would expect the test<->driver UAPI to track the kernel
+version since the sources are "released" together. I suppose a version number could be
+included in the request structure to handle mismatch driver and test program but that
+may be overkill.
+Are you suggesting that include/linux/test_hmm.h is a better location?
