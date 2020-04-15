@@ -2,106 +2,108 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB83AC3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:52:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8968C3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:53:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CA82206F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:52:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8D34206F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:53:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="kOKoxbSy"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ut9RWSaO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895145AbgDOIwe (ORCPT
+        id S2895180AbgDOIxF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 04:52:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42782 "EHLO
+        Wed, 15 Apr 2020 04:53:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2895134AbgDOIv5 (ORCPT
+        by vger.kernel.org with ESMTP id S2895164AbgDOIwr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 04:51:57 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8C05C061A0F
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 01:51:57 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id b13so2662682oti.3
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 01:51:57 -0700 (PDT)
+        Wed, 15 Apr 2020 04:52:47 -0400
+Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 535E7C061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 01:52:47 -0700 (PDT)
+Received: by mail-ua1-x943.google.com with SMTP id 21so1045333uae.4
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 01:52:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kZ8PEt8ilO1F7s0PZB2jEBFLypOtSGmLv+9HjFoznC8=;
-        b=kOKoxbSySQFWV4DTsd8hMXuUPciY0YdJjmtqavGBNtg6fmNgGRASTGJqeImXO941zR
-         i1ioZxDpnblsfXu/NTRnbq1hVPlN8Y8FI480+4TFTWPRH7dfkOIDCzMk7lt076WbZPqt
-         5wxioDQYlIOyq6EGcFZL7xQyuz7wtOotPGfIv0VTg1MyRrWMWFubIoc38+chQ05Zxtqh
-         8Ni72FCrRzrVxYw0tUSc73VaFeqsgCg4bIEV01XtO2N8/38ozd/AX979JOcZLH3WzrxR
-         tS71hzw1aGgyWSZDMKu9jyzo0tjsKGvGEG1j+zOF8bmZJPnE0/BUPC6ljQfSV4Y/eg6f
-         cwEQ==
+         :cc:content-transfer-encoding;
+        bh=GffN4wdV1b8/+GP7bB7msfOG3SsTk4D9FpQBELdB7UQ=;
+        b=Ut9RWSaOq1yupMZbWU33o+RQiJm1VcNInX3xL0Qg2Yu12twvk6t/92Wf0Py1JaXBW7
+         seiwUhSnzZDeqIFK/o6vdQ1KzM/lWT9y7RRQNWbGx64yLdbrPQxDTAnsOWWnqXGKMOLL
+         GxFZhp0BptUY2s68S0lWCLTgEsrSz3e0BRd8KcU7xFSdUMqzK1yrr+JlURONDWZBNJZq
+         w1+L9MVjy0l/BwMUarAgZKemDe7WXlv7abAiHz9Kl9N7XQ5JE8Hcjk59ti4cK4THNy9D
+         HnotyGjdAwHUGgJi+IjmHnkpf/cHvijf63dA3kf0GXIeof5uub5vU+szxsj3JT1mQVlA
+         65jA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kZ8PEt8ilO1F7s0PZB2jEBFLypOtSGmLv+9HjFoznC8=;
-        b=dDzQtbo6yrHmWexlzcPjyZfXYurrw4x3Mi2JmD6zGSUstFzpM4T2HSM/pdH+dMX3Dt
-         86lZ12Nsy80K4whG0zWEgqi3Od2mRRGKgtZ3XT8MvuyBVDYXvYxudC8DgNPniCHIt9vf
-         7eU/CJ2nGQEqF2U3uEKxJAXzG/OeJkYKe4GotFZATO/61FC2zjTLNUWPjNmgFttXroB0
-         WtBjvN8z/3td6B45lIAMcqNyE58Nz5OcQ1AWQWvZY76ao6oILZEtyyESufhwpxCuKYyE
-         3SCXU2sP5t1tk7CjYO5F8gE4SG3NFXKdw23hYHT/MXUk6Efdl6r/VVlPSz+gSe29AyJR
-         WR6g==
-X-Gm-Message-State: AGi0PubGHVWAhBunohPRbDsXEtVZvRQk+4qluEPczXjYKX+kPxEEz2po
-        9EXCFUVbcnVNpG1obBURNgtRN5DYqtYBhIo7xW/QnQ==
-X-Google-Smtp-Source: APiQypJv9QyoDLeyzwLnHZJawTduDHOVTKjxTKzUFB3jLIOo6iaZRWcW/QaOxtRbC16DF6GTDfN9Pm4nKSu8DpTh2bg=
-X-Received: by 2002:a9d:ef8:: with SMTP id 111mr21981983otj.94.1586940716871;
- Wed, 15 Apr 2020 01:51:56 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=GffN4wdV1b8/+GP7bB7msfOG3SsTk4D9FpQBELdB7UQ=;
+        b=j9qGZaRj7CP2UumH6y8gonllVaxfSRddt5v961sjEXZXz+mvVU/Mrz+XctB8JLE2PS
+         gnAWW9tlwgxOZyNNb6Jq6hMAd0TAiwdqgks3HzL2in5Zv8nOWUeNs9//C3sVeoSAYQpD
+         4FYXOuuvtEx7kSmGqOX2zX+Pn/eKZCzFJvPHlzi1S3KIFEqcjZX5TMj9EvAwqOKUbvUS
+         7/UT/ehPox9lYIKkomuPc6cZYq9YjNEIXiU0/lnT3otjHUQuNPeKHqkLKylogVKAEeRN
+         s2MW0hDqEEHB0EofOrz3fJUOW+shwdNzuziB4NVyaAzUKVzBJqIwm++wyv1WErAn1PMu
+         zGWQ==
+X-Gm-Message-State: AGi0PuZQPAFlzcBqzZhhPxB5wAgeZeb9UW7tSuuqP+VIdigySqLmCeS0
+        crffeMOxc4CxwOfgHvQi8ghfFFqQBbEfPlYGXLliRw==
+X-Google-Smtp-Source: APiQypIR6ai89vFmGqUSNQjlgJoCsLY70k1gj1lY6weiIV/qNYMav0X7PqbmVlV4sZKnwV/apxkl2A0RgEkql85Izu8=
+X-Received: by 2002:a9f:20c6:: with SMTP id 64mr3823674uaa.100.1586940766283;
+ Wed, 15 Apr 2020 01:52:46 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200414181012.114905-1-robert.marko@sartura.hr>
- <20200414181012.114905-3-robert.marko@sartura.hr> <076e0e54-ad3a-8cb7-d96d-8a83fc315b28@gmail.com>
-In-Reply-To: <076e0e54-ad3a-8cb7-d96d-8a83fc315b28@gmail.com>
-From:   Robert Marko <robert.marko@sartura.hr>
-Date:   Wed, 15 Apr 2020 10:51:45 +0200
-Message-ID: <CA+HBbNFm8PG87dBicYjfrvXjdBEyPzoy5vhrQuzSCsZL3o57Gw@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] dts: ipq4019: add MDIO node
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>, linux@armlinux.org.uk,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        Christian Lamparter <chunkeey@gmail.com>,
-        Luka Perkov <luka.perkov@sartura.hr>
+References: <cover.1585827904.git.mirq-linux@rere.qmqm.pl>
+In-Reply-To: <cover.1585827904.git.mirq-linux@rere.qmqm.pl>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 15 Apr 2020 10:52:10 +0200
+Message-ID: <CAPDyKFrWZN2pwdaJ3ctMP9Mb3W6d5Di5jt4F9u1AmqxSKFzboQ@mail.gmail.com>
+Subject: Re: [PATCH 0/7] SDHCI clock handling fixes and cleanups
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Kevin Liu <kliu5@marvell.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Suneel Garapati <suneel.garapati@xilinx.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 11:13 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
+On Thu, 2 Apr 2020 at 13:54, Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qmq=
+m.pl> wrote:
 >
+> This patch set combines a few of code improvements for SDHCI clock handli=
+ng.
+> Besides small fixes, most value comes from simplifying the code, so it's
+> easier to understand.
 >
+> Micha=C5=82 Miros=C5=82aw (7):
+>   mmc: sdhci: fix base clock usage in preset value
+>   mmc: sdhci: fix programmable clock config from preset value
+>   mmc: sdhci: fix SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN
+>   mmc: sdhci: move SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN frequency limit
+>   mmc: sdhci: simplify clock frequency calculation
+>   mmc: sdhci: squash v2/v3+ clock calculation differences
+>   mmc: sdhci: respect non-zero div quirk in programmable clock mode
 >
-> On 4/14/2020 11:10 AM, Robert Marko wrote:
-> > This patch adds the necessary MDIO interface node
-> > to the Qualcomm IPQ4019 DTSI.
-> >
-> > Built-in QCA8337N switch is managed using it,
-> > and since we have a driver for it lets add it.
-> >
-> > Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
-> > Signed-off-by: Robert Marko <robert.marko@sartura.hr>
-> > Cc: Luka Perkov <luka.perkov@sartura.hr>
-> > ---
-> >  arch/arm/boot/dts/qcom-ipq4019.dtsi | 28 ++++++++++++++++++++++++++++
-> >  1 file changed, 28 insertions(+)
+>  drivers/mmc/host/sdhci-of-arasan.c |   7 +-
+>  drivers/mmc/host/sdhci.c           | 126 +++++++++++++----------------
+>  drivers/mmc/host/sdhci.h           |   4 +-
+>  3 files changed, 64 insertions(+), 73 deletions(-)
 >
-> Earlier contributions to that file seem to suggest that the preferred
-> subject is:
->
-> ARM: dts: qcom: <subject>
-Will be changed in v3.
-Thanks
 > --
-> Florian
+> 2.20.1
+>
+
+Adrian, whenever you get the time, I would like to get your feedback
+on these, especially on patch1->patch3 as those may be targeted for
+fixes.
+
+Kind regards
+Uffe
