@@ -2,79 +2,148 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 732CCC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:13:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7874C3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:16:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51BE821835
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:13:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B601D2076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:16:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vTyEIRCF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1416502AbgDORNd (ORCPT
+        id S1416518AbgDORQ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 13:13:33 -0400
-Received: from muru.com ([72.249.23.125]:49644 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1416483AbgDORNS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 13:13:18 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 54633810E;
-        Wed, 15 Apr 2020 17:13:52 +0000 (UTC)
-Date:   Wed, 15 Apr 2020 10:13:00 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Maxime Ripard <maxime@cerno.tech>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        David Airlie <airlied@linux.ie>,
-        James Hogan <jhogan@kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-mips@vger.kernel.org,
-        Paul Cercueil <paul@crapouillou.net>,
-        linux-samsung-soc@vger.kernel.org, letux-kernel@openphoenux.org,
-        Paul Burton <paulburton@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Kukjin Kim <kgene@kernel.org>,
-        devicetree@vger.kernel.org,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Philipp Rossak <embed3d@gmail.com>,
-        openpvrsgx-devgroup@letux.org, linux-kernel@vger.kernel.org,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Daniel Vetter <daniel@ffwll.ch>, kernel@pyra-handheld.com
-Subject: Re: [PATCH v6 01/12] dt-bindings: add img, pvrsgx.yaml for
- Imagination GPUs
-Message-ID: <20200415171300.GG37466@atomide.com>
-References: <cover.1586939718.git.hns@goldelico.com>
- <06fb6569259bb9183d0a0d0fe70ec4f3033b8aab.1586939718.git.hns@goldelico.com>
- <20200415101251.o3wi5t6xvf56xmhq@gilmour.lan>
- <72919514-0657-4B71-902F-3E775E528F64@goldelico.com>
- <f4fdca8a-d18c-a8d2-7f51-d1ebbbab3647@baylibre.com>
- <535CAEBE-F43E-4BFC-B989-612C81F0D7EF@goldelico.com>
- <20200415142124.yzfh6mtqq7cdq22e@gilmour.lan>
- <DC0A2DE2-3D77-46F8-8DE1-55050FDACC9B@goldelico.com>
- <20200415162151.rwym4ioqz27migfn@gilmour.lan>
- <45F411C0-150B-4FBA-A0E1-B863B3F36DF6@goldelico.com>
+        Wed, 15 Apr 2020 13:16:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36658 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1416503AbgDORQY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 13:16:24 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03673C061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 10:16:24 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id g32so215301pgb.6
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 10:16:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Izg8ue8YhxY7H2kruJlEEdGPr0daRyfDG5yf987D9nU=;
+        b=vTyEIRCFkbm/7cTNcpVWop+cR+0/QClCSDkUDVPtYAu7XEXkE2QPRNxHxymFQZR2Nj
+         EKtN6f2MwtzpKVWkII8qfFECUdlvef4AtBgQbIx+cw1AFwa0hxhBN/Ckhipus8m1r0y0
+         PaDtt5Ep1oV8ZTtV9liF/XKuf+IuBz9xw/1OaShQJUJgYNcgZmpkRQ9z3MfzdKp8pUFA
+         CzIul5KZNqOShlWKg7nCWkAaK0nzehFlLHH4ZJ2j+3kjaeBKqiOryjcuyOIPTR5WuaAH
+         +G1FYIft7HFjwx1EHCPl+YG7c+MqiVSo6sIKmtckJSVtzNh/8LRxxcj9nLSpNQIjWBfs
+         PLgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Izg8ue8YhxY7H2kruJlEEdGPr0daRyfDG5yf987D9nU=;
+        b=SGszWiuu3Rpvftoq84w2mFcq50IciliDt9DzoNFRmyMpobeuVY6MEhU3LXCG0T7MsU
+         SPqBPUl4w2mhnYiAa5OxkyLMVbqoGgyrgwoOAy8PZEcr7UHIFQm1UNY2LVodFAeSJANB
+         3X/biabRtiCkX0F0WEGNgMXh7ETQdjMqaKOGagmQDT3lpv6GOq4OnT+noForqfZRGgrm
+         tvZJwztKoyaD6EDh3ZOY1tDusvNNXiH0OC6qJkwDax1Nt7EiobRrCor9id84iEC6Y1MM
+         X6SuPCQTlMteodjPpEjvStiqv5FdiuVFxdwgEfphttnl8/U0mSPXiB0V/3J1Ag2McnLu
+         9KaA==
+X-Gm-Message-State: AGi0PuZKnBUlCEPAXQG5iMD3fJhtKRmJcN+nkaYLHUwf9J3CDs7FOTXR
+        XReLIjHPt41xadjIJv+HbYf7WA==
+X-Google-Smtp-Source: APiQypIp+tAuF/KpVGiXjJ/mXx6QMkfcSDg3akdI4diIPizZMvKY5qs0xrcxJMuI9kMP22k4IMHCKA==
+X-Received: by 2002:a63:2057:: with SMTP id r23mr28157163pgm.232.1586970983425;
+        Wed, 15 Apr 2020 10:16:23 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id x27sm14559225pfj.74.2020.04.15.10.16.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2020 10:16:22 -0700 (PDT)
+Date:   Wed, 15 Apr 2020 11:16:20 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Siddharth Gupta <sidgup@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, ohad@wizery.com,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, tsoni@codeaurora.org,
+        psodagud@codeaurora.org, rishabhb@codeaurora.org
+Subject: Re: [PATCH v2 3/6] remoteproc: sysmon: Inform current rproc about
+ all active rprocs
+Message-ID: <20200415171620.GC16583@xps15>
+References: <1586389003-26675-1-git-send-email-sidgup@codeaurora.org>
+ <1586389003-26675-4-git-send-email-sidgup@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <45F411C0-150B-4FBA-A0E1-B863B3F36DF6@goldelico.com>
+In-Reply-To: <1586389003-26675-4-git-send-email-sidgup@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* H. Nikolaus Schaller <hns@goldelico.com> [200415 16:43]:
-> If you agree I can add the clocks/clock-names property as an
-> optional property. This should solve omap and all others.
+On Wed, Apr 08, 2020 at 04:36:40PM -0700, Siddharth Gupta wrote:
+> Clients/services running on a remoteproc that booted up might need to be
+> aware of the state of already running remoteprocs. When a remoteproc boots
+> up (fresh or after recovery) it is not aware of the remoteprocs that booted
+> before it, i.e., the system state is incomplete. So to keep track of it we
+> send sysmon on behalf of all 'ONLINE' remoteprocs.
+> 
+> Signed-off-by: Siddharth Gupta <sidgup@codeaurora.org>
+> ---
+>  drivers/remoteproc/qcom_sysmon.c | 25 +++++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+> 
+> diff --git a/drivers/remoteproc/qcom_sysmon.c b/drivers/remoteproc/qcom_sysmon.c
+> index 851664e..8d8996d 100644
+> --- a/drivers/remoteproc/qcom_sysmon.c
+> +++ b/drivers/remoteproc/qcom_sysmon.c
+> @@ -453,10 +453,20 @@ static int sysmon_prepare(struct rproc_subdev *subdev)
+>  	return 0;
+>  }
+>  
+> +/**
+> + * sysmon_start() - start callback for the sysmon remoteproc subdevice
+> + * @subdev:	instance of the sysmon subdevice
+> + *
+> + * Inform all the listners of sysmon notifications that the rproc associated
+> + * to @subdev has booted up. The rproc that booted up also needs to know
+> + * which rprocs are already up and running, so send start notifications
+> + * on behalf of all the online rprocs.
+> + */
+>  static int sysmon_start(struct rproc_subdev *subdev)
+>  {
+>  	struct qcom_sysmon *sysmon = container_of(subdev, struct qcom_sysmon,
+>  						  subdev);
+> +	struct qcom_sysmon *target;
+>  	struct sysmon_event event = {
+>  		.subsys_name = sysmon->name,
+>  		.ssr_event = SSCTL_SSR_EVENT_AFTER_POWERUP
+> @@ -464,6 +474,21 @@ static int sysmon_start(struct rproc_subdev *subdev)
+>  
+>  	blocking_notifier_call_chain(&sysmon_notifiers, 0, (void *)&event);
+>  
+> +	mutex_lock(&sysmon_lock);
+> +	list_for_each_entry(target, &sysmon_list, node) {
+> +		if (target == sysmon ||
+> +		    target->rproc->state != RPROC_RUNNING)
+> +			continue;
+> +
+> +		event.subsys_name = target->name;
+> +
+> +		if (sysmon->ssctl_version == 2)
+> +			ssctl_send_event(sysmon, &event);
+> +		else if (sysmon->ept)
+> +			sysmon_send_event(sysmon, &event);
+> +	}
+> +	mutex_unlock(&sysmon_lock);
+> +
 
-Yes the clock can be optional property no problem. If we have
-a clock, we just enable/disable it from the pvr_runtime_suspend()
-and pvr_runtime_resume() we alaready have in pvr-drv.c.
+Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-Regards,
-
-Tony
+>  	return 0;
+>  }
+>  
+> -- 
+> Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
