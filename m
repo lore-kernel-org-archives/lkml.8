@@ -2,79 +2,75 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF13C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:45:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5EDFC3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:45:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FDFA20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:45:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9612B20737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:45:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="LkXq7rUH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1416205AbgDOQpL (ORCPT
+        id S2410411AbgDOQpf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 12:45:11 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44200 "EHLO mx2.suse.de"
+        Wed, 15 Apr 2020 12:45:35 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:15261 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1416181AbgDOQpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 12:45:05 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 6C043ABC7;
-        Wed, 15 Apr 2020 16:45:02 +0000 (UTC)
-From:   Takashi Iwai <tiwai@suse.de>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] firmware: Drop unused pages field from struct firmware
-Date:   Wed, 15 Apr 2020 18:45:00 +0200
-Message-Id: <20200415164500.28749-1-tiwai@suse.de>
-X-Mailer: git-send-email 2.16.4
+        id S2404537AbgDOQpc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 12:45:32 -0400
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 492Ss61qB1zCQ;
+        Wed, 15 Apr 2020 18:45:29 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1586969130; bh=kAIJPE2ZZL/Q6yulReDpgbbwC0zEf9C+u6NXWrMTpRc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LkXq7rUHGtnXk/ohqLXvs9ytSE/gzc73Boks+663ZixJN1dMGTSWWli0CiDzpkIKC
+         X5CpCCp+xIv5b2JMM5WbyW6xmnTIOiEJlM7mx5yPE0UxlDT84AI/SiAWGjPk46HQXD
+         rSl3QyaOnzD/YQG04ZoI4k8ap0ITw4LhM2OaxYrPWz387tgGcy0XTbYr+jBMgQDzrl
+         csq+a2LG9WNH9gtIuOMU6YW9LTUDFksuXEDRweTzgAEUEjWZk2OrWVwExdfIDFiPVk
+         PTWeULgOUbLGw6S5h5WjRLthT1aC0RovdQzMegHmSZIU0RPynZkPfGfFwLhJ9kKqBZ
+         K9HAMBtPCxxnQ==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+Date:   Wed, 15 Apr 2020 18:45:28 +0200
+From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Kevin Liu <kliu5@marvell.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Suneel Garapati <suneel.garapati@xilinx.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
+Subject: Re: [PATCH 5/7] mmc: sdhci: simplify clock frequency calculation
+Message-ID: <20200415164528.GE19897@qmqm.qmqm.pl>
+References: <cover.1585827904.git.mirq-linux@rere.qmqm.pl>
+ <1a7f7f0941314da66acda3c60f44b3d2417133e6.1585827904.git.mirq-linux@rere.qmqm.pl>
+ <7967c035-52e3-1ce7-a82f-47d28a3cf484@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-2
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7967c035-52e3-1ce7-a82f-47d28a3cf484@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The struct firmware contains a page table pointer that was used only
-internally in the past.  Since the actual page tables are referred
-from struct fw_priv and should be never from struct firmware, we can
-drop this unused field gracefully.
+On Wed, Apr 15, 2020 at 04:54:33PM +0300, Adrian Hunter wrote:
+> On 2/04/20 2:54 pm, Micha³ Miros³aw wrote:
+> > Make clock frequency calculations simpler by replacing loops
+> > with divide-and-clamp.
+> 
+> I am sorry, but I am not really sure the simplification is worth the code
+> churn, risk of introducing new bugs, or validation effort.
+> 
+> IMO, the loops, while perhaps inefficient, are not hard to understand.
 
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
----
- drivers/base/firmware_loader/main.c | 3 ---
- include/linux/firmware.h            | 1 -
- 2 files changed, 4 deletions(-)
+I guess this is a kind of religious subject. ;-)
+I tend to prefer shorter and less-branchy code.
 
-diff --git a/drivers/base/firmware_loader/main.c b/drivers/base/firmware_loader/main.c
-index 76f79913916d..5296aaca35cf 100644
---- a/drivers/base/firmware_loader/main.c
-+++ b/drivers/base/firmware_loader/main.c
-@@ -548,9 +548,6 @@ static void firmware_free_data(const struct firmware *fw)
- static void fw_set_page_data(struct fw_priv *fw_priv, struct firmware *fw)
- {
- 	fw->priv = fw_priv;
--#ifdef CONFIG_FW_LOADER_USER_HELPER
--	fw->pages = fw_priv->pages;
--#endif
- 	fw->size = fw_priv->size;
- 	fw->data = fw_priv->data;
- 
-diff --git a/include/linux/firmware.h b/include/linux/firmware.h
-index 4bbd0afd91b7..cb3e2c06ed8a 100644
---- a/include/linux/firmware.h
-+++ b/include/linux/firmware.h
-@@ -12,7 +12,6 @@
- struct firmware {
- 	size_t size;
- 	const u8 *data;
--	struct page **pages;
- 
- 	/* firmware loader private fields */
- 	void *priv;
--- 
-2.25.0
-
+Best Regards,
+Micha³ Miros³aw
