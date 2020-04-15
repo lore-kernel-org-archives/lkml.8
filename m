@@ -2,86 +2,143 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ECB4C2BB85
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:57:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C11CCC2BB85
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:59:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6569320787
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:57:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DA24206D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:59:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586944741;
+	bh=Lr/I7Gh1dL+CTUVk0eKSJ4t1qqpK0Gyhn+u3fnbV7Ik=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=bCGABj7/XdMHUnxWWnavGi3Ygxfs6axo+4/mZeZcSQNH7HmPyIBWlI54y07Hfyv87
+	 CQwBCqtjblsULpX7sJe42SviW91Z/vBK2FX/iegWrQ1iNj4WklM3kuKg3ScDEkBnRG
+	 SSqnoIkmBhdE+cOwnp7qucQdRZKrMF4F8iFRH3KY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408492AbgDOJ5w (ORCPT
+        id S2408504AbgDOJ7A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 05:57:52 -0400
-Received: from foss.arm.com ([217.140.110.172]:41138 "EHLO foss.arm.com"
+        Wed, 15 Apr 2020 05:59:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405824AbgDOJ5r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 05:57:47 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C3D291063;
-        Wed, 15 Apr 2020 02:57:46 -0700 (PDT)
-Received: from [10.37.12.1] (unknown [10.37.12.1])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 760B13F68F;
-        Wed, 15 Apr 2020 02:57:44 -0700 (PDT)
-Subject: Re: [PATCH 1/8] arm64: cpufeature: Relax check for IESB support
-To:     will@kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu
-Cc:     linux-kernel@vger.kernel.org, mark.rutland@arm.com, maz@kernel.org,
-        anshuman.khandual@arm.com, catalin.marinas@arm.com,
-        saiprakash.ranjan@codeaurora.org, dianders@chromium.org,
-        kernel-team@android.com
-References: <20200414213114.2378-1-will@kernel.org>
- <20200414213114.2378-2-will@kernel.org>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <ef6f287a-9233-6d5a-b0b8-f5fabe5ac2fc@arm.com>
-Date:   Wed, 15 Apr 2020 11:02:33 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        id S2405824AbgDOJ65 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 05:58:57 -0400
+Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7D6120775;
+        Wed, 15 Apr 2020 09:58:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586944737;
+        bh=Lr/I7Gh1dL+CTUVk0eKSJ4t1qqpK0Gyhn+u3fnbV7Ik=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Lv/JNaSd5VO5HG5XJDnc84SAIxxkr8Wtttlr+F42/7lTHb+8CIYFh4OlDSpDSfVvI
+         y9H3lTneuO0Qw4pW6yrf2xWyOHY1wEZir1cqfcNjjbwWBPaG66w4Due4zzgjqtyVWV
+         GvXCHQG8WrNav+C13dkec0vAqxyHY8LJ6ZN1zP/I=
+Received: by mail-io1-f49.google.com with SMTP id h6so16417749iok.11;
+        Wed, 15 Apr 2020 02:58:56 -0700 (PDT)
+X-Gm-Message-State: AGi0PuaIujf0vcujGWojlOF080EIjqBCe7Mn/BvCYbdoZXAM8EXDIvEO
+        3dA0vv6fiVJVC5Z5dB7ojgebrxn+1ffX8z+E5Ps=
+X-Google-Smtp-Source: APiQypL1wZ7TQifTwSwS0MmPR0pnyRKxEtlIe582FtHvbSPq6+H/wcseQO6cwICMwR49iv2elopSASCXMQC9d8j0ns0=
+X-Received: by 2002:a05:6602:1550:: with SMTP id h16mr25614401iow.171.1586944736300;
+ Wed, 15 Apr 2020 02:58:56 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200414213114.2378-2-will@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CADDKRnBdM_T1W=iECrt89hmAmbRRyskGhS4d3ozTz1nWj_i_qQ@mail.gmail.com>
+ <CAMj1kXGuMjHi=E6cVGGpwrKF_-KXcj0VRcvAdFS_vmwV7PudCQ@mail.gmail.com>
+ <CADDKRnAvC7U6kWdiqmib40cJ7r41COyic4LTdO9utsp4GOJnvA@mail.gmail.com>
+ <CAMj1kXEDJ67oJJjKtDC--VXmr+z8-voPhHnRnaMCEfo5Pc6Sqg@mail.gmail.com> <CADDKRnBzMPw8cj5CQv93rxydx8LcNVyfs4mfrLvqxBEtH_r3zQ@mail.gmail.com>
+In-Reply-To: <CADDKRnBzMPw8cj5CQv93rxydx8LcNVyfs4mfrLvqxBEtH_r3zQ@mail.gmail.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Wed, 15 Apr 2020 11:58:45 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXEh9z6QJDyKicCE6enPrQt8emxXee1NjQQknfV0_KL0kQ@mail.gmail.com>
+Message-ID: <CAMj1kXEh9z6QJDyKicCE6enPrQt8emxXee1NjQQknfV0_KL0kQ@mail.gmail.com>
+Subject: Re: Kernel V5.7-rc1 doesn't boot (EFI?)
+To:     =?UTF-8?Q?J=C3=B6rg_Otte?= <jrg.otte@gmail.com>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Will
+On Wed, 15 Apr 2020 at 10:35, J=C3=B6rg Otte <jrg.otte@gmail.com> wrote:
+>
+> Am Di., 14. Apr. 2020 um 18:35 Uhr schrieb Ard Biesheuvel <ardb@kernel.or=
+g>:
+> >
+> > On Tue, 14 Apr 2020 at 18:32, J=C3=B6rg Otte <jrg.otte@gmail.com> wrote=
+:
+> > >
+> > > Am Di., 14. Apr. 2020 um 12:50 Uhr schrieb Ard Biesheuvel <ardb@kerne=
+l.org>:
+> > > >
+> > > > On Tue, 14 Apr 2020 at 12:40, J=C3=B6rg Otte <jrg.otte@gmail.com> w=
+rote:
+> > > > >
+> > > > > Booting my notebook with kernel V57-rc1 I get following
+> > > > > display:
+> > > > >
+> > > > > exit_boot() failed!
+> > > > > efi_main() failed!
+> > > > > StartImage failed: Buffer Too Small
+> > > > >
+> > > > > Booting Kernel V5.6 works well.
+> > > > >
+> > > > > From dmesg (kernel V5.6):
+> > > > > efi: EFI v2.31 by Phoenix Technologies Ltd.
+> > > > > efi:  ACPI=3D0xdcffe000  ACPI 2.0=3D0xdcffe014  SMBIOS=3D0xdce800=
+00  RNG=3D0xdc3cd198
+> > > > > efi: seeding entropy pool
+> > > > > efi: [Firmware Bug]: Invalid EFI memory map entries:
+> > > > > efi: mem47: [Reserved           |   |  |  |  |  |  |  |  |   |  |=
+  |
+> > > > > |  ] range=3D[0x0000000000000000-0x0000000000000000] (invalid)
+> > > > > efi: mem48: [Reserved           |   |  |  |  |  |  |  |  |   |  |=
+  |
+> > > > > |  ] range=3D[0x0000000000000000-0x0000000000000000] (invalid)
+> > > > > efi: mem49: [Reserved           |   |  |  |  |  |  |  |  |   |  |=
+  |
+> > > > > |  ] range=3D[0x0000000000000000-0x0000000000000000] (invalid)
+> > > > > efi: mem50: [Reserved           |   |  |  |  |  |  |  |  |   |  |=
+  |
+> > > > > |  ] range=3D[0x0000000000000000-0x0000000000000000] (invalid)
+> > > > > efi: mem51: [Reserved           |   |  |  |  |  |  |  |  |   |  |=
+  |
+> > > > > |  ] range=3D[0x0000000000000000-0x0000000000000000] (invalid)
+> > > > > efi: Removing 5 invalid memory map entries.
+> > > > >
+> > > >
+> > > > Thanks for the report.
+> > > >
+> > > > Can you try booting with efi=3Dno_disable_early_pci_dma passed via =
+the
+> > > > kernel command line? [*]
+> > > >
+> > > Yes, that works!
+> > >
+> > > > If that does not help, can you try to reproduce with this branch?
+> > > >
+> > > > https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/log/?h=
+=3Defi/urgent
+> > >
+> > > Should I give that branch a try anyway?
+> > >
+> >
+> > Your test proves that BSS is not being cleared correctly, so I have
+> > the answer I was looking for. However, I would appreciate it if you
+> > could test that branch, just to double check.
+> >
+> > Thanks,
+> > Ard.
+>
+> The branch works for me too!
+>
 
-On 04/14/2020 10:31 PM, Will Deacon wrote:
-> From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> 
-> We don't care if IESB is supported or not as we always set
-> SCTLR_ELx.IESB and, if it works, that's really great.
-> 
-> Relax the ID_AA64MMFR2.IESB cpufeature check so that we don't warn and
-> taint if it's mismatched.
-> 
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> [will: rewrote commit message]
-> Signed-off-by: Will Deacon <will@kernel.org>
-
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-
-> ---
->   arch/arm64/kernel/cpufeature.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-> index 9fac745aa7bb..63df28e6a425 100644
-> --- a/arch/arm64/kernel/cpufeature.c
-> +++ b/arch/arm64/kernel/cpufeature.c
-> @@ -247,7 +247,7 @@ static const struct arm64_ftr_bits ftr_id_aa64mmfr2[] = {
->   	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR2_FWB_SHIFT, 4, 0),
->   	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR2_AT_SHIFT, 4, 0),
->   	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR2_LVA_SHIFT, 4, 0),
-> -	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR2_IESB_SHIFT, 4, 0),
-> +	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64MMFR2_IESB_SHIFT, 4, 0),
->   	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR2_LSM_SHIFT, 4, 0),
->   	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR2_UAO_SHIFT, 4, 0),
->   	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR2_CNP_SHIFT, 4, 0),
-> 
-
+Thanks for testing!
