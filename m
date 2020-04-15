@@ -2,66 +2,103 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6187CC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:23:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28B6DC2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:23:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 481222076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:23:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F30F920775
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:23:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586957031;
+	bh=Isrih8rMZJRUmtk7ZuU2q84AJ4iMXZIZZshpIbEwdNY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=HQVoqKoJ80g0weVXASaqH1HgVvrn88F0MHUWu/tBLSpvK9U/IlnGDZFJQwB12sUfu
+	 w5an5dIkfvM9jHvWWuJmuurKOxZ6/6Hu+BZcOKdrWHgk6wCVcCn6152zoJMxhTVDOk
+	 GUEXJYyEZZBwXZjE8sXlqQKdc/qF9NXcTAajsWSI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2636030AbgDONXh (ORCPT
+        id S2636039AbgDONXt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:23:37 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53714 "EHLO mx2.suse.de"
+        Wed, 15 Apr 2020 09:23:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2636005AbgDONXH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 09:23:07 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 82DB7AE87;
-        Wed, 15 Apr 2020 13:23:03 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 8CEB3DA840; Wed, 15 Apr 2020 15:22:24 +0200 (CEST)
-Date:   Wed, 15 Apr 2020 15:22:24 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Josef Bacik <josef@toxicpanda.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.6 051/129] btrfs: handle NULL roots in
- btrfs_put/btrfs_grab_fs_root
-Message-ID: <20200415132224.GB5920@suse.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, Sasha Levin <sashal@kernel.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Josef Bacik <josef@toxicpanda.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org
+        id S2408871AbgDOLez (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:34:55 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2F1B20936;
+        Wed, 15 Apr 2020 11:34:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586950495;
+        bh=Isrih8rMZJRUmtk7ZuU2q84AJ4iMXZIZZshpIbEwdNY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=J7/0SHgEVxKEUh5cligVRowc3rhLOLZ0dRe/7KL95M/y698I7f9pzM4dcBZKPo7TY
+         5jimBIoC197qUFuYL8gn3qqc5C4kyXVpPrrkgWhHXhLWfNv3Nk/DdyLbVw1ZGC3txZ
+         UMD0sV2RWOJ7XBY2yVyhiO8OHirNXzPzCoK0Nbco=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Torsten Duwe <duwe@suse.de>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 008/129] s390/crypto: explicitly memzero stack key material in aes_s390.c
+Date:   Wed, 15 Apr 2020 07:32:43 -0400
+Message-Id: <20200415113445.11881-8-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
 References: <20200415113445.11881-1-sashal@kernel.org>
- <20200415113445.11881-51-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200415113445.11881-51-sashal@kernel.org>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 07:33:26AM -0400, Sasha Levin wrote:
-> From: Josef Bacik <josef@toxicpanda.com>
-> 
-> [ Upstream commit 4cdfd93002cb84471ed85b4999cd38077a317873 ]
-> 
-> We want to use this for dropping all roots, and in some error cases we
-> may not have a root, so handle this to make the cleanup code easier.
-> Make btrfs_grab_fs_root the same so we can use it in cases where the
-> root may not exist (like the quota root).
+From: Torsten Duwe <duwe@suse.de>
 
-This is another patch from the preparatory series, not needed for
-stable. Please drop it, thanks.
+[ Upstream commit 4a559cd15dbc79958fa9b18ad4e8afe4a0bf4744 ]
+
+aes_s390.c has several functions which allocate space for key material on
+the stack and leave the used keys there. It is considered good practice
+to clean these locations before the function returns.
+
+Link: https://lkml.kernel.org/r/20200221165511.GB6928@lst.de
+Signed-off-by: Torsten Duwe <duwe@suse.de>
+Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/s390/crypto/aes_s390.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/arch/s390/crypto/aes_s390.c b/arch/s390/crypto/aes_s390.c
+index 1c23d84a9097d..73044634d3427 100644
+--- a/arch/s390/crypto/aes_s390.c
++++ b/arch/s390/crypto/aes_s390.c
+@@ -342,6 +342,7 @@ static int cbc_aes_crypt(struct skcipher_request *req, unsigned long modifier)
+ 		memcpy(walk.iv, param.iv, AES_BLOCK_SIZE);
+ 		ret = skcipher_walk_done(&walk, nbytes - n);
+ 	}
++	memzero_explicit(&param, sizeof(param));
+ 	return ret;
+ }
+ 
+@@ -470,6 +471,8 @@ static int xts_aes_crypt(struct skcipher_request *req, unsigned long modifier)
+ 			 walk.dst.virt.addr, walk.src.virt.addr, n);
+ 		ret = skcipher_walk_done(&walk, nbytes - n);
+ 	}
++	memzero_explicit(&pcc_param, sizeof(pcc_param));
++	memzero_explicit(&xts_param, sizeof(xts_param));
+ 	return ret;
+ }
+ 
+-- 
+2.20.1
+
