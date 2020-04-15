@@ -2,38 +2,77 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F28EC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:10:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43703C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C7842076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:10:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF7AE2076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:10:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sNB0pOK+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S371356AbgDOVKs (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 17:10:48 -0400
-Received: from foss.arm.com ([217.140.110.172]:52504 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2442221AbgDOVFb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 17:05:31 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B5F051063;
-        Wed, 15 Apr 2020 14:05:25 -0700 (PDT)
-Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id CFD813F6C4;
-        Wed, 15 Apr 2020 14:05:24 -0700 (PDT)
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com
-Subject: [PATCH v3 1/9] sched/fair: find_idlest_group(): Remove unused sd_flag parameter
-Date:   Wed, 15 Apr 2020 22:05:04 +0100
-Message-Id: <20200415210512.805-2-valentin.schneider@arm.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200415210512.805-1-valentin.schneider@arm.com>
-References: <20200415210512.805-1-valentin.schneider@arm.com>
+        id S371362AbgDOVKz (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 17:10:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44410 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2392634AbgDOVHx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 17:07:53 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 840AFC061A0C;
+        Wed, 15 Apr 2020 14:07:53 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id a43so6833932edf.6;
+        Wed, 15 Apr 2020 14:07:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QgcBjVyTe1KwzpI/a+YEW1AtfSIj0GYWIv0ntbC2zi0=;
+        b=sNB0pOK+YwscZa7YSv+CtBNvoMzzx30aJFfXe6FIKW4iRnbK5AZzUpjEm4lXcvgDio
+         A2eW++9GmK6c7SKNy01piSL5O6uK0KsbQgH/9rPWy8GWbgqIs9v2rHovuVgxP6m9xGwq
+         Upp/rvhO4T8+KqxHbax09SFZddoIG1am62zlBGBdmYNdguWLynmPoUSZuZlRh/4u05H5
+         IkgZPuKsjjQlFWYEDPb9FF+Iq6e/zGTltWlacfBaTyVrYu3oL2TVdO9y5ynUbD/ZLVE6
+         KOd/hJ5BrlVrp43XUYQbhrdLAvI48q4jUtna0xoLO/eeFJGu1c/awEYJTDXjDYeCYRAh
+         Ib+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QgcBjVyTe1KwzpI/a+YEW1AtfSIj0GYWIv0ntbC2zi0=;
+        b=Rwhdilz/1ty58s0/N0eJVNMgE8+57kOHELqTjjOXhbOtgZOJkVjQYZtSxhQB82TMkM
+         GJ2GRBcKPvmNbryZoy8wCOtmga8pppEXBLxryDaT+z4pe+Ns14UR/q+osNFFlto8eSem
+         C4IofgqdMdkEjJboVtgiuRWvgEUvzaM1LsBkbv9z9tYGRiQ2BgqZRRIF7VRfP2tTVWRW
+         bCMldyBIKvy7mfy2GM7f7ptePihJkN5Hfut85CrB8hc1vBbyZtG5uzQ26SIY43vlN/Cd
+         89VIuO4XnxO8G3HGmLRstyGDqVGQckjk2B9OW6g2Z0cwGsT26rlozb+/H3+25mnHWH3E
+         T0yQ==
+X-Gm-Message-State: AGi0PubKyTH0UQOyrWjxL1su9csqAPmkJ1j9ZoE7lpX8rlK12EYNmIRB
+        WR0rxZV0PSnyUHL8vjDspIE=
+X-Google-Smtp-Source: APiQypKhbzk4hiRU3CF5vrGcgwo2S4vJAKiuYSnT8ruc2zNDF4Fo5kh828dKLv/eC6bAYmrucXrKVg==
+X-Received: by 2002:a17:906:2ad4:: with SMTP id m20mr7154236eje.324.1586984871760;
+        Wed, 15 Apr 2020 14:07:51 -0700 (PDT)
+Received: from Ansuel-XPS.localdomain (host93-255-dynamic.47-79-r.retail.telecomitalia.it. [79.47.255.93])
+        by smtp.googlemail.com with ESMTPSA id bu4sm1252454edb.90.2020.04.15.14.07.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2020 14:07:51 -0700 (PDT)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+To:     Andy Gross <agross@kernel.org>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Andy Gross <agross@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH v3 1/2] phy: qualcomm: add qcom ipq806x dwc usb phy driver
+Date:   Wed, 15 Apr 2020 23:07:26 +0200
+Message-Id: <20200415210729.9618-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -41,51 +80,645 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The last use of that parameter was removed by commit
+This has lost in the original push for the dwc3 qcom driver.
+This is needed for ipq806x SoC as without this the usb ports
+doesn't work at all.
 
-  57abff067a08 ("sched/fair: Rework find_idlest_group()")
-
-Get rid of the parameter.
-
-Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+Signed-off-by: Andy Gross <agross@codeaurora.org>
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
 ---
- kernel/sched/fair.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+v3:
+* Use reg instead of regmap phandle
+v2:
+* Renamed config from PHY_QCOM_DWC3 to PHY_QCOM_IPQ806X_USB
+* Rename inline function to generic name to reduce length
+* Fix check reported by checkpatch --strict
+* Rename compatible to qcom,ipq806x-usb-phy-(hs/ss)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 02f323b85b6d..98321d8dde7e 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -5821,8 +5821,7 @@ static int wake_affine(struct sched_domain *sd, struct task_struct *p,
- }
- 
- static struct sched_group *
--find_idlest_group(struct sched_domain *sd, struct task_struct *p,
--		  int this_cpu, int sd_flag);
-+find_idlest_group(struct sched_domain *sd, struct task_struct *p, int this_cpu);
- 
- /*
-  * find_idlest_group_cpu - find the idlest CPU among the CPUs in the group.
-@@ -5905,7 +5904,7 @@ static inline int find_idlest_cpu(struct sched_domain *sd, struct task_struct *p
- 			continue;
- 		}
- 
--		group = find_idlest_group(sd, p, cpu, sd_flag);
-+		group = find_idlest_group(sd, p, cpu);
- 		if (!group) {
- 			sd = sd->child;
- 			continue;
-@@ -8677,8 +8676,7 @@ static bool update_pick_idlest(struct sched_group *idlest,
-  * Assumes p is allowed on at least one CPU in sd.
-  */
- static struct sched_group *
--find_idlest_group(struct sched_domain *sd, struct task_struct *p,
--		  int this_cpu, int sd_flag)
-+find_idlest_group(struct sched_domain *sd, struct task_struct *p, int this_cpu)
- {
- 	struct sched_group *idlest = NULL, *local = NULL, *group = sd->groups;
- 	struct sg_lb_stats local_sgs, tmp_sgs;
+ drivers/phy/qualcomm/Kconfig                |  12 +
+ drivers/phy/qualcomm/Makefile               |   1 +
+ drivers/phy/qualcomm/phy-qcom-ipq806x-usb.c | 583 ++++++++++++++++++++
+ 3 files changed, 596 insertions(+)
+ create mode 100644 drivers/phy/qualcomm/phy-qcom-ipq806x-usb.c
+
+diff --git a/drivers/phy/qualcomm/Kconfig b/drivers/phy/qualcomm/Kconfig
+index e46824da29f6..9d41c3d12800 100644
+--- a/drivers/phy/qualcomm/Kconfig
++++ b/drivers/phy/qualcomm/Kconfig
+@@ -91,3 +91,15 @@ config PHY_QCOM_USB_HSIC
+ 	select GENERIC_PHY
+ 	help
+ 	  Support for the USB HSIC ULPI compliant PHY on QCOM chipsets.
++
++config PHY_QCOM_IPQ806X_USB
++	tristate "Qualcomm IPQ806x DWC3 USB PHY driver"
++	depends on ARCH_QCOM
++	depends on HAS_IOMEM
++	depends on OF
++	select GENERIC_PHY
++	help
++	  This option enables support for the Synopsis PHYs present inside the
++	  Qualcomm USB3.0 DWC3 controller on ipq806x SoC. This driver supports
++	  both HS and SS PHY controllers.
++
+diff --git a/drivers/phy/qualcomm/Makefile b/drivers/phy/qualcomm/Makefile
+index 283251d6a5d9..8629299c1495 100644
+--- a/drivers/phy/qualcomm/Makefile
++++ b/drivers/phy/qualcomm/Makefile
+@@ -10,3 +10,4 @@ obj-$(CONFIG_PHY_QCOM_UFS_14NM)		+= phy-qcom-ufs-qmp-14nm.o
+ obj-$(CONFIG_PHY_QCOM_UFS_20NM)		+= phy-qcom-ufs-qmp-20nm.o
+ obj-$(CONFIG_PHY_QCOM_USB_HS) 		+= phy-qcom-usb-hs.o
+ obj-$(CONFIG_PHY_QCOM_USB_HSIC) 	+= phy-qcom-usb-hsic.o
++obj-$(CONFIG_PHY_QCOM_IPQ806X_USB)		+= phy-qcom-ipq806x-usb.o
+diff --git a/drivers/phy/qualcomm/phy-qcom-ipq806x-usb.c b/drivers/phy/qualcomm/phy-qcom-ipq806x-usb.c
+new file mode 100644
+index 000000000000..cc8b5a99ef7f
+--- /dev/null
++++ b/drivers/phy/qualcomm/phy-qcom-ipq806x-usb.c
+@@ -0,0 +1,583 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/* Copyright (c) 2014-2015, Code Aurora Forum. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 and
++ * only version 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/clk.h>
++#include <linux/err.h>
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/phy/phy.h>
++#include <linux/platform_device.h>
++#include <linux/delay.h>
++#include <linux/regmap.h>
++#include <linux/mfd/syscon.h>
++
++/* USB QSCRATCH Hardware registers */
++#define QSCRATCH_GENERAL_CFG		(0x08)
++#define HSUSB_PHY_CTRL_REG		(0x10)
++
++/* PHY_CTRL_REG */
++#define HSUSB_CTRL_DMSEHV_CLAMP		BIT(24)
++#define HSUSB_CTRL_USB2_SUSPEND		BIT(23)
++#define HSUSB_CTRL_UTMI_CLK_EN		BIT(21)
++#define HSUSB_CTRL_UTMI_OTG_VBUS_VALID	BIT(20)
++#define HSUSB_CTRL_USE_CLKCORE		BIT(18)
++#define HSUSB_CTRL_DPSEHV_CLAMP		BIT(17)
++#define HSUSB_CTRL_COMMONONN		BIT(11)
++#define HSUSB_CTRL_ID_HV_CLAMP		BIT(9)
++#define HSUSB_CTRL_OTGSESSVLD_CLAMP	BIT(8)
++#define HSUSB_CTRL_CLAMP_EN		BIT(7)
++#define HSUSB_CTRL_RETENABLEN		BIT(1)
++#define HSUSB_CTRL_POR			BIT(0)
++
++/* QSCRATCH_GENERAL_CFG */
++#define HSUSB_GCFG_XHCI_REV		BIT(2)
++
++/* USB QSCRATCH Hardware registers */
++#define SSUSB_PHY_CTRL_REG		(0x00)
++#define SSUSB_PHY_PARAM_CTRL_1		(0x04)
++#define SSUSB_PHY_PARAM_CTRL_2		(0x08)
++#define CR_PROTOCOL_DATA_IN_REG		(0x0c)
++#define CR_PROTOCOL_DATA_OUT_REG	(0x10)
++#define CR_PROTOCOL_CAP_ADDR_REG	(0x14)
++#define CR_PROTOCOL_CAP_DATA_REG	(0x18)
++#define CR_PROTOCOL_READ_REG		(0x1c)
++#define CR_PROTOCOL_WRITE_REG		(0x20)
++
++/* PHY_CTRL_REG */
++#define SSUSB_CTRL_REF_USE_PAD		BIT(28)
++#define SSUSB_CTRL_TEST_POWERDOWN	BIT(27)
++#define SSUSB_CTRL_LANE0_PWR_PRESENT	BIT(24)
++#define SSUSB_CTRL_SS_PHY_EN		BIT(8)
++#define SSUSB_CTRL_SS_PHY_RESET		BIT(7)
++
++/* SSPHY control registers - Does this need 0x30? */
++#define SSPHY_CTRL_RX_OVRD_IN_HI(lane)	(0x1006 + 0x100 * (lane))
++#define SSPHY_CTRL_TX_OVRD_DRV_LO(lane)	(0x1002 + 0x100 * (lane))
++
++/* SSPHY SoC version specific values */
++#define SSPHY_RX_EQ_VALUE		4 /* Override value for rx_eq */
++/* Override value for transmit preemphasis */
++#define SSPHY_TX_DEEMPH_3_5DB		23
++#define SSPHY_MPLL_VALUE		0 /* Override value for mpll */
++
++/* QSCRATCH PHY_PARAM_CTRL1 fields */
++#define PHY_PARAM_CTRL1_TX_FULL_SWING_MASK	0x07f00000u
++#define PHY_PARAM_CTRL1_TX_DEEMPH_6DB_MASK	0x000fc000u
++#define PHY_PARAM_CTRL1_TX_DEEMPH_3_5DB_MASK	0x00003f00u
++#define PHY_PARAM_CTRL1_LOS_BIAS_MASK		0x000000f8u
++
++#define PHY_PARAM_CTRL1_MASK				\
++		(PHY_PARAM_CTRL1_TX_FULL_SWING_MASK |	\
++		 PHY_PARAM_CTRL1_TX_DEEMPH_6DB_MASK |	\
++		 PHY_PARAM_CTRL1_TX_DEEMPH_3_5DB_MASK |	\
++		 PHY_PARAM_CTRL1_LOS_BIAS_MASK)
++
++#define PHY_PARAM_CTRL1_TX_FULL_SWING(x)	\
++		(((x) << 20) & PHY_PARAM_CTRL1_TX_FULL_SWING_MASK)
++#define PHY_PARAM_CTRL1_TX_DEEMPH_6DB(x)	\
++		(((x) << 14) & PHY_PARAM_CTRL1_TX_DEEMPH_6DB_MASK)
++#define PHY_PARAM_CTRL1_TX_DEEMPH_3_5DB(x)	\
++		(((x) <<  8) & PHY_PARAM_CTRL1_TX_DEEMPH_3_5DB_MASK)
++#define PHY_PARAM_CTRL1_LOS_BIAS(x)	\
++		(((x) <<  3) & PHY_PARAM_CTRL1_LOS_BIAS_MASK)
++
++/* RX OVRD IN HI bits */
++#define RX_OVRD_IN_HI_RX_RESET_OVRD		BIT(13)
++#define RX_OVRD_IN_HI_RX_RX_RESET		BIT(12)
++#define RX_OVRD_IN_HI_RX_EQ_OVRD		BIT(11)
++#define RX_OVRD_IN_HI_RX_EQ_MASK		0x0700
++#define RX_OVRD_IN_HI_RX_EQ_SHIFT		8
++#define RX_OVRD_IN_HI_RX_EQ_EN_OVRD		BIT(7)
++#define RX_OVRD_IN_HI_RX_EQ_EN			BIT(6)
++#define RX_OVRD_IN_HI_RX_LOS_FILTER_OVRD	BIT(5)
++#define RX_OVRD_IN_HI_RX_LOS_FILTER_MASK	0x0018
++#define RX_OVRD_IN_HI_RX_RATE_OVRD		BIT(2)
++#define RX_OVRD_IN_HI_RX_RATE_MASK		0x0003
++
++/* TX OVRD DRV LO register bits */
++#define TX_OVRD_DRV_LO_AMPLITUDE_MASK	0x007F
++#define TX_OVRD_DRV_LO_PREEMPH_MASK	0x3F80
++#define TX_OVRD_DRV_LO_PREEMPH_SHIFT	7
++#define TX_OVRD_DRV_LO_EN		BIT(14)
++
++/* SS CAP register bits */
++#define SS_CR_CAP_ADDR_REG		BIT(0)
++#define SS_CR_CAP_DATA_REG		BIT(0)
++#define SS_CR_READ_REG			BIT(0)
++#define SS_CR_WRITE_REG			BIT(0)
++
++struct usb_phy {
++	void __iomem		*base;
++	struct device		*dev;
++	struct clk		*xo_clk;
++	struct clk		*ref_clk;
++	u32			rx_eq;
++	u32			tx_deamp_3_5db;
++	u32			mpll;
++};
++
++struct phy_drvdata {
++	struct phy_ops	ops;
++	u32		clk_rate;
++};
++
++/**
++ * Write register and read back masked value to confirm it is written
++ *
++ * @base - QCOM DWC3 PHY base virtual address.
++ * @offset - register offset.
++ * @mask - register bitmask specifying what should be updated
++ * @val - value to write.
++ */
++static inline void usb_phy_write_readback(struct usb_phy *phy_dwc3,
++					  u32 offset,
++					  const u32 mask, u32 val)
++{
++	u32 write_val, tmp = readl(phy_dwc3->base + offset);
++
++	tmp &= ~mask;		/* retain other bits */
++	write_val = tmp | val;
++
++	writel(write_val, phy_dwc3->base + offset);
++
++	/* Read back to see if val was written */
++	tmp = readl(phy_dwc3->base + offset);
++	tmp &= mask;		/* clear other bits */
++
++	if (tmp != val)
++		dev_err(phy_dwc3->dev, "write: %x to QSCRATCH: %x FAILED\n",
++			val, offset);
++}
++
++static int wait_for_latch(void __iomem *addr)
++{
++	u32 retry = 10;
++
++	while (true) {
++		if (!readl(addr))
++			break;
++
++		if (--retry == 0)
++			return -ETIMEDOUT;
++
++		usleep_range(10, 20);
++	}
++
++	return 0;
++}
++
++/**
++ * Write SSPHY register
++ *
++ * @base - QCOM DWC3 PHY base virtual address.
++ * @addr - SSPHY address to write.
++ * @val - value to write.
++ */
++static int usb_ss_write_phycreg(struct usb_phy *phy_dwc3,
++				u32 addr, u32 val)
++{
++	int ret;
++
++	writel(addr, phy_dwc3->base + CR_PROTOCOL_DATA_IN_REG);
++	writel(SS_CR_CAP_ADDR_REG,
++	       phy_dwc3->base + CR_PROTOCOL_CAP_ADDR_REG);
++
++	ret = wait_for_latch(phy_dwc3->base + CR_PROTOCOL_CAP_ADDR_REG);
++	if (ret)
++		goto err_wait;
++
++	writel(val, phy_dwc3->base + CR_PROTOCOL_DATA_IN_REG);
++	writel(SS_CR_CAP_DATA_REG,
++	       phy_dwc3->base + CR_PROTOCOL_CAP_DATA_REG);
++
++	ret = wait_for_latch(phy_dwc3->base + CR_PROTOCOL_CAP_DATA_REG);
++	if (ret)
++		goto err_wait;
++
++	writel(SS_CR_WRITE_REG, phy_dwc3->base + CR_PROTOCOL_WRITE_REG);
++
++	ret = wait_for_latch(phy_dwc3->base + CR_PROTOCOL_WRITE_REG);
++
++err_wait:
++	if (ret)
++		dev_err(phy_dwc3->dev, "timeout waiting for latch\n");
++	return ret;
++}
++
++/**
++ * Read SSPHY register.
++ *
++ * @base - QCOM DWC3 PHY base virtual address.
++ * @addr - SSPHY address to read.
++ */
++static int usb_ss_read_phycreg(struct usb_phy *phy_dwc3,
++			       u32 addr, u32 *val)
++{
++	int ret;
++
++	writel(addr, phy_dwc3->base + CR_PROTOCOL_DATA_IN_REG);
++	writel(SS_CR_CAP_ADDR_REG,
++	       phy_dwc3->base + CR_PROTOCOL_CAP_ADDR_REG);
++
++	ret = wait_for_latch(phy_dwc3->base + CR_PROTOCOL_CAP_ADDR_REG);
++	if (ret)
++		goto err_wait;
++
++	/*
++	 * Due to hardware bug, first read of SSPHY register might be
++	 * incorrect. Hence as workaround, SW should perform SSPHY register
++	 * read twice, but use only second read and ignore first read.
++	 */
++	writel(SS_CR_READ_REG, phy_dwc3->base + CR_PROTOCOL_READ_REG);
++
++	ret = wait_for_latch(phy_dwc3->base + CR_PROTOCOL_READ_REG);
++	if (ret)
++		goto err_wait;
++
++	/* throwaway read */
++	readl(phy_dwc3->base + CR_PROTOCOL_DATA_OUT_REG);
++
++	writel(SS_CR_READ_REG, phy_dwc3->base + CR_PROTOCOL_READ_REG);
++
++	ret = wait_for_latch(phy_dwc3->base + CR_PROTOCOL_READ_REG);
++	if (ret)
++		goto err_wait;
++
++	*val = readl(phy_dwc3->base + CR_PROTOCOL_DATA_OUT_REG);
++
++err_wait:
++	return ret;
++}
++
++static int qcom_ipq806x_usb_hs_phy_init(struct phy *phy)
++{
++	struct usb_phy *phy_dwc3 = phy_get_drvdata(phy);
++	int ret;
++	u32 val;
++
++	ret = clk_prepare_enable(phy_dwc3->xo_clk);
++	if (ret)
++		return ret;
++
++	ret = clk_prepare_enable(phy_dwc3->ref_clk);
++	if (ret) {
++		clk_disable_unprepare(phy_dwc3->xo_clk);
++		return ret;
++	}
++
++	/*
++	 * HSPHY Initialization: Enable UTMI clock, select 19.2MHz fsel
++	 * enable clamping, and disable RETENTION (power-on default is ENABLED)
++	 */
++	val = HSUSB_CTRL_DPSEHV_CLAMP | HSUSB_CTRL_DMSEHV_CLAMP |
++		HSUSB_CTRL_RETENABLEN  | HSUSB_CTRL_COMMONONN |
++		HSUSB_CTRL_OTGSESSVLD_CLAMP | HSUSB_CTRL_ID_HV_CLAMP |
++		HSUSB_CTRL_DPSEHV_CLAMP | HSUSB_CTRL_UTMI_OTG_VBUS_VALID |
++		HSUSB_CTRL_UTMI_CLK_EN | HSUSB_CTRL_CLAMP_EN | 0x70;
++
++	/* use core clock if external reference is not present */
++	if (!phy_dwc3->xo_clk)
++		val |= HSUSB_CTRL_USE_CLKCORE;
++
++	writel(val, phy_dwc3->base + HSUSB_PHY_CTRL_REG);
++	usleep_range(2000, 2200);
++
++	/* Disable (bypass) VBUS and ID filters */
++	writel(HSUSB_GCFG_XHCI_REV, phy_dwc3->base + QSCRATCH_GENERAL_CFG);
++
++	return 0;
++}
++
++static int qcom_ipq806x_usb_hs_phy_exit(struct phy *phy)
++{
++	struct usb_phy *phy_dwc3 = phy_get_drvdata(phy);
++
++	clk_disable_unprepare(phy_dwc3->ref_clk);
++	clk_disable_unprepare(phy_dwc3->xo_clk);
++
++	return 0;
++}
++
++static int qcom_ipq806x_usb_ss_phy_init(struct phy *phy)
++{
++	struct usb_phy *phy_dwc3 = phy_get_drvdata(phy);
++	int ret;
++	u32 data = 0;
++
++	ret = clk_prepare_enable(phy_dwc3->xo_clk);
++	if (ret)
++		return ret;
++
++	ret = clk_prepare_enable(phy_dwc3->ref_clk);
++	if (ret) {
++		clk_disable_unprepare(phy_dwc3->xo_clk);
++		return ret;
++	}
++
++	/* reset phy */
++	data = readl(phy_dwc3->base + SSUSB_PHY_CTRL_REG);
++	writel(data | SSUSB_CTRL_SS_PHY_RESET,
++	       phy_dwc3->base + SSUSB_PHY_CTRL_REG);
++	usleep_range(2000, 2200);
++	writel(data, phy_dwc3->base + SSUSB_PHY_CTRL_REG);
++
++	/* clear REF_PAD if we don't have XO clk */
++	if (!phy_dwc3->xo_clk)
++		data &= ~SSUSB_CTRL_REF_USE_PAD;
++	else
++		data |= SSUSB_CTRL_REF_USE_PAD;
++
++	writel(data, phy_dwc3->base + SSUSB_PHY_CTRL_REG);
++
++	/* wait for ref clk to become stable, this can take up to 30ms */
++	msleep(30);
++
++	data |= SSUSB_CTRL_SS_PHY_EN | SSUSB_CTRL_LANE0_PWR_PRESENT;
++	writel(data, phy_dwc3->base + SSUSB_PHY_CTRL_REG);
++
++	/*
++	 * WORKAROUND: There is SSPHY suspend bug due to which USB enumerates
++	 * in HS mode instead of SS mode. Workaround it by asserting
++	 * LANE0.TX_ALT_BLOCK.EN_ALT_BUS to enable TX to use alt bus mode
++	 */
++	ret = usb_ss_read_phycreg(phy_dwc3, 0x102D, &data);
++	if (ret)
++		goto err_phy_trans;
++
++	data |= (1 << 7);
++	ret = usb_ss_write_phycreg(phy_dwc3, 0x102D, data);
++	if (ret)
++		goto err_phy_trans;
++
++	ret = usb_ss_read_phycreg(phy_dwc3, 0x1010, &data);
++	if (ret)
++		goto err_phy_trans;
++
++	data &= ~0xff0;
++	data |= 0x20;
++	ret = usb_ss_write_phycreg(phy_dwc3, 0x1010, data);
++	if (ret)
++		goto err_phy_trans;
++
++	/*
++	 * Fix RX Equalization setting as follows
++	 * LANE0.RX_OVRD_IN_HI. RX_EQ_EN set to 0
++	 * LANE0.RX_OVRD_IN_HI.RX_EQ_EN_OVRD set to 1
++	 * LANE0.RX_OVRD_IN_HI.RX_EQ set based on SoC version
++	 * LANE0.RX_OVRD_IN_HI.RX_EQ_OVRD set to 1
++	 */
++	ret = usb_ss_read_phycreg(phy_dwc3,
++				  SSPHY_CTRL_RX_OVRD_IN_HI(0), &data);
++	if (ret)
++		goto err_phy_trans;
++
++	data &= ~RX_OVRD_IN_HI_RX_EQ_EN;
++	data |= RX_OVRD_IN_HI_RX_EQ_EN_OVRD;
++	data &= ~RX_OVRD_IN_HI_RX_EQ_MASK;
++	data |= phy_dwc3->rx_eq << RX_OVRD_IN_HI_RX_EQ_SHIFT;
++	data |= RX_OVRD_IN_HI_RX_EQ_OVRD;
++	ret = usb_ss_write_phycreg(phy_dwc3,
++				   SSPHY_CTRL_RX_OVRD_IN_HI(0), data);
++	if (ret)
++		goto err_phy_trans;
++
++	/*
++	 * Set EQ and TX launch amplitudes as follows
++	 * LANE0.TX_OVRD_DRV_LO.PREEMPH set based on SoC version
++	 * LANE0.TX_OVRD_DRV_LO.AMPLITUDE set to 110
++	 * LANE0.TX_OVRD_DRV_LO.EN set to 1.
++	 */
++	ret = usb_ss_read_phycreg(phy_dwc3,
++				  SSPHY_CTRL_TX_OVRD_DRV_LO(0), &data);
++	if (ret)
++		goto err_phy_trans;
++
++	data &= ~TX_OVRD_DRV_LO_PREEMPH_MASK;
++	data |= phy_dwc3->tx_deamp_3_5db << TX_OVRD_DRV_LO_PREEMPH_SHIFT;
++	data &= ~TX_OVRD_DRV_LO_AMPLITUDE_MASK;
++	data |= 0x6E;
++	data |= TX_OVRD_DRV_LO_EN;
++	ret = usb_ss_write_phycreg(phy_dwc3,
++				   SSPHY_CTRL_TX_OVRD_DRV_LO(0), data);
++	if (ret)
++		goto err_phy_trans;
++
++	usb_ss_write_phycreg(phy_dwc3, 0x30, phy_dwc3->mpll);
++
++	/*
++	 * Set the QSCRATCH PHY_PARAM_CTRL1 parameters as follows
++	 * TX_FULL_SWING [26:20] amplitude to 110
++	 * TX_DEEMPH_6DB [19:14] to 32
++	 * TX_DEEMPH_3_5DB [13:8] set based on SoC version
++	 * LOS_BIAS [7:3] to 9
++	 */
++	data = readl(phy_dwc3->base + SSUSB_PHY_PARAM_CTRL_1);
++
++	data &= ~PHY_PARAM_CTRL1_MASK;
++
++	data |= PHY_PARAM_CTRL1_TX_FULL_SWING(0x6e) |
++		PHY_PARAM_CTRL1_TX_DEEMPH_6DB(0x20) |
++		PHY_PARAM_CTRL1_TX_DEEMPH_3_5DB(phy_dwc3->tx_deamp_3_5db) |
++		PHY_PARAM_CTRL1_LOS_BIAS(0x9);
++
++	usb_phy_write_readback(phy_dwc3, SSUSB_PHY_PARAM_CTRL_1,
++			       PHY_PARAM_CTRL1_MASK, data);
++
++err_phy_trans:
++	return ret;
++}
++
++static int qcom_ipq806x_usb_ss_phy_exit(struct phy *phy)
++{
++	struct usb_phy *phy_dwc3 = phy_get_drvdata(phy);
++
++	/* Sequence to put SSPHY in low power state:
++	 * 1. Clear REF_PHY_EN in PHY_CTRL_REG
++	 * 2. Clear REF_USE_PAD in PHY_CTRL_REG
++	 * 3. Set TEST_POWERED_DOWN in PHY_CTRL_REG to enable PHY retention
++	 */
++	usb_phy_write_readback(phy_dwc3, SSUSB_PHY_CTRL_REG,
++			       SSUSB_CTRL_SS_PHY_EN, 0x0);
++	usb_phy_write_readback(phy_dwc3, SSUSB_PHY_CTRL_REG,
++			       SSUSB_CTRL_REF_USE_PAD, 0x0);
++	usb_phy_write_readback(phy_dwc3, SSUSB_PHY_CTRL_REG,
++			       SSUSB_CTRL_TEST_POWERDOWN, 0x0);
++
++	clk_disable_unprepare(phy_dwc3->ref_clk);
++	clk_disable_unprepare(phy_dwc3->xo_clk);
++
++	return 0;
++}
++
++static const struct phy_drvdata qcom_ipq806x_usb_hs_drvdata = {
++	.ops = {
++		.init		= qcom_ipq806x_usb_hs_phy_init,
++		.exit		= qcom_ipq806x_usb_hs_phy_exit,
++		.owner		= THIS_MODULE,
++	},
++	.clk_rate = 60000000,
++};
++
++static const struct phy_drvdata qcom_ipq806x_usb_ss_drvdata = {
++	.ops = {
++		.init		= qcom_ipq806x_usb_ss_phy_init,
++		.exit		= qcom_ipq806x_usb_ss_phy_exit,
++		.owner		= THIS_MODULE,
++	},
++	.clk_rate = 125000000,
++};
++
++static const struct of_device_id qcom_ipq806x_usb_phy_table[] = {
++	{ .compatible = "qcom,ipq806x-usb-phy-hs",
++	  .data = &qcom_ipq806x_usb_hs_drvdata },
++	{ .compatible = "qcom,ipq806x-usb-phy-ss",
++	  .data = &qcom_ipq806x_usb_ss_drvdata },
++	{ /* Sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, qcom_ipq806x_usb_phy_table);
++
++static int qcom_ipq806x_usb_phy_probe(struct platform_device *pdev)
++{
++	struct usb_phy	*phy_dwc3;
++	struct phy_provider		*phy_provider;
++	struct phy			*generic_phy;
++	const struct of_device_id *match;
++	const struct phy_drvdata *data;
++	struct resource			*res;
++	resource_size_t			size;
++	struct device_node *np;
++
++	phy_dwc3 = devm_kzalloc(&pdev->dev, sizeof(*phy_dwc3), GFP_KERNEL);
++	if (!phy_dwc3)
++		return -ENOMEM;
++
++	match = of_match_node(qcom_ipq806x_usb_phy_table, pdev->dev.of_node);
++	data = match->data;
++
++	phy_dwc3->dev = &pdev->dev;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	size = resource_size(res);
++	phy_dwc3->base = devm_ioremap(phy_dwc3->dev, res->start, size);
++
++	if (IS_ERR(phy_dwc3->base)) {
++		dev_err(phy_dwc3->dev, "failed to map reg\n");
++		return PTR_ERR(phy_dwc3->base);
++	}
++
++	phy_dwc3->ref_clk = devm_clk_get(phy_dwc3->dev, "ref");
++	if (IS_ERR(phy_dwc3->ref_clk)) {
++		dev_dbg(phy_dwc3->dev, "cannot get reference clock\n");
++		return PTR_ERR(phy_dwc3->ref_clk);
++	}
++
++	clk_set_rate(phy_dwc3->ref_clk, data->clk_rate);
++
++	phy_dwc3->xo_clk = devm_clk_get(phy_dwc3->dev, "xo");
++	if (IS_ERR(phy_dwc3->xo_clk)) {
++		dev_dbg(phy_dwc3->dev, "cannot get TCXO clock\n");
++		phy_dwc3->xo_clk = NULL;
++	}
++
++	/* Parse device node to probe HSIO settings */
++	np = of_node_get(pdev->dev.of_node);
++	if (!of_compat_cmp(match->compatible, "qcom,ipq806x-usb-phy-ss",
++			   strlen(match->compatible))) {
++		if (of_property_read_u32(np, "rx_eq", &phy_dwc3->rx_eq) ||
++		    of_property_read_u32(np, "tx_deamp_3_5db",
++					 &phy_dwc3->tx_deamp_3_5db) ||
++		    of_property_read_u32(np, "mpll", &phy_dwc3->mpll)) {
++			dev_err(phy_dwc3->dev, "cannot get HSIO settings from device node, using default values\n");
++
++			/* Default HSIO settings */
++			phy_dwc3->rx_eq = SSPHY_RX_EQ_VALUE;
++			phy_dwc3->tx_deamp_3_5db = SSPHY_TX_DEEMPH_3_5DB;
++			phy_dwc3->mpll = SSPHY_MPLL_VALUE;
++		}
++	}
++
++	generic_phy = devm_phy_create(phy_dwc3->dev, pdev->dev.of_node,
++				      &data->ops);
++
++	if (IS_ERR(generic_phy))
++		return PTR_ERR(generic_phy);
++
++	phy_set_drvdata(generic_phy, phy_dwc3);
++	platform_set_drvdata(pdev, phy_dwc3);
++
++	phy_provider = devm_of_phy_provider_register(phy_dwc3->dev,
++						     of_phy_simple_xlate);
++
++	if (IS_ERR(phy_provider))
++		return PTR_ERR(phy_provider);
++
++	return 0;
++}
++
++static struct platform_driver qcom_ipq806x_usb_phy_driver = {
++	.probe		= qcom_ipq806x_usb_phy_probe,
++	.driver		= {
++		.name	= "qcom-ipq806x-usb-phy",
++		.owner	= THIS_MODULE,
++		.of_match_table = qcom_ipq806x_usb_phy_table,
++	},
++};
++
++module_platform_driver(qcom_ipq806x_usb_phy_driver);
++
++MODULE_ALIAS("platform:phy-qcom-ipq806x-usb");
++MODULE_LICENSE("GPL v2");
++MODULE_AUTHOR("Andy Gross <agross@codeaurora.org>");
++MODULE_AUTHOR("Ivan T. Ivanov <iivanov@mm-sol.com>");
++MODULE_DESCRIPTION("DesignWare USB3 QCOM PHY driver");
 -- 
-2.24.0
+2.25.1
 
