@@ -2,127 +2,132 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22434C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:54:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93803C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:54:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F062820775
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:54:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f+XE5fH3"
+	by mail.kernel.org (Postfix) with ESMTP id 715C320775
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:54:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586944452;
+	bh=ko2AkkMakGqS1ar5tmN5wIgkrlEvey6E66F/2XcU/gU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=j3Z+YvyZR5rEBAx/I7ItLTGvPkOUEi04IXZgfvEyP0syr6qgKcRRYMujOnSf2OcW6
+	 S0vCGSm3Q2vr61r15pV79/TqLZnEnlLJu08f2pV1iDyArpjCUdqzfZ0o8chVLOT93J
+	 Ni1PPyNaTTO8YIDYGfKY+sHbXCPfgQRLMyBsUTTU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408453AbgDOJyB (ORCPT
+        id S2408462AbgDOJyK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 05:54:01 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22309 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2895873AbgDOJti (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 05:49:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586944176;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=qaGXYPrjx6asVnwUlRwgPZ9xv0d8gA5/xd4DP6F32Eg=;
-        b=f+XE5fH3w+CTeU7C/7DW0Rh5upeav7Dq8MYzb5UOOVQChq7gj+eSinhy0HBhwUHmYR2EVJ
-        L7jsnziyvb2oXbp/SQJ5zjM7NGYnYBzt9thN0HW8U9LbH8o2veIbnC0Ss6pLvg3BX8XgwN
-        pVTaoNQPlHdOoLU2/Jx57q4ZepS00Qo=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-100-0xTk02FKNDeyrW7ccboN8Q-1; Wed, 15 Apr 2020 05:49:28 -0400
-X-MC-Unique: 0xTk02FKNDeyrW7ccboN8Q-1
-Received: by mail-wr1-f70.google.com with SMTP id v14so10313602wrq.13
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 02:49:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=qaGXYPrjx6asVnwUlRwgPZ9xv0d8gA5/xd4DP6F32Eg=;
-        b=WZd5IlVnljuLQucde2jmHh7Kt6remj6Ii//a5Ozy+UYwG7hoaePFGDdJDNJswWvgdp
-         ZPuCVFagEHDDXex3pm7jXaBqd5Ty2zE7GBLaa6LUFgzmQbYdp4BvnDAYyTvKrUW4glcI
-         vd9edfwRuGEIaOTC43T9TeWxCJ9+GiBDFM20XC976nOYDG8AzOLzIkDr6RAzY/CEmnxn
-         b2HvNXdoeBf6F40JeA1m/borhTYgIycWwwd+8q1VgijzPv5xnmO7tAJStd+ZCMYiVR0Z
-         Cz1nJN8fsEdFUPiFq97KMMsJgi88FEsMaCmMiEs5OVjVHRR5TL0IBoyDIbJVEkHWIeVO
-         kJtg==
-X-Gm-Message-State: AGi0PubxShLOo9UIWw73I7HTkX96RlFZt9SctY8hronyNWxkPobLoTyx
-        V49hoV+RBoozjXvFwetWWjCCqn26EQPwFklA7mgNfoEA+2uLE41d80AHtlsw1BQGqFLbkU1SYfL
-        Yq5BN94zhnKrUWk+w2bbfASxc
-X-Received: by 2002:a05:6000:1008:: with SMTP id a8mr22513579wrx.189.1586944166843;
-        Wed, 15 Apr 2020 02:49:26 -0700 (PDT)
-X-Google-Smtp-Source: APiQypK6iom3TxtitcFG3fEyEhV0IQri7rGaW4po1K8ddZ+k0gAwKo+5fXC8PqAQAruae6CWSJ1r4g==
-X-Received: by 2002:a05:6000:1008:: with SMTP id a8mr22513570wrx.189.1586944166653;
-        Wed, 15 Apr 2020 02:49:26 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id l15sm21578535wmi.48.2020.04.15.02.49.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2020 02:49:26 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Cathy Avery <cavery@redhat.com>, pbonzini@redhat.com
-Cc:     wei.huang2@amd.com, Jim Mattson <jmattson@google.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH 0/2] KVM: SVM: Implement check_nested_events for NMI
-In-Reply-To: <20200414201107.22952-1-cavery@redhat.com>
-References: <20200414201107.22952-1-cavery@redhat.com>
-Date:   Wed, 15 Apr 2020 11:49:25 +0200
-Message-ID: <87zhbdw02i.fsf@vitty.brq.redhat.com>
+        Wed, 15 Apr 2020 05:54:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48700 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2896071AbgDOJxM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 05:53:12 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C7E0206D9;
+        Wed, 15 Apr 2020 09:53:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586944390;
+        bh=ko2AkkMakGqS1ar5tmN5wIgkrlEvey6E66F/2XcU/gU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=H8eUu2pEaSyw3x/u0TDYVRhgfmDcHV+D2EjWN4QhsKukqQhE7B3oM6yhSzUGz9+aI
+         vZnyFVGhzadGbT7dA3lrDvQzAdAVRF1SF1lvaznFqqItoeM1ahfAVayykFQ0uChlce
+         uvODjH/JaYfnnKAT1yzRaoGC9crUUw5C5vf4+Rp0=
+Received: by pali.im (Postfix)
+        id A8D3D589; Wed, 15 Apr 2020 11:53:07 +0200 (CEST)
+Date:   Wed, 15 Apr 2020 11:53:07 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Jason Cooper <jason@lakedaemon.net>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>
+Cc:     Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH pinctrl REGRESSION] Revert "pinctrl: mvebu: armada-37xx:
+ use use platform api"
+Message-ID: <20200415095307.dv4bwna32llnuy7e@pali>
+References: <20200324004413.14355-1-marek.behun@nic.cz>
+ <20200324122017.GR3819@lunn.ch>
+ <20200407115230.7dsepjfxwbk53x2v@pali>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200407115230.7dsepjfxwbk53x2v@pali>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cathy Avery <cavery@redhat.com> writes:
+On Tuesday 07 April 2020 13:52:30 Pali Rohár wrote:
+> On Tuesday 24 March 2020 13:20:17 Andrew Lunn wrote:
+> > On Tue, Mar 24, 2020 at 01:44:13AM +0100, Marek Behún wrote:
+> > > This reverts commit 06e26b75f5e613b400116fdb7ff6206a681ab271.
+> > > 
+> > > This commit caused a regression on Armada 37xx. The pinctrl driver says
+> > >   armada-37xx-pinctrl d0013800.pinctrl: invalid or no IRQ
+> > >   armada-37xx-pinctrl d0018800.pinctrl: invalid or no IRQ
+> > > and afterwards other drivers cannot use GPIOs by this driver as IRQs.
+> > > 
+> > > Fixes: 06e26b75f5e6 ("pinctrl: mvebu: armada-37xx: use use platform...")
+> > > Signed-off-by: Marek Behún <marek.behun@nic.cz>
+> > > Cc: Peng Fan <peng.fan@nxp.com>
+> > > ---
+> > >  drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 12 +++---------
+> > >  1 file changed, 3 insertions(+), 9 deletions(-)
+> > > 
+> > > diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+> > > index 32f12a388b3c..5f125bd6279d 100644
+> > > --- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+> > > +++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+> > > @@ -15,6 +15,7 @@
+> > >  #include <linux/of.h>
+> > >  #include <linux/of_address.h>
+> > >  #include <linux/of_device.h>
+> > > +#include <linux/of_irq.h>
+> > >  #include <linux/pinctrl/pinconf-generic.h>
+> > >  #include <linux/pinctrl/pinconf.h>
+> > >  #include <linux/pinctrl/pinctrl.h>
+> > > @@ -741,14 +742,7 @@ static int armada_37xx_irqchip_register(struct platform_device *pdev,
+> > >  		return ret;
+> > >  	}
+> > >  
+> > > -	nr_irq_parent = platform_irq_count(pdev);
+> > 
+> > Hi Marek
+> > 
+> > Could you determine the value of nr_irq_parent(). Is it -EPROBE_DEFER?
+> 
+> Hello Andrew! I have tested it with 5.6 kernel and return value in
+> nr_irq_parent is in both cases zero. So it is not -EPROBE_DEFER. And
+> return value of of_irq_count(np) is 12 for d0013800.pinctrl and 5 for
+> d0018800.pinctrl.
 
-> Moved nested NMI exit to new check_nested_events.
-> The second patch fixes the NMI pending race condition that now occurs.
->
-> Cathy Avery (2):
->   KVM: SVM: Implement check_nested_events for NMI
->   KVM: x86: check_nested_events if there is an injectable NMI
->
+Adding Jason, Gregory and Sebastian into the loop.
 
-Not directly related to this series but I just noticed that we have the
-following comment in inject_pending_event():
+Could you please look at this problem? If there is no easy solution,
+I would suggest to revert problematic commit as pinctrl in current state
+is broken and unusable.
 
-	/* try to inject new event if pending */
-	if (vcpu->arch.exception.pending) {
-                ...
-		if (vcpu->arch.exception.nr == DB_VECTOR) {
-			/*
-			 * This code assumes that nSVM doesn't use
-			 * check_nested_events(). If it does, the
-			 * DR6/DR7 changes should happen before L1
-			 * gets a #VMEXIT for an intercepted #DB in
-			 * L2.  (Under VMX, on the other hand, the
-			 * DR6/DR7 changes should not happen in the
-			 * event of a VM-exit to L1 for an intercepted
-			 * #DB in L2.)
-			 */
-			kvm_deliver_exception_payload(vcpu);
-			if (vcpu->arch.dr7 & DR7_GD) {
-				vcpu->arch.dr7 &= ~DR7_GD;
-				kvm_update_dr7(vcpu);
-			}
-		}
-
-		kvm_x86_ops.queue_exception(vcpu);
-	}
-
-As we already implement check_nested_events() on SVM, do we need to do
-anything here? CC: Jim who added the guardian (f10c729ff9652).
-
->  arch/x86/kvm/svm/nested.c | 21 +++++++++++++++++++++
->  arch/x86/kvm/svm/svm.c    |  2 +-
->  arch/x86/kvm/svm/svm.h    | 15 ---------------
->  arch/x86/kvm/x86.c        | 15 +++++++++++----
->  4 files changed, 33 insertions(+), 20 deletions(-)
-
--- 
-Vitaly
-
+> So this is a clear regression introduced by that patch.
+> 
+> > This patch has removed the handling of that.
+> > 
+> > > -	if (nr_irq_parent < 0) {
+> > > -		if (nr_irq_parent != -EPROBE_DEFER)
+> > > -			dev_err(dev, "Couldn't determine irq count: %pe\n",
+> > > -				ERR_PTR(nr_irq_parent));
+> > > -		return nr_irq_parent;
+> > > -	}
+> > 
+> > Thanks
+> > 	Andrew
