@@ -2,72 +2,108 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC02C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:17:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9FA6C2BB85
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:17:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C69EF20775
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:17:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBC1120775
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:17:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2635765AbgDOIRB (ORCPT
+        id S2635775AbgDOIRF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 04:17:01 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:34514 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2635729AbgDOIQ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 04:17:05 -0400
+Received: from sauhun.de ([88.99.104.3]:48970 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2635665AbgDOIQ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Apr 2020 04:16:57 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 728E89E13340D9F954CC;
-        Wed, 15 Apr 2020 16:16:55 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Wed, 15 Apr 2020
- 16:16:44 +0800
-From:   Jason Yan <yanaijie@huawei.com>
-To:     <michal.simek@xilinx.com>, <yanaijie@huawei.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Hulk Robot <hulkci@huawei.com>
-Subject: [PATCH] firmware: xilinx: make firmware_debugfs_root static
-Date:   Wed, 15 Apr 2020 16:43:11 +0800
-Message-ID: <20200415084311.24857-1-yanaijie@huawei.com>
-X-Mailer: git-send-email 2.21.1
+Received: from localhost (p54B33507.dip0.t-ipconnect.de [84.179.53.7])
+        by pokefinder.org (Postfix) with ESMTPSA id 023F92C1F58;
+        Wed, 15 Apr 2020 10:16:54 +0200 (CEST)
+Date:   Wed, 15 Apr 2020 10:16:54 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-i3c@lists.infradead.org,
+        Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [RFC PATCH v2 2/6] i2c: allow DT nodes without 'compatible'
+Message-ID: <20200415081654.GC1141@ninjato>
+References: <20200318150059.21714-1-wsa+renesas@sang-engineering.com>
+ <20200318150059.21714-3-wsa+renesas@sang-engineering.com>
+ <11ca7487-ac07-f714-8573-20d1a0040212@lucaceresoli.net>
+ <20200415075911.GA1141@ninjato>
+ <8937e466-fe3f-3686-98a9-8013990bc3f9@ideasonboard.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.124.28]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="E/DnYTRukya0zdZ1"
+Content-Disposition: inline
+In-Reply-To: <8937e466-fe3f-3686-98a9-8013990bc3f9@ideasonboard.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the following sparse warning:
 
-drivers/firmware/xilinx/zynqmp-debug.c:38:15: warning: symbol
-'firmware_debugfs_root' was not declared. Should it be static?
+--E/DnYTRukya0zdZ1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
----
- drivers/firmware/xilinx/zynqmp-debug.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/firmware/xilinx/zynqmp-debug.c b/drivers/firmware/xilinx/zynqmp-debug.c
-index c6d0724da4db..43bc6cfdab45 100644
---- a/drivers/firmware/xilinx/zynqmp-debug.c
-+++ b/drivers/firmware/xilinx/zynqmp-debug.c
-@@ -35,7 +35,7 @@ static struct pm_api_info pm_api_list[] = {
- 	PM_API(PM_QUERY_DATA),
- };
- 
--struct dentry *firmware_debugfs_root;
-+static struct dentry *firmware_debugfs_root;
- 
- /**
-  * zynqmp_pm_argument_value() - Extract argument value from a PM-API request
--- 
-2.21.1
+> Aha, is it easy enough to distinguish that difference in user-space so
+> that we can present a specific character to indicate this in i2cdetect?
+> Or is that not so easy?
 
+I thought about it shortly but have not come up with a way of doing
+that. This is the code in i2cdetect:
+
+	/* Set slave address */
+	if (ioctl(file, I2C_SLAVE, i+j) < 0) {
+		if (errno == EBUSY) {
+			printf("UU ");
+			continue;
+		} else {
+			fprintf(stderr, "Error: Could not set "
+				"address to 0x%02x: %s\n", i+j,
+				strerror(errno));
+			return -1;
+		}
+	}
+
+So, if we chose to use another errno to indicate 'reserved' and update
+i2cdetect, all old versions of i2cdetect will have ugly error messages.
+And adding another IOCTL just for printing reserved addresses neither
+sounds great.
+
+
+--E/DnYTRukya0zdZ1
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6WwvYACgkQFA3kzBSg
+KbZfTw//TrCAhfJ/znCZ5SkE/evodYpzpW+VCDNvh7VfXv1OKWhQwRPxUWhfOIbo
+l0H1DNk1swBMUICCbWCs0/jJ146amGzUsY/fp8fE8bVtUN9JMg3xuXeMnL5m4dYW
+b+6l7hm8sbHqs+ED6BgRd5fPBJATNVTldukoImwfTsYHpBMTayNgPDeECkdEHfrc
+LBZJwbarG+jvIV4AoDpakG5qg4Gp6D0j5V0lDfEW87DEqtn+/HwZI3QqJ4G2HKqS
+ywhxTHiehdg0ScVk7uijgqXuyJ6uAmRAw5sBehUcTRDO3V5Hqmt2yE2gaGO/VlKj
+JIcdUJjDFVAQJo3VbiwFViFYerxCECvAifRvJmwDwFB5KtsgBmEmBuYolEjXgi0N
+h3mWF+wGZKyRC8ErSahWgAk8QqKjLRlYMSCdddZxOZcd+1NwdyP7PrfL3wvRzZFw
+c/8VNnvFual/M1o/aYViqqAPbiVtj2MfKLm8ZViTKptZg+KUvZjATTv+jac1llo+
+J4rjYwrhJANcmgVFTRlpQwI2iIFprtwO6+PF0HK/MTA6LsbTSNit4IFzWwwgeb+7
+ALJQZMEGGFHx3H0cBaNEs3AY4jE24X1l//0k2QhfadTK3wUwqoZ+i7Mw/gZhtM/O
+tBOu6IgKqeMcmw2e7IvAcMWM8ZCTaoDFF4gt66h4f48LOuVMeG4=
+=964D
+-----END PGP SIGNATURE-----
+
+--E/DnYTRukya0zdZ1--
