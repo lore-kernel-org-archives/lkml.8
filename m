@@ -2,113 +2,116 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 500F3C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 633A3C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:22:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B3BD2078B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:22:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586956942;
-	bh=Pk3LH+KtmLOnF31lo8mARZysIUUWRRZBhV3Ch4KKeVI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VzMX140tSoJZLknE3bR9Q797wYdQT5moTsK9ng6zNzi5ZWprJ6G551crHcouJg7MH
-	 01SkJSVJYT5tZ1Xb2gLuRmBmtugfuVEhZJyrcgM1Gsqb4vG/lBd+GwVObG6DSdheH+
-	 59630qAQBpDwXoDh9IsOsI+uUe9dkxJNrkOvLsh8=
+	by mail.kernel.org (Postfix) with ESMTP id 4194420936
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:22:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506336AbgDONWU (ORCPT
+        id S2506349AbgDONWZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:22:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54384 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897009AbgDOLfD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:35:03 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAEA520857;
-        Wed, 15 Apr 2020 11:35:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950502;
-        bh=Pk3LH+KtmLOnF31lo8mARZysIUUWRRZBhV3Ch4KKeVI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gCQkZOt18wS5nOnSEVmt6zMpF4xPoszlNzFqPApeVIREvWSKvQj6LkWKI/lE2bt35
-         H5/+DFtW6ECEPc+7rbwNCUUKGuNgqDD0bn1p28QjAX29R5zQ+CA2V3LfQr8O7fvtzi
-         RMrEt8TlWp7RAArRoRiLUly9dGKpaIF6jS+MBSXQ=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.6 014/129] f2fs: fix to avoid use-after-free in f2fs_write_multi_pages()
-Date:   Wed, 15 Apr 2020 07:32:49 -0400
-Message-Id: <20200415113445.11881-14-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
-References: <20200415113445.11881-1-sashal@kernel.org>
+        Wed, 15 Apr 2020 09:22:25 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:39176 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2506231AbgDONWO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 09:22:14 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 8C9F94C817DDB2BDABE0;
+        Wed, 15 Apr 2020 21:22:10 +0800 (CST)
+Received: from localhost (10.173.223.234) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Wed, 15 Apr 2020
+ 21:22:03 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <tomi.valkeinen@ti.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
+        <sebastian.reichel@collabora.com>,
+        <laurent.pinchart@ideasonboard.com>
+CC:     <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] drm/omap: venc: remove unused variable 'venc_config_pal_bdghi'
+Date:   Wed, 15 Apr 2020 21:21:05 +0800
+Message-ID: <20200415132105.43636-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.173.223.234]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+drivers/gpu/drm/omapdrm/dss/venc.c:211:33:
+ warning: 'venc_config_pal_bdghi' defined but not used [-Wunused-const-variable=]
+ static const struct venc_config venc_config_pal_bdghi = {
+                                 ^~~~~~~~~~~~~~~~~~~~~
 
-[ Upstream commit 95978caa138948054e06d00bfc3432b518699f1b ]
+It is never used, remove it.
 
-In compress cluster, if physical block number is less than logic
-page number, race condition will cause use-after-free issue as
-described below:
-
-- f2fs_write_compressed_pages
- - fio.page = cic->rpages[0];
- - f2fs_outplace_write_data
-					- f2fs_compress_write_end_io
-					 - kfree(cic->rpages);
-					 - kfree(cic);
- - fio.page = cic->rpages[1];
-
-f2fs_write_multi_pages+0xfd0/0x1a98
-f2fs_write_data_pages+0x74c/0xb5c
-do_writepages+0x64/0x108
-__writeback_single_inode+0xdc/0x4b8
-writeback_sb_inodes+0x4d0/0xa68
-__writeback_inodes_wb+0x88/0x178
-wb_writeback+0x1f0/0x424
-wb_workfn+0x2f4/0x574
-process_one_work+0x210/0x48c
-worker_thread+0x2e8/0x44c
-kthread+0x110/0x120
-ret_from_fork+0x10/0x18
-
-Fixes: 4c8ff7095bef ("f2fs: support data compression")
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- fs/f2fs/compress.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/omapdrm/dss/venc.c | 43 ------------------------------
+ 1 file changed, 43 deletions(-)
 
-diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
-index c847523ab4a2e..927db1205bd81 100644
---- a/fs/f2fs/compress.c
-+++ b/fs/f2fs/compress.c
-@@ -845,7 +845,7 @@ static int f2fs_write_compressed_pages(struct compress_ctx *cc,
+diff --git a/drivers/gpu/drm/omapdrm/dss/venc.c b/drivers/gpu/drm/omapdrm/dss/venc.c
+index 766553bb2f87..9701843ccf09 100644
+--- a/drivers/gpu/drm/omapdrm/dss/venc.c
++++ b/drivers/gpu/drm/omapdrm/dss/venc.c
+@@ -208,49 +208,6 @@ static const struct venc_config venc_config_ntsc_trm = {
+ 	.gen_ctrl				= 0x00F90000,
+ };
  
- 		blkaddr = datablock_addr(dn.inode, dn.node_page,
- 							dn.ofs_in_node);
--		fio.page = cic->rpages[i];
-+		fio.page = cc->rpages[i];
- 		fio.old_blkaddr = blkaddr;
- 
- 		/* cluster header */
+-static const struct venc_config venc_config_pal_bdghi = {
+-	.f_control				= 0,
+-	.vidout_ctrl				= 0,
+-	.sync_ctrl				= 0,
+-	.hfltr_ctrl				= 0,
+-	.x_color				= 0,
+-	.line21					= 0,
+-	.ln_sel					= 21,
+-	.htrigger_vtrigger			= 0,
+-	.tvdetgp_int_start_stop_x		= 0x00140001,
+-	.tvdetgp_int_start_stop_y		= 0x00010001,
+-	.gen_ctrl				= 0x00FB0000,
+-
+-	.llen					= 864-1,
+-	.flens					= 625-1,
+-	.cc_carr_wss_carr			= 0x2F7625ED,
+-	.c_phase				= 0xDF,
+-	.gain_u					= 0x111,
+-	.gain_v					= 0x181,
+-	.gain_y					= 0x140,
+-	.black_level				= 0x3e,
+-	.blank_level				= 0x3e,
+-	.m_control				= 0<<2 | 1<<1,
+-	.bstamp_wss_data			= 0x42,
+-	.s_carr					= 0x2a098acb,
+-	.l21__wc_ctl				= 0<<13 | 0x16<<8 | 0<<0,
+-	.savid__eavid				= 0x06A70108,
+-	.flen__fal				= 23<<16 | 624<<0,
+-	.lal__phase_reset			= 2<<17 | 310<<0,
+-	.hs_int_start_stop_x			= 0x00920358,
+-	.hs_ext_start_stop_x			= 0x000F035F,
+-	.vs_int_start_x				= 0x1a7<<16,
+-	.vs_int_stop_x__vs_int_start_y		= 0x000601A7,
+-	.vs_int_stop_y__vs_ext_start_x		= 0x01AF0036,
+-	.vs_ext_stop_x__vs_ext_start_y		= 0x27101af,
+-	.vs_ext_stop_y				= 0x05,
+-	.avid_start_stop_x			= 0x03530082,
+-	.avid_start_stop_y			= 0x0270002E,
+-	.fid_int_start_x__fid_int_start_y	= 0x0005008A,
+-	.fid_int_offset_y__fid_ext_start_x	= 0x002E0138,
+-	.fid_ext_start_y__fid_ext_offset_y	= 0x01380005,
+-};
+-
+ enum venc_videomode {
+ 	VENC_MODE_UNKNOWN,
+ 	VENC_MODE_PAL,
 -- 
-2.20.1
+2.17.1
+
 
