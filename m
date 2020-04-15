@@ -2,297 +2,137 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 644C7C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:06:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB389C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:07:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3ADF8206E9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:06:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c0yWD0cp"
+	by mail.kernel.org (Postfix) with ESMTP id D152D206E9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:07:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405260AbgDOJGJ (ORCPT
+        id S2408278AbgDOJH6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 05:06:09 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:26520 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2393831AbgDOJFV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 05:05:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586941518;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=FPt9LCDfa/HfbhKaktspFlYSLG+Xrx8+0Nujdr48VHQ=;
-        b=c0yWD0cpMmeZFH3ACyAxJMx1Et7Orru0BRVLNZ9x7Ii20Uu7qtFwbJCMplcIoHvZzXkEpz
-        C9tx/tdK7LTe36aNMxSa8+ZoV+hp7cxJ+2jALH9xmXAC9EYqB1+8XW61XPtmm8cntEEaPD
-        bQa1tOAz+iWkdX6YDYiSy/gEhNjKois=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-478-s037hFZ2PCaaPPVrCVca9w-1; Wed, 15 Apr 2020 05:05:14 -0400
-X-MC-Unique: s037hFZ2PCaaPPVrCVca9w-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 29F4B107ACC7;
-        Wed, 15 Apr 2020 09:05:13 +0000 (UTC)
-Received: from krava (unknown [10.40.193.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7162A10013A1;
-        Wed, 15 Apr 2020 09:05:10 +0000 (UTC)
-Date:   Wed, 15 Apr 2020 11:05:07 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "bibo,mao" <bibo.mao@intel.com>,
-        "Ziqian SUN (Zamir)" <zsun@redhat.com>
-Subject: [PATCH] kretprobe: Prevent triggering kretprobe from within
- kprobe_flush_task
-Message-ID: <20200415090507.GG208694@krava>
-References: <20200408164641.3299633-1-jolsa@kernel.org>
- <20200409234101.8814f3cbead69337ac5a33fa@kernel.org>
- <20200409184451.GG3309111@krava>
- <20200409201336.GH3309111@krava>
- <20200410093159.0d7000a08fd76c2eaf1398f8@kernel.org>
- <20200414160338.GE208694@krava>
+        Wed, 15 Apr 2020 05:07:58 -0400
+Received: from mga03.intel.com ([134.134.136.65]:25045 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2408269AbgDOJHx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 05:07:53 -0400
+IronPort-SDR: mcDPuQ8ZC2YWJwiaZaEe7oX4/W6f0bJCaPwY07F8R+QzbMd1Dw/VHInAhiX6l0P3VB4u1DZfHT
+ Z2dzdWN3riqg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 02:07:52 -0700
+IronPort-SDR: dIcvUqmm8vkltmzBbRt7swG9EIHcpliBK18dHSes44YOxPl9GSHu+CpHbMxzexYHs+shu+VVQy
+ da/XylUQ7VEQ==
+X-IronPort-AV: E=Sophos;i="5.72,386,1580803200"; 
+   d="scan'208";a="427370602"
+Received: from ssolodk-mobl1.ccr.corp.intel.com (HELO localhost) ([10.252.48.37])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 02:07:47 -0700
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Colin Ian King <colin.king@canonical.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>, kbuild@lists.01.org
+Cc:     lkp@intel.com, kbuild-all@lists.01.org,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/i915/gt: remove redundant assignment to variable x
+In-Reply-To: <43eb0cbb-9bf0-c99a-470d-8121c3108a5e@canonical.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200414092359.GC1163@kadam> <43eb0cbb-9bf0-c99a-470d-8121c3108a5e@canonical.com>
+Date:   Wed, 15 Apr 2020 12:07:44 +0300
+Message-ID: <87blnt5d7j.fsf@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200414160338.GE208694@krava>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ziqian reported lockup when adding retprobe on _raw_spin_lock_irqsave.
-My test was also able to trigger lockdep output:
+On Tue, 14 Apr 2020, Colin Ian King <colin.king@canonical.com> wrote:
+> Hi Dan,
+>
+> I'd post a revert, but I don't seem to see an upstream commit for this
+> this to revert against. What's the revert policy in these cases? Or can
+> the patch be just ignored by the maintainers so it's not applied?
 
- ============================================
- WARNING: possible recursive locking detected
- 5.6.0-rc6+ #6 Not tainted
- --------------------------------------------
- sched-messaging/2767 is trying to acquire lock:
- ffffffff9a492798 (&(kretprobe_table_locks[i].lock)){-.-.}, at: kretprobe_hash_lock+0x52/0xa0
+It has not been applied, and will be ignored, in part thanks to the
+report.
 
- but task is already holding lock:
- ffffffff9a491a18 (&(kretprobe_table_locks[i].lock)){-.-.}, at: kretprobe_trampoline+0x0/0x50
+However I think Dan's report is misleading in that it looks like it's
+about a commit while I think it should emphasize that it's a pre-merge
+report on the patch on the mailing list.
 
- other info that might help us debug this:
-  Possible unsafe locking scenario:
+BR,
+Jani.
 
-        CPU0
-        ----
-   lock(&(kretprobe_table_locks[i].lock));
-   lock(&(kretprobe_table_locks[i].lock));
 
-  *** DEADLOCK ***
 
-  May be due to missing lock nesting notation
+>
+> Colin
+>
+>
+> On 14/04/2020 10:23, Dan Carpenter wrote:
+>> Hi Colin,
+>> 
+>> url:    https://github.com/0day-ci/linux/commits/Colin-King/drm-i915-gt-remove-redundant-assignment-to-variable-x/20200411-032731
+>> base:   git://anongit.freedesktop.org/drm-intel for-linux-next
+>> 
+>> If you fix the issue, kindly add following tag as appropriate
+>> Reported-by: kbuild test robot <lkp@intel.com>
+>> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+>> 
+>> smatch warnings:
+>> drivers/gpu/drm/i915/gt/intel_engine_cs.c:1210 print_request() error: uninitialized symbol 'x'.
+>> 
+>> # https://github.com/0day-ci/linux/commit/6ee08d455bba0066e8f5f276dcd43d9e3e594dc5
+>> git remote add linux-review https://github.com/0day-ci/linux
+>> git remote update linux-review
+>> git checkout 6ee08d455bba0066e8f5f276dcd43d9e3e594dc5
+>> vim +/x +1210 drivers/gpu/drm/i915/gt/intel_engine_cs.c
+>> 
+>> f636edb214a5ff drivers/gpu/drm/i915/intel_engine_cs.c    Chris Wilson   2017-10-09  1202  static void print_request(struct drm_printer *m,
+>> e61e0f51ba7974 drivers/gpu/drm/i915/intel_engine_cs.c    Chris Wilson   2018-02-21  1203  			  struct i915_request *rq,
+>> f636edb214a5ff drivers/gpu/drm/i915/intel_engine_cs.c    Chris Wilson   2017-10-09  1204  			  const char *prefix)
+>> f636edb214a5ff drivers/gpu/drm/i915/intel_engine_cs.c    Chris Wilson   2017-10-09  1205  {
+>> ab2681512b4c10 drivers/gpu/drm/i915/intel_engine_cs.c    Chris Wilson   2018-03-14  1206  	const char *name = rq->fence.ops->get_timeline_name(&rq->fence);
+>> 96d4f03c20d04c drivers/gpu/drm/i915/intel_engine_cs.c    Chris Wilson   2018-05-17  1207  	char buf[80] = "";
+>> 6ee08d455bba00 drivers/gpu/drm/i915/gt/intel_engine_cs.c Colin Ian King 2020-04-10  1208  	int x;
+>>                                                                                                 ^^^^^
+>> 
+>> 247870ac8ea729 drivers/gpu/drm/i915/intel_engine_cs.c    Chris Wilson   2018-04-24  1209  
+>> 247870ac8ea729 drivers/gpu/drm/i915/intel_engine_cs.c    Chris Wilson   2018-04-24 @1210  	x = print_sched_attr(rq->i915, &rq->sched.attr, buf, x, sizeof(buf));
+>>                                                                                                                                                      ^
+>> Uninitialized variable
+>> 
+>> ab2681512b4c10 drivers/gpu/drm/i915/intel_engine_cs.c    Chris Wilson   2018-03-14  1211  
+>> b300fde8965fdd drivers/gpu/drm/i915/intel_engine_cs.c    Chris Wilson   2019-02-26  1212  	drm_printf(m, "%s %llx:%llx%s%s %s @ %dms: %s\n",
+>> b7268c5eed0ab4 drivers/gpu/drm/i915/intel_engine_cs.c    Chris Wilson   2018-04-18  1213  		   prefix,
+>> b300fde8965fdd drivers/gpu/drm/i915/intel_engine_cs.c    Chris Wilson   2019-02-26  1214  		   rq->fence.context, rq->fence.seqno,
+>> 8547444137ec61 drivers/gpu/drm/i915/intel_engine_cs.c    Chris Wilson   2019-01-29  1215  		   i915_request_completed(rq) ? "!" :
+>> 8547444137ec61 drivers/gpu/drm/i915/intel_engine_cs.c    Chris Wilson   2019-01-29  1216  		   i915_request_started(rq) ? "*" :
+>> 8547444137ec61 drivers/gpu/drm/i915/intel_engine_cs.c    Chris Wilson   2019-01-29  1217  		   "",
+>> 8c334f24e3b448 drivers/gpu/drm/i915/gt/intel_engine_cs.c Chris Wilson   2019-05-01  1218  		   test_bit(DMA_FENCE_FLAG_SIGNALED_BIT,
+>> 8c334f24e3b448 drivers/gpu/drm/i915/gt/intel_engine_cs.c Chris Wilson   2019-05-01  1219  			    &rq->fence.flags) ? "+" :
+>> 52c0fdb25c7c91 drivers/gpu/drm/i915/intel_engine_cs.c    Chris Wilson   2019-01-29  1220  		   test_bit(DMA_FENCE_FLAG_ENABLE_SIGNAL_BIT,
+>> 8c334f24e3b448 drivers/gpu/drm/i915/gt/intel_engine_cs.c Chris Wilson   2019-05-01  1221  			    &rq->fence.flags) ? "-" :
+>> 8c334f24e3b448 drivers/gpu/drm/i915/gt/intel_engine_cs.c Chris Wilson   2019-05-01  1222  		   "",
+>> 247870ac8ea729 drivers/gpu/drm/i915/intel_engine_cs.c    Chris Wilson   2018-04-24  1223  		   buf,
+>> f636edb214a5ff drivers/gpu/drm/i915/intel_engine_cs.c    Chris Wilson   2017-10-09  1224  		   jiffies_to_msecs(jiffies - rq->emitted_jiffies),
+>> ab2681512b4c10 drivers/gpu/drm/i915/intel_engine_cs.c    Chris Wilson   2018-03-14  1225  		   name);
+>> f636edb214a5ff drivers/gpu/drm/i915/intel_engine_cs.c    Chris Wilson   2017-10-09  1226  }
+>> 
+>> ---
+>> 0-DAY CI Kernel Test Service, Intel Corporation
+>> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+>> 
+>
 
- 1 lock held by sched-messaging/2767:
-  #0: ffffffff9a491a18 (&(kretprobe_table_locks[i].lock)){-.-.}, at: kretprobe_trampoline+0x0/0x50
-
- stack backtrace:
- CPU: 3 PID: 2767 Comm: sched-messaging Not tainted 5.6.0-rc6+ #6
- Call Trace:
-  dump_stack+0x96/0xe0
-  __lock_acquire.cold.57+0x173/0x2b7
-  ? native_queued_spin_lock_slowpath+0x42b/0x9e0
-  ? lockdep_hardirqs_on+0x590/0x590
-  ? __lock_acquire+0xf63/0x4030
-  lock_acquire+0x15a/0x3d0
-  ? kretprobe_hash_lock+0x52/0xa0
-  _raw_spin_lock_irqsave+0x36/0x70
-  ? kretprobe_hash_lock+0x52/0xa0
-  kretprobe_hash_lock+0x52/0xa0
-  trampoline_handler+0xf8/0x940
-  ? kprobe_fault_handler+0x380/0x380
-  ? find_held_lock+0x3a/0x1c0
-  kretprobe_trampoline+0x25/0x50
-  ? lock_acquired+0x392/0xbc0
-  ? _raw_spin_lock_irqsave+0x50/0x70
-  ? __get_valid_kprobe+0x1f0/0x1f0
-  ? _raw_spin_unlock_irqrestore+0x3b/0x40
-  ? finish_task_switch+0x4b9/0x6d0
-  ? __switch_to_asm+0x34/0x70
-  ? __switch_to_asm+0x40/0x70
-
-The code within the kretprobe handler checks for probe reentrancy,
-so we won't trigger any _raw_spin_lock_irqsave probe in there.
-
-The problem is in outside kprobe_flush_task, where we call:
-
-  kprobe_flush_task
-    kretprobe_table_lock
-      raw_spin_lock_irqsave
-        _raw_spin_lock_irqsave
-
-where _raw_spin_lock_irqsave triggers the kretprobe and installs
-kretprobe_trampoline handler on _raw_spin_lock_irqsave return.
-
-The kretprobe_trampoline handler is then executed with already
-locked kretprobe_table_locks, and first thing it does is to
-lock kretprobe_table_locks ;-) the whole lockup path like:
-
-  kprobe_flush_task
-    kretprobe_table_lock
-      raw_spin_lock_irqsave
-        _raw_spin_lock_irqsave ---> probe triggered, kretprobe_trampoline installed
-
-        ---> kretprobe_table_locks locked
-
-        kretprobe_trampoline
-          trampoline_handler
-            kretprobe_hash_lock(current, &head, &flags);  <--- deadlock
-
-Adding kprobe_busy_begin/end helpers that mark code with fake
-probe installed to prevent triggering of another kprobe within
-this code.
-
-Using these helpers in kprobe_flush_task, so the probe recursion
-protection check is hit and the probe is never set to prevent
-above lockup.
-
-Reported-by: "Ziqian SUN (Zamir)" <zsun@redhat.com>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- arch/x86/kernel/kprobes/core.c | 16 +++-------------
- include/linux/kprobes.h        |  4 ++++
- kernel/kprobes.c               | 24 ++++++++++++++++++++++++
- 3 files changed, 31 insertions(+), 13 deletions(-)
-
-diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
-index 4d7022a740ab..a12adbe1559d 100644
---- a/arch/x86/kernel/kprobes/core.c
-+++ b/arch/x86/kernel/kprobes/core.c
-@@ -753,16 +753,11 @@ asm(
- NOKPROBE_SYMBOL(kretprobe_trampoline);
- STACK_FRAME_NON_STANDARD(kretprobe_trampoline);
- 
--static struct kprobe kretprobe_kprobe = {
--	.addr = (void *)kretprobe_trampoline,
--};
--
- /*
-  * Called from kretprobe_trampoline
-  */
- __used __visible void *trampoline_handler(struct pt_regs *regs)
- {
--	struct kprobe_ctlblk *kcb;
- 	struct kretprobe_instance *ri = NULL;
- 	struct hlist_head *head, empty_rp;
- 	struct hlist_node *tmp;
-@@ -772,16 +767,12 @@ __used __visible void *trampoline_handler(struct pt_regs *regs)
- 	void *frame_pointer;
- 	bool skipped = false;
- 
--	preempt_disable();
--
- 	/*
- 	 * Set a dummy kprobe for avoiding kretprobe recursion.
- 	 * Since kretprobe never run in kprobe handler, kprobe must not
- 	 * be running at this point.
- 	 */
--	kcb = get_kprobe_ctlblk();
--	__this_cpu_write(current_kprobe, &kretprobe_kprobe);
--	kcb->kprobe_status = KPROBE_HIT_ACTIVE;
-+	kprobe_busy_begin();
- 
- 	INIT_HLIST_HEAD(&empty_rp);
- 	kretprobe_hash_lock(current, &head, &flags);
-@@ -857,7 +848,7 @@ __used __visible void *trampoline_handler(struct pt_regs *regs)
- 			__this_cpu_write(current_kprobe, &ri->rp->kp);
- 			ri->ret_addr = correct_ret_addr;
- 			ri->rp->handler(ri, regs);
--			__this_cpu_write(current_kprobe, &kretprobe_kprobe);
-+			__this_cpu_write(current_kprobe, &kprobe_busy);
- 		}
- 
- 		recycle_rp_inst(ri, &empty_rp);
-@@ -873,8 +864,7 @@ __used __visible void *trampoline_handler(struct pt_regs *regs)
- 
- 	kretprobe_hash_unlock(current, &flags);
- 
--	__this_cpu_write(current_kprobe, NULL);
--	preempt_enable();
-+	kprobe_busy_end();
- 
- 	hlist_for_each_entry_safe(ri, tmp, &empty_rp, hlist) {
- 		hlist_del(&ri->hlist);
-diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
-index 04bdaf01112c..645fd401c856 100644
---- a/include/linux/kprobes.h
-+++ b/include/linux/kprobes.h
-@@ -350,6 +350,10 @@ static inline struct kprobe_ctlblk *get_kprobe_ctlblk(void)
- 	return this_cpu_ptr(&kprobe_ctlblk);
- }
- 
-+extern struct kprobe kprobe_busy;
-+void kprobe_busy_begin(void);
-+void kprobe_busy_end(void);
-+
- kprobe_opcode_t *kprobe_lookup_name(const char *name, unsigned int offset);
- int register_kprobe(struct kprobe *p);
- void unregister_kprobe(struct kprobe *p);
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 2625c241ac00..75bb4a8458e7 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -1236,6 +1236,26 @@ __releases(hlist_lock)
- }
- NOKPROBE_SYMBOL(kretprobe_table_unlock);
- 
-+struct kprobe kprobe_busy = {
-+	.addr = (void *) get_kprobe,
-+};
-+
-+void kprobe_busy_begin(void)
-+{
-+	struct kprobe_ctlblk *kcb;
-+
-+	preempt_disable();
-+	__this_cpu_write(current_kprobe, &kprobe_busy);
-+	kcb = get_kprobe_ctlblk();
-+	kcb->kprobe_status = KPROBE_HIT_ACTIVE;
-+}
-+
-+void kprobe_busy_end(void)
-+{
-+	__this_cpu_write(current_kprobe, NULL);
-+	preempt_enable();
-+}
-+
- /*
-  * This function is called from finish_task_switch when task tk becomes dead,
-  * so that we can recycle any function-return probe instances associated
-@@ -1253,6 +1273,8 @@ void kprobe_flush_task(struct task_struct *tk)
- 		/* Early boot.  kretprobe_table_locks not yet initialized. */
- 		return;
- 
-+	kprobe_busy_begin();
-+
- 	INIT_HLIST_HEAD(&empty_rp);
- 	hash = hash_ptr(tk, KPROBE_HASH_BITS);
- 	head = &kretprobe_inst_table[hash];
-@@ -1266,6 +1288,8 @@ void kprobe_flush_task(struct task_struct *tk)
- 		hlist_del(&ri->hlist);
- 		kfree(ri);
- 	}
-+
-+	kprobe_busy_end();
- }
- NOKPROBE_SYMBOL(kprobe_flush_task);
- 
 -- 
-2.18.2
-
+Jani Nikula, Intel Open Source Graphics Center
