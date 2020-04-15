@@ -2,146 +2,111 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A4D9C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:21:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 258B2C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:22:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F155C20775
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:21:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586942490;
-	bh=0zIrIYGU4YZzUsCcRWcNAZ9y7zWKPYfCHAgCLWK7wLw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YNbieGrZkUnOo9vPEAQvFeJyk00cRjUba5eVSsoOBBOYiMFdR5azkhAtJRw3MUPtJ
-	 Yi33Cv3eOohRdmSRN4sMNxeA6+kc3xzqIYMe/gCj+jvWO46eHIkv6yZ28Fz/OPf7Ti
-	 ggQV9tLcjDeu95vdziTaBdhtMTQIemkCU9APdYg0=
+	by mail.kernel.org (Postfix) with ESMTP id F12E220768
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:22:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="AP01Fz+J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729073AbgDOJV1 (ORCPT
+        id S2895363AbgDOJWF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 05:21:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37752 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405298AbgDOJVS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 05:21:18 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D9CB20768;
-        Wed, 15 Apr 2020 09:21:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586942477;
-        bh=0zIrIYGU4YZzUsCcRWcNAZ9y7zWKPYfCHAgCLWK7wLw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=j1kOvyWOkKrBt2dWPmJGa+IeML3i482ZhZNhxpmHODicI75ahW0n93JJXEP5E0fg1
-         goktsU48PgKPVtA6I1ch2csn7uc8pRFEU6rwzeP/yFtdIM92NfPWcsXJXhko6Ox4I2
-         gwfomh2q/BWCNJEJ1FeWelFmAK35i9c4Yq+h9WZE=
-Date:   Wed, 15 Apr 2020 11:21:15 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     Brendan Higgins <brendanhiggins@google.com>, rafael@kernel.org,
-        linux-kernel@vger.kernel.org, naresh.kamboju@linaro.org,
-        sakari.ailus@linux.intel.com, andy.shevchenko@gmail.com,
-        hdegoede@redhat.com, rafael.j.wysocki@intel.com,
-        linux-kselftest@vger.kernel.org, rostedt@goodmis.org,
-        sergey.senozhatsky@gmail.com, andriy.shevchenko@linux.intel.com,
-        shuah@kernel.org, anders.roxell@linaro.org,
-        lkft-triage@lists.linaro.org, linux@rasmusvillemoes.dk
-Subject: Re: [PATCH v1] kobject: make sure parent is not released before
- children
-Message-ID: <20200415092115.GA2565850@kroah.com>
-References: <20200414204240.186377-1-brendanhiggins@google.com>
- <20200415061154.GA2496263@kroah.com>
- <20200415084653.GM2828150@kuha.fi.intel.com>
+        Wed, 15 Apr 2020 05:22:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47460 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729094AbgDOJV4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 05:21:56 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BAC1C061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 02:21:55 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id d27so9028904wra.1
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 02:21:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloud.ionos.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Lsw/Iaiux+MLh4zGmzRDP0c55QH0mpEc78oqXzNiG98=;
+        b=AP01Fz+J3iar2E8zAzRwSbGq6J5btXocj1naiyK6aV6oO2naqSE3EQZ3ZRr6JeqT0C
+         YNfSOjiXOgYT030rl1G8vLdrb5iVUsISZkvKL2AvDIWK6hWPglbg3jDKoYveRo2xTlSU
+         sHXOrYhBuMqfXbIPABFtsM6AOu7xVsX1pBW15pI0mEXvvNLYD48d0yYZMWkhjL8NyTOJ
+         NAHwRZlhKQ36mSBqQ2QMV4DyfczF0Fb8asvbogbkytqebyvo+omP3WqWQX/XuosNxkIe
+         kIIzu1c8XrcOeltLaJ53JvMlTgtvlQfWdacIaPTkN1hlotbcOaUUwOCbiL2MELj+BK3k
+         2D8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Lsw/Iaiux+MLh4zGmzRDP0c55QH0mpEc78oqXzNiG98=;
+        b=MXHD7K09Ev2YCzoA2jzAtSvRymGI5gOBtR5DmgLQofoNNGFcykdP50G90sc5Eg2cph
+         +EzeCDvV8aSK4PmBp6eU5EYUmaxBkQt3Rg42+t7elJbVLIXAqd43ntqkSlUsX8j5Prbl
+         KVTrQ9tZyeCFWFVD+MzyPvs31Dcodj4e34ucf/XCuQ55ghrg8sQpIi9f3wqKVu/0xuu0
+         jTZESRU3/p2c6sxOc9mtdVtvkXdmKrDqNm6uIScJAo8I+Pz+nG0gyfL3CVJdlKsAhH2Z
+         stTUj00GiBGbmhn5KX9Efb/AZV4qMixc2qHz5TPo5+IAqHtupA+v/SnURNHWzfSu41Zi
+         wHsQ==
+X-Gm-Message-State: AGi0PuZMUey6GdQ4t03llGgBnFK4do2vd3nid4z6pETXV+TkHydz/eNe
+        MzlK/51XcmS7GImBx2EDYLol
+X-Google-Smtp-Source: APiQypLsqG22QZWeFoVMXZG8q5JrTXXNY5wde4LPzpchrO/6FZiARk3OSMxWx53p8sQ3RQF2n6+qAw==
+X-Received: by 2002:adf:e3ca:: with SMTP id k10mr11353040wrm.53.1586942514244;
+        Wed, 15 Apr 2020 02:21:54 -0700 (PDT)
+Received: from dkxps.fkb.profitbricks.net (dslb-002-204-231-072.002.204.pools.vodafone-ip.de. [2.204.231.72])
+        by smtp.gmail.com with ESMTPSA id v7sm22534615wmg.3.2020.04.15.02.21.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2020 02:21:53 -0700 (PDT)
+From:   Danil Kipnis <danil.kipnis@cloud.ionos.com>
+To:     linux-block@vger.kernel.org, linux-rdma@vger.kernel.org
+Cc:     axboe@kernel.dk, hch@infradead.org, sagi@grimberg.me,
+        bvanassche@acm.org, leon@kernel.org, dledford@redhat.com,
+        jgg@ziepe.ca, danil.kipnis@cloud.ionos.com,
+        jinpu.wang@cloud.ionos.com, pankaj.gupta@cloud.ionos.com,
+        Roman Pen <roman.penyaev@profitbricks.com>,
+        Tejun Heo <tj@kernel.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH v12 01/25] sysfs: export sysfs_remove_file_self()
+Date:   Wed, 15 Apr 2020 11:20:21 +0200
+Message-Id: <20200415092045.4729-2-danil.kipnis@cloud.ionos.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200415092045.4729-1-danil.kipnis@cloud.ionos.com>
+References: <20200415092045.4729-1-danil.kipnis@cloud.ionos.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200415084653.GM2828150@kuha.fi.intel.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 11:46:53AM +0300, Heikki Krogerus wrote:
-> Hi Greg,
-> 
-> On Wed, Apr 15, 2020 at 08:11:54AM +0200, Greg KH wrote:
-> > > diff --git a/lib/kobject.c b/lib/kobject.c
-> > > index 83198cb37d8d..5921e2470b46 100644
-> > > --- a/lib/kobject.c
-> > > +++ b/lib/kobject.c
-> > > @@ -663,6 +663,7 @@ EXPORT_SYMBOL(kobject_get_unless_zero);
-> > >   */
-> > >  static void kobject_cleanup(struct kobject *kobj)
-> > >  {
-> > > +	struct kobject *parent = kobj->parent;
-> > >  	struct kobj_type *t = get_ktype(kobj);
-> > >  	const char *name = kobj->name;
-> > >  
-> > > @@ -680,6 +681,9 @@ static void kobject_cleanup(struct kobject *kobj)
-> > >  		kobject_uevent(kobj, KOBJ_REMOVE);
-> > >  	}
-> > >  
-> > > +	/* make sure the parent is not released before the (last) child */
-> > > +	kobject_get(parent);
-> > > +
-> > >  	/* remove from sysfs if the caller did not do it */
-> > >  	if (kobj->state_in_sysfs) {
-> > >  		pr_debug("kobject: '%s' (%p): auto cleanup kobject_del\n",
-> > > @@ -693,6 +697,8 @@ static void kobject_cleanup(struct kobject *kobj)
-> > >  		t->release(kobj);
-> > >  	}
-> > >  
-> > > +	kobject_put(parent);
-> > > +
-> > 
-> > No, please don't do this.
-> > 
-> > A child device should have always incremented the parent already if it
-> > was correctly registered.  We have had this patch been proposed multiple
-> > times over the years, and every time it was, we said no and went and
-> > fixed the real issue which was with the user of the interface.
-> 
-> The parent ref count is incremented by the child, that is not the
-> problem. The problem is that when that child is released, if it's the
-> last child of the parent, and there are no other users for the parent,
-> then the parent is actually released _before_ the child. And that
-> happens in the above function kobject_cleanup().
-> 
-> We can work around the problem by taking a reference to the parent
-> separately, but we have to do that everywhere separately (which I
-> guess is exactly what has been done so far). That workaroud still does
-> not really fix the core problem. The core problem is still that
-> lib/kboject.c is allowing the parent kobject to be released before the
-> child kobject, and that quite simply should not be allowed to happen.
-> 
-> I don't have a problem if you want to have a better solution for this,
-> but the solution really can't anymore be that we are always expected
-> to separately increment the parent's ref count with every type of
-> kobject.
+From: Jack Wang <jinpu.wang@cloud.ionos.com>
 
-Why is this suddenly showing up as a issue and it hasn't ever before?
-Because of that I would argue that the problem is not in the kobject
-core, but the use of it.
+Function is going to be used in transport over RDMA module
+in subsequent patches, so export it to GPL modules.
 
-When a child object is created, it should have already incremented the
-parent reference count before it is registered, to ensure that the
-parent does not go away before the child is finished being registered.
-Then, when the child is removed, it decrements the reference count of
-the parent as it "knows" it is done with that pointer.
+Signed-off-by: Roman Pen <roman.penyaev@profitbricks.com>
+Acked-by: Tejun Heo <tj@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+[jwang: extend the commit message]
+Signed-off-by: Jack Wang <jinpu.wang@cloud.ionos.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+---
+ fs/sysfs/file.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-So perhaps this new swnode code is just wrong?  Dealing with "raw"
-kobjects is hard, and not generally recommended due to issues like this.
-When you use the driver core, all of this logic is already handled for
-you...
+diff --git a/fs/sysfs/file.c b/fs/sysfs/file.c
+index 26bbf960e2a2..d81f9f974a35 100644
+--- a/fs/sysfs/file.c
++++ b/fs/sysfs/file.c
+@@ -492,6 +492,7 @@ bool sysfs_remove_file_self(struct kobject *kobj, const struct attribute *attr)
+ 	kernfs_put(kn);
+ 	return ret;
+ }
++EXPORT_SYMBOL_GPL(sysfs_remove_file_self);
+ 
+ void sysfs_remove_files(struct kobject *kobj, const struct attribute * const *ptr)
+ {
+-- 
+2.20.1
 
-And I just looked at the code swnode_register() needs to increment the
-parent kobject's reference, as it is saving a pointer to it away to be
-used later.  That's just basic reference-counted-pointer logic here,
-please fix the issue there.
-
-thanks,
-
-greg k-h
