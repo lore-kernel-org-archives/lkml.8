@@ -2,68 +2,224 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49CB9C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 03:39:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB82DC2BB85
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 03:41:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A86720732
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 03:39:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C210E2083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 03:41:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389753AbgDODj6 (ORCPT
+        id S2389839AbgDODli (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 23:39:58 -0400
-Received: from mga12.intel.com ([192.55.52.136]:24529 "EHLO mga12.intel.com"
+        Tue, 14 Apr 2020 23:41:38 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:36960 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733221AbgDODj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 23:39:56 -0400
-IronPort-SDR: DYSJawISL5ei+DtA3UbmNUP4Vrq+GLpv/p+ShcIwK/aBj/n1g3xcaMK4qAQ1vvjRpP2lgRgGFG
- mdJu44Dy77TQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 20:39:55 -0700
-IronPort-SDR: 7JCPDFuG5gkmHoJv5Pr8ofM1Ya93E2671SFEH1yk6PSuA+sedyOqii0YLtp15hDH5IU3V4ckqY
- yHUBabzjYESw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,385,1580803200"; 
-   d="scan'208";a="271607890"
-Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
-  by orsmga002.jf.intel.com with ESMTP; 14 Apr 2020 20:39:55 -0700
-Date:   Tue, 14 Apr 2020 20:40:40 -0700
-From:   Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-To:     Jason Yan <yanaijie@huawei.com>
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org, ebiederm@xmission.com, Babu.Moger@amd.com,
-        bshanks@codeweavers.com, wangkefeng.wang@huawei.com,
-        linux-kernel@vger.kernel.org, Hulk Robot <hulkci@huawei.com>
-Subject: Re: [PATCH] x86/umip: make umip_insns static
-Message-ID: <20200415034040.GA23851@ranerica-svr.sc.intel.com>
-References: <20200413082213.22934-1-yanaijie@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200413082213.22934-1-yanaijie@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        id S1733221AbgDODlf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 23:41:35 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 441CA2006E5;
+        Wed, 15 Apr 2020 05:41:32 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id DCE29200715;
+        Wed, 15 Apr 2020 05:41:27 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 8277B402D8;
+        Wed, 15 Apr 2020 11:41:22 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     srinivas.kandagatla@linaro.org, robh+dt@kernel.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH 1/3] dt-bindings: nvmem: Convert i.MX OCOTP to json-schema
+Date:   Wed, 15 Apr 2020 11:33:20 +0800
+Message-Id: <1586921602-1877-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 04:22:13PM +0800, Jason Yan wrote:
-> Fix the following sparse warning:
-> 
-> arch/x86/kernel/umip.c:84:12: warning: symbol 'umip_insns' was not
-> declared. Should it be static?
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+Convert the i.MX OCOTP binding to DT schema format using json-schema.
 
-FWIW. This looks good to me.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ .../devicetree/bindings/nvmem/imx-ocotp.txt        |  50 ----------
+ .../devicetree/bindings/nvmem/imx-ocotp.yaml       | 103 +++++++++++++++++++++
+ 2 files changed, 103 insertions(+), 50 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
+ create mode 100644 Documentation/devicetree/bindings/nvmem/imx-ocotp.yaml
 
-Acked-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+diff --git a/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt b/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
+deleted file mode 100644
+index 6e346d5..0000000
+--- a/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
++++ /dev/null
+@@ -1,50 +0,0 @@
+-Freescale i.MX6 On-Chip OTP Controller (OCOTP) device tree bindings
+-
+-This binding represents the on-chip eFuse OTP controller found on
+-i.MX6Q/D, i.MX6DL/S, i.MX6SL, i.MX6SX, i.MX6UL, i.MX6ULL/ULZ, i.MX6SLL,
+-i.MX7D/S, i.MX7ULP, i.MX8MQ, i.MX8MM, i.MX8MN and i.MX8MP SoCs.
+-
+-Required properties:
+-- compatible: should be one of
+-	"fsl,imx6q-ocotp" (i.MX6Q/D/DL/S),
+-	"fsl,imx6sl-ocotp" (i.MX6SL), or
+-	"fsl,imx6sx-ocotp" (i.MX6SX),
+-	"fsl,imx6ul-ocotp" (i.MX6UL),
+-	"fsl,imx6ull-ocotp" (i.MX6ULL/ULZ),
+-	"fsl,imx7d-ocotp" (i.MX7D/S),
+-	"fsl,imx6sll-ocotp" (i.MX6SLL),
+-	"fsl,imx7ulp-ocotp" (i.MX7ULP),
+-	"fsl,imx8mq-ocotp" (i.MX8MQ),
+-	"fsl,imx8mm-ocotp" (i.MX8MM),
+-	"fsl,imx8mn-ocotp" (i.MX8MN),
+-	"fsl,imx8mp-ocotp" (i.MX8MP),
+-	followed by "syscon".
+-- #address-cells : Should be 1
+-- #size-cells : Should be 1
+-- reg: Should contain the register base and length.
+-- clocks: Should contain a phandle pointing to the gated peripheral clock.
+-
+-Optional properties:
+-- read-only: disable write access
+-
+-Optional Child nodes:
+-
+-- Data cells of ocotp:
+-  Detailed bindings are described in bindings/nvmem/nvmem.txt
+-
+-Example:
+-	ocotp: ocotp@21bc000 {
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-		compatible = "fsl,imx6sx-ocotp", "syscon";
+-		reg = <0x021bc000 0x4000>;
+-		clocks = <&clks IMX6SX_CLK_OCOTP>;
+-
+-		tempmon_calib: calib@38 {
+-			reg = <0x38 4>;
+-		};
+-
+-		tempmon_temp_grade: temp-grade@20 {
+-			reg = <0x20 4>;
+-		};
+-	};
+diff --git a/Documentation/devicetree/bindings/nvmem/imx-ocotp.yaml b/Documentation/devicetree/bindings/nvmem/imx-ocotp.yaml
+new file mode 100644
+index 0000000..70aa637
+--- /dev/null
++++ b/Documentation/devicetree/bindings/nvmem/imx-ocotp.yaml
+@@ -0,0 +1,103 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/nvmem/imx-ocotp.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale i.MX6 On-Chip OTP Controller (OCOTP) device tree bindings
++
++maintainers:
++  - Anson Huang <Anson.Huang@nxp.com>
++
++description: |
++  This binding represents the on-chip eFuse OTP controller found on
++  i.MX6Q/D, i.MX6DL/S, i.MX6SL, i.MX6SX, i.MX6UL, i.MX6ULL/ULZ, i.MX6SLL,
++  i.MX7D/S, i.MX7ULP, i.MX8MQ, i.MX8MM, i.MX8MN and i.MX8MP SoCs.
++
++allOf:
++  - $ref: "nvmem.yaml#"
++
++properties:
++  compatible:
++    anyOf:
++      - items:
++        - enum:
++          - fsl,imx6q-ocotp
++          - fsl,imx6sl-ocotp
++          - fsl,imx6sx-ocotp
++          - fsl,imx6ul-ocotp
++          - fsl,imx6ull-ocotp
++          - fsl,imx7d-ocotp
++          - fsl,imx6sll-ocotp
++          - fsl,imx7ulp-ocotp
++          - fsl,imx8mq-ocotp
++          - fsl,imx8mm-ocotp
++          - fsl,imx8mn-ocotp
++          - fsl,imx8mp-ocotp
++
++        - const: syscon
++
++      - contains:
++          const: syscon
++        additionalItems: true
++
++  reg:
++    maxItems: 1
++
++  "#address-cells":
++    const: 1
++
++  "#size-cells":
++    const: 1
++
++  clocks:
++    description: |
++      OCOTP's clock source.
++    maxItems: 1
++
++required:
++  - "#address-cells"
++  - "#size-cells"
++  - compatible
++  - reg
++
++patternProperties:
++  "^.*@[0-9a-f]+$":
++    type: object
++
++    properties:
++      reg:
++        maxItems: 1
++        description:
++          Offset and size in bytes within the storage device.
++
++    required:
++      - reg
++
++    additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/imx6sx-clock.h>
++
++    ocotp: efuse@21bc000 {
++        #address-cells = <1>;
++        #size-cells = <1>;
++        compatible = "fsl,imx6sx-ocotp", "syscon";
++        reg = <0x021bc000 0x4000>;
++        clocks = <&clks IMX6SX_CLK_OCOTP>;
++
++        cpu_speed_grade: speed-grade@10 {
++            reg = <0x10 4>;
++        };
++
++        tempmon_calib: calib@38 {
++            reg = <0x38 4>;
++        };
++
++        tempmon_temp_grade: temp-grade@20 {
++            reg = <0x20 4>;
++        };
++    };
++
++...
+-- 
+2.7.4
 
-Thanks and BR,
-Ricardo
