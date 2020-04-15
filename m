@@ -2,110 +2,79 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA6EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E4EC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:36:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16FA220771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:36:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97BA320771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:36:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="edX3pPAo"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="CIH6Up1e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895694AbgDOJgh (ORCPT
+        id S2895701AbgDOJgm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 05:36:42 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:48606 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2895690AbgDOJgh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Apr 2020 05:36:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49810 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2895655AbgDOJgc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 05:36:32 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECA34C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 02:36:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=gzpmZPmtxEm/2WaOlqs6ZzLJj6vb3mNUa4I7Dm8/uDM=; b=edX3pPAoPijTJTeTth2ags5AR0
-        Y3DrxNVp/qrkW3CQ4Y0cxF3siDEy8nBU3q0CTfayywsYSmkN+JFYjqnzkYlCJVQ5mXvYRdmOZahb4
-        Jg7Yz9W8HDWiOO7DARnB80lfWjll/ly737+HxaBheLglk7HV6VJoIwZWIqq9NRP5jVXcgxI5W3Zp6
-        2t1mU2szi32MxsEZIj9hgJXJ5yGEVyTaSeCHHt9pxhU+bSE2p7XDQ+6nTybHeMwsYApgXbu4ovANn
-        lzIrS3WoHFQ/C5XuJTXT2/ta4L3/i3lhXdEVucDOrD8OyGjIsZYtUjIes3JVxh9mJCk6ZCFrfW0IV
-        7d6OV96Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jOeSx-0007Zs-7M; Wed, 15 Apr 2020 09:36:19 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+Received: from zn.tnic (p200300EC2F095B00CCE44E2D0BBEAA22.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:5b00:cce4:4e2d:bbe:aa22])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 333B2305EEC;
-        Wed, 15 Apr 2020 11:36:17 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 10E2F2BC6F2D6; Wed, 15 Apr 2020 11:36:17 +0200 (CEST)
-Date:   Wed, 15 Apr 2020 11:36:17 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Qais Yousef <qais.yousef@arm.com>, Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Yury Norov <yury.norov@gmail.com>,
-        Paul Turner <pjt@google.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Josh Don <joshdon@google.com>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] cpumask: Make cpumask_any() truly random
-Message-ID: <20200415093617.GZ20730@hirez.programming.kicks-ass.net>
-References: <20200414150556.10920-1-qais.yousef@arm.com>
- <20200414150556.10920-3-qais.yousef@arm.com>
- <20200414121956.3687d6e9@gandalf.local.home>
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B12241EC0BFD;
+        Wed, 15 Apr 2020 11:36:35 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1586943395;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=tF0zXvP6dsoEGYoP3+FSRAMw3UmN5J8sq/q+JVx/ThE=;
+        b=CIH6Up1eTJmxcNsVgNQfgz5HUijWK4Feyyzw7Dnv3/cqfb4tcACFgNR3iuy4if/2mQ3YeH
+        bptWTrMKCNkNRzzLgYPaHnl3e1KDyzyw/l4rdQFc5nlUVf6DOOJEQjDYRqHcBExaK1Tk12
+        UfoQeoue8N/+PCbmj7YfzDsP5iKpdMQ=
+Date:   Wed, 15 Apr 2020 11:36:35 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     CodyYao-oc <CodyYao-oc@zhaoxin.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org, tglx@linutronix.de,
+        x86@kernel.org, hpa@zytor.com, linux-kernel@vger.kernel.org,
+        cooperyan@zhaoxin.com, codyyao@zhaoxin.com
+Subject: Re: [PATCH] x86/perf: Add hardware performance events support for
+ Zhaoxin CPU.
+Message-ID: <20200415093635.GD31016@zn.tnic>
+References: <1586747669-4827-1-git-send-email-CodyYao-oc@zhaoxin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200414121956.3687d6e9@gandalf.local.home>
+In-Reply-To: <1586747669-4827-1-git-send-email-CodyYao-oc@zhaoxin.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 12:19:56PM -0400, Steven Rostedt wrote:
-
-> > +/**
-> > + * cpumask_any - pick a "random" cpu from *srcp
-> > + * @srcp: the input cpumask
-> > + *
-> > + * Returns >= nr_cpu_ids if no cpus set.
-> > + */
-> > +int cpumask_any(const struct cpumask *srcp)
-> > +{
-> > +	int next, prev;
-> > +
-> > +	/* NOTE: our first selection will skip 0. */
-> > +	prev = __this_cpu_read(distribute_cpu_mask_prev);
-> > +
-> > +	next = cpumask_next(prev, srcp);
-> > +	if (next >= nr_cpu_ids)
-> > +		next = cpumask_first(srcp);
-> > +
-> > +	if (next < nr_cpu_ids)
-> > +		__this_cpu_write(distribute_cpu_mask_prev, next);
+On Mon, Apr 13, 2020 at 11:14:29AM +0800, CodyYao-oc wrote:
+> Zhaoxin CPU has provided facilities for monitoring performance
+> via PMU(Performance Monitor Unit), but the functionality is unused so far.
+> Therefore, add support for zhaoxin pmu to make performance related
+> hardware events available.
 > 
-> Do we care if this gets preempted and migrated to a new CPU where we read
-> "prev" from one distribute_cpu_mask_prev on one CPU and write it to another
-> CPU?
+> Signed-off-by: CodyYao-oc <CodyYao-oc@zhaoxin.com>
+> Reported-by: kbuild test robot <lkp@intel.com>
 
-I don't think we do; that just adds to the randomness ;-), but you do
-raise a good point in that __this_cpu_*() ops assume preemption is
-already disabled, which is true of the one exiting
-cpumask_any_and_distribute() caller, but is no longer true after patch
-1, and this patch repeats the mistake.
+What exactly did the 0day bot report?
 
-So either we need to disable preemption across the function or
-transition to this_cpu_*() ops.
+Put that in []
+
+above the Reported-by line pls.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
