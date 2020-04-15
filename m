@@ -2,93 +2,107 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AA7FC3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:22:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E15FC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:23:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D615D206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:22:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44647206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:23:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KWTAORPr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2636593AbgDOOWu (ORCPT
+        id S2391987AbgDOOXX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:22:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37714 "EHLO
+        Wed, 15 Apr 2020 10:23:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37758 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2391788AbgDOOWa (ORCPT
+        by vger.kernel.org with ESMTP id S2391838AbgDOOWn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 10:22:30 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34ED7C061A0F
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 07:22:30 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jOivp-0000OA-H5; Wed, 15 Apr 2020 16:22:25 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jOivp-0008MH-3O; Wed, 15 Apr 2020 16:22:25 +0200
-Date:   Wed, 15 Apr 2020 16:22:25 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Tang Bin <tangbin@cmss.chinamobile.com>
-Cc:     wsa@the-dreams.de, o.rempel@pengutronix.de, ardb@kernel.org,
-        linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Shengju Zhang <zhangshengju@cmss.chinamobile.com>
-Subject: Re: [PATCH] i2c: drivers: Omit superfluous error message in
- efm32_i2c_probe()
-Message-ID: <20200415142225.pxstqwyqvj7ayd6m@pengutronix.de>
-References: <20200415135734.14660-1-tangbin@cmss.chinamobile.com>
+        Wed, 15 Apr 2020 10:22:43 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61A7DC061A0E;
+        Wed, 15 Apr 2020 07:22:43 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id r24so3885989ljd.4;
+        Wed, 15 Apr 2020 07:22:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=yzzMWqy+OD4Sj0S39fbp3R3eS6fFNXX/dFDozNIagPM=;
+        b=KWTAORPrZ9yvy2jm6Ap6fsX3FfC6VKBcC0qtVLW22TSIvQGUqfa9ZFqAE1mcQI5H27
+         sh6X1jq0IReze++5Oioq6uIiLMUIygFHw82W/+Hsa1RBWVla9KHhjQmC6YGjkZOnEzPh
+         WzMtMStHr6tzuj6G3d9NYhLE18RqLXCBUlF038DeYkEG6h9tH7MT8Zn/BdfWGmXw2TWp
+         68GzOO8BYt1H/L6ZWeKsLsGDme7/cJAhnGR8Mfr0fTC5bMYBlQiLut+VJGwpN99brNwm
+         CKo3+PYwpg+ra/MJdYYMgEdlxKZ3SqYAOR9wFyYdNz26ECLZxIT46/U4VsLTPvBPij5x
+         g/wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yzzMWqy+OD4Sj0S39fbp3R3eS6fFNXX/dFDozNIagPM=;
+        b=eqcEd8t9S4UrhaHvDFFlxnSepII/TRx2aYQ480VQkRB5oAZF4uJZs/vDtgGR+edlBE
+         ujTc3LdgLphmGbhEm55gLS/l20pQGFvB74eMqLEliUfeDSLnvukfN3/6atj+eyZHqiP0
+         MTI+UR7mZ6g2I7y629Uiehxv6hpEYe0oH+BI3UYIGqrTiac/IuhfCXH7gMYATJfEXAoZ
+         TR/8y76Pydc8c3ShEJgv5P2b3HTzTHc/G+Yn9gf1dGOtgGiWMkFZZoTt9xrpfTozagBe
+         fcIapmI4Iq6b8uYftwus7eOkrJy/Lc18rY7t6V9bZQ3bYnJ0gRsUISPvxiwhHEUH8XFc
+         vj6g==
+X-Gm-Message-State: AGi0PuammHIfVcMMRN5yT6mZhTGYeXLwyqAt1TIoLmKOKIQY1Avbh7GG
+        W6BZTFIO5pIh4s48OcixHOB+W3kp
+X-Google-Smtp-Source: APiQypLMYU1bFrRYsDqjdUgL9OS1QiNz+30o8kG5V5EZ+R7+XtORGUcbqKGG7ZBWbfUmpihoYf9NZA==
+X-Received: by 2002:a2e:2245:: with SMTP id i66mr3534404lji.191.1586960559886;
+        Wed, 15 Apr 2020 07:22:39 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id o17sm12834558lff.70.2020.04.15.07.22.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Apr 2020 07:22:28 -0700 (PDT)
+Subject: Re: [RFC PATCH v7 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
+Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1586919463-30542-1-git-send-email-skomatineni@nvidia.com>
+ <1586919463-30542-7-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <4118112f-f865-5460-6319-d71271fd78d1@gmail.com>
+Date:   Wed, 15 Apr 2020 17:22:26 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <1586919463-30542-7-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200415135734.14660-1-tangbin@cmss.chinamobile.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+15.04.2020 05:57, Sowjanya Komatineni пишет:
+> +static int tegra_csi_remove(struct platform_device *pdev)
+> +{
+> +	struct tegra_csi *csi = platform_get_drvdata(pdev);
+> +	int err;
+> +
+> +	err = host1x_client_unregister(&csi->client);
+> +	if (err < 0) {
+> +		dev_err(csi->dev,
+> +			"failed to unregister host1x client: %d\n", err);
+> +		return err;
+> +	}
+> +
+> +	pm_runtime_disable(csi->dev);
+> +	kfree(csi);
 
-On Wed, Apr 15, 2020 at 09:57:34PM +0800, Tang Bin wrote:
-> In the function efm32_i2c_probe(),when get irq failed,the function
-> platform_get_irq() logs an error message,so remove redundant message
-> here.
+IIRC, the driver removal is invoked on the unbinding. Hence, I'm not
+sure how moving away from the resource-managed API helps here. Could you
+please explain in a more details?
 
-adding a space after each comma seems usual style.
-
-> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
-> Signed-off-by: Shengju Zhang <zhangshengju@cmss.chinamobile.com>
-
-Usually the Sign-off of the sender comes last. How is Shengju Zhang
-involved with this patch?
-
-> diff --git a/drivers/i2c/busses/i2c-efm32.c b/drivers/i2c/busses/i2c-efm32.c
-> index a8c6323e7..4de31fae7 100644
-> --- a/drivers/i2c/busses/i2c-efm32.c
-> +++ b/drivers/i2c/busses/i2c-efm32.c
-> @@ -352,7 +352,6 @@ static int efm32_i2c_probe(struct platform_device *pdev)
->  
->  	ret = platform_get_irq(pdev, 0);
->  	if (ret <= 0) {
-> -		dev_err(&pdev->dev, "failed to get irq (%d)\n", ret);
-
-The change looks fine.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-K�nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Have you tried to test this driver under KASAN? I suspect that you just
+masked the problem, instead of fixing it.
