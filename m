@@ -2,34 +2,34 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B009C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:55:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36CD3C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:56:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FE3C2084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:55:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A8FF2084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:56:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1416532AbgDORzj (ORCPT
+        id S1416559AbgDORzz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 13:55:39 -0400
-Received: from mga14.intel.com ([192.55.52.115]:26432 "EHLO mga14.intel.com"
+        Wed, 15 Apr 2020 13:55:55 -0400
+Received: from mga14.intel.com ([192.55.52.115]:26430 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2440818AbgDORz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2437449AbgDORz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Apr 2020 13:55:26 -0400
-IronPort-SDR: 8AqdmUkZaXAazSCe56EUX5p/qLHYsER1XTVYtQ+kVmP7GbvEhlFkcv3vqlo/aQvt4zr+0imOFr
- OhNr2eSUOjUQ==
+IronPort-SDR: SD3kBL3/MNWGAxxXyJ8CSTsfictFCgpK4W8UjKtnaC9F4ZKATkMBp+L717QKbjfk7zvC9JK+wF
+ L/H/BOn/7XRA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
   by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 10:55:22 -0700
-IronPort-SDR: zfGAZ303F//sCntmHIxHvT4Bv2JxWA2y+M4W4aY7YeZ02E5Oe33fpCGd/j6mpTKWSdlrUhswYR
- DK/9qhpTbORg==
+IronPort-SDR: 9AQT2fPHHcmbXSk8vc4uuwqSR7T8sOOIjmbcjQpiEI14xL/xSQtIw7BdQ8c7nA1Iq1cyje/nPa
+ K7/h1ke/QmMA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,387,1580803200"; 
-   d="scan'208";a="332567340"
+   d="scan'208";a="332567335"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
   by orsmga001.jf.intel.com with ESMTP; 15 Apr 2020 10:55:22 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -40,12 +40,10 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [PATCH v2 02/10] KVM: nVMX: Uninline nested_vmx_reflect_vmexit(), i.e. move it to nested.c
-Date:   Wed, 15 Apr 2020 10:55:11 -0700
-Message-Id: <20200415175519.14230-3-sean.j.christopherson@intel.com>
+Subject: [PATCH v2 00/10]  KVM: VMX: Unionize vcpu_vmx.exit_reason
+Date:   Wed, 15 Apr 2020 10:55:09 -0700
+Message-Id: <20200415175519.14230-1-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200415175519.14230-1-sean.j.christopherson@intel.com>
-References: <20200415175519.14230-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -53,125 +51,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Uninline nested_vmx_reflect_vmexit() in preparation of refactoring
-nested_vmx_exit_reflected() to split up the reflection logic into more
-consumable chunks, e.g. VM-Fail vs. L1 wants the exit vs. L0 always
-handles the exit.
+Convert the exit_reason field in struct vcpu_vmx from a vanilla u32 to a
+union, (ab)using the union to provide access to the basic exit reason and
+flags.
 
-No functional change intended.
+There is a fairly substantial delta relative to v1, as I ran with Vitaly's
+suggestion to split nested_vmx_exit_reflected() into VM-Fail, "L0 wants"
+and "L1 wants", and move the tracepoint into nested_vmx_reflect_vmexit().
+IMO, this yields cleaner and more understandable code overall, and helps
+eliminate caching the basic exit reason (see below) by avoiding large
+functions that repeatedly query the basic exit reason.  The refactoring
+isn't strictly related to making exit_reason a union, but the code would
+conflict horribly and the end code nicely demonstrates the value of using
+a union for the exit reason.
 
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/x86/kvm/vmx/nested.c | 34 +++++++++++++++++++++++++++++++++-
- arch/x86/kvm/vmx/nested.h | 36 +-----------------------------------
- 2 files changed, 34 insertions(+), 36 deletions(-)
+There are three motivating factors for making exit_reason a union:
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index aca57d8da400..afc8c3538ab3 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -5646,7 +5646,7 @@ static bool nested_vmx_exit_handled_mtf(struct vmcs12 *vmcs12)
-  * should handle it ourselves in L0 (and then continue L2). Only call this
-  * when in is_guest_mode (L2).
-  */
--bool nested_vmx_exit_reflected(struct kvm_vcpu *vcpu, u32 exit_reason)
-+static bool nested_vmx_exit_reflected(struct kvm_vcpu *vcpu, u32 exit_reason)
- {
- 	u32 intr_info = vmcs_read32(VM_EXIT_INTR_INFO);
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
-@@ -5813,6 +5813,38 @@ bool nested_vmx_exit_reflected(struct kvm_vcpu *vcpu, u32 exit_reason)
- 	}
- }
- 
-+/*
-+ * Conditionally reflect a VM-Exit into L1.  Returns %true if the VM-Exit was
-+ * reflected into L1.
-+ */
-+bool nested_vmx_reflect_vmexit(struct kvm_vcpu *vcpu, u32 exit_reason)
-+{
-+	u32 exit_intr_info;
-+
-+	if (!nested_vmx_exit_reflected(vcpu, exit_reason))
-+		return false;
-+
-+	/*
-+	 * At this point, the exit interruption info in exit_intr_info
-+	 * is only valid for EXCEPTION_NMI exits.  For EXTERNAL_INTERRUPT
-+	 * we need to query the in-kernel LAPIC.
-+	 */
-+	WARN_ON(exit_reason == EXIT_REASON_EXTERNAL_INTERRUPT);
-+
-+	exit_intr_info = vmcs_read32(VM_EXIT_INTR_INFO);
-+	if ((exit_intr_info &
-+	     (INTR_INFO_VALID_MASK | INTR_INFO_DELIVER_CODE_MASK)) ==
-+	    (INTR_INFO_VALID_MASK | INTR_INFO_DELIVER_CODE_MASK)) {
-+		struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
-+
-+		vmcs12->vm_exit_intr_error_code =
-+			vmcs_read32(VM_EXIT_INTR_ERROR_CODE);
-+	}
-+
-+	nested_vmx_vmexit(vcpu, exit_reason, exit_intr_info,
-+			  vmcs_readl(EXIT_QUALIFICATION));
-+	return true;
-+}
- 
- static int vmx_get_nested_state(struct kvm_vcpu *vcpu,
- 				struct kvm_nested_state __user *user_kvm_nested_state,
-diff --git a/arch/x86/kvm/vmx/nested.h b/arch/x86/kvm/vmx/nested.h
-index d6112b3e9ecf..bd959bd2eb58 100644
---- a/arch/x86/kvm/vmx/nested.h
-+++ b/arch/x86/kvm/vmx/nested.h
-@@ -25,7 +25,7 @@ void nested_vmx_set_vmcs_shadowing_bitmap(void);
- void nested_vmx_free_vcpu(struct kvm_vcpu *vcpu);
- enum nvmx_vmentry_status nested_vmx_enter_non_root_mode(struct kvm_vcpu *vcpu,
- 						     bool from_vmentry);
--bool nested_vmx_exit_reflected(struct kvm_vcpu *vcpu, u32 exit_reason);
-+bool nested_vmx_reflect_vmexit(struct kvm_vcpu *vcpu, u32 exit_reason);
- void nested_vmx_vmexit(struct kvm_vcpu *vcpu, u32 exit_reason,
- 		       u32 exit_intr_info, unsigned long exit_qualification);
- void nested_sync_vmcs12_to_shadow(struct kvm_vcpu *vcpu);
-@@ -80,40 +80,6 @@ static inline bool nested_ept_ad_enabled(struct kvm_vcpu *vcpu)
- 	return nested_ept_get_eptp(vcpu) & VMX_EPTP_AD_ENABLE_BIT;
- }
- 
--/*
-- * Conditionally reflect a VM-Exit into L1.  Returns %true if the VM-Exit was
-- * reflected into L1.
-- */
--static inline bool nested_vmx_reflect_vmexit(struct kvm_vcpu *vcpu,
--					     u32 exit_reason)
--{
--	u32 exit_intr_info;
--
--	if (!nested_vmx_exit_reflected(vcpu, exit_reason))
--		return false;
--
--	/*
--	 * At this point, the exit interruption info in exit_intr_info
--	 * is only valid for EXCEPTION_NMI exits.  For EXTERNAL_INTERRUPT
--	 * we need to query the in-kernel LAPIC.
--	 */
--	WARN_ON(exit_reason == EXIT_REASON_EXTERNAL_INTERRUPT);
--
--	exit_intr_info = vmcs_read32(VM_EXIT_INTR_INFO);
--	if ((exit_intr_info &
--	     (INTR_INFO_VALID_MASK | INTR_INFO_DELIVER_CODE_MASK)) ==
--	    (INTR_INFO_VALID_MASK | INTR_INFO_DELIVER_CODE_MASK)) {
--		struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
--
--		vmcs12->vm_exit_intr_error_code =
--			vmcs_read32(VM_EXIT_INTR_ERROR_CODE);
--	}
--
--	nested_vmx_vmexit(vcpu, exit_reason, exit_intr_info,
--			  vmcs_readl(EXIT_QUALIFICATION));
--	return true;
--}
--
- /*
-  * Return the cr0 value that a nested guest would read. This is a combination
-  * of the real cr0 used to run the guest (guest_cr0), and the bits shadowed by
+  - Help avoid bugs where a basic exit reason is compared against the full
+    exit reason, e.g. there have been two bugs where MCE_DURING_VMENTRY
+    was incorrectly compared against the full exit reason.
+
+  - Clarify the intent of related flows, e.g. exit_reason is used for both
+    "basic exit reason" and "full exit reason", and it's not always clear
+    which of the two is intended without a fair bit of digging.
+
+  - Prepare for future Intel features, e.g. SGX, that add new exit flags
+    that are less restricted than FAILED_VMENTRY, i.e. can be set on what
+    is otherwise a standard VM-Exit.
+
+v2:
+  - Don't snapshot the basic exit reason, i.e. either use vmx->exit_reason
+    directly or snapshot the whole thing.  The resulting code is similar
+    to Xiaoyao's original patch, e.g. vmx_handle_exit() now uses
+    "exit_reason.basic" instead of "exit_reason" to reference the basic
+    exit reason.
+  - Split nested_vmx_exit_reflected() into VM-Fail, "L0 wants" and "L1
+    wants", and move the tracepoint into nested_vmx_reflect_vmexit().
+    [Vitaly]
+  - Use a "union vmx_exit_reason exit_reason" to handle a consistency
+    check VM-Exit on VM-Enter in nested_vmx_enter_non_root_mode() to avoid
+    some implicit casting shenanigans. [Vitaly]
+  - Collect tags. [Vitaly]
+
+v1: https://lkml.kernel.org/r/20200312184521.24579-1-sean.j.christopherson@intel.com
+
+
+Sean Christopherson (10):
+  KVM: nVMX: Move reflection check into nested_vmx_reflect_vmexit()
+  KVM: nVMX: Uninline nested_vmx_reflect_vmexit(), i.e. move it to
+    nested.c
+  KVM: nVMX: Move VM-Fail check out of nested_vmx_exit_reflected()
+  KVM: nVMX: Move nested VM-Exit tracepoint into
+    nested_vmx_reflect_vmexit()
+  KVM: nVMX: Split VM-Exit reflection logic into L0 vs. L1 wants
+  KVM: nVMX: Drop a superfluous WARN on reflecting EXTERNAL_INTERRUPT
+  KVM: nVMX: Pull exit_reason from vcpu_vmx in
+    nested_vmx_reflect_vmexit()
+  KVM: nVMX: Cast exit_reason to u16 to check for nested
+    EXTERNAL_INTERRUPT
+  KVM: nVMX: Rename exit_reason to vm_exit_reason for nested VM-Exit
+  KVM: VMX: Convert vcpu_vmx.exit_reason to a union
+
+ arch/x86/kvm/vmx/nested.c | 237 +++++++++++++++++++++++++-------------
+ arch/x86/kvm/vmx/nested.h |  32 +----
+ arch/x86/kvm/vmx/vmx.c    |  66 ++++++-----
+ arch/x86/kvm/vmx/vmx.h    |  25 +++-
+ 4 files changed, 219 insertions(+), 141 deletions(-)
+
 -- 
 2.26.0
 
