@@ -2,215 +2,94 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8507DC2BB55
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E774C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:09:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 614B32076A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:07:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 685962076A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:09:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="iWw1bOn3"
+	dkim=pass (2048-bit key) header.d=cs-cmu-edu.20150623.gappssmtp.com header.i=@cs-cmu-edu.20150623.gappssmtp.com header.b="y9GjytsK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393118AbgDOPHj (ORCPT
-        <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 11:07:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44794 "EHLO
+        id S371247AbgDOPI6 (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 11:08:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45010 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730523AbgDOPH3 (ORCPT
+        by vger.kernel.org with ESMTP id S2388223AbgDOPIy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 11:07:29 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47C63C061A0F
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 08:07:29 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id j16so13722234oih.10
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 08:07:29 -0700 (PDT)
+        Wed, 15 Apr 2020 11:08:54 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D49DC061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 08:08:54 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id f13so13346477qti.5
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 08:08:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BJ/egVWRNDuUrA/1e/qFDXWs5Qc4J9+ABqHJ5tB4g3c=;
-        b=iWw1bOn3loZLesgeK5vvFlv/vbKF1B9cNeqqd8NzRsrGERu7XHxYHXWJ5Vj2aIKqQt
-         ALZSRzXYFGnpipKbpX9Mj6K4dlBHCsyPxQWdqycQN4uudHiPdiNQ0A4222J8g43ypldP
-         OoxNb0rt9UnzHvWxrcg9sL819b/jYP4eu3+0EmNCdVKPHvJcY9vtyTYzET+LtNy8PYxy
-         w5zNHoiUMDb8nwu0Ak6Y43R2eh/vABGjwHeVRBBsoy1i6JORJ6gx1bi4NriKKzTDSfEW
-         +T7kNtgF2mUJ+v+m5uG2JWiihzllu8oTQDSg0pj7Z+C/Og4Ys6uPJ1cmXJnz3/1755By
-         AQYQ==
+        d=cs-cmu-edu.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=zHjgRngcxp4AR6+D17yxXUy7WIPm1jT5Q+rQhvyf/FI=;
+        b=y9GjytsKMQ+oZy9UDO8XhfI+uLUyDw62L1UOqN6vu0FAUq2jz4NHihuZ1/7E8ytw0d
+         1VeWL14WK7i2JrRkh4SiL6o/aVMCWcK0rbFoACNEm1faH7Ahf79eigNpdjdf4Z1jD9l9
+         SdC+Kv1inHJt9ezk7CoRk+1x6+tlM//a+CnW35QeeeAa+8gRNNFs1kJA5FB1CqqP7/JQ
+         QXPB69NxwbKdwQmBrUJJYtDE1uWaAF8DUxQ/e3RxECjGvKa7Oay18MUamu2cRDE0tcl4
+         pZWO4vPILwfeZpYbeL5uTut1JiVoczQOPe61MN+bGE+D5Y6Li83xINxWzprCwTOlsDyM
+         RVsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BJ/egVWRNDuUrA/1e/qFDXWs5Qc4J9+ABqHJ5tB4g3c=;
-        b=CeoKs+KZaSEUWUzg2skjPWgDovbTA/OxtR6jj9nN9dVGt3m4MhAYS/SC6246BjBy1k
-         EKbyqWj7guqvHR0PaWEuXEtZYEdMJH9YUIhPgDdDU59fOwPlYejF1nlvC19if6sqX4Iw
-         gJ3Sx4/pPjosrnmYDepyJJfkHXMViXMEMm9l6GHZ8LXelD5ArRLsJBB+nb4X2Sv4zy1E
-         AVHzeTiyCk6YZ01ZPnv4tCe2igZRAMHbANld7+c/viWZX9p/mf9ndtV6sor92/VcsxI7
-         pAtlYIVEH0bFH/i0xJrFX6xKmFkYpdukEB4wRaxjLWyr50tV19AoNNBJ/eFimIjzHlxg
-         KdEg==
-X-Gm-Message-State: AGi0PuYzoAG3r7+Y97JgtRmwipcQOvq0sHjtYHAxa+SQioCEydkP5a0Z
-        /ns7wavaAIwU21iouvKrrCR86c9z/g3b3FiYqZsvWQ==
-X-Google-Smtp-Source: APiQypLvNSLmbcj2GoOJKPRwQ0b4TevwhF9jPUtKlLczQuSmRgDhP5Yyzo2l8yt6eZwfR64jtzXnvSUgm75W51k8BEs=
-X-Received: by 2002:aca:4d86:: with SMTP id a128mr19561982oib.96.1586963248561;
- Wed, 15 Apr 2020 08:07:28 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zHjgRngcxp4AR6+D17yxXUy7WIPm1jT5Q+rQhvyf/FI=;
+        b=iRARbHqkV5a16FxFI8pF5C793Bo2XzlphPECVF4JV3Lyf518W6pkANUU+BX1hFqfAz
+         q/uYZgWE6CzzNskP55FDHna483ayC6fi4g4k0aiPotx1/9NfxV+GKsLndugX07U1Qv/q
+         CqUXbONVJAqYL/BV6FC7PLwX3me31hCvcBFACLbfLehiT7QI3VpEI1wd097exftGSeBZ
+         07/M9ZA/DI23kjDaxJBYwh/xoyxWqSu5h9YvEh7lDHtuLt+HUb8bw677u9Ha01p9mo0N
+         8AmDVKijQfDpXbBqFxzoNomB9sBtyQNPQK+7+LyNOgabkb4ywzqutzkIrykzjzANG/Wy
+         FxlQ==
+X-Gm-Message-State: AGi0PuYAqvZYbMn5VLDBcHWNAu0H/OZ6dBbMuN79PHolCse9svHJ4MrW
+        XkJ5fKtXFzV99uzq5Yx0Wl6nmKdYTJs=
+X-Google-Smtp-Source: APiQypKBqVse0i/useuOKX9XIPZQeNQaGGpsDVaFjEJEOygDSozZAzhTK3chUTvgoREaBZJYXKbWrA==
+X-Received: by 2002:ac8:4e2c:: with SMTP id d12mr1849346qtw.204.1586963333213;
+        Wed, 15 Apr 2020 08:08:53 -0700 (PDT)
+Received: from cs.cmu.edu (tunnel29655-pt.tunnel.tserv13.ash1.ipv6.he.net. [2001:470:7:582::2])
+        by smtp.gmail.com with ESMTPSA id i6sm11541894qkk.123.2020.04.15.08.08.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2020 08:08:51 -0700 (PDT)
+Date:   Wed, 15 Apr 2020 11:08:49 -0400
+From:   Jan Harkes <jaharkes@cs.cmu.edu>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH 11/34] docs: filesystems: convert coda.txt to ReST
+Message-ID: <20200415150849.6vvcka4dxenpwbe3@cs.cmu.edu>
+References: <cover.1586960617.git.mchehab+huawei@kernel.org>
+ <e3dd3b8835e132090cb82d0acda1947c8bacf156.1586960617.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-References: <20200414181012.114905-1-robert.marko@sartura.hr> <20200415093334.GC25745@shell.armlinux.org.uk>
-In-Reply-To: <20200415093334.GC25745@shell.armlinux.org.uk>
-From:   Robert Marko <robert.marko@sartura.hr>
-Date:   Wed, 15 Apr 2020 17:07:17 +0200
-Message-ID: <CA+HBbNEYkQKy-WjxB+QDasknH8gAChddcbtNX6xxE3a+GoNC2g@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] net: phy: mdio: add IPQ40xx MDIO driver
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        Christian Lamparter <chunkeey@gmail.com>,
-        Luka Perkov <luka.perkov@sartura.hr>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e3dd3b8835e132090cb82d0acda1947c8bacf156.1586960617.git.mchehab+huawei@kernel.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I have sent a v3.
+On Wed, Apr 15, 2020 at 10:39:25AM -0400, Mauro Carvalho Chehab wrote:
+> This document has its own style. It seems to be print output
+> for the old matrixial printers where backspace were used to
+> do double prints.
 
-I tried to incorporate all of your remarks there.
+Ha, yes the original was probably generated with something like
+troff/nroff.
 
-Thanks
-Robert
+> For the conversion, I used several regex expressions to get
+> rid of some weird stuff. The patch also does almost all possible
+> conversions in order to get a nice output document, while keeping
+> it readable/editable as is:
+ 
+Looks good to me.
 
-On Wed, Apr 15, 2020 at 11:33 AM Russell King - ARM Linux admin
-<linux@armlinux.org.uk> wrote:
->
-> On Tue, Apr 14, 2020 at 08:10:11PM +0200, Robert Marko wrote:
-> > diff --git a/drivers/net/phy/mdio-ipq40xx.c b/drivers/net/phy/mdio-ipq40xx.c
-> > new file mode 100644
-> > index 000000000000..d8c11c621f20
-> > --- /dev/null
-> > +++ b/drivers/net/phy/mdio-ipq40xx.c
-> > @@ -0,0 +1,176 @@
-> > +// SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
-> > +/* Copyright (c) 2015, The Linux Foundation. All rights reserved. */
-> > +/* Copyright (c) 2020 Sartura Ltd. */
-> > +
-> > +#include <linux/delay.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/module.h>
-> > +#include <linux/mutex.h>
-> > +#include <linux/io.h>
-> > +#include <linux/of_address.h>
-> > +#include <linux/of_mdio.h>
-> > +#include <linux/phy.h>
-> > +#include <linux/platform_device.h>
-> > +
->
-> Looking at how these registers are used, they could be renamed:
->
-> > +#define MDIO_CTRL_0_REG              0x40
->
-> This seems to be unused.
->
-> > +#define MDIO_CTRL_1_REG              0x44
->
-> MDIO_ADDR_REG
->
-> > +#define MDIO_CTRL_2_REG              0x48
->
-> MDIO_DATA_WRITE_REG
->
-> > +#define MDIO_CTRL_3_REG              0x4c
->
-> MDIO_DATA_READ_REG
->
-> > +#define MDIO_CTRL_4_REG              0x50
-> > +#define MDIO_CTRL_4_ACCESS_BUSY              BIT(16)
-> > +#define MDIO_CTRL_4_ACCESS_START             BIT(8)
-> > +#define MDIO_CTRL_4_ACCESS_CODE_READ         0
-> > +#define MDIO_CTRL_4_ACCESS_CODE_WRITE        1
->
-> MDIO_CMD_* ?
->
-> > +
-> > +#define IPQ40XX_MDIO_RETRY   1000
-> > +#define IPQ40XX_MDIO_DELAY   10
-> > +
-> > +struct ipq40xx_mdio_data {
-> > +     void __iomem    *membase;
-> > +};
-> > +
-> > +static int ipq40xx_mdio_wait_busy(struct mii_bus *bus)
-> > +{
-> > +     struct ipq40xx_mdio_data *priv = bus->priv;
-> > +     int i;
-> > +
-> > +     for (i = 0; i < IPQ40XX_MDIO_RETRY; i++) {
-> > +             unsigned int busy;
-> > +
-> > +             busy = readl(priv->membase + MDIO_CTRL_4_REG) &
-> > +                     MDIO_CTRL_4_ACCESS_BUSY;
-> > +             if (!busy)
-> > +                     return 0;
-> > +
-> > +             /* BUSY might take to be cleard by 15~20 times of loop */
-> > +             udelay(IPQ40XX_MDIO_DELAY);
-> > +     }
-> > +
-> > +     dev_err(bus->parent, "MDIO operation timed out\n");
-> > +
-> > +     return -ETIMEDOUT;
-> > +}
-> > +
-> > +static int ipq40xx_mdio_read(struct mii_bus *bus, int mii_id, int regnum)
-> > +{
-> > +     struct ipq40xx_mdio_data *priv = bus->priv;
-> > +     int value = 0;
-> > +     unsigned int cmd = 0;
->
-> No need to initialise either of these, and you can eliminate "value"
-> which will then satisfy davem's requirement for reverse-christmas-tree
-> ordering of variable declarations.
->
-> > +
-> > +     /* Reject clause 45 */
-> > +     if (regnum & MII_ADDR_C45)
-> > +             return -EOPNOTSUPP;
-> > +
-> > +     if (ipq40xx_mdio_wait_busy(bus))
-> > +             return -ETIMEDOUT;
-> > +
-> > +     /* issue the phy address and reg */
-> > +     writel((mii_id << 8) | regnum, priv->membase + MDIO_CTRL_1_REG);
-> > +
-> > +     cmd = MDIO_CTRL_4_ACCESS_START | MDIO_CTRL_4_ACCESS_CODE_READ;
-> > +
-> > +     /* issue read command */
-> > +     writel(cmd, priv->membase + MDIO_CTRL_4_REG);
-> > +
-> > +     /* Wait read complete */
-> > +     if (ipq40xx_mdio_wait_busy(bus))
-> > +             return -ETIMEDOUT;
-> > +
-> > +     /* Read data */
-> > +     value = readl(priv->membase + MDIO_CTRL_3_REG);
-> > +
-> > +     return value;
-> > +}
-> > +
-> > +static int ipq40xx_mdio_write(struct mii_bus *bus, int mii_id, int regnum,
-> > +                                                      u16 value)
-> > +{
-> > +     struct ipq40xx_mdio_data *priv = bus->priv;
-> > +     unsigned int cmd = 0;
->
-> No need to initialise cmd.
->
-> --
-> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+Jan
+
