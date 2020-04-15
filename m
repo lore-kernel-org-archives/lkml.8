@@ -2,97 +2,136 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA36C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 327BDC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:15:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B4AB2074F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:14:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7CD42074F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:15:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="BaShE054";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="oLHqxo4u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2896362AbgDOKOL (ORCPT
+        id S2896379AbgDOKPB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 06:14:11 -0400
-Received: from sauhun.de ([88.99.104.3]:51402 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896333AbgDOKMc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 06:12:32 -0400
-Received: from localhost (p54B33507.dip0.t-ipconnect.de [84.179.53.7])
-        by pokefinder.org (Postfix) with ESMTPSA id 272D72C1FF1;
-        Wed, 15 Apr 2020 12:12:30 +0200 (CEST)
-Date:   Wed, 15 Apr 2020 12:12:29 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Dejin Zheng <zhengdejin5@gmail.com>
-Cc:     thor.thayer@linux.intel.com, krzysztof.adamski@nokia.com,
-        f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, nsekhar@ti.com,
-        bgolaszewski@baylibre.com, baruch@tkos.co.il,
-        wsa+renesas@sang-engineering.com, kgene@kernel.org,
-        krzk@kernel.org, paul@crapouillou.net, vz@mleia.com,
-        khilman@baylibre.com, gregory.clement@bootlin.com,
-        rrichter@marvell.com, afaerber@suse.de,
-        manivannan.sadhasivam@linaro.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, heiko@sntech.de, baohua@kernel.org,
-        linus.walleij@linaro.org, mripard@kernel.org, wens@csie.org,
-        ardb@kernel.org, gcherian@marvell.com, jun.nie@linaro.org,
-        shawnguo@kernel.org, tglx@linutronix.de, zhouyanjie@wanyeetech.com,
-        martin.blumenstingl@googlemail.com, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] i2c: busses: convert to devm_platform_ioremap_resource
-Message-ID: <20200415101229.GG1141@ninjato>
-References: <20200409135224.7426-1-zhengdejin5@gmail.com>
+        Wed, 15 Apr 2020 06:15:01 -0400
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:54001 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2896351AbgDOKM4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 06:12:56 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 4DB285800D5;
+        Wed, 15 Apr 2020 06:12:55 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Wed, 15 Apr 2020 06:12:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=s0d/RgblpxRTpjT4bbVue6KEZrZ
+        fSGVOQKbJKOBuu9A=; b=BaShE054Cu8Fnh/acc0XEM6aGr2IdsHSkCR9zQQPoWq
+        /aTmayYFa1i876Z7z82YolyKSCv+sSCevnTUFtxinPBkn8GKyebYvCT6pPJ9zRFr
+        +NJTV6cEhOa7ffWGY8hX8Qs8DSR/P/9odcyi/uCy/D6n9FbxLtigv5q+MvXjCQh/
+        ts+GP1GwXvzH9hoKVZUpDYB3VmicdPXaGhKrXUPsyACGXlU3xfHbxGb3MytL2eOB
+        ekvCku+QNFJQgDMw//fevXI8+zwzbY6vlSIIxg8yg4HK+X3u5VoHUa9bReq0Q0TP
+        YDFUvMiQW9A4UiSCoCOmSKv6rJ88u56CqdSmWl+Zaow==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=s0d/Rg
+        blpxRTpjT4bbVue6KEZrZfSGVOQKbJKOBuu9A=; b=oLHqxo4uH7p4gID2Qfnx+n
+        xTsOExk6MG4B0jJvQekYdqA0zg+qiJN/dSMI8PXd059NTmcBvXzqFaAQWsCvnnVE
+        r+QzsD4lKzgSnGO5DyJvru3RA0X5Iz4aHbpMe57n1iiY3z/99OPYCWFys2qZ+Uig
+        cTMw/2nF0nW/xekuYY04A3l9YlNpaNsJpDJGuHpuRtLscLwQbmUYzvrxutiIbsr6
+        oKVP1afJWmj/IwNwClKoABb1nQVSOPgQZC8fuhifL8oNF25OWpnxiWybTwUm9gnw
+        ojVbNiUrtarBNMy3BBcCCXPsfUd7SrGyLttkc8OvuckbN18ZCU4Yl4/+mTTH7apw
+        ==
+X-ME-Sender: <xms:JN6WXkp19ZHWXzjjhwwmwbdOPcn0MVPAoGysA4CHDf6qu7mq_HtyOQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrfeefgddugecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
+    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepmhgrihhl
+    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:JN6WXod6O9K8OpB2X5BQN7PGUGIJznWSSS6cdbBC5H0J7w-kqNbZYA>
+    <xmx:JN6WXjqrHaeqthMijteG5ve3Eny-UFarS3pVNI9vFRFqYd7YHy2Dqw>
+    <xmx:JN6WXpFRhkOqF7jbtSROO4HBcn7D2xf4JnjK_iBuz8tNwSN2k6bYZA>
+    <xmx:J96WXrRWOVF0KWZkQ3adnheXFK8UNYgZRjktsI970Lrnzt5ahKFV-A>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 3FE073060060;
+        Wed, 15 Apr 2020 06:12:52 -0400 (EDT)
+Date:   Wed, 15 Apr 2020 12:12:51 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Philipp Rossak <embed3d@gmail.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: Re: [PATCH v6 01/12] dt-bindings: add img,pvrsgx.yaml for
+ Imagination GPUs
+Message-ID: <20200415101251.o3wi5t6xvf56xmhq@gilmour.lan>
+References: <cover.1586939718.git.hns@goldelico.com>
+ <06fb6569259bb9183d0a0d0fe70ec4f3033b8aab.1586939718.git.hns@goldelico.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Wtrm9ATX0sn6fFKv"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="jbdyoswmyxbgpiz2"
 Content-Disposition: inline
-In-Reply-To: <20200409135224.7426-1-zhengdejin5@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <06fb6569259bb9183d0a0d0fe70ec4f3033b8aab.1586939718.git.hns@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---Wtrm9ATX0sn6fFKv
+--jbdyoswmyxbgpiz2
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 09, 2020 at 09:52:24PM +0800, Dejin Zheng wrote:
-> use devm_platform_ioremap_resource() to simplify code, it
-> contains platform_get_resource and devm_ioremap_resource.
->=20
-> Reviewed-by: Barry Song <baohua@kernel.org>
-> Acked-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Acked-by: Robert Richter <rrichter@marvell.com>
-> Acked-by: Thor Thayer <thor.thayer@linux.intel.com>
-> Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Suggested-by: Wolfram Sang <wsa@the-dreams.de>
-> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+Hi,
 
-Removed "my" Suggested-by and applied to for-next, thanks!
+On Wed, Apr 15, 2020 at 10:35:08AM +0200, H. Nikolaus Schaller wrote:
+> The Imagination PVR/SGX GPU is part of several SoC from
+> multiple vendors, e.g. TI OMAP, Ingenic JZ4780, Intel Poulsbo,
+> Allwinner A83 and others.
+>
+> With this binding, we describe how the SGX processor is
+> interfaced to the SoC (registers, interrupt etc.).
+>
+> In most cases, Clock, Reset and power management is handled
+> by a parent node or elsewhere (e.g. code in the driver).
 
+Wouldn't the "code in the driver" still require the clock / reset /
+power domain to be set in the DT?
 
---Wtrm9ATX0sn6fFKv
+Maxime
+
+--jbdyoswmyxbgpiz2
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6W3g0ACgkQFA3kzBSg
-KbbvDg/6AuDzpKihXYH/WBCmS2baaoFc7NYDSFPl3rNinWlRPjBPDt56O+r0CzHo
-G8fQGCaQmrc4BjRo5fFeKJdUwI4LIziigv0XmhHPaGjo3pjT8gjcfcfgMYlg64w/
-loC9yZOqaf+wCT1E+2omdi0Lgcofk82ViHfH+wt25UcG91og5VtDFwCNhoOltMFl
-m/jrmi04994LX0qPkelhve2BomrDGbTWW8I5VQ92mnOCfowu1b8Qh1nEByQMcnvy
-1qbPbJyI96slNtab/C9SfeBDluTVXvxUsNUiLQYrge7fliFx1KSywuTH7snbMjiE
-yVn8fSMLeUzpqwoC8iq4CLXJggV/BX+KdXIEI3tQFI4lArp0O1Xpc65Ri2A9O0oI
-cncXHYCUP0r5/8/LFS1CgVyDV/VZvfqP/qQqJQ6bBqWG2hBStjf2ysbowtJvnIuR
-B9rnzi9lsU7wC7YGHnZXRy1wJ8deh4V5sYOy8lRi8LL7kmP9ktVbLxbaXA+QoiZe
-APO77TP68ORPuoM8gMjDO7vYk7SAk2L0abz1VpGofJ4KPWao6w1CVpaUfdJIBYt5
-4E4r9i7XmYs9Mn+uHd4D01kcEIKr93b6nU8s7hd88hb+6Ee1YUSFTaE2jmV59rKJ
-6MgTxXuvU/BjF/wr+yP1CHNs8sipsDF2IjDP3qBSg11v7e/YsM4=
-=FGo9
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXpbeIwAKCRDj7w1vZxhR
+xU7VAP0ctDLTdRYVZSwO4CYzL5No4vlTBQEUBes1IQ1qFIdPwwD/XfAzl1dg/Sh8
+EZ+Ln+utszFGNQD3stVRlNmI74tEyAs=
+=V+IJ
 -----END PGP SIGNATURE-----
 
---Wtrm9ATX0sn6fFKv--
+--jbdyoswmyxbgpiz2--
