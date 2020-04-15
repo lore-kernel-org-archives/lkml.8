@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37891C3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F9EC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B5E0206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:48:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE98A206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:48:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586954900;
-	bh=hTRxnYZ1co6Pn1/bWbg7KuCbkL9xS1F43IkbvJiqbr8=;
+	s=default; t=1586954923;
+	bh=G7KxnwoLgLdPJXOkgOpWzhaL/rwPD/wpMyKVXu5Bt9U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u9R/ApsrQoT0N4VrYWlaOCCOPE1Yvvuo0CqeMyvvlw0HZv+kdYyiMh+N/pAEGCWBw
-	 ydTx5d1kL+Tdn96qlzHZDIu6KSWMyMjyITT1oUmGB/llshTUqFgpn7Fepu+6aiKzml
-	 KP5xJWT+JYUEciFs2jLhT2VkY/L+FLoI8J2I9IYU=
+	b=KjJ4QpYB8xEKd9lBbiSRyiuRGzKM45CiQPbapQ8JhUDJUu5jsVT1FOv+YId/f2Mke
+	 GlugVijGoll2F0UvKgMVqFZosgoko+RaQARqJxmbdJjxDb0VHPYF1RAuV5mDs1KMEe
+	 0dpj/K23Xxa3rxg7WzR/ZtqZ3fLmum2v5/wvp+JA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S370287AbgDOMsS (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:48:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34884 "EHLO mail.kernel.org"
+        id S370295AbgDOMsa (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:48:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408963AbgDOLnJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:43:09 -0400
+        id S2408957AbgDOLnG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:43:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9916F20936;
-        Wed, 15 Apr 2020 11:43:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45A90214AF;
+        Wed, 15 Apr 2020 11:43:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950989;
-        bh=hTRxnYZ1co6Pn1/bWbg7KuCbkL9xS1F43IkbvJiqbr8=;
+        s=default; t=1586950986;
+        bh=G7KxnwoLgLdPJXOkgOpWzhaL/rwPD/wpMyKVXu5Bt9U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o0lA0kIPPz7CW97jnwF097bOd5rsyywi/F4nCqOnEKr9eYQqLpwC9Qw0XjJGSzEHs
-         kcPrtZ4/kmG9GSQTd3PduBX/tDj/97Ex0pg2RNu1Kkgprh5XlYmQQQWU4urb4ceJrU
-         csICgW4R0jwex1ARmoeWgfkwKR1IoolhMy7BJqH8=
+        b=ULb1wmvB/kXcy0Wk4dJSWiA82rRcYa1DYYs36KkqYWbSZD759gltPYpaWsFD7QxTR
+         grDha1sr+2okBedBMsii4giAN8OWEXvDWCfbtmfQ9iA4S0foBVZD5demAHhdQzsMlW
+         WAcLhVOC/qyLKcuECPuWesos8XKtZIyzQamOx7Sg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.5 036/106] f2fs: fix to update f2fs_super_block fields under sb_lock
-Date:   Wed, 15 Apr 2020 07:41:16 -0400
-Message-Id: <20200415114226.13103-36-sashal@kernel.org>
+Cc:     Amit Kucheria <amit.kucheria@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 033/106] drivers: thermal: tsens: Release device in success path
+Date:   Wed, 15 Apr 2020 07:41:13 -0400
+Message-Id: <20200415114226.13103-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
 References: <20200415114226.13103-1-sashal@kernel.org>
@@ -58,58 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Amit Kucheria <amit.kucheria@linaro.org>
 
-[ Upstream commit a4ba5dfc5c88e49bb03385abfdd28c5a0acfbb54 ]
+[ Upstream commit f22a3bf0d2225fba438c46a25d3ab8823585a5e0 ]
 
-Fields in struct f2fs_super_block should be updated under coverage
-of sb_lock, fix to adjust update_sb_metadata() for that rule.
+We don't currently call put_device in case of successfully initialising
+the device. So we hold the reference and keep the device pinned forever.
 
-Fixes: 04f0b2eaa3b3 ("f2fs: ioctl for removing a range from F2FS")
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Allow control to fall through so we can use same code for success and
+error paths to put_device.
+
+As a part of this fixup, change devm_ioremap_resource to act on the same
+device pointer as that used to allocate regmap memory. That ensures that
+we are free to release op->dev after examining its resources.
+
+Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Link: https://lore.kernel.org/r/d3996667e9f976bb30e97e301585cb1023be422e.1584015867.git.amit.kucheria@linaro.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/gc.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ drivers/thermal/qcom/tsens-common.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
-index b3d3996232901..d6705ded0141a 100644
---- a/fs/f2fs/gc.c
-+++ b/fs/f2fs/gc.c
-@@ -1432,12 +1432,19 @@ static int free_segment_range(struct f2fs_sb_info *sbi, unsigned int start,
- static void update_sb_metadata(struct f2fs_sb_info *sbi, int secs)
- {
- 	struct f2fs_super_block *raw_sb = F2FS_RAW_SUPER(sbi);
--	int section_count = le32_to_cpu(raw_sb->section_count);
--	int segment_count = le32_to_cpu(raw_sb->segment_count);
--	int segment_count_main = le32_to_cpu(raw_sb->segment_count_main);
--	long long block_count = le64_to_cpu(raw_sb->block_count);
-+	int section_count;
-+	int segment_count;
-+	int segment_count_main;
-+	long long block_count;
- 	int segs = secs * sbi->segs_per_sec;
- 
-+	down_write(&sbi->sb_lock);
-+
-+	section_count = le32_to_cpu(raw_sb->section_count);
-+	segment_count = le32_to_cpu(raw_sb->segment_count);
-+	segment_count_main = le32_to_cpu(raw_sb->segment_count_main);
-+	block_count = le64_to_cpu(raw_sb->block_count);
-+
- 	raw_sb->section_count = cpu_to_le32(section_count + secs);
- 	raw_sb->segment_count = cpu_to_le32(segment_count + segs);
- 	raw_sb->segment_count_main = cpu_to_le32(segment_count_main + segs);
-@@ -1451,6 +1458,8 @@ static void update_sb_metadata(struct f2fs_sb_info *sbi, int secs)
- 		raw_sb->devs[last_dev].total_segments =
- 						cpu_to_le32(dev_segs + segs);
+diff --git a/drivers/thermal/qcom/tsens-common.c b/drivers/thermal/qcom/tsens-common.c
+index c8d57ee0a5bb2..2cc276cdfcdb1 100644
+--- a/drivers/thermal/qcom/tsens-common.c
++++ b/drivers/thermal/qcom/tsens-common.c
+@@ -602,7 +602,7 @@ int __init init_common(struct tsens_priv *priv)
+ 		/* DT with separate SROT and TM address space */
+ 		priv->tm_offset = 0;
+ 		res = platform_get_resource(op, IORESOURCE_MEM, 1);
+-		srot_base = devm_ioremap_resource(&op->dev, res);
++		srot_base = devm_ioremap_resource(dev, res);
+ 		if (IS_ERR(srot_base)) {
+ 			ret = PTR_ERR(srot_base);
+ 			goto err_put_device;
+@@ -620,7 +620,7 @@ int __init init_common(struct tsens_priv *priv)
  	}
-+
-+	up_write(&sbi->sb_lock);
- }
  
- static void update_fs_metadata(struct f2fs_sb_info *sbi, int secs)
+ 	res = platform_get_resource(op, IORESOURCE_MEM, 0);
+-	tm_base = devm_ioremap_resource(&op->dev, res);
++	tm_base = devm_ioremap_resource(dev, res);
+ 	if (IS_ERR(tm_base)) {
+ 		ret = PTR_ERR(tm_base);
+ 		goto err_put_device;
+@@ -687,8 +687,6 @@ int __init init_common(struct tsens_priv *priv)
+ 	tsens_enable_irq(priv);
+ 	tsens_debug_init(op);
+ 
+-	return 0;
+-
+ err_put_device:
+ 	put_device(&op->dev);
+ 	return ret;
 -- 
 2.20.1
 
