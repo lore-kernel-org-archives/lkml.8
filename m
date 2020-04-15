@@ -2,243 +2,156 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EEC6C2BB85
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:27:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9AD1C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:27:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37BAB20784
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:27:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B502C20784
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:27:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="aTrc5dlc"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="um6fO4IC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410991AbgDOR1Y (ORCPT
+        id S2411009AbgDOR1m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 13:27:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38394 "EHLO
+        Wed, 15 Apr 2020 13:27:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38436 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2410844AbgDOR1V (ORCPT
+        with ESMTP id S2410844AbgDOR1f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 13:27:21 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26021C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 10:27:21 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id o1so136929pjs.4
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 10:27:21 -0700 (PDT)
+        Wed, 15 Apr 2020 13:27:35 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3114BC061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 10:27:35 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id u11so2406914iow.4
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 10:27:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=nY+69lch1Z1eEPsftYngAsdf1DrodOInXT0dD8s9W9c=;
-        b=aTrc5dlcIr5Ec1JUMT00OHAtdS1DFD55M4o5HR4FrmM1TrFAZwNiv1oXURyyBNI504
-         c4AHjTusPxJMk+Y/TcYfuWbhAnkaYpXYSQcvng0B+6ZkEHKHQqW0mNBQvOYT3adUhrsz
-         8FXC3Zoe7wen3sq2Amxl1G9uqE0Pkokfy6qfaw0cyoPYamtvNBrc3XeUhGcUK0EBEjk8
-         /h8yRYT+DwivZKTkRyljziAVQM9lA5FG2GWAGQZVhkiuLclUKvgb0O1Hv8xxJcgfaE/7
-         5Vkhn4UZL/sYV84G9k+qu3vq/FtPwfpSEKxwIBgcwNKZAFyJ8y6AtAUoi8PkVFi384JU
-         sd/A==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4aWqk5/j/HVgM5+Uxpcn41+0bfk/7nkK2qOIYF53Lug=;
+        b=um6fO4ICFHnTmDxpxj4g8omamITG4Or1AS4OSK5B4sRHUERm7W6RtMHovrOQY9NWO3
+         s6Gvu6XKFJW1HXgXoIxxEHJGk8d64F6mmmfi7MCIEg1HD+XWJdTJu3Bg9t3CnBN+LJGH
+         lt/aWp81rCdC4JtMEqxtZPoPRhMkRqqSYCqh8Wh2a3p6SxQ5m/nitQkYecD2QcSpzgaH
+         U7xG1nJijRiotZhcZ3ZSJwY1Il/MhiqdfDeleZcV+5vaALmqnUalQH40IIvjzTG7WQgG
+         xbQOFyBJpd4CVHVRGAPSmqO/Cu1D/EDVpmgX5wHZ9vnnoIKQ6CtV6l9WjlNmI2DaYcgY
+         usfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=nY+69lch1Z1eEPsftYngAsdf1DrodOInXT0dD8s9W9c=;
-        b=qpU5IWvljZtHsDHw7K8Qyfr4Ek9gMq6Q9QQuEBeMKUKIl3fM9ymKzhuRuynv1+AiPz
-         a0jnMBPDwZQNnkevujZVttIxETYO6usz1cdtsAgiK8LXfesWpweLjD4n5Dl6zvzdP/Dy
-         4KphfhtNDx9Ew77B5onXm7Sy1Hqip3oaFOlHwxX5+O+p6VsWi4iFN1qsjDog2AsPPaCe
-         mAp0lCN+NiRqhHGR9D6SFbWjIFnz+zVWKuy6bFyhg1FUvjO6O0YpqnYQdraFg5LknfTL
-         s66MvgAvnmbM7ZHXRe/BbQHsdSalz8M1eJbJHZpsPnfflAK7gSuHwHIVkoIYLTymOqve
-         ylDw==
-X-Gm-Message-State: AGi0Pua/HsDf07r7FgLKE3bO0XUj1u9W16u3PFwLgscfVhlZ3ly69P/v
-        9NV2xF3Y7TWNLKzfIwnYbZZ2gQ==
-X-Google-Smtp-Source: APiQypJ3S4C89ZxzgEPCaieC6l6nSM9XM24BPwWjPdz80Q0NxTt/+zK9YejYVXMmInn12hTEr/Auiw==
-X-Received: by 2002:a17:90a:5d02:: with SMTP id s2mr326816pji.148.1586971640606;
-        Wed, 15 Apr 2020 10:27:20 -0700 (PDT)
-Received: from nuc7.sifive.com (c-24-5-48-146.hsd1.ca.comcast.net. [24.5.48.146])
-        by smtp.gmail.com with ESMTPSA id e66sm10784808pfa.69.2020.04.15.10.27.19
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 15 Apr 2020 10:27:19 -0700 (PDT)
-From:   Alan Mikhak <alan.mikhak@sifive.com>
-X-Google-Original-From: Alan Mikhak < alan.mikhak@sifive.com >
-To:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, gustavo.pimentel@synopsys.com,
-        dan.j.williams@intel.com, vkoul@kernel.org, kishon@ti.com,
-        paul.walmsley@sifive.com
-Cc:     Alan Mikhak <alan.mikhak@sifive.com>
-Subject: [PATCH v2] dmaengine: dw-edma: Decouple dw-edma-core.c from struct pci_dev
-Date:   Wed, 15 Apr 2020 10:27:09 -0700
-Message-Id: <1586971629-30196-1-git-send-email-alan.mikhak@sifive.com>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4aWqk5/j/HVgM5+Uxpcn41+0bfk/7nkK2qOIYF53Lug=;
+        b=NyMByXjQPlASCALlR+vHAVX+MOhKrkbrMgWBohjpxwksufum+2DGYhJ6saUKgadiG9
+         j15xfJ9DQJbwfmrdPqE5nrH3TIh5S2VZWNcbzpUh35l/M8aQp8Fw9G37qt+8aTts/U71
+         rvDEmyt6WQ9GPHWPhFuMW162+g+xM8Lzxt2ZP8AD2acYyoF9cpRmbezT7OfIUICfj0vZ
+         gIzJBCglz1czr4rqktHgqdzgVnTMhyvEY5riDHmDYfSg/j5ZR+Oo3bePmp2w2gXry3Xe
+         4BhZe3ygLlai8+IQSxabN9FORA2U2DFve6Qaeq64VmxK6JdA6bSarPoQYREqrIrcBl7e
+         ed/Q==
+X-Gm-Message-State: AGi0PuYxttTAaiqEtfF0bIaBrU6ZltPVZGNjiHUXijHwYrGHzt3oMhSQ
+        hswZzP8XUflBCBPee0W/QHzlMg6ILLdOVh5ZJiGX5w==
+X-Google-Smtp-Source: APiQypJFfAOIZLYxuanxeQwSwWbZbhF6g2d7/UWqFOVUVmkbVr4YQyfPCjXeu6IZ+UJGJnOHg/Ylh6hZ2M2icEmj0iU=
+X-Received: by 2002:a6b:9346:: with SMTP id v67mr16861359iod.154.1586971654121;
+ Wed, 15 Apr 2020 10:27:34 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200415012320.236065-1-jcargill@google.com> <20200415023726.GD12547@linux.intel.com>
+ <20200415025105.GE12547@linux.intel.com>
+In-Reply-To: <20200415025105.GE12547@linux.intel.com>
+From:   Jon Cargille <jcargill@google.com>
+Date:   Wed, 15 Apr 2020 10:27:21 -0700
+Message-ID: <CANxmayggcRWE994FVVgHFxBk4pv0Zf6a7AWT7psyOJuFs0VaVg@mail.gmail.com>
+Subject: Re: [PATCH 1/1] KVM: pass through CPUID(0x80000006)
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Eric Northup <digitaleric@gmail.com>,
+        Eric Northup <digitaleric@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Mikhak <alan.mikhak@sifive.com>
+> I assume you want to say something like:
 
-Decouple dw-edma-core.c from struct pci_dev as a step toward integration
-of dw-edma with pci-epf-test so the latter can initiate dma operations
-locally from the endpoint side. A barrier to such integration is the
-dependency of dw_edma_probe() and other functions in dw-edma-core.c on
-struct pci_dev.
+That's a much better commit message--thank you, Sean!
 
-The Synopsys DesignWare dw-edma driver was designed to run on host side
-of PCIe link to initiate DMA operations remotely using eDMA channels of
-PCIe controller on the endpoint side. This can be inferred from seeing
-that dw-edma uses struct pci_dev and accesses hardware registers of dma
-channels across the bus using BAR0 and BAR2.
+> Jim's tag is unnecessary, unless he was a middleman between Eric and Jon,
 
-The ops field of struct dw_edma in dw-edma-core.h is currenty undefined:
+I appreciate the feedback; I was trying to capture that Jim "was in
+the patch's delivery path."
+(per submitting-patches.rst), but it sounds like that is intended for
+a more explicit middle-man
+relationship than I had understood. Jim reviewed it internally before
+sending, which sounds
+like it should be expressed as an "Acked-by" instead; is that accurate?
 
-const struct dw_edma_core_ops   *ops;
+>> Only one of Eric's signoffs is needed (the one that matches the From: tag,
+> Ah, Eric's @google.com mail bounced.  Maybe do:
+>
+>   Signed-off-by: Eric Northup (Google) <digitaleric@gmail.com>
 
-However, the kernel builds without failure even when dw-edma driver is
-enabled. Instead of removing the currently undefined and usued ops field,
-define struct dw_edma_core_ops and use the ops field to decouple
-dw-edma-core.c from struct pci_dev.
+Gotcha, thanks. Yes, when I conferred with Eric on submitting his
+commits, he had wanted to
+acknowledge that the work was done while he was at Google (e.g. his
+old Google email addr),
+and  I wanted to include current contact information for him as well.
 
-Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
----
- drivers/dma/dw-edma/dw-edma-core.c | 29 ++++++++++++++++++++---------
- drivers/dma/dw-edma/dw-edma-core.h |  4 ++++
- drivers/dma/dw-edma/dw-edma-pcie.c | 10 ++++++++++
- 3 files changed, 34 insertions(+), 9 deletions(-)
+Your suggestion to combine into a single Signed-off-by is a good one,
+and I'll use that form
+in the future.
 
-diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-index ff392c01bad1..db401eb11322 100644
---- a/drivers/dma/dw-edma/dw-edma-core.c
-+++ b/drivers/dma/dw-edma/dw-edma-core.c
-@@ -14,7 +14,7 @@
- #include <linux/err.h>
- #include <linux/interrupt.h>
- #include <linux/dma/edma.h>
--#include <linux/pci.h>
-+#include <linux/dma-mapping.h>
- 
- #include "dw-edma-core.h"
- #include "dw-edma-v0-core.h"
-@@ -781,7 +781,7 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
- 
- 	if (dw->nr_irqs == 1) {
- 		/* Common IRQ shared among all channels */
--		err = request_irq(pci_irq_vector(to_pci_dev(dev), 0),
-+		err = request_irq(dw->ops->irq_vector(dev, 0),
- 				  dw_edma_interrupt_common,
- 				  IRQF_SHARED, dw->name, &dw->irq[0]);
- 		if (err) {
-@@ -789,7 +789,7 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
- 			return err;
- 		}
- 
--		get_cached_msi_msg(pci_irq_vector(to_pci_dev(dev), 0),
-+		get_cached_msi_msg(dw->ops->irq_vector(dev, 0),
- 				   &dw->irq[0].msi);
- 	} else {
- 		/* Distribute IRQs equally among all channels */
-@@ -804,7 +804,7 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
- 		dw_edma_add_irq_mask(&rd_mask, *rd_alloc, dw->rd_ch_cnt);
- 
- 		for (i = 0; i < (*wr_alloc + *rd_alloc); i++) {
--			err = request_irq(pci_irq_vector(to_pci_dev(dev), i),
-+			err = request_irq(dw->ops->irq_vector(dev, i),
- 					  i < *wr_alloc ?
- 						dw_edma_interrupt_write :
- 						dw_edma_interrupt_read,
-@@ -815,7 +815,7 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
- 				return err;
- 			}
- 
--			get_cached_msi_msg(pci_irq_vector(to_pci_dev(dev), i),
-+			get_cached_msi_msg(dw->ops->irq_vector(dev, i),
- 					   &dw->irq[i].msi);
- 		}
- 
-@@ -827,12 +827,23 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
- 
- int dw_edma_probe(struct dw_edma_chip *chip)
- {
--	struct device *dev = chip->dev;
--	struct dw_edma *dw = chip->dw;
-+	struct device *dev;
-+	struct dw_edma *dw;
- 	u32 wr_alloc = 0;
- 	u32 rd_alloc = 0;
- 	int i, err;
- 
-+	if (!chip)
-+		return -EINVAL;
-+
-+	dev = chip->dev;
-+	if (!dev)
-+		return -EINVAL;
-+
-+	dw = chip->dw;
-+	if (!dw || !dw->irq || !dw->ops || !dw->ops->irq_vector)
-+		return -EINVAL;
-+
- 	raw_spin_lock_init(&dw->lock);
- 
- 	/* Find out how many write channels are supported by hardware */
-@@ -884,7 +895,7 @@ int dw_edma_probe(struct dw_edma_chip *chip)
- 
- err_irq_free:
- 	for (i = (dw->nr_irqs - 1); i >= 0; i--)
--		free_irq(pci_irq_vector(to_pci_dev(dev), i), &dw->irq[i]);
-+		free_irq(dw->ops->irq_vector(dev, i), &dw->irq[i]);
- 
- 	dw->nr_irqs = 0;
- 
-@@ -904,7 +915,7 @@ int dw_edma_remove(struct dw_edma_chip *chip)
- 
- 	/* Free irqs */
- 	for (i = (dw->nr_irqs - 1); i >= 0; i--)
--		free_irq(pci_irq_vector(to_pci_dev(dev), i), &dw->irq[i]);
-+		free_irq(dw->ops->irq_vector(dev, i), &dw->irq[i]);
- 
- 	/* Power management */
- 	pm_runtime_disable(dev);
-diff --git a/drivers/dma/dw-edma/dw-edma-core.h b/drivers/dma/dw-edma/dw-edma-core.h
-index 4e5f9f6e901b..31fc50d31792 100644
---- a/drivers/dma/dw-edma/dw-edma-core.h
-+++ b/drivers/dma/dw-edma/dw-edma-core.h
-@@ -103,6 +103,10 @@ struct dw_edma_irq {
- 	struct dw_edma			*dw;
- };
- 
-+struct dw_edma_core_ops {
-+	int	(*irq_vector)(struct device *dev, unsigned int nr);
-+};
-+
- struct dw_edma {
- 	char				name[20];
- 
-diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
-index dc85f55e1bb8..1eafc602e17e 100644
---- a/drivers/dma/dw-edma/dw-edma-pcie.c
-+++ b/drivers/dma/dw-edma/dw-edma-pcie.c
-@@ -54,6 +54,15 @@ static const struct dw_edma_pcie_data snps_edda_data = {
- 	.irqs				= 1,
- };
- 
-+static int dw_edma_pcie_irq_vector(struct device *dev, unsigned int nr)
-+{
-+	return pci_irq_vector(to_pci_dev(dev), nr);
-+}
-+
-+static const struct dw_edma_core_ops dw_edma_pcie_core_ops = {
-+	.irq_vector = dw_edma_pcie_irq_vector,
-+};
-+
- static int dw_edma_pcie_probe(struct pci_dev *pdev,
- 			      const struct pci_device_id *pid)
- {
-@@ -151,6 +160,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
- 	dw->version = pdata->version;
- 	dw->mode = pdata->mode;
- 	dw->nr_irqs = nr_irqs;
-+	dw->ops = &dw_edma_pcie_core_ops;
- 
- 	/* Debug info */
- 	pci_dbg(pdev, "Version:\t%u\n", dw->version);
--- 
-2.7.4
+Thanks much,
 
+Jon
+
+On Tue, Apr 14, 2020 at 7:51 PM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+>
+> On Tue, Apr 14, 2020 at 07:37:26PM -0700, Sean Christopherson wrote:
+> > On Tue, Apr 14, 2020 at 06:23:20PM -0700, Jon Cargille wrote:
+> > > From: Eric Northup <digitaleric@gmail.com>
+> > >
+> > > Return L2 cache and TLB information to guests.
+> > > They could have been set before, but the defaults that KVM returns will be
+> > > necessary for usermode that doesn't supply their own CPUID tables.
+> >
+> > I don't follow the changelog.  The code makes sense, but I don't understand
+> > the justification.  This only affects KVM_GET_SUPPORTED_CPUID, i.e. what's
+> > advertised to userspace, it doesn't directly change CPUID emulation in any
+> > way.  The "They could have been set before" blurb is especially confusing.
+> >
+> > I assume you want to say something like:
+> >
+> >   Return the host's L2 cache and TLB information for CPUID.0x80000006
+> >   instead of zeroing out the entry as part of KVM_GET_SUPPORTED_CPUID.
+> >   This allows a userspace VMM to feed KVM_GET_SUPPORTED_CPUID's output
+> >   directly into KVM_SET_CPUID2 (without breaking the guest).
+> >
+> > > Signed-off-by: Eric Northup <digitaleric@google.com>
+> > > Signed-off-by: Eric Northup <digitaleric@gmail.com>
+> > > Signed-off-by: Jon Cargille <jcargill@google.com>
+> > > Signed-off-by: Jim Mattson <jmattson@google.com>
+> >
+> > Jim's tag is unnecessary, unless he was a middleman between Eric and Jon,
+> > in which case Jim's tag should also come between Eric's and Jon's.
+> >
+> > Only one of Eric's signoffs is needed (the one that matches the From: tag,
+> > i.e. is the official author).  I'm guessing Google would prefer the author
+> > to be the @google.com address.
+>
+> Ah, Eric's @google.com mail bounced.  Maybe do:
+>
+>   Signed-off-by: Eric Northup (Google) <digitaleric@gmail.com>
+>
+> to clarify the work was done for Google without having a double signoff
+> and/or a dead email.
