@@ -4,46 +4,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D0FFC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:06:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7635FC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:06:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6529B20784
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:06:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C3C52078A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:06:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442248AbgDOVGc (ORCPT
+        id S2442257AbgDOVGq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 17:06:32 -0400
-Received: from mga03.intel.com ([134.134.136.65]:64170 "EHLO mga03.intel.com"
+        Wed, 15 Apr 2020 17:06:46 -0400
+Received: from foss.arm.com ([217.140.110.172]:52588 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2442224AbgDOVFb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 17:05:31 -0400
-IronPort-SDR: jiIgtiYM3WeGGNc0wk1n7TUWtkENP409LXoGjU3HQI5NIFp8az/dalw3bsMiQnQingqIWVBmVy
- Ej7Ye2V+5pYg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 14:05:18 -0700
-IronPort-SDR: 7n8pRWt0V1GeJc9ECBQITu9uGiTez3QAZq7Wl8D0+wef+n1oKTjTuiwn6XciFIP7visxU7Khkz
- sHR9mObX3jFA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,388,1580803200"; 
-   d="scan'208";a="455035542"
-Received: from kcaccard-mobl.amr.corp.intel.com (HELO kcaccard-mobl1.jf.intel.com) ([10.209.116.191])
-  by fmsmga006.fm.intel.com with ESMTP; 15 Apr 2020 14:05:12 -0700
-From:   Kristen Carlson Accardi <kristen@linux.intel.com>
-To:     keescook@chromium.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, x86@kernel.org
-Cc:     arjan@linux.intel.com, linux-kernel@vger.kernel.org,
-        kernel-hardening@lists.openwall.com, rick.p.edgecomb@intel.com
-Subject: [PATCH 3/9] x86/boot: Allow a "silent" kaslr random byte fetch
-Date:   Wed, 15 Apr 2020 14:04:45 -0700
-Message-Id: <20200415210452.27436-4-kristen@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415210452.27436-1-kristen@linux.intel.com>
-References: <20200415210452.27436-1-kristen@linux.intel.com>
+        id S2442237AbgDOVFs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 17:05:48 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 01C3B13A1;
+        Wed, 15 Apr 2020 14:05:33 -0700 (PDT)
+Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1C1D93F6C4;
+        Wed, 15 Apr 2020 14:05:32 -0700 (PDT)
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com
+Subject: [PATCH v3 7/9] sched/fair: Dissociate wakeup decisions from SD flag value
+Date:   Wed, 15 Apr 2020 22:05:10 +0100
+Message-Id: <20200415210512.805-8-valentin.schneider@arm.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20200415210512.805-1-valentin.schneider@arm.com>
+References: <20200415210512.805-1-valentin.schneider@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -51,71 +42,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+The CFS wakeup code will only ever go through EAS / its fast path on
+"regular" wakeups (i.e. not on forks or execs). These are currently gated
+by a check against 'sd_flag', which would be SD_BALANCE_WAKE at wakeup.
 
-Under earlyprintk, each RNG call produces a debug report line. When
-shuffling hundreds of functions, this is not useful information (each
-line is identical and tells us nothing new). Instead, allow for a NULL
-"purpose" to suppress the debug reporting.
+However, we now have a flag that explicitly tells us whether a wakeup is a
+"regular" one, so hinge those conditions on that flag instead.
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Kristen Carlson Accardi <kristen@linux.intel.com>
+Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
 ---
- arch/x86/lib/kaslr.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ kernel/sched/fair.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/lib/kaslr.c b/arch/x86/lib/kaslr.c
-index a53665116458..2b3eb8c948a3 100644
---- a/arch/x86/lib/kaslr.c
-+++ b/arch/x86/lib/kaslr.c
-@@ -56,11 +56,14 @@ unsigned long kaslr_get_random_long(const char *purpose)
- 	unsigned long raw, random = get_boot_seed();
- 	bool use_i8254 = true;
- 
--	debug_putstr(purpose);
--	debug_putstr(" KASLR using");
-+	if (purpose) {
-+		debug_putstr(purpose);
-+		debug_putstr(" KASLR using");
-+	}
- 
- 	if (has_cpuflag(X86_FEATURE_RDRAND)) {
--		debug_putstr(" RDRAND");
-+		if (purpose)
-+			debug_putstr(" RDRAND");
- 		if (rdrand_long(&raw)) {
- 			random ^= raw;
- 			use_i8254 = false;
-@@ -68,7 +71,8 @@ unsigned long kaslr_get_random_long(const char *purpose)
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index b0bf98e6798b..f20e5cd6515c 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -6642,7 +6642,7 @@ select_task_rq_fair(struct task_struct *p, int prev_cpu, int wake_flags)
+ 		sd_flag = SD_BALANCE_EXEC;
  	}
  
- 	if (has_cpuflag(X86_FEATURE_TSC)) {
--		debug_putstr(" RDTSC");
-+		if (purpose)
-+			debug_putstr(" RDTSC");
- 		raw = rdtsc();
+-	if (sd_flag & SD_BALANCE_WAKE) {
++	if (wake_flags & WF_TTWU) {
+ 		record_wakee(p);
  
- 		random ^= raw;
-@@ -76,7 +80,8 @@ unsigned long kaslr_get_random_long(const char *purpose)
- 	}
+ 		if (sched_energy_enabled()) {
+@@ -6679,9 +6679,8 @@ select_task_rq_fair(struct task_struct *p, int prev_cpu, int wake_flags)
+ 	if (unlikely(sd)) {
+ 		/* Slow path */
+ 		new_cpu = find_idlest_cpu(sd, p, cpu, prev_cpu, sd_flag);
+-	} else if (sd_flag & SD_BALANCE_WAKE) { /* XXX always ? */
++	} else if (wake_flags & WF_TTWU) { /* XXX always ? */
+ 		/* Fast path */
+-
+ 		new_cpu = select_idle_sibling(p, prev_cpu, new_cpu);
  
- 	if (use_i8254) {
--		debug_putstr(" i8254");
-+		if (purpose)
-+			debug_putstr(" i8254");
- 		random ^= i8254();
- 	}
- 
-@@ -86,7 +91,8 @@ unsigned long kaslr_get_random_long(const char *purpose)
- 	    : "a" (random), "rm" (mix_const));
- 	random += raw;
- 
--	debug_putstr("...\n");
-+	if (purpose)
-+		debug_putstr("...\n");
- 
- 	return random;
- }
+ 		if (want_affine)
 -- 
-2.20.1
+2.24.0
 
