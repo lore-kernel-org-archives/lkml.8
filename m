@@ -2,124 +2,184 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 693BEC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:24:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D15C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:25:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D7A12076C
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:24:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C48220784
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 21:25:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wTx2LAC/"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="N0VtjTbS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439008AbgDOVYt (ORCPT
+        id S1729603AbgDOVZD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 17:24:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46790 "EHLO
+        Wed, 15 Apr 2020 17:25:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2442380AbgDOVXU (ORCPT
+        by vger.kernel.org with ESMTP id S2442400AbgDOVYJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 17:23:20 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01E95C061A0F
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 14:23:20 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id f82so4853748ilh.8
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 14:23:19 -0700 (PDT)
+        Wed, 15 Apr 2020 17:24:09 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88174C061A10
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 14:24:04 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id y4so5412209ljn.7
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 14:24:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=RX9/7s9yBWh914994jEXd2QhL9nBP30B6ZtmmCdyhxc=;
-        b=wTx2LAC/B09d11qUoGdj5u2RYaV0q/DFXuL4o/rD/9hsnsxy3S5NORSu186U+uJ4IE
-         jcC6jzYMmQ8GV9WITPDYUo+pKuC3obDmGC0Pc8ER3fS327RtZQGBFQfF1eT51JVmS8Oy
-         xrUgsO4kteAyb3P/UP2q9WnQ6nfqix6qLUg6mu44rlsXaw3dToxQy2M76TtGAfFbn2BJ
-         E7tUfpIZIncGBuebxAgOKHofF5RRkihw1MhQPSS0pA6KLyxIaZENXf4tirntu1JFB4Pg
-         CMRQw3FLkB6CPLTj3Hc9roAEkcFPGJX6KRm3FCercuGYGSOo66c28Qs4hqqADilgAFHo
-         GZtQ==
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zUiwPngCjCOT149YM1CpaUAyMcgHTCV4FZO5uSdXs+4=;
+        b=N0VtjTbSPmMQI+RlTx1yObqj6x91R6W/fup4bZ4ZAA+dHBABtXgciXtch5GcEGhoHH
+         JmpIDKEpx4dr8jnrsQA60GzCYrlGW1Im7DMFGyc+RQhpSKlgA1M3aP69+t2Ip2Dqd4Qm
+         cEOqAB/oeDbu0bTlvmUdRScVlX+VDAHyy4VjpGfwHVHPml+4gftSkW+dnlvSr7e6+z6K
+         fDyudV/9jxQQ+0tlIrcRokGYM4WOiJjnPRZKJTpxln1seAqdLqi+lqYzf/JdgR32fPD+
+         1W0RZJJw1XOxnLJtjsatcvivLOwJtvEPGPqvG+kdDzn390e0JVGwfXJrIfTR1sKBmDuj
+         2Vtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=RX9/7s9yBWh914994jEXd2QhL9nBP30B6ZtmmCdyhxc=;
-        b=NQCJDscOJWzJ5/EuY5y0ClYlzMEQxj7ovFU9QalF0h4RvfIX8knxh3BA4Y/sAAaqzu
-         sxsUCFKs857UZ1vLYXx6bxGz+OPuS8jSbB1EujdygdM5DbU+cW3WT9f1xeQxlzkX56pc
-         XFOUt/RANDDMYCrsEbrhEZ3QsATKAdqCv0SFTWXA/WXwnj3heHCm84r2hGvOfE2KMVal
-         lGrsAGtpqKngfPPjSPv9I3HWohOM4kRiuOUJDOEpaT9xCghgDw3lq4IuGFhWAWEKJ3cR
-         SvLZejEm7lDHMeG8Y9K01PyraRV1gwgRgUR3qAYiOcUjmgYFojVG2VwWWXM/tu5Fhrjz
-         UqDg==
-X-Gm-Message-State: AGi0PuZDSGnL/Tbb8efgRH54T7cO/IizEGqTfYFkb1r/snaJi95GXmD9
-        1l4XiPJszYEl+Y7ZVNtij+6AnaHo3G3tKg==
-X-Google-Smtp-Source: APiQypJKTAvCDrpOq2KGbM1EjjkdCf379V1hS/PN+AxYI5EfZRkWfFdPypD2jgzQnUDsF1BHxFOw5w==
-X-Received: by 2002:a92:cac7:: with SMTP id m7mr6784000ilq.6.1586985798849;
-        Wed, 15 Apr 2020 14:23:18 -0700 (PDT)
-Received: from [172.22.22.26] (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.googlemail.com with ESMTPSA id c19sm2379446ili.63.2020.04.15.14.23.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Apr 2020 14:23:17 -0700 (PDT)
-Subject: Re: [PATCH v2 5/7] remoteproc: Restructure firmware name allocation
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        bjorn.andersson@linaro.org, ohad@wizery.com
-Cc:     s-anna@ti.com, Markus.Elfring@web.de,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200415204858.2448-1-mathieu.poirier@linaro.org>
- <20200415204858.2448-6-mathieu.poirier@linaro.org>
-From:   Alex Elder <elder@linaro.org>
-Message-ID: <9a4b6342-750e-284a-2343-8151b478589b@linaro.org>
-Date:   Wed, 15 Apr 2020 16:23:14 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zUiwPngCjCOT149YM1CpaUAyMcgHTCV4FZO5uSdXs+4=;
+        b=jUvjETmqxUsYf1rtm37td+7x89vgusxYMBvAihCRQafyMp0qpryZhC/1VnYDxPZpQz
+         IsHDSiqaiIuACjiXuKYHmoeuZhDI+Dgopz83wQdfe5cc/I6U5QPsOIWCCDxrKKE3HATj
+         aA+82VKZ9mf44mpn0vn52zMwR9mhbkVGx35tSWyHsQoSxvoSaeEgOOsekfiZnEPMyuEt
+         iJ9igBd5te5KEIl+btGwz1BaJxLbXKCEhlcuMmuwMAszVV4k/3yRdDcmkAql3Uf80aMz
+         2khJgyNnWmQS40J6BhbjRcg8Y4yjWoc/h9N39Drtfwffqu/wrYbtSmhfp0JCyI+iijPN
+         oTnA==
+X-Gm-Message-State: AGi0PuYcUA2im8+Yk8b95rM/+6fEgG4B+gI73tL6abY9Yjb5qL4MZgMx
+        YzYD0e9c7P06hz4jIzinQsc7j2LTYR9z6HIWTK2vZA==
+X-Google-Smtp-Source: APiQypIOBCwRkWiDlV64pN+RvUzocju2VTLfH55G/LdorNT2T1+BVYwjjGnn2AsvN+E5sbPB+MNiKYSe4EI4Mugszi4=
+X-Received: by 2002:a2e:8056:: with SMTP id p22mr4614252ljg.266.1586985842846;
+ Wed, 15 Apr 2020 14:24:02 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200415204858.2448-6-mathieu.poirier@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1586916464-27727-1-git-send-email-alan.mikhak@sifive.com>
+ <DM5PR12MB1276CB8FA4457D4CDCE3137EDADB0@DM5PR12MB1276.namprd12.prod.outlook.com>
+ <CABEDWGwYmO52g6cqvQdWb6HXWEHaMA1rcf96aUqv0f32tJZT-g@mail.gmail.com>
+ <DM5PR12MB1276E09460BD4DB7E70EAF91DADB0@DM5PR12MB1276.namprd12.prod.outlook.com>
+ <CABEDWGw0OyQNppLpDaNgMedfB0Ci=kZVKm+h4T-LJoZYmbSgqA@mail.gmail.com> <DM5PR12MB127673CFDCA38A47E6F6F4DBDADB0@DM5PR12MB1276.namprd12.prod.outlook.com>
+In-Reply-To: <DM5PR12MB127673CFDCA38A47E6F6F4DBDADB0@DM5PR12MB1276.namprd12.prod.outlook.com>
+From:   Alan Mikhak <alan.mikhak@sifive.com>
+Date:   Wed, 15 Apr 2020 14:23:51 -0700
+Message-ID: <CABEDWGyUfq4c65K+btmKBcGLv59h6PFVUkSD_52kOw9R0Rtynw@mail.gmail.com>
+Subject: Re: [PATCH RFC] dmaengine: dw-edma: Decouple dw-edma-core.c from
+ struct pci_dev
+To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+Cc:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "kishon@ti.com" <kishon@ti.com>,
+        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/15/20 3:48 PM, Mathieu Poirier wrote:
-> Improve the readability of function rproc_alloc_firmware() by using
-> a non-negated condition.
-> 
-> Suggested-by: Alex Elder <elder@linaro.org>
-> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+On Wed, Apr 15, 2020 at 1:58 PM Gustavo Pimentel
+<Gustavo.Pimentel@synopsys.com> wrote:
+>
+> Hi Alan,
+>
+> > > > At the moment, pci-epf-test grabs the first available dma channel on the
+> > > > endpoint side and uses it for either read, write, or copy operation. it is not
+> > > > possible at the moment to specify which dma channel to use on the pcitest
+> > > > command line. This may be possible by modifying the command line option
+> > > > -D to also specify the name of one or more dma channels.
+> > >
+> > > I'm assuming that behavior is due to your code, right? I'm not seen that
+> > > behavior on the Kernel tree.
+> > > Check my previous suggestion, it should be something similar to what is
+> > > been done while you select the MSI/MSI-X interrupt to trigger.
+> >
+> > I believe this behavior exists in the kernel tree because the call to
+> > dma_request_chan_by_mask() always specifies channel zero. The user
+> > of pcitest has no way of specifying which one of the available dma channels
+> > to use.
+>
+> I think we were discussing different things. I was referring to the
+> pci-epf-test code, that I wasn't being able to find any instruction to
+> call the DMA driver which had the described behavior.
+>
+> I think you can do it by doing this:
+>
+> Pseudo code:
+>
+> #define EDMA_TEST_CHANNEL_NAME                  "dma%uchan%u"
+>
+> static bool dw_edma_test_filter(struct dma_chan *chan, void *filter)
+> {
+>         if (strcmp(dev_name(chan->device->dev), EDMA_TEST_DEVICE_NAME) ||
+> strcmp(dma_chan_name(chan), filter))
+>                 return false;
+>
+>         return true;
+> }
+>
+> static void dw_edma_test_thread_create(int id, int channel)
+> {
+>         struct dma_chan *chan;
+>         dma_cap_mask_t mask;
+>         char filter[20];
+>
+>         dma_cap_zero(mask);
+>         dma_cap_set(DMA_SLAVE, mask);
+>         dma_cap_set(DMA_CYCLIC, mask);
+>
+>         snprintf(filter, sizeof(filter), EDMA_TEST_CHANNEL_NAME, id,
+> channel);
+>         chan = dma_request_channel(mask, dw_edma_test_filter, filter);
+>
+>         [..]
+> }
 
-If it were me, I'd move the comment above the if statement and
-perhaps reword it a little bit to describe what's happening.
-But no matter, this looks good.
+Thanks Gustavo, This pseudo code is very useful. Now I know how to do
+that part of the change.
 
-Reviewed-by: Alex Elder <elder@linaro.org>
+What I have further in mind is to enable the pcitest user to specify some
+arbitrary string with -D option to select one or more of the dma channels
+that are available on the endpoint side. Since the user executes pcitest
+from host-side command prompt and pci-epf-test executes in kernel on the
+endpoint side, the messaging between userspace pcitest and kernel-space
+pci_endpoint_test as well as the messaging across the bus between
+pci_endpoint_test and pci-epf-test needs to be expanded to pass the user
+string from the host to the endpoint. Upon receiving each read, write, or
+copy message, pci-epf-test could then try to acquire the specified dma
+channel and execute the user command or fail it if no such channel is
+available at that moment.
 
-> ---
->  drivers/remoteproc/remoteproc_core.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> index ebaff496ef81..0bfa6998705d 100644
-> --- a/drivers/remoteproc/remoteproc_core.c
-> +++ b/drivers/remoteproc/remoteproc_core.c
-> @@ -1984,14 +1984,14 @@ static int rproc_alloc_firmware(struct rproc *rproc,
->  {
->  	const char *p;
->  
-> -	if (!firmware)
-> +	if (firmware)
-> +		p = kstrdup_const(firmware, GFP_KERNEL);
-> +	else
->  		/*
->  		 * If the caller didn't pass in a firmware name then
->  		 * construct a default name.
->  		 */
->  		p = kasprintf(GFP_KERNEL, "rproc-%s-fw", name);
-> -	else
-> -		p = kstrdup_const(firmware, GFP_KERNEL);
->  
->  	if (!p)
->  		return -ENOMEM;
-> 
+>
+> > I believe this behavior exists in the kernel tree because the call to
+> > dma_request_chan_by_mask() happens during the execution of
+> > pci_epf_test_bind() and the call to dma_release_channel() happens
+> > during the execution of pci_epf_test_unbind(). As long as pci-epf-test
+> > is bound, I cannot use another program such as dmatest from the
+> > endpoint-side command prompt to exercise the same channel.
+>
+> Ok, I understood it now. Right, you can't use the dmatest here, even
+> because, as far as I know, it is only MEM TO MEM operations and we need
+> DEVICE_TO_MEM and vice-versa.
+>
+> >
+> > What I was suggesting is perhaps pci-epf-test can be modified to
+> > acquire and release the channel on each call to pci_epf_test_read(),
+> > ...write(), or ...copy() when the pcitest user specifies -D option.
+>
+> Right, you are on the right track.
+> Perhaps you could take a look at patch [1] that I have done some time ago
+> for testing the eDMA, I think you have all the tools/guideline there to
+> do this adaption.
+> Another thing,
+>
+> [1] https://patchwork.kernel.org/patch/10760521/
 
+Thanks for the guidance and reference code patch [1]. I will definitely
+take a close look at [1].
+
+>
+>
+>
