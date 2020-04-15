@@ -7,56 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A95E9C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF67CC2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:51:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82744206D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:51:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92474206D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:51:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586951495;
-	bh=9NXEEyNPle9buOD5PAzi2advwivMFIPGG4uNAn1qRVs=;
+	s=default; t=1586951501;
+	bh=IMGULC2cXAQ6DuCwZ1QCNT0FF77EOO3SOTS0Todyx5U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ji3EleP57ImaVSPS7D2bcNU6WFfe1jnMD/aXDtML3OmaREVMOAKrunEXkTm+PqDrn
-	 e7oCatyws2HSd195uO2IibUU8/mvxrBc1S0uYtOrPel7FmEXQHl+cV1EHzIk2ckbCu
-	 gE8cU9xvqhZC8BRJeb1mI0vdRg+m3ypB22HIc9yU=
+	b=VfJ3RWiYPlEwOXfsfTh6DXKFImtmzUwwdD5SWMKOo3kDNO0+hlXKQTcGty+q2s0rX
+	 DXtrSAxCylP1FonyK4gBRO4lzVQfFEmEiEhBl28/EzAOYD0iJ+I7+gNLDMA/FSVnZO
+	 5aGHJwt4jHQqfbGIu6POA6zTWv1nJLHv/O5fKjmg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2897686AbgDOLvc (ORCPT
+        id S2897696AbgDOLvj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:51:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35840 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 07:51:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897541AbgDOLnt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:43:49 -0400
+        id S2897564AbgDOLoG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:44:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78D9D2078A;
-        Wed, 15 Apr 2020 11:43:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A192420775;
+        Wed, 15 Apr 2020 11:44:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951028;
-        bh=9NXEEyNPle9buOD5PAzi2advwivMFIPGG4uNAn1qRVs=;
+        s=default; t=1586951046;
+        bh=IMGULC2cXAQ6DuCwZ1QCNT0FF77EOO3SOTS0Todyx5U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f8vAoJ/0NOpGC9TbaIPPDTQjkfD0vcVBxxUjV6UjD7HC11llz4vueRzFh/hzQywZ9
-         FttX0iG7Jsxm1hFsJFA7RGECt9ojtp3H7UdMhAKMV23LdfEV6k5PSPTgE0DTsTmU0f
-         GgrInUhTCbxM2EKxd8FAPqKl3G6rFyqQlccuHpe0=
+        b=cqYTgjS+XtnhxDfNBk6okhSGMND+lFoAbnF8vMWy1Pg62f5lsour4LguqOecTq7TN
+         YDUMb0WntQos9QC92147TSMcZNG/6DIndPddbw5kF1AfYHPIr3qdt0uEDrEgZT/CWk
+         /B4EbyZMS9MzqpT8AxLXdneXlpPELzSJ2xzK1JQE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Steven Price <steven.price@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.5 067/106] include/linux/swapops.h: correct guards for non_swap_entry()
-Date:   Wed, 15 Apr 2020 07:41:47 -0400
-Message-Id: <20200415114226.13103-67-sashal@kernel.org>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 081/106] NFS: Fix memory leaks in nfs_pageio_stop_mirroring()
+Date:   Wed, 15 Apr 2020 07:42:01 -0400
+Message-Id: <20200415114226.13103-81-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
 References: <20200415114226.13103-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -65,57 +58,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Price <steven.price@arm.com>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit 3f3673d7d324d872d9d8ddb73b3e5e47fbf12e0d ]
+[ Upstream commit 862f35c94730c9270833f3ad05bd758a29f204ed ]
 
-If CONFIG_DEVICE_PRIVATE is defined, but neither CONFIG_MEMORY_FAILURE nor
-CONFIG_MIGRATION, then non_swap_entry() will return 0, meaning that the
-condition (non_swap_entry(entry) && is_device_private_entry(entry)) in
-zap_pte_range() will never be true even if the entry is a device private
-one.
+If we just set the mirror count to 1 without first clearing out
+the mirrors, we can leak queued up requests.
 
-Equally any other code depending on non_swap_entry() will not function as
-expected.
-
-I originally spotted this just by looking at the code, I haven't actually
-observed any problems.
-
-Looking a bit more closely it appears that actually this situation
-(currently at least) cannot occur:
-
-DEVICE_PRIVATE depends on ZONE_DEVICE
-ZONE_DEVICE depends on MEMORY_HOTREMOVE
-MEMORY_HOTREMOVE depends on MIGRATION
-
-Fixes: 5042db43cc26 ("mm/ZONE_DEVICE: new type of ZONE_DEVICE for unaddressable memory")
-Signed-off-by: Steven Price <steven.price@arm.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Jérôme Glisse <jglisse@redhat.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: John Hubbard <jhubbard@nvidia.com>
-Link: http://lkml.kernel.org/r/20200305130550.22693-1-steven.price@arm.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/swapops.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/nfs/pagelist.c | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
 
-diff --git a/include/linux/swapops.h b/include/linux/swapops.h
-index 877fd239b6fff..3208a520d0be3 100644
---- a/include/linux/swapops.h
-+++ b/include/linux/swapops.h
-@@ -348,7 +348,8 @@ static inline void num_poisoned_pages_inc(void)
+diff --git a/fs/nfs/pagelist.c b/fs/nfs/pagelist.c
+index 20b3717cd7ca8..3335cd2e8047b 100644
+--- a/fs/nfs/pagelist.c
++++ b/fs/nfs/pagelist.c
+@@ -886,15 +886,6 @@ static void nfs_pageio_setup_mirroring(struct nfs_pageio_descriptor *pgio,
+ 	pgio->pg_mirror_count = mirror_count;
  }
- #endif
  
--#if defined(CONFIG_MEMORY_FAILURE) || defined(CONFIG_MIGRATION)
-+#if defined(CONFIG_MEMORY_FAILURE) || defined(CONFIG_MIGRATION) || \
-+    defined(CONFIG_DEVICE_PRIVATE)
- static inline int non_swap_entry(swp_entry_t entry)
+-/*
+- * nfs_pageio_stop_mirroring - stop using mirroring (set mirror count to 1)
+- */
+-void nfs_pageio_stop_mirroring(struct nfs_pageio_descriptor *pgio)
+-{
+-	pgio->pg_mirror_count = 1;
+-	pgio->pg_mirror_idx = 0;
+-}
+-
+ static void nfs_pageio_cleanup_mirroring(struct nfs_pageio_descriptor *pgio)
  {
- 	return swp_type(entry) >= MAX_SWAPFILES;
+ 	pgio->pg_mirror_count = 1;
+@@ -1320,6 +1311,14 @@ void nfs_pageio_cond_complete(struct nfs_pageio_descriptor *desc, pgoff_t index)
+ 	}
+ }
+ 
++/*
++ * nfs_pageio_stop_mirroring - stop using mirroring (set mirror count to 1)
++ */
++void nfs_pageio_stop_mirroring(struct nfs_pageio_descriptor *pgio)
++{
++	nfs_pageio_complete(pgio);
++}
++
+ int __init nfs_init_nfspagecache(void)
+ {
+ 	nfs_page_cachep = kmem_cache_create("nfs_page",
 -- 
 2.20.1
 
