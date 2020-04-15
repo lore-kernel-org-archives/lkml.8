@@ -2,111 +2,110 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0458C3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:43:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9706CC2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:43:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7D012074F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:43:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586954628;
-	bh=fGz7a64lWYFN33TvpNVh9lbizXvizlbW6RS4o/D26oI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L5nkHepgbTJl1vMlMGWr5jPav7YqcJuERXxUV2JTju+GEuSdkavcQfNf26ZQHNwnX
-	 x9lrhsEAxQ5OxLFSSo5AmKmrqH8slCnwhJVqAyzqhJVMy6Kc26fGd5JY28/T5ys0Gg
-	 B/Dklt0jx/FaPJBsryT8YUdx+rHCtmm1CJwoP0wc=
+	by mail.kernel.org (Postfix) with ESMTP id 7BDDA2074F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:43:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2897521AbgDOLnb (ORCPT
-        <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:43:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57100 "EHLO mail.kernel.org"
+        id S370137AbgDOMnx (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:43:53 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58698 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897201AbgDOLhE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:37:04 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 259C82137B;
-        Wed, 15 Apr 2020 11:37:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950623;
-        bh=fGz7a64lWYFN33TvpNVh9lbizXvizlbW6RS4o/D26oI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bFDsjggXoiq2Qcu9kT9/elRYw5DSqAcmNMVQBw8/zOBhVdwVL+IUCMW9MApYa1/j6
-         JRguECdlP4kmQlQ9iNPhl/dishBje828JfO26iCbMF5nRS1sgeC1HMX0UXkrYL2FKU
-         XVxu3yS+r6lXbNaF5SFVhjDQggJO37ibKrfqQB9Y=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qian Cai <cai@lca.pw>, Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 5.6 115/129] iommu/vt-d: Silence RCU-list debugging warning in dmar_find_atsr()
-Date:   Wed, 15 Apr 2020 07:34:30 -0400
-Message-Id: <20200415113445.11881-115-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
-References: <20200415113445.11881-1-sashal@kernel.org>
+        id S370090AbgDOMnr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 08:43:47 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id ED032AC11;
+        Wed, 15 Apr 2020 12:43:43 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id B1379E16A6; Wed, 15 Apr 2020 14:43:43 +0200 (CEST)
+Date:   Wed, 15 Apr 2020 14:43:43 +0200
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     netdev@vger.kernel.org
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        David Jander <david@protonic.nl>, kernel@pengutronix.de,
+        linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        mkl@pengutronix.de, Marek Vasut <marex@denx.de>
+Subject: Re: [PATCH v1] ethtool: provide UAPI for PHY master/slave
+ configuration.
+Message-ID: <20200415124343.GZ3141@unicorn.suse.cz>
+References: <20200415121209.12197-1-o.rempel@pengutronix.de>
+ <20200415121940.2du33zckvayfqjrb@pengutronix.de>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200415121940.2du33zckvayfqjrb@pengutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+On Wed, Apr 15, 2020 at 02:19:40PM +0200, Oleksij Rempel wrote:
+> Cc: Marek Vasut <marex@denx.de>
+> 
+> On Wed, Apr 15, 2020 at 02:12:09PM +0200, Oleksij Rempel wrote:
+> > This UAPI is needed for BroadR-Reach 100BASE-T1 devices. Due to lack of
+> > auto-negotiation support, we needed to be able to configure the
+> > MASTER-SLAVE role of the port manually or from an application in user
+> > space.
+> > 
+> > The same UAPI can be used for 1000BASE-T or MultiGBASE-T devices to
+> > force MASTER or SLAVE role. See IEEE 802.3-2018:
+> > 22.2.4.3.7 MASTER-SLAVE control register (Register 9)
+> > 22.2.4.3.8 MASTER-SLAVE status register (Register 10)
+> > 40.5.2 MASTER-SLAVE configuration resolution
+> > 45.2.1.185.1 MASTER-SLAVE config value (1.2100.14)
+> > 45.2.7.10 MultiGBASE-T AN control 1 register (Register 7.32)
+> > 
+> > The MASTER-SLAVE role affects the clock configuration:
+> > 
+> > -------------------------------------------------------------------------------
+> > When the  PHY is configured as MASTER, the PMA Transmit function shall
+> > source TX_TCLK from a local clock source. When configured as SLAVE, the
+> > PMA Transmit function shall source TX_TCLK from the clock recovered from
+> > data stream provided by MASTER.
+> > 
+> > iMX6Q                     KSZ9031                XXX
+> > ------\                /-----------\        /------------\
+> >       |                |           |        |            |
+> >  MAC  |<----RGMII----->| PHY Slave |<------>| PHY Master |
+> >       |<--- 125 MHz ---+-<------/  |        | \          |
+> > ------/                \-----------/        \------------/
+> >                                                ^
+> >                                                 \-TX_TCLK
+> > 
+> > -------------------------------------------------------------------------------
+> > 
+> > Since some clock or link related issues are only reproducible in a
+> > specific MASTER-SLAVE-role, MAC and PHY configuration, it is beneficial
+> > to provide generic (not 100BASE-T1 specific) interface to the user space
+> > for configuration flexibility and trouble shooting.
+> > 
+> > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> > ---
+[...]
+> > +/* Port mode */
+> > +#define PORT_MODE_MASTER	0x00
+> > +#define PORT_MODE_SLAVE		0x01
+> > +#define PORT_MODE_MASTER_FORCE	0x02
+> > +#define PORT_MODE_SLAVE_FORCE	0x03
+> > +#define PORT_MODE_UNKNOWN	0xff
 
-[ Upstream commit c6f4ebdeba4cff590594df931ff1ee610c426431 ]
+Shouldn't 0 rather be something like PORT_MODE_UNSUPPORTED or
+PORT_MODE_NONE? If I see correctly, all drivers not setting the new
+field (which would be all drivers right now and almost all later) will
+leave the value at 0 which would be interpreted as PORT_MODE_MASTER.
 
-dmar_find_atsr() calls list_for_each_entry_rcu() outside of an RCU read
-side critical section but with dmar_global_lock held. Silence this
-false positive.
-
- drivers/iommu/intel-iommu.c:4504 RCU-list traversed in non-reader section!!
- 1 lock held by swapper/0/1:
- #0: ffffffff9755bee8 (dmar_global_lock){+.+.}, at: intel_iommu_init+0x1a6/0xe19
-
- Call Trace:
-  dump_stack+0xa4/0xfe
-  lockdep_rcu_suspicious+0xeb/0xf5
-  dmar_find_atsr+0x1ab/0x1c0
-  dmar_parse_one_atsr+0x64/0x220
-  dmar_walk_remapping_entries+0x130/0x380
-  dmar_table_init+0x166/0x243
-  intel_iommu_init+0x1ab/0xe19
-  pci_iommu_init+0x1a/0x44
-  do_one_initcall+0xae/0x4d0
-  kernel_init_freeable+0x412/0x4c5
-  kernel_init+0x19/0x193
-
-Signed-off-by: Qian Cai <cai@lca.pw>
-Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/iommu/intel-iommu.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 4be5494786918..ef0a5246700e5 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -4501,7 +4501,8 @@ static struct dmar_atsr_unit *dmar_find_atsr(struct acpi_dmar_atsr *atsr)
- 	struct dmar_atsr_unit *atsru;
- 	struct acpi_dmar_atsr *tmp;
- 
--	list_for_each_entry_rcu(atsru, &dmar_atsr_units, list) {
-+	list_for_each_entry_rcu(atsru, &dmar_atsr_units, list,
-+				dmar_rcu_check()) {
- 		tmp = (struct acpi_dmar_atsr *)atsru->hdr;
- 		if (atsr->segment != tmp->segment)
- 			continue;
--- 
-2.20.1
-
+Michal
