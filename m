@@ -2,164 +2,187 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E2EC3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4605AC2BB85
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:05:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2372A20784
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:04:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2464220737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:05:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FaDHsxJ/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ug3NRXJ3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410663AbgDOREA (ORCPT
+        id S2410665AbgDORFY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 13:04:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34754 "EHLO
+        Wed, 15 Apr 2020 13:05:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2410653AbgDORDz (ORCPT
+        with ESMTP id S2410659AbgDORFU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 13:03:55 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 099ADC061A0F
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 10:03:55 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id t11so205926pgg.2
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 10:03:55 -0700 (PDT)
+        Wed, 15 Apr 2020 13:05:20 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1561C061A0C;
+        Wed, 15 Apr 2020 10:05:20 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id d17so214597pgo.0;
+        Wed, 15 Apr 2020 10:05:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=TXmBTmjlGDdkYJ5YaS9MFQANC5ZQIcUdQZgB+/qVJcg=;
-        b=FaDHsxJ/Bsq5/mrz/KAm6LRhZzJ4oycH4qGHGQN9l033vBRXCFWhhDAHZx0+xkwcn6
-         3d9mqYrLsMXHMiqUyBOvrSZgysqBewL5VEDFgtVWtZ5r5R4iKx0idNL1JXlvFWZkTJG1
-         z4/YrF5Wga+eRnhDgvfXrFjJEwsFIlqlBzlRcSojTuj2fo9hu1Gco/ImeqCdmYAyEG7h
-         ladEsxtLlmQSyVLOdLCdz9Y6RtEjYQKZnB+Ofr1ZjLsx6jSBvrP7LBYE5Itxoaazm7tz
-         FI4TPa2wRScdEcGxXCnlV1c5PskOclAIjNWYYB/RjLot4De6rh4OvuWVsPpy2MGobT+R
-         vnAw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0AyhE+CJcuvLJxqL2z6J7uq4KCxVwXM0hQdDcmyUWAY=;
+        b=Ug3NRXJ3oZy5EhH7W93/FDpaX87Chj7NImU0fkg87IHrQy0MjCi1Z4Ll8TUe6lH+GX
+         UcqSYM51MRv0vg4XWl8oJVDg89eAgIq/IpA431B5CYegYHxv5RIFHXGEWaPjwsOPZwSb
+         fY7obQZ8vWsitSjpfWrMzFKYdv2k3Fcx8SZt7p+F/QKMhANwcUS2xnM6cH/IghaL2ITF
+         YXikU/OXSxp0kIQf9Zckk4KXTLhYgv8es/6kZ1MwvN5OW5pfAN1xjGxFaozBmKDWN51G
+         3PZkhT8MXZmccU/DvzqMi/+TXieOWKrMNaYUF85NbZPArwj9sW5moAF4CkW3HBzWRGf7
+         MHpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TXmBTmjlGDdkYJ5YaS9MFQANC5ZQIcUdQZgB+/qVJcg=;
-        b=AhueSTTpvm9ctAxtNpdSMkPya7zostGy9O8MdbmPviOZdXV1GS4r5sEQhdRbzotDGu
-         /gn1n8QxmU7heDUshtTXE8evZAulwM1Bp9SyIZrMywd5WZTvR7B0ta8wg/v5An8lnitd
-         vejTmkS4Nl6ufXV/+4unXBAzeptyauYlBHWBE6NBZIr4+Z5FaDXBgJjJCf1P7dNp30Hu
-         /ZUTlt0H7MmHYP2LoqNchrKhO60KRjxjpQwf9K20I47TUnUF+9EHvhodKtGwVqXx6VtN
-         uAeb3Sok30EGv5nLJGUabJoaAMgJXv0JiTW/yA9M+Guw4NS3tWRj8Ok5rqibdaE4Aflf
-         tQVg==
-X-Gm-Message-State: AGi0PuaiyP4UolsoOgzl7rEWpt46C/Efh5g18/ftgjg3Y/FQOi9spwzZ
-        JixacafuC1xoYByYLTttsa8ZSw==
-X-Google-Smtp-Source: APiQypKxA2s9Ixhh/x4lzTu9wFMre6vgaWEw6jKo5l4u/n/V4C6g53A2/FTS+wGYaVfEJGJ7TqgWsQ==
-X-Received: by 2002:a62:2506:: with SMTP id l6mr24888469pfl.184.1586970234265;
-        Wed, 15 Apr 2020 10:03:54 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id i124sm14308027pfg.14.2020.04.15.10.03.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2020 10:03:53 -0700 (PDT)
-Date:   Wed, 15 Apr 2020 11:03:51 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Siddharth Gupta <sidgup@codeaurora.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, ohad@wizery.com,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, tsoni@codeaurora.org,
-        psodagud@codeaurora.org, rishabhb@codeaurora.org
-Subject: Re: [PATCH v2 2/6] remoteproc: sysmon: Add notifications for events
-Message-ID: <20200415170351.GB16583@xps15>
-References: <1586389003-26675-1-git-send-email-sidgup@codeaurora.org>
- <1586389003-26675-3-git-send-email-sidgup@codeaurora.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0AyhE+CJcuvLJxqL2z6J7uq4KCxVwXM0hQdDcmyUWAY=;
+        b=XiLOv0L/21MM/GKHpRAZJhs/JKxNHavuVRrjO27Zc1/bbB5yp8rulXpELvsp8Cnyjz
+         IPctUEtoUMRVp463MekoSNEotuNPl6SlsJH4AQ323dPTDXWMIFKrTaAHxW1yC4oPgNZV
+         +aTqLOTSHAOdyxy1/70hpzpUfDoMosfl+33cFaUpOFQd/ilY6IWYKWRWYLxWLy2TYLb9
+         +AmniLWVHmhRM3odEhsLzSZICzxTj80n6WAkp084sklhxhUP8MEyNJDE49kdnCUdwrGL
+         pX8YOyG9fJECXpmalsvgi4Imi7yWEVRtdhOPqf96k9O8SU8Cj2dAX268r3OiFmRHd0hC
+         t8dQ==
+X-Gm-Message-State: AGi0Pua5kPXl5HbiwieBy8MNpZjm/BFFfC30eJk6GXFCWY0H1jkK02TE
+        4fwO4QXYNgLRpTvOCLaqQlttD8w5N5v6koqH1H0=
+X-Google-Smtp-Source: APiQypJwxVjH6YxiBycXKhEmsD67Wygk8gI1cdUWc3aOnIwtjqPxeiQTzcTh9wWXd9hwUNhlgdFZ/mE2eqmlEkQdNPk=
+X-Received: by 2002:a63:1d4:: with SMTP id 203mr26556401pgb.74.1586970320093;
+ Wed, 15 Apr 2020 10:05:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1586389003-26675-3-git-send-email-sidgup@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200415162030.16414-1-sravanhome@gmail.com> <CAHp75VerGG0_J+fHrZfwJRa3EHtGuz-pJbD7zwoXN2jfO7dszA@mail.gmail.com>
+ <dea1d71e-af5d-356a-79c0-38f343f54dfd@gmail.com>
+In-Reply-To: <dea1d71e-af5d-356a-79c0-38f343f54dfd@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 15 Apr 2020 20:05:12 +0300
+Message-ID: <CAHp75VeHxPFah+02Rj4efziM5bkwbe086aEQOJoHQed0jZmCHw@mail.gmail.com>
+Subject: Re: [PATCH v9 0/6] Add battery charger driver support for MP2629
+To:     saravanan sekar <sravanhome@gmail.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald <pmeerw@pmeerw.net>,
+        Sebastian Reichel <sre@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 04:36:39PM -0700, Siddharth Gupta wrote:
-> Add notification for other stages of remoteproc boot and shutdown. This
-> includes adding callback functions for the prepare and unprepare events,
-> and fleshing out the callback function for start.
-> 
-> Signed-off-by: Siddharth Gupta <sidgup@codeaurora.org>
+On Wed, Apr 15, 2020 at 7:53 PM saravanan sekar <sravanhome@gmail.com> wrote:
+>
+> Hi Andy,
+>
+> On 15/04/20 6:40 pm, Andy Shevchenko wrote:
+> > On Wed, Apr 15, 2020 at 7:20 PM Saravanan Sekar <sravanhome@gmail.com> wrote:
+> >> changes in v9:
+> >>   - fixed review comments in mp2629 power supply such as resource based
+> >>     iio channel, replace workqueue by threaded irq, irq get with "_optional"
+> >>
+> > May I ask you why you are ignoring my tag?
+> > If you don't want to have your patches reviewed / applied, just don't send them.
+>
+>
+> Sorry last time it was by mistake. But now I have added in below, if
+> suppose to added in top its my ignorance
 
-Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Ah, I see now. The idea of the tag given against cover letter that it
+applies to entire series (if doesn't say otherwise).
+It means, if you don't do any (drastic) changes to the patches, the
+tag is still valid and you simple add it to each patch in the series
+inside the commit message (usually after your SoB tag).
 
-> ---
->  drivers/remoteproc/qcom_sysmon.c | 37 +++++++++++++++++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
-> 
-> diff --git a/drivers/remoteproc/qcom_sysmon.c b/drivers/remoteproc/qcom_sysmon.c
-> index 1366050..851664e 100644
-> --- a/drivers/remoteproc/qcom_sysmon.c
-> +++ b/drivers/remoteproc/qcom_sysmon.c
-> @@ -439,8 +439,31 @@ static const struct qmi_ops ssctl_ops = {
->  	.del_server = ssctl_del_server,
->  };
->  
-> +static int sysmon_prepare(struct rproc_subdev *subdev)
-> +{
-> +	struct qcom_sysmon *sysmon = container_of(subdev, struct qcom_sysmon,
-> +						  subdev);
-> +	struct sysmon_event event = {
-> +		.subsys_name = sysmon->name,
-> +		.ssr_event = SSCTL_SSR_EVENT_BEFORE_POWERUP
-> +	};
-> +
-> +	blocking_notifier_call_chain(&sysmon_notifiers, 0, (void *)&event);
-> +
-> +	return 0;
-> +}
-> +
->  static int sysmon_start(struct rproc_subdev *subdev)
->  {
-> +	struct qcom_sysmon *sysmon = container_of(subdev, struct qcom_sysmon,
-> +						  subdev);
-> +	struct sysmon_event event = {
-> +		.subsys_name = sysmon->name,
-> +		.ssr_event = SSCTL_SSR_EVENT_AFTER_POWERUP
-> +	};
-> +
-> +	blocking_notifier_call_chain(&sysmon_notifiers, 0, (void *)&event);
-> +
->  	return 0;
->  }
->  
-> @@ -464,6 +487,18 @@ static void sysmon_stop(struct rproc_subdev *subdev, bool crashed)
->  		sysmon_request_shutdown(sysmon);
->  }
->  
-> +static void sysmon_unprepare(struct rproc_subdev *subdev)
-> +{
-> +	struct qcom_sysmon *sysmon = container_of(subdev, struct qcom_sysmon,
-> +						  subdev);
-> +	struct sysmon_event event = {
-> +		.subsys_name = sysmon->name,
-> +		.ssr_event = SSCTL_SSR_EVENT_AFTER_SHUTDOWN
-> +	};
-> +
-> +	blocking_notifier_call_chain(&sysmon_notifiers, 0, (void *)&event);
-> +}
-> +
->  /**
->   * sysmon_notify() - notify sysmon target of another's SSR
->   * @nb:		notifier_block associated with sysmon instance
-> @@ -563,8 +598,10 @@ struct qcom_sysmon *qcom_add_sysmon_subdev(struct rproc *rproc,
->  
->  	qmi_add_lookup(&sysmon->qmi, 43, 0, 0);
->  
-> +	sysmon->subdev.prepare = sysmon_prepare;
->  	sysmon->subdev.start = sysmon_start;
->  	sysmon->subdev.stop = sysmon_stop;
-> +	sysmon->subdev.unprepare = sysmon_unprepare;
->  
->  	rproc_add_subdev(rproc, &sysmon->subdev);
->  
-> -- 
-> Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+> >> changes in v8:
+> >>   - fixed order of call in probe/remove in iio adc
+> >>   - add ABI documentation for mp2629 power supply
+> >>
+> >> changes in v7:
+> >>   - fixed probe/remove order, managed and unmanaged call mix use in adc.
+> >>   - Documentation dual license, i2c node with controller address
+> >>
+> >> Overall looks good to me, FWIW,
+> >> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> >>
+> >> One question though in reply to patch 4.
+>
+>
+> Please see here, this is first experience of tag in cover letter so just
+> kept here as you gave against v7
+>
+> >>
+> >> changes in v6:
+> >>   - removed includes types.h in mfd, of_device.h in adc.
+> >>   - fixed review comments parentheses, err check, kstrtouint
+> >>
+> >> changes in v5:
+> >>   - removed platfrom data stored in mfd and directly accessed mfd struct in child
+> >>   - fixed spell check and capitalization in mfd and documentation
+> >>
+> >> changes in v4:
+> >>   - fixed capitalization in mfg Kconfig and documentation
+> >>
+> >> changes in v3:
+> >>   - regmap for children passed using platform data and remove mfd driver info
+> >>     access directly from children
+> >>
+> >> changes in v2:
+> >>   - removed EXPORT_SYMBOL of register set/get helper
+> >>   - regmap bit filed used, fixed other review comments
+> >>
+> >> This patch series add support for Battery charger control driver for Monolithic
+> >> Power System's MP2629 chipset, includes MFD driver for ADC battery & input
+> >> power supply measurement and battery charger control driver.
+> >>
+> >> Thanks,
+> >> Saravanan
+> >>
+> >> Saravanan Sekar (6):
+> >>    dt-bindings: mfd: add document bindings for mp2629
+> >>    mfd: mp2629: Add support for mps battery charger
+> >>    iio: adc: mp2629: Add support for mp2629 ADC driver
+> >>    power: supply: Add support for mps mp2629 battery charger
+> >>    power: supply: mp2629: Add impedance compenstation config
+> >>    MAINTAINERS: Add entry for mp2629 Battery Charger driver
+> >>
+> >>   .../ABI/testing/sysfs-class-power-mp2629      |   8 +
+> >>   .../devicetree/bindings/mfd/mps,mp2629.yaml   |  60 ++
+> >>   MAINTAINERS                                   |   5 +
+> >>   drivers/iio/adc/Kconfig                       |  10 +
+> >>   drivers/iio/adc/Makefile                      |   1 +
+> >>   drivers/iio/adc/mp2629_adc.c                  | 208 ++++++
+> >>   drivers/mfd/Kconfig                           |   9 +
+> >>   drivers/mfd/Makefile                          |   2 +
+> >>   drivers/mfd/mp2629.c                          |  86 +++
+> >>   drivers/power/supply/Kconfig                  |  10 +
+> >>   drivers/power/supply/Makefile                 |   1 +
+> >>   drivers/power/supply/mp2629_charger.c         | 667 ++++++++++++++++++
+> >>   include/linux/mfd/mp2629.h                    |  28 +
+> >>   13 files changed, 1095 insertions(+)
+> >>   create mode 100644 Documentation/ABI/testing/sysfs-class-power-mp2629
+> >>   create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+> >>   create mode 100644 drivers/iio/adc/mp2629_adc.c
+> >>   create mode 100644 drivers/mfd/mp2629.c
+> >>   create mode 100644 drivers/power/supply/mp2629_charger.c
+> >>   create mode 100644 include/linux/mfd/mp2629.h
+> >>
+> >> --
+> >> 2.17.1
+> >>
+> >
+
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
