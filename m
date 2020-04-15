@@ -2,149 +2,132 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B6BBC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27678C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:00:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E2BE20775
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:00:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF69820737
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:00:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586955635;
+	bh=aYUuWPfJpzqoqPVjphiZ2zRMzjSHaBbquwqd8TH1J4o=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=1VmKs4cLpL4BFAbxhk6TXuVhvmyIM/8puzKzww6Rq/4Clxid7i6/uZy2MoSIk0rAl
+	 G50NrGuV4aqjQhskklPIcDpdHcKAStYQSqcewoR8iVWZjJDNZ9HzIS5ZHAGuJEck4x
+	 4ShxXljjNZRlaBrmRiE8vQjN/1MMspiXGjxUZ/Bo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505691AbgDONAI (ORCPT
+        id S1729332AbgDONA0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:00:08 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:41019 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730906AbgDOM60 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 08:58:26 -0400
-Received: from mail-qt1-f179.google.com ([209.85.160.179]) by
- mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MLAF0-1jfp1x0mdG-00ID8r for <linux-kernel@vger.kernel.org>; Wed, 15 Apr
- 2020 14:58:23 +0200
-Received: by mail-qt1-f179.google.com with SMTP id q17so12770198qtp.4
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 05:58:23 -0700 (PDT)
-X-Gm-Message-State: AGi0PubKvuDuinOra+hcq4ZBZpO8BH9YHgBWT1p4c1zm+dKOXcPtiJp+
-        wkhcYA+xpPU8WAjfQ0BOs/46qfM8zpwnOIb725w=
-X-Google-Smtp-Source: APiQypLmb1bYsqGBxxmmhAYIpYg+E9AqYkcfzIMIIhGI/UjPoCq3S810wOoySTAVykqPSkerK29SOUSk3ZdF6ygThUU=
-X-Received: by 2002:ac8:6757:: with SMTP id n23mr8081126qtp.304.1586955502081;
- Wed, 15 Apr 2020 05:58:22 -0700 (PDT)
+        Wed, 15 Apr 2020 09:00:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56666 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2897182AbgDOLgo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:36:44 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FE36208FE;
+        Wed, 15 Apr 2020 11:36:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586950604;
+        bh=aYUuWPfJpzqoqPVjphiZ2zRMzjSHaBbquwqd8TH1J4o=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=bEumCFXf9h/Y9yyGJqLu2/LODsCDKUDua9KsN5GD4s9RqHJrZEAG53cdyC2GoUB1b
+         7QGOr7aCS3SZt0Gv1UCcrO0qu42H9Ie5xgnPQtQd3ozfi/QnRGgU3CviXiMdAKaeEt
+         EcpiZZfCRTcq9PAp0F+1YN1ynBc9vgD415/GmPdE=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 5.6 099/129] f2fs: fix NULL pointer dereference in f2fs_write_begin()
+Date:   Wed, 15 Apr 2020 07:34:14 -0400
+Message-Id: <20200415113445.11881-99-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
+References: <20200415113445.11881-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20200409232728.231527-1-caij2003@gmail.com> <CAK8P3a3uj7AHbAo4sNzr6KQx5Fk6v99k4ZixCgKo1tUuGoat9Q@mail.gmail.com>
- <CAMj1kXGXNxXGiC4dmNXHkZ6n=J0Fhim3oSwNx4Bz5m9fEphJvQ@mail.gmail.com>
- <20200410123301.GX25745@shell.armlinux.org.uk> <CAMj1kXFpknCfwb6JMdk_SHopnGqMswgSqaQUeAUEh5yaV10vJg@mail.gmail.com>
- <CAKwvOdk-xwuppJzxd1+5sfsC8jYiP3t8D=aTNaYxnFCRDiEUmQ@mail.gmail.com>
- <CAMj1kXFHb8th0rv1yjrsr=c1o-g9_ERPUy4itnrVN13fcQcXag@mail.gmail.com>
- <CAKwvOdm5aawsa2-=atB8z6W8zo8YVgdDEVbU3i4evDcpo1_AxQ@mail.gmail.com>
- <202004141258.6D9CB92507@keescook> <CAMj1kXG6_CO6pzeJCSeWiCDyLfWw+ZMuvkv_DLxe-si00fLd1Q@mail.gmail.com>
-In-Reply-To: <CAMj1kXG6_CO6pzeJCSeWiCDyLfWw+ZMuvkv_DLxe-si00fLd1Q@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 15 Apr 2020 14:58:05 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3Ko0XTLUGwBxVM=nNebGr6ww66+cCKbYBrd9A4ME0__w@mail.gmail.com>
-Message-ID: <CAK8P3a3Ko0XTLUGwBxVM=nNebGr6ww66+cCKbYBrd9A4ME0__w@mail.gmail.com>
-Subject: Re: [PATCH] ARM: do not assemble iwmmxt.S with LLVM toolchain
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Kristof Beyls <Kristof.Beyls@arm.com>,
-        Stephen Hines <srhines@google.com>,
-        Luis Lozano <llozano@google.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Jian Cai <caij2003@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Peter Smith <Peter.Smith@arm.com>,
-        Stefan Agner <stefan@agner.ch>,
-        David Howells <dhowells@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Manoj Gupta <manojgupta@google.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Ilie Halip <ilie.halip@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Jian Cai <jiancai@google.com>,
-        Doug Anderson <armlinux@m.disordat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Patrick Bellasi <patrick.bellasi@arm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Tejun Heo <tj@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:oBq4mQ79ir5f/pWuHXK2ecdTR1b1OYhz1uJFFN9zvrfd5Hp5FVG
- jDwRgbg/hkcVwtVwXyBmE7OrHj+Fg1rbiWAr+TtH/CL3e+8i1yWgZbdMGGlRf+ZnYB+vCGa
- a82T09mBdTxxCrJfjEKJDzugoQYaI3lfsje8MVTQfdDJCoiya+quIxner0V01876PJmRdgK
- FYNBjbj+NxudAXcrqimKg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:xWWKkKdeclk=:KH8P7cbJQBjQh6O/sY01/6
- 0nspAt2GmnhDkDf9iS7BBnQItlPTJVdIM4+/DZb9Sj5GsG2CiD+Pe6S/LMnxtXGa4/iZyt2Uk
- cQOgQut3uReG1RTSLixtK9joY9bPYaupZaySTknadX5hjlH1eSp3uwGcX7K9uTuUx9FqLPxr4
- /3HmqH9MD2o/vo2C6L15XCSorM1yL8bScWsy63bBhvwJyaOwzWnF3e+AphDWfByvq7BwgIvBY
- Hnv4C27w4Oh6/mwLd/DLEwLhxHK6IJhIQ0A4CShdjqbAgo+qeRKbaueLtT2vCkpvuAvDu4PpP
- dymqHXDmqmA82/ihUPbHTpAci04MfXueGO04kH4rw8xsrWXWFTvc8gNaBPqpcA+31n2axKzDD
- BReBLeIQVASbETLEf8nyBZKkefUWczJLwFq5Y01nh4HHdyBx+VINk2jj9Ia/deJWbRS4KCW3y
- 9wplW8JRXPWVkt6yNuKDtbyygHmNKVk3iqegMQSSzNjyLL+Xz8TBrBA5L3PweMXSPrtqLlT4J
- Lu6oK74lILlcS3T2JNf4e4upjJahS7pFP48Mfijanw0OlX4RXoOO1l6NAw+TqvhWaruw4jO8M
- 61ISXpY0oELc9Q1yX1AjDVXSV+MaX0L43Hbfnr8eu4SEmIdZQyBMRzgSilWrii3FVlC0lVMkj
- xP2SXyL2Iw7ob6LjHmyAtlmzocnuSR97ptTTQvCXizE1VaRr/5JolLusdZ7/mcrEsSFCoE2xs
- 6I55OTiX+IK5Ib4SuVWRy9Yd57kJBVqp81/xTowZjRKTyWo5hOzcLrbha8aAXyV+zD1FJtEj2
- 9MHWGlDpy6vXl4m2ytEJjd4f8GCt1AnVLH4zxR87CHAy7vopcI=
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 12:32 PM Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> On Tue, 14 Apr 2020 at 22:53, Kees Cook <keescook@chromium.org> wrote:
-> >
-> > I don't know if this will help, but I feel like folks might be talking
-> > past each other a little here. I see two primary issues that are
-> > colliding, and I just want to call them out specifically...
->
-> To reiterate my point: I strongly prefer minor asm surgery over
-> elaborate Kconfig plumbing if it means we can retain the functionality
-> even when using LLVM tools. In particular, the use of macros to
-> implement missing ISA support should be considered before any other
-> solution, as these are already being used widely across architectures
-> to fill in such gaps.
+From: Chao Yu <yuchao0@huawei.com>
 
-+1
+[ Upstream commit 62f63eea291b50a5677ae7503ac128803174698a ]
 
-> > What's a good middle ground here? For VLAs, I ended up getting akpm's
-> > help by having him add -Wvla to his local builds and send nag emails
-> > to people when they added VLAs. That's not really a thing here, but it
-> > seems like there should be a way to avoid losing ground (in this case,
-> > it's the erosion of attention: repeated known-issue warnings means the
-> > CI gets ignored for the warnings on newly added issues). It does seem
-> > to me like adding the negative depends is a reasonable first step: it
-> > marks what hard things need fixing later without losing coverage for
-> > things that can be more easily fixed now with available resources.
-> >
-> > For the specific iwmmxt.S case, perhaps the solution is the suggested
-> > changes? I imagine it should be possible to do a binary diff to see zero
-> > changes before/after.
->
-> This code has been around since 2004. It has never been possible to
-> assemble it with Clang's assembler. So the only thing this patch gives
-> you is the ability to switch from a .config where IWMMXT was disabled
-> by hand to one where it gets disabled automatically by Kconfig.
->
-> So what hard-won ground are we losing here? Did IWMMXT recently get
-> enabled in a defconfig that you care about?
+BUG: kernel NULL pointer dereference, address: 0000000000000000
+RIP: 0010:f2fs_write_begin+0x823/0xb90 [f2fs]
+Call Trace:
+ f2fs_quota_write+0x139/0x1d0 [f2fs]
+ write_blk+0x36/0x80 [quota_tree]
+ get_free_dqblk+0x42/0xa0 [quota_tree]
+ do_insert_tree+0x235/0x4a0 [quota_tree]
+ do_insert_tree+0x26e/0x4a0 [quota_tree]
+ do_insert_tree+0x26e/0x4a0 [quota_tree]
+ do_insert_tree+0x26e/0x4a0 [quota_tree]
+ qtree_write_dquot+0x70/0x190 [quota_tree]
+ v2_write_dquot+0x43/0x90 [quota_v2]
+ dquot_acquire+0x77/0x100
+ f2fs_dquot_acquire+0x2f/0x60 [f2fs]
+ dqget+0x310/0x450
+ dquot_transfer+0x7e/0x120
+ f2fs_setattr+0x11a/0x4a0 [f2fs]
+ notify_change+0x349/0x480
+ chown_common+0x168/0x1c0
+ do_fchownat+0xbc/0xf0
+ __x64_sys_fchownat+0x20/0x30
+ do_syscall_64+0x5f/0x220
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-I mainly care about the build testing aspect here, it seems we are getting
-close to having the clang integrated assembler working with all .S files
-in the kernel (it used to work for none), and I'd like to do randconfig and
-allmodconfig tests that include these as well. Disabling the option works
-for me, but your suggestion with the added macros is clearly better.
+Passing fsdata parameter to .write_{begin,end} in f2fs_quota_write(),
+so that if quota file is compressed one, we can avoid above NULL
+pointer dereference when updating quota content.
 
-        Arnd
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/f2fs/super.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 3669f060b6257..8deb0a260d928 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -1929,6 +1929,7 @@ static ssize_t f2fs_quota_write(struct super_block *sb, int type,
+ 	int offset = off & (sb->s_blocksize - 1);
+ 	size_t towrite = len;
+ 	struct page *page;
++	void *fsdata = NULL;
+ 	char *kaddr;
+ 	int err = 0;
+ 	int tocopy;
+@@ -1938,7 +1939,7 @@ static ssize_t f2fs_quota_write(struct super_block *sb, int type,
+ 								towrite);
+ retry:
+ 		err = a_ops->write_begin(NULL, mapping, off, tocopy, 0,
+-							&page, NULL);
++							&page, &fsdata);
+ 		if (unlikely(err)) {
+ 			if (err == -ENOMEM) {
+ 				congestion_wait(BLK_RW_ASYNC, HZ/50);
+@@ -1954,7 +1955,7 @@ static ssize_t f2fs_quota_write(struct super_block *sb, int type,
+ 		flush_dcache_page(page);
+ 
+ 		a_ops->write_end(NULL, mapping, off, tocopy, tocopy,
+-						page, NULL);
++						page, fsdata);
+ 		offset = 0;
+ 		towrite -= tocopy;
+ 		off += tocopy;
+-- 
+2.20.1
+
