@@ -2,135 +2,307 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16737C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B00FBC3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF16A208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:18:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93C6F206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:19:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S370755AbgDOOSh (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:18:37 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:37723 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2506385AbgDOOS0 (ORCPT
+        id S2636588AbgDOOTT (ORCPT
+        <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 10:19:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37206 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2636576AbgDOOTN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 10:18:26 -0400
-Received: by mail-pj1-f67.google.com with SMTP id z9so6747593pjd.2;
-        Wed, 15 Apr 2020 07:18:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=5IopSX9GJ2vX2KVXHELrCUGod5MEFkycVBu4B7TnveU=;
-        b=tFjVFLqcIhyffnInMoNhqhiP4mtZRmXpeu3m2JaODlrrvH3wNYAnrJxDnM1cAXAUHq
-         LAhQ0aHDOZM9e1PpvEjL6kRC+/3doQj39PjUkvtFf6+Q2M19rACyzXnZTNw9YUK8naTs
-         yL8MzhGGZADVQOfT1ybe3vS2LIQAwQhyPOvg7DjUEAUw8WfrWOSk9/D2zSTCmy9p6zfj
-         oob8cm2lVnIipX5YtbgeDhNnwweQ1cVZKvZ4z7YtmoR6fLSdFDA3X+c3hx4hpBfHw2on
-         xM6pJwJo+PX8qAsOy+kLsst7pBdn6qmDeGc287iL69mZbsNbpTE3AAW0ZVT4rYadV8EU
-         LLgw==
-X-Gm-Message-State: AGi0PubdvMtpE+8yoh6KX+I8cnPIleKoVEeBrKED5Wbbzz4wUfYGqoTo
-        F+h30Ljz1nyEAZWnYMDEG9I=
-X-Google-Smtp-Source: APiQypL+tq09UzLXwWYyxeyg0GFdB+W9oWy5Q4yXEHLV4C+RumEaBRUnw34+Pq3OPSvABtX30ZnGlw==
-X-Received: by 2002:a17:90a:9747:: with SMTP id i7mr6727270pjw.192.1586960305422;
-        Wed, 15 Apr 2020 07:18:25 -0700 (PDT)
-Received: from ?IPv6:2601:647:4000:d7:74a5:f25a:9320:53da? ([2601:647:4000:d7:74a5:f25a:9320:53da])
-        by smtp.gmail.com with ESMTPSA id 140sm9427833pge.49.2020.04.15.07.18.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Apr 2020 07:18:24 -0700 (PDT)
-Subject: Re: [PATCH 3/5] blktrace: refcount the request_queue during ioctl
-To:     Luis Chamberlain <mcgrof@kernel.org>,
-        Christoph Hellwig <hch@infradead.org>
-Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk,
-        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
-        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
-        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>
-References: <20200414041902.16769-1-mcgrof@kernel.org>
- <20200414041902.16769-4-mcgrof@kernel.org>
- <20200414154044.GB25765@infradead.org>
- <20200415061649.GS11244@42.do-not-panic.com>
- <20200415071425.GA21099@infradead.org>
- <20200415123434.GU11244@42.do-not-panic.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <73332d32-b095-507f-fb2a-68460533eeb7@acm.org>
-Date:   Wed, 15 Apr 2020 07:18:22 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 15 Apr 2020 10:19:13 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACDA9C061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 07:19:12 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jOisT-0008Kf-GZ; Wed, 15 Apr 2020 16:18:57 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jOisS-0008E9-SS; Wed, 15 Apr 2020 16:18:56 +0200
+Date:   Wed, 15 Apr 2020 16:18:56 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Sandipan Patra <spatra@nvidia.com>
+Cc:     Thierry Reding <treding@nvidia.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Bibek Basu <bbasu@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] pwm: tegra: dynamic clk freq configuration by PWM driver
+Message-ID: <20200415141856.ck3w3gtae4bsxyfl@pengutronix.de>
+References: <1585917303-10573-1-git-send-email-spatra@nvidia.com>
+ <20200403151050.nh2mrffkqdqtkozq@pengutronix.de>
+ <BYAPR12MB3014C0178A7360662C6FA8B7ADDB0@BYAPR12MB3014.namprd12.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20200415123434.GU11244@42.do-not-panic.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <BYAPR12MB3014C0178A7360662C6FA8B7ADDB0@BYAPR12MB3014.namprd12.prod.outlook.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-15 05:34, Luis Chamberlain wrote:
-> On Wed, Apr 15, 2020 at 12:14:25AM -0700, Christoph Hellwig wrote:
->> Btw, Isn't blk_get_queue racy as well?  Shouldn't we check
->> blk_queue_dying after getting the reference and undo it if the queue is
->> indeeed dying?
-> 
-> Yes that race should be possible:
-> 
-> bool blk_get_queue(struct request_queue *q)                                     
-> {                                                                               
-> 	if (likely(!blk_queue_dying(q))) {
->        ----------> we can get the queue to go dying here <---------
-> 		__blk_get_queue(q);
-> 		return true;
-> 	}                                                                       
-> 
-> 	return false;
-> }                                                                               
-> EXPORT_SYMBOL(blk_get_queue);
-> 
-> I'll pile up a fix. I've also considered doing a full review of callers
-> outside of the core block layer using it, and maybe just unexporting
-> this. It was originally exported due to commit d86e0e83b ("block: export
-> blk_{get,put}_queue()") to fix a scsi bug, but I can't find such
-> respective fix. I suspec that using bdgrab()/bdput() seems more likely
-> what drivers should be using. That would allow us to keep this
-> functionality internal.
+Hello,
 
-blk_get_queue() prevents concurrent freeing of struct request_queue but
-does not prevent concurrent blk_cleanup_queue() calls. Callers of
-blk_get_queue() may encounter a change of the queue state from normal
-into dying any time during the blk_get_queue() call or after
-blk_get_queue() has finished. Maybe I'm overlooking something but I
-doubt that modifying blk_get_queue() will help.
+On Wed, Apr 15, 2020 at 09:03:35AM +0000, Sandipan Patra wrote:
+> Thank you Uwe for reviewing the changes.
+> And sorry for the delay in my response.
 
-Bart.
+No problem, I didn't held my breath :-)
+
+> > -----Original Message-----
+> > From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> > Sent: Friday, April 3, 2020 8:41 PM
+> > To: Sandipan Patra <spatra@nvidia.com>
+> > Cc: Thierry Reding <treding@nvidia.com>; robh+dt@kernel.org; Jonathan
+> > Hunter <jonathanh@nvidia.com>; Bibek Basu <bbasu@nvidia.com>; Laxman
+> > Dewangan <ldewangan@nvidia.com>; linux-pwm@vger.kernel.org;
+> > devicetree@vger.kernel.org; linux-tegra@vger.kernel.org; linux-
+> > kernel@vger.kernel.org
+> > Subject: Re: [PATCH] pwm: tegra: dynamic clk freq configuration by PWM driver
+> > 
+> > External email: Use caution opening links or attachments
+> > 
+> > 
+> > On Fri, Apr 03, 2020 at 06:05:03PM +0530, Sandipan Patra wrote:
+> > > Added support for dynamic clock freq configuration in pwm kernel driver.
+> > > Earlier the pwm driver used to cache boot time clock rate by pwm clock
+> > > parent during probe. Hence dynamically changing pwm frequency was not
+> > > possible for all the possible ranges. With this change, dynamic
+> > > calculation is enabled and it is able to set the requested period from
+> > > sysfs knob provided the value is supported by clock source.
+> > 
+> > Without having looked closely at the patch (yet), just for my
+> > understanding: If the PWM is running and the frequency changes, the output
+> > changes, too, right? If so, do we need a notifier that prevents a frequency
+> > change when the PWM is running?
+> 
+> Yes, frequency can be changed anytime but by the same process who has 
+> acquired the channel. So if a process is already running/using the channel,
+> same process can only modify the frequency.
+
+How is this enforced? Does some other peripheral get its input clock
+from the clock in question? What is the motivation to modify the
+frequency other than modifying the PWM output?
+ 
+> > And slightly orthogonal to this patch: The tegra driver needs some love to make
+> > it use the atomic callback .apply() instead of
+> > .config()/.enable()/.disable() and a .get_state() implementation.
+> 
+> Understood to upgrade pwm-tegra driver with using .apply()
+> I will work on this with a new change request soon.
+
+That's great (but still not holding my breath :-)
+
+> > > Changes mainly have 2 parts:
+> > >   - T186 and later chips [1]
+> > >   - T210 and prior chips [2]
+> > >
+> > > For [1] - Changes implemented to set pwm period dynamically and
+> > >           also checks added to allow only if requested period(ns) is
+> > >           below or equals to higher range.
+> > >
+> > > For [2] - Only checks if the requested period(ns) is below or equals
+> > >           to higher range defined by max clock limit. The limitation
+> > >           in T210 or prior chips are due to the reason of having only
+> > >           one pwm-controller supporting multiple channels. But later
+> > >           chips have multiple pwm controller instances each having
+> > >         single channel support.
+> > >
+> > > Signed-off-by: Sandipan Patra <spatra@nvidia.com>
+> > > ---
+> > >  drivers/pwm/pwm-tegra.c | 45
+> > > +++++++++++++++++++++++++++++++++++++++++++--
+> > >  1 file changed, 43 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/drivers/pwm/pwm-tegra.c b/drivers/pwm/pwm-tegra.c index
+> > > aa12fb3..d3ba33c 100644
+> > > --- a/drivers/pwm/pwm-tegra.c
+> > > +++ b/drivers/pwm/pwm-tegra.c
+> > > @@ -4,7 +4,7 @@
+> > >   *
+> > >   * Tegra pulse-width-modulation controller driver
+> > >   *
+> > > - * Copyright (c) 2010, NVIDIA Corporation.
+> > > + * Copyright (c) 2010-2020, NVIDIA Corporation.
+> > >   * Based on arch/arm/plat-mxc/pwm.c by Sascha Hauer <s.hauer@pengutronix.de>
+> > >   */
+> > >
+> > > @@ -83,10 +83,51 @@ static int tegra_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+> > >       val = (u32)c << PWM_DUTY_SHIFT;
+> > >
+> > >       /*
+> > > +      * Its okay to ignore the fraction part since we will be trying to set
+> > > +      * slightly lower value to rate than the actual required rate
+> > 
+> > s/actual/actually/
+> 
+> Noted. I will update in the follow up patch.
+
+Just spotted: s/Its/It's/
+
+> > > +     /*
+> > > +      *  Period in nano second has to be <= highest allowed period
+> > > +      *  based on the max clock rate of the pwm controller.
+> > > +      *
+> > > +      *  higher limit = max clock limit >> PWM_DUTY_WIDTH
+> > > +      */
+> > > +     if (rate > (pc->soc->max_frequency >> PWM_DUTY_WIDTH))
+> > > +             return -EINVAL;
+> > 
+> > Related to my question above: What happens if the rate increases after this
+> > check?
+> 
+> Discussed above with my understanding. Please help me understand if 
+> you are referring to any other possibilities that rate can be changed. 
+
+The goal to reach is: The only way to modify the PWM output should be to call
+pwm_apply_state() (or its legacy relatives).
+
+> > Also the division above is just done to compare the requested period value with
+> > the allowed range.
+> > 
+> > Your check is:
+> > 
+> >         NSEC_PER_SEC / period_ns > (max_frequency >> PWM_DUTY_WIDTH)
+> > 
+> > This is equivalent to
+> > 
+> >         period_ns <= NSEC_PER_SEC / (max_frequency >> PWM_DUTY_WIDTH)
+> > 
+> > where the right side is constant per PWM type. (Rounding might need
+> > addressing.)
+> 
+> I will update this calculation in the probe since max_frequency value is
+> Different for each chip. Also please note that at this point the rate is not
+> the actual pwm output rate. It's just a reference for what should be the
+> source clock rate and then requested with clk_set_rate();
+> Actual rounding is required while setting pwm controller output rate is
+> done later down in same function. 
+
+I think I understood. Will check again in your next patch round.
+
+> > > +              * clk_set_rate() can not be called again in config because
+> > > +              * T210 or any prior chip supports one pwm-controller and
+> > > +              * multiple channels. Hence in this case cached clock rate
+> > > +              * will be considered which was stored during probe.
+> > 
+> > I don't understand that. If
+> 
+> The if part is for SoCs which have single channel per pwm instance. i.e. T186, 
+> T194 etc. For controllers with single channel, dynamic clock rate configuration
+> is possible. The other part is for legacy controller which has multiple channels
+> for single pwm instance. The pwm controllers having multiple channels share
+> the source clock. So it does not allow dynamic clock configuration since it
+> will affect users on the other channels.
+
+The usual approach here is to allow changes iff all other channels are
+off or unused.
+
+> > > +              */
+> > > +             rate = pc->clk_rate >> PWM_DUTY_WIDTH;
+> > > +     }
+> > >
+> > >       /* Consider precision in PWM_SCALE_WIDTH rate calculation */
+> > >       hz = DIV_ROUND_CLOSEST_ULL(100ULL * NSEC_PER_SEC, period_ns);
+> > 
+> > I took a deeper look into the driver now. Just to ensure, I understood the PWMs
+> > behaviour right:
+> > 
+> > There is an ENABLE bit (with obvious semantics), a 13-bit SCALE value and an 8-
+> > bit DUTY value. There is an internal counter incrementing by one each (SCALE +
+> > 1) clock cycles and resets at 256. The counter going from 0 to 256 defines the
+> > period length. On counter reset the output gets active and on reaching DUTY the
+> > output gets inactive.
+> > 
+> > So we have:
+> > 
+> >         .period = 256 * (SCALE + 1) / clkrate
+> >         .duty_cycle = DUTY * (SCALE + 1) / clkrate
+> > 
+> > Right?
+> 
+> Yes. Right.
+
+Ideally this would be described in a code comment.
+
+> >  - When .duty_ns == .period the assignment of DUTY overflows.
+> >    (Can the PWM provide 100% duty cycle at all?)
+> 
+> Yes, PWM controller is capable to provide 100% duty cycle.
+> Bits 30:16 are dedicated for pulse width out of which only 24:16 (9 bits)
+> are used. Only 8 bits are usable [23:16] for varying pulse width.
+> To achieve 100% duty cycle, Bit [24] needs to be programmed of this
+> register to 1'b1.
+
+This needs to be documented in a driver comment to be understandable for
+people being interested in this driver later.
+
+If Bit[24] is 1, should [23:16] be zero, or is it "don't care" then?
+
+> >  - The comment "Since the actual PWM divider is the register's frequency
+> >    divider field minus 1, we need to decrement to get the correct value
+> >    to write to the register." seems wrong. If I understand correctly, we
+> >    need to do s/minus/plus/. If the register holds a 0, the divider
+> >    isn't -1 for sure?!
+> 
+> Yes, you are right. The comment needs a correction. It will be plus 1 
+> instead of minus 1. I will update the comment in the follow up patch.
+> Otherwise the calculation is correct.
+> rate = DIV_ROUND_CLOSEST_ULL(100ULL * rate, hz);
+> here rate is the divider value to be set.
+
+If a certain duty+period is requested the driver is supposed to provide
+an output such that:
+
+	implemented_period = max{ possible periods <= requested period }
+	implemented_duty = max{ possible duty <= requested duty }
+
+so I think DIV_ROUND_CLOSEST_ULL is wrong.
+(If the driver provided the modern callback instead of
+.config/.enable/.disable CONFIG_PWM_DEBUG would help you here.)
+ 
+> > How does the PWM behave when it gets disabled? Does it complete the
+> > currently running period? Does the output stop at the inactive level, or where it
+> > just happens to be? How does a running PWM behave when the register is
+> > updated? Does it complete the currently running period?
+>
+> Yes, it allows to write the bit during any active and inactive time of the
+> width. Hence the pwm gets disabled as soon as the enable bit is set to 0.
+
+OK, so the output stops oscillating as soon as the PWM_ENABLE bit is
+cleared in hardware. How does the output behave then? (Does the output
+become inactive? Or does it drive the output level where it just happens
+to be?) I assume that the register write in tegra_pwm_config() also
+results in aborting the currently running period and start of a new one
+with the new settings?
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
