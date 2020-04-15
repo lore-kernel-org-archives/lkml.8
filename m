@@ -2,254 +2,95 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4131AC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E07A4C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:32:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CCCB2076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:32:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="QV4hTLik"
+	by mail.kernel.org (Postfix) with ESMTP id BDB4C2076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 17:32:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2411267AbgDORcb (ORCPT
+        id S2411284AbgDORcq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 13:32:31 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:64835 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2411253AbgDORcR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 13:32:17 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586971936; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=3TgMcCrZpFyQ+7T1SVyjTcHt6LJCINnBs6bbMh+5HH4=; b=QV4hTLikJtmwOgMz7KjEted6lOhnsgNz+1AVu3SPKp7SU5nhN4oyvm5C8Djl7GTMUxHQq7Hm
- HdYyHAGOLRSJAiusg6X1Bi9t+xi/z0SZKtfaTcyNUoAQlSq26Auf2ffhAqHhgi29cR98HqVB
- rsVMsZhwpCpuNqADHjgnv98MadQ=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e974511.7f9515088458-smtp-out-n02;
- Wed, 15 Apr 2020 17:32:01 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 3CF97C44793; Wed, 15 Apr 2020 17:32:00 +0000 (UTC)
-Received: from pillair-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pillair)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C7F79C44788;
-        Wed, 15 Apr 2020 17:31:57 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C7F79C44788
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
-From:   Rakesh Pillai <pillair@codeaurora.org>
-To:     ath10k@lists.infradead.org
-Cc:     linux-wireless@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Rakesh Pillai <pillair@codeaurora.org>
-Subject: [PATCH v3 3/3] ath10k: Add support for targets without trustzone
-Date:   Wed, 15 Apr 2020 23:01:46 +0530
-Message-Id: <1586971906-20985-4-git-send-email-pillair@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1586971906-20985-1-git-send-email-pillair@codeaurora.org>
-References: <1586971906-20985-1-git-send-email-pillair@codeaurora.org>
+        Wed, 15 Apr 2020 13:32:46 -0400
+Received: from mga07.intel.com ([134.134.136.100]:2222 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2411254AbgDORcX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 13:32:23 -0400
+IronPort-SDR: wvHLy714rTSlYcNhNlv+aRA5aHOerVTU7dJQbUch7nE3n99YpLYvKoOKz7fK7tI78g8g28zIiP
+ jFDC2ytqc2FQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 10:32:21 -0700
+IronPort-SDR: UPm9YQA1HstvxIqgWlU3zNpxyUt+ZwupuVkwia5v26qAtu66LLTG2cj0kvhRT5lV/Dwn4+r2AP
+ c2pza6vfIk6Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,387,1580803200"; 
+   d="scan'208";a="363732914"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga001.fm.intel.com with ESMTP; 15 Apr 2020 10:32:21 -0700
+Date:   Wed, 15 Apr 2020 10:32:21 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jon Cargille <jcargill@google.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Eric Northup <digitaleric@gmail.com>,
+        Eric Northup <digitaleric@google.com>
+Subject: Re: [PATCH 1/1] KVM: pass through CPUID(0x80000006)
+Message-ID: <20200415173221.GC30627@linux.intel.com>
+References: <20200415012320.236065-1-jcargill@google.com>
+ <20200415023726.GD12547@linux.intel.com>
+ <20200415025105.GE12547@linux.intel.com>
+ <CANxmayh4P5hhbJPxAnA2nvbzZC9EwFPeVCxDrkHzu8h6Y7JPPQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANxmayh4P5hhbJPxAnA2nvbzZC9EwFPeVCxDrkHzu8h6Y7JPPQ@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the support to attach and map iommu
-domain for targets which do not have the
-support of TrustZone.
+On Wed, Apr 15, 2020 at 10:22:16AM -0700, Jon Cargille wrote:
+> > I assume you want to say something like:
+> 
+> That's a much better commit message--thank you, Sean!
+> 
+> > Jim's tag is unnecessary, unless he was a middleman between Eric and Jon,
+> 
+> I appreciate the feedback; I was trying to capture that Jim "was in the
+> patch's delivery path." (per submitting-patches.rst), but it sounds like that
+> is intended for a more explicit middle-man relationship than I had
+> understood.
 
-Tested HW: WCN3990
-Tested FW: WLAN.HL.3.1-01040-QCAHLSWMTPLZ-1
+Yep, exactly.
 
-Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
----
- drivers/net/wireless/ath/ath10k/snoc.c | 118 ++++++++++++++++++++++++++++++++-
- drivers/net/wireless/ath/ath10k/snoc.h |   7 ++
- 2 files changed, 124 insertions(+), 1 deletion(-)
+> Jim reviewed it internally before sending, which sounds like it should be
+> expressed as an "Acked-by" instead; is that accurate?
 
-diff --git a/drivers/net/wireless/ath/ath10k/snoc.c b/drivers/net/wireless/ath/ath10k/snoc.c
-index 3633ea5..7a7e79b 100644
---- a/drivers/net/wireless/ath/ath10k/snoc.c
-+++ b/drivers/net/wireless/ath/ath10k/snoc.c
-@@ -12,6 +12,7 @@
- #include <linux/property.h>
- #include <linux/regulator/consumer.h>
- #include <linux/of_address.h>
-+#include <linux/iommu.h>
- 
- #include "ce.h"
- #include "coredump.h"
-@@ -1499,6 +1500,111 @@ static int ath10k_setup_msa_resources(struct ath10k *ar, u32 msa_size)
- 	return 0;
- }
- 
-+static int ath10k_fw_init(struct ath10k *ar)
-+{
-+	struct ath10k_snoc *ar_snoc = ath10k_snoc_priv(ar);
-+	struct device *host_dev = &ar_snoc->dev->dev;
-+	struct platform_device_info info;
-+	struct iommu_domain *iommu_dom;
-+	struct platform_device *pdev;
-+	struct device_node *node;
-+	int ret;
-+
-+	node = of_get_child_by_name(host_dev->of_node, "wifi-firmware");
-+	if (!node) {
-+		ar_snoc->use_tz = true;
-+		return 0;
-+	}
-+
-+	memset(&info, 0, sizeof(info));
-+	info.fwnode = &node->fwnode;
-+	info.parent = host_dev;
-+	info.name = node->name;
-+	info.dma_mask = DMA_BIT_MASK(32);
-+
-+	pdev = platform_device_register_full(&info);
-+	if (IS_ERR(pdev)) {
-+		of_node_put(node);
-+		return PTR_ERR(pdev);
-+	}
-+
-+	pdev->dev.of_node = node;
-+
-+	ret = of_dma_configure(&pdev->dev, node, true);
-+	if (ret) {
-+		ath10k_err(ar, "dma configure fail: %d\n", ret);
-+		goto err_unregister;
-+	}
-+
-+	ar_snoc->fw.dev = &pdev->dev;
-+
-+	iommu_dom = iommu_domain_alloc(&platform_bus_type);
-+	if (!iommu_dom) {
-+		ath10k_err(ar, "failed to allocate iommu domain\n");
-+		ret = -ENOMEM;
-+		goto err_unregister;
-+	}
-+
-+	ret = iommu_attach_device(iommu_dom, ar_snoc->fw.dev);
-+	if (ret) {
-+		ath10k_err(ar, "could not attach device: %d\n", ret);
-+		goto err_iommu_free;
-+	}
-+
-+	ar_snoc->fw.iommu_domain = iommu_dom;
-+	ar_snoc->fw.fw_start_addr = ar->msa.paddr;
-+
-+	ret = iommu_map(iommu_dom, ar_snoc->fw.fw_start_addr,
-+			ar->msa.paddr, ar->msa.mem_size,
-+			IOMMU_READ | IOMMU_WRITE);
-+	if (ret) {
-+		ath10k_err(ar, "failed to map firmware region: %d\n", ret);
-+		goto err_iommu_detach;
-+	}
-+
-+	of_node_put(node);
-+
-+	return 0;
-+
-+err_iommu_detach:
-+	iommu_detach_device(iommu_dom, ar_snoc->fw.dev);
-+
-+err_iommu_free:
-+	iommu_domain_free(iommu_dom);
-+
-+err_unregister:
-+	platform_device_unregister(pdev);
-+	of_node_put(node);
-+
-+	return ret;
-+}
-+
-+static int ath10k_fw_deinit(struct ath10k *ar)
-+{
-+	struct ath10k_snoc *ar_snoc = ath10k_snoc_priv(ar);
-+	const size_t mapped_size = ar_snoc->fw.mapped_mem_size;
-+	struct iommu_domain *iommu;
-+	size_t unmapped_size;
-+
-+	if (ar_snoc->use_tz)
-+		return 0;
-+
-+	iommu = ar_snoc->fw.iommu_domain;
-+
-+	unmapped_size = iommu_unmap(iommu, ar_snoc->fw.fw_start_addr,
-+				    mapped_size);
-+	if (unmapped_size != mapped_size)
-+		ath10k_err(ar, "failed to unmap firmware: %zu\n",
-+			   unmapped_size);
-+
-+	iommu_detach_device(iommu, ar_snoc->fw.dev);
-+	iommu_domain_free(iommu);
-+
-+	platform_device_unregister(to_platform_device(ar_snoc->fw.dev));
-+
-+	return 0;
-+}
-+
- static const struct of_device_id ath10k_snoc_dt_match[] = {
- 	{ .compatible = "qcom,wcn3990-wifi",
- 	 .data = &drv_priv,
-@@ -1607,16 +1713,25 @@ static int ath10k_snoc_probe(struct platform_device *pdev)
- 		goto err_power_off;
- 	}
- 
-+	ret = ath10k_fw_init(ar);
-+	if (ret) {
-+		ath10k_err(ar, "failed to initialize firmware: %d\n", ret);
-+		goto err_power_off;
-+	}
-+
- 	ret = ath10k_qmi_init(ar, msa_size);
- 	if (ret) {
- 		ath10k_warn(ar, "failed to register wlfw qmi client: %d\n", ret);
--		goto err_power_off;
-+		goto err_fw_deinit;
- 	}
- 
- 	ath10k_dbg(ar, ATH10K_DBG_SNOC, "snoc probe\n");
- 
- 	return 0;
- 
-+err_fw_deinit:
-+	ath10k_fw_deinit(ar);
-+
- err_power_off:
- 	ath10k_hw_power_off(ar);
- 
-@@ -1648,6 +1763,7 @@ static int ath10k_snoc_remove(struct platform_device *pdev)
- 
- 	ath10k_core_unregister(ar);
- 	ath10k_hw_power_off(ar);
-+	ath10k_fw_deinit(ar);
- 	ath10k_snoc_free_irq(ar);
- 	ath10k_snoc_release_resource(ar);
- 	ath10k_qmi_deinit(ar);
-diff --git a/drivers/net/wireless/ath/ath10k/snoc.h b/drivers/net/wireless/ath/ath10k/snoc.h
-index c05df45..a3dd06f 100644
---- a/drivers/net/wireless/ath/ath10k/snoc.h
-+++ b/drivers/net/wireless/ath/ath10k/snoc.h
-@@ -55,6 +55,13 @@ struct regulator_bulk_data;
- struct ath10k_snoc {
- 	struct platform_device *dev;
- 	struct ath10k *ar;
-+	unsigned int use_tz;
-+	struct ath10k_firmware {
-+		struct device *dev;
-+		dma_addr_t fw_start_addr;
-+		struct iommu_domain *iommu_domain;
-+		size_t mapped_mem_size;
-+	} fw;
- 	void __iomem *mem;
- 	dma_addr_t mem_pa;
- 	struct ath10k_snoc_target_info target_info;
--- 
-2.7.4
+Or Reviewed-by.  The proper (and easiest) way to handle this is to use
+whatever tag Jim (or any other reviewer) provides, e.g. submitting-patches
+states, under 12) When to use Acked-by:, Cc:, and Co-developed-by:, states:
+
+  If a person has had the opportunity to comment on a patch, but has not
+  provided such comments, you may optionally add a ``Cc:`` tag to the patch.
+  This is the only tag which might be added without an explicit action by the
+  person it names
+
+I.e. all *-by tags are only supposed to be used with explicit permission
+from the named person.  This doesn't mean the person has to literally write
+Reviewed-by or whatever (though that's usually the case), but it does mean
+you should confirm it's ok to add a tag, e.g. if someone replies "LGTM" and
+you want to interpret that as a Reviewed-by or Acked-by, explicitly ask if
+it's ok to add the tag.
