@@ -2,312 +2,128 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13CFEC2BA19
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A06C38A2B
 	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:27:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D761A206F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:27:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="YL3uRS+Q"
+	by mail.kernel.org (Postfix) with ESMTP id AE52B206F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:27:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586978832;
+	bh=oqLAfq+Hp/zz6ak0aKamBmeD135V20iu+B5yYO8QeUM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VQRJuCpRet3kIH9f1LDKbzKRxgh7MjABgtwUM7arbO3S98Lj9JI83rLOHitzgOpFg
+	 7eCLJwWPISv/CBKHkvtBe3V5iA+wJKX/Gws8+Kb1laDhuxsMUDgp7yszlenasf6TW2
+	 fKcYvRwaqFc9Kqo4Y4rweZ4yeEt55SDHqN6ZKZYw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404688AbgDOTWb (ORCPT
+        id S2406059AbgDOT1L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 15:22:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56246 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2404530AbgDOTWN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 15:22:13 -0400
-X-Greylist: delayed 1982 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 15 Apr 2020 12:22:13 PDT
-Received: from mx0b-00190b01.pphosted.com (mx0b-00190b01.pphosted.com [IPv6:2620:100:9005:57f::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D8F2C061A0C;
-        Wed, 15 Apr 2020 12:22:13 -0700 (PDT)
-Received: from pps.filterd (m0122331.ppops.net [127.0.0.1])
-        by mx0b-00190b01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03FIjCqU031913;
-        Wed, 15 Apr 2020 19:48:19 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=jan2016.eng;
- bh=tfyP2ECHbQ/s8AdsIIJTVPSDSgqkPyqgIBBNn+vOaxw=;
- b=YL3uRS+Q2qBGD5xObjq88ehkxHFw9cD4U8USFQelymXpj5jQ5Dh7orOz0LwGPm/fBrSz
- PU6Mg+wdaP7dNu+Bc1rl1MbpddEMRQLich7K2vDVJztHYiHPJm8Uja2SLeQQ5IlcSZTH
- myvyRgq4VIqYLQSJXFAu0e5+xJcyqKWu1FYBrwBN/ID3PSWtgcMSlBNnmVO7eov6kAB7
- WkSadNfgQ2t/r7u/2TsPGVUsCnpJT7h9NclU3c8ruTvihZyXEKoAYj4ZovOOj73U7BHx
- uocbp5e3AEYFUrHNCbVhnlovCkynzn24BrBIaQGKiETZGYEBsnS2S221CZ4RjTVgRMnl IA== 
-Received: from prod-mail-ppoint5 (prod-mail-ppoint5.akamai.com [184.51.33.60] (may be forged))
-        by mx0b-00190b01.pphosted.com with ESMTP id 30bphp4e54-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 Apr 2020 19:48:18 +0100
-Received: from pps.filterd (prod-mail-ppoint5.akamai.com [127.0.0.1])
-        by prod-mail-ppoint5.akamai.com (8.16.0.27/8.16.0.27) with SMTP id 03FIm6vw018854;
-        Wed, 15 Apr 2020 11:48:17 -0700
-Received: from prod-mail-relay10.akamai.com ([172.27.118.251])
-        by prod-mail-ppoint5.akamai.com with ESMTP id 30bbv92brf-1;
-        Wed, 15 Apr 2020 11:48:16 -0700
-Received: from [0.0.0.0] (prod-ssh-gw01.bos01.corp.akamai.com [172.27.119.138])
-        by prod-mail-relay10.akamai.com (Postfix) with ESMTP id 7866C39375;
-        Wed, 15 Apr 2020 18:48:16 +0000 (GMT)
-Subject: Re: [PATCH] dynamic_debug: Add an option to enable dynamic debug for
- modules only
-To:     Orson Zhai <orsonzhai@gmail.com>,
-        Orson Zhai <orson.unisoc@gmail.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>, Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-doc@vger.kernel.org,
-        Android Kernel Team <kernel-team@android.com>,
-        Orson Zhai <orson.zhai@unisoc.com>
-References: <1586521984-5890-1-git-send-email-orson.unisoc@gmail.com>
- <CA+H2tpH4+cLN0z7v50UdKCXOqZDt2rSYF5Lvm9-WBYJ3YWtJVg@mail.gmail.com>
-From:   Jason Baron <jbaron@akamai.com>
-Message-ID: <c50deb5a-e3c1-a3c7-1467-fb78b13ceea8@akamai.com>
-Date:   Wed, 15 Apr 2020 14:48:16 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Wed, 15 Apr 2020 15:27:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50338 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404698AbgDOT0M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 15:26:12 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63B9E206F9;
+        Wed, 15 Apr 2020 19:26:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586978771;
+        bh=oqLAfq+Hp/zz6ak0aKamBmeD135V20iu+B5yYO8QeUM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1EzpWjXb3zRhEGkA/LyA3y/dbXwlh47cdSpkBZ4OUTtw/66hxC6m+PuabdQvdrux/
+         m3klm5mP1g73V8pR9wacfGbP2xR0F7pnjGZi5zWF6hIcZiPaAx1WvZ0IcB49szbbjo
+         jaVxz1lEqV9prGa5AI5gRYskMy8IVOsp8WLpFD2Y=
+Date:   Wed, 15 Apr 2020 20:26:05 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        kernel-team@android.com, Michael Ellerman <mpe@ellerman.id.au>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v3 05/12] arm64: csum: Disable KASAN for do_csum()
+Message-ID: <20200415192605.GA21804@willie-the-truck>
+References: <20200415165218.20251-1-will@kernel.org>
+ <20200415165218.20251-6-will@kernel.org>
+ <20200415172813.GA2272@lakrids.cambridge.arm.com>
 MIME-Version: 1.0
-In-Reply-To: <CA+H2tpH4+cLN0z7v50UdKCXOqZDt2rSYF5Lvm9-WBYJ3YWtJVg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-15_06:2020-04-14,2020-04-15 signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-2002250000 definitions=main-2004150136
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-15_06:2020-04-14,2020-04-15 signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 clxscore=1011
- impostorscore=0 spamscore=0 lowpriorityscore=0 mlxlogscore=999
- phishscore=0 bulkscore=0 priorityscore=1501 adultscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004150138
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200415172813.GA2272@lakrids.cambridge.arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 4/15/20 12:31 PM, Orson Zhai wrote:
-> Hi Jason,
+On Wed, Apr 15, 2020 at 06:28:14PM +0100, Mark Rutland wrote:
+> On Wed, Apr 15, 2020 at 05:52:11PM +0100, Will Deacon wrote:
+> > do_csum() over-reads the source buffer and therefore abuses
+> > READ_ONCE_NOCHECK() to avoid tripping up KASAN. In preparation for
+> > READ_ONCE_NOCHECK() becoming a macro, and therefore losing its
+> > '__no_sanitize_address' annotation, just annotate do_csum() explicitly
+> > and fall back to normal loads.
 > 
-> On Fri, Apr 10, 2020 at 8:33 PM Orson Zhai <orson.unisoc@gmail.com> wrote:
->>
->> From: Orson Zhai <orson.zhai@unisoc.com>
->>
->> Instead of enabling dynamic debug globally with CONFIG_DYNAMIC_DEBUG,
->> CONFIG_DYNAMIC_DEBUG_CORE will only enable core function of dynamic
->> debug. With the DEBUG_MODULE defined for any modules, dynamic debug
->> will be tied to them.
->>
->> This is useful for people who only want to enable dynamic debug for
->> kernel modules without worrying about kernel image size and memory
->> consumption is increasing too much.
->>
+> I'm confused by this. The whole point of READ_ONCE_NOCHECK() is that it
+> isn't checked by KASAN, so if that semantic is removed it has no reason
+> to exist.
+
+Oh, I thought it was there to be used by things like KASAN itself and
+because READ_ONCE() was implemented using a static function, then that
+function had to be marked as __no_sanitize_address when used in these
+cases. Now that it's just a macro, that's not necessary so it's just
+the same as normal READ_ONCE().
+
+Do we have a "nocheck" version where we don't require the READ_ONCE()
+semantics? I think abusing a relaxed concurrency primitive for this is
+not the right thing to do, particularly when the __no_sanitize_address
+annotation is available. I fact, it's almost an argument in favour
+of removing READ_ONCE_NOCHECK() so that people use the annotation instead!
+
+> Changing that will break the unwind/stacktrace code across multiple
+> architectures. IIRC they use READ_ONCE_NOCHECK() for two reasons:
 > 
-> Do you have any comments for this patch?
+> 1. Races with concurrent modification, as might happen when a thread's
+>    stack is corrupted. Allowing the unwinder to bail out after a sanity
+>    check means the resulting report is more useful than a KASAN splat in
+>    the unwinder. I made the arm64 unwinder robust to this case.
 > 
+> 2. I believe that the frame record itself /might/ be poisoned by KASAN,
+>    since it's not meant to be an accessible object at the C langauge
+>    level. I could be wrong about this, and would have to check.
 
-So I like that you added the 'DEBUG_MODULE', but I'm wondering if the
-naming is too generic? Maybe DYNAMIC_DEBUG_MODULE?
+Ok.
 
-There may also be other places where you want to have the per-module
-dependency, for example netdev_dbg()? But perhaps further expansion
-could wait for a user...
+> I would like to keep the unwinding robust in the first case, even if the
+> second case doesn't apply, and I'd prefer to not mark the entirety of
+> the unwinding code as unchecked as that's sufficiently large an subtle
+> that it could have nasty bugs.
 
-Thanks,
+Hmm, maybe. I don't really see what's wrong with annotating the unwinding
+code, though. You can still tell kasan about the accesses you're making,
+like we do in the checksumming code here, and it's not hard to move the
+frame-pointer chasing code into a separate function.
 
--Jason
-
-
-> Best Regards,
-> Orson
+> Is there any way we keep something like READ_ONCE_NOCHECK() around even
+> if we have to give it reduced functionality relative to READ_ONCE()?
 > 
->> Signed-off-by: Orson Zhai <orson.zhai@unisoc.com>
->> ---
->>  Documentation/admin-guide/dynamic-debug-howto.rst |  7 +++++--
->>  include/linux/dev_printk.h                        |  6 ++++--
->>  include/linux/dynamic_debug.h                     |  2 +-
->>  include/linux/printk.h                            | 14 +++++++++-----
->>  lib/Kconfig.debug                                 | 12 ++++++++++++
->>  lib/Makefile                                      |  2 +-
->>  lib/dynamic_debug.c                               |  9 +++++++--
->>  7 files changed, 39 insertions(+), 13 deletions(-)
->>
->> diff --git a/Documentation/admin-guide/dynamic-debug-howto.rst b/Documentation/admin-guide/dynamic-debug-howto.rst
->> index 0dc2eb8..fa5b8d4 100644
->> --- a/Documentation/admin-guide/dynamic-debug-howto.rst
->> +++ b/Documentation/admin-guide/dynamic-debug-howto.rst
->> @@ -13,8 +13,11 @@ kernel code to obtain additional kernel information.  Currently, if
->>  ``print_hex_dump_debug()``/``print_hex_dump_bytes()`` calls can be dynamically
->>  enabled per-callsite.
->>
->> -If ``CONFIG_DYNAMIC_DEBUG`` is not set, ``print_hex_dump_debug()`` is just
->> -shortcut for ``print_hex_dump(KERN_DEBUG)``.
->> +If ``CONFIG_DYNAMIC_DEBUG_CORE`` is set, only the modules with ``DEBUG_MODULE``
->> +defined will be tied into dynamic debug.
->> +
->> +If ``CONFIG_DYNAMIC_DEBUG`` or ``CONFIG_DYNAMIC_DEBUG_CORE`` is not set,
->> +``print_hex_dump_debug()`` is just shortcut for ``print_hex_dump(KERN_DEBUG)``.
->>
->>  For ``print_hex_dump_debug()``/``print_hex_dump_bytes()``, format string is
->>  its ``prefix_str`` argument, if it is constant string; or ``hexdump``
->> diff --git a/include/linux/dev_printk.h b/include/linux/dev_printk.h
->> index 5aad06b..2fb0671 100644
->> --- a/include/linux/dev_printk.h
->> +++ b/include/linux/dev_printk.h
->> @@ -109,7 +109,8 @@ void _dev_info(const struct device *dev, const char *fmt, ...)
->>  #define dev_info(dev, fmt, ...)                                                \
->>         _dev_info(dev, dev_fmt(fmt), ##__VA_ARGS__)
->>
->> -#if defined(CONFIG_DYNAMIC_DEBUG)
->> +#if defined(CONFIG_DYNAMIC_DEBUG) || \
->> +       (defined(CONFIG_DYNAMIC_DEBUG_CORE) && defined(DEBUG_MODULE))
->>  #define dev_dbg(dev, fmt, ...)                                         \
->>         dynamic_dev_dbg(dev, dev_fmt(fmt), ##__VA_ARGS__)
->>  #elif defined(DEBUG)
->> @@ -181,7 +182,8 @@ do {                                                                        \
->>         dev_level_ratelimited(dev_notice, dev, fmt, ##__VA_ARGS__)
->>  #define dev_info_ratelimited(dev, fmt, ...)                            \
->>         dev_level_ratelimited(dev_info, dev, fmt, ##__VA_ARGS__)
->> -#if defined(CONFIG_DYNAMIC_DEBUG)
->> +#if defined(CONFIG_DYNAMIC_DEBUG) || \
->> +       (defined(CONFIG_DYNAMIC_DEBUG_CORE) && defined(DEBUG_MODULE))
->>  /* descriptor check is first to prevent flooding with "callbacks suppressed" */
->>  #define dev_dbg_ratelimited(dev, fmt, ...)                             \
->>  do {                                                                   \
->> diff --git a/include/linux/dynamic_debug.h b/include/linux/dynamic_debug.h
->> index 4cf02ec..abcd5fd 100644
->> --- a/include/linux/dynamic_debug.h
->> +++ b/include/linux/dynamic_debug.h
->> @@ -48,7 +48,7 @@ struct _ddebug {
->>
->>
->>
->> -#if defined(CONFIG_DYNAMIC_DEBUG)
->> +#if defined(CONFIG_DYNAMIC_DEBUG_CORE)
->>  int ddebug_add_module(struct _ddebug *tab, unsigned int n,
->>                                 const char *modname);
->>  extern int ddebug_remove_module(const char *mod_name);
->> diff --git a/include/linux/printk.h b/include/linux/printk.h
->> index 1e6108b..77fab5b 100644
->> --- a/include/linux/printk.h
->> +++ b/include/linux/printk.h
->> @@ -291,8 +291,9 @@ extern int kptr_restrict;
->>  /*
->>   * These can be used to print at the various log levels.
->>   * All of these will print unconditionally, although note that pr_debug()
->> - * and other debug macros are compiled out unless either DEBUG is defined
->> - * or CONFIG_DYNAMIC_DEBUG is set.
->> + * and other debug macros are compiled out unless either DEBUG is defined,
->> + * CONFIG_DYNAMIC_DEBUG is set, or CONFIG_DYNAMIC_DEBUG_CORE is set when
->> + * DEBUG_MODULE being defined for any modules.
->>   */
->>  #define pr_emerg(fmt, ...) \
->>         printk(KERN_EMERG pr_fmt(fmt), ##__VA_ARGS__)
->> @@ -327,7 +328,8 @@ extern int kptr_restrict;
->>
->>
->>  /* If you are writing a driver, please use dev_dbg instead */
->> -#if defined(CONFIG_DYNAMIC_DEBUG)
->> +#if defined(CONFIG_DYNAMIC_DEBUG) || \
->> +       (defined(CONFIG_DYNAMIC_DEBUG_CORE) && defined(DEBUG_MODULE))
->>  #include <linux/dynamic_debug.h>
->>
->>  /* dynamic_pr_debug() uses pr_fmt() internally so we don't need it here */
->> @@ -453,7 +455,8 @@ extern int kptr_restrict;
->>  #endif
->>
->>  /* If you are writing a driver, please use dev_dbg instead */
->> -#if defined(CONFIG_DYNAMIC_DEBUG)
->> +#if defined(CONFIG_DYNAMIC_DEBUG) || \
->> +       (defined(CONFIG_DYNAMIC_DEBUG_CORE) && defined(DEBUG_MODULE))
->>  /* descriptor check is first to prevent flooding with "callbacks suppressed" */
->>  #define pr_debug_ratelimited(fmt, ...)                                 \
->>  do {                                                                   \
->> @@ -500,7 +503,8 @@ static inline void print_hex_dump_bytes(const char *prefix_str, int prefix_type,
->>
->>  #endif
->>
->> -#if defined(CONFIG_DYNAMIC_DEBUG)
->> +#if defined(CONFIG_DYNAMIC_DEBUG) || \
->> +       (defined(CONFIG_DYNAMIC_DEBUG_CORE) && defined(DEBUG_MODULE))
->>  #define print_hex_dump_debug(prefix_str, prefix_type, rowsize, \
->>                              groupsize, buf, len, ascii)        \
->>         dynamic_hex_dump(prefix_str, prefix_type, rowsize,      \
->> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
->> index 50c1f5f..25a1b9de 100644
->> --- a/lib/Kconfig.debug
->> +++ b/lib/Kconfig.debug
->> @@ -99,6 +99,7 @@ config DYNAMIC_DEBUG
->>         default n
->>         depends on PRINTK
->>         depends on (DEBUG_FS || PROC_FS)
->> +       select DYNAMIC_DEBUG_CORE
->>         help
->>
->>           Compiles debug level messages into the kernel, which would not
->> @@ -165,6 +166,17 @@ config DYNAMIC_DEBUG
->>           See Documentation/admin-guide/dynamic-debug-howto.rst for additional
->>           information.
->>
->> +config DYNAMIC_DEBUG_CORE
->> +       bool "Enable core function of dynamic debug support"
->> +       depends on PRINTK
->> +       depends on (DEBUG_FS || PROC_FS)
->> +       help
->> +         Enable core functional support of dynamic debug. It is useful
->> +         when you want to tie dynamic debug to your kernel modules with
->> +         DEBUG_MODULE defined for each of them, especially for the case
->> +         of embedded system where the kernel image size is sensitive for
->> +         people.
->> +
->>  config SYMBOLIC_ERRNAME
->>         bool "Support symbolic error names in printf"
->>         default y if PRINTK
->> diff --git a/lib/Makefile b/lib/Makefile
->> index 685aee6..8952772 100644
->> --- a/lib/Makefile
->> +++ b/lib/Makefile
->> @@ -186,7 +186,7 @@ lib-$(CONFIG_GENERIC_BUG) += bug.o
->>
->>  obj-$(CONFIG_HAVE_ARCH_TRACEHOOK) += syscall.o
->>
->> -obj-$(CONFIG_DYNAMIC_DEBUG) += dynamic_debug.o
->> +obj-$(CONFIG_DYNAMIC_DEBUG_CORE) += dynamic_debug.o
->>  obj-$(CONFIG_SYMBOLIC_ERRNAME) += errname.o
->>
->>  obj-$(CONFIG_NLATTR) += nlattr.o
->> diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
->> index 8f199f4..321437b 100644
->> --- a/lib/dynamic_debug.c
->> +++ b/lib/dynamic_debug.c
->> @@ -1032,8 +1032,13 @@ static int __init dynamic_debug_init(void)
->>         int verbose_bytes = 0;
->>
->>         if (&__start___verbose == &__stop___verbose) {
->> -               pr_warn("_ddebug table is empty in a CONFIG_DYNAMIC_DEBUG build\n");
->> -               return 1;
->> +               if (IS_ENABLED(CONFIG_DYNAMIC_DEBUG)) {
->> +                       pr_warn("_ddebug table is empty in a CONFIG_DYNAMIC_DEBUG build\n");
->> +                       return 1;
->> +               }
->> +               pr_info("Ignore empty _ddebug table in a CONFIG_DYNAMIC_DEBUG_CORE build\n");
->> +               ddebug_init_success = 1;
->> +               return 0;
->>         }
->>         iter = __start___verbose;
->>         modname = iter->modname;
->> --
->> 2.7.4
->>
+> I'm not enirely sure why READ_ONCE_NOCHECK() had to go, so if there's a
+> particular pain point I'm happy to take a look.
+
+I got rid if it because I thought it wasn't required now that it's
+implemented entirely as a macro. I'd be reluctant to bring it back if
+there isn't a non-ONCE version of the helper.
+
+Will
