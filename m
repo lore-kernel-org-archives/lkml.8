@@ -2,115 +2,65 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B6BC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:02:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F34C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:04:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 840D720775
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:02:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586944921;
-	bh=DVGdggIgrHK2evBhp/QfmN+Z347bupNDRDqFz3LeO5M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=S9XGEDCIxiqLbCc110pYBIFJ5Ib3cjrKuARkO0QMK2z0S6OqMi1Y90mXeQp6Elngw
-	 9zg8w1Lr8LC12obSYfk7VOYpkE6lcdxB79FHQ8ZphV9aCtCqFLhxPCTo4rocvtlCVi
-	 NvkLgyoSc4K+khbfQvYWuMyXT1llF25H98oUDBgM=
+	by mail.kernel.org (Postfix) with ESMTP id CD5C52064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:04:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2896102AbgDOKB7 (ORCPT
+        id S2896120AbgDOKEb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 06:01:59 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:55613 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2895955AbgDOKBu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 06:01:50 -0400
-Received: by mail-wm1-f66.google.com with SMTP id e26so16700737wmk.5;
-        Wed, 15 Apr 2020 03:01:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Ik9SzoJG23HyWV3EJZBDw9KnoLZv3eWb0eYaCp2cs4I=;
-        b=YGaPNOVt6IA3KnoXCM3zXS55D4HzzWJBbGHn9eorupAT6wY0Z0lpwUNM/e2N1lGGrm
-         D1nwmd2a2tMgDrHQg9QFdJy3KZ4HoABciG3wtw16qnLBHKuW4VoRUMZJ/ok9+BFd6LFY
-         QTtHs76ObpZxxSMcHu8CMbOtAPngw8DUsj1gCM+Nya2uGQWUNmb3HcZ4UepBnsVJIh41
-         ov2AYhOK2jVQQAF8PuoW4aXnUhi6Akqbyuc2nkDCAZ4P8vxZ+0DfrFwpQDIk4vyyxGV1
-         XoUfyc4XJ3PcjesRpLi3NZBWmOT0S9nAE/8Mk6a8tJD7Zn/hcNLp9SH7hcN4i0oTHOAM
-         gQ7A==
-X-Gm-Message-State: AGi0PuaWciEnYj21oRvokxyY43G66LLAn5bOIWuKdxjY8k2B88iBNO1Y
-        iyeIJw/Vq+7w7yLD9yv6nKI=
-X-Google-Smtp-Source: APiQypKJVaGGm0WlX/P9D+5uZGAAwOwvoL0TgNtVED/ZyGRV1UePRP4N+INs4Ka7TCh9PUHB/SON9w==
-X-Received: by 2002:a1c:3d83:: with SMTP id k125mr4767806wma.177.1586944909281;
-        Wed, 15 Apr 2020 03:01:49 -0700 (PDT)
-Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
-        by smtp.gmail.com with ESMTPSA id 1sm21770489wmi.0.2020.04.15.03.01.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2020 03:01:48 -0700 (PDT)
-Date:   Wed, 15 Apr 2020 12:01:46 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
-        David Rientjes <rientjes@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: Re: [PATCH v2 0/3] support setting sysctl parameters from kernel
- command line
-Message-ID: <20200415100146.GC4629@dhcp22.suse.cz>
-References: <20200414113222.16959-1-vbabka@suse.cz>
- <20200415122359.939364e2c54c389c6b3f6457@kernel.org>
- <3fc1303a-cb57-b96e-ce77-7ff6407ab538@suse.cz>
+        Wed, 15 Apr 2020 06:04:31 -0400
+Received: from foss.arm.com ([217.140.110.172]:41230 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2895955AbgDOKEZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 06:04:25 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 416D71063;
+        Wed, 15 Apr 2020 03:04:25 -0700 (PDT)
+Received: from [10.37.12.1] (unknown [10.37.12.1])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D6CDD3F68F;
+        Wed, 15 Apr 2020 03:04:22 -0700 (PDT)
+Subject: Re: [PATCH 2/8] arm64: cpufeature: Spell out register fields for
+ ID_ISAR4 and ID_PFR1
+To:     will@kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu
+Cc:     linux-kernel@vger.kernel.org, mark.rutland@arm.com, maz@kernel.org,
+        anshuman.khandual@arm.com, catalin.marinas@arm.com,
+        saiprakash.ranjan@codeaurora.org, dianders@chromium.org,
+        kernel-team@android.com
+References: <20200414213114.2378-1-will@kernel.org>
+ <20200414213114.2378-3-will@kernel.org>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <632b7ace-a7db-a961-b9eb-c9c303376fcd@arm.com>
+Date:   Wed, 15 Apr 2020 11:09:12 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3fc1303a-cb57-b96e-ce77-7ff6407ab538@suse.cz>
+In-Reply-To: <20200414213114.2378-3-will@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 15-04-20 10:56:35, Vlastimil Babka wrote:
-> On 4/15/20 5:23 AM, Masami Hiramatsu wrote:
-> > Hi Vlastimil,
-> > 
-> > On Tue, 14 Apr 2020 13:32:19 +0200
-> > Vlastimil Babka <vbabka@suse.cz> wrote:
-> > 
-> >> This series adds support for something that seems like many people always
-> >> wanted but nobody added it yet, so here's the ability to set sysctl parameters
-> >> via kernel command line options in the form of sysctl.vm.something=1
-> > 
-> > Sounds good. And would you consider to use the bootconfig instead of (or
-> > in addition to) the kernel command line, because it is too short to describe
-> > the sysctl options?
+On 04/14/2020 10:31 PM, Will Deacon wrote:
+> In preparation for runtime updates to the strictness of some AArch32
+> features, spell out the register fields for ID_ISAR4 and ID_PFR1 to make
+> things clearer to read. Note that this isn't functionally necessary, as
+> the feature arrays themselves are not modified dynamically and remain
+> 'const'.
 > 
-> "Instead of" - no, as that would defeat the scenario of "I just want to set this
-> one sysctl in grub  (possibly interactively) and not update initrd for that". If
-> constructing bootconfig is of similar effort of loading sysctl.conf from initrd,
-> then I see little benefit?
-> 
-> "in addition to" - sure! but I hoped that's what already happens as it seemed to
-> me that options from bootconfig are appended to the command line that's then
-> parsed by everyone else, no? But I'll try it to be sure.
+> Signed-off-by: Will Deacon <will@kernel.org>
+> ---
+>   arch/arm64/include/asm/sysreg.h | 17 +++++++++++++++++
+>   arch/arm64/kernel/cpufeature.c  | 28 ++++++++++++++++++++++++++--
+>   2 files changed, 43 insertions(+), 2 deletions(-)
 
-Completely agreed!
-
-Btw. patches look sensible to me so feel free to add
-Acked-by: Michal Hocko <mhocko@suse.com>
-
--- 
-Michal Hocko
-SUSE Labs
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
