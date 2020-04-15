@@ -7,67 +7,67 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F11D0C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 06:22:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F7F7C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 06:22:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDE45206D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 06:22:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC3C4206D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 06:22:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X7rhER9V"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lbADryP1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634805AbgDOGW2 (ORCPT
+        id S2634816AbgDOGWj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 02:22:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47732 "EHLO
+        Wed, 15 Apr 2020 02:22:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2393532AbgDOGWT (ORCPT
+        by vger.kernel.org with ESMTP id S2393547AbgDOGWU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 02:22:19 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AF69C061A10
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 23:22:19 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id a23so892425plm.1
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 23:22:19 -0700 (PDT)
+        Wed, 15 Apr 2020 02:22:20 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80881C061A0E
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 23:22:20 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id g2so885520plo.3
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Apr 2020 23:22:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=m0wKJOnOp7WnSwAhhU9/YwBjXZo896nHbiajmhX/TkI=;
-        b=X7rhER9V+7D6xbrDFU5DyH6dKQUob8pQjifY3E+BOrJAbC90Wl9+qWdKont6wNvyRL
-         wRlM/Yof+1XQ1RbYJ4gPkJZoCogepwr8C+vcziATrQtSqM0rC0dMvjYW53NEcns2gaXm
-         Q4aFN5LSYyLt/25CSC5OojAbDmBSjIoIxNpgiKtXEUlqHF4HTM+iRCM3l6ioft0bDdHD
-         yAOqAzmWDBXpTYfLwh0zrlVuqpeKpvo9mGXZH41BfzI+E9zZn3L3k3lLBkO2zU3XSgH9
-         66qEpZgkyeQyHv3spFbB8HfWdqVWNhgymKgr7YDvXpAnhV39VzvASbbDBZ7uQ+f37ppA
-         bnsg==
+        bh=7avCLbe9HAwosQBa6LlVF/qUTGXim4biWBuIF11jNCU=;
+        b=lbADryP1UsnJT4+HlIV8WcjjuaMWFzGRcULDWPvuyis2HA6h2gAf8PIDWQ2M7Lc5qL
+         E2FsT5EO06c9Rsgfb6b3Ul4bCJOotCGIOnetst2/FbuDcRWm0PeulgY3nJnxNmlETAan
+         oGA6BRApANilKEsMzDnOF65f/BhoVhKkzh3IEpoWco2RPUtkKEEZqM5vXtHa1pUnDfIG
+         jy0dpd2zKihNeVvwXFEBASQ47bAolWY9CsRhlTWIk7E4EgCrLXIdGwz98dAEOcbvUQzG
+         Nxo8EH40SEmDLYb0OjtnC3Kpfzklx7ObUKiUVDEx0I/hqmdhsQiRYb7Tv/k5ZUa1/aXt
+         a+/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=m0wKJOnOp7WnSwAhhU9/YwBjXZo896nHbiajmhX/TkI=;
-        b=hNF2n7AEZUDI2NCDOh84E7L8SmnE0BTNKEVO2B6EpjDlgsXW4JtPz+nmbW4/cGwcda
-         fslVVxD7Sdb1jacsLnqVCSTOq7wBP+2XFLnC7DzetggSsbQialu2N15WYzx3uYcNvvJ5
-         QGdvOeVvg4F9+eSHxaC4ivfsU1yPoaK809E6ruS0Dk5c8oze8cd9LYiWjSiOrtqPH3lf
-         NzWC2HzBcS/lVlrPBBj30vHzknBDn9rhbW41RArJjM04aYnAApxTtePJ2rDlWhbBJzYr
-         QGvlDcVb69yKhwRvw2fmpOp/S0ud1wDgNguwJsswQGK1C9Kkw4iMOEt5tDDUwTt1l8hm
-         dwbg==
-X-Gm-Message-State: AGi0PuZPT8u+2JC8wwJnk/BqFdRHx0FPTn44bw/+uAeuVgmBW9eada/s
-        BCOh1ziRRRXLxomq9VaFsyez+w==
-X-Google-Smtp-Source: APiQypLBvo8HG6RqaxwQaTA2YJFeNp3xTsShLNtx1gsmY1f1yHP5m1Ijxq1G2gYLXswby7M/CyILNw==
-X-Received: by 2002:a17:902:7c8f:: with SMTP id y15mr3390229pll.202.1586931738637;
-        Tue, 14 Apr 2020 23:22:18 -0700 (PDT)
+        bh=7avCLbe9HAwosQBa6LlVF/qUTGXim4biWBuIF11jNCU=;
+        b=mJN+KIhCBqU5NmkdnSPZbP1JOf1zsLAQcO+3FnoGhBfQhOTvp+KKqbjg1/sG2g42mS
+         tLPMgcQm3u6ZZzxFXc9mBCj4KyjR97mXhUg9gedcG56jEkEkCvscPvB0Fw1Rc+mL3Ctr
+         uSI6176q+BzuYwHDmGEaIKff2PWky2lRtP1Ar1xzlNTJKPvVZaiDzX2n+ghFOi5YmTtb
+         nWLhyPfx0Zu0jfNb4heNQZNZ/5KD2iuujkj63PgS3U/kOv1YQ1L/J/nKNUSPeqlxYAzr
+         2yHPu4RuRW/5urz7AP0kmYkLv9oFRuU2ZMQvQnLd0kvjclkCtnVittx01cdL6ECNQwC+
+         zFGA==
+X-Gm-Message-State: AGi0PubFU0vO8+aAvDedL3dR/gYdssjrzt8UK+ok0K13wJQV0NmLC7W9
+        IHpqCE3BI69BkVnCb9+1qK0TUg==
+X-Google-Smtp-Source: APiQypIdwUPC4FfOrzwT02GzsEBa0duhvaBxGkyGhlCmkXhoVszx2qook34zcRpOUVAOB9HMAAGUBA==
+X-Received: by 2002:a17:90a:c78b:: with SMTP id gn11mr4330672pjb.147.1586931740009;
+        Tue, 14 Apr 2020 23:22:20 -0700 (PDT)
 Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id nu13sm14032899pjb.22.2020.04.14.23.22.17
+        by smtp.gmail.com with ESMTPSA id nu13sm14032899pjb.22.2020.04.14.23.22.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 23:22:18 -0700 (PDT)
+        Tue, 14 Apr 2020 23:22:19 -0700 (PDT)
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Rob Herring <robh+dt@kernel.org>
 Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] soc: qcom: rpmhpd: Add SM8250 power domains
-Date:   Tue, 14 Apr 2020 23:21:53 -0700
-Message-Id: <20200415062154.741179-2-bjorn.andersson@linaro.org>
+Subject: [PATCH 2/2] arm64: dts: qcom: sm8250: Add rpmhpd node
+Date:   Tue, 14 Apr 2020 23:21:54 -0700
+Message-Id: <20200415062154.741179-3-bjorn.andersson@linaro.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20200415062154.741179-1-bjorn.andersson@linaro.org>
 References: <20200415062154.741179-1-bjorn.andersson@linaro.org>
@@ -80,83 +80,78 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- .../devicetree/bindings/power/qcom,rpmpd.yaml |  1 +
- drivers/soc/qcom/rpmhpd.c                     | 19 +++++++++++++++++++
- include/dt-bindings/power/qcom-rpmpd.h        | 12 ++++++++++++
- 3 files changed, 32 insertions(+)
+ arch/arm64/boot/dts/qcom/sm8250.dtsi | 51 ++++++++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml b/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml
-index ba605310abeb..8058955fb3b9 100644
---- a/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml
-+++ b/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml
-@@ -23,6 +23,7 @@ properties:
-       - qcom,sc7180-rpmhpd
-       - qcom,sdm845-rpmhpd
-       - qcom,sm8150-rpmhpd
-+      - qcom,sm8250-rpmhpd
+diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+index a560f2cb40fe..f6ae5f55ca5e 100644
+--- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+@@ -6,6 +6,7 @@
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/clock/qcom,gcc-sm8250.h>
+ #include <dt-bindings/clock/qcom,rpmh.h>
++#include <dt-bindings/power/qcom-rpmpd.h>
+ #include <dt-bindings/soc/qcom,rpmh-rsc.h>
  
-   '#power-domain-cells':
-     const: 1
-diff --git a/drivers/soc/qcom/rpmhpd.c b/drivers/soc/qcom/rpmhpd.c
-index 4d264d0672c4..7baa39a91412 100644
---- a/drivers/soc/qcom/rpmhpd.c
-+++ b/drivers/soc/qcom/rpmhpd.c
-@@ -166,6 +166,24 @@ static const struct rpmhpd_desc sm8150_desc = {
- 	.num_pds = ARRAY_SIZE(sm8150_rpmhpds),
- };
- 
-+static struct rpmhpd *sm8250_rpmhpds[] = {
-+	[SM8250_CX] = &sdm845_cx,
-+	[SM8250_CX_AO] = &sdm845_cx_ao,
-+	[SM8250_EBI] = &sdm845_ebi,
-+	[SM8250_GFX] = &sdm845_gfx,
-+	[SM8250_LCX] = &sdm845_lcx,
-+	[SM8250_LMX] = &sdm845_lmx,
-+	[SM8250_MMCX] = &sm8150_mmcx,
-+	[SM8250_MMCX_AO] = &sm8150_mmcx_ao,
-+	[SM8250_MX] = &sdm845_mx,
-+	[SM8250_MX_AO] = &sdm845_mx_ao,
-+};
+ / {
+@@ -441,6 +442,56 @@ rpmhcc: clock-controller {
+ 				clock-names = "xo";
+ 				clocks = <&xo_board>;
+ 			};
 +
-+static const struct rpmhpd_desc sm8250_desc = {
-+	.rpmhpds = sm8250_rpmhpds,
-+	.num_pds = ARRAY_SIZE(sm8250_rpmhpds),
-+};
++			rpmhpd: power-controller {
++				compatible = "qcom,sm8250-rpmhpd";
++				#power-domain-cells = <1>;
++				operating-points-v2 = <&rpmhpd_opp_table>;
 +
- /* SC7180 RPMH powerdomains */
- static struct rpmhpd *sc7180_rpmhpds[] = {
- 	[SC7180_CX] = &sdm845_cx,
-@@ -187,6 +205,7 @@ static const struct of_device_id rpmhpd_match_table[] = {
- 	{ .compatible = "qcom,sc7180-rpmhpd", .data = &sc7180_desc },
- 	{ .compatible = "qcom,sdm845-rpmhpd", .data = &sdm845_desc },
- 	{ .compatible = "qcom,sm8150-rpmhpd", .data = &sm8150_desc },
-+	{ .compatible = "qcom,sm8250-rpmhpd", .data = &sm8250_desc },
- 	{ }
- };
- 
-diff --git a/include/dt-bindings/power/qcom-rpmpd.h b/include/dt-bindings/power/qcom-rpmpd.h
-index 3f74096d5a7c..dc146e44228b 100644
---- a/include/dt-bindings/power/qcom-rpmpd.h
-+++ b/include/dt-bindings/power/qcom-rpmpd.h
-@@ -28,6 +28,18 @@
- #define SM8150_MMCX	9
- #define SM8150_MMCX_AO	10
- 
-+/* SM8250 Power Domain Indexes */
-+#define SM8250_CX	0
-+#define SM8250_CX_AO	1
-+#define SM8250_EBI	2
-+#define SM8250_GFX	3
-+#define SM8250_LCX	4
-+#define SM8250_LMX	5
-+#define SM8250_MMCX	6
-+#define SM8250_MMCX_AO	7
-+#define SM8250_MX	8
-+#define SM8250_MX_AO	9
++				rpmhpd_opp_table: opp-table {
++					compatible = "operating-points-v2";
 +
- /* SC7180 Power Domain Indexes */
- #define SC7180_CX	0
- #define SC7180_CX_AO	1
++					rpmhpd_opp_ret: opp1 {
++						opp-level = <RPMH_REGULATOR_LEVEL_RETENTION>;
++					};
++
++					rpmhpd_opp_min_svs: opp2 {
++						opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
++					};
++
++					rpmhpd_opp_low_svs: opp3 {
++						opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
++					};
++
++					rpmhpd_opp_svs: opp4 {
++						opp-level = <RPMH_REGULATOR_LEVEL_SVS>;
++					};
++
++					rpmhpd_opp_svs_l1: opp5 {
++						opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
++					};
++
++					rpmhpd_opp_nom: opp6 {
++						opp-level = <RPMH_REGULATOR_LEVEL_NOM>;
++					};
++
++					rpmhpd_opp_nom_l1: opp7 {
++						opp-level = <RPMH_REGULATOR_LEVEL_NOM_L1>;
++					};
++
++					rpmhpd_opp_nom_l2: opp8 {
++						opp-level = <RPMH_REGULATOR_LEVEL_NOM_L2>;
++					};
++
++					rpmhpd_opp_turbo: opp9 {
++						opp-level = <RPMH_REGULATOR_LEVEL_TURBO>;
++					};
++
++					rpmhpd_opp_turbo_l1: opp10 {
++						opp-level = <RPMH_REGULATOR_LEVEL_TURBO_L1>;
++					};
++				};
++			};
+ 		};
+ 
+ 		tcsr_mutex_regs: syscon@1f40000 {
 -- 
 2.24.0
 
