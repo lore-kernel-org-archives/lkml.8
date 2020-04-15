@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B299C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:04:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB57C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF7AD20575
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:04:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42CE2206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:04:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586952289;
-	bh=9+x2FW9k7r3YtG8FnuuW9O/Ga8X9b8fEaiNci1x3PEc=;
+	s=default; t=1586952294;
+	bh=SGnr2/e7GmT3wDXUemKbpVvtulIMmGz6dK/StJqhNwc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T3Q7ejAFfac2Uw8nExNnSgQwGwAEI2CS88IK9zjGgmlJTJ7o6th99ZRVVRGs1gJ+K
-	 N/wizobPlUE1T92bNSmUnXkvZQf4Dsz1RuMw9zuN7iLhzTQhfRQHN3Io0xK85CxcZs
-	 aI++W2Yj/jUuPUoNR+rziJ/9uOoSIQ1aYb+n42IY=
+	b=aUkC029A3H2N9jBZpbYO58WQYWGPrC0z2UpF9MtnYxfQJAxVV4rOVLborcxqiHBU4
+	 k367Nccu9dUZlbkV05tx/7PnkM3HyMUwXr0DNlyFFqLyuaXLscMx4rYumql/7HVtD9
+	 2Sn+D4biiwz1/S5mELaJ2tBLlDwh5SvRPJKiz2+s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S368308AbgDOMEh (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:04:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43766 "EHLO mail.kernel.org"
+        id S368328AbgDOMEt (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:04:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409415AbgDOLsF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:48:05 -0400
+        id S2409407AbgDOLr7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:47:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 931AB20732;
-        Wed, 15 Apr 2020 11:48:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A983E21569;
+        Wed, 15 Apr 2020 11:47:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951284;
-        bh=9+x2FW9k7r3YtG8FnuuW9O/Ga8X9b8fEaiNci1x3PEc=;
+        s=default; t=1586951279;
+        bh=SGnr2/e7GmT3wDXUemKbpVvtulIMmGz6dK/StJqhNwc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lI6SiKvcteJGoEYmvF4qmNLxFHXn2GJhA0AqE7OKVBP70je9omC582QYcCZvx6OpH
-         5FQItpAmkjhqeEZEsWY9leKRhuv/C7kQ81TTcGGAniKlW/SgGw2KQ0XszCbVeO4yJC
-         11bQxID7W6eYVcFhEeGp74iGYWW0gURg/Qn568ag=
+        b=UK+q22tQy73IRIuzdDDpMRS82uDlhqtxmbM2HjQwLUpDlga71vObj0QVcrchOZH43
+         4jk2Z5RGjK4bT1fFZ3+qMpPk7RFYX54+lMDE7D+qptRo2h+HfMYP1WPIPkcBFArmNr
+         WOe8XwfBPjN4fUKQ6OYL38AeV6pdJzVt+WPE9OJw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vegard Nossum <vegard.nossum@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Daniel Santos <daniel.santos@pobox.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Ian Abbott <abbotti@mev.co.uk>, Joe Perches <joe@perches.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-sparse@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 13/21] compiler.h: fix error in BUILD_BUG_ON() reporting
-Date:   Wed, 15 Apr 2020 07:47:40 -0400
-Message-Id: <20200415114748.15713-13-sashal@kernel.org>
+Cc:     Josh Triplett <josh@joshtriplett.org>,
+        Andreas Dilger <adilger@dilger.ca>,
+        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
+        linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 09/21] ext4: fix incorrect inodes per group in error message
+Date:   Wed, 15 Apr 2020 07:47:36 -0400
+Message-Id: <20200415114748.15713-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114748.15713-1-sashal@kernel.org>
 References: <20200415114748.15713-1-sashal@kernel.org>
@@ -63,68 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vegard Nossum <vegard.nossum@oracle.com>
+From: Josh Triplett <josh@joshtriplett.org>
 
-[ Upstream commit af9c5d2e3b355854ff0e4acfbfbfadcd5198a349 ]
+[ Upstream commit b9c538da4e52a7b79dfcf4cfa487c46125066dfb ]
 
-compiletime_assert() uses __LINE__ to create a unique function name.  This
-means that if you have more than one BUILD_BUG_ON() in the same source
-line (which can happen if they appear e.g.  in a macro), then the error
-message from the compiler might output the wrong condition.
+If ext4_fill_super detects an invalid number of inodes per group, the
+resulting error message printed the number of blocks per group, rather
+than the number of inodes per group. Fix it to print the correct value.
 
-For this source file:
-
-	#include <linux/build_bug.h>
-
-	#define macro() \
-		BUILD_BUG_ON(1); \
-		BUILD_BUG_ON(0);
-
-	void foo()
-	{
-		macro();
-	}
-
-gcc would output:
-
-./include/linux/compiler.h:350:38: error: call to `__compiletime_assert_9' declared with attribute error: BUILD_BUG_ON failed: 0
-  _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
-
-However, it was not the BUILD_BUG_ON(0) that failed, so it should say 1
-instead of 0. With this patch, we use __COUNTER__ instead of __LINE__, so
-each BUILD_BUG_ON() gets a different function name and the correct
-condition is printed:
-
-./include/linux/compiler.h:350:38: error: call to `__compiletime_assert_0' declared with attribute error: BUILD_BUG_ON failed: 1
-  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-
-Signed-off-by: Vegard Nossum <vegard.nossum@oracle.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Reviewed-by: Daniel Santos <daniel.santos@pobox.com>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Ian Abbott <abbotti@mev.co.uk>
-Cc: Joe Perches <joe@perches.com>
-Link: http://lkml.kernel.org/r/20200331112637.25047-1-vegard.nossum@oracle.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: cd6bb35bf7f6d ("ext4: use more strict checks for inodes_per_block on mount")
+Link: https://lore.kernel.org/r/8be03355983a08e5d4eed480944613454d7e2550.1585434649.git.josh@joshtriplett.org
+Reviewed-by: Andreas Dilger <adilger@dilger.ca>
+Signed-off-by: Josh Triplett <josh@joshtriplett.org>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/compiler.h | 2 +-
+ fs/ext4/super.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-index 0020ee1cab37a..7837afabbd78e 100644
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -546,7 +546,7 @@ unsigned long read_word_at_a_time(const void *addr)
-  * compiler has support to do so.
-  */
- #define compiletime_assert(condition, msg) \
--	_compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
-+	_compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
- 
- #define compiletime_assert_atomic_type(t)				\
- 	compiletime_assert(__native_word(t),				\
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index cbea8ff6e6c7b..ed0520fe4dad6 100644
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -3821,7 +3821,7 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
+ 	if (sbi->s_inodes_per_group < sbi->s_inodes_per_block ||
+ 	    sbi->s_inodes_per_group > blocksize * 8) {
+ 		ext4_msg(sb, KERN_ERR, "invalid inodes per group: %lu\n",
+-			 sbi->s_blocks_per_group);
++			 sbi->s_inodes_per_group);
+ 		goto failed_mount;
+ 	}
+ 	sbi->s_itb_per_group = sbi->s_inodes_per_group /
 -- 
 2.20.1
 
