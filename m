@@ -2,101 +2,126 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D58FC3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:24:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3113BC2BB85
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BAD120768
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:24:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586942671;
-	bh=LS0uQLnHMVy4AMxkdi2AlWnlRLFdbw8UiT5yCRx/SjQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=m9XPvbrLLSwdDzMt2J3DlZ2XRYWwK7Zut2WSLR2GxxGrpEvCFPrc2nb+qHrtCSioM
-	 aJ0OU/beI8ZOphxKkjrH7mDjOxNGo4MCsxz6Gjfxw6/k7/RTOghMvhYSnSpNKk9ryF
-	 plT0j45zfVGEJOhmz6NXJuZ/hde0x+rsHar/zHLs=
+	by mail.kernel.org (Postfix) with ESMTP id 0E29720768
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:24:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MZISFk0+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895452AbgDOJY3 (ORCPT
+        id S2895460AbgDOJYe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 05:24:29 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:37026 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2895441AbgDOJYV (ORCPT
+        Wed, 15 Apr 2020 05:24:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47932 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2895392AbgDOJYT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 05:24:21 -0400
-Received: by mail-oi1-f195.google.com with SMTP id r25so3058376oij.4;
-        Wed, 15 Apr 2020 02:24:20 -0700 (PDT)
+        Wed, 15 Apr 2020 05:24:19 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46324C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 02:24:19 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id x25so16560554wmc.0
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 02:24:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=25hsR70J4xkR7QjWib9TX4C/RIJl6X5HgsLKdDMfcIM=;
+        b=MZISFk0+SGdYrIGleUjYyNyFlKlBZtpvcsFKyJMVxKBrgMGYtPYkcBrS4bRdkEp/7t
+         IW0OdNkkEzJjOHq32c8nyyFfVBOA0CWrvJjsIloNh7+9VO5CUroLlbNB3EdfC+VubzHW
+         RKiPdet4ElIC56WiuMenvtixe2coFc0mPjdD569+2OT9S+0GbYhuHmAMDdAJ2/wquaHH
+         afuwBSmcYlb9MymeQAxl6jMcXisGmnphb0nXiXzgHpPoKvx7ynmkS1jh5aDHDA3xUcag
+         t1mwgvkRTAPwn/Ml63NOIpJfKAurHTPzOMenfettsfMf8meyF+86UE6hMxa9KMhNgPe7
+         /dqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PeBwwUHexbq/B0mllpXl205PmqHG/3tGbcfB95WXpZk=;
-        b=IWlILqMAoTKQSWSI8IDWMp6nVligMUztlOrGi0xClI07bE/qiBqpScu11d6QwI7hLT
-         UzwElrqEz5Cez2IehCwiejPGUSRczWvUGxjEmGrqO5MCnzptk6vJUfol8YT6yCL/jaIL
-         2IbAQnZsZVbxeOOZsA7ocEPp7KeaJsGeReC2MsQryWwlrQyztN8DV/DnsDlO5N8pK5w/
-         tIiyzP2XElF9eIOOIdtC/mM3i/LT0Z3gTH3j8ZQKHsUDyv5kU14E8T/RX46l6mDztMFD
-         FQ8T2/OGJcGs5gKJ5P8rm3VozfKuu8HQ5Dx1J2BYM06/fwD+OsjRBsQWjcZqwOHfqwbC
-         F0IA==
-X-Gm-Message-State: AGi0PuaPiwbjl7p2vW85Ay8h1lRCkPw8mfjm45IkIxtCECdN8k3MyyeY
-        YPdFoNKnlOX059X4ZU31TBCPLH2F9+v1h181dYY=
-X-Google-Smtp-Source: APiQypJZrPtk9CTp5eBsivxylrSi0zfKsT9ogsSyvEIjXIEYZWQOgAkgP4CZqwUp9bBm3A0h4TeoQrnfXPtaDIa1khU=
-X-Received: by 2002:a05:6808:81:: with SMTP id s1mr559297oic.68.1586942660307;
- Wed, 15 Apr 2020 02:24:20 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=25hsR70J4xkR7QjWib9TX4C/RIJl6X5HgsLKdDMfcIM=;
+        b=YiAZF7zPxAH9hlDXKURqJY+OQaMAB3Crje/X9iuy9mTw/hU1BTLfcEmnnnvWsXkxhj
+         wRLCIQQl9ZQ4xwCmTjNh3SBjlDgJynl55qlf2KUpL4V04ILl0vj1hm9ZRc+yIcu6RWqP
+         +9chlSsx22B6pKTBNvr6KOrPbpe54prcbe+59Pl1GLN69iUyheY81l8r+VroPG5uV4gR
+         LvbG8BYgFfEYVsGlJB3liNXcsK5uFfufje1xmVjALTWaQGaj30f/BEzk08eOmwrbAOqt
+         x+W6Q4i+oF4kMLN8XMQHi19uedLUOyMTTD07OdETgcFe65S8U19z0/EnazWtxpvXHcwc
+         dQIQ==
+X-Gm-Message-State: AGi0PubHHC9v/za6JEZCKVKl/58ATBWnbvRO/8VvLF4PX0SejfUp8rkm
+        QRlqh2uZEYlWK3tcvc62yUG7RA==
+X-Google-Smtp-Source: APiQypI1L9Xj03pMeY/s2kTnKETE0bYjImrIZAgEBCHLd+qOzGsuktY5U9KyEtfeFWAbhU8Q4g0UeA==
+X-Received: by 2002:a7b:c10d:: with SMTP id w13mr4131241wmi.78.1586942657950;
+        Wed, 15 Apr 2020 02:24:17 -0700 (PDT)
+Received: from dell ([95.149.164.124])
+        by smtp.gmail.com with ESMTPSA id e1sm12258399wrc.12.2020.04.15.02.24.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2020 02:24:17 -0700 (PDT)
+Date:   Wed, 15 Apr 2020 10:25:17 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        qemu-devel@nongnu.org
+Subject: Re: [PATCH v6 3/8] mfd: sm501: Use GPIO_LOOKUP_IDX() helper macro
+Message-ID: <20200415092517.GF2167633@dell>
+References: <20200324135328.5796-1-geert+renesas@glider.be>
+ <20200324135653.6676-1-geert+renesas@glider.be>
+ <20200324135653.6676-3-geert+renesas@glider.be>
 MIME-Version: 1.0
-References: <20200415084933.6251-1-yanaijie@huawei.com>
-In-Reply-To: <20200415084933.6251-1-yanaijie@huawei.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 15 Apr 2020 11:24:09 +0200
-Message-ID: <CAJZ5v0ie67VHR40GjHnnAmW3fnO0V3ypLvsy9HSnq9_zR1bEMA@mail.gmail.com>
-Subject: Re: [PATCH] ACPICA: make acpi_protocol_lengths static
-To:     Jason Yan <yanaijie@huawei.com>,
-        Robert Moore <robert.moore@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>
-Cc:     Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hulk Robot <hulkci@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200324135653.6676-3-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 10:23 AM Jason Yan <yanaijie@huawei.com> wrote:
->
-> Fix the following sparse warning:
->
-> drivers/acpi/acpica/exfield.c:25:10: warning: symbol
-> 'acpi_protocol_lengths' was not declared. Should it be static?
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+On Tue, 24 Mar 2020, Geert Uytterhoeven wrote:
 
-Erik, Bob, this one is yours. :-)
-
+> i801_add_mux() fills in the GPIO lookup table by manually populating an
+> array of gpiod_lookup structures.  Use the existing GPIO_LOOKUP_IDX()
+> helper macro instead, to relax a dependency on the gpiod_lookup
+> structure's member names.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: Lee Jones <lee.jones@linaro.org>
 > ---
->  drivers/acpi/acpica/exfield.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/acpi/acpica/exfield.c b/drivers/acpi/acpica/exfield.c
-> index e85eb31e5075..3323a2ba6a31 100644
-> --- a/drivers/acpi/acpica/exfield.c
-> +++ b/drivers/acpi/acpica/exfield.c
-> @@ -22,7 +22,7 @@ ACPI_MODULE_NAME("exfield")
->   */
->  #define ACPI_INVALID_PROTOCOL_ID        0x80
->  #define ACPI_MAX_PROTOCOL_ID            0x0F
-> -const u8 acpi_protocol_lengths[] = {
-> +static const u8 acpi_protocol_lengths[] = {
->         ACPI_INVALID_PROTOCOL_ID,       /* 0 - reserved */
->         ACPI_INVALID_PROTOCOL_ID,       /* 1 - reserved */
->         0x00,                   /* 2 - ATTRIB_QUICK */
-> --
-> 2.21.1
->
+> While this patch is a dependency for "[PATCH v6 4/8] gpiolib: Add
+> support for GPIO lookup by line name", it can be applied independently.
+> But an Acked-by would be nice, too.
+> 
+> Cover letter and full series at
+> https://lore.kernel.org/r/20200324135328.5796-1-geert+renesas@glider.be/
+> 
+> v6:
+>   - New.
+> ---
+>  drivers/mfd/sm501.c | 24 ++++++++----------------
+>  1 file changed, 8 insertions(+), 16 deletions(-)
+
+Acked-by: Lee Jones <lee.jones@linaro.org>
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
