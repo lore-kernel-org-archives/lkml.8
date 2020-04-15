@@ -2,165 +2,105 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B0EC2BB55
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:21:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF885C2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:21:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FD192076A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:21:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586964068;
-	bh=2rAtFm2CKqMN7BuijhjYY9ykHruLRgcjgUJOSKVi2Bs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=C9kSfneRwAlGPOtzn/fo9mkrEkXBeBuitD2SK3uzdAoAhERYhScHow9Hum27c2RFc
-	 ubz0YLX5LDIjj9mFQU1+SQ90aYV8kap/knNjkujvwMWELNKRgJA5aDQtW71m+BlbJF
-	 6wjKPaPDkBP3Y5mmIOIyM7MB0y4cmi8V1BoAcAcA=
+	by mail.kernel.org (Postfix) with ESMTP id 8B4EC2076A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 15:21:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nQHhm9l0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506425AbgDOPVH (ORCPT
+        id S2634802AbgDOPVZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 11:21:07 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:37385 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730523AbgDOPVA (ORCPT
+        Wed, 15 Apr 2020 11:21:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46924 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730523AbgDOPVT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 11:21:00 -0400
-Received: by mail-oi1-f196.google.com with SMTP id r25so3901211oij.4;
-        Wed, 15 Apr 2020 08:20:59 -0700 (PDT)
+        Wed, 15 Apr 2020 11:21:19 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89402C061A0C;
+        Wed, 15 Apr 2020 08:21:19 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id m21so86800pff.13;
+        Wed, 15 Apr 2020 08:21:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=TD9EaFwapyU2qSwmdAV+2CcChhngrjdNFxDFbshTLXA=;
+        b=nQHhm9l0ZNDWXaN7XXaFI3qlDCdhj8NSO7ZSm5fruqQmQW35do2FunBnlQqUoynJml
+         7c2e+uR7F5xBGen8y2W06zeVM+vbgiJuapzRa0i1IeesJBckwdtEsqD+gdJsKG4IZpk0
+         RhNDLBLzurg6NM2ytlqjt95twMYWiOB+9A+aocJPVbXqlOBHVj+ASQlLntCHK35sAK2w
+         TexAvRixKW3S11SuhrEwLARj4ngTjZxNZTXrlPR304t4pU9GUpmrTEUNshD8igo83tzB
+         /QouN+mwg+vZcYCxQVOYSsC5R8EhMINpUIR67WBOFf9Ne5BXgQGkUVqXDfewT3bBo1En
+         GiwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1BfqGTsRG/XiRfj9IrPOvmGGbY0WhRE/e/njJVbckvY=;
-        b=nTTxldL/ABQjXu8h9JcdjFe58Tes9e7BP2Vw/Shhgv7pPg0G1/EI42/HTEPa5f5tee
-         /XunlSBdHshn5HxnHomNl2LLUrVeUyhoOHvKG+19apTaOD9CJSRd6Z3Kk1ixhXXBscVB
-         3cgOhyvUimx2daeRpB/DXgLXmB1CMCFCOP+Y/bonZzcTgzl6HEIk3+ZhfW+wIEjdCbM5
-         my4WN4M57EQQCEEGqO23WTnV02FPpjcEFN/kq5jNOvYT1zO3qS6+qb/l0kxZHIvkjzNf
-         ZyBxGaZGoipAyCeD5Z36hAvvG3ZKwNp01OnxBPh0PSyi3L9pWchb+XjK2UVNYleGv9dt
-         ZIjQ==
-X-Gm-Message-State: AGi0PuZ8CnMYxM2hYSZsfpH0yK/DcUG4mrij5fRTS20am2mzyBHpQbeF
-        qnt1cHplWjKhtbKob9cNtA==
-X-Google-Smtp-Source: APiQypJR6hUytgfto/sijH40XT6ONP45zrE8EFcxOW+Q+9Qc/j3M0QXAmAu6+xJRDcVihpLynYMw6w==
-X-Received: by 2002:aca:c145:: with SMTP id r66mr18690858oif.90.1586964058634;
-        Wed, 15 Apr 2020 08:20:58 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id k132sm6477456oih.9.2020.04.15.08.20.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2020 08:20:57 -0700 (PDT)
-Received: (nullmailer pid 9564 invoked by uid 1000);
-        Wed, 15 Apr 2020 15:20:56 -0000
-Date:   Wed, 15 Apr 2020 10:20:56 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     amirmizi6@gmail.com
-Cc:     Eyal.Cohen@nuvoton.com, jarkko.sakkinen@linux.intel.com,
-        oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
-        mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca,
-        arnd@arndb.de, gregkh@linuxfoundation.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
-        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
-        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
-        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com
-Subject: Re: [PATCH v6 6/7] dt-bindings: tpm: Add YAML schema for TPM TIS I2C
- options
-Message-ID: <20200415152056.GA30547@bogus>
-References: <20200407162044.168890-1-amirmizi6@gmail.com>
- <20200407162044.168890-7-amirmizi6@gmail.com>
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=TD9EaFwapyU2qSwmdAV+2CcChhngrjdNFxDFbshTLXA=;
+        b=qWEPaqRU1Ugj5BzH914//vzFjtZdseC4S1M2WdJsGJTEclar0t9vGlDEJGZe7pA7Y8
+         f17Mou/hogygHfnHBd7+pN4L9BDZxBkhYPdPyb44cEiKQnL3BcuFgHLbsG3u+WYp4Pq3
+         4P9ZSN92QKeGLxBDaSkfn3ABm/7dsgvXp9k1Ed4JyhhcnwSflgSuyDaniBOWP0aqKW+F
+         /iIt5yal6phVx0ngeK7bGY3QlOuDF3GlfbKAySnL4b9bc83DrS2cgh94eqaHKAHIOwvL
+         NGdzNkSxSqT1uetMFLHi/agobvrHLMaLhlS7lAo8xKXm7GgFAf/W964pilkI9vuym3sQ
+         KVaQ==
+X-Gm-Message-State: AGi0PuZPreOx3/xJNqkgEPV/t6WelUcdxPoAhkeNqM6epofSaq77D1R5
+        bfO1yjyh3K6fXa4sLkoERfY=
+X-Google-Smtp-Source: APiQypJRhNbAHK0EFpWTqY0QbAfoOd1yshvCg1EAyFwL+3WmQGnMSjZt9J5Dr/nxaaynNOq/WSuEBg==
+X-Received: by 2002:a63:4c1:: with SMTP id 184mr8174060pge.156.1586964078973;
+        Wed, 15 Apr 2020 08:21:18 -0700 (PDT)
+Received: from localhost (89.208.244.140.16clouds.com. [89.208.244.140])
+        by smtp.gmail.com with ESMTPSA id a129sm14160190pfb.127.2020.04.15.08.21.17
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 15 Apr 2020 08:21:18 -0700 (PDT)
+Date:   Wed, 15 Apr 2020 23:21:15 +0800
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Allison Randal <allison@lohutok.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        Shah Nehal-Bakulchandra <Nehal-bakulchandra.Shah@amd.com>,
+        Tang Bin <tangbin@cmss.chinamobile.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: i2c: img-scb: remove duplicate dev_err()
+Message-ID: <20200415152115.GA17519@nuc8i5>
+References: <08564c03-3bbd-5518-1a9d-a40b8ca09f48@web.de>
+ <20200415025426.GB14300@nuc8i5>
+ <b5db65f5-f236-9e22-98df-07629a827738@web.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200407162044.168890-7-amirmizi6@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b5db65f5-f236-9e22-98df-07629a827738@web.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 07:20:43PM +0300, amirmizi6@gmail.com wrote:
-> From: Amir Mizinski <amirmizi6@gmail.com>
+On Wed, Apr 15, 2020 at 07:47:41AM +0200, Markus Elfring wrote:
+> > Thanks for your comments, and maybe we can use coccinelle tools for
+> > more source files do this change in the mentioned software area.
 > 
-> Added a YAML schema to support tpm tis i2c realted dt-bindings for the I2c
-> PTP based physical layer.
-> 
-> This patch adds the documentation for corresponding device tree bindings of
-> I2C based Physical TPM.
-> Refer to the 'I2C Interface Definition' section in
-> 'TCG PC Client PlatformTPMProfile(PTP) Specification' publication
-> for specification.
-> 
-> Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
-> ---
->  .../bindings/security/tpm/tpm-tis-i2c.yaml         | 47 ++++++++++++++++++++++
->  1 file changed, 47 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml b/Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml
-> new file mode 100644
-> index 0000000..13d7c2c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml
-> @@ -0,0 +1,47 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/security/tpm/tpm-tis-i2c.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: I2C PTP based TPM Device Tree Bindings
-> +
-> +maintainers:
-> +  - Amir Mizinski <amirmizi6@gmail.com>
-> +
-> +description:
-> +  Device Tree Bindings for I2C based Trusted Platform Module(TPM).
-> +
-> +properties:
-> +  compatible:
-> +    contains:
-> +      const: tcg,tpm-tis-i2c
+> I found 19 source files (for example in the directory “drivers/i2c”
+> of the software “Linux next-20200408”) which seem to contain similar
+> update candidates according to a known transformation pattern.
+> Would you like to take another look at corresponding change possibilities?
+>
+yes, I want to do it and thanks for your info.
 
-This is not sufficient. I assume you are testing on some specific TPM 
-chip.
+BR,
+Dejin
 
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupt:
-> +    maxItems: 1
-> +
-> +  crc-checksum:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      CRC checksum enable.
-
-Why would you not want CRC? Some chips support and some don't? If so, 
-the compatible for the chip should imply that.
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    i2c {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      tpm-tis-i2c@2e {
-
-tpm@2e
-
-> +        compatible = "tcg,tpm-tis-i2c";
-> +        reg = <0x2e>;
-> +        crc-checksum;
-> +      };
-> +    };
-> +...
-> -- 
-> 2.7.4
-> 
+> Regards,
+> Markus
