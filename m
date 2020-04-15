@@ -2,339 +2,296 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02819C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:52:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F690C3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB1E32076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:52:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B8722076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:52:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="q6MD5pb8"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cnSKptqx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S371004AbgDOOv7 (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:51:59 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:51392 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S371018AbgDOOvi (ORCPT
+        id S371053AbgDOOwd (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 10:52:33 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38696 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S371006AbgDOOw2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 10:51:38 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586962297; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=Kb6I3a5c6ooAs/g7ThP2VEk7gvbB34RVJxobl7NaKzw=; b=q6MD5pb8t2HOwjkPW1FmM7Zjc8793nRTn0Zfe0vyo6edLidTDwtQG3SwRdnZ3p2IioU907Wp
- wsRAgDMrHbwAHxWOOfiBFGA3OZL+MNv6S7GQOavGhcw1OdZl3ZWcenUosVRNYL0pYHeonRSJ
- t+qCsF996sSIfLU3U2h84SgvSaM=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e971f78.7fc372a55d18-smtp-out-n03;
- Wed, 15 Apr 2020 14:51:36 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 36711C433F2; Wed, 15 Apr 2020 14:51:36 +0000 (UTC)
-Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Wed, 15 Apr 2020 10:52:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586962346;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=V4Hx+IN0pRdVO48Kb3j2SU1ntxZSQY+XRptloJnqRvo=;
+        b=cnSKptqxTv3ccrqfwYh8duJZQbGGZD/i4muWTcc3epwdUslMlT65ECSbtc8A+Ep772B8ZH
+        kyvyFmBW5v7RsP6eXVAt4XSbie0z7MJdhT7qnm86VQKLyoLWtqmA/bukHUp5WckLpfHrG0
+        QPLXtZqcOeq+UmuvXp86dGfd7gWC66E=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-151-UJ0WusaKNHC3XykYzkbsIw-1; Wed, 15 Apr 2020 10:52:22 -0400
+X-MC-Unique: UJ0WusaKNHC3XykYzkbsIw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DD5A8C43636;
-        Wed, 15 Apr 2020 14:51:32 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DD5A8C43636
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     bjorn.andersson@linaro.org, robh+dt@kernel.org
-Cc:     agross@kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        evgreen@chromium.org, ohad@wizery.com,
-        Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH 2/2] remoteproc: qcom_q6v5_mss: Drop accesses to MPSS PERPH register space
-Date:   Wed, 15 Apr 2020 20:21:10 +0530
-Message-Id: <20200415145110.20624-3-sibis@codeaurora.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200415145110.20624-1-sibis@codeaurora.org>
-References: <20200415145110.20624-1-sibis@codeaurora.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7B39018C8C0C;
+        Wed, 15 Apr 2020 14:52:19 +0000 (UTC)
+Received: from [10.36.115.53] (ovpn-115-53.ams2.redhat.com [10.36.115.53])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 807A89F9B6;
+        Wed, 15 Apr 2020 14:52:12 +0000 (UTC)
+Subject: Re: [PATCH v11 01/13] iommu: Introduce attach/detach_pasid_table API
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc:     eric.auger.pro@gmail.com, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        kvmarm@lists.cs.columbia.edu, will@kernel.org, joro@8bytes.org,
+        maz@kernel.org, robin.murphy@arm.com, jean-philippe@linaro.org,
+        zhangfei.gao@linaro.org, shameerali.kolothum.thodi@huawei.com,
+        alex.williamson@redhat.com, yi.l.liu@intel.com,
+        peter.maydell@linaro.org, zhangfei.gao@gmail.com, tn@semihalf.com,
+        zhangfei.gao@foxmail.com, bbhushan2@marvell.com
+References: <20200414150607.28488-1-eric.auger@redhat.com>
+ <20200414150607.28488-2-eric.auger@redhat.com>
+ <20200414151548.658a0401@jacob-builder>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <c781ce8d-7fe4-0fee-ba95-a1e493e003f5@redhat.com>
+Date:   Wed, 15 Apr 2020 16:52:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200414151548.658a0401@jacob-builder>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-7C retail devices using MSA based boot will result in a fuse combination
-which will prevent accesses to MSS PERPH register space where the mpss
-clocks and halt-nav reside. So drop all accesses to the MPSS PERPH
-register space. Issuing HALT NAV request and turning on the mss clocks
-as part of SSR will no longer be required since the modem firmware will
-have the necessary fixes to ensure that there are no pending NAV DMA
-transactions.
+Hi Jacob,
+On 4/15/20 12:15 AM, Jacob Pan wrote:
+> Hi Eric,
+> 
+> There are some discussions about how to size the uAPI data.
+> https://lkml.org/lkml/2020/4/14/939
+> 
+> I think the problem with the current scheme is that when uAPI data gets
+> extended, if VFIO continue to use:
+> 
+> minsz = offsetofend(struct vfio_iommu_type1_set_pasid_table, config);
+> if (copy_from_user(&spt, (void __user *)arg, minsz))
+> 
+> It may copy more data from user than what was setup by the user.
+> 
+> So, as suggested by Alex, we could add argsz to the IOMMU uAPI struct.
+> So if argsz > minsz, then fail the attach_table since kernel might be
+> old, doesn't know about the extra data.
+> If argsz <= minsz, kernel can support the attach_table but must process
+> the data based on flags or config.
 
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
- drivers/remoteproc/qcom_q6v5_mss.c | 102 +++++------------------------
- 1 file changed, 18 insertions(+), 84 deletions(-)
+So I guess we would need both an argsz _u32 + a new flag _u32 right?
 
-diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
-index 6a19e0e77236e..3a7352776a319 100644
---- a/drivers/remoteproc/qcom_q6v5_mss.c
-+++ b/drivers/remoteproc/qcom_q6v5_mss.c
-@@ -69,13 +69,9 @@
- #define AXI_HALTREQ_REG			0x0
- #define AXI_HALTACK_REG			0x4
- #define AXI_IDLE_REG			0x8
--#define NAV_AXI_HALTREQ_BIT		BIT(0)
--#define NAV_AXI_HALTACK_BIT		BIT(1)
--#define NAV_AXI_IDLE_BIT		BIT(2)
- #define AXI_GATING_VALID_OVERRIDE	BIT(0)
- 
- #define HALT_ACK_TIMEOUT_US		100000
--#define NAV_HALT_ACK_TIMEOUT_US		200
- 
- /* QDSP6SS_RESET */
- #define Q6SS_STOP_CORE			BIT(0)
-@@ -143,7 +139,7 @@ struct rproc_hexagon_res {
- 	int version;
- 	bool need_mem_protection;
- 	bool has_alt_reset;
--	bool has_halt_nav;
-+	bool has_spare_reg;
- };
- 
- struct q6v5 {
-@@ -154,13 +150,11 @@ struct q6v5 {
- 	void __iomem *rmb_base;
- 
- 	struct regmap *halt_map;
--	struct regmap *halt_nav_map;
- 	struct regmap *conn_map;
- 
- 	u32 halt_q6;
- 	u32 halt_modem;
- 	u32 halt_nc;
--	u32 halt_nav;
- 	u32 conn_box;
- 
- 	struct reset_control *mss_restart;
-@@ -205,7 +199,7 @@ struct q6v5 {
- 	struct qcom_sysmon *sysmon;
- 	bool need_mem_protection;
- 	bool has_alt_reset;
--	bool has_halt_nav;
-+	bool has_spare_reg;
- 	int mpss_perm;
- 	int mba_perm;
- 	const char *hexagon_mdt_image;
-@@ -426,21 +420,19 @@ static int q6v5_reset_assert(struct q6v5 *qproc)
- 		reset_control_assert(qproc->pdc_reset);
- 		ret = reset_control_reset(qproc->mss_restart);
- 		reset_control_deassert(qproc->pdc_reset);
--	} else if (qproc->has_halt_nav) {
-+	} else if (qproc->has_spare_reg) {
- 		/*
- 		 * When the AXI pipeline is being reset with the Q6 modem partly
- 		 * operational there is possibility of AXI valid signal to
- 		 * glitch, leading to spurious transactions and Q6 hangs. A work
- 		 * around is employed by asserting the AXI_GATING_VALID_OVERRIDE
--		 * BIT before triggering Q6 MSS reset. Both the HALTREQ and
--		 * AXI_GATING_VALID_OVERRIDE are withdrawn post MSS assert
--		 * followed by a MSS deassert, while holding the PDC reset.
-+		 * BIT before triggering Q6 MSS reset. AXI_GATING_VALID_OVERRIDE
-+		 * is withdrawn post MSS assert followed by a MSS deassert,
-+		 * while holding the PDC reset.
- 		 */
- 		reset_control_assert(qproc->pdc_reset);
- 		regmap_update_bits(qproc->conn_map, qproc->conn_box,
- 				   AXI_GATING_VALID_OVERRIDE, 1);
--		regmap_update_bits(qproc->halt_nav_map, qproc->halt_nav,
--				   NAV_AXI_HALTREQ_BIT, 0);
- 		reset_control_assert(qproc->mss_restart);
- 		reset_control_deassert(qproc->pdc_reset);
- 		regmap_update_bits(qproc->conn_map, qproc->conn_box,
-@@ -463,7 +455,7 @@ static int q6v5_reset_deassert(struct q6v5 *qproc)
- 		ret = reset_control_reset(qproc->mss_restart);
- 		writel(0, qproc->rmb_base + RMB_MBA_ALT_RESET);
- 		reset_control_deassert(qproc->pdc_reset);
--	} else if (qproc->has_halt_nav) {
-+	} else if (qproc->has_spare_reg) {
- 		ret = reset_control_reset(qproc->mss_restart);
- 	} else {
- 		ret = reset_control_deassert(qproc->mss_restart);
-@@ -760,32 +752,6 @@ static void q6v5proc_halt_axi_port(struct q6v5 *qproc,
- 	regmap_write(halt_map, offset + AXI_HALTREQ_REG, 0);
- }
- 
--static void q6v5proc_halt_nav_axi_port(struct q6v5 *qproc,
--				       struct regmap *halt_map,
--				       u32 offset)
--{
--	unsigned int val;
--	int ret;
--
--	/* Check if we're already idle */
--	ret = regmap_read(halt_map, offset, &val);
--	if (!ret && (val & NAV_AXI_IDLE_BIT))
--		return;
--
--	/* Assert halt request */
--	regmap_update_bits(halt_map, offset, NAV_AXI_HALTREQ_BIT,
--			   NAV_AXI_HALTREQ_BIT);
--
--	/* Wait for halt ack*/
--	regmap_read_poll_timeout(halt_map, offset, val,
--				 (val & NAV_AXI_HALTACK_BIT),
--				 5, NAV_HALT_ACK_TIMEOUT_US);
--
--	ret = regmap_read(halt_map, offset, &val);
--	if (ret || !(val & NAV_AXI_IDLE_BIT))
--		dev_err(qproc->dev, "port failed halt\n");
--}
--
- static int q6v5_mpss_init_image(struct q6v5 *qproc, const struct firmware *fw)
- {
- 	unsigned long dma_attrs = DMA_ATTR_FORCE_CONTIGUOUS;
-@@ -950,9 +916,6 @@ static int q6v5_mba_load(struct q6v5 *qproc)
- halt_axi_ports:
- 	q6v5proc_halt_axi_port(qproc, qproc->halt_map, qproc->halt_q6);
- 	q6v5proc_halt_axi_port(qproc, qproc->halt_map, qproc->halt_modem);
--	if (qproc->has_halt_nav)
--		q6v5proc_halt_nav_axi_port(qproc, qproc->halt_nav_map,
--					   qproc->halt_nav);
- 	q6v5proc_halt_axi_port(qproc, qproc->halt_map, qproc->halt_nc);
- 
- reclaim_mba:
-@@ -1000,9 +963,6 @@ static void q6v5_mba_reclaim(struct q6v5 *qproc)
- 
- 	q6v5proc_halt_axi_port(qproc, qproc->halt_map, qproc->halt_q6);
- 	q6v5proc_halt_axi_port(qproc, qproc->halt_map, qproc->halt_modem);
--	if (qproc->has_halt_nav)
--		q6v5proc_halt_nav_axi_port(qproc, qproc->halt_nav_map,
--					   qproc->halt_nav);
- 	q6v5proc_halt_axi_port(qproc, qproc->halt_map, qproc->halt_nc);
- 	if (qproc->version == MSS_MSM8996) {
- 		/*
-@@ -1433,36 +1393,12 @@ static int q6v5_init_mem(struct q6v5 *qproc, struct platform_device *pdev)
- 	qproc->halt_modem = args.args[1];
- 	qproc->halt_nc = args.args[2];
- 
--	if (qproc->has_halt_nav) {
--		struct platform_device *nav_pdev;
--
-+	if (qproc->has_spare_reg) {
- 		ret = of_parse_phandle_with_fixed_args(pdev->dev.of_node,
--						       "qcom,halt-nav-regs",
-+						       "qcom,spare-regs",
- 						       1, 0, &args);
- 		if (ret < 0) {
--			dev_err(&pdev->dev, "failed to parse halt-nav-regs\n");
--			return -EINVAL;
--		}
--
--		nav_pdev = of_find_device_by_node(args.np);
--		of_node_put(args.np);
--		if (!nav_pdev) {
--			dev_err(&pdev->dev, "failed to get mss clock device\n");
--			return -EPROBE_DEFER;
--		}
--
--		qproc->halt_nav_map = dev_get_regmap(&nav_pdev->dev, NULL);
--		if (!qproc->halt_nav_map) {
--			dev_err(&pdev->dev, "failed to get map from device\n");
--			return -EINVAL;
--		}
--		qproc->halt_nav = args.args[0];
--
--		ret = of_parse_phandle_with_fixed_args(pdev->dev.of_node,
--						       "qcom,halt-nav-regs",
--						       1, 1, &args);
--		if (ret < 0) {
--			dev_err(&pdev->dev, "failed to parse halt-nav-regs\n");
-+			dev_err(&pdev->dev, "failed to parse spare-regs\n");
- 			return -EINVAL;
- 		}
- 
-@@ -1548,7 +1484,7 @@ static int q6v5_init_reset(struct q6v5 *qproc)
- 		return PTR_ERR(qproc->mss_restart);
- 	}
- 
--	if (qproc->has_alt_reset || qproc->has_halt_nav) {
-+	if (qproc->has_alt_reset || qproc->has_spare_reg) {
- 		qproc->pdc_reset = devm_reset_control_get_exclusive(qproc->dev,
- 								    "pdc_reset");
- 		if (IS_ERR(qproc->pdc_reset)) {
-@@ -1674,7 +1610,7 @@ static int q6v5_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, qproc);
- 
--	qproc->has_halt_nav = desc->has_halt_nav;
-+	qproc->has_spare_reg = desc->has_spare_reg;
- 	ret = q6v5_init_mem(qproc, pdev);
- 	if (ret)
- 		goto free_rproc;
-@@ -1816,8 +1752,6 @@ static const struct rproc_hexagon_res sc7180_mss = {
- 	.active_clk_names = (char*[]){
- 		"mnoc_axi",
- 		"nav",
--		"mss_nav",
--		"mss_crypto",
- 		NULL
- 	},
- 	.active_pd_names = (char*[]){
-@@ -1832,7 +1766,7 @@ static const struct rproc_hexagon_res sc7180_mss = {
- 	},
- 	.need_mem_protection = true,
- 	.has_alt_reset = false,
--	.has_halt_nav = true,
-+	.has_spare_reg = true,
- 	.version = MSS_SC7180,
- };
- 
-@@ -1867,7 +1801,7 @@ static const struct rproc_hexagon_res sdm845_mss = {
- 	},
- 	.need_mem_protection = true,
- 	.has_alt_reset = true,
--	.has_halt_nav = false,
-+	.has_spare_reg = false,
- 	.version = MSS_SDM845,
- };
- 
-@@ -1894,7 +1828,7 @@ static const struct rproc_hexagon_res msm8998_mss = {
- 	},
- 	.need_mem_protection = true,
- 	.has_alt_reset = false,
--	.has_halt_nav = false,
-+	.has_spare_reg = false,
- 	.version = MSS_MSM8998,
- };
- 
-@@ -1924,7 +1858,7 @@ static const struct rproc_hexagon_res msm8996_mss = {
- 	},
- 	.need_mem_protection = true,
- 	.has_alt_reset = false,
--	.has_halt_nav = false,
-+	.has_spare_reg = false,
- 	.version = MSS_MSM8996,
- };
- 
-@@ -1957,7 +1891,7 @@ static const struct rproc_hexagon_res msm8916_mss = {
- 	},
- 	.need_mem_protection = false,
- 	.has_alt_reset = false,
--	.has_halt_nav = false,
-+	.has_spare_reg = false,
- 	.version = MSS_MSM8916,
- };
- 
-@@ -1998,7 +1932,7 @@ static const struct rproc_hexagon_res msm8974_mss = {
- 	},
- 	.need_mem_protection = false,
- 	.has_alt_reset = false,
--	.has_halt_nav = false,
-+	.has_spare_reg = false,
- 	.version = MSS_MSM8974,
- };
- 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+I am ok with that idea. Besides how will you manage for existing IOMMU
+UAPIs? At some point you envisionned to have a getter at iommu api level
+to retrieve the size of a structure for a given version, right?
+
+Thanks
+
+Eric
+> 
+> Does it make sense to you?
+> 
+> 
+> On Tue, 14 Apr 2020 17:05:55 +0200
+> Eric Auger <eric.auger@redhat.com> wrote:
+> 
+>> From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+>>
+>> In virtualization use case, when a guest is assigned
+>> a PCI host device, protected by a virtual IOMMU on the guest,
+>> the physical IOMMU must be programmed to be consistent with
+>> the guest mappings. If the physical IOMMU supports two
+>> translation stages it makes sense to program guest mappings
+>> onto the first stage/level (ARM/Intel terminology) while the host
+>> owns the stage/level 2.
+>>
+>> In that case, it is mandated to trap on guest configuration
+>> settings and pass those to the physical iommu driver.
+>>
+>> This patch adds a new API to the iommu subsystem that allows
+>> to set/unset the pasid table information.
+>>
+>> A generic iommu_pasid_table_config struct is introduced in
+>> a new iommu.h uapi header. This is going to be used by the VFIO
+>> user API.
+>>
+>> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+>> Signed-off-by: Liu, Yi L <yi.l.liu@linux.intel.com>
+>> Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+>> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+>> Signed-off-by: Eric Auger <eric.auger@redhat.com>
+>> Reviewed-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+>> ---
+>>  drivers/iommu/iommu.c      | 19 ++++++++++++++
+>>  include/linux/iommu.h      | 18 ++++++++++++++
+>>  include/uapi/linux/iommu.h | 51
+>> ++++++++++++++++++++++++++++++++++++++ 3 files changed, 88
+>> insertions(+)
+>>
+>> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+>> index 2b471419e26c..b71ad56f8c99 100644
+>> --- a/drivers/iommu/iommu.c
+>> +++ b/drivers/iommu/iommu.c
+>> @@ -1723,6 +1723,25 @@ int iommu_sva_unbind_gpasid(struct
+>> iommu_domain *domain, struct device *dev, }
+>>  EXPORT_SYMBOL_GPL(iommu_sva_unbind_gpasid);
+>>  
+>> +int iommu_attach_pasid_table(struct iommu_domain *domain,
+>> +			     struct iommu_pasid_table_config *cfg)
+>> +{
+>> +	if (unlikely(!domain->ops->attach_pasid_table))
+>> +		return -ENODEV;
+>> +
+>> +	return domain->ops->attach_pasid_table(domain, cfg);
+>> +}
+>> +EXPORT_SYMBOL_GPL(iommu_attach_pasid_table);
+>> +
+>> +void iommu_detach_pasid_table(struct iommu_domain *domain)
+>> +{
+>> +	if (unlikely(!domain->ops->detach_pasid_table))
+>> +		return;
+>> +
+>> +	domain->ops->detach_pasid_table(domain);
+>> +}
+>> +EXPORT_SYMBOL_GPL(iommu_detach_pasid_table);
+>> +
+>>  static void __iommu_detach_device(struct iommu_domain *domain,
+>>  				  struct device *dev)
+>>  {
+>> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+>> index 7ef8b0bda695..3e1057c3585a 100644
+>> --- a/include/linux/iommu.h
+>> +++ b/include/linux/iommu.h
+>> @@ -248,6 +248,8 @@ struct iommu_iotlb_gather {
+>>   * @cache_invalidate: invalidate translation caches
+>>   * @sva_bind_gpasid: bind guest pasid and mm
+>>   * @sva_unbind_gpasid: unbind guest pasid and mm
+>> + * @attach_pasid_table: attach a pasid table
+>> + * @detach_pasid_table: detach the pasid table
+>>   * @pgsize_bitmap: bitmap of all possible supported page sizes
+>>   * @owner: Driver module providing these ops
+>>   */
+>> @@ -307,6 +309,9 @@ struct iommu_ops {
+>>  				      void *drvdata);
+>>  	void (*sva_unbind)(struct iommu_sva *handle);
+>>  	int (*sva_get_pasid)(struct iommu_sva *handle);
+>> +	int (*attach_pasid_table)(struct iommu_domain *domain,
+>> +				  struct iommu_pasid_table_config
+>> *cfg);
+>> +	void (*detach_pasid_table)(struct iommu_domain *domain);
+>>  
+>>  	int (*page_response)(struct device *dev,
+>>  			     struct iommu_fault_event *evt,
+>> @@ -446,6 +451,9 @@ extern int iommu_sva_bind_gpasid(struct
+>> iommu_domain *domain, struct device *dev, struct
+>> iommu_gpasid_bind_data *data); extern int
+>> iommu_sva_unbind_gpasid(struct iommu_domain *domain, struct device
+>> *dev, ioasid_t pasid); +extern int iommu_attach_pasid_table(struct
+>> iommu_domain *domain,
+>> +				    struct iommu_pasid_table_config
+>> *cfg); +extern void iommu_detach_pasid_table(struct iommu_domain
+>> *domain); extern struct iommu_domain *iommu_get_domain_for_dev(struct
+>> device *dev); extern struct iommu_domain *iommu_get_dma_domain(struct
+>> device *dev); extern int iommu_map(struct iommu_domain *domain,
+>> unsigned long iova, @@ -1048,6 +1056,16 @@ iommu_aux_get_pasid(struct
+>> iommu_domain *domain, struct device *dev) return -ENODEV;
+>>  }
+>>  
+>> +static inline
+>> +int iommu_attach_pasid_table(struct iommu_domain *domain,
+>> +			     struct iommu_pasid_table_config *cfg)
+>> +{
+>> +	return -ENODEV;
+>> +}
+>> +
+>> +static inline
+>> +void iommu_detach_pasid_table(struct iommu_domain *domain) {}
+>> +
+>>  static inline struct iommu_sva *
+>>  iommu_sva_bind_device(struct device *dev, struct mm_struct *mm, void
+>> *drvdata) {
+>> diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
+>> index 4ad3496e5c43..8d00be10dc6d 100644
+>> --- a/include/uapi/linux/iommu.h
+>> +++ b/include/uapi/linux/iommu.h
+>> @@ -321,4 +321,55 @@ struct iommu_gpasid_bind_data {
+>>  	};
+>>  };
+>>  
+>> +/**
+>> + * struct iommu_pasid_smmuv3 - ARM SMMUv3 Stream Table Entry stage 1
+>> related
+>> + *     information
+>> + * @version: API version of this structure
+>> + * @s1fmt: STE s1fmt (format of the CD table: single CD, linear table
+>> + *         or 2-level table)
+>> + * @s1dss: STE s1dss (specifies the behavior when @pasid_bits != 0
+>> + *         and no PASID is passed along with the incoming
+>> transaction)
+>> + * @padding: reserved for future use (should be zero)
+>> + *
+>> + * The PASID table is referred to as the Context Descriptor (CD)
+>> table on ARM
+>> + * SMMUv3. Please refer to the ARM SMMU 3.x spec (ARM IHI 0070A) for
+>> full
+>> + * details.
+>> + */
+>> +struct iommu_pasid_smmuv3 {
+>> +#define PASID_TABLE_SMMUV3_CFG_VERSION_1 1
+>> +	__u32	version;
+>> +	__u8	s1fmt;
+>> +	__u8	s1dss;
+>> +	__u8	padding[2];
+>> +};
+>> +
+>> +/**
+>> + * struct iommu_pasid_table_config - PASID table data used to bind
+>> guest PASID
+>> + *     table to the host IOMMU
+>> + * @version: API version to prepare for future extensions
+>> + * @format: format of the PASID table
+>> + * @base_ptr: guest physical address of the PASID table
+>> + * @pasid_bits: number of PASID bits used in the PASID table
+>> + * @config: indicates whether the guest translation stage must
+>> + *          be translated, bypassed or aborted.
+>> + * @padding: reserved for future use (should be zero)
+>> + * @smmuv3: table information when @format is
+>> %IOMMU_PASID_FORMAT_SMMUV3
+>> + */
+>> +struct iommu_pasid_table_config {
+>> +#define PASID_TABLE_CFG_VERSION_1 1
+>> +	__u32	version;
+>> +#define IOMMU_PASID_FORMAT_SMMUV3	1
+>> +	__u32	format;
+>> +	__u64	base_ptr;
+>> +	__u8	pasid_bits;
+>> +#define IOMMU_PASID_CONFIG_TRANSLATE	1
+>> +#define IOMMU_PASID_CONFIG_BYPASS	2
+>> +#define IOMMU_PASID_CONFIG_ABORT	3
+>> +	__u8	config;
+>> +	__u8    padding[6];
+>> +	union {
+>> +		struct iommu_pasid_smmuv3 smmuv3;
+>> +	};
+>> +};
+>> +
+>>  #endif /* _UAPI_IOMMU_H */
+> 
+> [Jacob Pan]
+> 
+
