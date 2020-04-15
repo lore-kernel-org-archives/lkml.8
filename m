@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E51C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:28:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E10FAC2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A3DC208FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:28:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B710B208FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:28:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586953694;
-	bh=5nkV7eDi5Bx2nfm80C2yfyXLGRKXoar9TVzuNHHDrnU=;
+	s=default; t=1586953703;
+	bh=ONrlaUTrJlt3oF5jm/4hpTz5zdiFdn6NHQ66OXct7fU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BGxLpgP84IbndhK6KDhWofgya7lVmGE5kc/zQXA91jyXpOk/VnRLI+/Pna0H0hA3s
-	 AsUroiYZ9bX6HbgILdjxAnSjwb9wYCTeMDp7QaB1bSTvYeYLTWHgZX/KZhZMMwHPDM
-	 zpEwaaUbMb2ojLu+rCN+7Uuowj62oVPucn3Jp/z8=
+	b=1tYv5aMbLpBSD4DoxHe6/6MDtJzsTRjIS20V4uYDx4AizTVHsE/4xAf5WekZvKcgV
+	 m9zHw4knFHLUIdzxApco1C8A51hDenxYxGMLMMm0wMbUAj1BTPwSZiWtXLzzAfe2bf
+	 6366wpgoN310yJi4x5ihuu39ZhH1SZHN5F1eKmSA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S369321AbgDOM2L (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:28:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37406 "EHLO mail.kernel.org"
+        id S369334AbgDOM2W (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:28:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409147AbgDOLpN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:45:13 -0400
+        id S2409143AbgDOLpM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:45:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43203214D8;
-        Wed, 15 Apr 2020 11:45:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 273F120768;
+        Wed, 15 Apr 2020 11:45:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951113;
-        bh=5nkV7eDi5Bx2nfm80C2yfyXLGRKXoar9TVzuNHHDrnU=;
+        s=default; t=1586951111;
+        bh=ONrlaUTrJlt3oF5jm/4hpTz5zdiFdn6NHQ66OXct7fU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pmUWFK3ahS1ebH3z4jCSV0lXsod0sjFhAIGGdZ7v9uS5l+m0ClS5/giWwUFCcrBZ1
-         y2fSEc8+nCMCIm8INe7qFBDL9BjOe12UNNPQVDruJmM2XU4AsmN3fu3fZadpoT4EsH
-         MI4ckV+3rtzwD5LIDmWu441a+lzpZ8T/DmJBMbvk=
+        b=QQ6pDduxel7LrRANEP7kl3Yb4nkUnSzztJ8QZuLSBwKoANbLIEEk+01l962HLsvKb
+         FxAPGGjMseMksUYZgWyS/WfP+AqfMGi7I+0co6asPRpd6OQWR/d6kKgzDSTV4Dk7Tl
+         hJoo42+WmyNNIR7jLKyz/2XjQDE64VNJ/by2NrbE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexander Gordeev <agordeev@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 27/84] s390/cpuinfo: fix wrong output when CPU0 is offline
-Date:   Wed, 15 Apr 2020 07:43:44 -0400
-Message-Id: <20200415114442.14166-27-sashal@kernel.org>
+Cc:     Sahitya Tummala <stummala@codeaurora.org>,
+        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 5.4 26/84] f2fs: Add a new CP flag to help fsck fix resize SPO issues
+Date:   Wed, 15 Apr 2020 07:43:43 -0400
+Message-Id: <20200415114442.14166-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114442.14166-1-sashal@kernel.org>
 References: <20200415114442.14166-1-sashal@kernel.org>
@@ -59,47 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Gordeev <agordeev@linux.ibm.com>
+From: Sahitya Tummala <stummala@codeaurora.org>
 
-[ Upstream commit 872f27103874a73783aeff2aac2b41a489f67d7c ]
+[ Upstream commit c84ef3c5e65ccf99a7a91a4d731ebb5d6331a178 ]
 
-/proc/cpuinfo should not print information about CPU 0 when it is offline.
+Add and set a new CP flag CP_RESIZEFS_FLAG during
+online resize FS to help fsck fix the metadata mismatch
+that may happen due to SPO during resize, where SB
+got updated but CP data couldn't be written yet.
 
-Fixes: 281eaa8cb67c ("s390/cpuinfo: simplify locking and skip offline cpus early")
-Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
-Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-[heiko.carstens@de.ibm.com: shortened commit message]
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+fsck errors -
+Info: CKPT version = 6ed7bccb
+        Wrong user_block_count(2233856)
+[f2fs_do_mount:3365] Checkpoint is polluted
+
+Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/processor.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ fs/f2fs/checkpoint.c    | 8 ++++++--
+ include/linux/f2fs_fs.h | 1 +
+ 2 files changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/arch/s390/kernel/processor.c b/arch/s390/kernel/processor.c
-index 6ebc2117c66c7..91b9b3f73de6e 100644
---- a/arch/s390/kernel/processor.c
-+++ b/arch/s390/kernel/processor.c
-@@ -165,8 +165,9 @@ static void show_cpu_mhz(struct seq_file *m, unsigned long n)
- static int show_cpuinfo(struct seq_file *m, void *v)
- {
- 	unsigned long n = (unsigned long) v - 1;
-+	unsigned long first = cpumask_first(cpu_online_mask);
+diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+index 410f5c2c6ef17..a28ffecc0f95a 100644
+--- a/fs/f2fs/checkpoint.c
++++ b/fs/f2fs/checkpoint.c
+@@ -1301,10 +1301,14 @@ static void update_ckpt_flags(struct f2fs_sb_info *sbi, struct cp_control *cpc)
+ 	else
+ 		__clear_ckpt_flags(ckpt, CP_ORPHAN_PRESENT_FLAG);
  
--	if (!n)
-+	if (n == first)
- 		show_cpu_summary(m, v);
- 	if (!machine_has_cpu_mhz)
- 		return 0;
-@@ -179,6 +180,8 @@ static inline void *c_update(loff_t *pos)
- {
- 	if (*pos)
- 		*pos = cpumask_next(*pos - 1, cpu_online_mask);
+-	if (is_sbi_flag_set(sbi, SBI_NEED_FSCK) ||
+-		is_sbi_flag_set(sbi, SBI_IS_RESIZEFS))
++	if (is_sbi_flag_set(sbi, SBI_NEED_FSCK))
+ 		__set_ckpt_flags(ckpt, CP_FSCK_FLAG);
+ 
++	if (is_sbi_flag_set(sbi, SBI_IS_RESIZEFS))
++		__set_ckpt_flags(ckpt, CP_RESIZEFS_FLAG);
 +	else
-+		*pos = cpumask_first(cpu_online_mask);
- 	return *pos < nr_cpu_ids ? (void *)*pos + 1 : NULL;
- }
- 
++		__clear_ckpt_flags(ckpt, CP_RESIZEFS_FLAG);
++
+ 	if (is_sbi_flag_set(sbi, SBI_CP_DISABLED))
+ 		__set_ckpt_flags(ckpt, CP_DISABLED_FLAG);
+ 	else
+diff --git a/include/linux/f2fs_fs.h b/include/linux/f2fs_fs.h
+index 2847389960281..6bb6f718a1023 100644
+--- a/include/linux/f2fs_fs.h
++++ b/include/linux/f2fs_fs.h
+@@ -124,6 +124,7 @@ struct f2fs_super_block {
+ /*
+  * For checkpoint
+  */
++#define CP_RESIZEFS_FLAG		0x00004000
+ #define CP_DISABLED_QUICK_FLAG		0x00002000
+ #define CP_DISABLED_FLAG		0x00001000
+ #define CP_QUOTA_NEED_FSCK_FLAG		0x00000800
 -- 
 2.20.1
 
