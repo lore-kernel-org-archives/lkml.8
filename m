@@ -2,87 +2,109 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC53C2BB55
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:04:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C58B0C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:04:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C92620775
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:04:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VSwRqt3Z"
+	by mail.kernel.org (Postfix) with ESMTP id 971F220775
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:04:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586955855;
+	bh=1pQapq9m3603xrXiSN4BF3wGZPcBk5uTiJAJZ3h1E+A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=oIMFBL2hcfpzbbmzNmXePJKZOxfxj8uBvyzLh+Vcp4kORfhhWsijjCjqWRbwWQrIF
+	 tr6A2MSKRUqCeY8WD6HxQELtyB4M9lRuief7L7p936fwgHlKUzVzlhOHSGoM4VQiXG
+	 XVyqYLiLMJJAwdZTyBGqwNnMPZuYzlhJIPrC9kQQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505818AbgDONEC (ORCPT
+        id S2505835AbgDONEL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:04:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53666 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2503598AbgDONDb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 09:03:31 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FAEDC061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 06:03:31 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id a201so18563390wme.1
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 06:03:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=UQjPZcbdaiez8gPnZVEEptasSZ40rtGmLV1WRLqgzEE=;
-        b=VSwRqt3Z9lmcScQ0G7eBWnQVgvgcuNvjh9qtbKIgya4dAhsx5+Q5YDTPAZUlIlsVqd
-         Q51Tl3+QDwo07tHlTp7EelXW0wi0Yi7L403sJ4SMJnRwv81vD2YW5heygNkqDV6ho9Th
-         JlCoEBrVJ/mpZzPq9R4PukfDdIcmxT+RrrG4iZxmz3dJB3y8GbVmQJ7BpuvEqCPOnVqT
-         I5LS25e7XS9B1l3FZspq2OA2aYSsS+x4b25BEkBNZ0xNhK1KkT/QW7iOL2FveJuUpFo+
-         i/+KsWFwmxTUmPxCGhyvztcdbK/LtzCoHxKSerGwGWJHTiPX7Lv4XMM/NR+Yc1AyYmXa
-         y6RA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=UQjPZcbdaiez8gPnZVEEptasSZ40rtGmLV1WRLqgzEE=;
-        b=DPAVxfl4bTlG7mGhM89q/crQhmyneKoeOUaSWO0MQxryfZOr2ofB9SrKHUoY3z0GqG
-         yRGYn9LbXig1oJA/zNOk1jmy785Ge3IKLW+t23hlrkpSJpJHdekzvvIfgC2nGBa5oPPs
-         F58cR4a2yeQLohXbjMnAQSJvLc/0HmDvrlVwTTyZXgE5ph/IZp50cZlN2VbhY36mSz9T
-         0Izg4HfI32heB3oB1xQGosfdL37RTJ+VLsAAchgXTz9Vb4NzF4n7AJAmIqMjEor6Cg0X
-         YfbYNiEyxOLg7PgjQ0iIOC3CHPSACMPRSG2TZfgZ7PifcJDsaD5T4TcjRbi+mzStOX3l
-         keaQ==
-X-Gm-Message-State: AGi0PuazDuy17nkjTDTfMpl1ZT+TUpc9yNtJvn2rao+RgnZLt6cTeeyi
-        UVkjZdZZSHKk/GQzYtDlEWC5sw==
-X-Google-Smtp-Source: APiQypLOtd28MynQpn58BxBpE7EdDidkO7rzi7NUQyfanjjWdu4P7EKBZSzTP6xF0cq5tapcaJf1Fw==
-X-Received: by 2002:a1c:1d92:: with SMTP id d140mr5087120wmd.67.1586955809800;
-        Wed, 15 Apr 2020 06:03:29 -0700 (PDT)
-Received: from localhost.localdomain ([87.120.218.65])
-        by smtp.googlemail.com with ESMTPSA id b66sm23418111wmh.12.2020.04.15.06.03.28
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 15 Apr 2020 06:03:28 -0700 (PDT)
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        georgi.djakov@linaro.org
-Subject: [PATCH 0/1] interconnect fix for 5.7
-Date:   Wed, 15 Apr 2020 16:03:26 +0300
-Message-Id: <20200415130327.23059-1-georgi.djakov@linaro.org>
-X-Mailer: git-send-email 2.26.0
+        Wed, 15 Apr 2020 09:04:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56204 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2897143AbgDOLg0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:36:26 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E76D0208FE;
+        Wed, 15 Apr 2020 11:36:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586950584;
+        bh=1pQapq9m3603xrXiSN4BF3wGZPcBk5uTiJAJZ3h1E+A=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=g3MkuLRURQYK3wsH+aKZbj/stfmM7GbXJu+V6qRGnmTL8hxyj1YCPuhoAwO24IsZ2
+         C0uOn9Wcwfh3P+WdRAw318CQ5bxQccLpfHXvXvT7VPnJ0NUmh6psWgfM59XoSSPIew
+         OjO2guO7scPxidOXGG09Smd/ikxxeOPf61tzLs9k=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     David Hildenbrand <david@redhat.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 083/129] KVM: s390: vsie: Fix possible race when shadowing region 3 tables
+Date:   Wed, 15 Apr 2020 07:33:58 -0400
+Message-Id: <20200415113445.11881-83-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
+References: <20200415113445.11881-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
-This is a single fix for the current release. Please apply it to
-char-misc-linus whenever possible.
+From: David Hildenbrand <david@redhat.com>
 
-Thanks,
-Georgi
+[ Upstream commit 1493e0f944f3c319d11e067c185c904d01c17ae5 ]
 
-Mike Tipton (1):
-  interconnect: qcom: Fix uninitialized tcs_cmd::wait
+We have to properly retry again by returning -EINVAL immediately in case
+somebody else instantiated the table concurrently. We missed to add the
+goto in this function only. The code now matches the other, similar
+shadowing functions.
 
- drivers/interconnect/qcom/bcm-voter.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+We are overwriting an existing region 2 table entry. All allocated pages
+are added to the crst_list to be freed later, so they are not lost
+forever. However, when unshadowing the region 2 table, we wouldn't trigger
+unshadowing of the original shadowed region 3 table that we replaced. It
+would get unshadowed when the original region 3 table is modified. As it's
+not connected to the page table hierarchy anymore, it's not going to get
+used anymore. However, for a limited time, this page table will stick
+around, so it's in some sense a temporary memory leak.
+
+Identified by manual code inspection. I don't think this classifies as
+stable material.
+
+Fixes: 998f637cc4b9 ("s390/mm: avoid races on region/segment/page table shadowing")
+Signed-off-by: David Hildenbrand <david@redhat.com>
+Link: https://lore.kernel.org/r/20200403153050.20569-4-david@redhat.com
+Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/s390/mm/gmap.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/s390/mm/gmap.c b/arch/s390/mm/gmap.c
+index edcdca97e85ee..06d602c5ec7b7 100644
+--- a/arch/s390/mm/gmap.c
++++ b/arch/s390/mm/gmap.c
+@@ -1840,6 +1840,7 @@ int gmap_shadow_r3t(struct gmap *sg, unsigned long saddr, unsigned long r3t,
+ 		goto out_free;
+ 	} else if (*table & _REGION_ENTRY_ORIGIN) {
+ 		rc = -EAGAIN;		/* Race with shadow */
++		goto out_free;
+ 	}
+ 	crst_table_init(s_r3t, _REGION3_ENTRY_EMPTY);
+ 	/* mark as invalid as long as the parent table is not protected */
+-- 
+2.20.1
 
