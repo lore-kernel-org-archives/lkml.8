@@ -2,125 +2,97 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD5A1C3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:13:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA36C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:14:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CEC020775
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:13:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="pWFnNubA"
+	by mail.kernel.org (Postfix) with ESMTP id 1B4AB2074F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 10:14:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2896360AbgDOKND (ORCPT
+        id S2896362AbgDOKOL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 06:13:03 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:26676 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2896285AbgDOKL3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 06:11:29 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586945489; h=Message-ID: Subject: Cc: To: From: Date:
- Content-Transfer-Encoding: Content-Type: MIME-Version: Sender;
- bh=6Fmu2bYxuswkx5JslalXSUya4FFPt0PklF5SeocK9A0=; b=pWFnNubAbbhO64QKx5c8+UHZbyWr1833gK0rSJmQPSmRqRGaoV8Hvm0+r3ytZTgDvmqN86t3
- rq9nUl0IWXXrU6dXQiGw20OoK6PF+LZ2M8wHaAp6L+jroA0Y0W4Jjd1HaVemE0vcccXGz1lZ
- i86RjZ4aR/ATBhQZhYrMpHe/vBM=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e96ddc9.7f76bbeaa960-smtp-out-n05;
- Wed, 15 Apr 2020 10:11:21 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 99783C432C2; Wed, 15 Apr 2020 10:11:20 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DBE8FC433F2;
-        Wed, 15 Apr 2020 10:11:19 +0000 (UTC)
+        Wed, 15 Apr 2020 06:14:11 -0400
+Received: from sauhun.de ([88.99.104.3]:51402 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2896333AbgDOKMc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 06:12:32 -0400
+Received: from localhost (p54B33507.dip0.t-ipconnect.de [84.179.53.7])
+        by pokefinder.org (Postfix) with ESMTPSA id 272D72C1FF1;
+        Wed, 15 Apr 2020 12:12:30 +0200 (CEST)
+Date:   Wed, 15 Apr 2020 12:12:29 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Dejin Zheng <zhengdejin5@gmail.com>
+Cc:     thor.thayer@linux.intel.com, krzysztof.adamski@nokia.com,
+        f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, nsekhar@ti.com,
+        bgolaszewski@baylibre.com, baruch@tkos.co.il,
+        wsa+renesas@sang-engineering.com, kgene@kernel.org,
+        krzk@kernel.org, paul@crapouillou.net, vz@mleia.com,
+        khilman@baylibre.com, gregory.clement@bootlin.com,
+        rrichter@marvell.com, afaerber@suse.de,
+        manivannan.sadhasivam@linaro.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, heiko@sntech.de, baohua@kernel.org,
+        linus.walleij@linaro.org, mripard@kernel.org, wens@csie.org,
+        ardb@kernel.org, gcherian@marvell.com, jun.nie@linaro.org,
+        shawnguo@kernel.org, tglx@linutronix.de, zhouyanjie@wanyeetech.com,
+        martin.blumenstingl@googlemail.com, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] i2c: busses: convert to devm_platform_ioremap_resource
+Message-ID: <20200415101229.GG1141@ninjato>
+References: <20200409135224.7426-1-zhengdejin5@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 15 Apr 2020 15:41:19 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Matthias Kaehlcke <mka@chromium.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Joerg Roedel <joro@8bytes.org>
-Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Rob Clark <robdclark@gmail.com>,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [PATCH 0/2] iommu/arm-smmu: Allow client devices to select direct
- mapping
-Message-ID: <44be117e4661f9ccb64480912644420f@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Wtrm9ATX0sn6fFKv"
+Content-Disposition: inline
+In-Reply-To: <20200409135224.7426-1-zhengdejin5@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joerg,
 
-On 2020-04-13 20:42, Jordan Crouse wrote:
-> On Thu, Apr 09, 2020 at 04:31:24PM -0700, Matthias Kaehlcke wrote:
->> On Tue, Feb 04, 2020 at 11:12:17PM +0530, Sai Prakash Ranjan wrote:
->> > Hello Robin, Will
->> >
->> > On 2020-01-22 17:18, Sai Prakash Ranjan wrote:
->> > > This series allows drm devices to set a default identity
->> > > mapping using iommu_request_dm_for_dev(). First patch is
->> > > a cleanup to support other SoCs to call into QCOM specific
->> > > implementation and preparation for second patch.
->> > > Second patch sets the default identity domain for drm devices.
->> > >
->> > > Jordan Crouse (1):
->> > >   iommu/arm-smmu: Allow client devices to select direct mapping
->> > >
->> > > Sai Prakash Ranjan (1):
->> > >   iommu: arm-smmu-impl: Convert to a generic reset implementation
->> > >
->> > >  drivers/iommu/arm-smmu-impl.c |  8 +++--
->> > >  drivers/iommu/arm-smmu-qcom.c | 55 +++++++++++++++++++++++++++++++++--
->> > >  drivers/iommu/arm-smmu.c      |  3 ++
->> > >  drivers/iommu/arm-smmu.h      |  5 ++++
->> > >  4 files changed, 65 insertions(+), 6 deletions(-)
->> >
->> > Any review comments?
->> 
->> Ping
->> 
->> What is the status of this series, is it ready to land or are any 
->> changes
->> needed?
->> 
->> Thanks
->> 
->> Matthias
-> 
-> I think this is up in the air following the changes that Joerg 
-> suggested:
-> https://lists.linuxfoundation.org/pipermail/iommu/2020-April/043017.html
-> 
+--Wtrm9ATX0sn6fFKv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-1st patch for generic reset in this series is independent and can be 
-merged.
-But seems like requesting direct mapping fails with the joerg's patch 
-series.
+On Thu, Apr 09, 2020 at 09:52:24PM +0800, Dejin Zheng wrote:
+> use devm_platform_ioremap_resource() to simplify code, it
+> contains platform_get_resource and devm_ioremap_resource.
+>=20
+> Reviewed-by: Barry Song <baohua@kernel.org>
+> Acked-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Acked-by: Robert Richter <rrichter@marvell.com>
+> Acked-by: Thor Thayer <thor.thayer@linux.intel.com>
+> Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Suggested-by: Wolfram Sang <wsa@the-dreams.de>
+> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
 
-Thanks,
-Sai
+Removed "my" Suggested-by and applied to for-next, thanks!
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+
+--Wtrm9ATX0sn6fFKv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6W3g0ACgkQFA3kzBSg
+KbbvDg/6AuDzpKihXYH/WBCmS2baaoFc7NYDSFPl3rNinWlRPjBPDt56O+r0CzHo
+G8fQGCaQmrc4BjRo5fFeKJdUwI4LIziigv0XmhHPaGjo3pjT8gjcfcfgMYlg64w/
+loC9yZOqaf+wCT1E+2omdi0Lgcofk82ViHfH+wt25UcG91og5VtDFwCNhoOltMFl
+m/jrmi04994LX0qPkelhve2BomrDGbTWW8I5VQ92mnOCfowu1b8Qh1nEByQMcnvy
+1qbPbJyI96slNtab/C9SfeBDluTVXvxUsNUiLQYrge7fliFx1KSywuTH7snbMjiE
+yVn8fSMLeUzpqwoC8iq4CLXJggV/BX+KdXIEI3tQFI4lArp0O1Xpc65Ri2A9O0oI
+cncXHYCUP0r5/8/LFS1CgVyDV/VZvfqP/qQqJQ6bBqWG2hBStjf2ysbowtJvnIuR
+B9rnzi9lsU7wC7YGHnZXRy1wJ8deh4V5sYOy8lRi8LL7kmP9ktVbLxbaXA+QoiZe
+APO77TP68ORPuoM8gMjDO7vYk7SAk2L0abz1VpGofJ4KPWao6w1CVpaUfdJIBYt5
+4E4r9i7XmYs9Mn+uHd4D01kcEIKr93b6nU8s7hd88hb+6Ee1YUSFTaE2jmV59rKJ
+6MgTxXuvU/BjF/wr+yP1CHNs8sipsDF2IjDP3qBSg11v7e/YsM4=
+=FGo9
+-----END PGP SIGNATURE-----
+
+--Wtrm9ATX0sn6fFKv--
