@@ -2,76 +2,97 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A91DEC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:29:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9823C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:29:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 852AD206F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:29:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B11FF206F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:29:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="PAbQsHWp"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E1xf5iRf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1416031AbgDOQ3B (ORCPT
+        id S1416042AbgDOQ3Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 12:29:01 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:12688 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1415786AbgDOQ2n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 12:28:43 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 492STj0yyrzCQ;
-        Wed, 15 Apr 2020 18:28:40 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1586968121; bh=Rsasm2lhH1ZJqFeV4sB6sJTDdBy82LDRARlwkGNJNWs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PAbQsHWpbLD2Fo46RRsCnjnjAl/uJZvNeVFbsI4Dn2X8xsLouAhK+Nm42rC+0RS1l
-         ryd81UC0NcB2qSWxgV7cNM+luxbeNGj2KwDhTEk13m5zrRKZ+UMOjI46fCnKyBOSdg
-         4Ft6jkgljR6fRaSKTHT8lPTCkxCqZLnjDCjGtwv5kxQpQG3VtQ3UReeSbhooagqJ3t
-         BNmvdT0zjOxdhqRDWj1T9QszgHlYKtDKFRsELBhHc7cdgvilIuzkHnVjBJ+XmxDql8
-         NJloG6QxssZVgVZ/vCwgoxSyeloGRA5rhw7K8ot+1Gb2Jb8IAdc5xJmKzBoexgWKeR
-         6EBa6MjRMorcw==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Wed, 15 Apr 2020 18:28:39 +0200
-From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Kevin Liu <kliu5@marvell.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Suneel Garapati <suneel.garapati@xilinx.com>,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/7] mmc: sdhci: fix base clock usage in preset value
-Message-ID: <20200415162839.GD19897@qmqm.qmqm.pl>
-References: <cover.1585827904.git.mirq-linux@rere.qmqm.pl>
- <23c3fe72b0ff0eabdbf3a45023a76da1b18a7e90.1585827904.git.mirq-linux@rere.qmqm.pl>
- <218dd61b-48cc-a161-240f-b3823e8f48cb@intel.com>
+        Wed, 15 Apr 2020 12:29:25 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:48799 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1416026AbgDOQ3S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 12:29:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586968157;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=lirxC6OyLMe94Ytuu+eqjqHGME51p1BmVUJrMUdq9/E=;
+        b=E1xf5iRfHPAPB/icXj/7/R/efQJ1litXtbN5KmLpyPE+gZiQsMURWL6M3a3VJO6rLQQlda
+        W6IuxicAuUCQphwWfnbQzbT8tNC+htoX9Z+RKO3HdI3EEVJ8vG2KHjCjJxHGVEMScZIg2q
+        lkxVhKYPXWzIfHzyQBjO/m7jD83QXz0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-103-DketKOtEM7S8wFzabwZf9A-1; Wed, 15 Apr 2020 12:29:15 -0400
+X-MC-Unique: DketKOtEM7S8wFzabwZf9A-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 178B919057A0;
+        Wed, 15 Apr 2020 16:29:14 +0000 (UTC)
+Received: from treble (ovpn-116-146.rdu2.redhat.com [10.10.116.146])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 63A465D9E2;
+        Wed, 15 Apr 2020 16:29:13 +0000 (UTC)
+Date:   Wed, 15 Apr 2020 11:29:11 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jessica Yu <jeyu@kernel.org>
+Subject: Re: [PATCH 1/7] livepatch: Apply vmlinux-specific KLP relocations
+ early
+Message-ID: <20200415162911.k3kuqi5dqmngise7@treble>
+References: <cover.1586881704.git.jpoimboe@redhat.com>
+ <8c3af42719fe0add37605ede634c7035a90f9acc.1586881704.git.jpoimboe@redhat.com>
+ <20200414174406.GC2483@worktop.programming.kicks-ass.net>
+ <20200414180109.da4v2b4ifpixuzn3@treble>
+ <20200414193150.iqw224itgpedpltm@treble>
+ <alpine.LSU.2.21.2004151627100.13470@pobox.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <218dd61b-48cc-a161-240f-b3823e8f48cb@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <alpine.LSU.2.21.2004151627100.13470@pobox.suse.cz>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 03:25:52PM +0300, Adrian Hunter wrote:
-> On 2/04/20 2:54 pm, Micha³ Miros³aw wrote:
-> > Fixed commit added an unnecessary read of CLOCK_CONTROL. The value read
-> > is overwritten for programmable clock preset, but is carried over for
-> > divided clock preset. This can confuse sdhci_enable_clk() if the register
-> > has enable bits set for some reason at time time of clock calculation.
-> > value to be ORed with enable flags. Remove the read.
+On Wed, Apr 15, 2020 at 04:30:15PM +0200, Miroslav Benes wrote:
+> > From: Josh Poimboeuf <jpoimboe@redhat.com>
+> > Subject: [PATCH] livepatch: Disallow vmlinux.ko
+> > 
+> > This is purely a theoretical issue, but if there were a module named
 > 
-> The read is not needed, but drivers usually manage the enable bits,
-> especially disabling the clock before changing the frequency.  What driver
-> is it?
+> OT: "if there were"... subjunctive?
 
-Hopefully no driver requires this. It's just removing a trap.
+I had to google "subjunctive", but yes that seems to be it :-)
 
-Best Regards,
-Micha³ Miros³aw
+It means "if, hypothetically, a module named vmlinux.ko existed"...
+
+> > vmlinux.ko, the livepatch relocation code wouldn't be able to
+> > distinguish between vmlinux-specific and vmlinux.o-specific KLP
+> > relocations.
+> > 
+> > If CONFIG_LIVEPATCH is enabled, don't allow a module named vmlinux.ko.
+> 
+> Yup, there is no such check nowadays. I always struggle to find the right 
+> balance between being overprotective and letting the user shoot themselves 
+> in their foot if they want to. But it does not hurt, so ack to that.
+
+Yeah, and it does seem very unlikely to have a vmlinux.ko, but
+especially OOT modules do some crazy things and you never know...
+
+-- 
+Josh
+
