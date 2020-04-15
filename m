@@ -2,107 +2,104 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 881CCC3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE029C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:13:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7218A20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:12:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B893120936
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:13:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586952785;
+	bh=QeP+z2py5zehTf5cGkwbpGZ5Yi83zG6RPJpUo8i2+no=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ld9ophgAqbbvop8wRwqfxw9w62ashEoGy/OJQu8zgkgFbHbYWqstTHzlKhpWUuTck
+	 eMVREoXW7OJk4BRHTG1LvVHTJvwsEJiaeT97gG7kuYMytuCYa66MlLmlmd7c3tF1yX
+	 aEfMeLlEoIbwGAgkx7PlGPq77pnhXJnfj0Xbabik=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2898096AbgDOMMx (ORCPT
+        id S2898106AbgDOMNA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:12:53 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39518 "EHLO mx2.suse.de"
+        Wed, 15 Apr 2020 08:13:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441289AbgDOMIu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 08:08:50 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id E6A2FABB2;
-        Wed, 15 Apr 2020 12:08:47 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 9FD9B1E1250; Wed, 15 Apr 2020 14:08:46 +0200 (CEST)
-Date:   Wed, 15 Apr 2020 14:08:46 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     ira.weiny@intel.com
-Cc:     linux-kernel@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH RFC 4/8] fs/ext4: Introduce DAX inode flag
-Message-ID: <20200415120846.GG6126@quack2.suse.cz>
-References: <20200414040030.1802884-1-ira.weiny@intel.com>
- <20200414040030.1802884-5-ira.weiny@intel.com>
+        id S2897588AbgDOLrC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:47:02 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7C2220775;
+        Wed, 15 Apr 2020 11:47:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586951222;
+        bh=QeP+z2py5zehTf5cGkwbpGZ5Yi83zG6RPJpUo8i2+no=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=0edQKSTePlHU5yjwqBPUd5I7w4gt6Rk06DLudGU4LL9OaikHjEX4TraueWvyeOiSi
+         w/X83xDvbZVwF7/zfwZkskJ7S7P6YCNGKw9jeHBiL1LsTgvz899nTDxXHJ5+pKA/op
+         odOv33m44napsig7wiZzMbMRcXr1gatODoHbcS00=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 4.19 33/40] iommu/vt-d: Fix mm reference leak
+Date:   Wed, 15 Apr 2020 07:46:16 -0400
+Message-Id: <20200415114623.14972-33-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200415114623.14972-1-sashal@kernel.org>
+References: <20200415114623.14972-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200414040030.1802884-5-ira.weiny@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 13-04-20 21:00:26, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> Add a flag to preserve FS_XFLAG_DAX in the ext4 inode.
-> 
-> Set the flag to be user visible and changeable.  Set the flag to be
-> inherited.  Allow applications to change the flag at any time.
-> 
-> Finally, on regular files, flag the inode to not be cached to facilitate
-> changing S_DAX on the next creation of the inode.
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> ---
->  fs/ext4/ext4.h  | 13 +++++++++----
->  fs/ext4/ioctl.c | 21 ++++++++++++++++++++-
->  2 files changed, 29 insertions(+), 5 deletions(-)
-> 
-> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-> index 61b37a052052..434021fcec88 100644
-> --- a/fs/ext4/ext4.h
-> +++ b/fs/ext4/ext4.h
-> @@ -415,13 +415,16 @@ struct flex_groups {
->  #define EXT4_VERITY_FL			0x00100000 /* Verity protected inode */
->  #define EXT4_EA_INODE_FL	        0x00200000 /* Inode used for large EA */
->  #define EXT4_EOFBLOCKS_FL		0x00400000 /* Blocks allocated beyond EOF */
-> +
-> +#define EXT4_DAX_FL			0x00800000 /* Inode is DAX */
-> +
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
 
-You seem to be using somewhat older kernel... EXT4_EOFBLOCKS_FL doesn't
-exist anymore (but still it's good to leave it reserved for some time so
-the value you've chosen is OK).
+[ Upstream commit 902baf61adf6b187f0a6b789e70d788ea71ff5bc ]
 
-> @@ -813,6 +818,17 @@ static int ext4_ioctl_get_es_cache(struct file *filp, unsigned long arg)
->  	return error;
->  }
->  
-> +static void ext4_dax_dontcache(struct inode *inode, unsigned int flags)
-> +{
-> +	struct ext4_inode_info *ei = EXT4_I(inode);
-> +
-> +	if (S_ISDIR(inode->i_mode))
-> +		return;
-> +
-> +	if ((ei->i_flags ^ flags) == EXT4_DAX_FL)
-> +		inode->i_state |= I_DONTCACHE;
-> +}
-> +
+Move canonical address check before mmget_not_zero() to avoid mm
+reference leak.
 
-You probably want to use the function you've introduced in the XFS series
-here...
+Fixes: 9d8c3af31607 ("iommu/vt-d: IOMMU Page Request needs to check if address is canonical.")
+Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/iommu/intel-svm.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-								Honza
+diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
+index 5944d3b4dca37..ef3aadec980ee 100644
+--- a/drivers/iommu/intel-svm.c
++++ b/drivers/iommu/intel-svm.c
+@@ -620,14 +620,15 @@ static irqreturn_t prq_event_thread(int irq, void *d)
+ 		 * any faults on kernel addresses. */
+ 		if (!svm->mm)
+ 			goto bad_req;
+-		/* If the mm is already defunct, don't handle faults. */
+-		if (!mmget_not_zero(svm->mm))
+-			goto bad_req;
+ 
+ 		/* If address is not canonical, return invalid response */
+ 		if (!is_canonical_address(address))
+ 			goto bad_req;
+ 
++		/* If the mm is already defunct, don't handle faults. */
++		if (!mmget_not_zero(svm->mm))
++			goto bad_req;
++
+ 		down_read(&svm->mm->mmap_sem);
+ 		vma = find_extend_vma(svm->mm, address);
+ 		if (!vma || address < vma->vm_start)
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.20.1
+
