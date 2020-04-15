@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D81ADC2BB55
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9127C3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:55:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9654206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:55:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AF5B206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:55:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586955338;
-	bh=eOjHPZ2hM8yY0lMQEmFgXJ6RCmnDAUY8hOw/b5roVIc=;
+	s=default; t=1586955357;
+	bh=8qfY1PhpS8YCU7EkMHPLz0aR2nf5Kwu2pnxThzBrBOc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UrbctWe6kUFZW4ZHs8jb/AAUd4mefRNwYftNP6/aZVjmWvij/QQaF8dR7446yod+4
-	 ux1ml34Z4ZaYlartX+ikJ3kN3bj77UvBE4ZDjnK8OrmUmLOgr7WHgDvoCZd74bbaMr
-	 exewpclxR8YXB0Ox6HYTnV/DEyUQ9iD5bxMjHy0o=
+	b=xMNdJjkCwYD28O52r0uQyBpSdQf3jxW21X/MSnraG9rboeGzxlS5acrFcuvcB/6Pe
+	 /G9AZDzfGpJAMLRDC743uQAgHj84efV+FPfjGXUgilhl074hO2E0lUd+xEUkN++nuk
+	 7HWhbC1jOXaXcJSuDJJttJKzcWtZwmMF6i2StVLY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730371AbgDOMzf (ORCPT
+        id S2441337AbgDOMzx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:55:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56808 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 08:55:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897207AbgDOLhG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:37:06 -0400
+        id S2897200AbgDOLhD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:37:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77A50214AF;
-        Wed, 15 Apr 2020 11:37:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3628020768;
+        Wed, 15 Apr 2020 11:37:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950626;
-        bh=eOjHPZ2hM8yY0lMQEmFgXJ6RCmnDAUY8hOw/b5roVIc=;
+        s=default; t=1586950622;
+        bh=8qfY1PhpS8YCU7EkMHPLz0aR2nf5Kwu2pnxThzBrBOc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BFKRXdbidmVfYJiFlIgYZFZXJzwme/vKCZUUf2mVV6vuDPoQDwmWgF4IydPsaTnTx
-         f/lb7Y/b/wje1BNWzPe6ns/Bok/WJQeyxIF1EOe/mkF8MjuzRTm72mpvQCAq1O7VLg
-         1jQMb2Wfxq0Y50Mz0ollNxfCD2X7BBs2/68dkJfo=
+        b=CCL65ug9NLh5aTp7VSqEZLO5n1BousVTOfJdPqrkYtn3ONBDFStS4Jidvj9ygNG+u
+         V3rfUvr3Pz0zCx4Irr3dxc/oWOdpeieI0ijKgWGSuazDlkpjrrFeljLjSgcNINlmSZ
+         eYC4EM4FYbe4USRReNvVDRuSg/76mBtsam4WHumA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Amir Goldstein <amir73il@gmail.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-unionfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 117/129] ovl: fix value of i_ino for lower hardlink corner case
-Date:   Wed, 15 Apr 2020 07:34:32 -0400
-Message-Id: <20200415113445.11881-117-sashal@kernel.org>
+Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 5.6 114/129] f2fs: skip GC when section is full
+Date:   Wed, 15 Apr 2020 07:34:29 -0400
+Message-Id: <20200415113445.11881-114-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
 References: <20200415113445.11881-1-sashal@kernel.org>
@@ -59,53 +58,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amir Goldstein <amir73il@gmail.com>
+From: Jaegeuk Kim <jaegeuk@kernel.org>
 
-[ Upstream commit 300b124fcf6ad2cd99a7b721e0f096785e0a3134 ]
+[ Upstream commit 2bac07635ddf9ed59268e61e415d8de9c5eaded7 ]
 
-Commit 6dde1e42f497 ("ovl: make i_ino consistent with st_ino in more
-cases"), relaxed the condition nfs_export=on in order to set the value of
-i_ino to xino map of real ino.
+This fixes skipping GC when segment is full in large section.
 
-Specifically, it also relaxed the pre-condition that index=on for
-consistent i_ino. This opened the corner case of lower hardlink in
-ovl_get_inode(), which calls ovl_fill_inode() with ino=0 and then
-ovl_init_inode() is called to set i_ino to lower real ino without the xino
-mapping.
-
-Pass the correct values of ino;fsid in this case to ovl_fill_inode(), so it
-can initialize i_ino correctly.
-
-Fixes: 6dde1e42f497 ("ovl: make i_ino consistent with st_ino in more ...")
-Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/overlayfs/inode.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/f2fs/gc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/overlayfs/inode.c b/fs/overlayfs/inode.c
-index 79e8994e3bc1a..3f993c114829e 100644
---- a/fs/overlayfs/inode.c
-+++ b/fs/overlayfs/inode.c
-@@ -891,7 +891,7 @@ struct inode *ovl_get_inode(struct super_block *sb,
- 	struct dentry *lowerdentry = lowerpath ? lowerpath->dentry : NULL;
- 	bool bylower = ovl_hash_bylower(sb, upperdentry, lowerdentry,
- 					oip->index);
--	int fsid = bylower ? oip->lowerpath->layer->fsid : 0;
-+	int fsid = bylower ? lowerpath->layer->fsid : 0;
- 	bool is_dir, metacopy = false;
- 	unsigned long ino = 0;
- 	int err = oip->newinode ? -EEXIST : -ENOMEM;
-@@ -941,6 +941,8 @@ struct inode *ovl_get_inode(struct super_block *sb,
- 			err = -ENOMEM;
- 			goto out_err;
- 		}
-+		ino = realinode->i_ino;
-+		fsid = lowerpath->layer->fsid;
- 	}
- 	ovl_fill_inode(inode, realinode->i_mode, realinode->i_rdev, ino, fsid);
- 	ovl_inode_init(inode, upperdentry, lowerdentry, oip->lowerdata);
+diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+index 2f645c591a000..3cced15efebc2 100644
+--- a/fs/f2fs/gc.c
++++ b/fs/f2fs/gc.c
+@@ -1018,8 +1018,8 @@ static int gc_data_segment(struct f2fs_sb_info *sbi, struct f2fs_summary *sum,
+ 		 * race condition along with SSR block allocation.
+ 		 */
+ 		if ((gc_type == BG_GC && has_not_enough_free_secs(sbi, 0, 0)) ||
+-				get_valid_blocks(sbi, segno, false) ==
+-							sbi->blocks_per_seg)
++				get_valid_blocks(sbi, segno, true) ==
++							BLKS_PER_SEC(sbi))
+ 			return submitted;
+ 
+ 		if (check_valid_map(sbi, segno, off) == 0)
 -- 
 2.20.1
 
