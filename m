@@ -2,461 +2,355 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E0C3C2BB55
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:20:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09000C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:20:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C18020857
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:20:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA22220857
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:20:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586953226;
+	bh=Gqglel3VWWVrZC/6kFFL/p3h0vWJ/7YVXMFCIsSMLSs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=P5nH50+MkauhhLrQ/V5Gq8evMqHPmuZlGcoHzJE8Xf0f2iw0+kHDjiuiH890iGw7S
+	 vPS4jH+w6NTXFrMPwz/2mj/S1/4ST6o3Up5tX6qwjLAFgHS/a1hQNKKlk3X8IJ1Uk7
+	 cwGuOI6NhpUvhJ9SgjdRkPL8KK4+NdOgXc+f4nCg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S369007AbgDOMUC (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:20:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46838 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S368978AbgDOMTv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 08:19:51 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3D92C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 05:19:48 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jOh12-0008Il-Uf; Wed, 15 Apr 2020 14:19:40 +0200
-Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jOh12-0003d2-6L; Wed, 15 Apr 2020 14:19:40 +0200
-Date:   Wed, 15 Apr 2020 14:19:40 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Kubecek <mkubecek@suse.cz>
-Cc:     David Jander <david@protonic.nl>, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Russell King <linux@armlinux.org.uk>, mkl@pengutronix.de,
-        Marek Vasut <marex@denx.de>
-Subject: Re: [PATCH v1] ethtool: provide UAPI for PHY master/slave
- configuration.
-Message-ID: <20200415121940.2du33zckvayfqjrb@pengutronix.de>
-References: <20200415121209.12197-1-o.rempel@pengutronix.de>
+        id S369026AbgDOMUX (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:20:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40416 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2409243AbgDOLqA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:46:00 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA73820775;
+        Wed, 15 Apr 2020 11:45:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586951159;
+        bh=Gqglel3VWWVrZC/6kFFL/p3h0vWJ/7YVXMFCIsSMLSs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=aeukdPif/KJXf3mevXwTqaZaNtKJfSSO355H90paDtsKobuYu8b3HC3z1OP/dQwTN
+         BCRtgQdF9NUdapgWTIySlS6oyoBXrUzvvux02tM1BgZJw3rNdGkdcdYbqXUBXtwYOE
+         zt4RZNxKmS1jpRgUE0z0a1BB9q3Gy6NbvfMulp40=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Bob Moore <robert.moore@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org,
+        devel@acpica.org
+Subject: [PATCH AUTOSEL 5.4 65/84] ACPICA: Fixes for acpiExec namespace init file
+Date:   Wed, 15 Apr 2020 07:44:22 -0400
+Message-Id: <20200415114442.14166-65-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200415114442.14166-1-sashal@kernel.org>
+References: <20200415114442.14166-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="txzfdtzcwyntqg4n"
-Content-Disposition: inline
-In-Reply-To: <20200415121209.12197-1-o.rempel@pengutronix.de>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 14:18:20 up 152 days,  3:36, 170 users,  load average: 0.12, 0.08,
- 0.02
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Bob Moore <robert.moore@intel.com>
 
---txzfdtzcwyntqg4n
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[ Upstream commit 9a1ae80412dcaa67a29eecf19de44f32b5f1c357 ]
 
-Cc: Marek Vasut <marex@denx.de>
+This is the result of squashing the following ACPICA commit ID's:
+6803997e5b4f3635cea6610b51ff69e29d251de3
+f31cdf8bfda22fe265c1a176d0e33d311c82a7f7
 
-On Wed, Apr 15, 2020 at 02:12:09PM +0200, Oleksij Rempel wrote:
-> This UAPI is needed for BroadR-Reach 100BASE-T1 devices. Due to lack of
-> auto-negotiation support, we needed to be able to configure the
-> MASTER-SLAVE role of the port manually or from an application in user
-> space.
->=20
-> The same UAPI can be used for 1000BASE-T or MultiGBASE-T devices to
-> force MASTER or SLAVE role. See IEEE 802.3-2018:
-> 22.2.4.3.7 MASTER-SLAVE control register (Register 9)
-> 22.2.4.3.8 MASTER-SLAVE status register (Register 10)
-> 40.5.2 MASTER-SLAVE configuration resolution
-> 45.2.1.185.1 MASTER-SLAVE config value (1.2100.14)
-> 45.2.7.10 MultiGBASE-T AN control 1 register (Register 7.32)
->=20
-> The MASTER-SLAVE role affects the clock configuration:
->=20
-> -------------------------------------------------------------------------=
-------
-> When the  PHY is configured as MASTER, the PMA Transmit function shall
-> source TX_TCLK from a local clock source. When configured as SLAVE, the
-> PMA Transmit function shall source TX_TCLK from the clock recovered from
-> data stream provided by MASTER.
->=20
-> iMX6Q                     KSZ9031                XXX
-> ------\                /-----------\        /------------\
->       |                |           |        |            |
->  MAC  |<----RGMII----->| PHY Slave |<------>| PHY Master |
->       |<--- 125 MHz ---+-<------/  |        | \          |
-> ------/                \-----------/        \------------/
->                                                ^
->                                                 \-TX_TCLK
->=20
-> -------------------------------------------------------------------------=
-------
->=20
-> Since some clock or link related issues are only reproducible in a
-> specific MASTER-SLAVE-role, MAC and PHY configuration, it is beneficial
-> to provide generic (not 100BASE-T1 specific) interface to the user space
-> for configuration flexibility and trouble shooting.
->=20
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> ---
->  Documentation/networking/ethtool-netlink.rst |  2 +
->  drivers/net/phy/phy.c                        |  3 +-
->  drivers/net/phy/phy_device.c                 | 75 ++++++++++++++++++++
->  include/linux/phy.h                          |  1 +
->  include/uapi/linux/ethtool.h                 | 11 ++-
->  include/uapi/linux/ethtool_netlink.h         |  1 +
->  include/uapi/linux/mii.h                     |  2 +
->  net/ethtool/linkmodes.c                      |  9 ++-
->  8 files changed, 101 insertions(+), 3 deletions(-)
->=20
-> diff --git a/Documentation/networking/ethtool-netlink.rst b/Documentation=
-/networking/ethtool-netlink.rst
-> index f1f868479ceb8..83127a6e42b17 100644
-> --- a/Documentation/networking/ethtool-netlink.rst
-> +++ b/Documentation/networking/ethtool-netlink.rst
-> @@ -368,6 +368,7 @@ Kernel response contents:
->    ``ETHTOOL_A_LINKMODES_PEER``          bitset  partner link modes
->    ``ETHTOOL_A_LINKMODES_SPEED``         u32     link speed (Mb/s)
->    ``ETHTOOL_A_LINKMODES_DUPLEX``        u8      duplex mode
-> +  ``ETHTOOL_A_LINKMODES_MASTER_SLAVE``  u8      Master/slave port mode
->    =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> =20
->  For ``ETHTOOL_A_LINKMODES_OURS``, value represents advertised modes and =
-mask
-> @@ -390,6 +391,7 @@ Request contents:
->    ``ETHTOOL_A_LINKMODES_PEER``          bitset  partner link modes
->    ``ETHTOOL_A_LINKMODES_SPEED``         u32     link speed (Mb/s)
->    ``ETHTOOL_A_LINKMODES_DUPLEX``        u8      duplex mode
-> +  ``ETHTOOL_A_LINKMODES_MASTER_SLAVE``  u8      Master/slave port mode
->    =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> =20
->  ``ETHTOOL_A_LINKMODES_OURS`` bit set allows setting advertised link mode=
-s. If
-> diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
-> index d76e038cf2cb5..9f48141f1e701 100644
-> --- a/drivers/net/phy/phy.c
-> +++ b/drivers/net/phy/phy.c
-> @@ -294,7 +294,7 @@ int phy_ethtool_ksettings_set(struct phy_device *phyd=
-ev,
->  			 phydev->advertising, autoneg =3D=3D AUTONEG_ENABLE);
-> =20
->  	phydev->duplex =3D duplex;
-> -
-> +	phydev->master_slave =3D cmd->base.master_slave;
->  	phydev->mdix_ctrl =3D cmd->base.eth_tp_mdix_ctrl;
-> =20
->  	/* Restart the PHY */
-> @@ -313,6 +313,7 @@ void phy_ethtool_ksettings_get(struct phy_device *phy=
-dev,
-> =20
->  	cmd->base.speed =3D phydev->speed;
->  	cmd->base.duplex =3D phydev->duplex;
-> +	cmd->base.master_slave =3D phydev->master_slave;
->  	if (phydev->interface =3D=3D PHY_INTERFACE_MODE_MOCA)
->  		cmd->base.port =3D PORT_BNC;
->  	else
-> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-> index c8b0c34030d32..d5edf2bc40e43 100644
-> --- a/drivers/net/phy/phy_device.c
-> +++ b/drivers/net/phy/phy_device.c
-> @@ -604,6 +604,7 @@ struct phy_device *phy_device_create(struct mii_bus *=
-bus, int addr, u32 phy_id,
->  	dev->asym_pause =3D 0;
->  	dev->link =3D 0;
->  	dev->interface =3D PHY_INTERFACE_MODE_GMII;
-> +	dev->master_slave =3D PORT_MODE_UNKNOWN;
-> =20
->  	dev->autoneg =3D AUTONEG_ENABLE;
-> =20
-> @@ -1772,6 +1773,68 @@ int genphy_setup_forced(struct phy_device *phydev)
->  }
->  EXPORT_SYMBOL(genphy_setup_forced);
-> =20
-> +static int genphy_setup_master_slave(struct phy_device *phydev)
-> +{
-> +	u16 ctl =3D 0;
-> +
-> +	if (!phydev->is_gigabit_capable)
-> +		return 0;
-> +
-> +	switch (phydev->master_slave) {
-> +	case PORT_MODE_MASTER:
-> +		ctl |=3D CTL1000_PREFER_MASTER;
-> +		/* fallthrough */
-> +	case PORT_MODE_SLAVE:
-> +		/* CTL1000_ENABLE_MASTER is zero */
-> +		break;
-> +	case PORT_MODE_MASTER_FORCE:
-> +		ctl |=3D CTL1000_AS_MASTER;
-> +		/* fallthrough */
-> +	case PORT_MODE_SLAVE_FORCE:
-> +		ctl |=3D CTL1000_ENABLE_MASTER;
-> +		break;
-> +	case PORT_MODE_UNKNOWN:
-> +		return 0;
-> +	default:
-> +		phydev_warn(phydev, "Unsupported Master/Slave mode\n");
-> +		return 0;
-> +	}
-> +
-> +	return phy_modify_changed(phydev, MII_CTRL1000,
-> +				  (CTL1000_ENABLE_MASTER | CTL1000_AS_MASTER |
-> +				   CTL1000_PREFER_MASTER), ctl);
-> +}
-> +
-> +static int genphy_read_master_slave(struct phy_device *phydev)
-> +{
-> +	u16 ctl, stat;
-> +
-> +	if (!phydev->is_gigabit_capable)
-> +		return 0;
-> +
-> +	ctl =3D phy_read(phydev, MII_CTRL1000);
-> +	if (ctl < 0)
-> +		return ctl;
-> +
-> +	stat =3D phy_read(phydev, MII_STAT1000);
-> +	if (stat < 0)
-> +		return stat;
-> +
-> +	if (ctl & CTL1000_ENABLE_MASTER) {
-> +		if (stat & LPA_1000MSRES)
-> +			phydev->master_slave =3D PORT_MODE_MASTER_FORCE;
-> +		else
-> +			phydev->master_slave =3D PORT_MODE_SLAVE_FORCE;
-> +	} else {
-> +		if (stat & LPA_1000MSRES)
-> +			phydev->master_slave =3D PORT_MODE_MASTER;
-> +		else
-> +			phydev->master_slave =3D PORT_MODE_SLAVE;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  /**
->   * genphy_restart_aneg - Enable and Restart Autonegotiation
->   * @phydev: target phy_device struct
-> @@ -1830,6 +1893,12 @@ int __genphy_config_aneg(struct phy_device *phydev=
-, bool changed)
->  	if (genphy_config_eee_advert(phydev))
->  		changed =3D true;
-> =20
-> +	err =3D genphy_setup_master_slave(phydev);
-> +	if (err < 0)
-> +		return err;
-> +	else if (err)
-> +		changed =3D true;
-> +
->  	if (AUTONEG_ENABLE !=3D phydev->autoneg)
->  		return genphy_setup_forced(phydev);
-> =20
-> @@ -2062,6 +2131,11 @@ int genphy_read_status(struct phy_device *phydev)
->  	phydev->duplex =3D DUPLEX_UNKNOWN;
->  	phydev->pause =3D 0;
->  	phydev->asym_pause =3D 0;
-> +	phydev->master_slave =3D PORT_MODE_UNKNOWN;
-> +
-> +	err =3D genphy_read_master_slave(phydev);
-> +	if (err < 0)
-> +		return err;
-> =20
->  	err =3D genphy_read_lpa(phydev);
->  	if (err < 0)
-> @@ -2103,6 +2177,7 @@ int genphy_c37_read_status(struct phy_device *phyde=
-v)
->  	phydev->duplex =3D DUPLEX_UNKNOWN;
->  	phydev->pause =3D 0;
->  	phydev->asym_pause =3D 0;
-> +	phydev->master_slave =3D PORT_MODE_UNKNOWN;
-> =20
->  	if (phydev->autoneg =3D=3D AUTONEG_ENABLE && phydev->autoneg_complete) {
->  		lpa =3D phy_read(phydev, MII_LPA);
-> diff --git a/include/linux/phy.h b/include/linux/phy.h
-> index c570e162e05e5..de5f934223069 100644
-> --- a/include/linux/phy.h
-> +++ b/include/linux/phy.h
-> @@ -421,6 +421,7 @@ struct phy_device {
->  	int duplex;
->  	int pause;
->  	int asym_pause;
-> +	int master_slave;
-> =20
->  	/* Union of PHY and Attached devices' supported link modes */
->  	/* See ethtool.h for more info */
-> diff --git a/include/uapi/linux/ethtool.h b/include/uapi/linux/ethtool.h
-> index 2405ab2263779..bcbc44003c823 100644
-> --- a/include/uapi/linux/ethtool.h
-> +++ b/include/uapi/linux/ethtool.h
-> @@ -1659,6 +1659,13 @@ static inline int ethtool_validate_duplex(__u8 dup=
-lex)
->  	return 0;
->  }
-> =20
-> +/* Port mode */
-> +#define PORT_MODE_MASTER	0x00
-> +#define PORT_MODE_SLAVE		0x01
-> +#define PORT_MODE_MASTER_FORCE	0x02
-> +#define PORT_MODE_SLAVE_FORCE	0x03
-> +#define PORT_MODE_UNKNOWN	0xff
-> +
->  /* Which connector port. */
->  #define PORT_TP			0x00
->  #define PORT_AUI		0x01
-> @@ -1850,6 +1857,7 @@ enum ethtool_reset_flags {
->   *	autonegotiation; 0 if unknown or not applicable.  Read-only.
->   * @transceiver: Used to distinguish different possible PHY types,
->   *	reported consistently by PHYLIB.  Read-only.
-> + * @master_slave: Master or slave port mode.
->   *
->   * If autonegotiation is disabled, the speed and @duplex represent the
->   * fixed link mode and are writable if the driver supports multiple
-> @@ -1897,7 +1905,8 @@ struct ethtool_link_settings {
->  	__u8	eth_tp_mdix_ctrl;
->  	__s8	link_mode_masks_nwords;
->  	__u8	transceiver;
-> -	__u8	reserved1[3];
-> +	__u8	master_slave;
-> +	__u8	reserved1[2];
->  	__u32	reserved[7];
->  	__u32	link_mode_masks[0];
->  	/* layout of link_mode_masks fields:
-> diff --git a/include/uapi/linux/ethtool_netlink.h b/include/uapi/linux/et=
-htool_netlink.h
-> index 7e0b460f872c0..e04d47cb5f227 100644
-> --- a/include/uapi/linux/ethtool_netlink.h
-> +++ b/include/uapi/linux/ethtool_netlink.h
-> @@ -185,6 +185,7 @@ enum {
->  	ETHTOOL_A_LINKMODES_PEER,		/* bitset */
->  	ETHTOOL_A_LINKMODES_SPEED,		/* u32 */
->  	ETHTOOL_A_LINKMODES_DUPLEX,		/* u8 */
-> +	ETHTOOL_A_LINKMODES_MASTER_SLAVE,	/* u8 */
-> =20
->  	/* add new constants above here */
->  	__ETHTOOL_A_LINKMODES_CNT,
-> diff --git a/include/uapi/linux/mii.h b/include/uapi/linux/mii.h
-> index 0b9c3beda345b..78eac603a84fb 100644
-> --- a/include/uapi/linux/mii.h
-> +++ b/include/uapi/linux/mii.h
-> @@ -146,11 +146,13 @@
->  /* 1000BASE-T Control register */
->  #define ADVERTISE_1000FULL	0x0200  /* Advertise 1000BASE-T full duplex */
->  #define ADVERTISE_1000HALF	0x0100  /* Advertise 1000BASE-T half duplex */
-> +#define CTL1000_PREFER_MASTER	0x0400  /* prefer to operate as master */
->  #define CTL1000_AS_MASTER	0x0800
->  #define CTL1000_ENABLE_MASTER	0x1000
-> =20
->  /* 1000BASE-T Status register */
->  #define LPA_1000MSFAIL		0x8000	/* Master/Slave resolution failure */
-> +#define LPA_1000MSRES		0x4000	/* Master/Slave resolution status */
->  #define LPA_1000LOCALRXOK	0x2000	/* Link partner local receiver status */
->  #define LPA_1000REMRXOK		0x1000	/* Link partner remote receiver status */
->  #define LPA_1000FULL		0x0800	/* Link partner 1000BASE-T full duplex */
-> diff --git a/net/ethtool/linkmodes.c b/net/ethtool/linkmodes.c
-> index 96f20be64553e..dc15b88e64c6a 100644
-> --- a/net/ethtool/linkmodes.c
-> +++ b/net/ethtool/linkmodes.c
-> @@ -27,6 +27,7 @@ linkmodes_get_policy[ETHTOOL_A_LINKMODES_MAX + 1] =3D {
->  	[ETHTOOL_A_LINKMODES_PEER]		=3D { .type =3D NLA_REJECT },
->  	[ETHTOOL_A_LINKMODES_SPEED]		=3D { .type =3D NLA_REJECT },
->  	[ETHTOOL_A_LINKMODES_DUPLEX]		=3D { .type =3D NLA_REJECT },
-> +	[ETHTOOL_A_LINKMODES_MASTER_SLAVE]	=3D { .type =3D NLA_REJECT },
->  };
-> =20
->  static int linkmodes_prepare_data(const struct ethnl_req_info *req_base,
-> @@ -69,6 +70,7 @@ static int linkmodes_reply_size(const struct ethnl_req_=
-info *req_base,
->  	len =3D nla_total_size(sizeof(u8)) /* LINKMODES_AUTONEG */
->  		+ nla_total_size(sizeof(u32)) /* LINKMODES_SPEED */
->  		+ nla_total_size(sizeof(u8)) /* LINKMODES_DUPLEX */
-> +		+ nla_total_size(sizeof(u8)) /* LINKMODES_MASTER_SLAVE */
->  		+ 0;
->  	ret =3D ethnl_bitset_size(ksettings->link_modes.advertising,
->  				ksettings->link_modes.supported,
-> @@ -119,7 +121,9 @@ static int linkmodes_fill_reply(struct sk_buff *skb,
->  	}
-> =20
->  	if (nla_put_u32(skb, ETHTOOL_A_LINKMODES_SPEED, lsettings->speed) ||
-> -	    nla_put_u8(skb, ETHTOOL_A_LINKMODES_DUPLEX, lsettings->duplex))
-> +	    nla_put_u8(skb, ETHTOOL_A_LINKMODES_DUPLEX, lsettings->duplex) ||
-> +	    nla_put_u8(skb, ETHTOOL_A_LINKMODES_MASTER_SLAVE,
-> +		       lsettings->master_slave))
->  		return -EMSGSIZE;
-> =20
->  	return 0;
-> @@ -248,6 +252,7 @@ linkmodes_set_policy[ETHTOOL_A_LINKMODES_MAX + 1] =3D=
+This change fixes several problems with the support for the
+acpi_exec namespace init file (-fi option). Specifically, it
+fixes AE_ALREADY_EXISTS errors, as well as various seg faults.
+
+Link: https://github.com/acpica/acpica/commit/f31cdf8b
+Link: https://github.com/acpica/acpica/commit/6803997e
+Signed-off-by: Bob Moore <robert.moore@intel.com>
+Signed-off-by: Erik Kaneda <erik.kaneda@intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/acpi/acpica/acnamesp.h |  2 ++
+ drivers/acpi/acpica/dbinput.c  | 16 +++++++---------
+ drivers/acpi/acpica/dswexec.c  | 33 ++++++++++++++++++++++++++++++++
+ drivers/acpi/acpica/dswload.c  |  2 --
+ drivers/acpi/acpica/dswload2.c | 35 ++++++++++++++++++++++++++++++++++
+ drivers/acpi/acpica/nsnames.c  |  6 +-----
+ drivers/acpi/acpica/utdelete.c |  9 +++++----
+ 7 files changed, 83 insertions(+), 20 deletions(-)
+
+diff --git a/drivers/acpi/acpica/acnamesp.h b/drivers/acpi/acpica/acnamesp.h
+index 7da1864798a0e..ecaa28733dc61 100644
+--- a/drivers/acpi/acpica/acnamesp.h
++++ b/drivers/acpi/acpica/acnamesp.h
+@@ -256,6 +256,8 @@ u32
+ acpi_ns_build_normalized_path(struct acpi_namespace_node *node,
+ 			      char *full_path, u32 path_size, u8 no_trailing);
+ 
++void acpi_ns_normalize_pathname(char *original_path);
++
+ char *acpi_ns_get_normalized_pathname(struct acpi_namespace_node *node,
+ 				      u8 no_trailing);
+ 
+diff --git a/drivers/acpi/acpica/dbinput.c b/drivers/acpi/acpica/dbinput.c
+index 55a7e10998d87..1ef053585bbb8 100644
+--- a/drivers/acpi/acpica/dbinput.c
++++ b/drivers/acpi/acpica/dbinput.c
+@@ -464,16 +464,14 @@ char *acpi_db_get_next_token(char *string,
+ 		return (NULL);
+ 	}
+ 
+-	/* Remove any spaces at the beginning */
++	/* Remove any spaces at the beginning, ignore blank lines */
+ 
+-	if (*string == ' ') {
+-		while (*string && (*string == ' ')) {
+-			string++;
+-		}
++	while (*string && isspace(*string)) {
++		string++;
++	}
+ 
+-		if (!(*string)) {
+-			return (NULL);
+-		}
++	if (!(*string)) {
++		return (NULL);
+ 	}
+ 
+ 	switch (*string) {
+@@ -551,7 +549,7 @@ char *acpi_db_get_next_token(char *string,
+ 
+ 		/* Find end of token */
+ 
+-		while (*string && (*string != ' ')) {
++		while (*string && !isspace(*string)) {
+ 			string++;
+ 		}
+ 		break;
+diff --git a/drivers/acpi/acpica/dswexec.c b/drivers/acpi/acpica/dswexec.c
+index d75aae3045958..a68237b97c4c8 100644
+--- a/drivers/acpi/acpica/dswexec.c
++++ b/drivers/acpi/acpica/dswexec.c
+@@ -16,6 +16,9 @@
+ #include "acinterp.h"
+ #include "acnamesp.h"
+ #include "acdebug.h"
++#ifdef ACPI_EXEC_APP
++#include "aecommon.h"
++#endif
+ 
+ #define _COMPONENT          ACPI_DISPATCHER
+ ACPI_MODULE_NAME("dswexec")
+@@ -329,6 +332,10 @@ acpi_status acpi_ds_exec_end_op(struct acpi_walk_state *walk_state)
+ 	u32 op_class;
+ 	union acpi_parse_object *next_op;
+ 	union acpi_parse_object *first_arg;
++#ifdef ACPI_EXEC_APP
++	char *namepath;
++	union acpi_operand_object *obj_desc;
++#endif
+ 
+ 	ACPI_FUNCTION_TRACE_PTR(ds_exec_end_op, walk_state);
+ 
+@@ -537,6 +544,32 @@ acpi_status acpi_ds_exec_end_op(struct acpi_walk_state *walk_state)
+ 
+ 			status =
+ 			    acpi_ds_eval_buffer_field_operands(walk_state, op);
++			if (ACPI_FAILURE(status)) {
++				break;
++			}
++#ifdef ACPI_EXEC_APP
++			/*
++			 * acpi_exec support for namespace initialization file (initialize
++			 * buffer_fields in this code.)
++			 */
++			namepath =
++			    acpi_ns_get_external_pathname(op->common.node);
++			status = ae_lookup_init_file_entry(namepath, &obj_desc);
++			if (ACPI_SUCCESS(status)) {
++				status =
++				    acpi_ex_write_data_to_field(obj_desc,
++								op->common.
++								node->object,
++								NULL);
++				if ACPI_FAILURE
++					(status) {
++					ACPI_EXCEPTION((AE_INFO, status,
++							"While writing to buffer field"));
++					}
++			}
++			ACPI_FREE(namepath);
++			status = AE_OK;
++#endif
+ 			break;
+ 
+ 		case AML_TYPE_CREATE_OBJECT:
+diff --git a/drivers/acpi/acpica/dswload.c b/drivers/acpi/acpica/dswload.c
+index 4bcf15bf03ded..6cf93fae4d07f 100644
+--- a/drivers/acpi/acpica/dswload.c
++++ b/drivers/acpi/acpica/dswload.c
+@@ -14,7 +14,6 @@
+ #include "acdispat.h"
+ #include "acinterp.h"
+ #include "acnamesp.h"
+-
+ #ifdef ACPI_ASL_COMPILER
+ #include "acdisasm.h"
+ #endif
+@@ -399,7 +398,6 @@ acpi_status acpi_ds_load1_end_op(struct acpi_walk_state *walk_state)
+ 	union acpi_parse_object *op;
+ 	acpi_object_type object_type;
+ 	acpi_status status = AE_OK;
+-
+ #ifdef ACPI_ASL_COMPILER
+ 	u8 param_count;
+ #endif
+diff --git a/drivers/acpi/acpica/dswload2.c b/drivers/acpi/acpica/dswload2.c
+index 935a8e2623e4b..15d92bf15f0b6 100644
+--- a/drivers/acpi/acpica/dswload2.c
++++ b/drivers/acpi/acpica/dswload2.c
+@@ -15,6 +15,9 @@
+ #include "acinterp.h"
+ #include "acnamesp.h"
+ #include "acevents.h"
++#ifdef ACPI_EXEC_APP
++#include "aecommon.h"
++#endif
+ 
+ #define _COMPONENT          ACPI_DISPATCHER
+ ACPI_MODULE_NAME("dswload2")
+@@ -373,6 +376,10 @@ acpi_status acpi_ds_load2_end_op(struct acpi_walk_state *walk_state)
+ 	struct acpi_namespace_node *new_node;
+ 	u32 i;
+ 	u8 region_space;
++#ifdef ACPI_EXEC_APP
++	union acpi_operand_object *obj_desc;
++	char *namepath;
++#endif
+ 
+ 	ACPI_FUNCTION_TRACE(ds_load2_end_op);
+ 
+@@ -466,6 +473,11 @@ acpi_status acpi_ds_load2_end_op(struct acpi_walk_state *walk_state)
+ 		 * be evaluated later during the execution phase
+ 		 */
+ 		status = acpi_ds_create_buffer_field(op, walk_state);
++		if (ACPI_FAILURE(status)) {
++			ACPI_EXCEPTION((AE_INFO, status,
++					"CreateBufferField failure"));
++			goto cleanup;
++			}
+ 		break;
+ 
+ 	case AML_TYPE_NAMED_FIELD:
+@@ -604,6 +616,29 @@ acpi_status acpi_ds_load2_end_op(struct acpi_walk_state *walk_state)
+ 		case AML_NAME_OP:
+ 
+ 			status = acpi_ds_create_node(walk_state, node, op);
++			if (ACPI_FAILURE(status)) {
++				goto cleanup;
++			}
++#ifdef ACPI_EXEC_APP
++			/*
++			 * acpi_exec support for namespace initialization file (initialize
++			 * Name opcodes in this code.)
++			 */
++			namepath = acpi_ns_get_external_pathname(node);
++			status = ae_lookup_init_file_entry(namepath, &obj_desc);
++			if (ACPI_SUCCESS(status)) {
++
++				/* Detach any existing object, attach new object */
++
++				if (node->object) {
++					acpi_ns_detach_object(node);
++				}
++				acpi_ns_attach_object(node, obj_desc,
++						      obj_desc->common.type);
++			}
++			ACPI_FREE(namepath);
++			status = AE_OK;
++#endif
+ 			break;
+ 
+ 		case AML_METHOD_OP:
+diff --git a/drivers/acpi/acpica/nsnames.c b/drivers/acpi/acpica/nsnames.c
+index 370bbc8677453..c717fff7d9b57 100644
+--- a/drivers/acpi/acpica/nsnames.c
++++ b/drivers/acpi/acpica/nsnames.c
+@@ -13,9 +13,6 @@
+ #define _COMPONENT          ACPI_NAMESPACE
+ ACPI_MODULE_NAME("nsnames")
+ 
+-/* Local Prototypes */
+-static void acpi_ns_normalize_pathname(char *original_path);
+-
+ /*******************************************************************************
+  *
+  * FUNCTION:    acpi_ns_get_external_pathname
+@@ -30,7 +27,6 @@ static void acpi_ns_normalize_pathname(char *original_path);
+  *              for error and debug statements.
+  *
+  ******************************************************************************/
+-
+ char *acpi_ns_get_external_pathname(struct acpi_namespace_node *node)
  {
->  	[ETHTOOL_A_LINKMODES_PEER]		=3D { .type =3D NLA_REJECT },
->  	[ETHTOOL_A_LINKMODES_SPEED]		=3D { .type =3D NLA_U32 },
->  	[ETHTOOL_A_LINKMODES_DUPLEX]		=3D { .type =3D NLA_U8 },
-> +	[ETHTOOL_A_LINKMODES_MASTER_SLAVE]	=3D { .type =3D NLA_U8 },
->  };
-> =20
->  /* Set advertised link modes to all supported modes matching requested s=
-peed
-> @@ -310,6 +315,8 @@ static int ethnl_update_linkmodes(struct genl_info *i=
-nfo, struct nlattr **tb,
->  			 mod);
->  	ethnl_update_u8(&lsettings->duplex, tb[ETHTOOL_A_LINKMODES_DUPLEX],
->  			mod);
-> +	ethnl_update_u8(&lsettings->master_slave,
-> +			tb[ETHTOOL_A_LINKMODES_MASTER_SLAVE], mod);
-> =20
->  	if (!tb[ETHTOOL_A_LINKMODES_OURS] && lsettings->autoneg &&
->  	    (req_speed || req_duplex) &&
-> --=20
-> 2.26.0.rc2
->=20
->=20
+ 	char *name_buffer;
+@@ -411,7 +407,7 @@ char *acpi_ns_build_prefixed_pathname(union acpi_generic_state *prefix_scope,
+  *
+  ******************************************************************************/
+ 
+-static void acpi_ns_normalize_pathname(char *original_path)
++void acpi_ns_normalize_pathname(char *original_path)
+ {
+ 	char *input_path = original_path;
+ 	char *new_path_buffer;
+diff --git a/drivers/acpi/acpica/utdelete.c b/drivers/acpi/acpica/utdelete.c
+index eee263cb7beb0..c365faf4e6cd4 100644
+--- a/drivers/acpi/acpica/utdelete.c
++++ b/drivers/acpi/acpica/utdelete.c
+@@ -452,13 +452,13 @@ acpi_ut_update_ref_count(union acpi_operand_object *object, u32 action)
+  *
+  * FUNCTION:    acpi_ut_update_object_reference
+  *
+- * PARAMETERS:  object              - Increment ref count for this object
+- *                                    and all sub-objects
++ * PARAMETERS:  object              - Increment or decrement the ref count for
++ *                                    this object and all sub-objects
+  *              action              - Either REF_INCREMENT or REF_DECREMENT
+  *
+  * RETURN:      Status
+  *
+- * DESCRIPTION: Increment the object reference count
++ * DESCRIPTION: Increment or decrement the object reference count
+  *
+  * Object references are incremented when:
+  * 1) An object is attached to a Node (namespace object)
+@@ -492,7 +492,7 @@ acpi_ut_update_object_reference(union acpi_operand_object *object, u16 action)
+ 		}
+ 
+ 		/*
+-		 * All sub-objects must have their reference count incremented
++		 * All sub-objects must have their reference count updated
+ 		 * also. Different object types have different subobjects.
+ 		 */
+ 		switch (object->common.type) {
+@@ -559,6 +559,7 @@ acpi_ut_update_object_reference(union acpi_operand_object *object, u16 action)
+ 					break;
+ 				}
+ 			}
++
+ 			next_object = NULL;
+ 			break;
+ 
+-- 
+2.20.1
 
---=20
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-
---txzfdtzcwyntqg4n
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl6W+9cACgkQ4omh9DUa
-UbN7jg/9Em+O+aAW8m+uSribGo6H9cvo/MDhVUjJcOjzm6DEg4MSVBe500WpMbcH
-/yko33voV783SEtjk3DOelr0k0Ksl25bfrgoswlEn5UhNmtwMHh3PD3b0/xFQhn2
-e94H/CZzzFao0a1KNdLBJA2ElmqQvJ/jL4r6TYKG7RA+ShNUa6bZQ4jppDDHFAXE
-b/H3yQi/NA8FZcFUepgYmn2FxtFA1U5A+0Hh5FugUIRaS95vx2aDR1oOD2GyMtfi
-DExg2y/shVA1lCu+VW5+FCHkgTHqqPasKkWTVKu38w6fd8BQtn1cLtX0R95u3lQ7
-3xA0e4fVT3EkW3qu1qk5clBS+vOWqD1yUJfNVJntyI+Y2iFkJ1pIfEMEXObK0oK+
-04OGOOvuW5y4BdTl5b8zosjcts7k2ZbfNFUdpPaJqT4LWP4WMV0jXLOq52sb6MnE
-RbYGJmyM/IfktbwTzqfBIxxxX77wVbfZtBWjYzOOf3K/c/HP4GA0nucgf5NHJlO+
-PZbTD3qZE0k3uBLeiZsxVGP6DWt1K4wFsXIVxmRdfWIYJLdW9WvGVi+YjUFhyFMt
-U8B8LPks/buRKM7gX+x2Ry9iUKVLb5ZX/DR33MUG2ux2WYBOR/ZL1MTUCD8BUO5m
-9DEAl7spmveC84qB25dZvAZTVxBMOYUYJbbqkq6KSar3vwMs/GE=
-=a9II
------END PGP SIGNATURE-----
-
---txzfdtzcwyntqg4n--
