@@ -2,228 +2,221 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCCF9C2BB85
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:17:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A18C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:18:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3C1320775
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:17:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=bingham-xyz.20150623.gappssmtp.com header.i=@bingham-xyz.20150623.gappssmtp.com header.b="HHKT+vbn"
+	by mail.kernel.org (Postfix) with ESMTP id 1C4CB20775
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 08:18:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2635783AbgDOIR3 (ORCPT
+        id S2635796AbgDOISo convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 04:17:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37354 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2635665AbgDOIRT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 04:17:19 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF2E5C061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 01:17:18 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id k1so10768208wrx.4
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 01:17:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bingham-xyz.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=66J/HTT33Uol1SUiWn/L5p3x58zavge/AfZ1s13ycQs=;
-        b=HHKT+vbncLLE5ENnysOfThYsQlOABiBtlM9U3S9b5PJ2rdIB0k3EjbVpY3LHhPoVaQ
-         N5RWpRm/uhVMzD19pFTSYJxTWS1J3KzGodk30Ufo/3qhfO1+1ssDWFlsAcOFes4mqEvN
-         fqaPeNg0ix8/tr9HIEufa3czCVbPcr0MCH7El25hkL5mS7sC+CWjiZGc6TALdvwtluL1
-         qXbIWH54v7X7FcKzWBr3baYeapJWCNGQfGq3tAPAR7D3gbD2ZVuZIvCsxgUQ0dH/gd1I
-         z0t2WdqpbJPPzzNaMZQi5LDgKQEb01NA4Cv3M04iJayCGjRogp5WAvBGAdQU7A5OozXT
-         z0EQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=66J/HTT33Uol1SUiWn/L5p3x58zavge/AfZ1s13ycQs=;
-        b=HVcNmyBCDfbBQMCKXOLbGc3s4adJhPSf1UweSNdgxfTccU+3Ck19+P3S8ERIOn28px
-         ewsPCddddXVIT8mynHXdDqdgs2n3Nr9/uRF7G8RzLkpZ38suD3Exwz1bxljyPaTT26wC
-         Q+3kLZKYe8Zc/ph3Zh1GvnaRcDxP1SUJIIjaPciDL6luxoBMRRflKxD/Gvu/BQvjpnfc
-         VHv62fAFXhgLYDhTEFjo0ZAMh4KAyu8cjQLOwdIWCvchNPnzGeFWfjIjN2IAWoe1PCR8
-         mGH34r7XLrToUK1du1uhNZvqSVSY3CSBo5ib8lgpve5RK8tLnmocghWt9FtFlP3AA7SB
-         8YyA==
-X-Gm-Message-State: AGi0PubEAnzBOXnKs7eYG8c+jYBONk0iTAcGiIOfcoGzSBs2XloCfwsO
-        VqKsm2iVTTwvDLhVkNDv7b4ABA==
-X-Google-Smtp-Source: APiQypK/AhTJbpx8WrXtnpfEVeAyVY/z/Wlz42tkt4YSkttsVxnPoK6Bo3gTgmzQuJzPDaVQ8QtPmA==
-X-Received: by 2002:a5d:5189:: with SMTP id k9mr417179wrv.3.1586938637645;
-        Wed, 15 Apr 2020 01:17:17 -0700 (PDT)
-Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net. [86.31.129.233])
-        by smtp.gmail.com with ESMTPSA id v16sm21796745wml.30.2020.04.15.01.17.16
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 15 Apr 2020 01:17:16 -0700 (PDT)
-Subject: Re: [RFC PATCH v2 4/6] i2c: of: error message unification
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-i2c@vger.kernel.org
-Cc:     linux-renesas-soc@vger.kernel.org, linux-i3c@lists.infradead.org,
-        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
-        Luca Ceresoli <luca@lucaceresoli.net>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-References: <20200318150059.21714-1-wsa+renesas@sang-engineering.com>
- <20200318150059.21714-5-wsa+renesas@sang-engineering.com>
-From:   Kieran Bingham <kieran@ksquared.org.uk>
-Openpgp: preference=signencrypt
-Autocrypt: addr=kieran@bingham.xyz; keydata=
- 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
- QglrIkyNWSZm4Hhw98VxYDwOwmYhoXmAFg==
-Message-ID: <7014c94a-bb89-b282-52ee-49b42ab5aac1@bingham.xyz>
-Date:   Wed, 15 Apr 2020 09:17:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Wed, 15 Apr 2020 04:18:44 -0400
+Received: from mga07.intel.com ([134.134.136.100]:36970 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2635665AbgDOISh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 04:18:37 -0400
+IronPort-SDR: HBSlQfIIlwJY9rNH0DxsWLGY3DBKQxDoHmC2VATRX5e+ebjDjn5skvfUC91JRaLW2gPf1ur07N
+ NQapzJxzNFtQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 01:18:36 -0700
+IronPort-SDR: gwWDdwSqeSnRgrdW55EGTBDjMzuAxvnW9kJaJ3WB9sQLpa46TC5Uk2meU4OWfudziIrw08EP8z
+ Np+V5N5n/BeA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,386,1580803200"; 
+   d="scan'208";a="245634191"
+Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
+  by fmsmga008.fm.intel.com with ESMTP; 15 Apr 2020 01:18:36 -0700
+Received: from fmsmsx602.amr.corp.intel.com (10.18.126.82) by
+ FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 15 Apr 2020 01:18:36 -0700
+Received: from fmsmsx602.amr.corp.intel.com (10.18.126.82) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 15 Apr 2020 01:18:36 -0700
+Received: from shsmsx107.ccr.corp.intel.com (10.239.4.96) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Wed, 15 Apr 2020 01:18:35 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
+ SHSMSX107.ccr.corp.intel.com ([169.254.9.191]) with mapi id 14.03.0439.000;
+ Wed, 15 Apr 2020 16:18:33 +0800
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>
+CC:     "Raj, Ashok" <ashok.raj@intel.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2 2/7] iommu/vt-d: Multiple descriptors per
+ qi_submit_sync()
+Thread-Topic: [PATCH v2 2/7] iommu/vt-d: Multiple descriptors per
+ qi_submit_sync()
+Thread-Index: AQHWEubNcojyloGV5kG0IsggcRYC46h50o9A
+Date:   Wed, 15 Apr 2020 08:18:33 +0000
+Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D82055A@SHSMSX104.ccr.corp.intel.com>
+References: <20200415052542.30421-1-baolu.lu@linux.intel.com>
+ <20200415052542.30421-3-baolu.lu@linux.intel.com>
+In-Reply-To: <20200415052542.30421-3-baolu.lu@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-In-Reply-To: <20200318150059.21714-5-wsa+renesas@sang-engineering.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wolfram,
-
-On 18/03/2020 15:00, Wolfram Sang wrote:
-> - don't prefix the device if %pOF is provided. That information is
->   enough.
-> - move the prefix to pr_fmt
-> - change prefix from "of_i2c" to "i2c_of" because the code was moved
->   out of the of-domain long ago
-> - drop error string for callers of of_i2c_register_device because it
->   already reports enough (thanks to Tang Bin for the report!)
+> From: Lu Baolu <baolu.lu@linux.intel.com>
+> Sent: Wednesday, April 15, 2020 1:26 PM
 > 
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-
+> Extend qi_submit_sync() function to support multiple descriptors.
+> 
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
 > ---
->  drivers/i2c/i2c-core-of.c | 18 +++++++-----------
->  1 file changed, 7 insertions(+), 11 deletions(-)
+>  drivers/iommu/dmar.c        | 39 +++++++++++++++++++++++--------------
+>  include/linux/intel-iommu.h |  1 +
+>  2 files changed, 25 insertions(+), 15 deletions(-)
 > 
-> diff --git a/drivers/i2c/i2c-core-of.c b/drivers/i2c/i2c-core-of.c
-> index 710704cd583e..f2d09ea0d336 100644
-> --- a/drivers/i2c/i2c-core-of.c
-> +++ b/drivers/i2c/i2c-core-of.c
-> @@ -8,6 +8,8 @@
->   * Copyright (C) 2013, 2018 Wolfram Sang <wsa@the-dreams.de>
->   */
->  
-> +#define pr_fmt(fmt) "i2c_of: " fmt
-> +
->  #include <dt-bindings/i2c/i2c.h>
->  #include <linux/device.h>
->  #include <linux/err.h>
-> @@ -28,7 +30,7 @@ int of_i2c_get_board_info(struct device_node *node, struct i2c_board_info *info)
->  
->  	ret = of_property_read_u32(node, "reg", &addr);
->  	if (ret) {
-> -		pr_err("of_i2c: invalid reg on %pOF\n", node);
-> +		pr_err("invalid reg on %pOF\n", node);
->  		return ret;
+> diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
+> index bb42177e2369..61d049e91f84 100644
+> --- a/drivers/iommu/dmar.c
+> +++ b/drivers/iommu/dmar.c
+> @@ -1157,12 +1157,11 @@ static inline void reclaim_free_desc(struct
+> q_inval *qi)
 >  	}
->  
-> @@ -66,7 +68,7 @@ static struct i2c_client *of_i2c_register_device(struct i2c_adapter *adap,
->  	struct i2c_board_info info;
->  	int ret;
->  
-> -	dev_dbg(&adap->dev, "of_i2c: register %pOF\n", node);
-> +	pr_debug("register %pOF\n", node);
->  
->  	ret = of_i2c_get_board_info(node, &info);
->  	if (ret)
-> @@ -74,7 +76,7 @@ static struct i2c_client *of_i2c_register_device(struct i2c_adapter *adap,
->  
->  	client = i2c_new_client_device(adap, &info);
->  	if (IS_ERR(client))
-> -		dev_err(&adap->dev, "of_i2c: Failure registering %pOF\n", node);
-> +		pr_err("failure registering %pOF (%ld)\n", node, PTR_ERR(client));
->  
->  	return client;
 >  }
-> @@ -88,7 +90,7 @@ void of_i2c_register_devices(struct i2c_adapter *adap)
->  	if (!adap->dev.of_node)
->  		return;
->  
-> -	dev_dbg(&adap->dev, "of_i2c: walking child nodes\n");
-> +	dev_dbg(&adap->dev, "walking child nodes\n");
->  
->  	bus = of_get_child_by_name(adap->dev.of_node, "i2c-bus");
->  	if (!bus)
-> @@ -99,12 +101,8 @@ void of_i2c_register_devices(struct i2c_adapter *adap)
->  			continue;
->  
->  		client = of_i2c_register_device(adap, node);
-> -		if (IS_ERR(client)) {
-> -			dev_err(&adap->dev,
-> -				 "Failed to create I2C device for %pOF\n",
-> -				 node);
-> +		if (IS_ERR(client))
->  			of_node_clear_flag(node, OF_POPULATED);
-> -		}
->  	}
->  
->  	of_node_put(bus);
-> @@ -243,8 +241,6 @@ static int of_i2c_notify(struct notifier_block *nb, unsigned long action,
->  
->  		client = of_i2c_register_device(adap, rd->dn);
->  		if (IS_ERR(client)) {
-> -			dev_err(&adap->dev, "failed to create client for '%pOF'\n",
-> -				 rd->dn);
->  			put_device(&adap->dev);
->  			of_node_clear_flag(rd->dn, OF_POPULATED);
->  			return notifier_from_errno(PTR_ERR(client));
 > 
+> -static int qi_check_fault(struct intel_iommu *iommu, int index)
+> +static int qi_check_fault(struct intel_iommu *iommu, int index, int
+> wait_index)
+>  {
+>  	u32 fault;
+>  	int head, tail;
+>  	struct q_inval *qi = iommu->qi;
+> -	int wait_index = (index + 1) % QI_LENGTH;
+>  	int shift = qi_shift(iommu);
+> 
+>  	if (qi->desc_status[wait_index] == QI_ABORT)
+> @@ -1234,12 +1233,12 @@ static int qi_check_fault(struct intel_iommu
+> *iommu, int index)
+>  int qi_submit_sync(struct intel_iommu *iommu, struct qi_desc *desc,
+>  		   unsigned int count, unsigned long options)
+>  {
+> -	int rc;
+>  	struct q_inval *qi = iommu->qi;
+> -	int offset, shift, length;
+>  	struct qi_desc wait_desc;
+>  	int wait_index, index;
+>  	unsigned long flags;
+> +	int offset, shift;
+> +	int rc, i;
+> 
+>  	if (!qi)
+>  		return 0;
+> @@ -1248,32 +1247,41 @@ int qi_submit_sync(struct intel_iommu *iommu,
+> struct qi_desc *desc,
+>  	rc = 0;
+> 
+>  	raw_spin_lock_irqsave(&qi->q_lock, flags);
+> -	while (qi->free_cnt < 3) {
+> +	/*
+> +	 * Check if we have enough empty slots in the queue to submit,
+> +	 * the calculation is based on:
+> +	 * # of desc + 1 wait desc + 1 space between head and tail
+> +	 */
+> +	while (qi->free_cnt < count + 2) {
+>  		raw_spin_unlock_irqrestore(&qi->q_lock, flags);
+>  		cpu_relax();
+>  		raw_spin_lock_irqsave(&qi->q_lock, flags);
+>  	}
+> 
+>  	index = qi->free_head;
+> -	wait_index = (index + 1) % QI_LENGTH;
+> +	wait_index = (index + count) % QI_LENGTH;
+>  	shift = qi_shift(iommu);
+> -	length = 1 << shift;
+> 
+> -	qi->desc_status[index] = qi->desc_status[wait_index] = QI_IN_USE;
+> +	for (i = 0; i < count; i++) {
+> +		offset = ((index + i) % QI_LENGTH) << shift;
+> +		memcpy(qi->desc + offset, &desc[i], 1 << shift);
+> +		qi->desc_status[(index + i) % QI_LENGTH] = QI_IN_USE;
+> +	}
+
+what about doing one memcpy and leave the loop only for updating
+qi status?
+
+> +	qi->desc_status[wait_index] = QI_IN_USE;
+> 
+> -	offset = index << shift;
+> -	memcpy(qi->desc + offset, desc, length);
+>  	wait_desc.qw0 = QI_IWD_STATUS_DATA(QI_DONE) |
+>  			QI_IWD_STATUS_WRITE | QI_IWD_TYPE;
+> +	if (options & QI_OPT_WAIT_DRAIN)
+> +		wait_desc.qw0 |= QI_IWD_PRQ_DRAIN;
+>  	wait_desc.qw1 = virt_to_phys(&qi->desc_status[wait_index]);
+>  	wait_desc.qw2 = 0;
+>  	wait_desc.qw3 = 0;
+> 
+>  	offset = wait_index << shift;
+> -	memcpy(qi->desc + offset, &wait_desc, length);
+> +	memcpy(qi->desc + offset, &wait_desc, 1 << shift);
+> 
+> -	qi->free_head = (qi->free_head + 2) % QI_LENGTH;
+> -	qi->free_cnt -= 2;
+> +	qi->free_head = (qi->free_head + count + 1) % QI_LENGTH;
+> +	qi->free_cnt -= count + 1;
+> 
+>  	/*
+>  	 * update the HW tail register indicating the presence of
+> @@ -1289,7 +1297,7 @@ int qi_submit_sync(struct intel_iommu *iommu,
+> struct qi_desc *desc,
+>  		 * a deadlock where the interrupt context can wait
+> indefinitely
+>  		 * for free slots in the queue.
+>  		 */
+> -		rc = qi_check_fault(iommu, index);
+> +		rc = qi_check_fault(iommu, index, wait_index);
+>  		if (rc)
+>  			break;
+> 
+> @@ -1298,7 +1306,8 @@ int qi_submit_sync(struct intel_iommu *iommu,
+> struct qi_desc *desc,
+>  		raw_spin_lock(&qi->q_lock);
+>  	}
+> 
+> -	qi->desc_status[index] = QI_DONE;
+> +	for (i = 0; i < count; i++)
+> +		qi->desc_status[(index + i) % QI_LENGTH] = QI_DONE;
+> 
+>  	reclaim_free_desc(qi);
+>  	raw_spin_unlock_irqrestore(&qi->q_lock, flags);
+> diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
+> index ee2d5cdd8339..cca1e5f9aeaa 100644
+> --- a/include/linux/intel-iommu.h
+> +++ b/include/linux/intel-iommu.h
+> @@ -333,6 +333,7 @@ enum {
+> 
+>  #define QI_IWD_STATUS_DATA(d)	(((u64)d) << 32)
+>  #define QI_IWD_STATUS_WRITE	(((u64)1) << 5)
+> +#define QI_IWD_PRQ_DRAIN	(((u64)1) << 7)
+> 
+>  #define QI_IOTLB_DID(did) 	(((u64)did) << 16)
+>  #define QI_IOTLB_DR(dr) 	(((u64)dr) << 7)
+> --
+> 2.17.1
 
