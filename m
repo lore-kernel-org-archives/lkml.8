@@ -2,124 +2,172 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CFE4C2BB55
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2914AC2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29F032076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:02:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pcpO7VAT"
+	by mail.kernel.org (Postfix) with ESMTP id 0C4AA21734
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 13:02:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505727AbgDONCR (ORCPT
+        id S2505733AbgDONCY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:02:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53034 "EHLO
+        Wed, 15 Apr 2020 09:02:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2505573AbgDOM7d (ORCPT
+        by vger.kernel.org with ESMTP id S2505708AbgDONAn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 08:59:33 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58880C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 05:59:33 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id k28so2523620lfe.10
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 05:59:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DI2AFHL2tx49XNx60DqvVugAFBZg+6vnc4k/tFews4w=;
-        b=pcpO7VATwXbQgRo4gDRrisKgiqAhNg4kooWvscgbiAxACXrbuk6q6rB0qUtUbGdYuY
-         H2lD3k7Xsb5HZvF2rNoQOcFEHHJTpGYqBLUtokuiXQ0x386I1agfawl4xjeNKeocBWAW
-         PFMI63Gs9KSUVuxama69onANow47fHEzrBRgdW1sZwD9uZT1QIJfi4a+KQyCFSKczhzr
-         LiL1E6/yf9xkU2bOFPyVkOXiawIoN+VtzHqR/GX9a2MvHVQ2O70aft0ZT6B+W8bCq+ic
-         rMUrCWrGutxkwrVda6/xbdIF+IFCCriYE6ACMkQTjss64U77lu6YuA5dlsP6Tg2Idfdz
-         1UeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DI2AFHL2tx49XNx60DqvVugAFBZg+6vnc4k/tFews4w=;
-        b=nACdFxyCfzudKzFiqH3Uc95XJvc40bjWnMXgUXWiup9zeqpy8g3Bpw6I9D9V1c5FJJ
-         MFSkDkAf05wXNWK6giLQnm4U8tBuCzuTWcNAD9THkrOnL+zsk8HpGWmPAdXYrU64Tr41
-         dS4JMGh3TG38a70B26w/h5LKyTiXfxOzOAQZ8t+jz+37bSGtGkDEhNE/QgNrSdQ3M2Hi
-         bxx7Xa2lD4Cay66B99AKb0pjL/3QLIZHTjEMgG5jqOTsmmZeYAfaqrRHLEOrdaDoCgOF
-         NtasddcBFsNfZtJNnMrCRXfjeZSeQhEcSTqxvuA/fZ/a5b95i6VBsqQ7sTS9B42Tmbah
-         dDUg==
-X-Gm-Message-State: AGi0PuZqtapExtTD9S5Yvpp7h4vpOSE8RuNtjUOG0pkoeq+ALamq0svI
-        ppL0J2fpcJOK0p6fY2ZqosuPfQvdj+ADoC9qe20=
-X-Google-Smtp-Source: APiQypKdHRnG1jLXD546lADoQJVvI8dmouDB4eFL8ge91ANINXKAaEDi1lrwQj1WqbczqeOKIvJm09XmsCELPL9SPKw=
-X-Received: by 2002:ac2:5042:: with SMTP id a2mr3033068lfm.13.1586955571854;
- Wed, 15 Apr 2020 05:59:31 -0700 (PDT)
+        Wed, 15 Apr 2020 09:00:43 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4348C061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 06:00:42 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jOhed-00063e-5D; Wed, 15 Apr 2020 15:00:35 +0200
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jOhec-0004un-B2; Wed, 15 Apr 2020 15:00:34 +0200
+Date:   Wed, 15 Apr 2020 15:00:34 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        David Jander <david@protonic.nl>, kernel@pengutronix.de,
+        linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        mkl@pengutronix.de, Marek Vasut <marex@denx.de>
+Subject: Re: [PATCH v1] ethtool: provide UAPI for PHY master/slave
+ configuration.
+Message-ID: <20200415130034.7zbizr4x4vnxto6a@pengutronix.de>
+References: <20200415121209.12197-1-o.rempel@pengutronix.de>
+ <20200415121940.2du33zckvayfqjrb@pengutronix.de>
+ <20200415124343.GZ3141@unicorn.suse.cz>
 MIME-Version: 1.0
-References: <cover.1586757922.git.baolin.wang7@gmail.com>
-In-Reply-To: <cover.1586757922.git.baolin.wang7@gmail.com>
-From:   Baolin Wang <baolin.wang7@gmail.com>
-Date:   Wed, 15 Apr 2020 20:59:20 +0800
-Message-ID: <CADBw62p7Z9tLYknc6Jev5dhSrbDpJ_Lr8w8-dC0DG-3gYsMcMw@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 0/3] Add new reg_update_bits() support
-To:     Lee Jones <lee.jones@linaro.org>, Arnd Bergmann <arnd@arndb.de>,
-        Mark Brown <broonie@kernel.org>
-Cc:     Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="wmkigrreuigkomxv"
+Content-Disposition: inline
+In-Reply-To: <20200415124343.GZ3141@unicorn.suse.cz>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 14:58:11 up 152 days,  4:16, 170 users,  load average: 0.03, 0.06,
+ 0.01
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd,
 
-On Mon, Apr 13, 2020 at 2:13 PM Baolin Wang <baolin.wang7@gmail.com> wrote:
->
-> The Spreadtrum platform uses a special set/clear method to update
-> registers' bits, thus this patch set registers a physical regmap
-> bus into syscon core to support this feature instead of using the
-> MMIO bus, which is not a physical regmap bus.
->
-> Any comments are welcome. Thanks.
+--wmkigrreuigkomxv
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I saw Mark had applied patch 2 already. Thanks Mark.
+On Wed, Apr 15, 2020 at 02:43:43PM +0200, Michal Kubecek wrote:
+> On Wed, Apr 15, 2020 at 02:19:40PM +0200, Oleksij Rempel wrote:
+> > Cc: Marek Vasut <marex@denx.de>
+> >=20
+> > On Wed, Apr 15, 2020 at 02:12:09PM +0200, Oleksij Rempel wrote:
+> > > This UAPI is needed for BroadR-Reach 100BASE-T1 devices. Due to lack =
+of
+> > > auto-negotiation support, we needed to be able to configure the
+> > > MASTER-SLAVE role of the port manually or from an application in user
+> > > space.
+> > >=20
+> > > The same UAPI can be used for 1000BASE-T or MultiGBASE-T devices to
+> > > force MASTER or SLAVE role. See IEEE 802.3-2018:
+> > > 22.2.4.3.7 MASTER-SLAVE control register (Register 9)
+> > > 22.2.4.3.8 MASTER-SLAVE status register (Register 10)
+> > > 40.5.2 MASTER-SLAVE configuration resolution
+> > > 45.2.1.185.1 MASTER-SLAVE config value (1.2100.14)
+> > > 45.2.7.10 MultiGBASE-T AN control 1 register (Register 7.32)
+> > >=20
+> > > The MASTER-SLAVE role affects the clock configuration:
+> > >=20
+> > > ---------------------------------------------------------------------=
+----------
+> > > When the  PHY is configured as MASTER, the PMA Transmit function shall
+> > > source TX_TCLK from a local clock source. When configured as SLAVE, t=
+he
+> > > PMA Transmit function shall source TX_TCLK from the clock recovered f=
+rom
+> > > data stream provided by MASTER.
+> > >=20
+> > > iMX6Q                     KSZ9031                XXX
+> > > ------\                /-----------\        /------------\
+> > >       |                |           |        |            |
+> > >  MAC  |<----RGMII----->| PHY Slave |<------>| PHY Master |
+> > >       |<--- 125 MHz ---+-<------/  |        | \          |
+> > > ------/                \-----------/        \------------/
+> > >                                                ^
+> > >                                                 \-TX_TCLK
+> > >=20
+> > > ---------------------------------------------------------------------=
+----------
+> > >=20
+> > > Since some clock or link related issues are only reproducible in a
+> > > specific MASTER-SLAVE-role, MAC and PHY configuration, it is benefici=
+al
+> > > to provide generic (not 100BASE-T1 specific) interface to the user sp=
+ace
+> > > for configuration flexibility and trouble shooting.
+> > >=20
+> > > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> > > ---
+> [...]
+> > > +/* Port mode */
+> > > +#define PORT_MODE_MASTER	0x00
+> > > +#define PORT_MODE_SLAVE		0x01
+> > > +#define PORT_MODE_MASTER_FORCE	0x02
+> > > +#define PORT_MODE_SLAVE_FORCE	0x03
+> > > +#define PORT_MODE_UNKNOWN	0xff
+>=20
+> Shouldn't 0 rather be something like PORT_MODE_UNSUPPORTED or
+> PORT_MODE_NONE? If I see correctly, all drivers not setting the new
+> field (which would be all drivers right now and almost all later) will
+> leave the value at 0 which would be interpreted as PORT_MODE_MASTER.
 
-How do you think the syscon changes? As Mark pointed out, we can not
-add update_bits() for MMIO regmap bus, which is not a real physical
-regmap bus, so I introduced a new helper to allow a  physical regmap
-bus to be registered.
+Yes, you right. I was thinking about it and decided to follow the duplex
+code pattern. Will fix in the next version.
 
-And I wonder if you can apply the SPRD SoC driver through your tree if
-no objections from your side? Thanks.
+--=20
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 
-> Changes from RFC v1:
->  - Add new helper to registers a physical regmap bus instead of
->  using the MMIO bus.
->
-> Baolin Wang (3):
->   mfd: syscon: Support physical regmap bus
->   regmap: Add bus reg_update_bits() support
->   soc: sprd: Add Spreadtrum special bits updating support
->
->  drivers/base/regmap/regmap.c   |  1 +
->  drivers/mfd/syscon.c           | 16 ++++++-
->  drivers/soc/Kconfig            |  1 +
->  drivers/soc/Makefile           |  1 +
->  drivers/soc/sprd/Kconfig       | 16 +++++++
->  drivers/soc/sprd/Makefile      |  2 +
->  drivers/soc/sprd/sprd_syscon.c | 76 ++++++++++++++++++++++++++++++++++
->  include/linux/mfd/syscon.h     |  7 ++++
->  8 files changed, 118 insertions(+), 2 deletions(-)
->  create mode 100644 drivers/soc/sprd/Kconfig
->  create mode 100644 drivers/soc/sprd/Makefile
->  create mode 100644 drivers/soc/sprd/sprd_syscon.c
->
-> --
-> 2.17.1
->
+--wmkigrreuigkomxv
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
--- 
-Baolin Wang
+iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl6XBXEACgkQ4omh9DUa
+UbOglg//ZJyaMVRb7Ez1auRpbMdUrJ2zn7i1rb3lNG7CbUPgu6Ga2o+Vfr9VBXqv
+itDyVtiSnnMeamfoqpF+/2MguMcYdHfKDaEV9iZiDiWRqSHbpxqzK3HO8/rm6Ees
+aj2rb6WV2csMf2+yMGfpOdD21j2u3zwMHZJxPvGI0zzBQ3Q93X350k0Vq3+NdgL6
+P72GncsF2v9JXPcu6gqKkvBigQ6fHnIQTnD+O7PEDnyNII5acludGG/HysEILtcc
+jFGgZr38/pofHvLFEUYmeBYVKXulLN+iNEu6oD4dVkiV3z3N/s6fVHPu8grgRc0x
+tNOYfIePD3RjF7CjpxXJrZpDdd4Vc419eEmZxCEpTcJWm/sj4XNSF2g0VDWFGU78
+3K3vHODzwz1sO4Fn7gJwwF4RTZabftkpYMjXR7PCDqIhq2W3TlpZCojkqx7sn/zS
+2leZ0aqynSqgFxDBz+p9f09P6C7rTfhNeYWl6NsdPHQBZxnR6lAU01XZIR/C6r7m
+huP2iH8rUXYuyaNGqH5AY8tLc/EbZbfeR7QkWER6XrSbXE/bEsh6wr2CLjwhvyP4
+wHNQ7kNbZl402RLYjoUwhyvVfvYmBUqrWRZtw8Mr5W/oR/+4KA5OaBR31aYTd2AF
+mbY4uR7Q4tKOdo9a3gDHJ9O8Ti+5TGwLNu29PQVxy1Om3MgMb/k=
+=tQSm
+-----END PGP SIGNATURE-----
+
+--wmkigrreuigkomxv--
