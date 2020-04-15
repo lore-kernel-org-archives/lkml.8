@@ -2,96 +2,107 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F5AEC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:39:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F0D1C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 253FC20775
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:39:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5589A2074F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:39:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895720AbgDOJjj (ORCPT
+        id S2895728AbgDOJju (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 05:39:39 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:55090 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2895690AbgDOJje (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 05:39:34 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-26-3LtwRS6zPnGStZcChf9l-A-1; Wed, 15 Apr 2020 10:39:30 +0100
-X-MC-Unique: 3LtwRS6zPnGStZcChf9l-A-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Wed, 15 Apr 2020 10:39:30 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Wed, 15 Apr 2020 10:39:30 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     =?utf-8?B?J0NocmlzdGlhbiBLw7ZuaWcn?= <christian.koenig@amd.com>,
-        "Jani Nikula" <jani.nikula@linux.intel.com>,
-        Alex Deucher <alexdeucher@gmail.com>,
-        Bernard Zhao <bernard@vivo.com>
-CC:     Alex Sierra <alex.sierra@amd.com>, Oak Zeng <Oak.Zeng@amd.com>,
-        "Maling list - DRI developers" <dri-devel@lists.freedesktop.org>,
-        David Airlie <airlied@linux.ie>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        "kernel@vivo.com" <kernel@vivo.com>, Huang Rui <ray.huang@amd.com>,
-        "Kent Russell" <kent.russell@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        "Sam Ravnborg" <sam@ravnborg.org>,
-        Xiaojie Yuan <xiaojie.yuan@amd.com>
-Subject: RE: [PATCH] Optimized division operation to shift operation
-Thread-Topic: [PATCH] Optimized division operation to shift operation
-Thread-Index: AQHWEvuQwS1rXduVrE2yfaZDBTuKn6h57U6g
-Date:   Wed, 15 Apr 2020 09:39:29 +0000
-Message-ID: <e891ca9944774cbdba577982f0bc7738@AcuMS.aculab.com>
-References: <1586864113-30682-1-git-send-email-bernard@vivo.com>
- <CADnq5_Phca3L-HGOQz0DPBoARHgwcJRK_a7-WmeFMPkrPWeOeg@mail.gmail.com>
- <87lfmx5h72.fsf@intel.com> <b5ffc6b7-bfa5-0827-a267-4e8c20027982@amd.com>
-In-Reply-To: <b5ffc6b7-bfa5-0827-a267-4e8c20027982@amd.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Wed, 15 Apr 2020 05:39:50 -0400
+Received: from foss.arm.com ([217.140.110.172]:40752 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2895721AbgDOJjk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 05:39:40 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E1F8E1063;
+        Wed, 15 Apr 2020 02:39:39 -0700 (PDT)
+Received: from [192.168.1.19] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 365CF3F68F;
+        Wed, 15 Apr 2020 02:39:37 -0700 (PDT)
+Subject: Re: [PATCH 3/4] sched/deadline: Make DL capacity-aware
+To:     Juri Lelli <juri.lelli@redhat.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Luca Abeni <luca.abeni@santannapisa.it>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Wei Wang <wvw@google.com>, Quentin Perret <qperret@google.com>,
+        Alessio Balsini <balsini@google.com>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Qais Yousef <qais.yousef@arm.com>, linux-kernel@vger.kernel.org
+References: <20200408095012.3819-1-dietmar.eggemann@arm.com>
+ <20200408095012.3819-4-dietmar.eggemann@arm.com>
+ <20200410125253.GE14300@localhost.localdomain>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <f0e74500-77d7-a42c-410e-bc5d4d2ecdfb@arm.com>
+Date:   Wed, 15 Apr 2020 11:39:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200410125253.GE14300@localhost.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogQ2hyaXN0aWFuIEvDtm5pZw0KPiBTZW50OiAxNSBBcHJpbCAyMDIwIDA4OjU3DQo+IEFt
-IDE1LjA0LjIwIHVtIDA5OjQxIHNjaHJpZWIgSmFuaSBOaWt1bGE6DQo+ID4gT24gVHVlLCAxNCBB
-cHIgMjAyMCwgQWxleCBEZXVjaGVyIDxhbGV4ZGV1Y2hlckBnbWFpbC5jb20+IHdyb3RlOg0KPiA+
-PiBPbiBUdWUsIEFwciAxNCwgMjAyMCBhdCA5OjA1IEFNIEJlcm5hcmQgWmhhbyA8YmVybmFyZEB2
-aXZvLmNvbT4gd3JvdGU6DQo+ID4+PiBPbiBzb21lIHByb2Nlc3NvcnMsIHRoZSAvIG9wZXJhdGUg
-d2lsbCBjYWxsIHRoZSBjb21waWxlcmBzIGRpdiBsaWIsDQo+ID4+PiB3aGljaCBpcyBsb3cgZWZm
-aWNpZW50LCBXZSBjYW4gcmVwbGFjZSB0aGUgLyBvcGVyYXRpb24gd2l0aCBzaGlmdCwNCj4gPj4+
-IHNvIHRoYXQgd2UgY2FuIHJlcGxhY2UgdGhlIGNhbGwgb2YgdGhlIGRpdmlzaW9uIGxpYnJhcnkg
-d2l0aCBvbmUNCj4gPj4+IHNoaWZ0IGFzc2VtYmx5IGluc3RydWN0aW9uLg0KPiA+IFRoaXMgd2Fz
-IGFwcGxpZWQgYWxyZWFkeSwgYW5kIGl0J3Mgbm90IGluIGEgZHJpdmVyIEkgbG9vayBhZnRlci4u
-LiBidXQNCj4gPiB0byBtZSB0aGlzIGZlZWxzIGxpa2Ugc29tZXRoaW5nIHRoYXQgcmVhbGx5IHNo
-b3VsZCBiZQ0KPiA+IGp1c3RpZmllZC4gVXNpbmcgPj4gaW5zdGVhZCBvZiAvIGZvciBtdWx0aXBs
-ZXMgb2YgMiBkaXZpc2lvbiBtYXR0ZXJlZCAyMA0KPiA+IHllYXJzIGFnbywgSSdkIGJlIHN1cnBy
-aXNlZCBpZiBpdCBzdGlsbCBkaWQgb24gbW9kZXJuIGNvbXBpbGVycy4NCj4gDQo+IEkgaGF2ZSBz
-aW1pbGFyIHdvcnJpZXMsIGVzcGVjaWFsbHkgc2luY2Ugd2UgcmVwbGFjZSB0aGUgIi8gKDQgKiAy
-KSIgd2l0aA0KPiAiPj4gMyIgaXQncyBtYWtpbmcgdGhlIGNvZGUganVzdCBhIGJpdCBsZXNzIHJl
-YWRhYmxlLg0KPiANCj4gQW5kIHRoYXQgdGhlIGNvZGUgcnVucyBleGFjdGx5IG9uY2Ugd2hpbGUg
-bG9hZGluZyB0aGUgZHJpdmVyIGFuZCBwdXNoaW5nDQo+IHRoZSBmaXJtd2FyZSBpbnRvIHRoZSBo
-YXJkd2FyZS4gU28gcGVyZm9ybWFuY2UgaXMgY29tcGxldGVseSBpcnJlbGV2YW50DQo+IGhlcmUu
-DQoNCkZvcmNlIHRoZSBkaXZpc2lvbiB0byBiZSB1bnNpZ25lZCBhbmQgdGhlIGNvbXBpbGVyIHdp
-bGwgdXNlIGEgc2hpZnQuDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNp
-ZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsN
-ClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
+On 10.04.20 14:52, Juri Lelli wrote:
+> Hi,
+> 
+> On 08/04/20 11:50, Dietmar Eggemann wrote:
+>> From: Luca Abeni <luca.abeni@santannapisa.it>
 
+[...]
+
+>> @@ -1623,10 +1624,19 @@ select_task_rq_dl(struct task_struct *p, int cpu, int sd_flag, int flags)
+>>  	 * other hand, if it has a shorter deadline, we
+>>  	 * try to make it stay here, it might be important.
+>>  	 */
+>> -	if (unlikely(dl_task(curr)) &&
+>> -	    (curr->nr_cpus_allowed < 2 ||
+>> -	     !dl_entity_preempt(&p->dl, &curr->dl)) &&
+>> -	    (p->nr_cpus_allowed > 1)) {
+>> +	select_rq = unlikely(dl_task(curr)) &&
+>> +		    (curr->nr_cpus_allowed < 2 ||
+>> +		     !dl_entity_preempt(&p->dl, &curr->dl)) &&
+>> +		    p->nr_cpus_allowed > 1;
+>> +
+>> +	/*
+>> +	 * We take into account the capacity of the CPU to
+>> +	 * ensure it fits the requirement of the task.
+>> +	 */
+>> +	if (static_branch_unlikely(&sched_asym_cpucapacity))
+>> +		select_rq |= !dl_task_fits_capacity(p, cpu);
+> 
+> I'm thinking that, while dl_task_fits_capacity() works well when
+> selecting idle cpus, in this case we should consider the fact that curr
+> might be deadline as well and already consuming some of the rq capacity.
+> 
+> Do you think we should try to take that into account, maybe using
+> dl_rq->this_bw ?
+
+So you're saying that cpudl_find(..., later_mask) could return 1 (w/
+best_cpu (cp->elements[0].cpu) in later_mask).
+
+And that this best_cpu could be a non-fitting CPU for p.
+
+This could happen if cp->free_cpus is empty (no idle CPUs) so we take
+cpudl_find()'s else path and in case p's deadline < cp->elements[0]
+deadline.
+
+We could condition the 'return 1' on best_cpu fitting p.
+
+But should we do this for cpudl_find(..., NULL) calls from
+check_preempt_equal_dl() as well or will this break GEDF?
