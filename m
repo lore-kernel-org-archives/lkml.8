@@ -2,118 +2,136 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EED8C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4700BC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:15:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 634C720732
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:13:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21A22206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 02:15:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="l+uunWU9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392894AbgDOCNi (ORCPT
+        id S2392906AbgDOCPl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Apr 2020 22:13:38 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:32848 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387984AbgDOCN3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Apr 2020 22:13:29 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 6234E7247FE3D8DBD1C0;
-        Wed, 15 Apr 2020 10:13:27 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 15 Apr 2020 10:13:21 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH v2] f2fs: fix to avoid page count leak
-Date:   Wed, 15 Apr 2020 10:13:13 +0800
-Message-ID: <20200415021313.95538-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
+        Tue, 14 Apr 2020 22:15:41 -0400
+Received: from ozlabs.org ([203.11.71.1]:44089 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387984AbgDOCP0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Apr 2020 22:15:26 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4925Y71G2Vz9sSM;
+        Wed, 15 Apr 2020 12:15:22 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1586916925;
+        bh=GwSJW9qwj3VQE9O/y6ASuL4ZsieXgmyfhkDAyg2RkAk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=l+uunWU9SSUUDyiYdZlKPCCnSDV2E5J3t+nlXpnsKaOqU8uR96eiu0o8lnu0j3acO
+         yTZdiqZK3rFr+JzyMjC7cyIIqiP1a2qfiS852NYOqullGpcd++DLU0i9zDoKSNJHqm
+         WQRBi+Zn5UZ5Is/BQtdKx5FTgu6xClM8g0V+Xbch/RXPCDjHxXLs5ncsfyWqxLAj/n
+         NbGbBkNcKNtLI1qtlOwyTkDKU43MPXl4FnZSo2UCwxz4b3P+6cSfdZM6HydKCfyOV7
+         YECSZWMuDvTSHmBMYdT66o7ZeYjXBv9CgMXM94uWekCc2L/gDPZ+BcMMgVIxO0YEqJ
+         4Nj5sWRbbEAjg==
+Date:   Wed, 15 Apr 2020 12:15:21 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hui Wang <hui.wang@canonical.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: linux-next: build failures after merge of the sound-asoc tree
+Message-ID: <20200415121521.3e40b591@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; boundary="Sig_/uPk4X/ZD9LzKl7nBfW8dLg_";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In f2fs_read_data_pages(), once we add page into radix tree, we need to
-release reference count of that page, however when f2fs_read_multi_pages()
-fails, we didn't handle that case correctly, fix it.
+--Sig_/uPk4X/ZD9LzKl7nBfW8dLg_
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Fixes: 4c8ff7095bef ("f2fs: support data compression")
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
-v2:
-- add Fixes tag
-- improve commit message a bit
- fs/f2fs/compress.c | 2 +-
- fs/f2fs/data.c     | 6 +++++-
- fs/f2fs/f2fs.h     | 1 +
- 3 files changed, 7 insertions(+), 2 deletions(-)
+Hi all,
 
-diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
-index 498e0c2ba6ea..dbe3fa359a29 100644
---- a/fs/f2fs/compress.c
-+++ b/fs/f2fs/compress.c
-@@ -79,7 +79,7 @@ static void f2fs_drop_rpages(struct compress_ctx *cc, int len, bool unlock)
- 	}
- }
- 
--static void f2fs_put_rpages(struct compress_ctx *cc)
-+void f2fs_put_rpages(struct compress_ctx *cc)
- {
- 	f2fs_drop_rpages(cc, cc->cluster_size, false);
- }
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index 1139d8cf4b8d..22a31e2401cf 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -2138,7 +2138,7 @@ int f2fs_read_multi_pages(struct compress_ctx *cc, struct bio **bio_ret,
- 		} else if (!PageUptodate(page)) {
- 			continue;
- 		}
--		unlock_page(page);
-+		f2fs_put_page(page, 1);
- 		cc->rpages[i] = NULL;
- 		cc->nr_rpages--;
- 	}
-@@ -2303,6 +2303,8 @@ int f2fs_mpage_readpages(struct address_space *mapping,
- 							max_nr_pages,
- 							&last_block_in_bio,
- 							is_readahead, false);
-+				if (ret)
-+					f2fs_put_rpages(&cc);
- 				f2fs_destroy_compress_ctx(&cc);
- 				if (ret)
- 					goto set_error_page;
-@@ -2346,6 +2348,8 @@ int f2fs_mpage_readpages(struct address_space *mapping,
- 							max_nr_pages,
- 							&last_block_in_bio,
- 							is_readahead, false);
-+				if (ret)
-+					f2fs_put_rpages(&cc);
- 				f2fs_destroy_compress_ctx(&cc);
- 			}
- 		}
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index da5e9dd747fa..94d044feffd0 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -3803,6 +3803,7 @@ static inline bool f2fs_post_read_required(struct inode *inode)
-  */
- #ifdef CONFIG_F2FS_FS_COMPRESSION
- bool f2fs_is_compressed_page(struct page *page);
-+void f2fs_put_rpages(struct compress_ctx *cc);
- struct page *f2fs_compress_control_page(struct page *page);
- int f2fs_prepare_compress_overwrite(struct inode *inode,
- 			struct page **pagep, pgoff_t index, void **fsdata);
--- 
-2.18.0.rc1
+After merging the sound-asoc tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
+sound/soc/intel/boards/skl_hda_dsp_generic.c: In function 'skl_set_hda_code=
+c_autosuspend_delay':
+sound/soc/intel/boards/skl_hda_dsp_generic.c:178:37: error: 'struct snd_soc=
+_pcm_runtime' has no member named 'codec_dai'
+  178 |  struct snd_soc_dai *codec_dai =3D rtd->codec_dai;
+      |                                     ^~
+drivers/soundwire/intel.c: In function 'sdw_stream_setup':
+drivers/soundwire/intel.c:672:39: error: 'struct snd_soc_pcm_runtime' has n=
+o member named 'codec_dais'
+  672 |   ret =3D snd_soc_dai_set_sdw_stream(rtd->codec_dais[i], sdw_stream,
+      |                                       ^~
+In file included from include/linux/device.h:15,
+                 from include/linux/acpi.h:15,
+                 from drivers/soundwire/intel.c:8:
+drivers/soundwire/intel.c:676:8: error: 'struct snd_soc_pcm_runtime' has no=
+ member named 'codec_dais'
+  676 |     rtd->codec_dais[i]->name);
+      |        ^~
+include/linux/dev_printk.h:104:32: note: in definition of macro 'dev_err'
+  104 |  _dev_err(dev, dev_fmt(fmt), ##__VA_ARGS__)
+      |                                ^~~~~~~~~~~
+
+Caused by commit
+
+  1729025b04b9 ("ASoC: soc-core: remove cpu_dai/codec_dai/cpu_dais/codec_da=
+is")
+
+interacting with commit
+
+  3a24f135e6cc ("ASoC: intel/skl/hda - set autosuspend timeout for hda code=
+cs")
+
+(which should have been fixed up in commit
+
+  df3e71c42f05 ("Merge series "ASoC: Intel: machine drivers update for 5.8"=
+ from Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>:")
+
+or before like other references)
+
+and interacting with commit
+
+  5e7484d01928 ("soundwire: intel: add sdw_stream_setup helper for .startup=
+ callback")
+
+from Linus' tree.
+
+I have used the sound-asoc tree from next-20200414 for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/uPk4X/ZD9LzKl7nBfW8dLg_
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6WbjkACgkQAVBC80lX
+0GxG/wf/R3uNPjiFOwxvKw9s6xEweBqSUlfUsSkZcnja/+3R6Nc6zjmQPdMOx61Y
+1FIA02wEWtuZCfVUdIMODOjPDjGXmhVj+OHS0NKKICmPy4HSx0Fgo3drFFO0mAI0
+7Z7+SaSXwn6/QkDl6wld9qLBWMLfJQlUeq39Ibkq446Ge8hZflYZcGfi+w5d55q8
+MTCKuYIOg0RCSqVj0mLOOA9rbSFcre9La7C49YsId3LBSugL5Ru+KtRFkdPyujGH
+KuE+w1RuPYvKehEEPd8fE4CuFf6c21RZJpXkNTTqqMHIL74uWKFWkSWev4KpKkwN
+G7XkFJB6weMeE9RKQipfT1HzvxZ6Ww==
+=3H2+
+-----END PGP SIGNATURE-----
+
+--Sig_/uPk4X/ZD9LzKl7nBfW8dLg_--
