@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFCCDC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5DBBC2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:43:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71DF820775
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:43:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B93DB206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:43:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586950981;
-	bh=YLXBwgw3/Lm1c+qH8DOQy+FDCzjJEKmau8CPH+MDC5E=;
+	s=default; t=1586950988;
+	bh=zGk6FoANVMQFUDEne0uQaTPVZoZV1cfRSWWFR3MDCFw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xR5GYweefVU1obFK/VnSrfmjB2VSosNfPrYm+teufiAvetO7KY9XNb79uxIFJ30n4
-	 2+iVaAJ4ZujmJZ1+bTa+Yq4gvQQ5z9V82J2VGydq4egRA4oWT+N7rkCd0NTn0SZAV2
-	 oaBeCy9JfBMw+TTkHftHtjVCAPUTXEup5DwxsS7k=
+	b=Os4E+6dFEpF5nYkQ+gBhozJWuXMjyvsbTtb81PfkpE1PXNCBOCv5duzayzdkAmBBy
+	 Guk77JbXWVtMg+W4QHorNL5wenozPNK2cJ2j9S9WmP/9NxkUU5HuEjFujIEXKF3gsI
+	 YeGytoJRm0h+uS6RFikccerRl6Z920vq1L3mwLLg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408937AbgDOLm6 (ORCPT
+        id S2408958AbgDOLnG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:42:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56638 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 07:43:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897181AbgDOLgr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:36:47 -0400
+        id S2897186AbgDOLgx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:36:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C49220936;
-        Wed, 15 Apr 2020 11:36:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F1B820737;
+        Wed, 15 Apr 2020 11:36:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950603;
-        bh=YLXBwgw3/Lm1c+qH8DOQy+FDCzjJEKmau8CPH+MDC5E=;
+        s=default; t=1586950612;
+        bh=zGk6FoANVMQFUDEne0uQaTPVZoZV1cfRSWWFR3MDCFw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QiCK4FXusW5AcJ/AAPFy4hB78r5rogA3Geb5jUh1lpVRD+HhdAg0H+K5332jqv0WU
-         psxtlSLb/+IkFoFIiVh9j2VSQ6b8NH5dDKv/5XQURqHIvKqQLSoZjupkBnpebM0MBw
-         CjHU3lpxXdbNLLrhXedhrt5ywwg9kaW9ar07SdxA=
+        b=u5HkiRhqxMosgeAs7ATZO7fLuryfgspsd4K2o49iMLuoAJmBACfEC1IP69aEzDlaT
+         ZgWFy3CmKPasSEf2GOgyPfXpM3k1dQdJ/gGjO3B+0krkbGpeNys9aYuP3GHjrcGw2F
+         gME7gIRPNP/uvcTiaCvR3HruQNcVc13buXJdvo6M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Maxime Ripard <maxime@cerno.tech>,
         Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.6 098/129] f2fs: fix NULL pointer dereference in f2fs_verity_work()
-Date:   Wed, 15 Apr 2020 07:34:13 -0400
-Message-Id: <20200415113445.11881-98-sashal@kernel.org>
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.6 106/129] drm/vc4: Fix HDMI mode validation
+Date:   Wed, 15 Apr 2020 07:34:21 -0400
+Message-Id: <20200415113445.11881-106-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
 References: <20200415113445.11881-1-sashal@kernel.org>
@@ -59,102 +62,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
-[ Upstream commit 79bbefb19f1359fb2cbd144d5a054649e7e583be ]
+[ Upstream commit b1e7396a1d0e6af6806337fdaaa44098d6b3343c ]
 
-If both compression and fsverity feature is on, generic/572 will
-report below NULL pointer dereference bug.
+Current mode validation impedes setting up some video modes which should
+be supported otherwise. Namely 1920x1200@60Hz.
 
- BUG: kernel NULL pointer dereference, address: 0000000000000018
- RIP: 0010:f2fs_verity_work+0x60/0x90 [f2fs]
- #PF: supervisor read access in kernel mode
- Workqueue: fsverity_read_queue f2fs_verity_work [f2fs]
- RIP: 0010:f2fs_verity_work+0x60/0x90 [f2fs]
- Call Trace:
-  process_one_work+0x16c/0x3f0
-  worker_thread+0x4c/0x440
-  ? rescuer_thread+0x350/0x350
-  kthread+0xf8/0x130
-  ? kthread_unpark+0x70/0x70
-  ret_from_fork+0x35/0x40
+Fix this by lowering the minimum HDMI state machine clock to pixel clock
+ratio allowed.
 
-There are two issue in f2fs_verity_work():
-- it needs to traverse and verify all pages in bio.
-- if pages in bio belong to non-compressed cluster, accessing
-decompress IO context stored in page private will cause NULL
-pointer dereference.
-
-Fix them.
-
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Fixes: 32e823c63e90 ("drm/vc4: Reject HDMI modes with too high of clocks.")
+Reported-by: Stefan Wahren <stefan.wahren@i2se.com>
+Suggested-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200326122001.22215-1-nsaenzjulienne@suse.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/compress.c |  2 ++
- fs/f2fs/data.c     | 35 ++++++++++++++++++++++++++++++-----
- 2 files changed, 32 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/vc4/vc4_hdmi.c | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
 
-diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
-index 1a86e483b0907..eb84c13c1182c 100644
---- a/fs/f2fs/compress.c
-+++ b/fs/f2fs/compress.c
-@@ -476,6 +476,8 @@ void f2fs_decompress_pages(struct bio *bio, struct page *page, bool verity)
- out_vunmap_rbuf:
- 	vunmap(dic->rbuf);
- out_free_dic:
-+	if (verity)
-+		refcount_add(dic->nr_cpages - 1, &dic->ref);
- 	if (!verity)
- 		f2fs_decompress_end_io(dic->rpages, dic->cluster_size,
- 								ret, false);
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index b27b721079116..34990866cfe96 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -191,12 +191,37 @@ static void f2fs_verify_pages(struct page **rpages, unsigned int cluster_size)
- 
- static void f2fs_verify_bio(struct bio *bio)
+diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
+index cea18dc15f77c..340719238753d 100644
+--- a/drivers/gpu/drm/vc4/vc4_hdmi.c
++++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
+@@ -681,11 +681,23 @@ static enum drm_mode_status
+ vc4_hdmi_encoder_mode_valid(struct drm_encoder *crtc,
+ 			    const struct drm_display_mode *mode)
  {
--	struct page *page = bio_first_page_all(bio);
--	struct decompress_io_ctx *dic =
--			(struct decompress_io_ctx *)page_private(page);
-+	struct bio_vec *bv;
-+	struct bvec_iter_all iter_all;
-+
-+	bio_for_each_segment_all(bv, bio, iter_all) {
-+		struct page *page = bv->bv_page;
-+		struct decompress_io_ctx *dic;
-+
-+		dic = (struct decompress_io_ctx *)page_private(page);
-+
-+		if (dic) {
-+			if (refcount_dec_not_one(&dic->ref))
-+				continue;
-+			f2fs_verify_pages(dic->rpages,
-+						dic->cluster_size);
-+			f2fs_free_dic(dic);
-+			continue;
-+		}
-+
-+		if (bio->bi_status || PageError(page))
-+			goto clear_uptodate;
+-	/* HSM clock must be 108% of the pixel clock.  Additionally,
+-	 * the AXI clock needs to be at least 25% of pixel clock, but
+-	 * HSM ends up being the limiting factor.
++	/*
++	 * As stated in RPi's vc4 firmware "HDMI state machine (HSM) clock must
++	 * be faster than pixel clock, infinitesimally faster, tested in
++	 * simulation. Otherwise, exact value is unimportant for HDMI
++	 * operation." This conflicts with bcm2835's vc4 documentation, which
++	 * states HSM's clock has to be at least 108% of the pixel clock.
++	 *
++	 * Real life tests reveal that vc4's firmware statement holds up, and
++	 * users are able to use pixel clocks closer to HSM's, namely for
++	 * 1920x1200@60Hz. So it was decided to have leave a 1% margin between
++	 * both clocks. Which, for RPi0-3 implies a maximum pixel clock of
++	 * 162MHz.
++	 *
++	 * Additionally, the AXI clock needs to be at least 25% of
++	 * pixel clock, but HSM ends up being the limiting factor.
+ 	 */
+-	if (mode->clock > HSM_CLOCK_FREQ / (1000 * 108 / 100))
++	if (mode->clock > HSM_CLOCK_FREQ / (1000 * 101 / 100))
+ 		return MODE_CLOCK_HIGH;
  
--	f2fs_verify_pages(dic->rpages, dic->cluster_size);
--	f2fs_free_dic(dic);
-+		if (fsverity_verify_page(page)) {
-+			SetPageUptodate(page);
-+			goto unlock;
-+		}
-+clear_uptodate:
-+		ClearPageUptodate(page);
-+		ClearPageError(page);
-+unlock:
-+		unlock_page(page);
-+	}
- }
- #endif
- 
+ 	return MODE_OK;
 -- 
 2.20.1
 
