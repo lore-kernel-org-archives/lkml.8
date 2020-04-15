@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39796C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B87CC3815B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:49:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09E79206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:49:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31E62206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:49:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586951350;
-	bh=Mc1pIuQsFh+DB+kAcRNt4P2NwE+ll1nbXbIDWqB5Y6M=;
+	s=default; t=1586951364;
+	bh=11+yfY8Y1kvsmgFku4OKBQdXqF3Jq2UVnZHZWG+pGb8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rh89jjy0vvebFkI+gXvTFfxUx0orz/9/LR3dbpc/STegpm/P51NISiE+/UMUU2Wb6
-	 TqyIVUJwwXEJ+SBoOOHsXpFKJkhhKBX/uQmP0bLwiUW+mFbho9NP9Ht93LNktotBWN
-	 pPEx/XttdEZBpY4UBidYqgnWl03o6fAr7C6p34oQ=
+	b=iyDFLiPOXjetfm16+fwV+6VJi7UDUaD2acl2NBiJlBmoL3I4oucmZ/7Ku0RGj+wzM
+	 F3JcPphL47RYaNHLzjDFHWLYfcO+44obW91puI177Upm8SuhPGh1x4v6bBtnymnIhe
+	 o8n0TDqTHWnStfGN9s6PF+8EHJww5wIYNuAYWuXg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2897664AbgDOLtC (ORCPT
+        id S2409482AbgDOLtV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:49:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35036 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 07:49:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408978AbgDOLnO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:43:14 -0400
+        id S2408990AbgDOLnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:43:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EBDD21582;
-        Wed, 15 Apr 2020 11:43:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C85DC21556;
+        Wed, 15 Apr 2020 11:43:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950994;
-        bh=Mc1pIuQsFh+DB+kAcRNt4P2NwE+ll1nbXbIDWqB5Y6M=;
+        s=default; t=1586950997;
+        bh=11+yfY8Y1kvsmgFku4OKBQdXqF3Jq2UVnZHZWG+pGb8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pm9dSKrB7jcGwpIPcOmyY2mHLprxEHp7SgENhdiGFuKRNgbQLAvFE4+t3QXuzf3t9
-         sy8M4m1o3tRu58uqhJmuzO6LqgCxmLkPnF4Dzo4VaEX2fZjoeKaj2YXI4Jkk1lkNgL
-         UDw9n7zzAjSWMK2wJCob6vmRfm4wOyEuyjBanzIA=
+        b=arIgAKtBF4RQgIk+y6PH26aZoLv8Y1+irFXOSCLRDP9tv34xQuCppUUawpP/dTPko
+         DGBAy3Wq68dCvA0Qt2Sk/2AHMAkDJerZRAMq9DN00pyiehHAVV07gThCbX2gdiwEah
+         3SdaEG0P0WCnOvWgV1TU4NP01mwij/iSUhTTAZd8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alex Smith <alex.smith@imgtec.com>,
-        "H . Nikolaus Schaller" <hns@goldelico.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 040/106] MIPS: DTS: CI20: add DT node for IR sensor
-Date:   Wed, 15 Apr 2020 07:41:20 -0400
-Message-Id: <20200415114226.13103-40-sashal@kernel.org>
+Cc:     Josef Bacik <josef@toxicpanda.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 043/106] btrfs: handle NULL roots in btrfs_put/btrfs_grab_fs_root
+Date:   Wed, 15 Apr 2020 07:41:23 -0400
+Message-Id: <20200415114226.13103-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
 References: <20200415114226.13103-1-sashal@kernel.org>
@@ -62,39 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Smith <alex.smith@imgtec.com>
+From: Josef Bacik <josef@toxicpanda.com>
 
-[ Upstream commit f5e8fcf85a25bac26c32a0000dbab5857ead9113 ]
+[ Upstream commit 4cdfd93002cb84471ed85b4999cd38077a317873 ]
 
-The infrared sensor on the CI20 board is connected to a GPIO and can
-be operated by using the gpio-ir-recv driver. Add a DT node for the
-sensor to allow that driver to be used.
+We want to use this for dropping all roots, and in some error cases we
+may not have a root, so handle this to make the cleanup code easier.
+Make btrfs_grab_fs_root the same so we can use it in cases where the
+root may not exist (like the quota root).
 
-Signed-off-by: Alex Smith <alex.smith@imgtec.com>
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Reviewed-by: Paul Cercueil <paul@crapouillou.net>
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/boot/dts/ingenic/ci20.dts | 5 +++++
- 1 file changed, 5 insertions(+)
+ fs/btrfs/disk-io.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
-index c340f947baa03..fc4e64200c3d5 100644
---- a/arch/mips/boot/dts/ingenic/ci20.dts
-+++ b/arch/mips/boot/dts/ingenic/ci20.dts
-@@ -62,6 +62,11 @@
- 		enable-active-high;
- 	};
+diff --git a/fs/btrfs/disk-io.h b/fs/btrfs/disk-io.h
+index 76f123ebb2921..3c63b0965ad64 100644
+--- a/fs/btrfs/disk-io.h
++++ b/fs/btrfs/disk-io.h
+@@ -97,6 +97,8 @@ struct btrfs_root *btrfs_alloc_dummy_root(struct btrfs_fs_info *fs_info);
+  */
+ static inline struct btrfs_root *btrfs_grab_fs_root(struct btrfs_root *root)
+ {
++	if (!root)
++		return NULL;
+ 	if (refcount_inc_not_zero(&root->refs))
+ 		return root;
+ 	return NULL;
+@@ -104,6 +106,8 @@ static inline struct btrfs_root *btrfs_grab_fs_root(struct btrfs_root *root)
  
-+	ir: ir {
-+		compatible = "gpio-ir-receiver";
-+		gpios = <&gpe 3 GPIO_ACTIVE_LOW>;
-+	};
-+
- 	wlan0_power: fixedregulator@1 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "wlan0_power";
+ static inline void btrfs_put_fs_root(struct btrfs_root *root)
+ {
++	if (!root)
++		return;
+ 	if (refcount_dec_and_test(&root->refs))
+ 		kfree(root);
+ }
 -- 
 2.20.1
 
