@@ -2,153 +2,179 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3CE6C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE08C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:28:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A43CA206F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:25:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26737206F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:28:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="KT6hcGvw";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="GNfrtgy3"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Qpjxm2R2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403920AbgDOHY0 (ORCPT
+        id S2404169AbgDOH2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 03:24:26 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:50862 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2393666AbgDOHYL (ORCPT
+        Wed, 15 Apr 2020 03:28:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57850 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403937AbgDOH1n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 03:24:11 -0400
-Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
-        by m0089730.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 03F7JcSM032030;
-        Wed, 15 Apr 2020 00:23:04 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=J7TaB5vagR4jLlR65xt6qo1UL50Z0IdhpExPg7JYQBM=;
- b=KT6hcGvwqv2uihIRuB8SQZDGXXXyIDL7oFKiTduVXlMuLaMw2TlV1y+16K5IxWbkd5Rp
- UxCPfaQ2bu0YsqyCGXskDr0dBsU7ZWnHriuPObMkchBlptrEauocGyXamITaLOsD6bPg
- IAl1qHZr/ZRFWESUv5BjpCNTA0ZFxh03i00= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by m0089730.ppops.net with ESMTP id 30dn85k4cw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Wed, 15 Apr 2020 00:23:03 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.36.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Wed, 15 Apr 2020 00:23:03 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Yx/oGt68jaNIqPnyipClaRx7ORNOhWxwdjtZUP3B2GWExjHxmweHr/6bGTz+QgUoKOvSllt/O96GyJKRu8VuOHSXrYMuePFI153kcH/axG11ETz9xjj1r2LamEeUxN6bSz3wIwS4VKaKApfBbtlMTvRNdExmDkc3Fv97SkiwmkOkjO6GJqC6lR/qbNK46/0s6ws+oHCKLj/pczMYxrmG3/Dl34s//B/RUJfMZMCQZ4RdtWt7Z33Qqh05/coVwdr1zgKAIqPeWFBLAl7pd2axS1GZgCGwZGs5geBwVMJJTLu1X+/Lr87vJ+e5XRrUayqzndcQi89bG+aMFbC162IPUw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=J7TaB5vagR4jLlR65xt6qo1UL50Z0IdhpExPg7JYQBM=;
- b=F3Bubt/vePvf7+Eqdqaz7dL9FIkewiMs9Ng7B5DUtvo09N0BlllH+HheLZUQMb8Kyldh/nz9UfhfJ0EVPnKatc+yL9btUX8Jingk8tyJxxZ9IPy9l1wdMyHC/SLpM1DuCenJF14tJaf4VbdHfWUJaVWammbxIYhvO7NEB9Z0uabBWDPe9TI0gtMwGnd2QFPZa6Wao6py2Xi2YkRFTHGlj6HMRFpUk+SclMCI0QhXLR4//ZRNoj0lve9nQlJorbiyAWJHo17LEPyFzK+y7m06gfrUsZ6T2td1hydedMVBOj9UcmBOvV3cw+GyzXTNVRDVsUYRBT9yizwIutQejTVBLQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=J7TaB5vagR4jLlR65xt6qo1UL50Z0IdhpExPg7JYQBM=;
- b=GNfrtgy3nnawCoxq0JNlPYve8i6G3PC08TIsDGpy6B7tdmdl5hWEFMyM7/L6MU+evJVrpCogtNcpHkzPpzZrJwxu1eAQxd13GNyJ+51nd99tRb03SGmjG1udOFazWfstsQqeDnzQXejRHQrSp4ZNunO4CMoPpdxpLLqZhaFdqr4=
-Received: from BYAPR15MB2999.namprd15.prod.outlook.com (2603:10b6:a03:fa::12)
- by BYAPR15MB3207.namprd15.prod.outlook.com (2603:10b6:a03:101::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.26; Wed, 15 Apr
- 2020 07:23:02 +0000
-Received: from BYAPR15MB2999.namprd15.prod.outlook.com
- ([fe80::bdf1:da56:867d:f8a2]) by BYAPR15MB2999.namprd15.prod.outlook.com
- ([fe80::bdf1:da56:867d:f8a2%7]) with mapi id 15.20.2900.028; Wed, 15 Apr 2020
- 07:23:02 +0000
-From:   Song Liu <songliubraving@fb.com>
-To:     maowenan <maowenan@huawei.com>
-CC:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
-        "kpsingh@chromium.org" <kpsingh@chromium.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
-Subject: Re: [PATCH -next] bpf: remove set but not used variable 'dst_known'
-Thread-Topic: [PATCH -next] bpf: remove set but not used variable 'dst_known'
-Thread-Index: AQHWEYedD4qyQaRcJ0KQTxqzapbMNqh5LnoAgAA7NwCAAGCjgA==
-Date:   Wed, 15 Apr 2020 07:23:02 +0000
-Message-ID: <F68FB33A-1B98-45C1-8056-457EFA52F84F@fb.com>
-References: <20200413113703.194287-1-maowenan@huawei.com>
- <C75FACD4-8549-4AD1-BDE6-1F5B47095E4C@fb.com>
- <2b2e0060-ef9b-5541-1108-e28464b47f0a@huawei.com>
-In-Reply-To: <2b2e0060-ef9b-5541-1108-e28464b47f0a@huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3608.60.0.2.5)
-x-originating-ip: [2620:10d:c090:400::5:9d3e]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ce916dea-7c7a-4936-c4df-08d7e10dd53e
-x-ms-traffictypediagnostic: BYAPR15MB3207:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR15MB3207CF7CCC4CFF3DC9AEB5F6B3DB0@BYAPR15MB3207.namprd15.prod.outlook.com>
-x-fb-source: Internal
-x-ms-oob-tlc-oobclassifiers: OLM:1079;
-x-forefront-prvs: 0374433C81
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB2999.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(39860400002)(396003)(376002)(346002)(366004)(136003)(6506007)(2616005)(8936002)(71200400001)(8676002)(81156014)(6486002)(53546011)(186003)(86362001)(478600001)(4744005)(64756008)(6512007)(6916009)(66556008)(66476007)(91956017)(54906003)(316002)(5660300002)(36756003)(4326008)(33656002)(66446008)(66946007)(76116006)(2906002);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: YWByupRWF4kGojZXlQhX6ivhMK+M8f2WwjBKqXdH5bSbmxUVd3R3A6SPhRL72oxp69vEO8ZiPU8aZk/k3pVMLEbesYjmR4yoOJ3gZYBBJAJaLxeK/yTQAL9b9UB8spbKKXT26V4RmLFQFh82JUJX18uWbn2/WGGErIF5DFFJ09YNcOM6r2lE73qJBhYkhQXxkTZ1+s8UKSGsJYTDOO1ofczwtHdNJ3mjcmCEJmv0fCKGWqYCS/lBkR64apWQNt96hPLYvY+AMb39Ci5BBzLUUKI8w7P74ppoSvHlxytDCaZPrF/WtgAxGK9ALdZMln3nqnvBbBMC08BhAOgV+irWG9GR8rnbDa/LUTggRXjZNhBUZ5LQV78fPxD1gmdCXcb/FyFc1OTGISy4AASoz/++yJH4GqolEH3Pp6eVbcDjErTQW+ipSbPLopF0HzHvFEQO
-x-ms-exchange-antispam-messagedata: pA9OQXPB5JQxenlF2JA/OQ5VX1yz+oIcEJEZi/5r3g8wIVlHyzCAd5Dv13LNHELzCCnjFH0AuyqqoruoGbNmD3q8I2xET8r0KrigrFQYr4DBqJB4uSpibkQWvR4kMc2TfOBiHj9UdJMurTMe9TT0zKf2rAqhadivxvzpEnVX4VdE5eOI7T88WWUEAV5KHT+W
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <2A092136805AC6468CE9721CECDD0999@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 15 Apr 2020 03:27:43 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29E2AC061A0C;
+        Wed, 15 Apr 2020 00:27:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=zpVApyPSKNUh671Lce6Q4vlcf5khOoA/VRo2OWbqlac=; b=Qpjxm2R2rmmgUR7/xJzRAqA0Jy
+        eSIYEXsZzoVe02qupqqavVrgYyFbF/pIykDnW8TLwp0THBDAkcBMhVrZO12b/qihH2Plo2tr2yxu2
+        fE6gjGUT8b4DV6V2uuLnfvSQfCBMnYDSyfxXlw5VU+J7DsnH3/sF8MtgEU1/kMCpVprtgqlRn7BF5
+        37fxxY7FbmpIatlpRhxO6zjpJcyK/ovO55a9qZCN5BMxLl0UEB37+Mk62YTecpH55MVg7nve71cpD
+        UgLpPTAZhKh3UBwKKpmq03QlTQb8u1NoTSkkP0juofeITx/1Ca5aZ2mpo9dQcQEbjj3hhKkcS396i
+        r+L6AhPQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jOcS0-0005Lr-QZ; Wed, 15 Apr 2020 07:27:12 +0000
+Date:   Wed, 15 Apr 2020 00:27:12 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Alan Jenkins <alan.christopher.jenkins@gmail.com>,
+        axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
+        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
+        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
+        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Michal Hocko <mhocko@kernel.org>
+Subject: Re: [PATCH 4/5] mm/swapfile: refcount block and queue before using
+ blkcg_schedule_throttle()
+Message-ID: <20200415072712.GB21099@infradead.org>
+References: <20200414041902.16769-1-mcgrof@kernel.org>
+ <20200414041902.16769-5-mcgrof@kernel.org>
+ <20200414154447.GC25765@infradead.org>
+ <20200415054234.GQ11244@42.do-not-panic.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: ce916dea-7c7a-4936-c4df-08d7e10dd53e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Apr 2020 07:23:02.2750
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: nN2MF/Te28mxpmTmIaGYIV/CB5DcR1ciwfGQ6gqtJ7czYFz4I+5cQa6BU+bk18oc9IxmtcRfkqm4H7IblX5Rtw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3207
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-15_01:2020-04-14,2020-04-15 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 bulkscore=0 phishscore=0
- lowpriorityscore=0 mlxlogscore=999 mlxscore=0 malwarescore=0
- suspectscore=0 spamscore=0 impostorscore=0 adultscore=0 clxscore=1011
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004150056
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200415054234.GQ11244@42.do-not-panic.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gT24gQXByIDE0LCAyMDIwLCBhdCA2OjM3IFBNLCBtYW93ZW5hbiA8bWFvd2VuYW5AaHVh
-d2VpLmNvbT4gd3JvdGU6DQo+IA0KPiBPbiAyMDIwLzQvMTUgNjowNSwgU29uZyBMaXUgd3JvdGU6
-DQo+PiANCj4+IA0KPj4+IE9uIEFwciAxMywgMjAyMCwgYXQgNDozNyBBTSwgTWFvIFdlbmFuIDxt
-YW93ZW5hbkBodWF3ZWkuY29tPiB3cm90ZToNCj4+PiANCj4+PiBGaXhlcyBnY2MgJy1XdW51c2Vk
-LWJ1dC1zZXQtdmFyaWFibGUnIHdhcm5pbmc6DQo+Pj4gDQo+Pj4ga2VybmVsL2JwZi92ZXJpZmll
-ci5jOjU2MDM6MTg6IHdhcm5pbmc6IHZhcmlhYmxlIOKAmGRzdF9rbm93buKAmQ0KPj4+IHNldCBi
-dXQgbm90IHVzZWQgWy1XdW51c2VkLWJ1dC1zZXQtdmFyaWFibGVdDQo+Pj4gDQo+Pj4gSXQgaXMg
-bm90IHVzZWQgc2luY2UgY29tbWl0IGYxMTc0Zjc3YjUwYyAoImJwZi92ZXJpZmllcjoNCj4+PiBy
-ZXdvcmsgdmFsdWUgdHJhY2tpbmciKQ0KPj4gDQo+PiBUaGUgZml4IG1ha2VzIHNlbnNlLiBCdXQg
-SSB0aGluayBmMTE3NGY3N2I1MGMgaW50cm9kdWNlZCBkc3Rfa25vd24sIA0KPj4gc28gdGhpcyBz
-dGF0ZW1lbnQgaXMgbm90IGFjY3VyYXRlLiANCj4+IA0KPiB0aGFua3MgZm9yIHJldmlldywgeWVz
-LCBmMTE3NGY3N2I1MGMgaW50cm9kdWNlZCBkc3Rfa25vd24sIGFuZCBiZWxvdyBjb21taXQNCj4g
-ZG9lc24ndCBkZWZlcmVuY2UgdmFyaWFibGUgZHN0X2tub3duLiBTbyBJIHNlbmQgdjIgbGF0ZXI/
-DQo+IDNmNTBmMTMyZDg0MCAoImJwZjogVmVyaWZpZXIsIGRvIGV4cGxpY2l0IEFMVTMyIGJvdW5k
-cyB0cmFja2luZyIpDQoNCkkgZG9uJ3QgdGhpbmsgd2UgbmVlZCB0byBiYWNrIHBvcnQgdGhpcyB0
-byBzdGFibGUuIFNvIGl0IGlzIE9LIG5vdCB0byANCmluY2x1ZGUgRml4ZXMgdGFnLiBXZSBjYW4g
-anVzdCByZW1vdmUgdGhpcyBzdGF0ZW1lbnQgaW4gdGhlIGNvbW1pdCBsb2cuDQoNCmJwZi1uZXh0
-IGlzIG5vdCBvcGVuIHlldC4gUGxlYXNlIHNlbmQgdjIgd2hlbiBicGYtbmV4dCBpcyBvcGVuLiAN
-Cg0KVGhhbmtzLA0KU29uZw0KDQo=
+On Wed, Apr 15, 2020 at 05:42:34AM +0000, Luis Chamberlain wrote:
+> > I don't understand the atomic part of the comment.  How does
+> > bdgrab/bdput help us there?
+> 
+> The commit log above did a better job at explaining this in terms of our
+> goal to use the request_queue and how this use would prevent the risk of
+> releasing the request_queue, which could sleep.
+
+So bdput eventually does and iput, but what leads to an out of context
+offload?
+
+But anyway, isn't the original problem better solved by simply not
+releasing the queue from atomic context to start with?  There isn't
+really any good reason we keep holding the spinlock once we have a
+reference on the queue, so something like this (not even compile tested)
+should do the work:
+
+diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
+index c5dc833212e1..45faa851f789 100644
+--- a/block/blk-cgroup.c
++++ b/block/blk-cgroup.c
+@@ -1673,6 +1673,17 @@ void blkcg_maybe_throttle_current(void)
+ 	blk_put_queue(q);
+ }
+ 
++/* consumes a reference on q */
++void __blkcg_schedule_throttle(struct request_queue *q, bool use_memdelay)
++{
++	if (current->throttle_queue)
++		blk_put_queue(current->throttle_queue);
++	current->throttle_queue = q;
++	if (use_memdelay)
++		current->use_memdelay = use_memdelay;
++	set_notify_resume(current);
++}
++
+ /**
+  * blkcg_schedule_throttle - this task needs to check for throttling
+  * @q: the request queue IO was submitted on
+@@ -1694,16 +1705,8 @@ void blkcg_schedule_throttle(struct request_queue *q, bool use_memdelay)
+ {
+ 	if (unlikely(current->flags & PF_KTHREAD))
+ 		return;
+-
+-	if (!blk_get_queue(q))
+-		return;
+-
+-	if (current->throttle_queue)
+-		blk_put_queue(current->throttle_queue);
+-	current->throttle_queue = q;
+-	if (use_memdelay)
+-		current->use_memdelay = use_memdelay;
+-	set_notify_resume(current);
++	if (blk_get_queue(q))
++		__blkcg_schedule_throttle(q, use_memdelay);
+ }
+ 
+ /**
+diff --git a/include/linux/blk-cgroup.h b/include/linux/blk-cgroup.h
+index 35f8ffe92b70..68440cb3ea9e 100644
+--- a/include/linux/blk-cgroup.h
++++ b/include/linux/blk-cgroup.h
+@@ -679,6 +679,7 @@ static inline void blkcg_clear_delay(struct blkcg_gq *blkg)
+ 
+ void blkcg_add_delay(struct blkcg_gq *blkg, u64 now, u64 delta);
+ void blkcg_schedule_throttle(struct request_queue *q, bool use_memdelay);
++void __blkcg_schedule_throttle(struct request_queue *q, bool use_memdelay);
+ void blkcg_maybe_throttle_current(void);
+ #else	/* CONFIG_BLK_CGROUP */
+ 
+diff --git a/mm/swapfile.c b/mm/swapfile.c
+index 5871a2aa86a5..4c6aa59ee593 100644
+--- a/mm/swapfile.c
++++ b/mm/swapfile.c
+@@ -3749,9 +3749,10 @@ void mem_cgroup_throttle_swaprate(struct mem_cgroup *memcg, int node,
+ 				  gfp_t gfp_mask)
+ {
+ 	struct swap_info_struct *si, *next;
++	struct request_queue *q = NULL;
++
+ 	if (!(gfp_mask & __GFP_IO) || !memcg)
+ 		return;
+-
+ 	if (!blk_cgroup_congested())
+ 		return;
+ 
+@@ -3761,17 +3762,21 @@ void mem_cgroup_throttle_swaprate(struct mem_cgroup *memcg, int node,
+ 	 */
+ 	if (current->throttle_queue)
+ 		return;
++	if (unlikely(current->flags & PF_KTHREAD))
++		return;
+ 
+ 	spin_lock(&swap_avail_lock);
+ 	plist_for_each_entry_safe(si, next, &swap_avail_heads[node],
+ 				  avail_lists[node]) {
+ 		if (si->bdev) {
+-			blkcg_schedule_throttle(bdev_get_queue(si->bdev),
+-						true);
++			if (blk_get_queue(dev_get_queue(si->bdev)))
++				q = dev_get_queue(si->bdev);
+ 			break;
+ 		}
+ 	}
+ 	spin_unlock(&swap_avail_lock);
++	if (q)
++		__blkcg_schedule_throttle(q, true);
+ }
+ #endif
+ 
