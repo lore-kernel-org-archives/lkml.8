@@ -4,52 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 635DEC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67D3FC38A2C
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31DE4206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:45:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46636206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:45:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586954716;
-	bh=DB1F7DmshMsLEY2YqueSwvxRlGpbDWkuaDaxP+9e9Q0=;
+	s=default; t=1586954718;
+	bh=5D9GczrhsgcqaRMt/zuHZZcdP2g+4HoM3usyp9z2034=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o302m9eC1kYuDwOrxToPozQxCtbXeVTwlEAGlWIYgDqBouG1wALeeS4NpwNAHvVUK
-	 tQzbm62yKaky3vaic5zZe6CIfITHAvWCI0r5Uwe2ufgwd8ctxgwkVkniD/Y6yp1mFs
-	 SPlU4bwyJfAw1zJC4Knze5VyyEPWRjIEoYilSAeI=
+	b=zlgD8eeSIS9mVXL+8c0G/9yd+jkxfGwmcayu5l+sbuwPcA+6EVCS6i2j0LjlJ8cEM
+	 PrC3CzKxuG7PjEhVKZ/vpFgEiOCz68Sxwb//PmUna9VP/2xQqrXrf2xkP7/rGS1WTh
+	 ut/xzzRLZ283M99pqqNw8BDdXbFzaV6t5+uRfado=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408994AbgDOLnT (ORCPT
+        id S2898215AbgDOMpP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:43:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56638 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 08:45:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897199AbgDOLhC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:37:02 -0400
+        id S2897181AbgDOLnV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:43:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 306F520737;
-        Wed, 15 Apr 2020 11:37:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28307214D8;
+        Wed, 15 Apr 2020 11:43:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950621;
-        bh=DB1F7DmshMsLEY2YqueSwvxRlGpbDWkuaDaxP+9e9Q0=;
+        s=default; t=1586951001;
+        bh=5D9GczrhsgcqaRMt/zuHZZcdP2g+4HoM3usyp9z2034=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gAxO4S1SJxQXDreBEWehxYJKlq01OzhfwiS+bVtTCEbqYPBqGLTRcgGFXddZ+a1Y/
-         6cLS8AyCM9C1DeVqNxsklvSCAZizhKjJGhePEwfk6KBDbz9ve069Tt6KlelpJOXH4M
-         wd4H6GzMw3FxhgL65gBGcUTVJBrefn8tOagzCRIw=
+        b=o/Mw9USWr953RXlZRqp031AVVGnuUCSOimYDwGh4jvrODh96dWhShTAYtKtbdzqdA
+         B8tz3YHZYddLvSfMT1V7Z4GFuoJAsmVJa9c/wg/hWndWRebfEuPHmPym87P53B+QqI
+         UvywUn3CBlGn+hY1Ye85pb3nNhMWoqWJpflZHyrM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.6 113/129] f2fs: fix to account compressed blocks in f2fs_compressed_blocks()
-Date:   Wed, 15 Apr 2020 07:34:28 -0400
-Message-Id: <20200415113445.11881-113-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Ilie Halip <ilie.halip@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 5.5 046/106] powerpc/maple: Fix declaration made after definition
+Date:   Wed, 15 Apr 2020 07:41:26 -0400
+Message-Id: <20200415114226.13103-46-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
-References: <20200415113445.11881-1-sashal@kernel.org>
+In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
+References: <20200415114226.13103-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,98 +62,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 1a67cbe141cf991af252a88143d0fd975be2d9e7 ]
+[ Upstream commit af6cf95c4d003fccd6c2ecc99a598fb854b537e7 ]
 
-por_fsstress reports inconsistent status in orphan inode, the root cause
-of this is in f2fs_write_raw_pages() we decrease i_compr_blocks incorrectly
-due to wrong calculation in f2fs_compressed_blocks().
+When building ppc64 defconfig, Clang errors (trimmed for brevity):
 
-So this patch exposes below two functions based on __f2fs_cluster_blocks:
-- f2fs_compressed_blocks: get count of compressed blocks in compressed cluster
-- f2fs_cluster_blocks: get count of valid blocks (including reserved blocks)
-in compressed cluster.
+  arch/powerpc/platforms/maple/setup.c:365:1: error: attribute declaration
+  must precede definition [-Werror,-Wignored-attributes]
+  machine_device_initcall(maple, maple_cpc925_edac_setup);
+  ^
 
-Then use f2fs_compress_blocks() to get correct compressed blocks count in
-f2fs_write_raw_pages().
+machine_device_initcall expands to __define_machine_initcall, which in
+turn has the macro machine_is used in it, which declares mach_##name
+with an __attribute__((weak)). define_machine actually defines
+mach_##name, which in this file happens before the declaration, hence
+the warning.
 
-sanity_check_inode: inode (ino=ad80) hash inconsistent i_compr_blocks:2, i_blocks:1, run fsck to fix
+To fix this, move define_machine after machine_device_initcall so that
+the declaration occurs before the definition, which matches how
+machine_device_initcall and define_machine work throughout
+arch/powerpc.
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+While we're here, remove some spaces before tabs.
+
+Fixes: 8f101a051ef0 ("edac: cpc925 MC platform device setup")
+Reported-by: Nick Desaulniers <ndesaulniers@google.com>
+Suggested-by: Ilie Halip <ilie.halip@gmail.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200323222729.15365-1-natechancellor@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/compress.c | 28 ++++++++++++++++++++++------
- 1 file changed, 22 insertions(+), 6 deletions(-)
+ arch/powerpc/platforms/maple/setup.c | 34 ++++++++++++++--------------
+ 1 file changed, 17 insertions(+), 17 deletions(-)
 
-diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
-index ad8e25a1fbc26..11b13b881ada5 100644
---- a/fs/f2fs/compress.c
-+++ b/fs/f2fs/compress.c
-@@ -536,8 +536,7 @@ static bool __cluster_may_compress(struct compress_ctx *cc)
- 	return true;
+diff --git a/arch/powerpc/platforms/maple/setup.c b/arch/powerpc/platforms/maple/setup.c
+index 9cd6f3e1000b3..09a0594350b69 100644
+--- a/arch/powerpc/platforms/maple/setup.c
++++ b/arch/powerpc/platforms/maple/setup.c
+@@ -294,23 +294,6 @@ static int __init maple_probe(void)
+ 	return 1;
  }
  
--/* return # of compressed block addresses */
--static int f2fs_compressed_blocks(struct compress_ctx *cc)
-+static int __f2fs_cluster_blocks(struct compress_ctx *cc, bool compr)
- {
- 	struct dnode_of_data dn;
- 	int ret;
-@@ -560,8 +559,13 @@ static int f2fs_compressed_blocks(struct compress_ctx *cc)
- 
- 			blkaddr = datablock_addr(dn.inode,
- 					dn.node_page, dn.ofs_in_node + i);
--			if (blkaddr != NULL_ADDR)
--				ret++;
-+			if (compr) {
-+				if (__is_valid_data_blkaddr(blkaddr))
-+					ret++;
-+			} else {
-+				if (blkaddr != NULL_ADDR)
-+					ret++;
-+			}
- 		}
- 	}
- fail:
-@@ -569,6 +573,18 @@ static int f2fs_compressed_blocks(struct compress_ctx *cc)
- 	return ret;
+-define_machine(maple) {
+-	.name			= "Maple",
+-	.probe			= maple_probe,
+-	.setup_arch		= maple_setup_arch,
+-	.init_IRQ		= maple_init_IRQ,
+-	.pci_irq_fixup		= maple_pci_irq_fixup,
+-	.pci_get_legacy_ide_irq	= maple_pci_get_legacy_ide_irq,
+-	.restart		= maple_restart,
+-	.halt			= maple_halt,
+-       	.get_boot_time		= maple_get_boot_time,
+-       	.set_rtc_time		= maple_set_rtc_time,
+-       	.get_rtc_time		= maple_get_rtc_time,
+-      	.calibrate_decr		= generic_calibrate_decr,
+-	.progress		= maple_progress,
+-	.power_save		= power4_idle,
+-};
+-
+ #ifdef CONFIG_EDAC
+ /*
+  * Register a platform device for CPC925 memory controller on
+@@ -367,3 +350,20 @@ static int __init maple_cpc925_edac_setup(void)
  }
- 
-+/* return # of compressed blocks in compressed cluster */
-+static int f2fs_compressed_blocks(struct compress_ctx *cc)
-+{
-+	return __f2fs_cluster_blocks(cc, true);
-+}
+ machine_device_initcall(maple, maple_cpc925_edac_setup);
+ #endif
 +
-+/* return # of valid blocks in compressed cluster */
-+static int f2fs_cluster_blocks(struct compress_ctx *cc, bool compr)
-+{
-+	return __f2fs_cluster_blocks(cc, false);
-+}
-+
- int f2fs_is_compressed_cluster(struct inode *inode, pgoff_t index)
- {
- 	struct compress_ctx cc = {
-@@ -578,7 +594,7 @@ int f2fs_is_compressed_cluster(struct inode *inode, pgoff_t index)
- 		.cluster_idx = index >> F2FS_I(inode)->i_log_cluster_size,
- 	};
- 
--	return f2fs_compressed_blocks(&cc);
-+	return f2fs_cluster_blocks(&cc, false);
- }
- 
- static bool cluster_may_compress(struct compress_ctx *cc)
-@@ -627,7 +643,7 @@ static int prepare_compress_overwrite(struct compress_ctx *cc,
- 	bool prealloc;
- 
- retry:
--	ret = f2fs_compressed_blocks(cc);
-+	ret = f2fs_cluster_blocks(cc, false);
- 	if (ret <= 0)
- 		return ret;
- 
++define_machine(maple) {
++	.name			= "Maple",
++	.probe			= maple_probe,
++	.setup_arch		= maple_setup_arch,
++	.init_IRQ		= maple_init_IRQ,
++	.pci_irq_fixup		= maple_pci_irq_fixup,
++	.pci_get_legacy_ide_irq	= maple_pci_get_legacy_ide_irq,
++	.restart		= maple_restart,
++	.halt			= maple_halt,
++	.get_boot_time		= maple_get_boot_time,
++	.set_rtc_time		= maple_set_rtc_time,
++	.get_rtc_time		= maple_get_rtc_time,
++	.calibrate_decr		= generic_calibrate_decr,
++	.progress		= maple_progress,
++	.power_save		= power4_idle,
++};
 -- 
 2.20.1
 
