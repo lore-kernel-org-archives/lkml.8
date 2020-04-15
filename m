@@ -2,222 +2,83 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB9FC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:37:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C94A0C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF7602076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:37:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="POod/Q0b"
+	by mail.kernel.org (Postfix) with ESMTP id A47DA208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:37:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731581AbgDOOhO (ORCPT
+        id S2634533AbgDOOhj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:37:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39540 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2394142AbgDOOeN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 10:34:13 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2E55C061A10
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 07:34:12 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id g12so11534666wmh.3
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 07:34:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=nxelXILmKZchPwvimzsQBENiKfTkkLiVSXLT8HCWUfg=;
-        b=POod/Q0b08ZdV+ddPjR1JrfNwY27Dbz1s3Uw84CKlljOygYkgsJnl6F56k9XPO7ZKL
-         s1ULoVzWPEUCGPSWZarKN10UO8xNNQQGNPbd3fxmKEruKRDe1MPI0E8ZXrcHUtMNAvP5
-         5VaCQvB6o8KazHI/ePiNBMCebOd8aCVJCFrXLfg9Tk+9yBdrX9OgyoRuO1f3j1FIf70T
-         4JeLPh5w61dGRcY4eVGEsjbOBVxw0sppgq3GdwmYGEV/r0huvtbplLVyg5KLy2LJHHIO
-         zuXZ1qjJDZ/9QnkTgCmxNZH3K6UEFzboHHCSf6R3e66MspBZIv7Fs6s4hph3EQbH0TFs
-         yoag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=nxelXILmKZchPwvimzsQBENiKfTkkLiVSXLT8HCWUfg=;
-        b=mlpweb0HbEKFGGAOJ92bpq8q2c34F15eDyQYtpvVJmVbOv9AG4KqeTUyACsCpBuz/B
-         pBueoyM192TDpHF414692hvFEk1t8LrZIf3H3IBEAvyFoRhdoD7o2Cs4mqzngt+X2k7J
-         l111Kq4Jh9VpAkBlregjQjqvMR+QtwgXjuMGdJSH/FDHkz1lZyjTzdQi3ozIQk4+NozD
-         9JEooDryt57LU8owmFa1LLpPlxFATxCyhgyOx0ql6B7XzvShFhFEyF9jV5FIUwTNv/U9
-         5lur7j9e9XZl+ZLtx1NVtgkRoFAL5YUwIPulK4RpBiME8JWiscVG0w0G9dTEYm8PZoIx
-         /imA==
-X-Gm-Message-State: AGi0PuYIgtIBpGtNb/slwJw7EfOU9X35SU2ShE6Ot2g2DJmqWovaKifp
-        HMAYdJMu70PAfWDiHD6Xxf4LSQ==
-X-Google-Smtp-Source: APiQypKZQ8ksOeYlrdeJ8Nk3paLuV0a49yGc7LShsaCdvQV8dGeC8wnlFfMzLeyhC3ntLG7xWn/s7w==
-X-Received: by 2002:a05:600c:214b:: with SMTP id v11mr5813776wml.151.1586961250280;
-        Wed, 15 Apr 2020 07:34:10 -0700 (PDT)
-Received: from [192.168.1.5] (212-5-158-142.ip.btc-net.bg. [212.5.158.142])
-        by smtp.googlemail.com with ESMTPSA id w11sm22389148wmi.32.2020.04.15.07.34.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Apr 2020 07:34:09 -0700 (PDT)
-Subject: Re: [PATCH v4 04/12] v4l: Add source event change for bit-depth
-To:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     Vikash Garodia <vgarodia@codeaurora.org>, dikshita@codeaurora.org
-References: <20200106154929.4331-1-stanimir.varbanov@linaro.org>
- <20200106154929.4331-5-stanimir.varbanov@linaro.org>
- <c3b02589-1d7a-a476-7d33-7e555fbe276d@xs4all.nl>
- <ae233eb1-69fc-6723-0224-0c1fcf786156@linaro.org>
- <fb27b5cc-0eef-a7b4-f45b-a3986b77c4c9@xs4all.nl>
- <988e49aa-469d-17a1-ca25-982c63536e6e@linaro.org>
- <814252fe-6fa9-595b-92b3-8ef8ef4c0187@xs4all.nl>
-From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Message-ID: <8da8cb6c-4190-1670-46cf-a982481aecdf@linaro.org>
-Date:   Wed, 15 Apr 2020 17:34:01 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 15 Apr 2020 10:37:39 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48956 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2394152AbgDOOe3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 10:34:29 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id BB07FAB3D;
+        Wed, 15 Apr 2020 14:34:26 +0000 (UTC)
+Date:   Wed, 15 Apr 2020 16:34:26 +0200 (CEST)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>
+Subject: Re: [PATCH 1/7] livepatch: Apply vmlinux-specific KLP relocations
+ early
+In-Reply-To: <8c3af42719fe0add37605ede634c7035a90f9acc.1586881704.git.jpoimboe@redhat.com>
+Message-ID: <alpine.LSU.2.21.2004151633010.13470@pobox.suse.cz>
+References: <cover.1586881704.git.jpoimboe@redhat.com> <8c3af42719fe0add37605ede634c7035a90f9acc.1586881704.git.jpoimboe@redhat.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <814252fe-6fa9-595b-92b3-8ef8ef4c0187@xs4all.nl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hans,
+Just a nit below
 
-On 1/15/20 5:03 PM, Hans Verkuil wrote:
-> On 1/10/20 11:54 AM, Stanimir Varbanov wrote:
->> Hi Hans,
->>
->> On 1/9/20 10:57 AM, Hans Verkuil wrote:
->>> On 1/9/20 8:41 AM, Stanimir Varbanov wrote:
->>>> Hi Hans,
->>>>
->>>> On 1/8/20 6:09 PM, Hans Verkuil wrote:
->>>>> On 1/6/20 4:49 PM, Stanimir Varbanov wrote:
->>>>>> This event indicate that the source color bit-depth is changed
->>>>>> during run-time. The client must get the new format and re-allocate
->>>>>> buffers for it. This can usually happens with video decoder (encoders)
->>>>>> when the bit-stream color bit-depth is changed from 8 to 10bits
->>>>>> or vice versa.
->>>>>>
->>>>>> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
->>>>>> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
->>>>>> ---
->>>>>>  Documentation/media/uapi/v4l/vidioc-dqevent.rst | 8 +++++++-
->>>>>>  Documentation/media/videodev2.h.rst.exceptions  | 1 +
->>>>>>  include/uapi/linux/videodev2.h                  | 1 +
->>>>>>  3 files changed, 9 insertions(+), 1 deletion(-)
->>>>>>
->>>>>> diff --git a/Documentation/media/uapi/v4l/vidioc-dqevent.rst b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
->>>>>> index 42659a3d1705..fad853d440cf 100644
->>>>>> --- a/Documentation/media/uapi/v4l/vidioc-dqevent.rst
->>>>>> +++ b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
->>>>>> @@ -402,7 +402,13 @@ call.
->>>>>>  	that many Video Capture devices are not able to recover from a temporary
->>>>>>  	loss of signal and so restarting streaming I/O is required in order for
->>>>>>  	the hardware to synchronize to the video signal.
->>>>>> -
->>>>>> +    * - ``V4L2_EVENT_SRC_CH_COLOR_DEPTH``
->>>>>> +      - 0x0002
->>>>>> +      - This event gets triggered when color bit-depth change is detected
->>>>>> +	from a video decoder. Applications will have to query the new pixel
->>>>>> +	format and re-negotiate the queue. In most cases the streaming must be
->>>>>> +	stopped and restarted (:ref:`VIDIOC_STREAMOFF <VIDIOC_STREAMON>`
->>>>>> +	followed by :ref:`VIDIOC_STREAMON <VIDIOC_STREAMON>`).
->>>>>
->>>>> I think this is too specific for decoders. Something similar to the
->>>>> CH_RESOLUTION description would be more appropriate:
->>>>>
->>>>>       - This event gets triggered when a color bit-depth change (but not a
->>>>> 	resolution change!) is detected	at an input. This can come from an
->>>>
->>>> What you mean by "but not a resolution change" here? Resolution change
->>>> and bit-depth change cannot occur on the same time, or something else.
->>>
->>> What I was trying to say is that a resolution change implies a possible bit-depth
->>> change as well, whereas V4L2_EVENT_SRC_CH_COLOR_DEPTH is only set if there is
->>> a bit-depth change but no resolution change.
->>>
->>> V4L2_EVENT_SRC_CH_RESOLUTION requires that userspace does a full resync to the
->>> new format, CH_COLOR_DEPTH implies that only the bit depth changed.
->>
->> CH_COLOR_DEPTH implies format re-negotiation as well. In Venus case
->> 8->10bit change will change the format of OPB buffers (now it is not
->> possible because of lack of v4l modifiers) and DPB buffers becomes
->> compressed raw buffers (to optimize bandwidth).
->>
->>>
->>> Which actually makes me wonder: is there a difference between the two change flags
->>> w.r.t. userspace behavior? If there is, then that should be carefully documented,
->>> if there isn't, then is this new flag really needed?
->>
->> Looking into semantics of v4l events, CH_COLOR_DEPTH makes sense because
->> it describes what actually changed (similar to CH_RESOLUTION). I would
->> say that v4l2_event::type V4L2_EVENT_SOURCE_CHANGE implies format
->> re-negotiation and v4l2_event::src_change just informs userland what
->> exactly is changed.
->>
->> I'll postpone this patch until we have clear vision what will be the
->> usage in user-space.
->>
-> 
-> My main problem regarding semantics is what should be done if you disconnect
-> and reconnect an HDMI (for example) connector. You get a V4L2_EVENT_SOURCE_CHANGE
-> when the new signal is detected, but should it just set V4L2_EVENT_SRC_CH_RESOLUTION
-> (as it does today), or also V4L2_EVENT_SRC_CH_COLOR_DEPTH?
+> diff --git a/include/linux/livepatch.h b/include/linux/livepatch.h
+> index e894e74905f3..d9e9b76f6054 100644
+> --- a/include/linux/livepatch.h
+> +++ b/include/linux/livepatch.h
+> @@ -234,14 +234,30 @@ void klp_shadow_free_all(unsigned long id, klp_shadow_dtor_t dtor);
+>  struct klp_state *klp_get_state(struct klp_patch *patch, unsigned long id);
+>  struct klp_state *klp_get_prev_state(unsigned long id);
+>  
+> +int klp_write_relocations(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
+> +			  const char *shstrtab, const char *strtab,
+> +			  unsigned int symindex, struct module *pmod,
+> +			  const char *objname);
+> +
+>  #else /* !CONFIG_LIVEPATCH */
+>  
+> +struct klp_object;
+> +
 
-I think disconnect -> connect should imply that everything is changed
-i.e. source resolution, color depth and colorimetry. We cannot guess is
-it the same HDMI source or not.
+Is the forward declaration necessary here?
 
-> 
-> In my view V4L2_EVENT_SRC_CH_COLOR_DEPTH only makes sense if the resolution
-> stays the same, but only the color depth changes.
+>  static inline int klp_module_coming(struct module *mod) { return 0; }
+>  static inline void klp_module_going(struct module *mod) {}
+>  static inline bool klp_patch_pending(struct task_struct *task) { return false; }
+>  static inline void klp_update_patch_state(struct task_struct *task) {}
+>  static inline void klp_copy_process(struct task_struct *child) {}
+>  
+> +static inline
+> +int klp_write_relocations(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
+> +			  const char *shstrtab, const char *strtab,
+> +			  unsigned int symindex, struct module *pmod,
+> +			  const char *objname)
+> +{
+> +	return 0;
+> +}
+> +
+>  #endif /* CONFIG_LIVEPATCH */
 
-I can imagine a bitstream which changing resolution and color-depth at
-the same time. And I guess h264|265 doesn't denied this to happen.
-
-> 
-> BTW, one thing that will be added here as well in the future is a
-> V4L2_EVENT_SRC_CH_COLORIMETRY for when the colorspace etc. information changes,
-> but nothing else. In that case there is no need to renegotiate the format etc.,
-> it's just the interpretation of the video data that changes.
-
-In case of colorimetry, maybe the buffer format will not change but
-colorspace, quantization, ycbcr_encoding and transfer function will
-change. And this imply that the userspace have to streamoff -> gfmt ->
-do-some-action -> streamon ?
-
-I have to figure out what is for example Android is doing when the
-colorimentry is changed.
-If someone knows, please shed some light on that subject.
-
-> 
-> An alternative approach is to define a V4L2_EVENT_SRC_CH_ALL bit mask, OR-ing
-> all the V4L2_EVENT_SRC_CH_* defines, and change all drivers that use
-> V4L2_EVENT_SRC_CH_RESOLUTION at the moment to use V4L2_EVENT_SRC_CH_ALL instead,
-> and only drivers that detect that only one of these changes took place will
-> use a specific V4L2_EVENT_SRC_CH_ flag. This will be primarily codec drivers,
-> I believe.
-
-I can do that as an RFC.
-
-> 
-> There aren't that many of those, so this shouldn't be too difficult to do.
-> 
-> Perhaps this is the cleanest approach to this problem...
-> 
-> Regards,
-> 
-> 	Hans
-> 
-
--- 
-regards,
-Stan
+Miroslav
