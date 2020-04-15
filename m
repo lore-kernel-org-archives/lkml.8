@@ -2,152 +2,118 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 445B0C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:09:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 223CAC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2442D206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:09:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="hyvfWRgZ"
+	by mail.kernel.org (Postfix) with ESMTP id 0BEFD206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:12:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2636459AbgDOOJU (ORCPT
+        id S2636461AbgDOOL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:09:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35670 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2634048AbgDOOJN (ORCPT
+        Wed, 15 Apr 2020 10:11:56 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:43175 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732615AbgDOOLg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 10:09:13 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13D1AC061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 07:09:13 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id l78so1577951qke.7
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 07:09:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8l3fJ3svvSnnpPWSwQODVx9E9WXp25t5EtCooxlqAaI=;
-        b=hyvfWRgZ8ds04OSvqKNyo/oyMGZudplvEgKzicRUdSRA7vp3TtY92WjQnivcZ2zlVx
-         YGsqo2pSYCsL5gyfWH8KskcNoRlysYM+kZ0YMhf7DLoAEcWPb/meAwW+z9VwJ2o/zAKQ
-         Mf+CeCVpXGS0CxgIfgYWqEVHzRfJuIxFifI0IN17pIpclN6zHTtbdISuE1qxEgPYEinv
-         zriEbOBxBnvwhV/nxT6zLUvApM7+qCMNvIP3vvk6tOHIAUhKGQ7aOSziauK59XBka8Yb
-         9q5QkXsZZ8JueNWbHr7Un1tx9r6Rd7XMa3nsavZAziqQL6icouVnhboeNjAADXfnuT7U
-         u74g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8l3fJ3svvSnnpPWSwQODVx9E9WXp25t5EtCooxlqAaI=;
-        b=kXNMEQmUG1w5frLAGiF9mlBQpJ3VwWI8Oec24qNgG/OS+neSFTj7d6IuG8Tp+AmG4Q
-         4KeAD+qV50ea/qrQMz3OFy1daT2W2m/8iNJMPKbkJbS9DAaouAqzi3HvRmUop56pysVa
-         NnPV9TXlOopyWTX9ykVXJY4YNmWbYx8ACCyisvZ9EiahnFlTKS/y7hOt6MTfX0UjfBnp
-         LFqULLJVurUcqSRqndi9EO7mKGms5Ow8vj69AgpRurLEqSzxuYcYwtgmKG+rZdGvOvTY
-         cVn7x5c+etNaX8nbrzfMDBZSGhHMQsWWwfnrtkIcZ0BXkE0eTXC71m9LjyOJrxkK+0a8
-         uPRQ==
-X-Gm-Message-State: AGi0PuaAsgZlVrBqeajzn/JvkUWm1cUxWX8oTxwYhjdBb/dMHnhPqs+L
-        x7BPMS9ykEGThSGZ3ef/7eV5Dg==
-X-Google-Smtp-Source: APiQypLbb8LS8qXo73NMCiWFh1QIqqzNTocUAzDQFGF4qT8gB1BW0a9iIzLUAA/BXDJ9RXfzbpXISA==
-X-Received: by 2002:a05:620a:5fc:: with SMTP id z28mr27186371qkg.346.1586959752226;
-        Wed, 15 Apr 2020 07:09:12 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id o94sm13137882qtd.34.2020.04.15.07.09.11
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 15 Apr 2020 07:09:11 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jOij0-0005Px-OF; Wed, 15 Apr 2020 11:09:10 -0300
-Date:   Wed, 15 Apr 2020 11:09:10 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Cc:     Bernard Metzler <bmt@zurich.ibm.com>,
-        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org, yuanxzhang@fudan.edu.cn,
-        kjlu@umn.edu, Xin Tan <tanxin.ctf@gmail.com>
-Subject: Re: [PATCH] RDMA/siw: Fix potential siw_mem refcnt leak in
- nr_add_node
-Message-ID: <20200415140910.GN5100@ziepe.ca>
-References: <1586939949-69856-1-git-send-email-xiyuyang19@fudan.edu.cn>
+        Wed, 15 Apr 2020 10:11:36 -0400
+Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
+ mrelayeu.kundenserver.de (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis)
+ id 1M433w-1jOikV1ArA-0008D6; Wed, 15 Apr 2020 16:10:43 +0200
+Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
+        by mail.cetitecgmbh.com (Postfix) with ESMTP id 0D300650EBC;
+        Wed, 15 Apr 2020 14:10:42 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at cetitec.com
+Received: from mail.cetitecgmbh.com ([127.0.0.1])
+        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id a9FxySuCWEi3; Wed, 15 Apr 2020 16:10:41 +0200 (CEST)
+Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
+        by mail.cetitecgmbh.com (Postfix) with ESMTPS id A77C564C0D9;
+        Wed, 15 Apr 2020 16:10:41 +0200 (CEST)
+Received: from pflmmbl.corp.cetitec.com (10.8.5.60) by
+ PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 15 Apr 2020 16:10:41 +0200
+From:   Matthias Blankertz <matthias.blankertz@cetitec.com>
+To:     Mark Brown <broonie@kernel.org>
+CC:     Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        <linux-renesas-soc@vger.kernel.org>
+Subject: [PATCH 0/2] ASoC: rsnd: Fixes for multichannel HDMI audio output
+Date:   Wed, 15 Apr 2020 16:10:15 +0200
+Message-ID: <20200415141017.384017-1-matthias.blankertz@cetitec.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1586939949-69856-1-git-send-email-xiyuyang19@fudan.edu.cn>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.8.5.60]
+X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
+ PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A290D7F536B647460
+X-Provags-ID: V03:K1:ls00uf4IlbrL5k+iWkD/WTmWYJj2Y84rUbhh+RZdOmEf3f68PT4
+ FNEAZa4F7Phw66UR0nWjFpSj8t3Voz1xizvTTK53uk9EADtZ/ZitvNm85mdgfti69qH5I6a
+ UinE9tuhDB0krwi7u8TPxThlkypNIWsC2fBFky4+MKCdLbwLUA/ZpnQ0gmR5QyyZnHw6A8N
+ SX51zgcEnCyz2rJlqvYYg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:jytcsZGxxWc=:QLEgfUO1mDZFEbghCIOVbk
+ KY+vl+FRwGZVX9VdnmNGQ6fM4ZUfxE6XOkLI077L9TkwYRBnBXzKcVeqYliL1Q2mV+1krDhQ6
+ xrSmfpQUMiDNkobLrBMGVHbAzsbUs6IBqNp7H+//64Dyrlmz6MS8lhnUoVnNnNMr/wTrnR9FM
+ uYNwExBslY3O1/9A2KrKX0lSXJLk2DyYBRzQoe2DgwQQJyWckGy/vR1X7qrvbVYkWZbYDtkTY
+ iOMF1RvasrIZVG2abdGuXQoxBkAKjUyx6Uod+7UOD7emQoBKCtp1oe6Jpr3g49IFbKRT7pMOM
+ gmYiyyiDxEDCRoidNw2p5sfyKiN4I+gXNfs4bkEDy4m5GsnBQRwNIO8gYnrZK1APEyU4C+617
+ lyG5PDKwP6m23PSdajBjRTyiQblQBAAMk7M8ldOM4h16as43qnrqrmwGejLHElNva0Rt5UuRk
+ f3PYk2i8fD35JeRwsuZQChyc1Xyf5S5MS34WIRwZxla1sz2A9oHff3pvxRHKL8Yu3jkxCzkR9
+ SyvMqAyxjLprSDRe20DED+C9DDYMY6j4FwSUh/Xyw2N/Jxy4XKrMj6s7WrvuJlNsTOMGUkSzA
+ 5/cr+B20n9elSaNcdGRwIGGMuhI4YH54Jjynpm7etXzSazH48vIScId0YUnL6du+UaJyMyYZz
+ r4YDm9AJrRfAL9J2txtkE0GvTkvvNCe5xH9BFMj++CtyRgYFYQtNcRMCRlmkN/kArtDEu8uvv
+ OSDK7PfRzQPfozY+pxYJTeURAeQkMNkDpgoFJMNFUPrtUl0qwnIdC0Xo0/IjygnHU2UBKRFbw
+ YqD9znHvaYh/PPI5m3GFlY34NtLW+uz06NpxrjVqO8wx1z3dDV1xhvxgYfHWzKCQkUk+IfrL5
+ s4eP2fOsKWedPqZtPvYw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 04:39:08PM +0800, Xiyu Yang wrote:
-> siw_fastreg_mr() invokes siw_mem_id2obj(), which returns a local
-> reference of the siw_mem object to "mem" with increased refcnt.
-> When siw_fastreg_mr() returns, "mem" becomes invalid, so the refcount
-> should be decreased to keep refcount balanced.
-> 
-> The issue happens in one error path of siw_fastreg_mr(). When "base_mr"
-> equals to NULL but "mem" is not NULL, the function forgets to decrease
-> the refcnt increased by siw_mem_id2obj() and causes a refcnt leak.
-> 
-> Fix this issue by calling siw_mem_put() on this error path when mem is
-> not NULL.
-> 
-> Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-> Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
->  drivers/infiniband/sw/siw/siw_qp_tx.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/infiniband/sw/siw/siw_qp_tx.c b/drivers/infiniband/sw/siw/siw_qp_tx.c
-> index ae92c8080967..86044a44b83b 100644
-> +++ b/drivers/infiniband/sw/siw/siw_qp_tx.c
-> @@ -926,6 +926,8 @@ static int siw_fastreg_mr(struct ib_pd *pd, struct siw_sqe *sqe)
->  	siw_dbg_pd(pd, "STag 0x%08x\n", sqe->rkey);
->  
->  	if (unlikely(!mem || !base_mr)) {
-> +		if (mem)
-> +			siw_mem_put(mem);
->  		pr_warn("siw: fastreg: STag 0x%08x unknown\n", sqe->rkey);
->  		return -EINVAL;
->  	}
+This fixes two issues in the snd-soc-rcar driver blocking multichannel
+HDMI audio out: The parent SSI in a multi-SSI configuration is not
+correctly set up and started, and the SSI->HDMI channel mapping is
+wrong.
 
-I think I prefer this version, which is what I'll use if nobody has concerns:
+With these patches, the following device tree snippet can be used on an
+r8a7795-based platform (Salvator-X) to enable multichannel HDMI audio on
+HDMI0:
 
-diff --git a/drivers/infiniband/sw/siw/siw_qp_tx.c b/drivers/infiniband/sw/siw/siw_qp_tx.c
-index ae92c8080967c5..0580bbf535ceb7 100644
---- a/drivers/infiniband/sw/siw/siw_qp_tx.c
-+++ b/drivers/infiniband/sw/siw/siw_qp_tx.c
-@@ -920,20 +920,28 @@ static int siw_fastreg_mr(struct ib_pd *pd, struct siw_sqe *sqe)
- {
- 	struct ib_mr *base_mr = (struct ib_mr *)(uintptr_t)sqe->base_mr;
- 	struct siw_device *sdev = to_siw_dev(pd->device);
--	struct siw_mem *mem = siw_mem_id2obj(sdev, sqe->rkey  >> 8);
-+	struct siw_mem *mem;
- 	int rv = 0;
- 
- 	siw_dbg_pd(pd, "STag 0x%08x\n", sqe->rkey);
- 
--	if (unlikely(!mem || !base_mr)) {
-+	if (unlikely(!base_mr)) {
- 		pr_warn("siw: fastreg: STag 0x%08x unknown\n", sqe->rkey);
- 		return -EINVAL;
- 	}
-+
- 	if (unlikely(base_mr->rkey >> 8 != sqe->rkey  >> 8)) {
- 		pr_warn("siw: fastreg: STag 0x%08x: bad MR\n", sqe->rkey);
-+		return -EINVAL;
-+	}
-+
-+	mem = siw_mem_id2obj(sdev, sqe->rkey  >> 8);
-+	if (unlikely(!mem)) {
-+		pr_warn("siw: fastreg: STag 0x%08x unknown\n", sqe->rkey);
- 		rv = -EINVAL;
- 		goto out;
- 	}
-+
- 	if (unlikely(mem->pd != pd)) {
- 		pr_warn("siw: fastreg: PD mismatch\n");
- 		rv = -EINVAL;
+rsnd_port1: port@1 {
+	rsnd_endpoint1: endpoint {
+		remote-endpoint = <&dw_hdmi0_snd_in>;
+
+		dai-format = "i2s";
+		bitclock-master = <&rsnd_endpoint1>;
+		frame-master = <&rsnd_endpoint1>;
+
+		playback = <&ssi0 &ssi1 &ssi2 &ssi9>;
+	};
+};
+
+With a capable receiver attached, all of 2ch (stereo), 6ch (e.g. 5.1)
+and 8ch audio output should work.
+
+
+Matthias Blankertz (2):
+  ASoC: rsnd: Fix parent SSI start/stop in multi-SSI mode
+  ASoC: rsnd: Fix HDMI channel mapping for multi-SSI mode
+
+ sound/soc/sh/rcar/ssi.c  | 8 ++++----
+ sound/soc/sh/rcar/ssiu.c | 2 +-
+ 2 files changed, 5 insertions(+), 5 deletions(-)
+
+
+base-commit: 7111951b8d4973bda27ff663f2cf18b663d15b48
+-- 
+2.26.0
+
