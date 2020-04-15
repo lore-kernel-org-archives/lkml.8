@@ -2,50 +2,53 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB9FEC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A00A9C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:51:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C93AC20732
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:51:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 721D221655
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 11:51:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586951507;
-	bh=sscrRof2T2gOXm1DhhLMfhcfPs75brf/YmFVxd4ypA8=;
+	s=default; t=1586951512;
+	bh=mhBjTDI4vCH59s+ziiF3tVpz1mt1i8VO8riopu5unnc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qrvmw8jI4iDC9+uT9yDx2NQl2LcIXhwXptqU3ncfUx6p5CiSB0PjqR5gczlZngmFv
-	 Lz5mDFVFnnywJs7Ewowu8M4cjnv/qOb2HOJFOrYaaPOFO87Wm6IZ4jUiYQyUGM3NFo
-	 FQcThuDFYbJonrMPAAjqn/crQquaL/6SuKoFBct8=
+	b=R97VagKfMVNbprT6QzSAulE5LSzghc/ljDc8eNfbu1dAv0baoa0CUiIL5ax65I3dG
+	 2FxbjRuz4YQIeiuOnfHsRVbwRZmT3q5CQgU24+KnLLImm5W7qJALo3/CaZ0dRd6vvy
+	 PcSiuf0zBqTsCvcMk/QzXLvuT3bbr7XIuqtD6AnA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2897709AbgDOLvq (ORCPT
+        id S2897721AbgDOLvu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:51:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36644 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 07:51:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406090AbgDOLoI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:44:08 -0400
+        id S2409053AbgDOLoL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:44:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A99B320737;
-        Wed, 15 Apr 2020 11:44:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E904520768;
+        Wed, 15 Apr 2020 11:44:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951047;
-        bh=sscrRof2T2gOXm1DhhLMfhcfPs75brf/YmFVxd4ypA8=;
+        s=default; t=1586951049;
+        bh=mhBjTDI4vCH59s+ziiF3tVpz1mt1i8VO8riopu5unnc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MgxK4HSWWNb3IusQbaHuyBfEA5SenO7v9H4jYYfRsewVYN+UvPPXPsNSysG0hy7DV
-         xDue+LgqMNXGfIHP76Vb5qkehNkB7tvc/rmIW5a21mDhzliqrBzpd4EaolZJxeHfKW
-         c8d9Qmyr9DPrtvS+eqfTT9lDMLrlGcxqZ/gG1Hq8=
+        b=pNpZ7+pFoSVJ4rIW6nTCtLo4V+9jZu7jKPhDddzST5QyaCgGzpQUkH+ONjgOPLYyK
+         eEUDxrJsMMKWVGPvtrr8RZa6DujxHvSr9TxhsEb2JgzoF6tNZ1abgosGTuxmmLPLWw
+         iZuumKuX1R56ofog3jXm/rq5JKoHZEhkwwnye14o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Guo Ren <guoren@linux.alibaba.com>,
-        Sasha Levin <sashal@kernel.org>, linux-csky@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 082/106] csky: Fixup get wrong psr value from phyical reg
-Date:   Wed, 15 Apr 2020 07:42:02 -0400
-Message-Id: <20200415114226.13103-82-sashal@kernel.org>
+Cc:     Bob Moore <robert.moore@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org,
+        devel@acpica.org
+Subject: [PATCH AUTOSEL 5.5 084/106] ACPICA: Fixes for acpiExec namespace init file
+Date:   Wed, 15 Apr 2020 07:42:04 -0400
+Message-Id: <20200415114226.13103-84-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
 References: <20200415114226.13103-1-sashal@kernel.org>
@@ -58,124 +61,297 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guo Ren <guoren@linux.alibaba.com>
+From: Bob Moore <robert.moore@intel.com>
 
-[ Upstream commit 9c0e343d7654a329d1f9b53d253cbf7fb6eff85d ]
+[ Upstream commit 9a1ae80412dcaa67a29eecf19de44f32b5f1c357 ]
 
-We should get psr value from regs->psr in stack, not directly get
-it from phyiscal register then save the vector number in
-tsk->trap_no.
+This is the result of squashing the following ACPICA commit ID's:
+6803997e5b4f3635cea6610b51ff69e29d251de3
+f31cdf8bfda22fe265c1a176d0e33d311c82a7f7
 
-Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+This change fixes several problems with the support for the
+acpi_exec namespace init file (-fi option). Specifically, it
+fixes AE_ALREADY_EXISTS errors, as well as various seg faults.
+
+Link: https://github.com/acpica/acpica/commit/f31cdf8b
+Link: https://github.com/acpica/acpica/commit/6803997e
+Signed-off-by: Bob Moore <robert.moore@intel.com>
+Signed-off-by: Erik Kaneda <erik.kaneda@intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/csky/include/asm/processor.h |  1 +
- arch/csky/kernel/traps.c          | 11 ++++++++++-
- arch/csky/mm/fault.c              |  7 +++++++
- 3 files changed, 18 insertions(+), 1 deletion(-)
+ drivers/acpi/acpica/acnamesp.h |  2 ++
+ drivers/acpi/acpica/dbinput.c  | 16 +++++++---------
+ drivers/acpi/acpica/dswexec.c  | 33 ++++++++++++++++++++++++++++++++
+ drivers/acpi/acpica/dswload.c  |  2 --
+ drivers/acpi/acpica/dswload2.c | 35 ++++++++++++++++++++++++++++++++++
+ drivers/acpi/acpica/nsnames.c  |  6 +-----
+ drivers/acpi/acpica/utdelete.c |  9 +++++----
+ 7 files changed, 83 insertions(+), 20 deletions(-)
 
-diff --git a/arch/csky/include/asm/processor.h b/arch/csky/include/asm/processor.h
-index 21e0bd5293dde..c6bcd7f7c720b 100644
---- a/arch/csky/include/asm/processor.h
-+++ b/arch/csky/include/asm/processor.h
-@@ -43,6 +43,7 @@ extern struct cpuinfo_csky cpu_data[];
- struct thread_struct {
- 	unsigned long  ksp;       /* kernel stack pointer */
- 	unsigned long  sr;        /* saved status register */
-+	unsigned long  trap_no;   /* saved status register */
+diff --git a/drivers/acpi/acpica/acnamesp.h b/drivers/acpi/acpica/acnamesp.h
+index 7da1864798a0e..ecaa28733dc61 100644
+--- a/drivers/acpi/acpica/acnamesp.h
++++ b/drivers/acpi/acpica/acnamesp.h
+@@ -256,6 +256,8 @@ u32
+ acpi_ns_build_normalized_path(struct acpi_namespace_node *node,
+ 			      char *full_path, u32 path_size, u8 no_trailing);
  
- 	/* FPU regs */
- 	struct user_fp __aligned(16) user_fp;
-diff --git a/arch/csky/kernel/traps.c b/arch/csky/kernel/traps.c
-index b057480e7463c..63715cb90ee99 100644
---- a/arch/csky/kernel/traps.c
-+++ b/arch/csky/kernel/traps.c
-@@ -115,8 +115,9 @@ asmlinkage void trap_c(struct pt_regs *regs)
- 	int sig;
- 	unsigned long vector;
- 	siginfo_t info;
-+	struct task_struct *tsk = current;
++void acpi_ns_normalize_pathname(char *original_path);
++
+ char *acpi_ns_get_normalized_pathname(struct acpi_namespace_node *node,
+ 				      u8 no_trailing);
  
--	vector = (mfcr("psr") >> 16) & 0xff;
-+	vector = (regs->sr >> 16) & 0xff;
+diff --git a/drivers/acpi/acpica/dbinput.c b/drivers/acpi/acpica/dbinput.c
+index e1632b340182b..c0b8342513fa2 100644
+--- a/drivers/acpi/acpica/dbinput.c
++++ b/drivers/acpi/acpica/dbinput.c
+@@ -468,16 +468,14 @@ char *acpi_db_get_next_token(char *string,
+ 		return (NULL);
+ 	}
  
- 	switch (vector) {
- 	case VEC_ZERODIV:
-@@ -129,6 +130,7 @@ asmlinkage void trap_c(struct pt_regs *regs)
- 		sig = SIGTRAP;
+-	/* Remove any spaces at the beginning */
++	/* Remove any spaces at the beginning, ignore blank lines */
+ 
+-	if (*string == ' ') {
+-		while (*string && (*string == ' ')) {
+-			string++;
+-		}
++	while (*string && isspace(*string)) {
++		string++;
++	}
+ 
+-		if (!(*string)) {
+-			return (NULL);
+-		}
++	if (!(*string)) {
++		return (NULL);
+ 	}
+ 
+ 	switch (*string) {
+@@ -570,7 +568,7 @@ char *acpi_db_get_next_token(char *string,
+ 
+ 		/* Find end of token */
+ 
+-		while (*string && (*string != ' ')) {
++		while (*string && !isspace(*string)) {
+ 			string++;
+ 		}
  		break;
- 	case VEC_ILLEGAL:
-+		tsk->thread.trap_no = vector;
- 		die_if_kernel("Kernel mode ILLEGAL", regs, vector);
- #ifndef CONFIG_CPU_NO_USER_BKPT
- 		if (*(uint16_t *)instruction_pointer(regs) != USR_BKPT)
-@@ -146,16 +148,20 @@ asmlinkage void trap_c(struct pt_regs *regs)
- 		sig = SIGTRAP;
- 		break;
- 	case VEC_ACCESS:
-+		tsk->thread.trap_no = vector;
- 		return buserr(regs);
- #ifdef CONFIG_CPU_NEED_SOFTALIGN
- 	case VEC_ALIGN:
-+		tsk->thread.trap_no = vector;
- 		return csky_alignment(regs);
+diff --git a/drivers/acpi/acpica/dswexec.c b/drivers/acpi/acpica/dswexec.c
+index d75aae3045958..a68237b97c4c8 100644
+--- a/drivers/acpi/acpica/dswexec.c
++++ b/drivers/acpi/acpica/dswexec.c
+@@ -16,6 +16,9 @@
+ #include "acinterp.h"
+ #include "acnamesp.h"
+ #include "acdebug.h"
++#ifdef ACPI_EXEC_APP
++#include "aecommon.h"
++#endif
+ 
+ #define _COMPONENT          ACPI_DISPATCHER
+ ACPI_MODULE_NAME("dswexec")
+@@ -329,6 +332,10 @@ acpi_status acpi_ds_exec_end_op(struct acpi_walk_state *walk_state)
+ 	u32 op_class;
+ 	union acpi_parse_object *next_op;
+ 	union acpi_parse_object *first_arg;
++#ifdef ACPI_EXEC_APP
++	char *namepath;
++	union acpi_operand_object *obj_desc;
++#endif
+ 
+ 	ACPI_FUNCTION_TRACE_PTR(ds_exec_end_op, walk_state);
+ 
+@@ -537,6 +544,32 @@ acpi_status acpi_ds_exec_end_op(struct acpi_walk_state *walk_state)
+ 
+ 			status =
+ 			    acpi_ds_eval_buffer_field_operands(walk_state, op);
++			if (ACPI_FAILURE(status)) {
++				break;
++			}
++#ifdef ACPI_EXEC_APP
++			/*
++			 * acpi_exec support for namespace initialization file (initialize
++			 * buffer_fields in this code.)
++			 */
++			namepath =
++			    acpi_ns_get_external_pathname(op->common.node);
++			status = ae_lookup_init_file_entry(namepath, &obj_desc);
++			if (ACPI_SUCCESS(status)) {
++				status =
++				    acpi_ex_write_data_to_field(obj_desc,
++								op->common.
++								node->object,
++								NULL);
++				if ACPI_FAILURE
++					(status) {
++					ACPI_EXCEPTION((AE_INFO, status,
++							"While writing to buffer field"));
++					}
++			}
++			ACPI_FREE(namepath);
++			status = AE_OK;
++#endif
+ 			break;
+ 
+ 		case AML_TYPE_CREATE_OBJECT:
+diff --git a/drivers/acpi/acpica/dswload.c b/drivers/acpi/acpica/dswload.c
+index 4bcf15bf03ded..6cf93fae4d07f 100644
+--- a/drivers/acpi/acpica/dswload.c
++++ b/drivers/acpi/acpica/dswload.c
+@@ -14,7 +14,6 @@
+ #include "acdispat.h"
+ #include "acinterp.h"
+ #include "acnamesp.h"
+-
+ #ifdef ACPI_ASL_COMPILER
+ #include "acdisasm.h"
  #endif
- #ifdef CONFIG_CPU_HAS_FPU
- 	case VEC_FPE:
-+		tsk->thread.trap_no = vector;
- 		die_if_kernel("Kernel mode FPE", regs, vector);
- 		return fpu_fpe(regs);
- 	case VEC_PRIV:
-+		tsk->thread.trap_no = vector;
- 		die_if_kernel("Kernel mode PRIV", regs, vector);
- 		if (fpu_libc_helper(regs))
- 			return;
-@@ -164,5 +170,8 @@ asmlinkage void trap_c(struct pt_regs *regs)
- 		sig = SIGSEGV;
+@@ -399,7 +398,6 @@ acpi_status acpi_ds_load1_end_op(struct acpi_walk_state *walk_state)
+ 	union acpi_parse_object *op;
+ 	acpi_object_type object_type;
+ 	acpi_status status = AE_OK;
+-
+ #ifdef ACPI_ASL_COMPILER
+ 	u8 param_count;
+ #endif
+diff --git a/drivers/acpi/acpica/dswload2.c b/drivers/acpi/acpica/dswload2.c
+index 935a8e2623e4b..15d92bf15f0b6 100644
+--- a/drivers/acpi/acpica/dswload2.c
++++ b/drivers/acpi/acpica/dswload2.c
+@@ -15,6 +15,9 @@
+ #include "acinterp.h"
+ #include "acnamesp.h"
+ #include "acevents.h"
++#ifdef ACPI_EXEC_APP
++#include "aecommon.h"
++#endif
+ 
+ #define _COMPONENT          ACPI_DISPATCHER
+ ACPI_MODULE_NAME("dswload2")
+@@ -373,6 +376,10 @@ acpi_status acpi_ds_load2_end_op(struct acpi_walk_state *walk_state)
+ 	struct acpi_namespace_node *new_node;
+ 	u32 i;
+ 	u8 region_space;
++#ifdef ACPI_EXEC_APP
++	union acpi_operand_object *obj_desc;
++	char *namepath;
++#endif
+ 
+ 	ACPI_FUNCTION_TRACE(ds_load2_end_op);
+ 
+@@ -466,6 +473,11 @@ acpi_status acpi_ds_load2_end_op(struct acpi_walk_state *walk_state)
+ 		 * be evaluated later during the execution phase
+ 		 */
+ 		status = acpi_ds_create_buffer_field(op, walk_state);
++		if (ACPI_FAILURE(status)) {
++			ACPI_EXCEPTION((AE_INFO, status,
++					"CreateBufferField failure"));
++			goto cleanup;
++			}
  		break;
- 	}
-+
-+	tsk->thread.trap_no = vector;
-+
- 	send_sig(sig, current, 0);
- }
-diff --git a/arch/csky/mm/fault.c b/arch/csky/mm/fault.c
-index f76618b630f91..562c7f7087490 100644
---- a/arch/csky/mm/fault.c
-+++ b/arch/csky/mm/fault.c
-@@ -179,11 +179,14 @@ asmlinkage void do_page_fault(struct pt_regs *regs, unsigned long write,
- bad_area_nosemaphore:
- 	/* User mode accesses just cause a SIGSEGV */
- 	if (user_mode(regs)) {
-+		tsk->thread.trap_no = (regs->sr >> 16) & 0xff;
- 		force_sig_fault(SIGSEGV, si_code, (void __user *)address);
- 		return;
- 	}
  
- no_context:
-+	tsk->thread.trap_no = (regs->sr >> 16) & 0xff;
-+
- 	/* Are we prepared to handle this kernel fault? */
- 	if (fixup_exception(regs))
- 		return;
-@@ -198,6 +201,8 @@ asmlinkage void do_page_fault(struct pt_regs *regs, unsigned long write,
- 	die_if_kernel("Oops", regs, write);
+ 	case AML_TYPE_NAMED_FIELD:
+@@ -604,6 +616,29 @@ acpi_status acpi_ds_load2_end_op(struct acpi_walk_state *walk_state)
+ 		case AML_NAME_OP:
  
- out_of_memory:
-+	tsk->thread.trap_no = (regs->sr >> 16) & 0xff;
+ 			status = acpi_ds_create_node(walk_state, node, op);
++			if (ACPI_FAILURE(status)) {
++				goto cleanup;
++			}
++#ifdef ACPI_EXEC_APP
++			/*
++			 * acpi_exec support for namespace initialization file (initialize
++			 * Name opcodes in this code.)
++			 */
++			namepath = acpi_ns_get_external_pathname(node);
++			status = ae_lookup_init_file_entry(namepath, &obj_desc);
++			if (ACPI_SUCCESS(status)) {
 +
- 	/*
- 	 * We ran out of memory, call the OOM killer, and return the userspace
- 	 * (which will retry the fault, or kill us if we got oom-killed).
-@@ -206,6 +211,8 @@ asmlinkage void do_page_fault(struct pt_regs *regs, unsigned long write,
- 	return;
- 
- do_sigbus:
-+	tsk->thread.trap_no = (regs->sr >> 16) & 0xff;
++				/* Detach any existing object, attach new object */
 +
- 	up_read(&mm->mmap_sem);
++				if (node->object) {
++					acpi_ns_detach_object(node);
++				}
++				acpi_ns_attach_object(node, obj_desc,
++						      obj_desc->common.type);
++			}
++			ACPI_FREE(namepath);
++			status = AE_OK;
++#endif
+ 			break;
  
- 	/* Kernel mode? Handle exceptions or die */
+ 		case AML_METHOD_OP:
+diff --git a/drivers/acpi/acpica/nsnames.c b/drivers/acpi/acpica/nsnames.c
+index 370bbc8677453..c717fff7d9b57 100644
+--- a/drivers/acpi/acpica/nsnames.c
++++ b/drivers/acpi/acpica/nsnames.c
+@@ -13,9 +13,6 @@
+ #define _COMPONENT          ACPI_NAMESPACE
+ ACPI_MODULE_NAME("nsnames")
+ 
+-/* Local Prototypes */
+-static void acpi_ns_normalize_pathname(char *original_path);
+-
+ /*******************************************************************************
+  *
+  * FUNCTION:    acpi_ns_get_external_pathname
+@@ -30,7 +27,6 @@ static void acpi_ns_normalize_pathname(char *original_path);
+  *              for error and debug statements.
+  *
+  ******************************************************************************/
+-
+ char *acpi_ns_get_external_pathname(struct acpi_namespace_node *node)
+ {
+ 	char *name_buffer;
+@@ -411,7 +407,7 @@ char *acpi_ns_build_prefixed_pathname(union acpi_generic_state *prefix_scope,
+  *
+  ******************************************************************************/
+ 
+-static void acpi_ns_normalize_pathname(char *original_path)
++void acpi_ns_normalize_pathname(char *original_path)
+ {
+ 	char *input_path = original_path;
+ 	char *new_path_buffer;
+diff --git a/drivers/acpi/acpica/utdelete.c b/drivers/acpi/acpica/utdelete.c
+index eee263cb7beb0..c365faf4e6cd4 100644
+--- a/drivers/acpi/acpica/utdelete.c
++++ b/drivers/acpi/acpica/utdelete.c
+@@ -452,13 +452,13 @@ acpi_ut_update_ref_count(union acpi_operand_object *object, u32 action)
+  *
+  * FUNCTION:    acpi_ut_update_object_reference
+  *
+- * PARAMETERS:  object              - Increment ref count for this object
+- *                                    and all sub-objects
++ * PARAMETERS:  object              - Increment or decrement the ref count for
++ *                                    this object and all sub-objects
+  *              action              - Either REF_INCREMENT or REF_DECREMENT
+  *
+  * RETURN:      Status
+  *
+- * DESCRIPTION: Increment the object reference count
++ * DESCRIPTION: Increment or decrement the object reference count
+  *
+  * Object references are incremented when:
+  * 1) An object is attached to a Node (namespace object)
+@@ -492,7 +492,7 @@ acpi_ut_update_object_reference(union acpi_operand_object *object, u16 action)
+ 		}
+ 
+ 		/*
+-		 * All sub-objects must have their reference count incremented
++		 * All sub-objects must have their reference count updated
+ 		 * also. Different object types have different subobjects.
+ 		 */
+ 		switch (object->common.type) {
+@@ -559,6 +559,7 @@ acpi_ut_update_object_reference(union acpi_operand_object *object, u16 action)
+ 					break;
+ 				}
+ 			}
++
+ 			next_object = NULL;
+ 			break;
+ 
 -- 
 2.20.1
 
