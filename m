@@ -2,186 +2,153 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E446C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:09:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59732C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:13:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E5882074F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:09:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3416220768
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 07:13:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="So5gXrdA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404577AbgDOHJk (ORCPT
+        id S2408020AbgDOHNK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 03:09:40 -0400
-Received: from smtp.gentoo.org ([140.211.166.183]:42500 "EHLO smtp.gentoo.org"
+        Wed, 15 Apr 2020 03:13:10 -0400
+Received: from mout.web.de ([217.72.192.78]:51619 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404415AbgDOHJi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 03:09:38 -0400
-Received: from sf.home (tunnel547699-pt.tunnel.tserv1.lon2.ipv6.he.net [IPv6:2001:470:1f1c:3e6::2])
-        (using TLSv1 with cipher ECDHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: slyfox)
-        by smtp.gentoo.org (Postfix) with ESMTPSA id 0C46E34F32D;
-        Wed, 15 Apr 2020 07:09:37 +0000 (UTC)
-Received: by sf.home (Postfix, from userid 1000)
-        id 72D755A22061; Wed, 15 Apr 2020 08:09:34 +0100 (BST)
-From:   Sergei Trofimovich <slyfox@gentoo.org>
-To:     linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Cc:     Sergei Trofimovich <slyfox@gentoo.org>,
-        Sergey Kvachonok <ravenexp@gmail.com>,
-        Tony Vroon <chainsaw@gentoo.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH] umh: always return error when helper was not called
-Date:   Wed, 15 Apr 2020 08:09:31 +0100
-Message-Id: <20200415070931.4104491-1-slyfox@gentoo.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200415065940.4103990-1-slyfox@gentoo.org>
-References: <20200415065940.4103990-1-slyfox@gentoo.org>
+        id S2404013AbgDOHNH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 03:13:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1586934741;
+        bh=EXAvT0aboByTL0/9t4BjG/IsA2KiGVphpaH4RvWApW4=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=So5gXrdAlzClyqiPHjA1axpMsZfSIMgAQGCjGrl1IxqOU4MDzSNZ7hK8hm8PNyXoC
+         qrmGMGujEWMyzvbJdD3/0qLDRtvloh63u8nD6hLYiC9GJUKAjWte9M4i6lF9W5fioN
+         TNG2k+pHUdrYM5OMy3RVEosPHAH/RpbSqmkNKI8Q=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.3] ([78.48.133.192]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0LZvgf-1izQoy2TcL-00li0R; Wed, 15
+ Apr 2020 09:12:21 +0200
+Subject: Re: [v2] tracing: Fix the race between registering 'snapshot' event
+ trigger and triggering 'snapshot' operation
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Xiao Yang <yangx.jy@cn.fujitsu.com>,
+        linux-kselftest@vger.kernel.org, linux-trace-devel@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Xiao Yang <ice_yangxiao@163.com>
+References: <f4e4614b-e3df-e255-42d0-1148e39b3f8a@web.de>
+ <5E966604.1020400@cn.fujitsu.com> <20200414214643.2e14ac76@oasis.local.home>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <3797d4b4-180e-fb25-09ed-888385c04894@web.de>
+Date:   Wed, 15 Apr 2020 09:12:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200414214643.2e14ac76@oasis.local.home>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:hcxfmI3274wXkvaT6yq+7njR+vADLySKx89ZAvKUd5j/eoFHF/E
+ dst47aSvxB5eCVS/aBuXHy6+v/p5MGFb7offiTWK11Oyba8Lp2ZRnyqet8cNZV4m4AanTe5
+ My7dRCoQzHLK8sP5RH67IRg/yZYU90PaIfQzsmzhWfrEpklbvIHKGIC2U7UAmcjQoBH9niW
+ ach2xOx5CErUN0h7oabmw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:RLDtb7Oo75U=:u/3ry2wzTv2PP2x+FI8Td9
+ SsyZwNT/LVsu0g+N4cBXMhXzUIxMMLzGDQrh0MrcfO7dQkLTxDU4eiwGY7Vop4fw4T27ev7Wt
+ 0zeSXbJUQGrDtJfYi4Cg1A4rd0m0LFX4S+URGawibcmh9v5P2S5Km1cYghDm//D+nCSZohqbV
+ Htk9iziOh679wq7b6FO87jHf+cHofORphJqOYFIicO5/fZtnxNOsFeLXVDUytMbzM6zwvMfDQ
+ XnNEOx3PrURIuaVc0uETlXhu4cJlT7iPtqma5ZHKQden2wJyfPfuqwda0hgUMfkaM9eEt5IG6
+ hkcH62J+SSbPCjuNMLYBsfEwri3T53WaWUmoAft2YDw2myxQCfxJlcjw9gkvhwAbqonzHvnWs
+ OC7IYzRQdnNRnlhJcsyD/L4GZJRaT+x1yP5ma83dRYKBn+5fJ64ZEz68n0qBGCsmMx9LvttZt
+ CHJ0xFZEdkEaWL5WNRbfhdRv14pvanxADl3bU4EZrNrMIs+btX++VHuEjEo/TI8NSMauFilqb
+ z8vRsoYUsStpJHKN7r87q0a6pcVaNlxPflY78G2yvGK7o8UWQpnoh9v/9PdONL8Wr60yWDjKT
+ TnXhOoDltVaIRNeTfwNJ4XJ4ZDoZc6elYOPOdR0iiVcC3XC1uv13QbTABH4dAad+2brffPp5N
+ Q1xhakqxWsaHz/Ww/cLq+NA2M7CSUsxZSYcDBZIpKLlWdg0tD2q4IMk7F2EvX8+edWssWxlU4
+ rreenxlaRGE+xmtceJ2w68WDVVhHs1xRYG7R5vJJwlS1Ma0F2ZF9/4OKCvf+IfDCCpQF9/LTy
+ f5gVYdOMms19iY0sWfQWq6oE4v2PAgLdVOhUYDZIE8Wo1LhrPCyhrrm7BHaHRtNvHQcFVDTt3
+ aLtgByYRzjGoZaK2vWDXPJpgRjTlEvHnhaHS/txFxwxR15J5F0tQsjnbhdTOwei2HtL/K8m0K
+ s+m6eKHXRlrXoFuLzS9GYx9gPI2Xwtp4mvAmJca0MG6j04V1C/WhhLiaz9AKlak482wLa9L3F
+ DkCb02m81xoijftzCaDgm7su11pp0aiozE9uAHC61dl2ryCADt6mZB+PO0liq1gq6TpvX1Sm5
+ PMlgsqT/gApKEXV3RioUR8ASZJS1azxxpdjOyX69DZ5BfJ1t3ISXA8MdMtxIOxB96svxyOuxQ
+ q97b7uPViEKWFwrmlvh0S5PlBHFxFppEb+Sg08o3Ele83cz3LJuHa36rYcc80WxlpwHE3vH6b
+ iALMgqSNHnhxXMJoq
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Before this change on a system with the following setup crashed kernel:
+>>> * Adjustment:
+>>>    =E2=80=A6 operation (i. e. =E2=80=A6
+>> Hi Markus,
+>>
+>> Which part of description do you want to change or could you provide an
+>> example for reference?
 
-```
-CONFIG_STATIC_USERMODEHELPER=y
-CONFIG_STATIC_USERMODEHELPER_PATH=""
-kernel.core_pattern = |/usr/lib/systemd/systemd-coredump %P %u %g %s %t %c %h %e
-```
+I proposed to insert two space characters in a wording.
 
-The crash happens when a core dump is attempted:
 
-```
-[    2.819676] BUG: kernel NULL pointer dereference, address: 0000000000000020
-[    2.819859] #PF: supervisor read access in kernel mode
-[    2.820035] #PF: error_code(0x0000) - not-present page
-[    2.820188] PGD 0 P4D 0
-[    2.820305] Oops: 0000 [#1] SMP PTI
-[    2.820436] CPU: 2 PID: 89 Comm: a Not tainted 5.7.0-rc1+ #7
-[    2.820680] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20190711_202441-buildvm-armv7-10.arm.fedoraproject.org-2.fc31 04/01/2014
-[    2.821150] RIP: 0010:do_coredump+0xd80/0x1060
-[    2.821385] Code: e8 95 11 ed ff 48 c7 c6 cc a7 b4 81 48 8d bd 28 ff ff ff 89 c2 e8 70 f1 ff ff 41 89 c2 85 c0 0f 84 72 f7 ff ff e9 b4 fe ff ff <48> 8b 57 20 0f b7 02 66 25 00 f0 66 3d 00 8
-0 0f 84 9c 01 00 00 44
-[    2.822014] RSP: 0000:ffffc9000029bcb8 EFLAGS: 00010246
-[    2.822339] RAX: 0000000000000000 RBX: ffff88803f860000 RCX: 000000000000000a
-[    2.822746] RDX: 0000000000000009 RSI: 0000000000000282 RDI: 0000000000000000
-[    2.823141] RBP: ffffc9000029bde8 R08: 0000000000000000 R09: ffffc9000029bc00
-[    2.823508] R10: 0000000000000001 R11: ffff88803dec90be R12: ffffffff81c39da0
-[    2.823902] R13: ffff88803de84400 R14: 0000000000000000 R15: 0000000000000000
-[    2.824285] FS:  00007fee08183540(0000) GS:ffff88803e480000(0000) knlGS:0000000000000000
-[    2.824767] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    2.825111] CR2: 0000000000000020 CR3: 000000003f856005 CR4: 0000000000060ea0
-[    2.825479] Call Trace:
-[    2.825790]  get_signal+0x11e/0x720
-[    2.826087]  do_signal+0x1d/0x670
-[    2.826361]  ? force_sig_info_to_task+0xc1/0xf0
-[    2.826691]  ? force_sig_fault+0x3c/0x40
-[    2.826996]  ? do_trap+0xc9/0x100
-[    2.827179]  exit_to_usermode_loop+0x49/0x90
-[    2.827359]  prepare_exit_to_usermode+0x77/0xb0
-[    2.827559]  ? invalid_op+0xa/0x30
-[    2.827747]  ret_from_intr+0x20/0x20
-[    2.827921] RIP: 0033:0x55e2c76d2129
-[    2.828107] Code: 2d ff ff ff e8 68 ff ff ff 5d c6 05 18 2f 00 00 01 c3 0f 1f 80 00 00 00 00 c3 0f 1f 80 00 00 00 00 e9 7b ff ff ff 55 48 89 e5 <0f> 0b b8 00 00 00 00 5d c3 66 2e 0f 1f 84 0
-0 00 00 00 00 0f 1f 40
-[    2.828603] RSP: 002b:00007fffeba5e080 EFLAGS: 00010246
-[    2.828801] RAX: 000055e2c76d2125 RBX: 0000000000000000 RCX: 00007fee0817c718
-[    2.829034] RDX: 00007fffeba5e188 RSI: 00007fffeba5e178 RDI: 0000000000000001
-[    2.829257] RBP: 00007fffeba5e080 R08: 0000000000000000 R09: 00007fee08193c00
-[    2.829482] R10: 0000000000000009 R11: 0000000000000000 R12: 000055e2c76d2040
-[    2.829727] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-[    2.829964] CR2: 0000000000000020
-[    2.830149] ---[ end trace ceed83d8c68a1bf1 ]---
-```
+> That part is fine for me.
 
-Here is the sequence of events why it happens:
-fs/coredump.c:do_coredump():
-1. create 'coredump_params = { .file = NULL }'
-2. detect pipe mode
-3. `call_usermodehelper_setup(..., umh_pipe_setup, ...)`
-4. `call_usermodehelper_exec()`
-5. (if both succeeded) `file_start_write(cprm.file);`
+Such a view can be fine if you would like to adjust the provided contents
+another bit for the final commit message.
 
-Here crash happens at [5.] as `cprm.file` is still NULL.
 
-Normally it works because `fs/coredump.c:umh_pipe_setup()` is called
-successfully and populates `.file` field (or returns the error):
+>> Do you mean to add the following "Fixes" tag?
+>> Fixes: 93e31ffbf417 "tracing: Add 'snapshot' event trigger command"
+>
+> Yeah, that fixes tag is appropriate.
 
-```
-static int umh_pipe_setup(struct subprocess_info *info, struct cred *new)
-{
-        //...
-        struct coredump_params *cp = (struct coredump_params *)info->data;
-        // ...
-        cp->file = files[1];
-        // ...
-}
-```
+I suggest to reconsider the influence of parentheses at such places.
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/submitting-patches.rst?id=3D8632e9b5645bbc2331d21d892b=
+0d6961c1a08429#n183
 
-But in our case neither happens because `kernel/umh.c:call_usermodehelper_exec()`
-has a special case:
-
-```
-int call_usermodehelper_exec(struct subprocess_info *sub_info, int wait)
-{
-    int retval = 0;
-    // ...
-    /*
-     * If there is no binary for us to call, then just return and get out of
-     * here.  This allows us to set STATIC_USERMODEHELPER_PATH to "" and
-     * disable all call_usermodehelper() calls.
-     */
-    if (strlen(sub_info->path) == 0)
-        goto out;
-    ...
-    out:
-        // ...
-        return retval;
-
-```
-
-This breaks assumption of `do_coredump()`: "either helper was called successfully
-and created a file to dump core to or it failed".
-
-This change converts this special case to `-EPERM` error.
-
-This way we notify user that helper call was not successful
-and don't attempt to act on uninitialized `.file` field.
-
-User gets `"Core dump to |%s pipe failed\n` dmesg entry.
-
-Reported-by: Sergey Kvachonok <ravenexp@gmail.com>
-Reported-by: Tony Vroon <chainsaw@gentoo.org>
-Bug: https://bugzilla.kernel.org/show_bug.cgi?id=199795
-Signed-off-by: Sergei Trofimovich <slyfox@gentoo.org>
-CC: Luis Chamberlain <mcgrof@kernel.org>
-CC: Alexander Viro <viro@zeniv.linux.org.uk>
-CC: linux-fsdevel@vger.kernel.org
----
- kernel/umh.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/umh.c b/kernel/umh.c
-index 7f255b5a8845..66b02634a9ba 100644
---- a/kernel/umh.c
-+++ b/kernel/umh.c
-@@ -565,8 +565,10 @@ int call_usermodehelper_exec(struct subprocess_info *sub_info, int wait)
- 	 * here.  This allows us to set STATIC_USERMODEHELPER_PATH to "" and
- 	 * disable all call_usermodehelper() calls.
- 	 */
--	if (strlen(sub_info->path) == 0)
-+	if (strlen(sub_info->path) == 0) {
-+		retval = -EPERM;
- 		goto out;
-+	}
- 
- 	/*
- 	 * Set the completion pointer only if there is a waiter.
--- 
-2.26.1
-
+Regards,
+Markus
