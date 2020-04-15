@@ -2,143 +2,117 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75CF7C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:15:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89CC8C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:15:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F91620767
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:15:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 660DF20767
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 14:15:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="z3GOZAzV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A2lIE3kg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2636524AbgDOOPB (ORCPT
+        id S2636532AbgDOOPR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:15:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36512 "EHLO
+        Wed, 15 Apr 2020 10:15:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2636464AbgDOOOo (ORCPT
+        by vger.kernel.org with ESMTP id S2636501AbgDOOOq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 10:14:44 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EC2AC061A0C;
-        Wed, 15 Apr 2020 07:14:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=YURTFPGYV0Ly4WKCLsMF0KOG1vWwxeFQv/uUYMR94y4=; b=z3GOZAzVS5DSb1a/YuqiBT3qL
-        QhZl7ofjYL5bMIk6ly3q/tOqk4d507QJpheRGwa+5PU3XOJJM+1q+Hs5FYKDtH3zGZ7/4XUGo8DcQ
-        w1/zC/ygQia/7DRi2bnp1fppMHemT5yKMIJwvpUEQ3qfzyjGC3OAPK/vmbOoB0mVo3zEjNe6fFPNT
-        HB5y9qY28e8E3KaNU1s8Mh8ydYg0XTK3g5xStQTscOMTQwlTBSYEpH8HcjJUTbS3XAQhkPdi/4hj2
-        dZhbfhpVSQbwnpSx+h362+Zp9ikcPQrTaTm+jHySuZZlndnmMQyjo9dnrEei6SkuFL16l8r8iiaNH
-        oNBDyhkZw==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:46300)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jOioD-0006t0-Jx; Wed, 15 Apr 2020 15:14:33 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jOio7-0000yv-Kt; Wed, 15 Apr 2020 15:14:27 +0100
-Date:   Wed, 15 Apr 2020 15:14:27 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     Michal Kubecek <mkubecek@suse.cz>, netdev@vger.kernel.org,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        David Jander <david@protonic.nl>, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org, mkl@pengutronix.de,
-        Marek Vasut <marex@denx.de>
-Subject: Re: [PATCH v1] ethtool: provide UAPI for PHY master/slave
- configuration.
-Message-ID: <20200415141427.GD25745@shell.armlinux.org.uk>
-References: <20200415121209.12197-1-o.rempel@pengutronix.de>
- <20200415121940.2du33zckvayfqjrb@pengutronix.de>
- <20200415124343.GZ3141@unicorn.suse.cz>
- <20200415130034.7zbizr4x4vnxto6a@pengutronix.de>
+        Wed, 15 Apr 2020 10:14:46 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66526C061A0E;
+        Wed, 15 Apr 2020 07:14:46 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id q22so3891583ljg.0;
+        Wed, 15 Apr 2020 07:14:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=QzeHwFEGJr/8bxH2v0CKWpMLToIaeBe6lea2lI4zgDM=;
+        b=A2lIE3kghVFiVELn6oIETNImTUq9oxgX6Z8wrQBo+dD793MmcVhfd8oX/2fuN5v2Xm
+         P/dgCGGxEzswK4sqGdGiAVgO1Zm/kIyMZYaAJmRO+oHFNyQMwhdq9kbZ93nN/uO4puTv
+         emU/DCjJF7eB9CYdHPsQhsfZRizM6jAU3nL1Twr1/O2GNCT49/0w/OpkAOAeGSG3bLYa
+         4dycP0xDJE3CHmNS5F9Z+TEsIi8oo68yZsSXPYpF65CvhY1EteCLgPDu0xyqCK6DpVPu
+         DyPTPTvqrY7z5odWPDzcCoYBW25tSTodKLXbQ3vTSnHUkdfKK0/a5TfjSvkgwVN+hZZ1
+         eH2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=QzeHwFEGJr/8bxH2v0CKWpMLToIaeBe6lea2lI4zgDM=;
+        b=RQAjNhTdh/I8N79Ez/f4CwDFP9hk2po19shv2BpuwCITpJFBDHZ9lzhcL5VnMVvaAl
+         FG7egINqKp0sopclNRQJOq+fG38mTdvcSosu/cKMR7s6UBqzNb2xwjXUQxuNoqJidtP8
+         BjjzuJI0Wx/q7VdVa+q7YEBnLRdwYLX/n3E80YDu0IfiSDT6yduoZGJ/9wXuouHQqwQd
+         0Qp+KNvccejZU/fyVNeQXvLmtVL+obBg1IIfRQPZo7OAZJMHQnyp4xMGehc+N1yZ4H7E
+         HpsVJBOsvBldPl1HARz6KzoQaA5SoLTkvUpf6zrlrGPQZOpw0AOVG+kWVsEjLpzJ/VIu
+         Dy+w==
+X-Gm-Message-State: AGi0PuY2JiEWc5Ti8WMl8lmOWU5syU7L8ES9w1jVMNy3CYKsOjmc32Og
+        Gqj6UDFKcXB8JoiTfwbypwRUOPE6
+X-Google-Smtp-Source: APiQypJu5jBUvBYy6D4/PMMoKIxi/FfAKbsFdPDm9YWKPHV3ho24uGk4mkxIr9iyr7sJKDautLwTYQ==
+X-Received: by 2002:a2e:85c4:: with SMTP id h4mr3553226ljj.112.1586960083875;
+        Wed, 15 Apr 2020 07:14:43 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id v17sm12851270lfe.34.2020.04.15.07.14.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Apr 2020 07:14:41 -0700 (PDT)
+Subject: Re: [PATCH v2 0/2] NVIDIA Tegra I2C synchronization correction
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200324191217.1829-1-digetx@gmail.com>
+ <20200415114536.GB910@ninjato>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <87f18a67-5aec-b5df-9d8f-341f03ff3a72@gmail.com>
+Date:   Wed, 15 Apr 2020 17:14:39 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200415130034.7zbizr4x4vnxto6a@pengutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200415114536.GB910@ninjato>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 03:00:34PM +0200, Oleksij Rempel wrote:
-> On Wed, Apr 15, 2020 at 02:43:43PM +0200, Michal Kubecek wrote:
-> > On Wed, Apr 15, 2020 at 02:19:40PM +0200, Oleksij Rempel wrote:
-> > > Cc: Marek Vasut <marex@denx.de>
-> > > 
-> > > On Wed, Apr 15, 2020 at 02:12:09PM +0200, Oleksij Rempel wrote:
-> > > > This UAPI is needed for BroadR-Reach 100BASE-T1 devices. Due to lack of
-> > > > auto-negotiation support, we needed to be able to configure the
-> > > > MASTER-SLAVE role of the port manually or from an application in user
-> > > > space.
-> > > > 
-> > > > The same UAPI can be used for 1000BASE-T or MultiGBASE-T devices to
-> > > > force MASTER or SLAVE role. See IEEE 802.3-2018:
-> > > > 22.2.4.3.7 MASTER-SLAVE control register (Register 9)
-> > > > 22.2.4.3.8 MASTER-SLAVE status register (Register 10)
-> > > > 40.5.2 MASTER-SLAVE configuration resolution
-> > > > 45.2.1.185.1 MASTER-SLAVE config value (1.2100.14)
-> > > > 45.2.7.10 MultiGBASE-T AN control 1 register (Register 7.32)
-> > > > 
-> > > > The MASTER-SLAVE role affects the clock configuration:
-> > > > 
-> > > > -------------------------------------------------------------------------------
-> > > > When the  PHY is configured as MASTER, the PMA Transmit function shall
-> > > > source TX_TCLK from a local clock source. When configured as SLAVE, the
-> > > > PMA Transmit function shall source TX_TCLK from the clock recovered from
-> > > > data stream provided by MASTER.
-> > > > 
-> > > > iMX6Q                     KSZ9031                XXX
-> > > > ------\                /-----------\        /------------\
-> > > >       |                |           |        |            |
-> > > >  MAC  |<----RGMII----->| PHY Slave |<------>| PHY Master |
-> > > >       |<--- 125 MHz ---+-<------/  |        | \          |
-> > > > ------/                \-----------/        \------------/
-> > > >                                                ^
-> > > >                                                 \-TX_TCLK
-> > > > 
-> > > > -------------------------------------------------------------------------------
-> > > > 
-> > > > Since some clock or link related issues are only reproducible in a
-> > > > specific MASTER-SLAVE-role, MAC and PHY configuration, it is beneficial
-> > > > to provide generic (not 100BASE-T1 specific) interface to the user space
-> > > > for configuration flexibility and trouble shooting.
-> > > > 
-> > > > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> > > > ---
-> > [...]
-> > > > +/* Port mode */
-> > > > +#define PORT_MODE_MASTER	0x00
-> > > > +#define PORT_MODE_SLAVE		0x01
-> > > > +#define PORT_MODE_MASTER_FORCE	0x02
-> > > > +#define PORT_MODE_SLAVE_FORCE	0x03
-> > > > +#define PORT_MODE_UNKNOWN	0xff
-> > 
-> > Shouldn't 0 rather be something like PORT_MODE_UNSUPPORTED or
-> > PORT_MODE_NONE? If I see correctly, all drivers not setting the new
-> > field (which would be all drivers right now and almost all later) will
-> > leave the value at 0 which would be interpreted as PORT_MODE_MASTER.
+15.04.2020 14:45, Wolfram Sang пишет:
+> On Tue, Mar 24, 2020 at 10:12:15PM +0300, Dmitry Osipenko wrote:
+>> Hello,
+>>
+>> Recently I found a way to reliably reproduce I2C timeouts that happen due
+>> to improper synchronizations made by the I2C driver. It's quite easy to
+>> reproduce the problem when memory is running on a lower freq + there is
+>> some memory activity + CPU could get busy for a significant time. This
+>> is the case when KASAN is enabled and CPU is busy while accessing FS via
+>> NFS. This small series addresses the found problems.
+>>
+>> Changelog:
+>>
+>> v2: - The "Better handle case where CPU0 is busy for a long time" patch
+>>       now preserves the old behavior where completion is checked after
+>>       disabling the interrupt, preventing potential race-condition of
+>>       the completion awaiting vs interrupt syncing.
+>>
+>> Dmitry Osipenko (2):
+>>   i2c: tegra: Better handle case where CPU0 is busy for a long time
+>>   i2c: tegra: Synchronize DMA before termination
 > 
-> Yes, you right. I was thinking about it and decided to follow the duplex
-> code pattern. Will fix in the next version.
+> Patches look good to me. I tend to apply them to for-current instead of
+> for-next because they are fixing issues. Even a stable tag?
+> 
 
-Wouldn't that make PORT_MODE_UNKNOWN unnecessary?
+Thank you, yes it should be good to apply this series to 5.7 because the
+Tegra APBDMA driver dependency-patches are already in 5.7.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+The stable tag shouldn't be needed since this is not a critical bug fix
+and the DMA driver patches are not going into stable. This series should
+be more actual for the upcoming devices, which should be upstreamed in 5.8+.
