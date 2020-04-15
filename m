@@ -2,94 +2,222 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A22C3815B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BCEEC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:44:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E231D20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:44:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76F6D2076A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 16:44:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="QZjtPDz5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404584AbgDOQoB (ORCPT
+        id S1416177AbgDOQoD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 12:44:01 -0400
-Received: from mga14.intel.com ([192.55.52.115]:20935 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404634AbgDOQn6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 12:44:03 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:43807 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2404537AbgDOQn6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Apr 2020 12:43:58 -0400
-IronPort-SDR: kYAeWkmNNhXeN8kAglaA8wce/XXfsDnIfj81G/mvMuyXQPinrDotYQQ9pKLImgCq3v9ZSZ2Pyd
- CH7lvUUNMT8w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 09:43:55 -0700
-IronPort-SDR: fuagpmujq77Rziv1zLS89tA66hrokcG+kqQcDL48t9oyYrlnE8kYF9kpV2ECtPeXNwsgFX/yNK
- WglxWEVbKDmg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,387,1580803200"; 
-   d="scan'208";a="256912004"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga006.jf.intel.com with ESMTP; 15 Apr 2020 09:43:52 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jOl8l-000pTo-38; Wed, 15 Apr 2020 19:43:55 +0300
-Date:   Wed, 15 Apr 2020 19:43:55 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        alsa-devel@alsa-project.org
-Subject: Re: [PATCH v4 8/9] ASoC: rt5645: Switch DMI table match to a test of
- variable
-Message-ID: <20200415164355.GW185537@smile.fi.intel.com>
-References: <20200415145524.31745-1-andriy.shevchenko@linux.intel.com>
- <20200415145524.31745-9-andriy.shevchenko@linux.intel.com>
- <20200415162507.GG5265@sirena.org.uk>
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586969038; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=S5OWgppMszTi73VbpoM9eu/98YhTDWaVCVkdl2z9VJM=; b=QZjtPDz5TPBf7ozgVF/J97ctbdRsBWcYGx4+xSfjfQ+loluIGzAs2C1iNavvIQbOGCvLxETE
+ tEqA3m18ko7BA1Nj48Yy0TpikyuM8XmAIwTuEiX6MXBNLkxRS+JHOkPcbKY1rYk86jtUzRWf
+ u/LtZ9MRrUanLpxN4HK2AbFSPTE=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e9739b0.7ff5c5d787a0-smtp-out-n05;
+ Wed, 15 Apr 2020 16:43:28 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 93C68C433BA; Wed, 15 Apr 2020 16:43:27 +0000 (UTC)
+Received: from [10.111.193.245] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BCE36C433F2;
+        Wed, 15 Apr 2020 16:43:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BCE36C433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH 13/21] mmc: sdhci-msm: Use OPP API to set clk/perf state
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Pradeep P V K <ppvk@codeaurora.org>,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        Subhash Jadavani <subhashj@codeaurora.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+References: <1586353607-32222-1-git-send-email-rnayak@codeaurora.org>
+ <1586353607-32222-14-git-send-email-rnayak@codeaurora.org>
+ <CAPDyKFrOFOLCWHu8nE4i5t=d+Ei-kcJ15_42Ft3ROSUDe5jkpw@mail.gmail.com>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <3e5f8e78-7cd1-30fb-e005-78c1e7111794@codeaurora.org>
+Date:   Wed, 15 Apr 2020 22:13:19 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200415162507.GG5265@sirena.org.uk>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <CAPDyKFrOFOLCWHu8nE4i5t=d+Ei-kcJ15_42Ft3ROSUDe5jkpw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 05:25:07PM +0100, Mark Brown wrote:
-> On Wed, Apr 15, 2020 at 05:55:23PM +0300, Andy Shevchenko wrote:
-> > Since we have a common x86 quirk that provides an exported variable,
-> > use it instead of local DMI table match.
-> > 
-> > Note, arch/x86/kernel/quirks.c::early_platform_detect_quirk() prints
-> > the detected platform.
-> 
-> > @@ -3674,13 +3675,6 @@ static const struct dmi_system_id dmi_platform_data[] = {
-> >  		},
-> >  		.driver_data = (void *)&intel_braswell_platform_data,
-> >  	},
-> > -	{
-> > -		.ident = "Microsoft Surface 3",
-> > -		.matches = {
-> > -			DMI_MATCH(DMI_PRODUCT_NAME, "Surface 3"),
-> > -		},
-> > -		.driver_data = (void *)&intel_braswell_platform_data,
-> > -	},
-> >  	{
-> 
-> Are we going to convert all the other platforms to using a variable too?
 
-It makes sense to ones that have spread quirks over the kernel, like Apple.
+
+On 4/15/2020 7:22 PM, Ulf Hansson wrote:
+> On Wed, 8 Apr 2020 at 15:48, Rajendra Nayak <rnayak@codeaurora.org> wrote:
+>>
+>> On some qualcomm SoCs we need to vote on a performance state of a power
+>> domain depending on the clock rates. Hence move to using OPP api to set
+>> the clock rate and performance state specified in the OPP table.
+>> On platforms without an OPP table, dev_pm_opp_set_rate() is eqvivalent to
+>> clk_set_rate()
+>>
+>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+>> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+>> Cc: Pradeep P V K <ppvk@codeaurora.org>
+>> Cc: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+>> Cc: Subhash Jadavani <subhashj@codeaurora.org>
+>> Cc: linux-mmc@vger.kernel.org
+> 
+> This looks good to me!
+> 
+> However, are there any of the other patches in the series that
+> $subject patch depends on - or can I apply this as a standalone mmc
+> patch?
+
+Hey Ulf, thanks for the review. I'll just need to respin these to make
+sure I do not do a dev_pm_opp_of_remove_table() if dev_pm_opp_of_add_table()
+isn;t successful as discussed with Viresh on another thread [1]
+
+As for the dependencies, its only PATCH 01/21 in this series and that's
+already been queued by Viresh [2]
+
+[1] https://lkml.org/lkml/2020/4/15/18
+[2] https://lkml.org/lkml/2020/4/14/98
+
+> 
+> Kind regards
+> Uffe
+> 
+>> ---
+>>   drivers/mmc/host/sdhci-msm.c | 20 ++++++++++++++++----
+>>   1 file changed, 16 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+>> index 09ff731..d82075a 100644
+>> --- a/drivers/mmc/host/sdhci-msm.c
+>> +++ b/drivers/mmc/host/sdhci-msm.c
+>> @@ -10,6 +10,7 @@
+>>   #include <linux/delay.h>
+>>   #include <linux/mmc/mmc.h>
+>>   #include <linux/pm_runtime.h>
+>> +#include <linux/pm_opp.h>
+>>   #include <linux/slab.h>
+>>   #include <linux/iopoll.h>
+>>   #include <linux/regulator/consumer.h>
+>> @@ -242,6 +243,7 @@ struct sdhci_msm_host {
+>>          struct clk *xo_clk;     /* TCXO clk needed for FLL feature of cm_dll*/
+>>          struct clk_bulk_data bulk_clks[4]; /* core, iface, cal, sleep clocks */
+>>          unsigned long clk_rate;
+>> +       struct opp_table *opp;
+>>          struct mmc_host *mmc;
+>>          bool use_14lpp_dll_reset;
+>>          bool tuning_done;
+>> @@ -332,7 +334,7 @@ static void msm_set_clock_rate_for_bus_mode(struct sdhci_host *host,
+>>          int rc;
+>>
+>>          clock = msm_get_clock_rate_for_bus_mode(host, clock);
+>> -       rc = clk_set_rate(core_clk, clock);
+>> +       rc = dev_pm_opp_set_rate(mmc_dev(host->mmc), clock);
+>>          if (rc) {
+>>                  pr_err("%s: Failed to set clock at rate %u at timing %d\n",
+>>                         mmc_hostname(host->mmc), clock,
+>> @@ -1963,7 +1965,7 @@ static int sdhci_msm_probe(struct platform_device *pdev)
+>>          msm_host->bulk_clks[0].clk = clk;
+>>
+>>          /* Vote for maximum clock rate for maximum performance */
+>> -       ret = clk_set_rate(clk, INT_MAX);
+>> +       ret = dev_pm_opp_set_rate(&pdev->dev, INT_MAX);
+>>          if (ret)
+>>                  dev_warn(&pdev->dev, "core clock boost failed\n");
+>>
+>> @@ -2087,6 +2089,9 @@ static int sdhci_msm_probe(struct platform_device *pdev)
+>>                  goto clk_disable;
+>>          }
+>>
+>> +       msm_host->opp = dev_pm_opp_set_clkname(&pdev->dev, "core");
+>> +       dev_pm_opp_of_add_table(&pdev->dev);
+>> +
+>>          pm_runtime_get_noresume(&pdev->dev);
+>>          pm_runtime_set_active(&pdev->dev);
+>>          pm_runtime_enable(&pdev->dev);
+>> @@ -2109,10 +2114,12 @@ static int sdhci_msm_probe(struct platform_device *pdev)
+>>          return 0;
+>>
+>>   pm_runtime_disable:
+>> +       dev_pm_opp_of_remove_table(&pdev->dev);
+>>          pm_runtime_disable(&pdev->dev);
+>>          pm_runtime_set_suspended(&pdev->dev);
+>>          pm_runtime_put_noidle(&pdev->dev);
+>>   clk_disable:
+>> +       dev_pm_opp_set_rate(&pdev->dev, 0);
+>>          clk_bulk_disable_unprepare(ARRAY_SIZE(msm_host->bulk_clks),
+>>                                     msm_host->bulk_clks);
+>>   bus_clk_disable:
+>> @@ -2133,10 +2140,12 @@ static int sdhci_msm_remove(struct platform_device *pdev)
+>>
+>>          sdhci_remove_host(host, dead);
+>>
+>> +       dev_pm_opp_of_remove_table(&pdev->dev);
+>>          pm_runtime_get_sync(&pdev->dev);
+>>          pm_runtime_disable(&pdev->dev);
+>>          pm_runtime_put_noidle(&pdev->dev);
+>>
+>> +       dev_pm_opp_set_rate(&pdev->dev, 0);
+>>          clk_bulk_disable_unprepare(ARRAY_SIZE(msm_host->bulk_clks),
+>>                                     msm_host->bulk_clks);
+>>          if (!IS_ERR(msm_host->bus_clk))
+>> @@ -2151,6 +2160,7 @@ static __maybe_unused int sdhci_msm_runtime_suspend(struct device *dev)
+>>          struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+>>          struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+>>
+>> +       dev_pm_opp_set_rate(dev, 0);
+>>          clk_bulk_disable_unprepare(ARRAY_SIZE(msm_host->bulk_clks),
+>>                                     msm_host->bulk_clks);
+>>
+>> @@ -2173,9 +2183,11 @@ static __maybe_unused int sdhci_msm_runtime_resume(struct device *dev)
+>>           * restore the SDR DLL settings when the clock is ungated.
+>>           */
+>>          if (msm_host->restore_dll_config && msm_host->clk_rate)
+>> -               return sdhci_msm_restore_sdr_dll_config(host);
+>> +               ret = sdhci_msm_restore_sdr_dll_config(host);
+>>
+>> -       return 0;
+>> +       dev_pm_opp_set_rate(dev, msm_host->clk_rate);
+>> +
+>> +       return ret;
+>>   }
+>>
+>>   static const struct dev_pm_ops sdhci_msm_pm_ops = {
+>> --
+>> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+>> of Code Aurora Forum, hosted by The Linux Foundation
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
