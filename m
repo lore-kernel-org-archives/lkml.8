@@ -3,95 +3,91 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81584C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:29:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DBD8C2BB85
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:29:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5798E20732
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:29:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E64A520732
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 19:29:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436615AbgDOT3U (ORCPT
+        id S2436719AbgDOT3f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 15:29:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53658 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2411884AbgDOT26 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 15:28:58 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A73120771;
-        Wed, 15 Apr 2020 19:28:56 +0000 (UTC)
-Date:   Wed, 15 Apr 2020 15:28:54 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Brendan Higgins <brendanhiggins@google.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: linux-next: Tree for Apr 10 (lib/test_printf.ko)
-Message-ID: <20200415152854.625075ab@gandalf.local.home>
-In-Reply-To: <26e0f0dd-4ea2-14e7-fae5-81a5a1451272@infradead.org>
-References: <20200410132706.170811b7@canb.auug.org.au>
-        <27c212c4-b522-561d-411c-e74dc0ff0b74@infradead.org>
-        <CAHk-=wjhsM-n_NzSh=cSdpThX+62-x3EmyKjhMqGHFYEyG0nPg@mail.gmail.com>
-        <2b0f5d2e-3fe5-10c9-2a9a-9a0b341a52d5@infradead.org>
-        <CAHk-=wjXZSPPWzPs=KBDsLZWuq8qO=9qWfiKHw=yV10fFrDv9Q@mail.gmail.com>
-        <bfbcaa67-9656-3a80-fc66-c937297c8be0@infradead.org>
-        <CAHk-=whpvCqcCYvy=_v_F6NTtBSeQbXZ0iLr_smV2NJLT+XACw@mail.gmail.com>
-        <CA+G9fYu47hpXjYtAr32p9yJ97KZqTry+ioAY1S2TqtiKztCYRg@mail.gmail.com>
-        <f90fc906-395b-79be-8f44-3807586766f7@infradead.org>
-        <CAFd5g46ZaEVoMb2hO94A41Z=YH6ntTdXstZUhHu67mwOKY+QsA@mail.gmail.com>
-        <20200415185545.GA1632@home.goodmis.org>
-        <26e0f0dd-4ea2-14e7-fae5-81a5a1451272@infradead.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Wed, 15 Apr 2020 15:29:35 -0400
+Received: from baldur.buserror.net ([165.227.176.147]:35672 "EHLO
+        baldur.buserror.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2411889AbgDOT3K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 15:29:10 -0400
+Received: from [2601:449:8480:af0:12bf:48ff:fe84:c9a0]
+        by baldur.buserror.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <oss@buserror.net>)
+        id 1jOngW-00079u-N9; Wed, 15 Apr 2020 14:26:56 -0500
+Message-ID: <ef9f59f98f6bcf81891de87fd9cd0b5973bbd468.camel@buserror.net>
+From:   Scott Wood <oss@buserror.net>
+To:     Wang Wenhu <wenhu.wang@vivo.com>, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, christophe.leroy@c-s.fr,
+        linuxppc-dev@lists.ozlabs.org
+Cc:     kernel@vivo.com, Michael Ellerman <mpe@ellerman.id.au>
+Date:   Wed, 15 Apr 2020 14:26:55 -0500
+In-Reply-To: <20200415152442.122873-6-wenhu.wang@vivo.com>
+References: <20200415124929.GA3265842@kroah.com>
+         <20200415152442.122873-1-wenhu.wang@vivo.com>
+         <20200415152442.122873-6-wenhu.wang@vivo.com>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2601:449:8480:af0:12bf:48ff:fe84:c9a0
+X-SA-Exim-Rcpt-To: wenhu.wang@vivo.com, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, christophe.leroy@c-s.fr, linuxppc-dev@lists.ozlabs.org, kernel@vivo.com, mpe@ellerman.id.au
+X-SA-Exim-Mail-From: oss@buserror.net
+Subject: Re: [PATCH v2,5/5] drivers: uio: new driver for fsl_85xx_cache_sram
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on baldur.buserror.net)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Apr 2020 12:16:49 -0700
-Randy Dunlap <rdunlap@infradead.org> wrote:
+On Wed, 2020-04-15 at 08:24 -0700, Wang Wenhu wrote:
+> +static const struct of_device_id uio_mpc85xx_l2ctlr_of_match[] = {
+> +	{	.compatible = "uio,fsl,p2020-l2-cache-controller",	},
+> +	{	.compatible = "uio,fsl,p2010-l2-cache-controller",	},
+> +	{	.compatible = "uio,fsl,p1020-l2-cache-controller",	},
+> +	{	.compatible = "uio,fsl,p1011-l2-cache-controller",	},
+> +	{	.compatible = "uio,fsl,p1013-l2-cache-controller",	},
+> +	{	.compatible = "uio,fsl,p1022-l2-cache-controller",	},
+> +	{	.compatible = "uio,fsl,mpc8548-l2-cache-controller",	},
+> +	{	.compatible = "uio,fsl,mpc8544-l2-cache-controller",	},
+> +	{	.compatible = "uio,fsl,mpc8572-l2-cache-controller",	},
+> +	{	.compatible = "uio,fsl,mpc8536-l2-cache-controller",	},
+> +	{	.compatible = "uio,fsl,p1021-l2-cache-controller",	},
+> +	{	.compatible = "uio,fsl,p1012-l2-cache-controller",	},
+> +	{	.compatible = "uio,fsl,p1025-l2-cache-controller",	},
+> +	{	.compatible = "uio,fsl,p1016-l2-cache-controller",	},
+> +	{	.compatible = "uio,fsl,p1024-l2-cache-controller",	},
+> +	{	.compatible = "uio,fsl,p1015-l2-cache-controller",	},
+> +	{	.compatible = "uio,fsl,p1010-l2-cache-controller",	},
+> +	{	.compatible = "uio,fsl,bsc9131-l2-cache-controller",	},
+> +	{},
+> +};
+
+NACK
+
+The device tree describes the hardware, not what driver you want to bind the
+hardware to, or how you want to allocate the resources.  And even if defining
+nodes for sram allocation were the right way to go, why do you have a separate
+compatible for each chip when you're just describing software configuration?
+
+Instead, have module parameters that take the sizes and alignments you'd like
+to allocate and expose to userspace.  Better still would be some sort of
+dynamic allocation (e.g. open a fd, ioctl to set the requested size/alignment,
+if it succeeds you can mmap it, and when the fd is closed the region is
+freed).
+
+-Scott
 
 
-> > My test suite just tripped over this bug. Is this the patch that you think
-> > fixes it?
-> > 
-> > https://lore.kernel.org/linux-kselftest/20200414081513.GD2828150@kuha.fi.intel.com  
-> 
-> Yes, it is, but GregKH and Rafael Wysocki don't seem to like that patch
-> and are suggesting some changes in lib/kobject.c (only pseudocode,
-> no patch yet).
-> 
-> > I'll add it to see if I can continue my testing.  
-> 
-> See the thread
-> [PATCH v1] kobject: make sure parent is not released before children
-> 
-> Here is Rafael's suggestion:
-> https://lore.kernel.org/linux-kselftest/CAJZ5v0hNemTDVa_S-FfVMbrKjM-RWYoHh88asnUvTNxZinY2cw@mail.gmail.com/
-> 
-
-Thanks for the update.
-
-If the first patch prevents the crash from happening, then I'll keep it for
-the time being. I have a list of patch "fixes" that get applied to the
-kernel I'm testing, such that I can run the tests without them failing for
-something that I'm not testing. Otherwise, I'd never get to test my code :-)
-
-Some of theses patches just remove "WARN_ON" because those will cause my
-tests to fail. I really don't care if i915 triggers WARN_ON() as my code
-shouldn't be affecting it.
-
--- Steve
