@@ -7,47 +7,44 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC608C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C76D6C2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:01:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7EE6120575
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:01:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 956B721569
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 12:01:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586952083;
-	bh=QfbcyYDaBWmJRjjiORon6lz8/Yn4d3ZYAl2wpL+C0Is=;
+	s=default; t=1586952119;
+	bh=GaNAlxoIcuufHCy0GFgNzN8L5z5nlk6PDPiyXYSP6Ag=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hpSaiTG4ZDeF9ZLtXzxduNEsfXib0L415cv/3Kn6ld/kP9EAEmIh8joOZy11eW/Hm
-	 p8GkiyQPiceL9rqKU9fTvYyTzkiJkDfG7YZsAMoDwbq/wjWuI1lyPuQE68lcSO4Z5A
-	 gl4uwN/x8waepMT54EdNf6z+HP516s+LX7e3jIXE=
+	b=zfkgpnk0ijnNTWmpqRAObwWarO3p0om4jp85auIrQ3L8scvvmCmoptnVOv00CeUKR
+	 8nbxtPnIwyoK0geih3j1RoBpdmJ5B7onV8LWknZ6sJsJmF/WEhLfQk9YJB9LpSUT6B
+	 dCtAh+tM4EWYEYTHK5q6JBdTKeJrwrL6QMdm1V3I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S368151AbgDOMBV (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:01:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43790 "EHLO mail.kernel.org"
+        id S368190AbgDOMB4 (ORCPT <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Apr 2020 08:01:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409419AbgDOLsG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:48:06 -0400
+        id S2409424AbgDOLsI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:48:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2475C2137B;
-        Wed, 15 Apr 2020 11:48:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7542621569;
+        Wed, 15 Apr 2020 11:48:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951286;
-        bh=QfbcyYDaBWmJRjjiORon6lz8/Yn4d3ZYAl2wpL+C0Is=;
+        s=default; t=1586951288;
+        bh=GaNAlxoIcuufHCy0GFgNzN8L5z5nlk6PDPiyXYSP6Ag=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lXeCK76ZSBgxTknjGz1yGf2GW5zizX0q5R9fbZo1HtTqrTRn5/VpeYiI/9BdFhM+P
-         1pLV+tUG4yaydIvkS+mDPFOxaYKxE3Z5mm50IhTKhFGR7MDFVLukeY06rzEf0hFPCa
-         CDHLn2rOAMbK77rqcIlQSKvyTCSgepzHlggkOaK8=
+        b=bP6zF7zTQdLC8mjCqjDt55UVqMFc77oYbyIKfIO+bZRuEO+cyc1CE0lx0VjCw0ke3
+         yIfpyYbMWUPPJ70aiZQll3IT0qdleupEzyHy5r18PDplvHn4xSvUzwN4gRR1DDdXos
+         dGWiUj/Dbp7VN/JT/tLxvvYlJjiHVzV2stZMgFbc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Hildenbrand <david@redhat.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 14/21] KVM: s390: vsie: Fix possible race when shadowing region 3 tables
-Date:   Wed, 15 Apr 2020 07:47:41 -0400
-Message-Id: <20200415114748.15713-14-sashal@kernel.org>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 16/21] NFS: Fix memory leaks in nfs_pageio_stop_mirroring()
+Date:   Wed, 15 Apr 2020 07:47:43 -0400
+Message-Id: <20200415114748.15713-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114748.15713-1-sashal@kernel.org>
 References: <20200415114748.15713-1-sashal@kernel.org>
@@ -60,50 +57,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Hildenbrand <david@redhat.com>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit 1493e0f944f3c319d11e067c185c904d01c17ae5 ]
+[ Upstream commit 862f35c94730c9270833f3ad05bd758a29f204ed ]
 
-We have to properly retry again by returning -EINVAL immediately in case
-somebody else instantiated the table concurrently. We missed to add the
-goto in this function only. The code now matches the other, similar
-shadowing functions.
+If we just set the mirror count to 1 without first clearing out
+the mirrors, we can leak queued up requests.
 
-We are overwriting an existing region 2 table entry. All allocated pages
-are added to the crst_list to be freed later, so they are not lost
-forever. However, when unshadowing the region 2 table, we wouldn't trigger
-unshadowing of the original shadowed region 3 table that we replaced. It
-would get unshadowed when the original region 3 table is modified. As it's
-not connected to the page table hierarchy anymore, it's not going to get
-used anymore. However, for a limited time, this page table will stick
-around, so it's in some sense a temporary memory leak.
-
-Identified by manual code inspection. I don't think this classifies as
-stable material.
-
-Fixes: 998f637cc4b9 ("s390/mm: avoid races on region/segment/page table shadowing")
-Signed-off-by: David Hildenbrand <david@redhat.com>
-Link: https://lore.kernel.org/r/20200403153050.20569-4-david@redhat.com
-Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/mm/gmap.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/nfs/pagelist.c | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
 
-diff --git a/arch/s390/mm/gmap.c b/arch/s390/mm/gmap.c
-index b6c85b760305d..099db32ed104a 100644
---- a/arch/s390/mm/gmap.c
-+++ b/arch/s390/mm/gmap.c
-@@ -1680,6 +1680,7 @@ int gmap_shadow_r3t(struct gmap *sg, unsigned long saddr, unsigned long r3t,
- 		goto out_free;
- 	} else if (*table & _REGION_ENTRY_ORIGIN) {
- 		rc = -EAGAIN;		/* Race with shadow */
-+		goto out_free;
+diff --git a/fs/nfs/pagelist.c b/fs/nfs/pagelist.c
+index b6e25126a0b0f..529f3a5762637 100644
+--- a/fs/nfs/pagelist.c
++++ b/fs/nfs/pagelist.c
+@@ -851,15 +851,6 @@ static int nfs_pageio_setup_mirroring(struct nfs_pageio_descriptor *pgio,
+ 	return 0;
+ }
+ 
+-/*
+- * nfs_pageio_stop_mirroring - stop using mirroring (set mirror count to 1)
+- */
+-void nfs_pageio_stop_mirroring(struct nfs_pageio_descriptor *pgio)
+-{
+-	pgio->pg_mirror_count = 1;
+-	pgio->pg_mirror_idx = 0;
+-}
+-
+ static void nfs_pageio_cleanup_mirroring(struct nfs_pageio_descriptor *pgio)
+ {
+ 	pgio->pg_mirror_count = 1;
+@@ -1285,6 +1276,14 @@ void nfs_pageio_cond_complete(struct nfs_pageio_descriptor *desc, pgoff_t index)
  	}
- 	crst_table_init(s_r3t, _REGION3_ENTRY_EMPTY);
- 	/* mark as invalid as long as the parent table is not protected */
+ }
+ 
++/*
++ * nfs_pageio_stop_mirroring - stop using mirroring (set mirror count to 1)
++ */
++void nfs_pageio_stop_mirroring(struct nfs_pageio_descriptor *pgio)
++{
++	nfs_pageio_complete(pgio);
++}
++
+ int __init nfs_init_nfspagecache(void)
+ {
+ 	nfs_page_cachep = kmem_cache_create("nfs_page",
 -- 
 2.20.1
 
