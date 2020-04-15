@@ -2,123 +2,184 @@ Return-Path: <SRS0=pNjS=57=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBDCDC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B886FC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:48:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6500206D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:47:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95358206D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Apr 2020 09:48:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=flowbird.group header.i=@flowbird.group header.b="NMrJNqcK"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W0mSPiX1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895811AbgDOJrd (ORCPT
+        id S2895822AbgDOJsh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 05:47:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51490 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2895800AbgDOJrY (ORCPT
+        Wed, 15 Apr 2020 05:48:37 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22635 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2895812AbgDOJs0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 05:47:24 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6975AC061A0F
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 02:47:24 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id u15so2975752ljd.3
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 02:47:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=flowbird.group; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=B0qy5LvgHxuRhiqgWueJQ6xJ9sv8tPQCF7n+fvQHiOs=;
-        b=NMrJNqcK5eyfNz31lPbY+TyReQxJrnuEFiiI4ZHZ0RnGAep4m9OjU2s0Rahr5YHYpY
-         6WRSCNOS4baRnCAsvEYr+dpc/PQ6WzUxxo3xfLtRealkbI7fZee+//V3BHy5FJKc/9j9
-         90g6sX9fD4OSQuzvj6/DnLoV1DG5J9cQYAgGEEpl7v2ioZmNBalV6Oq5fKi3raobEXpa
-         Fp4AYfeeJ57k3lRyyTphoQPXEhGnFLELLopIT5C+oSfwpe9Y9ZLHBDQBYPctrB/9Po8g
-         pPMCcgWu8JTWAkQEFXN3DYv2QwvGGVaPmM/bcRIGn8n8FtTHP0YX3J5KDzH3zs6zIy7y
-         xLWw==
+        Wed, 15 Apr 2020 05:48:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586944105;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ug9COLY/YhK3wDyJaFP4QjMwRSRIqTSu+CJpF4CbDvs=;
+        b=W0mSPiX1HNkIxgOKDKczZcJy2D9DT9NCkLN/MiUqsMJ+nSnl7nXFbdfPEyUPkhzhrhYdvr
+        RJ92i0sGhgYrdhVuMbA5U2bQkxDOdMGGvjUFzEq3JAP54BQAo/GBvizjJlpG9xXuH3biPQ
+        ByY0Y44IhBQkaB7sQ4K/PlMU7GoRU3M=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-426-e6orq65aMvifBDWxV1LrQA-1; Wed, 15 Apr 2020 05:48:23 -0400
+X-MC-Unique: e6orq65aMvifBDWxV1LrQA-1
+Received: by mail-wm1-f69.google.com with SMTP id n127so4739811wme.4
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 02:48:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=B0qy5LvgHxuRhiqgWueJQ6xJ9sv8tPQCF7n+fvQHiOs=;
-        b=D5tiBIuhXGB81enkweMrwWlUDUDOgoxa/Kypr38RgpG4SRlM0AvBrKqrzyUJ8TpTe1
-         mwAgL7Su18UOpD9iWG6dRsNDk36HIhzt3+FCei9XwvnD4je6YlaLpWQ3IpxTddXQZ1T3
-         wfrDOY3vBvmJRN98JovlrVNtkfBmukZNtXu4jZ+TRCYaufguRayT1BYsfiRLJxgjlga8
-         O9pxYpF72Wh54tpDkpOYUr6u8qOXPYdL5FQGEVr1BwSf52jaY5+oLRUIQLvU2vm4kAJ4
-         rdNyyDTD4JGS61ppJU0RDkSjQEOrPNiQ7ZxRIAM0F+iqBVeH8+/2hboEpG1rWgDsrWsK
-         pmcA==
-X-Gm-Message-State: AGi0PuZbuJ5WScEg6UAT2NeNAF1iPzRy9GeQD7U7HSeGVMHdfNwFEN45
-        YGc9TMpWBmDVsUgu+6fC9fY/vhNWX8t/1k+EgemYrg==
-X-Google-Smtp-Source: APiQypL8XMn5RnIEI3l+oru1L0UvcAugx1E2ZOCgi2uoo8JXWePaVPOi0V09wbIxJKMCZ9MtgPVJV073Y9PJRgdOM4M=
-X-Received: by 2002:a2e:5746:: with SMTP id r6mr2665731ljd.15.1586944042730;
- Wed, 15 Apr 2020 02:47:22 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ug9COLY/YhK3wDyJaFP4QjMwRSRIqTSu+CJpF4CbDvs=;
+        b=SHzWEJZsX2H/dGGJNQ7eXO8SSEJYFa/eB1b4lPYQQ3ptkgsWiKXieYxqFsErFnuxMb
+         Lkd5Z8BDn9Xq34m8wTGIveJZ0BRuQtoYTiVLN2UVc13bSE3zO87Q9g9NqcDAVhdZsb3T
+         MtEz036In3PYsI9DBnrxMwPaXo0SxPNwH7Gi//gAjv94quQGtuNzsbaVga5TB4FXl+zx
+         PEfm7Ag1ODFrk6ikVGk5iL7mxX8VftBh4sUYheE7KYz0Mm/8A4dhgfbwNwwAXZOrbLd2
+         BjMwLKkHCGYEkCyN9bAqZwFF6XtVsxT1QNFR9ZhWIH4F/2tRW+e1fp1OA6SVCQmj2Osf
+         oDsQ==
+X-Gm-Message-State: AGi0PubD5M8qjjlfGYx70XDkT5LhL8Y/ocV7zIhWBW88+Gjue+B1079v
+        MvXuAFZNaktAcGvbh+ZAa5FlXxlnRRYrRBOLVO25sxgEcp0UMusTrTU69H61sNUc3Xvrq72Pev1
+        6cwKV/93BXPHUYOpGbbLgeQ1Y
+X-Received: by 2002:a1c:9e43:: with SMTP id h64mr4291793wme.0.1586944102149;
+        Wed, 15 Apr 2020 02:48:22 -0700 (PDT)
+X-Google-Smtp-Source: APiQypKUG80qfuOm5k54Q2sYK5dSgdmjv0kwB06qovoaM2PgbZClDJCAYTf/jozp54s3aKzh8FISyQ==
+X-Received: by 2002:a1c:9e43:: with SMTP id h64mr4291777wme.0.1586944101909;
+        Wed, 15 Apr 2020 02:48:21 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
+        by smtp.gmail.com with ESMTPSA id v21sm21528522wmj.8.2020.04.15.02.48.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Apr 2020 02:48:21 -0700 (PDT)
+Subject: Re: [PATCH v2] platform/x86: intel_int0002_vgpio: Only bind to the
+ INT0002 dev when using s2idle
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Maxim Mikityanskiy <maxtram95@gmail.com>,
+        "5 . 3+" <stable@vger.kernel.org>
+References: <20200414131953.131533-1-hdegoede@redhat.com>
+ <4380034.KJPSqyn9gG@kreacher>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <a9c4b315-2784-fe59-1236-3e3bf391fd4c@redhat.com>
+Date:   Wed, 15 Apr 2020 11:48:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <1583944596-23410-1-git-send-email-yibin.gong@nxp.com>
-In-Reply-To: <1583944596-23410-1-git-send-email-yibin.gong@nxp.com>
-From:   "Fuzzey, Martin" <martin.fuzzey@flowbird.group>
-Date:   Wed, 15 Apr 2020 11:47:11 +0200
-Message-ID: <CANh8QzwanSewjJ98HL_yR1juiHo1RN77JQyNNKrMrud3B0dnww@mail.gmail.com>
-Subject: Re: [PATCH v7 00/13] add ecspi ERR009165 for i.mx6/7 soc family
-To:     Robin Gong <yibin.gong@nxp.com>
-Cc:     Sascha Hauer <s.hauer@pengutronix.de>, vkoul@kernel.org,
-        Shawn Guo <shawnguo@kernel.org>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>, dan.j.williams@intel.com,
-        mark.rutland@arm.com, catalin.marinas@arm.com,
-        Will Deacon <will.deacon@arm.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <4380034.KJPSqyn9gG@kreacher>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robin,
+Hi,
 
+On 4/15/20 11:45 AM, Rafael J. Wysocki wrote:
+> On Tuesday, April 14, 2020 3:19:53 PM CEST Hans de Goede wrote:
+>> Commit 871f1f2bcb01 ("platform/x86: intel_int0002_vgpio: Only implement
+>> irq_set_wake on Bay Trail") stopped passing irq_set_wake requests on to
+>> the parents IRQ because this was breaking suspend (causing immediate
+>> wakeups) on an Asus E202SA.
+>>
+>> This workaround for this issue is mostly fine, on most Cherry Trail
+>> devices where we need the INT0002 device for wakeups by e.g. USB kbds,
+>> the parent IRQ is shared with the ACPI SCI and that is marked as wakeup
+>> anyways.
+>>
+>> But not on all devices, specifically on a Medion Akoya E1239T there is
+>> no SCI at all, and because the irq_set_wake request is not passed on to
+>> the parent IRQ, wake up by the builtin USB kbd does not work here.
+>>
+>> So the workaround for the Asus E202SA immediate wake problem is causing
+>> problems elsewhere; and in hindsight it is not the correct fix,
+>> the Asus E202SA uses Airmont CPU cores, but this does not mean it is a
+>> Cherry Trail based device, Brasswell uses Airmont CPU cores too and this
+>> actually is a Braswell device.
+>>
+>> Most (all?) Braswell devices use classic S3 mode suspend rather then
+>> s2idle suspend and in this case directly dealing with PME events as
+>> the INT0002 driver does likely is not the best idea, so that this is
+>> causing issues is not surprising.
+>>
+>> Replace the workaround of not passing irq_set_wake requests on to the
+>> parents IRQ, by not binding to the INT0002 device when s2idle is not used.
+>> This fixes USB kbd wakeups not working on some Cherry Trail devices,
+>> while still avoiding mucking with the wakeup flags on the Asus E202SA
+>> (and other Brasswell devices).
+>>
+>> Cc: Maxim Mikityanskiy <maxtram95@gmail.com>
+>> Cc: 5.3+ <stable@vger.kernel.org> # 5.3+
+>> Fixes: 871f1f2bcb01 ("platform/x86: intel_int0002_vgpio: Only implement irq_set_wake on Bay Trail")
+>> Tested-by: Maxim Mikityanskiy <maxtram95@gmail.com>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
+>> Changes in v2:
+>> - Rebase on top of 5.7-rc1
+>> ---
+>>   drivers/platform/x86/intel_int0002_vgpio.c | 18 +++++-------------
+>>   1 file changed, 5 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/intel_int0002_vgpio.c b/drivers/platform/x86/intel_int0002_vgpio.c
+>> index 289c6655d425..30806046b664 100644
+>> --- a/drivers/platform/x86/intel_int0002_vgpio.c
+>> +++ b/drivers/platform/x86/intel_int0002_vgpio.c
+>> @@ -143,21 +143,9 @@ static struct irq_chip int0002_byt_irqchip = {
+>>   	.irq_set_wake		= int0002_irq_set_wake,
+>>   };
+>>   
+>> -static struct irq_chip int0002_cht_irqchip = {
+>> -	.name			= DRV_NAME,
+>> -	.irq_ack		= int0002_irq_ack,
+>> -	.irq_mask		= int0002_irq_mask,
+>> -	.irq_unmask		= int0002_irq_unmask,
+>> -	/*
+>> -	 * No set_wake, on CHT the IRQ is typically shared with the ACPI SCI
+>> -	 * and we don't want to mess with the ACPI SCI irq settings.
+>> -	 */
+>> -	.flags			= IRQCHIP_SKIP_SET_WAKE,
+>> -};
+>> -
+>>   static const struct x86_cpu_id int0002_cpu_ids[] = {
+>>   	X86_MATCH_INTEL_FAM6_MODEL(ATOM_SILVERMONT,	&int0002_byt_irqchip),
+>> -	X86_MATCH_INTEL_FAM6_MODEL(ATOM_AIRMONT,	&int0002_cht_irqchip),
+>> +	X86_MATCH_INTEL_FAM6_MODEL(ATOM_AIRMONT,	&int0002_byt_irqchip),
+>>   	{}
+>>   };
+>>   
+>> @@ -181,6 +169,10 @@ static int int0002_probe(struct platform_device *pdev)
+>>   	if (!cpu_id)
+>>   		return -ENODEV;
+>>   
+>> +	/* We only need to directly deal with PMEs when using s2idle */
+>> +	if (!pm_suspend_default_s2idle())
+>> +		return -ENODEV;
+>> +
+> 
+> What if the system supports s2idle which is not the default suspend option
+> and then it is selected by user space (overriding the default)?
 
-On Wed, 11 Mar 2020 at 09:35, Robin Gong <yibin.gong@nxp.com> wrote:
->
-> There is ecspi ERR009165 on i.mx6/7 soc family, which cause FIFO
-> transfer to be send twice in DMA mode. Please get more information from:
-> https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf. The workaround is adding
-> new sdma ram script which works in XCH  mode as PIO inside sdma instead
-> of SMC mode, meanwhile, 'TX_THRESHOLD' should be 0. The issue should be
-> exist on all legacy i.mx6/7 soc family before i.mx6ul.
-> NXP fix this design issue from i.mx6ul, so newer chips including i.mx6ul/
-> 6ull/6sll do not need this workaroud anymore. All other i.mx6/7/8 chips
-> still need this workaroud. This patch set add new 'fsl,imx6ul-ecspi'
-> for ecspi driver and 'ecspi_fixed' in sdma driver to choose if need errata
-> or not.
-> The first two reverted patches should be the same issue, though, it
-> seems 'fixed' by changing to other shp script. Hope Sean or Sascha could
-> have the chance to test this patch set if could fix their issues.
-> Besides, enable sdma support for i.mx8mm/8mq and fix ecspi1 not work
-> on i.mx8mm because the event id is zero.
->
-> PS:
->    Please get sdma firmware from below linux-firmware and copy it to your
-> local rootfs /lib/firmware/imx/sdma.
-> https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/tree/imx/sdma
->
-
-A couple of questions
-
-1) Is this series needed for the i.MX6DL? (the document you linked
-only seems to mention i.MX6D/Q
-2) If the laterst SDMA firmware mentionned above is used will this
-break systems running mainline kernels without this patch series
-applied?
+This driver only binds (the cpuid check still visible above) on Bay Trail
+and Cherry Trail/Brasswell systems. AFAIK those never support both modes,
+the laptop variants of these SoCs always use S3 and the tablet versions
+always use s2idle.
 
 Regards,
 
-Martin
+Hans
+
