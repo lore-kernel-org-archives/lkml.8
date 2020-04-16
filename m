@@ -2,122 +2,66 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E772C352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:50:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1170C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:52:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17FD52054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:50:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1F282054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:52:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728242AbgDPUu2 (ORCPT
+        id S1728470AbgDPUwx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 16:50:28 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:34979 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725894AbgDPUu1 (ORCPT
+        Thu, 16 Apr 2020 16:52:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40470 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726725AbgDPUwx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 16:50:27 -0400
-X-Originating-IP: 86.202.105.35
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 866F0C0007;
-        Thu, 16 Apr 2020 20:50:23 +0000 (UTC)
-Date:   Thu, 16 Apr 2020 22:50:23 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>, kbuild-all@lists.01.org,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] iio: adc: ti-ads8344: properly byte swap value
-Message-ID: <20200416205023.GA437042@piout.net>
-References: <20200415212257.161238-2-alexandre.belloni@bootlin.com>
- <202004161449.NY5hL54S%lkp@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <202004161449.NY5hL54S%lkp@intel.com>
+        Thu, 16 Apr 2020 16:52:53 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 477DAC061A0C;
+        Thu, 16 Apr 2020 13:52:53 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 5B8E3118F0C0B;
+        Thu, 16 Apr 2020 13:52:52 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 13:52:51 -0700 (PDT)
+Message-Id: <20200416.135251.336715127059562428.davem@davemloft.net>
+To:     yanaijie@huawei.com
+Cc:     isdn@linux-pingi.de, yuehaibing@huawei.com,
+        gregkh@linuxfoundation.org, tglx@linutronix.de,
+        wangkefeng.wang@huawei.com, elfring@users.sourceforge.net,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hulkci@huawei.com
+Subject: Re: [PATCH] mISDN: make dmril and dmrim static
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200415084226.23971-1-yanaijie@huawei.com>
+References: <20200415084226.23971-1-yanaijie@huawei.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 16 Apr 2020 13:52:52 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Jason Yan <yanaijie@huawei.com>
+Date: Wed, 15 Apr 2020 16:42:26 +0800
 
-On 16/04/2020 14:22:03+0800, kbuild test robot wrote:
-> Hi Alexandre,
+> Fix the following sparse warning:
 > 
-> I love your patch! Yet something to improve:
+> drivers/isdn/hardware/mISDN/mISDNisar.c:746:12: warning: symbol 'dmril'
+> was not declared. Should it be static?
+> drivers/isdn/hardware/mISDN/mISDNisar.c:749:12: warning: symbol 'dmrim'
+> was not declared. Should it be static?
 > 
-> [auto build test ERROR on iio/togreg]
-> [also build test ERROR on v5.7-rc1 next-20200415]
-> [if your patch is applied to the wrong git tree, please drop us a note to help
-> improve the system. BTW, we also suggest to use '--base' option to specify the
-> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Alexandre-Belloni/iio-adc-ti-ads8344-improve-the-driver/20200416-073357
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
-> config: c6x-allyesconfig (attached as .config)
-> compiler: c6x-elf-gcc (GCC) 9.3.0
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         COMPILER_INSTALL_PATH=$HOME/0day GCC_VERSION=9.3.0 make.cross ARCH=c6x 
-> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
 
-I spent some time to reproduce and this is actually not that trivial
-because your toolchains are linked with libisl22 and most distributions
-still ship an older version. Maybe you can do something about that?
-
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kbuild test robot <lkp@intel.com>
-> 
-> All errors (new ones prefixed by >>):
-> 
-> 
-> vim +/302 +96 drivers/iio/adc/ti-ads8344.c
-> 
->     72	
->     73	static int ads8344_adc_conversion(struct ads8344 *adc, int channel,
->     74					  bool differential)
->     75	{
->     76		struct spi_device *spi = adc->spi;
->     77		int ret;
->     78		u8 buf[3];
->     79	
->     80		adc->tx_buf = ADS8344_START;
->     81		if (!differential)
->     82			adc->tx_buf |= ADS8344_SINGLE_END;
->     83		adc->tx_buf |= ADS8344_CHANNEL(channel);
->     84		adc->tx_buf |= ADS8344_CLOCK_INTERNAL;
->     85	
->     86		ret = spi_write(spi, &adc->tx_buf, 1);
->     87		if (ret)
->     88			return ret;
->     89	
->     90		udelay(9);
->     91	
->     92		ret = spi_read(spi, buf, sizeof(buf));
->     93		if (ret)
->     94			return ret;
->     95	
->   > 96		return buf[0] << 9 | buf[1] << 1 | buf[2] >> 7;
->     97	}
->     98	
-> 
-
-I take it this is a false positive as I don't get any errors when
-building this driver with the provided toolchain. However, I see a few
-"internal compiler error: in priority, at haifa-sched.c:1599"
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Applied, thank you.
