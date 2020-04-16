@@ -2,106 +2,175 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D7EC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73893C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:02:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3569F20857
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:02:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587016945;
-	bh=H95Q/syDnIOT80mK9pLWTpk+EblpARC2OaGNoxyxAiw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=TLtU3bF5K46UCcOsKx7pyTOZb01CH799XSf6Nr39XkBahOn1pKVI0iQBq7/UC3qXL
-	 kwky+5tu678HENi4ADRICAJ2XlvKQjoKidt0G2Fw46AaRyw1eHtxnPuP7tzeBCyA1I
-	 AdnJUZumru5+lMl5xKHiVSQjA1E0PVMc63GRCL/Q=
+	by mail.kernel.org (Postfix) with ESMTP id 54C752076A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:02:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407424AbgDPGCX (ORCPT
+        id S2407476AbgDPGCa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 02:02:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56238 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407165AbgDPGCN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 02:02:13 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94EEA2076A;
-        Thu, 16 Apr 2020 06:02:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587016932;
-        bh=H95Q/syDnIOT80mK9pLWTpk+EblpARC2OaGNoxyxAiw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=oAet7vuPUBRUElKdTjJcmSJ6ELXSNTpWsbnm60yn9+4UnifDG+l8n2NPbSf5FPtZ9
-         1U6C6/MVqik5+/djGWSe2Gf8hwEr3OSdXNxzP4vdiAMdlgq8bCnXuMOQOsVn9YKbXY
-         JgtPw4hu85/iVYpCPrhhtkGX5tA//9IcGEWs4BTw=
-Date:   Thu, 16 Apr 2020 15:02:06 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: Re: [PATCH v2 0/3] support setting sysctl parameters from kernel
- command line
-Message-Id: <20200416150206.d3e103a1a5497b3518d4359c@kernel.org>
-In-Reply-To: <20200415063041.GT11244@42.do-not-panic.com>
-References: <20200414113222.16959-1-vbabka@suse.cz>
-        <20200415122359.939364e2c54c389c6b3f6457@kernel.org>
-        <20200415063041.GT11244@42.do-not-panic.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 16 Apr 2020 02:02:30 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:61498 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2407165AbgDPGC0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 02:02:26 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03G5X2uS015813;
+        Thu, 16 Apr 2020 02:02:02 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30ef1jknfb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Apr 2020 02:02:01 -0400
+Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03G5X7lX016027;
+        Thu, 16 Apr 2020 02:01:57 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30ef1jkneg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Apr 2020 02:01:57 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03G607Rn018459;
+        Thu, 16 Apr 2020 06:01:55 GMT
+Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
+        by ppma02dal.us.ibm.com with ESMTP id 30b5h7a04r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Apr 2020 06:01:55 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03G61s1H12910984
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Apr 2020 06:01:54 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4A937B2065;
+        Thu, 16 Apr 2020 06:01:54 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4A278B2067;
+        Thu, 16 Apr 2020 06:01:53 +0000 (GMT)
+Received: from [9.70.82.143] (unknown [9.70.82.143])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 16 Apr 2020 06:01:53 +0000 (GMT)
+Subject: [PATCH v11 05/14] powerpc/vas: Register NX with fault window ID
+ and IRQ port value
+From:   Haren Myneni <haren@linux.ibm.com>
+To:     mpe@ellerman.id.au
+Cc:     mikey@neuling.org, srikar@linux.vnet.ibm.com,
+        frederic.barrat@fr.ibm.com, linux-kernel@vger.kernel.org,
+        npiggin@gmail.com, hch@infradead.org, oohall@gmail.com,
+        clg@kaod.org, herbert@gondor.apana.org.au,
+        sukadev@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
+        ajd@linux.ibm.com
+In-Reply-To: <1587016214.2275.1036.camel@hbabu-laptop>
+References: <1587016214.2275.1036.camel@hbabu-laptop>
+Content-Type: text/plain; charset="UTF-8"
+Date:   Wed, 15 Apr 2020 23:01:28 -0700
+Message-ID: <1587016888.2275.1054.camel@hbabu-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-Mailer: Evolution 2.28.3 
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-16_01:2020-04-14,2020-04-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ lowpriorityscore=0 impostorscore=0 spamscore=0 mlxlogscore=933
+ adultscore=0 clxscore=1015 priorityscore=1501 suspectscore=1 bulkscore=0
+ mlxscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004160033
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Luis,
 
-On Wed, 15 Apr 2020 06:30:41 +0000
-Luis Chamberlain <mcgrof@kernel.org> wrote:
-> Currently the maximum config size size is 32KB and the total key-words
-> (not     key-value entries) must be under 1024 nodes.  Note: this is not
-> the number of entries but nodes, an entry must consume more than 2 nodes
-> (a key-word and a value). So theoretically, it will be up to 512
-> key-value pairs. If keys contains 3 words in average, it can contain 256
-> key-value pairs. In most cases, the number of config items will be under
-> 100 entries and smaller than 8KB, so it would be enough.  If the node
-> number exceeds 1024, parser returns an error even if the file       size
-> is smaller than 32KB.  Anyway, since bootconfig command verifies it when
-> appending a boot config       to initrd image, user can notice it before
-> boot.  
-> ```
-> *recommending* bootconfig due to the limitation of cmdline seems
-> sensible, however if we advise that.. wouldn't the space for 512
-> theoretical entries full up rather fast?
+For each user space send window, register NX with fault window ID
+and port value so that NX paste CRBs in this fault FIFO when it
+sees fault on the request buffer.
 
-Yeah, I think it is easier to hit the node number limitation rather
-than fill up the space. However, since the bootconfig supports comments,
-if user writes enough readable config file, I think it's probably the
-right balance :)
-If you think the 512 entries is too small, it is easy to expand it
-upto 32K (64K nodes). But it may consume 512KB memory only for the
-node (meta) data. Current 1024 nodes consumes 8KB (8bytes/node), so
-compared with the max data size (32KB), I think it is a better balance.
+Signed-off-by: Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
+Signed-off-by: Haren Myneni <haren@linux.ibm.com>
+---
+ arch/powerpc/platforms/powernv/vas-window.c | 15 +++++++++++++--
+ arch/powerpc/platforms/powernv/vas.h        | 15 +++++++++++++++
+ 2 files changed, 28 insertions(+), 2 deletions(-)
 
-Thank you,
-
+diff --git a/arch/powerpc/platforms/powernv/vas-window.c b/arch/powerpc/platforms/powernv/vas-window.c
+index 1783fa9..dc46bf6 100644
+--- a/arch/powerpc/platforms/powernv/vas-window.c
++++ b/arch/powerpc/platforms/powernv/vas-window.c
+@@ -373,7 +373,7 @@ int init_winctx_regs(struct vas_window *window, struct vas_winctx *winctx)
+ 	init_xlate_regs(window, winctx->user_win);
+ 
+ 	val = 0ULL;
+-	val = SET_FIELD(VAS_FAULT_TX_WIN, val, 0);
++	val = SET_FIELD(VAS_FAULT_TX_WIN, val, winctx->fault_win_id);
+ 	write_hvwc_reg(window, VREG(FAULT_TX_WIN), val);
+ 
+ 	/* In PowerNV, interrupts go to HV. */
+@@ -748,6 +748,8 @@ static void init_winctx_for_rxwin(struct vas_window *rxwin,
+ 
+ 	winctx->min_scope = VAS_SCOPE_LOCAL;
+ 	winctx->max_scope = VAS_SCOPE_VECTORED_GROUP;
++	if (rxwin->vinst->virq)
++		winctx->irq_port = rxwin->vinst->irq_port;
+ }
+ 
+ static bool rx_win_args_valid(enum vas_cop_type cop,
+@@ -944,13 +946,22 @@ static void init_winctx_for_txwin(struct vas_window *txwin,
+ 	winctx->lpid = txattr->lpid;
+ 	winctx->pidr = txattr->pidr;
+ 	winctx->rx_win_id = txwin->rxwin->winid;
++	/*
++	 * IRQ and fault window setup is successful. Set fault window
++	 * for the send window so that ready to handle faults.
++	 */
++	if (txwin->vinst->virq)
++		winctx->fault_win_id = txwin->vinst->fault_win->winid;
+ 
+ 	winctx->dma_type = VAS_DMA_TYPE_INJECT;
+ 	winctx->tc_mode = txattr->tc_mode;
+ 	winctx->min_scope = VAS_SCOPE_LOCAL;
+ 	winctx->max_scope = VAS_SCOPE_VECTORED_GROUP;
++	if (txwin->vinst->virq)
++		winctx->irq_port = txwin->vinst->irq_port;
+ 
+-	winctx->pswid = 0;
++	winctx->pswid = txattr->pswid ? txattr->pswid :
++			encode_pswid(txwin->vinst->vas_id, txwin->winid);
+ }
+ 
+ static bool tx_win_args_valid(enum vas_cop_type cop,
+diff --git a/arch/powerpc/platforms/powernv/vas.h b/arch/powerpc/platforms/powernv/vas.h
+index 9c8e3f5..88d084d 100644
+--- a/arch/powerpc/platforms/powernv/vas.h
++++ b/arch/powerpc/platforms/powernv/vas.h
+@@ -467,6 +467,21 @@ static inline u64 read_hvwc_reg(struct vas_window *win,
+ 	return in_be64(win->hvwc_map+reg);
+ }
+ 
++/*
++ * Encode/decode the Partition Send Window ID (PSWID) for a window in
++ * a way that we can uniquely identify any window in the system. i.e.
++ * we should be able to locate the 'struct vas_window' given the PSWID.
++ *
++ *	Bits	Usage
++ *	0:7	VAS id (8 bits)
++ *	8:15	Unused, 0 (3 bits)
++ *	16:31	Window id (16 bits)
++ */
++static inline u32 encode_pswid(int vasid, int winid)
++{
++	return ((u32)winid | (vasid << (31 - 7)));
++}
++
+ static inline void decode_pswid(u32 pswid, int *vasid, int *winid)
+ {
+ 	if (vasid)
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+1.8.3.1
+
+
+
