@@ -2,119 +2,166 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B8F4C352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:42:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA43AC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:42:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E719F21D93
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:42:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587048136;
-	bh=d40miGP0omsGXS2m/78kMYB+UQ+x4E+uPbggBu46jEs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D467W/Arr6B8mxGfBc5z65vtZzRKKAi/m6aVx4HDMsH5uVh/lt1jV6vTpfn8oYmOJ
-	 TZvgEkirK2b+uPQ0iq5MqQ2ytpwPOv7q6rugJwmcP68sbL/1cyDye3EnkKkCwlKxG6
-	 vkIWSv1BDBnBhWdIt0RHu9obSJKnWZJj/RnhfF68=
+	by mail.kernel.org (Postfix) with ESMTP id 8F13121D93
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:42:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731656AbgDPOmO (ORCPT
+        id S2394497AbgDPOmY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:42:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47978 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:42:24 -0400
+Received: from mga05.intel.com ([192.55.52.43]:39396 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392676AbgDPOAu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:00:50 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F47121927;
-        Thu, 16 Apr 2020 14:00:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045650;
-        bh=d40miGP0omsGXS2m/78kMYB+UQ+x4E+uPbggBu46jEs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rEHs8hMQwJivEcTKoS9CYod9H6OF/4xB+VuHLzqTsTFjG2VSU87kiZg19IA8kJHA5
-         NOkgxYHSY+27AIWTljC+EL4xTdejv3C3Z87NNqthaFnolVYgDpaMSBDNnk8ym3+dFm
-         DXxVIHPzuPnSoNWDGPPVnMI1yPuhvIDRYu4Xkqlw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Jeff Vander Stoep <jeffv@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        NeilBrown <neilb@suse.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.6 220/254] fs/filesystems.c: downgrade user-reachable WARN_ONCE() to pr_warn_once()
-Date:   Thu, 16 Apr 2020 15:25:09 +0200
-Message-Id: <20200416131353.454828871@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
-References: <20200416131325.804095985@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1728522AbgDPOmB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:42:01 -0400
+IronPort-SDR: eywTvYHzDjkPog1u8P4uJqRr5jKt82OHoCEjbA8JMknfgCMRDRpIrv6ptyC34Pp/2XHpGRXzmf
+ Cs1CcbFwUjGg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 07:42:00 -0700
+IronPort-SDR: lvEpJOC50Hm1QMcKm0qilThYshi+I5TJTmGGWAwOLMchzbZnR3x0Ld8AXoUhQhceEgHmn6XE/y
+ ODRLedmDsamA==
+X-IronPort-AV: E=Sophos;i="5.72,391,1580803200"; 
+   d="scan'208";a="427852877"
+Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.249.170.42]) ([10.249.170.42])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 07:41:58 -0700
+Subject: Re: [PATCH v2] KVM: x86/pmu: Reduce counter period change overhead
+ and delay the effective time
+From:   Like Xu <like.xu@linux.intel.com>
+To:     pbonzini@redhat.com
+Cc:     ehankland@google.com, jmattson@google.com, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, wanpengli@tencent.com
+References: <20200317075315.70933-1-like.xu@linux.intel.com>
+ <20200317081458.88714-1-like.xu@linux.intel.com>
+ <1528e1b4-3dee-161b-9463-57471263b5a8@linux.intel.com>
+ <6a57b701-99a2-3917-3879-bc8141dca9d4@linux.intel.com>
+Organization: Intel OTC
+Message-ID: <c5e4723a-3136-e017-5997-77f56c4c27c1@linux.intel.com>
+Date:   Thu, 16 Apr 2020 22:41:57 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <6a57b701-99a2-3917-3879-bc8141dca9d4@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+Ping.
 
-commit 26c5d78c976ca298e59a56f6101a97b618ba3539 upstream.
-
-After request_module(), nothing is stopping the module from being
-unloaded until someone takes a reference to it via try_get_module().
-
-The WARN_ONCE() in get_fs_type() is thus user-reachable, via userspace
-running 'rmmod' concurrently.
-
-Since WARN_ONCE() is for kernel bugs only, not for user-reachable
-situations, downgrade this warning to pr_warn_once().
-
-Keep it printed once only, since the intent of this warning is to detect
-a bug in modprobe at boot time.  Printing the warning more than once
-wouldn't really provide any useful extra information.
-
-Fixes: 41124db869b7 ("fs: warn in case userspace lied about modprobe return")
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Jessica Yu <jeyu@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jeff Vander Stoep <jeffv@google.com>
-Cc: Jessica Yu <jeyu@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Luis Chamberlain <mcgrof@kernel.org>
-Cc: NeilBrown <neilb@suse.com>
-Cc: <stable@vger.kernel.org>		[4.13+]
-Link: http://lkml.kernel.org/r/20200312202552.241885-3-ebiggers@kernel.org
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- fs/filesystems.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
---- a/fs/filesystems.c
-+++ b/fs/filesystems.c
-@@ -272,7 +272,9 @@ struct file_system_type *get_fs_type(con
- 	fs = __get_fs_type(name, len);
- 	if (!fs && (request_module("fs-%.*s", len, name) == 0)) {
- 		fs = __get_fs_type(name, len);
--		WARN_ONCE(!fs, "request_module fs-%.*s succeeded, but still no fs?\n", len, name);
-+		if (!fs)
-+			pr_warn_once("request_module fs-%.*s succeeded, but still no fs?\n",
-+				     len, name);
- 	}
- 
- 	if (dot && fs && !(fs->fs_flags & FS_HAS_SUBTYPE)) {
-
+On 2020/4/8 22:04, Like Xu wrote:
+> Hi Paolo,
+>
+> Could you please take a look at this patch?
+> If there is anything needs to be improved, please let me know.
+>
+> Thanks,
+> Like Xu
+>
+> On 2020/3/26 20:47, Like Xu wrote:
+>> Anyone to help review this change?
+>>
+>> Thanks,
+>> Like Xu
+>>
+>> On 2020/3/17 16:14, Like Xu wrote:
+>>> The cost of perf_event_period() is unstable, and when the guest samples
+>>> multiple events, the overhead increases dramatically (5378 ns on E5-2699).
+>>>
+>>> For a non-running counter, the effective time of the new period is when
+>>> its corresponding enable bit is enabled. Calling perf_event_period()
+>>> in advance is superfluous. For a running counter, it's safe to delay the
+>>> effective time until the KVM_REQ_PMU event is handled. If there are
+>>> multiple perf_event_period() calls before handling KVM_REQ_PMU,
+>>> it helps to reduce the total cost.
+>>>
+>>> Signed-off-by: Like Xu <like.xu@linux.intel.com>
+>>> ---
+>>>   arch/x86/kvm/pmu.c           | 11 -----------
+>>>   arch/x86/kvm/pmu.h           | 11 +++++++++++
+>>>   arch/x86/kvm/vmx/pmu_intel.c | 10 ++++------
+>>>   3 files changed, 15 insertions(+), 17 deletions(-)
+>>>
+>>> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+>>> index d1f8ca57d354..527a8bb85080 100644
+>>> --- a/arch/x86/kvm/pmu.c
+>>> +++ b/arch/x86/kvm/pmu.c
+>>> @@ -437,17 +437,6 @@ void kvm_pmu_init(struct kvm_vcpu *vcpu)
+>>>       kvm_pmu_refresh(vcpu);
+>>>   }
+>>> -static inline bool pmc_speculative_in_use(struct kvm_pmc *pmc)
+>>> -{
+>>> -    struct kvm_pmu *pmu = pmc_to_pmu(pmc);
+>>> -
+>>> -    if (pmc_is_fixed(pmc))
+>>> -        return fixed_ctrl_field(pmu->fixed_ctr_ctrl,
+>>> -            pmc->idx - INTEL_PMC_IDX_FIXED) & 0x3;
+>>> -
+>>> -    return pmc->eventsel & ARCH_PERFMON_EVENTSEL_ENABLE;
+>>> -}
+>>> -
+>>>   /* Release perf_events for vPMCs that have been unused for a full 
+>>> time slice.  */
+>>>   void kvm_pmu_cleanup(struct kvm_vcpu *vcpu)
+>>>   {
+>>> diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
+>>> index d7da2b9e0755..cd112e825d2c 100644
+>>> --- a/arch/x86/kvm/pmu.h
+>>> +++ b/arch/x86/kvm/pmu.h
+>>> @@ -138,6 +138,17 @@ static inline u64 get_sample_period(struct kvm_pmc 
+>>> *pmc, u64 counter_value)
+>>>       return sample_period;
+>>>   }
+>>> +static inline bool pmc_speculative_in_use(struct kvm_pmc *pmc)
+>>> +{
+>>> +    struct kvm_pmu *pmu = pmc_to_pmu(pmc);
+>>> +
+>>> +    if (pmc_is_fixed(pmc))
+>>> +        return fixed_ctrl_field(pmu->fixed_ctr_ctrl,
+>>> +            pmc->idx - INTEL_PMC_IDX_FIXED) & 0x3;
+>>> +
+>>> +    return pmc->eventsel & ARCH_PERFMON_EVENTSEL_ENABLE;
+>>> +}
+>>> +
+>>>   void reprogram_gp_counter(struct kvm_pmc *pmc, u64 eventsel);
+>>>   void reprogram_fixed_counter(struct kvm_pmc *pmc, u8 ctrl, int 
+>>> fixed_idx);
+>>>   void reprogram_counter(struct kvm_pmu *pmu, int pmc_idx);
+>>> diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
+>>> index 7c857737b438..20f654a0c09b 100644
+>>> --- a/arch/x86/kvm/vmx/pmu_intel.c
+>>> +++ b/arch/x86/kvm/vmx/pmu_intel.c
+>>> @@ -263,15 +263,13 @@ static int intel_pmu_set_msr(struct kvm_vcpu 
+>>> *vcpu, struct msr_data *msr_info)
+>>>               if (!msr_info->host_initiated)
+>>>                   data = (s64)(s32)data;
+>>>               pmc->counter += data - pmc_read_counter(pmc);
+>>> -            if (pmc->perf_event)
+>>> -                perf_event_period(pmc->perf_event,
+>>> -                          get_sample_period(pmc, data));
+>>> +            if (pmc_speculative_in_use(pmc))
+>>> +                kvm_make_request(KVM_REQ_PMU, vcpu);
+>>>               return 0;
+>>>           } else if ((pmc = get_fixed_pmc(pmu, msr))) {
+>>>               pmc->counter += data - pmc_read_counter(pmc);
+>>> -            if (pmc->perf_event)
+>>> -                perf_event_period(pmc->perf_event,
+>>> -                          get_sample_period(pmc, data));
+>>> +            if (pmc_speculative_in_use(pmc))
+>>> +                kvm_make_request(KVM_REQ_PMU, vcpu);
+>>>               return 0;
+>>>           } else if ((pmc = get_gp_pmc(pmu, msr, MSR_P6_EVNTSEL0))) {
+>>>               if (data == pmc->eventsel)
+>>>
+>>
+>
 
