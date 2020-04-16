@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 125BCC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:33:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53927C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:33:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E05AC214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:33:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31E94214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:33:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587051217;
-	bh=vZKMLH6+87IUjMNrup5IggY1o+3zzdiZAgU3UikVZlw=;
+	s=default; t=1587051222;
+	bh=cj9k2hAYAxhpwnoNJGeoddNVllBSWZVfbFc0dQYDt/U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FsENL6OyKEiYIhKj0IPDgyeInCQEb/jKcHmSKWOvPAwxyqcQ5GRzUdadOdpg5XBLY
-	 /SKbPGQpiCl9Rgarocjwl+gv93g2+ydmE2mkZSJ0xM3x/SVu7A01tUNmlxBbZjTT4V
-	 ytoC7lM8zCLpCocfIj7hQm9Z7Ou+NvGstfHdmUWs=
+	b=UYxcnTFCF5c5191h9xP8InnEO0gbOefMHffcJZsOWrDCHYVifhUSGDtvKp3Mj6jKo
+	 AF2klZLWFeOsdzgzzt3PWXdEZADUsDuadDjAevcrCeOIRg8HLoGJm0sj56/fpqWsri
+	 wzOQ5ObUo6v0ZIofxwFiA48581OPSS8KAf6h83Jw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634419AbgDPPdg (ORCPT
+        id S2634779AbgDPPdk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:33:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54046 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:33:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898287AbgDPNlT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:41:19 -0400
+        id S2898283AbgDPNlQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:41:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DCEE214D8;
-        Thu, 16 Apr 2020 13:41:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0C5B2076D;
+        Thu, 16 Apr 2020 13:41:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044478;
-        bh=vZKMLH6+87IUjMNrup5IggY1o+3zzdiZAgU3UikVZlw=;
+        s=default; t=1587044476;
+        bh=cj9k2hAYAxhpwnoNJGeoddNVllBSWZVfbFc0dQYDt/U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XU9R5G4DernsuXLQSfySIHNoYJVnjrps62VMDMty/VIQv4/ebwnf/h0SaFD9aZeFY
-         QwMufgF/jsdyVwaK9ecmsU6/thTTWD91UfX1eWdyAstn7tkX5HaHvu9OTuJ9ZUtSBy
-         /jTgp2NWXmociEHOLioAJlaKGWkvuA3h4hd2Z6PM=
+        b=vf2LNXkFe5ZQ3XudJq52LiYLEWKnKW9REbWep05E3pG498uqcI8/UssWflM/GA8GV
+         DLGfRSLp8hih5Pss2rcSwAE2Wz6ILubBZ4zelQNo8TxsKMm79ok84PABYOYz4kReOE
+         4knCM628HbMIn8apaZsrcTA/9FggH+oPNkYEIbPo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wenyang@linux.alibaba.com>,
-        Corey Minyard <minyard@acm.org>, Arnd Bergmann <arnd@arndb.de>,
-        openipmi-developer@lists.sourceforge.net,
-        Corey Minyard <cminyard@mvista.com>
-Subject: [PATCH 5.5 233/257] ipmi: fix hung processes in __get_guid()
-Date:   Thu, 16 Apr 2020 15:24:44 +0200
-Message-Id: <20200416131354.800144331@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Auger <eric.auger@redhat.com>,
+        Andre Przywara <andre.przywara@arm.com>,
+        Alex Williamson <alex.williamson@redhat.com>
+Subject: [PATCH 5.5 206/257] vfio: platform: Switch to platform_get_irq_optional()
+Date:   Thu, 16 Apr 2020 15:24:17 +0200
+Message-Id: <20200416131351.833164111@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -61,68 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <wenyang@linux.alibaba.com>
+From: Eric Auger <eric.auger@redhat.com>
 
-commit 32830a0534700f86366f371b150b17f0f0d140d7 upstream.
+commit 723fe298ad85ad1278bd2312469ad14738953cc6 upstream.
 
-The wait_event() function is used to detect command completion.
-When send_guid_cmd() returns an error, smi_send() has not been
-called to send data. Therefore, wait_event() should not be used
-on the error path, otherwise it will cause the following warning:
+Since commit 7723f4c5ecdb ("driver core: platform: Add an error
+message to platform_get_irq*()"), platform_get_irq() calls dev_err()
+on an error. As we enumerate all interrupts until platform_get_irq()
+fails, we now systematically get a message such as:
+"vfio-platform fff51000.ethernet: IRQ index 3 not found" which is
+a false positive.
 
-[ 1361.588808] systemd-udevd   D    0  1501   1436 0x00000004
-[ 1361.588813]  ffff883f4b1298c0 0000000000000000 ffff883f4b188000 ffff887f7e3d9f40
-[ 1361.677952]  ffff887f64bd4280 ffffc90037297a68 ffffffff8173ca3b ffffc90000000010
-[ 1361.767077]  00ffc90037297ad0 ffff887f7e3d9f40 0000000000000286 ffff883f4b188000
-[ 1361.856199] Call Trace:
-[ 1361.885578]  [<ffffffff8173ca3b>] ? __schedule+0x23b/0x780
-[ 1361.951406]  [<ffffffff8173cfb6>] schedule+0x36/0x80
-[ 1362.010979]  [<ffffffffa071f178>] get_guid+0x118/0x150 [ipmi_msghandler]
-[ 1362.091281]  [<ffffffff810d5350>] ? prepare_to_wait_event+0x100/0x100
-[ 1362.168533]  [<ffffffffa071f755>] ipmi_register_smi+0x405/0x940 [ipmi_msghandler]
-[ 1362.258337]  [<ffffffffa0230ae9>] try_smi_init+0x529/0x950 [ipmi_si]
-[ 1362.334521]  [<ffffffffa022f350>] ? std_irq_setup+0xd0/0xd0 [ipmi_si]
-[ 1362.411701]  [<ffffffffa0232bd2>] init_ipmi_si+0x492/0x9e0 [ipmi_si]
-[ 1362.487917]  [<ffffffffa0232740>] ? ipmi_pci_probe+0x280/0x280 [ipmi_si]
-[ 1362.568219]  [<ffffffff810021a0>] do_one_initcall+0x50/0x180
-[ 1362.636109]  [<ffffffff812231b2>] ? kmem_cache_alloc_trace+0x142/0x190
-[ 1362.714330]  [<ffffffff811b2ae1>] do_init_module+0x5f/0x200
-[ 1362.781208]  [<ffffffff81123ca8>] load_module+0x1898/0x1de0
-[ 1362.848069]  [<ffffffff811202e0>] ? __symbol_put+0x60/0x60
-[ 1362.913886]  [<ffffffff8130696b>] ? security_kernel_post_read_file+0x6b/0x80
-[ 1362.998514]  [<ffffffff81124465>] SYSC_finit_module+0xe5/0x120
-[ 1363.068463]  [<ffffffff81124465>] ? SYSC_finit_module+0xe5/0x120
-[ 1363.140513]  [<ffffffff811244be>] SyS_finit_module+0xe/0x10
-[ 1363.207364]  [<ffffffff81003c04>] do_syscall_64+0x74/0x180
+Let's use platform_get_irq_optional() instead.
 
-Fixes: 50c812b2b951 ("[PATCH] ipmi: add full sysfs support")
-Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
-Cc: Corey Minyard <minyard@acm.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: openipmi-developer@lists.sourceforge.net
-Cc: linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org # 2.6.17-
-Message-Id: <20200403090408.58745-1-wenyang@linux.alibaba.com>
-Signed-off-by: Corey Minyard <cminyard@mvista.com>
+Signed-off-by: Eric Auger <eric.auger@redhat.com>
+Cc: stable@vger.kernel.org # v5.3+
+Reviewed-by: Andre Przywara <andre.przywara@arm.com>
+Tested-by: Andre Przywara <andre.przywara@arm.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/char/ipmi/ipmi_msghandler.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/vfio/platform/vfio_platform.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/char/ipmi/ipmi_msghandler.c
-+++ b/drivers/char/ipmi/ipmi_msghandler.c
-@@ -3188,8 +3188,8 @@ static void __get_guid(struct ipmi_smi *
- 	if (rv)
- 		/* Send failed, no GUID available. */
- 		bmc->dyn_guid_set = 0;
--
--	wait_event(intf->waitq, bmc->dyn_guid_set != 2);
-+	else
-+		wait_event(intf->waitq, bmc->dyn_guid_set != 2);
+--- a/drivers/vfio/platform/vfio_platform.c
++++ b/drivers/vfio/platform/vfio_platform.c
+@@ -44,7 +44,7 @@ static int get_platform_irq(struct vfio_
+ {
+ 	struct platform_device *pdev = (struct platform_device *) vdev->opaque;
  
- 	/* dyn_guid_set makes the guid data available. */
- 	smp_rmb();
+-	return platform_get_irq(pdev, i);
++	return platform_get_irq_optional(pdev, i);
+ }
+ 
+ static int vfio_platform_probe(struct platform_device *pdev)
 
 
