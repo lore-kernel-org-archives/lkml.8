@@ -2,87 +2,87 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 329A7C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 01:07:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57C12C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 01:11:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF92C206A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 01:07:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586999244;
-	bh=UI4M0an9OkbdhL+z1BRG1hDVzizwYVRuyM+a3tTMfCo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=YrIrROw6I+c0jBszYeL47xZ+rz9p7oQchGcXuIIsf2Fk5UrWnSN+S59QK7mVc4p/E
-	 F/MWAwbc4wv/yOmSjJh1s3EYC399eS+8dErmNfIXRMqPZMMMtvPm85qVv+jCbc2zqB
-	 zI1oNRuvS5YAG+AGlsdi6wh5p7ZXwDtaT0hKKHw0=
+	by mail.kernel.org (Postfix) with ESMTP id 32AD42064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 01:11:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406100AbgDPBHV (ORCPT
+        id S2406153AbgDPBK6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 21:07:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44574 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405983AbgDPBHQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 21:07:16 -0400
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 624ED2076D
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 01:07:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586999234;
-        bh=UI4M0an9OkbdhL+z1BRG1hDVzizwYVRuyM+a3tTMfCo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=bfyhq9sqF7FRuWxkywlklaOcV7ssGH8RVZT1Ekf6iCGXmt7jSTgRKH5syW7f2hO8D
-         nHctgiFDGfwKraDSkgphU02cdNZqBmn7M4Yskyl89BwlhJVNNd0mhozqzl60aEedcZ
-         Tj/pYUEOw2d+fOqoGtVvwtaQzW1OyPT81jfiEwOM=
-Received: by mail-wm1-f52.google.com with SMTP id g12so2983346wmh.3
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 18:07:14 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZ0AbRV/DrcOFdMDAp/u5WtlMOVWLZ3BMlJLWk47Cri515WKx28
-        EG+DHHYgHSdUyMQUb2rPsJs+nVhP6koaDcE9aasSrg==
-X-Google-Smtp-Source: APiQypJzorwgF6ubmFP/zRrR2ERVcZVr+7PihlCqYgHYoUSj9t/7JpVkQeE3O+1q2nyilBACGOANcrSWDpPQ/Y6TgEU=
-X-Received: by 2002:a1c:4186:: with SMTP id o128mr1971946wma.21.1586999232899;
- Wed, 15 Apr 2020 18:07:12 -0700 (PDT)
+        Wed, 15 Apr 2020 21:10:58 -0400
+Received: from cmccmta3.chinamobile.com ([221.176.66.81]:10479 "EHLO
+        cmccmta3.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728102AbgDPBKv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 21:10:51 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.11]) by rmmx-syy-dmz-app09-12009 (RichMail) with SMTP id 2ee95e97b0821fe-732a6; Thu, 16 Apr 2020 09:10:26 +0800 (CST)
+X-RM-TRANSID: 2ee95e97b0821fe-732a6
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from [172.20.146.139] (unknown[112.25.154.146])
+        by rmsmtp-syy-appsvr06-12006 (RichMail) with SMTP id 2ee65e97b08104b-9e65a;
+        Thu, 16 Apr 2020 09:10:26 +0800 (CST)
+X-RM-TRANSID: 2ee65e97b08104b-9e65a
+Subject: Re: [PATCH] i2c: drivers: Omit superfluous error message
+ inefm32_i2c_probe()
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     wsa@the-dreams.de, o.rempel@pengutronix.de, ardb@kernel.org,
+        linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <20200415135734.14660-1-tangbin@cmss.chinamobile.com>
+ <20200415142225.pxstqwyqvj7ayd6m@pengutronix.de>
+From:   Tang Bin <tangbin@cmss.chinamobile.com>
+Message-ID: <9948c5c2-fbdd-4782-8fae-1eccb03e5c85@cmss.chinamobile.com>
+Date:   Thu, 16 Apr 2020 09:12:21 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <a5b07aa9-96ea-a9b5-13db-e5dcbd7760e6@intel.com>
- <BEA3CCB8-5127-4E6A-9696-E293C00BFA82@amacapital.net> <CABV8kRxqcCmPKtX3DDOf+47Re1hO1gMeUPhCd6HtDP0-SpcSBw@mail.gmail.com>
- <CALCETrVmsWZ+w6C4RV50DWoL0Qaiy+S6BtXr=QKQEg3MYgAc6w@mail.gmail.com> <CABV8kRxfMNxzy8r2P4GKj-22i+GMj=VDfPWAZB-VSgfrsQsjCA@mail.gmail.com>
-In-Reply-To: <CABV8kRxfMNxzy8r2P4GKj-22i+GMj=VDfPWAZB-VSgfrsQsjCA@mail.gmail.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 15 Apr 2020 18:07:01 -0700
-X-Gmail-Original-Message-ID: <CALCETrWTDrcynTwpWZ6u6JXRL1rz6_vakLK7=BqMjCPCkQ+9dg@mail.gmail.com>
-Message-ID: <CALCETrWTDrcynTwpWZ6u6JXRL1rz6_vakLK7=BqMjCPCkQ+9dg@mail.gmail.com>
-Subject: Re: [RFC PATCH v2] x86/arch_prctl: Add ARCH_SET_XCR0 to set XCR0 per-thread
-To:     Keno Fischer <keno@juliacomputing.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andi Kleen <andi@firstfloor.org>,
-        Kyle Huey <khuey@kylehuey.com>,
-        "Robert O'Callahan" <robert@ocallahan.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200415142225.pxstqwyqvj7ayd6m@pengutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 5:10 PM Keno Fischer <keno@juliacomputing.com> wrote:
+Hi Uwe:
+
+On 2020/4/15 22:22, Uwe Kleine-König wrote:
+> Hello,
 >
-> > (why would you want to record with an unusual XCR0?)
+> On Wed, Apr 15, 2020 at 09:57:34PM +0800, Tang Bin wrote:
+>> In the function efm32_i2c_probe(),when get irq failed,the function
+>> platform_get_irq() logs an error message,so remove redundant message
+>> here.
+> adding a space after each comma seems usual style.
+Got it, I will notice. Whether should I submit v2 for this problems? Thanks.
+>
+>> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+>> Signed-off-by: Shengju Zhang <zhangshengju@cmss.chinamobile.com>
+> Usually the Sign-off of the sender comes last. How is Shengju Zhang
+> involved with this patch?
+Got it, I will notice next time. Thanks.
+>> diff --git a/drivers/i2c/busses/i2c-efm32.c b/drivers/i2c/busses/i2c-efm32.c
+>> index a8c6323e7..4de31fae7 100644
+>> --- a/drivers/i2c/busses/i2c-efm32.c
+>> +++ b/drivers/i2c/busses/i2c-efm32.c
+>> @@ -352,7 +352,6 @@ static int efm32_i2c_probe(struct platform_device *pdev)
+>>   
+>>   	ret = platform_get_irq(pdev, 0);
+>>   	if (ret <= 0) {
+>> -		dev_err(&pdev->dev, "failed to get irq (%d)\n", ret);
+> The change looks fine.
+
+Thanks,
+
+Tang Bin
+
 >
 
-Hmm.  I don't personally have a strong objection to allowing XCR0 to
-be overridden as long as it's done reasonably sanely.  And maybe
-requires a sysctl to be enabled.
 
-Would it make matters easier if tasks with nonstandard XCR0 were not
-allowed to use ptrace() at all?  And if ARCH_SET_XCR0 were disallowed
-if the caller is tracing anyone?
