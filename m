@@ -2,67 +2,130 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D72FC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:12:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C269C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:14:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64FAE20767
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:12:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AA6420767
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:14:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="Akz6oJbU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2635154AbgDPMMv (ORCPT
+        id S2635186AbgDPMOC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 08:12:51 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43054 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2635124AbgDPMMm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 08:12:42 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id B824DAF19;
-        Thu, 16 Apr 2020 12:12:40 +0000 (UTC)
-Date:   Thu, 16 Apr 2020 14:12:40 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Alexandre Chartre <alexandre.chartre@oracle.com>
-cc:     x86@kernel.org, linux-kernel@vger.kernel.org, jpoimboe@redhat.com,
-        peterz@infradead.org, jthierry@redhat.com, tglx@linutronix.de
-Subject: Re: [PATCH V3 3/9] objtool: Add support for intra-function calls
-In-Reply-To: <20200414103618.12657-4-alexandre.chartre@oracle.com>
-Message-ID: <alpine.LSU.2.21.2004161407340.10475@pobox.suse.cz>
-References: <20200414103618.12657-1-alexandre.chartre@oracle.com> <20200414103618.12657-4-alexandre.chartre@oracle.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Thu, 16 Apr 2020 08:14:02 -0400
+Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:56865 "EHLO
+        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2635124AbgDPMN4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 08:13:56 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id P3Oxjcid87xncP3P0j7bs5; Thu, 16 Apr 2020 14:13:54 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1587039234; bh=F+K4cdVq08HBBl8QpFts4+Tv330OztlyLas7ZcdXImo=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=Akz6oJbUK8lsqel0fCMca2SivYxWjsbVpmwmSa1cqjyELPBi5Jc3BE/4sYODYjemX
+         izM+Vlm4lYVq+Mr7z8haBVZZQgbH5l/P8tbBQ893MTcXrWaBsdkqk6689JQ5vcjwUf
+         QH6II73vYVNWMF0UeiFor0SEuNxQkFM4bA/PqsGtTPvtaTlFbAxcDWKTIggghH2BwO
+         KEAlu36a1YG795jndFHLgYVyTnqNwHqnPNV2YBm12U5yyf+JWLGYlctx8BhXPgtHPK
+         B8otA9pt+8wrPleu6nGW1vvk29dQ+SodCa7zD2ngk8tfM3fYAY+aXkZIh3JVVn2xY1
+         rwWGRI+jvA6gg==
+Subject: Re: [RFC][PATCH] media: v4l2-ctrls: add more NULL pointer checks
+To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tomasz Figa <tfiga@chromium.org>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200410103501.1083-1-sergey.senozhatsky@gmail.com>
+ <c83c137b-b801-a06b-e324-09dd3bbc9daf@xs4all.nl>
+ <20200416113249.GG30641@jagdpanzerIV.localdomain>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <f724e17d-51ae-ad20-6c78-4be21d39180b@xs4all.nl>
+Date:   Thu, 16 Apr 2020 14:13:51 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200416113249.GG30641@jagdpanzerIV.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfK0IWwIBm1UhD1bC7T6kfB06YpW1YWFKTqxtE0O3553vKk9goK75YTEKwbaXzlIw8G3xPast7YxL+D/x1nHDGEqyQTn4CPGNXSNQwxIAwh9TsNfJR4Wg
+ Zxk59URlOGRFprn+PaFVOQeIVi3LS5EsulEEM6DgZKZdygdb9xfDHz5VjvH9y8X+gNyw/8HaILe7yKe0NaFEmEJCmrXp2cMqdA+iyJEJ6kfkviT0LhGVBmwi
+ F6T+KsQKFpn2g8pofyZHWAPiFoGHvLh7b4koEjcZhPke/QEiRS7z3XONkE83q1Um/T6j954mmaabHAGNCLCDYSETZefODWa1SeEFsCVakhg=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +static int configure_call(struct objtool_file *file, struct instruction *insn)
-> +{
-> +	unsigned long dest_off;
-> +
-> +	dest_off = insn->offset + insn->len + insn->immediate;
-> +	insn->call_dest = find_func_by_offset(insn->sec, dest_off);
-> +	if (!insn->call_dest)
-> +		insn->call_dest = find_symbol_by_offset(insn->sec, dest_off);
-> +
-> +	if (insn->call_dest) {
-> +		/* regular call */
-> +		if (insn->func && insn->call_dest->type != STT_FUNC) {
-> +			WARN_FUNC("unsupported call to non-function",
-> +				  insn->sec, insn->offset);
-> +			return -1;
-> +		}
-> +		return 0;
-> +	}
-> +
-> +	/* intra-function call */
-> +	if (!insn->intra_function_call)
-> +		WARN_FUNC("intra-function call", insn->sec, insn->offset);
+On 16/04/2020 13:32, Sergey Senozhatsky wrote:
+> On (20/04/16 10:53), Hans Verkuil wrote:
+> [..]
+>>> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+>>> @@ -2869,6 +2869,9 @@ EXPORT_SYMBOL(v4l2_ctrl_add_handler);
+>>>  
+>>>  bool v4l2_ctrl_radio_filter(const struct v4l2_ctrl *ctrl)
+>>>  {
+>>> +	if (WARN_ON(!ctrl))
+>>> +		return false;
+>>> +
+>>>  	if (V4L2_CTRL_ID2WHICH(ctrl->id) == V4L2_CTRL_CLASS_FM_TX)
+>>>  		return true;
+>>>  	if (V4L2_CTRL_ID2WHICH(ctrl->id) == V4L2_CTRL_CLASS_FM_RX)
+>>> @@ -3794,7 +3797,9 @@ s32 v4l2_ctrl_g_ctrl(struct v4l2_ctrl *ctrl)
+>>>  	struct v4l2_ext_control c;
+>>>  
+>>>  	/* It's a driver bug if this happens. */
+>>> -	WARN_ON(!ctrl->is_int);
+>>> +	if (WARN_ON(!ctrl || !ctrl->is_int))
+>>> +		return -EINVAL;
+>>
+>> Just return 0 here. The return value is the control's value, not an error code.
+>> So all you can do here is return 0 in the absence of anything better.
+> 
+> OK.
+> 
+>>> +
+>>>  	c.value = 0;
+>>>  	get_ctrl(ctrl, &c);
+>>>  	return c.value;
+>>> @@ -4212,6 +4217,9 @@ EXPORT_SYMBOL(v4l2_s_ctrl);
+>>>  
+>>>  int __v4l2_ctrl_s_ctrl(struct v4l2_ctrl *ctrl, s32 val)
+>>>  {
+>>> +	if (!ctrl)
+>>
+>> Change this to 'if (WARN_ON(!ctrl))'
+>>
+>> I don't think NULL pointers should be silently ignored: it really
+>> indicates a driver bug. It it certainly a good idea to WARN instead.
+> 
+> Should WARN_ON() be only in unlocked versions of ctrl API? It probably
+> would make sense to add WARNs to both - e.g. to v4l2_ctrl_s_ctrl() and
 
-"unsupported intra-function call" ?
+Yes, it should be done for both.
 
-Miroslav
+> to __v4l2_ctrl_s_ctrl(). By the way, why don't locked and unlocked
+> versions live together in v4l2-ctrls.c file? Any reason for, e.g.,
+> v4l2_ctrl_s_ctrl() to be in header and __v4l2_ctrl_s_ctrl() to be C-file?
+
+The v4l2_ctrl_s_ctrl() work fine as a static inline (only compiled if
+they are actually used). But with an additional 'if (WARN_ON(!ctrl))'
+it becomes a bit questionable. I would not be opposed if these static
+inlines are now moved into the source code.
+
+Regards,
+
+	Hans
+
+> 
+>> The same is true for the functions below.
+> 
+> OK.
+> 
+> 	-ss
+> 
+
