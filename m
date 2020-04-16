@@ -5,55 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A61AAC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:32:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E30C1C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:32:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E4C8214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:32:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1D7F214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:32:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587051128;
-	bh=5tu6jgjQORBsXTyfqgjJ3eMKXV2UrGsH132oHEvwEcc=;
+	s=default; t=1587051132;
+	bh=OGZkcncoHPVJmL7cRIy9th8i3wkYCksTTNGUQW77P4g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PVO2fdiTthNhEfVivggRXBjB8cgXcAJxQpq9ltA8bVXx5t2Uguu68HFpEB2Cozla8
-	 S3qHGQ6OBz4WH6zTZITg2XqRD18RP6KZxF/A0s4w6yPvZEAZA3xCoiT7E6rImjBqGp
-	 f102ekwMEUZ1cuujIH9coWsadcBxqpkEI3yBX1pU=
+	b=oehEa2axUoykPJd9AF983/ktd5/AR2ZVNyRktGCTXxKQAHw0YXceL53c1Eli4TCBS
+	 X2Z1fNpSK2oUxkX4wksKA0fDUzUftUlhJPRG+iGXb6RGqyRC+/8+p2cB9LGFrtVtDz
+	 fwDZe3rI1kwVDFLiiF8G+LxEBXqnkbuiC3+MI6Lg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410397AbgDPPcF (ORCPT
+        id S2410422AbgDPPcK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:32:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55680 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:32:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441538AbgDPNmh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:42:37 -0400
+        id S2441495AbgDPNmd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:42:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAEBA2076D;
-        Thu, 16 Apr 2020 13:42:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 041CF214D8;
+        Thu, 16 Apr 2020 13:42:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044557;
-        bh=5tu6jgjQORBsXTyfqgjJ3eMKXV2UrGsH132oHEvwEcc=;
+        s=default; t=1587044552;
+        bh=OGZkcncoHPVJmL7cRIy9th8i3wkYCksTTNGUQW77P4g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fovl8ECzJJmB98/VgMt4lrAiUYzEgGDAgGNwv4nx1UgKPSMVKcMLUjcPNCSZ1Bnh9
-         DqSkm0KnsNg8+ZPMRW3ULgq7Ksc/MK6H3GgJ7YSl9OF7cB7nwojcwVQzXbWpWb8MVb
-         TEMPbJM2EGIv2uEr6M1ZdaZ8CGtZl0dlmYJvbjPw=
+        b=1oeV22Iik909cdMJcu6fBvKrD7Hja1P4heeh831+593Jko0EQaBEKIU3Vu2AfGhy4
+         7OXI9ND3QlKtD9gf2N6ZYi7Z2Q5KiXGNNt6gcFC1+xKXeNYIrRNMt/tQJPGEsm69sF
+         0hgnp+qkVNbZ5FcWJuPxSo+4VzOagUhnFcy85sJ4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ondrej Jirman <megous@megous.com>,
-        Maxime Ripard <maxime@cerno.tech>,
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 001/232] ARM: dts: sun8i-a83t-tbs-a711: HM5065 doesnt like such a high voltage
-Date:   Thu, 16 Apr 2020 15:21:35 +0200
-Message-Id: <20200416131316.814283255@linuxfoundation.org>
+Subject: [PATCH 5.5 255/257] powerpc/kasan: Fix kasan_remap_early_shadow_ro()
+Date:   Thu, 16 Apr 2020 15:25:06 +0200
+Message-Id: <20200416131357.383473013@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
-References: <20200416131316.640996080@linuxfoundation.org>
+In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
+References: <20200416131325.891903893@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,34 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ondrej Jirman <megous@megous.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-[ Upstream commit a40550952c000667b20082d58077bc647da6c890 ]
+[ Upstream commit af92bad615be75c6c0d1b1c5b48178360250a187 ]
 
-Lowering the voltage solves the quick image degradation over time
-(minutes), that was probably caused by overheating.
+At the moment kasan_remap_early_shadow_ro() does nothing, because
+k_end is 0 and k_cur < 0 is always true.
 
-Signed-off-by: Ondrej Jirman <megous@megous.com>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Change the test to k_cur != k_end, as done in
+kasan_init_shadow_page_tables()
+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Fixes: cbd18991e24f ("powerpc/mm: Fix an Oops in kasan_mmu_init()")
+Cc: stable@vger.kernel.org
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/4e7b56865e01569058914c991143f5961b5d4719.1583507333.git.christophe.leroy@c-s.fr
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/powerpc/mm/kasan/kasan_init_32.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-index 397140454132f..6bf93e5ed6817 100644
---- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-+++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-@@ -358,8 +358,8 @@
- };
+diff --git a/arch/powerpc/mm/kasan/kasan_init_32.c b/arch/powerpc/mm/kasan/kasan_init_32.c
+index 0e6ed4413eeac..1cfe57b51d7e3 100644
+--- a/arch/powerpc/mm/kasan/kasan_init_32.c
++++ b/arch/powerpc/mm/kasan/kasan_init_32.c
+@@ -117,7 +117,7 @@ static void __init kasan_remap_early_shadow_ro(void)
  
- &reg_dldo3 {
--	regulator-min-microvolt = <2800000>;
--	regulator-max-microvolt = <2800000>;
-+	regulator-min-microvolt = <1800000>;
-+	regulator-max-microvolt = <1800000>;
- 	regulator-name = "vdd-csi";
- };
+ 	kasan_populate_pte(kasan_early_shadow_pte, prot);
+ 
+-	for (k_cur = k_start & PAGE_MASK; k_cur < k_end; k_cur += PAGE_SIZE) {
++	for (k_cur = k_start & PAGE_MASK; k_cur != k_end; k_cur += PAGE_SIZE) {
+ 		pmd_t *pmd = pmd_offset(pud_offset(pgd_offset_k(k_cur), k_cur), k_cur);
+ 		pte_t *ptep = pte_offset_kernel(pmd, k_cur);
  
 -- 
 2.20.1
