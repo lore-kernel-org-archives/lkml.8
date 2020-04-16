@@ -7,54 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C61C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4061C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:31:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1663821D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:31:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A465321D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:31:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587047501;
-	bh=SJKfbcTMFH18rnumuVrFY/CSI7v7IEsH07v35ULM5S0=;
+	s=default; t=1587047504;
+	bh=LoTfbwCSaBF2QyTddDg0v6TEKT+rRRwgXkOpkMtXQUQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AycFPcVjgu1nLHl7GxIg2fuwyCTzEI+tFNr6V/o3B5OJ0xVp+M1DvEqK1yTRk3bZS
-	 j5qH+xZQsVNqeaxQF0j2CB0dV8u4ZXVt1PrEtUP1kegjv15J8wkN8EaIzhVN1VJgyl
-	 K6llx0ZdRuiV4uwGwcMQ3OAB1scgxQm3IYQJIBdA=
+	b=RGHGIokjYWICB+uXRkkWVrbDshPQrA7c7lTtipQqWZa02HpUekyxkiZjJjkDdoZbT
+	 c1lIEIknj8zoEymsJAlga5rYX3zIFcQjMnaxaqqBWhvXo9TxXUdX2r+tDd1oEtIIAT
+	 U917Ndvp08YBCYXoV4B2VUCVDQNVYjfroVjTHjmY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409526AbgDPObk (ORCPT
+        id S2388314AbgDPObn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:31:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49728 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:31:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409617AbgDPOCQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:02:16 -0400
+        id S2409631AbgDPOCT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:02:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF8432078B;
-        Thu, 16 Apr 2020 14:02:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43E01217D8;
+        Thu, 16 Apr 2020 14:02:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045736;
-        bh=SJKfbcTMFH18rnumuVrFY/CSI7v7IEsH07v35ULM5S0=;
+        s=default; t=1587045738;
+        bh=LoTfbwCSaBF2QyTddDg0v6TEKT+rRRwgXkOpkMtXQUQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JSdVC1U/cRmqop0BQuBtPGQfjWabsp3TnC5AeLxDoczTvKT7reGU9VkWE9BKvqfUb
-         I+jnrOJ7NtjjLh1yGvcUvb0fynUQUYgW9gNN255PRlct2dvZueBkgXr9j890uiwv4R
-         /zqymyOdBvlRglL88AkxZ9xCL9qIGtdbf5HlD0Qw=
+        b=o5DGY79eq8A8W0PHLM2UWBPZHi7sd7EfK4H41UmdR7UYDhsSsDYXrDYxqeYO+Uisu
+         Id15GnGStknL8E6ouBF+EUtjx9sJvBKlt0Xm9bEJtglE3cno5vl4JFw3YL3UB3P6pq
+         GPaR2NGseYPrwe0gbeKFSuPzEmysJj7qorS3ig4g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Jeff Vander Stoep <jeffv@google.com>,
-        Ben Hutchings <benh@debian.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.6 228/254] kmod: make request_module() return an error when autoloading is disabled
-Date:   Thu, 16 Apr 2020 15:25:17 +0200
-Message-Id: <20200416131354.225618687@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver OHalloran <oohall@gmail.com>,
+        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.6 229/254] cpufreq: powernv: Fix use-after-free
+Date:   Thu, 16 Apr 2020 15:25:18 +0200
+Message-Id: <20200416131354.328403598@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -67,108 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Oliver O'Halloran <oohall@gmail.com>
 
-commit d7d27cfc5cf0766a26a8f56868c5ad5434735126 upstream.
+commit d0a72efac89d1c35ac55197895201b7b94c5e6ef upstream.
 
-Patch series "module autoloading fixes and cleanups", v5.
+The cpufreq driver has a use-after-free that we can hit if:
 
-This series fixes a bug where request_module() was reporting success to
-kernel code when module autoloading had been completely disabled via
-'echo > /proc/sys/kernel/modprobe'.
+a) There's an OCC message pending when the notifier is registered, and
+b) The cpufreq driver fails to register with the core.
 
-It also addresses the issues raised on the original thread
-(https://lkml.kernel.org/lkml/20200310223731.126894-1-ebiggers@kernel.org/T/#u)
-bydocumenting the modprobe sysctl, adding a self-test for the empty path
-case, and downgrading a user-reachable WARN_ONCE().
+When a) occurs the notifier schedules a workqueue item to handle the
+message. The backing work_struct is located on chips[].throttle and
+when b) happens we clean up by freeing the array. Once we get to
+the (now free) queued item and the kernel crashes.
 
-This patch (of 4):
-
-It's long been possible to disable kernel module autoloading completely
-(while still allowing manual module insertion) by setting
-/proc/sys/kernel/modprobe to the empty string.
-
-This can be preferable to setting it to a nonexistent file since it
-avoids the overhead of an attempted execve(), avoids potential
-deadlocks, and avoids the call to security_kernel_module_request() and
-thus on SELinux-based systems eliminates the need to write SELinux rules
-to dontaudit module_request.
-
-However, when module autoloading is disabled in this way,
-request_module() returns 0.  This is broken because callers expect 0 to
-mean that the module was successfully loaded.
-
-Apparently this was never noticed because this method of disabling
-module autoloading isn't used much, and also most callers don't use the
-return value of request_module() since it's always necessary to check
-whether the module registered its functionality or not anyway.
-
-But improperly returning 0 can indeed confuse a few callers, for example
-get_fs_type() in fs/filesystems.c where it causes a WARNING to be hit:
-
-	if (!fs && (request_module("fs-%.*s", len, name) == 0)) {
-		fs = __get_fs_type(name, len);
-		WARN_ONCE(!fs, "request_module fs-%.*s succeeded, but still no fs?\n", len, name);
-	}
-
-This is easily reproduced with:
-
-	echo > /proc/sys/kernel/modprobe
-	mount -t NONEXISTENT none /
-
-It causes:
-
-	request_module fs-NONEXISTENT succeeded, but still no fs?
-	WARNING: CPU: 1 PID: 1106 at fs/filesystems.c:275 get_fs_type+0xd6/0xf0
-	[...]
-
-This should actually use pr_warn_once() rather than WARN_ONCE(), since
-it's also user-reachable if userspace immediately unloads the module.
-Regardless, request_module() should correctly return an error when it
-fails.  So let's make it return -ENOENT, which matches the error when
-the modprobe binary doesn't exist.
-
-I've also sent patches to document and test this case.
-
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Jessica Yu <jeyu@kernel.org>
-Acked-by: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jeff Vander Stoep <jeffv@google.com>
-Cc: Ben Hutchings <benh@debian.org>
-Cc: Josh Triplett <josh@joshtriplett.org>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200310223731.126894-1-ebiggers@kernel.org
-Link: http://lkml.kernel.org/r/20200312202552.241885-1-ebiggers@kernel.org
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: c5e29ea7ac14 ("cpufreq: powernv: Fix bugs in powernv_cpufreq_{init/exit}")
+Cc: stable@vger.kernel.org # v4.6+
+Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
+Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200206062622.28235-1-oohall@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/kmod.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/cpufreq/powernv-cpufreq.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/kernel/kmod.c
-+++ b/kernel/kmod.c
-@@ -120,7 +120,7 @@ out:
-  * invoke it.
-  *
-  * If module auto-loading support is disabled then this function
-- * becomes a no-operation.
-+ * simply returns -ENOENT.
-  */
- int __request_module(bool wait, const char *fmt, ...)
+--- a/drivers/cpufreq/powernv-cpufreq.c
++++ b/drivers/cpufreq/powernv-cpufreq.c
+@@ -1080,6 +1080,12 @@ free_and_return:
+ 
+ static inline void clean_chip_info(void)
  {
-@@ -137,7 +137,7 @@ int __request_module(bool wait, const ch
- 	WARN_ON_ONCE(wait && current_is_async());
++	int i;
++
++	/* flush any pending work items */
++	if (chips)
++		for (i = 0; i < nr_chips; i++)
++			cancel_work_sync(&chips[i].throttle);
+ 	kfree(chips);
+ }
  
- 	if (!modprobe_path[0])
--		return 0;
-+		return -ENOENT;
- 
- 	va_start(args, fmt);
- 	ret = vsnprintf(module_name, MODULE_NAME_LEN, fmt, args);
 
 
