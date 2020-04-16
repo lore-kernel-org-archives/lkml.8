@@ -2,115 +2,218 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A78C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:54:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF9C6C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:54:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5A9621927
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:54:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DfWDV60h"
+	by mail.kernel.org (Postfix) with ESMTP id B29A3214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:54:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587052476;
+	bh=6JXhCfInHA54YKntjpBtOWqLh6x4QkgVAoxkrTKKLlA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=mllq0ODM3e9BykmiTYvDsysl/adlbOeBaAKtam0Ppiewx0Iuc0IymP7onQaLkzbbA
+	 II9aL8903jPwocBhsYRK1ocE144vXqF1t7Qx2qHcmsCVl74hXVC2SsZKweU0jIKFd2
+	 /9inucZejObNzTQuomAEmJ/fNjT0BagyDWGqp4fI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506851AbgDPPy0 (ORCPT
+        id S2506853AbgDPPyd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:54:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50334 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2506841AbgDPPyW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 11:54:22 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED225C061A0C;
-        Thu, 16 Apr 2020 08:54:21 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id da9so2246783qvb.3;
-        Thu, 16 Apr 2020 08:54:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=06igGIcA/H4ph8vvfbTG6rW0CuRmF7Et2FUQ0fy+gEM=;
-        b=DfWDV60hyZMIyGS0zblXGs2jigtxTirnH7OvPNmvDmU4eEssi/kaFlj1hOPIe0ZPxv
-         aeWqJLp6b0S7hOwRXOF5zvji5IWS4j+CCvmwXkncfxw0EhoqZKAIH0RWANCrCdT3XNMK
-         efRpthmeCFQ5+bkJAIDv+vLjS1f6s1VoGRNsCXI6I9onRuSAwWsZwi7LpZFFHbJo1hVA
-         9FuqxDE45uhFUfwA5Qq03RqhWVP5SctfeNAcASifSHFQhT6FoifvUn/P4KKJ77CpArdt
-         PWQkmr3ZsPCjfA1+IiAVDR7Smr7utPfiZCuAwAmM4LZAThyIcqseEltkHhrUnNcFHpUE
-         E02Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=06igGIcA/H4ph8vvfbTG6rW0CuRmF7Et2FUQ0fy+gEM=;
-        b=Ub2aRgHzdBSOslk6VxvLmJZE2kOO08buq8sEZURFC7yeMz++gjKRM475PPDouUPU37
-         b5GBWOMWKB4sWklfmqDC0kwpNZgsHSZ5g9teN++JiHktbr6M68Q3oakCguQOQ7JVhmUk
-         UrpIvytBRu4XPqkuJD7fawrvc9E1W5KwTZovkSQO7m2Jj7oY0c8ON6bynN9UOVYfZis2
-         0Qfl9LmfTuMaM9rUJsaRsQ/RHEhWrlkDBhneln9HzsZTwoUWqKjNTH1lBvO0ht5Dbtwi
-         0byG6DLmr9HOcZXGlg+x17LTrDQcZFyF2d12u/jXksvLmYQBhku5wRXpJFoLcdeHH6jz
-         6YbA==
-X-Gm-Message-State: AGi0PubeMkGgvDwtl6apJZsyuNPCoFb6b+BpUWgotY8mPkv8AaOYdLcA
-        Kp/aEmdoIrIIm4j256CtiLwcY3zMS3Y=
-X-Google-Smtp-Source: APiQypKL4DlMArGAv/3DiI025InEC28GZ34i4YaFvPQLxlkkQR3N8qR9VobjJ5bgiUDD1KmgLJULgw==
-X-Received: by 2002:a0c:b790:: with SMTP id l16mr10618122qve.244.1587052461177;
-        Thu, 16 Apr 2020 08:54:21 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id y21sm14861483qka.37.2020.04.16.08.54.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2020 08:54:20 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id EDD57409A3; Thu, 16 Apr 2020 12:54:17 -0300 (-03)
-Date:   Thu, 16 Apr 2020 12:54:17 -0300
-To:     Daniel Stone <daniels@collabora.com>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Lyude Paul <lyude@redhat.com>
-Subject: Re: [PATCH 11/15] tools headers UAPI: Update tools's copy of drm.h
- headers
-Message-ID: <20200416155417.GF2650@kernel.org>
-References: <20200414164854.26026-1-acme@kernel.org>
- <20200414164854.26026-12-acme@kernel.org>
- <dc0b22308659f29d6b9e237d353ca651d34d183b.camel@collabora.com>
+        Thu, 16 Apr 2020 11:54:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40680 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2895586AbgDPNa1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:30:27 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76DDB217D8;
+        Thu, 16 Apr 2020 13:30:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587043826;
+        bh=6JXhCfInHA54YKntjpBtOWqLh6x4QkgVAoxkrTKKLlA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=DqPs5S9rTPQIIaUrIGJ5R12hbqy+zFyUtbqN7wCS1Xh+nh9Zrmf7LEnFDy53OVWaQ
+         /HzV11DaCrr/iOeN7Q5d/RbjLz/VVHc8cmX8jSB0uSy7MebZKUxcPqZS/g9tELV6Eg
+         vkHwy4Bc3cisHvdFquGO3AgHQwSHg+cQ2r3vWyo0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Liran Alon <liran.alon@oracle.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.19 079/146] KVM: nVMX: Properly handle userspace interrupt window request
+Date:   Thu, 16 Apr 2020 15:23:40 +0200
+Message-Id: <20200416131253.689478065@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
+References: <20200416131242.353444678@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dc0b22308659f29d6b9e237d353ca651d34d183b.camel@collabora.com>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Apr 14, 2020 at 05:56:59PM +0100, Daniel Stone escreveu:
-> On Tue, 2020-04-14 at 13:48 -0300, Arnaldo Carvalho de Melo wrote:
-> > Picking the changes from:
-> > 
-> >   455e00f1412f ("drm: Add getfb2 ioctl")
-> > 
-> > Silencing these perf build warnings:
-> > 
-> >   Warning: Kernel ABI header at 'tools/include/uapi/drm/drm.h'
-> > differs from latest version at 'include/uapi/drm/drm.h'
-> >   diff -u tools/include/uapi/drm/drm.h include/uapi/drm/drm.h
-> > 
-> > Now 'perf trace' and other code that might use the
-> > tools/perf/trace/beauty autogenerated tables will be able to
-> > translate
-> > this new ioctl code into a string:
-> > 
-> >   [...]
-> 
-> Acked-by: Daniel Stone <daniels@collabora.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-Thanks!
+commit a1c77abb8d93381e25a8d2df3a917388244ba776 upstream.
 
-- Arnaldo
+Return true for vmx_interrupt_allowed() if the vCPU is in L2 and L1 has
+external interrupt exiting enabled.  IRQs are never blocked in hardware
+if the CPU is in the guest (L2 from L1's perspective) when IRQs trigger
+VM-Exit.
+
+The new check percolates up to kvm_vcpu_ready_for_interrupt_injection()
+and thus vcpu_run(), and so KVM will exit to userspace if userspace has
+requested an interrupt window (to inject an IRQ into L1).
+
+Remove the @external_intr param from vmx_check_nested_events(), which is
+actually an indicator that userspace wants an interrupt window, e.g.
+it's named @req_int_win further up the stack.  Injecting a VM-Exit into
+L1 to try and bounce out to L0 userspace is all kinds of broken and is
+no longer necessary.
+
+Remove the hack in nested_vmx_vmexit() that attempted to workaround the
+breakage in vmx_check_nested_events() by only filling interrupt info if
+there's an actual interrupt pending.  The hack actually made things
+worse because it caused KVM to _never_ fill interrupt info when the
+LAPIC resides in userspace (kvm_cpu_has_interrupt() queries
+interrupt.injected, which is always cleared by prepare_vmcs12() before
+reaching the hack in nested_vmx_vmexit()).
+
+Fixes: 6550c4df7e50 ("KVM: nVMX: Fix interrupt window request with "Acknowledge interrupt on exit"")
+Cc: stable@vger.kernel.org
+Cc: Liran Alon <liran.alon@oracle.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ arch/x86/include/asm/kvm_host.h |    2 +-
+ arch/x86/kvm/vmx.c              |   27 +++++++++++----------------
+ arch/x86/kvm/x86.c              |   10 +++++-----
+ 3 files changed, 17 insertions(+), 22 deletions(-)
+
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1070,7 +1070,7 @@ struct kvm_x86_ops {
+ 	bool (*xsaves_supported)(void);
+ 	bool (*umip_emulated)(void);
+ 
+-	int (*check_nested_events)(struct kvm_vcpu *vcpu, bool external_intr);
++	int (*check_nested_events)(struct kvm_vcpu *vcpu);
+ 	void (*request_immediate_exit)(struct kvm_vcpu *vcpu);
+ 
+ 	void (*sched_in)(struct kvm_vcpu *kvm, int cpu);
+--- a/arch/x86/kvm/vmx.c
++++ b/arch/x86/kvm/vmx.c
+@@ -6954,8 +6954,13 @@ static int vmx_nmi_allowed(struct kvm_vc
+ 
+ static int vmx_interrupt_allowed(struct kvm_vcpu *vcpu)
+ {
+-	return (!to_vmx(vcpu)->nested.nested_run_pending &&
+-		vmcs_readl(GUEST_RFLAGS) & X86_EFLAGS_IF) &&
++	if (to_vmx(vcpu)->nested.nested_run_pending)
++		return false;
++
++	if (is_guest_mode(vcpu) && nested_exit_on_intr(vcpu))
++		return true;
++
++	return (vmcs_readl(GUEST_RFLAGS) & X86_EFLAGS_IF) &&
+ 		!(vmcs_read32(GUEST_INTERRUPTIBILITY_INFO) &
+ 			(GUEST_INTR_STATE_STI | GUEST_INTR_STATE_MOV_SS));
+ }
+@@ -12990,7 +12995,7 @@ static void vmcs12_save_pending_event(st
+ 	}
+ }
+ 
+-static int vmx_check_nested_events(struct kvm_vcpu *vcpu, bool external_intr)
++static int vmx_check_nested_events(struct kvm_vcpu *vcpu)
+ {
+ 	struct vcpu_vmx *vmx = to_vmx(vcpu);
+ 	unsigned long exit_qual;
+@@ -13028,8 +13033,7 @@ static int vmx_check_nested_events(struc
+ 		return 0;
+ 	}
+ 
+-	if ((kvm_cpu_has_interrupt(vcpu) || external_intr) &&
+-	    nested_exit_on_intr(vcpu)) {
++	if (kvm_cpu_has_interrupt(vcpu) && nested_exit_on_intr(vcpu)) {
+ 		if (block_nested_events)
+ 			return -EBUSY;
+ 		nested_vmx_vmexit(vcpu, EXIT_REASON_EXTERNAL_INTERRUPT, 0, 0);
+@@ -13607,17 +13611,8 @@ static void nested_vmx_vmexit(struct kvm
+ 	vcpu->arch.mp_state = KVM_MP_STATE_RUNNABLE;
+ 
+ 	if (likely(!vmx->fail)) {
+-		/*
+-		 * TODO: SDM says that with acknowledge interrupt on
+-		 * exit, bit 31 of the VM-exit interrupt information
+-		 * (valid interrupt) is always set to 1 on
+-		 * EXIT_REASON_EXTERNAL_INTERRUPT, so we shouldn't
+-		 * need kvm_cpu_has_interrupt().  See the commit
+-		 * message for details.
+-		 */
+-		if (nested_exit_intr_ack_set(vcpu) &&
+-		    exit_reason == EXIT_REASON_EXTERNAL_INTERRUPT &&
+-		    kvm_cpu_has_interrupt(vcpu)) {
++		if (exit_reason == EXIT_REASON_EXTERNAL_INTERRUPT &&
++		    nested_exit_intr_ack_set(vcpu)) {
+ 			int irq = kvm_cpu_get_interrupt(vcpu);
+ 			WARN_ON(irq < 0);
+ 			vmcs12->vm_exit_intr_info = irq |
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -7124,7 +7124,7 @@ static void update_cr8_intercept(struct
+ 	kvm_x86_ops->update_cr8_intercept(vcpu, tpr, max_irr);
+ }
+ 
+-static int inject_pending_event(struct kvm_vcpu *vcpu, bool req_int_win)
++static int inject_pending_event(struct kvm_vcpu *vcpu)
+ {
+ 	int r;
+ 
+@@ -7160,7 +7160,7 @@ static int inject_pending_event(struct k
+ 	 * from L2 to L1.
+ 	 */
+ 	if (is_guest_mode(vcpu) && kvm_x86_ops->check_nested_events) {
+-		r = kvm_x86_ops->check_nested_events(vcpu, req_int_win);
++		r = kvm_x86_ops->check_nested_events(vcpu);
+ 		if (r != 0)
+ 			return r;
+ 	}
+@@ -7210,7 +7210,7 @@ static int inject_pending_event(struct k
+ 		 * KVM_REQ_EVENT only on certain events and not unconditionally?
+ 		 */
+ 		if (is_guest_mode(vcpu) && kvm_x86_ops->check_nested_events) {
+-			r = kvm_x86_ops->check_nested_events(vcpu, req_int_win);
++			r = kvm_x86_ops->check_nested_events(vcpu);
+ 			if (r != 0)
+ 				return r;
+ 		}
+@@ -7683,7 +7683,7 @@ static int vcpu_enter_guest(struct kvm_v
+ 			goto out;
+ 		}
+ 
+-		if (inject_pending_event(vcpu, req_int_win) != 0)
++		if (inject_pending_event(vcpu) != 0)
+ 			req_immediate_exit = true;
+ 		else {
+ 			/* Enable SMI/NMI/IRQ window open exits if needed.
+@@ -7894,7 +7894,7 @@ static inline int vcpu_block(struct kvm
+ static inline bool kvm_vcpu_running(struct kvm_vcpu *vcpu)
+ {
+ 	if (is_guest_mode(vcpu) && kvm_x86_ops->check_nested_events)
+-		kvm_x86_ops->check_nested_events(vcpu, false);
++		kvm_x86_ops->check_nested_events(vcpu);
+ 
+ 	return (vcpu->arch.mp_state == KVM_MP_STATE_RUNNABLE &&
+ 		!vcpu->arch.apf.halted);
+
+
