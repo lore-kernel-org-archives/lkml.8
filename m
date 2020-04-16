@@ -2,95 +2,169 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D32C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:14:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D958C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:17:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9FAA2051A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:14:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V7ZUsQXr"
+	by mail.kernel.org (Postfix) with ESMTP id EADB521D91
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:17:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441496AbgDPKOR (ORCPT
+        id S2441519AbgDPKRN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 06:14:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53574 "EHLO
+        Thu, 16 Apr 2020 06:17:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2441467AbgDPKNq (ORCPT
+        with ESMTP id S2441482AbgDPKPo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 06:13:46 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A77D3C061A0F
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 03:13:41 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id d77so3961493wmd.3
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 03:13:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=wf1Npf9XSC73Ejyy+DvRIDVeqsXEFPd8u8XiRzEMgUA=;
-        b=V7ZUsQXrHaQgXeN9L6GIsDZcF5AXmwDSfb8Fu+bYTmu7cNylxhcGZmQO8ex3UvnUKl
-         vnTPCRJxEgE979dRUeC+LRYyVqm7tlsyBIsZXlPH89z5nI1vlM2mtJzKJSkBiKxZvhoV
-         E7B4hxkHnxkj+W7iRO4nzrzI5ZcbaehqM5QvpP4V53KA2a8e9S0WZDK2eCHDLDzcRsd7
-         eq07Moye1J6gN+zHqKk/QS4TkK03UXSt/jDvKG3Z80N202RxmyxtXh/I0T1weeGvipUl
-         PTBF1P6H91Jk7afn4eg9ncOVvJgvoXwVyMMcKtcCN6yh8Jhm+kM2aD8e7Og15Kb6Y6SH
-         HEBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=wf1Npf9XSC73Ejyy+DvRIDVeqsXEFPd8u8XiRzEMgUA=;
-        b=ZUzAL1ijhB2VsuteUxiYSrXvlSz11o9Xv14jW0l9wCmfJ4RKSl/EKts0hwS10JffSE
-         SC9r64pX/DvH/Utn+nv0xadloBmLfxvhPHOE4PwU8/VGFFff1r6aclF6sQhEPpaHHS/0
-         kZfHVIt0hqCilKHahF0q4u8qjSmEG1roLhH+jEnXGhcYdv2286gk7pCCzwNKf3+aIINx
-         STgGDDcCVRKFPSIGIsl//noaL07Ogl0dE8rGFQ6Y6kbolnBLsFnMhYRowvaCCiN9piJa
-         z95+O57kZIBX6e0s0EXiR5mQhVA/xBghXTfJLbFjD/7TUhqRMZdxj2u9DA0BhQMHtlwx
-         OpGA==
-X-Gm-Message-State: AGi0PuY3bSHlGK3N/s5kb5bAFkNrj/SekBKFPXGQJaqlrOsr/a5kLiXY
-        dilHxo1Rg+o7mtyWcDjQYN295w==
-X-Google-Smtp-Source: APiQypJXPwtuhD8dFO+JsNn5QLOU6Dyekq3TSruLoNK9phQLHnzSPcNF8U1T4kQiCuJrZMDNKiED+Q==
-X-Received: by 2002:a1c:384:: with SMTP id 126mr4165777wmd.58.1587032020316;
-        Thu, 16 Apr 2020 03:13:40 -0700 (PDT)
-Received: from dell ([95.149.164.124])
-        by smtp.gmail.com with ESMTPSA id y10sm3039407wma.5.2020.04.16.03.13.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2020 03:13:39 -0700 (PDT)
-Date:   Thu, 16 Apr 2020 11:14:39 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     andrew@lunn.ch, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] mfd: tqmx86: Fix a typo in MODULE_DESCRIPTION
-Message-ID: <20200416101439.GD2167633@dell>
-References: <20200412213047.4827-1-christophe.jaillet@wanadoo.fr>
+        Thu, 16 Apr 2020 06:15:44 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CD73C061A0C;
+        Thu, 16 Apr 2020 03:15:43 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jP1Ya-00046E-CQ; Thu, 16 Apr 2020 12:15:40 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A873C1C001F;
+        Thu, 16 Apr 2020 12:15:39 +0200 (CEST)
+Date:   Thu, 16 Apr 2020 10:15:39 -0000
+From:   "tip-bot2 for Andrei Vagin" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: timers/urgent] proc, time/namespace: Show clock symbolic names
+ in /proc/pid/timens_offsets
+Cc:     Michael Kerrisk <mtk.manpages@gmail.com>,
+        Andrei Vagin <avagin@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>, stable@vger.kernel.org,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200411154031.642557-1-avagin@gmail.com>
+References: <20200411154031.642557-1-avagin@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200412213047.4827-1-christophe.jaillet@wanadoo.fr>
+Message-ID: <158703213918.28353.5534603422697683760.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 12 Apr 2020, Christophe JAILLET wrote:
+The following commit has been merged into the timers/urgent branch of tip:
 
-> Based on the file name and code of the driver, it is likely that this
-> module is related to TQMx86 and not TQx86.
-> 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
->  drivers/mfd/tqmx86.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Commit-ID:     94d440d618467806009c8edc70b094d64e12ee5a
+Gitweb:        https://git.kernel.org/tip/94d440d618467806009c8edc70b094d64e12ee5a
+Author:        Andrei Vagin <avagin@gmail.com>
+AuthorDate:    Sat, 11 Apr 2020 08:40:31 -07:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Thu, 16 Apr 2020 12:10:54 +02:00
 
-Applied, thanks.
+proc, time/namespace: Show clock symbolic names in /proc/pid/timens_offsets
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Michael Kerrisk suggested to replace numeric clock IDs with symbolic names.
+
+Now the content of these files looks like this:
+$ cat /proc/774/timens_offsets
+monotonic      864000         0
+boottime      1728000         0
+
+For setting offsets, both representations of clocks (numeric and symbolic)
+can be used.
+
+As for compatibility, it is acceptable to change things as long as
+userspace doesn't care. The format of timens_offsets files is very new and
+there are no userspace tools yet which rely on this format.
+
+But three projects crun, util-linux and criu rely on the interface of
+setting time offsets and this is why it's required to continue supporting
+the numeric clock IDs on write.
+
+Fixes: 04a8682a71be ("fs/proc: Introduce /proc/pid/timens_offsets")
+Suggested-by: Michael Kerrisk <mtk.manpages@gmail.com>
+Signed-off-by: Andrei Vagin <avagin@gmail.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Michael Kerrisk <mtk.manpages@gmail.com>
+Acked-by: Michael Kerrisk <mtk.manpages@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Eric W. Biederman <ebiederm@xmission.com>
+Cc: Dmitry Safonov <0x7f454c46@gmail.com>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20200411154031.642557-1-avagin@gmail.com
+---
+ fs/proc/base.c          | 14 +++++++++++++-
+ kernel/time/namespace.c | 15 ++++++++++++++-
+ 2 files changed, 27 insertions(+), 2 deletions(-)
+
+diff --git a/fs/proc/base.c b/fs/proc/base.c
+index 6042b64..572898d 100644
+--- a/fs/proc/base.c
++++ b/fs/proc/base.c
+@@ -1573,6 +1573,7 @@ static ssize_t timens_offsets_write(struct file *file, const char __user *buf,
+ 	noffsets = 0;
+ 	for (pos = kbuf; pos; pos = next_line) {
+ 		struct proc_timens_offset *off = &offsets[noffsets];
++		char clock[10];
+ 		int err;
+ 
+ 		/* Find the end of line and ensure we don't look past it */
+@@ -1584,10 +1585,21 @@ static ssize_t timens_offsets_write(struct file *file, const char __user *buf,
+ 				next_line = NULL;
+ 		}
+ 
+-		err = sscanf(pos, "%u %lld %lu", &off->clockid,
++		err = sscanf(pos, "%9s %lld %lu", clock,
+ 				&off->val.tv_sec, &off->val.tv_nsec);
+ 		if (err != 3 || off->val.tv_nsec >= NSEC_PER_SEC)
+ 			goto out;
++
++		clock[sizeof(clock) - 1] = 0;
++		if (strcmp(clock, "monotonic") == 0 ||
++		    strcmp(clock, __stringify(CLOCK_MONOTONIC)) == 0)
++			off->clockid = CLOCK_MONOTONIC;
++		else if (strcmp(clock, "boottime") == 0 ||
++			 strcmp(clock, __stringify(CLOCK_BOOTTIME)) == 0)
++			off->clockid = CLOCK_BOOTTIME;
++		else
++			goto out;
++
+ 		noffsets++;
+ 		if (noffsets == ARRAY_SIZE(offsets)) {
+ 			if (next_line)
+diff --git a/kernel/time/namespace.c b/kernel/time/namespace.c
+index 3b30288..53bce34 100644
+--- a/kernel/time/namespace.c
++++ b/kernel/time/namespace.c
+@@ -338,7 +338,20 @@ static struct user_namespace *timens_owner(struct ns_common *ns)
+ 
+ static void show_offset(struct seq_file *m, int clockid, struct timespec64 *ts)
+ {
+-	seq_printf(m, "%d %lld %ld\n", clockid, ts->tv_sec, ts->tv_nsec);
++	char *clock;
++
++	switch (clockid) {
++	case CLOCK_BOOTTIME:
++		clock = "boottime";
++		break;
++	case CLOCK_MONOTONIC:
++		clock = "monotonic";
++		break;
++	default:
++		clock = "unknown";
++		break;
++	}
++	seq_printf(m, "%-10s %10lld %9ld\n", clock, ts->tv_sec, ts->tv_nsec);
+ }
+ 
+ void proc_timens_show_offsets(struct task_struct *p, struct seq_file *m)
