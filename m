@@ -2,119 +2,171 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5017DC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:49:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95B9CC352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:51:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E8C821973
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:49:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587041380;
-	bh=rQFw7uHZtK1V/T4CiIC4tQ899MpaJHNAwzqsJ4CngmU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZIZ/VRRasN4yK1aftt1k5HjN4TTABTQiwSIVM1oLx8C3H+yqALsxvn/nZ3EgAP92s
-	 ppd0Kv+wF55VvABu+T1kynCvqjODOjmQ6dof/O5/P9ZYklBOjCwQ8DDIxlqx/EfSdY
-	 Cr45GdyTPVGa+qx8c8yaWAiNiosHGQxJ+G06Z8X8=
+	by mail.kernel.org (Postfix) with ESMTP id 7DBBB21973
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:51:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2894543AbgDPMtf (ORCPT
+        id S2636296AbgDPMvi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 08:49:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50890 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2894515AbgDPMtF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 08:49:05 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92028208E4;
-        Thu, 16 Apr 2020 12:49:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587041344;
-        bh=rQFw7uHZtK1V/T4CiIC4tQ899MpaJHNAwzqsJ4CngmU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iDAIbZNBoZRv8qIU0jr4LVPMGxXIUHcViCvUwImIZjGHDArrKPy94zfX45DK0nWdh
-         N06rHaUtvoz1GIAWL2P6q90fLJ4kZEngITab5TR04rgHw1KSMnYQt6rh9xr3eW9N9d
-         iefMEwn/6Q18J3k9Um553PKsohEHW4/nn/pEU1jo=
-Date:   Thu, 16 Apr 2020 13:48:59 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        kernel-team@android.com, Michael Ellerman <mpe@ellerman.id.au>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: Re: [PATCH v3 00/12] Rework READ_ONCE() to improve codegen
-Message-ID: <20200416124858.GA32685@willie-the-truck>
-References: <20200415165218.20251-1-will@kernel.org>
- <809e006e-6641-c252-53a1-cc4479d2ca89@de.ibm.com>
+        Thu, 16 Apr 2020 08:51:38 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:39826 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2894435AbgDPMvZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 08:51:25 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: aratiu)
+        with ESMTPSA id 5340D2A00AE
+From:   Adrian Ratiu <adrian.ratiu@collabora.com>
+To:     devicetree@vger.kernel.org
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        kernel@collabora.com, Rob Herring <robh@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: [PATCH] dt-bindings: display: dw_mipi_dsi.txt: convert to yaml
+Date:   Thu, 16 Apr 2020 15:52:07 +0300
+Message-Id: <20200416125207.425271-1-adrian.ratiu@collabora.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <809e006e-6641-c252-53a1-cc4479d2ca89@de.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 02:30:36PM +0200, Christian Borntraeger wrote:
-> 
-> On 15.04.20 18:52, Will Deacon wrote:
-> > Hi everyone,
-> > 
-> > This is version three of the patches I previously posted for improving
-> > the code generation of READ_ONCE() and moving the minimum GCC version
-> > to 4.8:
-> > 
-> > RFC: https://lore.kernel.org/lkml/20200110165636.28035-1-will@kernel.org
-> > v2:  https://lore.kernel.org/lkml/20200123153341.19947-1-will@kernel.org
-> > 
-> > Although v2 was queued up by Peter in -tip, it was found to break the
-> > build for m68k and sparc32. We fixed m68k during the merge window and
-> > I've since posted patches to fix sparc32 here:
-> > 
-> >   https://lore.kernel.org/lkml/20200414214011.2699-1-will@kernel.org
-> > 
-> > This series is a refresh on top of 5.7-rc1, the main changes being:
-> > 
-> >   * Fix another issue where 'const' is assigned to non-const via
-> >     WRITE_ONCE(), this time in the tls code
-> > 
-> >   * Fix READ_ONCE_NOCHECK() abuse in arm64 checksum code
-> > 
-> >   * Added Reviewed-bys and Acks from v2
-> > 
-> > Hopefully this can be considered for 5.8, along with the sparc32 changes.
-> > 
-> > Cheers,
-> > 
-> > Will
-> > 
-> > Cc: Michael Ellerman <mpe@ellerman.id.au>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> > Cc: Segher Boessenkool <segher@kernel.crashing.org>
-> > Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-> > Cc: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> > Cc: Peter Oberparleiter <oberpar@linux.ibm.com>
-> > Cc: Masahiro Yamada <masahiroy@kernel.org>
-> > Cc: Nick Desaulniers <ndesaulniers@google.com>
-> > 
-> 
-> I gave this series a try and s390 seems to compile fine and it also seems to
-> properly compile the the ipte_unlock_siif function in arch/s390/kvm/gaccess.c
-> This function was miscompiled with gcc4.6 and the trigger for replacing
-> ACCESS_ONCE with READ_ONCE
+This converts the Synopsis MIPI DSI binding documentation to yaml and
+should be quite straightforward. I've added a missing ref clk and also
+added Mark and Rob as maintainers based on 'get_maintainer.pl' results.
 
-That's good to hear, thanks Christian!
+Cc: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org
+Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
+---
+ .../bindings/display/bridge/dw_mipi_dsi.txt   | 32 ---------
+ .../display/bridge/snps,dw-mipi-dsi.yaml      | 66 +++++++++++++++++++
+ 2 files changed, 66 insertions(+), 32 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/snps,dw-mipi-dsi.yaml
 
-Will
+diff --git a/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt b/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt
+deleted file mode 100644
+index b13adf30b8d3..000000000000
+--- a/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt
++++ /dev/null
+@@ -1,32 +0,0 @@
+-Synopsys DesignWare MIPI DSI host controller
+-============================================
+-
+-This document defines device tree properties for the Synopsys DesignWare MIPI
+-DSI host controller. It doesn't constitue a device tree binding specification
+-by itself but is meant to be referenced by platform-specific device tree
+-bindings.
+-
+-When referenced from platform device tree bindings the properties defined in
+-this document are defined as follows. The platform device tree bindings are
+-responsible for defining whether each optional property is used or not.
+-
+-- reg: Memory mapped base address and length of the DesignWare MIPI DSI
+-  host controller registers. (mandatory)
+-
+-- clocks: References to all the clocks specified in the clock-names property
+-  as specified in [1]. (mandatory)
+-
+-- clock-names:
+-  - "pclk" is the peripheral clock for either AHB and APB. (mandatory)
+-  - "px_clk" is the pixel clock for the DPI/RGB input. (optional)
+-
+-- resets: References to all the resets specified in the reset-names property
+-  as specified in [2]. (optional)
+-
+-- reset-names: string reset name, must be "apb" if used. (optional)
+-
+-- panel or bridge node: see [3]. (mandatory)
+-
+-[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+-[2] Documentation/devicetree/bindings/reset/reset.txt
+-[3] Documentation/devicetree/bindings/display/mipi-dsi-bus.txt
+diff --git a/Documentation/devicetree/bindings/display/bridge/snps,dw-mipi-dsi.yaml b/Documentation/devicetree/bindings/display/bridge/snps,dw-mipi-dsi.yaml
+new file mode 100644
+index 000000000000..0ab4125eee30
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/bridge/snps,dw-mipi-dsi.yaml
+@@ -0,0 +1,66 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/bridge/snps,dw-mipi-dsi.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Synopsys DesignWare MIPI DSI host controller
++
++maintainers:
++  - Rob Herring <robh+dt@kernel.org>
++  - Mark Rutland <mark.rutland@arm.com>
++
++description: |
++  This document defines device tree properties for the Synopsys DesignWare MIPI
++  DSI host controller. It doesn't constitue a device tree binding specification
++  by itself but is meant to be referenced by platform-specific device tree
++  bindings.
++
++  When referenced from platform device tree bindings the properties defined in
++  this document are defined as follows. The platform device tree bindings are
++  responsible for defining whether each property is required or optional.
++
++properties:
++  reg:
++    description: |
++      Memory mapped base address and length of the DesignWare MIPI DSI host
++      controller registers.
++
++  clocks:
++    description: |
++      References to all the clocks specified in the clock-names property as
++      specified in Documentation/devicetree/bindings/clock/clock-bindings.txt
++    items:
++      - description: Module clock
++      - description: DSI bus colck for either AHB and APB
++      - description: Pixel clock for the DPI/RGB input
++    minItems: 2
++    maxItems: 3
++
++  clock-names:
++    items:
++      - const: ref
++      - const: pclk
++      - const: px_clk
++    minItems: 2
++    maxItems: 3
++
++  resets:
++    description: |
++      References to all the resets specified in the reset-names property as
++      specified in Documentation/devicetree/bindings/reset/reset.txt
++
++  reset-names:
++    const: apb
++
++patternProperties:
++  "^panel@[0-3]$":
++    type: object
++    description: |
++      A node containing the panel or bridge description as documented in
++      Documentation/devicetree/bindings/display/mipi-dsi-bus.txt
++
++required:
++  - reg
++  - clocks
++  - clock-names
+-- 
+2.26.0
+
