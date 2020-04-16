@@ -2,264 +2,145 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF46C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:08:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCD01C352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:09:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 810E320787
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:08:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A189520787
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:09:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CDIbpLAX"
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="ECIiDJuA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503275AbgDPJII (ORCPT
+        id S2503325AbgDPJI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 05:08:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43096 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2503247AbgDPJGX (ORCPT
+        Thu, 16 Apr 2020 05:08:58 -0400
+Received: from mail1.bemta26.messagelabs.com ([85.158.142.1]:34844 "EHLO
+        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2503034AbgDPJGS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 05:06:23 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6092AC061A0C;
-        Thu, 16 Apr 2020 02:06:22 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id o81so3735533wmo.2;
-        Thu, 16 Apr 2020 02:06:22 -0700 (PDT)
+        Thu, 16 Apr 2020 05:06:18 -0400
+Received: from [100.113.2.32] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-1.bemta.az-a.eu-central-1.aws.symcld.net id 74/53-32015-400289E5; Thu, 16 Apr 2020 09:06:12 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrEJsWRWlGSWpSXmKPExsWSoS+Yo8usMCP
+  OYP97dYv7X48yWlzeNYfNgcnjzrU9bB6fN8kFMEWxZuYl5VcksGbcXniSpeAqe8WUo+sYGxhP
+  sHcxcnEwCixllrg7/xFzFyMnkHOMReLKOg6IxGZGid+9P9lAHBaBE8wSnfcuMII4QgLzmSQWL
+  j7CBOHcZZTo/NzODtLPJmAhMfnEAzYQW0QgUmLH15OMIDazQLnE/h/fwGqEBaIl9j58zwxREy
+  NxfNlUFgjbSuLOmXlgNouAqsS6Mw1gc3gFYiU+7O5khlh2jFHi6FGIZk4BHYn2/c+ZIA6Xlfj
+  SuJoZYpm4xK0n88HiEgICEkv2nGeGsEUlXj7+xwpRnypxsukGI0RcR+Ls9SdQtpLE3Ya3UPWy
+  Epfmd0PFfSWufTkIFdeSuHt6A1TcQmJJdyvQ0RxAtorEv0OVEOEciT3fDkOdoAZkH2GBsGUkv
+  s5eDA44CYG5LBJz5q5in8BoMAvJ2bOARjELaEqs36UPEVaUmNL9kH0WOCgEJU7OfMKygJFlFa
+  NFUlFmekZJbmJmjq6hgYGuoaGxrrGuhYVeYpVuol5qqW5yal5JUSJQUi+xvFivuDI3OSdFLy+
+  1ZBMjMOGkFDJH7GC8tva93iFGSQ4mJVHeHpkZcUJ8SfkplRmJxRnxRaU5qcWHGGU4OJQkeI3l
+  gHKCRanpqRVpmTnA5AeTluDgURLhXQ/SyltckJhbnJkOkTrFaMwx4eXcRcwcR+YuXcQsxJKXn
+  5cqJc6rCjJJAKQ0ozQPbhAsKV9ilJUS5mVkYGAQ4ilILcrNLEGVf8UozsGoJMx7URZoCk9mXg
+  ncvldApzABnRLtMB3klJJEhJRUA9PuUut5N804T5aYxH/4MPH+Gq+8OZzbGk4WZL/gqsgzOMo
+  i9f71jj9t3yx53P6lZPetu3a90jvI6YHwifxA3ZaG7v2Bx3d35M2Y7vTWasbyS7ZbRPJWCl1Y
+  MnXL9uSNO+tqD77TsxRkavdpe+rXcHL2GYfE3C3PHFiZU/fdcNnUb/z7f8r3ReZG3+uVr1X13
+  juy8XRWXOfvqU57P+zSuFf9Zt/KiYb7u5runVE7Kr2h7ELX63DNnZUChT83OTD/b9c/uC8pSJ
+  HhcrH1fp25j/8nZQdET9o2wzRR59fkyEDeKac/lzknfXZdeqq9rnbaP9Fow4J6oUnx5nN/Nmh
+  vXhq27q9T9E6hNQt7wg1r/gQqsRRnJBpqMRcVJwIAWvQ2SkUEAAA=
+X-Env-Sender: Adam.Thomson.Opensource@diasemi.com
+X-Msg-Ref: server-5.tower-223.messagelabs.com!1587027971!2339957!1
+X-Originating-IP: [104.47.17.108]
+X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.50.1; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 31367 invoked from network); 16 Apr 2020 09:06:11 -0000
+Received: from mail-db8eur05lp2108.outbound.protection.outlook.com (HELO EUR05-DB8-obe.outbound.protection.outlook.com) (104.47.17.108)
+  by server-5.tower-223.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 16 Apr 2020 09:06:11 -0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=T2dUC+pLUotlNwQY50mCjguj4gLeXSJgyMFx7fQkpTgZ/JuHMg5h3VPlZWskFD+2kLDZdEnGYkfit7K5ijfekO4kd6GHUUFDCspTPwEGCeGmqYq5yydowPauiRPsm3oBaN3+W3wnSKu2EwazAUncvMODmqe6psvDP4ErAGbOgeAmuI4sFi50yASyNFzSplHhIHLtAXNrAFcyeHcMebR1VvOnWt+nwqyikoKfq/ekz04vZpbR0cHuWE3HjiCaZSDqclbnfRcZjHloIgGl+kdVW+gCaDxeP7ekEsMDwwnXCsvJte/36aqF5twuwBafb+Y1M8KI3VZjPc5a8tzm3KAZgA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7S626BDOQgHoC4NC4xlGH4GPh/1GTf4C+us0YH2rqHM=;
+ b=SqsDVcAUYUb2Cw2y3VaIa40Gvxi5GBvyEq+H6pb7PC33oh9pyUexDFG8GXfDBbV4f5su3V3keMZ1S1QI9+YhyqTM2Y5xYY3UJf312NyvQo+VfpvuOxqDKHDBN64uoiz8vO929k5zbIEPmfTCX/esC0AVe6rgmc7USBLm5kilI3tkxV4qOJlxlJBZ9jg7VWeO50sfkmPDZVK6OibimrlBq353MKwsa+hEIEwK7db2bk+15/FKvg6Il9ghZ05Ib+RGBgVEOf2ip6vgFV5HBmBifLFG9VdN9RmuakmfzixbI6Mhmvv6bTWUgSQCI1zCeChzBoR6z9VycfwrIPRO8W0l5g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
+ dkim=pass header.d=diasemi.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=yAv2GmlpRM4DHIRBfsgxasc2IYmBEhDxXdtOBrWJ4U8=;
-        b=CDIbpLAXS1EKEN13b1kSvVLcPacISXzq1NCV1iNJQ773+hnlYxG6Is9sS4JShoc9n9
-         k3G+6a27oWeEwt1pJwSRR0lOqb7uuEEBotwWpvxkLBGK4sdBUm8VpyGwZR2F5LMIYqmk
-         jdGMEpxdJ/9JULk5sX11duK6rZAqJyG/z56EqlK13PYxHHxIL+8WRSUbU5ji/DGzNUGm
-         HOARn5L1Ub3isaoR3g2aijZ5lSKOTG9AyfvU2TfqATFGm5A0bNt42+GLwleMkWBtAL45
-         NP+kQIWlgHBldPKo/9BCkRg6xGazgJNk5fkBnBgzz39Ee28aFn0FcpL1N6kRJexGyPZ3
-         9o/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=yAv2GmlpRM4DHIRBfsgxasc2IYmBEhDxXdtOBrWJ4U8=;
-        b=nZzbtq4CDPveDMUBj3G1lX3hXqUq0j8z9TPPCkeQwyGfJVWZztEWkdSnjYExlkamxF
-         eQ+sSM5lL2hEvW/baPH104LOZX9n9p76eu3zUGFFAUC5W7BtxhzXSBhQsMal5sJxYjLB
-         GzjkEEa4hfohDaLjoMfAo9KV7nWsfRG6rHU8SAmyrg2zfBcPpKcUUKY3OCECJ3Cj4Apt
-         m5xqvIBHsYhZi+ztWJqd6zp5c8f3BDA7KXdr1qNBIHxrq6x8js2tWLbZbZFaBOUozrjz
-         Dfv6mCl0kxk8UA/PbGLbFcIk/pCARrHWrFd2ZrqBR6ibIfQ3NatT3PSK38rBEC11L0lv
-         0U5A==
-X-Gm-Message-State: AGi0PubZD+edKX12yOIwzjpRdTw45nXB2adw3tfgINY7nYbFeMsTE5+1
-        C7NHZ9oJdggnwGZayT/7vD4=
-X-Google-Smtp-Source: APiQypIT5qLrY1V6iR8ope7blS6HLhe0vatqp7eT57ABrFQv0dME7fPlM3XipHt6eXvUq16Sx0qycg==
-X-Received: by 2002:a1c:e242:: with SMTP id z63mr3963633wmg.72.1587027981096;
-        Thu, 16 Apr 2020 02:06:21 -0700 (PDT)
-Received: from Red ([2a01:cb1d:3d5:a100:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id s18sm17572177wrv.2.2020.04.16.02.06.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2020 02:06:20 -0700 (PDT)
-Date:   Thu, 16 Apr 2020 11:06:18 +0200
-From:   Corentin Labbe <clabbe.montjoie@gmail.com>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Joe Perches <joe@perches.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        David Rientjes <rientjes@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Chen-Yu Tsai <wens@csie.org>, linux-mm@kvack.org,
-        keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org
-Subject: Re: [PATCH v3 2/3] crypto: Remove unnecessary memzero_explicit()
-Message-ID: <20200416090618.GB29148@Red>
-References: <20200413211550.8307-1-longman@redhat.com>
- <20200414200214.1873-1-longman@redhat.com>
+ d=dialogsemiconductor.onmicrosoft.com;
+ s=selector1-dialogsemiconductor-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7S626BDOQgHoC4NC4xlGH4GPh/1GTf4C+us0YH2rqHM=;
+ b=ECIiDJuApN/UPypKwD1TiqwSrNjzZZX2Jz6SJW1jpMp6tvY3J06dbqTJs+rcqdt4PKyzJXhDm9XF8RMyzO3icmb/SLUsabUTraziNvCij+T11Xj8Da0cBAY1IYIbaH0Vn2VIOof16skJ6gJQ92mrfgqlvF2tPngO3fzl1fQiPqQ=
+Received: from AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:52::13)
+ by AM6PR10MB2421.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:48::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.26; Thu, 16 Apr
+ 2020 09:06:10 +0000
+Received: from AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::993f:cdb5:bb05:b01]) by AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::993f:cdb5:bb05:b01%7]) with mapi id 15.20.2900.028; Thu, 16 Apr 2020
+ 09:06:10 +0000
+From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+To:     Lee Jones <lee.jones@linaro.org>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Support Opensource <Support.Opensource@diasemi.com>
+Subject: RE: [RESEND v2 PATCH 2/2] mfd: da9063: Add support for latest DA
+ silicon revision
+Thread-Topic: [RESEND v2 PATCH 2/2] mfd: da9063: Add support for latest DA
+ silicon revision
+Thread-Index: AQHWC/EOAb3d4ssyhEOMElYvBjh5Bqh7c/2AgAAQjzA=
+Date:   Thu, 16 Apr 2020 09:06:10 +0000
+Message-ID: <AM6PR10MB22636366A37AD47ECEB30B7580D80@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
+References: <cover.1586162737.git.Adam.Thomson.Opensource@diasemi.com>
+ <f468a3c56496edf3641b41cbd7797b344c8a99dc.1586162737.git.Adam.Thomson.Opensource@diasemi.com>
+ <20200416080631.GV2167633@dell>
+In-Reply-To: <20200416080631.GV2167633@dell>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [146.200.27.209]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5206411f-7fcc-43fb-3e74-08d7e1e5680f
+x-ms-traffictypediagnostic: AM6PR10MB2421:
+x-ms-exchange-sharedmailbox-routingagent-processed: True
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM6PR10MB24215FAB3C3219593F40BA7BA7D80@AM6PR10MB2421.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 0375972289
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(366004)(396003)(136003)(39850400004)(346002)(376002)(478600001)(55016002)(81156014)(2906002)(86362001)(9686003)(8936002)(8676002)(55236004)(186003)(71200400001)(52536014)(107886003)(4326008)(6506007)(53546011)(33656002)(26005)(7696005)(76116006)(66476007)(66556008)(66446008)(64756008)(66946007)(316002)(110136005)(4744005)(5660300002)(54906003);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: diasemi.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: iG76w9t/G5lc6yX6RDN2eyq8W+mguYwld0Bx7x1f6zJ/cdFQk8a+q2Xv26lbtJTptGXnEEmRxJFDJxcZRVwYxtwL61+PykVfPsqnXDEyf5JPZ8hC5YrEVh4RNXLAxrjdY54tBoAO91KbjZiF1c0gh1J0nLsyJkQrMgWEPXaS6W+M5xi4wpuX4jTUvJmneZwoWjXy5JdtYM5yAkJNT6P6uIuCwb975QydDYkJMaHsqoHMRN0H1YH3l9NDU0PY3T742nN0e2f8K4tQ+MXuMNgqHMK7g7YIseivN1QV11FgilATuT27t9qMupqWu84GMpL8cwHCvfwBtYUmKfQAnAzMNTg0ccEmEj/3VfQeW4ZqwYyisEH3tJpqDGlzRrHRk+N8n80IJPikLkDvgrnXkq/KQ+9pk3IExzfxcZwCz5s6GUR7bmLOBCUwVHRILlsZkDsp
+x-ms-exchange-antispam-messagedata: 4GAEWna2xSZBR6xOW/OSwJxhp+ONm0WYRXcbVBPWOe4Gq2fUB+yOuYjeJ1oWn7VnEBfGqN87iW4D5p2ctbWkr/hqwGENaXNT6hyxMIcOiT74mXQaKXksUqR3IhjvggLqazOH1ba3WkrGCXfnu0tHZA==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200414200214.1873-1-longman@redhat.com>
+X-OriginatorOrg: diasemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5206411f-7fcc-43fb-3e74-08d7e1e5680f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Apr 2020 09:06:10.4804
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: wmXOXDW92Jy0c+DRYeVSPl3JQ5LOZNnbfkO8u9ycDlRxMWekzJxNAvLEgcEk6xVh14cO+xesigeXcOJhfi8hlsz+C+tB//f6bLBojKD5sUk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR10MB2421
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 04:02:14PM -0400, Waiman Long wrote:
-> Since kfree_sensitive() will do an implicit memzero_explicit(),
-> there is no need to call memzero_explicit() before it. Eliminate those
-> memzero_explicit() and simplify the call sites. For better correctness,
-> keylen is cleared if key memory allocation fails.
-> 
-> Signed-off-by: Waiman Long <longman@redhat.com>
-> ---
->  .../allwinner/sun8i-ce/sun8i-ce-cipher.c      | 23 +++++++-----------
->  .../allwinner/sun8i-ss/sun8i-ss-cipher.c      | 24 +++++++------------
->  drivers/crypto/amlogic/amlogic-gxl-cipher.c   | 14 ++++-------
->  drivers/crypto/inside-secure/safexcel_hash.c  |  3 +--
->  4 files changed, 24 insertions(+), 40 deletions(-)
-> 
-> diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
-> index aa4e8fdc2b32..a2bac10d2876 100644
-> --- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
-> +++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
-> @@ -366,10 +366,7 @@ void sun8i_ce_cipher_exit(struct crypto_tfm *tfm)
->  {
->  	struct sun8i_cipher_tfm_ctx *op = crypto_tfm_ctx(tfm);
->  
-> -	if (op->key) {
-> -		memzero_explicit(op->key, op->keylen);
-> -		kfree(op->key);
-> -	}
-> +	kfree_sensitive(op->key);
->  	crypto_free_sync_skcipher(op->fallback_tfm);
->  	pm_runtime_put_sync_suspend(op->ce->dev);
->  }
-> @@ -391,14 +388,13 @@ int sun8i_ce_aes_setkey(struct crypto_skcipher *tfm, const u8 *key,
->  		dev_dbg(ce->dev, "ERROR: Invalid keylen %u\n", keylen);
->  		return -EINVAL;
->  	}
-> -	if (op->key) {
-> -		memzero_explicit(op->key, op->keylen);
-> -		kfree(op->key);
-> -	}
-> +	kfree_sensitive(op->key);
->  	op->keylen = keylen;
->  	op->key = kmemdup(key, keylen, GFP_KERNEL | GFP_DMA);
-> -	if (!op->key)
-> +	if (unlikely(!op->key)) {
-> +		op->keylen = 0;
->  		return -ENOMEM;
-> +	}
->  
->  	crypto_sync_skcipher_clear_flags(op->fallback_tfm, CRYPTO_TFM_REQ_MASK);
->  	crypto_sync_skcipher_set_flags(op->fallback_tfm, tfm->base.crt_flags & CRYPTO_TFM_REQ_MASK);
-> @@ -416,14 +412,13 @@ int sun8i_ce_des3_setkey(struct crypto_skcipher *tfm, const u8 *key,
->  	if (err)
->  		return err;
->  
-> -	if (op->key) {
-> -		memzero_explicit(op->key, op->keylen);
-> -		kfree(op->key);
-> -	}
-> +	kfree_sensitive(op->key);
->  	op->keylen = keylen;
->  	op->key = kmemdup(key, keylen, GFP_KERNEL | GFP_DMA);
-> -	if (!op->key)
-> +	if (unlikely(!op->key)) {
-> +		op->keylen = 0;
->  		return -ENOMEM;
-> +	}
->  
->  	crypto_sync_skcipher_clear_flags(op->fallback_tfm, CRYPTO_TFM_REQ_MASK);
->  	crypto_sync_skcipher_set_flags(op->fallback_tfm, tfm->base.crt_flags & CRYPTO_TFM_REQ_MASK);
-> diff --git a/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-cipher.c b/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-cipher.c
-> index 5246ef4f5430..a24d567a6c36 100644
-> --- a/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-cipher.c
-> +++ b/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-cipher.c
-> @@ -249,7 +249,6 @@ static int sun8i_ss_cipher(struct skcipher_request *areq)
->  			offset = areq->cryptlen - ivsize;
->  			if (rctx->op_dir & SS_DECRYPTION) {
->  				memcpy(areq->iv, backup_iv, ivsize);
-> -				memzero_explicit(backup_iv, ivsize);
->  				kfree_sensitive(backup_iv);
->  			} else {
->  				scatterwalk_map_and_copy(areq->iv, areq->dst, offset,
-> @@ -367,10 +366,7 @@ void sun8i_ss_cipher_exit(struct crypto_tfm *tfm)
->  {
->  	struct sun8i_cipher_tfm_ctx *op = crypto_tfm_ctx(tfm);
->  
-> -	if (op->key) {
-> -		memzero_explicit(op->key, op->keylen);
-> -		kfree(op->key);
-> -	}
-> +	kfree_sensitive(op->key);
->  	crypto_free_sync_skcipher(op->fallback_tfm);
->  	pm_runtime_put_sync(op->ss->dev);
->  }
-> @@ -392,14 +388,13 @@ int sun8i_ss_aes_setkey(struct crypto_skcipher *tfm, const u8 *key,
->  		dev_dbg(ss->dev, "ERROR: Invalid keylen %u\n", keylen);
->  		return -EINVAL;
->  	}
-> -	if (op->key) {
-> -		memzero_explicit(op->key, op->keylen);
-> -		kfree(op->key);
-> -	}
-> +	kfree_sensitive(op->key);
->  	op->keylen = keylen;
->  	op->key = kmemdup(key, keylen, GFP_KERNEL | GFP_DMA);
-> -	if (!op->key)
-> +	if (unlikely(!op->key))
-> +		op->keylen = 0;
->  		return -ENOMEM;
-> +	}
->  
->  	crypto_sync_skcipher_clear_flags(op->fallback_tfm, CRYPTO_TFM_REQ_MASK);
->  	crypto_sync_skcipher_set_flags(op->fallback_tfm, tfm->base.crt_flags & CRYPTO_TFM_REQ_MASK);
-> @@ -418,14 +413,13 @@ int sun8i_ss_des3_setkey(struct crypto_skcipher *tfm, const u8 *key,
->  		return -EINVAL;
->  	}
->  
-> -	if (op->key) {
-> -		memzero_explicit(op->key, op->keylen);
-> -		kfree(op->key);
-> -	}
-> +	kfree_sensitive(op->key);
->  	op->keylen = keylen;
->  	op->key = kmemdup(key, keylen, GFP_KERNEL | GFP_DMA);
-> -	if (!op->key)
-> +	if (unlikely(!op->key))
-> +		op->keylen = 0;
->  		return -ENOMEM;
-> +	}
->  
->  	crypto_sync_skcipher_clear_flags(op->fallback_tfm, CRYPTO_TFM_REQ_MASK);
->  	crypto_sync_skcipher_set_flags(op->fallback_tfm, tfm->base.crt_flags & CRYPTO_TFM_REQ_MASK);
-> diff --git a/drivers/crypto/amlogic/amlogic-gxl-cipher.c b/drivers/crypto/amlogic/amlogic-gxl-cipher.c
-> index fd1269900d67..5312bad7534e 100644
-> --- a/drivers/crypto/amlogic/amlogic-gxl-cipher.c
-> +++ b/drivers/crypto/amlogic/amlogic-gxl-cipher.c
-> @@ -341,10 +341,7 @@ void meson_cipher_exit(struct crypto_tfm *tfm)
->  {
->  	struct meson_cipher_tfm_ctx *op = crypto_tfm_ctx(tfm);
->  
-> -	if (op->key) {
-> -		memzero_explicit(op->key, op->keylen);
-> -		kfree(op->key);
-> -	}
-> +	kfree_sensitive(op->key);
->  	crypto_free_sync_skcipher(op->fallback_tfm);
->  }
->  
-> @@ -368,14 +365,13 @@ int meson_aes_setkey(struct crypto_skcipher *tfm, const u8 *key,
->  		dev_dbg(mc->dev, "ERROR: Invalid keylen %u\n", keylen);
->  		return -EINVAL;
->  	}
-> -	if (op->key) {
-> -		memzero_explicit(op->key, op->keylen);
-> -		kfree(op->key);
-> -	}
-> +	kfree_sensitive(op->key);
->  	op->keylen = keylen;
->  	op->key = kmemdup(key, keylen, GFP_KERNEL | GFP_DMA);
-> -	if (!op->key)
-> +	if (unlikely(!op->key))
-> +		op->keylen = 0;
->  		return -ENOMEM;
-> +	}
->  
->  	return crypto_sync_skcipher_setkey(op->fallback_tfm, key, keylen);
->  }
-
-For sun8i-ss/sun8i-ce
-Acked-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-For amlogic
-Acked-by: Corentin Labbe <clabbe@baylibre.com>
-
-Thanks
+T24gMTYgQXByaWwgMjAyMCAwOTowNywgTGVlIEpvbmVzIHdyb3RlOg0KDQo+IE9uIE1vbiwgMDYg
+QXByIDIwMjAsIEFkYW0gVGhvbXNvbiB3cm90ZToNCj4gDQo+ID4gVGhpcyB1cGRhdGUgYWRkcyBu
+ZXcgcmVnbWFwIHRhYmxlcyB0byBzdXBwb3J0IHRoZSBsYXRlc3QgREEgc2lsaWNvbg0KPiA+IHdo
+aWNoIHdpbGwgYXV0b21hdGljYWxseSBiZSBzZWxlY3RlZCBiYXNlZCBvbiB0aGUgY2hpcCBhbmQg
+dmFyaWFudA0KPiA+IGluZm9ybWF0aW9uIHJlYWQgZnJvbSB0aGUgZGV2aWNlLg0KPiA+DQo+ID4g
+U2lnbmVkLW9mZi1ieTogQWRhbSBUaG9tc29uIDxBZGFtLlRob21zb24uT3BlbnNvdXJjZUBkaWFz
+ZW1pLmNvbT4NCj4gPiBBY2tlZC1mb3ItTUZELWJ5OiBMZWUgSm9uZXMgPGxlZS5qb25lc0BsaW5h
+cm8ub3JnPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL21mZC9kYTkwNjMtaTJjLmMgICAgICAgIHwg
+OTENCj4gKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0tLS0NCj4gPiAgaW5j
+bHVkZS9saW51eC9tZmQvZGE5MDYzL2NvcmUuaCB8ICAxICsNCj4gPiAgMiBmaWxlcyBjaGFuZ2Vk
+LCA4MiBpbnNlcnRpb25zKCspLCAxMCBkZWxldGlvbnMoLSkNCj4gDQo+IENhbiB0aGlzIHBhdGNo
+IGJlIGFwcGxpZWQgb24gaXRzIG93bj8NCg0KU2FkbHkgbm90LiBSZWxpZXMgb24gYSBuZXcgc3dp
+dGNoIHN0YXRlbWVudCBhZGRlZCBieSB0aGUgZmlyc3QgcGF0Y2guDQo=
