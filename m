@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E180C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC53EC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:29:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C1AC21927
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:29:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A456B21927
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:29:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587047387;
-	bh=lFhx4Pwgt/IIWG+kD1mKhR5l8kclKGuuGvtVWpV6au4=;
+	s=default; t=1587047393;
+	bh=NIfD1hK5pPn8ZzH1+MpzrsVPbWvO7PPVI91BpOhzswU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bdJXiliFswToIQw3PmmDWdSYNXgoDfyMxPc0oqTncC/su1G5pzkwLUj8NkowPN5n8
-	 /MxtByfkN9R6S62jGkT+dREgbCym2pR4a2U2JF97+znDbPIn8QShIhHK4Z0JxVGBO4
-	 s9xMjoNxMcJKCUgWDOHUFvkbxv7sJFtiwhCxqqGw=
+	b=dNSgVNC7FMPlti10hw5ITJKoxuWKE3yB00rekZwKRLS3HQ+fwklmSz5Fz8OYmrwfS
+	 UmdOVArAr7vqXFf4pDFS5/lrDP1mqT8oDOssH26x7cXJr4/IJn88kPfGwWXyKY7byt
+	 yQUYf8Roz6uGRzU1MIb7z+vK9N9wWY2GD5Jl/rqE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442110AbgDPO3F (ORCPT
+        id S2394248AbgDPO3r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:29:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48208 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:29:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392706AbgDPOBA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:01:00 -0400
+        id S2392753AbgDPOBR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:01:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50D7B21927;
-        Thu, 16 Apr 2020 14:00:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3EA220786;
+        Thu, 16 Apr 2020 14:01:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045659;
-        bh=lFhx4Pwgt/IIWG+kD1mKhR5l8kclKGuuGvtVWpV6au4=;
+        s=default; t=1587045677;
+        bh=NIfD1hK5pPn8ZzH1+MpzrsVPbWvO7PPVI91BpOhzswU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TKV31BRZnqpdteFzlRODg3IJaPv+GfzJRx7nhWoGVJEYQYGgfEwqrSLCCNxVNg5mD
-         1kx7XY2PLbBpGi9uub+sOjK8nScC9nONKHZfDOYUxddOrtEI2NSc+8LXOqNLGCaf+o
-         RBSDQ01bBfIswr6RqrvIj/gWka+9hCYMAg2kudPs=
+        b=ItxR51cSIIVj0kUQF8XZ4xTRTSE37IoZHdQsQjCcaTSUrzVszndAfXyfhJCsyVNOg
+         1b88j6cMRGVml9DMCqEsyk25dG+UNDMtQc5C4whcAVCuPBD1WjlSQqypl970GUYEw8
+         0iAmotmbmYQtCkrrv6O7Yhj/7oyfjb97Mc1Ya5Lw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Mueller <mimu@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: [PATCH 5.6 223/254] s390/diag: fix display of diagnose call statistics
-Date:   Thu, 16 Apr 2020 15:25:12 +0200
-Message-Id: <20200416131353.752423361@linuxfoundation.org>
+        stable@vger.kernel.org, Taeung Song <treeze.taeung@gmail.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 5.6 225/254] ftrace/kprobe: Show the maxactive number on kprobe_events
+Date:   Thu, 16 Apr 2020 15:25:14 +0200
+Message-Id: <20200416131353.946996077@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -60,36 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Mueller <mimu@linux.ibm.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-commit 6c7c851f1b666a8a455678a0b480b9162de86052 upstream.
+commit 6a13a0d7b4d1171ef9b80ad69abc37e1daa941b3 upstream.
 
-Show the full diag statistic table and not just parts of it.
+Show maxactive parameter on kprobe_events.
+This allows user to save the current configuration and
+restore it without losing maxactive parameter.
 
-The issue surfaced in a KVM guest with a number of vcpus
-defined smaller than NR_DIAG_STAT.
+Link: http://lkml.kernel.org/r/4762764a-6df7-bc93-ed60-e336146dce1f@gmail.com
+Link: http://lkml.kernel.org/r/158503528846.22706.5549974121212526020.stgit@devnote2
 
-Fixes: 1ec2772e0c3c ("s390/diag: add a statistic for diagnose calls")
 Cc: stable@vger.kernel.org
-Signed-off-by: Michael Mueller <mimu@linux.ibm.com>
-Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Fixes: 696ced4fb1d76 ("tracing/kprobes: expose maxactive for kretprobe in kprobe_events")
+Reported-by: Taeung Song <treeze.taeung@gmail.com>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/kernel/diag.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/trace/trace_kprobe.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/arch/s390/kernel/diag.c
-+++ b/arch/s390/kernel/diag.c
-@@ -84,7 +84,7 @@ static int show_diag_stat(struct seq_fil
+--- a/kernel/trace/trace_kprobe.c
++++ b/kernel/trace/trace_kprobe.c
+@@ -1078,6 +1078,8 @@ static int trace_kprobe_show(struct seq_
+ 	int i;
  
- static void *show_diag_stat_start(struct seq_file *m, loff_t *pos)
- {
--	return *pos <= nr_cpu_ids ? (void *)((unsigned long) *pos + 1) : NULL;
-+	return *pos <= NR_DIAG_STAT ? (void *)((unsigned long) *pos + 1) : NULL;
- }
+ 	seq_putc(m, trace_kprobe_is_return(tk) ? 'r' : 'p');
++	if (trace_kprobe_is_return(tk) && tk->rp.maxactive)
++		seq_printf(m, "%d", tk->rp.maxactive);
+ 	seq_printf(m, ":%s/%s", trace_probe_group_name(&tk->tp),
+ 				trace_probe_name(&tk->tp));
  
- static void *show_diag_stat_next(struct seq_file *m, void *v, loff_t *pos)
 
 
