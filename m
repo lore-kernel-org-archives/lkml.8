@@ -2,104 +2,120 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53CDDC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 17:44:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C8DAC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 17:45:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FFB12078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 17:44:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DAC1206F9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 17:45:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="d3YpuIAX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Ma9Wt4tB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393182AbgDPRoQ (ORCPT
+        id S2393825AbgDPRpE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 13:44:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39428 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2390371AbgDPRoI (ORCPT
+        Thu, 16 Apr 2020 13:45:04 -0400
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:9431 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728701AbgDPRpD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 13:44:08 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1751C061A0F
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 10:44:07 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id g16so1882260eds.1
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 10:44:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=lHUznoxru5R12GXaDmKNX8aXkplH6wFoA+QlOqPeLdI=;
-        b=d3YpuIAXek8wojwJPlX+mVEi3yrr57eFKzsLxMLgsJXoYIurH7nVZ/mjDHM2gKUNrb
-         BNl4EH9u92DBGQi5nZ3n0wyRZY0uR4VbVzZuwU64I+KyXeHKAXnv84oW6HnILOjliE/2
-         2l5wOeruQkOj98wCk5oWwrLKuQOWqQg1DEOtsearRpsE76PoOyAltDhjYcY1Uq+nGo+1
-         XlNPJp9Bc4GboEfZPwuUDRigqNmrT1fR3jQeQZNTvvoNStDZ4bQTCCqRoJ+ByeYrGgI/
-         B6DiXpJ5stBdqm0xq9RZkZvmh3Fgd9BCCdZFITb7q0eH5YXOc2AoTmfb/sKavW+V5n5X
-         /b1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=lHUznoxru5R12GXaDmKNX8aXkplH6wFoA+QlOqPeLdI=;
-        b=aa1V/UYatTJ+ssw3q5BEi2nIVtp8KM5Q8EX4/3R26G7D5LMepLr17aOLo1xWmd4ci0
-         IUEZrdnlYnA97hwvIbjW2hzW/5F3QfVyKyQb/JAHM4Ygt4Z0EGtCXVHRk6wwU7UHYY6x
-         7MAg6EWGgu0HTYvOjc31+H8yK91eyw1umcFi8J5smgDsutzuERYcZt3nNjN/UgALE51m
-         V5swxfViGxnnf03mKPy4Q68UoIimxiVPSJVYEeIjZ20M9WYfL9nvezXYNk6V40UcCti3
-         lCYMxshjrWkSG7uk3f433PCe1b3a7RW5AU/3oBanZt2DdymZ4ftmtvsLGWndWbeZ9WS7
-         ayOw==
-X-Gm-Message-State: AGi0PuaPQCKxbssCdiG5ikcsHsXHDqjZQ/GRjvm7orNST1tSbn+9RCAe
-        N4+RExC6YJscl/6+mF0I7VqgxnnzSAnk0lqkaXAgVgxTxQ==
-X-Google-Smtp-Source: APiQypJflJcsD5E5bvXwMy2efxg/kPt1RTDrCEezvZ+HNOokTDmdHJAaS9dz6ehK5wvShhDpAsPpwUKgeE0HZtOM/Kc=
-X-Received: by 2002:a05:6402:1b0b:: with SMTP id by11mr12141670edb.269.1587059046433;
- Thu, 16 Apr 2020 10:44:06 -0700 (PDT)
+        Thu, 16 Apr 2020 13:45:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1587059101; x=1618595101;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=5ZWBmVoYMO/hCFi0Ml2DiGaGCI33pC6mAPMVtPWs/Mw=;
+  b=Ma9Wt4tBIlioUm6kmKOHCEZrIlc3P1pCTzkv1GYe65NRYjz//bMwapRG
+   NjzikHI1UKfT6eZ8fidbFVWD5hWx5QGgvaziBmwi64Z01EoHazfPpCK1U
+   7ZQ6dWf2O+APg8uB9LYAZ/sQ80XfKtdfaIvKuwdCKsyKi3vkop+hoGdFG
+   GT3ZaBO9yH+OFy4kgOCYtnjkEK87krMzeiIMSeYX3lu7LFTYwaHgvClFR
+   ZoMYQusvXX0yfuUwUIQVnrVYYxS5ovi2aPQ3h5WVGLDvFEWpHUOl/B61A
+   PxrBtpwaa28FOxjBpiCdEI9diIQmqepdOWfBrODsAer+iKJFBqjzPJXjz
+   w==;
+IronPort-SDR: PtSZ4I31iksvGuzc9xhP9LVWGcyCXG8fRlBsa6MUe7f0kTawT44YjJW/Ol87YLQhSd/TWC06CN
+ vY3kUgO7yvYkMZdIj+THMSmt5tNVA09qVx/ltYeBsCpReLtfGehSmxuqAEQCuXp+3ajKkuhYLg
+ Aa6DHA/Ln42W8mtSjfNspxx1fMguUeZWpgI9znGdV4MVvQd3kWPobVaHh3rHewD3ersvdUVH8z
+ /7ym+dIl2VSnL1J7zsSvMomtoTVyGUY0+R1f3eBBjww1K6IxRNwQ/tA0STASxoi4fWAK+GT6rC
+ 7gU=
+X-IronPort-AV: E=Sophos;i="5.72,391,1580799600"; 
+   d="scan'208";a="9428364"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 16 Apr 2020 10:45:00 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 16 Apr 2020 10:45:00 -0700
+Received: from ness.corp.atmel.com (10.10.115.15) by chn-vm-ex04.mchp-main.com
+ (10.10.85.152) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Thu, 16 Apr 2020 10:44:55 -0700
+From:   <nicolas.ferre@microchip.com>
+To:     <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
+        "Claudiu Beznea" <claudiu.beznea@microchip.com>,
+        <harini.katakam@xilinx.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        <pthombar@cadence.com>, <sergio.prado@e-labworks.com>,
+        <antoine.tenart@bootlin.com>, <f.fainelli@gmail.com>,
+        <linux@armlinux.org.uk>, <andrew@lunn.ch>,
+        <michal.simek@xilinx.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>
+Subject: [PATCH 0/5] net: macb: Wake-on-Lan magic packet fixes and GEM handling
+Date:   Thu, 16 Apr 2020 19:44:27 +0200
+Message-ID: <cover.1587058078.git.nicolas.ferre@microchip.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Thu, 16 Apr 2020 13:43:55 -0400
-Message-ID: <CAHC9VhRNYDwZttwD0Pc3JctBg7puvc+UsuZG082CdPVrarQoDg@mail.gmail.com>
-Subject: [GIT PULL] SELinux fixes for v5.7 (#1)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+From: Nicolas Ferre <nicolas.ferre@microchip.com>
 
-One small SELinux fix for v5.7-rcX to ensure we cleanup properly on an
-error condition.  Please merge for the next -rcX release.
+Hi,
+Here are some of my patches in order to fix WoL magic-packet on the current
+macb driver.
+I also add, in the second part of this series the feature to GEM types of IPs.
+Please tell me if they should be separated; but the two last patches cannot go
+without the 3 fixes first ones.
 
-Thanks,
--Paul
+MACB and GEM code must co-exist and as they don't share exactly the same
+register layout, I had to specialize a bit the suspend/resume paths and plug a
+specific IRQ handler in order to avoid overloading the "normal" IRQ hot path.
 
---
-The following changes since commit c753924b628551564b6eea3c9896e4a95aa25ed9:
+The use of dumb buffers for RX that Harini implemented in [1] might
+need to be considered for a follow-up patch series in order to address
+lower-power modes on some of the platforms.
+For instance, I didn't have to implement dumb buffers for some of the simpler
+ARM9 platforms using MACB+FIFO types of controllers.
 
- selinux: clean up indentation issue with assignment statement
-   (2020-03-30 19:57:07 -0400)
+Please give feedback. Best regards,
+  Nicolas
 
-are available in the Git repository at:
+[1]:
+https://github.com/Xilinx/linux-xlnx/commit/e9648006e8d9132db2594e50e700af362b3c9226#diff-41909d180431659ccc1229aa30fd4e5a
+https://github.com/Xilinx/linux-xlnx/commit/60a21c686f7e4e50489ae04b9bb1980b145e52ef
 
- git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/selinux.git
-   tags/selinux-pr-20200416
 
-for you to fetch changes up to af15f14c8cfcee515f4e9078889045ad63efefe3:
+Nicolas Ferre (5):
+  net: macb: fix wakeup test in runtime suspend/resume routines
+  net: macb: mark device wake capable when "magic-packet" property
+    present
+  net: macb: fix macb_get/set_wol() when moving to phylink
+  net: macb: WoL support for GEM type of Ethernet controller
+  net: macb: Add WoL interrupt support for MACB type of Ethernet
+    controller
 
- selinux: free str on error in str_read() (2020-04-15 17:23:16 -0400)
-
-----------------------------------------------------------------
-selinux/stable-5.7 PR 20200416
-
-----------------------------------------------------------------
-Ondrej Mosnacek (1):
-     selinux: free str on error in str_read()
-
-security/selinux/ss/policydb.c | 8 ++++----
-1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/cadence/macb.h      |   3 +
+ drivers/net/ethernet/cadence/macb_main.c | 181 +++++++++++++++++++----
+ 2 files changed, 158 insertions(+), 26 deletions(-)
 
 -- 
-paul moore
-www.paul-moore.com
+2.20.1
+
