@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8F89C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E110AC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B77C214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:41:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4505214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:41:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587051688;
-	bh=fiGMzYdcKj1wMdAjWB8tpXxgYUTFGPSDkacsRCk08pA=;
+	s=default; t=1587051707;
+	bh=sPrl9R+yoAc0NrziY7jtHcAjfyMMgN98O+1GI2m295k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v9q9/7tlu1CJE0pP6BvN/FcMZWECRQvgBBZcT+n9lqT0Gz+5kS4PQqUqROQQ0+mgN
-	 KXEZeQdZ6kDB+OVY5gv42wWU9BY2JEDJvXxUODo/7xqWP1109rZT1m5b1Kvx0FAMAV
-	 aM3G9/+3JcWgoovpvaoX28v3nmI2xdNIviGryDnM=
+	b=PFrqFOET/UTjI+Jc8qZuWdUtZI9Px4xJHFd5g739V2L5XlZNUeowQWGRfpCYxT1LR
+	 11yxnffXLBtBhGdz8rpjbyWfQYFJY2bJuHsYqktiC3cxBl8siPpN7wPZ2Q4bitWss6
+	 BzZAtsDhV2E+e5E7UYF7PH1GVIaNIrr5X+HWeRLM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395511AbgDPPl1 (ORCPT
+        id S1732597AbgDPPlo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:41:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49378 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:41:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897420AbgDPNhK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:37:10 -0400
+        id S2897412AbgDPNhF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:37:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45682221F4;
-        Thu, 16 Apr 2020 13:37:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63CFF21BE5;
+        Thu, 16 Apr 2020 13:37:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044229;
-        bh=fiGMzYdcKj1wMdAjWB8tpXxgYUTFGPSDkacsRCk08pA=;
+        s=default; t=1587044224;
+        bh=sPrl9R+yoAc0NrziY7jtHcAjfyMMgN98O+1GI2m295k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dLVE9P2Ow+eJFiQjmAQSC/gZhG656HP1MxlOQ5zyNOBIjdm1944qINa64qA2GKWSB
-         w7Paoz3J7/8x8yWillvubEP2OgP7NY5fCU5xyIf18husAPZqtdvozM1ebvX9N217xk
-         IOoum/p2l8mCwHZUecIihbcCByKsJ3ilsZjltEE0=
+        b=uEK1K8LEkk3wsvxo7xZT1gDIgmmcFoc3e2LDXPeRtlKgbKtn+oldmIak3d6s3cKNy
+         ilorSkYLRYeegoZd6Vj/DUMVnUGN4QII3Ad3Q7TrsXqs2ZJx13it7Z5KQ0zub+5YyE
+         ttodI4fiR8GkmDKBt5JHChdRunAI/PzOIK09Kypc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Neeraj Upadhyay <neeraju@codeaurora.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.5 134/257] PM: sleep: wakeup: Skip wakeup_source_sysfs_remove() if device is not there
-Date:   Thu, 16 Apr 2020 15:23:05 +0200
-Message-Id: <20200416131343.183028554@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Subject: [PATCH 5.5 132/257] MIPS: OCTEON: irq: Fix potential NULL pointer dereference
+Date:   Thu, 16 Apr 2020 15:23:03 +0200
+Message-Id: <20200416131342.934826468@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -59,37 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Neeraj Upadhyay <neeraju@codeaurora.org>
+From: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-commit 87de6594dc45dbf6819f3e0ef92f9331c5a9444c upstream.
+commit 792a402c2840054533ef56279c212ef6da87d811 upstream.
 
-Skip wakeup_source_sysfs_remove() to fix a NULL pinter dereference via
-ws->dev, if the wakeup source is unregistered before registering the
-wakeup class from device_add().
+There is a potential NULL pointer dereference in case kzalloc()
+fails and returns NULL.
 
-Fixes: 2ca3d1ecb8c4 ("PM / wakeup: Register wakeup class kobj after device is added")
-Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
-Cc: 5.4+ <stable@vger.kernel.org> # 5.4+
-[ rjw: Subject & changelog, white space ]
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fix this by adding a NULL check on *cd*
+
+This bug was detected with the help of Coccinelle.
+
+Fixes: 64b139f97c01 ("MIPS: OCTEON: irq: add CIB and other fixes")
+Cc: stable@vger.kernel.org
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/base/power/wakeup.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/mips/cavium-octeon/octeon-irq.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/base/power/wakeup.c
-+++ b/drivers/base/power/wakeup.c
-@@ -241,7 +241,9 @@ void wakeup_source_unregister(struct wak
- {
- 	if (ws) {
- 		wakeup_source_remove(ws);
--		wakeup_source_sysfs_remove(ws);
-+		if (ws->dev)
-+			wakeup_source_sysfs_remove(ws);
-+
- 		wakeup_source_destroy(ws);
+--- a/arch/mips/cavium-octeon/octeon-irq.c
++++ b/arch/mips/cavium-octeon/octeon-irq.c
+@@ -2199,6 +2199,9 @@ static int octeon_irq_cib_map(struct irq
  	}
- }
+ 
+ 	cd = kzalloc(sizeof(*cd), GFP_KERNEL);
++	if (!cd)
++		return -ENOMEM;
++
+ 	cd->host_data = host_data;
+ 	cd->bit = hw;
+ 
 
 
