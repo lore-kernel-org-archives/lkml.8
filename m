@@ -2,127 +2,104 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86536C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DCFFC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:39:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B4D12063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:38:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587047935;
-	bh=vZKMLH6+87IUjMNrup5IggY1o+3zzdiZAgU3UikVZlw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i6do7xnlfYWuqSvJ1wKd89GAdN3HEA3ET3o5UiIWyMw3mUXnBhTd1rqyVVf0cXpoi
-	 68E8MXX1i89HK8J6c2wpaBd9+qOsIwI33sjTHdxtawagJU+3Ux7GEnwaLaYoyHMksX
-	 AFgptXv8dJuJ2QbXqQ+rL29+m12DirX8se+07L90=
+	by mail.kernel.org (Postfix) with ESMTP id 438D321D94
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:39:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728055AbgDPOiy (ORCPT
+        id S2392873AbgDPOjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:38:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49938 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409647AbgDPOC0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:02:26 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9761F2078B;
-        Thu, 16 Apr 2020 14:02:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045746;
-        bh=vZKMLH6+87IUjMNrup5IggY1o+3zzdiZAgU3UikVZlw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=owGHh+LpTJdhAAMlyPBDyUdeEMuuxUMF8KXFiu7emx/nYXbCY6jIbrI9PYlt3DBEY
-         Aa3JOPvRqT59vdgiKiAQ0iEQbIurD5VABX6jymoyni14a5GD09bOOtyVEheONwAZId
-         SxaR/jeUCRgUddAUFbNiC1DfMZq6Lwp4M7PRtmhI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wenyang@linux.alibaba.com>,
-        Corey Minyard <minyard@acm.org>, Arnd Bergmann <arnd@arndb.de>,
-        openipmi-developer@lists.sourceforge.net,
-        Corey Minyard <cminyard@mvista.com>
-Subject: [PATCH 5.6 232/254] ipmi: fix hung processes in __get_guid()
-Date:   Thu, 16 Apr 2020 15:25:21 +0200
-Message-Id: <20200416131354.620404362@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
-References: <20200416131325.804095985@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 16 Apr 2020 10:39:00 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:34155 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732580AbgDPOiv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:38:51 -0400
+Received: from mail-qt1-f172.google.com ([209.85.160.172]) by
+ mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MKbTo-1jfVWG3kB2-00KxGH for <linux-kernel@vger.kernel.org>; Thu, 16 Apr
+ 2020 16:38:49 +0200
+Received: by mail-qt1-f172.google.com with SMTP id w29so16128436qtv.3
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 07:38:48 -0700 (PDT)
+X-Gm-Message-State: AGi0PubxvvZNa9v1HqkW4O1DPrl4b/ItjBgYc8o2bT9OnuQt8l87x1fK
+        wuI0AGmyhIfhIQ1ClQsK6VfUkeMQxxs7sgBMnK4=
+X-Google-Smtp-Source: APiQypJqoo+1YOH8+oD0uoPKYpCZrmu3MnpzPZdEK0zTPXl6sPogVi+91etn3KKCDHnoj/lu3Amws5JqCt4BpnbxgJI=
+X-Received: by 2002:ac8:296f:: with SMTP id z44mr24605980qtz.18.1587047927805;
+ Thu, 16 Apr 2020 07:38:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <cover.1586757922.git.baolin.wang7@gmail.com> <ca403b816af38eae68ca7399640c82d0345a2296.1586757922.git.baolin.wang7@gmail.com>
+ <CAK8P3a06fed_WVmO84iod2VpY386_3J+V=A-M+W7yE57N04a8w@mail.gmail.com>
+ <CADBw62r06X6mMTx3eLY1iU5KLOK644d1vA49Kp9JXzUtm2CpCw@mail.gmail.com>
+ <CAK8P3a3jnpRDjWwAOJa1EmbMzu+vKXmG3DBzhjHtVFz8NHfP8A@mail.gmail.com> <CADBw62oNApMo_rCz1W6_tG8Z72ENjrAtHkWZ1Z4NsN0qWFctXg@mail.gmail.com>
+In-Reply-To: <CADBw62oNApMo_rCz1W6_tG8Z72ENjrAtHkWZ1Z4NsN0qWFctXg@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 16 Apr 2020 16:38:24 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a07n=5X5Cv7crAu_XCzoLA=o1wZjmO5r6=bwdGr2nHSwQ@mail.gmail.com>
+Message-ID: <CAK8P3a07n=5X5Cv7crAu_XCzoLA=o1wZjmO5r6=bwdGr2nHSwQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 3/3] soc: sprd: Add Spreadtrum special bits
+ updating support
+To:     Baolin Wang <baolin.wang7@gmail.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Lyra Zhang <zhang.lyra@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:u8MUkaFRBnn+Lh0FCWK5uE3WsHRFKrzXU/QFJKoRktJgghEzUug
+ 21Bguzy20iAF47/PfCadC8wWzQnEpwO8bKWLb1SYG5LK1y62zbRPfdQhS98MH3Fb9hZcGtZ
+ LHJtsm7tCPfNFt8VeDyafEAwxqZhsxXgCU5Jg/p1qLDi9PK8mJ+Ct4gr3MhLLUOKjAmpJ1L
+ L7iksVCsbawZadAivta7w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:kO7/9jTZSIA=:KEDcyi4N67of5W1DkUlfJS
+ 5LCkVVYTRlWDHaV/opCaKfEBcd2KB8Ke9woSarVpCzZQ5oEoOKje8Z6eQWRRPwxMjfGiO1fOJ
+ 9fdjddmJMA6CYInhyShpdFVNjCP6BCNiO7zRZCVqQGSs8eKpFc1/01WSYk0tO7g/48lgQbBQz
+ tTxMI9W1Fl4rdcjPPrC3LoyfyvknqJlgV8EaCn3KOhBKlYLpIOlgEPaQpxgsbnHGK9uF4Aw/Q
+ 8dRana6vkwTkZVQCXuki3LERksSim/LEL703PklqiZIPC8iFWosc/VWgsCHJMlh5BH7YNxRWs
+ JRSi+Myustp/xHeQ/zHnhCKJCoPlpdOlsWzeIptQLKgkkx3JJOqMVRMkWIjjEqNBdMEGWprm7
+ ljb7GfFtkqiWGSsKzjs0Fq+it7cVOgx2vibebNGo7lU0WNw7cKUOihILxzC7zisE7LaQn3ZE7
+ nBlKQCkJ/RqVlT0inYNtKlNOtk2fFC06O1ItSrT3p+jPJQRRMJaX2qxHvbxWZXRS6ydevtZNH
+ xCmBfcDifd9IXCaSgkPDm/0LhOTnI9esy6P2dpTlQE6iuOY1QCNRSAanDcyuwVNLIPJMeUP4r
+ sbcdN8qZSiCPi/Je0OQlhR5Nq4PiXD6uRxAhTF5HbD1EPVOSG3OOQ2Z3/vlfcmGUc2GemVrCc
+ kxQYBNKPQbxBxgQNBpquMPTv9PA54M/3bCNUnCUQxVMw1rjU6YoMS4QWQc1cCfKhU8EJVObrT
+ qcUwiyXRGNILDfwWUkKBffUwEq6zNjrJ5OUFcMFSPjcwFWmriflJHkDJtT/1q2uZamPkVWE4A
+ FjiX3ErNhEYTz9ZlrjTvBqrOHGeSSriGr66nNx7zkzgaerPMqY=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <wenyang@linux.alibaba.com>
+On Thu, Apr 16, 2020 at 3:49 PM Baolin Wang <baolin.wang7@gmail.com> wrote:
 
-commit 32830a0534700f86366f371b150b17f0f0d140d7 upstream.
+>
+> OK, I think adding a Spreadtrum compatible string will be an easy and
+> clear way, so what about below sample code?
+>
+> DT:
+> ap_ahb_regs: syscon@20210000 {
+>          compatible = "sprd,sc9860-syscon", "syscon";
+>          reg = <0 0x20210000 0 0x10000>;
+> };
+>
+> /* The Spreadtrum syscon need register a real physical regmap bus with
+> new bits updating method. */
+> if (of_device_is_compatible(np, "sprd,sc9860-syscon") && syscon_phy_regmap_bus)
+>        regmap = regmap_init(NULL, syscon_phy_regmap_bus, base, &syscon_config);
+> else
+>        regmap = regmap_init_mmio(NULL, base, &syscon_config);
 
-The wait_event() function is used to detect command completion.
-When send_guid_cmd() returns an error, smi_send() has not been
-called to send data. Therefore, wait_event() should not be used
-on the error path, otherwise it will cause the following warning:
+Ok, sounds good. Maybe also define another compatible string that
+is more generic than "sprd,sc9860-syscon" (but less generic than
+"syscon") so you can still identify the chip specific syscon area if
+necessary, while not having to list each future chip individually.
 
-[ 1361.588808] systemd-udevd   D    0  1501   1436 0x00000004
-[ 1361.588813]  ffff883f4b1298c0 0000000000000000 ffff883f4b188000 ffff887f7e3d9f40
-[ 1361.677952]  ffff887f64bd4280 ffffc90037297a68 ffffffff8173ca3b ffffc90000000010
-[ 1361.767077]  00ffc90037297ad0 ffff887f7e3d9f40 0000000000000286 ffff883f4b188000
-[ 1361.856199] Call Trace:
-[ 1361.885578]  [<ffffffff8173ca3b>] ? __schedule+0x23b/0x780
-[ 1361.951406]  [<ffffffff8173cfb6>] schedule+0x36/0x80
-[ 1362.010979]  [<ffffffffa071f178>] get_guid+0x118/0x150 [ipmi_msghandler]
-[ 1362.091281]  [<ffffffff810d5350>] ? prepare_to_wait_event+0x100/0x100
-[ 1362.168533]  [<ffffffffa071f755>] ipmi_register_smi+0x405/0x940 [ipmi_msghandler]
-[ 1362.258337]  [<ffffffffa0230ae9>] try_smi_init+0x529/0x950 [ipmi_si]
-[ 1362.334521]  [<ffffffffa022f350>] ? std_irq_setup+0xd0/0xd0 [ipmi_si]
-[ 1362.411701]  [<ffffffffa0232bd2>] init_ipmi_si+0x492/0x9e0 [ipmi_si]
-[ 1362.487917]  [<ffffffffa0232740>] ? ipmi_pci_probe+0x280/0x280 [ipmi_si]
-[ 1362.568219]  [<ffffffff810021a0>] do_one_initcall+0x50/0x180
-[ 1362.636109]  [<ffffffff812231b2>] ? kmem_cache_alloc_trace+0x142/0x190
-[ 1362.714330]  [<ffffffff811b2ae1>] do_init_module+0x5f/0x200
-[ 1362.781208]  [<ffffffff81123ca8>] load_module+0x1898/0x1de0
-[ 1362.848069]  [<ffffffff811202e0>] ? __symbol_put+0x60/0x60
-[ 1362.913886]  [<ffffffff8130696b>] ? security_kernel_post_read_file+0x6b/0x80
-[ 1362.998514]  [<ffffffff81124465>] SYSC_finit_module+0xe5/0x120
-[ 1363.068463]  [<ffffffff81124465>] ? SYSC_finit_module+0xe5/0x120
-[ 1363.140513]  [<ffffffff811244be>] SyS_finit_module+0xe/0x10
-[ 1363.207364]  [<ffffffff81003c04>] do_syscall_64+0x74/0x180
+Something like
 
-Fixes: 50c812b2b951 ("[PATCH] ipmi: add full sysfs support")
-Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
-Cc: Corey Minyard <minyard@acm.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: openipmi-developer@lists.sourceforge.net
-Cc: linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org # 2.6.17-
-Message-Id: <20200403090408.58745-1-wenyang@linux.alibaba.com>
-Signed-off-by: Corey Minyard <cminyard@mvista.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+compatible = "sprd,sc9860-syscon", "sprd,atomic-syscon", "syscon";
 
----
- drivers/char/ipmi/ipmi_msghandler.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Also I'd add an IS_ENABLED() check so it gets the 'else' path
+at compile-time when CONFIG_ARCH_SPRD is disabled.
 
---- a/drivers/char/ipmi/ipmi_msghandler.c
-+++ b/drivers/char/ipmi/ipmi_msghandler.c
-@@ -3188,8 +3188,8 @@ static void __get_guid(struct ipmi_smi *
- 	if (rv)
- 		/* Send failed, no GUID available. */
- 		bmc->dyn_guid_set = 0;
--
--	wait_event(intf->waitq, bmc->dyn_guid_set != 2);
-+	else
-+		wait_event(intf->waitq, bmc->dyn_guid_set != 2);
- 
- 	/* dyn_guid_set makes the guid data available. */
- 	smp_rmb();
-
-
+        Arnd
