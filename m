@@ -2,240 +2,181 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87BF4C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 02:37:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F5FC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 02:38:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56704206F9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 02:37:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE7CA2076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 02:38:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N28HWfbx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jrHbU5WL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388638AbgDPChC (ORCPT
+        id S2388889AbgDPCio (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 22:37:02 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:42894 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732153AbgDPCg5 (ORCPT
+        Wed, 15 Apr 2020 22:38:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39278 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732153AbgDPCik (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 22:36:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587004614;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=wsXQwfnrCmj0LGzc/sAnLb44iyzxNI7JAf2YStv+s3s=;
-        b=N28HWfbxAv+MKqcISec+4KFLy5SJuIvclxmrr5V2dr8rBbSCeKfKkqXR/nMxgs7GotFVlu
-        BoEGNkE/KqPpI3rhVnOErS2Znq4a//KK0pFTpyW7nSFxvn9FzPHBy6AylqzbIxHLWAKb0M
-        R6xIdJPFDaYKNJsKlhtNJ0xBHH6xxFA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-325-cHKJsk4HMgyqSWDUe5ploQ-1; Wed, 15 Apr 2020 22:36:50 -0400
-X-MC-Unique: cHKJsk4HMgyqSWDUe5ploQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9614D8024DA;
-        Thu, 16 Apr 2020 02:36:47 +0000 (UTC)
-Received: from T590 (ovpn-8-29.pek2.redhat.com [10.72.8.29])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 32C575C1D4;
-        Thu, 16 Apr 2020 02:36:33 +0000 (UTC)
-Date:   Thu, 16 Apr 2020 10:36:29 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
-        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
-        jack@suse.cz, nstange@suse.de, akpm@linux-foundation.org,
-        mhocko@suse.com, yukuai3@huawei.com, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>
-Subject: Re: [PATCH 5/5] block: revert back to synchronous request_queue
- removal
-Message-ID: <20200416023629.GC2717677@T590>
-References: <20200414041902.16769-1-mcgrof@kernel.org>
- <20200414041902.16769-6-mcgrof@kernel.org>
+        Wed, 15 Apr 2020 22:38:40 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BABADC061A0C;
+        Wed, 15 Apr 2020 19:38:38 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id 188so921226pgj.13;
+        Wed, 15 Apr 2020 19:38:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :message-id:content-transfer-encoding;
+        bh=inF2oUQWOVUn1zSzuLcDRWp19ZrU3frGNXSsTZrmfdQ=;
+        b=jrHbU5WLW/3NRzRL4tUP93CurNe3euf3u04ZSvHtx4DoKvg6BdTPCBmBNvMyBxrmZ7
+         TgU6cisZ6MbOW00sFnL3XXqhrZos/MnOzXaPFFHxANt1Lbnm9vbEaY/H69/eXJTkDffy
+         ipYXWrWZ5P1cZa1xWZhnN8U2oyc9HkCyolyDPlTsvYS1NbDcLglMyXiC04gAJ3QohUCR
+         jjhhKSZFl5DZdnIqOWAvjUvsN7l3N7G0oCbfxTH2p8/CtE0JdvlD3sOFTmXSKJceP4wx
+         +WBjX7cQkyZuAZdZmSzBG05XUhJpmhNFkrmD+CwNHb8SpwSIZ1DZTATXqT/9abQkBz88
+         tb5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:message-id:content-transfer-encoding;
+        bh=inF2oUQWOVUn1zSzuLcDRWp19ZrU3frGNXSsTZrmfdQ=;
+        b=HBQY6RygLqh0Xsz/eR3ySaemX6k9UPmfL1o5GwXkq3jaVaC743Wa2sW2PIQAxd7kjT
+         TonJHlVxA7zRWX/eyAPTTNSSy/yPk5nKvSS9jUHq/1j4QEQaZZ+BoBBzB4AkihJyG/6Z
+         Ori/6l2qIsKHxWzCKKHrnX7/w+clg0xcMsnqzto+4a4T8KB515xKF0PNv/i+peI8yNDl
+         VehmoxF+bgA33H35IB0FUsNfVV11+3OxfhHCN9TQx5I08K258OIdW6lCobzwMaWfTDUH
+         /OTiNPRdsln4bsuEO6+pDVbGTagBGdi6X6DjQfDeLM+OoIXPa3gtVKcYuG+plgBGhb5D
+         xKyA==
+X-Gm-Message-State: AGi0PubdI6IWBjFOScn6xHAKmJjH9if5+ANryksO5yJTA4/FfY9masoj
+        nKr1q/u7/7rDjrT0ysqmOjo=
+X-Google-Smtp-Source: APiQypLiACMHB4H40lzo7TjDzMxKO4UkcSYRYlY6AuEcTVgyHDfawhLANelI41IO6oDhsCuzUrA+DA==
+X-Received: by 2002:a62:7811:: with SMTP id t17mr31223582pfc.268.1587004718236;
+        Wed, 15 Apr 2020 19:38:38 -0700 (PDT)
+Received: from localhost ([203.18.28.220])
+        by smtp.gmail.com with ESMTPSA id 198sm15506729pfa.87.2020.04.15.19.38.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2020 19:38:37 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 12:38:00 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH v2 4/4] mm/vmalloc: Hugepage vmalloc mappings
+To:     Will Deacon <will@kernel.org>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org
+References: <20200413125303.423864-1-npiggin@gmail.com>
+        <20200413125303.423864-5-npiggin@gmail.com>
+        <20200415104755.GD12621@willie-the-truck>
+In-Reply-To: <20200415104755.GD12621@willie-the-truck>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200414041902.16769-6-mcgrof@kernel.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Message-Id: <1587003993.x84ylh11b2.astroid@bobo.none>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 04:19:02AM +0000, Luis Chamberlain wrote:
-> Commit dc9edc44de6c ("block: Fix a blk_exit_rl() regression") merged on
-> v4.12 moved the work behind blk_release_queue() into a workqueue after a
-> splat floated around which indicated some work on blk_release_queue()
-> could sleep in blk_exit_rl(). This splat would be possible when a driver
-> called blk_put_queue() or blk_cleanup_queue() (which calls blk_put_queue()
-> as its final call) from an atomic context.
-> 
-> blk_put_queue() decrements the refcount for the request_queue
-> kobject, and upon reaching 0 blk_release_queue() is called. Although
-> blk_exit_rl() is now removed through commit db6d9952356 ("block: remove
-> request_list code"), we reserve the right to be able to sleep within
-> blk_release_queue() context. If you see no other way and *have* be
-> in atomic context when you driver calls the last blk_put_queue()
-> you can always just increase your block device's reference count with
-> bdgrab() as this can be done in atomic context and the request_queue
-> removal would be left to upper layers later. We document this bit of
-> tribal knowledge as well now, and adjust kdoc format a bit.
-> 
-> We revert back to synchronous request_queue removal because asynchronous
-> removal creates a regression with expected userspace interaction with
-> several drivers. An example is when removing the loopback driver and
-> issues ioctl from userspace to do so, upon return and if successful one
-> expects the device to be removed. Moving to asynchronous request_queue
-> removal could have broken many scripts which relied on the removal to
-> have been completed if there was no error.
-> 
-> Using asynchronous request_queue removal however has helped us find
-> other bugs, in the future we can test what could break with this
-> arrangement by enabling CONFIG_DEBUG_KOBJECT_RELEASE.
-> 
-> Cc: Bart Van Assche <bvanassche@acm.org>
-> Cc: Omar Sandoval <osandov@fb.com>
-> Cc: Hannes Reinecke <hare@suse.com>
-> Cc: Nicolai Stange <nstange@suse.de>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> Cc: yu kuai <yukuai3@huawei.com>
-> Suggested-by: Nicolai Stange <nstange@suse.de>
-> Fixes: dc9edc44de6c ("block: Fix a blk_exit_rl() regression")
-> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
-> ---
->  block/blk-core.c       | 19 ++++++++++++++++++-
->  block/blk-sysfs.c      | 38 +++++++++++++++++---------------------
->  include/linux/blkdev.h |  2 --
->  3 files changed, 35 insertions(+), 24 deletions(-)
-> 
-> diff --git a/block/blk-core.c b/block/blk-core.c
-> index 5aaae7a1b338..8346c7c59ee6 100644
-> --- a/block/blk-core.c
-> +++ b/block/blk-core.c
-> @@ -301,6 +301,17 @@ void blk_clear_pm_only(struct request_queue *q)
->  }
->  EXPORT_SYMBOL_GPL(blk_clear_pm_only);
->  
-> +/**
-> + * blk_put_queue - decrement the request_queue refcount
-> + *
-> + * Decrements the refcount to the request_queue kobject, when this reaches
-> + * 0 we'll have blk_release_queue() called. You should avoid calling
-> + * this function in atomic context but if you really have to ensure you
-> + * first refcount the block device with bdgrab() / bdput() so that the
-> + * last decrement happens in blk_cleanup_queue().
-> + *
-> + * @q: the request_queue structure to decrement the refcount for
-> + */
->  void blk_put_queue(struct request_queue *q)
->  {
->  	kobject_put(&q->kobj);
-> @@ -328,10 +339,16 @@ EXPORT_SYMBOL_GPL(blk_set_queue_dying);
->  
->  /**
->   * blk_cleanup_queue - shutdown a request queue
-> - * @q: request queue to shutdown
->   *
->   * Mark @q DYING, drain all pending requests, mark @q DEAD, destroy and
->   * put it.  All future requests will be failed immediately with -ENODEV.
-> + *
-> + * You should not call this function in atomic context. If you need to
-> + * refcount a request_queue in atomic context, instead refcount the
-> + * block device with bdgrab() / bdput().
-> + *
-> + * @q: request queue to shutdown
-> + *
->   */
->  void blk_cleanup_queue(struct request_queue *q)
->  {
-> diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
-> index 0285d67e1e4c..859911191ebc 100644
-> --- a/block/blk-sysfs.c
-> +++ b/block/blk-sysfs.c
-> @@ -860,22 +860,27 @@ static void blk_exit_queue(struct request_queue *q)
->  	bdi_put(q->backing_dev_info);
->  }
->  
-> -
->  /**
-> - * __blk_release_queue - release a request queue
-> - * @work: pointer to the release_work member of the request queue to be released
-> + * blk_release_queue - release a request queue
-> + *
-> + * This function is called as part of the process when a block device is being
-> + * unregistered. Releasing a request queue starts with blk_cleanup_queue(),
-> + * which set the appropriate flags and then calls blk_put_queue() as the last
-> + * step. blk_put_queue() decrements the reference counter of the request queue
-> + * and once the reference counter reaches zero, this function is called to
-> + * release all allocated resources of the request queue.
->   *
-> - * Description:
-> - *     This function is called when a block device is being unregistered. The
-> - *     process of releasing a request queue starts with blk_cleanup_queue, which
-> - *     set the appropriate flags and then calls blk_put_queue, that decrements
-> - *     the reference counter of the request queue. Once the reference counter
-> - *     of the request queue reaches zero, blk_release_queue is called to release
-> - *     all allocated resources of the request queue.
-> + * This function can sleep, and so we must ensure that the very last
-> + * blk_put_queue() is never called from atomic context.
-> + *
-> + * @kobj: pointer to a kobject, who's container is a request_queue
->   */
-> -static void __blk_release_queue(struct work_struct *work)
-> +static void blk_release_queue(struct kobject *kobj)
->  {
-> -	struct request_queue *q = container_of(work, typeof(*q), release_work);
-> +	struct request_queue *q =
-> +		container_of(kobj, struct request_queue, kobj);
-> +
-> +	might_sleep();
->  
->  	if (test_bit(QUEUE_FLAG_POLL_STATS, &q->queue_flags))
->  		blk_stat_remove_callback(q, q->poll_cb);
-> @@ -905,15 +910,6 @@ static void __blk_release_queue(struct work_struct *work)
->  	call_rcu(&q->rcu_head, blk_free_queue_rcu);
->  }
->  
-> -static void blk_release_queue(struct kobject *kobj)
-> -{
-> -	struct request_queue *q =
-> -		container_of(kobj, struct request_queue, kobj);
-> -
-> -	INIT_WORK(&q->release_work, __blk_release_queue);
-> -	schedule_work(&q->release_work);
-> -}
-> -
->  static const struct sysfs_ops queue_sysfs_ops = {
->  	.show	= queue_attr_show,
->  	.store	= queue_attr_store,
-> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-> index cc43c8e6516c..81f7ddb1587e 100644
-> --- a/include/linux/blkdev.h
-> +++ b/include/linux/blkdev.h
-> @@ -582,8 +582,6 @@ struct request_queue {
->  
->  	size_t			cmd_size;
->  
-> -	struct work_struct	release_work;
-> -
->  #define BLK_MAX_WRITE_HINTS	5
->  	u64			write_hints[BLK_MAX_WRITE_HINTS];
->  };
-> -- 
-> 2.25.1
-> 
+Excerpts from Will Deacon's message of April 15, 2020 8:47 pm:
+> Hi Nick,
+>=20
+> On Mon, Apr 13, 2020 at 10:53:03PM +1000, Nicholas Piggin wrote:
+>> For platforms that define HAVE_ARCH_HUGE_VMAP and support PMD vmap mappi=
+ngs,
+>> have vmalloc attempt to allocate PMD-sized pages first, before falling b=
+ack
+>> to small pages. Allocations which use something other than PAGE_KERNEL
+>> protections are not permitted to use huge pages yet, not all callers exp=
+ect
+>> this (e.g., module allocations vs strict module rwx).
+>>=20
+>> This gives a 6x reduction in dTLB misses for a `git diff` (of linux), fr=
+om
+>> 45600 to 6500 and a 2.2% reduction in cycles on a 2-node POWER9.
+>=20
+> I wonder if it's worth extending vmap() to handle higher order pages in
+> a similar way? That might be helpful for tracing PMUs such as Arm SPE,
+> where the CPU streams tracing data out to a virtually addressed buffer
+> (see rb_alloc_aux_page()).
 
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Yeah it becomes pretty trivial to do that with VM_HUGE_PAGES after
+this patch, I have something to do it but no callers ready yet, if
+you have an easy one we can add it.
+
+>> This can result in more internal fragmentation and memory overhead for a
+>> given allocation. It can also cause greater NUMA unbalance on hashdist
+>> allocations.
+>>=20
+>> There may be other callers that expect small pages under vmalloc but use
+>> PAGE_KERNEL, I'm not sure if it's feasible to catch them all. An
+>> alternative would be a new function or flag which enables large mappings=
+,
+>> and use that in callers.
+>>=20
+>> Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+>> ---
+>>  include/linux/vmalloc.h |   2 +
+>>  mm/vmalloc.c            | 135 +++++++++++++++++++++++++++++-----------
+>>  2 files changed, 102 insertions(+), 35 deletions(-)
+>>=20
+>> diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
+>> index 291313a7e663..853b82eac192 100644
+>> --- a/include/linux/vmalloc.h
+>> +++ b/include/linux/vmalloc.h
+>> @@ -24,6 +24,7 @@ struct notifier_block;		/* in notifier.h */
+>>  #define VM_UNINITIALIZED	0x00000020	/* vm_struct is not fully initializ=
+ed */
+>>  #define VM_NO_GUARD		0x00000040      /* don't add guard page */
+>>  #define VM_KASAN		0x00000080      /* has allocated kasan shadow memory =
+*/
+>> +#define VM_HUGE_PAGES		0x00000100	/* may use huge pages */
+>=20
+> Please can you add a check for this in the arm64 change_memory_common()
+> code? Other architectures might need something similar, but we need to
+> forbid changing memory attributes for portions of the huge page.
+
+Yeah good idea, I can look about adding some more checks.
+
+>=20
+> In general, I'm a bit wary of software table walkers tripping over this.
+> For example, I don't think apply_to_existing_page_range() can handle
+> huge mappings at all, but the one user (KASAN) only ever uses page mappin=
+gs
+> so it's ok there.
+
+Right, I have something to warn for apply to page range (and looking
+at adding support for bigger pages). It doesn't even have a test and
+warn at the moment which isn't good practice IMO so we should add one
+even without huge vmap.
+
+>=20
+>> @@ -2325,9 +2356,11 @@ static struct vm_struct *__get_vm_area_node(unsig=
+ned long size,
+>>  	if (unlikely(!size))
+>>  		return NULL;
+>> =20
+>> -	if (flags & VM_IOREMAP)
+>> -		align =3D 1ul << clamp_t(int, get_count_order_long(size),
+>> -				       PAGE_SHIFT, IOREMAP_MAX_ORDER);
+>> +	if (flags & VM_IOREMAP) {
+>> +		align =3D max(align,
+>> +			    1ul << clamp_t(int, get_count_order_long(size),
+>> +					   PAGE_SHIFT, IOREMAP_MAX_ORDER));
+>> +	}
+>=20
+>=20
+> I don't follow this part. Please could you explain why you're potentially
+> aligning above IOREMAP_MAX_ORDER? It doesn't seem to follow from the rest
+> of the patch.
+
+Trying to remember. If the caller asks for a particular alignment we=20
+shouldn't reduce it. Should put it in another patch.
 
 Thanks,
-Ming
-
+Nick
