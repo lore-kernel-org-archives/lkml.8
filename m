@@ -2,127 +2,102 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA668C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 00:24:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD8F2C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 00:26:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86E6E20936
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 00:24:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586996647;
-	bh=FCPe1gayukNxr6qjvG7Hl461TNHn+GLs5pWruehW7UA=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=aSDlK2C7/mSVNtr3w+HqMzrXS/Hx9l1MMs/X4T067hSOZjL5HTCUNus28ekfIw1Lx
-	 fUiW+LolKRBbFmHKDfc1nNhMY37StFEGIVIAKej43LgMZKi9K7NOoDWjR/0YaOc1Nd
-	 HSguI4yR2zBdgguF5VFcz0/CKyolJUQGEUowCQN0=
+	by mail.kernel.org (Postfix) with ESMTP id 7D75520725
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 00:26:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="gt7M8eyE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391632AbgDPAYF (ORCPT
+        id S2391690AbgDPA0o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 20:24:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35784 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729384AbgDPAYB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 20:24:01 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2938F20936;
-        Thu, 16 Apr 2020 00:24:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586996641;
-        bh=FCPe1gayukNxr6qjvG7Hl461TNHn+GLs5pWruehW7UA=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=kNauBICbBFUNAiQ/ThXe/hN2YgD9t/61tLxnOUklq/4ZPOCM+JFOwv2aPx8YYCU1L
-         eP/ck+uTpuqcdfv59OD6IBTrFqT9/hhWMIJxwGrA7KgRdXvkUcyWmlbtEhzBmXnMOV
-         0KnO9WMXMXylJ8YtoSIsns10BM+RcXHcG+N1MPPQ=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id EFE403522AD1; Wed, 15 Apr 2020 17:24:00 -0700 (PDT)
-Date:   Wed, 15 Apr 2020 17:24:00 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Wei Yang <richard.weiyang@gmail.com>
-Cc:     josh@joshtriplett.org, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rcu: init and destroy rcu_synchronize when necessary
-Message-ID: <20200416002400.GL17661@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200415222655.9006-1-richard.weiyang@gmail.com>
+        Wed, 15 Apr 2020 20:26:44 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:8924 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729382AbgDPA0i (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 20:26:38 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e97a5cf0000>; Wed, 15 Apr 2020 17:24:47 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 15 Apr 2020 17:26:37 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 15 Apr 2020 17:26:37 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 16 Apr
+ 2020 00:26:37 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Thu, 16 Apr 2020 00:26:36 +0000
+Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5e97a63c0004>; Wed, 15 Apr 2020 17:26:36 -0700
+From:   Ralph Campbell <rcampbell@nvidia.com>
+To:     <linux-kselftest@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Mina Almasry <almasrymina@google.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Ralph Campbell <rcampbell@nvidia.com>
+Subject: [PATCH] hugetlb_cgroup: remove unused variable 'i'
+Date:   Wed, 15 Apr 2020 17:26:16 -0700
+Message-ID: <20200416002616.1456-1-rcampbell@nvidia.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200415222655.9006-1-richard.weiyang@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1586996687; bh=9UZSapsojgfRmmTfw+tENe0Xr/PLjL9zE3AQIRo5sNA=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:Content-Type:Content-Transfer-Encoding;
+        b=gt7M8eyEcd1zQnqT6ReYNOKqm4WamYPdBKlW+lIccYRu/R1nfADBrdupYeXgYSkP+
+         cjRu7CZafcYFS6HQ0lh5GPzXT+getlgb3i42UOSp20AX6eAgEvWg0AwJfHYZNhx72d
+         g2RkoIPRI3T2bTMP4uPMBHuEkb52oYyxpgbdpRN5De1shm3279q0LXObn3vd3qqpQD
+         bkxxRquLKGSOjRwCDqHQCi5KxO2hOO6wOuYznnJ1+i08xoOrNxK0nCtYt0hVyhLdMd
+         heFlF+CjjlQysaPEzZorTyndf3O0uC7PGSplrPSCgQO2Wt4j4qPxFtFcPAuUYU4b88
+         uN9qmKSsp0pjg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 10:26:55PM +0000, Wei Yang wrote:
-> We would skip the rcu_synchronize if it is a duplicate call back function.
-> 
-> This is not necessary to init and destroy for them.
-> 
-> Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
+Compiling tests in tools/testing/selftests/vm/ results in a C compiler
+warning:
 
-Applied, thank you!
+write_to_hugetlbfs.c: In function =E2=80=98main=E2=80=99:
+write_to_hugetlbfs.c:77:16: warning: unused variable =E2=80=98i=E2=80=99
+   77 |  unsigned long i;
 
-I edited the commit log a bit.  Could you please check below to make
-sure that I didn't mess anything up?
+Delete the unused variable.
 
-							Thanx, Paul
+Fixes: 29750f71a9b4 ("hugetlb_cgroup: add hugetlb_cgroup reservation tests"=
+)
+Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+---
+ tools/testing/selftests/vm/write_to_hugetlbfs.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-------------------------------------------------------------------------
+diff --git a/tools/testing/selftests/vm/write_to_hugetlbfs.c b/tools/testin=
+g/selftests/vm/write_to_hugetlbfs.c
+index 110bc4e4015d..6a2caba19ee1 100644
+--- a/tools/testing/selftests/vm/write_to_hugetlbfs.c
++++ b/tools/testing/selftests/vm/write_to_hugetlbfs.c
+@@ -74,8 +74,6 @@ int main(int argc, char **argv)
+ 	int write =3D 0;
+ 	int reserve =3D 1;
+=20
+-	unsigned long i;
+-
+ 	if (signal(SIGINT, sig_handler) =3D=3D SIG_ERR)
+ 		err(1, "\ncan't catch SIGINT\n");
+=20
+--=20
+2.25.2
 
-commit d9eaddf545fe8e3e2725e2fa0bf87b59b5667c14
-Author: Wei Yang <richard.weiyang@gmail.com>
-Date:   Wed Apr 15 22:26:55 2020 +0000
-
-    rcu: Initialize and destroy rcu_synchronize only when necessary
-    
-    The __wait_rcu_gp() function unconditionally initializes and cleans up
-    each element of rs_array[], whether used or not.  This is slightly
-    wasteful and rather confusing, so this commit skips both initialization
-    and cleanup for duplicate callback functions.
-    
-    Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
-    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-
-diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
-index 3ce63a9..351c322 100644
---- a/kernel/rcu/update.c
-+++ b/kernel/rcu/update.c
-@@ -391,13 +391,14 @@ void __wait_rcu_gp(bool checktiny, int n, call_rcu_func_t *crcu_array,
- 			might_sleep();
- 			continue;
- 		}
--		init_rcu_head_on_stack(&rs_array[i].head);
--		init_completion(&rs_array[i].completion);
- 		for (j = 0; j < i; j++)
- 			if (crcu_array[j] == crcu_array[i])
- 				break;
--		if (j == i)
-+		if (j == i) {
-+			init_rcu_head_on_stack(&rs_array[i].head);
-+			init_completion(&rs_array[i].completion);
- 			(crcu_array[i])(&rs_array[i].head, wakeme_after_rcu);
-+		}
- 	}
- 
- 	/* Wait for all callbacks to be invoked. */
-@@ -408,9 +409,10 @@ void __wait_rcu_gp(bool checktiny, int n, call_rcu_func_t *crcu_array,
- 		for (j = 0; j < i; j++)
- 			if (crcu_array[j] == crcu_array[i])
- 				break;
--		if (j == i)
-+		if (j == i) {
- 			wait_for_completion(&rs_array[i].completion);
--		destroy_rcu_head_on_stack(&rs_array[i].head);
-+			destroy_rcu_head_on_stack(&rs_array[i].head);
-+		}
- 	}
- }
- EXPORT_SYMBOL_GPL(__wait_rcu_gp);
