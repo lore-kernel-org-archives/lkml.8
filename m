@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B4D9C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:21:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E35CC352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E205214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:21:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E576C21927
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:21:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587050475;
-	bh=/BTERr8ntuoVM+oROY3RpI5yVZsGtjKuXRPEP0DY5B8=;
+	s=default; t=1587050478;
+	bh=RlPp1iaNAIZtXV/7DCpgYxXxtz24O5yn7VLRupqjAtw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=02tyUM8ozoUQ3DpIczYjgUxpWBANbLfc7ytZAZ5iAwIp21tzuv0FQ6pQ6RnuDzatn
-	 LOWrFuqp0zFya+GmA1OKRG0FxUQL1iGu8oBcMCRlYTbFYQOtj/9j8EaRKFSRdpq0pw
-	 A4dK7AXUFjAe3SMhVs8TCWUvOt2VLuPVZCNXEFZM=
+	b=cx/8FD/7kRGqoDKRrF+2PyMBntmZneEOBblGU5rJBqYtL6lIO52cchFur3b4s2JpU
+	 dYynuLel2o1oihGsVnJ8XqebHxRkxZ8N9FgwEb7OsoY5Dl20Gf5TLkfyO43tWkRoxF
+	 V8VBt/6Bv5JbygT1OdovH6/AuwoptoBJj45iJwmU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633436AbgDPPVL (ORCPT
+        id S2898612AbgDPNqj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:21:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32924 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:46:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898637AbgDPNq5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:46:57 -0400
+        id S2897069AbgDPNfL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:35:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3421208E4;
-        Thu, 16 Apr 2020 13:46:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF0C920732;
+        Thu, 16 Apr 2020 13:35:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044816;
-        bh=/BTERr8ntuoVM+oROY3RpI5yVZsGtjKuXRPEP0DY5B8=;
+        s=default; t=1587044111;
+        bh=RlPp1iaNAIZtXV/7DCpgYxXxtz24O5yn7VLRupqjAtw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1WuGoGEgRTvfLmEDvvZlNSqIy5Dp0jBkBCWWS0+xEYqdFJJW5kAOjhy5uYJjs/Vsq
-         NnAZ5BWwc8lEdK/hQJfLoxUBLwi3F6L9RUxrSVn59aad/pmEYpDeyXSVmCftUcb8yV
-         Z6SB7rhEpQ/Kc1DKDJXZiq+DBYNLRpeWEKwOkpBo=
+        b=gP55r7mXiORWciBv93JY6fi82dhNxsTkHNHxvB2ZQwzQiO8ZnTTRCTkeSlehvPGhB
+         MbgAb8qiIS7Tyl4WeCz9N+nGsd8e4KB/5CRsGrMBY+JsmOB1jbLJPfmQZI8P5qLCkW
+         hqfZclmJNdTd75p0z6DffN8fjIkiwMNHmNMGqs/s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH 5.4 113/232] pstore: pstore_ftrace_seq_next should increase position index
-Date:   Thu, 16 Apr 2020 15:23:27 +0200
-Message-Id: <20200416131329.272025766@linuxfoundation.org>
+        stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>,
+        Felipe Balbi <balbi@kernel.org>
+Subject: [PATCH 5.5 086/257] usb: gadget: composite: Inform controller driver of self-powered
+Date:   Thu, 16 Apr 2020 15:22:17 +0200
+Message-Id: <20200416131336.722636172@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
-References: <20200416131316.640996080@linuxfoundation.org>
+In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
+References: <20200416131325.891903893@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,81 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
 
-commit 6c871b7314dde9ab64f20de8f5aa3d01be4518e8 upstream.
+commit 5e5caf4fa8d3039140b4548b6ab23dd17fce9b2c upstream.
 
-In Aug 2018 NeilBrown noticed
-commit 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code and interface")
-"Some ->next functions do not increment *pos when they return NULL...
-Note that such ->next functions are buggy and should be fixed.
-A simple demonstration is
-
- dd if=/proc/swaps bs=1000 skip=1
-
-Choose any block size larger than the size of /proc/swaps. This will
-always show the whole last line of /proc/swaps"
-
-/proc/swaps output was fixed recently, however there are lot of other
-affected files, and one of them is related to pstore subsystem.
-
-If .next function does not change position index, following .show function
-will repeat output related to current position index.
-
-There are at least 2 related problems:
-- read after lseek beyond end of file, described above by NeilBrown
-  "dd if=<AFFECTED_FILE> bs=1000 skip=1" will generate whole last list
-- read after lseek on in middle of last line will output expected rest of
-  last line but then repeat whole last line once again.
-
-If .show() function generates multy-line output (like
-pstore_ftrace_seq_show() does ?) following bash script cycles endlessly
-
- $ q=;while read -r r;do echo "$((++q)) $r";done < AFFECTED_FILE
-
-Unfortunately I'm not familiar enough to pstore subsystem and was unable
-to find affected pstore-related file on my test node.
-
-If .next function does not change position index, following .show function
-will repeat output related to current position index.
+Different configuration/condition may draw different power. Inform the
+controller driver of the change so it can respond properly (e.g.
+GET_STATUS request). This fixes an issue with setting MaxPower from
+configfs. The composite driver doesn't check this value when setting
+self-powered.
 
 Cc: stable@vger.kernel.org
-Fixes: 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code ...")
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206283
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Link: https://lore.kernel.org/r/4e49830d-4c88-0171-ee24-1ee540028dad@virtuozzo.com
-[kees: with robustness tweak from Joel Fernandes <joelaf@google.com>]
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Fixes: 88af8bbe4ef7 ("usb: gadget: the start of the configfs interface")
+Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/pstore/inode.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/usb/gadget/composite.c |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
---- a/fs/pstore/inode.c
-+++ b/fs/pstore/inode.c
-@@ -87,11 +87,11 @@ static void *pstore_ftrace_seq_next(stru
- 	struct pstore_private *ps = s->private;
- 	struct pstore_ftrace_seq_data *data = v;
+--- a/drivers/usb/gadget/composite.c
++++ b/drivers/usb/gadget/composite.c
+@@ -861,6 +861,11 @@ static int set_config(struct usb_composi
+ 	else
+ 		power = min(power, 900U);
+ done:
++	if (power <= USB_SELF_POWER_VBUS_MAX_DRAW)
++		usb_gadget_set_selfpowered(gadget);
++	else
++		usb_gadget_clear_selfpowered(gadget);
++
+ 	usb_gadget_vbus_draw(gadget, power);
+ 	if (result >= 0 && cdev->delayed_status)
+ 		result = USB_GADGET_DELAYED_STATUS;
+@@ -2279,6 +2284,7 @@ void composite_suspend(struct usb_gadget
  
-+	(*pos)++;
- 	data->off += REC_SIZE;
- 	if (data->off + REC_SIZE > ps->total_size)
- 		return NULL;
+ 	cdev->suspended = 1;
  
--	(*pos)++;
- 	return data;
++	usb_gadget_set_selfpowered(gadget);
+ 	usb_gadget_vbus_draw(gadget, 2);
  }
  
-@@ -101,6 +101,9 @@ static int pstore_ftrace_seq_show(struct
- 	struct pstore_ftrace_seq_data *data = v;
- 	struct pstore_ftrace_record *rec;
+@@ -2307,6 +2313,9 @@ void composite_resume(struct usb_gadget
+ 		else
+ 			maxpower = min(maxpower, 900U);
  
-+	if (!data)
-+		return 0;
++		if (maxpower > USB_SELF_POWER_VBUS_MAX_DRAW)
++			usb_gadget_clear_selfpowered(gadget);
 +
- 	rec = (struct pstore_ftrace_record *)(ps->record->buf + data->off);
+ 		usb_gadget_vbus_draw(gadget, maxpower);
+ 	}
  
- 	seq_printf(s, "CPU:%d ts:%llu %08lx  %08lx  %ps <- %pS\n",
 
 
