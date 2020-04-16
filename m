@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0598CC352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:17:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 934F8C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:17:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE80B214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:17:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 713C521D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:17:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587050257;
-	bh=qeJIGrrKdtjjhYFAXGoPTkTclmMEdQSo7v/P9jFqUMA=;
+	s=default; t=1587050264;
+	bh=NzVsl77g47J5ch7O3/qgCHAedtZoN5S+VS8l9N5SDAQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o+H2UGKil5/1Z5a03PbKrQA6figPYGWE4bAlumpsLhSo8KK6hHDt7w53ZhmbmYm9h
-	 H7SCNAgNkWGMJtItuki2/534Mrpy6qU5yzERTs48ZnuMrlhj2j+kaN4lwfsIwF44Zv
-	 cCHPZR+oWNgOsSed7VcDlveFLheDuFLm773wkR/c=
+	b=md/Y0kvhs5eITk+vIJMZXWzzNjWsQYdjhiBhR6R1AdeUyjeMChep0SytX71/SYezW
+	 DhV58Nglwj5hLGiMhbEs0z2qeq04gk+MTt4A2e9k8pyyGTiCt+BJsR1BKz+zKcTTwg
+	 CHY3PpbqKA97aMQ0pehdYsHcaen7okSWX5lk5790=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394972AbgDPPRh (ORCPT
+        id S2395076AbgDPPRm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:17:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34790 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:17:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898514AbgDPNst (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:48:49 -0400
+        id S2636304AbgDPNsq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:48:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59BAB21744;
-        Thu, 16 Apr 2020 13:48:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1C31208E4;
+        Thu, 16 Apr 2020 13:48:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044928;
-        bh=qeJIGrrKdtjjhYFAXGoPTkTclmMEdQSo7v/P9jFqUMA=;
+        s=default; t=1587044926;
+        bh=NzVsl77g47J5ch7O3/qgCHAedtZoN5S+VS8l9N5SDAQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bJpLShqjNDF9/s/oJF1AqT52NZiQfWauBIHtW6tLF39IdRvl9cNAYmS4PdMHwo+dJ
-         5oqgSbf9k8EG5R1pQIA4it+FQsI1Bf+rjhGZOb+yjcbjs6BlQgwN51a9D/wt15074f
-         cbouu2xEDLWU0ZG6DJJ4mpd5jYFS2MJYHwpiU5dI=
+        b=Ot2RsA4DuCX9K0qVGJoAlME95UP5Kda1lU1TGxydofHdrGplMNZZ6O3R1K4Qn1kc3
+         KnZG43erD2IYFxTJ6RfAph7stkHuP9RCFTRxAjCbflfOLc2sLY49j5t7h/9T6+l91N
+         n0tK6bAWXZxyT9zPkwyWeq63gP5ZmnzSwlBklzjg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maxime Ripard <maxime@cerno.tech>,
+        stable@vger.kernel.org, Scott Wood <swood@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 5.4 159/232] arm64: dts: allwinner: h5: Fix PMU compatible
-Date:   Thu, 16 Apr 2020 15:24:13 +0200
-Message-Id: <20200416131334.893614640@linuxfoundation.org>
+Subject: [PATCH 5.4 158/232] sched/core: Remove duplicate assignment in sched_tick_remote()
+Date:   Thu, 16 Apr 2020 15:24:12 +0200
+Message-Id: <20200416131334.775155848@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -59,37 +62,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maxime Ripard <maxime@cerno.tech>
+From: Scott Wood <swood@redhat.com>
 
-commit 4ae7a3c3d7d31260f690d8d658f0365f3eca67a2 upstream.
+commit 82e0516ce3a147365a5dd2a9bedd5ba43a18663d upstream.
 
-The commit c35a516a4618 ("arm64: dts: allwinner: H5: Add PMU node")
-introduced support for the PMU found on the Allwinner H5. However, the
-binding only allows for a single compatible, while the patch was adding
-two.
+A redundant "curr = rq->curr" was added; remove it.
 
-Make sure we follow the binding.
-
-Fixes: c35a516a4618 ("arm64: dts: allwinner: H5: Add PMU node")
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Fixes: ebc0f83c78a2 ("timers/nohz: Update NOHZ load in remote tick")
+Signed-off-by: Scott Wood <swood@redhat.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/1580776558-12882-1-git-send-email-swood@redhat.com
 Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ kernel/sched/core.c |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-@@ -77,8 +77,7 @@
- 	};
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -3676,7 +3676,6 @@ static void sched_tick_remote(struct wor
+ 	if (cpu_is_offline(cpu))
+ 		goto out_unlock;
  
- 	pmu {
--		compatible = "arm,cortex-a53-pmu",
--			     "arm,armv8-pmuv3";
-+		compatible = "arm,cortex-a53-pmu";
- 		interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
- 			     <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>,
- 			     <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>,
+-	curr = rq->curr;
+ 	update_rq_clock(rq);
+ 
+ 	if (!is_idle_task(curr)) {
 
 
