@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A9DC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:56:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69FB9C352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:56:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DAFC217D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:56:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B27A20786
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:56:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587045385;
-	bh=KtggvIYcmYpaeupy2pxpogJA2WSu2oQ8qYpjo3uH7w8=;
+	s=default; t=1587045391;
+	bh=ASMEch0h1JuR4P5sOL7px8K3jpr0UJzaccFnZCfO7/s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q5+7gl216Jmq5lDDM+pR1ZfLUsnqu/d27UmaC/rX2abDsbEzCIILmpLcZmif9pcY9
-	 nmx/Lcz/U0TLGVXQqpKty6geljBuuWOIZmnFAtMePRXO9dBjeDyw5ETPyevppMQjjM
-	 SU2YGas+ZF/xP8vIgNjcBtzdL5HeqHIgQiAxp1xc=
+	b=wd+e/WmA+JbpQcsyv97clr11Xviso0/W2uXhJUPrPzDlbIivY8JSmo9hCf7ITLlOi
+	 ttmD74z3jz8CY3K0P/7wX8BauurQcCIjmqrOsf0gk/YEm3WqiN9m5BU1+PjYQuDm7U
+	 7DvU/7oUtp9enBliCe+l8fdJmy2EHWanZygPhYyc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409197AbgDPN4Y (ORCPT
+        id S2439367AbgDPN43 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:56:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51152 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:56:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897741AbgDPNio (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:38:44 -0400
+        id S2897752AbgDPNiq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:38:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BEFD221F7;
-        Thu, 16 Apr 2020 13:38:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F36221BE5;
+        Thu, 16 Apr 2020 13:38:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044323;
-        bh=KtggvIYcmYpaeupy2pxpogJA2WSu2oQ8qYpjo3uH7w8=;
+        s=default; t=1587044326;
+        bh=ASMEch0h1JuR4P5sOL7px8K3jpr0UJzaccFnZCfO7/s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MMrJtuZJWnE8gpidA8IrPMLLEW9hp8S8dKguI1gw8XGEEiGjFDfhE1MVQz2kVIx6S
-         WhEJ3CkVrjZnLeUujrlqyQmZTiD4FhiTbRqmiuhmHglxD4pRaGBm4SpsQ1ESo66T+3
-         7Odxx4w9jkb7NpBn0Ei//dr4XqgZo14NFKoKDbco=
+        b=jI+WYXMcUEztdeoq+EvdFQHU5aTS/WkBhto5Td5e3SvBXgNpTYP1ADfs5pxeZmuyr
+         Fi8U9FT4rb8slr4ej7tWxElgtBKoShuY47g0WQphZZqrqwZ9glVOupFUDdGWuyTnwU
+         Lh73LXB9g5T69TJWMV/4Pghsdb7Hf5E4wraSb2C0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.5 172/257] io_uring: honor original task RLIMIT_FSIZE
-Date:   Thu, 16 Apr 2020 15:23:43 +0200
-Message-Id: <20200416131347.893221294@linuxfoundation.org>
+        stable@vger.kernel.org, Yangbo Lu <yangbo.lu@nxp.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.5 173/257] mmc: sdhci-of-esdhc: fix esdhc_reset() for different controller versions
+Date:   Thu, 16 Apr 2020 15:23:44 +0200
+Message-Id: <20200416131347.984912332@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -58,63 +60,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Yangbo Lu <yangbo.lu@nxp.com>
 
-commit 4ed734b0d0913e566a9d871e15d24eb240f269f7 upstream.
+commit 2aa3d826adb578b26629a79b775a552cfe3fedf7 upstream.
 
-With the previous fixes for number of files open checking, I added some
-debug code to see if we had other spots where we're checking rlimit()
-against the async io-wq workers. The only one I found was file size
-checking, which we should also honor.
+This patch is to fix operating in esdhc_reset() for different
+controller versions, and to add bus-width restoring after data
+reset for eSDHC (verdor version <= 2.2).
 
-During write and fallocate prep, store the max file size and override
-that for the current ask if we're in io-wq worker context.
+Also add annotation for understanding.
 
-Cc: stable@vger.kernel.org # 5.1+
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Link: https://lore.kernel.org/r/20200108040713.38888-1-yangbo.lu@nxp.com
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-
 ---
- fs/io_uring.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/mmc/host/sdhci-of-esdhc.c |   43 ++++++++++++++++++++++++++++++++++----
+ 1 file changed, 39 insertions(+), 4 deletions(-)
 
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -432,6 +432,7 @@ struct io_kiocb {
- #define REQ_F_INFLIGHT		16384	/* on inflight list */
- #define REQ_F_COMP_LOCKED	32768	/* completion under lock */
- #define REQ_F_HARDLINK		65536	/* doesn't sever on completion < 0 */
-+	unsigned long		fsize;
- 	u64			user_data;
- 	u32			result;
- 	u32			sequence;
-@@ -1899,6 +1900,8 @@ static int io_write_prep(struct io_kiocb
- 	if (unlikely(!(req->file->f_mode & FMODE_WRITE)))
- 		return -EBADF;
+--- a/drivers/mmc/host/sdhci-of-esdhc.c
++++ b/drivers/mmc/host/sdhci-of-esdhc.c
+@@ -758,23 +758,58 @@ static void esdhc_reset(struct sdhci_hos
+ {
+ 	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+ 	struct sdhci_esdhc *esdhc = sdhci_pltfm_priv(pltfm_host);
+-	u32 val;
++	u32 val, bus_width = 0;
  
-+	req->fsize = rlimit(RLIMIT_FSIZE);
-+
- 	if (!req->io)
- 		return 0;
++	/*
++	 * Add delay to make sure all the DMA transfers are finished
++	 * for quirk.
++	 */
+ 	if (esdhc->quirk_delay_before_data_reset &&
+ 	    (mask & SDHCI_RESET_DATA) &&
+ 	    (host->flags & SDHCI_REQ_USE_DMA))
+ 		mdelay(5);
  
-@@ -1970,10 +1973,17 @@ static int io_write(struct io_kiocb *req
- 		}
- 		kiocb->ki_flags |= IOCB_WRITE;
++	/*
++	 * Save bus-width for eSDHC whose vendor version is 2.2
++	 * or lower for data reset.
++	 */
++	if ((mask & SDHCI_RESET_DATA) &&
++	    (esdhc->vendor_ver <= VENDOR_V_22)) {
++		val = sdhci_readl(host, ESDHC_PROCTL);
++		bus_width = val & ESDHC_CTRL_BUSWIDTH_MASK;
++	}
++
+ 	sdhci_reset(host, mask);
  
-+		if (!force_nonblock)
-+			current->signal->rlim[RLIMIT_FSIZE].rlim_cur = req->fsize;
+-	sdhci_writel(host, host->ier, SDHCI_INT_ENABLE);
+-	sdhci_writel(host, host->ier, SDHCI_SIGNAL_ENABLE);
++	/*
++	 * Restore bus-width setting and interrupt registers for eSDHC
++	 * whose vendor version is 2.2 or lower for data reset.
++	 */
++	if ((mask & SDHCI_RESET_DATA) &&
++	    (esdhc->vendor_ver <= VENDOR_V_22)) {
++		val = sdhci_readl(host, ESDHC_PROCTL);
++		val &= ~ESDHC_CTRL_BUSWIDTH_MASK;
++		val |= bus_width;
++		sdhci_writel(host, val, ESDHC_PROCTL);
 +
- 		if (req->file->f_op->write_iter)
- 			ret2 = call_write_iter(req->file, kiocb, &iter);
- 		else
- 			ret2 = loop_rw_iter(WRITE, req->file, kiocb, &iter);
-+
-+		if (!force_nonblock)
-+			current->signal->rlim[RLIMIT_FSIZE].rlim_cur = RLIM_INFINITY;
-+
- 		/*
- 		 * Raw bdev writes will -EOPNOTSUPP for IOCB_NOWAIT. Just
- 		 * retry them without IOCB_NOWAIT.
++		sdhci_writel(host, host->ier, SDHCI_INT_ENABLE);
++		sdhci_writel(host, host->ier, SDHCI_SIGNAL_ENABLE);
++	}
+ 
+-	if (mask & SDHCI_RESET_ALL) {
++	/*
++	 * Some bits have to be cleaned manually for eSDHC whose spec
++	 * version is higher than 3.0 for all reset.
++	 */
++	if ((mask & SDHCI_RESET_ALL) &&
++	    (esdhc->spec_ver >= SDHCI_SPEC_300)) {
+ 		val = sdhci_readl(host, ESDHC_TBCTL);
+ 		val &= ~ESDHC_TB_EN;
+ 		sdhci_writel(host, val, ESDHC_TBCTL);
+ 
++		/*
++		 * Initialize eSDHC_DLLCFG1[DLL_PD_PULSE_STRETCH_SEL] to
++		 * 0 for quirk.
++		 */
+ 		if (esdhc->quirk_unreliable_pulse_detection) {
+ 			val = sdhci_readl(host, ESDHC_DLLCFG1);
+ 			val &= ~ESDHC_DLL_PD_PULSE_STRETCH_SEL;
 
 
