@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24AAEC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C998C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:54:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0409F217D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:54:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73E8720786
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:54:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587045275;
-	bh=Mnur4y7Z3DG/U51267RRZUuGvk/ACYGL1HqBmKdp/bo=;
+	s=default; t=1587045294;
+	bh=TFXnfxHugoSP3Q7WZCuT3ZsZo+7q/qP8JgVFHiV9l8U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dDPE6JYWBX65niiK43R8c6tdSfE8lJ9qUgAp/mzt8s3DAtmPBt1C/IyYYbLiMcAs0
-	 SVXy8UoBu/RrU3epUB1fzFYy1V8h2sCjIxG4WdLu9z+pkS4I1DgnJFmKxbKDEBGFqb
-	 e+AyPHEWhdhprMlKWWgHkqztNxkuznM3JBNWONcI=
+	b=xD/sTnKjCDv6WvKRyXloIxsUCOzqS4RDQ7N+m9wRZyq/4XDTd8pmhIe1KWQNrqk5s
+	 48ROJovQ2d9EkmUufNCrHNMkXbWyhTW7QlJvjnknMxRfZadHTMAFpHDW5xFOP0myu5
+	 7WSqNDgTLSZf40SB+uDJXfm/RWE3CB4jJBXFQEos=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729187AbgDPNy3 (ORCPT
+        id S1730171AbgDPNyw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:54:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50136 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:54:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897548AbgDPNhw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:37:52 -0400
+        id S2897606AbgDPNiC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:38:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 104FA20732;
-        Thu, 16 Apr 2020 13:37:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DAEB721BE5;
+        Thu, 16 Apr 2020 13:38:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044271;
-        bh=Mnur4y7Z3DG/U51267RRZUuGvk/ACYGL1HqBmKdp/bo=;
+        s=default; t=1587044281;
+        bh=TFXnfxHugoSP3Q7WZCuT3ZsZo+7q/qP8JgVFHiV9l8U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oA6z+5XFKG+YSDOydFVk0B1eYAaTy6Dd5ZWxjYdEBDe8MhNmvV0OGoghc0vCeMrwk
-         bOdSHk2x3e5ktgkgVjaGBIFgiE9o5XHwCkyYH/QM/bszSL8rLKjbZPbbwkeAOKpMy2
-         5BfDbDIWWr5/+kB+JViCx/UlCI9spvJSwLswoRPY=
+        b=d+XKXZ/jWDiNwoYigYtimCnFTVFpdcAuVdKfTVo3b03m/86tEu9fI39E7Y/PWegmh
+         pfLsJX2kzfnV0IB9zNt3xOyl8dRGrWDpUsW1LbQTnG/cEJkHNLUVIY/QdvQ60R99r3
+         ilGWX1QREoufvrkjcOVqO7WPX45qkF/ccqU8a1sA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.5 149/257] KVM: VMX: Add a trampoline to fix VMREAD error handling
-Date:   Thu, 16 Apr 2020 15:23:20 +0200
-Message-Id: <20200416131345.116862483@linuxfoundation.org>
+        Frieder Schrempf <frieder.schrempf@kontron.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 5.5 153/257] mtd: spinand: Stop using spinand->oobbuf for buffering bad block markers
+Date:   Thu, 16 Apr 2020 15:23:24 +0200
+Message-Id: <20200416131345.705698143@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -60,149 +61,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-commit 842f4be95899df22b5843ba1a7c8cf37e831a6e8 upstream.
+commit 2148937501ee3d663e0010e519a553fea67ad103 upstream.
 
-Add a hand coded assembly trampoline to preserve volatile registers
-across vmread_error(), and to handle the calling convention differences
-between 64-bit and 32-bit due to asmlinkage on vmread_error().  Pass
-@field and @fault on the stack when invoking the trampoline to avoid
-clobbering volatile registers in the context of the inline assembly.
+For reading and writing the bad block markers, spinand->oobbuf is
+currently used as a buffer for the marker bytes. During the
+underlying read and write operations to actually get/set the content
+of the OOB area, the content of spinand->oobbuf is reused and changed
+by accessing it through spinand->oobbuf and/or spinand->databuf.
 
-Calling vmread_error() directly from inline assembly is partially broken
-on 64-bit, and completely broken on 32-bit.  On 64-bit, it will clobber
-%rdi and %rsi (used to pass @field and @fault) and any volatile regs
-written by vmread_error().  On 32-bit, asmlinkage means vmread_error()
-expects the parameters to be passed on the stack, not via regs.
+This is a flaw in the original design of the SPI NAND core and at the
+latest from 13c15e07eedf ("mtd: spinand: Handle the case where
+PROGRAM LOAD does not reset the cache") on, it results in not having
+the bad block marker written at all, as the spinand->oobbuf is
+cleared to 0xff after setting the marker bytes to zero.
 
-Opportunistically zero out the result in the trampoline to save a few
-bytes of code for every VMREAD.  A happy side effect of the trampoline
-is that the inline code footprint is reduced by three bytes on 64-bit
-due to PUSH/POP being more efficent (in terms of opcode bytes) than MOV.
+To fix it, we now just store the two bytes for the marker on the
+stack and let the read/write operations copy it from/to the page
+buffer later.
 
-Fixes: 6e2020977e3e6 ("KVM: VMX: Add error handling to VMREAD helper")
+Fixes: 7529df465248 ("mtd: nand: Add core infrastructure to support SPI NANDs")
 Cc: stable@vger.kernel.org
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Message-Id: <20200326160712.28803-1-sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Link: https://lore.kernel.org/linux-mtd/20200218100432.32433-2-frieder.schrempf@kontron.de
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/vmx/ops.h     |   28 ++++++++++++++++-----
- arch/x86/kvm/vmx/vmenter.S |   58 +++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 79 insertions(+), 7 deletions(-)
+ drivers/mtd/nand/spi/core.c |   14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
---- a/arch/x86/kvm/vmx/ops.h
-+++ b/arch/x86/kvm/vmx/ops.h
-@@ -12,7 +12,8 @@
+--- a/drivers/mtd/nand/spi/core.c
++++ b/drivers/mtd/nand/spi/core.c
+@@ -568,18 +568,18 @@ static int spinand_mtd_write(struct mtd_
+ static bool spinand_isbad(struct nand_device *nand, const struct nand_pos *pos)
+ {
+ 	struct spinand_device *spinand = nand_to_spinand(nand);
++	u8 marker[2] = { };
+ 	struct nand_page_io_req req = {
+ 		.pos = *pos,
+-		.ooblen = 2,
++		.ooblen = sizeof(marker),
+ 		.ooboffs = 0,
+-		.oobbuf.in = spinand->oobbuf,
++		.oobbuf.in = marker,
+ 		.mode = MTD_OPS_RAW,
+ 	};
  
- #define __ex(x) __kvm_handle_fault_on_reboot(x)
+-	memset(spinand->oobbuf, 0, 2);
+ 	spinand_select_target(spinand, pos->target);
+ 	spinand_read_page(spinand, &req, false);
+-	if (spinand->oobbuf[0] != 0xff || spinand->oobbuf[1] != 0xff)
++	if (marker[0] != 0xff || marker[1] != 0xff)
+ 		return true;
  
--asmlinkage void vmread_error(unsigned long field, bool fault);
-+__attribute__((regparm(0))) void vmread_error_trampoline(unsigned long field,
-+							 bool fault);
- void vmwrite_error(unsigned long field, unsigned long value);
- void vmclear_error(struct vmcs *vmcs, u64 phys_addr);
- void vmptrld_error(struct vmcs *vmcs, u64 phys_addr);
-@@ -70,15 +71,28 @@ static __always_inline unsigned long __v
- 	asm volatile("1: vmread %2, %1\n\t"
- 		     ".byte 0x3e\n\t" /* branch taken hint */
- 		     "ja 3f\n\t"
--		     "mov %2, %%" _ASM_ARG1 "\n\t"
--		     "xor %%" _ASM_ARG2 ", %%" _ASM_ARG2 "\n\t"
--		     "2: call vmread_error\n\t"
--		     "xor %k1, %k1\n\t"
-+
-+		     /*
-+		      * VMREAD failed.  Push '0' for @fault, push the failing
-+		      * @field, and bounce through the trampoline to preserve
-+		      * volatile registers.
-+		      */
-+		     "push $0\n\t"
-+		     "push %2\n\t"
-+		     "2:call vmread_error_trampoline\n\t"
-+
-+		     /*
-+		      * Unwind the stack.  Note, the trampoline zeros out the
-+		      * memory for @fault so that the result is '0' on error.
-+		      */
-+		     "pop %2\n\t"
-+		     "pop %1\n\t"
- 		     "3:\n\t"
+ 	return false;
+@@ -603,11 +603,12 @@ static int spinand_mtd_block_isbad(struc
+ static int spinand_markbad(struct nand_device *nand, const struct nand_pos *pos)
+ {
+ 	struct spinand_device *spinand = nand_to_spinand(nand);
++	u8 marker[2] = { };
+ 	struct nand_page_io_req req = {
+ 		.pos = *pos,
+ 		.ooboffs = 0,
+-		.ooblen = 2,
+-		.oobbuf.out = spinand->oobbuf,
++		.ooblen = sizeof(marker),
++		.oobbuf.out = marker,
+ 	};
+ 	int ret;
  
-+		     /* VMREAD faulted.  As above, except push '1' for @fault. */
- 		     ".pushsection .fixup, \"ax\"\n\t"
--		     "4: mov %2, %%" _ASM_ARG1 "\n\t"
--		     "mov $1, %%" _ASM_ARG2 "\n\t"
-+		     "4: push $1\n\t"
-+		     "push %2\n\t"
- 		     "jmp 2b\n\t"
- 		     ".popsection\n\t"
- 		     _ASM_EXTABLE(1b, 4b)
---- a/arch/x86/kvm/vmx/vmenter.S
-+++ b/arch/x86/kvm/vmx/vmenter.S
-@@ -234,3 +234,61 @@ SYM_FUNC_START(__vmx_vcpu_run)
- 2:	mov $1, %eax
- 	jmp 1b
- SYM_FUNC_END(__vmx_vcpu_run)
-+
-+/**
-+ * vmread_error_trampoline - Trampoline from inline asm to vmread_error()
-+ * @field:	VMCS field encoding that failed
-+ * @fault:	%true if the VMREAD faulted, %false if it failed
-+
-+ * Save and restore volatile registers across a call to vmread_error().  Note,
-+ * all parameters are passed on the stack.
-+ */
-+SYM_FUNC_START(vmread_error_trampoline)
-+	push %_ASM_BP
-+	mov  %_ASM_SP, %_ASM_BP
-+
-+	push %_ASM_AX
-+	push %_ASM_CX
-+	push %_ASM_DX
-+#ifdef CONFIG_X86_64
-+	push %rdi
-+	push %rsi
-+	push %r8
-+	push %r9
-+	push %r10
-+	push %r11
-+#endif
-+#ifdef CONFIG_X86_64
-+	/* Load @field and @fault to arg1 and arg2 respectively. */
-+	mov 3*WORD_SIZE(%rbp), %_ASM_ARG2
-+	mov 2*WORD_SIZE(%rbp), %_ASM_ARG1
-+#else
-+	/* Parameters are passed on the stack for 32-bit (see asmlinkage). */
-+	push 3*WORD_SIZE(%ebp)
-+	push 2*WORD_SIZE(%ebp)
-+#endif
-+
-+	call vmread_error
-+
-+#ifndef CONFIG_X86_64
-+	add $8, %esp
-+#endif
-+
-+	/* Zero out @fault, which will be popped into the result register. */
-+	_ASM_MOV $0, 3*WORD_SIZE(%_ASM_BP)
-+
-+#ifdef CONFIG_X86_64
-+	pop %r11
-+	pop %r10
-+	pop %r9
-+	pop %r8
-+	pop %rsi
-+	pop %rdi
-+#endif
-+	pop %_ASM_DX
-+	pop %_ASM_CX
-+	pop %_ASM_AX
-+	pop %_ASM_BP
-+
-+	ret
-+SYM_FUNC_END(vmread_error_trampoline)
+@@ -622,7 +623,6 @@ static int spinand_markbad(struct nand_d
+ 
+ 	spinand_erase_op(spinand, pos);
+ 
+-	memset(spinand->oobbuf, 0, 2);
+ 	return spinand_write_page(spinand, &req);
+ }
+ 
 
 
