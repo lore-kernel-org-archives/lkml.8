@@ -2,88 +2,159 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06794C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC7BC3815B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:10:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D98AB21744
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:08:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCEFA21841
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:10:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e8fKabtc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731014AbgDPUIN (ORCPT
+        id S1728606AbgDPUKl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 16:08:13 -0400
-Received: from smtprelay0085.hostedemail.com ([216.40.44.85]:47790 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728776AbgDPUIK (ORCPT
+        Thu, 16 Apr 2020 16:10:41 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:34157 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727905AbgDPUKk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 16:08:10 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id ECAD618224D93;
-        Thu, 16 Apr 2020 20:08:08 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: alley89_6406c9b99173f
-X-Filterd-Recvd-Size: 2121
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf16.hostedemail.com (Postfix) with ESMTPA;
-        Thu, 16 Apr 2020 20:08:07 +0000 (UTC)
-Message-ID: <4a40bfcf1c964bbb9b68a8b7c467a5a770907e4a.camel@perches.com>
-Subject: Re: [PATCH v4] mm/ksm: Fix NULL pointer dereference when KSM zero
- page is enabled
-From:   Joe Perches <joe@perches.com>
-To:     Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Markus Elfring <Markus.Elfring@web.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Muchun Song <songmuchun@bytedance.com>,
-        Xiongchun Duan <duanxiongchun@bytedance.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        David Hildenbrand <david@redhat.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>
-Date:   Thu, 16 Apr 2020 13:05:54 -0700
-In-Reply-To: <e620f913-d0fb-7d48-b6b2-d4c6b433b563@virtuozzo.com>
-References: <20200416025034.29780-1-songmuchun@bytedance.com>
-         <20200415195841.da4361916f662a0136a271a5@linux-foundation.org>
-         <516df5d7-b514-11dc-130e-f1a2edce0108@web.de>
-         <e620f913-d0fb-7d48-b6b2-d4c6b433b563@virtuozzo.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.1-2 
+        Thu, 16 Apr 2020 16:10:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587067838;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=+qvuVM962jw7kYq4Y9qfz/NOtli8L6Q3Rt5E3jbPz28=;
+        b=e8fKabtcpPVL8Y3EPrtrSDMOFazOrgIkwg4koFpnRs23fgrNB/FtwYAwh8+0IFoHgRv2vo
+        ednvrpUQGdB3NUYndcfuTTQUuaIiuDmeODYBVc7AScDFdlzLn0etbtIBfoLGZq5j2gdW7b
+        gEgv1cONgWpeChvfB+cW6vEFL1COM/U=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-197-xmXwcOAlMReTy_QwXm77Gg-1; Thu, 16 Apr 2020 16:10:31 -0400
+X-MC-Unique: xmXwcOAlMReTy_QwXm77Gg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 16FC718CA243;
+        Thu, 16 Apr 2020 20:10:27 +0000 (UTC)
+Received: from krava (unknown [10.40.195.119])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8414E99DEE;
+        Thu, 16 Apr 2020 20:10:15 +0000 (UTC)
+Date:   Thu, 16 Apr 2020 22:10:11 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jiwei Sun <jiwei.sun@windriver.com>,
+        yuzhoujian <yuzhoujian@didichuxing.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v9 4/4] perf tools: add support for libpfm4
+Message-ID: <20200416201011.GB414900@krava>
+References: <20200416063551.47637-1-irogers@google.com>
+ <20200416063551.47637-5-irogers@google.com>
+ <20200416095501.GC369437@krava>
+ <CAP-5=fVOb1nV2gdGGWLQvTApoMR=qzaSQHSwxsAKAXQ=wqQV+g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fVOb1nV2gdGGWLQvTApoMR=qzaSQHSwxsAKAXQ=wqQV+g@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-04-16 at 14:20 +0300, Kirill Tkhai wrote:
-> On 16.04.2020 09:14, Markus Elfring wrote:
-> > …
-> > > > +++ b/mm/ksm.c
-> > > > @@ -2112,8 +2112,15 @@ static void cmp_and_merge_page(struct page *page, struct rmap_item *rmap_item)
-> > …
-> > > > +		if (vma)
-> > > > +			err = try_to_merge_one_page(vma, page,
-> > > > +					ZERO_PAGE(rmap_item->address));
-> > > > +		else
-> > > > +			/**
-> > > > +			 * If the vma is out of date, we do not need to
-> > > > +			 * continue.
+On Thu, Apr 16, 2020 at 09:02:54AM -0700, Ian Rogers wrote:
+> On Thu, Apr 16, 2020 at 2:55 AM Jiri Olsa <jolsa@redhat.com> wrote:
+> >
+> > On Wed, Apr 15, 2020 at 11:35:51PM -0700, Ian Rogers wrote:
+> > > From: Stephane Eranian <eranian@google.com>
+> > >
+> > > This patch links perf with the libpfm4 library if it is available
+> > > and NO_LIBPFM4 isn't passed to the build. The libpfm4 library
+> > > contains hardware event tables for all processors supported by
+> > > perf_events. It is a helper library that helps convert from a
+> > > symbolic event name to the event encoding required by the
+> > > underlying kernel interface. This library is open-source and
+> > > available from: http://perfmon2.sf.net.
+> > >
+> > > With this patch, it is possible to specify full hardware events
+> > > by name. Hardware filters are also supported. Events must be
+> > > specified via the --pfm-events and not -e option. Both options
+> > > are active at the same time and it is possible to mix and match:
+> > >
+> > > $ perf stat --pfm-events inst_retired:any_p:c=1:i -e cycles ....
+> > >
+> > > Signed-off-by: Stephane Eranian <eranian@google.com>
+> > > Reviewed-by: Ian Rogers <irogers@google.com>
+> >
+> >         # perf list
+> >         ...
+> >         perf_raw pfm-events
+> >           r0000
+> >             [perf_events raw event syntax: r[0-9a-fA-F]+]
+> >
+> >         skl pfm-events
+> >           UNHALTED_CORE_CYCLES
+> >             [Count core clock cycles whenever the clock signal on the specific core is running (not halted)]
+> >           UNHALTED_REFERENCE_CYCLES
+> >
+> > please add ':' behind the '* pfm-events' label
+> 
+> Thanks! Not sure I follow here. skl here is the pmu. pfm-events is
+> here just to make it clearer these are --pfm-events. The event is
+> selected with '--pfm-events UNHALTED_CORE_CYCLES'. Will putting
+> skl:pfm-events here make it look like that is part of the event
+> encoding?
 
-trivia:
+aah I might have misunderstood the output here then, we have preceeding
+output like:
 
-It's generally better to not use "/**" as that's used for kernel-doc
-and this could be a single line like
+cache:
+  l1d.replacement                                   
+       [L1D data line replacements]
 
-+			/* If the vma is out of date, no need to continue */
+so I thought the 'skl pfm-events' is just a label
 
-> > > It's conventional to put braces around multi-line blocks such as this.
 
-true
+how about we use the first current label in the middle like:
 
-> > Are there different views to consider around the usage of single statements
-> > together with curly brackets in if branches?
+	# perf list
+	List of pre-defined events (to be used in -e):
 
-no
+	  current events stuff
+
+	List of pfm events (to be used in --pfm-xxx):
+
+	  pfm events stuff
+
+or maybe put it under 'perf list --pfm', thoughts?
+
+jirka
 
