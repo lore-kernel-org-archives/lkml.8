@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E9CC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:11:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 119DBC38A2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4B03206B9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:11:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE16520857
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:11:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="newE/pJ0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rr/rl32Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436917AbgDPQLY (ORCPT
+        id S2504007AbgDPQLd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 12:11:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53036 "EHLO
+        Thu, 16 Apr 2020 12:11:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2391640AbgDPQLQ (ORCPT
+        by vger.kernel.org with ESMTP id S2392983AbgDPQLR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 12:11:16 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E64FEC0610D5;
-        Thu, 16 Apr 2020 09:11:15 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id r24so8465773ljd.4;
-        Thu, 16 Apr 2020 09:11:15 -0700 (PDT)
+        Thu, 16 Apr 2020 12:11:17 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBC76C061A10;
+        Thu, 16 Apr 2020 09:11:16 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id j3so7972380ljg.8;
+        Thu, 16 Apr 2020 09:11:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=NTx/eaYAn2EOObOw5K1yoeTPkB5owPl9cMTn96Ty+/g=;
-        b=newE/pJ0Ew1eEmed0KAEG0EnIdEI4Iycd/HDOMEgkLIsU1b7rIfEBPf9ld5sAtbtrn
-         nAvIbIehZShl6Zx1CDvzTFyY0Af/jx1EvA4NxvJL5AXza8slqp0s1oeWLTRNd8XxbG4d
-         6QKMoTEnhZR4b+EeEerlfv9G8HK845b7xtnO9rjwYQl2tFrrRvYpCni1YGyYV879ZvLl
-         69T7VFRr3eZEJRvqZx2qcqES2qWt7lucMs2lvT/wN3Y8RK1YIlzf/aLL7o+Hq51BiCDc
-         /YU5+YeEOjTTH5eR2JFH3YC0cT5kk+Zpji2EiDbvCqvEUgJtqxKCH//NJE9Mpx4lpM9E
-         WP0w==
+        bh=LSop2fRHEeN0n5T5a31s3xV0wqW+LOYJC5cXPalZm5Q=;
+        b=Rr/rl32YZBcAaMdSeiVeUA3zX3g3uCw/fIa84SjVVZ11lBTT774xj3bcq0R4CM+G/6
+         axV/qiZxLOi1U8sZXU+H+988g7aF/g069+P+gtaHehLtD280JXtyvPE+nxK1yxxU/UUi
+         ib7elNuam5q6dyhgo2uARJ9TnBldVt4/D5Z7a7CkxoJiO3+x/ayBTIaXqNB5lvJFxxOc
+         3aBRW2eGWS0D3Qus5aFFDSM4yFxVhtXRYHw8xVafdcB1/eJ5+3i90Zw+yaC1zUGlLR+Z
+         1rRAB7SQ6sPzxAg2xo3YZ4F2VAurbBXOS1qar0+OB/z9o9PHxcm+7mZqMWAMVyqPQHJR
+         MoNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=NTx/eaYAn2EOObOw5K1yoeTPkB5owPl9cMTn96Ty+/g=;
-        b=NvY5t3hEJB4Z4T/fNLlqq0+cXFvz9/P0PxO1kezJlq1/F/ezrhjcaGo43wFy/3vtwG
-         mvaoie8lrCdVD100vjg0Tbio4e61D1z8HCdGjTZwAkAHtHM9yj/G1Ro1kKbn4OPVPJ8X
-         +NFih1es9ZVDdj3MFD5UexApfalNU5/3yGteH9+rjfrGDmW67MwRuoid6HMQEBLu61Qj
-         fFkhQdBJDzuVEWmLNrWcNqib2Vu6neflg7UrotIWgFwu8bpfKbxOrVp/6A9ggdsOd+Lv
-         Eh0ZRoE3FEw0AUVgNfhXKC00Z4vv4UBwsm9B9hOy8zCxWetlJDx9gq95yZRYyawIP0QP
-         Xtag==
-X-Gm-Message-State: AGi0PuYivrTlV0UXbvmSpeyS6Gwckus6jMps7hSfdBcYzcB5t6rRGtjS
-        dedFq2Q9lUcjmDGoDo2hw20=
-X-Google-Smtp-Source: APiQypKnkhT0pbqBlCrteK63VUEuVhdpWYHed1I1A5W7sVdYRnpg07cPOCG/Y+wH5cmrJEhlQM2VtQ==
-X-Received: by 2002:a2e:a179:: with SMTP id u25mr6889276ljl.192.1587053474404;
-        Thu, 16 Apr 2020 09:11:14 -0700 (PDT)
+        bh=LSop2fRHEeN0n5T5a31s3xV0wqW+LOYJC5cXPalZm5Q=;
+        b=U5V1njOEvBDEQcCHlVTkMWWTsi+aiMySp+/Uyopt3uJbEc9s4qU+YIdtCE8Md3QfMA
+         pP/gHy776qOJQzz/xA7Wh9kfFAk0Xbxlg/OCtJmB1Mc4pBRhd6cWHxCIvYyziV6me1zL
+         Mr6R2r5m3KPsCD7c61Icw1Pa+6I7shWaNC77zEkkmOtTXbWon5zAvOS3KXTAoyREfpVZ
+         aWBhdLfdPhwVYNW+gIHEpZ8uz52L/NC11pqO/hix2aojIF3gjjYpNNj+MXVkImTfQ0m+
+         CKugPCHLtLH/5xOskiavSn22+nr5JSo4Os1PYfSGUJeCZgdAoK6m2QKaojJaS1UUu5bi
+         6hqg==
+X-Gm-Message-State: AGi0PuZxqZQZH+8qZDGWI6m5zc7WPyTyy9aRYMgPSAYhkRJVaC+1V0Uj
+        DCHbpkxq6wsakS0a5PAowUo=
+X-Google-Smtp-Source: APiQypJaxKO5vs98n9b63E7t4P7CsdyuoUkwWsxhKgYnFlEeVEbRaRIttZv9Vkz8qDTnIKJPFDKLVA==
+X-Received: by 2002:a2e:9f16:: with SMTP id u22mr6595667ljk.202.1587053475405;
+        Thu, 16 Apr 2020 09:11:15 -0700 (PDT)
 Received: from localhost.localdomain (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.gmail.com with ESMTPSA id 125sm15702234lfb.89.2020.04.16.09.11.13
+        by smtp.gmail.com with ESMTPSA id 125sm15702234lfb.89.2020.04.16.09.11.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2020 09:11:13 -0700 (PDT)
+        Thu, 16 Apr 2020 09:11:14 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -73,9 +73,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
         Matt Merhar <mattmerhar@protonmail.com>
 Cc:     linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v5 4/6] dt-bindings: ARM: tegra: Add Acer Iconia Tab A500
-Date:   Thu, 16 Apr 2020 19:09:54 +0300
-Message-Id: <20200416160956.16468-5-digetx@gmail.com>
+Subject: [PATCH v5 5/6] dt-bindings: ARM: tegra: Add ASUS Google Nexus 7
+Date:   Thu, 16 Apr 2020 19:09:55 +0300
+Message-Id: <20200416160956.16468-6-digetx@gmail.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200416160956.16468-1-digetx@gmail.com>
 References: <20200416160956.16468-1-digetx@gmail.com>
@@ -86,27 +86,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a binding for the Tegra20-based Acer Iconia Tab A500 tablet device.
+Add a binding for the Tegra30-based ASUS Google Nexus 7 tablet device.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- Documentation/devicetree/bindings/arm/tegra.yaml | 3 +++
- 1 file changed, 3 insertions(+)
+ Documentation/devicetree/bindings/arm/tegra.yaml | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/arm/tegra.yaml b/Documentation/devicetree/bindings/arm/tegra.yaml
-index 60b38eb5c61a..7fd0b66c69b2 100644
+index 7fd0b66c69b2..fb3bbf7a5fb4 100644
 --- a/Documentation/devicetree/bindings/arm/tegra.yaml
 +++ b/Documentation/devicetree/bindings/arm/tegra.yaml
-@@ -34,6 +34,9 @@ properties:
-               - toradex,colibri_t20-iris
-           - const: toradex,colibri_t20
-           - const: nvidia,tegra20
+@@ -62,6 +62,13 @@ properties:
+               - toradex,colibri_t30-eval-v3
+           - const: toradex,colibri_t30
+           - const: nvidia,tegra30
 +      - items:
-+          - const: acer,picasso
-+          - const: nvidia,tegra20
++          - const: asus,grouper
++          - const: nvidia,tegra30
++      - items:
++          - const: asus,tilapia
++          - const: asus,grouper
++          - const: nvidia,tegra30
        - items:
            - enum:
-               - nvidia,beaver
+               - nvidia,dalmore
 -- 
 2.26.0
 
