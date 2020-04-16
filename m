@@ -2,52 +2,53 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,LOTS_OF_MONEY,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93371C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B49C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:57:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60BD32051A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:57:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1130206A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:57:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587049027;
-	bh=jTqXNIZrq7M+ps/+ixzZuFQUeMQw87aF7obAZ7PZc74=;
+	s=default; t=1587049033;
+	bh=GxDxnQPWte9R8U+Xt5tCwJr2ehCosUudNbeDUGyQaPI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KZdXg1AdZ+dD2FsUeMxTJ5L/7IvZgIE1z4JXDzOSr8FNL5PbDMctYKPrrwVnzq1KJ
-	 1qHXnbaaq7fCOGjfHvWlumJz6fRda42xxfZ/luiixPs4D3DxPlEfN0AVRPD/2+dJby
-	 dhqaxjkOduLEb28AirO2Gt6D8BIfuY8OlQ121GXQ=
+	b=RsA4O0xkKD8kxiSwL9OWpIdAKiR4kwga+V8lljG2TQnCfaYRtJzcdpTfD30PffQFq
+	 iJOlZ0/OZOF67g2ouEPgWsXDw8Ht+t5EHY9NZlOtK3bEAs0KAu0eF+ME/y2xvmzduC
+	 6pS3swdzkpBvm34Cvq5eXMJ4Jv1vTWTVrzOrRI14=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407131AbgDPO5F (ORCPT
+        id S2409370AbgDPO5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:57:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42906 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:57:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728257AbgDPNzy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:55:54 -0400
+        id S2392557AbgDPNzu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:55:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D833021744;
-        Thu, 16 Apr 2020 13:55:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC79A20732;
+        Thu, 16 Apr 2020 13:55:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045354;
-        bh=jTqXNIZrq7M+ps/+ixzZuFQUeMQw87aF7obAZ7PZc74=;
+        s=default; t=1587045349;
+        bh=GxDxnQPWte9R8U+Xt5tCwJr2ehCosUudNbeDUGyQaPI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h7dtVweTwQiYNrweyXzONCJJ7MC9BH4EAQrKW9WVU4W6Cw9RgGXu2xaCDRQceGf8v
-         CxlpR/MTh7iUefG6a9U+giYv9yvu8Tjt1P7LC1f/6UUYkY5MifGO4kcG8Ej7xoEklt
-         PKDaJlqhsmoGn5aa6/yLFcv1x1cqMlRPF2hT/CjU=
+        b=CupiWP4aXpgjjvwrgeTJwZiKxBKHEfvaBxwUNoYGltxAee3r/pYRQDYCTPAjrJ/3Y
+         XapGRbULNtWinnVhKoZJt82YAAWCqZL3ZCWAF4TsckSfnFIMV8K16m/u4UefBnF4EA
+         JOqfLnxlWHb1woD5iKK+gZQMfah86hiNroblLX0E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+        stable@vger.kernel.org, Michael Walle <michael@walle.cc>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 060/254] staging: mt7621-pci: avoid to poweroff the phy for slot one
-Date:   Thu, 16 Apr 2020 15:22:29 +0200
-Message-Id: <20200416131333.444610265@linuxfoundation.org>
+Subject: [PATCH 5.6 058/254] spi: spi-fsl-dspi: Replace interruptible wait queue with a simple completion
+Date:   Thu, 16 Apr 2020 15:22:27 +0200
+Message-Id: <20200416131333.165158993@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -60,87 +61,174 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-[ Upstream commit 5737cfe87a9c242ad0f60b34b5ac1688770a9236 ]
+[ Upstream commit 4f5ee75ea1718a09149460b3df993f389a67b56a ]
 
-Phy for slot 0 and 1 is shared and handled properly in slot 0.
-If there is only one port in use,(slot 0) we shall not call the
-'phy_power_off' function with an invalid slot because kernel
-will crash with an unaligned access fault like the following:
+Currently the driver puts the process in interruptible sleep waiting for
+the interrupt train to finish transfer to/from the tx_buf and rx_buf.
 
-mt7621-pci 1e140000.pcie: Error applying setting, reverse things back
-mt7621-pci-phy 1e149000.pcie-phy: PHY for 0xbe149000 (dual port = 1)
-mt7621-pci-phy 1e14a000.pcie-phy: PHY for 0xbe14a000 (dual port = 0)
-mt7621-pci-phy 1e149000.pcie-phy: Xtal is 40MHz
-mt7621-pci-phy 1e14a000.pcie-phy: Xtal is 40MHz
-mt7621-pci 1e140000.pcie: pcie1 no card, disable it (RST & CLK)
-Unhandled kernel unaligned access[#1]:
-CPU: 3 PID: 111 Comm: kworker/3:2 Not tainted 5.6.0-rc3-00347-g825c6f470c62-dirty #9
-Workqueue: events deferred_probe_work_func
-$ 0   : 00000000 00000001 5f60d043 8fe1ba80
-$ 4   : 0000010d 01eb9000 00000000 00000000
-$ 8   : 294b4c00 80940000 00000008 000000ce
-$12   : 2e303030 00000000 00000000 65696370
-$16   : ffffffed 0000010d 8e373cd0 8214c1e0
-$20   : 00000000 82144c80 82144680 8214c250
-$24   : 00000018 803ef8f4
-$28   : 8e372000 8e373c60 8214c080 803940e8
-Hi    : 00000125
-Lo    : 122f2000
-epc   : 807b3328 mutex_lock+0x8/0x44
-ra    : 803940e8 phy_power_off+0x28/0xb0
-Status: 1100fc03        KERNEL EXL IE
-Cause : 00800010 (ExcCode 04)
-BadVA : 0000010d
-PrId  : 0001992f (MIPS 1004Kc)
-Modules linked in:
-Process kworker/3:2 (pid: 111, threadinfo=(ptrval), task=(ptrval), tls=00000000)
-Stack : 8e373cd0 803fe4f4 8e372000 8e373c90 8214c080 804fde1c 8e373c98 808d62f4
-         8e373c78 00000000 8214c254 804fe648 1e160000 804f27b8 00000001 808d62f4
-         00000000 00000001 8214c228 808d62f4 80930000 809a0000 8fd47e10 808d63d4
-         808d62d4 8fd47e10 808d0000 808d0000 8e373cd0 8e373cd0 809e2a74 809db510
-         809db510 00000006 00000001 00000000 00000000 00000000 01000000 1e1440ff
-         ...
-Call Trace:
-[<807b3328>] mutex_lock+0x8/0x44
-[<803940e8>] phy_power_off+0x28/0xb0
-[<804fe648>] mt7621_pci_probe+0xc20/0xd18
-[<80402ab8>] platform_drv_probe+0x40/0x94
-[<80400a74>] really_probe+0x104/0x364
-[<803feb74>] bus_for_each_drv+0x84/0xdc
-[<80400924>] __device_attach+0xdc/0x120
-[<803ffb5c>] bus_probe_device+0xa0/0xbc
-[<80400124>] deferred_probe_work_func+0x7c/0xbc
-[<800420e8>] process_one_work+0x230/0x450
-[<80042638>] worker_thread+0x330/0x5fc
-[<80048eb0>] kthread+0x12c/0x134
-[<80007438>] ret_from_kernel_thread+0x14/0x1c
-Code: 24050002  27bdfff8  8f830000 <c0850000> 14a00005  00000000  00600825  e0810000  1020fffa
+But exiting the process with ctrl-c may make the kernel panic: the
+wait_event_interruptible call will return -ERESTARTSYS, which a proper
+driver implementation is perhaps supposed to handle, but nonetheless
+this one doesn't, and aborts the transfer altogether.
 
-Fixes: bf516f413f4e ("staging: mt7621-pci: use only two phys from device tree")
-Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Link: https://lore.kernel.org/r/20200320153837.20415-1-sergio.paracuellos@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Actually when the task is interrupted, there is still a high chance that
+the dspi_interrupt is still triggering. And if dspi_transfer_one_message
+returns execution all the way to the spi_device driver, that can free
+the spi_message and spi_transfer structures, leaving the interrupts to
+access a freed tx_buf and rx_buf.
+
+hexdump -C /dev/mtd0
+00000000  00 75 68 75 0a ff ff ff  ff ff ff ff ff ff ff ff
+|.uhu............|
+00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
+|................|
+*
+^C[   38.495955] fsl-dspi 2120000.spi: Waiting for transfer to complete failed!
+[   38.503097] spi_master spi2: failed to transfer one message from queue
+[   38.509729] Unable to handle kernel paging request at virtual address ffff800095ab3377
+[   38.517676] Mem abort info:
+[   38.520474]   ESR = 0x96000045
+[   38.523533]   EC = 0x25: DABT (current EL), IL = 32 bits
+[   38.528861]   SET = 0, FnV = 0
+[   38.531921]   EA = 0, S1PTW = 0
+[   38.535067] Data abort info:
+[   38.537952]   ISV = 0, ISS = 0x00000045
+[   38.541797]   CM = 0, WnR = 1
+[   38.544771] swapper pgtable: 4k pages, 48-bit VAs, pgdp=0000000082621000
+[   38.551494] [ffff800095ab3377] pgd=00000020fffff003, p4d=00000020fffff003, pud=0000000000000000
+[   38.560229] Internal error: Oops: 96000045 [#1] PREEMPT SMP
+[   38.565819] Modules linked in:
+[   38.568882] CPU: 0 PID: 2729 Comm: hexdump Not tainted 5.6.0-rc4-next-20200306-00052-gd8730cdc8a0b-dirty #193
+[   38.578834] Hardware name: Kontron SMARC-sAL28 (Single PHY) on SMARC Eval 2.0 carrier (DT)
+[   38.587129] pstate: 20000085 (nzCv daIf -PAN -UAO)
+[   38.591941] pc : ktime_get_real_ts64+0x3c/0x110
+[   38.596487] lr : spi_take_timestamp_pre+0x40/0x90
+[   38.601203] sp : ffff800010003d90
+[   38.604525] x29: ffff800010003d90 x28: ffff80001200e000
+[   38.609854] x27: ffff800011da9000 x26: ffff002079c40400
+[   38.615184] x25: ffff8000117fe018 x24: ffff800011daa1a0
+[   38.620513] x23: ffff800015ab3860 x22: ffff800095ab3377
+[   38.625841] x21: 000000000000146e x20: ffff8000120c3000
+[   38.631170] x19: ffff0020795f6e80 x18: ffff800011da9948
+[   38.636498] x17: 0000000000000000 x16: 0000000000000000
+[   38.641826] x15: ffff800095ab3377 x14: 0720072007200720
+[   38.647155] x13: 0720072007200765 x12: 0775076507750771
+[   38.652483] x11: 0720076d076f0772 x10: 0000000000000040
+[   38.657812] x9 : ffff8000108e2100 x8 : ffff800011dcabe8
+[   38.663139] x7 : 0000000000000000 x6 : ffff800015ab3a60
+[   38.668468] x5 : 0000000007200720 x4 : ffff800095ab3377
+[   38.673796] x3 : 0000000000000000 x2 : 0000000000000ab0
+[   38.679125] x1 : ffff800011daa000 x0 : 0000000000000026
+[   38.684454] Call trace:
+[   38.686905]  ktime_get_real_ts64+0x3c/0x110
+[   38.691100]  spi_take_timestamp_pre+0x40/0x90
+[   38.695470]  dspi_fifo_write+0x58/0x2c0
+[   38.699315]  dspi_interrupt+0xbc/0xd0
+[   38.702987]  __handle_irq_event_percpu+0x78/0x2c0
+[   38.707706]  handle_irq_event_percpu+0x3c/0x90
+[   38.712161]  handle_irq_event+0x4c/0xd0
+[   38.716008]  handle_fasteoi_irq+0xbc/0x170
+[   38.720115]  generic_handle_irq+0x2c/0x40
+[   38.724135]  __handle_domain_irq+0x68/0xc0
+[   38.728243]  gic_handle_irq+0xc8/0x160
+[   38.732000]  el1_irq+0xb8/0x180
+[   38.735149]  spi_nor_spimem_read_data+0xe0/0x140
+[   38.739779]  spi_nor_read+0xc4/0x120
+[   38.743364]  mtd_read_oob+0xa8/0xc0
+[   38.746860]  mtd_read+0x4c/0x80
+[   38.750007]  mtdchar_read+0x108/0x2a0
+[   38.753679]  __vfs_read+0x20/0x50
+[   38.757002]  vfs_read+0xa4/0x190
+[   38.760237]  ksys_read+0x6c/0xf0
+[   38.763471]  __arm64_sys_read+0x20/0x30
+[   38.767319]  el0_svc_common.constprop.3+0x90/0x160
+[   38.772125]  do_el0_svc+0x28/0x90
+[   38.775449]  el0_sync_handler+0x118/0x190
+[   38.779468]  el0_sync+0x140/0x180
+[   38.782793] Code: 91000294 1400000f d50339bf f9405e80 (f90002c0)
+[   38.788910] ---[ end trace 55da560db4d6bef7 ]---
+[   38.793540] Kernel panic - not syncing: Fatal exception in interrupt
+[   38.799914] SMP: stopping secondary CPUs
+[   38.803849] Kernel Offset: disabled
+[   38.807344] CPU features: 0x10002,20006008
+[   38.811451] Memory Limit: none
+[   38.814513] ---[ end Kernel panic - not syncing: Fatal exception in interrupt ]---
+
+So it is clear that the "interruptible" part isn't handled correctly.
+When the process receives a signal, one could either attempt a clean
+abort (which appears to be difficult with this hardware) or just keep
+restarting the sleep until the wait queue really completes. But checking
+in a loop for -ERESTARTSYS is a bit too complicated for this driver, so
+just make the sleep uninterruptible, to avoid all that nonsense.
+
+The wait queue was actually restructured as a completion, after polling
+other drivers for the most "popular" approach.
+
+Fixes: 349ad66c0ab0 ("spi:Add Freescale DSPI driver for Vybrid VF610 platform")
+Reported-by: Michael Walle <michael@walle.cc>
+Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Tested-by: Michael Walle <michael@walle.cc>
+Link: https://lore.kernel.org/r/20200318001603.9650-7-olteanv@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/mt7621-pci/pci-mt7621.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/spi/spi-fsl-dspi.c | 19 ++++++-------------
+ 1 file changed, 6 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/staging/mt7621-pci/pci-mt7621.c b/drivers/staging/mt7621-pci/pci-mt7621.c
-index 3633c924848ec..a1dafec0890a9 100644
---- a/drivers/staging/mt7621-pci/pci-mt7621.c
-+++ b/drivers/staging/mt7621-pci/pci-mt7621.c
-@@ -485,7 +485,8 @@ static void mt7621_pcie_init_ports(struct mt7621_pcie *pcie)
- 		if (!mt7621_pcie_port_is_linkup(port)) {
- 			dev_err(dev, "pcie%d no card, disable it (RST & CLK)\n",
- 				slot);
--			phy_power_off(port->phy);
-+			if (slot != 1)
-+				phy_power_off(port->phy);
- 			mt7621_control_assert(port);
- 			mt7621_pcie_port_clk_disable(port);
- 			port->enabled = false;
+diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+index 2ce65edf16b66..1305030379e82 100644
+--- a/drivers/spi/spi-fsl-dspi.c
++++ b/drivers/spi/spi-fsl-dspi.c
+@@ -196,8 +196,7 @@ struct fsl_dspi {
+ 	u8					bytes_per_word;
+ 	const struct fsl_dspi_devtype_data	*devtype_data;
+ 
+-	wait_queue_head_t			waitq;
+-	u32					waitflags;
++	struct completion			xfer_done;
+ 
+ 	struct fsl_dspi_dma			*dma;
+ };
+@@ -714,10 +713,8 @@ static irqreturn_t dspi_interrupt(int irq, void *dev_id)
+ 	if (!(spi_sr & SPI_SR_EOQF))
+ 		return IRQ_NONE;
+ 
+-	if (dspi_rxtx(dspi) == 0) {
+-		dspi->waitflags = 1;
+-		wake_up_interruptible(&dspi->waitq);
+-	}
++	if (dspi_rxtx(dspi) == 0)
++		complete(&dspi->xfer_done);
+ 
+ 	return IRQ_HANDLED;
+ }
+@@ -815,13 +812,9 @@ static int dspi_transfer_one_message(struct spi_controller *ctlr,
+ 				status = dspi_poll(dspi);
+ 			} while (status == -EINPROGRESS);
+ 		} else if (trans_mode != DSPI_DMA_MODE) {
+-			status = wait_event_interruptible(dspi->waitq,
+-							  dspi->waitflags);
+-			dspi->waitflags = 0;
++			wait_for_completion(&dspi->xfer_done);
++			reinit_completion(&dspi->xfer_done);
+ 		}
+-		if (status)
+-			dev_err(&dspi->pdev->dev,
+-				"Waiting for transfer to complete failed!\n");
+ 
+ 		spi_transfer_delay_exec(transfer);
+ 	}
+@@ -1161,7 +1154,7 @@ static int dspi_probe(struct platform_device *pdev)
+ 		goto out_clk_put;
+ 	}
+ 
+-	init_waitqueue_head(&dspi->waitq);
++	init_completion(&dspi->xfer_done);
+ 
+ poll_mode:
+ 
 -- 
 2.20.1
 
