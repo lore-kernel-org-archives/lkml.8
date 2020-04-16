@@ -2,113 +2,124 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C18C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 08:32:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A5BC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 08:34:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 025DC216FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 08:32:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bEDaLlNr"
+	by mail.kernel.org (Postfix) with ESMTP id 23FF52063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 08:34:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587026061;
+	bh=+AtB2qrsVxt1QWCAagtuBV0iMzA+FqM4hoS9ArXVBXI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=h19j+cDnQ7rxbK4K23IGqJE86R50japRyn2aJw+QTOJJtjl6EEW5WvTEiZCP90tZY
+	 9UXqqq9iEbqwuIluehOSDrFxDr0wRromz6LRcc25a6jd+WakXwYHhuAtRL8T4WPNiK
+	 GqDgW4dArqoakYM9MSNDH/655PnKdPe2fXIazuq0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441190AbgDPIcp (ORCPT
+        id S2441381AbgDPIdk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 04:32:45 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:35962 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2441122AbgDPILL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 04:11:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587024669;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=wFZ203bZj9/d1HrtvH0p9KqRawPq4JxwlKVrmFjPcis=;
-        b=bEDaLlNrtGwOSc7TADrkOK/PBCVfIv/cMTuZUFZjlQ/OMrsLOJKdah+F8fSxhRpMXhfrqw
-        CO0Xu3tbS9mGA3/y8nvZ+V8fPby+vaEn3OBuZ+p5n98fn/5gNF+nV5v8n+Z8Jc6RwYhtle
-        ETQ3gQ21dStAvFjc1rvQ4kRrPFsDX2Q=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-6-tZrY3pJgMBy2TZZWxU1zqg-1; Thu, 16 Apr 2020 04:11:08 -0400
-X-MC-Unique: tZrY3pJgMBy2TZZWxU1zqg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 16 Apr 2020 04:33:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38708 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2439552AbgDPILF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 04:11:05 -0400
+Received: from localhost (unknown [223.235.195.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 93AD81005509;
-        Thu, 16 Apr 2020 08:11:03 +0000 (UTC)
-Received: from gondolin (ovpn-112-234.ams2.redhat.com [10.36.112.234])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 734275DA7B;
-        Thu, 16 Apr 2020 08:10:49 +0000 (UTC)
-Date:   Thu, 16 Apr 2020 10:10:47 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Cc:     pbonzini@redhat.com, tsbogend@alpha.franken.de, paulus@ozlabs.org,
-        mpe@ellerman.id.au, benh@kernel.crashing.org,
-        borntraeger@de.ibm.com, frankja@linux.ibm.com, david@redhat.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, maz@kernel.org, james.morse@arm.com,
-        julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com,
-        christoffer.dall@arm.com, peterx@redhat.com, thuth@redhat.com,
-        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-mips@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] KVM: Optimize kvm_arch_vcpu_ioctl_run function
-Message-ID: <20200416101047.1cb9693c.cohuck@redhat.com>
-In-Reply-To: <20200416051057.26526-1-tianjia.zhang@linux.alibaba.com>
-References: <20200416051057.26526-1-tianjia.zhang@linux.alibaba.com>
-Organization: Red Hat GmbH
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D38A206B9;
+        Thu, 16 Apr 2020 08:07:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587024458;
+        bh=+AtB2qrsVxt1QWCAagtuBV0iMzA+FqM4hoS9ArXVBXI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=2SDVAHMhpWjl2KgmMtDeMa4mCSN5E7syFhtD6nl+7e+uOtdm92iHSJh7of/HWeSKy
+         HDPx9eDy3/ziMPBERearhYxolH1rzEwouN2J1vLT/RYfJAdCvbbfyQVciDd7LjXhj3
+         Rm7XEVuyXLSwCmFC9enIFNjzAhrkqZPWIGTVc9wk=
+Date:   Thu, 16 Apr 2020 13:37:34 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-i2c@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org
+Subject: Re: [PATCH 2/2] dt-bindings: Remove cases of 'allOf' containing a
+ '$ref'
+Message-ID: <20200416080734.GJ72691@vkoul-mobl>
+References: <20200416005549.9683-1-robh@kernel.org>
+ <20200416005549.9683-2-robh@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200416005549.9683-2-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Apr 2020 13:10:57 +0800
-Tianjia Zhang <tianjia.zhang@linux.alibaba.com> wrote:
-
-> In earlier versions of kvm, 'kvm_run' is an independent structure
-> and is not included in the vcpu structure. At present, 'kvm_run'
-> is already included in the vcpu structure, so the parameter
-> 'kvm_run' is redundant.
+On 15-04-20, 19:55, Rob Herring wrote:
+> json-schema versions draft7 and earlier have a weird behavior in that
+> any keywords combined with a '$ref' are ignored (silently). The correct
+> form was to put a '$ref' under an 'allOf'. This behavior is now changed
+> in the 2019-09 json-schema spec and '$ref' can be mixed with other
+> keywords. The json-schema library doesn't yet support this, but the
+> tooling now does a fixup for this and either way works.
 > 
-> This patch simplify the function definition, removes the extra
-
-s/simplify/simplifies/
-
-> 'kvm_run' parameter, and extract it from the 'kvm_vcpu' structure
-
-s/extract/extracts/
-
-> if necessary.
+> This has been a constant source of review comments, so let's change this
+> treewide so everyone copies the simpler syntax.
 > 
-> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+> Signed-off-by: Rob Herring <robh@kernel.org>
 > ---
-> 
-> v2 change:
->   remove 'kvm_run' parameter and extract it from 'kvm_vcpu'
-> 
->  arch/mips/kvm/mips.c       |  3 ++-
->  arch/powerpc/kvm/powerpc.c |  3 ++-
->  arch/s390/kvm/kvm-s390.c   |  3 ++-
->  arch/x86/kvm/x86.c         | 11 ++++++-----
->  include/linux/kvm_host.h   |  2 +-
->  virt/kvm/arm/arm.c         |  6 +++---
->  virt/kvm/kvm_main.c        |  2 +-
->  7 files changed, 17 insertions(+), 13 deletions(-)
-> 
+>  .../devicetree/bindings/arm/cpus.yaml         |  81 +++---
+>  .../devicetree/bindings/arm/l2c2x0.yaml       |  87 +++---
+>  .../devicetree/bindings/arm/psci.yaml         |  15 +-
+>  .../bindings/arm/samsung/exynos-chipid.yaml   |   5 +-
+>  .../bus/allwinner,sun50i-a64-de2.yaml         |   5 +-
+>  .../bindings/clock/fixed-factor-clock.yaml    |   5 +-
+>  .../bindings/connector/usb-connector.yaml     |  28 +-
+>  .../bindings/crypto/st,stm32-hash.yaml        |   9 +-
+>  .../allwinner,sun4i-a10-display-engine.yaml   |   7 +-
+>  .../display/allwinner,sun4i-a10-tcon.yaml     |   5 +-
+>  .../bindings/display/panel/panel-common.yaml  |   5 +-
+>  .../devicetree/bindings/dma/dma-common.yaml   |   3 +-
+>  .../devicetree/bindings/dma/ti/k3-udma.yaml   |  18 +-
 
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Acked-By: Vinod Koul <vkoul@kernel.org>
 
+-- 
+~Vinod
