@@ -2,145 +2,104 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56412C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACDE4C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:07:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34B5E2051A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:06:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZsDtoX17"
+	by mail.kernel.org (Postfix) with ESMTP id 923A321D91
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:07:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504715AbgDPKGy (ORCPT
+        id S2504746AbgDPKHF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 06:06:54 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:48504 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2504637AbgDPKF7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 06:05:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587031558;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ty6Z8UVku80uLPKqpG/bK1so+aAxk3CuiSE3D0QPpK8=;
-        b=ZsDtoX177Lwt/+dnaExyOHXBVaLeUltl6w345KpUt+hh18thtjHkBtISXq/ZHmAUzBnMQO
-        oVeOPnRBslfY7aDqhCk3Ch6jQ9mGD4eCeAJN1xH8R+kgefxblJaoXGR0Q6qoLm+cB8VE+1
-        fb54EUtwzgvctXB+PYVYUn2wvvEZrTI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-328-JPTMWRtDMI6k6O27XQEnjA-1; Thu, 16 Apr 2020 06:05:54 -0400
-X-MC-Unique: JPTMWRtDMI6k6O27XQEnjA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 671ACA0CC1;
-        Thu, 16 Apr 2020 10:05:52 +0000 (UTC)
-Received: from gondolin (ovpn-112-234.ams2.redhat.com [10.36.112.234])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0F597105911B;
-        Thu, 16 Apr 2020 10:05:46 +0000 (UTC)
-Date:   Thu, 16 Apr 2020 12:05:44 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Tony Krowiak <akrowiak@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
-        mjrosato@linux.ibm.com, pmorel@linux.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        jjherne@linux.ibm.com, fiuczy@linux.ibm.com
-Subject: Re: [PATCH v7 03/15] s390/zcrypt: driver callback to indicate
- resource in use
-Message-ID: <20200416120544.053b38d8.cohuck@redhat.com>
-In-Reply-To: <0f193571-1ff6-08f3-d02d-b4f40d2930c8@linux.ibm.com>
-References: <20200407192015.19887-1-akrowiak@linux.ibm.com>
-        <20200407192015.19887-4-akrowiak@linux.ibm.com>
-        <20200414140838.54f777b8.cohuck@redhat.com>
-        <0f193571-1ff6-08f3-d02d-b4f40d2930c8@linux.ibm.com>
-Organization: Red Hat GmbH
+        Thu, 16 Apr 2020 06:07:05 -0400
+Received: from mga06.intel.com ([134.134.136.31]:56743 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2504705AbgDPKGr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 06:06:47 -0400
+IronPort-SDR: Nq05mi+w52VvGnBb8n1S98bRJjIY+6PXI3tyr3uuNTt01kiMiH3PqEx/7awwGfrgIWCQkYJj61
+ 8JBzyzKLY9Pg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 03:06:46 -0700
+IronPort-SDR: Vr12MW/9ZzBxLfye5tyxFa71gfrlZA0G9NYn1sGmSqimIZipgDH53n1pWA5b17dmbXuu5MNac8
+ gEj5Xkj1ruhA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,390,1580803200"; 
+   d="scan'208";a="363941609"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.87]) ([10.237.72.87])
+  by fmsmga001.fm.intel.com with ESMTP; 16 Apr 2020 03:06:43 -0700
+Subject: Re: [PATCH V1] mmc: sdhci-msm: Enable ADMA length mismatch error
+ interrupt
+To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        ulf.hansson@linaro.org
+Cc:     bjorn.andersson@linaro.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Andy Gross <agross@kernel.org>
+References: <1586706808-27337-5-git-send-email-vbadigan@codeaurora.org>
+ <1586711302-3552-1-git-send-email-vbadigan@codeaurora.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <07a122bc-06a0-05fd-cec6-9f7ca31beb9d@intel.com>
+Date:   Thu, 16 Apr 2020 13:05:53 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <1586711302-3552-1-git-send-email-vbadigan@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Apr 2020 13:10:18 -0400
-Tony Krowiak <akrowiak@linux.ibm.com> wrote:
-
-> On 4/14/20 8:08 AM, Cornelia Huck wrote:
-> > On Tue,  7 Apr 2020 15:20:03 -0400
-> > Tony Krowiak <akrowiak@linux.ibm.com> wrote:
-
-> >> @@ -995,9 +996,11 @@ int ap_parse_mask_str(const char *str,
-> >>   	newmap = kmalloc(size, GFP_KERNEL);
-> >>   	if (!newmap)
-> >>   		return -ENOMEM;
-> >> -	if (mutex_lock_interruptible(lock)) {
-> >> -		kfree(newmap);
-> >> -		return -ERESTARTSYS;
-> >> +	if (lock) {
-> >> +		if (mutex_lock_interruptible(lock)) {
-> >> +			kfree(newmap);
-> >> +			return -ERESTARTSYS;
-> >> +		}  
-> > This whole function is a bit odd. It seems all masks we want to
-> > manipulate are always guarded by the ap_perms_mutex, and the need for
-> > allowing lock == NULL comes from wanting to call this function with the
-> > ap_perms_mutex already held.
-> >
-> > That would argue for a locked/unlocked version of this function... but
-> > looking at it, why do we lock the way we do? The one thing this
-> > function (prior to this patch) does outside of the holding of the mutex
-> > is the allocation and freeing of newmap. But with this patch, we do the
-> > allocation and freeing of newmap while holding the mutex. Something
-> > seems a bit weird here.  
+On 12/04/20 8:07 pm, Veerabhadrarao Badiganti wrote:
+> ADMA_ERR_SIZE_EN bit of VENDOR_SPECIFIC_FUNC register controls
+> ADMA length mismatch error interrupt. Enable it by default.
 > 
-> Note that the ap_parse_mask function copies the newmap
-> to the bitmap passed in as a parameter to the function.
-> Prior to the introduction of this patch, the calling functions - i.e.,
-> apmask_store(), aqmask_store() and ap_perms_init() - passed
-> in the actual bitmap (i.e., ap_perms.apm or ap_perms aqm),
-> so the ap_perms were changed directly by this function.
+> And update all bit shift defines with BIT macro.
 > 
-> With this patch, the apmask_store() and aqmask_store()
-> functions now pass in a copy of those bitmaps. This is so
-> we can verify that any APQNs being removed are not
-> in use by the vfio_ap device driver before committing the
-> change to ap_perms. Consequently, it is now necessary
-> to take the lock for the until the changes are committed.
+> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
 
-Yes, but every caller actually takes the mutex before calling this
-function already :)
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 
-> Having explained that, you make a valid argument that
-> this calls for a locked/unlocked version of this function, so
-> I will modify this patch to that effect.
-
-Ok.
-
-The other thing I found weird is that the function does
-alloc newmap -> grab mutex -> do manipulation -> release mutex -> free newmap
-
-while the new callers do
-(mutex already held) -> alloc newmap
-
-so why grab/release the mutex the way the function does now? IOW, why
-not have an unlocked __ap_parse_mask_string() and do
-
-int ap_parse_mask_string(...)
-{
-	int rc;
-
-	if (mutex_lock_interruptible(&ap_perms_mutex))
-		return -ERESTARTSYS;
-	rc = __ap_parse_mask_string(...);
-        mutex_unlock(&ap_perms_mutex);
-	return rc;
-}
+> ---
+>  drivers/mmc/host/sdhci-msm.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+> index 482045b..7d744f9 100644
+> --- a/drivers/mmc/host/sdhci-msm.c
+> +++ b/drivers/mmc/host/sdhci-msm.c
+> @@ -56,19 +56,19 @@
+>  #define CORE_FLL_CYCLE_CNT	BIT(18)
+>  #define CORE_DLL_CLOCK_DISABLE	BIT(21)
+>  
+> -#define CORE_VENDOR_SPEC_POR_VAL 0xa1c
+> +#define CORE_VENDOR_SPEC_POR_VAL 0xa9c
+>  #define CORE_CLK_PWRSAVE	BIT(1)
+>  #define CORE_HC_MCLK_SEL_DFLT	(2 << 8)
+>  #define CORE_HC_MCLK_SEL_HS400	(3 << 8)
+>  #define CORE_HC_MCLK_SEL_MASK	(3 << 8)
+> -#define CORE_IO_PAD_PWR_SWITCH_EN	(1 << 15)
+> -#define CORE_IO_PAD_PWR_SWITCH  (1 << 16)
+> +#define CORE_IO_PAD_PWR_SWITCH_EN	BIT(15)
+> +#define CORE_IO_PAD_PWR_SWITCH	BIT(16)
+>  #define CORE_HC_SELECT_IN_EN	BIT(18)
+>  #define CORE_HC_SELECT_IN_HS400	(6 << 19)
+>  #define CORE_HC_SELECT_IN_MASK	(7 << 19)
+>  
+> -#define CORE_3_0V_SUPPORT	(1 << 25)
+> -#define CORE_1_8V_SUPPORT	(1 << 26)
+> +#define CORE_3_0V_SUPPORT	BIT(25)
+> +#define CORE_1_8V_SUPPORT	BIT(26)
+>  #define CORE_VOLT_SUPPORT	(CORE_3_0V_SUPPORT | CORE_1_8V_SUPPORT)
+>  
+>  #define CORE_CSR_CDC_CTLR_CFG0		0x130
+> 
 
