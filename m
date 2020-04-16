@@ -2,136 +2,155 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 645C6C3815B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 19:02:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED105C352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 19:05:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DB8520786
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 19:02:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5FEA20786
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 19:05:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Uyos0jNd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730168AbgDPTC6 (ORCPT
+        id S1730512AbgDPTFZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 15:02:58 -0400
-Received: from mga01.intel.com ([192.55.52.88]:19476 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727800AbgDPTC4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 15:02:56 -0400
-IronPort-SDR: o8/lOeAnBe/FfP/a6aJ68/Xzx2pXIw5MSULeFsS1IObvMn9MiGyfkgMfHImZG27VkAzEuysfcK
- bbUfLvaejs+A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 12:02:55 -0700
-IronPort-SDR: ymq36zYJgR/7G957GC04BbdJKU/RbEgRmUIlu1MMdl3U0v53ei+MWGiscHTnQ+dQAQVTRa3O0F
- jWEw3kqZdaIg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,392,1580803200"; 
-   d="scan'208";a="257325450"
-Received: from cchyder-mobl1.amr.corp.intel.com (HELO [10.254.70.41]) ([10.254.70.41])
-  by orsmga006.jf.intel.com with ESMTP; 16 Apr 2020 12:02:54 -0700
-Subject: Re: [PATCH v4 2/2] mm/gup/writeback: add callbacks for inaccessible
- pages
-To:     Claudio Imbrenda <imbrenda@linux.ibm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>, linux-next@vger.kernel.org,
-        akpm@linux-foundation.org, jack@suse.cz, kirill@shutemov.name,
-        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        borntraeger@de.ibm.com, david@redhat.com, aarcange@redhat.com,
-        linux-mm@kvack.org, frankja@linux.ibm.com, sfr@canb.auug.org.au,
-        jhubbard@nvidia.com, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, Will Deacon <will@kernel.org>,
-        "Williams, Dan J" <dan.j.williams@intel.com>
-References: <20200306132537.783769-1-imbrenda@linux.ibm.com>
- <20200306132537.783769-3-imbrenda@linux.ibm.com>
- <3ae46945-0c7b-03cd-700a-a6fe8003c6ab@intel.com>
- <20200415221754.GM2483@worktop.programming.kicks-ass.net>
- <a7c2eb84-94c2-a608-4b04-a740fa9a389d@intel.com>
- <20200416141547.29be5ea0@p-imbrenda>
- <de56aa8e-9035-4b68-33cb-15682d073e26@intel.com>
- <20200416165900.68bd4dba@p-imbrenda>
- <a6b8728d-7382-9316-412d-dd48b5e7c41a@intel.com>
- <20200416183431.7216e1d1@p-imbrenda>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <396a4ece-ec66-d023-2c7e-f09f84b358bc@intel.com>
-Date:   Thu, 16 Apr 2020 12:02:54 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Thu, 16 Apr 2020 15:05:25 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:52926 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728611AbgDPTFX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 15:05:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587063921;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=LcO8LGSRLpNBRQkWwHdMf9RGdRa86XKrk2exP8zF5vE=;
+        b=Uyos0jNd0X1zkATsvQc8EhD1tog5pjW0fQQC56zwBlVIDFcsRlLNzYMsgaazNtsmsKJcGX
+        s/sBkSfVYMyRgqsf0SDY8t4NGI4XunKEsGjoJUWiO1NzLm14buna42m8i2un6nPWg3Cc9F
+        41+Pdclg7aA1M5ww9MWGg4V5+15HHz8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-73-6Ukn1W4mMRGW_C6M9lssZQ-1; Thu, 16 Apr 2020 15:05:17 -0400
+X-MC-Unique: 6Ukn1W4mMRGW_C6M9lssZQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2B336107ACCC;
+        Thu, 16 Apr 2020 19:05:16 +0000 (UTC)
+Received: from horse.redhat.com (ovpn-116-15.rdu2.redhat.com [10.10.116.15])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1B10E10027C3;
+        Thu, 16 Apr 2020 19:05:07 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id 4C979220537; Thu, 16 Apr 2020 15:05:07 -0400 (EDT)
+Date:   Thu, 16 Apr 2020 15:05:07 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Liu Bo <bo.liu@linux.alibaba.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, virtio-fs@redhat.com, miklos@szeredi.hu,
+        stefanha@redhat.com, dgilbert@redhat.com, mst@redhat.com
+Subject: Re: [PATCH 20/20] fuse,virtiofs: Add logic to free up a memory range
+Message-ID: <20200416190507.GC276932@redhat.com>
+References: <20200304165845.3081-1-vgoyal@redhat.com>
+ <20200304165845.3081-21-vgoyal@redhat.com>
+ <20200326000904.GA34937@rsjd01523.et2sqa>
+ <20200327140114.GB32717@redhat.com>
+ <20200327220606.GA119028@rsjd01523.et2sqa>
+ <20200414193045.GB210453@redhat.com>
+ <20200415172229.GA121484@rsjd01523.et2sqa>
 MIME-Version: 1.0
-In-Reply-To: <20200416183431.7216e1d1@p-imbrenda>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200415172229.GA121484@rsjd01523.et2sqa>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/16/20 9:34 AM, Claudio Imbrenda wrote:
->> Ahh, so this is *just* intended to precede I/O done on the page, when
->> a non-host entity is touching the memory?
-> yep
+On Thu, Apr 16, 2020 at 01:22:29AM +0800, Liu Bo wrote:
+> On Tue, Apr 14, 2020 at 03:30:45PM -0400, Vivek Goyal wrote:
+> > On Sat, Mar 28, 2020 at 06:06:06AM +0800, Liu Bo wrote:
+> > > On Fri, Mar 27, 2020 at 10:01:14AM -0400, Vivek Goyal wrote:
+> > > > On Thu, Mar 26, 2020 at 08:09:05AM +0800, Liu Bo wrote:
+> > > > 
+> > > > [..]
+> > > > > > +/*
+> > > > > > + * Find first mapping in the tree and free it and return it. Do not add
+> > > > > > + * it back to free pool. If fault == true, this function should be called
+> > > > > > + * with fi->i_mmap_sem held.
+> > > > > > + */
+> > > > > > +static struct fuse_dax_mapping *inode_reclaim_one_dmap(struct fuse_conn *fc,
+> > > > > > +							 struct inode *inode,
+> > > > > > +							 bool fault)
+> > > > > > +{
+> > > > > > +	struct fuse_inode *fi = get_fuse_inode(inode);
+> > > > > > +	struct fuse_dax_mapping *dmap;
+> > > > > > +	int ret;
+> > > > > > +
+> > > > > > +	if (!fault)
+> > > > > > +		down_write(&fi->i_mmap_sem);
+> > > > > > +
+> > > > > > +	/*
+> > > > > > +	 * Make sure there are no references to inode pages using
+> > > > > > +	 * get_user_pages()
+> > > > > > +	 */
+> > > > > > +	ret = fuse_break_dax_layouts(inode, 0, 0);
+> > > > > 
+> > > > > Hi Vivek,
+> > > > > 
+> > > > > This patch is enabling inline reclaim for fault path, but fault path
+> > > > > has already holds a locked exceptional entry which I believe the above
+> > > > > fuse_break_dax_layouts() needs to wait for, can you please elaborate
+> > > > > on how this can be avoided?
+> > > > > 
+> > > > 
+> > > > Hi Liubo,
+> > > > 
+> > > > Can you please point to the exact lock you are referring to. I will
+> > > > check it out. Once we got rid of needing to take inode lock in
+> > > > reclaim path, that opended the door to do inline reclaim in fault
+> > > > path as well. But I was not aware of this exceptional entry lock.
+> > > 
+> > > Hi Vivek,
+> > > 
+> > > dax_iomap_{pte,pmd}_fault has called grab_mapping_entry to get a
+> > > locked entry, when this fault gets into inline reclaim, would
+> > > fuse_break_dax_layouts wait for the locked exceptional entry which is
+> > > locked in dax_iomap_{pte,pmd}_fault?
+> > 
+> > Hi Liu Bo,
+> > 
+> > This is a good point. Indeed it can deadlock the way code is written
+> > currently.
+> >
+> 
+> It's 100% reproducible on 4.19, but not on 5.x which has xarray for
+> dax_layout_busy_page.
+> 
+> It was weird that on 5.x kernel the deadlock is gone, it turned out
+> that xarray search in dax_layout_busy_page simply skips the empty
+> locked exceptional entry, I didn't get deeper to find out whether it's
+> reasonable, but with that 5.x doesn't run to deadlock.
 
-OK, so we've got to do an action that precedes *all* I/O to a page.
-That's not too bad.
+I found more problems with enabling inline reclaim in fault path. I
+am holding fi->i_mmap_sem, shared and fuse_break_dax_layouts() can
+drop fi->i_mmap_sem if page is busy. I don't think we can drop and
+reacquire fi->i_mmap_sem while in fault path.
 
-I still don't understand how this could work generally, though  There
-are lots of places where I/O is done to a page without either going
-through __test_set_page_writeback() or gup() with FOLL_PIN set.
+Also fuse_break_dax_layouts() does not know if we are holding it
+shared or exclusive.
 
-sendfile() is probably the best example of this:
+So I will probably have to go back to disable inline reclaim in
+fault path. If memory range is not available go back up in
+fuse_dax_fault(), drop fi->i_mmap_sem lock and wait on wait queue for
+a range to become free and retry.
 
-	fd = open("/normal/ext4/file", O_RDONLY);
-	sendfile(socket_fd, fd, &off, count);
+I can retain the changes I did to break layout for a 2MB range only
+and not the whole file. I think that's a good optimization to retain
+anyway.
 
-There's no gup in sight since the file doesn't have an address and it's
-not being written to so there's no writeback.
+Vivek
 
-How does sendfile work?
