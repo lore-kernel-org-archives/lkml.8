@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75D46C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:02:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93ED1C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:03:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54E5220786
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:02:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72CFD217D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:03:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587045779;
-	bh=mDp69Lb0S9CHcaaZ0egFJJ01Dml5CiR2KtDUpVg1cCs=;
+	s=default; t=1587045785;
+	bh=LkFSaWD8eK5fUBwVuEfFuYOdlmwas0uXDLBhIaHcx94=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cSrURFMtqy3WXGcPoz6Ylr04TCOZBo3Qgv+Zjk04s4OmnAEsK7DttBtCiGtr1tydI
-	 hnkGUQ1yk29vBA6AZsugC/zccoKDonl56KPN2k78whjslJr5GZdRGJNW3S0QyqawXz
-	 j7e0lg+R68Aj7vwY93geWxS1xlNbaa1HIOP4nd3k=
+	b=WPR4AwUZ8dzkqp6EWp7P3loO51xmiBK8UFPnKEdtjYYs6KZNRRNkARk1FCgRnMecm
+	 2k65XriNDQY9KEwGGQjfuHQ6yQyAf2F2MJYANVu97GZ3n1XbAiiikHulTq5VYwpwzq
+	 lmBl3GQhYWv5dSn/2H5iZMEy2Q+hv32c6WmOWuBo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409659AbgDPOC5 (ORCPT
+        id S2387788AbgDPODD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:02:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54776 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:03:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389073AbgDPNlv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:41:51 -0400
+        id S2408333AbgDPNl4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:41:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 032422223E;
-        Thu, 16 Apr 2020 13:41:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7FE920732;
+        Thu, 16 Apr 2020 13:41:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044510;
-        bh=mDp69Lb0S9CHcaaZ0egFJJ01Dml5CiR2KtDUpVg1cCs=;
+        s=default; t=1587044515;
+        bh=LkFSaWD8eK5fUBwVuEfFuYOdlmwas0uXDLBhIaHcx94=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jbn2uPwD8XHh/5Xa8HhIsEHsmSJktJqKzMQ9nXFRhS2LlnZrLN/FGSRhp1H6gKDOk
-         F5+7Mc15xpMSthE4zPC+IdGVAkabihh6bBeUn8CIglXhfduHrXR+wXawJAOA/YoSoK
-         mcaEfbWLtkzH9ApY/q18eHMMgwQOYvtnSfiEZbbA=
+        b=elPWituUXMtrpFn7POeBzEkvuRuD41kzrADC67z+4YyT17vRP5F0pz0HtmsWxi/uE
+         LOdDhRLBRdR/uykd+9w2Djedixl0DQ5nzribcXHwhZfqgZfuaxkwON/SM+XmWtYFye
+         lR5raXC4Im6sp7u9JLIgbW3yN0RMRhLSw2Vj68sk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: [PATCH 5.5 245/257] arm64: Always force a branch protection mode when the compiler has one
-Date:   Thu, 16 Apr 2020 15:24:56 +0200
-Message-Id: <20200416131356.363859412@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 5.5 209/257] drm: Remove PageReserved manipulation from drm_pci_alloc
+Date:   Thu, 16 Apr 2020 15:24:20 +0200
+Message-Id: <20200416131352.194060957@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -60,54 +59,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Brown <broonie@kernel.org>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-commit b8fdef311a0bd9223f10754f94fdcf1a594a3457 upstream.
+commit ea36ec8623f56791c6ff6738d0509b7920f85220 upstream.
 
-Compilers with branch protection support can be configured to enable it by
-default, it is likely that distributions will do this as part of deploying
-branch protection system wide. As well as the slight overhead from having
-some extra NOPs for unused branch protection features this can cause more
-serious problems when the kernel is providing pointer authentication to
-userspace but not built for pointer authentication itself. In that case our
-switching of keys for userspace can affect the kernel unexpectedly, causing
-pointer authentication instructions in the kernel to corrupt addresses.
+drm_pci_alloc/drm_pci_free are very thin wrappers around the core dma
+facilities, and we have no special reason within the drm layer to behave
+differently. In particular, since
 
-To ensure that we get consistent and reliable behaviour always explicitly
-initialise the branch protection mode, ensuring that the kernel is built
-the same way regardless of the compiler defaults.
+commit de09d31dd38a50fdce106c15abd68432eebbd014
+Author: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Date:   Fri Jan 15 16:51:42 2016 -0800
 
-[This is a reworked version of b8fdef311a0bd9223f1075 ("arm64: Always
-force a branch protection mode when the compiler has one") for backport.
-Kernels prior to 74afda4016a7 ("arm64: compile the kernel with ptrauth
-return address signing") don't have any Makefile machinery for forcing
-on pointer auth but still have issues if the compiler defaults it on so
-need this reworked version. -- broonie]
+    page-flags: define PG_reserved behavior on compound pages
 
-Fixes: 7503197562567 (arm64: add basic pointer authentication support)
-Reported-by: Szabolcs Nagy <szabolcs.nagy@arm.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Cc: stable@vger.kernel.org
-[catalin.marinas@arm.com: remove Kconfig option in favour of Makefile check]
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+    As far as I can see there's no users of PG_reserved on compound pages.
+    Let's use PF_NO_COMPOUND here.
+
+it has been illegal to combine GFP_COMP with SetPageReserved, so lets
+stop doing both and leave the dma layer to its own devices.
+
+Reported-by: Taketo Kabe
+Bug: https://gitlab.freedesktop.org/drm/intel/issues/1027
+Fixes: de09d31dd38a ("page-flags: define PG_reserved behavior on compound pages")
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: <stable@vger.kernel.org> # v4.5+
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200202171635.4039044-1-chris@chris-wilson.co.uk
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/Makefile |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/gpu/drm/drm_pci.c |   23 ++---------------------
+ 1 file changed, 2 insertions(+), 21 deletions(-)
 
---- a/arch/arm64/Makefile
-+++ b/arch/arm64/Makefile
-@@ -72,6 +72,10 @@ stack_protector_prepare: prepare0
- 					include/generated/asm-offsets.h))
- endif
+--- a/drivers/gpu/drm/drm_pci.c
++++ b/drivers/gpu/drm/drm_pci.c
+@@ -51,8 +51,6 @@
+ drm_dma_handle_t *drm_pci_alloc(struct drm_device * dev, size_t size, size_t align)
+ {
+ 	drm_dma_handle_t *dmah;
+-	unsigned long addr;
+-	size_t sz;
  
-+# Ensure that if the compiler supports branch protection we default it
-+# off.
-+KBUILD_CFLAGS += $(call cc-option,-mbranch-protection=none)
-+
- ifeq ($(CONFIG_CPU_BIG_ENDIAN), y)
- KBUILD_CPPFLAGS	+= -mbig-endian
- CHECKFLAGS	+= -D__AARCH64EB__
+ 	/* pci_alloc_consistent only guarantees alignment to the smallest
+ 	 * PAGE_SIZE order which is greater than or equal to the requested size.
+@@ -68,20 +66,13 @@ drm_dma_handle_t *drm_pci_alloc(struct d
+ 	dmah->size = size;
+ 	dmah->vaddr = dma_alloc_coherent(&dev->pdev->dev, size,
+ 					 &dmah->busaddr,
+-					 GFP_KERNEL | __GFP_COMP);
++					 GFP_KERNEL);
+ 
+ 	if (dmah->vaddr == NULL) {
+ 		kfree(dmah);
+ 		return NULL;
+ 	}
+ 
+-	/* XXX - Is virt_to_page() legal for consistent mem? */
+-	/* Reserve */
+-	for (addr = (unsigned long)dmah->vaddr, sz = size;
+-	     sz > 0; addr += PAGE_SIZE, sz -= PAGE_SIZE) {
+-		SetPageReserved(virt_to_page((void *)addr));
+-	}
+-
+ 	return dmah;
+ }
+ 
+@@ -94,19 +85,9 @@ EXPORT_SYMBOL(drm_pci_alloc);
+  */
+ void __drm_legacy_pci_free(struct drm_device * dev, drm_dma_handle_t * dmah)
+ {
+-	unsigned long addr;
+-	size_t sz;
+-
+-	if (dmah->vaddr) {
+-		/* XXX - Is virt_to_page() legal for consistent mem? */
+-		/* Unreserve */
+-		for (addr = (unsigned long)dmah->vaddr, sz = dmah->size;
+-		     sz > 0; addr += PAGE_SIZE, sz -= PAGE_SIZE) {
+-			ClearPageReserved(virt_to_page((void *)addr));
+-		}
++	if (dmah->vaddr)
+ 		dma_free_coherent(&dev->pdev->dev, dmah->size, dmah->vaddr,
+ 				  dmah->busaddr);
+-	}
+ }
+ 
+ /**
 
 
