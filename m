@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3698FC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:54:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09BF8C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:54:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06EE82051A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:54:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D80312051A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:54:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587048868;
-	bh=09i/G7vgg7ev+ycjxbWmSImW9u6UHZ0WjClF6ojJ5Bk=;
+	s=default; t=1587048873;
+	bh=fiGMzYdcKj1wMdAjWB8tpXxgYUTFGPSDkacsRCk08pA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qVL+NKFZG/EzcJnOOsI+TIpufJhTjcHVsqfZ7cItxGXlg/9qaZClyhAXUo61R9pKb
-	 xaX7kqFPeeElB2s/ki59SpPgjmkHLkJ25NPaZNClIVMDpH5ijFI3QQFGeDDRce3i/1
-	 TkXXTesDRaGJ0LttEl/KQ8sv5gtd0T1yUKZIbIJ0=
+	b=mezCCtOjDkgHKut/+QOdBRDi/cfYes8+1OEpoHWvqb01UnpPoH98RAgW07Zfj9JYy
+	 caizMKCEhEHGAHcjzNbLyGRF+EuVIcvyDZMvdD5b9fQGoPLlyRQPpD03vWqPhm/+pq
+	 PNjDCbXotqsYWFd4tPnk4PGd+2GjAAm7cMPm4how=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405696AbgDPOy1 (ORCPT
+        id S2405730AbgDPOya (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:54:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43782 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:54:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409205AbgDPN4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2409220AbgDPN4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Apr 2020 09:56:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40E6821927;
-        Thu, 16 Apr 2020 13:56:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A56EF20786;
+        Thu, 16 Apr 2020 13:56:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045405;
-        bh=09i/G7vgg7ev+ycjxbWmSImW9u6UHZ0WjClF6ojJ5Bk=;
+        s=default; t=1587045408;
+        bh=fiGMzYdcKj1wMdAjWB8tpXxgYUTFGPSDkacsRCk08pA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MDZAWBZAOvTmS719BljEkoPGYdxvwp6N0CPvAz6WempmEtfqkA+8z98EOW5sof6/t
-         OjwJ/nZ4YzQJNhhfkXTdVMN8fdd2fPbT9sh/txLrVWPJ9nhnsgguKNvzd0FmOe7AOd
-         VwV0hzrJDcW3pD3qOoSNL7V1HEqXwE81UDZBzPSU=
+        b=nMTgHq4H7jH3jnPGD9nsZVfm4SUdDz097aryWrLzgu6gdHARYki3A4YaQ+i+opo6F
+         NAP7GMyKs9p4qgR+rB48whK5i0NEGkSyW+OiB/YQJcOEcO9Y/JUW5UQ2WFyC1duWFi
+         NYk0TpBOQr/1kJ1LfdWvWbpudY8mSyPkPkR7aCmI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org, Neeraj Upadhyay <neeraju@codeaurora.org>,
         "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.6 121/254] PM / Domains: Allow no domain-idle-states DT property in genpd when parsing
-Date:   Thu, 16 Apr 2020 15:23:30 +0200
-Message-Id: <20200416131341.461369727@linuxfoundation.org>
+Subject: [PATCH 5.6 122/254] PM: sleep: wakeup: Skip wakeup_source_sysfs_remove() if device is not there
+Date:   Thu, 16 Apr 2020 15:23:31 +0200
+Message-Id: <20200416131341.600717164@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -62,41 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ulf Hansson <ulf.hansson@linaro.org>
+From: Neeraj Upadhyay <neeraju@codeaurora.org>
 
-commit 56cb26891ea4180121265dc6b596015772c4a4b8 upstream.
+commit 87de6594dc45dbf6819f3e0ef92f9331c5a9444c upstream.
 
-Commit 2c361684803e ("PM / Domains: Don't treat zero found compatible idle
-states as an error"), moved of_genpd_parse_idle_states() towards allowing
-none compatible idle state to be found for the device node, rather than
-returning an error code.
+Skip wakeup_source_sysfs_remove() to fix a NULL pinter dereference via
+ws->dev, if the wakeup source is unregistered before registering the
+wakeup class from device_add().
 
-However, it didn't consider that the "domain-idle-states" DT property may
-be missing as it's optional, which makes of_count_phandle_with_args() to
-return -ENOENT. Let's fix this to make the behaviour consistent.
-
-Fixes: 2c361684803e ("PM / Domains: Don't treat zero found compatible idle states as an error")
-Reported-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc: 4.20+ <stable@vger.kernel.org> # 4.20+
-Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Fixes: 2ca3d1ecb8c4 ("PM / wakeup: Register wakeup class kobj after device is added")
+Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
+Cc: 5.4+ <stable@vger.kernel.org> # 5.4+
+[ rjw: Subject & changelog, white space ]
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/base/power/domain.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/base/power/wakeup.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/base/power/domain.c
-+++ b/drivers/base/power/domain.c
-@@ -2653,7 +2653,7 @@ static int genpd_iterate_idle_states(str
- 
- 	ret = of_count_phandle_with_args(dn, "domain-idle-states", NULL);
- 	if (ret <= 0)
--		return ret;
-+		return ret == -ENOENT ? 0 : ret;
- 
- 	/* Loop over the phandles until all the requested entry is found */
- 	of_for_each_phandle(&it, ret, dn, "domain-idle-states", NULL, 0) {
+--- a/drivers/base/power/wakeup.c
++++ b/drivers/base/power/wakeup.c
+@@ -241,7 +241,9 @@ void wakeup_source_unregister(struct wak
+ {
+ 	if (ws) {
+ 		wakeup_source_remove(ws);
+-		wakeup_source_sysfs_remove(ws);
++		if (ws->dev)
++			wakeup_source_sysfs_remove(ws);
++
+ 		wakeup_source_destroy(ws);
+ 	}
+ }
 
 
