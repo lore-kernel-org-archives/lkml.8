@@ -2,135 +2,134 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A2C3C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4737C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:27:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18A2822242
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:27:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587050859;
-	bh=VYPYg6i/pKod6qF6y1lY09357dtCaYVNp3iKvoKFzC8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y3904oFAcUlcp2i7fEO23ythCoph/J8xyCVjHS9D2tDcTcOniTlHgTjKHwjxIn5du
-	 8a0TvuiobWCS0pcaj6p/clvCvit6X350Np09KOofaRJAuUICwIvROtrQH9M6TikUFx
-	 jKRop3ip9nsDUGdo9fI8dkipz8nUt6ze9iV6QeB0=
+	by mail.kernel.org (Postfix) with ESMTP id 8681F22242
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:27:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395231AbgDPP1g (ORCPT
+        id S2395183AbgDPP1o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:27:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57734 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:27:44 -0400
+Received: from foss.arm.com ([217.140.110.172]:35904 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898448AbgDPNo3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:44:29 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B9812076D;
-        Thu, 16 Apr 2020 13:44:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044669;
-        bh=VYPYg6i/pKod6qF6y1lY09357dtCaYVNp3iKvoKFzC8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bphs0LKd+f/7qhwOyo2uF+Kdskb662yWrw5GxK852kGQyYRy2DBVy1nkMOuaa6Gs0
-         8pp3oWm6Yh4LfUYavqfEjhVynRvl5g+Ht4zYgPuJFjfXywd1Hb7A7sIdFlwo6HZiFU
-         KvAwcqIUWq0/AUD/sglDGQL6ATHToNAKKI/Ibgfg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arvind Sankar <nivedita@alum.mit.edu>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 054/232] efi/x86: Ignore the memory attributes table on i386
-Date:   Thu, 16 Apr 2020 15:22:28 +0200
-Message-Id: <20200416131322.379079652@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
-References: <20200416131316.640996080@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S2395240AbgDPP1i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 11:27:38 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C115B30E;
+        Thu, 16 Apr 2020 08:27:37 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 035633F237;
+        Thu, 16 Apr 2020 08:27:36 -0700 (PDT)
+References: <20200415210512.805-1-valentin.schneider@arm.com> <20200415210512.805-10-valentin.schneider@arm.com> <CAKfTPtBDGzrvG=YhjBZBEgfx5EtM-rTC-dWX5phqh4bOY5XqgA@mail.gmail.com> <jhj4ktjpw2z.mognet@arm.com> <d508a6a5-c04f-087f-8767-6fb397b70055@arm.com> <CAKfTPtD5x_NQ1KfHhTiAR3eNA85+k13nfSR-9_PKLp6FgVu08A@mail.gmail.com>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v3 9/9] sched/topology: Define and use shortcut pointers for wakeup sd_flag scan
+In-reply-to: <CAKfTPtD5x_NQ1KfHhTiAR3eNA85+k13nfSR-9_PKLp6FgVu08A@mail.gmail.com>
+Date:   Thu, 16 Apr 2020 16:27:32 +0100
+Message-ID: <jhjv9lz78nv.mognet@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
 
-[ Upstream commit dd09fad9d2caad2325a39b766ce9e79cfc690184 ]
+On 16/04/20 14:36, Vincent Guittot wrote:
+>> Coming back to the v2 discussion on this patch
+>>
+>> https://lore.kernel.org/r/20200311181601.18314-10-valentin.schneider@arm.com
+>>
+>> SD_BALANCE_WAKE is not used in mainline anymore, so wakeups are always
+>> fast today.
+>>
+>> I.e. you wouldn't need a per_cpu(sd_balance_wake, cpu) since it's always
+>> NULL.
+>>
+>> I.e. want_affine logic and the 'for_each_domain(cpu, tmp)' isn't needed
+>> anymore.
+>>
+>> This will dramatically simplify the code in select_task_rq_fair().
+>>
+>> But I guess Vincent wants to keep the functionality so we're able to
+>> enable SD_BALANCE_WAKE on certain sd's?
+>
+> I looked too quickly what was done by this patch. I thought that it
+> was adding a per_cpu pointer for all cases including the fast path
+> with wake affine but it only skips the for_each_domain loop for the
+> slow paths which don't need it because they are already slow.
+>
+> It would be better to keep the for_each_domain loop for slow paths and
+> to use a per_cpu pointer for fast_path/wake affine. Regarding the
+> wake_affine path, we don't really care about looping all domains and
+> we could directly use the highest domain because wake_affine() that is
+> used in the loop, only uses the imbalance_pct of the sched domain for
+> wake_affine_weight() and it should not harm to use only the highest
+> domain and then select_idle_sibling doesn't use it but the llc or
+> asym_capacity pointer instead.
 
-Commit:
+So Dietmar's pointing out that sd will always be NULL for want_affine,
+because want_affine can only be true at wakeups and we don't have any
+topologies with SD_BALANCE_WAKE anymore. We would still want to call
+wake_affine() though, because that can change new_cpu.
 
-  3a6b6c6fb23667fa ("efi: Make EFI_MEMORY_ATTRIBUTES_TABLE initialization common across all architectures")
+What you are adding on top is that the only sd field used in wake_affine()
+is the imbalance_pct, so we could take a shortcut and just go for the
+highest domain with SD_WAKE_AFFINE; i.e. something like this:
 
-moved the call to efi_memattr_init() from ARM specific to the generic
-EFI init code, in order to be able to apply the restricted permissions
-described in that table on x86 as well.
-
-We never enabled this feature fully on i386, and so mapping and
-reserving this table is pointless. However, due to the early call to
-memblock_reserve(), the memory bookkeeping gets confused to the point
-where it produces the splat below when we try to map the memory later
-on:
-
-  ------------[ cut here ]------------
-  ioremap on RAM at 0x3f251000 - 0x3fa1afff
-  WARNING: CPU: 0 PID: 0 at arch/x86/mm/ioremap.c:166 __ioremap_caller ...
-  Modules linked in:
-  CPU: 0 PID: 0 Comm: swapper/0 Not tainted 4.20.0 #48
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
-  EIP: __ioremap_caller.constprop.0+0x249/0x260
-  Code: 90 0f b7 05 4e 38 40 de 09 45 e0 e9 09 ff ff ff 90 8d 45 ec c6 05 ...
-  EAX: 00000029 EBX: 00000000 ECX: de59c228 EDX: 00000001
-  ESI: 3f250fff EDI: 00000000 EBP: de3edf20 ESP: de3edee0
-  DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00200296
-  CR0: 80050033 CR2: ffd17000 CR3: 1e58c000 CR4: 00040690
-  Call Trace:
-   ioremap_cache+0xd/0x10
-   ? old_map_region+0x72/0x9d
-   old_map_region+0x72/0x9d
-   efi_map_region+0x8/0xa
-   efi_enter_virtual_mode+0x260/0x43b
-   start_kernel+0x329/0x3aa
-   i386_start_kernel+0xa7/0xab
-   startup_32_smp+0x164/0x168
-  ---[ end trace e15ccf6b9f356833 ]---
-
-Let's work around this by disregarding the memory attributes table
-altogether on i386, which does not result in a loss of functionality
-or protection, given that we never consumed the contents.
-
-Fixes: 3a6b6c6fb23667fa ("efi: Make EFI_MEMORY_ATTRIBUTES_TABLE ... ")
-Tested-by: Arvind Sankar <nivedita@alum.mit.edu>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20200304165917.5893-1-ardb@kernel.org
-Link: https://lore.kernel.org/r/20200308080859.21568-21-ardb@kernel.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/efi/efi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+if (want_affine) {
+        // We can cache that at topology buildup
+        sd = highest_flag_domain(cpu, SD_WAKE_AFFINE);
 
-diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-index ad8a4bc074fbf..e3861d267d9aa 100644
---- a/drivers/firmware/efi/efi.c
-+++ b/drivers/firmware/efi/efi.c
-@@ -562,7 +562,7 @@ int __init efi_config_parse_tables(void *config_tables, int count, int sz,
- 		}
- 	}
- 
--	if (efi_enabled(EFI_MEMMAP))
-+	if (!IS_ENABLED(CONFIG_X86_32) && efi_enabled(EFI_MEMMAP))
- 		efi_memattr_init();
- 
- 	efi_tpm_eventlog_init();
--- 
-2.20.1
+        if (cpumask_test_cpu(prev_cpu, sched_domain_span(sd) &&
+            cpu != prev_cpu)
+                new_cpu = wake_affine();
 
+        // Directly go to select_idle_sibling()
+        goto sis;
+}
 
+// !want_affine logic here
+---
 
+As for the !want_affine part, we could either keep the current domain walk
+(IIUC this is what you are suggesting) or go for the extra cached pointers
+I'm introducing.
+
+Now if we are a bit bolder than that, because there are no more
+(mainline) topologies w/ SD_BALANCE_WAKE, we could even turn the above
+into:
+
+---
+if (wake_flags & WF_TTWU) {
+        if (want_affine) {
+                // We can cache that at topology buildup
+                sd = highest_flag_domain(cpu, SD_WAKE_AFFINE);
+
+                if (cpumask_test_cpu(prev_cpu, sched_domain_span(sd) &&
+                    cpu != prev_cpu)
+                        new_cpu = wake_affine();
+
+        }
+        // Directly go to select_idle_sibling()
+        goto sis;
+}
+
+// !want_affine logic here
+---
+
+This in turns mean we could get rid of SD_BALANCE_WAKE entirely... I'm a
+bit more reluctant to that only because the last SD_BALANCE_WAKE setter was
+removed fairly recently, see
+  a526d466798d ("sched/topology: Remove SD_BALANCE_WAKE on asymmetric capacity systems")
