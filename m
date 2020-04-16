@@ -2,98 +2,102 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA67C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:01:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C74C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E8A721924
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:01:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B3BA214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:01:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506816AbgDPQBh (ORCPT
+        id S2636563AbgDPQBn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 12:01:37 -0400
-Received: from mga14.intel.com ([192.55.52.115]:40294 "EHLO mga14.intel.com"
+        Thu, 16 Apr 2020 12:01:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2636404AbgDPQAm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 12:00:42 -0400
-IronPort-SDR: g/XFrmyn5GwHB/99h6aH5bxxV06mE5I3+7kN0X3X60a0RMe8qOgHfCHxQCcC+NYMrlEewS1Kg6
- yAscooNY1Yxw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 09:00:37 -0700
-IronPort-SDR: pDMNkWvYNHv1ubiGEOcKw/KAQTj5tzHAVB/4Q19JN+AEY6d4sLqBsaG9vLrsgh1d22eY0Z521B
- sV9XGTvo7wyA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,391,1580803200"; 
-   d="scan'208";a="455314877"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga006.fm.intel.com with ESMTP; 16 Apr 2020 09:00:34 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-        id 3FAC717F; Thu, 16 Apr 2020 19:00:31 +0300 (EEST)
-From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To:     akpm@linux-foundation.org, Andrea Arcangeli <aarcange@redhat.com>
-Cc:     Zi Yan <ziy@nvidia.com>, Yang Shi <yang.shi@linux.alibaba.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        William Kucharski <william.kucharski@oracle.com>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCHv4 0/8] thp/khugepaged improvements and CoW semantics
-Date:   Thu, 16 Apr 2020 19:00:18 +0300
-Message-Id: <20200416160026.16538-1-kirill.shutemov@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
+        id S2506593AbgDPQBf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 12:01:35 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49624214AF;
+        Thu, 16 Apr 2020 16:01:34 +0000 (UTC)
+Date:   Thu, 16 Apr 2020 12:01:32 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Muchun Song <songmuchun@bytedance.com>
+Cc:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        bsegall@google.com, mgorman@suse.de, mingo@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sched/cpuacct: Fix charge cpuacct.usage_sys
+ incorrently.
+Message-ID: <20200416120132.7c2df52a@gandalf.local.home>
+In-Reply-To: <20200416113502.53b33a1c@gandalf.local.home>
+References: <20200416141833.50663-1-songmuchun@bytedance.com>
+        <20200416113502.53b33a1c@gandalf.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patchset adds khugepaged selftest (anon-THP only for now), expands
-cases khugepaged can handle and switches anon-THP copy-on-write handling
-to 4k.
+On Thu, 16 Apr 2020 11:35:02 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Please review and consider applying.
+> On Thu, 16 Apr 2020 22:18:33 +0800
+> Muchun Song <songmuchun@bytedance.com> wrote:
+> 
+> > The user_mode(task_pt_regs(tsk)) always return true for
+> > user thread, and false for kernel thread. So it means that
+> > the cpuacct.usage_sys is the time that kernel thread uses
+> > not the time that thread uses in the kernel mode. We can
+> > use get_irq_regs() instead of task_pt_regs() to fix it.
+> > 
+> > Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+> > ---
+> >  kernel/sched/cpuacct.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/kernel/sched/cpuacct.c b/kernel/sched/cpuacct.c
+> > index 6448b0438ffb2..edfc62554648e 100644
+> > --- a/kernel/sched/cpuacct.c
+> > +++ b/kernel/sched/cpuacct.c
+> > @@ -5,6 +5,7 @@
+> >   * Based on the work by Paul Menage (menage@google.com) and Balbir Singh
+> >   * (balbir@in.ibm.com).
+> >   */
+> > +#include <asm/irq_regs.h>
+> >  #include "sched.h"
+> >  
+> >  /* Time spent by the tasks of the CPU accounting group executing in ... */
+> > @@ -339,7 +340,7 @@ void cpuacct_charge(struct task_struct *tsk, u64 cputime)
+> >  {
+> >  	struct cpuacct *ca;
+> >  	int index = CPUACCT_STAT_SYSTEM;
+> > -	struct pt_regs *regs = task_pt_regs(tsk);
+> > +	struct pt_regs *regs = get_irq_regs();  
+> 
+> But get_irq_regs() is only available from interrupt context. This will be
+> NULL most the time, whereas the original way will have regs existing for
+> the task.
 
-v4:
- - Rebase to v5.7-rc1;
- - Minor adjustments based on feedback: comments/messages/whitespace
- - Apply Reviewed/Acked/Tested-by;
-v3:
- - Fix handling compound pages in swap cache;
- - Rework swaped vs. referenced check;
- - Fix refcounting for compound pages;
- - Drop Reviewed-by/Acked-by as patchset changed non-trivially;
- - Typos;
-v2:
- - Fix race in compound page handling;
- - Add one more test-case for compound page case;
- - Rework LRU add cache draining;
- - Typos;
+Perhaps you want:
 
-Kirill A. Shutemov (8):
-  khugepaged: Add self test
-  khugepaged: Do not stop collapse if less than half PTEs are referenced
-  khugepaged: Drain all LRU caches before scanning pages
-  khugepaged: Drain LRU add pagevec after swapin
-  khugepaged: Allow to collapse a page shared across fork
-  khugepaged: Allow to collapse PTE-mapped compound pages
-  thp: Change CoW semantics for anon-THP
-  khugepaged: Introduce 'max_ptes_shared' tunable
+	regs = get_irqs_regs();
+	if (!regs)
+		regs = task_pt_regs(tsk);
 
- Documentation/admin-guide/mm/transhuge.rst |   7 +
- include/trace/events/huge_memory.h         |   3 +-
- mm/huge_memory.c                           | 250 +-----
- mm/khugepaged.c                            | 220 +++--
- tools/testing/selftests/vm/Makefile        |   1 +
- tools/testing/selftests/vm/khugepaged.c    | 982 +++++++++++++++++++++
- 6 files changed, 1175 insertions(+), 288 deletions(-)
- create mode 100644 tools/testing/selftests/vm/khugepaged.c
+?
 
--- 
-2.26.1
+-- Steve
 
+> 
+> >  
+> >  	if (regs && user_mode(regs))
+> >  		index = CPUACCT_STAT_USER;  
+> 
