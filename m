@@ -2,340 +2,102 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCFD6C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A9E0C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:43:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC79A20656
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:43:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EB7620656
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:43:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="F6msH8q4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506552AbgDPLnK (ORCPT
+        id S2633984AbgDPLnb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 07:43:10 -0400
-Received: from smtp-190e.mail.infomaniak.ch ([185.125.25.14]:41267 "EHLO
-        smtp-190e.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2506540AbgDPLmX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 07:42:23 -0400
-Received: from smtp-3-0001.mail.infomaniak.ch (unknown [10.4.36.108])
-        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 492wjN2t0Xzlhk0W;
-        Thu, 16 Apr 2020 12:40:24 +0200 (CEST)
-Received: from localhost (unknown [94.23.54.103])
-        by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 492wjM6mH5zlhJgr;
-        Thu, 16 Apr 2020 12:40:23 +0200 (CEST)
-From:   =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        James Morris <jmorris@namei.org>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mickael.salaun@ssi.gouv.fr>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vincent Dagonneau <vincent.dagonneau@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-security-module@vger.kernel.org, x86@kernel.org
-Subject: [PATCH v16 03/10] landlock: Set up the security framework and manage credentials
-Date:   Thu, 16 Apr 2020 12:39:48 +0200
-Message-Id: <20200416103955.145757-4-mic@digikod.net>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416103955.145757-1-mic@digikod.net>
-References: <20200416103955.145757-1-mic@digikod.net>
+        Thu, 16 Apr 2020 07:43:31 -0400
+Received: from ozlabs.org ([203.11.71.1]:34513 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2505947AbgDPLm6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 07:42:58 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 492y5V2GZKz9sR4;
+        Thu, 16 Apr 2020 21:42:53 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1587037375;
+        bh=t4CnpKi/1cWNveFL503UiUpa0nOioFN2uGWTVXoAKYo=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=F6msH8q4pMopBVokSfSDN6OBQ2S/Eb32uVgHlQ0T511IzSGtYtiaPIYwl/WVqwAzB
+         pl3QBuU5QbsXoXyFXmZ21FGYq7sWMmuonMX+4+FRxfwvwDpTakIsA64FlIELXls/Fk
+         iBWCoCwbM3fY2tIz6olJLuRfOd3prB0QUwORjf0UHyg5D0cXZN1n2479owrKo8mb2H
+         4Z9qCObz2+YH64TdrgA0v1on7J/TO5im0Sp37K7tv9tXlYJHD2zvBgJiPJGgTe5v36
+         ucqbz3InfjaVmg95tQi4nJj8dJYQ4sEzmpGlNqQ4eO6FheHkpmQ39ZsOyKv/JzFSDC
+         IOvVLxgMc6YPA==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
+        "christophe.leroy\@c-s.fr" <christophe.leroy@c-s.fr>,
+        "paulus\@samba.org" <paulus@samba.org>,
+        "benh\@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "oss\@buserror.net" <oss@buserror.net>,
+        "tglx\@linutronix.de" <tglx@linutronix.de>
+Cc:     "linuxppc-dev\@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Hamish Martin <Hamish.Martin@alliedtelesis.co.nz>
+Subject: Re: [PATCH v2] powerpc/setup_64: Set cache-line-size based on cache-block-size
+In-Reply-To: <343c0e8b01ab74481e0b8dfbe588b1c84127a487.camel@alliedtelesis.co.nz>
+References: <dd342c71e03e654a8786302d82f9662004418c6e.camel@alliedtelesis.co.nz> <20200325031854.7625-1-chris.packham@alliedtelesis.co.nz> <343c0e8b01ab74481e0b8dfbe588b1c84127a487.camel@alliedtelesis.co.nz>
+Date:   Thu, 16 Apr 2020 21:43:04 +1000
+Message-ID: <87tv1jirlj.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
-X-Antivirus-Code: 0x100000
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A process credentials point to a Landlock domain, which is underneath
-implemented with a ruleset.  In the following commits, this domain is
-used to check and enforce the ptrace and filesystem security policies.
-A domain is inherited from a parent to its child the same way a thread
-inherits a seccomp policy.
+Chris Packham <Chris.Packham@alliedtelesis.co.nz> writes:
+> Hi All,
+>
+> On Wed, 2020-03-25 at 16:18 +1300, Chris Packham wrote:
+>> If {i,d}-cache-block-size is set and {i,d}-cache-line-size is not,
+>> use
+>> the block-size value for both. Per the devicetree spec cache-line-
+>> size
+>> is only needed if it differs from the block size.
+>> 
+>> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+>> ---
+>> It looks as though the bsizep = lsizep is not required per the spec
+>> but it's
+>> probably safer to retain it.
+>> 
+>> Changes in v2:
+>> - Scott pointed out that u-boot should be filling in the cache
+>> properties
+>>   (which it does). But it does not specify a cache-line-size because
+>> it
+>>   provides a cache-block-size and the spec says you don't have to if
+>> they are
+>>   the same. So the error is in the parsing not in the devicetree
+>> itself.
+>> 
+>
+> Ping? This thread went kind of quiet.
 
-Signed-off-by: Mickaël Salaün <mic@digikod.net>
-Cc: James Morris <jmorris@namei.org>
-Cc: Jann Horn <jannh@google.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Serge E. Hallyn <serge@hallyn.com>
----
+I replied in the other thread:
 
-Changes since v15:
-* Optimize landlocked() for current thread.
-* Display the greeting message when everything is initialized.
+  https://lore.kernel.org/linuxppc-dev/87369xx99u.fsf@mpe.ellerman.id.au/
 
-Changes since v14:
-* Uses pr_fmt from common.h .
-* Constify variables.
-* Remove useless NULL initialization.
+But then the merge window happened which is a busy time.
 
-Changes since v13:
-* totally get ride of the seccomp dependency
-* only keep credential management and LSM setup.
+What I'd really like is a v3 that incorporates the info I wrote in the
+other thread and a Fixes tag.
 
-Previous changes:
-https://lore.kernel.org/lkml/20191104172146.30797-4-mic@digikod.net/
----
- security/Kconfig           | 10 +++----
- security/landlock/Makefile |  3 +-
- security/landlock/common.h | 20 +++++++++++++
- security/landlock/cred.c   | 46 ++++++++++++++++++++++++++++++
- security/landlock/cred.h   | 58 ++++++++++++++++++++++++++++++++++++++
- security/landlock/setup.c  | 31 ++++++++++++++++++++
- security/landlock/setup.h  | 16 +++++++++++
- 7 files changed, 178 insertions(+), 6 deletions(-)
- create mode 100644 security/landlock/common.h
- create mode 100644 security/landlock/cred.c
- create mode 100644 security/landlock/cred.h
- create mode 100644 security/landlock/setup.c
- create mode 100644 security/landlock/setup.h
+If you feel like doing that, that would be great. Otherwise I'll do it
+tomorrow.
 
-diff --git a/security/Kconfig b/security/Kconfig
-index 582fd777a757..a96ee1c7fd25 100644
---- a/security/Kconfig
-+++ b/security/Kconfig
-@@ -278,11 +278,11 @@ endchoice
- 
- config LSM
- 	string "Ordered list of enabled LSMs"
--	default "lockdown,yama,loadpin,safesetid,integrity,smack,selinux,tomoyo,apparmor,bpf" if DEFAULT_SECURITY_SMACK
--	default "lockdown,yama,loadpin,safesetid,integrity,apparmor,selinux,smack,tomoyo,bpf" if DEFAULT_SECURITY_APPARMOR
--	default "lockdown,yama,loadpin,safesetid,integrity,tomoyo,bpf" if DEFAULT_SECURITY_TOMOYO
--	default "lockdown,yama,loadpin,safesetid,integrity,bpf" if DEFAULT_SECURITY_DAC
--	default "lockdown,yama,loadpin,safesetid,integrity,selinux,smack,tomoyo,apparmor,bpf"
-+	default "landlock,lockdown,yama,loadpin,safesetid,integrity,smack,selinux,tomoyo,apparmor,bpf" if DEFAULT_SECURITY_SMACK
-+	default "landlock,lockdown,yama,loadpin,safesetid,integrity,apparmor,selinux,smack,tomoyo,bpf" if DEFAULT_SECURITY_APPARMOR
-+	default "landlock,lockdown,yama,loadpin,safesetid,integrity,tomoyo,bpf" if DEFAULT_SECURITY_TOMOYO
-+	default "landlock,lockdown,yama,loadpin,safesetid,integrity,bpf" if DEFAULT_SECURITY_DAC
-+	default "landlock,lockdown,yama,loadpin,safesetid,integrity,selinux,smack,tomoyo,apparmor,bpf"
- 	help
- 	  A comma-separated list of LSMs, in initialization order.
- 	  Any LSMs left off this list will be ignored. This can be
-diff --git a/security/landlock/Makefile b/security/landlock/Makefile
-index d846eba445bb..041ea242e627 100644
---- a/security/landlock/Makefile
-+++ b/security/landlock/Makefile
-@@ -1,3 +1,4 @@
- obj-$(CONFIG_SECURITY_LANDLOCK) := landlock.o
- 
--landlock-y := object.o ruleset.o
-+landlock-y := setup.o object.o ruleset.o \
-+	cred.o
-diff --git a/security/landlock/common.h b/security/landlock/common.h
-new file mode 100644
-index 000000000000..5dc0fe15707d
---- /dev/null
-+++ b/security/landlock/common.h
-@@ -0,0 +1,20 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Landlock LSM - Common constants and helpers
-+ *
-+ * Copyright © 2016-2020 Mickaël Salaün <mic@digikod.net>
-+ * Copyright © 2018-2020 ANSSI
-+ */
-+
-+#ifndef _SECURITY_LANDLOCK_COMMON_H
-+#define _SECURITY_LANDLOCK_COMMON_H
-+
-+#define LANDLOCK_NAME "landlock"
-+
-+#ifdef pr_fmt
-+#undef pr_fmt
-+#endif
-+
-+#define pr_fmt(fmt) LANDLOCK_NAME ": " fmt
-+
-+#endif /* _SECURITY_LANDLOCK_COMMON_H */
-diff --git a/security/landlock/cred.c b/security/landlock/cred.c
-new file mode 100644
-index 000000000000..7074149d2517
---- /dev/null
-+++ b/security/landlock/cred.c
-@@ -0,0 +1,46 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Landlock LSM - Credential hooks
-+ *
-+ * Copyright © 2017-2020 Mickaël Salaün <mic@digikod.net>
-+ * Copyright © 2018-2020 ANSSI
-+ */
-+
-+#include <linux/cred.h>
-+#include <linux/lsm_hooks.h>
-+
-+#include "common.h"
-+#include "cred.h"
-+#include "ruleset.h"
-+#include "setup.h"
-+
-+static int hook_cred_prepare(struct cred *const new,
-+		const struct cred *const old, const gfp_t gfp)
-+{
-+	const struct landlock_cred_security *cred_old = landlock_cred(old);
-+	struct landlock_cred_security *cred_new = landlock_cred(new);
-+	struct landlock_ruleset *dom_old;
-+
-+	dom_old = cred_old->domain;
-+	if (dom_old) {
-+		landlock_get_ruleset(dom_old);
-+		cred_new->domain = dom_old;
-+	}
-+	return 0;
-+}
-+
-+static void hook_cred_free(struct cred *const cred)
-+{
-+	landlock_put_ruleset_deferred(landlock_cred(cred)->domain);
-+}
-+
-+static struct security_hook_list landlock_hooks[] __lsm_ro_after_init = {
-+	LSM_HOOK_INIT(cred_prepare, hook_cred_prepare),
-+	LSM_HOOK_INIT(cred_free, hook_cred_free),
-+};
-+
-+__init void landlock_add_hooks_cred(void)
-+{
-+	security_add_hooks(landlock_hooks, ARRAY_SIZE(landlock_hooks),
-+			LANDLOCK_NAME);
-+}
-diff --git a/security/landlock/cred.h b/security/landlock/cred.h
-new file mode 100644
-index 000000000000..55459069769c
---- /dev/null
-+++ b/security/landlock/cred.h
-@@ -0,0 +1,58 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Landlock LSM - Credential hooks
-+ *
-+ * Copyright © 2019 Mickaël Salaün <mic@digikod.net>
-+ * Copyright © 2019 ANSSI
-+ */
-+
-+#ifndef _SECURITY_LANDLOCK_CRED_H
-+#define _SECURITY_LANDLOCK_CRED_H
-+
-+#include <linux/cred.h>
-+#include <linux/init.h>
-+#include <linux/rcupdate.h>
-+
-+#include "ruleset.h"
-+#include "setup.h"
-+
-+struct landlock_cred_security {
-+	struct landlock_ruleset *domain;
-+};
-+
-+static inline struct landlock_cred_security *landlock_cred(
-+		const struct cred *cred)
-+{
-+	return cred->security + landlock_blob_sizes.lbs_cred;
-+}
-+
-+static inline struct landlock_ruleset *landlock_get_current_domain(void)
-+{
-+	return landlock_cred(current_cred())->domain;
-+}
-+
-+/*
-+ * The call needs to come from an RCU read-side critical section.
-+ */
-+static inline struct landlock_ruleset *landlock_get_task_domain(
-+		const struct task_struct *const task)
-+{
-+	return landlock_cred(__task_cred(task))->domain;
-+}
-+
-+static inline bool landlocked(const struct task_struct *const task)
-+{
-+	bool has_dom;
-+
-+	if (task == current)
-+		return !!landlock_get_current_domain();
-+
-+	rcu_read_lock();
-+	has_dom = !!landlock_get_task_domain(task);
-+	rcu_read_unlock();
-+	return has_dom;
-+}
-+
-+__init void landlock_add_hooks_cred(void);
-+
-+#endif /* _SECURITY_LANDLOCK_CRED_H */
-diff --git a/security/landlock/setup.c b/security/landlock/setup.c
-new file mode 100644
-index 000000000000..39ee1766f175
---- /dev/null
-+++ b/security/landlock/setup.c
-@@ -0,0 +1,31 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Landlock LSM - Security framework setup
-+ *
-+ * Copyright © 2016-2020 Mickaël Salaün <mic@digikod.net>
-+ * Copyright © 2018-2020 ANSSI
-+ */
-+
-+#include <linux/init.h>
-+#include <linux/lsm_hooks.h>
-+
-+#include "common.h"
-+#include "cred.h"
-+#include "setup.h"
-+
-+struct lsm_blob_sizes landlock_blob_sizes __lsm_ro_after_init = {
-+	.lbs_cred = sizeof(struct landlock_cred_security),
-+};
-+
-+static int __init landlock_init(void)
-+{
-+	landlock_add_hooks_cred();
-+	pr_info("Up and running.\n");
-+	return 0;
-+}
-+
-+DEFINE_LSM(LANDLOCK_NAME) = {
-+	.name = LANDLOCK_NAME,
-+	.init = landlock_init,
-+	.blobs = &landlock_blob_sizes,
-+};
-diff --git a/security/landlock/setup.h b/security/landlock/setup.h
-new file mode 100644
-index 000000000000..9fdbf33fcc33
---- /dev/null
-+++ b/security/landlock/setup.h
-@@ -0,0 +1,16 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Landlock LSM - Security framework setup
-+ *
-+ * Copyright © 2016-2020 Mickaël Salaün <mic@digikod.net>
-+ * Copyright © 2018-2020 ANSSI
-+ */
-+
-+#ifndef _SECURITY_LANDLOCK_SETUP_H
-+#define _SECURITY_LANDLOCK_SETUP_H
-+
-+#include <linux/lsm_hooks.h>
-+
-+extern struct lsm_blob_sizes landlock_blob_sizes;
-+
-+#endif /* _SECURITY_LANDLOCK_SETUP_H */
--- 
-2.26.1
-
+cheers
