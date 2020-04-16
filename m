@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F755C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1720C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:53:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F4E020732
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:53:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEFDF2078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:53:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587045209;
-	bh=yhI3NI1KmfPDccG/EU6FqCzaXscBVZV5NqW/j9k7kIo=;
+	s=default; t=1587045217;
+	bh=YhHQ8Pn5tnS3rOozkj3F34JxgYMy1nVFrfal4eA4U58=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X0OCR6OmquAwHrqLc81U+9/UWo/a94Wjr7jx6h/KS75nIts0YLUtIO/i/eUWr/n+i
-	 u0OKCVVRagjPPLOlJP2kmGPnEqT21Dn9fJ7lZzykSuwmh9m/1t7ZKJYCjrsv33I2y5
-	 ZSj/HduqVRx9FRfC3QiIq2GnMwgBaL52Z35sgS2M=
+	b=TIntHiEqPOs96QPZwadAxkPe7FnE4813UMRWejW3F7qzhE0++sFrUpF7E4RW9Gd4q
+	 lw21TZo2dKeetP0gM94LOfH7s4yFZr9E6twp7ylZw6VdMcbno6keKWfJMegPJvy/LB
+	 yf5MGnJjyrUVC492AmAfQXvSXYRzLwqaGl/R+fTY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409049AbgDPNx1 (ORCPT
+        id S2503731AbgDPNxc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:53:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49422 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:53:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896757AbgDPNhM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:37:12 -0400
+        id S2897436AbgDPNhR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:37:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1121221F7;
-        Thu, 16 Apr 2020 13:37:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A757221BE5;
+        Thu, 16 Apr 2020 13:37:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044232;
-        bh=yhI3NI1KmfPDccG/EU6FqCzaXscBVZV5NqW/j9k7kIo=;
+        s=default; t=1587044237;
+        bh=YhHQ8Pn5tnS3rOozkj3F34JxgYMy1nVFrfal4eA4U58=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aiWXXYb7/YhWFJzmc473YiH+RX1cn+RqiGLre0dSjL5mB8+PUQvXIqtSfZEOZGTmx
-         fkp9MNKBzyi4QnXzAs7S3RGSLZNmn5AaC1tB2C4vCYG+xUS679tO2W8/O+AB4xpsU7
-         8Kyw2yRdw1wLdcuR7eJXTYAzaKFoVbWpOqFjC6mM=
+        b=yAwxnDc0YfMlE6Jv1fANE7jmWEUYLuYD2NzMn+cCyQmcTzIzjTUhNaO7VHHVP0mNF
+         7CLUJortZTY/CIn1AG/bRLeREKi7LQ8GwAr5zzhFdNJBSla0YrbBKYW5n1YXkPrWFl
+         3W/p1gmgFJAilkUEOPuJbPr3gPsures2WqH9DmY4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: [PATCH 5.5 117/257] PCI: endpoint: Fix for concurrent memory allocation in OB address region
-Date:   Thu, 16 Apr 2020 15:22:48 +0200
-Message-Id: <20200416131340.891461151@linuxfoundation.org>
+        stable@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>
+Subject: [PATCH 5.5 136/257] signal: Extend exec_id to 64bits
+Date:   Thu, 16 Apr 2020 15:23:07 +0200
+Message-Id: <20200416131343.468200755@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -59,95 +58,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kishon Vijay Abraham I <kishon@ti.com>
+From: Eric W. Biederman <ebiederm@xmission.com>
 
-commit 04e046ca57ebed3943422dee10eec9e73aec081e upstream.
+commit d1e7fd6462ca9fc76650fbe6ca800e35b24267da upstream.
 
-pci-epc-mem uses a bitmap to manage the Endpoint outbound (OB) address
-region. This address region will be shared by multiple endpoint
-functions (in the case of multi function endpoint) and it has to be
-protected from concurrent access to avoid updating an inconsistent state.
+Replace the 32bit exec_id with a 64bit exec_id to make it impossible
+to wrap the exec_id counter.  With care an attacker can cause exec_id
+wrap and send arbitrary signals to a newly exec'd parent.  This
+bypasses the signal sending checks if the parent changes their
+credentials during exec.
 
-Use a mutex to protect bitmap updates to prevent the memory
-allocation API from returning incorrect addresses.
+The severity of this problem can been seen that in my limited testing
+of a 32bit exec_id it can take as little as 19s to exec 65536 times.
+Which means that it can take as little as 14 days to wrap a 32bit
+exec_id.  Adam Zabrocki has succeeded wrapping the self_exe_id in 7
+days.  Even my slower timing is in the uptime of a typical server.
+Which means self_exec_id is simply a speed bump today, and if exec
+gets noticably faster self_exec_id won't even be a speed bump.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: stable@vger.kernel.org # v4.14+
+Extending self_exec_id to 64bits introduces a problem on 32bit
+architectures where reading self_exec_id is no longer atomic and can
+take two read instructions.  Which means that is is possible to hit
+a window where the read value of exec_id does not match the written
+value.  So with very lucky timing after this change this still
+remains expoiltable.
+
+I have updated the update of exec_id on exec to use WRITE_ONCE
+and the read of exec_id in do_notify_parent to use READ_ONCE
+to make it clear that there is no locking between these two
+locations.
+
+Link: https://lore.kernel.org/kernel-hardening/20200324215049.GA3710@pi3.com.pl
+Fixes: 2.3.23pre2
+Cc: stable@vger.kernel.org
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/endpoint/pci-epc-mem.c |   10 ++++++++--
- include/linux/pci-epc.h            |    3 +++
- 2 files changed, 11 insertions(+), 2 deletions(-)
+ fs/exec.c             |    2 +-
+ include/linux/sched.h |    4 ++--
+ kernel/signal.c       |    2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/pci/endpoint/pci-epc-mem.c
-+++ b/drivers/pci/endpoint/pci-epc-mem.c
-@@ -79,6 +79,7 @@ int __pci_epc_mem_init(struct pci_epc *e
- 	mem->page_size = page_size;
- 	mem->pages = pages;
- 	mem->size = size;
-+	mutex_init(&mem->lock);
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -1382,7 +1382,7 @@ void setup_new_exec(struct linux_binprm
  
- 	epc->mem = mem;
- 
-@@ -122,7 +123,7 @@ void __iomem *pci_epc_mem_alloc_addr(str
- 				     phys_addr_t *phys_addr, size_t size)
- {
- 	int pageno;
--	void __iomem *virt_addr;
-+	void __iomem *virt_addr = NULL;
- 	struct pci_epc_mem *mem = epc->mem;
- 	unsigned int page_shift = ilog2(mem->page_size);
- 	int order;
-@@ -130,15 +131,18 @@ void __iomem *pci_epc_mem_alloc_addr(str
- 	size = ALIGN(size, mem->page_size);
- 	order = pci_epc_mem_get_order(mem, size);
- 
-+	mutex_lock(&mem->lock);
- 	pageno = bitmap_find_free_region(mem->bitmap, mem->pages, order);
- 	if (pageno < 0)
--		return NULL;
-+		goto ret;
- 
- 	*phys_addr = mem->phys_base + ((phys_addr_t)pageno << page_shift);
- 	virt_addr = ioremap(*phys_addr, size);
- 	if (!virt_addr)
- 		bitmap_release_region(mem->bitmap, pageno, order);
- 
-+ret:
-+	mutex_unlock(&mem->lock);
- 	return virt_addr;
+ 	/* An exec changes our domain. We are no longer part of the thread
+ 	   group */
+-	current->self_exec_id++;
++	WRITE_ONCE(current->self_exec_id, current->self_exec_id + 1);
+ 	flush_signal_handlers(current, 0);
  }
- EXPORT_SYMBOL_GPL(pci_epc_mem_alloc_addr);
-@@ -164,7 +168,9 @@ void pci_epc_mem_free_addr(struct pci_ep
- 	pageno = (phys_addr - mem->phys_base) >> page_shift;
- 	size = ALIGN(size, mem->page_size);
- 	order = pci_epc_mem_get_order(mem, size);
-+	mutex_lock(&mem->lock);
- 	bitmap_release_region(mem->bitmap, pageno, order);
-+	mutex_unlock(&mem->lock);
- }
- EXPORT_SYMBOL_GPL(pci_epc_mem_free_addr);
+ EXPORT_SYMBOL(setup_new_exec);
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -939,8 +939,8 @@ struct task_struct {
+ 	struct seccomp			seccomp;
  
---- a/include/linux/pci-epc.h
-+++ b/include/linux/pci-epc.h
-@@ -71,6 +71,7 @@ struct pci_epc_ops {
-  * @bitmap: bitmap to manage the PCI address space
-  * @pages: number of bits representing the address region
-  * @page_size: size of each page
-+ * @lock: mutex to protect bitmap
-  */
- struct pci_epc_mem {
- 	phys_addr_t	phys_base;
-@@ -78,6 +79,8 @@ struct pci_epc_mem {
- 	unsigned long	*bitmap;
- 	size_t		page_size;
- 	int		pages;
-+	/* mutex to protect against concurrent access for memory allocation*/
-+	struct mutex	lock;
- };
+ 	/* Thread group tracking: */
+-	u32				parent_exec_id;
+-	u32				self_exec_id;
++	u64				parent_exec_id;
++	u64				self_exec_id;
  
- /**
+ 	/* Protection against (de-)allocation: mm, files, fs, tty, keyrings, mems_allowed, mempolicy: */
+ 	spinlock_t			alloc_lock;
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -1931,7 +1931,7 @@ bool do_notify_parent(struct task_struct
+ 		 * This is only possible if parent == real_parent.
+ 		 * Check if it has changed security domain.
+ 		 */
+-		if (tsk->parent_exec_id != tsk->parent->self_exec_id)
++		if (tsk->parent_exec_id != READ_ONCE(tsk->parent->self_exec_id))
+ 			sig = SIGCHLD;
+ 	}
+ 
 
 
