@@ -2,115 +2,142 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF4D7C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 01:17:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA925C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 01:18:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A40EF2076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 01:17:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rFyRARAR"
+	by mail.kernel.org (Postfix) with ESMTP id 855B82076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 01:18:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586999898;
+	bh=Ghz0lZLJntZUtz+57l/FbR56+HxHWxV55k1vKuCFgZg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ESKF5H/TvLSbRtphFYvhEeOkoxccQU23rQgIq0Om7UY5DCmQ5MLOJq9ve4JIq4JAw
+	 VONC/b7w7qPZYH1B5VeIPlmxlSxpNyG9w6aVWOLdsOYzRvlgMntXIR+Rw7Zi9PpMaQ
+	 5AqXMqq1XPh76uMzW5Oros8cwhRjG7PBwIGltLXM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730828AbgDPBRM (ORCPT
+        id S1731121AbgDPBSA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 21:17:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54682 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbgDPBQG (ORCPT
+        Wed, 15 Apr 2020 21:18:00 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:43729 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730752AbgDPBRH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 21:16:06 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17460C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 18:16:05 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id ca21so7322658edb.7
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 18:16:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DqhZGRoL70sm5/RzVHO716gnr2CLOKeQ+jLS9k1/y4Y=;
-        b=rFyRARARoNvifTie3IBinXaGw3HxWbMokaBEk9FRXHKnN2o9HQhSGjBCrKKdNUYv+q
-         ySccDKON48Kn5CX1Hb2xKb3O+fhncJOjdCjC0t2l1Q6XCKyMahaZUP34nUWaFw0LiVI9
-         r3pjyTURPGWopwqma4Z6YJa5jtcZf1Bz+K56h45IUS205NJ3gScZV0yC5wQSyQ8z50l1
-         Gvin7IoCG734F0kcIVUghxfJXGxvt9U2omfAFExwvrNieQpeK98ioL52hWBJ5aGWexXy
-         3kD1KIFDI5I4GMiAAQlLfEpqutRTj6lMTdeNaJftbg1z01fnoFuiQqpeAYHnmay+F6J9
-         rd/g==
+        Wed, 15 Apr 2020 21:17:07 -0400
+Received: by mail-pl1-f196.google.com with SMTP id z6so723382plk.10;
+        Wed, 15 Apr 2020 18:17:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DqhZGRoL70sm5/RzVHO716gnr2CLOKeQ+jLS9k1/y4Y=;
-        b=CJjq6EhlLT0HLSEsrwaJVWq5yMpizRBYWT+VJlLBXPhnOJ+aHYiAeXCrn1Nw6Coy4h
-         sX55DyUoo9kLE/s51JwXWD/hrsiRl2FYsDV2/j7rtmtXEEBQASdAFx35j8SnFO2xvx1b
-         F3urlohvbjw4fBH8CPieP6I8A39nzeaSW9lcDjKfkQ+3wOFmX2YmDg1azbopaW+lqzHn
-         5eRQ1O+WsR9wIMDklakczEWGGrfftDaUvKsNu9sST4M3MwnfBo1s4Guc65fa36Dq3nfv
-         QMfLeVeWPYoDs3nDxOGOV2wnDNm8OW5vd3WWhcJTPyAMPBoH4Uzeh902dYHnPMOM0gE1
-         DqSw==
-X-Gm-Message-State: AGi0PuYayGss6YeYsJ9q5ywifVUmwNeHKhgcTlgkoEbRTsGKOH2NuBUO
-        mzTnJgWNaWC4k8NAxd+1mSr/Wr3RQ8Zs8ZRvqSTw/A==
-X-Google-Smtp-Source: APiQypJdK40vPIhcswQ8xkik3AhhbZAYcvE2Hh6OIrvYJSqpheM1v+mhi3nUTHnpQhjxo0F4dTdt0+eK0N4jSjhfODc=
-X-Received: by 2002:a50:a9c5:: with SMTP id n63mr27903084edc.312.1586999763505;
- Wed, 15 Apr 2020 18:16:03 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WR6dS8sppVhsHDqaOLN6r5u6vSBUIRk19qqS7mXyQHc=;
+        b=TLo7dUqc8BaE8ldndA2REWP2b3LtqVk8fTTZxT0X047322Rb5bK1y2QMU3jYFbrepb
+         wWukpetp7UHdwOYwXERzPs+1PKVCWvKjeXTPjvmMw1zHYFPN1AP+/QS4ozrVJh5u8UBL
+         Kg9lcH3asjIb0IvK6wW6GjL77LEAwCpe7fWV50AZn0Hdb9F3mNpLXQHYTbOU7XqGDPt8
+         VfuRu3SxnoX86qnJ8DIG5BSfcSWvLXSL4CuFa+2k7eUSr7rw2Enp2Asj1DGQ2PkWxe3D
+         tmX9GT2dpe5FMuVFAlRVJ1P2Xkf8Bw7teex8Icc3PNafjn80ARYtN56l6zUWWuDJ8obQ
+         BNkw==
+X-Gm-Message-State: AGi0Puae75KNUcFiI0C2M1EYydHKh6VOU1q+IerRUR1OGB/iqVEyMRJw
+        dMWa0dKo4e9cmepG00fPW5o=
+X-Google-Smtp-Source: APiQypLfsZVuN4sYX8KfJSMniabfDLJgj3Rsrj4/IDbZiZZSHXaIrSBXDqfPp8TpiuntbH07OtI37g==
+X-Received: by 2002:a17:90b:4c8f:: with SMTP id my15mr2146114pjb.63.1586999824688;
+        Wed, 15 Apr 2020 18:17:04 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id o11sm8556031pgd.58.2020.04.15.18.17.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2020 18:17:03 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id AEA6B40277; Thu, 16 Apr 2020 01:17:02 +0000 (UTC)
+Date:   Thu, 16 Apr 2020 01:17:02 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     Christoph Hellwig <hch@infradead.org>, axboe@kernel.dk,
+        viro@zeniv.linux.org.uk, gregkh@linuxfoundation.org,
+        rostedt@goodmis.org, mingo@redhat.com, jack@suse.cz,
+        ming.lei@redhat.com, nstange@suse.de, akpm@linux-foundation.org,
+        mhocko@suse.com, yukuai3@huawei.com, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Michal Hocko <mhocko@kernel.org>
+Subject: Re: [PATCH 3/5] blktrace: refcount the request_queue during ioctl
+Message-ID: <20200416011702.GC11244@42.do-not-panic.com>
+References: <20200414041902.16769-1-mcgrof@kernel.org>
+ <20200414041902.16769-4-mcgrof@kernel.org>
+ <20200414154044.GB25765@infradead.org>
+ <20200415061649.GS11244@42.do-not-panic.com>
+ <49bfcbe0-2630-5c82-f305-fcee489ac9ea@acm.org>
 MIME-Version: 1.0
-References: <CADyq12wPW69ovpW4akDY5PGBbrvnwsLO86=sSKTU4CB3dNwG3Q@mail.gmail.com>
- <20200414214516.GA182757@xz-x1> <20200415031602.22348-1-hdanton@sina.com>
- <20200415142546.GO5100@ziepe.ca> <20200416000229.GA9922@redhat.com>
-In-Reply-To: <20200416000229.GA9922@redhat.com>
-From:   Brian Geffon <bgeffon@google.com>
-Date:   Wed, 15 Apr 2020 18:15:26 -0700
-Message-ID: <CADyq12xg8vxetG8y=M6i2m4qYrtjsRhmpds-3yKTY2icrHG2GA@mail.gmail.com>
-Subject: Re: Userfaultfd doesn't seem to break out of poll on fd close
-To:     Andrea Arcangeli <aarcange@redhat.com>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Hillf Danton <hdanton@sina.com>,
-        Peter Xu <peterx@redhat.com>, linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Sonny Rao <sonnyrao@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <49bfcbe0-2630-5c82-f305-fcee489ac9ea@acm.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrea,
-Thanks for taking the time to reply.
+On Wed, Apr 15, 2020 at 07:45:18AM -0700, Bart Van Assche wrote:
+> On 2020-04-14 23:16, Luis Chamberlain wrote:
+> > On Tue, Apr 14, 2020 at 08:40:44AM -0700, Christoph Hellwig wrote:
+> >> Hmm, where exactly does the race come in so that it can only happen
+> >> after where you take the reference, but not before it?  I'm probably
+> >> missing something, but that just means it needs to be explained a little
+> >> better :)
+> > 
+> >>From the trace on patch 2/5:
+> > 
+> >     BLKTRACE_SETUP(loop0) #2
+> >     [   13.933961] == blk_trace_ioctl(2, BLKTRACESETUP) start
+> >     [   13.936758] === do_blk_trace_setup(2) start
+> >     [   13.938944] === do_blk_trace_setup(2) creating directory
+> >     [   13.941029] === do_blk_trace_setup(2) using what debugfs_lookup() gave
+> >     
+> >     ---> From LOOP_CTL_DEL(loop0) #2
+> >     [   13.971046] === blk_trace_cleanup(7) end
+> >     [   13.973175] == __blk_trace_remove(7) end
+> >     [   13.975352] == blk_trace_shutdown(7) end
+> >     [   13.977415] = __blk_release_queue(7) calling blk_mq_debugfs_unregister()
+> >     [   13.980645] ==== blk_mq_debugfs_unregister(7) begin
+> >     [   13.980696] ==== blk_mq_debugfs_unregister(7) debugfs_remove_recursive(q->debugfs_dir)
+> >     [   13.983118] ==== blk_mq_debugfs_unregister(7) end q->debugfs_dir is NULL
+> >     [   13.986945] = __blk_release_queue(7) blk_mq_debugfs_unregister() end
+> >     [   13.993155] = __blk_release_queue(7) end
+> >     
+> >     ---> From BLKTRACE_SETUP(loop0) #2
+> >     [   13.995928] === do_blk_trace_setup(2) end with ret: 0
+> >     [   13.997623] == blk_trace_ioctl(2, BLKTRACESETUP) end
+> > 
+> > The BLKTRACESETUP above works on request_queue which later
+> > LOOP_CTL_DEL races on and sweeps the debugfs dir underneath us.
+> > If you use this commit alone though, this doesn't fix the race issue
+> > however, and that's because of both still the debugfs_lookup() use
+> > and that we're still using asynchronous removal at this point.
+> > 
+> > refcounting will just ensure we don't take the request_queue underneath
+> > our noses.
+> 
+> I think the above trace reveals a bug in the loop driver. The loop
+> driver shouldn't allow the associated request queue to disappear while
+> the loop device is open.
 
-> static int userfaultfd_flush(struct file *file, fl_owner_t id)
-> {
->         struct userfaultfd_ctx *ctx = file->private_data;
->         wake_up_poll(&ctx->fd_wqh, EPOLLHUP);
-> }
->
+The bug was *not* in the driver, the bug was in that deferal of removal
+was allowed to be asynchronous, therefore the removal from a userspace
+perspective *finishes*, but its not actually really done. Back when
+the removal was synchronous, the loop driver waited on cleanup, and
+didn't return to userspace until it was really removed.
 
-Yes, I think that something like this would work for this situation and eventfd.
+This is why I annotated that the move to asynch removal turns out to
+actually be a userspace API regression.
 
-> If eventfd and pipes all behave identical to uffd (they should as they
-> don't seem to implement flush) I'm not sure if there's good enough
-> justification to deviate from the default VFS behavior here.
+> One may want to have a look at sd_open() in the
+> sd driver. The scsi_disk_get() call in that function not only increases
+> the reference count of the SCSI disk but also of the underlying SCSI device.
 
-Pipes actually behave a little differently, in the case that you close
-the write end of the pipe the read end will break out of the poll with
-EPOLLHUP, but I suppose closing the read end while the read end is
-being polled would be more analogous to what I'm describing here. And
-this is why it felt weird to me, in these situations the kernel
-_knows_ that after the close nothing can happen on the file
-descriptor, so what's the point of keeping it in a poll? As soon as
-the poll breaks any read, write, ioctl, etc on the fd whether it's a
-userfaultfd or an eventfd would fail with -EBADF.
+Are you saying to use this as a template for what a driver should do or
+do you suspect there is a bug there? Not sure what you mean here.
 
-And all of that I guess makes sense in the case of a non-blocking fd,
-but what about the case of a blocking file descriptor? Both
-userfaultfd and eventfd can seemingly be stuck in a read syscall with
-no way to break them out when the userfaultfd/eventfd has no further
-utility. Here is an example:
-https://gist.github.com/bgaff/607302d86d99ac539efca307ce2dd679
-
-For my use case adding an eventfd on poll works well, so thank you for
-that suggestion. But the behavior just seemed odd to me which is why I
-started this thread.
-
-Thanks,
-Brian
+  Luis
