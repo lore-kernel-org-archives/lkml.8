@@ -2,164 +2,125 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DFA3C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 01:28:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C81CC2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 01:29:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 742922076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 01:28:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A55020725
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 01:29:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587000563;
+	bh=hq/+bVXnleESn8mSlWiIeOiFdqP5VlQ1XkbPhFhBPAQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bwv5JU5MMXkZFqOGDDkyeGTKM09Tw6vmoTyDhbZ9rMxU8/kB7vqlCv0xzIt6of5f/
+	 2NruSO5Rv1A4NpdRZQFakR7U6edCdS0R5tH9bnnto377Dxb2G20Fp0qDQ1ew31pfh1
+	 FX4wT/1Cyz6Nnbh5H5vgGlz4u6UjK3TYgoA55j/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732133AbgDPB2L convert rfc822-to-8bit (ORCPT
+        id S1732252AbgDPB3T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 21:28:11 -0400
-Received: from mga18.intel.com ([134.134.136.126]:55540 "EHLO mga18.intel.com"
+        Wed, 15 Apr 2020 21:29:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730752AbgDPB1s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 21:27:48 -0400
-IronPort-SDR: KhL4b3QUPzluE2oNEB2jGsmLexdoQZBoNovCW14pMTncchkHLLeMiWGa3+3L7g9Lo6+yG9Lp3Q
- T8M6SxCNlUYQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 18:27:47 -0700
-IronPort-SDR: Wk3nxhxHRz6SOJx4koO+5TLJ19Tk+Xep0f/M6EQz7uv9hWQFF1lTYEQhkp3EGAYA81lqyf9aPT
- wg4pqRCeUC5w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,388,1580803200"; 
-   d="scan'208";a="242491517"
-Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
-  by orsmga007.jf.intel.com with ESMTP; 15 Apr 2020 18:27:47 -0700
-Received: from fmsmsx157.amr.corp.intel.com (10.18.116.73) by
- FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 15 Apr 2020 18:27:46 -0700
-Received: from shsmsx106.ccr.corp.intel.com (10.239.4.159) by
- FMSMSX157.amr.corp.intel.com (10.18.116.73) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 15 Apr 2020 18:27:45 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
- SHSMSX106.ccr.corp.intel.com ([169.254.10.89]) with mapi id 14.03.0439.000;
- Thu, 16 Apr 2020 09:27:44 +0800
-From:   "Tian, Kevin" <kevin.tian@intel.com>
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
-CC:     Alex Williamson <alex.williamson@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>
-Subject: RE: [PATCH v2 1/3] iommu/uapi: Define uapi version and capabilities
-Thread-Topic: [PATCH v2 1/3] iommu/uapi: Define uapi version and capabilities
-Thread-Index: AQHWAvq+z2SPyfblHkGvV1oKjQsO9ahaFEoAgAB7VgCAAS14gP//zqQAgAEODYCABAXlIIAALvMAgAFssACAACIBAIABY/uQgAHtwgCAEWzRgIAAG8+AgABw0ICAALrWAIAAEIMAgABZOwCAAJqrwIAAhCAAgAEpdxA=
-Date:   Thu, 16 Apr 2020 01:27:43 +0000
-Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D822943@SHSMSX104.ccr.corp.intel.com>
-References: <1585178227-17061-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <20200326092316.GA31648@infradead.org>
-        <20200326094442.5be042ce@jacob-builder>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D7ECB45@SHSMSX104.ccr.corp.intel.com>
-        <20200327074702.GA27959@infradead.org>
-        <20200327165335.397f24a3@jacob-builder>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D7FE150@SHSMSX104.ccr.corp.intel.com>
-        <20200330090746.23c5599c@jacob-builder>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D8011A9@SHSMSX104.ccr.corp.intel.com>
-        <20200331085444.44bee0bb@jacob-builder>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D803AFF@SHSMSX104.ccr.corp.intel.com>
-        <20200402113604.6eea1e6f@jacob-builder>
-        <20200413134157.395981a6@jacob-builder> <20200413162129.313b3b5a@w520.home>
-        <20200413220515.25a107b6@jacob-builder> <20200414101358.3ae66ac5@w520.home>
-        <20200414101304.27e587eb@jacob-builder>
-        <20200414153226.30d8cab3@jacob-builder>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D81F901@SHSMSX104.ccr.corp.intel.com>
- <20200415083854.6fefac01@jacob-builder>
-In-Reply-To: <20200415083854.6fefac01@jacob-builder>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        id S1732522AbgDPB3E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 21:29:04 -0400
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CBC7208E0;
+        Thu, 16 Apr 2020 01:29:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587000543;
+        bh=hq/+bVXnleESn8mSlWiIeOiFdqP5VlQ1XkbPhFhBPAQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=U7Apg3PrInj1bZ5S36DCxeG04p3aKJHJiJwrLO/6Ve1tvjwUnZziTJm8y1phI+4Gq
+         qj09WXqwTPZmoyuQl/UvHjdW2KG4XibW7wv0YzFOJQw378Na5/IhOsJJS4CJTq+Shr
+         P3ndXnQ/1SyJbLjFawUAT8sTOdLs7Go1HtB9nKKE=
+Date:   Wed, 15 Apr 2020 18:29:01 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Jan Kara <jack@suse.cz>, linux-kernel@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH RFC 2/8] fs/ext4: Disallow verity if inode is DAX
+Message-ID: <20200416012901.GA816@sol.localdomain>
+References: <20200414040030.1802884-1-ira.weiny@intel.com>
+ <20200414040030.1802884-3-ira.weiny@intel.com>
+ <20200415120002.GE6126@quack2.suse.cz>
+ <20200415191451.GA2305801@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200415191451.GA2305801@iweiny-DESK2.sc.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Sent: Wednesday, April 15, 2020 11:39 PM
+On Wed, Apr 15, 2020 at 12:14:52PM -0700, Ira Weiny wrote:
+> On Wed, Apr 15, 2020 at 02:00:02PM +0200, Jan Kara wrote:
+> > On Mon 13-04-20 21:00:24, ira.weiny@intel.com wrote:
+> > > From: Ira Weiny <ira.weiny@intel.com>
+> > > 
+> > > Verity and DAX are incompatible.  Changing the DAX mode due to a verity
+> > > flag change is wrong without a corresponding address_space_operations
+> > > update.
+> > > 
+> > > Make the 2 options mutually exclusive by returning an error if DAX was
+> > > set first.
+> > > 
+> > > (Setting DAX is already disabled if Verity is set first.)
+> > > 
+> > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> > > ---
+> > >  fs/ext4/verity.c | 3 +++
+> > >  1 file changed, 3 insertions(+)
+> > > 
+> > > diff --git a/fs/ext4/verity.c b/fs/ext4/verity.c
+> > > index dc5ec724d889..ce3f9a198d3b 100644
+> > > --- a/fs/ext4/verity.c
+> > > +++ b/fs/ext4/verity.c
+> > > @@ -113,6 +113,9 @@ static int ext4_begin_enable_verity(struct file *filp)
+> > >  	handle_t *handle;
+> > >  	int err;
+> > >  
+> > > +	if (WARN_ON_ONCE(IS_DAX(inode)))
+> > > +		return -EINVAL;
+> > > +
+> > 
+> > Hum, one question, is there a reason for WARN_ON_ONCE()? If I understand
+> > correctly, user could normally trigger this, couldn't he?
 > 
-> On Tue, 14 Apr 2020 23:47:40 +0000
-> "Tian, Kevin" <kevin.tian@intel.com> wrote:
+> Ok.  I did not think this through but I did think about this.  I was following
+> the code from the encryption side which issues a warning and was thinking that
+> would be a good way to alert the user they are doing something wrong...
 > 
-> > > From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > > Sent: Wednesday, April 15, 2020 6:32 AM
-> > >
-> > > On Tue, 14 Apr 2020 10:13:04 -0700
-> > > Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
-> > >
-> > > > > > >  In any of the proposed solutions, the
-> > > > > > > IOMMU driver is ultimately responsible for validating the
-> > > > > > > user data, so do we want vfio performing the
-> > > > > > > copy_from_user() to an object that could later be assumed
-> > > > > > > to be sanitized, or should vfio just pass a user pointer to
-> > > > > > > make it obvious that the consumer is responsible for all
-> > > > > > > the user protections?  Seems like the latter.
-> > > > > > I like the latter as well.
-> > > > > >
-> > > On a second thought, I think the former is better. Two reasons:
-> > >
-> > > 1. IOMMU API such as page_response is also used in baremetal. So it
-> > > is not suitable to pass a __user *.
-> > > https://www.spinics.net/lists/arm-kernel/msg798677.html
-> >
-> > You can have a wrapped version accepting a __user* and an internal
-> > version for kernel pointers.
-> >
-> I have thought about that also but the problem is that some of the
-> flags are processed in the vendor IOMMU ops so it is hard to do that in
-> a generic wrapper.
-
-All vendor IOMMU ops are defined in the same header file, so they
-can be verified in one common IOMMU wrapper, just like how you
-dealt with it in VFIO originally...
-
+> I think you are right about both of them but we also need to put something in
+> the verity, dax, and ...  (I can't find a file in Documentation which talks
+> about encryption right off) documentation files....  For verity something like.
 > 
-> > >
-> > > 2. Some data are in the mandatory (fixed offset, never removed or
-> > > extended) portion of the uAPI structure. It is simpler for VFIO to
-> > > extract that and pass it to IOMMU API. For example, the PASID value
-> > > used for unbind_gpasid(). VFIO also need to sanitize the PASID
-> > > value to make sure it belongs to the same VM that did the
-> > > allocation.
-> >
-> > I don't think this makes much difference. If anyway you still plan to
-> > let IOMMU driver parse some user pointers, why not making a clear
-> > split to have it sparse all IOMMU specific fields?
-> >
-> The plan is not to have IOMMU driver parse user pointers. This is the
-> "former" case in Alex's comment. I.e. vfio performing the
-> copy_from_user based on argsz in IOMMU uAPI.
+> <quote>
+> Verity and DAX
+> --------------
+> 
+> Verity and DAX are not compatible and attempts to set both of these flags on a
+> file will fail.
+> </quote>
+> 
+> And the same thing in the DAX doc?
+> 
+> And where would be appropriate for the encrypt doc?
 > 
 
-I'm confused. I thought Alex proposed the latter one:
----[quote]
-> So, __user * will be passed to IOMMU driver if VFIO checks minsz
-> include flags and they are valid.
-> IOMMU driver can copy the rest based on the mandatory version/minsz and
-> flags in the IOMMU uAPI structs.
-> Does it sound right? This is really choice #2.
+Documentation/filesystems/fscrypt.rst mentions that DAX isn't supported on
+encrypted files, but it doesn't say what happens if someone tries to do it
+anyway.  Feel free to improve the documentation.
 
-Sounds like each IOMMU UAPI struct just needs to have an embedded size
-and flags field, but yes.
-----
-
-Thanks
-Kevin
+- Eric
