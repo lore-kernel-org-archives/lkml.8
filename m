@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B8FC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:11:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63200C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:11:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 980B2214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:11:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39745214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:11:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587049895;
-	bh=OX08Yy+S0/dVbFy6XcBFg78t8CZ/ZdRHwjDiG4BWfVM=;
+	s=default; t=1587049903;
+	bh=L9lth55zY+g3wY1fwvqUWhIhM+ZwE7TuD4VmdPiqPjQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rrlwV22q+pfxhtrdbwrHm9pF6LqhK9Zcwbbetmp8BU4FspoVm50nswQ7iYbxLYwJ1
-	 tC0IQIEtlDM9AHpx3JC6hA9n6DNIIg8lwz2RaFqNkKgPtF3pK5OJ2X2lhChhLJyZCV
-	 h1zEN0ohEXWDL2wYfrK6mrMGkbtaJ9FYdeEI2oMM=
+	b=fpKVDlg1mfexDBeF8/Qs68IUGgRsZ4b/QNqVBb27pppPDBvlIuKGqBB9278eiPouF
+	 BNKF5gAoYdQZmPpNvn8OBLOgDp9MtFzCTzrpi9ibLsYDHSeu6+2G6pxB3dTOUD4cF/
+	 2qy+Qd7wAOCxRlnj1tDmmzd6d9ZqjkhRc+xx+1Iw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389700AbgDPPLe (ORCPT
+        id S2394992AbgDPPLl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:11:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36224 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:11:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732677AbgDPNuR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:50:17 -0400
+        id S2441668AbgDPNuL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:50:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1967220732;
-        Thu, 16 Apr 2020 13:50:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E037822246;
+        Thu, 16 Apr 2020 13:49:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045016;
-        bh=OX08Yy+S0/dVbFy6XcBFg78t8CZ/ZdRHwjDiG4BWfVM=;
+        s=default; t=1587044992;
+        bh=L9lth55zY+g3wY1fwvqUWhIhM+ZwE7TuD4VmdPiqPjQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TIx8u/QMCC6vvYKUt2XG+deqpgfZNbPUzyk42qQd3AnRFBUQ98QbEj+oj4Uu/0J7x
-         Hge/TFg6GFbql5rnd0vVikPDLFmpxQrWRsVJYGzwZOSQuT8lFSW0BNd7tLxKdlnqU4
-         8ZqWAy7Zl+qd/nxVE32H1m7cLFkHTX4/0lI1E61w=
+        b=z4cidiq0j/Smp7Pcq6BXCKWwUcVJJDU/QR/scz+kTiDdv+8tWYJrsGIUMO2E8gwuX
+         dIgiuIRibqAdPiSUQxvrtU5bbxUkrqWCY7iiW/GDAZM99yR8FJybO31Eley17KdM51
+         1AdvQryMDrCXd8adVzzl0nZNIGyF3ytE4ZyK1DXg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sam Lunt <samuel.j.lunt@gmail.com>,
-        He Zhe <zhe.he@windriver.com>, Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, trivial@kernel.org,
-        stable@kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 5.4 195/232] perf tools: Support Python 3.8+ in Makefile
-Date:   Thu, 16 Apr 2020 15:24:49 +0200
-Message-Id: <20200416131339.582130882@linuxfoundation.org>
+        stable@vger.kernel.org, Yuxian Dai <Yuxian.Dai@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Huang Rui <ray.huang@amd.com>, Kevin Wang <Kevin1.Wang@amd.com>
+Subject: [PATCH 5.4 186/232] drm/amdgpu/powerplay: using the FCLK DPM table to set the MCLK
+Date:   Thu, 16 Apr 2020 15:24:40 +0200
+Message-Id: <20200416131338.376317121@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -64,59 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sam Lunt <samueljlunt@gmail.com>
+From: Yuxian Dai <Yuxian.Dai@amd.com>
 
-commit b9c9ce4e598e012ca7c1813fae2f4d02395807de upstream.
+commit 022ac4c9c55be35a2d1f71019a931324c51b0dab upstream.
 
-Python 3.8 changed the output of 'python-config --ldflags' to no longer
-include the '-lpythonX.Y' flag (this apparently fixed an issue loading
-modules with a statically linked Python executable).  The libpython
-feature check in linux/build/feature fails if the Python library is not
-included in FEATURE_CHECK_LDFLAGS-libpython variable.
+1.Using the FCLK DPM table to set the MCLK for DPM states consist of
+three entities:
+ FCLK
+ UCLK
+ MEMCLK
+All these three clk change together, MEMCLK from FCLK, so use the fclk
+frequency.
+2.we should show the current working clock freqency from clock table metric
 
-This adds a check in the Makefile to determine if PYTHON_CONFIG accepts
-the '--embed' flag and passes that flag alongside '--ldflags' if so.
-
-tools/perf is the only place the libpython feature check is used.
-
-Signed-off-by: Sam Lunt <samuel.j.lunt@gmail.com>
-Tested-by: He Zhe <zhe.he@windriver.com>
-Link: http://lore.kernel.org/lkml/c56be2e1-8111-9dfe-8298-f7d0f9ab7431@windriver.com
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: trivial@kernel.org
-Cc: stable@kernel.org
-Link: http://lore.kernel.org/lkml/20200131181123.tmamivhq4b7uqasr@gmail.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Yuxian Dai <Yuxian.Dai@amd.com>
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Reviewed-by: Huang Rui <ray.huang@amd.com>
+Reviewed-by: Kevin Wang <Kevin1.Wang@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/Makefile.config |   11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/powerplay/renoir_ppt.c |    6 ++++++
+ drivers/gpu/drm/amd/powerplay/renoir_ppt.h |    2 +-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -228,8 +228,17 @@ strip-libs  = $(filter-out -l%,$(1))
+--- a/drivers/gpu/drm/amd/powerplay/renoir_ppt.c
++++ b/drivers/gpu/drm/amd/powerplay/renoir_ppt.c
+@@ -184,6 +184,7 @@ static int renoir_print_clk_levels(struc
+ 	uint32_t cur_value = 0, value = 0, count = 0, min = 0, max = 0;
+ 	DpmClocks_t *clk_table = smu->smu_table.clocks_table;
+ 	SmuMetrics_t metrics;
++	bool cur_value_match_level = false;
  
- PYTHON_CONFIG_SQ := $(call shell-sq,$(PYTHON_CONFIG))
+ 	if (!clk_table || clk_type >= SMU_CLK_COUNT)
+ 		return -EINVAL;
+@@ -243,8 +244,13 @@ static int renoir_print_clk_levels(struc
+ 		GET_DPM_CUR_FREQ(clk_table, clk_type, i, value);
+ 		size += sprintf(buf + size, "%d: %uMhz %s\n", i, value,
+ 				cur_value == value ? "*" : "");
++		if (cur_value == value)
++			cur_value_match_level = true;
+ 	}
  
-+# Python 3.8 changed the output of `python-config --ldflags` to not include the
-+# '-lpythonX.Y' flag unless '--embed' is also passed. The feature check for
-+# libpython fails if that flag is not included in LDFLAGS
-+ifeq ($(shell $(PYTHON_CONFIG_SQ) --ldflags --embed 2>&1 1>/dev/null; echo $$?), 0)
-+  PYTHON_CONFIG_LDFLAGS := --ldflags --embed
-+else
-+  PYTHON_CONFIG_LDFLAGS := --ldflags
-+endif
++	if (!cur_value_match_level)
++		size += sprintf(buf + size, "   %uMhz *\n", cur_value);
 +
- ifdef PYTHON_CONFIG
--  PYTHON_EMBED_LDOPTS := $(shell $(PYTHON_CONFIG_SQ) --ldflags 2>/dev/null)
-+  PYTHON_EMBED_LDOPTS := $(shell $(PYTHON_CONFIG_SQ) $(PYTHON_CONFIG_LDFLAGS) 2>/dev/null)
-   PYTHON_EMBED_LDFLAGS := $(call strip-libs,$(PYTHON_EMBED_LDOPTS))
-   PYTHON_EMBED_LIBADD := $(call grep-libs,$(PYTHON_EMBED_LDOPTS)) -lutil
-   PYTHON_EMBED_CCOPTS := $(shell $(PYTHON_CONFIG_SQ) --includes 2>/dev/null)
+ 	return size;
+ }
+ 
+--- a/drivers/gpu/drm/amd/powerplay/renoir_ppt.h
++++ b/drivers/gpu/drm/amd/powerplay/renoir_ppt.h
+@@ -37,7 +37,7 @@ extern void renoir_set_ppt_funcs(struct
+ 			freq = table->SocClocks[dpm_level].Freq;	\
+ 			break;						\
+ 		case SMU_MCLK:						\
+-			freq = table->MemClocks[dpm_level].Freq;	\
++			freq = table->FClocks[dpm_level].Freq;	\
+ 			break;						\
+ 		case SMU_DCEFCLK:					\
+ 			freq = table->DcfClocks[dpm_level].Freq;	\
 
 
