@@ -2,159 +2,94 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92CF8C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 17:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B622C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 17:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66D812223F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 17:45:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBC7D2078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 17:45:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="w0+l8zJU"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yhuejy7C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436856AbgDPRph (ORCPT
+        id S2436981AbgDPRpm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 13:45:37 -0400
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:33935 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436526AbgDPRpf (ORCPT
+        Thu, 16 Apr 2020 13:45:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39670 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2405358AbgDPRpi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 13:45:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1587059134; x=1618595134;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=1gQFYv/wxSy8NSQledSt8Au4CSTxB96l8SvfBihusHg=;
-  b=w0+l8zJUpnyIGoUuBfYAmrjeNwfoFoSAqKyKVXfc3oAf8BNav7JA4A4I
-   nZKe7KzfYrelxXt3cA4oXucu+B7e8R+VFBVAN8fu14V3uWvmiJCbhjV4w
-   5csoEHgKvNSP4jLsrXK3QynKO64qiizFifCMkkq/ilWQ9VJUFHRncUOtY
-   9vL8NEcGDPUBXDn+Baj6rLEFEpRd1hans15R80E9Juy85pc0QmO3OY+Ol
-   HYhMvoAW+0LqBXMvOent0PS4I0CXJ7ckDSrFWQeIuqFjH4Pv9KBkPJqBP
-   l8wKYndPAlH7duvVx/obSul7WGq9545cBWnhOAFUqup/Llmsrk/bKThG4
-   A==;
-IronPort-SDR: RRv8XikDocCRNpPit1Rw49y7XIb4+YXQS9+HbZbRBEJhq96QoM2khX5iIy9p12gHeMfM79V9IC
- hl+rFpxmjIj9qTZN8ZKybNIdRrqQtwu5jeXr3W4uN2ViJZehgQOWXpOocckcnI02mB/FpLIVCh
- A97IOZcmGVuCOLh5As/jdxzJh3HHFRNSZrg1pKxe9NU7i4a8lOXaTJtyKBy/kHFQbtDJhG776h
- 4Yx+XgOIcLpWx+CC6i3ZfjpRpsGKKBs/FBxCn+/3PnGhzSJbIqc9fHb7undzg7eh9LKEkJIW7u
- rKQ=
-X-IronPort-AV: E=Sophos;i="5.72,391,1580799600"; 
-   d="scan'208";a="76173957"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 16 Apr 2020 10:45:34 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 16 Apr 2020 10:45:38 -0700
-Received: from ness.corp.atmel.com (10.10.115.15) by chn-vm-ex04.mchp-main.com
- (10.10.85.152) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Thu, 16 Apr 2020 10:45:27 -0700
-From:   <nicolas.ferre@microchip.com>
-To:     <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
-        "Claudiu Beznea" <claudiu.beznea@microchip.com>,
-        <harini.katakam@xilinx.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        <pthombar@cadence.com>, <sergio.prado@e-labworks.com>,
-        <antoine.tenart@bootlin.com>, <f.fainelli@gmail.com>,
-        <linux@armlinux.org.uk>, <andrew@lunn.ch>,
-        <michal.simek@xilinx.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>
-Subject: [PATCH 5/5] net: macb: Add WoL interrupt support for MACB type of Ethernet controller
-Date:   Thu, 16 Apr 2020 19:44:32 +0200
-Message-ID: <3c9db82da283abd7faf248985d21155a48554bdf.1587058078.git.nicolas.ferre@microchip.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <cover.1587058078.git.nicolas.ferre@microchip.com>
-References: <cover.1587058078.git.nicolas.ferre@microchip.com>
+        Thu, 16 Apr 2020 13:45:38 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24CD3C061A10
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 10:45:36 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id u15so8792534ljd.3
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 10:45:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dNf+O79dxYvL9upUNIRS+k5/S1UjI4y44sK7fhayR1c=;
+        b=yhuejy7C49EgHspat4U3jEapm5Mwx72TiEXWSd/E+JkFxuW54VToaZeqmpgHO9awa4
+         B8KIPl/0skwI5l8MKZBwPWl2ouP9Ag8DEz0hepOepQOQQRuWZ05dtw/1PqzXx1O9iuzO
+         e9pOPFmWfQogTHkA5DsEvC/7H5HoQgZov59RRldnV7rAJejBuuDUfCwOwRfqrK9aneqX
+         /MdkS3FtkTaT1af0mUT3saqaE9SpuPzwd44Tu1EFw9TOQspF8GfPUjGdzH5WjcTuHzyN
+         S4ZHToOtpkkDw7xauUnfBITP01N85mgxeKExbMZFwIfsCYHn0fk6s7ctr86ivxg7GGus
+         XwRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dNf+O79dxYvL9upUNIRS+k5/S1UjI4y44sK7fhayR1c=;
+        b=rgdcwElPC/DjZseBbRlH64srbQHBt/1BfeGtkbN4WCE/ZlmZKyWFSJMzENqr6gVSAI
+         vxarMEoXjYtw6n/v2XaW0ePgCl/1GqG7EHIfYgXlSMag3bd37WlMKzowKAt6OW7LgPH0
+         TIxxn4e0plxN95N6DkCQYHCre7qHNQAGYzraBxhkI0Dlh/ZB+n5v8xANWZjKNMsPDlnK
+         o6sr7WdDQ9hiZqW/8igw2Ioi0MxZfvVLrZtD9zWfbfQrgRB5DYkpwp2mlraPcjsWg8E/
+         gdzpawceFtRNi+fFywf6ZEViY+HMcwgUOUvVPCJSyMUwJYajoHdpbwZ/wTeIGPxtm6Do
+         M0Wg==
+X-Gm-Message-State: AGi0PuZjzCUCXCbm601SJxsCfVJiCpZCWkno4pczaChJNSnG1y6fefr/
+        Czn+XOkRhFeXMH9ffV2cDUnfLvfZ1LUTanP/DTvdUw==
+X-Google-Smtp-Source: APiQypJGuJOqkYj/Ehe30t1U9ZuH6dYK9mTv6Ks/1KBhVVrW2UXVfGzjV05x98HDEPK+WR5eLGwOBhDPQRAntg4Ru8g=
+X-Received: by 2002:a2e:8e85:: with SMTP id z5mr6778180ljk.165.1587059134502;
+ Thu, 16 Apr 2020 10:45:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+References: <CA+G9fYt7-R-_fVDeiwj=sVvBQ-456Pm1oFFtM5Hm_94nN-tA+w@mail.gmail.com>
+ <CAM_iQpXQdgwFwUONX+za5vJbcXP9krwz_--pG+z_Etf_v8K2mw@mail.gmail.com>
+In-Reply-To: <CAM_iQpXQdgwFwUONX+za5vJbcXP9krwz_--pG+z_Etf_v8K2mw@mail.gmail.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Thu, 16 Apr 2020 23:15:22 +0530
+Message-ID: <CA+G9fYtCV55uuArU4OLCTaaBPk7BDeZyOBUHoScN4NsbQeuPhA@mail.gmail.com>
+Subject: Re: x86_64: 5.6.0: locking/lockdep.c:1155 lockdep_register_key
+To:     Cong Wang <xiyou.wangcong@gmail.com>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, Borislav Petkov <bp@suse.de>,
+        Netdev <netdev@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Brian Gerst <brgerst@gmail.com>, lkft-triage@lists.linaro.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Ferre <nicolas.ferre@microchip.com>
+On Sat, 11 Apr 2020 at 02:20, Cong Wang <xiyou.wangcong@gmail.com> wrote:
+>
+> On Tue, Apr 7, 2020 at 2:58 AM Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+> >
+> > On Linux mainline kernel 5.6.0 running kselftest on i386 kernel running on
+> > x86_64 devices we have noticed this kernel warning.
+>
+> This is odd, the warning complains a lockdep key is static, but
+> all of the 3 lockdep keys in netdev_register_lockdep_key() are
+> dynamic. I don't see how this warning could happen.
 
-Handle the Wake-on-Lan interrupt for the Cadence MACB Ethernet
-controller.
-As we do for the GEM version, we handle of WoL interrupt in a
-specialized interrupt handler for MACB version that is positionned
-just between suspend() and resume() calls.
+I request to provide a debug patch which prints a detailed log.
+Happy to test it again with your debug patch and will provide more information.
 
-Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
----
- drivers/net/ethernet/cadence/macb_main.c | 38 +++++++++++++++++++++++-
- 1 file changed, 37 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-index 71e6afbdfb47..6d535e3e803c 100644
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -1513,6 +1513,34 @@ static void macb_tx_restart(struct macb_queue *queue)
- 	macb_writel(bp, NCR, macb_readl(bp, NCR) | MACB_BIT(TSTART));
- }
- 
-+static irqreturn_t macb_wol_interrupt(int irq, void *dev_id)
-+{
-+	struct macb_queue *queue = dev_id;
-+	struct macb *bp = queue->bp;
-+	u32 status;
-+
-+	status = queue_readl(queue, ISR);
-+
-+	if (unlikely(!status))
-+		return IRQ_NONE;
-+
-+	spin_lock(&bp->lock);
-+
-+	if (status & MACB_BIT(WOL)) {
-+		queue_writel(queue, IDR, MACB_BIT(WOL));
-+		macb_writel(bp, WOL, 0);
-+		netdev_vdbg(bp->dev, "MACB WoL: queue = %u, isr = 0x%08lx\n",
-+			    (unsigned int)(queue - bp->queues),
-+			    (unsigned long)status);
-+		if (bp->caps & MACB_CAPS_ISR_CLEAR_ON_WRITE)
-+			queue_writel(queue, ISR, MACB_BIT(WOL));
-+	}
-+
-+	spin_unlock(&bp->lock);
-+
-+	return IRQ_HANDLED;
-+}
-+
- static irqreturn_t gem_wol_interrupt(int irq, void *dev_id)
- {
- 	struct macb_queue *queue = dev_id;
-@@ -4585,8 +4613,8 @@ static int __maybe_unused macb_suspend(struct device *dev)
- 		/* Change interrupt handler and
- 		 * Enable WoL IRQ on queue 0
- 		 */
-+		devm_free_irq(dev, bp->queues[0].irq, bp->queues);
- 		if (macb_is_gem(bp)) {
--			devm_free_irq(dev, bp->queues[0].irq, bp->queues);
- 			err = devm_request_irq(dev, bp->queues[0].irq, gem_wol_interrupt,
- 					       IRQF_SHARED, netdev->name, bp->queues);
- 			if (err) {
-@@ -4598,6 +4626,14 @@ static int __maybe_unused macb_suspend(struct device *dev)
- 			queue_writel(bp->queues, IER, GEM_BIT(WOL));
- 			gem_writel(bp, WOL, MACB_BIT(MAG));
- 		} else {
-+			err = devm_request_irq(dev, bp->queues[0].irq, macb_wol_interrupt,
-+					       IRQF_SHARED, netdev->name, bp->queues);
-+			if (err) {
-+				dev_err(dev,
-+					"Unable to request IRQ %d (error %d)\n",
-+					bp->queues[0].irq, err);
-+				return err;
-+			}
- 			queue_writel(bp->queues, IER, MACB_BIT(WOL));
- 			macb_writel(bp, WOL, MACB_BIT(MAG));
- 		}
--- 
-2.20.1
-
+- Naresh
