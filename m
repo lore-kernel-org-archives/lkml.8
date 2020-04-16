@@ -4,60 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D24AEC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:04:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B34AC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:04:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4B032076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:04:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B01F2063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:04:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587045861;
-	bh=cPcVth3C/ecITib/wFDwsrdywlBZ+L1o5W0YguVVgSs=;
+	s=default; t=1587045869;
+	bh=7W8SpPIOywJNExWL8DrXnjX+O9i7Fc36hKuhRdZJWF0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pgWgRgcWn5IFJykEEPukwWbXR1dzKLQETkkdYBfF5Y+KjfTs/jxChK5qhU2WIgRQD
-	 R91JMhBH8Aj5dAd96zNYr8VPbL25o1o9wkFa1Eba8Slzm/ZELNH59dhJXjeMjR6IY6
-	 xZgyx7IIF+8kRWdwIujpuZK8fyVLMyEjMCXEB+FI=
+	b=pNkyCf5X4TA0HWKjZFdNY/py5OCSXPrPm4ByJXedS5JxGUY3bb3GnCxnkUKYYc6z+
+	 zdLbEC05jODOLxF3VnoPUQ+9hO16uyCUkI8jSpCdsM8hWycvnT3KiDcWxOXhw3C6Av
+	 4Je94K3ilfYxTpRGfWwvIXythS3zprE61/hJQd9Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393063AbgDPOES (ORCPT
+        id S2392951AbgDPOE1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:04:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55618 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:04:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441524AbgDPNmf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:42:35 -0400
+        id S2441551AbgDPNmk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:42:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DA0F218AC;
-        Thu, 16 Apr 2020 13:42:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 756DD214D8;
+        Thu, 16 Apr 2020 13:42:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044554;
-        bh=cPcVth3C/ecITib/wFDwsrdywlBZ+L1o5W0YguVVgSs=;
+        s=default; t=1587044559;
+        bh=7W8SpPIOywJNExWL8DrXnjX+O9i7Fc36hKuhRdZJWF0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MxKSL2UBtxLm59ZsnEvasOMAT+tGLoPJAblbIXi5qnErrlsqXX+jwUqzzkrBAsU0n
-         xRGZmYHb0WqGpkTmmFmzIsK+bH+hZic3dD+w1TnL4lOwm+Fs/JLWH5ymr5sUbO3PIB
-         C8I0WX3Q8C5U8yjWziGVN70ranijeWrE8JZEJ8eI=
+        b=HwfYo/VoSKCP+nxd6TZCQKNBb5MOxaoLBuA1eQwlfIgv2IY0uKQudzaFqIf2P08lt
+         AHtBv4OLeY+Z7JjLdftqzpRBMJn3gagEpNsbvc/zeVHNLvTnt/axT+vVn/I/+wk0Jg
+         91XGjqnZXlbdalj/0wDoZar6WnRKmmkoGGp23xAY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Torsten Duwe <duwe@lst.de>,
-        Thierry Reding <treding@nvidia.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
+        stable@vger.kernel.org, Markus Fuchs <mklntf@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 246/257] drm/bridge: analogix-anx78xx: Fix drm_dp_link helper removal
-Date:   Thu, 16 Apr 2020 15:24:57 +0200
-Message-Id: <20200416131356.465132016@linuxfoundation.org>
+Subject: [PATCH 5.4 010/232] net: stmmac: platform: Fix misleading interrupt error msg
+Date:   Thu, 16 Apr 2020 15:21:44 +0200
+Message-Id: <20200416131317.722791864@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
-References: <20200416131325.891903893@linuxfoundation.org>
+In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
+References: <20200416131316.640996080@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -67,49 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Torsten Duwe <duwe@lst.de>
+From: Markus Fuchs <mklntf@gmail.com>
 
-[ Upstream commit 3e138a63d6674a4567a018a31e467567c40b14d5 ]
+[ Upstream commit fc191af1bb0d069dc7e981076e8b80af21f1e61d ]
 
-drm_dp_link_rate_to_bw_code and ...bw_code_to_link_rate simply divide by
-and multiply with 27000, respectively. Avoid an overflow in the u8 dpcd[0]
-and the multiply+divide alltogether.
+Not every stmmac based platform makes use of the eth_wake_irq or eth_lpi
+interrupts. Use the platform_get_irq_byname_optional variant for these
+interrupts, so no error message is displayed, if they can't be found.
+Rather print an information to hint something might be wrong to assist
+debugging on platforms which use these interrupts.
 
-Signed-off-by: Torsten Duwe <duwe@lst.de>
-Fixes: ff1e8fb68ea0 ("drm/bridge: analogix-anx78xx: Avoid drm_dp_link helpers")
-Cc: Thierry Reding <treding@nvidia.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Andrzej Hajda <a.hajda@samsung.com>
-Cc: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Cc: Jonas Karlman <jonas@kwiboo.se>
-Cc: Jernej Skrabec <jernej.skrabec@siol.net>
-Cc: <stable@vger.kernel.org> # v5.5+
-Reviewed-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200218155744.9675368BE1@verein.lst.de
+Signed-off-by: Markus Fuchs <mklntf@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/bridge/analogix-anx78xx.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ .../net/ethernet/stmicro/stmmac/stmmac_platform.c  | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.c b/drivers/gpu/drm/bridge/analogix-anx78xx.c
-index 274989f96a916..914263a1afab4 100644
---- a/drivers/gpu/drm/bridge/analogix-anx78xx.c
-+++ b/drivers/gpu/drm/bridge/analogix-anx78xx.c
-@@ -866,10 +866,9 @@ static int anx78xx_dp_link_training(struct anx78xx *anx78xx)
- 	if (err)
- 		return err;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+index 5150551c28be3..508325cc105d5 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+@@ -663,16 +663,22 @@ int stmmac_get_platform_resources(struct platform_device *pdev,
+ 	 * In case the wake up interrupt is not passed from the platform
+ 	 * so the driver will continue to use the mac irq (ndev->irq)
+ 	 */
+-	stmmac_res->wol_irq = platform_get_irq_byname(pdev, "eth_wake_irq");
++	stmmac_res->wol_irq =
++		platform_get_irq_byname_optional(pdev, "eth_wake_irq");
+ 	if (stmmac_res->wol_irq < 0) {
+ 		if (stmmac_res->wol_irq == -EPROBE_DEFER)
+ 			return -EPROBE_DEFER;
++		dev_info(&pdev->dev, "IRQ eth_wake_irq not found\n");
+ 		stmmac_res->wol_irq = stmmac_res->irq;
+ 	}
  
--	dpcd[0] = drm_dp_max_link_rate(anx78xx->dpcd);
--	dpcd[0] = drm_dp_link_rate_to_bw_code(dpcd[0]);
- 	err = regmap_write(anx78xx->map[I2C_IDX_TX_P0],
--			   SP_DP_MAIN_LINK_BW_SET_REG, dpcd[0]);
-+			   SP_DP_MAIN_LINK_BW_SET_REG,
-+			   anx78xx->dpcd[DP_MAX_LINK_RATE]);
- 	if (err)
- 		return err;
+-	stmmac_res->lpi_irq = platform_get_irq_byname(pdev, "eth_lpi");
+-	if (stmmac_res->lpi_irq == -EPROBE_DEFER)
+-		return -EPROBE_DEFER;
++	stmmac_res->lpi_irq =
++		platform_get_irq_byname_optional(pdev, "eth_lpi");
++	if (stmmac_res->lpi_irq < 0) {
++		if (stmmac_res->lpi_irq == -EPROBE_DEFER)
++			return -EPROBE_DEFER;
++		dev_info(&pdev->dev, "IRQ eth_lpi not found\n");
++	}
  
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	stmmac_res->addr = devm_ioremap_resource(&pdev->dev, res);
 -- 
 2.20.1
 
