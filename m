@@ -2,135 +2,243 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B74D3C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 04:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92CAFC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 04:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E4212076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 04:12:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="gEkXV0oH"
+	by mail.kernel.org (Postfix) with ESMTP id 7AF0A20771
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 04:16:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391868AbgDPEMB (ORCPT
+        id S2391942AbgDPEQC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 00:12:01 -0400
-Received: from cmta19.telus.net ([209.171.16.92]:55853 "EHLO cmta19.telus.net"
+        Thu, 16 Apr 2020 00:16:02 -0400
+Received: from mga02.intel.com ([134.134.136.20]:21964 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389455AbgDPEL5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 00:11:57 -0400
-X-Greylist: delayed 494 seconds by postgrey-1.27 at vger.kernel.org; Thu, 16 Apr 2020 00:11:56 EDT
-Received: from dougxps ([173.180.45.4])
-        by cmsmtp with SMTP
-        id OvkUjbfUfFblkOvkWj2yjM; Wed, 15 Apr 2020 22:03:37 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
-        t=1587009817; bh=Zn1xtELv6JCY8tNYhmpOgWYNjoqTG3j5w3+geDPacPc=;
-        h=From:To:Cc:References:In-Reply-To:Subject:Date;
-        b=gEkXV0oHPIHN9wUtxHnAZFKw5C+A4TiIMnFMCv0gmuy3crm+tB9x5JhCCnNuaGjYO
-         635oFhrfzyr90AMDrpsOWBFPSr7V1LVbclQFNRZN+LB0DOQY+ld22MQ+s9UYPzwgdi
-         ehP4B68C3nveG8AbojtKRmJb1dKocmRvHHda8pCUxPitw+3GdKLCALI3ovKeX9NrEQ
-         xOukJhylGcjjwepwzrlFoFRogWakDAQnhnuAorlmpRceSrUB8A9cVXnAfEXDbjkEUl
-         lxPXEnzOqGzLLMqPxWNC/dETuM/vDhxgolwqTDm3fyFPE6NEHMhXk5BoALci2QCkAk
-         UwRBd6mDBeRJQ==
-X-Telus-Authed: none
-X-Authority-Analysis: v=2.3 cv=BNTNU2YG c=1 sm=1 tr=0
- a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
- a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
- a=kj9zAlcOel0A:10 a=80HlKv23USs_H_yaKB0A:9 a=CjuIK1q_8ugA:10
-From:   "Doug Smythies" <dsmythies@telus.net>
-To:     "'Chen Yu'" <yu.c.chen@intel.com>
-Cc:     "'Len Brown'" <lenb@kernel.org>,
-        "'Rafael J. Wysocki'" <rjw@rjwysocki.net>,
-        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>
-References: <cover.1586782089.git.yu.c.chen@intel.com> <db96fd31afd0ff65e4041665293b96c984e675bc.1586782089.git.yu.c.chen@intel.com>
-In-Reply-To: <db96fd31afd0ff65e4041665293b96c984e675bc.1586782089.git.yu.c.chen@intel.com>
-Subject: RE: [PATCH 2/3][v2] tools/power turbostat: Introduce functions to accumulate RAPL consumption
-Date:   Wed, 15 Apr 2020 21:03:34 -0700
-Message-ID: <001901d613a4$010e0a70$032a1f50$@net>
+        id S2389455AbgDPEP4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 00:15:56 -0400
+IronPort-SDR: JkHxu8MxZV1GQtNUdMQaR0oByExv8mnq/kvR00Vgkz0xigTw+S8aeopdYfsEa+FlG9vyYRTkFs
+ WCj4uDuNRMVg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 21:15:54 -0700
+IronPort-SDR: p8FGYhBhOm2nAXr672lmqH6Pbtr2jBkyK2nNKAcsCMBUi0s8SfTtnQ4OgzfrFSx6kREuNoyRzC
+ 62E9lrRQdhNQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,388,1580803200"; 
+   d="scan'208";a="299188766"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by FMSMGA003.fm.intel.com with ESMTP; 15 Apr 2020 21:15:54 -0700
+Date:   Wed, 15 Apr 2020 21:15:54 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V8 05/11] fs/xfs: Make DAX mount option a tri-state
+Message-ID: <20200416041553.GF2309605@iweiny-DESK2.sc.intel.com>
+References: <20200415064523.2244712-1-ira.weiny@intel.com>
+ <20200415064523.2244712-6-ira.weiny@intel.com>
+ <20200415151613.GO6742@magnolia>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Office Outlook 12.0
-Content-Language: en-ca
-Thread-Index: AdYSXDnMXkJ5RB5zStyDB6tksB289gBRJlyA
-X-CMAE-Envelope: MS4wfBOnqG2ci47ZFLMGWqetE1328PnfGu28WGOKFsABayPB9upiYSGVZXppBbxXWifzyY+GYDvLMBtjnkN8OX/QvkqW+klj583SvoDZNlFanQxvpH6o9pU6
- 0vtzr/HnF2Mc/L5+m1g/8PjJWTsYCxu/+YDOqVXJGCpDdm751DS5xLnVQDcJ3UXtCtAWXcXWEFcfjFQYACxEvT9czTHQcili5C6oU3iJVd4H9ojJLwiqHV+6
- LNm+PLEpByx0jDjcOMzt5Tc9/8pWqnaS4WEzdT0hx9I4XQRM0jTTNPVvdnEpIhT/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200415151613.GO6742@magnolia>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020.04.15 05:57 Chen Yu wrote:
+On Wed, Apr 15, 2020 at 08:16:13AM -0700, Darrick J. Wong wrote:
+> On Tue, Apr 14, 2020 at 11:45:17PM -0700, ira.weiny@intel.com wrote:
+> > From: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > As agreed upon[1].  We make the dax mount option a tri-state.  '-o dax'
+> > continues to operate the same.  We add 'always', 'never', and 'inode'
+> > (default).
+> > 
+> > [1] https://lore.kernel.org/lkml/20200405061945.GA94792@iweiny-DESK2.sc.intel.com/
+> > 
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > ---
+> > Changes from v7:
+> > 	Change to XFS_MOUNT_DAX_NEVER
+> > 
+> > Changes from v6:
+> > 	Use 2 flag bits rather than a field.
+> > 	change iflag to inode
+> > 
+> > Changes from v5:
+> > 	New Patch
+> > ---
+> >  fs/xfs/xfs_mount.h |  3 ++-
+> >  fs/xfs/xfs_super.c | 44 ++++++++++++++++++++++++++++++++++++++++----
+> >  2 files changed, 42 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/fs/xfs/xfs_mount.h b/fs/xfs/xfs_mount.h
+> > index 54bd74088936..2e88c30642e3 100644
+> > --- a/fs/xfs/xfs_mount.h
+> > +++ b/fs/xfs/xfs_mount.h
+> > @@ -233,7 +233,8 @@ typedef struct xfs_mount {
+> >  						   allocator */
+> >  #define XFS_MOUNT_NOATTR2	(1ULL << 25)	/* disable use of attr2 format */
+> >  
+> > -#define XFS_MOUNT_DAX_ALWAYS	(1ULL << 62)	/* TEST ONLY! */
+> > +#define XFS_MOUNT_DAX_ALWAYS	(1ULL << 62)
+> > +#define XFS_MOUNT_DAX_NEVER	(1ULL << 63)
+> >  
+> >  /*
+> >   * Max and min values for mount-option defined I/O
+> > diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+> > index 3863f41757d2..142e5d03566f 100644
+> > --- a/fs/xfs/xfs_super.c
+> > +++ b/fs/xfs/xfs_super.c
+> > @@ -47,6 +47,32 @@ static struct kset *xfs_kset;		/* top-level xfs sysfs dir */
+> >  static struct xfs_kobj xfs_dbg_kobj;	/* global debug sysfs attrs */
+> >  #endif
+> >  
+> > +enum {
+> 
+> enum xfs_dax_mode {  for the reasons given below?
+> 
+> > +	XFS_DAX_INODE = 0,
+> > +	XFS_DAX_ALWAYS = 1,
+> > +	XFS_DAX_NEVER = 2,
+> > +};
+> > +
+> > +static void xfs_mount_set_dax_mode(struct xfs_mount *mp, u32 val)
+> 
+> xfs style, please:
+> 
+> static void
+> xfs_mount_set_dax_mode(
+> 	struct xfs_mount	*mp,
+> 	u32			val)
 
-...
+NP changed.
 
-> v2: According to Len's suggestion:
->    1. Enable the accumulated RAPL mechanism by default.
+> 
+> or if you give a name to the enum above, you can enforce some type
+> safety too:
+> 
+> 	enum xfs_dax_mode	val)
 
-I am not a fan of this, but O.K.
+The problem is that the option parsing returns result.uint_32 type.  Generally
+I agree with using more specific types but here I'm not sure it matters.
 
->    2. Re-use the rapl_joule_counter_range to represent the
->       the timeout of periodical timer.
+> 
+> > +{
+> > +	if (val == XFS_DAX_INODE) {
+> 
+> and this probably could have been a "switch (val) {", in which case if
+> the enum ever gets expanded then gcc will whine about missing switch
+> cases.
 
-No, please no. It is too easy to still have an overflow.
+Sure...  that does require the enum to be defined and used in the signature...
 
-...
-> +	/*
-> +	 * A wraparound time is calculated early.
-> +	 */
-> +	its.it_interval.tv_sec = rapl_joule_counter_range;
+Ok I'll use the enum!  :-D
 
-Would this be o.K.?
+done.
 
-+	its.it_interval.tv_sec = rapl_joule_counter_range / 2;
-
-> +	its.it_interval.tv_nsec = 0;
-
-The way it was sent, this patch set does not work.
-It still overflows.
-
-Example, sample time calculated to ensure overflow:
-
-Busy%   Bzy_MHz IRQ     PkgTmp  PkgWatt GFXWatt
-100.00  3500    3592125 80      9.72    0.12
-100.00  3500    3587391 79      9.77    0.12
-
-Actual package watts was around 65.
-
-However, if this additional patch is applied (I only fixed one of them):
-
-doug@s18:~/temp-k-git/linux/tools/power/x86/turbostat$ git diff
-diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
-index 29fc4069f467..4d72d9be5209 100644
---- a/tools/power/x86/turbostat/turbostat.c
-+++ b/tools/power/x86/turbostat/turbostat.c
-@@ -1350,7 +1350,8 @@ delta_package(struct pkg_data *new, struct pkg_data *old)
-
-        old->gfx_mhz = new->gfx_mhz;
-
--       DELTA_WRAP32(new->energy_pkg, old->energy_pkg);
-+/*     DELTA_WRAP32(new->energy_pkg, old->energy_pkg);  */
-+       old->energy_pkg = new->energy_pkg - old->energy_pkg;
-        DELTA_WRAP32(new->energy_cores, old->energy_cores);
-        DELTA_WRAP32(new->energy_gfx, old->energy_gfx);
-        DELTA_WRAP32(new->energy_dram, old->energy_dram);
-
-Then it seems to work.
-
-Example:
-
-doug@s15:~/temp-turbostat$ sudo ./turbostat --Summary --show Busy%,Bzy_MHz,PkgTmp,PkgWatt,GFXWatt,IRQ --interval 1200
-...
-RAPL: 690 sec. Joule Counter Range, at 95 Watts
-...
-Busy%   Bzy_MHz IRQ     PkgTmp  PkgWatt GFXWatt
-100.00  3500    3592328 80      64.32   0.12
-100.00  3500    3595195 79      64.37   0.12
-
-... Doug
+Thanks,
+Ira
 
 
+> 
+> The rest of the patch looks good.
+> 
+> --D
+> 
+> > +		mp->m_flags &= ~(XFS_MOUNT_DAX_ALWAYS | XFS_MOUNT_DAX_NEVER);
+> > +	} else if (val == XFS_DAX_ALWAYS) {
+> > +		mp->m_flags |= XFS_MOUNT_DAX_ALWAYS;
+> > +		mp->m_flags &= ~XFS_MOUNT_DAX_NEVER;
+> > +	} else if (val == XFS_DAX_NEVER) {
+> > +		mp->m_flags |= XFS_MOUNT_DAX_NEVER;
+> > +		mp->m_flags &= ~XFS_MOUNT_DAX_ALWAYS;
+> > +	}
+> > +}
+> > +
+> > +static const struct constant_table dax_param_enums[] = {
+> > +	{"inode",	XFS_DAX_INODE },
+> > +	{"always",	XFS_DAX_ALWAYS },
+> > +	{"never",	XFS_DAX_NEVER },
+> > +	{}
+> > +};
+> > +
+> >  /*
+> >   * Table driven mount option parser.
+> >   */
+> > @@ -59,7 +85,7 @@ enum {
+> >  	Opt_filestreams, Opt_quota, Opt_noquota, Opt_usrquota, Opt_grpquota,
+> >  	Opt_prjquota, Opt_uquota, Opt_gquota, Opt_pquota,
+> >  	Opt_uqnoenforce, Opt_gqnoenforce, Opt_pqnoenforce, Opt_qnoenforce,
+> > -	Opt_discard, Opt_nodiscard, Opt_dax,
+> > +	Opt_discard, Opt_nodiscard, Opt_dax, Opt_dax_enum,
+> >  };
+> >  
+> >  static const struct fs_parameter_spec xfs_fs_parameters[] = {
+> > @@ -103,6 +129,7 @@ static const struct fs_parameter_spec xfs_fs_parameters[] = {
+> >  	fsparam_flag("discard",		Opt_discard),
+> >  	fsparam_flag("nodiscard",	Opt_nodiscard),
+> >  	fsparam_flag("dax",		Opt_dax),
+> > +	fsparam_enum("dax",		Opt_dax_enum, dax_param_enums),
+> >  	{}
+> >  };
+> >  
+> > @@ -129,7 +156,6 @@ xfs_fs_show_options(
+> >  		{ XFS_MOUNT_GRPID,		",grpid" },
+> >  		{ XFS_MOUNT_DISCARD,		",discard" },
+> >  		{ XFS_MOUNT_LARGEIO,		",largeio" },
+> > -		{ XFS_MOUNT_DAX_ALWAYS,		",dax" },
+> >  		{ 0, NULL }
+> >  	};
+> >  	struct xfs_mount	*mp = XFS_M(root->d_sb);
+> > @@ -185,6 +211,13 @@ xfs_fs_show_options(
+> >  	if (!(mp->m_qflags & XFS_ALL_QUOTA_ACCT))
+> >  		seq_puts(m, ",noquota");
+> >  
+> > +	if (mp->m_flags & XFS_MOUNT_DAX_ALWAYS)
+> > +		seq_puts(m, ",dax=always");
+> > +	else if (mp->m_flags & XFS_MOUNT_DAX_NEVER)
+> > +		seq_puts(m, ",dax=never");
+> > +	else
+> > +		seq_puts(m, ",dax=inode");
+> > +
+> >  	return 0;
+> >  }
+> >  
+> > @@ -1244,7 +1277,10 @@ xfs_fc_parse_param(
+> >  		return 0;
+> >  #ifdef CONFIG_FS_DAX
+> >  	case Opt_dax:
+> > -		mp->m_flags |= XFS_MOUNT_DAX_ALWAYS;
+> > +		xfs_mount_set_dax_mode(mp, XFS_DAX_ALWAYS);
+> > +		return 0;
+> > +	case Opt_dax_enum:
+> > +		xfs_mount_set_dax_mode(mp, result.uint_32);
+> >  		return 0;
+> >  #endif
+> >  	default:
+> > @@ -1451,7 +1487,7 @@ xfs_fc_fill_super(
+> >  		if (!rtdev_is_dax && !datadev_is_dax) {
+> >  			xfs_alert(mp,
+> >  			"DAX unsupported by block device. Turning off DAX.");
+> > -			mp->m_flags &= ~XFS_MOUNT_DAX_ALWAYS;
+> > +			xfs_mount_set_dax_mode(mp, XFS_DAX_NEVER);
+> >  		}
+> >  		if (xfs_sb_version_hasreflink(&mp->m_sb)) {
+> >  			xfs_alert(mp,
+> > -- 
+> > 2.25.1
+> > 
