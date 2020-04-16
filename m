@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B95C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C83AC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:22:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D028214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:21:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49317214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:22:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587050515;
-	bh=onF0Q3ck23MEhrOfebvcgKutD7Bobnp4aqHWm2/ayD4=;
+	s=default; t=1587050525;
+	bh=oC1yYeTCASyOsmvAUaZpZuS7X+KrPBxdHJ7CSAu80BM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MfQtcJ19T9pZ+T4kvc9Gf0ECc00bV5MBgD7KTxGUVpCQLG9Ksz6F3Vn+qG/9OS38g
-	 rGXW+MGZx0B9IDOKRlPR753ZkSdmwLn4+5TZKFcXOAqRiqqVbzuIKrIm2kRCOoUO2U
-	 bQfY0kQaauHYD9weiEP5nOij4ATZ9xviEmbUFPNY=
+	b=CHahRKOB3q7xmql636lhE2FLLJoSf3OmVjo+IOQtTZIewsQQK26vZ3mrKi8mLSpM7
+	 kepkH+ONTuZ/WexsgUkZ8ApnVq30AdBVIWS/3/QU/mdZc7UpH7jDMGDcyh7zTjA3Qj
+	 lz6VxvJtHyZ9J2oja6OWxVTgka08Bs58X31lncQw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633565AbgDPPVx (ORCPT
+        id S1728171AbgDPPWE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:21:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60602 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:22:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898599AbgDPNqc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:46:32 -0400
+        id S2898562AbgDPNqQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:46:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55AEC21974;
-        Thu, 16 Apr 2020 13:46:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B7EF20732;
+        Thu, 16 Apr 2020 13:46:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044791;
-        bh=onF0Q3ck23MEhrOfebvcgKutD7Bobnp4aqHWm2/ayD4=;
+        s=default; t=1587044774;
+        bh=oC1yYeTCASyOsmvAUaZpZuS7X+KrPBxdHJ7CSAu80BM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C13ngBRdOcowph6JBYB4z0vz2JeqqxDLdLSuflSEmkTCsSz7n1uyFmN5PP2+79n6z
-         cMUiA0mYNmaYptkjvMNtb7A+Ptn+EgO+tZlFjDzwK1xyqnAlnrxWePpdhy5ozitWTO
-         DGaljyihOf+3cqEEBSz/sgbhNjM7EBtT/KG1Cim8=
+        b=Pn06r5hFdjCYz52ff4OlYi7WtFhlPf5fZpbaaT64vcvPLKJADlagoTRr/0tHV2pVU
+         DyGSgv3673Vp2jt0QwZ2PSTzbHHZv5ptUelsnzDGCQKHs5Ob7h9JdF8DiGFRkuAlnb
+         I3dxp/2YPjWZKV3KfoKisa06f9RMKzuL7cO7Zk+8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>
-Subject: [PATCH 5.4 104/232] sched/fair: Fix enqueue_task_fair warning
-Date:   Thu, 16 Apr 2020 15:23:18 +0200
-Message-Id: <20200416131328.097402688@linuxfoundation.org>
+        stable@vger.kernel.org, James Smart <jsmart2021@gmail.com>,
+        Himanshu Madhani <himanshu.madhani@oracle.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: [PATCH 5.4 097/232] nvme-fc: Revert "add module to ops template to allow module references"
+Date:   Thu, 16 Apr 2020 15:23:11 +0200
+Message-Id: <20200416131327.128072640@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -62,91 +60,136 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Guittot <vincent.guittot@linaro.org>
+From: James Smart <jsmart2021@gmail.com>
 
-commit fe61468b2cbc2b7ce5f8d3bf32ae5001d4c434e9 upstream.
+commit 8c5c660529209a0e324c1c1a35ce3f83d67a2aa5 upstream.
 
-When a cfs rq is throttled, the latter and its child are removed from the
-leaf list but their nr_running is not changed which includes staying higher
-than 1. When a task is enqueued in this throttled branch, the cfs rqs must
-be added back in order to ensure correct ordering in the list but this can
-only happens if nr_running == 1.
-When cfs bandwidth is used, we call unconditionnaly list_add_leaf_cfs_rq()
-when enqueuing an entity to make sure that the complete branch will be
-added.
+The original patch was to resolve the lldd being able to be unloaded
+while being used to talk to the boot device of the system. However, the
+end result of the original patch is that any driver unload while a nvme
+controller is live via the lldd is now being prohibited. Given the module
+reference, the module teardown routine can't be called, thus there's no
+way, other than manual actions to terminate the controllers.
 
-Similarly unthrottle_cfs_rq() can stop adding cfs in the list when a parent
-is throttled. Iterate the remaining entity to ensure that the complete
-branch will be added in the list.
-
-Reported-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Tested-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: stable@vger.kernel.org
-Cc: stable@vger.kernel.org #v5.1+
-Link: https://lkml.kernel.org/r/20200306135257.25044-1-vincent.guittot@linaro.org
+Fixes: 863fbae929c7 ("nvme_fc: add module to ops template to allow module references")
+Cc: <stable@vger.kernel.org> # v5.4+
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/sched/fair.c |   26 ++++++++++++++++++++++----
- 1 file changed, 22 insertions(+), 4 deletions(-)
+ drivers/nvme/host/fc.c          |   14 ++------------
+ drivers/nvme/target/fcloop.c    |    1 -
+ drivers/scsi/lpfc/lpfc_nvme.c   |    2 --
+ drivers/scsi/qla2xxx/qla_nvme.c |    1 -
+ include/linux/nvme-fc-driver.h  |    4 ----
+ 5 files changed, 2 insertions(+), 20 deletions(-)
 
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -3927,6 +3927,7 @@ static inline void check_schedstat_requi
- #endif
+--- a/drivers/nvme/host/fc.c
++++ b/drivers/nvme/host/fc.c
+@@ -342,8 +342,7 @@ nvme_fc_register_localport(struct nvme_f
+ 	    !template->ls_req || !template->fcp_io ||
+ 	    !template->ls_abort || !template->fcp_abort ||
+ 	    !template->max_hw_queues || !template->max_sgl_segments ||
+-	    !template->max_dif_sgl_segments || !template->dma_boundary ||
+-	    !template->module) {
++	    !template->max_dif_sgl_segments || !template->dma_boundary) {
+ 		ret = -EINVAL;
+ 		goto out_reghost_failed;
+ 	}
+@@ -2016,7 +2015,6 @@ nvme_fc_ctrl_free(struct kref *ref)
+ {
+ 	struct nvme_fc_ctrl *ctrl =
+ 		container_of(ref, struct nvme_fc_ctrl, ref);
+-	struct nvme_fc_lport *lport = ctrl->lport;
+ 	unsigned long flags;
+ 
+ 	if (ctrl->ctrl.tagset) {
+@@ -2043,7 +2041,6 @@ nvme_fc_ctrl_free(struct kref *ref)
+ 	if (ctrl->ctrl.opts)
+ 		nvmf_free_options(ctrl->ctrl.opts);
+ 	kfree(ctrl);
+-	module_put(lport->ops->module);
  }
  
-+static inline bool cfs_bandwidth_used(void);
- 
- /*
-  * MIGRATION
-@@ -4005,10 +4006,16 @@ enqueue_entity(struct cfs_rq *cfs_rq, st
- 		__enqueue_entity(cfs_rq, se);
- 	se->on_rq = 1;
- 
--	if (cfs_rq->nr_running == 1) {
-+	/*
-+	 * When bandwidth control is enabled, cfs might have been removed
-+	 * because of a parent been throttled but cfs->nr_running > 1. Try to
-+	 * add it unconditionnally.
-+	 */
-+	if (cfs_rq->nr_running == 1 || cfs_bandwidth_used())
- 		list_add_leaf_cfs_rq(cfs_rq);
-+
-+	if (cfs_rq->nr_running == 1)
- 		check_enqueue_throttle(cfs_rq);
--	}
- }
- 
- static void __clear_buddies_last(struct sched_entity *se)
-@@ -4589,11 +4596,22 @@ void unthrottle_cfs_rq(struct cfs_rq *cf
- 			break;
+ static void
+@@ -3071,15 +3068,10 @@ nvme_fc_init_ctrl(struct device *dev, st
+ 		goto out_fail;
  	}
  
--	assert_list_leaf_cfs_rq(rq);
+-	if (!try_module_get(lport->ops->module)) {
+-		ret = -EUNATCH;
+-		goto out_free_ctrl;
+-	}
 -
- 	if (!se)
- 		add_nr_running(rq, task_delta);
+ 	idx = ida_simple_get(&nvme_fc_ctrl_cnt, 0, 0, GFP_KERNEL);
+ 	if (idx < 0) {
+ 		ret = -ENOSPC;
+-		goto out_mod_put;
++		goto out_free_ctrl;
+ 	}
  
-+	/*
-+	 * The cfs_rq_throttled() breaks in the above iteration can result in
-+	 * incomplete leaf list maintenance, resulting in triggering the
-+	 * assertion below.
-+	 */
-+	for_each_sched_entity(se) {
-+		cfs_rq = cfs_rq_of(se);
-+
-+		list_add_leaf_cfs_rq(cfs_rq);
-+	}
-+
-+	assert_list_leaf_cfs_rq(rq);
-+
- 	/* Determine whether we need to wake up potentially idle CPU: */
- 	if (rq->curr == rq->idle && rq->cfs.nr_running)
- 		resched_curr(rq);
+ 	ctrl->ctrl.opts = opts;
+@@ -3232,8 +3224,6 @@ out_free_queues:
+ out_free_ida:
+ 	put_device(ctrl->dev);
+ 	ida_simple_remove(&nvme_fc_ctrl_cnt, ctrl->cnum);
+-out_mod_put:
+-	module_put(lport->ops->module);
+ out_free_ctrl:
+ 	kfree(ctrl);
+ out_fail:
+--- a/drivers/nvme/target/fcloop.c
++++ b/drivers/nvme/target/fcloop.c
+@@ -850,7 +850,6 @@ fcloop_targetport_delete(struct nvmet_fc
+ #define FCLOOP_DMABOUND_4G		0xFFFFFFFF
+ 
+ static struct nvme_fc_port_template fctemplate = {
+-	.module			= THIS_MODULE,
+ 	.localport_delete	= fcloop_localport_delete,
+ 	.remoteport_delete	= fcloop_remoteport_delete,
+ 	.create_queue		= fcloop_create_queue,
+--- a/drivers/scsi/lpfc/lpfc_nvme.c
++++ b/drivers/scsi/lpfc/lpfc_nvme.c
+@@ -1976,8 +1976,6 @@ out_unlock:
+ 
+ /* Declare and initialization an instance of the FC NVME template. */
+ static struct nvme_fc_port_template lpfc_nvme_template = {
+-	.module	= THIS_MODULE,
+-
+ 	/* initiator-based functions */
+ 	.localport_delete  = lpfc_nvme_localport_delete,
+ 	.remoteport_delete = lpfc_nvme_remoteport_delete,
+--- a/drivers/scsi/qla2xxx/qla_nvme.c
++++ b/drivers/scsi/qla2xxx/qla_nvme.c
+@@ -610,7 +610,6 @@ static void qla_nvme_remoteport_delete(s
+ }
+ 
+ static struct nvme_fc_port_template qla_nvme_fc_transport = {
+-	.module	= THIS_MODULE,
+ 	.localport_delete = qla_nvme_localport_delete,
+ 	.remoteport_delete = qla_nvme_remoteport_delete,
+ 	.create_queue   = qla_nvme_alloc_queue,
+--- a/include/linux/nvme-fc-driver.h
++++ b/include/linux/nvme-fc-driver.h
+@@ -270,8 +270,6 @@ struct nvme_fc_remote_port {
+  *
+  * Host/Initiator Transport Entrypoints/Parameters:
+  *
+- * @module:  The LLDD module using the interface
+- *
+  * @localport_delete:  The LLDD initiates deletion of a localport via
+  *       nvme_fc_deregister_localport(). However, the teardown is
+  *       asynchronous. This routine is called upon the completion of the
+@@ -385,8 +383,6 @@ struct nvme_fc_remote_port {
+  *       Value is Mandatory. Allowed to be zero.
+  */
+ struct nvme_fc_port_template {
+-	struct module	*module;
+-
+ 	/* initiator-based functions */
+ 	void	(*localport_delete)(struct nvme_fc_local_port *);
+ 	void	(*remoteport_delete)(struct nvme_fc_remote_port *);
 
 
