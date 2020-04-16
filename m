@@ -2,234 +2,117 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09100C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:01:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF2C2C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:01:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4B5620771
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:01:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C995B20771
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:01:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PnGlSsf/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mCWSljnI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405681AbgDPPBT (ORCPT
+        id S2409089AbgDPPBZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:01:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41798 "EHLO
+        Thu, 16 Apr 2020 11:01:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728735AbgDPPAV (ORCPT
+        by vger.kernel.org with ESMTP id S2439781AbgDPPBK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 11:00:21 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A7ACC061A0C;
-        Thu, 16 Apr 2020 08:00:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=bgRf1Uon3bhynYCtMF0JFozpZiDwfnV+XNl7ui4zcKc=; b=PnGlSsf/3h+gLhETAXIz83xh76
-        92LP1eK3+R69IgSvsgyecXfyvI0R8cqeBSpTIZP9vngHmdRegLqNnlHxvnQKIVrc0uLo7Rs1h27wa
-        HRxyTLQsnSCflWBPDiT2w7GMtRZoLdqmXaerpYdcG9svv3DisiZs38sGSTeEZELPpIujCwnnBm6EM
-        jennkZsaeaRY9BikT3ZIiQN2aq7/zWcV+hsc8VEdH/AX8UwEvl7Iq/FxgZCJC2C+/Y299DruBeNmU
-        2QLryLwonZZw3+4YtE8MUaYnxC1VlPxcrfIPt3xlmj5xiCizxjVqc9K8toPk5vKUHDwu0t5n2BeIH
-        2qwuGjDg==;
-Received: from [2001:4bb8:184:4aa1:c70:4a89:bc61:2] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jP602-000228-Mg; Thu, 16 Apr 2020 15:00:19 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
-Subject: [PATCH 2/7] MIPS: remove cpu_has_64bit_addresses
-Date:   Thu, 16 Apr 2020 17:00:06 +0200
-Message-Id: <20200416150011.820984-3-hch@lst.de>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200416150011.820984-1-hch@lst.de>
-References: <20200416150011.820984-1-hch@lst.de>
+        Thu, 16 Apr 2020 11:01:10 -0400
+Received: from mail-qt1-x831.google.com (mail-qt1-x831.google.com [IPv6:2607:f8b0:4864:20::831])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12324C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 08:01:10 -0700 (PDT)
+Received: by mail-qt1-x831.google.com with SMTP id x2so16631238qtr.0
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 08:01:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=lpQpTnB6uwsBydiAGN/TFRHwAzlMUvz1NbDPp1spzsM=;
+        b=mCWSljnIyYpsxY8CPe5AE6ZgSkMm2M/cPwP743UpLY53s2viwDu0kj/PIq7UnhGNfb
+         J3a4qq+HtTHZLRhcdSq1Kg2MAVHcynq1NRTpFwMkVDIKB4Ujwm0rzrEt/PJ39dnsP3hu
+         zA8nzc6T2c+BEZJ9oDZduWF/dBdS1G8sveY0b87/A8I2dfxs+GpQTm+C4Tyc0pIVzPDP
+         jg7QLsHHA9X5Cfwe5tKMBLjxq7jHFzG0p29fo7xBPYNWh3sc4Z85YK7cjarY07jZQKn5
+         XdbmAsrO6EXePFpqy2GKT4qxIPfv+6DuRYlg4BwEk8XPPYE+piRmRaGStaYIS4GW49w8
+         0t5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=lpQpTnB6uwsBydiAGN/TFRHwAzlMUvz1NbDPp1spzsM=;
+        b=AOs8UlV1xD94aNTVC+dapNGDkoB1vwjroZ24Td9oR6PYf0+M79IM4O7A4LHGycfPF9
+         0oOXRhFCNDIqygyk8D7rNNBsDpXcvI+3jiHUoBosW4HT9N5OkgqCMai+lc+5QaCa2lQK
+         L4dn97rY60EuTIcCoethPpMZixUyORJ/rdzWgJxEWdRFE3HH2g3RWP/ZiWeuNk2eCGsL
+         d0jYeqIjXz3ADCsPMZHA3in2QMu9A7b0f+AyIwqvleGMUH6O4YUEX+9mZIpVnCcBAGtm
+         Vu5VZ+nSuyomv8Wji1Ilf8RYMyW35KemL7sjtjRMcDhTl4PQaiv3XviaROShEIoHVFSh
+         ldVQ==
+X-Gm-Message-State: AGi0Puawqz5IwTpkbu98b4FlQJTDll55f02PZPK/yHw+L2WCICQ+LCM7
+        UI2g4s7daulKyO94T4UwL0s=
+X-Google-Smtp-Source: APiQypIWW1+0WzMEPhUtUNzoXP4apgI30t35X7vMcRFurBcKiLWdMPgCAKYv1Tjz95vW24/lgRSjbA==
+X-Received: by 2002:ac8:1406:: with SMTP id k6mr26273684qtj.102.1587049269049;
+        Thu, 16 Apr 2020 08:01:09 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id 190sm9010459qkl.46.2020.04.16.08.01.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Apr 2020 08:01:08 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 8B616409A3; Thu, 16 Apr 2020 12:01:06 -0300 (-03)
+Date:   Thu, 16 Apr 2020 12:01:06 -0300
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 10/16] perf tools: Add support for synthesized sample type
+Message-ID: <20200416150106.GB31666@kernel.org>
+References: <20200401101613.6201-1-adrian.hunter@intel.com>
+ <20200401101613.6201-11-adrian.hunter@intel.com>
+ <20200416145426.GA31666@kernel.org>
+ <20200416145704.GA1842@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200416145704.GA1842@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This macro is identical to CONFIG_64BIT, and using a Kconfig variable
-for the only places that checks them (the ioremap implementation) will
-simplify later patches in this series.
+Em Thu, Apr 16, 2020 at 11:57:04AM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Thu, Apr 16, 2020 at 11:54:26AM -0300, Arnaldo Carvalho de Melo escreveu:
+> > Em Wed, Apr 01, 2020 at 01:16:07PM +0300, Adrian Hunter escreveu:
+> > > +++ b/tools/perf/util/evsel.c
+> > > @@ -2136,7 +2136,7 @@ int perf_evsel__parse_sample(struct evsel *evsel, union perf_event *event,
+> > >  		}
+> > >  	}
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- arch/mips/include/asm/cpu-features.h                        | 6 ------
- arch/mips/include/asm/io.h                                  | 4 ++--
- arch/mips/include/asm/mach-ath25/cpu-feature-overrides.h    | 1 -
- arch/mips/include/asm/mach-ath79/cpu-feature-overrides.h    | 1 -
- .../include/asm/mach-lantiq/falcon/cpu-feature-overrides.h  | 1 -
- .../include/asm/mach-ralink/mt7620/cpu-feature-overrides.h  | 1 -
- .../include/asm/mach-ralink/mt7621/cpu-feature-overrides.h  | 1 -
- .../include/asm/mach-ralink/rt288x/cpu-feature-overrides.h  | 1 -
- .../include/asm/mach-ralink/rt305x/cpu-feature-overrides.h  | 1 -
- .../include/asm/mach-ralink/rt3883/cpu-feature-overrides.h  | 1 -
- arch/mips/include/asm/mach-rc32434/cpu-feature-overrides.h  | 1 -
- 11 files changed, 2 insertions(+), 17 deletions(-)
+> > > -	if (evsel__has_callchain(evsel)) {
+> > > +	if (type & PERF_SAMPLE_CALLCHAIN) {
+> > >  		const u64 max_callchain_nr = UINT64_MAX / sizeof(u64);
 
-diff --git a/arch/mips/include/asm/cpu-features.h b/arch/mips/include/asm/cpu-features.h
-index de44c92b1c1f..400b123cb6da 100644
---- a/arch/mips/include/asm/cpu-features.h
-+++ b/arch/mips/include/asm/cpu-features.h
-@@ -435,9 +435,6 @@
- # ifndef cpu_has_64bit_gp_regs
- # define cpu_has_64bit_gp_regs		0
- # endif
--# ifndef cpu_has_64bit_addresses
--# define cpu_has_64bit_addresses	0
--# endif
- # ifndef cpu_vmbits
- # define cpu_vmbits 31
- # endif
-@@ -456,9 +453,6 @@
- # ifndef cpu_has_64bit_gp_regs
- # define cpu_has_64bit_gp_regs		1
- # endif
--# ifndef cpu_has_64bit_addresses
--# define cpu_has_64bit_addresses	1
--# endif
- # ifndef cpu_vmbits
- # define cpu_vmbits cpu_data[0].vmbits
- # define __NEED_VMBITS_PROBE
-diff --git a/arch/mips/include/asm/io.h b/arch/mips/include/asm/io.h
-index cf1f2a4a2418..7be323ed2bfd 100644
---- a/arch/mips/include/asm/io.h
-+++ b/arch/mips/include/asm/io.h
-@@ -166,7 +166,7 @@ static inline void __iomem * __ioremap_mode(phys_addr_t offset, unsigned long si
- 
- #define __IS_LOW512(addr) (!((phys_addr_t)(addr) & (phys_addr_t) ~0x1fffffffULL))
- 
--	if (cpu_has_64bit_addresses) {
-+	if (IS_ENABLED(CONFIG_64BIT)) {
- 		u64 base = UNCAC_BASE;
- 
- 		/*
-@@ -275,7 +275,7 @@ static inline void iounmap(const volatile void __iomem *addr)
- 
- #define __IS_KSEG1(addr) (((unsigned long)(addr) & ~0x1fffffffUL) == CKSEG1)
- 
--	if (cpu_has_64bit_addresses ||
-+	if (IS_ENABLED(CONFIG_64BIT) ||
- 	    (__builtin_constant_p(addr) && __IS_KSEG1(addr)))
- 		return;
- 
-diff --git a/arch/mips/include/asm/mach-ath25/cpu-feature-overrides.h b/arch/mips/include/asm/mach-ath25/cpu-feature-overrides.h
-index 95a0b580909d..a54f20d956a2 100644
---- a/arch/mips/include/asm/mach-ath25/cpu-feature-overrides.h
-+++ b/arch/mips/include/asm/mach-ath25/cpu-feature-overrides.h
-@@ -56,6 +56,5 @@
- #define cpu_has_64bits			0
- #define cpu_has_64bit_zero_reg		0
- #define cpu_has_64bit_gp_regs		0
--#define cpu_has_64bit_addresses		0
- 
- #endif /* __ASM_MACH_ATH25_CPU_FEATURE_OVERRIDES_H */
-diff --git a/arch/mips/include/asm/mach-ath79/cpu-feature-overrides.h b/arch/mips/include/asm/mach-ath79/cpu-feature-overrides.h
-index e7c972fccd9f..79ab3ad9fee8 100644
---- a/arch/mips/include/asm/mach-ath79/cpu-feature-overrides.h
-+++ b/arch/mips/include/asm/mach-ath79/cpu-feature-overrides.h
-@@ -45,7 +45,6 @@
- #define cpu_has_64bits		0
- #define cpu_has_64bit_zero_reg	0
- #define cpu_has_64bit_gp_regs	0
--#define cpu_has_64bit_addresses 0
- 
- #define cpu_dcache_line_size()	32
- #define cpu_icache_line_size()	32
-diff --git a/arch/mips/include/asm/mach-lantiq/falcon/cpu-feature-overrides.h b/arch/mips/include/asm/mach-lantiq/falcon/cpu-feature-overrides.h
-index f03c1c42dd90..10226976f7b7 100644
---- a/arch/mips/include/asm/mach-lantiq/falcon/cpu-feature-overrides.h
-+++ b/arch/mips/include/asm/mach-lantiq/falcon/cpu-feature-overrides.h
-@@ -46,7 +46,6 @@
- #define cpu_has_64bits		0
- #define cpu_has_64bit_zero_reg	0
- #define cpu_has_64bit_gp_regs	0
--#define cpu_has_64bit_addresses	0
- 
- #define cpu_dcache_line_size()	32
- #define cpu_icache_line_size()	32
-diff --git a/arch/mips/include/asm/mach-ralink/mt7620/cpu-feature-overrides.h b/arch/mips/include/asm/mach-ralink/mt7620/cpu-feature-overrides.h
-index 6ea5908f0c11..c4579f1705c2 100644
---- a/arch/mips/include/asm/mach-ralink/mt7620/cpu-feature-overrides.h
-+++ b/arch/mips/include/asm/mach-ralink/mt7620/cpu-feature-overrides.h
-@@ -45,7 +45,6 @@
- #define cpu_has_64bits		0
- #define cpu_has_64bit_zero_reg	0
- #define cpu_has_64bit_gp_regs	0
--#define cpu_has_64bit_addresses	0
- 
- #define cpu_dcache_line_size()	32
- #define cpu_icache_line_size()	32
-diff --git a/arch/mips/include/asm/mach-ralink/mt7621/cpu-feature-overrides.h b/arch/mips/include/asm/mach-ralink/mt7621/cpu-feature-overrides.h
-index e06f517b2588..168359a0a58d 100644
---- a/arch/mips/include/asm/mach-ralink/mt7621/cpu-feature-overrides.h
-+++ b/arch/mips/include/asm/mach-ralink/mt7621/cpu-feature-overrides.h
-@@ -46,7 +46,6 @@
- #define cpu_has_64bits		0
- #define cpu_has_64bit_zero_reg	0
- #define cpu_has_64bit_gp_regs	0
--#define cpu_has_64bit_addresses	0
- 
- #define cpu_dcache_line_size()	32
- #define cpu_icache_line_size()	32
-diff --git a/arch/mips/include/asm/mach-ralink/rt288x/cpu-feature-overrides.h b/arch/mips/include/asm/mach-ralink/rt288x/cpu-feature-overrides.h
-index 9c069646d0bd..fdaf8c9182bc 100644
---- a/arch/mips/include/asm/mach-ralink/rt288x/cpu-feature-overrides.h
-+++ b/arch/mips/include/asm/mach-ralink/rt288x/cpu-feature-overrides.h
-@@ -44,7 +44,6 @@
- #define cpu_has_64bits		0
- #define cpu_has_64bit_zero_reg	0
- #define cpu_has_64bit_gp_regs	0
--#define cpu_has_64bit_addresses	0
- 
- #define cpu_dcache_line_size()	16
- #define cpu_icache_line_size()	16
-diff --git a/arch/mips/include/asm/mach-ralink/rt305x/cpu-feature-overrides.h b/arch/mips/include/asm/mach-ralink/rt305x/cpu-feature-overrides.h
-index 2e423fd15384..7a385fe784a6 100644
---- a/arch/mips/include/asm/mach-ralink/rt305x/cpu-feature-overrides.h
-+++ b/arch/mips/include/asm/mach-ralink/rt305x/cpu-feature-overrides.h
-@@ -44,7 +44,6 @@
- #define cpu_has_64bits		0
- #define cpu_has_64bit_zero_reg	0
- #define cpu_has_64bit_gp_regs	0
--#define cpu_has_64bit_addresses	0
- 
- #define cpu_dcache_line_size()	32
- #define cpu_icache_line_size()	32
-diff --git a/arch/mips/include/asm/mach-ralink/rt3883/cpu-feature-overrides.h b/arch/mips/include/asm/mach-ralink/rt3883/cpu-feature-overrides.h
-index 7cee0e232580..0a61910f6521 100644
---- a/arch/mips/include/asm/mach-ralink/rt3883/cpu-feature-overrides.h
-+++ b/arch/mips/include/asm/mach-ralink/rt3883/cpu-feature-overrides.h
-@@ -43,7 +43,6 @@
- #define cpu_has_64bits		0
- #define cpu_has_64bit_zero_reg	0
- #define cpu_has_64bit_gp_regs	0
--#define cpu_has_64bit_addresses	0
- 
- #define cpu_dcache_line_size()	32
- #define cpu_icache_line_size()	32
-diff --git a/arch/mips/include/asm/mach-rc32434/cpu-feature-overrides.h b/arch/mips/include/asm/mach-rc32434/cpu-feature-overrides.h
-index bc46179fdf40..8539ccfb69b7 100644
---- a/arch/mips/include/asm/mach-rc32434/cpu-feature-overrides.h
-+++ b/arch/mips/include/asm/mach-rc32434/cpu-feature-overrides.h
-@@ -54,7 +54,6 @@
- #define cpu_has_64bits			0
- #define cpu_has_64bit_zero_reg		0
- #define cpu_has_64bit_gp_regs		0
--#define cpu_has_64bit_addresses		0
- 
- #define cpu_has_inclusive_pcaches	0
- 
--- 
-2.25.1
+> > This ends up looking unrelated, I had to go and look at the source to
+> > see that this is just a simplification, i.e. earlier in this function
+> > (perf_evsel__parse_sample) we have:
 
+> >         u64 type = evsel->core.attr.sample_type;
+
+> > So the above doesn't change anything, good, but slowed reviewing a bit,
+> > please consider next time to have this in a separate patch, I'll do it
+> > this time.
+
+> I've added this as the cset comment:
+
+> Using 'type' variable for checking for callchains is equivalent to using
+> evsel__has_callchain(evsel) and is how the other PERF_SAMPLE_ bits are checked
+> in this function, so use it to be consistent.
+
+Then, reading the rest of the patch, evsel__has_callchain() is not
+anymore equivalent to just looking at the PERF_SAMPLE_ bit in core.attr
+:-)
+
+- Arnaldo
