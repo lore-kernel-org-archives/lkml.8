@@ -2,128 +2,151 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0520FC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:32:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B206AC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:32:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE55521927
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:32:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9989E21927
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:32:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394313AbgDPOca (ORCPT
+        id S2394319AbgDPOce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:32:30 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:59949 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2896728AbgDPOFs (ORCPT
+        Thu, 16 Apr 2020 10:32:34 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:40528 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393673AbgDPOLb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:05:48 -0400
-Received: from localhost.localdomain (196.109.29.93.rev.sfr.net [93.29.109.196])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 7A4D9100009;
-        Thu, 16 Apr 2020 14:05:42 +0000 (UTC)
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     dri-devel@lists.freedesktop.org,
+        Thu, 16 Apr 2020 10:11:31 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 117862A20C3
+Message-ID: <765aa9ab4f354df47f587711603fba6ffd358147.camel@collabora.com>
+Subject: Re: [PATCH 2/4] arm64: dts: rockchip: Add RGA support to the PX30
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Johan Jonker <jbx6244@gmail.com>
+Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Sandy Huang <hjc@rock-chips.com>,
-        =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: [PATCH] drm/rockchip: Add per-pixel alpha support for the PX30 VOP
-Date:   Thu, 16 Apr 2020 16:05:26 +0200
-Message-Id: <20200416140526.262533-1-paul.kocialkowski@bootlin.com>
-X-Mailer: git-send-email 2.26.0
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Jacob Chen <jacob-chen@iotwrt.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Hans Verkuil <hansverk@cisco.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Date:   Thu, 16 Apr 2020 11:11:12 -0300
+In-Reply-To: <20200416135519.GJ125838@aptenodytes>
+References: <20200416115047.233720-1-paul.kocialkowski@bootlin.com>
+         <20200416115047.233720-3-paul.kocialkowski@bootlin.com>
+         <478f0a8b-f819-62f4-83b8-27918c4c2431@gmail.com>
+         <20200416132442.GI125838@aptenodytes>
+         <f4ad8ea4-7904-1458-e564-2d20c87ed417@gmail.com>
+         <20200416135519.GJ125838@aptenodytes>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.0-1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Compared to its predecessors, the PX30 VOP has a different register layout
-for enabling per-pixel alpha. Instead of src_alpha_ctl and dst_alpha_ctl,
-there is a single alpha control register. This register takes some fields
-from src_alpha_ctl, but with a different layout.
+On Thu, 2020-04-16 at 15:55 +0200, Paul Kocialkowski wrote:
+> Hi,
+> 
+> On Thu 16 Apr 20, 15:44, Johan Jonker wrote:
+> > On 4/16/20 3:24 PM, Paul Kocialkowski wrote:
+> > > Hi,
+> > > 
+> > > On Thu 16 Apr 20, 15:02, Johan Jonker wrote:
+> > > > Hi Paul,
+> > > > 
+> > > > The conversion of rockchip-rga.txt to rockchip-rga.yaml by myself just
+> > > > has been approved by robh.
+> > > 
+> > > Huh, I looked around for ongoing related work but missed it.
+> > > I'll definitely rebase on top of your series and use the yaml description
+> > > instead. Thanks!
+> > > 
+> > > > Maybe place dts patches at the end of a patch serie.
+> > > > Could you include a &rga patch if your device is supported in mainline,
+> > > > so we can test with:
+> > > > make ARCH=arm64 dtbs_check
+> > > > DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/rockchip-rga.yaml
+> > > 
+> > > I tested with the PX30 EVB so I can surely add a node there if that turns
+> > > out necessary (see below).
+> > > 
+> > > > Johan
+> > > > 
+> > > > On 4/16/20 1:50 PM, Paul Kocialkowski wrote:
+> > > > > The PX30 features a RGA block: add the necessary node to support it.
+> > > > > 
+> > > > > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> > > > > ---
+> > > > >  arch/arm64/boot/dts/rockchip/px30.dtsi | 11 +++++++++++
+> > > > >  1 file changed, 11 insertions(+)
+> > > > > 
+> > > > > diff --git a/arch/arm64/boot/dts/rockchip/px30.dtsi b/arch/arm64/boot/dts/rockchip/px30.dtsi
+> > > > > index 75908c587511..4bfbee9d4123 100644
+> > > > > --- a/arch/arm64/boot/dts/rockchip/px30.dtsi
+> > > > > +++ b/arch/arm64/boot/dts/rockchip/px30.dtsi
+> > > > > @@ -1104,6 +1104,17 @@ vopl_mmu: iommu@ff470f00 {
+> > > > >  		status = "disabled";
+> > > > >  	};
+> > > > >  
+> > > > > +	rga: rga@ff480000 {
+> > > > > +		compatible = "rockchip,px30-rga";
+> > > > > +		reg = <0x0 0xff480000 0x0 0x10000>;
+> > > > > +		interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH 0>;
+> > > > > +		clocks = <&cru ACLK_RGA>, <&cru HCLK_RGA>, <&cru SCLK_RGA_CORE>;
+> > > > > +		clock-names = "aclk", "hclk", "sclk";
+> > > > > +		resets = <&cru SRST_RGA>, <&cru SRST_RGA_A>, <&cru SRST_RGA_H>;
+> > > > > +		reset-names = "core", "axi", "ahb";
+> > > > > +		power-domains = <&power PX30_PD_VO>;
+> > > > 
+> > > > 		status = "disabled";
+> > > 
+> > > As of 5.6, the rk3399 has the node enabled by default. Did that change?
+> > 
+> > 'status' disappeared during review for rk3399 between v2 and v3, but
+> > doesn't mention the reason. If someone can give more info here?
+> > 
+> > https://lore.kernel.org/lkml/1500101920-24039-5-git-send-email-jacob-chen@iotwrt.com/
+> > 
+> > https://lore.kernel.org/lkml/1501470460-12014-5-git-send-email-jacob-chen@iotwrt.com/
+> > 
+> > > Since it's a standalone block that has no I/O dependency, I don't really see
+> > > the point of disabling it by default.
+> > 
+> > Vop, hdmi and other video devices are also disabled.
+> > Follow the rest I think...
+> 
+> Well, these blocks do have related I/O ports so it makes sense not to enable
+> them by default because of pinmux, or because there might be no connector
+> populated/routed.
+> 
+> For a memory to memory internal block, I don't see any reason why.
+> It's definitely not board-specific and having to add these nodes for every board
+> that has them is kind of a pain and might be overlooked. This will easily result
+> in the feature not being available for end users without having to change the
+> dt.
+> 
+> Also, the vpu node is always enabled on rockchip (and sunxi) platforms.
+> I think these are better examples to follow.
+> 
 
-Add support for the required fields to the PX30 VOP window descriptions,
-which makes per-pixel-alpha formats behave correctly.
+It's exactly as Paul just said :-)
 
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
----
- drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 4 ++++
- drivers/gpu/drm/rockchip/rockchip_drm_vop.h | 3 +++
- drivers/gpu/drm/rockchip/rockchip_vop_reg.c | 9 +++++++++
- 3 files changed, 16 insertions(+)
+Not board specific, no reason to disable, and also
+no way to know under what condition you'd enable.
 
-diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-index d04b3492bdac..ac1b1923c4bc 100644
---- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-@@ -906,6 +906,10 @@ static void vop_plane_atomic_update(struct drm_plane *plane,
- 			SRC_ALPHA_CAL_M0(ALPHA_NO_SATURATION) |
- 			SRC_FACTOR_M0(ALPHA_ONE);
- 		VOP_WIN_SET(vop, win, src_alpha_ctl, val);
-+
-+		VOP_WIN_SET(vop, win, alpha_pre_mul, ALPHA_SRC_PRE_MUL);
-+		VOP_WIN_SET(vop, win, alpha_mode, ALPHA_PER_PIX);
-+		VOP_WIN_SET(vop, win, alpha_en, 1);
- 	} else {
- 		VOP_WIN_SET(vop, win, src_alpha_ctl, SRC_ALPHA_EN(0));
- 	}
-diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.h b/drivers/gpu/drm/rockchip/rockchip_drm_vop.h
-index 0b3d18c457b2..562b127d120b 100644
---- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.h
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.h
-@@ -151,6 +151,9 @@ struct vop_win_phy {
- 
- 	struct vop_reg dst_alpha_ctl;
- 	struct vop_reg src_alpha_ctl;
-+	struct vop_reg alpha_pre_mul;
-+	struct vop_reg alpha_mode;
-+	struct vop_reg alpha_en;
- 	struct vop_reg channel;
- };
- 
-diff --git a/drivers/gpu/drm/rockchip/rockchip_vop_reg.c b/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
-index 7a9d979c8d5d..67bb2625db68 100644
---- a/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
-@@ -244,6 +244,9 @@ static const struct vop_win_phy px30_win0_data = {
- 	.uv_mst = VOP_REG(PX30_WIN0_CBR_MST0, 0xffffffff, 0),
- 	.yrgb_vir = VOP_REG(PX30_WIN0_VIR, 0x1fff, 0),
- 	.uv_vir = VOP_REG(PX30_WIN0_VIR, 0x1fff, 16),
-+	.alpha_pre_mul = VOP_REG(PX30_WIN0_ALPHA_CTRL, 0x1, 2),
-+	.alpha_mode = VOP_REG(PX30_WIN0_ALPHA_CTRL, 0x1, 1),
-+	.alpha_en = VOP_REG(PX30_WIN0_ALPHA_CTRL, 0x1, 0),
- };
- 
- static const struct vop_win_phy px30_win1_data = {
-@@ -256,6 +259,9 @@ static const struct vop_win_phy px30_win1_data = {
- 	.dsp_st = VOP_REG(PX30_WIN1_DSP_ST, 0xffffffff, 0),
- 	.yrgb_mst = VOP_REG(PX30_WIN1_MST, 0xffffffff, 0),
- 	.yrgb_vir = VOP_REG(PX30_WIN1_VIR, 0x1fff, 0),
-+	.alpha_pre_mul = VOP_REG(PX30_WIN1_ALPHA_CTRL, 0x1, 2),
-+	.alpha_mode = VOP_REG(PX30_WIN1_ALPHA_CTRL, 0x1, 1),
-+	.alpha_en = VOP_REG(PX30_WIN1_ALPHA_CTRL, 0x1, 0),
- };
- 
- static const struct vop_win_phy px30_win2_data = {
-@@ -269,6 +275,9 @@ static const struct vop_win_phy px30_win2_data = {
- 	.dsp_st = VOP_REG(PX30_WIN2_DSP_ST0, 0x1fff1fff, 0),
- 	.yrgb_mst = VOP_REG(PX30_WIN2_MST0, 0xffffffff, 0),
- 	.yrgb_vir = VOP_REG(PX30_WIN2_VIR0_1, 0x1fff, 0),
-+	.alpha_pre_mul = VOP_REG(PX30_WIN2_ALPHA_CTRL, 0x1, 2),
-+	.alpha_mode = VOP_REG(PX30_WIN2_ALPHA_CTRL, 0x1, 1),
-+	.alpha_en = VOP_REG(PX30_WIN2_ALPHA_CTRL, 0x1, 0),
- };
- 
- static const struct vop_win_data px30_vop_big_win_data[] = {
--- 
-2.26.0
+Thanks,
+Ezequiel
 
