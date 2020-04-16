@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A54AEC352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:05:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8BC4C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:05:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BFC0214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:05:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 945B021D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:05:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587049517;
-	bh=0XrRqotfepK3zUNWdd8fnIccrvPnNVyNdW6GWO8JWtQ=;
+	s=default; t=1587049524;
+	bh=CImT4A8W+bDgMXzHhYQ9uztQmGjlbf3XrDJF5jnPrRQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xWOlGrV5GWL6yM2EfxFnP7ulCpZ5Q8P+yCDVlR6E9Nit3SG2bc1k0v0EkC5J+N8t3
-	 sIp3+5S7eO+2poQs9HxcSJceQ4qUccPMW7WeI/Hq5dwugxhNPieE36qYmYZWMOjdU3
-	 NVEmiaFGO+K7xJEtNpn7Vjm1S3XdW+dNP3vNNoHs=
+	b=tkt0O+Bml72ENXIJmP3bl/cvYlt77SugMaK9wNooWN0NXu4fQ4oMbYLY/qQIrg7eL
+	 tjCOMlGEaCySm0EBVb6N2R156Rt3GAhB13kFX6Fbl/KV1y4U0Uzno+9DDeIJ0kcn3O
+	 PIB8ALIvOphTGtXi4QyJaJYx3TU1b6TyhW6XpZZY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389058AbgDPPFP (ORCPT
+        id S2394862AbgDPPFU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:05:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39122 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:05:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441696AbgDPNwo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:52:44 -0400
+        id S2441685AbgDPNwl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:52:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C0E120732;
-        Thu, 16 Apr 2020 13:52:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C30F72063A;
+        Thu, 16 Apr 2020 13:52:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045163;
-        bh=0XrRqotfepK3zUNWdd8fnIccrvPnNVyNdW6GWO8JWtQ=;
+        s=default; t=1587045161;
+        bh=CImT4A8W+bDgMXzHhYQ9uztQmGjlbf3XrDJF5jnPrRQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Eo7anQNB2uZtVDgRZKwhl9ytpGWg9D1YhZp+sVRQZziQF+94u5gt4pNQyCtuFSp55
-         r3R13t5GErmjUBs/IDDr5sMuntopcFwJ2fmALUhK/7XkREhgiZhF+BtVgfNakDZKcW
-         cBW5zHHK7XnYIOhzv1WTabE09oTqOW2cf4+gXhF8=
+        b=SSVxdG1hxQH92HQlhVnBteg5VXNHcqAUQAaSdlMmLLKJAnnShkyblv34UN8k4M9BX
+         TbSs6Avv6XMpqQe0wnG3p2E3KBZXktSaCJgyZ2SttznjOLIsaVJps5Xgv+W/2ubfTh
+         cttbewUBIxt27aB3VpXkPQI7gkMwMtBGS/qyCqgk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -48,9 +48,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 023/254] media: imx: imx7-media-csi: Fix video field handling
-Date:   Thu, 16 Apr 2020 15:21:52 +0200
-Message-Id: <20200416131328.737138646@linuxfoundation.org>
+Subject: [PATCH 5.6 022/254] media: imx: imx7_mipi_csis: Power off the source when stopping streaming
+Date:   Thu, 16 Apr 2020 15:21:51 +0200
+Message-Id: <20200416131328.594360724@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -65,47 +65,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-[ Upstream commit f7b8488bd39ae8feced4dfbb41cf1431277b893f ]
+[ Upstream commit 770cbf89f90b0663499dbb3f03aa81b3322757ec ]
 
-Commit 4791bd7d6adc ("media: imx: Try colorimetry at both sink and
-source pads") reworked the way that formats are set on the sink pad of
-the CSI subdevice, and accidentally removed video field handling.
-Restore it by defaulting to V4L2_FIELD_NONE if the field value isn't
-supported, with the only two supported value being V4L2_FIELD_NONE and
-V4L2_FIELD_INTERLACED.
+The .s_stream() implementation incorrectly powers on the source when
+stopping the stream. Power it off instead.
 
-Fixes: 4791bd7d6adc ("media: imx: Try colorimetry at both sink and source pads")
+Fixes: 7807063b862b ("media: staging/imx7: add MIPI CSI-2 receiver subdev for i.MX7")
 Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Reviewed-by: Rui Miguel Silva <rmfrfs@gmail.com>
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/media/imx/imx7-media-csi.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/staging/media/imx/imx7-mipi-csis.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/staging/media/imx/imx7-media-csi.c b/drivers/staging/media/imx/imx7-media-csi.c
-index db30e2c70f2fe..f45920b3137e4 100644
---- a/drivers/staging/media/imx/imx7-media-csi.c
-+++ b/drivers/staging/media/imx/imx7-media-csi.c
-@@ -1009,6 +1009,7 @@ static int imx7_csi_try_fmt(struct imx7_csi *csi,
- 		sdformat->format.width = in_fmt->width;
- 		sdformat->format.height = in_fmt->height;
- 		sdformat->format.code = in_fmt->code;
-+		sdformat->format.field = in_fmt->field;
- 		*cc = in_cc;
- 
- 		sdformat->format.colorspace = in_fmt->colorspace;
-@@ -1023,6 +1024,9 @@ static int imx7_csi_try_fmt(struct imx7_csi *csi,
- 							 false);
- 			sdformat->format.code = (*cc)->codes[0];
- 		}
-+
-+		if (sdformat->format.field != V4L2_FIELD_INTERLACED)
-+			sdformat->format.field = V4L2_FIELD_NONE;
- 		break;
- 	default:
- 		return -EINVAL;
+diff --git a/drivers/staging/media/imx/imx7-mipi-csis.c b/drivers/staging/media/imx/imx7-mipi-csis.c
+index 383abecb3bec0..0053e8b0b88e5 100644
+--- a/drivers/staging/media/imx/imx7-mipi-csis.c
++++ b/drivers/staging/media/imx/imx7-mipi-csis.c
+@@ -577,7 +577,7 @@ static int mipi_csis_s_stream(struct v4l2_subdev *mipi_sd, int enable)
+ 		state->flags |= ST_STREAMING;
+ 	} else {
+ 		v4l2_subdev_call(state->src_sd, video, s_stream, 0);
+-		ret = v4l2_subdev_call(state->src_sd, core, s_power, 1);
++		ret = v4l2_subdev_call(state->src_sd, core, s_power, 0);
+ 		mipi_csis_stop_stream(state);
+ 		state->flags &= ~ST_STREAMING;
+ 		if (state->debug)
 -- 
 2.20.1
 
