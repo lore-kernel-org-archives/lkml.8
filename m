@@ -2,147 +2,169 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88955C352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:01:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE732C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:01:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50351217D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:01:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587045682;
-	bh=5HTjWd+7Sl/qy30l/W4PW40cjGlT+DFrvZafOXww43Q=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jaBCJLOVRs3GXF1hagVA1RXVGpKMCyWjjIoccZDN32d8+ZpVvaDKfu6cpLy9fqilj
-	 vkbWH2aLKRs4GXlvGBD21aQ3qKoZhkD8gpAba+k7eGjWKQLUVFoodkfK82kuF3jSTq
-	 EJvKJ5fd0Q1Dv28I8hGSJQe1YEg/V9rncyeTuTv0=
+	by mail.kernel.org (Postfix) with ESMTP id B327C21734
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:01:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iqUrY2H9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392765AbgDPOBT (ORCPT
+        id S2392801AbgDPOB0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:01:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53314 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898153AbgDPNkk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:40:40 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CE5E20732;
-        Thu, 16 Apr 2020 13:40:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044439;
-        bh=5HTjWd+7Sl/qy30l/W4PW40cjGlT+DFrvZafOXww43Q=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KCFtje6LA+EjkoWmIOlOfWUDeD9ZzDxJK+jxrgVJs+r6CpKk/C7p9Ik5LG+oUFiwL
-         T5gTuneOHr0VXqPnnwVfEvy6qgpFZALEgx/72/lDsCt0qBeHCI37YIatiW8ktuIxdy
-         NqMWAGalFF4g0ZSdX+Gie2AF7zrMY76ZIF2h+dgU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Theodore Tso <tytso@mit.edu>, stable@kernel.org
-Subject: [PATCH 5.5 219/257] ext4: fix a data race at inode->i_blocks
-Date:   Thu, 16 Apr 2020 15:24:30 +0200
-Message-Id: <20200416131353.356092661@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
-References: <20200416131325.891903893@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Thu, 16 Apr 2020 10:01:26 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:43404 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2898166AbgDPNko (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:40:44 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03GDcKwv084649;
+        Thu, 16 Apr 2020 13:40:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=+FwckwE718nnFr/35g3gcj/92E89oTBl1ZMCTR5KEIM=;
+ b=iqUrY2H9ib6Tqb8czeWAPq4BibUWiDCpkkPRWOnjSVYxuYoossgOsmNXjtBStklxsrN/
+ BOrP9qPYV44t2frUqNHruNf9bA99+R1qP05U+WRC7YzNrDD4UzCq2QgGT4EAt3bshHe6
+ uvecHlGvvSUAozs7pESH75q4v9OcVMlmTfFEh0f+eEkP2GqqF+jBS5y6ULF4Gts0ilKP
+ UQfVBSJ7cQ7MzwTlxH2YR1ArDYswN+/zbvf8AinEnvTOh0UOv/IUc/kzXkl9LS1QrkrD
+ UccoJqRh/62a5sd4sXPR5SXu9rhd4Vp7QE2zsD71SkinXrPHQBHbDi4LQL4ew9aox85j 2Q== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 30dn95sfm5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Apr 2020 13:40:34 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03GDc55R134095;
+        Thu, 16 Apr 2020 13:40:33 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 30dynyqbr5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Apr 2020 13:40:33 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03GDeWWD019065;
+        Thu, 16 Apr 2020 13:40:32 GMT
+Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 16 Apr 2020 06:40:32 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: What's a good default TTL for DNS keys in the kernel
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <128769.1587032833@warthog.procyon.org.uk>
+Date:   Thu, 16 Apr 2020 09:40:30 -0400
+Cc:     Florian Weimer <fweimer@redhat.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        linux-cifs@vger.kernel.org, linux-afs@lists.infradead.org,
+        ceph-devel@vger.kernel.org, keyrings@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <8DC44895-E904-4155-B7B8-B109A777F23C@oracle.com>
+References: <874ktl2ide.fsf@oldenburg2.str.redhat.com>
+ <3865908.1586874010@warthog.procyon.org.uk>
+ <128769.1587032833@warthog.procyon.org.uk>
+To:     David Howells <dhowells@redhat.com>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9592 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 suspectscore=0
+ malwarescore=0 phishscore=0 spamscore=0 adultscore=0 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004160097
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9592 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 clxscore=1011
+ malwarescore=0 bulkscore=0 priorityscore=1501 lowpriorityscore=0
+ mlxscore=0 phishscore=0 spamscore=0 impostorscore=0 suspectscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004160097
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+Hi David-
 
-commit 28936b62e71e41600bab319f262ea9f9b1027629 upstream.
+> On Apr 16, 2020, at 6:27 AM, David Howells <dhowells@redhat.com> =
+wrote:
+>=20
+> Florian Weimer <fweimer@redhat.com> wrote:
+>=20
+>> You can get the real TTL if you do a DNS resolution on the name and
+>> match the addresses against what you get out of the NSS functions.  =
+If
+>> they match, you can use the TTL from DNS.  Hackish, but it does give =
+you
+>> *some* TTL value.
+>=20
+> I guess I'd have to do that in parallel.  Would calling something like
+> res_mkquery() use local DNS caching?
+>=20
+>> The question remains what the expected impact of TTL expiry is.  Will
+>> the kernel just perform a new DNS query if it needs one?  Or would =
+you
+>> expect that (say) the NFS client rechecks the addresses after TTL =
+expiry
+>> and if they change, reconnect to a new NFS server?
+>=20
+> It depends on the filesystem.
 
-inode->i_blocks could be accessed concurrently as noticed by KCSAN,
+Agreed. For example:
 
- BUG: KCSAN: data-race in ext4_do_update_inode [ext4] / inode_add_bytes
+The Linux NFS client won't connect to a new server when the server's
+DNS information changes. A fresh mount operation would be needed for
+the client to recognize and make use of it.
 
- write to 0xffff9a00d4b982d0 of 8 bytes by task 22100 on cpu 118:
-  inode_add_bytes+0x65/0xf0
-  __inode_add_bytes at fs/stat.c:689
-  (inlined by) inode_add_bytes at fs/stat.c:702
-  ext4_mb_new_blocks+0x418/0xca0 [ext4]
-  ext4_ext_map_blocks+0x1a6b/0x27b0 [ext4]
-  ext4_map_blocks+0x1a9/0x950 [ext4]
-  _ext4_get_block+0xfc/0x270 [ext4]
-  ext4_get_block_unwritten+0x33/0x50 [ext4]
-  __block_write_begin_int+0x22e/0xae0
-  __block_write_begin+0x39/0x50
-  ext4_write_begin+0x388/0xb50 [ext4]
-  ext4_da_write_begin+0x35f/0x8f0 [ext4]
-  generic_perform_write+0x15d/0x290
-  ext4_buffered_write_iter+0x11f/0x210 [ext4]
-  ext4_file_write_iter+0xce/0x9e0 [ext4]
-  new_sync_write+0x29c/0x3b0
-  __vfs_write+0x92/0xa0
-  vfs_write+0x103/0x260
-  ksys_write+0x9d/0x130
-  __x64_sys_write+0x4c/0x60
-  do_syscall_64+0x91/0xb05
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+There are mechanisms in the NFSv4 protocol to collect server IP =
+addresses
+from the server itself (fs_locations) and then try those locations if =
+the
+current server fails to respond. But currently that is not implemented =
+in
+Linux (and servers would need to be ready to provide that kind of =
+update).
 
- read to 0xffff9a00d4b982d0 of 8 bytes by task 8 on cpu 65:
-  ext4_do_update_inode+0x4a0/0xf60 [ext4]
-  ext4_inode_blocks_set at fs/ext4/inode.c:4815
-  ext4_mark_iloc_dirty+0xaf/0x160 [ext4]
-  ext4_mark_inode_dirty+0x129/0x3e0 [ext4]
-  ext4_convert_unwritten_extents+0x253/0x2d0 [ext4]
-  ext4_convert_unwritten_io_end_vec+0xc5/0x150 [ext4]
-  ext4_end_io_rsv_work+0x22c/0x350 [ext4]
-  process_one_work+0x54f/0xb90
-  worker_thread+0x80/0x5f0
-  kthread+0x1cd/0x1f0
-  ret_from_fork+0x27/0x50
 
- 4 locks held by kworker/u256:0/8:
-  #0: ffff9a025abc4328 ((wq_completion)ext4-rsv-conversion){+.+.}, at: process_one_work+0x443/0xb90
-  #1: ffffab5a862dbe20 ((work_completion)(&ei->i_rsv_conversion_work)){+.+.}, at: process_one_work+0x443/0xb90
-  #2: ffff9a025a9d0f58 (jbd2_handle){++++}, at: start_this_handle+0x1c1/0x9d0 [jbd2]
-  #3: ffff9a00d4b985d8 (&(&ei->i_raw_lock)->rlock){+.+.}, at: ext4_do_update_inode+0xaa/0xf60 [ext4]
- irq event stamp: 3009267
- hardirqs last  enabled at (3009267): [<ffffffff980da9b7>] __find_get_block+0x107/0x790
- hardirqs last disabled at (3009266): [<ffffffff980da8f9>] __find_get_block+0x49/0x790
- softirqs last  enabled at (3009230): [<ffffffff98a0034c>] __do_softirq+0x34c/0x57c
- softirqs last disabled at (3009223): [<ffffffff97cc67a2>] irq_exit+0xa2/0xc0
+> AFS keeps track of the expiration on the record and will issue a new =
+lookup
+> when the data expires, but NFS doesn't make use of this information.  =
+The
+> keyring subsystem will itself dispose of dns_resolver keys that expire =
+and
+> request_key() will only upcall again if the key has expired.
 
- Reported by Kernel Concurrency Sanitizer on:
- CPU: 65 PID: 8 Comm: kworker/u256:0 Tainted: G L 5.6.0-rc2-next-20200221+ #7
- Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
- Workqueue: ext4-rsv-conversion ext4_end_io_rsv_work [ext4]
+Our NFS colleagues working on Solaris have noted that handling the =
+expiry
+of DNS information can be tricky. It is usually desirable to continue =
+using
+expired information when a new DNS query fails temporarily (times out, =
+or
+the network is partitioned, etc). That makes for a more robust network =
+file
+service.
 
-The plain read is outside of inode->i_lock critical section which
-results in a data race. Fix it by adding READ_ONCE() there.
 
-Link: https://lore.kernel.org/r/20200222043258.2279-1-cai@lca.pw
-Signed-off-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Cc: stable@kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> The problem for NFS is that the host IP address is the primary key for =
+the
+> superblock (see nfs_compare_super_address()).
 
----
- fs/ext4/inode.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I thought that NFSv4.1 and newer have server-provided unique information
+that might be used in place of the server's IP address. This information
+is supposed to be independent of a server's network addresses.
 
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -4783,7 +4783,7 @@ static int ext4_inode_blocks_set(handle_
- 				struct ext4_inode_info *ei)
- {
- 	struct inode *inode = &(ei->vfs_inode);
--	u64 i_blocks = inode->i_blocks;
-+	u64 i_blocks = READ_ONCE(inode->i_blocks);
- 	struct super_block *sb = inode->i_sb;
- 
- 	if (i_blocks <= ~0U) {
+
+> CIFS also doesn't make direct use of the TTL, and again this may be =
+because it
+> uses the server address as part of the primary key for the superblock =
+(see
+> cifs_match_super()).
+
+--
+Chuck Lever
+
 
 
