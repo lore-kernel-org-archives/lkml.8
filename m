@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 154D3C352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 532C1C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB0FC21734
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:46:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2901D21744
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:46:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587044806;
-	bh=/QZYw7QTWqP41HlNZ8UmRopMV6mswugDKj2mQSlQ36w=;
+	s=default; t=1587044818;
+	bh=Ccx5IMb0hrnaC5537dtoCxBIqyonxRrmjubp0SWGv5o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HNdiVdnpLASxkmRHrtYhrw4k6J4vgMvXXlLuo1b2wKlZUmxk0EUopa5fnh+gg/K+6
-	 YsRnemKoyBx3BAWZ0MZZK57cL6Pb5Ywc29kKTPmajQnZG0cV8rdVN4NViN/9evVmC8
-	 2RC5UBWQsC6kqvR3bAPjdDKlLY7vd8fWaMBXAGzQ=
+	b=Ax/IFKvQnhW14VivZuQoVv5QgSxzU9FxgpntHRUYTmPb/1lyDp0Nm3vGQSnbnOPIu
+	 g/NibASg/rt2DXbmg0kGek1jz0MEw0upgCBQp3QbpUr5z8svPT/LEa3o2CzpeslHi6
+	 9emNt2luuZXaw5p/3Gyx/6Pm2VOkqGBvrs7zsOQA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2897703AbgDPNqn (ORCPT
+        id S2898634AbgDPNqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:46:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47132 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:46:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897093AbgDPNfP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:35:15 -0400
+        id S2895984AbgDPNfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:35:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68C9F20732;
-        Thu, 16 Apr 2020 13:35:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 561D420732;
+        Thu, 16 Apr 2020 13:35:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044113;
-        bh=/QZYw7QTWqP41HlNZ8UmRopMV6mswugDKj2mQSlQ36w=;
+        s=default; t=1587044118;
+        bh=Ccx5IMb0hrnaC5537dtoCxBIqyonxRrmjubp0SWGv5o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d1anSaTXrDIuhyVXBoYYMs2UpF0oNkdnV8LuHyPDBgj+wLfJg/7eE3TDlo1INWZxi
-         2m7WuH5DhmVWjYZpQzviHBm55zVeKbgZZUkdwcEFRsbZkFPAGbzjUXiwjBw8zJJ3vt
-         xf4N9Lz//8Dcq9BwoNPT4AbVZIEvMMdXyKVx1snA=
+        b=yx/9meMjizZ3N5cAYP9j9jIbNjgk7FPIHyENHyziBYfNkilNOLJxipmkiD9NCLzqF
+         pvg+9m0oKzpsshRF4ejN0b070xBEYPSNfi+0cSmnq/5DztozAOnQb4u44dxL16tUcN
+         wRj3xBv7r7da08iqmK0T3w+C/ddbTwdc0Gg7vMGM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.5 087/257] ALSA: usb-audio: Add mixer workaround for TRX40 and co
-Date:   Thu, 16 Apr 2020 15:22:18 +0200
-Message-Id: <20200416131336.859932174@linuxfoundation.org>
+        stable@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.5 089/257] ALSA: hda: Fix potential access overflow in beep helper
+Date:   Thu, 16 Apr 2020 15:22:20 +0200
+Message-Id: <20200416131337.097785990@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -60,75 +61,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Takashi Iwai <tiwai@suse.de>
 
-commit 2a48218f8e23d47bd3e23cfdfb8aa9066f7dc3e6 upstream.
+commit 0ad3f0b384d58f3bd1f4fb87d0af5b8f6866f41a upstream.
 
-Some recent boards (supposedly with a new AMD platform) contain the
-USB audio class 2 device that is often tied with HD-audio.  The device
-exposes an Input Gain Pad control (id=19, control=12) but this node
-doesn't behave correctly, returning an error for each inquiry of
-GET_MIN and GET_MAX that should have been mandatory.
+The beep control helper function blindly stores the values in two
+stereo channels no matter whether the actual control is mono or
+stereo.  This is practically harmless, but it annoys the recently
+introduced sanity check, resulting in an error when the checker is
+enabled.
 
-As a workaround, simply ignore this node by adding a usbmix_name_map
-table entry.  The currently known devices are:
-* 0414:a002 - Gigabyte TRX40 Aorus Pro WiFi
-* 0b05:1916 - ASUS ROG Zenith II
-* 0b05:1917 - ASUS ROG Strix
-* 0db0:0d64 - MSI TRX40 Creator
-* 0db0:543d - MSI TRX40
+This patch corrects the behavior to store only on the defined array
+member.
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206543
+Fixes: 0401e8548eac ("ALSA: hda - Move beep helper functions to hda_beep.c")
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207139
+Reviewed-by: Jaroslav Kysela <perex@perex.cz>
 Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200408140449.22319-1-tiwai@suse.de
+Link: https://lore.kernel.org/r/20200407084402.25589-2-tiwai@suse.de
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/mixer_maps.c |   28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ sound/pci/hda/hda_beep.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/sound/usb/mixer_maps.c
-+++ b/sound/usb/mixer_maps.c
-@@ -349,6 +349,14 @@ static const struct usbmix_name_map dell
- 	{ 0 }
- };
- 
-+/* Some mobos shipped with a dummy HD-audio show the invalid GET_MIN/GET_MAX
-+ * response for Input Gain Pad (id=19, control=12).  Skip it.
-+ */
-+static const struct usbmix_name_map asus_rog_map[] = {
-+	{ 19, NULL, 12 }, /* FU, Input Gain Pad */
-+	{}
-+};
+--- a/sound/pci/hda/hda_beep.c
++++ b/sound/pci/hda/hda_beep.c
+@@ -290,8 +290,12 @@ int snd_hda_mixer_amp_switch_get_beep(st
+ {
+ 	struct hda_codec *codec = snd_kcontrol_chip(kcontrol);
+ 	struct hda_beep *beep = codec->beep;
++	int chs = get_amp_channels(kcontrol);
 +
- /*
-  * Control map entries
-  */
-@@ -468,6 +476,26 @@ static struct usbmix_ctl_map usbmix_ctl_
- 		.id = USB_ID(0x05a7, 0x1020),
- 		.map = bose_companion5_map,
- 	},
-+	{	/* Gigabyte TRX40 Aorus Pro WiFi */
-+		.id = USB_ID(0x0414, 0xa002),
-+		.map = asus_rog_map,
-+	},
-+	{	/* ASUS ROG Zenith II */
-+		.id = USB_ID(0x0b05, 0x1916),
-+		.map = asus_rog_map,
-+	},
-+	{	/* ASUS ROG Strix */
-+		.id = USB_ID(0x0b05, 0x1917),
-+		.map = asus_rog_map,
-+	},
-+	{	/* MSI TRX40 Creator */
-+		.id = USB_ID(0x0db0, 0x0d64),
-+		.map = asus_rog_map,
-+	},
-+	{	/* MSI TRX40 */
-+		.id = USB_ID(0x0db0, 0x543d),
-+		.map = asus_rog_map,
-+	},
- 	{ 0 } /* terminator */
- };
- 
+ 	if (beep && (!beep->enabled || !ctl_has_mute(kcontrol))) {
+-		ucontrol->value.integer.value[0] =
++		if (chs & 1)
++			ucontrol->value.integer.value[0] = beep->enabled;
++		if (chs & 2)
+ 			ucontrol->value.integer.value[1] = beep->enabled;
+ 		return 0;
+ 	}
 
 
