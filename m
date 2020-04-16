@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF4F9C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A33EC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:02:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8D902222D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:02:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D67C32222D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:02:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587049362;
-	bh=kkvZbA2vkPiq5mVjy9hdXDb2Jqew+F4v57ty+HGHEU4=;
+	s=default; t=1587049368;
+	bh=Ikc0AYvLKTZZv4VYpqWl7cUBvSOW5ZMNjoOQKDLh2aA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wLJ8sJWNtgQPEAJAZR8LDyJWPITvCjgXvU7LNVhPrjKQnfsKtJTKxMvl0Df0K4ECH
-	 GRgusbDjuHHLSX6qd5AH2btGeJXazpaNyESOzfUtJ+1vpEPAgF+sBLOKlVsBV093Yc
-	 jtkkcaRiSQdFXqGW1jozn3vBK3/a7t7BzMnaDOnE=
+	b=2S36PmjlCmZ3xEdIFN/yzg06FXw1cWUKCt7uHP2l7MgTSelkzbYf5Ggou6UKyK90u
+	 RqhX7lOtsP4i85IzOW5k1eFp6qCyeRe+zeu16+gcTYztqYcFKyVyCzGMWCdWiZLDuB
+	 AMloiiXt5vJ3wgf2W29EAM6oxR9E684VdyL2Y8fs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441174AbgDPPCl (ORCPT
+        id S2441765AbgDPPCq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:02:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40302 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:02:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896190AbgDPNxr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:53:47 -0400
+        id S2894618AbgDPNxp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:53:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BACAB20732;
-        Thu, 16 Apr 2020 13:53:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E7DE2076D;
+        Thu, 16 Apr 2020 13:53:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045227;
-        bh=kkvZbA2vkPiq5mVjy9hdXDb2Jqew+F4v57ty+HGHEU4=;
+        s=default; t=1587045224;
+        bh=Ikc0AYvLKTZZv4VYpqWl7cUBvSOW5ZMNjoOQKDLh2aA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FaSWGASB5iHLo8N1rAv28P//wHvjuQi66v/WEi+pGQbZo7Wclhuw287FQAWB8q3tt
-         d6MMj1jALUMfMMoeBiSI2QtB/ZcKNsuq1xTK4MOD2WFaec5MYd72GK8UZP7HEMPu69
-         rXBtIrcX5m+IbiJvo3EDkTazCWYxZhZ1hjGvOsvw=
+        b=AX5tC+R9nyvfjeV8Q2D3Nz2cnDw74k2NQ6/e+HvmyiegNYyd5FES3QHoLz3oqjv5u
+         i99BC8KgV+THI8gPJmwtxf7e4adSleLXvH7xrf6QrsCJOHIV0D+9fPq7GUGJYPbDW1
+         MWxsgZHZGW4xvcdVve8Gfhc7ie4A4s+6smzIWlQw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arvind Sankar <nivedita@alum.mit.edu>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 047/254] x86/boot: Use unsigned comparison for addresses
-Date:   Thu, 16 Apr 2020 15:22:16 +0200
-Message-Id: <20200416131331.775592662@linuxfoundation.org>
+        stable@vger.kernel.org, Peng Fan <peng.fan@nxp.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 046/254] cpufreq: imx6q: fix error handling
+Date:   Thu, 16 Apr 2020 15:22:15 +0200
+Message-Id: <20200416131331.659823791@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -60,69 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arvind Sankar <nivedita@alum.mit.edu>
+From: Peng Fan <peng.fan@nxp.com>
 
-[ Upstream commit 81a34892c2c7c809f9c4e22c5ac936ae673fb9a2 ]
+[ Upstream commit 3646f50a3838c5949a89ecbdb868497cdc05b8fd ]
 
-The load address is compared with LOAD_PHYSICAL_ADDR using a signed
-comparison currently (using jge instruction).
+When speed checking failed, direclty jumping to put_node label
+is not correct. Need jump to out_free_opp to avoid resources leak.
 
-When loading a 64-bit kernel using the new efi32_pe_entry() point added by:
-
-  97aa276579b2 ("efi/x86: Add true mixed mode entry point into .compat section")
-
-using Qemu with -m 3072, the firmware actually loads us above 2Gb,
-resulting in a very early crash.
-
-Use the JAE instruction to perform a unsigned comparison instead, as physical
-addresses should be considered unsigned.
-
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20200301230436.2246909-6-nivedita@alum.mit.edu
-Link: https://lore.kernel.org/r/20200308080859.21568-14-ardb@kernel.org
+Fixes: 2733fb0d0699 ("cpufreq: imx6q: read OCOTP through nvmem for imx6ul/imx6ull")
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/boot/compressed/head_32.S | 2 +-
- arch/x86/boot/compressed/head_64.S | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/cpufreq/imx6q-cpufreq.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/boot/compressed/head_32.S b/arch/x86/boot/compressed/head_32.S
-index 73f17d0544dd5..7f7e8b8518fec 100644
---- a/arch/x86/boot/compressed/head_32.S
-+++ b/arch/x86/boot/compressed/head_32.S
-@@ -106,7 +106,7 @@ SYM_FUNC_START(startup_32)
- 	notl	%eax
- 	andl    %eax, %ebx
- 	cmpl	$LOAD_PHYSICAL_ADDR, %ebx
--	jge	1f
-+	jae	1f
- #endif
- 	movl	$LOAD_PHYSICAL_ADDR, %ebx
- 1:
-diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
-index 1f1f6c8139b38..afde2aa8382e9 100644
---- a/arch/x86/boot/compressed/head_64.S
-+++ b/arch/x86/boot/compressed/head_64.S
-@@ -106,7 +106,7 @@ SYM_FUNC_START(startup_32)
- 	notl	%eax
- 	andl	%eax, %ebx
- 	cmpl	$LOAD_PHYSICAL_ADDR, %ebx
--	jge	1f
-+	jae	1f
- #endif
- 	movl	$LOAD_PHYSICAL_ADDR, %ebx
- 1:
-@@ -296,7 +296,7 @@ SYM_CODE_START(startup_64)
- 	notq	%rax
- 	andq	%rax, %rbp
- 	cmpq	$LOAD_PHYSICAL_ADDR, %rbp
--	jge	1f
-+	jae	1f
- #endif
- 	movq	$LOAD_PHYSICAL_ADDR, %rbp
- 1:
+diff --git a/drivers/cpufreq/imx6q-cpufreq.c b/drivers/cpufreq/imx6q-cpufreq.c
+index 1fcbbd53a48a2..edef3399c9794 100644
+--- a/drivers/cpufreq/imx6q-cpufreq.c
++++ b/drivers/cpufreq/imx6q-cpufreq.c
+@@ -381,23 +381,24 @@ static int imx6q_cpufreq_probe(struct platform_device *pdev)
+ 		goto put_reg;
+ 	}
+ 
++	/* Because we have added the OPPs here, we must free them */
++	free_opp = true;
++
+ 	if (of_machine_is_compatible("fsl,imx6ul") ||
+ 	    of_machine_is_compatible("fsl,imx6ull")) {
+ 		ret = imx6ul_opp_check_speed_grading(cpu_dev);
+ 		if (ret) {
+ 			if (ret == -EPROBE_DEFER)
+-				goto put_node;
++				goto out_free_opp;
+ 
+ 			dev_err(cpu_dev, "failed to read ocotp: %d\n",
+ 				ret);
+-			goto put_node;
++			goto out_free_opp;
+ 		}
+ 	} else {
+ 		imx6q_opp_check_speed_grading(cpu_dev);
+ 	}
+ 
+-	/* Because we have added the OPPs here, we must free them */
+-	free_opp = true;
+ 	num = dev_pm_opp_get_opp_count(cpu_dev);
+ 	if (num < 0) {
+ 		ret = num;
 -- 
 2.20.1
 
