@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B137C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:06:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B013C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:06:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E4A1206D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:06:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 480A2206D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:06:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587045977;
-	bh=hFO4jLIKH+x5/7ssSNwRO2Wq0ZVgFPUvQpXBS26CSuE=;
+	s=default; t=1587045986;
+	bh=XQEArXGItVvaQZkfpdMmLcNNI8l93bdzj2TABmVv/Ek=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AAyz6LwkELUkNiWvvOvD2cqx8s99WBL80pbW1z7DW5p7q1+u7gQqQcHbWxOIATD+M
-	 dSAqL3J6phJzC0a26cdQC9qHR/CP01+XQh9s+BUNnWH2GYVltkw9boeJYPqEzq6Fon
-	 YDiHOfodDh8WpWPEHAr4keGJza8fFIHzf6EUqKV8=
+	b=uwwfhSt3LUp+gHYUjYe2JwZ/KguDvwQOOT8U4stuvSqIeJpylJNqPLYcLjM7Hvu6F
+	 /+OomeMsQ53JhpaRtcAaosreHSypw4Jb9FibJVOt8OaSTv1qRHeLYYXrg/Fc7UINj5
+	 MEgeBmkKXEw0WW8TuG3wWt85TM0SGNXiQpSsg5sQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727978AbgDPOEy (ORCPT
+        id S2409664AbgDPOGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:04:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56300 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:06:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392208AbgDPNnF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:43:05 -0400
+        id S2898242AbgDPNoO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:44:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28A7F2223E;
-        Thu, 16 Apr 2020 13:43:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BF0820732;
+        Thu, 16 Apr 2020 13:44:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044584;
-        bh=hFO4jLIKH+x5/7ssSNwRO2Wq0ZVgFPUvQpXBS26CSuE=;
+        s=default; t=1587044653;
+        bh=XQEArXGItVvaQZkfpdMmLcNNI8l93bdzj2TABmVv/Ek=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yHtMoGqVFgTY1OyIW2skAqLoAqG2xG0izTP7PLVUJIDqkNZT8IHW0cdk/3Pc7Qf6T
-         jsFkEamm5YDwDULh9H3hCZ5hlqz8cRGR0gBG+XEcQEtOlhHg2HX1zSFrah9MV6i4g4
-         M9yc3RNmAKtchdKzIOjiFcsJlz3Gf6JYybkF/8kk=
+        b=mko60WHz5jSitFbRFXzyNdSDvMHT35wvtGc6uw9597E5TuhzBYhp0s4FMrqiLRg4f
+         Z6hG23bwg9s8tQpFzsfO8CJMYkMzAltCH1AGRixXy7jmiInd/FXGimethtVwl23Qq1
+         ERAt0Brj60bMpA4zWTomcS4FZbOj6Rz55InHmkog=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ondrej Jirman <megous@megous.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 002/232] bus: sunxi-rsb: Return correct data when mixing 16-bit and 8-bit reads
-Date:   Thu, 16 Apr 2020 15:21:36 +0200
-Message-Id: <20200416131316.920781685@linuxfoundation.org>
+        stable@vger.kernel.org, Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Grigore Popescu <grigore.popescu@nxp.com>,
+        Li Yang <leoyang.li@nxp.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 007/232] soc: fsl: dpio: register dpio irq handlers after dpio create
+Date:   Thu, 16 Apr 2020 15:21:41 +0200
+Message-Id: <20200416131317.430036522@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -61,62 +60,150 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ondrej Jirman <megous@megous.com>
+From: Grigore Popescu <grigore.popescu@nxp.com>
 
-[ Upstream commit a43ab30dcd4a1abcdd0d2461bf1cf7c0817f6cd3 ]
+[ Upstream commit fe8fe7723a3a824790bda681b40efd767e2251a7 ]
 
-When doing a 16-bit read that returns data in the MSB byte, the
-RSB_DATA register will keep the MSB byte unchanged when doing
-the following 8-bit read. sunxi_rsb_read() will then return
-a result that contains high byte from 16-bit read mixed with
-the 8-bit result.
+The dpio irqs must be registered when you can actually
+receive interrupts, ie when the dpios are created.
+Kernel goes through NULL pointer dereference errors
+followed by kernel panic [1] because the dpio irqs are
+enabled before the dpio is created.
 
-The consequence is that after this happens the PMIC's regmap will
-look like this: (0x33 is the high byte from the 16-bit read)
+[1]
+Unable to handle kernel NULL pointer dereference at virtual address 0040
+fsl_mc_dpio dpio.14: probed
+fsl_mc_dpio dpio.13: Adding to iommu group 11
+  ISV = 0, ISS = 0x00000004
+Unable to handle kernel NULL pointer dereference at virtual address 0040
+Mem abort info:
+  ESR = 0x96000004
+  EC = 0x25: DABT (current EL), IL = 32 bits
+  SET = 0, FnV = 0
+  EA = 0, S1PTW = 0
+Data abort info:
+  ISV = 0, ISS = 0x00000004
+  CM = 0, WnR = 0
+[0000000000000040] user address but active_mm is swapper
+Internal error: Oops: 96000004 [#1] PREEMPT SMP
+Modules linked in:
+CPU: 2 PID: 151 Comm: kworker/2:1 Not tainted 5.6.0-rc4-next-20200304 #1
+Hardware name: NXP Layerscape LX2160ARDB (DT)
+Workqueue: events deferred_probe_work_func
+pstate: 00000085 (nzcv daIf -PAN -UAO)
+pc : dpaa2_io_irq+0x18/0xe0
+lr : dpio_irq_handler+0x1c/0x28
+sp : ffff800010013e20
+x29: ffff800010013e20 x28: ffff0026d9b4c140
+x27: ffffa1d38a142018 x26: ffff0026d2953400
+x25: ffffa1d38a142018 x24: ffffa1d38a7ba1d8
+x23: ffff800010013f24 x22: 0000000000000000
+x21: 0000000000000072 x20: ffff0026d2953400
+x19: ffff0026d2a68b80 x18: 0000000000000001
+x17: 000000002fb37f3d x16: 0000000035eafadd
+x15: ffff0026d9b4c5b8 x14: ffffffffffffffff
+x13: ff00000000000000 x12: 0000000000000038
+x11: 0101010101010101 x10: 0000000000000040
+x9 : ffffa1d388db11e4 x8 : ffffa1d38a7e40f0
+x7 : ffff0026da414f38 x6 : 0000000000000000
+x5 : ffff0026da414d80 x4 : ffff5e5353d0c000
+x3 : ffff800010013f60 x2 : ffffa1d388db11c8
+x1 : ffff0026d2a67c00 x0 : 0000000000000000
+Call trace:
+ dpaa2_io_irq+0x18/0xe0
+ dpio_irq_handler+0x1c/0x28
+ __handle_irq_event_percpu+0x78/0x2c0
+ handle_irq_event_percpu+0x38/0x90
+ handle_irq_event+0x4c/0xd0
+ handle_fasteoi_irq+0xbc/0x168
+ generic_handle_irq+0x2c/0x40
+ __handle_domain_irq+0x68/0xc0
+ gic_handle_irq+0x64/0x150
+ el1_irq+0xb8/0x180
+ _raw_spin_unlock_irqrestore+0x14/0x48
+ irq_set_affinity_hint+0x6c/0xa0
+ dpaa2_dpio_probe+0x2a4/0x518
+ fsl_mc_driver_probe+0x28/0x70
+ really_probe+0xdc/0x320
+ driver_probe_device+0x5c/0xf0
+ __device_attach_driver+0x88/0xc0
+ bus_for_each_drv+0x7c/0xc8
+ __device_attach+0xe4/0x140
+ device_initial_probe+0x18/0x20
+ bus_probe_device+0x98/0xa0
+ device_add+0x41c/0x758
+ fsl_mc_device_add+0x184/0x530
+ dprc_scan_objects+0x280/0x370
+ dprc_probe+0x124/0x3b0
+ fsl_mc_driver_probe+0x28/0x70
+ really_probe+0xdc/0x320
+ driver_probe_device+0x5c/0xf0
+ __device_attach_driver+0x88/0xc0
+ bus_for_each_drv+0x7c/0xc8
+ __device_attach+0xe4/0x140
+ device_initial_probe+0x18/0x20
+ bus_probe_device+0x98/0xa0
+ deferred_probe_work_func+0x74/0xa8
+ process_one_work+0x1c8/0x470
+ worker_thread+0x1f8/0x428
+ kthread+0x124/0x128
+ ret_from_fork+0x10/0x18
+Code: a9bc7bfd 910003fd a9025bf5 a90363f7 (f9402015)
+---[ end trace 38298e1a29e7a570 ]---
+Kernel panic - not syncing: Fatal exception in interrupt
+SMP: stopping secondary CPUs
+Mem abort info:
+  ESR = 0x96000004
+  CM = 0, WnR = 0
+  EC = 0x25: DABT (current EL), IL = 32 bits
+[0000000000000040] user address but active_mm is swapper
+  SET = 0, FnV = 0
+  EA = 0, S1PTW = 0
+Data abort info:
+  ISV = 0, ISS = 0x00000004
+  CM = 0, WnR = 0
+[0000000000000040] user address but active_mm is swapper
+SMP: failed to stop secondary CPUs 0-2
+Kernel Offset: 0x21d378600000 from 0xffff800010000000
+PHYS_OFFSET: 0xffffe92180000000
+CPU features: 0x10002,21806008
+Memory Limit: none
+---[ end Kernel panic - not syncing: Fatal exception in interrupt ]---
 
-% cat /sys/kernel/debug/regmap/sunxi-rsb-3a3/registers
-00: 33
-01: 33
-02: 33
-03: 33
-04: 33
-05: 33
-06: 33
-07: 33
-08: 33
-09: 33
-0a: 33
-0b: 33
-0c: 33
-0d: 33
-0e: 33
-[snip]
-
-Fix this by masking the result of the read with the correct mask
-based on the size of the read. There are no 16-bit users in the
-mainline kernel, so this doesn't need to get into the stable tree.
-
-Signed-off-by: Ondrej Jirman <megous@megous.com>
-Acked-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Signed-off-by: Grigore Popescu <grigore.popescu@nxp.com>
+Signed-off-by: Li Yang <leoyang.li@nxp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bus/sunxi-rsb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/soc/fsl/dpio/dpio-driver.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/bus/sunxi-rsb.c b/drivers/bus/sunxi-rsb.c
-index be79d6c6a4e45..1bb00a959c67f 100644
---- a/drivers/bus/sunxi-rsb.c
-+++ b/drivers/bus/sunxi-rsb.c
-@@ -345,7 +345,7 @@ static int sunxi_rsb_read(struct sunxi_rsb *rsb, u8 rtaddr, u8 addr,
- 	if (ret)
- 		goto unlock;
+diff --git a/drivers/soc/fsl/dpio/dpio-driver.c b/drivers/soc/fsl/dpio/dpio-driver.c
+index 70014ecce2a7e..7b642c330977f 100644
+--- a/drivers/soc/fsl/dpio/dpio-driver.c
++++ b/drivers/soc/fsl/dpio/dpio-driver.c
+@@ -233,10 +233,6 @@ static int dpaa2_dpio_probe(struct fsl_mc_device *dpio_dev)
+ 		goto err_allocate_irqs;
+ 	}
  
--	*buf = readl(rsb->regs + RSB_DATA);
-+	*buf = readl(rsb->regs + RSB_DATA) & GENMASK(len * 8 - 1, 0);
+-	err = register_dpio_irq_handlers(dpio_dev, desc.cpu);
+-	if (err)
+-		goto err_register_dpio_irq;
+-
+ 	priv->io = dpaa2_io_create(&desc, dev);
+ 	if (!priv->io) {
+ 		dev_err(dev, "dpaa2_io_create failed\n");
+@@ -244,6 +240,10 @@ static int dpaa2_dpio_probe(struct fsl_mc_device *dpio_dev)
+ 		goto err_dpaa2_io_create;
+ 	}
  
- unlock:
- 	mutex_unlock(&rsb->lock);
++	err = register_dpio_irq_handlers(dpio_dev, desc.cpu);
++	if (err)
++		goto err_register_dpio_irq;
++
+ 	dev_info(dev, "probed\n");
+ 	dev_dbg(dev, "   receives_notifications = %d\n",
+ 		desc.receives_notifications);
 -- 
 2.20.1
 
