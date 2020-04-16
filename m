@@ -2,146 +2,180 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0BF3C352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:27:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DDD5C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:31:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DAE9206B9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:27:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rrikCjo6"
+	by mail.kernel.org (Postfix) with ESMTP id F22FF21973
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:31:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2635522AbgDPM1K (ORCPT
+        id S2635574AbgDPMa6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 08:27:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46298 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2635437AbgDPM1D (ORCPT
+        Thu, 16 Apr 2020 08:30:58 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:30432 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2635398AbgDPMap (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 08:27:03 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3ACF7C061A0C;
-        Thu, 16 Apr 2020 05:27:03 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id cl8so1320435pjb.3;
-        Thu, 16 Apr 2020 05:27:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6+zoPumabDR7wfNBhA607mfTPqFnvtYyNRR6pkJeNRc=;
-        b=rrikCjo6OmPHVrOCaLm+Gva1H4yWEszY4mga/U1BhLvHHvvxk+RJGnSk8pXyWGDTgr
-         ArZtQrXxCKbrMHwqCytmTWKdLrkD+mr9kWeBopESSnNTEUA6HwR18Bkpdg4+3EWHk+o/
-         xOXwi90aVScXBzuqmuuquFT7mOyKeS0eAKYQRF3N6HM6P81Dl89CnOdCI2PIDo3bfAVb
-         OL48EkapNSlDBThy5XhtEXvkOG6atbCLx2m23ifH//EO8ch2NKiuNU4hxZz9z2o/UrzZ
-         AKN/dhyxPRoqSMtcHzhsflPexM1QwhfQXOejLz7kBkK1fSV5DIkhjRUBs9AltBnBTIsS
-         aGRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6+zoPumabDR7wfNBhA607mfTPqFnvtYyNRR6pkJeNRc=;
-        b=LN5W4JxgHksgxHpl453SFZ8qdupwKp45muqTbyHM7d/7T8jaRQGZtB0/eqgd/Mjn6a
-         tsUHN4Nnbc3SdYM21xynyEOU4ruAIR2A0GGs9nCOHJKJKJKcWrq4kSPc9oW34/OLiar8
-         qYKEWAqPOJHqIFP1+QM/ZRa/o6KYgU2tpdLp7J6vYzFAXKScV19tOEOUsgDaSfGItVBH
-         4saPxW79fVysQMMmsr2ukllzLhmvAkvfxCnEY8S5/3XIzD+muiXXB8LUwLBpZsGX/oCe
-         8gsqnmstFhUBsDmTwvyf9LsS+EtSMB6LhmPC1Hiwi4YQ448znsW8QrMJ6/6h21eGDc6K
-         E5ug==
-X-Gm-Message-State: AGi0PuYtZ1i/GWAHqXLQCfPlkAuuqDzJ++TOFwUowLm2efz1P2ns9AYq
-        O/QpmvAU1PkOboO8wjYYaLyWquBfSl2IvDJHac4=
-X-Google-Smtp-Source: APiQypJvkQh5+ugyct9yZGir74K1nYeyAEbWt+sAtjy2EG/owrAN5ZW/CfDb6rC12X8DVkuLLWoZMoJZIEJSmzjKy0U=
-X-Received: by 2002:a17:902:854a:: with SMTP id d10mr8026966plo.262.1587040022687;
- Thu, 16 Apr 2020 05:27:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200414022433.36622-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200415220533.733834-1-martin.blumenstingl@googlemail.com>
- <c33c8653-16a2-5bcd-97a9-511d958b755a@linux.intel.com> <20200416113822.2ef326cb@collabora.com>
- <18568cf6-2955-472e-7b68-eb35e654a906@linux.intel.com> <20200416122619.2c481792@collabora.com>
- <d3e137fa-54a0-b4ec-eb24-3984eab2a247@linux.intel.com> <20200416131725.51259573@collabora.com>
- <de9f50b8-9215-d294-9914-e49701552185@linux.intel.com> <20200416135711.039ba85c@collabora.com>
-In-Reply-To: <20200416135711.039ba85c@collabora.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 16 Apr 2020 15:26:51 +0300
-Message-ID: <CAHp75Vcpb-556imBuhsY-asrKqx7LjvQbq+P-ysK-+ii91YpWQ@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] mtd: rawnand: Add NAND controller support on Intel
- LGM SoC
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Andriy Shevchenko <andriy.shevchenko@intel.com>,
+        Thu, 16 Apr 2020 08:30:45 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03GC4YFd004188
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 08:30:44 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30epxn141p-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 08:30:44 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
+        Thu, 16 Apr 2020 13:30:22 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 16 Apr 2020 13:30:19 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03GCTVFA35520776
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Apr 2020 12:29:31 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D5B87A4062;
+        Thu, 16 Apr 2020 12:30:37 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 359DCA4060;
+        Thu, 16 Apr 2020 12:30:37 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.145.77.31])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 16 Apr 2020 12:30:37 +0000 (GMT)
+Subject: Re: [PATCH v3 00/12] Rework READ_ONCE() to improve codegen
+To:     Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org
+Cc:     linux-arch@vger.kernel.org, kernel-team@android.com,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
         Arnd Bergmann <arnd@arndb.de>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        cheol.yong.kim@intel.com, devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>,
-        masonccyang@mxic.com.tw, Miquel Raynal <miquel.raynal@bootlin.com>,
-        piotrs@cadence.com, qi-ming.wu@intel.com,
-        Richard Weinberger <richard@nod.at>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vignesh R <vigneshr@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>
+References: <20200415165218.20251-1-will@kernel.org>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
+Date:   Thu, 16 Apr 2020 14:30:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <20200415165218.20251-1-will@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20041612-0012-0000-0000-000003A58FFD
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20041612-0013-0000-0000-000021E2CFF7
+Message-Id: <809e006e-6641-c252-53a1-cc4479d2ca89@de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-16_03:2020-04-14,2020-04-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1015
+ priorityscore=1501 mlxscore=0 malwarescore=0 phishscore=0 bulkscore=0
+ impostorscore=0 suspectscore=0 mlxlogscore=999 spamscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004160082
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 3:03 PM Boris Brezillon
-<boris.brezillon@collabora.com> wrote:
-> On Thu, 16 Apr 2020 19:38:03 +0800
-> "Ramuthevar, Vadivel MuruganX"
-> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
-> > On 16/4/2020 7:17 pm, Boris Brezillon wrote:
-> > > On Thu, 16 Apr 2020 18:40:53 +0800
-> > > "Ramuthevar, Vadivel MuruganX"
-> > > <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
 
-...
+On 15.04.20 18:52, Will Deacon wrote:
+> Hi everyone,
+> 
+> This is version three of the patches I previously posted for improving
+> the code generation of READ_ONCE() and moving the minimum GCC version
+> to 4.8:
+> 
+> RFC: https://lore.kernel.org/lkml/20200110165636.28035-1-will@kernel.org
+> v2:  https://lore.kernel.org/lkml/20200123153341.19947-1-will@kernel.org
+> 
+> Although v2 was queued up by Peter in -tip, it was found to break the
+> build for m68k and sparc32. We fixed m68k during the merge window and
+> I've since posted patches to fix sparc32 here:
+> 
+>   https://lore.kernel.org/lkml/20200414214011.2699-1-will@kernel.org
+> 
+> This series is a refresh on top of 5.7-rc1, the main changes being:
+> 
+>   * Fix another issue where 'const' is assigned to non-const via
+>     WRITE_ONCE(), this time in the tls code
+> 
+>   * Fix READ_ONCE_NOCHECK() abuse in arm64 checksum code
+> 
+>   * Added Reviewed-bys and Acks from v2
+> 
+> Hopefully this can be considered for 5.8, along with the sparc32 changes.
+> 
+> Cheers,
+> 
+> Will
+> 
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: Segher Boessenkool <segher@kernel.crashing.org>
+> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+> Cc: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Peter Oberparleiter <oberpar@linux.ibm.com>
+> Cc: Masahiro Yamada <masahiroy@kernel.org>
+> Cc: Nick Desaulniers <ndesaulniers@google.com>
+> 
 
-> > There are different features involved and lines of code is more, if we
-> > add new driver patches over xway-nand driver
->
-> How about retro-fitting the xway logic into your driver then? I mean,
-> adding a 100 lines of code to your driver to get rid of the 500+ lines
-> we have in xway_nand.c is still a win.
->
-> >
-> > is completely looks ugly and it may disturb the existing functionality
-> > as well since we don't have platform to validate:'(.
->
-> How ugly? Can you show us? Maybe we can come with a solution to make it
-> less ugly.
->
-> As for the testing part, there are 4 scenarios:
->
-> 1/ Your changes work perfectly fine on older platforms. Yay \o/!
-> 2/ You break the xway driver and existing users notice it before this
->    series gets merged. Now you found someone to validate your changes.
-> 3/ You break the xway driver and none of the existing users notice it
->    before the driver is merged, but they notice it afterwards. Too bad
->    this happened after we've merged the driver, but now you've found
->    someone to help you fix the problem :P.
-> 4/ You break things for old platforms but no one ever complains about
->    it, either because there's no users left or because they never
->    update their kernels. In any case, that's no longer your problem.
->    Someone will remove those old platforms one day and get rid of the
->    unneeded code in the NAND driver.
->
-> What's more likely to happen is #3 or #4, and I think the NAND
-> maintainer would be fine with both.
->
-> Note that the NAND subsystem is full of unmaintained legacy drivers, so
-> every time we see someone who could help us get rid or update one of
-> them we have to take this opportunity.
+I gave this series a try and s390 seems to compile fine and it also seems to
+properly compile the the ipte_unlock_siif function in arch/s390/kvm/gaccess.c
+This function was miscompiled with gcc4.6 and the trigger for replacing
+ACCESS_ONCE with READ_ONCE
 
-Don't we rather insist to have a MAINTAINERS record for new code to
-avoid (or delay at least) the fate of the legacy drivers?
-
--- 
-With Best Regards,
-Andy Shevchenko
