@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 142EDC352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59044C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:57:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB27920732
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:57:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EFCC2076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:57:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587045452;
-	bh=LAIjssrxcqhHTuaqxyWX25CGsFD7yghpLh18RT6Ivr8=;
+	s=default; t=1587045458;
+	bh=rYEbbTZpOvYM3lyWTrWeTlys/rHzSaPGXH+mvSyaYi8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=04RINs0a49h0xUi5icNH9jZbnfUd1hCHnta45Dvspb1LarIRQQLi6heBh2WlEHEfo
-	 /UXdMkZNbLjNNu1eB/k15q6mrN5Pm5NDwL7uQt9UmH8wWLmB5xCcQYoMhgaO/kIaLl
-	 yuVfzkwxoLh6vBsqnRisyMu+KKMMqUfjcpL9qAEc=
+	b=YQWR91n3fWjbdKBsODlHymy4AmhqmhkYdvXfbuUzX9z+z6hYHVyCDFHpJpLIh8aCx
+	 QUjH4/b/5q7XE9apt7PPO0uRYENPSQhidE7nScCioGJPwG9Dd2Q2et5nRBY8XaC6iW
+	 WDM4yRTkR5R6LN8azDNNbjJ2vNeNpajYxU+at4v8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503530AbgDPN5b (ORCPT
+        id S2506727AbgDPN5g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:57:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51568 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:57:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897897AbgDPNjN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:39:13 -0400
+        id S2897931AbgDPNjS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:39:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3B36221F7;
-        Thu, 16 Apr 2020 13:39:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2AC421BE5;
+        Thu, 16 Apr 2020 13:39:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044353;
-        bh=LAIjssrxcqhHTuaqxyWX25CGsFD7yghpLh18RT6Ivr8=;
+        s=default; t=1587044358;
+        bh=rYEbbTZpOvYM3lyWTrWeTlys/rHzSaPGXH+mvSyaYi8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mLntFyqlWsRGheBcusmlaUeoovJ5tQIkTpBqQPuroNSS9OvXpjTeXmk1YhWIVTYGD
-         pFvs//+YlwPUOpySeEfyCuAASIgdfYa+f3vkJehyZSO6qPbvl0QNwjjcuwqSj3tZbI
-         AyNiVyWMVL4sZpFSrlDG5NOpcdbu+7oWg7VNKkp4=
+        b=PRp9yvR+QbyQqA4XsLuEB8LdG4Hy47ey6TpbT9sGh/G7tYqQ+z0O0aaOkpbdD3mms
+         a56qJd2Ng/qDPn60rPOxn1PR3VPSDZlghzSu8+9ceGPQ2DBMsWcxnfz1hdLF6k9+K3
+         CYz5+XwN9r1sxK4kfNxaEe3VXdplCqqQaAL/T4D4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bob Liu <bob.liu@oracle.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
+        stable@vger.kernel.org, Nikos Tsironis <ntsironis@arrikto.com>,
         Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.5 183/257] dm zoned: remove duplicate nr_rnd_zones increase in dmz_init_zone()
-Date:   Thu, 16 Apr 2020 15:23:54 +0200
-Message-Id: <20200416131349.226208741@linuxfoundation.org>
+Subject: [PATCH 5.5 185/257] dm clone: Add overflow check for number of regions
+Date:   Thu, 16 Apr 2020 15:23:56 +0200
+Message-Id: <20200416131349.450708706@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -60,37 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bob Liu <bob.liu@oracle.com>
+From: Nikos Tsironis <ntsironis@arrikto.com>
 
-commit b8fdd090376a7a46d17db316638fe54b965c2fb0 upstream.
+commit cd481c12269b4d276f1a52eda0ebd419079bfe3a upstream.
 
-zmd->nr_rnd_zones was increased twice by mistake. The other place it
-is increased in dmz_init_zone() is the only one needed:
+Add overflow check for clone->nr_regions variable, which holds the
+number of regions of the target.
 
-1131                 zmd->nr_useable_zones++;
-1132                 if (dmz_is_rnd(zone)) {
-1133                         zmd->nr_rnd_zones++;
-					^^^
-Fixes: 3b1a94c88b79 ("dm zoned: drive-managed zoned block device target")
-Cc: stable@vger.kernel.org
-Signed-off-by: Bob Liu <bob.liu@oracle.com>
-Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
+The overflow can occur with sufficiently large devices, if BITS_PER_LONG
+== 32. E.g., if the region size is 8 sectors (4K), the overflow would
+occur for device sizes > 34359738360 sectors (~16TB).
+
+This could result in multiple device sectors wrongly mapping to the same
+region number, due to the truncation from 64 bits to 32 bits, which
+would lead to data corruption.
+
+Fixes: 7431b7835f55 ("dm: add clone target")
+Cc: stable@vger.kernel.org # v5.4+
+Signed-off-by: Nikos Tsironis <ntsironis@arrikto.com>
 Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-zoned-metadata.c |    1 -
- 1 file changed, 1 deletion(-)
+ drivers/md/dm-clone-target.c |   12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
---- a/drivers/md/dm-zoned-metadata.c
-+++ b/drivers/md/dm-zoned-metadata.c
-@@ -1109,7 +1109,6 @@ static int dmz_init_zone(struct blk_zone
- 	switch (blkz->type) {
- 	case BLK_ZONE_TYPE_CONVENTIONAL:
- 		set_bit(DMZ_RND, &zone->flags);
--		zmd->nr_rnd_zones++;
- 		break;
- 	case BLK_ZONE_TYPE_SEQWRITE_REQ:
- 	case BLK_ZONE_TYPE_SEQWRITE_PREF:
+--- a/drivers/md/dm-clone-target.c
++++ b/drivers/md/dm-clone-target.c
+@@ -1790,6 +1790,7 @@ error:
+ static int clone_ctr(struct dm_target *ti, unsigned int argc, char **argv)
+ {
+ 	int r;
++	sector_t nr_regions;
+ 	struct clone *clone;
+ 	struct dm_arg_set as;
+ 
+@@ -1831,7 +1832,16 @@ static int clone_ctr(struct dm_target *t
+ 		goto out_with_source_dev;
+ 
+ 	clone->region_shift = __ffs(clone->region_size);
+-	clone->nr_regions = dm_sector_div_up(ti->len, clone->region_size);
++	nr_regions = dm_sector_div_up(ti->len, clone->region_size);
++
++	/* Check for overflow */
++	if (nr_regions != (unsigned long)nr_regions) {
++		ti->error = "Too many regions. Consider increasing the region size";
++		r = -EOVERFLOW;
++		goto out_with_source_dev;
++	}
++
++	clone->nr_regions = nr_regions;
+ 
+ 	r = validate_nr_regions(clone->nr_regions, &ti->error);
+ 	if (r)
 
 
