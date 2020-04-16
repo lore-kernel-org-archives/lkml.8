@@ -2,103 +2,138 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81DA3C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:45:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 343D4C352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:46:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A3DA21D82
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:45:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587048350;
-	bh=VYuhQynOOttQXgdTesb/aAZL2uNah2HlHkKcMndQFn4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Mkwta+nMFMqhgV+N4diWKUW23he4hz02m6a2o+svINVS2ajGTBnO1zfiNNXi1MEoD
-	 Huf+mLX8sQ42f9H6qhsWH+gYvJpGSDePMUF/w4/1wkGCZic9TiquSqKIx5cychSkFK
-	 It5Bje7H6CJmboDPUcgA3SLOFSgNe70Simyt7kp8=
+	by mail.kernel.org (Postfix) with ESMTP id 1BCFF206B9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:46:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729523AbgDPOps (ORCPT
+        id S2394505AbgDPOp5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:45:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46652 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437193AbgDPN7j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:59:39 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70FFF20732;
-        Thu, 16 Apr 2020 13:59:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045578;
-        bh=VYuhQynOOttQXgdTesb/aAZL2uNah2HlHkKcMndQFn4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2UGgNkGIspkRJQST1qZtxZu1YtT9HZOZPuOmCC/tV7EbPOGJ0haxWbclHqqn8Ms6C
-         cU3TnFshqUNx19gE3daHqJRvXo8pZWaDHMFfRWv07ANklnx8qn1oe2dMiGbc3r1t8C
-         dMak0Q3NETXYilAZqe8lfoPeb/cEI2/UoEonxfZE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>,
-        Roger Quadros <rogerq@ti.com>, stable@kernel.org,
-        Tero Kristo <t-kristo@ti.com>
-Subject: [PATCH 5.6 193/254] arm64: dts: ti: k3-am65: Add clocks to dwc3 nodes
-Date:   Thu, 16 Apr 2020 15:24:42 +0200
-Message-Id: <20200416131350.389876357@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
-References: <20200416131325.804095985@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 16 Apr 2020 10:45:57 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58340 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729317AbgDPOp1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:45:27 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03GEX89v008445;
+        Thu, 16 Apr 2020 10:45:25 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30es39gpfb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Apr 2020 10:45:24 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03GEZPSe016131;
+        Thu, 16 Apr 2020 10:45:24 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30es39gpew-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Apr 2020 10:45:24 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03GEeRs4003771;
+        Thu, 16 Apr 2020 14:45:23 GMT
+Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
+        by ppma03dal.us.ibm.com with ESMTP id 30b5h7dqmd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Apr 2020 14:45:23 +0000
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03GEjLJW52101412
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Apr 2020 14:45:21 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C64C4112061;
+        Thu, 16 Apr 2020 14:45:20 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 57650112070;
+        Thu, 16 Apr 2020 14:45:20 +0000 (GMT)
+Received: from cpe-172-100-172-46.stny.res.rr.com (unknown [9.85.128.208])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 16 Apr 2020 14:45:20 +0000 (GMT)
+Subject: Re: [PATCH v7 04/15] s390/vfio-ap: implement in-use callback for
+ vfio_ap driver
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
+        mjrosato@linux.ibm.com, pmorel@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        jjherne@linux.ibm.com, fiuczy@linux.ibm.com
+References: <20200407192015.19887-1-akrowiak@linux.ibm.com>
+ <20200407192015.19887-5-akrowiak@linux.ibm.com>
+ <20200416131845.3ef6b3b5.cohuck@redhat.com>
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Message-ID: <5cf7d611-e30c-226d-0d3d-d37170f117f4@linux.ibm.com>
+Date:   Thu, 16 Apr 2020 10:45:20 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200416131845.3ef6b3b5.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-16_05:2020-04-14,2020-04-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
+ priorityscore=1501 mlxscore=0 bulkscore=0 phishscore=0 impostorscore=0
+ lowpriorityscore=0 clxscore=1015 suspectscore=3 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004160105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Gerlach <d-gerlach@ti.com>
 
-commit a81e5442d796ccfa2cc97d205a5477053264d978 upstream.
 
-The TI sci-clk driver can scan the DT for all clocks provided by system
-firmware and does this by checking the clocks property of all nodes, so
-we must add this to the dwc3 nodes so USB clocks are available.
+On 4/16/20 7:18 AM, Cornelia Huck wrote:
+> On Tue,  7 Apr 2020 15:20:04 -0400
+> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+>
+>> Let's implement the callback to indicate when an APQN
+>> is in use by the vfio_ap device driver. The callback is
+>> invoked whenever a change to the apmask or aqmask would
+>> result in one or more queue devices being removed from the driver. The
+>> vfio_ap device driver will indicate a resource is in use
+>> if the APQN of any of the queue devices to be removed are assigned to
+>> any of the matrix mdevs under the driver's control.
+>>
+>> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+>> ---
+>>   drivers/s390/crypto/vfio_ap_drv.c     |  1 +
+>>   drivers/s390/crypto/vfio_ap_ops.c     | 47 +++++++++++++++++----------
+>>   drivers/s390/crypto/vfio_ap_private.h |  2 ++
+>>   3 files changed, 33 insertions(+), 17 deletions(-)
+>> @@ -1369,3 +1371,14 @@ void vfio_ap_mdev_remove_queue(struct ap_queue *queue)
+>>   	kfree(q);
+>>   	mutex_unlock(&matrix_dev->lock);
+>>   }
+>> +
+>> +bool vfio_ap_mdev_resource_in_use(unsigned long *apm, unsigned long *aqm)
+>> +{
+>> +	bool in_use;
+>> +
+>> +	mutex_lock(&matrix_dev->lock);
+>> +	in_use = vfio_ap_mdev_verify_no_sharing(NULL, apm, aqm) ? true : false;
+> Maybe
+>
+> in_use = !!vfio_ap_mdev_verify_no_sharing(NULL, apm, aqm);
+>
+> ?
 
-Without this USB does not work with latest system firmware i.e.
-[    1.714662] clk: couldn't get parent clock 0 for /interconnect@100000/dwc3@4020000
+To be honest, I find the !! expression very confusing. Every time I see 
+it, I have
+to spend time thinking about what the result of !! is going to be. I think
+the statement should be left as-is because it more clearly expresses
+the intent.
 
-Fixes: cc54a99464ccd ("arm64: dts: ti: k3-am6: add USB suppor")
-Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
-Signed-off-by: Roger Quadros <rogerq@ti.com>
-Cc: stable@kernel.org
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- arch/arm64/boot/dts/ti/k3-am65-main.dtsi |    2 ++
- 1 file changed, 2 insertions(+)
-
---- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-@@ -296,6 +296,7 @@
- 		interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
- 		dma-coherent;
- 		power-domains = <&k3_pds 151 TI_SCI_PD_EXCLUSIVE>;
-+		clocks = <&k3_clks 151 2>, <&k3_clks 151 7>;
- 		assigned-clocks = <&k3_clks 151 2>, <&k3_clks 151 7>;
- 		assigned-clock-parents = <&k3_clks 151 4>,	/* set REF_CLK to 20MHz i.e. PER0_PLL/48 */
- 					 <&k3_clks 151 9>;	/* set PIPE3_TXB_CLK to CLK_12M_RC/256 (for HS only) */
-@@ -335,6 +336,7 @@
- 		interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
- 		dma-coherent;
- 		power-domains = <&k3_pds 152 TI_SCI_PD_EXCLUSIVE>;
-+		clocks = <&k3_clks 152 2>;
- 		assigned-clocks = <&k3_clks 152 2>;
- 		assigned-clock-parents = <&k3_clks 152 4>;	/* set REF_CLK to 20MHz i.e. PER0_PLL/48 */
- 
-
+>
+>> +	mutex_unlock(&matrix_dev->lock);
+>> +
+>> +	return in_use;
+>> +}
 
