@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA321C352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:17:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6547CC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:17:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA1A02063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:17:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DC4F2076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:17:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587046635;
-	bh=dJFglhfHc6uw1MvFL015uE8KnyDBVoyTg7s0lOxDLDQ=;
+	s=default; t=1587046651;
+	bh=oo8k5WceXRjdNhrIZURPloY5o+v2rdHZpBp5cNa6Cy0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MIlo3QBWihkrKA+Obx4C829Jb8o9/6W64gY650wfHWnxtZXn1l5ElA6hKoq2N7caW
-	 IglUZ8W1M2Jq1kJA/MZQvU5e/l7fezrt3Tmjpc+olP5nQvHkX8oO/BogV5j+cXXc08
-	 euNUAsZmc37zhLXzjXOVBkjsudZMN84w7bj+JRaA=
+	b=q0Jms47dZ7nzSzuI43vJu9oGQGU0leIpg09xHaKqVcttM+ZvBbxzyFp0uV7qAXwiz
+	 ZYe+G3TCtzDCZHmYBSiBlIAjJ97t3uXZA1t6d8qg2y44OPe1oe0odUoBYdqkcqMyog
+	 K1bNcc9CJx6LyvPAQCHsai90OVNfSvWS62OQPmO0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393951AbgDPORN (ORCPT
+        id S2441969AbgDPOR2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:17:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38564 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:17:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392461AbgDPNwS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:52:18 -0400
+        id S2441310AbgDPNwj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:52:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B17A20732;
-        Thu, 16 Apr 2020 13:52:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C4952063A;
+        Thu, 16 Apr 2020 13:52:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045136;
-        bh=dJFglhfHc6uw1MvFL015uE8KnyDBVoyTg7s0lOxDLDQ=;
+        s=default; t=1587045158;
+        bh=oo8k5WceXRjdNhrIZURPloY5o+v2rdHZpBp5cNa6Cy0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GJOi4tNHZDfa/BF66wWU/8WS0KknyFQ3ehzX/Yap2C+4+eOH30b1X68AjYoLpHdQr
-         ipKum12/M/XpKio5laIh3LQ9uxTQQU72yzzrwiwnnhoQ7smpY8q9Bec8ObpAjtOspz
-         8aXzz77w6Fvb1UXF9apWbIPQCehWptSn8DB4Mvxk=
+        b=ekLt/tsH4WlFoKZg7NNdHEqSSCCNcVaA7Gmtxo39PAjjQBVzp30D6EcVKdg/8qBxt
+         dD3LaMVup6eZuZmI5269aPsh5xUQC8AEJcFgLECdL4Nc2nm7esFb7hzra4zeCFWYqN
+         J7tq91r+aHAGhoPR/4tyRinUVhgzgc0aYSVOCky8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ajay Gupta <ajayg@nvidia.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 004/254] usb: ucsi: ccg: disable runtime pm during fw flashing
-Date:   Thu, 16 Apr 2020 15:21:33 +0200
-Message-Id: <20200416131326.301522216@linuxfoundation.org>
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        "Alexey Dobriyan (SK hynix)" <adobriyan@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 021/254] null_blk: fix spurious IO errors after failed past-wp access
+Date:   Thu, 16 Apr 2020 15:21:50 +0200
+Message-Id: <20200416131328.465682024@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -60,43 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ajay Gupta <ajayg@nvidia.com>
+From: Alexey Dobriyan <adobriyan@gmail.com>
 
-[ Upstream commit 57a5e5f936be583d2c6cef3661c169e3ea4bf922 ]
+[ Upstream commit ff77042296d0a54535ddf74412c5ae92cb4ec76a ]
 
-Ucsi ppm is unregistered during fw flashing so disable
-runtime pm also and reenable after fw flashing is completed
-and ppm is re-registered.
+Steps to reproduce:
 
-Signed-off-by: Ajay Gupta <ajayg@nvidia.com>
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Link: https://lore.kernel.org/r/20200217144913.55330-3-heikki.krogerus@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+	BLKRESETZONE zone 0
+
+	// force EIO
+	pwrite(fd, buf, 4096, 4096);
+
+	[issue more IO including zone ioctls]
+
+It will start failing randomly including IO to unrelated zones because of
+->error "reuse". Trigger can be partition detection as well if test is not
+run immediately which is even more entertaining.
+
+The fix is of course to clear ->error where necessary.
+
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Alexey Dobriyan (SK hynix) <adobriyan@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/typec/ucsi/ucsi_ccg.c | 2 ++
+ drivers/block/null_blk_main.c | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/drivers/usb/typec/ucsi/ucsi_ccg.c b/drivers/usb/typec/ucsi/ucsi_ccg.c
-index a5b8530490dba..2658cda5da116 100644
---- a/drivers/usb/typec/ucsi/ucsi_ccg.c
-+++ b/drivers/usb/typec/ucsi/ucsi_ccg.c
-@@ -1219,6 +1219,7 @@ static int ccg_restart(struct ucsi_ccg *uc)
- 		return status;
+diff --git a/drivers/block/null_blk_main.c b/drivers/block/null_blk_main.c
+index 2b8b4cb447cfb..d6a8d66e98036 100644
+--- a/drivers/block/null_blk_main.c
++++ b/drivers/block/null_blk_main.c
+@@ -605,6 +605,7 @@ static struct nullb_cmd *__alloc_cmd(struct nullb_queue *nq)
+ 	if (tag != -1U) {
+ 		cmd = &nq->cmds[tag];
+ 		cmd->tag = tag;
++		cmd->error = BLK_STS_OK;
+ 		cmd->nq = nq;
+ 		if (nq->dev->irqmode == NULL_IRQ_TIMER) {
+ 			hrtimer_init(&cmd->timer, CLOCK_MONOTONIC,
+@@ -1385,6 +1386,7 @@ static blk_status_t null_queue_rq(struct blk_mq_hw_ctx *hctx,
+ 		cmd->timer.function = null_cmd_timer_expired;
  	}
+ 	cmd->rq = bd->rq;
++	cmd->error = BLK_STS_OK;
+ 	cmd->nq = nq;
  
-+	pm_runtime_enable(uc->dev);
- 	return 0;
- }
- 
-@@ -1234,6 +1235,7 @@ static void ccg_update_firmware(struct work_struct *work)
- 
- 	if (flash_mode != FLASH_NOT_NEEDED) {
- 		ucsi_unregister(uc->ucsi);
-+		pm_runtime_disable(uc->dev);
- 		free_irq(uc->irq, uc);
- 
- 		ccg_fw_update(uc, flash_mode);
+ 	blk_mq_start_request(bd->rq);
 -- 
 2.20.1
 
