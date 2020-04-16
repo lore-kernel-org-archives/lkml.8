@@ -2,289 +2,136 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C79C352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:40:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3930CC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:41:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A26D21D94
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:40:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="uP5musJ6"
+	by mail.kernel.org (Postfix) with ESMTP id 1EAC6217D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:41:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2635922AbgDPMki (ORCPT
+        id S2635931AbgDPMlE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 08:40:38 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:29017 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2635883AbgDPMjq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 08:39:46 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 492zM21SFNz9v021;
-        Thu, 16 Apr 2020 14:39:42 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=uP5musJ6; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id T4PU5mMzjC3c; Thu, 16 Apr 2020 14:39:42 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 492zM20QD4z9v01y;
-        Thu, 16 Apr 2020 14:39:42 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1587040782; bh=UK/kjP/G4TBbl6B9kenb9WS4mdzjrrbIspwcWgXfQlQ=;
-        h=From:Subject:To:Cc:Date:From;
-        b=uP5musJ6gZx+4BdnOLNPdSZ+B0yhRSJq6Wc2jwHnvOjwh6F1FQzKFvt31dxgMYk2B
-         Dw5Qt6+zQplvlwWh33+oJjFathV/0Qd67fA7i+FTSppvv+T5vsqZ1/6sYG69fAYzcN
-         aZleslnlbS0FVXGHj0Qmtqapwuzl+5ygJMWs0/4A=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 951868BC16;
-        Thu, 16 Apr 2020 14:39:43 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 7MVuIjGCL51o; Thu, 16 Apr 2020 14:39:43 +0200 (CEST)
-Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 35DF48BC11;
-        Thu, 16 Apr 2020 14:39:43 +0200 (CEST)
-Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id CE57E65798; Thu, 16 Apr 2020 12:39:42 +0000 (UTC)
-Message-Id: <c2addbd9d76212242d3d8554a2f7ff849fb08b85.1587040754.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v2] powerpc/uaccess: Use flexible addressing with
- __put_user()/__get_user()
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, npiggin@gmail.com,
-        segher@kernel.crashing.org
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Thu, 16 Apr 2020 12:39:42 +0000 (UTC)
+        Thu, 16 Apr 2020 08:41:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48382 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2635883AbgDPMkq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 08:40:46 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1FE5C061A0C;
+        Thu, 16 Apr 2020 05:40:43 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 750ED2A20B2;
+        Thu, 16 Apr 2020 13:40:40 +0100 (BST)
+Date:   Thu, 16 Apr 2020 14:40:36 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Andriy Shevchenko <andriy.shevchenko@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        cheol.yong.kim@intel.com, devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>,
+        masonccyang@mxic.com.tw, Miquel Raynal <miquel.raynal@bootlin.com>,
+        piotrs@cadence.com, qi-ming.wu@intel.com,
+        Richard Weinberger <richard@nod.at>,
+        Rob Herring <robh+dt@kernel.org>, Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCH v1 2/2] mtd: rawnand: Add NAND controller support on
+ Intel LGM SoC
+Message-ID: <20200416144036.3ce8432f@collabora.com>
+In-Reply-To: <CAHp75Vcpb-556imBuhsY-asrKqx7LjvQbq+P-ysK-+ii91YpWQ@mail.gmail.com>
+References: <20200414022433.36622-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+        <20200415220533.733834-1-martin.blumenstingl@googlemail.com>
+        <c33c8653-16a2-5bcd-97a9-511d958b755a@linux.intel.com>
+        <20200416113822.2ef326cb@collabora.com>
+        <18568cf6-2955-472e-7b68-eb35e654a906@linux.intel.com>
+        <20200416122619.2c481792@collabora.com>
+        <d3e137fa-54a0-b4ec-eb24-3984eab2a247@linux.intel.com>
+        <20200416131725.51259573@collabora.com>
+        <de9f50b8-9215-d294-9914-e49701552185@linux.intel.com>
+        <20200416135711.039ba85c@collabora.com>
+        <CAHp75Vcpb-556imBuhsY-asrKqx7LjvQbq+P-ysK-+ii91YpWQ@mail.gmail.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-At the time being, __put_user()/__get_user() and friends only use
-D-form addressing, with 0 offset. Ex:
+On Thu, 16 Apr 2020 15:26:51 +0300
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
-	lwz	reg1, 0(reg2)
+> On Thu, Apr 16, 2020 at 3:03 PM Boris Brezillon
+> <boris.brezillon@collabora.com> wrote:
+> > On Thu, 16 Apr 2020 19:38:03 +0800
+> > "Ramuthevar, Vadivel MuruganX"
+> > <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:  
+> > > On 16/4/2020 7:17 pm, Boris Brezillon wrote:  
+> > > > On Thu, 16 Apr 2020 18:40:53 +0800
+> > > > "Ramuthevar, Vadivel MuruganX"
+> > > > <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:  
+> 
+> ...
+> 
+> > > There are different features involved and lines of code is more, if we
+> > > add new driver patches over xway-nand driver  
+> >
+> > How about retro-fitting the xway logic into your driver then? I mean,
+> > adding a 100 lines of code to your driver to get rid of the 500+ lines
+> > we have in xway_nand.c is still a win.
+> >  
+> > >
+> > > is completely looks ugly and it may disturb the existing functionality
+> > > as well since we don't have platform to validate:'(.  
+> >
+> > How ugly? Can you show us? Maybe we can come with a solution to make it
+> > less ugly.
+> >
+> > As for the testing part, there are 4 scenarios:
+> >
+> > 1/ Your changes work perfectly fine on older platforms. Yay \o/!
+> > 2/ You break the xway driver and existing users notice it before this
+> >    series gets merged. Now you found someone to validate your changes.
+> > 3/ You break the xway driver and none of the existing users notice it
+> >    before the driver is merged, but they notice it afterwards. Too bad
+> >    this happened after we've merged the driver, but now you've found
+> >    someone to help you fix the problem :P.
+> > 4/ You break things for old platforms but no one ever complains about
+> >    it, either because there's no users left or because they never
+> >    update their kernels. In any case, that's no longer your problem.
+> >    Someone will remove those old platforms one day and get rid of the
+> >    unneeded code in the NAND driver.
+> >
+> > What's more likely to happen is #3 or #4, and I think the NAND
+> > maintainer would be fine with both.
+> >
+> > Note that the NAND subsystem is full of unmaintained legacy drivers, so
+> > every time we see someone who could help us get rid or update one of
+> > them we have to take this opportunity.  
+> 
+> Don't we rather insist to have a MAINTAINERS record for new code to
+> avoid (or delay at least) the fate of the legacy drivers?
+> 
 
-Give the compiler the opportunity to use other adressing modes
-whenever possible, to get more optimised code.
+Well, that's what we do for new drivers, but the xway driver has been
+added in 2012 and the policy was not enforced at that time. BTW, that
+goes for most of the legacy drivers in have in the NAND subsystems
+(some of them even predate the git era).
 
-Hereunder is a small exemple:
-
-struct test {
-	u32 item1;
-	u16 item2;
-	u8 item3;
-	u64 item4;
-};
-
-int set_test_user(struct test __user *from, struct test __user *to)
-{
-	int err;
-	u32 item1;
-	u16 item2;
-	u8 item3;
-	u64 item4;
-
-	err = __get_user(item1, &from->item1);
-	err |= __get_user(item2, &from->item2);
-	err |= __get_user(item3, &from->item3);
-	err |= __get_user(item4, &from->item4);
-
-	err |= __put_user(item1, &to->item1);
-	err |= __put_user(item2, &to->item2);
-	err |= __put_user(item3, &to->item3);
-	err |= __put_user(item4, &to->item4);
-
-	return err;
-}
-
-Before the patch:
-
-00000df0 <set_test_user>:
- df0:	94 21 ff f0 	stwu    r1,-16(r1)
- df4:	39 40 00 00 	li      r10,0
- df8:	93 c1 00 08 	stw     r30,8(r1)
- dfc:	93 e1 00 0c 	stw     r31,12(r1)
- e00:	7d 49 53 78 	mr      r9,r10
- e04:	80 a3 00 00 	lwz     r5,0(r3)
- e08:	38 e3 00 04 	addi    r7,r3,4
- e0c:	7d 46 53 78 	mr      r6,r10
- e10:	a0 e7 00 00 	lhz     r7,0(r7)
- e14:	7d 29 33 78 	or      r9,r9,r6
- e18:	39 03 00 06 	addi    r8,r3,6
- e1c:	7d 46 53 78 	mr      r6,r10
- e20:	89 08 00 00 	lbz     r8,0(r8)
- e24:	7d 29 33 78 	or      r9,r9,r6
- e28:	38 63 00 08 	addi    r3,r3,8
- e2c:	7d 46 53 78 	mr      r6,r10
- e30:	83 c3 00 00 	lwz     r30,0(r3)
- e34:	83 e3 00 04 	lwz     r31,4(r3)
- e38:	7d 29 33 78 	or      r9,r9,r6
- e3c:	7d 43 53 78 	mr      r3,r10
- e40:	90 a4 00 00 	stw     r5,0(r4)
- e44:	7d 29 1b 78 	or      r9,r9,r3
- e48:	38 c4 00 04 	addi    r6,r4,4
- e4c:	7d 43 53 78 	mr      r3,r10
- e50:	b0 e6 00 00 	sth     r7,0(r6)
- e54:	7d 29 1b 78 	or      r9,r9,r3
- e58:	38 e4 00 06 	addi    r7,r4,6
- e5c:	7d 43 53 78 	mr      r3,r10
- e60:	99 07 00 00 	stb     r8,0(r7)
- e64:	7d 23 1b 78 	or      r3,r9,r3
- e68:	38 84 00 08 	addi    r4,r4,8
- e6c:	93 c4 00 00 	stw     r30,0(r4)
- e70:	93 e4 00 04 	stw     r31,4(r4)
- e74:	7c 63 53 78 	or      r3,r3,r10
- e78:	83 c1 00 08 	lwz     r30,8(r1)
- e7c:	83 e1 00 0c 	lwz     r31,12(r1)
- e80:	38 21 00 10 	addi    r1,r1,16
- e84:	4e 80 00 20 	blr
-
-After the patch:
-
-00000dbc <set_test_user>:
- dbc:	39 40 00 00 	li      r10,0
- dc0:	7d 49 53 78 	mr      r9,r10
- dc4:	80 03 00 00 	lwz     r0,0(r3)
- dc8:	7d 48 53 78 	mr      r8,r10
- dcc:	a1 63 00 04 	lhz     r11,4(r3)
- dd0:	7d 29 43 78 	or      r9,r9,r8
- dd4:	7d 48 53 78 	mr      r8,r10
- dd8:	88 a3 00 06 	lbz     r5,6(r3)
- ddc:	7d 29 43 78 	or      r9,r9,r8
- de0:	7d 48 53 78 	mr      r8,r10
- de4:	80 c3 00 08 	lwz     r6,8(r3)
- de8:	80 e3 00 0c 	lwz     r7,12(r3)
- dec:	7d 29 43 78 	or      r9,r9,r8
- df0:	7d 43 53 78 	mr      r3,r10
- df4:	90 04 00 00 	stw     r0,0(r4)
- df8:	7d 29 1b 78 	or      r9,r9,r3
- dfc:	7d 43 53 78 	mr      r3,r10
- e00:	b1 64 00 04 	sth     r11,4(r4)
- e04:	7d 29 1b 78 	or      r9,r9,r3
- e08:	7d 43 53 78 	mr      r3,r10
- e0c:	98 a4 00 06 	stb     r5,6(r4)
- e10:	7d 23 1b 78 	or      r3,r9,r3
- e14:	90 c4 00 08 	stw     r6,8(r4)
- e18:	90 e4 00 0c 	stw     r7,12(r4)
- e1c:	7c 63 53 78 	or      r3,r3,r10
- e20:	4e 80 00 20 	blr
-
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Reviewed-by: Segher Boessenkool <segher@kernel.crashing.org>
----
-v2:
-- Added <> modifier in __put_user_asm() and __get_user_asm()
-- Removed %U2 in __put_user_asm2() and __get_user_asm2()
-- Reworded the commit log
----
- arch/powerpc/include/asm/uaccess.h | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
-
-diff --git a/arch/powerpc/include/asm/uaccess.h b/arch/powerpc/include/asm/uaccess.h
-index 7c811442b607..9365b59495a2 100644
---- a/arch/powerpc/include/asm/uaccess.h
-+++ b/arch/powerpc/include/asm/uaccess.h
-@@ -114,7 +114,7 @@ extern long __put_user_bad(void);
-  */
- #define __put_user_asm(x, addr, err, op)			\
- 	__asm__ __volatile__(					\
--		"1:	" op " %1,0(%2)	# put_user\n"		\
-+		"1:	" op "%U2%X2 %1,%2	# put_user\n"	\
- 		"2:\n"						\
- 		".section .fixup,\"ax\"\n"			\
- 		"3:	li %0,%3\n"				\
-@@ -122,7 +122,7 @@ extern long __put_user_bad(void);
- 		".previous\n"					\
- 		EX_TABLE(1b, 3b)				\
- 		: "=r" (err)					\
--		: "r" (x), "b" (addr), "i" (-EFAULT), "0" (err))
-+		: "r" (x), "m<>" (*addr), "i" (-EFAULT), "0" (err))
- 
- #ifdef __powerpc64__
- #define __put_user_asm2(x, ptr, retval)				\
-@@ -130,8 +130,8 @@ extern long __put_user_bad(void);
- #else /* __powerpc64__ */
- #define __put_user_asm2(x, addr, err)				\
- 	__asm__ __volatile__(					\
--		"1:	stw %1,0(%2)\n"				\
--		"2:	stw %1+1,4(%2)\n"			\
-+		"1:	stw%X2 %1,%2\n"			\
-+		"2:	stw%X2 %L1,%L2\n"			\
- 		"3:\n"						\
- 		".section .fixup,\"ax\"\n"			\
- 		"4:	li %0,%3\n"				\
-@@ -140,7 +140,7 @@ extern long __put_user_bad(void);
- 		EX_TABLE(1b, 4b)				\
- 		EX_TABLE(2b, 4b)				\
- 		: "=r" (err)					\
--		: "r" (x), "b" (addr), "i" (-EFAULT), "0" (err))
-+		: "r" (x), "m" (*addr), "i" (-EFAULT), "0" (err))
- #endif /* __powerpc64__ */
- 
- #define __put_user_size_allowed(x, ptr, size, retval)		\
-@@ -260,7 +260,7 @@ extern long __get_user_bad(void);
- 
- #define __get_user_asm(x, addr, err, op)		\
- 	__asm__ __volatile__(				\
--		"1:	"op" %1,0(%2)	# get_user\n"	\
-+		"1:	"op"%U2%X2 %1, %2	# get_user\n"	\
- 		"2:\n"					\
- 		".section .fixup,\"ax\"\n"		\
- 		"3:	li %0,%3\n"			\
-@@ -269,7 +269,7 @@ extern long __get_user_bad(void);
- 		".previous\n"				\
- 		EX_TABLE(1b, 3b)			\
- 		: "=r" (err), "=r" (x)			\
--		: "b" (addr), "i" (-EFAULT), "0" (err))
-+		: "m<>" (*addr), "i" (-EFAULT), "0" (err))
- 
- #ifdef __powerpc64__
- #define __get_user_asm2(x, addr, err)			\
-@@ -277,8 +277,8 @@ extern long __get_user_bad(void);
- #else /* __powerpc64__ */
- #define __get_user_asm2(x, addr, err)			\
- 	__asm__ __volatile__(				\
--		"1:	lwz %1,0(%2)\n"			\
--		"2:	lwz %1+1,4(%2)\n"		\
-+		"1:	lwz%X2 %1, %2\n"			\
-+		"2:	lwz%X2 %L1, %L2\n"		\
- 		"3:\n"					\
- 		".section .fixup,\"ax\"\n"		\
- 		"4:	li %0,%3\n"			\
-@@ -289,7 +289,7 @@ extern long __get_user_bad(void);
- 		EX_TABLE(1b, 4b)			\
- 		EX_TABLE(2b, 4b)			\
- 		: "=r" (err), "=&r" (x)			\
--		: "b" (addr), "i" (-EFAULT), "0" (err))
-+		: "m" (*addr), "i" (-EFAULT), "0" (err))
- #endif /* __powerpc64__ */
- 
- #define __get_user_size_allowed(x, ptr, size, retval)		\
-@@ -299,10 +299,10 @@ do {								\
- 	if (size > sizeof(x))					\
- 		(x) = __get_user_bad();				\
- 	switch (size) {						\
--	case 1: __get_user_asm(x, ptr, retval, "lbz"); break;	\
--	case 2: __get_user_asm(x, ptr, retval, "lhz"); break;	\
--	case 4: __get_user_asm(x, ptr, retval, "lwz"); break;	\
--	case 8: __get_user_asm2(x, ptr, retval);  break;	\
-+	case 1: __get_user_asm(x, (u8 __user *)ptr, retval, "lbz"); break;	\
-+	case 2: __get_user_asm(x, (u16 __user *)ptr, retval, "lhz"); break;	\
-+	case 4: __get_user_asm(x, (u32 __user *)ptr, retval, "lwz"); break;	\
-+	case 8: __get_user_asm2(x, (u64 __user *)ptr, retval);  break;	\
- 	default: (x) = __get_user_bad();			\
- 	}							\
- } while (0)
--- 
-2.25.0
-
+To be clear, I just checked and there's no official maintainer for this
+driver. Best option would be to Cc the original author and contributors
+who proposed functional changes to the code, as well as the MIPS
+maintainers (Xway is a MIPS platform).
