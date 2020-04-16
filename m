@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B498CC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E60C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:32:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AF3521D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:31:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF42C21D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:32:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587047517;
-	bh=T7UqCQ4MmuEZ9jZMyvkZ7fXJdJnl0Slb6/yftBff6Ww=;
+	s=default; t=1587047521;
+	bh=DE/MUp+D9xEnl5fSXNOQCd3Xb0ffRixuxH0Cb4zLX7Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uo7AhXW74v026RRp09yrOxvi3fwEI+sNMKvRQ1NlrO0wQKfT+XpnRVmJVZdofFjLY
-	 RMBgr+a/Vw2PWAqOckOajHke9cAmY+R2bVPqEEPW9CLBQ1Nlw4AZJZl108rOJl6hAM
-	 g9re4vXxaX7wx+T8SZFwSMBLiL/IW/DOsqMmB7Xc=
+	b=GKAH/qqkrNiTZOs6tm0Nrh8YgB9xxuodydYeI4NhRA+qKDjozPucVk70MMPtCZ2vS
+	 PNZkkY8be5FTsQFi0v9jr5q0fjXMKFpDwoXpPIwOgrnq3NM3e5M80nisJ4MtxMXBvw
+	 SfttQYvdgxfZRtbpAogsoZR/f20125omPl+TjDX8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410214AbgDPOb4 (ORCPT
+        id S2410232AbgDPOcA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:31:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50042 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:32:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441727AbgDPOCb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:02:31 -0400
+        id S2437792AbgDPOC3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:02:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C18E20732;
-        Thu, 16 Apr 2020 14:02:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12D91217D8;
+        Thu, 16 Apr 2020 14:02:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045751;
-        bh=T7UqCQ4MmuEZ9jZMyvkZ7fXJdJnl0Slb6/yftBff6Ww=;
+        s=default; t=1587045748;
+        bh=DE/MUp+D9xEnl5fSXNOQCd3Xb0ffRixuxH0Cb4zLX7Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qmHvCaLvs577RAe4FlpEYk5h9vW5+v4kGDSiJBO8B0dJYFWtdOBHbb/nnz1ZyTz8e
-         pfE/jciYs2CSg1iXzzBD9sH53DQMYC9TRVF5EHS7nCe9RlgS6PSqngiDZucDa/uM44
-         mx4xKCh52u8/LlzqP/mX0SBG2UwdKA8iem8cY9ww=
+        b=Sx4y+mj5WoaW/KhhJymDQdVXZTro686vMCm9dx37aWQk5UZZIRQcvwUIBJhzS06Cy
+         xrZysRmqklrku+0McXnsBFa2pIS3k1hdrmXbg55kQqG7FGtVHDicVJgCHDIaFfcSG6
+         zM8+/z1SOjVrPVx9FnAuX+iN12pNjANhAvYIALHI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 5.6 224/254] Input: i8042 - add Acer Aspire 5738z to nomux list
-Date:   Thu, 16 Apr 2020 15:25:13 +0200
-Message-Id: <20200416131353.844691497@linuxfoundation.org>
+        stable@vger.kernel.org, Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>
+Subject: [PATCH 5.6 233/254] xen/blkfront: fix memory allocation flags in blkfront_setup_indirect()
+Date:   Thu, 16 Apr 2020 15:25:22 +0200
+Message-Id: <20200416131354.732182370@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -59,52 +60,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Juergen Gross <jgross@suse.com>
 
-commit ebc68cedec4aead47d8d11623d013cca9bf8e825 upstream.
+commit 3a169c0be75b59dd85d159493634870cdec6d3c4 upstream.
 
-The Acer Aspire 5738z has a button to disable (and re-enable) the
-touchpad next to the touchpad.
+Commit 1d5c76e664333 ("xen-blkfront: switch kcalloc to kvcalloc for
+large array allocation") didn't fix the issue it was meant to, as the
+flags for allocating the memory are GFP_NOIO, which will lead the
+memory allocation falling back to kmalloc().
 
-When this button is pressed a LED underneath indicates that the touchpad
-is disabled (and an event is send to userspace and GNOME shows its
-touchpad enabled / disable OSD thingie).
+So instead of GFP_NOIO use GFP_KERNEL and do all the memory allocation
+in blkfront_setup_indirect() in a memalloc_noio_{save,restore} section.
 
-So far so good, but after re-enabling the touchpad it no longer works.
-
-The laptop does not have an external ps2 port, so mux mode is not needed
-and disabling mux mode fixes the touchpad no longer working after toggling
-it off and back on again, so lets add this laptop model to the nomux list.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://lore.kernel.org/r/20200331123947.318908-1-hdegoede@redhat.com
+Fixes: 1d5c76e664333 ("xen-blkfront: switch kcalloc to kvcalloc for large array allocation")
 Cc: stable@vger.kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Juergen Gross <jgross@suse.com>
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Acked-by: Roger Pau Monné <roger.pau@citrix.com>
+Link: https://lore.kernel.org/r/20200403090034.8753-1-jgross@suse.com
+Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/serio/i8042-x86ia64io.h |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/block/xen-blkfront.c |   17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
---- a/drivers/input/serio/i8042-x86ia64io.h
-+++ b/drivers/input/serio/i8042-x86ia64io.h
-@@ -530,6 +530,17 @@ static const struct dmi_system_id __init
- 			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo LaVie Z"),
- 		},
- 	},
-+	{
-+		/*
-+		 * Acer Aspire 5738z
-+		 * Touchpad stops working in mux mode when dis- + re-enabled
-+		 * with the touchpad enable/disable toggle hotkey
-+		 */
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Aspire 5738"),
-+		},
-+	},
- 	{ }
- };
+--- a/drivers/block/xen-blkfront.c
++++ b/drivers/block/xen-blkfront.c
+@@ -47,6 +47,7 @@
+ #include <linux/bitmap.h>
+ #include <linux/list.h>
+ #include <linux/workqueue.h>
++#include <linux/sched/mm.h>
+ 
+ #include <xen/xen.h>
+ #include <xen/xenbus.h>
+@@ -2189,10 +2190,12 @@ static void blkfront_setup_discard(struc
+ 
+ static int blkfront_setup_indirect(struct blkfront_ring_info *rinfo)
+ {
+-	unsigned int psegs, grants;
++	unsigned int psegs, grants, memflags;
+ 	int err, i;
+ 	struct blkfront_info *info = rinfo->dev_info;
+ 
++	memflags = memalloc_noio_save();
++
+ 	if (info->max_indirect_segments == 0) {
+ 		if (!HAS_EXTRA_REQ)
+ 			grants = BLKIF_MAX_SEGMENTS_PER_REQUEST;
+@@ -2224,7 +2227,7 @@ static int blkfront_setup_indirect(struc
+ 
+ 		BUG_ON(!list_empty(&rinfo->indirect_pages));
+ 		for (i = 0; i < num; i++) {
+-			struct page *indirect_page = alloc_page(GFP_NOIO);
++			struct page *indirect_page = alloc_page(GFP_KERNEL);
+ 			if (!indirect_page)
+ 				goto out_of_memory;
+ 			list_add(&indirect_page->lru, &rinfo->indirect_pages);
+@@ -2235,15 +2238,15 @@ static int blkfront_setup_indirect(struc
+ 		rinfo->shadow[i].grants_used =
+ 			kvcalloc(grants,
+ 				 sizeof(rinfo->shadow[i].grants_used[0]),
+-				 GFP_NOIO);
++				 GFP_KERNEL);
+ 		rinfo->shadow[i].sg = kvcalloc(psegs,
+ 					       sizeof(rinfo->shadow[i].sg[0]),
+-					       GFP_NOIO);
++					       GFP_KERNEL);
+ 		if (info->max_indirect_segments)
+ 			rinfo->shadow[i].indirect_grants =
+ 				kvcalloc(INDIRECT_GREFS(grants),
+ 					 sizeof(rinfo->shadow[i].indirect_grants[0]),
+-					 GFP_NOIO);
++					 GFP_KERNEL);
+ 		if ((rinfo->shadow[i].grants_used == NULL) ||
+ 			(rinfo->shadow[i].sg == NULL) ||
+ 		     (info->max_indirect_segments &&
+@@ -2252,6 +2255,7 @@ static int blkfront_setup_indirect(struc
+ 		sg_init_table(rinfo->shadow[i].sg, psegs);
+ 	}
+ 
++	memalloc_noio_restore(memflags);
+ 
+ 	return 0;
+ 
+@@ -2271,6 +2275,9 @@ out_of_memory:
+ 			__free_page(indirect_page);
+ 		}
+ 	}
++
++	memalloc_noio_restore(memflags);
++
+ 	return -ENOMEM;
+ }
  
 
 
