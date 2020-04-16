@@ -2,65 +2,113 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C81C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:55:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A044EC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:55:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 147972076A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:55:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587023730;
-	bh=Abz5pSmwk1KTWLiBpkLTEnr6DI7w9tkGqdSG1qVM7Iw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CNpci2MDL6pWJkDE+fZLeUFugdj618Xjd+NE2UeksyBapFdm4sgY0JTC/2UXh9YvU
-	 9HaYp6/sX5s4JXjmNGtfX+kqQGb710pis9z5HFrkzZ3y1V3gbpV29YsJaF9u3WqMqm
-	 Aq5IuKqQns5bFe3dgIKf1kti8Bsqg4XtVILtYsw0=
+	by mail.kernel.org (Postfix) with ESMTP id 87D7B206E9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:55:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440469AbgDPHz2 (ORCPT
+        id S2440517AbgDPHzi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 03:55:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35716 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 03:55:38 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37216 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2440183AbgDPHyY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 03:54:24 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41A45206E9;
-        Thu, 16 Apr 2020 07:54:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587023663;
-        bh=Abz5pSmwk1KTWLiBpkLTEnr6DI7w9tkGqdSG1qVM7Iw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kodGNv81Ugiz0EHVEVJPyurl5xazIMM1Bfm1yVdNqnHqi3F4oNAB1ZuessyOuCI+l
-         96IOKmnVgNevEQ7ap5eLeM+a8oFKSkwrcqlzObL+IhrkJ9DoO0sb05b0llOM1kxy7t
-         e5ghtal89lD/uEfz5JKEeV3vhFe+kRpK4z4OClVs=
-Date:   Thu, 16 Apr 2020 09:54:21 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     axboe@kernel.dk, yuyufen@huawei.com, tj@kernel.org, jack@suse.cz,
-        bvanassche@acm.org, tytso@mit.edu, linux-block@vger.kernel.org,
+        id S2440221AbgDPHyf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 03:54:35 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 3E075AE5C;
+        Thu, 16 Apr 2020 07:54:31 +0000 (UTC)
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Ben Skeggs <bskeggs@redhat.com>
+Cc:     dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 7/8] bdi: simplify bdi_alloc
-Message-ID: <20200416075421.GG376871@kroah.com>
-References: <20200416071519.807660-1-hch@lst.de>
- <20200416071519.807660-8-hch@lst.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200416071519.807660-8-hch@lst.de>
+Subject: [PATCH] drm/nouveau: Fix regression by audio component transition
+Date:   Thu, 16 Apr 2020 09:54:28 +0200
+Message-Id: <20200416075428.25521-1-tiwai@suse.de>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 09:15:18AM +0200, Christoph Hellwig wrote:
-> Merge the _node vs normal version and drop the superflous gfp_t argument.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+Since the commit 742db30c4ee6 ("drm/nouveau: Add HD-audio component
+notifier support"), the nouveau driver notifies and pokes the HD-audio
+HPD and ELD via audio component, but this seems broken.  The culprit
+is the naive assumption that crtc->index corresponds to the HDA pin.
+Actually this rather corresponds to the MST dev_id (alias "pipe" in
+the audio component framework) while the actual port number is given
+from the output ior id number.
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This patch corrects the assignment of port and dev_id arguments in the
+audio component ops to recover from the HDMI/DP audio regression.
+
+Fixes: 742db30c4ee6 ("drm/nouveau: Add HD-audio component notifier support")
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207223
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+---
+ drivers/gpu/drm/nouveau/dispnv50/disp.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+index a3dc2ba19fb2..3a9fd565079d 100644
+--- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
++++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+@@ -481,15 +481,16 @@ nv50_dac_create(struct drm_connector *connector, struct dcb_output *dcbe)
+  * audio component binding for ELD notification
+  */
+ static void
+-nv50_audio_component_eld_notify(struct drm_audio_component *acomp, int port)
++nv50_audio_component_eld_notify(struct drm_audio_component *acomp, int port,
++				int dev_id)
+ {
+ 	if (acomp && acomp->audio_ops && acomp->audio_ops->pin_eld_notify)
+ 		acomp->audio_ops->pin_eld_notify(acomp->audio_ops->audio_ptr,
+-						 port, -1);
++						 port, dev_id);
+ }
+ 
+ static int
+-nv50_audio_component_get_eld(struct device *kdev, int port, int pipe,
++nv50_audio_component_get_eld(struct device *kdev, int port, int dev_id,
+ 			     bool *enabled, unsigned char *buf, int max_bytes)
+ {
+ 	struct drm_device *drm_dev = dev_get_drvdata(kdev);
+@@ -505,7 +506,8 @@ nv50_audio_component_get_eld(struct device *kdev, int port, int pipe,
+ 		nv_encoder = nouveau_encoder(encoder);
+ 		nv_connector = nouveau_encoder_connector_get(nv_encoder);
+ 		nv_crtc = nouveau_crtc(encoder->crtc);
+-		if (!nv_connector || !nv_crtc || nv_crtc->index != port)
++		if (!nv_connector || !nv_crtc || nv_encoder->or != port ||
++		    nv_crtc->index != dev_id)
+ 			continue;
+ 		*enabled = drm_detect_monitor_audio(nv_connector->edid);
+ 		if (*enabled) {
+@@ -599,7 +601,8 @@ nv50_audio_disable(struct drm_encoder *encoder, struct nouveau_crtc *nv_crtc)
+ 
+ 	nvif_mthd(&disp->disp->object, 0, &args, sizeof(args));
+ 
+-	nv50_audio_component_eld_notify(drm->audio.component, nv_crtc->index);
++	nv50_audio_component_eld_notify(drm->audio.component, nv_encoder->or,
++					nv_crtc->index);
+ }
+ 
+ static void
+@@ -633,7 +636,8 @@ nv50_audio_enable(struct drm_encoder *encoder, struct drm_display_mode *mode)
+ 	nvif_mthd(&disp->disp->object, 0, &args,
+ 		  sizeof(args.base) + drm_eld_size(args.data));
+ 
+-	nv50_audio_component_eld_notify(drm->audio.component, nv_crtc->index);
++	nv50_audio_component_eld_notify(drm->audio.component, nv_encoder->or,
++					nv_crtc->index);
+ }
+ 
+ /******************************************************************************
+-- 
+2.16.4
+
