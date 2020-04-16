@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3ED3C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 089F0C352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:20:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F61C214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:20:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6C08214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:20:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587050404;
-	bh=dNKrePAaDHz3Wxm/VekMqLTAceT2OnaN46Dmu7N1AuI=;
+	s=default; t=1587050411;
+	bh=7optjhFEa+3PEcCmGs68rGHltQp375AoRvT4kjo1PUQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eB2N7RYygd1+H1fNsQ09BavllaAzBo/hHLjWMQwyt1zEbrhbPD162waohIpw08oG0
-	 9+Dy+SD0nzIl17C4KP3XLU6nnCCf+6ZH0z9ZSWBCjylY8cbszGF1hPxPt6EJFD2lUI
-	 VtZSVPFA90k+FZvDabr5jX5SG2sPx8Kqc6dXyWbM=
+	b=VlB6NXBUsdHOt5CUI1hN+1tVTFMk8B7YOQ5ccQleVrNU02a20HqboK0Y7XNC57nqV
+	 8o9HlXKeNDuVvMmyz3HmZ8AeKANKFmFPMVH2J+c+8Ql5QM4XCAI33bw1lEXQo0IHZi
+	 dy2lUAyGZpg5fRDVPKY8BhRMnCUcGZwJAzanUd90=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395064AbgDPPUC (ORCPT
+        id S2504793AbgDPPUK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:20:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33670 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:20:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898407AbgDPNri (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:47:38 -0400
+        id S2898681AbgDPNrb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:47:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 617B9208E4;
-        Thu, 16 Apr 2020 13:47:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04AAF2222D;
+        Thu, 16 Apr 2020 13:47:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044857;
-        bh=dNKrePAaDHz3Wxm/VekMqLTAceT2OnaN46Dmu7N1AuI=;
+        s=default; t=1587044850;
+        bh=7optjhFEa+3PEcCmGs68rGHltQp375AoRvT4kjo1PUQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I3wdNDUQiypeY2au4zd4t4hRYRZFw7nFxBFeerc+g3bIbzLCAU7IjBpFLa16uuYpU
-         vjGdTS8UjYMkaKGuCcrgpwZ9WLQqr8AcEZ9P2EobvcJlXMs4gxWzVz3GKojA/j8BEB
-         dDFIU/fe4Hcxer672Pz1x7qT83MaDvBTk8Mm9nhE=
+        b=sv5JfXcYZiSHtnMg9XNG8TTq6Kw9AY2x3GDkYKnRuZ7+OnGPLdgLkYHz/STg2hazm
+         fNyh+IyQiIQC5KsAvUiwlHn07XK7Jq9ZFPl4SYJOMOp8+vMyGfV06k/EZ2NQ6pwUqW
+         DzelvqKfFN/FO8eZJyUbdATZKZ88UaSW23sPlQEY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Peter Xu <peterx@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.4 128/232] KVM: x86: Allocate new rmap and large page tracking when moving memslot
-Date:   Thu, 16 Apr 2020 15:23:42 +0200
-Message-Id: <20200416131331.062134205@linuxfoundation.org>
+        stable@vger.kernel.org, Benoit Parrot <bparrot@ti.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Subject: [PATCH 5.4 090/232] media: ti-vpe: cal: fix a kernel oops when unloading module
+Date:   Thu, 16 Apr 2020 15:23:04 +0200
+Message-Id: <20200416131326.263654957@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -61,102 +61,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Benoit Parrot <bparrot@ti.com>
 
-commit edd4fa37baa6ee8e44dc65523b27bd6fe44c94de upstream.
+commit 80264809ea0a3fd2ee8251f31a9eb85d2c3fc77e upstream.
 
-Reallocate a rmap array and recalcuate large page compatibility when
-moving an existing memslot to correctly handle the alignment properties
-of the new memslot.  The number of rmap entries required at each level
-is dependent on the alignment of the memslot's base gfn with respect to
-that level, e.g. moving a large-page aligned memslot so that it becomes
-unaligned will increase the number of rmap entries needed at the now
-unaligned level.
+After the switch to use v4l2_async_notifier_add_subdev() and
+v4l2_async_notifier_cleanup(), unloading the ti_cal module would cause a
+kernel oops.
 
-Not updating the rmap array is the most obvious bug, as KVM accesses
-garbage data beyond the end of the rmap.  KVM interprets the bad data as
-pointers, leading to non-canonical #GPs, unexpected #PFs, etc...
+This was root cause to the fact that v4l2_async_notifier_cleanup() tries
+to kfree the asd pointer passed into v4l2_async_notifier_add_subdev().
 
-  general protection fault: 0000 [#1] SMP
-  CPU: 0 PID: 1909 Comm: move_memory_reg Not tainted 5.4.0-rc7+ #139
-  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
-  RIP: 0010:rmap_get_first+0x37/0x50 [kvm]
-  Code: <48> 8b 3b 48 85 ff 74 ec e8 6c f4 ff ff 85 c0 74 e3 48 89 d8 5b c3
-  RSP: 0018:ffffc9000021bbc8 EFLAGS: 00010246
-  RAX: ffff00617461642e RBX: ffff00617461642e RCX: 0000000000000012
-  RDX: ffff88827400f568 RSI: ffffc9000021bbe0 RDI: ffff88827400f570
-  RBP: 0010000000000000 R08: ffffc9000021bd00 R09: ffffc9000021bda8
-  R10: ffffc9000021bc48 R11: 0000000000000000 R12: 0030000000000000
-  R13: 0000000000000000 R14: ffff88827427d700 R15: ffffc9000021bce8
-  FS:  00007f7eda014700(0000) GS:ffff888277a00000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 00007f7ed9216ff8 CR3: 0000000274391003 CR4: 0000000000162eb0
-  Call Trace:
-   kvm_mmu_slot_set_dirty+0xa1/0x150 [kvm]
-   __kvm_set_memory_region.part.64+0x559/0x960 [kvm]
-   kvm_set_memory_region+0x45/0x60 [kvm]
-   kvm_vm_ioctl+0x30f/0x920 [kvm]
-   do_vfs_ioctl+0xa1/0x620
-   ksys_ioctl+0x66/0x70
-   __x64_sys_ioctl+0x16/0x20
-   do_syscall_64+0x4c/0x170
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-  RIP: 0033:0x7f7ed9911f47
-  Code: <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 21 6f 2c 00 f7 d8 64 89 01 48
-  RSP: 002b:00007ffc00937498 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-  RAX: ffffffffffffffda RBX: 0000000001ab0010 RCX: 00007f7ed9911f47
-  RDX: 0000000001ab1350 RSI: 000000004020ae46 RDI: 0000000000000004
-  RBP: 000000000000000a R08: 0000000000000000 R09: 00007f7ed9214700
-  R10: 00007f7ed92149d0 R11: 0000000000000246 R12: 00000000bffff000
-  R13: 0000000000000003 R14: 00007f7ed9215000 R15: 0000000000000000
-  Modules linked in: kvm_intel kvm irqbypass
-  ---[ end trace 0c5f570b3358ca89 ]---
+In our case the asd reference was from a statically allocated struct.
+So in effect v4l2_async_notifier_cleanup() was trying to free a pointer
+that was not kalloc.
 
-The disallow_lpage tracking is more subtle.  Failure to update results
-in KVM creating large pages when it shouldn't, either due to stale data
-or again due to indexing beyond the end of the metadata arrays, which
-can lead to memory corruption and/or leaking data to guest/userspace.
+So here we switch to using a kzalloc struct instead of a static one.
+To achieve this we re-order some of the calls to prevent asd allocation
+from leaking.
 
-Note, the arrays for the old memslot are freed by the unconditional call
-to kvm_free_memslot() in __kvm_set_memory_region().
-
-Fixes: 05da45583de9b ("KVM: MMU: large page support")
+Fixes: d079f94c9046 ("media: platform: Switch to v4l2_async_notifier_add_subdev")
 Cc: stable@vger.kernel.org
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Reviewed-by: Peter Xu <peterx@redhat.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/x86.c |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/media/platform/ti-vpe/cal.c |   13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -9726,6 +9726,13 @@ int kvm_arch_create_memslot(struct kvm *
- {
- 	int i;
+--- a/drivers/media/platform/ti-vpe/cal.c
++++ b/drivers/media/platform/ti-vpe/cal.c
+@@ -266,8 +266,6 @@ struct cal_ctx {
+ 	struct v4l2_subdev	*sensor;
+ 	struct v4l2_fwnode_endpoint	endpoint;
  
-+	/*
-+	 * Clear out the previous array pointers for the KVM_MR_MOVE case.  The
-+	 * old arrays will be freed by __kvm_set_memory_region() if installing
-+	 * the new memslot is successful.
-+	 */
-+	memset(&slot->arch, 0, sizeof(slot->arch));
+-	struct v4l2_async_subdev asd;
+-
+ 	struct v4l2_fh		fh;
+ 	struct cal_dev		*dev;
+ 	struct cc_data		*cc;
+@@ -1648,7 +1646,6 @@ static int of_cal_create_instance(struct
+ 
+ 	parent = pdev->dev.of_node;
+ 
+-	asd = &ctx->asd;
+ 	endpoint = &ctx->endpoint;
+ 
+ 	ep_node = NULL;
+@@ -1695,8 +1692,6 @@ static int of_cal_create_instance(struct
+ 		ctx_dbg(3, ctx, "can't get remote parent\n");
+ 		goto cleanup_exit;
+ 	}
+-	asd->match_type = V4L2_ASYNC_MATCH_FWNODE;
+-	asd->match.fwnode = of_fwnode_handle(sensor_node);
+ 
+ 	v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep_node), endpoint);
+ 
+@@ -1726,9 +1721,17 @@ static int of_cal_create_instance(struct
+ 
+ 	v4l2_async_notifier_init(&ctx->notifier);
+ 
++	asd = kzalloc(sizeof(*asd), GFP_KERNEL);
++	if (!asd)
++		goto cleanup_exit;
 +
- 	for (i = 0; i < KVM_NR_PAGE_SIZES; ++i) {
- 		struct kvm_lpage_info *linfo;
- 		unsigned long ugfn;
-@@ -9807,6 +9814,10 @@ int kvm_arch_prepare_memory_region(struc
- 				const struct kvm_userspace_memory_region *mem,
- 				enum kvm_mr_change change)
- {
-+	if (change == KVM_MR_MOVE)
-+		return kvm_arch_create_memslot(kvm, memslot,
-+					       mem->memory_size >> PAGE_SHIFT);
++	asd->match_type = V4L2_ASYNC_MATCH_FWNODE;
++	asd->match.fwnode = of_fwnode_handle(sensor_node);
 +
- 	return 0;
- }
+ 	ret = v4l2_async_notifier_add_subdev(&ctx->notifier, asd);
+ 	if (ret) {
+ 		ctx_err(ctx, "Error adding asd\n");
++		kfree(asd);
+ 		goto cleanup_exit;
+ 	}
  
 
 
