@@ -7,45 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EADB9C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:13:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E06FC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:13:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB6782076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:13:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 682CA2076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:13:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587046402;
-	bh=BTrJCJjuOs3aKRghzcA2v0wxKBlJaf92GOTS2GDdKQ4=;
+	s=default; t=1587046410;
+	bh=Q4F0B30tAtjMB3UUkUoCTh9k7686nZ8kTOr7gh4cJ4s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sVT02pgvuOBv/lHh1eYxEppcbVMrQ1NBc9wal2/jMlV4b6uWE4vssEPV9iQD9+T5j
-	 2L2J/dad6IKFOoQVwfQ4P0b5PkMp2ek/b8+YrhirUdNczRQ4hGKYgkIQQxuwSoHlBU
-	 blpluAaNuFeZsNlfN/FdvRBbxn2EtfytvKXCA+18=
+	b=L/tVqDgT1sjRx/JtgUmrjGyQCYA7bK/xW0LKAAwItqpm83okQKgUafkzejJDDIBND
+	 QC4yCo/gMgQGaLU2goXnt5AN5eunaYEaCBC3HIn8uRZbtVhYGx/uPfC7vRp0Ie2ybR
+	 v1gA2TEngrTs+h6SYxaWcmjSx1VadIdC2H4RlwJw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441944AbgDPONS (ORCPT
+        id S2441959AbgDPON1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:13:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34818 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:13:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898745AbgDPNsv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:48:51 -0400
+        id S2898761AbgDPNsy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:48:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CAAD521974;
-        Thu, 16 Apr 2020 13:48:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 395D72222C;
+        Thu, 16 Apr 2020 13:48:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044931;
-        bh=BTrJCJjuOs3aKRghzcA2v0wxKBlJaf92GOTS2GDdKQ4=;
+        s=default; t=1587044933;
+        bh=Q4F0B30tAtjMB3UUkUoCTh9k7686nZ8kTOr7gh4cJ4s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H4WMX06wgbNAxxMzRD2IYpb5safNwhalFcDBsKonVrD9ElSDqsgixzBoWjQHtC5p7
-         SI1Dy4jHcVKT7E3ZDnuyYib+Ym/POE4Br2+KTPJmFNEBfupf84ROOwBUjIrFtAOHd/
-         swi7XSZj0ypUb5s3i1/94xOXNQYD5FWel6ywzpFE=
+        b=ZhG1G+WQXlyGQr2SyVfmnl6lk6iCNcYgiyo7XFFbZcvPsvlawu+GDcQ9ajqc5VOtX
+         KfthE+LJZ26s2ez2Q9Uw9NY7az5H1x+g7mZQGOVeAX9jq7Bje4Lhjk3cAGJjPDFMSw
+         DGzYTGH+523S3fOyPtuAzC6ioxCFp/RZ0QLQZm20=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steve French <stfrench@microsoft.com>
-Subject: [PATCH 5.4 133/232] smb3: fix performance regression with setting mtime
-Date:   Thu, 16 Apr 2020 15:23:47 +0200
-Message-Id: <20200416131331.637991856@linuxfoundation.org>
+        stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Chris Down <chris@chrisdown.name>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 5.4 160/232] mm, memcg: do not high throttle allocators based on wraparound
+Date:   Thu, 16 Apr 2020 15:24:14 +0200
+Message-Id: <20200416131335.015077692@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -58,65 +64,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve French <stfrench@microsoft.com>
+From: Jakub Kicinski <kuba@kernel.org>
 
-commit cf5371ae460eb8e484e4884747af270c86c3c469 upstream.
+commit 9b8b17541f13809d06f6f873325305ddbb760e3e upstream.
 
-There are cases when we don't want to send the SMB2 flush operation
-(e.g. when user specifies mount parm "nostrictsync") and it can be
-a very expensive operation on the server.  In most cases in order
-to set mtime, we simply need to flush (write) the dirtry pages from
-the client and send the writes to the server not also send a flush
-protocol operation to the server.
+If a cgroup violates its memory.high constraints, we may end up unduly
+penalising it.  For example, for the following hierarchy:
 
-Fixes: aa081859b10c ("cifs: flush before set-info if we have writeable handles")
-CC: Stable <stable@vger.kernel.org>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+  A:   max high, 20 usage
+  A/B: 9 high, 10 usage
+  A/C: max high, 10 usage
+
+We would end up doing the following calculation below when calculating
+high delay for A/B:
+
+  A/B: 10 - 9 = 1...
+  A:   20 - PAGE_COUNTER_MAX = 21, so set max_overage to 21.
+
+This gets worse with higher disparities in usage in the parent.
+
+I have no idea how this disappeared from the final version of the patch,
+but it is certainly Not Good(tm).  This wasn't obvious in testing because,
+for a simple cgroup hierarchy with only one child, the result is usually
+roughly the same.  It's only in more complex hierarchies that things go
+really awry (although still, the effects are limited to a maximum of 2
+seconds in schedule_timeout_killable at a maximum).
+
+[chris@chrisdown.name: changelog]
+Fixes: e26733e0d0ec ("mm, memcg: throttle allocators based on ancestral memory.high")
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Chris Down <chris@chrisdown.name>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: <stable@vger.kernel.org>	[5.4.x]
+Link: http://lkml.kernel.org/r/20200331152424.GA1019937@chrisdown.name
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/inode.c |   23 ++++++++++++-----------
- 1 file changed, 12 insertions(+), 11 deletions(-)
+ mm/memcontrol.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/fs/cifs/inode.c
-+++ b/fs/cifs/inode.c
-@@ -2454,25 +2454,26 @@ cifs_setattr_nounix(struct dentry *diren
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -2441,6 +2441,9 @@ static unsigned long calculate_high_dela
+ 		usage = page_counter_read(&memcg->memory);
+ 		high = READ_ONCE(memcg->high);
  
- 	/*
- 	 * Attempt to flush data before changing attributes. We need to do
--	 * this for ATTR_SIZE and ATTR_MTIME for sure, and if we change the
--	 * ownership or mode then we may also need to do this. Here, we take
--	 * the safe way out and just do the flush on all setattr requests. If
--	 * the flush returns error, store it to report later and continue.
-+	 * this for ATTR_SIZE and ATTR_MTIME.  If the flush of the data
-+	 * returns error, store it to report later and continue.
- 	 *
- 	 * BB: This should be smarter. Why bother flushing pages that
- 	 * will be truncated anyway? Also, should we error out here if
--	 * the flush returns error?
-+	 * the flush returns error? Do we need to check for ATTR_MTIME_SET flag?
- 	 */
--	rc = filemap_write_and_wait(inode->i_mapping);
--	if (is_interrupt_error(rc)) {
--		rc = -ERESTARTSYS;
--		goto cifs_setattr_exit;
-+	if (attrs->ia_valid & (ATTR_MTIME | ATTR_SIZE | ATTR_CTIME)) {
-+		rc = filemap_write_and_wait(inode->i_mapping);
-+		if (is_interrupt_error(rc)) {
-+			rc = -ERESTARTSYS;
-+			goto cifs_setattr_exit;
-+		}
-+		mapping_set_error(inode->i_mapping, rc);
- 	}
- 
--	mapping_set_error(inode->i_mapping, rc);
- 	rc = 0;
- 
--	if (attrs->ia_valid & ATTR_MTIME) {
-+	if ((attrs->ia_valid & ATTR_MTIME) &&
-+	    !(cifs_sb->mnt_cifs_flags & CIFS_MOUNT_NOSSYNC)) {
- 		rc = cifs_get_writable_file(cifsInode, FIND_WR_ANY, &wfile);
- 		if (!rc) {
- 			tcon = tlink_tcon(wfile->tlink);
++		if (usage <= high)
++			continue;
++
+ 		/*
+ 		 * Prevent division by 0 in overage calculation by acting as if
+ 		 * it was a threshold of 1 page
 
 
