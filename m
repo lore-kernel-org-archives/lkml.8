@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E0DC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0121CC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:53:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 143D8214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:53:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D70AB20732
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:53:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587052382;
-	bh=/pRuMGAn0u2C8xDQzhfpisUenw8c2eLcIQtdrCXZSKY=;
+	s=default; t=1587052386;
+	bh=M+5zH2hdYE1SFCdCfW6nfxHibGgFpi/+Dvdz/3pLESQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=do1gquaJVGgH9Vzw1YUDxpGfJYpEDQhxgEapU1excaQVfwcl0rdm4bRG2sqx1PbRV
-	 jaJfEsVAoZtuNNyGbqapjcfgrZy16zEJ6un9cDvYtnt4Yyr11iqeiH9qSmYGI+RIiv
-	 LlU+Mpmop1MfEXKqxUrgdgsxXcrwMW4eHVsiqTDE=
+	b=U9vflSR9TNDBPwm2zcrIG3MoCZleoLeBYEPWTKSvJYPmLpMqfVPa7XuOPSDXSAIfa
+	 XWdifkQsqTbeHjZ1pHXqeTSsYolIlLHZprxGyVDk9O8qtqgrp4ffwkaat9wlM1koYR
+	 m5cLLXw0kYlpdNgTQqY6oYhQc9QoDfGFC1p+Gln0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2896279AbgDPPxB (ORCPT
+        id S2896572AbgDPPxF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:53:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43730 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:53:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896106AbgDPNcz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:32:55 -0400
+        id S2896555AbgDPNcy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:32:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 629922222D;
-        Thu, 16 Apr 2020 13:31:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBD4C22202;
+        Thu, 16 Apr 2020 13:31:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043900;
-        bh=/pRuMGAn0u2C8xDQzhfpisUenw8c2eLcIQtdrCXZSKY=;
+        s=default; t=1587043893;
+        bh=M+5zH2hdYE1SFCdCfW6nfxHibGgFpi/+Dvdz/3pLESQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h9ABYin6oNrEAi6x7OxIZRY/DMs0unW0lnbG6XLunpFtZz1p6CUiPxOtlMVSlEsJ5
-         q0lF9fWne/D9oFm7M8VFiMiMmE3luaVia66qQl9YP6mYe0UmvKOgacias+7gHRbdb7
-         zbgJCAXOPv4LpvbxNx7Y2xhNJGw5LkrLs0pP+Tkg=
+        b=IsPVkOlN80zjRyowRTCQRkDwoC+6r4iMp4ogehNQSdJvSH2i9ibXO09o6Yny4Rbh4
+         hZD2ky2wOd33970KF+gf043cBi5CwOCEPuKTWbBDYFcNhJbgwt9H7itwoVe9THQ92V
+         5Qhqw1h447hxF6ccNUobHQya+FPrazUSJu9MLvUU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
+        stable@vger.kernel.org, Taeung Song <treeze.taeung@gmail.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 146/146] etnaviv: perfmon: fix total and idle HI cyleces readout
-Date:   Thu, 16 Apr 2020 15:24:47 +0200
-Message-Id: <20200416131302.322010649@linuxfoundation.org>
+Subject: [PATCH 4.19 143/146] ftrace/kprobe: Show the maxactive number on kprobe_events
+Date:   Thu, 16 Apr 2020 15:24:44 +0200
+Message-Id: <20200416131301.931565735@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
 References: <20200416131242.353444678@linuxfoundation.org>
@@ -61,90 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Gmeiner <christian.gmeiner@gmail.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 15ff4a7b584163b12b118a2c381529f05ff3a94d ]
+[ Upstream commit 6a13a0d7b4d1171ef9b80ad69abc37e1daa941b3 ]
 
-As seen at CodeAurora's linux-imx git repo in imx_4.19.35_1.0.0 branch.
+Show maxactive parameter on kprobe_events.
+This allows user to save the current configuration and
+restore it without losing maxactive parameter.
 
-Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Link: http://lkml.kernel.org/r/4762764a-6df7-bc93-ed60-e336146dce1f@gmail.com
+Link: http://lkml.kernel.org/r/158503528846.22706.5549974121212526020.stgit@devnote2
+
+Cc: stable@vger.kernel.org
+Fixes: 696ced4fb1d76 ("tracing/kprobes: expose maxactive for kretprobe in kprobe_events")
+Reported-by: Taeung Song <treeze.taeung@gmail.com>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/etnaviv/etnaviv_perfmon.c | 43 +++++++++++++++++------
- 1 file changed, 32 insertions(+), 11 deletions(-)
+ kernel/trace/trace_kprobe.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
-index f86cb66a84b9c..3ce77cbad4ae3 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
-@@ -37,13 +37,6 @@ struct etnaviv_pm_domain_meta {
- 	u32 nr_domains;
- };
+diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+index c61b2b0a99e9c..65b4e28ff425f 100644
+--- a/kernel/trace/trace_kprobe.c
++++ b/kernel/trace/trace_kprobe.c
+@@ -975,6 +975,8 @@ static int probes_seq_show(struct seq_file *m, void *v)
+ 	int i;
  
--static u32 simple_reg_read(struct etnaviv_gpu *gpu,
--	const struct etnaviv_pm_domain *domain,
--	const struct etnaviv_pm_signal *signal)
--{
--	return gpu_read(gpu, signal->data);
--}
--
- static u32 perf_reg_read(struct etnaviv_gpu *gpu,
- 	const struct etnaviv_pm_domain *domain,
- 	const struct etnaviv_pm_signal *signal)
-@@ -77,6 +70,34 @@ static u32 pipe_reg_read(struct etnaviv_gpu *gpu,
- 	return value;
- }
+ 	seq_putc(m, trace_kprobe_is_return(tk) ? 'r' : 'p');
++	if (trace_kprobe_is_return(tk) && tk->rp.maxactive)
++		seq_printf(m, "%d", tk->rp.maxactive);
+ 	seq_printf(m, ":%s/%s", tk->tp.call.class->system,
+ 			trace_event_name(&tk->tp.call));
  
-+static u32 hi_total_cycle_read(struct etnaviv_gpu *gpu,
-+	const struct etnaviv_pm_domain *domain,
-+	const struct etnaviv_pm_signal *signal)
-+{
-+	u32 reg = VIVS_HI_PROFILE_TOTAL_CYCLES;
-+
-+	if (gpu->identity.model == chipModel_GC880 ||
-+		gpu->identity.model == chipModel_GC2000 ||
-+		gpu->identity.model == chipModel_GC2100)
-+		reg = VIVS_MC_PROFILE_CYCLE_COUNTER;
-+
-+	return gpu_read(gpu, reg);
-+}
-+
-+static u32 hi_total_idle_cycle_read(struct etnaviv_gpu *gpu,
-+	const struct etnaviv_pm_domain *domain,
-+	const struct etnaviv_pm_signal *signal)
-+{
-+	u32 reg = VIVS_HI_PROFILE_IDLE_CYCLES;
-+
-+	if (gpu->identity.model == chipModel_GC880 ||
-+		gpu->identity.model == chipModel_GC2000 ||
-+		gpu->identity.model == chipModel_GC2100)
-+		reg = VIVS_HI_PROFILE_TOTAL_CYCLES;
-+
-+	return gpu_read(gpu, reg);
-+}
-+
- static const struct etnaviv_pm_domain doms_3d[] = {
- 	{
- 		.name = "HI",
-@@ -86,13 +107,13 @@ static const struct etnaviv_pm_domain doms_3d[] = {
- 		.signal = (const struct etnaviv_pm_signal[]) {
- 			{
- 				"TOTAL_CYCLES",
--				VIVS_HI_PROFILE_TOTAL_CYCLES,
--				&simple_reg_read
-+				0,
-+				&hi_total_cycle_read
- 			},
- 			{
- 				"IDLE_CYCLES",
--				VIVS_HI_PROFILE_IDLE_CYCLES,
--				&simple_reg_read
-+				0,
-+				&hi_total_idle_cycle_read
- 			},
- 			{
- 				"AXI_CYCLES_READ_REQUEST_STALLED",
 -- 
 2.20.1
 
