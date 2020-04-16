@@ -2,89 +2,136 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6291C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03846C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8756920857
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:18:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="KqSX5xR3"
+	by mail.kernel.org (Postfix) with ESMTP id D1AEC2078A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:21:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587018072;
+	bh=Qy+g9domHuOyIJgHszCrFQ5XYU+LhbUne7Gxw0EJqpQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YF6BIlhZi/fyTub+vNGEqP7MP5FISgzWEIfKB4Ydi06miumpki8aNTmonKYN4Kdcv
+	 vE7h08bN+WyAR9Wk9CApKsOQUj5hU556oNX+caG1PT7BOpiyaXyY8OHz78PQ+j5yMm
+	 p9uBxyTN2fmWOAQccwXITy24OUGSqwRkBtNxHrGk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407833AbgDPGSF (ORCPT
+        id S2407835AbgDPGVI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 02:18:05 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:12870 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2407332AbgDPGR4 (ORCPT
+        Thu, 16 Apr 2020 02:21:08 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:39852 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407384AbgDPGU6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 02:17:56 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1587017875; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=Z2cB104A3VarQK23oJ8oGoWJI/nVp7NdgHxvhORaQVM=; b=KqSX5xR3xvzKr13Lr/2Lm0j27V152GjO83fiDYFdINttVGn2+7SzFB1jVCK3E8U962YdGkoR
- rWiWkMwhfvExEv/vQtvTHl5dJljLjNEhPZlxJW+JjSEtlODAEHMmP5uhCQDGpLWN6w2EHnVs
- zYF2NRFAT8ZGyPCzAMwIrvkA9i4=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e97f892.7fe93db26928-smtp-out-n05;
- Thu, 16 Apr 2020 06:17:54 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id DC998C44788; Thu, 16 Apr 2020 06:17:54 +0000 (UTC)
-Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: stummala)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5BA3BC433F2;
-        Thu, 16 Apr 2020 06:17:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5BA3BC433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
-From:   Sahitya Tummala <stummala@codeaurora.org>
-To:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
-        linux-f2fs-devel@lists.sourceforge.net
-Cc:     Sahitya Tummala <stummala@codeaurora.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] f2fs: Fix the accounting of dcc->undiscard_blks
-Date:   Thu, 16 Apr 2020 11:47:41 +0530
-Message-Id: <1587017861-6454-1-git-send-email-stummala@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Thu, 16 Apr 2020 02:20:58 -0400
+Received: by mail-pg1-f195.google.com with SMTP id g32so1165396pgb.6;
+        Wed, 15 Apr 2020 23:20:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=p15xYOQygHaMZBBF5Y1nnqVE33ZTctQDLOOIp9dIoLE=;
+        b=TTox5xiBcelasnIGWX6SIMPF+9VR0ZnaiYHUaJELkhRxLPDLqYtSKxlOiKiBDIqHzo
+         cjoFApG69Z/IMJ0cxPAytqe02eyfaI2JlsvMLDuBSXj+vJrfag9qjn/kGwvvqtBR7vPL
+         PUY4lhDbHy1gonnlVok4ctW1n52G0rKOhfzFdMSrUM/+Uv2xRXxUz+vW8GnDVqRB+FWf
+         YatT0xdjzURqrHrs72Rii0baZeLkls7G9cX2lEgiQGtaRZ3hac1Z/6aPptcVaINvJ4Cu
+         FfPwNNWwL1lTy78RuZRJZXsTqOVsn+rob3butyolVRl9P+gFjqtel4xId136ddgzx/f8
+         Befw==
+X-Gm-Message-State: AGi0PuZsOj47Xje/4cnmXf+AlRlgbfRl7qu2/r1rxwg+jUTWTGZ1KLX4
+        OjmVt1TqYlU+YssLRL6FKd4=
+X-Google-Smtp-Source: APiQypJdFaXOZeMn73PqeNL3aSMM9FGEv7xVBTPP0KhN6MUn3AMyk3tgHrWRUpkeOX/IOxTaJA/Zuw==
+X-Received: by 2002:a62:16d2:: with SMTP id 201mr29586848pfw.295.1587018056780;
+        Wed, 15 Apr 2020 23:20:56 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id g6sm15692090pfr.56.2020.04.15.23.20.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2020 23:20:55 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id D4F6F40277; Thu, 16 Apr 2020 06:20:54 +0000 (UTC)
+Date:   Thu, 16 Apr 2020 06:20:54 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
+        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
+        jack@suse.cz, nstange@suse.de, akpm@linux-foundation.org,
+        mhocko@suse.com, yukuai3@huawei.com, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
+Subject: Re: [PATCH 2/5] blktrace: fix debugfs use after free
+Message-ID: <20200416062054.GL11244@42.do-not-panic.com>
+References: <20200414041902.16769-1-mcgrof@kernel.org>
+ <20200414041902.16769-3-mcgrof@kernel.org>
+ <20200416021036.GA2717677@T590>
+ <20200416052524.GH11244@42.do-not-panic.com>
+ <20200416054750.GA2723777@T590>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200416054750.GA2723777@T590>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a discard_cmd needs to be split due to dpolicy->max_requests, then
-for the remaining length it will be either merged into another cmd or a
-new discard_cmd will be created. In this case, there is double
-accounting of dcc->undiscard_blks for the remaining len, due to which
-it shows incorrect value in stats.
+On Thu, Apr 16, 2020 at 01:47:50PM +0800, Ming Lei wrote:
+> On Thu, Apr 16, 2020 at 05:25:24AM +0000, Luis Chamberlain wrote:
+> > On Thu, Apr 16, 2020 at 10:10:36AM +0800, Ming Lei wrote:
+> > > In theory, multiple partitions can be traced concurrently, but looks
+> > > it never works, so it won't cause trouble for multiple partition trace.
+> > > 
+> > > One userspace visible change is that blktrace debugfs dir name is switched 
+> > > to disk name from partition name in case of partition trace, will it
+> > > break some utilities?
+> > 
+> > How is this possible, its not clear to me, we go from:
+> > 
+> > -	q->debugfs_dir = debugfs_create_dir(kobject_name(q->kobj.parent),
+> > -					    blk_debugfs_root);
+> > 
+> > To this:
+> > 
+> > +	q->debugfs_dir = debugfs_create_dir(kobject_name(q->kobj.parent),
+> > +					    blk_debugfs_root);
+> > 
+> > 
+> > Maybe I am overlooking something.
+> 
+> Your patch removes the blktrace debugfs dir:
+> 
+> do_blk_trace_setup()
+> 
+> -       dir = debugfs_lookup(buts->name, blk_debugfs_root);
+> -       if (!dir)
+> -               bt->dir = dir = debugfs_create_dir(buts->name, blk_debugfs_root);
+> -
+> 
+> Then create blktrace attributes under the dir of q->debugfs_dir.
+> 
+> However, buts->name could be one partition device name, but
 
-Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
----
- fs/f2fs/segment.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+I can see how buts->name is set to bdevname() which expands to
+disk_name(bdev->bd_disk, bdev->bd_part->partno, buf).
 
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 728ff6e..1c48ec8 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -1214,8 +1214,10 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
- 		len = total_len;
- 	}
- 
--	if (!err && len)
-+	if (!err && len) {
-+		dcc->undiscard_blks -= len;
- 		__update_discard_tree_range(sbi, bdev, lstart, start, len);
-+	}
- 	return err;
- }
- 
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+> q->debugfs_dir has to be disk name.
+
+I can't see this, can you point me to where it is clear the
+request_queue kobject's parent is sure to be the disk name?
+
+If it is different, the issue I don't think should be debugfs, but
+the bigger issue would be that blktrace on two different partitions
+would clash.
+
+Also, the *old* lookup intent on partitions always would fail on mq
+and we'd end up creating a directory.
+
+I think we'd need to create a directory per partition, even when we
+don't use blktrace. That makes this more complex than I'd hope for.
+
+  Luis
