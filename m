@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B54DCC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:17:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59677C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:18:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93F922063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:17:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EA99206B9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:18:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587046667;
-	bh=C342YGSxZ7cHTwUi8UWJoDuCX2Aj+5ytjAAcmtQ8Fzc=;
+	s=default; t=1587046681;
+	bh=iFWKPM79D+eOwWhbxjk4po4LTD20a1ZJmbOg1VrHgQg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SmNvyb14+OLdXp72v2VIkTYspQ8zlbAeKnQMiA1g3LbB6oi0rlrvFewwFdUVMsRoM
-	 xTJZCAp6ufGvVD3Buf3UgZVgPw08xM6i0C9EqQP7j+oJvWH6V4bHBxt6oq7CN+VW4H
-	 cXdFYxEq6V9znB8uJ0zroQgD3fGuDZ81S91j8E08=
+	b=Ww6uah0zPM8wZyLr/bunO55xgdy9zIMhPBVWAcuM42i+yH/InWPD4g2Dcvdti8Efm
+	 3+OPOV/c01Z5awMF1BVil2Pu4ppRMgf3Yr9KEX921QpsHMAnDxBnVfJ+ZC+bU2epDU
+	 4wOsRk89HfN+LiYruQO2d+RnY8bcN9aJdAwzXXKI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442275AbgDPORp (ORCPT
+        id S2441973AbgDPOR6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:17:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39212 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:17:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408787AbgDPNwv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:52:51 -0400
+        id S2408903AbgDPNwy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:52:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A27E82063A;
-        Thu, 16 Apr 2020 13:52:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 122DF20732;
+        Thu, 16 Apr 2020 13:52:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045171;
-        bh=C342YGSxZ7cHTwUi8UWJoDuCX2Aj+5ytjAAcmtQ8Fzc=;
+        s=default; t=1587045173;
+        bh=iFWKPM79D+eOwWhbxjk4po4LTD20a1ZJmbOg1VrHgQg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OnAtf9ggn/ppFyXFR7WVbYs0gmHUnhFsQXbKsBCB+H6ThGy/fgVc5pz10z9Vs7rOq
-         xl5AtzM4QVR6cnnM480RUfnfeNWdkoRxS96uu1zgPYfT66k7vIRsDeEBhgj4bkYkDt
-         uwK/O+KtRlpi03MGUVuQCPQava0bsVH8+g1HOUiY=
+        b=owWeskQ1LAn+MvSjW0qAgf5Ib0SkmV0z+M+8Jt0zMplFB7m3sNc7MxmXzMkKbVoxO
+         Xh0sPstVNOy2HUzyT2n4eLAQv1artACFRK6Ip4d2XaJIg3RjLJp8cKbqzN9Fey/0qq
+         PHhSImlOQf+DBbjZNUV4fsqMZO5mECjfY3EmTZxM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        stable@vger.kernel.org, Thomas Hellstrom <thellstrom@vmware.com>,
+        Borislav Petkov <bp@suse.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 026/254] clocksource/drivers/timer-microchip-pit64b: Fix rate for gck
-Date:   Thu, 16 Apr 2020 15:21:55 +0200
-Message-Id: <20200416131329.091921791@linuxfoundation.org>
+Subject: [PATCH 5.6 027/254] x86: Dont let pgprot_modify() change the page encryption bit
+Date:   Thu, 16 Apr 2020 15:21:56 +0200
+Message-Id: <20200416131329.230384350@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -61,35 +62,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Claudiu Beznea <claudiu.beznea@microchip.com>
+From: Thomas Hellstrom <thellstrom@vmware.com>
 
-[ Upstream commit 0585244523f0f4de7e4480375e871617a79cab98 ]
+[ Upstream commit 6db73f17c5f155dbcfd5e48e621c706270b84df0 ]
 
-Generic clock rate needs to be set in case it was selected as timer clock
-source in mchp_pit64b_init_mode(). Otherwise it will be enabled with wrong
-rate.
+When SEV or SME is enabled and active, vm_get_page_prot() typically
+returns with the encryption bit set. This means that users of
+pgprot_modify(, vm_get_page_prot()) (mprotect_fixup(), do_mmap()) end up
+with a value of vma->vm_pg_prot that is not consistent with the intended
+protection of the PTEs.
 
-Fixes: 625022a5f160 ("clocksource/drivers/timer-microchip-pit64b: Add Microchip PIT64B support")
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/1584352376-32585-1-git-send-email-claudiu.beznea@microchip.com
+This is also important for fault handlers that rely on the VMA
+vm_page_prot to set the page protection. Fix this by not allowing
+pgprot_modify() to change the encryption bit, similar to how it's done
+for PAT bits.
+
+Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+Acked-by: Tom Lendacky <thomas.lendacky@amd.com>
+Link: https://lkml.kernel.org/r/20200304114527.3636-2-thomas_os@shipmail.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clocksource/timer-microchip-pit64b.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/include/asm/pgtable.h       | 7 +++++--
+ arch/x86/include/asm/pgtable_types.h | 2 +-
+ 2 files changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/clocksource/timer-microchip-pit64b.c b/drivers/clocksource/timer-microchip-pit64b.c
-index bd63d3484838a..59e11ca8ee73e 100644
---- a/drivers/clocksource/timer-microchip-pit64b.c
-+++ b/drivers/clocksource/timer-microchip-pit64b.c
-@@ -264,6 +264,7 @@ static int __init mchp_pit64b_init_mode(struct mchp_pit64b_timer *timer,
+diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
+index 7e118660bbd98..64a03f226ab73 100644
+--- a/arch/x86/include/asm/pgtable.h
++++ b/arch/x86/include/asm/pgtable.h
+@@ -627,12 +627,15 @@ static inline pmd_t pmd_modify(pmd_t pmd, pgprot_t newprot)
+ 	return __pmd(val);
+ }
  
- 	if (!best_diff) {
- 		timer->mode |= MCHP_PIT64B_MR_SGCLK;
-+		clk_set_rate(timer->gclk, gclk_round);
- 		goto done;
- 	}
+-/* mprotect needs to preserve PAT bits when updating vm_page_prot */
++/*
++ * mprotect needs to preserve PAT and encryption bits when updating
++ * vm_page_prot
++ */
+ #define pgprot_modify pgprot_modify
+ static inline pgprot_t pgprot_modify(pgprot_t oldprot, pgprot_t newprot)
+ {
+ 	pgprotval_t preservebits = pgprot_val(oldprot) & _PAGE_CHG_MASK;
+-	pgprotval_t addbits = pgprot_val(newprot);
++	pgprotval_t addbits = pgprot_val(newprot) & ~_PAGE_CHG_MASK;
+ 	return __pgprot(preservebits | addbits);
+ }
  
+diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
+index 0239998d8cdc0..65c2ecd730c5b 100644
+--- a/arch/x86/include/asm/pgtable_types.h
++++ b/arch/x86/include/asm/pgtable_types.h
+@@ -118,7 +118,7 @@
+  */
+ #define _PAGE_CHG_MASK	(PTE_PFN_MASK | _PAGE_PCD | _PAGE_PWT |		\
+ 			 _PAGE_SPECIAL | _PAGE_ACCESSED | _PAGE_DIRTY |	\
+-			 _PAGE_SOFT_DIRTY | _PAGE_DEVMAP)
++			 _PAGE_SOFT_DIRTY | _PAGE_DEVMAP | _PAGE_ENC)
+ #define _HPAGE_CHG_MASK (_PAGE_CHG_MASK | _PAGE_PSE)
+ 
+ /*
 -- 
 2.20.1
 
