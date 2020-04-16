@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A95C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:33:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC8F8C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:33:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87030214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:33:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C04B214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:33:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587051196;
-	bh=/lUnU82i9NCKa7Nb5n2dmWvwoPHTtDhXL68RLJzcs/I=;
+	s=default; t=1587051206;
+	bh=UCUtmq9O84OUYC+GZF7mjcM9yAlMLxS1lex7u964yK4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iINqFEqIv5373U8vea/w37grSI++/01DkfxLJ1iJQy917WjCIR/SD84Zsb+54XHeT
-	 XkNWhITENsC+ENZuTadsu1+tTCGesK8IYv/sjhyUhl4o3G9n7w1Qc7g74dWexrogGH
-	 ZT/KI1qqXAkwI5lv8tFXoYOn8NdTIn/rAsQXPmvo=
+	b=c3ZpDvDLK2cs0aG42JLvlJ7/uB9URr/3CgORDYcyFsXR2OIw5UzAtK68x5Xi2wZ5w
+	 Mau3Lh7U8m0FcjS+2M+uJuuHnyEWhUdSQBu6e6TjTQVHX76y8UYHl+/JAa/MsuPZdw
+	 B86h4sV1aJDDF9U/oDxtcXO0oKdD8QcsmYx69QZc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442506AbgDPPdM (ORCPT
+        id S2442517AbgDPPdY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:33:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54604 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:33:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898345AbgDPNll (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:41:41 -0400
+        id S2898318AbgDPNl2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:41:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30AE52076D;
-        Thu, 16 Apr 2020 13:41:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB18B20732;
+        Thu, 16 Apr 2020 13:41:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044500;
-        bh=/lUnU82i9NCKa7Nb5n2dmWvwoPHTtDhXL68RLJzcs/I=;
+        s=default; t=1587044488;
+        bh=UCUtmq9O84OUYC+GZF7mjcM9yAlMLxS1lex7u964yK4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tNufUoMH6yM3rdOIrJZ4S7VMmk+zAsam+Rhoz7tapOAkWehz8rMw4tkMiyK3gxUnM
-         WqpB0ZKoid8xjfReKYUTIqM3WWzf2qeC8QmGG2DwvUoiuL8tUF2m00UDj4d6KrFTHn
-         OIXDSD7ZA+viVjLlUOvzHIlKxh41gHDysyWi73QM=
+        b=Ns1ij95BesEpteRWRWYisqWgaCHOtwUFfgmCaB+kTd0q7HFQkat1mmuzFqJy82+y2
+         5w+uN0p98wa/tylXH416iwNO5ffA52rtN9U64rhQWse2BPzFD4hlXCURG27+lbBpak
+         gJL4fiRz9YgV0a4t8Hxt5MX4dmdgVkEGVe5L7lR0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Larry Finger <Larry.Finger@lwfinger.net>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        stable@vger.kernel.org, Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Scott Wood <oss@buserror.net>,
         Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.5 242/257] powerpc/kprobes: Ignore traps that happened in real mode
-Date:   Thu, 16 Apr 2020 15:24:53 +0200
-Message-Id: <20200416131356.111001294@linuxfoundation.org>
+Subject: [PATCH 5.5 237/257] powerpc/fsl_booke: Avoid creating duplicate tlb1 entry
+Date:   Thu, 16 Apr 2020 15:24:48 +0200
+Message-Id: <20200416131355.209900249@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -62,74 +60,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 
-commit 21f8b2fa3ca5b01f7a2b51b89ce97a3705a15aa0 upstream.
+commit aa4113340ae6c2811e046f08c2bc21011d20a072 upstream.
 
-When a program check exception happens while MMU translation is
-disabled, following Oops happens in kprobe_handler() in the following
-code:
+In the current implementation, the call to loadcam_multi() is wrapped
+between switch_to_as1() and restore_to_as0() calls so, when it tries
+to create its own temporary AS=1 TLB1 entry, it ends up duplicating
+the existing one created by switch_to_as1(). Add a check to skip
+creating the temporary entry if already running in AS=1.
 
-	} else if (*addr != BREAKPOINT_INSTRUCTION) {
-
-  BUG: Unable to handle kernel data access on read at 0x0000e268
-  Faulting instruction address: 0xc000ec34
-  Oops: Kernel access of bad area, sig: 11 [#1]
-  BE PAGE_SIZE=16K PREEMPT CMPC885
-  Modules linked in:
-  CPU: 0 PID: 429 Comm: cat Not tainted 5.6.0-rc1-s3k-dev-00824-g84195dc6c58a #3267
-  NIP:  c000ec34 LR: c000ecd8 CTR: c019cab8
-  REGS: ca4d3b58 TRAP: 0300   Not tainted  (5.6.0-rc1-s3k-dev-00824-g84195dc6c58a)
-  MSR:  00001032 <ME,IR,DR,RI>  CR: 2a4d3c52  XER: 00000000
-  DAR: 0000e268 DSISR: c0000000
-  GPR00: c000b09c ca4d3c10 c66d0620 00000000 ca4d3c60 00000000 00009032 00000000
-  GPR08: 00020000 00000000 c087de44 c000afe0 c66d0ad0 100d3dd6 fffffff3 00000000
-  GPR16: 00000000 00000041 00000000 ca4d3d70 00000000 00000000 0000416d 00000000
-  GPR24: 00000004 c53b6128 00000000 0000e268 00000000 c07c0000 c07bb6fc ca4d3c60
-  NIP [c000ec34] kprobe_handler+0x128/0x290
-  LR [c000ecd8] kprobe_handler+0x1cc/0x290
-  Call Trace:
-  [ca4d3c30] [c000b09c] program_check_exception+0xbc/0x6fc
-  [ca4d3c50] [c000e43c] ret_from_except_full+0x0/0x4
-  --- interrupt: 700 at 0xe268
-  Instruction dump:
-  913e0008 81220000 38600001 3929ffff 91220000 80010024 bb410008 7c0803a6
-  38210020 4e800020 38600000 4e800020 <813b0000> 6d2a7fe0 2f8a0008 419e0154
-  ---[ end trace 5b9152d4cdadd06d ]---
-
-kprobe is not prepared to handle events in real mode and functions
-running in real mode should have been blacklisted, so kprobe_handler()
-can safely bail out telling 'this trap is not mine' for any trap that
-happened while in real-mode.
-
-If the trap happened with MSR_IR or MSR_DR cleared, return 0
-immediately.
-
-Reported-by: Larry Finger <Larry.Finger@lwfinger.net>
-Fixes: 6cc89bad60a6 ("powerpc/kprobes: Invoke handlers directly")
-Cc: stable@vger.kernel.org # v4.10+
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
-Reviewed-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Fixes: d9e1831a4202 ("powerpc/85xx: Load all early TLB entries at once")
+Cc: stable@vger.kernel.org # v4.4+
+Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Acked-by: Scott Wood <oss@buserror.net>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/424331e2006e7291a1bfe40e7f3fa58825f565e1.1582054578.git.christophe.leroy@c-s.fr
+Link: https://lore.kernel.org/r/20200123111914.2565-1-laurentiu.tudor@nxp.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kernel/kprobes.c |    3 +++
- 1 file changed, 3 insertions(+)
+ arch/powerpc/mm/nohash/tlb_low.S |   12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
---- a/arch/powerpc/kernel/kprobes.c
-+++ b/arch/powerpc/kernel/kprobes.c
-@@ -264,6 +264,9 @@ int kprobe_handler(struct pt_regs *regs)
- 	if (user_mode(regs))
- 		return 0;
+--- a/arch/powerpc/mm/nohash/tlb_low.S
++++ b/arch/powerpc/mm/nohash/tlb_low.S
+@@ -397,7 +397,7 @@ _GLOBAL(set_context)
+  * extern void loadcam_entry(unsigned int index)
+  *
+  * Load TLBCAM[index] entry in to the L2 CAM MMU
+- * Must preserve r7, r8, r9, and r10
++ * Must preserve r7, r8, r9, r10 and r11
+  */
+ _GLOBAL(loadcam_entry)
+ 	mflr	r5
+@@ -433,6 +433,10 @@ END_MMU_FTR_SECTION_IFSET(MMU_FTR_BIG_PH
+  */
+ _GLOBAL(loadcam_multi)
+ 	mflr	r8
++	/* Don't switch to AS=1 if already there */
++	mfmsr	r11
++	andi.	r11,r11,MSR_IS
++	bne	10f
  
-+	if (!(regs->msr & MSR_IR) || !(regs->msr & MSR_DR))
-+		return 0;
-+
  	/*
- 	 * We don't want to be preempted for the entire
- 	 * duration of kprobe processing
+ 	 * Set up temporary TLB entry that is the same as what we're
+@@ -458,6 +462,7 @@ _GLOBAL(loadcam_multi)
+ 	mtmsr	r6
+ 	isync
+ 
++10:
+ 	mr	r9,r3
+ 	add	r10,r3,r4
+ 2:	bl	loadcam_entry
+@@ -466,6 +471,10 @@ _GLOBAL(loadcam_multi)
+ 	mr	r3,r9
+ 	blt	2b
+ 
++	/* Don't return to AS=0 if we were in AS=1 at function start */
++	andi.	r11,r11,MSR_IS
++	bne	3f
++
+ 	/* Return to AS=0 and clear the temporary entry */
+ 	mfmsr	r6
+ 	rlwinm.	r6,r6,0,~(MSR_IS|MSR_DS)
+@@ -481,6 +490,7 @@ _GLOBAL(loadcam_multi)
+ 	tlbwe
+ 	isync
+ 
++3:
+ 	mtlr	r8
+ 	blr
+ #endif
 
 
