@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3796FC352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:43:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BA63C352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:43:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 166FD21D91
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:43:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8A66214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:43:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587051811;
-	bh=ZIcAg89D5twlHgvCRgZyM3HhzVVvVDgs3ml5dsPPPn8=;
+	s=default; t=1587051821;
+	bh=XjmrEhuophM687LSAaFi/HfiN1o+mJnwbGhVRoqqK60=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N6mr3P5MBX+o7KQnQeDqQOUx7JKmM0I118X9NPRsfX3hX8ptDL6QUEh5td8R0waCE
-	 6/KCzxHLpcKuW9nVVIszi/jyB8/bdfALwrCHTDbkTfCOw+EnEcRldduyYCb4sPeIy4
-	 sMgObomqCY9gcHfACGmzzmaWbTTRh96EbUTEXc+s=
+	b=i6vaJUKhZQBFlfnMUWlhx44fO15zz/os2OIn+Y5BTxbSuUkWfIVPcwuL+Ay3k0nlm
+	 xCTiLH4vfugRwgpCU9jruNVI4rn6cMJuD3Vgupf3DcZTxdrCNfqKnkL8q/iOxunUaX
+	 zKdVCrRDjH3tCHguOKNpTqVPGpbt/JY/vqu6DQig=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395460AbgDPPn3 (ORCPT
+        id S2897182AbgDPNfl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:43:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47840 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:35:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897195AbgDPNft (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:35:49 -0400
+        id S2896025AbgDPN3b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:29:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 071F321BE5;
-        Thu, 16 Apr 2020 13:35:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B872D217D8;
+        Thu, 16 Apr 2020 13:29:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044148;
-        bh=ZIcAg89D5twlHgvCRgZyM3HhzVVvVDgs3ml5dsPPPn8=;
+        s=default; t=1587043771;
+        bh=XjmrEhuophM687LSAaFi/HfiN1o+mJnwbGhVRoqqK60=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uypq7W0KZ25DVp/QgMaUIY4NQ8ZaJvBztg1wj7ZJpmm7t1B0C8RgqeGO9LeOdYjIx
-         J8i5Q+wuww5etGTGhLD2LLUz5Oh8wwhzsWuULORhhXImqXTHZbkD2/3QaVrkz1KJBs
-         xRbDSd9QUiw0rU71gxI9rTPc9gpBmxoSTj8xHLFI=
+        b=ynKOSd54krTP+lksKeb9H9v63foucAMxCJf01ZyIdVpxScWfg8X4+9ruqrKG1nZdy
+         FM8FJGxoWBY3uDRijXEE78xJN8rmR+vE2juxNrWpuS6wPcv90XKiXz6dgL6r13TpjX
+         AezSxTri9eLOSBgmL9QcoeVus6S/+IN6NPpFN5kk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 5.5 100/257] media: venus: firmware: Ignore secure call error on first resume
-Date:   Thu, 16 Apr 2020 15:22:31 +0200
-Message-Id: <20200416131338.583660790@linuxfoundation.org>
+        stable@vger.kernel.org, Rosioru Dragos <dragos.rosioru@nxp.com>,
+        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.19 094/146] crypto: mxs-dcp - fix scatterlist linearization for hash
+Date:   Thu, 16 Apr 2020 15:23:55 +0200
+Message-Id: <20200416131255.640682897@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
-References: <20200416131325.891903893@linuxfoundation.org>
+In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
+References: <20200416131242.353444678@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,44 +60,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+From: Rosioru Dragos <dragos.rosioru@nxp.com>
 
-commit 2632e7b618a7730969f9782593c29ca53553aa22 upstream.
+commit fa03481b6e2e82355c46644147b614f18c7a8161 upstream.
 
-With the latest cleanup in qcom scm driver the secure monitor
-call for setting the remote processor state returns EINVAL when
-it is called for the first time and after another scm call
-auth_and_reset. The error returned from scm call could be ignored
-because the state transition is already done in auth_and_reset.
+The incorrect traversal of the scatterlist, during the linearization phase
+lead to computing the hash value of the wrong input buffer.
+New implementation uses scatterwalk_map_and_copy()
+to address this issue.
 
-Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc: stable@vger.kernel.org
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: <stable@vger.kernel.org>
+Fixes: 15b59e7c3733 ("crypto: mxs - Add Freescale MXS DCP driver")
+Signed-off-by: Rosioru Dragos <dragos.rosioru@nxp.com>
+Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/platform/qcom/venus/firmware.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/crypto/mxs-dcp.c |   54 ++++++++++++++++++++++-------------------------
+ 1 file changed, 26 insertions(+), 28 deletions(-)
 
---- a/drivers/media/platform/qcom/venus/firmware.c
-+++ b/drivers/media/platform/qcom/venus/firmware.c
-@@ -44,8 +44,14 @@ static void venus_reset_cpu(struct venus
+--- a/drivers/crypto/mxs-dcp.c
++++ b/drivers/crypto/mxs-dcp.c
+@@ -25,6 +25,7 @@
+ #include <crypto/sha.h>
+ #include <crypto/internal/hash.h>
+ #include <crypto/internal/skcipher.h>
++#include <crypto/scatterwalk.h>
  
- int venus_set_hw_state(struct venus_core *core, bool resume)
- {
--	if (core->use_tz)
--		return qcom_scm_set_remote_state(resume, 0);
-+	int ret;
+ #define DCP_MAX_CHANS	4
+ #define DCP_BUF_SZ	PAGE_SIZE
+@@ -621,49 +622,46 @@ static int dcp_sha_req_to_buf(struct cry
+ 	struct dcp_async_ctx *actx = crypto_ahash_ctx(tfm);
+ 	struct dcp_sha_req_ctx *rctx = ahash_request_ctx(req);
+ 	struct hash_alg_common *halg = crypto_hash_alg_common(tfm);
+-	const int nents = sg_nents(req->src);
+ 
+ 	uint8_t *in_buf = sdcp->coh->sha_in_buf;
+ 	uint8_t *out_buf = sdcp->coh->sha_out_buf;
+ 
+-	uint8_t *src_buf;
+-
+ 	struct scatterlist *src;
+ 
+-	unsigned int i, len, clen;
++	unsigned int i, len, clen, oft = 0;
+ 	int ret;
+ 
+ 	int fin = rctx->fini;
+ 	if (fin)
+ 		rctx->fini = 0;
+ 
+-	for_each_sg(req->src, src, nents, i) {
+-		src_buf = sg_virt(src);
+-		len = sg_dma_len(src);
++	src = req->src;
++	len = req->nbytes;
+ 
+-		do {
+-			if (actx->fill + len > DCP_BUF_SZ)
+-				clen = DCP_BUF_SZ - actx->fill;
+-			else
+-				clen = len;
++	while (len) {
++		if (actx->fill + len > DCP_BUF_SZ)
++			clen = DCP_BUF_SZ - actx->fill;
++		else
++			clen = len;
+ 
+-			memcpy(in_buf + actx->fill, src_buf, clen);
+-			len -= clen;
+-			src_buf += clen;
+-			actx->fill += clen;
++		scatterwalk_map_and_copy(in_buf + actx->fill, src, oft, clen,
++					 0);
+ 
+-			/*
+-			 * If we filled the buffer and still have some
+-			 * more data, submit the buffer.
+-			 */
+-			if (len && actx->fill == DCP_BUF_SZ) {
+-				ret = mxs_dcp_run_sha(req);
+-				if (ret)
+-					return ret;
+-				actx->fill = 0;
+-				rctx->init = 0;
+-			}
+-		} while (len);
++		len -= clen;
++		oft += clen;
++		actx->fill += clen;
 +
-+	if (core->use_tz) {
-+		ret = qcom_scm_set_remote_state(resume, 0);
-+		if (resume && ret == -EINVAL)
-+			ret = 0;
-+		return ret;
-+	}
++		/*
++		 * If we filled the buffer and still have some
++		 * more data, submit the buffer.
++		 */
++		if (len && actx->fill == DCP_BUF_SZ) {
++			ret = mxs_dcp_run_sha(req);
++			if (ret)
++				return ret;
++			actx->fill = 0;
++			rctx->init = 0;
++		}
+ 	}
  
- 	if (resume)
- 		venus_reset_cpu(core);
+ 	if (fin) {
 
 
