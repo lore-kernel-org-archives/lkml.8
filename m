@@ -2,231 +2,96 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 749C9C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA52C352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:22:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F382206D5
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:21:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39EE0206D5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:22:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fWro629A"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="K/+1a/v9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439250AbgDPHVx (ORCPT
+        id S2439232AbgDPHVn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 03:21:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54842 "EHLO
+        Thu, 16 Apr 2020 03:21:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54764 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2439151AbgDPHVe (ORCPT
+        by vger.kernel.org with ESMTP id S2438790AbgDPHVD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 03:21:34 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E344C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 00:21:33 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id z6so3647322wml.2
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 00:21:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=PfcEIjHVOwJJoI3IG1yq+hLuJEPuCeMcpBtriOzJSVE=;
-        b=fWro629AKCHe7c1PY8qWNnc/MO1FUAtCQOwruVmdsj4Kyvr1SDGr9Xgc/VGuT4Ao08
-         aszgwv1hJNkmDxBtLtWK7K2S9mv6z5/c8TCmg4n+kwj4eAnnvC2Dt4pvdKuMnlfnbcGf
-         puxMyauwUmvCn/LNyQLnyjFrS1Kzkios1/MsF6m/I4GPnRVdRC2+tstnjmmO650ZwQzj
-         4aWRTSNgkZKvvDPkpZ/B7oqv4O1vvl2M0bRRRPUNQCjnZDrbzcP/JjjuClCaNvbDFuVJ
-         cZP/dedvaVFsRZKmIeGsiWSNvkLi9aAZR4c6U1deMU+GHzWLDixE4IBaBhe7BLuqYxXC
-         CRaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=PfcEIjHVOwJJoI3IG1yq+hLuJEPuCeMcpBtriOzJSVE=;
-        b=nIpjf4mA0CKtM1+B93ZDT/bWs6uf/IBGRHG7bX5Sd52dKn++vY7MlfEGQi8aIogad9
-         SHcfQ6H4Dr+ic+iBU0LvPvzmvj0hKKfO1EuMcJGS4Cw+nM83apIiiBhLRPCerGlDl7gJ
-         tVJpxL6ZUSIYVyU7CtBChFS5ppdiFA2ht/i+4lzMaKmpH58psxxmV/s/V5bg6b3RO7HE
-         XBBi+cVYrAwlpYiIZ25doRGzFuLrhMStTzAvSjlPvmmAiqFXmAFDtM/k0o5k6uZ2Dr8i
-         ALbSAXm3HIcGDOaSpTFg5xyus1TDEdUdYjUFHu3XGbrANp+KETjOlT3oe+o3Lh61/txM
-         n2Qw==
-X-Gm-Message-State: AGi0PubDBOuDIdX0K0uEDR241g5LGFNdr4R6JTxl7UmXMMNRcH2VXHrL
-        KbWPIeYl8uQJVdrL1WEcg3v5Cg==
-X-Google-Smtp-Source: APiQypKxoroogYo0WPMcKERsdRMrzAoaU5nNn92qAMbIpRzZIzICMY0kveTYaemzAUSe6fR6V9LLBA==
-X-Received: by 2002:a1c:990d:: with SMTP id b13mr3217540wme.179.1587021691888;
-        Thu, 16 Apr 2020 00:21:31 -0700 (PDT)
-Received: from dell ([95.149.164.124])
-        by smtp.gmail.com with ESMTPSA id h188sm2608116wme.8.2020.04.16.00.21.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2020 00:21:31 -0700 (PDT)
-Date:   Thu, 16 Apr 2020 08:22:31 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>, Vinod Koul <vkoul@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Heiko Stuebner <heiko@sntech.de>, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-i2c@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-can@vger.kernel.org,
-        netdev@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org
-Subject: Re: [PATCH 2/2] dt-bindings: Remove cases of 'allOf' containing a
- '$ref'
-Message-ID: <20200416072231.GT2167633@dell>
-References: <20200416005549.9683-1-robh@kernel.org>
- <20200416005549.9683-2-robh@kernel.org>
+        Thu, 16 Apr 2020 03:21:03 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87E22C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 00:21:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=jQJpyv9mWOGvWWLLrQIG1lSOaT4yQcrtTLgVAFWtcqo=; b=K/+1a/v9SCQ2y8fy5FWyuyEPVX
+        4zhtejMmGej+qnrrNoHsMs6hBRkLRNsx+4pqhz9ZmST/bJZhlDO0gzbeY8RqQZHlCijOdk8Ml83Ar
+        2zpPzLRgLkd9d/BoRctfN3whBLULQV8i3d1Ww4S3KuAhayVlPDcQVzJI1dAJRZ5+pvWk0gS1iFCpE
+        T6sGLeKvWhuW+evqLWUJaU6orM+KKlrarvLQ2BSoDvDXmXvUgL53cQHwNTf473zDA+/KaI4BDcCjx
+        xm4vEGACkbV3g7BMwN2OyEUp2FXWg6numvtEcYVPdkZVd3cbKH0dX570XcROdwPVo72+WeX51TMn+
+        8nDmAw8w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jOyow-0006TI-TH; Thu, 16 Apr 2020 07:20:23 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 26D7630477A;
+        Thu, 16 Apr 2020 09:20:17 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 741A62B0DB54A; Thu, 16 Apr 2020 09:20:17 +0200 (CEST)
+Date:   Thu, 16 Apr 2020 09:20:17 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Giovanni Gherdovich <ggherdovich@suse.cz>
+Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@suse.de>,
+        Len Brown <lenb@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>, x86@kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Doug Smythies <dsmythies@telus.net>,
+        Like Xu <like.xu@linux.intel.com>,
+        Neil Rickert <nwr10cst-oslnx@yahoo.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>
+Subject: Re: [PATCH 0/4] Frequency invariance fixes for x86
+Message-ID: <20200416072017.GJ20730@hirez.programming.kicks-ass.net>
+References: <20200416054745.740-1-ggherdovich@suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200416005549.9683-2-robh@kernel.org>
+In-Reply-To: <20200416054745.740-1-ggherdovich@suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Apr 2020, Rob Herring wrote:
-
-> json-schema versions draft7 and earlier have a weird behavior in that
-> any keywords combined with a '$ref' are ignored (silently). The correct
-> form was to put a '$ref' under an 'allOf'. This behavior is now changed
-> in the 2019-09 json-schema spec and '$ref' can be mixed with other
-> keywords. The json-schema library doesn't yet support this, but the
-> tooling now does a fixup for this and either way works.
+On Thu, Apr 16, 2020 at 07:47:41AM +0200, Giovanni Gherdovich wrote:
+> Patches 1-3 address bugs in the current frequency invariance support for x86,
+> including the incompatibility with cpu0 hotplug reported by Chris Wilson at
+> https://lore.kernel.org/lkml/158556634294.3228.4889951961483021094@build.alporthouse.com/
+> and the issue with CPUs that have less than 4 cores pointed out earlier
+> today by Like Xu at
+> https://lore.kernel.org/lkml/20200416021210.170736-1-like.xu@linux.intel.com/ 
 > 
-> This has been a constant source of review comments, so let's change this
-> treewide so everyone copies the simpler syntax.
+> Patch 4 is a minor code reorganization.
 > 
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->  .../devicetree/bindings/arm/cpus.yaml         |  81 +++---
->  .../devicetree/bindings/arm/l2c2x0.yaml       |  87 +++---
->  .../devicetree/bindings/arm/psci.yaml         |  15 +-
->  .../bindings/arm/samsung/exynos-chipid.yaml   |   5 +-
->  .../bus/allwinner,sun50i-a64-de2.yaml         |   5 +-
->  .../bindings/clock/fixed-factor-clock.yaml    |   5 +-
->  .../bindings/connector/usb-connector.yaml     |  28 +-
->  .../bindings/crypto/st,stm32-hash.yaml        |   9 +-
->  .../allwinner,sun4i-a10-display-engine.yaml   |   7 +-
->  .../display/allwinner,sun4i-a10-tcon.yaml     |   5 +-
->  .../bindings/display/panel/panel-common.yaml  |   5 +-
->  .../devicetree/bindings/dma/dma-common.yaml   |   3 +-
->  .../devicetree/bindings/dma/ti/k3-udma.yaml   |  18 +-
->  .../devicetree/bindings/eeprom/at24.yaml      |  11 +-
->  .../devicetree/bindings/example-schema.yaml   |  17 +-
->  .../bindings/hwmon/adi,ltc2947.yaml           |  32 +--
->  .../devicetree/bindings/hwmon/ti,tmp513.yaml  |  21 +-
->  .../devicetree/bindings/i2c/st,stm32-i2c.yaml |   9 +-
->  .../bindings/iio/adc/adi,ad7124.yaml          |   5 +-
->  .../bindings/iio/adc/lltc,ltc2496.yaml        |   3 +-
->  .../bindings/iio/adc/microchip,mcp3911.yaml   |   7 +-
->  .../bindings/iio/adc/st,stm32-dfsdm-adc.yaml  |  31 +-
->  .../bindings/iio/light/tsl2772.yaml           |  13 +-
->  .../bindings/iio/temperature/adi,ltc2983.yaml |  56 ++--
->  .../input/allwinner,sun4i-a10-lradc-keys.yaml |   5 +-
->  .../devicetree/bindings/input/input.yaml      |   9 +-
->  .../interrupt-controller/arm,gic-v3.yaml      |  39 ++-
->  .../devicetree/bindings/iommu/arm,smmu.yaml   |   3 +-
->  .../devicetree/bindings/leds/common.yaml      |  13 +-
->  .../devicetree/bindings/leds/leds-gpio.yaml   |   3 +-
->  .../bindings/leds/rohm,bd71828-leds.yaml      |  10 +-
->  .../bindings/mailbox/st,stm32-ipcc.yaml       |   5 +-
->  .../bindings/media/amlogic,gx-vdec.yaml       |   6 +-
->  .../media/amlogic,meson-gx-ao-cec.yaml        |   3 +-
->  .../devicetree/bindings/media/rc.yaml         | 265 +++++++++---------
->  .../bindings/media/renesas,vin.yaml           |   7 +-
->  .../memory-controllers/exynos-srom.yaml       |  14 +-
->  .../nvidia,tegra124-emc.yaml                  |   9 +-
->  .../nvidia,tegra124-mc.yaml                   |   3 +-
->  .../nvidia,tegra30-emc.yaml                   |   9 +-
->  .../memory-controllers/nvidia,tegra30-mc.yaml |   3 +-
+> Giovanni Gherdovich (3):
+>   x86, sched: Bail out of frequency invariance if base frequency is
+>     unknown
+>   x86, sched: Account for CPUs with less than 4 cores in freq.
+>     invariance
+>   x86, sched: Move check for CPU type to caller function
+> 
+> Peter Zijlstra (Intel) (1):
+>   x86, sched: Don't enable static key when starting secondary CPUs
+> 
+>  arch/x86/kernel/smpboot.c | 47 +++++++++++++++++++++++++++++++++--------------
+>  1 file changed, 33 insertions(+), 14 deletions(-)
 
->  .../bindings/mfd/allwinner,sun4i-a10-ts.yaml  |  20 +-
->  .../bindings/mfd/st,stm32-timers.yaml         |  33 ++-
->  .../devicetree/bindings/mfd/st,stpmic1.yaml   |   9 +-
->  .../devicetree/bindings/mfd/syscon.yaml       |   5 +-
-
-Acked-by: Lee Jones <lee.jones@linaro.org>
-
->  .../devicetree/bindings/mmc/aspeed,sdhci.yaml |   4 +-
->  .../devicetree/bindings/mmc/cdns,sdhci.yaml   |  77 +++--
->  .../bindings/mmc/mmc-controller.yaml          |  37 ++-
->  .../bindings/mmc/rockchip-dw-mshc.yaml        |   6 +-
->  .../bindings/mmc/synopsys-dw-mshc-common.yaml |  14 +-
->  .../mtd/allwinner,sun4i-a10-nand.yaml         |  13 +-
->  .../bindings/mtd/nand-controller.yaml         |  27 +-
->  .../bindings/net/can/bosch,m_can.yaml         |  59 ++--
->  .../bindings/net/ethernet-controller.yaml     |  34 +--
->  .../devicetree/bindings/net/qca,ar803x.yaml   |  17 +-
->  .../devicetree/bindings/net/snps,dwmac.yaml   |  22 +-
->  .../bindings/net/ti,cpsw-switch.yaml          |   3 +-
->  .../bindings/net/ti,davinci-mdio.yaml         |   7 +-
->  .../bindings/pci/intel-gw-pcie.yaml           |   7 +-
->  .../pinctrl/allwinner,sun4i-a10-pinctrl.yaml  |  12 +-
->  .../pinctrl/aspeed,ast2400-pinctrl.yaml       |  37 ++-
->  .../pinctrl/aspeed,ast2500-pinctrl.yaml       |  45 ++-
->  .../pinctrl/aspeed,ast2600-pinctrl.yaml       | 108 ++++---
->  .../bindings/pinctrl/fsl,imx8mp-pinctrl.yaml  |  31 +-
->  .../bindings/pinctrl/intel,lgm-io.yaml        |   4 +-
->  .../bindings/pinctrl/pinmux-node.yaml         |   3 +-
->  .../bindings/pinctrl/st,stm32-pinctrl.yaml    |  56 ++--
->  .../bindings/power/amlogic,meson-ee-pwrc.yaml |   3 +-
->  .../devicetree/bindings/pwm/pwm-samsung.yaml  |  11 +-
->  .../bindings/regulator/gpio-regulator.yaml    |  35 ++-
->  .../bindings/regulator/mps,mpq7920.yaml       |  31 +-
->  .../bindings/regulator/regulator.yaml         |   5 +-
->  .../regulator/rohm,bd71828-regulator.yaml     |  34 +--
->  .../bindings/regulator/st,stm32-booster.yaml  |   3 +-
->  .../regulator/st,stm32mp1-pwr-reg.yaml        |   3 +-
->  .../bindings/remoteproc/st,stm32-rproc.yaml   |   9 +-
->  .../bindings/reset/intel,rcu-gw.yaml          |   3 +-
->  .../devicetree/bindings/riscv/cpus.yaml       |  20 +-
->  .../devicetree/bindings/rtc/st,stm32-rtc.yaml |   9 +-
->  .../devicetree/bindings/serial/pl011.yaml     |  10 +-
->  .../devicetree/bindings/serial/rs485.yaml     |  26 +-
->  .../bindings/serial/samsung_uart.yaml         |   5 +-
->  .../bindings/sound/adi,adau7118.yaml          |  20 +-
->  .../sound/allwinner,sun4i-a10-codec.yaml      |  41 ++-
->  .../bindings/sound/qcom,wcd934x.yaml          |   3 +-
->  .../bindings/spi/renesas,sh-msiof.yaml        |  42 ++-
->  .../bindings/spi/spi-controller.yaml          |  14 +-
->  .../devicetree/bindings/spi/spi-pl022.yaml    |  55 ++--
->  .../devicetree/bindings/spi/spi-sifive.yaml   |  14 +-
->  .../bindings/thermal/qcom-tsens.yaml          |   7 +-
->  .../bindings/timer/arm,arch_timer_mmio.yaml   |   7 +-
->  91 files changed, 881 insertions(+), 1103 deletions(-)
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Thanks!
