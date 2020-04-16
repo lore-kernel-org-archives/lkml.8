@@ -2,108 +2,109 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34111C352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 04:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 908FEC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 04:11:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0524720767
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 04:07:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NxyQqYmp"
+	by mail.kernel.org (Postfix) with ESMTP id 6E22120767
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 04:11:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726466AbgDPEH5 (ORCPT
+        id S2391664AbgDPELq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 00:07:57 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24243 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726409AbgDPEHw (ORCPT
+        Thu, 16 Apr 2020 00:11:46 -0400
+Received: from m17618.mail.qiye.163.com ([59.111.176.18]:26904 "EHLO
+        m17618.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389455AbgDPELi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 00:07:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587010070;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=OTMaR92SihjV5ChuxWQeel8tadAmxm943VhVpwb3Ti0=;
-        b=NxyQqYmpAqE6rAjeeEtC3AGYqvBD1Z/7vAK+uIOzRDKXBzLXrfcu3u1llbA+hFEfNON6vq
-        9W5cJnBcAom54uPiYrNSxsfR3a1qqYCaLdG+ifang6JT7BSQgHxTwjYG0Uzuzc+FSFtGRy
-        q+c/Mk51ck3BC5+vgObHfgB7LKTwTuA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-99-7eV2h5M0OHOPzkEfEcYyJw-1; Thu, 16 Apr 2020 00:07:44 -0400
-X-MC-Unique: 7eV2h5M0OHOPzkEfEcYyJw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 67ACC800D5C;
-        Thu, 16 Apr 2020 04:07:13 +0000 (UTC)
-Received: from [10.72.13.240] (ovpn-13-240.pek2.redhat.com [10.72.13.240])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 480FFD7664;
-        Thu, 16 Apr 2020 04:07:07 +0000 (UTC)
-Subject: Re: linux-next: Tree for Apr 15 (vdpa)
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        virtualization@lists.linux-foundation.org
-References: <20200415152240.2422e06c@canb.auug.org.au>
- <620e1646-5899-a077-b9de-95443887364d@infradead.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <33e4922f-d2b5-f3fa-4d32-a5db5a177238@redhat.com>
-Date:   Thu, 16 Apr 2020 12:07:06 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <620e1646-5899-a077-b9de-95443887364d@infradead.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-Content-Transfer-Encoding: quoted-printable
+        Thu, 16 Apr 2020 00:11:38 -0400
+Received: from ubuntu.localdomain (unknown [58.251.74.226])
+        by m17618.mail.qiye.163.com (Hmail) with ESMTPA id 5B1A54E17F0;
+        Thu, 16 Apr 2020 12:11:32 +0800 (CST)
+From:   Wang Wenhu <wenhu.wang@vivo.com>
+To:     oss@buserror.net, Wang Wenhu <wenhu.wang@vivo.com>,
+        gregkh@linuxfoundation.org
+Cc:     christophe.leroy@c-s.fr, kernel@vivo.com,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        mpe@ellerman.id.au
+Subject: Re: [PATCH v2,1/5] powerpc: 85xx: make FSL_85XX_CACHE_SRAM configurable
+Date:   Wed, 15 Apr 2020 21:11:13 -0700
+Message-Id: <20200416041113.112735-1-wenhu.wang@vivo.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <36961f9d8c533d8b576043a2c6fc4859accfd9f1.camel@buserror.net>
+References: <36961f9d8c533d8b576043a2c6fc4859accfd9f1.camel@buserror.net>
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSFVJTkhLS0tJTkJIQkJPSllXWShZQU
+        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MFE6NSo6LTg2PAg9MEIrTD0V
+        NRAaFE9VSlVKTkNMS0pLSUJPTE9PVTMWGhIXVQweFRMOVQwaFRw7DRINFFUYFBZFWVdZEgtZQVlO
+        Q1VJTkpVTE9VSUlNWVdZCAFZQUlNSEI3Bg++
+X-HM-Tid: 0a71812f4ba89376kuws5b1a54e17f0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Scott Wood <oss@buserror.net>
 
-On 2020/4/16 =E4=B8=8A=E5=8D=8812:16, Randy Dunlap wrote:
-> On 4/14/20 10:22 PM, Stephen Rothwell wrote:
->> Hi all,
->>
->> Changes since 20200414:
->>
-> on x86_64:
+>> +	bool "32-bit kernel"
 >
-> ERROR: modpost: "vringh_set_iotlb" [drivers/vdpa/vdpa_sim/vdpa_sim.ko] =
-undefined!
-> ERROR: modpost: "vringh_init_iotlb" [drivers/vdpa/vdpa_sim/vdpa_sim.ko]=
- undefined!
-> ERROR: modpost: "vringh_iov_push_iotlb" [drivers/vdpa/vdpa_sim/vdpa_sim=
-.ko] undefined!
-> ERROR: modpost: "vringh_iov_pull_iotlb" [drivers/vdpa/vdpa_sim/vdpa_sim=
-.ko] undefined!
-> ERROR: modpost: "vringh_complete_iotlb" [drivers/vdpa/vdpa_sim/vdpa_sim=
-.ko] undefined!
-> ERROR: modpost: "vringh_getdesc_iotlb" [drivers/vdpa/vdpa_sim/vdpa_sim.=
-ko] undefined!
+>Why make that user selectable ?
+>
+>Either a kernel is 64-bit or it is 32-bit. So having PPC64 user 
+>selectable is all we need.
+>
+>And what is the link between this change and the description in the log ?
+>
+>>   	default y if !PPC64
+>>   	select KASAN_VMALLOC if KASAN && MODULES
+>>   
+>> @@ -15,6 +15,7 @@ config PPC_BOOK3S_32
+>>   	bool
+>>   
+>>   menu "Processor support"
+>> +
+>
+>Why adding this space ?
+>
+>>   choice
+>>   	prompt "Processor Type"
+>>   	depends on PPC32
+>> @@ -211,9 +212,9 @@ config PPC_BOOK3E
+>>   	depends on PPC_BOOK3E_64
+>>   
+>>   config E500
+>> +	bool "e500 Support"
+>>   	select FSL_EMB_PERFMON
+>>   	select PPC_FSL_BOOK3E
+>> -	bool
+>
+>Why make this user-selectable ? This is already selected by the 
+>processors requiring it, ie 8500, e5500 and e6500.
+>
+>Is there any other case where we need E500 ?
+>
+>And again, what's the link between this change and the description in 
+>the log ?
 >
 >
-> Full randconfig file is attached.
+>>   
+>>   config PPC_E500MC
+>>   	bool "e500mc Support"
+>> 
 >
+>Christophe
 
-The config has
+Hi, Scott, Christophe!
 
-CONFIG_VHOST_IOTLB=3Dm
-CONFIG_VHOST_RING=3Dy
+I find that I did not get the point well of the defferences between
+configurability and selectability(maybe words I created) of Kconfig items.
 
-But we don't select VHOST_IOTLB in VHOST_RING after commit=20
-e6faeaa128417("vhost: drop vring dependency on iotlb"). Which seems wrong=
-.
+You are right that FSL_85XX_CACHE_SRAM should only be selected by a caller
+but never enable it seperately.
 
-Thanks
+Same answer for the comments from Christophe. I will drop this patch in v3.
 
+Thanks,
+Wenhu
