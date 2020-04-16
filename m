@@ -2,176 +2,90 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 089ACC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:46:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12322C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D37092220A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:46:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XS2nQNy3"
+	by mail.kernel.org (Postfix) with ESMTP id D6B59206B9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:46:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587048399;
+	bh=W1TFNcL6d7PTuFQZwdR3ie9JKMjHoYNZuPHRwD0bY2A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=mPtC7SVzcF/Lh3R87ihtyzSnlN0ytwrAc9T3Rmu+uU7+Z4VZG+1zUTBXTVBEWsmsS
+	 7/5niOG2Z7fSWpG5rH2TUbT0BydHf9fvdaM6mno2YeJycRkRes7leseYPnnIx0erME
+	 BFSVGjqViPvLj9i8XGmxHtc53E7YDxEulmzoXUAs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394661AbgDPOqK (ORCPT
+        id S2394658AbgDPOqi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:46:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39544 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730029AbgDPOpv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:45:51 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32E92C061A0C;
-        Thu, 16 Apr 2020 07:45:50 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id l11so5809166lfc.5;
-        Thu, 16 Apr 2020 07:45:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=EMXgclwzvBeN8dhyuWXSHFYbEOy8aRgDPr8zMlH4fbc=;
-        b=XS2nQNy3i+gGy5SS5kmxTV/WpxQEDjrNebcEqBhzthvjDKS9q4IHMCI9uVlzrec0IE
-         b072PDOKJDTfifT+DIFCkBf0WBZ+nsJoByvKxQ1M7SpUtSA4GJFlpeKlXv+h2idlnFYr
-         p2kI2aZ2XfUqUGlZ31ItLVm+nHVHLmq/38SsddPbEgSNn7uvmC6Ajg8LekSvZcW1JNY4
-         3A5vm2Jjtos9u+GUe1rDNKYzNcGTePbdodc4zrDARSNifOQL2fGEuVhy7o++zWgk72uk
-         h+5FTH1zk2yGNptF82sqj2+RVQEBMUIIbri1Nu43kuTlAmJ2Vog7dXuz30w/Gcbq9qzA
-         Re5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=EMXgclwzvBeN8dhyuWXSHFYbEOy8aRgDPr8zMlH4fbc=;
-        b=RPFgvpvtWvVOFJ4QsiaMjD0loGpk62GjdQWWieUiv7ucKJ/kqhR61q8yglOtrcD0vO
-         23xZ1U7hbUlwLTZk++ZZrhBSeC+PkzjbGf1Hy0ja9pqtFATPGpTR6xhCh7Wqp82Bo2k3
-         DTqM9SN+OR14DXHTYetd6fETnbwlo1+/WSwV2u56/pzmD4CwUbozcnHh/Cv52Z1+/qs+
-         pu2g6Ni+E6gKOsOCYUlX8JbKDBLijdwX27aW83bGN8z+j5RKELIZVN2przHAFq+7uGuZ
-         MV/yGrVePZ+/N4JZsMytrDqJ1vRpmNH013N1SIz33zDPYWfFPYPiTgO8blb4CcTY6AdM
-         58Eg==
-X-Gm-Message-State: AGi0PuZTtdpRELH8ppIntzGCDQYHPxZaBCDl7HmKf+Zu4z19ssFWi+Uj
-        nbo0VbJFOU/KjqKY32l8hOQ=
-X-Google-Smtp-Source: APiQypJ4Zcs8Bc0WXCZK+8tUqDvHcTuohVcFAV10Xg+moiS6oM46PjWRSTc6DbByzXv+HFfOi6VamA==
-X-Received: by 2002:ac2:4d12:: with SMTP id r18mr6258629lfi.181.1587048348555;
-        Thu, 16 Apr 2020 07:45:48 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id x24sm15308428lfc.6.2020.04.16.07.45.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Apr 2020 07:45:47 -0700 (PDT)
-Subject: Re: [PATCH v1] iio: magnetometer: ak8974: Silence deferred-probe
- error
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-References: <20200414222713.32660-1-digetx@gmail.com>
- <CACRpkdY_J8e127etFFYkoxLDDkc334Xgg8ZbapdU36oGsaZ08g@mail.gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <e08c487c-5c2a-3172-7c9c-0e7d2cd51769@gmail.com>
-Date:   Thu, 16 Apr 2020 17:45:46 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 16 Apr 2020 10:46:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46458 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2506797AbgDPN71 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:59:27 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D2B922203;
+        Thu, 16 Apr 2020 13:59:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587045566;
+        bh=W1TFNcL6d7PTuFQZwdR3ie9JKMjHoYNZuPHRwD0bY2A=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=yhsGDobPb8TlPbGN2dKuZspQlGsb8kp4Omjft0LRdLYOwI0EXEt0nagqDMiKR3ex0
+         Ac12JaooHktqudy0Rx1yZElVYEoWzwMedpo3jl6TnHsfzvb8424k6SVgEDE0ftw8iL
+         poXlrP9i4SDA2S1llpqr/bOvE+s/DeKlXXqRs564=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Piotr Sroka <piotrs@cadence.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 5.6 146/254] mtd: rawnand: cadence: reinit completion before executing a new command
+Date:   Thu, 16 Apr 2020 15:23:55 +0200
+Message-Id: <20200416131344.795701960@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
+References: <20200416131325.804095985@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdY_J8e127etFFYkoxLDDkc334Xgg8ZbapdU36oGsaZ08g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-16.04.2020 14:33, Linus Walleij пишет:
-> Hi Dmitry,
-> 
-> thanks for your patch!
-> 
-> On Wed, Apr 15, 2020 at 12:27 AM Dmitry Osipenko <digetx@gmail.com> wrote:
-> 
->> It's not uncommon that voltage regulator becomes available later during
->> kernel's boot process, in this case there is no need to print a noisy
->> error message. This patch moves the message about unavailable regulator
->> to the debug level in a case of the deferred-probe error and also amends
->> the message with error code.
->>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>  drivers/iio/magnetometer/ak8974.c | 7 ++++++-
->>  1 file changed, 6 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/iio/magnetometer/ak8974.c b/drivers/iio/magnetometer/ak8974.c
->> index d32996702110..cc3861f97d42 100644
->> --- a/drivers/iio/magnetometer/ak8974.c
->> +++ b/drivers/iio/magnetometer/ak8974.c
->> @@ -718,6 +718,7 @@ static const struct regmap_config ak8974_regmap_config = {
->>  static int ak8974_probe(struct i2c_client *i2c,
->>                         const struct i2c_device_id *id)
->>  {
->> +       const char *level = KERN_ERR;
->>         struct iio_dev *indio_dev;
->>         struct ak8974 *ak8974;
->>         unsigned long irq_trig;
->> @@ -746,7 +747,11 @@ static int ak8974_probe(struct i2c_client *i2c,
->>                                       ARRAY_SIZE(ak8974->regs),
->>                                       ak8974->regs);
->>         if (ret < 0) {
->> -               dev_err(&i2c->dev, "cannot get regulators\n");
->> +               if (ret == -EPROBE_DEFER)
->> +                       level = KERN_DEBUG;
->> +
->> +               dev_printk(level, &i2c->dev, "cannot get regulators: %d\n",
-> 
-> This misses some important aspects of dev_dbg(), notably this:
-> 
-> #if defined(CONFIG_DYNAMIC_DEBUG)
-> #define dev_dbg(dev, fmt, ...)                                          \
->         dynamic_dev_dbg(dev, dev_fmt(fmt), ##__VA_ARGS__)
-> #elif defined(DEBUG)
-> #define dev_dbg(dev, fmt, ...)                                          \
->         dev_printk(KERN_DEBUG, dev, dev_fmt(fmt), ##__VA_ARGS__)
-> #else
-> #define dev_dbg(dev, fmt, ...)                                          \
-> ({                                                                      \
->         if (0)                                                          \
->                 dev_printk(KERN_DEBUG, dev, dev_fmt(fmt), ##__VA_ARGS__); \
-> })
-> #endif
-> 
-> If DEBUG is not defined the entire dev_dbg() message is enclodes in if (0)
-> and compiled out of the kernel, saving space. The above does not
-> fulfil that.
+From: Piotr Sroka <piotrs@cadence.com>
 
-Hello Linus,
+commit 0d7d6c8183aadb1dcc13f415941404a7913b46b3 upstream.
 
-After some recent discussions in regards to the EPROBE_DEFER handling,
-Thierry Reding suggested the form which is used in my patch and we
-started to use it recently in the Tegra DRM driver [1]. The reason is
-that we don't want to miss any deferred-probe messages under any
-circumstances, for example like in a case of a disabled DYNAMIC_DEBUG.
-The debug messages are usually disabled in a release-build and when not
-a very experienced person hands you KMSG for diagnosing a problem, the
-KMSG is pretty much useless if error is hidden silently.
+Reing the completion object before executing CDMA command to make sure
+the 'done' flag is OK.
 
-By moving the message to a debug level, we reduce the noise in the KMSG
-because usually people look for a bold-red error messages. Secondly, we
-don't introduce an additional overhead to the kernel size since the same
-text is reused for all error conditions.
+Fixes: ec4ba01e894d ("mtd: rawnand: Add new Cadence NAND driver to MTD subsystem")
+Cc: stable@vger.kernel.org
+Signed-off-by: Piotr Sroka <piotrs@cadence.com>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Link: https://lore.kernel.org/linux-mtd/1581328530-29966-4-git-send-email-piotrs@cadence.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-[1]
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=e32c8c2a5fbe1514e4ae9063a49e76ecf486ffb8
+---
+ drivers/mtd/nand/raw/cadence-nand-controller.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-I can change this patch to something like this:
+--- a/drivers/mtd/nand/raw/cadence-nand-controller.c
++++ b/drivers/mtd/nand/raw/cadence-nand-controller.c
+@@ -997,6 +997,7 @@ static int cadence_nand_cdma_send(struct
+ 		return status;
+ 
+ 	cadence_nand_reset_irq(cdns_ctrl);
++	reinit_completion(&cdns_ctrl->complete);
+ 
+ 	writel_relaxed((u32)cdns_ctrl->dma_cdma_desc,
+ 		       cdns_ctrl->reg + CMD_REG2);
 
-if (ret == -EPROBE_DEFER)
-	dev_dbg("deferring probe\n");
-else
-	dev_err("cannot...");
 
-but in general this should be a less useful variant, don't you agree?
