@@ -6,117 +6,118 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA7DC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:21:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90703C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:21:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47FB8206B9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:21:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C1AD20786
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:21:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TV6CBrEO"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IWLMuW4s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2635502AbgDPMVg (ORCPT
+        id S2635534AbgDPMVs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 08:21:36 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:25163 "EHLO
+        Thu, 16 Apr 2020 08:21:48 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31857 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2635421AbgDPMU6 (ORCPT
+        with ESMTP id S2635473AbgDPMVR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 08:20:58 -0400
+        Thu, 16 Apr 2020 08:21:17 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587039654;
+        s=mimecast20190719; t=1587039675;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=N//aUi9ilfSYZbtt9uubNhdLlMHa9VPzC/9aWc7u2N4=;
-        b=TV6CBrEOpmWjIdSjNFIyBBxbVxnW1vZwBpM+nEFbziHjfTD1lMafWgBfFgYEMhlzSjVvFP
-        43eL+wswiT81sTOO5cNMAWYDWpvy8gHKTWn7Rx39eLEUeTPBr3z7rAaoWYThPYk4OzPtGO
-        LrBlUIsyBa20ny3ZniiYZ4eAt6gWVnI=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-492-UlnQvrd8OZSrEW39ykNGkA-1; Thu, 16 Apr 2020 08:20:52 -0400
-X-MC-Unique: UlnQvrd8OZSrEW39ykNGkA-1
-Received: by mail-wm1-f71.google.com with SMTP id f8so1338301wmh.4
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 05:20:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=N//aUi9ilfSYZbtt9uubNhdLlMHa9VPzC/9aWc7u2N4=;
-        b=spULp70nsL0p2Vlpb8Iqrd+wFyWC2S8WJgt6KdhTYcJ3AOmzzZk8vfZuq1bbaA1ctx
-         c4dXPAYOjKaVLgQ1l3uIiIM6H8aLPz0GA3d2T6H+E2vMRMkJOSyRQksZYE27zR2yNAbA
-         hMnKdQs1CjoHEU5gUJ6llmN9o+Ra4G25VWNX3xGxjjD2UcKhGw5Y8v5F5rLKpknNFnMy
-         GrwgRjIh/3Jx0HpCsnDPHmT76GwOEPmv8WdEhDWcQHP/aEnDPLpsQl87pWCd6WdSPZv1
-         s5C6Iaem6dWyGebDt7tp3hyW3MkzqqgX9zluAtyn866b3/USC3MaDMcmAY/G//brpbbg
-         PY/w==
-X-Gm-Message-State: AGi0PubV2rGMkgkbQ6FIk7O5I+05mR+550eXQu86b4+NOhcnxsPW1oI7
-        X8yjqKrZX2KVk+A4i/HbC5BaJcWipjCRt3ehl1ePv1AbvMjw7BrqacH2ZV70Unv+fTiOLVvijhS
-        gohkglMnkMA/Rk2P9mzaqAKyc
-X-Received: by 2002:a1c:a344:: with SMTP id m65mr4634834wme.20.1587039648640;
-        Thu, 16 Apr 2020 05:20:48 -0700 (PDT)
-X-Google-Smtp-Source: APiQypL7Zr1AmadDiZcqsAC7y2lchYjfJabub1W1Nve6Z9EGEGzkMDXcyVU803uWBITr/U3dkRDooA==
-X-Received: by 2002:a1c:a344:: with SMTP id m65mr4634814wme.20.1587039648429;
-        Thu, 16 Apr 2020 05:20:48 -0700 (PDT)
-Received: from redhat.com (bzq-79-183-51-3.red.bezeqint.net. [79.183.51.3])
-        by smtp.gmail.com with ESMTPSA id a67sm3645719wmc.30.2020.04.16.05.20.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2020 05:20:47 -0700 (PDT)
-Date:   Thu, 16 Apr 2020 08:20:44 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     KVM list <kvm@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        Netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, ashutosh.dixit@intel.com,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Markus Elfring <elfring@users.sourceforge.net>,
-        eli@mellanox.com, eperezma@redhat.com,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>, hulkci@huawei.com,
-        "Cc: stable@vger.kernel.org, david@redhat.com, dverkamp@chromium.org,
-        hch@lst.de, jasowang@redhat.com, liang.z.li@intel.com, mst@redhat.com,
-        tiny.windzz@gmail.com," <jasowang@redhat.com>,
-        matej.genci@nutanix.com, Stephen Rothwell <sfr@canb.auug.org.au>,
-        yanaijie@huawei.com, YueHaibing <yuehaibing@huawei.com>
-Subject: Re: [GIT PULL] vhost: cleanups and fixes
-Message-ID: <20200416081330-mutt-send-email-mst@kernel.org>
-References: <20200414123606-mutt-send-email-mst@kernel.org>
- <CAHk-=wgVQcD=JJVmowEorHHQSVmSw+vG+Ddc4FATZoTp9mfUmw@mail.gmail.com>
+        bh=vqyaUkx8GR3JwQKbW/npDJYm+9ZLhBx+EmB8q5JLS1g=;
+        b=IWLMuW4sMqd1ybm2oqTmh62lqLQHvaYkDE0ZNgDODq/A/R7443rMSXCzBXn1jXPNTU/sbe
+        X9F3sjia92aD3QJq1joi5XcgZkD3lG0IBsj8fg6OIDfqcL/sNrD0MI2MhnGWuvGQsJDmsJ
+        BCd/lCKJQdDlvdCp4N2cqBBP5tUxusI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-438-a-kyZDoHP2eJd_9KW0C3kQ-1; Thu, 16 Apr 2020 08:20:55 -0400
+X-MC-Unique: a-kyZDoHP2eJd_9KW0C3kQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4A93C107B765;
+        Thu, 16 Apr 2020 12:20:54 +0000 (UTC)
+Received: from treble (ovpn-116-146.rdu2.redhat.com [10.10.116.146])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9A7951001902;
+        Thu, 16 Apr 2020 12:20:53 +0000 (UTC)
+Date:   Thu, 16 Apr 2020 07:20:51 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jessica Yu <jeyu@kernel.org>
+Subject: Re: [PATCH 0/7] livepatch,module: Remove .klp.arch and
+ module_disable_ro()
+Message-ID: <20200416122051.p3dk5i7h6ty4cwuc@treble>
+References: <cover.1586881704.git.jpoimboe@redhat.com>
+ <20200414182726.GF2483@worktop.programming.kicks-ass.net>
+ <20200414190814.glra2gceqgy34iyx@treble>
+ <alpine.LSU.2.21.2004161136340.10475@pobox.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wgVQcD=JJVmowEorHHQSVmSw+vG+Ddc4FATZoTp9mfUmw@mail.gmail.com>
+In-Reply-To: <alpine.LSU.2.21.2004161136340.10475@pobox.suse.cz>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 05:46:33PM -0700, Linus Torvalds wrote:
-> On Tue, Apr 14, 2020 at 9:36 AM Michael S. Tsirkin <mst@redhat.com> wrote:
-> >
-> > virtio: fixes, cleanups
+On Thu, Apr 16, 2020 at 11:45:05AM +0200, Miroslav Benes wrote:
+> On Tue, 14 Apr 2020, Josh Poimboeuf wrote:
 > 
-> Looking at this, about 75% of it looks like it should have come in
-> during the merge window, not now.
+> > On Tue, Apr 14, 2020 at 08:27:26PM +0200, Peter Zijlstra wrote:
+> > > On Tue, Apr 14, 2020 at 11:28:36AM -0500, Josh Poimboeuf wrote:
+> > > > Better late than never, these patches add simplifications and
+> > > > improvements for some issues Peter found six months ago, as part of his
+> > > > non-writable text code (W^X) cleanups.
+> > > 
+> > > Excellent stuff, thanks!!
+> > >
+> > > I'll go brush up these two patches then:
+> > > 
+> > >   https://lkml.kernel.org/r/20191018074634.801435443@infradead.org
+> > >   https://lkml.kernel.org/r/20191018074634.858645375@infradead.org
+> > 
+> > Ah right, I meant to bring that up.  I actually played around with those
+> > patches.  While it would be nice to figure out a way to converge the
+> > ftrace module init, I didn't really like the first patch.
+> > 
+> > It bothers me that both the notifiers and the module init() both see the
+> > same MODULE_STATE_COMING state, but only in the former case is the text
+> > writable.
+> > 
+> > I think it's cognitively simpler if MODULE_STATE_COMING always means the
+> > same thing, like the comments imply, "fully formed" and thus
+> > not-writable:
+> > 
+> > enum module_state {
+> > 	MODULE_STATE_LIVE,	/* Normal state. */
+> > 	MODULE_STATE_COMING,	/* Full formed, running module_init. */
+> > 	MODULE_STATE_GOING,	/* Going away. */
+> > 	MODULE_STATE_UNFORMED,	/* Still setting it up. */
+> > };
+> > 
+> > And, it keeps tighter constraints on what a notifier can do, which is a
+> > good thing if we can get away with it.
 > 
->               Linus
+> Agreed.
+> 
+> On the other hand, the first patch would remove the tiny race window when 
+> a module state is still UNFORMED, but the protections are (being) set up. 
+> Patches 4/7 and 5/7 allow to use memcpy in that case, because it is early. 
+> But it is in fact not already. I haven't checked yet if it really matters 
+> somewhere (a race with livepatch running klp_module_coming while another 
+> module is being loaded or anything like that).
 
-Well it's all just fallout from
+Maybe I'm missing your point, but I don't see any races here.
 
-	commit 61b89f23f854f458b8e23719978df58260f051ed
-	Author: Michael S. Tsirkin <mst@redhat.com>
-	Date:   Mon Apr 6 08:42:55 2020 -0400
-
-	    vhost: force spec specified alignment on types
-
-which I didn't know we need until things landed upstream and
-people started testing with weird configs.
-
-That forced changes to a header file and the rest followed.
-
-We could just ignore -mabi=apcs-gnu build being broken for this release -
-is that preferable? Pls let me know.
+apply_relocate_add() only writes to the patch module's text, so there
+can't be races with other modules.
 
 -- 
-MST
+Josh
 
