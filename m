@@ -2,112 +2,144 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE0BC3815B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 19:46:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE2AC3815B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 19:47:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEA8520786
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 19:46:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B52720786
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 19:47:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OfBLCxcB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IAp51Lnn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730423AbgDPTqS (ORCPT
+        id S1731097AbgDPTrj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 15:46:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58386 "EHLO
+        Thu, 16 Apr 2020 15:47:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729391AbgDPTqR (ORCPT
+        by vger.kernel.org with ESMTP id S1729391AbgDPTri (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 15:46:17 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B005EC061A0C;
-        Thu, 16 Apr 2020 12:46:16 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id e26so30651wmk.5;
-        Thu, 16 Apr 2020 12:46:16 -0700 (PDT)
+        Thu, 16 Apr 2020 15:47:38 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F05CCC061A0C;
+        Thu, 16 Apr 2020 12:47:37 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id di6so2672492qvb.10;
+        Thu, 16 Apr 2020 12:47:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=hdaOLswCaJX9E3ArN3QYtmnlCCcMvOx+Iq5pWMd6Dso=;
-        b=OfBLCxcBOsBHsU/Vn3l5dO2t1moWKU5iCeduO4yh4CeJjnKbMnyG1XJGGL7BiJWUc9
-         2BvuHk3F+PUQuNAJY+uawOJYwrmoEy8a1y0MqRy9WlvhEgRsWrSJKuD72uv8xTT5fEIC
-         fJ3g8j/lHu6qNxsOG7yG/vQNHzDxUADZOgftsi1b+XRnAVZYXT7ekphW9vCGUkn/d4Su
-         mrSRnCiNBDfUmgs+2Fw87kMzsV9FfqLHi582OHZsV2lsQtbw7kWO9moduDsPYEqO5veS
-         2Of1ptHaNcYlbulCebjbZyKfhuZTkF5Oagep7ALCCzopn4cbxAfUBydpbzIj4TP5uo5V
-         dauQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=IiQaPOayJr5kvs71qL3IciXFap6VIqNgrywtbyP8RsQ=;
+        b=IAp51LnnxGVluTzeHRtGz8VARjSfnCAjuCl69no0XTQV0d3qD7kTImLBnxzNHa3Qaz
+         na2O5C4U+jjVurGny/iDOZP7DQA94WJJIE15Rb4/gs4fk7T88hJvy/x7XP5FuI/qxtzS
+         fE+IsXIsd3+fpuBTk0KaVYfSTWlzJqd1ZdHdT0mxwxvIxqN/GBau5aX7oJJ1XqDgxtRt
+         8RH8En9BP7eHgxTcJIgI0ZOb3jIcFVwWqRMzeJmrCZgP+dxyJui8/IIyDIioL1xmjqyQ
+         YGRKCtfvpQUq5RQanOCJ/F8fcbGYrPtufqKpQbSrvgYq3Ic4DNb5iglB6lPSkPGX2utc
+         ux8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=hdaOLswCaJX9E3ArN3QYtmnlCCcMvOx+Iq5pWMd6Dso=;
-        b=FgxAijhpyRJ6ugDudx6Ekiu5p3tHSuji2yFpPr/LqJlZMSgJUUvFSDahDhMO+OZz90
-         s9wurmg8ypsIiYqVdGfkfTB/Oh2dsUbhEXxtJ7QKl8ui0dzQq131iYnfFPpl8z0rAXBZ
-         9RBVsVCYRTTxZUI94meNUIQwkm+zOX+EVYwC+ZC+9ZS6ahIGBPuQkld1OoAXqPxavsTS
-         +8d6gVMabDBZ4xLgmFE5+Zukiku62ldb6/sc/M7NLnnRE38jyLF16He1p2dxosiIJqpj
-         S2DmDPr1WEG1Bure/2zoWMZIht9mzFVR6c3iXIDnwQ/x7EGw/v0aVhikAe1akeE7N2M1
-         phqQ==
-X-Gm-Message-State: AGi0PuZK5JjgKilGbvTXby/9+vCFSzgDKS8N/ETS2pzI06HF0346uzKQ
-        q8arvewIHkk0VWrVtv9yqHI=
-X-Google-Smtp-Source: APiQypJPaZ8Uc9+o772th9A6hegmk/Smv9MAxV0CHKHhrAHjzHfgpQ7V8t6tbvhG9TFZVWtFunr6Vg==
-X-Received: by 2002:a1c:5502:: with SMTP id j2mr6297601wmb.71.1587066375308;
-        Thu, 16 Apr 2020 12:46:15 -0700 (PDT)
-Received: from debian.lan (host-84-13-17-86.opaltelecom.net. [84.13.17.86])
-        by smtp.gmail.com with ESMTPSA id v16sm4756092wml.30.2020.04.16.12.46.13
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 16 Apr 2020 12:46:14 -0700 (PDT)
-From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-To:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Paul Wise <pabs3@bonedaddy.net>, stable@vger.kernel.org
-Subject: [PATCH] coredump: fix null pointer dereference on coredump
-Date:   Thu, 16 Apr 2020 20:46:12 +0100
-Message-Id: <20200416194612.21418-1-sudipm.mukherjee@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=IiQaPOayJr5kvs71qL3IciXFap6VIqNgrywtbyP8RsQ=;
+        b=Vu6+v4XlBJzyxgDlLz+aXI54l2MyO+7PUQncHbC6P2/wn69pDsmCSBBrP7uACakRcu
+         YGq++2hlCsZpUWDAWq5CMMgZ3IjpH13BRX5FdoDrvKIp4kTjuT9/8YFfh04oMyLWH3Y1
+         UZ5vgBw/R6btyT5M1xVhJXLD58IxV1/Wijvi3drDSaGLOjMAPpfwCWYMz13ptcwCWlHe
+         ypUyhM8WlPKNtMsJsoJ0UliBbe085XA+oajbwmmoktkKqFfl+iR8xDyyHEAkjKTCcGKK
+         H1jvQjN16VfBfhr0vNnqYG/OfmgmviOjpCCCGqrdbclSpiMZzVM4PGHxjRSwLBJUiyDe
+         PL8g==
+X-Gm-Message-State: AGi0Pua8s3WcNGp1RMcC07Kiua+HrWKwgkCiq17wCM1ffvIwTrp9cSpH
+        xBSUINojG4Wm7zOaSdyk47+wSvlYPmOiOdV4/TQ=
+X-Google-Smtp-Source: APiQypKtquRwWQQXFqOBPvTZeBbMC3tNNdEXbLRDwIg2ysD7zcUg4ZsrG/9Ggfv0t+EXh+ucnxtI3C2lYt6SlX8rXiA=
+X-Received: by 2002:a0c:fd8c:: with SMTP id p12mr12042055qvr.163.1587066457100;
+ Thu, 16 Apr 2020 12:47:37 -0700 (PDT)
+MIME-Version: 1.0
+References: <000000000000500e6f05a34ecc01@google.com> <4ba5ee0c-ec81-8ce3-6681-465e34b98a93@iogearbox.net>
+ <a9219326-c07c-1069-270c-4bef17ee7b88@fb.com> <20200416102612.GO1163@kadam>
+In-Reply-To: <20200416102612.GO1163@kadam>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Thu, 16 Apr 2020 12:47:25 -0700
+Message-ID: <CAEf4BzY2XwQw0ZMN6PaJtN=DfAMQyMtGuo7dnmVH1embBXmhuw@mail.gmail.com>
+Subject: Re: WARNING in bpf_cgroup_link_release
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        syzbot <syzbot+8a5dadc5c0b1d7055945@syzkaller.appspotmail.com>,
+        Alexei Starovoitov <ast@kernel.org>, bpf <bpf@vger.kernel.org>,
+        john fastabend <john.fastabend@gmail.com>,
+        Martin Lau <kafai@fb.com>, KP Singh <kpsingh@chromium.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        syzkaller-bugs@googlegroups.com, Yonghong Song <yhs@fb.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the core_pattern is set to "|" and any process segfaults then we get
-a null pointer derefernce while trying to coredump. The call stack shows:
-[  108.212680] RIP: 0010:do_coredump+0x628/0x11c0
+On Thu, Apr 16, 2020 at 3:29 AM Dan Carpenter <dan.carpenter@oracle.com> wr=
+ote:
+>
+> On Wed, Apr 15, 2020 at 09:51:40AM -0700, 'Andrii Nakryiko' via syzkaller=
+-bugs wrote:
+> > On 4/15/20 4:57 AM, Daniel Borkmann wrote:
+> > > On 4/15/20 8:55 AM, syzbot wrote:
+> > > > Hello,
+> > > >
+> > > > syzbot found the following crash on:
+> > >
+> > > Andrii, ptal.
+> > >
+> > > > HEAD commit:    1a323ea5 x86: get rid of 'errret' argument to
+> > > > __get_user_x..
+> > > > git tree:       bpf-next
+> > > > console output: https://urldefense.proofpoint.com/v2/url?u=3Dhttps-=
+3A__syzkaller.appspot.com_x_log.txt-3Fx-3D148ccb57e00000&d=3DDwICaQ&c=3D5VD=
+0RTtNlTh3ycd41b3MUw&r=3Dvxqvl81C2rT6GOGdPyz8iQ&m=3DT2Ez0XmyIpHmEa_MPTTUOh61=
+jMDXqwETtTaTbSe-2M4&s=3D-6XBbsNV1O4X5flrx4Yssfjc56d0qeSHgwHhd92UPJc&e=3D
+> > > > kernel config:  https://urldefense.proofpoint.com/v2/url?u=3Dhttps-=
+3A__syzkaller.appspot.com_x_.config-3Fx-3D8c1e98458335a7d1&d=3DDwICaQ&c=3D5=
+VD0RTtNlTh3ycd41b3MUw&r=3Dvxqvl81C2rT6GOGdPyz8iQ&m=3DT2Ez0XmyIpHmEa_MPTTUOh=
+61jMDXqwETtTaTbSe-2M4&s=3Ds5-1AlWtSiBvo66WN4_UXoXMGIGIqsoUCrmAnxNnfX0&e=3D
+> > > > dashboard link: https://urldefense.proofpoint.com/v2/url?u=3Dhttps-=
+3A__syzkaller.appspot.com_bug-3Fextid-3D8a5dadc5c0b1d7055945&d=3DDwICaQ&c=
+=3D5VD0RTtNlTh3ycd41b3MUw&r=3Dvxqvl81C2rT6GOGdPyz8iQ&m=3DT2Ez0XmyIpHmEa_MPT=
+TUOh61jMDXqwETtTaTbSe-2M4&s=3DhAA0702qJH5EwRwvG0RKmj8FwIRm1O8hvmoS7ne5Dls&e=
+=3D
+> > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > > >
+> > > > Unfortunately, I don't have any reproducer for this crash yet.
+> > > >
+> > > > IMPORTANT: if you fix the bug, please add the following tag to the
+> > > > commit:
+> > > > Reported-by: syzbot+8a5dadc5c0b1d7055945@syzkaller.appspotmail.com
+> > > >
+> > > > ------------[ cut here ]------------
+> > > > WARNING: CPU: 0 PID: 25081 at kernel/bpf/cgroup.c:796
+> > > > bpf_cgroup_link_release+0x260/0x3a0 kernel/bpf/cgroup.c:796
+> >
+> > This warning is triggered due to __cgroup_bpf_detach returning an error=
+. It
+> > can do it only in two cases: either attached item is not found, which f=
+rom
+> > starting at code some moreI don't see how that can happen. The other re=
+ason
+> > - kmalloc() failing to allocate memory for new effective prog array.
+>
+> If you look at the log file then this was allocation fault injection in
+> bpf_prog_array_alloc().
 
-When the core_pattern has only "|" there is no use of trying the
-coredump and we can check that while formating the corename and exit
-with an error.
+Ah, I see, thanks for pointing this out! So that confirms that it's
+not a bug, but just unfortunate result of potentially failing cgroup
+BPF program detach code path.
 
-After this change I get:
-[   48.453756] format_corename failed
-[   48.453758] Aborting core
-
-Fixes: 315c69261dd3 ("coredump: split pipe command whitespace before expanding template")
-Reported-by: Matthew Ruffell <matthew.ruffell@canonical.com>
-Cc: Paul Wise <pabs3@bonedaddy.net>
-Cc: stable@vger.kernel.org
-Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
----
- fs/coredump.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/fs/coredump.c b/fs/coredump.c
-index f8296a82d01d..408418e6aa13 100644
---- a/fs/coredump.c
-+++ b/fs/coredump.c
-@@ -211,6 +211,8 @@ static int format_corename(struct core_name *cn, struct coredump_params *cprm,
- 			return -ENOMEM;
- 		(*argv)[(*argc)++] = 0;
- 		++pat_ptr;
-+		if (!(*pat_ptr))
-+			return -ENOMEM;
- 	}
- 
- 	/* Repeat as long as we have more pattern to process and more output
--- 
-2.11.0
-
+>
+> https://syzkaller.appspot.com/x/log.txt?x=3D148ccb57e00000
+>
+> regards,
+> dan carpenter
+>
