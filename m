@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18700C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:49:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46167C3815B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:50:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBEBA2223D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:49:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B0D520786
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:50:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587044951;
-	bh=i/WQ4zp2hHzop+pFU2DiVs4dApyLMmZBX3q6djS2+kI=;
+	s=default; t=1587045053;
+	bh=8g4rtJKK7f7hAR4yH8/t0x0WZTPgRBWJXq9lOexgqK0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QCTODDeeX78FmAt5zt2uXD8MdNn/X2WHcKqGo2xqtlvtWKXB38RgIw0iGKSWmsPg3
-	 8hBSZmWVFd9kzXYHuCpAC4zrjMBvcpTZtayi1//xhC/2ZuJvo5hzyMNqHMsNlwnu9u
-	 v1sWG5nVnlNT+MG0XXE+KVpjYsn86q5EX9aWfatM=
+	b=BvVG647fNDRgzBy4adwXVJnkEnq0UiNeEskBY+RQUomZx04qVzVTTtCY3hCbsqwhP
+	 gJjOnR6jLi1mdAP1F3ryvLnXRbJu+6Gry06eeOzDCVN26rR1m15q1rR8ehCw3xB7Cd
+	 PazU4gSo0rL64fzIJoHkprHV66/xkZCzIQ7x+cG8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2898814AbgDPNtI (ORCPT
+        id S2408638AbgDPNuv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:49:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48374 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:50:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897299AbgDPNgP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:36:15 -0400
+        id S2896068AbgDPNga (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:36:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25A39221EB;
-        Thu, 16 Apr 2020 13:36:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D55A221EB;
+        Thu, 16 Apr 2020 13:36:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044175;
-        bh=i/WQ4zp2hHzop+pFU2DiVs4dApyLMmZBX3q6djS2+kI=;
+        s=default; t=1587044187;
+        bh=8g4rtJKK7f7hAR4yH8/t0x0WZTPgRBWJXq9lOexgqK0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vfZslQFkC6TzDUBm5jYSUvnhLlmXX/rtvx61t6GqI6lNM00kJ+XySH8ee6xjQfkDh
-         sH9unVXVXYBlIZ5akNV6DPk1q/ErAkH5QuReRGMMQgLDaHQ8Dy9zpbyFUpZ802lZl7
-         /pJiDl7t37XAnqEC1klS/HIzW9DTVyTWY7NasnGg=
+        b=th+LARuLj2kz7sFLLxeBbGiYvbZ/i/UZVogJ2ZTsr8yXs0/LdnOYy15QtWpXoCIOr
+         eTF9srWQi9rZ0w7+Y7A6JoFocLG0+8gCGk/dyQ0tkkyS2FH/kTpof4FihdDjt3nra4
+         bOzKXGHwQaXo/eKWQFR+b5HgSQcnwE0Irsdo2LYI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenhua Liu <liuw@vmware.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>
-Subject: [PATCH 5.5 110/257] nvmet-tcp: fix maxh2cdata icresp parameter
-Date:   Thu, 16 Apr 2020 15:22:41 +0200
-Message-Id: <20200416131339.969872838@linuxfoundation.org>
+        stable@vger.kernel.org, Yicong Yang <yangyicong@hisilicon.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 5.5 114/257] PCI/ASPM: Clear the correct bits when enabling L1 substates
+Date:   Thu, 16 Apr 2020 15:22:45 +0200
+Message-Id: <20200416131340.513310055@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -60,34 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sagi Grimberg <sagi@grimberg.me>
+From: Yicong Yang <yangyicong@hisilicon.com>
 
-commit 9cda34e37489244a8c8628617e24b2dbc8a8edad upstream.
+commit 58a3862a10a317a81097ab0c78aecebabb1704f5 upstream.
 
-MAXH2CDATA is not zero based. Also no reason to limit ourselves to
-1M transfers as we can do more easily. Make this an arbitrary limit
-of 16M.
+In pcie_config_aspm_l1ss(), we cleared the wrong bits when enabling ASPM L1
+Substates.  Instead of the L1.x enable bits (PCI_L1SS_CTL1_L1SS_MASK, 0xf), we
+cleared the Link Activation Interrupt Enable bit (PCI_L1SS_CAP_L1_PM_SS,
+0x10).
 
-Reported-by: Wenhua Liu <liuw@vmware.com>
-Cc: stable@vger.kernel.org # v5.0+
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
+Clear the L1.x enable bits before writing the new L1.x configuration.
+
+[bhelgaas: changelog]
+Fixes: aeda9adebab8 ("PCI/ASPM: Configure L1 substate settings")
+Link: https://lore.kernel.org/r/1584093227-1292-1-git-send-email-yangyicong@hisilicon.com
+Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+CC: stable@vger.kernel.org	# v4.11+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/nvme/target/tcp.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/pcie/aspm.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/nvme/target/tcp.c
-+++ b/drivers/nvme/target/tcp.c
-@@ -794,7 +794,7 @@ static int nvmet_tcp_handle_icreq(struct
- 	icresp->hdr.pdo = 0;
- 	icresp->hdr.plen = cpu_to_le32(icresp->hdr.hlen);
- 	icresp->pfv = cpu_to_le16(NVME_TCP_PFV_1_0);
--	icresp->maxdata = cpu_to_le32(0xffff); /* FIXME: support r2t */
-+	icresp->maxdata = cpu_to_le32(0x400000); /* 16M arbitrary limit */
- 	icresp->cpda = 0;
- 	if (queue->hdr_digest)
- 		icresp->digest |= NVME_TCP_HDR_DIGEST_ENABLE;
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -747,9 +747,9 @@ static void pcie_config_aspm_l1ss(struct
+ 
+ 	/* Enable what we need to enable */
+ 	pci_clear_and_set_dword(parent, up_cap_ptr + PCI_L1SS_CTL1,
+-				PCI_L1SS_CAP_L1_PM_SS, val);
++				PCI_L1SS_CTL1_L1SS_MASK, val);
+ 	pci_clear_and_set_dword(child, dw_cap_ptr + PCI_L1SS_CTL1,
+-				PCI_L1SS_CAP_L1_PM_SS, val);
++				PCI_L1SS_CTL1_L1SS_MASK, val);
+ }
+ 
+ static void pcie_config_aspm_dev(struct pci_dev *pdev, u32 val)
 
 
