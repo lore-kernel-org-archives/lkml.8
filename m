@@ -2,88 +2,96 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04A8BC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA9CDC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:45:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D07BF20732
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:45:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84F7E20732
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:45:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587051915;
-	bh=uEzT4afH5aAvqU9GRUEUOIDgK+mWSReRCNYeDa+GX54=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=U169SBc8mfVQIYgKQ3rohRMYdOVPlacA8SoToBBnTPRjz4RLnx98Hb3tkacobuYLj
-	 suXC6qoqDeKHQW+vC0aDRSdqjzz99xI7tG7l9HDX+00qZISRcK6i76p4jcTTsvvZQr
-	 NidMxwqTCZ96+2/qk2D4tcullaKMRyaTQu8od6bQ=
+	s=default; t=1587051921;
+	bh=Zdg/vgCZtVzpvtzNd6vjcd/5iwmO3Je1o3bPcCol/5I=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=t6trbU9udG40FHQh/q+shGS5jjNhA+PLB6BLSfcA4Xgn+wRBKfKcNPsBMIXJDZESv
+	 nfqlEZc6S38Eg0BPRVF6PIfcfduJ73ac57eL2HNxHKfu8yIXYhBk0SNv2nWj7SAZ6x
+	 b93u81nPIsU1PIGNstKjXqD3uUM7oh6Uz0X7ZPRs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442536AbgDPPpN (ORCPT
+        id S2894721AbgDPPpT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:45:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52430 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:45:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395512AbgDPPpE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 11:45:04 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        id S2897055AbgDPNfK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:35:10 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E06521D91;
-        Thu, 16 Apr 2020 15:45:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88B9621BE5;
+        Thu, 16 Apr 2020 13:35:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587051904;
-        bh=uEzT4afH5aAvqU9GRUEUOIDgK+mWSReRCNYeDa+GX54=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=pcpz6ct4+maiiBtZd9rtrSScBUwuNgkpbamj//4pqaThgCwa0dSZd/zmWQvxvCsfV
-         RUQLLXo3E1W4BwlUALnGCD0TatfyNXlKArys+HNonhkcuogXDJYnW32hGvnB1VRJei
-         17ozwOeaEnJrH+S9jb9dJ176cvZXOo5GU7EQOPbU=
-Date:   Thu, 16 Apr 2020 16:45:01 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Colin King <colin.king@canonical.com>, linux-spi@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-In-Reply-To: <20200410122315.17523-1-colin.king@canonical.com>
-References: <20200410122315.17523-1-colin.king@canonical.com>
-Subject: Re: [PATCH] spi: remove redundant assignment to variable ms
-Message-Id: <158705187474.53607.10568254080085770802.b4-ty@kernel.org>
+        s=default; t=1587044109;
+        bh=Zdg/vgCZtVzpvtzNd6vjcd/5iwmO3Je1o3bPcCol/5I=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=VlZic/oF+ZC1w58phC3KI18MzdtF5MVBigVtTA8UukFeV+aZbu+caRRtvN5LgUdT0
+         lFQ74Z8eHl2/yig9/9/5x50yXdUWQUDaF2lX64IHo0w/sbGOBf22pCpdmS4kF1R77G
+         L2CBCYbGGzdaz0puU06AIXIcOak7i79eTFXgN2qs=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Sriharsha Allenki <sallenki@codeaurora.org>,
+        Peter Chen <peter.chen@nxp.com>
+Subject: [PATCH 5.5 085/257] usb: gadget: f_fs: Fix use after free issue as part of queue failure
+Date:   Thu, 16 Apr 2020 15:22:16 +0200
+Message-Id: <20200416131336.594045522@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
+References: <20200416131325.891903893@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 Apr 2020 13:23:15 +0100, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> The variable ms is being initialized with a value that is never read
-> and it is being updated later with a new value.  The initialization is
-> redundant and can be removed.
-> 
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Addresses-Coverity: ("Unused value")
-> 
-> [...]
+From: Sriharsha Allenki <sallenki@codeaurora.org>
 
-Applied, thanks!
+commit f63ec55ff904b2f2e126884fcad93175f16ab4bb upstream.
 
-[1/1] spi: remove redundant assignment to variable ms
-      commit: 49686df5b874e5ed6249bc622b73ad9a9e71cd99
+In AIO case, the request is freed up if ep_queue fails.
+However, io_data->req still has the reference to this freed
+request. In the case of this failure if there is aio_cancel
+call on this io_data it will lead to an invalid dequeue
+operation and a potential use after free issue.
+Fix this by setting the io_data->req to NULL when the request
+is freed as part of queue failure.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+Fixes: 2e4c7553cd6f ("usb: gadget: f_fs: add aio support")
+Signed-off-by: Sriharsha Allenki <sallenki@codeaurora.org>
+CC: stable <stable@vger.kernel.org>
+Reviewed-by: Peter Chen <peter.chen@nxp.com>
+Link: https://lore.kernel.org/r/20200326115620.12571-1-sallenki@codeaurora.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+---
+ drivers/usb/gadget/function/f_fs.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+--- a/drivers/usb/gadget/function/f_fs.c
++++ b/drivers/usb/gadget/function/f_fs.c
+@@ -1120,6 +1120,7 @@ static ssize_t ffs_epfile_io(struct file
+ 
+ 		ret = usb_ep_queue(ep->ep, req, GFP_ATOMIC);
+ 		if (unlikely(ret)) {
++			io_data->req = NULL;
+ 			usb_ep_free_request(ep->ep, req);
+ 			goto error_lock;
+ 		}
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
 
-Thanks,
-Mark
