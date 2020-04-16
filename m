@@ -6,65 +6,64 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 300FFC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47617C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:34:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1751921D7F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:33:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29637208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:34:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633695AbgDPLdz (ORCPT
+        id S2633299AbgDPLeA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 07:33:55 -0400
-Received: from mail-m127101.qiye.163.com ([115.236.127.101]:1185 "EHLO
+        Thu, 16 Apr 2020 07:34:00 -0400
+Received: from mail-m127101.qiye.163.com ([115.236.127.101]:1189 "EHLO
         mail-m127101.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2633503AbgDPLdQ (ORCPT
+        with ESMTP id S2633505AbgDPLdP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 07:33:16 -0400
+        Thu, 16 Apr 2020 07:33:15 -0400
 Received: from ubuntu.localdomain (unknown [58.251.74.226])
-        by mail-m127101.qiye.163.com (Hmail) with ESMTPA id 42A31481EC;
-        Thu, 16 Apr 2020 19:16:48 +0800 (CST)
+        by mail-m127101.qiye.163.com (Hmail) with ESMTPA id 49AF3483C3;
+        Thu, 16 Apr 2020 19:16:46 +0800 (CST)
 From:   Wang Wenhu <wenhu.wang@vivo.com>
 To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
         oss@buserror.net, christophe.leroy@c-s.fr,
         linuxppc-dev@lists.ozlabs.org
 Cc:     kernel@vivo.com, Wang Wenhu <wenhu.wang@vivo.com>,
         Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH RESEND,v3,2/4] powerpc: sysdev: fix compile error for fsl_85xx_cache_sram
-Date:   Thu, 16 Apr 2020 04:16:07 -0700
-Message-Id: <20200416111609.4191-3-wenhu.wang@vivo.com>
+Subject: [PATCH RESEND,v3,1/4] powerpc: sysdev: fix compile error for fsl_85xx_l2ctlr
+Date:   Thu, 16 Apr 2020 04:16:06 -0700
+Message-Id: <20200416111609.4191-2-wenhu.wang@vivo.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200416111609.4191-1-wenhu.wang@vivo.com>
 References: <20200416111609.4191-1-wenhu.wang@vivo.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSVVDSk1CQkJCSklJTUpCTVlXWShZQU
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSVVDSkhCQkJDQkpJQ0pKSFlXWShZQU
         hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6P0k6Hio*Ojg4PA9MEQgDEgI1
-        NUlPCRZVSlVKTkNMS0hOQ0tDQ0hLVTMWGhIXVQweFRMOVQwaFRw7DRINFFUYFBZFWVdZEgtZQVlO
-        Q1VJTkpVTE9VSUlNWVdZCAFZQUhJSUM3Bg++
-X-HM-Tid: 0a7182b4a3d09865kuuu42a31481ec
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6KzY6GQw*AzgrMA8#EQgiEgIi
+        Tk0wCRpVSlVKTkNMS0hOQ0tNTUJIVTMWGhIXVQweFRMOVQwaFRw7DRINFFUYFBZFWVdZEgtZQVlO
+        Q1VJTkpVTE9VSUlNWVdZCAFZQUhLTkI3Bg++
+X-HM-Tid: 0a7182b49b729865kuuu49af3483c3
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Include linux/io.h into fsl_85xx_cache_sram.c to fix the
-implicit-declaration compile error when building Cache-Sram.
+Include "linux/of_address.h" to fix the compile error for
+mpc85xx_l2ctlr_of_probe() when compiling fsl_85xx_cache_sram.c.
 
-arch/powerpc/sysdev/fsl_85xx_cache_sram.c: In function ‘instantiate_cache_sram’:
-arch/powerpc/sysdev/fsl_85xx_cache_sram.c:97:26: error: implicit declaration of function ‘ioremap_coherent’; did you mean ‘bitmap_complement’? [-Werror=implicit-function-declaration]
-  cache_sram->base_virt = ioremap_coherent(cache_sram->base_phys,
-                          ^~~~~~~~~~~~~~~~
-                          bitmap_complement
-arch/powerpc/sysdev/fsl_85xx_cache_sram.c:97:24: error: assignment makes pointer from integer without a cast [-Werror=int-conversion]
-  cache_sram->base_virt = ioremap_coherent(cache_sram->base_phys,
-                        ^
-arch/powerpc/sysdev/fsl_85xx_cache_sram.c:123:2: error: implicit declaration of function ‘iounmap’; did you mean ‘roundup’? [-Werror=implicit-function-declaration]
-  iounmap(cache_sram->base_virt);
-  ^~~~~~~
-  roundup
+  CC      arch/powerpc/sysdev/fsl_85xx_l2ctlr.o
+arch/powerpc/sysdev/fsl_85xx_l2ctlr.c: In function ‘mpc85xx_l2ctlr_of_probe’:
+arch/powerpc/sysdev/fsl_85xx_l2ctlr.c:90:11: error: implicit declaration of function ‘of_iomap’; did you mean ‘pci_iomap’? [-Werror=implicit-function-declaration]
+  l2ctlr = of_iomap(dev->dev.of_node, 0);
+           ^~~~~~~~
+           pci_iomap
+arch/powerpc/sysdev/fsl_85xx_l2ctlr.c:90:9: error: assignment makes pointer from integer without a cast [-Werror=int-conversion]
+  l2ctlr = of_iomap(dev->dev.of_node, 0);
+         ^
 cc1: all warnings being treated as errors
+scripts/Makefile.build:267: recipe for target 'arch/powerpc/sysdev/fsl_85xx_l2ctlr.o' failed
+make[2]: *** [arch/powerpc/sysdev/fsl_85xx_l2ctlr.o] Error 1
 
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Christophe Leroy <christophe.leroy@c-s.fr>
@@ -72,28 +71,28 @@ Cc: Scott Wood <oss@buserror.net>
 Cc: Michael Ellerman <mpe@ellerman.id.au>
 Cc: linuxppc-dev@lists.ozlabs.org
 Fixes: 6db92cc9d07d ("powerpc/85xx: add cache-sram support")
-Signed-off-by: WANG Wenhu <wenhu.wang@vivo.com>
+Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
 ---
 Changes since v1:
  * None
 Changes since v2:
  * None
 ---
- arch/powerpc/sysdev/fsl_85xx_cache_sram.c | 1 +
+ arch/powerpc/sysdev/fsl_85xx_l2ctlr.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/powerpc/sysdev/fsl_85xx_cache_sram.c b/arch/powerpc/sysdev/fsl_85xx_cache_sram.c
-index f6c665dac725..be3aef4229d7 100644
---- a/arch/powerpc/sysdev/fsl_85xx_cache_sram.c
-+++ b/arch/powerpc/sysdev/fsl_85xx_cache_sram.c
-@@ -17,6 +17,7 @@
+diff --git a/arch/powerpc/sysdev/fsl_85xx_l2ctlr.c b/arch/powerpc/sysdev/fsl_85xx_l2ctlr.c
+index 2d0af0c517bb..7533572492f0 100644
+--- a/arch/powerpc/sysdev/fsl_85xx_l2ctlr.c
++++ b/arch/powerpc/sysdev/fsl_85xx_l2ctlr.c
+@@ -10,6 +10,7 @@
+ #include <linux/kernel.h>
+ #include <linux/module.h>
  #include <linux/of_platform.h>
- #include <asm/pgtable.h>
- #include <asm/fsl_85xx_cache_sram.h>
-+#include <linux/io.h>
++#include <linux/of_address.h>
+ #include <asm/io.h>
  
  #include "fsl_85xx_cache_ctlr.h"
- 
 -- 
 2.17.1
 
