@@ -2,191 +2,180 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB25C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:40:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 960F9C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8882C21D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:40:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587048057;
-	bh=28OW14Pg6V+cY9SZW+S9pbIyd0BluxIjxSwJPQi4yws=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B6SiOOihKjJNsyRv7MlPqZeD52woFALva5oN03HBfaf+XnWJwhbdGkJwgdJYzTXdk
-	 TsAkMPRqrQ7QDpnQQ0CQuZWMAdlRC7a/eliPEtMkx8UhH9mrFdp+pljz0cMxUEHEEZ
-	 yANcZWLmYxoLBMkzj1aApmdjqVxNa71TTcKSz2Hw=
+	by mail.kernel.org (Postfix) with ESMTP id 744AF21D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:41:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XUDIJ2lA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393384AbgDPOkl (ORCPT
+        id S2393323AbgDPOlA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:40:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48890 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409468AbgDPOBf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:01:35 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 16 Apr 2020 10:41:00 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:46399 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2394425AbgDPOko (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:40:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587048042;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=80aHjGWongnpeQZzKC1CPTA8jUpzqlKutXIbnyqQU+g=;
+        b=XUDIJ2lAQAeiRSxu+ZVH/HmvTO58ygJ+a0KpR2audKl//2CqOWyrISSOJ97AX0XhZqB2+m
+        kOvveuq5AmCM21NllwNWEnwtUHtkp1bqpub+T6tr5Bu1RmFlsPj79/hvtavaHfLBxNOWfc
+        iuJTR2GbSSUpiDtK6qQqHRlsCw+zJAI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-357--hdoMGM2MUCQI3EYGcbQRg-1; Thu, 16 Apr 2020 10:40:41 -0400
+X-MC-Unique: -hdoMGM2MUCQI3EYGcbQRg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03EEC20786;
-        Thu, 16 Apr 2020 14:01:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045694;
-        bh=28OW14Pg6V+cY9SZW+S9pbIyd0BluxIjxSwJPQi4yws=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dYK+C+uXEjLmMFyzUemRLiKUK3xaThSc51KIE2VZlo1ZnHCXxcnVkSPpOzqbdZOCX
-         zFSZ8FkOyQ7bFsaBIJa7Marza7sFHHzy5/EZ7nVe3vNjHe4l8dXptBdcaymo8Qpxyq
-         CCIy8wdFzKmWNsIPPD92BGeNa92SC0nzPCyqNk18=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Gibson <david@gibson.dropbear.id.au>,
-        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.6 240/254] powerpc/xive: Use XIVE_BAD_IRQ instead of zero to catch non configured IPIs
-Date:   Thu, 16 Apr 2020 15:25:29 +0200
-Message-Id: <20200416131355.484276649@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
-References: <20200416131325.804095985@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 16E2E107B267;
+        Thu, 16 Apr 2020 14:40:39 +0000 (UTC)
+Received: from w520.home (ovpn-112-162.phx2.redhat.com [10.3.112.162])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EFC4B116D95;
+        Thu, 16 Apr 2020 14:40:31 +0000 (UTC)
+Date:   Thu, 16 Apr 2020 08:40:31 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     "Liu, Yi L" <yi.l.liu@intel.com>
+Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wu, Hao" <hao.wu@intel.com>
+Subject: Re: [PATCH v1 7/8] vfio/type1: Add VFIO_IOMMU_CACHE_INVALIDATE
+Message-ID: <20200416084031.7266ad40@w520.home>
+In-Reply-To: <A2975661238FB949B60364EF0F2C25743A231BAA@SHSMSX104.ccr.corp.intel.com>
+References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
+        <1584880325-10561-8-git-send-email-yi.l.liu@intel.com>
+        <20200402142428.2901432e@w520.home>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D807C4A@SHSMSX104.ccr.corp.intel.com>
+        <20200403093436.094b1928@w520.home>
+        <A2975661238FB949B60364EF0F2C25743A231BAA@SHSMSX104.ccr.corp.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cédric Le Goater <clg@kaod.org>
+On Thu, 16 Apr 2020 10:40:03 +0000
+"Liu, Yi L" <yi.l.liu@intel.com> wrote:
 
-commit b1a504a6500df50e83b701b7946b34fce27ad8a3 upstream.
+> Hi Alex,
+> Still have a direction question with you. Better get agreement with you
+> before heading forward.
+> 
+> > From: Alex Williamson <alex.williamson@redhat.com>
+> > Sent: Friday, April 3, 2020 11:35 PM  
+> [...]
+> > > > > + *
+> > > > > + * returns: 0 on success, -errno on failure.
+> > > > > + */
+> > > > > +struct vfio_iommu_type1_cache_invalidate {
+> > > > > +	__u32   argsz;
+> > > > > +	__u32   flags;
+> > > > > +	struct	iommu_cache_invalidate_info cache_info;
+> > > > > +};
+> > > > > +#define VFIO_IOMMU_CACHE_INVALIDATE      _IO(VFIO_TYPE,  
+> > VFIO_BASE  
+> > > > + 24)
+> > > >
+> > > > The future extension capabilities of this ioctl worry me, I wonder if
+> > > > we should do another data[] with flag defining that data as CACHE_INFO.  
+> > >
+> > > Can you elaborate? Does it mean with this way we don't rely on iommu
+> > > driver to provide version_to_size conversion and instead we just pass
+> > > data[] to iommu driver for further audit?  
+> > 
+> > No, my concern is that this ioctl has a single function, strictly tied
+> > to the iommu uapi.  If we replace cache_info with data[] then we can
+> > define a flag to specify that data[] is struct
+> > iommu_cache_invalidate_info, and if we need to, a different flag to
+> > identify data[] as something else.  For example if we get stuck
+> > expanding cache_info to meet new demands and develop a new uapi to
+> > solve that, how would we expand this ioctl to support it rather than
+> > also create a new ioctl?  There's also a trade-off in making the ioctl
+> > usage more difficult for the user.  I'd still expect the vfio layer to
+> > check the flag and interpret data[] as indicated by the flag rather
+> > than just passing a blob of opaque data to the iommu layer though.
+> > Thanks,  
+> 
+> Based on your comments about defining a single ioctl and a unified
+> vfio structure (with a @data[] field) for pasid_alloc/free, bind/
+> unbind_gpasid, cache_inv. After some offline trying, I think it would
+> be good for bind/unbind_gpasid and cache_inv as both of them use the
+> iommu uapi definition. While the pasid alloc/free operation doesn't.
+> It would be weird to put all of them together. So pasid alloc/free
+> may have a separate ioctl. It would look as below. Does this direction
+> look good per your opinion?
+> 
+> ioctl #22: VFIO_IOMMU_PASID_REQUEST
+> /**
+>   * @pasid: used to return the pasid alloc result when flags == ALLOC_PASID
+>   *         specify a pasid to be freed when flags == FREE_PASID
+>   * @range: specify the allocation range when flags == ALLOC_PASID
+>   */
+> struct vfio_iommu_pasid_request {
+> 	__u32	argsz;
+> #define VFIO_IOMMU_ALLOC_PASID	(1 << 0)
+> #define VFIO_IOMMU_FREE_PASID	(1 << 1)
+> 	__u32	flags;
+> 	__u32	pasid;
+> 	struct {
+> 		__u32	min;
+> 		__u32	max;
+> 	} range;
+> };
 
-When a CPU is brought up, an IPI number is allocated and recorded
-under the XIVE CPU structure. Invalid IPI numbers are tracked with
-interrupt number 0x0.
+Can't the ioctl return the pasid valid on alloc (like GET_DEVICE_FD)?
+Would it be useful to support freeing a range of pasids?  If so then we
+could simply use range for both, ie. allocate a pasid from this range
+and return it, or free all pasids in this range?  vfio already needs to
+track pasids to free them on release, so presumably this is something
+we could support easily.
+ 
+> ioctl #23: VFIO_IOMMU_NESTING_OP
+> struct vfio_iommu_type1_nesting_op {
+> 	__u32	argsz;
+> 	__u32	flags;
+> 	__u32	op;
+> 	__u8	data[];
+> };
 
-On the PowerNV platform, the interrupt number space starts at 0x10 and
-this works fine. However, on the sPAPR platform, it is possible to
-allocate the interrupt number 0x0 and this raises an issue when CPU 0
-is unplugged. The XIVE spapr driver tracks allocated interrupt numbers
-in a bitmask and it is not correctly updated when interrupt number 0x0
-is freed. It stays allocated and it is then impossible to reallocate.
+data only has 4-byte alignment, I think we really want it at an 8-byte
+alignment.  This is why I embedded the "op" into the flag for
+DEVICE_FEATURE.  Thanks,
 
-Fix by using the XIVE_BAD_IRQ value instead of zero on both platforms.
+Alex
 
-Reported-by: David Gibson <david@gibson.dropbear.id.au>
-Fixes: eac1e731b59e ("powerpc/xive: guest exploitation of the XIVE interrupt controller")
-Cc: stable@vger.kernel.org # v4.14+
-Signed-off-by: Cédric Le Goater <clg@kaod.org>
-Reviewed-by: David Gibson <david@gibson.dropbear.id.au>
-Tested-by: David Gibson <david@gibson.dropbear.id.au>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200306150143.5551-2-clg@kaod.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- arch/powerpc/sysdev/xive/common.c        |   12 +++---------
- arch/powerpc/sysdev/xive/native.c        |    4 ++--
- arch/powerpc/sysdev/xive/spapr.c         |    4 ++--
- arch/powerpc/sysdev/xive/xive-internal.h |    7 +++++++
- 4 files changed, 14 insertions(+), 13 deletions(-)
-
---- a/arch/powerpc/sysdev/xive/common.c
-+++ b/arch/powerpc/sysdev/xive/common.c
-@@ -68,13 +68,6 @@ static u32 xive_ipi_irq;
- /* Xive state for each CPU */
- static DEFINE_PER_CPU(struct xive_cpu *, xive_cpu);
- 
--/*
-- * A "disabled" interrupt should never fire, to catch problems
-- * we set its logical number to this
-- */
--#define XIVE_BAD_IRQ		0x7fffffff
--#define XIVE_MAX_IRQ		(XIVE_BAD_IRQ - 1)
--
- /* An invalid CPU target */
- #define XIVE_INVALID_TARGET	(-1)
- 
-@@ -1150,7 +1143,7 @@ static int xive_setup_cpu_ipi(unsigned i
- 	xc = per_cpu(xive_cpu, cpu);
- 
- 	/* Check if we are already setup */
--	if (xc->hw_ipi != 0)
-+	if (xc->hw_ipi != XIVE_BAD_IRQ)
- 		return 0;
- 
- 	/* Grab an IPI from the backend, this will populate xc->hw_ipi */
-@@ -1187,7 +1180,7 @@ static void xive_cleanup_cpu_ipi(unsigne
- 	/* Disable the IPI and free the IRQ data */
- 
- 	/* Already cleaned up ? */
--	if (xc->hw_ipi == 0)
-+	if (xc->hw_ipi == XIVE_BAD_IRQ)
- 		return;
- 
- 	/* Mask the IPI */
-@@ -1343,6 +1336,7 @@ static int xive_prepare_cpu(unsigned int
- 		if (np)
- 			xc->chip_id = of_get_ibm_chip_id(np);
- 		of_node_put(np);
-+		xc->hw_ipi = XIVE_BAD_IRQ;
- 
- 		per_cpu(xive_cpu, cpu) = xc;
- 	}
---- a/arch/powerpc/sysdev/xive/native.c
-+++ b/arch/powerpc/sysdev/xive/native.c
-@@ -312,7 +312,7 @@ static void xive_native_put_ipi(unsigned
- 	s64 rc;
- 
- 	/* Free the IPI */
--	if (!xc->hw_ipi)
-+	if (xc->hw_ipi == XIVE_BAD_IRQ)
- 		return;
- 	for (;;) {
- 		rc = opal_xive_free_irq(xc->hw_ipi);
-@@ -320,7 +320,7 @@ static void xive_native_put_ipi(unsigned
- 			msleep(OPAL_BUSY_DELAY_MS);
- 			continue;
- 		}
--		xc->hw_ipi = 0;
-+		xc->hw_ipi = XIVE_BAD_IRQ;
- 		break;
- 	}
- }
---- a/arch/powerpc/sysdev/xive/spapr.c
-+++ b/arch/powerpc/sysdev/xive/spapr.c
-@@ -560,11 +560,11 @@ static int xive_spapr_get_ipi(unsigned i
- 
- static void xive_spapr_put_ipi(unsigned int cpu, struct xive_cpu *xc)
- {
--	if (!xc->hw_ipi)
-+	if (xc->hw_ipi == XIVE_BAD_IRQ)
- 		return;
- 
- 	xive_irq_bitmap_free(xc->hw_ipi);
--	xc->hw_ipi = 0;
-+	xc->hw_ipi = XIVE_BAD_IRQ;
- }
- #endif /* CONFIG_SMP */
- 
---- a/arch/powerpc/sysdev/xive/xive-internal.h
-+++ b/arch/powerpc/sysdev/xive/xive-internal.h
-@@ -5,6 +5,13 @@
- #ifndef __XIVE_INTERNAL_H
- #define __XIVE_INTERNAL_H
- 
-+/*
-+ * A "disabled" interrupt should never fire, to catch problems
-+ * we set its logical number to this
-+ */
-+#define XIVE_BAD_IRQ		0x7fffffff
-+#define XIVE_MAX_IRQ		(XIVE_BAD_IRQ - 1)
-+
- /* Each CPU carry one of these with various per-CPU state */
- struct xive_cpu {
- #ifdef CONFIG_SMP
-
+> 
+> /* Nesting Ops */
+> #define VFIO_IOMMU_NESTING_OP_BIND_PGTBL        0
+> #define VFIO_IOMMU_NESTING_OP_UNBIND_PGTBL      1
+> #define VFIO_IOMMU_NESTING_OP_CACHE_INVLD       2
+>  
+> Thanks,
+> Yi Liu
+> 
 
