@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75120C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:55:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C53C352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:55:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49B87214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:55:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C393D21927
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:55:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587052525;
-	bh=CSAq5rROppY5//OEGvd2X8BZ1Ko3UATRHocojnY+lYU=;
+	s=default; t=1587052526;
+	bh=kZ0NiSTwCEI9iWhJHS4nvEjEPhJyU7VAc4ik70TAT4w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vE3z3nhWz4bMuMQG5wIys8U8SSYwUnmTYG9ymU6EMbNfpSOy3DY9whG+I9pisW9dr
-	 WlD47I98kHEBL//35X7d8mZHg5wnVLRGTPsPCEIJsQXoeIUAQUBp3tYbOXfVrWnhrI
-	 WmR0FFg4SZ6PjeKi3CM3mLt2PJsjHdIhfk7Yr+ao=
+	b=rST62rsnFoZ+J9gy4675HoiS10ASAGJywJwSsOdYBs60J4AuLjogtdzKt8xU2NBAr
+	 uYa4wl1fYjwZwHBbfUViE3oemxKFTnLqFsSJn/lwuoP3+UCJ9uOpCUpIYpqTkXOuh2
+	 +39YKZD/R3CvV7maYvGVaeWZ2GsqZScjVO0VUmB0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440888AbgDPPzX (ORCPT
+        id S2896063AbgDPN3p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:55:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39936 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:29:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36186 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896105AbgDPN3x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:29:53 -0400
+        id S2895544AbgDPN1j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:27:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 970E721D94;
-        Thu, 16 Apr 2020 13:29:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C94FE217D8;
+        Thu, 16 Apr 2020 13:27:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043793;
-        bh=CSAq5rROppY5//OEGvd2X8BZ1Ko3UATRHocojnY+lYU=;
+        s=default; t=1587043659;
+        bh=kZ0NiSTwCEI9iWhJHS4nvEjEPhJyU7VAc4ik70TAT4w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sGExd6hdJkc8L7/s8FF/iEjWdBF/E+YM4AXfuV4V+sVE2l+yHO7FVxokmiC8IiBnM
-         2VAmatjKfRCZXOVHU8nr1xvnlrBZlXVEBT+chbz4J4NyuAAP3rysyD9UpQV344s4II
-         cEKBicUxEpNgEWuiqZyaqp2w9z+yUXNYvb6QO64s=
+        b=V8UG/K1w+QkIJNhXxcEiziMyijACf9A/sER+/wW+u/5jzNJzJChCMzLuz1mgt4Mab
+         epSoFBy8dgBkoJFe55jpq6TvsFINn1qoREhPZAGtoTB1aYGzAF+71I/kWHKy02TxL9
+         8iKuDpsOb/eo3nWWP5Fi552zl9SfsfABmFcQMvsE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 4.19 102/146] dm writecache: add cond_resched to avoid CPU hangs
-Date:   Thu, 16 Apr 2020 15:24:03 +0200
-Message-Id: <20200416131256.671279018@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sriharsha Allenki <sallenki@codeaurora.org>,
+        Peter Chen <peter.chen@nxp.com>
+Subject: [PATCH 4.19 048/146] usb: gadget: f_fs: Fix use after free issue as part of queue failure
+Date:   Thu, 16 Apr 2020 15:23:09 +0200
+Message-Id: <20200416131249.422964259@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
 References: <20200416131242.353444678@linuxfoundation.org>
@@ -59,52 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Sriharsha Allenki <sallenki@codeaurora.org>
 
-commit 1edaa447d958bec24c6a79685a5790d98976fd16 upstream.
+commit f63ec55ff904b2f2e126884fcad93175f16ab4bb upstream.
 
-Initializing a dm-writecache device can take a long time when the
-persistent memory device is large.  Add cond_resched() to a few loops
-to avoid warnings that the CPU is stuck.
+In AIO case, the request is freed up if ep_queue fails.
+However, io_data->req still has the reference to this freed
+request. In the case of this failure if there is aio_cancel
+call on this io_data it will lead to an invalid dequeue
+operation and a potential use after free issue.
+Fix this by setting the io_data->req to NULL when the request
+is freed as part of queue failure.
 
-Cc: stable@vger.kernel.org # v4.18+
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Fixes: 2e4c7553cd6f ("usb: gadget: f_fs: add aio support")
+Signed-off-by: Sriharsha Allenki <sallenki@codeaurora.org>
+CC: stable <stable@vger.kernel.org>
+Reviewed-by: Peter Chen <peter.chen@nxp.com>
+Link: https://lore.kernel.org/r/20200326115620.12571-1-sallenki@codeaurora.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-writecache.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/usb/gadget/function/f_fs.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/md/dm-writecache.c
-+++ b/drivers/md/dm-writecache.c
-@@ -878,6 +878,7 @@ static int writecache_alloc_entries(stru
- 		struct wc_entry *e = &wc->entries[b];
- 		e->index = b;
- 		e->write_in_progress = false;
-+		cond_resched();
- 	}
+--- a/drivers/usb/gadget/function/f_fs.c
++++ b/drivers/usb/gadget/function/f_fs.c
+@@ -1036,6 +1036,7 @@ static ssize_t ffs_epfile_io(struct file
  
- 	return 0;
-@@ -932,6 +933,7 @@ static void writecache_resume(struct dm_
- 			e->original_sector = le64_to_cpu(wme.original_sector);
- 			e->seq_count = le64_to_cpu(wme.seq_count);
+ 		ret = usb_ep_queue(ep->ep, req, GFP_ATOMIC);
+ 		if (unlikely(ret)) {
++			io_data->req = NULL;
+ 			usb_ep_free_request(ep->ep, req);
+ 			goto error_lock;
  		}
-+		cond_resched();
- 	}
- #endif
- 	for (b = 0; b < wc->n_blocks; b++) {
-@@ -1764,8 +1766,10 @@ static int init_memory(struct dm_writeca
- 	pmem_assign(sb(wc)->n_blocks, cpu_to_le64(wc->n_blocks));
- 	pmem_assign(sb(wc)->seq_count, cpu_to_le64(0));
- 
--	for (b = 0; b < wc->n_blocks; b++)
-+	for (b = 0; b < wc->n_blocks; b++) {
- 		write_original_sector_seq_count(wc, &wc->entries[b], -1, -1);
-+		cond_resched();
-+	}
- 
- 	writecache_flush_all_metadata(wc);
- 	writecache_commit_flushed(wc, false);
 
 
