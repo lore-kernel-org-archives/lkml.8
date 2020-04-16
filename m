@@ -2,242 +2,123 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F952C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:56:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3482CC352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B24921973
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:56:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Ouy/TyU2"
+	by mail.kernel.org (Postfix) with ESMTP id 1292121973
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:57:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587034678;
+	bh=u5fMQDNAUuXaPw+89dTTA0ZVG5dJuZz63WEnr/aWCsA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=D5wg4S07VFqBql8RhDcanzR4hcUa4UY46VWWEvWZb+CapH56KPNAvauEwFaO2FJWT
+	 zoEGyGDe8ZmdGhgl7TTddtPyO7QeE+7H6f9mP/R8fA1Iw7nwHXBkIs/7kGNOu2AV6N
+	 yTu/4OZRB/9SIcHj3ugX9OBJLnBAOMYNum3TGhlo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505728AbgDPK4q (ORCPT
+        id S2505806AbgDPK5x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 06:56:46 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:32908 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2505421AbgDPKvy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 06:51:54 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1587034292; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=qdafRHsCwt2NymhXTwmhoWCd46MiQ96omLlRHjYgPoM=; b=Ouy/TyU2cYJ46TxxlsSKSJibkEpIrt3Z1ZC+255Vos6wXD3KmHUCMNJemuV1zgUOzOMRygQv
- u+Ie6iKG1E4YmXEsITK0r50UVZgOgoQI62XkHWYo3S3meVnvU9tUukPNv30mdnEcEw5pzCxj
- JU8wvB+ytvQiWDjIniQfd8d2bTo=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e9838b4.7f78049a09d0-smtp-out-n01;
- Thu, 16 Apr 2020 10:51:32 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 08B4AC433BA; Thu, 16 Apr 2020 10:51:32 +0000 (UTC)
-Received: from [192.168.43.137] (unknown [106.213.191.226])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Thu, 16 Apr 2020 06:57:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52438 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2505565AbgDPKtx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 06:49:53 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B9777C433CB;
-        Thu, 16 Apr 2020 10:51:27 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B9777C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH] soc: qcom: rpmh-rsc: Remove the pm_lock
-To:     Douglas Anderson <dianders@chromium.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     swboyd@chromium.org, mka@chromium.org, evgreen@chromium.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200414102312.1.I295cb72bc5334a2af80313cbe97cb5c9dcb1442c@changeid>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <4cf5c74a-44c0-190d-e752-a46ccd5cda7d@codeaurora.org>
-Date:   Thu, 16 Apr 2020 16:21:24 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        by mail.kernel.org (Postfix) with ESMTPSA id C8860221E9;
+        Thu, 16 Apr 2020 10:41:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587033667;
+        bh=u5fMQDNAUuXaPw+89dTTA0ZVG5dJuZz63WEnr/aWCsA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xp/KXtyBC+AW47+w/EThPewPKJno4LpErrb9k/MShW8CSZOjoH/eQie3gyamQtAPZ
+         7+2VNJeLRNNDDKaVoGmzb7acrQ3F10p7zOFoaEDwJaxmNypi234utwSFrQnjNbswMB
+         9dE8DImjkqaSZMR+teMounUi1jKOEIZOXIrffOdk=
+Date:   Thu, 16 Apr 2020 11:41:04 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>, Vinod Koul <vkoul@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-i2c@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org
+Subject: Re: [PATCH 2/2] dt-bindings: Remove cases of 'allOf' containing a
+ '$ref'
+Message-ID: <20200416104104.GE5354@sirena.org.uk>
+References: <20200416005549.9683-1-robh@kernel.org>
+ <20200416005549.9683-2-robh@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200414102312.1.I295cb72bc5334a2af80313cbe97cb5c9dcb1442c@changeid>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="/2994txjAzEdQwm5"
+Content-Disposition: inline
+In-Reply-To: <20200416005549.9683-2-robh@kernel.org>
+X-Cookie: Tempt me with a spoon!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On 4/14/2020 10:53 PM, Douglas Anderson wrote:
-> It has been postulated that the pm_lock is bad for performance because
-> a CPU currently running rpmh_flush() could block other CPUs from
-> coming out of idle.  Similarly CPUs coming out of / going into idle
-> all need to contend with each other for the spinlock just to update
-> the variable tracking who's in PM.
->
-> Let's optimize this a bit.  Specifically:
->
-> - Use a count rather than a bitmask.  This is faster to access and
->    also means we can use the atomic_inc_return() function to really
->    detect who the last one to enter PM was.
-> - Accept that it's OK if we race and are doing the flush (because we
->    think we're last) while another CPU is coming out of idle.  As long
->    as we block that CPU if/when it tries to do an active-only transfer
->    we're OK.
->
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
->
->   drivers/soc/qcom/rpmh-internal.h |  7 ++---
->   drivers/soc/qcom/rpmh-rsc.c      | 46 +++++++++++++++-----------------
->   2 files changed, 24 insertions(+), 29 deletions(-)
->
-> diff --git a/drivers/soc/qcom/rpmh-internal.h b/drivers/soc/qcom/rpmh-internal.h
-> index dba8510c0669..449cd511702b 100644
-> --- a/drivers/soc/qcom/rpmh-internal.h
-> +++ b/drivers/soc/qcom/rpmh-internal.h
-> @@ -97,7 +97,7 @@ struct rpmh_ctrlr {
->    * @num_tcs:            Number of TCSes in this DRV.
->    * @rsc_pm:             CPU PM notifier for controller.
->    *                      Used when solver mode is not present.
-> - * @cpus_entered_pm:    CPU mask for cpus in idle power collapse.
-> + * @cpus_in_pm:         Number of CPUs not in idle power collapse.
->    *                      Used when solver mode is not present.
->    * @tcs:                TCS groups.
->    * @tcs_in_use:         S/W state of the TCS; only set for ACTIVE_ONLY
-> @@ -111,8 +111,6 @@ struct rpmh_ctrlr {
->    *                      grabbing this lock and a tcs_lock at the same time,
->    *                      grab the tcs_lock first so we always have a
->    *                      consistent lock ordering.
-> - * @pm_lock:            Synchronize during PM notifications.
-> - *                      Used when solver mode is not present.
->    * @client:             Handle to the DRV's client.
->    */
->   struct rsc_drv {
-> @@ -121,11 +119,10 @@ struct rsc_drv {
->   	int id;
->   	int num_tcs;
->   	struct notifier_block rsc_pm;
-> -	struct cpumask cpus_entered_pm;
-> +	atomic_t cpus_in_pm;
->   	struct tcs_group tcs[TCS_TYPE_NR];
->   	DECLARE_BITMAP(tcs_in_use, MAX_TCS_NR);
->   	spinlock_t lock;
-> -	spinlock_t pm_lock;
->   	struct rpmh_ctrlr client;
->   };
->   
-> diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
-> index 732316bb67dc..4e45a8ac6cde 100644
-> --- a/drivers/soc/qcom/rpmh-rsc.c
-> +++ b/drivers/soc/qcom/rpmh-rsc.c
-> @@ -740,6 +740,8 @@ int rpmh_rsc_write_ctrl_data(struct rsc_drv *drv, const struct tcs_request *msg)
->    * SLEEP and WAKE sets. If AMCs are busy, controller can not enter
->    * power collapse, so deny from the last cpu's pm notification.
->    *
-> + * Context: Must be called with the drv->lock held.
-> + *
->    * Return:
->    * * False		- AMCs are idle
->    * * True		- AMCs are busy
-> @@ -754,9 +756,6 @@ static bool rpmh_rsc_ctrlr_is_busy(struct rsc_drv *drv)
->   	 * dedicated TCS for active state use, then re-purposed wake TCSes
->   	 * should be checked for not busy, because we used wake TCSes for
->   	 * active requests in this case.
-> -	 *
-> -	 * Since this is called from the last cpu, need not take drv or tcs
-> -	 * lock before checking tcs_is_free().
->   	 */
->   	if (!tcs->num_tcs)
->   		tcs = &drv->tcs[WAKE_TCS];
-> @@ -791,36 +790,36 @@ static int rpmh_rsc_cpu_pm_callback(struct notifier_block *nfb,
->   {
->   	struct rsc_drv *drv = container_of(nfb, struct rsc_drv, rsc_pm);
->   	int ret = NOTIFY_OK;
-> -
-> -	spin_lock(&drv->pm_lock);
-> +	int cpus_in_pm;
->   
->   	switch (action) {
->   	case CPU_PM_ENTER:
-> -		cpumask_set_cpu(smp_processor_id(), &drv->cpus_entered_pm);
-> -
-> -		if (!cpumask_equal(&drv->cpus_entered_pm, cpu_online_mask))
-> -			goto exit;
-> +		cpus_in_pm = atomic_inc_return(&drv->cpus_in_pm);
-> +		if (cpus_in_pm < num_online_cpus())
-> +			return NOTIFY_OK;
->   		break;
->   	case CPU_PM_ENTER_FAILED:
->   	case CPU_PM_EXIT:
-> -		cpumask_clear_cpu(smp_processor_id(), &drv->cpus_entered_pm);
-> -		goto exit;
-> -	}
-> -
-> -	ret = rpmh_rsc_ctrlr_is_busy(drv);
-> -	if (ret) {
-> -		ret = NOTIFY_BAD;
-> -		goto exit;
-> +		atomic_dec(&drv->cpus_in_pm);
-> +		return NOTIFY_OK;
->   	}
->   
-> -	ret = rpmh_flush(&drv->client);
-> -	if (ret)
-> +	/*
-> +	 * It's likely we're on the last CPU. Grab the drv->lock and write
-> +	 * out the sleep/wake commands to RPMH hardware. Grabbing the lock
-> +	 * means that if we race with another CPU coming up we are still
-> +	 * guaranteed to be safe. If another CPU came up just after we checked
-> +	 * and has already started an active transfer then we'll notice we're
-> +	 * busy and abort. If another CPU comes up after we start flushing it
-> +	 * will be blocked from starting an active transfer until we're done
-> +	 * flushing. If another CPU starts an active transfer after we release
-> +	 * the lock we're still OK because we're no longer the last CPU.
-> +	 */
-> +	spin_lock(&drv->lock);
-> +	if (rpmh_rsc_ctrlr_is_busy(drv) || !rpmh_flush(&drv->client))
->   		ret = NOTIFY_BAD;
-> -	else
-> -		ret = NOTIFY_OK;
-> +	spin_unlock(&drv->lock);
->   
-> -exit:
-> -	spin_unlock(&drv->pm_lock);
->   	return ret;
->   }
-There is a race if we allow other CPUs to exit without pm lock
-below scenarios can happen.
+--/2994txjAzEdQwm5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-1. for the last cpu (CPU-x) CPU_PM_ENTER notification came
-2. On CPU-x, rpmh_flush() is in progress with drv->lock held, which is 
-at the flush_batch() stage
-3. Meanwhile any other CPU (CPU-y) woken up and did CPU_PM_EXIT
-4. From the woken up cpu, rpmh_invalidate() is invoked.
-5. It takes ctrlr->cache_lock and empties the cached batch requests 
-(making list empty and kfree() the cached requests)
-6. The last cpu (CPU-x) which was doing rpmh_flush() suddently gets the 
-list empty which it was traversing in flush_batch(),
-    leading to null pointer derefence.
+On Wed, Apr 15, 2020 at 07:55:49PM -0500, Rob Herring wrote:
+> json-schema versions draft7 and earlier have a weird behavior in that
+> any keywords combined with a '$ref' are ignored (silently). The correct
+> form was to put a '$ref' under an 'allOf'. This behavior is now changed
 
-To Fix above race condtion, ctrlr->cache_lock should be taken inside 
-rpmh_flush() starting point.
-also need to remove lockdep_assert_irqs_disabled() which got insterted, 
-since IRQ might be enabled by this time if some CPU exits.
+Acked-by: Mark Brown <broonie@kernel.org>
 
-Thanks,
-Maulik
+--/2994txjAzEdQwm5
+Content-Type: application/pgp-signature; name="signature.asc"
 
->   
-> @@ -964,7 +963,6 @@ static int rpmh_rsc_probe(struct platform_device *pdev)
->   	solver_config = solver_config >> DRV_HW_SOLVER_SHIFT;
->   	if (!solver_config) {
->   		drv->rsc_pm.notifier_call = rpmh_rsc_cpu_pm_callback;
-> -		spin_lock_init(&drv->pm_lock);
->   		cpu_pm_register_notifier(&drv->rsc_pm);
->   	}
->   
+-----BEGIN PGP SIGNATURE-----
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6YNkAACgkQJNaLcl1U
+h9B9Tgf/e6Ex42p5b/rjUYhiAhK+0T+nvTbdLGjxGyRfopnnVMMaYPWXmkdGdh0H
+/nGE0rn04EUyWfBkjgCeKuclbzRWJCfQBSl+4dlYbMuX1LKrybV3nRANP03o7A9y
+sqPsDL3Qq01Rgb8waJiwmXqcHjxKBbCZd5bzU8ff82hg8jGKMIDVzJdnYrzGJJm7
+wLygPWU+Nj65KniavgesiRhfwSLfveuWwAR6SsWCCiOhJOWgl0/KbhceiFTRLJ4c
+pQQeBPzy+/C5VH2sYPCZB3/MEQ4/6+CC1AchkSDqGwOooj4KsPXXCjiJtj4YZB86
+9wfRx0ePvlfgBQgHYw4LX6341lhYUw==
+=Rw7L
+-----END PGP SIGNATURE-----
+
+--/2994txjAzEdQwm5--
