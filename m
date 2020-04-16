@@ -2,78 +2,174 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7733C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F5DC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F4D2221F9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:38:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587069502;
-	bh=9i3CfymeGe/NEpMGnyUqethDDHOzRWWGJhLiiXR7+QU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=K8sVlfA3eqqaz/mVEJiZNmYgcB4L/LDyhKy0qp7TGGE95RSYTYdNC/jCBDYwhyl4F
-	 cjFZvD0kWn25Ic1iHYzo6E0lGpNvzkWKjgi/Bq28OPF4ZnglsTuJUdbe3HNe4E54wN
-	 CPJ4WKfMFaNUO/EY6AftHhprMWb3s8P6KiRVJTFk=
+	by mail.kernel.org (Postfix) with ESMTP id 2E931221F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:40:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="tKMoiJzj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731501AbgDPUiV (ORCPT
+        id S1731720AbgDPUkP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 16:38:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48680 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 16:40:15 -0400
+Received: from cmta19.telus.net ([209.171.16.92]:40649 "EHLO cmta19.telus.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726114AbgDPUiV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 16:38:21 -0400
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7557E2220A;
-        Thu, 16 Apr 2020 20:38:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587069500;
-        bh=9i3CfymeGe/NEpMGnyUqethDDHOzRWWGJhLiiXR7+QU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=AtYRlm3JeEbYNmK1uFVhGVztI222HVj0FYwHr9mzeclmUYYZuRqTLCpQSm86Z7sc+
-         Du0qNp5IZ0S8HL2Hch2Cqk9T6fxX/q4QaM3OPYLhsccpaNS9nI9FuK8u3ZO5VRHeaJ
-         coliPMrSFWdwbUFi9HGRYwz/F4taGg50ckffHISM=
-Received: by mail-qt1-f171.google.com with SMTP id b10so59049qtt.9;
-        Thu, 16 Apr 2020 13:38:20 -0700 (PDT)
-X-Gm-Message-State: AGi0PuaYL/mneGQ4+9jemTNYXirtiDM9x2OzMejLLG9mlMOsFyMhLqoP
-        Ah2DSLuRgPp9Y4nQnTfDnI7eBAzH4pclhikF0Q==
-X-Google-Smtp-Source: APiQypINcM/3te3/8Ff4YCoykqXgpcs+an4Ryq2/zxonzK/oqiiErlVLJql23/90o1z0HIyweV5zlL9XqTC+jP72nKw=
-X-Received: by 2002:ac8:4907:: with SMTP id e7mr28608227qtq.300.1587069499594;
- Thu, 16 Apr 2020 13:38:19 -0700 (PDT)
+        id S1726114AbgDPUkO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 16:40:14 -0400
+Received: from dougxps ([173.180.45.4])
+        by cmsmtp with SMTP
+        id PBIwjhLWDFblkPBIxj6pVE; Thu, 16 Apr 2020 14:40:13 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
+        t=1587069613; bh=kMrSu5wL+W/PT4AK4fBhYDNmaytt313olJcVR9Tlz1g=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date;
+        b=tKMoiJzjnG4seufXgIta8ArcQIDrvLyDrKglytbfYtWYoq5d1pY7d2dC9EwaAVGT3
+         LosdB78kONx/JQw8lZ9BZQDjAB8zNjhn1ZEG+xvTI2pkHy7+bkeMrjcss+JDwSuXA7
+         pXh2O3ihrPJox7LxneIgGhjC3xUh/RR5twnTmeJn6LEg13ITxUI5dE3FH3RP7nKmJN
+         W0dzMAcpmfbimLPmdWQWiJxfMd9BAHp0FiIleSNGlvFL1S/45Bg9cQgyps1HSYRZg9
+         2NDAwe2e8QTpFfv8hIHr3IvPdx5nNTcvX3kmTUhtWfJgcDpESKavrXOcuDitWP9ihh
+         73V207wd1t1Qg==
+X-Telus-Authed: none
+X-Authority-Analysis: v=2.3 cv=BNTNU2YG c=1 sm=1 tr=0
+ a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
+ a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
+ a=kj9zAlcOel0A:10 a=Ic_2fVt4t7qr8CzPNX0A:9 a=CjuIK1q_8ugA:10
+From:   "Doug Smythies" <dsmythies@telus.net>
+To:     "'Chen Yu'" <yu.c.chen@intel.com>
+Cc:     "'Len Brown'" <lenb@kernel.org>,
+        "'Rafael J. Wysocki'" <rjw@rjwysocki.net>,
+        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>
+References: <cover.1586782089.git.yu.c.chen@intel.com> <db96fd31afd0ff65e4041665293b96c984e675bc.1586782089.git.yu.c.chen@intel.com> <001901d613a4$010e0a70$032a1f50$@net> <20200416170611.GA23628@chenyu-office.sh.intel.com>
+In-Reply-To: <20200416170611.GA23628@chenyu-office.sh.intel.com>
+Subject: RE: [PATCH 2/3][v2] tools/power turbostat: Introduce functions to accumulate RAPL consumption
+Date:   Thu, 16 Apr 2020 13:40:09 -0700
+Message-ID: <001201d6142f$39fcde20$adf69a60$@net>
 MIME-Version: 1.0
-References: <1587012974-21219-1-git-send-email-gupt21@gmail.com>
-In-Reply-To: <1587012974-21219-1-git-send-email-gupt21@gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 16 Apr 2020 15:38:07 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLWMTpHG=bOmWgy1kg6d7vxRGbCda+febq=FnqbuRbPyQ@mail.gmail.com>
-Message-ID: <CAL_JsqLWMTpHG=bOmWgy1kg6d7vxRGbCda+febq=FnqbuRbPyQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/4] dt-bindings: ttyvs: document serial null modem
- driver bindings
-To:     Rishi Gupta <gupt21@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, Jonathan Corbet <corbet@lwn.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        devicetree@vger.kernel.org,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Office Outlook 12.0
+Content-Language: en-ca
+Thread-Index: AdYUEUlAclnAOCYlSaea7n5JOlcPYAAHAhlw
+X-CMAE-Envelope: MS4wfMI4Diz8wlDDwDXTilLSmN6awGayPgr4FX4048AH1mpBUd26YhPDXL1JdzVXnqEKKcZVfJgXUT7KpaAGct5mXxdhhk0zMwHcZCr5aNe/Y23zfV5yaNsU
+ 4oK3hW61E9q5I1ynDhhXRGrM6mL5SmgwM94luH/3u0eaZQTXWLa2yjt4Bmuurg/dUymywk08L3xDgemI9g7hCRK2tjnEz5VcfUcEuMmNmlHPOEby63Zm1mbQ
+ cYynMKeHADu/40OseeHzWNhUtFTwzvafqbrvzK4pi7KEvAp7niKFNcbQb8UVLrFJ
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 11:56 PM Rishi Gupta <gupt21@gmail.com> wrote:
->
-> The ttyvs driver creates virtual tty devices. These devices can
-> also be created through device tree. This commit document this.
+On 2020.04.10:06 Chen Yu wrote:
+> On Wed, Apr 15, 2020 at 09:03:34PM -0700, Doug Smythies wrote:
+>> On 2020.04.15 05:57 Chen Yu wrote:
+> 
+>>> +	/*
+>>> +	 * A wraparound time is calculated early.
+>>> +	 */
+>>> +	its.it_interval.tv_sec = rapl_joule_counter_range;
+>> 
+>> Would this be o.K.?
+>> 
+>> +	its.it_interval.tv_sec = rapl_joule_counter_range / 2;
+>> 
+> This should be okay. I've checked the defination of TDP, and
+> on a wiki page it has mentioned that[1]:
+> "Some sources state that the peak power for a microprocessor
+> is usually 1.5 times the TDP rating"
+> although the defination of TDP varies, using 2 * TDP should
+> be safe.
 
-Device tree is for real h/w devices. You have a configfs interface to
-set these up. I don't think we need both.
+O.K. Great.
+By the way, I have already tested it (in addition to the previously e-mailed patch correction):
 
-Rob
+First, with this:
+
+	its.it_interval.tv_sec = rapl_joule_counter_range;
+
+Result:
+
+sudo ./turbostat --Summary --interval 3200 --show Avg_MHz,Busy%,Bzy_MHz,IRQ,PkgTmp,PkgWatt,GFXWatt
+...
+RAPL: 2759 sec. Joule Counter Range, at 95 Watts
+...
+cpu0: MSR_PKG_POWER_INFO: 0x000002f8 (95 W TDP, RAPL 0 - 0 W, 0.000000 sec.)
+cpu0: MSR_PKG_POWER_LIMIT: 0x4283e800dd8320 (UNlocked)
+cpu0: PKG Limit #1: ENabled (100.000000 Watts, 28.000000 sec, clamp ENabled)
+cpu0: PKG Limit #2: ENabled (125.000000 Watts, 0.002441* sec, clamp DISabled)
+...
+Avg_MHz Busy%   Bzy_MHz IRQ     PkgTmp  PkgWatt GFXWatt
+4039    100.20  4031    7211202 64      18.29   0.00
+4033    100.22  4024    7254993 66      18.00   0.00
+
+actual (using a shorter interval, that doesn't wrap around):
+
+Avg_MHz Busy%   Bzy_MHz IRQ     PkgTmp  PkgWatt GFXWatt
+4032    100.22  4023    676360  65      99.92   0.00
+4029    100.23  4019    676629  65      99.91   0.00
+4032    100.22  4023    676771  65      99.91   0.00
+4037    100.22  4028    675430  65      99.91   0.00
+4032    100.22  4023    675819  65      99.91   0.00
+4028    100.23  4019    676541  65      99.91   0.00
+4042    100.22  4033    675857  64      99.91   0.00
+4029    100.23  4020    675597  65      99.91   0.00
+4027    100.23  4017    676201  65      3751748943144.71        0.00
+4034    100.22  4025    676402  65      99.91   0.00
+4035    100.22  4026    674982  65      99.91   0.00
+4032    100.22  4023    676012  64      99.91   0.00
+4034    100.22  4025    723696  66      99.91   0.00
+4039    100.22  4030    676342  64      99.91   0.00
+4028    100.23  4018    676082  65      99.91   0.00
+4028    100.23  4019    676218  65      99.91   0.00
+4038    100.22  4030    675771  65      99.91   0.00
+4031    100.22  4022    674282  65      3751749380702.93        0.00
+4031    100.22  4022    676314  65      99.91   0.00
+4039    100.22  4030    676197  65      99.91   0.00
+
+And now with this:
+
+	its.it_interval.tv_sec = rapl_joule_counter_range / 2;
+
+Avg_MHz Busy%   Bzy_MHz IRQ     PkgTmp  PkgWatt GFXWatt
+4032    100.22  4023    7205931 65      99.91   0.00
+4033    100.22  4023    7208003 65      99.91   0.00
+4034    100.22  4024    7205563 65      99.91   0.00
+
+and using the shorter interval:
+
+Avg_MHz Busy%   Bzy_MHz IRQ     PkgTmp  PkgWatt GFXWatt
+4028    100.23  4019    676147  64      99.92   0.00
+4027    100.23  4017    675857  65      99.91   0.00
+4036    100.22  4027    675736  65      99.91   0.00
+4032    100.22  4023    674758  65      99.91   0.00
+4032    100.22  4022    675692  65      99.91   0.00
+4032    100.22  4023    676275  65      99.91   0.00
+4043    100.22  4035    676001  66      99.91   0.00
+4028    100.23  4019    676277  65      99.91   0.00
+4028    100.23  4019    676420  65      99.91   0.00
+4028    100.23  4019    675884  65      99.91   0.00
+4037    100.22  4028    675293  65      99.91   0.00
+4030    100.23  4021    674025  66      99.91   0.00
+4031    100.22  4022    676462  65      99.91   0.00
+4032    100.22  4023    676007  66      99.91   0.00
+4047    100.21  4038    676424  65      99.91   0.00
+4030    100.22  4021    676853  65      99.91   0.00
+4028    100.23  4019    676553  65      99.91   0.00
+4034    100.22  4025    675880  65      99.91   0.00
+4036    100.22  4027    674824  65      99.91   0.00
+4033    100.22  4024    674577  65      99.91   0.00
+4031    100.22  4022    676599  65      99.91   0.00
+4041    100.22  4032    676675  66      99.91   0.00
+
+Note that it is very much on purpose that I have set
+TDP to 100 watts on this processor, whereas the
+default is 95 watts. Notice the package temperature,
+after several hours of running power throttled to
+a CPU frequency of 4.03 GHz.
+
+... Doug
+
+
