@@ -2,155 +2,132 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED105C352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 19:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F57C352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 19:12:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5FEA20786
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 19:05:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 630D520786
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 19:12:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Uyos0jNd"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="do1iupJT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730512AbgDPTFZ (ORCPT
+        id S1730864AbgDPTMW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 15:05:25 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:52926 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728611AbgDPTFX (ORCPT
+        Thu, 16 Apr 2020 15:12:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53118 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727989AbgDPTMT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 15:05:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587063921;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=LcO8LGSRLpNBRQkWwHdMf9RGdRa86XKrk2exP8zF5vE=;
-        b=Uyos0jNd0X1zkATsvQc8EhD1tog5pjW0fQQC56zwBlVIDFcsRlLNzYMsgaazNtsmsKJcGX
-        s/sBkSfVYMyRgqsf0SDY8t4NGI4XunKEsGjoJUWiO1NzLm14buna42m8i2un6nPWg3Cc9F
-        41+Pdclg7aA1M5ww9MWGg4V5+15HHz8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-73-6Ukn1W4mMRGW_C6M9lssZQ-1; Thu, 16 Apr 2020 15:05:17 -0400
-X-MC-Unique: 6Ukn1W4mMRGW_C6M9lssZQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2B336107ACCC;
-        Thu, 16 Apr 2020 19:05:16 +0000 (UTC)
-Received: from horse.redhat.com (ovpn-116-15.rdu2.redhat.com [10.10.116.15])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1B10E10027C3;
-        Thu, 16 Apr 2020 19:05:07 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 4C979220537; Thu, 16 Apr 2020 15:05:07 -0400 (EDT)
-Date:   Thu, 16 Apr 2020 15:05:07 -0400
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     Liu Bo <bo.liu@linux.alibaba.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, virtio-fs@redhat.com, miklos@szeredi.hu,
-        stefanha@redhat.com, dgilbert@redhat.com, mst@redhat.com
-Subject: Re: [PATCH 20/20] fuse,virtiofs: Add logic to free up a memory range
-Message-ID: <20200416190507.GC276932@redhat.com>
-References: <20200304165845.3081-1-vgoyal@redhat.com>
- <20200304165845.3081-21-vgoyal@redhat.com>
- <20200326000904.GA34937@rsjd01523.et2sqa>
- <20200327140114.GB32717@redhat.com>
- <20200327220606.GA119028@rsjd01523.et2sqa>
- <20200414193045.GB210453@redhat.com>
- <20200415172229.GA121484@rsjd01523.et2sqa>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200415172229.GA121484@rsjd01523.et2sqa>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+        Thu, 16 Apr 2020 15:12:19 -0400
+Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79226C061A0F
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 12:12:19 -0700 (PDT)
+Received: by mail-qv1-xf49.google.com with SMTP id t16so4222203qve.22
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 12:12:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=akfUqnFcHbR4ypUK0waDS6vSsDmt70xk58DkBEhixQg=;
+        b=do1iupJTFmsxaH3hlHdr4r/sVdtkohH+o2zKk5OnjDlNtdtq3IgMnNQa8oe9bE9tZk
+         T7mxam+uL1lKWTS8eclSdD7tNmxvzRuDzLNZvuzmBY2aoNC1RfGeZKXD/EBeuzFzfWIr
+         WJZHHWVuGV/SQF4RzrES/bJXAM4lLssSGx4Ijqqa7pY431PrVSte603yTzBazwmOOy53
+         Dg9NPpvOUyl+7bSOHXZSLJKN9qN0YpEVLIZrVCuHHAipr+4tm5tVqHqFuiUbpTofL1cE
+         +92D4EfDi2Egn+PC7ABAi7lUqTDDkEKceV3jg+kju8Mw+tV08GZ10XV89Fi9XWU7/tHb
+         prQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=akfUqnFcHbR4ypUK0waDS6vSsDmt70xk58DkBEhixQg=;
+        b=dI5Au0bxsaaFN08QnHuKWygFXhZs8/ltD11U3p73WFw7sk/Plrv0eRDXJCaXNZrOTz
+         NarQMbEmZQLSGPpPMqJlvfl7iRmMUcV34dY0zag12aHPDKaTEPRLA71Lxuz7COzq0Ptp
+         PnFrbLbKbcGy0zA+enQdSJ88MMitR/6/HwXrpsE1iyZN9arnVBQfgln7yXHZiOYl96yn
+         ItHmKiAjvWhqQEShmk7quVtMZfDOExr8y6/8ClTQlixDrd84TsxjlU2qwcNU0otmYblA
+         zJUqwUsf9zgXM2Ap48ioWIKRu15Mjg70M+AZIvKTfPGh6NF9+JwKrBUu7zu1gNawGSrI
+         eTyQ==
+X-Gm-Message-State: AGi0PuboFqMTBoyslq8djZ3CSLpon9W1yPqNMnzii8KUsj5AT9a+XcdY
+        JUmQHl2FqZDz3IxVJ7ucjODHIwgRen0t6g==
+X-Google-Smtp-Source: APiQypLttKT3SWY83gbGGp6Kj1Y4LsKg53UpN8WjCnn4NxYVGBQ/lOGRM1gn8dXlfLwC/TTmCRtAPeP7DJHcuw==
+X-Received: by 2002:ad4:5546:: with SMTP id v6mr12063970qvy.11.1587064337976;
+ Thu, 16 Apr 2020 12:12:17 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 12:11:52 -0700
+Message-Id: <20200416191152.259434-1-jcargill@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.1.301.g55bc3eb7cb9-goog
+Subject: [PATCH] KVM: Remove CREATE_IRQCHIP/SET_PIT2 race
+From:   Jon Cargille <jcargill@google.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Steve Rutherford <srutherford@google.com>,
+        Jon Cargille <jcargill@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 01:22:29AM +0800, Liu Bo wrote:
-> On Tue, Apr 14, 2020 at 03:30:45PM -0400, Vivek Goyal wrote:
-> > On Sat, Mar 28, 2020 at 06:06:06AM +0800, Liu Bo wrote:
-> > > On Fri, Mar 27, 2020 at 10:01:14AM -0400, Vivek Goyal wrote:
-> > > > On Thu, Mar 26, 2020 at 08:09:05AM +0800, Liu Bo wrote:
-> > > > 
-> > > > [..]
-> > > > > > +/*
-> > > > > > + * Find first mapping in the tree and free it and return it. Do not add
-> > > > > > + * it back to free pool. If fault == true, this function should be called
-> > > > > > + * with fi->i_mmap_sem held.
-> > > > > > + */
-> > > > > > +static struct fuse_dax_mapping *inode_reclaim_one_dmap(struct fuse_conn *fc,
-> > > > > > +							 struct inode *inode,
-> > > > > > +							 bool fault)
-> > > > > > +{
-> > > > > > +	struct fuse_inode *fi = get_fuse_inode(inode);
-> > > > > > +	struct fuse_dax_mapping *dmap;
-> > > > > > +	int ret;
-> > > > > > +
-> > > > > > +	if (!fault)
-> > > > > > +		down_write(&fi->i_mmap_sem);
-> > > > > > +
-> > > > > > +	/*
-> > > > > > +	 * Make sure there are no references to inode pages using
-> > > > > > +	 * get_user_pages()
-> > > > > > +	 */
-> > > > > > +	ret = fuse_break_dax_layouts(inode, 0, 0);
-> > > > > 
-> > > > > Hi Vivek,
-> > > > > 
-> > > > > This patch is enabling inline reclaim for fault path, but fault path
-> > > > > has already holds a locked exceptional entry which I believe the above
-> > > > > fuse_break_dax_layouts() needs to wait for, can you please elaborate
-> > > > > on how this can be avoided?
-> > > > > 
-> > > > 
-> > > > Hi Liubo,
-> > > > 
-> > > > Can you please point to the exact lock you are referring to. I will
-> > > > check it out. Once we got rid of needing to take inode lock in
-> > > > reclaim path, that opended the door to do inline reclaim in fault
-> > > > path as well. But I was not aware of this exceptional entry lock.
-> > > 
-> > > Hi Vivek,
-> > > 
-> > > dax_iomap_{pte,pmd}_fault has called grab_mapping_entry to get a
-> > > locked entry, when this fault gets into inline reclaim, would
-> > > fuse_break_dax_layouts wait for the locked exceptional entry which is
-> > > locked in dax_iomap_{pte,pmd}_fault?
-> > 
-> > Hi Liu Bo,
-> > 
-> > This is a good point. Indeed it can deadlock the way code is written
-> > currently.
-> >
-> 
-> It's 100% reproducible on 4.19, but not on 5.x which has xarray for
-> dax_layout_busy_page.
-> 
-> It was weird that on 5.x kernel the deadlock is gone, it turned out
-> that xarray search in dax_layout_busy_page simply skips the empty
-> locked exceptional entry, I didn't get deeper to find out whether it's
-> reasonable, but with that 5.x doesn't run to deadlock.
+From: Steve Rutherford <srutherford@google.com>
 
-I found more problems with enabling inline reclaim in fault path. I
-am holding fi->i_mmap_sem, shared and fuse_break_dax_layouts() can
-drop fi->i_mmap_sem if page is busy. I don't think we can drop and
-reacquire fi->i_mmap_sem while in fault path.
+Fixes a NULL pointer dereference, caused by the PIT firing an interrupt
+before the interrupt table has been initialized.
 
-Also fuse_break_dax_layouts() does not know if we are holding it
-shared or exclusive.
+SET_PIT2 can race with the creation of the IRQchip. In particular,
+if SET_PIT2 is called with a low PIT timer period (after the creation of
+the IOAPIC, but before the instantiation of the irq routes), the PIT can
+fire an interrupt at an uninitialized table.
 
-So I will probably have to go back to disable inline reclaim in
-fault path. If memory range is not available go back up in
-fuse_dax_fault(), drop fi->i_mmap_sem lock and wait on wait queue for
-a range to become free and retry.
+Signed-off-by: Steve Rutherford <srutherford@google.com>
+Signed-off-by: Jon Cargille <jcargill@google.com>
+Reviewed-by: Jim Mattson <jmattson@google.com>
+---
+ arch/x86/kvm/x86.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-I can retain the changes I did to break layout for a 2MB range only
-and not the whole file. I think that's a good optimization to retain
-anyway.
-
-Vivek
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 027dfd278a973..3cc3f673785c8 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -5049,10 +5049,13 @@ long kvm_arch_vm_ioctl(struct file *filp,
+ 		r = -EFAULT;
+ 		if (copy_from_user(&u.ps, argp, sizeof(u.ps)))
+ 			goto out;
++		mutex_lock(&kvm->lock);
+ 		r = -ENXIO;
+ 		if (!kvm->arch.vpit)
+-			goto out;
++			goto set_pit_out;
+ 		r = kvm_vm_ioctl_set_pit(kvm, &u.ps);
++set_pit_out:
++		mutex_unlock(&kvm->lock);
+ 		break;
+ 	}
+ 	case KVM_GET_PIT2: {
+@@ -5072,10 +5075,13 @@ long kvm_arch_vm_ioctl(struct file *filp,
+ 		r = -EFAULT;
+ 		if (copy_from_user(&u.ps2, argp, sizeof(u.ps2)))
+ 			goto out;
++		mutex_lock(&kvm->lock);
+ 		r = -ENXIO;
+ 		if (!kvm->arch.vpit)
+-			goto out;
++			goto set_pit2_out;
+ 		r = kvm_vm_ioctl_set_pit2(kvm, &u.ps2);
++set_pit2_out:
++		mutex_unlock(&kvm->lock);
+ 		break;
+ 	}
+ 	case KVM_REINJECT_CONTROL: {
+-- 
+2.26.0.110.g2183baf09c-goog
 
