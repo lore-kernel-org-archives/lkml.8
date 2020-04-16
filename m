@@ -5,48 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D25C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC5B3C352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:03:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3548320771
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:03:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A2EA20771
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:03:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587049404;
-	bh=4z7NnpuZEBJNYB8KjP7ZA8GDhYwTkGxdqMbAgTBOzPM=;
+	s=default; t=1587049409;
+	bh=bZPiNyvVGdaJKBKZrFOz0pBhySVoMImQT9fF9e1eZP4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BqgFIfaApmIf97ipewcnueZns4DAG6ngAaXQcxQLAijdtNfmlP0rX1SdLJpZFRVqz
-	 owu4PqzzOjhixtxdXwND0oNYVk5FYbSB1sMBRnju7Od6Oem/yXKB6J5ennC2CLJuG5
-	 Q4pV7VZSm9AtmQwya3DC96zrUd+XBFfGuXlglBs8=
+	b=1NQBogG8cGPOwmbBgrkCKBGE7jOfc0xV3mma4qE/KDkJz2MCHwph9UlGI18vhEPGc
+	 EZ8kk/tUshuIdiBOpkGS5ty7QNbacqCOhibqRj2I2lFyXum9a0iSNkn8yTX2tX+gtS
+	 gh8mSS5MBlFUjGSDQ2RuIvmxJrXVRqGjKJSS063s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441859AbgDPPDU (ORCPT
+        id S2441935AbgDPPD0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:03:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40062 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:03:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2504093AbgDPNxf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:53:35 -0400
+        id S2503376AbgDPNxa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:53:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A5DC20786;
-        Thu, 16 Apr 2020 13:53:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A560420786;
+        Thu, 16 Apr 2020 13:53:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045215;
-        bh=4z7NnpuZEBJNYB8KjP7ZA8GDhYwTkGxdqMbAgTBOzPM=;
+        s=default; t=1587045210;
+        bh=bZPiNyvVGdaJKBKZrFOz0pBhySVoMImQT9fF9e1eZP4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AGkXnZNCjQQKp+7ruXoIP207dW9l10oasP/+gRYzRTq8aMAZOpEcSMhKwd7VmJPpl
-         wMmTyjAl9aOuGl8ylu7IQcfCjBqivop9kjgZKcAI6qnVvu0jR168KFp2YJ46vUGMna
-         T9p0gYJ11t1Jcgi3Rz8gUnqqjEPXHPqDYPi/wjZQ=
+        b=tWGuRn6qZjWxxIkr5SV5xyq8vwqTaI1l3pKiu26+GVkemY44evO3dHrP9sdqg+BXz
+         JxeA22BKWbzMSNmw7aB2C5N5CM6MV9vrghvxfb5oiSNX4PkUhZoEzSMZar1KG3u6Hn
+         DRNGYwnjWVLGI2JMGfQV4RwPkbe4ZeoQvv/B4dak=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
+        stable@vger.kernel.org, cki-project@redhat.com,
+        Paolo Valente <paolo.valente@linaro.org>,
         Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 042/254] libata: Remove extra scsi_host_put() in ata_scsi_add_hosts()
-Date:   Thu, 16 Apr 2020 15:22:11 +0200
-Message-Id: <20200416131331.123225571@linuxfoundation.org>
+Subject: [PATCH 5.6 040/254] block, bfq: move forward the getting of an extra ref in bfq_bfqq_move
+Date:   Thu, 16 Apr 2020 15:22:09 +0200
+Message-Id: <20200416131330.850487573@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -59,156 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Garry <john.garry@huawei.com>
+From: Paolo Valente <paolo.valente@linaro.org>
 
-[ Upstream commit 1d72f7aec3595249dbb83291ccac041a2d676c57 ]
+[ Upstream commit fd1bb3ae54a9a2e0c42709de861c69aa146b8955 ]
 
-If the call to scsi_add_host_with_dma() in ata_scsi_add_hosts() fails,
-then we may get use-after-free KASAN warns:
+Commit ecedd3d7e199 ("block, bfq: get extra ref to prevent a queue
+from being freed during a group move") gets an extra reference to a
+bfq_queue before possibly deactivating it (temporarily), in
+bfq_bfqq_move(). This prevents the bfq_queue from disappearing before
+being reactivated in its new group.
 
-==================================================================
-BUG: KASAN: use-after-free in kobject_put+0x24/0x180
-Read of size 1 at addr ffff0026b8c80364 by task swapper/0/1
-CPU: 1 PID: 1 Comm: swapper/0 Tainted: G        W         5.6.0-rc3-00004-g5a71b206ea82-dirty #1765
-Hardware name: Huawei TaiShan 200 (Model 2280)/BC82AMDD, BIOS 2280-V2 CS V3.B160.01 02/24/2020
-Call trace:
-dump_backtrace+0x0/0x298
-show_stack+0x14/0x20
-dump_stack+0x118/0x190
-print_address_description.isra.9+0x6c/0x3b8
-__kasan_report+0x134/0x23c
-kasan_report+0xc/0x18
-__asan_load1+0x5c/0x68
-kobject_put+0x24/0x180
-put_device+0x10/0x20
-scsi_host_put+0x10/0x18
-ata_devres_release+0x74/0xb0
-release_nodes+0x2d0/0x470
-devres_release_all+0x50/0x78
-really_probe+0x2d4/0x560
-driver_probe_device+0x7c/0x148
-device_driver_attach+0x94/0xa0
-__driver_attach+0xa8/0x110
-bus_for_each_dev+0xe8/0x158
-driver_attach+0x30/0x40
-bus_add_driver+0x220/0x2e0
-driver_register+0xbc/0x1d0
-__pci_register_driver+0xbc/0xd0
-ahci_pci_driver_init+0x20/0x28
-do_one_initcall+0xf0/0x608
-kernel_init_freeable+0x31c/0x384
-kernel_init+0x10/0x118
-ret_from_fork+0x10/0x18
+Yet, the bfq_queue may also be expired (i.e., its service may be
+stopped) before the bfq_queue is deactivated. And also an expiration
+may lead to a premature freeing. This commit fixes this issue by
+simply moving forward the getting of the extra reference already
+introduced by commit ecedd3d7e199 ("block, bfq: get extra ref to
+prevent a queue from being freed during a group move").
 
-Allocated by task 5:
-save_stack+0x28/0xc8
-__kasan_kmalloc.isra.8+0xbc/0xd8
-kasan_kmalloc+0xc/0x18
-__kmalloc+0x1a8/0x280
-scsi_host_alloc+0x44/0x678
-ata_scsi_add_hosts+0x74/0x268
-ata_host_register+0x228/0x488
-ahci_host_activate+0x1c4/0x2a8
-ahci_init_one+0xd18/0x1298
-local_pci_probe+0x74/0xf0
-work_for_cpu_fn+0x2c/0x48
-process_one_work+0x488/0xc08
-worker_thread+0x330/0x5d0
-kthread+0x1c8/0x1d0
-ret_from_fork+0x10/0x18
-
-Freed by task 5:
-save_stack+0x28/0xc8
-__kasan_slab_free+0x118/0x180
-kasan_slab_free+0x10/0x18
-slab_free_freelist_hook+0xa4/0x1a0
-kfree+0xd4/0x3a0
-scsi_host_dev_release+0x100/0x148
-device_release+0x7c/0xe0
-kobject_put+0xb0/0x180
-put_device+0x10/0x20
-scsi_host_put+0x10/0x18
-ata_scsi_add_hosts+0x210/0x268
-ata_host_register+0x228/0x488
-ahci_host_activate+0x1c4/0x2a8
-ahci_init_one+0xd18/0x1298
-local_pci_probe+0x74/0xf0
-work_for_cpu_fn+0x2c/0x48
-process_one_work+0x488/0xc08
-worker_thread+0x330/0x5d0
-kthread+0x1c8/0x1d0
-ret_from_fork+0x10/0x18
-
-There is also refcount issue, as well:
-WARNING: CPU: 1 PID: 1 at lib/refcount.c:28 refcount_warn_saturate+0xf8/0x170
-
-The issue is that we make an erroneous extra call to scsi_host_put()
-for that host:
-
-So in ahci_init_one()->ata_host_alloc_pinfo()->ata_host_alloc(), we setup
-a device release method - ata_devres_release() - which intends to release
-the SCSI hosts:
-
-static void ata_devres_release(struct device *gendev, void *res)
-{
-	...
-	for (i = 0; i < host->n_ports; i++) {
-		struct ata_port *ap = host->ports[i];
-
-		if (!ap)
-			continue;
-
-		if (ap->scsi_host)
-			scsi_host_put(ap->scsi_host);
-
-	}
-	...
-}
-
-However in the ata_scsi_add_hosts() error path, we also call
-scsi_host_put() for the SCSI hosts.
-
-Fix by removing the the scsi_host_put() calls in ata_scsi_add_hosts() and
-leave this to ata_devres_release().
-
-Fixes: f31871951b38 ("libata: separate out ata_host_alloc() and ata_host_register()")
-Signed-off-by: John Garry <john.garry@huawei.com>
+Reported-by: cki-project@redhat.com
+Tested-by: cki-project@redhat.com
+Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ata/libata-scsi.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ block/bfq-cgroup.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
-index eb2eb599e6023..061eebf85e6d2 100644
---- a/drivers/ata/libata-scsi.c
-+++ b/drivers/ata/libata-scsi.c
-@@ -4562,22 +4562,19 @@ int ata_scsi_add_hosts(struct ata_host *host, struct scsi_host_template *sht)
- 		 */
- 		shost->max_host_blocked = 1;
+diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
+index f0ff6654af289..9d963ed518d1f 100644
+--- a/block/bfq-cgroup.c
++++ b/block/bfq-cgroup.c
+@@ -642,6 +642,12 @@ void bfq_bfqq_move(struct bfq_data *bfqd, struct bfq_queue *bfqq,
+ {
+ 	struct bfq_entity *entity = &bfqq->entity;
  
--		rc = scsi_add_host_with_dma(ap->scsi_host,
--						&ap->tdev, ap->host->dev);
-+		rc = scsi_add_host_with_dma(shost, &ap->tdev, ap->host->dev);
- 		if (rc)
--			goto err_add;
-+			goto err_alloc;
- 	}
++	/*
++	 * Get extra reference to prevent bfqq from being freed in
++	 * next possible expire or deactivate.
++	 */
++	bfqq->ref++;
++
+ 	/* If bfqq is empty, then bfq_bfqq_expire also invokes
+ 	 * bfq_del_bfqq_busy, thereby removing bfqq and its entity
+ 	 * from data structures related to current group. Otherwise we
+@@ -652,12 +658,6 @@ void bfq_bfqq_move(struct bfq_data *bfqd, struct bfq_queue *bfqq,
+ 		bfq_bfqq_expire(bfqd, bfqd->in_service_queue,
+ 				false, BFQQE_PREEMPTED);
  
- 	return 0;
+-	/*
+-	 * get extra reference to prevent bfqq from being freed in
+-	 * next possible deactivate
+-	 */
+-	bfqq->ref++;
+-
+ 	if (bfq_bfqq_busy(bfqq))
+ 		bfq_deactivate_bfqq(bfqd, bfqq, false, false);
+ 	else if (entity->on_st_or_in_serv)
+@@ -677,7 +677,7 @@ void bfq_bfqq_move(struct bfq_data *bfqd, struct bfq_queue *bfqq,
  
-- err_add:
--	scsi_host_put(host->ports[i]->scsi_host);
-  err_alloc:
- 	while (--i >= 0) {
- 		struct Scsi_Host *shost = host->ports[i]->scsi_host;
- 
-+		/* scsi_host_put() is in ata_devres_release() */
- 		scsi_remove_host(shost);
--		scsi_host_put(shost);
- 	}
- 	return rc;
+ 	if (!bfqd->in_service_queue && !bfqd->rq_in_driver)
+ 		bfq_schedule_dispatch(bfqd);
+-	/* release extra ref taken above */
++	/* release extra ref taken above, bfqq may happen to be freed now */
+ 	bfq_put_queue(bfqq);
  }
+ 
 -- 
 2.20.1
 
