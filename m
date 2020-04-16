@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E010C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 345F4C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:11:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43B4C2076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:11:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10546206D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:11:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587046267;
-	bh=sPrl9R+yoAc0NrziY7jtHcAjfyMMgN98O+1GI2m295k=;
+	s=default; t=1587046273;
+	bh=LVIw4RglqMHO9GLqQAM4ex7xZERbrnRufJ49tt/+4Ic=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JM7ugrNFKuIW+GoU3mXBrqFihXMYvpenuZ8RgKwX9GOMfjMk9ARe3tQCxBNYwcF6N
-	 Co3H4+5GqKHCViNDOvse8Wt75xDwACnyKRQFB0vv5xVS03FBgQVQAllYFbTJ+AisC0
-	 lah6qISeo0Bi/xOl5gSia/1/XshDuWsVR3mp6uBI=
+	b=CxtkuWPQPhH2rppPX7fCKtJoJ0gkQSD/XElYVJKUK+cMi2UD7HT0YWpPsvSrjLns+
+	 Zibqmibyn34E+WniY473QRnhdDe+bxVnm1pUehDEO9VwWKlmxW1Ht4vRt4sSkAaKpg
+	 E1YG+yrg5i5KLNBfQyaOsmfnd1oFPcEF30mQ+JQ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728690AbgDPOLF (ORCPT
+        id S2393595AbgDPOLK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:11:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33018 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:11:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731775AbgDPNrB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:47:01 -0400
+        id S1731780AbgDPNrE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:47:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0E1421734;
-        Thu, 16 Apr 2020 13:47:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BBC7208E4;
+        Thu, 16 Apr 2020 13:47:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044821;
-        bh=sPrl9R+yoAc0NrziY7jtHcAjfyMMgN98O+1GI2m295k=;
+        s=default; t=1587044823;
+        bh=LVIw4RglqMHO9GLqQAM4ex7xZERbrnRufJ49tt/+4Ic=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B+DgOhhr3Exwl6nHvj4YzSCfjKOwN6Xgivw7Qp8xkcVuAI5QIeg1J6PhiNR/m9uet
-         nDKYOnwpiasdBJ2Fkz49oT1TExwOstyFzrfQxdjjftiZkR6raBqL7zFIz8cNR/OuYL
-         fNNTur4YTntU54tBFdXGImYngbGL7qBR6acnVZkg=
+        b=M81L0eq6ux8kFQyGS+1NMWNtW/+Gj3iJyi9BS0yOq6kb/Vk6ubf9Ays/4IK2zRxv5
+         bvHMCDbmnwQAwUEy9YPjeFFxXmzR0eEnezSjUhKySztJIhrniatU8t8Ovt6BENb6TT
+         6Ne1n8QgUgSv/oOhxmGHYnEkqwwAcPuWw3GBzeck=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Subject: [PATCH 5.4 115/232] MIPS: OCTEON: irq: Fix potential NULL pointer dereference
-Date:   Thu, 16 Apr 2020 15:23:29 +0200
-Message-Id: <20200416131329.509258625@linuxfoundation.org>
+        stable@vger.kernel.org, Benoit Parrot <bparrot@ti.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Subject: [PATCH 5.4 089/232] media: ti-vpe: cal: fix disable_irqs to only the intended target
+Date:   Thu, 16 Apr 2020 15:23:03 +0200
+Message-Id: <20200416131326.124301479@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -60,38 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+From: Benoit Parrot <bparrot@ti.com>
 
-commit 792a402c2840054533ef56279c212ef6da87d811 upstream.
+commit 1db56284b9da9056093681f28db48a09a243274b upstream.
 
-There is a potential NULL pointer dereference in case kzalloc()
-fails and returns NULL.
+disable_irqs() was mistakenly disabling all interrupts when called.
+This cause all port stream to stop even if only stopping one of them.
 
-Fix this by adding a NULL check on *cd*
-
-This bug was detected with the help of Coccinelle.
-
-Fixes: 64b139f97c01 ("MIPS: OCTEON: irq: add CIB and other fixes")
-Cc: stable@vger.kernel.org
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/cavium-octeon/octeon-irq.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/media/platform/ti-vpe/cal.c |   16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
---- a/arch/mips/cavium-octeon/octeon-irq.c
-+++ b/arch/mips/cavium-octeon/octeon-irq.c
-@@ -2199,6 +2199,9 @@ static int octeon_irq_cib_map(struct irq
- 	}
+--- a/drivers/media/platform/ti-vpe/cal.c
++++ b/drivers/media/platform/ti-vpe/cal.c
+@@ -537,16 +537,16 @@ static void enable_irqs(struct cal_ctx *
  
- 	cd = kzalloc(sizeof(*cd), GFP_KERNEL);
-+	if (!cd)
-+		return -ENOMEM;
+ static void disable_irqs(struct cal_ctx *ctx)
+ {
++	u32 val;
 +
- 	cd->host_data = host_data;
- 	cd->bit = hw;
- 
+ 	/* Disable IRQ_WDMA_END 0/1 */
+-	reg_write_field(ctx->dev,
+-			CAL_HL_IRQENABLE_CLR(2),
+-			CAL_HL_IRQ_CLEAR,
+-			CAL_HL_IRQ_MASK(ctx->csi2_port));
++	val = 0;
++	set_field(&val, CAL_HL_IRQ_CLEAR, CAL_HL_IRQ_MASK(ctx->csi2_port));
++	reg_write(ctx->dev, CAL_HL_IRQENABLE_CLR(2), val);
+ 	/* Disable IRQ_WDMA_START 0/1 */
+-	reg_write_field(ctx->dev,
+-			CAL_HL_IRQENABLE_CLR(3),
+-			CAL_HL_IRQ_CLEAR,
+-			CAL_HL_IRQ_MASK(ctx->csi2_port));
++	val = 0;
++	set_field(&val, CAL_HL_IRQ_CLEAR, CAL_HL_IRQ_MASK(ctx->csi2_port));
++	reg_write(ctx->dev, CAL_HL_IRQENABLE_CLR(3), val);
+ 	/* Todo: Add VC_IRQ and CSI2_COMPLEXIO_IRQ handling */
+ 	reg_write(ctx->dev, CAL_CSI2_VC_IRQENABLE(1), 0);
+ }
 
 
