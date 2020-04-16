@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0E4DC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:16:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5922FC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:16:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79A2822241
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:16:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 358E522241
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:16:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587050189;
-	bh=VmVN60V25JspsZ14eGwB7Xo4/VC6TrWzh+uz3z2ASuA=;
+	s=default; t=1587050195;
+	bh=HgRYTwaT0K3i6R4yyE0ffxtTm8sNUE/pRjIWBN7QiJ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vmu86eNnLJATI4zEmZGly6v4qBblwn/IGRCN/BBKxXCWQJcYesNDJLGe/IA+5F334
-	 1iIhEbtrEPkVvppC6tR0ADTygGwMR7H/LzrefpJBPUiublwVkCx6uodZk31hB7U/YH
-	 T5VUyqo8jQtg2b/GYVS3E4jODGI/nbTXQx76ZAlo=
+	b=B+gfLZZNxfZDbvgnDEtFIeQq66PmQG8DiZ5q6XPCPF78X/QoSbOG5OL0wmBYmRZ9l
+	 9Vkln4JJZR04Fh5Mg+lpPmI75ZIZYf1oon8awvTheUJPY2B1P+No3p63UydIbzZJHs
+	 E17B7Fk7oShKW7ZPwJWUpaBa3zkuyqADKBsdGJvw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503801AbgDPPQ1 (ORCPT
+        id S2395032AbgDPPQd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:16:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35830 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:16:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441637AbgDPNuC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2441583AbgDPNuC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Apr 2020 09:50:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2190E2223F;
-        Thu, 16 Apr 2020 13:49:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D010A2222C;
+        Thu, 16 Apr 2020 13:49:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044960;
-        bh=VmVN60V25JspsZ14eGwB7Xo4/VC6TrWzh+uz3z2ASuA=;
+        s=default; t=1587044953;
+        bh=HgRYTwaT0K3i6R4yyE0ffxtTm8sNUE/pRjIWBN7QiJ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aNpvQQk/jcMLMdXwkMur12w2GRR/N9HqcS/6PZJ/LaX8jwJKFdWyyL6owh5Afr85q
-         7OChxm0jFKzOqTlwAnenadwL49pqJocUy/qcvHsxeUxra6zyE3fwOkwqOd1xn3Qeu0
-         1gDcuyT61WmUzqzZePBPRWuBO3h6e6c8KKrOFcbw=
+        b=Mbc1gpIasdm7OfBlVQvIjr+M/9j35IIepcqBHOGv3NQlGqVsUN3lTmH3Y8B6+refj
+         v/WjCCf6TZXBuq3RRD1r5KJSQDi1T5Y9raYoIP726EhZlpZbH3G/O2q36/b1OMB5Az
+         P9AP3Xt15bzz03pKJN1UgF8acoz4ZFQO8Nq6pxcI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Gilad Ben-Yossef <gilad@benyossef.com>,
+        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
+        Valentin Ciocoi Radulescu <valentin.ciocoi@nxp.com>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.4 170/232] crypto: ccree - protect against empty or NULL scatterlists
-Date:   Thu, 16 Apr 2020 15:24:24 +0200
-Message-Id: <20200416131336.274627879@linuxfoundation.org>
+Subject: [PATCH 5.4 168/232] crypto: caam/qi2 - fix chacha20 data size error
+Date:   Thu, 16 Apr 2020 15:24:22 +0200
+Message-Id: <20200416131336.009875806@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -61,163 +61,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gilad Ben-Yossef <gilad@benyossef.com>
+From: Horia Geantă <horia.geanta@nxp.com>
 
-commit ce0fc6db38decf0d2919bfe783de6d6b76e421a9 upstream.
+commit 3a5a9e1ef37b030b836d92df8264f840988f4a38 upstream.
 
-Deal gracefully with a NULL or empty scatterlist which can happen
-if both cryptlen and assoclen are zero and we're doing in-place
-AEAD encryption.
+HW generates a Data Size error for chacha20 requests that are not
+a multiple of 64B, since algorithm state (AS) does not have
+the FINAL bit set.
 
-This fixes a crash when this causes us to try and map a NULL page,
-at least with some platforms / DMA mapping configs.
+Since updating req->iv (for chaining) is not required,
+modify skcipher descriptors to set the FINAL bit for chacha20.
 
-Cc: stable@vger.kernel.org # v4.19+
-Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+[Note that for skcipher decryption we know that ctx1_iv_off is 0,
+which allows for an optimization by not checking algorithm type,
+since append_dec_op1() sets FINAL bit for all algorithms except AES.]
+
+Also drop the descriptor operations that save the IV.
+However, in order to keep code logic simple, things like
+S/G tables generation etc. are not touched.
+
+Cc: <stable@vger.kernel.org> # v5.3+
+Fixes: 334d37c9e263 ("crypto: caam - update IV using HW support")
+Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
+Tested-by: Valentin Ciocoi Radulescu <valentin.ciocoi@nxp.com>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/ccree/cc_buffer_mgr.c |   62 +++++++++++++++--------------------
- drivers/crypto/ccree/cc_buffer_mgr.h |    1 
- 2 files changed, 28 insertions(+), 35 deletions(-)
+ drivers/crypto/caam/caamalg_desc.c |   14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
---- a/drivers/crypto/ccree/cc_buffer_mgr.c
-+++ b/drivers/crypto/ccree/cc_buffer_mgr.c
-@@ -87,6 +87,8 @@ static unsigned int cc_get_sgl_nents(str
+--- a/drivers/crypto/caam/caamalg_desc.c
++++ b/drivers/crypto/caam/caamalg_desc.c
+@@ -1379,6 +1379,9 @@ void cnstr_shdsc_skcipher_encap(u32 * co
+ 				const u32 ctx1_iv_off)
  {
- 	unsigned int nents = 0;
+ 	u32 *key_jump_cmd;
++	u32 options = cdata->algtype | OP_ALG_AS_INIT | OP_ALG_ENCRYPT;
++	bool is_chacha20 = ((cdata->algtype & OP_ALG_ALGSEL_MASK) ==
++			    OP_ALG_ALGSEL_CHACHA20);
  
-+	*lbytes = 0;
-+
- 	while (nbytes && sg_list) {
- 		nents++;
- 		/* get the number of bytes in the last entry */
-@@ -95,6 +97,7 @@ static unsigned int cc_get_sgl_nents(str
- 				nbytes : sg_list->length;
- 		sg_list = sg_next(sg_list);
- 	}
-+
- 	dev_dbg(dev, "nents %d last bytes %d\n", nents, *lbytes);
- 	return nents;
- }
-@@ -290,37 +293,25 @@ static int cc_map_sg(struct device *dev,
- 		     unsigned int nbytes, int direction, u32 *nents,
- 		     u32 max_sg_nents, u32 *lbytes, u32 *mapped_nents)
+ 	init_sh_desc(desc, HDR_SHARE_SERIAL | HDR_SAVECTX);
+ 	/* Skip if already shared */
+@@ -1417,14 +1420,15 @@ void cnstr_shdsc_skcipher_encap(u32 * co
+ 				      LDST_OFFSET_SHIFT));
+ 
+ 	/* Load operation */
+-	append_operation(desc, cdata->algtype | OP_ALG_AS_INIT |
+-			 OP_ALG_ENCRYPT);
++	if (is_chacha20)
++		options |= OP_ALG_AS_FINALIZE;
++	append_operation(desc, options);
+ 
+ 	/* Perform operation */
+ 	skcipher_append_src_dst(desc);
+ 
+ 	/* Store IV */
+-	if (ivsize)
++	if (!is_chacha20 && ivsize)
+ 		append_seq_store(desc, ivsize, LDST_SRCDST_BYTE_CONTEXT |
+ 				 LDST_CLASS_1_CCB | (ctx1_iv_off <<
+ 				 LDST_OFFSET_SHIFT));
+@@ -1451,6 +1455,8 @@ void cnstr_shdsc_skcipher_decap(u32 * co
+ 				const u32 ctx1_iv_off)
  {
--	if (sg_is_last(sg)) {
--		/* One entry only case -set to DLLI */
--		if (dma_map_sg(dev, sg, 1, direction) != 1) {
--			dev_err(dev, "dma_map_sg() single buffer failed\n");
--			return -ENOMEM;
--		}
--		dev_dbg(dev, "Mapped sg: dma_address=%pad page=%p addr=%pK offset=%u length=%u\n",
--			&sg_dma_address(sg), sg_page(sg), sg_virt(sg),
--			sg->offset, sg->length);
--		*lbytes = nbytes;
--		*nents = 1;
--		*mapped_nents = 1;
--	} else {  /*sg_is_last*/
--		*nents = cc_get_sgl_nents(dev, sg, nbytes, lbytes);
--		if (*nents > max_sg_nents) {
--			*nents = 0;
--			dev_err(dev, "Too many fragments. current %d max %d\n",
--				*nents, max_sg_nents);
--			return -ENOMEM;
--		}
--		/* In case of mmu the number of mapped nents might
--		 * be changed from the original sgl nents
--		 */
--		*mapped_nents = dma_map_sg(dev, sg, *nents, direction);
--		if (*mapped_nents == 0) {
--			*nents = 0;
--			dev_err(dev, "dma_map_sg() sg buffer failed\n");
--			return -ENOMEM;
--		}
-+	int ret = 0;
-+
-+	*nents = cc_get_sgl_nents(dev, sg, nbytes, lbytes);
-+	if (*nents > max_sg_nents) {
-+		*nents = 0;
-+		dev_err(dev, "Too many fragments. current %d max %d\n",
-+			*nents, max_sg_nents);
-+		return -ENOMEM;
- 	}
+ 	u32 *key_jump_cmd;
++	bool is_chacha20 = ((cdata->algtype & OP_ALG_ALGSEL_MASK) ==
++			    OP_ALG_ALGSEL_CHACHA20);
  
-+	ret = dma_map_sg(dev, sg, *nents, direction);
-+	if (dma_mapping_error(dev, ret)) {
-+		*nents = 0;
-+		dev_err(dev, "dma_map_sg() sg buffer failed %d\n", ret);
-+		return -ENOMEM;
-+	}
-+
-+	*mapped_nents = ret;
-+
- 	return 0;
- }
+ 	init_sh_desc(desc, HDR_SHARE_SERIAL | HDR_SAVECTX);
+ 	/* Skip if already shared */
+@@ -1499,7 +1505,7 @@ void cnstr_shdsc_skcipher_decap(u32 * co
+ 	skcipher_append_src_dst(desc);
  
-@@ -555,11 +546,12 @@ void cc_unmap_aead_request(struct device
- 		sg_virt(req->src), areq_ctx->src.nents, areq_ctx->assoc.nents,
- 		areq_ctx->assoclen, req->cryptlen);
- 
--	dma_unmap_sg(dev, req->src, sg_nents(req->src), DMA_BIDIRECTIONAL);
-+	dma_unmap_sg(dev, req->src, areq_ctx->src.mapped_nents,
-+		     DMA_BIDIRECTIONAL);
- 	if (req->src != req->dst) {
- 		dev_dbg(dev, "Unmapping dst sgl: req->dst=%pK\n",
- 			sg_virt(req->dst));
--		dma_unmap_sg(dev, req->dst, sg_nents(req->dst),
-+		dma_unmap_sg(dev, req->dst, areq_ctx->dst.mapped_nents,
- 			     DMA_BIDIRECTIONAL);
- 	}
- 	if (drvdata->coherent &&
-@@ -881,7 +873,7 @@ static int cc_aead_chain_data(struct cc_
- 					    &src_last_bytes);
- 	sg_index = areq_ctx->src_sgl->length;
- 	//check where the data starts
--	while (sg_index <= size_to_skip) {
-+	while (src_mapped_nents && (sg_index <= size_to_skip)) {
- 		src_mapped_nents--;
- 		offset -= areq_ctx->src_sgl->length;
- 		sgl = sg_next(areq_ctx->src_sgl);
-@@ -908,7 +900,7 @@ static int cc_aead_chain_data(struct cc_
- 			size_for_map += crypto_aead_ivsize(tfm);
- 
- 		rc = cc_map_sg(dev, req->dst, size_for_map, DMA_BIDIRECTIONAL,
--			       &areq_ctx->dst.nents,
-+			       &areq_ctx->dst.mapped_nents,
- 			       LLI_MAX_NUM_OF_DATA_ENTRIES, &dst_last_bytes,
- 			       &dst_mapped_nents);
- 		if (rc)
-@@ -921,7 +913,7 @@ static int cc_aead_chain_data(struct cc_
- 	offset = size_to_skip;
- 
- 	//check where the data starts
--	while (sg_index <= size_to_skip) {
-+	while (dst_mapped_nents && sg_index <= size_to_skip) {
- 		dst_mapped_nents--;
- 		offset -= areq_ctx->dst_sgl->length;
- 		sgl = sg_next(areq_ctx->dst_sgl);
-@@ -1123,7 +1115,7 @@ int cc_map_aead_request(struct cc_drvdat
- 	if (is_gcm4543)
- 		size_to_map += crypto_aead_ivsize(tfm);
- 	rc = cc_map_sg(dev, req->src, size_to_map, DMA_BIDIRECTIONAL,
--		       &areq_ctx->src.nents,
-+		       &areq_ctx->src.mapped_nents,
- 		       (LLI_MAX_NUM_OF_ASSOC_DATA_ENTRIES +
- 			LLI_MAX_NUM_OF_DATA_ENTRIES),
- 		       &dummy, &mapped_nents);
---- a/drivers/crypto/ccree/cc_buffer_mgr.h
-+++ b/drivers/crypto/ccree/cc_buffer_mgr.h
-@@ -25,6 +25,7 @@ enum cc_sg_cpy_direct {
- 
- struct cc_mlli {
- 	cc_sram_addr_t sram_addr;
-+	unsigned int mapped_nents;
- 	unsigned int nents; //sg nents
- 	unsigned int mlli_nents; //mlli nents might be different than the above
- };
+ 	/* Store IV */
+-	if (ivsize)
++	if (!is_chacha20 && ivsize)
+ 		append_seq_store(desc, ivsize, LDST_SRCDST_BYTE_CONTEXT |
+ 				 LDST_CLASS_1_CCB | (ctx1_iv_off <<
+ 				 LDST_OFFSET_SHIFT));
 
 
