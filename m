@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E11D4C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF35C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:20:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B97C3214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:20:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9C7C21927
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:20:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587050418;
-	bh=rAE7rB+Hi786MKpUO7dDoxTVBTSD19Rs3R/iOiuEn38=;
+	s=default; t=1587050423;
+	bh=x3Qs4aSBXK64Z+K9htOVT9QwK/aJU4j3a0hDBID9p/U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pBuJlcdbIITFKdH+oKeijGlPwGfwnOw/VZeKeGqrg1HANVTdLxZbpzHymLUUnmvlD
-	 jKn9wb6JYXs2k01IV3cdxl1sHpAMIlvCD/EYLDMo3venWw5xQhECCO4Fy3lfTV9kYK
-	 FoTCICuaQ1Xx94+h6nq52Av74KShGs/0Qe29DPdc=
+	b=1Sk4ZKTrUyRIPSCggRD6sOiFchOW2BG8M92+xttA13d4H15FM+jI5dUOTxt8ik687
+	 QZsSnwNqybBFqWUubcpx0ymx6Ajy5JCjH6tKyUh38i9rtdDZz884XO4DeSl/DQJaHA
+	 NPe9kkx/7i6g5FK3/pcziXTH0YfVerd2WeO05FMw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395143AbgDPPUQ (ORCPT
+        id S2504942AbgDPPUW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:20:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33516 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:20:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898678AbgDPNra (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:47:30 -0400
+        id S2898674AbgDPNr0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:47:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9188921744;
-        Thu, 16 Apr 2020 13:47:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 283BD21734;
+        Thu, 16 Apr 2020 13:47:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044848;
-        bh=rAE7rB+Hi786MKpUO7dDoxTVBTSD19Rs3R/iOiuEn38=;
+        s=default; t=1587044845;
+        bh=x3Qs4aSBXK64Z+K9htOVT9QwK/aJU4j3a0hDBID9p/U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2af+8x1ei6/oKs+NsK8uRVXKPzPl02B5GeDy5OV3YvM+JtSCFOiUBtPWssx8V8n9w
-         Tq1cZynGHYJ8BKSurIF+c51Et3zFAT7x8xhy2M4oKo9sWg4zlwR0Y1Av3S7Gm3/E55
-         lPUo32XS67Sit6R7J5uHPTFyTVjGmpZaGc1nBQPY=
+        b=rRGPeHnksUYytNB2CbaDtAmiv7EQ70K5+g1O5n+Y0D1DlRUHGLPGJa9/GyA8RW9gf
+         lRad31sJI0Zrai6ZtOFwAJ12blR/J7NGbfJahZkX4Ngr9LyXsiDuAyX+9GPBgVqop3
+         IOZQ+dRMa5XJTJCiUkkAbksBKnCF1wekFYfhNVS4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Liran Alon <liran.alon@oracle.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.4 125/232] KVM: nVMX: Properly handle userspace interrupt window request
-Date:   Thu, 16 Apr 2020 15:23:39 +0200
-Message-Id: <20200416131330.694867397@linuxfoundation.org>
+        stable@vger.kernel.org, Kristian Klausen <kristian@klausen.dk>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 5.4 124/232] platform/x86: asus-wmi: Support laptops where the first battery is named BATT
+Date:   Thu, 16 Apr 2020 15:23:38 +0200
+Message-Id: <20200416131330.587893981@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -60,163 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Kristian Klausen <kristian@klausen.dk>
 
-commit a1c77abb8d93381e25a8d2df3a917388244ba776 upstream.
+commit 6b3586d45bba14f6912f37488090c37a3710e7b4 upstream.
 
-Return true for vmx_interrupt_allowed() if the vCPU is in L2 and L1 has
-external interrupt exiting enabled.  IRQs are never blocked in hardware
-if the CPU is in the guest (L2 from L1's perspective) when IRQs trigger
-VM-Exit.
+The WMI method to set the charge threshold does not provide a
+way to specific a battery, so we assume it is the first/primary
+battery (by checking if the name is BAT0).
+On some newer ASUS laptops (Zenbook UM431DA) though, the
+primary/first battery isn't named BAT0 but BATT, so we need
+to support that case.
 
-The new check percolates up to kvm_vcpu_ready_for_interrupt_injection()
-and thus vcpu_run(), and so KVM will exit to userspace if userspace has
-requested an interrupt window (to inject an IRQ into L1).
-
-Remove the @external_intr param from vmx_check_nested_events(), which is
-actually an indicator that userspace wants an interrupt window, e.g.
-it's named @req_int_win further up the stack.  Injecting a VM-Exit into
-L1 to try and bounce out to L0 userspace is all kinds of broken and is
-no longer necessary.
-
-Remove the hack in nested_vmx_vmexit() that attempted to workaround the
-breakage in vmx_check_nested_events() by only filling interrupt info if
-there's an actual interrupt pending.  The hack actually made things
-worse because it caused KVM to _never_ fill interrupt info when the
-LAPIC resides in userspace (kvm_cpu_has_interrupt() queries
-interrupt.injected, which is always cleared by prepare_vmcs12() before
-reaching the hack in nested_vmx_vmexit()).
-
-Fixes: 6550c4df7e50 ("KVM: nVMX: Fix interrupt window request with "Acknowledge interrupt on exit"")
+Fixes: 7973353e92ee ("platform/x86: asus-wmi: Refactor charge threshold to use the battery hooking API")
 Cc: stable@vger.kernel.org
-Cc: Liran Alon <liran.alon@oracle.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Kristian Klausen <kristian@klausen.dk>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/include/asm/kvm_host.h |    2 +-
- arch/x86/kvm/vmx/nested.c       |   18 ++++--------------
- arch/x86/kvm/vmx/vmx.c          |    9 +++++++--
- arch/x86/kvm/x86.c              |   10 +++++-----
- 4 files changed, 17 insertions(+), 22 deletions(-)
+ drivers/platform/x86/asus-wmi.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1130,7 +1130,7 @@ struct kvm_x86_ops {
- 	bool (*pt_supported)(void);
- 	bool (*pku_supported)(void);
- 
--	int (*check_nested_events)(struct kvm_vcpu *vcpu, bool external_intr);
-+	int (*check_nested_events)(struct kvm_vcpu *vcpu);
- 	void (*request_immediate_exit)(struct kvm_vcpu *vcpu);
- 
- 	void (*sched_in)(struct kvm_vcpu *kvm, int cpu);
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -3460,7 +3460,7 @@ static void nested_vmx_inject_exception_
- 	nested_vmx_vmexit(vcpu, EXIT_REASON_EXCEPTION_NMI, intr_info, exit_qual);
- }
- 
--static int vmx_check_nested_events(struct kvm_vcpu *vcpu, bool external_intr)
-+static int vmx_check_nested_events(struct kvm_vcpu *vcpu)
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -418,8 +418,11 @@ static int asus_wmi_battery_add(struct p
  {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
- 	unsigned long exit_qual;
-@@ -3507,8 +3507,7 @@ static int vmx_check_nested_events(struc
- 		return 0;
- 	}
- 
--	if ((kvm_cpu_has_interrupt(vcpu) || external_intr) &&
--	    nested_exit_on_intr(vcpu)) {
-+	if (kvm_cpu_has_interrupt(vcpu) && nested_exit_on_intr(vcpu)) {
- 		if (block_nested_events)
- 			return -EBUSY;
- 		nested_vmx_vmexit(vcpu, EXIT_REASON_EXTERNAL_INTERRUPT, 0, 0);
-@@ -4158,17 +4157,8 @@ void nested_vmx_vmexit(struct kvm_vcpu *
- 	vcpu->arch.mp_state = KVM_MP_STATE_RUNNABLE;
- 
- 	if (likely(!vmx->fail)) {
--		/*
--		 * TODO: SDM says that with acknowledge interrupt on
--		 * exit, bit 31 of the VM-exit interrupt information
--		 * (valid interrupt) is always set to 1 on
--		 * EXIT_REASON_EXTERNAL_INTERRUPT, so we shouldn't
--		 * need kvm_cpu_has_interrupt().  See the commit
--		 * message for details.
--		 */
--		if (nested_exit_intr_ack_set(vcpu) &&
--		    exit_reason == EXIT_REASON_EXTERNAL_INTERRUPT &&
--		    kvm_cpu_has_interrupt(vcpu)) {
-+		if (exit_reason == EXIT_REASON_EXTERNAL_INTERRUPT &&
-+		    nested_exit_intr_ack_set(vcpu)) {
- 			int irq = kvm_cpu_get_interrupt(vcpu);
- 			WARN_ON(irq < 0);
- 			vmcs12->vm_exit_intr_info = irq |
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -4505,8 +4505,13 @@ static int vmx_nmi_allowed(struct kvm_vc
- 
- static int vmx_interrupt_allowed(struct kvm_vcpu *vcpu)
- {
--	return (!to_vmx(vcpu)->nested.nested_run_pending &&
--		vmcs_readl(GUEST_RFLAGS) & X86_EFLAGS_IF) &&
-+	if (to_vmx(vcpu)->nested.nested_run_pending)
-+		return false;
-+
-+	if (is_guest_mode(vcpu) && nested_exit_on_intr(vcpu))
-+		return true;
-+
-+	return (vmcs_readl(GUEST_RFLAGS) & X86_EFLAGS_IF) &&
- 		!(vmcs_read32(GUEST_INTERRUPTIBILITY_INFO) &
- 			(GUEST_INTR_STATE_STI | GUEST_INTR_STATE_MOV_SS));
- }
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -7555,7 +7555,7 @@ static void update_cr8_intercept(struct
- 	kvm_x86_ops->update_cr8_intercept(vcpu, tpr, max_irr);
- }
- 
--static int inject_pending_event(struct kvm_vcpu *vcpu, bool req_int_win)
-+static int inject_pending_event(struct kvm_vcpu *vcpu)
- {
- 	int r;
- 
-@@ -7591,7 +7591,7 @@ static int inject_pending_event(struct k
- 	 * from L2 to L1.
+ 	/* The WMI method does not provide a way to specific a battery, so we
+ 	 * just assume it is the first battery.
++	 * Note: On some newer ASUS laptops (Zenbook UM431DA), the primary/first
++	 * battery is named BATT.
  	 */
- 	if (is_guest_mode(vcpu) && kvm_x86_ops->check_nested_events) {
--		r = kvm_x86_ops->check_nested_events(vcpu, req_int_win);
-+		r = kvm_x86_ops->check_nested_events(vcpu);
- 		if (r != 0)
- 			return r;
- 	}
-@@ -7653,7 +7653,7 @@ static int inject_pending_event(struct k
- 		 * KVM_REQ_EVENT only on certain events and not unconditionally?
- 		 */
- 		if (is_guest_mode(vcpu) && kvm_x86_ops->check_nested_events) {
--			r = kvm_x86_ops->check_nested_events(vcpu, req_int_win);
-+			r = kvm_x86_ops->check_nested_events(vcpu);
- 			if (r != 0)
- 				return r;
- 		}
-@@ -8130,7 +8130,7 @@ static int vcpu_enter_guest(struct kvm_v
- 			goto out;
- 		}
+-	if (strcmp(battery->desc->name, "BAT0") != 0)
++	if (strcmp(battery->desc->name, "BAT0") != 0 &&
++	    strcmp(battery->desc->name, "BATT") != 0)
+ 		return -ENODEV;
  
--		if (inject_pending_event(vcpu, req_int_win) != 0)
-+		if (inject_pending_event(vcpu) != 0)
- 			req_immediate_exit = true;
- 		else {
- 			/* Enable SMI/NMI/IRQ window open exits if needed.
-@@ -8360,7 +8360,7 @@ static inline int vcpu_block(struct kvm
- static inline bool kvm_vcpu_running(struct kvm_vcpu *vcpu)
- {
- 	if (is_guest_mode(vcpu) && kvm_x86_ops->check_nested_events)
--		kvm_x86_ops->check_nested_events(vcpu, false);
-+		kvm_x86_ops->check_nested_events(vcpu);
- 
- 	return (vcpu->arch.mp_state == KVM_MP_STATE_RUNNABLE &&
- 		!vcpu->arch.apf.halted);
+ 	if (device_create_file(&battery->dev,
 
 
