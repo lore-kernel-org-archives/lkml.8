@@ -2,144 +2,78 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F6EC352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7733C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:38:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABFEE21BE5
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:37:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F4D2221F9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:38:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587069463;
-	bh=u5aVN4WZK+kEholtZnnhIh7+K2tLHxSM9C2zW9iB8eo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NmDLqrD8z/aGi+LjJeI280ZnW2U+lp/Zv+5fDEgTXv4CzEoDxnMoM87SsiqXYBkqY
-	 GO7lXRG92z5XPayLfseP41zEmZnTlb++d9dyEzrWlHyQDdht7xZLvanLI5ChyfiTN/
-	 4EGI9bRw3Ro6DOa+bbBUJMfH/ejx/qIkYYrRMWCY=
+	s=default; t=1587069502;
+	bh=9i3CfymeGe/NEpMGnyUqethDDHOzRWWGJhLiiXR7+QU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=K8sVlfA3eqqaz/mVEJiZNmYgcB4L/LDyhKy0qp7TGGE95RSYTYdNC/jCBDYwhyl4F
+	 cjFZvD0kWn25Ic1iHYzo6E0lGpNvzkWKjgi/Bq28OPF4ZnglsTuJUdbe3HNe4E54wN
+	 CPJ4WKfMFaNUO/EY6AftHhprMWb3s8P6KiRVJTFk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731301AbgDPUhm (ORCPT
+        id S1731501AbgDPUiV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 16:37:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38140 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726114AbgDPUhl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 16:37:41 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78E0DC061A0C;
-        Thu, 16 Apr 2020 13:37:41 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id w65so2186142pfc.12;
-        Thu, 16 Apr 2020 13:37:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=XptGLsb8LK835cBV0jSCf0HRG/zsBSED6dv7tPgulp4=;
-        b=gnCYkWmGETLB8PFSLV04Wdrz2FK+gEIIVYi1koqv0Kj68T1sE9a0zKATXAPY7gyzfJ
-         suAROh/dNMoI6pHy/mCCmAEukmmvuLcuT+oRiOR7pSsJ7zs8in52Gebp1M1SYorAU4tK
-         gOw3D6aDwjxZUg6c2JW6Y26Oj3CTSIyaIex5HlRUwrN0Akr9mc2rJN/ETJ63AkMWNaPZ
-         lBqmfTlQr2tQLv3hxk3korpwrPMIzUOkCHKM9MiAc5EcYNrnyoXofMkm1N6eYHhs/DeF
-         913mMDnNGshbbDlgR/ygTf2Uto9ROB2t1oEKoFobtuWYnROIBcT0nnQEOaLeZGRWafc8
-         pefQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=XptGLsb8LK835cBV0jSCf0HRG/zsBSED6dv7tPgulp4=;
-        b=MxW0PSGrt0SfuwDyrVTKA3/ccX+uoQSfUwzzRijA+xbrXZ8N3RR3XATDn3qwVTRRDL
-         iGCVR32pLV8H7j0LFp1Ni7HdIGpXH+H/a6Uqp2jgP1Dnpqyzii0KvvFOSU+aQXyXqkXj
-         iqeZGbSSs0NOyTyMZum/tpG5eyng8DJCb2B31lEyTDbeDgqMs5VJKwXCrBOReaclTLq/
-         15bQb8DPi27+330AWKImJ0vyuplQT4mnL0i2r8BOwHDwWz706yYzJpiKu0BlaCy6BjS1
-         OY9Aapp+wyBRXbc8SyIQtg/lRcLipRQ51tiVcnzjp1zY0JxfvqyBQq4noNlB1NQQrtd5
-         oqyQ==
-X-Gm-Message-State: AGi0PuYZnxIMTeu51BcxARMuli6w1G9tnZ/nM0H3b1cchJLd6EZ5IBF4
-        om3sGt3jb63zUcpvsdtrREY=
-X-Google-Smtp-Source: APiQypLz/G622vMAZI/1t7tx6iXdrAiprqdhsptFvPk2bcCnaQJR//IYq0Xxli2CBTatOLYd6eCB1g==
-X-Received: by 2002:a63:2e03:: with SMTP id u3mr15186804pgu.121.1587069460712;
-        Thu, 16 Apr 2020 13:37:40 -0700 (PDT)
-Received: from google.com ([2601:647:4001:3000::50e3])
-        by smtp.gmail.com with ESMTPSA id u13sm3654978pjb.45.2020.04.16.13.37.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2020 13:37:38 -0700 (PDT)
-Date:   Thu, 16 Apr 2020 13:37:36 -0700
-From:   Minchan Kim <minchan@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Laura Abbott <labbott@redhat.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Nitin Gupta <ngupta@vflare.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 10/28] mm: only allow page table mappings for built-in
- zsmalloc
-Message-ID: <20200416203736.GB50092@google.com>
-References: <20200408115926.1467567-1-hch@lst.de>
- <20200408115926.1467567-11-hch@lst.de>
- <20200409160826.GC247701@google.com>
- <20200409165030.GG20713@hirez.programming.kicks-ass.net>
- <20200409170813.GD247701@google.com>
- <20200410023845.GA2354@jagdpanzerIV.localdomain>
- <20200410231136.GA101325@google.com>
- <20200411072052.GA31242@lst.de>
+        Thu, 16 Apr 2020 16:38:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48680 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726114AbgDPUiV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 16:38:21 -0400
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7557E2220A;
+        Thu, 16 Apr 2020 20:38:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587069500;
+        bh=9i3CfymeGe/NEpMGnyUqethDDHOzRWWGJhLiiXR7+QU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=AtYRlm3JeEbYNmK1uFVhGVztI222HVj0FYwHr9mzeclmUYYZuRqTLCpQSm86Z7sc+
+         Du0qNp5IZ0S8HL2Hch2Cqk9T6fxX/q4QaM3OPYLhsccpaNS9nI9FuK8u3ZO5VRHeaJ
+         coliPMrSFWdwbUFi9HGRYwz/F4taGg50ckffHISM=
+Received: by mail-qt1-f171.google.com with SMTP id b10so59049qtt.9;
+        Thu, 16 Apr 2020 13:38:20 -0700 (PDT)
+X-Gm-Message-State: AGi0PuaYL/mneGQ4+9jemTNYXirtiDM9x2OzMejLLG9mlMOsFyMhLqoP
+        Ah2DSLuRgPp9Y4nQnTfDnI7eBAzH4pclhikF0Q==
+X-Google-Smtp-Source: APiQypINcM/3te3/8Ff4YCoykqXgpcs+an4Ryq2/zxonzK/oqiiErlVLJql23/90o1z0HIyweV5zlL9XqTC+jP72nKw=
+X-Received: by 2002:ac8:4907:: with SMTP id e7mr28608227qtq.300.1587069499594;
+ Thu, 16 Apr 2020 13:38:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200411072052.GA31242@lst.de>
+References: <1587012974-21219-1-git-send-email-gupt21@gmail.com>
+In-Reply-To: <1587012974-21219-1-git-send-email-gupt21@gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 16 Apr 2020 15:38:07 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLWMTpHG=bOmWgy1kg6d7vxRGbCda+febq=FnqbuRbPyQ@mail.gmail.com>
+Message-ID: <CAL_JsqLWMTpHG=bOmWgy1kg6d7vxRGbCda+febq=FnqbuRbPyQ@mail.gmail.com>
+Subject: Re: [PATCH v3 1/4] dt-bindings: ttyvs: document serial null modem
+ driver bindings
+To:     Rishi Gupta <gupt21@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, Jonathan Corbet <corbet@lwn.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        devicetree@vger.kernel.org,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+On Wed, Apr 15, 2020 at 11:56 PM Rishi Gupta <gupt21@gmail.com> wrote:
+>
+> The ttyvs driver creates virtual tty devices. These devices can
+> also be created through device tree. This commit document this.
 
+Device tree is for real h/w devices. You have a configfs interface to
+set these up. I don't think we need both.
 
-Sorry for the late.
-
-On Sat, Apr 11, 2020 at 09:20:52AM +0200, Christoph Hellwig wrote:
-> Hi Minchan,
-> 
-> On Fri, Apr 10, 2020 at 04:11:36PM -0700, Minchan Kim wrote:
-> > It doesn't mean we couldn't use zsmalloc as module any longer. It means
-> > we couldn't use zsmalloc as module with pgtable mapping whcih was little
-> > bit faster on microbenchmark in some architecutre(However, I usually temped
-> > to remove it since it had several problems). However, we could still use
-> > zsmalloc as module as copy way instead of pgtable mapping. Thus, if someone
-> > really want to rollback the feature, they should provide reasonable reason
-> > why it doesn't work for them. "A little fast" wouldn't be enough to exports
-> > deep internal to the module.
-> 
-> do you have any data how much faster it is on arm (and does that include
-> arm64 as well)?  Besides the exports which were my prime concern,
-
-https://github.com/sjenning/zsmapbench
-
-I need to recall the memory. IIRC, it was almost 30% faster at that time
-in ARM so was not trivial at that time. However, it was story from
-several years ago.
-
-> zsmalloc with pgtable mappings also is the only user of map_kernel_range
-> outside of vmalloc.c, if it really is another code base for tiny
-> improvements we could mark map_kernel_range or in fact remove it entirely
-> and open code it in the remaining callers.
-
-I alsh have temped to remove it. Let me have time to revist it in this
-chance.
-
-Thanks.
+Rob
