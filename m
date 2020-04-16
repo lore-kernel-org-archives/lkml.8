@@ -2,149 +2,115 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30083C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:45:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A751C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:45:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1742A21D95
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:45:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E237C221EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:45:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506578AbgDPLpO (ORCPT
+        id S2505183AbgDPLp2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 07:45:14 -0400
-Received: from foss.arm.com ([217.140.110.172]:59306 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2634046AbgDPLoC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 07:44:02 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BE53DC14;
-        Thu, 16 Apr 2020 04:44:01 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A31B73F73D;
-        Thu, 16 Apr 2020 04:44:00 -0700 (PDT)
-References: <20200415210512.805-1-valentin.schneider@arm.com> <20200415210512.805-7-valentin.schneider@arm.com> <CAKfTPtA5-S_EyzZMDMr9SuVQmWZNdLXOVSLMAMTD+6Bow4jJBQ@mail.gmail.com> <20200416104725.GM20730@hirez.programming.kicks-ass.net>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH v3 6/9] sched: Kill select_task_rq()'s sd_flag parameter
-In-reply-to: <20200416104725.GM20730@hirez.programming.kicks-ass.net>
-Date:   Thu, 16 Apr 2020 12:43:54 +0100
-Message-ID: <jhjwo6f7j0l.mognet@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Thu, 16 Apr 2020 07:45:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57090 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2505200AbgDPKgS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 06:36:18 -0400
+Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [IPv6:2a02:1800:120:4::f00:13])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC461C03C1A7
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 03:36:14 -0700 (PDT)
+Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:fd83:81bb:c1d7:433d])
+        by baptiste.telenet-ops.be with bizsmtp
+        id TNWz2200b4dKHqf01NWzN4; Thu, 16 Apr 2020 12:31:11 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jP1nP-0001co-N7; Thu, 16 Apr 2020 12:30:59 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jP1nP-0003zF-Lu; Thu, 16 Apr 2020 12:30:59 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Rob Herring <robh+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        =?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jiri Kosina <trivial@kernel.org>
+Cc:     devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-iio@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH trivial 3/6] drm: Fix misspellings of "Analog Devices"
+Date:   Thu, 16 Apr 2020 12:30:55 +0200
+Message-Id: <20200416103058.15269-4-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200416103058.15269-1-geert+renesas@glider.be>
+References: <20200416103058.15269-1-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+According to https://www.analog.com/, the company name is spelled
+"Analog Devices".
 
-On 16/04/20 11:47, Peter Zijlstra wrote:
-> On Thu, Apr 16, 2020 at 09:42:36AM +0200, Vincent Guittot wrote:
->> On Wed, 15 Apr 2020 at 23:05, Valentin Schneider
->> > @@ -6622,13 +6622,25 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
->> >   * preempt must be disabled.
->> >   */
->> >  static int
->> > +select_task_rq_fair(struct task_struct *p, int prev_cpu, int wake_flags)
->> >  {
->> > +       int sync = (wake_flags & WF_SYNC) && !(current->flags & PF_EXITING);
->> >         struct sched_domain *tmp, *sd = NULL;
->> >         int cpu = smp_processor_id();
->> >         int new_cpu = prev_cpu;
->> >         int want_affine = 0;
->> > -       int sync = (wake_flags & WF_SYNC) && !(current->flags & PF_EXITING);
->> > +       int sd_flag;
->> > +
->> > +       switch (wake_flags & (WF_TTWU | WF_FORK | WF_EXEC)) {
->>
->> You remove a function parameter, which was directly set with the right
->> flag, but then you add a switch case to recreate this sd_flag
->> internally. Not sure we can say that it's real benefit
->>
->> > +       case WF_TTWU:
->> > +               sd_flag = SD_BALANCE_WAKE;
->> > +               break;
->> > +       case WF_FORK:
->> > +               sd_flag = SD_BALANCE_FORK;
->> > +               break;
->> > +       default:
->> > +               sd_flag = SD_BALANCE_EXEC;
->> > +       }
->
-> Agreed, that's a bit yuck, how about something like so instead:
->
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ drivers/gpu/drm/bridge/adv7511/Kconfig | 2 +-
+ drivers/gpu/drm/drm_fb_cma_helper.c    | 2 +-
+ drivers/gpu/drm/tegra/fb.c             | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-Aligning the SD_* and WF_* flags sure makes it simpler, I just wasn't
-daring enough to do that. I suppose we'll want some BUILD_BUG_ON() checks
-just for good measure.
+diff --git a/drivers/gpu/drm/bridge/adv7511/Kconfig b/drivers/gpu/drm/bridge/adv7511/Kconfig
+index 47d4eb9e845d085c..f46a5e26b5dd6406 100644
+--- a/drivers/gpu/drm/bridge/adv7511/Kconfig
++++ b/drivers/gpu/drm/bridge/adv7511/Kconfig
+@@ -6,7 +6,7 @@ config DRM_I2C_ADV7511
+ 	select REGMAP_I2C
+ 	select DRM_MIPI_DSI
+ 	help
+-	  Support for the Analog Device ADV7511(W)/13/33/35 HDMI encoders.
++	  Support for the Analog Devices ADV7511(W)/13/33/35 HDMI encoders.
+ 
+ config DRM_I2C_ADV7511_AUDIO
+ 	bool "ADV7511 HDMI Audio driver"
+diff --git a/drivers/gpu/drm/drm_fb_cma_helper.c b/drivers/gpu/drm/drm_fb_cma_helper.c
+index 9801c0333eca29e9..cb2349ad338d953b 100644
+--- a/drivers/gpu/drm/drm_fb_cma_helper.c
++++ b/drivers/gpu/drm/drm_fb_cma_helper.c
+@@ -2,7 +2,7 @@
+ /*
+  * drm kms/fb cma (contiguous memory allocator) helper functions
+  *
+- * Copyright (C) 2012 Analog Device Inc.
++ * Copyright (C) 2012 Analog Devices Inc.
+  *   Author: Lars-Peter Clausen <lars@metafoo.de>
+  *
+  * Based on udl_fbdev.c
+diff --git a/drivers/gpu/drm/tegra/fb.c b/drivers/gpu/drm/tegra/fb.c
+index b8a328f538626e7a..2b0666ac681b8721 100644
+--- a/drivers/gpu/drm/tegra/fb.c
++++ b/drivers/gpu/drm/tegra/fb.c
+@@ -4,7 +4,7 @@
+  * Copyright (C) 2012 NVIDIA CORPORATION.  All rights reserved.
+  *
+  * Based on the KMS/FB CMA helpers
+- *   Copyright (C) 2012 Analog Device Inc.
++ *   Copyright (C) 2012 Analog Devices Inc.
+  */
+ 
+ #include <linux/console.h>
+-- 
+2.17.1
 
-Also, it doesn't directly solve the switch case of 9/9, but I may get out
-of it with some hackery such as what I suggested in my reply to Vincent.
-
->
-> --- a/include/linux/sched/topology.h
-> +++ b/include/linux/sched/topology.h
-> @@ -11,10 +11,12 @@
->   */
->  #ifdef CONFIG_SMP
->
-> +/* First nibble of SD_flag is shared with WF_flag */
->  #define SD_BALANCE_NEWIDLE	0x0001	/* Balance when about to become idle */
->  #define SD_BALANCE_EXEC		0x0002	/* Balance on exec */
->  #define SD_BALANCE_FORK		0x0004	/* Balance on fork, clone */
->  #define SD_BALANCE_WAKE		0x0008  /* Balance on wakeup */
-> +
->  #define SD_WAKE_AFFINE		0x0010	/* Wake task to waking CPU */
->  #define SD_ASYM_CPUCAPACITY	0x0020  /* Domain members have different CPU capacities */
->  #define SD_SHARE_CPUCAPACITY	0x0040	/* Domain members share CPU capacity */
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -6635,16 +6635,8 @@ select_task_rq_fair(struct task_struct *
->       int want_affine = 0;
->       int sd_flag;
->
-> -	switch (wake_flags & (WF_TTWU | WF_FORK | WF_EXEC)) {
-> -	case WF_TTWU:
-> -		sd_flag = SD_BALANCE_WAKE;
-> -		break;
-> -	case WF_FORK:
-> -		sd_flag = SD_BALANCE_FORK;
-> -		break;
-> -	default:
-> -		sd_flag = SD_BALANCE_EXEC;
-> -	}
-> +	/* SD_flags and WF_flags share the first nibble */
-> +	sd_flag = wake_flags & 0xf;
->
->       if (sd_flag & SD_BALANCE_WAKE) {
->               record_wakee(p);
-> --- a/kernel/sched/sched.h
-> +++ b/kernel/sched/sched.h
-> @@ -1685,11 +1685,12 @@ static inline int task_on_rq_migrating(s
->  /*
->   * Wake flags
->   */
-> -#define WF_SYNC			0x01		/* Waker goes to sleep after wakeup */
-> -#define WF_TTWU                 0x02            /* Regular task wakeup */
-> -#define WF_FORK			0x04		/* Child wakeup after fork */
-> -#define WF_EXEC			0x08		/* "Fake" wakeup at exec */
-> -#define WF_MIGRATED		0x10		/* Internal use, task got migrated */
-> +#define WF_EXEC			0x02	/* SD_BALANCE_EXEC */
-> +#define WF_FORK			0x04	/* SD_BALANCE_FORK */
-> +#define WF_TTWU			0x08	/* SD_BALANCE_WAKE */
-> +
-> +#define WF_SYNC			0x10	/* Waker goes to sleep after wakeup */
-> +#define WF_MIGRATED		0x20	/* Internal use, task got migrated */
->
->  /*
->   * To aid in avoiding the subversion of "niceness" due to uneven distribution
