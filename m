@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C12BC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:58:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C85C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:58:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E40720786
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:58:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3789C21D94
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:58:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587045513;
-	bh=VZ39YWwP05qYCay5b0xukEXzfT7EKSUhftLU/x7SAco=;
+	s=default; t=1587045537;
+	bh=YNqyrUmTtTzpCpSBaY6Qh5xbnshOKHOCcipHDOMmFIo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NZ7DN0sQOCr+ucSs3N11HzOQFEmFl5+AVZOFmybvsEaFr6KVh4sbTdj7euSuejg+Q
-	 a+okHgVl7wkem7mPDZg+60DInYEFxf4PWyndTfTx6sN4wSZx67LhzceWuPnzBD7zXm
-	 nyhB2atEEBNDK8BVIhc46I4C6HHCHTG/Yjeb+RjE=
+	b=QMLdGK6hEDQV78/xlmIKfqPBn8jn3GhXDguKapV98zgD9NJgVf4h6AtfthlE9qUkW
+	 LHBqy/SrTDVJIl++klQwyKs8edApgfuRwNCDPnS+wOUW5jbX8ZhBZBwSeKg0k2FKJY
+	 VxUdiKAFUF8kZLBg4ylQimfma33nHmfQX9RsS780=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409024AbgDPN62 (ORCPT
+        id S2897290AbgDPN6y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:58:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51974 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:58:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897980AbgDPNjf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:39:35 -0400
+        id S2897942AbgDPNjs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:39:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3F402063A;
-        Thu, 16 Apr 2020 13:39:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 108D6206E9;
+        Thu, 16 Apr 2020 13:39:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044375;
-        bh=VZ39YWwP05qYCay5b0xukEXzfT7EKSUhftLU/x7SAco=;
+        s=default; t=1587044387;
+        bh=YNqyrUmTtTzpCpSBaY6Qh5xbnshOKHOCcipHDOMmFIo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YJSj3v7mgbLDzr7nvr3ZcYQJkTUdUCFc3N1G6JG2CqGU1sGcqTGsPtciTG4jHECMZ
-         apoqN8TAJIbOocmouSLbEpL3MKjIrY5FeHJNBRE8Ex5f9OrYFZh1uj2/QBymAAPgQ+
-         cnvhJeb/iyitRHfptgie3Dplenmstm3hXvJ5DWuc=
+        b=cFicuUdXu9PnwgrQP1YotmA40CXiw2JRMTFwxxIqNMDQJlaHbdIsrUrWzBkkLSmDv
+         g53+vd3rjbYCZIkucrauG7SFWoqyTvGQTzlVcE613RV2GWOLMMCImVHj9Mk/KOsCMd
+         AW/eBPIbkbJUhZpAXoKvOayuYLnas5KmM+5xR02o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrei Botila <andrei.botila@nxp.com>,
-        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.5 191/257] crypto: caam - update xts sector size for large input length
-Date:   Thu, 16 Apr 2020 15:24:02 +0200
-Message-Id: <20200416131350.134238295@linuxfoundation.org>
+        stable@vger.kernel.org, Bean Huo <beanhuo@micron.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Asutosh Das <asutoshd@codeaurora.org>,
+        Can Guo <cang@codeaurora.org>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.5 196/257] scsi: ufs: fix Auto-Hibern8 error detection
+Date:   Thu, 16 Apr 2020 15:24:07 +0200
+Message-Id: <20200416131350.692004522@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -60,59 +63,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrei Botila <andrei.botila@nxp.com>
+From: Stanley Chu <stanley.chu@mediatek.com>
 
-commit 3f142b6a7b573bde6cff926f246da05652c61eb4 upstream.
+commit 5a244e0ea67b293abb1d26c825db2ddde5f2862f upstream.
 
-Since in the software implementation of XTS-AES there is
-no notion of sector every input length is processed the same way.
-CAAM implementation has the notion of sector which causes different
-results between the software implementation and the one in CAAM
-for input lengths bigger than 512 bytes.
-Increase sector size to maximum value on 16 bits.
+Auto-Hibern8 may be disabled by some vendors or sysfs in runtime even if
+Auto-Hibern8 capability is supported by host. If Auto-Hibern8 capability is
+supported by host but not actually enabled, Auto-Hibern8 error shall not
+happen.
 
-Fixes: c6415a6016bf ("crypto: caam - add support for acipher xts(aes)")
-Cc: <stable@vger.kernel.org> # v4.12+
-Signed-off-by: Andrei Botila <andrei.botila@nxp.com>
-Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+To fix this, provide a way to detect if Auto-Hibern8 is actually enabled
+first, and bypass Auto-Hibern8 disabling case in
+ufshcd_is_auto_hibern8_error().
+
+Fixes: 821744403913 ("scsi: ufs: Add error-handling of Auto-Hibernate")
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200129105251.12466-4-stanley.chu@mediatek.com
+Reviewed-by: Bean Huo <beanhuo@micron.com>
+Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
+Reviewed-by: Can Guo <cang@codeaurora.org>
+Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/caam/caamalg_desc.c |   16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ drivers/scsi/ufs/ufshcd.c |    3 ++-
+ drivers/scsi/ufs/ufshcd.h |    6 ++++++
+ 2 files changed, 8 insertions(+), 1 deletion(-)
 
---- a/drivers/crypto/caam/caamalg_desc.c
-+++ b/drivers/crypto/caam/caamalg_desc.c
-@@ -1524,7 +1524,13 @@ EXPORT_SYMBOL(cnstr_shdsc_skcipher_decap
-  */
- void cnstr_shdsc_xts_skcipher_encap(u32 * const desc, struct alginfo *cdata)
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -5513,7 +5513,8 @@ static irqreturn_t ufshcd_update_uic_err
+ static bool ufshcd_is_auto_hibern8_error(struct ufs_hba *hba,
+ 					 u32 intr_mask)
  {
--	__be64 sector_size = cpu_to_be64(512);
-+	/*
-+	 * Set sector size to a big value, practically disabling
-+	 * sector size segmentation in xts implementation. We cannot
-+	 * take full advantage of this HW feature with existing
-+	 * crypto API / dm-crypt SW architecture.
-+	 */
-+	__be64 sector_size = cpu_to_be64(BIT(15));
- 	u32 *key_jump_cmd;
+-	if (!ufshcd_is_auto_hibern8_supported(hba))
++	if (!ufshcd_is_auto_hibern8_supported(hba) ||
++	    !ufshcd_is_auto_hibern8_enabled(hba))
+ 		return false;
  
- 	init_sh_desc(desc, HDR_SHARE_SERIAL | HDR_SAVECTX);
-@@ -1577,7 +1583,13 @@ EXPORT_SYMBOL(cnstr_shdsc_xts_skcipher_e
-  */
- void cnstr_shdsc_xts_skcipher_decap(u32 * const desc, struct alginfo *cdata)
- {
--	__be64 sector_size = cpu_to_be64(512);
-+	/*
-+	 * Set sector size to a big value, practically disabling
-+	 * sector size segmentation in xts implementation. We cannot
-+	 * take full advantage of this HW feature with existing
-+	 * crypto API / dm-crypt SW architecture.
-+	 */
-+	__be64 sector_size = cpu_to_be64(BIT(15));
- 	u32 *key_jump_cmd;
+ 	if (!(intr_mask & UFSHCD_UIC_HIBERN8_MASK))
+--- a/drivers/scsi/ufs/ufshcd.h
++++ b/drivers/scsi/ufs/ufshcd.h
+@@ -55,6 +55,7 @@
+ #include <linux/clk.h>
+ #include <linux/completion.h>
+ #include <linux/regulator/consumer.h>
++#include <linux/bitfield.h>
+ #include "unipro.h"
  
- 	init_sh_desc(desc, HDR_SHARE_SERIAL | HDR_SAVECTX);
+ #include <asm/irq.h>
+@@ -781,6 +782,11 @@ static inline bool ufshcd_is_auto_hibern
+ 	return (hba->capabilities & MASK_AUTO_HIBERN8_SUPPORT);
+ }
+ 
++static inline bool ufshcd_is_auto_hibern8_enabled(struct ufs_hba *hba)
++{
++	return FIELD_GET(UFSHCI_AHIBERN8_TIMER_MASK, hba->ahit) ? true : false;
++}
++
+ #define ufshcd_writel(hba, val, reg)	\
+ 	writel((val), (hba)->mmio_base + (reg))
+ #define ufshcd_readl(hba, reg)	\
 
 
