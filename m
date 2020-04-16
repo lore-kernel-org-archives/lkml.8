@@ -2,87 +2,66 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 893FEC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:08:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89B19C352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66BBF20774
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:08:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587049683;
-	bh=j2JTeMUQcJQF4DGF/2vYwdzn6cK3zbBJV6eCQlvgkOc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CnECYeUuBW+5sZJ9pppXn8goiG5zkeVxZZLYjKhz5TSnn9GJCoNKN4HdzC82C4W+p
-	 BT+ofEmbf3rvBqLJMX/rhRj2wnt5TLeNK1sLfHnmwdGg0528CgFDu01QrxtuC5cgCG
-	 shd4nDtwu+Oast2I1qsZfJaJ/3ZKS2pW/e/6zh0Y=
+	by mail.kernel.org (Postfix) with ESMTP id 6FC2C206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:08:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503294AbgDPPIC (ORCPT
+        id S2388888AbgDPPIK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:08:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37472 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:08:10 -0400
+Received: from mga07.intel.com ([134.134.136.100]:63742 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392326AbgDPNvU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:51:20 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7EA5E2063A;
-        Thu, 16 Apr 2020 13:51:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045080;
-        bh=j2JTeMUQcJQF4DGF/2vYwdzn6cK3zbBJV6eCQlvgkOc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BTM4ogHVGMJYem/Nk2xLadmerIdDlWtV6v1c4IIPPf5PlwkiJh4a0OxPT9O9IJT/0
-         ogZdJv6D74bx7DICIhbmWOXyaYw/+WHrsMEKhpMF6rRuTNSOAg4kI8H5DhSuNiogAH
-         pmQ6PjGL5XDKNrQB2i/2akXrybrOLc4aQnedqsnU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.4 181/232] selftests/powerpc: Add tlbie_test in .gitignore
-Date:   Thu, 16 Apr 2020 15:24:35 +0200
-Message-Id: <20200416131337.704487031@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
-References: <20200416131316.640996080@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S2441872AbgDPPHw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 11:07:52 -0400
+IronPort-SDR: CRhiPWPlSDDWiEGWg66HjxGlQNN/Ma26T12do60+1eiLeXlQVDjQxMtUcIMw3AiSKtZ9Z3SkXi
+ 8EtfiGGhvjAA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 08:07:50 -0700
+IronPort-SDR: o5iUjlKVYAkiSQVPwxHxIkIYdjmBCXuTBBpdTwXmAecBBvW1C+zOu8iK1KaQu3UOTksj0n79i9
+ Gz3Rqojkq5Bw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,391,1580803200"; 
+   d="scan'208";a="278018877"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga004.fm.intel.com with ESMTP; 16 Apr 2020 08:07:49 -0700
+Date:   Thu, 16 Apr 2020 08:07:49 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
+Subject: Re: [PATCH v2 00/10] KVM: VMX: Unionize vcpu_vmx.exit_reason
+Message-ID: <20200416150749.GA12170@linux.intel.com>
+References: <20200415175519.14230-1-sean.j.christopherson@intel.com>
+ <a77ca940-afe4-a94a-2698-6cda0f95ba5c@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a77ca940-afe4-a94a-2698-6cda0f95ba5c@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+On Thu, Apr 16, 2020 at 03:44:06PM +0200, Paolo Bonzini wrote:
+> On 15/04/20 19:55, Sean Christopherson wrote:
+> For now I committed only patches 1-9, just to limit the conflicts with
+> the other series.  I would like to understand how you think the
+> conflicts should be fixed with the union.
 
-commit 47bf235f324c696395c30541fe4fcf99fcd24188 upstream.
+Pushed a branch.  Basically, take the union code and then make sure there
+aren't any vmcs_read32(VM_EXIT_INTR_INFO) or vmcs_readl(EXIT_QUALIFICATION)
+calls outside of the caching accessors or dump_vmcs().
 
-The commit identified below added tlbie_test but forgot to add it in
-.gitignore.
-
-Fixes: 93cad5f78995 ("selftests/powerpc: Add test case for tlbie vs mtpidr ordering issue")
-Cc: stable@vger.kernel.org # v5.4+
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/259f9c06ed4563c4fa4fa8ffa652347278d769e7.1582847784.git.christophe.leroy@c-s.fr
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- tools/testing/selftests/powerpc/mm/.gitignore |    1 +
- 1 file changed, 1 insertion(+)
-
---- a/tools/testing/selftests/powerpc/mm/.gitignore
-+++ b/tools/testing/selftests/powerpc/mm/.gitignore
-@@ -5,3 +5,4 @@ prot_sao
- segv_errors
- wild_bctr
- large_vm_fork_separation
-+tlbie_test
-
-
+  https://github.com/sean-jc/linux for_paolo_merge_union_cache 
