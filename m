@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E30C1C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1850FC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:32:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1D7F214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:32:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA597214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:32:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587051132;
-	bh=OGZkcncoHPVJmL7cRIy9th8i3wkYCksTTNGUQW77P4g=;
+	s=default; t=1587051140;
+	bh=7+c6pVLMVKpK+K5KTRWeQ5J/R2s6GfTYxOoxi9ddTZQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oehEa2axUoykPJd9AF983/ktd5/AR2ZVNyRktGCTXxKQAHw0YXceL53c1Eli4TCBS
-	 X2Z1fNpSK2oUxkX4wksKA0fDUzUftUlhJPRG+iGXb6RGqyRC+/8+p2cB9LGFrtVtDz
-	 fwDZe3rI1kwVDFLiiF8G+LxEBXqnkbuiC3+MI6Lg=
+	b=nCYnF5WsSjxePaYJkjzfzYEKmbAPMGWz/TZpSi7Uv3eReL8S/cv2h+nFBEO8+ttke
+	 PqsE6Y5TdKXYG26GlHkp/N7QjYDQTYiQcfl/cuRq6gfIlypHrRe/3UBLPz0/plWtCW
+	 ZTcXqDTiQlkCLYRBgzoKVkZCmC728a7ZhjSreKw4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410422AbgDPPcK (ORCPT
+        id S2410433AbgDPPcR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:32:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55578 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:32:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441495AbgDPNmd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:42:33 -0400
+        id S2441405AbgDPNma (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:42:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 041CF214D8;
-        Thu, 16 Apr 2020 13:42:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73F822076D;
+        Thu, 16 Apr 2020 13:42:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044552;
-        bh=OGZkcncoHPVJmL7cRIy9th8i3wkYCksTTNGUQW77P4g=;
+        s=default; t=1587044549;
+        bh=7+c6pVLMVKpK+K5KTRWeQ5J/R2s6GfTYxOoxi9ddTZQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1oeV22Iik909cdMJcu6fBvKrD7Hja1P4heeh831+593Jko0EQaBEKIU3Vu2AfGhy4
-         7OXI9ND3QlKtD9gf2N6ZYi7Z2Q5KiXGNNt6gcFC1+xKXeNYIrRNMt/tQJPGEsm69sF
-         0hgnp+qkVNbZ5FcWJuPxSo+4VzOagUhnFcy85sJ4=
+        b=iKK5agGL+ci4jHiLYk9m8fM/SKrA65/m/0x7P/r59afpszUq8LYhlfoq3jR7Sajxn
+         PK48V0f3L3l7gDu8M6GjY+oFAyge1gNWWNXiD2o/j5jS8WXv17k40EywC0DYtw2kfT
+         bXODl0Dvonhnl/x5zqQPasJp2NHtpuaiC+8dFjNQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 255/257] powerpc/kasan: Fix kasan_remap_early_shadow_ro()
-Date:   Thu, 16 Apr 2020 15:25:06 +0200
-Message-Id: <20200416131357.383473013@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 254/257] perf/core: Remove struct sched_in_data
+Date:   Thu, 16 Apr 2020 15:25:05 +0200
+Message-Id: <20200416131357.280092911@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -60,39 +60,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit af92bad615be75c6c0d1b1c5b48178360250a187 ]
+[ Upstream commit 2c2366c7548ecee65adfd264517ddf50f9e2d029 ]
 
-At the moment kasan_remap_early_shadow_ro() does nothing, because
-k_end is 0 and k_cur < 0 is always true.
+We can deduce the ctx and cpuctx from the event, no need to pass them
+along. Remove the structure and pass in can_add_hw directly.
 
-Change the test to k_cur != k_end, as done in
-kasan_init_shadow_page_tables()
-
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Fixes: cbd18991e24f ("powerpc/mm: Fix an Oops in kasan_mmu_init()")
-Cc: stable@vger.kernel.org
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/4e7b56865e01569058914c991143f5961b5d4719.1583507333.git.christophe.leroy@c-s.fr
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/mm/kasan/kasan_init_32.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/events/core.c | 36 +++++++++++-------------------------
+ 1 file changed, 11 insertions(+), 25 deletions(-)
 
-diff --git a/arch/powerpc/mm/kasan/kasan_init_32.c b/arch/powerpc/mm/kasan/kasan_init_32.c
-index 0e6ed4413eeac..1cfe57b51d7e3 100644
---- a/arch/powerpc/mm/kasan/kasan_init_32.c
-+++ b/arch/powerpc/mm/kasan/kasan_init_32.c
-@@ -117,7 +117,7 @@ static void __init kasan_remap_early_shadow_ro(void)
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 8d8e52a0922f4..78068b57cbba2 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -3437,17 +3437,11 @@ static int visit_groups_merge(struct perf_event_groups *groups, int cpu,
+ 	return 0;
+ }
  
- 	kasan_populate_pte(kasan_early_shadow_pte, prot);
+-struct sched_in_data {
+-	struct perf_event_context *ctx;
+-	struct perf_cpu_context *cpuctx;
+-	int can_add_hw;
+-};
+-
+ static int merge_sched_in(struct perf_event *event, void *data)
+ {
+-	struct sched_in_data *sid = data;
+-
+-	WARN_ON_ONCE(event->ctx != sid->ctx);
++	struct perf_event_context *ctx = event->ctx;
++	struct perf_cpu_context *cpuctx = __get_cpu_context(ctx);
++	int *can_add_hw = data;
  
--	for (k_cur = k_start & PAGE_MASK; k_cur < k_end; k_cur += PAGE_SIZE) {
-+	for (k_cur = k_start & PAGE_MASK; k_cur != k_end; k_cur += PAGE_SIZE) {
- 		pmd_t *pmd = pmd_offset(pud_offset(pgd_offset_k(k_cur), k_cur), k_cur);
- 		pte_t *ptep = pte_offset_kernel(pmd, k_cur);
+ 	if (event->state <= PERF_EVENT_STATE_OFF)
+ 		return 0;
+@@ -3455,8 +3449,8 @@ static int merge_sched_in(struct perf_event *event, void *data)
+ 	if (!event_filter_match(event))
+ 		return 0;
  
+-	if (group_can_go_on(event, sid->cpuctx, sid->can_add_hw)) {
+-		if (!group_sched_in(event, sid->cpuctx, sid->ctx))
++	if (group_can_go_on(event, cpuctx, *can_add_hw)) {
++		if (!group_sched_in(event, cpuctx, ctx))
+ 			list_add_tail(&event->active_list, get_event_list(event));
+ 	}
+ 
+@@ -3466,8 +3460,8 @@ static int merge_sched_in(struct perf_event *event, void *data)
+ 			perf_event_set_state(event, PERF_EVENT_STATE_ERROR);
+ 		}
+ 
+-		sid->can_add_hw = 0;
+-		sid->ctx->rotate_necessary = 1;
++		*can_add_hw = 0;
++		ctx->rotate_necessary = 1;
+ 	}
+ 
+ 	return 0;
+@@ -3477,30 +3471,22 @@ static void
+ ctx_pinned_sched_in(struct perf_event_context *ctx,
+ 		    struct perf_cpu_context *cpuctx)
+ {
+-	struct sched_in_data sid = {
+-		.ctx = ctx,
+-		.cpuctx = cpuctx,
+-		.can_add_hw = 1,
+-	};
++	int can_add_hw = 1;
+ 
+ 	visit_groups_merge(&ctx->pinned_groups,
+ 			   smp_processor_id(),
+-			   merge_sched_in, &sid);
++			   merge_sched_in, &can_add_hw);
+ }
+ 
+ static void
+ ctx_flexible_sched_in(struct perf_event_context *ctx,
+ 		      struct perf_cpu_context *cpuctx)
+ {
+-	struct sched_in_data sid = {
+-		.ctx = ctx,
+-		.cpuctx = cpuctx,
+-		.can_add_hw = 1,
+-	};
++	int can_add_hw = 1;
+ 
+ 	visit_groups_merge(&ctx->flexible_groups,
+ 			   smp_processor_id(),
+-			   merge_sched_in, &sid);
++			   merge_sched_in, &can_add_hw);
+ }
+ 
+ static void
 -- 
 2.20.1
 
