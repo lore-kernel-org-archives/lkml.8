@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62145C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1DFEC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:31:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3262A208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:30:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85DAC20767
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:31:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587043848;
-	bh=IO9sfJh1ECQjFYciwaez13SC3S2Brz/c3XRKHxCtHkw=;
+	s=default; t=1587043870;
+	bh=AbhXf+q4XJyK/m9srmt09+PwS5h3X9ucgvLiH3zxmQo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=erBbPJCohxVf0Naxh7KVHPlBEW33bvnHB9m3kNMcspfnZvcvIwFZ10K7NgHZqJsUF
-	 jD+4tJUa0TYAxVC+yTcRHNz+hAUsPbJbtXjjIF5Hc95Thjn/zfl1AhT4umlQ/R3isT
-	 jdHQUf9um3/9m9AUo2VNbzNXK6TiMaXBMddWPZdw=
+	b=SEuSKNPIi+QZYxmuPTg2YPdFi6YMb5bA7G9S34ZbrlQlZQsaDB94h2PINxF/cfoE4
+	 LVIczMA5vlKWiqGN4BfKN9f4iTwL0dHV7mGFFkfsf05gIU9U9d+QoVorXqujLlXouO
+	 djzC+0P7ToEy3SAEAnnS8ZwB+/5aFSbw8l6fnKGY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2896297AbgDPNao (ORCPT
+        id S2896370AbgDPNbH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:30:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36910 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:31:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2895672AbgDPN2G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:28:06 -0400
+        id S2895689AbgDPN2L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:28:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69F8D21D79;
-        Thu, 16 Apr 2020 13:28:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 539F721BE5;
+        Thu, 16 Apr 2020 13:28:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043685;
-        bh=IO9sfJh1ECQjFYciwaez13SC3S2Brz/c3XRKHxCtHkw=;
+        s=default; t=1587043690;
+        bh=AbhXf+q4XJyK/m9srmt09+PwS5h3X9ucgvLiH3zxmQo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Yf63naVU7rStPAm4pg+i32vXDf0uJk5xn8/w6cV9PtqVfXrpKaS2WfSh6gJlV8aTQ
-         pSV0wsugDFNK2RTtOTtf+silgFa/wJGhudEUAAsm+kEcwVYw8Qky1RgvtamhDrOcIi
-         OC9PlOH25lZorad76+nH1q95+9aip9zFZCxiWhE0=
+        b=h1YAXIzUXBxuh7A/jJfcW0WxFaZFWRllNtAo6/u9Ml6YpD1rtlMJdPfnEC84ro+J/
+         4srWSHwDwpAOzu4ahLFeneEXwtziFd/xuo4bVZvAwDqPh3SW6zEznzKkEFFM2qlS+a
+         N5HP4HRacUudWnuu5cV/8CSzYSPG8PeHHPNmUWEA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 058/146] ALSA: hda/realtek - Add quirk for MSI GL63
-Date:   Thu, 16 Apr 2020 15:23:19 +0200
-Message-Id: <20200416131250.822265021@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Engelhardt <jengelh@inai.de>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 4.19 060/146] acpi/x86: ignore unspecified bit positions in the ACPI global lock field
+Date:   Thu, 16 Apr 2020 15:23:21 +0200
+Message-Id: <20200416131251.119400098@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
 References: <20200416131242.353444678@linuxfoundation.org>
@@ -58,34 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Jan Engelhardt <jengelh@inai.de>
 
-commit 1d3aa4a5516d2e4933fe3cca11d3349ef63bc547 upstream.
+commit ecb9c790999fd6c5af0f44783bd0217f0b89ec2b upstream.
 
-MSI GL63 laptop requires the similar quirk like other MSI models,
-ALC1220_FIXUP_CLEVO_P950.  The board BIOS doesn't provide a PCI SSID
-for the device, hence we need to take the codec SSID (1462:1275)
-instead.
+The value in "new" is constructed from "old" such that all bits defined
+as reserved by the ACPI spec[1] are left untouched. But if those bits
+do not happen to be all zero, "new < 3" will not evaluate to true.
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207157
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200408135645.21896-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+The firmware of the laptop(s) Medion MD63490 / Akoya P15648 comes with
+garbage inside the "FACS" ACPI table. The starting value is
+old=0x4944454d, therefore new=0x4944454e, which is >= 3. Mask off
+the reserved bits.
+
+[1] https://uefi.org/sites/default/files/resources/ACPI_6_2.pdf
+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206553
+Cc: All applicable <stable@vger.kernel.org>
+Signed-off-by: Jan Engelhardt <jengelh@inai.de>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/kernel/acpi/boot.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -2441,6 +2441,7 @@ static const struct snd_pci_quirk alc882
- 	SND_PCI_QUIRK(0x1458, 0xa0b8, "Gigabyte AZ370-Gaming", ALC1220_FIXUP_GB_DUAL_CODECS),
- 	SND_PCI_QUIRK(0x1458, 0xa0cd, "Gigabyte X570 Aorus Master", ALC1220_FIXUP_CLEVO_P950),
- 	SND_PCI_QUIRK(0x1462, 0x1228, "MSI-GP63", ALC1220_FIXUP_CLEVO_P950),
-+	SND_PCI_QUIRK(0x1462, 0x1275, "MSI-GL63", ALC1220_FIXUP_CLEVO_P950),
- 	SND_PCI_QUIRK(0x1462, 0x1276, "MSI-GL73", ALC1220_FIXUP_CLEVO_P950),
- 	SND_PCI_QUIRK(0x1462, 0x1293, "MSI-GP65", ALC1220_FIXUP_CLEVO_P950),
- 	SND_PCI_QUIRK(0x1462, 0x7350, "MSI-7350", ALC889_FIXUP_CD),
+--- a/arch/x86/kernel/acpi/boot.c
++++ b/arch/x86/kernel/acpi/boot.c
+@@ -1752,7 +1752,7 @@ int __acpi_acquire_global_lock(unsigned
+ 		new = (((old & ~0x3) + 2) + ((old >> 1) & 0x1));
+ 		val = cmpxchg(lock, old, new);
+ 	} while (unlikely (val != old));
+-	return (new < 3) ? -1 : 0;
++	return ((new & 0x3) < 3) ? -1 : 0;
+ }
+ 
+ int __acpi_release_global_lock(unsigned int *lock)
 
 
