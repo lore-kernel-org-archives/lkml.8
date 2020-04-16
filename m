@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B42DEC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 810D5C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:17:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9061F206B9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:17:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 613092063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:17:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587046657;
-	bh=xSuIVxf2IZEyMJBOPJqn1kxpuXNYcQGD/c4t9Fjt72E=;
+	s=default; t=1587046661;
+	bh=MimweiWYVvrul8ktelJA1CcccY/FgjmSwgVtsi6jHIk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ibPZqsbDZjCRKLs99pc8mDe8pDe4qf4+Fc9hxO2Qo4M2q1loph6KgjH8N3/DY539A
-	 yABGom5Qb/B13eF6tFCHxojVUUPxRFR56FLtCg71Q0xPAJ1Uypg4JksTRiXTa6v3s3
-	 a9luu+gZaat1tlUG3rn183vDBoe0w80B/ZCCBUqU=
+	b=2E2Tm/eW9cHLMZRAORzIXtU5AFZ16TmU/FO6FUPCs768O05yU2KTNpAiRSl4pT/wl
+	 k1lMOUYfScfmzgjXSpFGL3o5w7IJPKwkCt/xHtFCwLsOBVFwwM7hOulqDUNeK2f1U+
+	 KXpyJDXUEAcn8Q5awKXnp3LNZwDdTrlgPWG/yE/U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439305AbgDPORg (ORCPT
+        id S2442241AbgDPORk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:17:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38914 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:17:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2440062AbgDPNwe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:52:34 -0400
+        id S2387965AbgDPNwt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:52:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 769C821734;
-        Thu, 16 Apr 2020 13:52:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2BE7D2076D;
+        Thu, 16 Apr 2020 13:52:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045153;
-        bh=xSuIVxf2IZEyMJBOPJqn1kxpuXNYcQGD/c4t9Fjt72E=;
+        s=default; t=1587045168;
+        bh=MimweiWYVvrul8ktelJA1CcccY/FgjmSwgVtsi6jHIk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nOF5xdW3QHXo5xiEaPECcsdS+YTS0SL63wA8W7z0Lw3Ucge3SnVbHuBn62dvaDIqA
-         d9ubAv7beuzDTBNqeRC1r5S38LRL8aHvs4W0VXiJJBPB5fKavzoTz4O4h4eigEkA8M
-         vPHkfLaiRANwuu5IzpoWvqypOdDNsT0WEOD80G/E=
+        b=F7N8c4fDXYWMNa7t0vYbGzrW9zuSvNnnKK5I/nvDPIB9V+GUk/Ms/0mKDSTT4U+Gp
+         oZaFr7ZLMeqsbOSbBpaSucGqnOuTmCl268sxI9U8nHNWXzBMof0B/SkN8MF9QTVZy+
+         8AXX46YdehmYio2jUMBDgKi3UiEadYI//61+SHyY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Johannes Thumshirn <jth@kernel.org>,
-        Hannes Reinecke <hare@suse.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 019/254] null_blk: Handle null_add_dev() failures properly
-Date:   Thu, 16 Apr 2020 15:21:48 +0200
-Message-Id: <20200416131328.214550214@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 025/254] ACPI: EC: Do not clear boot_ec_is_ecdt in acpi_ec_add()
+Date:   Thu, 16 Apr 2020 15:21:54 +0200
+Message-Id: <20200416131328.979207183@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -64,62 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-[ Upstream commit 9b03b713082a31a5b90e0a893c72aa620e255c26 ]
+[ Upstream commit 65a691f5f8f0bb63d6a82eec7b0ffd193d8d8a5f ]
 
-If null_add_dev() fails then null_del_dev() is called with a NULL argument.
-Make null_del_dev() handle this scenario correctly. This patch fixes the
-following KASAN complaint:
+The reason for clearing boot_ec_is_ecdt in acpi_ec_add() (if a
+PNP0C09 device object matching the ECDT boot EC had been found in
+the namespace) was to cause acpi_ec_ecdt_start() to return early,
+but since the latter does not look at boot_ec_is_ecdt any more,
+acpi_ec_add() need not clear it.
 
-null-ptr-deref in null_del_dev+0x28/0x280 [null_blk]
-Read of size 8 at addr 0000000000000000 by task find/1062
+Moreover, doing that may be confusing as it may cause "DSDT" to be
+printed instead of "ECDT" in the EC initialization completion
+message, so stop doing it.
 
-Call Trace:
- dump_stack+0xa5/0xe6
- __kasan_report.cold+0x65/0x99
- kasan_report+0x16/0x20
- __asan_load8+0x58/0x90
- null_del_dev+0x28/0x280 [null_blk]
- nullb_group_drop_item+0x7e/0xa0 [null_blk]
- client_drop_item+0x53/0x80 [configfs]
- configfs_rmdir+0x395/0x4e0 [configfs]
- vfs_rmdir+0xb6/0x220
- do_rmdir+0x238/0x2c0
- __x64_sys_unlinkat+0x75/0x90
- do_syscall_64+0x6f/0x2f0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
+While at it, split the EC initialization completion message into
+two messages, one regarding the boot EC and another one printed
+regardless of whether or not the EC at hand is the boot one.
 
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Cc: Johannes Thumshirn <jth@kernel.org>
-Cc: Hannes Reinecke <hare@suse.com>
-Cc: Ming Lei <ming.lei@redhat.com>
-Cc: Christoph Hellwig <hch@infradead.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/null_blk_main.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/acpi/ec.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/block/null_blk_main.c b/drivers/block/null_blk_main.c
-index 8ada43b3eca13..d5b4a92033d48 100644
---- a/drivers/block/null_blk_main.c
-+++ b/drivers/block/null_blk_main.c
-@@ -1432,7 +1432,12 @@ static void cleanup_queues(struct nullb *nullb)
+diff --git a/drivers/acpi/ec.c b/drivers/acpi/ec.c
+index d1f1cf5d4bf08..3385be8b057c8 100644
+--- a/drivers/acpi/ec.c
++++ b/drivers/acpi/ec.c
+@@ -1641,7 +1641,6 @@ static int acpi_ec_add(struct acpi_device *device)
  
- static void null_del_dev(struct nullb *nullb)
- {
--	struct nullb_device *dev = nullb->dev;
-+	struct nullb_device *dev;
+ 		if (boot_ec && ec->command_addr == boot_ec->command_addr &&
+ 		    ec->data_addr == boot_ec->data_addr) {
+-			boot_ec_is_ecdt = false;
+ 			/*
+ 			 * Trust PNP0C09 namespace location rather than
+ 			 * ECDT ID. But trust ECDT GPE rather than _GPE
+@@ -1661,9 +1660,12 @@ static int acpi_ec_add(struct acpi_device *device)
+ 
+ 	if (ec == boot_ec)
+ 		acpi_handle_info(boot_ec->handle,
+-				 "Boot %s EC used to handle transactions and events\n",
++				 "Boot %s EC initialization complete\n",
+ 				 boot_ec_is_ecdt ? "ECDT" : "DSDT");
+ 
++	acpi_handle_info(ec->handle,
++			 "EC: Used to handle transactions and events\n");
 +
-+	if (!nullb)
-+		return;
-+
-+	dev = nullb->dev;
+ 	device->driver_data = ec;
  
- 	ida_simple_remove(&nullb_indexes, nullb->index);
- 
+ 	ret = !!request_region(ec->data_addr, 1, "EC data");
 -- 
 2.20.1
 
