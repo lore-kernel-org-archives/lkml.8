@@ -2,37 +2,38 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A751C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:45:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A178DC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:45:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E237C221EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:45:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 880FD21D7F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:45:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505183AbgDPLp2 (ORCPT
+        id S2505068AbgDPLpv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 07:45:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57090 "EHLO
+        Thu, 16 Apr 2020 07:45:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2505200AbgDPKgS (ORCPT
+        with ESMTP id S2505187AbgDPKgN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 06:36:18 -0400
-Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [IPv6:2a02:1800:120:4::f00:13])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC461C03C1A7
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 03:36:14 -0700 (PDT)
+        Thu, 16 Apr 2020 06:36:13 -0400
+X-Greylist: delayed 301 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 16 Apr 2020 03:36:13 PDT
+Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5012EC061A0F
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 03:36:13 -0700 (PDT)
 Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:fd83:81bb:c1d7:433d])
-        by baptiste.telenet-ops.be with bizsmtp
-        id TNWz2200b4dKHqf01NWzN4; Thu, 16 Apr 2020 12:31:11 +0200
+        by xavier.telenet-ops.be with bizsmtp
+        id TNWz2200i4dKHqf01NWzxE; Thu, 16 Apr 2020 12:31:11 +0200
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1jP1nP-0001co-N7; Thu, 16 Apr 2020 12:30:59 +0200
+        id 1jP1nP-0001cj-Ll; Thu, 16 Apr 2020 12:30:59 +0200
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1jP1nP-0003zF-Lu; Thu, 16 Apr 2020 12:30:59 +0200
+        id 1jP1nP-0003z7-JX; Thu, 16 Apr 2020 12:30:59 +0200
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Rob Herring <robh+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
         David Airlie <airlied@linux.ie>,
@@ -51,66 +52,62 @@ Cc:     devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
         dri-devel@lists.freedesktop.org, linux-iio@vger.kernel.org,
         alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH trivial 3/6] drm: Fix misspellings of "Analog Devices"
-Date:   Thu, 16 Apr 2020 12:30:55 +0200
-Message-Id: <20200416103058.15269-4-geert+renesas@glider.be>
+Subject: [PATCH trivial 0/6] Fix misspellings of "Analog Devices"
+Date:   Thu, 16 Apr 2020 12:30:52 +0200
+Message-Id: <20200416103058.15269-1-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200416103058.15269-1-geert+renesas@glider.be>
-References: <20200416103058.15269-1-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to https://www.analog.com/, the company name is spelled
-"Analog Devices".
+	Hi all,
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- drivers/gpu/drm/bridge/adv7511/Kconfig | 2 +-
- drivers/gpu/drm/drm_fb_cma_helper.c    | 2 +-
- drivers/gpu/drm/tegra/fb.c             | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+In several files the company also known as ADI is spelled as "Analog
+Device".  However, according to https://www.analog.com/, the company
+name is spelled "Analog Devices".
 
-diff --git a/drivers/gpu/drm/bridge/adv7511/Kconfig b/drivers/gpu/drm/bridge/adv7511/Kconfig
-index 47d4eb9e845d085c..f46a5e26b5dd6406 100644
---- a/drivers/gpu/drm/bridge/adv7511/Kconfig
-+++ b/drivers/gpu/drm/bridge/adv7511/Kconfig
-@@ -6,7 +6,7 @@ config DRM_I2C_ADV7511
- 	select REGMAP_I2C
- 	select DRM_MIPI_DSI
- 	help
--	  Support for the Analog Device ADV7511(W)/13/33/35 HDMI encoders.
-+	  Support for the Analog Devices ADV7511(W)/13/33/35 HDMI encoders.
- 
- config DRM_I2C_ADV7511_AUDIO
- 	bool "ADV7511 HDMI Audio driver"
-diff --git a/drivers/gpu/drm/drm_fb_cma_helper.c b/drivers/gpu/drm/drm_fb_cma_helper.c
-index 9801c0333eca29e9..cb2349ad338d953b 100644
---- a/drivers/gpu/drm/drm_fb_cma_helper.c
-+++ b/drivers/gpu/drm/drm_fb_cma_helper.c
-@@ -2,7 +2,7 @@
- /*
-  * drm kms/fb cma (contiguous memory allocator) helper functions
-  *
-- * Copyright (C) 2012 Analog Device Inc.
-+ * Copyright (C) 2012 Analog Devices Inc.
-  *   Author: Lars-Peter Clausen <lars@metafoo.de>
-  *
-  * Based on udl_fbdev.c
-diff --git a/drivers/gpu/drm/tegra/fb.c b/drivers/gpu/drm/tegra/fb.c
-index b8a328f538626e7a..2b0666ac681b8721 100644
---- a/drivers/gpu/drm/tegra/fb.c
-+++ b/drivers/gpu/drm/tegra/fb.c
-@@ -4,7 +4,7 @@
-  * Copyright (C) 2012 NVIDIA CORPORATION.  All rights reserved.
-  *
-  * Based on the KMS/FB CMA helpers
-- *   Copyright (C) 2012 Analog Device Inc.
-+ *   Copyright (C) 2012 Analog Devices Inc.
-  */
- 
- #include <linux/console.h>
+Hence this patch series, one per subsystem, fixes these misspellings.
+
+Thanks for your comments!
+
+Geert Uytterhoeven (6):
+  dt-bindings: Fix misspellings of "Analog Devices"
+  dma: Fix misspelling of "Analog Devices"
+  drm: Fix misspellings of "Analog Devices"
+  iio: Fix misspellings of "Analog Devices"
+  ALSA: Fix misspellings of "Analog Devices"
+  ASoC: Fix misspellings of "Analog Devices"
+
+ .../devicetree/bindings/display/bridge/adi,adv7123.txt        | 4 ++--
+ .../devicetree/bindings/display/bridge/adi,adv7511.txt        | 4 ++--
+ Documentation/devicetree/bindings/dma/adi,axi-dmac.txt        | 2 +-
+ Documentation/devicetree/bindings/iio/dac/ad5755.txt          | 2 +-
+ drivers/dma/Kconfig                                           | 2 +-
+ drivers/gpu/drm/bridge/adv7511/Kconfig                        | 2 +-
+ drivers/gpu/drm/drm_fb_cma_helper.c                           | 2 +-
+ drivers/gpu/drm/tegra/fb.c                                    | 2 +-
+ drivers/iio/adc/ad7791.c                                      | 2 +-
+ drivers/iio/trigger/iio-trig-hrtimer.c                        | 2 +-
+ drivers/staging/iio/Documentation/overview.txt                | 2 +-
+ sound/isa/ad1816a/ad1816a.c                                   | 2 +-
+ sound/pci/ac97/ac97_patch.c                                   | 2 +-
+ sound/pci/hda/Kconfig                                         | 4 ++--
+ sound/soc/codecs/ad1980.c                                     | 2 +-
+ sound/soc/codecs/ad73311.c                                    | 2 +-
+ sound/soc/codecs/wm8782.c                                     | 2 +-
+ 17 files changed, 20 insertions(+), 20 deletions(-)
+
 -- 
 2.17.1
 
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
