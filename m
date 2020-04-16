@@ -2,134 +2,163 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9678CC2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 01:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A763C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 01:02:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D23D206A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 01:02:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B7ED206A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 01:02:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HAzFjLaL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392012AbgDPBCT (ORCPT
+        id S2404660AbgDPBCt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 21:02:19 -0400
-Received: from sandeen.net ([63.231.237.45]:45848 "EHLO sandeen.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728100AbgDPBCJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 21:02:09 -0400
-Received: from [10.0.0.4] (liberator [10.0.0.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 25151170B41;
-        Wed, 15 Apr 2020 20:01:46 -0500 (CDT)
-Subject: Re: [PATCH 2/5] blktrace: fix debugfs use after free
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
-        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
-        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
-        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
-References: <20200414041902.16769-1-mcgrof@kernel.org>
- <20200414041902.16769-3-mcgrof@kernel.org>
- <55401e02-f61c-25eb-271c-3ec7baf35e28@sandeen.net>
- <20200416005636.GA11244@42.do-not-panic.com>
-From:   Eric Sandeen <sandeen@sandeen.net>
-Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
- 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 pA==
-Message-ID: <924950e6-e016-25b2-4ee1-b5ea9f752c12@sandeen.net>
-Date:   Wed, 15 Apr 2020 20:02:04 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Wed, 15 Apr 2020 21:02:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52624 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390560AbgDPBCo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 21:02:44 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2772FC061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 18:02:43 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id g2so723989plo.3
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 18:02:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=7UQrhSEDM58XydjofCn22z7WL3fCANffkSo3mRa4+HQ=;
+        b=HAzFjLaLrkIPyyIdYV+vho0vnJ9xStnAScdbk/jA7fimFxKZNF5bcGp0yFg9zBHJ26
+         hqh8F6Yy4v/HfW4veL8mQigE2LgtdYUr9cPJfg+kh3YhTQIKjxv4dFIGmyfyooteMHJG
+         z8bcArnqfMwu2/o9YvW7fzfaGHEJsxHCAL7XGy7pougtkTkL1udAwfE3MCWeDW7cNpVl
+         xI5Iwida46XP1GT/yNaqg1GUQ9tCaipms4gU/tDWFAIbSS+t2zAv/3WSlo15v8Ot7tDS
+         G3vrsQLIKLrv2zB3J/3hSUXfGlXLabT81TcFwbj998HyLGlidF4P4ZIxJwGZViUyvios
+         2PWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=7UQrhSEDM58XydjofCn22z7WL3fCANffkSo3mRa4+HQ=;
+        b=c5IPIvI1hB/JDjL0h2zFTU4CKwRa682fCou+4vICmkEPi5tr4Bo9BaWr8dn5O9I7iz
+         lSV1cp9I4s+mY+KFpMLL87B2s0GEyON//Vr3WAwROl1DbITQN1f9+0qEeFu4jgZoHnIJ
+         T8ixDCBim2aZn4GWMefP5EodYgk6cocFo1PKfQtLAQury0ZbaTNNN7RHl2c5DPw6p43e
+         0jCRyQVOtai0bvRCaetJhTdHv/qtKgd2W6IB/uJ9+rE8p7trXJx6aSj7wlpmDEZkm8WK
+         Ix62FUyAia80+QBCmkEy1XWBC4aTLrjFMwYiQoK3lNrMqjoK6cTmosV3GHtAzrzDtBK7
+         sBRg==
+X-Gm-Message-State: AGi0PuZKpJRcfp2dhvAOdqLl7Wx1tI/Ja250+V02YE2xeUcdaecKlBL+
+        B0kwQ0Bu0BVWCU/Ch39y6GSbCA==
+X-Google-Smtp-Source: APiQypJeos+C/0GkWzwCb9fo26gxqG5e88azbaJINvDM05szttN5/IIFNzsJYJfIT0pPaqfrzkjASQ==
+X-Received: by 2002:a17:902:507:: with SMTP id 7mr7564825plf.42.1586998962351;
+        Wed, 15 Apr 2020 18:02:42 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id o125sm13705278pgo.74.2020.04.15.18.02.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2020 18:02:41 -0700 (PDT)
+Date:   Wed, 15 Apr 2020 18:02:58 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Todd Kjos <tkjos@google.com>, Stephen Boyd <sboyd@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: On trace_*_rcuidle functions in modules
+Message-ID: <20200416010258.GM20625@builder.lan>
+References: <CALAqxLV1A6sOC1GWpFYXeBoDff0+AJgoOYK7NktcTdvX3kvAeg@mail.gmail.com>
+ <20200415161424.584d07d3@gandalf.local.home>
+ <CALAqxLU26PVFPSza5GceSF6gTVdzo_2D3G0dBp0KZXvAWFUktA@mail.gmail.com>
+ <20200415164116.40564f2c@gandalf.local.home>
+ <CALAqxLW6jqr38bk8pp-Hom2=MLm3coTmzCP8MMfrDvMfx388=Q@mail.gmail.com>
+ <20200415174918.154a86d0@gandalf.local.home>
+ <20200415220459.GE17661@paulmck-ThinkPad-P72>
+ <20200415185121.381a4bc3@gandalf.local.home>
+ <CALAqxLX2UDQ7=dvzMoP6g-rYzw9dBebrynMfo4Gnv=SzaqhE=g@mail.gmail.com>
+ <20200415204827.24f2c548@oasis.local.home>
 MIME-Version: 1.0
-In-Reply-To: <20200416005636.GA11244@42.do-not-panic.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200415204827.24f2c548@oasis.local.home>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed 15 Apr 17:48 PDT 2020, Steven Rostedt wrote:
 
-
-On 4/15/20 7:56 PM, Luis Chamberlain wrote:
-> On Wed, Apr 15, 2020 at 12:38:26PM -0500, Eric Sandeen wrote:
->> On 4/13/20 11:18 PM, Luis Chamberlain wrote:
->>> On commit 6ac93117ab00 ("blktrace: use existing disk debugfs directory")
->>> merged on v4.12 Omar fixed the original blktrace code for request-based
->>> drivers (multiqueue). This however left in place a possible crash, if you
->>> happen to abuse blktrace in a way it was not intended.
->>>
->>> Namely, if you loop adding a device, setup the blktrace with BLKTRACESETUP,
->>> forget to BLKTRACETEARDOWN, and then just remove the device you end up
->>> with a panic:
->>
->> I think this patch makes this all cleaner anyway, but - without the apparent
->> loop bug mentioned by Bart which allows removal of the loop device while blktrace
->> is active (if I read that right), can this still happen?
+> On Wed, 15 Apr 2020 17:06:24 -0700
+> John Stultz <john.stultz@linaro.org> wrote:
 > 
-> I have not tested that, but some modifications of the break-blktrace
-> program could enable us to test that
+> > So you're saying the recent change to move to using trace_*_rcuidle()
+> > was unnecessary?
+> > 
+> > Or is there a different notifier then cpu_pm_register_notifier() that
+> > the driver should be using (that one seems to be using
+> > atomic_notifier_chain_register())?
+> 
+> From looking at the trace event in __tcs_buffer_write() in
+> drivers/soc/qcom/rpmh-rsc.c, the _rcuidle() was added by:
+> 
+> efde2659b0fe8 ("drivers: qcom: rpmh-rsc: Use rcuidle tracepoints for rpmh")
+> 
+> Which shows a backtrace dump of:
+> 
+>      Call trace:
+>       dump_backtrace+0x0/0x174
+>       show_stack+0x20/0x2c
+>       dump_stack+0xc8/0x124
+>       lockdep_rcu_suspicious+0xe4/0x104
+>       __tcs_buffer_write+0x230/0x2d0
+>       rpmh_rsc_write_ctrl_data+0x210/0x270
+>       rpmh_flush+0x84/0x24c
+>       rpmh_domain_power_off+0x78/0x98
+>       _genpd_power_off+0x40/0xc0
+>       genpd_power_off+0x168/0x208
+>       genpd_power_off+0x1e0/0x208
+>       genpd_power_off+0x1e0/0x208
+>       genpd_runtime_suspend+0x1ac/0x220
+>       __rpm_callback+0x70/0xfc
+>       rpm_callback+0x34/0x8c
+>       rpm_suspend+0x218/0x4a4
+>       __pm_runtime_suspend+0x88/0xac
+>       psci_enter_domain_idle_state+0x3c/0xb4
+>       cpuidle_enter_state+0xb8/0x284
+>       cpuidle_enter+0x38/0x4c
+>       call_cpuidle+0x3c/0x68
+>       do_idle+0x194/0x260
+>       cpu_startup_entry+0x24/0x28
+>       secondary_start_kernel+0x150/0x15c
+> 
+> 
+> There's no notifier that calls this. This is called by the rpm_callback
+> logic. Perhaps that callback will require a call to rcu_irq_enter()
+> before calling the callback.
+> 
+> In any case, I think it is wrong that these callbacks are called
+> without RCU watching. The _rcuidle() on that tracepoint should be
+> removed, and we fix the code that gets there to ensure that RCU is
+> enabled. I agree with Peter, that no module code should be executed
+> without RCU watching.
+> 
 
-FWIW, I modified it to modprobe & rmmod scsi_debug instead of the loop ioctls,
-and the module can't be unloaded after the blktrace is started since it's busy.
+Forgive me, but how is this problem related to the fact that the code is
+dynamically loaded, i.e. encapsulated in a module?
 
-Not sure that's equivalent tho.
+Per the example earlier in this thread, the thing we're worried about is
+a use after free in the following scenario, right?
 
-> however I don't think the race
-> would be possible after patch 3/5 "blktrace: refcount the request_queue
-> during ioctl" is merged, as removal then a pending blktrace would
-> refcount the request_queue and the removal would have to wait until
-> the refcount is decremeneted, until after the blktrace ioctl.
+        cpu_pm_unregister_notifier(my_notifier);
+	kfree(my_data);
 
-I'm out of my depth in the block layer, not sure who's supposed to take
-refs on what. ;)
+But a driver implementing this snippet might do this regardless of being
+builtin or module and afaict exiting probe() unsuccessfully or unbinding
+the device would risk triggering this issue?
 
--Eric
+Regards,
+Bjorn
