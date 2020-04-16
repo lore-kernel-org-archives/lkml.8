@@ -2,51 +2,53 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD50AC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F53C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:50:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FBA3214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:50:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C366620732
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:50:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587052216;
-	bh=kObJDC/1q5HTeBBBFM095gnld/bSmt4OyfjVyl3BCH4=;
+	s=default; t=1587052227;
+	bh=/EJ9dHF6ueg51GjpZ+JmgPpnVp5DH+aTyR0tZmW0Tm8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=obeugvb7glEjamqRzzbCJsBzSfgt3pxsIslfrKo3w5o/MntwH/GxwDKYxyFQDI5bk
-	 mYKUP9A9LJK57ejD53lfGBkZemmHpAqGa++z5eAopi5yCL7BeRtB8PUy3wIzcetuFs
-	 zGGss+atukrWfxe/wPNamY6ivUFmcIoI1qRwtmQ8=
+	b=yOnKpv4nA9M0SkuBDt9f0EItAg/rsDaOP5U+7CALEZvWJLoovUGRxhqy2RNlr71Nc
+	 rKqYlaANpfQOnVL447i8VI0N9Okmy8elsp4rqSoZKpuBPPYcuSsuR4mkkHSttNrojz
+	 RDifoKG738c/jt3UCbv3COhplJyCUJKn9wxYVLzs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442740AbgDPPuM (ORCPT
+        id S2442757AbgDPPuY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:50:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44062 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:50:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896584AbgDPNc4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:32:56 -0400
+        id S2896664AbgDPNdC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:33:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7946F2223E;
-        Thu, 16 Apr 2020 13:32:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D5CB22286;
+        Thu, 16 Apr 2020 13:32:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043925;
-        bh=kObJDC/1q5HTeBBBFM095gnld/bSmt4OyfjVyl3BCH4=;
+        s=default; t=1587043974;
+        bh=/EJ9dHF6ueg51GjpZ+JmgPpnVp5DH+aTyR0tZmW0Tm8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CDGOqcowP5Q7daeB0U3eZFCYvNGjcuOL++8ebkaKt648kUBOpHMea+3OROVUGJ63D
-         B8C7bbuiprmo/KlBhvGSb7gUA77c+hfqDMoafKKlyN6xe9O/ZJze4XrpHMy/eZjQjH
-         rq/ifNNYls3DvwmlThkTS6VTbcpI0WUCkyrsx/78=
+        b=Ic2EEJFyhd7oqc7T4kWv4agjWxOIk5MmS6OykyniOpG6BV00pWzAYeWlj7Ug+dojF
+         I1uo2pqr085LrKp1cgSl4o1OfAuIHzlPVaadxRNB9z2KdytXM9kjGiUINgkgjKiOXc
+         2PMOIE8CWpPAy4YS40/c1XjpwCfbfGTjB6XPMrGQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        stable@vger.kernel.org, Yonghong Song <yhs@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 010/257] rxrpc: Fix call interruptibility handling
-Date:   Thu, 16 Apr 2020 15:21:01 +0200
-Message-Id: <20200416131327.148884549@linuxfoundation.org>
+Subject: [PATCH 5.5 004/257] bpf: Fix deadlock with rq_lock in bpf_send_signal()
+Date:   Thu, 16 Apr 2020 15:20:55 +0200
+Message-Id: <20200416131326.426081589@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -59,255 +61,196 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Yonghong Song <yhs@fb.com>
 
-[ Upstream commit e138aa7d3271ac1b0690ae2c9b04d51468dce1d6 ]
+[ Upstream commit 1bc7896e9ef44fd77858b3ef0b8a6840be3a4494 ]
 
-Fix the interruptibility of kernel-initiated client calls so that they're
-either only interruptible when they're waiting for a call slot to come
-available or they're not interruptible at all.  Either way, they're not
-interruptible during transmission.
+When experimenting with bpf_send_signal() helper in our production
+environment (5.2 based), we experienced a deadlock in NMI mode:
+   #5 [ffffc9002219f770] queued_spin_lock_slowpath at ffffffff8110be24
+   #6 [ffffc9002219f770] _raw_spin_lock_irqsave at ffffffff81a43012
+   #7 [ffffc9002219f780] try_to_wake_up at ffffffff810e7ecd
+   #8 [ffffc9002219f7e0] signal_wake_up_state at ffffffff810c7b55
+   #9 [ffffc9002219f7f0] __send_signal at ffffffff810c8602
+  #10 [ffffc9002219f830] do_send_sig_info at ffffffff810ca31a
+  #11 [ffffc9002219f868] bpf_send_signal at ffffffff8119d227
+  #12 [ffffc9002219f988] bpf_overflow_handler at ffffffff811d4140
+  #13 [ffffc9002219f9e0] __perf_event_overflow at ffffffff811d68cf
+  #14 [ffffc9002219fa10] perf_swevent_overflow at ffffffff811d6a09
+  #15 [ffffc9002219fa38] ___perf_sw_event at ffffffff811e0f47
+  #16 [ffffc9002219fc30] __schedule at ffffffff81a3e04d
+  #17 [ffffc9002219fc90] schedule at ffffffff81a3e219
+  #18 [ffffc9002219fca0] futex_wait_queue_me at ffffffff8113d1b9
+  #19 [ffffc9002219fcd8] futex_wait at ffffffff8113e529
+  #20 [ffffc9002219fdf0] do_futex at ffffffff8113ffbc
+  #21 [ffffc9002219fec0] __x64_sys_futex at ffffffff81140d1c
+  #22 [ffffc9002219ff38] do_syscall_64 at ffffffff81002602
+  #23 [ffffc9002219ff50] entry_SYSCALL_64_after_hwframe at ffffffff81c00068
 
-This should help prevent StoreData calls from being interrupted when
-writeback is in progress.  It doesn't, however, handle interruption during
-the receive phase.
+The above call stack is actually very similar to an issue
+reported by Commit eac9153f2b58 ("bpf/stackmap: Fix deadlock with
+rq_lock in bpf_get_stack()") by Song Liu. The only difference is
+bpf_send_signal() helper instead of bpf_get_stack() helper.
 
-Userspace-initiated calls are still interruptable.  After the signal has
-been handled, sendmsg() will return the amount of data copied out of the
-buffer and userspace can perform another sendmsg() call to continue
-transmission.
+The above deadlock is triggered with a perf_sw_event.
+Similar to Commit eac9153f2b58, the below almost identical reproducer
+used tracepoint point sched/sched_switch so the issue can be easily caught.
+  /* stress_test.c */
+  #include <stdio.h>
+  #include <stdlib.h>
+  #include <sys/mman.h>
+  #include <pthread.h>
+  #include <sys/types.h>
+  #include <sys/stat.h>
+  #include <fcntl.h>
 
-Fixes: bc5e3a546d55 ("rxrpc: Use MSG_WAITALL to tell sendmsg() to temporarily ignore signals")
-Signed-off-by: David Howells <dhowells@redhat.com>
+  #define THREAD_COUNT 1000
+  char *filename;
+  void *worker(void *p)
+  {
+        void *ptr;
+        int fd;
+        char *pptr;
+
+        fd = open(filename, O_RDONLY);
+        if (fd < 0)
+                return NULL;
+        while (1) {
+                struct timespec ts = {0, 1000 + rand() % 2000};
+
+                ptr = mmap(NULL, 4096 * 64, PROT_READ, MAP_PRIVATE, fd, 0);
+                usleep(1);
+                if (ptr == MAP_FAILED) {
+                        printf("failed to mmap\n");
+                        break;
+                }
+                munmap(ptr, 4096 * 64);
+                usleep(1);
+                pptr = malloc(1);
+                usleep(1);
+                pptr[0] = 1;
+                usleep(1);
+                free(pptr);
+                usleep(1);
+                nanosleep(&ts, NULL);
+        }
+        close(fd);
+        return NULL;
+  }
+
+  int main(int argc, char *argv[])
+  {
+        void *ptr;
+        int i;
+        pthread_t threads[THREAD_COUNT];
+
+        if (argc < 2)
+                return 0;
+
+        filename = argv[1];
+
+        for (i = 0; i < THREAD_COUNT; i++) {
+                if (pthread_create(threads + i, NULL, worker, NULL)) {
+                        fprintf(stderr, "Error creating thread\n");
+                        return 0;
+                }
+        }
+
+        for (i = 0; i < THREAD_COUNT; i++)
+                pthread_join(threads[i], NULL);
+        return 0;
+  }
+and the following command:
+  1. run `stress_test /bin/ls` in one windown
+  2. hack bcc trace.py with the following change:
+#     --- a/tools/trace.py
+#     +++ b/tools/trace.py
+     @@ -513,6 +513,7 @@ BPF_PERF_OUTPUT(%s);
+              __data.tgid = __tgid;
+              __data.pid = __pid;
+              bpf_get_current_comm(&__data.comm, sizeof(__data.comm));
+     +        bpf_send_signal(10);
+      %s
+      %s
+              %s.perf_submit(%s, &__data, sizeof(__data));
+  3. in a different window run
+     ./trace.py -p $(pidof stress_test) t:sched:sched_switch
+
+The deadlock can be reproduced in our production system.
+
+Similar to Song's fix, the fix is to delay sending signal if
+irqs is disabled to avoid deadlocks involving with rq_lock.
+With this change, my above stress-test in our production system
+won't cause deadlock any more.
+
+I also implemented a scale-down version of reproducer in the
+selftest (a subsequent commit). With latest bpf-next,
+it complains for the following potential deadlock.
+  [   32.832450] -> #1 (&p->pi_lock){-.-.}:
+  [   32.833100]        _raw_spin_lock_irqsave+0x44/0x80
+  [   32.833696]        task_rq_lock+0x2c/0xa0
+  [   32.834182]        task_sched_runtime+0x59/0xd0
+  [   32.834721]        thread_group_cputime+0x250/0x270
+  [   32.835304]        thread_group_cputime_adjusted+0x2e/0x70
+  [   32.835959]        do_task_stat+0x8a7/0xb80
+  [   32.836461]        proc_single_show+0x51/0xb0
+  ...
+  [   32.839512] -> #0 (&(&sighand->siglock)->rlock){....}:
+  [   32.840275]        __lock_acquire+0x1358/0x1a20
+  [   32.840826]        lock_acquire+0xc7/0x1d0
+  [   32.841309]        _raw_spin_lock_irqsave+0x44/0x80
+  [   32.841916]        __lock_task_sighand+0x79/0x160
+  [   32.842465]        do_send_sig_info+0x35/0x90
+  [   32.842977]        bpf_send_signal+0xa/0x10
+  [   32.843464]        bpf_prog_bc13ed9e4d3163e3_send_signal_tp_sched+0x465/0x1000
+  [   32.844301]        trace_call_bpf+0x115/0x270
+  [   32.844809]        perf_trace_run_bpf_submit+0x4a/0xc0
+  [   32.845411]        perf_trace_sched_switch+0x10f/0x180
+  [   32.846014]        __schedule+0x45d/0x880
+  [   32.846483]        schedule+0x5f/0xd0
+  ...
+
+  [   32.853148] Chain exists of:
+  [   32.853148]   &(&sighand->siglock)->rlock --> &p->pi_lock --> &rq->lock
+  [   32.853148]
+  [   32.854451]  Possible unsafe locking scenario:
+  [   32.854451]
+  [   32.855173]        CPU0                    CPU1
+  [   32.855745]        ----                    ----
+  [   32.856278]   lock(&rq->lock);
+  [   32.856671]                                lock(&p->pi_lock);
+  [   32.857332]                                lock(&rq->lock);
+  [   32.857999]   lock(&(&sighand->siglock)->rlock);
+
+  Deadlock happens on CPU0 when it tries to acquire &sighand->siglock
+  but it has been held by CPU1 and CPU1 tries to grab &rq->lock
+  and cannot get it.
+
+  This is not exactly the callstack in our production environment,
+  but sympotom is similar and both locks are using spin_lock_irqsave()
+  to acquire the lock, and both involves rq_lock. The fix to delay
+  sending signal when irq is disabled also fixed this issue.
+
+Signed-off-by: Yonghong Song <yhs@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Cc: Song Liu <songliubraving@fb.com>
+Link: https://lore.kernel.org/bpf/20200304191104.2796501-1-yhs@fb.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/afs/rxrpc.c          |  3 ++-
- include/net/af_rxrpc.h  |  8 +++++++-
- net/rxrpc/af_rxrpc.c    |  4 ++--
- net/rxrpc/ar-internal.h |  4 ++--
- net/rxrpc/call_object.c |  3 +--
- net/rxrpc/conn_client.c | 13 +++++++++---
- net/rxrpc/sendmsg.c     | 44 +++++++++++++++++++++++++++++++++--------
- 7 files changed, 60 insertions(+), 19 deletions(-)
+ kernel/trace/bpf_trace.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/afs/rxrpc.c b/fs/afs/rxrpc.c
-index 27a879eaa5a4e..1ecc67da6c1a4 100644
---- a/fs/afs/rxrpc.c
-+++ b/fs/afs/rxrpc.c
-@@ -414,7 +414,8 @@ void afs_make_call(struct afs_addr_cursor *ac, struct afs_call *call, gfp_t gfp)
- 					  afs_wake_up_async_call :
- 					  afs_wake_up_call_waiter),
- 					 call->upgrade,
--					 call->intr,
-+					 (call->intr ? RXRPC_PREINTERRUPTIBLE :
-+					  RXRPC_UNINTERRUPTIBLE),
- 					 call->debug_id);
- 	if (IS_ERR(rxcall)) {
- 		ret = PTR_ERR(rxcall);
-diff --git a/include/net/af_rxrpc.h b/include/net/af_rxrpc.h
-index 299240df79e4a..04e97bab6f28b 100644
---- a/include/net/af_rxrpc.h
-+++ b/include/net/af_rxrpc.h
-@@ -16,6 +16,12 @@ struct sock;
- struct socket;
- struct rxrpc_call;
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -731,7 +731,7 @@ BPF_CALL_1(bpf_send_signal, u32, sig)
+ 	if (unlikely(!nmi_uaccess_okay()))
+ 		return -EPERM;
  
-+enum rxrpc_interruptibility {
-+	RXRPC_INTERRUPTIBLE,	/* Call is interruptible */
-+	RXRPC_PREINTERRUPTIBLE,	/* Call can be cancelled whilst waiting for a slot */
-+	RXRPC_UNINTERRUPTIBLE,	/* Call should not be interruptible at all */
-+};
-+
- /*
-  * Debug ID counter for tracing.
-  */
-@@ -41,7 +47,7 @@ struct rxrpc_call *rxrpc_kernel_begin_call(struct socket *,
- 					   gfp_t,
- 					   rxrpc_notify_rx_t,
- 					   bool,
--					   bool,
-+					   enum rxrpc_interruptibility,
- 					   unsigned int);
- int rxrpc_kernel_send_data(struct socket *, struct rxrpc_call *,
- 			   struct msghdr *, size_t,
-diff --git a/net/rxrpc/af_rxrpc.c b/net/rxrpc/af_rxrpc.c
-index bad0d6adcc49f..15ee92d795815 100644
---- a/net/rxrpc/af_rxrpc.c
-+++ b/net/rxrpc/af_rxrpc.c
-@@ -285,7 +285,7 @@ struct rxrpc_call *rxrpc_kernel_begin_call(struct socket *sock,
- 					   gfp_t gfp,
- 					   rxrpc_notify_rx_t notify_rx,
- 					   bool upgrade,
--					   bool intr,
-+					   enum rxrpc_interruptibility interruptibility,
- 					   unsigned int debug_id)
- {
- 	struct rxrpc_conn_parameters cp;
-@@ -310,7 +310,7 @@ struct rxrpc_call *rxrpc_kernel_begin_call(struct socket *sock,
- 	memset(&p, 0, sizeof(p));
- 	p.user_call_ID = user_call_ID;
- 	p.tx_total_len = tx_total_len;
--	p.intr = intr;
-+	p.interruptibility = interruptibility;
- 
- 	memset(&cp, 0, sizeof(cp));
- 	cp.local		= rx->local;
-diff --git a/net/rxrpc/ar-internal.h b/net/rxrpc/ar-internal.h
-index 394d18857979a..3eb1ab40ca5cb 100644
---- a/net/rxrpc/ar-internal.h
-+++ b/net/rxrpc/ar-internal.h
-@@ -489,7 +489,6 @@ enum rxrpc_call_flag {
- 	RXRPC_CALL_BEGAN_RX_TIMER,	/* We began the expect_rx_by timer */
- 	RXRPC_CALL_RX_HEARD,		/* The peer responded at least once to this call */
- 	RXRPC_CALL_RX_UNDERRUN,		/* Got data underrun */
--	RXRPC_CALL_IS_INTR,		/* The call is interruptible */
- 	RXRPC_CALL_DISCONNECTED,	/* The call has been disconnected */
- };
- 
-@@ -598,6 +597,7 @@ struct rxrpc_call {
- 	atomic_t		usage;
- 	u16			service_id;	/* service ID */
- 	u8			security_ix;	/* Security type */
-+	enum rxrpc_interruptibility interruptibility; /* At what point call may be interrupted */
- 	u32			call_id;	/* call ID on connection  */
- 	u32			cid;		/* connection ID plus channel index */
- 	int			debug_id;	/* debug ID for printks */
-@@ -720,7 +720,7 @@ struct rxrpc_call_params {
- 		u32		normal;		/* Max time since last call packet (msec) */
- 	} timeouts;
- 	u8			nr_timeouts;	/* Number of timeouts specified */
--	bool			intr;		/* The call is interruptible */
-+	enum rxrpc_interruptibility interruptibility; /* How is interruptible is the call? */
- };
- 
- struct rxrpc_send_params {
-diff --git a/net/rxrpc/call_object.c b/net/rxrpc/call_object.c
-index c9f34b0a11df4..f07970207b544 100644
---- a/net/rxrpc/call_object.c
-+++ b/net/rxrpc/call_object.c
-@@ -237,8 +237,7 @@ struct rxrpc_call *rxrpc_new_client_call(struct rxrpc_sock *rx,
- 		return call;
- 	}
- 
--	if (p->intr)
--		__set_bit(RXRPC_CALL_IS_INTR, &call->flags);
-+	call->interruptibility = p->interruptibility;
- 	call->tx_total_len = p->tx_total_len;
- 	trace_rxrpc_call(call->debug_id, rxrpc_call_new_client,
- 			 atomic_read(&call->usage),
-diff --git a/net/rxrpc/conn_client.c b/net/rxrpc/conn_client.c
-index ea7d4c21f8893..f2a1a5dbb5a7b 100644
---- a/net/rxrpc/conn_client.c
-+++ b/net/rxrpc/conn_client.c
-@@ -655,13 +655,20 @@ static int rxrpc_wait_for_channel(struct rxrpc_call *call, gfp_t gfp)
- 
- 		add_wait_queue_exclusive(&call->waitq, &myself);
- 		for (;;) {
--			if (test_bit(RXRPC_CALL_IS_INTR, &call->flags))
-+			switch (call->interruptibility) {
-+			case RXRPC_INTERRUPTIBLE:
-+			case RXRPC_PREINTERRUPTIBLE:
- 				set_current_state(TASK_INTERRUPTIBLE);
--			else
-+				break;
-+			case RXRPC_UNINTERRUPTIBLE:
-+			default:
- 				set_current_state(TASK_UNINTERRUPTIBLE);
-+				break;
-+			}
- 			if (call->call_id)
- 				break;
--			if (test_bit(RXRPC_CALL_IS_INTR, &call->flags) &&
-+			if ((call->interruptibility == RXRPC_INTERRUPTIBLE ||
-+			     call->interruptibility == RXRPC_PREINTERRUPTIBLE) &&
- 			    signal_pending(current)) {
- 				ret = -ERESTARTSYS;
- 				break;
-diff --git a/net/rxrpc/sendmsg.c b/net/rxrpc/sendmsg.c
-index 1cbd43eeda937..0fcf157aa09f8 100644
---- a/net/rxrpc/sendmsg.c
-+++ b/net/rxrpc/sendmsg.c
-@@ -62,7 +62,7 @@ static int rxrpc_wait_for_tx_window_intr(struct rxrpc_sock *rx,
-  * Wait for space to appear in the Tx queue uninterruptibly, but with
-  * a timeout of 2*RTT if no progress was made and a signal occurred.
-  */
--static int rxrpc_wait_for_tx_window_nonintr(struct rxrpc_sock *rx,
-+static int rxrpc_wait_for_tx_window_waitall(struct rxrpc_sock *rx,
- 					    struct rxrpc_call *call)
- {
- 	rxrpc_seq_t tx_start, tx_win;
-@@ -87,8 +87,7 @@ static int rxrpc_wait_for_tx_window_nonintr(struct rxrpc_sock *rx,
- 		if (call->state >= RXRPC_CALL_COMPLETE)
- 			return call->error;
- 
--		if (test_bit(RXRPC_CALL_IS_INTR, &call->flags) &&
--		    timeout == 0 &&
-+		if (timeout == 0 &&
- 		    tx_win == tx_start && signal_pending(current))
- 			return -EINTR;
- 
-@@ -102,6 +101,26 @@ static int rxrpc_wait_for_tx_window_nonintr(struct rxrpc_sock *rx,
- 	}
- }
- 
-+/*
-+ * Wait for space to appear in the Tx queue uninterruptibly.
-+ */
-+static int rxrpc_wait_for_tx_window_nonintr(struct rxrpc_sock *rx,
-+					    struct rxrpc_call *call,
-+					    long *timeo)
-+{
-+	for (;;) {
-+		set_current_state(TASK_UNINTERRUPTIBLE);
-+		if (rxrpc_check_tx_space(call, NULL))
-+			return 0;
-+
-+		if (call->state >= RXRPC_CALL_COMPLETE)
-+			return call->error;
-+
-+		trace_rxrpc_transmit(call, rxrpc_transmit_wait);
-+		*timeo = schedule_timeout(*timeo);
-+	}
-+}
-+
- /*
-  * wait for space to appear in the transmit/ACK window
-  * - caller holds the socket locked
-@@ -119,10 +138,19 @@ static int rxrpc_wait_for_tx_window(struct rxrpc_sock *rx,
- 
- 	add_wait_queue(&call->waitq, &myself);
- 
--	if (waitall)
--		ret = rxrpc_wait_for_tx_window_nonintr(rx, call);
--	else
--		ret = rxrpc_wait_for_tx_window_intr(rx, call, timeo);
-+	switch (call->interruptibility) {
-+	case RXRPC_INTERRUPTIBLE:
-+		if (waitall)
-+			ret = rxrpc_wait_for_tx_window_waitall(rx, call);
-+		else
-+			ret = rxrpc_wait_for_tx_window_intr(rx, call, timeo);
-+		break;
-+	case RXRPC_PREINTERRUPTIBLE:
-+	case RXRPC_UNINTERRUPTIBLE:
-+	default:
-+		ret = rxrpc_wait_for_tx_window_nonintr(rx, call, timeo);
-+		break;
-+	}
- 
- 	remove_wait_queue(&call->waitq, &myself);
- 	set_current_state(TASK_RUNNING);
-@@ -628,7 +656,7 @@ int rxrpc_do_sendmsg(struct rxrpc_sock *rx, struct msghdr *msg, size_t len)
- 		.call.tx_total_len	= -1,
- 		.call.user_call_ID	= 0,
- 		.call.nr_timeouts	= 0,
--		.call.intr		= true,
-+		.call.interruptibility	= RXRPC_INTERRUPTIBLE,
- 		.abort_code		= 0,
- 		.command		= RXRPC_CMD_SEND_DATA,
- 		.exclusive		= false,
--- 
-2.20.1
-
+-	if (in_nmi()) {
++	if (irqs_disabled()) {
+ 		/* Do an early check on signal validity. Otherwise,
+ 		 * the error is lost in deferred irq_work.
+ 		 */
 
 
