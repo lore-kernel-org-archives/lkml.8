@@ -2,116 +2,153 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37B46C352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 18:20:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 366D2C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 18:21:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C7422222D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 18:20:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 121FA2223C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 18:21:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZUqLcz4h"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="AQM7h/gu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388720AbgDPSUB (ORCPT
+        id S2389175AbgDPSVO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 14:20:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45008 "EHLO
+        Thu, 16 Apr 2020 14:21:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730886AbgDPSTz (ORCPT
+        with ESMTP id S1728495AbgDPSVK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 14:19:55 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DFCAC061A0C;
-        Thu, 16 Apr 2020 11:19:54 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id j2so5960288wrs.9;
-        Thu, 16 Apr 2020 11:19:54 -0700 (PDT)
+        Thu, 16 Apr 2020 14:21:10 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C461BC061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 11:21:08 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id s18so2539563qvn.1
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 11:21:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=un5r5wTF9YSeE5H41tvnou6xOakyg+8DVX6yhx1HH88=;
-        b=ZUqLcz4hHJEOkbo9fAObJQkyqo4pX0Cg8rMzkZa/eMXTQ2/+3RoO6qkNGZVtmL/Y2o
-         GQtyHzHj4oCoRQNgPhyfof1gd9aZQjeWxANU27KsOxf8Jyq3tYnrDEgOFTYyLYG9ykVW
-         uS24lqVzItzURKlIPSuCva4Uo90s9A7erCksXBlmh7icVU81rLqWYb2kpWIR5hob4a71
-         WqNeseB4JSSJtp0qrBxosPI1yYOXza5aNDl9X7NJhS9Nt4cx1fnTUv8OSM1BOUpu/Xfy
-         yBnabSPeLk0ZsrnGHLM/YtXE5JzIQOslDCDFmTFXsFvKyZsI8ocqj6hOaW7SQxXUUKyt
-         D8/g==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VBxNtn9uLGeSV22Vl2rB9fJP9oTr50J1UVIxL3T4SdQ=;
+        b=AQM7h/guHIikQc6/ALmkgldpqSxx+vukOeOKH25qjbdAYokggloytSCSv3uQiNoab+
+         kmCq0lgWRHsHhVXS/p/KuNMYHolqBV1lhCIlnfGP0GtGI/Hyrk9GYCsTpTg9E5SwNOX9
+         r7oJF9IbgXygTuDOFxNChu/pX0xNIVcW5M88scZItWJNAHP2v3Q0QliUjLxhlWDActcy
+         9twFPmO0K9ytT7V+3c9bR+pUOvNs0I0vnxODnP+il1jO3CGGGBnZWWeVC9kw3elxN3BO
+         n+hwJeISZ+kUhd4+QGbmgmQa7fq/FNoQWDw7NlBGiTqRrxMCsVKSTdQXj0vKEpJVbcYm
+         IvrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=un5r5wTF9YSeE5H41tvnou6xOakyg+8DVX6yhx1HH88=;
-        b=llF5I122I4Fzhv8+bi6/94MkNF87SURbDTn9tTmFb9Jsh1m4aRvhG0/vS+xI8mYRWi
-         bjXxSx4UX475ZRIvy77bcdrm0rULqhjvNxg/hsMauH3EtzocgoxtVoylr7MxDrhALsr7
-         GwXXX4mFUUh39ZIeF6Moe72H+Vc2sji7bf+zvQ8VXChODd+jAHLUBYUW3YK3fh09zNeq
-         QKKqofFcJFTA7Y5HdovbQOd2eIvIYO00qI8HNXoLTkeBWrt0sEE+tLr5tlgpCJkvtNsQ
-         0wYvNRrSDo/lPdOUrufeHNVC0V0gG0/d9aY3qi2OY7ehyfV71gjMpcm75hxPVT4ksMjM
-         0hdQ==
-X-Gm-Message-State: AGi0PuaWXQLil3UxSeTUNT4zfeyvT3RGpiLA5b3n4albpRbZZxyGuf8d
-        2yEEl2PbFLkn3bGRe0Odt6o=
-X-Google-Smtp-Source: APiQypLCS49o+s1pMzcEqla3EhAESVxIpwpRuJ128hGVMG1TyTItLU0RQ+EfVAIWtH7wjgIJewKW/g==
-X-Received: by 2002:adf:e88d:: with SMTP id d13mr9336514wrm.375.1587061192972;
-        Thu, 16 Apr 2020 11:19:52 -0700 (PDT)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id u17sm31317719wra.63.2020.04.16.11.19.52
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 16 Apr 2020 11:19:52 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] arm64: dts: rockchip: add bus-width properties to mmc nodes for rk3368.dtsi
-Date:   Thu, 16 Apr 2020 20:19:43 +0200
-Message-Id: <20200416181944.5879-2-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200416181944.5879-1-jbx6244@gmail.com>
-References: <20200416181944.5879-1-jbx6244@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VBxNtn9uLGeSV22Vl2rB9fJP9oTr50J1UVIxL3T4SdQ=;
+        b=sZRde3DXe3iGRYzgDhAzUHC/qc8pkgLcb91F9+8KJ2ytJOW7cydD9cWn0fd06GF/CU
+         301uK7utkfc0YBzWbFOaUKdAbG1vaJfsrpx57zrU1E8a02z0ZyBebmNsl5yXUF0ycldR
+         RSsRVdI5vDNVKRkG215avwFG7YkRkhgiOKjMs6JCiLa8c4ISk7E3jPX7y8sHlMN4jAL8
+         TWCpnBXT5GX5pKJ9fjnx04c5PTszvRt19+db/kcumpL9uK2dOgKdAULVzZO5oEuNUtv6
+         76TQpJlOz3vor9qG7jqL4F/YS9UoPpg0yoOU2/SN20o18YlTnRBCSlxqfxpdxkeOwiVZ
+         w1vA==
+X-Gm-Message-State: AGi0PuamNtmFAe8X6kTTG/Xsfdolvh4CVGf+J/2+i/USFvhadPnf7Eib
+        NmxNPD33UnrCAeniVBS3glJeOgjBb43wpg==
+X-Google-Smtp-Source: APiQypLv85/ivbA+DcFrwvD4zHlx16bJI6Zu4b9MTnY51aBljq0lYBh1Gg7Hao613nl9Rg4XGDGzhQ==
+X-Received: by 2002:a05:6214:173:: with SMTP id y19mr11502093qvs.106.1587061268006;
+        Thu, 16 Apr 2020 11:21:08 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id s15sm16363679qtc.31.2020.04.16.11.21.07
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 16 Apr 2020 11:21:07 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jP98M-0006MB-Uj; Thu, 16 Apr 2020 15:21:06 -0300
+Date:   Thu, 16 Apr 2020 15:21:06 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Nicolas Pitre <nico@fluxnic.net>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
+        "masahiroy@kernel.org" <masahiroy@kernel.org>,
+        "Laurent.pinchart@ideasonboard.com" 
+        <Laurent.pinchart@ideasonboard.com>,
+        "leon@kernel.org" <leon@kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "kieran.bingham+renesas@ideasonboard.com" 
+        <kieran.bingham+renesas@ideasonboard.com>,
+        "a.hajda@samsung.com" <a.hajda@samsung.com>,
+        "jonas@kwiboo.se" <jonas@kwiboo.se>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>
+Subject: Re: [RFC 0/6] Regressions for "imply" behavior change
+Message-ID: <20200416182106.GX5100@ziepe.ca>
+References: <CAK8P3a0aFQ7h4zRDW=QLogXWc88JkJJXEOK0_CpWwsRjq6+T+w@mail.gmail.com>
+ <20200414152312.GF5100@ziepe.ca>
+ <CAK8P3a1PjP9_b5NdmqTLeGN4y+3JXx_yyTE8YAf1u5rYHWPA9g@mail.gmail.com>
+ <f6d83b08fc0bc171b5ba5b2a0bc138727d92e2c0.camel@mellanox.com>
+ <CAK8P3a1-J=4EAxh7TtQxugxwXk239u8ffgxZNRdw_WWy8ExFoQ@mail.gmail.com>
+ <834c7606743424c64951dd2193ca15e29799bf18.camel@mellanox.com>
+ <CAK8P3a3Wx5_bUOKnN3_hG5nLOqv3WCUtMSq6vOkJzWZgsmAz+A@mail.gmail.com>
+ <874ktj4tvn.fsf@intel.com>
+ <CAK8P3a1S2x1jnx9Q5B22vX8gBHs0Ztu-znA9hqZ5xp5tRAykGg@mail.gmail.com>
+ <nycvar.YSQ.7.76.2004161106140.2671@knanqh.ubzr>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <nycvar.YSQ.7.76.2004161106140.2671@knanqh.ubzr>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'bus-width' and pinctrl containing the bus-pins
-should be in the same file, so add them to
-all mmc nodes in 'rk3368.dtsi'.
+On Thu, Apr 16, 2020 at 11:12:56AM -0400, Nicolas Pitre wrote:
+> On Thu, 16 Apr 2020, Arnd Bergmann wrote:
+> 
+> > On Thu, Apr 16, 2020 at 12:17 PM Jani Nikula
+> > <jani.nikula@linux.intel.com> wrote:
+> > >
+> > > On Thu, 16 Apr 2020, Arnd Bergmann <arnd@arndb.de> wrote:
+> > > > On Thu, Apr 16, 2020 at 5:25 AM Saeed Mahameed <saeedm@mellanox.com> wrote:
+> > > >> BTW how about adding a new Kconfig option to hide the details of
+> > > >> ( BAR || !BAR) ? as Jason already explained and suggested, this will
+> > > >> make it easier for the users and developers to understand the actual
+> > > >> meaning behind this tristate weird condition.
+> > > >>
+> > > >> e.g have a new keyword:
+> > > >>      reach VXLAN
+> > > >> which will be equivalent to:
+> > > >>      depends on VXLAN && !VXLAN
+> > > >
+> > > > I'd love to see that, but I'm not sure what keyword is best. For your
+> > > > suggestion of "reach", that would probably do the job, but I'm not
+> > > > sure if this ends up being more or less confusing than what we have
+> > > > today.
+> > >
+> > > Ah, perfect bikeshedding topic!
+> > >
+> > > Perhaps "uses"? If the dependency is enabled it gets used as a
+> > > dependency.
+> > 
+> > That seems to be the best naming suggestion so far
+> 
+> What I don't like about "uses" is that it doesn't convey the conditional 
+> dependency. It could be mistaken as being synonymous to "select".
+> 
+> What about "depends_if" ? The rationale is that this is actually a
+> dependency, but only if the related symbol is set (i.e. not n or empty).
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- arch/arm64/boot/dts/rockchip/rk3368.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
+I think that stretches the common understanding of 'depends' a bit too
+far.. A depends where the target can be N is just too strange.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3368.dtsi b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-index f22475016..0678c2e5c 100644
---- a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-@@ -210,6 +210,7 @@
- 		clocks = <&cru HCLK_SDMMC>, <&cru SCLK_SDMMC>,
- 			 <&cru SCLK_SDMMC_DRV>, <&cru SCLK_SDMMC_SAMPLE>;
- 		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
-+		bus-width = <4>;
- 		fifo-depth = <0x100>;
- 		interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
- 		resets = <&cru SRST_MMC0>;
-@@ -224,6 +225,7 @@
- 		clocks = <&cru HCLK_SDIO0>, <&cru SCLK_SDIO0>,
- 			 <&cru SCLK_SDIO0_DRV>, <&cru SCLK_SDIO0_SAMPLE>;
- 		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
-+		bus-width = <4>;
- 		fifo-depth = <0x100>;
- 		interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
- 		resets = <&cru SRST_SDIO0>;
-@@ -238,6 +240,7 @@
- 		clocks = <&cru HCLK_EMMC>, <&cru SCLK_EMMC>,
- 			 <&cru SCLK_EMMC_DRV>, <&cru SCLK_EMMC_SAMPLE>;
- 		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
-+		bus-width = <8>;
- 		fifo-depth = <0x100>;
- 		interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
- 		resets = <&cru SRST_EMMC>;
--- 
-2.11.0
+Somthing incorporating 'optional' seems like a better choice
+'optionally uses' seems particularly clear and doesn't overload
+existing works like depends or select
 
+Jason
