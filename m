@@ -2,102 +2,93 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C74C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA44BC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:01:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B3BA214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:01:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 765E021924
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:01:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587052911;
+	bh=GRMBxBlJT/dO0QD5MNbcBQeYW30XVAvGkRBTy11zOTs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Av2xktXW4c4gNOq7Eynsact2IRG1WrrCb2jhqHirTEOK3M0MNlDe7ZNtBBBi8Smz1
+	 QofhnikSORJby+ooGThSGWjvMLSqZ8xSakgVSpKVV4R+rzmQeY8tz6hI7xiXBIPfOE
+	 G84KleDa6Vr2QhoyKetbcEwfoGYx5z8SoFprEWf8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2636563AbgDPQBn (ORCPT
+        id S2410656AbgDPQBu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 12:01:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37210 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 12:01:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2506593AbgDPQBf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 12:01:35 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2636447AbgDPQBk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 12:01:40 -0400
+Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49624214AF;
-        Thu, 16 Apr 2020 16:01:34 +0000 (UTC)
-Date:   Thu, 16 Apr 2020 12:01:32 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Muchun Song <songmuchun@bytedance.com>
-Cc:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        bsegall@google.com, mgorman@suse.de, mingo@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sched/cpuacct: Fix charge cpuacct.usage_sys
- incorrently.
-Message-ID: <20200416120132.7c2df52a@gandalf.local.home>
-In-Reply-To: <20200416113502.53b33a1c@gandalf.local.home>
-References: <20200416141833.50663-1-songmuchun@bytedance.com>
-        <20200416113502.53b33a1c@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC9E5214AF;
+        Thu, 16 Apr 2020 16:01:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587052899;
+        bh=GRMBxBlJT/dO0QD5MNbcBQeYW30XVAvGkRBTy11zOTs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Wd6gpejeL4CD8GUdf4YOdFd2JV29pdtKPe9SZek/dgSskzy/RLN+hLerzcN4Gv5CO
+         oD4TsUO4ngAUFXYY0s4mZm09YALzZoiWP86TLZVs96jY+ONPtcqWPp7nC+Jilcwv5H
+         WW+Z9SXGgiRB1gO+Qz7+Do1Xdahl8FxCmlT2Ytl4=
+Received: by mail-io1-f50.google.com with SMTP id n10so21551870iom.3;
+        Thu, 16 Apr 2020 09:01:39 -0700 (PDT)
+X-Gm-Message-State: AGi0PubTzof1dhfBsJ00kt0jXm4DVcWJEgrUZTenTlmsKJAyA0tjYzvN
+        7qQg2Nl9R+KbjtcTvx/5KtOJixFlRfz3XetsbLw=
+X-Google-Smtp-Source: APiQypI5m+VVAEjBcHIER11Qc+zAjLHrN9hHgnqG6Tf5SDyVH6demyr0ouoviqm1aacN4anUNnkTfBIHcMcqYhD8J2o=
+X-Received: by 2002:a02:3341:: with SMTP id k1mr22768776jak.74.1587052899328;
+ Thu, 16 Apr 2020 09:01:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200415221520.2692512-1-nivedita@alum.mit.edu> <20200416151227.3360778-1-nivedita@alum.mit.edu>
+In-Reply-To: <20200416151227.3360778-1-nivedita@alum.mit.edu>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Thu, 16 Apr 2020 18:01:27 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXFD7JYRLrn0D-pGG2thGdjsvQ1QDdRpXKdG9DqfW7vc4g@mail.gmail.com>
+Message-ID: <CAMj1kXFD7JYRLrn0D-pGG2thGdjsvQ1QDdRpXKdG9DqfW7vc4g@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] efi: Remove __efistub_global annotation
+To:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Atish Patra <atish.patra@wdc.com>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        X86 ML <x86@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Apr 2020 11:35:02 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Thu, 16 Apr 2020 at 17:12, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+>
+> This patch series removes the need for annotating global data in the EFI
+> stub with __efistub_global for ARM32 and X86.
+>
+> This is done by renaming the .data and .bss sections in the object files
+> linked into the EFI stub to .data.efistub and .bss.efistub respectively,
+> and including those sections into the compressed kernel's .data section
+> using its linker script.
+>
+> Changes from v1:
+> - drop patch 2 and squash patches 3 and 5 for x86
+> - fix R_X86 -> R_386
+> - only check native relocation size (32-bit for R386 and 64-bit for
+>   RX86_64)
+>
 
-> On Thu, 16 Apr 2020 22:18:33 +0800
-> Muchun Song <songmuchun@bytedance.com> wrote:
-> 
-> > The user_mode(task_pt_regs(tsk)) always return true for
-> > user thread, and false for kernel thread. So it means that
-> > the cpuacct.usage_sys is the time that kernel thread uses
-> > not the time that thread uses in the kernel mode. We can
-> > use get_irq_regs() instead of task_pt_regs() to fix it.
-> > 
-> > Signed-off-by: Muchun Song <songmuchun@bytedance.com>
-> > ---
-> >  kernel/sched/cpuacct.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/kernel/sched/cpuacct.c b/kernel/sched/cpuacct.c
-> > index 6448b0438ffb2..edfc62554648e 100644
-> > --- a/kernel/sched/cpuacct.c
-> > +++ b/kernel/sched/cpuacct.c
-> > @@ -5,6 +5,7 @@
-> >   * Based on the work by Paul Menage (menage@google.com) and Balbir Singh
-> >   * (balbir@in.ibm.com).
-> >   */
-> > +#include <asm/irq_regs.h>
-> >  #include "sched.h"
-> >  
-> >  /* Time spent by the tasks of the CPU accounting group executing in ... */
-> > @@ -339,7 +340,7 @@ void cpuacct_charge(struct task_struct *tsk, u64 cputime)
-> >  {
-> >  	struct cpuacct *ca;
-> >  	int index = CPUACCT_STAT_SYSTEM;
-> > -	struct pt_regs *regs = task_pt_regs(tsk);
-> > +	struct pt_regs *regs = get_irq_regs();  
-> 
-> But get_irq_regs() is only available from interrupt context. This will be
-> NULL most the time, whereas the original way will have regs existing for
-> the task.
+Thanks Arvind. I have queued these up now.
 
-Perhaps you want:
+Atish, I have queued up the first 2 patches of your RISC-V EFI stbu
+series as well. Please base your next version on
 
-	regs = get_irqs_regs();
-	if (!regs)
-		regs = task_pt_regs(tsk);
+https://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git/log/?h=next
 
-?
-
--- Steve
-
-> 
-> >  
-> >  	if (regs && user_mode(regs))
-> >  		index = CPUACCT_STAT_USER;  
-> 
+Thanks,
+Ard.
