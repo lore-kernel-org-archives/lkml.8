@@ -2,96 +2,133 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F79BC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53EE7C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:33:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2A13208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:33:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22B05208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:33:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W0IGsdm+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633552AbgDPLdX (ORCPT
+        id S2633626AbgDPLdd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 07:33:23 -0400
-Received: from mga01.intel.com ([192.55.52.88]:49755 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2633425AbgDPLcz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 07:33:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37766 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2633448AbgDPLcz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Apr 2020 07:32:55 -0400
-IronPort-SDR: AQf1YNrfXGFCkTaTDHusUA6EYcszOs1nRzVxfCN++NR4blKKfVXkFwajp+jqFP3B9pW5KzVMIy
- 5N8DcMoFjPhA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 04:32:52 -0700
-IronPort-SDR: JLjViU3I/7OhNUNFa14OtK4jxawo6cL4DIbAiuwxDw0aNbt8rAsEQeI/aVasFOrEUV6+diXta5
- ZTj7u56OWrjw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,390,1580803200"; 
-   d="scan'208";a="454295922"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga005.fm.intel.com with ESMTP; 16 Apr 2020 04:32:48 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1jP2lG-00113k-Db; Thu, 16 Apr 2020 14:32:50 +0300
-Date:   Thu, 16 Apr 2020 14:32:50 +0300
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        anders.roxell@linaro.org, arnd@arndb.de, brendanhiggins@google.com,
-        cheol.yong.kim@intel.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        masonccyang@mxic.com.tw, miquel.raynal@bootlin.com,
-        piotrs@cadence.com, qi-ming.wu@intel.com, richard@nod.at,
-        robh+dt@kernel.org, tglx@linutronix.de, vigneshr@ti.com
-Subject: Re: [PATCH v1 2/2] mtd: rawnand: Add NAND controller support on
- Intel LGM SoC
-Message-ID: <20200416113250.GA185537@smile.fi.intel.com>
-References: <20200414022433.36622-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200415220533.733834-1-martin.blumenstingl@googlemail.com>
- <c33c8653-16a2-5bcd-97a9-511d958b755a@linux.intel.com>
- <20200416113822.2ef326cb@collabora.com>
- <18568cf6-2955-472e-7b68-eb35e654a906@linux.intel.com>
- <20200416122619.2c481792@collabora.com>
- <d3e137fa-54a0-b4ec-eb24-3984eab2a247@linux.intel.com>
- <20200416131725.51259573@collabora.com>
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 912ECC061A0C;
+        Thu, 16 Apr 2020 04:32:53 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id x26so1496992pgc.10;
+        Thu, 16 Apr 2020 04:32:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=73G/tYBPsY7Yumk7mWov9Hec1mGGxgp9HY4KcukxdJk=;
+        b=W0IGsdm+ACN3UO/Jo0nd+PFHgkmBMXkb3+UjlCb2MUZNnpWE2c0Srt8wlfJrux16No
+         55tOI1PdSYIqK+t6kOiy9gqnRnEQE0HnP4cICNOeuDQL82IOiVKpcRke4iQEnvrFvHmh
+         pj5S9eQEugeAbYsuDllp01Y+LyCUWgpVsNrKvwEvWbgu79wYOpEiMcp/pkCKPp2I573F
+         84IauxJyP3NqAYcyu3dYmbyW/oZQrSKdRzgKMlxSpuqM8ZuA+DHkIthKUpnLI+WK8sqj
+         fDXNeKeK9RtrqqJ3Jj2sQbWnU9Tp9+vEOdtae05A33NhtDVJ3fmR+XpYxmbk6b9QnZz2
+         qL7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=73G/tYBPsY7Yumk7mWov9Hec1mGGxgp9HY4KcukxdJk=;
+        b=b9MncRHlBFIhtavphH83o34YGOx74nqSh5VOscJ6KeQamyHpyNTLmuFN6ym8+FbZWr
+         +BU4pL83wmsltI9yg4CaQfe/6mQSKfCc3+SWIgR1EfkK9FyKW96WMVJwccMFGS9jWXgw
+         PP4w9AxtrExTgt6m/gV9F1sSjnjCHRNQvpV5gX63IuKXRK5O2nbsjmLHqaoRELdJwaRf
+         mgCJfaD1FdxemU6BP8l3mv3G0Z+SwNT3q/CgliJzGI0h6GUDeqmndulknoemhtNhduW6
+         7S5TWzEf3/flF3FWf71q+enUSilZiBvFw0UjLfThgP/KaLHleBxup7vncaiQkfkyACU8
+         fpQg==
+X-Gm-Message-State: AGi0PuaizA6nq1hLXAj+CCCLBD810xt/Wm9whJ0eHSWZoAtj/bo/fZ+E
+        8avNTMMKu4fOMzIVQ1t1oz8=
+X-Google-Smtp-Source: APiQypKzID1pPKYdKYh039MvmszprZ+oT+Eo9hNJzwnQiIO4oU4+niTGf8czeKJIbqDEZzyjhgdirQ==
+X-Received: by 2002:a63:6c83:: with SMTP id h125mr21113825pgc.168.1587036772993;
+        Thu, 16 Apr 2020 04:32:52 -0700 (PDT)
+Received: from localhost (181.56.30.125.dy.iij4u.or.jp. [125.30.56.181])
+        by smtp.gmail.com with ESMTPSA id h11sm16533490pfn.125.2020.04.16.04.32.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Apr 2020 04:32:51 -0700 (PDT)
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Date:   Thu, 16 Apr 2020 20:32:49 +0900
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tomasz Figa <tfiga@chromium.org>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC][PATCH] media: v4l2-ctrls: add more NULL pointer checks
+Message-ID: <20200416113249.GG30641@jagdpanzerIV.localdomain>
+References: <20200410103501.1083-1-sergey.senozhatsky@gmail.com>
+ <c83c137b-b801-a06b-e324-09dd3bbc9daf@xs4all.nl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200416131725.51259573@collabora.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <c83c137b-b801-a06b-e324-09dd3bbc9daf@xs4all.nl>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 01:17:25PM +0200, Boris Brezillon wrote:
-> On Thu, 16 Apr 2020 18:40:53 +0800
-> "Ramuthevar, Vadivel MuruganX"
-> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+On (20/04/16 10:53), Hans Verkuil wrote:
+[..]
+> > +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+> > @@ -2869,6 +2869,9 @@ EXPORT_SYMBOL(v4l2_ctrl_add_handler);
+> >  
+> >  bool v4l2_ctrl_radio_filter(const struct v4l2_ctrl *ctrl)
+> >  {
+> > +	if (WARN_ON(!ctrl))
+> > +		return false;
+> > +
+> >  	if (V4L2_CTRL_ID2WHICH(ctrl->id) == V4L2_CTRL_CLASS_FM_TX)
+> >  		return true;
+> >  	if (V4L2_CTRL_ID2WHICH(ctrl->id) == V4L2_CTRL_CLASS_FM_RX)
+> > @@ -3794,7 +3797,9 @@ s32 v4l2_ctrl_g_ctrl(struct v4l2_ctrl *ctrl)
+> >  	struct v4l2_ext_control c;
+> >  
+> >  	/* It's a driver bug if this happens. */
+> > -	WARN_ON(!ctrl->is_int);
+> > +	if (WARN_ON(!ctrl || !ctrl->is_int))
+> > +		return -EINVAL;
 > 
-> > >>> we'll be happy to have one more of the existing driver converted to  
-> > >>> ->exec_op() ;-).  
-> > >> I have completely adapted to ->exec_op() hook up to replace the legacy
-> > >> call-back.  
-> > > I suspect porting what you've done to the xway driver shouldn't be too
-> > > complicated.  
-> > Not ported from xway_nand.c driver , we have developed from the scratch 
-> > to make it work on
-> > Intel LGM SoC , it's new x86 ATOM based SoC, IP itself completely 
-> > different and most of the registers won't match.
-> > if we port then it would be ugly and also what are the problem may occur 
-> > we do not know.
+> Just return 0 here. The return value is the control's value, not an error code.
+> So all you can do here is return 0 in the absence of anything better.
+
+OK.
+
+> > +
+> >  	c.value = 0;
+> >  	get_ctrl(ctrl, &c);
+> >  	return c.value;
+> > @@ -4212,6 +4217,9 @@ EXPORT_SYMBOL(v4l2_s_ctrl);
+> >  
+> >  int __v4l2_ctrl_s_ctrl(struct v4l2_ctrl *ctrl, s32 val)
+> >  {
+> > +	if (!ctrl)
 > 
-> Sorry but IMO they look similar enough to try to merge them.
+> Change this to 'if (WARN_ON(!ctrl))'
+> 
+> I don't think NULL pointers should be silently ignored: it really
+> indicates a driver bug. It it certainly a good idea to WARN instead.
 
-I agree. I tried to convince them internally... but here we are.
+Should WARN_ON() be only in unlocked versions of ctrl API? It probably
+would make sense to add WARNs to both - e.g. to v4l2_ctrl_s_ctrl() and
+to __v4l2_ctrl_s_ctrl(). By the way, why don't locked and unlocked
+versions live together in v4l2-ctrls.c file? Any reason for, e.g.,
+v4l2_ctrl_s_ctrl() to be in header and __v4l2_ctrl_s_ctrl() to be C-file?
 
--- 
-With Best Regards,
-Andy Shevchenko
+> The same is true for the functions below.
 
+OK.
 
+	-ss
