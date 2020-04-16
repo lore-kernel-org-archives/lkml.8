@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 846D9C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:27:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3214EC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:27:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D4DD2076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:27:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 086172076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:27:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587047249;
-	bh=9dyaT9wnAWhQSKmAiJwAuMsv2hIYneiLsOUo5frnMTc=;
+	s=default; t=1587047256;
+	bh=tNQiznTZr5UZXT8EsdnvaiE1cyih/pzpSTRVjS6ghjs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b0DEP2RR2KO7rBFxdyTjQ6/EhIWuMFWDH8UgwfmysmwyRl0toeWM4BXNpwH+u8u9U
-	 dp4XGC0cv1hr3xGx4GpacnuDyNHk3AlBfWD2rxpWIyKCFDgz/3DQOgcH0QoC6r2VZi
-	 z5z8XiCCmkxiNA+nGaS93fFZxYoocHglHYPBu1P0=
+	b=oRvs9sCIcyPIDIRHByC5pC2uQZvsS8oCXRFBCC/us+640J2iLuH/VqhMN+u7KysuZ
+	 MaSZuaA6LEi00uQ1vVVsQ3hQmsaggjgMgbLDfyGAqYkr+hsGxLSLQIXRTQWYcoDzA5
+	 f+qH29+zAJai4VIyqiAQrHTZZOLJXwgpdDLjtpG0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729420AbgDPO11 (ORCPT
+        id S2394245AbgDPO1d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:27:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46202 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:27:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898029AbgDPN7N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:59:13 -0400
+        id S2389857AbgDPN7c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:59:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78CB421744;
-        Thu, 16 Apr 2020 13:59:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19B5720786;
+        Thu, 16 Apr 2020 13:59:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045552;
-        bh=9dyaT9wnAWhQSKmAiJwAuMsv2hIYneiLsOUo5frnMTc=;
+        s=default; t=1587045571;
+        bh=tNQiznTZr5UZXT8EsdnvaiE1cyih/pzpSTRVjS6ghjs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jM6AW8hsudG+VGCggsf9v3hjQ75RuTrHf2UnFDNPZxlLOIp7rAycirb+qYYMQVJOo
-         Ub9CQlwbCWN7ubmJEGxQ3hnAzCJId/IR9OdGYqOPUdSjGejMOSxH/gMMbFvOmBmZGt
-         6Dx5vWqOg9kpe3cr1xVsdM5rKY8htk/uh5GC/rBQ=
+        b=KBP2/mwmzq+4aJMt35fAdLnJ4bxD8yh4zxVDrrqxghD1dBzeMeM3Q1xMovRiBNJhD
+         HRoG5tTp+Ybem/r3v9l3/aBMy3i5PJicHwiNMzfdRp64Jz6U6OWAo+2G+eXmO3eynw
+         bjBPD30fZLyJfxA3gISHhPMXkZeSpJhrC2dafUfo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nikos Tsironis <ntsironis@arrikto.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.6 179/254] dm clone: Add missing casts to prevent overflows and data corruption
-Date:   Thu, 16 Apr 2020 15:24:28 +0200
-Message-Id: <20200416131348.759928574@linuxfoundation.org>
+        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.6 138/254] KVM: VMX: fix crash cleanup when KVM wasnt used
+Date:   Thu, 16 Apr 2020 15:23:47 +0200
+Message-Id: <20200416131343.727101780@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -59,63 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikos Tsironis <ntsironis@arrikto.com>
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-commit 9fc06ff56845cc5ccafec52f545fc2e08d22f849 upstream.
+commit dbef2808af6c594922fe32833b30f55f35e9da6d upstream.
 
-Add missing casts when converting from regions to sectors.
+If KVM wasn't used at all before we crash the cleanup procedure fails with
+ BUG: unable to handle page fault for address: ffffffffffffffc8
+ #PF: supervisor read access in kernel mode
+ #PF: error_code(0x0000) - not-present page
+ PGD 23215067 P4D 23215067 PUD 23217067 PMD 0
+ Oops: 0000 [#8] SMP PTI
+ CPU: 0 PID: 3542 Comm: bash Kdump: loaded Tainted: G      D           5.6.0-rc2+ #823
+ RIP: 0010:crash_vmclear_local_loaded_vmcss.cold+0x19/0x51 [kvm_intel]
 
-In case BITS_PER_LONG == 32, the lack of the appropriate casts can lead
-to overflows and miscalculation of the device sector.
+The root cause is that loaded_vmcss_on_cpu list is not yet initialized,
+we initialize it in hardware_enable() but this only happens when we start
+a VM.
 
-As a result, we could end up discarding and/or copying the wrong parts
-of the device, thus corrupting the device's data.
+Previously, we used to have a bitmap with enabled CPUs and that was
+preventing [masking] the issue.
 
-Fixes: 7431b7835f55 ("dm: add clone target")
-Cc: stable@vger.kernel.org # v5.4+
-Signed-off-by: Nikos Tsironis <ntsironis@arrikto.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Initialized loaded_vmcss_on_cpu list earlier, right before we assign
+crash_vmclear_loaded_vmcss pointer. blocked_vcpu_on_cpu list and
+blocked_vcpu_on_cpu_lock are moved altogether for consistency.
+
+Fixes: 31603d4fc2bb ("KVM: VMX: Always VMCLEAR in-use VMCSes during crash with kexec support")
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Message-Id: <20200401081348.1345307-1-vkuznets@redhat.com>
+Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-clone-target.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ arch/x86/kvm/vmx/vmx.c |   12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
---- a/drivers/md/dm-clone-target.c
-+++ b/drivers/md/dm-clone-target.c
-@@ -282,7 +282,7 @@ static bool bio_triggers_commit(struct c
- /* Get the address of the region in sectors */
- static inline sector_t region_to_sector(struct clone *clone, unsigned long region_nr)
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -2264,10 +2264,6 @@ static int hardware_enable(void)
+ 	    !hv_get_vp_assist_page(cpu))
+ 		return -EFAULT;
+ 
+-	INIT_LIST_HEAD(&per_cpu(loaded_vmcss_on_cpu, cpu));
+-	INIT_LIST_HEAD(&per_cpu(blocked_vcpu_on_cpu, cpu));
+-	spin_lock_init(&per_cpu(blocked_vcpu_on_cpu_lock, cpu));
+-
+ 	kvm_cpu_vmxon(phys_addr);
+ 	if (enable_ept)
+ 		ept_sync_global();
+@@ -8025,7 +8021,7 @@ module_exit(vmx_exit);
+ 
+ static int __init vmx_init(void)
  {
--	return (region_nr << clone->region_shift);
-+	return ((sector_t)region_nr << clone->region_shift);
- }
+-	int r;
++	int r, cpu;
  
- /* Get the region number of the bio */
-@@ -471,7 +471,7 @@ static void complete_discard_bio(struct
- 	if (test_bit(DM_CLONE_DISCARD_PASSDOWN, &clone->flags) && success) {
- 		remap_to_dest(clone, bio);
- 		bio_region_range(clone, bio, &rs, &nr_regions);
--		trim_bio(bio, rs << clone->region_shift,
-+		trim_bio(bio, region_to_sector(clone, rs),
- 			 nr_regions << clone->region_shift);
- 		generic_make_request(bio);
- 	} else
-@@ -804,11 +804,14 @@ static void hydration_copy(struct dm_clo
- 	struct dm_io_region from, to;
- 	struct clone *clone = hd->clone;
+ #if IS_ENABLED(CONFIG_HYPERV)
+ 	/*
+@@ -8079,6 +8075,12 @@ static int __init vmx_init(void)
+ 		return r;
+ 	}
  
-+	if (WARN_ON(!nr_regions))
-+		return;
++	for_each_possible_cpu(cpu) {
++		INIT_LIST_HEAD(&per_cpu(loaded_vmcss_on_cpu, cpu));
++		INIT_LIST_HEAD(&per_cpu(blocked_vcpu_on_cpu, cpu));
++		spin_lock_init(&per_cpu(blocked_vcpu_on_cpu_lock, cpu));
++	}
 +
- 	region_size = clone->region_size;
- 	region_start = hd->region_nr;
- 	region_end = region_start + nr_regions - 1;
- 
--	total_size = (nr_regions - 1) << clone->region_shift;
-+	total_size = region_to_sector(clone, nr_regions - 1);
- 
- 	if (region_end == clone->nr_regions - 1) {
- 		/*
+ #ifdef CONFIG_KEXEC_CORE
+ 	rcu_assign_pointer(crash_vmclear_loaded_vmcss,
+ 			   crash_vmclear_local_loaded_vmcss);
 
 
