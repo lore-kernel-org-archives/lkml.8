@@ -2,69 +2,167 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E1ABC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 22:15:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C4B8C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 22:15:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFE8E221F9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 22:15:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587075331;
-	bh=XpIMQIWcueISAg4dETpJJ6SrYPt+w6B/MF4ltSLjw6M=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=Suaxa9CXNN5QAW1A3lHKxvD5O6LLRcwgK5tdyaY0xDZaK1BdtfSdb24UjVEeGbmxb
-	 Ki8QZhmxZ2tlUV4WMfepO+JG2zQEAxPXAZbDD2eHNqhexRDW/R6ceX71Kt3KCikSEu
-	 gIlUa/AZC//NMzlvcJ6WQkoMqtANCbxb2AKSaBHI=
+	by mail.kernel.org (Postfix) with ESMTP id 3AFD622202
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 22:15:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SrGxGy8s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729394AbgDPWPa (ORCPT
+        id S1729287AbgDPWPR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 18:15:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54714 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729350AbgDPWPY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 18:15:24 -0400
-Subject: Re: [GIT PULL] chrome-platform fixes for v5.7-rc2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587075323;
-        bh=XpIMQIWcueISAg4dETpJJ6SrYPt+w6B/MF4ltSLjw6M=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=RuXJfsdl/UC/GrJgGhkr4moi25PlubdEYenQiOYM3WTTF2mdbs8+uxEB0de7IE3GO
-         5FFcFptk/Z6Bu4cwb2+Wrlkoz8qbdYyPC8wWlSEvYSrR8Y9ujVFyrlF+2L/Mb3k3/L
-         xWDttIFvhRKtspNxr7rjByiERBPKqMxb7Lxr8h1M=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200416214035.GA1586@google.com>
-References: <20200416214035.GA1586@google.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200416214035.GA1586@google.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git
- tags/tag-chrome-platform-fixes-for-v5.7-rc2
-X-PR-Tracked-Commit-Id: 538b8471fee89eaf18f6bfbbc0576473f952b83e
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 2fcd80144b93ff90836a44f2054b4d82133d3a85
-Message-Id: <158707532371.2733.17062166003215775460.pr-tracker-bot@kernel.org>
-Date:   Thu, 16 Apr 2020 22:15:23 +0000
-To:     Benson Leung <bleung@google.com>
-Cc:     torvalds@linux-foundation.org, bleung@kernel.org,
-        bleung@chromium.org, bleung@google.com,
-        enric.balletbo@collabora.com, linux-kernel@vger.kernel.org
+        Thu, 16 Apr 2020 18:15:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53336 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729239AbgDPWPK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 18:15:10 -0400
+Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF927C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 15:15:10 -0700 (PDT)
+Received: by mail-qt1-x849.google.com with SMTP id x56so215615qtc.10
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 15:15:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=i6zi1rxo51fT0gF/9bIKSou9eRtAcSwwYlA8EKV06Zo=;
+        b=SrGxGy8s4ytPw4timT44/yvzlyEckdI3kUPwh456UpVj+LH7jd6GHSbiMnnJ0MMkCK
+         x3Gakjw88HjZMraj2upA2jKbx/ISFXBxkkeB27X00Y1lETyNKLH8mYCC6R47lGkLqK8H
+         vaGoRx5tBFnwy99b1MwAMkT6YLcectvICoCWacgNsja+p9ctvAjpwOAAesNLUmJX7taD
+         WcQY7D6bc60UFTOr8KFamArKB2FJCWlZnpwhXlNAYWuT7NCCSIw1ggP+LNTKo1sMV/eV
+         NpbDezVvXmlEYFQuDLR6W3vLBIcb10wxLruXG5CwXfAYZUs+8GwYN5flnTWlTfh0/pkS
+         Okvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=i6zi1rxo51fT0gF/9bIKSou9eRtAcSwwYlA8EKV06Zo=;
+        b=hKzntjtTc/XjlysSQaL5YZiPgUk7ZioC15gIxv8Mc+q63SyLjtNV2L9EypkJ0oR7kb
+         HQv3Hkz4ER9LzsgzFzTdKjPQZZTF37vzpWdIsJrQtCp9mA+qbESpgCXUK1R25eMtSPej
+         ysyp0rM01bx/6j9GDVYi34bulnAF0740lyZEBlsPFNrTfa5G/fX8jLk2/+KzzEBYzvQv
+         8vr2Ku5b0mk+2xVaOKX0AL35jblJtxvlpsbEfP1URE0k2jQZoTqkmpPoUt5TgZ59JtVq
+         U1/NbccfIojsVbewISaYeJrCxz2+kveXsa7OU2M+pWhKsKpNG0ZNqDNYbjNNshlBZn56
+         wWsA==
+X-Gm-Message-State: AGi0Pub3CcwOd6ulopKDRZeLHkLwl9uBbIhlvzFnGe9AoxyzC0NWcewb
+        rCSljT2725CsFRJTWOXF1SOG7Eugt6ur
+X-Google-Smtp-Source: APiQypLk4PUpjzE7K8jVUtavsUcybhrkLlxmuvUCKxRqtRx63IfICXBx4LOCUTvKNzrUFxmZzcER8r+wwzh6
+X-Received: by 2002:a05:6214:1248:: with SMTP id q8mr12436429qvv.66.1587075309771;
+ Thu, 16 Apr 2020 15:15:09 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 15:14:55 -0700
+In-Reply-To: <20200416221457.46710-1-irogers@google.com>
+Message-Id: <20200416221457.46710-3-irogers@google.com>
+Mime-Version: 1.0
+References: <20200416221457.46710-1-irogers@google.com>
+X-Mailer: git-send-email 2.26.1.301.g55bc3eb7cb9-goog
+Subject: [PATCH v11 2/4] tools feature: add support for detecting libpfm4
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jiwei Sun <jiwei.sun@windriver.com>,
+        yuzhoujian <yuzhoujian@didichuxing.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 16 Apr 2020 14:40:35 -0700:
+From: Stephane Eranian <eranian@google.com>
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git tags/tag-chrome-platform-fixes-for-v5.7-rc2
+libpfm4 provides an alternate command line encoding of perf events.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/2fcd80144b93ff90836a44f2054b4d82133d3a85
+Signed-off-by: Stephane Eranian <eranian@google.com>
+Reviewed-by: Ian Rogers <irogers@google.com>
+---
+ tools/build/Makefile.feature       | 3 ++-
+ tools/build/feature/Makefile       | 6 +++++-
+ tools/build/feature/test-libpfm4.c | 9 +++++++++
+ 3 files changed, 16 insertions(+), 2 deletions(-)
+ create mode 100644 tools/build/feature/test-libpfm4.c
 
-Thank you!
-
+diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+index 3e0c019ef297..3abd4316cd4f 100644
+--- a/tools/build/Makefile.feature
++++ b/tools/build/Makefile.feature
+@@ -98,7 +98,8 @@ FEATURE_TESTS_EXTRA :=                  \
+          llvm                           \
+          llvm-version                   \
+          clang                          \
+-         libbpf
++         libbpf                         \
++         libpfm4
+ 
+ FEATURE_TESTS ?= $(FEATURE_TESTS_BASIC)
+ 
+diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+index 621f528f7822..a6eded94a36b 100644
+--- a/tools/build/feature/Makefile
++++ b/tools/build/feature/Makefile
+@@ -68,7 +68,8 @@ FILES=                                          \
+          test-llvm-version.bin			\
+          test-libaio.bin			\
+          test-libzstd.bin			\
+-         test-file-handle.bin
++         test-file-handle.bin			\
++         test-libpfm4.bin
+ 
+ FILES := $(addprefix $(OUTPUT),$(FILES))
+ 
+@@ -325,6 +326,9 @@ $(OUTPUT)test-libzstd.bin:
+ $(OUTPUT)test-file-handle.bin:
+ 	$(BUILD)
+ 
++$(OUTPUT)test-libpfm4.bin:
++	$(BUILD) -lpfm
++
+ ###############################
+ 
+ clean:
+diff --git a/tools/build/feature/test-libpfm4.c b/tools/build/feature/test-libpfm4.c
+new file mode 100644
+index 000000000000..af49b259459e
+--- /dev/null
++++ b/tools/build/feature/test-libpfm4.c
+@@ -0,0 +1,9 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <sys/types.h>
++#include <perfmon/pfmlib.h>
++
++int main(void)
++{
++	pfm_initialize();
++	return 0;
++}
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.26.1.301.g55bc3eb7cb9-goog
+
