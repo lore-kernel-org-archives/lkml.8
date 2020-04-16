@@ -2,173 +2,112 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6778AC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:11:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96C6BC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:11:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AEA020771
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:11:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587028291;
-	bh=cq7TORbSy5Y9jQZrayfK6hSr3QmJCfPHO7C1ZVqSf/M=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=Jo028r9rzvVX6AZkmlH6fIUiD4oCRqyXkuMJ9HSD0LBL/X/NnBoym3JU7bI16oWtH
-	 WNNzmFgJOQv41nEcR2zxK6iQHWUrTcV4OB2ggs1RY2srNQIHaErf7SnsKh5AkvsU42
-	 /qCqHxrPN273A5yfo8JTLOUFjvpg6FPzZduqP8gw=
+	by mail.kernel.org (Postfix) with ESMTP id 7A44A20771
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:11:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502634AbgDPIjB (ORCPT
+        id S2502776AbgDPJLx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 04:39:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38184 "EHLO
+        Thu, 16 Apr 2020 05:11:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502254AbgDPIgU (ORCPT
+        with ESMTP id S2502370AbgDPIb7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 04:36:20 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B68EC061A0C;
-        Thu, 16 Apr 2020 01:22:36 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id j14so4903993lfg.9;
-        Thu, 16 Apr 2020 01:22:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=5XivUy7FYVNBF2ALrQWWddiXZG0r/RtMEsTQOMXoZEw=;
-        b=hrxyamFeaN5opbMcHQIxgyojWXXgF0/AxSdT61mtPK/9nuopn2X3w+Eo7DmP8MgRrW
-         cyaf9xt2UXlInW++gbOBn+B5WwIovU/cUwpTbDaABwoFf6xwgWIz3NH8KkrePTDplsKB
-         ooSPWlZBuCE8bUqqRkYUK9MfI6BmkvmvP2sRVcs6zVmHnu7c6cQoGlTWZmFc5xx6D6JD
-         XqNOkrRYtWq0NW4zllmDjBajqjgPIDlFtp/AzA1F5KJdrO17qnCbXArLOZjEMUkasGJo
-         uPE801WBQchV6XXE8oaDAXSz06AUauSnJ4VLBZAz0TwXeyJpI6InwVpG5Hpu4/WA3ee0
-         EBmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=5XivUy7FYVNBF2ALrQWWddiXZG0r/RtMEsTQOMXoZEw=;
-        b=G0UeX2h2pcFjrUThs+ZJXfdYbuKShaBL0C2vFtAZkinTWCsrEKmjDupnu9ectITvRR
-         Dxj//Q8F3UqtRK8D8JdQNJvCKyCt+ZZW0R/l2TQX3Jb9M/7nagJszvxz7dWE2zAPbCt2
-         snqB8a+4GNk0IEOVw8xiSiu/elujRbwWnegFn3iOIRRYnslV+MM+WLaM4emE5opqore8
-         rLabsEQ1bZdMXC6YtXAdE6HKr0qTFUDpmvuBDN2ssvNDmwM5qFGGE3Niu0qKM0qbgxpk
-         XyVfpr8irGqf4zKxfnEXHM1IzKoVhCVlqtxy21n/3bKA0CoXdcTDdq5f/4J4LJH4Aoic
-         iJ2w==
-X-Gm-Message-State: AGi0PuaTUiucwBO6LYrQ4clbsH/NPr6PsLcceNS4IehlQSlkzVHTZU5l
-        VTR9ZKQT90qJHWreH+tyxMKmt1GVrZY=
-X-Google-Smtp-Source: APiQypL8+Q52Lb0ewPp/pJoLw9OSGQ5XBl1Ni/2AkpVcoNu5RaFpOoY8wN7upjMPPDqseJD2jwRj5Q==
-X-Received: by 2002:ac2:4426:: with SMTP id w6mr5381093lfl.8.1587025354320;
-        Thu, 16 Apr 2020 01:22:34 -0700 (PDT)
-Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
-        by smtp.gmail.com with ESMTPSA id y25sm14443965lfy.59.2020.04.16.01.22.33
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 16 Apr 2020 01:22:33 -0700 (PDT)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Tejas Joglekar <Tejas.Joglekar@synopsys.com>,
-        Rob Herring <robh@kernel.org>,
-        Tejas Joglekar <Tejas.Joglekar@synopsys.com>
-Cc:     "linux-usb\@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "devicetree\@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        John Youn <John.Youn@synopsys.com>
-Subject: Re: [RESENDING RFC PATCH 1/4] dt-bindings: usb: Add snps,consolidate-sgl & consolidate-sgl
-In-Reply-To: <fe59318a-b3dd-c6af-702e-1ca4aed04a8b@synopsys.com>
-References: <cover.1585297723.git.joglekar@synopsys.com> <8a9ca8e08d7c4957789a209c77589f1aa4bd2f06.1585297723.git.joglekar@synopsys.com> <20200405014548.GA25539@bogus> <fe59318a-b3dd-c6af-702e-1ca4aed04a8b@synopsys.com>
-Date:   Thu, 16 Apr 2020 11:22:29 +0300
-Message-ID: <874ktjsuuy.fsf@kernel.org>
+        Thu, 16 Apr 2020 04:31:59 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E04EC025487;
+        Thu, 16 Apr 2020 01:31:39 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jOzvr-0000r1-OH; Thu, 16 Apr 2020 10:31:35 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5195A1C03A9;
+        Thu, 16 Apr 2020 10:31:30 +0200 (CEST)
+Date:   Thu, 16 Apr 2020 08:31:29 -0000
+From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/urgent] perf python: Check if clang supports
+ -fno-semantic-interposition
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Message-ID: <158702588996.28353.6714987613967508418.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+The following commit has been merged into the perf/urgent branch of tip:
 
+Commit-ID:     9a00df311b5c1dfb7284ea22070772803dd0c95e
+Gitweb:        https://git.kernel.org/tip/9a00df311b5c1dfb7284ea22070772803dd0c95e
+Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
+AuthorDate:    Mon, 06 Apr 2020 10:30:16 -03:00
+Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitterDate: Tue, 14 Apr 2020 08:43:18 -03:00
 
-Hi,
+perf python: Check if clang supports -fno-semantic-interposition
 
-Tejas Joglekar <Tejas.Joglekar@synopsys.com> writes:
-> Hi,
-> On 4/5/2020 7:15 AM, Rob Herring wrote:
->> On Fri, Mar 27, 2020 at 03:11:56PM +0530, Tejas Joglekar wrote:
->>> This commit adds the documentation for consolidate-sgl, and
->>> snps,consolidate-sgl property. These when set enables the quirk for
->>> XHCI driver for consolidation of sg list into a temporary buffer when s=
-mall
->>> buffer sizes are scattered over the sg list not making up to MPS or tot=
-al
->>> transfer size within TRB cache size with Synopsys xHC.
->>>
->>> Signed-off-by: Tejas Joglekar <joglekar@synopsys.com>
->>> ---
->>>  Documentation/devicetree/bindings/usb/dwc3.txt     | 3 +++
->>>  Documentation/devicetree/bindings/usb/usb-xhci.txt | 3 +++
->>>  2 files changed, 6 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documenta=
-tion/devicetree/bindings/usb/dwc3.txt
->>> index 9946ff9ba735..292d1f7969e4 100644
->>> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
->>> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
->>> @@ -104,6 +104,9 @@ Optional properties:
->>>  			this and tx-thr-num-pkt-prd to a valid, non-zero value
->>>  			1-16 (DWC_usb31 programming guide section 1.2.3) to
->>>  			enable periodic ESS TX threshold.
->>> + - snps,consolidate-sgl: enable sg list consolidation - host mode only=
-. Set to use
->>> +			SG buffers of at least MPS size by consolidating smaller SG
->>> +			buffers list into a single buffer.
->>=20
->> The preference is not to keep adding properties for every single quirk=20
->> or feature. These should be implied by specific compatibles. As Synopsys=
-=20
->> knows what quirks/errata/features are in each version of IP, the=20
->> compatible strings should reflect those versions. (And yes, I'm sure=20
->> there's customer ECO fixes that aren't reflected in the version, but=20
->> that's why we have SoC specific compatibles too.) This is the only way=20
->> we can fix quirks in the OS without doing DT updates. For comparison, do=
-=20
->> you want to have to update your PC BIOS so an OS can work-around issues?
->>
-> Yes, I understand what you want to say here. But I think this compatible =
-string
-> does not work with the platform drivers with PCI based systems. So based =
-on the vendor=20
-> id and device id then I need to set the quirk required.=20
->
-> @Felipe: What do you suggest for setting up quirk without the DT update f=
-or dwc3?
+The set of C compiler options used by distros to build python bindings
+may include options that are unknown to clang, we check for a variety of
+such options, add -fno-semantic-interposition to that mix:
 
-We have been using Synopsys controller's revision register, but that's
-not visible to xhci driver and we don't have a separate compatible for
-each synopsys version on the xhci driver side. One option would be to
-add "snps,xhci-foo-bar" to xhci-plat and use that.
+This fixes the build on, among others, Manjaro Linux:
 
-=2D-=20
-balbi
+    GEN      /tmp/build/perf/python/perf.so
+  clang-9: error: unknown argument: '-fno-semantic-interposition'
+  error: command 'clang' failed with exit status 1
+  make: Leaving directory '/git/perf/tools/perf'
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+  [perfbuilder@602aed1c266d ~]$ gcc -v
+  Using built-in specs.
+  COLLECT_GCC=gcc
+  COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-pc-linux-gnu/9.3.0/lto-wrapper
+  Target: x86_64-pc-linux-gnu
+  Configured with: /build/gcc/src/gcc/configure --prefix=/usr --libdir=/usr/lib --libexecdir=/usr/lib --mandir=/usr/share/man --infodir=/usr/share/info --with-pkgversion='Arch Linux 9.3.0-1' --with-bugurl=https://bugs.archlinux.org/ --enable-languages=c,c++,ada,fortran,go,lto,objc,obj-c++,d --enable-shared --enable-threads=posix --with-system-zlib --with-isl --enable-__cxa_atexit --disable-libunwind-exceptions --enable-clocale=gnu --disable-libstdcxx-pch --disable-libssp --enable-gnu-unique-object --enable-linker-build-id --enable-lto --enable-plugin --enable-install-libiberty --with-linker-hash-style=gnu --enable-gnu-indirect-function --enable-multilib --disable-werror --enable-checking=release --enable-default-pie --enable-default-ssp --enable-cet=auto gdc_include_dir=/usr/include/dlang/gdc
+  Thread model: posix
+  gcc version 9.3.0 (Arch Linux 9.3.0-1)
+  [perfbuilder@602aed1c266d ~]$
 
------BEGIN PGP SIGNATURE-----
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/setup.py | 2 ++
+ 1 file changed, 2 insertions(+)
 
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl6YFcUACgkQzL64meEa
-mQastxAAyArwov8WGnSblC6znvn16hE4x9d7GVKj4PyYpMBcnccppp2VGviRXfRs
-BzH8B0drFGFQ5fhRGZDpm2uAssAJgdrUkw4npkVvVKFztohaAha8Q9yu02jtChXD
-1AVmbd1nUH5IiIhlLPa6AuxeszA3hP1p3os1wSCIuH3NcBEx6K+I27X5zgs7uG5v
-OT5oednhw3mgQBxHkh9luPlLiToFbrb1eE21w7FzCKPzbMeAnJzFVodlcVe5OTF/
-cvzdLk+YhP0JG+K4trjp1bu7/nlvy5qWXQ3FBaUv6/7DzAwDKKD77wN8z1i1nebl
-hhk60Kt6x1d566VvpJZNyjpYrdd5ub5HQbdp4933JBjMyNYwx2FBwjQxylV31M4s
-hB1BSDtVUy+h+cD9qwNWpE9I3iuRqjqNIl0IfJRxhEzaUHU89EYKpk3XbJr83rtp
-Ae/SopbpHr2GelmPhgUK0PBDeaeIIa+WWJQMqtfsVQO6z+43oBJHzYmsY8QZLj9H
-Yt8IuWRMc7kbpcNQl+Dx+JCQRLhggkeLIGaIPmexAzWSRY4Cod0Q4QD6xXmOlJiE
-S64Egfd9Q8d8LBY3iyFRRTMAQcCFVfaK+8Uf9kwitgHww/Hc/886/4WhBaVHTAoJ
-8Pwku4qw1VePFeKWoUKqwCEWdwuFxq0eqKTWgdu5HurClw+OJEg=
-=faNe
------END PGP SIGNATURE-----
---=-=-=--
+diff --git a/tools/perf/util/setup.py b/tools/perf/util/setup.py
+index 347b2c0..c5e3e9a 100644
+--- a/tools/perf/util/setup.py
++++ b/tools/perf/util/setup.py
+@@ -21,6 +21,8 @@ if cc_is_clang:
+             vars[var] = sub("-fstack-clash-protection", "", vars[var])
+         if not clang_has_option("-fstack-protector-strong"):
+             vars[var] = sub("-fstack-protector-strong", "", vars[var])
++        if not clang_has_option("-fno-semantic-interposition"):
++            vars[var] = sub("-fno-semantic-interposition", "", vars[var])
+ 
+ from distutils.core import setup, Extension
+ 
