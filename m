@@ -2,173 +2,178 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00CC9C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25E07C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:07:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D27C4206D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:07:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587046029;
-	bh=kgB0fWHWLd8OQi91eKRL0HlRnAwZjRg96qiPO2GbR5I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K1Rq7VCWtlXCTvPJbcfCYMOdjAYXcnvQbx1MGXrGgPpUbLHaC+VmKq9g3/ndk4bva
-	 +w/OX+UvevTNu1qImNOJJIbWbmm+v24BxvZGogNd8giey2wxRLOVNMLTHx3UxbTB1C
-	 GlNiCFK7kn/wr7YzQCdKstwIxrJcXgXYw8DGde8c=
+	by mail.kernel.org (Postfix) with ESMTP id EA89C2076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:07:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NKaFl00p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441590AbgDPOHH (ORCPT
+        id S2441885AbgDPOHP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:07:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57806 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898453AbgDPNoe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:44:34 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F128208E4;
-        Thu, 16 Apr 2020 13:44:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044674;
-        bh=kgB0fWHWLd8OQi91eKRL0HlRnAwZjRg96qiPO2GbR5I=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lkH6CKwoUVlcVrt1oZZ9HJRVluVFP7g7syqNoD4zO+yGO3MibV7RjPfg4uDXLG3Qh
-         gtcmZLqSmLymX+IxahfgVJh/9FuG+6/22Bw7aNBsm7Rq69ncLkE8c3GBFgrJFpbt7s
-         67V7bpUVkFpex16ee7uslK7HMrmyV+PvW4a98Dnc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sahitya Tummala <stummala@codeaurora.org>,
-        Pradeep P V K <ppvk@codeaurora.org>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 056/232] block: Fix use-after-free issue accessing struct io_cq
-Date:   Thu, 16 Apr 2020 15:22:30 +0200
-Message-Id: <20200416131322.580642501@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
-References: <20200416131316.640996080@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 16 Apr 2020 10:07:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58252 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2898433AbgDPNoa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:44:30 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B064C061A0C;
+        Thu, 16 Apr 2020 06:44:30 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id v8so2574131wma.0;
+        Thu, 16 Apr 2020 06:44:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=WnOLlJGWjKKU4l6KU86petvNf/KeuBQfP8LASQRqnt8=;
+        b=NKaFl00peRLsJRd1TCpOYzHetW8sbRA+/HJn6nXHcphRgYoHcE2As4Skpd/c5OOtl3
+         aAJP6GhSIoz0w4NCFbSZJ6HKcTBmEX7IXKjNWRGHscVFHFO40s7l2Oij2g2owDoID0a5
+         7/75cQ6pZ1aQ52kQoT65AaH1sagq0kwsSQQsKV6iAsy2BwSQXEQu+AZUDJEATTyjsEvW
+         /dQmoQ710BctBOzQRsQWEq7qIyYJgrGIrl24rfwI89EL6oev6W3DzRYRUHoGWtgMTglM
+         5DlQjWI5n+jybhbO+jO01+JAbMYihB8YdAnzppfOgx7wop42LLUkMnTRf0PV4zxzyq5i
+         zrVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WnOLlJGWjKKU4l6KU86petvNf/KeuBQfP8LASQRqnt8=;
+        b=lEubnyQ/cp6fLEeDfiOQMbHMzZiBd3aDNoa+AcT1Fi9XTQjA+d3zE0t/guRpbmmNTx
+         kSXsmk8Kx7bqIYOjbFROmQ7OPLW2BBRpLkOYLJ8Wqmcfhxv4cG5NKieOqYZ92cj2ikpJ
+         RDzdKktUhiLFywVL4st851X2HA+5/ao6KcioXMDfoXyFYmo7ZM5fHDuy73sjmNPLM6KP
+         VF8EV6p7p8nic8l0X9Qn1S2GrUIZfXadFv0wXjONHLNcmsdIt8sjT0rUv1b1LcalBWrK
+         l6ptRSPUQhERa6rPCoiM3+2MgygRR8Ojjau05E7PN1oHLx+cuHNsrsRTDJlP7dhV/QZ0
+         sIBA==
+X-Gm-Message-State: AGi0PuYh6giViBV7jL1UZxPwjcpeMX3S/xDX6bqsMWEOdI+qWbLzcQQl
+        dTyjG5FaeklVpRtO63ZRcHs=
+X-Google-Smtp-Source: APiQypKHstkks+d7QKXlK1Kx2K4FOqpUNOov9QzJnGobXCUEc76Hs0tyB7U8aK6EB9CSGnwIDUH4vw==
+X-Received: by 2002:a7b:cd10:: with SMTP id f16mr5171636wmj.21.1587044668689;
+        Thu, 16 Apr 2020 06:44:28 -0700 (PDT)
+Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id z18sm21457242wrw.41.2020.04.16.06.44.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Apr 2020 06:44:27 -0700 (PDT)
+Subject: Re: [PATCH 2/4] arm64: dts: rockchip: Add RGA support to the PX30
+To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Jacob Chen <jacob-chen@iotwrt.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Hans Verkuil <hansverk@cisco.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+References: <20200416115047.233720-1-paul.kocialkowski@bootlin.com>
+ <20200416115047.233720-3-paul.kocialkowski@bootlin.com>
+ <478f0a8b-f819-62f4-83b8-27918c4c2431@gmail.com>
+ <20200416132442.GI125838@aptenodytes>
+From:   Johan Jonker <jbx6244@gmail.com>
+Message-ID: <f4ad8ea4-7904-1458-e564-2d20c87ed417@gmail.com>
+Date:   Thu, 16 Apr 2020 15:44:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200416132442.GI125838@aptenodytes>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sahitya Tummala <stummala@codeaurora.org>
+On 4/16/20 3:24 PM, Paul Kocialkowski wrote:
+> Hi,
+> 
+> On Thu 16 Apr 20, 15:02, Johan Jonker wrote:
+>> Hi Paul,
+>>
+>> The conversion of rockchip-rga.txt to rockchip-rga.yaml by myself just
+>> has been approved by robh.
+> 
+> Huh, I looked around for ongoing related work but missed it.
+> I'll definitely rebase on top of your series and use the yaml description
+> instead. Thanks!
+> 
+>> Maybe place dts patches at the end of a patch serie.
+>> Could you include a &rga patch if your device is supported in mainline,
+>> so we can test with:
+>> make ARCH=arm64 dtbs_check
+>> DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/rockchip-rga.yaml
+> 
+> I tested with the PX30 EVB so I can surely add a node there if that turns
+> out necessary (see below).
+> 
+>> Johan
+>>
+>> On 4/16/20 1:50 PM, Paul Kocialkowski wrote:
+>>> The PX30 features a RGA block: add the necessary node to support it.
+>>>
+>>> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+>>> ---
+>>>  arch/arm64/boot/dts/rockchip/px30.dtsi | 11 +++++++++++
+>>>  1 file changed, 11 insertions(+)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/rockchip/px30.dtsi b/arch/arm64/boot/dts/rockchip/px30.dtsi
+>>> index 75908c587511..4bfbee9d4123 100644
+>>> --- a/arch/arm64/boot/dts/rockchip/px30.dtsi
+>>> +++ b/arch/arm64/boot/dts/rockchip/px30.dtsi
+>>> @@ -1104,6 +1104,17 @@ vopl_mmu: iommu@ff470f00 {
+>>>  		status = "disabled";
+>>>  	};
+>>>  
+>>> +	rga: rga@ff480000 {
+>>> +		compatible = "rockchip,px30-rga";
+>>> +		reg = <0x0 0xff480000 0x0 0x10000>;
+>>> +		interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH 0>;
+>>> +		clocks = <&cru ACLK_RGA>, <&cru HCLK_RGA>, <&cru SCLK_RGA_CORE>;
+>>> +		clock-names = "aclk", "hclk", "sclk";
+>>> +		resets = <&cru SRST_RGA>, <&cru SRST_RGA_A>, <&cru SRST_RGA_H>;
+>>> +		reset-names = "core", "axi", "ahb";
+>>> +		power-domains = <&power PX30_PD_VO>;
+>>
+>> 		status = "disabled";
+> 
+> As of 5.6, the rk3399 has the node enabled by default. Did that change?
 
-[ Upstream commit 30a2da7b7e225ef6c87a660419ea04d3cef3f6a7 ]
+'status' disappeared during review for rk3399 between v2 and v3, but
+doesn't mention the reason. If someone can give more info here?
 
-There is a potential race between ioc_release_fn() and
-ioc_clear_queue() as shown below, due to which below kernel
-crash is observed. It also can result into use-after-free
-issue.
+https://lore.kernel.org/lkml/1500101920-24039-5-git-send-email-jacob-chen@iotwrt.com/
 
-context#1:				context#2:
-ioc_release_fn()			__ioc_clear_queue() gets the same icq
-->spin_lock(&ioc->lock);		->spin_lock(&ioc->lock);
-->ioc_destroy_icq(icq);
-  ->list_del_init(&icq->q_node);
-  ->call_rcu(&icq->__rcu_head,
-  	icq_free_icq_rcu);
-->spin_unlock(&ioc->lock);
-					->ioc_destroy_icq(icq);
-					  ->hlist_del_init(&icq->ioc_node);
-					  This results into below crash as this memory
-					  is now used by icq->__rcu_head in context#1.
-					  There is a chance that icq could be free'd
-					  as well.
+https://lore.kernel.org/lkml/1501470460-12014-5-git-send-email-jacob-chen@iotwrt.com/
 
-22150.386550:   <6> Unable to handle kernel write to read-only memory
-at virtual address ffffffaa8d31ca50
-...
-Call trace:
-22150.607350:   <2>  ioc_destroy_icq+0x44/0x110
-22150.611202:   <2>  ioc_clear_queue+0xac/0x148
-22150.615056:   <2>  blk_cleanup_queue+0x11c/0x1a0
-22150.619174:   <2>  __scsi_remove_device+0xdc/0x128
-22150.623465:   <2>  scsi_forget_host+0x2c/0x78
-22150.627315:   <2>  scsi_remove_host+0x7c/0x2a0
-22150.631257:   <2>  usb_stor_disconnect+0x74/0xc8
-22150.635371:   <2>  usb_unbind_interface+0xc8/0x278
-22150.639665:   <2>  device_release_driver_internal+0x198/0x250
-22150.644897:   <2>  device_release_driver+0x24/0x30
-22150.649176:   <2>  bus_remove_device+0xec/0x140
-22150.653204:   <2>  device_del+0x270/0x460
-22150.656712:   <2>  usb_disable_device+0x120/0x390
-22150.660918:   <2>  usb_disconnect+0xf4/0x2e0
-22150.664684:   <2>  hub_event+0xd70/0x17e8
-22150.668197:   <2>  process_one_work+0x210/0x480
-22150.672222:   <2>  worker_thread+0x32c/0x4c8
+> 
+> Since it's a standalone block that has no I/O dependency, I don't really see
+> the point of disabling it by default.
 
-Fix this by adding a new ICQ_DESTROYED flag in ioc_destroy_icq() to
-indicate this icq is once marked as destroyed. Also, ensure
-__ioc_clear_queue() is accessing icq within rcu_read_lock/unlock so
-that icq doesn't get free'd up while it is still using it.
+Vop, hdmi and other video devices are also disabled.
+Follow the rest I think...
 
-Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-Co-developed-by: Pradeep P V K <ppvk@codeaurora.org>
-Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- block/blk-ioc.c           | 7 +++++++
- include/linux/iocontext.h | 1 +
- 2 files changed, 8 insertions(+)
-
-diff --git a/block/blk-ioc.c b/block/blk-ioc.c
-index 5ed59ac6ae58b..9df50fb507caf 100644
---- a/block/blk-ioc.c
-+++ b/block/blk-ioc.c
-@@ -84,6 +84,7 @@ static void ioc_destroy_icq(struct io_cq *icq)
- 	 * making it impossible to determine icq_cache.  Record it in @icq.
- 	 */
- 	icq->__rcu_icq_cache = et->icq_cache;
-+	icq->flags |= ICQ_DESTROYED;
- 	call_rcu(&icq->__rcu_head, icq_free_icq_rcu);
- }
- 
-@@ -212,15 +213,21 @@ static void __ioc_clear_queue(struct list_head *icq_list)
- {
- 	unsigned long flags;
- 
-+	rcu_read_lock();
- 	while (!list_empty(icq_list)) {
- 		struct io_cq *icq = list_entry(icq_list->next,
- 						struct io_cq, q_node);
- 		struct io_context *ioc = icq->ioc;
- 
- 		spin_lock_irqsave(&ioc->lock, flags);
-+		if (icq->flags & ICQ_DESTROYED) {
-+			spin_unlock_irqrestore(&ioc->lock, flags);
-+			continue;
-+		}
- 		ioc_destroy_icq(icq);
- 		spin_unlock_irqrestore(&ioc->lock, flags);
- 	}
-+	rcu_read_unlock();
- }
- 
- /**
-diff --git a/include/linux/iocontext.h b/include/linux/iocontext.h
-index dba15ca8e60bc..1dcd9198beb7f 100644
---- a/include/linux/iocontext.h
-+++ b/include/linux/iocontext.h
-@@ -8,6 +8,7 @@
- 
- enum {
- 	ICQ_EXITED		= 1 << 2,
-+	ICQ_DESTROYED		= 1 << 3,
- };
- 
- /*
--- 
-2.20.1
-
-
+> 
+> What do you think?
+> 
+> Cheers,
+> 
+> Paul
+> 
+>>> +	};
+>>> +
+>>>  	qos_gmac: qos@ff518000 {
+>>>  		compatible = "syscon";
+>>>  		reg = <0x0 0xff518000 0x0 0x20>;
+>>>
+>>
+> 
 
