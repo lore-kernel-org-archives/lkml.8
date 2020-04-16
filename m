@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8CA1C3815B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:02:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75D46C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:02:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9C1722250
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:02:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54E5220786
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:02:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587045773;
-	bh=7rP73lTWU6+Q7t9AJyrmnd9s5HX/5v+B3ctmotKKrpU=;
+	s=default; t=1587045779;
+	bh=mDp69Lb0S9CHcaaZ0egFJJ01Dml5CiR2KtDUpVg1cCs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iTr9kVBjFIBWjUDjRqkT+dllo3atu0aFf6rU+8B+MwBH89C6CU7M/1BomIEDDr74X
-	 uCcVJ5Vc8TmsfGLuPKVHAoGQVN8fdMGwLxDXTxllkIw+wz5HNUweTKHlTVLLJjwpcp
-	 arqoMbjZBy9x180RHPR058NLNL9mB7Hr0LkezinA=
+	b=cSrURFMtqy3WXGcPoz6Ylr04TCOZBo3Qgv+Zjk04s4OmnAEsK7DttBtCiGtr1tydI
+	 hnkGUQ1yk29vBA6AZsugC/zccoKDonl56KPN2k78whjslJr5GZdRGJNW3S0QyqawXz
+	 j7e0lg+R68Aj7vwY93geWxS1xlNbaa1HIOP4nd3k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728297AbgDPOCv (ORCPT
+        id S2409659AbgDPOC5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:02:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54804 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:02:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898379AbgDPNlx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:41:53 -0400
+        id S2389073AbgDPNlv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:41:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7ED732076D;
-        Thu, 16 Apr 2020 13:41:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 032422223E;
+        Thu, 16 Apr 2020 13:41:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044513;
-        bh=7rP73lTWU6+Q7t9AJyrmnd9s5HX/5v+B3ctmotKKrpU=;
+        s=default; t=1587044510;
+        bh=mDp69Lb0S9CHcaaZ0egFJJ01Dml5CiR2KtDUpVg1cCs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mvTltQ0VccKQvvceFN301QAUr2DgmyU3jnTFGyytVYUITTCMyPHkij8np9sp2erqO
-         3jSVB3rZWE9EY1A2j3IOWU6lJV4XOWP5nuj05bSGKeYqLx1/0dg1GnbgfgZSHKKmp0
-         ySO5ea0mdeRNRdLrgap+N/qzXdcmrGEV7Ns1ougg=
+        b=Jbn2uPwD8XHh/5Xa8HhIsEHsmSJktJqKzMQ9nXFRhS2LlnZrLN/FGSRhp1H6gKDOk
+         F5+7Mc15xpMSthE4zPC+IdGVAkabihh6bBeUn8CIglXhfduHrXR+wXawJAOA/YoSoK
+         mcaEfbWLtkzH9ApY/q18eHMMgwQOYvtnSfiEZbbA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>
-Subject: [PATCH 5.5 208/257] drm/etnaviv: rework perfmon query infrastructure
-Date:   Thu, 16 Apr 2020 15:24:19 +0200
-Message-Id: <20200416131352.073781570@linuxfoundation.org>
+        stable@vger.kernel.org, Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: [PATCH 5.5 245/257] arm64: Always force a branch protection mode when the compiler has one
+Date:   Thu, 16 Apr 2020 15:24:56 +0200
+Message-Id: <20200416131356.363859412@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -60,136 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Gmeiner <christian.gmeiner@gmail.com>
+From: Mark Brown <broonie@kernel.org>
 
-commit ed1dd899baa32d47d9a93d98336472da50564346 upstream.
+commit b8fdef311a0bd9223f10754f94fdcf1a594a3457 upstream.
 
-Report the correct perfmon domains and signals depending
-on the supported feature flags.
+Compilers with branch protection support can be configured to enable it by
+default, it is likely that distributions will do this as part of deploying
+branch protection system wide. As well as the slight overhead from having
+some extra NOPs for unused branch protection features this can cause more
+serious problems when the kernel is providing pointer authentication to
+userspace but not built for pointer authentication itself. In that case our
+switching of keys for userspace can affect the kernel unexpectedly, causing
+pointer authentication instructions in the kernel to corrupt addresses.
 
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Fixes: 9e2c2e273012 ("drm/etnaviv: add infrastructure to query perf counter")
+To ensure that we get consistent and reliable behaviour always explicitly
+initialise the branch protection mode, ensuring that the kernel is built
+the same way regardless of the compiler defaults.
+
+[This is a reworked version of b8fdef311a0bd9223f1075 ("arm64: Always
+force a branch protection mode when the compiler has one") for backport.
+Kernels prior to 74afda4016a7 ("arm64: compile the kernel with ptrauth
+return address signing") don't have any Makefile machinery for forcing
+on pointer auth but still have issues if the compiler defaults it on so
+need this reworked version. -- broonie]
+
+Fixes: 7503197562567 (arm64: add basic pointer authentication support)
+Reported-by: Szabolcs Nagy <szabolcs.nagy@arm.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Cc: stable@vger.kernel.org
-Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+[catalin.marinas@arm.com: remove Kconfig option in favour of Makefile check]
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/etnaviv/etnaviv_perfmon.c |   59 ++++++++++++++++++++++++++----
- 1 file changed, 52 insertions(+), 7 deletions(-)
+ arch/arm64/Makefile |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
-@@ -32,6 +32,7 @@ struct etnaviv_pm_domain {
- };
+--- a/arch/arm64/Makefile
++++ b/arch/arm64/Makefile
+@@ -72,6 +72,10 @@ stack_protector_prepare: prepare0
+ 					include/generated/asm-offsets.h))
+ endif
  
- struct etnaviv_pm_domain_meta {
-+	unsigned int feature;
- 	const struct etnaviv_pm_domain *domains;
- 	u32 nr_domains;
- };
-@@ -410,36 +411,78 @@ static const struct etnaviv_pm_domain do
- 
- static const struct etnaviv_pm_domain_meta doms_meta[] = {
- 	{
-+		.feature = chipFeatures_PIPE_3D,
- 		.nr_domains = ARRAY_SIZE(doms_3d),
- 		.domains = &doms_3d[0]
- 	},
- 	{
-+		.feature = chipFeatures_PIPE_2D,
- 		.nr_domains = ARRAY_SIZE(doms_2d),
- 		.domains = &doms_2d[0]
- 	},
- 	{
-+		.feature = chipFeatures_PIPE_VG,
- 		.nr_domains = ARRAY_SIZE(doms_vg),
- 		.domains = &doms_vg[0]
- 	}
- };
- 
-+static unsigned int num_pm_domains(const struct etnaviv_gpu *gpu)
-+{
-+	unsigned int num = 0, i;
++# Ensure that if the compiler supports branch protection we default it
++# off.
++KBUILD_CFLAGS += $(call cc-option,-mbranch-protection=none)
 +
-+	for (i = 0; i < ARRAY_SIZE(doms_meta); i++) {
-+		const struct etnaviv_pm_domain_meta *meta = &doms_meta[i];
-+
-+		if (gpu->identity.features & meta->feature)
-+			num += meta->nr_domains;
-+	}
-+
-+	return num;
-+}
-+
-+static const struct etnaviv_pm_domain *pm_domain(const struct etnaviv_gpu *gpu,
-+	unsigned int index)
-+{
-+	const struct etnaviv_pm_domain *domain = NULL;
-+	unsigned int offset = 0, i;
-+
-+	for (i = 0; i < ARRAY_SIZE(doms_meta); i++) {
-+		const struct etnaviv_pm_domain_meta *meta = &doms_meta[i];
-+
-+		if (!(gpu->identity.features & meta->feature))
-+			continue;
-+
-+		if (meta->nr_domains < (index - offset)) {
-+			offset += meta->nr_domains;
-+			continue;
-+		}
-+
-+		domain = meta->domains + (index - offset);
-+	}
-+
-+	return domain;
-+}
-+
- int etnaviv_pm_query_dom(struct etnaviv_gpu *gpu,
- 	struct drm_etnaviv_pm_domain *domain)
- {
--	const struct etnaviv_pm_domain_meta *meta = &doms_meta[domain->pipe];
-+	const unsigned int nr_domains = num_pm_domains(gpu);
- 	const struct etnaviv_pm_domain *dom;
- 
--	if (domain->iter >= meta->nr_domains)
-+	if (domain->iter >= nr_domains)
- 		return -EINVAL;
- 
--	dom = meta->domains + domain->iter;
-+	dom = pm_domain(gpu, domain->iter);
-+	if (!dom)
-+		return -EINVAL;
- 
- 	domain->id = domain->iter;
- 	domain->nr_signals = dom->nr_signals;
- 	strncpy(domain->name, dom->name, sizeof(domain->name));
- 
- 	domain->iter++;
--	if (domain->iter == meta->nr_domains)
-+	if (domain->iter == nr_domains)
- 		domain->iter = 0xff;
- 
- 	return 0;
-@@ -448,14 +491,16 @@ int etnaviv_pm_query_dom(struct etnaviv_
- int etnaviv_pm_query_sig(struct etnaviv_gpu *gpu,
- 	struct drm_etnaviv_pm_signal *signal)
- {
--	const struct etnaviv_pm_domain_meta *meta = &doms_meta[signal->pipe];
-+	const unsigned int nr_domains = num_pm_domains(gpu);
- 	const struct etnaviv_pm_domain *dom;
- 	const struct etnaviv_pm_signal *sig;
- 
--	if (signal->domain >= meta->nr_domains)
-+	if (signal->domain >= nr_domains)
- 		return -EINVAL;
- 
--	dom = meta->domains + signal->domain;
-+	dom = pm_domain(gpu, signal->domain);
-+	if (!dom)
-+		return -EINVAL;
- 
- 	if (signal->iter >= dom->nr_signals)
- 		return -EINVAL;
+ ifeq ($(CONFIG_CPU_BIG_ENDIAN), y)
+ KBUILD_CPPFLAGS	+= -mbig-endian
+ CHECKFLAGS	+= -D__AARCH64EB__
 
 
