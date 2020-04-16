@@ -2,53 +2,53 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92863C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:51:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A84BC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B26F21927
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:51:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 543362063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:51:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587045102;
-	bh=EkOBFVCYfHMSHV79LZ+glFm4WQ53lVX1OwA+34TvyF0=;
+	s=default; t=1587045113;
+	bh=+uJIfhq4To9PPx/vDjuWEYrcyKoHKGRkmagYR3usmxQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wMw2lHS/FMbSQdh8i+gwulcl4Jcbfj6Ls6hhFYyuv1hYk0D/Hv1j77BqX83Qi6lqh
-	 Imhs0jmsAERk9b3bUA5aEHtQRS+zhAqvgRFTSV7NxgIn33f+77HYXKuaxvS6ZFpCr1
-	 Gh0zOFppnCpaHEzAZR+cu2z6hL3lHzjog73IocIo=
+	b=gHCZS+knmK9ph42derm8QgyqkgK1NBV4nizirYgz2h6b/yl+cMsacmOEWwZORbTgf
+	 pHQrQGYt5uq2+3/BHmitoDmCNy959LVAc9tu7fYIJ9DvE6IYiIsmmqgjg+Rtfuk/qY
+	 VQ7grs16TfOdgHEw0e7G1Q2AurIZEARBDUTBhkEg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392418AbgDPNvj (ORCPT
+        id S2408745AbgDPNvu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:51:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48870 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:51:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897357AbgDPNgo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:36:44 -0400
+        id S2897359AbgDPNgr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:36:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30D9E208E4;
-        Thu, 16 Apr 2020 13:36:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F34D20732;
+        Thu, 16 Apr 2020 13:36:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044202;
-        bh=EkOBFVCYfHMSHV79LZ+glFm4WQ53lVX1OwA+34TvyF0=;
+        s=default; t=1587044205;
+        bh=+uJIfhq4To9PPx/vDjuWEYrcyKoHKGRkmagYR3usmxQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Lb9DP8msolkN2VEhTH/k7nqfmxVsrIGwseafQ3sNhoTtCt3sPJYdUJhAOhL8ypMS2
-         lZYCic9FovVqKLf4I7MBIaIstad2Mqhgr5Mm973w2YcfUFzzaskHHShOAWzXc7YTrk
-         jgKTSxpHmtUSqt+SWbunfBF8o/g81uUFfV61soYo=
+        b=l+/4wdFY6mfL4KBkwV4dnia1YIy3TkU8ywcPmLYyZPCy2FA/q/Vb7LwBmLUrEOCo6
+         GLfwGO3ZDSnbZAyZRyAWVJ9N2kSWFAT5ZbhX2QvPKjSajLfR9MLagXWQLfsrU/G2Q/
+         4WVvGYmA1Q/Ao5mFJgPHfwH2+Yr/zweK3uUX9AMs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        Song Liu <songliubraving@fb.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 072/257] md: check arrays is suspended in mddev_detach before call quiesce operations
-Date:   Thu, 16 Apr 2020 15:22:03 +0200
-Message-Id: <20200416131334.931821537@linuxfoundation.org>
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: [PATCH 5.5 116/257] PCI: qcom: Fix the fixup of PCI_VENDOR_ID_QCOM
+Date:   Thu, 16 Apr 2020 15:22:47 +0200
+Message-Id: <20200416131340.765163247@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -61,65 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-[ Upstream commit 6b40bec3b13278d21fa6c1ae7a0bdf2e550eed5f ]
+commit 604f3956524a6a53c1e3dd27b4b685b664d181ec upstream.
 
-Don't call quiesce(1) and quiesce(0) if array is already suspended,
-otherwise in level_store, the array is writable after mddev_detach
-in below part though the intention is to make array writable after
-resume.
+There exists non-bridge PCIe devices with PCI_VENDOR_ID_QCOM, so limit
+the fixup to only affect the relevant PCIe bridges.
 
-	mddev_suspend(mddev);
-	mddev_detach(mddev);
-	...
-	mddev_resume(mddev);
+Fixes: 322f03436692 ("PCI: qcom: Use default config space read function")
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+Cc: stable@vger.kernel.org # v5.2+
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-And it also causes calltrace as follows in [1].
-
-[48005.653834] WARNING: CPU: 1 PID: 45380 at kernel/kthread.c:510 kthread_park+0x77/0x90
-[...]
-[48005.653976] CPU: 1 PID: 45380 Comm: mdadm Tainted: G           OE     5.4.10-arch1-1 #1
-[48005.653979] Hardware name: To Be Filled By O.E.M. To Be Filled By O.E.M./J4105-ITX, BIOS P1.40 08/06/2018
-[48005.653984] RIP: 0010:kthread_park+0x77/0x90
-[48005.654015] Call Trace:
-[48005.654039]  r5l_quiesce+0x3c/0x70 [raid456]
-[48005.654052]  raid5_quiesce+0x228/0x2e0 [raid456]
-[48005.654073]  mddev_detach+0x30/0x70 [md_mod]
-[48005.654090]  level_store+0x202/0x670 [md_mod]
-[48005.654099]  ? security_capable+0x40/0x60
-[48005.654114]  md_attr_store+0x7b/0xc0 [md_mod]
-[48005.654123]  kernfs_fop_write+0xce/0x1b0
-[48005.654132]  vfs_write+0xb6/0x1a0
-[48005.654138]  ksys_write+0x67/0xe0
-[48005.654146]  do_syscall_64+0x4e/0x140
-[48005.654155]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[48005.654161] RIP: 0033:0x7fa0c8737497
-
-[1]: https://bugzilla.kernel.org/show_bug.cgi?id=206161
-
-Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/md.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/controller/dwc/pcie-qcom.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 4e7c9f398bc66..6b69a12ca2d80 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -6040,7 +6040,7 @@ EXPORT_SYMBOL_GPL(md_stop_writes);
- static void mddev_detach(struct mddev *mddev)
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -1289,7 +1289,13 @@ static void qcom_fixup_class(struct pci_
  {
- 	md_bitmap_wait_behind_writes(mddev);
--	if (mddev->pers && mddev->pers->quiesce) {
-+	if (mddev->pers && mddev->pers->quiesce && !mddev->suspended) {
- 		mddev->pers->quiesce(mddev, 1);
- 		mddev->pers->quiesce(mddev, 0);
- 	}
--- 
-2.20.1
-
+ 	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
+ }
+-DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCI_ANY_ID, qcom_fixup_class);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0101, qcom_fixup_class);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0104, qcom_fixup_class);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0106, qcom_fixup_class);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0107, qcom_fixup_class);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0302, qcom_fixup_class);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1000, qcom_fixup_class);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1001, qcom_fixup_class);
+ 
+ static struct platform_driver qcom_pcie_driver = {
+ 	.probe = qcom_pcie_probe,
 
 
