@@ -2,113 +2,137 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A345EC352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:54:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B976C352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:55:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82653206A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:54:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587048899;
-	bh=wttoton6TEU7iHeRKVPjij7bCAVwDWT6iBkWVBDZgs8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X0AW5qAeg4TmPwzBwTeuk9DKB+njEEuryfuWNfbCtG2QiFxqX2OpmufFOHSL1sDR0
-	 +8YzYaNvbgttgxuSTlpBN0H4hzrNT9LvR1Dj2GBlp4FfqnUiQCSANoE17xCRFljBih
-	 nIekew6RJgNtjHxyh/F79qTy1Ko83DVHCXngGkfM=
+	by mail.kernel.org (Postfix) with ESMTP id 6E1C5206A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:55:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408620AbgDPOy4 (ORCPT
+        id S2408928AbgDPOzB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:54:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43726 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:55:01 -0400
+Received: from foss.arm.com ([217.140.110.172]:34760 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408973AbgDPN4m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:56:42 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6AC9D20732;
-        Thu, 16 Apr 2020 13:56:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045400;
-        bh=wttoton6TEU7iHeRKVPjij7bCAVwDWT6iBkWVBDZgs8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wmQp8u3cifGf2gFkJ3QI65U4mE8CGgFZ+tcLJOM/6lWtr7IB45m7aMr9lVZfMGI2p
-         ThAN5xJZoLQEXhiq4QSaYKul1jMUEsB7SwsqF4lcVcrO5kIPe4EBCT8XHXMCslWZiq
-         DsVi3OHqxefWenuf2xDr6Zr5Fy/ZdpxRSJbUmIdM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pei Huang <huangpei@loongson.cn>,
-        Huacai Chen <chenhc@lemote.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Subject: [PATCH 5.6 119/254] MIPS/tlbex: Fix LDDIR usage in setup_pw() for Loongson-3
-Date:   Thu, 16 Apr 2020 15:23:28 +0200
-Message-Id: <20200416131341.188947248@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
-References: <20200416131325.804095985@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S2408363AbgDPOyw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:54:52 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2DF521FB;
+        Thu, 16 Apr 2020 07:54:51 -0700 (PDT)
+Received: from [10.37.12.32] (unknown [10.37.12.32])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E0AEE3F237;
+        Thu, 16 Apr 2020 07:54:48 -0700 (PDT)
+Subject: Re: [PATCH 8/8] arm64: cpufeature: Add an overview comment for the
+ cpufeature framework
+To:     will@kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu
+Cc:     linux-kernel@vger.kernel.org, mark.rutland@arm.com, maz@kernel.org,
+        anshuman.khandual@arm.com, catalin.marinas@arm.com,
+        saiprakash.ranjan@codeaurora.org, dianders@chromium.org,
+        kernel-team@android.com
+References: <20200414213114.2378-1-will@kernel.org>
+ <20200414213114.2378-9-will@kernel.org>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <96dd797d-ccfe-c867-0a70-65eccacde3cd@arm.com>
+Date:   Thu, 16 Apr 2020 15:59:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200414213114.2378-9-will@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huacai Chen <chenhc@lemote.com>
+Hi Will,
 
-commit d191aaffe3687d1e73e644c185f5f0550ec242b5 upstream.
+On 04/14/2020 10:31 PM, Will Deacon wrote:
+> Now that Suzuki isn't within throwing distance, I thought I'd better add
+> a rough overview comment to cpufeature.c so that it doesn't take me days
+> to remember how it works next time.
+> 
+> Signed-off-by: Will Deacon <will@kernel.org>
+> ---
+>   arch/arm64/kernel/cpufeature.c | 43 ++++++++++++++++++++++++++++++++++
+>   1 file changed, 43 insertions(+)
+> 
+> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+> index 680a453ca8c4..421ca99dc8fc 100644
+> --- a/arch/arm64/kernel/cpufeature.c
+> +++ b/arch/arm64/kernel/cpufeature.c
+> @@ -3,6 +3,49 @@
+>    * Contains CPU feature definitions
+>    *
+>    * Copyright (C) 2015 ARM Ltd.
+> + *
+> + * A note for the weary kernel hacker: the code here is confusing and hard to
+> + * follow! That's partly because it's solving a nasty problem, but also because
+> + * there's a little bit of over-abstraction that tends to obscure what's going
+> + * on behind a maze of helper functions and macros.
 
-LDDIR/LDPTE is Loongson-3's acceleration for Page Table Walking. If BD
-(Base Directory, the 4th page directory) is not enabled, then GDOffset
-is biased by BadVAddr[63:62]. So, if GDOffset (aka. BadVAddr[47:36] for
-Loongson-3) is big enough, "0b11(BadVAddr[63:62])|BadVAddr[47:36]|...."
-can far beyond pg_swapper_dir. This means the pg_swapper_dir may NOT be
-accessed by LDDIR correctly, so fix it by set PWDirExt in CP0_PWCtl.
+Thanks for writing this up !
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Pei Huang <huangpei@loongson.cn>
-Signed-off-by: Huacai Chen <chenhc@lemote.com>
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> + *
+> + * The basic problem is that hardware folks have started gluing together CPUs
+> + * with distinct architectural features; in some cases even creating SoCs where
+> + * user-visible instructions are available only on a subset of the available
+> + * cores. We try to address this by snapshotting the feature registers of the
+> + * boot CPU and comparing these with the feature registers of each secondary
+> + * CPU when bringing them up. If there is a mismatch, then we update the
+> + * snapshot state to indicate the lowest-common denominator of the feature,
+> + * known as the "safe" value. This snapshot state can be queried to view the
 
----
- arch/mips/mm/tlbex.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+I am not sure if the following is implied above.
 
---- a/arch/mips/mm/tlbex.c
-+++ b/arch/mips/mm/tlbex.c
-@@ -1480,6 +1480,7 @@ static void build_r4000_tlb_refill_handl
- 
- static void setup_pw(void)
- {
-+	unsigned int pwctl;
- 	unsigned long pgd_i, pgd_w;
- #ifndef __PAGETABLE_PMD_FOLDED
- 	unsigned long pmd_i, pmd_w;
-@@ -1506,6 +1507,7 @@ static void setup_pw(void)
- 
- 	pte_i = ilog2(_PAGE_GLOBAL);
- 	pte_w = 0;
-+	pwctl = 1 << 30; /* Set PWDirExt */
- 
- #ifndef __PAGETABLE_PMD_FOLDED
- 	write_c0_pwfield(pgd_i << 24 | pmd_i << 12 | pt_i << 6 | pte_i);
-@@ -1516,8 +1518,9 @@ static void setup_pw(void)
- #endif
- 
- #ifdef CONFIG_MIPS_HUGE_TLB_SUPPORT
--	write_c0_pwctl(1 << 6 | psn);
-+	pwctl |= (1 << 6 | psn);
- #endif
-+	write_c0_pwctl(pwctl);
- 	write_c0_kpgd((long)swapper_pg_dir);
- 	kscratch_used_mask |= (1 << 7); /* KScratch6 is used for KPGD */
- }
+   1) Against the "snapshot" state, where mismatches triggers updating
+      the "snapshot" state to reflect the "safe" value.
 
+   2) Compared against the CPU feature registers of *the boot CPU* for
+     "FTR_STRICT" fields and any mismatch triggers TAINT_CPU_OUT_OF_SPEC.
+      This makes sure that warning is generated for each OUT_OF_SPEC
+      secondary CPU.
 
+> + * "sanitised" value of a feature register.
+> + *
+> + * The sanitised register values are used to decide which capabilities we
+> + * have in the system. These may be in the form of traditional "hwcaps"
+> + * advertised to userspace or internal "cpucaps" which are used to configure
+> + * things like alternative patching and static keys. While a feature mismatch
+> + * may result in a TAINT_CPU_OUT_OF_SPEC kernel taint, a capability mismatch
+> + * may prevent a CPU from being onlined at all.
+> + *
+> + * Some implementation details worth remembering:
+> + *
+> + * - Mismatched features are *always* sanitised to a "safe" value, which
+> + *   usually indicates that the feature is not supported.
+> + *
+> + * - A mismatched feature marked with FTR_STRICT will cause a "SANITY CHECK"
+> + *   warning when onlining an offending CPU and the kernel will be tainted
+> + *   with TAINT_CPU_OUT_OF_SPEC.
+
+As mentioned above, this check is against that of the "boot CPU"
+register state, which may not be implicit from the statement.
+
+> + *
+> + * - Features marked as FTR_VISIBLE have their sanitised value visible to
+> + *   userspace. FTR_VISIBLE features in registers that are only visible
+> + *   to EL0 by trapping *must* have a corresponding HWCAP so that late
+> + *   onlining of CPUs cannot lead to features disappearing at runtime.
+> + *
+
+As you mentioned in the other response we could add information about
+the guest view, something like :
+
+       - KVM exposes the sanitised value of the feature registers to the
+	guests and is not affected by the FTR_VISIBLE. However,
+	depending on the individual feature support in the hypervisor,
+	some of the fields may be capped/limited.
+
+Cheers
+Suzuki
