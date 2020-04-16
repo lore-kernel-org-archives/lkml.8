@@ -2,132 +2,109 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93884C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 17:23:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB5FC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 17:23:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7974221924
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 17:23:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ACB72076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 17:23:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H5GIAQ0S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390197AbgDPRXj (ORCPT
+        id S2391623AbgDPRXo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 16 Apr 2020 13:23:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36246 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388338AbgDPRXj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Apr 2020 13:23:39 -0400
-Received: from foss.arm.com ([217.140.110.172]:38442 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388338AbgDPRXg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 13:23:36 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1E25830E;
-        Thu, 16 Apr 2020 10:23:36 -0700 (PDT)
-Received: from [192.168.1.19] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 616E03F73D;
-        Thu, 16 Apr 2020 10:23:33 -0700 (PDT)
-Subject: Re: [RFC PATCH 1/9] sched,cgroup: Add interface for latency-nice
-To:     Joel Fernandes <joel@joelfernandes.org>,
-        Qais Yousef <qais.yousef@arm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Patrick Bellasi <patrick.bellasi@arm.com>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de,
-        steven.sistare@oracle.com, dhaval.giani@oracle.com,
-        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
-        viresh.kumar@linaro.org, tim.c.chen@linux.intel.com,
-        mgorman@techsingularity.net, parth@linux.ibm.com
-References: <20190830174944.21741-1-subhra.mazumdar@oracle.com>
- <20190830174944.21741-2-subhra.mazumdar@oracle.com>
- <20190905083127.GA2332@hirez.programming.kicks-ass.net>
- <87r24v2i14.fsf@arm.com>
- <20190905104616.GD2332@hirez.programming.kicks-ass.net>
- <20190905111346.2w6kuqrdvaqvgilu@e107158-lin.cambridge.arm.com>
- <20190905113002.GK2349@hirez.programming.kicks-ass.net>
- <20190905114725.ehi5ea6qg3rychlz@e107158-lin.cambridge.arm.com>
- <20200416000235.GA211099@google.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <730928f8-b48b-ea3a-149a-18932eb18c90@arm.com>
-Date:   Thu, 16 Apr 2020 19:23:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 233EFC061A0C;
+        Thu, 16 Apr 2020 10:23:39 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id f13so5732058wrm.13;
+        Thu, 16 Apr 2020 10:23:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Z9XHKckPCLBcZSv3PK4hH27LcSZZ7AZ4+cDFop3NIPQ=;
+        b=H5GIAQ0ShVvZb4fhj6iIB/qGY+q4uMEhxdwpqxo2RaCk09uo88RWgc7BsALOUjTMJn
+         UHhhIXKm/FtjQ7UvVHE8rUq2UxdnF9xjdDoYkeETt4M3AnyI9FTDbKTpdAtPMavCjVAu
+         mmMFYGLVD28KNJETihHa9RJp1ZWrHlKhjJ6kqsqya6J69vTK2bb5leJwZ9/ZFeFMnm2w
+         DU/HQgUQkL4gHQJbuXVXIiQmskobgdkOuQn8t4Idb+CgVTUOk9XTwnBfAsWjH2SL2I/Q
+         rwWrumE37oriWHoUcImXD/3QMcXa6KapOYwmPMYzARG9qi8dnY43bi0dlrdZXv4pGReF
+         ONPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Z9XHKckPCLBcZSv3PK4hH27LcSZZ7AZ4+cDFop3NIPQ=;
+        b=p6DEMabk6LI+CfAF2mMdZa1AQASQefBuT7F/UQnLFY+J7hIr3diM2SL4drIAoeJhP3
+         pt181Bjxbr/Cqu1LxhX/t7H3rE/lB81Dc2+22jVHceV/LRxluwgNI5ZHEXpLmHEo288Y
+         HwoQ+ZsYa4qGNY3ZlOscPEuCn5MUTh8ilOZMqN68DCGAja8EUzlrGobNAMpN6dfsEhFE
+         k7Ij7QG/Fyn9I4ErJQOsb1W3PHuK3xPouBcutMdm6AhrNtd8HrUOCTxR+P1pQiPChRDV
+         IiQKmR7Nx87DwPCIThWw6JZfoIb36gMsPorHldg4zA9bRsqY3k04Orovd2cnqeo3EO3+
+         aE0w==
+X-Gm-Message-State: AGi0PuYKN/ayTqYlxAdnidDqw1oNg0Iu0U89d1beq0+l/yRWEAbugjOc
+        ECSKHDoiI1612O3gih4JhLg=
+X-Google-Smtp-Source: APiQypKzyc24yuJDB7Jn2s/8pHU8T+iSuTsxPtDgiWHOEQc+B31IaI7PkAzu9cFFtSFWJO0CCqW+7g==
+X-Received: by 2002:a5d:4286:: with SMTP id k6mr23465999wrq.222.1587057817866;
+        Thu, 16 Apr 2020 10:23:37 -0700 (PDT)
+Received: from kwango.redhat.com (ip-94-112-129-237.net.upcbroadband.cz. [94.112.129.237])
+        by smtp.gmail.com with ESMTPSA id w12sm13763186wrk.56.2020.04.16.10.23.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Apr 2020 10:23:37 -0700 (PDT)
+From:   Ilya Dryomov <idryomov@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Ceph fixes for 5.7-rc2
+Date:   Thu, 16 Apr 2020 19:23:21 +0200
+Message-Id: <20200416172321.20778-1-idryomov@gmail.com>
+X-Mailer: git-send-email 2.19.2
 MIME-Version: 1.0
-In-Reply-To: <20200416000235.GA211099@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joel,
+Hi Linus,
 
-On 16.04.20 02:02, Joel Fernandes wrote:
-> On Thu, Sep 05, 2019 at 12:47:26PM +0100, Qais Yousef wrote:
->> On 09/05/19 13:30, Peter Zijlstra wrote:
->>> On Thu, Sep 05, 2019 at 12:13:47PM +0100, Qais Yousef wrote:
->>>> On 09/05/19 12:46, Peter Zijlstra wrote:
->>>
->>>>> This is important because we want to be able to bias towards less
->>>>> importance to (tail) latency as well as more importantance to (tail)
->>>>> latency.
->>>>>
->>>>> Specifically, Oracle wants to sacrifice (some) latency for throughput.
->>>>> Facebook OTOH seems to want to sacrifice (some) throughput for latency.
->>>>
->>>> Another use case I'm considering is using latency-nice to prefer an idle CPU if
->>>> latency-nice is set otherwise go for the most energy efficient CPU.
->>>>
->>>> Ie: sacrifice (some) energy for latency.
->>>>
->>>> The way I see interpreting latency-nice here as a binary switch. But
->>>> maybe we can use the range to select what (some) energy to sacrifice
->>>> mean here. Hmmm.
->>>
->>> It cannot be binary, per definition is must be ternary, that is, <0, ==0
->>> and >0 (or middle value if you're of that persuasion).
->>
->> I meant I want to use it as a binary.
->>
->>>
->>> In your case, I'm thinking you mean >0, we want to lower the latency.
->>
->> Yes. As long as there's an easy way to say: does this task care about latency
->> or not I'm good.
-> 
-> Qais, Peter, all,
-> 
-> For ChromeOS (my team), we are planning to use the upstream uclamp mechanism
-> instead of the out-of-tree schedtune mechanism to provide EAS with the
-> latency-sensitivity (binary/ternary) hint. ChromeOS is thankfully quite a bit
-> upstream focussed :)
-> 
-> However, uclamp is missing an attribute to provide this biasing to EAS as we
-> know.
-> 
-> What was the consensus on adding a per-task attribute to uclamp for providing
-> this? Happy to collaborate on this front.
+The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
 
-We're planning to have a session about this topic (latency-nice
-attribute per task group) during the virtual Pisa OSPM summit
-retis.sssup.it/ospm-summit in May this year.
+  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
 
-There are two presentations/discussions planned:
+are available in the Git repository at:
 
-"Introducing Latency Nice for Scheduler Hints and Optimizing Scheduler
-Task Wakeup" and "The latency nice use case for Energy-Aware-Scheduling
-(EAS) in Android Common Kernel (ACK)"
+  https://github.com/ceph/ceph-client.git tags/ceph-for-5.7-rc2
 
-We'll probably merge those two into one presentation/discussion.
+for you to fetch changes up to 2a575f138d003fff0f4930b5cfae4a1c46343b8f:
 
-So far we have Parth's per-task implementation
+  ceph: fix potential bad pointer deref in async dirops cb's (2020-04-13 19:33:47 +0200)
 
-https://lore.kernel.org/lkml/20200228090755.22829-1-parth@linux.ibm.com
+----------------------------------------------------------------
+A set of patches for a deadlock on "rbd map" error path and a fix
+for invalid pointer dereference and uninitialized variable use on
+asynchronous create and unlink error paths.
 
-What's missing is the per-taskgroup implementation, at least from the
-standpoint of ACK.
+----------------------------------------------------------------
+Ilya Dryomov (4):
+      rbd: avoid a deadlock on header_rwsem when flushing notifies
+      rbd: call rbd_dev_unprobe() after unwatching and flushing notifies
+      rbd: don't test rbd_dev->opts in rbd_dev_image_release()
+      rbd: don't mess with a page vector in rbd_notify_op_lock()
 
-The (mainline) EAS use-case for latency nice is already in ACK
-(android-5.4):
+Jeff Layton (1):
+      ceph: fix potential bad pointer deref in async dirops cb's
 
-https://android.googlesource.com/kernel/common/+/760b82c9b88d2c8125abfc5f732cc3cd460b2a54
+ drivers/block/rbd.c  | 33 +++++++++++++++++++--------------
+ fs/ceph/dir.c        |  4 ++--
+ fs/ceph/file.c       |  4 ++--
+ fs/ceph/mds_client.h |  2 +-
+ 4 files changed, 24 insertions(+), 19 deletions(-)
