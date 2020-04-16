@@ -2,111 +2,117 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23FC3C352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:21:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 577DEC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:22:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01DBC21734
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:21:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CDAA21734
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:22:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eH2ppfHN"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OtzsmKq4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633008AbgDPLVM (ORCPT
+        id S2632745AbgDPLWg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 07:21:12 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:31714 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2632881AbgDPLT2 (ORCPT
+        Thu, 16 Apr 2020 07:22:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35732 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2632917AbgDPLTr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 07:19:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587035939;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/can4Mo5wcD8VxSmCD4glckN/kBnBrb4gDabEOaSwyw=;
-        b=eH2ppfHNwikK8p9wtPS0CfhoygOl3XuBCy5WHxc9K1dcK4rQTS9reV3tIC6YbJtAYioo75
-        +gJgXxuufZFRS7BbatwFhWcz3lWSgeq7gVJ4x3TYm7G9bHjRIOcyAe58rPUqZfMXEC8sMi
-        u8KeQQGidqb0+MtrZ0W57hPZbSE3N+8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-140-i6e1aPlgPd6TuQe7djFNRw-1; Thu, 16 Apr 2020 07:18:55 -0400
-X-MC-Unique: i6e1aPlgPd6TuQe7djFNRw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7FD0F149C3;
-        Thu, 16 Apr 2020 11:18:53 +0000 (UTC)
-Received: from gondolin (ovpn-112-234.ams2.redhat.com [10.36.112.234])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3D7FD5D9E2;
-        Thu, 16 Apr 2020 11:18:48 +0000 (UTC)
-Date:   Thu, 16 Apr 2020 13:18:45 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Tony Krowiak <akrowiak@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
-        mjrosato@linux.ibm.com, pmorel@linux.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        jjherne@linux.ibm.com, fiuczy@linux.ibm.com
-Subject: Re: [PATCH v7 04/15] s390/vfio-ap: implement in-use callback for
- vfio_ap driver
-Message-ID: <20200416131845.3ef6b3b5.cohuck@redhat.com>
-In-Reply-To: <20200407192015.19887-5-akrowiak@linux.ibm.com>
-References: <20200407192015.19887-1-akrowiak@linux.ibm.com>
-        <20200407192015.19887-5-akrowiak@linux.ibm.com>
-Organization: Red Hat GmbH
+        Thu, 16 Apr 2020 07:19:47 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D12A6C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 04:19:45 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id e25so886543ljg.5
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 04:19:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=NGDiAiHa7gOkZcjetP+fIoZxVSWT0kUGxzHZFTTg7do=;
+        b=OtzsmKq4kHVDABFucflRXQScsA5dK0d8y+T7VpIusux0bdbzOkryTGmdsRMejMModx
+         hG+VUUfuAGphGgNl/ZWXlXnkPfKW8XJTUtB2InKKwK+VcmtS133aXqUYztuRFDgCKwYr
+         CuXgPqQNihksSjAt6Quo/CXuja6kdP04P2Gvo1/g98aFnINd6I9yEQ/8pZ1kl2n2D588
+         7oh3h6PhgI4kgcrI04UrK/gjC7byofTga40iU9XD5p9G/tTD9nCNZdb0xlIsO1aFBAIB
+         1GMRLSIgOunDZtfkEJg5DwnLQjfuOZf9TkvUJjQS3MjVtW9RVo8n1pZUQ1yFDHuupZdE
+         870A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=NGDiAiHa7gOkZcjetP+fIoZxVSWT0kUGxzHZFTTg7do=;
+        b=I3k+KDhQeHiOU4JcDC2TY2YAiSFt8LWJU64fgtScVztsIWkt0at2pmemsyrcMkxcNs
+         mTs7zFS+54toHLs021oo04BZh8NK7fuB9BMXfAnnYSQ6Dc42nGMBbgJisX4wn4OvTlWa
+         CmMzALDtZaEIdOwDI5q61cUDSplhAidDqQU0S+NfSSNcaVooMEuw/WcXi7VdgBtcbSBX
+         DDMBBlG3AfiVn+QPxCWZl1baVuzVzSlEuUHQnYPCXuJmhK8kC4scRb6zT+Ro/cqxwOEH
+         EHlHzERn/aX/ODQA+2jdyUcrtdiFvjmHX4P+4nGoUheNFnIhK8pbyQhE5bo9C5hqQ8GA
+         QT0A==
+X-Gm-Message-State: AGi0PuZb+/FXqnY5TXdNaGZm8pxcq3VGd15T7loLujqfznufyNBmqglM
+        Wm/Ldh/VivuIPWh3FCi5f6uH1k77NIy82ajsYfnhAg==
+X-Google-Smtp-Source: APiQypJy9THPwjoS7Jo2tqNfqwFCh62pVSbwOBq6PdDLITxyc2Xnd0cf+VlMiSRhsUAbLwuDb/LTyMe0TXHxVDUdths=
+X-Received: by 2002:a2e:5048:: with SMTP id v8mr5663453ljd.99.1587035984361;
+ Thu, 16 Apr 2020 04:19:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+References: <20200320093125.23092-1-brgl@bgdev.pl> <CACRpkdZgWUwmmuXn12DS3TsQS0yQxcweqK6HGxBm=V_2LBLBMw@mail.gmail.com>
+ <CAMpxmJUb09KGreHw6Bdz79rbnQE7oZnWg_5qN_FhzoS2-XccFA@mail.gmail.com>
+In-Reply-To: <CAMpxmJUb09KGreHw6Bdz79rbnQE7oZnWg_5qN_FhzoS2-XccFA@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 16 Apr 2020 13:19:33 +0200
+Message-ID: <CACRpkdaeWtk1fiGMX7QkkCZ-DcFqSvSB9xQmuLy1VO+QWsZo6w@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: don't call sleeping functions with a spinlock taken
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  7 Apr 2020 15:20:04 -0400
-Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+On Tue, Apr 14, 2020 at 2:27 PM Bartosz Golaszewski
+<bgolaszewski@baylibre.com> wrote:
+> wt., 14 kwi 2020 o 14:00 Linus Walleij <linus.walleij@linaro.org> napisa=
+=C5=82(a):
+> >
+> > On Fri, Mar 20, 2020 at 10:31 AM Bartosz Golaszewski <brgl@bgdev.pl> wr=
+ote:
+> >
+> > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > >
+> > > We must not call pinctrl_gpio_can_use_line() with the gpio_lock taken
+> > > as it takes a mutex internally. Let's move the call before taking the
+> > > spinlock and store the return value.
+> > >
+> > > This isn't perfect - there's a moment between calling
+> > > pinctrl_gpio_can_use_line() and taking the spinlock where the situati=
+on
+> > > can change but it isn't a regression either: previously this part was=
+n't
+> > > protected at all and it only affects the information user-space is
+> > > seeing.
+> > >
+> > > Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> > > Fixes: d2ac25798208 ("gpiolib: provide a dedicated function for setti=
+ng lineinfo")
+> > > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > I'm sorry that I lost track of this patch :(
+> >
+> > Do we still need something like this or has it been fixed
+> > by some other patches?
+> >
+> > Yours,
+> > Linus Walleij
+>
+> Nope, this is still an issue. Do you have a better idea than mine?
 
-> Let's implement the callback to indicate when an APQN
-> is in use by the vfio_ap device driver. The callback is
-> invoked whenever a change to the apmask or aqmask would
-> result in one or more queue devices being removed from the driver. The
-> vfio_ap device driver will indicate a resource is in use
-> if the APQN of any of the queue devices to be removed are assigned to
-> any of the matrix mdevs under the driver's control.
-> 
-> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
-> ---
->  drivers/s390/crypto/vfio_ap_drv.c     |  1 +
->  drivers/s390/crypto/vfio_ap_ops.c     | 47 +++++++++++++++++----------
->  drivers/s390/crypto/vfio_ap_private.h |  2 ++
->  3 files changed, 33 insertions(+), 17 deletions(-)
+Nope, can you just queue it in your tree?
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-> @@ -1369,3 +1371,14 @@ void vfio_ap_mdev_remove_queue(struct ap_queue *queue)
->  	kfree(q);
->  	mutex_unlock(&matrix_dev->lock);
->  }
-> +
-> +bool vfio_ap_mdev_resource_in_use(unsigned long *apm, unsigned long *aqm)
-> +{
-> +	bool in_use;
-> +
-> +	mutex_lock(&matrix_dev->lock);
-> +	in_use = vfio_ap_mdev_verify_no_sharing(NULL, apm, aqm) ? true : false;
-
-Maybe
-
-in_use = !!vfio_ap_mdev_verify_no_sharing(NULL, apm, aqm);
-
-?
-
-> +	mutex_unlock(&matrix_dev->lock);
-> +
-> +	return in_use;
-> +}
-
+Yours,
+Linus Walleij
