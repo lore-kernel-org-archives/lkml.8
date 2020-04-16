@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 805E3C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 989E1C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:53:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 557FB20732
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:53:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C0CE2076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:53:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587045195;
-	bh=wttoton6TEU7iHeRKVPjij7bCAVwDWT6iBkWVBDZgs8=;
+	s=default; t=1587045202;
+	bh=57XLkEo9IUFW0ke8/XfWMYUe3XW5lyxCAG3v48t6+k8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qs42mrxyepv3MDXrT06VBGaEK/0iQoWLd6AdseKERH7oJB4+D6+aNlsCN4GqNcyjm
-	 EEFURqVFae5SRmQzaRn2jwrHlDVeA7a7LVNFLr+was5aEinZPkDj9iWBB7mJ1SZvYH
-	 GWnIFwkWZAULlbkHd9h5e3Jhck3SkyX15WZE6zsg=
+	b=mJG9ukeQmI8HUCRStvLvby4GxuVyWa+eeNX8rzZn54rRX99B4kZJoihyDTqrovHIx
+	 614xVfvPGkMWVFJeGlhyFRECr2pDyGQW6UDATCoRX4sQ8Ijlqg8RpB+K9h2emRoqa6
+	 8X1wZYAQURJ9sju8q5B+WUYMuJLeErLUHyazgc7s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441715AbgDPNxF (ORCPT
+        id S2408984AbgDPNxU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:53:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49188 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:53:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896190AbgDPNhE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:37:04 -0400
+        id S2896697AbgDPNhH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:37:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E28A7208E4;
-        Thu, 16 Apr 2020 13:37:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3E84221EB;
+        Thu, 16 Apr 2020 13:37:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044222;
-        bh=wttoton6TEU7iHeRKVPjij7bCAVwDWT6iBkWVBDZgs8=;
+        s=default; t=1587044227;
+        bh=57XLkEo9IUFW0ke8/XfWMYUe3XW5lyxCAG3v48t6+k8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zCdGBgxRhPo17UVo9PmKgFCjwkgOJpZUaHylt4pzbfEJr1GCXr2oi/pdcCZS6qSwO
-         4uLQWr31yzYCoMgMY8bgL1+jpJfdRY6b9PmLLarxD3j3OBSC0JAWgsr6wFpyj2p9Oj
-         VP7DVNrer8vOEZw/ZcPavXCmfbHk8nDqArkqhFE0=
+        b=deHeMl5cFZzExItriaA22KYZ9weq91im5cP8ujadxTAO+mO6gbjiBs3/NMxR7Qwb8
+         1rPDLDb8VJ3Su3kNvBwjyUvVip/F4S9Zo3kFtJ8776OpvCAczt7ZUUEcNttzxe4AF3
+         Gr0zr9kOi/C4LCtQoGtYZtyeqtQ2R+Mp5FUCXxhE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pei Huang <huangpei@loongson.cn>,
-        Huacai Chen <chenhc@lemote.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Subject: [PATCH 5.5 131/257] MIPS/tlbex: Fix LDDIR usage in setup_pw() for Loongson-3
-Date:   Thu, 16 Apr 2020 15:23:02 +0200
-Message-Id: <20200416131342.796318254@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.5 133/257] PM / Domains: Allow no domain-idle-states DT property in genpd when parsing
+Date:   Thu, 16 Apr 2020 15:23:04 +0200
+Message-Id: <20200416131343.047986818@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -60,55 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huacai Chen <chenhc@lemote.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
 
-commit d191aaffe3687d1e73e644c185f5f0550ec242b5 upstream.
+commit 56cb26891ea4180121265dc6b596015772c4a4b8 upstream.
 
-LDDIR/LDPTE is Loongson-3's acceleration for Page Table Walking. If BD
-(Base Directory, the 4th page directory) is not enabled, then GDOffset
-is biased by BadVAddr[63:62]. So, if GDOffset (aka. BadVAddr[47:36] for
-Loongson-3) is big enough, "0b11(BadVAddr[63:62])|BadVAddr[47:36]|...."
-can far beyond pg_swapper_dir. This means the pg_swapper_dir may NOT be
-accessed by LDDIR correctly, so fix it by set PWDirExt in CP0_PWCtl.
+Commit 2c361684803e ("PM / Domains: Don't treat zero found compatible idle
+states as an error"), moved of_genpd_parse_idle_states() towards allowing
+none compatible idle state to be found for the device node, rather than
+returning an error code.
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Pei Huang <huangpei@loongson.cn>
-Signed-off-by: Huacai Chen <chenhc@lemote.com>
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+However, it didn't consider that the "domain-idle-states" DT property may
+be missing as it's optional, which makes of_count_phandle_with_args() to
+return -ENOENT. Let's fix this to make the behaviour consistent.
+
+Fixes: 2c361684803e ("PM / Domains: Don't treat zero found compatible idle states as an error")
+Reported-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc: 4.20+ <stable@vger.kernel.org> # 4.20+
+Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/mm/tlbex.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/base/power/domain.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/mips/mm/tlbex.c
-+++ b/arch/mips/mm/tlbex.c
-@@ -1480,6 +1480,7 @@ static void build_r4000_tlb_refill_handl
+--- a/drivers/base/power/domain.c
++++ b/drivers/base/power/domain.c
+@@ -2615,7 +2615,7 @@ static int genpd_iterate_idle_states(str
  
- static void setup_pw(void)
- {
-+	unsigned int pwctl;
- 	unsigned long pgd_i, pgd_w;
- #ifndef __PAGETABLE_PMD_FOLDED
- 	unsigned long pmd_i, pmd_w;
-@@ -1506,6 +1507,7 @@ static void setup_pw(void)
+ 	ret = of_count_phandle_with_args(dn, "domain-idle-states", NULL);
+ 	if (ret <= 0)
+-		return ret;
++		return ret == -ENOENT ? 0 : ret;
  
- 	pte_i = ilog2(_PAGE_GLOBAL);
- 	pte_w = 0;
-+	pwctl = 1 << 30; /* Set PWDirExt */
- 
- #ifndef __PAGETABLE_PMD_FOLDED
- 	write_c0_pwfield(pgd_i << 24 | pmd_i << 12 | pt_i << 6 | pte_i);
-@@ -1516,8 +1518,9 @@ static void setup_pw(void)
- #endif
- 
- #ifdef CONFIG_MIPS_HUGE_TLB_SUPPORT
--	write_c0_pwctl(1 << 6 | psn);
-+	pwctl |= (1 << 6 | psn);
- #endif
-+	write_c0_pwctl(pwctl);
- 	write_c0_kpgd((long)swapper_pg_dir);
- 	kscratch_used_mask |= (1 << 7); /* KScratch6 is used for KPGD */
- }
+ 	/* Loop over the phandles until all the requested entry is found */
+ 	of_for_each_phandle(&it, ret, dn, "domain-idle-states", NULL, 0) {
 
 
