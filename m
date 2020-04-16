@@ -2,252 +2,62 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14B39C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:14:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 099CEC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:15:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7F72206D5
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:14:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC374206D5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:15:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WsEFbDTN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438506AbgDPHOe (ORCPT
+        id S2438620AbgDPHPq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 03:14:34 -0400
-Received: from server-x.ipv4.hkg02.ds.network ([27.111.83.178]:47794 "EHLO
-        mail.gtsys.com.hk" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
-        with ESMTP id S2437959AbgDPHOZ (ORCPT
+        Thu, 16 Apr 2020 03:15:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53836 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2438466AbgDPHPg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 03:14:25 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id 9C978200E7EC;
-        Thu, 16 Apr 2020 15:14:14 +0800 (HKT)
-X-Virus-Scanned: Debian amavisd-new at gtsys.com.hk
-Received: from mail.gtsys.com.hk ([127.0.0.1])
-        by localhost (mail.gtsys.com.hk [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id cUck7dk6dGh3; Thu, 16 Apr 2020 15:14:14 +0800 (HKT)
-Received: from s01.gtsys.com.hk (unknown [10.128.4.2])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id 6FDE7200E7CA;
-        Thu, 16 Apr 2020 15:14:14 +0800 (HKT)
-Received: from [10.128.2.32] (unknown [124.217.188.146])
-        by s01.gtsys.com.hk (Postfix) with ESMTPSA id 39206C019EC;
-        Thu, 16 Apr 2020 15:14:13 +0800 (HKT)
-Subject: Re: [PATCH v4 2/3] iio: DAC extension for ltc2634-12/10/8
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     devicetree@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexandru Tachici <alexandru.tachici@analog.com>,
-        Steve Winslow <swinslow@gmail.com>, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200416012016.21422-1-chris.ruehl@gtsys.com.hk>
- <20200416012016.21422-3-chris.ruehl@gtsys.com.hk>
- <20200416065655.cxy67hlj267dpjrw@pengutronix.de>
-From:   Chris Ruehl <chris.ruehl@gtsys.com.hk>
-Message-ID: <e4a6af21-a8ec-e9b5-2c5e-1e109888f0c7@gtsys.com.hk>
-Date:   Thu, 16 Apr 2020 15:14:10 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 16 Apr 2020 03:15:36 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EB20C061A0C;
+        Thu, 16 Apr 2020 00:15:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=pAC8y4t3FdRbk1n60w0TsVD+opVLgm9/jLxOASkoO8A=; b=WsEFbDTN3VLDQTF3Xhyo1/bz9N
+        58K2eWylh/BmzXGTLojSBkYSHvnrZ8LDo5s1VD8XRwLkf7lbn5FxUJB7ufdeDZEHIc5f4UzRf74oK
+        0OgPizb5DUPWUCZ7UTz69GnzUY/VeoNYKCQf+5gjjmPD0g50bIRsKlOJgsZ+LA9fqEVLx5mEgG61j
+        BYJnCikk+BgA6/gauOcg+FN6OhaS9ORIVIQEvvxOGOET1eF2qoxuER4kAwOVE23kS7bC46dgyzNuG
+        /oW268wElk3wj+xnSsuCW+wUb3H5Hv/VGjAT5zHeaP/2QSNTpx0iw8CTK032JrLkw1oercJEEkox6
+        fCj4sg7Q==;
+Received: from [2001:4bb8:184:4aa1:c70:4a89:bc61:2] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jOyk5-0003Ga-Ow; Thu, 16 Apr 2020 07:15:22 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     axboe@kernel.dk
+Cc:     yuyufen@huawei.com, tj@kernel.org, jack@suse.cz,
+        bvanassche@acm.org, tytso@mit.edu, gregkh@linuxfoundation.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: bdi: fix use-after-free for dev_name(bdi->dev)
+Date:   Thu, 16 Apr 2020 09:15:11 +0200
+Message-Id: <20200416071519.807660-1-hch@lst.de>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200416065655.cxy67hlj267dpjrw@pengutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi all,
 
-On 16/4/2020 2:56 pm, Uwe Kleine-König wrote:
-> Hello,
-> 
-> dropped stefan.popa@analog.com from recipents as the address bounces for
-> me.
-the maintainer script added this email automatically , I will remove it
-in the future mails.
+the first three patches are my take on the proposal from Yufen Yu
+to fix the use after free of the device name of the bdi device.
 
-Thanks.
-
-> 
-> On Thu, Apr 16, 2020 at 09:20:10AM +0800, Chris Ruehl wrote:
->> This patch add support for Analog Devices (Linear Technology)
->> LTC2634 Quad 12-/10-/8-Bit Rail-to-Rail DAC.
->> The SPI functionality based on them from LTC2632 therefor
->> add the definitions only and update the Kconfig.
->>
->> Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
->> ---
->> v4:
->> -hide version from commit text
->> v3:
->> -Consistens decimal separator in help text
->> v2:
->> -Send the documentation fix in a extra patch
->> -Kconfig simplify the driver description, details to the help text
->> -ltc2632.txt add to this patch-set (prepare to convert to yaml)
->>
->>   .../devicetree/bindings/iio/dac/ltc2632.txt   |  8 ++-
->>   drivers/iio/dac/Kconfig                       |  6 +-
->>   drivers/iio/dac/ltc2632.c                     | 60 +++++++++++++++++++
->>   3 files changed, 70 insertions(+), 4 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/iio/dac/ltc2632.txt b/Documentation/devicetree/bindings/iio/dac/ltc2632.txt
->> index 338c3220f01a..1ab9570cf219 100644
->> --- a/Documentation/devicetree/bindings/iio/dac/ltc2632.txt
->> +++ b/Documentation/devicetree/bindings/iio/dac/ltc2632.txt
->> @@ -1,4 +1,4 @@
->> -Linear Technology LTC2632/2636 DAC
->> +Linear Technology LTC2632/2634/2636 DAC
->>   
->>   Required properties:
->>    - compatible: Has to contain one of the following:
->> @@ -8,6 +8,12 @@ Required properties:
->>   	lltc,ltc2632-h12
->>   	lltc,ltc2632-h10
->>   	lltc,ltc2632-h8
->> +	lltc,ltc2634-l12
->> +	lltc,ltc2634-l10
->> +	lltc,ltc2634-l8
->> +	lltc,ltc2634-h12
->> +	lltc,ltc2634-h10
->> +	lltc,ltc2634-h8
->>   	lltc,ltc2636-l12
->>   	lltc,ltc2636-l10
->>   	lltc,ltc2636-l8
->> diff --git a/drivers/iio/dac/Kconfig b/drivers/iio/dac/Kconfig
->> index 93744011b63f..aee13ced6ddf 100644
->> --- a/drivers/iio/dac/Kconfig
->> +++ b/drivers/iio/dac/Kconfig
->> @@ -279,12 +279,12 @@ config LTC1660
->>   	  module will be called ltc1660.
->>   
->>   config LTC2632
->> -	tristate "Linear Technology LTC2632-12/10/8 and LTC2636-12/10/8 DAC spi driver"
->> +	tristate "Linear Technology LTC2632-12/10/8 and similar DAC spi driver"
->>   	depends on SPI
->>   	help
->>   	  Say yes here to build support for Linear Technology
->> -	  LTC2632-12, LTC2632-10, LTC2632-8, LTC2636-12, LTC2636-10 and
->> -	  LTC2636-8 converters (DAC).
->> +	  LTC2632, LTC2634 and LTC2636 DAC resolution 12/10/8 bit
->> +	  low 0-2.5V and high 0-4.096V range converters.
->>   
->>   	  To compile this driver as a module, choose M here: the
->>   	  module will be called ltc2632.
->> diff --git a/drivers/iio/dac/ltc2632.c b/drivers/iio/dac/ltc2632.c
->> index 2a84ea654645..e939d7f81014 100644
->> --- a/drivers/iio/dac/ltc2632.c
->> +++ b/drivers/iio/dac/ltc2632.c
->> @@ -54,6 +54,12 @@ enum ltc2632_supported_device_ids {
->>   	ID_LTC2632H12,
->>   	ID_LTC2632H10,
->>   	ID_LTC2632H8,
->> +	ID_LTC2634L12,
->> +	ID_LTC2634L10,
->> +	ID_LTC2634L8,
->> +	ID_LTC2634H12,
->> +	ID_LTC2634H10,
->> +	ID_LTC2634H8,
->>   	ID_LTC2636L12,
->>   	ID_LTC2636L10,
->>   	ID_LTC2636L8,
->> @@ -236,6 +242,36 @@ static const struct ltc2632_chip_info ltc2632_chip_info_tbl[] = {
->>   		.num_channels	= 2,
->>   		.vref_mv	= 4096,
->>   	},
->> +	[ID_LTC2634L12] = {
->> +		.channels	= ltc2632x12_channels,
->> +		.num_channels	= 4,
->> +		.vref_mv	= 2500,
->> +	},
->> +	[ID_LTC2634L10] = {
->> +		.channels	= ltc2632x10_channels,
->> +		.num_channels	= 4,
->> +		.vref_mv	= 2500,
->> +	},
->> +	[ID_LTC2634L8] =  {
->> +		.channels	= ltc2632x8_channels,
->> +		.num_channels	= 4,
->> +		.vref_mv	= 2500,
->> +	},
->> +	[ID_LTC2634H12] = {
->> +		.channels	= ltc2632x12_channels,
->> +		.num_channels	= 4,
->> +		.vref_mv	= 4096,
->> +	},
->> +	[ID_LTC2634H10] = {
->> +		.channels	= ltc2632x10_channels,
->> +		.num_channels	= 4,
->> +		.vref_mv	= 4096,
->> +	},
->> +	[ID_LTC2634H8] =  {
->> +		.channels	= ltc2632x8_channels,
->> +		.num_channels	= 4,
->> +		.vref_mv	= 4096,
->> +	},
->>   	[ID_LTC2636L12] = {
->>   		.channels	= ltc2632x12_channels,
->>   		.num_channels	= 8,
->> @@ -357,6 +393,12 @@ static const struct spi_device_id ltc2632_id[] = {
->>   	{ "ltc2632-h12", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2632H12] },
->>   	{ "ltc2632-h10", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2632H10] },
->>   	{ "ltc2632-h8", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2632H8] },
->> +	{ "ltc2634-l12", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2634L12] },
->> +	{ "ltc2634-l10", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2634L10] },
->> +	{ "ltc2634-l8", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2634L8] },
->> +	{ "ltc2634-h12", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2634H12] },
->> +	{ "ltc2634-h10", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2634H10] },
->> +	{ "ltc2634-h8", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2634H8] },
->>   	{ "ltc2636-l12", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2636L12] },
->>   	{ "ltc2636-l10", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2636L10] },
->>   	{ "ltc2636-l8", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2636L8] },
->> @@ -386,6 +428,24 @@ static const struct of_device_id ltc2632_of_match[] = {
->>   	}, {
->>   		.compatible = "lltc,ltc2632-h8",
->>   		.data = &ltc2632_chip_info_tbl[ID_LTC2632H8]
->> +	}, {
->> +		.compatible = "lltc,ltc2634-l12",
->> +		.data = &ltc2632_chip_info_tbl[ID_LTC2634L12]
->> +	}, {
->> +		.compatible = "lltc,ltc2634-l10",
->> +		.data = &ltc2632_chip_info_tbl[ID_LTC2634L10]
->> +	}, {
->> +		.compatible = "lltc,ltc2634-l8",
->> +		.data = &ltc2632_chip_info_tbl[ID_LTC2634L8]
->> +	}, {
->> +		.compatible = "lltc,ltc2634-h12",
->> +		.data = &ltc2632_chip_info_tbl[ID_LTC2634H12]
->> +	}, {
->> +		.compatible = "lltc,ltc2634-h10",
->> +		.data = &ltc2632_chip_info_tbl[ID_LTC2634H10]
->> +	}, {
->> +		.compatible = "lltc,ltc2634-h8",
->> +		.data = &ltc2632_chip_info_tbl[ID_LTC2634H8]
->>   	}, {
->>   		.compatible = "lltc,ltc2636-l12",
->>   		.data = &ltc2632_chip_info_tbl[ID_LTC2636L12]
-> 
-> Looks good to me:
-> 
-> Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> 
-> Thanks
-> Uwe
-> 
-
--- 
-GTSYS Limited RFID Technology
-9/F, Unit E, R07, Kwai Shing Industrial Building Phase 2,
-42-46 Tai Lin Pai Road, Kwai Chung, N.T., Hong Kong
-Tel (852) 9079 9521
-
-Disclaimer: https://www.gtsys.com.hk/email/classified.html
+The rest is vaguely related cleanups.
