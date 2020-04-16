@@ -2,104 +2,111 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DCFFC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18789C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:39:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 438D321D94
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:39:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEB9521D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:39:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587047962;
+	bh=SoVqO3bK3jHNnFnqoHbBV+IZFxZYUJeXCaLy+Ihncvo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=SHBL70USBr0iEiKtoVLar6E1qDYhHOUc0KCTUlBeOSWTXkIG8mRf3gMgnR2Db9vrL
+	 pQHuRPvRi4iy1TJdqxk1tHJ2G5+s+cxhbJIHswtpFdduc3KDnuTp4KsCqFhibLEISG
+	 wT67ZIVrcChqMYU+/Uqee7u053Ox3pPSookqYAvc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392873AbgDPOjA (ORCPT
+        id S2393860AbgDPOjU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:39:00 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:34155 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732580AbgDPOiv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:38:51 -0400
-Received: from mail-qt1-f172.google.com ([209.85.160.172]) by
- mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MKbTo-1jfVWG3kB2-00KxGH for <linux-kernel@vger.kernel.org>; Thu, 16 Apr
- 2020 16:38:49 +0200
-Received: by mail-qt1-f172.google.com with SMTP id w29so16128436qtv.3
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 07:38:48 -0700 (PDT)
-X-Gm-Message-State: AGi0PubxvvZNa9v1HqkW4O1DPrl4b/ItjBgYc8o2bT9OnuQt8l87x1fK
-        wuI0AGmyhIfhIQ1ClQsK6VfUkeMQxxs7sgBMnK4=
-X-Google-Smtp-Source: APiQypJqoo+1YOH8+oD0uoPKYpCZrmu3MnpzPZdEK0zTPXl6sPogVi+91etn3KKCDHnoj/lu3Amws5JqCt4BpnbxgJI=
-X-Received: by 2002:ac8:296f:: with SMTP id z44mr24605980qtz.18.1587047927805;
- Thu, 16 Apr 2020 07:38:47 -0700 (PDT)
+        Thu, 16 Apr 2020 10:39:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49850 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405605AbgDPOCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:02:21 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEB882078B;
+        Thu, 16 Apr 2020 14:02:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587045741;
+        bh=SoVqO3bK3jHNnFnqoHbBV+IZFxZYUJeXCaLy+Ihncvo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=TJNfRKub5Hujh2S1Y3vDelb/d53f4SpKpZAaaiDckQvrIJcwoGhk2WNgtLQgVrsZe
+         5/4WZnyU2+J7uuUZrD0fn0xehEivourie+fMMrA4Tx+/yV8Sk9K72JVGArYQv40LrI
+         e9XnGksTnVp5QVPgxMZTxur6Wsu2KdB3X7pkJw3Y=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Simon Gander <simon@tuxera.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Anton Altaparmakov <anton@tuxera.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.6 230/254] hfsplus: fix crash and filesystem corruption when deleting files
+Date:   Thu, 16 Apr 2020 15:25:19 +0200
+Message-Id: <20200416131354.420861781@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
+References: <20200416131325.804095985@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <cover.1586757922.git.baolin.wang7@gmail.com> <ca403b816af38eae68ca7399640c82d0345a2296.1586757922.git.baolin.wang7@gmail.com>
- <CAK8P3a06fed_WVmO84iod2VpY386_3J+V=A-M+W7yE57N04a8w@mail.gmail.com>
- <CADBw62r06X6mMTx3eLY1iU5KLOK644d1vA49Kp9JXzUtm2CpCw@mail.gmail.com>
- <CAK8P3a3jnpRDjWwAOJa1EmbMzu+vKXmG3DBzhjHtVFz8NHfP8A@mail.gmail.com> <CADBw62oNApMo_rCz1W6_tG8Z72ENjrAtHkWZ1Z4NsN0qWFctXg@mail.gmail.com>
-In-Reply-To: <CADBw62oNApMo_rCz1W6_tG8Z72ENjrAtHkWZ1Z4NsN0qWFctXg@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 16 Apr 2020 16:38:24 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a07n=5X5Cv7crAu_XCzoLA=o1wZjmO5r6=bwdGr2nHSwQ@mail.gmail.com>
-Message-ID: <CAK8P3a07n=5X5Cv7crAu_XCzoLA=o1wZjmO5r6=bwdGr2nHSwQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 3/3] soc: sprd: Add Spreadtrum special bits
- updating support
-To:     Baolin Wang <baolin.wang7@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Lyra Zhang <zhang.lyra@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:u8MUkaFRBnn+Lh0FCWK5uE3WsHRFKrzXU/QFJKoRktJgghEzUug
- 21Bguzy20iAF47/PfCadC8wWzQnEpwO8bKWLb1SYG5LK1y62zbRPfdQhS98MH3Fb9hZcGtZ
- LHJtsm7tCPfNFt8VeDyafEAwxqZhsxXgCU5Jg/p1qLDi9PK8mJ+Ct4gr3MhLLUOKjAmpJ1L
- L7iksVCsbawZadAivta7w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:kO7/9jTZSIA=:KEDcyi4N67of5W1DkUlfJS
- 5LCkVVYTRlWDHaV/opCaKfEBcd2KB8Ke9woSarVpCzZQ5oEoOKje8Z6eQWRRPwxMjfGiO1fOJ
- 9fdjddmJMA6CYInhyShpdFVNjCP6BCNiO7zRZCVqQGSs8eKpFc1/01WSYk0tO7g/48lgQbBQz
- tTxMI9W1Fl4rdcjPPrC3LoyfyvknqJlgV8EaCn3KOhBKlYLpIOlgEPaQpxgsbnHGK9uF4Aw/Q
- 8dRana6vkwTkZVQCXuki3LERksSim/LEL703PklqiZIPC8iFWosc/VWgsCHJMlh5BH7YNxRWs
- JRSi+Myustp/xHeQ/zHnhCKJCoPlpdOlsWzeIptQLKgkkx3JJOqMVRMkWIjjEqNBdMEGWprm7
- ljb7GfFtkqiWGSsKzjs0Fq+it7cVOgx2vibebNGo7lU0WNw7cKUOihILxzC7zisE7LaQn3ZE7
- nBlKQCkJ/RqVlT0inYNtKlNOtk2fFC06O1ItSrT3p+jPJQRRMJaX2qxHvbxWZXRS6ydevtZNH
- xCmBfcDifd9IXCaSgkPDm/0LhOTnI9esy6P2dpTlQE6iuOY1QCNRSAanDcyuwVNLIPJMeUP4r
- sbcdN8qZSiCPi/Je0OQlhR5Nq4PiXD6uRxAhTF5HbD1EPVOSG3OOQ2Z3/vlfcmGUc2GemVrCc
- kxQYBNKPQbxBxgQNBpquMPTv9PA54M/3bCNUnCUQxVMw1rjU6YoMS4QWQc1cCfKhU8EJVObrT
- qcUwiyXRGNILDfwWUkKBffUwEq6zNjrJ5OUFcMFSPjcwFWmriflJHkDJtT/1q2uZamPkVWE4A
- FjiX3ErNhEYTz9ZlrjTvBqrOHGeSSriGr66nNx7zkzgaerPMqY=
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 3:49 PM Baolin Wang <baolin.wang7@gmail.com> wrote:
+From: Simon Gander <simon@tuxera.com>
 
->
-> OK, I think adding a Spreadtrum compatible string will be an easy and
-> clear way, so what about below sample code?
->
-> DT:
-> ap_ahb_regs: syscon@20210000 {
->          compatible = "sprd,sc9860-syscon", "syscon";
->          reg = <0 0x20210000 0 0x10000>;
-> };
->
-> /* The Spreadtrum syscon need register a real physical regmap bus with
-> new bits updating method. */
-> if (of_device_is_compatible(np, "sprd,sc9860-syscon") && syscon_phy_regmap_bus)
->        regmap = regmap_init(NULL, syscon_phy_regmap_bus, base, &syscon_config);
-> else
->        regmap = regmap_init_mmio(NULL, base, &syscon_config);
+commit 25efb2ffdf991177e740b2f63e92b4ec7d310a92 upstream.
 
-Ok, sounds good. Maybe also define another compatible string that
-is more generic than "sprd,sc9860-syscon" (but less generic than
-"syscon") so you can still identify the chip specific syscon area if
-necessary, while not having to list each future chip individually.
+When removing files containing extended attributes, the hfsplus driver may
+remove the wrong entries from the attributes b-tree, causing major
+filesystem damage and in some cases even kernel crashes.
 
-Something like
+To remove a file, all its extended attributes have to be removed as well.
+The driver does this by looking up all keys in the attributes b-tree with
+the cnid of the file.  Each of these entries then gets deleted using the
+key used for searching, which doesn't contain the attribute's name when it
+should.  Since the key doesn't contain the name, the deletion routine will
+not find the correct entry and instead remove the one in front of it.  If
+parent nodes have to be modified, these become corrupt as well.  This
+causes invalid links and unsorted entries that not even macOS's fsck_hfs
+is able to fix.
 
-compatible = "sprd,sc9860-syscon", "sprd,atomic-syscon", "syscon";
+To fix this, modify the search key before an entry is deleted from the
+attributes b-tree by copying the found entry's key into the search key,
+therefore ensuring that the correct entry gets removed from the tree.
 
-Also I'd add an IS_ENABLED() check so it gets the 'else' path
-at compile-time when CONFIG_ARCH_SPRD is disabled.
+Signed-off-by: Simon Gander <simon@tuxera.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Anton Altaparmakov <anton@tuxera.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200327155541.1521-1-simon@tuxera.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-        Arnd
+---
+ fs/hfsplus/attributes.c |    4 ++++
+ 1 file changed, 4 insertions(+)
+
+--- a/fs/hfsplus/attributes.c
++++ b/fs/hfsplus/attributes.c
+@@ -292,6 +292,10 @@ static int __hfsplus_delete_attr(struct
+ 		return -ENOENT;
+ 	}
+ 
++	/* Avoid btree corruption */
++	hfs_bnode_read(fd->bnode, fd->search_key,
++			fd->keyoffset, fd->keylength);
++
+ 	err = hfs_brec_remove(fd);
+ 	if (err)
+ 		return err;
+
+
