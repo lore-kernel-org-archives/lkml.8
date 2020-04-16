@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 255C1C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E558DC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9F3C20786
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:03:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC8352078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:03:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587045804;
-	bh=+llwUcLtdnDf5ipAJ8Q607OsR1s6kLxbaQozCIUXY1A=;
+	s=default; t=1587045810;
+	bh=tRXqSHZ8cQC+9aPAz8WM9CyiqdFKO7LOWNsUqFUbfmM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jz0fz+xoAgI+dcuBiqfoMHiJki2nGo7IRuvxcLHK38dmeEkASM1Wxem0SMMuEXR4p
-	 eZ6VWmHnCMTotje+i76v27i2mDLf2eID6CDMNsh40ddhk3Ad3/IhHYaSHaXyDXqqjF
-	 NJh2Rjq0Xq7o2090QFII77izK0scGS5LZYJtPJbA=
+	b=EJLcMJkc3c+E7fSxzjx7+ePulBPTIqV9r4Dcl52YX0nvzOHLv/ke+EzdDoIwZcF4L
+	 q/VIDvGSQjA/XXmg9Wt5g8Jb3B7VkJw5sVlSg2f1h3KE0leE6SkDsZ0/X5kf5wv2GY
+	 jLFklYh1PmBSv6ahBq9q6hSYzgS2MOevuI029tVE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392808AbgDPODV (ORCPT
+        id S2391989AbgDPOD3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:03:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54936 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:03:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898381AbgDPNmA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:42:00 -0400
+        id S1726521AbgDPNmC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:42:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9617214D8;
-        Thu, 16 Apr 2020 13:41:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4148A20732;
+        Thu, 16 Apr 2020 13:42:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044520;
-        bh=+llwUcLtdnDf5ipAJ8Q607OsR1s6kLxbaQozCIUXY1A=;
+        s=default; t=1587044522;
+        bh=tRXqSHZ8cQC+9aPAz8WM9CyiqdFKO7LOWNsUqFUbfmM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mQhaNgh7B8CX+54m9yVC+xywwaFdeqoWW8xYa6Zy0J3V8VbmqO4Q943QBAMGbRAgB
-         EIlFT97Ll1l25MPKVxEi1GTEp8mBLs1gp5dKobyeI/qcOHMXb3n/kH08X4eRgBnEMY
-         OyvW3FIqGiV+v9VBNKQ8gmzpKY+W7kaiAw5Nkwv0=
+        b=0kUPLg3V6op0UbpTWi78tCraM9y8FTJA2iIxbXsu0ffUbtVpMDBqVJGzE39+o04T9
+         FG63WjuX41ljRC/EcHWQURUp6z0HAI7i2zOI/0HXhGNdiQLp5kWy/fdb2r5TlMG5f5
+         vFsBihuPwkJgJymecnR3G/v6a3babmRxYVEey474=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aaron Liu <aaron.liu@amd.com>,
-        Yuxian Dai <Yuxian.Dai@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Huang Rui <ray.huang@amd.com>
-Subject: [PATCH 5.5 211/257] drm/amdgpu: unify fw_write_wait for new gfx9 asics
-Date:   Thu, 16 Apr 2020 15:24:22 +0200
-Message-Id: <20200416131352.431962090@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Strauss <michael.strauss@amd.com>,
+        Eric Yang <eric.yang2@amd.com>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 5.5 212/257] drm/amd/display: Check for null fclk voltage when parsing clock table
+Date:   Thu, 16 Apr 2020 15:24:23 +0200
+Message-Id: <20200416131352.553064905@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -61,37 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aaron Liu <aaron.liu@amd.com>
+From: Michael Strauss <michael.strauss@amd.com>
 
-commit 2960758cce2310774de60bbbd8d6841d436c54d9 upstream.
+commit 72f5b5a308c744573fdbc6c78202c52196d2c162 upstream.
 
-Make the fw_write_wait default case true since presumably all new
-gfx9 asics will have updated firmware. That is using unique WAIT_REG_MEM
-packet with opration=1.
+[WHY]
+In cases where a clock table is malformed such that fclk entries have
+frequencies but not voltages listed, we don't catch the error and set
+clocks to 0 instead of using hardcoded values as we should.
 
-Signed-off-by: Aaron Liu <aaron.liu@amd.com>
-Tested-by: Aaron Liu <aaron.liu@amd.com>
-Tested-by: Yuxian Dai <Yuxian.Dai@amd.com>
-Acked-by: Alex Deucher <alexander.deucher@amd.com>
-Acked-by: Huang Rui <ray.huang@amd.com>
+[HOW]
+Add check for clock tables fclk entry's voltage as well
+
+Signed-off-by: Michael Strauss <michael.strauss@amd.com>
+Reviewed-by: Eric Yang <eric.yang2@amd.com>
+Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-@@ -1040,6 +1040,8 @@ static void gfx_v9_0_check_fw_write_wait
- 			adev->gfx.mec_fw_write_wait = true;
- 		break;
- 	default:
-+		adev->gfx.me_fw_write_wait = true;
-+		adev->gfx.mec_fw_write_wait = true;
- 		break;
- 	}
- }
+--- a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr.c
++++ b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr.c
+@@ -641,7 +641,7 @@ static void rn_clk_mgr_helper_populate_b
+ 	/* Find lowest DPM, FCLK is filled in reverse order*/
+ 
+ 	for (i = PP_SMU_NUM_FCLK_DPM_LEVELS - 1; i >= 0; i--) {
+-		if (clock_table->FClocks[i].Freq != 0) {
++		if (clock_table->FClocks[i].Freq != 0 && clock_table->FClocks[i].Vol != 0) {
+ 			j = i;
+ 			break;
+ 		}
 
 
