@@ -2,151 +2,280 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA66C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:03:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA8FC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:04:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4202B20787
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:03:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D68F20787
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:04:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VAFOtuQz"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WM/Rly1N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438298AbgDPHD5 (ORCPT
+        id S2438435AbgDPHEG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 03:03:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52038 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2436919AbgDPHDw (ORCPT
+        Thu, 16 Apr 2020 03:04:06 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:21216 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2438174AbgDPHDz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 03:03:52 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9D2CC061A10
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 00:03:51 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id z6so3599463wml.2
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 00:03:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=AruXxjr9GHlZ2Z9Tv42XPGLrf7MP2PtB4f9OTEBH4MM=;
-        b=VAFOtuQzGjjh1BpnjdwrBb8ATOf9hLIQMepMrNF2THjStFG8m/qucMONexKM/Ibh0E
-         XnkPy+lPDXG4ZLFC0CUaOGOAsEj1n4I0cqOGjjq2UtVhoTGbcvAy14ISFMKTzA6o7JZB
-         erM05v8TzGUWzuAZDgeE6K0dy3boHLEmcgO8mqrTXpiSO+J/eJ2v4+FPMkRt4eAvIUvn
-         wEL/CDEmrhNzU/AhUYaUhPQK+gwDwngk88DYkCqM+/uO8cyxAE/LzNoRMnuA9Pr5u5KL
-         r5cFfhRBHKjkgpMV9vagPW6RZY70RwX0WgU2wxq3vBZPk9De1qT0f9Og4VBs/JWNT5hu
-         rmWQ==
+        Thu, 16 Apr 2020 03:03:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587020633;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=u8Fe4HRBZIpxRs2mIcqmv3RiTnssjCSY9lhZeXvdF9I=;
+        b=WM/Rly1NitS+VYy6Y2QqYvq1lk8LnyN5AJiy5Noxyn/LYlQj2PDEAWEnmj6n1Ac6fsQbWK
+        5yhMjGy7kECWJBXUH08fE0+kZOsPxBwqpfp7H+3E6awDQkcFGGfKGLvPotI3zo7Q/TIIMv
+        qviSam0ELui+TGvxi+A46+7F3eIwNwQ=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-142-y3Bs39A7P6yk-H3_jkHMKQ-1; Thu, 16 Apr 2020 03:03:52 -0400
+X-MC-Unique: y3Bs39A7P6yk-H3_jkHMKQ-1
+Received: by mail-wr1-f71.google.com with SMTP id h95so1235709wrh.11
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 00:03:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=AruXxjr9GHlZ2Z9Tv42XPGLrf7MP2PtB4f9OTEBH4MM=;
-        b=R8MRCMLg0VfTE8bULACsg/Ud2jVXGL7Qlv6FoITYrwR/DsW+QSPBscPBjxNIe0cyIt
-         R99UgfncumDktV7IgT0teIIbL9YOD6g5HkhCTEVU0ubG6Tp5GV2ZoAr2j0kskKE9YmTd
-         4lLr3wHyOMhn1NbYRy3OZkSnPeUDiWndFpgKca3GHqHi4dlc8j/KQ/f95ob6w9Ru4j6M
-         iERIE8y5c+i1rPPsNpx6wGcHKvIZyNPJSAIdzuGp9XPDQp5k9ZrYEf2flMOazVmg6pxa
-         mxRJxbw/rvamAn97dNN2ViDjKh5aNclBpE+dshG5+j0Suk0ovXHKY5hmdcJ0A8fqo9Gy
-         kQqw==
-X-Gm-Message-State: AGi0Pubp7D6UQu4T+woNe4/MM6oLmvrh9cQu2z69yriuQL0t8IqJWHK9
-        80GXhTWUKkQ2ZRKHfCyYTZaPng==
-X-Google-Smtp-Source: APiQypK1dMnBZLZOHx8PctsABj5RlziysLlkiXO8f0byNomGW94UpABYhu4MUL2N+fcrhwskc4rKnw==
-X-Received: by 2002:a1c:9a96:: with SMTP id c144mr3289606wme.84.1587020630466;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=u8Fe4HRBZIpxRs2mIcqmv3RiTnssjCSY9lhZeXvdF9I=;
+        b=eXBvQwp5WkdkYdTo7f2vnMD7hLr/shKbYS6xCK860psYNKV+V2W2M55AVly+5J9mPl
+         L3sVdvh7Vd+8uO4ZCc6yVmabu2cwYmHeMrv94vX2hgnMXRdixBSil1DIk7kAU5jwwVpZ
+         yoK/ZM9O3yxAwSjM2pLOiicESvjD/t+BD5Whc/E13JA+p34fqF9/BkxSeXJPuvZ/eqxJ
+         VttSPB43hwCiNW0MiMjEkAT0UZhlk+zovZtlE4dimOxd8p14zwZ9tn3JSjO8y0Qdznrc
+         henvGW88t5svjBruVfMTdheWaRaV8Lkr2Q7HsOoaTM3hWacYyHStqQvfolNGyhe1mx9o
+         jrgg==
+X-Gm-Message-State: AGi0Puah727/qX/9dRumSeBdlWTj2zB08VGV8VdbcB2lOS23PE0OpPrp
+        msCmFfHsBCL2Y7kKelZY4GeOWt0Ybvg6XfI/wCqNqsJAqRZT6FlmS2O6y+gxYJy1rVYua9Jvf44
+        /3Gstd8Xxy2ZMhIMDXzExeolq
+X-Received: by 2002:a5d:4005:: with SMTP id n5mr7830137wrp.242.1587020631091;
+        Thu, 16 Apr 2020 00:03:51 -0700 (PDT)
+X-Google-Smtp-Source: APiQypKzVfRYkQQjXNmPRmmEuweWR0AsvTUy66VIOLHRJ9IcCVXdD+fbCSvkQnkvtw8EzDw2iMvttg==
+X-Received: by 2002:a5d:4005:: with SMTP id n5mr7830094wrp.242.1587020630785;
         Thu, 16 Apr 2020 00:03:50 -0700 (PDT)
-Received: from dell ([95.149.164.124])
-        by smtp.gmail.com with ESMTPSA id w18sm25908396wrn.55.2020.04.16.00.03.42
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id o16sm26785055wrs.44.2020.04.16.00.03.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 16 Apr 2020 00:03:49 -0700 (PDT)
-Date:   Thu, 16 Apr 2020 08:04:41 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     fabrice.gasnier@st.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
-        daniel.lezcano@linaro.org, tglx@linutronix.de,
-        devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 0/6] clockevent: add low power STM32 timer
-Message-ID: <20200416070441.GP2167633@dell>
-References: <20200401083909.18886-1-benjamin.gaignard@st.com>
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+Cc:     kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-mips@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        tianjia.zhang@linux.alibaba.com, pbonzini@redhat.com,
+        tsbogend@alpha.franken.de, paulus@ozlabs.org, mpe@ellerman.id.au,
+        benh@kernel.crashing.org, borntraeger@de.ibm.com,
+        frankja@linux.ibm.com, david@redhat.com, cohuck@redhat.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        sean.j.christopherson@intel.com, wanpengli@tencent.com,
+        jmattson@google.com, joro@8bytes.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        maz@kernel.org, james.morse@arm.com, julien.thierry.kdev@gmail.com,
+        suzuki.poulose@arm.com, christoffer.dall@arm.com,
+        peterx@redhat.com, thuth@redhat.com
+Subject: Re: [PATCH v2] KVM: Optimize kvm_arch_vcpu_ioctl_run function
+In-Reply-To: <20200416051057.26526-1-tianjia.zhang@linux.alibaba.com>
+References: <20200416051057.26526-1-tianjia.zhang@linux.alibaba.com>
+Date:   Thu, 16 Apr 2020 09:03:47 +0200
+Message-ID: <878sivx67g.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200401083909.18886-1-benjamin.gaignard@st.com>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 01 Apr 2020, Benjamin Gaignard wrote:
+Tianjia Zhang <tianjia.zhang@linux.alibaba.com> writes:
 
-> This series add low power timer as boadcast clockevent device.
-> Low power timer could runs even when CPUs are in idle mode and 
-> could wakeup them.
-> 
-> version 6:
-> - simplify binding, DT and code to use only one interrupt
-> 
-> version 5:
-> - document interrupts and interrupt-names bindings
-> - use a different wake up interrupt
-> - add device-tree patch
-> - make STM32MP157 select low power timer configuration flag
-> - enable fast_io in regmap configuration
-> 
-> version 4:
-> - move defines in mfd/stm32-lptimer.h
-> - change compatible and subnode names
-> - document wakeup-source property
-> - reword commit message
-> - make driver Kconfig depends of MFD_STM32_LPTIMER
-> - remove useless include
-> - remove rate and clk fields from the private structure
-> - to add comments about the registers sequence in stm32_clkevent_lp_set_timer
-> - rework probe function and use devm_request_irq()
-> - do not allow module to be removed
-> 
-> version 3:
-> - fix timer set sequence
-> - don't forget to free irq on remove function
-> - use devm_kzalloc to simplify errors handling in probe function
-> 
-> version 2:
-> - stm32 clkevent driver is now a child of the stm32 lp timer node
-> - add a probe function and adpat the driver to use regmap provide
->   by it parent
-> - stop using timer_of helpers
-> 
-> 
-> Benjamin Gaignard (6):
->   dt-bindings: mfd: Document STM32 low power timer bindings
->   ARM: dts: stm32: Add timer subnodes on stm32mp15 SoCs
->   mfd: stm32: Add defines to be used for clkevent purpose
->   mfd: stm32: enable regmap fast_io for stm32-lptimer
->   clocksource: Add Low Power STM32 timers driver
->   ARM: mach-stm32: select low power timer for STM32MP157
-> 
->  .../devicetree/bindings/mfd/st,stm32-lptimer.yaml  |  21 ++
->  arch/arm/boot/dts/stm32mp151.dtsi                  |  35 ++++
->  arch/arm/mach-stm32/Kconfig                        |   1 +
->  drivers/clocksource/Kconfig                        |   4 +
->  drivers/clocksource/Makefile                       |   1 +
->  drivers/clocksource/timer-stm32-lp.c               | 221 +++++++++++++++++++++
->  drivers/mfd/stm32-lptimer.c                        |   1 +
->  include/linux/mfd/stm32-lptimer.h                  |   5 +
+> In earlier versions of kvm, 'kvm_run' is an independent structure
+> and is not included in the vcpu structure. At present, 'kvm_run'
+> is already included in the vcpu structure, so the parameter
+> 'kvm_run' is redundant.
+>
+> This patch simplify the function definition, removes the extra
+> 'kvm_run' parameter, and extract it from the 'kvm_vcpu' structure
+> if necessary.
+>
+> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+> ---
+>
+> v2 change:
+>   remove 'kvm_run' parameter and extract it from 'kvm_vcpu'
+>
+>  arch/mips/kvm/mips.c       |  3 ++-
+>  arch/powerpc/kvm/powerpc.c |  3 ++-
+>  arch/s390/kvm/kvm-s390.c   |  3 ++-
+>  arch/x86/kvm/x86.c         | 11 ++++++-----
+>  include/linux/kvm_host.h   |  2 +-
+>  virt/kvm/arm/arm.c         |  6 +++---
+>  virt/kvm/kvm_main.c        |  2 +-
+>  7 files changed, 17 insertions(+), 13 deletions(-)
+>
+> diff --git a/arch/mips/kvm/mips.c b/arch/mips/kvm/mips.c
+> index 8f05dd0a0f4e..ec24adf4857e 100644
+> --- a/arch/mips/kvm/mips.c
+> +++ b/arch/mips/kvm/mips.c
+> @@ -439,8 +439,9 @@ int kvm_arch_vcpu_ioctl_set_guest_debug(struct kvm_vcpu *vcpu,
+>  	return -ENOIOCTLCMD;
+>  }
+>  
+> -int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *run)
+> +int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+>  {
+> +	struct kvm_run *run = vcpu->run;
+>  	int r = -EINTR;
+>  
+>  	vcpu_load(vcpu);
+> diff --git a/arch/powerpc/kvm/powerpc.c b/arch/powerpc/kvm/powerpc.c
+> index e15166b0a16d..7e24691e138a 100644
+> --- a/arch/powerpc/kvm/powerpc.c
+> +++ b/arch/powerpc/kvm/powerpc.c
+> @@ -1764,8 +1764,9 @@ int kvm_vcpu_ioctl_set_one_reg(struct kvm_vcpu *vcpu, struct kvm_one_reg *reg)
+>  	return r;
+>  }
+>  
+> -int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *run)
+> +int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+>  {
+> +	struct kvm_run *run = vcpu->run;
+>  	int r;
+>  
+>  	vcpu_load(vcpu);
+> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+> index 19a81024fe16..443af3ead739 100644
+> --- a/arch/s390/kvm/kvm-s390.c
+> +++ b/arch/s390/kvm/kvm-s390.c
+> @@ -4333,8 +4333,9 @@ static void store_regs(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+>  		store_regs_fmt2(vcpu, kvm_run);
+>  }
+>  
+> -int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+> +int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+>  {
+> +	struct kvm_run *kvm_run = vcpu->run;
+>  	int rc;
+>  
+>  	if (kvm_run->immediate_exit)
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 3bf2ecafd027..a0338e86c90f 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -8707,8 +8707,9 @@ static void kvm_put_guest_fpu(struct kvm_vcpu *vcpu)
+>  	trace_kvm_fpu(0);
+>  }
+>  
+> -int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+> +int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+>  {
+> +	struct kvm_run *kvm_run = vcpu->run;
+>  	int r;
+>  
+>  	vcpu_load(vcpu);
+> @@ -8726,18 +8727,18 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+>  		r = -EAGAIN;
+>  		if (signal_pending(current)) {
+>  			r = -EINTR;
+> -			vcpu->run->exit_reason = KVM_EXIT_INTR;
+> +			kvm_run->exit_reason = KVM_EXIT_INTR;
+>  			++vcpu->stat.signal_exits;
+>  		}
+>  		goto out;
+>  	}
+>  
+> -	if (vcpu->run->kvm_valid_regs & ~KVM_SYNC_X86_VALID_FIELDS) {
+> +	if (kvm_run->kvm_valid_regs & ~KVM_SYNC_X86_VALID_FIELDS) {
+>  		r = -EINVAL;
+>  		goto out;
+>  	}
+>  
+> -	if (vcpu->run->kvm_dirty_regs) {
+> +	if (kvm_run->kvm_dirty_regs) {
+>  		r = sync_regs(vcpu);
+>  		if (r != 0)
+>  			goto out;
+> @@ -8767,7 +8768,7 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+>  
+>  out:
+>  	kvm_put_guest_fpu(vcpu);
+> -	if (vcpu->run->kvm_valid_regs)
+> +	if (kvm_run->kvm_valid_regs)
+>  		store_regs(vcpu);
+>  	post_kvm_run_save(vcpu);
+>  	kvm_sigset_deactivate(vcpu);
+> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> index 6d58beb65454..1e17ef719595 100644
+> --- a/include/linux/kvm_host.h
+> +++ b/include/linux/kvm_host.h
+> @@ -866,7 +866,7 @@ int kvm_arch_vcpu_ioctl_set_mpstate(struct kvm_vcpu *vcpu,
+>  				    struct kvm_mp_state *mp_state);
+>  int kvm_arch_vcpu_ioctl_set_guest_debug(struct kvm_vcpu *vcpu,
+>  					struct kvm_guest_debug *dbg);
+> -int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run);
+> +int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu);
+>  
+>  int kvm_arch_init(void *opaque);
+>  void kvm_arch_exit(void);
+> diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
+> index 48d0ec44ad77..f5390ac2165b 100644
+> --- a/virt/kvm/arm/arm.c
+> +++ b/virt/kvm/arm/arm.c
+> @@ -639,7 +639,6 @@ static void check_vcpu_requests(struct kvm_vcpu *vcpu)
+>  /**
+>   * kvm_arch_vcpu_ioctl_run - the main VCPU run function to execute guest code
+>   * @vcpu:	The VCPU pointer
+> - * @run:	The kvm_run structure pointer used for userspace state exchange
+>   *
+>   * This function is called through the VCPU_RUN ioctl called from user space. It
+>   * will execute VM code in a loop until the time slice for the process is used
+> @@ -647,8 +646,9 @@ static void check_vcpu_requests(struct kvm_vcpu *vcpu)
+>   * return with return value 0 and with the kvm_run structure filled in with the
+>   * required data for the requested emulation.
+>   */
+> -int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *run)
+> +int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+>  {
+> +	struct kvm_run *run = vcpu->run;
+>  	int ret;
+>  
+>  	if (unlikely(!kvm_vcpu_initialized(vcpu)))
+> @@ -659,7 +659,7 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *run)
+>  		return ret;
+>  
+>  	if (run->exit_reason == KVM_EXIT_MMIO) {
+> -		ret = kvm_handle_mmio_return(vcpu, vcpu->run);
+> +		ret = kvm_handle_mmio_return(vcpu, run);
 
-I'd be happy to take this set, but you need Acks from the other
-subsystem Maintainers before I can do so.
+I don't know much about ARM but this also seems redundant,
+kvm_handle_mmio_return() is also able to extruct 'struct kvm_run' from'
+'struct kvm_vcpu'. This likely deserves it's own patch though.
 
->  8 files changed, 289 insertions(+)
->  create mode 100644 drivers/clocksource/timer-stm32-lp.c
-> 
+>  		if (ret)
+>  			return ret;
+>  	}
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index 74bdb7bf3295..e18faea89146 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -3135,7 +3135,7 @@ static long kvm_vcpu_ioctl(struct file *filp,
+>  				synchronize_rcu();
+>  			put_pid(oldpid);
+>  		}
+> -		r = kvm_arch_vcpu_ioctl_run(vcpu, vcpu->run);
+> +		r = kvm_arch_vcpu_ioctl_run(vcpu);
+>  		trace_kvm_userspace_exit(vcpu->run->exit_reason, r);
+>  		break;
+>  	}
+
+Looked at non-x86 arches just briefly but there seems to be no
+controversy here, so
+
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Vitaly
+
