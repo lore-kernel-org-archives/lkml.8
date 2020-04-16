@@ -2,93 +2,75 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A11CC2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 00:30:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C325C3815B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 00:30:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26450206D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 00:30:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21616206D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 00:30:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RnwO9osy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403966AbgDPAaI (ORCPT
+        id S2404085AbgDPAam (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 20:30:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42916 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391755AbgDPA36 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 20:29:58 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 39771AF8A;
-        Thu, 16 Apr 2020 00:29:53 +0000 (UTC)
-From:   NeilBrown <neilb@suse.de>
-To:     Trond Myklebust <trondmy@hammerspace.com>,
-        "Anna.Schumaker\@Netapp.com" <Anna.Schumaker@Netapp.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jan Kara <jack@suse.cz>, Michal Hocko <mhocko@kernel.org>
-Date:   Thu, 16 Apr 2020 10:29:45 +1000
-Cc:     linux-mm@kvack.org, linux-nfs@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Writeback fixes for NFS - V3
-In-Reply-To: <87ftdgw58w.fsf@notabene.neil.brown.name>
-References: <87tv2b7q72.fsf@notabene.neil.brown.name> <87v9miydai.fsf@notabene.neil.brown.name> <87ftdgw58w.fsf@notabene.neil.brown.name>
-Message-ID: <87wo6gs26e.fsf@notabene.neil.brown.name>
+        Wed, 15 Apr 2020 20:30:42 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:49076 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2403969AbgDPAab (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 20:30:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586997027;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=s4rkdFZCt+CYPzp3/Qg70/GCXwWzZ5opTjJmcpHVXJY=;
+        b=RnwO9osy7m0802mDJB/mLOcITZoZbaq0b6cQ3EsjH1IPjDNHomwAqWlsQ+qdIa5ncG0fS2
+        I0uAfJ0g9BeJC6izuPQ/ct7yMpqqk6NlP97BVBiU8NKt9O3XzX3AMK++mcPgoTTffFdXBu
+        nSmFbKxYvYnaIzL4G08360NGkH3T60Q=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-441-u5im1Xo4PlegAf8ewrePhg-1; Wed, 15 Apr 2020 20:30:25 -0400
+X-MC-Unique: u5im1Xo4PlegAf8ewrePhg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B4F9C107ACC9;
+        Thu, 16 Apr 2020 00:30:21 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-113-213.rdu2.redhat.com [10.10.113.213])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 041D15DA66;
+        Thu, 16 Apr 2020 00:30:09 +0000 (UTC)
+Subject: Re: WARNING in kernfs_create_dir_ns
+To:     syzbot <syzbot+38f5d5cf7ae88c46b11a@syzkaller.appspotmail.com>,
+        a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org,
+        davem@davemloft.net, gregkh@linuxfoundation.org, hdanton@sina.com,
+        hongjiefang@asrmicro.com, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org, mareklindner@neomailbox.ch,
+        mingo@kernel.org, netdev@vger.kernel.org, peterz@infradead.org,
+        sw@simonwunderlich.de, syzkaller-bugs@googlegroups.com,
+        tj@kernel.org, ulf.hansson@linaro.org
+References: <000000000000ba8e5605a35d4465@google.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <894635f4-772e-a28c-1078-be8a5093e351@redhat.com>
+Date:   Wed, 15 Apr 2020 20:30:09 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+In-Reply-To: <000000000000ba8e5605a35d4465@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+#syz fix: locking/lockdep: Reuse freed chain_hlocks entries
 
-
-This is version 3 (I think) of my patches to improve NFS writeaback.
-
-Changes:
- - the code for adding legacy values to /proc/vmstat was broken.
-   I haven't taken the approach that Michal and Jan discussed but
-   a simpler (I hope) approach that just seq_puts() the lines at an
-   appropriate place.
-
- - I've modified the handling of PF_LOCAL_THROTTLE - sufficiently that
-   I dropped Jan's reviewed-by.
-   Rather than invoking the same behaviour as BDI_CAP_STRICTLIMIT,
-   I now just use the part I needed.
-   So if the global threshold is not exceeded, PF_LOCAL_THROTTLE tasks
-   are not throttled.  This is the case for normal processes, but not
-   when BDI_CAP_STRICTLIMIT is in effect.
-   If the global threshold *is* exceeded, only then to we check the
-   local per-bdi threshold.  If that is not exceeded then
-   PF_LOCAL_THROTTLE again avoid any throttling.  Only if both the
-   thresholds are exceeded are these tasks throttled.
-   I think this is more refletive if what we actually need.
-
-
-Thanks,
-NeilBrown
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl6XpvkACgkQOeye3VZi
-gbmE0g//fohyxqVmWfY0gBY1Eu5eE69mCobqspLO+gxINBuecBNhzJRXDub+b9Jk
-gGwg5NnJ0yJfUxN//Et4UzX+ZhQWg5rrJ9fYPXkNt4LrsRR1fnr31jUI3+S+XpcZ
-GxnJjWCHskHVlqf7N9cjdFj+i6Yl4/yVqP0XqWtBVW+IDBvP8WAmICh5BM5rEqrB
-0MEKRU3UwVFWLvn+tH6BrSboiSCNHIxsGL/t2nYQf3/CD+s00t4YzRp1FPzV8/WE
-T1i93OdjiOzaWqDQs3VBaPqyb7fzo/Y35s/2cDJ/WXD2kuEDefmM5P+7uF/UUXir
-DlCa1IC5mlbsP2qMsrJl4SgbL0IUgqZXpZZUU7n77N7hd6QznJMI60mXKBthrnwq
-J6Tuua66nAWI7te6EHJkLYP5zTHiAa8dQEk5o7S0ENx/ojcoXjU2LWfMEgCVGrud
-GUCHWWswFD4w3Xz29UDwAfUTkntbML77hgwlhUI9bKsOtu3IvlQ3npbyVS3DN8wu
-WQh0YR5e/C3vAQA6vHgw3WhJcMG2vqqMdZeCIwcGOBZ9Z+c00j7t+T9PN2UHiLWs
-3OX6yo70TJwYvzRqWrqWJMnaQ1kPxMJVDCt9ZteVkCgmE/PTYCqDNuAUKnZds5Ej
-XFbpwoyhzN/hxLJRbUOndIb7NJspO5hPVzJvkrrt9era8tXt7j8=
-=pJOU
------END PGP SIGNATURE-----
---=-=-=--
