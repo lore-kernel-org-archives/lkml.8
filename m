@@ -4,49 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD842C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:37:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B921C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:37:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4E3D21927
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:37:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BBB121D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:37:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587047824;
-	bh=T7UqCQ4MmuEZ9jZMyvkZ7fXJdJnl0Slb6/yftBff6Ww=;
+	s=default; t=1587047833;
+	bh=GMCeEdBjC+Mv67Ici8GialvdPUryQ4WJJTJWdXnnZhc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s5DEElw39rdGewwFg6q+Hj31ke4HCntXS0PvICRPgUN+faGIIbUYX7GniN3tEyU+D
-	 dbXyT4AME7e4rvm4wKWjmr7t7jDbNKiyz2UPFGyVMNQfo1fz5IcIPkdN6NE5RJV4ur
-	 RPDejn78w1JiAcl03zW5POZyYwd6D+iAZYtu1byY=
+	b=erGWjdOyZ8KJCS5lztHkL6e/S6/87tKaHJZPiVhcz7zlwQiYDDQJQMSmeiWrBsKNH
+	 FoZifa9YHtTsv+hX+ZHSNGoLuVgxFclC1Y4KFjhXFWKPwFY+lrvxIdlneEgY9rDlth
+	 trOucwFuzfjzswLanInJ6ZG49in5YFmhn189BXSQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442130AbgDPOOH (ORCPT
+        id S2442039AbgDPOOE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:14:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36340 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:14:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392352AbgDPNuZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:50:25 -0400
+        id S1726022AbgDPNuO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:50:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBF802063A;
-        Thu, 16 Apr 2020 13:50:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3C522063A;
+        Thu, 16 Apr 2020 13:50:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045021;
-        bh=T7UqCQ4MmuEZ9jZMyvkZ7fXJdJnl0Slb6/yftBff6Ww=;
+        s=default; t=1587045014;
+        bh=GMCeEdBjC+Mv67Ici8GialvdPUryQ4WJJTJWdXnnZhc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n0CZrKoILp2viB04K/SKAnUaHuIuPOe40IXsg8jBdXjxk6+UamHLkYDFT50+Eu69k
-         XvVmezAsmTnONJXThUemh1olxrGCHsppqLqmZlJ++eZ7uuvxhrkGBHujVWSHl8wnR1
-         jUEIg3meZUKVvY4oxmnuwYDXnQ8PvY28tvvIclsQ=
+        b=Td8haKEPPkStV8mFyrcEj2SMdzwx2D4nkl/yFalt4t5lsy3b8bLTAKGVTsvYz29CW
+         WERN7mFsgBPF2TgPPQiWIakDScf/SfryAZTD7oqupLjl4MWNGjVHZoIp28JCU21C3S
+         LHIP1Pd83KmrWEI1l5WCMf5/L2R23oXsqbnVxQZQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 5.4 197/232] Input: i8042 - add Acer Aspire 5738z to nomux list
-Date:   Thu, 16 Apr 2020 15:24:51 +0200
-Message-Id: <20200416131339.839053626@linuxfoundation.org>
+        stable@vger.kernel.org, Changwei Ge <chge@linux.alibaba.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
+        Jun Piao <piaojun@huawei.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 194/232] ocfs2: no need try to truncate file beyond i_size
+Date:   Thu, 16 Apr 2020 15:24:48 +0200
+Message-Id: <20200416131339.437707967@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -59,52 +66,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Changwei Ge <chge@linux.alibaba.com>
 
-commit ebc68cedec4aead47d8d11623d013cca9bf8e825 upstream.
+commit 783fda856e1034dee90a873f7654c418212d12d7 upstream.
 
-The Acer Aspire 5738z has a button to disable (and re-enable) the
-touchpad next to the touchpad.
+Linux fallocate(2) with FALLOC_FL_PUNCH_HOLE mode set, its offset can
+exceed the inode size.  Ocfs2 now doesn't allow that offset beyond inode
+size.  This restriction is not necessary and violates fallocate(2)
+semantics.
 
-When this button is pressed a LED underneath indicates that the touchpad
-is disabled (and an event is send to userspace and GNOME shows its
-touchpad enabled / disable OSD thingie).
+If fallocate(2) offset is beyond inode size, just return success and do
+nothing further.
 
-So far so good, but after re-enabling the touchpad it no longer works.
+Otherwise, ocfs2 will crash the kernel.
 
-The laptop does not have an external ps2 port, so mux mode is not needed
-and disabling mux mode fixes the touchpad no longer working after toggling
-it off and back on again, so lets add this laptop model to the nomux list.
+  kernel BUG at fs/ocfs2//alloc.c:7264!
+   ocfs2_truncate_inline+0x20f/0x360 [ocfs2]
+   ocfs2_remove_inode_range+0x23c/0xcb0 [ocfs2]
+   __ocfs2_change_file_space+0x4a5/0x650 [ocfs2]
+   ocfs2_fallocate+0x83/0xa0 [ocfs2]
+   vfs_fallocate+0x148/0x230
+   SyS_fallocate+0x48/0x80
+   do_syscall_64+0x79/0x170
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://lore.kernel.org/r/20200331123947.318908-1-hdegoede@redhat.com
-Cc: stable@vger.kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Changwei Ge <chge@linux.alibaba.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Gang He <ghe@suse.com>
+Cc: Jun Piao <piaojun@huawei.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200407082754.17565-1-chge@linux.alibaba.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/serio/i8042-x86ia64io.h |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+ fs/ocfs2/alloc.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/input/serio/i8042-x86ia64io.h
-+++ b/drivers/input/serio/i8042-x86ia64io.h
-@@ -530,6 +530,17 @@ static const struct dmi_system_id __init
- 			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo LaVie Z"),
- 		},
- 	},
-+	{
-+		/*
-+		 * Acer Aspire 5738z
-+		 * Touchpad stops working in mux mode when dis- + re-enabled
-+		 * with the touchpad enable/disable toggle hotkey
-+		 */
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Aspire 5738"),
-+		},
-+	},
- 	{ }
- };
+--- a/fs/ocfs2/alloc.c
++++ b/fs/ocfs2/alloc.c
+@@ -7403,6 +7403,10 @@ int ocfs2_truncate_inline(struct inode *
+ 	struct ocfs2_dinode *di = (struct ocfs2_dinode *)di_bh->b_data;
+ 	struct ocfs2_inline_data *idata = &di->id2.i_data;
+ 
++	/* No need to punch hole beyond i_size. */
++	if (start >= i_size_read(inode))
++		return 0;
++
+ 	if (end > i_size_read(inode))
+ 		end = i_size_read(inode);
  
 
 
