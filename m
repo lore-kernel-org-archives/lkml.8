@@ -2,109 +2,91 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93EE4C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9882C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:47:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FD3C21D93
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:47:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587048442;
-	bh=shd0LP0Bg8wGz6s3YwEhALAbANLNDLZwnav84oEtfjo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hmczGLVOf+6JkHSOK7p47S3s6sxuZWIbooVa68NXGJm4qAL4FaCTrcMke3yZjmA3o
-	 W6t4PQgoP5WEiKP29EWIFUH86AGdiAgTrLvqfWw1lvmPovmCoavWBKYMvamQvLLzeV
-	 tcz5WsosjfE9bIFRhGlallNPyozfEz7RvTZW5GJs=
+	by mail.kernel.org (Postfix) with ESMTP id B798121D93
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:47:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ajCfJ1M6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394681AbgDPOrS (ORCPT
+        id S2394684AbgDPOra (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:47:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46324 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898809AbgDPN7U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:59:20 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0C0820786;
-        Thu, 16 Apr 2020 13:59:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045559;
-        bh=shd0LP0Bg8wGz6s3YwEhALAbANLNDLZwnav84oEtfjo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o7hqSajFIW6Cp3u4zO6tVBHm2DFKoTI6iW+yvxQwzgARXVBq4QznTLrDwzlRpsdZ/
-         iIlpRwY6G32FVreupLYUIzgZwgOVk3lD2oSZirfuDURwLL0WSIhdbdHFz9bIVXcxF8
-         cpx+C92xN4DfMinb1cafJBhwhLGMRm0NNovB73yQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Frieder Schrempf <frieder.schrempf@kontron.de>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 5.6 143/254] mtd: spinand: Do not erase the block before writing a bad block marker
-Date:   Thu, 16 Apr 2020 15:23:52 +0200
-Message-Id: <20200416131344.376085393@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
-References: <20200416131325.804095985@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 16 Apr 2020 10:47:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39748 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2394668AbgDPOrK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:47:10 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D11B2C061A0C;
+        Thu, 16 Apr 2020 07:47:09 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id w12so3210324otm.13;
+        Thu, 16 Apr 2020 07:47:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=SzZBIJ1vFMB5OIxa5Nui2vPMLFwAMxv68r5Gb9P72a4=;
+        b=ajCfJ1M6r2pZxJFBvjyDS8dD2joULw4EAc5H0mUZ34t9TrnLn82hTVK4ipAPhoLJ3g
+         H6Wpxu5xO09esKSA678AUobqdfxkPv+4G2L5gLqxZOc3w9idnRf2OW19iCOkJ4RXl4Q1
+         XNiOX/I3JPJlp3dUju+l1JTdKbcI3CNOIJGMAcJjKxEsBV9tJv2pdzgEuUuFerEK0mHq
+         CDNHbUGp93DHYehQeGHMdBDIaj+40uajAF8xsfwo8u3p9SKulj+82I+z+LFTZ9PZgNOH
+         SoB5Bqg4Pgt6gR2OralSQexTeQ3UbkYiwFmJRSDru20gyW0b6J8xWXSZqBf4qQuE2D4e
+         2bgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=SzZBIJ1vFMB5OIxa5Nui2vPMLFwAMxv68r5Gb9P72a4=;
+        b=G8N3SlkVrImm+abMSKvWrclAvW4wHjgPbSMCGekCyZ4GLyvezUS8S91yLmYSVJ8aAz
+         5ixieeWM2O0vtJ4j9cYvQgTilTSww5XKtAZdFeEeucvFT8IpizQZDc9q8Q3PSACDc0lH
+         pqVEg5D8xUPvB8jncnVehlz7Ax3E3tVVYbLCcGNKhuEwVMTehy5FJ3zkwHRqIreGoit1
+         lw3CC81lT5T13oQ51qVLrbzmNVwNqZOyiKz1JJZ6qM5lyFwRErIn79dxgLeo76GgTqgE
+         18UfwZZiKwis/ibP2VdGYLVsgNnrDVGe3mwzAO7Sx50j5mEvlua4ZISicZLHVAxy4bRi
+         nwuQ==
+X-Gm-Message-State: AGi0PuYcQ8GA2mGYYV4wTqiPPI7blaPFi7FpLQ509jnyNMRnRBYyunWM
+        ktN+nHrZSg76VdKKiD7i/cJMCsO0UZ4lQhtfuzg=
+X-Google-Smtp-Source: APiQypLdEbF3+t9LzDqALjNDG7plEaTTms/SfdlHEm65gdxa0jPdwNRVRRoUCOFXZeveNmrPK2qn+MtBebHlL6rUyeQ=
+X-Received: by 2002:a9d:12f6:: with SMTP id g109mr10158623otg.0.1587048429098;
+ Thu, 16 Apr 2020 07:47:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Thu, 16 Apr 2020 10:46:58 -0400
+Message-ID: <CAGngYiVa9v9jGPNu4W+KHUnvemKU-BVE89-XNLcWOmoZjAPMTg@mail.gmail.com>
+Subject: [Q] devicetree overlays
+To:     Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frieder Schrempf <frieder.schrempf@kontron.de>
+Pantelis, Frank,
 
-commit b645ad39d56846618704e463b24bb994c9585c7f upstream.
+A quick question about the state of devicetree overlays. There don't seem to
+be many in-kernel overlay users (rcar and fpga only?). Does it make sense for
+new projects to use them?
 
-Currently when marking a block, we use spinand_erase_op() to erase
-the block before writing the marker to the OOB area. Doing so without
-waiting for the operation to finish can lead to the marking failing
-silently and no bad block marker being written to the flash.
+My situation is this: I have hardware which consists of several modules.
+Knowledge about the type and location of these modules is located in an
+on-board eeprom.
 
-In fact we don't need to do an erase at all before writing the BBM.
-The ECC is disabled for raw accesses to the OOB data and we don't
-need to work around any issues with chips reporting ECC errors as it
-is known to be the case for raw NAND.
+So now I need to assemble a devicetree, by puzzling various 'blobs' together.
+This could be done in the bootloader, but also by a rcar-like driver, which
+queries the eeprom and inserts devicetree fragments/overlays into a live kernel.
 
-Fixes: 7529df465248 ("mtd: nand: Add core infrastructure to support SPI NANDs")
-Cc: stable@vger.kernel.org
-Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Link: https://lore.kernel.org/linux-mtd/20200218100432.32433-4-frieder.schrempf@kontron.de
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+A couple of questions:
+- are devicetree overlays here to stay? (given that there are 2 in-kernel users)
+- does it make sense to solve the modular devicetree problem in a rcar-like
+  fashion?
+- is there perhaps a more canonical / idiomatic way to solve this?
 
----
- drivers/mtd/nand/spi/core.c |    3 ---
- 1 file changed, 3 deletions(-)
-
---- a/drivers/mtd/nand/spi/core.c
-+++ b/drivers/mtd/nand/spi/core.c
-@@ -612,7 +612,6 @@ static int spinand_markbad(struct nand_d
- 	};
- 	int ret;
- 
--	/* Erase block before marking it bad. */
- 	ret = spinand_select_target(spinand, pos->target);
- 	if (ret)
- 		return ret;
-@@ -621,8 +620,6 @@ static int spinand_markbad(struct nand_d
- 	if (ret)
- 		return ret;
- 
--	spinand_erase_op(spinand, pos);
--
- 	return spinand_write_page(spinand, &req);
- }
- 
-
-
+Sven
