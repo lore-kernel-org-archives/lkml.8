@@ -2,252 +2,131 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 666FEC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:07:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AE98C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:07:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38E6220774
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:07:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587049621;
-	bh=qzChlNWTWRaIgPiRyh59KMNyEZ1s89OWhDJKTLGaS4w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iYE/3SHsfynXWB3ChZ2UVADL1uf7FNPCoxYXTTaKYiWPWsiWmVgEmRuJ0BAVmMDtX
-	 dFYYSwxiwYqvJUXQb3bhU4iRGJTKwrZ6XXfv7KR5c+owPSAG8cftdbuedxQSIimePf
-	 jX5TNZHbHWPnRkJmbBgJANlIwPR9AZOWR9ksxwcw=
+	by mail.kernel.org (Postfix) with ESMTP id 7108420774
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:07:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394961AbgDPPG7 (ORCPT
+        id S2502065AbgDPPHI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:06:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38208 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:07:08 -0400
+Received: from nbd.name ([46.4.11.11]:49192 "EHLO nbd.name"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408796AbgDPNv6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2408793AbgDPNv6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Apr 2020 09:51:58 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7844A2063A;
-        Thu, 16 Apr 2020 13:51:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045116;
-        bh=qzChlNWTWRaIgPiRyh59KMNyEZ1s89OWhDJKTLGaS4w=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E4LDLXv/zq0QB6ZxzCCkNfDfhv9VNrpyEGApWQBVmtpc8apV9Bx3lAq7Xep2VsiDN
-         FvX9fPY0Boc6EYyS9jwsG7RWUliGtMAGqBEshdsUaKlDv+Sup8o7RASmGfMZEVSRlT
-         rfo/yzllUSKjxdeIPfSZjnIiDIKko2Lf8hCdy4Lc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <jsmart2021@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 223/232] scsi: lpfc: Fix Fabric hostname registration if system hostname changes
-Date:   Thu, 16 Apr 2020 15:25:17 +0200
-Message-Id: <20200416131343.419754731@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
-References: <20200416131316.640996080@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from [2a04:4540:1400:7b00:2d8:61ff:feed:60f5]
+        by ds12 with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <john@phrozen.org>)
+        id 1jP4vV-0004e0-L6; Thu, 16 Apr 2020 15:51:33 +0200
+Subject: Re: [PATCH v1 2/2] mtd: rawnand: Add NAND controller support on Intel
+ LGM SoC
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Andriy Shevchenko <andriy.shevchenko@intel.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        cheol.yong.kim@intel.com, devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>,
+        masonccyang@mxic.com.tw, Miquel Raynal <miquel.raynal@bootlin.com>,
+        Piotr Sroka <piotrs@cadence.com>, qi-ming.wu@intel.com,
+        Richard Weinberger <richard@nod.at>,
+        Rob Herring <robh+dt@kernel.org>, Vignesh R <vigneshr@ti.com>,
+        Songjun Wu <songjun.wu@linux.intel.com>,
+        hua.ma@linux.intel.com, yixin.zhu@linux.intel.com,
+        chuanhua.lei@linux.intel.com, Hauke Mehrtens <hauke@hauke-m.de>
+References: <20200414022433.36622-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200415220533.733834-1-martin.blumenstingl@googlemail.com>
+ <c33c8653-16a2-5bcd-97a9-511d958b755a@linux.intel.com>
+ <20200416113822.2ef326cb@collabora.com>
+ <18568cf6-2955-472e-7b68-eb35e654a906@linux.intel.com>
+ <20200416122619.2c481792@collabora.com>
+ <d3e137fa-54a0-b4ec-eb24-3984eab2a247@linux.intel.com>
+ <20200416131725.51259573@collabora.com>
+ <de9f50b8-9215-d294-9914-e49701552185@linux.intel.com>
+ <20200416135711.039ba85c@collabora.com>
+ <CAHp75Vcpb-556imBuhsY-asrKqx7LjvQbq+P-ysK-+ii91YpWQ@mail.gmail.com>
+ <20200416144036.3ce8432f@collabora.com>
+ <CAK8P3a1rYDfTW60eY3RiiSOeT9EsNxw2rxMuQ9UjaS+JDiHy3Q@mail.gmail.com>
+From:   John Crispin <john@phrozen.org>
+Message-ID: <5cb0fe27-8b65-d777-b1c5-8dc47bda2d54@phrozen.org>
+Date:   Thu, 16 Apr 2020 15:51:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAK8P3a1rYDfTW60eY3RiiSOeT9EsNxw2rxMuQ9UjaS+JDiHy3Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+On 16.04.20 15:20, Arnd Bergmann wrote:
+> On Thu, Apr 16, 2020 at 2:40 PM Boris Brezillon
+> <boris.brezillon@collabora.com> wrote:
+>> On Thu, 16 Apr 2020 15:26:51 +0300
+>> Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+>>> On Thu, Apr 16, 2020 at 3:03 PM Boris Brezillon
+>>> <boris.brezillon@collabora.com> wrote:
+>>>> On Thu, 16 Apr 2020 19:38:03 +0800
+>>>> Note that the NAND subsystem is full of unmaintained legacy drivers, so
+>>>> every time we see someone who could help us get rid or update one of
+>>>> them we have to take this opportunity.
+>>>
+>>> Don't we rather insist to have a MAINTAINERS record for new code to
+>>> avoid (or delay at least) the fate of the legacy drivers?
+>>>
+>>
+>> Well, that's what we do for new drivers, but the xway driver has been
+>> added in 2012 and the policy was not enforced at that time. BTW, that
+>> goes for most of the legacy drivers in have in the NAND subsystems
+>> (some of them even predate the git era).
+>>
+>> To be clear, I just checked and there's no official maintainer for this
+>> driver. Best option would be to Cc the original author and contributors
+>> who proposed functional changes to the code, as well as the MIPS
+>> maintainers (Xway is a MIPS platform).
+> 
+> A lot of the pre-acquisition code for lantiq was contributed by Hauke
+> Mehrtens and John Crispin. There was an intermediate generation of
+> MIPS SoCs with patches posted for review  by Intel in 2018 (presumably
+> by the same organizatiob), but those were never resubmitted after v2
+> and never merged:
+> 
+> https://lore.kernel.org/linux-mips/20180803030237.3366-1-songjun.wu@linux.intel.com/
+> 
+>          Arnd
+> 
 
-[ Upstream commit e3ba04c9bad1d1c7f15df43da25e878045150777 ]
+Hi,
 
-There are reports of multiple ports on the same system displaying different
-hostnames in fabric FDMI displays.
+the legacy Mips SoC had a External Bus Unit (EBU), similar to an 
+Intel/Hitachi style bus. It was used back then for lots of things, 
+sometimes driving Leds via 74* latches, Arcadyan used it for external 
+reset lines and very rarely was it used for nand.
 
-Currently, the driver registers the hostname at initialization and obtains
-the hostname via init_utsname()->nodename queried at the time the FC link
-comes up. Unfortunately, if the machine hostname is updated after
-initialization, such as via DHCP or admin command, the value registered
-initially will be incorrect.
+Looking at this series and comparing it with xway_nand.c we see that the 
+init sequence is near identical. Best guess is that the mountain lion 
+uses an internal block very similar to what the legacy mips silicon used 
+just in a newer generation and the new proposed driver is more feature 
+complete.
 
-Fix by having the driver save the hostname that was registered with FDMI.
-The driver then runs a heartbeat action that will check the hostname.  If
-the name changes, reregister the FMDI data.
+If this is the case ideally the xway_nand.c is dropped and that silicon 
+is made working with the newer driver. Chances are that we just need to 
+add a "support less features" style flag.
 
-The hostname is used in RSNN_NN, FDMI RPA and FDMI RHBA.
+Unfortunately i no longer have the evalkit for the Mips SoCs.
 
-Link: https://lore.kernel.org/r/20191218235808.31922-5-jsmart2021@gmail.com
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/scsi/lpfc/lpfc.h         |  2 ++
- drivers/scsi/lpfc/lpfc_crtn.h    |  2 +-
- drivers/scsi/lpfc/lpfc_ct.c      | 48 ++++++++++++++++++++++++--------
- drivers/scsi/lpfc/lpfc_hbadisc.c |  5 ++++
- drivers/scsi/lpfc/lpfc_init.c    |  2 +-
- 5 files changed, 46 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/scsi/lpfc/lpfc.h b/drivers/scsi/lpfc/lpfc.h
-index 84b0f0ac26e7e..e492ca2d0b8be 100644
---- a/drivers/scsi/lpfc/lpfc.h
-+++ b/drivers/scsi/lpfc/lpfc.h
-@@ -1216,6 +1216,8 @@ struct lpfc_hba {
- #define LPFC_POLL_HB	1		/* slowpath heartbeat */
- #define LPFC_POLL_FASTPATH	0	/* called from fastpath */
- #define LPFC_POLL_SLOWPATH	1	/* called from slowpath */
-+
-+	char os_host_name[MAXHOSTNAMELEN];
- };
- 
- static inline struct Scsi_Host *
-diff --git a/drivers/scsi/lpfc/lpfc_crtn.h b/drivers/scsi/lpfc/lpfc_crtn.h
-index 9e477d766ce98..a03efe9ad2a42 100644
---- a/drivers/scsi/lpfc/lpfc_crtn.h
-+++ b/drivers/scsi/lpfc/lpfc_crtn.h
-@@ -180,7 +180,7 @@ int lpfc_issue_gidft(struct lpfc_vport *vport);
- int lpfc_get_gidft_type(struct lpfc_vport *vport, struct lpfc_iocbq *iocbq);
- int lpfc_ns_cmd(struct lpfc_vport *, int, uint8_t, uint32_t);
- int lpfc_fdmi_cmd(struct lpfc_vport *, struct lpfc_nodelist *, int, uint32_t);
--void lpfc_fdmi_num_disc_check(struct lpfc_vport *);
-+void lpfc_fdmi_change_check(struct lpfc_vport *vport);
- void lpfc_delayed_disc_tmo(struct timer_list *);
- void lpfc_delayed_disc_timeout_handler(struct lpfc_vport *);
- 
-diff --git a/drivers/scsi/lpfc/lpfc_ct.c b/drivers/scsi/lpfc/lpfc_ct.c
-index f81d1453eefbd..85f77c1ed23c8 100644
---- a/drivers/scsi/lpfc/lpfc_ct.c
-+++ b/drivers/scsi/lpfc/lpfc_ct.c
-@@ -1495,7 +1495,7 @@ lpfc_vport_symbolic_node_name(struct lpfc_vport *vport, char *symbol,
- 	if (strlcat(symbol, tmp, size) >= size)
- 		goto buffer_done;
- 
--	scnprintf(tmp, sizeof(tmp), " HN:%s", init_utsname()->nodename);
-+	scnprintf(tmp, sizeof(tmp), " HN:%s", vport->phba->os_host_name);
- 	if (strlcat(symbol, tmp, size) >= size)
- 		goto buffer_done;
- 
-@@ -1984,14 +1984,16 @@ lpfc_cmpl_ct_disc_fdmi(struct lpfc_hba *phba, struct lpfc_iocbq *cmdiocb,
- 
- 
- /**
-- * lpfc_fdmi_num_disc_check - Check how many mapped NPorts we are connected to
-+ * lpfc_fdmi_change_check - Check for changed FDMI parameters
-  * @vport: pointer to a host virtual N_Port data structure.
-  *
-- * Called from hbeat timeout routine to check if the number of discovered
-- * ports has changed. If so, re-register thar port Attribute.
-+ * Check how many mapped NPorts we are connected to
-+ * Check if our hostname changed
-+ * Called from hbeat timeout routine to check if any FDMI parameters
-+ * changed. If so, re-register those Attributes.
-  */
- void
--lpfc_fdmi_num_disc_check(struct lpfc_vport *vport)
-+lpfc_fdmi_change_check(struct lpfc_vport *vport)
- {
- 	struct lpfc_hba *phba = vport->phba;
- 	struct lpfc_nodelist *ndlp;
-@@ -2004,17 +2006,41 @@ lpfc_fdmi_num_disc_check(struct lpfc_vport *vport)
- 	if (!(vport->fc_flag & FC_FABRIC))
- 		return;
- 
-+	ndlp = lpfc_findnode_did(vport, FDMI_DID);
-+	if (!ndlp || !NLP_CHK_NODE_ACT(ndlp))
-+		return;
-+
-+	/* Check if system hostname changed */
-+	if (strcmp(phba->os_host_name, init_utsname()->nodename)) {
-+		memset(phba->os_host_name, 0, sizeof(phba->os_host_name));
-+		scnprintf(phba->os_host_name, sizeof(phba->os_host_name), "%s",
-+			  init_utsname()->nodename);
-+		lpfc_ns_cmd(vport, SLI_CTNS_RSNN_NN, 0, 0);
-+
-+		/* Since this effects multiple HBA and PORT attributes, we need
-+		 * de-register and go thru the whole FDMI registration cycle.
-+		 * DHBA -> DPRT -> RHBA -> RPA  (physical port)
-+		 * DPRT -> RPRT (vports)
-+		 */
-+		if (vport->port_type == LPFC_PHYSICAL_PORT)
-+			lpfc_fdmi_cmd(vport, ndlp, SLI_MGMT_DHBA, 0);
-+		else
-+			lpfc_fdmi_cmd(vport, ndlp, SLI_MGMT_DPRT, 0);
-+
-+		/* Since this code path registers all the port attributes
-+		 * we can just return without further checking.
-+		 */
-+		return;
-+	}
-+
- 	if (!(vport->fdmi_port_mask & LPFC_FDMI_PORT_ATTR_num_disc))
- 		return;
- 
-+	/* Check if the number of mapped NPorts changed */
- 	cnt = lpfc_find_map_node(vport);
- 	if (cnt == vport->fdmi_num_disc)
- 		return;
- 
--	ndlp = lpfc_findnode_did(vport, FDMI_DID);
--	if (!ndlp || !NLP_CHK_NODE_ACT(ndlp))
--		return;
--
- 	if (vport->port_type == LPFC_PHYSICAL_PORT) {
- 		lpfc_fdmi_cmd(vport, ndlp, SLI_MGMT_RPA,
- 			      LPFC_FDMI_PORT_ATTR_num_disc);
-@@ -2602,8 +2628,8 @@ lpfc_fdmi_port_attr_host_name(struct lpfc_vport *vport,
- 	ae = (struct lpfc_fdmi_attr_entry *)&ad->AttrValue;
- 	memset(ae, 0, 256);
- 
--	snprintf(ae->un.AttrString, sizeof(ae->un.AttrString), "%s",
--		 init_utsname()->nodename);
-+	scnprintf(ae->un.AttrString, sizeof(ae->un.AttrString), "%s",
-+		  vport->phba->os_host_name);
- 
- 	len = strnlen(ae->un.AttrString, sizeof(ae->un.AttrString));
- 	len += (len & 3) ? (4 - (len & 3)) : 4;
-diff --git a/drivers/scsi/lpfc/lpfc_hbadisc.c b/drivers/scsi/lpfc/lpfc_hbadisc.c
-index ee70d14e7a9dc..39ca541935342 100644
---- a/drivers/scsi/lpfc/lpfc_hbadisc.c
-+++ b/drivers/scsi/lpfc/lpfc_hbadisc.c
-@@ -28,6 +28,7 @@
- #include <linux/kthread.h>
- #include <linux/interrupt.h>
- #include <linux/lockdep.h>
-+#include <linux/utsname.h>
- 
- #include <scsi/scsi.h>
- #include <scsi/scsi_device.h>
-@@ -3322,6 +3323,10 @@ lpfc_mbx_process_link_up(struct lpfc_hba *phba, struct lpfc_mbx_read_top *la)
- 		lpfc_sli4_clear_fcf_rr_bmask(phba);
- 	}
- 
-+	/* Prepare for LINK up registrations */
-+	memset(phba->os_host_name, 0, sizeof(phba->os_host_name));
-+	scnprintf(phba->os_host_name, sizeof(phba->os_host_name), "%s",
-+		  init_utsname()->nodename);
- 	return;
- out:
- 	lpfc_vport_set_state(vport, FC_VPORT_FAILED);
-diff --git a/drivers/scsi/lpfc/lpfc_init.c b/drivers/scsi/lpfc/lpfc_init.c
-index 1bf79445c15bf..14d9f41977f1c 100644
---- a/drivers/scsi/lpfc/lpfc_init.c
-+++ b/drivers/scsi/lpfc/lpfc_init.c
-@@ -1370,7 +1370,7 @@ lpfc_hb_timeout_handler(struct lpfc_hba *phba)
- 	if (vports != NULL)
- 		for (i = 0; i <= phba->max_vports && vports[i] != NULL; i++) {
- 			lpfc_rcv_seq_check_edtov(vports[i]);
--			lpfc_fdmi_num_disc_check(vports[i]);
-+			lpfc_fdmi_change_check(vports[i]);
- 		}
- 	lpfc_destroy_vport_work_array(phba, vports);
- 
--- 
-2.20.1
-
-
-
+    John
