@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E43A4C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB83C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:42:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4862214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:42:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E02EB21D91
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:42:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587051721;
-	bh=QmB29ly0Y71X/FgMW4b306XefznnlZC+fnySE+kruPU=;
+	s=default; t=1587051725;
+	bh=YvEO37qKCjWeczjWU6192GteB1w/O74tNl8rInnF+to=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZVgQH7CCCahO2Ea/4y5BVQtUDVWpwBhJqDnZsfZedqzT+RS5kOneeRziq3x4VwT3S
-	 3WoTI6/b+Tt9pDcJnyA5mEOI2/2dpzyPQ48NczDy+bimAVfQMIVFjEhhRb28s/nloL
-	 n0oUZkFtWWMoJPwfMAfVAmBkFtCdMAeniWvjDqpc=
+	b=Zuq9suvC81XjIbcn256xusuAAEsoKTBd7uLU+hBkuRR5ONFF4TiQLS9Cx2cwL93ZY
+	 MYLN7XJx2M3BPzKhKhz5iCQJ0i/aj2qh8ICiRRgj8brCeUTbihWTlPYrewSVlCknjk
+	 aFMzd61rSB/TeoSbJJh0DDHPZ+3duItYRTiRp7TE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395517AbgDPPmA (ORCPT
+        id S2633818AbgDPPmE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:42:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49008 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:42:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897370AbgDPNgw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:36:52 -0400
+        id S2897368AbgDPNgu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:36:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F70021BE5;
-        Thu, 16 Apr 2020 13:36:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9795F208E4;
+        Thu, 16 Apr 2020 13:36:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044212;
-        bh=QmB29ly0Y71X/FgMW4b306XefznnlZC+fnySE+kruPU=;
+        s=default; t=1587044210;
+        bh=YvEO37qKCjWeczjWU6192GteB1w/O74tNl8rInnF+to=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qfAr3iBSPqpVnlGKrt3KvOBcqyN3GplVjVjEf3SOIRf0b8cuvQZ28tL6IDkukloZq
-         /MPWkz1PXBsJYQTpXiusjaW+SO+n1pQOOn4I1XU8KPxNcLjwechL9sd8fJj9yr6f1/
-         dvRzJ2PX1QMgDfio3HjF57DSaQ20xkLEEB4owBmk=
+        b=Ryl6V0VYSpW0q4WDOjtVIL8FG9jt1ZGcd7eJJLZtQitvxdIjNlFz2HVCor1iCzqle
+         XyC6wbAAT41zuxGr1YCwV/Kjn/2hI5iwjv8VhyMbO2ia7iZjTn2HY8iKm59lq4rexl
+         4c8gwLwwFG2HnHTj/yPiHkc2ckqHhZWwGxpLjPPc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>
-Subject: [PATCH 5.5 127/257] genirq/debugfs: Add missing sanity checks to interrupt injection
-Date:   Thu, 16 Apr 2020 15:22:58 +0200
-Message-Id: <20200416131342.240942269@linuxfoundation.org>
+        stable@vger.kernel.org, Boqun Feng <boqun.feng@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Pavankumar Kondeti <pkondeti@codeaurora.org>
+Subject: [PATCH 5.5 126/257] cpu/hotplug: Ignore pm_wakeup_pending() for disable_nonboot_cpus()
+Date:   Thu, 16 Apr 2020 15:22:57 +0200
+Message-Id: <20200416131342.112609544@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -61,41 +62,75 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thomas Gleixner <tglx@linutronix.de>
 
-commit a740a423c36932695b01a3e920f697bc55b05fec upstream.
+commit e98eac6ff1b45e4e73f2e6031b37c256ccb5d36b upstream.
 
-Interrupts cannot be injected when the interrupt is not activated and when
-a replay is already in progress.
+A recent change to freeze_secondary_cpus() which added an early abort if a
+wakeup is pending missed the fact that the function is also invoked for
+shutdown, reboot and kexec via disable_nonboot_cpus().
 
-Fixes: 536e2e34bd00 ("genirq/debugfs: Triggering of interrupts from userspace")
+In case of disable_nonboot_cpus() the wakeup event needs to be ignored as
+the purpose is to terminate the currently running kernel.
+
+Add a 'suspend' argument which is only set when the freeze is in context of
+a suspend operation. If not set then an eventually pending wakeup event is
+ignored.
+
+Fixes: a66d955e910a ("cpu/hotplug: Abort disabling secondary CPUs if wakeup is pending")
+Reported-by: Boqun Feng <boqun.feng@gmail.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Marc Zyngier <maz@kernel.org>
+Cc: Pavankumar Kondeti <pkondeti@codeaurora.org>
 Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20200306130623.500019114@linutronix.de
+Link: https://lkml.kernel.org/r/874kuaxdiz.fsf@nanos.tec.linutronix.de
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/irq/debugfs.c |   11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ include/linux/cpu.h |   12 +++++++++---
+ kernel/cpu.c        |    4 ++--
+ 2 files changed, 11 insertions(+), 5 deletions(-)
 
---- a/kernel/irq/debugfs.c
-+++ b/kernel/irq/debugfs.c
-@@ -206,8 +206,15 @@ static ssize_t irq_debug_write(struct fi
- 		chip_bus_lock(desc);
- 		raw_spin_lock_irqsave(&desc->lock, flags);
+--- a/include/linux/cpu.h
++++ b/include/linux/cpu.h
+@@ -138,12 +138,18 @@ static inline void get_online_cpus(void)
+ static inline void put_online_cpus(void) { cpus_read_unlock(); }
  
--		if (irq_settings_is_level(desc) || desc->istate & IRQS_NMI) {
--			/* Can't do level nor NMIs, sorry */
-+		/*
-+		 * Don't allow injection when the interrupt is:
-+		 *  - Level or NMI type
-+		 *  - not activated
-+		 *  - replaying already
-+		 */
-+		if (irq_settings_is_level(desc) ||
-+		    !irqd_is_activated(&desc->irq_data) ||
-+		    (desc->istate & (IRQS_NMI | IRQS_REPLAY))) {
- 			err = -EINVAL;
- 		} else {
- 			desc->istate |= IRQS_PENDING;
+ #ifdef CONFIG_PM_SLEEP_SMP
+-extern int freeze_secondary_cpus(int primary);
++int __freeze_secondary_cpus(int primary, bool suspend);
++static inline int freeze_secondary_cpus(int primary)
++{
++	return __freeze_secondary_cpus(primary, true);
++}
++
+ static inline int disable_nonboot_cpus(void)
+ {
+-	return freeze_secondary_cpus(0);
++	return __freeze_secondary_cpus(0, false);
+ }
+-extern void enable_nonboot_cpus(void);
++
++void enable_nonboot_cpus(void);
+ 
+ static inline int suspend_disable_secondary_cpus(void)
+ {
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -1212,7 +1212,7 @@ EXPORT_SYMBOL_GPL(cpu_up);
+ #ifdef CONFIG_PM_SLEEP_SMP
+ static cpumask_var_t frozen_cpus;
+ 
+-int freeze_secondary_cpus(int primary)
++int __freeze_secondary_cpus(int primary, bool suspend)
+ {
+ 	int cpu, error = 0;
+ 
+@@ -1237,7 +1237,7 @@ int freeze_secondary_cpus(int primary)
+ 		if (cpu == primary)
+ 			continue;
+ 
+-		if (pm_wakeup_pending()) {
++		if (suspend && pm_wakeup_pending()) {
+ 			pr_info("Wakeup pending. Abort CPU freeze\n");
+ 			error = -EBUSY;
+ 			break;
 
 
