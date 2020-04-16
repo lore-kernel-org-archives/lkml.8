@@ -2,165 +2,125 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 376B1C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:51:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54CE9C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1245121973
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:51:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iSEn7hJN"
+	by mail.kernel.org (Postfix) with ESMTP id 2F28E21973
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:52:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587034355;
+	bh=LjtYJ1+zP8B4coyCSSkpAR0h9NEbqGTk1VJW9/0u9YM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=D3SLK0wYCzcBrazfk5YwvwLj05MVDb75T8FbD0mg1os2IUoACWLI30n7Xyl09Id5H
+	 6MVsS7lvljMOO/R6InPBOtmjkS84Er1d1f9U8DqBkf/DTuaFOMcB1t5ztxlm7hMZZl
+	 U9KIrsGAeZ1KoQQRWqFgthKnIkskZ5gAXrjZp2+U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505515AbgDPKvE (ORCPT
+        id S2505779AbgDPKw0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 06:51:04 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:60906 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2505583AbgDPKuD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 06:52:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60618 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2505584AbgDPKuD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Apr 2020 06:50:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587034202;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=zRYNtBUkNWEzX+BKNPgl2EfmanwkifXZxxgsKaVH4Bg=;
-        b=iSEn7hJN9+hZl0zfcCaxDOGhzemLgpFFAeXoyS9B7Nf5T+DPIR0pqcz/OEnQAUoOLpBe+1
-        AzwhKOcq+xh3Zv+ek0QBU9otpBcmymas9/IcCPy1CG6p4Eqj6w6dSXrhO+PeD0rmMWPLS9
-        01muFseqDMU352DnSwdGnWIEr1mxBbs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-64-AEPnD6C3MwiUVmbkj9l5vg-1; Thu, 16 Apr 2020 06:47:16 -0400
-X-MC-Unique: AEPnD6C3MwiUVmbkj9l5vg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 84E0B107B26F;
-        Thu, 16 Apr 2020 10:47:15 +0000 (UTC)
-Received: from t480s.redhat.com (ovpn-114-9.ams2.redhat.com [10.36.114.9])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C518E1036D03;
-        Thu, 16 Apr 2020 10:47:13 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
+        by mail.kernel.org (Postfix) with ESMTPSA id CFB6821973;
+        Thu, 16 Apr 2020 10:49:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587034203;
+        bh=LjtYJ1+zP8B4coyCSSkpAR0h9NEbqGTk1VJW9/0u9YM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=hVtiK8gSA6OqY8oY4HnFhpmgvWLI2HvqcFXcU5YyKJdhNP37a5BfYSw23JXFYOAzq
+         3ZnmfvIdea6UiBOS7K1SXBWE6YBf4bP5IHp97F4Q1bnDE9Xor5UAQcDwN0BM0jsxjh
+         dOpxHZr2HaQzsEDck+ov8Ah3UdmIFICjC2gf65aE=
+Date:   Thu, 16 Apr 2020 19:49:55 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Vlastimil Babka <vbabka@suse.cz>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>, Baoquan He <bhe@redhat.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Subject: [PATCH RFC 1/2] mm/memory_hotplug: no need to init new pgdat with node_start_pfn
-Date:   Thu, 16 Apr 2020 12:47:06 +0200
-Message-Id: <20200416104707.20219-2-david@redhat.com>
-In-Reply-To: <20200416104707.20219-1-david@redhat.com>
-References: <20200416104707.20219-1-david@redhat.com>
-MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Content-Transfer-Encoding: quoted-printable
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: Re: [PATCH v2 1/3] kernel/sysctl: support setting sysctl parameters
+ from kernel command line
+Message-Id: <20200416194955.3448c8526ea3f59e95c506da@kernel.org>
+In-Reply-To: <20200416012931.GE11244@42.do-not-panic.com>
+References: <20200414113222.16959-1-vbabka@suse.cz>
+        <20200414113222.16959-2-vbabka@suse.cz>
+        <20200415180355.00bc828ea726c421638db871@kernel.org>
+        <20200416012931.GE11244@42.do-not-panic.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A hotadded node/pgdat will span no pages at all, until memory is moved to
-the zone/node via move_pfn_range_to_zone() -> resize_pgdat_range - e.g.,
-when onlining memory blocks. We don't have to initialize the
-node_start_pfn to the memory we are adding.
+Hi Luis,
 
-Note: we'll also end up with pgdat->node_start_pfn =3D=3D 0 when offlined=
- the
-last memory block belonging to a node (via remove_pfn_range_from_zone()->
-update_pgdat_span()).
+On Thu, 16 Apr 2020 01:29:31 +0000
+Luis Chamberlain <mcgrof@kernel.org> wrote:
 
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- mm/memory_hotplug.c | 15 ++++++---------
- 1 file changed, 6 insertions(+), 9 deletions(-)
+> On Wed, Apr 15, 2020 at 06:03:55PM +0900, Masami Hiramatsu wrote:
+> > On Tue, 14 Apr 2020 13:32:20 +0200
+> > Vlastimil Babka <vbabka@suse.cz> wrote:
+> > > diff --git a/init/main.c b/init/main.c
+> > > index a48617f2e5e5..7b43118215d6 100644
+> > > --- a/init/main.c
+> > > +++ b/init/main.c
+> > > @@ -1372,6 +1372,8 @@ static int __ref kernel_init(void *unused)
+> > >  
+> > >  	rcu_end_inkernel_boot();
+> > >  
+> > > +	do_sysctl_args();
+> > > +
+> > 
+> > Ah, I see. Since the sysctl is designed to be called after all __init calls were
+> > done, it shouldn't use bootconfig directly because bootconfig is full of __init
+> > call.
+> 
+> The idea is bootconfig would be useful in the sense of a library set of
+> helpers which could be modified to remove __init, and then used to
+> instrument the cmdline depending on certain debugging kconfig entries.
 
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 47cf6036eb31..9b15ce465be2 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -866,10 +866,9 @@ static void reset_node_present_pages(pg_data_t *pgda=
-t)
- }
-=20
- /* we are OK calling __meminit stuff here - we have CONFIG_MEMORY_HOTPLU=
-G */
--static pg_data_t __ref *hotadd_new_pgdat(int nid, u64 start)
-+static pg_data_t __ref *hotadd_new_pgdat(int nid)
- {
- 	struct pglist_data *pgdat;
--	unsigned long start_pfn =3D PFN_DOWN(start);
-=20
- 	pgdat =3D NODE_DATA(nid);
- 	if (!pgdat) {
-@@ -899,9 +898,8 @@ static pg_data_t __ref *hotadd_new_pgdat(int nid, u64=
- start)
- 	}
-=20
- 	/* we can use NODE_DATA(nid) from here */
--
- 	pgdat->node_id =3D nid;
--	pgdat->node_start_pfn =3D start_pfn;
-+	pgdat->node_start_pfn =3D 0;
-=20
- 	/* init node's zones as empty zones, we don't have any present pages.*/
- 	free_area_init_core_hotplug(nid);
-@@ -936,7 +934,6 @@ static void rollback_node_hotadd(int nid)
- /**
-  * try_online_node - online a node if offlined
-  * @nid: the node ID
-- * @start: start addr of the node
-  * @set_node_online: Whether we want to online the node
-  * called by cpu_up() to online a node without onlined memory.
-  *
-@@ -945,7 +942,7 @@ static void rollback_node_hotadd(int nid)
-  * 0 -> the node is already online
-  * -ENOMEM -> the node could not be allocated
-  */
--static int __try_online_node(int nid, u64 start, bool set_node_online)
-+static int __try_online_node(int nid, bool set_node_online)
- {
- 	pg_data_t *pgdat;
- 	int ret =3D 1;
-@@ -953,7 +950,7 @@ static int __try_online_node(int nid, u64 start, bool=
- set_node_online)
- 	if (node_online(nid))
- 		return 0;
-=20
--	pgdat =3D hotadd_new_pgdat(nid, start);
-+	pgdat =3D hotadd_new_pgdat(nid);
- 	if (!pgdat) {
- 		pr_err("Cannot online node %d due to NULL pgdat\n", nid);
- 		ret =3D -ENOMEM;
-@@ -977,7 +974,7 @@ int try_online_node(int nid)
- 	int ret;
-=20
- 	mem_hotplug_begin();
--	ret =3D  __try_online_node(nid, 0, true);
-+	ret =3D  __try_online_node(nid, true);
- 	mem_hotplug_done();
- 	return ret;
- }
-@@ -1031,7 +1028,7 @@ int __ref add_memory_resource(int nid, struct resou=
-rce *res)
- 	 */
- 	memblock_add_node(start, size, nid);
-=20
--	ret =3D __try_online_node(nid, start, false);
-+	ret =3D __try_online_node(nid, false);
- 	if (ret < 0)
- 		goto error;
- 	new_node =3D ret;
---=20
-2.25.1
+Would you mean making bootconfig (parser and APIs) be more generic so that
+other subsystem can reuse it with their data?
+Or just make it available after boot? (I think this latter one will be
+useful for module initialization)
 
+> We currently have no way to purposely extend / break the cmdline for
+> debugging purposes, so, bootconfig's parsers, since it already has a
+> way to extend the cmdlineline, might make it much easier to do this
+> later.
+> 
+> Without bootconfig, if we wanted to add new kconfig to, for example,
+> add new funny cmdline arguments to test they worked or not, we'd have
+> to devise our own set of helpers now. ie, new functionality. bootconfig
+> however already has existing functionality to tweak the cmdline, and so
+> some code could be leveraged there for this purpose.
+
+Hmm, you can use the bootconfig as a "supplemental" kernel command line,
+but not tweak (like modify/replace) it. Would you like to change the
+kernel command line parameter on-line?
+
+Thank you,
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
