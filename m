@@ -2,143 +2,152 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B683C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 18:26:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B83DC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 18:26:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D969C2222D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 18:26:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1441A2223D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 18:26:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ar1Z/cb6"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="roL3XP1A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390176AbgDPS00 (ORCPT
+        id S2390330AbgDPS0u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 14:26:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46032 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727901AbgDPS0Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 14:26:25 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EA11C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 11:26:24 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id d7so12345308oif.9
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 11:26:24 -0700 (PDT)
+        Thu, 16 Apr 2020 14:26:50 -0400
+Received: from mail-bn8nam12on2071.outbound.protection.outlook.com ([40.107.237.71]:33582
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727901AbgDPS0q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 14:26:46 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JX6/1VXfeWzeHH8snX1A5hVTat7/eoM3u7uNAGOVFlj/TRIrzDiLfHpJgj4OTx6lyqWiGihpRffc1eC/NXg0zE2qr4ZFPyXP8F5gdaWmb0UyoQ78136VOnzS8nCj3xQRKmPNvbZ5ALcRWIWCIkfLmCwM7dMY2kcMrwP15h43N/S2lu/bjXlNhCwUOxc85M7q2N+AOhs2BVW8uLv5SHwWGYaUugWvQx8mJGI0ZHxD4qWpJs/M3D7bpLpbDIAmvAQemWTR/fX65m7eUK360prvYQ+m7CWi7wz9d4Anw5wjTR5Xtau1uRIyeFC9pYI0zS/JF/qQv6yjVkE5spDYEdkjxQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nUC1s/XNOjLPhGKh77zIdZcv0ikaQzwppB1UpUBH+CU=;
+ b=bSRLsvCFGuB1Uc8emdC4KIbL+xUX5PMfgLrmrph0g9h0dp2OLNY8EPhzXV9BdAwnSGHdIyIQRWW4AwS+kO1IRuwoZTU6sEaDXWMtXObc4xMpW9bEQqPsTEWg2guEgG7d2zCSYDC196Hqpa2yrA8RGm2Xw/TcvFrHaH8vE3y/aLGb2O5wJFUgXY1tPXtBhpIyqjSJO1hdYg5wSWaAtwW8rcQr7o0JhFWb89rz2cer5zKImPeN7bHH9FjUfJYxI/BpZf7z/JRe62ohdXvwEaZsgqjtNEbT3Ay8iEyMqCzrACII5tRsPA4+Tz7fvWrVyfxHAemx3VLFqdJ7a3XBS/v6sA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
+ dkim=pass header.d=xilinx.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aOBdn9RcUNTUGqzn1cwLdTTT4EHiOQc1gFprlV5Swzo=;
-        b=ar1Z/cb6+XVPXZIW71AUbODqEYnpqFqNkc3U7YiTvOdft5wxlVkU0unFkA9HDD0uzZ
-         f7Qg4M4jaVhmiqZIbw+yaxSenIN/ZukH+pS0zWIIW0C2lmH9jwvTreeKiozmh+qfz4Vm
-         YZJ149OiSsKu2pR9KYc/jiKmkqZbQiOyi8pU0L/33IRUvpP8IAXLOvX/hc6hqz2cfr0y
-         q7YWM7uIHNvWfB1Mm5359hqAgX4OuFZt6ASZYmKgNJL0omORM7WArOwtGrqDXgjbxtxm
-         /KUbs+50PJsY1aprREnC5uOSM+X4+nrp7cjK4T52boSqCWDWLilGS6mZPRXSJoQQz7UH
-         X2dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aOBdn9RcUNTUGqzn1cwLdTTT4EHiOQc1gFprlV5Swzo=;
-        b=LVEoJtZx0z5G67ifBvgFymRa5pdGA1VCvLCzE7atW7cmcNGTviby3yp/bcG2Jr0xKr
-         BvAVkn5V0TjG9hsIYNeEn/6wVyX7MVrRu42qzB9ZVyxp5mMbN0U+rI3wePkcPySoxLhN
-         9R/MvqyUr0UpM1si71nT9BUhLg3v8Ydlor1srfzaemUNPfGj1tz+BNdO+j+dXqgGWZq6
-         /2CdVHxybViNo9fEmEgIRwTdx2btUlSDSWm1XG7NnzPuuZ7iVWDs7QdIACFnCdYWET/7
-         UyKtxWxWTIXMmfjEmcBCCprCWudHJWjuPXx0LCtiSkGpsDcJyQy2613wWcfS/PjhQDYw
-         Op7g==
-X-Gm-Message-State: AGi0PubwKHeKNOO1XTWZwV8VAK1UnV1f8tmPBSQ4HKW5f0dqKEFcNfe1
-        tCUqeEW1FHKoPd5p/RuZ8O6XlYzVaF3GEUlK5vdkig==
-X-Google-Smtp-Source: APiQypImfuGINmzUiAKm+fXdZ4ehIq2ATmivl0tU47oYeAHpGIUVxUBWrMHDUAwnjzFm3Bz2BQ3SVcXY25b83XjVoPo=
-X-Received: by 2002:aca:682:: with SMTP id 124mr3885582oig.69.1587061583117;
- Thu, 16 Apr 2020 11:26:23 -0700 (PDT)
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nUC1s/XNOjLPhGKh77zIdZcv0ikaQzwppB1UpUBH+CU=;
+ b=roL3XP1AzJvkT5bpq/g67mYHLgb4RpbNrjiJpmoc9QGWBdtrXunWF4QfNHM1PpOHNPahhwV14vGzXaVfiyqtKEmqlVR8yJebBWrEBPF2mdhL36S2FETD/+47G75IIFTsioC02ttlb178vylZ8OD/66C6XscOU5UHGkZ9yHjTKLc=
+Received: from MW2PR02MB3770.namprd02.prod.outlook.com (2603:10b6:907:4::15)
+ by MW2PR02MB3772.namprd02.prod.outlook.com (2603:10b6:907:3::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.24; Thu, 16 Apr
+ 2020 18:26:43 +0000
+Received: from MW2PR02MB3770.namprd02.prod.outlook.com
+ ([fe80::1846:3334:1289:1f7d]) by MW2PR02MB3770.namprd02.prod.outlook.com
+ ([fe80::1846:3334:1289:1f7d%5]) with mapi id 15.20.2900.028; Thu, 16 Apr 2020
+ 18:26:43 +0000
+From:   Harini Katakam <harinik@xilinx.com>
+To:     "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "pthombar@cadence.com" <pthombar@cadence.com>,
+        "sergio.prado@e-labworks.com" <sergio.prado@e-labworks.com>,
+        "antoine.tenart@bootlin.com" <antoine.tenart@bootlin.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        Michal Simek <michals@xilinx.com>,
+        Rafal Ozieblo <rafalo@cadence.com>
+Subject: RE: [PATCH 1/5] net: macb: fix wakeup test in runtime suspend/resume
+ routines
+Thread-Topic: [PATCH 1/5] net: macb: fix wakeup test in runtime suspend/resume
+ routines
+Thread-Index: AQHWFBbHfzHTc4wzLUmw4FeI8KiR0Kh8D02g
+Date:   Thu, 16 Apr 2020 18:26:42 +0000
+Message-ID: <MW2PR02MB37706E6E182F19F278B35707C9D80@MW2PR02MB3770.namprd02.prod.outlook.com>
+References: <cover.1587058078.git.nicolas.ferre@microchip.com>
+ <eba7f3605d6dcad37f875b2584d519cd6cae9fd1.1587058078.git.nicolas.ferre@microchip.com>
+In-Reply-To: <eba7f3605d6dcad37f875b2584d519cd6cae9fd1.1587058078.git.nicolas.ferre@microchip.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=harinik@xilinx.com; 
+x-originating-ip: [149.199.50.130]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 2b48911d-bcbb-41bc-9ec0-08d7e233b68f
+x-ms-traffictypediagnostic: MW2PR02MB3772:|MW2PR02MB3772:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MW2PR02MB3772424D0C8EDF9CDB0E8CC4C9D80@MW2PR02MB3772.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0375972289
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR02MB3770.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(346002)(376002)(39860400002)(396003)(136003)(366004)(76116006)(5660300002)(2906002)(26005)(15650500001)(8676002)(9686003)(7416002)(8936002)(33656002)(186003)(4326008)(81156014)(55016002)(316002)(110136005)(54906003)(52536014)(64756008)(66476007)(66946007)(66446008)(66556008)(478600001)(71200400001)(86362001)(53546011)(7696005)(6506007);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: n6oB8HsivFgRC9RAKqYVozDBokyrxxSza462tf4RuCrPsh3jztL3c8pPIaVGtPG34NYVHLknl8/yW0UwnpUKlNtXg5F5dkTndb3ZiZMGiAi7mauFFIcpLtpc7K7AxgHb1exPtpkSEk3IUjHl5Xqhkh1OPDgKSKV1mcvZjDl6aWiAs/dBuduO3bJrVyM6m39ykIQEEB4h2M4H1kk4pIJ4XP5Woh0tG+9bl27zPrMS/993ZWcNUGjNpycl6Dj4N/tBGakXwEN/YFzt7KuEu2Hlfq+avFWmVVge2VEll0ysSElR3YCnUqykK/uxzk4m4vZdFr6U7efn9H9sNQzv2TLJ9DAHUFNRkBtZBXLIyDuKWGrv/QUxAYA8Nkuuy9s4SGRVbHKBNLH3/QGEVLaD1uw3VEdZ2LHBUsd3wx45VxEyVGCb7L7bToiOF1kCloxDqUnp
+x-ms-exchange-antispam-messagedata: rukRdoh5nrIZrjspW1cS0vzR5wqQ5c3Kku/6lZYVqeRYy6ENycX7KDyuiwcnsifhCRAdSDNUfHHyolbg42bQBfnpWFhPiybtpaFvh/o1SoPdZLCpkccjBEVaYbOQchJdQtAB/zGjSKqWHlc4z3pD8Q==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <CGME20200331022842eucas1p29e52dc93c4bd0b6e470c41aef19c9a86@eucas1p2.samsung.com>
- <20200331022832.209618-1-saravanak@google.com> <781eefdc-c926-7566-5305-bb9633e6fac0@samsung.com>
- <CAGETcx8aW-EY+bGEPr+20bZUF-=ghZDPyQ8AdU7eYYd-wOvekA@mail.gmail.com> <20200331072910.GC854501@kroah.com>
-In-Reply-To: <20200331072910.GC854501@kroah.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Thu, 16 Apr 2020 11:25:47 -0700
-Message-ID: <CAGETcx9r_t0AWVaTt5hk9s6Tti0UcNAersjXCJ_A04yJKNPtDA@mail.gmail.com>
-Subject: Re: [PATCH v1] driver core: Fix handling of fw_devlink=permissive
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2b48911d-bcbb-41bc-9ec0-08d7e233b68f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Apr 2020 18:26:42.9260
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 1xPp7TqMdz9RFR50fQRYbdKGZPvLuOLUGtrTLMzFtVY53is5QaenzGJfcTI3jDz0lxhFunGv99OeR6d0nadXEQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR02MB3772
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 12:29 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Mon, Mar 30, 2020 at 11:18:01PM -0700, Saravana Kannan wrote:
-> > On Mon, Mar 30, 2020 at 10:43 PM Marek Szyprowski
-> > <m.szyprowski@samsung.com> wrote:
-> > >
-> > > Hi,
-> > >
-> > > On 2020-03-31 04:28, Saravana Kannan wrote:
-> > > > When commit 8375e74f2bca ("driver core: Add fw_devlink kernel
-> > > > commandline option") added fw_devlink, it didn't implement "permissive"
-> > > > mode correctly.
-> > > >
-> > > > That commit got the device links flags correct to make sure unprobed
-> > > > suppliers don't block the probing of a consumer. However, if a consumer
-> > > > is waiting for mandatory suppliers to register, that could still block a
-> > > > consumer from probing.
-> > > >
-> > > > This commit fixes that by making sure in permissive mode, all suppliers
-> > > > to a consumer are treated as a optional suppliers. So, even if a
-> > > > consumer is waiting for suppliers to register and link itself (using the
-> > > > DL_FLAG_SYNC_STATE_ONLY flag) to the supplier, the consumer is never
-> > > > blocked from probing.
-> > > >
-> > > > Fixes: 8375e74f2bca ("driver core: Add fw_devlink kernel commandline option")
-> > > > Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> > > > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > > > ---
-> > > > Hi Marek,
-> > > >
-> > > > If you pull in this patch and then add back in my patch that created the
-> > > > boot problem for you, can you see if that fixes the boot issue for you?
-> > >
-> > > Indeed, this fixes booting on my Raspberry Pi3/4 boards with linux
-> > > next-20200327. Thanks! :)
-> >
-> > Hi Marek,
-> >
-> > Thanks for testing, but I'm not able to find the tag next-20200327. I
-> > can only find next-20200326 and next-20200330. I was just trying to
-> > make sure that next-20200327 doesn't have the revert Greg did. I'm
-> > guessing you meant next-20200326?
-> >
-> > > Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> >
-> > Thanks!
-> >
-> > Greg,
-> >
-> > Can you pull in my fix and then revert the revert?
->
-> After 5.7-rc1 is out I will, thanks.
+Hi Nicolas,
 
-Hi Greg,
+> -----Original Message-----
+> From: nicolas.ferre@microchip.com [mailto:nicolas.ferre@microchip.com]
+> Sent: Thursday, April 16, 2020 11:14 PM
+> To: linux-arm-kernel@lists.infradead.org; netdev@vger.kernel.org; Claudiu
+> Beznea <claudiu.beznea@microchip.com>; Harini Katakam
+> <harinik@xilinx.com>
+> Cc: linux-kernel@vger.kernel.org; David S. Miller <davem@davemloft.net>;
+> Alexandre Belloni <alexandre.belloni@bootlin.com>; pthombar@cadence.com;
+> sergio.prado@e-labworks.com; antoine.tenart@bootlin.com;
+> f.fainelli@gmail.com; linux@armlinux.org.uk; andrew@lunn.ch; Michal Simek
+> <michals@xilinx.com>; Nicolas Ferre <nicolas.ferre@microchip.com>; Rafal
+> Ozieblo <rafalo@cadence.com>
+> Subject: [PATCH 1/5] net: macb: fix wakeup test in runtime suspend/resume
+> routines
+>=20
+> From: Nicolas Ferre <nicolas.ferre@microchip.com>
+>=20
+> Use the proper struct device pointer to check if the wakeup flag and wake=
+up
+> source are positioned.
+> Use the one passed by function call which is equivalent to &bp->dev-
+> >dev.parent.
+>=20
+> It's preventing the trigger of a spurious interrupt in case the Wake-on-L=
+an
+> feature is used.
 
-Just to clarify, this patch is a bug fix and I think this patch should
-go into all the stable branches that support fw_devlink.
+Sorry I have some mail issues; meant to reply earlier.
+Tested patches 1, 2, 3 in this set and they work for me.
 
-The only risky change that you needed to wait on for 5.7-rc1 is the
-patch [1] that sets fw_devlink=permissive by default. Well, a revert
-of the revert of [1].
+I'll try patch 4; it looks similar to what I'm using locally but I'll add w=
+hatever
+tie-off queue handling is required on top of your series, thanks.
 
-[1] - https://lore.kernel.org/lkml/20200321210305.28937-1-saravanak@google.com/
-
-Thanks,
-Saravana
+Regards,
+Harini
