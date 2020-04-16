@@ -2,155 +2,119 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E464C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7535C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2068021973
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:48:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Q1mfZRzd"
+	by mail.kernel.org (Postfix) with ESMTP id 9F4FF21973
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:48:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505497AbgDPKsL (ORCPT
+        id S2505487AbgDPKse (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 06:48:11 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:51691 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2505052AbgDPKgq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 06:36:46 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 492wd560Khz9v1KF;
-        Thu, 16 Apr 2020 12:36:41 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=Q1mfZRzd; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id gjgErL3lbfTm; Thu, 16 Apr 2020 12:36:41 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 492wd54vTKz9v1KC;
-        Thu, 16 Apr 2020 12:36:41 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1587033401; bh=l5FwhWsZFKoNYPFvSBrPZm1J3No4Lds1oXRu+U6EyzE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Q1mfZRzdVTVLZ9spIAcjumqoNKfKtAXMhqqu72UQK2qqOHAgzcyZ93dCPB4Z9HBDb
-         eUTezV8zEsorpEL5x5DoxpQ1KoJ4kzp5DqP3jd5KDzneZxqh06kk6xhlxU4YVc9Zbm
-         iebw9fw1oWps8adcEcDcgg+pOfjnMtWRYxvJ/Pmc=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 29BEB8BBF0;
-        Thu, 16 Apr 2020 12:36:43 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id UL0sASDHqyWS; Thu, 16 Apr 2020 12:36:43 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 991E18B99F;
-        Thu, 16 Apr 2020 12:36:42 +0200 (CEST)
-Subject: Re: [PATCH v3,0/4] drivers: uio: new driver uio_fsl_85xx_cache_sram
-To:     =?UTF-8?B?546L5paH6JmO?= <wenhu.wang@vivo.com>
-Cc:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        oss@buserror.net, linuxppc-dev@lists.ozlabs.org, kernel@vivo.com
-References: <AIgAKQBlCIqtPx5U5P0kFqpr.3.1587029369636.Hmail.wenhu.wang@vivo.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <a3032813-ba1e-101a-0b73-cc477d702aac@c-s.fr>
-Date:   Thu, 16 Apr 2020 12:36:38 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <AIgAKQBlCIqtPx5U5P0kFqpr.3.1587029369636.Hmail.wenhu.wang@vivo.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+        Thu, 16 Apr 2020 06:48:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57126 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2505251AbgDPKgY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 06:36:24 -0400
+Received: from andre.telenet-ops.be (andre.telenet-ops.be [IPv6:2a02:1800:120:4::f00:15])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39FEEC061A10
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 03:36:24 -0700 (PDT)
+Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:fd83:81bb:c1d7:433d])
+        by andre.telenet-ops.be with bizsmtp
+        id TNWz2200b4dKHqf01NX0RZ; Thu, 16 Apr 2020 12:31:23 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jP1nP-0001cw-Ou; Thu, 16 Apr 2020 12:30:59 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jP1nP-0003zL-Nb; Thu, 16 Apr 2020 12:30:59 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Rob Herring <robh+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        =?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jiri Kosina <trivial@kernel.org>
+Cc:     devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-iio@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH trivial 5/6] ALSA: Fix misspellings of "Analog Devices"
+Date:   Thu, 16 Apr 2020 12:30:57 +0200
+Message-Id: <20200416103058.15269-6-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200416103058.15269-1-geert+renesas@glider.be>
+References: <20200416103058.15269-1-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+According to https://www.analog.com/, the company name is spelled
+"Analog Devices".
 
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ sound/isa/ad1816a/ad1816a.c | 2 +-
+ sound/pci/ac97/ac97_patch.c | 2 +-
+ sound/pci/hda/Kconfig       | 4 ++--
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-Le 16/04/2020 à 11:29, 王文虎 a écrit :
-> Hi,
-> Seems there is something wrong with the server that multiple dumplications
-> of the v3 patches were sent out, please ignore the rest and take this newest
-> series as formal count.
+diff --git a/sound/isa/ad1816a/ad1816a.c b/sound/isa/ad1816a/ad1816a.c
+index ce4c8ba2fa9873e7..ca18fe3ff8a59a9f 100644
+--- a/sound/isa/ad1816a/ad1816a.c
++++ b/sound/isa/ad1816a/ad1816a.c
+@@ -54,7 +54,7 @@ MODULE_PARM_DESC(clockfreq, "Clock frequency for ad1816a driver (default = 0).")
+ static const struct pnp_card_device_id snd_ad1816a_pnpids[] = {
+ 	/* Analog Devices AD1815 */
+ 	{ .id = "ADS7150", .devs = { { .id = "ADS7150" }, { .id = "ADS7151" } } },
+-	/* Analog Device AD1816? */
++	/* Analog Devices AD1816? */
+ 	{ .id = "ADS7180", .devs = { { .id = "ADS7180" }, { .id = "ADS7181" } } },
+ 	/* Analog Devices AD1816A - added by Kenneth Platz <kxp@atl.hp.com> */
+ 	{ .id = "ADS7181", .devs = { { .id = "ADS7180" }, { .id = "ADS7181" } } },
+diff --git a/sound/pci/ac97/ac97_patch.c b/sound/pci/ac97/ac97_patch.c
+index ebf926728c5f84af..45ef0f52ec55b803 100644
+--- a/sound/pci/ac97/ac97_patch.c
++++ b/sound/pci/ac97/ac97_patch.c
+@@ -1356,7 +1356,7 @@ static int patch_cx20551(struct snd_ac97 *ac97)
+ }
+ 
+ /*
+- * Analog Device AD18xx, AD19xx codecs
++ * Analog Devices AD18xx, AD19xx codecs
+  */
+ #ifdef CONFIG_PM
+ static void ad18xx_resume(struct snd_ac97 *ac97)
+diff --git a/sound/pci/hda/Kconfig b/sound/pci/hda/Kconfig
+index e1d3082a4fe93153..7ba542e45a3d7f88 100644
+--- a/sound/pci/hda/Kconfig
++++ b/sound/pci/hda/Kconfig
+@@ -99,10 +99,10 @@ comment "Set to Y if you want auto-loading the codec driver"
+ 	depends on SND_HDA=y && SND_HDA_CODEC_REALTEK=m
+ 
+ config SND_HDA_CODEC_ANALOG
+-	tristate "Build Analog Device HD-audio codec support"
++	tristate "Build Analog Devices HD-audio codec support"
+ 	select SND_HDA_GENERIC
+ 	help
+-	  Say Y or M here to include Analog Device HD-audio codec support in
++	  Say Y or M here to include Analog Devices HD-audio codec support in
+ 	  snd-hda-intel driver, such as AD1986A.
+ 
+ comment "Set to Y if you want auto-loading the codec driver"
+-- 
+2.17.1
 
-Which series ?
-
-It seems you sent 3 times, at 9:29, 9:41 and 9:49 (Paris Time)
-
- From the series of 9:29, I received patches 0 to 3
- From the series of 9:41, I received patches 0 to 3
- From the series of 9:49, I received patches 0 and 4.
-
-Looks like powerpc patchwork 
-(https://patchwork.ozlabs.org/project/linuxppc-dev/list/?submitter=78320) 
-got:
- From the series of 9:29, I received patches 0 to 4
- From the series of 9:41, I received patches 1 to 4
- From the series of 9:49, I received patches 1 to 4
-
-So this seems to be something wrong somewhere.
-
-Christophe
-
-
-> 
-> Thanks,
-> Wenhu
-> 
-> From: Wang Wenhu <wenhu.wang@vivo.com>
-> Date: 2020-04-16 15:49:14
-> To:  gregkh@linuxfoundation.org,linux-kernel@vger.kernel.org,oss@buserror.net,christophe.leroy@c-s.fr,linuxppc-dev@lists.ozlabs.org
-> Cc:  kernel@vivo.com,Wang Wenhu <wenhu.wang@vivo.com>
-> Subject: [PATCH v3,0/4] drivers: uio: new driver uio_fsl_85xx_cache_sram>This series add a new uio driver for freescale 85xx platforms to
->> access the Cache-Sram form user level. This is extremely helpful
->> for the user-space applications that require high performance memory
->> accesses.
->>
->> It fixes the compile errors and warning of the hardware level drivers
->> and implements the uio driver in uio_fsl_85xx_cache_sram.c.
->>
->> Changes since v1:
->> * Addressed comments from Greg K-H
->> * Moved kfree(info->name) into uio_info_free_internal()
->>
->> Changes since v2:
->> * Drop the patch that modifies Kconfigs of arch/powerpc/platforms
->>    and modified the sequence of patches:
->>     01:dropped, 02->03, 03->02, 04->01, 05->04
->> * Addressed comments from Greg, Scott and Christophe
->> * Use "uiomem->internal_addr" as if condition for sram memory free,
->>    and memset the uiomem entry
->> * Modified of_match_table make the driver apart from Cache-Sram HW info
->>    which belong to the HW level driver fsl_85xx_cache_sram to match
->> * Use roundup_pow_of_two for align calc(really learned a lot from Christophe)
->> * Remove useless clear block of uiomem entries.
->> * Use UIO_INFO_VER micro for info->version, and define it as
->>    "devicetree,pseudo", meaning this is pseudo device and probed from
->>    device tree configuration
->> * Select FSL_85XX_CACHE_SRAM rather than depends on it
->>
->> Wang Wenhu (4):
->>   powerpc: sysdev: fix compile error for fsl_85xx_l2ctlr
->>   powerpc: sysdev: fix compile error for fsl_85xx_cache_sram
->>   powerpc: sysdev: fix compile warning for fsl_85xx_cache_sram
->>   drivers: uio: new driver for fsl_85xx_cache_sram
->>
->> arch/powerpc/sysdev/fsl_85xx_cache_sram.c |   3 +-
->> arch/powerpc/sysdev/fsl_85xx_l2ctlr.c     |   1 +
->> drivers/uio/Kconfig                       |   9 ++
->> drivers/uio/Makefile                      |   1 +
->> drivers/uio/uio_fsl_85xx_cache_sram.c     | 158 ++++++++++++++++++++++
->> 5 files changed, 171 insertions(+), 1 deletion(-)
->> create mode 100644 drivers/uio/uio_fsl_85xx_cache_sram.c
->>
->> -- 
->> 2.17.1
->>
-> 
-> 
