@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC584C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:27:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9707EC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:27:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7C7E21D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:27:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 714A02076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:27:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587047230;
-	bh=0t/oLzkgFXhjX5DcSYiAxTJvv2saLqLGZ+qwSaWFEk8=;
+	s=default; t=1587047239;
+	bh=1m5wxyivcW2j67TdFd8cmYte2yfupQ9BTC223xGt5FI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PYVPPt3gIHIFwaTWcAaKqdgJm56H3X4NCwHeU5VV0IQtzwu8OkEZp2+ubZxX2/zLx
-	 rN9GKcpeTrKy9humPzh/qHlWwmaFgXUmZ92h7Vr/RyKZkAc81RaE7Kodf7RJXumxGO
-	 A8QtzMJpvINLpkNb+RMqYKqQdD5MdExYd/6NVzuw=
+	b=UFqf1rc19UMTZRTSw948rdlrBEoimXfAZpSFpfgqLhWJihfPfaBLAY1ut5l+FkS0X
+	 yPyMkzd3g9Sn0h7Ds+2D+pdjHRHFXp/aYO2+W7iO9ADa8Pl3QMImaE+1XTQM0cMbeB
+	 z28Q59FZHJfMhmIUKsS8wyqJr56FwHPg7fx7h148=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393898AbgDPO1I (ORCPT
+        id S1730769AbgDPO1Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:27:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46280 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:27:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898851AbgDPN7S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:59:18 -0400
+        id S2898849AbgDPN7Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:59:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6481E21734;
-        Thu, 16 Apr 2020 13:59:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EED5720786;
+        Thu, 16 Apr 2020 13:59:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045556;
-        bh=0t/oLzkgFXhjX5DcSYiAxTJvv2saLqLGZ+qwSaWFEk8=;
+        s=default; t=1587045554;
+        bh=1m5wxyivcW2j67TdFd8cmYte2yfupQ9BTC223xGt5FI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PdLGDjgJNXy7HI6vKfgeQjxFVVsVibdneKNMksjj5Eb+hO03NyZhpNo/cMJib6Qxf
-         ThBOcpxY4cNqI7Z6JMgJ/1kjFOHxROgzepbgVzyDBgozzCDF4McvFKtKzIqqj5yESL
-         1SkWXR9SgeVL9fea4o1en3XvQxL5I84mWuTg97xM=
+        b=N2F2xgcvaDoF6YQZAGJn3ffBBSfuYeek0FSXyxTP3mpmvOgh8I9nD7Ztx9rB/nCVe
+         o5U6rhzdZcSZLBD7g6mMW6lglZcA54E7RyyA++TpuJMtMwg17ASuLlyZLrMbfSnfhB
+         1VEjqPcaPEdYJLPac5EtbCaNkfbFfTIE3M7hG1Zw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Subject: [PATCH 5.6 181/254] XArray: Fix xas_pause for large multi-index entries
-Date:   Thu, 16 Apr 2020 15:24:30 +0200
-Message-Id: <20200416131349.034610037@linuxfoundation.org>
+        stable@vger.kernel.org, Nikos Tsironis <ntsironis@arrikto.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 5.6 180/254] dm clone metadata: Fix return type of dm_clone_nr_of_hydrated_regions()
+Date:   Thu, 16 Apr 2020 15:24:29 +0200
+Message-Id: <20200416131348.897131217@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -59,88 +59,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthew Wilcox (Oracle) <willy@infradead.org>
+From: Nikos Tsironis <ntsironis@arrikto.com>
 
-commit c36d451ad386b34f452fc3c8621ff14b9eaa31a6 upstream.
+commit 81d5553d1288c2ec0390f02f84d71ca0f0f9f137 upstream.
 
-Inspired by the recent Coverity report, I looked for other places where
-the offset wasn't being converted to an unsigned long before being
-shifted, and I found one in xas_pause() when the entry being paused is
-of order >32.
+dm_clone_nr_of_hydrated_regions() returns the number of regions that
+have been hydrated so far. In order to do so it employs bitmap_weight().
 
-Fixes: b803b42823d0 ("xarray: Add XArray iterators")
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-Cc: stable@vger.kernel.org
+Until now, the return type of dm_clone_nr_of_hydrated_regions() was
+unsigned long.
+
+Because bitmap_weight() returns an int, in case BITS_PER_LONG == 64 and
+the return value of bitmap_weight() is 2^31 (the maximum allowed number
+of regions for a device), the result is sign extended from 32 bits to 64
+bits and an incorrect value is displayed, in the status output of
+dm-clone, as the number of hydrated regions.
+
+Fix this by having dm_clone_nr_of_hydrated_regions() return an unsigned
+int.
+
+Fixes: 7431b7835f55 ("dm: add clone target")
+Cc: stable@vger.kernel.org # v5.4+
+Signed-off-by: Nikos Tsironis <ntsironis@arrikto.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- lib/test_xarray.c |   37 +++++++++++++++++++++++++++++++++++++
- lib/xarray.c      |    2 +-
- 2 files changed, 38 insertions(+), 1 deletion(-)
+ drivers/md/dm-clone-metadata.c |    2 +-
+ drivers/md/dm-clone-metadata.h |    2 +-
+ drivers/md/dm-clone-target.c   |    2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
---- a/lib/test_xarray.c
-+++ b/lib/test_xarray.c
-@@ -1156,6 +1156,42 @@ static noinline void check_find_entry(st
- 	XA_BUG_ON(xa, !xa_empty(xa));
+--- a/drivers/md/dm-clone-metadata.c
++++ b/drivers/md/dm-clone-metadata.c
+@@ -656,7 +656,7 @@ bool dm_clone_is_range_hydrated(struct d
+ 	return (bit >= (start + nr_regions));
  }
  
-+static noinline void check_pause(struct xarray *xa)
-+{
-+	XA_STATE(xas, xa, 0);
-+	void *entry;
-+	unsigned int order;
-+	unsigned long index = 1;
-+	unsigned int count = 0;
-+
-+	for (order = 0; order < order_limit; order++) {
-+		XA_BUG_ON(xa, xa_store_order(xa, index, order,
-+					xa_mk_index(index), GFP_KERNEL));
-+		index += 1UL << order;
-+	}
-+
-+	rcu_read_lock();
-+	xas_for_each(&xas, entry, ULONG_MAX) {
-+		XA_BUG_ON(xa, entry != xa_mk_index(1UL << count));
-+		count++;
-+	}
-+	rcu_read_unlock();
-+	XA_BUG_ON(xa, count != order_limit);
-+
-+	count = 0;
-+	xas_set(&xas, 0);
-+	rcu_read_lock();
-+	xas_for_each(&xas, entry, ULONG_MAX) {
-+		XA_BUG_ON(xa, entry != xa_mk_index(1UL << count));
-+		count++;
-+		xas_pause(&xas);
-+	}
-+	rcu_read_unlock();
-+	XA_BUG_ON(xa, count != order_limit);
-+
-+	xa_destroy(xa);
-+}
-+
- static noinline void check_move_tiny(struct xarray *xa)
+-unsigned long dm_clone_nr_of_hydrated_regions(struct dm_clone_metadata *cmd)
++unsigned int dm_clone_nr_of_hydrated_regions(struct dm_clone_metadata *cmd)
  {
- 	XA_STATE(xas, xa, 0);
-@@ -1664,6 +1700,7 @@ static int xarray_checks(void)
- 	check_xa_alloc();
- 	check_find(&array);
- 	check_find_entry(&array);
-+	check_pause(&array);
- 	check_account(&array);
- 	check_destroy(&array);
- 	check_move(&array);
---- a/lib/xarray.c
-+++ b/lib/xarray.c
-@@ -970,7 +970,7 @@ void xas_pause(struct xa_state *xas)
+ 	return bitmap_weight(cmd->region_map, cmd->nr_regions);
+ }
+--- a/drivers/md/dm-clone-metadata.h
++++ b/drivers/md/dm-clone-metadata.h
+@@ -156,7 +156,7 @@ bool dm_clone_is_range_hydrated(struct d
+ /*
+  * Returns the number of hydrated regions.
+  */
+-unsigned long dm_clone_nr_of_hydrated_regions(struct dm_clone_metadata *cmd);
++unsigned int dm_clone_nr_of_hydrated_regions(struct dm_clone_metadata *cmd);
  
- 	xas->xa_node = XAS_RESTART;
- 	if (node) {
--		unsigned int offset = xas->xa_offset;
-+		unsigned long offset = xas->xa_offset;
- 		while (++offset < XA_CHUNK_SIZE) {
- 			if (!xa_is_sibling(xa_entry(xas->xa, node, offset)))
- 				break;
+ /*
+  * Returns the first unhydrated region with region_nr >= @start
+--- a/drivers/md/dm-clone-target.c
++++ b/drivers/md/dm-clone-target.c
+@@ -1473,7 +1473,7 @@ static void clone_status(struct dm_targe
+ 			goto error;
+ 		}
+ 
+-		DMEMIT("%u %llu/%llu %llu %lu/%lu %u ",
++		DMEMIT("%u %llu/%llu %llu %u/%lu %u ",
+ 		       DM_CLONE_METADATA_BLOCK_SIZE,
+ 		       (unsigned long long)(nr_metadata_blocks - nr_free_metadata_blocks),
+ 		       (unsigned long long)nr_metadata_blocks,
 
 
