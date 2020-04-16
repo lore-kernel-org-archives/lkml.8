@@ -2,256 +2,136 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F013C352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 19:39:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2131CC38A29
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 19:41:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BA0F21BE5
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 19:39:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F201B21BE5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 19:41:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="nx/sEQY+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vCizqDZq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731390AbgDPTjB (ORCPT
+        id S1728423AbgDPTls (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 15:39:01 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:4671 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725894AbgDPTjA (ORCPT
+        Thu, 16 Apr 2020 15:41:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57688 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725894AbgDPTlr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 15:39:00 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e98b3e40000>; Thu, 16 Apr 2020 12:37:08 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 16 Apr 2020 12:38:59 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 16 Apr 2020 12:38:59 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 16 Apr
- 2020 19:38:58 +0000
-Received: from [10.2.171.241] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 16 Apr
- 2020 19:38:56 +0000
-Subject: Re: [PATCH v2 1/2] sdhci: tegra: Implement Tegra specific set_timeout
- callback
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-CC:     Adrian Hunter <adrian.hunter@intel.com>,
-        "(Exiting) Baolin Wang" <baolin.wang@linaro.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Bradley Bolen <bradleybolen@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        "Jon Hunter" <jonathanh@nvidia.com>,
-        Aniruddha Tvs Rao <anrao@nvidia.com>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        <lkft-triage@lists.linaro.org>,
-        linux- stable <stable@vger.kernel.org>
-References: <1583886030-11339-1-git-send-email-skomatineni@nvidia.com>
- <CA+G9fYvreAv5HmZg0O4VvLvf_PYSvzD1rp08XONNQGExctgQ0Q@mail.gmail.com>
- <CAPDyKFpZEiqTdD6O-y6Sw7ifXF__MHAv0zKT=RFKs+Fmvr-K_Q@mail.gmail.com>
- <753ec108-858c-660e-af0a-f57922134609@nvidia.com>
-Message-ID: <512441d1-a9ba-912f-ed2e-46edad22278b@nvidia.com>
-Date:   Thu, 16 Apr 2020 12:38:55 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 16 Apr 2020 15:41:47 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84484C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 12:41:47 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id i3so2141622pgk.1
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 12:41:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4+5yvpF/CzkFV4Q2jkIdrwA/yhScLV1YzzJf+T0+lT0=;
+        b=vCizqDZqzySQAlaQKNZSPfzWTNKVRci9vMWz/TPic+3XrkQ03Ffgkm9kWe0f4jZjUf
+         8G/6u6CSBI/Ollj0zVbg8YRdI9x7IulHItSD/ttIFKdkO77DNk9A2QM5GoXfHCf58OOY
+         ENtU9vEBypBTtQvaaLBL8IVFxOKZCqadrz/x6ScCnlG0oxmakq9nru4cWYT20gdDgyY4
+         UI+drYXOPUwSRIZRBwmi9GvTGrryUnz5pMW4HOHttXbnoQotENvKHXfDGo8RgUaV0vxP
+         3QlZeNHsCFrYH93qGFHQbLR2Z2zNWAVNhknBrBzhUwknHU7g1S3YMLN4mvZEVckyopmG
+         kNug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4+5yvpF/CzkFV4Q2jkIdrwA/yhScLV1YzzJf+T0+lT0=;
+        b=adanUkApuHxlTcVOAbU8J6ykiFm3HxSsnBOVAhFrIwWiJSRbUWAiBvMpEFyXs/Orjb
+         SV+IvO2j/ANYi+dZzP4K8L4XWH2zuSn62VcnrXPTiNkC56UVdRLY1NzXwRcvmZbBNq+E
+         +1BLsfFDCH1UFFiCFpHk7Gx24joWBhovp9vZgTfdKX7zLy0Y9D8A9gHxCtwKZTa2B5d6
+         eO7ruGjNBH0jNbZ6od9Hf7RkRVYW40LZzW0Y/+ndzt/pAyQrVyUzd/amtUPKtr2clOeD
+         yM9DBDtxzql26xtbmomuPAv3Kdit3ZeOdP11/9PJJAc9t64r/OSN4UWF5bWSsnaXgn06
+         AqIg==
+X-Gm-Message-State: AGi0Puah416dZev8rLf9PVTOP7i99cho1NeQjOcLkKj8UQmKrAtD3qmV
+        ir1E8f9C7OEcG26NJ2Q72j7NSzEFxIY=
+X-Google-Smtp-Source: APiQypL9j8meLyGkikWSZboSQOmU2u65qLLK1r6+xhTUyBIVdpn5qScfiojY7EddmHUFHZFnYDfj6w==
+X-Received: by 2002:a05:6a00:c8:: with SMTP id e8mr32914135pfj.131.1587066106898;
+        Thu, 16 Apr 2020 12:41:46 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id y123sm17140605pfb.13.2020.04.16.12.41.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Apr 2020 12:41:46 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 13:41:44 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Siddharth Gupta <sidgup@codeaurora.org>
+Cc:     bjorn.andersson@linaro.org, ohad@wizery.com,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, tsoni@codeaurora.org,
+        psodagud@codeaurora.org, rishabhb@codeaurora.org
+Subject: Re: [PATCH v2 2/2] remoteproc: core: Prevent sleep when rproc crashes
+Message-ID: <20200416194144.GA30314@xps15>
+References: <1586384305-7825-1-git-send-email-sidgup@codeaurora.org>
+ <1586384305-7825-3-git-send-email-sidgup@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <753ec108-858c-660e-af0a-f57922134609@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1587065828; bh=yof6X6rV69zuRCOOErruqXvyViu+DLoQF5o7Ja8s66o=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=nx/sEQY+aDNWeB+UH9SVf4IMJhj910xm0DhgM0XdemImrdQv0A04QyPTOPdrZbaaH
-         kxnwowMfDRxaDAXfjlBIN56Ksg4YOy0uHTn+Ff+54UY32A742M+O2swtVcaWtp70jL
-         8yJ3vKw6Bmf/hWcyvzNUod5vb3v0zecv060Gp4ALmrr1Vv93BkIBOwseiP8Tqf3SBJ
-         Exu5XAg/WXdX8ohkyIosK39pbcNKy691oBACr3DkcpQj+2BOxAdly1Q6TnJZlKTG4B
-         +Zx9Hih3bZA0jbT1I9flwKbyKKSEpHlO+QPHfjAtnG64RCKLGZrg75TMKkHTK2+Wu0
-         BzlNhlF/6MrSQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1586384305-7825-3-git-send-email-sidgup@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Apr 08, 2020 at 03:18:25PM -0700, Siddharth Gupta wrote:
+> Remoteproc recovery should be fast and any delay will have an impact on the
+> user-experience. Add a wakeup source to remoteproc which ensures that the
+> system does not go into idle state while a remoteproc is recovering, thus
+> prevent any delays that might occur during system resume.
+> 
+> Signed-off-by: Siddharth Gupta <sidgup@codeaurora.org>
+> ---
+>  drivers/remoteproc/qcom_q6v5_pas.c   | 1 +
+>  drivers/remoteproc/remoteproc_core.c | 4 ++++
+>  2 files changed, 5 insertions(+)
+> 
+> diff --git a/drivers/remoteproc/qcom_q6v5_pas.c b/drivers/remoteproc/qcom_q6v5_pas.c
+> index 7a63efb..6bb2c7d 100644
+> --- a/drivers/remoteproc/qcom_q6v5_pas.c
+> +++ b/drivers/remoteproc/qcom_q6v5_pas.c
+> @@ -401,6 +401,7 @@ static int adsp_probe(struct platform_device *pdev)
+>  
+>  	adsp = (struct qcom_adsp *)rproc->priv;
+>  	adsp->dev = &pdev->dev;
+> +	device_wakeup_enable(adsp->dev);
+>  	adsp->rproc = rproc;
+>  	adsp->pas_id = desc->pas_id;
+>  	adsp->has_aggre2_clk = desc->has_aggre2_clk;
+> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+> index 9f99fe2..19a360d 100644
+> --- a/drivers/remoteproc/remoteproc_core.c
+> +++ b/drivers/remoteproc/remoteproc_core.c
+> @@ -1729,6 +1729,8 @@ static void rproc_crash_handler_work(struct work_struct *work)
+>  
+>  	if (!rproc->recovery_disabled)
+>  		rproc_trigger_recovery(rproc);
+> +
+> +	pm_relax(rproc->dev.parent);
+>  }
+>  
+>  /**
+> @@ -2273,6 +2275,8 @@ void rproc_report_crash(struct rproc *rproc, enum rproc_crash_type type)
+>  		return;
+>  	}
+>  
+> +	pm_stay_awake(rproc->dev.parent);
+> +
 
-On 4/16/20 9:29 AM, Sowjanya Komatineni wrote:
->
-> On 4/16/20 3:59 AM, Ulf Hansson wrote:
->> External email: Use caution opening links or attachments
->>
->>
->> On Wed, 15 Apr 2020 at 19:55, Naresh Kamboju=20
->> <naresh.kamboju@linaro.org> wrote:
->>> On Fri, 13 Mar 2020 at 06:41, Sowjanya Komatineni
->>> <skomatineni@nvidia.com> wrote:
->>>> Tegra host supports HW busy detection and timeouts based on the
->>>> count programmed in SDHCI_TIMEOUT_CONTROL register and max busy
->>>> timeout it supports is 11s in finite busy wait mode.
->>>>
->>>> Some operations like SLEEP_AWAKE, ERASE and flush cache through
->>>> SWITCH commands take longer than 11s and Tegra host supports
->>>> infinite HW busy wait mode where HW waits forever till the card
->>>> is busy without HW timeout.
->>>>
->>>> This patch implements Tegra specific set_timeout sdhci_ops to allow
->>>> switching between finite and infinite HW busy detection wait modes
->>>> based on the device command expected operation time.
->>>>
->>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>> ---
->>>> =C2=A0 drivers/mmc/host/sdhci-tegra.c | 31 +++++++++++++++++++++++++++=
-++++
->>>> =C2=A0 1 file changed, 31 insertions(+)
->>>>
->>>> diff --git a/drivers/mmc/host/sdhci-tegra.c=20
->>>> b/drivers/mmc/host/sdhci-tegra.c
->>>> index a25c3a4..fa8f6a4 100644
->>>> --- a/drivers/mmc/host/sdhci-tegra.c
->>>> +++ b/drivers/mmc/host/sdhci-tegra.c
->>>> @@ -45,6 +45,7 @@
->>>> =C2=A0 #define SDHCI_TEGRA_CAP_OVERRIDES_DQS_TRIM_SHIFT=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 8
->>>>
->>>> =C2=A0 #define SDHCI_TEGRA_VENDOR_MISC_CTRL 0x120
->>>> +#define SDHCI_MISC_CTRL_ERASE_TIMEOUT_LIMIT BIT(0)
->>>> =C2=A0 #define SDHCI_MISC_CTRL_ENABLE_SDR104=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 0x8
->>>> =C2=A0 #define SDHCI_MISC_CTRL_ENABLE_SDR50 0x10
->>>> =C2=A0 #define SDHCI_MISC_CTRL_ENABLE_SDHCI_SPEC_300 0x20
->>>> @@ -1227,6 +1228,34 @@ static u32 sdhci_tegra_cqhci_irq(struct=20
->>>> sdhci_host *host, u32 intmask)
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
->>>> =C2=A0 }
->>>>
->>>> +static void tegra_sdhci_set_timeout(struct sdhci_host *host,
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct mmc_com=
-mand *cmd)
->>>> +{
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u32 val;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * HW busy detection timeou=
-t is based on programmed data=20
->>>> timeout
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * counter and maximum supp=
-orted timeout is 11s which may=20
->>>> not be
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * enough for long operatio=
-ns like cache flush, sleep=20
->>>> awake, erase.
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * ERASE_TIMEOUT_LIMIT bit =
-of VENDOR_MISC_CTRL register allows
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * host controller to wait =
-for busy state until the card is=20
->>>> busy
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * without HW timeout.
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * So, use infinite busy wa=
-it mode for operations that may=20
->>>> take
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * more than maximum HW bus=
-y timeout of 11s otherwise use=20
->>>> finite
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * busy wait mode.
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val =3D sdhci_readl(host, SDHCI_=
-TEGRA_VENDOR_MISC_CTRL);
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (cmd && cmd->busy_timeout >=
-=3D 11 * HZ)
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 val |=3D SDHCI_MISC_CTRL_ERASE_TIMEOUT_LIMIT;
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 else
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 val &=3D ~SDHCI_MISC_CTRL_ERASE_TIMEOUT_LIMIT;
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 sdhci_writel(host, val, SDHCI_TE=
-GRA_VENDOR_MISC_CTRL);
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __sdhci_set_timeout(host, cmd);
->>> kernel build on arm and arm64 architecture failed on stable-rc 4.19
->>> (arm), 5.4 (arm64) and 5.5 (arm64)
->>>
->>> drivers/mmc/host/sdhci-tegra.c: In function 'tegra_sdhci_set_timeout':
->>> drivers/mmc/host/sdhci-tegra.c:1256:2: error: implicit declaration of
->>> function '__sdhci_set_timeout'; did you mean
->>> 'tegra_sdhci_set_timeout'? [-Werror=3Dimplicit-function-declaration]
->>> =C2=A0=C2=A0 __sdhci_set_timeout(host, cmd);
->>> =C2=A0=C2=A0 ^~~~~~~~~~~~~~~~~~~
->>> =C2=A0=C2=A0 tegra_sdhci_set_timeout
->>>
->>> Full build log,
->>> https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-stable-rc-5=
-.5/DISTRO=3Dlkft,MACHINE=3Dam57xx-evm,label=3Ddocker-lkft/83/consoleText=20
->>>
->>> https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-stable-rc-5=
-.4/DISTRO=3Dlkft,MACHINE=3Djuno,label=3Ddocker-lkft/158/consoleText=20
->>>
->>> https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-stable-rc-4=
-.19/DISTRO=3Dlkft,MACHINE=3Dam57xx-evm,label=3Ddocker-lkft/511/consoleText=
-=20
->>>
->>>
->>> - Naresh
->> Thanks for reporting! What a mess.
->>
->> It turns out that the commit that was queued for stable that is
->> causing the above errors, also requires another commit.
->>
->> The commit that was queued:
->> 5e958e4aacf4 ("sdhci: tegra: Implement Tegra specific set_timeout=20
->> callback")
->>
->> The additional commit needed (which was added in v5.6-rc1):
->> 7d76ed77cfbd ("mmc: sdhci: Refactor sdhci_set_timeout()")
->>
->> However, the above commit needs a manual backport (quite trivial, but
->> still) for the relevant stable kernels, to allow it to solve the build
->> problems.
->>
->> Greg, Sasha - I suggest you to drop the offending commit from the
->> stable kernels, for now. I think it's better to let Sowjanya deal with
->> the backports, then send them in small series instead.
->>
->> Kind regards
->> Uffe
->
-> Hi Ufee,
->
-> Will back-porting below commit cause any issues to other vendors?
->
-> 7d76ed77cfbd ("mmc: sdhci: Refactor sdhci_set_timeout()")
->
-sdhci-tegra driver in 4.19 is using same sdhci_ops for Tegra114 and=20
-Tegra210 and separate sdhci_ops for T210 started from 4.20.
+Much better:
 
-5e958e4aacf4 ("sdhci: tegra: Implement Tegra specific set_timeout callback"=
-)
+Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-So above commit can't be applied to 4.19. So probably a separate patch=20
-need to be created to apply for 4.19 and back port above commit along=20
-with its dependency commit (7d76ed77cfbd ("mmc: sdhci: Refactor=20
-sdhci_set_timeout()") for 5.4 and 5.4.
-
-
-> Thanks
-Sowjanya
->
+>  	dev_err(&rproc->dev, "crash detected in %s: type %s\n",
+>  		rproc->name, rproc_crash_to_string(type));
+>  
+> -- 
+> Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
