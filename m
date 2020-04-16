@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 810D5C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:17:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B54DCC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:17:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 613092063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:17:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93F922063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:17:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587046661;
-	bh=MimweiWYVvrul8ktelJA1CcccY/FgjmSwgVtsi6jHIk=;
+	s=default; t=1587046667;
+	bh=C342YGSxZ7cHTwUi8UWJoDuCX2Aj+5ytjAAcmtQ8Fzc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2E2Tm/eW9cHLMZRAORzIXtU5AFZ16TmU/FO6FUPCs768O05yU2KTNpAiRSl4pT/wl
-	 k1lMOUYfScfmzgjXSpFGL3o5w7IJPKwkCt/xHtFCwLsOBVFwwM7hOulqDUNeK2f1U+
-	 KXpyJDXUEAcn8Q5awKXnp3LNZwDdTrlgPWG/yE/U=
+	b=SmNvyb14+OLdXp72v2VIkTYspQ8zlbAeKnQMiA1g3LbB6oi0rlrvFewwFdUVMsRoM
+	 xTJZCAp6ufGvVD3Buf3UgZVgPw08xM6i0C9EqQP7j+oJvWH6V4bHBxt6oq7CN+VW4H
+	 cXdFYxEq6V9znB8uJ0zroQgD3fGuDZ81S91j8E08=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442241AbgDPORk (ORCPT
+        id S2442275AbgDPORp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:17:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39178 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:17:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387965AbgDPNwt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:52:49 -0400
+        id S2408787AbgDPNwv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:52:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BE7D2076D;
-        Thu, 16 Apr 2020 13:52:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A27E82063A;
+        Thu, 16 Apr 2020 13:52:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045168;
-        bh=MimweiWYVvrul8ktelJA1CcccY/FgjmSwgVtsi6jHIk=;
+        s=default; t=1587045171;
+        bh=C342YGSxZ7cHTwUi8UWJoDuCX2Aj+5ytjAAcmtQ8Fzc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F7N8c4fDXYWMNa7t0vYbGzrW9zuSvNnnKK5I/nvDPIB9V+GUk/Ms/0mKDSTT4U+Gp
-         oZaFr7ZLMeqsbOSbBpaSucGqnOuTmCl268sxI9U8nHNWXzBMof0B/SkN8MF9QTVZy+
-         8AXX46YdehmYio2jUMBDgKi3UiEadYI//61+SHyY=
+        b=OnAtf9ggn/ppFyXFR7WVbYs0gmHUnhFsQXbKsBCB+H6ThGy/fgVc5pz10z9Vs7rOq
+         xl5AtzM4QVR6cnnM480RUfnfeNWdkoRxS96uu1zgPYfT66k7vIRsDeEBhgj4bkYkDt
+         uwK/O+KtRlpi03MGUVuQCPQava0bsVH8+g1HOUiY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 025/254] ACPI: EC: Do not clear boot_ec_is_ecdt in acpi_ec_add()
-Date:   Thu, 16 Apr 2020 15:21:54 +0200
-Message-Id: <20200416131328.979207183@linuxfoundation.org>
+Subject: [PATCH 5.6 026/254] clocksource/drivers/timer-microchip-pit64b: Fix rate for gck
+Date:   Thu, 16 Apr 2020 15:21:55 +0200
+Message-Id: <20200416131329.091921791@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -60,56 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+From: Claudiu Beznea <claudiu.beznea@microchip.com>
 
-[ Upstream commit 65a691f5f8f0bb63d6a82eec7b0ffd193d8d8a5f ]
+[ Upstream commit 0585244523f0f4de7e4480375e871617a79cab98 ]
 
-The reason for clearing boot_ec_is_ecdt in acpi_ec_add() (if a
-PNP0C09 device object matching the ECDT boot EC had been found in
-the namespace) was to cause acpi_ec_ecdt_start() to return early,
-but since the latter does not look at boot_ec_is_ecdt any more,
-acpi_ec_add() need not clear it.
+Generic clock rate needs to be set in case it was selected as timer clock
+source in mchp_pit64b_init_mode(). Otherwise it will be enabled with wrong
+rate.
 
-Moreover, doing that may be confusing as it may cause "DSDT" to be
-printed instead of "ECDT" in the EC initialization completion
-message, so stop doing it.
-
-While at it, split the EC initialization completion message into
-two messages, one regarding the boot EC and another one printed
-regardless of whether or not the EC at hand is the boot one.
-
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fixes: 625022a5f160 ("clocksource/drivers/timer-microchip-pit64b: Add Microchip PIT64B support")
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Link: https://lore.kernel.org/r/1584352376-32585-1-git-send-email-claudiu.beznea@microchip.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/ec.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/clocksource/timer-microchip-pit64b.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/acpi/ec.c b/drivers/acpi/ec.c
-index d1f1cf5d4bf08..3385be8b057c8 100644
---- a/drivers/acpi/ec.c
-+++ b/drivers/acpi/ec.c
-@@ -1641,7 +1641,6 @@ static int acpi_ec_add(struct acpi_device *device)
+diff --git a/drivers/clocksource/timer-microchip-pit64b.c b/drivers/clocksource/timer-microchip-pit64b.c
+index bd63d3484838a..59e11ca8ee73e 100644
+--- a/drivers/clocksource/timer-microchip-pit64b.c
++++ b/drivers/clocksource/timer-microchip-pit64b.c
+@@ -264,6 +264,7 @@ static int __init mchp_pit64b_init_mode(struct mchp_pit64b_timer *timer,
  
- 		if (boot_ec && ec->command_addr == boot_ec->command_addr &&
- 		    ec->data_addr == boot_ec->data_addr) {
--			boot_ec_is_ecdt = false;
- 			/*
- 			 * Trust PNP0C09 namespace location rather than
- 			 * ECDT ID. But trust ECDT GPE rather than _GPE
-@@ -1661,9 +1660,12 @@ static int acpi_ec_add(struct acpi_device *device)
+ 	if (!best_diff) {
+ 		timer->mode |= MCHP_PIT64B_MR_SGCLK;
++		clk_set_rate(timer->gclk, gclk_round);
+ 		goto done;
+ 	}
  
- 	if (ec == boot_ec)
- 		acpi_handle_info(boot_ec->handle,
--				 "Boot %s EC used to handle transactions and events\n",
-+				 "Boot %s EC initialization complete\n",
- 				 boot_ec_is_ecdt ? "ECDT" : "DSDT");
- 
-+	acpi_handle_info(ec->handle,
-+			 "EC: Used to handle transactions and events\n");
-+
- 	device->driver_data = ec;
- 
- 	ret = !!request_region(ec->data_addr, 1, "EC data");
 -- 
 2.20.1
 
