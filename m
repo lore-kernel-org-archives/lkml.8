@@ -2,165 +2,156 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A063C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:33:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 241A0C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:34:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 068A22078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:33:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3EF620732
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:34:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=qnap.com header.i=@qnap.com header.b="hAAkkXoJ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A3kOy/3s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439299AbgDPHdf (ORCPT
+        id S2439339AbgDPHek (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 03:33:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56774 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2438944AbgDPHd3 (ORCPT
+        Thu, 16 Apr 2020 03:34:40 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:36850 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2438944AbgDPHef (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 03:33:29 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACEC8C061A10
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 00:33:29 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id b62so20327971qkf.6
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 00:33:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=qnap.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=UUNY3ShQiEMlKdA2OtEmjXgSE2HQo1VpKsXAZEAB++8=;
-        b=hAAkkXoJSeTZMtgLyumWdDpGnE/XBC+aHvFhGPPys8ToYyqHksL4ZpwqW5T+JaRcXl
-         o43Nn1KGZaVBKhFR5FOvCjbaxWqLrHV8OuMXkvtnh//zZQZGZaqTPXCj5qByMUT5RFbh
-         SJPoK/fhkM3ssd3iqshhMe81Lr0zwvKA7RXU0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=UUNY3ShQiEMlKdA2OtEmjXgSE2HQo1VpKsXAZEAB++8=;
-        b=te7NaiGbIpNyIzz4bbuNq0JUyxzwZnZ4VdcyPSqgzm3WK/cZECLDrxSV+l4NBGm5cx
-         y6anWvZ4hgEnICUnH1i2Kyv5ewLB79a30p9/6ntmzMbzIchZNT0i+BwCVNdA1SX9t6LE
-         2E9XHm/ELniEbWNF7vS8uv09w1Y+XT5TGtMZFt87ndWXj05E4tJ8YDyXVWskR7I3UAm+
-         U3R6qZowLhjzOJUplIhIE2QIWOv2prtAFe4Y40XoK+PZBVcj5YEu4+Q+r5wNyP3qZql+
-         r6a6z6HAblehBBFDt1g2DyH4iepJlW35ipVrxrIBlnS6tNYKDnVvsIIhsrZcQY8t+cls
-         yZKw==
-X-Gm-Message-State: AGi0PuYQv9XT6xqXu92HTHV3nBq7lAZx8gYqrsiG6wDDb3lKUCWTET6D
-        GUYV/Vw73q75XohYfB5UefjSaIZpvwoYUjleGQge3Q==
-X-Google-Smtp-Source: APiQypLjMQQF6xFJgGIcXivLrWGvnotQ+D6p4pL53qIa6tvjRUBiKhdEepCEpb+H3UzPYGRtQEGOvPOSLCAH19n/LJg=
-X-Received: by 2002:a37:8b04:: with SMTP id n4mr30253412qkd.222.1587022408701;
- Thu, 16 Apr 2020 00:33:28 -0700 (PDT)
+        Thu, 16 Apr 2020 03:34:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587022474;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Nxv5kpTqinY+ODzNYtSbDuaLVbS6rONas/3LXmmJm3Y=;
+        b=A3kOy/3sehg4yg0wkzlPbnzTVB7Sg+IuVM+A/3xO7DATFpeF4EtdReNPQjQQABVDZU6Dqz
+        BFCkJZ44c00UDEDLYb3PGNTOzhhU5yEN9o8Z+bRSNV/Uo4nITawVjzpOLuPn3LYcTCmGku
+        58ZhzW3buZ1XDGfPVlPoCRhJ1OEhrwU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-409-Bv8t9qYvOmqW98wuIGuo1w-1; Thu, 16 Apr 2020 03:34:27 -0400
+X-MC-Unique: Bv8t9qYvOmqW98wuIGuo1w-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 80B3B1005509;
+        Thu, 16 Apr 2020 07:34:24 +0000 (UTC)
+Received: from t480s.redhat.com (ovpn-114-9.ams2.redhat.com [10.36.114.9])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 43BE15C1D4;
+        Thu, 16 Apr 2020 07:34:18 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Baoquan He <bhe@redhat.com>,
+        Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        Oscar Salvador <osalvador@suse.de>
+Subject: [PATCH v2] mm/page_alloc: fix watchdog soft lockups during set_zone_contiguous()
+Date:   Thu, 16 Apr 2020 09:34:17 +0200
+Message-Id: <20200416073417.5003-1-david@redhat.com>
 MIME-Version: 1.0
-References: <CAEUGjKiLPQP9wp0AgLUvHgKBOe9We2a-RQaZ7cd7CvhnarwWiw@mail.gmail.com>
- <CAKywueT0Q9WkANNsg8cEDwGZSMaaE5c4LHuEeMhVDzJAzycroQ@mail.gmail.com>
- <CAEUGjKhSBNQboKOMFMgos9OQfxcLQZsXp8aBrUSFcaSe1saH2Q@mail.gmail.com>
- <CAH2r5mt1k5t8rSH1KizeSrcLaN1Fn3GWeMvDPwT2Kfq43UAWaQ@mail.gmail.com> <CAEUGjKhpgmhj9RzcGQXPuFUyoqsUnk2d3oCpOYBdR=EwCO21YQ@mail.gmail.com>
-In-Reply-To: <CAEUGjKhpgmhj9RzcGQXPuFUyoqsUnk2d3oCpOYBdR=EwCO21YQ@mail.gmail.com>
-From:   Jones Syue <jonessyue@qnap.com>
-Date:   Thu, 16 Apr 2020 15:33:18 +0800
-Message-ID: <CAEUGjKh5mj0rFUZPoguFh4G-_YfwACV+_jVK7TNi+jK_fE1dgQ@mail.gmail.com>
-Subject: Re: [PATCH] cifs: improve read performance for page size 64KB &
- cache=strict & vers=2.1+
-To:     Steve French <smfrench@gmail.com>
-Cc:     Pavel Shilovsky <piastryyy@gmail.com>,
-        linux-cifs <linux-cifs@vger.kernel.org>,
-        Samba Technical <samba-technical@lists.samba.org>,
-        Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Steve
+Without CONFIG_PREEMPT, it can happen that we get soft lockups detected,
+e.g., while booting up.
 
-> Test read performance over 1GbE network with command:
-Also test read performance over 10GbE network,
-vers=3D2.1+ can reach over 600 MB/s with v2.patch.
+[  105.608900] watchdog: BUG: soft lockup - CPU#0 stuck for 22s! [swapper=
+/0:1]
+[  105.608933] Modules linked in:
+[  105.608933] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.6.0-next-20200=
+331+ #4
+[  105.608933] Hardware name: Red Hat KVM, BIOS 1.11.1-4.module+el8.1.0+4=
+066+0f1aadab 04/01/2014
+[  105.608933] RIP: 0010:__pageblock_pfn_to_page+0x134/0x1c0
+[  105.608933] Code: 85 c0 74 71 4a 8b 04 d0 48 85 c0 74 68 48 01 c1 74 6=
+3 f6 01 04 74 5e 48 c1 e7 06 4c 8b 05 cc 991
+[  105.608933] RSP: 0000:ffffb6d94000fe60 EFLAGS: 00010286 ORIG_RAX: ffff=
+ffffffffff13
+[  105.608933] RAX: fffff81953250000 RBX: 000000000a4c9600 RCX: ffff8fe9f=
+f7c1990
+[  105.608933] RDX: ffff8fe9ff7dab80 RSI: 000000000a4c95ff RDI: 000000029=
+3250000
+[  105.608933] RBP: ffff8fe9ff7dab80 R08: fffff816c0000000 R09: 000000000=
+0000008
+[  105.608933] R10: 0000000000000014 R11: 0000000000000014 R12: 000000000=
+0000000
+[  105.608933] R13: 0000000000000000 R14: 0000000000000000 R15: 000000000=
+0000000
+[  105.608933] FS:  0000000000000000(0000) GS:ffff8fe1ff400000(0000) knlG=
+S:0000000000000000
+[  105.608933] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  105.608933] CR2: 000000000f613000 CR3: 00000088cf20a000 CR4: 000000000=
+00006f0
+[  105.608933] Call Trace:
+[  105.608933]  set_zone_contiguous+0x56/0x70
+[  105.608933]  page_alloc_init_late+0x166/0x176
+[  105.608933]  kernel_init_freeable+0xfa/0x255
+[  105.608933]  ? rest_init+0xaa/0xaa
+[  105.608933]  kernel_init+0xa/0x106
+[  105.608933]  ret_from_fork+0x35/0x40
 
-aarch64, page size 64KB (CONFIG_ARM64_64K_PAGES=3Dy), linux-4.2.8,
-cpu Annapurna Labs Alpine AL324 Quad-core ARM Cortex-A57 CPU @ 1.70GHz,
-ram 8GB,
-with patch,
-vers=3D1.0,cache=3Dstrict: read throughput 110MB/s, max read IO size 16KB
-vers=3D2.0,cache=3Dstrict: read throughput 106MB/s, max read IO size 16KB
-vers=3D2.1,cache=3Dstrict: read throughput 667MB/s, max read IO size 1MB
-vers=3D3.0,cache=3Dstrict: read throughput 639MB/s, max read IO size 1MB
-without patch,
-vers=3D1.0,cache=3Dstrict: read throughput 107MB/s, max read IO size 16KB
-vers=3D2.0,cache=3Dstrict: read throughput 107MB/s, max read IO size 16KB
-vers=3D2.1,cache=3Dstrict: read throughput 106MB/s, max read IO size 16KB
-vers=3D3.0,cache=3Dstrict: read throughput 106MB/s, max read IO size 16KB
+The issue becomes visible when having a lot of memory (e.g., 4TB)
+assigned to a single NUMA node - a system that can easily be created
+using QEMU. Inside VMs on a hypervisor with quite some memory
+overcommit, this is fairly easy to trigger.
 
-command:
-mount -tcifs //<server_ip>/<share> /remote_strict
--overs=3D<x.y>,cache=3Dstrict,username=3D<uu>,password=3D<pp>
-dd if=3D/remote_strict/10G.img of=3D/dev/null bs=3D1M count=3D10240
+Reviewed-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+Reviewed-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Reviewed-by: Baoquan He <bhe@redhat.com>
+Reviewed-by: Shile Zhang <shile.zhang@linux.alibaba.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc: Shile Zhang <shile.zhang@linux.alibaba.com>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Alexander Duyck <alexander.duyck@gmail.com>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Oscar Salvador <osalvador@suse.de>
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
 
---
-Regards,
-Jones Syue | =E8=96=9B=E6=87=B7=E5=AE=97
-QNAP Systems, Inc.
+This is just a resend of patch #2 of
+https://lkml.kernel.org/r/20200401104156.11564-3-david@redhat.com
 
-On Thu, Apr 16, 2020 at 11:46 AM Jones Syue <jonessyue@qnap.com> wrote:
->
-> Hello Steve
->
-> > Did you also test (at least briefly) with vers=3D1.0 since some of your
-> > code affects that code path too?
->
-> Yes test v2.patch on 2 platforms aarch64 (page size 64KB) and x86_64
-> (page size 4KB), vers=3D1.0 read function works fine on both.
->
-> Test read performance over 1GbE network with command:
-> 'dd if=3D/remote_strict/10G.img of=3D/dev/null bs=3D1M count=3D10240'
->
-> For read performance on aarch64 (page size 64KB), vers=3D[1.0|2.0] is not=
- as
-> fast as vers=3D2.1+, max_read on both SMB 1 (16KB) and SMB 2.0 (64KB) are
-> still smaller then page size 64KB plus packet header size, hence do not
-> support readpages.
-> aarch64, page size 64KB (CONFIG_ARM64_64K_PAGES=3Dy), linux-4.2.8,
-> cpu Annapurna Labs Alpine AL324 Quad-core ARM Cortex-A57 CPU @ 1.70GHz,
-> ram 8GB,
-> with patch,
-> vers=3D1.0,cache=3Dstrict: read throughput 40MB/s, max read IO size 16KB
-> vers=3D2.0,cache=3Dstrict: read throughput 40MB/s, max read IO size 16KB
-> vers=3D2.1,cache=3Dstrict: read throughput 115MB/s, max read IO size 1MB
-> vers=3D3.0,cache=3Dstrict: read throughput 115MB/s, max read IO size 1MB
-> without patch,
-> vers=3D1.0,cache=3Dstrict: read throughput 40MB/s, max read IO size 16KB
-> vers=3D2.0,cache=3Dstrict: read throughput 40MB/s, max read IO size 16KB
-> vers=3D2.1,cache=3Dstrict: read throughput 40MB/s, max read IO size 16KB
-> vers=3D3.0,cache=3Dstrict: read throughput 40MB/s, max read IO size 16KB
->
-> For read performance on x86_64 (page size 4KB), all vers can support
-> readpages because max_read is bigger than page size 4KB plus packet heade=
-r
-> size.
-> x86_64, page size 4KB, linux-4.2.8,
-> cpu AMD Embedded R-Series RX-421ND 2.10GHz,
-> ram 4GB,
-> without patch,
-> vers=3D1.0,cache=3Dstrict: read throughput 109MB/s, read IO size 60KB
-> vers=3D2.0,cache=3Dstrict: read throughput 115MB/s, read IO size 64KB
-> vers=3D2.1,cache=3Dstrict: read throughput 117MB/s, read IO size 1MB
-> vers=3D3.0,cache=3Dstrict: read throughput 117MB/s, read IO size 1MB
-> with patch,
-> vers=3D1.0,cache=3Dstrict: read throughput 110MB/s, read IO size 60KB
-> vers=3D2.0,cache=3Dstrict: read throughput 115MB/s, read IO size 64KB
-> vers=3D2.1,cache=3Dstrict: read throughput 117MB/s, read IO size 1MB
-> vers=3D3.0,cache=3Dstrict: read throughput 117MB/s, read IO size 1MB
->
-> > And if anyone figures out how to configure an x86_64 Linux to use
-> > PAGE_SIZE of 64K or larger let me know...
-> I am using physical platform with arm cpu and aarch64 toolchain,
-> perhaps try qemu-system-aarch64 later.
->
-> --
-> Regards,
-> Jones Syue | =E8=96=9B=E6=87=B7=E5=AE=97
-> QNAP Systems, Inc.
+Not that patch #1 was replaced by
+https://lkml.kernel.org/r/20200403140952.17177-4-pasha.tatashin@soleen.co=
+m
+
+---
+ mm/page_alloc.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 1385d786a01a..ae1545246b69 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -1607,6 +1607,7 @@ void set_zone_contiguous(struct zone *zone)
+ 		if (!__pageblock_pfn_to_page(block_start_pfn,
+ 					     block_end_pfn, zone))
+ 			return;
++		cond_resched();
+ 	}
+=20
+ 	/* We confirm that there is no hole */
+--=20
+2.25.1
+
