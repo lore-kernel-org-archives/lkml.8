@@ -2,122 +2,116 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FB7FC38A29
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 17:37:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04650C3815B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 17:43:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25BC92223D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 17:37:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587058647;
-	bh=c6RjcLo9mHi0Qj+iI/ymrQ+8S7krFiwa/crVExYtMzc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=W1fit2gY3J6BbtGHLpo8vsbBY1vE4n0afTyxjm5lXSJDyNcA/sd0TzoxH9++jZGgk
-	 nYzXT1+JNVs6zlET92v8ekfbgxRGDIef0VKcoQWKszYJom0jRhT6fUTS4q3SgUA/Tu
-	 X3MQXHGKZofvh9otNyT7iAa2WLcw/nTICvqeg854=
+	by mail.kernel.org (Postfix) with ESMTP id D4C3A2078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 17:43:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pns9fgLX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730270AbgDPRhZ (ORCPT
+        id S1730829AbgDPRnV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 13:37:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57854 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729673AbgDPRhW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 13:37:22 -0400
-Received: from Mani-XPS-13-9360 (unknown [157.50.106.138])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D183A2076D;
-        Thu, 16 Apr 2020 17:37:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587058642;
-        bh=c6RjcLo9mHi0Qj+iI/ymrQ+8S7krFiwa/crVExYtMzc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MPW/w2Hfnyk6tUbCwgA+epGBp7s9x8qUWJj1HiCBq+J9LTkOTM2QYZTP/j5uo/wrm
-         Zu7E5RQleCiRVXkZUgTILmP6u9Q5+x1hOTZEgCwX8xxgd1Ay9ngjsrcfWax9ah1H31
-         eWIhS2p6dEJvzP9lw8E2V62BIIK92l1CFStWvCOY=
-Date:   Thu, 16 Apr 2020 23:07:10 +0530
-From:   Manivannan Sadhasivam <mani@kernel.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/2] Add software flow control support for STM32 UART
-Message-ID: <20200416173710.GA4548@Mani-XPS-13-9360>
-References: <20200412180923.30774-1-mani@kernel.org>
- <CAHp75VfDUoFMWg42OFHZtKQ972eoR3UDLVAs+BQjJm3h3-fOGw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75VfDUoFMWg42OFHZtKQ972eoR3UDLVAs+BQjJm3h3-fOGw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Thu, 16 Apr 2020 13:43:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39292 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725906AbgDPRnU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 13:43:20 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FF95C061A0C;
+        Thu, 16 Apr 2020 10:43:20 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id i10so5821939wrv.10;
+        Thu, 16 Apr 2020 10:43:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=NrrUfW6vk8LgplT9nLEcV4V1JQYGDjA/MPqzeQmBnq8=;
+        b=pns9fgLXDrLLhNt5os5ASORlyC0koVOzvPif+M5x6S/CCgOKjO3IyFkQNdQoP3Z4UK
+         Tvm9T7/an5kT7IXWAtMWuoQN3Vy9ZfMa611ZA5SKsUb/YuNTorbImGAEkw5cq1ztrfoX
+         4G1rdsg4LZdti7+0vAU0O6q2Lka5A65gTEUKQUTcKrtvcFzlSgNcvgqPmC6f/fg913Z2
+         x/rYzoTUDjHhU/gVOMWsHnwbfOssQg9luk4Xte9TyK9j8IyIdlCvR5gqKHPKY7+t8M/M
+         Jpy00ecl3IC3k0B5viNA7ImKIYwSGzF+tMUghlZZEVxpNmrPKQ2qs7/18StwPQWZUrWM
+         vuqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=NrrUfW6vk8LgplT9nLEcV4V1JQYGDjA/MPqzeQmBnq8=;
+        b=rAKn0liKVkckGwh1hkjlGoFk7puEo2tGIbovLgA96/TQj5g+D3fCYrLOY9cSSYDqAv
+         2A66KjGWp4mJ8uCAi/R/8LNNuNwcWZqRwz0eg3ClK3b/4Ps9/pxOnrHfPF/tvvCv57v4
+         iof1W2Yry8LxjjnPlkespcLSxHxnXdcGY5UNz/5/I7gsmh9Btweh8BZyyHArAkZAEyKK
+         ezvSpwv7GfOw5DfNhML2tL1jC0Gjey32PPz1T8qxfsYlLQ/cdOUIFm5+G1K91C20JFfA
+         er8TMkqEEe2QCiKWLBImVgGL20esfku319MKHTTFIl9V2PrjIq8X9osPfuG5UX9qQ+6j
+         ztcg==
+X-Gm-Message-State: AGi0PuZYbas58h1DlHXUnQBZ3aaqXCMsnewLShS64ghv+kEtelnJ7Frb
+        y9NOf6N1mJM0ovYbZn2p0rybgnhoxwk=
+X-Google-Smtp-Source: APiQypKFjOmDUmtTBtpZe21AkDnu+8Yk+AWo5X3eZCnDcLMBTElU/6Y2/S8IBVEwUYWgP8g00DuvTQ==
+X-Received: by 2002:adf:fa41:: with SMTP id y1mr34531615wrr.131.1587058999291;
+        Thu, 16 Apr 2020 10:43:19 -0700 (PDT)
+Received: from mail.broadcom.com ([192.19.231.250])
+        by smtp.gmail.com with ESMTPSA id p7sm28736296wrf.31.2020.04.16.10.43.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Apr 2020 10:43:18 -0700 (PDT)
+From:   Kamal Dasu <kdasu.kdev@gmail.com>
+To:     Kamal Dasu <kdasu.kdev@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Mark Brown <broonie@kernel.org>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [Patch 1/9] spi: bcm-qspi: Handle clock probe deferral
+Date:   Thu, 16 Apr 2020 13:43:01 -0400
+Message-Id: <20200416174309.34044-1-kdasu.kdev@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
+The clock provider may not be ready by the time spi-bcm-qspi gets
+probed, handle probe deferral using devm_clk_get_optional().
 
-On Mon, Apr 13, 2020 at 12:17:21PM +0300, Andy Shevchenko wrote:
-> On Mon, Apr 13, 2020 at 7:06 AM <mani@kernel.org> wrote:
-> >
-> > From: Manivannan Sadhasivam <mani@kernel.org>
-> >
-> > Hello,
-> >
-> > This patchset adds software flow control support for STM32 UART controller.
-> > This is necessary for the upcoming STM32MP1 based board called Stinger96
-> > IoT-Box. On that board, a bluetooth chip is connected to one of the UART
-> > controller but the CTS/RTS lines got swapped mistakenly. So in order to
-> > workaround that hardware bug and also to support the usecase of using only
-> > Tx/Rx pins, this patchset adds software flow control support.
-> >
-> > This patchset has been validated w/ Stinger96 IoT-Box connected to Murata
-> > WiFi-BT combo chip.
-> >
-> 
-> I think it's a mix of terminology or so. Looking into the patches I
-> found that it's required to have GPIOs for SW flow control.
-> No, SW flow control does not require any additional signals, except RxD/TxD.
-> 
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
+---
+ drivers/spi/spi-bcm-qspi.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
-Yikes. Yes I got it wrong. 'st,hw-flow-ctrl' property confused me :)
+diff --git a/drivers/spi/spi-bcm-qspi.c b/drivers/spi/spi-bcm-qspi.c
+index 23d295f36c80..74f4579c3f6a 100644
+--- a/drivers/spi/spi-bcm-qspi.c
++++ b/drivers/spi/spi-bcm-qspi.c
+@@ -1222,6 +1222,11 @@ int bcm_qspi_probe(struct platform_device *pdev,
+ 	}
+ 
+ 	qspi = spi_master_get_devdata(master);
++
++	qspi->clk = devm_clk_get_optional(&pdev->dev, NULL);
++	if (IS_ERR(qspi->clk))
++		return PTR_ERR(qspi->clk);
++
+ 	qspi->pdev = pdev;
+ 	qspi->trans_pos.trans = NULL;
+ 	qspi->trans_pos.byte = 0;
+@@ -1335,13 +1340,6 @@ int bcm_qspi_probe(struct platform_device *pdev,
+ 		qspi->soc_intc = NULL;
+ 	}
+ 
+-	qspi->clk = devm_clk_get(&pdev->dev, NULL);
+-	if (IS_ERR(qspi->clk)) {
+-		dev_warn(dev, "unable to get clock\n");
+-		ret = PTR_ERR(qspi->clk);
+-		goto qspi_probe_err;
+-	}
+-
+ 	ret = clk_prepare_enable(qspi->clk);
+ 	if (ret) {
+ 		dev_err(dev, "failed to prepare clock\n");
+-- 
+2.17.1
 
-> On top of that, it seems you adding mctrl-gpio functionality. Why
-> can't you use that one? And thus no bindings needs to be updated.
-> 
-
-Sure. This looks feasible. Will submit a follow up patch.
-
-Thanks,
-Mani
-
-> > Thanks,
-> > Mani
-> >
-> > Manivannan Sadhasivam (2):
-> >   dt-bindings: serial: Add binding for software flow control in STM32
-> >     UART
-> >   tty: serial: Add software flow control support for STM32 USART
-> >
-> >  .../bindings/serial/st,stm32-uart.yaml        |  15 +-
-> >  drivers/tty/serial/stm32-usart.c              | 143 +++++++++++++++++-
-> >  drivers/tty/serial/stm32-usart.h              |   4 +
-> >  3 files changed, 155 insertions(+), 7 deletions(-)
-> >
-> > --
-> > 2.17.1
-> >
-> 
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
