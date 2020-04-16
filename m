@@ -2,90 +2,124 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8F0BC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F31AC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:55:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C680E2063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:54:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AA682078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:55:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X0FwYuN8"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZNck3riq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504399AbgDPJya (ORCPT
+        id S2504428AbgDPJz0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 05:54:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50542 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2504354AbgDPJyF (ORCPT
+        Thu, 16 Apr 2020 05:55:26 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32348 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2504147AbgDPJzT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 05:54:05 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD3F7C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 02:54:04 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id h25so7094488lja.10
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 02:54:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vmbTM85pXtLEnvZz1CqQLZJasM9rtSlADHL+rW8xlrw=;
-        b=X0FwYuN8PxbnKfdFk1WRENwOJ5S/hI0XCnA9Oy2Lu3WB2kR3kCTK75cPlxqCiZPtnk
-         pOJu6ikqPqEygo03Gt1k39EsS5FzXAJpr82cqxvwcBqyrH5vIHSvPQTUq42xRpUH2RUC
-         YekYxdSDnrHHYqGcVZfUjFKNQlUTcNXbRacq63XWG8TuP24SpCcMEGzaPJrX5SzeGriR
-         fHQz1tryaVkTKNDBK180Uj4sS488b35fMebmxJYsRTkxRqyP28iS4vxqvDNreb4pOdWx
-         xCD4ThUu2HVHfLv1Aw6q0jX+0ZpybtQngclP5WG6YNMtX+c3Kf2NDLcVpB7qC6y4fPNU
-         ATFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vmbTM85pXtLEnvZz1CqQLZJasM9rtSlADHL+rW8xlrw=;
-        b=Acw1gYLGxHs1skY452lnB0c52RcEQ5AJX1XvwrL4yhzjTGk4YAstctAYZ/XPioI4ru
-         I8ZFzsyZ/BD2MCNZgvuY3QAM8kCC0SGftCYYir/iX14Rs+4rAe/my8srI211SBvICk7n
-         zg6pSE9hhHqBYqYVX4x8eYV6eVbfKjYup7QVdhKXhyzZJHM/GAypbL39mdMCReWCP5/t
-         TrocN9JTeOw+YZsgwEx8Z8SPixLau6HBv7sLH0h1d5DJh+rNWCYUrdN2wkUiZ5C/yNYF
-         NypUHa4wuifksr9yusxaVA6h7ZyIxxPNG0Nuk/HYOWBcoLHAD5LbaPwb7yCDzUzf6wO3
-         Ty5A==
-X-Gm-Message-State: AGi0PuZM3RJcXjZZLpnPhkYLZujFV45QXoSkpgexrQDKAwwjhMFv28FF
-        cqUlztgrsyahmwNbl+W6dGUjFBO2WzS0UPaOv+KW6g==
-X-Google-Smtp-Source: APiQypLayQLGT/Ao9sW1llsHHkRFIz0OeK7rOpmFlYZ4pDnuYKa6o7Y6T15Uy20O8h92MJhp/gGAXS8WRrqWYC06AGs=
-X-Received: by 2002:a2e:9605:: with SMTP id v5mr5752886ljh.258.1587030843273;
- Thu, 16 Apr 2020 02:54:03 -0700 (PDT)
+        Thu, 16 Apr 2020 05:55:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587030918;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=uzkUV3nQdx/hoYoZQDt470t93oI86X5pG7zK+r/DONM=;
+        b=ZNck3riqJ74S2YXFcz6g2MRgHiXBoLAChjgWzNxV1ryUutUxHmACkIeMQHOI2uRA5E07Bz
+        5md455D1e6+/Vy1ojlHROIuUqqJvrfqMA47ELsyiSWtK1IfffptG4zAgmapKH8lo7ZH7zL
+        QyO51XTwTItHaO70QHehAZdPBUSgP44=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-176-zDLWURH8Neyn4RNTbgME8g-1; Thu, 16 Apr 2020 05:55:14 -0400
+X-MC-Unique: zDLWURH8Neyn4RNTbgME8g-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 09C6013FE;
+        Thu, 16 Apr 2020 09:55:11 +0000 (UTC)
+Received: from krava (unknown [10.40.195.119])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B4FC9118DF1;
+        Thu, 16 Apr 2020 09:55:04 +0000 (UTC)
+Date:   Thu, 16 Apr 2020 11:55:01 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jiwei Sun <jiwei.sun@windriver.com>,
+        yuzhoujian <yuzhoujian@didichuxing.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v9 4/4] perf tools: add support for libpfm4
+Message-ID: <20200416095501.GC369437@krava>
+References: <20200416063551.47637-1-irogers@google.com>
+ <20200416063551.47637-5-irogers@google.com>
 MIME-Version: 1.0
-References: <20200407154245.2548-1-brgl@bgdev.pl>
-In-Reply-To: <20200407154245.2548-1-brgl@bgdev.pl>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 16 Apr 2020 11:53:52 +0200
-Message-ID: <CACRpkdYUdRn7=ASQ0xkZ06sAzt4umA_ajg=pbcT5Hm3Tt7JjFA@mail.gmail.com>
-Subject: Re: [PATCH] gpio: pca953x: disable regmap locking
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Marek Vasut <marek.vasut@gmail.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200416063551.47637-5-irogers@google.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 7, 2020 at 5:42 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+On Wed, Apr 15, 2020 at 11:35:51PM -0700, Ian Rogers wrote:
+> From: Stephane Eranian <eranian@google.com>
+> 
+> This patch links perf with the libpfm4 library if it is available
+> and NO_LIBPFM4 isn't passed to the build. The libpfm4 library
+> contains hardware event tables for all processors supported by
+> perf_events. It is a helper library that helps convert from a
+> symbolic event name to the event encoding required by the
+> underlying kernel interface. This library is open-source and
+> available from: http://perfmon2.sf.net.
+> 
+> With this patch, it is possible to specify full hardware events
+> by name. Hardware filters are also supported. Events must be
+> specified via the --pfm-events and not -e option. Both options
+> are active at the same time and it is possible to mix and match:
+> 
+> $ perf stat --pfm-events inst_retired:any_p:c=1:i -e cycles ....
+> 
+> Signed-off-by: Stephane Eranian <eranian@google.com>
+> Reviewed-by: Ian Rogers <irogers@google.com>
 
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> This driver uses its own locking but regmap silently uses a mutex for
-> all operations too. Add the option to disable locking to the regmap
-> config struct.
->
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+	# perf list
+	...
+	perf_raw pfm-events
+	  r0000
+	    [perf_events raw event syntax: r[0-9a-fA-F]+]
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+	skl pfm-events
+	  UNHALTED_CORE_CYCLES
+	    [Count core clock cycles whenever the clock signal on the specific core is running (not halted)]
+	  UNHALTED_REFERENCE_CYCLES
 
-Please queued this in your next devel pull request for me, thanks!
+please add ':' behind the '* pfm-events' label
 
-Yours,
-Linus Walleij
+jirka
+
