@@ -2,158 +2,252 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98995C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 02:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88ADEC2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 02:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 723A320737
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 02:18:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nMC/qWTk"
+	by mail.kernel.org (Postfix) with ESMTP id 6977020737
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 02:19:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732585AbgDPCSK (ORCPT
+        id S2387490AbgDPCTk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 22:18:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36086 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731031AbgDPCSE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 22:18:04 -0400
-Received: from mail-oo1-xc43.google.com (mail-yw1-xc43.google.com [IPv6:2607:f8b0:4864:20::c43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21D12C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 19:18:04 -0700 (PDT)
-Received: by mail-oo1-xc43.google.com with SMTP id g14so338736ooa.4
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 19:18:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EQ31clhLZb3VXpySOphZmzfjZTGe/r/2/PRRcbkZITI=;
-        b=nMC/qWTktNUMDXE45p0WHAv3qQ2luZCbAsFW6wl4sjF9gcgJ2G0R1JMPV+jsMydNRD
-         TgG00U1QJCed8qep3C0HhtJUBBm9jXAAWCH4+6f+n4MvVZi0CFKVUxhx8w4aEtQn2gnl
-         mV39d+E0efQh4qKgDRPWlFW+FpJgq1suZWlAUlBbsHVw7Gnfzv0Z8GHkrxtDnYte1cWX
-         eSV+BKQjR8jLSML/UZAbJe1mjGtohQPot93lIc8u4s3pCYUQtlR/bobRukMR0zq9BJz3
-         IHZGlD/NXR0f73j71Pwl0LZFjYjx7I0yvCjfbngCyuxYISAiPP+YyhEhsZ8UCTNdLKx3
-         /rXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EQ31clhLZb3VXpySOphZmzfjZTGe/r/2/PRRcbkZITI=;
-        b=gcmuAF4EgVmdpV2mNHbM8az2RJvaeVu5isrQrsOwFQAJIS5Zjvhd8EiIm3VHzxFc3B
-         a117iI93Zy3jP0DDZoJzhsZOyNova8E5/stHgS43jrP3F58dLYZqLpIU1PvVAn6TWyB8
-         zCdZ1+JRd61cbCArgdTy/c4lS6D2yQczpAxziLYDNg9cM/zkFjaidFZF7jccLov8+t7T
-         Rs6lyequo4InhGEdTIq6dtXZzYWAZopx1AFdAFDtay1XtyBafBVy9wi2S8TjaalsWS4h
-         hPZSNzkbTH70JGv8GWYiHutUZioeZ91hYdIXAc82z66+FE679p5Agg05Ne3IHzRM+mxh
-         TUcw==
-X-Gm-Message-State: AGi0PuYsdc+wPfz5Yf+QRrnRnJWAtBUsvjLj7z03/864nqxFcDkJCx1n
-        vbLqpWp5zfg4HrINT1kD7FLOXh7ag4+AupJMuxYlxQ==
-X-Google-Smtp-Source: APiQypJYFbdoctpq7gPgdilZR2mhzYaNNUpeyPOmIFI5tHwJzxXJHkshSlEFWLWaHPMYKeLP9csZ0IQAm1NqTgesAfI=
-X-Received: by 2002:a4a:4c8d:: with SMTP id a135mr24835704oob.36.1587003483373;
- Wed, 15 Apr 2020 19:18:03 -0700 (PDT)
+        Wed, 15 Apr 2020 22:19:40 -0400
+Received: from mga04.intel.com ([192.55.52.120]:1563 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731031AbgDPCTc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 22:19:32 -0400
+IronPort-SDR: XmMmOO/wfzJ+LllXY2Z4FbuwEv5J8u+r5t00Gf0LrAZuKBzyrO9tqpfKNlQ13gzx6ClFUEG0qs
+ 6yXUygjT+S3A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 19:19:32 -0700
+IronPort-SDR: pAQS6ld+epnMiGhFpY9ElpfTOX7Ui3KLVMJRz7ZmQtWlcK3N07TXi8bQ+WbsuKE1b2+M29F4FV
+ bcE6avtw/lKA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,388,1580803200"; 
+   d="scan'208";a="245852114"
+Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.254.208.171]) ([10.254.208.171])
+  by fmsmga008.fm.intel.com with ESMTP; 15 Apr 2020 19:19:30 -0700
+Cc:     baolu.lu@linux.intel.com, "Raj, Ashok" <ashok.raj@intel.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 6/7] iommu/vt-d: Add page request draining support
+To:     "Tian, Kevin" <kevin.tian@intel.com>,
+        Joerg Roedel <joro@8bytes.org>
+References: <20200415052542.30421-1-baolu.lu@linux.intel.com>
+ <20200415052542.30421-7-baolu.lu@linux.intel.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D8209CE@SHSMSX104.ccr.corp.intel.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <97bb69fe-4020-6487-6f1f-4454bcf0ba7a@linux.intel.com>
+Date:   Thu, 16 Apr 2020 10:19:29 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <CALAqxLV4rM74wuzuZ+BkUi+keccxkAxv30N4vrFO7CVQ5vnT1A@mail.gmail.com>
- <20200415085348.5511a5fe@gandalf.local.home> <CALAqxLV1A6sOC1GWpFYXeBoDff0+AJgoOYK7NktcTdvX3kvAeg@mail.gmail.com>
- <20200415161424.584d07d3@gandalf.local.home> <CALAqxLU26PVFPSza5GceSF6gTVdzo_2D3G0dBp0KZXvAWFUktA@mail.gmail.com>
- <20200415164116.40564f2c@gandalf.local.home> <CALAqxLW6jqr38bk8pp-Hom2=MLm3coTmzCP8MMfrDvMfx388=Q@mail.gmail.com>
- <20200415174918.154a86d0@gandalf.local.home> <20200415220459.GE17661@paulmck-ThinkPad-P72>
- <20200415185121.381a4bc3@gandalf.local.home> <CALAqxLX2UDQ7=dvzMoP6g-rYzw9dBebrynMfo4Gnv=SzaqhE=g@mail.gmail.com>
- <20200415204827.24f2c548@oasis.local.home>
-In-Reply-To: <20200415204827.24f2c548@oasis.local.home>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Wed, 15 Apr 2020 19:17:52 -0700
-Message-ID: <CALAqxLVdRp4Kc4rV2m9huQVRszdkgjRW09ghh3n2EA1ods-U3Q@mail.gmail.com>
-Subject: Re: On trace_*_rcuidle functions in modules
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Todd Kjos <tkjos@google.com>, Stephen Boyd <sboyd@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D8209CE@SHSMSX104.ccr.corp.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 5:48 PM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> On Wed, 15 Apr 2020 17:06:24 -0700
-> John Stultz <john.stultz@linaro.org> wrote:
->
-> > So you're saying the recent change to move to using trace_*_rcuidle()
-> > was unnecessary?
-> >
-> > Or is there a different notifier then cpu_pm_register_notifier() that
-> > the driver should be using (that one seems to be using
-> > atomic_notifier_chain_register())?
->
-> From looking at the trace event in __tcs_buffer_write() in
-> drivers/soc/qcom/rpmh-rsc.c, the _rcuidle() was added by:
->
-> efde2659b0fe8 ("drivers: qcom: rpmh-rsc: Use rcuidle tracepoints for rpmh")
->
-> Which shows a backtrace dump of:
->
->      Call trace:
->       dump_backtrace+0x0/0x174
->       show_stack+0x20/0x2c
->       dump_stack+0xc8/0x124
->       lockdep_rcu_suspicious+0xe4/0x104
->       __tcs_buffer_write+0x230/0x2d0
->       rpmh_rsc_write_ctrl_data+0x210/0x270
->       rpmh_flush+0x84/0x24c
->       rpmh_domain_power_off+0x78/0x98
->       _genpd_power_off+0x40/0xc0
->       genpd_power_off+0x168/0x208
->       genpd_power_off+0x1e0/0x208
->       genpd_power_off+0x1e0/0x208
->       genpd_runtime_suspend+0x1ac/0x220
->       __rpm_callback+0x70/0xfc
->       rpm_callback+0x34/0x8c
->       rpm_suspend+0x218/0x4a4
->       __pm_runtime_suspend+0x88/0xac
->       psci_enter_domain_idle_state+0x3c/0xb4
->       cpuidle_enter_state+0xb8/0x284
->       cpuidle_enter+0x38/0x4c
->       call_cpuidle+0x3c/0x68
->       do_idle+0x194/0x260
->       cpu_startup_entry+0x24/0x28
->       secondary_start_kernel+0x150/0x15c
->
->
-> There's no notifier that calls this. This is called by the rpm_callback
-> logic. Perhaps that callback will require a call to rcu_irq_enter()
-> before calling the callback.
+On 2020/4/15 19:10, Tian, Kevin wrote:
+>> From: Lu Baolu <baolu.lu@linux.intel.com>
+>> Sent: Wednesday, April 15, 2020 1:26 PM
+>>
+>> When a PASID is stopped or terminated, there can be pending
+>> PRQs (requests that haven't received responses) in remapping
+>> hardware. This adds the interface to drain page requests and
+>> call it when a PASID is terminated.
+>>
+>> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+>> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+>> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+>> ---
+>>   drivers/iommu/intel-svm.c   | 90 ++++++++++++++++++++++++++++++++++---
+>>   include/linux/intel-iommu.h |  1 +
+>>   2 files changed, 86 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
+>> index 05aeb8ea51c4..736dd39fb52b 100644
+>> --- a/drivers/iommu/intel-svm.c
+>> +++ b/drivers/iommu/intel-svm.c
+>> @@ -23,6 +23,7 @@
+>>   #include "intel-pasid.h"
+>>
+>>   static irqreturn_t prq_event_thread(int irq, void *d);
+>> +static void intel_svm_drain_prq(struct device *dev, int pasid);
+>>
+>>   #define PRQ_ORDER 0
+>>
+>> @@ -210,6 +211,7 @@ static void intel_mm_release(struct mmu_notifier
+>> *mn, struct mm_struct *mm)
+>>   	rcu_read_lock();
+>>   	list_for_each_entry_rcu(sdev, &svm->devs, list) {
+>>   		intel_pasid_tear_down_entry(svm->iommu, sdev->dev, svm-
+>>> pasid);
+>> +		intel_svm_drain_prq(sdev->dev, svm->pasid);
+> 
+> I feel there is a problem here. If you clear the PASID entry before draining,
+> in-fly requests will hit unrecoverable fault instead, due to invalid PASID
+> entry.
 
-Yea. Sorry, its extra confusing as the call stack there includes
-patches who's equivalents are only now in -next (I myself managed to
-confuse what was upstream vs in -next in this thread and suddenly
-couldn't find the code I had described - apologies).
+The in-fly requests will be ignored by IOMMU if the pasid entry is
+empty. It won't result in an unrecoverable fault.
 
-See:
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/soc/qcom/rpmh-rsc.c?h=next-20200415#n795
+> 
+>>   		intel_flush_svm_range_dev(svm, sdev, 0, -1, 0);
+>>   	}
+>>   	rcu_read_unlock();
+>> @@ -403,12 +405,8 @@ int intel_svm_unbind_gpasid(struct device *dev, int
+>> pasid)
+>>   		if (!sdev->users) {
+>>   			list_del_rcu(&sdev->list);
+>>   			intel_pasid_tear_down_entry(iommu, dev, svm-
+>>> pasid);
+>> +			intel_svm_drain_prq(dev, svm->pasid);
+>>   			intel_flush_svm_range_dev(svm, sdev, 0, -1, 0);
+>> -			/* TODO: Drain in flight PRQ for the PASID since it
+>> -			 * may get reused soon, we don't want to
+>> -			 * confuse with its previous life.
+>> -			 * intel_svm_drain_prq(dev, pasid);
+>> -			 */
+>>   			kfree_rcu(sdev, rcu);
+>>
+>>   			if (list_empty(&svm->devs)) {
+>> @@ -646,6 +644,7 @@ int intel_svm_unbind_mm(struct device *dev, int
+>> pasid)
+>>   			 * large and has to be physically contiguous. So it's
+>>   			 * hard to be as defensive as we might like. */
+>>   			intel_pasid_tear_down_entry(iommu, dev, svm-
+>>> pasid);
+>> +			intel_svm_drain_prq(dev, svm->pasid);
+>>   			intel_flush_svm_range_dev(svm, sdev, 0, -1, 0);
+>>   			kfree_rcu(sdev, rcu);
+>>
+>> @@ -703,6 +702,7 @@ struct page_req_dsc {
+>>   struct page_req {
+>>   	struct list_head list;
+>>   	struct page_req_dsc desc;
+>> +	struct completion complete;
+>>   	unsigned int processing:1;
+>>   	unsigned int drained:1;
+>>   	unsigned int completed:1;
+>> @@ -732,9 +732,83 @@ static bool is_canonical_address(u64 addr)
+>>   	return (((saddr << shift) >> shift) == saddr);
+>>   }
+>>
+>> +/**
+>> + * intel_svm_drain_prq:
+>> + *
+>> + * Drain all pending page requests related to a specific pasid in both
+>> + * software and hardware. The caller must guarantee that no more page
+>> + * requests related to this pasid coming.
+>> + */
+>> +static void intel_svm_drain_prq(struct device *dev, int pasid)
+>> +{
+>> +	struct device_domain_info *info;
+>> +	struct dmar_domain *domain;
+>> +	struct intel_iommu *iommu;
+>> +	struct qi_desc desc[3];
+>> +	struct pci_dev *pdev;
+>> +	struct page_req *req;
+>> +	unsigned long flags;
+>> +	u16 sid, did;
+>> +	int qdep;
+>> +
+>> +	info = get_domain_info(dev);
+>> +	if (WARN_ON(!info || !dev_is_pci(dev)))
+>> +		return;
+>> +
+>> +	iommu = info->iommu;
+>> +	domain = info->domain;
+>> +	pdev = to_pci_dev(dev);
+>> +
+>> +	/* Mark all related pending requests drained. */
+>> +	spin_lock_irqsave(&iommu->prq_lock, flags);
+>> +	list_for_each_entry(req, &iommu->prq_list, list)
+>> +		if (req->desc.pasid_present && req->desc.pasid == pasid)
+>> +			req->drained = true;
+>> +	spin_unlock_irqrestore(&iommu->prq_lock, flags);
+>> +
+>> +	/* Wait until all related pending requests complete. */
+>> +retry:
+>> +	spin_lock_irqsave(&iommu->prq_lock, flags);
+>> +	list_for_each_entry(req, &iommu->prq_list, list) {
+>> +		if (req->desc.pasid_present &&
+>> +		    req->desc.pasid == pasid &&
+>> +		    !req->completed) {
+>> +			spin_unlock_irqrestore(&iommu->prq_lock, flags);
+>> +			wait_for_completion_timeout(&req->complete, 5 *
+>> HZ);
+>> +			goto retry;
+>> +		}
+>> +	}
+>> +	spin_unlock_irqrestore(&iommu->prq_lock, flags);
+>> +
+>> +	/*
+>> +	 * Perform steps described in VT-d spec CH7.10 to drain page
+>> +	 * request and responses in hardware.
+>> +	 */
+>> +	sid = PCI_DEVID(info->bus, info->devfn);
+>> +	did = domain->iommu_did[iommu->seq_id];
+>> +	qdep = pci_ats_queue_depth(pdev);
+>> +
+>> +	memset(desc, 0, sizeof(desc));
+>> +	desc[0].qw0 = QI_IWD_STATUS_DATA(QI_DONE) |
+>> +			QI_IWD_FENCE |
+>> +			QI_IWD_TYPE;
+>> +	desc[1].qw0 = QI_EIOTLB_PASID(pasid) |
+>> +			QI_EIOTLB_DID(did) |
+>> +			QI_EIOTLB_GRAN(QI_GRAN_NONG_PASID) |
+>> +			QI_EIOTLB_TYPE;
+>> +	desc[2].qw0 = QI_DEV_EIOTLB_PASID(pasid) |
+>> +			QI_DEV_EIOTLB_SID(sid) |
+>> +			QI_DEV_EIOTLB_QDEP(qdep) |
+>> +			QI_DEIOTLB_TYPE |
+>> +			QI_DEV_IOTLB_PFSID(info->pfsid);
+>> +
+>> +	qi_submit_sync(iommu, desc, 3, QI_OPT_WAIT_DRAIN);
+> 
+> the completion of above sequence ensures that previous queued
+> page group responses are sent out and received by the endpoint
+> and vice versa all in-fly page requests from the endpoint are queued
+> in iommu page request queue. Then comes a problem - you didn't
+> wait for completion of those newly-queued requests and their
+> responses.
 
-> In any case, I think it is wrong that these callbacks are called
-> without RCU watching. The _rcuidle() on that tracepoint should be
-> removed, and we fix the code that gets there to ensure that RCU is
-> enabled. I agree with Peter, that no module code should be executed
-> without RCU watching.
+We have emptied the pasid entry and invalidate the related caches, IOMMU
+will ignore any new-coming page requests.
 
-For sanity sake, it seems like the rule should be we avoid driver code
-executing without RCU watching. The fact of if it's a loadable module
-or not is super subtle, and likely that more folks will trip over it.
+> 
+> According to VT-d spec 7.10, step (d) mentions when queue overflow
+> happens, software needs to repeat the above draining sequence to
+> drain auto-responses.
 
-But ok. I'll follow around to understand if the commit efde2659b0fe8
-("drivers: qcom: rpmh-rsc: Use rcuidle tracepoints for rpmh") is
-actually necessary and see what would be needed to revert it.
+Page request queue overflow is not checked and handled in the prq
+interrupt thread. My plan is to add it in a separated patch set. Maybe I
+need to state this in the cover letter.
 
-thanks
--john
+> 
+> According to VT-d spec 7.11, the device driver must be notified to
+> revoke the PASID before this draining sequence happens. When
+> does that happen? Possibly can add some comment to explain such
+> background.
+
+Currently, page request drain only happens in unbind() operations. That
+ensures that the device driver and the endpoint device have revoked the
+pasid. As for how should kernel handle pasid termination before
+unbind(), it's still under discussion. For now, AFAICS, it seems that
+the acceptable solution is to delay the release of a pasid until ubind()
+happens.
+
+Best regards,
+baolu
