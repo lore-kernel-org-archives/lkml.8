@@ -2,143 +2,186 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17859C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 05:49:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA84C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 05:50:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1D832076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 05:48:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 975722076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 05:50:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="igTopo3N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407278AbgDPFs6 (ORCPT
+        id S2407295AbgDPFuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 01:48:58 -0400
-Received: from mga14.intel.com ([192.55.52.115]:2915 "EHLO mga14.intel.com"
+        Thu, 16 Apr 2020 01:50:19 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:41748 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407149AbgDPFsQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 01:48:16 -0400
-IronPort-SDR: 1MnNJUp19vJwvEROKs1VPjwHDiNl+sHqxUqVVnHvjNvG/8paaw7KN3+Al7o0eY8Vv+uXDY47pg
- 9qBNlJA6wmrg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 22:48:15 -0700
-IronPort-SDR: kSgWfODYLPIBI+Ko+8skThE/Mc9TejguXhlMxJ86rY+O8OqEpbwA0DhMGRuh59LaPdUH6Xz8iP
- sW/20cnw+ODQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,388,1580803200"; 
-   d="scan'208";a="245887317"
-Received: from xingzhen-mobl1.ccr.corp.intel.com (HELO [10.238.5.222]) ([10.238.5.222])
-  by fmsmga008.fm.intel.com with ESMTP; 15 Apr 2020 22:48:12 -0700
-Subject: Re: [LKP] Re: [ext4] b1b4705d54: filebench.sum_bytes_mb/s -20.2%
- regression
-To:     Jan Kara <jack@suse.cz>
-Cc:     Rong Chen <rong.a.chen@intel.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Matthew Bobrowski <mbobrowski@mbobrowski.org>,
-        Ritesh Harjani <riteshh@linux.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        lkp@lists.01.org
-References: <20191224005915.GW2760@shao2-debian>
- <20200107134106.GD25547@quack2.suse.cz> <20200107165708.GA3619@mit.edu>
- <20200107172824.GK25547@quack2.suse.cz>
- <fde1ad11-c9b0-4393-a123-3f7625c819fa@intel.com>
- <7ec6b078-7b09-fb87-8ad2-a328e96c5bf9@linux.intel.com>
- <49a59199-53af-206f-d07c-5c8c45f498b3@linux.intel.com>
- <20200325143102.GJ28951@quack2.suse.cz>
- <309baa89-9f69-0545-946e-4b3624f83e60@linux.intel.com>
- <20200415083954.GD501@quack2.suse.cz>
-From:   Xing Zhengjun <zhengjun.xing@linux.intel.com>
-Message-ID: <3dbd1c40-00d5-5e3e-f864-cb9abe30a7fa@linux.intel.com>
-Date:   Thu, 16 Apr 2020 13:48:11 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        id S2407149AbgDPFuJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 01:50:09 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 492pGN2TZVz9tymG;
+        Thu, 16 Apr 2020 07:50:04 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=igTopo3N; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id PtXMNzHK3n0W; Thu, 16 Apr 2020 07:50:04 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 492pGN1Q6Pz9tymB;
+        Thu, 16 Apr 2020 07:50:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1587016204; bh=N4ayq2OQWh2ZYIlUh/X2JW+6xQidyN4B0Sfy2P2aRR8=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=igTopo3NsYZk4jzEOW552mqvJXc551JWByVueOri7QTQrrwNA2wq4tFimK7ll97m+
+         p/dA4U2VVre1NBuutmQJ177ExMyOL2tEoneFyYoHJOF1GZc8ZS2uyWyfEGeMIkWFWt
+         p8mCZLiLjncG2q0FkQHvcybBXoQK3aIBpMIjGO0s=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 41A1E8B778;
+        Thu, 16 Apr 2020 07:50:05 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id xRLvXbBNUkpJ; Thu, 16 Apr 2020 07:50:05 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 813AD8B756;
+        Thu, 16 Apr 2020 07:50:04 +0200 (CEST)
+Subject: Re: [PATCH] powerpc/uaccess: Use flexible addressing with
+ __put_user()/__get_user()
+To:     Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, npiggin@gmail.com,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <4fdc2aba6f5e51887d1cd0fee94be0989eada2cd.1586942312.git.christophe.leroy@c-s.fr>
+ <20200415220652.GW26902@gate.crashing.org>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <1f5a7975-3b32-3a14-e03e-7c875df57aa3@c-s.fr>
+Date:   Thu, 16 Apr 2020 07:50:00 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200415083954.GD501@quack2.suse.cz>
+In-Reply-To: <20200415220652.GW26902@gate.crashing.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-
-On 4/15/2020 4:39 PM, Jan Kara wrote:
-> On Wed 15-04-20 15:55:09, Xing Zhengjun wrote:
->>
->>
->> On 3/25/2020 10:31 PM, Jan Kara wrote:
->>> On Wed 25-03-20 13:50:09, Xing Zhengjun wrote:
->>>> ping...
->>>> The issue still exists in v5.6-rc7.
->>>
->>> So I have tried again to reproduce this so that I can look into the
->>> regression. When observing what is actually happening in the system I have
->>> to say that this workfile (or actually its implementation in filebench) is
->>> pretty dubious. The problem is that filebench first creates the files by
->>> writing them through ordinary write(2). Then it immediately starts reading
->>> the files with direct IO read. So what happens is that by the time direct
->>> IO read is running, the system is still writing back the create files and
->>> depending on how read vs writes get scheduled, you get different results.
->>> Also direct IO read will first flush the range it is going to read from the
->>> page cache so to some extent this is actually parallel small ranged
->>> fsync(2) benchmark. Finally differences in how we achieve integrity of
->>> direct IO reads with dirty page cache are going to impact this benchmark.
->>>
->>
->> Sounds reasonable!  Thanks for the clarification!
->>
->>> So overall can now see why this commit makes a difference but the workload
->>> is IMHO largely irrelevant. What would make sense is to run filebench once,
->>> then unmount & mount the fs to force files to disk and clear page cache and
->>> then run it again. Filebench will reuse the files in this case and then
->>> parallel direct IO readers without page cache are a sensible workload. But
->>> I didn't see any difference in that (even with rotating disk) on my
->>> machines.
->>>
->> We do a test per your suggestion, run "filebench" once during setup stage,
->> then do a "sync",  after that run "filebench" again, from the attached test
->> result "compare", "filebench.sum_bytes_mb/s" regression is disappeared.
+Le 16/04/2020 à 00:06, Segher Boessenkool a écrit :
+> Hi!
 > 
-> Cool. Thanks for improving the testcase! I'd just note that if you only do
-> sync(2) between the setup and benchmark phase, you'll still have files
-> cached in the page cache and so direct IO will go through the slow path
-> when it has to evict pages from the page cache. The standard (and optimized
-> for) situation for direct IO is that there is no page cache for the files
-> direct IO is performed to. That's why I suggested remounting the
-> filesystem, not just calling sync(2)...
->
-
-Thanks. We will keep improving the test case and try to make sure there 
-is no page cache for the files direct IO is performed to.
-
-> 								Honza
-> 
->> =========================================================================================
->> tbox_group/testcase/rootfs/kconfig/compiler/debug-setup/disk/fs/test/cpufreq_governor/ucode:
->>    lkp-hsw-d01/filebench/debian-x86_64-20191114.cgz/x86_64-rhel-7.6/gcc-7/test2/1HDD/ext4/fivestreamreaddirect.f/performance/0x27
+> On Wed, Apr 15, 2020 at 09:20:26AM +0000, Christophe Leroy wrote:
+>> At the time being, __put_user()/__get_user() and friends only use
+>> register indirect with immediate index addressing, with the index
+>> set to 0. Ex:
 >>
->> commit:
->>    b1b4705d54abedfd69dcdf42779c521aa1e0fbd3
->>    09edf4d381957b144440bac18a4769c53063b943
->>    v5.5
->>    v5.7-rc1
->>
->> b1b4705d54abedfd 09edf4d381957b144440bac18a4                        v5.5                    v5.7-rc1
->> ---------------- --------------------------- --------------------------- ---------------------------
->>           %stddev     %change         %stddev     %change         %stddev     %change         %stddev
->>               \          |                \          |                \          |                \
->>       59.40            +0.0%      59.40            -0.8%      58.93            -1.0%      58.80        filebench.sum_bytes_mb/s
->>        3570            +0.0%       3570            -0.8%       3541            -1.0%       3533        filebench.sum_operations
->>       59.50            +0.0%      59.50            -0.8%      59.02            -1.0%      58.89        filebench.sum_operations/s
->>       59.33            +0.0%      59.33            +0.0%      59.33            -0.6%      59.00        filebench.sum_reads/s
->>       83.98            -1.5%      82.75            +0.8%      84.62            +1.0%      84.84        filebench.sum_time_ms/op
+>> 	lwz	reg1, 0(reg2)
+> 
+> This is called a "D-form" instruction, or sometimes "offset addressing".
+> Don't talk about an "index", it confuses things, because the *other*
+> kind is called "indexed" already, also in the ISA docs!  (X-form, aka
+> indexed addressing, [reg+reg], where D-form does [reg+imm], and both
+> forms can do [reg]).
+
+In the "Programming Environments Manual for 32-Bit Implementations of 
+the PowerPC™ Architecture", they list the following addressing modes:
+
+Load and store operations have three categories of effective address 
+generation that depend on the
+operands specified:
+• Register indirect with immediate index mode
+• Register indirect with index mode
+• Register indirect mode
+
+
+> 
+>> Give the compiler the opportunity to use other adressing modes
+>> whenever possible, to get more optimised code.
+> 
+> Great :-)
+> 
+>> --- a/arch/powerpc/include/asm/uaccess.h
+>> +++ b/arch/powerpc/include/asm/uaccess.h
+>> @@ -114,7 +114,7 @@ extern long __put_user_bad(void);
+>>    */
+>>   #define __put_user_asm(x, addr, err, op)			\
+>>   	__asm__ __volatile__(					\
+>> -		"1:	" op " %1,0(%2)	# put_user\n"		\
+>> +		"1:	" op "%U2%X2 %1,%2	# put_user\n"	\
+>>   		"2:\n"						\
+>>   		".section .fixup,\"ax\"\n"			\
+>>   		"3:	li %0,%3\n"				\
+>> @@ -122,7 +122,7 @@ extern long __put_user_bad(void);
+>>   		".previous\n"					\
+>>   		EX_TABLE(1b, 3b)				\
+>>   		: "=r" (err)					\
+>> -		: "r" (x), "b" (addr), "i" (-EFAULT), "0" (err))
+>> +		: "r" (x), "m" (*addr), "i" (-EFAULT), "0" (err))
+> 
+> %Un on an "m" operand doesn't do much: you need to make it "m<>" if you
+> want pre-modify ("update") insns to be generated.  (You then will want
+> to make sure that operand is used in a way GCC can understand; since it
+> is used only once here, that works fine).
+
+Ah ? Indeed I got the idea from include/asm/io.h where there is:
+
+#define DEF_MMIO_IN_D(name, size, insn)				\
+static inline u##size name(const volatile u##size __iomem *addr)	\
+{									\
+	u##size ret;							\
+	__asm__ __volatile__("sync;"#insn"%U1%X1 %0,%1;twi 0,%0,0;isync"\
+		: "=r" (ret) : "m" (*addr) : "memory");			\
+	return ret;							\
+}
+
+It should be "m<>" there as well ?
+
+> 
+>> @@ -130,8 +130,8 @@ extern long __put_user_bad(void);
+>>   #else /* __powerpc64__ */
+>>   #define __put_user_asm2(x, addr, err)				\
+>>   	__asm__ __volatile__(					\
+>> -		"1:	stw %1,0(%2)\n"				\
+>> -		"2:	stw %1+1,4(%2)\n"			\
+>> +		"1:	stw%U2%X2 %1,%2\n"			\
+>> +		"2:	stw%U2%X2 %L1,%L2\n"			\
+>>   		"3:\n"						\
+>>   		".section .fixup,\"ax\"\n"			\
+>>   		"4:	li %0,%3\n"				\
+>> @@ -140,7 +140,7 @@ extern long __put_user_bad(void);
+>>   		EX_TABLE(1b, 4b)				\
+>>   		EX_TABLE(2b, 4b)				\
+>>   		: "=r" (err)					\
+>> -		: "r" (x), "b" (addr), "i" (-EFAULT), "0" (err))
+>> +		: "r" (x), "m" (*addr), "i" (-EFAULT), "0" (err))
+> 
+> Here, it doesn't work.  You don't want two consecutive update insns in
+> any case.  Easiest is to just not use "m<>", and then, don't use %Un
+> (which won't do anything, but it is confusing).
+
+Can't we leave the Un on the second stw ?
+
+> 
+> Same for the reads.
+> 
+> Rest looks fine, and update should be good with that fixed as said.
+> 
+> Reviewed-by: Segher Boessenkool <segher@kernel.crashing.org>
+> 
+> 
+> Segher
 > 
 
--- 
-Zhengjun Xing
+Thanks for the review
+Christophe
