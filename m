@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A7AC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D0CDC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:40:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D980D21D91
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:40:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF6442223D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:40:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587051609;
-	bh=jecDxhdbIUC2i9PxgzsZxqXdLuxpex7RGNa3KibokSw=;
+	s=default; t=1587051614;
+	bh=zHhjz7bAC4lCz9BDYxtMEQD9e9rotebVujj8UYfL8g4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AyIuxyy0NG9/WOqryaTQxDuximfloXC+1B75fUc0oK0BcJuBnowPLWlA5TZXu083L
-	 k4gS6RZVo0N9vqy7SFJ6hsosnlBKrA/xlQ5n6/xa/UyPlHupIdShpfKr6MPqBbhwgn
-	 PXSZxk7myx9YcuQug4CdD6qtmfQjQR+OP9EOJb3s=
+	b=y2B9RheREJYXya+/sFBJnkTSPOy6b6VkwWokWflWMcTg/w7QW8pxQFILstinpZMRU
+	 EqTajQ92VJaSv2xTGhViXv5K7hjR99Mto5lxpC7n0z5jzxAL4ATOz01t/iVZFamtkx
+	 WZ5xoozvg2zUXuM27SYb8L4C3brauj7Ln5aMiaS0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395285AbgDPPkH (ORCPT
+        id S2395491AbgDPPkN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:40:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50384 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:40:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896928AbgDPNh7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:37:59 -0400
+        id S2897598AbgDPNh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:37:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EA6F221F4;
-        Thu, 16 Apr 2020 13:37:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03DCC20732;
+        Thu, 16 Apr 2020 13:37:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044278;
-        bh=jecDxhdbIUC2i9PxgzsZxqXdLuxpex7RGNa3KibokSw=;
+        s=default; t=1587044276;
+        bh=zHhjz7bAC4lCz9BDYxtMEQD9e9rotebVujj8UYfL8g4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=neAPvekIibn8npCMIElW2Sx+5sVVNxPUqGiapqACbG3HC6402L1OH/LoTDfYmi5XS
-         dZkWQZQv0VIr2AaHMKQznRM/pzYfAHRmViNPZfzcz5fcAReg/eXeFlqCZ7Nl3DuAJv
-         g/nNpfVRpSaFRSoL9WZ9mg9bM4axVxkeXbWGr3rw=
+        b=llXKZZ1uBEG3U56TLRovf9rFYcDdYx+pbs7xCJ9Ms2MVOmvQtr4t8KQkfaeTs4U3d
+         th579LuJTLCIEIi6bipnwl1lvEow5FKxH19deWx+jJn/BrFXxEofCDfjOKuBj64MZf
+         vCKGtNTYGj7AxgTvRQus6272GpDj27bdLPJW8JcU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yilu Lin <linyilu@huawei.com>,
-        Steve French <stfrench@microsoft.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>
-Subject: [PATCH 5.5 152/257] CIFS: Fix bug which the return value by asynchronous read is error
-Date:   Thu, 16 Apr 2020 15:23:23 +0200
-Message-Id: <20200416131345.551035978@linuxfoundation.org>
+        stable@vger.kernel.org, Steve French <stfrench@microsoft.com>
+Subject: [PATCH 5.5 151/257] smb3: fix performance regression with setting mtime
+Date:   Thu, 16 Apr 2020 15:23:22 +0200
+Message-Id: <20200416131345.391321329@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -60,63 +58,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yilu Lin <linyilu@huawei.com>
+From: Steve French <stfrench@microsoft.com>
 
-commit 97adda8b3ab703de8e4c8d27646ddd54fe22879c upstream.
+commit cf5371ae460eb8e484e4884747af270c86c3c469 upstream.
 
-This patch is used to fix the bug in collect_uncached_read_data()
-that rc is automatically converted from a signed number to an
-unsigned number when the CIFS asynchronous read fails.
-It will cause ctx->rc is error.
+There are cases when we don't want to send the SMB2 flush operation
+(e.g. when user specifies mount parm "nostrictsync") and it can be
+a very expensive operation on the server.  In most cases in order
+to set mtime, we simply need to flush (write) the dirtry pages from
+the client and send the writes to the server not also send a flush
+protocol operation to the server.
 
-Example:
-Share a directory and create a file on the Windows OS.
-Mount the directory to the Linux OS using CIFS.
-On the CIFS client of the Linux OS, invoke the pread interface to
-deliver the read request.
-
-The size of the read length plus offset of the read request is greater
-than the maximum file size.
-
-In this case, the CIFS server on the Windows OS returns a failure
-message (for example, the return value of
-smb2.nt_status is STATUS_INVALID_PARAMETER).
-
-After receiving the response message, the CIFS client parses
-smb2.nt_status to STATUS_INVALID_PARAMETER
-and converts it to the Linux error code (rdata->result=-22).
-
-Then the CIFS client invokes the collect_uncached_read_data function to
-assign the value of rdata->result to rc, that is, rc=rdata->result=-22.
-
-The type of the ctx->total_len variable is unsigned integer,
-the type of the rc variable is integer, and the type of
-the ctx->rc variable is ssize_t.
-
-Therefore, during the ternary operation, the value of rc is
-automatically converted to an unsigned number. The final result is
-ctx->rc=4294967274. However, the expected result is ctx->rc=-22.
-
-Signed-off-by: Yilu Lin <linyilu@huawei.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Fixes: aa081859b10c ("cifs: flush before set-info if we have writeable handles")
 CC: Stable <stable@vger.kernel.org>
-Acked-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/file.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/cifs/inode.c |   23 ++++++++++++-----------
+ 1 file changed, 12 insertions(+), 11 deletions(-)
 
---- a/fs/cifs/file.c
-+++ b/fs/cifs/file.c
-@@ -3842,7 +3842,7 @@ again:
- 	if (rc == -ENODATA)
- 		rc = 0;
+--- a/fs/cifs/inode.c
++++ b/fs/cifs/inode.c
+@@ -2517,25 +2517,26 @@ cifs_setattr_nounix(struct dentry *diren
  
--	ctx->rc = (rc == 0) ? ctx->total_len : rc;
-+	ctx->rc = (rc == 0) ? (ssize_t)ctx->total_len : rc;
+ 	/*
+ 	 * Attempt to flush data before changing attributes. We need to do
+-	 * this for ATTR_SIZE and ATTR_MTIME for sure, and if we change the
+-	 * ownership or mode then we may also need to do this. Here, we take
+-	 * the safe way out and just do the flush on all setattr requests. If
+-	 * the flush returns error, store it to report later and continue.
++	 * this for ATTR_SIZE and ATTR_MTIME.  If the flush of the data
++	 * returns error, store it to report later and continue.
+ 	 *
+ 	 * BB: This should be smarter. Why bother flushing pages that
+ 	 * will be truncated anyway? Also, should we error out here if
+-	 * the flush returns error?
++	 * the flush returns error? Do we need to check for ATTR_MTIME_SET flag?
+ 	 */
+-	rc = filemap_write_and_wait(inode->i_mapping);
+-	if (is_interrupt_error(rc)) {
+-		rc = -ERESTARTSYS;
+-		goto cifs_setattr_exit;
++	if (attrs->ia_valid & (ATTR_MTIME | ATTR_SIZE | ATTR_CTIME)) {
++		rc = filemap_write_and_wait(inode->i_mapping);
++		if (is_interrupt_error(rc)) {
++			rc = -ERESTARTSYS;
++			goto cifs_setattr_exit;
++		}
++		mapping_set_error(inode->i_mapping, rc);
+ 	}
  
- 	mutex_unlock(&ctx->aio_mutex);
+-	mapping_set_error(inode->i_mapping, rc);
+ 	rc = 0;
  
+-	if (attrs->ia_valid & ATTR_MTIME) {
++	if ((attrs->ia_valid & ATTR_MTIME) &&
++	    !(cifs_sb->mnt_cifs_flags & CIFS_MOUNT_NOSSYNC)) {
+ 		rc = cifs_get_writable_file(cifsInode, FIND_WR_ANY, &wfile);
+ 		if (!rc) {
+ 			tcon = tlink_tcon(wfile->tlink);
 
 
