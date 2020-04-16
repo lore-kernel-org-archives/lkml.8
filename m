@@ -2,133 +2,102 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0124C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:20:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA492C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:20:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9AAB32076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:20:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587046821;
-	bh=7SRvRr9oGqe5O3+KQvo7jEjrTxqZh64PRVA9WYJHS50=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vkt/tgVWM8rl4kPP5jq6ioQv2ak8SSl/PpwWbmc+z8wxjrHTpBlkFiNdxjsr1XmxS
-	 XbnuObhtyb2SJLXS8LAPuJdygzsLtYI5H4ChyP1DPR7pJEF/Px2jpjEvdub1UPpS2u
-	 7gCVR8kgw7J/7yWDE47noEbmdQrCkBZk04CtHzwI=
+	by mail.kernel.org (Postfix) with ESMTP id B30662076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:20:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WapX0vA+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390139AbgDPOUT (ORCPT
+        id S1730075AbgDPOUZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:20:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41386 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727941AbgDPNyq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:54:46 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52D282078B;
-        Thu, 16 Apr 2020 13:54:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045285;
-        bh=7SRvRr9oGqe5O3+KQvo7jEjrTxqZh64PRVA9WYJHS50=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mODQkeRlXrhM4+knNyp1/kdJdgVH6VOrqzB5LJWhpL3fGlDm+uhPNClrxYZ9rQwVv
-         Zc5A2v54tMp1Wfoo5b1mCnu7+WuhI9QQ4yNhQM46JQz7nVd2NBsUyaC9ErCM5uLkAq
-         2HPamg4vJbKbAhkfxGy0jv85hiUyJxYSiueRu7gI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.6 072/254] ALSA: usb-audio: Add mixer workaround for TRX40 and co
-Date:   Thu, 16 Apr 2020 15:22:41 +0200
-Message-Id: <20200416131334.885425481@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
-References: <20200416131325.804095985@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 16 Apr 2020 10:20:25 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:47692 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728620AbgDPNyp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:54:45 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03GDruw5059005;
+        Thu, 16 Apr 2020 13:54:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=corp-2020-01-29;
+ bh=ewaUBdhOkKob9iIFy9m3K0prmwFTG1DLRzvoCPBRDmM=;
+ b=WapX0vA+MMohwDAw+oFE94garCniL8tFeOp4FSxAnPznNkgWSAg/41+GMuj8l9eKgvqK
+ 21eew9TudM+WsSKECzs6BsgFE+MIuGLMTEGv4UYrU9oyn2bxYrWppOcqZo3i+uTyWd37
+ 7C9bJi4jeNI57koT0tk43UYO7uRK0j7ex6Aj2hMm198eaAcxS2cUw3WZqOaVadF8wPvJ
+ sjpwQxYtAWA54MJC6Yz279TaH/t/nGwN4Ipp0vQRRc3dkg03edVa8RhWSPZfRUfqBKTn
+ 3ekjd3Vbip0Tu7ilVugZVA/xXeT1gd64XuwTjw8OiL4cYE3NLVdHAMj494zKnOVArFS7 1Q== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 30emejharp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Apr 2020 13:54:38 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03GDh7EI155474;
+        Thu, 16 Apr 2020 13:52:37 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 30emen3jp5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Apr 2020 13:52:37 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03GDqZF0012118;
+        Thu, 16 Apr 2020 13:52:35 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 16 Apr 2020 06:52:35 -0700
+Date:   Thu, 16 Apr 2020 16:52:25 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Jerome Pouiller <Jerome.Pouiller@silabs.com>
+Cc:     devel@driverdev.osuosl.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: Re: [PATCH 12/20] staging: wfx: align semantic of beacon filter with
+ other filters
+Message-ID: <20200416135225.GQ1163@kadam>
+References: <20200415161147.69738-1-Jerome.Pouiller@silabs.com>
+ <20200415161147.69738-13-Jerome.Pouiller@silabs.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200415161147.69738-13-Jerome.Pouiller@silabs.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9592 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxscore=0 suspectscore=0
+ mlxlogscore=999 phishscore=0 spamscore=0 bulkscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004160098
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9592 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 impostorscore=0
+ mlxscore=0 suspectscore=0 lowpriorityscore=0 spamscore=0 mlxlogscore=999
+ bulkscore=0 adultscore=0 phishscore=0 clxscore=1015 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004160099
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+On Wed, Apr 15, 2020 at 06:11:39PM +0200, Jerome Pouiller wrote:
+> From: Jérôme Pouiller <jerome.pouiller@silabs.com>
+> 
+> Filters provided by HIF API are sometime inclusive, sometime exclusive.
+> 
+> This patch align the behavior and name of the beacon filter with the
+> other filters. Also avoid double negation: "disable filter"
 
-commit 2a48218f8e23d47bd3e23cfdfb8aa9066f7dc3e6 upstream.
+Hooray!  I have been wanting to suggest this every time I see the
+->disable_beacon_filter name, especially for patch 7/20.
 
-Some recent boards (supposedly with a new AMD platform) contain the
-USB audio class 2 device that is often tied with HD-audio.  The device
-exposes an Input Gain Pad control (id=19, control=12) but this node
-doesn't behave correctly, returning an error for each inquiry of
-GET_MIN and GET_MAX that should have been mandatory.
-
-As a workaround, simply ignore this node by adding a usbmix_name_map
-table entry.  The currently known devices are:
-* 0414:a002 - Gigabyte TRX40 Aorus Pro WiFi
-* 0b05:1916 - ASUS ROG Zenith II
-* 0b05:1917 - ASUS ROG Strix
-* 0db0:0d64 - MSI TRX40 Creator
-* 0db0:543d - MSI TRX40
-
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206543
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200408140449.22319-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- sound/usb/mixer_maps.c |   28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
-
---- a/sound/usb/mixer_maps.c
-+++ b/sound/usb/mixer_maps.c
-@@ -359,6 +359,14 @@ static const struct usbmix_name_map cors
- 	{ 0 }
- };
- 
-+/* Some mobos shipped with a dummy HD-audio show the invalid GET_MIN/GET_MAX
-+ * response for Input Gain Pad (id=19, control=12).  Skip it.
-+ */
-+static const struct usbmix_name_map asus_rog_map[] = {
-+	{ 19, NULL, 12 }, /* FU, Input Gain Pad */
-+	{}
-+};
-+
- /*
-  * Control map entries
-  */
-@@ -488,6 +496,26 @@ static const struct usbmix_ctl_map usbmi
- 		.id = USB_ID(0x1b1c, 0x0a42),
- 		.map = corsair_virtuoso_map,
- 	},
-+	{	/* Gigabyte TRX40 Aorus Pro WiFi */
-+		.id = USB_ID(0x0414, 0xa002),
-+		.map = asus_rog_map,
-+	},
-+	{	/* ASUS ROG Zenith II */
-+		.id = USB_ID(0x0b05, 0x1916),
-+		.map = asus_rog_map,
-+	},
-+	{	/* ASUS ROG Strix */
-+		.id = USB_ID(0x0b05, 0x1917),
-+		.map = asus_rog_map,
-+	},
-+	{	/* MSI TRX40 Creator */
-+		.id = USB_ID(0x0db0, 0x0d64),
-+		.map = asus_rog_map,
-+	},
-+	{	/* MSI TRX40 */
-+		.id = USB_ID(0x0db0, 0x543d),
-+		.map = asus_rog_map,
-+	},
- 	{ 0 } /* terminator */
- };
- 
-
+regards,
+dan carpenter
 
