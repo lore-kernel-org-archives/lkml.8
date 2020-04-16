@@ -1,74 +1,115 @@
 Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: **
-X-Spam-Status: No, score=2.5 required=3.0 tests=CHARSET_FARAWAY_HEADER,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B8AC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:06:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F500C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59038206B9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:06:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BED4206B9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:07:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506073AbgDPLGJ (ORCPT
+        id S2505958AbgDPLGu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 07:06:09 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:2057 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2505994AbgDPLBs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 07:01:48 -0400
-Received: from dggeml405-hub.china.huawei.com (unknown [172.30.72.56])
-        by Forcepoint Email with ESMTP id 7070F6156CB31EE8123A;
-        Thu, 16 Apr 2020 18:45:18 +0800 (CST)
-Received: from DGGEML524-MBX.china.huawei.com ([169.254.1.24]) by
- dggeml405-hub.china.huawei.com ([10.3.17.49]) with mapi id 14.03.0487.000;
- Thu, 16 Apr 2020 18:45:12 +0800
-From:   "Zouwei (Samuel)" <zou_wei@huawei.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: =?gb2312?B?tPC4tDogW1BBVENIIC1uZXh0XSBtbS91c2VyY29weTogZml4IHdhcm5pbmcg?=
- =?gb2312?Q?Comparison_to_bool?=
-Thread-Topic: [PATCH -next] mm/usercopy: fix warning Comparison to bool
-Thread-Index: AQHWEg3NM5G3b6CdWkWVy/pKazaWX6h6SkKAgAFHhdA=
-Date:   Thu, 16 Apr 2020 10:45:12 +0000
-Message-ID: <C3CD0DF8AD11A84CB25A1426DE537C61E594BFF6@dggeml524-mbx.china.huawei.com>
-References: <1586835724-45738-1-git-send-email-zou_wei@huawei.com>
- <20200415160439.256c89d4cb67b76d4119935d@linux-foundation.org>
-In-Reply-To: <20200415160439.256c89d4cb67b76d4119935d@linux-foundation.org>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.166.212.180]
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Thu, 16 Apr 2020 07:06:50 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42564 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2506004AbgDPLDV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 07:03:21 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 83812AC52;
+        Thu, 16 Apr 2020 11:03:00 +0000 (UTC)
+Message-ID: <69b79028764dcdfc9f550a5f95752afb491005f0.camel@suse.de>
+Subject: Re: [PATCH 0/4] of: property: fw_devlink misc fixes
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Thu, 16 Apr 2020 13:02:59 +0200
+In-Reply-To: <CAGETcx-=E-6sg=B2Rr+V51eCxiBjNWPnOvvq6K=o9Sr-qLDvOg@mail.gmail.com>
+References: <20200415150550.28156-1-nsaenzjulienne@suse.de>
+         <CAGETcx-=E-6sg=B2Rr+V51eCxiBjNWPnOvvq6K=o9Sr-qLDvOg@mail.gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-U0A1alyAP1S30q95YmNu"
+User-Agent: Evolution 3.34.2 
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQW5kcmV3LA0KDQpUaGFua3MgZm9yIHlvdXIgcmVwbHkuDQpQZXJoYXBzIHRoaXMgaXMgYSBk
-ZXRlY3Rpb24gcnVsZSBvZiBDb2NjaW5lbGxlIChjb2NjaWNoZWNrKSBzb2Z0d2FyZSBmb3IgcHJv
-Z3JhbW1pbmcgc3BlY2lmaWNhdGlvbnMsDQphbmQgaXQncyBubyB3cm9uZyB3aXRoIHRoZSBjb2Rl
-LCBqdXN0IGEgY29kaW5nIHN0eWxlLg0KDQpCZXN0IFJlZ2FyZHMNClpvdSBXZWkNCi0tLS0t08q8
-/tStvP4tLS0tLQ0Kt6K8/sjLOiBBbmRyZXcgTW9ydG9uIFttYWlsdG86YWtwbUBsaW51eC1mb3Vu
-ZGF0aW9uLm9yZ10gDQq3osvNyrG85DogMjAyMMTqNNTCMTbI1SA3OjA1DQrK1bz+yMs6IFpvdXdl
-aSAoU2FtdWVsKSA8em91X3dlaUBodWF3ZWkuY29tPg0Ks63LzTogbGludXgtbW1Aa3ZhY2sub3Jn
-OyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQrW98ziOiBSZTogW1BBVENIIC1uZXh0XSBt
-bS91c2VyY29weTogZml4IHdhcm5pbmcgQ29tcGFyaXNvbiB0byBib29sDQoNCk9uIFR1ZSwgMTQg
-QXByIDIwMjAgMTE6NDI6MDQgKzA4MDAgWm91IFdlaSA8em91X3dlaUBodWF3ZWkuY29tPiB3cm90
-ZToNCg0KPiBmaXggYmVsb3cgd2FybmluZ3MgcmVwb3J0ZWQgYnkgY29jY2ljaGVjaw0KPiANCj4g
-bW0vdXNlcmNvcHkuYzozMDQ6NS0xODogV0FSTklORzogQ29tcGFyaXNvbiB0byBib29sDQo+DQo+
-IC4uLg0KPg0KPiAtLS0gYS9tbS91c2VyY29weS5jDQo+ICsrKyBiL21tL3VzZXJjb3B5LmMNCj4g
-QEAgLTMwMSw3ICszMDEsNyBAQCBfX3NldHVwKCJoYXJkZW5lZF91c2VyY29weT0iLCANCj4gcGFy
-c2VfaGFyZGVuZWRfdXNlcmNvcHkpOw0KPiAgDQo+ICBzdGF0aWMgaW50IF9faW5pdCBzZXRfaGFy
-ZGVuZWRfdXNlcmNvcHkodm9pZCkgIHsNCj4gLQlpZiAoZW5hYmxlX2NoZWNrcyA9PSBmYWxzZSkN
-Cj4gKwlpZiAoIWVuYWJsZV9jaGVja3MpDQo+ICAJCXN0YXRpY19icmFuY2hfZW5hYmxlKCZieXBh
-c3NfdXNlcmNvcHlfY2hlY2tzKTsNCj4gIAlyZXR1cm4gMTsNCj4gIH0NCg0KTXkgaW5pdGlhbCBy
-ZWFjdGlvbiBpcyAiZml4IGNvY2NpY2hlY2siLiAgVGhlcmUncyBub3RoaW5nIHdyb25nIHdpdGgg
-dGhhdCBjb2RlPw0KDQo=
+
+--=-U0A1alyAP1S30q95YmNu
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, 2020-04-15 at 11:17 -0700, Saravana Kannan wrote:
+> On Wed, Apr 15, 2020 at 8:06 AM Nicolas Saenz Julienne
+> <nsaenzjulienne@suse.de> wrote:
+> > As I'm interested in using this feature to fine-tune Raspberry Pi 4's
+>=20
+> You've made my day! Finally another user outside of Android. :) If
+> this does improve the boot time, I'd be super interested to see the
+> numbers.
+
+Actually making the boot time faster isn't my main objective just a nice
+possible side-effect. I'll give you some numbers nonetheless :).
+
+I have two things in mind:
+ - Exploring if fw_devlink=3Don can help us solve a rather convoluted devic=
+e
+   initialization depency we're seeing in RPi4. It could potentially preven=
+t us
+   from adding nasty platform specific driver code.
+ - See if we can use all this information to fine-tune initrd generation on
+   smaller arm devices with limited i/o speeds.
+
+Do you have any plans in moving the default behavior to fw_devlink=3Don? If=
+ so
+what is blocking us?
+
+Also do you think it'd be reasonable to add a DT binding to set the desired
+fw_devlink level? Something like a 'linux,fw_devlink' property under the
+/chosen node.
+
+> > device probe dependencies, I tried to get the board to boot with
+> > fw_devlink=3Don. As of today's linux-next the board won't boot with tha=
+t
+> > option. I tried to address the underlying issues.
+>=20
+> I'll review the patches. Apologies in advance if my explanations
+> aren't thorough. A bit swamped right now.
+
+They were pretty clear!
+
+Thanks,
+Nicolas
+
+
+--=-U0A1alyAP1S30q95YmNu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl6YO2MACgkQlfZmHno8
+x/666wf/VylFMUp6RLlJhIXSGCFQ/cPOJJTYI73tBsxzqgAsq9hWHbuH6fYDBxCU
+5AnrhT8W1qkUUEMk4bBN4jUSK0mQJYI1T9pRpHUe6o83pxSeWPEK/kkQMRfLr0UI
+LxDzhO290djKF7rw9ndeTfV6iEXjNfMuqBzHJkE+22VIkEWQuNiMduE7p5Drfv5a
+a5CXIkMmUoNJsVRS104xH+lxdg+IFFDrHN9tEhLAua6OMwfClptUKWryeiGqFi6S
+TV8BvdStbPRPjfQpLnESs/SYp/l5LQVSl/L60q9Rsq7mxXLvmR6UDMRmzbabH4mV
+ZtR6LwbQkqD8dzPnvpY4i/pmr8xgHg==
+=SdVL
+-----END PGP SIGNATURE-----
+
+--=-U0A1alyAP1S30q95YmNu--
+
