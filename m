@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF9AC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:23:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B605FC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:23:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA8EB21D82
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:23:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F4C420715
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:23:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587046995;
-	bh=EK/Cuxjn3w46ZMpO2v2XOHxAZrlG7GWtQElkScPysAM=;
+	s=default; t=1587047003;
+	bh=WQ2GBdbncs0pgwwcbxwy8DH/t/mkVeV1o2bgg3dntvg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kSpf8gbNtXmos6+qTZLRZH3kP+4nZz/mB9bHG0SMd15qTAv2HoY+1312ODLi6WblL
-	 QJO0HbJAblR6U62+vFwar2FHiSO+HRf51hte8D5ub2g2rc6J0CbEcBFfdU9NgFYJGj
-	 QM+G59b3StGYSgtJIxXIe/YukcDkPwenHZzNmzBM=
+	b=J7A1qGT1xb2pcaZzYPj9HNi4hEDlDSdn2jIixqZYGyP45FiTRrY1L4byvco8GDdRD
+	 vvLEQPTIQK3uIc1qUS2Pfojq65YgF5zojsby9MNcX8wnR0jBVO0UF+mlfPIFh+0sHD
+	 RLeay6A3FvwrJmmV13GJxWmx1G4xVFPfywKs1JpQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394193AbgDPOXM (ORCPT
+        id S2394209AbgDPOXU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:23:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43498 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:23:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441775AbgDPN41 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:56:27 -0400
+        id S2441781AbgDPN43 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:56:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0F8621927;
-        Thu, 16 Apr 2020 13:56:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31BE221744;
+        Thu, 16 Apr 2020 13:56:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045386;
-        bh=EK/Cuxjn3w46ZMpO2v2XOHxAZrlG7GWtQElkScPysAM=;
+        s=default; t=1587045388;
+        bh=WQ2GBdbncs0pgwwcbxwy8DH/t/mkVeV1o2bgg3dntvg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nAnzrskEiBiJZiN+ZLUhTacgTYxgQ9kw54PIaS62Hdd5MYCNTtVAUoK5TmUs3QyzF
-         lEToscRiGQCTwOwYP7uChvJlk2Znki0BMZCVtMzvsO9LNziEsDNqAlnLRsoaXVqqmO
-         lilCMvY2G7O7lVvN5Y1JEzCInnzqXZM/awJ2+6qc=
+        b=PzCd1LIktjMezHwu7HsFqNW1XFax1mcNWQUD1/yx2SHZr4pvb1meLIcoab2b/9an4
+         fUqB8KI2nP+nwqQtmuqzLNujfaoBb721xQJRHOZcQKVJf68zwZQUywec2qGQGYf9qq
+         FGZF7OMMyccr5PdARkUT/I84YxD2IJLjipA1rSaw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sungbo Eo <mans0n@gorani.run>,
-        Marc Zyngier <maz@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 5.6 114/254] irqchip/versatile-fpga: Apply clear-mask earlier
-Date:   Thu, 16 Apr 2020 15:23:23 +0200
-Message-Id: <20200416131340.455792622@linuxfoundation.org>
+        stable@vger.kernel.org, James Smart <jsmart2021@gmail.com>,
+        Himanshu Madhani <himanshu.madhani@oracle.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: [PATCH 5.6 097/254] nvme-fc: Revert "add module to ops template to allow module references"
+Date:   Thu, 16 Apr 2020 15:23:06 +0200
+Message-Id: <20200416131338.119119139@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -60,52 +60,136 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sungbo Eo <mans0n@gorani.run>
+From: James Smart <jsmart2021@gmail.com>
 
-commit 6a214a28132f19ace3d835a6d8f6422ec80ad200 upstream.
+commit 8c5c660529209a0e324c1c1a35ce3f83d67a2aa5 upstream.
 
-Clear its own IRQs before the parent IRQ get enabled, so that the
-remaining IRQs do not accidentally interrupt the parent IRQ controller.
+The original patch was to resolve the lldd being able to be unloaded
+while being used to talk to the boot device of the system. However, the
+end result of the original patch is that any driver unload while a nvme
+controller is live via the lldd is now being prohibited. Given the module
+reference, the module teardown routine can't be called, thus there's no
+way, other than manual actions to terminate the controllers.
 
-This patch also fixes a reboot bug on OX820 SoC, where the remaining
-rps-timer IRQ raises a GIC interrupt that is left pending. After that,
-the rps-timer IRQ is cleared during driver initialization, and there's
-no IRQ left in rps-irq when local_irq_enable() is called, which evokes
-an error message "unexpected IRQ trap".
-
-Fixes: bdd272cbb97a ("irqchip: versatile FPGA: support cascaded interrupts from DT")
-Signed-off-by: Sungbo Eo <mans0n@gorani.run>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200321133842.2408823-1-mans0n@gorani.run
+Fixes: 863fbae929c7 ("nvme_fc: add module to ops template to allow module references")
+Cc: <stable@vger.kernel.org> # v5.4+
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/irqchip/irq-versatile-fpga.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/nvme/host/fc.c          |   14 ++------------
+ drivers/nvme/target/fcloop.c    |    1 -
+ drivers/scsi/lpfc/lpfc_nvme.c   |    2 --
+ drivers/scsi/qla2xxx/qla_nvme.c |    1 -
+ include/linux/nvme-fc-driver.h  |    4 ----
+ 5 files changed, 2 insertions(+), 20 deletions(-)
 
---- a/drivers/irqchip/irq-versatile-fpga.c
-+++ b/drivers/irqchip/irq-versatile-fpga.c
-@@ -212,6 +212,9 @@ int __init fpga_irq_of_init(struct devic
- 	if (of_property_read_u32(node, "valid-mask", &valid_mask))
- 		valid_mask = 0;
+--- a/drivers/nvme/host/fc.c
++++ b/drivers/nvme/host/fc.c
+@@ -342,8 +342,7 @@ nvme_fc_register_localport(struct nvme_f
+ 	    !template->ls_req || !template->fcp_io ||
+ 	    !template->ls_abort || !template->fcp_abort ||
+ 	    !template->max_hw_queues || !template->max_sgl_segments ||
+-	    !template->max_dif_sgl_segments || !template->dma_boundary ||
+-	    !template->module) {
++	    !template->max_dif_sgl_segments || !template->dma_boundary) {
+ 		ret = -EINVAL;
+ 		goto out_reghost_failed;
+ 	}
+@@ -2016,7 +2015,6 @@ nvme_fc_ctrl_free(struct kref *ref)
+ {
+ 	struct nvme_fc_ctrl *ctrl =
+ 		container_of(ref, struct nvme_fc_ctrl, ref);
+-	struct nvme_fc_lport *lport = ctrl->lport;
+ 	unsigned long flags;
  
-+	writel(clear_mask, base + IRQ_ENABLE_CLEAR);
-+	writel(clear_mask, base + FIQ_ENABLE_CLEAR);
-+
- 	/* Some chips are cascaded from a parent IRQ */
- 	parent_irq = irq_of_parse_and_map(node, 0);
- 	if (!parent_irq) {
-@@ -221,9 +224,6 @@ int __init fpga_irq_of_init(struct devic
+ 	if (ctrl->ctrl.tagset) {
+@@ -2043,7 +2041,6 @@ nvme_fc_ctrl_free(struct kref *ref)
+ 	if (ctrl->ctrl.opts)
+ 		nvmf_free_options(ctrl->ctrl.opts);
+ 	kfree(ctrl);
+-	module_put(lport->ops->module);
+ }
  
- 	fpga_irq_init(base, node->name, 0, parent_irq, valid_mask, node);
+ static void
+@@ -3074,15 +3071,10 @@ nvme_fc_init_ctrl(struct device *dev, st
+ 		goto out_fail;
+ 	}
  
--	writel(clear_mask, base + IRQ_ENABLE_CLEAR);
--	writel(clear_mask, base + FIQ_ENABLE_CLEAR);
+-	if (!try_module_get(lport->ops->module)) {
+-		ret = -EUNATCH;
+-		goto out_free_ctrl;
+-	}
 -
- 	/*
- 	 * On Versatile AB/PB, some secondary interrupts have a direct
- 	 * pass-thru to the primary controller for IRQs 20 and 22-31 which need
+ 	idx = ida_simple_get(&nvme_fc_ctrl_cnt, 0, 0, GFP_KERNEL);
+ 	if (idx < 0) {
+ 		ret = -ENOSPC;
+-		goto out_mod_put;
++		goto out_free_ctrl;
+ 	}
+ 
+ 	ctrl->ctrl.opts = opts;
+@@ -3235,8 +3227,6 @@ out_free_queues:
+ out_free_ida:
+ 	put_device(ctrl->dev);
+ 	ida_simple_remove(&nvme_fc_ctrl_cnt, ctrl->cnum);
+-out_mod_put:
+-	module_put(lport->ops->module);
+ out_free_ctrl:
+ 	kfree(ctrl);
+ out_fail:
+--- a/drivers/nvme/target/fcloop.c
++++ b/drivers/nvme/target/fcloop.c
+@@ -850,7 +850,6 @@ fcloop_targetport_delete(struct nvmet_fc
+ #define FCLOOP_DMABOUND_4G		0xFFFFFFFF
+ 
+ static struct nvme_fc_port_template fctemplate = {
+-	.module			= THIS_MODULE,
+ 	.localport_delete	= fcloop_localport_delete,
+ 	.remoteport_delete	= fcloop_remoteport_delete,
+ 	.create_queue		= fcloop_create_queue,
+--- a/drivers/scsi/lpfc/lpfc_nvme.c
++++ b/drivers/scsi/lpfc/lpfc_nvme.c
+@@ -1985,8 +1985,6 @@ out_unlock:
+ 
+ /* Declare and initialization an instance of the FC NVME template. */
+ static struct nvme_fc_port_template lpfc_nvme_template = {
+-	.module	= THIS_MODULE,
+-
+ 	/* initiator-based functions */
+ 	.localport_delete  = lpfc_nvme_localport_delete,
+ 	.remoteport_delete = lpfc_nvme_remoteport_delete,
+--- a/drivers/scsi/qla2xxx/qla_nvme.c
++++ b/drivers/scsi/qla2xxx/qla_nvme.c
+@@ -610,7 +610,6 @@ static void qla_nvme_remoteport_delete(s
+ }
+ 
+ static struct nvme_fc_port_template qla_nvme_fc_transport = {
+-	.module	= THIS_MODULE,
+ 	.localport_delete = qla_nvme_localport_delete,
+ 	.remoteport_delete = qla_nvme_remoteport_delete,
+ 	.create_queue   = qla_nvme_alloc_queue,
+--- a/include/linux/nvme-fc-driver.h
++++ b/include/linux/nvme-fc-driver.h
+@@ -270,8 +270,6 @@ struct nvme_fc_remote_port {
+  *
+  * Host/Initiator Transport Entrypoints/Parameters:
+  *
+- * @module:  The LLDD module using the interface
+- *
+  * @localport_delete:  The LLDD initiates deletion of a localport via
+  *       nvme_fc_deregister_localport(). However, the teardown is
+  *       asynchronous. This routine is called upon the completion of the
+@@ -385,8 +383,6 @@ struct nvme_fc_remote_port {
+  *       Value is Mandatory. Allowed to be zero.
+  */
+ struct nvme_fc_port_template {
+-	struct module	*module;
+-
+ 	/* initiator-based functions */
+ 	void	(*localport_delete)(struct nvme_fc_local_port *);
+ 	void	(*remoteport_delete)(struct nvme_fc_remote_port *);
 
 
