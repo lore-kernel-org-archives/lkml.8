@@ -2,73 +2,232 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A7D2C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:20:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54260C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:21:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0457B20771
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:20:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D4462078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:21:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TzxCiZg+"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MPGXXzBg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731335AbgDPQUh (ORCPT
+        id S2391916AbgDPQVM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 12:20:37 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:55927 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726362AbgDPQUd (ORCPT
+        Thu, 16 Apr 2020 12:21:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54574 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731557AbgDPQVE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 12:20:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587054033;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=s4rkdFZCt+CYPzp3/Qg70/GCXwWzZ5opTjJmcpHVXJY=;
-        b=TzxCiZg++1RNG9Kzqtv7aijYb8fto828VpPdoA09O7Ya8jOCL1KfhfoyCop+gh54HGDbwz
-        j1KREuJLS1lDZc5o9Eo3t4s/Q31yFD+u1+QFkXwQDXis5uWPX/DWlOym7fR17nFNHQe6jJ
-        TRtuVM6hhp62ns4cwJtjQCT31DVzZOY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-175-ahS35uOiO1aiRJMy7kongw-1; Thu, 16 Apr 2020 12:20:29 -0400
-X-MC-Unique: ahS35uOiO1aiRJMy7kongw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 181ED8F297B;
-        Thu, 16 Apr 2020 16:20:17 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-117-72.rdu2.redhat.com [10.10.117.72])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D07AB6025E;
-        Thu, 16 Apr 2020 16:20:14 +0000 (UTC)
-Subject: Re: WARNING in kernfs_new_node
-To:     syzbot <syzbot+499aea72daa2cea73cb7@syzkaller.appspotmail.com>,
-        benh@kernel.crashing.org, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, mingo@kernel.org,
-        peterz@infradead.org, rafael@kernel.org,
-        syzkaller-bugs@googlegroups.com, tj@kernel.org,
-        torvalds@linux-foundation.org
-References: <00000000000066c5a605a366e88c@google.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <db670b70-8ed9-94d5-6492-622a8e0bf28b@redhat.com>
-Date:   Thu, 16 Apr 2020 12:20:14 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <00000000000066c5a605a366e88c@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+        Thu, 16 Apr 2020 12:21:04 -0400
+Received: from mail-pl1-x649.google.com (mail-pl1-x649.google.com [IPv6:2607:f8b0:4864:20::649])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77135C061A10
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 09:21:03 -0700 (PDT)
+Received: by mail-pl1-x649.google.com with SMTP id z9so3204858plk.5
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 09:21:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=QaScWPrvN+bBa0cuWNJArKq6KBmuiJpXWRJFnVKPzZk=;
+        b=MPGXXzBgL8V0UK0Wjmuk8tyxL0j5v5jsaHumAkRtFrCRYtLogPsyd1roR1b0RkIPD5
+         KUVcg0GD7GcaWyeAv6oD24p754NvAT8xqdgCYhuW9CnUncphKfBLVF++4BCTy9oIR+Sd
+         nhDFVy7LR/tPURbvoLjx0hITNoHIxgxH8ZPgqDIfhBeR9+VuHQ1Dg/ApiqNfCRGg5s9P
+         EPEGxKCliNioxSxQeFQWSNs4F33p8DCHnw7VSr4QvTIYP67vcmCakS0rzvCcPtrrG1Xc
+         8StG+9Q4jyr3HPH5TgFUczAZqgAGD+aZxPcjsafYp/8Cq5lfLRoruMTij+8sxcFCQ0C7
+         dkMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=QaScWPrvN+bBa0cuWNJArKq6KBmuiJpXWRJFnVKPzZk=;
+        b=EFrTBb6uYdR36YqS2vODTQe2mhZgUZjvCtIq70cUWA86oDgvyCi0LpUvDamRL/42Dx
+         OPVGSDvxXpVrgUftImTFb/LDgavsKxX1PBKWcpWzZtx7PzIkXhb8KAv3ivKasyN+uW9v
+         ldZPI2N+E8CXhXNnmckSGXMnuYSiJTyokymJMQkaEKE/8+Offy7nzsJtO8kQZHqfDAG/
+         iVCNQxTiegM+FY+e0dj4zTGcqcdhLMz+vQkhRq1AKkb/XTdesKakbC2mpQWRYQ9e2Zok
+         2VQu99wq4920cdWkb1kVPIlu4w3+Hy20Z5GdItjbsDuKS7hk8gr0dk2fpdX9q6QB/4/p
+         LoOA==
+X-Gm-Message-State: AGi0PuZBCsePGNOptDh/56wHIJAUXno94Mpsz6bDK9ULsx89m4+pzTQl
+        csAOcSHaXFVj4yobkgfKTJ5EtXVZE8tY
+X-Google-Smtp-Source: APiQypIhCYVKYMDKbZO4If3W8pkUvbQGyhxY2Ztvnnh0lFhQLXJUUg+ywqpMYQVJUmHsX0sbKWp4jxq3Bmbm
+X-Received: by 2002:a17:90a:e64e:: with SMTP id ep14mr6371239pjb.190.1587054062749;
+ Thu, 16 Apr 2020 09:21:02 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 09:20:54 -0700
+Message-Id: <20200416162058.201954-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.1.301.g55bc3eb7cb9-goog
+Subject: [PATCH v10 0/4] perf tools: add support for libpfm4
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jiwei Sun <jiwei.sun@windriver.com>,
+        yuzhoujian <yuzhoujian@didichuxing.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-#syz fix: locking/lockdep: Reuse freed chain_hlocks entries
+This patch links perf with the libpfm4 library if it is available
+and NO_LIBPFM4 isn't passed to the build. The libpfm4 library
+contains hardware event tables for all processors supported by
+perf_events. It is a helper library that helps convert from a
+symbolic event name to the event encoding required by the
+underlying kernel interface. This library is open-source and
+available from: http://perfmon2.sf.net.
+    
+With this patch, it is possible to specify full hardware events
+by name. Hardware filters are also supported. Events must be
+specified via the --pfm-events and not -e option. Both options
+are active at the same time and it is possible to mix and match:
+    
+$ perf stat --pfm-events inst_retired:any_p:c=1:i -e cycles ....
+
+v10 addresses review comments from jolsa@redhat.com.
+v9 removes some unnecessary #ifs.
+v8 addresses review comments from jolsa@redhat.com.
+   Breaks the patch into 4, adds a test and moves the libpfm code into its
+   own file. perf list encoding tries to be closer to existing:
+...
+skx pfm-events:
+  UNHALTED_CORE_CYCLES
+    [Count core clock cycles whenever the clock signal on the specific ...
+  UNHALTED_REFERENCE_CYCLES
+    [Unhalted reference cycles]
+  INSTRUCTION_RETIRED
+    [Number of instructions at retirement]
+  INSTRUCTIONS_RETIRED
+    [This is an alias for INSTRUCTION_RETIRED]
+  BRANCH_INSTRUCTIONS_RETIRED
+    [Count branch instructions at retirement. Specifically, this event ...
+  MISPREDICTED_BRANCH_RETIRED
+    [Count mispredicted branch instructions at retirement. ...
+  BACLEARS
+    [Branch re-steered]
+      BACLEARS:ANY
+        [Number of front-end re-steers due to BPU misprediction]
+  BR_INST_RETIRED
+    [Branch instructions retired (Precise Event)]
+      BR_INST_RETIRED:CONDITIONAL
+        [Counts all taken and not taken macro conditional branch ...
+...
+  and supports --long-desc/-v:
+...
+  BACLEARS
+    [Branch re-steered]
+      Code  : 0xe6
+      BACLEARS:ANY
+        [Number of front-end re-steers due to BPU misprediction]
+        Umask : 0x01 : PMU: [default] 
+      Modif : PMU: [e] : edge level (may require counter-mask >= 1) ...
+      Modif : PMU: [i] : invert (boolean)
+      Modif : PMU: [c] : counter-mask in range [0-255] (integer)
+      Modif : PMU: [t] : measure any thread (boolean)
+      Modif : PMU: [intx] : monitor only inside transactional memory ...
+      Modif : PMU: [intxcp] : do not count occurrences inside aborted ...
+      Modif : perf_event: [u] : monitor at user level (boolean)
+      Modif : perf_event: [k] : monitor at kernel level (boolean)
+      Modif : perf_event: [period] : sampling period (integer)
+      Modif : perf_event: [freq] : sampling frequency (Hz) (integer)
+      Modif : perf_event: [excl] : exclusive access (boolean)
+      Modif : perf_event: [mg] : monitor guest execution (boolean)
+      Modif : perf_event: [mh] : monitor host execution (boolean)
+      Modif : perf_event: [cpu] : CPU to program (integer)
+      Modif : perf_event: [pinned] : pin event to counters (boolean)
+  BR_INST_RETIRED
+    [Branch instructions retired (Precise Event)]
+      Code  : 0xc4
+      BR_INST_RETIRED:CONDITIONAL
+        [Counts all taken and not taken macro conditional branch ...
+        Umask : 0x01 : PMU: [precise]
+
+v7 rebases and adds fallback code for libpfm4 events.
+   The fallback code is to force user only priv level in case the
+   perf_event_open() syscall failed for permissions reason.
+   the fallback forces a user privilege level restriction on the event
+   string, so depending on the syntax either u or :u is needed.
+    
+   But libpfm4 can use a : or . as the separator, so simply searching
+   for ':' vs. '/' is not good enough to determine the syntax needed.
+   Therefore, this patch introduces a new evsel boolean field to mark
+   events coming from  libpfm4. The field is then used to adjust the
+   fallback string.
+v6 was a rebase.
+v5 was a rebase.
+v4 was a rebase on
+   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git
+   branch perf/core and re-adds the tools/build/feature/test-libpfm4.c
+   missed in v3.
+v3 is against acme/perf/core and removes a diagnostic warning.
+v2 of this patch makes the --pfm-events man page documentation
+   conditional on libpfm4 behing configured. It tidies some of the
+   documentation and adds the feature test missed in the v1 patch.
+
+Ian Rogers (1):
+  perf doc: allow ASCIIDOC_EXTRA to be an argument
+
+Stephane Eranian (3):
+  tools feature: add support for detecting libpfm4
+  perf pmu: add perf_pmu__find_by_type helper
+  perf tools: add support for libpfm4
+
+ tools/build/Makefile.feature             |   3 +-
+ tools/build/feature/Makefile             |   6 +-
+ tools/build/feature/test-libpfm4.c       |   9 +
+ tools/perf/Documentation/Makefile        |   4 +-
+ tools/perf/Documentation/perf-record.txt |  11 +
+ tools/perf/Documentation/perf-stat.txt   |  10 +
+ tools/perf/Documentation/perf-top.txt    |  11 +
+ tools/perf/Makefile.config               |  13 ++
+ tools/perf/Makefile.perf                 |   6 +-
+ tools/perf/builtin-list.c                |  12 +-
+ tools/perf/builtin-record.c              |   8 +
+ tools/perf/builtin-stat.c                |   8 +
+ tools/perf/builtin-top.c                 |   8 +
+ tools/perf/tests/Build                   |   1 +
+ tools/perf/tests/builtin-test.c          |   9 +
+ tools/perf/tests/pfm.c                   | 207 +++++++++++++++++
+ tools/perf/tests/tests.h                 |   3 +
+ tools/perf/util/Build                    |   2 +
+ tools/perf/util/evsel.c                  |   2 +-
+ tools/perf/util/evsel.h                  |   1 +
+ tools/perf/util/parse-events.c           |  30 ++-
+ tools/perf/util/parse-events.h           |   4 +
+ tools/perf/util/pfm.c                    | 277 +++++++++++++++++++++++
+ tools/perf/util/pfm.h                    |  43 ++++
+ tools/perf/util/pmu.c                    |  11 +
+ tools/perf/util/pmu.h                    |   1 +
+ 26 files changed, 685 insertions(+), 15 deletions(-)
+ create mode 100644 tools/build/feature/test-libpfm4.c
+ create mode 100644 tools/perf/tests/pfm.c
+ create mode 100644 tools/perf/util/pfm.c
+ create mode 100644 tools/perf/util/pfm.h
+
+-- 
+2.26.1.301.g55bc3eb7cb9-goog
 
