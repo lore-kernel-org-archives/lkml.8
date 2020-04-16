@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C05C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E46CC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:43:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 730AB2076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:43:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF9C32076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:43:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587044601;
-	bh=Dxv9GWgwYfpM4ZleMavZeL7T7rb9/AIQg6B8qLU2Pao=;
+	s=default; t=1587044618;
+	bh=58Vk06b0j3aXbBGmy0Io28RxmfmRhNpj7yF6V6krN1w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1yCMlFUXxT+1Lxs9iudxYme2vbA0C5V7jTUDy5ARcSSKPp/9iJzOZTw8RV08IR7wa
-	 XoW1qKzB968glRa6RN7Up6O77YBTWAKtDtyFu7ufVZ/tjLHGaw0Ni32NtfsLFwUNc3
-	 /1R/q45b2q+UximbKn50phHoLCKfjcVcspSdpFBo=
+	b=L8djlmFs+va/dUYeUcXM6CCGKwTfDNb9jFQKjE1hcGAbNM6WoU1uAifN8vIa17yYf
+	 Fv31nBjgLC/La94e73H6/V2PdVrBg6mx+msiugVKscwF2W21tvW7/2NIqxcNfP25Rd
+	 /C/trxN1O7wLJ14OTwpHdmHLHxdG6l95sJnAW/8c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441595AbgDPNnR (ORCPT
+        id S1730793AbgDPNnd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:43:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44912 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:43:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896749AbgDPNdk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:33:40 -0400
+        id S2896781AbgDPNdp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:33:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC980208E4;
-        Thu, 16 Apr 2020 13:33:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1D24208E4;
+        Thu, 16 Apr 2020 13:33:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044020;
-        bh=Dxv9GWgwYfpM4ZleMavZeL7T7rb9/AIQg6B8qLU2Pao=;
+        s=default; t=1587044025;
+        bh=58Vk06b0j3aXbBGmy0Io28RxmfmRhNpj7yF6V6krN1w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LyHwonsuvtQeH9yygag5DTjDMgzcsxONJQyTs/T8dGxxyBga7Z3ffKPRVKkkPVISx
-         n3gjzL9FMTe3qNiH0POJFxJBot7pGOdwLccswVSHhteWJsQ9OugGw91/lJoRMPsEPo
-         6B6TgLOgXEZflYWzjNSZ+yzv++8ukUqIBKQ4xXfw=
+        b=ROn4xqaUrxmxnMOe/hlyVNK4LADNV4Jdwjio7qLylCTBrkw2qju0hCVoqvHXdF6F9
+         E0EpojJdTDwXCGwGzRc/S39ZFCu8nKk5Fd6iZ5U54SmU7zTQgg2HWAOmXID767R41j
+         O1uZrNx7NqHHd/1Q+WP2fnSUNgmjYK60OSi1bv/s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Michael Walle <michael@walle.cc>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org,
+        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 048/257] spi: spi-fsl-dspi: Avoid NULL pointer in dspi_slave_abort for non-DMA mode
-Date:   Thu, 16 Apr 2020 15:21:39 +0200
-Message-Id: <20200416131331.939656998@linuxfoundation.org>
+Subject: [PATCH 5.5 050/257] time/sched_clock: Expire timer in hardirq context
+Date:   Thu, 16 Apr 2020 15:21:41 +0200
+Message-Id: <20200416131332.187510103@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -61,40 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
+From: Ahmed S. Darwish <a.darwish@linutronix.de>
 
-[ Upstream commit 3d6224e63be39ff26cf416492cb3923cd3d07dd0 ]
+[ Upstream commit 2c8bd58812ee3dbf0d78b566822f7eacd34bdd7b ]
 
-The driver does not create the dspi->dma structure unless operating in
-DSPI_DMA_MODE, so it makes sense to check for that.
+To minimize latency, PREEMPT_RT kernels expires hrtimers in preemptible
+softirq context by default. This can be overriden by marking the timer's
+expiry with HRTIMER_MODE_HARD.
 
-Fixes: f4b323905d8b ("spi: Introduce dspi_slave_abort() function for NXP's dspi SPI driver")
-Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-Tested-by: Michael Walle <michael@walle.cc>
-Link: https://lore.kernel.org/r/20200318001603.9650-8-olteanv@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+sched_clock_timer is missing this annotation: if its callback is preempted
+and the duration of the preemption exceeds the wrap around time of the
+underlying clocksource, sched clock will get out of sync.
+
+Mark the sched_clock_timer for expiry in hard interrupt context.
+
+Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20200309181529.26558-1-a.darwish@linutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-fsl-dspi.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ kernel/time/sched_clock.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-index 8428b69c858bc..a534b8af27b8d 100644
---- a/drivers/spi/spi-fsl-dspi.c
-+++ b/drivers/spi/spi-fsl-dspi.c
-@@ -1021,8 +1021,10 @@ static int dspi_slave_abort(struct spi_master *master)
- 	 * Terminate all pending DMA transactions for the SPI working
- 	 * in SLAVE mode.
- 	 */
--	dmaengine_terminate_sync(dspi->dma->chan_rx);
--	dmaengine_terminate_sync(dspi->dma->chan_tx);
-+	if (dspi->devtype_data->trans_mode == DSPI_DMA_MODE) {
-+		dmaengine_terminate_sync(dspi->dma->chan_rx);
-+		dmaengine_terminate_sync(dspi->dma->chan_tx);
-+	}
+diff --git a/kernel/time/sched_clock.c b/kernel/time/sched_clock.c
+index dbd69052eaa66..a5538dd76a819 100644
+--- a/kernel/time/sched_clock.c
++++ b/kernel/time/sched_clock.c
+@@ -207,7 +207,8 @@ sched_clock_register(u64 (*read)(void), int bits, unsigned long rate)
  
- 	/* Clear the internal DSPI RX and TX FIFO buffers */
- 	regmap_update_bits(dspi->regmap, SPI_MCR,
+ 	if (sched_clock_timer.function != NULL) {
+ 		/* update timeout for clock wrap */
+-		hrtimer_start(&sched_clock_timer, cd.wrap_kt, HRTIMER_MODE_REL);
++		hrtimer_start(&sched_clock_timer, cd.wrap_kt,
++			      HRTIMER_MODE_REL_HARD);
+ 	}
+ 
+ 	r = rate;
+@@ -251,9 +252,9 @@ void __init generic_sched_clock_init(void)
+ 	 * Start the timer to keep sched_clock() properly updated and
+ 	 * sets the initial epoch.
+ 	 */
+-	hrtimer_init(&sched_clock_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
++	hrtimer_init(&sched_clock_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_HARD);
+ 	sched_clock_timer.function = sched_clock_poll;
+-	hrtimer_start(&sched_clock_timer, cd.wrap_kt, HRTIMER_MODE_REL);
++	hrtimer_start(&sched_clock_timer, cd.wrap_kt, HRTIMER_MODE_REL_HARD);
+ }
+ 
+ /*
+@@ -290,7 +291,7 @@ void sched_clock_resume(void)
+ 	struct clock_read_data *rd = &cd.read_data[0];
+ 
+ 	rd->epoch_cyc = cd.actual_read_sched_clock();
+-	hrtimer_start(&sched_clock_timer, cd.wrap_kt, HRTIMER_MODE_REL);
++	hrtimer_start(&sched_clock_timer, cd.wrap_kt, HRTIMER_MODE_REL_HARD);
+ 	rd->read_sched_clock = cd.actual_read_sched_clock;
+ }
+ 
 -- 
 2.20.1
 
