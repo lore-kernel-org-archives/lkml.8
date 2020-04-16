@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E69A2C352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:00:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD5FC352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:00:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C64442192A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:00:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 377ED20732
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:00:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587045642;
-	bh=UG+omDNmUoAj/lnia2Lo9HKh1rXW0017TCXQfL7YMLM=;
+	s=default; t=1587045654;
+	bh=5Ty25x7/siPUKilRYHMcLb7XfHJHNLiTxo6srGlszyA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kHiIgIcC3SAqs+39Ubu6P79Gc4NE1GYzNSq3RAfzaLqLnk7xHYjrQN8jbY8HQhjZ1
-	 IhO5UM57nir42BlRVHOAClG+wklDHbJ2yxFWO78Nd43QeUAOMMrSk2ZIfG5J/D/hqD
-	 xO3NHM1hc82MSChIsB+KcceRTVYJ57vdmkXp/DaQ=
+	b=qFrVihnimASl/t2iDj912MIesO7yYerdzTqJVHNjTKe9ElAID+ywtyzC0T0iGnLHc
+	 PKGzb1uymdhpcIZgkPswpvwlQAS24VlcbhaL4dnBuofk6bz6rVV9d6Oq/i/SWCcXbg
+	 WeMKqB10gqoN/o9QC8yZjUCJ/tnCvsb5KMNL42Us=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389750AbgDPOAl (ORCPT
+        id S2392677AbgDPOAv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:00:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53018 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:00:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898109AbgDPNk0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:40:26 -0400
+        id S2898117AbgDPNka (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:40:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BC452076D;
-        Thu, 16 Apr 2020 13:40:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A8CA2076D;
+        Thu, 16 Apr 2020 13:40:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044425;
-        bh=UG+omDNmUoAj/lnia2Lo9HKh1rXW0017TCXQfL7YMLM=;
+        s=default; t=1587044429;
+        bh=5Ty25x7/siPUKilRYHMcLb7XfHJHNLiTxo6srGlszyA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v/bqFV16iXxynvsnwNFeP2EKmTuOCS5Yn5iLXHMa3hkIWjoGR+zO1QLE/y+cGFDVX
-         QZkPUYgcrq4Kb03saCui7Tc2SOQbwA/oxs5iElLrCzz1rc+o42shHp6tc0vNrGZ43X
-         Kbs5TdmStocOY0f6Gel25CvPRTnK/j/3rK9FS3Lo=
+        b=hSTSxxJXVaeM4438vLQs9f822KEbHhGWGMNqHNjft082pO+269pi9ZAPH5mtZuKNV
+         Y8tsIORMdZa1ukllD+le+cR6Syu4tncCgk8RvaAHOAw87xRKppPdPPWWUODejFZs1W
+         +/qZXgS2UyobRspkOgNxr7ojKdY1J6Z0A3Zvs7S0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.5 213/257] drm/prime: fix extracting of the DMA addresses from a scatterlist
-Date:   Thu, 16 Apr 2020 15:24:24 +0200
-Message-Id: <20200416131352.669962384@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+Subject: [PATCH 5.5 215/257] drm/vboxvideo: Add missing remove_conflicting_pci_framebuffers call, v2
+Date:   Thu, 16 Apr 2020 15:24:26 +0200
+Message-Id: <20200416131352.888156549@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -60,86 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit c0f83d164fb8f3a2b7bc379a6c1e27d1123a9eab upstream.
+commit a65a97b48694d34248195eb89bf3687403261056 upstream.
 
-Scatterlist elements contains both pages and DMA addresses, but one
-should not assume 1:1 relation between them. The sg->length is the size
-of the physical memory chunk described by the sg->page, while
-sg_dma_len(sg) is the size of the DMA (IO virtual) chunk described by
-the sg_dma_address(sg).
+The vboxvideo driver is missing a call to remove conflicting framebuffers.
 
-The proper way of extracting both: pages and DMA addresses of the whole
-buffer described by a scatterlist it to iterate independently over the
-sg->pages/sg->length and sg_dma_address(sg)/sg_dma_len(sg) entries.
+Surprisingly, when using legacy BIOS booting this does not really cause
+any issues. But when using UEFI to boot the VM then plymouth will draw
+on both the efifb /dev/fb0 and /dev/drm/card0 (which has registered
+/dev/fb1 as fbdev emulation).
 
-Fixes: 42e67b479eab ("drm/prime: use dma length macro when mapping sg")
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200327162126.29705-1-m.szyprowski@samsung.com
+VirtualBox will actual display the output of both devices (I guess it is
+showing whatever was drawn last), this causes weird artifacts because of
+pitch issues in the efifb when the VM window is not sized at 1024x768
+(the window will resize to its last size once the vboxvideo driver loads,
+changing the pitch).
+
+Adding the missing drm_fb_helper_remove_conflicting_pci_framebuffers()
+call fixes this.
+
+Changes in v2:
+-Make the drm_fb_helper_remove_conflicting_pci_framebuffers() call one of
+ the first things we do in our probe() method
+
 Cc: stable@vger.kernel.org
+Fixes: 2695eae1f6d3 ("drm/vboxvideo: Switch to generic fbdev emulation")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200325144310.36779-1-hdegoede@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/drm_prime.c |   37 +++++++++++++++++++++++++------------
- 1 file changed, 25 insertions(+), 12 deletions(-)
+ drivers/gpu/drm/vboxvideo/vbox_drv.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/gpu/drm/drm_prime.c
-+++ b/drivers/gpu/drm/drm_prime.c
-@@ -959,27 +959,40 @@ int drm_prime_sg_to_page_addr_arrays(str
- 	unsigned count;
- 	struct scatterlist *sg;
- 	struct page *page;
--	u32 len, index;
-+	u32 page_len, page_index;
- 	dma_addr_t addr;
-+	u32 dma_len, dma_index;
+--- a/drivers/gpu/drm/vboxvideo/vbox_drv.c
++++ b/drivers/gpu/drm/vboxvideo/vbox_drv.c
+@@ -41,6 +41,10 @@ static int vbox_pci_probe(struct pci_dev
+ 	if (!vbox_check_supported(VBE_DISPI_ID_HGSMI))
+ 		return -ENODEV;
  
--	index = 0;
-+	/*
-+	 * Scatterlist elements contains both pages and DMA addresses, but
-+	 * one shoud not assume 1:1 relation between them. The sg->length is
-+	 * the size of the physical memory chunk described by the sg->page,
-+	 * while sg_dma_len(sg) is the size of the DMA (IO virtual) chunk
-+	 * described by the sg_dma_address(sg).
-+	 */
-+	page_index = 0;
-+	dma_index = 0;
- 	for_each_sg(sgt->sgl, sg, sgt->nents, count) {
--		len = sg_dma_len(sg);
-+		page_len = sg->length;
- 		page = sg_page(sg);
-+		dma_len = sg_dma_len(sg);
- 		addr = sg_dma_address(sg);
- 
--		while (len > 0) {
--			if (WARN_ON(index >= max_entries))
-+		while (pages && page_len > 0) {
-+			if (WARN_ON(page_index >= max_entries))
- 				return -1;
--			if (pages)
--				pages[index] = page;
--			if (addrs)
--				addrs[index] = addr;
--
-+			pages[page_index] = page;
- 			page++;
-+			page_len -= PAGE_SIZE;
-+			page_index++;
-+		}
-+		while (addrs && dma_len > 0) {
-+			if (WARN_ON(dma_index >= max_entries))
-+				return -1;
-+			addrs[dma_index] = addr;
- 			addr += PAGE_SIZE;
--			len -= PAGE_SIZE;
--			index++;
-+			dma_len -= PAGE_SIZE;
-+			dma_index++;
- 		}
- 	}
- 	return 0;
++	ret = drm_fb_helper_remove_conflicting_pci_framebuffers(pdev, "vboxvideodrmfb");
++	if (ret)
++		return ret;
++
+ 	vbox = kzalloc(sizeof(*vbox), GFP_KERNEL);
+ 	if (!vbox)
+ 		return -ENOMEM;
 
 
