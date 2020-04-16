@@ -2,152 +2,143 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54168C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:54:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F1AC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34ED9206D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:54:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B838208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:55:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2894507AbgDPMyY (ORCPT
+        id S2894547AbgDPMzK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 08:54:24 -0400
-Received: from mga07.intel.com ([134.134.136.100]:56523 "EHLO mga07.intel.com"
+        Thu, 16 Apr 2020 08:55:10 -0400
+Received: from mga03.intel.com ([134.134.136.65]:44510 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2894377AbgDPMyU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 08:54:20 -0400
-IronPort-SDR: FojiQLcyoHzbKNpbMoGB+kduzJnxfbIk+mw2YWYxSoFaEse2ZJf30vOr/bj/XJIFYQtFrJvHW7
- /3nUaOxKhthw==
+        id S2894386AbgDPMzD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 08:55:03 -0400
+IronPort-SDR: QDJk1YuomN4Ox0Ih29E5CwR9zi/tj5m+ja1ETz/mfjMgeCgsjYNL14mMCWFDDquZ1P3zPDwmMy
+ QbjwShyR5aWg==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 05:54:17 -0700
-IronPort-SDR: 2TWSUvSo2BpQ7WsbpwBWIS7QOg1aMl494NOtDrQ0w9oEj0roNF0ut0BpZBlr0jyuB+BJyENMYL
- TB/ez5YBnYOA==
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 05:55:02 -0700
+IronPort-SDR: 14P7OUA2rGLVVihMxD7Mh+HTh7r2zX/e3sYE5q2bO9zCEJAb3oibfFAx5NtpPsXExduTJ7eQ0J
+ JjekCo9vW6vA==
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,391,1580803200"; 
-   d="scan'208";a="400659843"
-Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.249.170.42]) ([10.249.170.42])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 05:54:15 -0700
-Subject: Re: [PATCH] x86, smpboot: Disable frequency invariance when it's
- unsupported
-To:     Giovanni Gherdovich <ggherdovich@suse.cz>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Doug Smythies <dsmythies@telus.net>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20200416020700.167294-1-like.xu@linux.intel.com>
- <1587017284.32139.20.camel@suse.cz>
- <bf43772d-48e5-01d4-dd03-330110e487fa@linux.intel.com>
- <1587026430.32139.29.camel@suse.cz>
-From:   Like Xu <like.xu@linux.intel.com>
-Organization: Intel OTC
-Message-ID: <a2a0dc7a-2b9c-1cb3-677d-1e9e77ad5f15@linux.intel.com>
-Date:   Thu, 16 Apr 2020 20:54:12 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+   d="scan'208";a="363986159"
+Received: from kuha.fi.intel.com ([10.237.72.162])
+  by fmsmga001.fm.intel.com with SMTP; 16 Apr 2020 05:54:59 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Thu, 16 Apr 2020 15:54:59 +0300
+Date:   Thu, 16 Apr 2020 15:54:59 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Badhri Jagan Sridharan <badhri@google.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] usb: typec: tcpm: Ignore CC and vbus changes in
+ PORT_RESET change
+Message-ID: <20200416125459.GA3473073@kuha.fi.intel.com>
+References: <20200402215947.176577-1-badhri@google.com>
 MIME-Version: 1.0
-In-Reply-To: <1587026430.32139.29.camel@suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200402215947.176577-1-badhri@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/4/16 16:40, Giovanni Gherdovich wrote:
-> On Thu, 2020-04-16 at 15:01 +0800, Like Xu wrote:
->> On 2020/4/16 14:08, Giovanni Gherdovich wrote:
->>> [...]
->>> I've just sent fixes for these two problems here:
->>> https://lore.kernel.org/lkml/20200416054745.740-1-ggherdovich@suse.cz/
->>
->> Hence the "less than 4 cores" comment is weird for C6562
->> but the use of "1C turbo" looks good to me.
+On Thu, Apr 02, 2020 at 02:59:47PM -0700, Badhri Jagan Sridharan wrote:
+> After PORT_RESET, the port is set to the appropriate
+> default_state. Ignore processing CC changes here as this
+> could cause the port to be switched into sink states
+> by default.
 > 
-> Right, your C6562 has 24 cores, (I think) it doesn't support turbo at all,
-> declares 1C turbo equal to the base frequency and all other turbo ratios (2C,
-> 4C etc) as zero.
+> echo source > /sys/class/typec/port0/port_type
 > 
-> The commit message of the fix I sent doesn't describe exactly your situation
-> but the patch addresses your case nonetheless. Some more comments below.
+> Before:
+> [  154.528547] pending state change PORT_RESET -> PORT_RESET_WAIT_OFF @ 100 ms
+> [  154.528560] CC1: 0 -> 0, CC2: 3 -> 0 [state PORT_RESET, polarity 0, disconnected]
+> [  154.528564] state change PORT_RESET -> SNK_UNATTACHED
 > 
-> On Thu, 2020-04-16 at 15:01 +0800, Like Xu wrote:
->> On 2020/4/16 14:08, Giovanni Gherdovich wrote:
->>> [...]
->>> Hello Like Xu,
->>>
->>> thanks for reporting this and for the patch. My preferred solution for when
->>> the 4 cores turbo freq is detected as zero would be to look for the 1 core turbo
->>> frequency, as we're likely on a machine with less than 4 cores. Is that the
->>> case on your Atom C6562? I couldn't find it on ark.intel.com.
->>
->> The Atom C6562 is "24 cores" based on
->> https://www.intel.com/content/dam/www/public/us/en/documents/product-briefs/atom-p5900-product-brief.pdf
->>
->> #define MSR_PLATFORM_INFO		0x000000ce
->>
->> the value for this msr is 80820f9801600
->>
->> #define MSR_TURBO_RATIO_LIMIT		0x000001ad
->>
->> the value for this msr is 16
->>
->> I know you didn't test your feature on this platform,
->> but combinations of other various values are also possible
->> (unless it's made clear in the specification).
+> After:
+> [  151.068814] pending state change PORT_RESET -> PORT_RESET_WAIT_OFF @ 100 ms [rev3 NONE_AMS]
+> [  151.072440] CC1: 3 -> 0, CC2: 0 -> 0 [state PORT_RESET, polarity 0, disconnected]
+> [  151.172117] state change PORT_RESET -> PORT_RESET_WAIT_OFF [delayed 100 ms]
+> [  151.172136] pending state change PORT_RESET_WAIT_OFF -> SRC_UNATTACHED @ 870 ms [rev3 NONE_AMS]
+> [  152.060106] state change PORT_RESET_WAIT_OFF -> SRC_UNATTACHED [delayed 870 ms]
+> [  152.060118] Start toggling
 > 
-> That's an interesting CPU; let me indulge in a couple of comments/questions
-> for my own curiosity.
->>From the document you link, the product name in the Intel catalogue seems to
-> be Atom P5962B. Apparently it belongs to the "P Series" just launched:
-> https://ark.intel.com/content/www/us/en/ark/products/series/202693/intel-atom-processor-p-series.html
-> and your product brief suggests it's meant for installation in 5G base stations.
-> 
-> 1) Can you share the output of "turbostat --interval 1 sleep 0"? I'm
->     interested in the headers of the output, where all the various pm-related
->     MSRs are decoded.
-> 
+> Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
 
-I couldn't disclose more information about this.
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-> 2) Despite not being in the Intel SDM, I was under the assumption that all
->     Intel CPUs declare the "all-cores turbo" frequency, but it's not the case
->     for this one. Eg: if you have 24 cores, somewhere in your MSRs I'd expect
->     to find "24C turbo" (or even "30C turbo", anything greater or equal than 24).
->     My understanding from
->     https://ark.intel.com/content/www/us/en/ark/products/202682/intel-atom-processor-p5962b-27m-cache-2-20-ghz.html
->     is that this CPU doesn't support turbo boost at all; in other CPUs without
->     turbo I've seen MSRs saying the all-cores turbo freq is equal to the base
->     freq (for compatibility I suppose). Here MSR_TURBO_RATIO_LIMIT says that 1C
->     turbo is the same as base frequency (2.2GHz), but turbo for larger sets of
->     cores is declared as zero, which I find a little odd.
-
-That's odd and we could only rely on the Intel specification
-about the assumption "Intel CPUs declare the all-cores turbo frequency"
-and I may report this issue if something does mismatch.
-
+> ---
+>  drivers/usb/typec/tcpm/tcpm.c | 26 ++++++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
 > 
-> 3) The parsing of MSRs in the frequency invariance code is modeled after
->     turbostat, and classifies CPUs in 5 groups: Atom up to Goldmont, Atom from
->     Goldmont onwards, Xeon Phi, Xeon Scalable Processors onwards and "generic
->     Core". As you've already found out from where your panic happens, your Atom
->     falls into the "generic Core" category (function core_set_max_freq_ratio()),
->     but given that it's an Atom and it's been released this very quarter I'd
->     have guessed it to behave like a Goldmont. Something for me to keep in mind.
+> diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
+> index de3576e6530ab2..82b19ebd7838e0 100644
+> --- a/drivers/usb/typec/tcpm/tcpm.c
+> +++ b/drivers/usb/typec/tcpm/tcpm.c
+> @@ -3794,6 +3794,14 @@ static void _tcpm_cc_change(struct tcpm_port *port, enum typec_cc_status cc1,
+>  		 */
+>  		break;
+>  
+> +	case PORT_RESET:
+> +	case PORT_RESET_WAIT_OFF:
+> +		/*
+> +		 * State set back to default mode once the timer completes.
+> +		 * Ignore CC changes here.
+> +		 */
+> +		break;
+> +
+>  	default:
+>  		if (tcpm_port_is_disconnected(port))
+>  			tcpm_set_state(port, unattached_state(port), 0);
+> @@ -3855,6 +3863,15 @@ static void _tcpm_pd_vbus_on(struct tcpm_port *port)
+>  	case SRC_TRY_DEBOUNCE:
+>  		/* Do nothing, waiting for sink detection */
+>  		break;
+> +
+> +	case PORT_RESET:
+> +	case PORT_RESET_WAIT_OFF:
+> +		/*
+> +		 * State set back to default mode once the timer completes.
+> +		 * Ignore vbus changes here.
+> +		 */
+> +		break;
+> +
+>  	default:
+>  		break;
+>  	}
+> @@ -3908,10 +3925,19 @@ static void _tcpm_pd_vbus_off(struct tcpm_port *port)
+>  	case PORT_RESET_WAIT_OFF:
+>  		tcpm_set_state(port, tcpm_default_state(port), 0);
+>  		break;
+> +
+>  	case SRC_TRY_WAIT:
+>  	case SRC_TRY_DEBOUNCE:
+>  		/* Do nothing, waiting for sink detection */
+>  		break;
+> +
+> +	case PORT_RESET:
+> +		/*
+> +		 * State set back to default mode once the timer completes.
+> +		 * Ignore vbus changes here.
+> +		 */
+> +		break;
+> +
+>  	default:
+>  		if (port->pwr_role == TYPEC_SINK &&
+>  		    port->attached)
+> -- 
+> 2.26.0.292.g33ef6b2f38-goog
 
-It's INTEL_FAM6_ATOM_TREMONT or INTEL_FAM6_ATOM_TREMONT_D.
+thanks,
 
-Thanks,
-Like Xu
-
-> 
-> 
-> Thanks,
-> Giovanni Gherdovich
-> 
-
+-- 
+heikki
