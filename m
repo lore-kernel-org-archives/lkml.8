@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA821C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:25:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A89FDC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:25:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B741C2076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:25:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 836222076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:25:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587047154;
-	bh=oK4EUs+DRClyG/3rKXZm1ZxXK0l4/9QJpxPizuGmNhw=;
+	s=default; t=1587047159;
+	bh=LY47aTPPMAmsiUBhTInmnH4kGMQUiyaa/B9hGY7Hsd8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lYNkDvr/4Wk6pqoezaQeT8gu7h6AbwpTFS9UB8H57qFtxG/X9SHsVZszYqGbbD5Bx
-	 TaNgW+ojltJ1LETcCF2jzH1YMDZwC2nDndQZ9Fma1zz+dADkJp7dD0oCFoS0xjkjVT
-	 umJ4tA+Wow7zpSrDOm6UrVxT4BhUHMinbS4TpBAw=
+	b=2uqHf6czyXz/2Py46Wm9FRs1RTJ/Xzvw9DUlJkuR5pXBniSe34XK6rN/s9NIlS0mI
+	 486qqA3ss28C8I6CdRHDLJ2aGnw57sW7Gvx0jzJAbO2OSGwHODx6ni1jj2QX2sbUg+
+	 y41GBUh4HUddPKzmFYJb+L0wIcK0g7HL6khlmRsI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728334AbgDPOZx (ORCPT
+        id S2410021AbgDPOZ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:25:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45128 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:25:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441867AbgDPN6Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:58:16 -0400
+        id S1728926AbgDPN6X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:58:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A4D02078B;
-        Thu, 16 Apr 2020 13:58:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1D5B21744;
+        Thu, 16 Apr 2020 13:58:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045495;
-        bh=oK4EUs+DRClyG/3rKXZm1ZxXK0l4/9QJpxPizuGmNhw=;
+        s=default; t=1587045503;
+        bh=LY47aTPPMAmsiUBhTInmnH4kGMQUiyaa/B9hGY7Hsd8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DtS5JsZl4LSoFJxzGKlAkolwjdEJevdaKvWKKLXfxF5IHnL7qp1td04XXpmUbV2m9
-         +kIxTOJaTd+HOuQWmnZB8sXcR606Y3Z6oA3I0pz8r2/NF5kXCUQOMok8GdvpXYRjXw
-         nKh8eAtZUcAifQZCow/QMHul+py+94/I9ErIN2MA=
+        b=Li4StG1GgoqCnu7On+Swp6GftdHmG28viKEnxQ3SSX7qQ48HvJe3wUz+vsvkdSrZ/
+         IPIsmoenbk2JemQKVQA1uq+speLfLvSPj5NMiwILlr2ZFyqdpqpA8eROzXe993EMFj
+         zitAcIHm8Ouv7QeKexpmmSRMlGejFv0M+3/mJqbg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH 5.6 158/254] remoteproc: qcom_q6v5_mss: Dont reassign mpss region on shutdown
-Date:   Thu, 16 Apr 2020 15:24:07 +0200
-Message-Id: <20200416131346.381431027@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Kerrisk <mtk.manpages@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dmitry Safonov <dima@arista.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Andrei Vagin <avagin@gmail.com>
+Subject: [PATCH 5.6 161/254] time/namespace: Fix time_for_children symlink
+Date:   Thu, 16 Apr 2020 15:24:10 +0200
+Message-Id: <20200416131346.748653817@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -60,100 +62,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
+From: Michael Kerrisk (man-pages) <mtk.manpages@gmail.com>
 
-commit 900fc60df22748dbc28e4970838e8f7b8f1013ce upstream.
+commit b801f1e22c23c259d6a2c955efddd20370de19a6 upstream.
 
-Trying to reclaim mpss memory while the mba is not running causes the
-system to crash on devices with security fuses blown, so leave it
-assigned to the remote on shutdown and recover it on a subsequent boot.
+Looking at the contents of the /proc/PID/ns/time_for_children symlink shows
+an anomaly:
 
-Fixes: 6c5a9dc2481b ("remoteproc: qcom: Make secure world call for mem ownership switch")
+$ ls -l /proc/self/ns/* |awk '{print $9, $10, $11}'
+...
+/proc/self/ns/pid -> pid:[4026531836]
+/proc/self/ns/pid_for_children -> pid:[4026531836]
+/proc/self/ns/time -> time:[4026531834]
+/proc/self/ns/time_for_children -> time_for_children:[4026531834]
+/proc/self/ns/user -> user:[4026531837]
+...
+
+The reference for 'time_for_children' should be a 'time' namespace, just as
+the reference for 'pid_for_children' is a 'pid' namespace.  In other words,
+the above time_for_children link should read:
+
+/proc/self/ns/time_for_children -> time:[4026531834]
+
+Fixes: 769071ac9f20 ("ns: Introduce Time Namespace")
+Signed-off-by: Michael Kerrisk <mtk.manpages@gmail.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Dmitry Safonov <dima@arista.com>
+Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+Acked-by: Andrei Vagin <avagin@gmail.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-Tested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Link: https://lore.kernel.org/r/20200304194729.27979-2-sibis@codeaurora.org
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Link: https://lkml.kernel.org/r/a2418c48-ed80-3afe-116e-6611cb799557@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/remoteproc/qcom_q6v5_mss.c |   35 ++++++++++++++++++++++++-----------
- 1 file changed, 24 insertions(+), 11 deletions(-)
+ kernel/time/namespace.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/remoteproc/qcom_q6v5_mss.c
-+++ b/drivers/remoteproc/qcom_q6v5_mss.c
-@@ -1001,11 +1001,6 @@ static void q6v5_mba_reclaim(struct q6v5
- 		writel(val, qproc->reg_base + QDSP6SS_PWR_CTL_REG);
- 	}
+--- a/kernel/time/namespace.c
++++ b/kernel/time/namespace.c
+@@ -446,6 +446,7 @@ const struct proc_ns_operations timens_o
  
--	ret = q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm,
--				      false, qproc->mpss_phys,
--				      qproc->mpss_size);
--	WARN_ON(ret);
--
- 	q6v5_reset_assert(qproc);
- 
- 	q6v5_clk_disable(qproc->dev, qproc->reset_clks,
-@@ -1095,6 +1090,14 @@ static int q6v5_mpss_load(struct q6v5 *q
- 			max_addr = ALIGN(phdr->p_paddr + phdr->p_memsz, SZ_4K);
- 	}
- 
-+	/**
-+	 * In case of a modem subsystem restart on secure devices, the modem
-+	 * memory can be reclaimed only after MBA is loaded. For modem cold
-+	 * boot this will be a nop
-+	 */
-+	q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm, false,
-+				qproc->mpss_phys, qproc->mpss_size);
-+
- 	mpss_reloc = relocate ? min_addr : qproc->mpss_phys;
- 	qproc->mpss_reloc = mpss_reloc;
- 	/* Load firmware segments */
-@@ -1184,8 +1187,16 @@ static void qcom_q6v5_dump_segment(struc
- 	void *ptr = rproc_da_to_va(rproc, segment->da, segment->size);
- 
- 	/* Unlock mba before copying segments */
--	if (!qproc->dump_mba_loaded)
-+	if (!qproc->dump_mba_loaded) {
- 		ret = q6v5_mba_load(qproc);
-+		if (!ret) {
-+			/* Reset ownership back to Linux to copy segments */
-+			ret = q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm,
-+						      false,
-+						      qproc->mpss_phys,
-+						      qproc->mpss_size);
-+		}
-+	}
- 
- 	if (!ptr || ret)
- 		memset(dest, 0xff, segment->size);
-@@ -1196,8 +1207,14 @@ static void qcom_q6v5_dump_segment(struc
- 
- 	/* Reclaim mba after copying segments */
- 	if (qproc->dump_segment_mask == qproc->dump_complete_mask) {
--		if (qproc->dump_mba_loaded)
-+		if (qproc->dump_mba_loaded) {
-+			/* Try to reset ownership back to Q6 */
-+			q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm,
-+						true,
-+						qproc->mpss_phys,
-+						qproc->mpss_size);
- 			q6v5_mba_reclaim(qproc);
-+		}
- 	}
- }
- 
-@@ -1237,10 +1254,6 @@ static int q6v5_start(struct rproc *rpro
- 	return 0;
- 
- reclaim_mpss:
--	xfermemop_ret = q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm,
--						false, qproc->mpss_phys,
--						qproc->mpss_size);
--	WARN_ON(xfermemop_ret);
- 	q6v5_mba_reclaim(qproc);
- 
- 	return ret;
+ const struct proc_ns_operations timens_for_children_operations = {
+ 	.name		= "time_for_children",
++	.real_ns_name	= "time",
+ 	.type		= CLONE_NEWTIME,
+ 	.get		= timens_for_children_get,
+ 	.put		= timens_put,
 
 
