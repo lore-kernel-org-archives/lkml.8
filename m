@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B34AC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B93FC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:04:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B01F2063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:04:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 696F02063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:04:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587045869;
-	bh=7W8SpPIOywJNExWL8DrXnjX+O9i7Fc36hKuhRdZJWF0=;
+	s=default; t=1587045874;
+	bh=F86Uvr/8Vvq5iRg6CyvWRy8iUXPMXaS3bKVGg6vxyPU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pNkyCf5X4TA0HWKjZFdNY/py5OCSXPrPm4ByJXedS5JxGUY3bb3GnCxnkUKYYc6z+
-	 zdLbEC05jODOLxF3VnoPUQ+9hO16uyCUkI8jSpCdsM8hWycvnT3KiDcWxOXhw3C6Av
-	 4Je94K3ilfYxTpRGfWwvIXythS3zprE61/hJQd9Y=
+	b=IvCTyHeuVV0+Qd0IWdiKKwbqywfWnnh38GEaVAJcU4cWrnE6xy030xIrOdV52rr8s
+	 26dw0IGhzjXy62qDxOF2a+MVsoUIqURJ6nlIRyBv/nlG8KDiu2VDk6OaeJ22v9g4nn
+	 y047GOvT/2I7QvZqQ/XaNa1tAx+RoHe3B83iiz7Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392951AbgDPOE1 (ORCPT
+        id S2392727AbgDPOEc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:04:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55714 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:04:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441551AbgDPNmk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:42:40 -0400
+        id S2441572AbgDPNmr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:42:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 756DD214D8;
-        Thu, 16 Apr 2020 13:42:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D73402222C;
+        Thu, 16 Apr 2020 13:42:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044559;
-        bh=7W8SpPIOywJNExWL8DrXnjX+O9i7Fc36hKuhRdZJWF0=;
+        s=default; t=1587044567;
+        bh=F86Uvr/8Vvq5iRg6CyvWRy8iUXPMXaS3bKVGg6vxyPU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HwfYo/VoSKCP+nxd6TZCQKNBb5MOxaoLBuA1eQwlfIgv2IY0uKQudzaFqIf2P08lt
-         AHtBv4OLeY+Z7JjLdftqzpRBMJn3gagEpNsbvc/zeVHNLvTnt/axT+vVn/I/+wk0Jg
-         91XGjqnZXlbdalj/0wDoZar6WnRKmmkoGGp23xAY=
+        b=Uo5dNhhS/UEycXGm4TfCeRS5HJIFNTS6mbvwjmMwOusjA/A+JGXj13FOauG9xbli9
+         Y/U+ZbeLpxNHQ1Ik2uvnulZ64uokHur2+aza1+hPQrHYD4tBd1+Wvu/QXuEepgDWky
+         SEsfEwWp2kvfV5ya58+39gzPf28pXaCsstySO4TI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Markus Fuchs <mklntf@gmail.com>,
+        stable@vger.kernel.org, Luo bin <luobin9@huawei.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 010/232] net: stmmac: platform: Fix misleading interrupt error msg
-Date:   Thu, 16 Apr 2020 15:21:44 +0200
-Message-Id: <20200416131317.722791864@linuxfoundation.org>
+Subject: [PATCH 5.4 013/232] hinic: fix the bug of clearing event queue
+Date:   Thu, 16 Apr 2020 15:21:47 +0200
+Message-Id: <20200416131318.053610461@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -60,54 +60,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Fuchs <mklntf@gmail.com>
+From: Luo bin <luobin9@huawei.com>
 
-[ Upstream commit fc191af1bb0d069dc7e981076e8b80af21f1e61d ]
+[ Upstream commit 614eaa943e9fc3fcdbd4aa0692ae84973d363333 ]
 
-Not every stmmac based platform makes use of the eth_wake_irq or eth_lpi
-interrupts. Use the platform_get_irq_byname_optional variant for these
-interrupts, so no error message is displayed, if they can't be found.
-Rather print an information to hint something might be wrong to assist
-debugging on platforms which use these interrupts.
+should disable eq irq before freeing it, must clear event queue
+depth in hw before freeing relevant memory to avoid illegal
+memory access and update consumer idx to avoid invalid interrupt
 
-Signed-off-by: Markus Fuchs <mklntf@gmail.com>
+Signed-off-by: Luo bin <luobin9@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/stmicro/stmmac/stmmac_platform.c  | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ .../net/ethernet/huawei/hinic/hinic_hw_eqs.c  | 24 +++++++++++++------
+ 1 file changed, 17 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-index 5150551c28be3..508325cc105d5 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-@@ -663,16 +663,22 @@ int stmmac_get_platform_resources(struct platform_device *pdev,
- 	 * In case the wake up interrupt is not passed from the platform
- 	 * so the driver will continue to use the mac irq (ndev->irq)
- 	 */
--	stmmac_res->wol_irq = platform_get_irq_byname(pdev, "eth_wake_irq");
-+	stmmac_res->wol_irq =
-+		platform_get_irq_byname_optional(pdev, "eth_wake_irq");
- 	if (stmmac_res->wol_irq < 0) {
- 		if (stmmac_res->wol_irq == -EPROBE_DEFER)
- 			return -EPROBE_DEFER;
-+		dev_info(&pdev->dev, "IRQ eth_wake_irq not found\n");
- 		stmmac_res->wol_irq = stmmac_res->irq;
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_eqs.c b/drivers/net/ethernet/huawei/hinic/hinic_hw_eqs.c
+index 79243b626ddbe..6a723c4757bce 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_hw_eqs.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_eqs.c
+@@ -188,7 +188,7 @@ static u8 eq_cons_idx_checksum_set(u32 val)
+  * eq_update_ci - update the HW cons idx of event queue
+  * @eq: the event queue to update the cons idx for
+  **/
+-static void eq_update_ci(struct hinic_eq *eq)
++static void eq_update_ci(struct hinic_eq *eq, u32 arm_state)
+ {
+ 	u32 val, addr = EQ_CONS_IDX_REG_ADDR(eq);
+ 
+@@ -202,7 +202,7 @@ static void eq_update_ci(struct hinic_eq *eq)
+ 
+ 	val |= HINIC_EQ_CI_SET(eq->cons_idx, IDX)    |
+ 	       HINIC_EQ_CI_SET(eq->wrapped, WRAPPED) |
+-	       HINIC_EQ_CI_SET(EQ_ARMED, INT_ARMED);
++	       HINIC_EQ_CI_SET(arm_state, INT_ARMED);
+ 
+ 	val |= HINIC_EQ_CI_SET(eq_cons_idx_checksum_set(val), XOR_CHKSUM);
+ 
+@@ -347,7 +347,7 @@ static void eq_irq_handler(void *data)
+ 	else if (eq->type == HINIC_CEQ)
+ 		ceq_irq_handler(eq);
+ 
+-	eq_update_ci(eq);
++	eq_update_ci(eq, EQ_ARMED);
+ }
+ 
+ /**
+@@ -702,7 +702,7 @@ static int init_eq(struct hinic_eq *eq, struct hinic_hwif *hwif,
  	}
  
--	stmmac_res->lpi_irq = platform_get_irq_byname(pdev, "eth_lpi");
--	if (stmmac_res->lpi_irq == -EPROBE_DEFER)
--		return -EPROBE_DEFER;
-+	stmmac_res->lpi_irq =
-+		platform_get_irq_byname_optional(pdev, "eth_lpi");
-+	if (stmmac_res->lpi_irq < 0) {
-+		if (stmmac_res->lpi_irq == -EPROBE_DEFER)
-+			return -EPROBE_DEFER;
-+		dev_info(&pdev->dev, "IRQ eth_lpi not found\n");
-+	}
+ 	set_eq_ctrls(eq);
+-	eq_update_ci(eq);
++	eq_update_ci(eq, EQ_ARMED);
  
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	stmmac_res->addr = devm_ioremap_resource(&pdev->dev, res);
+ 	err = alloc_eq_pages(eq);
+ 	if (err) {
+@@ -752,18 +752,28 @@ err_req_irq:
+  **/
+ static void remove_eq(struct hinic_eq *eq)
+ {
+-	struct msix_entry *entry = &eq->msix_entry;
+-
+-	free_irq(entry->vector, eq);
++	hinic_set_msix_state(eq->hwif, eq->msix_entry.entry,
++			     HINIC_MSIX_DISABLE);
++	free_irq(eq->msix_entry.vector, eq);
+ 
+ 	if (eq->type == HINIC_AEQ) {
+ 		struct hinic_eq_work *aeq_work = &eq->aeq_work;
+ 
+ 		cancel_work_sync(&aeq_work->work);
++		/* clear aeq_len to avoid hw access host memory */
++		hinic_hwif_write_reg(eq->hwif,
++				     HINIC_CSR_AEQ_CTRL_1_ADDR(eq->q_id), 0);
+ 	} else if (eq->type == HINIC_CEQ) {
+ 		tasklet_kill(&eq->ceq_tasklet);
++		/* clear ceq_len to avoid hw access host memory */
++		hinic_hwif_write_reg(eq->hwif,
++				     HINIC_CSR_CEQ_CTRL_1_ADDR(eq->q_id), 0);
+ 	}
+ 
++	/* update cons_idx to avoid invalid interrupt */
++	eq->cons_idx = hinic_hwif_read_reg(eq->hwif, EQ_PROD_IDX_REG_ADDR(eq));
++	eq_update_ci(eq, EQ_NOT_ARMED);
++
+ 	free_eq_pages(eq);
+ }
+ 
 -- 
 2.20.1
 
