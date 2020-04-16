@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC84C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:30:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F6C2C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:31:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7E5721D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:30:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3EF821927
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:31:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587047457;
-	bh=Lbzwri5nAQnSVBDvl0p+EY0f92hs81UTtQlOYaKPuEo=;
+	s=default; t=1587047465;
+	bh=OcHSjCBVh8O+gSPSk498B8g0PPVsotxuMHRNfK3IrFY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nLo+cAnz7Ri6AR03t3LZZi1QsiQqBg8xD2xxSvzZw3jtUE3upufAVn4rNjykSYS4G
-	 8ub+xLC2FFZVqnDujBzBBnpdtpfSy+Ix8jMfmhocm0dttQsQComt90kARXhJ36ow80
-	 fI/3WmDHWHflYjcYPHFcmNcwjPTUXoQ/82WeOoj8=
+	b=fXiELq6oU5g8ZKkuBr+J4jK/HDFZmBc+oqnjo2YZMCZylyPo7M4lN00b/LbTbKoj4
+	 9KhnZceWUHkMFyDshHDPPWBZhitupJAElKguxH3QcxelCRxrfiwmwZ6aIMHZ/gUF1a
+	 IqckKVuqIJLkfACEVIuSFjya7bTRqn0XuGkJLovw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394283AbgDPOay (ORCPT
+        id S2394286AbgDPObC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:30:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49318 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:31:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409549AbgDPOB5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:01:57 -0400
+        id S2405953AbgDPOCE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:02:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3878420786;
-        Thu, 16 Apr 2020 14:01:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BB1F22246;
+        Thu, 16 Apr 2020 14:02:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045716;
-        bh=Lbzwri5nAQnSVBDvl0p+EY0f92hs81UTtQlOYaKPuEo=;
+        s=default; t=1587045724;
+        bh=OcHSjCBVh8O+gSPSk498B8g0PPVsotxuMHRNfK3IrFY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dS6naBGqG6l41IbpYStg6V8cNFTsqd2Xkns1neuuVo4qRQ1+GqiGpJqO3EO7VUsb4
-         hIvforfUcuMTl2at2Bh1sGpI93u6zO60Pj/dNvpTTTsWKs3q99Bu/z6NAS1JOVeHVG
-         GiagVM37YxyTHF4xdwdEVruzzSREIl1q8zVvBT1k=
+        b=ErmEf3Nozl+sKS6aFMWeN02PwO04YOpsIHJcOqA7LaX9zhzASCrvLZJJVfitkR1Tf
+         OndAOWIL75VqqqcsblboefKc+sQReUgxi2U83rhZlZNwPprpXGsaUwe66PZNbpHuBo
+         DoFTmtIsi5i+MpAbV6rytqlGZZEoOyg2H/Pxd+kg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Prike Liang <Prike.Liang@amd.com>,
-        Mengbing Wang <Mengbing.Wang@amd.com>,
-        Huang Rui <ray.huang@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 248/254] drm/amdgpu: fix gfx hang during suspend with video playback (v2)
-Date:   Thu, 16 Apr 2020 15:25:37 +0200
-Message-Id: <20200416131356.670036614@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 251/254] perf/core: Unify {pinned,flexible}_sched_in()
+Date:   Thu, 16 Apr 2020 15:25:40 +0200
+Message-Id: <20200416131356.964812173@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -62,50 +60,136 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Prike Liang <Prike.Liang@amd.com>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit 487eca11a321ef33bcf4ca5adb3c0c4954db1b58 ]
+[ Upstream commit ab6f824cfdf7363b5e529621cbc72ae6519c78d1 ]
 
-The system will be hang up during S3 suspend because of SMU is pending
-for GC not respose the register CP_HQD_ACTIVE access request.This issue
-root cause of accessing the GC register under enter GFX CGGPG and can
-be fixed by disable GFX CGPG before perform suspend.
+Less is more; unify the two very nearly identical function.
 
-v2: Use disable the GFX CGPG instead of RLC safe mode guard.
-
-Signed-off-by: Prike Liang <Prike.Liang@amd.com>
-Tested-by: Mengbing Wang <Mengbing.Wang@amd.com>
-Reviewed-by: Huang Rui <ray.huang@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ kernel/events/core.c | 58 ++++++++++++++++----------------------------
+ 1 file changed, 21 insertions(+), 37 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-index b8975857d60d6..48e2863461b7f 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-@@ -2285,8 +2285,6 @@ static int amdgpu_device_ip_suspend_phase1(struct amdgpu_device *adev)
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index e453589da97ca..95860901949e7 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -1986,6 +1986,12 @@ static int perf_get_aux_event(struct perf_event *event,
+ 	return 1;
+ }
+ 
++static inline struct list_head *get_event_list(struct perf_event *event)
++{
++	struct perf_event_context *ctx = event->ctx;
++	return event->attr.pinned ? &ctx->pinned_active : &ctx->flexible_active;
++}
++
+ static void perf_group_detach(struct perf_event *event)
  {
- 	int i, r;
+ 	struct perf_event *sibling, *tmp;
+@@ -2028,12 +2034,8 @@ static void perf_group_detach(struct perf_event *event)
+ 		if (!RB_EMPTY_NODE(&event->group_node)) {
+ 			add_event_to_groups(sibling, event->ctx);
  
--	amdgpu_device_set_pg_state(adev, AMD_PG_STATE_UNGATE);
--	amdgpu_device_set_cg_state(adev, AMD_CG_STATE_UNGATE);
- 
- 	for (i = adev->num_ip_blocks - 1; i >= 0; i--) {
- 		if (!adev->ip_blocks[i].status.valid)
-@@ -3309,6 +3307,9 @@ int amdgpu_device_suspend(struct drm_device *dev, bool fbcon)
+-			if (sibling->state == PERF_EVENT_STATE_ACTIVE) {
+-				struct list_head *list = sibling->attr.pinned ?
+-					&ctx->pinned_active : &ctx->flexible_active;
+-
+-				list_add_tail(&sibling->active_list, list);
+-			}
++			if (sibling->state == PERF_EVENT_STATE_ACTIVE)
++				list_add_tail(&sibling->active_list, get_event_list(sibling));
  		}
+ 
+ 		WARN_ON_ONCE(sibling->ctx != event->ctx);
+@@ -2350,6 +2352,8 @@ event_sched_in(struct perf_event *event,
+ {
+ 	int ret = 0;
+ 
++	WARN_ON_ONCE(event->ctx != ctx);
++
+ 	lockdep_assert_held(&ctx->lock);
+ 
+ 	if (event->state <= PERF_EVENT_STATE_OFF)
+@@ -3425,10 +3429,12 @@ struct sched_in_data {
+ 	int can_add_hw;
+ };
+ 
+-static int pinned_sched_in(struct perf_event *event, void *data)
++static int merge_sched_in(struct perf_event *event, void *data)
+ {
+ 	struct sched_in_data *sid = data;
+ 
++	WARN_ON_ONCE(event->ctx != sid->ctx);
++
+ 	if (event->state <= PERF_EVENT_STATE_OFF)
+ 		return 0;
+ 
+@@ -3437,37 +3443,15 @@ static int pinned_sched_in(struct perf_event *event, void *data)
+ 
+ 	if (group_can_go_on(event, sid->cpuctx, sid->can_add_hw)) {
+ 		if (!group_sched_in(event, sid->cpuctx, sid->ctx))
+-			list_add_tail(&event->active_list, &sid->ctx->pinned_active);
++			list_add_tail(&event->active_list, get_event_list(event));
  	}
  
-+	amdgpu_device_set_pg_state(adev, AMD_PG_STATE_UNGATE);
-+	amdgpu_device_set_cg_state(adev, AMD_CG_STATE_UNGATE);
-+
- 	amdgpu_amdkfd_suspend(adev);
+-	/*
+-	 * If this pinned group hasn't been scheduled,
+-	 * put it in error state.
+-	 */
+-	if (event->state == PERF_EVENT_STATE_INACTIVE)
+-		perf_event_set_state(event, PERF_EVENT_STATE_ERROR);
+-
+-	return 0;
+-}
+-
+-static int flexible_sched_in(struct perf_event *event, void *data)
+-{
+-	struct sched_in_data *sid = data;
+-
+-	if (event->state <= PERF_EVENT_STATE_OFF)
+-		return 0;
+-
+-	if (!event_filter_match(event))
+-		return 0;
++	if (event->state == PERF_EVENT_STATE_INACTIVE) {
++		if (event->attr.pinned)
++			perf_event_set_state(event, PERF_EVENT_STATE_ERROR);
  
- 	amdgpu_ras_suspend(adev);
+-	if (group_can_go_on(event, sid->cpuctx, sid->can_add_hw)) {
+-		int ret = group_sched_in(event, sid->cpuctx, sid->ctx);
+-		if (ret) {
+-			sid->can_add_hw = 0;
+-			sid->ctx->rotate_necessary = 1;
+-			return 0;
+-		}
+-		list_add_tail(&event->active_list, &sid->ctx->flexible_active);
++		sid->can_add_hw = 0;
++		sid->ctx->rotate_necessary = 1;
+ 	}
+ 
+ 	return 0;
+@@ -3485,7 +3469,7 @@ ctx_pinned_sched_in(struct perf_event_context *ctx,
+ 
+ 	visit_groups_merge(&ctx->pinned_groups,
+ 			   smp_processor_id(),
+-			   pinned_sched_in, &sid);
++			   merge_sched_in, &sid);
+ }
+ 
+ static void
+@@ -3500,7 +3484,7 @@ ctx_flexible_sched_in(struct perf_event_context *ctx,
+ 
+ 	visit_groups_merge(&ctx->flexible_groups,
+ 			   smp_processor_id(),
+-			   flexible_sched_in, &sid);
++			   merge_sched_in, &sid);
+ }
+ 
+ static void
 -- 
 2.20.1
 
