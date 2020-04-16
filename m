@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D0CDC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:40:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87769C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:40:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF6442223D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:40:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5313B21D91
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:40:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587051614;
-	bh=zHhjz7bAC4lCz9BDYxtMEQD9e9rotebVujj8UYfL8g4=;
+	s=default; t=1587051626;
+	bh=bFWDlqP9USn3c5lqfAuj6t5+gOROS4BcTG8X8ED4KOI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y2B9RheREJYXya+/sFBJnkTSPOy6b6VkwWokWflWMcTg/w7QW8pxQFILstinpZMRU
-	 EqTajQ92VJaSv2xTGhViXv5K7hjR99Mto5lxpC7n0z5jzxAL4ATOz01t/iVZFamtkx
-	 WZ5xoozvg2zUXuM27SYb8L4C3brauj7Ln5aMiaS0=
+	b=LEsN1QrBiSv/lNEfkKbhDSkub5hl9VNvhDhfTGGX0tSI6JHBabdkEz6Cf2cNcTI71
+	 yVKDiMWkzuFpagIwEVL6ZlTnlXjvk/EU5vgap/eeJwlh3Fg5jL9lP5jwKheHu8dDkg
+	 pgU0xVGFFKHcnVYMy+bPAQ+ZA56SOwcExIA1emZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395491AbgDPPkN (ORCPT
+        id S2388300AbgDPPkW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:40:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50314 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:40:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897598AbgDPNh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:37:57 -0400
+        id S2897538AbgDPNhu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:37:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03DCC20732;
-        Thu, 16 Apr 2020 13:37:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FA1C221F4;
+        Thu, 16 Apr 2020 13:37:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044276;
-        bh=zHhjz7bAC4lCz9BDYxtMEQD9e9rotebVujj8UYfL8g4=;
+        s=default; t=1587044269;
+        bh=bFWDlqP9USn3c5lqfAuj6t5+gOROS4BcTG8X8ED4KOI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=llXKZZ1uBEG3U56TLRovf9rFYcDdYx+pbs7xCJ9Ms2MVOmvQtr4t8KQkfaeTs4U3d
-         th579LuJTLCIEIi6bipnwl1lvEow5FKxH19deWx+jJn/BrFXxEofCDfjOKuBj64MZf
-         vCKGtNTYGj7AxgTvRQus6272GpDj27bdLPJW8JcU=
+        b=BNLzNi46Usq1Lpo/GxVgCp1U9k2sAJSNRR+1XeeECZe7djOnr4Ywj5RFkpEHtnm9c
+         pwqtNpKB12++AZmU9SI3TQf4SlqwEa5w/+FKzszgvlxm3SEUPz1ZLOgm0q1YUeqMGo
+         6ovcdcss8EBvND7bIpMkCQqcocSLeWsJxHrMjTj4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steve French <stfrench@microsoft.com>
-Subject: [PATCH 5.5 151/257] smb3: fix performance regression with setting mtime
-Date:   Thu, 16 Apr 2020 15:23:22 +0200
-Message-Id: <20200416131345.391321329@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.5 148/257] KVM: x86: Gracefully handle __vmalloc() failure during VM allocation
+Date:   Thu, 16 Apr 2020 15:23:19 +0200
+Message-Id: <20200416131344.971663792@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -58,65 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve French <stfrench@microsoft.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit cf5371ae460eb8e484e4884747af270c86c3c469 upstream.
+commit d18b2f43b9147c8005ae0844fb445d8cc6a87e31 upstream.
 
-There are cases when we don't want to send the SMB2 flush operation
-(e.g. when user specifies mount parm "nostrictsync") and it can be
-a very expensive operation on the server.  In most cases in order
-to set mtime, we simply need to flush (write) the dirtry pages from
-the client and send the writes to the server not also send a flush
-protocol operation to the server.
+Check the result of __vmalloc() to avoid dereferencing a NULL pointer in
+the event that allocation failres.
 
-Fixes: aa081859b10c ("cifs: flush before set-info if we have writeable handles")
-CC: Stable <stable@vger.kernel.org>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Fixes: d1e5b0e98ea27 ("kvm: Make VM ioctl do valloc for some archs")
+Cc: stable@vger.kernel.org
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/inode.c |   23 ++++++++++++-----------
- 1 file changed, 12 insertions(+), 11 deletions(-)
+ arch/x86/kvm/svm.c     |    4 ++++
+ arch/x86/kvm/vmx/vmx.c |    4 ++++
+ 2 files changed, 8 insertions(+)
 
---- a/fs/cifs/inode.c
-+++ b/fs/cifs/inode.c
-@@ -2517,25 +2517,26 @@ cifs_setattr_nounix(struct dentry *diren
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -1930,6 +1930,10 @@ static struct kvm *svm_vm_alloc(void)
+ 	struct kvm_svm *kvm_svm = __vmalloc(sizeof(struct kvm_svm),
+ 					    GFP_KERNEL_ACCOUNT | __GFP_ZERO,
+ 					    PAGE_KERNEL);
++
++	if (!kvm_svm)
++		return NULL;
++
+ 	return &kvm_svm->kvm;
+ }
  
- 	/*
- 	 * Attempt to flush data before changing attributes. We need to do
--	 * this for ATTR_SIZE and ATTR_MTIME for sure, and if we change the
--	 * ownership or mode then we may also need to do this. Here, we take
--	 * the safe way out and just do the flush on all setattr requests. If
--	 * the flush returns error, store it to report later and continue.
-+	 * this for ATTR_SIZE and ATTR_MTIME.  If the flush of the data
-+	 * returns error, store it to report later and continue.
- 	 *
- 	 * BB: This should be smarter. Why bother flushing pages that
- 	 * will be truncated anyway? Also, should we error out here if
--	 * the flush returns error?
-+	 * the flush returns error? Do we need to check for ATTR_MTIME_SET flag?
- 	 */
--	rc = filemap_write_and_wait(inode->i_mapping);
--	if (is_interrupt_error(rc)) {
--		rc = -ERESTARTSYS;
--		goto cifs_setattr_exit;
-+	if (attrs->ia_valid & (ATTR_MTIME | ATTR_SIZE | ATTR_CTIME)) {
-+		rc = filemap_write_and_wait(inode->i_mapping);
-+		if (is_interrupt_error(rc)) {
-+			rc = -ERESTARTSYS;
-+			goto cifs_setattr_exit;
-+		}
-+		mapping_set_error(inode->i_mapping, rc);
- 	}
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -6633,6 +6633,10 @@ static struct kvm *vmx_vm_alloc(void)
+ 	struct kvm_vmx *kvm_vmx = __vmalloc(sizeof(struct kvm_vmx),
+ 					    GFP_KERNEL_ACCOUNT | __GFP_ZERO,
+ 					    PAGE_KERNEL);
++
++	if (!kvm_vmx)
++		return NULL;
++
+ 	return &kvm_vmx->kvm;
+ }
  
--	mapping_set_error(inode->i_mapping, rc);
- 	rc = 0;
- 
--	if (attrs->ia_valid & ATTR_MTIME) {
-+	if ((attrs->ia_valid & ATTR_MTIME) &&
-+	    !(cifs_sb->mnt_cifs_flags & CIFS_MOUNT_NOSSYNC)) {
- 		rc = cifs_get_writable_file(cifsInode, FIND_WR_ANY, &wfile);
- 		if (!rc) {
- 			tcon = tlink_tcon(wfile->tlink);
 
 
