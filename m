@@ -2,209 +2,99 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F29C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 21:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82EE6C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 21:36:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D660D22201
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 21:35:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="O73fRdHy"
+	by mail.kernel.org (Postfix) with ESMTP id 54DEB22201
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 21:36:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587072960;
+	bh=c/KbASC+HiXA03F3f0VKXRU/SOyntQfgE+IQskpSxNg=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=ZSYtPErwlUbjjRD63kh0HEp6wqtkIwt5K2i+1OCxTL5YbDX/SmEicMX6X4kBDtUcb
+	 TBHI6rPHEn/y4d0A7XNBJPDgNEsb8bPoobbtBgxqLUpxbbLrgUaSs1NVVGljbQBjHo
+	 fBGIT88jb+SDS1T39q/sGd6jOMlrauKUGjNZCrOc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728171AbgDPVfj (ORCPT
+        id S1728195AbgDPVf7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 17:35:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47148 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727799AbgDPVfi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 17:35:38 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A842AC061A0C;
-        Thu, 16 Apr 2020 14:35:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=ALVLHD2RNHekDAbv25k6R8kMb5XvPMsdU139s7Bmfkk=; b=O73fRdHyTZGG9/qw+Vm47xiAYT
-        qR4eHMYfOTl4MHjc+iovIcgnudP+mR7/YBlPjax77KDd5U6pe241rpvmkGEsDU3oVyTTFVHrpJ2Gy
-        2G9VCz7gNkXSsMH+IKai1iWb+42Y5eRuulmuIB302LJgO5wsXMqZy93E4g/8Nl3NWtSqFmWmHrfBr
-        wO9zMYEq1Dv3wTBVTve9tvNdYtoeu0NYTYLXufm0lqUEFgp34hGsIM1lFhqtl/IVLhZgNtRpccxu+
-        nFwHukU9yCXa6vy2+k5AFaTHbPyjTgPJnA7CvHT5VcC3LRfMfF+luJxGIqia7kr/a1faJ6CXmqWXG
-        UGVcBHfA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jPCAX-0001JU-0y; Thu, 16 Apr 2020 21:35:33 +0000
-Subject: Re: [PATCH v2 5/5] scsi: ufs: UFS Host Performance Booster(HPB)
- driver
-To:     huobean@gmail.com, alim.akhtar@samsung.com, avri.altman@wdc.com,
-        asutoshd@codeaurora.org, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, stanley.chu@mediatek.com,
-        beanhuo@micron.com, bvanassche@acm.org, tomas.winkler@intel.com,
-        cang@codeaurora.org
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200416203126.1210-1-beanhuo@micron.com>
- <20200416203126.1210-6-beanhuo@micron.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <d8d3ccea-95dd-184b-3099-b168becbf00d@infradead.org>
-Date:   Thu, 16 Apr 2020 14:35:30 -0700
+        Thu, 16 Apr 2020 17:35:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49392 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727799AbgDPVf5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 17:35:57 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFB37221F9;
+        Thu, 16 Apr 2020 21:35:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587072957;
+        bh=c/KbASC+HiXA03F3f0VKXRU/SOyntQfgE+IQskpSxNg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=kb0g8rYSvDeOcQbZnkjSsimfn0h+5tB7hphhqwQZWALFz8GecOKo6BC/W6L2fNZT9
+         SJBc8fwJwL5KzqCViujwWAR4WSmLt4FiNbxMzsAzL+QU6OMgLGkFJlFQY5DUv57kx+
+         /tgMpO+ZR7UYX/JMW2XGkn8GkV8qG/zy3ZaOkZeI=
+Subject: Re: [PATCH 5.6 000/254] 5.6.5-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20200416131325.804095985@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <a83ee7a6-d13d-6929-e4be-669058714fd9@kernel.org>
+Date:   Thu, 16 Apr 2020 15:35:35 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200416203126.1210-6-beanhuo@micron.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi--
-
-A few Kconfig changes for you to consider:
-
-
-On 4/16/20 1:31 PM, huobean@gmail.com wrote:
-> From: Bean Huo <beanhuo@micron.com>
+On 4/16/20 7:21 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.6.5 release.
+> There are 254 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> This patch is to add support for the UFS Host Performance Booster (HPB v1.0),
-> which is used to improve UFS read performance, especially for the random read.
+> Responses should be made by Sat, 18 Apr 2020 13:11:20 +0000.
+> Anything received after that time might be too late.
 > 
-> NAND flash-based storage devices, including UFS, have mechanisms to translate
-> logical addresses of requests to the corresponding physical addresses of the
-> flash storage. Traditionally this L2P mapping data is loaded to the internal
-> SRAM in the storage controller. When the capacity of storage is larger, a
-> larger size of SRAM for the L2P map data is required. Since increased SRAM
-> size affects the manufacturing cost significantly, it is not cost-effective
-> to allocate all the amount of SRAM needed to keep all the Logical-address to
-> Physical-address (L2P) map data. Therefore, L2P map data, which is required
-> to identify the physical address for the requested IOs, can only be partially
-> stored in SRAM from NAND flash. Due to this partial loading, accessing the
-> flash address area where the L2P information for that address is not loaded
-> in the SRAM can result in serious performance degradation.
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.5-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.6.y
+> and the diffstat can be found below.
 > 
-> The HPB is a software solution for the above problem, which uses the host’s
-> system memory as a cache for the FTL L2P mapping table. It does not need
-> additional hardware support from the host side. By using HPB, the L2P mapping
-> table can be read from host memory and stored in host-side memory. while
-> reading the operation, the corresponding L2P information will be sent to the
-> UFS device along with the reading request. Since the L2P entry is provided in
-> the read request, UFS device does not have to load L2P entry from flash memory.
-> This will significantly improve random read performance.
+> thanks,
 > 
-> Signed-off-by: Bean Huo <beanhuo@micron.com>
-> ---
->  drivers/scsi/ufs/Kconfig  |   62 +
->  drivers/scsi/ufs/Makefile |    1 +
->  drivers/scsi/ufs/ufshcd.c |   55 +-
->  drivers/scsi/ufs/ufshcd.h |   10 +
->  drivers/scsi/ufs/ufshpb.c | 3279 +++++++++++++++++++++++++++++++++++++
->  drivers/scsi/ufs/ufshpb.h |  450 +++++
->  6 files changed, 3851 insertions(+), 6 deletions(-)
->  create mode 100644 drivers/scsi/ufs/ufshpb.c
->  create mode 100644 drivers/scsi/ufs/ufshpb.h
+> greg k-h
 > 
-> diff --git a/drivers/scsi/ufs/Kconfig b/drivers/scsi/ufs/Kconfig
-> index e2005aeddc2d..48704062861a 100644
-> --- a/drivers/scsi/ufs/Kconfig
-> +++ b/drivers/scsi/ufs/Kconfig
-> @@ -160,3 +160,65 @@ config SCSI_UFS_BSG
->  
->  	  Select this if you need a bsg device node for your UFS controller.
->  	  If unsure, say N.
-> +
-> +config SCSI_UFSHPB
-> +	bool "UFS Host Performance Booster (EXPERIMENTAL)"
-> +	depends on SCSI_UFSHCD
-> +	help
-> +	  NAND flash-based storage devices, including UFS, have mechanisms to
-> +	  translate logical addresses of the IO requests to the corresponding
-> +	  physical addresses of the flash storage. Traditionally, this L2P
-> +	  mapping data is loaded to the internal SRAM in the storage controller.
-> +	  When the capacity of storage is larger, a larger size of SRAM for the
-> +	  L2P map data is required. Since increased SRAM size affects the
-> +	  manufacturing cost significantly, it is not cost-effective to allocate
-> +	  all the amount of SRAM needed to keep all the Logical-address to
-> +	  Physical-address (L2P) map data. Therefore, L2P map data, which is
-> +	  required to identify the physical address for the requested IOs, can
-> +	  only be partially stored in SRAM from NAND flash. Due to this partial
-> +	  loading, accessing the flash address area where the L2P information
-> +	  for that address is not loaded in the SRAM can result in serious
-> +	  performance degradation.
-> +
-> +	  UFS Host Performance Booster (HPB) is a software solution for the
-> +	  above problem, which uses the host side system memory as a cache for
-> +	  the FTL L2P mapping table. It does not need additional hardware
-> +	  support from the host side. By using HPB, the L2P mapping table can be
-> +	  read from host memory and stored in host-side memory. while reading
 
-	            ^??^                                        When performing a
+Compiled and booted on my test system. No dmesg regressions.
+reboot and poweroff hang forever. I saw this problem on
+Linux 5.7rc1 as well.
 
-> +	  the operation, the corresponding L2P information will be sent to the
+AMD Ryzen 5 PRO 2400GE
 
-	  read operation, the
+I don't see this problem on Intel i7-8550U
 
-> +	  UFS device along with the reading request. Since the L2P entry is
+I haven't started debugging yet. I will have to go back and
+check if it is introduced in 5.6.4-rc1. 5.6-3-rc2 is the last
+good one.
 
-	                        the read request.
+I will update you later on today with bisect data.
 
-> +	  provided in the read request, UFS device does not have to load L2P
-> +	  entry from flash memory to UFS internal SRAM. This will significantly
-> +	  improve the read performance.
-> +
-> +	  When selected, this feature will be built in the UFS driver.
-> +
-> +	  If in doubt, say N.
-> +
-> +config UFSHPB_MAX_MEM_SIZE
-> +	int "UFS HPB maximum memory size per controller (in MiB)"
-> +	depends on SCSI_UFSHPB
-> +	default 128
-> +	range 0 65536
-> +	help
-> +	  This parameter defines the maximum UFS HPB memory/cache size in the
-> +	  host system. The recommended HPB cache size by the UFS device can be
-> +	  calculated from bHPBRegionSize and wDeviceMaxActiveHPBRegions. The
-> +	  reference formula can be
-> +
-> +		(bHPBRegionSize(in KB) / 4KB) * 8 * wDeviceMaxActiveHPBRegions.
-> +
-> +	  The HPB cache in the host system is used to contain L2P mapping entry.
-
-	                                                                  entries.
-
-> +	  If the allocated HPB cache size is lower than what calculated by the
-
-	                                                that
-
-> +	  above formula, the use of HPB feature may provide lower performance
-> +	  advantage. But the system memory resource has the limitation, we can
-> +	  not let HPB driver allocate its cache at will according to the UFS
-> +	  device recommendation, so an appropriate size of the cache for HPB
-> +	  should be specified before you choose to use HPB, then please input a
-
-	                                                    then enter a
-
-> +	  non-zero positive integer value.
-> +
-> +	  Nevertheless, if you want to leave this right to the HPB driver, and
-
-	                               leave this to the HPB driver, and
-
-> +	  let the HPB driver allocate the HPB cache based on the recommendation
-> +	  of the UFS device. Just give 0 value to this parameter.
-
-	             device, just
-
-> +
-> +	  Leave the default value if unsure.
-
-gday.
--- 
-~Randy
-
+thanks,
+-- Shuah
