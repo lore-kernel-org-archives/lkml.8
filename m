@@ -2,128 +2,109 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2021CC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:33:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 482C4C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:33:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05EA121D94
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:33:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2478721927
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:33:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="X+a/uoFu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394431AbgDPOda (ORCPT
+        id S2503248AbgDPOdg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:33:30 -0400
-Received: from mga18.intel.com ([134.134.136.126]:28772 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391699AbgDPOUu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:20:50 -0400
-IronPort-SDR: Yl/9Vwme6a2z4ZfinLTkn45Gx9ADKvcdn30GCYpXZR+4WdnDc64ageH4whe/UrYPbyxLvUZtST
- WoTSG/cJLAzA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 07:20:49 -0700
-IronPort-SDR: 4aXlHZMbhNG1je7pcHHUeeCakUi0Jtdz4mAIIAD/SttvwL4xTsvtfe3yBUnis54lyriFtIAJpN
- Rn8JSuP7HYrw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,391,1580803200"; 
-   d="scan'208";a="257231281"
-Received: from cchyder-mobl1.amr.corp.intel.com (HELO [10.254.70.41]) ([10.254.70.41])
-  by orsmga006.jf.intel.com with ESMTP; 16 Apr 2020 07:20:48 -0700
-Subject: Re: [PATCH v4 2/2] mm/gup/writeback: add callbacks for inaccessible
- pages
-To:     Claudio Imbrenda <imbrenda@linux.ibm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>, linux-next@vger.kernel.org,
-        akpm@linux-foundation.org, jack@suse.cz, kirill@shutemov.name,
-        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        borntraeger@de.ibm.com, david@redhat.com, aarcange@redhat.com,
-        linux-mm@kvack.org, frankja@linux.ibm.com, sfr@canb.auug.org.au,
-        jhubbard@nvidia.com, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, Will Deacon <will@kernel.org>,
-        "Williams, Dan J" <dan.j.williams@intel.com>
-References: <20200306132537.783769-1-imbrenda@linux.ibm.com>
- <20200306132537.783769-3-imbrenda@linux.ibm.com>
- <3ae46945-0c7b-03cd-700a-a6fe8003c6ab@intel.com>
- <20200415221754.GM2483@worktop.programming.kicks-ass.net>
- <a7c2eb84-94c2-a608-4b04-a740fa9a389d@intel.com>
- <20200416141547.29be5ea0@p-imbrenda>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <de56aa8e-9035-4b68-33cb-15682d073e26@intel.com>
-Date:   Thu, 16 Apr 2020 07:20:48 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Thu, 16 Apr 2020 10:33:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35364 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2442413AbgDPOTI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:19:08 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D33CC061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 07:19:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=np/r4qmw0QP+lfZCIwmj89Ty0A5BEtMfhuVH8iBF1rQ=; b=X+a/uoFuacTRKSXmyYyt76ewgI
+        X0RVeg+FHBRqUShdYm8ZS7gOQ7qLxNCBoXbdGvdw0Z0tKNAmZEjfjQNiY6/T6Eki1nUaEhPLbxRMF
+        ry7FDCKJcSugklhOm6KMPIG53c/H22gkr2Ib1JLGXFHjFSIgBBxpsnTgM/vsmNHzmupU8Jaib/ekX
+        ltpHTDT1Gjb+AyrsvyDIZPIXK8bI/NsMi7AVROjzBNu92vFqZPK28ZdSBx99EYMXrbZcL3wu6QBvL
+        xKc//812mOYH82Lxfu9KADhmBJ+atHBp5WWApdtH1NNQd6HpcYKfMZQRNtjga9f9RHoKHAYvKcTn+
+        j8IQdcUg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jP5Lp-00020H-SF; Thu, 16 Apr 2020 14:18:46 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3EB4B3006E0;
+        Thu, 16 Apr 2020 16:18:43 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 2A45329E7027C; Thu, 16 Apr 2020 16:18:43 +0200 (CEST)
+Date:   Thu, 16 Apr 2020 16:18:43 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Alexandre Chartre <alexandre.chartre@oracle.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, jpoimboe@redhat.com,
+        jthierry@redhat.com, tglx@linutronix.de
+Subject: Re: [PATCH V3 6/9] objtool: Report inconsistent stack changes in
+ alternative
+Message-ID: <20200416141843.GP20730@hirez.programming.kicks-ass.net>
+References: <20200414103618.12657-1-alexandre.chartre@oracle.com>
+ <20200414103618.12657-7-alexandre.chartre@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <20200416141547.29be5ea0@p-imbrenda>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200414103618.12657-7-alexandre.chartre@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/16/20 5:15 AM, Claudio Imbrenda wrote:
->> I assumed that this was all anonymous-only so it's always dirty before
->> writeback starts.
-> it could also be mmapped
+On Tue, Apr 14, 2020 at 12:36:15PM +0200, Alexandre Chartre wrote:
+> To allow a valid stack unwinding, an alternative should have code
+> where the same stack changes happens at the same places as in the
+> original code. Add a check in objtool to validate that stack changes
+> in alternative are effectively consitent with the original code.
 
-Let's say you have a mmap()'d ramfs file.  Another process calls which
-doesn't have it mapped calls sys_write() and writes to the file.
+This thing is completely buggered, it warns all over the place, even for
+obviously correct alternatives like:
 
-This means that host host has to write to the physical page and must do
-arch_make_page_accessible() in the sys_write() path somewhere.
+0000000000000310 <return_to_handler>:
+ 310:   48 83 ec 18             sub    $0x18,%rsp
+ 314:   48 89 04 24             mov    %rax,(%rsp)
+ 318:   48 89 54 24 08          mov    %rdx,0x8(%rsp)
+ 31d:   48 89 ef                mov    %rbp,%rdi
+ 320:   e8 00 00 00 00          callq  325 <return_to_handler+0x15>
+                        321: R_X86_64_PLT32     ftrace_return_to_handler-0x4
+ 325:   48 89 c7                mov    %rax,%rdi
+ 328:   48 8b 54 24 08          mov    0x8(%rsp),%rdx
+ 32d:   48 8b 04 24             mov    (%rsp),%rax
+ 331:   48 83 c4 18             add    $0x18,%rsp
+ 335:   ff e7                   jmpq   *%rdi
+ 337:   90                      nop
+ 338:   90                      nop
+ 339:   90                      nop
 
-There is a get_user_pages() in that path, but it's on the _source_
-buffer, not the ramfs page because the ramfs page is not mapped.
-There's also no __test_set_page_writeback() because you can't write back
-ramfs.
 
-Where is the arch_make_page_accessible() in this case on the ramfs page?
+Where 335 has two alternatives:
+
+   0:   e9 00 00 00 00          jmpq   5 <.altinstr_replacement+0x5>
+                        1: R_X86_64_PLT32       __x86_retpoline_rdi-0x4
+
+and
+
+   5:   0f ae e8                lfence
+   8:   ff e7                   jmpq   *%rdi
+
+
+And it then comes back with:
+
+  defconfig-build/arch/x86/kernel/ftrace_64.o: warning: objtool: .entry.text+0x335: error in alternative
+  defconfig-build/arch/x86/kernel/ftrace_64.o: warning: objtool: .altinstr_replacement+0x5: in alternative 2
+  defconfig-build/arch/x86/kernel/ftrace_64.o: warning: objtool: .altinstr_replacement+0x8: misaligned alternative state change
+
+which is just utter crap, JMP has no (CFI) state change.
