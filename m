@@ -2,78 +2,132 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA6A6C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9937C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:11:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC13420774
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:10:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RWZZ7/Sk"
+	by mail.kernel.org (Postfix) with ESMTP id C670D20774
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:11:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2635098AbgDPMKe (ORCPT
+        id S2635111AbgDPML4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 08:10:34 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:20446 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2634901AbgDPMKV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 08:10:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587039020;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=UkBX4tWUeuF6phNnH/IEoeZJtqdkC3zMlBoaKCG3/EY=;
-        b=RWZZ7/SkN7dXoC+OLbC0pEnOuvDyswTHAPeb444UDXQ8AHvRh5k22N0N0OF1NJ0sEEnrf7
-        6FGieVFyxMROFCi4P1DLwkBa4yPIafFJvs9wqCOG2rexlguev4khLVfOO8rJrHoXVV62Nf
-        97fsVMNTr5/qj11X8hSCaXW+4ge5quE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-434-yO9ig_6DNtKAekjRYWwj2g-1; Thu, 16 Apr 2020 08:10:13 -0400
-X-MC-Unique: yO9ig_6DNtKAekjRYWwj2g-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CAB601005513;
-        Thu, 16 Apr 2020 12:10:11 +0000 (UTC)
-Received: from treble (ovpn-116-146.rdu2.redhat.com [10.10.116.146])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 228DE7E7C9;
-        Thu, 16 Apr 2020 12:10:10 +0000 (UTC)
-Date:   Thu, 16 Apr 2020 07:10:08 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Miroslav Benes <mbenes@suse.cz>
-Cc:     Jessica Yu <jeyu@kernel.org>, live-patching@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH 6/7] livepatch: Remove module_disable_ro() usage
-Message-ID: <20200416121008.i5vmafqcv4ab7van@treble>
-References: <cover.1586881704.git.jpoimboe@redhat.com>
- <9f0d8229bbe79d8c13c091ed70c41d49caf598f2.1586881704.git.jpoimboe@redhat.com>
- <20200415150216.GA6164@linux-8ccs.fritz.box>
- <20200415163303.ubdnza6okg4h3e5a@treble>
- <alpine.LSU.2.21.2004161126540.10475@pobox.suse.cz>
+        Thu, 16 Apr 2020 08:11:56 -0400
+Received: from foss.arm.com ([217.140.110.172]:59736 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2634901AbgDPMLn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 08:11:43 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5F3D6C14;
+        Thu, 16 Apr 2020 05:11:40 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7C6013F73D;
+        Thu, 16 Apr 2020 05:11:38 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 13:11:36 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Will Deacon <will@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        kernel-team@android.com, Michael Ellerman <mpe@ellerman.id.au>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v3 05/12] arm64: csum: Disable KASAN for do_csum()
+Message-ID: <20200416121135.GE4987@lakrids.cambridge.arm.com>
+References: <20200415165218.20251-1-will@kernel.org>
+ <20200415165218.20251-6-will@kernel.org>
+ <20200415172813.GA2272@lakrids.cambridge.arm.com>
+ <20200415192605.GA21804@willie-the-truck>
+ <20200416093106.GB4987@lakrids.cambridge.arm.com>
+ <20200416115342.GA32443@willie-the-truck>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.LSU.2.21.2004161126540.10475@pobox.suse.cz>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <20200416115342.GA32443@willie-the-truck>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 11:28:25AM +0200, Miroslav Benes wrote:
-> If I remember correctly, text_mutex must be held whenever text is modified 
-> to prevent race due to the modification. It is not only about permission 
-> changes even though it was how it manifested itself in our case.
+On Thu, Apr 16, 2020 at 12:53:46PM +0100, Will Deacon wrote:
+> On Thu, Apr 16, 2020 at 10:31:06AM +0100, Mark Rutland wrote:
+> > FWIW, for the arm64 unwind code we could add a helper to snapshot the
+> > frame record, and mark that as __no_sanitize_address, e.g.
 
-Yeah, that's what confused me.  We went years without using text_mutex
-and then only started using it because of a race with the permissions
-changes.
+[...]
 
--- 
-Josh
+> > ... we'd need to do likewied in a few bits of unwind code:
 
+[...]
+
+> Indeed. For now, I'm going to keep this simple with the change below, but
+> I'll revisit this later on because I have another series removing
+> smp_read_barrier_depends() which makes this a lot simpler.
+> 
+> Will
+
+The below looks good to me; thanks for putting that together!
+
+Mark.
+
+> 
+> --->8
+> 
+> diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+> index 00a68063d9d5..c363d8debc43 100644
+> --- a/include/linux/compiler.h
+> +++ b/include/linux/compiler.h
+> @@ -212,18 +212,12 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
+>  	(typeof(x))__x;							\
+>  })
+>  
+> -/*
+> - * Use READ_ONCE_NOCHECK() instead of READ_ONCE() if you need
+> - * to hide memory access from KASAN.
+> - */
+> -#define READ_ONCE_NOCHECK(x)						\
+> +#define READ_ONCE(x)							\
+>  ({									\
+>  	compiletime_assert_rwonce_type(x);				\
+>  	__READ_ONCE_SCALAR(x);						\
+>  })
+>  
+> -#define READ_ONCE(x)	READ_ONCE_NOCHECK(x)
+> -
+>  #define __WRITE_ONCE(x, val)				\
+>  do {							\
+>  	*(volatile typeof(x) *)&(x) = (val);		\
+> @@ -247,6 +241,24 @@ do {							\
+>  # define __no_kasan_or_inline __always_inline
+>  #endif
+>  
+> +static __no_kasan_or_inline
+> +unsigned long __read_once_word_nocheck(const void *addr)
+> +{
+> +	return __READ_ONCE(*(unsigned long *)addr);
+> +}
+> +
+> +/*
+> + * Use READ_ONCE_NOCHECK() instead of READ_ONCE() if you need to load a
+> + * word from memory atomically but without telling KASAN. This is usually
+> + * used by unwinding code when walking the stack of a running process.
+> + */
+> +#define READ_ONCE_NOCHECK(x)						\
+> +({									\
+> +	unsigned long __x = __read_once_word_nocheck(&(x));		\
+> +	smp_read_barrier_depends();					\
+> +	__x;								\
+> +})
+> +
+>  static __no_kasan_or_inline
+>  unsigned long read_word_at_a_time(const void *addr)
+>  {
