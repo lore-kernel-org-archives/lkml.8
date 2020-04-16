@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C8DC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:23:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED04BC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:24:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E2C22222D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:23:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C56CB206D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:24:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587050631;
-	bh=cLAUE6W9azIyv7Ba+e+54A7+PzMWCz7hsSN19O7q4Ek=;
+	s=default; t=1587050641;
+	bh=OUkSnEZhEGuu1K9o5YcKxKzW0scZgqC1euBVD3hJwOg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XheqYcRMx9z3Wn+KJifYf4EwH5R4lXO/XbyzJQlwGUiuXcGzMJwoxk/52pESWJzki
-	 admUqs3Pb0oADlqq/ZQPME4bCZ8QlTnr8QDkeKfsM4hbj8AGaZ28dvixyPLiatwoEK
-	 DMUD2FJ1q7pZJXCEeP+fT/mFaiaWiB4jUfwhzwVk=
+	b=V5grrGKA+IjVRiVo2/LEdVVEaJT0sZi5p0ev59Bz+O9YVZDxPzzLiWaUjhIl0XxNa
+	 4X62EwiKgxTO3EIjVEOkRjIAVUDgB6i0H20ETRdctD4hzErCXv39YHkipEET60QH7K
+	 TAXeLhgFAt+nhp9Pi0hvsVIojyppvcln6iPSnfMI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442479AbgDPPXu (ORCPT
+        id S2633591AbgDPPXz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:23:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58512 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:23:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898474AbgDPNpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:45:06 -0400
+        id S2898470AbgDPNo7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:44:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 832FA20732;
-        Thu, 16 Apr 2020 13:45:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 434D020732;
+        Thu, 16 Apr 2020 13:44:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044706;
-        bh=cLAUE6W9azIyv7Ba+e+54A7+PzMWCz7hsSN19O7q4Ek=;
+        s=default; t=1587044698;
+        bh=OUkSnEZhEGuu1K9o5YcKxKzW0scZgqC1euBVD3hJwOg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TxpIhnzApP5x1ElgykUvVwqZ1iYpeFaBS+UnxNAhYanoU+Zjdc5y4yg2fwOJPlXiC
-         MkhkVXc/aCn0c7Ya8L8D37826CSLnb8KIo6HM2AV3UMOvZGFbyHK0hwB/wdIvzOMQ4
-         rdgcJv6GLCxxHRuh035pbF+4CuI6slVk87/jEpQw=
+        b=VaKLlDwIxhUI2TX4cQyqwyV2ynEV9A0Ze+J54t7g7Isip+AbQ4YrSJAdr1oQySMiH
+         jgImE3fbuDPuq4dk8faPkex4w/K8jIHFvztAo0vdE0FkUm1lQxi+lETZHFpnUajFsU
+         Ey4zRlsAdu3umNf9P0xQYJl+nUInmCVA+qC904/c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
+        stable@vger.kernel.org, Jeff Mahoney <jeffm@suse.com>,
+        Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 068/232] btrfs: track reloc roots based on their commit root bytenr
-Date:   Thu, 16 Apr 2020 15:22:42 +0200
-Message-Id: <20200416131323.836631577@linuxfoundation.org>
+Subject: [PATCH 5.4 065/232] btrfs: qgroup: ensure qgroup_rescan_running is only set when the worker is at least queued
+Date:   Thu, 16 Apr 2020 15:22:39 +0200
+Message-Id: <20200416131323.494179904@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -60,119 +60,138 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Qu Wenruo <wqu@suse.com>
 
-[ Upstream commit ea287ab157c2816bf12aad4cece41372f9d146b4 ]
+[ Upstream commit d61acbbf54c612ea9bf67eed609494cda0857b3a ]
 
-We always search the commit root of the extent tree for looking up back
-references, however we track the reloc roots based on their current
-bytenr.
+[BUG]
+There are some reports about btrfs wait forever to unmount itself, with
+the following call trace:
 
-This is wrong, if we commit the transaction between relocating tree
-blocks we could end up in this code in build_backref_tree
+  INFO: task umount:4631 blocked for more than 491 seconds.
+        Tainted: G               X  5.3.8-2-default #1
+  "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+  umount          D    0  4631   3337 0x00000000
+  Call Trace:
+  ([<00000000174adf7a>] __schedule+0x342/0x748)
+   [<00000000174ae3ca>] schedule+0x4a/0xd8
+   [<00000000174b1f08>] schedule_timeout+0x218/0x420
+   [<00000000174af10c>] wait_for_common+0x104/0x1d8
+   [<000003ff804d6994>] btrfs_qgroup_wait_for_completion+0x84/0xb0 [btrfs]
+   [<000003ff8044a616>] close_ctree+0x4e/0x380 [btrfs]
+   [<0000000016fa3136>] generic_shutdown_super+0x8e/0x158
+   [<0000000016fa34d6>] kill_anon_super+0x26/0x40
+   [<000003ff8041ba88>] btrfs_kill_super+0x28/0xc8 [btrfs]
+   [<0000000016fa39f8>] deactivate_locked_super+0x68/0x98
+   [<0000000016fcb198>] cleanup_mnt+0xc0/0x140
+   [<0000000016d6a846>] task_work_run+0xc6/0x110
+   [<0000000016d04f76>] do_notify_resume+0xae/0xb8
+   [<00000000174b30ae>] system_call+0xe2/0x2c8
 
-  if (key.objectid == key.offset) {
-	  /*
-	   * Only root blocks of reloc trees use backref
-	   * pointing to itself.
-	   */
-	  root = find_reloc_root(rc, cur->bytenr);
-	  ASSERT(root);
-	  cur->root = root;
-	  break;
-  }
+[CAUSE]
+The problem happens when we have called qgroup_rescan_init(), but
+not queued the worker. It can be caused mostly by error handling.
 
-find_reloc_root() is looking based on the bytenr we had in the commit
-root, but if we've COWed this reloc root we will not find that bytenr,
-and we will trip over the ASSERT(root).
+	Qgroup ioctl thread		|	Unmount thread
+----------------------------------------+-----------------------------------
+					|
+btrfs_qgroup_rescan()			|
+|- qgroup_rescan_init()			|
+|  |- qgroup_rescan_running = true;	|
+|					|
+|- trans = btrfs_join_transaction()	|
+|  Some error happened			|
+|					|
+|- btrfs_qgroup_rescan() returns error	|
+   But qgroup_rescan_running == true;	|
+					| close_ctree()
+					| |- btrfs_qgroup_wait_for_completion()
+					|    |- running == true;
+					|    |- wait_for_completion();
 
-Fix this by using the commit_root->start bytenr for indexing the commit
-root.  Then we change the __update_reloc_root() caller to be used when
-we switch the commit root for the reloc root during commit.
+btrfs_qgroup_rescan_worker is never queued, thus no one is going to wake
+up close_ctree() and we get a deadlock.
 
-This fixes the panic I was seeing when we started throttling relocation
-for delayed refs.
+All involved qgroup_rescan_init() callers are:
 
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+- btrfs_qgroup_rescan()
+  The example above. It's possible to trigger the deadlock when error
+  happened.
+
+- btrfs_quota_enable()
+  Not possible. Just after qgroup_rescan_init() we queue the work.
+
+- btrfs_read_qgroup_config()
+  It's possible to trigger the deadlock. It only init the work, the
+  work queueing happens in btrfs_qgroup_rescan_resume().
+  Thus if error happened in between, deadlock is possible.
+
+We shouldn't set fs_info->qgroup_rescan_running just in
+qgroup_rescan_init(), as at that stage we haven't yet queued qgroup
+rescan worker to run.
+
+[FIX]
+Set qgroup_rescan_running before queueing the work, so that we ensure
+the rescan work is queued when we wait for it.
+
+Fixes: 8d9eddad1946 ("Btrfs: fix qgroup rescan worker initialization")
+Signed-off-by: Jeff Mahoney <jeffm@suse.com>
+[ Change subject and cause analyse, use a smaller fix ]
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/relocation.c | 17 +++++++----------
- 1 file changed, 7 insertions(+), 10 deletions(-)
+ fs/btrfs/qgroup.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/fs/btrfs/relocation.c b/fs/btrfs/relocation.c
-index c4ed7015cc7d9..cb4a888fc9dec 100644
---- a/fs/btrfs/relocation.c
-+++ b/fs/btrfs/relocation.c
-@@ -1298,7 +1298,7 @@ static int __must_check __add_reloc_root(struct btrfs_root *root)
- 	if (!node)
- 		return -ENOMEM;
- 
--	node->bytenr = root->node->start;
-+	node->bytenr = root->commit_root->start;
- 	node->data = root;
- 
- 	spin_lock(&rc->reloc_root_tree.lock);
-@@ -1329,10 +1329,11 @@ static void __del_reloc_root(struct btrfs_root *root)
- 	if (rc && root->node) {
- 		spin_lock(&rc->reloc_root_tree.lock);
- 		rb_node = tree_search(&rc->reloc_root_tree.rb_root,
--				      root->node->start);
-+				      root->commit_root->start);
- 		if (rb_node) {
- 			node = rb_entry(rb_node, struct mapping_node, rb_node);
- 			rb_erase(&node->rb_node, &rc->reloc_root_tree.rb_root);
-+			RB_CLEAR_NODE(&node->rb_node);
- 		}
- 		spin_unlock(&rc->reloc_root_tree.lock);
- 		if (!node)
-@@ -1350,7 +1351,7 @@ static void __del_reloc_root(struct btrfs_root *root)
-  * helper to update the 'address of tree root -> reloc tree'
-  * mapping
-  */
--static int __update_reloc_root(struct btrfs_root *root, u64 new_bytenr)
-+static int __update_reloc_root(struct btrfs_root *root)
- {
- 	struct btrfs_fs_info *fs_info = root->fs_info;
- 	struct rb_node *rb_node;
-@@ -1359,7 +1360,7 @@ static int __update_reloc_root(struct btrfs_root *root, u64 new_bytenr)
- 
- 	spin_lock(&rc->reloc_root_tree.lock);
- 	rb_node = tree_search(&rc->reloc_root_tree.rb_root,
--			      root->node->start);
-+			      root->commit_root->start);
- 	if (rb_node) {
- 		node = rb_entry(rb_node, struct mapping_node, rb_node);
- 		rb_erase(&node->rb_node, &rc->reloc_root_tree.rb_root);
-@@ -1371,7 +1372,7 @@ static int __update_reloc_root(struct btrfs_root *root, u64 new_bytenr)
- 	BUG_ON((struct btrfs_root *)node->data != root);
- 
- 	spin_lock(&rc->reloc_root_tree.lock);
--	node->bytenr = new_bytenr;
-+	node->bytenr = root->node->start;
- 	rb_node = tree_insert(&rc->reloc_root_tree.rb_root,
- 			      node->bytenr, &node->rb_node);
- 	spin_unlock(&rc->reloc_root_tree.lock);
-@@ -1529,6 +1530,7 @@ int btrfs_update_reloc_root(struct btrfs_trans_handle *trans,
+diff --git a/fs/btrfs/qgroup.c b/fs/btrfs/qgroup.c
+index 286c8c11c8d32..590defdf88609 100644
+--- a/fs/btrfs/qgroup.c
++++ b/fs/btrfs/qgroup.c
+@@ -1030,6 +1030,7 @@ out_add_root:
+ 	ret = qgroup_rescan_init(fs_info, 0, 1);
+ 	if (!ret) {
+ 	        qgroup_rescan_zero_tracking(fs_info);
++		fs_info->qgroup_rescan_running = true;
+ 	        btrfs_queue_work(fs_info->qgroup_rescan_workers,
+ 	                         &fs_info->qgroup_rescan_work);
  	}
+@@ -3276,7 +3277,6 @@ qgroup_rescan_init(struct btrfs_fs_info *fs_info, u64 progress_objectid,
+ 		sizeof(fs_info->qgroup_rescan_progress));
+ 	fs_info->qgroup_rescan_progress.objectid = progress_objectid;
+ 	init_completion(&fs_info->qgroup_rescan_completion);
+-	fs_info->qgroup_rescan_running = true;
  
- 	if (reloc_root->commit_root != reloc_root->node) {
-+		__update_reloc_root(reloc_root);
- 		btrfs_set_root_node(root_item, reloc_root->node);
- 		free_extent_buffer(reloc_root->commit_root);
- 		reloc_root->commit_root = btrfs_root_node(reloc_root);
-@@ -4718,11 +4720,6 @@ int btrfs_reloc_cow_block(struct btrfs_trans_handle *trans,
- 	BUG_ON(rc->stage == UPDATE_DATA_PTRS &&
- 	       root->root_key.objectid == BTRFS_DATA_RELOC_TREE_OBJECTID);
+ 	spin_unlock(&fs_info->qgroup_lock);
+ 	mutex_unlock(&fs_info->qgroup_rescan_lock);
+@@ -3341,8 +3341,11 @@ btrfs_qgroup_rescan(struct btrfs_fs_info *fs_info)
  
--	if (root->root_key.objectid == BTRFS_TREE_RELOC_OBJECTID) {
--		if (buf == root->node)
--			__update_reloc_root(root, cow->start);
--	}
--
- 	level = btrfs_header_level(buf);
- 	if (btrfs_header_generation(buf) <=
- 	    btrfs_root_last_snapshot(&root->root_item))
+ 	qgroup_rescan_zero_tracking(fs_info);
+ 
++	mutex_lock(&fs_info->qgroup_rescan_lock);
++	fs_info->qgroup_rescan_running = true;
+ 	btrfs_queue_work(fs_info->qgroup_rescan_workers,
+ 			 &fs_info->qgroup_rescan_work);
++	mutex_unlock(&fs_info->qgroup_rescan_lock);
+ 
+ 	return 0;
+ }
+@@ -3378,9 +3381,13 @@ int btrfs_qgroup_wait_for_completion(struct btrfs_fs_info *fs_info,
+ void
+ btrfs_qgroup_rescan_resume(struct btrfs_fs_info *fs_info)
+ {
+-	if (fs_info->qgroup_flags & BTRFS_QGROUP_STATUS_FLAG_RESCAN)
++	if (fs_info->qgroup_flags & BTRFS_QGROUP_STATUS_FLAG_RESCAN) {
++		mutex_lock(&fs_info->qgroup_rescan_lock);
++		fs_info->qgroup_rescan_running = true;
+ 		btrfs_queue_work(fs_info->qgroup_rescan_workers,
+ 				 &fs_info->qgroup_rescan_work);
++		mutex_unlock(&fs_info->qgroup_rescan_lock);
++	}
+ }
+ 
+ /*
 -- 
 2.20.1
 
