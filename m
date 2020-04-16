@@ -2,55 +2,52 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33325C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EF82C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E7A92076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:23:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FA3A2076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:23:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587047029;
-	bh=1jzhNCiKswhoIJTfB2OLMsRckfeRXXkCNaRRwVljCGw=;
+	s=default; t=1587047032;
+	bh=KWxq6ZrFrO8jPWH9ZCMnZoxwcvM3QWIjNinxvnDkmIE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q+ReGTr1RExfZIEaM5wBHzood1S63fXL0PRdw5p9V0+aJtT9kbZPvMarylhamAAOF
-	 fn7Yb7dgh3uOfQNexQxn4IGnPJy6GH4s3LoDIAMRpBPb7NSOsbue7BGGImGOID+sMV
-	 zNy8hseQ763bEGraO2j1X9dxrtcvU5ZSaRkf+94g=
+	b=1okUqqYl69mtdlP/jP+07S/tGdohxfeaa7Bhb84z5OUNGptaaBeqd+rTUHgI5JHgz
+	 6NNF7wLuYgLtZ2LuFlyZDdoqRgDe1AUm0FarfLWYzImth2dbfxMN3W5hEIf99hoAqX
+	 b+tFOJV6o6zZC5PjFaIPX0JuMOzARyBDtpNn4I7E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393626AbgDPOXq (ORCPT
+        id S2442408AbgDPOTH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:23:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43936 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:19:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409247AbgDPN4z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:56:55 -0400
+        id S2636312AbgDPNxn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:53:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E99F920786;
-        Thu, 16 Apr 2020 13:56:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE4B620732;
+        Thu, 16 Apr 2020 13:53:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045415;
-        bh=1jzhNCiKswhoIJTfB2OLMsRckfeRXXkCNaRRwVljCGw=;
+        s=default; t=1587045222;
+        bh=KWxq6ZrFrO8jPWH9ZCMnZoxwcvM3QWIjNinxvnDkmIE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sFXF656UiBTpJn3JMkDrhH2qFhxm4zT0Eb07ArMJnvBMZUSj2Q9XR0jYe+M3yeLwJ
-         dch3ODJ5IAg6wKhII0ohLBVF+9Ko+QampC93fN36BBRBmyTshbkVvxKo+mMuaKuPb6
-         qPGmYnHUEr92ABO0xuERKV6zLzxPR42iwNa4DTo8=
+        b=vQMUp9AS/NEdZbbrf1pV9NKwsjqaguD/kYn1hrFJeKVYJV1cdGJmIfU2jX5wezjh/
+         fC0p1dDbXMYKAmA+00x2lZSh2tgubpGLT/RKMsHeXsk1ZMHdBYIbZiWmCXUDtdHJdH
+         d4s45TXtipmOZ4SOeiMvT+jDFc635oCt5EnYf/Po=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Lendacky <thomas.lendacky@amd.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, linux-efi@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        David Hildenbrand <david@redhat.com>,
-        Heinrich Schuchardt <xypron.glpk@gmx.de>
-Subject: [PATCH 5.6 098/254] efi/x86: Add TPM related EFI tables to unencrypted mapping checks
-Date:   Thu, 16 Apr 2020 15:23:07 +0200
-Message-Id: <20200416131338.257988354@linuxfoundation.org>
+        stable@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 045/254] gfs2: Dont demote a glock until its revokes are written
+Date:   Thu, 16 Apr 2020 15:22:14 +0200
+Message-Id: <20200416131331.520541316@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -63,45 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Lendacky <thomas.lendacky@amd.com>
+From: Bob Peterson <rpeterso@redhat.com>
 
-commit f10e80a19b07b58fc2adad7945f8313b01503bae upstream.
+[ Upstream commit df5db5f9ee112e76b5202fbc331f990a0fc316d6 ]
 
-When booting with SME active, EFI tables must be mapped unencrypted since
-they were built by UEFI in unencrypted memory. Update the list of tables
-to be checked during early_memremap() processing to account for the EFI
-TPM tables.
+Before this patch, run_queue would demote glocks based on whether
+there are any more holders. But if the glock has pending revokes that
+haven't been written to the media, giving up the glock might end in
+file system corruption if the revokes never get written due to
+io errors, node crashes and fences, etc. In that case, another node
+will replay the metadata blocks associated with the glock, but
+because the revoke was never written, it could replay that block
+even though the glock had since been granted to another node who
+might have made changes.
 
-This fixes a bug where an EFI TPM log table has been created by UEFI, but
-it lives in memory that has been marked as usable rather than reserved.
+This patch changes the logic in run_queue so that it never demotes
+a glock until its count of pending revokes reaches zero.
 
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: linux-efi@vger.kernel.org
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Heinrich Schuchardt <xypron.glpk@gmx.de>
-Cc: <stable@vger.kernel.org> # v5.4+
-Link: https://lore.kernel.org/r/4144cd813f113c20cdfa511cf59500a64e6015be.1582662842.git.thomas.lendacky@amd.com
-Link: https://lore.kernel.org/r/20200228121408.9075-2-ardb@kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+Reviewed-by: Andreas Gruenbacher <agruenba@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/platform/efi/efi.c |    2 ++
- 1 file changed, 2 insertions(+)
+ fs/gfs2/glock.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/arch/x86/platform/efi/efi.c
-+++ b/arch/x86/platform/efi/efi.c
-@@ -85,6 +85,8 @@ static const unsigned long * const efi_t
- #ifdef CONFIG_EFI_RCI2_TABLE
- 	&rci2_table_phys,
- #endif
-+	&efi.tpm_log,
-+	&efi.tpm_final_log,
- };
- 
- u64 efi_setup;		/* efi setup_data physical address */
+diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
+index d0eceaff3cea9..19ebc6cd0f2ba 100644
+--- a/fs/gfs2/glock.c
++++ b/fs/gfs2/glock.c
+@@ -645,6 +645,9 @@ __acquires(&gl->gl_lockref.lock)
+ 			goto out_unlock;
+ 		if (nonblock)
+ 			goto out_sched;
++		smp_mb();
++		if (atomic_read(&gl->gl_revokes) != 0)
++			goto out_sched;
+ 		set_bit(GLF_DEMOTE_IN_PROGRESS, &gl->gl_flags);
+ 		GLOCK_BUG_ON(gl, gl->gl_demote_state == LM_ST_EXCLUSIVE);
+ 		gl->gl_target = gl->gl_demote_state;
+-- 
+2.20.1
+
 
 
