@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11B27C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:50:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C9EC352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:50:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E203B21D93
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:50:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D06C21D93
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:50:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587048652;
-	bh=iC3JlktHeUP9mEC7t7KF/EvNwWB0l/c2MqS64cwwzVU=;
+	s=default; t=1587048655;
+	bh=CHZCDzVZtTmPQ15/Y7IU5HMGBNokPes40qIBuCXVNVk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xvdwJdhDU5bh6Zfqh1MrfItjglKHNaItgY/4dkuukpSv+WI6p4rWySQL0DA0za+Tk
-	 xgzy/YC285CsBxLb6m8KySyIYt0AsSKqrbd5zCp0equo5g4r/i0S3JTqyILFA9THXE
-	 oZzJ9MYM5CXJLPIpEa4T7DiYOOkcYXHlEqx8ZfqM=
+	b=AAzdIepOcWdWD54kmUEsE2fpHUq+n7lbqhvR9CrLbAIJ+eVks88vVl+b0G8B95oda
+	 EzfbnGlBxHjS2JayaBcyxojdIyRjeFCKIxgnP2hLjm3jWl3d6bHQYqfhX8kyRRP8iC
+	 qHYAyAJDn1OKK6kpz5QS3pP6O5DXmM0s0Xv5KrL8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394782AbgDPOuv (ORCPT
+        id S2394683AbgDPOuo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:50:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45146 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:50:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2506776AbgDPN6L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:58:11 -0400
+        id S2502589AbgDPN6S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:58:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7744B20732;
-        Thu, 16 Apr 2020 13:58:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFBE721744;
+        Thu, 16 Apr 2020 13:58:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045490;
-        bh=iC3JlktHeUP9mEC7t7KF/EvNwWB0l/c2MqS64cwwzVU=;
+        s=default; t=1587045498;
+        bh=CHZCDzVZtTmPQ15/Y7IU5HMGBNokPes40qIBuCXVNVk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=095TdULbtvGzchvT/FBP2Wg8bqhghHQ9v3XNsZtwf/SVAKUSrME3p7jpZcHCSsKDt
-         MW0sdKdVTkTZfMRX7Y+ZamhUiRFcq5rdf5I5nmAxFNLadF/lT5G8eMl+SQrXTC4T3A
-         ybmEM/PndzItuC5RzmgI7LceZecZoASdYiL1Arns=
+        b=x4L4dn9KTv1ves8WGL20iSoTv5UROGEqiDt8mXrH4LhbSndVGq/As0tQ/llfOi0uc
+         kTOohZ0QenBFkPIUGr3XCgtelo8QsBeZP6mAfufTpn2iycZv5Vy7uPBKB4adRNd9Xb
+         ZcEpD3Va4aan68cRCgj5fFLwtVyICq4dIOmMQVoA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.6 157/254] btrfs: use nofs allocations for running delayed items
-Date:   Thu, 16 Apr 2020 15:24:06 +0200
-Message-Id: <20200416131346.255619574@linuxfoundation.org>
+        stable@vger.kernel.org, Sibi Sankar <sibis@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH 5.6 159/254] remoteproc: qcom_q6v5_mss: Reload the mba region on coredump
+Date:   Thu, 16 Apr 2020 15:24:08 +0200
+Message-Id: <20200416131346.503860271@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -59,232 +59,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Sibi Sankar <sibis@codeaurora.org>
 
-commit 351cbf6e4410e7ece05e35d0a07320538f2418b4 upstream.
+commit d96f2571dc84d128cacf1944f4ecc87834c779a6 upstream.
 
-Zygo reported the following lockdep splat while testing the balance
-patches
+On secure devices after a wdog/fatal interrupt, the mba region has to be
+refreshed in order to prevent the following errors during mba load.
 
-======================================================
-WARNING: possible circular locking dependency detected
-5.6.0-c6f0579d496a+ #53 Not tainted
-------------------------------------------------------
-kswapd0/1133 is trying to acquire lock:
-ffff888092f622c0 (&delayed_node->mutex){+.+.}, at: __btrfs_release_delayed_node+0x7c/0x5b0
+Err Logs:
+remoteproc remoteproc2: stopped remote processor 4080000.remoteproc
+qcom-q6v5-mss 4080000.remoteproc: PBL returned unexpected status -284031232
+qcom-q6v5-mss 4080000.remoteproc: PBL returned unexpected status -284031232
+....
+qcom-q6v5-mss 4080000.remoteproc: PBL returned unexpected status -284031232
+qcom-q6v5-mss 4080000.remoteproc: MBA booted, loading mpss
 
-but task is already holding lock:
-ffffffff8fc5f860 (fs_reclaim){+.+.}, at: __fs_reclaim_acquire+0x5/0x30
-
-which lock already depends on the new lock.
-
-the existing dependency chain (in reverse order) is:
-
--> #1 (fs_reclaim){+.+.}:
-       fs_reclaim_acquire.part.91+0x29/0x30
-       fs_reclaim_acquire+0x19/0x20
-       kmem_cache_alloc_trace+0x32/0x740
-       add_block_entry+0x45/0x260
-       btrfs_ref_tree_mod+0x6e2/0x8b0
-       btrfs_alloc_tree_block+0x789/0x880
-       alloc_tree_block_no_bg_flush+0xc6/0xf0
-       __btrfs_cow_block+0x270/0x940
-       btrfs_cow_block+0x1ba/0x3a0
-       btrfs_search_slot+0x999/0x1030
-       btrfs_insert_empty_items+0x81/0xe0
-       btrfs_insert_delayed_items+0x128/0x7d0
-       __btrfs_run_delayed_items+0xf4/0x2a0
-       btrfs_run_delayed_items+0x13/0x20
-       btrfs_commit_transaction+0x5cc/0x1390
-       insert_balance_item.isra.39+0x6b2/0x6e0
-       btrfs_balance+0x72d/0x18d0
-       btrfs_ioctl_balance+0x3de/0x4c0
-       btrfs_ioctl+0x30ab/0x44a0
-       ksys_ioctl+0xa1/0xe0
-       __x64_sys_ioctl+0x43/0x50
-       do_syscall_64+0x77/0x2c0
-       entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
--> #0 (&delayed_node->mutex){+.+.}:
-       __lock_acquire+0x197e/0x2550
-       lock_acquire+0x103/0x220
-       __mutex_lock+0x13d/0xce0
-       mutex_lock_nested+0x1b/0x20
-       __btrfs_release_delayed_node+0x7c/0x5b0
-       btrfs_remove_delayed_node+0x49/0x50
-       btrfs_evict_inode+0x6fc/0x900
-       evict+0x19a/0x2c0
-       dispose_list+0xa0/0xe0
-       prune_icache_sb+0xbd/0xf0
-       super_cache_scan+0x1b5/0x250
-       do_shrink_slab+0x1f6/0x530
-       shrink_slab+0x32e/0x410
-       shrink_node+0x2a5/0xba0
-       balance_pgdat+0x4bd/0x8a0
-       kswapd+0x35a/0x800
-       kthread+0x1e9/0x210
-       ret_from_fork+0x3a/0x50
-
-other info that might help us debug this:
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(fs_reclaim);
-                               lock(&delayed_node->mutex);
-                               lock(fs_reclaim);
-  lock(&delayed_node->mutex);
-
- *** DEADLOCK ***
-
-3 locks held by kswapd0/1133:
- #0: ffffffff8fc5f860 (fs_reclaim){+.+.}, at: __fs_reclaim_acquire+0x5/0x30
- #1: ffffffff8fc380d8 (shrinker_rwsem){++++}, at: shrink_slab+0x1e8/0x410
- #2: ffff8881e0e6c0e8 (&type->s_umount_key#42){++++}, at: trylock_super+0x1b/0x70
-
-stack backtrace:
-CPU: 2 PID: 1133 Comm: kswapd0 Not tainted 5.6.0-c6f0579d496a+ #53
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
-Call Trace:
- dump_stack+0xc1/0x11a
- print_circular_bug.isra.38.cold.57+0x145/0x14a
- check_noncircular+0x2a9/0x2f0
- ? print_circular_bug.isra.38+0x130/0x130
- ? stack_trace_consume_entry+0x90/0x90
- ? save_trace+0x3cc/0x420
- __lock_acquire+0x197e/0x2550
- ? btrfs_inode_clear_file_extent_range+0x9b/0xb0
- ? register_lock_class+0x960/0x960
- lock_acquire+0x103/0x220
- ? __btrfs_release_delayed_node+0x7c/0x5b0
- __mutex_lock+0x13d/0xce0
- ? __btrfs_release_delayed_node+0x7c/0x5b0
- ? __asan_loadN+0xf/0x20
- ? pvclock_clocksource_read+0xeb/0x190
- ? __btrfs_release_delayed_node+0x7c/0x5b0
- ? mutex_lock_io_nested+0xc20/0xc20
- ? __kasan_check_read+0x11/0x20
- ? check_chain_key+0x1e6/0x2e0
- mutex_lock_nested+0x1b/0x20
- ? mutex_lock_nested+0x1b/0x20
- __btrfs_release_delayed_node+0x7c/0x5b0
- btrfs_remove_delayed_node+0x49/0x50
- btrfs_evict_inode+0x6fc/0x900
- ? btrfs_setattr+0x840/0x840
- ? do_raw_spin_unlock+0xa8/0x140
- evict+0x19a/0x2c0
- dispose_list+0xa0/0xe0
- prune_icache_sb+0xbd/0xf0
- ? invalidate_inodes+0x310/0x310
- super_cache_scan+0x1b5/0x250
- do_shrink_slab+0x1f6/0x530
- shrink_slab+0x32e/0x410
- ? do_shrink_slab+0x530/0x530
- ? do_shrink_slab+0x530/0x530
- ? __kasan_check_read+0x11/0x20
- ? mem_cgroup_protected+0x13d/0x260
- shrink_node+0x2a5/0xba0
- balance_pgdat+0x4bd/0x8a0
- ? mem_cgroup_shrink_node+0x490/0x490
- ? _raw_spin_unlock_irq+0x27/0x40
- ? finish_task_switch+0xce/0x390
- ? rcu_read_lock_bh_held+0xb0/0xb0
- kswapd+0x35a/0x800
- ? _raw_spin_unlock_irqrestore+0x4c/0x60
- ? balance_pgdat+0x8a0/0x8a0
- ? finish_wait+0x110/0x110
- ? __kasan_check_read+0x11/0x20
- ? __kthread_parkme+0xc6/0xe0
- ? balance_pgdat+0x8a0/0x8a0
- kthread+0x1e9/0x210
- ? kthread_create_worker_on_cpu+0xc0/0xc0
- ret_from_fork+0x3a/0x50
-
-This is because we hold that delayed node's mutex while doing tree
-operations.  Fix this by just wrapping the searches in nofs.
-
-CC: stable@vger.kernel.org # 4.4+
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: 7dd8ade24dc2a ("remoteproc: qcom: q6v5-mss: Add custom dump function for modem")
+Cc: stable@vger.kernel.org
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+Tested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Link: https://lore.kernel.org/r/20200304194729.27979-4-sibis@codeaurora.org
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/delayed-inode.c |   13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/remoteproc/qcom_q6v5_mss.c |   19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
 
---- a/fs/btrfs/delayed-inode.c
-+++ b/fs/btrfs/delayed-inode.c
-@@ -6,6 +6,7 @@
+--- a/drivers/remoteproc/qcom_q6v5_mss.c
++++ b/drivers/remoteproc/qcom_q6v5_mss.c
+@@ -1030,6 +1030,23 @@ static void q6v5_mba_reclaim(struct q6v5
+ 	}
+ }
  
- #include <linux/slab.h>
- #include <linux/iversion.h>
-+#include <linux/sched/mm.h>
- #include "misc.h"
- #include "delayed-inode.h"
- #include "disk-io.h"
-@@ -805,11 +806,14 @@ static int btrfs_insert_delayed_item(str
- 				     struct btrfs_delayed_item *delayed_item)
- {
- 	struct extent_buffer *leaf;
-+	unsigned int nofs_flag;
- 	char *ptr;
- 	int ret;
- 
-+	nofs_flag = memalloc_nofs_save();
- 	ret = btrfs_insert_empty_item(trans, root, path, &delayed_item->key,
- 				      delayed_item->data_len);
-+	memalloc_nofs_restore(nofs_flag);
- 	if (ret < 0 && ret != -EEXIST)
- 		return ret;
- 
-@@ -937,6 +941,7 @@ static int btrfs_delete_delayed_items(st
- 				      struct btrfs_delayed_node *node)
- {
- 	struct btrfs_delayed_item *curr, *prev;
-+	unsigned int nofs_flag;
- 	int ret = 0;
- 
- do_again:
-@@ -945,7 +950,9 @@ do_again:
- 	if (!curr)
- 		goto delete_fail;
- 
-+	nofs_flag = memalloc_nofs_save();
- 	ret = btrfs_search_slot(trans, root, &curr->key, path, -1, 1);
-+	memalloc_nofs_restore(nofs_flag);
- 	if (ret < 0)
- 		goto delete_fail;
- 	else if (ret > 0) {
-@@ -1012,6 +1019,7 @@ static int __btrfs_update_delayed_inode(
- 	struct btrfs_key key;
- 	struct btrfs_inode_item *inode_item;
- 	struct extent_buffer *leaf;
-+	unsigned int nofs_flag;
- 	int mod;
- 	int ret;
- 
-@@ -1024,7 +1032,9 @@ static int __btrfs_update_delayed_inode(
- 	else
- 		mod = 1;
- 
-+	nofs_flag = memalloc_nofs_save();
- 	ret = btrfs_lookup_inode(trans, root, path, &key, mod);
-+	memalloc_nofs_restore(nofs_flag);
- 	if (ret > 0) {
- 		btrfs_release_path(path);
- 		return -ENOENT;
-@@ -1075,7 +1085,10 @@ search:
- 
- 	key.type = BTRFS_INODE_EXTREF_KEY;
- 	key.offset = -1;
++static int q6v5_reload_mba(struct rproc *rproc)
++{
++	struct q6v5 *qproc = rproc->priv;
++	const struct firmware *fw;
++	int ret;
 +
-+	nofs_flag = memalloc_nofs_save();
- 	ret = btrfs_search_slot(trans, root, &key, path, -1, 1);
-+	memalloc_nofs_restore(nofs_flag);
- 	if (ret < 0)
- 		goto err_out;
- 	ASSERT(ret);
++	ret = request_firmware(&fw, rproc->firmware, qproc->dev);
++	if (ret < 0)
++		return ret;
++
++	q6v5_load(rproc, fw);
++	ret = q6v5_mba_load(qproc);
++	release_firmware(fw);
++
++	return ret;
++}
++
+ static int q6v5_mpss_load(struct q6v5 *qproc)
+ {
+ 	const struct elf32_phdr *phdrs;
+@@ -1188,7 +1205,7 @@ static void qcom_q6v5_dump_segment(struc
+ 
+ 	/* Unlock mba before copying segments */
+ 	if (!qproc->dump_mba_loaded) {
+-		ret = q6v5_mba_load(qproc);
++		ret = q6v5_reload_mba(rproc);
+ 		if (!ret) {
+ 			/* Reset ownership back to Linux to copy segments */
+ 			ret = q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm,
 
 
