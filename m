@@ -2,150 +2,125 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5695DC2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 00:02:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D5DC2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 00:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DD862078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 00:02:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13AE12078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 00:02:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="wlTvb45C"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G/bM1xr1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391003AbgDPACq (ORCPT
+        id S2391023AbgDPACx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 20:02:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43280 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730983AbgDPACm (ORCPT
+        Wed, 15 Apr 2020 20:02:53 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:53812 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729647AbgDPACn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 20:02:42 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5876C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 17:02:38 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id l78so3880117qke.7
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 17:02:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=X6Mgw1nun/Uy4a+IPSrxBx2LY1+xrpHKaA4zi6L+JLQ=;
-        b=wlTvb45CffggOZUiA2YX0BJzHY0Y+vT7fwA78EoFTbc+3f3+3rLQ2AY2kK4MYR8RyD
-         UmqAsBbarIU+pg4GnT71VBsriKivmOVDIEKHlMC0mbvNIR7SLexkeg+kBIkULlDxAJTr
-         ghuksWcv8gH4N/nKbtuy1gLDp2Qf0MCNRQy4o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=X6Mgw1nun/Uy4a+IPSrxBx2LY1+xrpHKaA4zi6L+JLQ=;
-        b=QMDwR/NsKsa1ehrrUWXsGUT4i6faf7YzEnOc0qSPe7izmxbGvBhV1fwAeLzqdgBQX0
-         Zh91GXrzo/fxkk5qS5Fj4u/i1+TyKMRJACzkw+TWD/CAF6p3bGx0jIVjuQ8hSeGwoLZy
-         wTB/OyykXwxkl4Cv3z6UIoA8Pgsg3jE9wtga8heyRUERL0PbFxjeHObZ1Ub9Mxqh8fLt
-         6jK37l7hY2ILwQ+dlhPxHGCFKZUpSvwJT25e0d8BOUmWaenVI2I8afDi/WGJQAiBwZzP
-         aZDLIUsrWhAy6XRN2ASq2G3Ew9PzSj73JjOvvYhHdb7fvQn3wkkTaRWbFL11JxNKpskg
-         cmoQ==
-X-Gm-Message-State: AGi0PuY3XQyQ9f8m5buC71XtUHy00NJTo3+4DQ6xR22mpLIkFftrbjZX
-        IwNiDijrAXicK7YjMvDC8pxyBA==
-X-Google-Smtp-Source: APiQypIbxc8jo4K13VEY2oIrO9aS6ndUQFg674L5mw7lqTQJWvJmBKuHi5gEAokl3owq+1tfBgo7Jw==
-X-Received: by 2002:a37:5004:: with SMTP id e4mr28829285qkb.18.1586995357890;
-        Wed, 15 Apr 2020 17:02:37 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id x55sm4705228qtk.3.2020.04.15.17.02.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2020 17:02:36 -0700 (PDT)
-Date:   Wed, 15 Apr 2020 20:02:35 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Patrick Bellasi <patrick.bellasi@arm.com>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de,
-        steven.sistare@oracle.com, dhaval.giani@oracle.com,
-        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
-        viresh.kumar@linaro.org, tim.c.chen@linux.intel.com,
-        mgorman@techsingularity.net, parth@linux.ibm.com
-Subject: Re: [RFC PATCH 1/9] sched,cgroup: Add interface for latency-nice
-Message-ID: <20200416000235.GA211099@google.com>
-References: <20190830174944.21741-1-subhra.mazumdar@oracle.com>
- <20190830174944.21741-2-subhra.mazumdar@oracle.com>
- <20190905083127.GA2332@hirez.programming.kicks-ass.net>
- <87r24v2i14.fsf@arm.com>
- <20190905104616.GD2332@hirez.programming.kicks-ass.net>
- <20190905111346.2w6kuqrdvaqvgilu@e107158-lin.cambridge.arm.com>
- <20190905113002.GK2349@hirez.programming.kicks-ass.net>
- <20190905114725.ehi5ea6qg3rychlz@e107158-lin.cambridge.arm.com>
+        Wed, 15 Apr 2020 20:02:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586995357;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ps9/dNn16oHNeGiINVoqPKfCACcgsF/ho6TjzNXBShg=;
+        b=G/bM1xr1yfL6bZ9JnkEla3TxhBiD9ftqEWo/P+FXq8lw9o6EzXantSqo37DKejb5vPRyYx
+        oyJEmdiNhQpT7qL8FbceIrpOUOaYKHfBM1cLynlRR2RiAECn7NohunoLmKixOP+ZxxYZQS
+        fPpxU2HmlWbL+wvCXSA/Daae/sXn5Oc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-83-p986kzuxOE2rvxO8AY3uhw-1; Wed, 15 Apr 2020 20:02:35 -0400
+X-MC-Unique: p986kzuxOE2rvxO8AY3uhw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A9271107ACC9;
+        Thu, 16 Apr 2020 00:02:33 +0000 (UTC)
+Received: from mail (ovpn-112-243.rdu2.redhat.com [10.10.112.243])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 85E3E99E03;
+        Thu, 16 Apr 2020 00:02:30 +0000 (UTC)
+Date:   Wed, 15 Apr 2020 20:02:29 -0400
+From:   Andrea Arcangeli <aarcange@redhat.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Hillf Danton <hdanton@sina.com>, Peter Xu <peterx@redhat.com>,
+        Brian Geffon <bgeffon@google.com>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Sonny Rao <sonnyrao@google.com>
+Subject: Re: Userfaultfd doesn't seem to break out of poll on fd close
+Message-ID: <20200416000229.GA9922@redhat.com>
+References: <CADyq12wPW69ovpW4akDY5PGBbrvnwsLO86=sSKTU4CB3dNwG3Q@mail.gmail.com>
+ <20200414214516.GA182757@xz-x1>
+ <20200415031602.22348-1-hdanton@sina.com>
+ <20200415142546.GO5100@ziepe.ca>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190905114725.ehi5ea6qg3rychlz@e107158-lin.cambridge.arm.com>
+In-Reply-To: <20200415142546.GO5100@ziepe.ca>
+User-Agent: Mutt/1.13.5 (2020-03-28)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 12:47:26PM +0100, Qais Yousef wrote:
-> On 09/05/19 13:30, Peter Zijlstra wrote:
-> > On Thu, Sep 05, 2019 at 12:13:47PM +0100, Qais Yousef wrote:
-> > > On 09/05/19 12:46, Peter Zijlstra wrote:
-> > 
-> > > > This is important because we want to be able to bias towards less
-> > > > importance to (tail) latency as well as more importantance to (tail)
-> > > > latency.
-> > > > 
-> > > > Specifically, Oracle wants to sacrifice (some) latency for throughput.
-> > > > Facebook OTOH seems to want to sacrifice (some) throughput for latency.
-> > > 
-> > > Another use case I'm considering is using latency-nice to prefer an idle CPU if
-> > > latency-nice is set otherwise go for the most energy efficient CPU.
-> > > 
-> > > Ie: sacrifice (some) energy for latency.
-> > > 
-> > > The way I see interpreting latency-nice here as a binary switch. But
-> > > maybe we can use the range to select what (some) energy to sacrifice
-> > > mean here. Hmmm.
-> > 
-> > It cannot be binary, per definition is must be ternary, that is, <0, ==0
-> > and >0 (or middle value if you're of that persuasion).
+Hello everyone,
+
+On Wed, Apr 15, 2020 at 11:25:46AM -0300, Jason Gunthorpe wrote:
+>           CPU1                            CPU2                  CPU3
+>  fds[i]->fd = userfaultfd;
+>  while()
+>                                        close(userfaultfd)
+>                                        pthread_join()
+>                                                             someother_fd = open()
+>                                                             userfaultfd == someother_fd
+>      poll(fds)   // <- Still sleeps
 > 
-> I meant I want to use it as a binary.
+> The kernel should not be trying to wake poll from fd release, and
+> userspace should not close a FD that is currently under poll.
 > 
-> > 
-> > In your case, I'm thinking you mean >0, we want to lower the latency.
-> 
-> Yes. As long as there's an easy way to say: does this task care about latency
-> or not I'm good.
+> Besides, it really does look like poll holds the fget while doing its
+> work (see poll_freewait), so fops release() won't be called anyhow..
 
-Qais, Peter, all,
+Agreed, poll does fdget (not userfaultfd_poll) so there's no way
+->release will be called when the fd is closed in the other thread.
 
-For ChromeOS (my team), we are planning to use the upstream uclamp mechanism
-instead of the out-of-tree schedtune mechanism to provide EAS with the
-latency-sensitivity (binary/ternary) hint. ChromeOS is thankfully quite a bit
-upstream focussed :)
+The simple way to fix this is to implement a ->flush operation
+(userfaultfd_flush), perhaps something like this would work (untested):
 
-However, uclamp is missing an attribute to provide this biasing to EAS as we
-know.
+static int userfaultfd_flush(struct file *file, fl_owner_t id)
+{
+	struct userfaultfd_ctx *ctx = file->private_data;
+	wake_up_poll(&ctx->fd_wqh, EPOLLHUP);
+}
 
-What was the consensus on adding a per-task attribute to uclamp for providing
-this? Happy to collaborate on this front.
+If eventfd and pipes all behave identical to uffd (they should as they
+don't seem to implement flush) I'm not sure if there's good enough
+justification to deviate from the default VFS behavior here.
 
-thanks,
+The file flush operation is usually meaningful when the fd represent
+data stored remotely, like with nfs, for uffd close() has no special
+semantics.
 
- - Joel
+With threads, you can get the wakeup by other means as Peter
+suggested. Then you can close the uffd in the parent after poll
+returns.
 
+Alternatively if you want to rely on uffd to send the poll wakeup you
+could use UFFDIO_WAKE instead of closing the fd, and still close the fd
+after poll returns.
 
-> > Anyway; there were a number of things mentioned at OSPM that we could
-> > tie into this thing and finding sensible mappings is going to be a bit
-> > of trial and error I suppose.
-> > 
-> > But as patrick said; we're very much exporting a BIAS knob, not a set of
-> > behaviours.
-> 
-> Agreed. I just wanted to say that the way this range is going to be
-> interpreted will differ from path to path and we need to consider that in the
-> final mapping. Especially from the final user's perspective of what setting
-> this value ultimately means to them.
-> 
-> --
-> Qais Yousef
+Overall the more normal thing to do is to close the uffd after poll
+returns, if you can't do that (or if it's less efficient doing that)
+it'd be interesting to know why to better evaluate this. By just
+looking the testcase there's no way to tell if you gain something
+meaningful by closing the fd during poll..
+
+Thanks,
+Andrea
+
