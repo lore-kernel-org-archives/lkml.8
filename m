@@ -2,413 +2,1565 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E4EC352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9069CC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:48:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79F4E22204
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:47:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 589D1206E9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:48:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="GSvBThVG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504613AbgDPKSI (ORCPT
+        id S2506654AbgDPLsi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 06:18:08 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2341 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2441511AbgDPKRU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 06:17:20 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id DB013ED08882747518D6;
-        Thu, 16 Apr 2020 18:17:12 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 16 Apr 2020 18:17:04 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH] f2fs: support read iostat
-Date:   Thu, 16 Apr 2020 18:16:56 +0800
-Message-ID: <20200416101656.106970-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
+        Thu, 16 Apr 2020 07:48:38 -0400
+Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:55839 "EHLO
+        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2506621AbgDPLsR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 07:48:17 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id P2zsjcZuz7xncP2zwj7Wx0; Thu, 16 Apr 2020 13:48:08 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1587037688; bh=Ea3hz62fBtpeDGm0wK8flxJ6mfw14t0A7BrSOA/msT0=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=GSvBThVGcyG/5cNThsjZ9Q7fyMrhaQkQMLB2U58Yr5O9qmK1QSNufnUtP7/k7YdEL
+         mK87X3J1vRxD/WVdS5dyMzxYhHljzw9Hk/J9SiVsNfwOW2ItWPAozZ+sbkhIn6sR5L
+         nkTcuXgzq/XHERvvWaNdSuPSsLmFT7dExp0+FaUw1OgEnk3EMJqwJgEfvnDdhJJo+q
+         5MkOOvXjcTYM+2akLoXr0n70d8PhVxzLR21QaHB7gY3MG49tQ6kcm5GsWmMvSwKsPO
+         SUf7RXaiWpj0nVC3nhkzzJS1uCmvyCs1w6YzQLlteAh/4EJ5R29YWDB2RSnN78BLGR
+         b6Bb6GiIfQakQ==
+Subject: Re: [PATCH v2 2/3] media: uapi: Add VP9 stateless decoder controls
+To:     Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>,
+        Boris Brezillon <boris.brezillon@collabora.com>
+References: <20200410115113.31728-1-ezequiel@collabora.com>
+ <20200410115113.31728-3-ezequiel@collabora.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <9126475c-275d-71ab-0308-6ae85e22446b@xs4all.nl>
+Date:   Thu, 16 Apr 2020 13:47:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200410115113.31728-3-ezequiel@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfK8N5hKq1ZBYn2jhR20Q+Jr9Yc3EFhpLDDh3b0M/TgVYbW8peAUCAhzm4NoeRpuc4EEwyFAmluWvyJuNOTHl8ulgx2VvU97ac1oXNPev7g2EZAgr+3Wo
+ XFnjC85yv5MqQC+NvOZGscgYp1eQobmM/LAjRDe395U6SMHaFtRErCbv7yjbIdYSkK377m4o4H5zlSUKdQTKY7LHtc0oAaLdGCBq0PrdbCn1TbKB14iKZSy+
+ QOvAQU6tszJzPhY//NNtJ2LOQAA48VVaHPnRJAILc1rBJ6ZpFm1+YXFpj0271pjhldTsRTKhFBVL2yaGTYw7JC9PUAUC8Xqf/jhfb3r5ar2wEuHFVvdBihdH
+ 4YDSbqzF4AGOEHS1+MNroCFUn4jCVCIphnR7gJZlDXS0ykXVKkGznUjy1CQ2mnclH37HpxPX4nQ5VunMEWGMuU+xEp8SOcS86O5WGaYtrlIiGgUd6/HdzObe
+ vku/PLRPHqgZcqGo4KPh3C9sFJaH7pkWDRRou1e6CXxFMNJQmLXsvBDBcHo=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adds to support accounting read IOs from userspace/kernel.
+On 10/04/2020 13:51, Ezequiel Garcia wrote:
+> From: Boris Brezillon <boris.brezillon@collabora.com>
+> 
+> Add the VP9 stateless decoder controls plus the documentation that goes
+> with it.
+> 
+> Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> ---
+>  Documentation/media/uapi/v4l/biblio.rst       |  10 +
+>  .../media/uapi/v4l/ext-ctrls-codec.rst        | 584 ++++++++++++++++++
+>  drivers/media/v4l2-core/v4l2-ctrls.c          | 242 ++++++++
+>  drivers/media/v4l2-core/v4l2-ioctl.c          |   1 +
+>  include/media/v4l2-ctrls.h                    |   1 +
+>  include/media/vp9-ctrls.h                     | 515 +++++++++++++++
+>  6 files changed, 1353 insertions(+)
+>  create mode 100644 include/media/vp9-ctrls.h
+> 
+> diff --git a/Documentation/media/uapi/v4l/biblio.rst b/Documentation/media/uapi/v4l/biblio.rst
+> index 8095f57d3d75..f89341350b6d 100644
+> --- a/Documentation/media/uapi/v4l/biblio.rst
+> +++ b/Documentation/media/uapi/v4l/biblio.rst
+> @@ -414,3 +414,13 @@ VP8
+>  :title:     RFC 6386: "VP8 Data Format and Decoding Guide"
+>  
+>  :author:    J. Bankoski et al.
+> +
+> +.. _vp9:
+> +
+> +VP9
+> +===
+> +
+> +
+> +:title:     VP9 Bitstream & Decoding Process Specification
+> +
+> +:author:    Adrian Grange (Google), Peter de Rivaz (Argon Design), Jonathan Hunt (Argon Design)
+> diff --git a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
+> index d4fc5f25aa14..fe4b03a512a4 100644
+> --- a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
+> +++ b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
+> @@ -2658,6 +2658,590 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
+>        - ``padding[3]``
+>        - Applications and drivers must set this to zero.
+>  
+> +.. _v4l2-mpeg-vp9:
+> +
+> +``V4L2_CID_MPEG_VIDEO_VP9_FRAME_CONTEXT(0..3) (struct)``
+> +    Stores VP9 probabilities attached to a specific frame context. The VP9
+> +    specification allows using a maximum of 4 contexts. Each frame being
+> +    decoded refers to one of those context. See section '7.1.2 Refresh
+> +    probs semantics' section of :ref:`vp9` for more details about these
+> +    contexts.
+> +
+> +    This control is bi-directional:
+> +
+> +    * all 4 contexts must be initialized by userspace just after the
+> +      stream is started and before the first decoding request is submitted
+> +    * the referenced context might be read by the kernel when a decoding
+> +      request is submitted, and will be updated after the decoder is done
+> +      decoding the frame ifthe V4L2_VP9_FRAME_FLAG_REFRESH_FRAME_CTX flag
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
- fs/f2fs/checkpoint.c        |  5 ++++
- fs/f2fs/data.c              |  6 +++++
- fs/f2fs/f2fs.h              | 37 +++++++++++++++++++-------
- fs/f2fs/file.c              | 12 ++++++++-
- fs/f2fs/gc.c                |  6 +++++
- fs/f2fs/node.c              |  8 +++++-
- fs/f2fs/sysfs.c             | 52 +++++++++++++++++++++++++------------
- include/trace/events/f2fs.h | 23 ++++++++++++++--
- 8 files changed, 118 insertions(+), 31 deletions(-)
+ifthe -> if the
 
-diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-index dcb3a15574c9..eafe37eab5e0 100644
---- a/fs/f2fs/checkpoint.c
-+++ b/fs/f2fs/checkpoint.c
-@@ -86,6 +86,8 @@ static struct page *__get_meta_page(struct f2fs_sb_info *sbi, pgoff_t index,
- 		return ERR_PTR(err);
- 	}
- 
-+	f2fs_update_iostat(sbi, FS_META_READ_IO, F2FS_BLKSIZE);
-+
- 	lock_page(page);
- 	if (unlikely(page->mapping != mapping)) {
- 		f2fs_put_page(page, 1);
-@@ -266,6 +268,9 @@ int f2fs_ra_meta_pages(struct f2fs_sb_info *sbi, block_t start, int nrpages,
- 		fio.page = page;
- 		err = f2fs_submit_page_bio(&fio);
- 		f2fs_put_page(page, err ? 1 : 0);
-+
-+		if (!err)
-+			f2fs_update_iostat(sbi, FS_META_READ_IO, F2FS_BLKSIZE);
- 	}
- out:
- 	blk_finish_plug(&plug);
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index 22a31e2401cf..676f48bf79eb 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -1033,6 +1033,7 @@ static int f2fs_submit_page_read(struct inode *inode, struct page *page,
- 	}
- 	ClearPageError(page);
- 	inc_page_count(sbi, F2FS_RD_DATA);
-+	f2fs_update_iostat(sbi, FS_DATA_READ_IO, F2FS_BLKSIZE);
- 	__submit_bio(sbi, bio, DATA);
- 	return 0;
- }
-@@ -2089,6 +2090,7 @@ static int f2fs_read_single_page(struct inode *inode, struct page *page,
- 		goto submit_and_realloc;
- 
- 	inc_page_count(F2FS_I_SB(inode), F2FS_RD_DATA);
-+	f2fs_update_iostat(F2FS_I_SB(inode), FS_DATA_READ_IO, F2FS_BLKSIZE);
- 	ClearPageError(page);
- 	*last_block_in_bio = block_nr;
- 	goto out;
-@@ -2224,6 +2226,7 @@ int f2fs_read_multi_pages(struct compress_ctx *cc, struct bio **bio_ret,
- 			goto submit_and_realloc;
- 
- 		inc_page_count(sbi, F2FS_RD_DATA);
-+		f2fs_update_iostat(sbi, FS_DATA_READ_IO, F2FS_BLKSIZE);
- 		ClearPageError(page);
- 		*last_block_in_bio = blkaddr;
- 	}
-@@ -3581,6 +3584,9 @@ static ssize_t f2fs_direct_IO(struct kiocb *iocb, struct iov_iter *iter)
- 		} else if (err < 0) {
- 			f2fs_write_failed(mapping, offset + count);
- 		}
-+	} else {
-+		if (err > 0)
-+			f2fs_update_iostat(sbi, APP_DIRECT_READ_IO, err);
- 	}
- 
- out:
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 9dd1fc957b94..bae8e65deed6 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -1093,8 +1093,9 @@ enum cp_reason_type {
- };
- 
- enum iostat_type {
--	APP_DIRECT_IO,			/* app direct IOs */
--	APP_BUFFERED_IO,		/* app buffered IOs */
-+	/* WRITE IO */
-+	APP_DIRECT_IO,			/* app direct write IOs */
-+	APP_BUFFERED_IO,		/* app buffered write IOs */
- 	APP_WRITE_IO,			/* app write IOs */
- 	APP_MAPPED_IO,			/* app mapped IOs */
- 	FS_DATA_IO,			/* data IOs from kworker/fsync/reclaimer */
-@@ -1105,6 +1106,17 @@ enum iostat_type {
- 	FS_CP_DATA_IO,			/* data IOs from checkpoint */
- 	FS_CP_NODE_IO,			/* node IOs from checkpoint */
- 	FS_CP_META_IO,			/* meta IOs from checkpoint */
-+
-+	/* READ IO */
-+	APP_DIRECT_READ_IO,		/* app direct read IOs */
-+	APP_BUFFERED_READ_IO,		/* app buffered read IOs */
-+	APP_READ_IO,			/* app read IOs */
-+	APP_MAPPED_READ_IO,		/* app mapped read IOs */
-+	FS_DATA_READ_IO,		/* data read IOs */
-+	FS_NODE_READ_IO,		/* node read IOs */
-+	FS_META_READ_IO,		/* meta read IOs */
-+
-+	/* other */
- 	FS_DISCARD,			/* discard */
- 	NR_IO_TYPE,
- };
-@@ -1509,8 +1521,8 @@ struct f2fs_sb_info {
- 
- 	/* For app/fs IO statistics */
- 	spinlock_t iostat_lock;
--	unsigned long long write_iostat[NR_IO_TYPE];
--	unsigned long long prev_write_iostat[NR_IO_TYPE];
-+	unsigned long long rw_iostat[NR_IO_TYPE];
-+	unsigned long long prev_rw_iostat[NR_IO_TYPE];
- 	bool iostat_enable;
- 	unsigned long iostat_next_period;
- 	unsigned int iostat_period_ms;
-@@ -3018,8 +3030,8 @@ static inline void f2fs_reset_iostat(struct f2fs_sb_info *sbi)
- 
- 	spin_lock(&sbi->iostat_lock);
- 	for (i = 0; i < NR_IO_TYPE; i++) {
--		sbi->write_iostat[i] = 0;
--		sbi->prev_write_iostat[i] = 0;
-+		sbi->rw_iostat[i] = 0;
-+		sbi->prev_rw_iostat[i] = 0;
- 	}
- 	spin_unlock(&sbi->iostat_lock);
- }
-@@ -3032,12 +3044,17 @@ static inline void f2fs_update_iostat(struct f2fs_sb_info *sbi,
- 	if (!sbi->iostat_enable)
- 		return;
- 	spin_lock(&sbi->iostat_lock);
--	sbi->write_iostat[type] += io_bytes;
-+	sbi->rw_iostat[type] += io_bytes;
- 
- 	if (type == APP_WRITE_IO || type == APP_DIRECT_IO)
--		sbi->write_iostat[APP_BUFFERED_IO] =
--			sbi->write_iostat[APP_WRITE_IO] -
--			sbi->write_iostat[APP_DIRECT_IO];
-+		sbi->rw_iostat[APP_BUFFERED_IO] =
-+			sbi->rw_iostat[APP_WRITE_IO] -
-+			sbi->rw_iostat[APP_DIRECT_IO];
-+
-+	if (type == APP_READ_IO || type == APP_DIRECT_READ_IO)
-+		sbi->rw_iostat[APP_BUFFERED_READ_IO] =
-+			sbi->rw_iostat[APP_READ_IO] -
-+			sbi->rw_iostat[APP_DIRECT_READ_IO];
- 	spin_unlock(&sbi->iostat_lock);
- 
- 	f2fs_record_iostat(sbi);
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index 212c5996d380..ea04fb4dcdbd 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -40,6 +40,10 @@ static vm_fault_t f2fs_filemap_fault(struct vm_fault *vmf)
- 	ret = filemap_fault(vmf);
- 	up_read(&F2FS_I(inode)->i_mmap_sem);
- 
-+	if (!ret)
-+		f2fs_update_iostat(F2FS_I_SB(inode), APP_MAPPED_READ_IO,
-+							F2FS_BLKSIZE);
-+
- 	trace_f2fs_filemap_fault(inode, vmf->pgoff, (unsigned long)ret);
- 
- 	return ret;
-@@ -3822,11 +3826,17 @@ static ssize_t f2fs_file_read_iter(struct kiocb *iocb, struct iov_iter *iter)
- {
- 	struct file *file = iocb->ki_filp;
- 	struct inode *inode = file_inode(file);
-+	int ret;
- 
- 	if (!f2fs_is_compress_backend_ready(inode))
- 		return -EOPNOTSUPP;
- 
--	return generic_file_read_iter(iocb, iter);
-+	ret = generic_file_read_iter(iocb, iter);
-+
-+	if (ret > 0)
-+		f2fs_update_iostat(F2FS_I_SB(inode), APP_READ_IO, ret);
-+
-+	return ret;
- }
- 
- static ssize_t f2fs_file_write_iter(struct kiocb *iocb, struct iov_iter *from)
-diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
-index ad395b774a0b..1cd4992aeec0 100644
---- a/fs/f2fs/gc.c
-+++ b/fs/f2fs/gc.c
-@@ -737,6 +737,9 @@ static int ra_data_block(struct inode *inode, pgoff_t index)
- 		goto put_encrypted_page;
- 	f2fs_put_page(fio.encrypted_page, 0);
- 	f2fs_put_page(page, 1);
-+
-+	f2fs_update_iostat(sbi, FS_DATA_READ_IO, F2FS_BLKSIZE);
-+
- 	return 0;
- put_encrypted_page:
- 	f2fs_put_page(fio.encrypted_page, 1);
-@@ -840,6 +843,9 @@ static int move_data_block(struct inode *inode, block_t bidx,
- 			f2fs_put_page(mpage, 1);
- 			goto up_out;
- 		}
-+
-+		f2fs_update_iostat(fio.sbi, FS_DATA_READ_IO, F2FS_BLKSIZE);
-+
- 		lock_page(mpage);
- 		if (unlikely(mpage->mapping != META_MAPPING(fio.sbi) ||
- 						!PageUptodate(mpage))) {
-diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
-index ecbd6bd14a49..4da0d8713df5 100644
---- a/fs/f2fs/node.c
-+++ b/fs/f2fs/node.c
-@@ -1300,7 +1300,13 @@ static int read_node_page(struct page *page, int op_flags)
- 	}
- 
- 	fio.new_blkaddr = fio.old_blkaddr = ni.blk_addr;
--	return f2fs_submit_page_bio(&fio);
-+
-+	err = f2fs_submit_page_bio(&fio);
-+
-+	if (!err)
-+		f2fs_update_iostat(sbi, FS_NODE_READ_IO, F2FS_BLKSIZE);
-+
-+	return err;
- }
- 
- /*
-diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
-index d05cb68c2637..eaf8088548f0 100644
---- a/fs/f2fs/sysfs.c
-+++ b/fs/f2fs/sysfs.c
-@@ -781,9 +781,9 @@ void f2fs_record_iostat(struct f2fs_sb_info *sbi)
- 				msecs_to_jiffies(sbi->iostat_period_ms);
- 
- 	for (i = 0; i < NR_IO_TYPE; i++) {
--		iostat_diff[i] = sbi->write_iostat[i] -
--				sbi->prev_write_iostat[i];
--		sbi->prev_write_iostat[i] = sbi->write_iostat[i];
-+		iostat_diff[i] = sbi->rw_iostat[i] -
-+				sbi->prev_rw_iostat[i];
-+		sbi->prev_rw_iostat[i] = sbi->rw_iostat[i];
- 	}
- 	spin_unlock(&sbi->iostat_lock);
- 
-@@ -802,33 +802,51 @@ static int __maybe_unused iostat_info_seq_show(struct seq_file *seq,
- 
- 	seq_printf(seq, "time:		%-16llu\n", now);
- 
--	/* print app IOs */
-+	/* print app write IOs */
- 	seq_printf(seq, "app buffered:	%-16llu\n",
--				sbi->write_iostat[APP_BUFFERED_IO]);
-+				sbi->rw_iostat[APP_BUFFERED_IO]);
- 	seq_printf(seq, "app direct:	%-16llu\n",
--				sbi->write_iostat[APP_DIRECT_IO]);
-+				sbi->rw_iostat[APP_DIRECT_IO]);
- 	seq_printf(seq, "app mapped:	%-16llu\n",
--				sbi->write_iostat[APP_MAPPED_IO]);
-+				sbi->rw_iostat[APP_MAPPED_IO]);
- 
--	/* print fs IOs */
-+	/* print fs write IOs */
- 	seq_printf(seq, "fs data:	%-16llu\n",
--				sbi->write_iostat[FS_DATA_IO]);
-+				sbi->rw_iostat[FS_DATA_IO]);
- 	seq_printf(seq, "fs node:	%-16llu\n",
--				sbi->write_iostat[FS_NODE_IO]);
-+				sbi->rw_iostat[FS_NODE_IO]);
- 	seq_printf(seq, "fs meta:	%-16llu\n",
--				sbi->write_iostat[FS_META_IO]);
-+				sbi->rw_iostat[FS_META_IO]);
- 	seq_printf(seq, "fs gc data:	%-16llu\n",
--				sbi->write_iostat[FS_GC_DATA_IO]);
-+				sbi->rw_iostat[FS_GC_DATA_IO]);
- 	seq_printf(seq, "fs gc node:	%-16llu\n",
--				sbi->write_iostat[FS_GC_NODE_IO]);
-+				sbi->rw_iostat[FS_GC_NODE_IO]);
- 	seq_printf(seq, "fs cp data:	%-16llu\n",
--				sbi->write_iostat[FS_CP_DATA_IO]);
-+				sbi->rw_iostat[FS_CP_DATA_IO]);
- 	seq_printf(seq, "fs cp node:	%-16llu\n",
--				sbi->write_iostat[FS_CP_NODE_IO]);
-+				sbi->rw_iostat[FS_CP_NODE_IO]);
- 	seq_printf(seq, "fs cp meta:	%-16llu\n",
--				sbi->write_iostat[FS_CP_META_IO]);
-+				sbi->rw_iostat[FS_CP_META_IO]);
-+
-+	/* print app read IOs */
-+	seq_printf(seq, "app buffered:	%-16llu\n",
-+				sbi->rw_iostat[APP_BUFFERED_READ_IO]);
-+	seq_printf(seq, "app direct:	%-16llu\n",
-+				sbi->rw_iostat[APP_DIRECT_READ_IO]);
-+	seq_printf(seq, "app mapped:	%-16llu\n",
-+				sbi->rw_iostat[APP_MAPPED_READ_IO]);
-+
-+	/* print fs read IOs */
-+	seq_printf(seq, "fs data:	%-16llu\n",
-+				sbi->rw_iostat[FS_DATA_READ_IO]);
-+	seq_printf(seq, "fs node:	%-16llu\n",
-+				sbi->rw_iostat[FS_NODE_READ_IO]);
-+	seq_printf(seq, "fs meta:	%-16llu\n",
-+				sbi->rw_iostat[FS_META_READ_IO]);
-+
-+	/* print other IOs */
- 	seq_printf(seq, "fs discard:	%-16llu\n",
--				sbi->write_iostat[FS_DISCARD]);
-+				sbi->rw_iostat[FS_DISCARD]);
- 
- 	return 0;
- }
-diff --git a/include/trace/events/f2fs.h b/include/trace/events/f2fs.h
-index 421a661bfd5a..4dbcdc6d2738 100644
---- a/include/trace/events/f2fs.h
-+++ b/include/trace/events/f2fs.h
-@@ -1835,6 +1835,13 @@ TRACE_EVENT(f2fs_iostat,
- 		__field(unsigned long long,	fs_cp_dio)
- 		__field(unsigned long long,	fs_cp_nio)
- 		__field(unsigned long long,	fs_cp_mio)
-+		__field(unsigned long long,	app_drio)
-+		__field(unsigned long long,	app_brio)
-+		__field(unsigned long long,	app_rio)
-+		__field(unsigned long long,	app_mrio)
-+		__field(unsigned long long,	fs_drio)
-+		__field(unsigned long long,	fs_nrio)
-+		__field(unsigned long long,	fs_mrio)
- 		__field(unsigned long long,	fs_discard)
- 	),
- 
-@@ -1852,6 +1859,13 @@ TRACE_EVENT(f2fs_iostat,
- 		__entry->fs_cp_dio	= iostat[FS_CP_DATA_IO];
- 		__entry->fs_cp_nio	= iostat[FS_CP_NODE_IO];
- 		__entry->fs_cp_mio	= iostat[FS_CP_META_IO];
-+		__entry->app_drio	= iostat[APP_DIRECT_READ_IO];
-+		__entry->app_brio	= iostat[APP_BUFFERED_READ_IO];
-+		__entry->app_rio	= iostat[APP_READ_IO];
-+		__entry->app_mrio	= iostat[APP_MAPPED_READ_IO];
-+		__entry->fs_drio	= iostat[FS_DATA_READ_IO];
-+		__entry->fs_nrio	= iostat[FS_NODE_READ_IO];
-+		__entry->fs_mrio	= iostat[FS_META_READ_IO];
- 		__entry->fs_discard	= iostat[FS_DISCARD];
- 	),
- 
-@@ -1859,12 +1873,17 @@ TRACE_EVENT(f2fs_iostat,
- 		"app [write=%llu (direct=%llu, buffered=%llu), mapped=%llu], "
- 		"fs [data=%llu, node=%llu, meta=%llu, discard=%llu], "
- 		"gc [data=%llu, node=%llu], "
--		"cp [data=%llu, node=%llu, meta=%llu]",
-+		"cp [data=%llu, node=%llu, meta=%llu], "
-+		"app [read=%llu (direct=%llu, buffered=%llu), mapped=%llu], "
-+		"fs [data=%llu, node=%llu, meta=%llu]",
- 		show_dev(__entry->dev), __entry->app_wio, __entry->app_dio,
- 		__entry->app_bio, __entry->app_mio, __entry->fs_dio,
- 		__entry->fs_nio, __entry->fs_mio, __entry->fs_discard,
- 		__entry->fs_gc_dio, __entry->fs_gc_nio, __entry->fs_cp_dio,
--		__entry->fs_cp_nio, __entry->fs_cp_mio)
-+		__entry->fs_cp_nio, __entry->fs_cp_mio,
-+		__entry->app_rio, __entry->app_drio, __entry->app_brio,
-+		__entry->app_mrio, __entry->fs_drio, __entry->fs_nrio,
-+		__entry->fs_mrio)
- );
- 
- #endif /* _TRACE_F2FS_H */
--- 
-2.18.0.rc1
+Add `` around V4L2_VP9_FRAME_FLAG_REFRESH_FRAME_CTX.
 
+> +      is set
+> +    * contexts will be read back by user space before each decoding request
+> +      to retrieve the updated probabilities
+> +    * userspace will re-initialize the context to their default values when
+> +      a reset context is required
+> +
+> +    .. note::
+> +
+> +       This compound control is not yet part of the public kernel API and
+> +       it is expected to change.
+> +
+> +.. c:type:: v4l2_ctrl_vp9_frame_ctx
+> +
+> +.. cssclass:: longtable
+> +
+> +.. tabularcolumns:: |p{5.8cm}|p{4.8cm}|p{6.6cm}|
+> +
+> +.. flat-table:: struct v4l2_ctrl_vp9_frame_ctx
+> +    :header-rows:  0
+> +    :stub-columns: 0
+> +    :widths:       1 1 2
+> +
+> +    * - struct :c:type:`v4l2_vp9_probabilities`
+> +      - ``probs``
+> +      - Structure with VP9 probabilities attached to the context.
+> +
+> +.. c:type:: v4l2_vp9_probabilities
+> +
+> +.. cssclass:: longtable
+> +
+> +.. tabularcolumns:: |p{1.5cm}|p{6.3cm}|p{9.4cm}|
+> +
+> +.. flat-table:: struct v4l2_vp9_probabilities
+> +    :header-rows:  0
+> +    :stub-columns: 0
+> +    :widths:       1 1 2
+> +
+> +    * - __u8
+> +      - ``tx8[2][1]``
+> +      - TX 8x8 probabilities.
+> +    * - __u8
+> +      - ``tx16[2][2]``
+> +      - TX 16x16 probabilities.
+> +    * - __u8
+> +      - ``tx32[2][3]``
+> +      - TX 32x32 probabilities.
+> +    * - __u8
+> +      - ``coef[4][2][2][6][6][3]``
+> +      - Coefficient probabilities.
+> +    * - __u8
+> +      - ``skip[3]``
+> +      - Skip probabilities.
+> +    * - __u8
+> +      - ``inter_mode[7][3]``
+> +      - Inter prediction mode probabilities.
+> +    * - __u8
+> +      - ``interp_filter[4][2]``
+> +      - Interpolation filter probabilities.
+> +    * - __u8
+> +      - ``is_inter[4]``
+> +      - Is inter-block probabilities.
+> +    * - __u8
+> +      - ``comp_mode[5]``
+> +      - Compound prediction mode probabilities.
+> +    * - __u8
+> +      - ``single_ref[5][2]``
+> +      - Single reference probabilities.
+> +    * - __u8
+> +      - ``comp_mode[5]``
+> +      - Compound reference probabilities.
+> +    * - __u8
+> +      - ``y_mode[4][9]``
+> +      - Y prediction mode probabilities.
+> +    * - __u8
+> +      - ``uv_mode[10][9]``
+> +      - UV prediction mode probabilities.
+> +    * - __u8
+> +      - ``partition[16][3]``
+> +      - Partition probabilities.
+> +    * - __u8
+> +      - ``mv.joint[3]``
+> +      - Motion vector joint probabilities.
+> +    * - __u8
+> +      - ``mv.sign[2]``
+> +      - Motion vector sign probabilities.
+> +    * - __u8
+> +      - ``mv.class[2][10]``
+> +      - Motion vector class probabilities.
+> +    * - __u8
+> +      - ``mv.class0_bit[2]``
+> +      - Motion vector class0 bit probabilities.
+> +    * - __u8
+> +      - ``mv.bits[2][10]``
+> +      - Motion vector bits probabilities.
+> +    * - __u8
+> +      - ``mv.class0_fr[2][2][3]``
+> +      - Motion vector class0 fractional bit probabilities.
+> +    * - __u8
+> +      - ``mv.fr[2][3]``
+> +      - Motion vector fractional bit probabilities.
+> +    * - __u8
+> +      - ``mv.class0_hp[2]``
+> +      - Motion vector class0 high precision fractional bit probabilities.
+> +    * - __u8
+> +      - ``mv.hp[2]``
+> +      - Motion vector high precision fractional bit probabilities.
+> +
+> +``V4L2_CID_MPEG_VIDEO_VP9_FRAME_DECODE_PARAMS (struct)``
+> +    Specifies the frame parameters for the associated VP9 frame decode request.
+> +    This includes the necessary parameters for configuring a stateless hardware
+> +    decoding pipeline for VP9. The bitstream parameters are defined according
+> +    to :ref:`vp9`.
+> +
+> +    .. note::
+> +
+> +       This compound control is not yet part of the public kernel API and
+> +       it is expected to change.
+> +
+> +.. c:type:: v4l2_ctrl_vp9_frame_decode_params
+> +
+> +.. cssclass:: longtable
+> +
+> +.. tabularcolumns:: |p{1.5cm}|p{6.3cm}|p{9.4cm}|
+> +
+> +.. flat-table:: struct v4l2_ctrl_vp9_frame_decode_params
+> +    :header-rows:  0
+> +    :stub-columns: 0
+> +    :widths:       1 1 2
+> +
+> +    * - __u32
+> +      - ``flags``
+> +      - Combination of V4L2_VP9_FRAME_FLAG_* flags. See
+> +        :c:type:`v4l2_vp9_frame_flags`.
+> +    * - __u16
+> +      - ``compressed_header_size``
+> +      - Compressed header size in bytes.
+> +    * - __u16
+> +      - ``uncompressed_header_size``
+> +      - Uncompressed header size in bytes.
+> +    * - __u8
+> +      - ``profile``
+> +      - VP9 profile. Can be 0, 1, 2 or 3.
+> +    * - __u8
+> +      - ``reset_frame_context``
+> +      - Frame context that should be used/updated when decoding the frame.
+> +    * - __u8
+> +      - ``bit_depth``
+> +      - Component depth in bits. Must be 8 for profile 0 and 1. Must 10 or 12
+> +        for profile 2 and 3.
+> +    * - __u8
+> +      - ``color_space``
+> +      - Specifies the color space of the stream. See V4L2_VP9_COLOR_SPACE_*
+> +        values. See :c:type:`v4l2_vp9_color_space`
+> +    * - __u8
+> +      - ``interpolation_filter``
+> +      - Specifies the filter selection used for performing inter prediction. See
+> +        :c:type:`v4l2_vp9_interpolation_filter`.
+> +    * - __u8
+> +      - ``tile_cols_log2``
+> +      - Specifies the base 2 logarithm of the width of each tile (where the
+> +        width is measured in units of 8x8 blocks). Shall be less than or equal
+> +        to 6.
+> +    * - __u8
+> +      - ``tile_rows_log2``
+> +      - Specifies the base 2 logarithm of the height of each tile (where the
+> +        height is measured in units of 8x8 blocks)
+> +    * - __u8
+> +      - ``tx_mode``
+> +      - Specifies the TX mode. See :c:type:`v4l2_vp9_tx_mode`.
+> +    * - __u8
+> +      - ``reference_mode``
+> +      - Specifies the type of inter prediction to be used. See
+> +        :c:type:`v4l2_vp9_reference_mode`.
+> +    * - __u8
+> +      - ``padding``
+> +      - Needed to make this struct 64 bit aligned. Shall be filled with zeros.
+> +    * - __u16
+> +      - ``frame_width_minus_1``
+> +      - Add 1 to get the frame width expressed in pixels.
+> +    * - __u16
+> +      - ``frame_height_minus_1``
+> +      - Add 1 to to get the frame height expressed in pixels.
+> +    * - __u16
+> +      - ``frame_width_minus_1``
+> +      - Add 1 to to get the expected render width expressed in pixels. This is
+> +        not used during the decoding process but might be used by HW scalers to
+> +        prepare a frame that's ready for scanout.
+> +    * - __u16
+> +      - frame_height_minus_1
+> +      - Add 1 to get the expected render height expressed in pixels. This is
+> +        not used during the decoding process but might be used by HW scalers to
+> +        prepare a frame that's ready for scanout.
+> +    * - __u64
+> +      - ``refs[3]``
+> +      - Array of reference frame timestamps.
+> +    * - struct :c:type:`v4l2_vp9_loop_filter`
+> +      - ``lf``
+> +      - Loop filter parameters. See struct :c:type:`v4l2_vp9_loop_filter.
+
+Missing ` at the end.
+
+> +    * - struct :c:type:`v4l2_vp9_quantization`
+> +      - ``quant``
+> +      - Quantization parameters. See :c:type:`v4l2_vp9_quantization`.
+> +    * - struct :c:type:`v4l2_vp9_segmentation`
+> +      - ``seg``
+> +      - Segmentation parameters. See :c:type:`v4l2_vp9_segmentation`.
+> +    * - struct :c:type:`v4l2_vp9_probabilities`
+> +      - ``probs``
+> +      - Probabilities. See :c:type:`v4l2_vp9_probabilities`.
+> +
+> +.. c:type:: v4l2_vp9_frame_flags
+> +
+> +.. cssclass:: longtable
+> +
+> +.. tabularcolumns:: |p{1.5cm}|p{6.3cm}|p{9.4cm}|
+> +
+> +.. flat-table:: enum v4l2_vp9_frame_flags
+> +    :header-rows:  0
+> +    :stub-columns: 0
+> +    :widths:       1 2
+> +
+> +    * - ``V4L2_VP9_FRAME_FLAG_KEY_FRAME``
+> +      - The frame is a key frame.
+> +    * - ``V4L2_VP9_FRAME_FLAG_SHOW_FRAME`
+
+Missing ` at the end.
+
+> +      - The frame should be displayed.
+> +    * - ``V4L2_VP9_FRAME_FLAG_ERROR_RESILIENT``
+> +      - The decoding should be error resilient.
+> +    * - ``V4L2_VP9_FRAME_FLAG_INTRA_ONLY``
+> +      - The frame does not reference other frames.
+> +    * - ``V4L2_VP9_FRAME_FLAG_ALLOW_HIGH_PREC_MV``
+> +      - the frame might can high precision motion vectors.
+> +    * - ``V4L2_VP9_FRAME_FLAG_REFRESH_FRAME_CTX``
+> +      - Frame context should be updated after decoding.
+> +    * - ``V4L2_VP9_FRAME_FLAG_PARALLEL_DEC_MODE``
+> +      - Parallel decoding is used.
+> +    * - ``V4L2_VP9_FRAME_FLAG_X_SUBSAMPLING``
+> +      - Vertical subsampling is enabled.
+> +    * - ``V4L2_VP9_FRAME_FLAG_Y_SUBSAMPLING``
+> +      - Horizontal subsampling is enabled.
+> +    * - ``V4L2_VP9_FRAME_FLAG_COLOR_RANGE_FULL_SWING``
+> +      - The full UV range is used.
+> +
+> +.. c:type:: v4l2_vp9_ref_id
+> +
+> +.. cssclass:: longtable
+> +
+> +.. tabularcolumns:: |p{1.5cm}|p{6.3cm}|p{9.4cm}|
+> +
+> +.. flat-table:: enum v4l2_vp9_ref_id
+> +    :header-rows:  0
+> +    :stub-columns: 0
+> +    :widths:       1 2
+> +
+> +    * - ``V4L2_REF_ID_LAST``
+> +      - Last reference frame.
+> +    * - V4L2_REF_ID_GOLDEN
+> +      - Golden reference frame.
+> +    * - V4L2_REF_ID_ALTREF
+> +      - Alternative reference frame.
+> +    * - V4L2_REF_ID_CNT
+
+These three V4L2_REF_ID_ defines should have `` as well.
+
+> +      - Number of reference frames.
+> +
+> +.. c:type:: v4l2_vp9_tx_mode
+> +
+> +.. cssclass:: longtable
+> +
+> +.. tabularcolumns:: |p{1.5cm}|p{6.3cm}|p{9.4cm}|
+> +
+> +.. flat-table:: enum v4l2_vp9_tx_mode
+> +    :header-rows:  0
+> +    :stub-columns: 0
+> +    :widths:       1 2
+> +
+> +    * - ``V4L2_VP9_TX_MODE_ONLY_4X4``
+> +      - Transform size is 4x4.
+> +    * - ``V4L2_VP9_TX_MODE_ALLOW_8X8``
+> +      - Transform size can be up to 8x8.
+> +    * - ``V4L2_VP9_TX_MODE_ALLOW_16X16``
+> +      - Transform size can be up to 16x16.
+> +    * - ``V4L2_VP9_TX_MODE_ALLOW_32X32`
+> +      - transform size can be up to 32x32.
+> +    * - ``V4L2_VP9_TX_MODE_SELECT``
+> +      - Bitstream contains transform size for each block.
+> +
+> +.. c:type:: v4l2_vp9_reference_mode
+> +
+> +.. cssclass:: longtable
+> +
+> +.. tabularcolumns:: |p{1.5cm}|p{6.3cm}|p{9.4cm}|
+> +
+> +.. flat-table:: enum v4l2_vp9_reference_mode
+> +    :header-rows:  0
+> +    :stub-columns: 0
+> +    :widths:       1 2
+> +
+> +    * - ``V4L2_VP9_REF_MODE_SINGLE``
+> +      - Indicates that all the inter blocks use only a single reference frame
+> +        to generate motion compensated prediction.
+> +    * - ``V4L2_VP9_REF_MODE_COMPOUND``
+> +      - Requires all the inter blocks to use compound mode. Single reference
+> +        frame prediction is not allowed.
+> +    * - ``V4L2_VP9_REF_MODE_SELECT``
+> +      - Allows each individual inter block to select between single and
+> +        compound prediction modes.
+> +
+> +.. c:type:: v4l2_vp9_interpolation_filter
+> +
+> +.. cssclass:: longtable
+> +
+> +.. tabularcolumns:: |p{1.5cm}|p{6.3cm}|p{9.4cm}|
+> +
+> +.. flat-table:: enum v4l2_vp9_interpolation_filter
+> +    :header-rows:  0
+> +    :stub-columns: 0
+> +    :widths:       1 2
+> +
+> +    * - ``V4L2_VP9_INTERP_FILTER_8TAP``
+> +      - Height tap filter.
+> +    * - ``V4L2_VP9_INTERP_FILTER_8TAP_SMOOTH``
+> +      - Height tap smooth filter.
+> +    * - ``V4L2_VP9_INTERP_FILTER_8TAP_SHARP``
+> +      - Height tap sharp filter.
+> +    * - ``V4L2_VP9_INTERP_FILTER_BILINEAR``
+> +      - Bilinear filter.
+> +    * - ``V4L2_VP9_INTERP_FILTER_SWITCHABLE``
+> +      - Filter selection is signaled at the block level.
+> +
+> +.. c:type:: v4l2_vp9_color_space
+> +
+> +.. cssclass:: longtable
+> +
+> +.. tabularcolumns:: |p{1.5cm}|p{6.3cm}|p{9.4cm}|
+> +
+> +.. flat-table:: enum v4l2_vp9_color_space
+> +    :header-rows:  0
+> +    :stub-columns: 0
+> +    :widths:       1 2
+> +
+> +    * - ``V4L2_VP9_COLOR_SPACE_UNKNOWN``
+> +      - Unknown color space. In this case the color space must be signaled
+> +        outside the VP9 bitstream.
+> +    * - ``V4L2_VP9_COLOR_SPACE_BT_601``
+> +      - Rec. ITU-R BT.601-7 color space.
+> +    * - ``V4L2_VP9_COLOR_SPACE_BT_709``
+> +      - Rec. ITU-R BT.709-6 color space.
+> +    * - ``V4L2_VP9_COLOR_SPACE_SMPTE_170``
+> +      - SMPTE-170 color space.
+> +    * - ``V4L2_VP9_COLOR_SPACE_SMPTE_240``
+> +      - SMPTE-240 color space.
+> +    * - ``V4L2_VP9_COLOR_SPACE_BT_2020``
+> +      - Rec. ITU-R BT.2020-2 color space.
+> +    * - ``V4L2_VP9_COLOR_SPACE_RESERVED``
+> +      - Reserved. This value shall never be passed.
+> +    * - ``V4L2_VP9_COLOR_SPACE_SRGB``
+> +      - sRGB (IEC 61966-2-1) color space.
+> +
+> +.. c:type:: v4l2_vp9_reset_frame_context
+> +
+> +.. cssclass:: longtable
+> +
+> +.. tabularcolumns:: |p{1.5cm}|p{6.3cm}|p{9.4cm}|
+> +
+> +.. flat-table:: enum v4l2_vp9_reset_frame_context
+> +    :header-rows:  0
+> +    :stub-columns: 0
+> +    :widths:       1 2
+> +
+> +    * - ``V4L2_VP9_RESET_FRAME_CTX_NONE``
+> +      - Do not reset any frame context.
+> +    * - ``V4L2_VP9_RESET_FRAME_CTX_NONE_ALT``
+> +      - Do not reset any frame context. This is an alternative value for
+> +        V4L2_VP9_RESET_FRAME_CTX_NONE.
+
+Add `` around V4L2_VP9_RESET_FRAME_CTX_NONE.
+
+> +    * - ``V4L2_VP9_RESET_FRAME_CTX_SPEC``
+> +      - Reset the frame context pointed by
+> +        :c:type:`v4l2_ctrl_vp9_frame_decode_params`.frame_context_idx.
+> +    * - ``V4L2_VP9_RESET_FRAME_CTX_ALL``
+> +      - Reset all frame contexts.
+> +
+> +.. c:type:: v4l2_vp9_intra_prediction_mode
+> +
+> +.. cssclass:: longtable
+> +
+> +.. tabularcolumns:: |p{1.5cm}|p{6.3cm}|p{9.4cm}|
+> +
+> +.. flat-table:: enum v4l2_vp9_intra_prediction_mode
+> +    :header-rows:  0
+> +    :stub-columns: 0
+> +    :widths:       1 2
+> +
+> +    * - ``V4L2_VP9_INTRA_PRED_DC``
+> +      - DC intra prediction.
+> +    * - ``V4L2_VP9_INTRA_PRED_MODE_V``
+> +      - Vertical intra prediction.
+> +    * - ``V4L2_VP9_INTRA_PRED_MODE_H``
+> +      - Horizontal intra prediction.
+> +    * - ``V4L2_VP9_INTRA_PRED_MODE_D45``
+> +      - D45 intra prediction.
+> +    * - ``V4L2_VP9_INTRA_PRED_MODE_D135``
+> +      - D135 intra prediction.
+> +    * - ``V4L2_VP9_INTRA_PRED_MODE_D117``
+> +      - D117 intra prediction.
+> +    * - ``V4L2_VP9_INTRA_PRED_MODE_D153``
+> +      - D153 intra prediction.
+> +    * - ``V4L2_VP9_INTRA_PRED_MODE_D207``
+> +      - D207 intra prediction.
+> +    * - ``V4L2_VP9_INTRA_PRED_MODE_D63``
+> +      - D63 intra prediction.
+> +    * - ``V4L2_VP9_INTRA_PRED_MODE_TM``
+> +      - True motion intra prediction.
+> +
+> +.. c:type:: v4l2_vp9_segmentation
+> +
+> +.. cssclass:: longtable
+> +
+> +.. tabularcolumns:: |p{1.5cm}|p{6.3cm}|p{9.4cm}|
+> +
+> +.. flat-table:: struct v4l2_vp9_segmentation
+> +    :header-rows:  0
+> +    :stub-columns: 0
+> +    :widths:       1 1 2
+> +
+> +    * - __u8
+> +      - ``flags``
+> +      - Combination of V4L2_VP9_SEGMENTATION_FLAG_* flags. See
+> +        :c:type:`v4l2_vp9_segmentation_flags`.
+> +    * - __u8
+> +      - ``tree_probs[7]``
+> +      - Specifies the probability values to be used when decoding segment_id.
+> +    * - __u8
+> +      - ``pred_prob[3]``
+> +      - Specifies the probability values to be used when decoding
+> +        seg_id_predicte.
+> +    * - __u8
+> +      - ``padding[5]``
+> +      - Used to align this struct on 64 bit. Shall be filled with zeros.
+> +    * - __u8
+> +      - ``feature_enabled[8]``
+> +      - Bitmask defining which features are enabled in each segment.
+> +    * - __u8
+> +      - ``feature_data[8][4]``
+> +      - Data attached to each feature. Data entry is only valid if the feature
+> +        is enabled.
+> +
+> +.. c:type:: v4l2_vp9_segment_feature
+> +
+> +.. cssclass:: longtable
+> +
+> +.. tabularcolumns:: |p{1.5cm}|p{6.3cm}|p{9.4cm}|
+> +
+> +.. flat-table:: enum v4l2_vp9_segment_feature
+> +    :header-rows:  0
+> +    :stub-columns: 0
+> +    :widths:       1 2
+> +
+> +    * - ``V4L2_VP9_SEGMENT_FEATURE_QP_DELTA``
+> +      - QP delta segment feature.
+> +    * - ``V4L2_VP9_SEGMENT_FEATURE_LF``
+> +      - Loop filter segment feature.
+> +    * - ``V4L2_VP9_SEGMENT_FEATURE_REF_FRAME``
+> +      - Reference frame segment feature.
+> +    * - ``V4L2_VP9_SEGMENT_FEATURE_SKIP``
+> +      - Skip segment feature.
+> +    * - ``V4L2_VP9_SEGMENT_FEATURE_CNT``
+> +      - Number of segment features.
+> +
+> +.. c:type:: v4l2_vp9_segmentation_flags
+> +
+> +.. cssclass:: longtable
+> +
+> +.. tabularcolumns:: |p{1.5cm}|p{6.3cm}|p{9.4cm}|
+> +
+> +.. flat-table:: enum v4l2_vp9_segmentation_flags
+> +    :header-rows:  0
+> +    :stub-columns: 0
+> +    :widths:       1 2
+> +
+> +    * - ``V4L2_VP9_SEGMENTATION_FLAG_ENABLED``
+> +      - Indicates that this frame makes use of the segmentation tool.
+> +    * - ``V4L2_VP9_SEGMENTATION_FLAG_UPDATE_MAP``
+> +      - Indicates that the segmentation map should be updated during the
+> +        decoding of this frame.
+> +    * - ``V4L2_VP9_SEGMENTATION_FLAG_TEMPORAL_UPDATE``
+> +      - Indicates that the updates to the segmentation map are coded
+> +        relative to the existing segmentation map.
+> +    * - ``V4L2_VP9_SEGMENTATION_FLAG_UPDATE_DATA``
+> +      - Indicates that new parameters are about to be specified for each
+> +        segment.
+> +    * - ``V4L2_VP9_SEGMENTATION_FLAG_ABS_OR_DELTA_UPDATE``
+> +      - Indicates that the segmentation parameters represent the actual values
+> +        to be used.
+> +
+> +.. c:type:: v4l2_vp9_quantization
+> +
+> +.. cssclass:: longtable
+> +
+> +.. tabularcolumns:: |p{1.5cm}|p{6.3cm}|p{9.4cm}|
+> +
+> +.. flat-table:: struct v4l2_vp9_quantization
+> +    :header-rows:  0
+> +    :stub-columns: 0
+> +    :widths:       1 1 2
+> +
+> +    * - __u8
+> +      - ``base_q_idx``
+> +      - Indicates the base frame qindex.
+> +    * - __s8
+> +      - ``delta_q_y_dc``
+> +      - Indicates the Y DC quantizer relative to base_q_idx.
+> +    * - __s8
+> +      - ``delta_q_uv_dc``
+> +      - Indicates the UV DC quantizer relative to base_q_idx.
+> +    * - __s8
+> +      - ``delta_q_uv_ac``
+> +      - Indicates the UV AC quantizer relative to base_q_idx.
+> +    * - __u8
+> +      - ``padding[4]``
+> +      - Padding bytes used to align this struct on 64 bit. Must be set to 0.
+> +
+> +.. c:type:: v4l2_vp9_loop_filter
+> +
+> +.. cssclass:: longtable
+> +
+> +.. tabularcolumns:: |p{1.5cm}|p{6.3cm}|p{9.4cm}|
+> +
+> +.. flat-table:: struct v4l2_vp9_loop_filter
+> +    :header-rows:  0
+> +    :stub-columns: 0
+> +    :widths:       1 1 2
+> +
+> +    * - __u8
+> +      - ``flags``
+> +      - Combination of V4L2_VP9_LOOP_FILTER_FLAG_* flags.
+> +        See :c:type:`v4l2_vp9_loop_filter_flags`.
+> +    * - __u8
+> +      - ``level``
+> +      - Indicates the loop filter strength.
+> +    * - __u8
+> +      - ``sharpness``
+> +      - Indicates the sharpness level.
+> +    * - __s8
+> +      - ``ref_deltas[4]``
+> +      - Contains the adjustment needed for the filter level based on the chosen
+> +        reference frame.
+> +    * - __s8
+> +      - ``mode_deltas[2]``
+> +      - Contains the adjustment needed for the filter level based on the chosen
+> +        mode
+> +    * - __u8
+> +      - ``lvl_lookup[8][4][2]``
+> +      - Level lookup table.
+> +
+> +
+> +.. c:type:: v4l2_vp9_loop_filter_flags
+> +
+> +.. cssclass:: longtable
+> +
+> +.. tabularcolumns:: |p{1.5cm}|p{6.3cm}|p{9.4cm}|
+> +
+> +.. flat-table:: enum v4l2_vp9_loop_filter_flags
+> +    :header-rows:  0
+> +    :stub-columns: 0
+> +    :widths:       1 2
+> +
+> +    * - ``V4L2_VP9_LOOP_FILTER_FLAG_DELTA_ENABLED``
+> +      - When set, the filter level depends on the mode and reference frame used
+> +        to predict a block.
+> +    * - ``V4L2_VP9_LOOP_FILTER_FLAG_DELTA_UPDATE``
+> +      - When set, the bitstream contains additional syntax elements that
+> +        specify which mode and reference frame deltas are to be updated.
+> +
+>  .. raw:: latex
+>  
+>      \normalsize
+> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+> index 9a8445a9e788..69f43a4a9815 100644
+> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
+> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+> @@ -925,6 +925,11 @@ const char *v4l2_ctrl_get_name(u32 id)
+>  	case V4L2_CID_MPEG_VIDEO_VP8_PROFILE:			return "VP8 Profile";
+>  	case V4L2_CID_MPEG_VIDEO_VP9_PROFILE:			return "VP9 Profile";
+>  	case V4L2_CID_MPEG_VIDEO_VP8_FRAME_HEADER:		return "VP8 Frame Header";
+> +	case V4L2_CID_MPEG_VIDEO_VP9_FRAME_DECODE_PARAMS:	return "VP9 Frame Decode Parameters";
+> +	case V4L2_CID_MPEG_VIDEO_VP9_FRAME_CONTEXT(0):		return "VP9 Frame Context 0";
+> +	case V4L2_CID_MPEG_VIDEO_VP9_FRAME_CONTEXT(1):		return "VP9 Frame Context 1";
+> +	case V4L2_CID_MPEG_VIDEO_VP9_FRAME_CONTEXT(2):		return "VP9 Frame Context 2";
+> +	case V4L2_CID_MPEG_VIDEO_VP9_FRAME_CONTEXT(3):		return "VP9 Frame Context 3";
+>  
+>  	/* HEVC controls */
+>  	case V4L2_CID_MPEG_VIDEO_HEVC_I_FRAME_QP:		return "HEVC I-Frame QP Value";
+> @@ -1398,6 +1403,15 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
+>  	case V4L2_CID_MPEG_VIDEO_VP8_FRAME_HEADER:
+>  		*type = V4L2_CTRL_TYPE_VP8_FRAME_HEADER;
+>  		break;
+> +	case V4L2_CID_MPEG_VIDEO_VP9_FRAME_DECODE_PARAMS:
+> +		*type = V4L2_CTRL_TYPE_VP9_FRAME_DECODE_PARAMS;
+> +		break;
+> +	case V4L2_CID_MPEG_VIDEO_VP9_FRAME_CONTEXT(0):
+> +	case V4L2_CID_MPEG_VIDEO_VP9_FRAME_CONTEXT(1):
+> +	case V4L2_CID_MPEG_VIDEO_VP9_FRAME_CONTEXT(2):
+> +	case V4L2_CID_MPEG_VIDEO_VP9_FRAME_CONTEXT(3):
+> +		*type = V4L2_CTRL_TYPE_VP9_FRAME_CONTEXT;
+> +		break;
+>  	case V4L2_CID_MPEG_VIDEO_HEVC_SPS:
+>  		*type = V4L2_CTRL_TYPE_HEVC_SPS;
+>  		break;
+> @@ -1698,6 +1712,222 @@ static void std_log(const struct v4l2_ctrl *ctrl)
+>  	0;							\
+>  })
+>  
+> +static int
+> +validate_vp9_lf_params(struct v4l2_vp9_loop_filter *lf)
+> +{
+> +	unsigned int i, j, k;
+> +
+> +	if (lf->flags &
+> +	    ~(V4L2_VP9_LOOP_FILTER_FLAG_DELTA_ENABLED |
+> +	      V4L2_VP9_LOOP_FILTER_FLAG_DELTA_UPDATE))
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * V4L2_VP9_LOOP_FILTER_FLAG_DELTA_ENABLED implies
+> +	 * V4L2_VP9_LOOP_FILTER_FLAG_DELTA_UPDATE.
+> +	 */
+> +	if (lf->flags & V4L2_VP9_LOOP_FILTER_FLAG_DELTA_UPDATE &&
+> +	    !(lf->flags & V4L2_VP9_LOOP_FILTER_FLAG_DELTA_ENABLED))
+> +		return -EINVAL;
+> +
+> +	/* That all values are in the accepted range. */
+> +	if (lf->level > GENMASK(5, 0))
+> +		return -EINVAL;
+> +
+> +	if (lf->sharpness > GENMASK(2, 0))
+> +		return -EINVAL;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(lf->ref_deltas); i++) {
+> +		if (lf->ref_deltas[i] < -63 || lf->ref_deltas[i] > 63)
+> +			return -EINVAL;
+> +	}
+> +
+> +	for (i = 0; i < ARRAY_SIZE(lf->mode_deltas); i++) {
+> +		if (lf->mode_deltas[i] < -63 || lf->mode_deltas[i] > 63)
+> +			return -EINVAL;
+> +	}
+> +
+> +	for (i = 0; i < ARRAY_SIZE(lf->lvl_lookup); i++) {
+> +		for (j = 0; j < ARRAY_SIZE(lf->lvl_lookup[0]); j++) {
+> +			for (k = 0; k < ARRAY_SIZE(lf->lvl_lookup[0][0]); k++) {
+> +				if (lf->lvl_lookup[i][j][k] > 63)
+> +					return -EINVAL;
+> +			}
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int
+> +validate_vp9_quant_params(struct v4l2_vp9_quantization *quant)
+> +{
+> +	if (quant->delta_q_y_dc < -15 || quant->delta_q_y_dc > 15 ||
+> +	    quant->delta_q_uv_dc < -15 || quant->delta_q_uv_dc > 15 ||
+> +	    quant->delta_q_uv_ac < -15 || quant->delta_q_uv_ac > 15)
+> +		return -EINVAL;
+> +
+> +	memset(quant->padding, 0, sizeof(quant->padding));
+> +	return 0;
+> +}
+> +
+> +static int
+> +validate_vp9_seg_params(struct v4l2_vp9_segmentation *seg)
+> +{
+> +	unsigned int i, j;
+> +
+> +	if (seg->flags &
+> +	    ~(V4L2_VP9_SEGMENTATION_FLAG_ENABLED |
+> +	      V4L2_VP9_SEGMENTATION_FLAG_UPDATE_MAP |
+> +	      V4L2_VP9_SEGMENTATION_FLAG_TEMPORAL_UPDATE |
+> +	      V4L2_VP9_SEGMENTATION_FLAG_UPDATE_DATA |
+> +	      V4L2_VP9_SEGMENTATION_FLAG_ABS_OR_DELTA_UPDATE))
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * V4L2_VP9_SEGMENTATION_FLAG_UPDATE_MAP and
+> +	 * V4L2_VP9_SEGMENTATION_FLAG_UPDATE_DATA imply
+> +	 * V4L2_VP9_SEGMENTATION_FLAG_ENABLED.
+> +	 */
+> +	if ((seg->flags &
+> +	     (V4L2_VP9_SEGMENTATION_FLAG_UPDATE_MAP |
+> +	      V4L2_VP9_SEGMENTATION_FLAG_UPDATE_DATA)) &&
+> +	    !(seg->flags & V4L2_VP9_SEGMENTATION_FLAG_ENABLED))
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * V4L2_VP9_SEGMENTATION_FLAG_TEMPORAL_UPDATE implies
+> +	 * V4L2_VP9_SEGMENTATION_FLAG_UPDATE_MAP.
+> +	 */
+> +	if (seg->flags & V4L2_VP9_SEGMENTATION_FLAG_TEMPORAL_UPDATE &&
+> +	    !(seg->flags & V4L2_VP9_SEGMENTATION_FLAG_UPDATE_MAP))
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * V4L2_VP9_SEGMENTATION_FLAG_ABS_OR_DELTA_UPDATE implies
+> +	 * V4L2_VP9_SEGMENTATION_FLAG_UPDATE_DATA.
+> +	 */
+> +	if (seg->flags & V4L2_VP9_SEGMENTATION_FLAG_ABS_OR_DELTA_UPDATE &&
+> +	    !(seg->flags & V4L2_VP9_SEGMENTATION_FLAG_UPDATE_DATA))
+> +		return -EINVAL;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(seg->feature_enabled); i++) {
+> +		if (seg->feature_enabled[i] &
+> +		    ~(V4L2_VP9_SEGMENT_FEATURE_QP_DELTA |
+> +		      V4L2_VP9_SEGMENT_FEATURE_LF |
+> +		      V4L2_VP9_SEGMENT_FEATURE_REF_FRAME |
+> +		      V4L2_VP9_SEGMENT_FEATURE_SKIP))
+> +			return -EINVAL;
+> +	}
+> +
+> +	for (i = 0; i < ARRAY_SIZE(seg->feature_data); i++) {
+> +		const int range[] = {255, 63, 3, 0};
+> +
+> +		for (j = 0; j < ARRAY_SIZE(seg->feature_data[j]); j++) {
+> +			if (seg->feature_data[i][j] < -range[j] ||
+> +			    seg->feature_data[i][j] > range[j])
+> +				return -EINVAL;
+> +		}
+> +	}
+> +
+> +	memset(seg->padding, 0, sizeof(seg->padding));
+> +	return 0;
+> +}
+> +
+> +static int
+> +validate_vp9_frame_decode_params(struct v4l2_ctrl_vp9_frame_decode_params *dec_params)
+> +{
+> +	int ret;
+> +
+> +	/* Make sure we're not passed invalid flags. */
+> +	if (dec_params->flags &
+> +	    ~(V4L2_VP9_FRAME_FLAG_KEY_FRAME |
+> +	      V4L2_VP9_FRAME_FLAG_SHOW_FRAME |
+> +	      V4L2_VP9_FRAME_FLAG_ERROR_RESILIENT |
+> +	      V4L2_VP9_FRAME_FLAG_INTRA_ONLY |
+> +	      V4L2_VP9_FRAME_FLAG_ALLOW_HIGH_PREC_MV |
+> +	      V4L2_VP9_FRAME_FLAG_REFRESH_FRAME_CTX |
+> +	      V4L2_VP9_FRAME_FLAG_PARALLEL_DEC_MODE |
+> +	      V4L2_VP9_FRAME_FLAG_X_SUBSAMPLING |
+> +	      V4L2_VP9_FRAME_FLAG_Y_SUBSAMPLING |
+> +	      V4L2_VP9_FRAME_FLAG_COLOR_RANGE_FULL_SWING))
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * The refresh context and error resilient flags are mutually exclusive.
+> +	 * Same goes for parallel decoding and error resilient modes.
+> +	 */
+> +	if (dec_params->flags & V4L2_VP9_FRAME_FLAG_ERROR_RESILIENT &&
+> +	    dec_params->flags &
+> +	    (V4L2_VP9_FRAME_FLAG_REFRESH_FRAME_CTX |
+> +	     V4L2_VP9_FRAME_FLAG_PARALLEL_DEC_MODE))
+> +		return -EINVAL;
+> +
+> +	if (dec_params->profile > V4L2_VP9_PROFILE_MAX)
+> +		return -EINVAL;
+> +
+> +	if (dec_params->reset_frame_context > V4L2_VP9_RESET_FRAME_CTX_ALL)
+> +		return -EINVAL;
+> +
+> +	if (dec_params->frame_context_idx >= V4L2_VP9_NUM_FRAME_CTX)
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * Profiles 0 and 1 only support 8-bit depth, profiles 2 and 3 only 10
+> +	 * and 12 bit depths.
+> +	 */
+> +	if ((dec_params->profile < 2 && dec_params->bit_depth != 8) ||
+> +	    (dec_params->profile >= 2 &&
+> +	     (dec_params->bit_depth != 10 || dec_params->bit_depth != 12)))
+
+|| should be && (was a smatch warning, it took me a while before I saw what the
+problem was :-) )
+
+> +		return -EINVAL;
+> +
+> +	/* Profile 0 and 2 only accept YUV 4:2:0. */
+> +	if ((dec_params->profile == 0 || dec_params->profile == 2) &&
+> +	    (!(dec_params->flags & V4L2_VP9_FRAME_FLAG_X_SUBSAMPLING) ||
+> +	     !(dec_params->flags & V4L2_VP9_FRAME_FLAG_Y_SUBSAMPLING)))
+> +		return -EINVAL;
+> +
+> +	/* Profile 1 and 3 only accept YUV 4:2:2, 4:4:0 and 4:4:4. */
+> +	if ((dec_params->profile == 1 || dec_params->profile == 3) &&
+> +	    ((dec_params->flags & V4L2_VP9_FRAME_FLAG_X_SUBSAMPLING) &&
+> +	     (dec_params->flags & V4L2_VP9_FRAME_FLAG_Y_SUBSAMPLING)))
+> +		return -EINVAL;
+> +
+> +	if (dec_params->color_space > V4L2_VP9_COLOR_SPACE_SRGB)
+> +		return -EINVAL;
+> +
+> +	if (dec_params->interpolation_filter > V4L2_VP9_INTERP_FILTER_SWITCHABLE)
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * According to the spec, tile_cols_log2 shall be less than or equal
+> +	 * to 6.
+> +	 */
+> +	if (dec_params->tile_cols_log2 > 6)
+> +		return -EINVAL;
+> +
+> +	if (dec_params->tx_mode > V4L2_VP9_TX_MODE_SELECT)
+> +		return -EINVAL;
+> +
+> +	if (dec_params->reference_mode > V4L2_VP9_REF_MODE_SELECT)
+> +		return -EINVAL;
+> +
+> +	ret = validate_vp9_lf_params(&dec_params->lf);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = validate_vp9_quant_params(&dec_params->quant);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = validate_vp9_seg_params(&dec_params->seg);
+> +	if (ret)
+> +		return ret;
+> +
+> +	memset(dec_params->padding, 0, sizeof(dec_params->padding));
+> +	return 0;
+> +}
+> +
+>  /* Validate a new control */
+>  
+>  #define zero_padding(s) \
+> @@ -1794,6 +2024,12 @@ static int std_validate_compound(const struct v4l2_ctrl *ctrl, u32 idx,
+>  		zero_padding(p_vp8_frame_header->coder_state);
+>  		break;
+>  
+> +	case V4L2_CTRL_TYPE_VP9_FRAME_DECODE_PARAMS:
+> +		return validate_vp9_frame_decode_params(p);
+> +
+> +	case V4L2_CTRL_TYPE_VP9_FRAME_CONTEXT:
+> +		break;
+> +
+>  	case V4L2_CTRL_TYPE_HEVC_SPS:
+>  		p_hevc_sps = p;
+>  
+> @@ -2537,6 +2773,12 @@ static struct v4l2_ctrl *v4l2_ctrl_new(struct v4l2_ctrl_handler *hdl,
+>  	case V4L2_CTRL_TYPE_VP8_FRAME_HEADER:
+>  		elem_size = sizeof(struct v4l2_ctrl_vp8_frame_header);
+>  		break;
+> +	case V4L2_CTRL_TYPE_VP9_FRAME_CONTEXT:
+> +		elem_size = sizeof(struct v4l2_ctrl_vp9_frame_ctx);
+> +		break;
+> +	case V4L2_CTRL_TYPE_VP9_FRAME_DECODE_PARAMS:
+> +		elem_size = sizeof(struct v4l2_ctrl_vp9_frame_decode_params);
+> +		break;
+>  	case V4L2_CTRL_TYPE_HEVC_SPS:
+>  		elem_size = sizeof(struct v4l2_ctrl_hevc_sps);
+>  		break;
+> diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
+> index b2ef8e60ea7d..baa50388f8de 100644
+> --- a/drivers/media/v4l2-core/v4l2-ioctl.c
+> +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+> @@ -1371,6 +1371,7 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
+>  		case V4L2_PIX_FMT_VP8:		descr = "VP8"; break;
+>  		case V4L2_PIX_FMT_VP8_FRAME:    descr = "VP8 Frame"; break;
+>  		case V4L2_PIX_FMT_VP9:		descr = "VP9"; break;
+> +		case V4L2_PIX_FMT_VP9_FRAME:    descr = "VP9 Frame"; break;
+>  		case V4L2_PIX_FMT_HEVC:		descr = "HEVC"; break; /* aka H.265 */
+>  		case V4L2_PIX_FMT_HEVC_SLICE:	descr = "HEVC Parsed Slice Data"; break;
+>  		case V4L2_PIX_FMT_FWHT:		descr = "FWHT"; break; /* used in vicodec */
+> diff --git a/include/media/v4l2-ctrls.h b/include/media/v4l2-ctrls.h
+> index 30c3be7f5efc..b69521b96968 100644
+> --- a/include/media/v4l2-ctrls.h
+> +++ b/include/media/v4l2-ctrls.h
+> @@ -21,6 +21,7 @@
+>  #include <media/fwht-ctrls.h>
+>  #include <media/h264-ctrls.h>
+>  #include <media/vp8-ctrls.h>
+> +#include <media/vp9-ctrls.h>
+>  #include <media/hevc-ctrls.h>
+>  
+>  /* forward references */
+> diff --git a/include/media/vp9-ctrls.h b/include/media/vp9-ctrls.h
+> new file mode 100644
+> index 000000000000..f9435890763d
+> --- /dev/null
+> +++ b/include/media/vp9-ctrls.h
+> @@ -0,0 +1,515 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * These are the VP9 state controls for use with stateless VP9
+> + * codec drivers.
+> + *
+> + * It turns out that these structs are not stable yet and will undergo
+> + * more changes. So keep them private until they are stable and ready to
+> + * become part of the official public API.
+> + */
+> +
+> +#ifndef _VP9_CTRLS_H_
+> +#define _VP9_CTRLS_H_
+> +
+> +#include <linux/types.h>
+> +
+> +#define V4L2_PIX_FMT_VP9_FRAME v4l2_fourcc('V', 'P', '9', 'F')
+> +
+> +#define V4L2_CID_MPEG_VIDEO_VP9_FRAME_CONTEXT(i)	(V4L2_CID_MPEG_BASE + 4000 + (i))
+> +#define V4L2_CID_MPEG_VIDEO_VP9_FRAME_DECODE_PARAMS	(V4L2_CID_MPEG_BASE + 4004)
+> +#define V4L2_CTRL_TYPE_VP9_FRAME_CONTEXT		0x400
+> +#define V4L2_CTRL_TYPE_VP9_FRAME_DECODE_PARAMS		0x404
+> +
+> +/**
+> + * enum v4l2_vp9_loop_filter_flags - VP9 loop filter flags
+> + *
+> + * @V4L2_VP9_LOOP_FILTER_FLAG_DELTA_ENABLED: the filter level depends on
+> + *					     the mode and reference frame used
+> + *					     to predict a block
+> + * @V4L2_VP9_LOOP_FILTER_FLAG_DELTA_UPDATE: the bitstream contains additional
+> + *					    syntax elements that specify which
+> + *					    mode and reference frame deltas
+> + *					    are to be updated
+> + *
+> + * Those are the flags you should pass to &v4l2_vp9_loop_filter.flags. See
+> + * section '7.2.8 Loop filter semantics' of the VP9 specification for more
+> + * details.
+> + */
+> +enum v4l2_vp9_loop_filter_flags {
+> +	V4L2_VP9_LOOP_FILTER_FLAG_DELTA_ENABLED = 1 << 0,
+> +	V4L2_VP9_LOOP_FILTER_FLAG_DELTA_UPDATE = 1 << 1,
+> +};
+> +
+> +/**
+> + * struct v4l2_vp9_loop_filter - VP9 loop filter parameters
+> + *
+> + * @flags: combination of V4L2_VP9_LOOP_FILTER_FLAG_* flags
+> + * @level: indicates the loop filter strength
+> + * @sharpness: indicates the sharpness level
+> + * @ref_deltas: contains the adjustment needed for the filter level based on
+> + *		the chosen reference frame
+> + * @mode_deltas: contains the adjustment needed for the filter level based on
+> + *		 the chosen mode
+> + * @lvl_lookup: level lookup table
+> + *
+> + * This structure contains all loop filter related parameters. See sections
+> + * '7.2.8 Loop filter semantics' and '8.8.1 Loop filter frame init process'
+> + * of the VP9 specification for more details.
+> + */
+> +struct v4l2_vp9_loop_filter {
+> +	__u8 flags;
+> +	__u8 level;
+> +	__u8 sharpness;
+> +	__s8 ref_deltas[4];
+> +	__s8 mode_deltas[2];
+> +	__u8 lvl_lookup[8][4][2];
+> +};
+> +
+> +/**
+> + * struct v4l2_vp9_quantization - VP9 quantization parameters
+> + *
+> + * @base_q_idx: indicates the base frame qindex
+> + * @delta_q_y_dc: indicates the Y DC quantizer relative to base_q_idx
+> + * @delta_q_uv_dc: indicates the UV DC quantizer relative to base_q_idx
+> + * @delta_q_uv_ac indicates the UV AC quantizer relative to base_q_idx
+> + * @padding: padding bytes to align things on 64 bits. Must be set to 0
+> + *
+> + * Encodes the quantization parameters. See section '7.2.9 Quantization params
+> + * syntax' of the VP9 specification for more details.
+> + */
+> +struct v4l2_vp9_quantization {
+> +	__u8 base_q_idx;
+> +	__s8 delta_q_y_dc;
+> +	__s8 delta_q_uv_dc;
+> +	__s8 delta_q_uv_ac;
+> +	__u8 padding[4];
+> +};
+> +
+> +/**
+> + * enum v4l2_vp9_segmentation_flags - VP9 segmentation flags
+> + *
+> + * @V4L2_VP9_SEGMENTATION_FLAG_ENABLED: indicates that this frame makes use of
+> + *					the segmentation tool
+> + * @V4L2_VP9_SEGMENTATION_FLAG_UPDATE_MAP: indicates that the segmentation map
+> + *					   should be updated during the
+> + *					   decoding of this frame
+> + * @V4L2_VP9_SEGMENTATION_FLAG_TEMPORAL_UPDATE: indicates that the updates to
+> + *						the segmentation map are coded
+> + *						relative to the existing
+> + *						segmentation map
+> + * @V4L2_VP9_SEGMENTATION_FLAG_UPDATE_DATA: indicates that new parameters are
+> + *					    about to be specified for each
+> + *					    segment
+> + * @V4L2_VP9_SEGMENTATION_FLAG_ABS_OR_DELTA_UPDATE: indicates that the
+> + *						    segmentation parameters
+> + *						    represent the actual values
+> + *						    to be used
+> + *
+> + * Those are the flags you should pass to &v4l2_vp9_segmentation.flags. See
+> + * section '7.2.10 Segmentation params syntax' of the VP9 specification for
+> + * more details.
+> + */
+> +enum v4l2_vp9_segmentation_flags {
+> +	V4L2_VP9_SEGMENTATION_FLAG_ENABLED = 1 << 0,
+> +	V4L2_VP9_SEGMENTATION_FLAG_UPDATE_MAP = 1 << 1,
+> +	V4L2_VP9_SEGMENTATION_FLAG_TEMPORAL_UPDATE = 1 << 2,
+> +	V4L2_VP9_SEGMENTATION_FLAG_UPDATE_DATA = 1 << 3,
+> +	V4L2_VP9_SEGMENTATION_FLAG_ABS_OR_DELTA_UPDATE = 1 << 4,
+> +};
+> +
+> +#define V4L2_VP9_SEGMENT_FEATURE_ENABLED(id)	(1 << (id))
+> +#define V4L2_VP9_SEGMENT_FEATURE_ENABLED_MASK	0xf
+> +
+> +/**
+> + * enum v4l2_vp9_segment_feature - VP9 segment feature IDs
+> + *
+> + * @V4L2_VP9_SEGMENT_FEATURE_QP_DELTA: QP delta segment feature
+> + * @V4L2_VP9_SEGMENT_FEATURE_LF: loop filter segment feature
+> + * @V4L2_VP9_SEGMENT_FEATURE_REF_FRAME: reference frame segment feature
+> + * @V4L2_VP9_SEGMENT_FEATURE_SKIP: skip segment feature
+> + * @V4L2_VP9_SEGMENT_FEATURE_CNT: number of segment features
+> + *
+> + * Segment feature IDs. See section '7.2.10 Segmentation params syntax' of the
+> + * VP9 specification for more details.
+> + */
+> +enum v4l2_vp9_segment_feature {
+> +	V4L2_VP9_SEGMENT_FEATURE_QP_DELTA,
+> +	V4L2_VP9_SEGMENT_FEATURE_LF,
+> +	V4L2_VP9_SEGMENT_FEATURE_REF_FRAME,
+> +	V4L2_VP9_SEGMENT_FEATURE_SKIP,
+> +	V4L2_VP9_SEGMENT_FEATURE_CNT,
+> +};
+> +
+> +/**
+> + * struct v4l2_vp9_segmentation - VP9 segmentation parameters
+> + *
+> + * @flags: combination of V4L2_VP9_SEGMENTATION_FLAG_* flags
+> + * @tree_probs: specify the probability values to be used when decoding
+> + *		segment_id
+> + * @pred_prob: specify the probability values to be used when decoding
+> + *	       seg_id_predicte
+> + * @padding: padding used to make things aligned on 64 bits. Shall be zero
+> + *	     filled
+> + * @feature_enabled: bitmask defining which features are enabled in each
+> + *		     segment
+> + * @feature_data: data attached to each feature. Data entry is only valid if
+> + *		  the feature is enabled
+> + *
+> + * Encodes the quantization parameters. See section '7.2.10 Segmentation
+> + * params syntax' of the VP9 specification for more details.
+> + */
+> +struct v4l2_vp9_segmentation {
+> +	__u8 flags;
+> +	__u8 tree_probs[7];
+> +	__u8 pred_probs[3];
+> +	__u8 padding[5];
+> +	__u8 feature_enabled[8];
+> +	__s16 feature_data[8][4];
+> +};
+> +
+> +/**
+> + * enum v4l2_vp9_intra_prediction_mode - VP9 Intra prediction modes
+> + *
+> + * @V4L2_VP9_INTRA_PRED_DC: DC intra prediction
+> + * @V4L2_VP9_INTRA_PRED_MODE_V: vertical intra prediction
+> + * @V4L2_VP9_INTRA_PRED_MODE_H: horizontal intra prediction
+> + * @V4L2_VP9_INTRA_PRED_MODE_D45: D45 intra prediction
+> + * @V4L2_VP9_INTRA_PRED_MODE_D135: D135 intra prediction
+> + * @V4L2_VP9_INTRA_PRED_MODE_D117: D117 intra prediction
+> + * @V4L2_VP9_INTRA_PRED_MODE_D153: D153 intra prediction
+> + * @V4L2_VP9_INTRA_PRED_MODE_D207: D207 intra prediction
+> + * @V4L2_VP9_INTRA_PRED_MODE_D63: D63 intra prediction
+> + * @V4L2_VP9_INTRA_PRED_MODE_TM: True Motion intra prediction
+> + *
+> + * See section '7.4.5 Intra frame mode info semantics' for more details.
+> + */
+> +enum v4l2_vp9_intra_prediction_mode {
+> +	V4L2_VP9_INTRA_PRED_MODE_DC,
+> +	V4L2_VP9_INTRA_PRED_MODE_V,
+> +	V4L2_VP9_INTRA_PRED_MODE_H,
+> +	V4L2_VP9_INTRA_PRED_MODE_D45,
+> +	V4L2_VP9_INTRA_PRED_MODE_D135,
+> +	V4L2_VP9_INTRA_PRED_MODE_D117,
+> +	V4L2_VP9_INTRA_PRED_MODE_D153,
+> +	V4L2_VP9_INTRA_PRED_MODE_D207,
+> +	V4L2_VP9_INTRA_PRED_MODE_D63,
+> +	V4L2_VP9_INTRA_PRED_MODE_TM,
+> +};
+> +
+> +/**
+> + * struct v4l2_vp9_probabilities - VP9 Probabilities
+> + *
+> + * @tx8: TX 8x8 probabilities
+> + * @tx16: TX 16x16 probabilities
+> + * @tx32: TX 32x32 probabilities
+> + * @coef: coefficient probabilities
+> + * @skip: skip probabilities
+> + * @inter_mode: inter mode probabilities
+> + * @interp_filter: interpolation filter probabilities
+> + * @is_inter: is inter-block probabilities
+> + * @comp_mode: compound prediction mode probabilities
+> + * @single_ref: single ref probabilities
+> + * @comp_ref: compound ref probabilities
+> + * @y_mode: Y prediction mode probabilities
+> + * @uv_mode: UV prediction mode probabilities
+> + * @partition: partition probabilities
+> + * @mv.joint: motion vector joint probabilities
+> + * @mv.sign: motion vector sign probabilities
+> + * @mv.class: motion vector class probabilities
+> + * @mv.class0_bit: motion vector class0 bit probabilities
+> + * @mv.bits: motion vector bits probabilities
+> + * @mv.class0_fr: motion vector class0 fractional bit probabilities
+> + * @mv.fr: motion vector fractional bit probabilities
+> + * @mv.class0_hp: motion vector class0 high precision fractional bit
+> + *		  probabilities
+> + * @mv.hp: motion vector high precision fractional bit probabilities
+> + * @mv: motion vector probabilities
+> + *
+> + * Structure containing most VP9 probabilities. See the VP9 specification
+> + * for more details.
+> + */
+> +struct v4l2_vp9_probabilities {
+> +	__u8 tx8[2][1];
+> +	__u8 tx16[2][2];
+> +	__u8 tx32[2][3];
+> +	__u8 coef[4][2][2][6][6][3];
+> +	__u8 skip[3];
+> +	__u8 inter_mode[7][3];
+> +	__u8 interp_filter[4][2];
+> +	__u8 is_inter[4];
+> +	__u8 comp_mode[5];
+> +	__u8 single_ref[5][2];
+> +	__u8 comp_ref[5];
+> +	__u8 y_mode[4][9];
+> +	__u8 uv_mode[10][9];
+> +	__u8 partition[16][3];
+> +	struct {
+> +		__u8 joint[3];
+> +		__u8 sign[2];
+> +		__u8 class[2][10];
+> +		__u8 class0_bit[2];
+> +		__u8 bits[2][10];
+> +		__u8 class0_fr[2][2][3];
+> +		__u8 fr[2][3];
+> +		__u8 class0_hp[2];
+> +		__u8 hp[2];
+> +	} mv;
+> +};
+> +
+> +/**
+> + * enum v4l2_vp9_reset_frame_context - Valid values for
+> + *			&v4l2_ctrl_vp9_frame_decode_params->reset_frame_context
+> + *
+> + * @V4L2_VP9_RESET_FRAME_CTX_NONE: don't reset any frame context
+> + * @V4L2_VP9_RESET_FRAME_CTX_NONE_ALT: don't reset any frame context. This is an
+> + *				       alternate value for
+> + *				       V4L2_VP9_RESET_FRAME_CTX_NONE but has
+> + *				       the same meaning
+> + * @V4L2_VP9_RESET_FRAME_CTX_SPEC: reset the frame context pointed by
+> + *			&v4l2_ctrl_vp9_frame_decode_params.frame_context_idx
+> + * @V4L2_VP9_RESET_FRAME_CTX_ALL: reset all frame contexts
+> + *
+> + * See section '7.2 Uncompressed header semantics' of the VP9 specification
+> + * for more details.
+> + */
+> +enum v4l2_vp9_reset_frame_context {
+> +	V4L2_VP9_RESET_FRAME_CTX_NONE,
+> +	V4L2_VP9_RESET_FRAME_CTX_NONE_ALT,
+> +	V4L2_VP9_RESET_FRAME_CTX_SPEC,
+> +	V4L2_VP9_RESET_FRAME_CTX_ALL,
+> +};
+> +
+> +/**
+> + * enum v4l2_vp9_color_space - Valid values for
+> + *			&v4l2_ctrl_vp9_frame_decode_params->color_space
+> + *
+> + * @V4L2_VP9_COLOR_SPACE_UNKNOWN: unknown color space. In this case the color
+> + *				  space must be signaled outside the VP9
+> + *				  bitstream
+> + * @V4L2_VP9_COLOR_SPACE_BT_601: Rec. ITU-R BT.601-7
+> + * @V4L2_VP9_COLOR_SPACE_BT_709: Rec. ITU-R BT.709-6
+> + * @V4L2_VP9_COLOR_SPACE_SMPTE_170: SMPTE-170
+> + * @V4L2_VP9_COLOR_SPACE_SMPTE_240: SMPTE-240
+> + * @V4L2_VP9_COLOR_SPACE_BT_2020: Rec. ITU-R BT.2020-2
+> + * @V4L2_VP9_COLOR_SPACE_RESERVED: reserved. This value should never be passed
+> + * @V4L2_VP9_COLOR_SPACE_SRGB: sRGB (IEC 61966-2-1)
+> + *
+> + * See section '7.2.2 Color config semantics' of the VP9 specification for more
+> + * details.
+> + */
+> +enum v4l2_vp9_color_space {
+> +	V4L2_VP9_COLOR_SPACE_UNKNOWN,
+> +	V4L2_VP9_COLOR_SPACE_BT_601,
+> +	V4L2_VP9_COLOR_SPACE_BT_709,
+> +	V4L2_VP9_COLOR_SPACE_SMPTE_170,
+> +	V4L2_VP9_COLOR_SPACE_SMPTE_240,
+> +	V4L2_VP9_COLOR_SPACE_BT_2020,
+> +	V4L2_VP9_COLOR_SPACE_RESERVED,
+> +	V4L2_VP9_COLOR_SPACE_SRGB,
+> +};
+> +
+> +/**
+> + * enum v4l2_vp9_interpolation_filter - VP9 interpolation filter types
+> + *
+> + * @V4L2_VP9_INTERP_FILTER_8TAP: height tap filter
+> + * @V4L2_VP9_INTERP_FILTER_8TAP_SMOOTH: height tap smooth filter
+> + * @V4L2_VP9_INTERP_FILTER_8TAP_SHARP: height tap sharp filter
+> + * @V4L2_VP9_INTERP_FILTER_BILINEAR: bilinear filter
+> + * @V4L2_VP9_INTERP_FILTER_SWITCHABLE: filter selection is signaled at the
+> + *				       block level
+> + *
+> + * See section '7.2.7 Interpolation filter semantics' of the VP9 specification
+> + * for more details.
+> + */
+> +enum v4l2_vp9_interpolation_filter {
+> +	V4L2_VP9_INTERP_FILTER_8TAP,
+> +	V4L2_VP9_INTERP_FILTER_8TAP_SMOOTH,
+> +	V4L2_VP9_INTERP_FILTER_8TAP_SHARP,
+> +	V4L2_VP9_INTERP_FILTER_BILINEAR,
+> +	V4L2_VP9_INTERP_FILTER_SWITCHABLE,
+> +};
+> +
+> +/**
+> + * enum v4l2_vp9_reference_mode - VP9 reference modes
+> + *
+> + * @V4L2_VP9_REF_MODE_SINGLE: indicates that all the inter blocks use only a
+> + *			      single reference frame to generate motion
+> + *			      compensated prediction
+> + * @V4L2_VP9_REF_MODE_COMPOUND: requires all the inter blocks to use compound
+> + *				mode. Single reference frame prediction is not
+> + *				allowed
+> + * @V4L2_VP9_REF_MODE_SELECT: allows each individual inter block to select
+> + *			      between single and compound prediction modes
+> + *
+> + * See section '7.3.6 Frame reference mode semantics' of the VP9 specification
+> + * for more details.
+> + */
+> +enum v4l2_vp9_reference_mode {
+> +	V4L2_VP9_REF_MODE_SINGLE,
+> +	V4L2_VP9_REF_MODE_COMPOUND,
+> +	V4L2_VP9_REF_MODE_SELECT,
+> +};
+> +
+> +/**
+> + * enum v4l2_vp9_tx_mode - VP9 TX modes
+> + *
+> + * @V4L2_VP9_TX_MODE_ONLY_4X4: transform size is 4x4
+> + * @V4L2_VP9_TX_MODE_ALLOW_8X8: transform size can be up to 8x8
+> + * @V4L2_VP9_TX_MODE_ALLOW_16X16: transform size can be up to 16x16
+> + * @V4L2_VP9_TX_MODE_ALLOW_32X32: transform size can be up to 32x32
+> + * @V4L2_VP9_TX_MODE_SELECT: bitstream contains transform size for each block
+> + *
+> + * See section '7.3.1 Tx mode semantics' of the VP9 specification for more
+> + * details.
+> + */
+> +enum v4l2_vp9_tx_mode {
+> +	V4L2_VP9_TX_MODE_ONLY_4X4,
+> +	V4L2_VP9_TX_MODE_ALLOW_8X8,
+> +	V4L2_VP9_TX_MODE_ALLOW_16X16,
+> +	V4L2_VP9_TX_MODE_ALLOW_32X32,
+> +	V4L2_VP9_TX_MODE_SELECT,
+> +};
+> +
+> +/**
+> + * enum v4l2_vp9_ref_id - VP9 Reference frame IDs
+> + *
+> + * @V4L2_REF_ID_LAST: last reference frame
+> + * @V4L2_REF_ID_GOLDEN: golden reference frame
+> + * @V4L2_REF_ID_ALTREF: alternative reference frame
+> + * @V4L2_REF_ID_CNT: number of reference frames
+> + *
+> + * See section '7.4.12 Ref frames semantics' of the VP9 specification for more
+> + * details.
+> + */
+> +enum v4l2_vp9_ref_id {
+> +	V4L2_REF_ID_LAST,
+> +	V4L2_REF_ID_GOLDEN,
+> +	V4L2_REF_ID_ALTREF,
+> +	V4L2_REF_ID_CNT,
+> +};
+> +
+> +/**
+> + * enum v4l2_vp9_frame_flags - VP9 frame flags
+> + * @V4L2_VP9_FRAME_FLAG_KEY_FRAME: the frame is a key frame
+> + * @V4L2_VP9_FRAME_FLAG_SHOW_FRAME: the frame should be displayed
+> + * @V4L2_VP9_FRAME_FLAG_ERROR_RESILIENT: the decoding should be error resilient
+> + * @V4L2_VP9_FRAME_FLAG_INTRA_ONLY: the frame does not reference other frames
+> + * @V4L2_VP9_FRAME_FLAG_ALLOW_HIGH_PREC_MV: the frame might can high precision
+> + *					    motion vectors
+> + * @V4L2_VP9_FRAME_FLAG_REFRESH_FRAME_CTX: frame context should be updated
+> + *					   after decoding
+> + * @V4L2_VP9_FRAME_FLAG_PARALLEL_DEC_MODE: parallel decoding is used
+> + * @V4L2_VP9_FRAME_FLAG_X_SUBSAMPLING: vertical subsampling is enabled
+> + * @V4L2_VP9_FRAME_FLAG_Y_SUBSAMPLING: horizontal subsampling is enabled
+> + * @V4L2_VP9_FRAME_FLAG_COLOR_RANGE_FULL_SWING: full UV range is used
+> + *
+> + * Check the VP9 specification for more details.
+> + */
+> +enum v4l2_vp9_frame_flags {
+> +	V4L2_VP9_FRAME_FLAG_KEY_FRAME = 1 << 0,
+> +	V4L2_VP9_FRAME_FLAG_SHOW_FRAME = 1 << 1,
+> +	V4L2_VP9_FRAME_FLAG_ERROR_RESILIENT = 1 << 2,
+> +	V4L2_VP9_FRAME_FLAG_INTRA_ONLY = 1 << 3,
+> +	V4L2_VP9_FRAME_FLAG_ALLOW_HIGH_PREC_MV = 1 << 4,
+> +	V4L2_VP9_FRAME_FLAG_REFRESH_FRAME_CTX = 1 << 5,
+> +	V4L2_VP9_FRAME_FLAG_PARALLEL_DEC_MODE = 1 << 6,
+> +	V4L2_VP9_FRAME_FLAG_X_SUBSAMPLING = 1 << 7,
+> +	V4L2_VP9_FRAME_FLAG_Y_SUBSAMPLING = 1 << 8,
+> +	V4L2_VP9_FRAME_FLAG_COLOR_RANGE_FULL_SWING = 1 << 9,
+> +};
+> +
+> +#define V4L2_VP9_PROFILE_MAX		3
+> +
+> +/**
+> + * struct v4l2_ctrl_vp9_frame_decode_params - VP9 frame decoding control
+> + *
+> + * @flags: combination of V4L2_VP9_FRAME_FLAG_* flags
+> + * @compressed_header_size: compressed header size in bytes
+> + * @uncompressed_header_size: uncompressed header size in bytes
+> + * @profile: VP9 profile. Can be 0, 1, 2 or 3
+> + * @reset_frame_context: specifies whether the frame context should be reset
+> + *			 to default values. See &v4l2_vp9_reset_frame_context
+> + *			 for more details
+> + * @frame_context_idx: frame context that should be used/updated
+> + * @bit_depth: bits per components. Can be 8, 10 or 12. Note that not all
+> + *	       profiles support 10 and/or 12 bits depths
+> + * @color_space: specifies the color space of the stream. See
+> + *		 &v4l2_vp9_color_space for more details
+> + * @interpolation_filter: specifies the filter selection used for performing
+> + *			  inter prediction. See &v4l2_vp9_interpolation_filter
+> + *			  for more details
+> + * @tile_cols_log2: specifies the base 2 logarithm of the width of each tile
+> + *		    (where the width is measured in units of 8x8 blocks).
+> + *		    Shall be less than or equal to 6
+> + * @tile_rows_log2: specifies the base 2 logarithm of the height of each tile
+> + *		    (where the height is measured in units of 8x8 blocks)
+> + * @tx_mode: specifies the TX mode. See &v4l2_vp9_tx_mode for more details
+> + * @reference_mode: specifies the type of inter prediction to be used. See
+> + *		    &v4l2_vp9_reference_mode for more details
+> + * @padding: needed to make this struct 64 bit aligned. Shall be filled with
+> + *	     zeros
+> + * @frame_width_minus_1: add 1 to it and you'll get the frame width expressed
+> + *			 in pixels
+> + * @frame_height_minus_1: add 1 to it and you'll get the frame height expressed
+> + *			  in pixels
+> + * @frame_width_minus_1: add 1 to it and you'll get the expected render width
+> + *			 expressed in pixels. This is not used during the
+> + *			 decoding process but might be used by HW scalers to
+> + *			 prepare a frame that's ready for scanout
+> + * @frame_height_minus_1: add 1 to it and you'll get the expected render height
+> + *			 expressed in pixels. This is not used during the
+> + *			 decoding process but might be used by HW scalers to
+> + *			 prepare a frame that's ready for scanout
+> + * @refs: array of reference frames. See &v4l2_vp9_ref_id for more details
+> + * @lf: loop filter parameters. See &v4l2_vp9_loop_filter for more details
+> + * @quant: quantization parameters. See &v4l2_vp9_quantization for more details
+> + * @seg: segmentation parameters. See &v4l2_vp9_segmentation for more details
+> + * @probs: probabilities. See &v4l2_vp9_probabilities for more details
+> + */
+> +struct v4l2_ctrl_vp9_frame_decode_params {
+> +	__u32 flags;
+> +	__u16 compressed_header_size;
+> +	__u16 uncompressed_header_size;
+> +	__u8 profile;
+> +	__u8 reset_frame_context;
+> +	__u8 frame_context_idx;
+> +	__u8 bit_depth;
+> +	__u8 color_space;
+> +	__u8 interpolation_filter;
+> +	__u8 tile_cols_log2;
+> +	__u8 tile_rows_log2;
+> +	__u8 tx_mode;
+> +	__u8 reference_mode;
+> +	__u8 padding[6];
+> +	__u16 frame_width_minus_1;
+> +	__u16 frame_height_minus_1;
+> +	__u16 render_width_minus_1;
+> +	__u16 render_height_minus_1;
+> +	__u64 refs[V4L2_REF_ID_CNT];
+> +	struct v4l2_vp9_loop_filter lf;
+> +	struct v4l2_vp9_quantization quant;
+> +	struct v4l2_vp9_segmentation seg;
+> +	struct v4l2_vp9_probabilities probs;
+> +};
+> +
+> +#define V4L2_VP9_NUM_FRAME_CTX	4
+> +
+> +/**
+> + * struct v4l2_ctrl_vp9_frame_ctx - VP9 frame context control
+> + *
+> + * @probs: VP9 probabilities
+> + *
+> + * This control is accessed in both direction. The user should initialize the
+> + * 4 contexts with default values just after starting the stream. Then before
+> + * decoding a frame it should query the current frame context (the one passed
+> + * through &v4l2_ctrl_vp9_frame_decode_params.frame_context_idx) to initialize
+> + * &v4l2_ctrl_vp9_frame_decode_params.probs. The probs are then adjusted based
+> + * on the bitstream info and passed to the kernel. The codec should update
+> + * the frame context after the frame has been decoded, so that next time
+> + * userspace query this context it contains the updated probabilities.
+> + */
+> +struct v4l2_ctrl_vp9_frame_ctx {
+> +	struct v4l2_vp9_probabilities probs;
+> +};
+> +
+> +#endif /* _VP9_CTRLS_H_ */
+> 
+
+I got several smatch warnings:
+
+smatch: ERRORS
+drivers/media/v4l2-core/v4l2-ctrls.c:1880 validate_vp9_frame_decode_params() warn: was && intended here instead of ||?
+
+(Commented on this ^^^ one above)
+
+drivers/staging/media/rkvdec/rkvdec-vp9.c:426 init_intra_only_probs() error: buffer overflow 'ptr' 9 <= 69
+drivers/staging/media/rkvdec/rkvdec-vp9.c:1478 rkvdec_vp9_done() error: potentially dereferencing uninitialized 'ctrl'.
+drivers/staging/media/rkvdec/rkvdec-vp9.c:1483 rkvdec_vp9_done() error: uninitialized symbol 'dec_dst_buf'.
+drivers/staging/media/rkvdec/rkvdec-vp9.c:941:6: warning: variable 'ret' set but not used [-Wunused-but-set-variable]
+drivers/staging/media/rkvdec/rkvdec-vp9.c:1466:40: warning: variable 'fctx' set but not used [-Wunused-but-set-variable]
+
+Regards,
+
+	Hans
