@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C698AC352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:59:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C86C9C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:59:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BD06206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:59:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A585621D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:59:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587049176;
-	bh=xoMlAsrAwSFJ6j+8P0UmEPOQWgINmOoMiTSG2rIDnuI=;
+	s=default; t=1587049178;
+	bh=0QWkgSBGNSY24xOj/Y0cCCQ4J4uNUMUkBlsyxRF5Sm0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Muo/Lv1GNG8m1u/483puAzJiMRFdWVkpbpjS4Jm2mIiuvFaPO9A21Do8FA1r35b23
-	 ba8yIsRazQ4Gg1KRxbxbZ/TcrdiokZIhrINK7TivZZ5xpr/36yLHUAVmj7EC8y8GZK
-	 84CzYv0KE8tEZaQ+9U8W52mFCfpibxOoVljQ7ecE=
+	b=wSxouF3v3GfRD48yh5E2KTBBNIksrMF1K2h5UOvnrwP0Uv2B6E0hpJV7mQihi9avK
+	 tVtKPVqIRGiczbXPrDMzu2LWfvfbfI0FISm01BxCCBMJfDARpnocl+wZ/mTrwrN8IV
+	 KsKJO97uZPlTs6ecX91tiWhf4S99OMnI/ZGU/NFE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438039AbgDPO7f (ORCPT
+        id S2409057AbgDPNyn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:59:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41418 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:54:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898868AbgDPNys (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:54:48 -0400
+        id S2896376AbgDPNhy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:37:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3A3620732;
-        Thu, 16 Apr 2020 13:54:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8995D21BE5;
+        Thu, 16 Apr 2020 13:37:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045288;
-        bh=xoMlAsrAwSFJ6j+8P0UmEPOQWgINmOoMiTSG2rIDnuI=;
+        s=default; t=1587044274;
+        bh=0QWkgSBGNSY24xOj/Y0cCCQ4J4uNUMUkBlsyxRF5Sm0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lo9myVyvdnLn0fy30+iemr8+LtbbGtT05dcve4D96m3lS9ImYjaMwtXf2pWMHp5dq
-         olV22IHOygRO6Bryh9WYfs9mKfhBfMMO/MsGLIMiPUwv/MtK50QiErg2Q2jyjPlm4I
-         Xhxks/+zkDd1EdoMYcOkxPhNpHVNoU8ETrDqTY7g=
+        b=s9YO2dNZylBPEb8bAWgO/TFCjyVUTyNWkfcp6056IxgMMbVa5fQNkYUYEt5SBcCsr
+         KZAe1paHcO7oilvCFd6m2ii6dobkN70TInRAe03JpDE4qkOsIDTzQ8tFOCpn+XrIWD
+         Ltf+3w4HO3R62JsEECR1FTcWHJhJeSWDOEkU3JSQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.6 073/254] ALSA: hda: Add driver blacklist
-Date:   Thu, 16 Apr 2020 15:22:42 +0200
-Message-Id: <20200416131335.008053608@linuxfoundation.org>
+        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.5 150/257] KVM: VMX: fix crash cleanup when KVM wasnt used
+Date:   Thu, 16 Apr 2020 15:23:21 +0200
+Message-Id: <20200416131345.257475880@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
-References: <20200416131325.804095985@linuxfoundation.org>
+In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
+References: <20200416131325.891903893@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -58,63 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-commit 3c6fd1f07ed03a04debbb9a9d782205f1ef5e2ab upstream.
+commit dbef2808af6c594922fe32833b30f55f35e9da6d upstream.
 
-The recent AMD platform exposes an HD-audio bus but without any actual
-codecs, which is internally tied with a USB-audio device, supposedly.
-It results in "no codecs" error of HD-audio bus driver, and it's
-nothing but a waste of resources.
+If KVM wasn't used at all before we crash the cleanup procedure fails with
+ BUG: unable to handle page fault for address: ffffffffffffffc8
+ #PF: supervisor read access in kernel mode
+ #PF: error_code(0x0000) - not-present page
+ PGD 23215067 P4D 23215067 PUD 23217067 PMD 0
+ Oops: 0000 [#8] SMP PTI
+ CPU: 0 PID: 3542 Comm: bash Kdump: loaded Tainted: G      D           5.6.0-rc2+ #823
+ RIP: 0010:crash_vmclear_local_loaded_vmcss.cold+0x19/0x51 [kvm_intel]
 
-This patch introduces a static blacklist table for skipping such a
-known bogus PCI SSID entry.  As of writing this patch, the known SSIDs
-are:
-* 1043:874f - ASUS ROG Zenith II / Strix
-* 1462:cb59 - MSI TRX40 Creator
-* 1462:cb60 - MSI TRX40
+The root cause is that loaded_vmcss_on_cpu list is not yet initialized,
+we initialize it in hardware_enable() but this only happens when we start
+a VM.
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206543
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200408140449.22319-2-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Previously, we used to have a bitmap with enabled CPUs and that was
+preventing [masking] the issue.
+
+Initialized loaded_vmcss_on_cpu list earlier, right before we assign
+crash_vmclear_loaded_vmcss pointer. blocked_vcpu_on_cpu list and
+blocked_vcpu_on_cpu_lock are moved altogether for consistency.
+
+Fixes: 31603d4fc2bb ("KVM: VMX: Always VMCLEAR in-use VMCSes during crash with kexec support")
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Message-Id: <20200401081348.1345307-1-vkuznets@redhat.com>
+Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/hda_intel.c |   16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ arch/x86/kvm/vmx/vmx.c |   12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -2076,6 +2076,17 @@ static void pcm_mmap_prepare(struct snd_
- #endif
- }
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -2232,10 +2232,6 @@ static int hardware_enable(void)
+ 	    !hv_get_vp_assist_page(cpu))
+ 		return -EFAULT;
  
-+/* Blacklist for skipping the whole probe:
-+ * some HD-audio PCI entries are exposed without any codecs, and such devices
-+ * should be ignored from the beginning.
-+ */
-+static const struct snd_pci_quirk driver_blacklist[] = {
-+	SND_PCI_QUIRK(0x1043, 0x874f, "ASUS ROG Zenith II / Strix", 0),
-+	SND_PCI_QUIRK(0x1462, 0xcb59, "MSI TRX40 Creator", 0),
-+	SND_PCI_QUIRK(0x1462, 0xcb60, "MSI TRX40", 0),
-+	{}
-+};
-+
- static const struct hda_controller_ops pci_hda_ops = {
- 	.disable_msi_reset_irq = disable_msi_reset_irq,
- 	.pcm_mmap_prepare = pcm_mmap_prepare,
-@@ -2092,6 +2103,11 @@ static int azx_probe(struct pci_dev *pci
- 	bool schedule_probe;
- 	int err;
+-	INIT_LIST_HEAD(&per_cpu(loaded_vmcss_on_cpu, cpu));
+-	INIT_LIST_HEAD(&per_cpu(blocked_vcpu_on_cpu, cpu));
+-	spin_lock_init(&per_cpu(blocked_vcpu_on_cpu_lock, cpu));
+-
+ 	rdmsrl(MSR_IA32_FEATURE_CONTROL, old);
  
-+	if (snd_pci_quirk_lookup(pci, driver_blacklist)) {
-+		dev_info(&pci->dev, "Skipping the blacklisted device\n");
-+		return -ENODEV;
+ 	test_bits = FEATURE_CONTROL_LOCKED;
+@@ -8006,7 +8002,7 @@ module_exit(vmx_exit);
+ 
+ static int __init vmx_init(void)
+ {
+-	int r;
++	int r, cpu;
+ 
+ #if IS_ENABLED(CONFIG_HYPERV)
+ 	/*
+@@ -8060,6 +8056,12 @@ static int __init vmx_init(void)
+ 		return r;
+ 	}
+ 
++	for_each_possible_cpu(cpu) {
++		INIT_LIST_HEAD(&per_cpu(loaded_vmcss_on_cpu, cpu));
++		INIT_LIST_HEAD(&per_cpu(blocked_vcpu_on_cpu, cpu));
++		spin_lock_init(&per_cpu(blocked_vcpu_on_cpu_lock, cpu));
 +	}
 +
- 	if (dev >= SNDRV_CARDS)
- 		return -ENODEV;
- 	if (!enable[dev]) {
+ #ifdef CONFIG_KEXEC_CORE
+ 	rcu_assign_pointer(crash_vmclear_loaded_vmcss,
+ 			   crash_vmclear_local_loaded_vmcss);
 
 
