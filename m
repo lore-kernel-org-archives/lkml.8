@@ -6,63 +6,62 @@ X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14375C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:54:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ABA1C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:54:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECEF92087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:54:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6223F2087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:54:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436703AbgDPGyW (ORCPT
+        id S2437276AbgDPGxK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 02:54:22 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:41546 "EHLO fornost.hmeau.com"
+        Thu, 16 Apr 2020 02:53:10 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:41474 "EHLO fornost.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437468AbgDPGyH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 02:54:07 -0400
+        id S2436923AbgDPGwQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 02:52:16 -0400
 Received: from gwarestrin.me.apana.org.au ([192.168.0.7] helo=gwarestrin.arnor.me.apana.org.au)
         by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
-        id 1jOyP5-0005SP-QY; Thu, 16 Apr 2020 16:53:40 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 16 Apr 2020 16:53:39 +1000
-Date:   Thu, 16 Apr 2020 16:53:39 +1000
+        id 1jOyNK-0005Jq-CU; Thu, 16 Apr 2020 16:51:51 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 16 Apr 2020 16:51:50 +1000
+Date:   Thu, 16 Apr 2020 16:51:50 +1000
 From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     bbrezillon@kernel.org, arno@natisbad.org, schalla@marvell.com,
-        davem@davemloft.net, lbartosik@marvell.com,
-        colin.king@canonical.com, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH V2] crypto: marvell/octeontx - Add missing '\n' in log
- messages
-Message-ID: <20200416065339.GK7901@gondor.apana.org.au>
-References: <20200411120633.22150-1-christophe.jaillet@wanadoo.fr>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     linux-crypto@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Deepak Saxena <dsaxena@plexity.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Matt Mackall <mpm@selenic.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        Tang Bin <tangbin@cmss.chinamobile.com>
+Subject: Re: [PATCH] hwrng: omap - Delete an error message in
+ of_get_omap_rng_device_details()
+Message-ID: <20200416065150.GG7901@gondor.apana.org.au>
+References: <eae7170c-4371-4865-7b85-589c0ed2b5b6@web.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200411120633.22150-1-christophe.jaillet@wanadoo.fr>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <eae7170c-4371-4865-7b85-589c0ed2b5b6@web.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 11, 2020 at 02:06:33PM +0200, Christophe JAILLET wrote:
-> Message logged by 'dev_xxx()' or 'pr_xxx()' should end with a '\n'.
+On Sat, Apr 04, 2020 at 04:56:57PM +0200, Markus Elfring wrote:
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Sat, 4 Apr 2020 16:45:57 +0200
 > 
-> While at it, I've introduced a few pr_cont that looked logical to me.
+> The function “platform_get_irq” can log an error already.
+> Thus omit a redundant message for the exception handling in the
+> calling function.
 > 
-> Fixes: 10b4f09491bf ("crypto: marvell - add the Virtual Function driver for CPT")
-> Fixes: d9110b0b01ff ("crypto: marvell - add support for OCTEON TX CPT engine")
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> This issue was detected by using the Coccinelle software.
+> 
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
 > ---
-> V2: remove a pr_cont after a pr_debug
->     avoid repeating 'engine_group' in a message
-> ---
->  .../crypto/marvell/octeontx/otx_cptpf_main.c  |  4 +-
->  .../crypto/marvell/octeontx/otx_cptpf_mbox.c  | 12 +--
->  .../crypto/marvell/octeontx/otx_cptpf_ucode.c | 95 ++++++++++---------
->  .../crypto/marvell/octeontx/otx_cptvf_algs.c  |  6 +-
->  .../crypto/marvell/octeontx/otx_cptvf_main.c  | 12 +--
->  .../marvell/octeontx/otx_cptvf_reqmgr.c       | 10 +-
->  6 files changed, 70 insertions(+), 69 deletions(-)
+>  drivers/char/hw_random/omap-rng.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
 
 Patch applied.  Thanks.
 -- 
