@@ -2,194 +2,234 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DBE8C352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:40:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D306AC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:40:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DE3021D93
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:40:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587048048;
-	bh=g1PfHpNPZ94VFzqvVTuE+t5CXA4UXTCnIYtxGm8+ha4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X0WHsIrf8ifB6Dam2tqigWt7LS3b9/LGTklW0fLnjGuMM2trgW9TPKbgCz0wih6hY
-	 iG9SXLHwmrtqL6QrGuAkZOAFynOR63VMguzNH6odbdXrle0W/hxP/iEI5qhU0TxzHx
-	 zh6xwMAJXhNe2h3FuLAUNtnAlR1BrDKE7jK8Qo0Q=
+	by mail.kernel.org (Postfix) with ESMTP id B7B4F21D93
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:40:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393609AbgDPOkq (ORCPT
+        id S1728083AbgDPOkw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:40:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48816 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:40:52 -0400
+Received: from mga03.intel.com ([134.134.136.65]:50382 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409453AbgDPOBc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:01:32 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88D4C22209;
-        Thu, 16 Apr 2020 14:01:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045692;
-        bh=g1PfHpNPZ94VFzqvVTuE+t5CXA4UXTCnIYtxGm8+ha4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fcX/fL7au07b8IGN3gMSh+/z/G6OFCiQFXUlW0/GJM3frdIk5AOI5wUO0kv7hWH8I
-         BHxoMOBBfltzQLTEjPMVrScxucJN3fY6dz7i+jJCiKxoktBDrsBGTVsDPJmwVldeC5
-         5clOrlp/lR8xCgZV4U6IC2xPWygIknHfxaIVjOIU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.6 239/254] powerpc/hash64/devmap: Use H_PAGE_THP_HUGE when setting up huge devmap PTE entries
-Date:   Thu, 16 Apr 2020 15:25:28 +0200
-Message-Id: <20200416131355.383857451@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
-References: <20200416131325.804095985@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S2394351AbgDPOkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:40:39 -0400
+IronPort-SDR: 5ZwiseOLGGV7W6Xrx/u+UqMxZwFgbKjo5HnNoIVwhjMp7fqEC+ve2VW5D6CfPNTRqoxSUthA/h
+ boBs2gur9zAg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 07:40:38 -0700
+IronPort-SDR: JlyUbcayvN+Dj+yHk3BwZbC7Z2ryIM8yYu4rP6QhWbWfaF5YBMD2Lr5znLtlb70WzbL61zGkdr
+ /V2Q4Gh+5E+w==
+X-IronPort-AV: E=Sophos;i="5.72,391,1580803200"; 
+   d="scan'208";a="427852526"
+Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.249.170.42]) ([10.249.170.42])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 07:40:36 -0700
+Subject: Re: [PATCH] KVM: x86/pmu: Support full width counting
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Andi Kleen <ak@linux.intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200408135325.3160-1-like.xu@linux.intel.com>
+From:   Like Xu <like.xu@linux.intel.com>
+Organization: Intel OTC
+Message-ID: <89f5464e-3bff-898f-f407-28dbba36aa60@linux.intel.com>
+Date:   Thu, 16 Apr 2020 22:40:34 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200408135325.3160-1-like.xu@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Hi Paolo,
 
-commit 36b78402d97a3b9aeab136feb9b00d8647ec2c20 upstream.
+If there is anything needs to be improved for this patch,
+please let me know.
 
-H_PAGE_THP_HUGE is used to differentiate between a THP hugepage and
-hugetlb hugepage entries. The difference is WRT how we handle hash
-fault on these address. THP address enables MPSS in segments. We want
-to manage devmap hugepage entries similar to THP pt entries. Hence use
-H_PAGE_THP_HUGE for devmap huge PTE entries.
+Thanks,
+Like Xu
 
-With current code while handling hash PTE fault, we do set is_thp =
-true when finding devmap PTE huge PTE entries.
-
-Current code also does the below sequence we setting up huge devmap
-entries.
-
-	entry = pmd_mkhuge(pfn_t_pmd(pfn, prot));
-	if (pfn_t_devmap(pfn))
-		entry = pmd_mkdevmap(entry);
-
-In that case we would find both H_PAGE_THP_HUGE and PAGE_DEVMAP set
-for huge devmap PTE entries. This results in false positive error like
-below.
-
-  kernel BUG at /home/kvaneesh/src/linux/mm/memory.c:4321!
-  Oops: Exception in kernel mode, sig: 5 [#1]
-  LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
-  Modules linked in:
-  CPU: 56 PID: 67996 Comm: t_mmap_dio Not tainted 5.6.0-rc4-59640-g371c804dedbc #128
-  ....
-  NIP [c00000000044c9e4] __follow_pte_pmd+0x264/0x900
-  LR [c0000000005d45f8] dax_writeback_one+0x1a8/0x740
-  Call Trace:
-    str_spec.74809+0x22ffb4/0x2d116c (unreliable)
-    dax_writeback_one+0x1a8/0x740
-    dax_writeback_mapping_range+0x26c/0x700
-    ext4_dax_writepages+0x150/0x5a0
-    do_writepages+0x68/0x180
-    __filemap_fdatawrite_range+0x138/0x180
-    file_write_and_wait_range+0xa4/0x110
-    ext4_sync_file+0x370/0x6e0
-    vfs_fsync_range+0x70/0xf0
-    sys_msync+0x220/0x2e0
-    system_call+0x5c/0x68
-
-This is because our pmd_trans_huge check doesn't exclude _PAGE_DEVMAP.
-
-To make this all consistent, update pmd_mkdevmap to set
-H_PAGE_THP_HUGE and pmd_trans_huge check now excludes _PAGE_DEVMAP
-correctly.
-
-Fixes: ebd31197931d ("powerpc/mm: Add devmap support for ppc64")
-Cc: stable@vger.kernel.org # v4.13+
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200313094842.351830-1-aneesh.kumar@linux.ibm.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- arch/powerpc/include/asm/book3s/64/hash-4k.h  |    6 ++++++
- arch/powerpc/include/asm/book3s/64/hash-64k.h |    8 +++++++-
- arch/powerpc/include/asm/book3s/64/pgtable.h  |    4 +++-
- arch/powerpc/include/asm/book3s/64/radix.h    |    5 +++++
- 4 files changed, 21 insertions(+), 2 deletions(-)
-
---- a/arch/powerpc/include/asm/book3s/64/hash-4k.h
-+++ b/arch/powerpc/include/asm/book3s/64/hash-4k.h
-@@ -156,6 +156,12 @@ extern pmd_t hash__pmdp_huge_get_and_cle
- extern int hash__has_transparent_hugepage(void);
- #endif
- 
-+static inline pmd_t hash__pmd_mkdevmap(pmd_t pmd)
-+{
-+	BUG();
-+	return pmd;
-+}
-+
- #endif /* !__ASSEMBLY__ */
- 
- #endif /* _ASM_POWERPC_BOOK3S_64_HASH_4K_H */
---- a/arch/powerpc/include/asm/book3s/64/hash-64k.h
-+++ b/arch/powerpc/include/asm/book3s/64/hash-64k.h
-@@ -246,7 +246,7 @@ static inline void mark_hpte_slot_valid(
-  */
- static inline int hash__pmd_trans_huge(pmd_t pmd)
- {
--	return !!((pmd_val(pmd) & (_PAGE_PTE | H_PAGE_THP_HUGE)) ==
-+	return !!((pmd_val(pmd) & (_PAGE_PTE | H_PAGE_THP_HUGE | _PAGE_DEVMAP)) ==
- 		  (_PAGE_PTE | H_PAGE_THP_HUGE));
- }
- 
-@@ -272,6 +272,12 @@ extern pmd_t hash__pmdp_huge_get_and_cle
- 				       unsigned long addr, pmd_t *pmdp);
- extern int hash__has_transparent_hugepage(void);
- #endif /*  CONFIG_TRANSPARENT_HUGEPAGE */
-+
-+static inline pmd_t hash__pmd_mkdevmap(pmd_t pmd)
-+{
-+	return __pmd(pmd_val(pmd) | (_PAGE_PTE | H_PAGE_THP_HUGE | _PAGE_DEVMAP));
-+}
-+
- #endif	/* __ASSEMBLY__ */
- 
- #endif /* _ASM_POWERPC_BOOK3S_64_HASH_64K_H */
---- a/arch/powerpc/include/asm/book3s/64/pgtable.h
-+++ b/arch/powerpc/include/asm/book3s/64/pgtable.h
-@@ -1303,7 +1303,9 @@ extern void serialize_against_pte_lookup
- 
- static inline pmd_t pmd_mkdevmap(pmd_t pmd)
- {
--	return __pmd(pmd_val(pmd) | (_PAGE_PTE | _PAGE_DEVMAP));
-+	if (radix_enabled())
-+		return radix__pmd_mkdevmap(pmd);
-+	return hash__pmd_mkdevmap(pmd);
- }
- 
- static inline int pmd_devmap(pmd_t pmd)
---- a/arch/powerpc/include/asm/book3s/64/radix.h
-+++ b/arch/powerpc/include/asm/book3s/64/radix.h
-@@ -263,6 +263,11 @@ static inline int radix__has_transparent
- }
- #endif
- 
-+static inline pmd_t radix__pmd_mkdevmap(pmd_t pmd)
-+{
-+	return __pmd(pmd_val(pmd) | (_PAGE_PTE | _PAGE_DEVMAP));
-+}
-+
- extern int __meminit radix__vmemmap_create_mapping(unsigned long start,
- 					     unsigned long page_size,
- 					     unsigned long phys);
-
+On 2020/4/8 21:53, Like Xu wrote:
+> Intel CPUs have a new alternative MSR range (starting from MSR_IA32_PMC0)
+> for GP counters that allows writing the full counter width. Enable this
+> range from a new capability bit (IA32_PERF_CAPABILITIES.FW_WRITE[bit 13]).
+> 
+> The perf driver queries CPUID to get the counter width, and sign extends
+> the counter values as needed. The traditional MSRs always limit to 32bit,
+> even though the counter internally is larger (usually 48 bits).
+> 
+> When the new capability is set, use the alternative range which do not
+> have these restrictions. This lowers the overhead of perf stat slightly
+> because it has to do less interrupts to accumulate the counter value.
+> 
+> Signed-off-by: Like Xu <like.xu@linux.intel.com>
+> ---
+>   arch/x86/include/asm/kvm_host.h |  1 +
+>   arch/x86/kvm/vmx/capabilities.h | 15 +++++++++++++
+>   arch/x86/kvm/vmx/pmu_intel.c    | 38 +++++++++++++++++++++++++++------
+>   arch/x86/kvm/vmx/vmx.c          |  2 ++
+>   4 files changed, 50 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index 42a2d0d3984a..1c2e3e79490b 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -481,6 +481,7 @@ struct kvm_pmu {
+>   	u64 counter_bitmask[2];
+>   	u64 global_ctrl_mask;
+>   	u64 global_ovf_ctrl_mask;
+> +	u64 perf_capabilities;
+>   	u64 reserved_bits;
+>   	u8 version;
+>   	struct kvm_pmc gp_counters[INTEL_PMC_MAX_GENERIC];
+> diff --git a/arch/x86/kvm/vmx/capabilities.h b/arch/x86/kvm/vmx/capabilities.h
+> index 8903475f751e..3624568633bd 100644
+> --- a/arch/x86/kvm/vmx/capabilities.h
+> +++ b/arch/x86/kvm/vmx/capabilities.h
+> @@ -367,4 +367,19 @@ static inline bool vmx_pt_mode_is_host_guest(void)
+>   	return pt_mode == PT_MODE_HOST_GUEST;
+>   }
+>   
+> +#define PMU_CAP_FW_WRITE	(1ULL << 13)
+> +
+> +static inline u64 vmx_supported_perf_capabilities(void)
+> +{
+> +	u64 perf_cap = 0;
+> +
+> +	if (boot_cpu_has(X86_FEATURE_PDCM))
+> +		rdmsrl(MSR_IA32_PERF_CAPABILITIES, perf_cap);
+> +
+> +	/* Currently, KVM only support Full-Width Writes. */
+> +	perf_cap &= PMU_CAP_FW_WRITE;
+> +
+> +	return perf_cap;
+> +}
+> +
+>   #endif /* __KVM_X86_VMX_CAPS_H */
+> diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
+> index 7c857737b438..99563d1ec854 100644
+> --- a/arch/x86/kvm/vmx/pmu_intel.c
+> +++ b/arch/x86/kvm/vmx/pmu_intel.c
+> @@ -150,6 +150,12 @@ static struct kvm_pmc *intel_rdpmc_ecx_to_pmc(struct kvm_vcpu *vcpu,
+>   	return &counters[array_index_nospec(idx, num_counters)];
+>   }
+>   
+> +static inline bool full_width_writes_is_enabled(struct kvm_pmu *pmu)
+> +{
+> +	return (vmx_supported_perf_capabilities() & PMU_CAP_FW_WRITE) &&
+> +		(pmu->perf_capabilities & PMU_CAP_FW_WRITE);
+> +}
+> +
+>   static bool intel_is_valid_msr(struct kvm_vcpu *vcpu, u32 msr)
+>   {
+>   	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
+> @@ -162,10 +168,15 @@ static bool intel_is_valid_msr(struct kvm_vcpu *vcpu, u32 msr)
+>   	case MSR_CORE_PERF_GLOBAL_OVF_CTRL:
+>   		ret = pmu->version > 1;
+>   		break;
+> +	case MSR_IA32_PERF_CAPABILITIES:
+> +		ret = guest_cpuid_has(vcpu, X86_FEATURE_PDCM);
+> +		break;
+>   	default:
+>   		ret = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0) ||
+>   			get_gp_pmc(pmu, msr, MSR_P6_EVNTSEL0) ||
+> -			get_fixed_pmc(pmu, msr);
+> +			get_fixed_pmc(pmu, msr) ||
+> +			(get_gp_pmc(pmu, msr, MSR_IA32_PMC0) &&
+> +				full_width_writes_is_enabled(pmu));
+>   		break;
+>   	}
+>   
+> @@ -202,8 +213,12 @@ static int intel_pmu_get_msr(struct kvm_vcpu *vcpu, u32 msr, u64 *data)
+>   	case MSR_CORE_PERF_GLOBAL_OVF_CTRL:
+>   		*data = pmu->global_ovf_ctrl;
+>   		return 0;
+> +	case MSR_IA32_PERF_CAPABILITIES:
+> +		*data = pmu->perf_capabilities;
+> +		return 0;
+>   	default:
+> -		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0))) {
+> +		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0))
+> +			|| (pmc = get_gp_pmc(pmu, msr, MSR_IA32_PMC0))) {
+>   			u64 val = pmc_read_counter(pmc);
+>   			*data = val & pmu->counter_bitmask[KVM_PMC_GP];
+>   			return 0;
+> @@ -258,9 +273,13 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>   			return 0;
+>   		}
+>   		break;
+> +	case MSR_IA32_PERF_CAPABILITIES:
+> +		return 1; /* RO MSR */
+>   	default:
+> -		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0))) {
+> -			if (!msr_info->host_initiated)
+> +		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0))
+> +			|| (pmc = get_gp_pmc(pmu, msr, MSR_IA32_PMC0))) {
+> +			if (!msr_info->host_initiated &&
+> +				!full_width_writes_is_enabled(pmu))
+>   				data = (s64)(s32)data;
+>   			pmc->counter += data - pmc_read_counter(pmc);
+>   			if (pmc->perf_event)
+> @@ -303,15 +322,18 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
+>   
+>   	entry = kvm_find_cpuid_entry(vcpu, 0xa, 0);
+>   	if (!entry)
+> -		return;
+> +		goto end;
+>   	eax.full = entry->eax;
+>   	edx.full = entry->edx;
+>   
+>   	pmu->version = eax.split.version_id;
+>   	if (!pmu->version)
+> -		return;
+> +		goto end;
+>   
+>   	perf_get_x86_pmu_capability(&x86_pmu);
+> +	pmu->perf_capabilities = vmx_supported_perf_capabilities();
+> +	if (!pmu->perf_capabilities)
+> +		guest_cpuid_clear(vcpu, X86_FEATURE_PDCM);
+>   
+>   	pmu->nr_arch_gp_counters = min_t(int, eax.split.num_counters,
+>   					 x86_pmu.num_counters_gp);
+> @@ -351,6 +373,10 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
+>   		INTEL_PMC_MAX_GENERIC, pmu->nr_arch_fixed_counters);
+>   
+>   	nested_vmx_pmu_entry_exit_ctls_update(vcpu);
+> +	return;
+> +
+> +end:
+> +	guest_cpuid_clear(vcpu, X86_FEATURE_PDCM);
+>   }
+>   
+>   static void intel_pmu_init(struct kvm_vcpu *vcpu)
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 4f844257a72d..abc0f15a4de5 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -7112,6 +7112,8 @@ static __init void vmx_set_cpu_caps(void)
+>   		kvm_cpu_cap_check_and_set(X86_FEATURE_INVPCID);
+>   	if (vmx_pt_mode_is_host_guest())
+>   		kvm_cpu_cap_check_and_set(X86_FEATURE_INTEL_PT);
+> +	if (vmx_supported_perf_capabilities())
+> +		kvm_cpu_cap_check_and_set(X86_FEATURE_PDCM);
+>   
+>   	/* PKU is not yet implemented for shadow paging. */
+>   	if (enable_ept && boot_cpu_has(X86_FEATURE_OSPKE))
+> 
 
