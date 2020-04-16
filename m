@@ -2,143 +2,149 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A7BC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 17:36:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B85C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 17:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 553AD2064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 17:36:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52D0322241
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 17:36:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MZtUi+fN"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ptHIh1Hz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728716AbgDPRgF (ORCPT
+        id S1729150AbgDPRgc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 13:36:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38168 "EHLO
+        Thu, 16 Apr 2020 13:36:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726207AbgDPRgA (ORCPT
+        by vger.kernel.org with ESMTP id S1726207AbgDPRg2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 13:36:00 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8B24C061A0C;
-        Thu, 16 Apr 2020 10:35:59 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id v9so8674820ljk.12;
-        Thu, 16 Apr 2020 10:35:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=s5+mQ8PRD4Xuh/sg6Yq5khXNgkKUys7E4hCzlBLjTQ4=;
-        b=MZtUi+fNkH6D8qF/APDSAPqjrQD5Q3rwdqHhtK6UiLVLOEcYhUUuan6dsWuZ6rkUtK
-         YwlGKT9q7CFwMlad4ryoE0Yh3q5GeTxcBknKFHIdOI3reFSGjq7mIpSX73nGcUSM8N3Q
-         pJ9DtysQtqI8g2g/z7uUaVvlNwtY3Vd13+itMgctgGdDfW97qKv8WtKGjYPXYxCQyD8i
-         CvtNLWkrZ9J1wr+eJFvU4Y7OmNZSnS/Pppyi212qPmn+dMaaB2E22cXDcC4G/q7HWSjf
-         dSOsSaQpPuMHYo2OtnmkKejXQx2u5BC9JI4auG8JyVavXfJCWN4x+3+nmAb2PvGArcbT
-         RbGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=s5+mQ8PRD4Xuh/sg6Yq5khXNgkKUys7E4hCzlBLjTQ4=;
-        b=dMirb9JYOowU/q0Uz5uAxdWmQGuEM1dRvhUA5KJ5wmI2ZTY1m75lfdfheY0xelTR54
-         L9V0SXy8OqcBDBgIZ/1BL5JvMdeQAVZe3Sy/NHFT/O6LSBD1gvKKy49wfYjbAeJHKmO0
-         jpLOVSN0yrcMcg3HD1XlVflG5HVlV+rneUkGJ3hrqTjbzmKWDdZgiGMIoqO9eAmZJBse
-         F+7MUzWCVpVy47aN9VbUw9rInm9wX8osEfOM4ZgJTvtjazsZfpeBvxA93hpZpsMkNuxg
-         +7tV5FDtz802rQrQk6ZjZ3HGQwIKilzs4csXsnkSTjcG2tva/hnsUTJA/TnqZNI7FMrJ
-         jxLw==
-X-Gm-Message-State: AGi0PuYya3ECujMIJje38kLjw9Uu5/boWX+WOxjt0ml50vgJfcEgdPF7
-        0I4VCn5MeNZBVU7M/gnfk/ilAjRp
-X-Google-Smtp-Source: APiQypIkRdoN44kuZTN0QuMzpjRy7U9QjmgPMuUdmo/n4IU91fZxPIFuKTphq0yY1ZeSyM0CyI672Q==
-X-Received: by 2002:a2e:a30c:: with SMTP id l12mr4700236lje.174.1587058558252;
-        Thu, 16 Apr 2020 10:35:58 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id v26sm5005803lji.43.2020.04.16.10.35.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Apr 2020 10:35:57 -0700 (PDT)
-Subject: Re: [PATCH v1] iio: magnetometer: ak8974: Silence deferred-probe
- error
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-References: <20200414222713.32660-1-digetx@gmail.com>
- <CACRpkdY_J8e127etFFYkoxLDDkc334Xgg8ZbapdU36oGsaZ08g@mail.gmail.com>
- <e08c487c-5c2a-3172-7c9c-0e7d2cd51769@gmail.com>
- <CACRpkdbMF4=-g2ic_SKgOkd6kfgKJqZ2UxCRaoXJjq0EiEn+pw@mail.gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <26f96265-c699-66aa-ec70-becd868bb795@gmail.com>
-Date:   Thu, 16 Apr 2020 20:35:56 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 16 Apr 2020 13:36:28 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7567AC061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 10:36:28 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 030E797D;
+        Thu, 16 Apr 2020 19:36:26 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1587058587;
+        bh=A4kobtKnRgHR/0bO25uAPJpKtbu/t4ZwQa5A24AwJKc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ptHIh1HzKJ6pFVKISCU9v8/8MiCbgaGSpKfKWOvN71TqLrAOHifkVVpdMw8hg2RvO
+         yuItEkEnFFQIVGiZWB9qWgAQlLymOAWNvBaVCH9XiLFTSLz4if72rTj14g2FG8iT1D
+         9jp2y83R3qOzZn0/saiU7ywhKEQpc4kz2t/5UxVc=
+Date:   Thu, 16 Apr 2020 20:36:15 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Collabora Kernel ML <kernel@collabora.com>,
+        matthias.bgg@gmail.com, drinkcat@chromium.org, hsinyi@chromium.org,
+        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v2 7/7] drm/mediatek: mtk_dsi: Create connector for
+ bridges
+Message-ID: <20200416173615.GR4796@pendragon.ideasonboard.com>
+References: <20200416155720.2360443-1-enric.balletbo@collabora.com>
+ <20200416155720.2360443-8-enric.balletbo@collabora.com>
+ <20200416173525.GQ4796@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdbMF4=-g2ic_SKgOkd6kfgKJqZ2UxCRaoXJjq0EiEn+pw@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+In-Reply-To: <20200416173525.GQ4796@pendragon.ideasonboard.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-16.04.2020 19:51, Linus Walleij пишет:
-> On Thu, Apr 16, 2020 at 4:45 PM Dmitry Osipenko <digetx@gmail.com> wrote:
->> 16.04.2020 14:33, Linus Walleij пишет:
-> 
->>> This misses some important aspects of dev_dbg(), notably this:
->>>
->>> #if defined(CONFIG_DYNAMIC_DEBUG)
->>> #define dev_dbg(dev, fmt, ...)                                          \
->>>         dynamic_dev_dbg(dev, dev_fmt(fmt), ##__VA_ARGS__)
->>> #elif defined(DEBUG)
->>> #define dev_dbg(dev, fmt, ...)                                          \
->>>         dev_printk(KERN_DEBUG, dev, dev_fmt(fmt), ##__VA_ARGS__)
->>> #else
->>> #define dev_dbg(dev, fmt, ...)                                          \
->>> ({                                                                      \
->>>         if (0)                                                          \
->>>                 dev_printk(KERN_DEBUG, dev, dev_fmt(fmt), ##__VA_ARGS__); \
->>> })
->>> #endif
->>>
->>> If DEBUG is not defined the entire dev_dbg() message is enclodes in if (0)
->>> and compiled out of the kernel, saving space. The above does not
->>> fulfil that.
->>
->> Hello Linus,
->>
->> After some recent discussions in regards to the EPROBE_DEFER handling,
->> Thierry Reding suggested the form which is used in my patch and we
->> started to use it recently in the Tegra DRM driver [1]. The reason is
->> that we don't want to miss any deferred-probe messages under any
->> circumstances, for example like in a case of a disabled DYNAMIC_DEBUG.
-> 
-> I have a hard time to accept this reasoning.
-> 
-> Who doesn't feel that way about their subsystem? If you don't want
-> to miss the message under any circumstances then use dev_info().
-> Don't override the default behaviour of dev_dbg().
-> 
->> The debug messages are usually disabled in a release-build and when not
->> a very experienced person hands you KMSG for diagnosing a problem, the
->> KMSG is pretty much useless if error is hidden silently.
-> 
-> So use dev_info().
-> 
->> By moving the message to a debug level, we reduce the noise in the KMSG
->> because usually people look for a bold-red error messages. Secondly, we
->> don't introduce an additional overhead to the kernel size since the same
->> text is reused for all error conditions.
-> 
-> dev_info() is not supposed to be an error message, it is supposed to
-> be information, so use that.
+Hi Enric,
 
-Okay, I'll make a v2. Thank you for the review.
+On Thu, Apr 16, 2020 at 08:35:26PM +0300, Laurent Pinchart wrote:
+> On Thu, Apr 16, 2020 at 05:57:19PM +0200, Enric Balletbo i Serra wrote:
+> > Use the drm_bridge_connector helper to create a connector for pipelines
+> > that use drm_bridge. This allows splitting connector operations across
+> > multiple bridges when necessary, instead of having the last bridge in
+> > the chain creating the connector and handling all connector operations
+> > internally.
+> 
+> That's the right direction, but this should be done in the mtk display
+> controller driver core, not in here. I'm OK with the code being here as
+> an interim measure if needed to move forward, but that should then be
+> temporary only.
+
+I forgot to mention that the drm_encoder should also move out of the
+bridge driver to the display controller driver.
+
+> > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> > ---
+> > 
+> > Changes in v2: None
+> > 
+> >  drivers/gpu/drm/mediatek/mtk_dsi.c | 14 +++++++++++++-
+> >  1 file changed, 13 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> > index 44718fa3d1ca..2f8876c32864 100644
+> > --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
+> > +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> > @@ -17,6 +17,7 @@
+> >  
+> >  #include <drm/drm_atomic_helper.h>
+> >  #include <drm/drm_bridge.h>
+> > +#include <drm/drm_bridge_connector.h>
+> >  #include <drm/drm_mipi_dsi.h>
+> >  #include <drm/drm_of.h>
+> >  #include <drm/drm_panel.h>
+> > @@ -184,6 +185,7 @@ struct mtk_dsi {
+> >  	struct drm_bridge bridge;
+> >  	struct drm_bridge *panel_bridge;
+> >  	struct drm_bridge *next_bridge;
+> > +	struct drm_connector *connector;
+> >  	struct phy *phy;
+> >  
+> >  	void __iomem *regs;
+> > @@ -983,10 +985,19 @@ static int mtk_dsi_encoder_init(struct drm_device *drm, struct mtk_dsi *dsi)
+> >  	 */
+> >  	dsi->encoder.possible_crtcs = 1;
+> >  
+> > -	ret = drm_bridge_attach(&dsi->encoder, &dsi->bridge, NULL, 0);
+> > +	ret = drm_bridge_attach(&dsi->encoder, &dsi->bridge, NULL,
+> > +				DRM_BRIDGE_ATTACH_NO_CONNECTOR);
+> >  	if (ret)
+> >  		goto err_cleanup_encoder;
+> >  
+> > +	dsi->connector = drm_bridge_connector_init(drm, &dsi->encoder);
+> > +	if (IS_ERR(dsi->connector)) {
+> > +		DRM_ERROR("Unable to create bridge connector\n");
+> > +		ret = PTR_ERR(dsi->connector);
+> > +		goto err_cleanup_encoder;
+> > +	}
+> > +	drm_connector_attach_encoder(dsi->connector, &dsi->encoder);
+> > +
+> >  	return 0;
+> >  
+> >  err_cleanup_encoder:
+> > @@ -1144,6 +1155,7 @@ static int mtk_dsi_probe(struct platform_device *pdev)
+> >  
+> >  	dsi->bridge.funcs = &mtk_dsi_bridge_funcs;
+> >  	dsi->bridge.of_node = dev->of_node;
+> > +	dsi->bridge.type = DRM_MODE_CONNECTOR_DSI;
+> 
+> I think this line belongs to the patch that adds drm_bridge support to
+> this driver.
+> 
+> >  
+> >  	drm_bridge_add(&dsi->bridge);
+> >  
+
+-- 
+Regards,
+
+Laurent Pinchart
