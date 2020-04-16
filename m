@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09857C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:30:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A92ECC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:30:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D218921D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:30:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87EF721927
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:30:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587047428;
-	bh=QXDIIPH8GK3Ux1ynVTxNG6RvRhtHCDyClAcTXjsslm8=;
+	s=default; t=1587047431;
+	bh=USXPWGJ/YKf0rRFL56rcX8aUIC+Psvx24aboiTldo2A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VvGTY1Z0xhhViO8pkXgdaKSjoe3Ds3pafUp89XAxA6zWHQA1teQpLs58dzEAJba4U
-	 AQGC46Q+LDcGmbKRJ+clkpc/BQEAfi6Kahs404KCFIlPL7rLtewM7iSFrAThivduwd
-	 XA2ixK1L8oXSmRbZ8Mtx5kGdrffNMxSomburd4qw=
+	b=ZXy/87gWpwQQmTzlJ6lx4YVHUnlKHoy0sofVpdtR5HgkVmglqCBKVHlYmbRA5eXz3
+	 kAnP+zOuZZSlz7VVJwN88DgDTb3KYIK0JRNBgE6282zA3UNIjbDwh/o0dhT7cFUyzh
+	 RRaewOIw5cJToRhNsRmjzv/sTQ8GxQrdbNWBrmRM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729074AbgDPOa1 (ORCPT
+        id S2394237AbgDPOaT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:30:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48976 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:30:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409483AbgDPOBj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:01:39 -0400
+        id S2392795AbgDPOBZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:01:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E004A2078B;
-        Thu, 16 Apr 2020 14:01:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 161D4217D8;
+        Thu, 16 Apr 2020 14:01:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045699;
-        bh=QXDIIPH8GK3Ux1ynVTxNG6RvRhtHCDyClAcTXjsslm8=;
+        s=default; t=1587045684;
+        bh=USXPWGJ/YKf0rRFL56rcX8aUIC+Psvx24aboiTldo2A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AmKuYQIirSHDe5AGL05yRUfoRXAuSK+DO5I9vIe+yXjZ4a6ErL85Cl78CQym6Y6tW
-         77s4lutUOa9iSHZtT2jZCEXDMVr2Pzj9RUAx9QqVrDVDEZUnn8qKz8WKLeqBodBvyp
-         x4/G9306C+IaEABYeWthNrwXz2ddt1PZ32BHdY5o=
+        b=lKE9s5Bnr2su15sX/tOijblfuO+TYr/xY5NVFLJKZGtwZtGEU2r9bLbbJ9Q0mqA17
+         OJLbmAyL5ENm7DGOIUL7qMkD/v75l47SzJOZShDc0kQ42tWJxLdJDO16mAIbPZlINp
+         oESWsWBhmkxJnzw/hST7eYkg8OGLWy/Zr0N2yIGM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
-        Greg Kurz <groug@kaod.org>,
+        stable@vger.kernel.org, Clement Courbet <courbet@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
         Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.6 242/254] powerpc/xive: Fix xmon support on the PowerNV platform
-Date:   Thu, 16 Apr 2020 15:25:31 +0200
-Message-Id: <20200416131356.109332565@linuxfoundation.org>
+Subject: [PATCH 5.6 236/254] powerpc: Make setjmp/longjmp signature standard
+Date:   Thu, 16 Apr 2020 15:25:25 +0200
+Message-Id: <20200416131355.046567363@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -61,43 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cédric Le Goater <clg@kaod.org>
+From: Clement Courbet <courbet@google.com>
 
-commit 97ef275077932c65b1b8ec5022abd737a9fbf3e0 upstream.
+commit c17eb4dca5a353a9dbbb8ad6934fe57af7165e91 upstream.
 
-The PowerNV platform has multiple IRQ chips and the xmon command
-dumping the state of the XIVE interrupt should only operate on the
-XIVE IRQ chip.
+Declaring setjmp()/longjmp() as taking longs makes the signature
+non-standard, and makes clang complain. In the past, this has been
+worked around by adding -ffreestanding to the compile flags.
 
-Fixes: 5896163f7f91 ("powerpc/xmon: Improve output of XIVE interrupts")
-Cc: stable@vger.kernel.org # v5.4+
-Signed-off-by: Cédric Le Goater <clg@kaod.org>
-Reviewed-by: Greg Kurz <groug@kaod.org>
+The implementation looks like it only ever propagates the value
+(in longjmp) or sets it to 1 (in setjmp), and we only call longjmp
+with integer parameters.
+
+This allows removing -ffreestanding from the compilation flags.
+
+Fixes: c9029ef9c957 ("powerpc: Avoid clang warnings around setjmp and longjmp")
+Cc: stable@vger.kernel.org # v4.14+
+Signed-off-by: Clement Courbet <courbet@google.com>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Tested-by: Nathan Chancellor <natechancellor@gmail.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200306150143.5551-3-clg@kaod.org
+Link: https://lore.kernel.org/r/20200330080400.124803-1-courbet@google.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/sysdev/xive/common.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ arch/powerpc/include/asm/setjmp.h |    6 ++++--
+ arch/powerpc/kexec/Makefile       |    3 ---
+ arch/powerpc/xmon/Makefile        |    3 ---
+ 3 files changed, 4 insertions(+), 8 deletions(-)
 
---- a/arch/powerpc/sysdev/xive/common.c
-+++ b/arch/powerpc/sysdev/xive/common.c
-@@ -258,11 +258,15 @@ notrace void xmon_xive_do_dump(int cpu)
+--- a/arch/powerpc/include/asm/setjmp.h
++++ b/arch/powerpc/include/asm/setjmp.h
+@@ -7,7 +7,9 @@
  
- int xmon_xive_get_irq_config(u32 hw_irq, struct irq_data *d)
- {
-+	struct irq_chip *chip = irq_data_get_irq_chip(d);
- 	int rc;
- 	u32 target;
- 	u8 prio;
- 	u32 lirq;
+ #define JMP_BUF_LEN    23
  
-+	if (!is_xive_irq(chip))
-+		return -EINVAL;
+-extern long setjmp(long *) __attribute__((returns_twice));
+-extern void longjmp(long *, long) __attribute__((noreturn));
++typedef long jmp_buf[JMP_BUF_LEN];
 +
- 	rc = xive_ops->get_irq_config(hw_irq, &target, &prio, &lirq);
- 	if (rc) {
- 		xmon_printf("IRQ 0x%08x : no config rc=%d\n", hw_irq, rc);
++extern int setjmp(jmp_buf env) __attribute__((returns_twice));
++extern void longjmp(jmp_buf env, int val) __attribute__((noreturn));
+ 
+ #endif /* _ASM_POWERPC_SETJMP_H */
+--- a/arch/powerpc/kexec/Makefile
++++ b/arch/powerpc/kexec/Makefile
+@@ -3,9 +3,6 @@
+ # Makefile for the linux kernel.
+ #
+ 
+-# Avoid clang warnings around longjmp/setjmp declarations
+-CFLAGS_crash.o += -ffreestanding
+-
+ obj-y				+= core.o crash.o core_$(BITS).o
+ 
+ obj-$(CONFIG_PPC32)		+= relocate_32.o
+--- a/arch/powerpc/xmon/Makefile
++++ b/arch/powerpc/xmon/Makefile
+@@ -1,9 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ # Makefile for xmon
+ 
+-# Avoid clang warnings around longjmp/setjmp declarations
+-subdir-ccflags-y := -ffreestanding
+-
+ GCOV_PROFILE := n
+ KCOV_INSTRUMENT := n
+ UBSAN_SANITIZE := n
 
 
