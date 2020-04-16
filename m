@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C151C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:32:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77755C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:32:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0377622275
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:32:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F74922276
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:32:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587043940;
-	bh=BamNKXhfNiFIPXsfMP57heTe3HPRT8zjnwY/cjSBLY8=;
+	s=default; t=1587043950;
+	bh=+1jJAipbKsBP4A6cGWqZanA8GOgZ3Am4/T7UsiGhELc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jO+3/yQSy6PW9kTnpvg2yxry459N4HqietG5yEhOCU6KMDKvQ8RUTCqwyHO1g2M3n
-	 Q6nljhHfhRDkhPMJD9FmBA9yQIggVN5AErA/FIpEYxhu5Dz/hy/N8TBAabCNif+WHB
-	 hFIopZVYLvPyU/+LtxfrSdk4ZCqo93PE3fpAINpM=
+	b=jBkRW5hwRxRkbeD05sputY5Z9Kx03T/AofFidlXOuMcn6wvbMh0iOCkugmkFSqoAf
+	 ZM8eSpMslvHaznMiNW7Ivq2ubCcTnAMbOQi4hxegwDcJhACvPys3IAI0wdDH7WCQi8
+	 2X5I46yXPOszFKwnUMQHJHT6Qx+VsUhzTMxYwjZo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895875AbgDPNcS (ORCPT
+        id S2896518AbgDPNc2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:32:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37652 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:32:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2895787AbgDPN2g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:28:36 -0400
+        id S2895781AbgDPN2e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:28:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B638E21BE5;
-        Thu, 16 Apr 2020 13:28:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D8F6217D8;
+        Thu, 16 Apr 2020 13:28:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043715;
-        bh=BamNKXhfNiFIPXsfMP57heTe3HPRT8zjnwY/cjSBLY8=;
+        s=default; t=1587043712;
+        bh=+1jJAipbKsBP4A6cGWqZanA8GOgZ3Am4/T7UsiGhELc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WetpIXFKwaiSu7+XE0mjzYC4cSsw1Q3ixukp6vPaP0am5ekr2bRSS+UXHUsThhEOc
-         AiUCRqeh3CFwRl6LGuXaQ4HNGNVDK6z1Y4/yUu+/l9FCTzDg9n4ctFexQLYDyIN4aV
-         l+NVzwjTg/xgL9f5VY95Ma+toF4Oppwbvf2JuvuA=
+        b=QTIzuM8JSwMbAPQjtlNFowWvB7ENUgK+O1VV8gvPB1JNw+OzyZcBHAmYAtgsucriV
+         cqnB7LdlBsaKeboQPBqRQZqmeyNLtu97mN5MJiLe8kM6gSPOLxjXD63FXknR8IwdMC
+         2tDW+uiwINOdsC58JO+eyKHtXM0e5TGqo9OXHNKU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        stable@vger.kernel.org,
+        Matthew Garrett <matthewgarrett@google.com>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
         Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH 4.19 069/146] tpm: tpm1_bios_measurements_next should increase position index
-Date:   Thu, 16 Apr 2020 15:23:30 +0200
-Message-Id: <20200416131252.401580845@linuxfoundation.org>
+Subject: [PATCH 4.19 068/146] tpm: Dont make log failures fatal
+Date:   Thu, 16 Apr 2020 15:23:29 +0200
+Message-Id: <20200416131252.245390317@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
 References: <20200416131242.353444678@linuxfoundation.org>
@@ -59,49 +61,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Matthew Garrett <matthewgarrett@google.com>
 
-commit d7a47b96ed1102551eb7325f97937e276fb91045 upstream.
+commit 805fa88e0780b7ce1cc9b649dd91a0a7164c6eb4 upstream.
 
-If .next function does not change position index,
-following .show function will repeat output related
-to current position index.
+If a TPM is in disabled state, it's reasonable for it to have an empty
+log. Bailing out of probe in this case means that the PPI interface
+isn't available, so there's no way to then enable the TPM from the OS.
+In general it seems reasonable to ignore log errors - they shouldn't
+interfere with any other TPM functionality.
 
-In case of /sys/kernel/security/tpm0/ascii_bios_measurements
-and binary_bios_measurements:
-1) read after lseek beyound end of file generates whole last line.
-2) read after lseek to middle of last line generates
-expected end of last line and unexpected whole last line once again.
-
+Signed-off-by: Matthew Garrett <matthewgarrett@google.com>
 Cc: stable@vger.kernel.org # 4.19.x
-Fixes: 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code ...")
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206283
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
 Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/char/tpm/eventlog/tpm1.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/char/tpm/eventlog/common.c |   12 ++++--------
+ drivers/char/tpm/tpm-chip.c        |    4 +---
+ drivers/char/tpm/tpm.h             |    2 +-
+ 3 files changed, 6 insertions(+), 12 deletions(-)
 
---- a/drivers/char/tpm/eventlog/tpm1.c
-+++ b/drivers/char/tpm/eventlog/tpm1.c
-@@ -129,6 +129,7 @@ static void *tpm1_bios_measurements_next
- 	u32 converted_event_size;
- 	u32 converted_event_type;
+--- a/drivers/char/tpm/eventlog/common.c
++++ b/drivers/char/tpm/eventlog/common.c
+@@ -104,11 +104,8 @@ static int tpm_read_log(struct tpm_chip
+  *
+  * If an event log is found then the securityfs files are setup to
+  * export it to userspace, otherwise nothing is done.
+- *
+- * Returns -ENODEV if the firmware has no event log or securityfs is not
+- * supported.
+  */
+-int tpm_bios_log_setup(struct tpm_chip *chip)
++void tpm_bios_log_setup(struct tpm_chip *chip)
+ {
+ 	const char *name = dev_name(&chip->dev);
+ 	unsigned int cnt;
+@@ -117,7 +114,7 @@ int tpm_bios_log_setup(struct tpm_chip *
  
-+	(*pos)++;
- 	converted_event_size = do_endian_conversion(event->event_size);
+ 	rc = tpm_read_log(chip);
+ 	if (rc < 0)
+-		return rc;
++		return;
+ 	log_version = rc;
  
- 	v += sizeof(struct tcpa_event) + converted_event_size;
-@@ -146,7 +147,6 @@ static void *tpm1_bios_measurements_next
- 	    ((v + sizeof(struct tcpa_event) + converted_event_size) >= limit))
- 		return NULL;
+ 	cnt = 0;
+@@ -163,13 +160,12 @@ int tpm_bios_log_setup(struct tpm_chip *
+ 		cnt++;
+ 	}
  
--	(*pos)++;
- 	return v;
+-	return 0;
++	return;
+ 
+ err:
+-	rc = PTR_ERR(chip->bios_dir[cnt]);
+ 	chip->bios_dir[cnt] = NULL;
+ 	tpm_bios_log_teardown(chip);
+-	return rc;
++	return;
  }
  
+ void tpm_bios_log_teardown(struct tpm_chip *chip)
+--- a/drivers/char/tpm/tpm-chip.c
++++ b/drivers/char/tpm/tpm-chip.c
+@@ -463,9 +463,7 @@ int tpm_chip_register(struct tpm_chip *c
+ 
+ 	tpm_sysfs_add_device(chip);
+ 
+-	rc = tpm_bios_log_setup(chip);
+-	if (rc != 0 && rc != -ENODEV)
+-		return rc;
++	tpm_bios_log_setup(chip);
+ 
+ 	tpm_add_ppi(chip);
+ 
+--- a/drivers/char/tpm/tpm.h
++++ b/drivers/char/tpm/tpm.h
+@@ -602,6 +602,6 @@ int tpm2_prepare_space(struct tpm_chip *
+ int tpm2_commit_space(struct tpm_chip *chip, struct tpm_space *space,
+ 		      u32 cc, u8 *buf, size_t *bufsiz);
+ 
+-int tpm_bios_log_setup(struct tpm_chip *chip);
++void tpm_bios_log_setup(struct tpm_chip *chip);
+ void tpm_bios_log_teardown(struct tpm_chip *chip);
+ #endif
 
 
