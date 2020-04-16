@@ -7,113 +7,100 @@ X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6005C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:42:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7901EC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:42:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8617A221F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:42:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56083221F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:42:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587069741;
-	bh=ESlwOvz35Ein/xZEcTEu3CokgsYuWQqOyfvZUaVNrYU=;
+	s=default; t=1587069766;
+	bh=88KREd6cXawqAocf04DzMDJBeAvDovpHH9MbEKvpAQ8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZwMbufgu3Ns10lpcuaye7mYbESEzF59yB1rQVU0FyEgmipD5PPb0KokulrU07tD7G
-	 50G54o8BidTdfg8kTXQZRZb6w4kV2G/QxexbKwJOubMt54WXM7QT1FdSWEjmPHfC0i
-	 2Do3AhxcVLnsi9l5EFe6A/hx2e3Mw8td6dWLXGYc=
+	b=STLk32msCUC/s/AUYC6G36M+YvlJJjAbug00vYEoMEmK7Y75538f1R86kuaL2tODp
+	 RYeyhSjlIJfSx+8jPn33GTT0Y2tQ5jvydON1tp0tn4vFEZvsl0qx2tlYK63trmYjIm
+	 aIjcFjGczsJnam0UYD8dgwGX8mDwfxd1HYhDpU3U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732694AbgDPUmV (ORCPT
+        id S1728956AbgDPUmp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 16:42:21 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:41470 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731844AbgDPUmB (ORCPT
+        Thu, 16 Apr 2020 16:42:45 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:41516 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727798AbgDPUmo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 16:42:01 -0400
-Received: by mail-ot1-f68.google.com with SMTP id c3so153569otp.8;
-        Thu, 16 Apr 2020 13:42:00 -0700 (PDT)
+        Thu, 16 Apr 2020 16:42:44 -0400
+Received: by mail-ot1-f65.google.com with SMTP id c3so155207otp.8;
+        Thu, 16 Apr 2020 13:42:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=anW0cTk2V2JJay0BG4lZbAZX39UmWgVy33oQofhYL+o=;
-        b=TrOIgi/Psi9lHEQb0p80KCPztg6udz4+rr0XyCa8Wkt57hera+PoysMJRclxDiM/7t
-         tCUFQiKwFGtZFk80IsqoxTrrcKd3YsUVaKvd0io//86RBx7n0MgbwjXTEc/HorcO3N+1
-         DsXgZjF2jNj7U0ZTHpTulxAHeKStOIRo4atSFMyMw7q8XarNxhspS4czCwzi9VgTL1UC
-         FaH4zzO2AbA3QrHhKiO2rDseQbzJ60KIHsWCC5ECKMtBKG2oqUBb+KpSWfFyvgZL2OC/
-         K9k/7P4X3YN8FJXAid1NOJn1DFJHpR4c3pJxYfuky4mWsPRn2ORllT7NvbWEqkcz9+EN
-         ODcQ==
-X-Gm-Message-State: AGi0PuZzUWvCP681alK6PrRPA81k8SRaaWAKc8BzuZhL+W1YFJIFBTK6
-        sk6bY7VySAvn4HXqL0KCDg==
-X-Google-Smtp-Source: APiQypLW3db/YOgTAVu/J1ZAay4EFYrxFtuax8O/ijjNSMUub8dIEYBEUvJBFYL72MQmqT4sac6WuA==
-X-Received: by 2002:a9d:6644:: with SMTP id q4mr39174otm.229.1587069719796;
-        Thu, 16 Apr 2020 13:41:59 -0700 (PDT)
+        bh=jZ0RlsGr2+5/XacCO4EL2cmFSLDykRvrVImbCZUcZLg=;
+        b=DvAOXBQonaCJPEGwmplK2XFnZME3s8BkyLLNEDBkWC1BZhAS7XFunAZxwBXS3hhPt/
+         OS+pMokkLMirRFe2ohlfmBnnlzPPHCyTK1BKXBWZSC6t+PFEsQGKeVNSOlGKoXMXcFyV
+         X4XFLPndA4s88qq7vPHxljsLi+eKlpvckfE7Yf1SNN8LyLlpTDf7AabClIDmIAfivqMv
+         URFEmY6O+zcygEO3frWCubRCJ8M6qIB5EahaX7FH/IASMvwi7g8lj57dINFVKsE6CVYC
+         loP/cl/k7fLGUxqcdPEWFMHpKQviANNTG+WpPJ3E+yl6rsT6Dtl7c/aKnzNSwpE/llBM
+         jRoA==
+X-Gm-Message-State: AGi0PuavByK+0JR1Z6cqxl0QoOz0QPGsr7CgIX4BVPuBsVBBiJxiC1I0
+        k8l5EPW2bU4T/n4OQqKz6A==
+X-Google-Smtp-Source: APiQypJo+wfUfZ+Jua5JzMhkPsJfsCwdLjpvmnCen6w86M/uhXfd6Uaka/f2N84W9kSeMbR05r4Myg==
+X-Received: by 2002:a05:6830:15a:: with SMTP id j26mr28677476otp.248.1587069762956;
+        Thu, 16 Apr 2020 13:42:42 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id s13sm8064384oov.28.2020.04.16.13.41.58
+        by smtp.gmail.com with ESMTPSA id s25sm2712659ooh.22.2020.04.16.13.42.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2020 13:41:59 -0700 (PDT)
-Received: (nullmailer pid 13530 invoked by uid 1000);
-        Thu, 16 Apr 2020 20:41:58 -0000
-Date:   Thu, 16 Apr 2020 15:41:58 -0500
+        Thu, 16 Apr 2020 13:42:42 -0700 (PDT)
+Received: (nullmailer pid 14696 invoked by uid 1000);
+        Thu, 16 Apr 2020 20:42:41 -0000
+Date:   Thu, 16 Apr 2020 15:42:41 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Philipp Rossak <embed3d@gmail.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org,
-        "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH v6 01/12] dt-bindings: add img,pvrsgx.yaml for
- Imagination GPUs
-Message-ID: <20200416204158.GA1006@bogus>
-References: <cover.1586939718.git.hns@goldelico.com>
- <06fb6569259bb9183d0a0d0fe70ec4f3033b8aab.1586939718.git.hns@goldelico.com>
+To:     Jishnu Prakash <jprakash@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mka@chromium.org, linus.walleij@linaro.org,
+        Jonathan.Cameron@huawei.com, smohanad@codeaurora.org,
+        kgunda@codeaurora.org, aghayal@codeaurora.org,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jishnu Prakash <jprakash@codeaurora.org>,
+        linux-iio@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH V2 1/3] iio: adc: Convert the QCOM SPMI ADC bindings to
+ .yaml format
+Message-ID: <20200416204241.GA14143@bogus>
+References: <1586942266-21480-1-git-send-email-jprakash@codeaurora.org>
+ <1586942266-21480-2-git-send-email-jprakash@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <06fb6569259bb9183d0a0d0fe70ec4f3033b8aab.1586939718.git.hns@goldelico.com>
+In-Reply-To: <1586942266-21480-2-git-send-email-jprakash@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Apr 2020 10:35:08 +0200, "H. Nikolaus Schaller" wrote:
-> The Imagination PVR/SGX GPU is part of several SoC from
-> multiple vendors, e.g. TI OMAP, Ingenic JZ4780, Intel Poulsbo,
-> Allwinner A83 and others.
+On Wed, 15 Apr 2020 14:47:44 +0530, Jishnu Prakash wrote:
+> Convert the adc bindings from .txt to .yaml format.
 > 
-> With this binding, we describe how the SGX processor is
-> interfaced to the SoC (registers, interrupt etc.).
-> 
-> In most cases, Clock, Reset and power management is handled
-> by a parent node or elsewhere (e.g. code in the driver).
-> 
-> Tested by make dt_binding_check dtbs_check
-> 
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> Signed-off-by: Jishnu Prakash <jprakash@codeaurora.org>
 > ---
->  .../devicetree/bindings/gpu/img,pvrsgx.yaml   | 122 ++++++++++++++++++
->  1 file changed, 122 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
+>  .../devicetree/bindings/iio/adc/qcom,spmi-vadc.txt | 173 -------------
+>  .../bindings/iio/adc/qcom,spmi-vadc.yaml           | 288 +++++++++++++++++++++
+>  2 files changed, 288 insertions(+), 173 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.yaml
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml:  while parsing a block mapping
-  in "<unicode string>", line 74, column 13
-did not find expected key
-  in "<unicode string>", line 117, column 21
-Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/gpu/img,pvrsgx.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/gpu/img,pvrsgx.example.dts] Error 1
-make[1]: *** Waiting for unfinished jobs....
-Makefile:1264: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.example.dt.yaml: adc@3100: 'adc-chan@0x39', 'adc-chan@0x9', 'adc-chan@0xa', 'adc-chan@0xe', 'adc-chan@0xf' do not match any of the regexes: '.*-names$', '.*-supply$', '^#.*-cells$', '^#[a-zA-Z0-9,+\\-._]{0,63}$', '^[a-zA-Z][a-zA-Z0-9,+\\-._]{0,63}$', '^[a-zA-Z][a-zA-Z0-9,+\\-._]{0,63}@[0-9a-fA-F]+(,[0-9a-fA-F]+)*$', '^__.*__$', 'pinctrl-[0-9]+'
 
-See https://patchwork.ozlabs.org/patch/1270997
+See https://patchwork.ozlabs.org/patch/1271025
 
 If you already ran 'make dt_binding_check' and didn't see the above
 error(s), then make sure dt-schema is up to date:
