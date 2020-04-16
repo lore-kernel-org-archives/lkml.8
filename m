@@ -2,245 +2,165 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60089C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:41:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1055EC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:41:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3394C21D92
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:41:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="i9oZ+y2G"
+	by mail.kernel.org (Postfix) with ESMTP id E535421D92
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:41:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505525AbgDPKlB (ORCPT
+        id S2505611AbgDPKlZ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 06:41:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57476 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2505042AbgDPKik (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 06:38:40 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A030C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 03:38:37 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id d27so4275393wra.1
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 03:38:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=pSjSCo+R3nw6Mi3WgTdlVGEQK1cZ5sHURhNm1msjdTw=;
-        b=i9oZ+y2GOFfxTK1a5ceBZ6AFtsRyWZturgwWSIzu0ubbthr/zDvbQIlhqpL9KQ+Akf
-         iRHamma5/OBwrFLC7wFH2TGQpQI8Uqr/mK2ZlnGswi7y4iSeL3PAbHFVttOAeb2yJMg6
-         wbjEn2oAT+H4FpDaBQYfOSlS3HVjxO0y4fG8sFsSMFyrDBdlJZklr/Uv8NL7uZ6ZVrGB
-         QcBEqdQMhigJmJRKosP/nueTsLOcT0Lp9ckPDHZip8stn+yTKyQKeINIQjPOcLac54ES
-         ewZXUEaNNSEHp4rS5VebyWCJRGnhEerGVxVMh0oKL2fmEAwsEkSpD3nethOrJj97Gbd4
-         dqAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=pSjSCo+R3nw6Mi3WgTdlVGEQK1cZ5sHURhNm1msjdTw=;
-        b=i78qk7IjmUM6WtVSbH2ld3aW/GSS6+TtS8TZFDFAGGy9axaXyBs6FbvqBfkOl44PJa
-         HQ3BfdWuLX2tCjA+FbBf5x8JQ8MJypxBwKdBQv0+01qN65hcpvVmJ81Qp3NNpM/rF1/W
-         VYHXWMkZgXs+7GqF1eM1bSkF32DkpKl8IP0Elmaa7IAJJQMtTdZHIyXVeOSGWYp+o1f0
-         3zvaPGaOVNw6WLspuq/NXT/FKs6Pb8J+VjabSMFTKhI5x623hi4rso+eEO/ZrAmh/cDL
-         W0T6x1lB/bAivnFloSRGw6Hbwxbet93H8byU0lkibkQqnMRKS21Z539pqTzFnFP9pR/W
-         BqNg==
-X-Gm-Message-State: AGi0Pub2y2ln1ASoGTgjlBz1PcxRR6B+deEejsQEBOVQSo5mwCsd7N3P
-        PSm8rj88/wIPgHyusQhpXchSgw==
-X-Google-Smtp-Source: APiQypJRkCtqhGOi3dzTBuCbBVYy1aeVZ14BVM0pG6hWY3E79FseizYNTA5LM6TJWETKq3a/bTDp4A==
-X-Received: by 2002:adf:e591:: with SMTP id l17mr5282824wrm.268.1587033516109;
-        Thu, 16 Apr 2020 03:38:36 -0700 (PDT)
-Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
-        by smtp.gmail.com with ESMTPSA id y16sm26567044wrp.78.2020.04.16.03.38.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2020 03:38:35 -0700 (PDT)
-References: <20200414200017.226136-1-martin.blumenstingl@googlemail.com> <20200414200017.226136-3-martin.blumenstingl@googlemail.com>
-User-agent: mu4e 1.3.3; emacs 26.3
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org
-Cc:     narmstrong@baylibre.com, mturquette@baylibre.com, sboyd@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] clk: meson: meson8b: Fix the polarity of the RESET_N lines
-In-reply-to: <20200414200017.226136-3-martin.blumenstingl@googlemail.com>
-Date:   Thu, 16 Apr 2020 12:38:34 +0200
-Message-ID: <1ja73bbtqt.fsf@starbuckisacylon.baylibre.com>
+        Thu, 16 Apr 2020 06:41:25 -0400
+Received: from mga03.intel.com ([134.134.136.65]:38453 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2505368AbgDPKkM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 06:40:12 -0400
+IronPort-SDR: g2C2npSqDr9IzYjcOYzQDEV7QOdelRhOCPpKHYB/Xm4B8w2IG6yoiChLqnZ3GNjvMmrYPuMKXj
+ 3vWbxg/myazw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 03:40:08 -0700
+IronPort-SDR: xNHXCsemG8ocpE+IioNARwcyCC2nV/4MzsdvoKLGtCR7+CYIAKlmQEHwym/WVaKMczxdRNkkGx
+ LTzmLvUYZQng==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,390,1580803200"; 
+   d="scan'208";a="332798286"
+Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
+  by orsmga001.jf.intel.com with ESMTP; 16 Apr 2020 03:40:08 -0700
+Received: from fmsmsx154.amr.corp.intel.com (10.18.116.70) by
+ FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 16 Apr 2020 03:40:07 -0700
+Received: from shsmsx153.ccr.corp.intel.com (10.239.6.53) by
+ FMSMSX154.amr.corp.intel.com (10.18.116.70) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 16 Apr 2020 03:40:06 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
+ SHSMSX153.ccr.corp.intel.com ([169.254.12.89]) with mapi id 14.03.0439.000;
+ Thu, 16 Apr 2020 18:40:04 +0800
+From:   "Liu, Yi L" <yi.l.liu@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>
+CC:     "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wu, Hao" <hao.wu@intel.com>
+Subject: RE: [PATCH v1 7/8] vfio/type1: Add VFIO_IOMMU_CACHE_INVALIDATE
+Thread-Topic: [PATCH v1 7/8] vfio/type1: Add VFIO_IOMMU_CACHE_INVALIDATE
+Thread-Index: AQHWAEUdcc1u01skwUmp6uBHREsZ66hl0sQAgACrzQCAAJWLAIAUkGLA
+Date:   Thu, 16 Apr 2020 10:40:03 +0000
+Message-ID: <A2975661238FB949B60364EF0F2C25743A231BAA@SHSMSX104.ccr.corp.intel.com>
+References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
+        <1584880325-10561-8-git-send-email-yi.l.liu@intel.com>
+        <20200402142428.2901432e@w520.home>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D807C4A@SHSMSX104.ccr.corp.intel.com>
+ <20200403093436.094b1928@w520.home>
+In-Reply-To: <20200403093436.094b1928@w520.home>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Alex,
+Still have a direction question with you. Better get agreement with you
+before heading forward.
 
-On Tue 14 Apr 2020 at 22:00, Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
+> From: Alex Williamson <alex.williamson@redhat.com>
+> Sent: Friday, April 3, 2020 11:35 PM
+[...]
+> > > > + *
+> > > > + * returns: 0 on success, -errno on failure.
+> > > > + */
+> > > > +struct vfio_iommu_type1_cache_invalidate {
+> > > > +	__u32   argsz;
+> > > > +	__u32   flags;
+> > > > +	struct	iommu_cache_invalidate_info cache_info;
+> > > > +};
+> > > > +#define VFIO_IOMMU_CACHE_INVALIDATE      _IO(VFIO_TYPE,
+> VFIO_BASE
+> > > + 24)
+> > >
+> > > The future extension capabilities of this ioctl worry me, I wonder if
+> > > we should do another data[] with flag defining that data as CACHE_INFO.
+> >
+> > Can you elaborate? Does it mean with this way we don't rely on iommu
+> > driver to provide version_to_size conversion and instead we just pass
+> > data[] to iommu driver for further audit?
+> 
+> No, my concern is that this ioctl has a single function, strictly tied
+> to the iommu uapi.  If we replace cache_info with data[] then we can
+> define a flag to specify that data[] is struct
+> iommu_cache_invalidate_info, and if we need to, a different flag to
+> identify data[] as something else.  For example if we get stuck
+> expanding cache_info to meet new demands and develop a new uapi to
+> solve that, how would we expand this ioctl to support it rather than
+> also create a new ioctl?  There's also a trade-off in making the ioctl
+> usage more difficult for the user.  I'd still expect the vfio layer to
+> check the flag and interpret data[] as indicated by the flag rather
+> than just passing a blob of opaque data to the iommu layer though.
+> Thanks,
 
-> CLKC_RESET_VID_DIVIDER_CNTL_RESET_N_POST and
-> CLKC_RESET_VID_DIVIDER_CNTL_RESET_N_PRE are active low. This means:
-> - asserting them requires setting the register value to 0
-> - de-asserting them requires setting the register value to 1
->
-> Set the register value accordingly for these two reset lines by setting
-> the inverted the register value compared to all other reset lines.
->
-> Fixes: 189621726bc2f6 ("clk: meson: meson8b: register the built-in reset controller")
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> ---
->  drivers/clk/meson/meson8b.c | 81 ++++++++++++++++++++++++++-----------
->  1 file changed, 58 insertions(+), 23 deletions(-)
->
-> diff --git a/drivers/clk/meson/meson8b.c b/drivers/clk/meson/meson8b.c
-> index 90d284ffc780..fa251e45e208 100644
-> --- a/drivers/clk/meson/meson8b.c
-> +++ b/drivers/clk/meson/meson8b.c
-> @@ -3506,54 +3506,87 @@ static struct clk_regmap *const meson8b_clk_regmaps[] = {
->  static const struct meson8b_clk_reset_line {
->  	u32 reg;
->  	u8 bit_idx;
-> +	bool active_low;
->  } meson8b_clk_reset_bits[] = {
->  	[CLKC_RESET_L2_CACHE_SOFT_RESET] = {
-> -		.reg = HHI_SYS_CPU_CLK_CNTL0, .bit_idx = 30
-> +		.reg = HHI_SYS_CPU_CLK_CNTL0,
-> +		.bit_idx = 30,
-> +		.active_low = false,
->  	},
->  	[CLKC_RESET_AXI_64_TO_128_BRIDGE_A5_SOFT_RESET] = {
-> -		.reg = HHI_SYS_CPU_CLK_CNTL0, .bit_idx = 29
-> +		.reg = HHI_SYS_CPU_CLK_CNTL0,
-> +		.bit_idx = 29,
-> +		.active_low = false,
->  	},
->  	[CLKC_RESET_SCU_SOFT_RESET] = {
-> -		.reg = HHI_SYS_CPU_CLK_CNTL0, .bit_idx = 28
-> +		.reg = HHI_SYS_CPU_CLK_CNTL0,
-> +		.bit_idx = 28,
-> +		.active_low = false,
->  	},
->  	[CLKC_RESET_CPU3_SOFT_RESET] = {
-> -		.reg = HHI_SYS_CPU_CLK_CNTL0, .bit_idx = 27
-> +		.reg = HHI_SYS_CPU_CLK_CNTL0,
-> +		.bit_idx = 27,
-> +		.active_low = false,
->  	},
->  	[CLKC_RESET_CPU2_SOFT_RESET] = {
-> -		.reg = HHI_SYS_CPU_CLK_CNTL0, .bit_idx = 26
-> +		.reg = HHI_SYS_CPU_CLK_CNTL0,
-> +		.bit_idx = 26,
-> +		.active_low = false,
->  	},
->  	[CLKC_RESET_CPU1_SOFT_RESET] = {
-> -		.reg = HHI_SYS_CPU_CLK_CNTL0, .bit_idx = 25
-> +		.reg = HHI_SYS_CPU_CLK_CNTL0,
-> +		.bit_idx = 25,
-> +		.active_low = false,
->  	},
->  	[CLKC_RESET_CPU0_SOFT_RESET] = {
-> -		.reg = HHI_SYS_CPU_CLK_CNTL0, .bit_idx = 24
-> +		.reg = HHI_SYS_CPU_CLK_CNTL0,
-> +		.bit_idx = 24,
-> +		.active_low = false,
->  	},
->  	[CLKC_RESET_A5_GLOBAL_RESET] = {
-> -		.reg = HHI_SYS_CPU_CLK_CNTL0, .bit_idx = 18
-> +		.reg = HHI_SYS_CPU_CLK_CNTL0,
-> +		.bit_idx = 18,
-> +		.active_low = false,
->  	},
->  	[CLKC_RESET_A5_AXI_SOFT_RESET] = {
-> -		.reg = HHI_SYS_CPU_CLK_CNTL0, .bit_idx = 17
-> +		.reg = HHI_SYS_CPU_CLK_CNTL0,
-> +		.bit_idx = 17,
-> +		.active_low = false,
->  	},
->  	[CLKC_RESET_A5_ABP_SOFT_RESET] = {
-> -		.reg = HHI_SYS_CPU_CLK_CNTL0, .bit_idx = 16
-> +		.reg = HHI_SYS_CPU_CLK_CNTL0,
-> +		.bit_idx = 16,
-> +		.active_low = false,
->  	},
->  	[CLKC_RESET_AXI_64_TO_128_BRIDGE_MMC_SOFT_RESET] = {
-> -		.reg = HHI_SYS_CPU_CLK_CNTL1, .bit_idx = 30
-> +		.reg = HHI_SYS_CPU_CLK_CNTL1,
-> +		.bit_idx = 30,
-> +		.active_low = false,
->  	},
->  	[CLKC_RESET_VID_CLK_CNTL_SOFT_RESET] = {
-> -		.reg = HHI_VID_CLK_CNTL, .bit_idx = 15
-> +		.reg = HHI_VID_CLK_CNTL,
-> +		.bit_idx = 15,
-> +		.active_low = false,
->  	},
->  	[CLKC_RESET_VID_DIVIDER_CNTL_SOFT_RESET_POST] = {
-> -		.reg = HHI_VID_DIVIDER_CNTL, .bit_idx = 7
-> +		.reg = HHI_VID_DIVIDER_CNTL,
-> +		.bit_idx = 7,
-> +		.active_low = false,
->  	},
->  	[CLKC_RESET_VID_DIVIDER_CNTL_SOFT_RESET_PRE] = {
-> -		.reg = HHI_VID_DIVIDER_CNTL, .bit_idx = 3
-> +		.reg = HHI_VID_DIVIDER_CNTL,
-> +		.bit_idx = 3,
-> +		.active_low = false,
->  	},
->  	[CLKC_RESET_VID_DIVIDER_CNTL_RESET_N_POST] = {
-> -		.reg = HHI_VID_DIVIDER_CNTL, .bit_idx = 1
-> +		.reg = HHI_VID_DIVIDER_CNTL,
-> +		.bit_idx = 1,
-> +		.active_low = true,
->  	},
->  	[CLKC_RESET_VID_DIVIDER_CNTL_RESET_N_PRE] = {
-> -		.reg = HHI_VID_DIVIDER_CNTL, .bit_idx = 0
-> +		.reg = HHI_VID_DIVIDER_CNTL,
-> +		.bit_idx = 0,
-> +		.active_low = true,
->  	},
->  };
->  
-> @@ -3562,22 +3595,24 @@ static int meson8b_clk_reset_update(struct reset_controller_dev *rcdev,
->  {
->  	struct meson8b_clk_reset *meson8b_clk_reset =
->  		container_of(rcdev, struct meson8b_clk_reset, reset);
-> -	unsigned long flags;
->  	const struct meson8b_clk_reset_line *reset;
-> +	unsigned long flags;
-> +	unsigned int value;
+Based on your comments about defining a single ioctl and a unified
+vfio structure (with a @data[] field) for pasid_alloc/free, bind/
+unbind_gpasid, cache_inv. After some offline trying, I think it would
+be good for bind/unbind_gpasid and cache_inv as both of them use the
+iommu uapi definition. While the pasid alloc/free operation doesn't.
+It would be weird to put all of them together. So pasid alloc/free
+may have a separate ioctl. It would look as below. Does this direction
+look good per your opinion?
 
-suggestion:
+ioctl #22: VFIO_IOMMU_PASID_REQUEST
+/**
+  * @pasid: used to return the pasid alloc result when flags == ALLOC_PASID
+  *         specify a pasid to be freed when flags == FREE_PASID
+  * @range: specify the allocation range when flags == ALLOC_PASID
+  */
+struct vfio_iommu_pasid_request {
+	__u32	argsz;
+#define VFIO_IOMMU_ALLOC_PASID	(1 << 0)
+#define VFIO_IOMMU_FREE_PASID	(1 << 1)
+	__u32	flags;
+	__u32	pasid;
+	struct {
+		__u32	min;
+		__u32	max;
+	} range;
+};
 
-unsigned int value = 0;
+ioctl #23: VFIO_IOMMU_NESTING_OP
+struct vfio_iommu_type1_nesting_op {
+	__u32	argsz;
+	__u32	flags;
+	__u32	op;
+	__u8	data[];
+};
 
->  
->  	if (id >= ARRAY_SIZE(meson8b_clk_reset_bits))
->  		return -EINVAL;
->  
->  	reset = &meson8b_clk_reset_bits[id];
->  
-> +	if (assert == reset->active_low)
-> +		value = 0;
-> +	else
-> +		value = BIT(reset->bit_idx);
-
-if (assert ^ reset->active_low)
-	value = BIT(reset->bit_idx);
-
-?
-
-> +
->  	spin_lock_irqsave(&meson_clk_lock, flags);
->  
-> -	if (assert)
-> -		regmap_update_bits(meson8b_clk_reset->regmap, reset->reg,
-> -				   BIT(reset->bit_idx), BIT(reset->bit_idx));
-> -	else
-> -		regmap_update_bits(meson8b_clk_reset->regmap, reset->reg,
-> -				   BIT(reset->bit_idx), 0);
-> +	regmap_update_bits(meson8b_clk_reset->regmap, reset->reg,
-> +			   BIT(reset->bit_idx), value);
->  
->  	spin_unlock_irqrestore(&meson_clk_lock, flags);
-
+/* Nesting Ops */
+#define VFIO_IOMMU_NESTING_OP_BIND_PGTBL        0
+#define VFIO_IOMMU_NESTING_OP_UNBIND_PGTBL      1
+#define VFIO_IOMMU_NESTING_OP_CACHE_INVLD       2
+ 
+Thanks,
+Yi Liu
