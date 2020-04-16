@@ -2,105 +2,73 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81FFBC352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:18:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A7D2C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:20:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6938420771
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:18:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0457B20771
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:20:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TzxCiZg+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410792AbgDPQS4 (ORCPT
+        id S1731335AbgDPQUh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 12:18:56 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:39046 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729188AbgDPQSz (ORCPT
+        Thu, 16 Apr 2020 12:20:37 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:55927 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726362AbgDPQUd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 12:18:55 -0400
-Received: by mail-oi1-f195.google.com with SMTP id 8so6798586oiy.6;
-        Thu, 16 Apr 2020 09:18:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Y4HfSPhfYRgg7hXjXhAC7Y1EeYCA1tKGpq/7RYwzqLQ=;
-        b=XptBWNaXGtr2lf4zmDuotfET//WHlNnI9aEfVp8OZ+3Wjg/9rtR8Fim+MQV0gGhnoe
-         EqW6pfsUzNMFQgBC5wPSnOrfdacyEeoPOT1JbZX1QKxhxHZFQLeGTaFY2+Rgfy+1GF84
-         N9SyiGaZILPvjyDjIMErGMlJi7HkPUztjFBFsdZ3fNISs6Qh4p9g46f50PkzbzgVpDto
-         ag6wynhM5DMFzuC5sGqdRCcLaNbzoYmNmVddYIhKLk/3h4+pw0SOkXFjRQZShnEvsYO8
-         RmOfKSmGncNie/Gw1tfE3ICa3NExeDX6FjxyuvWvzhDMkpyAGfDxET1qKTxCLl/1UoU0
-         mStA==
-X-Gm-Message-State: AGi0PubCTHvujUBVZtpBxulfeXcV82BBNA2BkzAV0GLiL/AcLvp7oyUi
-        aLqVgyxRJoluOwW7ZZWko4cjul/0js3kRKDI148=
-X-Google-Smtp-Source: APiQypJ9S7cnz9hITqdHHVyamXCWYRrJVGPFnD+VZ/1EEx7X1+UtJPbyFBYx3JtLlZlLYcDWxZ5vL+tvZA1NAMOzy+c=
-X-Received: by 2002:aca:f541:: with SMTP id t62mr3288764oih.148.1587053934205;
- Thu, 16 Apr 2020 09:18:54 -0700 (PDT)
+        Thu, 16 Apr 2020 12:20:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587054033;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=s4rkdFZCt+CYPzp3/Qg70/GCXwWzZ5opTjJmcpHVXJY=;
+        b=TzxCiZg++1RNG9Kzqtv7aijYb8fto828VpPdoA09O7Ya8jOCL1KfhfoyCop+gh54HGDbwz
+        j1KREuJLS1lDZc5o9Eo3t4s/Q31yFD+u1+QFkXwQDXis5uWPX/DWlOym7fR17nFNHQe6jJ
+        TRtuVM6hhp62ns4cwJtjQCT31DVzZOY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-175-ahS35uOiO1aiRJMy7kongw-1; Thu, 16 Apr 2020 12:20:29 -0400
+X-MC-Unique: ahS35uOiO1aiRJMy7kongw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 181ED8F297B;
+        Thu, 16 Apr 2020 16:20:17 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-117-72.rdu2.redhat.com [10.10.117.72])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D07AB6025E;
+        Thu, 16 Apr 2020 16:20:14 +0000 (UTC)
+Subject: Re: WARNING in kernfs_new_node
+To:     syzbot <syzbot+499aea72daa2cea73cb7@syzkaller.appspotmail.com>,
+        benh@kernel.crashing.org, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, mingo@kernel.org,
+        peterz@infradead.org, rafael@kernel.org,
+        syzkaller-bugs@googlegroups.com, tj@kernel.org,
+        torvalds@linux-foundation.org
+References: <00000000000066c5a605a366e88c@google.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <db670b70-8ed9-94d5-6492-622a8e0bf28b@redhat.com>
+Date:   Thu, 16 Apr 2020 12:20:14 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20200416115658.20406-1-geert+renesas@glider.be>
- <20200416115658.20406-3-geert+renesas@glider.be> <20200416125630.GF4987@lakrids.cambridge.arm.com>
- <CAMuHMdWRW4+YLR8fz0hUTAPupRkM4Y5c82XHuOWSvNYOh-BZ0A@mail.gmail.com> <20200416155655.GA7155@lakrids.cambridge.arm.com>
-In-Reply-To: <20200416155655.GA7155@lakrids.cambridge.arm.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 16 Apr 2020 18:18:42 +0200
-Message-ID: <CAMuHMdXO5Qv1XezGW+yELOaTkoFUA4B8SvBpBH=r4mLtbnkBhg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] [RFC] arm64: Add dependencies to vendor-specific errata
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>, Wei Xu <xuwei5@hisilicon.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Robert Richter <rrichter@marvell.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <00000000000066c5a605a366e88c@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
+#syz fix: locking/lockdep: Reuse freed chain_hlocks entries
 
-On Thu, Apr 16, 2020 at 5:57 PM Mark Rutland <mark.rutland@arm.com> wrote:
-> On Thu, Apr 16, 2020 at 05:38:07PM +0200, Geert Uytterhoeven wrote:
-> > And perhaps you do want to enable some platform-specific drivers for
-> > VFIO pass-through?  Hence having ARCH_* dependencies on those drivers
-> > means they cannot be enabled :-( Hmm...
->
-> IIRC platform device passthrough requires an corresponding VFIO platform
-> driver in the host to handle reset and so on, but it does seem a shame
-
-If your SoC has a reset controller, that problem has been solved in a generic
-way, cfr. "[PATCH v5] vfio: platform: Add generic reset controller support"
-(https://lore.kernel.org/lkml/20181113131508.18246-1-geert+renesas@glider.be/).
-Unfortunately not yet upstream.
-
-Combine with "hw/arm/sysbus-fdt: Add support for instantiating generic devices"
-(https://github.com/geertu/qemu/commit/180318003c08594e8e852b2285a98184f905bfa9)
-and you're set ;-)
-
-> to not allow the user to select a driver if they really want it.
-
-I forgot you can add "|| VIRTIO_MMIO" to the dependencies of drivers for
-devices that can be used with VFIO pass-through.
-
-> I guess there might be platform-specific PCIe drivers too, which might
-> work with VFIO regardless.
-
-Indeed. PCI is business as usual.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
