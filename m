@@ -7,49 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3E0FC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EADB9C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:13:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAE33206D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:13:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB6782076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:13:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587046399;
-	bh=aBs0U7UDsdXOR98ZbF/DFAx8LAlxF0lzVvph7LALPJo=;
+	s=default; t=1587046402;
+	bh=BTrJCJjuOs3aKRghzcA2v0wxKBlJaf92GOTS2GDdKQ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GZdHVgjh03bcwpk036zbuntGbXJd6Y5mQnhaX36ua99SroGBAMusGEpzBTTSJZbnD
-	 xrajjKa+bmMftCVnlZl36eZaZQjsCZd0UJZI0oaCIDyZYEYiN+INsPHD8rojHjDxqx
-	 C7WFzsqXEg9us7J0PBIlxepxEQM+hydmkvTllRjw=
+	b=sVT02pgvuOBv/lHh1eYxEppcbVMrQ1NBc9wal2/jMlV4b6uWE4vssEPV9iQD9+T5j
+	 2L2J/dad6IKFOoQVwfQ4P0b5PkMp2ek/b8+YrhirUdNczRQ4hGKYgkIQQxuwSoHlBU
+	 blpluAaNuFeZsNlfN/FdvRBbxn2EtfytvKXCA+18=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441927AbgDPONK (ORCPT
+        id S2441944AbgDPONS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:13:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34696 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:13:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2633435AbgDPNsn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:48:43 -0400
+        id S2898745AbgDPNsv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:48:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 016872222D;
-        Thu, 16 Apr 2020 13:48:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CAAD521974;
+        Thu, 16 Apr 2020 13:48:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044921;
-        bh=aBs0U7UDsdXOR98ZbF/DFAx8LAlxF0lzVvph7LALPJo=;
+        s=default; t=1587044931;
+        bh=BTrJCJjuOs3aKRghzcA2v0wxKBlJaf92GOTS2GDdKQ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=htVR+alqBX/oiDa51QHy2MGYgI6iSrvRYa0hcnfdnkae+Sdm8moHmHbZhak6aEALk
-         h7bcFZdU98bbCqERKxe1SNGXwskiSjQph2sAtBHmDurxuPGZo2UpqdGbrJfCro5b6F
-         Z7pS+AHjn7o1kFjCFcPHfCXAOYnmHgLJXR8XLicE=
+        b=H4WMX06wgbNAxxMzRD2IYpb5safNwhalFcDBsKonVrD9ElSDqsgixzBoWjQHtC5p7
+         SI1Dy4jHcVKT7E3ZDnuyYib+Ym/POE4Br2+KTPJmFNEBfupf84ROOwBUjIrFtAOHd/
+         swi7XSZj0ypUb5s3i1/94xOXNQYD5FWel6ywzpFE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sean Tranchetti <stranche@codeaurora.org>,
-        Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Alex Elder <elder@linaro.org>
-Subject: [PATCH 5.4 156/232] net: qualcomm: rmnet: Allow configuration updates to existing devices
-Date:   Thu, 16 Apr 2020 15:24:10 +0200
-Message-Id: <20200416131334.525581286@linuxfoundation.org>
+        stable@vger.kernel.org, Steve French <stfrench@microsoft.com>
+Subject: [PATCH 5.4 133/232] smb3: fix performance regression with setting mtime
+Date:   Thu, 16 Apr 2020 15:23:47 +0200
+Message-Id: <20200416131331.637991856@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -62,74 +58,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>
+From: Steve French <stfrench@microsoft.com>
 
-commit 2abb5792387eb188b12051337d5dcd2cba615cb0 upstream.
+commit cf5371ae460eb8e484e4884747af270c86c3c469 upstream.
 
-This allows the changelink operation to succeed if the mux_id was
-specified as an argument. Note that the mux_id must match the
-existing mux_id of the rmnet device or should be an unused mux_id.
+There are cases when we don't want to send the SMB2 flush operation
+(e.g. when user specifies mount parm "nostrictsync") and it can be
+a very expensive operation on the server.  In most cases in order
+to set mtime, we simply need to flush (write) the dirtry pages from
+the client and send the writes to the server not also send a flush
+protocol operation to the server.
 
-Fixes: 1dc49e9d164c ("net: rmnet: do not allow to change mux id if mux id is duplicated")
-Reported-and-tested-by: Alex Elder <elder@linaro.org>
-Signed-off-by: Sean Tranchetti <stranche@codeaurora.org>
-Signed-off-by: Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Cc: Guenter Roeck <linux@roeck-us.net>
+Fixes: aa081859b10c ("cifs: flush before set-info if we have writeable handles")
+CC: Stable <stable@vger.kernel.org>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c |   31 ++++++++++++---------
- 1 file changed, 19 insertions(+), 12 deletions(-)
+ fs/cifs/inode.c |   23 ++++++++++++-----------
+ 1 file changed, 12 insertions(+), 11 deletions(-)
 
---- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
-+++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
-@@ -279,7 +279,6 @@ static int rmnet_changelink(struct net_d
- {
- 	struct rmnet_priv *priv = netdev_priv(dev);
- 	struct net_device *real_dev;
--	struct rmnet_endpoint *ep;
- 	struct rmnet_port *port;
- 	u16 mux_id;
+--- a/fs/cifs/inode.c
++++ b/fs/cifs/inode.c
+@@ -2454,25 +2454,26 @@ cifs_setattr_nounix(struct dentry *diren
  
-@@ -294,19 +293,27 @@ static int rmnet_changelink(struct net_d
- 
- 	if (data[IFLA_RMNET_MUX_ID]) {
- 		mux_id = nla_get_u16(data[IFLA_RMNET_MUX_ID]);
--		if (rmnet_get_endpoint(port, mux_id)) {
--			NL_SET_ERR_MSG_MOD(extack, "MUX ID already exists");
--			return -EINVAL;
--		}
--		ep = rmnet_get_endpoint(port, priv->mux_id);
--		if (!ep)
--			return -ENODEV;
- 
--		hlist_del_init_rcu(&ep->hlnode);
--		hlist_add_head_rcu(&ep->hlnode, &port->muxed_ep[mux_id]);
-+		if (mux_id != priv->mux_id) {
-+			struct rmnet_endpoint *ep;
-+
-+			ep = rmnet_get_endpoint(port, priv->mux_id);
-+			if (!ep)
-+				return -ENODEV;
-+
-+			if (rmnet_get_endpoint(port, mux_id)) {
-+				NL_SET_ERR_MSG_MOD(extack,
-+						   "MUX ID already exists");
-+				return -EINVAL;
-+			}
-+
-+			hlist_del_init_rcu(&ep->hlnode);
-+			hlist_add_head_rcu(&ep->hlnode,
-+					   &port->muxed_ep[mux_id]);
- 
--		ep->mux_id = mux_id;
--		priv->mux_id = mux_id;
-+			ep->mux_id = mux_id;
-+			priv->mux_id = mux_id;
+ 	/*
+ 	 * Attempt to flush data before changing attributes. We need to do
+-	 * this for ATTR_SIZE and ATTR_MTIME for sure, and if we change the
+-	 * ownership or mode then we may also need to do this. Here, we take
+-	 * the safe way out and just do the flush on all setattr requests. If
+-	 * the flush returns error, store it to report later and continue.
++	 * this for ATTR_SIZE and ATTR_MTIME.  If the flush of the data
++	 * returns error, store it to report later and continue.
+ 	 *
+ 	 * BB: This should be smarter. Why bother flushing pages that
+ 	 * will be truncated anyway? Also, should we error out here if
+-	 * the flush returns error?
++	 * the flush returns error? Do we need to check for ATTR_MTIME_SET flag?
+ 	 */
+-	rc = filemap_write_and_wait(inode->i_mapping);
+-	if (is_interrupt_error(rc)) {
+-		rc = -ERESTARTSYS;
+-		goto cifs_setattr_exit;
++	if (attrs->ia_valid & (ATTR_MTIME | ATTR_SIZE | ATTR_CTIME)) {
++		rc = filemap_write_and_wait(inode->i_mapping);
++		if (is_interrupt_error(rc)) {
++			rc = -ERESTARTSYS;
++			goto cifs_setattr_exit;
 +		}
++		mapping_set_error(inode->i_mapping, rc);
  	}
  
- 	if (data[IFLA_RMNET_FLAGS]) {
+-	mapping_set_error(inode->i_mapping, rc);
+ 	rc = 0;
+ 
+-	if (attrs->ia_valid & ATTR_MTIME) {
++	if ((attrs->ia_valid & ATTR_MTIME) &&
++	    !(cifs_sb->mnt_cifs_flags & CIFS_MOUNT_NOSSYNC)) {
+ 		rc = cifs_get_writable_file(cifsInode, FIND_WR_ANY, &wfile);
+ 		if (!rc) {
+ 			tcon = tlink_tcon(wfile->tlink);
 
 
