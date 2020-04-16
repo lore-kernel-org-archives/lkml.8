@@ -2,93 +2,94 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A3AC352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:01:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0303CC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:02:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA01F206B9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:01:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFF2520784
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:02:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZB0SB3T3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503242AbgDPJBu (ORCPT
+        id S2503213AbgDPI7j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 05:01:50 -0400
-Received: from cmccmta3.chinamobile.com ([221.176.66.81]:2384 "EHLO
-        cmccmta3.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502998AbgDPI7N (ORCPT
+        Thu, 16 Apr 2020 04:59:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41482 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2503036AbgDPI4B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 04:59:13 -0400
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.19]) by rmmx-syy-dmz-app10-12010 (RichMail) with SMTP id 2eea5e981e32466-81700; Thu, 16 Apr 2020 16:58:26 +0800 (CST)
-X-RM-TRANSID: 2eea5e981e32466-81700
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from [172.20.145.111] (unknown[112.25.154.146])
-        by rmsmtp-syy-appsvr10-12010 (RichMail) with SMTP id 2eea5e981e31183-3c8ab;
-        Thu, 16 Apr 2020 16:58:26 +0800 (CST)
-X-RM-TRANSID: 2eea5e981e31183-3c8ab
-Subject: Re: [PATCH] i2c: drivers: Avoid unnecessary check inefm32_i2c_probe()
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     wsa@the-dreams.de, o.rempel@pengutronix.de, ardb@kernel.org,
-        linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20200415140640.19948-1-tangbin@cmss.chinamobile.com>
- <20200415143133.qwbes5whbqx5jf2j@pengutronix.de>
- <20cc01b8-2661-7b3e-3dbc-38f7e282679b@cmss.chinamobile.com>
- <20200416065014.7umocf2aohz6q2nn@pengutronix.de>
-From:   Tang Bin <tangbin@cmss.chinamobile.com>
-Message-ID: <145d0ba7-fca4-20f6-a6e2-6fc370bc9a57@cmss.chinamobile.com>
-Date:   Thu, 16 Apr 2020 17:00:21 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 16 Apr 2020 04:56:01 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE216C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 01:56:00 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id k21so2465842otl.5
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 01:56:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aCt/25bZqDvJVBbS2T/nSkaf4i35Ayu5fc8C9w+DSHs=;
+        b=ZB0SB3T3b/D2aou2Jlt1WAGRUEG6DPFL8ORrU5aJDGvS4RRldCBtGq2u7ipF43i5+e
+         m/n8V+goLmrO0pw+8cjm6JNzoJXnwPETMIFcZ+HOgQKONpKf2OP/Px6JmiJdtlW6Sikt
+         E3E3/GJMs9fYI7obYF+mrWBKiHyFnQ20T5a6caWaCncQ5gNuRPc+kBFKK/F10B5w47KA
+         XAe6XDI71mypF0rmtCrEAH5exDprf+LakqHYHxw/kMhdR3F1XHquGELfQY2VnTq3M5x/
+         f0+zXtyA5UD23Mhql3kdSSsqXZ4unrLQGx8xVdKvGxAjOycZ13qziMAOsaemXu4l2ASR
+         QbiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aCt/25bZqDvJVBbS2T/nSkaf4i35Ayu5fc8C9w+DSHs=;
+        b=F/LzjCRQUeKRob1oTxVw3fplOLqRCD8+2dO6D48wrc66BpokSQ4dDGJbYwrjpWcN9S
+         9qS5Ux1AasfpamQ47lW+siG3ibPeoEzPcmv/mYqxv3C0TPcSUnKBcGXAmf1CJA5+V7mm
+         hruFltiNHWNQvA0XDB2LjuElbW69T1hv3ENvi3i5JUXP4XxrcP3p/XFA/2BxBkUBn3/C
+         haGvCbKZgRPcsiHTy5J819wuiPXmbmDWCKabcJ9+AMasGfVtbrtwkrX93z47YkaLZCF6
+         Iaq91gMEAm3PDJkDSk0oF2B4GZq/vndLkHAOq8KHW4vGz4HvDxc149IRP71RfFCjJUJZ
+         e5Cw==
+X-Gm-Message-State: AGi0PuaU+GxaQ9vXOeZoNhGFcvDYcLgkwOgyolqUnl+MPF0n+XI/5Ae6
+        w4odyQLACE+WYBASeDa0cfDxJLAqpJgdOoTuKz5wTw==
+X-Google-Smtp-Source: APiQypL2lhwIWiAZBB0Q4t1XxMP5gwqrnEPMEO5qsx7kwPdeLMRsCyvcU6J1wF1QmqGUwY3+rdRxCitBqx9DG5FCrOM=
+X-Received: by 2002:a05:6830:1f39:: with SMTP id e25mr26276595oth.135.1587027360244;
+ Thu, 16 Apr 2020 01:56:00 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200416065014.7umocf2aohz6q2nn@pengutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20200414143743.32677-1-peter.maydell@linaro.org> <20200415151132.03cad507@lwn.net>
+In-Reply-To: <20200415151132.03cad507@lwn.net>
+From:   Peter Maydell <peter.maydell@linaro.org>
+Date:   Thu, 16 Apr 2020 09:55:49 +0100
+Message-ID: <CAFEAcA8igL7L8D16shd6KoVH8Yvu0SwyxcShKoGFgLmDhnSrNA@mail.gmail.com>
+Subject: Re: [PATCH] scripts/kernel-doc: Add missing close-paren in c:function directives
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        lkml - Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Uwe:
-
-On 2020/4/16 14:50, Uwe Kleine-König wrote:
->>>> diff --git a/drivers/i2c/busses/i2c-efm32.c b/drivers/i2c/busses/i2c-efm32.c
->>>> index 4de31fae7..4786ef6b2 100644
->>>> --- a/drivers/i2c/busses/i2c-efm32.c
->>>> +++ b/drivers/i2c/busses/i2c-efm32.c
->>>> @@ -312,9 +312,6 @@ static int efm32_i2c_probe(struct platform_device *pdev)
->>>>    	int ret;
->>>>    	u32 clkdiv;
->>>> -	if (!np)
->>>> -		return -EINVAL;
->>>> -
->>> I don't care much about this change. While the statement that this
->>> driver is only instantiated on dt platforms is probably right,
->>> explicitly checking for it might still prevent surprises later, serves
->>> as explicit statement for the driver reader that non-dt isn't supposed
->>> to work and given that the check is cheap I tend slightly to just keep
->>> it.
->>>
->> In this driver, the function efm32_i2c_probe() can be triggered only if the
->> platform_device and platform_driver matches,  and the matching condition is
->> DTS. It's my opinion.
-> I admit I didn't recheck, but I think the driver will also be matched on
-> non-dt platforms that provide an "efm32-i2c" device.
-
-Year, I agree with you, the driver should be matched on dt or non-dt 
-platforms. But for non-dt platforms, I think this driver may need minor 
-changes, after all, it is just suitable for the dt platforms right now. 
-That's my shallow opinions.
-
-Thanks for your patient guidance and reply, thank you. I think you are 
-also a good teacher, thanks.
-
-Tang Bin
-
+On Wed, 15 Apr 2020 at 22:11, Jonathan Corbet <corbet@lwn.net> wrote:
 >
+> On Tue, 14 Apr 2020 15:37:43 +0100
+> Peter Maydell <peter.maydell@linaro.org> wrote:
+> > When kernel-doc generates a 'c:function' directive for a function
+> > one of whose arguments is a function pointer, it fails to print
+> > the close-paren after the argument list of the function pointer
+> > argument. For instance:
+> >
+> >  long work_on_cpu(int cpu, long (*fn) (void *, void * arg)
 
+> Interesting.  This appears to have affected well over 100 function
+> definitions in the docs, and nobody ever noticed.  Good to know we're all
+> reading it closely :)
 
+Heh; I think my conclusion is "function signatures for APIs which
+don't provide and use a typedef for function-pointer-arguments are
+sufficiently hard to read that people don't notice simple errors
+in them", but then I prefer the with-typedef style to start with :-)
 
+thanks
+-- PMM
