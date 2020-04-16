@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31814C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:48:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C686BC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:48:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0941A214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:48:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93FBE2063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:48:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587052102;
-	bh=aj+C3qty4HdDe8GL8geUEloqbIzbEgqKD6KeLaYq//Q=;
+	s=default; t=1587052115;
+	bh=gWKi+M4ukqnEuUHDdXxPRoNAqrcK8KTNaaTDcH/tEEU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xWkUZlGnz8Ypz7VtFO+5OO7OAq/omAcqIJ+REJLajcRDpaCFibBSKxgNwiH1WrUm1
-	 stoqeQJXacw8YJfsUX7MBmQQN/FbPQB4PUu7oAf62qwutsO7SBkXgvdWBHQXbLtoFq
-	 qQg4AaVBqMk9X0oFKgRlo5aao+ROFhUAe/mSifyc=
+	b=aojq+WMjtpM03JHcAvssQl2BCnh77zX0bvlBfR57DPn0ujbRwx/guUvnQ8QjGOPNw
+	 ZGJXNhFgvr5IDPLXChGnLPDekAtlbddTA+E/ZywYgf+vcfFEsoUC4hGqyajAtYQtSh
+	 f31WGpZHKHBozjbSHkrVmxoLvARLzJw1M59A7FL8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442555AbgDPPsT (ORCPT
+        id S2442581AbgDPPsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:48:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44618 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:48:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896705AbgDPNdY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:33:24 -0400
+        id S2895523AbgDPNdU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:33:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB6B2221F4;
-        Thu, 16 Apr 2020 13:33:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D194221EB;
+        Thu, 16 Apr 2020 13:33:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044003;
-        bh=aj+C3qty4HdDe8GL8geUEloqbIzbEgqKD6KeLaYq//Q=;
+        s=default; t=1587043998;
+        bh=gWKi+M4ukqnEuUHDdXxPRoNAqrcK8KTNaaTDcH/tEEU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F6U7pDi+wQ1qISrUK0D2oFVALag4ePJm0DY5H98aKs3O66VnRbxzsmX+1g3UAIm5h
-         u6PCFUGVFmmRHqBSOhQKG1e8NpZPAY04SeRPbd78TzClOpravzvRCr2kbTJoPOoXlq
-         FiXX0AjPlZRgtoNs8rUmR+9Ic166OQcvX38xicqU=
+        b=2JK0nfIseRhXHI9zy12AQjyxIZRyUkCrJ2P0zC4whU77wE0uLZ9n3Mp/rccHwH25C
+         hIEO5DFsExolnBnmgoJYdRrKBE/gi1Bjx6/R9sBeWdNCB4hqOm2v/LjwaoxiTZmezp
+         ap11LwFeNrQ27Z8PyZlBJZfCIeGUoC9egxjq4peE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rui Miguel Silva <rmfrfs@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 042/257] xhci: bail out early if driver cant accress host in resume
-Date:   Thu, 16 Apr 2020 15:21:33 +0200
-Message-Id: <20200416131331.200370170@linuxfoundation.org>
+Subject: [PATCH 5.5 040/257] media: imx: imx7_mipi_csis: Power off the source when stopping streaming
+Date:   Thu, 16 Apr 2020 15:21:31 +0200
+Message-Id: <20200416131330.947376055@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -60,43 +63,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-[ Upstream commit 72ae194704da212e2ec312ab182a96799d070755 ]
+[ Upstream commit 770cbf89f90b0663499dbb3f03aa81b3322757ec ]
 
-Bail out early if the xHC host needs to be reset at resume
-but driver can't access xHC PCI registers.
+The .s_stream() implementation incorrectly powers on the source when
+stopping the stream. Power it off instead.
 
-If xhci driver already fails to reset the controller then there
-is no point in attempting to free, re-initialize, re-allocate and
-re-start the host. If failure to access the host is detected later,
-failing the resume, xhci interrupts will be double freed
-when remove is called.
-
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20200312144517.1593-2-mathias.nyman@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 7807063b862b ("media: staging/imx7: add MIPI CSI-2 receiver subdev for i.MX7")
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Reviewed-by: Rui Miguel Silva <rmfrfs@gmail.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/xhci.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/staging/media/imx/imx7-mipi-csis.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
-index dbac0fa9748d5..fe38275363e0f 100644
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -1157,8 +1157,10 @@ int xhci_resume(struct xhci_hcd *xhci, bool hibernated)
- 		xhci_dbg(xhci, "Stop HCD\n");
- 		xhci_halt(xhci);
- 		xhci_zero_64b_regs(xhci);
--		xhci_reset(xhci);
-+		retval = xhci_reset(xhci);
- 		spin_unlock_irq(&xhci->lock);
-+		if (retval)
-+			return retval;
- 		xhci_cleanup_msix(xhci);
- 
- 		xhci_dbg(xhci, "// Disabling event ring interrupts\n");
+diff --git a/drivers/staging/media/imx/imx7-mipi-csis.c b/drivers/staging/media/imx/imx7-mipi-csis.c
+index 99166afca071b..aa1749b1e28fc 100644
+--- a/drivers/staging/media/imx/imx7-mipi-csis.c
++++ b/drivers/staging/media/imx/imx7-mipi-csis.c
+@@ -579,7 +579,7 @@ static int mipi_csis_s_stream(struct v4l2_subdev *mipi_sd, int enable)
+ 		state->flags |= ST_STREAMING;
+ 	} else {
+ 		v4l2_subdev_call(state->src_sd, video, s_stream, 0);
+-		ret = v4l2_subdev_call(state->src_sd, core, s_power, 1);
++		ret = v4l2_subdev_call(state->src_sd, core, s_power, 0);
+ 		mipi_csis_stop_stream(state);
+ 		state->flags &= ~ST_STREAMING;
+ 		if (state->debug)
 -- 
 2.20.1
 
