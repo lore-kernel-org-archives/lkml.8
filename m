@@ -2,103 +2,191 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D072C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:22:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA6CC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:22:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B65521927
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:22:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587050575;
-	bh=Ccx5IMb0hrnaC5537dtoCxBIqyonxRrmjubp0SWGv5o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jTQyLp5QgKkLExJLx4kOqrObBOziMHpe9GN5lNJCETJX5286+8aRGgieOq73lZ3yt
-	 HthLEaBU2N+t+kginbq7Mneez9bdPMgW/bxfgmgSXpxgpId+EC7n3LiHsyhrEFWbYF
-	 OwCKsOtjytF4yulW/S8pykQ4gnrx7CDrhsM5gG1w=
+	by mail.kernel.org (Postfix) with ESMTP id 5BFF9214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:22:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=pp3345.net header.i=@pp3345.net header.b="LtxyhaVm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410146AbgDPPWv (ORCPT
+        id S2409657AbgDPPWp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:22:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58974 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:22:45 -0400
+Received: from saul.pp3345.net ([163.172.111.124]:52988 "EHLO saul.pp3345.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898513AbgDPNpb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:45:31 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F059920732;
-        Thu, 16 Apr 2020 13:45:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044730;
-        bh=Ccx5IMb0hrnaC5537dtoCxBIqyonxRrmjubp0SWGv5o=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eUqSUmmJeVaTRLNrhEg3oUg7tv/E9M0zHPIkolqCkzTxQaE6PfEiYh5WFvwncCjis
-         rMgGgkYf/iFsh8ITsYF74O/O+u6rrcHq9mINsLGHaqdfYoygEez27tPkWXPEdwATeB
-         IJiA7d3hHUkWgPrqTVu4JCXRsJBq08Fw/SHgPlEM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.4 077/232] ALSA: hda: Fix potential access overflow in beep helper
-Date:   Thu, 16 Apr 2020 15:22:51 +0200
-Message-Id: <20200416131324.835754846@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
-References: <20200416131316.640996080@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S2898519AbgDPNpi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:45:38 -0400
+Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: dev@pp3345.net)
+        by saul.pp3345.net (Postcow) with ESMTPSA id 039279A4640;
+        Thu, 16 Apr 2020 15:44:57 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pp3345.net; s=saul;
+        t=1587044700; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:openpgp:autocrypt;
+        bh=XFpSBwsComldpKaI1pOqVCUGFWWRy6at6PB2RGEFAXU=;
+        b=LtxyhaVmGMB3UPcLDdWG15/UYkPFRQbtdWpVvTzyz4iKNFXQL4NPAJEd38xV+9nWHmCFxk
+        iCA4x3XsC/tNc/lamZVXrM3F1YKu6/rddcAxtrxbY0/ZyoddJIzE/RRMQez8MjusD0Nppt
+        bN6FD0UOFaHoBsc/tMULMTZ1unPo0DaaL/SsxCY6kgdusMq8bMi59ULbS5KWVIKhtgdJWl
+        FdVS1qQDrricyclJ6pe0+Eq2xTR7MjLsnXsQLMBXwBTtOLlicOVxvpZHgrTLhY6DFlTorP
+        X4VpkjwvqWKJZKfWRBsl5gPXeTNaC6XoejVRM4DQ4knNylwgSOrivtNjaOfWvg==
+Message-ID: <35ab8ba55f661cb8fd3ee65322e790421b65ef53.camel@pp3345.net>
+Subject: Re: [PATCH 5/5] drm/i915: Replace "Broadcast RGB" with "RGB
+ quantization range" property
+From:   Yussuf Khalil <dev@pp3345.net>
+To:     Daniel Vetter <daniel@ffwll.ch>,
+        Jani Nikula <jani.nikula@linux.intel.com>
+Cc:     Simon Ser <contact@emersion.fr>, David Airlie <airlied@linux.ie>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>
+Date:   Thu, 16 Apr 2020 15:44:53 +0200
+In-Reply-To: <20200415111336.GZ3456981@phenom.ffwll.local>
+References: <20200413214024.46500-1-dev@pp3345.net>
+         <20200413214024.46500-6-dev@pp3345.net>
+         <daCvJk4O6rHOwEometGSPENJupb6adPr583_dLEetvftUQPbK4198VDijHGzM9uTm9bP3TEyGCZvxKe5PSvqWBg5xhXkL_7EiAQlmEPKWQI=@emersion.fr>
+         <87ftd6mi3e.fsf@intel.com> <87d08amhy5.fsf@intel.com>
+         <20200414123404.GT3456981@phenom.ffwll.local>
+         <2cfe44c96818515939050ad19e9c248e50519be2.camel@pp3345.net>
+         <87r1wp5hkq.fsf@intel.com> <20200415111336.GZ3456981@phenom.ffwll.local>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.1 (3.36.1-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+On Wed, 2020-04-15 at 13:13 +0200, Daniel Vetter wrote:
+> On Wed, Apr 15, 2020 at 10:33:25AM +0300, Jani Nikula wrote:
+> > On Tue, 14 Apr 2020, Yussuf Khalil <dev@pp3345.net> wrote:
+> > > On Tue, 2020-04-14 at 14:34 +0200, Daniel Vetter wrote:
+> > > > On Tue, Apr 14, 2020 at 02:21:06PM +0300, Jani Nikula wrote:
+> > > > > On Tue, 14 Apr 2020, Jani Nikula <jani.nikula@linux.intel.com
+> > > > > >
+> > > > > wrote:
+> > > > > > On Mon, 13 Apr 2020, Simon Ser <contact@emersion.fr> wrote:
+> > > > > > > On Monday, April 13, 2020 11:40 PM, Yussuf Khalil <
+> > > > > > > dev@pp3345.net> wrote:
+> > > > > > > 
+> > > > > > > > DRM now has a globally available "RGB quantization
+> > > > > > > > range"
+> > > > > > > > connector
+> > > > > > > > property. i915's "Broadcast RGB" that fulfils the same
+> > > > > > > > purpose is now
+> > > > > > > > considered deprecated, so drop it in favor of the DRM
+> > > > > > > > property.
+> > > > > > > 
+> > > > > > > For a UAPI point-of-view, I'm not sure this is fine. Some
+> > > > > > > user-
+> > > > > > > space
+> > > > > > > might depend on this property, dropping it would break
+> > > > > > > such
+> > > > > > > user-space.
+> > > > > > 
+> > > > > > Agreed.
+> > > > > > 
+> > > > > > > Can we make this property deprecated but still keep it
+> > > > > > > for
+> > > > > > > backwards
+> > > > > > > compatibility?
+> > > > > > 
+> > > > > > Would be nice to make the i915 specific property an "alias"
+> > > > > > for
+> > > > > > the new
+> > > > > > property, however I'm not sure how you'd make that happen.
+> > > > > > Otherwise
+> > > > > > juggling between the two properties is going to be a
+> > > > > > nightmare.
+> > > > > 
+> > > > > Ah, the obvious easy choice is to use the property and enum
+> > > > > names
+> > > > > already being used by i915 and gma500, and you have no
+> > > > > problem.
+> > > > > Perhaps
+> > > > > they're not the names you'd like, but then looking at the
+> > > > > total
+> > > > > lack of
+> > > > > consistency across property naming makes them fit right in.
+> > > > > ;)
+> > > > 
+> > > > Yeah if we don't have contradictory usage across drivers when
+> > > > modernizing
+> > > > these properties, then let's just stick with the names already
+> > > > there.
+> > > > It's
+> > > > not pretty, but works better since more userspace/internet
+> > > > howtos
+> > > > know how
+> > > > to use this stuff.
+> > > > -Daniel
+> > > 
+> > > Note that i915's "Broadcast RGB" isn't the same as gma500's: i915
+> > > has an
+> > > "Automatic" option, whereas gma500 does not.
+> > 
+> > Adding "Automatic" option that just defaults to "Full" in gma500
+> > does
+> > not break existing userspace, but allows for extending it to do
+> > more
+> > clever things later.
+> 
+> gma500 could keep it's own property, without the "Automatic" value.
+> We've
+> done tricks like this for other properties too.
+> 
+> > > Also, radeon has a property called
+> > > "output_csc" that fulfills a similar purpose. Looking at the
+> > > code, though, it
+> > > seems that radeon does not adhere to the standard correctly (or I
+> > > am missing
+> > > something).
+> > > 
+> > > An alternative would be to leave the existing driver-specific
+> > > properties and
+> > > change them to be pseudo-aliases for the "RGB quantization range"
+> > > property.
+> > > This can be done by letting the drivers read from and write to
+> > > the new property
+> > > when user-space tries to read or modify the driver's property.
+> > > This way we could
+> > > retain full backwards compatibility for all drivers equally.
+> > > 
+> > > What do you think?
+> > 
+> > I'm obviously biased and predisposed to avoid adding extra
+> > complexity to
+> > i915 when it's not necessary. We'd have *two* connector properties
+> > for
+> > the same thing until the end of time, even if one is an alias for
+> > the
+> > other.
+> 
+> Yeah just pick one, and implement the others as aliases. Drivers can
+> do
+> the aliases in their atomic_get/set_property functions pretty easily,
+> atomic properties aren't stored anywhere else than decoded (which was
+> done
+> partially to make stuff like this work).
+> 
+> Coming up a new property name just so that everyone suffers equally
+> feels
+> silly.
+> -Daniel
 
-commit 0ad3f0b384d58f3bd1f4fb87d0af5b8f6866f41a upstream.
+Okay, I understand your point. Leaving gma500 without a proper implementation of
+the "Automatic" value isn't an option though as that would break the whole
+purpose of this patchset: having a property that works precisely the same way
+across all drivers. I'll build a patch that implements standards-compliant
+behavior for gma500 then, so that it can use the same property as the others.
 
-The beep control helper function blindly stores the values in two
-stereo channels no matter whether the actual control is mono or
-stereo.  This is practically harmless, but it annoys the recently
-introduced sanity check, resulting in an error when the checker is
-enabled.
-
-This patch corrects the behavior to store only on the defined array
-member.
-
-Fixes: 0401e8548eac ("ALSA: hda - Move beep helper functions to hda_beep.c")
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207139
-Reviewed-by: Jaroslav Kysela <perex@perex.cz>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200407084402.25589-2-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- sound/pci/hda/hda_beep.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
---- a/sound/pci/hda/hda_beep.c
-+++ b/sound/pci/hda/hda_beep.c
-@@ -290,8 +290,12 @@ int snd_hda_mixer_amp_switch_get_beep(st
- {
- 	struct hda_codec *codec = snd_kcontrol_chip(kcontrol);
- 	struct hda_beep *beep = codec->beep;
-+	int chs = get_amp_channels(kcontrol);
-+
- 	if (beep && (!beep->enabled || !ctl_has_mute(kcontrol))) {
--		ucontrol->value.integer.value[0] =
-+		if (chs & 1)
-+			ucontrol->value.integer.value[0] = beep->enabled;
-+		if (chs & 2)
- 			ucontrol->value.integer.value[1] = beep->enabled;
- 		return 0;
- 	}
-
+Regards
+Yussuf
 
