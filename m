@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B05C352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:44:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A59BC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E999206B9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:44:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08015206B9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:44:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587048257;
-	bh=/MZG7D6frHE0UnnT/D1f/ogB9Ko41bQzTQea43xIACI=;
+	s=default; t=1587048266;
+	bh=bA8K2AOso87BeqHclySCW19T72yEic4780pqkF97yGY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WAAWtESZKP2haNBqMmHLrgjuGr3N41algCcIHLUxpDrEwc0OOzjLzvtywneD1RQbL
-	 SU2coVv+SLDvEJ6/GdtDd0LDzJCc4cHfbHDA425M6oh8mbgbCqLDk47QCwl+R+Yctl
-	 dyebvHnfvKoh5Q2XCsjYXSLcwHSaq3uoows2wxQo=
+	b=J7Bnr7q+qOYUZ5aKDNxCEpm/IShxNvc6RJjKpiJUTCDmA1U0ngn8UoUWLNI2EJsz9
+	 x03yXSnYnDZWXLKx7Ef/XSxZpYPGuQaJvs9ni1sb8nZQpZeWoYjNXjs+ZKqJI0T1y3
+	 4bo2aVLNyQ13TMtDeR+2pISti+zyv9xh+dV3yXRQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394593AbgDPOoO (ORCPT
+        id S2387860AbgDPOoX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:44:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47254 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:44:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409416AbgDPOAL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:00:11 -0400
+        id S2405710AbgDPOAJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:00:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C6FD2078B;
-        Thu, 16 Apr 2020 14:00:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4CA220786;
+        Thu, 16 Apr 2020 14:00:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045610;
-        bh=/MZG7D6frHE0UnnT/D1f/ogB9Ko41bQzTQea43xIACI=;
+        s=default; t=1587045608;
+        bh=bA8K2AOso87BeqHclySCW19T72yEic4780pqkF97yGY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=abNdN6vxI/RhsEm32aQC3PYs9LFjVkr1lwJwGmvDenIzvZHt2zRqsOTGOpCwbarJj
-         ap9wbEWvcSad7R4aUFHLFej5XUTYrDITDI/t+4TI4Q61WzXsMtFtfWjbhksaJcHEFe
-         iKkggeljxCDSzKzVHF5Wjnwkgl9VDBz5D2027b9M=
+        b=CW+uO9cpkFpYwZ1GHvcjHGwYsTfX7u4aPyW6t1tRkFsoQWKZd0jm55bgU9choGI33
+         X2ziJWAAK19KYIu1RYapiMMdj7YAX4Q8PLVaF6oPihe/w77vn/08eYSkOccoGebVDs
+         nZvQ6BvShcztEpQ2kaIoKMx3pN3pk4X5FnV9BW0Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Prike Liang <Prike.Liang@amd.com>,
-        Huang Rui <ray.huang@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.6 205/254] drm/amd/powerplay: implement the is_dpm_running()
-Date:   Thu, 16 Apr 2020 15:24:54 +0200
-Message-Id: <20200416131351.692090182@linuxfoundation.org>
+        stable@vger.kernel.org, Yuxian Dai <Yuxian.Dai@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Huang Rui <ray.huang@amd.com>, Kevin Wang <Kevin1.Wang@amd.com>
+Subject: [PATCH 5.6 204/254] drm/amdgpu/powerplay: using the FCLK DPM table to set the MCLK
+Date:   Thu, 16 Apr 2020 15:24:53 +0200
+Message-Id: <20200416131351.585936261@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -60,51 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Prike Liang <Prike.Liang@amd.com>
+From: Yuxian Dai <Yuxian.Dai@amd.com>
 
-commit 4ee2bb22ddb53a2eafc675690d0d67452029ca37 upstream.
+commit 022ac4c9c55be35a2d1f71019a931324c51b0dab upstream.
 
-As the pmfw hasn't exported the interface of SMU feature
-mask to APU SKU so just force on all the features to driver
-inquired interface at early initial stage.
+1.Using the FCLK DPM table to set the MCLK for DPM states consist of
+three entities:
+ FCLK
+ UCLK
+ MEMCLK
+All these three clk change together, MEMCLK from FCLK, so use the fclk
+frequency.
+2.we should show the current working clock freqency from clock table metric
 
-Signed-off-by: Prike Liang <Prike.Liang@amd.com>
+Signed-off-by: Yuxian Dai <Yuxian.Dai@amd.com>
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
 Reviewed-by: Huang Rui <ray.huang@amd.com>
+Reviewed-by: Kevin Wang <Kevin1.Wang@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/powerplay/renoir_ppt.c |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/gpu/drm/amd/powerplay/renoir_ppt.c |    6 ++++++
+ drivers/gpu/drm/amd/powerplay/renoir_ppt.h |    2 +-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
 --- a/drivers/gpu/drm/amd/powerplay/renoir_ppt.c
 +++ b/drivers/gpu/drm/amd/powerplay/renoir_ppt.c
-@@ -887,6 +887,17 @@ static int renoir_read_sensor(struct smu
- 	return ret;
+@@ -240,6 +240,7 @@ static int renoir_print_clk_levels(struc
+ 	uint32_t cur_value = 0, value = 0, count = 0, min = 0, max = 0;
+ 	DpmClocks_t *clk_table = smu->smu_table.clocks_table;
+ 	SmuMetrics_t metrics;
++	bool cur_value_match_level = false;
+ 
+ 	if (!clk_table || clk_type >= SMU_CLK_COUNT)
+ 		return -EINVAL;
+@@ -298,8 +299,13 @@ static int renoir_print_clk_levels(struc
+ 		GET_DPM_CUR_FREQ(clk_table, clk_type, i, value);
+ 		size += sprintf(buf + size, "%d: %uMhz %s\n", i, value,
+ 				cur_value == value ? "*" : "");
++		if (cur_value == value)
++			cur_value_match_level = true;
+ 	}
+ 
++	if (!cur_value_match_level)
++		size += sprintf(buf + size, "   %uMhz *\n", cur_value);
++
+ 	return size;
  }
  
-+static bool renoir_is_dpm_running(struct smu_context *smu)
-+{
-+	/*
-+	 * Util now, the pmfw hasn't exported the interface of SMU
-+	 * feature mask to APU SKU so just force on all the feature
-+	 * at early initial stage.
-+	 */
-+	return true;
-+
-+}
-+
- static const struct pptable_funcs renoir_ppt_funcs = {
- 	.get_smu_msg_index = renoir_get_smu_msg_index,
- 	.get_smu_clk_index = renoir_get_smu_clk_index,
-@@ -928,6 +939,7 @@ static const struct pptable_funcs renoir
- 	.mode2_reset = smu_v12_0_mode2_reset,
- 	.set_soft_freq_limited_range = smu_v12_0_set_soft_freq_limited_range,
- 	.set_driver_table_location = smu_v12_0_set_driver_table_location,
-+	.is_dpm_running = renoir_is_dpm_running,
- };
- 
- void renoir_set_ppt_funcs(struct smu_context *smu)
+--- a/drivers/gpu/drm/amd/powerplay/renoir_ppt.h
++++ b/drivers/gpu/drm/amd/powerplay/renoir_ppt.h
+@@ -37,7 +37,7 @@ extern void renoir_set_ppt_funcs(struct
+ 			freq = table->SocClocks[dpm_level].Freq;	\
+ 			break;						\
+ 		case SMU_MCLK:						\
+-			freq = table->MemClocks[dpm_level].Freq;	\
++			freq = table->FClocks[dpm_level].Freq;	\
+ 			break;						\
+ 		case SMU_DCEFCLK:					\
+ 			freq = table->DcfClocks[dpm_level].Freq;	\
 
 
