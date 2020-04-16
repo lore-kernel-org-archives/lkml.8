@@ -2,103 +2,202 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF520C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:40:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BE0AC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD41721BE5
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:40:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27D7321BE5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:41:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587030062;
+	bh=Rv7XrR5lXHMCHVxYItGbbEukoFm73yigisZjMw3dUOQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=s6pbH7WgTs91Kg4t1tBBS5YqIZ6xxokuMVC0OmjtdHjwhR3Z0TqQECpRvlQVXOFDI
+	 P0BS2ZWTBQX0NB/LC0t1rVSfxTPK83VxD3SkNG9nhD2zwvtL6wUICiigdRyfXgwOcy
+	 95lgnWBUR93N7WmNIDKN3uWNVACuDf03kFjvqb+8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503876AbgDPJkI (ORCPT
+        id S2503663AbgDPJk5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 05:40:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48254 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2503645AbgDPJjm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 05:39:42 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EBEFC061A41
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 02:39:42 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        Thu, 16 Apr 2020 05:40:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50000 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2503645AbgDPJkb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 05:40:31 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4CCB2072D;
+        Thu, 16 Apr 2020 09:40:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587030028;
+        bh=Rv7XrR5lXHMCHVxYItGbbEukoFm73yigisZjMw3dUOQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=D1GK1/2p4K/IlHV7XscyBTuvzsfpMiyppPZAC3JppayORw5Mzri5wPo2tmjnTSR49
+         5mRNgs+FmymLeYYp8iSgR6iT6+Eue70lYDU+oK5GwGwEHeCNQmLCeYxU5loaqv3PW1
+         g/ZqjRsf7xW3Ci7DLYYurbJcCyHwkhbXVI0ZWGNM=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1jP0zd-0002ad-L6; Thu, 16 Apr 2020 11:39:33 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1jP0zc-0008A1-NM; Thu, 16 Apr 2020 11:39:32 +0200
-Date:   Thu, 16 Apr 2020 11:39:32 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
-Subject: Re: [PATCH V2 1/5] dt-bindings: clock: Convert i.MX6Q clock to
- json-schema
-Message-ID: <20200416093932.2mkcyv4rs6v6a24a@pengutronix.de>
-References: <1587019158-12143-1-git-send-email-Anson.Huang@nxp.com>
+        (envelope-from <maz@kernel.org>)
+        id 1jP10V-003mjD-2A; Thu, 16 Apr 2020 10:40:27 +0100
+Date:   Thu, 16 Apr 2020 10:40:25 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH] irqchip/meson-gpio: Fix HARDIRQ-safe -> HARDIRQ-unsafe
+ lock order
+Message-ID: <20200416104025.5a22c228@why>
+In-Reply-To: <1jeesqt686.fsf@starbuckisacylon.baylibre.com>
+References: <20200407144658.829246-1-maz@kernel.org>
+        <20200414142018.6e7e5ec3@why>
+        <1jeesqt686.fsf@starbuckisacylon.baylibre.com>
+Organization: Approximate
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1587019158-12143-1-git-send-email-Anson.Huang@nxp.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 11:37:20 up 153 days, 55 min, 168 users,  load average: 0.00, 0.06,
- 0.07
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: jbrunet@baylibre.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, khilman@baylibre.com, martin.blumenstingl@googlemail.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Anson,
+On Tue, 14 Apr 2020 17:52:25 +0200
+Jerome Brunet <jbrunet@baylibre.com> wrote:
 
-On 20-04-16 14:39, Anson Huang wrote:
+Hi Jerome,
 
-...
+> On Tue 14 Apr 2020 at 15:20, Marc Zyngier <maz@kernel.org> wrote:
+> 
+> > On Tue,  7 Apr 2020 15:46:58 +0100
+> > Marc Zyngier <maz@kernel.org> wrote:
+> >
+> > +Jerome, Martin,
+> >  
+> >> Running a lockedp-enabled kernel on a vim3l board (Amlogic SM1)
+> >> leads to the following splat:
+> >> 
+> >> [   13.557138] WARNING: HARDIRQ-safe -> HARDIRQ-unsafe lock order detected
+> >> [   13.587485] ip/456 [HC0[0]:SC0[0]:HE0:SE1] is trying to acquire:
+> >> [   13.625922] ffff000059908cf0 (&irq_desc_lock_class){-.-.}-{2:2}, at: __setup_irq+0xf8/0x8d8
+> >> [   13.632273] which would create a new lock dependency:
+> >> [   13.637272]  (&irq_desc_lock_class){-.-.}-{2:2} -> (&ctl->lock){+.+.}-{2:2}
+> >> [   13.644209]
+> >> [   13.644209] but this new dependency connects a HARDIRQ-irq-safe lock:
+> >> [   13.654122]  (&irq_desc_lock_class){-.-.}-{2:2}
+> >> [   13.654125]
+> >> [   13.654125] ... which became HARDIRQ-irq-safe at:
+> >> [   13.664759]   lock_acquire+0xec/0x368
+> >> [   13.666926]   _raw_spin_lock+0x60/0x88
+> >> [   13.669979]   handle_fasteoi_irq+0x30/0x178
+> >> [   13.674082]   generic_handle_irq+0x38/0x50
+> >> [   13.678098]   __handle_domain_irq+0x6c/0xc8
+> >> [   13.682209]   gic_handle_irq+0x5c/0xb0
+> >> [   13.685872]   el1_irq+0xd0/0x180
+> >> [   13.689010]   arch_cpu_idle+0x40/0x220
+> >> [   13.692732]   default_idle_call+0x54/0x60
+> >> [   13.696677]   do_idle+0x23c/0x2e8
+> >> [   13.699903]   cpu_startup_entry+0x30/0x50
+> >> [   13.703852]   rest_init+0x1e0/0x2b4
+> >> [   13.707301]   arch_call_rest_init+0x18/0x24
+> >> [   13.711449]   start_kernel+0x4ec/0x51c
+> >> [   13.715167]
+> >> [   13.715167] to a HARDIRQ-irq-unsafe lock:
+> >> [   13.722426]  (&ctl->lock){+.+.}-{2:2}
+> >> [   13.722430]
+> >> [   13.722430] ... which became HARDIRQ-irq-unsafe at:
+> >> [   13.732319] ...
+> >> [   13.732324]   lock_acquire+0xec/0x368
+> >> [   13.735985]   _raw_spin_lock+0x60/0x88
+> >> [   13.739452]   meson_gpio_irq_domain_alloc+0xcc/0x290
+> >> [   13.744392]   irq_domain_alloc_irqs_hierarchy+0x24/0x60
+> >> [   13.749586]   __irq_domain_alloc_irqs+0x160/0x2f0
+> >> [   13.754254]   irq_create_fwspec_mapping+0x118/0x320
+> >> [   13.759073]   irq_create_of_mapping+0x78/0xa0
+> >> [   13.763360]   of_irq_get+0x6c/0x80
+> >> [   13.766701]   of_mdiobus_register_phy+0x10c/0x238 [of_mdio]
+> >> [   13.772227]   of_mdiobus_register+0x158/0x380 [of_mdio]
+> >> [   13.777388]   mdio_mux_init+0x180/0x2e8 [mdio_mux]
+> >> [   13.782128]   g12a_mdio_mux_probe+0x290/0x398 [mdio_mux_meson_g12a]
+> >> [   13.788349]   platform_drv_probe+0x5c/0xb0
+> >> [   13.792379]   really_probe+0xe4/0x448
+> >> [   13.795979]   driver_probe_device+0xe8/0x140
+> >> [   13.800189]   __device_attach_driver+0x94/0x120
+> >> [   13.804639]   bus_for_each_drv+0x84/0xd8
+> >> [   13.808474]   __device_attach+0xe4/0x168
+> >> [   13.812361]   device_initial_probe+0x1c/0x28
+> >> [   13.816592]   bus_probe_device+0xa4/0xb0
+> >> [   13.820430]   deferred_probe_work_func+0xa8/0x100
+> >> [   13.825064]   process_one_work+0x264/0x688
+> >> [   13.829088]   worker_thread+0x4c/0x458
+> >> [   13.832768]   kthread+0x154/0x158
+> >> [   13.836018]   ret_from_fork+0x10/0x18
+> >> [   13.839612]
+> >> [   13.839612] other info that might help us debug this:
+> >> [   13.839612]
+> >> [   13.850354]  Possible interrupt unsafe locking scenario:
+> >> [   13.850354]
+> >> [   13.855720]        CPU0                    CPU1
+> >> [   13.858774]        ----                    ----
+> >> [   13.863242]   lock(&ctl->lock);
+> >> [   13.866330]                                local_irq_disable();
+> >> [   13.872233]                                lock(&irq_desc_lock_class);
+> >> [   13.878705]                                lock(&ctl->lock);
+> >> [   13.884297]   <Interrupt>
+> >> [   13.886857]     lock(&irq_desc_lock_class);
+> >> [   13.891014]
+> >> [   13.891014]  *** DEADLOCK ***
+> >> 
+> >> The issue can occur when CPU1 is doing something like irq_set_type()
+> >> and CPU0 performing an interrupt allocation, for example. Taking
+> >> an interrupt (like the one being reconfigured) would lead to a
+> >> deadlock.  
+> 
+> Just to make sure I understand
+> * the 1st trace is a CPU getting interrupted while setting the irq type
+> * the 2nd trace is another CPU trying to allocate an irq for network PHY.
 
-> diff --git a/Documentation/devicetree/bindings/clock/imx6q-clock.yaml b/Documentation/devicetree/bindings/clock/imx6q-clock.yaml
-> new file mode 100644
-> index 0000000..1c6e600
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/imx6q-clock.yaml
-> @@ -0,0 +1,66 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/clock/imx6q-clock.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Clock bindings for Freescale i.MX6 Quad
-> +
-> +maintainers:
-> +  - Anson Huang <Anson.Huang@nxp.com>
-> +
-> +properties:
-> +  compatible:
-> +    const: fsl,imx6q-ccm
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 2
+The traces are only what lockdep sees as a dangerous behaviour, not
+necessarily what actually leads to a deadlock. The deadlock scenario is
+the one outlined just before "*** DEADLOCK ***", and a way to get there
+is my interpretation just above.
 
-IMHO I would force them to have exactly two so we need
-minItems: 2 too here.
+> >> 
+> >> A solution to this is:
+> >> 
+> >> - Reorder the locking so that meson_gpio_irq_update_bits takes the lock
+> >>   itself at all times, instead of relying on the caller to lock or not,
+> >>   hence making the RMW sequence atomic,
+> >> 
+> >> - Rework the critical section in meson_gpio_irq_request_channel to only
+> >>   cover the allocation itself, and let the gpio_irq_sel_pin callback
+> >>   deal with its own locking if required,
+> >> 
+> >> - Take the private spin-lock with interrupts disabled at all times  
+> 
+> Looks like the only safe path if I understand correctly.
+> The patch below looks good to me.
+> 
+> >> 
+> >> Signed-off-by: Marc Zyngier <maz@kernel.org>  
+> 
+> Thanks for the fix Marc.
+> 
+> Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
 
-Regards,
-  Marco
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
