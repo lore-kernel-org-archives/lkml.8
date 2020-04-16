@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EF3DC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD41C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:02:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F3CB217D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:02:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CEBA22250
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:02:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587045762;
-	bh=f/MuBIwhf8lkkmoBHa26oyZAK+2rL9c6PazhpF9AxPo=;
+	s=default; t=1587045768;
+	bh=BOu0AN0pfQjoXKcTkTU6Nc2Y2gjBUNMbPmTmThh6Y0I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g+psvP7uAEUrd/ImC2AY1VD4apyuMOoMAhG96SdOBiB17+yimhj/sRqtcgVngs7hn
-	 c2FJOY/S1DqFcV/wd8np8cZwAARQp2nxUKLnSeVKu9cT8XCZ75FXxwryEEaasabBOk
-	 w8GZTirOvAqZ2hFyGQf8KjM1ZgD2cuYuo0n9xN94=
+	b=EC4W2rOeZypRFg21CLF4yEwNEnvB2wyZHwBxWu9/LLLroaBxId82glyQQpdw3APOT
+	 xwFTJ3vbk/fmSmNJaowwgmfwfjAyu+ZgjuKijcYc8fOcjqBvl3a57NCCsMyZqRdmxX
+	 ZsgIO8lfBzjaEDhifQpseDB3hhT9lhBA9xMvriW4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441912AbgDPOCk (ORCPT
+        id S2505186AbgDPOCq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:02:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54500 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:02:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898334AbgDPNlg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:41:36 -0400
+        id S2898352AbgDPNln (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:41:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51DA1214D8;
-        Thu, 16 Apr 2020 13:41:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E952214D8;
+        Thu, 16 Apr 2020 13:41:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044495;
-        bh=f/MuBIwhf8lkkmoBHa26oyZAK+2rL9c6PazhpF9AxPo=;
+        s=default; t=1587044503;
+        bh=BOu0AN0pfQjoXKcTkTU6Nc2Y2gjBUNMbPmTmThh6Y0I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RpmsedYNPhtyf2FFnmKvrlXW4P2XHxf03Id3jWpE9cE33hLmCcJgd/KHrdFc9qsXZ
-         1itPj24h+otMwPUieTdmZ+T+McG1PjFEJ8jNpLMadc7y9O8bjw7VcJ/BZzY98gXPPy
-         pwkj8JShSbbg2vCaiubVrUUfw7oehrNsDXfvUIro=
+        b=kr3qPryl//Ul4T2HMr/LiU/v4eZLTvBetroyIu0IxMEVPXCccqCLpI9Z8sLPgo8Sc
+         V0qs3Kfam9Y9oa8IzbQ0gN6wlUzqTQbUaejgwwWWeEnFwrmsPGgRj645Y9/IDgJFLx
+         0ul6O+535x0Bed5STIVyhO/1m9diGUCHXLeJ3ngA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Donnellan <ajd@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Daniel Axtens <dja@axtens.net>
-Subject: [PATCH 5.5 240/257] powerpc/64: Setup a paca before parsing device tree etc.
-Date:   Thu, 16 Apr 2020 15:24:51 +0200
-Message-Id: <20200416131355.536237727@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Matthew Auld <matthew.william.auld@gmail.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>
+Subject: [PATCH 5.5 207/257] drm/i915/gem: Flush all the reloc_gpu batch
+Date:   Thu, 16 Apr 2020 15:24:18 +0200
+Message-Id: <20200416131351.953230891@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -60,132 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Axtens <dja@axtens.net>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-commit d4a8e98621543d5798421eed177978bf2b3cdd11 upstream.
+commit 1aaea8476d9f014667d2cb24819f9bcaf3ebb7a4 upstream.
 
-Currently we set up the paca after parsing the device tree for CPU
-features. Prior to that, r13 contains random data, which means there
-is random data in r13 while we're running the generic dt parsing code.
+__i915_gem_object_flush_map() takes a byte range, so feed it the written
+bytes and do not mistake the u32 index as bytes!
 
-This random data varies depending on whether we boot through a vmlinux
-or a zImage: for the vmlinux case it's usually around zero, but for
-zImages we see random values like 912a72603d420015.
-
-This is poor practice, and can also lead to difficult-to-debug
-crashes. For example, when kcov is enabled, the kcov instrumentation
-attempts to read preempt_count out of the current task, which goes via
-the paca. This then crashes in the zImage case.
-
-Similarly stack protector can cause crashes if r13 is bogus, by
-reading from the stack canary in the paca.
-
-To resolve this:
-
- - move the paca setup to before the CPU feature parsing.
-
- - because we no longer have access to CPU feature flags in paca
- setup, change the HV feature test in the paca setup path to consider
- the actual value of the MSR rather than the CPU feature.
-
-Translations get switched on once we leave early_setup, so I think
-we'd already catch any other cases where the paca or task aren't set
-up.
-
-Boot tested on a P9 guest and host.
-
-Fixes: fb0b0a73b223 ("powerpc: Enable kcov")
-Fixes: 06ec27aea9fc ("powerpc/64: add stack protector support")
-Cc: stable@vger.kernel.org # v4.20+
-Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
-Suggested-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Daniel Axtens <dja@axtens.net>
-[mpe: Reword comments & change log a bit to mention stack protector]
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200320032116.1024773-1-mpe@ellerman.id.au
+Fixes: a679f58d0510 ("drm/i915: Flush pages on acquisition")
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Matthew Auld <matthew.william.auld@gmail.com>
+Cc: <stable@vger.kernel.org> # v5.2+
+Reviewed-by: Matthew Auld <matthew.william.auld@gmail.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200406114821.10949-1-chris@chris-wilson.co.uk
+(cherry picked from commit 30c88a47f1abd5744908d3681f54dcf823fe2a12)
+Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kernel/dt_cpu_ftrs.c |    1 -
- arch/powerpc/kernel/paca.c        |   10 +++++++---
- arch/powerpc/kernel/setup_64.c    |   30 ++++++++++++++++++++++++------
- 3 files changed, 31 insertions(+), 10 deletions(-)
+ drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
---- a/arch/powerpc/kernel/dt_cpu_ftrs.c
-+++ b/arch/powerpc/kernel/dt_cpu_ftrs.c
-@@ -139,7 +139,6 @@ static void __init cpufeatures_setup_cpu
- 	/* Initialize the base environment -- clear FSCR/HFSCR.  */
- 	hv_mode = !!(mfmsr() & MSR_HV);
- 	if (hv_mode) {
--		/* CPU_FTR_HVMODE is used early in PACA setup */
- 		cur_cpu_spec->cpu_features |= CPU_FTR_HVMODE;
- 		mtspr(SPRN_HFSCR, 0);
- 	}
---- a/arch/powerpc/kernel/paca.c
-+++ b/arch/powerpc/kernel/paca.c
-@@ -214,11 +214,15 @@ void setup_paca(struct paca_struct *new_
- 	/* On Book3E, initialize the TLB miss exception frames */
- 	mtspr(SPRN_SPRG_TLB_EXFRAME, local_paca->extlb);
- #else
--	/* In HV mode, we setup both HPACA and PACA to avoid problems
-+	/*
-+	 * In HV mode, we setup both HPACA and PACA to avoid problems
- 	 * if we do a GET_PACA() before the feature fixups have been
--	 * applied
-+	 * applied.
-+	 *
-+	 * Normally you should test against CPU_FTR_HVMODE, but CPU features
-+	 * are not yet set up when we first reach here.
- 	 */
--	if (early_cpu_has_feature(CPU_FTR_HVMODE))
-+	if (mfmsr() & MSR_HV)
- 		mtspr(SPRN_SPRG_HPACA, local_paca);
- #endif
- 	mtspr(SPRN_SPRG_PACA, local_paca);
---- a/arch/powerpc/kernel/setup_64.c
-+++ b/arch/powerpc/kernel/setup_64.c
-@@ -285,18 +285,36 @@ void __init early_setup(unsigned long dt
+--- a/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
++++ b/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
+@@ -939,11 +939,13 @@ static inline struct i915_ggtt *cache_to
  
- 	/* -------- printk is _NOT_ safe to use here ! ------- */
- 
--	/* Try new device tree based feature discovery ... */
--	if (!dt_cpu_ftrs_init(__va(dt_ptr)))
--		/* Otherwise use the old style CPU table */
--		identify_cpu(0, mfspr(SPRN_PVR));
--
--	/* Assume we're on cpu 0 for now. Don't write to the paca yet! */
-+	/*
-+	 * Assume we're on cpu 0 for now.
-+	 *
-+	 * We need to load a PACA very early for a few reasons.
-+	 *
-+	 * The stack protector canary is stored in the paca, so as soon as we
-+	 * call any stack protected code we need r13 pointing somewhere valid.
-+	 *
-+	 * If we are using kcov it will call in_task() in its instrumentation,
-+	 * which relies on the current task from the PACA.
-+	 *
-+	 * dt_cpu_ftrs_init() calls into generic OF/fdt code, as well as
-+	 * printk(), which can trigger both stack protector and kcov.
-+	 *
-+	 * percpu variables and spin locks also use the paca.
-+	 *
-+	 * So set up a temporary paca. It will be replaced below once we know
-+	 * what CPU we are on.
-+	 */
- 	initialise_paca(&boot_paca, 0);
- 	setup_paca(&boot_paca);
- 	fixup_boot_paca();
- 
- 	/* -------- printk is now safe to use ------- */
- 
-+	/* Try new device tree based feature discovery ... */
-+	if (!dt_cpu_ftrs_init(__va(dt_ptr)))
-+		/* Otherwise use the old style CPU table */
-+		identify_cpu(0, mfspr(SPRN_PVR));
+ static void reloc_gpu_flush(struct reloc_cache *cache)
+ {
+-	GEM_BUG_ON(cache->rq_size >= cache->rq->batch->obj->base.size / sizeof(u32));
++	struct drm_i915_gem_object *obj = cache->rq->batch->obj;
 +
- 	/* Enable early debugging if any specified (see udbg.h) */
- 	udbg_early_init();
++	GEM_BUG_ON(cache->rq_size >= obj->base.size / sizeof(u32));
+ 	cache->rq_cmd[cache->rq_size] = MI_BATCH_BUFFER_END;
+ 
+-	__i915_gem_object_flush_map(cache->rq->batch->obj, 0, cache->rq_size);
+-	i915_gem_object_unpin_map(cache->rq->batch->obj);
++	__i915_gem_object_flush_map(obj, 0, sizeof(u32) * (cache->rq_size + 1));
++	i915_gem_object_unpin_map(obj);
+ 
+ 	intel_gt_chipset_flush(cache->rq->engine->gt);
  
 
 
