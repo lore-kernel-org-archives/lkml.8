@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B56A0C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C8D5C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:02:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 902C7217D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:02:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3850020732
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:02:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587045746;
-	bh=28OW14Pg6V+cY9SZW+S9pbIyd0BluxIjxSwJPQi4yws=;
+	s=default; t=1587045755;
+	bh=QXDIIPH8GK3Ux1ynVTxNG6RvRhtHCDyClAcTXjsslm8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cbEFxK+zDB7lrtoSs/FQy3OGrudtFy6rSK+WUr8LvymyqE4elzTd+SSNZY3y4tJhM
-	 XiBs4ZGTlGv4QjwcV6/8JfkfpLaYs4ooaBLh2LPwxTfj7LQJ4HHr524/aCa+DkuPdg
-	 EnJL3M/OXqTKrQB34EvLCCcl/9dnuvpv5GNRzZKA=
+	b=qZQfD/2d0+vRQP7bWKFEhqo1k5jilOb/HT4PSIL2WVtMHEjEBQnJs6LEtl4DfwoGe
+	 Meljak3aTLEOSO8KAamK3Tmxiax+x166Vow0LRhAbKoT4l1P6PpV/WJzT51Ok9qXv/
+	 L3UKSr9gzBpmAmm0LkWMqPdcwbCdfDUwHkF44cTQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409395AbgDPOCZ (ORCPT
+        id S1730288AbgDPOCd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:02:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54436 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:02:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898325AbgDPNle (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:41:34 -0400
+        id S2898336AbgDPNli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:41:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C812620732;
-        Thu, 16 Apr 2020 13:41:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B95B220732;
+        Thu, 16 Apr 2020 13:41:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044493;
-        bh=28OW14Pg6V+cY9SZW+S9pbIyd0BluxIjxSwJPQi4yws=;
+        s=default; t=1587044498;
+        bh=QXDIIPH8GK3Ux1ynVTxNG6RvRhtHCDyClAcTXjsslm8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tf4i/vLVj6BlqYtxYiDlTLSpkL6FxT9q01S6cU244dgKkZ0PJRAnebZe+Wd2jI4VT
-         q+rXpZuFuLCrfqZ10KYu2QDMpnTYMgh2YDhvU/6BIkaBkWXo+Ey5aelEt3TlifMRUO
-         Nw0g8mEiQRYHk0Bew/XWVbqJxTX9SX40bEdkZYog=
+        b=io20Vhn7yFnuaIwrGn4pY/4IKrQjW/eEIUkRsserv7zThRuna8xfQ+taO8Fb54v0h
+         jcWlLtIG/S/fBo4+3jtWxAMgXn8N+A1HefkQZjUdcFDfo+rvf47Ap9eSSv+nO4ERkQ
+         ECnZanO7M2gnVs4UdWcg80ijn7oJV6119i8vk2Es=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Gibson <david@gibson.dropbear.id.au>,
+        stable@vger.kernel.org,
         =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
+        Greg Kurz <groug@kaod.org>,
         Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.5 239/257] powerpc/xive: Use XIVE_BAD_IRQ instead of zero to catch non configured IPIs
-Date:   Thu, 16 Apr 2020 15:24:50 +0200
-Message-Id: <20200416131355.429458228@linuxfoundation.org>
+Subject: [PATCH 5.5 241/257] powerpc/xive: Fix xmon support on the PowerNV platform
+Date:   Thu, 16 Apr 2020 15:24:52 +0200
+Message-Id: <20200416131355.977857219@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -62,131 +63,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Cédric Le Goater <clg@kaod.org>
 
-commit b1a504a6500df50e83b701b7946b34fce27ad8a3 upstream.
+commit 97ef275077932c65b1b8ec5022abd737a9fbf3e0 upstream.
 
-When a CPU is brought up, an IPI number is allocated and recorded
-under the XIVE CPU structure. Invalid IPI numbers are tracked with
-interrupt number 0x0.
+The PowerNV platform has multiple IRQ chips and the xmon command
+dumping the state of the XIVE interrupt should only operate on the
+XIVE IRQ chip.
 
-On the PowerNV platform, the interrupt number space starts at 0x10 and
-this works fine. However, on the sPAPR platform, it is possible to
-allocate the interrupt number 0x0 and this raises an issue when CPU 0
-is unplugged. The XIVE spapr driver tracks allocated interrupt numbers
-in a bitmask and it is not correctly updated when interrupt number 0x0
-is freed. It stays allocated and it is then impossible to reallocate.
-
-Fix by using the XIVE_BAD_IRQ value instead of zero on both platforms.
-
-Reported-by: David Gibson <david@gibson.dropbear.id.au>
-Fixes: eac1e731b59e ("powerpc/xive: guest exploitation of the XIVE interrupt controller")
-Cc: stable@vger.kernel.org # v4.14+
+Fixes: 5896163f7f91 ("powerpc/xmon: Improve output of XIVE interrupts")
+Cc: stable@vger.kernel.org # v5.4+
 Signed-off-by: Cédric Le Goater <clg@kaod.org>
-Reviewed-by: David Gibson <david@gibson.dropbear.id.au>
-Tested-by: David Gibson <david@gibson.dropbear.id.au>
+Reviewed-by: Greg Kurz <groug@kaod.org>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200306150143.5551-2-clg@kaod.org
+Link: https://lore.kernel.org/r/20200306150143.5551-3-clg@kaod.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/sysdev/xive/common.c        |   12 +++---------
- arch/powerpc/sysdev/xive/native.c        |    4 ++--
- arch/powerpc/sysdev/xive/spapr.c         |    4 ++--
- arch/powerpc/sysdev/xive/xive-internal.h |    7 +++++++
- 4 files changed, 14 insertions(+), 13 deletions(-)
+ arch/powerpc/sysdev/xive/common.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
 --- a/arch/powerpc/sysdev/xive/common.c
 +++ b/arch/powerpc/sysdev/xive/common.c
-@@ -68,13 +68,6 @@ static u32 xive_ipi_irq;
- /* Xive state for each CPU */
- static DEFINE_PER_CPU(struct xive_cpu *, xive_cpu);
+@@ -258,11 +258,15 @@ notrace void xmon_xive_do_dump(int cpu)
  
--/*
-- * A "disabled" interrupt should never fire, to catch problems
-- * we set its logical number to this
-- */
--#define XIVE_BAD_IRQ		0x7fffffff
--#define XIVE_MAX_IRQ		(XIVE_BAD_IRQ - 1)
--
- /* An invalid CPU target */
- #define XIVE_INVALID_TARGET	(-1)
- 
-@@ -1150,7 +1143,7 @@ static int xive_setup_cpu_ipi(unsigned i
- 	xc = per_cpu(xive_cpu, cpu);
- 
- 	/* Check if we are already setup */
--	if (xc->hw_ipi != 0)
-+	if (xc->hw_ipi != XIVE_BAD_IRQ)
- 		return 0;
- 
- 	/* Grab an IPI from the backend, this will populate xc->hw_ipi */
-@@ -1187,7 +1180,7 @@ static void xive_cleanup_cpu_ipi(unsigne
- 	/* Disable the IPI and free the IRQ data */
- 
- 	/* Already cleaned up ? */
--	if (xc->hw_ipi == 0)
-+	if (xc->hw_ipi == XIVE_BAD_IRQ)
- 		return;
- 
- 	/* Mask the IPI */
-@@ -1343,6 +1336,7 @@ static int xive_prepare_cpu(unsigned int
- 		if (np)
- 			xc->chip_id = of_get_ibm_chip_id(np);
- 		of_node_put(np);
-+		xc->hw_ipi = XIVE_BAD_IRQ;
- 
- 		per_cpu(xive_cpu, cpu) = xc;
- 	}
---- a/arch/powerpc/sysdev/xive/native.c
-+++ b/arch/powerpc/sysdev/xive/native.c
-@@ -312,7 +312,7 @@ static void xive_native_put_ipi(unsigned
- 	s64 rc;
- 
- 	/* Free the IPI */
--	if (!xc->hw_ipi)
-+	if (xc->hw_ipi == XIVE_BAD_IRQ)
- 		return;
- 	for (;;) {
- 		rc = opal_xive_free_irq(xc->hw_ipi);
-@@ -320,7 +320,7 @@ static void xive_native_put_ipi(unsigned
- 			msleep(OPAL_BUSY_DELAY_MS);
- 			continue;
- 		}
--		xc->hw_ipi = 0;
-+		xc->hw_ipi = XIVE_BAD_IRQ;
- 		break;
- 	}
- }
---- a/arch/powerpc/sysdev/xive/spapr.c
-+++ b/arch/powerpc/sysdev/xive/spapr.c
-@@ -560,11 +560,11 @@ static int xive_spapr_get_ipi(unsigned i
- 
- static void xive_spapr_put_ipi(unsigned int cpu, struct xive_cpu *xc)
+ int xmon_xive_get_irq_config(u32 hw_irq, struct irq_data *d)
  {
--	if (!xc->hw_ipi)
-+	if (xc->hw_ipi == XIVE_BAD_IRQ)
- 		return;
++	struct irq_chip *chip = irq_data_get_irq_chip(d);
+ 	int rc;
+ 	u32 target;
+ 	u8 prio;
+ 	u32 lirq;
  
- 	xive_irq_bitmap_free(xc->hw_ipi);
--	xc->hw_ipi = 0;
-+	xc->hw_ipi = XIVE_BAD_IRQ;
- }
- #endif /* CONFIG_SMP */
- 
---- a/arch/powerpc/sysdev/xive/xive-internal.h
-+++ b/arch/powerpc/sysdev/xive/xive-internal.h
-@@ -5,6 +5,13 @@
- #ifndef __XIVE_INTERNAL_H
- #define __XIVE_INTERNAL_H
- 
-+/*
-+ * A "disabled" interrupt should never fire, to catch problems
-+ * we set its logical number to this
-+ */
-+#define XIVE_BAD_IRQ		0x7fffffff
-+#define XIVE_MAX_IRQ		(XIVE_BAD_IRQ - 1)
++	if (!is_xive_irq(chip))
++		return -EINVAL;
 +
- /* Each CPU carry one of these with various per-CPU state */
- struct xive_cpu {
- #ifdef CONFIG_SMP
+ 	rc = xive_ops->get_irq_config(hw_irq, &target, &prio, &lirq);
+ 	if (rc) {
+ 		xmon_printf("IRQ 0x%08x : no config rc=%d\n", hw_irq, rc);
 
 
