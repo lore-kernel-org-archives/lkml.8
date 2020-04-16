@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07010C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F82C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D813C2223C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:31:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22B4322250
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:31:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587043900;
-	bh=KsL9znS/gqHlzm4Ru+tKVfzZq417gzhg9zkrl04jOOw=;
+	s=default; t=1587043909;
+	bh=ZTGCCw01lPhTo/izv+JIZcVsDGvAQR9XfAGcQdEpLOg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PlHYPtkUc2OpWaauO2mFC6LbZK1ZZIU9ODwKMrKgOlxksvgGp9G4TwDo4UTuQJ2+9
-	 QhSDO8DwqlR2EAmyPfTZuZDkFR9+Ips1XvJxX8T0EdrQai7AmeLfZ8ahOgUM5I6G/J
-	 NO0ioMx4Vhc6A0u1z+Zso/GpkdJTCJEibgRMkcuw=
+	b=HiOOd4Ku8FjgYRhH65uVAMikuJI0f1NnsNxFeKNMMG360qqi4r8dy4pZpm2w7O8Aj
+	 pv29cmDXxKKWQgoAkcPucACxN377NIEWhqcnHpd/Hf0ozgq7z2hMnTU71Gs75w5ZMH
+	 fFPhY5dF/4gN66qwJyxBAtp7DURw9g8oMFtGiDWo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2896348AbgDPNbj (ORCPT
+        id S2896433AbgDPNbq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:31:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37202 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:31:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2895716AbgDPN2S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:28:18 -0400
+        id S2895717AbgDPN2W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:28:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9712721D82;
-        Thu, 16 Apr 2020 13:28:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D65121BE5;
+        Thu, 16 Apr 2020 13:28:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043698;
-        bh=KsL9znS/gqHlzm4Ru+tKVfzZq417gzhg9zkrl04jOOw=;
+        s=default; t=1587043700;
+        bh=ZTGCCw01lPhTo/izv+JIZcVsDGvAQR9XfAGcQdEpLOg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jDpBexZ3pSGhftLCgBfiyZnhorISx6BZeNl9yvej/E0hagFjAFvKf2nfbQr0q9Tjz
-         HN+DXyhNDvpZbZeB1Te6PMWJejx9kz3Yzip+VeCXNK4jxa0WqUiDxwEcP4pF4mhByc
-         JqekQYuxPyb+Ogw02sJcWG4zapfJIc/KsXR9kD/c=
+        b=aotWsfpq3/HPtRJMWSpbr1Bgd0Y/6UwKPnjLsrojuEIRn79bN+KhuJSOksXfWb6c/
+         Uin5fsBSxUndQYbu86sT/WMiDsq3ehbm4GWBJWWWmUcNjJll4tAQCS0z0ll0PPnux5
+         F9vR3PLjS417YVdECoOVRQzOK6VCX4Pc3wSUR8fc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, James Smart <jsmart2021@gmail.com>,
-        Himanshu Madhani <himanshu.madhani@oracle.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 4.19 062/146] nvme-fc: Revert "add module to ops template to allow module references"
-Date:   Thu, 16 Apr 2020 15:23:23 +0200
-Message-Id: <20200416131251.364119861@linuxfoundation.org>
+        Sagi Grimberg <sagi@grimberg.me>,
+        Christoph Hellwig <hch@lst.de>,
+        Max Gurtovoy <maxg@mellanox.com>
+Subject: [PATCH 4.19 063/146] nvme: Treat discovery subsystems as unique subsystems
+Date:   Thu, 16 Apr 2020 15:23:24 +0200
+Message-Id: <20200416131251.520217772@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
 References: <20200416131242.353444678@linuxfoundation.org>
@@ -62,134 +63,51 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: James Smart <jsmart2021@gmail.com>
 
-commit 8c5c660529209a0e324c1c1a35ce3f83d67a2aa5 upstream.
+commit c26aa572027d438de9cc311aaebcbe972f698c24 upstream.
 
-The original patch was to resolve the lldd being able to be unloaded
-while being used to talk to the boot device of the system. However, the
-end result of the original patch is that any driver unload while a nvme
-controller is live via the lldd is now being prohibited. Given the module
-reference, the module teardown routine can't be called, thus there's no
-way, other than manual actions to terminate the controllers.
+Current code matches subnqn and collapses all controllers to the
+same subnqn to a single subsystem structure. This is good for
+recognizing multiple controllers for the same subsystem. But with
+the well-known discovery subnqn, the subsystems aren't truly the
+same subsystem. As such, subsystem specific rules, such as no
+overlap of controller id, do not apply. With today's behavior, the
+check for overlap of controller id can fail, preventing the new
+discovery controller from being created.
 
-Fixes: 863fbae929c7 ("nvme_fc: add module to ops template to allow module references")
-Cc: <stable@vger.kernel.org> # v5.4+
+When searching for like subsystem nqn, exclude the discovery nqn
+from matching. This will result in each discovery controller being
+attached to a unique subsystem structure.
+
 Signed-off-by: James Smart <jsmart2021@gmail.com>
-Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/nvme/host/fc.c          |   14 ++------------
- drivers/nvme/target/fcloop.c    |    1 -
- drivers/scsi/lpfc/lpfc_nvme.c   |    2 --
- drivers/scsi/qla2xxx/qla_nvme.c |    1 -
- include/linux/nvme-fc-driver.h  |    4 ----
- 5 files changed, 2 insertions(+), 20 deletions(-)
+ drivers/nvme/host/core.c |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
---- a/drivers/nvme/host/fc.c
-+++ b/drivers/nvme/host/fc.c
-@@ -342,8 +342,7 @@ nvme_fc_register_localport(struct nvme_f
- 	    !template->ls_req || !template->fcp_io ||
- 	    !template->ls_abort || !template->fcp_abort ||
- 	    !template->max_hw_queues || !template->max_sgl_segments ||
--	    !template->max_dif_sgl_segments || !template->dma_boundary ||
--	    !template->module) {
-+	    !template->max_dif_sgl_segments || !template->dma_boundary) {
- 		ret = -EINVAL;
- 		goto out_reghost_failed;
- 	}
-@@ -1987,7 +1986,6 @@ nvme_fc_ctrl_free(struct kref *ref)
- {
- 	struct nvme_fc_ctrl *ctrl =
- 		container_of(ref, struct nvme_fc_ctrl, ref);
--	struct nvme_fc_lport *lport = ctrl->lport;
- 	unsigned long flags;
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -2200,6 +2200,17 @@ static struct nvme_subsystem *__nvme_fin
  
- 	if (ctrl->ctrl.tagset) {
-@@ -2013,7 +2011,6 @@ nvme_fc_ctrl_free(struct kref *ref)
- 	if (ctrl->ctrl.opts)
- 		nvmf_free_options(ctrl->ctrl.opts);
- 	kfree(ctrl);
--	module_put(lport->ops->module);
- }
+ 	lockdep_assert_held(&nvme_subsystems_lock);
  
- static void
-@@ -3055,15 +3052,10 @@ nvme_fc_init_ctrl(struct device *dev, st
- 		goto out_fail;
- 	}
- 
--	if (!try_module_get(lport->ops->module)) {
--		ret = -EUNATCH;
--		goto out_free_ctrl;
--	}
--
- 	idx = ida_simple_get(&nvme_fc_ctrl_cnt, 0, 0, GFP_KERNEL);
- 	if (idx < 0) {
- 		ret = -ENOSPC;
--		goto out_mod_put;
-+		goto out_free_ctrl;
- 	}
- 
- 	ctrl->ctrl.opts = opts;
-@@ -3205,8 +3197,6 @@ out_free_queues:
- out_free_ida:
- 	put_device(ctrl->dev);
- 	ida_simple_remove(&nvme_fc_ctrl_cnt, ctrl->cnum);
--out_mod_put:
--	module_put(lport->ops->module);
- out_free_ctrl:
- 	kfree(ctrl);
- out_fail:
---- a/drivers/nvme/target/fcloop.c
-+++ b/drivers/nvme/target/fcloop.c
-@@ -825,7 +825,6 @@ fcloop_targetport_delete(struct nvmet_fc
- #define FCLOOP_DMABOUND_4G		0xFFFFFFFF
- 
- static struct nvme_fc_port_template fctemplate = {
--	.module			= THIS_MODULE,
- 	.localport_delete	= fcloop_localport_delete,
- 	.remoteport_delete	= fcloop_remoteport_delete,
- 	.create_queue		= fcloop_create_queue,
---- a/drivers/scsi/lpfc/lpfc_nvme.c
-+++ b/drivers/scsi/lpfc/lpfc_nvme.c
-@@ -1903,8 +1903,6 @@ lpfc_nvme_fcp_abort(struct nvme_fc_local
- 
- /* Declare and initialization an instance of the FC NVME template. */
- static struct nvme_fc_port_template lpfc_nvme_template = {
--	.module	= THIS_MODULE,
--
- 	/* initiator-based functions */
- 	.localport_delete  = lpfc_nvme_localport_delete,
- 	.remoteport_delete = lpfc_nvme_remoteport_delete,
---- a/drivers/scsi/qla2xxx/qla_nvme.c
-+++ b/drivers/scsi/qla2xxx/qla_nvme.c
-@@ -560,7 +560,6 @@ static void qla_nvme_remoteport_delete(s
- }
- 
- static struct nvme_fc_port_template qla_nvme_fc_transport = {
--	.module	= THIS_MODULE,
- 	.localport_delete = qla_nvme_localport_delete,
- 	.remoteport_delete = qla_nvme_remoteport_delete,
- 	.create_queue   = qla_nvme_alloc_queue,
---- a/include/linux/nvme-fc-driver.h
-+++ b/include/linux/nvme-fc-driver.h
-@@ -282,8 +282,6 @@ struct nvme_fc_remote_port {
-  *
-  * Host/Initiator Transport Entrypoints/Parameters:
-  *
-- * @module:  The LLDD module using the interface
-- *
-  * @localport_delete:  The LLDD initiates deletion of a localport via
-  *       nvme_fc_deregister_localport(). However, the teardown is
-  *       asynchronous. This routine is called upon the completion of the
-@@ -397,8 +395,6 @@ struct nvme_fc_remote_port {
-  *       Value is Mandatory. Allowed to be zero.
-  */
- struct nvme_fc_port_template {
--	struct module	*module;
--
- 	/* initiator-based functions */
- 	void	(*localport_delete)(struct nvme_fc_local_port *);
- 	void	(*remoteport_delete)(struct nvme_fc_remote_port *);
++	/*
++	 * Fail matches for discovery subsystems. This results
++	 * in each discovery controller bound to a unique subsystem.
++	 * This avoids issues with validating controller values
++	 * that can only be true when there is a single unique subsystem.
++	 * There may be multiple and completely independent entities
++	 * that provide discovery controllers.
++	 */
++	if (!strcmp(subsysnqn, NVME_DISC_SUBSYS_NAME))
++		return NULL;
++
+ 	list_for_each_entry(subsys, &nvme_subsystems, entry) {
+ 		if (strcmp(subsys->subnqn, subsysnqn))
+ 			continue;
 
 
