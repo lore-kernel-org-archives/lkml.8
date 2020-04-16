@@ -2,126 +2,129 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6EDFC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB32BC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:39:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF38321D79
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:39:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A48FD2078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:39:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2635846AbgDPMjB (ORCPT
+        id S2635878AbgDPMjd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 08:39:01 -0400
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:48735 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2632877AbgDPMil (ORCPT
+        Thu, 16 Apr 2020 08:39:33 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:49927 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2635720AbgDPMjL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 08:38:41 -0400
-X-Originating-IP: 93.29.109.196
-Received: from aptenodytes (196.109.29.93.rev.sfr.net [93.29.109.196])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id DA089E0013;
-        Thu, 16 Apr 2020 12:38:34 +0000 (UTC)
-Date:   Thu, 16 Apr 2020 14:38:34 +0200
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Ezequiel Garcia <ezequiel@collabora.com>
-Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Jacob Chen <jacob-chen@iotwrt.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Hans Verkuil <hansverk@cisco.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 0/4] media: rockchip: rga: PX30 support and YUV2YUV fix
-Message-ID: <20200416123834.GG125838@aptenodytes>
-References: <20200416115047.233720-1-paul.kocialkowski@bootlin.com>
- <d33aef355623a5abd6eec176d33a167c456ed915.camel@collabora.com>
+        Thu, 16 Apr 2020 08:39:11 -0400
+Received: from mail-lj1-f177.google.com ([209.85.208.177]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1N7zJj-1jClw02wGx-0155ZG; Thu, 16 Apr 2020 14:39:07 +0200
+Received: by mail-lj1-f177.google.com with SMTP id y4so7622553ljn.7;
+        Thu, 16 Apr 2020 05:39:07 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZCrYRbhBk6titTh0aN0KepnQmgROdDLy6FfIZ4bV/9xH4uJq/+
+        7CeBoTRRXBt2AuyNw0zYIfkmF8xcEalFZzPxAX8=
+X-Google-Smtp-Source: APiQypJBjKSJ60PBcmBCW4rJUa3iEMj8puJUFjtDtgFXYZenSiZo1kQ7qfLc3ugSe7HBLKnPyUhQlFliM3tyUpQ3SD4=
+X-Received: by 2002:a2e:6a08:: with SMTP id f8mr6773388ljc.8.1587040747110;
+ Thu, 16 Apr 2020 05:39:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="S5HS5MvDw4DmbRmb"
-Content-Disposition: inline
-In-Reply-To: <d33aef355623a5abd6eec176d33a167c456ed915.camel@collabora.com>
+References: <20200408202711.1198966-1-arnd@arndb.de> <nycvar.YSQ.7.76.2004081633260.2671@knanqh.ubzr>
+ <CAK8P3a2frDf4BzEpEF0uwPTV2dv6Jve+6N97z1sSuSBUAPJquA@mail.gmail.com>
+ <20200408224224.GD11886@ziepe.ca> <87k12pgifv.fsf@intel.com>
+ <7d9410a4b7d0ef975f7cbd8f0b6762df114df539.camel@mellanox.com>
+ <20200410171320.GN11886@ziepe.ca> <16441479b793077cdef9658f35773739038c39dc.camel@mellanox.com>
+ <20200414132900.GD5100@ziepe.ca> <CAK8P3a0aFQ7h4zRDW=QLogXWc88JkJJXEOK0_CpWwsRjq6+T+w@mail.gmail.com>
+ <20200414152312.GF5100@ziepe.ca> <CAK8P3a1PjP9_b5NdmqTLeGN4y+3JXx_yyTE8YAf1u5rYHWPA9g@mail.gmail.com>
+ <f6d83b08fc0bc171b5ba5b2a0bc138727d92e2c0.camel@mellanox.com>
+ <CAK8P3a1-J=4EAxh7TtQxugxwXk239u8ffgxZNRdw_WWy8ExFoQ@mail.gmail.com>
+ <834c7606743424c64951dd2193ca15e29799bf18.camel@mellanox.com>
+ <CAK8P3a3Wx5_bUOKnN3_hG5nLOqv3WCUtMSq6vOkJzWZgsmAz+A@mail.gmail.com> <874ktj4tvn.fsf@intel.com>
+In-Reply-To: <874ktj4tvn.fsf@intel.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 16 Apr 2020 14:38:50 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1S2x1jnx9Q5B22vX8gBHs0Ztu-znA9hqZ5xp5tRAykGg@mail.gmail.com>
+Message-ID: <CAK8P3a1S2x1jnx9Q5B22vX8gBHs0Ztu-znA9hqZ5xp5tRAykGg@mail.gmail.com>
+Subject: Re: [RFC 0/6] Regressions for "imply" behavior change
+To:     Jani Nikula <jani.nikula@linux.intel.com>
+Cc:     Saeed Mahameed <saeedm@mellanox.com>,
+        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
+        "masahiroy@kernel.org" <masahiroy@kernel.org>,
+        "Laurent.pinchart@ideasonboard.com" 
+        <Laurent.pinchart@ideasonboard.com>,
+        "leon@kernel.org" <leon@kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "nico@fluxnic.net" <nico@fluxnic.net>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "kieran.bingham+renesas@ideasonboard.com" 
+        <kieran.bingham+renesas@ideasonboard.com>,
+        "a.hajda@samsung.com" <a.hajda@samsung.com>,
+        "jonas@kwiboo.se" <jonas@kwiboo.se>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "jgg@ziepe.ca" <jgg@ziepe.ca>,
+        "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:F8U/N57N4ckbcTeNDfExN5yylgb+ezCMC5CxuKhm89y+pGLDcau
+ TREUOKo1o7WqeUtbope5PEn3ZpW/vvn9CO6eTPp4FgVJSWUMLQkv9ZiwTNMlTrUksypdRkL
+ iekpBmtIaw/V0rrPXVnRsSsS4KnQG9tja4TN0vUbG4n6n8i7TRUGcMnwdO/uVog7m/pWJMQ
+ szUoSrbUSgkQ1PeMQ3Qhg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:EG5Pwn24R0E=:NEbJWW3YOe8tbYtXoYzQlB
+ OYg76xqSVyfU+/ffXRtmY2F9L/jdC9+7winJhhdBcrgqy/cmI9hA1PzJ+O63YcHHjaKN/gghJ
+ Rfp1wl6U7HQetDu3+0QYelsd+30GJVA03G9SL0JR6NY52MLgLMcXXjcbpBnR7HdRzB8OptiqP
+ oUJfdahNM4nDohNOj+WsdsVatMuKlloeqszEytPxYNHOZHOiJNo3nlMHrhOFMnkc+c+rhCs01
+ Tp5oyyUP+RRoLiEAvYn/YxY03443yZmMYCrOIfGDdmwc7wURorYc725p4fyKeT9X8CxzuPKMn
+ 4QlugRQEkWhj9+0kUJLnelNqBjg/nRpzSgm5bdeNwoeH4o1ouafmEcMYPJ/qXpaANcDLIQpCd
+ x4gPZmDJ+kxDxf+c/0v5LZJ75+sUQ4DPLfuOlUfAenV6xxU0lSpZVkdeDaUXXjbbRub6SOAHD
+ srVyUcUFbDpXjch+HtEqUMQcQKepiKhm/bl4pDktj6VicPIkd3ZkEpA7o6wNOHgj4XK0GlSxB
+ 01k415eeDnDwMhVrQqarpasfYw7yWI6ftUYtaOZMY5N6JP3nchBTSHOuuw2SX/t3+dBBF1akg
+ J/dQilZQjOljqzOyKDfx/7/6lwexgABL7jI7ys3SApuTzsYIX5M8TD4vA59r0VoQlEWUJ1emQ
+ 2ptxk0G9LLwXYi+SxR4sjzZ61XreMX+Jw7B7vi30YHtbHNH/FUTcAFDAjL1ytz5lYq6IYfMMq
+ ihIyKkE8nLu0z0bsFkuo3GNPdUKZhstr81HUW7Tus5uYok8AMo/+Qxf1O5zOK1vfIeTOalrcO
+ 3BNPsKq2lLZray15UpWQU5C20cOWblEffC2DJIUeh0mNPOqgMI=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Apr 16, 2020 at 12:17 PM Jani Nikula
+<jani.nikula@linux.intel.com> wrote:
+>
+> On Thu, 16 Apr 2020, Arnd Bergmann <arnd@arndb.de> wrote:
+> > On Thu, Apr 16, 2020 at 5:25 AM Saeed Mahameed <saeedm@mellanox.com> wrote:
+> >> BTW how about adding a new Kconfig option to hide the details of
+> >> ( BAR || !BAR) ? as Jason already explained and suggested, this will
+> >> make it easier for the users and developers to understand the actual
+> >> meaning behind this tristate weird condition.
+> >>
+> >> e.g have a new keyword:
+> >>      reach VXLAN
+> >> which will be equivalent to:
+> >>      depends on VXLAN && !VXLAN
+> >
+> > I'd love to see that, but I'm not sure what keyword is best. For your
+> > suggestion of "reach", that would probably do the job, but I'm not
+> > sure if this ends up being more or less confusing than what we have
+> > today.
+>
+> Ah, perfect bikeshedding topic!
+>
+> Perhaps "uses"? If the dependency is enabled it gets used as a
+> dependency.
 
---S5HS5MvDw4DmbRmb
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+That seems to be the best naming suggestion so far
 
-Hi Ezequiel,
+> Of course, this is all just talk until someone(tm) posts a patch
+> actually making the change. I've looked at the kconfig tool sources
+> before; not going to make the same mistake again.
 
-On Thu 16 Apr 20, 09:22, Ezequiel Garcia wrote:
-> Hi Paul,
->=20
-> Thanks for the patch.
->=20
-> On Thu, 2020-04-16 at 13:50 +0200, Paul Kocialkowski wrote:
-> > Hi,
-> >=20
-> > This series adds support for the Rockchip PX30 SoC in the V4L2 M2M RGA =
-driver.
-> > It also contains a fix for the YUV2YUV case that was not properly handl=
-ed.
->=20
-> How have you been testing this?
+Right. OTOH whoever implements it gets to pick the color of the
+bikeshed. ;-)
 
-I tested it with a standalone utility setting V4L2_PIX_FMT_YUV420 on both
-output and capture. The issue should be pretty easy to reproduce.
-
-Cheers,
-
-Paul
-
-> Thanks,
-> Ezequiel
->=20
-> > Cheers,
-> >=20
-> > Paul
-> >=20
-> > Paul Kocialkowski (4):
-> >   dt-bindings: rockchip-rga: Add PX30 compatible
-> >   arm64: dts: rockchip: Add RGA support to the PX30
-> >   media: rockchip: rga: Add support for the PX30 compatible
-> >   media: rockchip: rga: Only set output CSC mode for RGB input
-> >=20
-> >  .../devicetree/bindings/media/rockchip-rga.txt |  1 +
-> >  arch/arm64/boot/dts/rockchip/px30.dtsi         | 11 +++++++++++
-> >  drivers/media/platform/rockchip/rga/rga-hw.c   | 18 +++++++++++-------
-> >  drivers/media/platform/rockchip/rga/rga.c      |  4 +++-
-> >  4 files changed, 26 insertions(+), 8 deletions(-)
-> >=20
->=20
->=20
-
---=20
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
-
---S5HS5MvDw4DmbRmb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl6YUcoACgkQ3cLmz3+f
-v9EMAQf8C+o9NTz5s1Go3gR6vgIrpWCEJZ018/7aZT+9I8EdjoBxSH0wE9Nl/Ir6
-99oB3jHnwpjXEisECpuYP29hhXJl8O7wsuJGu21Jq9Nil/wMJRO2sbkkVuNDHNGi
-R6uiCiwoj71YvB5W3QR7wVf+2przwmkdGtg6+xjVa6mFVACIE91EAC3oJHrCAdjO
-WS+3EXhZ6kisMEMOhSKGVqe2X5xLitPfHm5N7owGiCYy210dxmciQhe1mqbagcBO
-QQCFM1DpzUdMz6JFE68azeMHq+InMno9rrlbNBqwJcm2oYIDZ8FlzTP/pitouaFs
-pFewZcsp2SqyCM+TzUdiBighDMz3sg==
-=6ymt
------END PGP SIGNATURE-----
-
---S5HS5MvDw4DmbRmb--
+      Arnd
