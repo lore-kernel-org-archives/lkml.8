@@ -2,222 +2,136 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF476C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:37:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E474BC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:37:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8A6A21D91
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:37:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587051425;
-	bh=VmVN60V25JspsZ14eGwB7Xo4/VC6TrWzh+uz3z2ASuA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MR9nNt2qKwbZUcgQzobmC3UvWX/UN9dKsi18g21bCYHk1CulCA3HaAZLma5kgBO6z
-	 RWvOWbYcWtmCSleUt5+NVRaYM4A4onscTmbR5eFgKTZ5g8Tw5W0S2ctmWX1y/k6V4h
-	 4mVMLuq0vs8B33d82TW+Q1oc3tf/IBp5p1kNz0AI=
+	by mail.kernel.org (Postfix) with ESMTP id C8CCE21D91
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:37:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506667AbgDPPhE (ORCPT
+        id S2405016AbgDPPhK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:37:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52046 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:37:10 -0400
+Received: from mga06.intel.com ([134.134.136.31]:10233 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897866AbgDPNji (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:39:38 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46DC1206E9;
-        Thu, 16 Apr 2020 13:39:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044377;
-        bh=VmVN60V25JspsZ14eGwB7Xo4/VC6TrWzh+uz3z2ASuA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RCMxa9ACptSh4b8DmEfy32bY5WVjnhurX1dmfdhJFnpTR+Kn+BQ7eThE8eAM/5QqY
-         9J/x/QOfVRaOI/gq73b8KrPr6b26eUDik5GJ+zwI6epfX2qaRKYxm82f+C7GZ/5rke
-         VCYueLJC7c+INSV7Am3S9rp/lBZ0Po9ry0Bxq4M8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Gilad Ben-Yossef <gilad@benyossef.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.5 192/257] crypto: ccree - protect against empty or NULL scatterlists
-Date:   Thu, 16 Apr 2020 15:24:03 +0200
-Message-Id: <20200416131350.252443063@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
-References: <20200416131325.891903893@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S2438042AbgDPPgw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 11:36:52 -0400
+IronPort-SDR: ZWSFs09+B+jmDxB/WgYPhqAnsqlAsiUOVsMWyPLE7bP75ezzPlB1cwEcaDntWdzXo4ArXMx2O/
+ TJPQBFV91qRQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 08:36:52 -0700
+IronPort-SDR: Ie9VQt6/1hIpshXKVEVkpt8gf3HuPL9A3Xh9hbWwj1vo8Rn2DYjBtqstG/xpmvPf+n/EbB0E5r
+ s7InR8Iwgl+A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,391,1580803200"; 
+   d="scan'208";a="257257679"
+Received: from cchyder-mobl1.amr.corp.intel.com (HELO [10.254.70.41]) ([10.254.70.41])
+  by orsmga006.jf.intel.com with ESMTP; 16 Apr 2020 08:36:51 -0700
+Subject: Re: [PATCH v4 2/2] mm/gup/writeback: add callbacks for inaccessible
+ pages
+To:     Claudio Imbrenda <imbrenda@linux.ibm.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>, linux-next@vger.kernel.org,
+        akpm@linux-foundation.org, jack@suse.cz, kirill@shutemov.name,
+        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        borntraeger@de.ibm.com, david@redhat.com, aarcange@redhat.com,
+        linux-mm@kvack.org, frankja@linux.ibm.com, sfr@canb.auug.org.au,
+        jhubbard@nvidia.com, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, Will Deacon <will@kernel.org>,
+        "Williams, Dan J" <dan.j.williams@intel.com>
+References: <20200306132537.783769-1-imbrenda@linux.ibm.com>
+ <20200306132537.783769-3-imbrenda@linux.ibm.com>
+ <3ae46945-0c7b-03cd-700a-a6fe8003c6ab@intel.com>
+ <20200415221754.GM2483@worktop.programming.kicks-ass.net>
+ <a7c2eb84-94c2-a608-4b04-a740fa9a389d@intel.com>
+ <20200416141547.29be5ea0@p-imbrenda>
+ <de56aa8e-9035-4b68-33cb-15682d073e26@intel.com>
+ <20200416165900.68bd4dba@p-imbrenda>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <a6b8728d-7382-9316-412d-dd48b5e7c41a@intel.com>
+Date:   Thu, 16 Apr 2020 08:36:50 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20200416165900.68bd4dba@p-imbrenda>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gilad Ben-Yossef <gilad@benyossef.com>
+On 4/16/20 7:59 AM, Claudio Imbrenda wrote:
+> On Thu, 16 Apr 2020 07:20:48 -0700
+> Dave Hansen <dave.hansen@intel.com> wrote:
+>> On 4/16/20 5:15 AM, Claudio Imbrenda wrote:
+>>>> I assumed that this was all anonymous-only so it's always dirty
+>>>> before writeback starts.  
+>>> it could also be mmapped  
+>>
+>> Let's say you have a mmap()'d ramfs file.  Another process calls which
+>> doesn't have it mapped calls sys_write() and writes to the file.
+...
+>> Where is the arch_make_page_accessible() in this case on the ramfs
+>> page?
+> 
+> it's in the fault handler for the exception the CPU will get when
+> attempting to write the data to the protected page
 
-commit ce0fc6db38decf0d2919bfe783de6d6b76e421a9 upstream.
+Ahh, so this is *just* intended to precede I/O done on the page, when a
+non-host entity is touching the memory?
 
-Deal gracefully with a NULL or empty scatterlist which can happen
-if both cryptlen and assoclen are zero and we're doing in-place
-AEAD encryption.
-
-This fixes a crash when this causes us to try and map a NULL page,
-at least with some platforms / DMA mapping configs.
-
-Cc: stable@vger.kernel.org # v4.19+
-Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/crypto/ccree/cc_buffer_mgr.c |   62 +++++++++++++++--------------------
- drivers/crypto/ccree/cc_buffer_mgr.h |    1 
- 2 files changed, 28 insertions(+), 35 deletions(-)
-
---- a/drivers/crypto/ccree/cc_buffer_mgr.c
-+++ b/drivers/crypto/ccree/cc_buffer_mgr.c
-@@ -87,6 +87,8 @@ static unsigned int cc_get_sgl_nents(str
- {
- 	unsigned int nents = 0;
- 
-+	*lbytes = 0;
-+
- 	while (nbytes && sg_list) {
- 		nents++;
- 		/* get the number of bytes in the last entry */
-@@ -95,6 +97,7 @@ static unsigned int cc_get_sgl_nents(str
- 				nbytes : sg_list->length;
- 		sg_list = sg_next(sg_list);
- 	}
-+
- 	dev_dbg(dev, "nents %d last bytes %d\n", nents, *lbytes);
- 	return nents;
- }
-@@ -290,37 +293,25 @@ static int cc_map_sg(struct device *dev,
- 		     unsigned int nbytes, int direction, u32 *nents,
- 		     u32 max_sg_nents, u32 *lbytes, u32 *mapped_nents)
- {
--	if (sg_is_last(sg)) {
--		/* One entry only case -set to DLLI */
--		if (dma_map_sg(dev, sg, 1, direction) != 1) {
--			dev_err(dev, "dma_map_sg() single buffer failed\n");
--			return -ENOMEM;
--		}
--		dev_dbg(dev, "Mapped sg: dma_address=%pad page=%p addr=%pK offset=%u length=%u\n",
--			&sg_dma_address(sg), sg_page(sg), sg_virt(sg),
--			sg->offset, sg->length);
--		*lbytes = nbytes;
--		*nents = 1;
--		*mapped_nents = 1;
--	} else {  /*sg_is_last*/
--		*nents = cc_get_sgl_nents(dev, sg, nbytes, lbytes);
--		if (*nents > max_sg_nents) {
--			*nents = 0;
--			dev_err(dev, "Too many fragments. current %d max %d\n",
--				*nents, max_sg_nents);
--			return -ENOMEM;
--		}
--		/* In case of mmu the number of mapped nents might
--		 * be changed from the original sgl nents
--		 */
--		*mapped_nents = dma_map_sg(dev, sg, *nents, direction);
--		if (*mapped_nents == 0) {
--			*nents = 0;
--			dev_err(dev, "dma_map_sg() sg buffer failed\n");
--			return -ENOMEM;
--		}
-+	int ret = 0;
-+
-+	*nents = cc_get_sgl_nents(dev, sg, nbytes, lbytes);
-+	if (*nents > max_sg_nents) {
-+		*nents = 0;
-+		dev_err(dev, "Too many fragments. current %d max %d\n",
-+			*nents, max_sg_nents);
-+		return -ENOMEM;
- 	}
- 
-+	ret = dma_map_sg(dev, sg, *nents, direction);
-+	if (dma_mapping_error(dev, ret)) {
-+		*nents = 0;
-+		dev_err(dev, "dma_map_sg() sg buffer failed %d\n", ret);
-+		return -ENOMEM;
-+	}
-+
-+	*mapped_nents = ret;
-+
- 	return 0;
- }
- 
-@@ -555,11 +546,12 @@ void cc_unmap_aead_request(struct device
- 		sg_virt(req->src), areq_ctx->src.nents, areq_ctx->assoc.nents,
- 		areq_ctx->assoclen, req->cryptlen);
- 
--	dma_unmap_sg(dev, req->src, sg_nents(req->src), DMA_BIDIRECTIONAL);
-+	dma_unmap_sg(dev, req->src, areq_ctx->src.mapped_nents,
-+		     DMA_BIDIRECTIONAL);
- 	if (req->src != req->dst) {
- 		dev_dbg(dev, "Unmapping dst sgl: req->dst=%pK\n",
- 			sg_virt(req->dst));
--		dma_unmap_sg(dev, req->dst, sg_nents(req->dst),
-+		dma_unmap_sg(dev, req->dst, areq_ctx->dst.mapped_nents,
- 			     DMA_BIDIRECTIONAL);
- 	}
- 	if (drvdata->coherent &&
-@@ -881,7 +873,7 @@ static int cc_aead_chain_data(struct cc_
- 					    &src_last_bytes);
- 	sg_index = areq_ctx->src_sgl->length;
- 	//check where the data starts
--	while (sg_index <= size_to_skip) {
-+	while (src_mapped_nents && (sg_index <= size_to_skip)) {
- 		src_mapped_nents--;
- 		offset -= areq_ctx->src_sgl->length;
- 		sgl = sg_next(areq_ctx->src_sgl);
-@@ -908,7 +900,7 @@ static int cc_aead_chain_data(struct cc_
- 			size_for_map += crypto_aead_ivsize(tfm);
- 
- 		rc = cc_map_sg(dev, req->dst, size_for_map, DMA_BIDIRECTIONAL,
--			       &areq_ctx->dst.nents,
-+			       &areq_ctx->dst.mapped_nents,
- 			       LLI_MAX_NUM_OF_DATA_ENTRIES, &dst_last_bytes,
- 			       &dst_mapped_nents);
- 		if (rc)
-@@ -921,7 +913,7 @@ static int cc_aead_chain_data(struct cc_
- 	offset = size_to_skip;
- 
- 	//check where the data starts
--	while (sg_index <= size_to_skip) {
-+	while (dst_mapped_nents && sg_index <= size_to_skip) {
- 		dst_mapped_nents--;
- 		offset -= areq_ctx->dst_sgl->length;
- 		sgl = sg_next(areq_ctx->dst_sgl);
-@@ -1123,7 +1115,7 @@ int cc_map_aead_request(struct cc_drvdat
- 	if (is_gcm4543)
- 		size_to_map += crypto_aead_ivsize(tfm);
- 	rc = cc_map_sg(dev, req->src, size_to_map, DMA_BIDIRECTIONAL,
--		       &areq_ctx->src.nents,
-+		       &areq_ctx->src.mapped_nents,
- 		       (LLI_MAX_NUM_OF_ASSOC_DATA_ENTRIES +
- 			LLI_MAX_NUM_OF_DATA_ENTRIES),
- 		       &dummy, &mapped_nents);
---- a/drivers/crypto/ccree/cc_buffer_mgr.h
-+++ b/drivers/crypto/ccree/cc_buffer_mgr.h
-@@ -25,6 +25,7 @@ enum cc_sg_cpy_direct {
- 
- struct cc_mlli {
- 	cc_sram_addr_t sram_addr;
-+	unsigned int mapped_nents;
- 	unsigned int nents; //sg nents
- 	unsigned int mlli_nents; //mlli nents might be different than the above
- };
-
-
+That seems inconsistent with the process_vm_readv/writev() paths which
+set FOLL_PIN on their pin_remote_user_pages() requests, but don't do I/O
+to the memory.
