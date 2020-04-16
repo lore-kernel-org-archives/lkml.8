@@ -7,51 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0569C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:38:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B87E1C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:38:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9E4B214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:38:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 950DA214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:38:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587051495;
-	bh=RDjO3YYy/MdIUEH1+yLlqQdclPfYbYEFsqVHv24n7HY=;
+	s=default; t=1587051502;
+	bh=ZrHzyFlGKUss73Jc+wNUE+fZkpYQLAwarN1zR6GzVN4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kSjfgkPWD4mjL2YL4i9X/+8CnCwX2/UC86nxBxTVNuWOCFWN3vtJzE303wVsI6l0V
-	 P29mRM9wLvuElXUy8+XncAzocmMj6IChe2poK/682p8N4wJIIx1HdTSqqNpYmVPhhC
-	 Jgza+5hAvku8NnZDNqSPJj6LazGa44OUC5SMur3o=
+	b=j39NRw06x34FZz52vXZVQddbp2Tv+nxqOosd6KLlsOoAlU99YxZQ2PRoHzvedfhNI
+	 YgIuvw8NYtGl91CdSjVaLsE420ab2WQUZmf+6m/K43RzhoooTnKkIBEInzWCp/hLvg
+	 8ZEZHuMIvux/KplEcjZvfz+x33Wk0ljGe0X2Gf6U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410531AbgDPPiO (ORCPT
+        id S2395362AbgDPPiT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:38:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51482 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:38:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897800AbgDPNjE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:39:04 -0400
+        id S2897789AbgDPNjB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:39:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD5642222C;
-        Thu, 16 Apr 2020 13:39:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CA9822203;
+        Thu, 16 Apr 2020 13:39:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044343;
-        bh=RDjO3YYy/MdIUEH1+yLlqQdclPfYbYEFsqVHv24n7HY=;
+        s=default; t=1587044340;
+        bh=ZrHzyFlGKUss73Jc+wNUE+fZkpYQLAwarN1zR6GzVN4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tmSO4cKv0ZRFBp1rQizcXkHYqZqg5i+EJUMA740CE3YHRLJfWwNpCm6KtT47EqpG/
-         gTMTRNgp3ex3nEqTKE0kbytVQiZ3WHFdxEbb7X6kpM26nrniB17Wx+SbTGnPqQosuR
-         QAL91Bqowfe2pevYNi/M1jIdu1/cn0qsTHO/qjwE=
+        b=N97JfX5VpLh9VroROYJjg5P+GfJAMbIf66KBijuCn+69PuB099ZLaN1X/0CQWuU8J
+         ECpvcfJ160uQhMTlE4MrkJ5lfCVxJ4BPztyy10Do/Jk7wYhmhpol0FveLS+r/ISyjs
+         oe9p2XY0V1vOQcn00gJJ7WuX3XQ6Jox7mhmO3ibQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        Chris Down <chris@chrisdown.name>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 5.5 179/257] mm, memcg: do not high throttle allocators based on wraparound
-Date:   Thu, 16 Apr 2020 15:23:50 +0200
-Message-Id: <20200416131348.720466304@linuxfoundation.org>
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.5 161/257] btrfs: set update the uuid generation as soon as possible
+Date:   Thu, 16 Apr 2020 15:23:32 +0200
+Message-Id: <20200416131346.690964572@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -64,60 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <kuba@kernel.org>
+From: Josef Bacik <josef@toxicpanda.com>
 
-commit 9b8b17541f13809d06f6f873325305ddbb760e3e upstream.
+commit 75ec1db8717a8f0a9d9c8d033e542fdaa7b73898 upstream.
 
-If a cgroup violates its memory.high constraints, we may end up unduly
-penalising it.  For example, for the following hierarchy:
+In my EIO stress testing I noticed I was getting forced to rescan the
+uuid tree pretty often, which was weird.  This is because my error
+injection stuff would sometimes inject an error after log replay but
+before we loaded the UUID tree.  If log replay committed the transaction
+it wouldn't have updated the uuid tree generation, but the tree was
+valid and didn't change, so there's no reason to not update the
+generation here.
 
-  A:   max high, 20 usage
-  A/B: 9 high, 10 usage
-  A/C: max high, 10 usage
+Fix this by setting the BTRFS_FS_UPDATE_UUID_TREE_GEN bit immediately
+after reading all the fs roots if the uuid tree generation matches the
+fs generation.  Then any transaction commits that happen during mount
+won't screw up our uuid tree state, forcing us to do needless uuid
+rescans.
 
-We would end up doing the following calculation below when calculating
-high delay for A/B:
-
-  A/B: 10 - 9 = 1...
-  A:   20 - PAGE_COUNTER_MAX = 21, so set max_overage to 21.
-
-This gets worse with higher disparities in usage in the parent.
-
-I have no idea how this disappeared from the final version of the patch,
-but it is certainly Not Good(tm).  This wasn't obvious in testing because,
-for a simple cgroup hierarchy with only one child, the result is usually
-roughly the same.  It's only in more complex hierarchies that things go
-really awry (although still, the effects are limited to a maximum of 2
-seconds in schedule_timeout_killable at a maximum).
-
-[chris@chrisdown.name: changelog]
-Fixes: e26733e0d0ec ("mm, memcg: throttle allocators based on ancestral memory.high")
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Chris Down <chris@chrisdown.name>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: <stable@vger.kernel.org>	[5.4.x]
-Link: http://lkml.kernel.org/r/20200331152424.GA1019937@chrisdown.name
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Guenter Roeck <linux@roeck-us.net>
+Fixes: 70f801754728 ("Btrfs: check UUID tree during mount if required")
+CC: stable@vger.kernel.org # 4.19+
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/memcontrol.c |    3 +++
- 1 file changed, 3 insertions(+)
+ fs/btrfs/disk-io.c |   14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -2324,6 +2324,9 @@ static unsigned long calculate_high_dela
- 		usage = page_counter_read(&memcg->memory);
- 		high = READ_ONCE(memcg->high);
+--- a/fs/btrfs/disk-io.c
++++ b/fs/btrfs/disk-io.c
+@@ -3054,6 +3054,18 @@ int __cold open_ctree(struct super_block
+ 	if (ret)
+ 		goto fail_tree_roots;
  
-+		if (usage <= high)
-+			continue;
++	/*
++	 * If we have a uuid root and we're not being told to rescan we need to
++	 * check the generation here so we can set the
++	 * BTRFS_FS_UPDATE_UUID_TREE_GEN bit.  Otherwise we could commit the
++	 * transaction during a balance or the log replay without updating the
++	 * uuid generation, and then if we crash we would rescan the uuid tree,
++	 * even though it was perfectly fine.
++	 */
++	if (fs_info->uuid_root && !btrfs_test_opt(fs_info, RESCAN_UUID_TREE) &&
++	    fs_info->generation == btrfs_super_uuid_tree_generation(disk_super))
++		set_bit(BTRFS_FS_UPDATE_UUID_TREE_GEN, &fs_info->flags);
 +
- 		/*
- 		 * Prevent division by 0 in overage calculation by acting as if
- 		 * it was a threshold of 1 page
+ 	ret = btrfs_verify_dev_extents(fs_info);
+ 	if (ret) {
+ 		btrfs_err(fs_info,
+@@ -3284,8 +3296,6 @@ int __cold open_ctree(struct super_block
+ 			close_ctree(fs_info);
+ 			return ret;
+ 		}
+-	} else {
+-		set_bit(BTRFS_FS_UPDATE_UUID_TREE_GEN, &fs_info->flags);
+ 	}
+ 	set_bit(BTRFS_FS_OPEN, &fs_info->flags);
+ 
 
 
