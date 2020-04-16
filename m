@@ -2,76 +2,238 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A8D6C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A69C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:18:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D4FD217D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:14:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8861E217D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:18:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jJ87Z/5L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2894997AbgDPNOK (ORCPT
+        id S2895028AbgDPNSG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:14:10 -0400
-Received: from mga14.intel.com ([192.55.52.115]:27289 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2894939AbgDPNOC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:14:02 -0400
-IronPort-SDR: CcmgXTLjx0NJ1DluPc8qvyzD++5ZOQo8ZhR4P5O+DATiRMyqdPHLkv/SUgOhVYm5BdJYBNgA/I
- /PwBQCvCF3Kw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 06:13:42 -0700
-IronPort-SDR: WvI81BDYmtxqUsTDFRbJ7tWkzpztLdDLQPZXYSdcA4+j62BciXmPy3JbTTpOaVrSVcm/25Ai/b
- yJajpsV9fqOg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,391,1580803200"; 
-   d="scan'208";a="332834202"
-Received: from otazetdi-mobl.ccr.corp.intel.com (HELO localhost) ([10.249.42.128])
-  by orsmga001.jf.intel.com with ESMTP; 16 Apr 2020 06:13:39 -0700
-Date:   Thu, 16 Apr 2020 16:13:39 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     linux-integrity@vger.kernel.org, stable@vger.kernel.org,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] tpm/tpm_tis: Free IRQ if probing fails
-Message-ID: <20200416131339.GB65786@linux.intel.com>
-References: <20200412170412.324200-1-jarkko.sakkinen@linux.intel.com>
- <b909aaee-3fff-4dca-40f4-4c5348474426@redhat.com>
- <20200413180732.GA11147@linux.intel.com>
- <7df7f8bd-c65e-1435-7e82-b9f4ecd729de@redhat.com>
- <20200414071349.GA8403@linux.intel.com>
- <d6684575-ce91-fe72-6035-11834a05cd54@redhat.com>
- <20200414160404.GA32775@linux.intel.com>
- <20200414164542.GC32775@linux.intel.com>
- <df580835-f887-1918-c933-6509e5a1ad47@redhat.com>
+        Thu, 16 Apr 2020 09:18:06 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:36620 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2895031AbgDPNQ7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:16:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587043003;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=walCYN4WkDNtTgYLVIJ9g+ufVPDd3WAeg5aHW/gs+FQ=;
+        b=jJ87Z/5LcS75H/I38TWzsGTZ5PwZmgCabAq/eHWi0wXdgBu3rH7+jF4qF5QJoPy0nwKnxI
+        0APtEVPNOwd0IQXGOsiH4kVv94hVSFymUDzG8kSRl0qWc1B41yzsDyyTvX1N8vvowk7+vj
+        cgZP9jdk/n44sfVhZtV80iTY1TByQzI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-26-AUkX1xh4N-G2HhfxHPoJ2Q-1; Thu, 16 Apr 2020 09:16:40 -0400
+X-MC-Unique: AUkX1xh4N-G2HhfxHPoJ2Q-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 72B4980256B;
+        Thu, 16 Apr 2020 13:16:38 +0000 (UTC)
+Received: from treble (ovpn-116-146.rdu2.redhat.com [10.10.116.146])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7945C10372C0;
+        Thu, 16 Apr 2020 13:16:37 +0000 (UTC)
+Date:   Thu, 16 Apr 2020 08:16:35 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>, linux-s390@vger.kernel.org,
+        heiko.carstens@de.ibm.com
+Subject: Re: [PATCH 4/7] s390/module: Use s390_kernel_write() for relocations
+Message-ID: <20200416131635.scbpuued6l4xb6qq@treble>
+References: <cover.1586881704.git.jpoimboe@redhat.com>
+ <e7f2ad87cf83dcdaa7b69b4e37c11fa355bdfe78.1586881704.git.jpoimboe@redhat.com>
+ <alpine.LSU.2.21.2004161047410.10475@pobox.suse.cz>
+ <20200416120651.wqmoaa35jft4prox@treble>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <df580835-f887-1918-c933-6509e5a1ad47@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200416120651.wqmoaa35jft4prox@treble>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 07:15:08PM +0200, Hans de Goede wrote:
-> Sounds good, I guess it would be best to combine that with a:
+On Thu, Apr 16, 2020 at 07:06:51AM -0500, Josh Poimboeuf wrote:
+> On Thu, Apr 16, 2020 at 10:56:02AM +0200, Miroslav Benes wrote:
+> > > +	bool early = me->state == MODULE_STATE_UNFORMED;
+> > > +
+> > > +	return __apply_relocate_add(sechdrs, strtab, symindex, relsec, me,
+> > > +				    early ? memcpy : s390_kernel_write);
+> > 
+> > The compiler warns about
+> > 
+> > arch/s390/kernel/module.c: In function 'apply_relocate_add':
+> > arch/s390/kernel/module.c:453:24: warning: pointer type mismatch in conditional expression
+> >          early ? memcpy : s390_kernel_write);
 > 
-> 	if (priv->irq == 0)
-> 		return;
+> Thanks, I'll get all that cleaned up.
 > 
-> At the top of disable_interrupts() and then unconditionally
-> call disable_interrupts() where your v1 of this patch
-> calls devm_free_irq(). That would be a reasonable clean
-> solution I think.
+> I could have sworn I got a SUCCESS message from the kbuild bot.  Does it
+> ignore warnings nowadays?
 
-Great, this was my plan (just wanted to double check).
+Here's a fix on top of the original patch.
 
-/Jarkko
+I changed s390_kernel_write() to return "void *" to match memcpy()
+(probably a separate patch).
+
+I also grabbed the text_mutex for the !early case in
+apply_relocate_add() -- will do something similar for x86.
+
+Will try to test this on a 390 box.
+
+
+diff --git a/arch/s390/include/asm/uaccess.h b/arch/s390/include/asm/uaccess.h
+index a470f1fa9f2a..324438889fe1 100644
+--- a/arch/s390/include/asm/uaccess.h
++++ b/arch/s390/include/asm/uaccess.h
+@@ -276,6 +276,6 @@ static inline unsigned long __must_check clear_user(void __user *to, unsigned lo
+ }
+ 
+ int copy_to_user_real(void __user *dest, void *src, unsigned long count);
+-void s390_kernel_write(void *dst, const void *src, size_t size);
++void *s390_kernel_write(void *dst, const void *src, size_t size);
+ 
+ #endif /* __S390_UACCESS_H */
+diff --git a/arch/s390/kernel/module.c b/arch/s390/kernel/module.c
+index e85e378f876e..2b30ed0ce14f 100644
+--- a/arch/s390/kernel/module.c
++++ b/arch/s390/kernel/module.c
+@@ -19,6 +19,7 @@
+ #include <linux/kasan.h>
+ #include <linux/moduleloader.h>
+ #include <linux/bug.h>
++#include <linux/memory.h>
+ #include <asm/alternative.h>
+ #include <asm/nospec-branch.h>
+ #include <asm/facility.h>
+@@ -175,10 +176,11 @@ int module_frob_arch_sections(Elf_Ehdr *hdr, Elf_Shdr *sechdrs,
+ 
+ static int apply_rela_bits(Elf_Addr loc, Elf_Addr val,
+ 			   int sign, int bits, int shift,
+-			   void (*write)(void *dest, const void *src, size_t len))
++			   void *(*write)(void *dest, const void *src, size_t len))
+ {
+ 	unsigned long umax;
+ 	long min, max;
++	void *dest = (void *)loc;
+ 
+ 	if (val & ((1UL << shift) - 1))
+ 		return -ENOEXEC;
+@@ -196,28 +198,28 @@ static int apply_rela_bits(Elf_Addr loc, Elf_Addr val,
+ 	}
+ 
+ 	if (bits == 8) {
+-		write(loc, &val, 1);
++		write(dest, &val, 1);
+ 	} else if (bits == 12) {
+ 		unsigned short tmp = (val & 0xfff) |
+ 			(*(unsigned short *) loc & 0xf000);
+-		write(loc, &tmp, 2);
++		write(dest, &tmp, 2);
+ 	} else if (bits == 16) {
+-		write(loc, &val, 2);
++		write(dest, &val, 2);
+ 	} else if (bits == 20) {
+ 		unsigned int tmp = (val & 0xfff) << 16 |
+ 			(val & 0xff000) >> 4 | (*(unsigned int *) loc & 0xf00000ff);
+-		write(loc, &tmp, 4);
++		write(dest, &tmp, 4);
+ 	} else if (bits == 32) {
+-		write(loc, &val, 4);
++		write(dest, &val, 4);
+ 	} else if (bits == 64) {
+-		write(loc, &val, 8);
++		write(dest, &val, 8);
+ 	}
+ 	return 0;
+ }
+ 
+ static int apply_rela(Elf_Rela *rela, Elf_Addr base, Elf_Sym *symtab,
+ 		      const char *strtab, struct module *me,
+-		      void (*write)(void *dest, const void *src, size_t len))
++		      void *(*write)(void *dest, const void *src, size_t len))
+ {
+ 	struct mod_arch_syminfo *info;
+ 	Elf_Addr loc, val;
+@@ -419,7 +421,7 @@ static int apply_rela(Elf_Rela *rela, Elf_Addr base, Elf_Sym *symtab,
+ static int __apply_relocate_add(Elf_Shdr *sechdrs, const char *strtab,
+ 		       unsigned int symindex, unsigned int relsec,
+ 		       struct module *me,
+-		       void (*write)(void *dest, const void *src, size_t len))
++		       void *(*write)(void *dest, const void *src, size_t len))
+ {
+ 	Elf_Addr base;
+ 	Elf_Sym *symtab;
+@@ -435,7 +437,7 @@ static int __apply_relocate_add(Elf_Shdr *sechdrs, const char *strtab,
+ 	n = sechdrs[relsec].sh_size / sizeof(Elf_Rela);
+ 
+ 	for (i = 0; i < n; i++, rela++) {
+-		rc = apply_rela(rela, base, symtab, strtab, me);
++		rc = apply_rela(rela, base, symtab, strtab, me, write);
+ 		if (rc)
+ 			return rc;
+ 	}
+@@ -449,8 +451,16 @@ int apply_relocate_add(Elf_Shdr *sechdrs, const char *strtab,
+ 	int ret;
+ 	bool early = me->state == MODULE_STATE_UNFORMED;
+ 
+-	return __apply_relocate_add(sechdrs, strtab, symindex, relsec, me,
+-				    early ? memcpy : s390_kernel_write);
++	if (!early)
++		mutex_lock(&text_mutex);
++
++	ret = __apply_relocate_add(sechdrs, strtab, symindex, relsec, me,
++				   early ? memcpy : s390_kernel_write);
++
++	if (!early)
++		mutex_unlock(&text_mutex);
++
++	return ret;
+ }
+ 
+ int module_finalize(const Elf_Ehdr *hdr,
+diff --git a/arch/s390/mm/maccess.c b/arch/s390/mm/maccess.c
+index de7ca4b6718f..22a0be655f27 100644
+--- a/arch/s390/mm/maccess.c
++++ b/arch/s390/mm/maccess.c
+@@ -55,19 +55,22 @@ static notrace long s390_kernel_write_odd(void *dst, const void *src, size_t siz
+  */
+ static DEFINE_SPINLOCK(s390_kernel_write_lock);
+ 
+-void notrace s390_kernel_write(void *dst, const void *src, size_t size)
++notrace void *s390_kernel_write(void *dst, const void *src, size_t size)
+ {
++	void *tmp = dst;
+ 	unsigned long flags;
+ 	long copied;
+ 
+ 	spin_lock_irqsave(&s390_kernel_write_lock, flags);
+ 	while (size) {
+-		copied = s390_kernel_write_odd(dst, src, size);
+-		dst += copied;
++		copied = s390_kernel_write_odd(tmp, src, size);
++		tmp += copied;
+ 		src += copied;
+ 		size -= copied;
+ 	}
+ 	spin_unlock_irqrestore(&s390_kernel_write_lock, flags);
++
++	return dst;
+ }
+ 
+ static int __no_sanitize_address __memcpy_real(void *dest, void *src, size_t count)
+
