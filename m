@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72117C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 666FEC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:07:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51686206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:06:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38E6220774
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:07:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587049617;
-	bh=hDL60ZE/KPb1rBhVBfw2gW9qxX0LLGCOEybMnmAnzYM=;
+	s=default; t=1587049621;
+	bh=qzChlNWTWRaIgPiRyh59KMNyEZ1s89OWhDJKTLGaS4w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pSrxlL/3bBin2PTgZsGoz2xb/sd/NW7YQMA2QlSODBq9fMZUoGo90xvzeUD7qOQrB
-	 7AH6mcTbiRSBaL0x45KAoIwI+KChVkz5toKSjBUjRSPCEipXDSuH2CPKxi6eQn2s4B
-	 ioeSBu+4MSO7yRUuYy0Zfpc9XplbGdiTNim7ze7E=
+	b=iYE/3SHsfynXWB3ChZ2UVADL1uf7FNPCoxYXTTaKYiWPWsiWmVgEmRuJ0BAVmMDtX
+	 dFYYSwxiwYqvJUXQb3bhU4iRGJTKwrZ6XXfv7KR5c+owPSAG8cftdbuedxQSIimePf
+	 jX5TNZHbHWPnRkJmbBgJANlIwPR9AZOWR9ksxwcw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392342AbgDPPGx (ORCPT
+        id S2394961AbgDPPG7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:06:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38274 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:06:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408817AbgDPNwC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:52:02 -0400
+        id S2408796AbgDPNv6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:51:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 563882063A;
-        Thu, 16 Apr 2020 13:52:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7844A2063A;
+        Thu, 16 Apr 2020 13:51:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045121;
-        bh=hDL60ZE/KPb1rBhVBfw2gW9qxX0LLGCOEybMnmAnzYM=;
+        s=default; t=1587045116;
+        bh=qzChlNWTWRaIgPiRyh59KMNyEZ1s89OWhDJKTLGaS4w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cl/Gf4uk4I9ODaau6hXmX1HWwKSz1ZRz5M6DzCPgmliIasuZHtBAwCYibVMRe1Ivo
-         T8z4Vk6ZFlJ6CUEaNV8H3bdT7gavWaI/wA6UZWV6CjqU5NrG7fJTik+H8kr/DeFNs2
-         94Tmt0ue+I+fUAR0T+sHtG+0DO97aEqK84/f3f00=
+        b=E4LDLXv/zq0QB6ZxzCCkNfDfhv9VNrpyEGApWQBVmtpc8apV9Bx3lAq7Xep2VsiDN
+         FvX9fPY0Boc6EYyS9jwsG7RWUliGtMAGqBEshdsUaKlDv+Sup8o7RASmGfMZEVSRlT
+         rfo/yzllUSKjxdeIPfSZjnIiDIKko2Lf8hCdy4Lc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         James Smart <jsmart2021@gmail.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 225/232] scsi: lpfc: Fix broken Credit Recovery after driver load
-Date:   Thu, 16 Apr 2020 15:25:19 +0200
-Message-Id: <20200416131343.655236486@linuxfoundation.org>
+Subject: [PATCH 5.4 223/232] scsi: lpfc: Fix Fabric hostname registration if system hostname changes
+Date:   Thu, 16 Apr 2020 15:25:17 +0200
+Message-Id: <20200416131343.419754731@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -63,148 +63,189 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit 835214f5d5f516a38069bc077c879c7da00d6108 ]
+[ Upstream commit e3ba04c9bad1d1c7f15df43da25e878045150777 ]
 
-When driver is set to enable bb credit recovery, the switch displayed the
-setting as inactive.  If the link bounces, it switches to Active.
+There are reports of multiple ports on the same system displaying different
+hostnames in fabric FDMI displays.
 
-During link up processing, the driver currently does a MBX_READ_SPARAM
-followed by a MBX_CONFIG_LINK. These mbox commands are queued to be
-executed, one at a time and the completion is processed by the worker
-thread.  Since the MBX_READ_SPARAM is done BEFORE the MBX_CONFIG_LINK, the
-BB_SC_N bit is never set the the returned values. BB Credit recovery status
-only gets set after the driver requests the feature in CONFIG_LINK, which
-is done after the link up. Thus the ordering of READ_SPARAM needs to follow
-the CONFIG_LINK.
+Currently, the driver registers the hostname at initialization and obtains
+the hostname via init_utsname()->nodename queried at the time the FC link
+comes up. Unfortunately, if the machine hostname is updated after
+initialization, such as via DHCP or admin command, the value registered
+initially will be incorrect.
 
-Fix by reordering so that READ_SPARAM is done after CONFIG_LINK.  Added a
-HBA_DEFER_FLOGI flag so that any FLOGI handling waits until after the
-READ_SPARAM is done so that the proper BB credit value is set in the FLOGI
-payload.
+Fix by having the driver save the hostname that was registered with FDMI.
+The driver then runs a heartbeat action that will check the hostname.  If
+the name changes, reregister the FMDI data.
 
-Fixes: 6bfb16208298 ("scsi: lpfc: Fix configuration of BB credit recovery in service parameters")
-Cc: <stable@vger.kernel.org> # v5.4+
-Link: https://lore.kernel.org/r/20200128002312.16346-4-jsmart2021@gmail.com
+The hostname is used in RSNN_NN, FDMI RPA and FDMI RHBA.
+
+Link: https://lore.kernel.org/r/20191218235808.31922-5-jsmart2021@gmail.com
 Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
 Signed-off-by: James Smart <jsmart2021@gmail.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc.h         |  1 +
- drivers/scsi/lpfc/lpfc_hbadisc.c | 59 +++++++++++++++++++++-----------
- 2 files changed, 40 insertions(+), 20 deletions(-)
+ drivers/scsi/lpfc/lpfc.h         |  2 ++
+ drivers/scsi/lpfc/lpfc_crtn.h    |  2 +-
+ drivers/scsi/lpfc/lpfc_ct.c      | 48 ++++++++++++++++++++++++--------
+ drivers/scsi/lpfc/lpfc_hbadisc.c |  5 ++++
+ drivers/scsi/lpfc/lpfc_init.c    |  2 +-
+ 5 files changed, 46 insertions(+), 13 deletions(-)
 
 diff --git a/drivers/scsi/lpfc/lpfc.h b/drivers/scsi/lpfc/lpfc.h
-index e492ca2d0b8be..8943d42fc406e 100644
+index 84b0f0ac26e7e..e492ca2d0b8be 100644
 --- a/drivers/scsi/lpfc/lpfc.h
 +++ b/drivers/scsi/lpfc/lpfc.h
-@@ -742,6 +742,7 @@ struct lpfc_hba {
- 					 * capability
- 					 */
- #define HBA_FLOGI_ISSUED	0x100000 /* FLOGI was issued */
-+#define HBA_DEFER_FLOGI		0x800000 /* Defer FLOGI till read_sparm cmpl */
+@@ -1216,6 +1216,8 @@ struct lpfc_hba {
+ #define LPFC_POLL_HB	1		/* slowpath heartbeat */
+ #define LPFC_POLL_FASTPATH	0	/* called from fastpath */
+ #define LPFC_POLL_SLOWPATH	1	/* called from slowpath */
++
++	char os_host_name[MAXHOSTNAMELEN];
+ };
  
- 	uint32_t fcp_ring_in_use; /* When polling test if intr-hndlr active*/
- 	struct lpfc_dmabuf slim2p;
+ static inline struct Scsi_Host *
+diff --git a/drivers/scsi/lpfc/lpfc_crtn.h b/drivers/scsi/lpfc/lpfc_crtn.h
+index 9e477d766ce98..a03efe9ad2a42 100644
+--- a/drivers/scsi/lpfc/lpfc_crtn.h
++++ b/drivers/scsi/lpfc/lpfc_crtn.h
+@@ -180,7 +180,7 @@ int lpfc_issue_gidft(struct lpfc_vport *vport);
+ int lpfc_get_gidft_type(struct lpfc_vport *vport, struct lpfc_iocbq *iocbq);
+ int lpfc_ns_cmd(struct lpfc_vport *, int, uint8_t, uint32_t);
+ int lpfc_fdmi_cmd(struct lpfc_vport *, struct lpfc_nodelist *, int, uint32_t);
+-void lpfc_fdmi_num_disc_check(struct lpfc_vport *);
++void lpfc_fdmi_change_check(struct lpfc_vport *vport);
+ void lpfc_delayed_disc_tmo(struct timer_list *);
+ void lpfc_delayed_disc_timeout_handler(struct lpfc_vport *);
+ 
+diff --git a/drivers/scsi/lpfc/lpfc_ct.c b/drivers/scsi/lpfc/lpfc_ct.c
+index f81d1453eefbd..85f77c1ed23c8 100644
+--- a/drivers/scsi/lpfc/lpfc_ct.c
++++ b/drivers/scsi/lpfc/lpfc_ct.c
+@@ -1495,7 +1495,7 @@ lpfc_vport_symbolic_node_name(struct lpfc_vport *vport, char *symbol,
+ 	if (strlcat(symbol, tmp, size) >= size)
+ 		goto buffer_done;
+ 
+-	scnprintf(tmp, sizeof(tmp), " HN:%s", init_utsname()->nodename);
++	scnprintf(tmp, sizeof(tmp), " HN:%s", vport->phba->os_host_name);
+ 	if (strlcat(symbol, tmp, size) >= size)
+ 		goto buffer_done;
+ 
+@@ -1984,14 +1984,16 @@ lpfc_cmpl_ct_disc_fdmi(struct lpfc_hba *phba, struct lpfc_iocbq *cmdiocb,
+ 
+ 
+ /**
+- * lpfc_fdmi_num_disc_check - Check how many mapped NPorts we are connected to
++ * lpfc_fdmi_change_check - Check for changed FDMI parameters
+  * @vport: pointer to a host virtual N_Port data structure.
+  *
+- * Called from hbeat timeout routine to check if the number of discovered
+- * ports has changed. If so, re-register thar port Attribute.
++ * Check how many mapped NPorts we are connected to
++ * Check if our hostname changed
++ * Called from hbeat timeout routine to check if any FDMI parameters
++ * changed. If so, re-register those Attributes.
+  */
+ void
+-lpfc_fdmi_num_disc_check(struct lpfc_vport *vport)
++lpfc_fdmi_change_check(struct lpfc_vport *vport)
+ {
+ 	struct lpfc_hba *phba = vport->phba;
+ 	struct lpfc_nodelist *ndlp;
+@@ -2004,17 +2006,41 @@ lpfc_fdmi_num_disc_check(struct lpfc_vport *vport)
+ 	if (!(vport->fc_flag & FC_FABRIC))
+ 		return;
+ 
++	ndlp = lpfc_findnode_did(vport, FDMI_DID);
++	if (!ndlp || !NLP_CHK_NODE_ACT(ndlp))
++		return;
++
++	/* Check if system hostname changed */
++	if (strcmp(phba->os_host_name, init_utsname()->nodename)) {
++		memset(phba->os_host_name, 0, sizeof(phba->os_host_name));
++		scnprintf(phba->os_host_name, sizeof(phba->os_host_name), "%s",
++			  init_utsname()->nodename);
++		lpfc_ns_cmd(vport, SLI_CTNS_RSNN_NN, 0, 0);
++
++		/* Since this effects multiple HBA and PORT attributes, we need
++		 * de-register and go thru the whole FDMI registration cycle.
++		 * DHBA -> DPRT -> RHBA -> RPA  (physical port)
++		 * DPRT -> RPRT (vports)
++		 */
++		if (vport->port_type == LPFC_PHYSICAL_PORT)
++			lpfc_fdmi_cmd(vport, ndlp, SLI_MGMT_DHBA, 0);
++		else
++			lpfc_fdmi_cmd(vport, ndlp, SLI_MGMT_DPRT, 0);
++
++		/* Since this code path registers all the port attributes
++		 * we can just return without further checking.
++		 */
++		return;
++	}
++
+ 	if (!(vport->fdmi_port_mask & LPFC_FDMI_PORT_ATTR_num_disc))
+ 		return;
+ 
++	/* Check if the number of mapped NPorts changed */
+ 	cnt = lpfc_find_map_node(vport);
+ 	if (cnt == vport->fdmi_num_disc)
+ 		return;
+ 
+-	ndlp = lpfc_findnode_did(vport, FDMI_DID);
+-	if (!ndlp || !NLP_CHK_NODE_ACT(ndlp))
+-		return;
+-
+ 	if (vport->port_type == LPFC_PHYSICAL_PORT) {
+ 		lpfc_fdmi_cmd(vport, ndlp, SLI_MGMT_RPA,
+ 			      LPFC_FDMI_PORT_ATTR_num_disc);
+@@ -2602,8 +2628,8 @@ lpfc_fdmi_port_attr_host_name(struct lpfc_vport *vport,
+ 	ae = (struct lpfc_fdmi_attr_entry *)&ad->AttrValue;
+ 	memset(ae, 0, 256);
+ 
+-	snprintf(ae->un.AttrString, sizeof(ae->un.AttrString), "%s",
+-		 init_utsname()->nodename);
++	scnprintf(ae->un.AttrString, sizeof(ae->un.AttrString), "%s",
++		  vport->phba->os_host_name);
+ 
+ 	len = strnlen(ae->un.AttrString, sizeof(ae->un.AttrString));
+ 	len += (len & 3) ? (4 - (len & 3)) : 4;
 diff --git a/drivers/scsi/lpfc/lpfc_hbadisc.c b/drivers/scsi/lpfc/lpfc_hbadisc.c
-index 3f7df471106e9..799db8a785c21 100644
+index ee70d14e7a9dc..39ca541935342 100644
 --- a/drivers/scsi/lpfc/lpfc_hbadisc.c
 +++ b/drivers/scsi/lpfc/lpfc_hbadisc.c
-@@ -1163,13 +1163,16 @@ lpfc_mbx_cmpl_local_config_link(struct lpfc_hba *phba, LPFC_MBOXQ_t *pmb)
- 	}
+@@ -28,6 +28,7 @@
+ #include <linux/kthread.h>
+ #include <linux/interrupt.h>
+ #include <linux/lockdep.h>
++#include <linux/utsname.h>
  
- 	/* Start discovery by sending a FLOGI. port_state is identically
--	 * LPFC_FLOGI while waiting for FLOGI cmpl
-+	 * LPFC_FLOGI while waiting for FLOGI cmpl. Check if sending
-+	 * the FLOGI is being deferred till after MBX_READ_SPARAM completes.
- 	 */
--	if (vport->port_state != LPFC_FLOGI)
--		lpfc_initial_flogi(vport);
--	else if (vport->fc_flag & FC_PT2PT)
--		lpfc_disc_start(vport);
--
-+	if (vport->port_state != LPFC_FLOGI) {
-+		if (!(phba->hba_flag & HBA_DEFER_FLOGI))
-+			lpfc_initial_flogi(vport);
-+	} else {
-+		if (vport->fc_flag & FC_PT2PT)
-+			lpfc_disc_start(vport);
-+	}
- 	return;
- 
- out:
-@@ -3094,6 +3097,14 @@ lpfc_mbx_cmpl_read_sparam(struct lpfc_hba *phba, LPFC_MBOXQ_t *pmb)
- 	lpfc_mbuf_free(phba, mp->virt, mp->phys);
- 	kfree(mp);
- 	mempool_free(pmb, phba->mbox_mem_pool);
-+
-+	/* Check if sending the FLOGI is being deferred to after we get
-+	 * up to date CSPs from MBX_READ_SPARAM.
-+	 */
-+	if (phba->hba_flag & HBA_DEFER_FLOGI) {
-+		lpfc_initial_flogi(vport);
-+		phba->hba_flag &= ~HBA_DEFER_FLOGI;
-+	}
- 	return;
- 
- out:
-@@ -3224,6 +3235,23 @@ lpfc_mbx_process_link_up(struct lpfc_hba *phba, struct lpfc_mbx_read_top *la)
- 	}
- 
- 	lpfc_linkup(phba);
-+	sparam_mbox = NULL;
-+
-+	if (!(phba->hba_flag & HBA_FCOE_MODE)) {
-+		cfglink_mbox = mempool_alloc(phba->mbox_mem_pool, GFP_KERNEL);
-+		if (!cfglink_mbox)
-+			goto out;
-+		vport->port_state = LPFC_LOCAL_CFG_LINK;
-+		lpfc_config_link(phba, cfglink_mbox);
-+		cfglink_mbox->vport = vport;
-+		cfglink_mbox->mbox_cmpl = lpfc_mbx_cmpl_local_config_link;
-+		rc = lpfc_sli_issue_mbox(phba, cfglink_mbox, MBX_NOWAIT);
-+		if (rc == MBX_NOT_FINISHED) {
-+			mempool_free(cfglink_mbox, phba->mbox_mem_pool);
-+			goto out;
-+		}
-+	}
-+
- 	sparam_mbox = mempool_alloc(phba->mbox_mem_pool, GFP_KERNEL);
- 	if (!sparam_mbox)
- 		goto out;
-@@ -3244,20 +3272,7 @@ lpfc_mbx_process_link_up(struct lpfc_hba *phba, struct lpfc_mbx_read_top *la)
- 		goto out;
- 	}
- 
--	if (!(phba->hba_flag & HBA_FCOE_MODE)) {
--		cfglink_mbox = mempool_alloc(phba->mbox_mem_pool, GFP_KERNEL);
--		if (!cfglink_mbox)
--			goto out;
--		vport->port_state = LPFC_LOCAL_CFG_LINK;
--		lpfc_config_link(phba, cfglink_mbox);
--		cfglink_mbox->vport = vport;
--		cfglink_mbox->mbox_cmpl = lpfc_mbx_cmpl_local_config_link;
--		rc = lpfc_sli_issue_mbox(phba, cfglink_mbox, MBX_NOWAIT);
--		if (rc == MBX_NOT_FINISHED) {
--			mempool_free(cfglink_mbox, phba->mbox_mem_pool);
--			goto out;
--		}
--	} else {
-+	if (phba->hba_flag & HBA_FCOE_MODE) {
- 		vport->port_state = LPFC_VPORT_UNKNOWN;
- 		/*
- 		 * Add the driver's default FCF record at FCF index 0 now. This
-@@ -3314,6 +3329,10 @@ lpfc_mbx_process_link_up(struct lpfc_hba *phba, struct lpfc_mbx_read_top *la)
- 		}
- 		/* Reset FCF roundrobin bmask for new discovery */
+ #include <scsi/scsi.h>
+ #include <scsi/scsi_device.h>
+@@ -3322,6 +3323,10 @@ lpfc_mbx_process_link_up(struct lpfc_hba *phba, struct lpfc_mbx_read_top *la)
  		lpfc_sli4_clear_fcf_rr_bmask(phba);
-+	} else {
-+		if (phba->bbcredit_support && phba->cfg_enable_bbcr &&
-+		    !(phba->link_flag & LS_LOOPBACK_MODE))
-+			phba->hba_flag |= HBA_DEFER_FLOGI;
  	}
  
- 	/* Prepare for LINK up registrations */
++	/* Prepare for LINK up registrations */
++	memset(phba->os_host_name, 0, sizeof(phba->os_host_name));
++	scnprintf(phba->os_host_name, sizeof(phba->os_host_name), "%s",
++		  init_utsname()->nodename);
+ 	return;
+ out:
+ 	lpfc_vport_set_state(vport, FC_VPORT_FAILED);
+diff --git a/drivers/scsi/lpfc/lpfc_init.c b/drivers/scsi/lpfc/lpfc_init.c
+index 1bf79445c15bf..14d9f41977f1c 100644
+--- a/drivers/scsi/lpfc/lpfc_init.c
++++ b/drivers/scsi/lpfc/lpfc_init.c
+@@ -1370,7 +1370,7 @@ lpfc_hb_timeout_handler(struct lpfc_hba *phba)
+ 	if (vports != NULL)
+ 		for (i = 0; i <= phba->max_vports && vports[i] != NULL; i++) {
+ 			lpfc_rcv_seq_check_edtov(vports[i]);
+-			lpfc_fdmi_num_disc_check(vports[i]);
++			lpfc_fdmi_change_check(vports[i]);
+ 		}
+ 	lpfc_destroy_vport_work_array(phba, vports);
+ 
 -- 
 2.20.1
 
