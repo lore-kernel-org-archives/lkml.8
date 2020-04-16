@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B4C0C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC276C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:10:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E492222244
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:09:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F3262222D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:10:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587049792;
-	bh=6yOYKSkkjiW+PSa9ceaqSZizZQtvjSKI5yYQ7sjHvpw=;
+	s=default; t=1587049805;
+	bh=T9Q/+8y+10RHMimFMocEtiqH524D6C047MMtaJaMqCU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JkaZk2h+Otv93gn5OReayfmAUzeKRutsnT+eVin6nwdD2JeVbqUDbcRe8fxr5z4Og
-	 nWYhRmDLpGjMWMbi6LMQHkYFhRUdvutiE3MyF2/1XxClwKtp4Adty8u3arP+yHEncO
-	 cGPnvLHh04CVvxA7drhYoTwjxiELmodv4hlYPP30=
+	b=jOsb/gI1bFLWP+nVJCVcgK0CaMhxp8EVHF0k3hzOLnMZS4d06/oHMQ3FbVTqSHK2o
+	 uiNvY1wvKUdUXAr0f4FM2pv1GI3Z+RWPAcK7S6M056skVnH5C5DX2K8AcLL5kYoPb1
+	 0Ieo62AnTuCWgNpbzRZQU1joctv52b7Yb1TYDSHk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395027AbgDPPJu (ORCPT
+        id S2395003AbgDPPKC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:09:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36774 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:10:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408517AbgDPNut (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2439253AbgDPNut (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Apr 2020 09:50:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E9B721734;
-        Thu, 16 Apr 2020 13:50:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D1102078B;
+        Thu, 16 Apr 2020 13:50:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045048;
-        bh=6yOYKSkkjiW+PSa9ceaqSZizZQtvjSKI5yYQ7sjHvpw=;
+        s=default; t=1587045045;
+        bh=T9Q/+8y+10RHMimFMocEtiqH524D6C047MMtaJaMqCU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GPfFT3jozhDFqEMTMNP97UhApunLldGpAH5CN/I7tQAPim9XoBTaUcryW9dluca4m
-         aBvTiIyvvicT1a5XStiAd1UUTwWL7lKCbHadcZcYSUfwmfvxard9scmV0N9J1CWtg3
-         ZZn7zyxwS7gR9aDOVXUv66Ig3cP/rijiWNeZ+3JU=
+        b=uHqTpV/mTujhXKQdg0w76UzIK5LUStMAfC6e47Ejhub8J/zLp1M2veX665x+fcsp7
+         JwKFnUl9cYnNo5sC7PevneR6HPCsVoMdvE9HGugvLa1VBENzHlHY36mb7EdopJ9Dtk
+         4dCmnW+7vbYCbgUKwFF9AWdrvR31s50N3NY4j0MI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.4 207/232] powerpc/64/tm: Dont let userspace set regs->trap via sigreturn
-Date:   Thu, 16 Apr 2020 15:25:01 +0200
-Message-Id: <20200416131341.247743593@linuxfoundation.org>
+        stable@vger.kernel.org, Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>
+Subject: [PATCH 5.4 206/232] xen/blkfront: fix memory allocation flags in blkfront_setup_indirect()
+Date:   Thu, 16 Apr 2020 15:25:00 +0200
+Message-Id: <20200416131341.101292091@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -58,64 +60,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Juergen Gross <jgross@suse.com>
 
-commit c7def7fbdeaa25feaa19caf4a27c5d10bd8789e4 upstream.
+commit 3a169c0be75b59dd85d159493634870cdec6d3c4 upstream.
 
-In restore_tm_sigcontexts() we take the trap value directly from the
-user sigcontext with no checking:
+Commit 1d5c76e664333 ("xen-blkfront: switch kcalloc to kvcalloc for
+large array allocation") didn't fix the issue it was meant to, as the
+flags for allocating the memory are GFP_NOIO, which will lead the
+memory allocation falling back to kmalloc().
 
-	err |= __get_user(regs->trap, &sc->gp_regs[PT_TRAP]);
+So instead of GFP_NOIO use GFP_KERNEL and do all the memory allocation
+in blkfront_setup_indirect() in a memalloc_noio_{save,restore} section.
 
-This means we can be in the kernel with an arbitrary regs->trap value.
-
-Although that's not immediately problematic, there is a risk we could
-trigger one of the uses of CHECK_FULL_REGS():
-
-	#define CHECK_FULL_REGS(regs)	BUG_ON(regs->trap & 1)
-
-It can also cause us to unnecessarily save non-volatile GPRs again in
-save_nvgprs(), which shouldn't be problematic but is still wrong.
-
-It's also possible it could trick the syscall restart machinery, which
-relies on regs->trap not being == 0xc00 (see 9a81c16b5275 ("powerpc:
-fix double syscall restarts")), though I haven't been able to make
-that happen.
-
-Finally it doesn't match the behaviour of the non-TM case, in
-restore_sigcontext() which zeroes regs->trap.
-
-So change restore_tm_sigcontexts() to zero regs->trap.
-
-This was discovered while testing Nick's upcoming rewrite of the
-syscall entry path. In that series the call to save_nvgprs() prior to
-signal handling (do_notify_resume()) is removed, which leaves the
-low-bit of regs->trap uncleared which can then trigger the FULL_REGS()
-WARNs in setup_tm_sigcontexts().
-
-Fixes: 2b0a576d15e0 ("powerpc: Add new transactional memory state to the signal context")
-Cc: stable@vger.kernel.org # v3.9+
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200401023836.3286664-1-mpe@ellerman.id.au
+Fixes: 1d5c76e664333 ("xen-blkfront: switch kcalloc to kvcalloc for large array allocation")
+Cc: stable@vger.kernel.org
+Signed-off-by: Juergen Gross <jgross@suse.com>
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Acked-by: Roger Pau Monné <roger.pau@citrix.com>
+Link: https://lore.kernel.org/r/20200403090034.8753-1-jgross@suse.com
+Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kernel/signal_64.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/block/xen-blkfront.c |   17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
---- a/arch/powerpc/kernel/signal_64.c
-+++ b/arch/powerpc/kernel/signal_64.c
-@@ -473,8 +473,10 @@ static long restore_tm_sigcontexts(struc
- 	err |= __get_user(tsk->thread.ckpt_regs.ccr,
- 			  &sc->gp_regs[PT_CCR]);
+--- a/drivers/block/xen-blkfront.c
++++ b/drivers/block/xen-blkfront.c
+@@ -47,6 +47,7 @@
+ #include <linux/bitmap.h>
+ #include <linux/list.h>
+ #include <linux/workqueue.h>
++#include <linux/sched/mm.h>
  
-+	/* Don't allow userspace to set the trap value */
-+	regs->trap = 0;
+ #include <xen/xen.h>
+ #include <xen/xenbus.h>
+@@ -2188,10 +2189,12 @@ static void blkfront_setup_discard(struc
+ 
+ static int blkfront_setup_indirect(struct blkfront_ring_info *rinfo)
+ {
+-	unsigned int psegs, grants;
++	unsigned int psegs, grants, memflags;
+ 	int err, i;
+ 	struct blkfront_info *info = rinfo->dev_info;
+ 
++	memflags = memalloc_noio_save();
 +
- 	/* These regs are not checkpointed; they can go in 'regs'. */
--	err |= __get_user(regs->trap, &sc->gp_regs[PT_TRAP]);
- 	err |= __get_user(regs->dar, &sc->gp_regs[PT_DAR]);
- 	err |= __get_user(regs->dsisr, &sc->gp_regs[PT_DSISR]);
- 	err |= __get_user(regs->result, &sc->gp_regs[PT_RESULT]);
+ 	if (info->max_indirect_segments == 0) {
+ 		if (!HAS_EXTRA_REQ)
+ 			grants = BLKIF_MAX_SEGMENTS_PER_REQUEST;
+@@ -2223,7 +2226,7 @@ static int blkfront_setup_indirect(struc
+ 
+ 		BUG_ON(!list_empty(&rinfo->indirect_pages));
+ 		for (i = 0; i < num; i++) {
+-			struct page *indirect_page = alloc_page(GFP_NOIO);
++			struct page *indirect_page = alloc_page(GFP_KERNEL);
+ 			if (!indirect_page)
+ 				goto out_of_memory;
+ 			list_add(&indirect_page->lru, &rinfo->indirect_pages);
+@@ -2234,15 +2237,15 @@ static int blkfront_setup_indirect(struc
+ 		rinfo->shadow[i].grants_used =
+ 			kvcalloc(grants,
+ 				 sizeof(rinfo->shadow[i].grants_used[0]),
+-				 GFP_NOIO);
++				 GFP_KERNEL);
+ 		rinfo->shadow[i].sg = kvcalloc(psegs,
+ 					       sizeof(rinfo->shadow[i].sg[0]),
+-					       GFP_NOIO);
++					       GFP_KERNEL);
+ 		if (info->max_indirect_segments)
+ 			rinfo->shadow[i].indirect_grants =
+ 				kvcalloc(INDIRECT_GREFS(grants),
+ 					 sizeof(rinfo->shadow[i].indirect_grants[0]),
+-					 GFP_NOIO);
++					 GFP_KERNEL);
+ 		if ((rinfo->shadow[i].grants_used == NULL) ||
+ 			(rinfo->shadow[i].sg == NULL) ||
+ 		     (info->max_indirect_segments &&
+@@ -2251,6 +2254,7 @@ static int blkfront_setup_indirect(struc
+ 		sg_init_table(rinfo->shadow[i].sg, psegs);
+ 	}
+ 
++	memalloc_noio_restore(memflags);
+ 
+ 	return 0;
+ 
+@@ -2270,6 +2274,9 @@ out_of_memory:
+ 			__free_page(indirect_page);
+ 		}
+ 	}
++
++	memalloc_noio_restore(memflags);
++
+ 	return -ENOMEM;
+ }
+ 
 
 
