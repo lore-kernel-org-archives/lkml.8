@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A3AC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:27:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FEE2C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:28:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52BFC217D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:27:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59F6C21BE5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:28:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587043672;
-	bh=LfWkDjywQCoxUu+49IHyA0f/oOATnPdQz1zBNlFyEoo=;
+	s=default; t=1587043680;
+	bh=An4EaviWBME8D96bl9RCViqqRBYpK9o27KjVjecXiYE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=depGUwrUPMfxRJYqERs8lrsD2ghN27fDSfca+/wALj20girz2MQTmGPLOGfnPKU9/
-	 2TnApFnYQzut/zUYlLW/QoU23C4HtgMlqUvOGumc9netH9wU4v9Fr4K/skpNOrRMWx
-	 BJBarCltaRfSWYd6ber180plHjmRBx5Mdh0o0ZJc=
+	b=Vinpy6o61HjGaZeUKo0Xs0/WDe/SDDfSzUF3njEgdlcFbadr53tD/XFjNQ72KOLDa
+	 yRS+q5cB2/hHCzqcOa0+e9s/lzhJ8lQkufhmfJYBFTwnIgmymHaCE0uttS7ftNvssz
+	 E2ZnzvRjXjUOxnhYEKniSPeUobbfG2cac5J4YkaI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895606AbgDPN1u (ORCPT
+        id S2895642AbgDPN15 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:27:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34982 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:27:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2895298AbgDPN0p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:26:45 -0400
+        id S2895317AbgDPN0x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:26:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EA1E21D79;
-        Thu, 16 Apr 2020 13:26:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B91D21D7F;
+        Thu, 16 Apr 2020 13:26:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043605;
-        bh=LfWkDjywQCoxUu+49IHyA0f/oOATnPdQz1zBNlFyEoo=;
+        s=default; t=1587043613;
+        bh=An4EaviWBME8D96bl9RCViqqRBYpK9o27KjVjecXiYE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1yeQ4mO+bOzJ20uWvvR/kbe22OApVKy5pFbPetK5W7gTbTqbQHqYuTDtp/nTBpeAj
-         OHJx/bskFCSubWmCHH+N5b5K4mtmNZ49fO2RUSfOAOvgKMOaW/2I6u88hHw0iH2ul5
-         u7ahPfVrbWXuGzviPUMpX477YGBhwCgiR6nK4mH4=
+        b=OqbQYGDWBVYEcQV0Wjjb5jferkcqMct08yLTqCYpPiAEZNUwYnUHmW/PY/Kxt3Pjd
+         w1VMrWteOo5JZqZG0os6ws2h8qbDTTxhYhNcTfjNRvpsI50iBPMCcnqocj64Fk4WKP
+         q+b7jSLNacGUYnASErBIj5GECzrGNSDehn1d66g4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, chenqiwu <chenqiwu@xiaomi.com>,
-        Kees Cook <keescook@chromium.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 025/146] pstore/platform: fix potential mem leak if pstore_init_fs failed
-Date:   Thu, 16 Apr 2020 15:22:46 +0200
-Message-Id: <20200416131245.888112119@linuxfoundation.org>
+        stable@vger.kernel.org, Arvind Sankar <nivedita@alum.mit.edu>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 028/146] efi/x86: Ignore the memory attributes table on i386
+Date:   Thu, 16 Apr 2020 15:22:49 +0200
+Message-Id: <20200416131246.301692860@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
 References: <20200416131242.353444678@linuxfoundation.org>
@@ -60,39 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: chenqiwu <chenqiwu@xiaomi.com>
+From: Ard Biesheuvel <ardb@kernel.org>
 
-[ Upstream commit 8a57d6d4ddfa41c49014e20493152c41a38fcbf8 ]
+[ Upstream commit dd09fad9d2caad2325a39b766ce9e79cfc690184 ]
 
-There is a potential mem leak when pstore_init_fs failed,
-since the pstore compression maybe unlikey to initialized
-successfully. We must clean up the allocation once this
-unlikey issue happens.
+Commit:
 
-Signed-off-by: chenqiwu <chenqiwu@xiaomi.com>
-Link: https://lore.kernel.org/r/1581068800-13817-1-git-send-email-qiwuchen55@gmail.com
-Signed-off-by: Kees Cook <keescook@chromium.org>
+  3a6b6c6fb23667fa ("efi: Make EFI_MEMORY_ATTRIBUTES_TABLE initialization common across all architectures")
+
+moved the call to efi_memattr_init() from ARM specific to the generic
+EFI init code, in order to be able to apply the restricted permissions
+described in that table on x86 as well.
+
+We never enabled this feature fully on i386, and so mapping and
+reserving this table is pointless. However, due to the early call to
+memblock_reserve(), the memory bookkeeping gets confused to the point
+where it produces the splat below when we try to map the memory later
+on:
+
+  ------------[ cut here ]------------
+  ioremap on RAM at 0x3f251000 - 0x3fa1afff
+  WARNING: CPU: 0 PID: 0 at arch/x86/mm/ioremap.c:166 __ioremap_caller ...
+  Modules linked in:
+  CPU: 0 PID: 0 Comm: swapper/0 Not tainted 4.20.0 #48
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+  EIP: __ioremap_caller.constprop.0+0x249/0x260
+  Code: 90 0f b7 05 4e 38 40 de 09 45 e0 e9 09 ff ff ff 90 8d 45 ec c6 05 ...
+  EAX: 00000029 EBX: 00000000 ECX: de59c228 EDX: 00000001
+  ESI: 3f250fff EDI: 00000000 EBP: de3edf20 ESP: de3edee0
+  DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00200296
+  CR0: 80050033 CR2: ffd17000 CR3: 1e58c000 CR4: 00040690
+  Call Trace:
+   ioremap_cache+0xd/0x10
+   ? old_map_region+0x72/0x9d
+   old_map_region+0x72/0x9d
+   efi_map_region+0x8/0xa
+   efi_enter_virtual_mode+0x260/0x43b
+   start_kernel+0x329/0x3aa
+   i386_start_kernel+0xa7/0xab
+   startup_32_smp+0x164/0x168
+  ---[ end trace e15ccf6b9f356833 ]---
+
+Let's work around this by disregarding the memory attributes table
+altogether on i386, which does not result in a loss of functionality
+or protection, given that we never consumed the contents.
+
+Fixes: 3a6b6c6fb23667fa ("efi: Make EFI_MEMORY_ATTRIBUTES_TABLE ... ")
+Tested-by: Arvind Sankar <nivedita@alum.mit.edu>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20200304165917.5893-1-ardb@kernel.org
+Link: https://lore.kernel.org/r/20200308080859.21568-21-ardb@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/pstore/platform.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/firmware/efi/efi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
-index 4bae3f4fe829d..dcd9c3163587c 100644
---- a/fs/pstore/platform.c
-+++ b/fs/pstore/platform.c
-@@ -802,9 +802,9 @@ static int __init pstore_init(void)
+diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+index d54fca902e64f..f1e0a27152691 100644
+--- a/drivers/firmware/efi/efi.c
++++ b/drivers/firmware/efi/efi.c
+@@ -572,7 +572,7 @@ int __init efi_config_parse_tables(void *config_tables, int count, int sz,
+ 		}
+ 	}
  
- 	ret = pstore_init_fs();
- 	if (ret)
--		return ret;
-+		free_buf_for_compression();
+-	if (efi_enabled(EFI_MEMMAP))
++	if (!IS_ENABLED(CONFIG_X86_32) && efi_enabled(EFI_MEMMAP))
+ 		efi_memattr_init();
  
--	return 0;
-+	return ret;
- }
- late_initcall(pstore_init);
- 
+ 	efi_tpm_eventlog_init();
 -- 
 2.20.1
 
