@@ -2,179 +2,65 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B481C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:00:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80565C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:00:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC42720771
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:00:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587049225;
-	bh=KaRnqimdJK2+YakApchmRvSrJLlaObdWFeRaxC/MGBo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YGwCpo+Z3OH9dakqdbHIyjEIpOmWFBqfut73Y/VFDE3+jzbxL9DoDvpUgBPjgH5vP
-	 8//3Rs9f1U2cyPIfKf5r0zysXbNdn4jnwISz3M8OmAegLLmxDkZf4FbaiKwgk0t5ZF
-	 fiWbePA7nUpK8VYWioFkF8wWBIRMpms01+XlzLbA=
+	by mail.kernel.org (Postfix) with ESMTP id 5E2D322242
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:00:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nYkexzPU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394874AbgDPPAY (ORCPT
+        id S2437654AbgDPPA3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:00:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41044 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898839AbgDPNy2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:54:28 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C281F2076D;
-        Thu, 16 Apr 2020 13:54:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045266;
-        bh=KaRnqimdJK2+YakApchmRvSrJLlaObdWFeRaxC/MGBo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WFamU6cbRBTvZdRZijjpJ9F676j387PqAa2QB3Mfg1/1ViW9v3Ps4fVLaU42rjaUI
-         d0XDC+VfUiFN73kIO4qj3qRqxfN4M1xy5Koj8Inf8e81eRcS+umsc60Lurg/ZZg+2t
-         oTUNXK5ZLhuykjbGj9H0RfOmrlNiDdVXDbB4GMIc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 065/254] btrfs: track reloc roots based on their commit root bytenr
-Date:   Thu, 16 Apr 2020 15:22:34 +0200
-Message-Id: <20200416131334.029587084@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
-References: <20200416131325.804095985@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 16 Apr 2020 11:00:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41784 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388235AbgDPPAR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 11:00:17 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 993F1C061A0C;
+        Thu, 16 Apr 2020 08:00:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=uYntwwOxHl+eWmrggy0D1lZ6buzvACNOsmvvl0lx4SM=; b=nYkexzPURS/EEaBQzLNs6ZJPtY
+        iXXeif5/EFTvuipZKQz0BouVV3czxminJPIipTRWE+1tuUi/189SxUUAIXh+sMh1wE/AMHQuQhCLa
+        wFYwxEplgeD16FEvzoPHa6ClGQ9ZK/lcHBr/wKiIYTFTwBYcbWmyCjfA5wAEpmDx1hjBN4Ke48VTI
+        FVSQ48dRRq+fZWRGREvz+o/oEt4q2IrPWYh1DLPvCBPJb6QlCzuSz7qQojJXH6J7j6sucJumsagVP
+        9EFeSRjp/5S4kgcB43Q9ag7iqI2D9LhbhvheItZ9PTRz6xXRXnZFT6OUTM6P3MZ8wTGzfngQoVLhQ
+        tywJXWRA==;
+Received: from [2001:4bb8:184:4aa1:c70:4a89:bc61:2] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jP5zx-0001nv-Jg; Thu, 16 Apr 2020 15:00:14 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
+Subject: MIPS ioremap cleanups v2
+Date:   Thu, 16 Apr 2020 17:00:04 +0200
+Message-Id: <20200416150011.820984-1-hch@lst.de>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+Hi Thomas,
 
-[ Upstream commit ea287ab157c2816bf12aad4cece41372f9d146b4 ]
+below is a bunch of cleanups for the MIPS ioremap code.  Compile tested
+only.
 
-We always search the commit root of the extent tree for looking up back
-references, however we track the reloc roots based on their current
-bytenr.
-
-This is wrong, if we commit the transaction between relocating tree
-blocks we could end up in this code in build_backref_tree
-
-  if (key.objectid == key.offset) {
-	  /*
-	   * Only root blocks of reloc trees use backref
-	   * pointing to itself.
-	   */
-	  root = find_reloc_root(rc, cur->bytenr);
-	  ASSERT(root);
-	  cur->root = root;
-	  break;
-  }
-
-find_reloc_root() is looking based on the bytenr we had in the commit
-root, but if we've COWed this reloc root we will not find that bytenr,
-and we will trip over the ASSERT(root).
-
-Fix this by using the commit_root->start bytenr for indexing the commit
-root.  Then we change the __update_reloc_root() caller to be used when
-we switch the commit root for the reloc root during commit.
-
-This fixes the panic I was seeing when we started throttling relocation
-for delayed refs.
-
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/btrfs/relocation.c | 17 +++++++----------
- 1 file changed, 7 insertions(+), 10 deletions(-)
-
-diff --git a/fs/btrfs/relocation.c b/fs/btrfs/relocation.c
-index d7e8839048d71..8e86934a17c35 100644
---- a/fs/btrfs/relocation.c
-+++ b/fs/btrfs/relocation.c
-@@ -1298,7 +1298,7 @@ static int __must_check __add_reloc_root(struct btrfs_root *root)
- 	if (!node)
- 		return -ENOMEM;
- 
--	node->bytenr = root->node->start;
-+	node->bytenr = root->commit_root->start;
- 	node->data = root;
- 
- 	spin_lock(&rc->reloc_root_tree.lock);
-@@ -1329,10 +1329,11 @@ static void __del_reloc_root(struct btrfs_root *root)
- 	if (rc && root->node) {
- 		spin_lock(&rc->reloc_root_tree.lock);
- 		rb_node = tree_search(&rc->reloc_root_tree.rb_root,
--				      root->node->start);
-+				      root->commit_root->start);
- 		if (rb_node) {
- 			node = rb_entry(rb_node, struct mapping_node, rb_node);
- 			rb_erase(&node->rb_node, &rc->reloc_root_tree.rb_root);
-+			RB_CLEAR_NODE(&node->rb_node);
- 		}
- 		spin_unlock(&rc->reloc_root_tree.lock);
- 		if (!node)
-@@ -1350,7 +1351,7 @@ static void __del_reloc_root(struct btrfs_root *root)
-  * helper to update the 'address of tree root -> reloc tree'
-  * mapping
-  */
--static int __update_reloc_root(struct btrfs_root *root, u64 new_bytenr)
-+static int __update_reloc_root(struct btrfs_root *root)
- {
- 	struct btrfs_fs_info *fs_info = root->fs_info;
- 	struct rb_node *rb_node;
-@@ -1359,7 +1360,7 @@ static int __update_reloc_root(struct btrfs_root *root, u64 new_bytenr)
- 
- 	spin_lock(&rc->reloc_root_tree.lock);
- 	rb_node = tree_search(&rc->reloc_root_tree.rb_root,
--			      root->node->start);
-+			      root->commit_root->start);
- 	if (rb_node) {
- 		node = rb_entry(rb_node, struct mapping_node, rb_node);
- 		rb_erase(&node->rb_node, &rc->reloc_root_tree.rb_root);
-@@ -1371,7 +1372,7 @@ static int __update_reloc_root(struct btrfs_root *root, u64 new_bytenr)
- 	BUG_ON((struct btrfs_root *)node->data != root);
- 
- 	spin_lock(&rc->reloc_root_tree.lock);
--	node->bytenr = new_bytenr;
-+	node->bytenr = root->node->start;
- 	rb_node = tree_insert(&rc->reloc_root_tree.rb_root,
- 			      node->bytenr, &node->rb_node);
- 	spin_unlock(&rc->reloc_root_tree.lock);
-@@ -1529,6 +1530,7 @@ int btrfs_update_reloc_root(struct btrfs_trans_handle *trans,
- 	}
- 
- 	if (reloc_root->commit_root != reloc_root->node) {
-+		__update_reloc_root(reloc_root);
- 		btrfs_set_root_node(root_item, reloc_root->node);
- 		free_extent_buffer(reloc_root->commit_root);
- 		reloc_root->commit_root = btrfs_root_node(reloc_root);
-@@ -4727,11 +4729,6 @@ int btrfs_reloc_cow_block(struct btrfs_trans_handle *trans,
- 	BUG_ON(rc->stage == UPDATE_DATA_PTRS &&
- 	       root->root_key.objectid == BTRFS_DATA_RELOC_TREE_OBJECTID);
- 
--	if (root->root_key.objectid == BTRFS_TREE_RELOC_OBJECTID) {
--		if (buf == root->node)
--			__update_reloc_root(root, cow->start);
--	}
--
- 	level = btrfs_header_level(buf);
- 	if (btrfs_header_generation(buf) <=
- 	    btrfs_root_last_snapshot(&root->root_item))
--- 
-2.20.1
-
-
-
+Changes since v1:
+ - don't remove cpu_has_64bit_gp_regs
+ - add a new prep patch to stop txx9aclc-ac97 from poking into ioremap
+   internals
