@@ -5,53 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ED0AC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:42:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62FB1C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:42:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EC292222C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:42:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 391152222C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:42:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587044562;
-	bh=4FfjHUzoXOQuHsFmCwjdJHNFyyAOjk/AM8IR/EFRMnM=;
+	s=default; t=1587044575;
+	bh=UrwSOr4h2UrF7KC5Oh4oX+BltuND9X9C5BW/wnK2KGY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IWIY2nGmROI/X1mX6GcRQtx0EKQHRRtVjPW1BEaZBwL6Y99KmeEvEjO9D+xkrE43t
-	 KbgJ1TuVTJ0SBR46EnjBcliPDXp3CNzFg1JcgPF/z7KvvxO8sjz1fy+gseFJRFQB5k
-	 oSUXIUgNULKoSJSJQFOQdiPZP/XxmTkRkBbUVP8E=
+	b=FTosQFzZyoChFtiUtSFpKu9sYbJre6ujZlVvlhmFWhpYxO2lF6ZyBwBNWDMgBiTtz
+	 05fqmF2iPwgAAgIEzZMJqRr9gYHEqPHLApCB67SPXlKloJC3kEmMLsKMKfDWkEVsqX
+	 oXgbb+2UC/mRVU7MU542enlZekXBYROp5hJJ+TGU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441554AbgDPNmk (ORCPT
+        id S2441578AbgDPNmu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:42:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44106 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:42:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896693AbgDPNdN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:33:13 -0400
+        id S2896687AbgDPNdM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:33:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28838208E4;
-        Thu, 16 Apr 2020 13:33:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC71722201;
+        Thu, 16 Apr 2020 13:33:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043993;
-        bh=4FfjHUzoXOQuHsFmCwjdJHNFyyAOjk/AM8IR/EFRMnM=;
+        s=default; t=1587043991;
+        bh=UrwSOr4h2UrF7KC5Oh4oX+BltuND9X9C5BW/wnK2KGY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o9Ddqge7LXPj3+I0Xjsq0u+Kr4FCf4fILyg5YhL/bcCg109yUmxFcrMhpSaZIq7XI
-         3txsxHA6pvzeZ7lknfNy1a4+F5nth55gos4UGPI4Xi2SPW8Jp+5cS6vyZGK8f42bQc
-         DE/UANEY5K3EKVqwpl7uh+VGpZ+Jpc4bAz4VsJNk=
+        b=KkPjcAYnM7agpiwmdlv0PDVFvQdJ0ocHzw6AORfV0ZPenSoRtck/wxGhRB5PLANKL
+         ii04yOT6MvUbNSoN7De91h7OB1a+pjcpN2WiVvyiSkNG5287cfYlyfMszUu2SLKjKN
+         mNwC618uvfehBD0h1zmPE6Lfrr9lE17GM8sE3utw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Johannes Thumshirn <jth@kernel.org>,
-        Hannes Reinecke <hare@suse.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 038/257] null_blk: Handle null_add_dev() failures properly
-Date:   Thu, 16 Apr 2020 15:21:29 +0200
-Message-Id: <20200416131330.705406807@linuxfoundation.org>
+        stable@vger.kernel.org, Robert Richter <rrichter@marvell.com>,
+        Borislav Petkov <bp@suse.de>,
+        Aristeu Rozanski <aris@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 029/257] EDAC/mc: Report "unknown memory" on too many DIMM labels found
+Date:   Thu, 16 Apr 2020 15:21:20 +0200
+Message-Id: <20200416131329.582557948@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -64,62 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Robert Richter <rrichter@marvell.com>
 
-[ Upstream commit 9b03b713082a31a5b90e0a893c72aa620e255c26 ]
+[ Upstream commit 65bb4d1af92cf007adc0a0c59dadcc393c5cada6 ]
 
-If null_add_dev() fails then null_del_dev() is called with a NULL argument.
-Make null_del_dev() handle this scenario correctly. This patch fixes the
-following KASAN complaint:
+There is a limitation to report only EDAC_MAX_LABELS in e->label of
+the error descriptor. This is to prevent a potential string overflow.
 
-null-ptr-deref in null_del_dev+0x28/0x280 [null_blk]
-Read of size 8 at addr 0000000000000000 by task find/1062
+The current implementation falls back to "any memory" in this case and
+also stops all further processing to find a unique row and channel of
+the possible error location.
 
-Call Trace:
- dump_stack+0xa5/0xe6
- __kasan_report.cold+0x65/0x99
- kasan_report+0x16/0x20
- __asan_load8+0x58/0x90
- null_del_dev+0x28/0x280 [null_blk]
- nullb_group_drop_item+0x7e/0xa0 [null_blk]
- client_drop_item+0x53/0x80 [configfs]
- configfs_rmdir+0x395/0x4e0 [configfs]
- vfs_rmdir+0xb6/0x220
- do_rmdir+0x238/0x2c0
- __x64_sys_unlinkat+0x75/0x90
- do_syscall_64+0x6f/0x2f0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Reporting "any memory" is wrong as the memory controller reported an
+error location for one of the layers. Instead, report "unknown memory"
+and also do not break early in the loop to further check row and channel
+for uniqueness.
 
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Cc: Johannes Thumshirn <jth@kernel.org>
-Cc: Hannes Reinecke <hare@suse.com>
-Cc: Ming Lei <ming.lei@redhat.com>
-Cc: Christoph Hellwig <hch@infradead.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+ [ bp: Massage commit message. ]
+
+Signed-off-by: Robert Richter <rrichter@marvell.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Aristeu Rozanski <aris@redhat.com>
+Link: https://lkml.kernel.org/r/20200123090210.26933-7-rrichter@marvell.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/null_blk_main.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/edac/edac_mc.c | 21 +++++++++++----------
+ 1 file changed, 11 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/block/null_blk_main.c b/drivers/block/null_blk_main.c
-index 97bb53d7fa348..635904bfcf777 100644
---- a/drivers/block/null_blk_main.c
-+++ b/drivers/block/null_blk_main.c
-@@ -1432,7 +1432,12 @@ static void cleanup_queues(struct nullb *nullb)
+diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
+index 69e0d90460e6c..2349f2ad946bb 100644
+--- a/drivers/edac/edac_mc.c
++++ b/drivers/edac/edac_mc.c
+@@ -1180,20 +1180,21 @@ void edac_mc_handle_error(const enum hw_event_mc_err_type type,
+ 		 * channel/memory controller/...  may be affected.
+ 		 * Also, don't show errors for empty DIMM slots.
+ 		 */
+-		if (!e->enable_per_layer_report || !dimm->nr_pages)
++		if (!dimm->nr_pages)
+ 			continue;
  
- static void null_del_dev(struct nullb *nullb)
- {
--	struct nullb_device *dev = nullb->dev;
-+	struct nullb_device *dev;
-+
-+	if (!nullb)
-+		return;
-+
-+	dev = nullb->dev;
+-		if (n_labels >= EDAC_MAX_LABELS) {
+-			e->enable_per_layer_report = false;
+-			break;
+-		}
+ 		n_labels++;
+-		if (p != e->label) {
+-			strcpy(p, OTHER_LABEL);
+-			p += strlen(OTHER_LABEL);
++		if (n_labels > EDAC_MAX_LABELS) {
++			p = e->label;
++			*p = '\0';
++		} else {
++			if (p != e->label) {
++				strcpy(p, OTHER_LABEL);
++				p += strlen(OTHER_LABEL);
++			}
++			strcpy(p, dimm->label);
++			p += strlen(p);
+ 		}
+-		strcpy(p, dimm->label);
+-		p += strlen(p);
  
- 	ida_simple_remove(&nullb_indexes, nullb->index);
- 
+ 		/*
+ 		 * get csrow/channel of the DIMM, in order to allow
 -- 
 2.20.1
 
