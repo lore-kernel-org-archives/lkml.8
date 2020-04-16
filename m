@@ -2,169 +2,82 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D958C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:17:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8AB1C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:17:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EADB521D91
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:17:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9858C206B9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:17:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TuXyyx+e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441519AbgDPKRN (ORCPT
+        id S2441541AbgDPKRp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 06:17:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53890 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2441482AbgDPKPo (ORCPT
+        Thu, 16 Apr 2020 06:17:45 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:28757 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2441262AbgDPKP0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 06:15:44 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CD73C061A0C;
-        Thu, 16 Apr 2020 03:15:43 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jP1Ya-00046E-CQ; Thu, 16 Apr 2020 12:15:40 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A873C1C001F;
-        Thu, 16 Apr 2020 12:15:39 +0200 (CEST)
-Date:   Thu, 16 Apr 2020 10:15:39 -0000
-From:   "tip-bot2 for Andrei Vagin" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/urgent] proc, time/namespace: Show clock symbolic names
- in /proc/pid/timens_offsets
-Cc:     Michael Kerrisk <mtk.manpages@gmail.com>,
-        Andrei Vagin <avagin@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>, stable@vger.kernel.org,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200411154031.642557-1-avagin@gmail.com>
-References: <20200411154031.642557-1-avagin@gmail.com>
+        Thu, 16 Apr 2020 06:15:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587032125;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=duQdUsOOdHGiX8X+SSFFtnhQDtBYHM0gSY3ojiBRAto=;
+        b=TuXyyx+ekI/WaMjlYcHQVVMCe/hcxDlB5MqMHB1GdZnCjLdDwvHuYuQgn4Vp2lu1w24MhZ
+        cA+6SNtQagk0KFYIjrwFr6CcEm/ntuq5KWO4WktgNPupSWlJut92trUyILxUmckGF8Msi7
+        hTsODdreetkUkMOPCbdq8a2vhZVlZmc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-341-lvRNdSpjMxOevcxPakXQlg-1; Thu, 16 Apr 2020 06:15:23 -0400
+X-MC-Unique: lvRNdSpjMxOevcxPakXQlg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3A21218C8C02;
+        Thu, 16 Apr 2020 10:15:22 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-113-129.rdu2.redhat.com [10.10.113.129])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7175E5C1D6;
+        Thu, 16 Apr 2020 10:15:20 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAH2r5mvj7GF3i8AE6E=+5f_Vigtb3uw=665F2uuBOgGzUhHObQ@mail.gmail.com>
+References: <CAH2r5mvj7GF3i8AE6E=+5f_Vigtb3uw=665F2uuBOgGzUhHObQ@mail.gmail.com> <3865908.1586874010@warthog.procyon.org.uk> <e751977dac616d93806d98f4ad3ce144bb1eb244.camel@kernel.org>
+To:     Steve French <smfrench@gmail.com>
+Cc:     dhowells@redhat.com, Jeff Layton <jlayton@kernel.org>,
+        linux-nfs <linux-nfs@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>, linux-afs@lists.infradead.org,
+        ceph-devel@vger.kernel.org, keyrings@vger.kernel.org,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, fweimer@redhat.com
+Subject: Re: What's a good default TTL for DNS keys in the kernel
 MIME-Version: 1.0
-Message-ID: <158703213918.28353.5534603422697683760.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <127742.1587032119.1@warthog.procyon.org.uk>
+Date:   Thu, 16 Apr 2020 11:15:19 +0100
+Message-ID: <127743.1587032119@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the timers/urgent branch of tip:
+Steve French <smfrench@gmail.com> wrote:
 
-Commit-ID:     94d440d618467806009c8edc70b094d64e12ee5a
-Gitweb:        https://git.kernel.org/tip/94d440d618467806009c8edc70b094d64e12ee5a
-Author:        Andrei Vagin <avagin@gmail.com>
-AuthorDate:    Sat, 11 Apr 2020 08:40:31 -07:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Thu, 16 Apr 2020 12:10:54 +02:00
+> > 10 mins sounds like a reasonable default to me.
+> 
+> I would lean toward slightly longer (20 minutes?) but aren't there
+> usually different timeouts for 'static' vs. 'dynamic' DNS records (so
+> static records would have longer timeouts)?
 
-proc, time/namespace: Show clock symbolic names in /proc/pid/timens_offsets
+Unfortunately, getaddrinfo() doesn't give me that information.
 
-Michael Kerrisk suggested to replace numeric clock IDs with symbolic names.
+David
 
-Now the content of these files looks like this:
-$ cat /proc/774/timens_offsets
-monotonic      864000         0
-boottime      1728000         0
-
-For setting offsets, both representations of clocks (numeric and symbolic)
-can be used.
-
-As for compatibility, it is acceptable to change things as long as
-userspace doesn't care. The format of timens_offsets files is very new and
-there are no userspace tools yet which rely on this format.
-
-But three projects crun, util-linux and criu rely on the interface of
-setting time offsets and this is why it's required to continue supporting
-the numeric clock IDs on write.
-
-Fixes: 04a8682a71be ("fs/proc: Introduce /proc/pid/timens_offsets")
-Suggested-by: Michael Kerrisk <mtk.manpages@gmail.com>
-Signed-off-by: Andrei Vagin <avagin@gmail.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Michael Kerrisk <mtk.manpages@gmail.com>
-Acked-by: Michael Kerrisk <mtk.manpages@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Eric W. Biederman <ebiederm@xmission.com>
-Cc: Dmitry Safonov <0x7f454c46@gmail.com>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20200411154031.642557-1-avagin@gmail.com
----
- fs/proc/base.c          | 14 +++++++++++++-
- kernel/time/namespace.c | 15 ++++++++++++++-
- 2 files changed, 27 insertions(+), 2 deletions(-)
-
-diff --git a/fs/proc/base.c b/fs/proc/base.c
-index 6042b64..572898d 100644
---- a/fs/proc/base.c
-+++ b/fs/proc/base.c
-@@ -1573,6 +1573,7 @@ static ssize_t timens_offsets_write(struct file *file, const char __user *buf,
- 	noffsets = 0;
- 	for (pos = kbuf; pos; pos = next_line) {
- 		struct proc_timens_offset *off = &offsets[noffsets];
-+		char clock[10];
- 		int err;
- 
- 		/* Find the end of line and ensure we don't look past it */
-@@ -1584,10 +1585,21 @@ static ssize_t timens_offsets_write(struct file *file, const char __user *buf,
- 				next_line = NULL;
- 		}
- 
--		err = sscanf(pos, "%u %lld %lu", &off->clockid,
-+		err = sscanf(pos, "%9s %lld %lu", clock,
- 				&off->val.tv_sec, &off->val.tv_nsec);
- 		if (err != 3 || off->val.tv_nsec >= NSEC_PER_SEC)
- 			goto out;
-+
-+		clock[sizeof(clock) - 1] = 0;
-+		if (strcmp(clock, "monotonic") == 0 ||
-+		    strcmp(clock, __stringify(CLOCK_MONOTONIC)) == 0)
-+			off->clockid = CLOCK_MONOTONIC;
-+		else if (strcmp(clock, "boottime") == 0 ||
-+			 strcmp(clock, __stringify(CLOCK_BOOTTIME)) == 0)
-+			off->clockid = CLOCK_BOOTTIME;
-+		else
-+			goto out;
-+
- 		noffsets++;
- 		if (noffsets == ARRAY_SIZE(offsets)) {
- 			if (next_line)
-diff --git a/kernel/time/namespace.c b/kernel/time/namespace.c
-index 3b30288..53bce34 100644
---- a/kernel/time/namespace.c
-+++ b/kernel/time/namespace.c
-@@ -338,7 +338,20 @@ static struct user_namespace *timens_owner(struct ns_common *ns)
- 
- static void show_offset(struct seq_file *m, int clockid, struct timespec64 *ts)
- {
--	seq_printf(m, "%d %lld %ld\n", clockid, ts->tv_sec, ts->tv_nsec);
-+	char *clock;
-+
-+	switch (clockid) {
-+	case CLOCK_BOOTTIME:
-+		clock = "boottime";
-+		break;
-+	case CLOCK_MONOTONIC:
-+		clock = "monotonic";
-+		break;
-+	default:
-+		clock = "unknown";
-+		break;
-+	}
-+	seq_printf(m, "%-10s %10lld %9ld\n", clock, ts->tv_sec, ts->tv_nsec);
- }
- 
- void proc_timens_show_offsets(struct task_struct *p, struct seq_file *m)
