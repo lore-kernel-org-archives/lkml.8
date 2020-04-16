@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28271C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:04:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBE36C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:04:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01BFA20774
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:04:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC60020774
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:04:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587049441;
-	bh=vDbC//cFoiarsCOyRPOI0FBifzs1I3USmWge+kKgjaU=;
+	s=default; t=1587049452;
+	bh=4PpD070jqdkedZt8ThZiTCX383+wNv8MLoZ3mDIv1Aw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UGh2vTfp8AATEkAfjrESyZpBou3k6jZ73xfIm1SEIAquQgCHldxyn2wdHLHLv70QC
-	 rZ42uDwfyztsqp1OM1PPUaTULgIHXTj7iOxkFEyLphEXK1IX9iX+pGXRnkU+su0hRW
-	 V7NnEVIOHxGb/gh8SQfoYMHzlmbddeT4lUwFwgsU=
+	b=RA50K7YZDHt95jB8Pn1HTHW9ves8pvykgAy0zAs1luCcp+CuyAqxlgivKSCRR3LXn
+	 lNvyMvJ/9ZuP/bwicWlLnX882aOh2SulFPNOXQPlvUdHJhYmGkYppPHfqQRqe/vsUj
+	 Ha6atNa6nb3Q1zgFNxG1mbkAjQ69I5xCWLH2LAV4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442111AbgDPPDz (ORCPT
+        id S2394877AbgDPPEI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:03:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39856 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:04:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408992AbgDPNxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:53:25 -0400
+        id S2408983AbgDPNxU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:53:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C679720732;
-        Thu, 16 Apr 2020 13:53:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE4B82076D;
+        Thu, 16 Apr 2020 13:53:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045205;
-        bh=vDbC//cFoiarsCOyRPOI0FBifzs1I3USmWge+kKgjaU=;
+        s=default; t=1587045200;
+        bh=4PpD070jqdkedZt8ThZiTCX383+wNv8MLoZ3mDIv1Aw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v4U6RxbvAb8SH1KNpmrUmfM01SmjcvOzI5w59nPPeaFVAB4OWLdby9jaNLvKgJS2v
-         Id5a2/Whvk8iXpajvIfN53d+gdPfqaUTSEZdS5M3IZaNd/jB19fof9QXh/EGmplfUX
-         zGHINFAqTNQ3HlgjsMz1DZu/MepxI0/CdgXrNDSY=
+        b=B5mbzYANFoihGrbsvOwtmQ4dLKrj048dDVSZLVsrUmILsRM67dhL5qf90nyYdnOIS
+         dle7g3XQgsC8Mid6QOXHs7QC3Ywxt+14koYxJ/V3LvjcKsrF/Fsrx8cs2L/GTLXFOT
+         9+/YUiW0ytOyfPLtRdksII6Dq6NaXRvCWqEzrBFI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 038/254] selftests/x86/ptrace_syscall_32: Fix no-vDSO segfault
-Date:   Thu, 16 Apr 2020 15:22:07 +0200
-Message-Id: <20200416131330.625241721@linuxfoundation.org>
+        stable@vger.kernel.org, Tao Zhou <ouwen210@hotmail.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Mel Gorman <mgorman@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 037/254] sched/fair: Fix condition of avg_load calculation
+Date:   Thu, 16 Apr 2020 15:22:06 +0200
+Message-Id: <20200416131330.497922858@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -60,40 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Lutomirski <luto@kernel.org>
+From: Tao Zhou <ouwen210@hotmail.com>
 
-[ Upstream commit 630b99ab60aa972052a4202a1ff96c7e45eb0054 ]
+[ Upstream commit 6c8116c914b65be5e4d6f66d69c8142eb0648c22 ]
 
-If AT_SYSINFO is not present, don't try to call a NULL pointer.
+In update_sg_wakeup_stats(), the comment says:
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/faaf688265a7e1a5b944d6f8bc0f6368158306d3.1584052409.git.luto@kernel.org
+Computing avg_load makes sense only when group is fully
+busy or overloaded.
+
+But, the code below this comment does not check like this.
+
+>From reading the code about avg_load in other functions, I
+confirm that avg_load should be calculated in fully busy or
+overloaded case. The comment is correct and the checking
+condition is wrong. So, change that condition.
+
+Fixes: 57abff067a08 ("sched/fair: Rework find_idlest_group()")
+Signed-off-by: Tao Zhou <ouwen210@hotmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+Acked-by: Mel Gorman <mgorman@suse.de>
+Link: https://lkml.kernel.org/r/Message-ID:
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/x86/ptrace_syscall.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ kernel/sched/fair.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/x86/ptrace_syscall.c b/tools/testing/selftests/x86/ptrace_syscall.c
-index 6f22238f32173..12aaa063196e7 100644
---- a/tools/testing/selftests/x86/ptrace_syscall.c
-+++ b/tools/testing/selftests/x86/ptrace_syscall.c
-@@ -414,8 +414,12 @@ int main()
- 
- #if defined(__i386__) && (!defined(__GLIBC__) || __GLIBC__ > 2 || __GLIBC_MINOR__ >= 16)
- 	vsyscall32 = (void *)getauxval(AT_SYSINFO);
--	printf("[RUN]\tCheck AT_SYSINFO return regs\n");
--	test_sys32_regs(do_full_vsyscall32);
-+	if (vsyscall32) {
-+		printf("[RUN]\tCheck AT_SYSINFO return regs\n");
-+		test_sys32_regs(do_full_vsyscall32);
-+	} else {
-+		printf("[SKIP]\tAT_SYSINFO is not available\n");
-+	}
- #endif
- 
- 	test_ptrace_syscall_restart();
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index c1217bfe5e819..7f895d5139948 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -8345,7 +8345,8 @@ static inline void update_sg_wakeup_stats(struct sched_domain *sd,
+ 	 * Computing avg_load makes sense only when group is fully busy or
+ 	 * overloaded
+ 	 */
+-	if (sgs->group_type < group_fully_busy)
++	if (sgs->group_type == group_fully_busy ||
++		sgs->group_type == group_overloaded)
+ 		sgs->avg_load = (sgs->group_load * SCHED_CAPACITY_SCALE) /
+ 				sgs->group_capacity;
+ }
 -- 
 2.20.1
 
