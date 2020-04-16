@@ -2,95 +2,77 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B29AC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3A7C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:32:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDA6721927
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:32:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587047530;
-	bh=zbL0A8afOYEvdEVbqQo3xydp13RhWQj9s/P/zr+aQNs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YRjcFkinMmQGayTScrW7FnULxm1K1GsxoUF1MMRi5MsBJDN+wvdpqN+gW0A4m126L
-	 rQBcHlg+wDodaqKyGEjIf0GAk+POSkbR68QLdlcmtfNs8LTKS9fpCwQtbf8bPmVy9f
-	 DRK2zIEamqKBticyE3g+f9PpEhvgKzsuOSKs+qYQ=
+	by mail.kernel.org (Postfix) with ESMTP id D019721927
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:32:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410268AbgDPOcJ (ORCPT
+        id S2437366AbgDPOcQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:32:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50630 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2633481AbgDPOCz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:02:55 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFA9722250;
-        Thu, 16 Apr 2020 14:02:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045775;
-        bh=zbL0A8afOYEvdEVbqQo3xydp13RhWQj9s/P/zr+aQNs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0xeOsGUiZnA/j4Ccbn5JNZspM5sNoEks9lsD2WrADpzK0aYtzYuydh+2EWBXl/clf
-         AUwxou8rj/tOHzZyM0kxAE/54TYvI06Vr4Y0BUzL0PQyuon4uv7q1Csf8TbKZi2A0R
-         xgo6tIp+HVKlLoJKoX4gDLdMt16j8FuOH/y5k0rM=
-Date:   Thu, 16 Apr 2020 15:58:36 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jules Irenge <jbi.octave@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, boqun.feng@gmail.com,
-        Jiri Slaby <jslaby@suse.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
-Subject: Re: [PATCH 7/7] tty: serial_core: Add missing annotation for
- _unlock_and_check_sysrq()
-Message-ID: <20200416135836.GB1295013@kroah.com>
-References: <0/7>
- <20200331204643.11262-1-jbi.octave@gmail.com>
- <20200331204643.11262-8-jbi.octave@gmail.com>
+        Thu, 16 Apr 2020 10:32:16 -0400
+Received: from cmccmta1.chinamobile.com ([221.176.66.79]:12038 "EHLO
+        cmccmta1.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393013AbgDPOEI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:04:08 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.5]) by rmmx-syy-dmz-app04-12004 (RichMail) with SMTP id 2ee45e9865c9f24-87203; Thu, 16 Apr 2020 22:03:53 +0800 (CST)
+X-RM-TRANSID: 2ee45e9865c9f24-87203
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from localhost.localdomain (unknown[112.1.173.7])
+        by rmsmtp-syy-appsvr03-12003 (RichMail) with SMTP id 2ee35e9865c63fd-fa69c;
+        Thu, 16 Apr 2020 22:03:53 +0800 (CST)
+X-RM-TRANSID: 2ee35e9865c63fd-fa69c
+From:   Tang Bin <tangbin@cmss.chinamobile.com>
+To:     aisheng.dong@nxp.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com
+Cc:     linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Tang Bin <tangbin@cmss.chinamobile.com>
+Subject: [PATCH] i2c:imx-lpi2c: Omit superfluous error message in lpi2c_imx_probe()
+Date:   Thu, 16 Apr 2020 22:05:29 +0800
+Message-Id: <20200416140529.20036-1-tangbin@cmss.chinamobile.com>
+X-Mailer: git-send-email 2.20.1.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200331204643.11262-8-jbi.octave@gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 09:46:43PM +0100, Jules Irenge wrote:
-> Sparse reports a warning at _unlock_and_check_sysrq()
-> 
-> warning: context imbalance in uart_unlock_and_check_sysrq()
-> 	- unexpected unlock
-> 
-> The root cause is the missing annotation at _unlock_and_check_sysrq()
-> Add the missing __releases(&port->lock) annotation.
-> 
-> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
-> ---
->  drivers/tty/serial/serial_core.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
-> index 76e506ee335c..32f93f03efce 100644
-> --- a/drivers/tty/serial/serial_core.c
-> +++ b/drivers/tty/serial/serial_core.c
-> @@ -3121,6 +3121,7 @@ int uart_prepare_sysrq_char(struct uart_port *port, unsigned int ch)
->  EXPORT_SYMBOL_GPL(uart_prepare_sysrq_char);
->  
->  void uart_unlock_and_check_sysrq(struct uart_port *port, unsigned long irqflags)
-> +	__releases(&port->lock)
->  {
->  	int sysrq_ch;
->  
-> -- 
-> 2.24.1
-> 
+In the function lpi2c_imx_probe(), when get irq failed, the function
+platform_get_irq() logs an error message, so remove redundant message
+here.
 
-This is already in the tree, are you sure you are not working from an
-older one?
+Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+---
+ drivers/i2c/busses/i2c-imx-lpi2c.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-greg k-h
+diff --git a/drivers/i2c/busses/i2c-imx-lpi2c.c b/drivers/i2c/busses/i2c-imx-lpi2c.c
+index c92b56485..ee16e7e22 100644
+--- a/drivers/i2c/busses/i2c-imx-lpi2c.c
++++ b/drivers/i2c/busses/i2c-imx-lpi2c.c
+@@ -557,10 +557,8 @@ static int lpi2c_imx_probe(struct platform_device *pdev)
+ 		return PTR_ERR(lpi2c_imx->base);
+ 
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		dev_err(&pdev->dev, "can't get irq number\n");
++	if (irq < 0)
+ 		return irq;
+-	}
+ 
+ 	lpi2c_imx->adapter.owner	= THIS_MODULE;
+ 	lpi2c_imx->adapter.algo		= &lpi2c_imx_algo;
+-- 
+2.20.1.windows.1
+
+
+
