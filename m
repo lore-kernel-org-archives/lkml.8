@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D2D3C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1AB1C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D14F206B9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:18:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CC552063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:18:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587046700;
-	bh=bLaYknW8xJkpruAeW9vzpZ0HesbH5LKBqP1T/qNO/0I=;
+	s=default; t=1587046711;
+	bh=KaHfIVIHtR3Eir+Dk/EI3yLkcAOUT+psbNvlaMLf7UA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T4l6OJecr0ekIp9uXGkeAh5LPDN59p3RAZ+l/spALbWCQG0VqHbwSj6b4KBLJLxMn
-	 f4jA7Sw0P6YWCT8MYcXavgl1xJHcNF2ehRxTbdXpnvz1eYNXJP5OtWQzbdqlJwfpLi
-	 ZEJT/1W7uqf+J5VZcy0sHJkYjTWkYg1urjHnQLH4=
+	b=RM8tfDzNvw1lk/V6LpfZL16JKfLgo0iORkYy1tLPtDprulMQnR3FWChDbz06LRlCR
+	 nXeyjCeXpKfuwIyQxigPqnbYZ6eEWLzvAO3gY/KN7nsfVaWbILizVtRlboa+u4BuQw
+	 9helrZsTTe5XYXxXBbYjLhnzb4i++oeI51IVkeUU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409720AbgDPOSN (ORCPT
+        id S1731132AbgDPOS3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:18:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39310 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:18:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408928AbgDPNw7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:52:59 -0400
+        id S2441710AbgDPNxF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:53:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED3062076D;
-        Thu, 16 Apr 2020 13:52:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D47E520732;
+        Thu, 16 Apr 2020 13:53:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045178;
-        bh=bLaYknW8xJkpruAeW9vzpZ0HesbH5LKBqP1T/qNO/0I=;
+        s=default; t=1587045183;
+        bh=KaHfIVIHtR3Eir+Dk/EI3yLkcAOUT+psbNvlaMLf7UA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LOm4FXCJ8SmBfOYWoWlqlxd2L/b1Qoe812WPig5NUf3GM1RhQJwkPOJMRZmLlzJtt
-         o0xS7LgT2tkFOEmw6OnUjO4YZ8ilY/xo03xQ10fDuprnhDt5/T1WyKZVDY32bqlPDS
-         xBiA671V6OsEnmqjDHcTrLFZ5fsPc0A8XrfbsCy0=
+        b=F4bVaEUsaiJE2/QG7OXI2Hx7WZEtCVn9+pb6vi/6wBQSkNRKVS+ZTZRgNt//4jOBi
+         a0wK0jg1mlm47I13v6IMfn/JetaPv85dTTtFSlapNYjnuQ36vx8QG7toA0kiuto/jW
+         56zLC3fj3A55PzaTFiI/2Jqz+vKLsdYcXnQ7pTzo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Hellstrom <thellstrom@vmware.com>,
-        Borislav Petkov <bp@suse.de>, Christoph Hellwig <hch@lst.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Taehee Yoo <ap420073@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 028/254] dma-mapping: Fix dma_pgprot() for unencrypted coherent pages
-Date:   Thu, 16 Apr 2020 15:21:57 +0200
-Message-Id: <20200416131329.359655264@linuxfoundation.org>
+Subject: [PATCH 5.6 030/254] debugfs: Check module state before warning in {full/open}_proxy_open()
+Date:   Thu, 16 Apr 2020 15:21:59 +0200
+Message-Id: <20200416131329.622506992@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -61,45 +60,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Hellstrom <thellstrom@vmware.com>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit 17c4a2ae15a7aaefe84bdb271952678c5c9cd8e1 ]
+[ Upstream commit 275678e7a9be6a0ea9c1bb493e48abf2f4a01be5 ]
 
-When dma_mmap_coherent() sets up a mapping to unencrypted coherent memory
-under SEV encryption and sometimes under SME encryption, it will actually
-set up an encrypted mapping rather than an unencrypted, causing devices
-that DMAs from that memory to read encrypted contents. Fix this.
+When the module is being removed, the module state is set to
+MODULE_STATE_GOING. At this point, try_module_get() fails.
+And when {full/open}_proxy_open() is being called,
+it calls try_module_get() to try to hold module reference count.
+If it fails, it warns about the possibility of debugfs file leak.
 
-When force_dma_unencrypted() returns true, the linear kernel map of the
-coherent pages have had the encryption bit explicitly cleared and the
-page content is unencrypted. Make sure that any additional PTEs we set
-up to these pages also have the encryption bit cleared by having
-dma_pgprot() return a protection with the encryption bit cleared in this
-case.
+If {full/open}_proxy_open() is called while the module is being removed,
+it fails to hold the module.
+So, It warns about debugfs file leak. But it is not the debugfs file
+leak case. So, this patch just adds module state checking routine
+in the {full/open}_proxy_open().
 
-Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Acked-by: Tom Lendacky <thomas.lendacky@amd.com>
-Link: https://lkml.kernel.org/r/20200304114527.3636-3-thomas_os@shipmail.org
+Test commands:
+    #SHELL1
+    while :
+    do
+        modprobe netdevsim
+        echo 1 > /sys/bus/netdevsim/new_device
+        modprobe -rv netdevsim
+    done
+
+    #SHELL2
+    while :
+    do
+        cat /sys/kernel/debug/netdevsim/netdevsim1/ports/0/ipsec
+    done
+
+Splat looks like:
+[  298.766738][T14664] debugfs file owner did not clean up at exit: ipsec
+[  298.766766][T14664] WARNING: CPU: 2 PID: 14664 at fs/debugfs/file.c:312 full_proxy_open+0x10f/0x650
+[  298.768595][T14664] Modules linked in: netdevsim(-) openvswitch nsh nf_conncount nf_nat nf_conntrack nf_defrag_ipv6 n][  298.771343][T14664] CPU: 2 PID: 14664 Comm: cat Tainted: G        W         5.5.0+ #1
+[  298.772373][T14664] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
+[  298.773545][T14664] RIP: 0010:full_proxy_open+0x10f/0x650
+[  298.774247][T14664] Code: 48 c1 ea 03 80 3c 02 00 0f 85 c1 04 00 00 49 8b 3c 24 e8 e4 b5 78 ff 84 c0 75 2d 4c 89 ee 48
+[  298.776782][T14664] RSP: 0018:ffff88805b7df9b8 EFLAGS: 00010282[  298.777583][T14664] RAX: dffffc0000000008 RBX: ffff8880511725c0 RCX: 0000000000000000
+[  298.778610][T14664] RDX: 0000000000000000 RSI: 0000000000000006 RDI: ffff8880540c5c14
+[  298.779637][T14664] RBP: 0000000000000000 R08: fffffbfff15235ad R09: 0000000000000000
+[  298.780664][T14664] R10: 0000000000000001 R11: 0000000000000000 R12: ffffffffc06b5000
+[  298.781702][T14664] R13: ffff88804c234a88 R14: ffff88804c22dd00 R15: ffffffff8a1b5660
+[  298.782722][T14664] FS:  00007fafa13a8540(0000) GS:ffff88806c800000(0000) knlGS:0000000000000000
+[  298.783845][T14664] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  298.784672][T14664] CR2: 00007fafa0e9cd10 CR3: 000000004b286005 CR4: 00000000000606e0
+[  298.785739][T14664] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[  298.786769][T14664] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[  298.787785][T14664] Call Trace:
+[  298.788237][T14664]  do_dentry_open+0x63c/0xf50
+[  298.788872][T14664]  ? open_proxy_open+0x270/0x270
+[  298.789524][T14664]  ? __x64_sys_fchdir+0x180/0x180
+[  298.790169][T14664]  ? inode_permission+0x65/0x390
+[  298.790832][T14664]  path_openat+0xc45/0x2680
+[  298.791425][T14664]  ? save_stack+0x69/0x80
+[  298.791988][T14664]  ? save_stack+0x19/0x80
+[  298.792544][T14664]  ? path_mountpoint+0x2e0/0x2e0
+[  298.793233][T14664]  ? check_chain_key+0x236/0x5d0
+[  298.793910][T14664]  ? sched_clock_cpu+0x18/0x170
+[  298.794527][T14664]  ? find_held_lock+0x39/0x1d0
+[  298.795153][T14664]  do_filp_open+0x16a/0x260
+[ ... ]
+
+Fixes: 9fd4dcece43a ("debugfs: prevent access to possibly dead file_operations at file open")
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Link: https://lore.kernel.org/r/20200218043150.29447-1-ap420073@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/dma/mapping.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/debugfs/file.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
-index 12ff766ec1fa3..98e3d873792ea 100644
---- a/kernel/dma/mapping.c
-+++ b/kernel/dma/mapping.c
-@@ -154,6 +154,8 @@ EXPORT_SYMBOL(dma_get_sgtable_attrs);
-  */
- pgprot_t dma_pgprot(struct device *dev, pgprot_t prot, unsigned long attrs)
- {
-+	if (force_dma_unencrypted(dev))
-+		prot = pgprot_decrypted(prot);
- 	if (dev_is_dma_coherent(dev) ||
- 	    (IS_ENABLED(CONFIG_DMA_NONCOHERENT_CACHE_SYNC) &&
-              (attrs & DMA_ATTR_NON_CONSISTENT)))
+diff --git a/fs/debugfs/file.c b/fs/debugfs/file.c
+index db987b5110a99..f34757e8f25f8 100644
+--- a/fs/debugfs/file.c
++++ b/fs/debugfs/file.c
+@@ -175,8 +175,13 @@ static int open_proxy_open(struct inode *inode, struct file *filp)
+ 	if (r)
+ 		goto out;
+ 
+-	real_fops = fops_get(real_fops);
+-	if (!real_fops) {
++	if (!fops_get(real_fops)) {
++#ifdef MODULE
++		if (real_fops->owner &&
++		    real_fops->owner->state == MODULE_STATE_GOING)
++			goto out;
++#endif
++
+ 		/* Huh? Module did not clean up after itself at exit? */
+ 		WARN(1, "debugfs file owner did not clean up at exit: %pd",
+ 			dentry);
+@@ -305,8 +310,13 @@ static int full_proxy_open(struct inode *inode, struct file *filp)
+ 	if (r)
+ 		goto out;
+ 
+-	real_fops = fops_get(real_fops);
+-	if (!real_fops) {
++	if (!fops_get(real_fops)) {
++#ifdef MODULE
++		if (real_fops->owner &&
++		    real_fops->owner->state == MODULE_STATE_GOING)
++			goto out;
++#endif
++
+ 		/* Huh? Module did not cleanup after itself at exit? */
+ 		WARN(1, "debugfs file owner did not clean up at exit: %pd",
+ 			dentry);
 -- 
 2.20.1
 
