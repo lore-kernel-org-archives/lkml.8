@@ -2,117 +2,125 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32EB7C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 17:24:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8038C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 17:24:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 146F321924
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 17:24:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587057876;
-	bh=UxgHHt2NeWIhftpv8xNENijT4Gukwwyzyg1IRpvLXzs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=pBswMduSYQsGpl18O/dy1y+Q/E8NUfQv7H+/fUoaquTJYXNCy8fN5QEAHwJdh1HSG
-	 8qXWrFB2F/w2MKN5MSNAYbLqUT9AzmjKhiahbp/oiIQHpBQHaXngwOuewUGz5i1Kzi
-	 dkx2j8mh2FMI6Q08K7elaSplDrcpUdAZxuiwt53M=
+	by mail.kernel.org (Postfix) with ESMTP id 93E012076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 17:24:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="JFrpxmOX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392711AbgDPRYf (ORCPT
+        id S1729611AbgDPRYz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 13:24:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44438 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726514AbgDPRYc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 13:24:32 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FC712076D;
-        Thu, 16 Apr 2020 17:24:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587057871;
-        bh=UxgHHt2NeWIhftpv8xNENijT4Gukwwyzyg1IRpvLXzs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=g1SBH/S1xjhAVDsIoJ0zw1ZDNL0B3F+hLnuVxkY0fnxebNuSDImVx3u6mOare9YCA
-         4B8XIu+02w2z06xNZ3ECpop9c9DrFCr6MsrodIv2FEw++3Tiw2obZ+NiGHxKOlH1C8
-         IixQNKpOrpGBopT59Ex7iKaDWHehGvM/AxMQqaoY=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jP8FZ-003x8f-Od; Thu, 16 Apr 2020 18:24:29 +0100
+        Thu, 16 Apr 2020 13:24:55 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:50072 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbgDPRYu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 13:24:50 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id C1F8B97D;
+        Thu, 16 Apr 2020 19:24:47 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1587057888;
+        bh=n96mzpZtECYxDWfSDMueCKOeosR0PhwZDxdep4i2jmI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JFrpxmOXiWHzXnwDoyiRONCycIkNUzJYgNmk635T7FlC9y2jc/AlXdflLh+I/WI+s
+         rFk4kGJdsGPl0HQEAP8Id2du0KeHQn3uIN6nEo6+fX0ijONqcCJOgGXH/zoBXkwaHN
+         Y0NErElmPG3LoFsHaCFdRq+/Buhl9BCJ71y7rcoM=
+Date:   Thu, 16 Apr 2020 20:24:35 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Collabora Kernel ML <kernel@collabora.com>,
+        matthias.bgg@gmail.com, drinkcat@chromium.org, hsinyi@chromium.org,
+        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v2 3/7] drm/mediatek: mtk_dsi: Rename bridge to
+ next_bridge
+Message-ID: <20200416172435.GM4796@pendragon.ideasonboard.com>
+References: <20200416155720.2360443-1-enric.balletbo@collabora.com>
+ <20200416155720.2360443-4-enric.balletbo@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 16 Apr 2020 18:24:29 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     Zenghui Yu <yuzenghui@huawei.com>, kvmarm@lists.cs.columbia.edu,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        catalin.marinas@arm.com, wanghaibin.wang@huawei.com
-Subject: Re: [PATCH] KVM: arm64: Drop PTE_S2_MEMATTR_MASK
-In-Reply-To: <20200416170539.GC32685@willie-the-truck>
-References: <20200415105746.314-1-yuzenghui@huawei.com>
- <20200416163605.091fa6eb@why> <20200416170539.GC32685@willie-the-truck>
-Message-ID: <1248b9b0922a2c2886650f5bacadf1af@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: will@kernel.org, yuzenghui@huawei.com, kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com, wanghaibin.wang@huawei.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200416155720.2360443-4-enric.balletbo@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-16 18:05, Will Deacon wrote:
-> On Thu, Apr 16, 2020 at 04:36:05PM +0100, Marc Zyngier wrote:
->> On Wed, 15 Apr 2020 18:57:46 +0800
->> Zenghui Yu <yuzenghui@huawei.com> wrote:
->> 
->> > The only user of PTE_S2_MEMATTR_MASK macro had been removed since
->> > commit a501e32430d4 ("arm64: Clean up the default pgprot setting").
->> > It has been about six years and no one has used it again.
->> >
->> > Let's drop it.
->> >
->> > Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
->> > ---
->> >  arch/arm64/include/asm/pgtable-hwdef.h | 1 -
->> >  1 file changed, 1 deletion(-)
->> >
->> > diff --git a/arch/arm64/include/asm/pgtable-hwdef.h b/arch/arm64/include/asm/pgtable-hwdef.h
->> > index 6bf5e650da78..99315bdca0e6 100644
->> > --- a/arch/arm64/include/asm/pgtable-hwdef.h
->> > +++ b/arch/arm64/include/asm/pgtable-hwdef.h
->> > @@ -190,7 +190,6 @@
->> >   * Memory Attribute override for Stage-2 (MemAttr[3:0])
->> >   */
->> >  #define PTE_S2_MEMATTR(t)	(_AT(pteval_t, (t)) << 2)
->> > -#define PTE_S2_MEMATTR_MASK	(_AT(pteval_t, 0xf) << 2)
->> >
->> >  /*
->> >   * EL2/HYP PTE/PMD definitions
->> 
->> Looks good to me. Catalin, Will: do you want to take this directly? If
->> so please add my:
->> 
->> Acked-by: Marc Zyngier <maz@kernel.org>
->> 
->> Otherwise, I'll route it via the KVM tree.
+Hi Enric,
+
+Thank you for the patch.
+
+On Thu, Apr 16, 2020 at 05:57:15PM +0200, Enric Balletbo i Serra wrote:
+> This is really a cosmetic change just to make a bit more readable the
+> code after convert the driver to drm_bridge. The bridge variable name
+> will be used by the encoder drm_bridge, and the chained bridge will be
+> named next_bridge.
 > 
-> I can take it for 5.8 if it's not urgent.
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> ---
+> 
+> Changes in v2: None
+> 
+>  drivers/gpu/drm/mediatek/mtk_dsi.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> index cfa45d6abd74..44ee884cc31c 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> @@ -182,7 +182,7 @@ struct mtk_dsi {
+>  	struct drm_encoder encoder;
+>  	struct drm_connector conn;
+>  	struct drm_panel *panel;
+> -	struct drm_bridge *bridge;
+> +	struct drm_bridge *next_bridge;
+>  	struct phy *phy;
+>  
+>  	void __iomem *regs;
+> @@ -903,8 +903,9 @@ static int mtk_dsi_create_conn_enc(struct drm_device *drm, struct mtk_dsi *dsi)
+>  	dsi->encoder.possible_crtcs = 1;
+>  
+>  	/* If there's a bridge, attach to it and let it create the connector */
 
-It has been there 6 years, I think we can cope with another few 
-months... ;-)
+Maybe s/bridge/next bridge/ here ? I expect this comment to go away
+though, as there will always be a next bridge when the driver switches
+to the DRM panel bridge helper.
 
-Thanks,
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-         M.
+> -	if (dsi->bridge) {
+> -		ret = drm_bridge_attach(&dsi->encoder, dsi->bridge, NULL, 0);
+> +	if (dsi->next_bridge) {
+> +		ret = drm_bridge_attach(&dsi->encoder, dsi->next_bridge, NULL,
+> +					0);
+>  		if (ret) {
+>  			DRM_ERROR("Failed to attach bridge to drm\n");
+>  			goto err_encoder_cleanup;
+> @@ -1185,7 +1186,7 @@ static int mtk_dsi_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	ret = drm_of_find_panel_or_bridge(dev->of_node, 0, 0,
+> -					  &dsi->panel, &dsi->bridge);
+> +					  &dsi->panel, &dsi->next_bridge);
+>  	if (ret)
+>  		goto err_unregister_host;
+>  
+
 -- 
-Jazz is not dead. It just smells funny...
+Regards,
+
+Laurent Pinchart
