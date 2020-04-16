@@ -2,98 +2,207 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	TVD_RCVD_SPACE_BRACKET,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 280A8C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 17:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51AF1C352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 17:07:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0292320732
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 17:05:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587056750;
-	bh=yvKxJ0oqI8tAb7XGYBeopy2h/oK1YUZKnUOgcn1sW7c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SXcguF/coV04SK6eujePs7pjJNgBEC5UrlBYOqzlRKMFE/+zX+OQS6P6tDHA7xNGE
-	 7vzrubpCqqHlPMjCyhsVKMItNDdiQusfO6/C/krFIW0ZH7Igu1Sf3D6347KBAcdoKV
-	 YHdTwBtGB4C0UdKTv1jO78YrY6sRDsbmw36mhzC4=
+	by mail.kernel.org (Postfix) with ESMTP id 2FB1120732
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 17:07:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="IGCFY8PR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405104AbgDPRFs (ORCPT
+        id S1728482AbgDPRHh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 13:05:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48392 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730647AbgDPRFo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 13:05:44 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E88F20732;
-        Thu, 16 Apr 2020 17:05:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587056744;
-        bh=yvKxJ0oqI8tAb7XGYBeopy2h/oK1YUZKnUOgcn1sW7c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=effOu2XiYpIAUEIWQ3do9dPFE/zgnIpN5HBFfHEl1XFwI3GcIBF2htju2SYwTBLtu
-         0GqtALsJONiT8hngxN44EXw49w6kRbEHeyskiG39W8gTZizvMt0xUkNi0wESbALG1A
-         2JSJFebvJDi0kg/wkOVlvAh9KPgP0Paf2LpAfHJA=
-Date:   Thu, 16 Apr 2020 18:05:40 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Zenghui Yu <yuzenghui@huawei.com>, kvmarm@lists.cs.columbia.edu,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        catalin.marinas@arm.com, wanghaibin.wang@huawei.com
-Subject: Re: [PATCH] KVM: arm64: Drop PTE_S2_MEMATTR_MASK
-Message-ID: <20200416170539.GC32685@willie-the-truck>
-References: <20200415105746.314-1-yuzenghui@huawei.com>
- <20200416163605.091fa6eb@why>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200416163605.091fa6eb@why>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 16 Apr 2020 13:07:37 -0400
+Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:44902 "EHLO
+        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727795AbgDPRHg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 13:07:36 -0400
+Received: from pps.filterd (m0170395.ppops.net [127.0.0.1])
+        by mx0b-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03GGrDqw012698;
+        Thu, 16 Apr 2020 13:07:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=smtpout1;
+ bh=57rCVVKOXdckaGYFkHn6a/IguIgTfi8gpKH3/fQWiVs=;
+ b=IGCFY8PRMCHKrmrIvC1CTJj6W8IYNzYjcDKB4vcqxIGXxQwyf0O+i7/g23L4/LSumnk+
+ fe2QjGPdvgxs1AhE0Vi9VNGnzeShpaTRR3CU/qIDpTHtCmEu65R7IGS8hQ6OboXr2NT4
+ 9YLqo2X1j51vJZosba3O82F/5sY3WqKZ1Cbiy29mmk+ZW9ZN2cAFjrTygUXQl3Dp96KJ
+ kNHegMdb5z0Dvy37mfd4ICid9Xe2OPB8yULCbPTYppMMtK+lCC7DTFJmC9s8caPjgZdH
+ YS14ZicdIFfpMmwQM5qd5QLX1/PcYsuINcYy1R1j5ObHrSf/emYQYcIKqdVBO5AOyJ7A DA== 
+Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
+        by mx0b-00154904.pphosted.com with ESMTP id 30dn8uu99k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Apr 2020 13:07:17 -0400
+Received: from pps.filterd (m0142699.ppops.net [127.0.0.1])
+        by mx0a-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03GGt3pP042361;
+        Thu, 16 Apr 2020 13:07:17 -0400
+Received: from mailuogwhop.emc.com (mailuogwhop-nat.lss.emc.com [168.159.213.141] (may be forged))
+        by mx0a-00154901.pphosted.com with ESMTP id 30dn7qqr0v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 16 Apr 2020 13:07:16 -0400
+Received: from emc.com (localhost [127.0.0.1])
+        by mailuogwprd03.lss.emc.com (Sentrion-MTA-4.3.1/Sentrion-MTA-4.3.0) with ESMTP id 03GH7FKQ009592;
+        Thu, 16 Apr 2020 13:07:15 -0400
+Received: from mailapphubprd03.lss.emc.com ([mailapphubprd03.lss.emc.com [10.253.24.70]]) by mailuogwprd03.lss.emc.com with ESMTP id 03GH6lrt009364 ;
+          Thu, 16 Apr 2020 13:06:48 -0400
+Received: from arwen2.xiolab.lab.emc.com. (arwen2.xiolab.lab.emc.com [10.76.211.113])
+        by mailapphubprd03.lss.emc.com (Sentrion-MTA-4.3.1/Sentrion-MTA-4.3.0) with ESMTP id 03GH6hRv020685;
+        Thu, 16 Apr 2020 13:06:44 -0400
+From:   leonid.ravich@dell.com
+To:     dmaengine@vger.kernel.org
+Cc:     lravich@gmail.com, Leonid Ravich <Leonid.Ravich@dell.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        "Alexander.Barabash@dell.com" <Alexander.Barabash@dell.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Jilayne Lovejoy <opensource@jilayne.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 1/2] dmaengine: ioat: fixing chunk sizing macros dependency
+Date:   Thu, 16 Apr 2020 20:06:21 +0300
+Message-Id: <20200416170628.16196-1-leonid.ravich@dell.com>
+X-Mailer: git-send-email 2.16.2
+In-Reply-To: <20200402163356.9029-2-leonid.ravich@dell.com>
+References: <20200402163356.9029-2-leonid.ravich@dell.com>
+X-Sentrion-Hostname: mailuogwprd03.lss.emc.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-16_07:2020-04-14,2020-04-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ adultscore=0 spamscore=0 impostorscore=0 clxscore=1015 suspectscore=38
+ priorityscore=1501 mlxscore=0 malwarescore=0 phishscore=0 bulkscore=0
+ mlxlogscore=839 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004160120
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=38 adultscore=0
+ mlxlogscore=895 priorityscore=1501 impostorscore=0 mlxscore=0 spamscore=0
+ lowpriorityscore=0 clxscore=1015 bulkscore=0 phishscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004160120
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 04:36:05PM +0100, Marc Zyngier wrote:
-> On Wed, 15 Apr 2020 18:57:46 +0800
-> Zenghui Yu <yuzenghui@huawei.com> wrote:
-> 
-> > The only user of PTE_S2_MEMATTR_MASK macro had been removed since
-> > commit a501e32430d4 ("arm64: Clean up the default pgprot setting").
-> > It has been about six years and no one has used it again.
-> > 
-> > Let's drop it.
-> > 
-> > Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
-> > ---
-> >  arch/arm64/include/asm/pgtable-hwdef.h | 1 -
-> >  1 file changed, 1 deletion(-)
-> > 
-> > diff --git a/arch/arm64/include/asm/pgtable-hwdef.h b/arch/arm64/include/asm/pgtable-hwdef.h
-> > index 6bf5e650da78..99315bdca0e6 100644
-> > --- a/arch/arm64/include/asm/pgtable-hwdef.h
-> > +++ b/arch/arm64/include/asm/pgtable-hwdef.h
-> > @@ -190,7 +190,6 @@
-> >   * Memory Attribute override for Stage-2 (MemAttr[3:0])
-> >   */
-> >  #define PTE_S2_MEMATTR(t)	(_AT(pteval_t, (t)) << 2)
-> > -#define PTE_S2_MEMATTR_MASK	(_AT(pteval_t, 0xf) << 2)
-> >  
-> >  /*
-> >   * EL2/HYP PTE/PMD definitions
-> 
-> Looks good to me. Catalin, Will: do you want to take this directly? If
-> so please add my:
-> 
-> Acked-by: Marc Zyngier <maz@kernel.org>
-> 
-> Otherwise, I'll route it via the KVM tree.
+From: Leonid Ravich <Leonid.Ravich@emc.com>
 
-I can take it for 5.8 if it's not urgent.
+changing macros which assumption is chunk size of 2M,
+which can be other size
+prepare for changing allocation chunk size.
 
-Will
+Acked-by: Dave Jiang <dave.jiang@intel.com>
+Signed-off-by: Leonid Ravich <Leonid.Ravich@emc.com>
+---
+Changing in v3:
+  - Make the commit message more clearer.
+
+ drivers/dma/ioat/dma.c  | 14 ++++++++------
+ drivers/dma/ioat/dma.h  | 10 ++++++----
+ drivers/dma/ioat/init.c |  2 +-
+ 3 files changed, 15 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/dma/ioat/dma.c b/drivers/dma/ioat/dma.c
+index 18c011e..1e0e6c1 100644
+--- a/drivers/dma/ioat/dma.c
++++ b/drivers/dma/ioat/dma.c
+@@ -332,8 +332,8 @@ static dma_cookie_t ioat_tx_submit_unlock(struct dma_async_tx_descriptor *tx)
+ 	u8 *pos;
+ 	off_t offs;
+ 
+-	chunk = idx / IOAT_DESCS_PER_2M;
+-	idx &= (IOAT_DESCS_PER_2M - 1);
++	chunk = idx / IOAT_DESCS_PER_CHUNK;
++	idx &= (IOAT_DESCS_PER_CHUNK - 1);
+ 	offs = idx * IOAT_DESC_SZ;
+ 	pos = (u8 *)ioat_chan->descs[chunk].virt + offs;
+ 	phys = ioat_chan->descs[chunk].hw + offs;
+@@ -370,7 +370,8 @@ struct ioat_ring_ent **
+ 	if (!ring)
+ 		return NULL;
+ 
+-	ioat_chan->desc_chunks = chunks = (total_descs * IOAT_DESC_SZ) / SZ_2M;
++	chunks = (total_descs * IOAT_DESC_SZ) / IOAT_CHUNK_SIZE;
++	ioat_chan->desc_chunks = chunks;
+ 
+ 	for (i = 0; i < chunks; i++) {
+ 		struct ioat_descs *descs = &ioat_chan->descs[i];
+@@ -382,8 +383,9 @@ struct ioat_ring_ent **
+ 
+ 			for (idx = 0; idx < i; idx++) {
+ 				descs = &ioat_chan->descs[idx];
+-				dma_free_coherent(to_dev(ioat_chan), SZ_2M,
+-						  descs->virt, descs->hw);
++				dma_free_coherent(to_dev(ioat_chan),
++						IOAT_CHUNK_SIZE,
++						descs->virt, descs->hw);
+ 				descs->virt = NULL;
+ 				descs->hw = 0;
+ 			}
+@@ -404,7 +406,7 @@ struct ioat_ring_ent **
+ 
+ 			for (idx = 0; idx < ioat_chan->desc_chunks; idx++) {
+ 				dma_free_coherent(to_dev(ioat_chan),
+-						  SZ_2M,
++						  IOAT_CHUNK_SIZE,
+ 						  ioat_chan->descs[idx].virt,
+ 						  ioat_chan->descs[idx].hw);
+ 				ioat_chan->descs[idx].virt = NULL;
+diff --git a/drivers/dma/ioat/dma.h b/drivers/dma/ioat/dma.h
+index b8e8e0b..5216c6b 100644
+--- a/drivers/dma/ioat/dma.h
++++ b/drivers/dma/ioat/dma.h
+@@ -81,6 +81,11 @@ struct ioatdma_device {
+ 	u32 msixpba;
+ };
+ 
++#define IOAT_MAX_ORDER 16
++#define IOAT_MAX_DESCS (1 << IOAT_MAX_ORDER)
++#define IOAT_CHUNK_SIZE (SZ_2M)
++#define IOAT_DESCS_PER_CHUNK (IOAT_CHUNK_SIZE / IOAT_DESC_SZ)
++
+ struct ioat_descs {
+ 	void *virt;
+ 	dma_addr_t hw;
+@@ -128,7 +133,7 @@ struct ioatdma_chan {
+ 	u16 produce;
+ 	struct ioat_ring_ent **ring;
+ 	spinlock_t prep_lock;
+-	struct ioat_descs descs[2];
++	struct ioat_descs descs[IOAT_MAX_DESCS / IOAT_DESCS_PER_CHUNK];
+ 	int desc_chunks;
+ 	int intr_coalesce;
+ 	int prev_intr_coalesce;
+@@ -301,9 +306,6 @@ static inline bool is_ioat_bug(unsigned long err)
+ 	return !!err;
+ }
+ 
+-#define IOAT_MAX_ORDER 16
+-#define IOAT_MAX_DESCS 65536
+-#define IOAT_DESCS_PER_2M 32768
+ 
+ static inline u32 ioat_ring_size(struct ioatdma_chan *ioat_chan)
+ {
+diff --git a/drivers/dma/ioat/init.c b/drivers/dma/ioat/init.c
+index 60e9afb..58d1356 100644
+--- a/drivers/dma/ioat/init.c
++++ b/drivers/dma/ioat/init.c
+@@ -651,7 +651,7 @@ static void ioat_free_chan_resources(struct dma_chan *c)
+ 	}
+ 
+ 	for (i = 0; i < ioat_chan->desc_chunks; i++) {
+-		dma_free_coherent(to_dev(ioat_chan), SZ_2M,
++		dma_free_coherent(to_dev(ioat_chan), IOAT_CHUNK_SIZE,
+ 				  ioat_chan->descs[i].virt,
+ 				  ioat_chan->descs[i].hw);
+ 		ioat_chan->descs[i].virt = NULL;
+-- 
+1.9.3
+
