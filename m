@@ -2,52 +2,53 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CA1CC352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:47:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC666C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:48:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BF3C208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:47:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 845A521734
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:48:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587044871;
-	bh=LGYD6nF+jAY2y5u0s809J0M2sYuL/telrnLiHSscRN0=;
+	s=default; t=1587044881;
+	bh=nUyyFBPLL/D22YbTWaXKhSr8m7tLa7bkRcmk4XL9nQk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fz5aWOVZCTq5Ef9e0CXf+H4l+XbAIsv7BZeeIO8/6XqCaIczztnTO8zQvdywaHNQp
-	 +7dzO8fIleWfi+Gc/F+sg2EmbW6rzMqhzczjA52917jzZDTDidWobbbXI+XJ/Mjwdm
-	 OQO2JMOCgKzCpiX4dXU2SxaNXiNg9aoT4BsAPzXM=
+	b=jMQWsvWrjb/Ly+xgjONDzTp+N1qDFIovkfIHM/lvpdMxccDvwYY4LkSCKT6MEcynu
+	 we1+6WHs1HLMpeaYujBmdxDrEtOrNYXloqN2gpw+rW7ZUmuKcTke+0KnkIgY9Xn+Fc
+	 A+Aq0EYBeUWXvGMZbhWSOhg5eBql4eQH6hA/4fBQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2898708AbgDPNrs (ORCPT
+        id S2898726AbgDPNr6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:47:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47796 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:47:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897201AbgDPNfs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:35:48 -0400
+        id S2897207AbgDPNfx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:35:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90206221F4;
-        Thu, 16 Apr 2020 13:35:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1626321BE5;
+        Thu, 16 Apr 2020 13:35:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044146;
-        bh=LGYD6nF+jAY2y5u0s809J0M2sYuL/telrnLiHSscRN0=;
+        s=default; t=1587044153;
+        bh=nUyyFBPLL/D22YbTWaXKhSr8m7tLa7bkRcmk4XL9nQk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SCDaIIbbQ3+yO3W+xsoYg/SdvM1vOGCbMcUOd3kIEAaFKiiU0m0sU3S0IHzoesmB1
-         E43vJx9MZ0nd7L3k01SIkP4+QLfpVLwB8J4flY4Pz52nH4WLCflk2XTNiernDmPACg
-         +ks1K3LlKMKeRAr56SI4LYyW+AmyeBFhCD7nUzgU=
+        b=JPINk5ad+nadXKJppUzrbqpiT8Ldaj13wYUt+x688dNXw6cm/fLUFpzLcOTp2kFwo
+         pixxOFSGMRAI1pwVVwH40rnensjyW5Cwjst3A9JejrYoi05Cx2igRSJ3R5Zm6rjx4R
+         Gq4CHr6bE4GPTC0usWN7Y/hY28xjheFM+M/zoaDU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 5.5 099/257] media: venus: cache vb payload to be used by clock scaling
-Date:   Thu, 16 Apr 2020 15:22:30 +0200
-Message-Id: <20200416131338.452724993@linuxfoundation.org>
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 075/257] locking/lockdep: Avoid recursion in lockdep_count_{for,back}ward_deps()
+Date:   Thu, 16 Apr 2020 15:22:06 +0200
+Message-Id: <20200416131335.345336402@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -60,143 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+From: Boqun Feng <boqun.feng@gmail.com>
 
-commit fd1ee315dcd4a0f913a74939eb88f6d9b0bd9250 upstream.
+[ Upstream commit 25016bd7f4caf5fc983bbab7403d08e64cba3004 ]
 
-Instead of iterate over previously queued buffers in clock
-scaling code do cache the payload in instance context structure
-for later use when calculating new clock rate.
+Qian Cai reported a bug when PROVE_RCU_LIST=y, and read on /proc/lockdep
+triggered a warning:
 
-This will avoid to use spin locks during buffer list iteration
-in clock_scaling.
+  [ ] DEBUG_LOCKS_WARN_ON(current->hardirqs_enabled)
+  ...
+  [ ] Call Trace:
+  [ ]  lock_is_held_type+0x5d/0x150
+  [ ]  ? rcu_lockdep_current_cpu_online+0x64/0x80
+  [ ]  rcu_read_lock_any_held+0xac/0x100
+  [ ]  ? rcu_read_lock_held+0xc0/0xc0
+  [ ]  ? __slab_free+0x421/0x540
+  [ ]  ? kasan_kmalloc+0x9/0x10
+  [ ]  ? __kmalloc_node+0x1d7/0x320
+  [ ]  ? kvmalloc_node+0x6f/0x80
+  [ ]  __bfs+0x28a/0x3c0
+  [ ]  ? class_equal+0x30/0x30
+  [ ]  lockdep_count_forward_deps+0x11a/0x1a0
 
-This fixes following kernel Oops:
+The warning got triggered because lockdep_count_forward_deps() call
+__bfs() without current->lockdep_recursion being set, as a result
+a lockdep internal function (__bfs()) is checked by lockdep, which is
+unexpected, and the inconsistency between the irq-off state and the
+state traced by lockdep caused the warning.
 
- Unable to handle kernel paging request at virtual address deacfffffffffd6c
- Mem abort info:
-   ESR = 0x96000004
-   EC = 0x25: DABT (current EL), IL = 32 bits
-   SET = 0, FnV = 0
-   EA = 0, S1PTW = 0
- Data abort info:
-   ISV = 0, ISS = 0x00000004
-   CM = 0, WnR = 0
- [deacfffffffffd6c] address between user and kernel address ranges
- Internal error: Oops: 96000004 [#1] PREEMPT SMP
- CPU: 7 PID: 5763 Comm: V4L2DecoderThre Tainted: G S      W         5.4.11 #8
- pstate: 20400009 (nzCv daif +PAN -UAO)
- pc : load_scale_v4+0x4c/0x2bc [venus_core]
- lr : session_process_buf+0x18c/0x1c0 [venus_core]
- sp : ffffffc01376b8d0
- x29: ffffffc01376b8d0 x28: ffffff80cf1b0220
- x27: ffffffc01376bba0 x26: ffffffd8f562b2d8
- x25: ffffff80cf1b0220 x24: 0000000000000005
- x23: ffffffd8f5620d98 x22: ffffff80ca01c800
- x21: ffffff80cf1b0000 x20: ffffff8149490080
- x19: ffffff8174b2c010 x18: 0000000000000000
- x17: 0000000000000000 x16: ffffffd96ee3a0dc
- x15: 0000000000000026 x14: 0000000000000026
- x13: 00000000000055ac x12: 0000000000000001
- x11: deacfffffffffd6c x10: dead000000000100
- x9 : ffffff80ca01cf28 x8 : 0000000000000026
- x7 : 0000000000000000 x6 : ffffff80cdd899c0
- x5 : ffffff80cdd899c0 x4 : 0000000000000008
- x3 : ffffff80ca01cf28 x2 : ffffff80ca01cf28
- x1 : ffffff80d47ffc00 x0 : ffffff80cf1b0000
- Call trace:
-  load_scale_v4+0x4c/0x2bc [venus_core]
-  session_process_buf+0x18c/0x1c0 [venus_core]
-  venus_helper_vb2_buf_queue+0x7c/0xf0 [venus_core]
-  __enqueue_in_driver+0xe4/0xfc [videobuf2_common]
-  vb2_core_qbuf+0x15c/0x338 [videobuf2_common]
-  vb2_qbuf+0x78/0xb8 [videobuf2_v4l2]
-  v4l2_m2m_qbuf+0x80/0xf8 [v4l2_mem2mem]
-  v4l2_m2m_ioctl_qbuf+0x2c/0x38 [v4l2_mem2mem]
-  v4l_qbuf+0x48/0x58
-  __video_do_ioctl+0x2b0/0x39c
-  video_usercopy+0x394/0x710
-  video_ioctl2+0x38/0x48
-  v4l2_ioctl+0x6c/0x80
-  do_video_ioctl+0xb00/0x2874
-  v4l2_compat_ioctl32+0x5c/0xcc
-  __se_compat_sys_ioctl+0x100/0x2074
-  __arm64_compat_sys_ioctl+0x20/0x2c
-  el0_svc_common+0xa4/0x154
-  el0_svc_compat_handler+0x2c/0x38
-  el0_svc_compat+0x8/0x10
- Code: eb0a013f 54000200 aa1f03e8 d10e514b (b940016c)
- ---[ end trace e11304b46552e0b9 ]---
+Apart from this warning, lockdep internal functions like __bfs() should
+always be protected by current->lockdep_recursion to avoid potential
+deadlocks and data inconsistency, therefore add the
+current->lockdep_recursion on-and-off section to protect __bfs() in both
+lockdep_count_forward_deps() and lockdep_count_backward_deps()
 
-Fixes: c0e284ccfeda ("media: venus: Update clock scaling")
-
-Cc: stable@vger.kernel.org # v5.5+
-Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reported-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20200312151258.128036-1-boqun.feng@gmail.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/qcom/venus/core.h    |    1 +
- drivers/media/platform/qcom/venus/helpers.c |   20 +++++++++++++-------
- 2 files changed, 14 insertions(+), 7 deletions(-)
+ kernel/locking/lockdep.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/media/platform/qcom/venus/core.h
-+++ b/drivers/media/platform/qcom/venus/core.h
-@@ -344,6 +344,7 @@ struct venus_inst {
- 	unsigned int subscriptions;
- 	int buf_count;
- 	struct venus_ts_metadata tss[VIDEO_MAX_FRAME];
-+	unsigned long payloads[VIDEO_MAX_FRAME];
- 	u64 fps;
- 	struct v4l2_fract timeperframe;
- 	const struct venus_format *fmt_out;
---- a/drivers/media/platform/qcom/venus/helpers.c
-+++ b/drivers/media/platform/qcom/venus/helpers.c
-@@ -544,18 +544,13 @@ static int scale_clocks_v4(struct venus_
- 	struct venus_core *core = inst->core;
- 	const struct freq_tbl *table = core->res->freq_tbl;
- 	unsigned int num_rows = core->res->freq_tbl_size;
--	struct v4l2_m2m_ctx *m2m_ctx = inst->m2m_ctx;
- 	struct device *dev = core->dev;
- 	unsigned long freq = 0, freq_core1 = 0, freq_core2 = 0;
- 	unsigned long filled_len = 0;
--	struct venus_buffer *buf, *n;
--	struct vb2_buffer *vb;
- 	int i, ret;
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index 32406ef0d6a2d..5142a6b11bf5b 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -1719,9 +1719,11 @@ unsigned long lockdep_count_forward_deps(struct lock_class *class)
+ 	this.class = class;
  
--	v4l2_m2m_for_each_src_buf_safe(m2m_ctx, buf, n) {
--		vb = &buf->vb.vb2_buf;
--		filled_len = max(filled_len, vb2_get_plane_payload(vb, 0));
--	}
-+	for (i = 0; i < inst->num_input_bufs; i++)
-+		filled_len = max(filled_len, inst->payloads[i]);
+ 	raw_local_irq_save(flags);
++	current->lockdep_recursion = 1;
+ 	arch_spin_lock(&lockdep_lock);
+ 	ret = __lockdep_count_forward_deps(&this);
+ 	arch_spin_unlock(&lockdep_lock);
++	current->lockdep_recursion = 0;
+ 	raw_local_irq_restore(flags);
  
- 	if (inst->session_type == VIDC_SESSION_TYPE_DEC && !filled_len)
- 		return 0;
-@@ -1289,6 +1284,15 @@ int venus_helper_vb2_buf_prepare(struct
- }
- EXPORT_SYMBOL_GPL(venus_helper_vb2_buf_prepare);
+ 	return ret;
+@@ -1746,9 +1748,11 @@ unsigned long lockdep_count_backward_deps(struct lock_class *class)
+ 	this.class = class;
  
-+static void cache_payload(struct venus_inst *inst, struct vb2_buffer *vb)
-+{
-+	struct vb2_v4l2_buffer *vbuf = to_vb2_v4l2_buffer(vb);
-+	unsigned int idx = vbuf->vb2_buf.index;
-+
-+	if (vbuf->vb2_buf.type == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE)
-+		inst->payloads[idx] = vb2_get_plane_payload(vb, 0);
-+}
-+
- void venus_helper_vb2_buf_queue(struct vb2_buffer *vb)
- {
- 	struct vb2_v4l2_buffer *vbuf = to_vb2_v4l2_buffer(vb);
-@@ -1300,6 +1304,8 @@ void venus_helper_vb2_buf_queue(struct v
+ 	raw_local_irq_save(flags);
++	current->lockdep_recursion = 1;
+ 	arch_spin_lock(&lockdep_lock);
+ 	ret = __lockdep_count_backward_deps(&this);
+ 	arch_spin_unlock(&lockdep_lock);
++	current->lockdep_recursion = 0;
+ 	raw_local_irq_restore(flags);
  
- 	v4l2_m2m_buf_queue(m2m_ctx, vbuf);
- 
-+	cache_payload(inst, vb);
-+
- 	if (inst->session_type == VIDC_SESSION_TYPE_ENC &&
- 	    !(inst->streamon_out && inst->streamon_cap))
- 		goto unlock;
+ 	return ret;
+-- 
+2.20.1
+
 
 
