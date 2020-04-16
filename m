@@ -2,110 +2,103 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAEEDC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 22:24:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98CD7C352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 22:28:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E70D2087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 22:24:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 766592078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 22:28:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QaA5Gci+"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="HtIjNc/4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729047AbgDPWX7 (ORCPT
+        id S1728911AbgDPW24 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 18:23:59 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42578 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725768AbgDPWX6 (ORCPT
+        Thu, 16 Apr 2020 18:28:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55462 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725770AbgDPW24 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 18:23:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587075837;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=thP110RWC9V2lBT1UZm7pYYAB5Rx9MHjI99nftGtv50=;
-        b=QaA5Gci+PB9H8ZwIlI1u+LNvorc9vFA7PQuSrffz7Cw+izhKyRUhc+mqoylGiwtrKa8Mhg
-        90UG0ZA1g/Ilpgt4Uvy6ZWV1B5wdRmpwCZTWRCWNzaj8Di0vwqGVpAUhGoWUjtTd6wJ7x4
-        xA/cl60n8C7ja62EYqsGPGtVq//8BMY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-268-5SxAEzt4Pu-pjVS5qRoHKw-1; Thu, 16 Apr 2020 18:23:55 -0400
-X-MC-Unique: 5SxAEzt4Pu-pjVS5qRoHKw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 16 Apr 2020 18:28:56 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6397C061A0C;
+        Thu, 16 Apr 2020 15:28:55 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 945F8107ACC9;
-        Thu, 16 Apr 2020 22:23:54 +0000 (UTC)
-Received: from krava (unknown [10.40.195.119])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2091311A023;
-        Thu, 16 Apr 2020 22:23:52 +0000 (UTC)
-Date:   Fri, 17 Apr 2020 00:22:51 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Andi Kleen <andi@firstfloor.org>
-Cc:     acme@kernel.org, jolsa@kernel.org, linux-kernel@vger.kernel.org,
-        Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH v1] perf parse: Avoid false uncore matches
-Message-ID: <20200416222251.GC414900@krava>
-References: <20200416162119.619956-1-andi@firstfloor.org>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 493DQs0vBCz9sRN;
+        Fri, 17 Apr 2020 08:28:53 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1587076134;
+        bh=EpscCTIqrow2PlSw0PSXkc8ESSMhpE7S/ZWqsBaA5Nk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=HtIjNc/4L3+YYVsI3vQDk0nmXyV2LztsuahapBCD0JqvaZAaFZKqMoghURKRbwsbu
+         OBK6w13Brmvfg9vXb9KBdx+4Ns5FKA+ylbIe0JWxYQStVwOicIInN+/ppDOfSQ50B6
+         hoC3TgjKkS+wHJH2n12fpXmzrw0+dUBAci5ibaa/dtwxMxI04ddkhPtF8q0eprT2j4
+         mG0RSR7tQ/UvcnKKkheHmceFL7cO54UUUfu62PAW3UW0mj63bmPJTFuiPnUGXD0uP4
+         hLkGa14fjklRgAtE3PBnZh998Vj223sCuPltEgIzvlX5bcA1Ss6BdU14U827grlIhp
+         HbH5Wo098u+Gw==
+Date:   Fri, 17 Apr 2020 08:28:51 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: linux-next: Signed-off-by missing for commits in the gpio tree
+Message-ID: <20200417082851.7d68e9ea@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200416162119.619956-1-andi@firstfloor.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: multipart/signed; boundary="Sig_/+ql/69sBZx4m90dkvoIzbhA";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 09:21:19AM -0700, Andi Kleen wrote:
+--Sig_/+ql/69sBZx4m90dkvoIzbhA
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-SNIP
+Hi all,
 
-> ---
->  tools/perf/util/parse-events.y | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-> index 94f8bcd83582..f38c90756476 100644
-> --- a/tools/perf/util/parse-events.y
-> +++ b/tools/perf/util/parse-events.y
-> @@ -286,7 +286,8 @@ PE_NAME opt_pmu_config
->  		parse_events_terms__delete(orig_terms);	\
->  		free(list);				\
->  		free($1);				\
-> -		free(pattern);				\
-> +		if ($1 != pattern)			\
-> +			free(pattern);			\
->  		YYABORT;				\
->  	} while(0)
->  
-> @@ -303,7 +304,9 @@ PE_NAME opt_pmu_config
->  		struct perf_pmu *pmu = NULL;
->  		int ok = 0;
->  
-> -		if (asprintf(&pattern, "%s*", $1) < 0)
-> +		if ($1[0] && isdigit($1[strlen($1) - 1]))
-> +			pattern = $1;
-> +		else if (asprintf(&pattern, "%s*", $1) < 0)
->  			CLEANUP_YYABORT;
->  
->  		while ((pmu = perf_pmu__scan(pmu)) != NULL) {
-> @@ -320,6 +323,8 @@ PE_NAME opt_pmu_config
->  				parse_events_terms__delete(terms);
->  			}
->  		}
-> +		if ($1 != pattern)
-> +			free(pattern);
+Commits
 
-good catch
+  fe5dfc6af3eb ("MAINTAINERS: Add Segey Semin to maintainers of DW APB GPIO=
+ driver")
+  49a369f94046 ("gpio: dwapb: Add debounce reference clock support")
+  cbabbfa160bd ("gpio: dwapb: Use optional-clocks interface for APB ref-clo=
+ck")
+  fb7e1fc1b806 ("dt-bindings: gpio: Add Sergey Semin to DW APB GPIO driver =
+maintainers")
+  7f51dbb7cab7 ("dt-bindings: gpio: Add DW GPIO debounce clock property")
+  179587eb757f ("dt-bindings: gpio: Convert snps,dw-apb-gpio to DT schema")
 
-Acked-by: Jiri Olsa <jolsa@kernel.org>
+are missing a Signed-off-by from their committer.
 
-thanks,
-jirka
+Also, please keep all the commit message tags together at the end of
+the commit message.
 
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/+ql/69sBZx4m90dkvoIzbhA
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6Y3CMACgkQAVBC80lX
+0GyLNAf/b86EB7v+B95qQdpb7Hn6DJ6NWgg/NVi8BsUPDdsIZtnZhdlkVNuJYJA4
+VNfCKeY82ts0mK7lef6jBjE5Q00G8ATtRi7pWtsG4dO49ZM6mBW0akc8C47zplTb
+I5MrMkZcDdNBbEXuPPkGjUDin/N0/Dc8sLu1JgCJpMKjToQINnEEBE/Vv2RNQk+N
+jUFS4zUX1nn4XmslYVfz9PBSGVxAVvzrKIWGshksO2BQkIyJb5+D1QZJzg6G9AFQ
+Eldg+04lEA2Tbzbn3sPxs+BNsh5QIvNyOLR57vMIu3Q6aSen/krCtZw/iQgvMko9
+HE3+57E7lXukPDKZtLhXUsan5LMiTQ==
+=hLqk
+-----END PGP SIGNATURE-----
+
+--Sig_/+ql/69sBZx4m90dkvoIzbhA--
