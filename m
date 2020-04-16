@@ -2,195 +2,147 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE14C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:01:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1700EC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:01:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F2182076A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:01:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E083A2076A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:01:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="my+5VYU4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407383AbgDPGBB (ORCPT
+        id S2407399AbgDPGBG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 02:01:01 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:37918 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2407207AbgDPGAz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 02:00:55 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03G5XKKu061490;
-        Thu, 16 Apr 2020 02:00:34 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30edx1nka6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Apr 2020 02:00:34 -0400
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03G5Yck1064597;
-        Thu, 16 Apr 2020 02:00:34 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30edx1nk9q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Apr 2020 02:00:34 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03G607mX018750;
-        Thu, 16 Apr 2020 06:00:33 GMT
-Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
-        by ppma03dal.us.ibm.com with ESMTP id 30b5h7a1ek-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Apr 2020 06:00:33 +0000
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03G60WMQ51315180
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Apr 2020 06:00:32 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8CE042805C;
-        Thu, 16 Apr 2020 06:00:32 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7FD302805A;
-        Thu, 16 Apr 2020 06:00:31 +0000 (GMT)
-Received: from [9.70.82.143] (unknown [9.70.82.143])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 16 Apr 2020 06:00:31 +0000 (GMT)
-Subject: [PATCH v11 03/14] powerpc/vas: Alloc and setup IRQ and trigger
- port address
-From:   Haren Myneni <haren@linux.ibm.com>
-To:     mpe@ellerman.id.au
-Cc:     mikey@neuling.org, srikar@linux.vnet.ibm.com,
-        frederic.barrat@fr.ibm.com, linux-kernel@vger.kernel.org,
-        npiggin@gmail.com, hch@infradead.org, oohall@gmail.com,
-        clg@kaod.org, herbert@gondor.apana.org.au,
-        sukadev@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
-        ajd@linux.ibm.com
-In-Reply-To: <1587016214.2275.1036.camel@hbabu-laptop>
-References: <1587016214.2275.1036.camel@hbabu-laptop>
-Content-Type: text/plain; charset="UTF-8"
-Date:   Wed, 15 Apr 2020 23:00:06 -0700
-Message-ID: <1587016806.2275.1050.camel@hbabu-laptop>
-Mime-Version: 1.0
-X-Mailer: Evolution 2.28.3 
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-16_01:2020-04-14,2020-04-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=1 bulkscore=0
- adultscore=0 priorityscore=1501 phishscore=0 mlxlogscore=999
- impostorscore=0 clxscore=1015 lowpriorityscore=0 malwarescore=0 mlxscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004160029
+        Thu, 16 Apr 2020 02:01:06 -0400
+Received: from mout.web.de ([212.227.17.12]:42335 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2407345AbgDPGA7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 02:00:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1587016846;
+        bh=RpJs2DXqttTf+Vv+o/O3GhRJDxw7hx42291B9GNdEes=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=my+5VYU4nwFmi1ZgvGFQi+rfNBWfPVHRDiDh335R1vzjJLAyteol+ybjJ687+gh1s
+         ar0N4iHlmyq+RWvnZMezK7mpCrvXAiFYCSC4F2nwbsgbVLUQQsCJUNYksvbNktsVta
+         AsksgwJV8rsXu0YIW0q5O+EL7KbmdFfCzRIUf9Ms=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.3] ([2.243.109.113]) by smtp.web.de (mrweb103
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0M6mTI-1j1dL00G2O-00wUpS; Thu, 16
+ Apr 2020 08:00:46 +0200
+Subject: Re: [PATCH v4] mm/ksm: Fix NULL pointer dereference when KSM zero
+ page is enabled
+To:     Muchun Song <songmuchun@bytedance.com>,
+        Xiongchun Duan <duanxiongchun@bytedance.com>,
+        linux-mm@kvack.org
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>
+References: <20200416025034.29780-1-songmuchun@bytedance.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <039d201a-a5fc-5ce2-54a1-f236531f9829@web.de>
+Date:   Thu, 16 Apr 2020 08:00:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200416025034.29780-1-songmuchun@bytedance.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:RKx8zEDYvDQfBB2YiAv7zoArG3Sm2dAqndOJZdX62p3epEf9Q6u
+ twj9rG3Y6d39g0Yw2AVdB65UoR7CVz5k3UWZq+ltssKebCliXGK7+v1iclJB5hb7IzW+vXU
+ iPEy/bHOeOEPg8mE5ZI3ajqM0E/5QJ3sK+88iIg+cHHmSmtcsDNGPZMGnJGZtRrVd1kSzS6
+ rfPEFBwLZQqgqO2vbmT/w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:5dIKY8+DE64=:csTGDJ/L22B1g1+uiYI1sF
+ WAZQEr5oOIKpZ5hdkENcqnSTX6kO8Ib562pVL6KA3VYkvSQOZaBaO2GcBDSJNf6ufm4ob1jQ5
+ /H6oCw5Uviu46yeO+sbltJC8Xdx+FfWe9SV+efuGYFRnMmroqiqfMC5GPI9CtUZJCzJSt/2bE
+ xv5IfRoSkwaZKT/jhIEt7VqekWHC0GlTR+yiTK0MC8TrynC56Ea9MNi+lYdgR4wJY8qRheTvz
+ CPunCqgocfOO0uzTQxekImHUkxJFtIkHb//9lBzSa0R0jydR2mdgUoZmPU3nNLJGGEFserXqH
+ F0nL8y4DiOY/pkzG3OcnE/73y1Xb2WguibyNLpOlH8L04xSj001UrJxi0VPpSF6mcmnBDjVb6
+ bKyTEJBPNRGxWC6XYu1hocNL72tCsfEk+Roa4DbL0VSbMKcYYkBe416mqUstwZPKRWWYZK+dC
+ iuLxvaKaJlbGhcqy17HHKe5xRTujvp6dqh+Yh6zzOrTH4n9lgno8O2hqOxnjGBYd711SyVxBY
+ yhSsMc55qw2UIiS3puVT1UD63u4Rkp7d4EFvqIQnL4VhD4lvsMiS0/yGVgRmi4Ne2yVMNaPAj
+ H0fZ9V/SJP5qmhx+4Xy37Dt2i/e4AM5Bp1yEujjvUTlQTE+1qHuuN7paG/DMsNI8CwTtkDbKc
+ eK1zc2CHUlHE59U29pCzd/pDSXch6h3Jj2LcHwHYYLDH/KISJqNM5deg+mHes9mghAS05xAbb
+ gkJKWO7rizTZ4MQH6kITYnBqMXNbEDIrlIMsxuabPhGmL+qGUeNgVo4gaL9khWyDuONu1zBFg
+ F21P2OT23gCd6T/SeCiURX51jhmuLLBzE2Vw5Fq2W0F18QqDi1XOI2FrnTWU/Qj6hdiDoNHNt
+ jOCxydcywMSZ9SCcTCoiB9WJQo2cAj/q0lM6jLsozsL+2Q3wcfvk4Rby5G2dvnt2YAQKRWuQW
+ qs8IfNRt6AE3QcT/+nvQmfJJvoWY5EnlN5CIiySFmBUT8WJu3IncRwIvL4PJSQaYPIGf+76R6
+ PTdJmmuTHR+AfG4SCTjUj46qc4QPGpYV3dC90RXcQNexCz8piu+KGUzPb4Go+rNovY3FyvjL2
+ dMMHhuRsFd6aTo2zIgF/dpjmkinCFBEySkADoAS6F2ebzpU4iF29W+HhKDSqTYJyaoz8RAk2u
+ 0JZ29gs4utsozceN1W47SrVk5X6usP4ZeiEQasnh1gAj/6gIDXqKvZv1qGuyuRe/huMlc1qOU
+ eXdxGCtXIY9vY4BVA
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> to a crash when we access vm_mm(its offset is 0x40) later in
 
-Allocate a xive irq on each chip with a vas instance. The NX coprocessor
-raises a host CPU interrupt via vas if it encounters page fault on user
-space request buffer. Subsequent patches register the trigger port with
-the NX coprocessor, and create a vas fault handler for this interrupt
-mapping.
-
-Signed-off-by: Haren Myneni <haren@linux.ibm.com>
-Reviewed-by: Cédric Le Goater <clg@kaod.org>
----
- arch/powerpc/platforms/powernv/vas.c | 44 +++++++++++++++++++++++++++++++-----
- arch/powerpc/platforms/powernv/vas.h |  2 ++
- 2 files changed, 40 insertions(+), 6 deletions(-)
-
-diff --git a/arch/powerpc/platforms/powernv/vas.c b/arch/powerpc/platforms/powernv/vas.c
-index ed9cc6d..3303cfe 100644
---- a/arch/powerpc/platforms/powernv/vas.c
-+++ b/arch/powerpc/platforms/powernv/vas.c
-@@ -15,6 +15,7 @@
- #include <linux/of_address.h>
- #include <linux/of.h>
- #include <asm/prom.h>
-+#include <asm/xive.h>
- 
- #include "vas.h"
- 
-@@ -25,10 +26,12 @@
- 
- static int init_vas_instance(struct platform_device *pdev)
- {
--	int rc, cpu, vasid;
--	struct resource *res;
--	struct vas_instance *vinst;
- 	struct device_node *dn = pdev->dev.of_node;
-+	struct vas_instance *vinst;
-+	struct xive_irq_data *xd;
-+	uint32_t chipid, hwirq;
-+	struct resource *res;
-+	int rc, cpu, vasid;
- 
- 	rc = of_property_read_u32(dn, "ibm,vas-id", &vasid);
- 	if (rc) {
-@@ -36,6 +39,12 @@ static int init_vas_instance(struct platform_device *pdev)
- 		return -ENODEV;
- 	}
- 
-+	rc = of_property_read_u32(dn, "ibm,chip-id", &chipid);
-+	if (rc) {
-+		pr_err("No ibm,chip-id property for %s?\n", pdev->name);
-+		return -ENODEV;
-+	}
-+
- 	if (pdev->num_resources != 4) {
- 		pr_err("Unexpected DT configuration for [%s, %d]\n",
- 				pdev->name, vasid);
-@@ -69,9 +78,32 @@ static int init_vas_instance(struct platform_device *pdev)
- 
- 	vinst->paste_win_id_shift = 63 - res->end;
- 
--	pr_devel("Initialized instance [%s, %d], paste_base 0x%llx, "
--			"paste_win_id_shift 0x%llx\n", pdev->name, vasid,
--			vinst->paste_base_addr, vinst->paste_win_id_shift);
-+	hwirq = xive_native_alloc_irq_on_chip(chipid);
-+	if (!hwirq) {
-+		pr_err("Inst%d: Unable to allocate global irq for chip %d\n",
-+				vinst->vas_id, chipid);
-+		return -ENOENT;
-+	}
-+
-+	vinst->virq = irq_create_mapping(NULL, hwirq);
-+	if (!vinst->virq) {
-+		pr_err("Inst%d: Unable to map global irq %d\n",
-+				vinst->vas_id, hwirq);
-+		return -EINVAL;
-+	}
-+
-+	xd = irq_get_handler_data(vinst->virq);
-+	if (!xd) {
-+		pr_err("Inst%d: Invalid virq %d\n",
-+				vinst->vas_id, vinst->virq);
-+		return -EINVAL;
-+	}
-+
-+	vinst->irq_port = xd->trig_page;
-+	pr_devel("Initialized instance [%s, %d] paste_base 0x%llx paste_win_id_shift 0x%llx IRQ %d Port 0x%llx\n",
-+			pdev->name, vasid, vinst->paste_base_addr,
-+			vinst->paste_win_id_shift, vinst->virq,
-+			vinst->irq_port);
- 
- 	for_each_possible_cpu(cpu) {
- 		if (cpu_to_chip_id(cpu) == of_get_ibm_chip_id(dn))
-diff --git a/arch/powerpc/platforms/powernv/vas.h b/arch/powerpc/platforms/powernv/vas.h
-index 5574aec..598608b 100644
---- a/arch/powerpc/platforms/powernv/vas.h
-+++ b/arch/powerpc/platforms/powernv/vas.h
-@@ -313,6 +313,8 @@ struct vas_instance {
- 	u64 paste_base_addr;
- 	u64 paste_win_id_shift;
- 
-+	u64 irq_port;
-+	int virq;
- 	struct mutex mutex;
- 	struct vas_window *rxwin[VAS_COP_TYPE_MAX];
- 	struct vas_window *windows[VAS_WINDOWS_PER_CHIP];
--- 
-1.8.3.1
+Would the text variant =E2=80=9C=E2=80=A6 vm_mm (its =E2=80=A6=E2=80=9D be=
+ a bit nicer?
 
 
+=E2=80=A6
+> +++ b/mm/ksm.c
+> @@ -2112,8 +2112,15 @@ static void cmp_and_merge_page(struct page *page,=
+ struct rmap_item *rmap_item)
+=E2=80=A6
+> +		if (vma)
+> +			err =3D try_to_merge_one_page(vma, page,
+> +					ZERO_PAGE(rmap_item->address));
 
+Can the parameter alignment trigger further software development considera=
+tions
+for such a function call?
+
+Regards,
+Markus
