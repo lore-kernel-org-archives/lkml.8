@@ -2,52 +2,52 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C888C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC30C352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB2762076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F1022222C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:41:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587044494;
-	bh=T9Q/+8y+10RHMimFMocEtiqH524D6C047MMtaJaMqCU=;
+	s=default; t=1587044506;
+	bh=fVibvqL9DMu1Yg/IVcb6cWJg7YBQvJjwZVNu2jm5AaM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p+wCP2FHSFsm76Sz8E6g8IwRc853w0PsgXPxgvwHGMZZKKzonwSrC7T0ZlYB8GA41
-	 RfrzafrWNPZXFf3rnbrA3Tah387BSMbOhACXUrF7sQ3SSXAwHs6n2SRCfliACmrKfA
-	 AtHOtdKbGB4kqmvqZAZnrULupmIw42GuqVtHw/tc=
+	b=xFujQFONAGYdzotOGx64tKzXilWkXSNLOZcceLT12luqeqoXpEAjzB18wh64KT7vk
+	 iqMBcEz5zkyE+Lc3oI8BAWMPFVkQOIuPO7ny+Hsix7sUeib73xY8XyQMDRAe1ZSA3t
+	 3906nGRK/fI6pi2r/4MjilEZGzWoYKdlC1FV5C2Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2898320AbgDPNl3 (ORCPT
+        id S2898355AbgDPNlo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:41:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42824 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:41:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896558AbgDPNcz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2896549AbgDPNcz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Apr 2020 09:32:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98B692224F;
-        Thu, 16 Apr 2020 13:31:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E723E2222C;
+        Thu, 16 Apr 2020 13:31:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043908;
-        bh=T9Q/+8y+10RHMimFMocEtiqH524D6C047MMtaJaMqCU=;
+        s=default; t=1587043898;
+        bh=fVibvqL9DMu1Yg/IVcb6cWJg7YBQvJjwZVNu2jm5AaM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PjNz5n2RDKaRm9+DmdhvQCmL2scBlam6SurYDyQHPEZHO+Ew+slQUvJoUcOW7uZ1H
-         vQ8YSe9qIbEMFQRcuQrWPh8k5HWGIq3UYUHeLwi4Q2faMOmhw9Ho1cL2Iq16ibM4MO
-         8655NdbP5l+5MPYUisiEKq657P4COK+KwDXsbCA4=
+        b=Z0WJil4sqgcoR5FJZvTOuLlE2hoDQvc+F/p+ahTfIGAqDpG21T1A7UD8tS0lJDlCh
+         J1t2kyQwl2r702hT6SQA1Y42AbJsRX+M3sGU/uj/Mg15WEAHkE8tWExV/dMfe3gJrA
+         SxBm0rh7O1eD+5sYg73W8J/PNFTq7qBHjRmBt9eQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>
-Subject: [PATCH 4.19 123/146] xen/blkfront: fix memory allocation flags in blkfront_setup_indirect()
-Date:   Thu, 16 Apr 2020 15:24:24 +0200
-Message-Id: <20200416131259.388834579@linuxfoundation.org>
+        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 145/146] misc: echo: Remove unnecessary parentheses and simplify check for zero
+Date:   Thu, 16 Apr 2020 15:24:46 +0200
+Message-Id: <20200416131302.195343029@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
 References: <20200416131242.353444678@linuxfoundation.org>
@@ -60,100 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Juergen Gross <jgross@suse.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-commit 3a169c0be75b59dd85d159493634870cdec6d3c4 upstream.
+[ Upstream commit 85dc2c65e6c975baaf36ea30f2ccc0a36a8c8add ]
 
-Commit 1d5c76e664333 ("xen-blkfront: switch kcalloc to kvcalloc for
-large array allocation") didn't fix the issue it was meant to, as the
-flags for allocating the memory are GFP_NOIO, which will lead the
-memory allocation falling back to kmalloc().
+Clang warns when multiple pairs of parentheses are used for a single
+conditional statement.
 
-So instead of GFP_NOIO use GFP_KERNEL and do all the memory allocation
-in blkfront_setup_indirect() in a memalloc_noio_{save,restore} section.
+drivers/misc/echo/echo.c:384:27: warning: equality comparison with
+extraneous parentheses [-Wparentheses-equality]
+        if ((ec->nonupdate_dwell == 0)) {
+             ~~~~~~~~~~~~~~~~~~~~^~~~
+drivers/misc/echo/echo.c:384:27: note: remove extraneous parentheses
+around the comparison to silence this warning
+        if ((ec->nonupdate_dwell == 0)) {
+            ~                    ^   ~
+drivers/misc/echo/echo.c:384:27: note: use '=' to turn this equality
+comparison into an assignment
+        if ((ec->nonupdate_dwell == 0)) {
+                                 ^~
+                                 =
+1 warning generated.
 
-Fixes: 1d5c76e664333 ("xen-blkfront: switch kcalloc to kvcalloc for large array allocation")
-Cc: stable@vger.kernel.org
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Acked-by: Roger Pau Monné <roger.pau@citrix.com>
-Link: https://lore.kernel.org/r/20200403090034.8753-1-jgross@suse.com
-Signed-off-by: Juergen Gross <jgross@suse.com>
+Remove them and while we're at it, simplify the zero check as '!var' is
+used more than 'var == 0'.
+
+Reported-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/xen-blkfront.c |   17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ drivers/misc/echo/echo.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/block/xen-blkfront.c
-+++ b/drivers/block/xen-blkfront.c
-@@ -47,6 +47,7 @@
- #include <linux/bitmap.h>
- #include <linux/list.h>
- #include <linux/workqueue.h>
-+#include <linux/sched/mm.h>
+diff --git a/drivers/misc/echo/echo.c b/drivers/misc/echo/echo.c
+index 8a5adc0d2e887..3ebe5d75ad6a2 100644
+--- a/drivers/misc/echo/echo.c
++++ b/drivers/misc/echo/echo.c
+@@ -381,7 +381,7 @@ int16_t oslec_update(struct oslec_state *ec, int16_t tx, int16_t rx)
+ 	 */
+ 	ec->factor = 0;
+ 	ec->shift = 0;
+-	if ((ec->nonupdate_dwell == 0)) {
++	if (!ec->nonupdate_dwell) {
+ 		int p, logp, shift;
  
- #include <xen/xen.h>
- #include <xen/xenbus.h>
-@@ -2188,10 +2189,12 @@ static void blkfront_setup_discard(struc
- 
- static int blkfront_setup_indirect(struct blkfront_ring_info *rinfo)
- {
--	unsigned int psegs, grants;
-+	unsigned int psegs, grants, memflags;
- 	int err, i;
- 	struct blkfront_info *info = rinfo->dev_info;
- 
-+	memflags = memalloc_noio_save();
-+
- 	if (info->max_indirect_segments == 0) {
- 		if (!HAS_EXTRA_REQ)
- 			grants = BLKIF_MAX_SEGMENTS_PER_REQUEST;
-@@ -2223,7 +2226,7 @@ static int blkfront_setup_indirect(struc
- 
- 		BUG_ON(!list_empty(&rinfo->indirect_pages));
- 		for (i = 0; i < num; i++) {
--			struct page *indirect_page = alloc_page(GFP_NOIO);
-+			struct page *indirect_page = alloc_page(GFP_KERNEL);
- 			if (!indirect_page)
- 				goto out_of_memory;
- 			list_add(&indirect_page->lru, &rinfo->indirect_pages);
-@@ -2234,15 +2237,15 @@ static int blkfront_setup_indirect(struc
- 		rinfo->shadow[i].grants_used =
- 			kvcalloc(grants,
- 				 sizeof(rinfo->shadow[i].grants_used[0]),
--				 GFP_NOIO);
-+				 GFP_KERNEL);
- 		rinfo->shadow[i].sg = kvcalloc(psegs,
- 					       sizeof(rinfo->shadow[i].sg[0]),
--					       GFP_NOIO);
-+					       GFP_KERNEL);
- 		if (info->max_indirect_segments)
- 			rinfo->shadow[i].indirect_grants =
- 				kvcalloc(INDIRECT_GREFS(grants),
- 					 sizeof(rinfo->shadow[i].indirect_grants[0]),
--					 GFP_NOIO);
-+					 GFP_KERNEL);
- 		if ((rinfo->shadow[i].grants_used == NULL) ||
- 			(rinfo->shadow[i].sg == NULL) ||
- 		     (info->max_indirect_segments &&
-@@ -2251,6 +2254,7 @@ static int blkfront_setup_indirect(struc
- 		sg_init_table(rinfo->shadow[i].sg, psegs);
- 	}
- 
-+	memalloc_noio_restore(memflags);
- 
- 	return 0;
- 
-@@ -2270,6 +2274,9 @@ out_of_memory:
- 			__free_page(indirect_page);
- 		}
- 	}
-+
-+	memalloc_noio_restore(memflags);
-+
- 	return -ENOMEM;
- }
- 
+ 		/* Determine:
+-- 
+2.20.1
+
 
 
