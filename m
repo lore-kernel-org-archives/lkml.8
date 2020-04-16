@@ -2,114 +2,109 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A33EC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:02:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD8A7C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:03:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D67C32222D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:02:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587049368;
-	bh=Ikc0AYvLKTZZv4VYpqWl7cUBvSOW5ZMNjoOQKDLh2aA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2S36PmjlCmZ3xEdIFN/yzg06FXw1cWUKCt7uHP2l7MgTSelkzbYf5Ggou6UKyK90u
-	 RqhX7lOtsP4i85IzOW5k1eFp6qCyeRe+zeu16+gcTYztqYcFKyVyCzGMWCdWiZLDuB
-	 AMloiiXt5vJ3wgf2W29EAM6oxR9E684VdyL2Y8fs=
+	by mail.kernel.org (Postfix) with ESMTP id 9CAD720771
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:03:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RoTJFRbR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441765AbgDPPCq (ORCPT
+        id S2441724AbgDPPDA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:02:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40250 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2894618AbgDPNxp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:53:45 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E7DE2076D;
-        Thu, 16 Apr 2020 13:53:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045224;
-        bh=Ikc0AYvLKTZZv4VYpqWl7cUBvSOW5ZMNjoOQKDLh2aA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AX5tC+R9nyvfjeV8Q2D3Nz2cnDw74k2NQ6/e+HvmyiegNYyd5FES3QHoLz3oqjv5u
-         i99BC8KgV+THI8gPJmwtxf7e4adSleLXvH7xrf6QrsCJOHIV0D+9fPq7GUGJYPbDW1
-         MWxsgZHZGW4xvcdVve8Gfhc7ie4A4s+6smzIWlQw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peng Fan <peng.fan@nxp.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 046/254] cpufreq: imx6q: fix error handling
-Date:   Thu, 16 Apr 2020 15:22:15 +0200
-Message-Id: <20200416131331.659823791@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
-References: <20200416131325.804095985@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 16 Apr 2020 11:03:00 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:35869 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2441725AbgDPNxm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:53:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587045221;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=l5Kvo8iqImptqYWsZSVRrcAXyDBLn+NV1FJvmlGAZQs=;
+        b=RoTJFRbR4rzaOwNX7LcSs9elegXgI7fBsqdwi96HECy8futjYinQItzUlaftvuAqO0c7Yb
+        jwQKfnWxXZxY4S1NGcuwObEHaIOcri0paPu1hRmE5RL6nVFuXREyfZvkeVOh9qL6cofR/c
+        t3/UBI4k02MNHwYgJeIEBCfOdW1IRlU=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-252-2YJKJvimMT-5RUX7qxa0pA-1; Thu, 16 Apr 2020 09:53:39 -0400
+X-MC-Unique: 2YJKJvimMT-5RUX7qxa0pA-1
+Received: by mail-wr1-f70.google.com with SMTP id d17so1723931wrr.17
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 06:53:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=l5Kvo8iqImptqYWsZSVRrcAXyDBLn+NV1FJvmlGAZQs=;
+        b=djHXVdtt/LEOwQgqdnBQ5lFz3DoHoPR3IykBa87k3QzUf7dHOmTJ4mLtjIvc/YsozY
+         T0FXgHfHPEIOmvhSiTjiXNpnIqBHrG/OW5wEiTGJvEa/wkQkRAiRiJb3g6IJLArmSGEj
+         JaHeAey0w9pFsSTvakBLfmWnZA7AIBK8tSoVARSJAiKCaAt7QOPUnLnXbwLioe4/FABN
+         YJR0jz+DGf5IOuU1qRVZ9hPghsiNYrLkNMbB/hY+oVnvmwSpvkUIsqzArKlslMVpN+xL
+         ToTWnbYuNZT/sPpmS72UKHjFULCSs4W38kuWnWc1wOlE6q5+AqbewKF6QHWT2/MN5IWt
+         TxQg==
+X-Gm-Message-State: AGi0PuYbyU7D+JS2uli26XaYPkFARDSSIeesFV/lA2vfT/flNLphqoft
+        OllLm8c7hFfU61TB+YlK04zepRQHvZOoqO+9DZYQsmCR4j5TkqiTSNJANI0RvW4mJ8JZdl2ZPRi
+        MqVIO2x0iM3y6Pw5uY7pHG58t
+X-Received: by 2002:a1c:41d7:: with SMTP id o206mr5041261wma.89.1587045218354;
+        Thu, 16 Apr 2020 06:53:38 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJz8z7BCZnr8VscT/Dzs37ZSpW6T2prR2o4U8uyDX4us/2PqqegrZdIYt2ZRQvbdMEU26XesA==
+X-Received: by 2002:a1c:41d7:: with SMTP id o206mr5041239wma.89.1587045218126;
+        Thu, 16 Apr 2020 06:53:38 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:399d:3ef7:647c:b12d? ([2001:b07:6468:f312:399d:3ef7:647c:b12d])
+        by smtp.gmail.com with ESMTPSA id f23sm3585008wml.4.2020.04.16.06.53.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Apr 2020 06:53:37 -0700 (PDT)
+Subject: Re: [PATCH 1/1] selftests: kvm: Add overlapped memory regions test
+To:     Krish Sadhukhan <krish.sadhukhan@oracle.com>,
+        Wainer dos Santos Moschetta <wainersm@redhat.com>,
+        kvm@vger.kernel.org
+Cc:     drjones@redhat.com, sean.j.christopherson@intel.com,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+References: <20200415204505.10021-1-wainersm@redhat.com>
+ <20200415204505.10021-2-wainersm@redhat.com>
+ <455a01b6-506b-3c16-7ad8-327ad63292e9@oracle.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <1d05b77b-1e8b-2dfd-cbc9-5b09b685b630@redhat.com>
+Date:   Thu, 16 Apr 2020 15:53:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <455a01b6-506b-3c16-7ad8-327ad63292e9@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+On 16/04/20 01:57, Krish Sadhukhan wrote:
+> 
+>> Add the test_overlap_memory_regions() test case in
+>> set_memory_region_test. This should check that overlapping
+>> memory regions on the guest physical address cannot be added.
+> 
+> 
+> I think the commit header and the body need some improvement. For example,
+> 
+>         Header: Test that overlapping guest memory regions can not be added
+> 
+>         Body:  Enhance the existing tests in set_memory_region_test.c so
+> that it tests overlapping guest
+> 
+>                     memory regions. The new test verifies that adding
+> overlapping guest memory regions fails.
 
-[ Upstream commit 3646f50a3838c5949a89ecbdb868497cdc05b8fd ]
+I like Wainer's header and your body. :)
 
-When speed checking failed, direclty jumping to put_node label
-is not correct. Need jump to out_free_opp to avoid resources leak.
-
-Fixes: 2733fb0d0699 ("cpufreq: imx6q: read OCOTP through nvmem for imx6ul/imx6ull")
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/cpufreq/imx6q-cpufreq.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/cpufreq/imx6q-cpufreq.c b/drivers/cpufreq/imx6q-cpufreq.c
-index 1fcbbd53a48a2..edef3399c9794 100644
---- a/drivers/cpufreq/imx6q-cpufreq.c
-+++ b/drivers/cpufreq/imx6q-cpufreq.c
-@@ -381,23 +381,24 @@ static int imx6q_cpufreq_probe(struct platform_device *pdev)
- 		goto put_reg;
- 	}
- 
-+	/* Because we have added the OPPs here, we must free them */
-+	free_opp = true;
-+
- 	if (of_machine_is_compatible("fsl,imx6ul") ||
- 	    of_machine_is_compatible("fsl,imx6ull")) {
- 		ret = imx6ul_opp_check_speed_grading(cpu_dev);
- 		if (ret) {
- 			if (ret == -EPROBE_DEFER)
--				goto put_node;
-+				goto out_free_opp;
- 
- 			dev_err(cpu_dev, "failed to read ocotp: %d\n",
- 				ret);
--			goto put_node;
-+			goto out_free_opp;
- 		}
- 	} else {
- 		imx6q_opp_check_speed_grading(cpu_dev);
- 	}
- 
--	/* Because we have added the OPPs here, we must free them */
--	free_opp = true;
- 	num = dev_pm_opp_get_opp_count(cpu_dev);
- 	if (num < 0) {
- 		ret = num;
--- 
-2.20.1
-
-
+Paolo
 
