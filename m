@@ -2,51 +2,52 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46167C3815B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:50:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1879EC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:51:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B0D520786
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:50:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E314B21744
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:51:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587045053;
-	bh=8g4rtJKK7f7hAR4yH8/t0x0WZTPgRBWJXq9lOexgqK0=;
+	s=default; t=1587045062;
+	bh=zCv7emeh8qqkvdSPxK1eftiliypS9jDLI+ZgAK+C4Os=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BvVG647fNDRgzBy4adwXVJnkEnq0UiNeEskBY+RQUomZx04qVzVTTtCY3hCbsqwhP
-	 gJjOnR6jLi1mdAP1F3ryvLnXRbJu+6Gry06eeOzDCVN26rR1m15q1rR8ehCw3xB7Cd
-	 PazU4gSo0rL64fzIJoHkprHV66/xkZCzIQ7x+cG8=
+	b=TAiK5zByTzdkeG5VKfYj2e33ekXePEhNhJCXjQvEG3LDw+iDeJ008uMZGgNQvKYP9
+	 vqZFPpO1UewKKmk6qt/f6GARQ4KJGRp2zEH/PqyFGNXb5w61/cQbpm7EsWboeV3XbU
+	 76swOxPnZEZMxz6WMv3dlu8/2AUn6oR9eDCXDBuI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408638AbgDPNuv (ORCPT
+        id S2408689AbgDPNvA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:50:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48634 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:51:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896068AbgDPNga (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:36:30 -0400
+        id S2896368AbgDPNgg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:36:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D55A221EB;
-        Thu, 16 Apr 2020 13:36:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB64620732;
+        Thu, 16 Apr 2020 13:36:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044187;
-        bh=8g4rtJKK7f7hAR4yH8/t0x0WZTPgRBWJXq9lOexgqK0=;
+        s=default; t=1587044195;
+        bh=zCv7emeh8qqkvdSPxK1eftiliypS9jDLI+ZgAK+C4Os=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=th+LARuLj2kz7sFLLxeBbGiYvbZ/i/UZVogJ2ZTsr8yXs0/LdnOYy15QtWpXoCIOr
-         eTF9srWQi9rZ0w7+Y7A6JoFocLG0+8gCGk/dyQ0tkkyS2FH/kTpof4FihdDjt3nra4
-         bOzKXGHwQaXo/eKWQFR+b5HgSQcnwE0Irsdo2LYI=
+        b=Bq3QTIzAZNZHZOlVRqOU0lcYcJEtxrPj2xnn+cYlqcr/oUDEOQ4c/EVbIjBQAwB0A
+         XBFi7xrzX1qYW4CqACVqFMXIeApzTIJja5IQibLf6iKt6VQfIkygdkIwVUDLfQ6QFC
+         aAgmGaTMgMpeUqI9w7EWJiCI6tq8+ROP3lefHHas=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yicong Yang <yangyicong@hisilicon.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 5.5 114/257] PCI/ASPM: Clear the correct bits when enabling L1 substates
-Date:   Thu, 16 Apr 2020 15:22:45 +0200
-Message-Id: <20200416131340.513310055@linuxfoundation.org>
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 079/257] btrfs: restart relocate_tree_blocks properly
+Date:   Thu, 16 Apr 2020 15:22:10 +0200
+Message-Id: <20200416131335.808916832@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -59,42 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yicong Yang <yangyicong@hisilicon.com>
+From: Josef Bacik <josef@toxicpanda.com>
 
-commit 58a3862a10a317a81097ab0c78aecebabb1704f5 upstream.
+[ Upstream commit 50dbbb71c79df89532ec41d118d59386e5a877e3 ]
 
-In pcie_config_aspm_l1ss(), we cleared the wrong bits when enabling ASPM L1
-Substates.  Instead of the L1.x enable bits (PCI_L1SS_CTL1_L1SS_MASK, 0xf), we
-cleared the Link Activation Interrupt Enable bit (PCI_L1SS_CAP_L1_PM_SS,
-0x10).
+There are two bugs here, but fixing them independently would just result
+in pain if you happened to bisect between the two patches.
 
-Clear the L1.x enable bits before writing the new L1.x configuration.
+First is how we handle the -EAGAIN from relocate_tree_block().  We don't
+set error, unless we happen to be the first node, which makes no sense,
+I have no idea what the code was trying to accomplish here.
 
-[bhelgaas: changelog]
-Fixes: aeda9adebab8 ("PCI/ASPM: Configure L1 substate settings")
-Link: https://lore.kernel.org/r/1584093227-1292-1-git-send-email-yangyicong@hisilicon.com
-Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-CC: stable@vger.kernel.org	# v4.11+
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+We in fact _do_ want err set here so that we know we need to restart in
+relocate_block_group().  Also we need finish_pending_nodes() to not
+actually call link_to_upper(), because we didn't actually relocate the
+block.
 
+And then if we do get -EAGAIN we do not want to set our backref cache
+last_trans to the one before ours.  This would force us to update our
+backref cache if we didn't cross transaction ids, which would mean we'd
+have some nodes updated to their new_bytenr, but still able to find
+their old bytenr because we're searching the same commit root as the
+last time we went through relocate_tree_blocks.
+
+Fixing these two things keeps us from panicing when we start breaking
+out of relocate_tree_blocks() either for delayed ref flushing or enospc.
+
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pcie/aspm.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/btrfs/relocation.c | 11 ++---------
+ 1 file changed, 2 insertions(+), 9 deletions(-)
 
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -747,9 +747,9 @@ static void pcie_config_aspm_l1ss(struct
- 
- 	/* Enable what we need to enable */
- 	pci_clear_and_set_dword(parent, up_cap_ptr + PCI_L1SS_CTL1,
--				PCI_L1SS_CAP_L1_PM_SS, val);
-+				PCI_L1SS_CTL1_L1SS_MASK, val);
- 	pci_clear_and_set_dword(child, dw_cap_ptr + PCI_L1SS_CTL1,
--				PCI_L1SS_CAP_L1_PM_SS, val);
-+				PCI_L1SS_CTL1_L1SS_MASK, val);
- }
- 
- static void pcie_config_aspm_dev(struct pci_dev *pdev, u32 val)
+diff --git a/fs/btrfs/relocation.c b/fs/btrfs/relocation.c
+index f7060b2172c44..963e70141e398 100644
+--- a/fs/btrfs/relocation.c
++++ b/fs/btrfs/relocation.c
+@@ -3175,9 +3175,8 @@ int relocate_tree_blocks(struct btrfs_trans_handle *trans,
+ 		ret = relocate_tree_block(trans, rc, node, &block->key,
+ 					  path);
+ 		if (ret < 0) {
+-			if (ret != -EAGAIN || &block->rb_node == rb_first(blocks))
+-				err = ret;
+-			goto out;
++			err = ret;
++			break;
+ 		}
+ 	}
+ out:
+@@ -4151,12 +4150,6 @@ restart:
+ 		if (!RB_EMPTY_ROOT(&blocks)) {
+ 			ret = relocate_tree_blocks(trans, rc, &blocks);
+ 			if (ret < 0) {
+-				/*
+-				 * if we fail to relocate tree blocks, force to update
+-				 * backref cache when committing transaction.
+-				 */
+-				rc->backref_cache.last_trans = trans->transid - 1;
+-
+ 				if (ret != -EAGAIN) {
+ 					err = ret;
+ 					break;
+-- 
+2.20.1
+
 
 
