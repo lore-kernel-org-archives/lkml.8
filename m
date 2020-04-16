@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25502C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:55:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82648C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:55:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED8742051A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:55:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B3A12051A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:55:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587048924;
-	bh=YdurenuvYXqj8lZs7kKY9HUmHPXOIkJEorYnYCGwvPU=;
+	s=default; t=1587048929;
+	bh=s/3kHi8il/W5VDn7fjf0NkJJm/Hn4ruaFDq8kuwR8lA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vjk0PR/cSHf1tJEpR5pIshnePW/ic5eif0oPGnLTk9A+gTgbEJMIzxjGSr/NUK4nS
-	 A5jko+VjbEIbxKMIpsC15XZCSSlFNio93rjnGSthpqKe1MiCmF6Y9QyDcNbqMAby6A
-	 aBNPywdcBqEMzHx7e8Z7EirPaJ4IHfXPKstB/ww0=
+	b=wqGFlmwzD1dYMuWJoSgEDEicytvN9wfD6iO+r+CDbBciyWuR94od5MQPoXDdvl/Fi
+	 PUSoi/FtrlJPi1yphgRZKoinQJ56lnARocLhEFFwGYV0JlUZG6jNQA+1BoVDXxq84O
+	 3/OFMRNrW2R7Yv3evQ7DdGd/Re6PSQBZSILAm/jQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731640AbgDPOzW (ORCPT
+        id S2394776AbgDPOz1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:55:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43664 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:55:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441809AbgDPN4g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:56:36 -0400
+        id S2441805AbgDPN4e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:56:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 850EE21734;
-        Thu, 16 Apr 2020 13:56:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1649A20786;
+        Thu, 16 Apr 2020 13:56:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045396;
-        bh=YdurenuvYXqj8lZs7kKY9HUmHPXOIkJEorYnYCGwvPU=;
+        s=default; t=1587045393;
+        bh=s/3kHi8il/W5VDn7fjf0NkJJm/Hn4ruaFDq8kuwR8lA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TbzGU5anfUvuW3ToxIuvo5J6R8V52d4f11WANrJlMIldXX7LWjrZZgqKGJUw8FEdX
-         fzLTo64OHzibywkVFYh3dRfBnup5FY6JDB/o4/STxinBY4icSWRER3SXUruZjOuMa0
-         TkDMQul9kkCjBHi7nxuIlxkbjVgXdNp93tJwqFGU=
+        b=In0sonq0goaPJfUgC+cBAIESVZXRXBE1NIVMLgQmMDukE8NCr+ZFKRJ/B3chtjl5p
+         0jvJpgSNb5X7c5ugKRY7wb47s/8BWqaHWif4Xk8YxbrBd20GJj6Q8ippm1pT/Dqf1c
+         Wyi+L9BPlyyyb4MIXmuNQtPdbydy9Rr/2F5rk6rw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Begunkov <asml.silence@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.6 117/254] io_uring: fix ctx refcounting in io_submit_sqes()
-Date:   Thu, 16 Apr 2020 15:23:26 +0200
-Message-Id: <20200416131340.873146158@linuxfoundation.org>
+        stable@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.6 116/254] io_uring: remove bogus RLIMIT_NOFILE check in file registration
+Date:   Thu, 16 Apr 2020 15:23:25 +0200
+Message-Id: <20200416131340.746421182@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -59,38 +58,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Begunkov <asml.silence@gmail.com>
+From: Jens Axboe <axboe@kernel.dk>
 
-commit 48bdd849e967f1c573d2b2bc24308e24a83f39c2 upstream.
+commit c336e992cb1cb1db9ee608dfb30342ae781057ab upstream.
 
-If io_get_req() fails, it drops a ref. Then, awhile keeping @submitted
-unmodified, io_submit_sqes() breaks the loop and puts @nr - @submitted
-refs. For each submitted req a ref is dropped in io_put_req() and
-friends. So, for @nr taken refs there will be
-(@nr - @submitted + @submitted + 1) dropped.
+We already checked this limit when the file was opened, and we keep it
+open in the file table. Hence when we added unit_inflight to the count
+we want to register, we're doubly accounting these files. This results
+in -EMFILE for file registration, if we're at half the limit.
 
-Remove ctx refcounting from io_get_req(), that at the same time makes
-it clearer.
-
-Fixes: 2b85edfc0c90 ("io_uring: batch getting pcpu references")
-Cc: stable@vger.kernel.org # v5.6
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+Cc: stable@vger.kernel.org # v5.1+
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/io_uring.c |    1 -
- 1 file changed, 1 deletion(-)
+ fs/io_uring.c |    7 -------
+ 1 file changed, 7 deletions(-)
 
 --- a/fs/io_uring.c
 +++ b/fs/io_uring.c
-@@ -1242,7 +1242,6 @@ fallback:
- 	req = io_get_fallback_req(ctx);
- 	if (req)
- 		goto got_it;
--	percpu_ref_put(&ctx->refs);
- 	return NULL;
- }
+@@ -5426,13 +5426,6 @@ static int __io_sqe_files_scm(struct io_
+ 	struct sk_buff *skb;
+ 	int i, nr_files;
  
+-	if (!capable(CAP_SYS_RESOURCE) && !capable(CAP_SYS_ADMIN)) {
+-		unsigned long inflight = ctx->user->unix_inflight + nr;
+-
+-		if (inflight > task_rlimit(current, RLIMIT_NOFILE))
+-			return -EMFILE;
+-	}
+-
+ 	fpl = kzalloc(sizeof(*fpl), GFP_KERNEL);
+ 	if (!fpl)
+ 		return -ENOMEM;
 
 
