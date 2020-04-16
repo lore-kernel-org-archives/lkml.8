@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8CE0C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:01:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85975C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:01:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC81E20771
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:01:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F121206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:01:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587049299;
-	bh=voR2c5oles2bsqgJ3Oq75JQIQaJoorClTevFqXOzlbU=;
+	s=default; t=1587049307;
+	bh=UyeJtdp9U82Hk060fneyVqL7AIj7dU5ovHBE11uIfDo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dA9GAgSHTJ2qBKjngvVdg9D1ahTodWLCp/IDHj5Of+jFfYUzA/WmSNcpq6VYtk/VK
-	 tb9A+VaojzT5dgfPpNPPnPHG0WzhP3Hgzgm4hBRC7JpAllMJYni/3PnIiO4Jt/M/iq
-	 tK23fK06YOkzeTr63LKvIYttAGVssec9RjAAM6tA=
+	b=ikAZJMr5bnwHa9aF71iUf8wXfoUWY2s1nUPLUUMWEQYrZLLX+p1wcjmGRD0WTMoZs
+	 jdrjKdVNv6IinnEzeX7/D0o1dTlTplC0uePT1OrmMuGVObpGx+ywoRehul4iG/Ahzn
+	 +qKGs7yn1xCXw9HYWSm/RIX0t7ZSnNaaSA4L/Jeg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409323AbgDPPBh (ORCPT
+        id S2409468AbgDPPBn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:01:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41010 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:01:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726079AbgDPNyY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:54:24 -0400
+        id S2408964AbgDPNyR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:54:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54CAF20786;
-        Thu, 16 Apr 2020 13:54:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F353720732;
+        Thu, 16 Apr 2020 13:54:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045263;
-        bh=voR2c5oles2bsqgJ3Oq75JQIQaJoorClTevFqXOzlbU=;
+        s=default; t=1587045256;
+        bh=UyeJtdp9U82Hk060fneyVqL7AIj7dU5ovHBE11uIfDo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dhE2hQgJW6hpt8Gd4pBmx4CyrncwaEd+Bx3IkfYcgceJFntYgOupmKbL0GmOpB3Qb
-         IkD0nOY5zYBNqBR8hH+11qbdChRh7aT7QL5JPiLjokN04f/tOzol2SFLMGQ+G1KIXj
-         AYN0rsDYWHm/RX+PZyo3pdygT7Nuz91vPY7KByCs=
+        b=lEr0HqGxrc2MvDcpTRGI6+m9BGtcxHoeY/NPdHlIg5r/Virg2oQljnqPKXi35mKaq
+         PkKMP55Ni0zgzR90GNaIU4DIc2kkAJivrQJS9tFgaiWVKhmb8vESUikQY4XEw9dELD
+         WoQGtl3WLBtbQr4tAMeqn7K7v44JjoD74U2VV0Ys=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
+        stable@vger.kernel.org, Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 064/254] btrfs: restart relocate_tree_blocks properly
-Date:   Thu, 16 Apr 2020 15:22:33 +0200
-Message-Id: <20200416131333.917036185@linuxfoundation.org>
+Subject: [PATCH 5.6 053/254] media: i2c: ov5695: Fix power on and off sequences
+Date:   Thu, 16 Apr 2020 15:22:22 +0200
+Message-Id: <20200416131332.512678814@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -60,68 +62,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Dongchun Zhu <dongchun.zhu@mediatek.com>
 
-[ Upstream commit 50dbbb71c79df89532ec41d118d59386e5a877e3 ]
+[ Upstream commit f1a64f56663e9d03e509439016dcbddd0166b2da ]
 
-There are two bugs here, but fixing them independently would just result
-in pain if you happened to bisect between the two patches.
+>From the measured hardware signal, OV5695 reset pin goes high for a
+short period of time during boot-up. From the sensor specification, the
+reset pin is active low and the DT binding defines the pin as active
+low, which means that the values set by the driver are inverted and thus
+the value requested in probe ends up high.
 
-First is how we handle the -EAGAIN from relocate_tree_block().  We don't
-set error, unless we happen to be the first node, which makes no sense,
-I have no idea what the code was trying to accomplish here.
+Fix it by changing probe to request the reset GPIO initialized to high,
+which makes the initial state of the physical signal low.
 
-We in fact _do_ want err set here so that we know we need to restart in
-relocate_block_group().  Also we need finish_pending_nodes() to not
-actually call link_to_upper(), because we didn't actually relocate the
-block.
+In addition, DOVDD rising must occur before DVDD rising from spec., but
+regulator_bulk_enable() API enables all the regulators asynchronously.
+Use an explicit loops of regulator_enable() instead.
 
-And then if we do get -EAGAIN we do not want to set our backref cache
-last_trans to the one before ours.  This would force us to update our
-backref cache if we didn't cross transaction ids, which would mean we'd
-have some nodes updated to their new_bytenr, but still able to find
-their old bytenr because we're searching the same commit root as the
-last time we went through relocate_tree_blocks.
+For power off sequence, it is required that DVDD falls first. Given the
+bulk API does not give any guarantee about the order of regulators,
+change the driver to use regulator_disable() instead.
 
-Fixing these two things keeps us from panicing when we start breaking
-out of relocate_tree_blocks() either for delayed ref flushing or enospc.
+The sensor also requires a delay between reset high and first I2C
+transaction, which was assumed to be 8192 XVCLK cycles, but 1ms is
+recommended by the vendor. Fix this as well.
 
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
+Signed-off-by: Tomasz Figa <tfiga@chromium.org>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/relocation.c | 11 ++---------
- 1 file changed, 2 insertions(+), 9 deletions(-)
+ drivers/media/i2c/ov5695.c | 49 ++++++++++++++++++++++++--------------
+ 1 file changed, 31 insertions(+), 18 deletions(-)
 
-diff --git a/fs/btrfs/relocation.c b/fs/btrfs/relocation.c
-index db6abe3f10e57..d7e8839048d71 100644
---- a/fs/btrfs/relocation.c
-+++ b/fs/btrfs/relocation.c
-@@ -3175,9 +3175,8 @@ int relocate_tree_blocks(struct btrfs_trans_handle *trans,
- 		ret = relocate_tree_block(trans, rc, node, &block->key,
- 					  path);
- 		if (ret < 0) {
--			if (ret != -EAGAIN || &block->rb_node == rb_first(blocks))
--				err = ret;
--			goto out;
-+			err = ret;
-+			break;
- 		}
- 	}
- out:
-@@ -4151,12 +4150,6 @@ restart:
- 		if (!RB_EMPTY_ROOT(&blocks)) {
- 			ret = relocate_tree_blocks(trans, rc, &blocks);
- 			if (ret < 0) {
--				/*
--				 * if we fail to relocate tree blocks, force to update
--				 * backref cache when committing transaction.
--				 */
--				rc->backref_cache.last_trans = trans->transid - 1;
+diff --git a/drivers/media/i2c/ov5695.c b/drivers/media/i2c/ov5695.c
+index d6cd15bb699ac..cc678d9d2e0da 100644
+--- a/drivers/media/i2c/ov5695.c
++++ b/drivers/media/i2c/ov5695.c
+@@ -971,16 +971,9 @@ unlock_and_return:
+ 	return ret;
+ }
+ 
+-/* Calculate the delay in us by clock rate and clock cycles */
+-static inline u32 ov5695_cal_delay(u32 cycles)
+-{
+-	return DIV_ROUND_UP(cycles, OV5695_XVCLK_FREQ / 1000 / 1000);
+-}
 -
- 				if (ret != -EAGAIN) {
- 					err = ret;
- 					break;
+ static int __ov5695_power_on(struct ov5695 *ov5695)
+ {
+-	int ret;
+-	u32 delay_us;
++	int i, ret;
+ 	struct device *dev = &ov5695->client->dev;
+ 
+ 	ret = clk_prepare_enable(ov5695->xvclk);
+@@ -991,21 +984,28 @@ static int __ov5695_power_on(struct ov5695 *ov5695)
+ 
+ 	gpiod_set_value_cansleep(ov5695->reset_gpio, 1);
+ 
+-	ret = regulator_bulk_enable(OV5695_NUM_SUPPLIES, ov5695->supplies);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to enable regulators\n");
+-		goto disable_clk;
++	/*
++	 * The hardware requires the regulators to be powered on in order,
++	 * so enable them one by one.
++	 */
++	for (i = 0; i < OV5695_NUM_SUPPLIES; i++) {
++		ret = regulator_enable(ov5695->supplies[i].consumer);
++		if (ret) {
++			dev_err(dev, "Failed to enable %s: %d\n",
++				ov5695->supplies[i].supply, ret);
++			goto disable_reg_clk;
++		}
+ 	}
+ 
+ 	gpiod_set_value_cansleep(ov5695->reset_gpio, 0);
+ 
+-	/* 8192 cycles prior to first SCCB transaction */
+-	delay_us = ov5695_cal_delay(8192);
+-	usleep_range(delay_us, delay_us * 2);
++	usleep_range(1000, 1200);
+ 
+ 	return 0;
+ 
+-disable_clk:
++disable_reg_clk:
++	for (--i; i >= 0; i--)
++		regulator_disable(ov5695->supplies[i].consumer);
+ 	clk_disable_unprepare(ov5695->xvclk);
+ 
+ 	return ret;
+@@ -1013,9 +1013,22 @@ disable_clk:
+ 
+ static void __ov5695_power_off(struct ov5695 *ov5695)
+ {
++	struct device *dev = &ov5695->client->dev;
++	int i, ret;
++
+ 	clk_disable_unprepare(ov5695->xvclk);
+ 	gpiod_set_value_cansleep(ov5695->reset_gpio, 1);
+-	regulator_bulk_disable(OV5695_NUM_SUPPLIES, ov5695->supplies);
++
++	/*
++	 * The hardware requires the regulators to be powered off in order,
++	 * so disable them one by one.
++	 */
++	for (i = OV5695_NUM_SUPPLIES - 1; i >= 0; i--) {
++		ret = regulator_disable(ov5695->supplies[i].consumer);
++		if (ret)
++			dev_err(dev, "Failed to disable %s: %d\n",
++				ov5695->supplies[i].supply, ret);
++	}
+ }
+ 
+ static int __maybe_unused ov5695_runtime_resume(struct device *dev)
+@@ -1285,7 +1298,7 @@ static int ov5695_probe(struct i2c_client *client,
+ 	if (clk_get_rate(ov5695->xvclk) != OV5695_XVCLK_FREQ)
+ 		dev_warn(dev, "xvclk mismatched, modes are based on 24MHz\n");
+ 
+-	ov5695->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
++	ov5695->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
+ 	if (IS_ERR(ov5695->reset_gpio)) {
+ 		dev_err(dev, "Failed to get reset-gpios\n");
+ 		return -EINVAL;
 -- 
 2.20.1
 
