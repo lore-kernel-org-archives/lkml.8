@@ -2,166 +2,99 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 917CBC352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 18:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83EB3C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 18:13:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F2B8221EB
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 18:12:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587060734;
-	bh=dKS+MG0CSg/HtNkZGsr/L3wWaajOLzH1Y3yCvJSHGCc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xaGg8amlxy+fU9+Y49DEJte0H39RWZTCjEed7JFL3BWlU1ST0TPomaB4qWdpnUQtg
-	 cnAMO8JUExonWxgzbX0f0oviFUwMcv+rbLaoq0EpCUyhDmX4hzjQqd/V2rG8SQr715
-	 mYR0CX6KjkPUqArpDAjo9r4wIxZhI46oraqm2FCg=
+	by mail.kernel.org (Postfix) with ESMTP id 592E521924
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 18:13:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="MI3PIN03"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732136AbgDPSMN (ORCPT
+        id S2388671AbgDPSNE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 14:12:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35828 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726129AbgDPSMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 14:12:10 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3ABA21924;
-        Thu, 16 Apr 2020 18:12:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587060728;
-        bh=dKS+MG0CSg/HtNkZGsr/L3wWaajOLzH1Y3yCvJSHGCc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xUUF9lrCWR6yVbI1xTXNYLK0+Ii7L54BmGYZLumlSKYcxHZYf8JpjLlMCQHNwZ+OU
-         eOq0PU0fnjPkw6ZxU2hk5HoIZ05Ascu5Ju5BuZ66j+6k4NXJy1ScW1Xj0I2R0mun8p
-         wOEXfVb0pm+hDIVscbNID/It1oZgbhjKIOWY6vxQ=
-Date:   Thu, 16 Apr 2020 19:12:03 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com, maz@kernel.org,
-        anshuman.khandual@arm.com, catalin.marinas@arm.com,
-        saiprakash.ranjan@codeaurora.org, dianders@chromium.org,
-        kernel-team@android.com
-Subject: Re: [PATCH 8/8] arm64: cpufeature: Add an overview comment for the
- cpufeature framework
-Message-ID: <20200416181202.GA3739@willie-the-truck>
-References: <20200414213114.2378-1-will@kernel.org>
- <20200414213114.2378-9-will@kernel.org>
- <96dd797d-ccfe-c867-0a70-65eccacde3cd@arm.com>
+        Thu, 16 Apr 2020 14:13:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43952 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726129AbgDPSNC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 14:13:02 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 252BFC061A0C;
+        Thu, 16 Apr 2020 11:13:01 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id rh22so1984335ejb.12;
+        Thu, 16 Apr 2020 11:13:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3BujPtYkPgE5qbv/kcmnLou5PuLayVpEmjsVIPVlZ6c=;
+        b=MI3PIN03g9mte9tt/J80yvDslXb3w5cZmZDi6gm4zlUVzFOR9lZnuarDbb8wWGmYJm
+         NKMmuKGIWz9Nz2eRwTDCAUTxmweTc9el3ER8sG3w1TZGBshbNfx0vMTldgm65Cdlll78
+         WZ0BOuepmKQy15b9XnY3Qdn8gQLvqy1E4Q2orei2X8a6KbkHoOcwwOtIxXnDlFnjGLph
+         WJlmU9GbCvAa/WFA3EY+gzuUHVqwVyMe8Qx3igEX0O4wX4MUu293I9QfiuaXqLadpIhX
+         KsQFZRC2lLEBWh/0JvCD2aW0+aa7shBCg2fiEqcRiFN3SmaW39m+JikfaII+EJxJHEzA
+         2dnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3BujPtYkPgE5qbv/kcmnLou5PuLayVpEmjsVIPVlZ6c=;
+        b=oLL1r9gIwybtF1nsOLKzkb08QzxpwjJq54Whs04wHb//67N3rUGeIRSkxigTOty0W7
+         9+ISw4OHMUUtZD+yPQBjh/sOgdKee0Mpdni5utdsD/CmSbM01plMZMRCflUYR3SKxUFU
+         WCNJkBWNylMWGOXPw/VJgV1dmfQO3e9LyWEx6kY2Pb84ZGcXSJ4HkBMhLsDrHvPV3S8u
+         rU+wEd1wh75JFwhbyN0yE/GxFWQx17ZpfkVlPCsOS8EBmxlWSHxXQZZkmhSwnOrQa5Ko
+         JHzL8BORE+S0RNXjK8/QWDz7rBz0j2iZJiJLhcZxdU3KhvKxHDL3wgX4yJrl6iO3oc12
+         fInA==
+X-Gm-Message-State: AGi0PuaBEjj1tzAeoy40lDOgM9m9b5RCEBY5d8+rI4OP2qL5lt7RoDaO
+        ASGANwH9xyQquQqXwe+31hT1MUXT2lTqousjfWE=
+X-Google-Smtp-Source: APiQypIkLNljPlUdohCkcdi0muKk9NtkNh8bkA9dgBVjbBN/j84bykCU96fEtuK2GZpJZGQwXkyrDlqZd1lfhqCqzrA=
+X-Received: by 2002:a17:906:2962:: with SMTP id x2mr10118232ejd.233.1587060779605;
+ Thu, 16 Apr 2020 11:12:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <96dd797d-ccfe-c867-0a70-65eccacde3cd@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200414200017.226136-1-martin.blumenstingl@googlemail.com>
+ <20200414200017.226136-3-martin.blumenstingl@googlemail.com> <1ja73bbtqt.fsf@starbuckisacylon.baylibre.com>
+In-Reply-To: <1ja73bbtqt.fsf@starbuckisacylon.baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Thu, 16 Apr 2020 20:12:48 +0200
+Message-ID: <CAFBinCAtSPTHfbr5KGNFFg3eo_d2p2q59fQfMXu+XkOb8WVrDQ@mail.gmail.com>
+Subject: Re: [PATCH 2/4] clk: meson: meson8b: Fix the polarity of the RESET_N lines
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        mturquette@baylibre.com, sboyd@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 03:59:39PM +0100, Suzuki K Poulose wrote:
-> On 04/14/2020 10:31 PM, Will Deacon wrote:
-> > Now that Suzuki isn't within throwing distance, I thought I'd better add
-> > a rough overview comment to cpufeature.c so that it doesn't take me days
-> > to remember how it works next time.
-> > 
-> > Signed-off-by: Will Deacon <will@kernel.org>
-> > ---
-> >   arch/arm64/kernel/cpufeature.c | 43 ++++++++++++++++++++++++++++++++++
-> >   1 file changed, 43 insertions(+)
-> > 
-> > diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-> > index 680a453ca8c4..421ca99dc8fc 100644
-> > --- a/arch/arm64/kernel/cpufeature.c
-> > +++ b/arch/arm64/kernel/cpufeature.c
-> > @@ -3,6 +3,49 @@
-> >    * Contains CPU feature definitions
-> >    *
-> >    * Copyright (C) 2015 ARM Ltd.
-> > + *
-> > + * A note for the weary kernel hacker: the code here is confusing and hard to
-> > + * follow! That's partly because it's solving a nasty problem, but also because
-> > + * there's a little bit of over-abstraction that tends to obscure what's going
-> > + * on behind a maze of helper functions and macros.
-> 
-> Thanks for writing this up !
+Hi Jerome,
 
-It's purely a selfish thing ;)
+On Thu, Apr 16, 2020 at 12:38 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
+[...]
+> >
+> >       if (id >= ARRAY_SIZE(meson8b_clk_reset_bits))
+> >               return -EINVAL;
+> >
+> >       reset = &meson8b_clk_reset_bits[id];
+> >
+> > +     if (assert == reset->active_low)
+> > +             value = 0;
+> > +     else
+> > +             value = BIT(reset->bit_idx);
+>
+> if (assert ^ reset->active_low)
+>         value = BIT(reset->bit_idx);
+I can do that, but I prefer "!=" over "^" because the result is
+expected to be a bool (and because I'm not used to reading "^" for
+logical comparisons)
+will this work for you as well?
 
-> > + * The basic problem is that hardware folks have started gluing together CPUs
-> > + * with distinct architectural features; in some cases even creating SoCs where
-> > + * user-visible instructions are available only on a subset of the available
-> > + * cores. We try to address this by snapshotting the feature registers of the
-> > + * boot CPU and comparing these with the feature registers of each secondary
-> > + * CPU when bringing them up. If there is a mismatch, then we update the
-> > + * snapshot state to indicate the lowest-common denominator of the feature,
-> > + * known as the "safe" value. This snapshot state can be queried to view the
-> 
-> I am not sure if the following is implied above.
-> 
->   1) Against the "snapshot" state, where mismatches triggers updating
->      the "snapshot" state to reflect the "safe" value.
-> 
->   2) Compared against the CPU feature registers of *the boot CPU* for
->     "FTR_STRICT" fields and any mismatch triggers TAINT_CPU_OUT_OF_SPEC.
->      This makes sure that warning is generated for each OUT_OF_SPEC
->      secondary CPU.
 
-I was trying to avoid talking about the consequences of a mismatch in that
-paragraph, and instead cover them below:
-
-> > + * The sanitised register values are used to decide which capabilities we
-> > + * have in the system. These may be in the form of traditional "hwcaps"
-> > + * advertised to userspace or internal "cpucaps" which are used to configure
-> > + * things like alternative patching and static keys. While a feature mismatch
-> > + * may result in a TAINT_CPU_OUT_OF_SPEC kernel taint, a capability mismatch
-> > + * may prevent a CPU from being onlined at all.
-
-Do you think something is missing here?
-
-> > + *
-> > + * Some implementation details worth remembering:
-> > + *
-> > + * - Mismatched features are *always* sanitised to a "safe" value, which
-> > + *   usually indicates that the feature is not supported.
-> > + *
-> > + * - A mismatched feature marked with FTR_STRICT will cause a "SANITY CHECK"
-> > + *   warning when onlining an offending CPU and the kernel will be tainted
-> > + *   with TAINT_CPU_OUT_OF_SPEC.
-> 
-> As mentioned above, this check is against that of the "boot CPU"
-> register state, which may not be implicit from the statement.
-
-Hmm, I'm trying to figure out if this matters. I suppose this means you
-get a SANITY CHECK warning for every mismatching secondary CPU, but that's
-implied by the above. Is there something else I'm missing?
-
-> > + *
-> > + * - Features marked as FTR_VISIBLE have their sanitised value visible to
-> > + *   userspace. FTR_VISIBLE features in registers that are only visible
-> > + *   to EL0 by trapping *must* have a corresponding HWCAP so that late
-> > + *   onlining of CPUs cannot lead to features disappearing at runtime.
-> > + *
-> 
-> As you mentioned in the other response we could add information about
-> the guest view, something like :
-> 
->       - KVM exposes the sanitised value of the feature registers to the
-> 	guests and is not affected by the FTR_VISIBLE. However,
-> 	depending on the individual feature support in the hypervisor,
-> 	some of the fields may be capped/limited.
-
-In light of Marc's comment, I'll add something here along the lines of:
-
-  "KVM exposes its own view of the feature registers to guest operating
-   systems regardless of FTR_VISIBLE. This is typically driven from the
-   sanitised register values to allow virtual CPUs to be migrated between
-   arbitrary physical CPUs, but some features not present on the host are
-   also advertised and emulated. Look at sys_reg_descs[] for the gory
-   details."
-
-Will
+Martin
