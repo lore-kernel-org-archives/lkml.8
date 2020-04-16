@@ -2,53 +2,52 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18789C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:39:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16BF5C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEB9521D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:39:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E540721D93
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:39:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587047962;
-	bh=SoVqO3bK3jHNnFnqoHbBV+IZFxZYUJeXCaLy+Ihncvo=;
+	s=default; t=1587047971;
+	bh=v2onqnJMQEazmkuHUhSO3ULptroL/OOhJUCUP71lnjY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SHBL70USBr0iEiKtoVLar6E1qDYhHOUc0KCTUlBeOSWTXkIG8mRf3gMgnR2Db9vrL
-	 pQHuRPvRi4iy1TJdqxk1tHJ2G5+s+cxhbJIHswtpFdduc3KDnuTp4KsCqFhibLEISG
-	 wT67ZIVrcChqMYU+/Uqee7u053Ox3pPSookqYAvc=
+	b=nPpAQPA496/+VuiZI/Jh1/127QNHdNTeOqKoNTDC4j316XpkYhn3vlJf/8Clo+Mah
+	 hU7cmcbZ1lUa7ItTT1UmA67+hMWVX9+bEbHM2rrtE5vwOTxSLDJUt2ofTJdznzcNPy
+	 5gZ0V2v7viWb++gNshU6O0Dj5DJxL4RecPemaIUI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393860AbgDPOjU (ORCPT
+        id S2405644AbgDPOj2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:39:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49850 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:39:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405605AbgDPOCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:02:21 -0400
+        id S2409610AbgDPOCJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:02:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AEB882078B;
-        Thu, 16 Apr 2020 14:02:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90EB52078B;
+        Thu, 16 Apr 2020 14:02:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045741;
-        bh=SoVqO3bK3jHNnFnqoHbBV+IZFxZYUJeXCaLy+Ihncvo=;
+        s=default; t=1587045729;
+        bh=v2onqnJMQEazmkuHUhSO3ULptroL/OOhJUCUP71lnjY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TJNfRKub5Hujh2S1Y3vDelb/d53f4SpKpZAaaiDckQvrIJcwoGhk2WNgtLQgVrsZe
-         5/4WZnyU2+J7uuUZrD0fn0xehEivourie+fMMrA4Tx+/yV8Sk9K72JVGArYQv40LrI
-         e9XnGksTnVp5QVPgxMZTxur6Wsu2KdB3X7pkJw3Y=
+        b=dHZjrKVRkRxl4wILU4VFx+ryc7F5gOjIQWv5shrD+QCV28mcDCuVQ9aViyYUVeNXy
+         MIP+9mkLCar4AK7Zu7XQK2TgxOm0QoMr5ggWsNDVM3Jjbs29sAV5ZDTQHI/ykYN1fl
+         qeNf4nhqNAvs+/8qqBKbeCHDp8iBr807XxcjWAig=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Simon Gander <simon@tuxera.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Anton Altaparmakov <anton@tuxera.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.6 230/254] hfsplus: fix crash and filesystem corruption when deleting files
-Date:   Thu, 16 Apr 2020 15:25:19 +0200
-Message-Id: <20200416131354.420861781@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 253/254] perf/core: Remove struct sched_in_data
+Date:   Thu, 16 Apr 2020 15:25:42 +0200
+Message-Id: <20200416131357.207561899@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -61,52 +60,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Simon Gander <simon@tuxera.com>
+From: Peter Zijlstra <peterz@infradead.org>
 
-commit 25efb2ffdf991177e740b2f63e92b4ec7d310a92 upstream.
+[ Upstream commit 2c2366c7548ecee65adfd264517ddf50f9e2d029 ]
 
-When removing files containing extended attributes, the hfsplus driver may
-remove the wrong entries from the attributes b-tree, causing major
-filesystem damage and in some cases even kernel crashes.
+We can deduce the ctx and cpuctx from the event, no need to pass them
+along. Remove the structure and pass in can_add_hw directly.
 
-To remove a file, all its extended attributes have to be removed as well.
-The driver does this by looking up all keys in the attributes b-tree with
-the cnid of the file.  Each of these entries then gets deleted using the
-key used for searching, which doesn't contain the attribute's name when it
-should.  Since the key doesn't contain the name, the deletion routine will
-not find the correct entry and instead remove the one in front of it.  If
-parent nodes have to be modified, these become corrupt as well.  This
-causes invalid links and unsorted entries that not even macOS's fsck_hfs
-is able to fix.
-
-To fix this, modify the search key before an entry is deleted from the
-attributes b-tree by copying the found entry's key into the search key,
-therefore ensuring that the correct entry gets removed from the tree.
-
-Signed-off-by: Simon Gander <simon@tuxera.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Anton Altaparmakov <anton@tuxera.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200327155541.1521-1-simon@tuxera.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/hfsplus/attributes.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ kernel/events/core.c | 36 +++++++++++-------------------------
+ 1 file changed, 11 insertions(+), 25 deletions(-)
 
---- a/fs/hfsplus/attributes.c
-+++ b/fs/hfsplus/attributes.c
-@@ -292,6 +292,10 @@ static int __hfsplus_delete_attr(struct
- 		return -ENOENT;
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index b816127367ffc..243717177f446 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -3437,17 +3437,11 @@ static int visit_groups_merge(struct perf_event_groups *groups, int cpu,
+ 	return 0;
+ }
+ 
+-struct sched_in_data {
+-	struct perf_event_context *ctx;
+-	struct perf_cpu_context *cpuctx;
+-	int can_add_hw;
+-};
+-
+ static int merge_sched_in(struct perf_event *event, void *data)
+ {
+-	struct sched_in_data *sid = data;
+-
+-	WARN_ON_ONCE(event->ctx != sid->ctx);
++	struct perf_event_context *ctx = event->ctx;
++	struct perf_cpu_context *cpuctx = __get_cpu_context(ctx);
++	int *can_add_hw = data;
+ 
+ 	if (event->state <= PERF_EVENT_STATE_OFF)
+ 		return 0;
+@@ -3455,8 +3449,8 @@ static int merge_sched_in(struct perf_event *event, void *data)
+ 	if (!event_filter_match(event))
+ 		return 0;
+ 
+-	if (group_can_go_on(event, sid->cpuctx, sid->can_add_hw)) {
+-		if (!group_sched_in(event, sid->cpuctx, sid->ctx))
++	if (group_can_go_on(event, cpuctx, *can_add_hw)) {
++		if (!group_sched_in(event, cpuctx, ctx))
+ 			list_add_tail(&event->active_list, get_event_list(event));
  	}
  
-+	/* Avoid btree corruption */
-+	hfs_bnode_read(fd->bnode, fd->search_key,
-+			fd->keyoffset, fd->keylength);
-+
- 	err = hfs_brec_remove(fd);
- 	if (err)
- 		return err;
+@@ -3466,8 +3460,8 @@ static int merge_sched_in(struct perf_event *event, void *data)
+ 			perf_event_set_state(event, PERF_EVENT_STATE_ERROR);
+ 		}
+ 
+-		sid->can_add_hw = 0;
+-		sid->ctx->rotate_necessary = 1;
++		*can_add_hw = 0;
++		ctx->rotate_necessary = 1;
+ 	}
+ 
+ 	return 0;
+@@ -3477,30 +3471,22 @@ static void
+ ctx_pinned_sched_in(struct perf_event_context *ctx,
+ 		    struct perf_cpu_context *cpuctx)
+ {
+-	struct sched_in_data sid = {
+-		.ctx = ctx,
+-		.cpuctx = cpuctx,
+-		.can_add_hw = 1,
+-	};
++	int can_add_hw = 1;
+ 
+ 	visit_groups_merge(&ctx->pinned_groups,
+ 			   smp_processor_id(),
+-			   merge_sched_in, &sid);
++			   merge_sched_in, &can_add_hw);
+ }
+ 
+ static void
+ ctx_flexible_sched_in(struct perf_event_context *ctx,
+ 		      struct perf_cpu_context *cpuctx)
+ {
+-	struct sched_in_data sid = {
+-		.ctx = ctx,
+-		.cpuctx = cpuctx,
+-		.can_add_hw = 1,
+-	};
++	int can_add_hw = 1;
+ 
+ 	visit_groups_merge(&ctx->flexible_groups,
+ 			   smp_processor_id(),
+-			   merge_sched_in, &sid);
++			   merge_sched_in, &can_add_hw);
+ }
+ 
+ static void
+-- 
+2.20.1
+
 
 
