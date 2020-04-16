@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E67F9C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:05:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBDA4C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:05:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C46CF206D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:05:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A09F720786
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:05:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587045903;
-	bh=1Nbx4WvLj84+n0M/+Kj4ou1MfifW815+ZChWgpnGHsA=;
+	s=default; t=1587045910;
+	bh=AL4Duf7m5IvoTTD4d2+gCaDhn7bLAW1D0iwX6syCWJw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nFIrwFyNS9jY/+O89VF8pQofY329LlkGQqi+8/D1J2OZvONZ7qg+iixE+Ce/cqffI
-	 JtdcabLrFYY6F04fIEYKdKIDxueV+lOTCTwd23zwunBsyAfo+O5dQ811j9gxgsMOH4
-	 cGCTlPrT7vgNRn6P3I+hdZlOr0mh9tXh4TuDW0Z0=
+	b=qeze40rQ26Bpp4XFCE3AEV1msK1oZ88VCCajITt8ThHldPknU0TXRm4QJ9/w0z1VZ
+	 rMKAj6rVWKxQ7pDoaY1XtYHCO5LbXPkyxHH+QFRi6w0Xx7NfSYVW042vd4Jx1Gd7K4
+	 s48LefuGgwZ6LI+/us7mIFx5KDdpJ684JVVmgVsc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393223AbgDPOFC (ORCPT
+        id S2393237AbgDPOFI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:05:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56526 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:05:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441590AbgDPNnS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:43:18 -0400
+        id S2441600AbgDPNnU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:43:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9465B2076D;
-        Thu, 16 Apr 2020 13:43:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A214218AC;
+        Thu, 16 Apr 2020 13:43:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044597;
-        bh=1Nbx4WvLj84+n0M/+Kj4ou1MfifW815+ZChWgpnGHsA=;
+        s=default; t=1587044599;
+        bh=AL4Duf7m5IvoTTD4d2+gCaDhn7bLAW1D0iwX6syCWJw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t4urDn53AGDol5NGozc+qsh9dTW0ux53zIvDJPqMokuG9zIbGcOfDTOL5kSsrAN1g
-         7kw5EKtH818IMqT4WpcThUItvU2maWOJNRjpMJP+kkworaXoXpPqJKyoxqNmuGlR69
-         9VS1r2z7l6cXmAPm8qnin4RRSgCOp8r/lhV1ZCHw=
+        b=Sf2/eRSp7dN/zDj8c709CU/dbvGvL4+72JSvv1Q48uo9Pi6/2s2VtTSFVaOGIjpjW
+         cLrnn2vFk1wTKCgNMNKXvUGAWdP+yKqf/tie1uJxGQhHVZEAh5OrPhN9qn9W9Q8SWr
+         85cqs/W9TJLlAkjmFRChC9zNV8dNThzOD8feEpXU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Mohammad Rasim <mohammad.rasim96@gmail.com>,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Christoph Niedermaier <cniedermaier@dh-electronics.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 024/232] media: rc: add keymap for Videostrong KII Pro
-Date:   Thu, 16 Apr 2020 15:21:58 +0200
-Message-Id: <20200416131319.287542456@linuxfoundation.org>
+Subject: [PATCH 5.4 025/232] cpufreq: imx6q: Fixes unwanted cpu overclocking on i.MX6ULL
+Date:   Thu, 16 Apr 2020 15:21:59 +0200
+Message-Id: <20200416131319.392102070@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -62,137 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mohammad Rasim <mohammad.rasim96@gmail.com>
+From: Christoph Niedermaier <cniedermaier@dh-electronics.com>
 
-[ Upstream commit 30defecb98400575349a7d32f0526e1dc42ea83e ]
+[ Upstream commit 36eb7dc1bd42fe5f850329c893768ff89b696fba ]
 
-This is an NEC remote control device shipped with the Videostrong KII Pro
-tv box as well as other devices from videostrong.
+imx6ul_opp_check_speed_grading is called for both i.MX6UL and i.MX6ULL.
+Since the i.MX6ULL was introduced to a separate ocotp compatible node
+later, it is possible that the i.MX6ULL has also dtbs with
+"fsl,imx6ull-ocotp". On a system without nvmem-cell speed grade a
+missing check on this node causes a driver fail without considering
+the cpu speed grade.
 
-Signed-off-by: Mohammad Rasim <mohammad.rasim96@gmail.com>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+This patch prevents unwanted cpu overclocking on i.MX6ULL with compatible
+node "fsl,imx6ull-ocotp" in old dtbs without nvmem-cell speed grade.
+
+Fixes: 2733fb0d0699 ("cpufreq: imx6q: read OCOTP through nvmem for imx6ul/imx6ull")
+Signed-off-by: Christoph Niedermaier <cniedermaier@dh-electronics.com>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/rc/keymaps/Makefile             |  1 +
- .../media/rc/keymaps/rc-videostrong-kii-pro.c | 83 +++++++++++++++++++
- include/media/rc-map.h                        |  1 +
- 3 files changed, 85 insertions(+)
- create mode 100644 drivers/media/rc/keymaps/rc-videostrong-kii-pro.c
+ drivers/cpufreq/imx6q-cpufreq.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/media/rc/keymaps/Makefile b/drivers/media/rc/keymaps/Makefile
-index a56fc634d2d68..ea91a9afa6a02 100644
---- a/drivers/media/rc/keymaps/Makefile
-+++ b/drivers/media/rc/keymaps/Makefile
-@@ -117,6 +117,7 @@ obj-$(CONFIG_RC_MAP) += rc-adstech-dvb-t-pci.o \
- 			rc-videomate-m1f.o \
- 			rc-videomate-s350.o \
- 			rc-videomate-tv-pvr.o \
-+			rc-videostrong-kii-pro.o \
- 			rc-wetek-hub.o \
- 			rc-wetek-play2.o \
- 			rc-winfast.o \
-diff --git a/drivers/media/rc/keymaps/rc-videostrong-kii-pro.c b/drivers/media/rc/keymaps/rc-videostrong-kii-pro.c
-new file mode 100644
-index 0000000000000..414d4d231e7ed
---- /dev/null
-+++ b/drivers/media/rc/keymaps/rc-videostrong-kii-pro.c
-@@ -0,0 +1,83 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+//
-+// Copyright (C) 2019 Mohammad Rasim <mohammad.rasim96@gmail.com>
-+
-+#include <media/rc-map.h>
-+#include <linux/module.h>
-+
-+//
-+// Keytable for the Videostrong KII Pro STB remote control
-+//
-+
-+static struct rc_map_table kii_pro[] = {
-+	{ 0x59, KEY_POWER },
-+	{ 0x19, KEY_MUTE },
-+	{ 0x42, KEY_RED },
-+	{ 0x40, KEY_GREEN },
-+	{ 0x00, KEY_YELLOW },
-+	{ 0x03, KEY_BLUE },
-+	{ 0x4a, KEY_BACK },
-+	{ 0x48, KEY_FORWARD },
-+	{ 0x08, KEY_PREVIOUSSONG},
-+	{ 0x0b, KEY_NEXTSONG},
-+	{ 0x46, KEY_PLAYPAUSE },
-+	{ 0x44, KEY_STOP },
-+	{ 0x1f, KEY_FAVORITES},	//KEY_F5?
-+	{ 0x04, KEY_PVR },
-+	{ 0x4d, KEY_EPG },
-+	{ 0x02, KEY_INFO },
-+	{ 0x09, KEY_SUBTITLE },
-+	{ 0x01, KEY_AUDIO },
-+	{ 0x0d, KEY_HOMEPAGE },
-+	{ 0x11, KEY_TV },	// DTV ?
-+	{ 0x06, KEY_UP },
-+	{ 0x5a, KEY_LEFT },
-+	{ 0x1a, KEY_ENTER },	// KEY_OK ?
-+	{ 0x1b, KEY_RIGHT },
-+	{ 0x16, KEY_DOWN },
-+	{ 0x45, KEY_MENU },
-+	{ 0x05, KEY_ESC },
-+	{ 0x13, KEY_VOLUMEUP },
-+	{ 0x17, KEY_VOLUMEDOWN },
-+	{ 0x58, KEY_APPSELECT },
-+	{ 0x12, KEY_VENDOR },	// mouse
-+	{ 0x55, KEY_PAGEUP },	// KEY_CHANNELUP ?
-+	{ 0x15, KEY_PAGEDOWN },	// KEY_CHANNELDOWN ?
-+	{ 0x52, KEY_1 },
-+	{ 0x50, KEY_2 },
-+	{ 0x10, KEY_3 },
-+	{ 0x56, KEY_4 },
-+	{ 0x54, KEY_5 },
-+	{ 0x14, KEY_6 },
-+	{ 0x4e, KEY_7 },
-+	{ 0x4c, KEY_8 },
-+	{ 0x0c, KEY_9 },
-+	{ 0x18, KEY_WWW },	// KEY_F7
-+	{ 0x0f, KEY_0 },
-+	{ 0x51, KEY_BACKSPACE },
-+};
-+
-+static struct rc_map_list kii_pro_map = {
-+	.map = {
-+		.scan     = kii_pro,
-+		.size     = ARRAY_SIZE(kii_pro),
-+		.rc_proto = RC_PROTO_NEC,
-+		.name     = RC_MAP_KII_PRO,
-+	}
-+};
-+
-+static int __init init_rc_map_kii_pro(void)
-+{
-+	return rc_map_register(&kii_pro_map);
-+}
-+
-+static void __exit exit_rc_map_kii_pro(void)
-+{
-+	rc_map_unregister(&kii_pro_map);
-+}
-+
-+module_init(init_rc_map_kii_pro)
-+module_exit(exit_rc_map_kii_pro)
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Mohammad Rasim <mohammad.rasim96@gmail.com>");
-diff --git a/include/media/rc-map.h b/include/media/rc-map.h
-index afd2ab31bdf2d..c2ef3906e1cd1 100644
---- a/include/media/rc-map.h
-+++ b/include/media/rc-map.h
-@@ -271,6 +271,7 @@ struct rc_map *rc_map_get(const char *name);
- #define RC_MAP_VIDEOMATE_K100            "rc-videomate-k100"
- #define RC_MAP_VIDEOMATE_S350            "rc-videomate-s350"
- #define RC_MAP_VIDEOMATE_TV_PVR          "rc-videomate-tv-pvr"
-+#define RC_MAP_KII_PRO                   "rc-videostrong-kii-pro"
- #define RC_MAP_WETEK_HUB                 "rc-wetek-hub"
- #define RC_MAP_WETEK_PLAY2               "rc-wetek-play2"
- #define RC_MAP_WINFAST                   "rc-winfast"
+diff --git a/drivers/cpufreq/imx6q-cpufreq.c b/drivers/cpufreq/imx6q-cpufreq.c
+index 648a09a1778a3..1fcbbd53a48a2 100644
+--- a/drivers/cpufreq/imx6q-cpufreq.c
++++ b/drivers/cpufreq/imx6q-cpufreq.c
+@@ -280,6 +280,9 @@ static int imx6ul_opp_check_speed_grading(struct device *dev)
+ 		void __iomem *base;
+ 
+ 		np = of_find_compatible_node(NULL, NULL, "fsl,imx6ul-ocotp");
++		if (!np)
++			np = of_find_compatible_node(NULL, NULL,
++						     "fsl,imx6ull-ocotp");
+ 		if (!np)
+ 			return -ENOENT;
+ 
 -- 
 2.20.1
 
