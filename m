@@ -2,36 +2,37 @@ Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5910C352BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:50:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD89FC2BB55
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:50:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D8C1221E9
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:50:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98CFC221EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 08:50:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729980AbgDQIuf (ORCPT
+        id S1730001AbgDQIuk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 04:50:35 -0400
+        Fri, 17 Apr 2020 04:50:40 -0400
 Received: from mga09.intel.com ([134.134.136.24]:7443 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729965AbgDQIub (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 04:50:31 -0400
-IronPort-SDR: yOD4ulxt+1mXOLkAA93p6a3mcYv3u/I/TMnArAtDejtWO0YYJovNfWh/WYUIiPbKz4p44j+z1D
- IR53cc9qjB6A==
+        id S1729930AbgDQIue (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Apr 2020 04:50:34 -0400
+IronPort-SDR: /BoamejqcZA+X1awHeiMHvXWA1RRYbln/+gkRMsaBWcA6nw1wUPd4QkpWuP2wETGAUQj5bMTac
+ x6CoS+SPiZuQ==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2020 01:50:30 -0700
-IronPort-SDR: petqKNauugCtt8HtiFFVMtSL1QAAiUZUx0Oxs6ih4y3gSqYZKe8UywgZ1+HzkwbT+VAz5jxjCR
- dMgwdcBpmPLw==
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2020 01:50:33 -0700
+IronPort-SDR: eeJIs9XPAQRfCPDjU9lk+dP9r4ZJtNJuzU561RCKZZOSEY/VF/a3p3BJulRwaZBhrwl9qjTwoW
+ Ul8pY69T3sFw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,394,1580803200"; 
-   d="scan'208";a="454661427"
+   d="scan'208";a="454661444"
 Received: from bard-ubuntu.sh.intel.com ([10.239.13.33])
-  by fmsmga005.fm.intel.com with ESMTP; 17 Apr 2020 01:50:25 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 17 Apr 2020 01:50:29 -0700
 From:   Bard Liao <yung-chuan.liao@linux.intel.com>
 To:     alsa-devel@alsa-project.org, vkoul@kernel.org
 Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
@@ -40,43 +41,451 @@ Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
         ranjani.sridharan@linux.intel.com, hui.wang@canonical.com,
         pierre-louis.bossart@linux.intel.com, sanyog.r.kale@intel.com,
         slawomir.blauciak@intel.com, mengdong.lin@intel.com
-Subject: [RFC 0/5] soundwire: create master device and use it
-Date:   Fri, 17 Apr 2020 04:55:19 +0800
-Message-Id: <20200416205524.2043-1-yung-chuan.liao@linux.intel.com>
+Subject: [RFC 1/5] soundwire: bus_type: add sdw_master_device support
+Date:   Fri, 17 Apr 2020 04:55:20 +0800
+Message-Id: <20200416205524.2043-2-yung-chuan.liao@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200416205524.2043-1-yung-chuan.liao@linux.intel.com>
+References: <20200416205524.2043-1-yung-chuan.liao@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series adds sdw master devices and use it instead of platform devices.
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-An open needs to be addressed is that should we use differrent bus type for
-sdw master and slave devices?
+In the existing SoundWire code, Master Devices are not explicitly
+represented - only SoundWire Slave Devices are exposed (the use of
+capital letters follows the SoundWire specification conventions).
 
-Pierre-Louis Bossart (4):
-  soundwire: bus_type: add sdw_master_device support
-  soundwire: qcom: fix error handling in probe
-  soundwire: qcom: add sdw_master_device support
-  soundwire: intel: transition to sdw_master_device
+The SoundWire Master Device provides the clock, synchronization
+information and command/control channels. When multiple links are
+supported, a Controller may expose more than one Master Device; they
+are typically embedded inside a larger audio cluster (be it in an
+SOC/chipset or an external audio codec), and we need to describe it
+using the Linux device and driver model.  This will allow for
+configuration functions to account for external dependencies such as
+power rails, clock sources or wake-up mechanisms. This transition will
+also allow for better sysfs support without the reference count issues
+mentioned in the initial reviews.
 
-Srinivas Kandagatla (1):
-  soundwire: master: use device node pointer from master device
+In this patch, we convert the existing code to use an explicit
+sdw_slave_type, then define a sdw_master_device structure.
 
+A parent (such as the Intel audio controller or its equivalent on
+Qualcomm devices) would use sdw_master_device_add() to create the
+device, the master device would be released when
+sdw_master_device_del() is invoked by the parent.
+
+The 'Master Device' device can be configured with optional link ops,
+in case an implementation needs link-specific resources allocated or
+power-management capabilities. The .add/.del callbacks are handled
+internally by the SoundWire core, while the optional
+.startup/.process_wake need to be called by the parent directly (using
+wrappers). The uevent handling is moved to the slave side since it's
+not relevant for master devices.
+
+Additional callbacks will be added in the future for e.g. autonomous
+clock stop modes.
+
+Credits to Jaroslav Kysela <perex@perex.cz> for the idea of using link_ops.
+
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
+---
  drivers/soundwire/Makefile         |   2 +-
  drivers/soundwire/bus.h            |   2 +
- drivers/soundwire/bus_type.c       |  19 +-
- drivers/soundwire/intel.c          |  98 ++++++----
- drivers/soundwire/intel.h          |   8 +-
- drivers/soundwire/intel_init.c     | 293 ++++++++++++++++++++++-------
- drivers/soundwire/master.c         | 168 +++++++++++++++++
- drivers/soundwire/qcom.c           |  59 ++++--
+ drivers/soundwire/bus_type.c       |  19 ++--
+ drivers/soundwire/master.c         | 167 +++++++++++++++++++++++++++++
  drivers/soundwire/slave.c          |   8 +-
- include/linux/soundwire/sdw.h      |  60 ++++++
+ include/linux/soundwire/sdw.h      |  60 +++++++++++
  include/linux/soundwire/sdw_type.h |  10 +-
- 11 files changed, 601 insertions(+), 126 deletions(-)
+ 7 files changed, 258 insertions(+), 10 deletions(-)
  create mode 100644 drivers/soundwire/master.c
 
+diff --git a/drivers/soundwire/Makefile b/drivers/soundwire/Makefile
+index e2cdff990e9f..7319918e0aec 100644
+--- a/drivers/soundwire/Makefile
++++ b/drivers/soundwire/Makefile
+@@ -4,7 +4,7 @@
+ #
+ 
+ #Bus Objs
+-soundwire-bus-objs := bus_type.o bus.o slave.o mipi_disco.o stream.o
++soundwire-bus-objs := bus_type.o bus.o master.o slave.o mipi_disco.o stream.o
+ obj-$(CONFIG_SOUNDWIRE) += soundwire-bus.o
+ 
+ ifdef CONFIG_DEBUG_FS
+diff --git a/drivers/soundwire/bus.h b/drivers/soundwire/bus.h
+index 204204a26db8..99943d40222a 100644
+--- a/drivers/soundwire/bus.h
++++ b/drivers/soundwire/bus.h
+@@ -173,4 +173,6 @@ sdw_update(struct sdw_slave *slave, u32 addr, u8 mask, u8 val)
+ 
+ void sdw_clear_slave_status(struct sdw_bus *bus, u32 request);
+ 
++int sdw_slave_uevent(struct device *dev, struct kobj_uevent_env *env);
++
+ #endif /* __SDW_BUS_H */
+diff --git a/drivers/soundwire/bus_type.c b/drivers/soundwire/bus_type.c
+index 17f096dd6806..2c1a19caba51 100644
+--- a/drivers/soundwire/bus_type.c
++++ b/drivers/soundwire/bus_type.c
+@@ -33,13 +33,21 @@ sdw_get_device_id(struct sdw_slave *slave, struct sdw_driver *drv)
+ 
+ static int sdw_bus_match(struct device *dev, struct device_driver *ddrv)
+ {
+-	struct sdw_slave *slave = dev_to_sdw_dev(dev);
+-	struct sdw_driver *drv = drv_to_sdw_driver(ddrv);
++	struct sdw_slave *slave;
++	struct sdw_driver *drv;
++	int ret = 0;
++
++	if (is_sdw_slave(dev)) {
++		slave = dev_to_sdw_dev(dev);
++		drv = drv_to_sdw_driver(ddrv);
+ 
+-	return !!sdw_get_device_id(slave, drv);
++		ret = !!sdw_get_device_id(slave, drv);
++	}
++	return ret;
+ }
+ 
+-int sdw_slave_modalias(const struct sdw_slave *slave, char *buf, size_t size)
++static int sdw_slave_modalias(const struct sdw_slave *slave, char *buf,
++			      size_t size)
+ {
+ 	/* modalias is sdw:m<mfg_id>p<part_id> */
+ 
+@@ -47,7 +55,7 @@ int sdw_slave_modalias(const struct sdw_slave *slave, char *buf, size_t size)
+ 			slave->id.mfg_id, slave->id.part_id);
+ }
+ 
+-static int sdw_uevent(struct device *dev, struct kobj_uevent_env *env)
++int sdw_slave_uevent(struct device *dev, struct kobj_uevent_env *env)
+ {
+ 	struct sdw_slave *slave = dev_to_sdw_dev(dev);
+ 	char modalias[32];
+@@ -63,7 +71,6 @@ static int sdw_uevent(struct device *dev, struct kobj_uevent_env *env)
+ struct bus_type sdw_bus_type = {
+ 	.name = "soundwire",
+ 	.match = sdw_bus_match,
+-	.uevent = sdw_uevent,
+ };
+ EXPORT_SYMBOL_GPL(sdw_bus_type);
+ 
+diff --git a/drivers/soundwire/master.c b/drivers/soundwire/master.c
+new file mode 100644
+index 000000000000..094518817601
+--- /dev/null
++++ b/drivers/soundwire/master.c
+@@ -0,0 +1,167 @@
++// SPDX-License-Identifier: GPL-2.0-only
++// Copyright(c) 2019-2020 Intel Corporation.
++
++#include <linux/device.h>
++#include <linux/acpi.h>
++#include <linux/soundwire/sdw.h>
++#include <linux/soundwire/sdw_type.h>
++#include "bus.h"
++
++static void sdw_master_device_release(struct device *dev)
++{
++	struct sdw_master_device *md = dev_to_sdw_master_device(dev);
++
++	kfree(md);
++}
++
++struct device_type sdw_master_type = {
++	.name =		"soundwire_master",
++	.release =	sdw_master_device_release,
++};
++
++/**
++ * sdw_master_device_add() - create a Linux Master Device representation.
++ * @parent: the parent Linux device (e.g. a PCI device)
++ * @fwnode: the parent fwnode (e.g. an ACPI companion device to the parent)
++ * @link_ops: link-specific ops (optional)
++ * @link_id: link index as defined by MIPI DisCo specification
++ * @pdata: private data (e.g. register base, offsets, platform quirks, etc).
++ *
++ * The link_ops argument can be NULL, it is only used when link-specific
++ * initializations and power-management are required.
++ */
++struct sdw_master_device
++*sdw_master_device_add(struct device *parent,
++		       struct fwnode_handle *fwnode,
++		       struct sdw_link_ops *link_ops,
++		       int link_id,
++		       void *pdata)
++{
++	struct sdw_master_device *md;
++	int ret;
++
++	md = kzalloc(sizeof(*md), GFP_KERNEL);
++	if (!md)
++		return ERR_PTR(-ENOMEM);
++
++	md->link_id = link_id;
++	md->pdata = pdata;
++	md->link_ops = link_ops;
++
++	md->dev.parent = parent;
++	md->dev.fwnode = fwnode;
++	md->dev.bus = &sdw_bus_type;
++	md->dev.type = &sdw_master_type;
++	md->dev.dma_mask = md->dev.parent->dma_mask;
++	dev_set_name(&md->dev, "sdw-master-%d", md->link_id);
++
++	if (link_ops && link_ops->driver) {
++		/*
++		 * A driver is only needed for ASoC integration (need
++		 * driver->name) and for link-specific power management
++		 * w/ a pm_dev_ops structure.
++		 *
++		 * The driver needs to be registered by the parent
++		 */
++		md->dev.driver = link_ops->driver;
++	}
++
++	ret = device_register(&md->dev);
++	if (ret) {
++		dev_err(parent, "Failed to add master: ret %d\n", ret);
++		/*
++		 * On err, don't free but drop ref as this will be freed
++		 * when release method is invoked.
++		 */
++		put_device(&md->dev);
++		goto device_register_err;
++	}
++
++	if (link_ops && link_ops->add) {
++		ret = link_ops->add(md, pdata);
++		if (ret < 0) {
++			dev_err(&md->dev, "link_ops add callback failed: %d\n",
++				ret);
++			goto link_add_err;
++		}
++	}
++
++	return md;
++
++link_add_err:
++	device_unregister(&md->dev);
++device_register_err:
++	return ERR_PTR(ret);
++}
++EXPORT_SYMBOL_GPL(sdw_master_device_add);
++
++/**
++ * sdw_master_device_del() - delete a Linux Master Device representation.
++ * @md: the master device
++ *
++ * This function is the dual of sdw_master_device_add(), itreleases
++ * all link-specific resources and unregisters the device.
++ */
++int sdw_master_device_del(struct sdw_master_device *md)
++{
++	int ret = 0;
++
++	if (md && md->link_ops && md->link_ops->del) {
++		ret = md->link_ops->del(md);
++		if (ret < 0) {
++			dev_err(&md->dev, "link_ops del callback failed: %d\n",
++				ret);
++			return ret;
++		}
++	}
++
++	device_unregister(&md->dev);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(sdw_master_device_del);
++
++/**
++ * sdw_master_device_startup() - startup hardware
++ *
++ * @md: Linux Soundwire master device
++ */
++int sdw_master_device_startup(struct sdw_master_device *md)
++{
++	struct sdw_link_ops *link_ops;
++	int ret = 0;
++
++	if (IS_ERR_OR_NULL(md))
++		return -EINVAL;
++
++	link_ops = md->link_ops;
++
++	if (link_ops && link_ops->startup)
++		ret = link_ops->startup(md);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(sdw_master_device_startup);
++
++/**
++ * sdw_master_device_process_wake_event() - handle external wake
++ * event, e.g. handled at the PCI level
++ *
++ * @md: Linux Soundwire master device
++ */
++int sdw_master_device_process_wake_event(struct sdw_master_device *md)
++{
++	struct sdw_link_ops *link_ops;
++	int ret = 0;
++
++	if (IS_ERR_OR_NULL(md))
++		return -EINVAL;
++
++	link_ops = md->link_ops;
++
++	if (link_ops && link_ops->process_wake_event)
++		ret = link_ops->process_wake_event(md);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(sdw_master_device_process_wake_event);
+diff --git a/drivers/soundwire/slave.c b/drivers/soundwire/slave.c
+index aace57fae7f8..ed068a004bd9 100644
+--- a/drivers/soundwire/slave.c
++++ b/drivers/soundwire/slave.c
+@@ -14,6 +14,12 @@ static void sdw_slave_release(struct device *dev)
+ 	kfree(slave);
+ }
+ 
++struct device_type sdw_slave_type = {
++	.name =		"sdw_slave",
++	.release =	sdw_slave_release,
++	.uevent =	sdw_slave_uevent,
++};
++
+ static int sdw_slave_add(struct sdw_bus *bus,
+ 			 struct sdw_slave_id *id, struct fwnode_handle *fwnode)
+ {
+@@ -41,9 +47,9 @@ static int sdw_slave_add(struct sdw_bus *bus,
+ 			     id->class_id, id->unique_id);
+ 	}
+ 
+-	slave->dev.release = sdw_slave_release;
+ 	slave->dev.bus = &sdw_bus_type;
+ 	slave->dev.of_node = of_node_get(to_of_node(fwnode));
++	slave->dev.type = &sdw_slave_type;
+ 	slave->bus = bus;
+ 	slave->status = SDW_SLAVE_UNATTACHED;
+ 	init_completion(&slave->enumeration_complete);
+diff --git a/include/linux/soundwire/sdw.h b/include/linux/soundwire/sdw.h
+index 00f5826092e3..ecd070df4ae9 100644
+--- a/include/linux/soundwire/sdw.h
++++ b/include/linux/soundwire/sdw.h
+@@ -632,6 +632,53 @@ struct sdw_slave {
+ 
+ #define dev_to_sdw_dev(_dev) container_of(_dev, struct sdw_slave, dev)
+ 
++struct sdw_link_ops;
++
++/**
++ * struct sdw_master_device - SoundWire 'Master Device' representation
++ *
++ * @dev: Linux device for this Master
++ * @bus: Bus handle
++ * @link_ops: link-specific ops, initialized with sdw_master_device_add()
++ * @link_id: link index as defined by MIPI DisCo specification
++ * @pdata: private data typically provided with sdw_master_device_add()
++ *
++ * link_ops can be NULL when link-level initializations and power-management
++ * are not desired.
++ */
++struct sdw_master_device {
++	struct device dev;
++	struct sdw_bus *bus;
++	struct sdw_link_ops *link_ops;
++	int link_id;
++	void *pdata;
++};
++
++/**
++ * struct sdw_link_ops - SoundWire link-specific ops
++ * @add: initializations and allocation (hardware may not be enabled yet)
++ * @startup: initialization handled after the hardware is enabled, all
++ * clock/power dependencies are available
++ * @del: free all remaining resources
++ * @process_wake_event: handle external wake
++ * @driver: raw structure used for name/PM hooks.
++ *
++ * This optional structure is provided for link specific
++ * operations. All members are optional, but if .add() is supported the
++ * dual .del() function shall be used to release all resources allocated
++ * in .add().
++ */
++struct sdw_link_ops {
++	int (*add)(struct sdw_master_device *md, void *link_ctx);
++	int (*startup)(struct sdw_master_device *md);
++	int (*del)(struct sdw_master_device *md);
++	int (*process_wake_event)(struct sdw_master_device *md);
++	struct device_driver *driver;
++};
++
++#define dev_to_sdw_master_device(d)	\
++	container_of(d, struct sdw_master_device, dev)
++
+ struct sdw_driver {
+ 	const char *name;
+ 
+@@ -835,6 +882,19 @@ struct sdw_bus {
+ int sdw_add_bus_master(struct sdw_bus *bus);
+ void sdw_delete_bus_master(struct sdw_bus *bus);
+ 
++struct sdw_master_device
++*sdw_master_device_add(struct device *parent,
++		       struct fwnode_handle *fwnode,
++		       struct sdw_link_ops *master_ops,
++		       int link_id,
++		       void *pdata);
++
++int sdw_master_device_del(struct sdw_master_device *md);
++
++int sdw_master_device_startup(struct sdw_master_device *md);
++
++int sdw_master_device_process_wake_event(struct sdw_master_device *md);
++
+ /**
+  * sdw_port_config: Master or Slave Port configuration
+  *
+diff --git a/include/linux/soundwire/sdw_type.h b/include/linux/soundwire/sdw_type.h
+index aaa7f4267c14..990857eddff8 100644
+--- a/include/linux/soundwire/sdw_type.h
++++ b/include/linux/soundwire/sdw_type.h
+@@ -5,6 +5,13 @@
+ #define __SOUNDWIRE_TYPES_H
+ 
+ extern struct bus_type sdw_bus_type;
++extern struct device_type sdw_slave_type;
++extern struct device_type sdw_master_type;
++
++static inline int is_sdw_slave(const struct device *dev)
++{
++	return dev->type == &sdw_slave_type;
++}
+ 
+ #define drv_to_sdw_driver(_drv) container_of(_drv, struct sdw_driver, driver)
+ 
+@@ -14,8 +21,6 @@ extern struct bus_type sdw_bus_type;
+ int __sdw_register_driver(struct sdw_driver *drv, struct module *owner);
+ void sdw_unregister_driver(struct sdw_driver *drv);
+ 
+-int sdw_slave_modalias(const struct sdw_slave *slave, char *buf, size_t size);
+-
+ /**
+  * module_sdw_driver() - Helper macro for registering a Soundwire driver
+  * @__sdw_driver: soundwire slave driver struct
+@@ -27,4 +32,5 @@ int sdw_slave_modalias(const struct sdw_slave *slave, char *buf, size_t size);
+ #define module_sdw_driver(__sdw_driver) \
+ 	module_driver(__sdw_driver, sdw_register_driver, \
+ 			sdw_unregister_driver)
++
+ #endif /* __SOUNDWIRE_TYPES_H */
 -- 
 2.17.1
 
