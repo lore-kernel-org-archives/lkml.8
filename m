@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82810C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:15:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2354DC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:15:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 531D5206B9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:15:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0151A2076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:15:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587046545;
-	bh=OGZkcncoHPVJmL7cRIy9th8i3wkYCksTTNGUQW77P4g=;
+	s=default; t=1587046550;
+	bh=Ja8o/eU4oIIfcb0wmCeRSuyQL/x0GQj1UN5VukFYvt0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=thsnt0jxYO4fFDpiKcQFiWlIR9ytEubBZ0wsprDAil4WgHAgNpabg+mZOdHJ0bqOq
-	 q+En8woG4C5EF6aklBtpXf0zViqMHvnZ3Pi0aeX9VLznc1pzNLnS7X+cpxzqazHBR9
-	 bDPUYxdGJJC8uA7fxj8+IZVju2gPFBEdRNxnwKSM=
+	b=MYq7SMHgQkK53QWsvdeWAIN7D4KAccJFnLJYxLqNaNPb9p1mtKhH0+xztwJmPFDdu
+	 9fQoreoxxlpzvBHm3WCp0cLEyHk3YL1DSbb8o3IeU7zD+Y+LnFdXzsCiIeuxcDlTxV
+	 pt1XRcHxS258udhl/mtfT1mI1H9C6O/FD2ycXNHs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393329AbgDPOPo (ORCPT
+        id S2393518AbgDPOPt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:15:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37812 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:15:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392420AbgDPNvk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:51:40 -0400
+        id S2392389AbgDPNvh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:51:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D20020786;
-        Thu, 16 Apr 2020 13:51:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C75892063A;
+        Thu, 16 Apr 2020 13:51:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045099;
-        bh=OGZkcncoHPVJmL7cRIy9th8i3wkYCksTTNGUQW77P4g=;
+        s=default; t=1587045097;
+        bh=Ja8o/eU4oIIfcb0wmCeRSuyQL/x0GQj1UN5VukFYvt0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s+wHn/SJ2rwgaZYmW9mpjkobMx3vD/Ev4MsXfme2osRx3wwCXp8FMGC3LM2DYeADz
-         C1AI71nvnYLU0td1ymT8qo9NSbhBA6wHO/eZ9h8hM8SbyPVkRJzRbzrDIAzsq1/gBQ
-         hfWQyy5L5PupqJ9yTLx91kPRY+Sk7qmgO5fAhO7w=
+        b=r8FrAKBssEhwScxqct7DIfR2rtQJMaIzPgSjmSpXHxjnm64Aija5OGMOi/5bi/SpT
+         l8UYQQvRNZ6gCHNlz0wlIRfNEKKCoQlJqGU2QdHQvouVG7KmOyZhtvj4MU1yDnN9SO
+         TIj82ZYwusvcAKEdX784MowZidz9TZKZyvGmMfZ8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Imre Deak <imre.deak@intel.com>,
+        =?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 230/232] powerpc/kasan: Fix kasan_remap_early_shadow_ro()
-Date:   Thu, 16 Apr 2020 15:25:24 +0200
-Message-Id: <20200416131344.321623895@linuxfoundation.org>
+Subject: [PATCH 5.4 229/232] drm/i915/icl+: Dont enable DDI IO power on a TypeC port in TBT mode
+Date:   Thu, 16 Apr 2020 15:25:23 +0200
+Message-Id: <20200416131344.191224613@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -60,39 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Imre Deak <imre.deak@intel.com>
 
-[ Upstream commit af92bad615be75c6c0d1b1c5b48178360250a187 ]
+The DDI IO power well must not be enabled for a TypeC port in TBT mode,
+ensure this during driver loading/system resume.
 
-At the moment kasan_remap_early_shadow_ro() does nothing, because
-k_end is 0 and k_cur < 0 is always true.
+This gets rid of error messages like
+[drm] *ERROR* power well DDI E TC2 IO state mismatch (refcount 1/enabled 0)
 
-Change the test to k_cur != k_end, as done in
-kasan_init_shadow_page_tables()
+and avoids leaking the power ref when disabling the output.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Fixes: cbd18991e24f ("powerpc/mm: Fix an Oops in kasan_mmu_init()")
-Cc: stable@vger.kernel.org
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/4e7b56865e01569058914c991143f5961b5d4719.1583507333.git.christophe.leroy@c-s.fr
+Cc: <stable@vger.kernel.org> # v5.4+
+Signed-off-by: Imre Deak <imre.deak@intel.com>
+Reviewed-by: José Roberto de Souza <jose.souza@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200330152244.11316-1-imre.deak@intel.com
+(cherry picked from commit f77a2db27f26c3ccba0681f7e89fef083718f07f)
+Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/mm/kasan/kasan_init_32.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/i915/display/intel_ddi.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/mm/kasan/kasan_init_32.c b/arch/powerpc/mm/kasan/kasan_init_32.c
-index 0e6ed4413eeac..1cfe57b51d7e3 100644
---- a/arch/powerpc/mm/kasan/kasan_init_32.c
-+++ b/arch/powerpc/mm/kasan/kasan_init_32.c
-@@ -117,7 +117,7 @@ static void __init kasan_remap_early_shadow_ro(void)
+diff --git a/drivers/gpu/drm/i915/display/intel_ddi.c b/drivers/gpu/drm/i915/display/intel_ddi.c
+index 8eb2b3ec01edd..b3c77c988d1cd 100644
+--- a/drivers/gpu/drm/i915/display/intel_ddi.c
++++ b/drivers/gpu/drm/i915/display/intel_ddi.c
+@@ -2124,7 +2124,11 @@ static void intel_ddi_get_power_domains(struct intel_encoder *encoder,
+ 		return;
  
- 	kasan_populate_pte(kasan_early_shadow_pte, prot);
+ 	dig_port = enc_to_dig_port(&encoder->base);
+-	intel_display_power_get(dev_priv, dig_port->ddi_io_power_domain);
++
++	if (!intel_phy_is_tc(dev_priv, phy) ||
++	    dig_port->tc_mode != TC_PORT_TBT_ALT)
++		intel_display_power_get(dev_priv,
++					dig_port->ddi_io_power_domain);
  
--	for (k_cur = k_start & PAGE_MASK; k_cur < k_end; k_cur += PAGE_SIZE) {
-+	for (k_cur = k_start & PAGE_MASK; k_cur != k_end; k_cur += PAGE_SIZE) {
- 		pmd_t *pmd = pmd_offset(pud_offset(pgd_offset_k(k_cur), k_cur), k_cur);
- 		pte_t *ptep = pte_offset_kernel(pmd, k_cur);
- 
+ 	/*
+ 	 * AUX power is only needed for (e)DP mode, and for HDMI mode on TC
 -- 
 2.20.1
 
