@@ -2,121 +2,128 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9DB4C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:08:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C4FC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B24BD20857
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:08:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E4A9214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:08:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587017335;
+	bh=UbzFaYMrN1j2xemeLV2+pIN8pGIBq/3wkSPSZQ0MtR8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=X/0QWfzFEkeTJNc+BaxJ3pviqoM0GIk76T6PXBXypebMfqe2xlbCb05K5z/zBJ0fj
+	 xOB7CwVoazbBuzesqSm9U9jZURsyY9CBOCufbhD7zMbqVvYcmclq3GRAn1vuiIFTfE
+	 224+Eqi9B0NY9boy45gWH6lawNf2gj5Q+YSzfH4g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407686AbgDPGIm (ORCPT
+        id S2407767AbgDPGIx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 02:08:42 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:29796 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2407157AbgDPGIY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 02:08:24 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03G63Lhu120500;
-        Thu, 16 Apr 2020 02:08:06 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30egsmsnfw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Apr 2020 02:08:06 -0400
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03G65uDe130456;
-        Thu, 16 Apr 2020 02:08:05 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30egsmsnf4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Apr 2020 02:08:05 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03G66q2h029896;
-        Thu, 16 Apr 2020 06:08:03 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-        by ppma01dal.us.ibm.com with ESMTP id 30b5h79ydf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Apr 2020 06:08:03 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03G682BF33358242
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Apr 2020 06:08:02 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DCB34B2070;
-        Thu, 16 Apr 2020 06:08:01 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DBFBCB205F;
-        Thu, 16 Apr 2020 06:08:00 +0000 (GMT)
-Received: from [9.70.82.143] (unknown [9.70.82.143])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 16 Apr 2020 06:08:00 +0000 (GMT)
-Subject: [PATCH v11 13/14] powerpc/vas: Free send window in VAS instance
- after credits returned
-From:   Haren Myneni <haren@linux.ibm.com>
-To:     mpe@ellerman.id.au
-Cc:     mikey@neuling.org, srikar@linux.vnet.ibm.com,
-        frederic.barrat@fr.ibm.com, linux-kernel@vger.kernel.org,
-        npiggin@gmail.com, hch@infradead.org, oohall@gmail.com,
-        clg@kaod.org, herbert@gondor.apana.org.au,
-        sukadev@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
-        ajd@linux.ibm.com
-In-Reply-To: <1587016214.2275.1036.camel@hbabu-laptop>
-References: <1587016214.2275.1036.camel@hbabu-laptop>
-Content-Type: text/plain; charset="UTF-8"
-Date:   Wed, 15 Apr 2020 23:07:36 -0700
-Message-ID: <1587017256.2275.1076.camel@hbabu-laptop>
+        Thu, 16 Apr 2020 02:08:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37546 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2407698AbgDPGIn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 02:08:43 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 536E220771;
+        Thu, 16 Apr 2020 06:08:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587017322;
+        bh=UbzFaYMrN1j2xemeLV2+pIN8pGIBq/3wkSPSZQ0MtR8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=THaBoiDIZWZeYbTFzn3XI1UxvWKDapxdVa9hfmjcMgp6yvJyB8Vpqhj1C1/xUF0dq
+         c3ZGuaazxq2/KXG6A0IuYqjcqcBwrFANsoAmbz8WG0BkSMPueN5BFs0ub3dgvEH3Ls
+         UpmjWot9ZNZ4GzHl5LkioCVC6whAAcgaue5jLDPM=
+Date:   Thu, 16 Apr 2020 15:08:35 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: Re: [PATCH v2 0/3] support setting sysctl parameters from kernel
+ command line
+Message-Id: <20200416150835.13c0b13e406c694d63bdcd47@kernel.org>
+In-Reply-To: <3fc1303a-cb57-b96e-ce77-7ff6407ab538@suse.cz>
+References: <20200414113222.16959-1-vbabka@suse.cz>
+        <20200415122359.939364e2c54c389c6b3f6457@kernel.org>
+        <3fc1303a-cb57-b96e-ce77-7ff6407ab538@suse.cz>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
-X-Mailer: Evolution 2.28.3 
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-16_01:2020-04-14,2020-04-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=3
- clxscore=1015 malwarescore=0 mlxlogscore=999 bulkscore=0 mlxscore=0
- phishscore=0 spamscore=0 lowpriorityscore=0 priorityscore=1501
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004160038
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 15 Apr 2020 10:56:35 +0200
+Vlastimil Babka <vbabka@suse.cz> wrote:
 
-NX may be processing requests while trying to close window. Wait until
-all credits are returned and then free send window from VAS instance.
+> On 4/15/20 5:23 AM, Masami Hiramatsu wrote:
+> > Hi Vlastimil,
+> > 
+> > On Tue, 14 Apr 2020 13:32:19 +0200
+> > Vlastimil Babka <vbabka@suse.cz> wrote:
+> > 
+> >> This series adds support for something that seems like many people always
+> >> wanted but nobody added it yet, so here's the ability to set sysctl parameters
+> >> via kernel command line options in the form of sysctl.vm.something=1
+> > 
+> > Sounds good. And would you consider to use the bootconfig instead of (or
+> > in addition to) the kernel command line, because it is too short to describe
+> > the sysctl options?
+> 
+> "Instead of" - no, as that would defeat the scenario of "I just want to set this
+> one sysctl in grub  (possibly interactively) and not update initrd for that". If
+> constructing bootconfig is of similar effort of loading sysctl.conf from initrd,
+> then I see little benefit?
+> 
+> "in addition to" - sure! but I hoped that's what already happens as it seemed to
+> me that options from bootconfig are appended to the command line that's then
+> parsed by everyone else, no? But I'll try it to be sure.
 
-Signed-off-by: Haren Myneni <haren@linux.ibm.com>
----
- arch/powerpc/platforms/powernv/vas-window.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Yes, all configurations under "kernel" key are passed to kernel command line,
+so you don't need to change anything :)
 
-diff --git a/arch/powerpc/platforms/powernv/vas-window.c b/arch/powerpc/platforms/powernv/vas-window.c
-index d0c07cf..e15b405 100644
---- a/arch/powerpc/platforms/powernv/vas-window.c
-+++ b/arch/powerpc/platforms/powernv/vas-window.c
-@@ -1316,14 +1316,14 @@ int vas_win_close(struct vas_window *window)
- 
- 	unmap_paste_region(window);
- 
--	clear_vinst_win(window);
--
- 	poll_window_busy_state(window);
- 
- 	unpin_close_window(window);
- 
- 	poll_window_credits(window);
- 
-+	clear_vinst_win(window);
-+
- 	poll_window_castout(window);
- 
- 	/* if send window, drop reference to matching receive window */
+> > With the bootconfig, you can describe the sysctl parameters in an
+> > independent file as same as /etc/sysctl.conf. It is easy to convert
+> > form sysctl.conf to bootconfig because bootconfig format is simply
+> > enhanced structured sysctl.conf :). What we just need is;
+> > 
+> > (echo "sysctl {"; cat "/etc/sysctl.conf"; echo "}") >> sysctl.bconf
+> > bootconfig -a sysctl.bconf /boot/initrd.img
+> > 
+> > Even with only your patch, since bootconfig can pass the options which
+> > start with "kernel." prefix to kernel command line, so;
+> > 
+> > (echo "kernel.sysctl {"; cat "/etc/sysctl.conf"; echo "}") >> sysctl.bconf
+> > bootconfig -a sysctl.bconf /boot/initrd.img
+> 
+> Hmm I hope I figure out if the way virtme creates initrd on the fly supports
+> hooking a bootconfig addition :)
+
+Would you mean how to hook the mkinitrd to add /etc/bootconfig?
+
+Thank you,
+
+> 
+
+
 -- 
-1.8.3.1
-
-
-
+Masami Hiramatsu <mhiramat@kernel.org>
