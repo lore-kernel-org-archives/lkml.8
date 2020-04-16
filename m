@@ -2,801 +2,244 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21D31C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 00:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86590C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 00:15:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF04120725
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 00:15:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yvejqx4y"
+	by mail.kernel.org (Postfix) with ESMTP id 631CE2078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 00:15:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403832AbgDPAO7 (ORCPT
+        id S2403946AbgDPAPa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 20:14:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45070 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730823AbgDPAOW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 20:14:22 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBD24C061A0F;
-        Wed, 15 Apr 2020 17:14:21 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id p19so1210512qve.0;
-        Wed, 15 Apr 2020 17:14:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=WJtUdNiAM+S2qCrMzsUNiIRZj7sUZKvPvsHdwXjnHNk=;
-        b=Yvejqx4yej0Xdy9mgeksW8jnAniAJxiLrClZKHLDUpNfFHphpcXjYf8wsp1ZiEHlb0
-         N2Ay6iqvrk35x0EwoKXuge2H9WYxQHNg6UmEMjtWfTAeZ5Sx4irTX2ca+KJFTiFKbc30
-         yLimLAtj1rTcD0JOXmDHfUAuLiZVDTZ8TypIFwh6pY3FNaXFSpzxVAZo8SU9lT1Lhvyq
-         6zhBTQqa/4d40aUxUyD4qgJvEbOBNH8af44kEt5On6clAv4rwIhBS/u6uKoZrvjbFQ7J
-         7DDkS555+Q+i6Xqe5gNvaPKMYKhG97WPQnvDm9ExjViY2IDwKORY79R6BdiLi9IRcex4
-         nrYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=WJtUdNiAM+S2qCrMzsUNiIRZj7sUZKvPvsHdwXjnHNk=;
-        b=J8+flovrkb+6SobYZA0+ZmqAaKfvt265/NMNqoMjKmTeHNClnxr/cVy9wRKbSIL035
-         fsAeAWe2jxkPAMNBZR+BcmsynSP02hyuJH+f65YWL6z28K1j9KuNomUKTrTT6AADcKPp
-         Rvh7onMzpiTK61UmZtsR4Fy6a4q868AzHSHz9Np1O7RZ74bhatAMeRkKf73933OjP1Ju
-         h2krOMaNTDQmo6ai+wgV9X6vY/DK5GnhTQoWi0SZ+iVnwEm+olqzuzB7Feqmv79ZoHrc
-         2a6nrE43m26YWSkomVjyNL+qTtfzyiPebc9jT+o1PJ1roU3FiOCGXSvqy6GObb4R9nYI
-         BbVw==
-X-Gm-Message-State: AGi0Puaog7axDM+QtdmgDU/p8C0K9Z90BZt9vt5cNZqzAK3ewqmi07UP
-        A2TQwIyNK1bbSn06AgFV0UFRCA+i
-X-Google-Smtp-Source: APiQypJzUbzsfEioHoLeF+QO87bP4TWDNCQCoweqh9Jb4oaRREtP0RWTOvhMpsOqThzRI8BFDRuwfA==
-X-Received: by 2002:a0c:9e68:: with SMTP id z40mr7478017qve.242.1586996060589;
-        Wed, 15 Apr 2020 17:14:20 -0700 (PDT)
-Received: from localhost.localdomain ([72.53.229.195])
-        by smtp.gmail.com with ESMTPSA id v27sm5199071qtb.35.2020.04.15.17.14.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2020 17:14:20 -0700 (PDT)
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v1 2/2] ASoC: Add initial ZL38060 driver
-Date:   Wed, 15 Apr 2020 20:14:14 -0400
-Message-Id: <20200416001414.25746-2-TheSven73@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200416001414.25746-1-TheSven73@gmail.com>
-References: <20200416001414.25746-1-TheSven73@gmail.com>
+        Wed, 15 Apr 2020 20:15:30 -0400
+Received: from mga07.intel.com ([134.134.136.100]:22518 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403807AbgDPAPL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 20:15:11 -0400
+IronPort-SDR: R8mEYhxg3fkW2VioydplFWwHA+/bw/mDsMhcZKszNBpcUmmZuJ8U+pscFYyp0YP7LIUxE4p8nN
+ yCoI+dzjrJfg==
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 17:15:07 -0700
+IronPort-SDR: 3rVFVDeGcNl6HtVcgLd4GMykj2Wf9o9VapmUD7r25jT4ac/rP8ZeBiUigUmTqE3rjlssuzILxu
+ ZO0SQ20jEDiw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,388,1580803200"; 
+   d="gz'50?scan'50,208,50";a="274914925"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga008.jf.intel.com with ESMTP; 15 Apr 2020 17:15:03 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jOsBK-000BU1-PM; Thu, 16 Apr 2020 08:15:02 +0800
+Date:   Thu, 16 Apr 2020 08:14:09 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Kristen Carlson Accardi <kristen@linux.intel.com>,
+        keescook@chromium.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, Jonathan Corbet <corbet@lwn.net>,
+        x86@kernel.org
+Cc:     kbuild-all@lists.01.org, arjan@linux.intel.com,
+        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
+        rick.p.edgecomb@intel.com, linux-doc@vger.kernel.org
+Subject: Re: [PATCH 7/9] x86: Add support for function granular KASLR
+Message-ID: <202004160811.sBWd3bTo%lkp@intel.com>
+References: <20200415210452.27436-8-kristen@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="2oS5YaxWCcQjTEyO"
+Content-Disposition: inline
+In-Reply-To: <20200415210452.27436-8-kristen@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ZL38060 is a "Connected Home Audio Processor" from Microsemi,
-which consists of a Digital Signal Processor (DSP), several Digital
-Audio Interfaces (DAIs), analog outputs, and a block of 14 GPIOs.
 
-This driver supports only a tiny subset of the chip's functionality
-and possible configurations:
-- bypass mode (whole dsp block is bypassed)
-- chip's DAI routed directly to/from DACs and microphone
-- chip's internal clock is driven by a 12 MHz external crystal
-- chip's DAI connected to CPU is I2S, and bit + frame clock master
+--2oS5YaxWCcQjTEyO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+Hi Kristen,
+
+Thank you for the patch! Yet something to improve:
+
+[auto build test ERROR on kees/for-next/pstore]
+[also build test ERROR on tip/auto-latest linus/master tip/x86/core v5.7-rc1 next-20200415]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+
+url:    https://github.com/0day-ci/linux/commits/Kristen-Carlson-Accardi/Function-Granular-Kernel-Address-Space-Layout-Randomization/20200416-072741
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/pstore
+config: i386-tinyconfig (attached as .config)
+compiler: gcc-7 (Ubuntu 7.5.0-6ubuntu2) 7.5.0
+reproduce:
+        # save the attached .config to linux build tree
+        make ARCH=i386 
+
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kbuild test robot <lkp@intel.com>
+
+All errors (new ones prefixed by >>):
+
+   ld: arch/x86/boot/compressed/misc.o: in function `index_update.isra.12':
+>> misc.c:(.text+0x102c): undefined reference to `xz_crc32_table'
+   ld: arch/x86/boot/compressed/misc.o: in function `xz_crc32_init':
+   misc.c:(.text+0x11c0): undefined reference to `xz_crc32_table'
+   ld: arch/x86/boot/compressed/misc.o: in function `xz_crc32':
+   misc.c:(.text+0x1213): undefined reference to `xz_crc32_table'
+   ld: arch/x86/boot/compressed/misc.o: in function `xz_dec_run':
+   misc.c:(.text+0x1e69): undefined reference to `xz_crc32_table'
+>> ld: misc.c:(.text+0x1f2d): undefined reference to `xz_crc32_table'
+   ld: arch/x86/boot/compressed/misc.o:misc.c:(.text+0x1ff3): more undefined references to `xz_crc32_table' follow
+
 ---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
 
-Tree: v5.7-rc1
+--2oS5YaxWCcQjTEyO
+Content-Type: application/gzip
+Content-Disposition: attachment; filename=".config.gz"
+Content-Transfer-Encoding: base64
 
- sound/soc/codecs/Kconfig   |  11 +
- sound/soc/codecs/Makefile  |   2 +
- sound/soc/codecs/zl38060.c | 643 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 656 insertions(+)
- create mode 100644 sound/soc/codecs/zl38060.c
+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
+ilqbT2RoAAA=
 
-diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
-index e6a0c5d05fa5..7cb032757d32 100644
---- a/sound/soc/codecs/Kconfig
-+++ b/sound/soc/codecs/Kconfig
-@@ -272,6 +272,7 @@ config SND_SOC_ALL_CODECS
- 	imply SND_SOC_WM9712
- 	imply SND_SOC_WM9713
- 	imply SND_SOC_WSA881X
-+	imply SND_SOC_ZL38060
- 	help
- 	  Normally ASoC codec drivers are only built if a machine driver which
- 	  uses them is also built since they are only usable with a machine
-@@ -1642,6 +1643,16 @@ config SND_SOC_WSA881X
- 	  This enables support for Qualcomm WSA8810/WSA8815 Class-D
- 	  Smart Speaker Amplifier.
- 
-+config SND_SOC_ZL38060
-+	tristate "Microsemi ZL38060 Connected Home Audio Processor"
-+	depends on SPI_MASTER
-+	select GPIOLIB
-+	select REGMAP
-+	help
-+	  Support for ZL38060 Connected Home Audio Processor from Microsemi,
-+	  which consists of a Digital Signal Processor (DSP), several Digital
-+	  Audio Interfaces (DAIs), analog outputs, and a block of 14 GPIOs.
-+
- config SND_SOC_ZX_AUD96P22
- 	tristate "ZTE ZX AUD96P22 CODEC"
- 	depends on I2C
-diff --git a/sound/soc/codecs/Makefile b/sound/soc/codecs/Makefile
-index 03533157cda6..a603532c7af5 100644
---- a/sound/soc/codecs/Makefile
-+++ b/sound/soc/codecs/Makefile
-@@ -288,6 +288,7 @@ snd-soc-wm9712-objs := wm9712.o
- snd-soc-wm9713-objs := wm9713.o
- snd-soc-wm-hubs-objs := wm_hubs.o
- snd-soc-wsa881x-objs := wsa881x.o
-+snd-soc-zl38060-objs := zl38060.o
- snd-soc-zx-aud96p22-objs := zx_aud96p22.o
- # Amp
- snd-soc-max9877-objs := max9877.o
-@@ -588,6 +589,7 @@ obj-$(CONFIG_SND_SOC_WM9713)	+= snd-soc-wm9713.o
- obj-$(CONFIG_SND_SOC_WM_ADSP)	+= snd-soc-wm-adsp.o
- obj-$(CONFIG_SND_SOC_WM_HUBS)	+= snd-soc-wm-hubs.o
- obj-$(CONFIG_SND_SOC_WSA881X)	+= snd-soc-wsa881x.o
-+obj-$(CONFIG_SND_SOC_ZL38060)	+= snd-soc-zl38060.o
- obj-$(CONFIG_SND_SOC_ZX_AUD96P22) += snd-soc-zx-aud96p22.o
- 
- # Amp
-diff --git a/sound/soc/codecs/zl38060.c b/sound/soc/codecs/zl38060.c
-new file mode 100644
-index 000000000000..c40094a86076
---- /dev/null
-+++ b/sound/soc/codecs/zl38060.c
-@@ -0,0 +1,643 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Codec driver for Microsemi ZL38060 Connected Home Audio Processor.
-+ *
-+ * Copyright(c) 2020 Sven Van Asbroeck
-+ *
-+ */
-+
-+/* The ZL38060 is very flexible and configurable. This driver implements only a
-+ * tiny subset of the chip's possible configurations:
-+ *
-+ * - DSP block bypassed: DAI        routed straight to DACs
-+ *                       microphone routed straight to DAI
-+ * - chip's internal clock is driven by a 12 MHz external crystal
-+ * - chip's DAI connected to CPU is I2S, and bit + frame clock master
-+ */
-+
-+#include <linux/gpio/consumer.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/property.h>
-+#include <linux/spi/spi.h>
-+#include <linux/regmap.h>
-+#include <linux/module.h>
-+#include <linux/ihex.h>
-+
-+#include <sound/core.h>
-+#include <sound/pcm.h>
-+#include <sound/pcm_params.h>
-+#include <sound/soc.h>
-+
-+#define DRV_NAME		"zl38060"
-+
-+#define ZL38_RATES		(SNDRV_PCM_RATE_8000  |\
-+				SNDRV_PCM_RATE_16000 |\
-+				SNDRV_PCM_RATE_48000)
-+#define ZL38_FORMATS		SNDRV_PCM_FMTBIT_S16_LE
-+
-+#define HBI_FIRMWARE_PAGE	0xFF
-+#define ZL38_MAX_RAW_XFER	0x100
-+
-+#define REG_TDMA_CFG_CLK	0x0262
-+#define CFG_CLK_PCLK_SHIFT	4
-+#define CFG_CLK_PCLK_MASK	(0x7ff << CFG_CLK_PCLK_SHIFT)
-+#define CFG_CLK_PCLK(bits)	((bits - 1) << CFG_CLK_PCLK_SHIFT)
-+#define CFG_CLK_MASTER		BIT(15)
-+#define CFG_CLK_FSRATE_MASK	0x7
-+#define CFG_CLK_FSRATE_8KHZ	0x1
-+#define CFG_CLK_FSRATE_16KHZ	0x2
-+#define CFG_CLK_FSRATE_48KHZ	0x6
-+
-+#define REG_CLK_CFG		0x0016
-+#define CLK_CFG_SOURCE_XTAL	BIT(15)
-+
-+#define REG_CLK_STATUS		0x0014
-+#define CLK_STATUS_HWRST	BIT(0)
-+
-+#define REG_PARAM_RESULT	0x0034
-+#define PARAM_RESULT_READY	0xD3D3
-+
-+#define REG_PG255_BASE_HI	0x000C
-+#define REG_PG255_OFFS(addr)	((HBI_FIRMWARE_PAGE << 8) | (addr & 0xFF))
-+#define REG_FWR_EXEC		0x012C
-+
-+#define REG_CMD			0x0032
-+#define REG_HW_REV		0x0020
-+#define REG_FW_PROD		0x0022
-+#define REG_FW_REV		0x0024
-+
-+#define REG_SEMA_FLAGS		0x0006
-+#define SEMA_FLAGS_BOOT_CMD	BIT(0)
-+#define SEMA_FLAGS_APP_REBOOT	BIT(1)
-+
-+#define REG_HW_REV		0x0020
-+#define REG_FW_PROD		0x0022
-+#define REG_FW_REV		0x0024
-+#define REG_GPIO_DIR		0x02DC
-+#define REG_GPIO_DAT		0x02DA
-+
-+#define BOOTCMD_LOAD_COMPLETE	0x000D
-+#define BOOTCMD_FW_GO		0x0008
-+
-+#define FIRMWARE_MAJOR		2
-+#define FIRMWARE_MINOR		2
-+
-+struct zl38_codec_priv {
-+	struct device *dev;
-+	struct regmap *regmap;
-+	bool is_stream_in_use[2];
-+	u32 amp_startup_delay_ms;
-+	struct gpio_chip *gpio_chip;
-+	struct gpio_desc *amp_en_gpio;
-+};
-+
-+static int zl38_fw_issue_command(struct regmap *regmap, u16 cmd)
-+{
-+	unsigned int val;
-+	int err;
-+
-+	err = regmap_read_poll_timeout(regmap, REG_SEMA_FLAGS, val,
-+				       !(val & SEMA_FLAGS_BOOT_CMD), 10000,
-+				       10000 * 100);
-+	if (err)
-+		return err;
-+	err = regmap_write(regmap, REG_CMD, cmd);
-+	if (err)
-+		return err;
-+	err = regmap_update_bits(regmap, REG_SEMA_FLAGS, SEMA_FLAGS_BOOT_CMD,
-+				 SEMA_FLAGS_BOOT_CMD);
-+	if (err)
-+		return err;
-+
-+	return regmap_read_poll_timeout(regmap, REG_CMD, val, !val, 10000,
-+					10000 * 100);
-+}
-+
-+static int zl38_fw_go(struct regmap *regmap)
-+{
-+	int err;
-+
-+	err = zl38_fw_issue_command(regmap, BOOTCMD_LOAD_COMPLETE);
-+	if (err)
-+		return err;
-+
-+	return zl38_fw_issue_command(regmap, BOOTCMD_FW_GO);
-+}
-+
-+static int zl38_fw_enter_boot_mode(struct regmap *regmap)
-+{
-+	unsigned int val;
-+	int err;
-+
-+	err = regmap_update_bits(regmap, REG_CLK_STATUS, CLK_STATUS_HWRST,
-+				 CLK_STATUS_HWRST);
-+	if (err)
-+		return err;
-+
-+	return regmap_read_poll_timeout(regmap, REG_PARAM_RESULT, val,
-+					val == PARAM_RESULT_READY, 1000, 50000);
-+}
-+
-+static int
-+zl38_fw_send_data(struct regmap *regmap, u32 addr, const void *data, u16 len)
-+{
-+	__be32 addr_base = cpu_to_be32(addr & ~0xFF);
-+	int err;
-+
-+	err = regmap_raw_write(regmap, REG_PG255_BASE_HI, &addr_base,
-+			       sizeof(addr_base));
-+	if (err)
-+		return err;
-+	return regmap_raw_write(regmap, REG_PG255_OFFS(addr), data, len);
-+}
-+
-+static int zl38_fw_send_xaddr(struct regmap *regmap, const void *data)
-+{
-+	/* execution address from ihex: 32-bit little endian.
-+	 * device register expects 32-bit big endian.
-+	 */
-+	u32 addr = le32_to_cpup(data);
-+	__be32 baddr = cpu_to_be32(addr);
-+
-+	return regmap_raw_write(regmap, REG_FWR_EXEC, &baddr, sizeof(baddr));
-+}
-+
-+static int zl38_load_firmware(struct device *dev, struct regmap *regmap)
-+{
-+	const struct ihex_binrec *rec;
-+	const struct firmware *fw;
-+	u32 addr;
-+	u16 len;
-+	int err;
-+
-+	/* how to get this firmware:
-+	 * 1. request and download chip firmware from Microsemi
-+	 *    (provided by Microsemi in srec format)
-+	 * 2. convert downloaded firmware from srec to ihex. Simple tool:
-+	 *    https://gitlab.com/TheSven73/s3-to-irec
-+	 * 3. convert ihex to binary (.fw) using ihex2fw tool which is included
-+	 *    with the Linux kernel sources
-+	 */
-+	err = request_ihex_firmware(&fw, "zl38060.fw", dev);
-+	if (err)
-+		return err;
-+	err = zl38_fw_enter_boot_mode(regmap);
-+	if (err)
-+		goto out;
-+	rec = (const struct ihex_binrec *)fw->data;
-+	while (rec) {
-+		addr = be32_to_cpu(rec->addr);
-+		len = be16_to_cpu(rec->len);
-+		if (addr) {
-+			/* regular data ihex record */
-+			err = zl38_fw_send_data(regmap, addr, rec->data, len);
-+		} else if (len == 4) {
-+			/* execution address ihex record */
-+			err = zl38_fw_send_xaddr(regmap, rec->data);
-+		} else
-+			err = -EINVAL;
-+		if (err)
-+			goto out;
-+		/* next ! */
-+		rec = ihex_next_binrec(rec);
-+	}
-+	err = zl38_fw_go(regmap);
-+
-+out:
-+	release_firmware(fw);
-+	return err;
-+}
-+
-+
-+static int zl38_software_reset(struct regmap *regmap)
-+{
-+	unsigned int val;
-+	int err;
-+
-+	err = regmap_update_bits(regmap, REG_SEMA_FLAGS, SEMA_FLAGS_APP_REBOOT,
-+				 SEMA_FLAGS_APP_REBOOT);
-+	if (err)
-+		return err;
-+
-+	/* wait for host bus interface to settle.
-+	 * Not sure if this is required: Microsemi's vendor driver does this,
-+	 * but the firmware manual does not mention it. Leave it in, there's
-+	 * little downside, apart from a slower reset.
-+	 */
-+	msleep(50);
-+
-+	return regmap_read_poll_timeout(regmap, REG_SEMA_FLAGS, val,
-+					!(val & SEMA_FLAGS_APP_REBOOT), 10000,
-+					10000 * 100);
-+}
-+
-+static int zl38_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
-+{
-+	struct zl38_codec_priv *priv = snd_soc_dai_get_drvdata(dai);
-+	int err;
-+
-+	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
-+	case SND_SOC_DAIFMT_I2S:
-+		/* firmware default is normal i2s */
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	switch (fmt & SND_SOC_DAIFMT_INV_MASK) {
-+	case SND_SOC_DAIFMT_NB_NF:
-+		/* firmware default is normal bitclock and frame */
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	switch (fmt & SND_SOC_DAIFMT_MASTER_MASK) {
-+	case SND_SOC_DAIFMT_CBM_CFM:
-+		/* always 32 bits per frame (= 16 bits/channel, 2 channels) */
-+		err = regmap_update_bits(priv->regmap, REG_TDMA_CFG_CLK,
-+					 CFG_CLK_MASTER | CFG_CLK_PCLK_MASK,
-+					 CFG_CLK_MASTER | CFG_CLK_PCLK(32));
-+		if (err)
-+			return err;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int zl38_hw_params(struct snd_pcm_substream *substream,
-+			  struct snd_pcm_hw_params *params,
-+			  struct snd_soc_dai *dai)
-+{
-+	struct zl38_codec_priv *priv = snd_soc_dai_get_drvdata(dai);
-+	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
-+	unsigned int fsrate;
-+	int err;
-+
-+	/* We cannot change hw_params while the dai is already in use - the
-+	 * software reset will corrupt the audio. However, this is not required,
-+	 * as the chip's TDM buses are fully symmetric, which mandates identical
-+	 * rates, channels, and samplebits for record and playback.
-+	 */
-+	if (priv->is_stream_in_use[!tx])
-+		goto skip_setup;
-+
-+	switch (params_rate(params)) {
-+	case 8000:
-+		fsrate = CFG_CLK_FSRATE_8KHZ;
-+		break;
-+	case 16000:
-+		fsrate = CFG_CLK_FSRATE_16KHZ;
-+		break;
-+	case 48000:
-+		fsrate = CFG_CLK_FSRATE_48KHZ;
-+		break;
-+	default:
-+		return -EINVAL;
-+	};
-+
-+	err = regmap_update_bits(priv->regmap, REG_TDMA_CFG_CLK,
-+				 CFG_CLK_FSRATE_MASK, fsrate);
-+	if (err)
-+		return err;
-+
-+	/* chip requires a software reset to apply audio register changes */
-+	err = zl38_software_reset(priv->regmap);
-+	if (err)
-+		return err;
-+
-+skip_setup:
-+	if (priv->amp_en_gpio && tx) {
-+		/* enable the external amplifier before playback starts */
-+		gpiod_set_value_cansleep(priv->amp_en_gpio, 1);
-+		if (priv->amp_startup_delay_ms)
-+			msleep(priv->amp_startup_delay_ms);
-+	}
-+
-+	priv->is_stream_in_use[tx] = true;
-+
-+	return 0;
-+}
-+
-+static int zl38_hw_free(struct snd_pcm_substream *substream,
-+			struct snd_soc_dai *dai)
-+{
-+	struct zl38_codec_priv *priv = snd_soc_dai_get_drvdata(dai);
-+	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
-+
-+	priv->is_stream_in_use[tx] = false;
-+
-+	/* disable the external amplifier after playback finishes */
-+	if (priv->amp_en_gpio && tx)
-+		gpiod_set_value_cansleep(priv->amp_en_gpio, 0);
-+
-+	return 0;
-+}
-+
-+/* stereo bypass with no AEC */
-+static const struct reg_sequence cp_config_stereo_bypass[] = {
-+	/* interconnects must be programmed first */
-+	{ 0x0210, 0x0005 },	/* DAC1   in <= I2S1-L */
-+	{ 0x0212, 0x0006 },	/* DAC2   in <= I2S1-R */
-+	{ 0x0214, 0x0001 },	/* I2S1-L in <= MIC1   */
-+	{ 0x0216, 0x0001 },	/* I2S1-R in <= MIC1   */
-+	{ 0x0224, 0x0000 },	/* AEC-S  in <= n/a    */
-+	{ 0x0226, 0x0000 },	/* AEC-R  in <= n/a    */
-+	/* output enables must be programmed next */
-+	{ 0x0202, 0x000F },	/* enable I2S1 + DAC   */
-+};
-+
-+static const struct snd_soc_dai_ops zl38_dai_ops = {
-+	.set_fmt = zl38_set_fmt,
-+	.hw_params = zl38_hw_params,
-+	.hw_free = zl38_hw_free,
-+};
-+
-+static struct snd_soc_dai_driver zl38_dai = {
-+	.name = "zl38060-tdma",
-+	.playback = {
-+		.stream_name = "Playback",
-+		.channels_min = 2,
-+		.channels_max = 2,
-+		.rates = ZL38_RATES,
-+		.formats = ZL38_FORMATS,
-+	},
-+	.capture = {
-+		.stream_name = "Capture",
-+		.channels_min = 2,
-+		.channels_max = 2,
-+		.rates = ZL38_RATES,
-+		.formats = ZL38_FORMATS,
-+	},
-+	.ops = &zl38_dai_ops,
-+	.symmetric_rates = 1,
-+	.symmetric_samplebits = 1,
-+	.symmetric_channels = 1,
-+};
-+
-+static const struct snd_soc_component_driver zl38_component_dev = {
-+	.endianness		= 1,
-+	.non_legacy_dai_naming	= 1,
-+};
-+
-+static void chip_gpio_set(struct gpio_chip *c, unsigned int offset, int val)
-+{
-+	struct regmap *regmap = gpiochip_get_data(c);
-+	unsigned int mask = BIT(offset);
-+
-+	regmap_update_bits(regmap, REG_GPIO_DAT, mask, val ? mask : 0);
-+}
-+
-+static int chip_gpio_get(struct gpio_chip *c, unsigned int offset)
-+{
-+	struct regmap *regmap = gpiochip_get_data(c);
-+	unsigned int mask = BIT(offset);
-+	unsigned int val;
-+	int err;
-+
-+	err = regmap_read(regmap, REG_GPIO_DAT, &val);
-+	if (err)
-+		return err;
-+
-+	return !!(val & mask);
-+}
-+
-+static int chip_direction_input(struct gpio_chip *c, unsigned int offset)
-+{
-+	struct regmap *regmap = gpiochip_get_data(c);
-+	unsigned int mask = BIT(offset);
-+
-+	return regmap_update_bits(regmap, REG_GPIO_DIR, mask, 0);
-+}
-+
-+static int
-+chip_direction_output(struct gpio_chip *c, unsigned int offset, int val)
-+{
-+	struct regmap *regmap = gpiochip_get_data(c);
-+	unsigned int mask = BIT(offset);
-+
-+	chip_gpio_set(c, offset, val);
-+	return regmap_update_bits(regmap, REG_GPIO_DIR, mask, mask);
-+}
-+
-+static const struct gpio_chip template_chip = {
-+	.owner = THIS_MODULE,
-+	.label = DRV_NAME,
-+
-+	.base = -1,
-+	.ngpio = 14,
-+	.direction_input = chip_direction_input,
-+	.direction_output = chip_direction_output,
-+	.get = chip_gpio_get,
-+	.set = chip_gpio_set,
-+
-+	.can_sleep = true,
-+};
-+
-+static int zl38_check_revision(struct device *dev, struct regmap *regmap)
-+{
-+	unsigned int hwrev, fwprod, fwrev;
-+	int fw_major, fw_minor, fw_micro;
-+	int err;
-+
-+	err = regmap_read(regmap, REG_HW_REV, &hwrev);
-+	if (err)
-+		return err;
-+	err = regmap_read(regmap, REG_FW_PROD, &fwprod);
-+	if (err)
-+		return err;
-+	err = regmap_read(regmap, REG_FW_REV, &fwrev);
-+	if (err)
-+		return err;
-+
-+	fw_major = (fwrev >> 12) & 0xF;
-+	fw_minor = (fwrev >>  8) & 0xF;
-+	fw_micro = fwrev & 0xFF;
-+	dev_info(dev, "hw rev 0x%x, fw product code %d, firmware rev %d.%d.%d",
-+		 hwrev & 0x1F, fwprod, fw_major, fw_minor, fw_micro);
-+
-+	if (fw_major != FIRMWARE_MAJOR || fw_minor < FIRMWARE_MINOR) {
-+		dev_err(dev, "unsupported firmware. driver supports %d.%d",
-+			FIRMWARE_MAJOR, FIRMWARE_MINOR);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int zl38_bus_read(void *context,
-+			 const void *reg_buf, size_t reg_size,
-+			 void *val_buf, size_t val_size)
-+{
-+	struct spi_device *spi = context;
-+	const u8 *reg_buf8 = reg_buf;
-+	size_t len = 0;
-+	u8 offs, page;
-+	u8 txbuf[4];
-+
-+	if (reg_size != 2 || val_size > ZL38_MAX_RAW_XFER)
-+		return -EINVAL;
-+
-+	offs = reg_buf8[1] >> 1;
-+	page = reg_buf8[0];
-+
-+	if (page) {
-+		txbuf[len++] = 0xFE;
-+		txbuf[len++] = page == HBI_FIRMWARE_PAGE ? 0xFF : page - 1;
-+		txbuf[len++] = offs;
-+		txbuf[len++] = val_size / 2 - 1;
-+	} else {
-+		txbuf[len++] = offs | 0x80;
-+		txbuf[len++] = val_size / 2 - 1;
-+	}
-+
-+	return spi_write_then_read(spi, txbuf, len, val_buf, val_size);
-+}
-+
-+static int zl38_bus_write(void *context, const void *data, size_t count)
-+{
-+	struct spi_device *spi = context;
-+	u8 buf[4 + ZL38_MAX_RAW_XFER];
-+	size_t val_len, len = 0;
-+	const u8 *data8 = data;
-+	u8 offs, page;
-+
-+	if (count > (2 + ZL38_MAX_RAW_XFER) || count < 4)
-+		return -EINVAL;
-+	val_len = count - 2;
-+	offs = data8[1] >> 1;
-+	page = data8[0];
-+
-+	if (page) {
-+		buf[len++] = 0xFE;
-+		buf[len++] = page == HBI_FIRMWARE_PAGE ? 0xFF : page - 1;
-+		buf[len++] = offs;
-+		buf[len++] = (val_len / 2 - 1) | 0x80;
-+	} else {
-+		buf[len++] = offs | 0x80;
-+		buf[len++] = (val_len / 2 - 1) | 0x80;
-+	}
-+	memcpy(buf + len, data8 + 2, val_len);
-+	len += val_len;
-+
-+	return spi_write(spi, buf, len);
-+}
-+
-+static const struct regmap_bus zl38_regmap_bus = {
-+	.read = zl38_bus_read,
-+	.write = zl38_bus_write,
-+	.max_raw_write = ZL38_MAX_RAW_XFER,
-+	.max_raw_read = ZL38_MAX_RAW_XFER,
-+};
-+
-+static const struct regmap_config zl38_regmap_conf = {
-+	.reg_bits = 16,
-+	.val_bits = 16,
-+	.reg_stride = 2,
-+	.use_single_read = true,
-+	.use_single_write = true,
-+};
-+
-+static int zl38_spi_probe(struct spi_device *spi)
-+{
-+	struct device *dev = &spi->dev;
-+	struct zl38_codec_priv *priv;
-+	struct gpio_desc *reset_gpio;
-+	int err;
-+
-+	/* take chip out of reset, if a reset gpio is provided */
-+	reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
-+	if (IS_ERR(reset_gpio))
-+		return PTR_ERR(reset_gpio);
-+	if (reset_gpio) {
-+		/* according to the datasheet, chip needs 3ms for its digital
-+		 * section to become stable.
-+		 */
-+		usleep_range(3000, 10000);
-+	}
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->dev = dev;
-+	dev_set_drvdata(dev, priv);
-+	priv->regmap = devm_regmap_init(dev, &zl38_regmap_bus, spi,
-+					&zl38_regmap_conf);
-+	if (IS_ERR(priv->regmap))
-+		return PTR_ERR(priv->regmap);
-+
-+	if (device_property_present(dev, "mscc,load-firmware")) {
-+		err = zl38_load_firmware(dev, priv->regmap);
-+		if (err)
-+			return err;
-+	}
-+
-+	err = zl38_check_revision(dev, priv->regmap);
-+	if (err)
-+		return err;
-+
-+	/* register GPIO provider first, so any consumer GPIOs this chip needs
-+	 * can potentially be provided by itself, if so configured.
-+	 */
-+	priv->gpio_chip = devm_kmemdup(dev, &template_chip,
-+				       sizeof(template_chip), GFP_KERNEL);
-+	if (!priv->gpio_chip)
-+		return -ENOMEM;
-+#ifdef CONFIG_OF_GPIO
-+	priv->gpio_chip->of_node = dev->of_node;
-+#endif
-+	err = devm_gpiochip_add_data(dev, priv->gpio_chip, priv->regmap);
-+	if (err)
-+		return err;
-+
-+	priv->amp_en_gpio = devm_gpiod_get_optional(dev, "amp-en",
-+						    GPIOD_OUT_LOW);
-+	if (IS_ERR(priv->amp_en_gpio))
-+		return PTR_ERR(priv->amp_en_gpio);
-+	device_property_read_u32(dev, "mscc,amp-startup-delay-ms",
-+				 &priv->amp_startup_delay_ms);
-+
-+	/* setup the cross-point switch for stereo bypass */
-+	err = regmap_multi_reg_write(priv->regmap, cp_config_stereo_bypass,
-+				     ARRAY_SIZE(cp_config_stereo_bypass));
-+	if (err)
-+		return err;
-+	/* setup for 12MHz crystal connected to the chip */
-+	err = regmap_update_bits(priv->regmap, REG_CLK_CFG, CLK_CFG_SOURCE_XTAL,
-+				 CLK_CFG_SOURCE_XTAL);
-+	if (err)
-+		return err;
-+
-+	return devm_snd_soc_register_component(dev, &zl38_component_dev,
-+					       &zl38_dai, 1);
-+}
-+
-+static const struct of_device_id zl38_dt_ids[] = {
-+	{ .compatible = "mscc,zl38060", },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, zl38_dt_ids);
-+
-+static const struct spi_device_id zl38_spi_ids[] = {
-+	{ "zl38060", 0 },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(spi, zl38_spi_ids);
-+
-+static struct spi_driver zl38060_spi_driver = {
-+	.driver	= {
-+		.name = DRV_NAME,
-+		.of_match_table = of_match_ptr(zl38_dt_ids),
-+	},
-+	.probe = zl38_spi_probe,
-+	.id_table = zl38_spi_ids,
-+};
-+module_spi_driver(zl38060_spi_driver);
-+
-+MODULE_DESCRIPTION("ASoC ZL38060 driver");
-+MODULE_AUTHOR("Sven Van Asbroeck <TheSven73@gmail.com>");
-+MODULE_LICENSE("GPL v2");
--- 
-2.17.1
-
+--2oS5YaxWCcQjTEyO--
