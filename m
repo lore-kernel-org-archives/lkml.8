@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D685AC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C19A7C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:21:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5E0E214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:21:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1544214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:21:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587050499;
-	bh=1ClpcThwENIVjhgFj2BIfnEiPBTFpOMrznL6cQRlSt8=;
+	s=default; t=1587050509;
+	bh=W2NX7RUrjeSGIxVbUNcuOSZnXLYhBIfIG0GMm8GFxD4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gSH+EMqH30MMBLKsJD7l0N9J/RXuqBvIGF6COXavb/Pp70gOdlV+g8DnVPFIuH8uO
-	 QlT3UKMXqMVAZCu9CBt8GjkZ0lYjhTFDAaaAEbw3mklLW2cJ8zBsGYMoGRIhJ1TM2u
-	 1po3GhpTkv1QYh/TK3g7jqmU+5vlso/vsfk9brV4=
+	b=I7QYJp8o/PMF50rl2bUgtUk7YggXG4hwDDNi1lSoCZ+gypUOoADsAYJQRrg5U94e/
+	 AnFkyV1RpH7echZjajgDKJmmdTITrF13x7zAoUqFLqT9mHNU2vUZyl8arzIDUilVnp
+	 61HtRfq9jK7+mHNNdrhRtDGk8Ygh0MSA/v5zDrB8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505248AbgDPPVh (ORCPT
+        id S2503888AbgDPPVs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:21:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60794 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:21:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898610AbgDPNqj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:46:39 -0400
+        id S2898606AbgDPNqh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:46:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B71E021734;
-        Thu, 16 Apr 2020 13:46:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43784208E4;
+        Thu, 16 Apr 2020 13:46:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044799;
-        bh=1ClpcThwENIVjhgFj2BIfnEiPBTFpOMrznL6cQRlSt8=;
+        s=default; t=1587044796;
+        bh=W2NX7RUrjeSGIxVbUNcuOSZnXLYhBIfIG0GMm8GFxD4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PwV4PH5M6g5Qr0/MeohryNWCgy856/C6Jus7tBBZhR4mpNj5UroPhE1/D3aH90QKx
-         PUXMPuyZUUKTwfYCWxxzReolYsN/SgpydEenX+yLdnIFu7DEzu6H50Rao0DWgrBy7r
-         x1kU60v2HelvwEOUARpZ8jmZW45hAiblNwoFPatI=
+        b=CGncjACT2BLWQWusMJ66/omnKwDE3tSKZPK6VjtaCG6zySy1d48kizrxb53TQW0OU
+         O9YB7TiBJFQNtooayTAPFdKeIT+SQgNyI7BA7HBmVQ40h3Ka8ScumGOqUQhEnJVjg2
+         JYgG31+ofFN7uoRNV+4Hlvu9NYF2k6ShizC46Fgc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH 5.4 106/232] tpm: tpm1_bios_measurements_next should increase position index
-Date:   Thu, 16 Apr 2020 15:23:20 +0200
-Message-Id: <20200416131328.380305814@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Subject: [PATCH 5.4 088/232] media: hantro: Read be32 words starting at every fourth byte
+Date:   Thu, 16 Apr 2020 15:23:02 +0200
+Message-Id: <20200416131326.002278291@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -59,49 +62,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
 
-commit d7a47b96ed1102551eb7325f97937e276fb91045 upstream.
+commit e34bca49e4953e5c2afc0425303199a5fd515f82 upstream.
 
-If .next function does not change position index,
-following .show function will repeat output related
-to current position index.
+Since (luma/chroma)_qtable is an array of unsigned char, indexing it
+returns consecutive byte locations, but we are supposed to read the arrays
+in four-byte words. Consequently, we should be pointing
+get_unaligned_be32() at consecutive word locations instead.
 
-In case of /sys/kernel/security/tpm0/ascii_bios_measurements
-and binary_bios_measurements:
-1) read after lseek beyound end of file generates whole last line.
-2) read after lseek to middle of last line generates
-expected end of last line and unexpected whole last line once again.
-
-Cc: stable@vger.kernel.org # 4.19.x
-Fixes: 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code ...")
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206283
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Reviewed-by: Ezequiel Garcia <ezequiel@collabora.com>
+Tested-by: Ezequiel Garcia <ezequiel@collabora.com>
+Cc: stable@vger.kernel.org
+Fixes: 00c30f42c7595f "media: rockchip vpu: remove some unused vars"
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/char/tpm/eventlog/tpm1.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/staging/media/hantro/hantro_h1_jpeg_enc.c     |    9 +++++++--
+ drivers/staging/media/hantro/rk3399_vpu_hw_jpeg_enc.c |    9 +++++++--
+ 2 files changed, 14 insertions(+), 4 deletions(-)
 
---- a/drivers/char/tpm/eventlog/tpm1.c
-+++ b/drivers/char/tpm/eventlog/tpm1.c
-@@ -115,6 +115,7 @@ static void *tpm1_bios_measurements_next
- 	u32 converted_event_size;
- 	u32 converted_event_type;
+--- a/drivers/staging/media/hantro/hantro_h1_jpeg_enc.c
++++ b/drivers/staging/media/hantro/hantro_h1_jpeg_enc.c
+@@ -67,12 +67,17 @@ hantro_h1_jpeg_enc_set_qtable(struct han
+ 			      unsigned char *chroma_qtable)
+ {
+ 	u32 reg, i;
++	__be32 *luma_qtable_p;
++	__be32 *chroma_qtable_p;
++
++	luma_qtable_p = (__be32 *)luma_qtable;
++	chroma_qtable_p = (__be32 *)chroma_qtable;
  
-+	(*pos)++;
- 	converted_event_size = do_endian_conversion(event->event_size);
+ 	for (i = 0; i < H1_JPEG_QUANT_TABLE_COUNT; i++) {
+-		reg = get_unaligned_be32(&luma_qtable[i]);
++		reg = get_unaligned_be32(&luma_qtable_p[i]);
+ 		vepu_write_relaxed(vpu, reg, H1_REG_JPEG_LUMA_QUAT(i));
  
- 	v += sizeof(struct tcpa_event) + converted_event_size;
-@@ -132,7 +133,6 @@ static void *tpm1_bios_measurements_next
- 	    ((v + sizeof(struct tcpa_event) + converted_event_size) > limit))
- 		return NULL;
- 
--	(*pos)++;
- 	return v;
+-		reg = get_unaligned_be32(&chroma_qtable[i]);
++		reg = get_unaligned_be32(&chroma_qtable_p[i]);
+ 		vepu_write_relaxed(vpu, reg, H1_REG_JPEG_CHROMA_QUAT(i));
+ 	}
  }
+--- a/drivers/staging/media/hantro/rk3399_vpu_hw_jpeg_enc.c
++++ b/drivers/staging/media/hantro/rk3399_vpu_hw_jpeg_enc.c
+@@ -98,12 +98,17 @@ rk3399_vpu_jpeg_enc_set_qtable(struct ha
+ 			       unsigned char *chroma_qtable)
+ {
+ 	u32 reg, i;
++	__be32 *luma_qtable_p;
++	__be32 *chroma_qtable_p;
++
++	luma_qtable_p = (__be32 *)luma_qtable;
++	chroma_qtable_p = (__be32 *)chroma_qtable;
  
+ 	for (i = 0; i < VEPU_JPEG_QUANT_TABLE_COUNT; i++) {
+-		reg = get_unaligned_be32(&luma_qtable[i]);
++		reg = get_unaligned_be32(&luma_qtable_p[i]);
+ 		vepu_write_relaxed(vpu, reg, VEPU_REG_JPEG_LUMA_QUAT(i));
+ 
+-		reg = get_unaligned_be32(&chroma_qtable[i]);
++		reg = get_unaligned_be32(&chroma_qtable_p[i]);
+ 		vepu_write_relaxed(vpu, reg, VEPU_REG_JPEG_CHROMA_QUAT(i));
+ 	}
+ }
 
 
