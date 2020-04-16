@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CFE0C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:59:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67622C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:59:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20FE120732
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:59:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4117F21744
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:59:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587045540;
-	bh=MkPs644BC6fRZVf3njDdZwqWGc69xsas9A4iun9REXc=;
+	s=default; t=1587045545;
+	bh=dlEss9BDF5MWdoHoy1JlqYZL4Ppiy0B4C1vCgajjelQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y5c7G9uKd1tem5rZB+88z7sznOFmy8o2xrRw9xWVtmAwu85UEtO7/G5JuCKSOhPbu
-	 +BZk0o8HHtv8YsPVg/qRCzAMI0mZrI2f+es0UoCbmgOZDQrS45gn4JtCxaAQcocfTC
-	 2SBqT3hte7wBAYUPaUi2EPRBvdUDVrJl9hnsDCGc=
+	b=a8K2izZuCuSWILqbADuMT0i0h4RzC553G/4y+i7Ibt45l3SLZEtL4oqY3jGAec4Cz
+	 9RWOvDKi+a0r3nTc+1OlS9qzNykebcgxhNPepVCLc187+n53yNrAucwNnsFzqCPlty
+	 ICN7jCzThV6suI7CEKgMhw6mihz4VGou43qm0upQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2897980AbgDPN64 (ORCPT
+        id S1728450AbgDPN7D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:58:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52294 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:59:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897889AbgDPNju (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:39:50 -0400
+        id S2898023AbgDPNjz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:39:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E1FF20732;
-        Thu, 16 Apr 2020 13:39:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C64220732;
+        Thu, 16 Apr 2020 13:39:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044390;
-        bh=MkPs644BC6fRZVf3njDdZwqWGc69xsas9A4iun9REXc=;
+        s=default; t=1587044394;
+        bh=dlEss9BDF5MWdoHoy1JlqYZL4Ppiy0B4C1vCgajjelQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=umKpHyzCFo6s2TtmmIT2+kL1IpsPXmmhYbO5JMpL/Y4wpB7lFKrqVjreePl0Gfxxq
-         /V3+33jLwgdOmLBvMPSprd9ACnltmCyZ/k9xV39Dq9obtAEFAq4vO29bCP9pf7UzKo
-         P75VyzEnODmSdVbJ+ZZlx6XgxwgZBFht/oErSQtg=
+        b=AsUY5EEO5RmCtgFxZhTTsXm4nQwG1A48oZmU/slWUzE0RD2pEu40tmxyiuLxAITHb
+         FyPH+ZAd11o3gRayqYDogzcUkdqVEBi33TdZRHc4ZrcOfvb1FRW5MSifsTNeilREpT
+         zLxrPxIeiaqCh95zLtVz/Vg3q+a3PdnXIQQ7nmMs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <jsmart2021@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.5 197/257] scsi: lpfc: Fix lpfc_io_buf resource leak in lpfc_get_scsi_buf_s4 error path
-Date:   Thu, 16 Apr 2020 15:24:08 +0200
-Message-Id: <20200416131350.797787837@linuxfoundation.org>
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.5 163/257] btrfs: fix missing file extent item for hole after ranged fsync
+Date:   Thu, 16 Apr 2020 15:23:34 +0200
+Message-Id: <20200416131346.917604883@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -60,40 +60,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-commit 0ab384a49c548baf132ccef249f78d9c6c506380 upstream.
+commit 95418ed1d10774cd9a49af6f39e216c1256f1eeb upstream.
 
-If a call to lpfc_get_cmd_rsp_buf_per_hdwq returns NULL (memory allocation
-failure), a previously allocated lpfc_io_buf resource is leaked.
+When doing a fast fsync for a range that starts at an offset greater than
+zero, we can end up with a log that when replayed causes the respective
+inode miss a file extent item representing a hole if we are not using the
+NO_HOLES feature. This is because for fast fsyncs we don't log any extents
+that cover a range different from the one requested in the fsync.
 
-Fix by releasing the lpfc_io_buf resource in the failure path.
+Example scenario to trigger it:
 
-Fixes: d79c9e9d4b3d ("scsi: lpfc: Support dynamic unbounded SGL lists on G7 hardware.")
-Cc: <stable@vger.kernel.org> # v5.4+
-Link: https://lore.kernel.org/r/20200128002312.16346-3-jsmart2021@gmail.com
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+  $ mkfs.btrfs -O ^no-holes -f /dev/sdd
+  $ mount /dev/sdd /mnt
+
+  # Create a file with a single 256K and fsync it to clear to full sync
+  # bit in the inode - we want the msync below to trigger a fast fsync.
+  $ xfs_io -f -c "pwrite -S 0xab 0 256K" -c "fsync" /mnt/foo
+
+  # Force a transaction commit and wipe out the log tree.
+  $ sync
+
+  # Dirty 768K of data, increasing the file size to 1Mb, and flush only
+  # the range from 256K to 512K without updating the log tree
+  # (sync_file_range() does not trigger fsync, it only starts writeback
+  # and waits for it to finish).
+
+  $ xfs_io -c "pwrite -S 0xcd 256K 768K" /mnt/foo
+  $ xfs_io -c "sync_range -abw 256K 256K" /mnt/foo
+
+  # Now dirty the range from 768K to 1M again and sync that range.
+  $ xfs_io -c "mmap -w 768K 256K"        \
+           -c "mwrite -S 0xef 768K 256K" \
+           -c "msync -s 768K 256K"       \
+           -c "munmap"                   \
+           /mnt/foo
+
+  <power fail>
+
+  # Mount to replay the log.
+  $ mount /dev/sdd /mnt
+  $ umount /mnt
+
+  $ btrfs check /dev/sdd
+  Opening filesystem to check...
+  Checking filesystem on /dev/sdd
+  UUID: 482fb574-b288-478e-a190-a9c44a78fca6
+  [1/7] checking root items
+  [2/7] checking extents
+  [3/7] checking free space cache
+  [4/7] checking fs roots
+  root 5 inode 257 errors 100, file extent discount
+  Found file extent holes:
+       start: 262144, len: 524288
+  ERROR: errors found in fs roots
+  found 720896 bytes used, error(s) found
+  total csum bytes: 512
+  total tree bytes: 131072
+  total fs tree bytes: 32768
+  total extent tree bytes: 16384
+  btree space waste bytes: 123514
+  file data blocks allocated: 589824
+    referenced 589824
+
+Fix this issue by setting the range to full (0 to LLONG_MAX) when the
+NO_HOLES feature is not enabled. This results in extra work being done
+but it gives the guarantee we don't end up with missing holes after
+replaying the log.
+
+CC: stable@vger.kernel.org # 4.19+
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/lpfc/lpfc_scsi.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/btrfs/file.c |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
---- a/drivers/scsi/lpfc/lpfc_scsi.c
-+++ b/drivers/scsi/lpfc/lpfc_scsi.c
-@@ -671,8 +671,10 @@ lpfc_get_scsi_buf_s4(struct lpfc_hba *ph
- 	lpfc_cmd->prot_data_type = 0;
- #endif
- 	tmp = lpfc_get_cmd_rsp_buf_per_hdwq(phba, lpfc_cmd);
--	if (!tmp)
-+	if (!tmp) {
-+		lpfc_release_io_buf(phba, lpfc_cmd, lpfc_cmd->hdwq);
- 		return NULL;
-+	}
+--- a/fs/btrfs/file.c
++++ b/fs/btrfs/file.c
+@@ -2072,6 +2072,16 @@ int btrfs_sync_file(struct file *file, l
+ 	btrfs_init_log_ctx(&ctx, inode);
  
- 	lpfc_cmd->fcp_cmnd = tmp->fcp_cmnd;
- 	lpfc_cmd->fcp_rsp = tmp->fcp_rsp;
+ 	/*
++	 * Set the range to full if the NO_HOLES feature is not enabled.
++	 * This is to avoid missing file extent items representing holes after
++	 * replaying the log.
++	 */
++	if (!btrfs_fs_incompat(fs_info, NO_HOLES)) {
++		start = 0;
++		end = LLONG_MAX;
++	}
++
++	/*
+ 	 * We write the dirty pages in the range and wait until they complete
+ 	 * out of the ->i_mutex. If so, we can flush the dirty pages by
+ 	 * multi-task, and make the performance up.  See
 
 
