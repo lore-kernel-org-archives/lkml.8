@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2354DC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:15:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC1DBC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:16:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0151A2076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:15:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B856B206B9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:16:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587046550;
-	bh=Ja8o/eU4oIIfcb0wmCeRSuyQL/x0GQj1UN5VukFYvt0=;
+	s=default; t=1587046564;
+	bh=yzOCijrevyWKq0eQvi+H/8CZmlIe60H58OkBcByJv7A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MYq7SMHgQkK53QWsvdeWAIN7D4KAccJFnLJYxLqNaNPb9p1mtKhH0+xztwJmPFDdu
-	 9fQoreoxxlpzvBHm3WCp0cLEyHk3YL1DSbb8o3IeU7zD+Y+LnFdXzsCiIeuxcDlTxV
-	 pt1XRcHxS258udhl/mtfT1mI1H9C6O/FD2ycXNHs=
+	b=y9OClhxpY3o0KqLav9pc/MlaRgKysxchjXpV7sRdVtpYvhWL0JXMk2ZicCAOG2dNx
+	 Q8CWuWiXbPogViEKjbpzBPdN0gVfQPFgcu0EAhDdakAIyJshg5NCU2yRvIx3S86zx4
+	 6jsdjvofkBVfF47LcxBRQQJ4JfwJeFmDP9B+yHRw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393518AbgDPOPt (ORCPT
+        id S2393116AbgDPOQA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:15:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37776 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:16:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392389AbgDPNvh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:51:37 -0400
+        id S2408717AbgDPNvp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:51:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C75892063A;
-        Thu, 16 Apr 2020 13:51:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2EE662063A;
+        Thu, 16 Apr 2020 13:51:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045097;
-        bh=Ja8o/eU4oIIfcb0wmCeRSuyQL/x0GQj1UN5VukFYvt0=;
+        s=default; t=1587045104;
+        bh=yzOCijrevyWKq0eQvi+H/8CZmlIe60H58OkBcByJv7A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r8FrAKBssEhwScxqct7DIfR2rtQJMaIzPgSjmSpXHxjnm64Aija5OGMOi/5bi/SpT
-         l8UYQQvRNZ6gCHNlz0wlIRfNEKKCoQlJqGU2QdHQvouVG7KmOyZhtvj4MU1yDnN9SO
-         TIj82ZYwusvcAKEdX784MowZidz9TZKZyvGmMfZ8=
+        b=weeZ1Bb1zex6izmJaDHraPUNyljf+O6WpoAuQc+xiflMb1cZhGc841SaK/bWTb0aZ
+         68UmVr7eQsZXGOVoAd9iGeIJ1Ce5dtpWP4FPbevB4U0QQnSPrFrqEE5KB7Fzxo/ktg
+         285L6yLZWKR5DE7vdIriPoJIAS2vXp9Z3Z583QV8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Imre Deak <imre.deak@intel.com>,
-        =?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        stable@vger.kernel.org, Faiz Abbas <faiz_abbas@ti.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 229/232] drm/i915/icl+: Dont enable DDI IO power on a TypeC port in TBT mode
-Date:   Thu, 16 Apr 2020 15:25:23 +0200
-Message-Id: <20200416131344.191224613@linuxfoundation.org>
+Subject: [PATCH 5.4 232/232] mmc: sdhci: Refactor sdhci_set_timeout()
+Date:   Thu, 16 Apr 2020 15:25:26 +0200
+Message-Id: <20200416131344.569182480@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -61,44 +61,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Imre Deak <imre.deak@intel.com>
+From: Faiz Abbas <faiz_abbas@ti.com>
 
-The DDI IO power well must not be enabled for a TypeC port in TBT mode,
-ensure this during driver loading/system resume.
+[ Upstream commit 7d76ed77cfbd39468ae58d419f537d35ca892d83 ]
 
-This gets rid of error messages like
-[drm] *ERROR* power well DDI E TC2 IO state mismatch (refcount 1/enabled 0)
+Refactor sdhci_set_timeout() such that platform drivers can do some
+functionality in a set_timeout() callback and then call
+__sdhci_set_timeout() to complete the operation.
 
-and avoids leaking the power ref when disabling the output.
-
-Cc: <stable@vger.kernel.org> # v5.4+
-Signed-off-by: Imre Deak <imre.deak@intel.com>
-Reviewed-by: José Roberto de Souza <jose.souza@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200330152244.11316-1-imre.deak@intel.com
-(cherry picked from commit f77a2db27f26c3ccba0681f7e89fef083718f07f)
-Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Link: https://lore.kernel.org/r/20200116105154.7685-7-faiz_abbas@ti.com
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/i915/display/intel_ddi.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/mmc/host/sdhci.c | 38 ++++++++++++++++++++------------------
+ drivers/mmc/host/sdhci.h |  1 +
+ 2 files changed, 21 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/gpu/drm/i915/display/intel_ddi.c b/drivers/gpu/drm/i915/display/intel_ddi.c
-index 8eb2b3ec01edd..b3c77c988d1cd 100644
---- a/drivers/gpu/drm/i915/display/intel_ddi.c
-+++ b/drivers/gpu/drm/i915/display/intel_ddi.c
-@@ -2124,7 +2124,11 @@ static void intel_ddi_get_power_domains(struct intel_encoder *encoder,
- 		return;
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+index 4c40fd4ba21b1..50514fedbc76f 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -992,27 +992,29 @@ void sdhci_set_data_timeout_irq(struct sdhci_host *host, bool enable)
+ }
+ EXPORT_SYMBOL_GPL(sdhci_set_data_timeout_irq);
  
- 	dig_port = enc_to_dig_port(&encoder->base);
--	intel_display_power_get(dev_priv, dig_port->ddi_io_power_domain);
+-static void sdhci_set_timeout(struct sdhci_host *host, struct mmc_command *cmd)
++void __sdhci_set_timeout(struct sdhci_host *host, struct mmc_command *cmd)
+ {
+-	u8 count;
+-
+-	if (host->ops->set_timeout) {
+-		host->ops->set_timeout(host, cmd);
+-	} else {
+-		bool too_big = false;
+-
+-		count = sdhci_calc_timeout(host, cmd, &too_big);
++	bool too_big = false;
++	u8 count = sdhci_calc_timeout(host, cmd, &too_big);
 +
-+	if (!intel_phy_is_tc(dev_priv, phy) ||
-+	    dig_port->tc_mode != TC_PORT_TBT_ALT)
-+		intel_display_power_get(dev_priv,
-+					dig_port->ddi_io_power_domain);
++	if (too_big &&
++	    host->quirks2 & SDHCI_QUIRK2_DISABLE_HW_TIMEOUT) {
++		sdhci_calc_sw_timeout(host, cmd);
++		sdhci_set_data_timeout_irq(host, false);
++	} else if (!(host->ier & SDHCI_INT_DATA_TIMEOUT)) {
++		sdhci_set_data_timeout_irq(host, true);
++	}
  
- 	/*
- 	 * AUX power is only needed for (e)DP mode, and for HDMI mode on TC
+-		if (too_big &&
+-		    host->quirks2 & SDHCI_QUIRK2_DISABLE_HW_TIMEOUT) {
+-			sdhci_calc_sw_timeout(host, cmd);
+-			sdhci_set_data_timeout_irq(host, false);
+-		} else if (!(host->ier & SDHCI_INT_DATA_TIMEOUT)) {
+-			sdhci_set_data_timeout_irq(host, true);
+-		}
++	sdhci_writeb(host, count, SDHCI_TIMEOUT_CONTROL);
++}
++EXPORT_SYMBOL_GPL(__sdhci_set_timeout);
+ 
+-		sdhci_writeb(host, count, SDHCI_TIMEOUT_CONTROL);
+-	}
++static void sdhci_set_timeout(struct sdhci_host *host, struct mmc_command *cmd)
++{
++	if (host->ops->set_timeout)
++		host->ops->set_timeout(host, cmd);
++	else
++		__sdhci_set_timeout(host, cmd);
+ }
+ 
+ static void sdhci_prepare_data(struct sdhci_host *host, struct mmc_command *cmd)
+diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+index 4613d71b3cd6e..76e69288632db 100644
+--- a/drivers/mmc/host/sdhci.h
++++ b/drivers/mmc/host/sdhci.h
+@@ -796,5 +796,6 @@ void sdhci_reset_tuning(struct sdhci_host *host);
+ void sdhci_send_tuning(struct sdhci_host *host, u32 opcode);
+ void sdhci_abort_tuning(struct sdhci_host *host, u32 opcode);
+ void sdhci_set_data_timeout_irq(struct sdhci_host *host, bool enable);
++void __sdhci_set_timeout(struct sdhci_host *host, struct mmc_command *cmd);
+ 
+ #endif /* __SDHCI_HW_H */
 -- 
 2.20.1
 
