@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5511EC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D09FC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:25:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 321792076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:25:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67CDB2076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:25:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587047133;
-	bh=iwpOkWNrhBwUswnOtXqVscbGbYoZHkHCPnAV4L0FYI0=;
+	s=default; t=1587047142;
+	bh=+09gj9DFydIP7mf6pVPiMl7RvRE9gZ7eUk45AMpunfA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=itnU81DLPVMNdn/pQ9q+3soLKw9kgaSiq0UGfS0SbsXa57jwY70mx/1S8T0vNA+3F
-	 aX5L1tCM2AKqsx+C/+nY9HaOUP/5VPi1tW5am/u9WCvARwmyR3HnVgO+D+9Bj7TtrT
-	 4w7NndMfN2a+GUNmelF4XeITZnZXuebilotAyOsg=
+	b=syvy+D72D6zuirw7oaEnITT5lm/7SsCPyjGiHnQOSUCnhWOOh9H5U91+tb4+MejE8
+	 sf7SXY9GWe0fHm+/yoEJ7hih3Z/IZVaNP7aMqqKfXRvD9MccvKXr/sq0mfe43whAd7
+	 A7IqGKGkLlrAa0QUcd7Lk884QDCRRSSNSlqmWunI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404968AbgDPOZa (ORCPT
+        id S2410006AbgDPOZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:25:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45024 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:25:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2506775AbgDPN55 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:57:57 -0400
+        id S2636331AbgDPN6H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:58:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2C6C20786;
-        Thu, 16 Apr 2020 13:57:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90B952078B;
+        Thu, 16 Apr 2020 13:58:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045476;
-        bh=iwpOkWNrhBwUswnOtXqVscbGbYoZHkHCPnAV4L0FYI0=;
+        s=default; t=1587045486;
+        bh=+09gj9DFydIP7mf6pVPiMl7RvRE9gZ7eUk45AMpunfA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WTMrOzY7BKAW02Vm0dshszIZBmjIBFdnxOcWojXyoJaX3JXoC61kQR9xg+pG7fGrS
-         ti/Xqf1iY4eieF0JiDHSrzP1S+/GZhFbK9l5xOVd3N0q6jIvnMkTOQb1ZGcLIoH+LO
-         RxHwWzsK5/gScTaSQWY9EK9RyUj07+BWa9S33iRY=
+        b=jNdLLgjcx8bJjdK6Nnf9tCbzRM7as1TkycUgzAqhoEUCSw66QuvWQFEF0cdc8opU5
+         gaW4VR/iL0+qVSrdHKa22W6iodkdhYrzsMBgib8z4+3WLDsRsexx3dXmKUWU9tuN+o
+         qEtU+XijFdGMWwvSFn5hfBqMvU5OXVCpUF4b8LWc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.6 151/254] btrfs: reloc: clean dirty subvols if we fail to start a transaction
-Date:   Thu, 16 Apr 2020 15:24:00 +0200
-Message-Id: <20200416131345.468335806@linuxfoundation.org>
+Subject: [PATCH 5.6 155/254] btrfs: unset reloc control if we fail to recover
+Date:   Thu, 16 Apr 2020 15:24:04 +0200
+Message-Id: <20200416131345.994367461@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -61,49 +62,68 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Josef Bacik <josef@toxicpanda.com>
 
-commit 6217b0fadd4473a16fabc6aecd7527a9f71af534 upstream.
+commit fb2d83eefef4e1c717205bac71cb1941edf8ae11 upstream.
 
-If we do merge_reloc_roots() we could insert a few roots onto the dirty
-subvol roots list, where we hold a ref on them.  If we fail to start the
-transaction we need to run clean_dirty_subvols() in order to cleanup the
-refs.
+If we fail to load an fs root, or fail to start a transaction we can
+bail without unsetting the reloc control, which leads to problems later
+when we free the reloc control but still have it attached to the file
+system.
+
+In the normal path we'll end up calling unset_reloc_control() twice, but
+all it does is set fs_info->reloc_control = NULL, and we can only have
+one balance at a time so it's not racey.
 
 CC: stable@vger.kernel.org # 5.4+
+Reviewed-by: Qu Wenruo <wqu@suse.com>
 Signed-off-by: Josef Bacik <josef@toxicpanda.com>
 Reviewed-by: David Sterba <dsterba@suse.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/relocation.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ fs/btrfs/relocation.c |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
 --- a/fs/btrfs/relocation.c
 +++ b/fs/btrfs/relocation.c
-@@ -4221,10 +4221,10 @@ restart:
- 		goto out_free;
+@@ -4593,9 +4593,8 @@ int btrfs_recover_relocation(struct btrf
+ 
+ 	trans = btrfs_join_transaction(rc->extent_root);
+ 	if (IS_ERR(trans)) {
+-		unset_reloc_control(rc);
+ 		err = PTR_ERR(trans);
+-		goto out_free;
++		goto out_unset;
  	}
- 	btrfs_commit_transaction(trans);
-+out_free:
+ 
+ 	rc->merge_reloc_tree = 1;
+@@ -4615,7 +4614,7 @@ int btrfs_recover_relocation(struct btrf
+ 		if (IS_ERR(fs_root)) {
+ 			err = PTR_ERR(fs_root);
+ 			list_add_tail(&reloc_root->root_list, &reloc_roots);
+-			goto out_free;
++			goto out_unset;
+ 		}
+ 
+ 		err = __add_reloc_root(reloc_root);
+@@ -4625,7 +4624,7 @@ int btrfs_recover_relocation(struct btrf
+ 
+ 	err = btrfs_commit_transaction(trans);
+ 	if (err)
+-		goto out_free;
++		goto out_unset;
+ 
+ 	merge_reloc_roots(rc);
+ 
+@@ -4641,7 +4640,8 @@ out_clean:
  	ret = clean_dirty_subvols(rc);
  	if (ret < 0 && !err)
  		err = ret;
 -out_free:
- 	btrfs_free_block_rsv(fs_info, rc->block_rsv);
- 	btrfs_free_path(path);
- 	return err;
-@@ -4634,10 +4634,10 @@ int btrfs_recover_relocation(struct btrf
- 	trans = btrfs_join_transaction(rc->extent_root);
- 	if (IS_ERR(trans)) {
- 		err = PTR_ERR(trans);
--		goto out_free;
-+		goto out_clean;
- 	}
- 	err = btrfs_commit_transaction(trans);
--
-+out_clean:
- 	ret = clean_dirty_subvols(rc);
- 	if (ret < 0 && !err)
- 		err = ret;
++out_unset:
++	unset_reloc_control(rc);
+ 	kfree(rc);
+ out:
+ 	if (!list_empty(&reloc_roots))
 
 
