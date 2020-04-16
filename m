@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F00C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:41:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C888C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A62352222C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:41:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB2762076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:41:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587044473;
-	bh=YT2uPu+CvbKPtXH7NT0G3Z7bnBFybUw4cBTirjFdyIA=;
+	s=default; t=1587044494;
+	bh=T9Q/+8y+10RHMimFMocEtiqH524D6C047MMtaJaMqCU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hGD61BCQZ/UN/ypdJU2l7tSu4HV9pFSQOpIEkVRgyw8aXyExp7Ybr25fVAsTOH15v
-	 pz7XG/usfww1G3bfA9rbJrTCqMAEmrXUcfZxV4gqw/BB6W7VPQGDDsR30VoW5iEOX7
-	 kzE8rtOVzA+nhmwGJTsROX7DzFaSVDS+PqoRsDPg=
+	b=p+wCP2FHSFsm76Sz8E6g8IwRc853w0PsgXPxgvwHGMZZKKzonwSrC7T0ZlYB8GA41
+	 RfrzafrWNPZXFf3rnbrA3Tah387BSMbOhACXUrF7sQ3SSXAwHs6n2SRCfliACmrKfA
+	 AtHOtdKbGB4kqmvqZAZnrULupmIw42GuqVtHw/tc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2898266AbgDPNlM (ORCPT
+        id S2898320AbgDPNl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:41:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40848 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:41:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896270AbgDPNah (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:30:37 -0400
+        id S2896558AbgDPNcz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:32:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 716B6206E9;
-        Thu, 16 Apr 2020 13:30:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98B692224F;
+        Thu, 16 Apr 2020 13:31:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043836;
-        bh=YT2uPu+CvbKPtXH7NT0G3Z7bnBFybUw4cBTirjFdyIA=;
+        s=default; t=1587043908;
+        bh=T9Q/+8y+10RHMimFMocEtiqH524D6C047MMtaJaMqCU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cZHgfFiYsBLicpa/vdFpVouDR8NUY8UD4ny3NQZUdzJdeCZsqBibGm1rlcEm4tw7m
-         oo3V2glyte/S05AoosQR3COvwRcSJslSpziKC/RMeD76w20Q5MgJ2b9UqYbPt7hC4i
-         VE8uBUWCbOkeLDiAOrHpetZNfnr7vsD1jj3W08LE=
+        b=PjNz5n2RDKaRm9+DmdhvQCmL2scBlam6SurYDyQHPEZHO+Ew+slQUvJoUcOW7uZ1H
+         vQ8YSe9qIbEMFQRcuQrWPh8k5HWGIq3UYUHeLwi4Q2faMOmhw9Ho1cL2Iq16ibM4MO
+         8655NdbP5l+5MPYUisiEKq657P4COK+KwDXsbCA4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: [PATCH 4.19 080/146] KVM: s390: vsie: Fix region 1 ASCE sanity shadow address checks
-Date:   Thu, 16 Apr 2020 15:23:41 +0200
-Message-Id: <20200416131253.818790582@linuxfoundation.org>
+        stable@vger.kernel.org, Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>
+Subject: [PATCH 4.19 123/146] xen/blkfront: fix memory allocation flags in blkfront_setup_indirect()
+Date:   Thu, 16 Apr 2020 15:24:24 +0200
+Message-Id: <20200416131259.388834579@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
 References: <20200416131242.353444678@linuxfoundation.org>
@@ -61,56 +60,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Hildenbrand <david@redhat.com>
+From: Juergen Gross <jgross@suse.com>
 
-commit a1d032a49522cb5368e5dfb945a85899b4c74f65 upstream.
+commit 3a169c0be75b59dd85d159493634870cdec6d3c4 upstream.
 
-In case we have a region 1 the following calculation
-(31 + ((gmap->asce & _ASCE_TYPE_MASK) >> 2)*11)
-results in 64. As shifts beyond the size are undefined the compiler is
-free to use instructions like sllg. sllg will only use 6 bits of the
-shift value (here 64) resulting in no shift at all. That means that ALL
-addresses will be rejected.
+Commit 1d5c76e664333 ("xen-blkfront: switch kcalloc to kvcalloc for
+large array allocation") didn't fix the issue it was meant to, as the
+flags for allocating the memory are GFP_NOIO, which will lead the
+memory allocation falling back to kmalloc().
 
-The can result in endless loops, e.g. when prefix cannot get mapped.
+So instead of GFP_NOIO use GFP_KERNEL and do all the memory allocation
+in blkfront_setup_indirect() in a memalloc_noio_{save,restore} section.
 
-Fixes: 4be130a08420 ("s390/mm: add shadow gmap support")
-Tested-by: Janosch Frank <frankja@linux.ibm.com>
-Reported-by: Janosch Frank <frankja@linux.ibm.com>
-Cc: <stable@vger.kernel.org> # v4.8+
-Signed-off-by: David Hildenbrand <david@redhat.com>
-Link: https://lore.kernel.org/r/20200403153050.20569-2-david@redhat.com
-Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
-[borntraeger@de.ibm.com: fix patch description, remove WARN_ON_ONCE]
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Fixes: 1d5c76e664333 ("xen-blkfront: switch kcalloc to kvcalloc for large array allocation")
+Cc: stable@vger.kernel.org
+Signed-off-by: Juergen Gross <jgross@suse.com>
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Acked-by: Roger Pau Monné <roger.pau@citrix.com>
+Link: https://lore.kernel.org/r/20200403090034.8753-1-jgross@suse.com
+Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/mm/gmap.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/block/xen-blkfront.c |   17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
---- a/arch/s390/mm/gmap.c
-+++ b/arch/s390/mm/gmap.c
-@@ -787,14 +787,18 @@ static void gmap_call_notifier(struct gm
- static inline unsigned long *gmap_table_walk(struct gmap *gmap,
- 					     unsigned long gaddr, int level)
- {
-+	const int asce_type = gmap->asce & _ASCE_TYPE_MASK;
- 	unsigned long *table;
+--- a/drivers/block/xen-blkfront.c
++++ b/drivers/block/xen-blkfront.c
+@@ -47,6 +47,7 @@
+ #include <linux/bitmap.h>
+ #include <linux/list.h>
+ #include <linux/workqueue.h>
++#include <linux/sched/mm.h>
  
- 	if ((gmap->asce & _ASCE_TYPE_MASK) + 4 < (level * 4))
- 		return NULL;
- 	if (gmap_is_shadow(gmap) && gmap->removed)
- 		return NULL;
--	if (gaddr & (-1UL << (31 + ((gmap->asce & _ASCE_TYPE_MASK) >> 2)*11)))
+ #include <xen/xen.h>
+ #include <xen/xenbus.h>
+@@ -2188,10 +2189,12 @@ static void blkfront_setup_discard(struc
+ 
+ static int blkfront_setup_indirect(struct blkfront_ring_info *rinfo)
+ {
+-	unsigned int psegs, grants;
++	unsigned int psegs, grants, memflags;
+ 	int err, i;
+ 	struct blkfront_info *info = rinfo->dev_info;
+ 
++	memflags = memalloc_noio_save();
 +
-+	if (asce_type != _ASCE_TYPE_REGION1 &&
-+	    gaddr & (-1UL << (31 + (asce_type >> 2) * 11)))
- 		return NULL;
+ 	if (info->max_indirect_segments == 0) {
+ 		if (!HAS_EXTRA_REQ)
+ 			grants = BLKIF_MAX_SEGMENTS_PER_REQUEST;
+@@ -2223,7 +2226,7 @@ static int blkfront_setup_indirect(struc
+ 
+ 		BUG_ON(!list_empty(&rinfo->indirect_pages));
+ 		for (i = 0; i < num; i++) {
+-			struct page *indirect_page = alloc_page(GFP_NOIO);
++			struct page *indirect_page = alloc_page(GFP_KERNEL);
+ 			if (!indirect_page)
+ 				goto out_of_memory;
+ 			list_add(&indirect_page->lru, &rinfo->indirect_pages);
+@@ -2234,15 +2237,15 @@ static int blkfront_setup_indirect(struc
+ 		rinfo->shadow[i].grants_used =
+ 			kvcalloc(grants,
+ 				 sizeof(rinfo->shadow[i].grants_used[0]),
+-				 GFP_NOIO);
++				 GFP_KERNEL);
+ 		rinfo->shadow[i].sg = kvcalloc(psegs,
+ 					       sizeof(rinfo->shadow[i].sg[0]),
+-					       GFP_NOIO);
++					       GFP_KERNEL);
+ 		if (info->max_indirect_segments)
+ 			rinfo->shadow[i].indirect_grants =
+ 				kvcalloc(INDIRECT_GREFS(grants),
+ 					 sizeof(rinfo->shadow[i].indirect_grants[0]),
+-					 GFP_NOIO);
++					 GFP_KERNEL);
+ 		if ((rinfo->shadow[i].grants_used == NULL) ||
+ 			(rinfo->shadow[i].sg == NULL) ||
+ 		     (info->max_indirect_segments &&
+@@ -2251,6 +2254,7 @@ static int blkfront_setup_indirect(struc
+ 		sg_init_table(rinfo->shadow[i].sg, psegs);
+ 	}
+ 
++	memalloc_noio_restore(memflags);
+ 
+ 	return 0;
+ 
+@@ -2270,6 +2274,9 @@ out_of_memory:
+ 			__free_page(indirect_page);
+ 		}
+ 	}
 +
- 	table = gmap->table;
- 	switch (gmap->asce & _ASCE_TYPE_MASK) {
- 	case _ASCE_TYPE_REGION1:
++	memalloc_noio_restore(memflags);
++
+ 	return -ENOMEM;
+ }
+ 
 
 
