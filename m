@@ -2,172 +2,296 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C8DC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:48:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C91CC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:49:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76552208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:48:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D652521D79
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:49:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="gcd8ZiDn"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="rCBrPVK3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504208AbgDPJsg (ORCPT
+        id S2504230AbgDPJs6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 05:48:36 -0400
-Received: from mail-am6eur05on2049.outbound.protection.outlook.com ([40.107.22.49]:6093
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2503681AbgDPJsM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 05:48:12 -0400
+        Thu, 16 Apr 2020 05:48:58 -0400
+Received: from mga17.intel.com ([192.55.52.151]:63822 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2504126AbgDPJsh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 05:48:37 -0400
+IronPort-SDR: drNFHjEeXl7DGqHhua/GDKvw7OVpjoktN3JGuEy9dX5ie8/ZuGanb7B77lt5Pi43ay69Lcw2LB
+ TPJXSuFtyQyQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 02:48:31 -0700
+IronPort-SDR: wL3njhJkGut5DF2SN985WpBAthwzTrFL94B6JKx80uvQKxmKALNU0BtdNEMn1ZoxQkG4Go6Hux
+ 5RK2wC/OMuiw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,390,1580803200"; 
+   d="scan'208";a="242599418"
+Received: from orsmsx102.amr.corp.intel.com ([10.22.225.129])
+  by orsmga007.jf.intel.com with ESMTP; 16 Apr 2020 02:48:31 -0700
+Received: from orsmsx607.amr.corp.intel.com (10.22.229.20) by
+ ORSMSX102.amr.corp.intel.com (10.22.225.129) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 16 Apr 2020 02:48:31 -0700
+Received: from orsmsx607.amr.corp.intel.com (10.22.229.20) by
+ ORSMSX607.amr.corp.intel.com (10.22.229.20) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 16 Apr 2020 02:48:30 -0700
+Received: from ORSEDG001.ED.cps.intel.com (10.7.248.4) by
+ orsmsx607.amr.corp.intel.com (10.22.229.20) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 16 Apr 2020 02:48:30 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.176)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 16 Apr 2020 02:48:20 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KQeeI7eZBkfa1ZQuJX+L59uLVHRriYug/9Mzb8/euEUxSHw2jOzaaWjeSZGj2LRTtjsymEQ5hmiQnUNMsPkv7CD1LlIdbbFLFi9X8OVqV5OD+qYHu/gImS3EW+W1263EoA+l99m2GLUBFn9RFw/O3Q6S7XriGLvx5hm6DI2vLWpToJ6gO4HIbkLsnz2eC1XMpHvYAPhxMzJZnjhi+ckE+ZsnvvawJTZ5StIvxvt244BykbMwmLOPgVN6+o8GFgW37ftFB/o+lxEgy9co5ipDoTcSiVQFuckc7nDOSlWobgaIDVyNP0Faf4NPkp1FQfuRljkXEitWKqum0PD4MXvBvQ==
+ b=U7f5b7YDue6amdfPxheAb/WQyv0im0OyCMKI56k0JqWhmQHt/w0XYyzD1/EC910FMLHPMGj08hTdR50xgAKGMSkHvCmbKIjwiVEx4yviGA2XvrYc/W6Dz6cPlv1bmH91tz7+XxcO8TFWLCO4UG2MU4Ub6dSMbnjPywBdFuvci2cNlqakucu4oQAvvadud/1XA4/QaBGy2+5ig1WY/PsGE+wVf9JPTfXWwdhwJkK9eU5vApAv6PEYJf3F3XN7NLoxRRMWYc5DqTOFwE+x+U9XFACU0tMM5RUCwXYDKaRDATCjwTHFgdIJEQPId1TOcDpQv5J4aNVpEpw1Rso7JEIDDw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iFfEtUxSBPOydsEfgtacQJUVTWrwXzNvpGFy+kBIHQ0=;
- b=l1bjRyJpie2TWgiVJdpSpmD5spgBEK+rYY4mdTBfqmhvQOiGylMy7DCpzZsZitFsloDXr22R5ON8yWM8SkgK5tUtFq/yC4bONbdHYLH++n6WixqSPke9Ni3Dcj5ELkvuzA0FgfGbeNoqXYnW2da05qXtlztkNKWnLg7zlks8DYwvwFu0ExNAH+85xKg5PXj4Hur+QMbSYdF98wI4zVXnb+DkdyqvlHdHcpjiezUVetN3yEgdAvnCMafNPkrkW2Icm8I6FqbWIdFMVIN9KH8csEgKBTPjWMBZlZI41m2HwYsGd9KVv9Ym3PbrA7WnhpYQMYs/WZ8eC5BY/nrfVZeV5Q==
+ bh=JDZvfXGuknErF0hZ9/n6QDVNhdBo9TTnR1f9/DuHLIY=;
+ b=BjPYccFah8WcDunbp8Y9DX4gJ4AYfLPOtci03OpyMQ5yo1JfBk8G8/TPQkrRGIWkP+YX6YSlL3iXrHxaqEn8oX/PAKsK3gEjs/4hbGSobpDMgkR2DCnSXDyVKLOBPqOjsozuTfCNpLmlWptpBqcnpuGPgPX+WP7jlI90bzL2RvlHwooCF1qfBkGRLtbmhIHiSlkQs8FpiYUT6mEPvzrV34OgY7+k8rzmgzr6zJRXRVR3gtDQVgIoJv9KIBlqzKetzHPkQxiG3//7v679b1yxAlE3dGAaFqUeEtc7jY1sLu0pvE26Ap/olQP11n33QyCJK8Qg+gEoP8qky2z78LjYdw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iFfEtUxSBPOydsEfgtacQJUVTWrwXzNvpGFy+kBIHQ0=;
- b=gcd8ZiDnW05jnUctg55DlQUbddOGz2aFyI97X+nNTYl3l/nnnVHSGyBfVAwEg7QJEoI2F4V/S4lAFHt5Y67qgnHDGJ0tgBdE3SGZIsJb83ZduLLRm9hlpxf4ZD+n12fp5N4nG4rWV1/O1tFbeokrV8pUJeUEqtfQI87LAaMr5Hw=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (2603:10a6:8:10::18)
- by DB3PR0402MB3835.eurprd04.prod.outlook.com (2603:10a6:8:3::30) with
+ bh=JDZvfXGuknErF0hZ9/n6QDVNhdBo9TTnR1f9/DuHLIY=;
+ b=rCBrPVK3wNknbnmfXZJue5Az3xS2zP2MCFkypkzw7Hn9ELJm+LtZ/QSqJiOMrylfrg947YW+5CKzTRpwjKQrE0GnWVJCJrJBcXzPwzRfiVNWywLCSbA25V2GCFw1pWR4T9oqNrkUfhc6eWwgkxAAq38sARYxRFx2iMCKpHfORQY=
+Received: from DM6PR11MB3819.namprd11.prod.outlook.com (2603:10b6:5:13f::31)
+ by DM6PR11MB3834.namprd11.prod.outlook.com (2603:10b6:5:137::27) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.26; Thu, 16 Apr
- 2020 09:48:08 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::3143:c46:62e4:8a8b]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::3143:c46:62e4:8a8b%7]) with mapi id 15.20.2900.028; Thu, 16 Apr 2020
- 09:48:08 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Marco Felsch <m.felsch@pengutronix.de>
-CC:     "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH V2 1/5] dt-bindings: clock: Convert i.MX6Q clock to
- json-schema
-Thread-Topic: [PATCH V2 1/5] dt-bindings: clock: Convert i.MX6Q clock to
- json-schema
-Thread-Index: AQHWE7rnIXhaMxmp60Ko8ImmCqNkpah7fmcAgAABvHA=
-Date:   Thu, 16 Apr 2020 09:48:08 +0000
-Message-ID: <DB3PR0402MB391613C2B53CEE067E1C7EC7F5D80@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1587019158-12143-1-git-send-email-Anson.Huang@nxp.com>
- <20200416093932.2mkcyv4rs6v6a24a@pengutronix.de>
-In-Reply-To: <20200416093932.2mkcyv4rs6v6a24a@pengutronix.de>
+ 2020 09:47:53 +0000
+Received: from DM6PR11MB3819.namprd11.prod.outlook.com
+ ([fe80::98a:bb06:5551:e5a3]) by DM6PR11MB3819.namprd11.prod.outlook.com
+ ([fe80::98a:bb06:5551:e5a3%3]) with mapi id 15.20.2900.028; Thu, 16 Apr 2020
+ 09:47:53 +0000
+From:   "Wu, Hao" <hao.wu@intel.com>
+To:     "Xu, Yilun" <yilun.xu@intel.com>,
+        "mdf@kernel.org" <mdf@kernel.org>,
+        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "trix@redhat.com" <trix@redhat.com>,
+        "bhu@redhat.com" <bhu@redhat.com>,
+        "Kang, Luwei" <luwei.kang@intel.com>
+Subject: RE: [PATCH v4 5/7] fpga: dfl: fme: add interrupt support for global
+ error reporting
+Thread-Topic: [PATCH v4 5/7] fpga: dfl: fme: add interrupt support for global
+ error reporting
+Thread-Index: AQHWEw5ReWeaVzoLK0+zi/nRtLwP8Kh7gcmw
+Date:   Thu, 16 Apr 2020 09:47:53 +0000
+Message-ID: <DM6PR11MB3819E22A4BBA27F532476B4485D80@DM6PR11MB3819.namprd11.prod.outlook.com>
+References: <1586945255-30823-1-git-send-email-yilun.xu@intel.com>
+ <1586945255-30823-6-git-send-email-yilun.xu@intel.com>
+In-Reply-To: <1586945255-30823-6-git-send-email-yilun.xu@intel.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+dlp-version: 11.2.0.6
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [183.192.13.100]
+ smtp.mailfrom=hao.wu@intel.com; 
+x-originating-ip: [192.102.204.38]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 0ffe423e-96f6-4af8-9fa4-08d7e1eb44c2
-x-ms-traffictypediagnostic: DB3PR0402MB3835:|DB3PR0402MB3835:
+x-ms-office365-filtering-correlation-id: 585b9beb-4134-409c-b570-08d7e1eb3c1e
+x-ms-traffictypediagnostic: DM6PR11MB3834:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB3PR0402MB38359FDD559D28C5B83269C8F5D80@DB3PR0402MB3835.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-microsoft-antispam-prvs: <DM6PR11MB38343F610A150D09B6524D1D85D80@DM6PR11MB3834.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
 x-forefront-prvs: 0375972289
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(346002)(376002)(366004)(136003)(39860400002)(396003)(66946007)(55016002)(478600001)(8676002)(6506007)(81156014)(52536014)(44832011)(2906002)(316002)(966005)(66476007)(64756008)(71200400001)(6916009)(76116006)(9686003)(33656002)(7696005)(86362001)(66446008)(66556008)(4326008)(26005)(8936002)(7416002)(53546011)(54906003)(5660300002)(186003)(45080400002);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3819.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(39860400002)(346002)(376002)(366004)(396003)(136003)(110136005)(316002)(26005)(478600001)(6506007)(33656002)(7696005)(53546011)(2906002)(8676002)(5660300002)(81156014)(52536014)(54906003)(66946007)(66446008)(4326008)(186003)(9686003)(86362001)(55016002)(8936002)(76116006)(66476007)(64756008)(71200400001)(66556008)(107886003);DIR:OUT;SFP:1102;
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: hFC3t3xPdJIqatY5bWbHkmeUhvJr2J91SIX2/q+iF3DtpBpe2jdJyW4IQzglHJv234f4D0OSaCJ1Lu3Bd/TIg0Vfk7YgTeb5BsZRauGu5ihRUrE0MzcMA3ivvqlii3+lpeDXx+fAMlcfflYYfH8O1xaLXYy7hElA0aw0MnY8e4XIDaDwJ3j4g6UO1A+kVntW/0lOGCFSnFtRhg+yL/XSSF5GI/CdQV2/eSKRB6j7qkjqsHmN208sVo7VECCTDi+we27HcrWN6rUwTCStyTm6RI9a4A0bR6MKln16VZZzV9DgvLSJbAB9M19+IZxefapKzgPzPKfaZMvVjl237Up8LRNQfAa/fRj8Ulbtjup1nqriEix3qn6eUHL3WVz51bxtuQzZB0ePjEsQFwQ6EpltndvslHLF7eg04NVADVV9nXRuCQq6pK4/P4N5JU0ncxAt+j5uHM3WFHXECEFjBKDpm2cO93ShfXNFO9SRbxuje84=
-x-ms-exchange-antispam-messagedata: DREShWuCI91PlTnjNctWATwdxgbeRRN9F4iTcFNVkNfFsPPAVVCO1A2qUszjsGFDAbHDqugZ6Fzbv/e4zRe9AytnbqDpeBJj5Ej3bqqddS0B+FqsDwZbKp2nigvFSQxSONMtAA0o2ejPb9kyMrvXkA==
+x-microsoft-antispam-message-info: Cn+TNGhwCsOvMqyIueraK8eC7E2T8bmOyvSb9vO/gkjYjKDzI84zJL8G4oaeQqq7hYYRVf6P9d/+PVgioHBTeu84TKUSjoNx+uA8/+b51bod7OGBkG1DQ9/07t9ybjqSStQ3kyrJqmWKr943KJGupZj4FvD9ryjqH68XQl2UV98TBGLHjVgr7Vc2D8QD9fZPJUlRtEUPS86+HlM4lyR9e868C93VRsR0Ib7q+SRyAdQ3AX4qtppMd3eFewJNw7ossddBeUjMUYV5wZRTNtUGG2cy8LlKtzfPDpOkqEV28ir3+8YoL7EkSlprVKJ2Jaej9dxwgX8dJ81Qzh15TePs2991x05gqfvT++Y9TyZDxHRuiidVVxJnLiWVQXMwIY/cV5gUudc8WlI3VRHcxR8VOy7bYOXZPrV2/uQ97CFTt0kezS8M/VFvkmq+m3OAFPfc
+x-ms-exchange-antispam-messagedata: HjtkSC5rGGPwJK0JRgTRR4M0SZUsJ/GYli2L2vukhWuN3zLetUBNVbnevPtdJnb7xWx5P0liGed8vM/3vYDZl9Q1hyjTM6IXm0jl76rhCNKI0qkm/XlHZtACbKOWXuTRqKTl1VmzjImj9N90wfEU2w==
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0ffe423e-96f6-4af8-9fa4-08d7e1eb44c2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Apr 2020 09:48:08.2774
+X-MS-Exchange-CrossTenant-Network-Message-Id: 585b9beb-4134-409c-b570-08d7e1eb3c1e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Apr 2020 09:47:53.7334
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: x/ajJoEvi6ABGG05EKfLaGqksNVnPoeySRdFyf5nkZERwQIzEWcAOuj9pgKtoaSmrCsUhihatert3OUU9jHmBA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3835
+X-MS-Exchange-CrossTenant-userprincipalname: pbCmg86lJ2GyIe40XrIY3yifoqNK+UUdSPIwwbsIVWOsBrsljcFbdQ+XOXhQHCE9nhzVhAyVphIP5a8P9RinMA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3834
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Marco
+> -----Original Message-----
+> From: Xu, Yilun <yilun.xu@intel.com>
+> Sent: Wednesday, April 15, 2020 6:08 PM
+> To: mdf@kernel.org; linux-fpga@vger.kernel.org; linux-
+> kernel@vger.kernel.org
+> Cc: trix@redhat.com; bhu@redhat.com; Xu, Yilun <yilun.xu@intel.com>;
+> Kang, Luwei <luwei.kang@intel.com>; Wu, Hao <hao.wu@intel.com>
+> Subject: [PATCH v4 5/7] fpga: dfl: fme: add interrupt support for global =
+error
+> reporting
+>=20
+> Error reporting interrupt is very useful to notify users that some
+> errors are detected by the hardware. Once users are notified, they
+> could query hardware logged error states, no need to continuously
+> poll on these states.
+>=20
+> This patch adds interrupt support for fme global error reporting sub
+> feature. It follows the common DFL interrupt notification and handling
+> mechanism. And it implements two ioctls below for user to query
+> number of irqs supported, and set/unset interrupt triggers.
+>=20
+>  Ioctls:
+>  * DFL_FPGA_FME_ERR_GET_IRQ_NUM
+>    get the number of irqs, which is used to determine whether/how many
+>    interrupts fme error reporting feature supports.
+>=20
+>  * DFL_FPGA_FME_ERR_SET_IRQ
+>    set/unset given eventfds as fme error reporting interrupt triggers.
+>=20
+> Signed-off-by: Luwei Kang <luwei.kang@intel.com>
+> Signed-off-by: Wu Hao <hao.wu@intel.com>
+> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> ----
+> v2: use DFL_FPGA_FME_ERR_GET_IRQ_NUM instead of
+>     DFL_FPGA_FME_ERR_GET_INFO
+>     Delete flags field for DFL_FPGA_FME_ERR_SET_IRQ
+> v3: put_user() instead of copy_to_user()
+>     improves comments
+> v4: use common functions to handle irq ioctls
+> ---
+>  drivers/fpga/dfl-fme-error.c  | 23 +++++++++++++++++++++++
+>  drivers/fpga/dfl-fme-main.c   |  6 ++++++
+>  include/uapi/linux/fpga-dfl.h | 23 +++++++++++++++++++++++
+>  3 files changed, 52 insertions(+)
+>=20
+> diff --git a/drivers/fpga/dfl-fme-error.c b/drivers/fpga/dfl-fme-error.c
+> index f897d41..a4cbf8c 100644
+> --- a/drivers/fpga/dfl-fme-error.c
+> +++ b/drivers/fpga/dfl-fme-error.c
+> @@ -16,6 +16,7 @@
+>   */
+>=20
+>  #include <linux/uaccess.h>
+> +#include <linux/fpga-dfl.h>
+>=20
+>  #include "dfl.h"
+>  #include "dfl-fme.h"
+> @@ -348,6 +349,27 @@ static void fme_global_err_uinit(struct
+> platform_device *pdev,
+>  	fme_err_mask(&pdev->dev, true);
+>  }
+>=20
+> +static long
+> +fme_global_error_ioctl(struct platform_device *pdev,
+> +		       struct dfl_feature *feature,
+> +		       unsigned int cmd, unsigned long arg)
+> +{
+> +	long ret =3D -ENODEV;
 
-> Subject: Re: [PATCH V2 1/5] dt-bindings: clock: Convert i.MX6Q clock to
-> json-schema
->=20
-> Hi Anson,
->=20
-> On 20-04-16 14:39, Anson Huang wrote:
->=20
-> ...
->=20
-> > diff --git a/Documentation/devicetree/bindings/clock/imx6q-clock.yaml
-> b/Documentation/devicetree/bindings/clock/imx6q-clock.yaml
-> > new file mode 100644
-> > index 0000000..1c6e600
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/clock/imx6q-clock.yaml
-> > @@ -0,0 +1,66 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id:
-> https://eur01.safelinks.protection.outlook.com/?url=3Dhttp%3A%2F%2Fdevice=
-tr
-> ee.org%2Fschemas%2Fclock%2Fimx6q-clock.yaml%23&amp;data=3D02%7C01%
-> 7Canson.huang%40nxp.com%7Ca840fd5be8c94d4d950608d7e1ea16a2%7C6
-> 86ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C1%7C637226267845578228&
-> amp;sdata=3DIw1CkVBMqw3m6sox6C3khcMy0BHNCQ9v2k72q3CM6Xs%3D&a
-> mp;reserved=3D0
-> > +$schema:
-> https://eur01.safelinks.protection.outlook.com/?url=3Dhttp%3A%2F%2Fdevice=
-tr
-> ee.org%2Fmeta-schemas%2Fcore.yaml%23&amp;data=3D02%7C01%7Canson.hu
-> ang%40nxp.com%7Ca840fd5be8c94d4d950608d7e1ea16a2%7C686ea1d3bc2
-> b4c6fa92cd99c5c301635%7C0%7C1%7C637226267845578228&amp;sdata=3DP
-> Be2CEoDdMo9I1m3DHbITCyYxB4GF%2FigP%2FNd7YCopCQ%3D&amp;reserve
-> d=3D0
-> > +
-> > +title: Clock bindings for Freescale i.MX6 Quad
-> > +
-> > +maintainers:
-> > +  - Anson Huang <Anson.Huang@nxp.com>
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: fsl,imx6q-ccm
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    maxItems: 2
->=20
-> IMHO I would force them to have exactly two so we need
-> minItems: 2 too here.
+Same case for patch #5 and #6.=20
+Other place looks good to me.
 
-Actually, those 2 interrupts are NOT necessary for some platforms, such as =
-i.MX platforms
-do NOT enable them at all, so is it OK to force them to be '2' here?
+Thanks
+Hao
 
-Thanks,
-Anson
+> +
+> +	switch (cmd) {
+> +	case DFL_FPGA_FME_ERR_GET_IRQ_NUM:
+> +		ret =3D dfl_feature_ioctl_get_num_irqs(pdev, feature, arg);
+> +		break;
+> +	case DFL_FPGA_FME_ERR_SET_IRQ:
+> +		ret =3D dfl_feature_ioctl_set_irq(pdev, feature, arg);
+> +		break;
+> +	default:
+> +		dev_dbg(&pdev->dev, "%x cmd not handled", cmd);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+>  const struct dfl_feature_id fme_global_err_id_table[] =3D {
+>  	{.id =3D FME_FEATURE_ID_GLOBAL_ERR,},
+>  	{0,}
+> @@ -356,4 +378,5 @@ const struct dfl_feature_id fme_global_err_id_table[]
+> =3D {
+>  const struct dfl_feature_ops fme_global_err_ops =3D {
+>  	.init =3D fme_global_err_init,
+>  	.uinit =3D fme_global_err_uinit,
+> +	.ioctl =3D fme_global_error_ioctl,
+>  };
+> diff --git a/drivers/fpga/dfl-fme-main.c b/drivers/fpga/dfl-fme-main.c
+> index 56d720c..ab3722d 100644
+> --- a/drivers/fpga/dfl-fme-main.c
+> +++ b/drivers/fpga/dfl-fme-main.c
+> @@ -616,11 +616,17 @@ static int fme_release(struct inode *inode, struct
+> file *filp)
+>  {
+>  	struct dfl_feature_platform_data *pdata =3D filp->private_data;
+>  	struct platform_device *pdev =3D pdata->dev;
+> +	struct dfl_feature *feature;
+>=20
+>  	dev_dbg(&pdev->dev, "Device File Release\n");
+>=20
+>  	mutex_lock(&pdata->lock);
+>  	dfl_feature_dev_use_end(pdata);
+> +
+> +	if (!dfl_feature_dev_use_count(pdata))
+> +		dfl_fpga_dev_for_each_feature(pdata, feature)
+> +			dfl_fpga_set_irq_triggers(feature, 0,
+> +						  feature->nr_irqs, NULL);
+>  	mutex_unlock(&pdata->lock);
+>=20
+>  	return 0;
+> diff --git a/include/uapi/linux/fpga-dfl.h b/include/uapi/linux/fpga-dfl.=
+h
+> index fbe1e99..9e12fff 100644
+> --- a/include/uapi/linux/fpga-dfl.h
+> +++ b/include/uapi/linux/fpga-dfl.h
+> @@ -230,4 +230,27 @@ struct dfl_fpga_fme_port_pr {
+>   */
+>  #define DFL_FPGA_FME_PORT_ASSIGN     _IOW(DFL_FPGA_MAGIC,
+> DFL_FME_BASE + 2, int)
+>=20
+> +/**
+> + * DFL_FPGA_FME_ERR_GET_IRQ_NUM - _IOR(DFL_FPGA_MAGIC,
+> DFL_FME_BASE + 3,
+> + *							__u32 num_irqs)
+> + *
+> + * Get the number of irqs supported by the fpga fme error reporting priv=
+ate
+> + * feature. Currently hardware supports up to 1 irq.
+> + * Return: 0 on success, -errno on failure.
+> + */
+> +#define DFL_FPGA_FME_ERR_GET_IRQ_NUM	_IOR(DFL_FPGA_MAGIC,
+> 	\
+> +					     DFL_FME_BASE + 3, __u32)
+> +
+> +/**
+> + * DFL_FPGA_FME_ERR_SET_IRQ - _IOW(DFL_FPGA_MAGIC, DFL_FME_BASE
+> + 4,
+> + *						struct dfl_fpga_irq_set)
+> + *
+> + * Set fpga fme error reporting interrupt trigger if evtfds[n] is valid.
+> + * Unset related interrupt trigger if evtfds[n] is a negative value.
+> + * Return: 0 on success, -errno on failure.
+> + */
+> +#define DFL_FPGA_FME_ERR_SET_IRQ	_IOW(DFL_FPGA_MAGIC,
+> 	\
+> +					     DFL_FME_BASE + 4,	\
+> +					     struct dfl_fpga_irq_set)
+> +
+>  #endif /* _UAPI_LINUX_FPGA_DFL_H */
+> --
+> 2.7.4
+
