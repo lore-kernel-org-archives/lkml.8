@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE053C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B963DC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:22:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBD082076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:22:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90E772076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:22:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587046941;
-	bh=dB2KDjlcVCRYXWZJQZqtT4mhyHRjUEp26h/b+SX/bSs=;
+	s=default; t=1587046950;
+	bh=KU2FR0I+xliMtcNvmrcH8n2pqjet0iy99xhppOQoRJE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h49rDKG8d8CZYfHbLohsm88Ja9csj3WH7DqR1+yDWp3UYa/+eGa7TQQTv7qrGKtU4
-	 YmobLCyV9M3GIgkpEQ8T1A1GgadN3BRql1dz0GR2xuS+RF/RYULL/Vzugy11eFaoMe
-	 hUesHJkrwD6buLsv8dvQwwpXWW0vUibVPqh+GKE8=
+	b=uNAVLdTmYfW25WRoqbCuMZD0iMd5jTgXhNEJR959vjrqR9mrAWXpUnxN5NRQOb3WU
+	 B/oEBgaUO2o8v+P0uC1Tdx7EVgsWb2rVoDXKLZiN4WeZxQmg/F/dONTOoN2Ybxj/g9
+	 N0tGHOYci7xisyPlQYaxTkhurwJBDNx4lV9r2d78=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390297AbgDPOWT (ORCPT
+        id S2394057AbgDPOW1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:22:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42706 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:22:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409147AbgDPNzm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:55:42 -0400
+        id S2441747AbgDPNzq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:55:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 913CE20786;
-        Thu, 16 Apr 2020 13:55:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1264120732;
+        Thu, 16 Apr 2020 13:55:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045342;
-        bh=dB2KDjlcVCRYXWZJQZqtT4mhyHRjUEp26h/b+SX/bSs=;
+        s=default; t=1587045344;
+        bh=KU2FR0I+xliMtcNvmrcH8n2pqjet0iy99xhppOQoRJE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FY/O8hwmlb8NUYj/UpfDOShIPBB2QR3KomCjUoanWI8MrU4q7cx2YK4gBgBFiBFT7
-         eVMpmqwo187QRSK9F0DAckfMCHtopAAAsU47CWzwdcox5NSswjR9c7kHfzYHMgSrwS
-         BbVrbDAEplNpZcAPEmJsq+BsQruZwzvigQmjMkj8=
+        b=cRoPATc+/BXdpkEBSQj1lBuvbYeREKYtj6wIo0OoCVaxMFpGfYX1LO2tNCIWvHAMX
+         ycxGJirUuhJpfJuk0gLgvgwhdeSub+ZHSJmLTvI3q1bmw7igeTg+fz34EIo5q90Auj
+         3eBLJXIMjEuRd+1iZB66oukz/aaeSQPDYvs3AGuA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Ond=C5=99ej=20Caletka?= <ondrej@caletka.cz>,
+        Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
+        Gayatri Kammela <gayatri.kammela@intel.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.6 093/254] ACPI: PM: s2idle: Refine active GPEs check
-Date:   Thu, 16 Apr 2020 15:23:02 +0200
-Message-Id: <20200416131337.567498669@linuxfoundation.org>
+Subject: [PATCH 5.6 094/254] thermal: int340x_thermal: fix: Update Tiger Lake ACPI device IDs
+Date:   Thu, 16 Apr 2020 15:23:03 +0200
+Message-Id: <20200416131337.728284469@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -60,87 +63,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+From: Gayatri Kammela <gayatri.kammela@intel.com>
 
-commit d5406284ff803a578ca503373624312770319054 upstream.
+commit 26d8bec1e97ba218b7d82afadca1c049eb75f773 upstream.
 
-The check for any active GPEs added by commit fdde0ff8590b ("ACPI:
-PM: s2idle: Prevent spurious SCIs from waking up the system") turns
-out to be insufficiently precise to prevent some systems from
-resuming prematurely due to a spurious EC wakeup, so refine it
-by first checking if any GPEs other than the EC GPE are active
-and skipping all of the SCIs coming from the EC that do not produce
-any genuine wakeup events after processing.
+Tiger Lake's new unique ACPI device IDs for Intel thermal driver are not
+valid because of missing 'C' in the IDs. Fix the IDs by updating them.
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206629
-Fixes: fdde0ff8590b ("ACPI: PM: s2idle: Prevent spurious SCIs from waking up the system")
-Reported-by: Ondřej Caletka <ondrej@caletka.cz>
-Tested-by: Ondřej Caletka <ondrej@caletka.cz>
-Cc: 5.4+ <stable@vger.kernel.org> # 5.4+
+After the update, the new IDs should now look like
+INT1040 --> INTC1040
+INT1043 --> INTC1043
+
+Fixes: 9b1b5535dfc9 ("thermal: int340x_thermal: Add Tiger Lake ACPI device IDs")
+Cc: 5.6+ <stable@vger.kernel.org> # 5.6+
+Suggested-by: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
+Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
+Acked-by: Zhang Rui <rui.zhang@intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/acpi/ec.c       |    5 +++++
- drivers/acpi/internal.h |    1 +
- drivers/acpi/sleep.c    |   19 ++++++++++---------
- 3 files changed, 16 insertions(+), 9 deletions(-)
+ drivers/thermal/intel/int340x_thermal/int3400_thermal.c |    2 +-
+ drivers/thermal/intel/int340x_thermal/int3403_thermal.c |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/acpi/ec.c
-+++ b/drivers/acpi/ec.c
-@@ -2044,6 +2044,11 @@ void acpi_ec_set_gpe_wake_mask(u8 action
- 		acpi_set_gpe_wake_mask(NULL, first_ec->gpe, action);
+--- a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
++++ b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
+@@ -369,8 +369,8 @@ static int int3400_thermal_remove(struct
  }
  
-+bool acpi_ec_other_gpes_active(void)
-+{
-+	return acpi_any_gpe_status_set(first_ec ? first_ec->gpe : U32_MAX);
-+}
-+
- bool acpi_ec_dispatch_gpe(void)
- {
- 	u32 ret;
---- a/drivers/acpi/internal.h
-+++ b/drivers/acpi/internal.h
-@@ -202,6 +202,7 @@ void acpi_ec_remove_query_handler(struct
+ static const struct acpi_device_id int3400_thermal_match[] = {
+-	{"INT1040", 0},
+ 	{"INT3400", 0},
++	{"INTC1040", 0},
+ 	{}
+ };
  
- #ifdef CONFIG_PM_SLEEP
- void acpi_ec_flush_work(void);
-+bool acpi_ec_other_gpes_active(void);
- bool acpi_ec_dispatch_gpe(void);
- #endif
+--- a/drivers/thermal/intel/int340x_thermal/int3403_thermal.c
++++ b/drivers/thermal/intel/int340x_thermal/int3403_thermal.c
+@@ -282,8 +282,8 @@ static int int3403_remove(struct platfor
+ }
  
---- a/drivers/acpi/sleep.c
-+++ b/drivers/acpi/sleep.c
-@@ -1017,19 +1017,20 @@ static bool acpi_s2idle_wake(void)
- 			return true;
- 
- 		/*
--		 * If there are no EC events to process and at least one of the
--		 * other enabled GPEs is active, the wakeup is regarded as a
--		 * genuine one.
--		 *
--		 * Note that the checks below must be carried out in this order
--		 * to avoid returning prematurely due to a change of the EC GPE
--		 * status bit from unset to set between the checks with the
--		 * status bits of all the other GPEs unset.
-+		 * If the status bit is set for any enabled GPE other than the
-+		 * EC one, the wakeup is regarded as a genuine one.
- 		 */
--		if (acpi_any_gpe_status_set(U32_MAX) && !acpi_ec_dispatch_gpe())
-+		if (acpi_ec_other_gpes_active())
- 			return true;
- 
- 		/*
-+		 * If the EC GPE status bit has not been set, the wakeup is
-+		 * regarded as a spurious one.
-+		 */
-+		if (!acpi_ec_dispatch_gpe())
-+			return false;
-+
-+		/*
- 		 * Cancel the wakeup and process all pending events in case
- 		 * there are any wakeup ones in there.
- 		 *
+ static const struct acpi_device_id int3403_device_ids[] = {
+-	{"INT1043", 0},
+ 	{"INT3403", 0},
++	{"INTC1043", 0},
+ 	{"", 0},
+ };
+ MODULE_DEVICE_TABLE(acpi, int3403_device_ids);
 
 
