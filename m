@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC15EC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB087C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:52:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A553220732
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:52:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAAC920732
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:52:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587052362;
-	bh=AkmUSef8AZSysoXpdP9BYzpEVG+EqMyehV9XhTMGm60=;
+	s=default; t=1587052368;
+	bh=vAfpia3+3SoFhwgFhHVn8pNS77US4Paef5mt5mvn45E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OYuV9BtutLQe70LWfOOmybMs7aqvnJzfP+8M+Eda7EEm8+VxcHWSkrK1n18t5+F5G
-	 p64TL9eaoE6LGPci70SFOrSSZyJw8ac91APTVsajr1+dSNU+1/fd+MwDdAdJDN97in
-	 RVz4e94+4q/eN+P2SZnPirjY6/6qd/3uwWr9c/LA=
+	b=0LkdmXxx7TmmNCVbv/0SWI5BfvZHpmMaB8Z+NNwwSbySxdl/LpXYdcAC0l+zXV4Pk
+	 okYTHIvGIqu3Xk5vdXnhdrsnd/vUrYcPMhRSCRuvqAPexwQeOa+VfHScp1J0l87RvE
+	 H3+4MJ5PejCsZa8gqlsoabUV8iHH6ucWIPIPtjiI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442617AbgDPPwj (ORCPT
+        id S2894662AbgDPPwr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:52:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44084 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:52:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896576AbgDPNcz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2896560AbgDPNcz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Apr 2020 09:32:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8396722260;
-        Thu, 16 Apr 2020 13:31:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E619F22261;
+        Thu, 16 Apr 2020 13:31:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043913;
-        bh=AkmUSef8AZSysoXpdP9BYzpEVG+EqMyehV9XhTMGm60=;
+        s=default; t=1587043915;
+        bh=vAfpia3+3SoFhwgFhHVn8pNS77US4Paef5mt5mvn45E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I8WVjATeowDhcyybtHUAnFK8hC5n4rkyDGmSp7mwpM6jDhnWNJDZAiCOk+VymnG2w
-         2CwVmZBHSoz1WGy3XYgO1FHi93kSMVhFIQEB2aIGqiS5v6zqrPEHuiTwyrYUOkxuSb
-         YTOVMhUb/PiXM2ovqZZ0TOPlqBmf2M1lkupfPIu4=
+        b=xG5ZiJLaxcoKNcG/1LY8u9wshAkBuxYPB5i8G8HSFgScCKUdBhBWzd7V3es96iNn+
+         eRw+HM2khU3uDrs5hgTPYlGunmN7t1hI11CTda0xi55WajpLCkpC4kS9WIuV4tPRmJ
+         w/XqMLcwl/cgfpPefDhgMmF9yyNqWehlce9+9d/k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.19 125/146] powerpc/64/tm: Dont let userspace set regs->trap via sigreturn
-Date:   Thu, 16 Apr 2020 15:24:26 +0200
-Message-Id: <20200416131259.643833652@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.19 126/146] powerpc/hash64/devmap: Use H_PAGE_THP_HUGE when setting up huge devmap PTE entries
+Date:   Thu, 16 Apr 2020 15:24:27 +0200
+Message-Id: <20200416131259.748650096@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
 References: <20200416131242.353444678@linuxfoundation.org>
@@ -58,64 +60,136 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 
-commit c7def7fbdeaa25feaa19caf4a27c5d10bd8789e4 upstream.
+commit 36b78402d97a3b9aeab136feb9b00d8647ec2c20 upstream.
 
-In restore_tm_sigcontexts() we take the trap value directly from the
-user sigcontext with no checking:
+H_PAGE_THP_HUGE is used to differentiate between a THP hugepage and
+hugetlb hugepage entries. The difference is WRT how we handle hash
+fault on these address. THP address enables MPSS in segments. We want
+to manage devmap hugepage entries similar to THP pt entries. Hence use
+H_PAGE_THP_HUGE for devmap huge PTE entries.
 
-	err |= __get_user(regs->trap, &sc->gp_regs[PT_TRAP]);
+With current code while handling hash PTE fault, we do set is_thp =
+true when finding devmap PTE huge PTE entries.
 
-This means we can be in the kernel with an arbitrary regs->trap value.
+Current code also does the below sequence we setting up huge devmap
+entries.
 
-Although that's not immediately problematic, there is a risk we could
-trigger one of the uses of CHECK_FULL_REGS():
+	entry = pmd_mkhuge(pfn_t_pmd(pfn, prot));
+	if (pfn_t_devmap(pfn))
+		entry = pmd_mkdevmap(entry);
 
-	#define CHECK_FULL_REGS(regs)	BUG_ON(regs->trap & 1)
+In that case we would find both H_PAGE_THP_HUGE and PAGE_DEVMAP set
+for huge devmap PTE entries. This results in false positive error like
+below.
 
-It can also cause us to unnecessarily save non-volatile GPRs again in
-save_nvgprs(), which shouldn't be problematic but is still wrong.
+  kernel BUG at /home/kvaneesh/src/linux/mm/memory.c:4321!
+  Oops: Exception in kernel mode, sig: 5 [#1]
+  LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
+  Modules linked in:
+  CPU: 56 PID: 67996 Comm: t_mmap_dio Not tainted 5.6.0-rc4-59640-g371c804dedbc #128
+  ....
+  NIP [c00000000044c9e4] __follow_pte_pmd+0x264/0x900
+  LR [c0000000005d45f8] dax_writeback_one+0x1a8/0x740
+  Call Trace:
+    str_spec.74809+0x22ffb4/0x2d116c (unreliable)
+    dax_writeback_one+0x1a8/0x740
+    dax_writeback_mapping_range+0x26c/0x700
+    ext4_dax_writepages+0x150/0x5a0
+    do_writepages+0x68/0x180
+    __filemap_fdatawrite_range+0x138/0x180
+    file_write_and_wait_range+0xa4/0x110
+    ext4_sync_file+0x370/0x6e0
+    vfs_fsync_range+0x70/0xf0
+    sys_msync+0x220/0x2e0
+    system_call+0x5c/0x68
 
-It's also possible it could trick the syscall restart machinery, which
-relies on regs->trap not being == 0xc00 (see 9a81c16b5275 ("powerpc:
-fix double syscall restarts")), though I haven't been able to make
-that happen.
+This is because our pmd_trans_huge check doesn't exclude _PAGE_DEVMAP.
 
-Finally it doesn't match the behaviour of the non-TM case, in
-restore_sigcontext() which zeroes regs->trap.
+To make this all consistent, update pmd_mkdevmap to set
+H_PAGE_THP_HUGE and pmd_trans_huge check now excludes _PAGE_DEVMAP
+correctly.
 
-So change restore_tm_sigcontexts() to zero regs->trap.
-
-This was discovered while testing Nick's upcoming rewrite of the
-syscall entry path. In that series the call to save_nvgprs() prior to
-signal handling (do_notify_resume()) is removed, which leaves the
-low-bit of regs->trap uncleared which can then trigger the FULL_REGS()
-WARNs in setup_tm_sigcontexts().
-
-Fixes: 2b0a576d15e0 ("powerpc: Add new transactional memory state to the signal context")
-Cc: stable@vger.kernel.org # v3.9+
+Fixes: ebd31197931d ("powerpc/mm: Add devmap support for ppc64")
+Cc: stable@vger.kernel.org # v4.13+
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200401023836.3286664-1-mpe@ellerman.id.au
+Link: https://lore.kernel.org/r/20200313094842.351830-1-aneesh.kumar@linux.ibm.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kernel/signal_64.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/powerpc/include/asm/book3s/64/hash-4k.h  |    6 ++++++
+ arch/powerpc/include/asm/book3s/64/hash-64k.h |    8 +++++++-
+ arch/powerpc/include/asm/book3s/64/pgtable.h  |    4 +++-
+ arch/powerpc/include/asm/book3s/64/radix.h    |    5 +++++
+ 4 files changed, 21 insertions(+), 2 deletions(-)
 
---- a/arch/powerpc/kernel/signal_64.c
-+++ b/arch/powerpc/kernel/signal_64.c
-@@ -477,8 +477,10 @@ static long restore_tm_sigcontexts(struc
- 	err |= __get_user(tsk->thread.ckpt_regs.ccr,
- 			  &sc->gp_regs[PT_CCR]);
+--- a/arch/powerpc/include/asm/book3s/64/hash-4k.h
++++ b/arch/powerpc/include/asm/book3s/64/hash-4k.h
+@@ -145,6 +145,12 @@ extern pmd_t hash__pmdp_huge_get_and_cle
+ extern int hash__has_transparent_hugepage(void);
+ #endif
  
-+	/* Don't allow userspace to set the trap value */
-+	regs->trap = 0;
++static inline pmd_t hash__pmd_mkdevmap(pmd_t pmd)
++{
++	BUG();
++	return pmd;
++}
 +
- 	/* These regs are not checkpointed; they can go in 'regs'. */
--	err |= __get_user(regs->trap, &sc->gp_regs[PT_TRAP]);
- 	err |= __get_user(regs->dar, &sc->gp_regs[PT_DAR]);
- 	err |= __get_user(regs->dsisr, &sc->gp_regs[PT_DSISR]);
- 	err |= __get_user(regs->result, &sc->gp_regs[PT_RESULT]);
+ #endif /* !__ASSEMBLY__ */
+ 
+ #endif /* _ASM_POWERPC_BOOK3S_64_HASH_4K_H */
+--- a/arch/powerpc/include/asm/book3s/64/hash-64k.h
++++ b/arch/powerpc/include/asm/book3s/64/hash-64k.h
+@@ -233,7 +233,7 @@ static inline void mark_hpte_slot_valid(
+  */
+ static inline int hash__pmd_trans_huge(pmd_t pmd)
+ {
+-	return !!((pmd_val(pmd) & (_PAGE_PTE | H_PAGE_THP_HUGE)) ==
++	return !!((pmd_val(pmd) & (_PAGE_PTE | H_PAGE_THP_HUGE | _PAGE_DEVMAP)) ==
+ 		  (_PAGE_PTE | H_PAGE_THP_HUGE));
+ }
+ 
+@@ -259,6 +259,12 @@ extern pmd_t hash__pmdp_huge_get_and_cle
+ 				       unsigned long addr, pmd_t *pmdp);
+ extern int hash__has_transparent_hugepage(void);
+ #endif /*  CONFIG_TRANSPARENT_HUGEPAGE */
++
++static inline pmd_t hash__pmd_mkdevmap(pmd_t pmd)
++{
++	return __pmd(pmd_val(pmd) | (_PAGE_PTE | H_PAGE_THP_HUGE | _PAGE_DEVMAP));
++}
++
+ #endif	/* __ASSEMBLY__ */
+ 
+ #endif /* _ASM_POWERPC_BOOK3S_64_HASH_64K_H */
+--- a/arch/powerpc/include/asm/book3s/64/pgtable.h
++++ b/arch/powerpc/include/asm/book3s/64/pgtable.h
+@@ -1253,7 +1253,9 @@ extern void serialize_against_pte_lookup
+ 
+ static inline pmd_t pmd_mkdevmap(pmd_t pmd)
+ {
+-	return __pmd(pmd_val(pmd) | (_PAGE_PTE | _PAGE_DEVMAP));
++	if (radix_enabled())
++		return radix__pmd_mkdevmap(pmd);
++	return hash__pmd_mkdevmap(pmd);
+ }
+ 
+ static inline int pmd_devmap(pmd_t pmd)
+--- a/arch/powerpc/include/asm/book3s/64/radix.h
++++ b/arch/powerpc/include/asm/book3s/64/radix.h
+@@ -255,6 +255,11 @@ extern pmd_t radix__pmdp_huge_get_and_cl
+ extern int radix__has_transparent_hugepage(void);
+ #endif
+ 
++static inline pmd_t radix__pmd_mkdevmap(pmd_t pmd)
++{
++	return __pmd(pmd_val(pmd) | (_PAGE_PTE | _PAGE_DEVMAP));
++}
++
+ extern int __meminit radix__vmemmap_create_mapping(unsigned long start,
+ 					     unsigned long page_size,
+ 					     unsigned long phys);
 
 
