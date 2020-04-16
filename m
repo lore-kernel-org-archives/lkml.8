@@ -2,160 +2,202 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B9B3C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:31:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56900C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5772321BE5
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:31:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3432D21BE5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:33:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DhTOlOYZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503249AbgDPJbS (ORCPT
+        id S2503305AbgDPJdd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 05:31:18 -0400
-Received: from foss.arm.com ([217.140.110.172]:57890 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2502117AbgDPJbL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 05:31:11 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A3815C14;
-        Thu, 16 Apr 2020 02:31:10 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C23D23F73D;
-        Thu, 16 Apr 2020 02:31:08 -0700 (PDT)
-Date:   Thu, 16 Apr 2020 10:31:06 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Will Deacon <will@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        kernel-team@android.com, Michael Ellerman <mpe@ellerman.id.au>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v3 05/12] arm64: csum: Disable KASAN for do_csum()
-Message-ID: <20200416093106.GB4987@lakrids.cambridge.arm.com>
-References: <20200415165218.20251-1-will@kernel.org>
- <20200415165218.20251-6-will@kernel.org>
- <20200415172813.GA2272@lakrids.cambridge.arm.com>
- <20200415192605.GA21804@willie-the-truck>
+        Thu, 16 Apr 2020 05:33:33 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:48084 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2440173AbgDPJdT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 05:33:19 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03G9McWf035260;
+        Thu, 16 Apr 2020 09:33:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=r9/Y7OZYuJr3hxhRbamTnKz46pCML+stvFIbGX2Fz5k=;
+ b=DhTOlOYZTXWI16VmHoxh/we9dJYfwM/9pRAv2zrnzTXjDpMwEjoLKdooaSL5n+2fMnP/
+ 9qL9fijdvJkLKtwaClMj8tNa+lcOeD7h29fVUi7fD+BCGU5hrzbs4DJcwgtUSWm8z9ov
+ tOrECfo7rACNob91dIHW7j26C7bKnrtKP0lWJeT+bhTVIqi8ooD6x0o38yCCGIQy+tZ0
+ QCdOSUcoyUP9LwJbqp+QQxtT1c1oI/79Xu4U03Q0QHlyOOoCDj0jjEG3C4meGoag121y
+ whnHp/YjgWiMLB/8pGVnIaWwjEUUTTp44heFfrRbs/wpi7oeNKhhZzgNYBJG1ax3lTLz Vg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 30e0aa5ubx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Apr 2020 09:33:10 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03G9W6sW117861;
+        Thu, 16 Apr 2020 09:33:09 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 30dn9ev1nv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Apr 2020 09:33:09 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03G9X5nu032592;
+        Thu, 16 Apr 2020 09:33:06 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 16 Apr 2020 02:33:04 -0700
+Date:   Thu, 16 Apr 2020 12:32:54 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Eduardo Valentin <edubezval@gmail.com>, Keerthy <j-keerthy@ti.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        linux-pm@vger.kernel.org, linux-omap@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] thermal: ti-soc-thermal: remove redundant assignment to
+ variable i
+Message-ID: <20200416093254.GL1163@kadam>
+References: <20200415224010.1564330-1-colin.king@canonical.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200415192605.GA21804@willie-the-truck>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <20200415224010.1564330-1-colin.king@canonical.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9592 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 mlxscore=0 adultscore=0
+ spamscore=0 phishscore=0 bulkscore=0 suspectscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004160065
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9592 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 clxscore=1011
+ impostorscore=0 mlxlogscore=999 mlxscore=0 lowpriorityscore=0
+ suspectscore=0 adultscore=0 spamscore=0 malwarescore=0 phishscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004160064
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 08:26:05PM +0100, Will Deacon wrote:
-> On Wed, Apr 15, 2020 at 06:28:14PM +0100, Mark Rutland wrote:
-> > On Wed, Apr 15, 2020 at 05:52:11PM +0100, Will Deacon wrote:
-> > > do_csum() over-reads the source buffer and therefore abuses
-> > > READ_ONCE_NOCHECK() to avoid tripping up KASAN. In preparation for
-> > > READ_ONCE_NOCHECK() becoming a macro, and therefore losing its
-> > > '__no_sanitize_address' annotation, just annotate do_csum() explicitly
-> > > and fall back to normal loads.
-> > 
-> > I'm confused by this. The whole point of READ_ONCE_NOCHECK() is that it
-> > isn't checked by KASAN, so if that semantic is removed it has no reason
-> > to exist.
+On Wed, Apr 15, 2020 at 11:40:10PM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> Oh, I thought it was there to be used by things like KASAN itself and
-> because READ_ONCE() was implemented using a static function, then that
-> function had to be marked as __no_sanitize_address when used in these
-> cases. Now that it's just a macro, that's not necessary so it's just
-> the same as normal READ_ONCE().
-
-I believe that the KASAN core files are compiled without
-instrumentation, so they can use either without issue.
-
-> Do we have a "nocheck" version where we don't require the READ_ONCE()
-> semantics? 
-
-For the unwind code we rely on the ONCE semantic (but arguably don't
-need single-copy-atomicity) so that we operate on a consistent snapshot.
-
-> I think abusing a relaxed concurrency primitive for this is
-> not the right thing to do, particularly when the __no_sanitize_address
-> annotation is available. I fact, it's almost an argument in favour
-> of removing READ_ONCE_NOCHECK() so that people use the annotation instead!
-
-Arguably we *are* using it as a relaxed concurrency primitive, to get a
-snapshot of a varaible undergoing concurrent modification.
-
-FWIW, for the arm64 unwind code we could add a helper to snapshot the
-frame record, and mark that as __no_sanitize_address, e.g.
-
-/*
- * Get a snapshot of a frame record that might be undergoing concurrent
- * modification (and hence we must also avoid a KASAN splat).
- */
-static __no_sanitize_address snapshot_frame(struct stackframe *frame,
-					    unsigned long fp)
-{
-	frame->fp = READ_ONCE(*(unsigned long *)(fp));
-	frame->pc = READ_ONCE(*(unsigned long *)(fp + 8));
-}
-
-... we'd need to do likewied in a few bits of unwind code:
-
-arch/s390/kernel/unwind_bc.c:	       READ_ONCE_NOCHECK(regs->psw.mask) & PSW_MASK_PSTATE;
-arch/s390/kernel/unwind_bc.c:		ip = READ_ONCE_NOCHECK(sf->gprs[8]);
-arch/s390/kernel/unwind_bc.c:		sp = READ_ONCE_NOCHECK(sf->back_chain);
-arch/s390/kernel/unwind_bc.c:			ip = READ_ONCE_NOCHECK(sf->gprs[8]);
-arch/s390/kernel/unwind_bc.c:			ip = READ_ONCE_NOCHECK(regs->psw.addr);
-arch/s390/kernel/unwind_bc.c:			sp = READ_ONCE_NOCHECK(regs->gprs[15]);
-arch/s390/kernel/unwind_bc.c:		ip = READ_ONCE_NOCHECK(sf->gprs[8]);
-arch/x86/include/asm/atomic.h:	 * Note for KASAN: we deliberately don't use READ_ONCE_NOCHECK() here,
-arch/x86/include/asm/unwind.h:		val = READ_ONCE_NOCHECK(x);		\
-arch/x86/kernel/dumpstack.c:			unsigned long addr = READ_ONCE_NOCHECK(*stack);
-arch/x86/kernel/process.c:	fp = READ_ONCE_NOCHECK(((struct inactive_task_frame *)sp)->bp);
-arch/x86/kernel/process.c:		ip = READ_ONCE_NOCHECK(*(unsigned long *)(fp + sizeof(unsigned long)));
-arch/x86/kernel/process.c:		fp = READ_ONCE_NOCHECK(*(unsigned long *)fp);
-arch/x86/kernel/unwind_frame.c:			word = READ_ONCE_NOCHECK(*sp);
-arch/x86/kernel/unwind_guess.c:	addr = READ_ONCE_NOCHECK(*state->sp);
-arch/x86/kernel/unwind_guess.c:			unsigned long addr = READ_ONCE_NOCHECK(*state->sp);
-arch/x86/kernel/unwind_orc.c:	*val = READ_ONCE_NOCHECK(*(unsigned long *)addr);
-arch/x86/kernel/unwind_orc.c:		state->bp = READ_ONCE_NOCHECK(frame->bp);
-arch/x86/kernel/unwind_orc.c:		state->ip = READ_ONCE_NOCHECK(frame->ret_addr);
-include/linux/compiler.h: * Use READ_ONCE_NOCHECK() instead of READ_ONCE() if you need
-include/linux/compiler.h:#define READ_ONCE_NOCHECK(x) __READ_ONCE(x, 0)
-kernel/trace/trace_stack.c:			 * The READ_ONCE_NOCHECK is used to let KASAN know that
-kernel/trace/trace_stack.c:			if ((READ_ONCE_NOCHECK(*p)) == stack_dump_trace[i]) {
-
-> > I would like to keep the unwinding robust in the first case, even if the
-> > second case doesn't apply, and I'd prefer to not mark the entirety of
-> > the unwinding code as unchecked as that's sufficiently large an subtle
-> > that it could have nasty bugs.
+> The variable i is being assigned with a value that is never read,
+> the assignment is redundant and can be removed.
 > 
-> Hmm, maybe. I don't really see what's wrong with annotating the unwinding
-> code, though. You can still tell kasan about the accesses you're making,
-> like we do in the checksumming code here, and it's not hard to move the
-> frame-pointer chasing code into a separate function.
-
-Sure; agreed as above. We just need to fix up a number of places.
-
-> > Is there any way we keep something like READ_ONCE_NOCHECK() around even
-> > if we have to give it reduced functionality relative to READ_ONCE()?
-> > 
-> > I'm not enirely sure why READ_ONCE_NOCHECK() had to go, so if there's a
-> > particular pain point I'm happy to take a look.
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/thermal/ti-soc-thermal/ti-bandgap.c | 1 -
+>  1 file changed, 1 deletion(-)
 > 
-> I got rid if it because I thought it wasn't required now that it's
-> implemented entirely as a macro. I'd be reluctant to bring it back if
-> there isn't a non-ONCE version of the helper.
+> diff --git a/drivers/thermal/ti-soc-thermal/ti-bandgap.c b/drivers/thermal/ti-soc-thermal/ti-bandgap.c
+> index ab19ceff6e2a..abaf629038c3 100644
+> --- a/drivers/thermal/ti-soc-thermal/ti-bandgap.c
+> +++ b/drivers/thermal/ti-soc-thermal/ti-bandgap.c
+> @@ -1003,7 +1003,6 @@ int ti_bandgap_probe(struct platform_device *pdev)
+>  		ret = ti_bandgap_talert_init(bgp, pdev);
+>  		if (ret) {
+>  			dev_err(&pdev->dev, "failed to initialize Talert IRQ\n");
+> -			i = bgp->conf->sensor_count;
+>  			goto disable_clk;
+>  		}
+>  	}
 
-As above, I think that we *do* care about the ONCE-ness for the unwind
-code, but I'm happy for those to be dealt with by special helpers.
+This isn't the right fix.  The goto is wrong.
 
-Thanks,
-Mark.
+The "i" variable comes from the iterator of the previous loop.  When
+you're unwinding inside a loop then first undo the partial iteration
+before doing a goto.
+
+   979          /* Every thing is good? Then expose the sensors */
+   980          for (i = 0; i < bgp->conf->sensor_count; i++) {
+   981                  char *domain;
+   982  
+   983                  if (bgp->conf->sensors[i].register_cooling) {
+   984                          ret = bgp->conf->sensors[i].register_cooling(bgp, i);
+   985                          if (ret)
+   986                                  goto remove_sensors;
+   987                  }
+   988  
+   989                  if (bgp->conf->expose_sensor) {
+   990                          domain = bgp->conf->sensors[i].domain;
+   991                          ret = bgp->conf->expose_sensor(bgp, i, domain);
+   992                          if (ret)
+   993                                  goto remove_last_cooling;
+
+So here we should do:
+
+				if (ret) {
+					if (bgp->conf->sensors[i].unregister_cooling)
+						bgp->conf->sensors[i].unregister_cooling(bgp, i);
+					goto remove_sensors;
+				}
+The line lengths are long so it would be cleaner to say:
+
+
+			struct ti_temp_sensor *sensor = &bgp->conf->sensors[i];
+
+at the start of the loop.
+
+			if (ret) {
+				if (sensor->unregister_cooling)
+					sensor->unregister_cooling(bgp, i);
+				goto remove_sensors;
+			}
+
+
+   994                  }
+   995          }
+   996  
+   997          /*
+   998           * Enable the Interrupts once everything is set. Otherwise irq handler
+   999           * might be called as soon as it is enabled where as rest of framework
+  1000           * is still getting initialised.
+  1001           */
+  1002          if (TI_BANDGAP_HAS(bgp, TALERT)) {
+  1003                  ret = ti_bandgap_talert_init(bgp, pdev);
+  1004                  if (ret) {
+  1005                          dev_err(&pdev->dev, "failed to initialize Talert IRQ\n");
+  1006                          i = bgp->conf->sensor_count;
+  1007                          goto disable_clk;
+
+This should be "goto remove_sensors;" as well.  The i assignment can
+be deleted though because it already equals bgp->conf->sensor_count.
+
+  1008                  }
+  1009          }
+  1010  
+  1011          return 0;
+  1012  
+  1013  remove_last_cooling:
+  1014          if (bgp->conf->sensors[i].unregister_cooling)
+  1015                  bgp->conf->sensors[i].unregister_cooling(bgp, i);
+
+Delete this partial unwind because we moved it before the goto.  Say
+we add some more error conditions at the end of the function, then now
+we can add more labels and it's not complicated with this partial
+unwind.
+
+  1016  remove_sensors:
+  1017          for (i--; i >= 0; i--) {
+
+
+It's slightly nicer to write: "while (--i >= 0) {"
+
+  1018                  if (bgp->conf->sensors[i].unregister_cooling)
+  1019                          bgp->conf->sensors[i].unregister_cooling(bgp, i);
+  1020                  if (bgp->conf->remove_sensor)
+  1021                          bgp->conf->remove_sensor(bgp, i);
+  1022          }
+
+regards,
+dan carpenter
