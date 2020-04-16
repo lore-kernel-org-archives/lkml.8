@@ -2,123 +2,73 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0594C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 00:44:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 269CBC2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 00:45:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5BDF206A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 00:44:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1BA72076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 00:45:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586997932;
+	bh=vBw4T3xTlplGvbEqBdW8GHYuLCowN5rvdavpmsnvdqY=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=JEw49XexNm/MjIQjAvwcOifLnrfAiaN6RK7jsanzobqtwtGaFn7CbG5KTRdCPDTug
+	 2BjJu6n9hNlsG77C03evxU/AhvQu69C94uA7NR5ZoUNgyq4SNuyQh+CNAKsdOD4cfb
+	 GSkyuLhednrMavUuRP5yMrX/9RPZjL8ddjU/ra90=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404839AbgDPAok (ORCPT
+        id S2404890AbgDPAp2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 20:44:40 -0400
-Received: from mga04.intel.com ([192.55.52.120]:6004 "EHLO mga04.intel.com"
+        Wed, 15 Apr 2020 20:45:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39514 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404680AbgDPAoe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 20:44:34 -0400
-IronPort-SDR: 5OWOdHQTfBj8JBjKbRtro52wXfjxIhjQ+gY/OR7nbZtlSycagzTRZ8NtBC3QL036Ujx03TUdfr
- AMWeCBIFeszQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 17:44:31 -0700
-IronPort-SDR: LP1ZX19PIRLq3IQP8QvX+QBzgBj0twgbyBMruwkfFconOhZcQs0SRky7gY3uTsjQUgnVwPt8ky
- 2pLK6B6D2yuQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,388,1580803200"; 
-   d="scan'208";a="427636809"
-Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.23])
-  by orsmga005.jf.intel.com with ESMTP; 15 Apr 2020 17:44:29 -0700
-From:   "Huang\, Ying" <ying.huang@intel.com>
-To:     Andrea Righi <andrea.righi@canonical.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Minchan Kim <minchan@kernel.org>,
-        Anchal Agarwal <anchalag@amazon.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] mm: swap: use fixed-size readahead during swapoff
-References: <20200413111810.GA801367@xps-13>
-        <87a73f7d71.fsf@yhuang-dev.intel.com> <20200413133150.GA810380@xps-13>
-        <87wo6i6efn.fsf@yhuang-dev.intel.com> <20200414130520.GF810380@xps-13>
-        <87v9m1zd83.fsf@yhuang-dev.intel.com> <20200415073239.GG810380@xps-13>
-        <87imi1yz07.fsf@yhuang-dev.intel.com> <20200415091948.GH810380@xps-13>
-Date:   Thu, 16 Apr 2020 08:44:28 +0800
-In-Reply-To: <20200415091948.GH810380@xps-13> (Andrea Righi's message of "Wed,
-        15 Apr 2020 11:19:48 +0200")
-Message-ID: <87wo6gxnrn.fsf@yhuang-dev.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+        id S2404680AbgDPApV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 20:45:21 -0400
+Subject: Re: [GIT PULL] EFI fixes
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586997921;
+        bh=vBw4T3xTlplGvbEqBdW8GHYuLCowN5rvdavpmsnvdqY=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=LlcCrTGq0iK8/fGhERzEbWjkzpWJvZ1q/5ooSiED8xNZO9mkeT9dUsuEJxH/W78E3
+         GoruTkxSISDw77JdVgGZpPpVReXC+2v4sPHNdL9hWKQniJhLDWTLxn6qWvjS1++Th2
+         jccdfMgWbgYQ5vKfq33ff2lZ2S3Dp4zDpBMlmIB4=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200415090327.GA35892@gmail.com>
+References: <20200415090327.GA35892@gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200415090327.GA35892@gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
+ efi-urgent-2020-04-15
+X-PR-Tracked-Commit-Id: a088b858f16af85e3db359b6c6aaa92dd3bc0921
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 00086336a8d96a04aa960f912287692a258f6cf5
+Message-Id: <158699792123.12687.380291890980058766.pr-tracker-bot@kernel.org>
+Date:   Thu, 16 Apr 2020 00:45:21 +0000
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrea Righi <andrea.righi@canonical.com> writes:
+The pull request you sent on Wed, 15 Apr 2020 11:03:27 +0200:
 
-> On Wed, Apr 15, 2020 at 03:44:08PM +0800, Huang, Ying wrote:
->> Andrea Righi <andrea.righi@canonical.com> writes:
->> 
->> >  mm/swapfile.c | 4 +++-
->> >  1 file changed, 3 insertions(+), 1 deletion(-)
->> >
->> > diff --git a/mm/swapfile.c b/mm/swapfile.c
->> > index 9fd47e6f7a86..cb9eb517178d 100644
->> > --- a/mm/swapfile.c
->> > +++ b/mm/swapfile.c
->> > @@ -1944,7 +1944,9 @@ static int unuse_pte_range(struct vm_area_struct *vma, pmd_t *pmd,
->> >  		vmf.pmd = pmd;
->> >  		last_ra = atomic_read(&last_readahead_pages);
->> >  		atomic_set(&swapin_readahead_hits, last_ra);
->> 
->> You need to remove the above 2 lines firstly.
->
-> Meh... too much enthusiasm, and I definitely need more coffee this
-> morning. Here's the right patch applied:
->
-> diff --git a/mm/swapfile.c b/mm/swapfile.c
-> index 5871a2aa86a5..8b38441b66fa 100644
-> --- a/mm/swapfile.c
-> +++ b/mm/swapfile.c
-> @@ -1940,7 +1940,9 @@ static int unuse_pte_range(struct vm_area_struct *vma, pmd_t *pmd,
->  		vmf.vma = vma;
->  		vmf.address = addr;
->  		vmf.pmd = pmd;
-> -		page = swapin_readahead(entry, GFP_HIGHUSER_MOVABLE, &vmf);
-> +		page = lookup_swap_cache(entry, vma, addr);
-> +		if (!page)
-> +			page = swapin_readahead(entry, GFP_HIGHUSER_MOVABLE, &vmf);
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git efi-urgent-2020-04-15
 
-The vmf assignment can be moved inside "if" block.  Otherwise the patch
-looks good to me.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/00086336a8d96a04aa960f912287692a258f6cf5
 
->  		if (!page) {
->  			if (*swap_map == 0 || *swap_map == SWAP_MAP_BAD)
->  				goto try_next;
->
-> And following the right results:
->
-> r::swapin_nr_pages(unsigned long offset):unsigned long:$retval
-> 	COUNT      EVENT
-> 	1618       $retval = 1
-> 	4960       $retval = 2
-> 	41315      $retval = 4
-> 	103521     $retval = 8
->
-> swapoff time: 12.19s
->
-> So, not as good as the fixed-size readahead, but it's definitely an
-> improvement, considering that the swapoff time is ~22s without this
-> patch applied.
->
-> I think this change can be a simple and reasonable compromise.
+Thank you!
 
-Yes.  I think so too.
-
-Best Regards,
-Huang, Ying
-
-> Thanks again and sorry for the noise,
-> -Andrea
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
