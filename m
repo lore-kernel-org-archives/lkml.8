@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F37F3C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DADFC3815B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:19:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF3062063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:19:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E21B2063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:19:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587046756;
-	bh=RNwFNWBjhyFKt/046IiLuAMSumi5DABqIaiGdEpHIl4=;
+	s=default; t=1587046757;
+	bh=qGGHLgI69/UcAs4ENrIAU9SzHDP6u/Wk4UVoOLBeRrk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nRwEbDfQPn1tAjFPKPsnEVJlBKvOyohlhwte85wggwdukcpmDD+T4rdmO27PM0QFt
-	 v/piixGRdskdUCJ44OBQnoaPZ+C6hHRofvoz990t+B+Uaxp5iZsAysArWnOH8L2x8y
-	 gp4P5mYlpalDnp8FFCt+jUVQpud1HCcq1jjK/QZI=
+	b=KKm0LfEEP8lMVJ+85CZ/WYpt11FplUHlJzFGNDDdE6r/NBEZDyuZX8wOxSlkQTVsE
+	 Y7TPOgZ5P4ifg0vf33eF4WrKFX8Ok73kypMU2szVwyiIZKfymLtRrm6THH8CWJBilA
+	 tQiCNy4G/Jd8WV4mFDrLczLZGfTKVIOKSQ5rZ5/Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442340AbgDPOTD (ORCPT
+        id S2442443AbgDPOTN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:19:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39910 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:19:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409047AbgDPNx2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:53:28 -0400
+        id S2896356AbgDPNxw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:53:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38C7F2076D;
-        Thu, 16 Apr 2020 13:53:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A08FC20732;
+        Thu, 16 Apr 2020 13:53:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045207;
-        bh=RNwFNWBjhyFKt/046IiLuAMSumi5DABqIaiGdEpHIl4=;
+        s=default; t=1587045232;
+        bh=qGGHLgI69/UcAs4ENrIAU9SzHDP6u/Wk4UVoOLBeRrk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UMghaPCJQkk1bkc36xf83pdL4zWbg1urlXmXnygiZuVXkeAB1ciEv+0/xblpEX9g2
-         uQzzlt5Rtw+ZCU5RO7xk8Jf2/EgoY3dm5FpQ97B/cYGqgcz+sxy4NT13w6t8LDdwA9
-         Tt6CJsGH+QOBKvuRF2aRf+quo06zCUzu0a6bkqIc=
+        b=FzjARM82cBpzF7Iqr3V1bjZhg6TFMNwuG88mC0WOEL8B0F6PkAOXc+AhmA6FxMUED
+         HI9HY3QBsswJGpg3a6e3mq7NjEMi6iaxa6ZMJI1kAL04ugQl3jvF/woIk9kikgrD4U
+         dLmhnPj/gH1FS/QXQPjn2+NExdpH3Gulfn0iSh1M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 039/254] PCI/switchtec: Fix init_completion race condition with poll_wait()
-Date:   Thu, 16 Apr 2020 15:22:08 +0200
-Message-Id: <20200416131330.744544737@linuxfoundation.org>
+        stable@vger.kernel.org, Arvind Sankar <nivedita@alum.mit.edu>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 048/254] efi/x86: Ignore the memory attributes table on i386
+Date:   Thu, 16 Apr 2020 15:22:17 +0200
+Message-Id: <20200416131331.896747335@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -64,50 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Logan Gunthorpe <logang@deltatee.com>
+From: Ard Biesheuvel <ardb@kernel.org>
 
-[ Upstream commit efbdc769601f4d50018bf7ca50fc9f7c67392ece ]
+[ Upstream commit dd09fad9d2caad2325a39b766ce9e79cfc690184 ]
 
-The call to init_completion() in mrpc_queue_cmd() can theoretically
-race with the call to poll_wait() in switchtec_dev_poll().
+Commit:
 
-  poll()			write()
-    switchtec_dev_poll()   	  switchtec_dev_write()
-      poll_wait(&s->comp.wait);      mrpc_queue_cmd()
-			               init_completion(&s->comp)
-				         init_waitqueue_head(&s->comp.wait)
+  3a6b6c6fb23667fa ("efi: Make EFI_MEMORY_ATTRIBUTES_TABLE initialization common across all architectures")
 
-To my knowledge, no one has hit this bug.
+moved the call to efi_memattr_init() from ARM specific to the generic
+EFI init code, in order to be able to apply the restricted permissions
+described in that table on x86 as well.
 
-Fix this by using reinit_completion() instead of init_completion() in
-mrpc_queue_cmd().
+We never enabled this feature fully on i386, and so mapping and
+reserving this table is pointless. However, due to the early call to
+memblock_reserve(), the memory bookkeeping gets confused to the point
+where it produces the splat below when we try to map the memory later
+on:
 
-Fixes: 080b47def5e5 ("MicroSemi Switchtec management interface driver")
+  ------------[ cut here ]------------
+  ioremap on RAM at 0x3f251000 - 0x3fa1afff
+  WARNING: CPU: 0 PID: 0 at arch/x86/mm/ioremap.c:166 __ioremap_caller ...
+  Modules linked in:
+  CPU: 0 PID: 0 Comm: swapper/0 Not tainted 4.20.0 #48
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+  EIP: __ioremap_caller.constprop.0+0x249/0x260
+  Code: 90 0f b7 05 4e 38 40 de 09 45 e0 e9 09 ff ff ff 90 8d 45 ec c6 05 ...
+  EAX: 00000029 EBX: 00000000 ECX: de59c228 EDX: 00000001
+  ESI: 3f250fff EDI: 00000000 EBP: de3edf20 ESP: de3edee0
+  DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00200296
+  CR0: 80050033 CR2: ffd17000 CR3: 1e58c000 CR4: 00040690
+  Call Trace:
+   ioremap_cache+0xd/0x10
+   ? old_map_region+0x72/0x9d
+   old_map_region+0x72/0x9d
+   efi_map_region+0x8/0xa
+   efi_enter_virtual_mode+0x260/0x43b
+   start_kernel+0x329/0x3aa
+   i386_start_kernel+0xa7/0xab
+   startup_32_smp+0x164/0x168
+  ---[ end trace e15ccf6b9f356833 ]---
 
-Reported-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Link: https://lkml.kernel.org/r/20200313183608.2646-1-logang@deltatee.com
+Let's work around this by disregarding the memory attributes table
+altogether on i386, which does not result in a loss of functionality
+or protection, given that we never consumed the contents.
+
+Fixes: 3a6b6c6fb23667fa ("efi: Make EFI_MEMORY_ATTRIBUTES_TABLE ... ")
+Tested-by: Arvind Sankar <nivedita@alum.mit.edu>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20200304165917.5893-1-ardb@kernel.org
+Link: https://lore.kernel.org/r/20200308080859.21568-21-ardb@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/switch/switchtec.c | 2 +-
+ drivers/firmware/efi/efi.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
-index a823b4b8ef8a9..81dc7ac013817 100644
---- a/drivers/pci/switch/switchtec.c
-+++ b/drivers/pci/switch/switchtec.c
-@@ -175,7 +175,7 @@ static int mrpc_queue_cmd(struct switchtec_user *stuser)
- 	kref_get(&stuser->kref);
- 	stuser->read_len = sizeof(stuser->data);
- 	stuser_set_state(stuser, MRPC_QUEUED);
--	init_completion(&stuser->comp);
-+	reinit_completion(&stuser->comp);
- 	list_add_tail(&stuser->list, &stdev->mrpc_queue);
+diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+index 21ea99f651134..77cb95f70ed66 100644
+--- a/drivers/firmware/efi/efi.c
++++ b/drivers/firmware/efi/efi.c
+@@ -570,7 +570,7 @@ int __init efi_config_parse_tables(void *config_tables, int count, int sz,
+ 		}
+ 	}
  
- 	mrpc_cmd_submit(stdev);
+-	if (efi_enabled(EFI_MEMMAP))
++	if (!IS_ENABLED(CONFIG_X86_32) && efi_enabled(EFI_MEMMAP))
+ 		efi_memattr_init();
+ 
+ 	efi_tpm_eventlog_init();
 -- 
 2.20.1
 
