@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FDA2C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49F7CC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:48:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55BAF21734
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:48:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DDEF208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:48:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587044891;
-	bh=LVIw4RglqMHO9GLqQAM4ex7xZERbrnRufJ49tt/+4Ic=;
+	s=default; t=1587044910;
+	bh=lrPL53OSTON8Nsv/n0d7JXU7mtHY8Pldg49JI8vXw20=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Mu0IidbQnVP0jEU7Oa4vgPALs5AIFj5S9JICH4I49rBWREA4Whdy5dWFU0QV/rDg7
-	 tjSNb8GA343tT5Grz3d3OWN9Jhuvpc1qp5ECyEBi2ahFkatpBuMwPwlnfQ1ucYRNn6
-	 AxiMCfNhHJ2dyVkKFG+z+/IJyPMFItmDtCuyYibY=
+	b=jz619CGrNpJjcASc7Hq+xAMbaGim28snwSrTSOJmLLwPyA5smaXI+WEspw/ND23RA
+	 uBzVNSvZbvwlWfi3D7n0r7g0D9CmkPocRETguQpESQvzPq76BcAf+cpRfwQ7sNSIDF
+	 SVcXtg2voX/XGTieYM6fCaFstCV1EvwJ/CxuXzKM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392321AbgDPNsJ (ORCPT
+        id S2898740AbgDPNs0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:48:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48024 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:48:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897246AbgDPNf4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:35:56 -0400
+        id S2897267AbgDPNgD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:36:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BDEF20732;
-        Thu, 16 Apr 2020 13:35:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E709D221F4;
+        Thu, 16 Apr 2020 13:36:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044156;
-        bh=LVIw4RglqMHO9GLqQAM4ex7xZERbrnRufJ49tt/+4Ic=;
+        s=default; t=1587044163;
+        bh=lrPL53OSTON8Nsv/n0d7JXU7mtHY8Pldg49JI8vXw20=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=do0itLlQlcEI948Iahx7RqnN+PNKXLa5WLWOS6+owuN/0VU19Lxx0hEQKnr2MkVBF
-         dnAoDQcgY1JZVYat4xtHMB0UIAI+YC08onNpjnzriLT8JeBffzYNosykRVO6LncHQm
-         qhJoqgfY4xH5kduAm0m4sO/AEPq136xvihFriynY=
+        b=g0r9jJ4ZwZyNqxTNSbdaDRR3FCFuEeURLvp75BBWpbfyGtZdqhHmEd47h1BV3qnsg
+         Zcr9tKhJDLFm/KuZquWlJBBwcPLua5aaWMbTvwx6VH4vNN3aYEvc1dFjQoLPuSrA6U
+         028Vs/71fvGvJ7kl1djrB1uuC0QzGJQji56lqj4A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Benoit Parrot <bparrot@ti.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 5.5 102/257] media: ti-vpe: cal: fix disable_irqs to only the intended target
-Date:   Thu, 16 Apr 2020 15:22:33 +0200
-Message-Id: <20200416131338.860303347@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.5 105/257] ACPI: EC: Avoid printing confusing messages in acpi_ec_setup()
+Date:   Thu, 16 Apr 2020 15:22:36 +0200
+Message-Id: <20200416131339.279815773@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -60,49 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benoit Parrot <bparrot@ti.com>
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-commit 1db56284b9da9056093681f28db48a09a243274b upstream.
+commit c823c17a8ea4db4943152388a0beb9a556715716 upstream.
 
-disable_irqs() was mistakenly disabling all interrupts when called.
-This cause all port stream to stop even if only stopping one of them.
+It doesn't really make sense to pass ec->handle of the ECDT EC to
+acpi_handle_info(), because it is set to ACPI_ROOT_OBJECT in
+acpi_ec_ecdt_probe(), so rework acpi_ec_setup() to avoid using
+acpi_handle_info() for printing messages.
 
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+First, notice that the "Used as first EC" message is not really
+useful, because it is immediately followed by a more meaningful one
+from either acpi_ec_ecdt_probe() or acpi_ec_dsdt_probe() (the latter
+also includes the EC object path), so drop it altogether.
+
+Second, use pr_info() for printing the EC configuration information.
+
+While at it, make the code in question avoid printing invalid GPE or
+IRQ numbers and make it print the GPE/IRQ information only when the
+driver is ready to handle events.
+
+Fixes: 72c77b7ea9ce ("ACPI / EC: Cleanup first_ec/boot_ec code")
+Fixes: 406857f773b0 ("ACPI: EC: add support for hardware-reduced systems")
+Cc: 5.5+ <stable@vger.kernel.org> # 5.5+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/platform/ti-vpe/cal.c |   16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ drivers/acpi/ec.c |   15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
---- a/drivers/media/platform/ti-vpe/cal.c
-+++ b/drivers/media/platform/ti-vpe/cal.c
-@@ -537,16 +537,16 @@ static void enable_irqs(struct cal_ctx *
+--- a/drivers/acpi/ec.c
++++ b/drivers/acpi/ec.c
+@@ -1592,14 +1592,19 @@ static int acpi_ec_setup(struct acpi_ec
+ 		return ret;
  
- static void disable_irqs(struct cal_ctx *ctx)
- {
-+	u32 val;
+ 	/* First EC capable of handling transactions */
+-	if (!first_ec) {
++	if (!first_ec)
+ 		first_ec = ec;
+-		acpi_handle_info(first_ec->handle, "Used as first EC\n");
 +
- 	/* Disable IRQ_WDMA_END 0/1 */
--	reg_write_field(ctx->dev,
--			CAL_HL_IRQENABLE_CLR(2),
--			CAL_HL_IRQ_CLEAR,
--			CAL_HL_IRQ_MASK(ctx->csi2_port));
-+	val = 0;
-+	set_field(&val, CAL_HL_IRQ_CLEAR, CAL_HL_IRQ_MASK(ctx->csi2_port));
-+	reg_write(ctx->dev, CAL_HL_IRQENABLE_CLR(2), val);
- 	/* Disable IRQ_WDMA_START 0/1 */
--	reg_write_field(ctx->dev,
--			CAL_HL_IRQENABLE_CLR(3),
--			CAL_HL_IRQ_CLEAR,
--			CAL_HL_IRQ_MASK(ctx->csi2_port));
-+	val = 0;
-+	set_field(&val, CAL_HL_IRQ_CLEAR, CAL_HL_IRQ_MASK(ctx->csi2_port));
-+	reg_write(ctx->dev, CAL_HL_IRQENABLE_CLR(3), val);
- 	/* Todo: Add VC_IRQ and CSI2_COMPLEXIO_IRQ handling */
- 	reg_write(ctx->dev, CAL_CSI2_VC_IRQENABLE(1), 0);
++	pr_info("EC_CMD/EC_SC=0x%lx, EC_DATA=0x%lx\n", ec->command_addr,
++		ec->data_addr);
++
++	if (test_bit(EC_FLAGS_EVENT_HANDLER_INSTALLED, &ec->flags)) {
++		if (ec->gpe >= 0)
++			pr_info("GPE=0x%x\n", ec->gpe);
++		else
++			pr_info("IRQ=%d\n", ec->irq);
+ 	}
+ 
+-	acpi_handle_info(ec->handle,
+-			 "GPE=0x%x, IRQ=%d, EC_CMD/EC_SC=0x%lx, EC_DATA=0x%lx\n",
+-			 ec->gpe, ec->irq, ec->command_addr, ec->data_addr);
+ 	return ret;
  }
+ 
 
 
