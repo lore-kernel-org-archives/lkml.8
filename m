@@ -4,56 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8958FC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6546C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F3982222D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:41:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA34621D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:41:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388907AbgDPQli (ORCPT
+        id S2391171AbgDPQlp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 12:41:38 -0400
-Received: from elvis.franken.de ([193.175.24.41]:42202 "EHLO elvis.franken.de"
+        Thu, 16 Apr 2020 12:41:45 -0400
+Received: from elvis.franken.de ([193.175.24.41]:42211 "EHLO elvis.franken.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728109AbgDPQld (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 12:41:33 -0400
+        id S1731023AbgDPQlf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 12:41:35 -0400
 Received: from uucp (helo=alpha)
         by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jP7Zy-0001kl-03; Thu, 16 Apr 2020 18:41:30 +0200
+        id 1jP7Zy-0001kl-05; Thu, 16 Apr 2020 18:41:30 +0200
 Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 77EF1C0144; Thu, 16 Apr 2020 18:37:55 +0200 (CEST)
-Date:   Thu, 16 Apr 2020 18:37:55 +0200
+        id 4946EC0144; Thu, 16 Apr 2020 18:40:55 +0200 (CEST)
+Date:   Thu, 16 Apr 2020 18:40:55 +0200
 From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     bibo mao <maobibo@loongson.cn>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>,
-        Allison Randal <allison@lohutok.net>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MIPS: xilfpga: Removed unused header files
-Message-ID: <20200416163755.GD24743@alpha.franken.de>
-References: <1585208567-17979-1-git-send-email-maobibo@loongson.cn>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: Re: [PATCH] MIPS: Loongson: Use CONFIG_NR_CPUS_DEFAULT_64 to support
+ more CPUs
+Message-ID: <20200416164055.GF24743@alpha.franken.de>
+References: <1585638006-19439-1-git-send-email-yangtiezhu@loongson.cn>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1585208567-17979-1-git-send-email-maobibo@loongson.cn>
+In-Reply-To: <1585638006-19439-1-git-send-email-yangtiezhu@loongson.cn>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 03:42:47AM -0400, bibo mao wrote:
-> Header in directory asm/mach-xilfpga is not used any more.
-> Remove it here, and it passes to compile with xilfpga_defconfig
+On Tue, Mar 31, 2020 at 03:00:06PM +0800, Tiezhu Yang wrote:
+> When I update the mainline kernel on the Loongson 2-way platform which
+> has 8 CPUs, it only shows 4 CPUs due to NR_CPUS is 4, this is obviously
+> wrong.
 > 
-> Signed-off-by: bibo mao <maobibo@loongson.cn>
+> In order to support more CPUs on the Loongson platform, it is better
+> to use CONFIG_NR_CPUS_DEFAULT_64 instead of CONFIG_NR_CPUS_DEFAULT_4
+> to specify the maximum number of CPUs which the kernel will support.
+> 
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 > ---
->  arch/mips/include/asm/mach-xilfpga/irq.h | 14 --------------
->  1 file changed, 14 deletions(-)
->  delete mode 100644 arch/mips/include/asm/mach-xilfpga/irq.h
+>  arch/mips/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
 applied to mips-next.
 
