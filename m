@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67250C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:14:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A8FC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:14:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 413522076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:14:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D19C32063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:14:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587046492;
-	bh=UCUtmq9O84OUYC+GZF7mjcM9yAlMLxS1lex7u964yK4=;
+	s=default; t=1587046497;
+	bh=28OW14Pg6V+cY9SZW+S9pbIyd0BluxIjxSwJPQi4yws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Cx/Y02XHSiBQ5rJqV6EQBpk7/5JXP8ShCk0AW2ndrH/oDjPFxxvZL6UF5e8oUj5al
-	 XieTI8wpIGfL9llIF/MAKN/W9r+k95jnD5mhb8r09Z2PwtPVVa2+Bp4zIcyFbQN9io
-	 7h5F+uhywluAjcYHfBzg87u0n6WTRvJbTpwoUtrM=
+	b=ma4k3JkSncc4F87Gsgvw3K93KkYteksK+f/dJXxAK30UI+inwOFN59r0h7yQ9wEka
+	 Y8NQ0EupyvNGjP8H4CdNAAgtWW4Kw4PG0hIpYH38PSyYCPAYtO/rrM9pvChy5jVDm8
+	 D5sT50xkqPs/3MwpNbpyZtkUdjJA8ypJWrlTW1CE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442104AbgDPOOu (ORCPT
+        id S2442262AbgDPOO4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:14:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36690 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:14:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408627AbgDPNuv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:50:51 -0400
+        id S2408654AbgDPNu4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:50:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23CBE2063A;
-        Thu, 16 Apr 2020 13:50:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0080C20732;
+        Thu, 16 Apr 2020 13:50:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045050;
-        bh=UCUtmq9O84OUYC+GZF7mjcM9yAlMLxS1lex7u964yK4=;
+        s=default; t=1587045055;
+        bh=28OW14Pg6V+cY9SZW+S9pbIyd0BluxIjxSwJPQi4yws=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n5RGujE+fNX6kiMplq0hXlZhC9XcY5ldNQ9zVmW+COyIqgCQt5wQdptfArriRsFzb
-         4CSdQ46ctXrAiGNK8g0ToneW5dpoitJQWDg90REpx/I3xoonZHsSbNCurTe1V54Org
-         Y5ODS8H+6VVDkNxjbFUnOKqrjJFEZEc73pP9YI3E=
+        b=ODd6m2TouwRuCMBP8mW6aYoStp3vRiXlIGy2eOZxfq44J7YxqMKh6Qg1RxXPU75bw
+         Eux1/RuOrlQj5KzWaELNG2DwzY4xh/CY3+oEhIYwV17RhuvKC452lHiHXVehFaQQFJ
+         h6v7QQ8Q/PgXinYpT7lhEyKgqQZJMwynE1wmyCh0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Scott Wood <oss@buserror.net>,
+        stable@vger.kernel.org, David Gibson <david@gibson.dropbear.id.au>,
+        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
         Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.4 208/232] powerpc/fsl_booke: Avoid creating duplicate tlb1 entry
-Date:   Thu, 16 Apr 2020 15:25:02 +0200
-Message-Id: <20200416131341.389410749@linuxfoundation.org>
+Subject: [PATCH 5.4 210/232] powerpc/xive: Use XIVE_BAD_IRQ instead of zero to catch non configured IPIs
+Date:   Thu, 16 Apr 2020 15:25:04 +0200
+Message-Id: <20200416131341.685209048@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -60,76 +60,133 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+From: Cédric Le Goater <clg@kaod.org>
 
-commit aa4113340ae6c2811e046f08c2bc21011d20a072 upstream.
+commit b1a504a6500df50e83b701b7946b34fce27ad8a3 upstream.
 
-In the current implementation, the call to loadcam_multi() is wrapped
-between switch_to_as1() and restore_to_as0() calls so, when it tries
-to create its own temporary AS=1 TLB1 entry, it ends up duplicating
-the existing one created by switch_to_as1(). Add a check to skip
-creating the temporary entry if already running in AS=1.
+When a CPU is brought up, an IPI number is allocated and recorded
+under the XIVE CPU structure. Invalid IPI numbers are tracked with
+interrupt number 0x0.
 
-Fixes: d9e1831a4202 ("powerpc/85xx: Load all early TLB entries at once")
-Cc: stable@vger.kernel.org # v4.4+
-Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Acked-by: Scott Wood <oss@buserror.net>
+On the PowerNV platform, the interrupt number space starts at 0x10 and
+this works fine. However, on the sPAPR platform, it is possible to
+allocate the interrupt number 0x0 and this raises an issue when CPU 0
+is unplugged. The XIVE spapr driver tracks allocated interrupt numbers
+in a bitmask and it is not correctly updated when interrupt number 0x0
+is freed. It stays allocated and it is then impossible to reallocate.
+
+Fix by using the XIVE_BAD_IRQ value instead of zero on both platforms.
+
+Reported-by: David Gibson <david@gibson.dropbear.id.au>
+Fixes: eac1e731b59e ("powerpc/xive: guest exploitation of the XIVE interrupt controller")
+Cc: stable@vger.kernel.org # v4.14+
+Signed-off-by: Cédric Le Goater <clg@kaod.org>
+Reviewed-by: David Gibson <david@gibson.dropbear.id.au>
+Tested-by: David Gibson <david@gibson.dropbear.id.au>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200123111914.2565-1-laurentiu.tudor@nxp.com
+Link: https://lore.kernel.org/r/20200306150143.5551-2-clg@kaod.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/mm/nohash/tlb_low.S |   12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ arch/powerpc/sysdev/xive/common.c        |   12 +++---------
+ arch/powerpc/sysdev/xive/native.c        |    4 ++--
+ arch/powerpc/sysdev/xive/spapr.c         |    4 ++--
+ arch/powerpc/sysdev/xive/xive-internal.h |    7 +++++++
+ 4 files changed, 14 insertions(+), 13 deletions(-)
 
---- a/arch/powerpc/mm/nohash/tlb_low.S
-+++ b/arch/powerpc/mm/nohash/tlb_low.S
-@@ -397,7 +397,7 @@ _GLOBAL(set_context)
-  * extern void loadcam_entry(unsigned int index)
-  *
-  * Load TLBCAM[index] entry in to the L2 CAM MMU
-- * Must preserve r7, r8, r9, and r10
-+ * Must preserve r7, r8, r9, r10 and r11
-  */
- _GLOBAL(loadcam_entry)
- 	mflr	r5
-@@ -433,6 +433,10 @@ END_MMU_FTR_SECTION_IFSET(MMU_FTR_BIG_PH
-  */
- _GLOBAL(loadcam_multi)
- 	mflr	r8
-+	/* Don't switch to AS=1 if already there */
-+	mfmsr	r11
-+	andi.	r11,r11,MSR_IS
-+	bne	10f
+--- a/arch/powerpc/sysdev/xive/common.c
++++ b/arch/powerpc/sysdev/xive/common.c
+@@ -68,13 +68,6 @@ static u32 xive_ipi_irq;
+ /* Xive state for each CPU */
+ static DEFINE_PER_CPU(struct xive_cpu *, xive_cpu);
  
- 	/*
- 	 * Set up temporary TLB entry that is the same as what we're
-@@ -458,6 +462,7 @@ _GLOBAL(loadcam_multi)
- 	mtmsr	r6
- 	isync
+-/*
+- * A "disabled" interrupt should never fire, to catch problems
+- * we set its logical number to this
+- */
+-#define XIVE_BAD_IRQ		0x7fffffff
+-#define XIVE_MAX_IRQ		(XIVE_BAD_IRQ - 1)
+-
+ /* An invalid CPU target */
+ #define XIVE_INVALID_TARGET	(-1)
  
-+10:
- 	mr	r9,r3
- 	add	r10,r3,r4
- 2:	bl	loadcam_entry
-@@ -466,6 +471,10 @@ _GLOBAL(loadcam_multi)
- 	mr	r3,r9
- 	blt	2b
+@@ -1150,7 +1143,7 @@ static int xive_setup_cpu_ipi(unsigned i
+ 	xc = per_cpu(xive_cpu, cpu);
  
-+	/* Don't return to AS=0 if we were in AS=1 at function start */
-+	andi.	r11,r11,MSR_IS
-+	bne	3f
+ 	/* Check if we are already setup */
+-	if (xc->hw_ipi != 0)
++	if (xc->hw_ipi != XIVE_BAD_IRQ)
+ 		return 0;
+ 
+ 	/* Grab an IPI from the backend, this will populate xc->hw_ipi */
+@@ -1187,7 +1180,7 @@ static void xive_cleanup_cpu_ipi(unsigne
+ 	/* Disable the IPI and free the IRQ data */
+ 
+ 	/* Already cleaned up ? */
+-	if (xc->hw_ipi == 0)
++	if (xc->hw_ipi == XIVE_BAD_IRQ)
+ 		return;
+ 
+ 	/* Mask the IPI */
+@@ -1343,6 +1336,7 @@ static int xive_prepare_cpu(unsigned int
+ 		if (np)
+ 			xc->chip_id = of_get_ibm_chip_id(np);
+ 		of_node_put(np);
++		xc->hw_ipi = XIVE_BAD_IRQ;
+ 
+ 		per_cpu(xive_cpu, cpu) = xc;
+ 	}
+--- a/arch/powerpc/sysdev/xive/native.c
++++ b/arch/powerpc/sysdev/xive/native.c
+@@ -312,7 +312,7 @@ static void xive_native_put_ipi(unsigned
+ 	s64 rc;
+ 
+ 	/* Free the IPI */
+-	if (!xc->hw_ipi)
++	if (xc->hw_ipi == XIVE_BAD_IRQ)
+ 		return;
+ 	for (;;) {
+ 		rc = opal_xive_free_irq(xc->hw_ipi);
+@@ -320,7 +320,7 @@ static void xive_native_put_ipi(unsigned
+ 			msleep(OPAL_BUSY_DELAY_MS);
+ 			continue;
+ 		}
+-		xc->hw_ipi = 0;
++		xc->hw_ipi = XIVE_BAD_IRQ;
+ 		break;
+ 	}
+ }
+--- a/arch/powerpc/sysdev/xive/spapr.c
++++ b/arch/powerpc/sysdev/xive/spapr.c
+@@ -560,11 +560,11 @@ static int xive_spapr_get_ipi(unsigned i
+ 
+ static void xive_spapr_put_ipi(unsigned int cpu, struct xive_cpu *xc)
+ {
+-	if (!xc->hw_ipi)
++	if (xc->hw_ipi == XIVE_BAD_IRQ)
+ 		return;
+ 
+ 	xive_irq_bitmap_free(xc->hw_ipi);
+-	xc->hw_ipi = 0;
++	xc->hw_ipi = XIVE_BAD_IRQ;
+ }
+ #endif /* CONFIG_SMP */
+ 
+--- a/arch/powerpc/sysdev/xive/xive-internal.h
++++ b/arch/powerpc/sysdev/xive/xive-internal.h
+@@ -5,6 +5,13 @@
+ #ifndef __XIVE_INTERNAL_H
+ #define __XIVE_INTERNAL_H
+ 
++/*
++ * A "disabled" interrupt should never fire, to catch problems
++ * we set its logical number to this
++ */
++#define XIVE_BAD_IRQ		0x7fffffff
++#define XIVE_MAX_IRQ		(XIVE_BAD_IRQ - 1)
 +
- 	/* Return to AS=0 and clear the temporary entry */
- 	mfmsr	r6
- 	rlwinm.	r6,r6,0,~(MSR_IS|MSR_DS)
-@@ -481,6 +490,7 @@ _GLOBAL(loadcam_multi)
- 	tlbwe
- 	isync
- 
-+3:
- 	mtlr	r8
- 	blr
- #endif
+ /* Each CPU carry one of these with various per-CPU state */
+ struct xive_cpu {
+ #ifdef CONFIG_SMP
 
 
