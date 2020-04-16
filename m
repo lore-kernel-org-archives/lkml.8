@@ -2,111 +2,173 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27ED1C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:15:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8353AC352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:15:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0045020771
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:15:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62FAE20771
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:15:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hnp1g1bi"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h79u+RID"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503355AbgDPJPE (ORCPT
+        id S2441152AbgDPJPR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 05:15:04 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:52242 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2503666AbgDPJNb (ORCPT
+        Thu, 16 Apr 2020 05:15:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44236 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2502571AbgDPJNl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 05:13:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587028409;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=kDbMwf4T7fz2iy2x4sZthu5JgBi4KMPTfc1UBx0b968=;
-        b=Hnp1g1biIF3moUQ4hmlvaDRiMWae/JNlCnHQxdzmcbARHA7Z23YM7BPkQvmZdzvG5KnEAi
-        rq+y6eCBxjsiQRBZIbg5VaqGjDLyqJGPXBtkmvGmZvG+PltNKCEbwuInERKUUPPmJCEppO
-        GD8U2Ab2GNkFW9X5mrH0UhK3QfSUflM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-311-pSsGjVneONSQGO4bbt2LdA-1; Thu, 16 Apr 2020 05:13:28 -0400
-X-MC-Unique: pSsGjVneONSQGO4bbt2LdA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 60E491005513;
-        Thu, 16 Apr 2020 09:13:26 +0000 (UTC)
-Received: from krava (unknown [10.40.195.119])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C5CF87E7C4;
-        Thu, 16 Apr 2020 09:13:23 +0000 (UTC)
-Date:   Thu, 16 Apr 2020 11:13:20 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "bibo,mao" <bibo.mao@intel.com>,
-        "Ziqian SUN (Zamir)" <zsun@redhat.com>, stable@vger.kernel.org
-Subject: Re: [PATCH] kretprobe: Prevent triggering kretprobe from within
- kprobe_flush_task
-Message-ID: <20200416091320.GA322899@krava>
-References: <20200408164641.3299633-1-jolsa@kernel.org>
- <20200409234101.8814f3cbead69337ac5a33fa@kernel.org>
- <20200409184451.GG3309111@krava>
- <20200409201336.GH3309111@krava>
- <20200410093159.0d7000a08fd76c2eaf1398f8@kernel.org>
- <20200414160338.GE208694@krava>
- <20200415090507.GG208694@krava>
- <20200416105506.904b7847a1b621b75463076d@kernel.org>
+        Thu, 16 Apr 2020 05:13:41 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10B40C061A10
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 02:13:40 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id k1so3950164wrx.4
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 02:13:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=AyKKf2vu9ets5qQ05mKeEx+H3HJdeMhyf7LDU6EPmvg=;
+        b=h79u+RID/Tw8EjEr7PzOeW67I5riBs6/JV027laFW3VtXjta4zpbT4owqSzSYadzXI
+         UooqVXoXGL1A8oAByZdeXkLIJKTO01hEePh4C5fzehOrUdnbfQ1pEs9kiyqYoA/KX+JH
+         1qMRtfcJSHijAK2OGm7YZmCKbHczogdEeoL22Pw+vKfPbVBWs4ymX9eJohxZQNiYHrt4
+         ev6JtRiaXOHosoQtEI6ZEvp9wcTaGhtxQIVftu4d8viJsibPKXtJvkzZsh+8sFdMla2G
+         mZm9iRn+HrGu+Q6eydYFxopmA1r46j4zcJCjdDXVsTQRSFhEB8VLG7f5460IgaYT+mVk
+         jnYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=AyKKf2vu9ets5qQ05mKeEx+H3HJdeMhyf7LDU6EPmvg=;
+        b=sdLc/ABF7eknoHDbKB7DbrGudFNAXwd3OnjxH9r5pl1FGPmHGt3N48JxSugSObo5kH
+         wDohtPRLIK2H77Y9mzuEjl84CoRSOlHxK8kO3+9V7sJdoNveqL8WpVkomPmuWIURN0/X
+         phAB/z+JJCDhMyhccHabA/b+lfgAxXJvRRrIW28qKdqJCgthDB9CE26cI5zjcxL/ugxO
+         BSjP+d8mxnj6lGsKOsP7YqGIYrDgnKKzSnpSHcT/P4yzIAf3h3PdYPpQZD8ri95UCtUp
+         CVQYPPxGafj4S7ihEjUmdYTlvzOv3cdSBskKBYm4RXG7SD+aTCFIoVhS1oe7ip9KJch4
+         SE2Q==
+X-Gm-Message-State: AGi0PuaUXdf8D9MTBBAbp13Jj32vpVzQq29N24sE0nKMs+GDQw7Va/37
+        rW+QPydUeyxB5uMDQYVLCKv2NQ==
+X-Google-Smtp-Source: APiQypL6P5SXhhJYLq4NR+TEKXmQzYaSqAHnJaTlLyokBRKxP3wo+p/iZ1+/LSCv7ZJBVaCmcdxoSg==
+X-Received: by 2002:a5d:68cf:: with SMTP id p15mr4801408wrw.139.1587028418328;
+        Thu, 16 Apr 2020 02:13:38 -0700 (PDT)
+Received: from dell ([95.149.164.124])
+        by smtp.gmail.com with ESMTPSA id b4sm21818100wrv.42.2020.04.16.02.13.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Apr 2020 02:13:37 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 10:14:38 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Josef Friedl <josef.friedl@speed.at>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ran Bi <ran.bi@mediatek.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
+        srv_heupstream@mediatek.com
+Subject: Re: [PATCH v12 5/6] rtc: mt6397: Add support for the MediaTek MT6358
+ RTC
+Message-ID: <20200416091438.GA2167633@dell>
+References: <1586333531-21641-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <1586333531-21641-6-git-send-email-hsin-hsiung.wang@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200416105506.904b7847a1b621b75463076d@kernel.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1586333531-21641-6-git-send-email-hsin-hsiung.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 10:55:06AM +0900, Masami Hiramatsu wrote:
+On Wed, 08 Apr 2020, Hsin-Hsiung Wang wrote:
 
-SNIP
+> From: Ran Bi <ran.bi@mediatek.com>
+> 
+> This add support for the MediaTek MT6358 RTC. Driver using
+> compatible data to store different RTC_WRTGR address offset.
+> This replace RTC_WRTGR to RTC_WRTGR_MT6323 in mt6323-poweroff
+> driver which only needed by armv7 CPU without ATF.
+> 
+> Reviewed-by: Nicolas Boichat <drinkcat@chromium.org>
+> Reviewed-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
+> Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Acked-by: Sebastian Reichel <sre@kernel.org>
+> Signed-off-by: Ran Bi <ran.bi@mediatek.com>
+> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
 
-> >           trampoline_handler
-> >             kretprobe_hash_lock(current, &head, &flags);  <--- deadlock
-> > 
-> > Adding kprobe_busy_begin/end helpers that mark code with fake
-> > probe installed to prevent triggering of another kprobe within
-> > this code.
-> > 
-> > Using these helpers in kprobe_flush_task, so the probe recursion
-> > protection check is hit and the probe is never set to prevent
-> > above lockup.
-> > 
-> > Reported-by: "Ziqian SUN (Zamir)" <zsun@redhat.com>
-> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> 
-> Thanks Jiri and Ziqian!
-> 
-> Looks good to me.
-> 
-> Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-> 
-> BTW, this is a kind of bugfix. So should it add a Fixes tag?
-> 
-> Fixes: ef53d9c5e4da ('kprobes: improve kretprobe scalability with hashed locking')
-> Cc: stable@vger.kernel.org
+Please place these in chronological order.  They should provide some
+history, rather than a unordered slab list of random sign-offs.
 
-ah right, do you want me to repost with those?
+> ---
+>  drivers/power/reset/mt6323-poweroff.c |  2 +-
+>  drivers/rtc/rtc-mt6397.c              | 18 +++++++++++++++---
+>  include/linux/mfd/mt6397/rtc.h        |  9 ++++++++-
+>  3 files changed, 24 insertions(+), 5 deletions(-)
 
-thanks,
-jirka
+[...]
 
+> diff --git a/include/linux/mfd/mt6397/rtc.h b/include/linux/mfd/mt6397/rtc.h
+> index 7dfb63b..6200f3b 100644
+> --- a/include/linux/mfd/mt6397/rtc.h
+> +++ b/include/linux/mfd/mt6397/rtc.h
+> @@ -18,7 +18,9 @@
+>  #define RTC_BBPU_CBUSY         BIT(6)
+>  #define RTC_BBPU_KEY            (0x43 << 8)
+>  
+> -#define RTC_WRTGR              0x003c
+> +#define RTC_WRTGR_MT6358       0x3a
+> +#define RTC_WRTGR_MT6397       0x3c
+
+Why remove the leading 00's?
+
+These are now different to the other regs defined in this header.
+
+> +#define RTC_WRTGR_MT6323       RTC_WRTGR_MT6397
+>  
+>  #define RTC_IRQ_STA            0x0002
+
+Like here for instance  --^
+
+>  #define RTC_IRQ_STA_AL         BIT(0)
+> @@ -65,6 +67,10 @@
+>  #define MTK_RTC_POLL_DELAY_US  10
+>  #define MTK_RTC_POLL_TIMEOUT   (jiffies_to_usecs(HZ))
+>  
+> +struct mtk_rtc_data {
+> +	u32                     wrtgr;
+> +};
+> +
+>  struct mt6397_rtc {
+>  	struct device           *dev;
+>  	struct rtc_device       *rtc_dev;
+> @@ -74,6 +80,7 @@ struct mt6397_rtc {
+>  	struct regmap           *regmap;
+>  	int                     irq;
+>  	u32                     addr_base;
+> +	const struct mtk_rtc_data *data;
+>  };
+>  
+>  #endif /* _LINUX_MFD_MT6397_RTC_H_ */
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
