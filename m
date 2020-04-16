@@ -2,103 +2,103 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0301AC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:30:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD5F8C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:30:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE5D5214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:30:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="xig6g/Wf"
+	by mail.kernel.org (Postfix) with ESMTP id 877C021927
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:30:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587051025;
+	bh=6udrQF6+eqNb7J8MjuaEbwbF3uzk3PjNir0m9HPYV3M=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=PU+9IPKOYeB8GRsL9Xw80Bdwba1FNmMT58RfsiOmNtWLAA3/J63vz/V4KZYf9DQVP
+	 dVR8GqMTkRsPO3E/g/kBEZ2mygf2OoCecTE44tDO2PmffP2dqKz4muIYclra84Gjj2
+	 ENtdZa1eVCMB9hrncDHLPlVJFE1YrY4+Q+Hd8ZZs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395288AbgDPPaT (ORCPT
+        id S2395294AbgDPPaW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:30:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46524 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2395276AbgDPPaJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 11:30:09 -0400
-Received: from mail-io1-xd2b.google.com (mail-io1-xd2b.google.com [IPv6:2607:f8b0:4864:20::d2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 584AFC061A10
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 08:30:09 -0700 (PDT)
-Received: by mail-io1-xd2b.google.com with SMTP id w20so21461512iob.2
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 08:30:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=bgLKTDMc966pLZePK7Gy4v5POGBi54ywnFTq5rJSgzs=;
-        b=xig6g/WfEF6trkg+0bcPLBXurHgj5BTteF/0bBs3S1SiPTI9eFkmsiah/l6oXRYuc4
-         zkslZZdVvLAWgF0iEVZIyTeaxPgYk0LncDabFx/Kt7CGJC0/Wcztp1H/XH7BCabWb2Li
-         +3iteA8k8S4RTWplvYBrO8hJ9kQIVhFywXE3gVg2U9sjyHWhwQTswfZut7DE1JL3jYzF
-         okcX8eMj9A7MTPleU1A+uVJD+E8ajXhwpEK/djVcnI5BC9ciULzrr8zoBF6Qi2bWBJLC
-         J92SSWGu9sUk3rF/7qe+Hw+ct6OCLF373Xl5/deOMRiBil0k4xNutPCfd0ZT0SBfF5QU
-         PT/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=bgLKTDMc966pLZePK7Gy4v5POGBi54ywnFTq5rJSgzs=;
-        b=EC5R7zqFD/uoObUahDScOo70RaDSP4ykH7MzNqmQwlPK/xwKA2gj3FwgmnCjrLgsP2
-         6iC+Ap175qbHxMcHwuesM6gyBWc6MHX0bCCgQLpx0yHQeQqSokYtTimwtqiLwFJPu7QE
-         HV9QyHP5XHFAVFsuBmJGmq6V/4p+NEQ0BgOMAgxbQkNQWkSkvv7hXlTDsQnH22yKjtli
-         E4h/jKMvo3JOo3si9vM2nw+NTVPakFYrBT071JfguY+EgrXtRg2hIXejBzAvu+LeY2oC
-         /zboMVJ3PIxnrVZ1Ws6B7nIJkVcl1ZOQjaUj74xBPr7zV90DBUZ/78nRl3ln5tJLZ/ET
-         swWQ==
-X-Gm-Message-State: AGi0PubA62JAuG/EdWZ4gWoySzuRO0t3pxpFA1jkjHpDWBNC21d8ByZc
-        yrba+e3qpMml6nwgugq4o6QHaq6qjmbczA==
-X-Google-Smtp-Source: APiQypJ3ogc/LftQFKCcQO/enKyIUEms8Z22MlRj0HPuqyykMQA7qtclm9/YE48pZzjgb3iq7VFBJw==
-X-Received: by 2002:a5d:8f02:: with SMTP id f2mr2254689iof.55.1587051008389;
-        Thu, 16 Apr 2020 08:30:08 -0700 (PDT)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id a19sm5725806ilk.34.2020.04.16.08.30.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Apr 2020 08:30:07 -0700 (PDT)
-Subject: Re: bdi: fix use-after-free for dev_name(bdi->dev)
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     yuyufen@huawei.com, tj@kernel.org, jack@suse.cz,
-        bvanassche@acm.org, tytso@mit.edu, gregkh@linuxfoundation.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200416071519.807660-1-hch@lst.de>
- <874d57cb-90f1-db09-8f9d-29527451e241@kernel.dk>
- <20200416152946.GA10845@lst.de>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <ca7973dc-3be5-e482-900a-1018a0762b93@kernel.dk>
-Date:   Thu, 16 Apr 2020 09:30:07 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 16 Apr 2020 11:30:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57086 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2896596AbgDPNno (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:43:44 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB0A120732;
+        Thu, 16 Apr 2020 13:43:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587044624;
+        bh=6udrQF6+eqNb7J8MjuaEbwbF3uzk3PjNir0m9HPYV3M=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Q63cXkzUzMn9e+m3mGpEtf0coJz3BWV49oCH9T/52tYGD5jwKZFHKyZKdj7R7x1mi
+         D8Puud2W9ZqUl1lzjNlhjKe4pIoM/WHok701grp3Ib2EvsDQ7s+WOvKhaa+lgsffpi
+         gtyjozmAyfRfqQOotas8iUAgFd3/5exBB+IcX1ZM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 034/232] xhci: bail out early if driver cant accress host in resume
+Date:   Thu, 16 Apr 2020 15:22:08 +0200
+Message-Id: <20200416131320.264012138@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
+References: <20200416131316.640996080@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200416152946.GA10845@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/16/20 9:29 AM, Christoph Hellwig wrote:
-> On Thu, Apr 16, 2020 at 09:29:13AM -0600, Jens Axboe wrote:
->> On 4/16/20 1:15 AM, Christoph Hellwig wrote:
->>> Hi all,
->>>
->>> the first three patches are my take on the proposal from Yufen Yu
->>> to fix the use after free of the device name of the bdi device.
->>>
->>> The rest is vaguely related cleanups.
->>
->> Applied, thanks.
-> 
-> Please hold back, we still have a major issues with it.  I will resend
-> a fixed version tomorrow.
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
 
-OK, will do.
+[ Upstream commit 72ae194704da212e2ec312ab182a96799d070755 ]
 
+Bail out early if the xHC host needs to be reset at resume
+but driver can't access xHC PCI registers.
+
+If xhci driver already fails to reset the controller then there
+is no point in attempting to free, re-initialize, re-allocate and
+re-start the host. If failure to access the host is detected later,
+failing the resume, xhci interrupts will be double freed
+when remove is called.
+
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/20200312144517.1593-2-mathias.nyman@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/usb/host/xhci.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
+index 9b3b1b16eafba..2f49a7b3ce854 100644
+--- a/drivers/usb/host/xhci.c
++++ b/drivers/usb/host/xhci.c
+@@ -1157,8 +1157,10 @@ int xhci_resume(struct xhci_hcd *xhci, bool hibernated)
+ 		xhci_dbg(xhci, "Stop HCD\n");
+ 		xhci_halt(xhci);
+ 		xhci_zero_64b_regs(xhci);
+-		xhci_reset(xhci);
++		retval = xhci_reset(xhci);
+ 		spin_unlock_irq(&xhci->lock);
++		if (retval)
++			return retval;
+ 		xhci_cleanup_msix(xhci);
+ 
+ 		xhci_dbg(xhci, "// Disabling event ring interrupts\n");
 -- 
-Jens Axboe
+2.20.1
+
+
 
