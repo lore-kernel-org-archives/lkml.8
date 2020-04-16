@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED62BC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77EB6C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:21:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBCC62076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:21:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 517662076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:21:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587046903;
-	bh=ZIcAg89D5twlHgvCRgZyM3HhzVVvVDgs3ml5dsPPPn8=;
+	s=default; t=1587046913;
+	bh=f5G/PgNlQLorwMRYwCChGgzk+9oz/wHoIFMd326/k2A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QOWd/t2ldNnwrdX6AK3TdQcVnVuGehRgr6TyYCAPRMCeH6sCgXn6dnSGSWvnlb6kQ
-	 vkSV+Q9ncN4zrLX6NmIspBYwB7v/Lo3XFTAG/dPkWP/6FjAnzwSTaukVDHKQjxDFo0
-	 x+73IPWk0dYPArccD8sQ9nb5liic5PTTf38oybkQ=
+	b=FtHaIJ6eMvIV+gx5K1yaP+kAjT+qIia80nWLOzmEI8zA48IrfSTK4/ah6AeD4p4JO
+	 1WKThZQGFv0NIh6147B13YW2iUIpaP9ICM73mHtQ7drUwh+SJSyAo7OMG3/8VfpKlM
+	 Szz6Pqmppv//PgmEZ3AFs44u7XN79Ur73uEfNwss=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393218AbgDPOVl (ORCPT
+        id S2394019AbgDPOVv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:21:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41920 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:21:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392485AbgDPNzV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:55:21 -0400
+        id S2392533AbgDPNza (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:55:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F8D42078B;
-        Thu, 16 Apr 2020 13:55:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59B2A20732;
+        Thu, 16 Apr 2020 13:55:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045320;
-        bh=ZIcAg89D5twlHgvCRgZyM3HhzVVvVDgs3ml5dsPPPn8=;
+        s=default; t=1587045329;
+        bh=f5G/PgNlQLorwMRYwCChGgzk+9oz/wHoIFMd326/k2A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=szs7hDau0LR67QIexXmN7fip/dnk07Vi+MPWpdGXhJbBncmGzIz3F4w+2Wu7rpyt5
-         EDML3Rou3ys7397RT7dxy5q7SqvOEzRGnb3vKxTScwT0vX50jSK1bilzOAAXa2qZDJ
-         U/NpIJhV2P/UcSQBihT+yqfapBVPwcX5+toWulDc=
+        b=UQj4/FDfxXoe6iWd+JW/FNU/fiVMatpnsu0tqdiVnC3R133v4qQz3iw52nY42cBxG
+         yaWduayUvHh0kvp3772FD3QFFdH6YGKAeQdcNOKJXYJuCXAs61nPV4iXx0S6v7bNdP
+         ebuhXtmvqGIH6RuPNlbNeXks2P03GHo5dRkeexBs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 5.6 085/254] media: venus: firmware: Ignore secure call error on first resume
-Date:   Thu, 16 Apr 2020 15:22:54 +0200
-Message-Id: <20200416131336.543667686@linuxfoundation.org>
+        stable@vger.kernel.org, Sven Schnelle <svens@linux.ibm.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH 5.6 089/254] seccomp: Add missing compat_ioctl for notify
+Date:   Thu, 16 Apr 2020 15:22:58 +0200
+Message-Id: <20200416131337.071349726@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -61,44 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+From: Sven Schnelle <svens@linux.ibm.com>
 
-commit 2632e7b618a7730969f9782593c29ca53553aa22 upstream.
+commit 3db81afd99494a33f1c3839103f0429c8f30cb9d upstream.
 
-With the latest cleanup in qcom scm driver the secure monitor
-call for setting the remote processor state returns EINVAL when
-it is called for the first time and after another scm call
-auth_and_reset. The error returned from scm call could be ignored
-because the state transition is already done in auth_and_reset.
+Executing the seccomp_bpf testsuite under a 64-bit kernel with 32-bit
+userland (both s390 and x86) doesn't work because there's no compat_ioctl
+handler defined. Add the handler.
 
-Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
+Fixes: 6a21cc50f0c7 ("seccomp: add a return code to trap to userspace")
 Cc: stable@vger.kernel.org
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Link: https://lore.kernel.org/r/20200310123332.42255-1-svens@linux.ibm.com
+Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/platform/qcom/venus/firmware.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ kernel/seccomp.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/media/platform/qcom/venus/firmware.c
-+++ b/drivers/media/platform/qcom/venus/firmware.c
-@@ -44,8 +44,14 @@ static void venus_reset_cpu(struct venus
+--- a/kernel/seccomp.c
++++ b/kernel/seccomp.c
+@@ -1221,6 +1221,7 @@ static const struct file_operations secc
+ 	.poll = seccomp_notify_poll,
+ 	.release = seccomp_notify_release,
+ 	.unlocked_ioctl = seccomp_notify_ioctl,
++	.compat_ioctl = seccomp_notify_ioctl,
+ };
  
- int venus_set_hw_state(struct venus_core *core, bool resume)
- {
--	if (core->use_tz)
--		return qcom_scm_set_remote_state(resume, 0);
-+	int ret;
-+
-+	if (core->use_tz) {
-+		ret = qcom_scm_set_remote_state(resume, 0);
-+		if (resume && ret == -EINVAL)
-+			ret = 0;
-+		return ret;
-+	}
- 
- 	if (resume)
- 		venus_reset_cpu(core);
+ static struct file *init_listener(struct seccomp_filter *filter)
 
 
