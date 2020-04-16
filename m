@@ -2,100 +2,138 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3148C3815B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:27:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65BF0C352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:28:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9053214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:27:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587050875;
-	bh=3UjQVSicJ7z1E7lK3tpNSkw0cHKIFbCY3jGJKT13Kv0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Menb2V3em1UpUsTIeujstu/G4B56lkIKMI2zRnma9aactJj1pTlwdEtaGzzxLUDNb
-	 iOfTjtsuK0PJQ2lzOVeeBSbUNxGyOCqv5gdNB/Oj7pn0csn/9UM9+p+h13aZJhwvV7
-	 M1xuJqdbypGMc6sjYgggo7W9KB4Fxd7TQkl2Iq54=
+	by mail.kernel.org (Postfix) with ESMTP id 4129722241
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:28:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y31rxYOX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2898441AbgDPNo1 (ORCPT
+        id S2395257AbgDPP2A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:44:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45500 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896842AbgDPNeF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:34:05 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D32E208E4;
-        Thu, 16 Apr 2020 13:34:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044045;
-        bh=3UjQVSicJ7z1E7lK3tpNSkw0cHKIFbCY3jGJKT13Kv0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yH8XMLiNlvKz6plqoy8WNlds69FBgjGmDkAtiaY07OenjiVCi9FRxb5T4ngOg0kWM
-         4wasrUR7O//oF+qKbGSUI4zCOIUeybW1d56r4ZA5NSAMYbkiascANTrpzjx/q+V9X+
-         YAHAbdBFkz9UIer4dAu1xBOAnXvI0pOvVbm3gLEA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Ajay Singh <ajay.kathat@microchip.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 031/257] staging: wilc1000: avoid double unlocking of wilc->hif_cs mutex
-Date:   Thu, 16 Apr 2020 15:21:22 +0200
-Message-Id: <20200416131329.849879181@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
-References: <20200416131325.891903893@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 16 Apr 2020 11:28:00 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47947 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2898442AbgDPNo2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:44:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587044666;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=VNwYgeif6SS8pR2Shi4E6mQu99cc3aS7IJK5cTr/jMU=;
+        b=Y31rxYOX6a5ie4Vcllyg+ubkQekwhnPQbcta1uZXhI+eqVtzyPxOmvsKVwppDFMCpwkknU
+        Ni9OSMvNVexBYOve4bc4J9Ji3ZQNAs0QVSPLBTqWt57OywnbnIajaaRNnArvLALZ+r2i4m
+        ZaBy8dWdpLBXuNEztEfKtQc3CLbzZ0M=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-65-9eDRhbKIOHyWmyAlGo8qgg-1; Thu, 16 Apr 2020 09:44:09 -0400
+X-MC-Unique: 9eDRhbKIOHyWmyAlGo8qgg-1
+Received: by mail-wr1-f71.google.com with SMTP id f2so1732581wrm.9
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 06:44:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=VNwYgeif6SS8pR2Shi4E6mQu99cc3aS7IJK5cTr/jMU=;
+        b=HyBDvEcihdarhppNJJnco55JIYHaz3o94q/W2jpRLlgiMCYSoqaUOej885tzMd6ASR
+         bFNJHyDlOVNX+U8GQZ2oQhI+fFxbeXVVj98eMNA297buoXM87oijzk61/JSdYfXWJppB
+         0VByS6sWOpCVRMpwWmiQBLomL6BLtVpgCPBzcoztaV3IOlPnGcVHDkg7nkDY96f59kFs
+         Z/Q1f9qG24tu2OvMcOB1upzvKH0h/cUiXxxu629h7CI6WMeYKjMLOv44BwfFYBGl+BA7
+         V7hS5nO1u0B9BfgUekSp2hT7yUIMkxwUwFrsHRbLZck/vxPR5ueFuv85M714zTeBYtdv
+         jaLw==
+X-Gm-Message-State: AGi0PuYSiy8kXVlFX+WsAN/WDn/+Gi6yM6hPI98dm4+YvcdPJPumrik+
+        YsCCPRcgLAOIBm7I5UmdfJIk0YSf91tSfvIhWe4IQnAwMP52RhNHAhYDfxB9Z0VwGnUouQW5Zjw
+        SzhPfML4MGSiJ1pOLODvDIskl
+X-Received: by 2002:a1c:9e42:: with SMTP id h63mr4711036wme.115.1587044648698;
+        Thu, 16 Apr 2020 06:44:08 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJbJo3jezBS7NrZjbC7U3OMTYgi+dwQqgaUpndr48EWx/XnTEuvdzSDmjn7g2cPMV+vyM9+Dg==
+X-Received: by 2002:a1c:9e42:: with SMTP id h63mr4711010wme.115.1587044648389;
+        Thu, 16 Apr 2020 06:44:08 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:399d:3ef7:647c:b12d? ([2001:b07:6468:f312:399d:3ef7:647c:b12d])
+        by smtp.gmail.com with ESMTPSA id s24sm3860611wmj.28.2020.04.16.06.44.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Apr 2020 06:44:07 -0700 (PDT)
+Subject: Re: [PATCH v2 00/10] KVM: VMX: Unionize vcpu_vmx.exit_reason
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
+References: <20200415175519.14230-1-sean.j.christopherson@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <a77ca940-afe4-a94a-2698-6cda0f95ba5c@redhat.com>
+Date:   Thu, 16 Apr 2020 15:44:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200415175519.14230-1-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ajay Singh <ajay.kathat@microchip.com>
+On 15/04/20 19:55, Sean Christopherson wrote:
+> Convert the exit_reason field in struct vcpu_vmx from a vanilla u32 to a
+> union, (ab)using the union to provide access to the basic exit reason and
+> flags.
+> 
+> There is a fairly substantial delta relative to v1, as I ran with Vitaly's
+> suggestion to split nested_vmx_exit_reflected() into VM-Fail, "L0 wants"
+> and "L1 wants", and move the tracepoint into nested_vmx_reflect_vmexit().
+> IMO, this yields cleaner and more understandable code overall, and helps
+> eliminate caching the basic exit reason (see below) by avoiding large
+> functions that repeatedly query the basic exit reason.  The refactoring
+> isn't strictly related to making exit_reason a union, but the code would
+> conflict horribly and the end code nicely demonstrates the value of using
+> a union for the exit reason.
+> 
+> There are three motivating factors for making exit_reason a union:
+> 
+>   - Help avoid bugs where a basic exit reason is compared against the full
+>     exit reason, e.g. there have been two bugs where MCE_DURING_VMENTRY
+>     was incorrectly compared against the full exit reason.
+> 
+>   - Clarify the intent of related flows, e.g. exit_reason is used for both
+>     "basic exit reason" and "full exit reason", and it's not always clear
+>     which of the two is intended without a fair bit of digging.
+> 
+>   - Prepare for future Intel features, e.g. SGX, that add new exit flags
+>     that are less restricted than FAILED_VMENTRY, i.e. can be set on what
+>     is otherwise a standard VM-Exit.
+> 
+> v2:
+>   - Don't snapshot the basic exit reason, i.e. either use vmx->exit_reason
+>     directly or snapshot the whole thing.  The resulting code is similar
+>     to Xiaoyao's original patch, e.g. vmx_handle_exit() now uses
+>     "exit_reason.basic" instead of "exit_reason" to reference the basic
+>     exit reason.
+>   - Split nested_vmx_exit_reflected() into VM-Fail, "L0 wants" and "L1
+>     wants", and move the tracepoint into nested_vmx_reflect_vmexit().
+>     [Vitaly]
+>   - Use a "union vmx_exit_reason exit_reason" to handle a consistency
+>     check VM-Exit on VM-Enter in nested_vmx_enter_non_root_mode() to avoid
+>     some implicit casting shenanigans. [Vitaly]
+>   - Collect tags. [Vitaly]
+> 
+> v1: https://lkml.kernel.org/r/20200312184521.24579-1-sean.j.christopherson@intel.com
 
-[ Upstream commit 6c411581caef6e3b2c286871641018364c6db50a ]
+For now I committed only patches 1-9, just to limit the conflicts with
+the other series.  I would like to understand how you think the
+conflicts should be fixed with the union.
 
-Possible double unlocking of 'wilc->hif_cs' mutex was identified by
-smatch [1]. Removed the extra call to release_bus() in
-wilc_wlan_handle_txq() which was missed in earlier commit fdc2ac1aafc6
-("staging: wilc1000: support suspend/resume functionality").
-
-[1]. https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org/thread/NOEVW7C3GV74EWXJO3XX6VT2NKVB2HMT/
-
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Ajay Singh <ajay.kathat@microchip.com>
-Link: https://lore.kernel.org/r/20200221170120.15739-1-ajay.kathat@microchip.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/staging/wilc1000/wlan.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/staging/wilc1000/wlan.c b/drivers/staging/wilc1000/wlan.c
-index d3de76126b787..3098399741d7b 100644
---- a/drivers/staging/wilc1000/wlan.c
-+++ b/drivers/staging/wilc1000/wlan.c
-@@ -578,7 +578,6 @@ int wilc_wlan_handle_txq(struct wilc *wilc, u32 *txq_count)
- 				entries = ((reg >> 3) & 0x3f);
- 				break;
- 			}
--			release_bus(wilc, WILC_BUS_RELEASE_ALLOW_SLEEP);
- 		} while (--timeout);
- 		if (timeout <= 0) {
- 			ret = func->hif_write_reg(wilc, WILC_HOST_VMM_CTL, 0x0);
--- 
-2.20.1
-
-
+Paolo
 
