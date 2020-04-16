@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7535C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:48:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 705ABC352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:49:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F4FF21973
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:48:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B7C321D82
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:49:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505487AbgDPKse (ORCPT
+        id S2505521AbgDPKtA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 06:48:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57126 "EHLO
+        Thu, 16 Apr 2020 06:49:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2505251AbgDPKgY (ORCPT
+        with ESMTP id S2505224AbgDPKgX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 06:36:24 -0400
+        Thu, 16 Apr 2020 06:36:23 -0400
 Received: from andre.telenet-ops.be (andre.telenet-ops.be [IPv6:2a02:1800:120:4::f00:15])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39FEEC061A10
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 03:36:24 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02449C0258D4
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 03:36:14 -0700 (PDT)
 Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:fd83:81bb:c1d7:433d])
         by andre.telenet-ops.be with bizsmtp
-        id TNWz2200b4dKHqf01NX0RZ; Thu, 16 Apr 2020 12:31:23 +0200
+        id TNWz2200X4dKHqf01NWzRY; Thu, 16 Apr 2020 12:31:11 +0200
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1jP1nP-0001cw-Ou; Thu, 16 Apr 2020 12:30:59 +0200
+        id 1jP1nP-0001ck-MK; Thu, 16 Apr 2020 12:30:59 +0200
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1jP1nP-0003zL-Nb; Thu, 16 Apr 2020 12:30:59 +0200
+        id 1jP1nP-0003zB-LC; Thu, 16 Apr 2020 12:30:59 +0200
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Rob Herring <robh+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
         David Airlie <airlied@linux.ie>,
@@ -51,9 +51,9 @@ Cc:     devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
         dri-devel@lists.freedesktop.org, linux-iio@vger.kernel.org,
         alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH trivial 5/6] ALSA: Fix misspellings of "Analog Devices"
-Date:   Thu, 16 Apr 2020 12:30:57 +0200
-Message-Id: <20200416103058.15269-6-geert+renesas@glider.be>
+Subject: [PATCH trivial 2/6] dma: Fix misspelling of "Analog Devices"
+Date:   Thu, 16 Apr 2020 12:30:54 +0200
+Message-Id: <20200416103058.15269-3-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200416103058.15269-1-geert+renesas@glider.be>
 References: <20200416103058.15269-1-geert+renesas@glider.be>
@@ -67,54 +67,22 @@ According to https://www.analog.com/, the company name is spelled
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- sound/isa/ad1816a/ad1816a.c | 2 +-
- sound/pci/ac97/ac97_patch.c | 2 +-
- sound/pci/hda/Kconfig       | 4 ++--
- 3 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/dma/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/isa/ad1816a/ad1816a.c b/sound/isa/ad1816a/ad1816a.c
-index ce4c8ba2fa9873e7..ca18fe3ff8a59a9f 100644
---- a/sound/isa/ad1816a/ad1816a.c
-+++ b/sound/isa/ad1816a/ad1816a.c
-@@ -54,7 +54,7 @@ MODULE_PARM_DESC(clockfreq, "Clock frequency for ad1816a driver (default = 0).")
- static const struct pnp_card_device_id snd_ad1816a_pnpids[] = {
- 	/* Analog Devices AD1815 */
- 	{ .id = "ADS7150", .devs = { { .id = "ADS7150" }, { .id = "ADS7151" } } },
--	/* Analog Device AD1816? */
-+	/* Analog Devices AD1816? */
- 	{ .id = "ADS7180", .devs = { { .id = "ADS7180" }, { .id = "ADS7181" } } },
- 	/* Analog Devices AD1816A - added by Kenneth Platz <kxp@atl.hp.com> */
- 	{ .id = "ADS7181", .devs = { { .id = "ADS7180" }, { .id = "ADS7181" } } },
-diff --git a/sound/pci/ac97/ac97_patch.c b/sound/pci/ac97/ac97_patch.c
-index ebf926728c5f84af..45ef0f52ec55b803 100644
---- a/sound/pci/ac97/ac97_patch.c
-+++ b/sound/pci/ac97/ac97_patch.c
-@@ -1356,7 +1356,7 @@ static int patch_cx20551(struct snd_ac97 *ac97)
- }
- 
- /*
-- * Analog Device AD18xx, AD19xx codecs
-+ * Analog Devices AD18xx, AD19xx codecs
-  */
- #ifdef CONFIG_PM
- static void ad18xx_resume(struct snd_ac97 *ac97)
-diff --git a/sound/pci/hda/Kconfig b/sound/pci/hda/Kconfig
-index e1d3082a4fe93153..7ba542e45a3d7f88 100644
---- a/sound/pci/hda/Kconfig
-+++ b/sound/pci/hda/Kconfig
-@@ -99,10 +99,10 @@ comment "Set to Y if you want auto-loading the codec driver"
- 	depends on SND_HDA=y && SND_HDA_CODEC_REALTEK=m
- 
- config SND_HDA_CODEC_ANALOG
--	tristate "Build Analog Device HD-audio codec support"
-+	tristate "Build Analog Devices HD-audio codec support"
- 	select SND_HDA_GENERIC
+diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+index 0924836443152fb5..c35c0e03b40f026b 100644
+--- a/drivers/dma/Kconfig
++++ b/drivers/dma/Kconfig
+@@ -106,7 +106,7 @@ config AXI_DMAC
+ 	select REGMAP_MMIO
  	help
--	  Say Y or M here to include Analog Device HD-audio codec support in
-+	  Say Y or M here to include Analog Devices HD-audio codec support in
- 	  snd-hda-intel driver, such as AD1986A.
+ 	  Enable support for the Analog Devices AXI-DMAC peripheral. This DMA
+-	  controller is often used in Analog Device's reference designs for FPGA
++	  controller is often used in Analog Devices' reference designs for FPGA
+ 	  platforms.
  
- comment "Set to Y if you want auto-loading the codec driver"
+ config BCM_SBA_RAID
 -- 
 2.17.1
 
