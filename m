@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE4EDC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E78F9C352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:46:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B055E21974
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:46:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C35822076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:46:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587044780;
-	bh=AL4Duf7m5IvoTTD4d2+gCaDhn7bLAW1D0iwX6syCWJw=;
+	s=default; t=1587044784;
+	bh=lb20TAWB1L8o9R9POCRdfn3ZTAVt4zIsBHpavNxlDo0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Gy2vwaL9AMonhgJZlf8P6uPQi5MLPmgX0gmBC3PpibdLuKDkWdBeGUadFbrsTuQbP
-	 QzkYLh+kOl7XuELBFL0LczyHNIyXmSIKh30jd2lq6IJZ0a3ahfz6oTD70Q0sHB3XY4
-	 qcPICtFw23zwtRajAVq5puHzsXQZggKi8W/wEDp0=
+	b=2EPBisJkD71+DZ2GbSusa51hm53s+MVw2LPd6+3XcFoV7qxe8bSUJasAmt9KgPMJg
+	 PuPJS1BJZ/uEBBvKHad5AQQrX+2ifp3p6gihB2yjdcOurPHrjPuAZGQ0OLmnqImRlG
+	 ZTUQMbgUIxEoIIJfZO0C7OJ60rMCFZY8kqm8ingQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2898539AbgDPNqT (ORCPT
+        id S2898582AbgDPNqX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:46:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46684 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:46:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897027AbgDPNe4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:34:56 -0400
+        id S2897037AbgDPNe7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:34:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D2A4208E4;
-        Thu, 16 Apr 2020 13:34:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A303A20732;
+        Thu, 16 Apr 2020 13:34:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044096;
-        bh=AL4Duf7m5IvoTTD4d2+gCaDhn7bLAW1D0iwX6syCWJw=;
+        s=default; t=1587044099;
+        bh=lb20TAWB1L8o9R9POCRdfn3ZTAVt4zIsBHpavNxlDo0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=orlGN9nEI7Q8LFrkOCr705qvjWHc0FQADt7WG0WMpPGmgRfsLo3ZLeO1T/ARWhYqO
-         FmZLZ2x+xIBpl6894k1AKd8G6C3ntHMewn1rVrjd/mJrMSLHSxIpSxGNYkcKe+TLaW
-         4j9Bdj0keJER0H2cziMOvLAbUveBWYJ30Py2YY8Q=
+        b=rUXo5z69/y3QyHldAtFNbVmqixYZIDbI/qcDRIZDydJ359pxENx6Z9DcV1WS6WV4v
+         785cwdMqGG/MTcTCyTf5M0gEko0Bj0C+gM8XnRfOJ78oqmj0htv49lY5GiU84SWO8+
+         xkuFifSlbWzpo9t4Cz7KASfogEeUL2XfBE5IxpO0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christoph Niedermaier <cniedermaier@dh-electronics.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
+        stable@vger.kernel.org, Junyong Sun <sunjunyong@xiaomi.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 028/257] cpufreq: imx6q: Fixes unwanted cpu overclocking on i.MX6ULL
-Date:   Thu, 16 Apr 2020 15:21:19 +0200
-Message-Id: <20200416131329.471239529@linuxfoundation.org>
+Subject: [PATCH 5.5 073/257] firmware: fix a double abort case with fw_load_sysfs_fallback
+Date:   Thu, 16 Apr 2020 15:22:04 +0200
+Message-Id: <20200416131335.057874466@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -61,42 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Niedermaier <cniedermaier@dh-electronics.com>
+From: Junyong Sun <sunjy516@gmail.com>
 
-[ Upstream commit 36eb7dc1bd42fe5f850329c893768ff89b696fba ]
+[ Upstream commit bcfbd3523f3c6eea51a74d217a8ebc5463bcb7f4 ]
 
-imx6ul_opp_check_speed_grading is called for both i.MX6UL and i.MX6ULL.
-Since the i.MX6ULL was introduced to a separate ocotp compatible node
-later, it is possible that the i.MX6ULL has also dtbs with
-"fsl,imx6ull-ocotp". On a system without nvmem-cell speed grade a
-missing check on this node causes a driver fail without considering
-the cpu speed grade.
+fw_sysfs_wait_timeout may return err with -ENOENT
+at fw_load_sysfs_fallback and firmware is already
+in abort status, no need to abort again, so skip it.
 
-This patch prevents unwanted cpu overclocking on i.MX6ULL with compatible
-node "fsl,imx6ull-ocotp" in old dtbs without nvmem-cell speed grade.
+This issue is caused by concurrent situation like below:
+when thread 1# wait firmware loading, thread 2# may write
+-1 to abort loading and wakeup thread 1# before it timeout.
+so wait_for_completion_killable_timeout of thread 1# would
+return remaining time which is != 0 with fw_st->status
+FW_STATUS_ABORTED.And the results would be converted into
+err -ENOENT in __fw_state_wait_common and transfered to
+fw_load_sysfs_fallback in thread 1#.
+The -ENOENT means firmware status is already at ABORTED,
+so fw_load_sysfs_fallback no need to get mutex to abort again.
+-----------------------------
+thread 1#,wait for loading
+fw_load_sysfs_fallback
+ ->fw_sysfs_wait_timeout
+    ->__fw_state_wait_common
+       ->wait_for_completion_killable_timeout
 
-Fixes: 2733fb0d0699 ("cpufreq: imx6q: read OCOTP through nvmem for imx6ul/imx6ull")
-Signed-off-by: Christoph Niedermaier <cniedermaier@dh-electronics.com>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+in __fw_state_wait_common,
+...
+93    ret = wait_for_completion_killable_timeout(&fw_st->completion, timeout);
+94    if (ret != 0 && fw_st->status == FW_STATUS_ABORTED)
+95       return -ENOENT;
+96    if (!ret)
+97	 return -ETIMEDOUT;
+98
+99    return ret < 0 ? ret : 0;
+-----------------------------
+thread 2#, write -1 to abort loading
+firmware_loading_store
+ ->fw_load_abort
+   ->__fw_load_abort
+     ->fw_state_aborted
+       ->__fw_state_set
+         ->complete_all
+
+in __fw_state_set,
+...
+111    if (status == FW_STATUS_DONE || status == FW_STATUS_ABORTED)
+112       complete_all(&fw_st->completion);
+-------------------------------------------
+BTW,the double abort issue would not cause kernel panic or create an issue,
+but slow down it sometimes.The change is just a minor optimization.
+
+Signed-off-by: Junyong Sun <sunjunyong@xiaomi.com>
+Acked-by: Luis Chamberlain <mcgrof@kernel.org>
+Link: https://lore.kernel.org/r/1583202968-28792-1-git-send-email-sunjunyong@xiaomi.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpufreq/imx6q-cpufreq.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/base/firmware_loader/fallback.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/cpufreq/imx6q-cpufreq.c b/drivers/cpufreq/imx6q-cpufreq.c
-index 648a09a1778a3..1fcbbd53a48a2 100644
---- a/drivers/cpufreq/imx6q-cpufreq.c
-+++ b/drivers/cpufreq/imx6q-cpufreq.c
-@@ -280,6 +280,9 @@ static int imx6ul_opp_check_speed_grading(struct device *dev)
- 		void __iomem *base;
+diff --git a/drivers/base/firmware_loader/fallback.c b/drivers/base/firmware_loader/fallback.c
+index 62ee90b4db56e..70efbb22dfc30 100644
+--- a/drivers/base/firmware_loader/fallback.c
++++ b/drivers/base/firmware_loader/fallback.c
+@@ -525,7 +525,7 @@ static int fw_load_sysfs_fallback(struct fw_sysfs *fw_sysfs,
+ 	}
  
- 		np = of_find_compatible_node(NULL, NULL, "fsl,imx6ul-ocotp");
-+		if (!np)
-+			np = of_find_compatible_node(NULL, NULL,
-+						     "fsl,imx6ull-ocotp");
- 		if (!np)
- 			return -ENOENT;
- 
+ 	retval = fw_sysfs_wait_timeout(fw_priv, timeout);
+-	if (retval < 0) {
++	if (retval < 0 && retval != -ENOENT) {
+ 		mutex_lock(&fw_lock);
+ 		fw_load_abort(fw_sysfs);
+ 		mutex_unlock(&fw_lock);
 -- 
 2.20.1
 
