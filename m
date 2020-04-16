@@ -2,158 +2,232 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC276C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B1FC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F3262222D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:10:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF4A3214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:10:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587049805;
-	bh=T9Q/+8y+10RHMimFMocEtiqH524D6C047MMtaJaMqCU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jOsb/gI1bFLWP+nVJCVcgK0CaMhxp8EVHF0k3hzOLnMZS4d06/oHMQ3FbVTqSHK2o
-	 uiNvY1wvKUdUXAr0f4FM2pv1GI3Z+RWPAcK7S6M056skVnH5C5DX2K8AcLL5kYoPb1
-	 0Ieo62AnTuCWgNpbzRZQU1joctv52b7Yb1TYDSHk=
+	s=default; t=1587049833;
+	bh=rW0Bvw3mt3oRNulNWXsyEx1/+k3RkTc+dWy1wdwu6Qo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=USWK1ouLuhHsxkBbS70WUKy6KS/i1FqrdakYF+x44Ft67F6EUQu37qh3nIZEl0MsO
+	 W+bifVQAPaBOnhxXryobhr5HqZryPVB3uR+xD/S0qqPki3k3xnHTv3KD0lSwbi/WAx
+	 WWFD7BEZ8G+y4kVRim2Vl/LPMH7EAJKCitRhr/bw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395003AbgDPPKC (ORCPT
+        id S2392450AbgDPPKa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:10:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36746 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:10:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2439253AbgDPNut (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:50:49 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2394992AbgDPPJ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 11:09:58 -0400
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D1102078B;
-        Thu, 16 Apr 2020 13:50:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB00D2222D;
+        Thu, 16 Apr 2020 15:09:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045045;
-        bh=T9Q/+8y+10RHMimFMocEtiqH524D6C047MMtaJaMqCU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uHqTpV/mTujhXKQdg0w76UzIK5LUStMAfC6e47Ejhub8J/zLp1M2veX665x+fcsp7
-         JwKFnUl9cYnNo5sC7PevneR6HPCsVoMdvE9HGugvLa1VBENzHlHY36mb7EdopJ9Dtk
-         4dCmnW+7vbYCbgUKwFF9AWdrvR31s50N3NY4j0MI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>
-Subject: [PATCH 5.4 206/232] xen/blkfront: fix memory allocation flags in blkfront_setup_indirect()
-Date:   Thu, 16 Apr 2020 15:25:00 +0200
-Message-Id: <20200416131341.101292091@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
-References: <20200416131316.640996080@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1587049797;
+        bh=rW0Bvw3mt3oRNulNWXsyEx1/+k3RkTc+dWy1wdwu6Qo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=hthOJdnrcdqI6mMre4jfYWe1srm1RKsINoBdel8L88TL63UL7K3qE/bZotnPScbWn
+         HnOsPRTdKvhFS3sZg8Sa8cW+uDQcJnHjZ4cu3wQmtZy+UaGdKzJLq4jI/KslkaVkje
+         ij4rmuwpBU4Da7u/hi//x2ybpLVxv4RFng/klKNI=
+Received: by mail-qk1-f173.google.com with SMTP id x66so21581571qkd.9;
+        Thu, 16 Apr 2020 08:09:56 -0700 (PDT)
+X-Gm-Message-State: AGi0Pubq0O+1yFrA+WFAG7vEprpuqX1QRtwDhoXYHmI0NYZZuR1tIptP
+        ccrWjrvJr34JPC2FJhoEnNiMG4WUx3s4TYKr6w==
+X-Google-Smtp-Source: APiQypJ+bjQ0KgyMuk0uvkjJanAnJ0Z7kTZhk7t7vqPo6scnZ7torJnyQYrZi5/0Y+NTz2ZfLoR+oJzvFDzDKWw5KXQ=
+X-Received: by 2002:a37:7dc6:: with SMTP id y189mr33611422qkc.223.1587049796040;
+ Thu, 16 Apr 2020 08:09:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200416125207.425271-1-adrian.ratiu@collabora.com>
+In-Reply-To: <20200416125207.425271-1-adrian.ratiu@collabora.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 16 Apr 2020 10:09:44 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLyEjXjeADvxztT0kg6Sc-VASUeBPr0jJAwS39PckQjpw@mail.gmail.com>
+Message-ID: <CAL_JsqLyEjXjeADvxztT0kg6Sc-VASUeBPr0jJAwS39PckQjpw@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: display: dw_mipi_dsi.txt: convert to yaml
+To:     Adrian Ratiu <adrian.ratiu@collabora.com>
+Cc:     devicetree@vger.kernel.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Juergen Gross <jgross@suse.com>
+On Thu, Apr 16, 2020 at 7:51 AM Adrian Ratiu <adrian.ratiu@collabora.com> wrote:
+>
+> This converts the Synopsis MIPI DSI binding documentation to yaml and
+> should be quite straightforward. I've added a missing ref clk and also
+> added Mark and Rob as maintainers based on 'get_maintainer.pl' results.
+>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: devicetree@vger.kernel.org
+> Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
+> ---
+>  .../bindings/display/bridge/dw_mipi_dsi.txt   | 32 ---------
+>  .../display/bridge/snps,dw-mipi-dsi.yaml      | 66 +++++++++++++++++++
+>  2 files changed, 66 insertions(+), 32 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/snps,dw-mipi-dsi.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt b/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt
+> deleted file mode 100644
+> index b13adf30b8d3..000000000000
+> --- a/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt
+> +++ /dev/null
+> @@ -1,32 +0,0 @@
+> -Synopsys DesignWare MIPI DSI host controller
+> -============================================
+> -
+> -This document defines device tree properties for the Synopsys DesignWare MIPI
+> -DSI host controller. It doesn't constitue a device tree binding specification
+> -by itself but is meant to be referenced by platform-specific device tree
+> -bindings.
+> -
+> -When referenced from platform device tree bindings the properties defined in
+> -this document are defined as follows. The platform device tree bindings are
+> -responsible for defining whether each optional property is used or not.
+> -
+> -- reg: Memory mapped base address and length of the DesignWare MIPI DSI
+> -  host controller registers. (mandatory)
+> -
+> -- clocks: References to all the clocks specified in the clock-names property
+> -  as specified in [1]. (mandatory)
+> -
+> -- clock-names:
+> -  - "pclk" is the peripheral clock for either AHB and APB. (mandatory)
+> -  - "px_clk" is the pixel clock for the DPI/RGB input. (optional)
+> -
+> -- resets: References to all the resets specified in the reset-names property
+> -  as specified in [2]. (optional)
+> -
+> -- reset-names: string reset name, must be "apb" if used. (optional)
+> -
+> -- panel or bridge node: see [3]. (mandatory)
+> -
+> -[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+> -[2] Documentation/devicetree/bindings/reset/reset.txt
+> -[3] Documentation/devicetree/bindings/display/mipi-dsi-bus.txt
+> diff --git a/Documentation/devicetree/bindings/display/bridge/snps,dw-mipi-dsi.yaml b/Documentation/devicetree/bindings/display/bridge/snps,dw-mipi-dsi.yaml
+> new file mode 100644
+> index 000000000000..0ab4125eee30
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/snps,dw-mipi-dsi.yaml
+> @@ -0,0 +1,66 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/bridge/snps,dw-mipi-dsi.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Synopsys DesignWare MIPI DSI host controller
+> +
+> +maintainers:
+> +  - Rob Herring <robh+dt@kernel.org>
 
-commit 3a169c0be75b59dd85d159493634870cdec6d3c4 upstream.
+No thanks, I don't know anything about this hardware. It should be the
+owner for this binding, not who applies patches.
 
-Commit 1d5c76e664333 ("xen-blkfront: switch kcalloc to kvcalloc for
-large array allocation") didn't fix the issue it was meant to, as the
-flags for allocating the memory are GFP_NOIO, which will lead the
-memory allocation falling back to kmalloc().
+> +  - Mark Rutland <mark.rutland@arm.com>
 
-So instead of GFP_NOIO use GFP_KERNEL and do all the memory allocation
-in blkfront_setup_indirect() in a memalloc_noio_{save,restore} section.
+Check current maintainers. Mark is not one anymore.
 
-Fixes: 1d5c76e664333 ("xen-blkfront: switch kcalloc to kvcalloc for large array allocation")
-Cc: stable@vger.kernel.org
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Acked-by: Roger Pau Monné <roger.pau@citrix.com>
-Link: https://lore.kernel.org/r/20200403090034.8753-1-jgross@suse.com
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> +
+> +description: |
+> +  This document defines device tree properties for the Synopsys DesignWare MIPI
+> +  DSI host controller. It doesn't constitue a device tree binding specification
+> +  by itself but is meant to be referenced by platform-specific device tree
+> +  bindings.
+> +
+> +  When referenced from platform device tree bindings the properties defined in
+> +  this document are defined as follows. The platform device tree bindings are
+> +  responsible for defining whether each property is required or optional.
+> +
 
----
- drivers/block/xen-blkfront.c |   17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+Need to reference ($ref) dsi-controller.yaml here.
 
---- a/drivers/block/xen-blkfront.c
-+++ b/drivers/block/xen-blkfront.c
-@@ -47,6 +47,7 @@
- #include <linux/bitmap.h>
- #include <linux/list.h>
- #include <linux/workqueue.h>
-+#include <linux/sched/mm.h>
- 
- #include <xen/xen.h>
- #include <xen/xenbus.h>
-@@ -2188,10 +2189,12 @@ static void blkfront_setup_discard(struc
- 
- static int blkfront_setup_indirect(struct blkfront_ring_info *rinfo)
- {
--	unsigned int psegs, grants;
-+	unsigned int psegs, grants, memflags;
- 	int err, i;
- 	struct blkfront_info *info = rinfo->dev_info;
- 
-+	memflags = memalloc_noio_save();
-+
- 	if (info->max_indirect_segments == 0) {
- 		if (!HAS_EXTRA_REQ)
- 			grants = BLKIF_MAX_SEGMENTS_PER_REQUEST;
-@@ -2223,7 +2226,7 @@ static int blkfront_setup_indirect(struc
- 
- 		BUG_ON(!list_empty(&rinfo->indirect_pages));
- 		for (i = 0; i < num; i++) {
--			struct page *indirect_page = alloc_page(GFP_NOIO);
-+			struct page *indirect_page = alloc_page(GFP_KERNEL);
- 			if (!indirect_page)
- 				goto out_of_memory;
- 			list_add(&indirect_page->lru, &rinfo->indirect_pages);
-@@ -2234,15 +2237,15 @@ static int blkfront_setup_indirect(struc
- 		rinfo->shadow[i].grants_used =
- 			kvcalloc(grants,
- 				 sizeof(rinfo->shadow[i].grants_used[0]),
--				 GFP_NOIO);
-+				 GFP_KERNEL);
- 		rinfo->shadow[i].sg = kvcalloc(psegs,
- 					       sizeof(rinfo->shadow[i].sg[0]),
--					       GFP_NOIO);
-+					       GFP_KERNEL);
- 		if (info->max_indirect_segments)
- 			rinfo->shadow[i].indirect_grants =
- 				kvcalloc(INDIRECT_GREFS(grants),
- 					 sizeof(rinfo->shadow[i].indirect_grants[0]),
--					 GFP_NOIO);
-+					 GFP_KERNEL);
- 		if ((rinfo->shadow[i].grants_used == NULL) ||
- 			(rinfo->shadow[i].sg == NULL) ||
- 		     (info->max_indirect_segments &&
-@@ -2251,6 +2254,7 @@ static int blkfront_setup_indirect(struc
- 		sg_init_table(rinfo->shadow[i].sg, psegs);
- 	}
- 
-+	memalloc_noio_restore(memflags);
- 
- 	return 0;
- 
-@@ -2270,6 +2274,9 @@ out_of_memory:
- 			__free_page(indirect_page);
- 		}
- 	}
-+
-+	memalloc_noio_restore(memflags);
-+
- 	return -ENOMEM;
- }
- 
+> +properties:
+> +  reg:
+> +    description: |
+> +      Memory mapped base address and length of the DesignWare MIPI DSI host
+> +      controller registers.
 
+Drop the description. That's every 'reg'. You need to say how many
+regions (maxItems: 1?).
 
+> +
+> +  clocks:
+> +    description: |
+> +      References to all the clocks specified in the clock-names property as
+> +      specified in Documentation/devicetree/bindings/clock/clock-bindings.txt
+
+Drop
+
+> +    items:
+> +      - description: Module clock
+> +      - description: DSI bus colck for either AHB and APB
+
+typo
+
+> +      - description: Pixel clock for the DPI/RGB input
+> +    minItems: 2
+> +    maxItems: 3
+
+You can drop 'maxItems'. It's implied by the length of 'items'.
+> +
+> +  clock-names:
+> +    items:
+> +      - const: ref
+> +      - const: pclk
+> +      - const: px_clk
+> +    minItems: 2
+> +    maxItems: 3
+> +
+> +  resets:
+> +    description: |
+> +      References to all the resets specified in the reset-names property as
+> +      specified in Documentation/devicetree/bindings/reset/reset.txt
+
+Drop.
+
+You need maxItems to define how many reset entries.
+
+> +
+> +  reset-names:
+> +    const: apb
+> +
+> +patternProperties:
+> +  "^panel@[0-3]$":
+> +    type: object
+> +    description: |
+> +      A node containing the panel or bridge description as documented in
+
+bridge? But the node name says panel only.
+
+> +      Documentation/devicetree/bindings/display/mipi-dsi-bus.txt
+
+Drop description.
+
+> +
+> +required:
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> --
+> 2.26.0
+>
