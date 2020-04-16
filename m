@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 705ABC352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3791C352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:50:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B7C321D82
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:49:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA56021D82
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:50:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505521AbgDPKtA (ORCPT
+        id S2505544AbgDPKts (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 06:49:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57098 "EHLO
+        Thu, 16 Apr 2020 06:49:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2505224AbgDPKgX (ORCPT
+        with ESMTP id S2505232AbgDPKgX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Apr 2020 06:36:23 -0400
-Received: from andre.telenet-ops.be (andre.telenet-ops.be [IPv6:2a02:1800:120:4::f00:15])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02449C0258D4
+Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04B51C025481
         for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 03:36:14 -0700 (PDT)
 Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:fd83:81bb:c1d7:433d])
-        by andre.telenet-ops.be with bizsmtp
-        id TNWz2200X4dKHqf01NWzRY; Thu, 16 Apr 2020 12:31:11 +0200
+        by xavier.telenet-ops.be with bizsmtp
+        id TNWz2200l4dKHqf01NWzxG; Thu, 16 Apr 2020 12:31:11 +0200
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1jP1nP-0001ck-MK; Thu, 16 Apr 2020 12:30:59 +0200
+        id 1jP1nP-0001cq-O4; Thu, 16 Apr 2020 12:30:59 +0200
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1jP1nP-0003zB-LC; Thu, 16 Apr 2020 12:30:59 +0200
+        id 1jP1nP-0003zI-Me; Thu, 16 Apr 2020 12:30:59 +0200
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Rob Herring <robh+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
         David Airlie <airlied@linux.ie>,
@@ -51,9 +51,9 @@ Cc:     devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
         dri-devel@lists.freedesktop.org, linux-iio@vger.kernel.org,
         alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH trivial 2/6] dma: Fix misspelling of "Analog Devices"
-Date:   Thu, 16 Apr 2020 12:30:54 +0200
-Message-Id: <20200416103058.15269-3-geert+renesas@glider.be>
+Subject: [PATCH trivial 4/6] iio: Fix misspellings of "Analog Devices"
+Date:   Thu, 16 Apr 2020 12:30:56 +0200
+Message-Id: <20200416103058.15269-5-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200416103058.15269-1-geert+renesas@glider.be>
 References: <20200416103058.15269-1-geert+renesas@glider.be>
@@ -67,22 +67,48 @@ According to https://www.analog.com/, the company name is spelled
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- drivers/dma/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iio/adc/ad7791.c                       | 2 +-
+ drivers/iio/trigger/iio-trig-hrtimer.c         | 2 +-
+ drivers/staging/iio/Documentation/overview.txt | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index 0924836443152fb5..c35c0e03b40f026b 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -106,7 +106,7 @@ config AXI_DMAC
- 	select REGMAP_MMIO
- 	help
- 	  Enable support for the Analog Devices AXI-DMAC peripheral. This DMA
--	  controller is often used in Analog Device's reference designs for FPGA
-+	  controller is often used in Analog Devices' reference designs for FPGA
- 	  platforms.
+diff --git a/drivers/iio/adc/ad7791.c b/drivers/iio/adc/ad7791.c
+index abb2393926317087..70bfc41052db2740 100644
+--- a/drivers/iio/adc/ad7791.c
++++ b/drivers/iio/adc/ad7791.c
+@@ -444,5 +444,5 @@ static struct spi_driver ad7791_driver = {
+ module_spi_driver(ad7791_driver);
  
- config BCM_SBA_RAID
+ MODULE_AUTHOR("Lars-Peter Clausen <lars@metafoo.de>");
+-MODULE_DESCRIPTION("Analog Device AD7787/AD7788/AD7789/AD7790/AD7791 ADC driver");
++MODULE_DESCRIPTION("Analog Devices AD7787/AD7788/AD7789/AD7790/AD7791 ADC driver");
+ MODULE_LICENSE("GPL v2");
+diff --git a/drivers/iio/trigger/iio-trig-hrtimer.c b/drivers/iio/trigger/iio-trig-hrtimer.c
+index a5e670726717f0d8..f59bf8d585866ea2 100644
+--- a/drivers/iio/trigger/iio-trig-hrtimer.c
++++ b/drivers/iio/trigger/iio-trig-hrtimer.c
+@@ -4,7 +4,7 @@
+  *
+  * Copyright (C) Intuitive Aerial AB
+  * Written by Marten Svanfeldt, marten@intuitiveaerial.com
+- * Copyright (C) 2012, Analog Device Inc.
++ * Copyright (C) 2012, Analog Devices Inc.
+  *	Author: Lars-Peter Clausen <lars@metafoo.de>
+  * Copyright (C) 2015, Intel Corporation
+  */
+diff --git a/drivers/staging/iio/Documentation/overview.txt b/drivers/staging/iio/Documentation/overview.txt
+index 43f92b06bc3e5574..ebdc64f451d7c798 100644
+--- a/drivers/staging/iio/Documentation/overview.txt
++++ b/drivers/staging/iio/Documentation/overview.txt
+@@ -34,7 +34,7 @@ turned on or off (if possible) via sysfs interfaces.
+ fifo / ring buffers on the sensor chip.  These greatly reduce the load
+ on the host CPU by buffering relatively large numbers of data samples
+ based on an internal sampling clock. Examples include VTI SCA3000
+-series and Analog Device ADXL345 accelerometers.  Each buffer supports
++series and Analog Devices ADXL345 accelerometers.  Each buffer supports
+ polling to establish when data is available.
+ 
+ * Trigger and software buffer support. In many data analysis
 -- 
 2.17.1
 
