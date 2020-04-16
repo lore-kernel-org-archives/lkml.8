@@ -2,413 +2,156 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF918C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 21:40:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4BD4C352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 21:44:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C65EF2222D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 21:40:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587073248;
-	bh=kD3FLTAguUSjCbNRJznMz6tky2EHZZ2JOrcdJ+RsUvc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PceZDlK/r5jLZfRijhiN57TMaQ0KOfUK7fEBmnZJOzWReS4LZsazBAa85wwpuM6zi
-	 U6zNWzgSDajPMX9kmK4lqfhsKJuQcKYmw1AB1oxzuRQ5EzwHXjFNtyHXAUxM7/KI4H
-	 +kMBMma9qqVE9T+xkoOoj5QBWAKHuL7XDThreSXw=
+	by mail.kernel.org (Postfix) with ESMTP id A316D221F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 21:44:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YEYNjhgX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728231AbgDPVks (ORCPT
+        id S1727874AbgDPVoR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 17:40:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54998 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726116AbgDPVkr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 17:40:47 -0400
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BCC422209;
-        Thu, 16 Apr 2020 21:40:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587073245;
-        bh=kD3FLTAguUSjCbNRJznMz6tky2EHZZ2JOrcdJ+RsUvc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IPj8nuBgwdFIfJS53J0pSIzYCIXg9wdUlzUDNqhh9LNKcCe4q2HfQS/Og9o+S9mwN
-         5xDLW5o1jp0e/bqFqDuReQ4OP5ujAD3+kQfzj60qNMhIZmlQgWrsHzbfRB/uyaTl7M
-         DEkRxGQD5Umo38yaHODlbvlRj4G+fxenBYXbsBIw=
-Date:   Thu, 16 Apr 2020 14:40:45 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Sahitya Tummala <stummala@codeaurora.org>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: Re: [f2fs-dev] [PATCH] f2fs: prevent meta updates while checkpoint
- is in progress
-Message-ID: <20200416214045.GB196168@google.com>
-References: <1585219019-24831-1-git-send-email-stummala@codeaurora.org>
- <20200331035419.GB79749@google.com>
- <20200331090608.GZ20234@codeaurora.org>
- <20200331184307.GA198665@google.com>
- <20200401050801.GA20234@codeaurora.org>
- <20200403171727.GB68460@google.com>
- <20200403172750.GD68460@google.com>
- <20200413174237.GC39092@google.com>
- <20200414134403.GA69282@google.com>
+        Thu, 16 Apr 2020 17:44:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48478 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725843AbgDPVoQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 17:44:16 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BC2DC061A0C;
+        Thu, 16 Apr 2020 14:44:16 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id a25so428258wrd.0;
+        Thu, 16 Apr 2020 14:44:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=sffAzPhQCHYxlONYOcziAs0q3Ct9dInBstNF3EUot0A=;
+        b=YEYNjhgXkDenCpaBe24hLDaEJUvQf+AFbMkJW/M52iScpAsaPalPvb+cBzOAG4sWqw
+         VJUdkzApo+PR/PcD6/dpOypTZD35Cn+iYnDeBotGPwhxW08ok2pII37KP12YBWBlEwTj
+         zS3zoJ2kQuuLQtrKMIjJ6DVsVTg8gG34PMl4nMQ74O565/TEoKtCiFFquOfmKc3B2e2J
+         jqMcujTLmug9H9x8b31CN1vi6tnRVlZBCDvetFwy1hXGPaVV+BD9Qxq+EkGT5rwDQi49
+         lF2n9nFXAJNuIsIwNgPL566gMYGIiLmAyOLLCCQBJgYKHpjRsA508DIsMGXw27uti8u1
+         3naw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sffAzPhQCHYxlONYOcziAs0q3Ct9dInBstNF3EUot0A=;
+        b=HIxTGV2oRdRTTeyPyu4t3eZBnA/PS218S2OrxeE1cPn1nZmHyQV8Shx4ST7LWoMqed
+         QNW8ThFZIl9/f12yaKuKF/Vgm5La6yHH8m6EZhLzzocD9i65eZ6xqMjIQDNu6fB6Sip5
+         BpZWOnn6bueK0Tc/Cdc+W8gRaf8vn2m6lMS9dJJ88tBnvD5e0Kdgj8ZPE7g14ot+75Le
+         MxB1o7pR7jgrfVuTVjVRHhKiYcrzZAxkyXz+IFtJ6Znh6K5mG3Go/2lHSpwZLwUzFYot
+         C1NAE3EvcEZYoV7YTTbKgNJnADSVyrGfNTMEcxJ0MgMsgSAoSjtpq7Wt8ZmFsKBzrJsz
+         AuHg==
+X-Gm-Message-State: AGi0PuYlr8HoOfNAF5hO9L4EFxDrVqufnC74/Y8Umth9EtjLSTML57X+
+        NkgPaizFuIhE/VtC3D0SnT8=
+X-Google-Smtp-Source: APiQypJKY7xZFLf/Hax5amZPWqkmcol0SYTy6Ns1Cqz64Wk+JcRO5hXIDf9tGCtdetce2kIblVptsQ==
+X-Received: by 2002:a5d:6646:: with SMTP id f6mr275421wrw.318.1587073455065;
+        Thu, 16 Apr 2020 14:44:15 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id s27sm20203721wra.94.2020.04.16.14.44.14
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 16 Apr 2020 14:44:14 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 21:44:13 +0000
+From:   Wei Yang <richard.weiyang@gmail.com>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Wei Yang <richard.weiyang@gmail.com>, josh@joshtriplett.org,
+        rcu@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rcu: init and destroy rcu_synchronize when necessary
+Message-ID: <20200416214413.uabk6ojzykiy5rol@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <20200415222655.9006-1-richard.weiyang@gmail.com>
+ <20200416002400.GL17661@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200414134403.GA69282@google.com>
+In-Reply-To: <20200416002400.GL17661@paulmck-ThinkPad-P72>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/14, Jaegeuk Kim wrote:
-> On 04/13, Jaegeuk Kim wrote:
-> > On 04/03, Jaegeuk Kim wrote:
-> > > On 04/03, Jaegeuk Kim wrote:
-> > > > On 04/01, Sahitya Tummala wrote:
-> > > > > Hi Jaegeuk,
-> > > > > 
-> > > > > Got it.
-> > > > > The diff below looks good to me.
-> > > > > Would you like me to test it and put a patch for this?
-> > > > 
-> > > > Sahitya, Chao,
-> > > > 
-> > > > Could you please take a look at this patch and test intensively?
-> > > > 
-> > > > Thanks,
+On Wed, Apr 15, 2020 at 05:24:00PM -0700, Paul E. McKenney wrote:
+>On Wed, Apr 15, 2020 at 10:26:55PM +0000, Wei Yang wrote:
+>> We would skip the rcu_synchronize if it is a duplicate call back function.
+>> 
+>> This is not necessary to init and destroy for them.
+>> 
+>> Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
+>
+>Applied, thank you!
+>
+>I edited the commit log a bit.  Could you please check below to make
+>sure that I didn't mess anything up?
+>
 
-v5:
- - add signal handler
+Yep, the changelog looks good to me :-)
 
-Sahitya raised an issue:
-- prevent meta updates while checkpoint is in progress
+Glad you like it.
 
-allocate_segment_for_resize() can cause metapage updates if
-it requires to change the current node/data segments for resizing.
-Stop these meta updates when there is a checkpoint already
-in progress to prevent inconsistent CP data.
+>							Thanx, Paul
+>
+>------------------------------------------------------------------------
+>
+>commit d9eaddf545fe8e3e2725e2fa0bf87b59b5667c14
+>Author: Wei Yang <richard.weiyang@gmail.com>
+>Date:   Wed Apr 15 22:26:55 2020 +0000
+>
+>    rcu: Initialize and destroy rcu_synchronize only when necessary
+>    
+>    The __wait_rcu_gp() function unconditionally initializes and cleans up
+>    each element of rs_array[], whether used or not.  This is slightly
+>    wasteful and rather confusing, so this commit skips both initialization
+>    and cleanup for duplicate callback functions.
+>    
+>    Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
+>    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+>
+>diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
+>index 3ce63a9..351c322 100644
+>--- a/kernel/rcu/update.c
+>+++ b/kernel/rcu/update.c
+>@@ -391,13 +391,14 @@ void __wait_rcu_gp(bool checktiny, int n, call_rcu_func_t *crcu_array,
+> 			might_sleep();
+> 			continue;
+> 		}
+>-		init_rcu_head_on_stack(&rs_array[i].head);
+>-		init_completion(&rs_array[i].completion);
+> 		for (j = 0; j < i; j++)
+> 			if (crcu_array[j] == crcu_array[i])
+> 				break;
+>-		if (j == i)
+>+		if (j == i) {
+>+			init_rcu_head_on_stack(&rs_array[i].head);
+>+			init_completion(&rs_array[i].completion);
+> 			(crcu_array[i])(&rs_array[i].head, wakeme_after_rcu);
+>+		}
+> 	}
+> 
+> 	/* Wait for all callbacks to be invoked. */
+>@@ -408,9 +409,10 @@ void __wait_rcu_gp(bool checktiny, int n, call_rcu_func_t *crcu_array,
+> 		for (j = 0; j < i; j++)
+> 			if (crcu_array[j] == crcu_array[i])
+> 				break;
+>-		if (j == i)
+>+		if (j == i) {
+> 			wait_for_completion(&rs_array[i].completion);
+>-		destroy_rcu_head_on_stack(&rs_array[i].head);
+>+			destroy_rcu_head_on_stack(&rs_array[i].head);
+>+		}
+> 	}
+> }
+> EXPORT_SYMBOL_GPL(__wait_rcu_gp);
 
-Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
----
- fs/f2fs/checkpoint.c        |   6 +-
- fs/f2fs/f2fs.h              |   2 +-
- fs/f2fs/file.c              |   5 +-
- fs/f2fs/gc.c                | 114 ++++++++++++++++++++----------------
- fs/f2fs/super.c             |   1 -
- include/trace/events/f2fs.h |   4 +-
- 6 files changed, 74 insertions(+), 58 deletions(-)
-
-diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-index 6be357c8e0020..dcb3a15574c99 100644
---- a/fs/f2fs/checkpoint.c
-+++ b/fs/f2fs/checkpoint.c
-@@ -1554,7 +1554,8 @@ int f2fs_write_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
- 			return 0;
- 		f2fs_warn(sbi, "Start checkpoint disabled!");
- 	}
--	mutex_lock(&sbi->cp_mutex);
-+	if (cpc->reason != CP_RESIZE)
-+		mutex_lock(&sbi->cp_mutex);
- 
- 	if (!is_sbi_flag_set(sbi, SBI_IS_DIRTY) &&
- 		((cpc->reason & CP_FASTBOOT) || (cpc->reason & CP_SYNC) ||
-@@ -1623,7 +1624,8 @@ int f2fs_write_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
- 	f2fs_update_time(sbi, CP_TIME);
- 	trace_f2fs_write_checkpoint(sbi->sb, cpc->reason, "finish checkpoint");
- out:
--	mutex_unlock(&sbi->cp_mutex);
-+	if (cpc->reason != CP_RESIZE)
-+		mutex_unlock(&sbi->cp_mutex);
- 	return err;
- }
- 
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index dd9c1de7c59d2..9dd1fc957b943 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -194,6 +194,7 @@ enum {
- #define	CP_DISCARD	0x00000010
- #define CP_TRIMMED	0x00000020
- #define CP_PAUSE	0x00000040
-+#define CP_RESIZE 	0x00000080
- 
- #define MAX_DISCARD_BLOCKS(sbi)		BLKS_PER_SEC(sbi)
- #define DEF_MAX_DISCARD_REQUEST		8	/* issue 8 discards per round */
-@@ -1423,7 +1424,6 @@ struct f2fs_sb_info {
- 	unsigned int segs_per_sec;		/* segments per section */
- 	unsigned int secs_per_zone;		/* sections per zone */
- 	unsigned int total_sections;		/* total section count */
--	struct mutex resize_mutex;		/* for resize exclusion */
- 	unsigned int total_node_count;		/* total node block count */
- 	unsigned int total_valid_node_count;	/* valid node block count */
- 	loff_t max_file_blocks;			/* max block index of file */
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index dc470358f25eb..212c5996d3807 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -3306,7 +3306,6 @@ static int f2fs_ioc_resize_fs(struct file *filp, unsigned long arg)
- {
- 	struct f2fs_sb_info *sbi = F2FS_I_SB(file_inode(filp));
- 	__u64 block_count;
--	int ret;
- 
- 	if (!capable(CAP_SYS_ADMIN))
- 		return -EPERM;
-@@ -3318,9 +3317,7 @@ static int f2fs_ioc_resize_fs(struct file *filp, unsigned long arg)
- 			   sizeof(block_count)))
- 		return -EFAULT;
- 
--	ret = f2fs_resize_fs(sbi, block_count);
--
--	return ret;
-+	return f2fs_resize_fs(sbi, block_count);
- }
- 
- static int f2fs_ioc_enable_verity(struct file *filp, unsigned long arg)
-diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
-index 26248c8936db0..c979dd1add5de 100644
---- a/fs/f2fs/gc.c
-+++ b/fs/f2fs/gc.c
-@@ -1399,12 +1399,29 @@ void f2fs_build_gc_manager(struct f2fs_sb_info *sbi)
- 				GET_SEGNO(sbi, FDEV(0).end_blk) + 1;
- }
- 
--static int free_segment_range(struct f2fs_sb_info *sbi, unsigned int start,
--							unsigned int end)
-+static int free_segment_range(struct f2fs_sb_info *sbi,
-+				unsigned int secs, bool gc_only)
- {
--	int type;
--	unsigned int segno, next_inuse;
-+	unsigned int segno, next_inuse, start, end;
-+	struct cp_control cpc = { CP_RESIZE, 0, 0, 0 };
-+	int gc_mode, gc_type;
- 	int err = 0;
-+	int type;
-+
-+	/* Force block allocation for GC */
-+	MAIN_SECS(sbi) -= secs;
-+	start = MAIN_SECS(sbi) * sbi->segs_per_sec;
-+	end = MAIN_SEGS(sbi) - 1;
-+
-+	mutex_lock(&DIRTY_I(sbi)->seglist_lock);
-+	for (gc_mode = 0; gc_mode < MAX_GC_POLICY; gc_mode++)
-+		if (SIT_I(sbi)->last_victim[gc_mode] >= start)
-+			SIT_I(sbi)->last_victim[gc_mode] = 0;
-+
-+	for (gc_type = BG_GC; gc_type <= FG_GC; gc_type++)
-+		if (sbi->next_victim_seg[gc_type] >= start)
-+			sbi->next_victim_seg[gc_type] = NULL_SEGNO;
-+	mutex_unlock(&DIRTY_I(sbi)->seglist_lock);
- 
- 	/* Move out cursegs from the target range */
- 	for (type = CURSEG_HOT_DATA; type < NR_CURSEG_TYPE; type++)
-@@ -1417,18 +1434,22 @@ static int free_segment_range(struct f2fs_sb_info *sbi, unsigned int start,
- 			.iroot = RADIX_TREE_INIT(gc_list.iroot, GFP_NOFS),
- 		};
- 
--		down_write(&sbi->gc_lock);
- 		do_garbage_collect(sbi, segno, &gc_list, FG_GC);
--		up_write(&sbi->gc_lock);
- 		put_gc_inode(&gc_list);
- 
--		if (get_valid_blocks(sbi, segno, true))
--			return -EAGAIN;
-+		if (!gc_only && get_valid_blocks(sbi, segno, true)) {
-+			err = -EAGAIN;
-+			goto out;
-+		}
-+		if (fatal_signal_pending(current))
-+			return -ERESTARTSYS;
- 	}
-+	if (gc_only)
-+		goto out;
- 
--	err = f2fs_sync_fs(sbi->sb, 1);
-+	err = f2fs_write_checkpoint(sbi, &cpc);
- 	if (err)
--		return err;
-+		goto out;
- 
- 	next_inuse = find_next_inuse(FREE_I(sbi), end + 1, start);
- 	if (next_inuse <= end) {
-@@ -1436,6 +1457,8 @@ static int free_segment_range(struct f2fs_sb_info *sbi, unsigned int start,
- 			 next_inuse);
- 		f2fs_bug_on(sbi, 1);
- 	}
-+out:
-+	MAIN_SECS(sbi) -= secs;
- 	return err;
- }
- 
-@@ -1481,6 +1504,7 @@ static void update_fs_metadata(struct f2fs_sb_info *sbi, int secs)
- 
- 	SM_I(sbi)->segment_count = (int)SM_I(sbi)->segment_count + segs;
- 	MAIN_SEGS(sbi) = (int)MAIN_SEGS(sbi) + segs;
-+	MAIN_SECS(sbi) += secs;
- 	FREE_I(sbi)->free_sections = (int)FREE_I(sbi)->free_sections + secs;
- 	FREE_I(sbi)->free_segments = (int)FREE_I(sbi)->free_segments + segs;
- 	F2FS_CKPT(sbi)->user_block_count = cpu_to_le64(user_block_count + blks);
-@@ -1502,8 +1526,8 @@ static void update_fs_metadata(struct f2fs_sb_info *sbi, int secs)
- int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
- {
- 	__u64 old_block_count, shrunk_blocks;
-+	struct cp_control cpc = { CP_RESIZE, 0, 0, 0 };
- 	unsigned int secs;
--	int gc_mode, gc_type;
- 	int err = 0;
- 	__u32 rem;
- 
-@@ -1538,10 +1562,27 @@ int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
- 		return -EINVAL;
- 	}
- 
--	freeze_bdev(sbi->sb->s_bdev);
--
- 	shrunk_blocks = old_block_count - block_count;
- 	secs = div_u64(shrunk_blocks, BLKS_PER_SEC(sbi));
-+
-+	/* stop other GC */
-+	if (!down_write_trylock(&sbi->gc_lock))
-+		return -EAGAIN;
-+
-+	/* stop CP to protect MAIN_SEC in free_segment_range */
-+	f2fs_lock_op(sbi);
-+	err = free_segment_range(sbi, secs, true);
-+	f2fs_unlock_op(sbi);
-+	up_write(&sbi->gc_lock);
-+	if (err)
-+		return err;
-+
-+	set_sbi_flag(sbi, SBI_IS_RESIZEFS);
-+
-+	freeze_super(sbi->sb);
-+	down_write(&sbi->gc_lock);
-+	mutex_lock(&sbi->cp_mutex);
-+
- 	spin_lock(&sbi->stat_lock);
- 	if (shrunk_blocks + valid_user_blocks(sbi) +
- 		sbi->current_reserved_blocks + sbi->unusable_block_count +
-@@ -1550,69 +1591,44 @@ int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
- 	else
- 		sbi->user_block_count -= shrunk_blocks;
- 	spin_unlock(&sbi->stat_lock);
--	if (err) {
--		thaw_bdev(sbi->sb->s_bdev, sbi->sb);
--		return err;
--	}
--
--	mutex_lock(&sbi->resize_mutex);
--	set_sbi_flag(sbi, SBI_IS_RESIZEFS);
--
--	mutex_lock(&DIRTY_I(sbi)->seglist_lock);
--
--	MAIN_SECS(sbi) -= secs;
--
--	for (gc_mode = 0; gc_mode < MAX_GC_POLICY; gc_mode++)
--		if (SIT_I(sbi)->last_victim[gc_mode] >=
--					MAIN_SECS(sbi) * sbi->segs_per_sec)
--			SIT_I(sbi)->last_victim[gc_mode] = 0;
--
--	for (gc_type = BG_GC; gc_type <= FG_GC; gc_type++)
--		if (sbi->next_victim_seg[gc_type] >=
--					MAIN_SECS(sbi) * sbi->segs_per_sec)
--			sbi->next_victim_seg[gc_type] = NULL_SEGNO;
--
--	mutex_unlock(&DIRTY_I(sbi)->seglist_lock);
-+	if (err)
-+		goto out_err;
- 
--	err = free_segment_range(sbi, MAIN_SECS(sbi) * sbi->segs_per_sec,
--			MAIN_SEGS(sbi) - 1);
-+	err = free_segment_range(sbi, secs, false);
- 	if (err)
--		goto out;
-+		goto recover_out;
- 
- 	update_sb_metadata(sbi, -secs);
- 
- 	err = f2fs_commit_super(sbi, false);
- 	if (err) {
- 		update_sb_metadata(sbi, secs);
--		goto out;
-+		goto recover_out;
- 	}
- 
--	mutex_lock(&sbi->cp_mutex);
- 	update_fs_metadata(sbi, -secs);
- 	clear_sbi_flag(sbi, SBI_IS_RESIZEFS);
- 	set_sbi_flag(sbi, SBI_IS_DIRTY);
--	mutex_unlock(&sbi->cp_mutex);
- 
--	err = f2fs_sync_fs(sbi->sb, 1);
-+	err = f2fs_write_checkpoint(sbi, &cpc);
- 	if (err) {
--		mutex_lock(&sbi->cp_mutex);
- 		update_fs_metadata(sbi, secs);
--		mutex_unlock(&sbi->cp_mutex);
- 		update_sb_metadata(sbi, secs);
- 		f2fs_commit_super(sbi, false);
- 	}
--out:
-+recover_out:
- 	if (err) {
- 		set_sbi_flag(sbi, SBI_NEED_FSCK);
- 		f2fs_err(sbi, "resize_fs failed, should run fsck to repair!");
- 
--		MAIN_SECS(sbi) += secs;
- 		spin_lock(&sbi->stat_lock);
- 		sbi->user_block_count += shrunk_blocks;
- 		spin_unlock(&sbi->stat_lock);
- 	}
-+out_err:
-+	mutex_unlock(&sbi->cp_mutex);
-+	up_write(&sbi->gc_lock);
-+	thaw_super(sbi->sb);
- 	clear_sbi_flag(sbi, SBI_IS_RESIZEFS);
--	mutex_unlock(&sbi->resize_mutex);
--	thaw_bdev(sbi->sb->s_bdev, sbi->sb);
- 	return err;
- }
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index e3a323ff04c34..ad3b66c3dbe0e 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -3420,7 +3420,6 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
- 	init_rwsem(&sbi->gc_lock);
- 	mutex_init(&sbi->writepages);
- 	mutex_init(&sbi->cp_mutex);
--	mutex_init(&sbi->resize_mutex);
- 	init_rwsem(&sbi->node_write);
- 	init_rwsem(&sbi->node_change);
- 
-diff --git a/include/trace/events/f2fs.h b/include/trace/events/f2fs.h
-index 3577fa67690af..421a661bfd5aa 100644
---- a/include/trace/events/f2fs.h
-+++ b/include/trace/events/f2fs.h
-@@ -50,6 +50,7 @@ TRACE_DEFINE_ENUM(CP_RECOVERY);
- TRACE_DEFINE_ENUM(CP_DISCARD);
- TRACE_DEFINE_ENUM(CP_TRIMMED);
- TRACE_DEFINE_ENUM(CP_PAUSE);
-+TRACE_DEFINE_ENUM(CP_RESIZE);
- 
- #define show_block_type(type)						\
- 	__print_symbolic(type,						\
-@@ -126,7 +127,8 @@ TRACE_DEFINE_ENUM(CP_PAUSE);
- 		{ CP_RECOVERY,	"Recovery" },				\
- 		{ CP_DISCARD,	"Discard" },				\
- 		{ CP_PAUSE,	"Pause" },				\
--		{ CP_TRIMMED,	"Trimmed" })
-+		{ CP_TRIMMED,	"Trimmed" },				\
-+		{ CP_RESIZE,	"Resize" })
- 
- #define show_fsync_cpreason(type)					\
- 	__print_symbolic(type,						\
 -- 
-2.26.1.301.g55bc3eb7cb9-goog
-
+Wei Yang
+Help you, Help me
