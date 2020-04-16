@@ -2,112 +2,141 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3378C352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 17:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10389C352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 17:05:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE41620732
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 17:05:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB16B2083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 17:05:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394450AbgDPRFU (ORCPT
+        id S2404057AbgDPRFn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 13:05:20 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:46456 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730647AbgDPRFS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 13:05:18 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id DB6931C01E5; Thu, 16 Apr 2020 19:05:15 +0200 (CEST)
-Date:   Thu, 16 Apr 2020 19:05:15 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        David Howells <dhowells@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 003/146] rxrpc: Abstract out the calculation of
- whether theres Tx space
-Message-ID: <20200416170515.GA29803@duo.ucw.cz>
-References: <20200416131242.353444678@linuxfoundation.org>
- <20200416131242.886803103@linuxfoundation.org>
+        Thu, 16 Apr 2020 13:05:43 -0400
+Received: from mga12.intel.com ([192.55.52.136]:7539 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730647AbgDPRFl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 13:05:41 -0400
+IronPort-SDR: ZtviEUcwAw04AQ6vGY2G6qGqhVhluMbOfUY9MOTyDKQ/HBJlrfEQCTppp6icNF6lCYwwlEBLwe
+ lgH+ydAGIQXQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 10:05:40 -0700
+IronPort-SDR: r2p37llV8oTWEX2XJNI4HUD191O2WCdTioOapylF9eDQt2rnWXEtqiqUUUL7PgwyfxBRBlAi4M
+ pxaUQq64DoUw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,391,1580803200"; 
+   d="scan'208";a="257290016"
+Received: from chenyu-office.sh.intel.com ([10.239.158.173])
+  by orsmga006.jf.intel.com with ESMTP; 16 Apr 2020 10:05:39 -0700
+Date:   Fri, 17 Apr 2020 01:06:11 +0800
+From:   Chen Yu <yu.c.chen@intel.com>
+To:     Doug Smythies <dsmythies@telus.net>
+Cc:     'Len Brown' <lenb@kernel.org>,
+        "'Rafael J. Wysocki'" <rjw@rjwysocki.net>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH 2/3][v2] tools/power turbostat: Introduce functions to
+ accumulate RAPL consumption
+Message-ID: <20200416170611.GA23628@chenyu-office.sh.intel.com>
+References: <cover.1586782089.git.yu.c.chen@intel.com>
+ <db96fd31afd0ff65e4041665293b96c984e675bc.1586782089.git.yu.c.chen@intel.com>
+ <001901d613a4$010e0a70$032a1f50$@net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="CE+1k2dSO48ffgeK"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200416131242.886803103@linuxfoundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <001901d613a4$010e0a70$032a1f50$@net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Doug,
+Thanks for reviewing this patch.
+On Wed, Apr 15, 2020 at 09:03:34PM -0700, Doug Smythies wrote:
+> On 2020.04.15 05:57 Chen Yu wrote:
+> 
+> ...
+> 
+> > v2: According to Len's suggestion:
+> >    1. Enable the accumulated RAPL mechanism by default.
+> 
+> I am not a fan of this, but O.K.
+> 
+> >    2. Re-use the rapl_joule_counter_range to represent the
+> >       the timeout of periodical timer.
+> 
+> No, please no. It is too easy to still have an overflow.
+> 
+> ...
+> > +	/*
+> > +	 * A wraparound time is calculated early.
+> > +	 */
+> > +	its.it_interval.tv_sec = rapl_joule_counter_range;
+> 
+> Would this be o.K.?
+> 
+> +	its.it_interval.tv_sec = rapl_joule_counter_range / 2;
+> 
+This should be okay. I've checked the defination of TDP, and
+on a wiki page it has mentioned that[1]:
+"Some sources state that the peak power for a microprocessor
+is usually 1.5 times the TDP rating"
+although the defination of TDP varies, using 2 * TDP should
+be safe.
+> > +	its.it_interval.tv_nsec = 0;
+> 
+> The way it was sent, this patch set does not work.
+> It still overflows.
+> 
+> Example, sample time calculated to ensure overflow:
+> 
+> Busy%   Bzy_MHz IRQ     PkgTmp  PkgWatt GFXWatt
+> 100.00  3500    3592125 80      9.72    0.12
+> 100.00  3500    3587391 79      9.77    0.12
+> 
+> Actual package watts was around 65.
+> 
+> However, if this additional patch is applied (I only fixed one of them):
+> 
+> doug@s18:~/temp-k-git/linux/tools/power/x86/turbostat$ git diff
+> diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
+> index 29fc4069f467..4d72d9be5209 100644
+> --- a/tools/power/x86/turbostat/turbostat.c
+> +++ b/tools/power/x86/turbostat/turbostat.c
+> @@ -1350,7 +1350,8 @@ delta_package(struct pkg_data *new, struct pkg_data *old)
+> 
+>         old->gfx_mhz = new->gfx_mhz;
+> 
+> -       DELTA_WRAP32(new->energy_pkg, old->energy_pkg);
+> +/*     DELTA_WRAP32(new->energy_pkg, old->energy_pkg);  */
+> +       old->energy_pkg = new->energy_pkg - old->energy_pkg;
+>         DELTA_WRAP32(new->energy_cores, old->energy_cores);
+>         DELTA_WRAP32(new->energy_gfx, old->energy_gfx);
+>         DELTA_WRAP32(new->energy_dram, old->energy_dram);
+> 
+> Then it seems to work.
+> 
+Nice catch, I did not realize that the energy_pkg field has
+already been converted into accumuted variable which does not
+need to consider the wrapping(64bit should be long enough for
+normal test cases).
 
---CE+1k2dSO48ffgeK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-> Abstract out the calculation of there being sufficient Tx buffer space.
-> This is reproduced several times in the rxrpc sendmsg code.
-
-I don't think this is suitable for stable. It does not fix anything.
-
-> +/*
-> + * Return true if there's sufficient Tx queue space.
-> + */
-> +static bool rxrpc_check_tx_space(struct rxrpc_call *call, rxrpc_seq_t *_=
-tx_win)
-> +{
-> +	unsigned int win_size =3D
-> +		min_t(unsigned int, call->tx_winsize,
-> +		      call->cong_cwnd + call->cong_extra);
-> +	rxrpc_seq_t tx_win =3D READ_ONCE(call->tx_hard_ack);
-> +
-> +	if (_tx_win)
-> +		*_tx_win =3D tx_win;
-
-Plus, this is very very strange. Most callers pass NULL here, so we
-do READ_ONCE(call->tx_hard_ack) and it can't be optimized out, and
-then we drop the result.
-
-> @@ -72,9 +85,7 @@ static int rxrpc_wait_for_tx_window_nonintr(struct rxrp=
-c_sock *rx,
->  		set_current_state(TASK_UNINTERRUPTIBLE);
-> =20
->  		tx_win =3D READ_ONCE(call->tx_hard_ack);
-> -		if (call->tx_top - tx_win <
-> -		    min_t(unsigned int, call->tx_winsize,
-> -			  call->cong_cwnd + call->cong_extra))
-> +		if (rxrpc_check_tx_space(call, &tx_win))
->  			return 0;
-> =20
->  		if (call->state >=3D RXRPC_CALL_COMPLETE)
-
-And the remaining caller already has right value in tx_win, and it is
-discarded and READ again.
-
-This does not make sense.
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---CE+1k2dSO48ffgeK
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXpiQSwAKCRAw5/Bqldv6
-8pxlAJ4jlYRivfobYEnRilD+7i/P/WH66QCeK3UC3V/yoW3FBSFpofNrBuqkwgs=
-=oxcX
------END PGP SIGNATURE-----
-
---CE+1k2dSO48ffgeK--
+Thanks,
+Chenyu
+> Example:
+> 
+> doug@s15:~/temp-turbostat$ sudo ./turbostat --Summary --show Busy%,Bzy_MHz,PkgTmp,PkgWatt,GFXWatt,IRQ --interval 1200
+> ...
+> RAPL: 690 sec. Joule Counter Range, at 95 Watts
+> ...
+> Busy%   Bzy_MHz IRQ     PkgTmp  PkgWatt GFXWatt
+> 100.00  3500    3592328 80      64.32   0.12
+> 100.00  3500    3595195 79      64.37   0.12
+> 
+> ... Doug
+> 
+> 
