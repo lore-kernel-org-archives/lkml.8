@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85593C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:29:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CD0CC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:29:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6365721927
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:29:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31FE921D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:29:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587047372;
-	bh=MkPs644BC6fRZVf3njDdZwqWGc69xsas9A4iun9REXc=;
+	s=default; t=1587047381;
+	bh=94cz29se5LLA8ncjoWOVfAgIgJ6gJN3JLCLKs+vL0ag=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BleT8AjQ2GEEYef/j5t6NdlswNI2lyUfZGlcj5Lx+5LFuAxexYCeHiCNClXuouDg7
-	 P1DM//ktz6ELFwrsNp4FgtoHcTXrQqfgWgTDoxSUd5e8vQ7df68uKMVQqj7odqYFW3
-	 IQk5mTN+zDybJX+nBefcpSx8v36COultM23985DA=
+	b=z4ARgOOGVQQetyjwRiKV0RlWzWZOjkYvaVO11JYCnpsThQDoZ+k2M7Mzkxguk4k2p
+	 Qql4nrROnGVpfYI69h1FJdWqmXceEEjqzA5u/I3tHGv4VdEOZSXMmq9XBK1ZQ66k5u
+	 Ni8M6K9qdQHH3AhUThIPD5K3/eRxSWLjkhxPQ0Mg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389299AbgDPO3a (ORCPT
+        id S2389297AbgDPO3i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:29:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48388 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:29:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392743AbgDPOBK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:01:10 -0400
+        id S1731940AbgDPOBM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:01:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38FB120732;
-        Thu, 16 Apr 2020 14:01:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A88DF2078B;
+        Thu, 16 Apr 2020 14:01:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045669;
-        bh=MkPs644BC6fRZVf3njDdZwqWGc69xsas9A4iun9REXc=;
+        s=default; t=1587045672;
+        bh=94cz29se5LLA8ncjoWOVfAgIgJ6gJN3JLCLKs+vL0ag=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QXjbY6Cqftl/JXqz6wUk3qKYfvdjk7EwzwwHNRCNwlWCmHIc33aYsGaJkLwrG6zFc
-         xx1/FdDiY2dnU7Hu0tXXZ5aFaI6hRMzVm9KV+N8O4m4WlMmvdDe0lj1gOY7k1g5gru
-         VWLMqKL4xa/n4fIP6eUNW/1rWd23FzmQTSjDazXY=
+        b=IiLAI08Y2IIf99KMUXilBxJDQA7tfPuypOgI/7BK2wCc2LpB9gwfY7uPLeso366UN
+         r0Q8sOo8Jzvngh0cyYUhpRwmvE2PxBJxcFezDmMJl2W9Xepw0/ZR9hdH7RTKoU+grB
+         cK9t4oAwHWmcjNVTe1OVbC5FSh5CIvttQVDBCqAI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
         James Smart <jsmart2021@gmail.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.6 190/254] scsi: lpfc: Fix lpfc_io_buf resource leak in lpfc_get_scsi_buf_s4 error path
-Date:   Thu, 16 Apr 2020 15:24:39 +0200
-Message-Id: <20200416131350.083260494@linuxfoundation.org>
+Subject: [PATCH 5.6 191/254] scsi: lpfc: Fix broken Credit Recovery after driver load
+Date:   Thu, 16 Apr 2020 15:24:40 +0200
+Message-Id: <20200416131350.178570156@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -62,38 +62,144 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: James Smart <jsmart2021@gmail.com>
 
-commit 0ab384a49c548baf132ccef249f78d9c6c506380 upstream.
+commit 835214f5d5f516a38069bc077c879c7da00d6108 upstream.
 
-If a call to lpfc_get_cmd_rsp_buf_per_hdwq returns NULL (memory allocation
-failure), a previously allocated lpfc_io_buf resource is leaked.
+When driver is set to enable bb credit recovery, the switch displayed the
+setting as inactive.  If the link bounces, it switches to Active.
 
-Fix by releasing the lpfc_io_buf resource in the failure path.
+During link up processing, the driver currently does a MBX_READ_SPARAM
+followed by a MBX_CONFIG_LINK. These mbox commands are queued to be
+executed, one at a time and the completion is processed by the worker
+thread.  Since the MBX_READ_SPARAM is done BEFORE the MBX_CONFIG_LINK, the
+BB_SC_N bit is never set the the returned values. BB Credit recovery status
+only gets set after the driver requests the feature in CONFIG_LINK, which
+is done after the link up. Thus the ordering of READ_SPARAM needs to follow
+the CONFIG_LINK.
 
-Fixes: d79c9e9d4b3d ("scsi: lpfc: Support dynamic unbounded SGL lists on G7 hardware.")
+Fix by reordering so that READ_SPARAM is done after CONFIG_LINK.  Added a
+HBA_DEFER_FLOGI flag so that any FLOGI handling waits until after the
+READ_SPARAM is done so that the proper BB credit value is set in the FLOGI
+payload.
+
+Fixes: 6bfb16208298 ("scsi: lpfc: Fix configuration of BB credit recovery in service parameters")
 Cc: <stable@vger.kernel.org> # v5.4+
-Link: https://lore.kernel.org/r/20200128002312.16346-3-jsmart2021@gmail.com
+Link: https://lore.kernel.org/r/20200128002312.16346-4-jsmart2021@gmail.com
 Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
 Signed-off-by: James Smart <jsmart2021@gmail.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/lpfc/lpfc_scsi.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/scsi/lpfc/lpfc.h         |    1 
+ drivers/scsi/lpfc/lpfc_hbadisc.c |   59 +++++++++++++++++++++++++--------------
+ 2 files changed, 40 insertions(+), 20 deletions(-)
 
---- a/drivers/scsi/lpfc/lpfc_scsi.c
-+++ b/drivers/scsi/lpfc/lpfc_scsi.c
-@@ -671,8 +671,10 @@ lpfc_get_scsi_buf_s4(struct lpfc_hba *ph
- 	lpfc_cmd->prot_data_type = 0;
- #endif
- 	tmp = lpfc_get_cmd_rsp_buf_per_hdwq(phba, lpfc_cmd);
--	if (!tmp)
-+	if (!tmp) {
-+		lpfc_release_io_buf(phba, lpfc_cmd, lpfc_cmd->hdwq);
- 		return NULL;
-+	}
+--- a/drivers/scsi/lpfc/lpfc.h
++++ b/drivers/scsi/lpfc/lpfc.h
+@@ -749,6 +749,7 @@ struct lpfc_hba {
+ 					 * capability
+ 					 */
+ #define HBA_FLOGI_ISSUED	0x100000 /* FLOGI was issued */
++#define HBA_DEFER_FLOGI		0x800000 /* Defer FLOGI till read_sparm cmpl */
  
- 	lpfc_cmd->fcp_cmnd = tmp->fcp_cmnd;
- 	lpfc_cmd->fcp_rsp = tmp->fcp_rsp;
+ 	uint32_t fcp_ring_in_use; /* When polling test if intr-hndlr active*/
+ 	struct lpfc_dmabuf slim2p;
+--- a/drivers/scsi/lpfc/lpfc_hbadisc.c
++++ b/drivers/scsi/lpfc/lpfc_hbadisc.c
+@@ -1163,13 +1163,16 @@ lpfc_mbx_cmpl_local_config_link(struct l
+ 	}
+ 
+ 	/* Start discovery by sending a FLOGI. port_state is identically
+-	 * LPFC_FLOGI while waiting for FLOGI cmpl
++	 * LPFC_FLOGI while waiting for FLOGI cmpl. Check if sending
++	 * the FLOGI is being deferred till after MBX_READ_SPARAM completes.
+ 	 */
+-	if (vport->port_state != LPFC_FLOGI)
+-		lpfc_initial_flogi(vport);
+-	else if (vport->fc_flag & FC_PT2PT)
+-		lpfc_disc_start(vport);
+-
++	if (vport->port_state != LPFC_FLOGI) {
++		if (!(phba->hba_flag & HBA_DEFER_FLOGI))
++			lpfc_initial_flogi(vport);
++	} else {
++		if (vport->fc_flag & FC_PT2PT)
++			lpfc_disc_start(vport);
++	}
+ 	return;
+ 
+ out:
+@@ -3094,6 +3097,14 @@ lpfc_mbx_cmpl_read_sparam(struct lpfc_hb
+ 	lpfc_mbuf_free(phba, mp->virt, mp->phys);
+ 	kfree(mp);
+ 	mempool_free(pmb, phba->mbox_mem_pool);
++
++	/* Check if sending the FLOGI is being deferred to after we get
++	 * up to date CSPs from MBX_READ_SPARAM.
++	 */
++	if (phba->hba_flag & HBA_DEFER_FLOGI) {
++		lpfc_initial_flogi(vport);
++		phba->hba_flag &= ~HBA_DEFER_FLOGI;
++	}
+ 	return;
+ 
+ out:
+@@ -3224,6 +3235,23 @@ lpfc_mbx_process_link_up(struct lpfc_hba
+ 	}
+ 
+ 	lpfc_linkup(phba);
++	sparam_mbox = NULL;
++
++	if (!(phba->hba_flag & HBA_FCOE_MODE)) {
++		cfglink_mbox = mempool_alloc(phba->mbox_mem_pool, GFP_KERNEL);
++		if (!cfglink_mbox)
++			goto out;
++		vport->port_state = LPFC_LOCAL_CFG_LINK;
++		lpfc_config_link(phba, cfglink_mbox);
++		cfglink_mbox->vport = vport;
++		cfglink_mbox->mbox_cmpl = lpfc_mbx_cmpl_local_config_link;
++		rc = lpfc_sli_issue_mbox(phba, cfglink_mbox, MBX_NOWAIT);
++		if (rc == MBX_NOT_FINISHED) {
++			mempool_free(cfglink_mbox, phba->mbox_mem_pool);
++			goto out;
++		}
++	}
++
+ 	sparam_mbox = mempool_alloc(phba->mbox_mem_pool, GFP_KERNEL);
+ 	if (!sparam_mbox)
+ 		goto out;
+@@ -3244,20 +3272,7 @@ lpfc_mbx_process_link_up(struct lpfc_hba
+ 		goto out;
+ 	}
+ 
+-	if (!(phba->hba_flag & HBA_FCOE_MODE)) {
+-		cfglink_mbox = mempool_alloc(phba->mbox_mem_pool, GFP_KERNEL);
+-		if (!cfglink_mbox)
+-			goto out;
+-		vport->port_state = LPFC_LOCAL_CFG_LINK;
+-		lpfc_config_link(phba, cfglink_mbox);
+-		cfglink_mbox->vport = vport;
+-		cfglink_mbox->mbox_cmpl = lpfc_mbx_cmpl_local_config_link;
+-		rc = lpfc_sli_issue_mbox(phba, cfglink_mbox, MBX_NOWAIT);
+-		if (rc == MBX_NOT_FINISHED) {
+-			mempool_free(cfglink_mbox, phba->mbox_mem_pool);
+-			goto out;
+-		}
+-	} else {
++	if (phba->hba_flag & HBA_FCOE_MODE) {
+ 		vport->port_state = LPFC_VPORT_UNKNOWN;
+ 		/*
+ 		 * Add the driver's default FCF record at FCF index 0 now. This
+@@ -3314,6 +3329,10 @@ lpfc_mbx_process_link_up(struct lpfc_hba
+ 		}
+ 		/* Reset FCF roundrobin bmask for new discovery */
+ 		lpfc_sli4_clear_fcf_rr_bmask(phba);
++	} else {
++		if (phba->bbcredit_support && phba->cfg_enable_bbcr &&
++		    !(phba->link_flag & LS_LOOPBACK_MODE))
++			phba->hba_flag |= HBA_DEFER_FLOGI;
+ 	}
+ 
+ 	/* Prepare for LINK up registrations */
 
 
