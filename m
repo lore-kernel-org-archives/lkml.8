@@ -2,134 +2,93 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4737C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECCBEC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8681F22242
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:27:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC497206D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:27:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="k0w5KgsQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395183AbgDPP1o (ORCPT
+        id S2395256AbgDPP1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:27:44 -0400
-Received: from foss.arm.com ([217.140.110.172]:35904 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395240AbgDPP1i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 11:27:38 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C115B30E;
-        Thu, 16 Apr 2020 08:27:37 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 035633F237;
-        Thu, 16 Apr 2020 08:27:36 -0700 (PDT)
-References: <20200415210512.805-1-valentin.schneider@arm.com> <20200415210512.805-10-valentin.schneider@arm.com> <CAKfTPtBDGzrvG=YhjBZBEgfx5EtM-rTC-dWX5phqh4bOY5XqgA@mail.gmail.com> <jhj4ktjpw2z.mognet@arm.com> <d508a6a5-c04f-087f-8767-6fb397b70055@arm.com> <CAKfTPtD5x_NQ1KfHhTiAR3eNA85+k13nfSR-9_PKLp6FgVu08A@mail.gmail.com>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH v3 9/9] sched/topology: Define and use shortcut pointers for wakeup sd_flag scan
-In-reply-to: <CAKfTPtD5x_NQ1KfHhTiAR3eNA85+k13nfSR-9_PKLp6FgVu08A@mail.gmail.com>
-Date:   Thu, 16 Apr 2020 16:27:32 +0100
-Message-ID: <jhjv9lz78nv.mognet@arm.com>
+        Thu, 16 Apr 2020 11:27:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46032 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2392343AbgDPP1P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 11:27:15 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46E2DC061A0F
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 08:27:15 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id d2so7319357ilc.0
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 08:27:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=J+iM4IV/bLEyrF9kw46DZpxuO4x2QaA2JmBIMEiwT5M=;
+        b=k0w5KgsQW7J5bI3TlEYBfxGM81pCvY0fB9a4hzWcaD3hTWXEUa4NOh3fyBwV14FPZa
+         I99cQhbp/5Vc5WzgFRSmdQo4Gn68RVa3Z+BndxfAYykQz3Yagrp2TMLzBkmyZvHbCWgH
+         UdsDfP/84bkpwxejAVeeFvmYzZzPo0pBzbRZRIAlK8KC6+b6yRwQb65juf2rwZHesF+K
+         roCv09PQHLX/CJKnJriR69mdDqeWURCvcfZUOAId0VmMrAi+opR//HRS5RZV1q8SWdxt
+         MUEie0Mz2ukiUybilfMOY6+j+lbBfOIyA4uSu0p8U1qEwPSa2AkIQg8yiESOuzFJe260
+         REDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=J+iM4IV/bLEyrF9kw46DZpxuO4x2QaA2JmBIMEiwT5M=;
+        b=HE3T133WtfoYazPDP/X9mhRKUPdYKRc72b26gce8vorUvyv4JTI+P6vehK7l+HMdun
+         n5ccfuWP1VET0kPspUipiAA6qq+2tWVbbI2TdZn1vjqmYLs5GG+N0IzyWEd+p4erseCs
+         IX99XSFMz//CgwfApBphdXFDBBDBcFO5zg+FRIIp9lZysLFWpBpiYxxQLdoxIyBL//Yw
+         3AYpBEllpWgk4YHe5McJ2Kjjfng/IWXZnGs00JFxvNPMFurnrbkgl2amidK0lMK33SYm
+         r6wqShJ82XBlk6tRVheg6HHQ7zhoFfmN8gKGXXy2fNi5bss7NxFpV42MOMylfV8SLKid
+         zmmA==
+X-Gm-Message-State: AGi0PuaIsx0SeRutARhUZt6hZvj0vIoml/4i1CPowVhILMtERZG45nGf
+        kJdDSyqRImDVPQgD/Tsggc+BIQ==
+X-Google-Smtp-Source: APiQypKGzPUmvE3dAyPFh4OXyM106ao8Cz1IgSwgan5zQMMBUxtvn113Cs4tk1fq/vwlKFqen4OYmQ==
+X-Received: by 2002:a92:606:: with SMTP id x6mr10385653ilg.92.1587050834482;
+        Thu, 16 Apr 2020 08:27:14 -0700 (PDT)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id 10sm7234116ilb.45.2020.04.16.08.27.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Apr 2020 08:27:13 -0700 (PDT)
+Subject: Re: [PATCH] blk-mq: Put driver tag in blk_mq_dispatch_rq_list() when
+ no budget
+To:     John Garry <john.garry@huawei.com>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ming.lei@redhat.com
+References: <1587035931-125028-1-git-send-email-john.garry@huawei.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <8b247811-7ce5-7a2c-66f4-1a45235f622c@kernel.dk>
+Date:   Thu, 16 Apr 2020 09:27:12 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <1587035931-125028-1-git-send-email-john.garry@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 4/16/20 5:18 AM, John Garry wrote:
+> If in blk_mq_dispatch_rq_list() we find no budget, then we break of the
+> dispatch loop, but the request may keep the driver tag, evaulated
+> in 'nxt' in the previous loop iteration.
+> 
+> Fix by putting the driver tag for that request.
 
-On 16/04/20 14:36, Vincent Guittot wrote:
->> Coming back to the v2 discussion on this patch
->>
->> https://lore.kernel.org/r/20200311181601.18314-10-valentin.schneider@arm.com
->>
->> SD_BALANCE_WAKE is not used in mainline anymore, so wakeups are always
->> fast today.
->>
->> I.e. you wouldn't need a per_cpu(sd_balance_wake, cpu) since it's always
->> NULL.
->>
->> I.e. want_affine logic and the 'for_each_domain(cpu, tmp)' isn't needed
->> anymore.
->>
->> This will dramatically simplify the code in select_task_rq_fair().
->>
->> But I guess Vincent wants to keep the functionality so we're able to
->> enable SD_BALANCE_WAKE on certain sd's?
->
-> I looked too quickly what was done by this patch. I thought that it
-> was adding a per_cpu pointer for all cases including the fast path
-> with wake affine but it only skips the for_each_domain loop for the
-> slow paths which don't need it because they are already slow.
->
-> It would be better to keep the for_each_domain loop for slow paths and
-> to use a per_cpu pointer for fast_path/wake affine. Regarding the
-> wake_affine path, we don't really care about looping all domains and
-> we could directly use the highest domain because wake_affine() that is
-> used in the loop, only uses the imbalance_pct of the sched domain for
-> wake_affine_weight() and it should not harm to use only the highest
-> domain and then select_idle_sibling doesn't use it but the llc or
-> asym_capacity pointer instead.
+Applied, thanks.
 
-So Dietmar's pointing out that sd will always be NULL for want_affine,
-because want_affine can only be true at wakeups and we don't have any
-topologies with SD_BALANCE_WAKE anymore. We would still want to call
-wake_affine() though, because that can change new_cpu.
+-- 
+Jens Axboe
 
-What you are adding on top is that the only sd field used in wake_affine()
-is the imbalance_pct, so we could take a shortcut and just go for the
-highest domain with SD_WAKE_AFFINE; i.e. something like this:
-
----
-if (want_affine) {
-        // We can cache that at topology buildup
-        sd = highest_flag_domain(cpu, SD_WAKE_AFFINE);
-
-        if (cpumask_test_cpu(prev_cpu, sched_domain_span(sd) &&
-            cpu != prev_cpu)
-                new_cpu = wake_affine();
-
-        // Directly go to select_idle_sibling()
-        goto sis;
-}
-
-// !want_affine logic here
----
-
-As for the !want_affine part, we could either keep the current domain walk
-(IIUC this is what you are suggesting) or go for the extra cached pointers
-I'm introducing.
-
-Now if we are a bit bolder than that, because there are no more
-(mainline) topologies w/ SD_BALANCE_WAKE, we could even turn the above
-into:
-
----
-if (wake_flags & WF_TTWU) {
-        if (want_affine) {
-                // We can cache that at topology buildup
-                sd = highest_flag_domain(cpu, SD_WAKE_AFFINE);
-
-                if (cpumask_test_cpu(prev_cpu, sched_domain_span(sd) &&
-                    cpu != prev_cpu)
-                        new_cpu = wake_affine();
-
-        }
-        // Directly go to select_idle_sibling()
-        goto sis;
-}
-
-// !want_affine logic here
----
-
-This in turns mean we could get rid of SD_BALANCE_WAKE entirely... I'm a
-bit more reluctant to that only because the last SD_BALANCE_WAKE setter was
-removed fairly recently, see
-  a526d466798d ("sched/topology: Remove SD_BALANCE_WAKE on asymmetric capacity systems")
