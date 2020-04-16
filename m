@@ -2,75 +2,72 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C832C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 18:37:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A29EC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 18:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EDE720786
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 18:37:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 431E5206E9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 18:37:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="CQHi/uns"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="FG9WLRGe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732253AbgDPShh (ORCPT
+        id S1732974AbgDPShm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 14:37:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47722 "EHLO
+        Thu, 16 Apr 2020 14:37:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728117AbgDPSh0 (ORCPT
+        with ESMTP id S1728038AbgDPShZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 14:37:26 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 005F7C061A10;
-        Thu, 16 Apr 2020 11:37:25 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id t14so5995187wrw.12;
-        Thu, 16 Apr 2020 11:37:25 -0700 (PDT)
+        Thu, 16 Apr 2020 14:37:25 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E5D0C061A0C;
+        Thu, 16 Apr 2020 11:37:24 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id a25so6082601wrd.0;
+        Thu, 16 Apr 2020 11:37:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=C1S/+OwOPtKiEhvj9DA7M//jhqBwvQtvgsSI6UOLquM=;
-        b=CQHi/unsUcvoUVzVaipedhpVjjLOdaIJ3t70EcTJiXiU3W6QWnpO4BzU9qC5wzdMS7
-         NI3dBKWOPwn9LymU0i6VlQP4CQ2Q0k65AXXqCNRRR+lqoOhB8CXOAxt/4T3rvSFhruBZ
-         JkMYrl8tbZBbfv+kb7tRnlMvmSMKmuNYVAgyMbLd2DvER+TvRsPJYIum1xuMZEvsc6Iq
-         JX+6bTEPpwn/TWF2kB0OYFjqxnNESTZPJ+Ir5MOPavHDjVGSaYCl+VAvunsF2YdstMQJ
-         65GYJyvoYhmYlSJ6jMMrWr4b4NB8guNA0rJatuQAVt2clPvB5BVvHxBCJzsWBm0cDd9F
-         PLcA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5aO4xzcD+0wNNf/PxxNiXuB2ikdc6r7QQ2PRhCRC3Yg=;
+        b=FG9WLRGecEzt5yeGkGmmEEDa7GQwVbDWiOvSd9qjmkGgeQGFjYkiAo3br+2/TroUip
+         dV+Ad4C2oS+YHZWy9GdT2Vxd7rXDbBW5OsT+xcDZqeO7TtT5ml+gbnoFMIkgSzs0sIjc
+         jGemJiIb3YzPLELsNskzftGnUhPSnFdbwONV9Cyveq/qWS4XfW9sIwu2VoYz0P/3Gt+P
+         AP1gaT/nhrXKaL4caHp6D8jQmY12FHzzSgpscu42dF8gJT/l/NcdTgkxCn/IJgjUwPax
+         HdQ0GgaEHjxBjw30yu1v9b+6Xc7u/XM6XAacI/hE8p3JMIgSjwqO7rNjK/BzSqJg1P2J
+         pkTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=C1S/+OwOPtKiEhvj9DA7M//jhqBwvQtvgsSI6UOLquM=;
-        b=r6HqzGkynBt0EBUZpdXtnxfNUeQUogXHp7W+lFPVrew/nVHP2lP43CX2gD1lE1ncQx
-         CmOFbSkAUbXEt4Por05JaoycQP2GpAgwsjbDZWd430RWuzTOAdYEIe/4YHScG0lKeG3O
-         oRBisFRZZrY8PTSBfanShFEkixgr4S9gmfeA7noyGBp31e6gVmewfHE4YNLUiaqPUF/q
-         Hzeiq0PrJxssFfJ2BmNqNADHZRYMOqucKm+0f9dPbSufy97r0Pm04P43A0LDp5M72oaz
-         0NP8alW/QCItEwH5Wsg3RbmD5yFASr1fmgu/Tm5+cuk5geFDS7DG3L/ytICDgoQhloIB
-         hRDQ==
-X-Gm-Message-State: AGi0Pub2NsEYnGfX8um1XxYUUzssvPJLnzAj7NHmXUAqVhq1bUAIVYzF
-        CrIkU4B/xQhsvBJ+JK2TK6w=
-X-Google-Smtp-Source: APiQypLrrWMR3D00/qDY9fDZ7v+GzkuuMpcELcn5wFZA6k15OY1Sa+zbngp6IolofbZP344OubtZ3w==
-X-Received: by 2002:a5d:4485:: with SMTP id j5mr11941530wrq.427.1587062244619;
-        Thu, 16 Apr 2020 11:37:24 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5aO4xzcD+0wNNf/PxxNiXuB2ikdc6r7QQ2PRhCRC3Yg=;
+        b=sZv5/LjoguBgbh1kesYwdqBbqRDjZhxqw2yUNgS6L6aEyNQJW+IsIMqVP+eP+JJtN9
+         dQizbfHZdPU35AC2cxXi8dr3MKUk0Xex7eYeu4u7pkgbMhm8ShDka+G3M/fyq+PIw5WR
+         bgRFr/Sv74GQbcrDMR9LI8eaid6gupD1QDh2t7d7f0/Jlm/HWmBEwjPcruSfmbFsXtMJ
+         wauDgpgiQzjPyufKzz83Y/zRqrpqyLVGy1ql2HR8A69Oro+9ip6Qmji+8/LYmGQkkwW+
+         yXJ/ZYhcypRi5cxJ5t5HoFpS4TOydxbgp6+hLodI53O9c2mTI0GOJQmaj1+LTQPnne4q
+         nAjQ==
+X-Gm-Message-State: AGi0PuYWhbJ+SZoun4ar5r3lG+1njZWpG8TnDwXR6jcHylp6jvQHsR9V
+        STLuC1veL+j/VRX66gw9c7kpPJur+Rg=
+X-Google-Smtp-Source: APiQypLF69djmNWJQ16igTe3DHck+hJYapQKt6rYlnZf9gHpnpETMKxfUYg/wmGaM5Csx0GhrQ9CWw==
+X-Received: by 2002:adf:ee91:: with SMTP id b17mr6072924wro.109.1587062242718;
+        Thu, 16 Apr 2020 11:37:22 -0700 (PDT)
 Received: from localhost.localdomain (p200300F137142E00428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:3714:2e00:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id v131sm4626434wmb.19.2020.04.16.11.37.23
+        by smtp.googlemail.com with ESMTPSA id v131sm4626434wmb.19.2020.04.16.11.37.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2020 11:37:24 -0700 (PDT)
+        Thu, 16 Apr 2020 11:37:22 -0700 (PDT)
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 To:     ulf.hansson@linaro.org, linux-mmc@vger.kernel.org,
         linux-amlogic@lists.infradead.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v2 2/2] mmc: meson-mx-sdio: remove the broken ->card_busy() op
-Date:   Thu, 16 Apr 2020 20:35:13 +0200
-Message-Id: <20200416183513.993763-3-martin.blumenstingl@googlemail.com>
+Subject: [PATCH v2 0/2] meson-mx-sdhc card busy detection fixes
+Date:   Thu, 16 Apr 2020 20:35:11 +0200
+Message-Id: <20200416183513.993763-1-martin.blumenstingl@googlemail.com>
 X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416183513.993763-1-martin.blumenstingl@googlemail.com>
-References: <20200416183513.993763-1-martin.blumenstingl@googlemail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,61 +75,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The recent commit 0d84c3e6a5b2 ("mmc: core: Convert to
-mmc_poll_for_busy() for erase/trim/discard") makes use of the
-->card_busy() op for SD cards. This uncovered that the ->card_busy() op
-in the Meson SDIO driver was never working right:
-while polling the busy status with ->card_busy()
-meson_mx_mmc_card_busy() reads only one of the two MESON_MX_SDIO_IRQC
-register values 0x1f001f10 or 0x1f003f10. This translates to "three out
-of four DAT lines are HIGH" and "all four DAT lines are HIGH", which
-is interpreted as "the card is busy".
+The following errors were observed with Linux 5.7-rc1 and an SD card
+hooked up to the meson-mx-sdio controller:
+  mmc1: Card stuck being busy! __mmc_poll_for_busy
+  blk_update_request: I/O error, dev mmcblk1, sector 17111080 op
+   0x3:(DISCARD) flags 0x0 phys_seg 1 prio class 0
 
-It turns out that no situation can be observed where all four DAT lines
-are LOW, meaning the card is not busy anymore. Upon further research the
-3.10 vendor driver for this controller does not implement the
-->card_busy() op.
 
-Remove the ->card_busy() op from the meson-mx-sdio driver since it is
-not working. At the time of writing this patch it is not clear what's
-needed to make the ->card_busy() implementation work with this specific
-controller hardware. For all use-cases which have previously worked the
-MMC_CAP_WAIT_WHILE_BUSY flag is now taking over, even if we don't have
-a ->card_busy() op anymore.
+At least patch #1 should go to a -fixes branch so it can make it
+into v5.7.
 
-Fixes: ed80a13bb4c4c9 ("mmc: meson-mx-sdio: Add a driver for the Amlogic Meson8 and Meson8b SoCs")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- drivers/mmc/host/meson-mx-sdio.c | 9 ---------
- 1 file changed, 9 deletions(-)
 
-diff --git a/drivers/mmc/host/meson-mx-sdio.c b/drivers/mmc/host/meson-mx-sdio.c
-index fe02130237a8..2e58743d83bb 100644
---- a/drivers/mmc/host/meson-mx-sdio.c
-+++ b/drivers/mmc/host/meson-mx-sdio.c
-@@ -357,14 +357,6 @@ static void meson_mx_mmc_request(struct mmc_host *mmc, struct mmc_request *mrq)
- 		meson_mx_mmc_start_cmd(mmc, mrq->cmd);
- }
- 
--static int meson_mx_mmc_card_busy(struct mmc_host *mmc)
--{
--	struct meson_mx_mmc_host *host = mmc_priv(mmc);
--	u32 irqc = readl(host->base + MESON_MX_SDIO_IRQC);
--
--	return !!(irqc & MESON_MX_SDIO_IRQC_FORCE_DATA_DAT_MASK);
--}
--
- static void meson_mx_mmc_read_response(struct mmc_host *mmc,
- 				       struct mmc_command *cmd)
- {
-@@ -506,7 +498,6 @@ static void meson_mx_mmc_timeout(struct timer_list *t)
- static struct mmc_host_ops meson_mx_mmc_ops = {
- 	.request		= meson_mx_mmc_request,
- 	.set_ios		= meson_mx_mmc_set_ios,
--	.card_busy		= meson_mx_mmc_card_busy,
- 	.get_cd			= mmc_gpio_get_cd,
- 	.get_ro			= mmc_gpio_get_ro,
- };
+Changes since v1 at [0]:
+- added correct Fixes tag for patch #1
+- added a patch which drops the ->card_busy() implementation from
+  the meson-mx-sdio driver because this is not working
+- special thanks to Ulf for taking the time to provide debug
+  patches, explaining things and answering my questions!
+
+
+[0] https://patchwork.kernel.org/patch/11483621/
+
+
+Martin Blumenstingl (2):
+  mmc: meson-mx-sdio: Set MMC_CAP_WAIT_WHILE_BUSY
+  mmc: meson-mx-sdio: remove the broken ->card_busy() op
+
+ drivers/mmc/host/meson-mx-sdio.c | 11 +----------
+ 1 file changed, 1 insertion(+), 10 deletions(-)
+
 -- 
 2.26.1
 
