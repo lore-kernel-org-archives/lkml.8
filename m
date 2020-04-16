@@ -2,110 +2,120 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F5CC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:02:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29C36C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:02:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19AA3215A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:02:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587027744;
-	bh=dVAp91Tj6hWWtUY7tL+aLgKkZ276mvf5MWRT7goV5sk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=cYp945xS7YDCc6ATSudyU7RDZNaZw1W6K3AM2RCNF1sJMf5+3y3P/zbxpwgtWpINs
-	 LYZzxnG+e5h0EE89l7NQLwrG1OBy9K4KpV/nIGhPsB1doYVU5y71hMvGviyFHgkfCd
-	 ddosfoh+WwiTpUw91K3dfnT+hHTSF2C3FKnl8XhI=
+	by mail.kernel.org (Postfix) with ESMTP id 04C2D20787
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:02:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RKkD22rb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503263AbgDPJCN (ORCPT
+        id S2503008AbgDPJCg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 05:02:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58756 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2503097AbgDPI6s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 04:58:48 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84BF220784;
-        Thu, 16 Apr 2020 08:58:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587027527;
-        bh=dVAp91Tj6hWWtUY7tL+aLgKkZ276mvf5MWRT7goV5sk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=NAw/DPQ2vN2rzJzmUreAA38rnfxIXX3BUID+0uehW0Z9v4f/Ntd1a7JWQHTF+uDMv
-         4tUi3XdV3gd/0EuPpoon9MJXibqbgTfuDttD3xyfrTBNZAOlFyJ4cRJ6Z+sHqArQUT
-         PeqbbpCCaPZTxxeljv/xMr+adoczGliqtOh0MmEk=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jP0M9-003lwb-Tr; Thu, 16 Apr 2020 09:58:46 +0100
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Thu, 16 Apr 2020 09:58:45 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, pbonzini@redhat.com,
-        tsbogend@alpha.franken.de, paulus@ozlabs.org, mpe@ellerman.id.au,
-        benh@kernel.crashing.org, borntraeger@de.ibm.com,
-        frankja@linux.ibm.com, david@redhat.com, cohuck@redhat.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        sean.j.christopherson@intel.com, wanpengli@tencent.com,
-        jmattson@google.com, joro@8bytes.org, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
-        james.morse@arm.com, julien.thierry.kdev@gmail.com,
-        suzuki.poulose@arm.com, christoffer.dall@arm.com,
-        peterx@redhat.com, thuth@redhat.com
-Subject: Re: [PATCH v2] KVM: Optimize kvm_arch_vcpu_ioctl_run function
-In-Reply-To: <8b92fb5b-5138-0695-fb90-6c36b8dfad00@linux.alibaba.com>
-References: <20200416051057.26526-1-tianjia.zhang@linux.alibaba.com>
- <878sivx67g.fsf@vitty.brq.redhat.com>
- <1000159f971a6fa3b5bd9e5871ce4d82@kernel.org>
- <8b92fb5b-5138-0695-fb90-6c36b8dfad00@linux.alibaba.com>
-Message-ID: <b700f9bde1218b217ca4e571b1d29c1e@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: tianjia.zhang@linux.alibaba.com, vkuznets@redhat.com, kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org, pbonzini@redhat.com, tsbogend@alpha.franken.de, paulus@ozlabs.org, mpe@ellerman.id.au, benh@kernel.crashing.org, borntraeger@de.ibm.com, frankja@linux.ibm.com, david@redhat.com, cohuck@redhat.com, heiko.carstens@de.ibm.com, gor@linux.ibm.com, sean.j.christopherson@intel.com, wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, christoffer.dall@arm.com, peterx@redhat.com, thuth@redhat.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        Thu, 16 Apr 2020 05:02:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42102 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2503156AbgDPJAC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 05:00:02 -0400
+Received: from mail-wr1-x44a.google.com (mail-wr1-x44a.google.com [IPv6:2a00:1450:4864:20::44a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E45BBC061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 02:00:00 -0700 (PDT)
+Received: by mail-wr1-x44a.google.com with SMTP id p16so1370580wro.16
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 02:00:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=zYXTZFcfx+3CensArNPFNmiVclp57O43Gn/CFyzw2Uo=;
+        b=RKkD22rb6Dzs2uaucfSqEkzpn0HhEKZCL5xRSJVQRCjvmF6gjSa+MTJl+xlpi2TDkC
+         bQiuk/gS8BfTYSuGBDtYbw+GEivN6EyJLFV2SiilGvCu1pqNlQOvRNYI6O60CX8OhyPc
+         NPUXPobg4JIXNwSCb98uUproTN5H8lF+titV2n6/INf5gA84sJYuhs/XDaurCZscX2IT
+         gCCz1kmvaCdVrYRACn3tCTr7rXBUMZ3I711tDJ8x1WnWn2wfvT7X36NsT0dMDb0fhaq+
+         FmcLwdqSqkUgiw4K8ICrhiRFrZZ+X16maJxVfuHqp8Y9UtVeNe+AAYfwTTHaG7YU/AmL
+         acfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=zYXTZFcfx+3CensArNPFNmiVclp57O43Gn/CFyzw2Uo=;
+        b=UnFVq/dvWFdk70XE1ySjUMngyR9fPlimJYq8FjMQEzoFi+2JZ7LHCdMbZ0f+AwfOl9
+         ywa9uFhGx/ND50rFtiCv0Gj/qn+V1gyY/mtsvSxNK2HsFxX4LiSUckKZpiDLiV3FmL98
+         zLuI8xQYIMF8y6A3uICJgYKrdGiGmylow3hUyBv/x9bLqhmM1WKpmntrbKnKkT+vwjLt
+         v1twOtuKSspwmMOF205tLrNPYp5h1h+hFwFWUFkuApqM8xyrldN3uYpxKbywnqz1mb0p
+         oMKezA2JzKRvrI2XaR5yOBZ5gq5IUQD7jLwj1ZOFuZJEuS5FOgmQ/3whZgxefhem9B8t
+         qSrw==
+X-Gm-Message-State: AGi0Puba3VlkIioRZqSYeowxK5aVnvpatstC0TFignu+8+6okWgTtmvn
+        UOzpsNdWTX89lg3rRaGU2eZUowiDxJPt
+X-Google-Smtp-Source: APiQypLlmJYWXmx/JSoE63GJVL18iRgi9VtfgPiWUqZvjb7Syp0ZSad0LLsQREO6kuDj8yMmglS2NoQ4jTaM
+X-Received: by 2002:adf:f7c6:: with SMTP id a6mr33267035wrq.193.1587027599379;
+ Thu, 16 Apr 2020 01:59:59 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 09:59:56 +0100
+Message-Id: <20200416085956.217587-1-qperret@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.1.301.g55bc3eb7cb9-goog
+Subject: [PATCH v2] sched/core: Fix reset-on-fork from RT with uclamp
+From:   Quentin Perret <qperret@google.com>
+To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org
+Cc:     dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, ctheegal@codeaurora.org, dianders@chromium.org,
+        patrick.bellasi@matbug.net, valentin.schneider@arm.com,
+        qais.yousef@arm.com, linux-kernel@vger.kernel.org,
+        qperret@google.com, kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-16 09:45, Tianjia Zhang wrote:
-> On 2020/4/16 16:28, Marc Zyngier wrote:
+uclamp_fork() resets the uclamp values to their default when the
+reset-on-fork flag is set. It also checks whether the task has a RT
+policy, and sets its uclamp.min to 1024 accordingly. However, during
+reset-on-fork, the task's policy is lowered to SCHED_NORMAL right after,
+hence leading to an erroneous uclamp.min setting for the new task if it
+was forked from RT.
 
-[...]
+Fix this by removing the unnecessary check on rt_task() in
+uclamp_fork() as this doesn't make sense if the reset-on-fork flag is
+set.
 
->> Overall, there is a large set of cleanups to be done when both the 
->> vcpu and the run
->> structures are passed as parameters at the same time. Just grepping 
->> the tree for
->> kvm_run is pretty instructive.
->> 
->>          M.
-> 
-> Sorry, it's my mistake, I only compiled the x86 platform, I will
-> submit patch again.
+Fixes: 1a00d999971c ("sched/uclamp: Set default clamps for RT tasks")
+Reported-by: Chitti Babu Theegala <ctheegal@codeaurora.org>
+Reviewed-by: Patrick Bellasi <patrick.bellasi@matbug.net>
+Signed-off-by: Quentin Perret <qperret@google.com>
+---
+Changes in v2:
+ - Added missing 'Fixes:' tag (Patrick)
+ - Removed unnecessary local variable (Doug, Patrick)
+---
+ kernel/sched/core.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
-Not a mistake. All I'm saying is that there is an opportunity for a 
-larger
-series that cleans up the code base, rather than just doing a couple of
-localized changes.
-
-Thanks,
-
-         M.
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 3a61a3b8eaa9..9a2fbf98fd6f 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -1232,13 +1232,8 @@ static void uclamp_fork(struct task_struct *p)
+ 		return;
+ 
+ 	for_each_clamp_id(clamp_id) {
+-		unsigned int clamp_value = uclamp_none(clamp_id);
+-
+-		/* By default, RT tasks always get 100% boost */
+-		if (unlikely(rt_task(p) && clamp_id == UCLAMP_MIN))
+-			clamp_value = uclamp_none(UCLAMP_MAX);
+-
+-		uclamp_se_set(&p->uclamp_req[clamp_id], clamp_value, false);
++		uclamp_se_set(&p->uclamp_req[clamp_id],
++			      uclamp_none(clamp_id), false);
+ 	}
+ }
+ 
 -- 
-Jazz is not dead. It just smells funny...
+2.26.1.301.g55bc3eb7cb9-goog
+
