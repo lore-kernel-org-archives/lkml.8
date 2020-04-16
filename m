@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7513C38A2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:49:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B367C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:49:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 872D920732
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:49:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14E0120732
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:49:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587052182;
-	bh=lkt+7S1Ws1ROwt9EaaZvt6jC5ZwlXMV5tjkHz4O490Y=;
+	s=default; t=1587052187;
+	bh=F86Uvr/8Vvq5iRg6CyvWRy8iUXPMXaS3bKVGg6vxyPU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MO6s9GnesxyAyQuyxat5dEvdRWVAvxKQ+5rIERQg7iXxdFLORSLZeWGr/w7jvg459
-	 8hhQFHm1cOE2V+povZx0DPX7ItGSKtNc1TeKj5jMcT6CAJ1l1BjP4E9jnHF5Hd7SnP
-	 tr15+NRElKSN0ZAKAPATXGcxqF7VpmfoWU5mrz+s=
+	b=eOg/CFjDv5MCleXWQkdrxBH2nMoVE3fj9/rpAnCE2Va6b9HfIm710xyPx5nSLWVjR
+	 LRMSFfASBn89gKHepWF9bJ27l3bNPrOwnHNePTrKRo+knU+LBUcfT2DFFPndRj4Ows
+	 IwVfrPhjq9nKqH0GK9ITRMXrn5D6V60UB9rVU48E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442642AbgDPPtk (ORCPT
+        id S2395507AbgDPPtp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:49:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44090 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:49:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896667AbgDPNdB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:33:01 -0400
+        id S2896591AbgDPNc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:32:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E3BF22285;
-        Thu, 16 Apr 2020 13:32:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 325B322273;
+        Thu, 16 Apr 2020 13:32:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043964;
-        bh=lkt+7S1Ws1ROwt9EaaZvt6jC5ZwlXMV5tjkHz4O490Y=;
+        s=default; t=1587043939;
+        bh=F86Uvr/8Vvq5iRg6CyvWRy8iUXPMXaS3bKVGg6vxyPU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2h3XIS6u5qhffY42dxSmZkfNISzs7QOoeZbP6QpLwmftUuNf/cH4RPyg2MJsx4gA6
-         R/IvYCjPz6aQswHbbYPa25KWXhpty2FJPUliXYV+mmodFbkwW30Y6/LLJzcvsZQ7lj
-         yBmLSov7VpnpmB3ujDKAf5lr+2RzCy2I6elD9qVQ=
+        b=WGdzaJokFnH5nBO050vs9e+3zlUO/Yl07OFGrvrjP6KRAPvFkzH8FxeRp6oRK0soa
+         /+wKXm8n3kta3/xrd3fjRLRz5M7Xan8bSNEjRtlIlsrw89p8HCfY/Y1mcdPLO0CS+m
+         9Z8yRIj9sEZFX/hoTmmrYqmAa1irfMsbOba/mqWc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alain Volmat <avolmat@me.com>,
-        Patrice Chotard <patrice.chotard@st.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
+        stable@vger.kernel.org, Luo bin <luobin9@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 025/257] i2c: st: fix missing struct parameter description
-Date:   Thu, 16 Apr 2020 15:21:16 +0200
-Message-Id: <20200416131329.109137564@linuxfoundation.org>
+Subject: [PATCH 5.5 016/257] hinic: fix the bug of clearing event queue
+Date:   Thu, 16 Apr 2020 15:21:07 +0200
+Message-Id: <20200416131327.904091026@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -61,33 +60,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alain Volmat <avolmat@me.com>
+From: Luo bin <luobin9@huawei.com>
 
-[ Upstream commit f491c6687332920e296d0209e366fe2ca7eab1c6 ]
+[ Upstream commit 614eaa943e9fc3fcdbd4aa0692ae84973d363333 ]
 
-Fix a missing struct parameter description to allow
-warning free W=1 compilation.
+should disable eq irq before freeing it, must clear event queue
+depth in hw before freeing relevant memory to avoid illegal
+memory access and update consumer idx to avoid invalid interrupt
 
-Signed-off-by: Alain Volmat <avolmat@me.com>
-Reviewed-by: Patrice Chotard <patrice.chotard@st.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Signed-off-by: Luo bin <luobin9@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-st.c | 1 +
- 1 file changed, 1 insertion(+)
+ .../net/ethernet/huawei/hinic/hinic_hw_eqs.c  | 24 +++++++++++++------
+ 1 file changed, 17 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-st.c b/drivers/i2c/busses/i2c-st.c
-index 54e1fc8a495e7..f7f7b5b64720e 100644
---- a/drivers/i2c/busses/i2c-st.c
-+++ b/drivers/i2c/busses/i2c-st.c
-@@ -434,6 +434,7 @@ static void st_i2c_wr_fill_tx_fifo(struct st_i2c_dev *i2c_dev)
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_eqs.c b/drivers/net/ethernet/huawei/hinic/hinic_hw_eqs.c
+index 79243b626ddbe..6a723c4757bce 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_hw_eqs.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_eqs.c
+@@ -188,7 +188,7 @@ static u8 eq_cons_idx_checksum_set(u32 val)
+  * eq_update_ci - update the HW cons idx of event queue
+  * @eq: the event queue to update the cons idx for
+  **/
+-static void eq_update_ci(struct hinic_eq *eq)
++static void eq_update_ci(struct hinic_eq *eq, u32 arm_state)
+ {
+ 	u32 val, addr = EQ_CONS_IDX_REG_ADDR(eq);
+ 
+@@ -202,7 +202,7 @@ static void eq_update_ci(struct hinic_eq *eq)
+ 
+ 	val |= HINIC_EQ_CI_SET(eq->cons_idx, IDX)    |
+ 	       HINIC_EQ_CI_SET(eq->wrapped, WRAPPED) |
+-	       HINIC_EQ_CI_SET(EQ_ARMED, INT_ARMED);
++	       HINIC_EQ_CI_SET(arm_state, INT_ARMED);
+ 
+ 	val |= HINIC_EQ_CI_SET(eq_cons_idx_checksum_set(val), XOR_CHKSUM);
+ 
+@@ -347,7 +347,7 @@ static void eq_irq_handler(void *data)
+ 	else if (eq->type == HINIC_CEQ)
+ 		ceq_irq_handler(eq);
+ 
+-	eq_update_ci(eq);
++	eq_update_ci(eq, EQ_ARMED);
+ }
+ 
  /**
-  * st_i2c_rd_fill_tx_fifo() - Fill the Tx FIFO in read mode
-  * @i2c_dev: Controller's private data
-+ * @max: Maximum amount of data to fill into the Tx FIFO
-  *
-  * This functions fills the Tx FIFO with fixed pattern when
-  * in read mode to trigger clock.
+@@ -702,7 +702,7 @@ static int init_eq(struct hinic_eq *eq, struct hinic_hwif *hwif,
+ 	}
+ 
+ 	set_eq_ctrls(eq);
+-	eq_update_ci(eq);
++	eq_update_ci(eq, EQ_ARMED);
+ 
+ 	err = alloc_eq_pages(eq);
+ 	if (err) {
+@@ -752,18 +752,28 @@ err_req_irq:
+  **/
+ static void remove_eq(struct hinic_eq *eq)
+ {
+-	struct msix_entry *entry = &eq->msix_entry;
+-
+-	free_irq(entry->vector, eq);
++	hinic_set_msix_state(eq->hwif, eq->msix_entry.entry,
++			     HINIC_MSIX_DISABLE);
++	free_irq(eq->msix_entry.vector, eq);
+ 
+ 	if (eq->type == HINIC_AEQ) {
+ 		struct hinic_eq_work *aeq_work = &eq->aeq_work;
+ 
+ 		cancel_work_sync(&aeq_work->work);
++		/* clear aeq_len to avoid hw access host memory */
++		hinic_hwif_write_reg(eq->hwif,
++				     HINIC_CSR_AEQ_CTRL_1_ADDR(eq->q_id), 0);
+ 	} else if (eq->type == HINIC_CEQ) {
+ 		tasklet_kill(&eq->ceq_tasklet);
++		/* clear ceq_len to avoid hw access host memory */
++		hinic_hwif_write_reg(eq->hwif,
++				     HINIC_CSR_CEQ_CTRL_1_ADDR(eq->q_id), 0);
+ 	}
+ 
++	/* update cons_idx to avoid invalid interrupt */
++	eq->cons_idx = hinic_hwif_read_reg(eq->hwif, EQ_PROD_IDX_REG_ADDR(eq));
++	eq_update_ci(eq, EQ_NOT_ARMED);
++
+ 	free_eq_pages(eq);
+ }
+ 
 -- 
 2.20.1
 
