@@ -2,117 +2,112 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF60C352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 800AFC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:36:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D49C921973
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:35:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DA4221D91
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:36:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DuAiR70A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505141AbgDPKfp (ORCPT
+        id S2505179AbgDPKgJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 06:35:45 -0400
-Received: from mga01.intel.com ([192.55.52.88]:46619 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2505096AbgDPKeC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 06:34:02 -0400
-IronPort-SDR: CDrhlRQysprIsZyFirOrkx3MXsSk0l3AKyFwcJB+VWntV/yDAzSVifTGoi2pZfwJKjC3hCrNt5
- zko0gkyxmeDA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 03:33:31 -0700
-IronPort-SDR: uaGMqjC1D3LJTSHhxkWzZqyX/QcbfjO69rPnA6+ZfklqV8oJiikirHHkpPssHofAXpOL6lPM8f
- LVq4Ne569yow==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,390,1580803200"; 
-   d="scan'208";a="277947912"
-Received: from lxy-clx-4s.sh.intel.com ([10.239.43.132])
-  by fmsmga004.fm.intel.com with ESMTP; 16 Apr 2020 03:33:29 -0700
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        kvm@vger.kernel.org
-Cc:     Nadav Amit <namit@cs.technion.ac.il>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [RFC PATCH 3/3] kvm: x86: skip DRn reload if previous VM exit is DR access VM exit
-Date:   Thu, 16 Apr 2020 18:15:09 +0800
-Message-Id: <20200416101509.73526-4-xiaoyao.li@intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200416101509.73526-1-xiaoyao.li@intel.com>
-References: <20200416101509.73526-1-xiaoyao.li@intel.com>
+        Thu, 16 Apr 2020 06:36:09 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:42849 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2505072AbgDPKdm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 06:33:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587033221;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=wSOHFT9tJQ3WMUJpzqJBLiS8QZ3BM+HLY6292xvXFZM=;
+        b=DuAiR70AkTLxvA/rK7PsFcNZGWdjqBd8BtZy5tk7QANjZlp3r28/2gyWuprA/f5aV3HfCi
+        bJAeN3BvIl7SWiZjkLiY29dCK/pc0Z6fY5oDPvRB/3LGLcOECjcrWNqw9e7FPfJbqGUkkr
+        lDDNfmSN2tqkSJgn0o2GCBeUG9b9fBQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-451-mRLDz9gnN72cnltf895Q4Q-1; Thu, 16 Apr 2020 06:33:39 -0400
+X-MC-Unique: mRLDz9gnN72cnltf895Q4Q-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 26B2513F9;
+        Thu, 16 Apr 2020 10:33:38 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (ovpn-114-61.ams2.redhat.com [10.36.114.61])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 178D194B40;
+        Thu, 16 Apr 2020 10:33:35 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     David Howells <dhowells@redhat.com>
+Cc:     linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+        linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org,
+        keyrings@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: What's a good default TTL for DNS keys in the kernel
+References: <874ktl2ide.fsf@oldenburg2.str.redhat.com>
+        <3865908.1586874010@warthog.procyon.org.uk>
+        <128769.1587032833@warthog.procyon.org.uk>
+Date:   Thu, 16 Apr 2020 12:33:34 +0200
+In-Reply-To: <128769.1587032833@warthog.procyon.org.uk> (David Howells's
+        message of "Thu, 16 Apr 2020 11:27:13 +0100")
+Message-ID: <87v9lzu3cx.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When DR access vm exit, there is no DRn change throughout VM exit to
-next VM enter. Skip the DRn reload in this case and fix the comments.
+* David Howells:
 
-Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
----
- arch/x86/kvm/svm/svm.c | 8 +++++---
- arch/x86/kvm/vmx/vmx.c | 8 +++++---
- arch/x86/kvm/x86.c     | 2 +-
- 3 files changed, 11 insertions(+), 7 deletions(-)
+> Florian Weimer <fweimer@redhat.com> wrote:
+>
+>> You can get the real TTL if you do a DNS resolution on the name and
+>> match the addresses against what you get out of the NSS functions.  If
+>> they match, you can use the TTL from DNS.  Hackish, but it does give you
+>> *some* TTL value.
+>
+> I guess I'd have to do that in parallel.
 
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 66123848448d..c6883a0bf8c3 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -2287,9 +2287,11 @@ static int dr_interception(struct vcpu_svm *svm)
- 
- 	if (svm->vcpu.guest_debug == 0) {
- 		/*
--		 * No more DR vmexits; force a reload of the debug registers
--		 * and reenter on this instruction.  The next vmexit will
--		 * retrieve the full state of the debug registers.
-+		 * No more DR vmexits and reenter on this instruction.
-+		 * The next vmexit will retrieve the full state of the debug
-+		 * registers and re-enable DR vmexits.
-+		 * No need to set KVM_DEBUGREG_NEED_RELOAD because no DRn change
-+		 * since this DR vmexit.
- 		 */
- 		clr_dr_intercepts(svm);
- 		svm->vcpu.arch.switch_db_regs |= KVM_DEBUGREG_WONT_EXIT;
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index aa1b8cf7c915..22eff8503048 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -4967,9 +4967,11 @@ static int handle_dr(struct kvm_vcpu *vcpu)
- 		exec_controls_clearbit(to_vmx(vcpu), CPU_BASED_MOV_DR_EXITING);
- 
- 		/*
--		 * No more DR vmexits; force a reload of the debug registers
--		 * and reenter on this instruction.  The next vmexit will
--		 * retrieve the full state of the debug registers.
-+		 * No more DR vmexits and reenter on this instruction.
-+		 * The next vmexit will retrieve the full state of the debug
-+		 * registers and re-enable DR vmexits.
-+		 * No need to set KVM_DEBUGREG_NEED_RELOAD because no DRn change
-+		 * since this DR vmexit.
- 		 */
- 		vcpu->arch.switch_db_regs |= KVM_DEBUGREG_WONT_EXIT;
- 		return 1;
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 71264df64001..8983848cbf45 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -8400,7 +8400,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
- 	if (test_thread_flag(TIF_NEED_FPU_LOAD))
- 		switch_fpu_return();
- 
--	if (unlikely(vcpu->arch.switch_db_regs)) {
-+	if (unlikely(vcpu->arch.switch_db_regs & KVM_DEBUGREG_NEED_RELOAD)) {
- 		set_debugreg(0, 7);
- 		set_debugreg(vcpu->arch.eff_db[0], 0);
- 		set_debugreg(vcpu->arch.eff_db[1], 1);
--- 
-2.20.1
+Not necessary.  You can do the getaddrinfo lookup first and then perform
+the query.
+
+> Would calling something like res_mkquery() use local DNS caching?
+
+Yes (but res_mkquery builds a packet, it does not send it).
+
+>> The question remains what the expected impact of TTL expiry is.  Will
+>> the kernel just perform a new DNS query if it needs one?  Or would you
+>> expect that (say) the NFS client rechecks the addresses after TTL expiry
+>> and if they change, reconnect to a new NFS server?
+>
+> It depends on the filesystem.
+>
+> AFS keeps track of the expiration on the record and will issue a new lookup
+> when the data expires, but NFS doesn't make use of this information.
+
+And it will switch servers at that point?  Or only if the existing
+server association fails/times out?
+
+> The keyring subsystem will itself dispose of dns_resolver keys that
+> expire and request_key() will only upcall again if the key has
+> expired.
+
+What's are higher-level effects of that?
+
+I'm still not convinced that the kernel *needs* accurate TTL
+information.  The benefit from upcall avoidance likely vanishes quickly
+after the in-kernel TTL increases beyond 5 or so.  That's just my guess,
+though.
+
+Thanks,
+Florian
 
