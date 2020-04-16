@@ -2,51 +2,51 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F00AFC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E15E7C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:59:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE806214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:58:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD655206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:59:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587049137;
-	bh=GC7P3y7Dy+E6t3Dg2e24lsZ2vsRQWKY2LNgLclPIFq8=;
+	s=default; t=1587049145;
+	bh=30hy3yBwfYpGQ3YmwExCQUUPvJUTtZHkZv+HN2q/6M4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W//gnOiiUp9nazK+thvaLTg1ay7wV83AYNfpl6UPnyhSjlN5/vGv6V9w8P9xvuoCa
-	 lXPw0/50Phijh61bZECuDf0gsG7vFhfZYtefbX4MAhZlgBB1omKBG/HRZtl5iltbwi
-	 Y8KX4WzKiDU5JMedR6S8ZjGzmKFnhZvOq69jCSFY=
+	b=S+vzX8m7pXyulj+6NC7Esg6MTwUxx8unnaDb9VStMgx9d32iKLoOoNzocbUMGAhHn
+	 GcCLTcsunvRCg+26lOl19Yn9/zWrH5F/kpZJvAx/SMvV4ygqrj+mkTQRPU8fFGAl3c
+	 mo0UIi+6GwSs/x0v1NbR7j1DXdHyynJU94oFvN68=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438024AbgDPO6y (ORCPT
+        id S2439001AbgDPO7D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:58:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41726 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:59:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409114AbgDPNzI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:55:08 -0400
+        id S2409133AbgDPNzL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:55:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 618E721734;
-        Thu, 16 Apr 2020 13:55:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CEEA421744;
+        Thu, 16 Apr 2020 13:55:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045307;
-        bh=GC7P3y7Dy+E6t3Dg2e24lsZ2vsRQWKY2LNgLclPIFq8=;
+        s=default; t=1587045310;
+        bh=30hy3yBwfYpGQ3YmwExCQUUPvJUTtZHkZv+HN2q/6M4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zl1gqymUE2Hv9ZCW4669RcJVnRtksQQue1gBFuO4AE/t9adkPGchEG1gkVSH9AJ2P
-         LI1xD//Asdg8wBwZqkWGnynQStv4cay1qFoi9EXi5COWAMlEivnD1aqsanb0B+hbnb
-         rmQifij8NBuRlZIjmk/3Arcaq+8589tEfKtwKE2Y=
+        b=Bn5dqy84busxFTxp+oOMZyEFx5tP1zCtAU4TiMBv+WVc4lmy23gLLmVLL3rDzS7Zv
+         PSDWsoyD6onkMSujb+Ce0Tma40XqCB4JFYSyj7jxsAeOY5bLaFe9g8wLZN3mPpu88l
+         TzUE/TIqyAtabM2K6gXGxadI8qF0EfawXhcPxFlI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Hebb <tommyhebb@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.6 081/254] ALSA: hda/realtek - Remove now-unnecessary XPS 13 headphone noise fixups
-Date:   Thu, 16 Apr 2020 15:22:50 +0200
-Message-Id: <20200416131336.021271851@linuxfoundation.org>
+        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 055/254] irqchip/gic-v4: Provide irq_retrigger to avoid circular locking dependency
+Date:   Thu, 16 Apr 2020 15:22:24 +0200
+Message-Id: <20200416131332.790863670@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -59,142 +59,145 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Hebb <tommyhebb@gmail.com>
+From: Marc Zyngier <maz@kernel.org>
 
-commit f36938aa7440f46a0a365f1cfde5f5985af2bef3 upstream.
+[ Upstream commit 7809f7011c3bce650e502a98afeb05961470d865 ]
 
-patch_realtek.c has historically failed to properly configure the PC
-Beep Hidden Register for the ALC256 codec (among others). Depending on
-your kernel version, symptoms of this misconfiguration can range from
-chassis noise, picked up by a poorly-shielded PCBEEP trace, getting
-amplified and played on your internal speaker and/or headphones to loud
-feedback, which responds to the "Headphone Mic Boost" ALSA control,
-getting played through your headphones. For details of the problem, see
-the patch in this series titled "ALSA: hda/realtek - Set principled PC
-Beep configuration for ALC256", which fixes the configuration.
+On a very heavily loaded D05 with GICv4, I managed to trigger the
+following lockdep splat:
 
-These symptoms have been most noticed on the Dell XPS 13 9350 and 9360,
-popular laptops that use the ALC256. As a result, several model-specific
-fixups have been introduced to try and fix the problem, the most
-egregious of which locks the "Headphone Mic Boost" control as a hack to
-minimize noise from a feedback loop that shouldn't have been there in
-the first place.
+[ 6022.598864] ======================================================
+[ 6022.605031] WARNING: possible circular locking dependency detected
+[ 6022.611200] 5.6.0-rc4-00026-geee7c7b0f498 #680 Tainted: G            E
+[ 6022.618061] ------------------------------------------------------
+[ 6022.624227] qemu-system-aar/7569 is trying to acquire lock:
+[ 6022.629789] ffff042f97606808 (&p->pi_lock){-.-.}, at: try_to_wake_up+0x54/0x7a0
+[ 6022.637102]
+[ 6022.637102] but task is already holding lock:
+[ 6022.642921] ffff002fae424cf0 (&irq_desc_lock_class){-.-.}, at: __irq_get_desc_lock+0x5c/0x98
+[ 6022.651350]
+[ 6022.651350] which lock already depends on the new lock.
+[ 6022.651350]
+[ 6022.659512]
+[ 6022.659512] the existing dependency chain (in reverse order) is:
+[ 6022.666980]
+[ 6022.666980] -> #2 (&irq_desc_lock_class){-.-.}:
+[ 6022.672983]        _raw_spin_lock_irqsave+0x50/0x78
+[ 6022.677848]        __irq_get_desc_lock+0x5c/0x98
+[ 6022.682453]        irq_set_vcpu_affinity+0x40/0xc0
+[ 6022.687236]        its_make_vpe_non_resident+0x6c/0xb8
+[ 6022.692364]        vgic_v4_put+0x54/0x70
+[ 6022.696273]        vgic_v3_put+0x20/0xd8
+[ 6022.700183]        kvm_vgic_put+0x30/0x48
+[ 6022.704182]        kvm_arch_vcpu_put+0x34/0x50
+[ 6022.708614]        kvm_sched_out+0x34/0x50
+[ 6022.712700]        __schedule+0x4bc/0x7f8
+[ 6022.716697]        schedule+0x50/0xd8
+[ 6022.720347]        kvm_arch_vcpu_ioctl_run+0x5f0/0x978
+[ 6022.725473]        kvm_vcpu_ioctl+0x3d4/0x8f8
+[ 6022.729820]        ksys_ioctl+0x90/0xd0
+[ 6022.733642]        __arm64_sys_ioctl+0x24/0x30
+[ 6022.738074]        el0_svc_common.constprop.3+0xa8/0x1e8
+[ 6022.743373]        do_el0_svc+0x28/0x88
+[ 6022.747198]        el0_svc+0x14/0x40
+[ 6022.750761]        el0_sync_handler+0x124/0x2b8
+[ 6022.755278]        el0_sync+0x140/0x180
+[ 6022.759100]
+[ 6022.759100] -> #1 (&rq->lock){-.-.}:
+[ 6022.764143]        _raw_spin_lock+0x38/0x50
+[ 6022.768314]        task_fork_fair+0x40/0x128
+[ 6022.772572]        sched_fork+0xe0/0x210
+[ 6022.776484]        copy_process+0x8c4/0x18d8
+[ 6022.780742]        _do_fork+0x88/0x6d8
+[ 6022.784478]        kernel_thread+0x64/0x88
+[ 6022.788563]        rest_init+0x30/0x270
+[ 6022.792390]        arch_call_rest_init+0x14/0x1c
+[ 6022.796995]        start_kernel+0x498/0x4c4
+[ 6022.801164]
+[ 6022.801164] -> #0 (&p->pi_lock){-.-.}:
+[ 6022.806382]        __lock_acquire+0xdd8/0x15c8
+[ 6022.810813]        lock_acquire+0xd0/0x218
+[ 6022.814896]        _raw_spin_lock_irqsave+0x50/0x78
+[ 6022.819761]        try_to_wake_up+0x54/0x7a0
+[ 6022.824018]        wake_up_process+0x1c/0x28
+[ 6022.828276]        wakeup_softirqd+0x38/0x40
+[ 6022.832533]        __tasklet_schedule_common+0xc4/0xf0
+[ 6022.837658]        __tasklet_schedule+0x24/0x30
+[ 6022.842176]        check_irq_resend+0xc8/0x158
+[ 6022.846609]        irq_startup+0x74/0x128
+[ 6022.850606]        __enable_irq+0x6c/0x78
+[ 6022.854602]        enable_irq+0x54/0xa0
+[ 6022.858431]        its_make_vpe_non_resident+0xa4/0xb8
+[ 6022.863557]        vgic_v4_put+0x54/0x70
+[ 6022.867469]        kvm_arch_vcpu_blocking+0x28/0x38
+[ 6022.872336]        kvm_vcpu_block+0x48/0x490
+[ 6022.876594]        kvm_handle_wfx+0x18c/0x310
+[ 6022.880938]        handle_exit+0x138/0x198
+[ 6022.885022]        kvm_arch_vcpu_ioctl_run+0x4d4/0x978
+[ 6022.890148]        kvm_vcpu_ioctl+0x3d4/0x8f8
+[ 6022.894494]        ksys_ioctl+0x90/0xd0
+[ 6022.898317]        __arm64_sys_ioctl+0x24/0x30
+[ 6022.902748]        el0_svc_common.constprop.3+0xa8/0x1e8
+[ 6022.908046]        do_el0_svc+0x28/0x88
+[ 6022.911871]        el0_svc+0x14/0x40
+[ 6022.915434]        el0_sync_handler+0x124/0x2b8
+[ 6022.919951]        el0_sync+0x140/0x180
+[ 6022.923773]
+[ 6022.923773] other info that might help us debug this:
+[ 6022.923773]
+[ 6022.931762] Chain exists of:
+[ 6022.931762]   &p->pi_lock --> &rq->lock --> &irq_desc_lock_class
+[ 6022.931762]
+[ 6022.942101]  Possible unsafe locking scenario:
+[ 6022.942101]
+[ 6022.948007]        CPU0                    CPU1
+[ 6022.952523]        ----                    ----
+[ 6022.957039]   lock(&irq_desc_lock_class);
+[ 6022.961036]                                lock(&rq->lock);
+[ 6022.966595]                                lock(&irq_desc_lock_class);
+[ 6022.973109]   lock(&p->pi_lock);
+[ 6022.976324]
+[ 6022.976324]  *** DEADLOCK ***
 
-Now that the underlying issue has been fixed, remove all these fixups.
-Remaining fixups needed by the XPS 13 are all picked up by existing pin
-quirks.
+This is happening because we have a pending doorbell that requires
+retrigger. As SW retriggering is done in a tasklet, we trigger the
+circular dependency above.
 
-This change should, for the XPS 13 9350/9360
+The easy cop-out is to provide a retrigger callback that doesn't
+require acquiring any extra lock.
 
- - Significantly increase volume and audio quality on headphones
- - Eliminate headphone popping on suspend/resume
- - Allow "Headphone Mic Boost" to be set again, making the headphone
-   jack fully usable as a microphone jack too.
-
-Fixes: 8c69729b4439 ("ALSA: hda - Fix headphone noise after Dell XPS 13 resume back from S3")
-Fixes: 423cd785619a ("ALSA: hda - Fix headphone noise on Dell XPS 13 9360")
-Fixes: e4c9fd10eb21 ("ALSA: hda - Apply headphone noise quirk for another Dell XPS 13 variant")
-Fixes: 1099f48457d0 ("ALSA: hda/realtek: Reduce the Headphone static noise on XPS 9350/9360")
-Cc: stable@vger.kernel.org
-Signed-off-by: Thomas Hebb <tommyhebb@gmail.com>
-Link: https://lore.kernel.org/r/b649a00edfde150cf6eebbb4390e15e0c2deb39a.1585584498.git.tommyhebb@gmail.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/r/20200310184921.23552-5-maz@kernel.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/sound/hd-audio/models.rst |    2 -
- sound/pci/hda/patch_realtek.c           |   34 --------------------------------
- 2 files changed, 36 deletions(-)
+ drivers/irqchip/irq-gic-v3-its.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/Documentation/sound/hd-audio/models.rst
-+++ b/Documentation/sound/hd-audio/models.rst
-@@ -216,8 +216,6 @@ alc298-dell-aio
-     ALC298 fixups on Dell AIO machines
- alc275-dell-xps
-     ALC275 fixups on Dell XPS models
--alc256-dell-xps13
--    ALC256 fixups on Dell XPS13
- lenovo-spk-noise
-     Workaround for speaker noise on Lenovo machines
- lenovo-hotkey
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -5491,17 +5491,6 @@ static void alc271_hp_gate_mic_jack(stru
- 	}
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index da883a6910284..7c8f65c9c32de 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -3679,12 +3679,18 @@ static int its_vpe_set_irqchip_state(struct irq_data *d,
+ 	return 0;
  }
  
--static void alc256_fixup_dell_xps_13_headphone_noise2(struct hda_codec *codec,
--						      const struct hda_fixup *fix,
--						      int action)
--{
--	if (action != HDA_FIXUP_ACT_PRE_PROBE)
--		return;
--
--	snd_hda_codec_amp_stereo(codec, 0x1a, HDA_INPUT, 0, HDA_AMP_VOLMASK, 1);
--	snd_hda_override_wcaps(codec, 0x1a, get_wcaps(codec, 0x1a) & ~AC_WCAP_IN_AMP);
--}
--
- static void alc269_fixup_limit_int_mic_boost(struct hda_codec *codec,
- 					     const struct hda_fixup *fix,
- 					     int action)
-@@ -5916,8 +5905,6 @@ enum {
- 	ALC298_FIXUP_DELL1_MIC_NO_PRESENCE,
- 	ALC298_FIXUP_DELL_AIO_MIC_NO_PRESENCE,
- 	ALC275_FIXUP_DELL_XPS,
--	ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE,
--	ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE2,
- 	ALC293_FIXUP_LENOVO_SPK_NOISE,
- 	ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY,
- 	ALC255_FIXUP_DELL_SPK_NOISE,
-@@ -6658,23 +6645,6 @@ static const struct hda_fixup alc269_fix
- 			{}
- 		}
- 	},
--	[ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE] = {
--		.type = HDA_FIXUP_VERBS,
--		.v.verbs = (const struct hda_verb[]) {
--			/* Disable pass-through path for FRONT 14h */
--			{0x20, AC_VERB_SET_COEF_INDEX, 0x36},
--			{0x20, AC_VERB_SET_PROC_COEF, 0x1737},
--			{}
--		},
--		.chained = true,
--		.chain_id = ALC255_FIXUP_DELL1_MIC_NO_PRESENCE
--	},
--	[ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE2] = {
--		.type = HDA_FIXUP_FUNC,
--		.v.func = alc256_fixup_dell_xps_13_headphone_noise2,
--		.chained = true,
--		.chain_id = ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE
--	},
- 	[ALC293_FIXUP_LENOVO_SPK_NOISE] = {
- 		.type = HDA_FIXUP_FUNC,
- 		.v.func = alc_fixup_disable_aamix,
-@@ -7172,17 +7142,14 @@ static const struct snd_pci_quirk alc269
- 	SND_PCI_QUIRK(0x1028, 0x06de, "Dell", ALC293_FIXUP_DISABLE_AAMIX_MULTIJACK),
- 	SND_PCI_QUIRK(0x1028, 0x06df, "Dell", ALC293_FIXUP_DISABLE_AAMIX_MULTIJACK),
- 	SND_PCI_QUIRK(0x1028, 0x06e0, "Dell", ALC293_FIXUP_DISABLE_AAMIX_MULTIJACK),
--	SND_PCI_QUIRK(0x1028, 0x0704, "Dell XPS 13 9350", ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE2),
- 	SND_PCI_QUIRK(0x1028, 0x0706, "Dell Inspiron 7559", ALC256_FIXUP_DELL_INSPIRON_7559_SUBWOOFER),
- 	SND_PCI_QUIRK(0x1028, 0x0725, "Dell Inspiron 3162", ALC255_FIXUP_DELL_SPK_NOISE),
- 	SND_PCI_QUIRK(0x1028, 0x0738, "Dell Precision 5820", ALC269_FIXUP_NO_SHUTUP),
--	SND_PCI_QUIRK(0x1028, 0x075b, "Dell XPS 13 9360", ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE2),
- 	SND_PCI_QUIRK(0x1028, 0x075c, "Dell XPS 27 7760", ALC298_FIXUP_SPK_VOLUME),
- 	SND_PCI_QUIRK(0x1028, 0x075d, "Dell AIO", ALC298_FIXUP_SPK_VOLUME),
- 	SND_PCI_QUIRK(0x1028, 0x07b0, "Dell Precision 7520", ALC295_FIXUP_DISABLE_DAC3),
- 	SND_PCI_QUIRK(0x1028, 0x0798, "Dell Inspiron 17 7000 Gaming", ALC256_FIXUP_DELL_INSPIRON_7559_SUBWOOFER),
- 	SND_PCI_QUIRK(0x1028, 0x080c, "Dell WYSE", ALC225_FIXUP_DELL_WYSE_MIC_NO_PRESENCE),
--	SND_PCI_QUIRK(0x1028, 0x082a, "Dell XPS 13 9360", ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE2),
- 	SND_PCI_QUIRK(0x1028, 0x084b, "Dell", ALC274_FIXUP_DELL_AIO_LINEOUT_VERB),
- 	SND_PCI_QUIRK(0x1028, 0x084e, "Dell", ALC274_FIXUP_DELL_AIO_LINEOUT_VERB),
- 	SND_PCI_QUIRK(0x1028, 0x0871, "Dell Precision 3630", ALC255_FIXUP_DELL_HEADSET_MIC),
-@@ -7536,7 +7503,6 @@ static const struct hda_model_fixup alc2
- 	{.id = ALC298_FIXUP_DELL1_MIC_NO_PRESENCE, .name = "alc298-dell1"},
- 	{.id = ALC298_FIXUP_DELL_AIO_MIC_NO_PRESENCE, .name = "alc298-dell-aio"},
- 	{.id = ALC275_FIXUP_DELL_XPS, .name = "alc275-dell-xps"},
--	{.id = ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE, .name = "alc256-dell-xps13"},
- 	{.id = ALC293_FIXUP_LENOVO_SPK_NOISE, .name = "lenovo-spk-noise"},
- 	{.id = ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY, .name = "lenovo-hotkey"},
- 	{.id = ALC255_FIXUP_DELL_SPK_NOISE, .name = "dell-spk-noise"},
++static int its_vpe_retrigger(struct irq_data *d)
++{
++	return !its_vpe_set_irqchip_state(d, IRQCHIP_STATE_PENDING, true);
++}
++
+ static struct irq_chip its_vpe_irq_chip = {
+ 	.name			= "GICv4-vpe",
+ 	.irq_mask		= its_vpe_mask_irq,
+ 	.irq_unmask		= its_vpe_unmask_irq,
+ 	.irq_eoi		= irq_chip_eoi_parent,
+ 	.irq_set_affinity	= its_vpe_set_affinity,
++	.irq_retrigger		= its_vpe_retrigger,
+ 	.irq_set_irqchip_state	= its_vpe_set_irqchip_state,
+ 	.irq_set_vcpu_affinity	= its_vpe_set_vcpu_affinity,
+ };
+-- 
+2.20.1
+
 
 
