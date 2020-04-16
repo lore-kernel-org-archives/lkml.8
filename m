@@ -2,118 +2,98 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 704D7C38A29
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37B85C352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:44:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DB76221F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:43:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CAC921841
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:44:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587069801;
-	bh=7d31cEyKngb3AJGtdDfr1sm/sywbfaeeHt/ZxDspSq0=;
+	s=default; t=1587069879;
+	bh=ynGbnIT4pnntI9B7fjPXuZHS5SYvmW7+1GP3SGVuzhY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IroGPSRL9/HA0hypeke3mFFZd2WDklYjlRaWirrjV5betjzntT2XO+yvV/xUpJr6A
-	 0YPZlGDVqTqhS1NFaJrR8pX9EefYvqe6y7uaPJPHnTT3tXRyDCIEKApYS8IzT1XzeL
-	 Tx4SbVKhBAaEEkQf9jiylG+FbPYn72HbnuaMO8i4=
+	b=eYzKdFSJVxX0fDy3jwL0yzd653ysEtrZL+qv4vF5tnFGwYVYSIcybxNnddFKVFN0z
+	 nsBnBTMSK+g293Wz53DffCTUhNeWnUfXIFNMbUTW/S+taMeQwKlY9nJoySqVJKd5+i
+	 hat3VD6EdpzX0SIKfMir56FhbyHg5fOiQYNLljeI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729628AbgDPUnU (ORCPT
+        id S1728399AbgDPUoi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 16:43:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39002 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727798AbgDPUnS (ORCPT
+        Thu, 16 Apr 2020 16:44:38 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:34064 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727798AbgDPUoh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 16:43:18 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4406C061A0C;
-        Thu, 16 Apr 2020 13:43:18 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id r20so2200550pfh.9;
-        Thu, 16 Apr 2020 13:43:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=uRgyzvRokr7ai+Xbzs2rruJuXsUX0gI+b1jlIGwtZfU=;
-        b=Oyt/oE4Ouu2LsqJ33+344yy9kTnzp8/CWBPr7eZxkvWVB8IZf0+J46FH47n3dNy47b
-         kice3lT1TD1ImxQCmYZXk7jvpWZg6z2mlPpY+Ys0QsgGXJZASv5HCmVZZlmcrHIT3Ph1
-         RKXMfEG5U32cSw2YdADUYO/EfTtD9hhgBLJykOZsHZxahfZ5hvKGj73ZVuWHyjvAGPoR
-         RHWgpNuleLC3zAE0hLLzQ7w33YGWM89r44CUTwO3o99AukFCQ236ORK+lQr8hmH9KMgP
-         UlVILhg/WfSY98sw4aGVs5qRfCrdXOIUD0WC5/KQPrk9NkEuUE7EvhH2UBMwt4f/4YfC
-         w6PQ==
+        Thu, 16 Apr 2020 16:44:37 -0400
+Received: by mail-ot1-f67.google.com with SMTP id m2so4288967otr.1;
+        Thu, 16 Apr 2020 13:44:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=uRgyzvRokr7ai+Xbzs2rruJuXsUX0gI+b1jlIGwtZfU=;
-        b=CpgoyxNWVumskaX9FyggCDgqzHDYJJfcyw7gdhgSmDDSo9CZemm3PL+Y6AIkHXdqw6
-         NjPAnXmGne/JbpEad7dciNHhAJbZNt0DpK722tMRKofw2HuvldTABILCUPpjuEYISJie
-         R30++n4S3+ISIuGFJ5hqfJUC4RwpOIDkoURRILx5e2KqPvHmsGVryHjLYAOmwikUNggb
-         D04X7xVs+NN4cP1yivjvV2KeTpqi69q2tUr3t2eF49y2VcUvOxtSIb3AAxrkWQfWCAo6
-         2+paleuBl9QUpiPIb6uDybEkXaVqDDStlfG8wJxe7e5L34LK7K522+xSvksz6/hm8nTZ
-         EFlg==
-X-Gm-Message-State: AGi0Pub0PFJrN/XrrgigjVemTSkbDx4ShAH5FwJcLNZokE83e8sDXr3A
-        QyHV+55+KmoLIRcJ8u8hS5Q=
-X-Google-Smtp-Source: APiQypIXiJO4KCjTGpKvDHmXGV5HxR6F5ChtTIbUrCsBU11gVwLi7psgN6LJANKPucmqiSohUc35Kg==
-X-Received: by 2002:a65:611a:: with SMTP id z26mr3767121pgu.341.1587069797727;
-        Thu, 16 Apr 2020 13:43:17 -0700 (PDT)
-Received: from google.com ([2601:647:4001:3000::50e3])
-        by smtp.gmail.com with ESMTPSA id d8sm12215742pfd.159.2020.04.16.13.43.15
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Yi9rW2hcrQI044TTGmD3SpdpVrHiwZ/VfGa5oOsnsdc=;
+        b=sD3m2A8XsM7Tz+ZZbhIrPHqXMON8ivPHtOqdUCdM2BK0XkwzOnONHgNrCMPnKX3mtU
+         kRmbszRqXjgPa2TXlnhVAJSl75XZIaDkKdZRSyDK+4DFAtl1qma1ZEEps/k2NmxttoVZ
+         BWkk/BwXC+6z6j4bYSaW3/V6IObojGwkCnf1F4KHRZyuxcFLCsys7ZcuxdK6AbaVI2ol
+         a3OmMtOmNV0W5c4pPKcSJ2olB2mz8qPc2dEHJ82Q4igBcLT8t+4eaW4jFBaELTTsAGlW
+         n3zZXafYp6OH8mg/OX+y+05jGTouiaChfSeNxYqJafdrfgj96dffnoOSEYP817mJwFDT
+         XyqQ==
+X-Gm-Message-State: AGi0PuZbd860IvVV4OoGjeVpaYJQ4r4jdl90hgy7AqAYuNW2WtA/i6gl
+        qoLZhS3CY8liIg4TDqtRDA==
+X-Google-Smtp-Source: APiQypKBpcF29A5Z99HB1PtYwR19nLnL23EQjtQJ5e8lRTqcPV6Fqo+5Okfb2v7AK3cAEowNirm0dw==
+X-Received: by 2002:a9d:75ce:: with SMTP id c14mr10356otl.64.1587069876593;
+        Thu, 16 Apr 2020 13:44:36 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id q3sm161210oom.12.2020.04.16.13.44.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2020 13:43:16 -0700 (PDT)
-Date:   Thu, 16 Apr 2020 13:43:14 -0700
-From:   Minchan Kim <minchan@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Laura Abbott <labbott@redhat.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Nitin Gupta <ngupta@vflare.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sergey.senozhatsky.work@gmail.com
-Subject: Re: [PATCH 11/29] mm: only allow page table mappings for built-in
- zsmalloc
-Message-ID: <20200416204314.GA59451@google.com>
-References: <20200414131348.444715-1-hch@lst.de>
- <20200414131348.444715-12-hch@lst.de>
+        Thu, 16 Apr 2020 13:44:36 -0700 (PDT)
+Received: (nullmailer pid 17673 invoked by uid 1000);
+        Thu, 16 Apr 2020 20:44:34 -0000
+Date:   Thu, 16 Apr 2020 15:44:34 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Saravanan Sekar <sravanhome@gmail.com>
+Cc:     lee.jones@linaro.org, andy.shevchenko@gmail.com,
+        robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org,
+        Saravanan Sekar <sravanhome@gmail.com>
+Subject: Re: [PATCH v9 1/6] dt-bindings: mfd: add document bindings for mp2629
+Message-ID: <20200416204434.GA17165@bogus>
+References: <20200415162030.16414-1-sravanhome@gmail.com>
+ <20200415162030.16414-2-sravanhome@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200414131348.444715-12-hch@lst.de>
+In-Reply-To: <20200415162030.16414-2-sravanhome@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 03:13:30PM +0200, Christoph Hellwig wrote:
-> This allows to unexport map_vm_area and unmap_kernel_range, which are
-> rather deep internal and should not be available to modules, as they for
-> example allow fine grained control of mapping permissions, and also
-> allow splitting the setup of a vmalloc area and the actual mapping and
-> thus expose vmalloc internals.
+On Wed, 15 Apr 2020 18:20:25 +0200, Saravanan Sekar wrote:
+> Add device tree binding information for mp2629 mfd driver.
 > 
-> zsmalloc is typically built-in and continues to work (just like the
-> percpu-vm code using a similar patter), while modular zsmalloc also
-> continues to work, but must use copies.
+> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+> ---
+>  .../devicetree/bindings/mfd/mps,mp2629.yaml   | 60 +++++++++++++++++++
+>  1 file changed, 60 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Minchan Kim <minchan@kernel.org>
 
-Thanks!
+My bot found errors running 'make dt_binding_check' on your patch:
+
+Documentation/devicetree/bindings/mfd/mps,mp2629.example.dts:19.22-32.11: Warning (unit_address_vs_reg): /example-0/i2c@7e205000: node has a unit name, but no reg or ranges property
+
+See https://patchwork.ozlabs.org/patch/1271317
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
