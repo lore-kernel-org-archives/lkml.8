@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D17C4C352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:37:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD93C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:38:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A601821D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:37:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3C8321927
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:38:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587047876;
-	bh=RlPp1iaNAIZtXV/7DCpgYxXxtz24O5yn7VLRupqjAtw=;
+	s=default; t=1587047880;
+	bh=Zdg/vgCZtVzpvtzNd6vjcd/5iwmO3Je1o3bPcCol/5I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MmaUNgKk+SQyItaRcRrGM5+xev+qpmu9g9F6RLxhwPX46cGTdMVOyiUf4G8KR4Dkl
-	 aeqJwIseBhvY/lhPLtVpIcHWage8EJ6b1Cyvz1YYld3DkvDI2Xf8DoIdYTbcDyxmRy
-	 Q2kFWH+mRlncAiT13UBSosk9Jn8h2GTcDyHEa7hQ=
+	b=0VBvePghdAQxMmlPzoV1Y+xpVzezsu+Fy9F+re9YPE+yH43XdA5UInl4+HMTgJQNQ
+	 EQqrQv7HD9Kg8dsabnJlizVzOm5mXEUba0OXFUtX3CFIh8EFXGzNx9wv6pm4NcprYT
+	 fY8bCenjFviFTDE+jwTnIun1PQ02LJOG3hUU52AM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393235AbgDPOIF (ORCPT
+        id S1729234AbgDPOIC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:08:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58840 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:08:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898505AbgDPNpX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:45:23 -0400
+        id S2898502AbgDPNpW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:45:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BDD620732;
-        Thu, 16 Apr 2020 13:45:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 293E3208E4;
+        Thu, 16 Apr 2020 13:45:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044723;
-        bh=RlPp1iaNAIZtXV/7DCpgYxXxtz24O5yn7VLRupqjAtw=;
+        s=default; t=1587044720;
+        bh=Zdg/vgCZtVzpvtzNd6vjcd/5iwmO3Je1o3bPcCol/5I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=geL4oxBB5Su+U22c5SBXYgiU+L8YMKgut2tGXeqL5w2qM4l8H7wrDuEGYxSogtrOs
-         zgzIFxaGVAGpMlS0mKzzWkQLa2jHv6N04p7dju4dMX3c+FVMV865Wky2LHV16A2YbQ
-         jV3ScxW+ecuHzEpFZ8Kx2MEwbiufRJg7fGW6C3Zs=
+        b=cVHXra5wx4K0kogPrSF4a7mQTQfT3GSJspC9hy5hqwlIDM4DjZ0tKb8fCWWmO5lPG
+         AArxqwcDb9M8Ld1Gu/QLMYwKOzr/Bj4IDPKdYnY1Jc+DwgzG8sN0Xv7+VMN0w4SxL2
+         3eOHlPwmSvVwnnMNaGzEkt8xA7847mpchzu9vB5o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>,
-        Felipe Balbi <balbi@kernel.org>
-Subject: [PATCH 5.4 074/232] usb: gadget: composite: Inform controller driver of self-powered
-Date:   Thu, 16 Apr 2020 15:22:48 +0200
-Message-Id: <20200416131324.532258700@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sriharsha Allenki <sallenki@codeaurora.org>,
+        Peter Chen <peter.chen@nxp.com>
+Subject: [PATCH 5.4 073/232] usb: gadget: f_fs: Fix use after free issue as part of queue failure
+Date:   Thu, 16 Apr 2020 15:22:47 +0200
+Message-Id: <20200416131324.428413287@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -59,57 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+From: Sriharsha Allenki <sallenki@codeaurora.org>
 
-commit 5e5caf4fa8d3039140b4548b6ab23dd17fce9b2c upstream.
+commit f63ec55ff904b2f2e126884fcad93175f16ab4bb upstream.
 
-Different configuration/condition may draw different power. Inform the
-controller driver of the change so it can respond properly (e.g.
-GET_STATUS request). This fixes an issue with setting MaxPower from
-configfs. The composite driver doesn't check this value when setting
-self-powered.
+In AIO case, the request is freed up if ep_queue fails.
+However, io_data->req still has the reference to this freed
+request. In the case of this failure if there is aio_cancel
+call on this io_data it will lead to an invalid dequeue
+operation and a potential use after free issue.
+Fix this by setting the io_data->req to NULL when the request
+is freed as part of queue failure.
 
-Cc: stable@vger.kernel.org
-Fixes: 88af8bbe4ef7 ("usb: gadget: the start of the configfs interface")
-Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Fixes: 2e4c7553cd6f ("usb: gadget: f_fs: add aio support")
+Signed-off-by: Sriharsha Allenki <sallenki@codeaurora.org>
+CC: stable <stable@vger.kernel.org>
+Reviewed-by: Peter Chen <peter.chen@nxp.com>
+Link: https://lore.kernel.org/r/20200326115620.12571-1-sallenki@codeaurora.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/gadget/composite.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/usb/gadget/function/f_fs.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/usb/gadget/composite.c
-+++ b/drivers/usb/gadget/composite.c
-@@ -861,6 +861,11 @@ static int set_config(struct usb_composi
- 	else
- 		power = min(power, 900U);
- done:
-+	if (power <= USB_SELF_POWER_VBUS_MAX_DRAW)
-+		usb_gadget_set_selfpowered(gadget);
-+	else
-+		usb_gadget_clear_selfpowered(gadget);
-+
- 	usb_gadget_vbus_draw(gadget, power);
- 	if (result >= 0 && cdev->delayed_status)
- 		result = USB_GADGET_DELAYED_STATUS;
-@@ -2279,6 +2284,7 @@ void composite_suspend(struct usb_gadget
+--- a/drivers/usb/gadget/function/f_fs.c
++++ b/drivers/usb/gadget/function/f_fs.c
+@@ -1120,6 +1120,7 @@ static ssize_t ffs_epfile_io(struct file
  
- 	cdev->suspended = 1;
- 
-+	usb_gadget_set_selfpowered(gadget);
- 	usb_gadget_vbus_draw(gadget, 2);
- }
- 
-@@ -2307,6 +2313,9 @@ void composite_resume(struct usb_gadget
- 		else
- 			maxpower = min(maxpower, 900U);
- 
-+		if (maxpower > USB_SELF_POWER_VBUS_MAX_DRAW)
-+			usb_gadget_clear_selfpowered(gadget);
-+
- 		usb_gadget_vbus_draw(gadget, maxpower);
- 	}
- 
+ 		ret = usb_ep_queue(ep->ep, req, GFP_ATOMIC);
+ 		if (unlikely(ret)) {
++			io_data->req = NULL;
+ 			usb_ep_free_request(ep->ep, req);
+ 			goto error_lock;
+ 		}
 
 
