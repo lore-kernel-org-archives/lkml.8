@@ -2,109 +2,94 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27731C2BB55
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1619C3815B
 	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A05E214AF
+	by mail.kernel.org (Postfix) with ESMTP id BC66F22245
 	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:59:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587052753;
+	bh=8PpGL1xkqmeHJ2Vira44+EEkc2xrM5AF6XsNGJQaXU4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=OfxI/+3AnxFBBbNeQWa+cps7KvPuxB+spSQCMAI1Lhs8QT6+IYMwcxn6z5ttaFfxK
+	 7euZ3F0Bwx4/SVsum3YLVqp3rpuYrwJ4KvwJbaya/CQKbO6iByLTocWvQAVBbsJohY
+	 0fSU4eMBV6fqYgNHBce9FwRInT7KUEJ3aRowW790=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2896035AbgDPP67 (ORCPT
+        id S2895702AbgDPN2N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:58:59 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:41347 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2895850AbgDPP6w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 11:58:52 -0400
-Received: from mail-qk1-f170.google.com ([209.85.222.170]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MNso2-1jaCjx2SnQ-00OGie; Thu, 16 Apr 2020 17:58:49 +0200
-Received: by mail-qk1-f170.google.com with SMTP id o19so14496656qkk.5;
-        Thu, 16 Apr 2020 08:58:49 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZ2KdLVAVbdkKvggkA12EKvnomfG7hGlLVN8SvY09KMHhQMhu5G
-        Fk9PEpVHam3/+dhMMl3BELWq1nn2ymFMSscbLAI=
-X-Google-Smtp-Source: APiQypKGrakVFJpHU6+2/9ubHFZSVsfORqHq+Dek4jgUuB+FQt0sMX/hFlCLPEJjO3Byfz+ywXPktI2/F+cmyK0/LA8=
-X-Received: by 2002:a37:851:: with SMTP id 78mr32467282qki.352.1587052728173;
- Thu, 16 Apr 2020 08:58:48 -0700 (PDT)
+        Thu, 16 Apr 2020 09:28:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35370 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2895347AbgDPN1F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:27:05 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2687206E9;
+        Thu, 16 Apr 2020 13:27:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587043625;
+        bh=8PpGL1xkqmeHJ2Vira44+EEkc2xrM5AF6XsNGJQaXU4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=EHsY3ZgYbacBT58OVUeQTP/5PI+73WXJp7u3i82LAq/qIqJQyHq8LsP1z/p08zQEs
+         0sNJUgobenWBcy6KfPrPBB9XSRqfLmo8TLajnXvxVMD5F83onBM9JkFlyNITBz9hiK
+         lWs9gHQyiUndNaOzW1qri+9oITszwPpAnh5TCchg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Raju Rangoju <rajur@chelsio.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 007/146] cxgb4/ptp: pass the sign of offset delta in FW CMD
+Date:   Thu, 16 Apr 2020 15:22:28 +0200
+Message-Id: <20200416131243.507556526@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
+References: <20200416131242.353444678@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200414132900.GD5100@ziepe.ca> <CAK8P3a0aFQ7h4zRDW=QLogXWc88JkJJXEOK0_CpWwsRjq6+T+w@mail.gmail.com>
- <20200414152312.GF5100@ziepe.ca> <CAK8P3a1PjP9_b5NdmqTLeGN4y+3JXx_yyTE8YAf1u5rYHWPA9g@mail.gmail.com>
- <f6d83b08fc0bc171b5ba5b2a0bc138727d92e2c0.camel@mellanox.com>
- <CAK8P3a1-J=4EAxh7TtQxugxwXk239u8ffgxZNRdw_WWy8ExFoQ@mail.gmail.com>
- <834c7606743424c64951dd2193ca15e29799bf18.camel@mellanox.com>
- <CAK8P3a3Wx5_bUOKnN3_hG5nLOqv3WCUtMSq6vOkJzWZgsmAz+A@mail.gmail.com>
- <874ktj4tvn.fsf@intel.com> <CAK8P3a1S2x1jnx9Q5B22vX8gBHs0Ztu-znA9hqZ5xp5tRAykGg@mail.gmail.com>
- <20200416145235.GR5100@ziepe.ca>
-In-Reply-To: <20200416145235.GR5100@ziepe.ca>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 16 Apr 2020 17:58:31 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3HwFYKfZftm2fWE=Lzi486rXpMBwjy1F4oohYU2+o7-g@mail.gmail.com>
-Message-ID: <CAK8P3a3HwFYKfZftm2fWE=Lzi486rXpMBwjy1F4oohYU2+o7-g@mail.gmail.com>
-Subject: Re: [RFC 0/6] Regressions for "imply" behavior change
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
-        "masahiroy@kernel.org" <masahiroy@kernel.org>,
-        "Laurent.pinchart@ideasonboard.com" 
-        <Laurent.pinchart@ideasonboard.com>,
-        "leon@kernel.org" <leon@kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "nico@fluxnic.net" <nico@fluxnic.net>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "kieran.bingham+renesas@ideasonboard.com" 
-        <kieran.bingham+renesas@ideasonboard.com>,
-        "a.hajda@samsung.com" <a.hajda@samsung.com>,
-        "jonas@kwiboo.se" <jonas@kwiboo.se>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:NvuMKkUOlsrp2prjXUqiJgwl2fFGba1tjbVPgdJTXH3/mhN0MMO
- V1nblPlClntAmE57yT9m+FF7dqNXEKFVfWA1yfdb6htAepBEPga8nvSndR5RyyuJ0SOgU3a
- QfXMeh6PgxUfxNwK/RiPHCUwXPvl83ppSySAWgOh356/NJb2EEBRIuhmfA8++gpR3FWDhjf
- +ipZITRcVMeuNVkejH/PA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:nLLF9c2uOC4=:CO3B1+y57PnWI3KAQsNtp+
- XOVUMAJLv1uP+nnwoMyOUjWAMxhCA6kUHH7SUVTnLLwkWYun6Il50xBEv34zL2Pb8WHHTGI7T
- KfT2u4SNrBxbBee4PnMm40NQ9ECxnvLlIulMqwAvSgEk1DuxD5reTyl3t1lzxx9EISnrshAXm
- zglvRnqi7s3epUZv4BqyE7xXeQA08X27PykRNW3RRioJR6KiGmdmSZOal6A6x2dudQtzITvRJ
- TSsGr3s6vQJbaMOzjFeLsrA7TDOdOeSo1kodMSS1grC3HuUUcmrDHwPp8HFTk13vaSl2vOaKt
- 9Fn6p8mFjguKEDBuECGUV2yHLUhUHRd59j/oVymQC6d5TWMgmIYQ6Hn+vdoVovyQcxzQ/aLGO
- 4LsMntB1DvHXkkeN/vfkjbf4LnvXwe4CGneR0xG2PSa9m81qHrN1cMPYCBH6F2sLz+IJbYX/q
- nbtMESTGcTyvqvPye/VfuXNBj2UD83hkLtAE2n2o+My9LfSXib/AdERcqp1Xp9YzN/zqxEyF/
- NWRLC47HtdeXVdeCr631fjjqSZZK7wYG6kb/QO1p5FZKWhrvoTr/Ehtvpe/5UdUrWSZ7hUJ1x
- YTOC3D2zs3dNhYmNwlO5qNUv6Nia+657JxMI6xtbpxastY9GwIQYixo8NoEvjcnr218KwnY9Y
- fXk/dLaeKc862FyZie5AQfE4Bfp2WT9FV7cRG6hH0QjPK4mPGXto/QzH60dNsl43z+0OinG4H
- gAB32EphIxXK56OMN4KW/RI6RYOPkcDnjM/pTu+XibtSbRtDYFYJyOellq8Kx/mS8jT/8JyaW
- Av3FXArCl/gJb7EVEeywqp9NPDw1Z2n/lzxFR28MPRyqkMehXU=
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 4:52 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> On Thu, Apr 16, 2020 at 02:38:50PM +0200, Arnd Bergmann wrote:
-> > On Thu, Apr 16, 2020 at 12:17 PM Jani Nikula <jani.nikula@linux.intel.com> wrote:
-> > > Of course, this is all just talk until someone(tm) posts a patch
-> > > actually making the change. I've looked at the kconfig tool sources
-> > > before; not going to make the same mistake again.
-> >
-> > Right. OTOH whoever implements it gets to pick the color of the
-> > bikeshed. ;-)
->
-> I hope someone takes it up, especially now that imply, which
-> apparently used to do this, doesn't any more :)
+From: Raju Rangoju <rajur@chelsio.com>
 
-The old 'imply' was something completely different, it was more of a
-'try to select if you can so we can assume it's there, but give up
-if it can only be a module and we need it to be built-in".
+[ Upstream commit 50e0d28d3808146cc19b0d5564ef4ba9e5bf3846 ]
 
-        Arnd
+cxgb4_ptp_fineadjtime() doesn't pass the signedness of offset delta
+in FW_PTP_CMD. Fix it by passing correct sign.
+
+Signed-off-by: Raju Rangoju <rajur@chelsio.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_ptp.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ptp.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ptp.c
+index 9f9d6cae39d55..758f2b8363282 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ptp.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ptp.c
+@@ -246,6 +246,9 @@ static int  cxgb4_ptp_fineadjtime(struct adapter *adapter, s64 delta)
+ 			     FW_PTP_CMD_PORTID_V(0));
+ 	c.retval_len16 = cpu_to_be32(FW_CMD_LEN16_V(sizeof(c) / 16));
+ 	c.u.ts.sc = FW_PTP_SC_ADJ_FTIME;
++	c.u.ts.sign = (delta < 0) ? 1 : 0;
++	if (delta < 0)
++		delta = -delta;
+ 	c.u.ts.tm = cpu_to_be64(delta);
+ 
+ 	err = t4_wr_mbox(adapter, adapter->mbox, &c, sizeof(c), NULL);
+-- 
+2.20.1
+
+
+
