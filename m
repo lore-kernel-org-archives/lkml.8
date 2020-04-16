@@ -2,118 +2,152 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D057AC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C615EC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:32:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD49B21973
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:32:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A423921D79
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:32:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U5f1iFpL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2635621AbgDPMck (ORCPT
+        id S2635642AbgDPMct (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 08:32:40 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50944 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2635446AbgDPMcR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 08:32:17 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 322ADAC6D;
-        Thu, 16 Apr 2020 12:32:15 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 117861E1250; Thu, 16 Apr 2020 14:32:15 +0200 (CEST)
-Date:   Thu, 16 Apr 2020 14:32:15 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     axboe@kernel.dk, yuyufen@huawei.com, tj@kernel.org, jack@suse.cz,
-        bvanassche@acm.org, tytso@mit.edu, gregkh@linuxfoundation.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/8] bdi: move bdi_dev_name out of line
-Message-ID: <20200416123215.GO23739@quack2.suse.cz>
-References: <20200416071519.807660-1-hch@lst.de>
- <20200416071519.807660-2-hch@lst.de>
+        Thu, 16 Apr 2020 08:32:49 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:59697 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2635613AbgDPMce (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 08:32:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587040352;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=0VyMwAzowexFZjgtgFRovq2sXpLz94EE6LhxQbSKU6M=;
+        b=U5f1iFpLn0zZBHJayBAIjMqOc9t7l73h2+sVS2Tj2UCoFMgzOO+qkbWnEbC5+TR5KtE5nM
+        5BpjePYdw+lV/XKEOK7tnIL7qhjSniZ7bU0RoqYbB1dBjH9j7qA53PfjuM2AUV+lpxf+g/
+        QaV25XIVkRhwvAK6FWK8eaQLoLNvpBQ=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-387-AjUJxw8LM3mQ8KpWvbsusQ-1; Thu, 16 Apr 2020 08:32:29 -0400
+X-MC-Unique: AjUJxw8LM3mQ8KpWvbsusQ-1
+Received: by mail-wr1-f70.google.com with SMTP id o12so1632416wra.14
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 05:32:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=0VyMwAzowexFZjgtgFRovq2sXpLz94EE6LhxQbSKU6M=;
+        b=pPPYYo7tn4A5uM+pjI+XWsVVXL29WOIB8vmevhymxMHFXwt/74a77CkwfS2oUPX/M4
+         W1RtARLPjFqw/k0wNKtQZAriMeMhxs+3nvaWL0mWOnQYXr8pG7boZZHxbfAda/ZOY4sa
+         uzw3SOchDUW57cfSaALdD0+Dsqdt/ZyOeNsGFLCw3cDt3NiuJf71rJAIJvwxMmM1ZF7e
+         BjWhH3pN8XfLFM0a2Q9fM1dTU2DmQQg+IyHhtTBsvGgMXr5r6Gfg1X/YOL8dcpEA2vGH
+         VOVT7PDtHEipmyzXUckmrubu6Xt/Yahwr2T7QD/C+AS4vuaJyOdSoy0uSp2c1iEVf2nF
+         URMA==
+X-Gm-Message-State: AGi0PubY13xGTSC2KWebt1OH8HqMbOh56ErUZhHsBXzPYdTHEDFvyiR4
+        u4/Anb5LNC3hC2ybPpKzTY5Et58VD52r18HRhVqsa2AFB0Cvqqj9BIvQ2EEoFg3O+n+qImFig29
+        L/ywpOF0PNWKwmPnhZHcQXdCF
+X-Received: by 2002:adf:dc06:: with SMTP id t6mr30558901wri.385.1587040348033;
+        Thu, 16 Apr 2020 05:32:28 -0700 (PDT)
+X-Google-Smtp-Source: APiQypIfoJajvWS7IEEc1sc0ClwIXFD0DzNYfYWsVh5RONPu0C09BwqAJcBPfglPDU6iaP06YIqewA==
+X-Received: by 2002:adf:dc06:: with SMTP id t6mr30558886wri.385.1587040347864;
+        Thu, 16 Apr 2020 05:32:27 -0700 (PDT)
+Received: from redhat.com (bzq-79-183-51-3.red.bezeqint.net. [79.183.51.3])
+        by smtp.gmail.com with ESMTPSA id p10sm26656903wrm.6.2020.04.16.05.32.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Apr 2020 05:32:27 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 08:32:24 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org
+Subject: Re: linux-next: Tree for Apr 15 (vdpa)
+Message-ID: <20200416082248-mutt-send-email-mst@kernel.org>
+References: <20200415152240.2422e06c@canb.auug.org.au>
+ <620e1646-5899-a077-b9de-95443887364d@infradead.org>
+ <33e4922f-d2b5-f3fa-4d32-a5db5a177238@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200416071519.807660-2-hch@lst.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <33e4922f-d2b5-f3fa-4d32-a5db5a177238@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 16-04-20 09:15:12, Christoph Hellwig wrote:
-> bdi_dev_name is not a fast path function, move it out of line.  This
-> prepares for using it from modular callers without having to export
-> an implementation detail like bdi_unknown_name.
+On Thu, Apr 16, 2020 at 12:07:06PM +0800, Jason Wang wrote:
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-
-Looks good to me. You can add:
-
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-								Honza
-
-> ---
->  include/linux/backing-dev.h |  9 +--------
->  mm/backing-dev.c            | 10 +++++++++-
->  2 files changed, 10 insertions(+), 9 deletions(-)
+> On 2020/4/16 上午12:16, Randy Dunlap wrote:
+> > On 4/14/20 10:22 PM, Stephen Rothwell wrote:
+> > > Hi all,
+> > > 
+> > > Changes since 20200414:
+> > > 
+> > on x86_64:
+> > 
+> > ERROR: modpost: "vringh_set_iotlb" [drivers/vdpa/vdpa_sim/vdpa_sim.ko] undefined!
+> > ERROR: modpost: "vringh_init_iotlb" [drivers/vdpa/vdpa_sim/vdpa_sim.ko] undefined!
+> > ERROR: modpost: "vringh_iov_push_iotlb" [drivers/vdpa/vdpa_sim/vdpa_sim.ko] undefined!
+> > ERROR: modpost: "vringh_iov_pull_iotlb" [drivers/vdpa/vdpa_sim/vdpa_sim.ko] undefined!
+> > ERROR: modpost: "vringh_complete_iotlb" [drivers/vdpa/vdpa_sim/vdpa_sim.ko] undefined!
+> > ERROR: modpost: "vringh_getdesc_iotlb" [drivers/vdpa/vdpa_sim/vdpa_sim.ko] undefined!
+> > 
+> > 
+> > Full randconfig file is attached.
+> > 
 > 
-> diff --git a/include/linux/backing-dev.h b/include/linux/backing-dev.h
-> index f88197c1ffc2..c9ad5c3b7b4b 100644
-> --- a/include/linux/backing-dev.h
-> +++ b/include/linux/backing-dev.h
-> @@ -505,13 +505,6 @@ static inline int bdi_rw_congested(struct backing_dev_info *bdi)
->  				  (1 << WB_async_congested));
->  }
->  
-> -extern const char *bdi_unknown_name;
-> -
-> -static inline const char *bdi_dev_name(struct backing_dev_info *bdi)
-> -{
-> -	if (!bdi || !bdi->dev)
-> -		return bdi_unknown_name;
-> -	return dev_name(bdi->dev);
-> -}
-> +const char *bdi_dev_name(struct backing_dev_info *bdi);
->  
->  #endif	/* _LINUX_BACKING_DEV_H */
-> diff --git a/mm/backing-dev.c b/mm/backing-dev.c
-> index c81b4f3a7268..c2c44c89ee5d 100644
-> --- a/mm/backing-dev.c
-> +++ b/mm/backing-dev.c
-> @@ -21,7 +21,7 @@ struct backing_dev_info noop_backing_dev_info = {
->  EXPORT_SYMBOL_GPL(noop_backing_dev_info);
->  
->  static struct class *bdi_class;
-> -const char *bdi_unknown_name = "(unknown)";
-> +static const char *bdi_unknown_name = "(unknown)";
->  
->  /*
->   * bdi_lock protects bdi_tree and updates to bdi_list. bdi_list has RCU
-> @@ -1043,6 +1043,14 @@ void bdi_put(struct backing_dev_info *bdi)
->  }
->  EXPORT_SYMBOL(bdi_put);
->  
-> +const char *bdi_dev_name(struct backing_dev_info *bdi)
-> +{
-> +	if (!bdi || !bdi->dev)
-> +		return bdi_unknown_name;
-> +	return dev_name(bdi->dev);
-> +}
-> +EXPORT_SYMBOL_GPL(bdi_dev_name);
-> +
->  static wait_queue_head_t congestion_wqh[2] = {
->  		__WAIT_QUEUE_HEAD_INITIALIZER(congestion_wqh[0]),
->  		__WAIT_QUEUE_HEAD_INITIALIZER(congestion_wqh[1])
-> -- 
-> 2.25.1
+> The config has
 > 
+> CONFIG_VHOST_IOTLB=m
+> CONFIG_VHOST_RING=y
+> 
+> But we don't select VHOST_IOTLB in VHOST_RING after commit
+> e6faeaa128417("vhost: drop vring dependency on iotlb"). Which seems wrong.
+> 
+> Thanks
+
+Well selecting IOTLB from ring breaks configs which don't need IOTLB.
+
+Legal configurations are:
+
+CONFIG_VHOST_IOTLB=y
+CONFIG_VHOST_RING=n
+
+CONFIG_VHOST_IOTLB=m
+CONFIG_VHOST_RING=n
+
+CONFIG_VHOST_IOTLB=n
+CONFIG_VHOST_RING=n
+
+CONFIG_VHOST_IOTLB=y
+CONFIG_VHOST_RING=y
+
+CONFIG_VHOST_IOTLB=n
+CONFIG_VHOST_RING=y
+
+CONFIG_VHOST_IOTLB=n
+CONFIG_VHOST_RING=m
+
+CONFIG_VHOST_IOTLB=y
+CONFIG_VHOST_RING=m
+
+CONFIG_VHOST_IOTLB=m
+CONFIG_VHOST_RING=m
+
+
+So VHOST_RING=y and VHOST_IOTLB=m is the only illegal one.
+
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+MST
+
