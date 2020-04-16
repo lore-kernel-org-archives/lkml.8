@@ -2,141 +2,155 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17DEDC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E464C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB04021973
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:47:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2068021973
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 10:48:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Q1mfZRzd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505367AbgDPKqM (ORCPT
+        id S2505497AbgDPKsL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 06:46:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57408 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2505324AbgDPKiT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 06:38:19 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E029C061A10
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 03:38:11 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1jP1uG-00044F-53; Thu, 16 Apr 2020 12:38:04 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1jP1uF-0002qS-5f; Thu, 16 Apr 2020 12:38:03 +0200
-Date:   Thu, 16 Apr 2020 12:38:03 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH V2 1/5] dt-bindings: clock: Convert i.MX6Q clock to
- json-schema
-Message-ID: <20200416103803.eifgth77wi44pejc@pengutronix.de>
-References: <1587019158-12143-1-git-send-email-Anson.Huang@nxp.com>
- <20200416093932.2mkcyv4rs6v6a24a@pengutronix.de>
- <DB3PR0402MB391613C2B53CEE067E1C7EC7F5D80@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+        Thu, 16 Apr 2020 06:48:11 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:51691 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2505052AbgDPKgq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 06:36:46 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 492wd560Khz9v1KF;
+        Thu, 16 Apr 2020 12:36:41 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=Q1mfZRzd; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id gjgErL3lbfTm; Thu, 16 Apr 2020 12:36:41 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 492wd54vTKz9v1KC;
+        Thu, 16 Apr 2020 12:36:41 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1587033401; bh=l5FwhWsZFKoNYPFvSBrPZm1J3No4Lds1oXRu+U6EyzE=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Q1mfZRzdVTVLZ9spIAcjumqoNKfKtAXMhqqu72UQK2qqOHAgzcyZ93dCPB4Z9HBDb
+         eUTezV8zEsorpEL5x5DoxpQ1KoJ4kzp5DqP3jd5KDzneZxqh06kk6xhlxU4YVc9Zbm
+         iebw9fw1oWps8adcEcDcgg+pOfjnMtWRYxvJ/Pmc=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 29BEB8BBF0;
+        Thu, 16 Apr 2020 12:36:43 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id UL0sASDHqyWS; Thu, 16 Apr 2020 12:36:43 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 991E18B99F;
+        Thu, 16 Apr 2020 12:36:42 +0200 (CEST)
+Subject: Re: [PATCH v3,0/4] drivers: uio: new driver uio_fsl_85xx_cache_sram
+To:     =?UTF-8?B?546L5paH6JmO?= <wenhu.wang@vivo.com>
+Cc:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        oss@buserror.net, linuxppc-dev@lists.ozlabs.org, kernel@vivo.com
+References: <AIgAKQBlCIqtPx5U5P0kFqpr.3.1587029369636.Hmail.wenhu.wang@vivo.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <a3032813-ba1e-101a-0b73-cc477d702aac@c-s.fr>
+Date:   Thu, 16 Apr 2020 12:36:38 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DB3PR0402MB391613C2B53CEE067E1C7EC7F5D80@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 12:35:43 up 153 days,  1:54, 168 users,  load average: 0.25, 0.26,
- 0.19
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <AIgAKQBlCIqtPx5U5P0kFqpr.3.1587029369636.Hmail.wenhu.wang@vivo.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20-04-16 09:48, Anson Huang wrote:
-> Hi, Marco
+
+
+Le 16/04/2020 à 11:29, 王文虎 a écrit :
+> Hi,
+> Seems there is something wrong with the server that multiple dumplications
+> of the v3 patches were sent out, please ignore the rest and take this newest
+> series as formal count.
+
+Which series ?
+
+It seems you sent 3 times, at 9:29, 9:41 and 9:49 (Paris Time)
+
+ From the series of 9:29, I received patches 0 to 3
+ From the series of 9:41, I received patches 0 to 3
+ From the series of 9:49, I received patches 0 and 4.
+
+Looks like powerpc patchwork 
+(https://patchwork.ozlabs.org/project/linuxppc-dev/list/?submitter=78320) 
+got:
+ From the series of 9:29, I received patches 0 to 4
+ From the series of 9:41, I received patches 1 to 4
+ From the series of 9:49, I received patches 1 to 4
+
+So this seems to be something wrong somewhere.
+
+Christophe
+
+
 > 
-> > Subject: Re: [PATCH V2 1/5] dt-bindings: clock: Convert i.MX6Q clock to
-> > json-schema
-> > 
-> > Hi Anson,
-> > 
-> > On 20-04-16 14:39, Anson Huang wrote:
-> > 
-> > ...
-> > 
-> > > diff --git a/Documentation/devicetree/bindings/clock/imx6q-clock.yaml
-> > b/Documentation/devicetree/bindings/clock/imx6q-clock.yaml
-> > > new file mode 100644
-> > > index 0000000..1c6e600
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/clock/imx6q-clock.yaml
-> > > @@ -0,0 +1,66 @@
-> > > +# SPDX-License-Identifier: GPL-2.0
-> > > +%YAML 1.2
-> > > +---
-> > > +$id:
-> > https://eur01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fdevicetr
-> > ee.org%2Fschemas%2Fclock%2Fimx6q-clock.yaml%23&amp;data=02%7C01%
-> > 7Canson.huang%40nxp.com%7Ca840fd5be8c94d4d950608d7e1ea16a2%7C6
-> > 86ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C1%7C637226267845578228&
-> > amp;sdata=Iw1CkVBMqw3m6sox6C3khcMy0BHNCQ9v2k72q3CM6Xs%3D&a
-> > mp;reserved=0
-> > > +$schema:
-> > https://eur01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fdevicetr
-> > ee.org%2Fmeta-schemas%2Fcore.yaml%23&amp;data=02%7C01%7Canson.hu
-> > ang%40nxp.com%7Ca840fd5be8c94d4d950608d7e1ea16a2%7C686ea1d3bc2
-> > b4c6fa92cd99c5c301635%7C0%7C1%7C637226267845578228&amp;sdata=P
-> > Be2CEoDdMo9I1m3DHbITCyYxB4GF%2FigP%2FNd7YCopCQ%3D&amp;reserve
-> > d=0
-> > > +
-> > > +title: Clock bindings for Freescale i.MX6 Quad
-> > > +
-> > > +maintainers:
-> > > +  - Anson Huang <Anson.Huang@nxp.com>
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    const: fsl,imx6q-ccm
-> > > +
-> > > +  reg:
-> > > +    maxItems: 1
-> > > +
-> > > +  interrupts:
-> > > +    maxItems: 2
-> > 
-> > IMHO I would force them to have exactly two so we need
-> > minItems: 2 too here.
-> 
-> Actually, those 2 interrupts are NOT necessary for some platforms, such as i.MX platforms
-> do NOT enable them at all, so is it OK to force them to be '2' here?
-
-Why do we list them as required if they are not required? Currently all
-5 platforms adding both irqs so this won't break anything here.
-
-Regards,
-  Marco
-
 > Thanks,
-> Anson
+> Wenhu
+> 
+> From: Wang Wenhu <wenhu.wang@vivo.com>
+> Date: 2020-04-16 15:49:14
+> To:  gregkh@linuxfoundation.org,linux-kernel@vger.kernel.org,oss@buserror.net,christophe.leroy@c-s.fr,linuxppc-dev@lists.ozlabs.org
+> Cc:  kernel@vivo.com,Wang Wenhu <wenhu.wang@vivo.com>
+> Subject: [PATCH v3,0/4] drivers: uio: new driver uio_fsl_85xx_cache_sram>This series add a new uio driver for freescale 85xx platforms to
+>> access the Cache-Sram form user level. This is extremely helpful
+>> for the user-space applications that require high performance memory
+>> accesses.
+>>
+>> It fixes the compile errors and warning of the hardware level drivers
+>> and implements the uio driver in uio_fsl_85xx_cache_sram.c.
+>>
+>> Changes since v1:
+>> * Addressed comments from Greg K-H
+>> * Moved kfree(info->name) into uio_info_free_internal()
+>>
+>> Changes since v2:
+>> * Drop the patch that modifies Kconfigs of arch/powerpc/platforms
+>>    and modified the sequence of patches:
+>>     01:dropped, 02->03, 03->02, 04->01, 05->04
+>> * Addressed comments from Greg, Scott and Christophe
+>> * Use "uiomem->internal_addr" as if condition for sram memory free,
+>>    and memset the uiomem entry
+>> * Modified of_match_table make the driver apart from Cache-Sram HW info
+>>    which belong to the HW level driver fsl_85xx_cache_sram to match
+>> * Use roundup_pow_of_two for align calc(really learned a lot from Christophe)
+>> * Remove useless clear block of uiomem entries.
+>> * Use UIO_INFO_VER micro for info->version, and define it as
+>>    "devicetree,pseudo", meaning this is pseudo device and probed from
+>>    device tree configuration
+>> * Select FSL_85XX_CACHE_SRAM rather than depends on it
+>>
+>> Wang Wenhu (4):
+>>   powerpc: sysdev: fix compile error for fsl_85xx_l2ctlr
+>>   powerpc: sysdev: fix compile error for fsl_85xx_cache_sram
+>>   powerpc: sysdev: fix compile warning for fsl_85xx_cache_sram
+>>   drivers: uio: new driver for fsl_85xx_cache_sram
+>>
+>> arch/powerpc/sysdev/fsl_85xx_cache_sram.c |   3 +-
+>> arch/powerpc/sysdev/fsl_85xx_l2ctlr.c     |   1 +
+>> drivers/uio/Kconfig                       |   9 ++
+>> drivers/uio/Makefile                      |   1 +
+>> drivers/uio/uio_fsl_85xx_cache_sram.c     | 158 ++++++++++++++++++++++
+>> 5 files changed, 171 insertions(+), 1 deletion(-)
+>> create mode 100644 drivers/uio/uio_fsl_85xx_cache_sram.c
+>>
+>> -- 
+>> 2.17.1
+>>
+> 
+> 
