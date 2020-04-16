@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1ECCC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:58:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C12BC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E79120732
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:58:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E40720786
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:58:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587045502;
-	bh=HgRYTwaT0K3i6R4yyE0ffxtTm8sNUE/pRjIWBN7QiJ0=;
+	s=default; t=1587045513;
+	bh=VZ39YWwP05qYCay5b0xukEXzfT7EKSUhftLU/x7SAco=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W8n1F0Mu22hMHWTYMtTNfo4w8LQqc3OOs/6xrhySYNZyIv501AulMcj37XVZMjL3q
-	 ESioLtntNC2nMeuXOeNxcovQZj/nLuQh0J3336jqbZRGuwb9FxaruPhGlZ1uOXwRXd
-	 m+Tm5ouH65pMVfQ/88Bqn4DzZXhsupY/PNFUSBn4=
+	b=NZ7DN0sQOCr+ucSs3N11HzOQFEmFl5+AVZOFmybvsEaFr6KVh4sbTdj7euSuejg+Q
+	 a+okHgVl7wkem7mPDZg+60DInYEFxf4PWyndTfTx6sN4wSZx67LhzceWuPnzBD7zXm
+	 nyhB2atEEBNDK8BVIhc46I4C6HHCHTG/Yjeb+RjE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506759AbgDPN6S (ORCPT
+        id S2409024AbgDPN62 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:58:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51938 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:58:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897976AbgDPNjd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:39:33 -0400
+        id S2897980AbgDPNjf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:39:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67A5D20786;
-        Thu, 16 Apr 2020 13:39:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3F402063A;
+        Thu, 16 Apr 2020 13:39:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044372;
-        bh=HgRYTwaT0K3i6R4yyE0ffxtTm8sNUE/pRjIWBN7QiJ0=;
+        s=default; t=1587044375;
+        bh=VZ39YWwP05qYCay5b0xukEXzfT7EKSUhftLU/x7SAco=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YHMphaOCJALqXRA6HM7daI6AK6I7WQKSM90RJhZaDY0Ou0en40X8vo1uyIZ2Uibgo
-         ndGB/9sLCgru1o28UGryKZrp+6huTPXKBANg4NI9/G8ATAaSQ0zZRbQ7fFZvEY+BhD
-         G7GbtISTM4PrVHr24AXQKw6juqvxil021MRqQrnM=
+        b=YJSj3v7mgbLDzr7nvr3ZcYQJkTUdUCFc3N1G6JG2CqGU1sGcqTGsPtciTG4jHECMZ
+         apoqN8TAJIbOocmouSLbEpL3MKjIrY5FeHJNBRE8Ex5f9OrYFZh1uj2/QBymAAPgQ+
+         cnvhJeb/iyitRHfptgie3Dplenmstm3hXvJ5DWuc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
+        stable@vger.kernel.org, Andrei Botila <andrei.botila@nxp.com>,
         =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
-        Valentin Ciocoi Radulescu <valentin.ciocoi@nxp.com>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.5 190/257] crypto: caam/qi2 - fix chacha20 data size error
-Date:   Thu, 16 Apr 2020 15:24:01 +0200
-Message-Id: <20200416131350.027267421@linuxfoundation.org>
+Subject: [PATCH 5.5 191/257] crypto: caam - update xts sector size for large input length
+Date:   Thu, 16 Apr 2020 15:24:02 +0200
+Message-Id: <20200416131350.134238295@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -61,84 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Horia Geantă <horia.geanta@nxp.com>
+From: Andrei Botila <andrei.botila@nxp.com>
 
-commit 3a5a9e1ef37b030b836d92df8264f840988f4a38 upstream.
+commit 3f142b6a7b573bde6cff926f246da05652c61eb4 upstream.
 
-HW generates a Data Size error for chacha20 requests that are not
-a multiple of 64B, since algorithm state (AS) does not have
-the FINAL bit set.
+Since in the software implementation of XTS-AES there is
+no notion of sector every input length is processed the same way.
+CAAM implementation has the notion of sector which causes different
+results between the software implementation and the one in CAAM
+for input lengths bigger than 512 bytes.
+Increase sector size to maximum value on 16 bits.
 
-Since updating req->iv (for chaining) is not required,
-modify skcipher descriptors to set the FINAL bit for chacha20.
-
-[Note that for skcipher decryption we know that ctx1_iv_off is 0,
-which allows for an optimization by not checking algorithm type,
-since append_dec_op1() sets FINAL bit for all algorithms except AES.]
-
-Also drop the descriptor operations that save the IV.
-However, in order to keep code logic simple, things like
-S/G tables generation etc. are not touched.
-
-Cc: <stable@vger.kernel.org> # v5.3+
-Fixes: 334d37c9e263 ("crypto: caam - update IV using HW support")
-Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
-Tested-by: Valentin Ciocoi Radulescu <valentin.ciocoi@nxp.com>
+Fixes: c6415a6016bf ("crypto: caam - add support for acipher xts(aes)")
+Cc: <stable@vger.kernel.org> # v4.12+
+Signed-off-by: Andrei Botila <andrei.botila@nxp.com>
+Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/caam/caamalg_desc.c |   14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ drivers/crypto/caam/caamalg_desc.c |   16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
 --- a/drivers/crypto/caam/caamalg_desc.c
 +++ b/drivers/crypto/caam/caamalg_desc.c
-@@ -1379,6 +1379,9 @@ void cnstr_shdsc_skcipher_encap(u32 * co
- 				const u32 ctx1_iv_off)
+@@ -1524,7 +1524,13 @@ EXPORT_SYMBOL(cnstr_shdsc_skcipher_decap
+  */
+ void cnstr_shdsc_xts_skcipher_encap(u32 * const desc, struct alginfo *cdata)
  {
+-	__be64 sector_size = cpu_to_be64(512);
++	/*
++	 * Set sector size to a big value, practically disabling
++	 * sector size segmentation in xts implementation. We cannot
++	 * take full advantage of this HW feature with existing
++	 * crypto API / dm-crypt SW architecture.
++	 */
++	__be64 sector_size = cpu_to_be64(BIT(15));
  	u32 *key_jump_cmd;
-+	u32 options = cdata->algtype | OP_ALG_AS_INIT | OP_ALG_ENCRYPT;
-+	bool is_chacha20 = ((cdata->algtype & OP_ALG_ALGSEL_MASK) ==
-+			    OP_ALG_ALGSEL_CHACHA20);
  
  	init_sh_desc(desc, HDR_SHARE_SERIAL | HDR_SAVECTX);
- 	/* Skip if already shared */
-@@ -1417,14 +1420,15 @@ void cnstr_shdsc_skcipher_encap(u32 * co
- 				      LDST_OFFSET_SHIFT));
- 
- 	/* Load operation */
--	append_operation(desc, cdata->algtype | OP_ALG_AS_INIT |
--			 OP_ALG_ENCRYPT);
-+	if (is_chacha20)
-+		options |= OP_ALG_AS_FINALIZE;
-+	append_operation(desc, options);
- 
- 	/* Perform operation */
- 	skcipher_append_src_dst(desc);
- 
- 	/* Store IV */
--	if (ivsize)
-+	if (!is_chacha20 && ivsize)
- 		append_seq_store(desc, ivsize, LDST_SRCDST_BYTE_CONTEXT |
- 				 LDST_CLASS_1_CCB | (ctx1_iv_off <<
- 				 LDST_OFFSET_SHIFT));
-@@ -1451,6 +1455,8 @@ void cnstr_shdsc_skcipher_decap(u32 * co
- 				const u32 ctx1_iv_off)
+@@ -1577,7 +1583,13 @@ EXPORT_SYMBOL(cnstr_shdsc_xts_skcipher_e
+  */
+ void cnstr_shdsc_xts_skcipher_decap(u32 * const desc, struct alginfo *cdata)
  {
+-	__be64 sector_size = cpu_to_be64(512);
++	/*
++	 * Set sector size to a big value, practically disabling
++	 * sector size segmentation in xts implementation. We cannot
++	 * take full advantage of this HW feature with existing
++	 * crypto API / dm-crypt SW architecture.
++	 */
++	__be64 sector_size = cpu_to_be64(BIT(15));
  	u32 *key_jump_cmd;
-+	bool is_chacha20 = ((cdata->algtype & OP_ALG_ALGSEL_MASK) ==
-+			    OP_ALG_ALGSEL_CHACHA20);
  
  	init_sh_desc(desc, HDR_SHARE_SERIAL | HDR_SAVECTX);
- 	/* Skip if already shared */
-@@ -1499,7 +1505,7 @@ void cnstr_shdsc_skcipher_decap(u32 * co
- 	skcipher_append_src_dst(desc);
- 
- 	/* Store IV */
--	if (ivsize)
-+	if (!is_chacha20 && ivsize)
- 		append_seq_store(desc, ivsize, LDST_SRCDST_BYTE_CONTEXT |
- 				 LDST_CLASS_1_CCB | (ctx1_iv_off <<
- 				 LDST_OFFSET_SHIFT));
 
 
