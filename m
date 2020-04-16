@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB4AAC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:45:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA2BC3815B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:45:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0D5620732
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:45:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95FE120732
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:45:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587051946;
-	bh=g0JPxNPuqoHUzF/vEU+fleh3hf32aKcWMVB7AZyvb9Y=;
+	s=default; t=1587051951;
+	bh=1c08XC1B6rSTFGUlvN4qhU6O/IY9IRqHTGMA58kStOk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RGClxtq/Ej2qqJEYw0VOBtSwwcroucfjkRUuhTEOThEgt806dHyOymbEchcwLm5az
-	 Ad1Qq80/WhsbHLaCTuJhF8PlSmUvXfbZer44sTj4aq5b5zeOsLFUgCpyTCf0r22xvI
-	 6NsJHY4784uJ+KML7jBjuH+hTbLlGeNyIC93TxLY=
+	b=lvqXWtksp4tdb5nefzRAPqrrqFnIdbbtP/B4qp/aBdUNGrfl9wRHOfIUrFxAXHIQw
+	 fcMljm7Fe5ith9BLpRLDjHF1wICCGAvUZ53e3vMNsmUHoZuxQl0IKU8ltSkW6q2U3K
+	 iivVHe+hRZZM6AMpaGqzD1g3a0TiPQka7rvbnrhw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393270AbgDPPpp (ORCPT
+        id S2635052AbgDPPpu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:45:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46956 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:45:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897063AbgDPNfI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:35:08 -0400
+        id S2897050AbgDPNfC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:35:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 227B520732;
-        Thu, 16 Apr 2020 13:35:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20328208E4;
+        Thu, 16 Apr 2020 13:35:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044106;
-        bh=g0JPxNPuqoHUzF/vEU+fleh3hf32aKcWMVB7AZyvb9Y=;
+        s=default; t=1587044101;
+        bh=1c08XC1B6rSTFGUlvN4qhU6O/IY9IRqHTGMA58kStOk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XS5nQHAc3M+WYE04inD/mxaX/8lgEfnCt5m9NbXWl6z5cSyWPJRqDdxGk8EoF/Dw3
-         tzMGBeww49wVd3F2v7bZZlS0gYg9E8a4VnKTgiIO+r+P6t3XkhZ5BVaDQ0OwrSqtxO
-         erqY9KSWzONWmZNXMQ0xjoysmXDs1V99nRHI+dDA=
+        b=vh3G5Dzt78DsU45Wv2O+t3PyCbrD/rOsXv5clem2E3TAGfGwC4AtcP7xvZZ84NmuR
+         7mR8caH/+U9HghuQu//Hon42G/iDQP/CbKfxMQ/rS7B+rwMlFp4wtgZl6yWCOYZqsz
+         Jc6tvJ26Z47piW1MtVRfympzIHBpnqNGEuIhVuu8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Gyeongtaek Lee <gt82.lee@samsung.com>,
         Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.5 084/257] ASoC: topology: use name_prefix for new kcontrol
-Date:   Thu, 16 Apr 2020 15:22:15 +0200
-Message-Id: <20200416131336.457554916@linuxfoundation.org>
+Subject: [PATCH 5.5 082/257] ASoC: dapm: connect virtual mux with default value
+Date:   Thu, 16 Apr 2020 15:22:13 +0200
+Message-Id: <20200416131336.200776073@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -61,29 +61,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: 이경택 <gt82.lee@samsung.com>
 
-commit abca9e4a04fbe9c6df4d48ca7517e1611812af25 upstream.
+commit 3bbbb7728fc853d71dbce4073fef9f281fbfb4dd upstream.
 
-Current topology doesn't add prefix of component to new kcontrol.
+Since a virtual mixer has no backing registers
+to decide which path to connect,
+it will try to match with initial state.
+This is to ensure that the default mixer choice will be
+correctly powered up during initialization.
+Invert flag is used to select initial state of the virtual switch.
+Since actual hardware can't be disconnected by virtual switch,
+connected is better choice as initial state in many cases.
 
 Signed-off-by: Gyeongtaek Lee <gt82.lee@samsung.com>
-Link: https://lore.kernel.org/r/009b01d60804$ae25c2d0$0a714870$@samsung.com
+Link: https://lore.kernel.org/r/01a301d60731$b724ea10$256ebe30$@samsung.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/soc-topology.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/soc-dapm.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
---- a/sound/soc/soc-topology.c
-+++ b/sound/soc/soc-topology.c
-@@ -362,7 +362,7 @@ static int soc_tplg_add_kcontrol(struct
- 	struct snd_soc_component *comp = tplg->comp;
- 
- 	return soc_tplg_add_dcontrol(comp->card->snd_card,
--				comp->dev, k, NULL, comp, kcontrol);
-+				comp->dev, k, comp->name_prefix, comp, kcontrol);
+--- a/sound/soc/soc-dapm.c
++++ b/sound/soc/soc-dapm.c
+@@ -802,7 +802,13 @@ static void dapm_set_mixer_path_status(s
+ 			val = max - val;
+ 		p->connect = !!val;
+ 	} else {
+-		p->connect = 0;
++		/* since a virtual mixer has no backing registers to
++		 * decide which path to connect, it will try to match
++		 * with initial state.  This is to ensure
++		 * that the default mixer choice will be
++		 * correctly powered up during initialization.
++		 */
++		p->connect = invert;
+ 	}
  }
  
- /* remove a mixer kcontrol */
 
 
