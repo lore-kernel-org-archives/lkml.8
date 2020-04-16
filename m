@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A37C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08DA9C352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:14:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D08302076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:14:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D33DA221F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:14:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587046450;
-	bh=IFWJtKO8b6hb9xBju8DtQHaiyO8+G0f/3xvR3wpJ/4I=;
+	s=default; t=1587046451;
+	bh=QbwX/cYzHyWzd67ry82iq9jNyfuA+lBj+qA600TsiTs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QZ9xaTo4ekGKaAV9d1ThKSwvRfHmGRM85TApJ/27V3dbzFdGOOympfwg083VO4Cds
-	 u78KmSheCXDazHjNCQqkplX3GItllqFEOhtwgLr5s+q/MQCA4GlOiVXv7ypb1Dfa7Q
-	 6NhHj7qwdPF5r0WjOoqfpn9ZKsoBDMjUVkj9Zw1I=
+	b=dN5UzbQXRIMrPnzUYGpXc20BtqBhxIZ8OoYNB761Jss2VadsLbRC6wyWHZV0qWF11
+	 va0z1KSa6Tyi2MW+6D0ZIvdM4a8VNPSDFhRpXqjtP672nIYET83gC2Cf1mchNEjlYy
+	 GDoj67Pyk8zD8NaXTxnwEbWx55YrJJJyDgiAyBhY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442083AbgDPOOG (ORCPT
+        id S2442169AbgDPOOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:14:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36154 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:14:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732651AbgDPNuM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:50:12 -0400
+        id S2392302AbgDPNuZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:50:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6304220786;
-        Thu, 16 Apr 2020 13:50:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65AED20732;
+        Thu, 16 Apr 2020 13:50:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045011;
-        bh=IFWJtKO8b6hb9xBju8DtQHaiyO8+G0f/3xvR3wpJ/4I=;
+        s=default; t=1587045023;
+        bh=QbwX/cYzHyWzd67ry82iq9jNyfuA+lBj+qA600TsiTs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IjeNy5rUhRU5aALrX0SngQrFj9FO4vFJjZIpUXRJR8D3qNmwDPDoogRQV0ODsbQFE
-         PBKuC1jn4TOiq1t2yOCaAh9WBXaORWvRh/G+MWBdLhyMRPq1rNwcjxBLYRCpeoEsp+
-         mDjaJrGpaPc9E/U+j+gvZBN8vOZ/tf9WcUVbC2bI=
+        b=R7aS1Oz/xBcQql9rFbrtxZ6yTcTuOLsbfZN9dhefDBznkcEhV0klPxOtItAUwXJlP
+         KbAD3oeABuuGilNiMFa+EYQ8fl01y4uQv4wB8inlFzPadvl3DKwt49CjdeyKH4K15t
+         ypjT3xFLViafSeehoLXCsQtokSgBPdgoVzK8p1sU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 5.4 176/232] ARM: dts: exynos: Fix polarity of the LCD SPI bus on UniversalC210 board
-Date:   Thu, 16 Apr 2020 15:24:30 +0200
-Message-Id: <20200416131337.049796282@linuxfoundation.org>
+        stable@vger.kernel.org, Taeung Song <treeze.taeung@gmail.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 5.4 198/232] ftrace/kprobe: Show the maxactive number on kprobe_events
+Date:   Thu, 16 Apr 2020 15:24:52 +0200
+Message-Id: <20200416131339.974367966@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -61,45 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-commit 32a1671ff8e84f0dfff3a50d4b2091d25e91f5e2 upstream.
+commit 6a13a0d7b4d1171ef9b80ad69abc37e1daa941b3 upstream.
 
-Recent changes in the SPI core and the SPI-GPIO driver revealed that the
-GPIO lines for the LD9040 LCD controller on the UniversalC210 board are
-defined incorrectly. Fix the polarity for those lines to match the old
-behavior and hardware requirements to fix LCD panel operation with
-recent kernels.
+Show maxactive parameter on kprobe_events.
+This allows user to save the current configuration and
+restore it without losing maxactive parameter.
 
-Cc: <stable@vger.kernel.org> # 5.0.x
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Link: http://lkml.kernel.org/r/4762764a-6df7-bc93-ed60-e336146dce1f@gmail.com
+Link: http://lkml.kernel.org/r/158503528846.22706.5549974121212526020.stgit@devnote2
+
+Cc: stable@vger.kernel.org
+Fixes: 696ced4fb1d76 ("tracing/kprobes: expose maxactive for kretprobe in kprobe_events")
+Reported-by: Taeung Song <treeze.taeung@gmail.com>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/exynos4210-universal_c210.dts |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ kernel/trace/trace_kprobe.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/arch/arm/boot/dts/exynos4210-universal_c210.dts
-+++ b/arch/arm/boot/dts/exynos4210-universal_c210.dts
-@@ -115,7 +115,7 @@
- 		gpio-sck = <&gpy3 1 GPIO_ACTIVE_HIGH>;
- 		gpio-mosi = <&gpy3 3 GPIO_ACTIVE_HIGH>;
- 		num-chipselects = <1>;
--		cs-gpios = <&gpy4 3 GPIO_ACTIVE_HIGH>;
-+		cs-gpios = <&gpy4 3 GPIO_ACTIVE_LOW>;
+--- a/kernel/trace/trace_kprobe.c
++++ b/kernel/trace/trace_kprobe.c
+@@ -918,6 +918,8 @@ static int trace_kprobe_show(struct seq_
+ 	int i;
  
- 		lcd@0 {
- 			compatible = "samsung,ld9040";
-@@ -124,8 +124,6 @@
- 			vci-supply = <&ldo17_reg>;
- 			reset-gpios = <&gpy4 5 GPIO_ACTIVE_HIGH>;
- 			spi-max-frequency = <1200000>;
--			spi-cpol;
--			spi-cpha;
- 			power-on-delay = <10>;
- 			reset-delay = <10>;
- 			panel-width-mm = <90>;
+ 	seq_putc(m, trace_kprobe_is_return(tk) ? 'r' : 'p');
++	if (trace_kprobe_is_return(tk) && tk->rp.maxactive)
++		seq_printf(m, "%d", tk->rp.maxactive);
+ 	seq_printf(m, ":%s/%s", trace_probe_group_name(&tk->tp),
+ 				trace_probe_name(&tk->tp));
+ 
 
 
