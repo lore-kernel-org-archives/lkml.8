@@ -2,181 +2,131 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D81C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F088C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:56:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8AC621D91
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:56:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587038190;
-	bh=0mpxLSIOs3tq2gfBo7MJk3NNjMvIOABD4VUjv69CESM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nFa4JTTYdJDO6k+m/XIFK0lRngl3+tXPbda8X7DDEsYTJy4RCOH3DeLpApjfi9zgs
-	 pVIUy1ZjbbgTWJDbdVqffeTOj03MV9EzjCBx2AwqooEx6WzlmtGaM9VnFVPnaxsFen
-	 Q3FaR6zkeVR1cSOJW4ajdeBNaJklnIFGjFky6j9M=
+	by mail.kernel.org (Postfix) with ESMTP id 0249521D7F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:56:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634495AbgDPL4Z (ORCPT
+        id S2634262AbgDPL4z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 07:56:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54916 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 07:56:55 -0400
+Received: from mga18.intel.com ([134.134.136.126]:21328 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2634140AbgDPLxx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 07:53:53 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3819221D7F;
-        Thu, 16 Apr 2020 11:53:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587038032;
-        bh=0mpxLSIOs3tq2gfBo7MJk3NNjMvIOABD4VUjv69CESM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oCqjLq2W5XYIiSSVO2KE0QKiNjuGCtb5Ex8H0ZZdRq3LQoHTd2bP8ewMSsmQeIwqq
-         mJVyQEl8WTXSxlDKofHHmrLMVE8SgZ/X49eFy3V712/en9UsSFjDE5EqhQWd0rKObH
-         mZcywS+Y8Tzz1YG0vKKcvGjUK1+QeM6W5XSt2W0U=
-Date:   Thu, 16 Apr 2020 12:53:46 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        kernel-team@android.com, Michael Ellerman <mpe@ellerman.id.au>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v3 05/12] arm64: csum: Disable KASAN for do_csum()
-Message-ID: <20200416115342.GA32443@willie-the-truck>
-References: <20200415165218.20251-1-will@kernel.org>
- <20200415165218.20251-6-will@kernel.org>
- <20200415172813.GA2272@lakrids.cambridge.arm.com>
- <20200415192605.GA21804@willie-the-truck>
- <20200416093106.GB4987@lakrids.cambridge.arm.com>
+        id S2634441AbgDPLzz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 07:55:55 -0400
+IronPort-SDR: Ry/mSWwhScbHXjW/4hYOfPRvNn2aH749AAA54qxRsoYnqX1AdlU8d8WVpi5aZOpg5318h6dOgn
+ 36ooTq+ZS+6Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 04:55:48 -0700
+IronPort-SDR: 6xbYQ7bm74P+/k++sH19edQ8IvZr3u8OVOUZTSYZxrg/ppO9a108MLvLFWS8LOQHLBIHjc5c0G
+ A0XADJuXrQUA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,390,1580803200"; 
+   d="scan'208";a="363976114"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 16 Apr 2020 04:55:45 -0700
+Received: by lahna (sSMTP sendmail emulation); Thu, 16 Apr 2020 14:55:44 +0300
+Date:   Thu, 16 Apr 2020 14:55:44 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        Benoit =?iso-8859-1?Q?Gr=E9goire?= <benoitg@coeus.ca>,
+        juhapekka.heikkila@gmail.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/resource: Do not exclude regions that are marked as
+ MMIO in EFI memmap
+Message-ID: <20200416115544.GY2586@lahna.fi.intel.com>
+References: <20200302141451.18983-1-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200416093106.GB4987@lakrids.cambridge.arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200302141451.18983-1-mika.westerberg@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 10:31:06AM +0100, Mark Rutland wrote:
-> On Wed, Apr 15, 2020 at 08:26:05PM +0100, Will Deacon wrote:
-> > I think abusing a relaxed concurrency primitive for this is
-> > not the right thing to do, particularly when the __no_sanitize_address
-> > annotation is available. I fact, it's almost an argument in favour
-> > of removing READ_ONCE_NOCHECK() so that people use the annotation instead!
+On Mon, Mar 02, 2020 at 05:14:51PM +0300, Mika Westerberg wrote:
+> Commit 4dc2287c1805 ("x86: avoid E820 regions when allocating address
+> space") made the resource allocation code to avoid all regions that are
+> in E820 table. This prevents the kernel to assign MMIO resources to
+> regions that may be real RAM for example.
 > 
-> Arguably we *are* using it as a relaxed concurrency primitive, to get a
-> snapshot of a varaible undergoing concurrent modification.
-
-That's fair, so it's only the checksum code that was abusing this, which
-I've fixed.
-
-> FWIW, for the arm64 unwind code we could add a helper to snapshot the
-> frame record, and mark that as __no_sanitize_address, e.g.
+> However, at least with Lenovo Yoca C940 and S740 this causes problems
+> when allocating resources for PCIe devices behind Thunderbolt port(s).
 > 
-> /*
->  * Get a snapshot of a frame record that might be undergoing concurrent
->  * modification (and hence we must also avoid a KASAN splat).
->  */
-> static __no_sanitize_address snapshot_frame(struct stackframe *frame,
-> 					    unsigned long fp)
-> {
-> 	frame->fp = READ_ONCE(*(unsigned long *)(fp));
-> 	frame->pc = READ_ONCE(*(unsigned long *)(fp + 8));
-> }
+> On Yoga S740 the E820 table contains an entry like this:
 > 
-> ... we'd need to do likewied in a few bits of unwind code:
+>   BIOS-e820: [mem 0x000000002bc50000-0x00000000cfffffff] reserved
 > 
-> arch/s390/kernel/unwind_bc.c:	       READ_ONCE_NOCHECK(regs->psw.mask) & PSW_MASK_PSTATE;
-> arch/s390/kernel/unwind_bc.c:		ip = READ_ONCE_NOCHECK(sf->gprs[8]);
-> arch/s390/kernel/unwind_bc.c:		sp = READ_ONCE_NOCHECK(sf->back_chain);
-> arch/s390/kernel/unwind_bc.c:			ip = READ_ONCE_NOCHECK(sf->gprs[8]);
-> arch/s390/kernel/unwind_bc.c:			ip = READ_ONCE_NOCHECK(regs->psw.addr);
-> arch/s390/kernel/unwind_bc.c:			sp = READ_ONCE_NOCHECK(regs->gprs[15]);
-> arch/s390/kernel/unwind_bc.c:		ip = READ_ONCE_NOCHECK(sf->gprs[8]);
-> arch/x86/include/asm/atomic.h:	 * Note for KASAN: we deliberately don't use READ_ONCE_NOCHECK() here,
-> arch/x86/include/asm/unwind.h:		val = READ_ONCE_NOCHECK(x);		\
-> arch/x86/kernel/dumpstack.c:			unsigned long addr = READ_ONCE_NOCHECK(*stack);
-> arch/x86/kernel/process.c:	fp = READ_ONCE_NOCHECK(((struct inactive_task_frame *)sp)->bp);
-> arch/x86/kernel/process.c:		ip = READ_ONCE_NOCHECK(*(unsigned long *)(fp + sizeof(unsigned long)));
-> arch/x86/kernel/process.c:		fp = READ_ONCE_NOCHECK(*(unsigned long *)fp);
-> arch/x86/kernel/unwind_frame.c:			word = READ_ONCE_NOCHECK(*sp);
-> arch/x86/kernel/unwind_guess.c:	addr = READ_ONCE_NOCHECK(*state->sp);
-> arch/x86/kernel/unwind_guess.c:			unsigned long addr = READ_ONCE_NOCHECK(*state->sp);
-> arch/x86/kernel/unwind_orc.c:	*val = READ_ONCE_NOCHECK(*(unsigned long *)addr);
-> arch/x86/kernel/unwind_orc.c:		state->bp = READ_ONCE_NOCHECK(frame->bp);
-> arch/x86/kernel/unwind_orc.c:		state->ip = READ_ONCE_NOCHECK(frame->ret_addr);
-> include/linux/compiler.h: * Use READ_ONCE_NOCHECK() instead of READ_ONCE() if you need
-> include/linux/compiler.h:#define READ_ONCE_NOCHECK(x) __READ_ONCE(x, 0)
-> kernel/trace/trace_stack.c:			 * The READ_ONCE_NOCHECK is used to let KASAN know that
-> kernel/trace/trace_stack.c:			if ((READ_ONCE_NOCHECK(*p)) == stack_dump_trace[i]) {
+> and ACPI _CRS method for the host bridge returns these windows:
+> 
+>   pci_bus 0000:00: root bus resource [io  0x0000-0x0cf7 window]
+>   pci_bus 0000:00: root bus resource [io  0x0d00-0xffff window]
+>   pci_bus 0000:00: root bus resource [mem 0x000a0000-0x000bffff window]
+>   pci_bus 0000:00: root bus resource [mem 0x45400000-0xbfffffff window]
+>   pci_bus 0000:00: root bus resource [mem 0x4000000000-0x7fffffffff window]
+> 
+> Note that the 0x45400000-0xbfffffff entry is also included in the E820
+> table and marked as "reserved".
+> 
+> When Thunderbolt device is connected and the PCIe gets tunneled PCI core
+> tries to allocate memory for the new devices but it fails because all
+> the resources are inside this reserved region so arch_remove_reservations()
+> clips them which makes the resource assignment fail as in below log:
+> 
+>   pci 0000:00:07.0: PCI bridge to [bus 01-2a]
+>   pci 0000:00:07.0:   bridge window [mem 0x46000000-0x521fffff]
+>   pci 0000:00:07.0:   bridge window [mem 0x6000000000-0x601bffffff 64bit pref]
+>   ...
+>   pci 0000:02:04.0: bridge window [mem 0x00100000-0x001fffff 64bit pref] to [bus 07-2a] add_size 100000 add_align 100000
+>   pci 0000:02:04.0: bridge window [mem 0x00100000-0x001fffff] to [bus 07-2a] add_size 100000 add_align 100000
+>   pci 0000:01:00.0: bridge window [mem 0x00100000-0x005fffff 64bit pref] to [bus 02-2a] add_size 100000 add_align 100000
+>   pci 0000:01:00.0: bridge window [mem 0x00100000-0x005fffff] to [bus 02-2a] add_size 100000 add_align 100000
+>   pci 0000:01:00.0: bridge window [io  0x1000-0x5fff] shrunken by 0x0000000000004000
+>   pci 0000:01:00.0: bridge window [mem 0x00100000-0x005fffff] extended by 0x000000000bd00000
+>   pci 0000:01:00.0: bridge window [mem 0x00100000-0x005fffff 64bit pref] extended by 0x000000001bb00000
+>   pci 0000:02:04.0: bridge window [mem 0x00100000-0x001fffff] extended by 0x000000000bd00000
+>   pci 0000:02:04.0: bridge window [mem 0x00100000-0x001fffff 64bit pref] extended by 0x000000001bb00000
+>   pci 0000:01:00.0: BAR 8: no space for [mem size 0x0c200000]
+>   pci 0000:01:00.0: BAR 8: failed to assign [mem size 0x0c200000]
+>   pci 0000:01:00.0: BAR 9: assigned [mem 0x6000000000-0x601bffffff 64bit pref]
+>   pci 0000:01:00.0: BAR 7: assigned [io  0x4000-0x4fff]
+> 
+> The 01:00.0 is the upstream port of the PCIe switch that is connected to
+> the PCIe root port (00:07.1) over Thunderbolt link.
+> 
+> If I add "efi=debug" to the command line I can see that the EFI memory
+> map actually contains several entries:
+> 
+>   [Reserved           |   |  |  |  |  |  |  | |   |WB|WT|WC|UC] range=[0x000000002bc50000-0x000000003fffffff] (323MB)
+>   [Reserved           |   |  |  |  |  |  |  | |   |WB|  |  |UC] range=[0x0000000040000000-0x0000000040ffffff] (16MB)
+>   [Reserved           |   |  |  |  |  |  |  | |   |  |  |  |  ] range=[0x0000000041000000-0x00000000453fffff] (68MB)
+>   [Memory Mapped I/O  |RUN|  |  |  |  |  |  | |   |  |  |  |UC] range=[0x0000000045400000-0x00000000cfffffff] (2220MB)
+> 
+> I think the EFI stub merges these consecutive entries into that single
+> E820 entry showed above. The last region marked as EFI_MEMORY_MAPPED_IO
+> actually covers the PCI host bridge window entirely. However, since
+> there is corresponding E820 type for this it is simply marked as
+> E820_TYPE_RESERVED.
+> 
+> All in all, I think we can fix this by modifying arch_remove_reservations()
+> to check the EFI type as well and if it is EFI_MEMORY_MAPPED_IO skip the
+> clipping in that case.
+> 
+> Reported-by: Benoit Grégoire <benoitg@coeus.ca>
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=206459
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-Indeed. For now, I'm going to keep this simple with the change below, but
-I'll revisit this later on because I have another series removing
-smp_read_barrier_depends() which makes this a lot simpler.
-
-Will
-
---->8
-
-diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-index 00a68063d9d5..c363d8debc43 100644
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -212,18 +212,12 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
- 	(typeof(x))__x;							\
- })
- 
--/*
-- * Use READ_ONCE_NOCHECK() instead of READ_ONCE() if you need
-- * to hide memory access from KASAN.
-- */
--#define READ_ONCE_NOCHECK(x)						\
-+#define READ_ONCE(x)							\
- ({									\
- 	compiletime_assert_rwonce_type(x);				\
- 	__READ_ONCE_SCALAR(x);						\
- })
- 
--#define READ_ONCE(x)	READ_ONCE_NOCHECK(x)
--
- #define __WRITE_ONCE(x, val)				\
- do {							\
- 	*(volatile typeof(x) *)&(x) = (val);		\
-@@ -247,6 +241,24 @@ do {							\
- # define __no_kasan_or_inline __always_inline
- #endif
- 
-+static __no_kasan_or_inline
-+unsigned long __read_once_word_nocheck(const void *addr)
-+{
-+	return __READ_ONCE(*(unsigned long *)addr);
-+}
-+
-+/*
-+ * Use READ_ONCE_NOCHECK() instead of READ_ONCE() if you need to load a
-+ * word from memory atomically but without telling KASAN. This is usually
-+ * used by unwinding code when walking the stack of a running process.
-+ */
-+#define READ_ONCE_NOCHECK(x)						\
-+({									\
-+	unsigned long __x = __read_once_word_nocheck(&(x));		\
-+	smp_read_barrier_depends();					\
-+	__x;								\
-+})
-+
- static __no_kasan_or_inline
- unsigned long read_word_at_a_time(const void *addr)
- {
+Hello, any comments for this?
