@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7414EC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:20:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0124C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:20:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EB932076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:20:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AAB32076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:20:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587046812;
-	bh=1c08XC1B6rSTFGUlvN4qhU6O/IY9IRqHTGMA58kStOk=;
+	s=default; t=1587046821;
+	bh=7SRvRr9oGqe5O3+KQvo7jEjrTxqZh64PRVA9WYJHS50=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kxT5X83AIJG6uKjbdDFAQ+Ij7J/G4baJ8+++J01ZWgBkQWHyZoqDzGYr4VAoHMEK4
-	 lUDpdJkjv1dsKUVzziV4sSCqT5mb+qVHcpO/3d9rrJ6i2zoz0CeYqIg5PPBE+NeEe6
-	 c1h1rh6B0wUYelZ5Txfuk5SbzT7+3YpAKLbURvgA=
+	b=vkt/tgVWM8rl4kPP5jq6ioQv2ak8SSl/PpwWbmc+z8wxjrHTpBlkFiNdxjsr1XmxS
+	 XbnuObhtyb2SJLXS8LAPuJdygzsLtYI5H4ChyP1DPR7pJEF/Px2jpjEvdub1UPpS2u
+	 7gCVR8kgw7J/7yWDE47noEbmdQrCkBZk04CtHzwI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393967AbgDPOUJ (ORCPT
+        id S2390139AbgDPOUT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:20:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41010 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:20:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898845AbgDPNyb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:54:31 -0400
+        id S1727941AbgDPNyq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:54:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4DAA20786;
-        Thu, 16 Apr 2020 13:54:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52D282078B;
+        Thu, 16 Apr 2020 13:54:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045271;
-        bh=1c08XC1B6rSTFGUlvN4qhU6O/IY9IRqHTGMA58kStOk=;
+        s=default; t=1587045285;
+        bh=7SRvRr9oGqe5O3+KQvo7jEjrTxqZh64PRVA9WYJHS50=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NbpfQsiU9EtbT+TSDevuZ/4GF0nydOUeChXz52hsNe8PY1Boa2wOrrvmbsDM/fvyY
-         Ct98wOjEICEsPxGysLRcMppZdo8qBCg1/CF5sLuSmJeGGTUaRczTQ976MKW37Xurzo
-         sxa9b0gLLuEUvIJPv6wG552q7vwi6Ce/lNVIYMlM=
+        b=mODQkeRlXrhM4+knNyp1/kdJdgVH6VOrqzB5LJWhpL3fGlDm+uhPNClrxYZ9rQwVv
+         Zc5A2v54tMp1Wfoo5b1mCnu7+WuhI9QQ4yNhQM46JQz7nVd2NBsUyaC9ErCM5uLkAq
+         2HPamg4vJbKbAhkfxGy0jv85hiUyJxYSiueRu7gI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gyeongtaek Lee <gt82.lee@samsung.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.6 067/254] ASoC: dapm: connect virtual mux with default value
-Date:   Thu, 16 Apr 2020 15:22:36 +0200
-Message-Id: <20200416131334.275495011@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.6 072/254] ALSA: usb-audio: Add mixer workaround for TRX40 and co
+Date:   Thu, 16 Apr 2020 15:22:41 +0200
+Message-Id: <20200416131334.885425481@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -59,44 +58,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: 이경택 <gt82.lee@samsung.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 3bbbb7728fc853d71dbce4073fef9f281fbfb4dd upstream.
+commit 2a48218f8e23d47bd3e23cfdfb8aa9066f7dc3e6 upstream.
 
-Since a virtual mixer has no backing registers
-to decide which path to connect,
-it will try to match with initial state.
-This is to ensure that the default mixer choice will be
-correctly powered up during initialization.
-Invert flag is used to select initial state of the virtual switch.
-Since actual hardware can't be disconnected by virtual switch,
-connected is better choice as initial state in many cases.
+Some recent boards (supposedly with a new AMD platform) contain the
+USB audio class 2 device that is often tied with HD-audio.  The device
+exposes an Input Gain Pad control (id=19, control=12) but this node
+doesn't behave correctly, returning an error for each inquiry of
+GET_MIN and GET_MAX that should have been mandatory.
 
-Signed-off-by: Gyeongtaek Lee <gt82.lee@samsung.com>
-Link: https://lore.kernel.org/r/01a301d60731$b724ea10$256ebe30$@samsung.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+As a workaround, simply ignore this node by adding a usbmix_name_map
+table entry.  The currently known devices are:
+* 0414:a002 - Gigabyte TRX40 Aorus Pro WiFi
+* 0b05:1916 - ASUS ROG Zenith II
+* 0b05:1917 - ASUS ROG Strix
+* 0db0:0d64 - MSI TRX40 Creator
+* 0db0:543d - MSI TRX40
+
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206543
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200408140449.22319-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/soc-dapm.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ sound/usb/mixer_maps.c |   28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
---- a/sound/soc/soc-dapm.c
-+++ b/sound/soc/soc-dapm.c
-@@ -802,7 +802,13 @@ static void dapm_set_mixer_path_status(s
- 			val = max - val;
- 		p->connect = !!val;
- 	} else {
--		p->connect = 0;
-+		/* since a virtual mixer has no backing registers to
-+		 * decide which path to connect, it will try to match
-+		 * with initial state.  This is to ensure
-+		 * that the default mixer choice will be
-+		 * correctly powered up during initialization.
-+		 */
-+		p->connect = invert;
- 	}
- }
+--- a/sound/usb/mixer_maps.c
++++ b/sound/usb/mixer_maps.c
+@@ -359,6 +359,14 @@ static const struct usbmix_name_map cors
+ 	{ 0 }
+ };
+ 
++/* Some mobos shipped with a dummy HD-audio show the invalid GET_MIN/GET_MAX
++ * response for Input Gain Pad (id=19, control=12).  Skip it.
++ */
++static const struct usbmix_name_map asus_rog_map[] = {
++	{ 19, NULL, 12 }, /* FU, Input Gain Pad */
++	{}
++};
++
+ /*
+  * Control map entries
+  */
+@@ -488,6 +496,26 @@ static const struct usbmix_ctl_map usbmi
+ 		.id = USB_ID(0x1b1c, 0x0a42),
+ 		.map = corsair_virtuoso_map,
+ 	},
++	{	/* Gigabyte TRX40 Aorus Pro WiFi */
++		.id = USB_ID(0x0414, 0xa002),
++		.map = asus_rog_map,
++	},
++	{	/* ASUS ROG Zenith II */
++		.id = USB_ID(0x0b05, 0x1916),
++		.map = asus_rog_map,
++	},
++	{	/* ASUS ROG Strix */
++		.id = USB_ID(0x0b05, 0x1917),
++		.map = asus_rog_map,
++	},
++	{	/* MSI TRX40 Creator */
++		.id = USB_ID(0x0db0, 0x0d64),
++		.map = asus_rog_map,
++	},
++	{	/* MSI TRX40 */
++		.id = USB_ID(0x0db0, 0x543d),
++		.map = asus_rog_map,
++	},
+ 	{ 0 } /* terminator */
+ };
  
 
 
