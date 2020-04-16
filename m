@@ -2,168 +2,122 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABD67C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:36:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 231D0C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:37:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8568321D94
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:36:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xfj9q5ps"
+	by mail.kernel.org (Postfix) with ESMTP id F3A4F20656
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:37:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587037023;
+	bh=PbIJJBCyxb0zjE+EsVUIseBGje2iBqdBzd3TawdCtII=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yFsS45SFVz5WzSWwGHRntwWvayedRBTO8bKjeG0sf87NiRF+i2+UyjSA5JzsRDC87
+	 nJLUiKL2OJ6kk9tYpC4lfuk08MlwffQCJrdm5E6+chaZcBHeISTLRuPPmtY7KddAWo
+	 lqLFaA4K+aDiyihtte8gkYss8pXZ8wbZ+/S33ZSw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506401AbgDPLg2 (ORCPT
+        id S2506440AbgDPLg4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 07:36:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38242 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2505994AbgDPLfz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 07:35:55 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C1A8C061A0C;
-        Thu, 16 Apr 2020 04:35:54 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id f13so4354328wrm.13;
-        Thu, 16 Apr 2020 04:35:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=cc:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=a4ieNNuZ6tLA+4dVx4dh3yTVKKcJr6C5Xg+XaxMx+Wg=;
-        b=Xfj9q5psuqNGyruPOiyZQ5NsusUUXpygmybW5Hv5TZdygCMy8/o/ki8bANCMygOLGT
-         iXgeNYCK8Cvy4d4GgZUoTOoLHNAsNjiI7Dq/rHmZOFdz2ln/q5YjfbeXNwG98/D5tSuI
-         4Y9r4cgLtNoG7erSuacGmi2YfbrilgXp6mopSQGHDHoOD0NjsidIFrqUiMy5MslD/qhv
-         k+5+fk5Lp5AhOYOqq/HXAwjxw7U6iy9z6JflCDB0rTp37D81rdyhO89YUSK2/kwnM1lk
-         VdZJ55PJZm3pTX7rxtSPn2SKeUYjuDlcPWxF8ftDQIugFYgvRPUxcHYou+KHlS6I367c
-         8kmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=a4ieNNuZ6tLA+4dVx4dh3yTVKKcJr6C5Xg+XaxMx+Wg=;
-        b=AxT4Xztsy+ir7zgpP2vLXQ1DrghLhkPv13zw7eiQxH1r6S4X/ccKwAXNbw4h4uch77
-         8B5KvbTk+iwPUAm+t2Rzs4BxYs+/+VsyCkEAVrkczxf90kROLzZH1+IdTKYDxf+cVRS9
-         N19w67upx7H6qiNIg6ihSi7/ts+HWyJxtBNrHROsNvHKnWxPWkJpNRKwfuiUwUMrH9gg
-         gj77+G3wivR1E3WdEcmOrOq3xxKjqyQvzbkg5lKa2KQrFM1tsFj2NuZbfYuyJdDIhFbj
-         25I7WqSQ3FVNDahCiDbyehZoHF/DAdvPSupKGZOJEtvktPUu2/eOD68kMTKy0/r8uVgx
-         qTnQ==
-X-Gm-Message-State: AGi0PuZBznUMkOZdE0j4i7jlrevU4yVFJodxCeyRClkHkjtv9SVFLQjp
-        C7+LLgXdbLD5M30AwsooBMivdAfn
-X-Google-Smtp-Source: APiQypIacuw32clGX4yFy7n896znzlZ0b59ACM2KJOOVsycKPEDJ92FJ+0tV1dNTDMjtldFw1Nkl4g==
-X-Received: by 2002:adf:e791:: with SMTP id n17mr27110600wrm.217.1587036953145;
-        Thu, 16 Apr 2020 04:35:53 -0700 (PDT)
-Received: from ?IPv6:2001:a61:2482:101:3351:6160:8173:cc31? ([2001:a61:2482:101:3351:6160:8173:cc31])
-        by smtp.gmail.com with ESMTPSA id t20sm3391884wmi.2.2020.04.16.04.35.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Apr 2020 04:35:52 -0700 (PDT)
-Cc:     mtk.manpages@gmail.com, linux-man@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [v3 PATCH] move_pages.2: Returning positive value is a new error
- case
-To:     Yang Shi <yang.shi@linux.alibaba.com>, mhocko@suse.com,
-        david@redhat.com, akpm@linux-foundation.org
-References: <1580757507-120233-1-git-send-email-yang.shi@linux.alibaba.com>
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Message-ID: <033ce46c-74c6-7e9f-d89c-cd184a891e1c@gmail.com>
-Date:   Thu, 16 Apr 2020 13:35:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 16 Apr 2020 07:36:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42100 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2506025AbgDPLEV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 07:04:21 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BEA4206B9;
+        Thu, 16 Apr 2020 10:40:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587033627;
+        bh=PbIJJBCyxb0zjE+EsVUIseBGje2iBqdBzd3TawdCtII=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qLx+neJh2XiUym52/Y5To6wDkJdF+YfeO3N39IXBEI/aglNs6bS7P/uMNiV4FoJl3
+         TMp7QxwJIyoECwfzV+F5isAyTkbeACxvuyoa8MrjQkJVF1B64098yNWGLrS06i/htu
+         0dOZ+2iYr9R63yIwg4ubkL8oPIU3RmTo6iLh2Iwc=
+Date:   Thu, 16 Apr 2020 11:40:24 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>, Vinod Koul <vkoul@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-i2c@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: Clean-up schema indentation formatting
+Message-ID: <20200416104024.GD5354@sirena.org.uk>
+References: <20200416005549.9683-1-robh@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <1580757507-120233-1-git-send-email-yang.shi@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="wLAMOaPNJ0fu1fTG"
+Content-Disposition: inline
+In-Reply-To: <20200416005549.9683-1-robh@kernel.org>
+X-Cookie: Tempt me with a spoon!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Yang Shi,
 
-On 2/3/20 8:18 PM, Yang Shi wrote:
-> Since commit a49bd4d71637 ("mm, numa: rework do_pages_move"),
-> the semantic of move_pages() has changed to return the number of
-> non-migrated pages if they were result of a non-fatal reasons (usually a
-> busy page).  This was an unintentional change that hasn't been noticed
-> except for LTP tests which checked for the documented behavior.
-> 
-> There are two ways to go around this change.  We can even get back to the
-> original behavior and return -EAGAIN whenever migrate_pages is not able
-> to migrate pages due to non-fatal reasons.  Another option would be to
-> simply continue with the changed semantic and extend move_pages
-> documentation to clarify that -errno is returned on an invalid input or
-> when migration simply cannot succeed (e.g. -ENOMEM, -EBUSY) or the
-> number of pages that couldn't have been migrated due to ephemeral
-> reasons (e.g. page is pinned or locked for other reasons).
-> 
-> We decided to keep the second option in kernel because this behavior is in
-> place for some time without anybody complaining and possibly new users
-> depending on it.  Also it allows to have a slightly easier error handling
-> as the caller knows that it is worth to retry when err > 0.
-> 
-> Update man pages to reflect the new semantic.
+--wLAMOaPNJ0fu1fTG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thanks for the patch. I've applied it.
+On Wed, Apr 15, 2020 at 07:55:48PM -0500, Rob Herring wrote:
+> Fix various inconsistencies in schema indentation. Most of these are
+> list indentation which should be 2 spaces more than the start of the
+> enclosing keyword. This doesn't matter functionally, but affects running
+> scripts which do transforms on the schema files.
 
-@Michal: thanks for the Ack.
+Acked-by: Mark Brown <broonie@kernel.org>
 
-Cheers,
+--wLAMOaPNJ0fu1fTG
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Michael
+-----BEGIN PGP SIGNATURE-----
 
-> 
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Michael Kerrisk <mtk.manpages@gmail.com>
-> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-> ---
-> v3: * Fixed the comments from David Hildenbrand.
->     * Fixed the inaccuracy about pre-initialized status array values.
-> v2: * Added notes about status array per Michal.
->     * Added Michal's Acked-by.
-> 
->  man2/move_pages.2 | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
-> 
-> diff --git a/man2/move_pages.2 b/man2/move_pages.2
-> index 1bf1053..50c83a4 100644
-> --- a/man2/move_pages.2
-> +++ b/man2/move_pages.2
-> @@ -104,7 +104,9 @@ pages that need to be moved.
->  is an array of integers that return the status of each page.
->  The array contains valid values only if
->  .BR move_pages ()
-> -did not return an error.
-> +did not return an error.  Pre-initialization of the array to the value
-> +which cannot represent a real numa node or valid error of status array
-> +could help to identify pages that have been migrated
->  .PP
->  .I flags
->  specify what types of pages to move.
-> @@ -164,9 +166,13 @@ returns zero.
->  .\" do the right thing?
->  On error, it returns \-1, and sets
->  .I errno
-> -to indicate the error.
-> +to indicate the error. If positive value is returned, it is the number of
-> +non-migrated pages.
->  .SH ERRORS
->  .TP
-> +.B Positive value
-> +The number of non-migrated pages if they were the result of non-fatal
-> +reasons (since version 4.17).
->  .B E2BIG
->  Too many pages to move.
->  Since Linux 2.6.29,
-> 
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6YNhcACgkQJNaLcl1U
+h9CTpAf+IW4icH5zPKy5c7TecTxfEyWNDjNTt8Pa69ga67NVmMDHKzueRcPb7D3e
+ihhK7zM0HDSd8aebO5YtW3GiVBBUyJ0m1CNYvbcsJscIhoOoco+NPJUss00w/0Zs
+L0RHGHcgc6lhNve8n+r6QbzSYEeeT9QhqTaPtyPnvMDRUkAYgShAD0ejHjNQWYOt
+3KuH8RD18xfK/PWSRsrrxCY3flOTx0RIpS9+oyO+JWIcKd6Y5lCZiBAXGrXEdEjx
+bgRsC/mO1YSE03iuDgQnodKThzIoJrygjOkGGDJuYsKY5erh8JZ93l5KPoLkyKCT
+SSA9qjNaVs+wMuSlq8WJ3w8m+z5cOA==
+=dNaD
+-----END PGP SIGNATURE-----
 
-
--- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+--wLAMOaPNJ0fu1fTG--
