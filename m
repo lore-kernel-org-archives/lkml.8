@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 055ABC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:55:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74495C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:55:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB9A9221F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:55:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 489032076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:55:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587045325;
-	bh=g9v6h6SXtblq+7AJbJQ450xlCwd+w7sxbEg9I5Os8I4=;
+	s=default; t=1587045339;
+	bh=6H1V2cPpME8yyZYSE40VWtVW+9eZQ/zpTdh4A8UwM1s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=udXgFFtoDXMZLVjnXUtqE7zxDIF8OSTmmAxgHvN5aulVXpSma9uwxLybQzF0g2bHQ
-	 FduGn6qY0zzcVtwdslAnOykTFSQFQt4ltPda+nHtgt5SVFFP2z3DcjiLeRBV55hoqv
-	 kaYBf3zRtuAdpfyfermBZR04+xHRQqTbuIwMKgIc=
+	b=MgK+Sigf2cNvD2zyBkA+FkO32SBF+E06ZfZZjlYZpFU5aKTIu/bz/gQ3qq8QpvmEK
+	 FqIFUXpzi/2TveeTa8tTEuIT2nH/xSrgzqH9DH/FT7LrGd36xBvTA4bkaHifY0OuFv
+	 zyW54umVVqh67mXKqPzu2TFUHW2eaXJod5+G6Uso=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392499AbgDPNzX (ORCPT
+        id S2392465AbgDPNzg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:55:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50632 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:55:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897667AbgDPNiL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:38:11 -0400
+        id S2897689AbgDPNiY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:38:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F01F520732;
-        Thu, 16 Apr 2020 13:38:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 617FC22203;
+        Thu, 16 Apr 2020 13:38:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044291;
-        bh=g9v6h6SXtblq+7AJbJQ450xlCwd+w7sxbEg9I5Os8I4=;
+        s=default; t=1587044303;
+        bh=6H1V2cPpME8yyZYSE40VWtVW+9eZQ/zpTdh4A8UwM1s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1cG2aSEjPxN9KLZOHDapzD+NOmgf1rmJijrFBez/rU5IXRUa9DyHQmFZqzZehxU2+
-         mheQlBPAHryzrrhV9oCS6TeQFY/rJWGGch+V9runzLQ8E1d4jyrDmdTkqQn7l6us9F
-         BG3IDxGqJbtfuarmWnSY22cWvIgu1EyaVWiTrYbQ=
+        b=uhdM0fdH7rygOpl4+EqTJCDVPCA2ZP3Bx3ATafVZXF02vXJm0Y+1aqZxeV2gxNqSX
+         T4Ty6CxCVoKjDkp0FJE6rQ5vQIMUHYfHxhdtjDB1GhaqZujUOHZyqVqy2YIa7bRUjm
+         nfdw9OJdmqA83J/pUvz6KOZ0LeWMTeQqhRUFnZOk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Piotr Sroka <piotrs@cadence.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 5.5 156/257] mtd: rawnand: cadence: change bad block marker size
-Date:   Thu, 16 Apr 2020 15:23:27 +0200
-Message-Id: <20200416131346.055219849@linuxfoundation.org>
+        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: [PATCH 5.5 122/257] tpm: tpm2_bios_measurements_next should increase position index
+Date:   Thu, 16 Apr 2020 15:22:53 +0200
+Message-Id: <20200416131341.565617325@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -59,42 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Piotr Sroka <piotrs@cadence.com>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-commit 9bf1903bed7a2e84f5a8deedb38f7e0ac5e8bfc6 upstream.
+commit f9bf8adb55cd5a357b247a16aafddf8c97b276e0 upstream.
 
-Increase bad block marker size from one byte to two bytes.
-Bad block marker is handled by skip bytes feature of HPNFC.
-Controller expects this value to be an even number.
+If .next function does not change position index,
+following .show function will repeat output related
+to current position index.
 
-Fixes: ec4ba01e894d ("mtd: rawnand: Add new Cadence NAND driver to MTD subsystem")
-Cc: stable@vger.kernel.org
-Signed-off-by: Piotr Sroka <piotrs@cadence.com>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Link: https://lore.kernel.org/linux-mtd/1581328530-29966-3-git-send-email-piotrs@cadence.com
+For /sys/kernel/security/tpm0/binary_bios_measurements:
+1) read after lseek beyound end of file generates whole last line.
+2) read after lseek to middle of last line generates
+expected end of last line and unexpected whole last line once again.
+
+Cc: stable@vger.kernel.org # 4.19.x
+Fixes: 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code ...")
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206283
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mtd/nand/raw/cadence-nand-controller.c |    9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ drivers/char/tpm/eventlog/tpm2.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/mtd/nand/raw/cadence-nand-controller.c
-+++ b/drivers/mtd/nand/raw/cadence-nand-controller.c
-@@ -2603,12 +2603,9 @@ int cadence_nand_attach_chip(struct nand
- 	chip->options |= NAND_NO_SUBPAGE_WRITE;
+--- a/drivers/char/tpm/eventlog/tpm2.c
++++ b/drivers/char/tpm/eventlog/tpm2.c
+@@ -94,6 +94,7 @@ static void *tpm2_bios_measurements_next
+ 	size_t event_size;
+ 	void *marker;
  
- 	cdns_chip->bbm_offs = chip->badblockpos;
--	if (chip->options & NAND_BUSWIDTH_16) {
--		cdns_chip->bbm_offs &= ~0x01;
--		cdns_chip->bbm_len = 2;
--	} else {
--		cdns_chip->bbm_len = 1;
--	}
-+	cdns_chip->bbm_offs &= ~0x01;
-+	/* this value should be even number */
-+	cdns_chip->bbm_len = 2;
++	(*pos)++;
+ 	event_header = log->bios_event_log;
  
- 	ret = nand_ecc_choose_conf(chip,
- 				   &cdns_ctrl->ecc_caps,
+ 	if (v == SEQ_START_TOKEN) {
+@@ -118,7 +119,6 @@ static void *tpm2_bios_measurements_next
+ 	if (((v + event_size) >= limit) || (event_size == 0))
+ 		return NULL;
+ 
+-	(*pos)++;
+ 	return v;
+ }
+ 
 
 
