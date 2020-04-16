@@ -2,138 +2,192 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B24C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E19AC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:40:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F9B820656
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:39:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44A4A21D94
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:40:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H1PRjyup"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506520AbgDPLiJ (ORCPT
+        id S2506528AbgDPLkE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 07:38:09 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57660 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2506483AbgDPLhv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 07:37:51 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id CF685AC64;
-        Thu, 16 Apr 2020 11:37:48 +0000 (UTC)
-Message-ID: <55611d3e028b6ea418cba1ef9d94fe7bf1e1b1fd.camel@suse.de>
-Subject: Re: [PATCH 2/4] of: property: Do not link to disabled devices
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Thu, 16 Apr 2020 13:37:48 +0200
-In-Reply-To: <CAGETcx_7cTp0zx2hfGX0X=NpudkAjER8YeLMmRxTEtoqxc0pFw@mail.gmail.com>
-References: <20200415150550.28156-1-nsaenzjulienne@suse.de>
-         <20200415150550.28156-3-nsaenzjulienne@suse.de>
-         <CAGETcx_7cTp0zx2hfGX0X=NpudkAjER8YeLMmRxTEtoqxc0pFw@mail.gmail.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-YH2OaEqwZ+TPp+cvOI2i"
-User-Agent: Evolution 3.34.2 
+        Thu, 16 Apr 2020 07:40:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60824 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2505925AbgDPK7n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 06:59:43 -0400
+Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 615BDC025481
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 03:59:43 -0700 (PDT)
+Received: by mail-ua1-x941.google.com with SMTP id c24so2031686uap.13
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 03:59:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=p/NQn3x2dQrPgmua+MkXZ2CPgsicQ89yPGaFimgDCmY=;
+        b=H1PRjyupkz+ecVblYlD5uZ6r4HV5zKCOh+pkNDaV9amQ+qoxu3nkqACQli5ciwIiPE
+         RZYTRcRro5ZMqNbQf4/M1vESYaAobmD4nNuC0g72XoFTuHA9BzE6oyn5+UZPvtNAlJEW
+         ie/Lt169KGZ57WHaUv2tfQZD62uiHLfBim1YFbVgseXfc9JvQkfriTgSS7/0211ybdZR
+         vY785wUltPwG3+Y3GOoKYBsPOR6lhKm25CiMM1z+OitCgs5fCmLii0es72sWXK7AhmWu
+         v4PzLn8cVZR22flguxUivk/kqmXVeFMLyegDsuJNhiW5y+CWuztKa+zfIYH2w41QuLYZ
+         TDog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=p/NQn3x2dQrPgmua+MkXZ2CPgsicQ89yPGaFimgDCmY=;
+        b=oyYQub1GCeMFupvvUYOBynyk2ie9dEIOLXFvLBsGhNiHTvHExPs+9oJcg/6PMBbgZ+
+         Hc6pUGLcIjQrs0prdYZ/z0TwNMUq/LYPVdT0Z0SjmeGFgzEIPeh43cQUqwwAOppBQR6f
+         TH32EN00T0xCjbrw5MnhHbbXtyIUzmddOE06wwcyOZtrN+q6vMR9Z2eoplAMLnT0fuVE
+         35P0UvxKcP187L+KavMwB2kJoNxlXSStTNtJgvDOSSZFLkNMm/eYhrWf9ZM6RsjwHBxj
+         vYpfw1TyIdpM7MdhiPwf5kwH+FrCOoTIf4eXJ1JWokzvA3vTqFq7xEpJYd06fxJTzygZ
+         AxRg==
+X-Gm-Message-State: AGi0PuYqzgzbhpcHuMbviI87PUOI97Lmlk5hpOK4stmF85nrxuAV8+hR
+        cEqfXJylNNtd4RJJgvrfc3h9070ZdJZNNKBACd1b+A==
+X-Google-Smtp-Source: APiQypIheC8zF+5u1sxqSHfIaGuYjJzSfh8tnXKmJeq8phNdy3w/AXb9wUOkMUHaVScHJYnzRhCpI5N5eo01eUkNqKU=
+X-Received: by 2002:ab0:2ea:: with SMTP id 97mr8516870uah.129.1587034782283;
+ Thu, 16 Apr 2020 03:59:42 -0700 (PDT)
 MIME-Version: 1.0
+References: <1583886030-11339-1-git-send-email-skomatineni@nvidia.com> <CA+G9fYvreAv5HmZg0O4VvLvf_PYSvzD1rp08XONNQGExctgQ0Q@mail.gmail.com>
+In-Reply-To: <CA+G9fYvreAv5HmZg0O4VvLvf_PYSvzD1rp08XONNQGExctgQ0Q@mail.gmail.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 16 Apr 2020 12:59:06 +0200
+Message-ID: <CAPDyKFpZEiqTdD6O-y6Sw7ifXF__MHAv0zKT=RFKs+Fmvr-K_Q@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] sdhci: tegra: Implement Tegra specific set_timeout callback
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        "(Exiting) Baolin Wang" <baolin.wang@linaro.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Bradley Bolen <bradleybolen@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Aniruddha Tvs Rao <anrao@nvidia.com>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---=-YH2OaEqwZ+TPp+cvOI2i
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, 2020-04-15 at 11:30 -0700, Saravana Kannan wrote:
-> On Wed, Apr 15, 2020 at 8:06 AM Nicolas Saenz Julienne
-> <nsaenzjulienne@suse.de> wrote:
-> > When creating a consumer/supplier relationship between two devices, mak=
-e
-> > sure the supplier node is actually active. Otherwise this will create a
-> > device link that will never be fulfilled. This, in the worst case
-> > scenario, will hang the system during boot.
-> >=20
-> > Note that, in practice, the fact that a device-tree represented
-> > consumer/supplier relationship isn't fulfilled will not prevent devices
-> > from successfully probing.
-> >=20
-> > Fixes: a3e1d1a7f5fc ("of: property: Add functional dependency link from=
- DT
-> > bindings")
-> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+On Wed, 15 Apr 2020 at 19:55, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+>
+> On Fri, 13 Mar 2020 at 06:41, Sowjanya Komatineni
+> <skomatineni@nvidia.com> wrote:
+> >
+> > Tegra host supports HW busy detection and timeouts based on the
+> > count programmed in SDHCI_TIMEOUT_CONTROL register and max busy
+> > timeout it supports is 11s in finite busy wait mode.
+> >
+> > Some operations like SLEEP_AWAKE, ERASE and flush cache through
+> > SWITCH commands take longer than 11s and Tegra host supports
+> > infinite HW busy wait mode where HW waits forever till the card
+> > is busy without HW timeout.
+> >
+> > This patch implements Tegra specific set_timeout sdhci_ops to allow
+> > switching between finite and infinite HW busy detection wait modes
+> > based on the device command expected operation time.
+> >
+> > Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 > > ---
-> >  drivers/of/property.c | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> >=20
-> > diff --git a/drivers/of/property.c b/drivers/of/property.c
-> > index a8c2b13521b27..487685ff8bb19 100644
-> > --- a/drivers/of/property.c
-> > +++ b/drivers/of/property.c
-> > @@ -1052,6 +1052,13 @@ static int of_link_to_phandle(struct device *dev=
-,
-> > struct device_node *sup_np,
-> >                 return -ENODEV;
-> >         }
-> >=20
-> > +       /* Don't allow linking a device node as consumer of a disabled =
-node
-> > */
-> > +       if (!of_device_is_available(sup_np)) {
-> > +               dev_dbg(dev, "Not linking to %pOFP - Not available\n",
-> > sup_np);
-> > +               of_node_put(sup_np);
-> > +               return -ENODEV;
-> > +       }
+> >  drivers/mmc/host/sdhci-tegra.c | 31 +++++++++++++++++++++++++++++++
+> >  1 file changed, 31 insertions(+)
+> >
+> > diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
+> > index a25c3a4..fa8f6a4 100644
+> > --- a/drivers/mmc/host/sdhci-tegra.c
+> > +++ b/drivers/mmc/host/sdhci-tegra.c
+> > @@ -45,6 +45,7 @@
+> >  #define SDHCI_TEGRA_CAP_OVERRIDES_DQS_TRIM_SHIFT       8
+> >
+> >  #define SDHCI_TEGRA_VENDOR_MISC_CTRL                   0x120
+> > +#define SDHCI_MISC_CTRL_ERASE_TIMEOUT_LIMIT            BIT(0)
+> >  #define SDHCI_MISC_CTRL_ENABLE_SDR104                  0x8
+>
+> >  #define SDHCI_MISC_CTRL_ENABLE_SDR50                   0x10
+> >  #define SDHCI_MISC_CTRL_ENABLE_SDHCI_SPEC_300          0x20
+> > @@ -1227,6 +1228,34 @@ static u32 sdhci_tegra_cqhci_irq(struct sdhci_host *host, u32 intmask)
+> >         return 0;
+> >  }
+> >
+> > +static void tegra_sdhci_set_timeout(struct sdhci_host *host,
+> > +                                   struct mmc_command *cmd)
+> > +{
+> > +       u32 val;
 > > +
->=20
-> Again, surprised I haven't hit this situation with the number of
-> disabled devices I have.
+> > +       /*
+> > +        * HW busy detection timeout is based on programmed data timeout
+> > +        * counter and maximum supported timeout is 11s which may not be
+> > +        * enough for long operations like cache flush, sleep awake, erase.
+> > +        *
+> > +        * ERASE_TIMEOUT_LIMIT bit of VENDOR_MISC_CTRL register allows
+> > +        * host controller to wait for busy state until the card is busy
+> > +        * without HW timeout.
+> > +        *
+> > +        * So, use infinite busy wait mode for operations that may take
+> > +        * more than maximum HW busy timeout of 11s otherwise use finite
+> > +        * busy wait mode.
+> > +        */
+> > +       val = sdhci_readl(host, SDHCI_TEGRA_VENDOR_MISC_CTRL);
+> > +       if (cmd && cmd->busy_timeout >= 11 * HZ)
+> > +               val |= SDHCI_MISC_CTRL_ERASE_TIMEOUT_LIMIT;
+> > +       else
+> > +               val &= ~SDHCI_MISC_CTRL_ERASE_TIMEOUT_LIMIT;
+> > +       sdhci_writel(host, val, SDHCI_TEGRA_VENDOR_MISC_CTRL);
+> > +
+> > +       __sdhci_set_timeout(host, cmd);
+>
+> kernel build on arm and arm64 architecture failed on stable-rc 4.19
+> (arm), 5.4 (arm64) and 5.5 (arm64)
+>
+> drivers/mmc/host/sdhci-tegra.c: In function 'tegra_sdhci_set_timeout':
+> drivers/mmc/host/sdhci-tegra.c:1256:2: error: implicit declaration of
+> function '__sdhci_set_timeout'; did you mean
+> 'tegra_sdhci_set_timeout'? [-Werror=implicit-function-declaration]
+>   __sdhci_set_timeout(host, cmd);
+>   ^~~~~~~~~~~~~~~~~~~
+>   tegra_sdhci_set_timeout
+>
+> Full build log,
+> https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-stable-rc-5.5/DISTRO=lkft,MACHINE=am57xx-evm,label=docker-lkft/83/consoleText
+> https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-stable-rc-5.4/DISTRO=lkft,MACHINE=juno,label=docker-lkft/158/consoleText
+> https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-stable-rc-4.19/DISTRO=lkft,MACHINE=am57xx-evm,label=docker-lkft/511/consoleText
+>
+> - Naresh
 
-I'll point out to the example that triggered this issue on my reply to patc=
-h
-#4.
+Thanks for reporting! What a mess.
 
-> The idea is right, but the implementation can be better. I think this
-> check needs to be the first check after the of_node_get(sup_np) --
-> before we do any of the "walk up to find the device" part.
->=20
-> Otherwise, you could have a supplier device (the one with compatible
-> prop) that's available with a child node that's disabled. And the
-> phandle could be pointing to that disabled child node. If you don't do
-> this as the first check, you might still try to form a pointless
-> device link. It won't affect probing (because the actual struct device
-> will probe) but it's still a pointless device link and a pointless
-> delay in probing, etc.
+It turns out that the commit that was queued for stable that is
+causing the above errors, also requires another commit.
 
-Agree, I'll update the patch.
+The commit that was queued:
+5e958e4aacf4 ("sdhci: tegra: Implement Tegra specific set_timeout callback")
 
-Regards,
-Nicolas
+The additional commit needed (which was added in v5.6-rc1):
+7d76ed77cfbd ("mmc: sdhci: Refactor sdhci_set_timeout()")
 
+However, the above commit needs a manual backport (quite trivial, but
+still) for the relevant stable kernels, to allow it to solve the build
+problems.
 
---=-YH2OaEqwZ+TPp+cvOI2i
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+Greg, Sasha - I suggest you to drop the offending commit from the
+stable kernels, for now. I think it's better to let Sowjanya deal with
+the backports, then send them in small series instead.
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl6YQ4wACgkQlfZmHno8
-x/7CQwgAlEnq8CbPih0tHYb/hiZxVOfc5OBXZ8B1bBe5PoGNyCKfxSehoWqog+fw
-/LDFWdYASXiHvs3jSnKeSoXJTHa+rtBt+EeE/UEXU/c6geGUFq6FKnhRQBmzceBP
-yAJOgDwKtvS86k5bpNuFRbh+nkwN+AFNYglSWBOWlFsuIg2JXaXOCNsF52q7rSS5
-mhNFPkGCqHtvgGlFPYA5hLQMjR+pdwn8/G5rk4Tzr/KSCqJNqNMtsAqpGTvTrI5E
-MtY2COIf/pkkqi7hNbxhD8jaS62zPJ5jBdRq3nkWroZAWwd01CfdYsqfNZhoPdyX
-1PyuuJgabgqfbPrjcIHqWMV5M0DJlg==
-=hiud
------END PGP SIGNATURE-----
-
---=-YH2OaEqwZ+TPp+cvOI2i--
-
+Kind regards
+Uffe
