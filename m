@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16BF5C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49A08C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:39:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E540721D93
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:39:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28E2A21D93
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:39:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587047971;
-	bh=v2onqnJMQEazmkuHUhSO3ULptroL/OOhJUCUP71lnjY=;
+	s=default; t=1587047978;
+	bh=JPyrDM0EsVXoKmdux7d3zG3Dut7dAVdn6X0+xOrsOQE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nPpAQPA496/+VuiZI/Jh1/127QNHdNTeOqKoNTDC4j316XpkYhn3vlJf/8Clo+Mah
-	 hU7cmcbZ1lUa7ItTT1UmA67+hMWVX9+bEbHM2rrtE5vwOTxSLDJUt2ofTJdznzcNPy
-	 5gZ0V2v7viWb++gNshU6O0Dj5DJxL4RecPemaIUI=
+	b=ij4IQD/tU+g0PCvLLMOwdsQrCL8qUyBXqNC6rRy2x1nUc6AvVytBE16MFg+12UZlB
+	 ibfVuqW2WkyWOUbme/e1ICJUYOrgNMEfgFVBNFnzztyk2ACmkzq6P0FpwjjgyVyjNM
+	 VC8QIBqkKxa+0Y/k5eVXbr/2XQlzf6o9yABOzE+Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405644AbgDPOj2 (ORCPT
+        id S2406443AbgDPOjg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:39:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49576 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:39:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409610AbgDPOCJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:02:09 -0400
+        id S2409532AbgDPOBy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:01:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90EB52078B;
-        Thu, 16 Apr 2020 14:02:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF99720732;
+        Thu, 16 Apr 2020 14:01:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045729;
-        bh=v2onqnJMQEazmkuHUhSO3ULptroL/OOhJUCUP71lnjY=;
+        s=default; t=1587045714;
+        bh=JPyrDM0EsVXoKmdux7d3zG3Dut7dAVdn6X0+xOrsOQE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dHZjrKVRkRxl4wILU4VFx+ryc7F5gOjIQWv5shrD+QCV28mcDCuVQ9aViyYUVeNXy
-         MIP+9mkLCar4AK7Zu7XQK2TgxOm0QoMr5ggWsNDVM3Jjbs29sAV5ZDTQHI/ykYN1fl
-         qeNf4nhqNAvs+/8qqBKbeCHDp8iBr807XxcjWAig=
+        b=uIJ+cWGmmqEK3NIofkw3PlepdSH/QCIkl50w0i75qKtZmMNa0YvqVbZs0X2QFtqw8
+         kYIY11l92spWt8Jv0wxR5WvmAB99gQQz+R28P7zej+QHAKaZy6VSuDs37NKFtk4kdu
+         GmjNd6uhTnEiyxl7mZW5CyZnrKDiy5PKoK46GyKI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 253/254] perf/core: Remove struct sched_in_data
-Date:   Thu, 16 Apr 2020 15:25:42 +0200
-Message-Id: <20200416131357.207561899@linuxfoundation.org>
+        stable@vger.kernel.org, Sean Paul <sean@poorly.run>,
+        Wayne Lin <Wayne.Lin@amd.com>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>, Lyude Paul <lyude@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 247/254] drm/dp_mst: Fix clearing payload state on topology disable
+Date:   Thu, 16 Apr 2020 15:25:36 +0200
+Message-Id: <20200416131356.573444360@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -60,102 +62,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Lyude Paul <lyude@redhat.com>
 
-[ Upstream commit 2c2366c7548ecee65adfd264517ddf50f9e2d029 ]
+[ Upstream commit 8732fe46b20c951493bfc4dba0ad08efdf41de81 ]
 
-We can deduce the ctx and cpuctx from the event, no need to pass them
-along. Remove the structure and pass in can_add_hw directly.
+The issues caused by:
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+commit 64e62bdf04ab ("drm/dp_mst: Remove VCPI while disabling topology
+mgr")
+
+Prompted me to take a closer look at how we clear the payload state in
+general when disabling the topology, and it turns out there's actually
+two subtle issues here.
+
+The first is that we're not grabbing &mgr.payload_lock when clearing the
+payloads in drm_dp_mst_topology_mgr_set_mst(). Seeing as the canonical
+lock order is &mgr.payload_lock -> &mgr.lock (because we always want
+&mgr.lock to be the inner-most lock so topology validation always
+works), this makes perfect sense. It also means that -technically- there
+could be racing between someone calling
+drm_dp_mst_topology_mgr_set_mst() to disable the topology, along with a
+modeset occurring that's modifying the payload state at the same time.
+
+The second is the more obvious issue that Wayne Lin discovered, that
+we're not clearing proposed_payloads when disabling the topology.
+
+I actually can't see any obvious places where the racing caused by the
+first issue would break something, and it could be that some of our
+higher-level locks already prevent this by happenstance, but better safe
+then sorry. So, let's make it so that drm_dp_mst_topology_mgr_set_mst()
+first grabs &mgr.payload_lock followed by &mgr.lock so that we never
+race when modifying the payload state. Then, we also clear
+proposed_payloads to fix the original issue of enabling a new topology
+with a dirty payload state. This doesn't clear any of the drm_dp_vcpi
+structures, but those are getting destroyed along with the ports anyway.
+
+Changes since v1:
+* Use sizeof(mgr->payloads[0])/sizeof(mgr->proposed_vcpis[0]) instead -
+  vsyrjala
+
+Cc: Sean Paul <sean@poorly.run>
+Cc: Wayne Lin <Wayne.Lin@amd.com>
+Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Cc: stable@vger.kernel.org # v4.4+
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200122194321.14953-1-lyude@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/events/core.c | 36 +++++++++++-------------------------
- 1 file changed, 11 insertions(+), 25 deletions(-)
+ drivers/gpu/drm/drm_dp_mst_topology.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index b816127367ffc..243717177f446 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -3437,17 +3437,11 @@ static int visit_groups_merge(struct perf_event_groups *groups, int cpu,
- 	return 0;
- }
+diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
+index e993009fdb763..7b7f0da013467 100644
+--- a/drivers/gpu/drm/drm_dp_mst_topology.c
++++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+@@ -3506,6 +3506,7 @@ int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_mst_topology_mgr *mgr, bool ms
+ 	int ret = 0;
+ 	struct drm_dp_mst_branch *mstb = NULL;
  
--struct sched_in_data {
--	struct perf_event_context *ctx;
--	struct perf_cpu_context *cpuctx;
--	int can_add_hw;
--};
--
- static int merge_sched_in(struct perf_event *event, void *data)
- {
--	struct sched_in_data *sid = data;
--
--	WARN_ON_ONCE(event->ctx != sid->ctx);
-+	struct perf_event_context *ctx = event->ctx;
-+	struct perf_cpu_context *cpuctx = __get_cpu_context(ctx);
-+	int *can_add_hw = data;
++	mutex_lock(&mgr->payload_lock);
+ 	mutex_lock(&mgr->lock);
+ 	if (mst_state == mgr->mst_state)
+ 		goto out_unlock;
+@@ -3564,7 +3565,10 @@ int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_mst_topology_mgr *mgr, bool ms
+ 		/* this can fail if the device is gone */
+ 		drm_dp_dpcd_writeb(mgr->aux, DP_MSTM_CTRL, 0);
+ 		ret = 0;
+-		memset(mgr->payloads, 0, mgr->max_payloads * sizeof(struct drm_dp_payload));
++		memset(mgr->payloads, 0,
++		       mgr->max_payloads * sizeof(mgr->payloads[0]));
++		memset(mgr->proposed_vcpis, 0,
++		       mgr->max_payloads * sizeof(mgr->proposed_vcpis[0]));
+ 		mgr->payload_mask = 0;
+ 		set_bit(0, &mgr->payload_mask);
+ 		mgr->vcpi_mask = 0;
+@@ -3573,6 +3577,7 @@ int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_mst_topology_mgr *mgr, bool ms
  
- 	if (event->state <= PERF_EVENT_STATE_OFF)
- 		return 0;
-@@ -3455,8 +3449,8 @@ static int merge_sched_in(struct perf_event *event, void *data)
- 	if (!event_filter_match(event))
- 		return 0;
- 
--	if (group_can_go_on(event, sid->cpuctx, sid->can_add_hw)) {
--		if (!group_sched_in(event, sid->cpuctx, sid->ctx))
-+	if (group_can_go_on(event, cpuctx, *can_add_hw)) {
-+		if (!group_sched_in(event, cpuctx, ctx))
- 			list_add_tail(&event->active_list, get_event_list(event));
- 	}
- 
-@@ -3466,8 +3460,8 @@ static int merge_sched_in(struct perf_event *event, void *data)
- 			perf_event_set_state(event, PERF_EVENT_STATE_ERROR);
- 		}
- 
--		sid->can_add_hw = 0;
--		sid->ctx->rotate_necessary = 1;
-+		*can_add_hw = 0;
-+		ctx->rotate_necessary = 1;
- 	}
- 
- 	return 0;
-@@ -3477,30 +3471,22 @@ static void
- ctx_pinned_sched_in(struct perf_event_context *ctx,
- 		    struct perf_cpu_context *cpuctx)
- {
--	struct sched_in_data sid = {
--		.ctx = ctx,
--		.cpuctx = cpuctx,
--		.can_add_hw = 1,
--	};
-+	int can_add_hw = 1;
- 
- 	visit_groups_merge(&ctx->pinned_groups,
- 			   smp_processor_id(),
--			   merge_sched_in, &sid);
-+			   merge_sched_in, &can_add_hw);
- }
- 
- static void
- ctx_flexible_sched_in(struct perf_event_context *ctx,
- 		      struct perf_cpu_context *cpuctx)
- {
--	struct sched_in_data sid = {
--		.ctx = ctx,
--		.cpuctx = cpuctx,
--		.can_add_hw = 1,
--	};
-+	int can_add_hw = 1;
- 
- 	visit_groups_merge(&ctx->flexible_groups,
- 			   smp_processor_id(),
--			   merge_sched_in, &sid);
-+			   merge_sched_in, &can_add_hw);
- }
- 
- static void
+ out_unlock:
+ 	mutex_unlock(&mgr->lock);
++	mutex_unlock(&mgr->payload_lock);
+ 	if (mstb)
+ 		drm_dp_mst_topology_put_mstb(mstb);
+ 	return ret;
 -- 
 2.20.1
 
