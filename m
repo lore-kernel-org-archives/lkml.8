@@ -2,182 +2,133 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC0B3C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:37:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B47AAC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:38:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6EA721D7F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:37:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587037078;
-	bh=D6KNpcqoqW+wtZeb9+UJQvNuWWMAtdxBSNCcqPr1D9k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TY3Wiaa3srVZA1aYGLbPwA7pHzL1DXRbeYke7S4vFsPGvmBXLreNQnCOVtt6/G1Jy
-	 9yj7TEn9+83XkqzI82ue+7ardrR7xPdbHYmlbO7934ihp0PAuODJzTLO8C3AnOYTI4
-	 MuCh+1zTr7HDS91gzai8cfoh655fI4RiAf8Gb1zY=
+	by mail.kernel.org (Postfix) with ESMTP id 9B6A520656
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:38:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506493AbgDPLh4 (ORCPT
+        id S2506484AbgDPLhv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 07:37:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39068 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 07:37:51 -0400
+Received: from mga14.intel.com ([192.55.52.115]:19921 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2506463AbgDPLhe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 07:37:34 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A00DA20656;
-        Thu, 16 Apr 2020 11:37:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587037054;
-        bh=D6KNpcqoqW+wtZeb9+UJQvNuWWMAtdxBSNCcqPr1D9k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rhZni2XChkGutHtdBgN6CzWEqzyRe34NxV7qTHe02YEwxPFPYq64ZsTGUjc3U7biV
-         RrB51+YUHAUGMLEzX7v7wX4jcqtgnyLbzxWzyR9Ta79V4v/30sLjR8jpm71TthLj/o
-         qE12jM0VcF3eHKXpgW6R1GrE+ADCoS4RqP/iXJlI=
-Date:   Thu, 16 Apr 2020 13:37:32 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        "(Exiting) Baolin Wang" <baolin.wang@linaro.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Bradley Bolen <bradleybolen@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Aniruddha Tvs Rao <anrao@nvidia.com>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Subject: Re: [PATCH v2 1/2] sdhci: tegra: Implement Tegra specific
- set_timeout callback
-Message-ID: <20200416113732.GA882109@kroah.com>
-References: <1583886030-11339-1-git-send-email-skomatineni@nvidia.com>
- <CA+G9fYvreAv5HmZg0O4VvLvf_PYSvzD1rp08XONNQGExctgQ0Q@mail.gmail.com>
- <CAPDyKFpZEiqTdD6O-y6Sw7ifXF__MHAv0zKT=RFKs+Fmvr-K_Q@mail.gmail.com>
+        id S2505999AbgDPLCu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 07:02:50 -0400
+IronPort-SDR: lcxxE+nfGBsZftEHNYwjeoggejy1kV4+AiHRPj3qB6/101S9K7a0STQqYA1Hntk2/OGMsxUYkv
+ uGHtRfNp6fjg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 03:40:59 -0700
+IronPort-SDR: 1wg/ODuGBi06D2wIst8A75fcWOrchCyh2F+4Utprzj+/NzuIiYQxmuD3T45hQ2lYlnQkbDVcxb
+ 5dyTobpPsHAQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,390,1580803200"; 
+   d="scan'208";a="455224018"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga006.fm.intel.com with ESMTP; 16 Apr 2020 03:40:59 -0700
+Received: from [10.255.154.239] (vramuthx-MOBL1.gar.corp.intel.com [10.255.154.239])
+        by linux.intel.com (Postfix) with ESMTP id 084F558045A;
+        Thu, 16 Apr 2020 03:40:54 -0700 (PDT)
+Subject: Re: [PATCH v1 2/2] mtd: rawnand: Add NAND controller support on Intel
+ LGM SoC
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        anders.roxell@linaro.org, andriy.shevchenko@intel.com,
+        arnd@arndb.de, brendanhiggins@google.com, cheol.yong.kim@intel.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, masonccyang@mxic.com.tw,
+        miquel.raynal@bootlin.com, piotrs@cadence.com,
+        qi-ming.wu@intel.com, richard@nod.at, robh+dt@kernel.org,
+        tglx@linutronix.de, vigneshr@ti.com
+References: <20200414022433.36622-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200415220533.733834-1-martin.blumenstingl@googlemail.com>
+ <c33c8653-16a2-5bcd-97a9-511d958b755a@linux.intel.com>
+ <20200416113822.2ef326cb@collabora.com>
+ <18568cf6-2955-472e-7b68-eb35e654a906@linux.intel.com>
+ <20200416122619.2c481792@collabora.com>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <d3e137fa-54a0-b4ec-eb24-3984eab2a247@linux.intel.com>
+Date:   Thu, 16 Apr 2020 18:40:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPDyKFpZEiqTdD6O-y6Sw7ifXF__MHAv0zKT=RFKs+Fmvr-K_Q@mail.gmail.com>
+In-Reply-To: <20200416122619.2c481792@collabora.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 12:59:06PM +0200, Ulf Hansson wrote:
-> On Wed, 15 Apr 2020 at 19:55, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-> >
-> > On Fri, 13 Mar 2020 at 06:41, Sowjanya Komatineni
-> > <skomatineni@nvidia.com> wrote:
-> > >
-> > > Tegra host supports HW busy detection and timeouts based on the
-> > > count programmed in SDHCI_TIMEOUT_CONTROL register and max busy
-> > > timeout it supports is 11s in finite busy wait mode.
-> > >
-> > > Some operations like SLEEP_AWAKE, ERASE and flush cache through
-> > > SWITCH commands take longer than 11s and Tegra host supports
-> > > infinite HW busy wait mode where HW waits forever till the card
-> > > is busy without HW timeout.
-> > >
-> > > This patch implements Tegra specific set_timeout sdhci_ops to allow
-> > > switching between finite and infinite HW busy detection wait modes
-> > > based on the device command expected operation time.
-> > >
-> > > Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> > > ---
-> > >  drivers/mmc/host/sdhci-tegra.c | 31 +++++++++++++++++++++++++++++++
-> > >  1 file changed, 31 insertions(+)
-> > >
-> > > diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
-> > > index a25c3a4..fa8f6a4 100644
-> > > --- a/drivers/mmc/host/sdhci-tegra.c
-> > > +++ b/drivers/mmc/host/sdhci-tegra.c
-> > > @@ -45,6 +45,7 @@
-> > >  #define SDHCI_TEGRA_CAP_OVERRIDES_DQS_TRIM_SHIFT       8
-> > >
-> > >  #define SDHCI_TEGRA_VENDOR_MISC_CTRL                   0x120
-> > > +#define SDHCI_MISC_CTRL_ERASE_TIMEOUT_LIMIT            BIT(0)
-> > >  #define SDHCI_MISC_CTRL_ENABLE_SDR104                  0x8
-> >
-> > >  #define SDHCI_MISC_CTRL_ENABLE_SDR50                   0x10
-> > >  #define SDHCI_MISC_CTRL_ENABLE_SDHCI_SPEC_300          0x20
-> > > @@ -1227,6 +1228,34 @@ static u32 sdhci_tegra_cqhci_irq(struct sdhci_host *host, u32 intmask)
-> > >         return 0;
-> > >  }
-> > >
-> > > +static void tegra_sdhci_set_timeout(struct sdhci_host *host,
-> > > +                                   struct mmc_command *cmd)
-> > > +{
-> > > +       u32 val;
-> > > +
-> > > +       /*
-> > > +        * HW busy detection timeout is based on programmed data timeout
-> > > +        * counter and maximum supported timeout is 11s which may not be
-> > > +        * enough for long operations like cache flush, sleep awake, erase.
-> > > +        *
-> > > +        * ERASE_TIMEOUT_LIMIT bit of VENDOR_MISC_CTRL register allows
-> > > +        * host controller to wait for busy state until the card is busy
-> > > +        * without HW timeout.
-> > > +        *
-> > > +        * So, use infinite busy wait mode for operations that may take
-> > > +        * more than maximum HW busy timeout of 11s otherwise use finite
-> > > +        * busy wait mode.
-> > > +        */
-> > > +       val = sdhci_readl(host, SDHCI_TEGRA_VENDOR_MISC_CTRL);
-> > > +       if (cmd && cmd->busy_timeout >= 11 * HZ)
-> > > +               val |= SDHCI_MISC_CTRL_ERASE_TIMEOUT_LIMIT;
-> > > +       else
-> > > +               val &= ~SDHCI_MISC_CTRL_ERASE_TIMEOUT_LIMIT;
-> > > +       sdhci_writel(host, val, SDHCI_TEGRA_VENDOR_MISC_CTRL);
-> > > +
-> > > +       __sdhci_set_timeout(host, cmd);
-> >
-> > kernel build on arm and arm64 architecture failed on stable-rc 4.19
-> > (arm), 5.4 (arm64) and 5.5 (arm64)
-> >
-> > drivers/mmc/host/sdhci-tegra.c: In function 'tegra_sdhci_set_timeout':
-> > drivers/mmc/host/sdhci-tegra.c:1256:2: error: implicit declaration of
-> > function '__sdhci_set_timeout'; did you mean
-> > 'tegra_sdhci_set_timeout'? [-Werror=implicit-function-declaration]
-> >   __sdhci_set_timeout(host, cmd);
-> >   ^~~~~~~~~~~~~~~~~~~
-> >   tegra_sdhci_set_timeout
-> >
-> > Full build log,
-> > https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-stable-rc-5.5/DISTRO=lkft,MACHINE=am57xx-evm,label=docker-lkft/83/consoleText
-> > https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-stable-rc-5.4/DISTRO=lkft,MACHINE=juno,label=docker-lkft/158/consoleText
-> > https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-stable-rc-4.19/DISTRO=lkft,MACHINE=am57xx-evm,label=docker-lkft/511/consoleText
-> >
-> > - Naresh
-> 
-> Thanks for reporting! What a mess.
-> 
-> It turns out that the commit that was queued for stable that is
-> causing the above errors, also requires another commit.
-> 
-> The commit that was queued:
-> 5e958e4aacf4 ("sdhci: tegra: Implement Tegra specific set_timeout callback")
-> 
-> The additional commit needed (which was added in v5.6-rc1):
-> 7d76ed77cfbd ("mmc: sdhci: Refactor sdhci_set_timeout()")
-> 
-> However, the above commit needs a manual backport (quite trivial, but
-> still) for the relevant stable kernels, to allow it to solve the build
-> problems.
-> 
-> Greg, Sasha - I suggest you to drop the offending commit from the
-> stable kernels, for now. I think it's better to let Sowjanya deal with
-> the backports, then send them in small series instead.
+On 16/4/2020 6:26 pm, Boris Brezillon wrote:
+> On Thu, 16 Apr 2020 17:45:49 +0800
+> "Ramuthevar, Vadivel MuruganX"
+> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+>
+>>>>>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>>>>>
+>>>>>> This patch adds the new IP of Nand Flash Controller(NFC) support
+>>>>>> on Intel's Lightning Mountain(LGM) SoC.
+>>>>>>
+>>>>>> DMA is used for burst data transfer operation, also DMA HW supports
+>>>>>> aligned 32bit memory address and aligned data access by default.
+>>>>>> DMA burst of 8 supported. Data register used to support the read/write
+>>>>>> operation from/to device.
+>>>>> I am wondering how this new hardware is different from the Lantiq NAND
+>>>>> controller IP - for which there is already a driver in mainline (it's
+>>>>> in drivers/mtd/nand/raw/xway_nand.c).
+>>>>> The CON and WAIT registers look suspiciously similar.
+>>>>>
+>>>>> As far as I understand the "old" SoCs (VRX200 and earlier) don't have
+>>>>> a built-in ECC engine. This seems to have changed with ARX300 though
+>>>>> (again, AFAIK).
+>>>>>
+>>>>> A bit of lineage on these SoCs (initially these were developed by
+>>>>> Infineon. Lantiq then started as an Infineon spin-off in 2009 and
+>>>>> was then acquired by Intel in 2015):
+>>>>> - Danube
+>>>>> - ARX100 from 2008/2009
+>>>>> - VRX200 from 2009/2010
+>>>>> - ARX300 from 2014
+>>>>> - GRX350 from 2015/2016
+>>>>> - GRX550 from 2017
+>>>>> - and now finally: LGM from 2020 (est.)
+>>>>>
+>>>>> The existing xway_nand driver supports the Danube, ARX100 and VRX200
+>>>>> SoCs.
+>>>> Lantiq upstreamed a driver for an older version of this IP core 8 years
+>>>> ago, see here:
+>>>> https://elixir.bootlin.com/linux/v5.5.6/source/drivers/mtd/nand/raw/xway_nand.c
+>>>> It does not support DMA and ECC.
+>>> Then let's just extend this driver to support the new features. Plus,
+>> We do not have the platform to test also it's very old legacy driver .
+> Well, if it's similar enough, we want to have one driver.
 
-Thanks for this, now dropped.
+Thank you very much for the time and suggestions...
 
-greg k-h
+This in-review driver is written for a new nand flash controller IP 
+which is used in LGM.
+
+>>> we'll be happy to have one more of the existing driver converted to
+>>> ->exec_op() ;-).
+>> I have completely adapted to ->exec_op() hook up to replace the legacy
+>> call-back.
+> I suspect porting what you've done to the xway driver shouldn't be too
+> complicated.
+Not ported from xway_nand.c driver , we have developed from the scratch 
+to make it work on
+Intel LGM SoC , it's new x86 ATOM based SoC, IP itself completely 
+different and most of the registers won't match.
+if we port then it would be ugly and also what are the problem may occur 
+we do not know.
+
+Regards
+Vadivel
