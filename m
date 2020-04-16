@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6962C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A54EC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:45:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3C4121D93
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:44:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57D6B206B9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:45:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587048290;
-	bh=cj9k2hAYAxhpwnoNJGeoddNVllBSWZVfbFc0dQYDt/U=;
+	s=default; t=1587048304;
+	bh=I8PHgfdD0SDvIxDAZKoac40s1IpppyWu12/+HSUbMSs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XfLyr0qE9eVqzLIH8OBQ6bS4U1VCDkdMsriMmC/D7YmVBx5knXP9cq1YgyD6OhnUU
-	 FXhwUWRTdocVfijdtutjYT/FMYu3BKZqcN8spCScK7xIu5JmOaB62klZeA376rdI7w
-	 JTz3lHn3jl95wi4upNkWGWepvWkKrPQgniH6nHnA=
+	b=S5atdSVZTy5TNxU+GdmtL3MAoiwhY3xUT23IZr+zwVnC3QUMfPUzQOskCWNwsB/Qx
+	 QtzEMloNMW2f2c5NR17369MxSOr4P7z7hQ769UaXJaBTROpWFFLh+nf9P3iKlOZjKV
+	 kDy/AJXJpY2C60vm2et1ydFLGZAH/XmU7QMBjXtU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726610AbgDPOos (ORCPT
+        id S2394588AbgDPOpC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:44:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46958 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:45:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409410AbgDPN7y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:59:54 -0400
+        id S2409349AbgDPN7v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:59:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DBC620732;
-        Thu, 16 Apr 2020 13:59:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF7F121734;
+        Thu, 16 Apr 2020 13:59:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045593;
-        bh=cj9k2hAYAxhpwnoNJGeoddNVllBSWZVfbFc0dQYDt/U=;
+        s=default; t=1587045591;
+        bh=I8PHgfdD0SDvIxDAZKoac40s1IpppyWu12/+HSUbMSs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G46y9i9XJdHSRKhj2oVXdE0zecB5UxNL7H6Qd7MWg2fjk8aL2I0l92EGru7A2KgEb
-         wTCQqJ5DC8BJYQqY0/q48sCNdGFvWDOq6Mai7Y4cbO8aGJFi0CokeTlK5dg1M2Rkuo
-         UgQniDSSBPwzf4j1SAzPg+lggsbUyX1f343s3tOc=
+        b=HZPKcc0eiQEO45bCcBNcKCC36C3wP3Z0+SfIpX/5y4d1jo7Y5ktG9Uar/VyjQYkxN
+         0kTxKlIrS52qQ3P0IapTSED/MpshMGSffi6cxKsyF3mLWGNNA0b727PZbgwouJVt0j
+         pifZfP2G7XC0dUsPBNsIuHdzqACbe7w0+Y9lUZZw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Auger <eric.auger@redhat.com>,
-        Andre Przywara <andre.przywara@arm.com>,
-        Alex Williamson <alex.williamson@redhat.com>
-Subject: [PATCH 5.6 199/254] vfio: platform: Switch to platform_get_irq_optional()
-Date:   Thu, 16 Apr 2020 15:24:48 +0200
-Message-Id: <20200416131351.026993633@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.6 198/254] selftests/powerpc: Fix try-run when source tree is not writable
+Date:   Thu, 16 Apr 2020 15:24:47 +0200
+Message-Id: <20200416131350.920961896@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -60,40 +58,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Auger <eric.auger@redhat.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-commit 723fe298ad85ad1278bd2312469ad14738953cc6 upstream.
+commit 9686813f6e9d5568bc045de0be853411e44958c8 upstream.
 
-Since commit 7723f4c5ecdb ("driver core: platform: Add an error
-message to platform_get_irq*()"), platform_get_irq() calls dev_err()
-on an error. As we enumerate all interrupts until platform_get_irq()
-fails, we now systematically get a message such as:
-"vfio-platform fff51000.ethernet: IRQ index 3 not found" which is
-a false positive.
+We added a usage of try-run to pmu/ebb/Makefile to detect if the
+toolchain supported the -no-pie option.
 
-Let's use platform_get_irq_optional() instead.
+This fails if we build out-of-tree and the source tree is not
+writable, as try-run tries to write its temporary files to the current
+directory. That leads to the -no-pie option being silently dropped,
+which leads to broken executables with some toolchains.
 
-Signed-off-by: Eric Auger <eric.auger@redhat.com>
-Cc: stable@vger.kernel.org # v5.3+
-Reviewed-by: Andre Przywara <andre.przywara@arm.com>
-Tested-by: Andre Przywara <andre.przywara@arm.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+If we remove the redirect to /dev/null in try-run, we see the error:
+
+  make[3]: Entering directory '/linux/tools/testing/selftests/powerpc/pmu/ebb'
+  /usr/bin/ld: cannot open output file .54.tmp: Read-only file system
+  collect2: error: ld returned 1 exit status
+  make[3]: Nothing to be done for 'all'.
+
+And looking with strace we see it's trying to use a file that's in the
+source tree:
+
+  lstat("/linux/tools/testing/selftests/powerpc/pmu/ebb/.54.tmp", 0x7ffffc0f83c8)
+
+We can fix it by setting TMPOUT to point to the $(OUTPUT) directory,
+and we can verify with strace it's now trying to write to the output
+directory:
+
+  lstat("/output/kselftest/powerpc/pmu/ebb/.54.tmp", 0x7fffd1bf6bf8)
+
+And also see that the -no-pie option is now correctly detected.
+
+Fixes: 0695f8bca93e ("selftests/powerpc: Handle Makefile for unrecognized option")
+Cc: stable@vger.kernel.org # v5.5+
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200327095319.2347641-1-mpe@ellerman.id.au
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/vfio/platform/vfio_platform.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/selftests/powerpc/pmu/ebb/Makefile |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/vfio/platform/vfio_platform.c
-+++ b/drivers/vfio/platform/vfio_platform.c
-@@ -44,7 +44,7 @@ static int get_platform_irq(struct vfio_
- {
- 	struct platform_device *pdev = (struct platform_device *) vdev->opaque;
+--- a/tools/testing/selftests/powerpc/pmu/ebb/Makefile
++++ b/tools/testing/selftests/powerpc/pmu/ebb/Makefile
+@@ -7,6 +7,7 @@ noarg:
+ # The EBB handler is 64-bit code and everything links against it
+ CFLAGS += -m64
  
--	return platform_get_irq(pdev, i);
-+	return platform_get_irq_optional(pdev, i);
- }
- 
- static int vfio_platform_probe(struct platform_device *pdev)
++TMPOUT = $(OUTPUT)/
+ # Toolchains may build PIE by default which breaks the assembly
+ no-pie-option := $(call try-run, echo 'int main() { return 0; }' | \
+         $(CC) -Werror $(KBUILD_CPPFLAGS) $(CC_OPTION_CFLAGS) -no-pie -x c - -o "$$TMP", -no-pie)
 
 
