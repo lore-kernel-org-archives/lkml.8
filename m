@@ -2,152 +2,104 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01589C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:39:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47261C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:40:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D205D21D94
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:39:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DUEtWuzo"
+	by mail.kernel.org (Postfix) with ESMTP id 1B8F621D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:40:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587048007;
+	bh=LoTfbwCSaBF2QyTddDg0v6TEKT+rRRwgXkOpkMtXQUQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=xxuWVtFMJB7yTKT3I4M/2SrCJuTuPu8WFN1O/ubdKqhVF5xGKDgMDQB5Ni5lYIZjg
+	 JOHIXAIuZuvXEbKX3nFu/txKt23B83BSzHxrfLdN3exWflns76XkYH0NsNaZsbR+au
+	 y/W5WgIhqCwwDpZfq/qrOeU8WbdJeQmh18RjBgY4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393100AbgDPOjz (ORCPT
+        id S2406500AbgDPOBy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:39:55 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:60584 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405776AbgDPOjc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:39:32 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03GEc1Gj127181;
-        Thu, 16 Apr 2020 14:38:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=k7Izfo/QNElByY6sB7IwedfWSbgNNCCpEV2qFXzdMog=;
- b=DUEtWuzoYwcnv0EAW44aTm50bOMZT/HTUnOwhsptQ0ztQqxSq49KwW/FmrB0V4LuZu8k
- +hkEi7qjLkAuFl7MDpiSb9FrOQUKHBZhf+qQYLrspSscXDXs6CdF0waMn1KA/X8/4U4K
- jIQEEUVpLEZrrqGkJPti1a/YLBtISy6BskkgRNJSltnmy/SgLb+MKVingFoqQqfwbZX8
- LiKNiXxNeFufO9mZXMS4LBCnk3YdnS1/HrNIrj3YgFMqzrt7+YD7IfbSRm9C8fgTWe3c
- cqIfinWnq+aYKE46B6VInwmRVpVvxkHm4wv5Tk/XYWtKuVC2bDHPw9CgsZCtQ257xvu2 Rg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 30emejhker-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Apr 2020 14:38:46 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03GEc1qu078177;
-        Thu, 16 Apr 2020 14:38:46 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 30dynyv93c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Apr 2020 14:38:46 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03GEciwI017010;
-        Thu, 16 Apr 2020 14:38:44 GMT
-Received: from linux-1.home (/92.157.36.49)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 16 Apr 2020 07:38:43 -0700
-Subject: Re: [PATCH V3 6/9] objtool: Report inconsistent stack changes in
- alternative
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, jpoimboe@redhat.com,
-        jthierry@redhat.com, tglx@linutronix.de
-References: <20200414103618.12657-1-alexandre.chartre@oracle.com>
- <20200414103618.12657-7-alexandre.chartre@oracle.com>
- <20200416141843.GP20730@hirez.programming.kicks-ass.net>
-From:   Alexandre Chartre <alexandre.chartre@oracle.com>
-Message-ID: <806684aa-dcba-644e-540a-c88055b0d936@oracle.com>
-Date:   Thu, 16 Apr 2020 16:43:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 16 Apr 2020 10:01:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53862 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2898256AbgDPNlJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:41:09 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D11520732;
+        Thu, 16 Apr 2020 13:41:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587044468;
+        bh=LoTfbwCSaBF2QyTddDg0v6TEKT+rRRwgXkOpkMtXQUQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=BgIA0Ha14XaTy3LIEeW1Kn+urgMPBIppHaa0t9d0dE31ymG9LG2cZebu1DU06dspH
+         IQpdOqmCCjP6hC4HB9PBKm0Wex8ckanhLd7ZbB/Tu6INqi/1ou3jEAqZEDhNL7eou6
+         aWNx/PWSq4QJAIGoQlzgEfesiCiVykL+xmugxATU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Oliver OHalloran <oohall@gmail.com>,
+        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.5 230/257] cpufreq: powernv: Fix use-after-free
+Date:   Thu, 16 Apr 2020 15:24:41 +0200
+Message-Id: <20200416131354.479566978@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
+References: <20200416131325.891903893@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200416141843.GP20730@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9592 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 suspectscore=0
- malwarescore=0 phishscore=0 spamscore=0 adultscore=0 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004160106
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9592 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 impostorscore=0
- mlxscore=0 suspectscore=0 lowpriorityscore=0 spamscore=0 mlxlogscore=999
- bulkscore=0 adultscore=0 phishscore=0 clxscore=1015 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004160106
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Oliver O'Halloran <oohall@gmail.com>
 
-On 4/16/20 4:18 PM, Peter Zijlstra wrote:
-> On Tue, Apr 14, 2020 at 12:36:15PM +0200, Alexandre Chartre wrote:
->> To allow a valid stack unwinding, an alternative should have code
->> where the same stack changes happens at the same places as in the
->> original code. Add a check in objtool to validate that stack changes
->> in alternative are effectively consitent with the original code.
-> 
-> This thing is completely buggered, it warns all over the place, even for
-> obviously correct alternatives like:
-> 
-> 0000000000000310 <return_to_handler>:
->   310:   48 83 ec 18             sub    $0x18,%rsp
->   314:   48 89 04 24             mov    %rax,(%rsp)
->   318:   48 89 54 24 08          mov    %rdx,0x8(%rsp)
->   31d:   48 89 ef                mov    %rbp,%rdi
->   320:   e8 00 00 00 00          callq  325 <return_to_handler+0x15>
->                          321: R_X86_64_PLT32     ftrace_return_to_handler-0x4
->   325:   48 89 c7                mov    %rax,%rdi
->   328:   48 8b 54 24 08          mov    0x8(%rsp),%rdx
->   32d:   48 8b 04 24             mov    (%rsp),%rax
->   331:   48 83 c4 18             add    $0x18,%rsp
->   335:   ff e7                   jmpq   *%rdi
->   337:   90                      nop
->   338:   90                      nop
->   339:   90                      nop
-> 
-> 
-> Where 335 has two alternatives:
-> 
->     0:   e9 00 00 00 00          jmpq   5 <.altinstr_replacement+0x5>
->                          1: R_X86_64_PLT32       __x86_retpoline_rdi-0x4
-> 
-> and
-> 
->     5:   0f ae e8                lfence
->     8:   ff e7                   jmpq   *%rdi
-> 
-> 
-> And it then comes back with:
-> 
->    defconfig-build/arch/x86/kernel/ftrace_64.o: warning: objtool: .entry.text+0x335: error in alternative
->    defconfig-build/arch/x86/kernel/ftrace_64.o: warning: objtool: .altinstr_replacement+0x5: in alternative 2
->    defconfig-build/arch/x86/kernel/ftrace_64.o: warning: objtool: .altinstr_replacement+0x8: misaligned alternative state change
-> 
-> which is just utter crap, JMP has no (CFI) state change.
+commit d0a72efac89d1c35ac55197895201b7b94c5e6ef upstream.
 
-I think that's because the original nop instructions are not reached, so
-they probably have an undefined stack state. Hence there's a different
-stack state between 335 (jmpq *%rdi) and 337 (nop).
+The cpufreq driver has a use-after-free that we can hit if:
 
-With the alternative, we have:
+a) There's an OCC message pending when the notifier is registered, and
+b) The cpufreq driver fails to register with the core.
 
-335:         lfence
-338:         jmpq *%rdi
+When a) occurs the notifier schedules a workqueue item to handle the
+message. The backing work_struct is located on chips[].throttle and
+when b) happens we clean up by freeing the array. Once we get to
+the (now free) queued item and the kernel crashes.
 
-So now instruction 338 is reached with the stack state we had at 335
-which is different from the original stack state at 338 (undefined)
-with the unreached instruction.
+Fixes: c5e29ea7ac14 ("cpufreq: powernv: Fix bugs in powernv_cpufreq_{init/exit}")
+Cc: stable@vger.kernel.org # v4.6+
+Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
+Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200206062622.28235-1-oohall@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Don't we have a state change recorded at 337 because the instruction
-is seen as not reached?
+---
+ drivers/cpufreq/powernv-cpufreq.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
+
+--- a/drivers/cpufreq/powernv-cpufreq.c
++++ b/drivers/cpufreq/powernv-cpufreq.c
+@@ -1080,6 +1080,12 @@ free_and_return:
+ 
+ static inline void clean_chip_info(void)
+ {
++	int i;
++
++	/* flush any pending work items */
++	if (chips)
++		for (i = 0; i < nr_chips; i++)
++			cancel_work_sync(&chips[i].throttle);
+ 	kfree(chips);
+ }
+ 
 
 
-alex.
