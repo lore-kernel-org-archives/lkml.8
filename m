@@ -2,50 +2,51 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
+X-Spam-Status: No, score=-11.7 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51630C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:13:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 158ADC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:13:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3521920771
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:13:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0ECE20771
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:13:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503216AbgDPJNS (ORCPT
+        id S2503661AbgDPJNY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 05:13:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37602 "EHLO
+        Thu, 16 Apr 2020 05:13:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502302AbgDPIbh (ORCPT
+        with ESMTP id S2502304AbgDPIbh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Apr 2020 04:31:37 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 342ECC03C1AF;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6354C08C5F2;
         Thu, 16 Apr 2020 01:31:35 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jOzvi-0000m9-2O; Thu, 16 Apr 2020 10:31:26 +0200
+        id 1jOzvl-0000qT-RS; Thu, 16 Apr 2020 10:31:30 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A988C1C001F;
-        Thu, 16 Apr 2020 10:31:25 +0200 (CEST)
-Date:   Thu, 16 Apr 2020 08:31:25 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6C99D1C03A9;
+        Thu, 16 Apr 2020 10:31:29 +0200 (CEST)
+Date:   Thu, 16 Apr 2020 08:31:29 -0000
 From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] tools headers UAPI: Sync drm/i915_drm.h with the
- kernel sources
+Subject: [tip: perf/urgent] tools headers: Update linux/vdso.h and grab a copy
+ of vdso/const.h
 Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <158702588533.28353.2572372854140988796.tip-bot2@tip-bot2>
+Message-ID: <158702588903.28353.2967832668276700000.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -61,63 +62,77 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     54a58ebc66cea54de056888e0afdda2983f00e0e
-Gitweb:        https://git.kernel.org/tip/54a58ebc66cea54de056888e0afdda2983f00e0e
+Commit-ID:     ca64d84e93762f4e587e040a44ad9f6089afc777
+Gitweb:        https://git.kernel.org/tip/ca64d84e93762f4e587e040a44ad9f6089afc777
 Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate:    Tue, 14 Apr 2020 09:40:01 -03:00
+AuthorDate:    Tue, 14 Apr 2020 08:52:23 -03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Tue, 14 Apr 2020 11:02:52 -03:00
+CommitterDate: Tue, 14 Apr 2020 08:55:03 -03:00
 
-tools headers UAPI: Sync drm/i915_drm.h with the kernel sources
+tools headers: Update linux/vdso.h and grab a copy of vdso/const.h
 
-To pick the change in:
+To get in line with:
 
-  88be76cdafc7 ("drm/i915: Allow userspace to specify ringsize on construction")
+  8165b57bca21 ("linux/const.h: Extract common header for vDSO")
 
-That don't result in any changes in tooling, just silences this perf
-build warning:
+And silence this tools/perf/ build warning:
 
-  Warning: Kernel ABI header at 'tools/include/uapi/drm/i915_drm.h' differs from latest version at 'include/uapi/drm/i915_drm.h'
-  diff -u tools/include/uapi/drm/i915_drm.h include/uapi/drm/i915_drm.h
+  Warning: Kernel ABI header at 'tools/include/linux/const.h' differs from latest version at 'include/linux/const.h'
+  diff -u tools/include/linux/const.h include/linux/const.h
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Chris Wilson <chris@chris-wilson.co.uk>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/uapi/drm/i915_drm.h | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ tools/include/linux/const.h |  5 +----
+ tools/include/vdso/const.h  | 10 ++++++++++
+ tools/perf/check-headers.sh |  1 +
+ 3 files changed, 12 insertions(+), 4 deletions(-)
+ create mode 100644 tools/include/vdso/const.h
 
-diff --git a/tools/include/uapi/drm/i915_drm.h b/tools/include/uapi/drm/i915_drm.h
-index 829c0a4..2813e57 100644
---- a/tools/include/uapi/drm/i915_drm.h
-+++ b/tools/include/uapi/drm/i915_drm.h
-@@ -1619,6 +1619,27 @@ struct drm_i915_gem_context_param {
-  * By default, new contexts allow persistence.
-  */
- #define I915_CONTEXT_PARAM_PERSISTENCE	0xb
-+
-+/*
-+ * I915_CONTEXT_PARAM_RINGSIZE:
-+ *
-+ * Sets the size of the CS ringbuffer to use for logical ring contexts. This
-+ * applies a limit of how many batches can be queued to HW before the caller
-+ * is blocked due to lack of space for more commands.
-+ *
-+ * Only reliably possible to be set prior to first use, i.e. during
-+ * construction. At any later point, the current execution must be flushed as
-+ * the ring can only be changed while the context is idle. Note, the ringsize
-+ * can be specified as a constructor property, see
-+ * I915_CONTEXT_CREATE_EXT_SETPARAM, but can also be set later if required.
-+ *
-+ * Only applies to the current set of engine and lost when those engines
-+ * are replaced by a new mapping (see I915_CONTEXT_PARAM_ENGINES).
-+ *
-+ * Must be between 4 - 512 KiB, in intervals of page size [4 KiB].
-+ * Default is 16 KiB.
-+ */
-+#define I915_CONTEXT_PARAM_RINGSIZE	0xc
- /* Must be kept compact -- no holes and well documented */
+diff --git a/tools/include/linux/const.h b/tools/include/linux/const.h
+index 7b55a55..81b8aae 100644
+--- a/tools/include/linux/const.h
++++ b/tools/include/linux/const.h
+@@ -1,9 +1,6 @@
+ #ifndef _LINUX_CONST_H
+ #define _LINUX_CONST_H
  
- 	__u64 value;
+-#include <uapi/linux/const.h>
+-
+-#define UL(x)		(_UL(x))
+-#define ULL(x)		(_ULL(x))
++#include <vdso/const.h>
+ 
+ #endif /* _LINUX_CONST_H */
+diff --git a/tools/include/vdso/const.h b/tools/include/vdso/const.h
+new file mode 100644
+index 0000000..94b385a
+--- /dev/null
++++ b/tools/include/vdso/const.h
+@@ -0,0 +1,10 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __VDSO_CONST_H
++#define __VDSO_CONST_H
++
++#include <uapi/linux/const.h>
++
++#define UL(x)		(_UL(x))
++#define ULL(x)		(_ULL(x))
++
++#endif /* __VDSO_CONST_H */
+diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
+index bfb21d0..c905c68 100755
+--- a/tools/perf/check-headers.sh
++++ b/tools/perf/check-headers.sh
+@@ -23,6 +23,7 @@ include/uapi/linux/vhost.h
+ include/uapi/sound/asound.h
+ include/linux/bits.h
+ include/linux/const.h
++include/vdso/const.h
+ include/linux/hash.h
+ include/uapi/linux/hw_breakpoint.h
+ arch/x86/include/asm/disabled-features.h
