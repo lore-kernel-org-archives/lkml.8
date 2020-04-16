@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D19C9C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:18:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E59C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:19:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACAFD2063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:18:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCE442063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:19:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587046731;
-	bh=S3kmvQnrFbm9NwxUbbMXxAAdzCLFDFuaxgikDn3OQNU=;
+	s=default; t=1587046740;
+	bh=YDlUlH9cxoPoePJ/BVt1VLVyGDJmuuZt3f/vtA5eHsQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sbc2mo9rVHaUvOIwECWwYcKTfDdV4+mrd5KA0gY0WxN2YkvFmqHBbki2LSyVvFuYJ
-	 CUQHXxeuzdjV0cCRdywgxU/+axSy0zuc7PL1nU5oBQ8CIGILqqXzDjFDELPp/NaYAI
-	 +wUFaAgoYoTOCikhgPjIY7ck8dljboZOczruWFug=
+	b=AGXYH4y4gc+v8sYGZlVCP2A/lwNxhXjKNc6EpTUcDSykjJkxIaUNzVeJLNAbxm4Rp
+	 Xs/1PdKMjIA572/XuZpe7sNIEz5mJfJ8GVzHVklCTWFcvpGZydPO7t7GJIhcRNqO/e
+	 8lWSs+JTADyoLpVUsh7i7r76A3jKSxr2+037wn1Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442303AbgDPOSt (ORCPT
+        id S2442315AbgDPOS5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:18:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39552 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:18:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408948AbgDPNxN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:53:13 -0400
+        id S2409029AbgDPNxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:53:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9920321927;
-        Thu, 16 Apr 2020 13:53:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 541CC2063A;
+        Thu, 16 Apr 2020 13:53:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045193;
-        bh=S3kmvQnrFbm9NwxUbbMXxAAdzCLFDFuaxgikDn3OQNU=;
+        s=default; t=1587045202;
+        bh=YDlUlH9cxoPoePJ/BVt1VLVyGDJmuuZt3f/vtA5eHsQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F6NYv3N9VSUuNb4TGlCzqPBaGTCb+xRbw2OpW5BoGkRbfIxp+uD2ktrTFtXeiCLn5
-         tean/nj2LoQA7211SkZ4X8z8xOXtX7fMMAoIejfDvdkYYvnU5OjqcH+kjATPH0eioj
-         1JVqUkCza1BnCLkYRBHw68i5zVcWeaP8IAULKYlA=
+        b=nifbJc9BtYti/5myITebsjwHw4MffF3KVhiYkgbXRzMQbgw+VQJ1TJD4CgD4hHHwY
+         FRHzSy3iZbT2Li3jBgk/8wFcoup27E+WQ80+WQb+7hTTRdfXXhno469QnUcBxam45B
+         pRgbbFDtcbejcN3b14Yub5/iu2FB98QAKJC/pP3w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Zenghui Yu <yuzenghui@huawei.com>,
-        Eric Auger <eric.auger@redhat.com>,
+        stable@vger.kernel.org,
+        Liguang Zhang <zhangliguang@linux.alibaba.com>,
+        James Morse <james.morse@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 034/254] irqchip/gic-v4.1: Skip absent CPUs while iterating over redistributors
-Date:   Thu, 16 Apr 2020 15:22:03 +0200
-Message-Id: <20200416131330.131517661@linuxfoundation.org>
+Subject: [PATCH 5.6 011/254] firmware: arm_sdei: fix double-lock on hibernate with shared events
+Date:   Thu, 16 Apr 2020 15:21:40 +0200
+Message-Id: <20200416131327.189072138@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -61,40 +62,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+From: James Morse <james.morse@arm.com>
 
-[ Upstream commit 28d160de5194c68ff534443d2a8b6f1d10d57c58 ]
+[ Upstream commit 6ded0b61cf638bf9f8efe60ab8ba23db60ea9763 ]
 
-In a system that is only sparsly populated with CPUs, we can end-up with
-redistributors structures that are not initialized. Let's make sure we
-don't try and access those when iterating over them (in this case when
-checking we have a L2 VPE table).
+SDEI has private events that must be registered on each CPU. When
+CPUs come and go they must re-register and re-enable their private
+events. Each event has flags to indicate whether this should happen
+to protect against an event being registered on a CPU coming online,
+while all the others are unregistering the event.
 
-Fixes: 4e6437f12d6e ("irqchip/gic-v4.1: Ensure L2 vPE table is allocated at RD level")
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
-Link: https://lore.kernel.org/r/20200304203330.4967-3-maz@kernel.org
+These flags are protected by the sdei_list_lock spinlock, because
+the cpuhp callbacks can't take the mutex.
+
+Hibernate needs to unregister all events, but keep the in-memory
+re-register and re-enable as they are. sdei_unregister_shared()
+takes the spinlock to walk the list, then calls _sdei_event_unregister()
+on each shared event. _sdei_event_unregister() tries to take the
+same spinlock to update re-register and re-enable. This doesn't go
+so well.
+
+Push the re-register and re-enable updates out to their callers.
+sdei_unregister_shared() doesn't want these values updated, so
+doesn't need to do anything.
+
+This also fixes shared events getting lost over hibernate as this
+path made them look unregistered.
+
+Fixes: da351827240e ("firmware: arm_sdei: Add support for CPU and system power states")
+Reported-by: Liguang Zhang <zhangliguang@linux.alibaba.com>
+Signed-off-by: James Morse <james.morse@arm.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-gic-v3-its.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/firmware/arm_sdei.c | 32 +++++++++++++++-----------------
+ 1 file changed, 15 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 83b1186ffcad0..da883a6910284 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -2452,6 +2452,10 @@ static bool allocate_vpe_l2_table(int cpu, u32 id)
- 	if (!gic_rdists->has_rvpeid)
- 		return true;
+diff --git a/drivers/firmware/arm_sdei.c b/drivers/firmware/arm_sdei.c
+index a479023fa036e..77eaa9a2fd156 100644
+--- a/drivers/firmware/arm_sdei.c
++++ b/drivers/firmware/arm_sdei.c
+@@ -491,11 +491,6 @@ static int _sdei_event_unregister(struct sdei_event *event)
+ {
+ 	lockdep_assert_held(&sdei_events_lock);
  
-+	/* Skip non-present CPUs */
-+	if (!base)
-+		return true;
+-	spin_lock(&sdei_list_lock);
+-	event->reregister = false;
+-	event->reenable = false;
+-	spin_unlock(&sdei_list_lock);
+-
+ 	if (event->type == SDEI_EVENT_TYPE_SHARED)
+ 		return sdei_api_event_unregister(event->event_num);
+ 
+@@ -518,6 +513,11 @@ int sdei_event_unregister(u32 event_num)
+ 			break;
+ 		}
+ 
++		spin_lock(&sdei_list_lock);
++		event->reregister = false;
++		event->reenable = false;
++		spin_unlock(&sdei_list_lock);
 +
- 	val  = gicr_read_vpropbaser(base + SZ_128K + GICR_VPROPBASER);
+ 		err = _sdei_event_unregister(event);
+ 		if (err)
+ 			break;
+@@ -585,26 +585,15 @@ static int _sdei_event_register(struct sdei_event *event)
  
- 	esz  = FIELD_GET(GICR_VPROPBASER_4_1_ENTRY_SIZE, val) + 1;
+ 	lockdep_assert_held(&sdei_events_lock);
+ 
+-	spin_lock(&sdei_list_lock);
+-	event->reregister = true;
+-	spin_unlock(&sdei_list_lock);
+-
+ 	if (event->type == SDEI_EVENT_TYPE_SHARED)
+ 		return sdei_api_event_register(event->event_num,
+ 					       sdei_entry_point,
+ 					       event->registered,
+ 					       SDEI_EVENT_REGISTER_RM_ANY, 0);
+ 
+-
+ 	err = sdei_do_cross_call(_local_event_register, event);
+-	if (err) {
+-		spin_lock(&sdei_list_lock);
+-		event->reregister = false;
+-		event->reenable = false;
+-		spin_unlock(&sdei_list_lock);
+-
++	if (err)
+ 		sdei_do_cross_call(_local_event_unregister, event);
+-	}
+ 
+ 	return err;
+ }
+@@ -632,8 +621,17 @@ int sdei_event_register(u32 event_num, sdei_event_callback *cb, void *arg)
+ 			break;
+ 		}
+ 
++		spin_lock(&sdei_list_lock);
++		event->reregister = true;
++		spin_unlock(&sdei_list_lock);
++
+ 		err = _sdei_event_register(event);
+ 		if (err) {
++			spin_lock(&sdei_list_lock);
++			event->reregister = false;
++			event->reenable = false;
++			spin_unlock(&sdei_list_lock);
++
+ 			sdei_event_destroy(event);
+ 			pr_warn("Failed to register event %u: %d\n", event_num,
+ 				err);
 -- 
 2.20.1
 
