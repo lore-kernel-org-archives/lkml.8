@@ -2,153 +2,155 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B576C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:18:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00663C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D97D421D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:18:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="KunL1GHn"
+	by mail.kernel.org (Postfix) with ESMTP id DB899214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:18:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395084AbgDPPST (ORCPT
+        id S2504338AbgDPPS1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:18:19 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:42002 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2442384AbgDPPSH (ORCPT
+        Thu, 16 Apr 2020 11:18:27 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:48115 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S2504094AbgDPPSQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 11:18:07 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 20E5497D;
-        Thu, 16 Apr 2020 17:18:03 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1587050283;
-        bh=kRV0TK76jaLsKumnRx9oBxQ+fB9EZ/hBhcVvcCrUN8Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KunL1GHnZWE+ve/sOLaoFkAzYPKX6+/n+r78iuYJs7x5e+okkGATOqE6ApGMnuikF
-         /2ayUcQFN/Z9UdwuSHJbBCZB/V8aA1w7KUzO09ROtISEFr9rEn/3j6xTfoHtnx7/rk
-         eGxptalaFyRgrldUK2vtce1M8FhIp7rddugLnmJg=
-Date:   Thu, 16 Apr 2020 18:17:51 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        David Airlie <airlied@linux.ie>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>
-Subject: Re: [RFC 5/6] drm/rcar-du: fix selection of CMM driver
-Message-ID: <20200416151751.GD4796@pendragon.ideasonboard.com>
-References: <20200414201739.GJ19819@pendragon.ideasonboard.com>
- <CAK8P3a0hd5bsezrJS3+GV2nRMui4P5yeD2Rk7wQpJsAZeOCOUg@mail.gmail.com>
- <20200414205158.GM19819@pendragon.ideasonboard.com>
- <CAK8P3a1PZbwdvdH_Gi9UQVUz2+_a8QDxKuWLqPtjhK1stxzMBQ@mail.gmail.com>
- <CAMuHMdUb=XXucGUbxt26tZ1xu9pdyVUB8RVsfB2SffURVVXwSg@mail.gmail.com>
- <CAK8P3a1uasBFg9dwvPEcokrRhYE2qh6iwOMW1fDTY+LBZMrTjg@mail.gmail.com>
- <CAK8P3a0CoPUTSJp6ddDnmabo59iE73pugGSYayoeB5N57az9_w@mail.gmail.com>
- <20200415211220.GQ4758@pendragon.ideasonboard.com>
- <CAK8P3a1rDZO4cuL6VAXgu9sOiedcHqOSL7ELhpvULz+YYRaGbA@mail.gmail.com>
- <CAKMK7uEoZ1jC8c25tPVX20kcdC1=+TpUUNyf+-c=sg5iK2cTZA@mail.gmail.com>
+        Thu, 16 Apr 2020 11:18:16 -0400
+Received: (qmail 4506 invoked by uid 500); 16 Apr 2020 11:18:15 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 16 Apr 2020 11:18:15 -0400
+Date:   Thu, 16 Apr 2020 11:18:15 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@netrider.rowland.org
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        USB list <linux-usb@vger.kernel.org>,
+        Linux-pm mailing list <linux-pm@vger.kernel.org>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Subject: Re: lockdep warning in urb.c:363 usb_submit_urb
+In-Reply-To: <1998412.Cp2JyuGtSI@kreacher>
+Message-ID: <Pine.LNX.4.44L0.2004161036410.14937-100000@netrider.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAKMK7uEoZ1jC8c25tPVX20kcdC1=+TpUUNyf+-c=sg5iK2cTZA@mail.gmail.com>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 08:51:14AM +0200, Daniel Vetter wrote:
-> On Wed, Apr 15, 2020 at 11:22 PM Arnd Bergmann wrote:
-> > On Wed, Apr 15, 2020 at 11:12 PM Laurent Pinchart wrote:
-> > > On Wed, Apr 15, 2020 at 09:07:14PM +0200, Arnd Bergmann wrote:
-> > > > On Wed, Apr 15, 2020 at 5:18 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > > > > On Wed, Apr 15, 2020 at 4:13 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > > > > On Wed, Apr 15, 2020 at 3:47 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > > > > > > On Tue, Apr 14, 2020 at 10:52 PM Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
-> > > > > > > > Doesn't "imply" mean it gets selected by default but can be manually
-> > > > > > > > disabled ?
-> > > > > > >
-> > > > > > > That may be what it means now (I still don't understand how it's defined
-> > > > > > > as of v5.7-rc1), but traditionally it was more like a 'select if all
-> > > > > > > dependencies are met'.
-> > > > > >
-> > > > > > That's still what it is supposed to mean right now ;-)
-> > > > > > Except that now it should correctly handle the modular case, too.
-> > > > >
-> > > > > Then there is a bug. If I run 'make menuconfig' now on a mainline kernel
-> > > > > and enable CONFIG_DRM_RCAR_DU, I can set
-> > > > > DRM_RCAR_CMM and DRM_RCAR_LVDS to 'y', 'n' or 'm' regardless
-> > > > > of whether CONFIG_DRM_RCAR_DU is 'm' or 'y'. The 'implies'
-> > > > > statement seems to be ignored entirely, except as reverse 'default'
-> > > > > setting.
-> > > >
-> > > > Here is another version that should do what we want and is only
-> > > > half-ugly. I can send that as a proper patch if it passes my testing
-> > > > and nobody hates it too much.
-> > >
-> > > This may be a stupid question, but doesn't this really call for fixing
-> > > Kconfig ? This seems to be such a common pattern that requiring
-> > > constructs similar to the ones below will be a never-ending chase of
-> > > offenders.
-> >
-> > Maybe, I suppose the hardest part here would be to come up with
-> > an appropriate name for the keyword ;-)
-> >
-> > Any suggestions?
+Thanks for all your help straightening this out.  I think the end 
+result will be a distinct improvement over the old code.
 
-Would it make sense to fix the imply semantics ? Or are they use cases
-for the current behaviour of imply ? "recommend" could be another
-keyword. I think we should try to limit the number of keywords though,
-as it would otherwise become quite messy.
+On Thu, 16 Apr 2020, Rafael J. Wysocki wrote:
 
-> > This specific issue is fairly rare though, in most cases the dependencies
-> > are in the right order so a Kconfig symbol 'depends on' a second one
-> > when the corresponding loadable module uses symbols from that second
-> > module. The problem here is that the two are mixed up.
-> >
-> > The much more common problem is the one where one needs to
-> > wrong
-> >
-> > config FOO
-> >        depends on BAR || !BAR
-> >
-> > To ensure the dependency is either met or BAR is disabled, but
-> > not FOO=y with BAR=m. If you have any suggestions for a keyword
-> > for that thing, we can clean up hundreds of such instances.
+> This means that the dev_pm_skip_resume() logic really is relatively
+> straightforward:
+>  - If the current transition is RESTORE, return "false".
+>  - Otherwise, if the current transition is THAW, return the return value
+>    of dev_pm_skip_suspend().
+>  - Otherwise (so the current transition is RESUME which is the only remaining
+>    case), return the logical negation of power.must_resume.
 > 
-> Some ideas:
+> > Also, it would mean 
+> > that a device whose subsystem doesn't know about power.may_skip_resume 
+> > would never be allowed to stay in runtime suspend.
 > 
-> config FOO
->     can use  BAR
->     maybe BAR
->     optional BAR
+> Not really, because I want the core to set power.may_skip_resume for the
+> devices for which dev_pm_skip_suspend() returns "true" if the "suspend_late"
+> subsystem-level callback is not present.  [It might be more consistent
+> to simply set it for all devices for which dev_pm_skip_suspend() returns
+> "true" and let the subsystems update it should they want to?  IOW, the
+> default value of power.may_skip_resume could be the return value of
+> dev_pm_skip_suspend()?]
 
-Another idea,
+How about this?  Let's set power.may_skip_resume to "true" for each
+device before issuing ->prepare.  The subsystem can set it to "false"
+if it wants to during any of the suspend-side callbacks.  Following the
+->suspend_noirq callback, the core will do the equivalent of:
 
-	depends optionally on BAR
+	dev->power.may_skip_resume &= dev_pm_skip_suspend(dev);
 
-> We should probably double-check that this is only ever used for when
-> both FOO and BAR are tri-state, since without that it doesn't make
-> much sense.
+before propagating the flag.  Any subsystem changes to support this
+should be minimal, since only ACPI and PCI currently use
+may_skip_resume.
 
--- 
-Regards,
+> > What about the runtime PM usage counter?
+> 
+> Yes, it applies to that too.
+> 
+> Of course, if dev_pm_skip_suspend() returns "true", the usage counter cannot
+> be greater than 1 (for the given device as well as for any dependent devices).
 
-Laurent Pinchart
+Well, in theory the subsystem could call pm_runtime_get_noresume().  I 
+can't imagine why it would want to, though.
+
+So here's what we've got:
+
+> > Transition   Conditions for dev_pm_skip_resume() to return "true"
+> > ----------   ----------------------------------------------------
+> > 
+> > RESTORE      Never
+> 
+> Right.
+
+>  THAW	         dev_pm_skip_suspend() returns "true".
+
+>  RESUME        power.must_resume is clear (which requires
+>                  MAY_SKIP_RESUME and power.may_skip_resume to be set and
+>                  the runtime usage counter to be = 1, and which 
+>                  propagates up from dependent devices)
+> 
+> Nothing else is really strictly required IMO.
+
+This seems very clear and simple.  And I will repeat here some of the 
+things posted earlier, to make the description more complete:
+
+	During the suspend side, for each of the
+	{suspend,freeze,poweroff}_{late,noirq} phases: If
+	dev_pm_skip_suspend() returns true then the subsystem should
+	not invoke the driver's callback, and if there is no subsystem
+	callback then the core will not invoke the driver's callback.
+
+	During the resume side, for each of the
+	{resume,thaw,restore}_{early,noirq} phases: If
+	dev_pm_skip_resume() returns true then the subsystem should
+	not invoke the driver's callback, and if there is no subsystem
+	callback then the core will not invoke the driver's callback.
+
+	dev_pm_skip_suspend() will return "true" if SMART_SUSPEND is
+	set and the device's runtime status is "suspended".
+
+	For dev_pm_skip_resume() and power.must_resume, see above.
+
+	At the start of the {resume,thaw,restore}_noirq phase, if
+	dev_pm_skip_resume() returns true then the core will set the
+	runtime status to "suspended".  Otherwise it will set the
+	runtime status to "active".  If this is not what the subsystem
+	or driver wants, it must update the runtime status itself.
+
+For this to work properly, we will have to rely on subsystems/drivers
+to call pm_runtime_resume() during the suspend/freeze transition if
+SMART_SUSPEND is clear.  Otherwise we could have the following
+scenario:
+
+Device A has a child B, and both are runtime suspended when hibernation
+starts.  Suppose that the SMART_SUSPEND flag is set for A but not for
+B, and suppose that B's subsystem/driver neglects to call
+pm_runtime_resume() during the FREEZE transition.  Then during the THAW
+transition, dev_pm_skip_resume() will return "true" for A and "false"  
+for B.  This will lead to an error when the core tries to set B's
+runtime status to "active" while A's status is "suspended".
+
+One way to avoid this is to have the core make the pm_runtime_resume()  
+call, but you have said that you don't like that approach.  Any 
+suggestions?
+
+Should the core take some special action following ->freeze_noirq if
+the runtime status is "suspended" and SMART_SUSPEND is clear?
+
+Alan Stern
+
