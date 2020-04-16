@@ -2,179 +2,235 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F041C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 21:55:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A660C38A29
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 21:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6593A218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 21:55:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00CAF221F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 21:55:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="iiE6eIoG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CNfYTVuK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728663AbgDPVzE (ORCPT
+        id S1728707AbgDPVzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 16 Apr 2020 17:55:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50216 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728646AbgDPVzE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Apr 2020 17:55:04 -0400
-Received: from mail-eopbgr700070.outbound.protection.outlook.com ([40.107.70.70]:51424
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728308AbgDPVyv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 17:54:51 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PcAguEZPqL3CnF7runsUf6hmRTVyjmeruM2+svZ6pWaTPDmW2d63FKxBxjBiaUjqYznrncTCGwcBdpeR0gf4CEu8UYLIiG32SqBOAjbcxiWpUi3mDR7pAZnhW8pna+JLw5jebYsUIYJw1pVY4t50JnxSVYMBzAtC2R16vmUYcYes9O2M8nVK4YwJYFwUl6uOxuWcFT7YVCE/qMZaUwT3nq2gN2NXeKGk84kUPE8sOLHeHoYAlStioWtKZbM3BExpAVDazG+CcVjCVuyakdy6xHOKpysi3RmZXyFxvNjnGyTKDOR8IUaYdzoB197j3X2z6Pi44sHR/vRx6lIdGSt7Hg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ym5wJllLzKBNSaHlZTDO4xHyMwQtrx+lmbsHnkMms24=;
- b=f9N7LiB9yZ+Ofw4O8bTFBQMQwBFFPAw/kyPs+w7C/EG0wvK0OOcojSAfrYHK9t9y9EwzIibwdFN9oaCjAaMHeM0I3xsUbiwng+QD/IEnuXR1W2x8wdJ1OnfuGlg6VSeyzY8nd9dq8SM6Al9SIT15pD39BaPf50rMa+dd03X8QbyUNknXwGXv0reuPMepAvQgCV12wgxpqwrOqFnGQl2MgvBUj6Lpl/S83AsoEQSnQ06kkKKkv93VJCvVo5zA//cmnU6Sv+WatM8Z5bkOulQxHtf1HSoi722xm3jhQ4GzCm5De9lXejAjoACs4QZyhvZNHapt2pwmk6hx2n5cQSWqAA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=wizery.com smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9387C061A0C;
+        Thu, 16 Apr 2020 14:55:03 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id k1so438573wrx.4;
+        Thu, 16 Apr 2020 14:55:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ym5wJllLzKBNSaHlZTDO4xHyMwQtrx+lmbsHnkMms24=;
- b=iiE6eIoGIyInOfpOaUfaOC2ogAAisZIDBisfAwK42IXekcteM/M8uWcxeciCuG7rmrDSOKj2GpRGaQPSfL+i0xYln4U6h69Nt0gxYAVox0Ir5evAQl3qNvN7c2x9ry+QIEjhEO2SkyeeMaTAQ/Ecgp1swV6dizQCOkH6gu8X+SA=
-Received: from BL0PR05CA0001.namprd05.prod.outlook.com (2603:10b6:208:91::11)
- by BY5PR02MB6161.namprd02.prod.outlook.com (2603:10b6:a03:1b3::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.26; Thu, 16 Apr
- 2020 21:54:47 +0000
-Received: from BL2NAM02FT032.eop-nam02.prod.protection.outlook.com
- (2603:10b6:208:91:cafe::4f) by BL0PR05CA0001.outlook.office365.com
- (2603:10b6:208:91::11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.5 via Frontend
- Transport; Thu, 16 Apr 2020 21:54:47 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; wizery.com; dkim=none (message not signed)
- header.d=none;wizery.com; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT032.mail.protection.outlook.com (10.152.77.169) with Microsoft SMTP
- Server id 15.20.2921.25 via Frontend Transport; Thu, 16 Apr 2020 21:54:47
- +0000
-Received: from [149.199.38.66] (port=38388 helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
-        (envelope-from <ben.levinsky@xilinx.com>)
-        id 1jPCSN-0004cY-EU; Thu, 16 Apr 2020 14:53:59 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <ben.levinsky@xilinx.com>)
-        id 1jPCT8-0003e3-LN; Thu, 16 Apr 2020 14:54:46 -0700
-Received: from [172.19.2.206] (helo=xsjblevinsk50.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <ben.levinsky@xilinx.com>)
-        id 1jPCT4-0003cm-5Q; Thu, 16 Apr 2020 14:54:42 -0700
-From:   Ben Levinsky <ben.levinsky@xilinx.com>
-To:     ohad@wizery.com, bjorn.andersson@linaro.org,
-        michal.simek@xilinx.com, jollys@xilinx.com, rajan.vaja@xilinx.com,
-        robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     linux-remoteproc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/5] firmware: xilinx: Add ZynqMP firmware ioctl enums for RPU configuration.
-Date:   Thu, 16 Apr 2020 14:54:38 -0700
-Message-Id: <1587074082-14836-2-git-send-email-ben.levinsky@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1587074082-14836-1-git-send-email-ben.levinsky@xilinx.com>
-References: <1587074082-14836-1-git-send-email-ben.levinsky@xilinx.com>
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(39860400002)(136003)(376002)(346002)(396003)(46966005)(336012)(70206006)(8936002)(5660300002)(426003)(356005)(9786002)(44832011)(70586007)(2906002)(2616005)(82740400003)(6666004)(7696005)(8676002)(316002)(4326008)(478600001)(47076004)(81166007)(26005)(81156014)(186003)(36756003);DIR:OUT;SFP:1101;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=rAFWRmCauzapDqY6zF6wYDHpb+eX5UR9B/4Z3NEvnTc=;
+        b=CNfYTVuKIBIp6tZgQC803INlAGosjrnkwkNgVhBDqENWuNDr9mf4jy8DRNAGzy1rLJ
+         s6pUD8o0PoziHcCdGenejLs5ji4NtbucA0Eace9Ru1Fr9SgytsHeMpwstkZukWu3VNws
+         Wrm4g8cDoc17wSb5J+ItL0tQfL2a/x+0x8gLW3LHYaZ1A4MQTCTzF8jRu5DPCtdVFVfF
+         TmejhNxo9ziq/n0Jh3ZxzqMbhy2kDutTBe2wDY7zwk+cslfkmD02o6j9mdUzadthe5dB
+         lp37SHR8mi1NfGEro4U4JG+EMIL/yuNPE/d9EJDLGOIMlG3TcdZ4/2wxIm2Pxj7FCfa9
+         hA8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=rAFWRmCauzapDqY6zF6wYDHpb+eX5UR9B/4Z3NEvnTc=;
+        b=EL/9HOhHsgb3kJHL57n9LWK6igU0pHdtXuMHDwJyldXH57Fwc+2bHcFpjhDDzKE/U8
+         t7ub32pG/I7LXia9iJJZy2c9y8YAanRp1r8ptqBx5anfTbXlvRO7BMu/bdVjp+cHriXY
+         VrL8w9uUobBm31P0T/Vulmzb2MZdLoLXfxElPSh/IrsxnGXbDTzEkVXUsMJSZz5M5kGB
+         nZnXA27EAvx8B7ebol6ghv/Mg2POTgclj3d6xUAT7/W2Si4b6Gc0S2hFHhib3Svkd8eE
+         Chj1eQG2A6xJKbHFnmKscUhojqBJk9rdew6INUKpheSqwI3XWf+/9GCBxMAj6EA2HwXb
+         3MtA==
+X-Gm-Message-State: AGi0PubwXqgTdTsdueD2y4u5FEkIiB6o8HsTwGs+oCxEuBSs+PbOZu1g
+        AwWlHD7lWmOcB5ARXljL7EfhvuUjDi6+tnxsLcY=
+X-Google-Smtp-Source: APiQypKBG9g3I0G49ErAhZ5RFh0i026vsX5S8R4TJ6e0ibQ5yL9ar7nTPz5H115z+Cbfywn0ifljaq0XdjHCtbp/kxo=
+X-Received: by 2002:adf:f146:: with SMTP id y6mr361227wro.132.1587074102376;
+ Thu, 16 Apr 2020 14:55:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: e909902e-0191-4b23-8482-08d7e250c7a3
-X-MS-TrafficTypeDiagnostic: BY5PR02MB6161:
-X-Microsoft-Antispam-PRVS: <BY5PR02MB6161CA424CC4A1CD5CD0DC7BB5D80@BY5PR02MB6161.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:525;
-X-Forefront-PRVS: 0375972289
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: vxfDz1hKHnVZQ/bBxzE02MydLV5WuUVrvPx12E6m3+6FVte74nMcWGApjuwkG549gPwkN5hWtz6f/JSsapwmLtnOB+C7fHFWy5whmBMy5W8OPtEQkhpn/ZHq2aTkJiagOW/iYLLkREsvwsMbi8L5G7a3YQZBtkMcb2GgzGMbzmGIIMLRtjgNdcbaCLJ/oagS2Oh8GgfuXrvLRDQ8ontW/T6fSwL55GWsoc3SepWtPEgq+08e+AQTCcHUPh/swlMm+0GqLqMtnpGFofo71GxVRlog95T0qPIwLt7DutOoWqSmbNfroSkkfSoyqe5oZpxbfGpsh9Nu3/Kc/iKaueNokT1HzR/fyfS2w6yArZyYmt2tSjj0ZD+UvOPzItzzEF9jv915cCMzuSb46JliWML9i9nbAQNC213fCyl2AmihPT8JpRiaZErFMGcdTf2oMrISMkm5qsogdH5XijwisVu6iBtGRMA2SP3ON8HrHQks8yb2hzdiew7+qUkkV1XkLDe5KxLxAWN56HwSj0TNLPQCfQ==
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Apr 2020 21:54:47.0737
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e909902e-0191-4b23-8482-08d7e250c7a3
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR02MB6161
+References: <20200407213058.62870-1-hdegoede@redhat.com> <CAKErNvqM9ax8RB+Hm0e70a_uk_Ok3KfSQDmy0q9jKFaAQM3Fsg@mail.gmail.com>
+ <b876973e-71f4-1dbc-1b41-138f81511685@redhat.com>
+In-Reply-To: <b876973e-71f4-1dbc-1b41-138f81511685@redhat.com>
+From:   Maxim Mikityanskiy <maxtram95@gmail.com>
+Date:   Fri, 17 Apr 2020 00:54:36 +0300
+Message-ID: <CAKErNvqqHAVAkETsSjneSpaPNwoaHh1F=4XKS8F+ZBPp0gR0YQ@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86: intel_int0002_vgpio: Only bind to the
+ INT0002 dev when using s2idle
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "5 . 3+" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add ZynqMP firmware ioctl enums for RPU configuration.
+On Tue, Apr 14, 2020 at 4:24 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Hi,
+>
+> On 4/8/20 2:11 PM, Maxim Mikityanskiy wrote:
+> > On Wed, Apr 8, 2020 at 12:31 AM Hans de Goede <hdegoede@redhat.com> wro=
+te:
+> >>
+> >> Commit 871f1f2bcb01 ("platform/x86: intel_int0002_vgpio: Only implemen=
+t
+> >> irq_set_wake on Bay Trail") stopped passing irq_set_wake requests on t=
+o
+> >> the parents IRQ because this was breaking suspend (causing immediate
+> >> wakeups) on an Asus E202SA.
+> >>
+> >> This workaround for this issue is mostly fine, on most Cherry Trail
+> >> devices where we need the INT0002 device for wakeups by e.g. USB kbds,
+> >> the parent IRQ is shared with the ACPI SCI and that is marked as wakeu=
+p
+> >> anyways.
+> >>
+> >> But not on all devices, specifically on a Medion Akoya E1239T there is
+> >> no SCI at all, and because the irq_set_wake request is not passed on t=
+o
+> >> the parent IRQ, wake up by the builtin USB kbd does not work here.
+> >>
+> >> So the workaround for the Asus E202SA immediate wake problem is causin=
+g
+> >> problems elsewhere; and in hindsight it is not the correct fix,
+> >> the Asus E202SA uses Airmont CPU cores, but this does not mean it is a
+> >> Cherry Trail based device, Brasswell uses Airmont CPU cores too and th=
+is
+> >> actually is a Braswell device.
+> >>
+> >> Most (all?) Braswell devices use classic S3 mode suspend rather then
+> >> s2idle suspend and in this case directly dealing with PME events as
+> >> the INT0002 driver does likely is not the best idea, so that this is
+> >> causing issues is not surprising.
+> >>
+> >> Replace the workaround of not passing irq_set_wake requests on to the
+> >> parents IRQ, by not binding to the INT0002 device when s2idle is not u=
+sed.
+> >> This fixes USB kbd wakeups not working on some Cherry Trail devices,
+> >> while still avoiding mucking with the wakeup flags on the Asus E202SA
+> >> (and other Brasswell devices).
+> >
+> > I tested this patch over kernel 5.6.2 on Asus E202SA and didn't notice
+> > any regressions. Wakeup by opening lid, by pressing a button on
+> > keyboard, by USB keyboard =E2=80=94 all seem to work fine. So, if appro=
+priate:
+> >
+> > Tested-by: Maxim Mikityanskiy <maxtram95@gmail.com>
+>
+> Thank you for testing this.
+>
+> > I have a question though. After your patch this driver will basically
+> > be a no-op on my laptop. Does it mean I don't even need it in the
+> > first place? What about the IRQ storm this driver is meant to deal
+> > with =E2=80=94 does it never happen on Braswell? What are the reproduct=
+ion
+> > steps to verify my hardware is not affected? I have that INT0002
+> > device, so I'm worried it may cause issues if not bound to the driver.
+>
+> I do not expect Braswell platforms to suffer from the IRQ storm
+> issue. That was something which I hit on a Cherry Trail based device.
+>
+> To test this, try waking up the device from suspend by an USB attached
+> keyboard (this may not work, in that case wake it some other way).
+>
+> After this do:
+>
+> cat /proc/interrupts | grep " 9-fasteoi"
+>
+> This should output something like this:
+>
+> [root@localhost ~]# cat /proc/interrupts | grep " 9-fasteoi"
+>     9:          0          0          0          0   IO-APIC    9-fasteoi=
+   acpi
+>
+> Repeat this a couple of times, of the numbers after the 9:
+> increase (very) rapidly you have an interrupt storm. Likely
+> they will either be fully unchanged or change very slowly.
 
-Signed-off-by: Ben Levinsky <ben.levinsky@xilinx.com>
----
- drivers/firmware/xilinx/zynqmp.c     |  4 ++++
- include/linux/firmware/xlnx-zynqmp.h | 19 +++++++++++++++++++
- 2 files changed, 23 insertions(+)
+Thanks a lot for the instructions. After a wakeup by USB keyboard, the
+counter increased by a few hundred (compared to the value before
+suspend), but there was no further growth, so it looks I'm safe.
+(Tested with your patch, of course.)
 
-diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
-index 41b6516..7978065 100644
---- a/drivers/firmware/xilinx/zynqmp.c
-+++ b/drivers/firmware/xilinx/zynqmp.c
-@@ -512,6 +512,10 @@ static int zynqmp_pm_clock_getparent(u32 clock_id, u32 *parent_id)
- static inline int zynqmp_is_valid_ioctl(u32 ioctl_id)
- {
- 	switch (ioctl_id) {
-+	case IOCTL_GET_RPU_OPER_MODE:
-+	case IOCTL_SET_RPU_OPER_MODE:
-+	case IOCTL_RPU_BOOT_ADDR_CONFIG:
-+	case IOCTL_TCM_COMB_CONFIG:
- 	case IOCTL_SD_DLL_RESET:
- 	case IOCTL_SET_SD_TAPDELAY:
- 	case IOCTL_SET_PLL_FRAC_MODE:
-diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
-index 8efa5ac..ddc996de 100644
---- a/include/linux/firmware/xlnx-zynqmp.h
-+++ b/include/linux/firmware/xlnx-zynqmp.h
-@@ -101,6 +101,10 @@ enum pm_ret_status {
- };
- 
- enum pm_ioctl_id {
-+	IOCTL_GET_RPU_OPER_MODE = 0,
-+	IOCTL_SET_RPU_OPER_MODE,
-+	IOCTL_RPU_BOOT_ADDR_CONFIG,
-+	IOCTL_TCM_COMB_CONFIG,
- 	IOCTL_SD_DLL_RESET = 6,
- 	IOCTL_SET_SD_TAPDELAY,
- 	IOCTL_SET_PLL_FRAC_MODE,
-@@ -120,6 +124,21 @@ enum pm_query_id {
- 	PM_QID_CLOCK_GET_MAX_DIVISOR,
- };
- 
-+enum rpu_oper_mode {
-+	PM_RPU_MODE_LOCKSTEP,
-+	PM_RPU_MODE_SPLIT,
-+};
-+
-+enum rpu_boot_mem {
-+	PM_RPU_BOOTMEM_LOVEC,
-+	PM_RPU_BOOTMEM_HIVEC,
-+};
-+
-+enum rpu_tcm_comb {
-+	PM_RPU_TCM_SPLIT,
-+	PM_RPU_TCM_COMB,
-+};
-+
- enum zynqmp_pm_reset_action {
- 	PM_RESET_ACTION_RELEASE,
- 	PM_RESET_ACTION_ASSERT,
--- 
-2.7.4
-
+> Note if nothing is output then IRQ 9 is not used on your
+> model, then the INT0002 device cannot cause an interrupt storm.
+>
+> Regards,
+>
+> Hans
+>
+>
+>
+> >
+> >> Cc: Maxim Mikityanskiy <maxtram95@gmail.com>
+> >> Cc: 5.3+ <stable@vger.kernel.org> # 5.3+
+> >> Fixes: 871f1f2bcb01 ("platform/x86: intel_int0002_vgpio: Only implemen=
+t irq_set_wake on Bay Trail")
+> >> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> >> ---
+> >>   drivers/platform/x86/intel_int0002_vgpio.c | 18 +++++-------------
+> >>   1 file changed, 5 insertions(+), 13 deletions(-)
+> >>
+> >> diff --git a/drivers/platform/x86/intel_int0002_vgpio.c b/drivers/plat=
+form/x86/intel_int0002_vgpio.c
+> >> index 55f088f535e2..e8bec72d3823 100644
+> >> --- a/drivers/platform/x86/intel_int0002_vgpio.c
+> >> +++ b/drivers/platform/x86/intel_int0002_vgpio.c
+> >> @@ -143,21 +143,9 @@ static struct irq_chip int0002_byt_irqchip =3D {
+> >>          .irq_set_wake           =3D int0002_irq_set_wake,
+> >>   };
+> >>
+> >> -static struct irq_chip int0002_cht_irqchip =3D {
+> >> -       .name                   =3D DRV_NAME,
+> >> -       .irq_ack                =3D int0002_irq_ack,
+> >> -       .irq_mask               =3D int0002_irq_mask,
+> >> -       .irq_unmask             =3D int0002_irq_unmask,
+> >> -       /*
+> >> -        * No set_wake, on CHT the IRQ is typically shared with the AC=
+PI SCI
+> >> -        * and we don't want to mess with the ACPI SCI irq settings.
+> >> -        */
+> >> -       .flags                  =3D IRQCHIP_SKIP_SET_WAKE,
+> >> -};
+> >> -
+> >>   static const struct x86_cpu_id int0002_cpu_ids[] =3D {
+> >>          INTEL_CPU_FAM6(ATOM_SILVERMONT, int0002_byt_irqchip),   /* Va=
+lleyview, Bay Trail  */
+> >> -       INTEL_CPU_FAM6(ATOM_AIRMONT, int0002_cht_irqchip),      /* Bra=
+swell, Cherry Trail */
+> >> +       INTEL_CPU_FAM6(ATOM_AIRMONT, int0002_byt_irqchip),      /* Bra=
+swell, Cherry Trail */
+> >>          {}
+> >>   };
+> >>
+> >> @@ -181,6 +169,10 @@ static int int0002_probe(struct platform_device *=
+pdev)
+> >>          if (!cpu_id)
+> >>                  return -ENODEV;
+> >>
+> >> +       /* We only need to directly deal with PMEs when using s2idle *=
+/
+> >> +       if (!pm_suspend_default_s2idle())
+> >> +               return -ENODEV;
+> >> +
+> >>          irq =3D platform_get_irq(pdev, 0);
+> >>          if (irq < 0)
+> >>                  return irq;
+> >> --
+> >> 2.26.0
+> >>
+> >
+>
