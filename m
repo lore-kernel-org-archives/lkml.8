@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 934F8C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:17:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 429F2C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 713C521D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:17:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 144CF214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:17:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587050264;
-	bh=NzVsl77g47J5ch7O3/qgCHAedtZoN5S+VS8l9N5SDAQ=;
+	s=default; t=1587050271;
+	bh=79z7BDql8stYOus3GTROCiSx/mTNrMJNRyoDBHRU8TQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=md/Y0kvhs5eITk+vIJMZXWzzNjWsQYdjhiBhR6R1AdeUyjeMChep0SytX71/SYezW
-	 DhV58Nglwj5hLGiMhbEs0z2qeq04gk+MTt4A2e9k8pyyGTiCt+BJsR1BKz+zKcTTwg
-	 CHY3PpbqKA97aMQ0pehdYsHcaen7okSWX5lk5790=
+	b=KQMMsGAhJ6ba3W6k0Hef8EUriQq8c7vHPJoVLP40ZxsbWpaqDJQI/FJnkAuvrSg1k
+	 i89K9MiaSjmUMKD5FXp0EvG0PM0mg/lhJqL5t2G3LRfgBfpZP3eEjEk2CBRYQ4kCwH
+	 TsxyvlgumPJDomMOPPee44NOBTFeeQPSTQhCacoE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395076AbgDPPRm (ORCPT
+        id S2442129AbgDPPRu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:17:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34764 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:17:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2636304AbgDPNsq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:48:46 -0400
+        id S2898758AbgDPNsk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:48:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1C31208E4;
-        Thu, 16 Apr 2020 13:48:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88A0D21744;
+        Thu, 16 Apr 2020 13:48:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044926;
-        bh=NzVsl77g47J5ch7O3/qgCHAedtZoN5S+VS8l9N5SDAQ=;
+        s=default; t=1587044919;
+        bh=79z7BDql8stYOus3GTROCiSx/mTNrMJNRyoDBHRU8TQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ot2RsA4DuCX9K0qVGJoAlME95UP5Kda1lU1TGxydofHdrGplMNZZ6O3R1K4Qn1kc3
-         KnZG43erD2IYFxTJ6RfAph7stkHuP9RCFTRxAjCbflfOLc2sLY49j5t7h/9T6+l91N
-         n0tK6bAWXZxyT9zPkwyWeq63gP5ZmnzSwlBklzjg=
+        b=KDGLRAtnlPtD4XFQE/+rfG+I04Q5N95Ub90j4kvLVUf2+wea8ZOr1kGPhFs+8LVap
+         6nbfLxqKMhZXgs0VpDGwHeHJHgVnlNn/uB1w1MexRdLkvtZRGSBFRkN0Sq8N5ei3ov
+         TVN4y8gprVY1ds4TnJNw43NvLlEauPe419fiRyWM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Scott Wood <swood@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 5.4 158/232] sched/core: Remove duplicate assignment in sched_tick_remote()
-Date:   Thu, 16 Apr 2020 15:24:12 +0200
-Message-Id: <20200416131334.775155848@linuxfoundation.org>
+        stable@vger.kernel.org, Laura Abbott <labbott@redhat.com>,
+        Anssi Hannula <anssi.hannula@bitwise.fi>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 5.4 155/232] tools: gpio: Fix out-of-tree build regression
+Date:   Thu, 16 Apr 2020 15:24:09 +0200
+Message-Id: <20200416131334.408829957@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -62,34 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Scott Wood <swood@redhat.com>
+From: Anssi Hannula <anssi.hannula@bitwise.fi>
 
-commit 82e0516ce3a147365a5dd2a9bedd5ba43a18663d upstream.
+commit 82f04bfe2aff428b063eefd234679b2d693228ed upstream.
 
-A redundant "curr = rq->curr" was added; remove it.
+Commit 0161a94e2d1c7 ("tools: gpio: Correctly add make dependencies for
+gpio_utils") added a make rule for gpio-utils-in.o but used $(output)
+instead of the correct $(OUTPUT) for the output directory, breaking
+out-of-tree build (O=xx) with the following error:
 
-Fixes: ebc0f83c78a2 ("timers/nohz: Update NOHZ load in remote tick")
-Signed-off-by: Scott Wood <swood@redhat.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/1580776558-12882-1-git-send-email-swood@redhat.com
-Cc: Guenter Roeck <linux@roeck-us.net>
+  No rule to make target 'out/tools/gpio/gpio-utils-in.o', needed by 'out/tools/gpio/lsgpio-in.o'.  Stop.
+
+Fix that.
+
+Fixes: 0161a94e2d1c ("tools: gpio: Correctly add make dependencies for gpio_utils")
+Cc: <stable@vger.kernel.org>
+Cc: Laura Abbott <labbott@redhat.com>
+Signed-off-by: Anssi Hannula <anssi.hannula@bitwise.fi>
+Link: https://lore.kernel.org/r/20200325103154.32235-1-anssi.hannula@bitwise.fi
+Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/sched/core.c |    1 -
- 1 file changed, 1 deletion(-)
+ tools/gpio/Makefile |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -3676,7 +3676,6 @@ static void sched_tick_remote(struct wor
- 	if (cpu_is_offline(cpu))
- 		goto out_unlock;
+--- a/tools/gpio/Makefile
++++ b/tools/gpio/Makefile
+@@ -35,7 +35,7 @@ $(OUTPUT)include/linux/gpio.h: ../../inc
  
--	curr = rq->curr;
- 	update_rq_clock(rq);
+ prepare: $(OUTPUT)include/linux/gpio.h
  
- 	if (!is_idle_task(curr)) {
+-GPIO_UTILS_IN := $(output)gpio-utils-in.o
++GPIO_UTILS_IN := $(OUTPUT)gpio-utils-in.o
+ $(GPIO_UTILS_IN): prepare FORCE
+ 	$(Q)$(MAKE) $(build)=gpio-utils
+ 
 
 
