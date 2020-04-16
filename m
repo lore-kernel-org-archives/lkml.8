@@ -2,223 +2,119 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C470C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5017DC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:49:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52B6421973
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:49:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E8C821973
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:49:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587041380;
+	bh=rQFw7uHZtK1V/T4CiIC4tQ899MpaJHNAwzqsJ4CngmU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZIZ/VRRasN4yK1aftt1k5HjN4TTABTQiwSIVM1oLx8C3H+yqALsxvn/nZ3EgAP92s
+	 ppd0Kv+wF55VvABu+T1kynCvqjODOjmQ6dof/O5/P9ZYklBOjCwQ8DDIxlqx/EfSdY
+	 Cr45GdyTPVGa+qx8c8yaWAiNiosHGQxJ+G06Z8X8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2894504AbgDPMtB (ORCPT
+        id S2894543AbgDPMtf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 08:49:01 -0400
-Received: from foss.arm.com ([217.140.110.172]:60258 "EHLO foss.arm.com"
+        Thu, 16 Apr 2020 08:49:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2635962AbgDPMsj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 08:48:39 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B0A39C14;
-        Thu, 16 Apr 2020 05:48:38 -0700 (PDT)
-Received: from [10.57.59.184] (unknown [10.57.59.184])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 940FD3F68F;
-        Thu, 16 Apr 2020 05:48:36 -0700 (PDT)
-Subject: Re: [PATCH 2/3] media: rockchip: Introduce driver for Rockhip's
- camera interface
-To:     Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        linux-rockchip@lists.infradead.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
-References: <20200403142122.297283-1-maxime.chevallier@bootlin.com>
- <20200403142122.297283-3-maxime.chevallier@bootlin.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <18d46e23-a7fa-ddaf-690f-f06580a536cb@arm.com>
-Date:   Thu, 16 Apr 2020 13:48:35 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S2894515AbgDPMtF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 08:49:05 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92028208E4;
+        Thu, 16 Apr 2020 12:49:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587041344;
+        bh=rQFw7uHZtK1V/T4CiIC4tQ899MpaJHNAwzqsJ4CngmU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iDAIbZNBoZRv8qIU0jr4LVPMGxXIUHcViCvUwImIZjGHDArrKPy94zfX45DK0nWdh
+         N06rHaUtvoz1GIAWL2P6q90fLJ4kZEngITab5TR04rgHw1KSMnYQt6rh9xr3eW9N9d
+         iefMEwn/6Q18J3k9Um553PKsohEHW4/nn/pEU1jo=
+Date:   Thu, 16 Apr 2020 13:48:59 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        kernel-team@android.com, Michael Ellerman <mpe@ellerman.id.au>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: Re: [PATCH v3 00/12] Rework READ_ONCE() to improve codegen
+Message-ID: <20200416124858.GA32685@willie-the-truck>
+References: <20200415165218.20251-1-will@kernel.org>
+ <809e006e-6641-c252-53a1-cc4479d2ca89@de.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200403142122.297283-3-maxime.chevallier@bootlin.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <809e006e-6641-c252-53a1-cc4479d2ca89@de.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maxime,
+On Thu, Apr 16, 2020 at 02:30:36PM +0200, Christian Borntraeger wrote:
+> 
+> On 15.04.20 18:52, Will Deacon wrote:
+> > Hi everyone,
+> > 
+> > This is version three of the patches I previously posted for improving
+> > the code generation of READ_ONCE() and moving the minimum GCC version
+> > to 4.8:
+> > 
+> > RFC: https://lore.kernel.org/lkml/20200110165636.28035-1-will@kernel.org
+> > v2:  https://lore.kernel.org/lkml/20200123153341.19947-1-will@kernel.org
+> > 
+> > Although v2 was queued up by Peter in -tip, it was found to break the
+> > build for m68k and sparc32. We fixed m68k during the merge window and
+> > I've since posted patches to fix sparc32 here:
+> > 
+> >   https://lore.kernel.org/lkml/20200414214011.2699-1-will@kernel.org
+> > 
+> > This series is a refresh on top of 5.7-rc1, the main changes being:
+> > 
+> >   * Fix another issue where 'const' is assigned to non-const via
+> >     WRITE_ONCE(), this time in the tls code
+> > 
+> >   * Fix READ_ONCE_NOCHECK() abuse in arm64 checksum code
+> > 
+> >   * Added Reviewed-bys and Acks from v2
+> > 
+> > Hopefully this can be considered for 5.8, along with the sparc32 changes.
+> > 
+> > Cheers,
+> > 
+> > Will
+> > 
+> > Cc: Michael Ellerman <mpe@ellerman.id.au>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> > Cc: Segher Boessenkool <segher@kernel.crashing.org>
+> > Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+> > Cc: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Cc: Peter Oberparleiter <oberpar@linux.ibm.com>
+> > Cc: Masahiro Yamada <masahiroy@kernel.org>
+> > Cc: Nick Desaulniers <ndesaulniers@google.com>
+> > 
+> 
+> I gave this series a try and s390 seems to compile fine and it also seems to
+> properly compile the the ipte_unlock_siif function in arch/s390/kvm/gaccess.c
+> This function was miscompiled with gcc4.6 and the trigger for replacing
+> ACCESS_ONCE with READ_ONCE
 
-Just a handful of drive-by cleanup suggestions to help this smell less 
-like a BSP driver...
+That's good to hear, thanks Christian!
 
-(one day I still hope to get round to playing with what appears to be 
-the DVP interface populated but unused inside my RK3288 box, and the 
-camera module I picked up to supposedly fit it, but alas not today)
-
-On 2020-04-03 3:21 pm, Maxime Chevallier wrote:
-[...]
-> +static int rkcif_plat_probe(struct platform_device *pdev)
-> +{
-> +	const struct of_device_id *match;
-> +	struct device_node *node = pdev->dev.of_node;
-> +	struct device *dev = &pdev->dev;
-> +	struct v4l2_device *v4l2_dev;
-> +	struct rkcif_device *cif_dev;
-> +	const struct cif_match_data *data;
-> +	struct resource *res;
-> +	int i, ret, irq;
-> +
-> +	match = of_match_node(rkcif_plat_of_match, node);
-> +	if (IS_ERR(match))
-> +		return PTR_ERR(match);
-
-of_device_get_match_data()
-
-> +
-> +	cif_dev = devm_kzalloc(dev, sizeof(*cif_dev), GFP_KERNEL);
-> +	if (!cif_dev)
-> +		return -ENOMEM;
-> +
-> +	dev_set_drvdata(dev, cif_dev);
-> +	cif_dev->dev = dev;
-> +
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (irq < 0)
-> +		return irq;
-> +
-> +	ret = devm_request_irq(dev, irq, rkcif_irq_handler, IRQF_SHARED,
-> +			       dev_driver_string(dev), dev);
-> +	if (ret < 0) {
-> +		dev_err(dev, "request irq failed: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	cif_dev->irq = irq;
-> +	data = match->data;
-> +	cif_dev->chip_id = data->chip_id;
-
-It pretty much breaks even at the moment, but consider just holding a 
-pointer to data itself rather than copying multiple fields into cif_dev, 
-particularly if there's any likelihood of adding more in future. The 
-couple of places clk_size and chip_id are used here don't really look 
-like critical fast-paths where cache/TLB locality is super-important.
-
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	cif_dev->base_addr = devm_ioremap_resource(dev, res);
-
-devm_platform_ioremap_resource()
-
-> +
-> +	if (IS_ERR(cif_dev->base_addr))
-> +		return PTR_ERR(cif_dev->base_addr);
-> +
-> +	if (data->clks_num > RKCIF_MAX_BUS_CLK ||
-> +		data->rsts_num > RKCIF_MAX_RESET) {
-
-It's silly to have runtime checks of constants - BUILD_BUG_ON() 
-somewhere if you really want to validate that the driver data is 
-self-consistent.
-
-> +		dev_err(dev, "out of range: clks(%d %d) rsts(%d %d)\n",
-> +			data->clks_num, RKCIF_MAX_BUS_CLK,
-> +			data->rsts_num, RKCIF_MAX_RESET);
-> +		return -EINVAL;
-> +	}
-> +
-> +	for (i = 0; i < data->clks_num; i++) {
-> +		struct clk *clk = devm_clk_get(dev, data->clks[i]);
-> +
-> +		if (IS_ERR(clk)) {
-> +			dev_err(dev, "failed to get %s\n", data->clks[i]);
-> +			return PTR_ERR(clk);
-> +		}
-> +
-> +		cif_dev->clks[i] = clk;
-> +	}
-
-All of the clock handling looks like it could use the clk_bulk_* APIs.
-
-> +
-> +	cif_dev->clk_size = data->clks_num;
-> +
-> +	for (i = 0; i < data->rsts_num; i++) {
-> +		struct reset_control *rst =
-> +			devm_reset_control_get(dev, data->rsts[i]);
-> +		if (IS_ERR(rst)) {
-> +			dev_err(dev, "failed to get %s\n", data->rsts[i]);
-> +			return PTR_ERR(rst);
-> +		}
-> +		cif_dev->cif_rst[i] = rst;
-> +	}
-
-And possibly the reset_control_array_* APIs for resets? (assuming there 
-isn't a subtle ordering requirement implicit in data->rsts)
-
-> +
-> +	/* Initialize the stream */
-> +	rkcif_stream_init(cif_dev);
-> +
-> +	strlcpy(cif_dev->media_dev.model, "rkcif",
-> +		sizeof(cif_dev->media_dev.model));
-> +	cif_dev->media_dev.dev = &pdev->dev;
-> +	v4l2_dev = &cif_dev->v4l2_dev;
-> +	v4l2_dev->mdev = &cif_dev->media_dev;
-> +	strlcpy(v4l2_dev->name, "rkcif", sizeof(v4l2_dev->name));
-> +	v4l2_ctrl_handler_init(&cif_dev->ctrl_handler, 8);
-> +	v4l2_dev->ctrl_handler = &cif_dev->ctrl_handler;
-> +
-> +	ret = v4l2_device_register(cif_dev->dev, &cif_dev->v4l2_dev);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	media_device_init(&cif_dev->media_dev);
-> +
-> +	ret = media_device_register(&cif_dev->media_dev);
-> +	if (ret < 0) {
-> +		v4l2_err(v4l2_dev, "Failed to register media device: %d\n",
-> +			 ret);
-> +		goto err_unreg_v4l2_dev;
-> +	}
-> +
-> +	/* create & register platefom subdev (from of_node) */
-> +	ret = rkcif_register_platform_subdevs(cif_dev);
-> +	if (ret < 0)
-> +		goto err_unreg_media_dev;
-> +
-> +	ret = of_reserved_mem_device_init(dev);
-> +	if (ret)
-> +		v4l2_warn(v4l2_dev, "No reserved memory region assign to CIF\n");
-
-It feels like that should probably happen earlier in the "resource 
-acquisition" part of probe, before any external init/register calls that 
-in principle could want to preallocate DMA buffers.
-
-Also, is the lack of reserved memory really a warn-level condition? The 
-DT binding doesn't even appear to treat a "memory-region" property as 
-legal, and with CMA or (as appears to be the case for at least RK3288) 
-an IOMMU, it should be largely moot anyway.
-
-Robin.
-
-> +
-> +	pm_runtime_enable(&pdev->dev);
-> +
-> +	return 0;
-> +
-> +err_unreg_media_dev:
-> +	media_device_unregister(&cif_dev->media_dev);
-> +err_unreg_v4l2_dev:
-> +	v4l2_device_unregister(&cif_dev->v4l2_dev);
-> +	return ret;
-> +}
+Will
