@@ -2,582 +2,104 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E6F9C352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:02:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10A21C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:02:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B38E20787
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:02:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D835D206A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:02:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zS3y8Lnl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437942AbgDPHCo (ORCPT
+        id S2438011AbgDPHCq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 03:02:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51824 "EHLO
+        Thu, 16 Apr 2020 03:02:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2437734AbgDPHCf (ORCPT
+        by vger.kernel.org with ESMTP id S2437748AbgDPHCf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Apr 2020 03:02:35 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E8DAC03C1A7
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95964C03C1A8
         for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 00:02:34 -0700 (PDT)
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jOyXY-0005qW-Uv; Thu, 16 Apr 2020 09:02:24 +0200
-Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jOyXY-0003XK-Hr; Thu, 16 Apr 2020 09:02:24 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        Rob Herring <robh@kernel.org>,
-        Robin van der Gracht <robin@protonic.nl>,
-        David Jander <david@protonic.nl>, devicetree@vger.kernel.org,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>
-Subject: [PATCH v5 3/4] ARM: dts: add Protonic VT7 board
-Date:   Thu, 16 Apr 2020 09:02:21 +0200
-Message-Id: <20200416070222.12181-4-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.26.0.rc2
-In-Reply-To: <20200416070222.12181-1-o.rempel@pengutronix.de>
-References: <20200416070222.12181-1-o.rempel@pengutronix.de>
+Received: by mail-wr1-x443.google.com with SMTP id j2so3481589wrs.9
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 00:02:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=UcbV/1U7fcT3mqmBtnCZDKM08tchT85s7YFfnWx+Mb8=;
+        b=zS3y8LnlF68g0JllYixN26PbAwCSYY7xSlE8nXjsy7YcsVxDwbGAO2rKjNYL1Vw91a
+         cDrmXmEMPfKStjnT6sMkP5P5xZ8usWxZHQ37ENd8X7uF3wahkUpFfF65sbOObwpTipWH
+         TwoCG+Z5BXWUk1u0ookteA/VWEm7Wd0Jed1o8tTilBP9B0hvhsJE5Z0KHkyyIpWzxfRH
+         doTWrjcELR9xW1KFiQWOEp6uzvD1Nu0DMMHEgI58rgOUMG1xKY+G6wCXfFHBYPbGaMxd
+         5TBnIdhsAJvm7fT4SxC6iM6fvjYQgs5DBb/i/3w3d45KPazkLTm3Ew6LM+RzDHcGFe5f
+         6/Nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=UcbV/1U7fcT3mqmBtnCZDKM08tchT85s7YFfnWx+Mb8=;
+        b=hIwGpRv8bJAOZA4Ac80sAwTKYE4FQ9U+a7QEuD2LiPFihFxtYqurd+bi/hXB13aehV
+         c/ZraDvV4dzELTD2QEyGexB/MDtq6fmAX/a02LyuI+DzlihbTrOVQcQsQ3u8qDI5ViVa
+         4MqJkrPeEfDerQM1wBfXyA6K5T3m9jVZoPGQghkuIrp4J6cOrflEleAKz9A4PUehM/z5
+         SorhfVD4NywnomPG1thZdZ6f87ed6XwaRzotU2vCMRqLBt8fvlzIzu8LjxDp+qMF4v7l
+         2EiXVdC7OWbLjh1fEFpWO9ow3GksjoN3LMW5v9AGEqKrQzPnuiaCiuIxKuUFPnNPV9lt
+         jDEg==
+X-Gm-Message-State: AGi0PuaESR6T3KrsQHgajW9a4oueAS8JAeYh/FGcqNdUcCwJoSv4Kvwt
+        aCHvyM1vG7EdIa9su3U2iSbBEQ==
+X-Google-Smtp-Source: APiQypJ96rWLxKp7VAvSeHK7hZEqilWnmaYg11vV8dBdjgLm8n9pRM8C8e1VgmyHDPezkPAvIIBirQ==
+X-Received: by 2002:adf:ed0e:: with SMTP id a14mr32770394wro.400.1587020553212;
+        Thu, 16 Apr 2020 00:02:33 -0700 (PDT)
+Received: from dell ([95.149.164.124])
+        by smtp.gmail.com with ESMTPSA id j11sm4915082wrr.62.2020.04.16.00.02.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Apr 2020 00:02:32 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 08:03:23 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     fabrice.gasnier@st.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        daniel.lezcano@linaro.org, tglx@linutronix.de,
+        devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 4/6] mfd: stm32: enable regmap fast_io for
+ stm32-lptimer
+Message-ID: <20200416070323.GO2167633@dell>
+References: <20200401083909.18886-1-benjamin.gaignard@st.com>
+ <20200401083909.18886-5-benjamin.gaignard@st.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20200401083909.18886-5-benjamin.gaignard@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Protonic VT7 is a mid-class ISObus Virtual Terminal with a 7 inch
-touchscreen display.
+On Wed, 01 Apr 2020, Benjamin Gaignard wrote:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Robin van der Gracht <robin@protonic.nl>
-Signed-off-by: David Jander <david@protonic.nl>
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
- .../devicetree/bindings/arm/fsl.yaml          |   1 +
- arch/arm/boot/dts/Makefile                    |   1 +
- arch/arm/boot/dts/imx6dl-prtvt7.dts           | 473 ++++++++++++++++++
- 3 files changed, 475 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6dl-prtvt7.dts
+> Because stm32-lptimer need to write in registers in interrupt context
+> enable regmap fast_io to use a spin_lock to protect registers access
+> rather than a mutex.
+> 
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> ---
+>  drivers/mfd/stm32-lptimer.c | 1 +
+>  1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-index 5bdf8d38b2f0b..424be1edf005a 100644
---- a/Documentation/devicetree/bindings/arm/fsl.yaml
-+++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-@@ -168,6 +168,7 @@ properties:
-               - emtrion,emcon-mx6-avari   # emCON-MX6S or emCON-MX6DL SoM on Avari Base
-               - fsl,imx6dl-sabreauto      # i.MX6 DualLite/Solo SABRE Automotive Board
-               - fsl,imx6dl-sabresd        # i.MX6 DualLite SABRE Smart Device Board
-+              - prt,prtvt7                # Protonic VT7 board
-               - technologic,imx6dl-ts4900
-               - technologic,imx6dl-ts7970
-               - toradex,colibri_imx6dl          # Colibri iMX6 Module
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index b6fc2b375a616..e53abe1de259c 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -446,6 +446,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
- 	imx6dl-nitrogen6x.dtb \
- 	imx6dl-phytec-mira-rdk-nand.dtb \
- 	imx6dl-phytec-pbab01.dtb \
-+	imx6dl-prtvt7.dtb \
- 	imx6dl-rex-basic.dtb \
- 	imx6dl-riotboard.dtb \
- 	imx6dl-sabreauto.dtb \
-diff --git a/arch/arm/boot/dts/imx6dl-prtvt7.dts b/arch/arm/boot/dts/imx6dl-prtvt7.dts
-new file mode 100644
-index 0000000000000..c90c0e197b64a
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6dl-prtvt7.dts
-@@ -0,0 +1,473 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
-+/*
-+ * Copyright (c) 2016 Protonic Holland
-+ */
-+
-+/dts-v1/;
-+#include "imx6dl.dtsi"
-+#include "imx6qdl-prti6q.dtsi"
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/leds/common.h>
-+#include <dt-bindings/sound/fsl-imx-audmux.h>
-+
-+/ {
-+	model = "Protonic VT7";
-+	compatible = "prt,prtvt7", "fsl,imx6dl";
-+
-+	memory@10000000 {
-+		device_type = "memory";
-+		reg = <0x10000000 0x20000000>;
-+	};
-+
-+	backlight_lcd: backlight-lcd {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm1 0 500000>;
-+		brightness-levels = <0 20 81 248 1000>;
-+		default-brightness-level = <20>;
-+		num-interpolated-steps = <21>;
-+		power-supply = <&reg_12v_bl>;
-+		enable-gpios = <&gpio4 28 GPIO_ACTIVE_HIGH>;
-+		status = "okay";
-+	};
-+
-+	display {
-+		compatible = "fsl,imx-parallel-display";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_ipu1_disp>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		interface-pix-fmt = "rgb24";
-+		status = "okay";
-+
-+		port@0 {
-+			reg = <0>;
-+
-+			display_in: endpoint {
-+				remote-endpoint = <&ipu1_di0_disp0>;
-+			};
-+		};
-+
-+		port@1 {
-+			reg = <1>;
-+
-+			display_out: endpoint {
-+				remote-endpoint = <&panel_in>;
-+			};
-+		};
-+	};
-+
-+	keys {
-+		compatible = "gpio-keys";
-+		autorepeat;
-+
-+		esc {
-+			label = "GPIO Key ESC";
-+			linux,code = <KEY_ESC>;
-+			gpios = <&gpio_pca 0 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		up {
-+			label = "GPIO Key UP";
-+			linux,code = <KEY_UP>;
-+			gpios = <&gpio_pca 1 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		down {
-+			label = "GPIO Key DOWN";
-+			linux,code = <KEY_DOWN>;
-+			gpios = <&gpio_pca 4 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		enter {
-+			label = "GPIO Key Enter";
-+			linux,code = <KEY_ENTER>;
-+			gpios = <&gpio_pca 3 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		cycle {
-+			label = "GPIO Key CYCLE";
-+			linux,code = <KEY_CYCLEWINDOWS>;
-+			gpios = <&gpio_pca 2 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		f1 {
-+			label = "GPIO Key F1";
-+			linux,code = <KEY_F1>;
-+			gpios = <&gpio_pca 14 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		f2 {
-+			label = "GPIO Key F2";
-+			linux,code = <KEY_F2>;
-+			gpios = <&gpio_pca 13 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		f3 {
-+			label = "GPIO Key F3";
-+			linux,code = <KEY_F3>;
-+			gpios = <&gpio_pca 12 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		f4 {
-+			label = "GPIO Key F4";
-+			linux,code = <KEY_F4>;
-+			gpios = <&gpio_pca 11 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		f5 {
-+			label = "GPIO Key F5";
-+			linux,code = <KEY_F5>;
-+			gpios = <&gpio_pca 10 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		f6 {
-+			label = "GPIO Key F6";
-+			linux,code = <KEY_F6>;
-+			gpios = <&gpio_pca 5 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		f7 {
-+			label = "GPIO Key F7";
-+			linux,code = <KEY_F7>;
-+			gpios = <&gpio_pca 6 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		f8 {
-+			label = "GPIO Key F8";
-+			linux,code = <KEY_F8>;
-+			gpios = <&gpio_pca 7 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		f9 {
-+			label = "GPIO Key F9";
-+			linux,code = <KEY_F9>;
-+			gpios = <&gpio_pca 8 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		f10 {
-+			label = "GPIO Key F10";
-+			linux,code = <KEY_F10>;
-+			gpios = <&gpio_pca 9 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_leds>;
-+
-+		led-debug0 {
-+			function = LED_FUNCTION_STATUS;
-+			gpios = <&gpio1 8 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "heartbeat";
-+		};
-+	};
-+
-+	panel {
-+		compatible = "innolux,g070y2t0ec";
-+		backlight = <&backlight_lcd>;
-+
-+		port {
-+			panel_in: endpoint {
-+				remote-endpoint = <&display_out>;
-+			};
-+		};
-+	};
-+
-+	reg_12v_bl: regulator-bl-12v {
-+		compatible = "regulator-fixed";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_reg_12v_bl>;
-+		regulator-name = "12v-bl";
-+		regulator-min-microvolt = <12000000>;
-+		regulator-max-microvolt = <12000000>;
-+		gpio = <&gpio1 7 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	reg_1v8: regulator-1v8 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "1v8";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-always-on;
-+	};
-+
-+	sound {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,name = "prti6q-sgtl5000";
-+		simple-audio-card,format = "i2s";
-+		simple-audio-card,widgets =
-+			"Microphone", "Microphone Jack",
-+			"Line", "Line In Jack",
-+			"Headphone", "Headphone Jack",
-+			"Speaker", "External Speaker";
-+		simple-audio-card,routing =
-+			"MIC_IN", "Microphone Jack",
-+			"LINE_IN", "Line In Jack",
-+			"Headphone Jack", "HP_OUT",
-+			"External Speaker", "LINE_OUT";
-+
-+		simple-audio-card,cpu {
-+			sound-dai = <&ssi1>;
-+			system-clock-frequency = <0>;
-+		};
-+
-+		simple-audio-card,codec {
-+			sound-dai = <&sgtl5000>;
-+			bitclock-master;
-+			frame-master;
-+		};
-+	};
-+};
-+
-+&clks {
-+	assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>;
-+	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL5_VIDEO_DIV>;
-+};
-+
-+&ecspi2 {
-+	cs-gpios = <&gpio2 26 GPIO_ACTIVE_HIGH>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_ecspi2>;
-+	status = "okay";
-+
-+	tsc@0 {
-+		compatible = "ti,tsc2046";
-+		reg = <0>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_tsc>;
-+		spi-max-frequency = <100000>;
-+		interrupts-extended = <&gpio3 20 IRQ_TYPE_EDGE_FALLING>;
-+		pendown-gpio = <&gpio3 20 GPIO_ACTIVE_HIGH>;
-+		vcc-supply = <&reg_3v3>;
-+
-+		ti,vref-delay-usecs = /bits/ 16 <100>;
-+
-+		ti,x-min = /bits/ 16 <0>;
-+		ti,x-max = /bits/ 16 <8000>;
-+		ti,y-min = /bits/ 16 <0>;
-+		ti,y-max = /bits/ 16 <4800>;
-+		ti,x-plate-ohms = /bits/ 16 <800>;
-+		ti,y-plate-ohms = /bits/ 16 <300>;
-+		ti,pressure-max = /bits/ 16 <4095>;
-+
-+		ti,skip-samples = <2>;
-+		ti,sample-period-msecs = <10>;
-+		ti,report-period-msecs = <30>;
-+
-+		ti,filter-tolerance = <80>;
-+		ti,touch-resistance-threshold = <3500>;
-+	};
-+};
-+
-+&audmux {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_audmux>;
-+	status = "okay";
-+
-+	mux_ssi1 {
-+		fsl,audmux-port = <0>;
-+		fsl,port-config = <
-+			IMX_AUDMUX_V2_PTCR_SYN 		0
-+			IMX_AUDMUX_V2_PTCR_TFSEL(2) 	0
-+			IMX_AUDMUX_V2_PTCR_TCSEL(2) 	0
-+			IMX_AUDMUX_V2_PTCR_TFSDIR 	0
-+			IMX_AUDMUX_V2_PTCR_TCLKDIR IMX_AUDMUX_V2_PDCR_RXDSEL(2)
-+		>;
-+	};
-+
-+	mux_pins3 {
-+		fsl,audmux-port = <2>;
-+		fsl,port-config = <
-+			IMX_AUDMUX_V2_PTCR_SYN IMX_AUDMUX_V2_PDCR_RXDSEL(0)
-+			0		       IMX_AUDMUX_V2_PDCR_TXRXEN
-+		>;
-+	};
-+};
-+
-+&can1 {
-+	pinctrl-0 = <&pinctrl_can1 &pinctrl_can1phy>;
-+};
-+
-+&i2c1 {
-+	sgtl5000: codec@a {
-+		compatible = "fsl,sgtl5000";
-+		reg = <0xa>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_codec>;
-+		#sound-dai-cells = <0>;
-+		clocks = <&clks 201>;
-+		VDDA-supply = <&reg_3v3>;
-+		VDDIO-supply = <&reg_3v3>;
-+		VDDD-supply = <&reg_1v8>;
-+	};
-+};
-+
-+&i2c3 {
-+	rtc@51 {
-+		compatible = "nxp,pcf8563";
-+		reg = <0x51>;
-+	};
-+
-+	gpio_pca: gpio@74 {
-+		compatible = "nxp,pca9539";
-+		reg = <0x74>;
-+		interrupts-extended = <&gpio4 5 IRQ_TYPE_LEVEL_LOW>;
-+		#gpio-cells = <2>;
-+		gpio-controller;
-+	};
-+};
-+
-+&ipu1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_ipu1_csi0>;
-+	status = "okay";
-+};
-+
-+&ipu1_di0_disp0 {
-+	remote-endpoint = <&display_in>;
-+};
-+
-+&pwm1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm1>;
-+	status = "okay";
-+};
-+
-+&snvs_poweroff {
-+	status = "okay";
-+};
-+
-+&snvs_pwrkey {
-+	status = "okay";
-+};
-+
-+&ssi1 {
-+	#sound-dai-cells = <0>;
-+	fsl,mode = "i2s-slave";
-+	status = "okay";
-+};
-+
-+&usbh1 {
-+	status = "disabled";
-+};
-+
-+&vpu {
-+	status = "disabled";
-+};
-+
-+&iomuxc {
-+	pinctrl_audmux: audmuxgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_CSI0_MCLK__CCM_CLKO1		0x030b0
-+			MX6QDL_PAD_CSI0_DAT7__AUD3_RXD		0x130b0
-+			MX6QDL_PAD_CSI0_DAT4__AUD3_TXC		0x130b0
-+			MX6QDL_PAD_CSI0_DAT5__AUD3_TXD		0x110b0
-+			MX6QDL_PAD_CSI0_DAT6__AUD3_TXFS		0x130b0
-+		>;
-+	};
-+
-+	pinctrl_can1phy: can1phy {
-+		fsl,pins = <
-+			/* CAN1_SR */
-+			MX6QDL_PAD_KEY_COL3__GPIO4_IO12		0x13070
-+			/* CAN1_TERM */
-+			MX6QDL_PAD_GPIO_0__GPIO1_IO00		0x1b0b0
-+		>;
-+	};
-+
-+	pinctrl_codec: codecgrp {
-+		fsl,pins = <
-+			/* AUDIO_nRESET */
-+			MX6QDL_PAD_CSI0_VSYNC__GPIO5_IO21	0x1f0b0
-+		>;
-+	};
-+
-+	pinctrl_ecspi2: ecspi2grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_EIM_OE__ECSPI2_MISO		0x100b1
-+			MX6QDL_PAD_EIM_CS0__ECSPI2_SCLK		0x100b1
-+			MX6QDL_PAD_EIM_CS1__ECSPI2_MOSI		0x100b1
-+			MX6QDL_PAD_EIM_RW__GPIO2_IO26		0x000b1
-+		>;
-+	};
-+
-+	pinctrl_ipu1_csi0: ipu1csi0grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_CSI0_DAT12__IPU1_CSI0_DATA12	0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT13__IPU1_CSI0_DATA13	0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT14__IPU1_CSI0_DATA14	0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT15__IPU1_CSI0_DATA15	0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT16__IPU1_CSI0_DATA16	0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT17__IPU1_CSI0_DATA17	0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT18__IPU1_CSI0_DATA18	0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT19__IPU1_CSI0_DATA19	0x1b0b0
-+			MX6QDL_PAD_CSI0_PIXCLK__IPU1_CSI0_PIXCLK 0x1b0b0
-+			/* ITU656_nRESET */
-+			MX6QDL_PAD_GPIO_2__GPIO1_IO02		0x1b0b0
-+			/* ITU656_nPDN */
-+			MX6QDL_PAD_CSI0_DATA_EN__GPIO5_IO20	0x1b0b0
-+		>;
-+	};
-+
-+	pinctrl_ipu1_disp: ipudisp1grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_DI0_DISP_CLK__IPU1_DI0_DISP_CLK 0xb0
-+			MX6QDL_PAD_DI0_PIN15__IPU1_DI0_PIN15	   0xb0
-+
-+			MX6QDL_PAD_DISP0_DAT0__IPU1_DISP0_DATA00 0xb0
-+			MX6QDL_PAD_DISP0_DAT1__IPU1_DISP0_DATA01 0xb0
-+			MX6QDL_PAD_DISP0_DAT2__IPU1_DISP0_DATA02 0xb0
-+			MX6QDL_PAD_DISP0_DAT3__IPU1_DISP0_DATA03 0xb0
-+			MX6QDL_PAD_DISP0_DAT4__IPU1_DISP0_DATA04 0xb0
-+			MX6QDL_PAD_DISP0_DAT5__IPU1_DISP0_DATA05 0xb0
-+			MX6QDL_PAD_DISP0_DAT6__IPU1_DISP0_DATA06 0xb0
-+			MX6QDL_PAD_DISP0_DAT7__IPU1_DISP0_DATA07 0xb0
-+
-+			MX6QDL_PAD_DISP0_DAT8__IPU1_DISP0_DATA08 0xb0
-+			MX6QDL_PAD_DISP0_DAT9__IPU1_DISP0_DATA09 0xb0
-+			MX6QDL_PAD_DISP0_DAT10__IPU1_DISP0_DATA10 0xb0
-+			MX6QDL_PAD_DISP0_DAT11__IPU1_DISP0_DATA11 0xb0
-+			MX6QDL_PAD_DISP0_DAT12__IPU1_DISP0_DATA12 0xb0
-+			MX6QDL_PAD_DISP0_DAT13__IPU1_DISP0_DATA13 0xb0
-+			MX6QDL_PAD_DISP0_DAT14__IPU1_DISP0_DATA14 0xb0
-+			MX6QDL_PAD_DISP0_DAT15__IPU1_DISP0_DATA15 0xb0
-+
-+			MX6QDL_PAD_DISP0_DAT16__IPU1_DISP0_DATA16 0xb0
-+			MX6QDL_PAD_DISP0_DAT17__IPU1_DISP0_DATA17 0xb0
-+			MX6QDL_PAD_DISP0_DAT18__IPU1_DISP0_DATA18 0xb0
-+			MX6QDL_PAD_DISP0_DAT19__IPU1_DISP0_DATA19 0xb0
-+			MX6QDL_PAD_DISP0_DAT20__IPU1_DISP0_DATA20 0xb0
-+			MX6QDL_PAD_DISP0_DAT21__IPU1_DISP0_DATA21 0xb0
-+			MX6QDL_PAD_DISP0_DAT22__IPU1_DISP0_DATA22 0xb0
-+			MX6QDL_PAD_DISP0_DAT23__IPU1_DISP0_DATA23 0xb0
-+		>;
-+	};
-+
-+	pinctrl_leds: ledsgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_GPIO_8__GPIO1_IO08		0x1b0b0
-+		>;
-+	};
-+
-+	pinctrl_pwm1: pwm1grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_GPIO_9__PWM1_OUT		0x1b0b0
-+		>;
-+	};
-+
-+	pinctrl_reg_12v_bl: 12blgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_GPIO_7__GPIO1_IO07		0x1b0b0
-+		>;
-+	};
-+
-+	pinctrl_tsc: tscgrp {
-+
-+		fsl,pins = <
-+			MX6QDL_PAD_EIM_D20__GPIO3_IO20		0x1b0b0
-+			MX6QDL_PAD_EIM_EB2__GPIO2_IO30		0x1b0b0
-+		>;
-+	};
-+};
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+
 -- 
-2.26.0.rc2
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
