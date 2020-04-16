@@ -2,68 +2,92 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71390C3815B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 17:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D44DC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 17:55:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52346214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 17:55:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587059728;
-	bh=etVCD76bhHfxKZx+YL8EO2UfLMLM5gDpfBrdGDEmRXw=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=FAZtRS5g3WRU/PxBkQf1noGXBb/uc6fd2XuHPDI/kM9ABp5LOjjpn9g+1KfwMCoTN
-	 eTQG4pxd+cXiE+95mN0GAGteo7aYx0n/0hALkq5f/DltMrKVpt6B7GwHS6vASIc/4K
-	 mLV8JeirMbTDbIYF8kYmKqEL7i9B+gzs/YTU0A+8=
+	by mail.kernel.org (Postfix) with ESMTP id 4907D20786
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 17:55:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390089AbgDPRzY (ORCPT
+        id S2394852AbgDPRz4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 13:55:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47724 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729436AbgDPRzW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 13:55:22 -0400
-Subject: Re: [GIT PULL] Ceph fixes for 5.7-rc2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587059721;
-        bh=etVCD76bhHfxKZx+YL8EO2UfLMLM5gDpfBrdGDEmRXw=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=c+WRKd6f3DQITdxYwNhPzEKTBM7Qps9SVdGdNQpwO5WY/GLSpACEdz+6rvWDVAgUj
-         nK/RCYZtywI4S3lDafWx7LZ7vEgQ5QlmUtGDQ8sSKgjokmIqsmf79JTjVve7z8+0ik
-         K+wqZBLxTWT4AUJqUvCtC7pLFb1XzzWkykSMOUfs=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200416172321.20778-1-idryomov@gmail.com>
-References: <20200416172321.20778-1-idryomov@gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200416172321.20778-1-idryomov@gmail.com>
-X-PR-Tracked-Remote: https://github.com/ceph/ceph-client.git
- tags/ceph-for-5.7-rc2
-X-PR-Tracked-Commit-Id: 2a575f138d003fff0f4930b5cfae4a1c46343b8f
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 3fa84bf926f32edf798cfad0317e14df41ac0509
-Message-Id: <158705972176.30027.7508667561184560509.pr-tracker-bot@kernel.org>
-Date:   Thu, 16 Apr 2020 17:55:21 +0000
-To:     Ilya Dryomov <idryomov@gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+        Thu, 16 Apr 2020 13:55:56 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:37671 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728445AbgDPRzy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 13:55:54 -0400
+Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 16 Apr 2020 10:55:28 -0700
+Received: from gurus-linux.qualcomm.com ([10.46.162.81])
+  by ironmsg05-sd.qualcomm.com with ESMTP; 16 Apr 2020 10:55:28 -0700
+Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
+        id DD0574C5E; Thu, 16 Apr 2020 10:55:27 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 10:55:27 -0700
+From:   Guru Das Srinagesh <gurus@codeaurora.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        David Collins <collinsd@codeaurora.org>,
+        linux-kernel@vger.kernel.org,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
+Subject: Re: [PATCH v12 09/11] backlight: pwm_bl: Use 64-bit division function
+Message-ID: <20200416175527.GA21388@codeaurora.org>
+References: <cover.1586414867.git.gurus@codeaurora.org>
+ <e2139a83008e9f301889f9384487c55de475a6a2.1586414867.git.gurus@codeaurora.org>
+ <20200416094420.GB2167633@dell>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200416094420.GB2167633@dell>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 16 Apr 2020 19:23:21 +0200:
+On Thu, Apr 16, 2020 at 10:44:20AM +0100, Lee Jones wrote:
+> On Wed, 08 Apr 2020, Guru Das Srinagesh wrote:
+> 
+> > Since the PWM framework is switching struct pwm_state.period's datatype
+> > to u64, prepare for this transition by using div_u64 to handle a 64-bit
+> > dividend instead of a straight division operation.
+> > 
+> > Cc: Lee Jones <lee.jones@linaro.org>
+> > Cc: Daniel Thompson <daniel.thompson@linaro.org>
+> > Cc: Jingoo Han <jingoohan1@gmail.com>
+> > Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> > Cc: linux-pwm@vger.kernel.org
+> > Cc: dri-devel@lists.freedesktop.org
+> > Cc: linux-fbdev@vger.kernel.org
+> > 
+> > Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
+> > Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+> > ---
+> >  drivers/video/backlight/pwm_bl.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> I see that this is part of a large set, but the remainder of the
+> patches have been hidden from me.
 
-> https://github.com/ceph/ceph-client.git tags/ceph-for-5.7-rc2
+Sorry about that, the full series is here: [1].
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/3fa84bf926f32edf798cfad0317e14df41ac0509
+> Does this mean I can apply this patch on its own?
 
-Thank you!
+I'll defer to Uwe on this point as I am not sure of the implications of
+taking in this single patch and not the entire series.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Thank you.
+
+Guru Das.
+
+[1] https://www.spinics.net/lists/linux-pwm/msg12131.html
