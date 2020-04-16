@@ -2,84 +2,187 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B78C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E67EDC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:59:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51D99206E9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:59:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587038380;
-	bh=C02HcDV/4ymZNiH43m0bSPRVlDyWt+JoeqGraHiMLd0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zoeD873YE4HF11doW8N45PxCiUw+KC7Gw+0hGFtL7S5heTpNHHUb1WxfjMSP1xHkZ
-	 qgUGh3UTH1nEv/CGxVztivayc5j7yu4FCsfilm8AdUwsB+UgN8pc0pxxhbYbIDv6b4
-	 cpobVpHuZbjYa3Sa1wYlIFXxM5ug4x1OvHDQ3pHI=
+	by mail.kernel.org (Postfix) with ESMTP id B8A7120767
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:59:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FI1FZqbV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634786AbgDPL7e (ORCPT
+        id S2634785AbgDPL7u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 07:59:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57642 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2634634AbgDPL6a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 07:58:30 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 16 Apr 2020 07:59:50 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:28296 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2634642AbgDPL6d (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 07:58:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587038309;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=bGw1yxQ4kUkJge/B/iukxWMb8QJpj2UIRy259IkujXU=;
+        b=FI1FZqbVG5tp2iK0JUgNFWW5TnPngrFp5C7iRVO7ceRhkESI1kEsnrYJFjJCltOFYo1VPN
+        lHcX+yPJnWJZ3Zed1p6KROyKLfAUs6n4dvilWfzjSioB/EHjYMEUuTLjapccHAJw7ptWmp
+        2RvvVELFbirM5xrgpBw2rhHGrkvBvKw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-153-O1gRkXczPaKdX84Ai9Wx9Q-1; Thu, 16 Apr 2020 07:58:25 -0400
+X-MC-Unique: O1gRkXczPaKdX84Ai9Wx9Q-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84BA521D7F;
-        Thu, 16 Apr 2020 11:58:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587038307;
-        bh=C02HcDV/4ymZNiH43m0bSPRVlDyWt+JoeqGraHiMLd0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=URf8tVUpg0dmW48kXtETXHP24CfevH1ltJdpvaAbByZa5tCvk27qPG9Kfjtvb4RAs
-         tlGYb9cWL6gOnGvPrPDx0n8WM9ShN8U2ZjoQEDehefBb+vVe2Mnw3CPY3McZnvoZ9w
-         Bg39tBl0Nx4JN2v/pxk4wIRYnLg1kI+62/88Of/0=
-Date:   Thu, 16 Apr 2020 12:58:22 +0100
-From:   Will Deacon <will@kernel.org>
-To:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu
-Cc:     linux-kernel@vger.kernel.org,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Doug Anderson <dianders@chromium.org>, kernel-team@android.com
-Subject: Re: [PATCH 8/8] arm64: cpufeature: Add an overview comment for the
- cpufeature framework
-Message-ID: <20200416115817.GB32443@willie-the-truck>
-References: <20200414213114.2378-1-will@kernel.org>
- <20200414213114.2378-9-will@kernel.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4CE6B800D5C;
+        Thu, 16 Apr 2020 11:58:23 +0000 (UTC)
+Received: from gondolin (ovpn-112-234.ams2.redhat.com [10.36.112.234])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0F7D59DD6D;
+        Thu, 16 Apr 2020 11:58:17 +0000 (UTC)
+Date:   Thu, 16 Apr 2020 13:58:15 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Tony Krowiak <akrowiak@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
+        mjrosato@linux.ibm.com, pmorel@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        jjherne@linux.ibm.com, fiuczy@linux.ibm.com
+Subject: Re: [PATCH v7 05/15] s390/vfio-ap: introduce shadow CRYCB
+Message-ID: <20200416135815.0ec6e0b3.cohuck@redhat.com>
+In-Reply-To: <20200407192015.19887-6-akrowiak@linux.ibm.com>
+References: <20200407192015.19887-1-akrowiak@linux.ibm.com>
+        <20200407192015.19887-6-akrowiak@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200414213114.2378-9-will@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Suzuki,
+On Tue,  7 Apr 2020 15:20:05 -0400
+Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 
-On Tue, Apr 14, 2020 at 10:31:14PM +0100, Will Deacon wrote:
-> Now that Suzuki isn't within throwing distance, I thought I'd better add
-> a rough overview comment to cpufeature.c so that it doesn't take me days
-> to remember how it works next time.
+> Let's introduce a shadow copy of the KVM guest's CRYCB and maintain it for
+> the lifespan of the guest. The shadow CRYCB will be used to provide the
+> AP configuration for a KVM guest.
+
+'shadow CRYCB' seems to be a bit of a misnomer, as the real CRYCB has a
+different format (for starters, it also contains key wrapping stuff).
+It seems to be more of a 'shadow matrix'.
+
 > 
-> Signed-off-by: Will Deacon <will@kernel.org>
+> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
 > ---
->  arch/arm64/kernel/cpufeature.c | 43 ++++++++++++++++++++++++++++++++++
->  1 file changed, 43 insertions(+)
+>  drivers/s390/crypto/vfio_ap_ops.c     | 31 +++++++++++++++++++++------
+>  drivers/s390/crypto/vfio_ap_private.h |  1 +
+>  2 files changed, 25 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+> index 8ece0d52ff4c..b8b678032ab7 100644
+> --- a/drivers/s390/crypto/vfio_ap_ops.c
+> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+> @@ -280,14 +280,32 @@ static int handle_pqap(struct kvm_vcpu *vcpu)
+>  	return 0;
+>  }
+>  
+> +static void vfio_ap_matrix_clear(struct ap_matrix *matrix)
 
-Any chance you can look at this one, please? I don't trust myself to get
-all of the details right here! I'm also wondering whether we should mention
-something about KVM and the guest view of the registers.
+vfio_ap_matrix_clear_masks()?
 
-What do you think?
+> +{
+> +	bitmap_clear(matrix->apm, 0, AP_DEVICES);
+> +	bitmap_clear(matrix->aqm, 0, AP_DOMAINS);
+> +	bitmap_clear(matrix->adm, 0, AP_DOMAINS);
+> +}
+> +
+>  static void vfio_ap_matrix_init(struct ap_config_info *info,
+>  				struct ap_matrix *matrix)
+>  {
+> +	vfio_ap_matrix_clear(matrix);
+>  	matrix->apm_max = info->apxa ? info->Na : 63;
+>  	matrix->aqm_max = info->apxa ? info->Nd : 15;
+>  	matrix->adm_max = info->apxa ? info->Nd : 15;
+>  }
+>  
+> +static bool vfio_ap_mdev_commit_crycb(struct ap_matrix_mdev *matrix_mdev)
 
-Will
+vfio_ap_mdev_commit_masks()?
+
+And it does not seem to return anything? (Maybe it should, to be
+consumed below?)
+
+> +{
+> +	if (matrix_mdev->kvm && matrix_mdev->kvm->arch.crypto.crycbd) {
+> +		kvm_arch_crypto_set_masks(matrix_mdev->kvm,
+> +					  matrix_mdev->shadow_crycb.apm,
+> +					  matrix_mdev->shadow_crycb.aqm,
+> +					  matrix_mdev->shadow_crycb.adm);
+> +	}
+> +}
+> +
+>  static int vfio_ap_mdev_create(struct kobject *kobj, struct mdev_device *mdev)
+>  {
+>  	struct ap_matrix_mdev *matrix_mdev;
+> @@ -303,6 +321,7 @@ static int vfio_ap_mdev_create(struct kobject *kobj, struct mdev_device *mdev)
+>  
+>  	matrix_mdev->mdev = mdev;
+>  	vfio_ap_matrix_init(&matrix_dev->info, &matrix_mdev->matrix);
+> +	vfio_ap_matrix_init(&matrix_dev->info, &matrix_mdev->shadow_crycb);
+>  	mdev_set_drvdata(mdev, matrix_mdev);
+>  	matrix_mdev->pqap_hook.hook = handle_pqap;
+>  	matrix_mdev->pqap_hook.owner = THIS_MODULE;
+> @@ -1126,13 +1145,9 @@ static int vfio_ap_mdev_group_notifier(struct notifier_block *nb,
+>  	if (ret)
+>  		return NOTIFY_DONE;
+>  
+> -	/* If there is no CRYCB pointer, then we can't copy the masks */
+> -	if (!matrix_mdev->kvm->arch.crypto.crycbd)
+> -		return NOTIFY_DONE;
+> -
+> -	kvm_arch_crypto_set_masks(matrix_mdev->kvm, matrix_mdev->matrix.apm,
+> -				  matrix_mdev->matrix.aqm,
+> -				  matrix_mdev->matrix.adm);
+> +	memcpy(&matrix_mdev->shadow_crycb, &matrix_mdev->matrix,
+> +	       sizeof(matrix_mdev->shadow_crycb));
+> +	vfio_ap_mdev_commit_crycb(matrix_mdev);
+
+You are changing the return code for !crycb; maybe that's where a good
+return code for vfio_ap_mdev_commit_crycb() would come in handy :)
+
+>  
+>  	return NOTIFY_OK;
+>  }
+> @@ -1247,6 +1262,8 @@ static void vfio_ap_mdev_release(struct mdev_device *mdev)
+>  		kvm_put_kvm(matrix_mdev->kvm);
+>  		matrix_mdev->kvm = NULL;
+>  	}
+> +
+> +	vfio_ap_matrix_clear(&matrix_mdev->shadow_crycb);
+>  	mutex_unlock(&matrix_dev->lock);
+>  
+>  	vfio_unregister_notifier(mdev_dev(mdev), VFIO_IOMMU_NOTIFY,
+> diff --git a/drivers/s390/crypto/vfio_ap_private.h b/drivers/s390/crypto/vfio_ap_private.h
+> index 4b6e144bab17..87cc270c3212 100644
+> --- a/drivers/s390/crypto/vfio_ap_private.h
+> +++ b/drivers/s390/crypto/vfio_ap_private.h
+> @@ -83,6 +83,7 @@ struct ap_matrix {
+>  struct ap_matrix_mdev {
+>  	struct list_head node;
+>  	struct ap_matrix matrix;
+> +	struct ap_matrix shadow_crycb;
+
+I think shadow_matrix would be a better name.
+
+>  	struct notifier_block group_notifier;
+>  	struct notifier_block iommu_notifier;
+>  	struct kvm *kvm;
+
