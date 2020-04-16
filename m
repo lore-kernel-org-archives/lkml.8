@@ -2,125 +2,144 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76DE4C352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:36:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F6EC352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52583206A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:36:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABFEE21BE5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:37:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587069463;
+	bh=u5aVN4WZK+kEholtZnnhIh7+K2tLHxSM9C2zW9iB8eo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NmDLqrD8z/aGi+LjJeI280ZnW2U+lp/Zv+5fDEgTXv4CzEoDxnMoM87SsiqXYBkqY
+	 GO7lXRG92z5XPayLfseP41zEmZnTlb++d9dyEzrWlHyQDdht7xZLvanLI5ChyfiTN/
+	 4EGI9bRw3Ro6DOa+bbBUJMfH/ejx/qIkYYrRMWCY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730916AbgDPUgW (ORCPT
+        id S1731301AbgDPUhm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 16:36:22 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:40974 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726114AbgDPUgV (ORCPT
+        Thu, 16 Apr 2020 16:37:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38140 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726114AbgDPUhl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 16:36:21 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jPBF9-0003Wf-Lk; Thu, 16 Apr 2020 14:36:15 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jPBF8-0008Kz-Fm; Thu, 16 Apr 2020 14:36:15 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Richard Guy Briggs <rgb@redhat.com>, nhorman@tuxdriver.com,
-        linux-api@vger.kernel.org, containers@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
-        linux-audit@redhat.com, netfilter-devel@vger.kernel.org,
-        simo@redhat.com, netdev@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
-        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
-References: <20200318215550.es4stkjwnefrfen2@madcap2.tricolour.ca>
-        <CAHC9VhSdDDP7Ec-w61NhGxZG5ZiekmrBCAg=Y=VJvEZcgQh46g@mail.gmail.com>
-        <20200319220249.jyr6xmwvflya5mks@madcap2.tricolour.ca>
-        <CAHC9VhR84aN72yNB_j61zZgrQV1y6yvrBLNY7jp7BqQiEDL+cw@mail.gmail.com>
-        <20200324210152.5uydf3zqi3dwshfu@madcap2.tricolour.ca>
-        <CAHC9VhTQUnVhoN3JXTAQ7ti+nNLfGNVXhT6D-GYJRSpJHCwDRg@mail.gmail.com>
-        <20200330134705.jlrkoiqpgjh3rvoh@madcap2.tricolour.ca>
-        <CAHC9VhQTsEMcYAF1CSHrrVn07DR450W9j6sFVfKAQZ0VpheOfw@mail.gmail.com>
-        <20200330162156.mzh2tsnovngudlx2@madcap2.tricolour.ca>
-        <CAHC9VhTRzZXJ6yUFL+xZWHNWZFTyiizBK12ntrcSwmgmySbkWw@mail.gmail.com>
-        <20200330174937.xalrsiev7q3yxsx2@madcap2.tricolour.ca>
-        <CAHC9VhR_bKSHDn2WAUgkquu+COwZUanc0RV3GRjMDvpoJ5krjQ@mail.gmail.com>
-Date:   Thu, 16 Apr 2020 15:33:13 -0500
-In-Reply-To: <CAHC9VhR_bKSHDn2WAUgkquu+COwZUanc0RV3GRjMDvpoJ5krjQ@mail.gmail.com>
-        (Paul Moore's message of "Mon, 30 Mar 2020 15:55:36 -0400")
-Message-ID: <871ronf9x2.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 16 Apr 2020 16:37:41 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78E0DC061A0C;
+        Thu, 16 Apr 2020 13:37:41 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id w65so2186142pfc.12;
+        Thu, 16 Apr 2020 13:37:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=XptGLsb8LK835cBV0jSCf0HRG/zsBSED6dv7tPgulp4=;
+        b=gnCYkWmGETLB8PFSLV04Wdrz2FK+gEIIVYi1koqv0Kj68T1sE9a0zKATXAPY7gyzfJ
+         suAROh/dNMoI6pHy/mCCmAEukmmvuLcuT+oRiOR7pSsJ7zs8in52Gebp1M1SYorAU4tK
+         gOw3D6aDwjxZUg6c2JW6Y26Oj3CTSIyaIex5HlRUwrN0Akr9mc2rJN/ETJ63AkMWNaPZ
+         lBqmfTlQr2tQLv3hxk3korpwrPMIzUOkCHKM9MiAc5EcYNrnyoXofMkm1N6eYHhs/DeF
+         913mMDnNGshbbDlgR/ygTf2Uto9ROB2t1oEKoFobtuWYnROIBcT0nnQEOaLeZGRWafc8
+         pefQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=XptGLsb8LK835cBV0jSCf0HRG/zsBSED6dv7tPgulp4=;
+        b=MxW0PSGrt0SfuwDyrVTKA3/ccX+uoQSfUwzzRijA+xbrXZ8N3RR3XATDn3qwVTRRDL
+         iGCVR32pLV8H7j0LFp1Ni7HdIGpXH+H/a6Uqp2jgP1Dnpqyzii0KvvFOSU+aQXyXqkXj
+         iqeZGbSSs0NOyTyMZum/tpG5eyng8DJCb2B31lEyTDbeDgqMs5VJKwXCrBOReaclTLq/
+         15bQb8DPi27+330AWKImJ0vyuplQT4mnL0i2r8BOwHDwWz706yYzJpiKu0BlaCy6BjS1
+         OY9Aapp+wyBRXbc8SyIQtg/lRcLipRQ51tiVcnzjp1zY0JxfvqyBQq4noNlB1NQQrtd5
+         oqyQ==
+X-Gm-Message-State: AGi0PuYZnxIMTeu51BcxARMuli6w1G9tnZ/nM0H3b1cchJLd6EZ5IBF4
+        om3sGt3jb63zUcpvsdtrREY=
+X-Google-Smtp-Source: APiQypLz/G622vMAZI/1t7tx6iXdrAiprqdhsptFvPk2bcCnaQJR//IYq0Xxli2CBTatOLYd6eCB1g==
+X-Received: by 2002:a63:2e03:: with SMTP id u3mr15186804pgu.121.1587069460712;
+        Thu, 16 Apr 2020 13:37:40 -0700 (PDT)
+Received: from google.com ([2601:647:4001:3000::50e3])
+        by smtp.gmail.com with ESMTPSA id u13sm3654978pjb.45.2020.04.16.13.37.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Apr 2020 13:37:38 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 13:37:36 -0700
+From:   Minchan Kim <minchan@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Laura Abbott <labbott@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Nitin Gupta <ngupta@vflare.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 10/28] mm: only allow page table mappings for built-in
+ zsmalloc
+Message-ID: <20200416203736.GB50092@google.com>
+References: <20200408115926.1467567-1-hch@lst.de>
+ <20200408115926.1467567-11-hch@lst.de>
+ <20200409160826.GC247701@google.com>
+ <20200409165030.GG20713@hirez.programming.kicks-ass.net>
+ <20200409170813.GD247701@google.com>
+ <20200410023845.GA2354@jagdpanzerIV.localdomain>
+ <20200410231136.GA101325@google.com>
+ <20200411072052.GA31242@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jPBF8-0008Kz-Fm;;;mid=<871ronf9x2.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX18QCbICEec/DdkpMxCQSiOIlOx7aNlCCNU=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH ghak90 V8 07/16] audit: add contid support for signalling the audit daemon
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200411072052.GA31242@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Paul Moore <paul@paul-moore.com> writes:
+Hi Christoph,
 
-> On Mon, Mar 30, 2020 at 1:49 PM Richard Guy Briggs <rgb@redhat.com> wrote:
->> On 2020-03-30 13:34, Paul Moore wrote:
->> > On Mon, Mar 30, 2020 at 12:22 PM Richard Guy Briggs <rgb@redhat.com> wrote:
->> > > On 2020-03-30 10:26, Paul Moore wrote:
->> > > > On Mon, Mar 30, 2020 at 9:47 AM Richard Guy Briggs <rgb@redhat.com> wrote:
->> > > > > On 2020-03-28 23:11, Paul Moore wrote:
->> > > > > > On Tue, Mar 24, 2020 at 5:02 PM Richard Guy Briggs <rgb@redhat.com> wrote:
->> > > > > > > On 2020-03-23 20:16, Paul Moore wrote:
->> > > > > > > > On Thu, Mar 19, 2020 at 6:03 PM Richard Guy Briggs <rgb@redhat.com> wrote:
->> > > > > > > > > On 2020-03-18 18:06, Paul Moore wrote:
->
-> ...
->
->> > > Well, every time a record gets generated, *any* record gets generated,
->> > > we'll need to check for which audit daemons this record is in scope and
->> > > generate a different one for each depending on the content and whether
->> > > or not the content is influenced by the scope.
->> >
->> > That's the problem right there - we don't want to have to generate a
->> > unique record for *each* auditd on *every* record.  That is a recipe
->> > for disaster.
->> >
->> > Solving this for all of the known audit records is not something we
->> > need to worry about in depth at the moment (although giving it some
->> > casual thought is not a bad thing), but solving this for the audit
->> > container ID information *is* something we need to worry about right
->> > now.
->>
->> If you think that a different nested contid value string per daemon is
->> not acceptable, then we are back to issuing a record that has only *one*
->> contid listed without any nesting information.  This brings us back to
->> the original problem of keeping *all* audit log history since the boot
->> of the machine to be able to track the nesting of any particular contid.
->
-> I'm not ruling anything out, except for the "let's just completely
-> regenerate every record for each auditd instance".
 
-Paul I am a bit confused about what you are referring to when you say
-regenerate every record.
+Sorry for the late.
 
-Are you saying that you don't want to repeat the sequence:
-	audit_log_start(...);
-	audit_log_format(...);
-	audit_log_end(...);
-for every nested audit daemon?
+On Sat, Apr 11, 2020 at 09:20:52AM +0200, Christoph Hellwig wrote:
+> Hi Minchan,
+> 
+> On Fri, Apr 10, 2020 at 04:11:36PM -0700, Minchan Kim wrote:
+> > It doesn't mean we couldn't use zsmalloc as module any longer. It means
+> > we couldn't use zsmalloc as module with pgtable mapping whcih was little
+> > bit faster on microbenchmark in some architecutre(However, I usually temped
+> > to remove it since it had several problems). However, we could still use
+> > zsmalloc as module as copy way instead of pgtable mapping. Thus, if someone
+> > really want to rollback the feature, they should provide reasonable reason
+> > why it doesn't work for them. "A little fast" wouldn't be enough to exports
+> > deep internal to the module.
+> 
+> do you have any data how much faster it is on arm (and does that include
+> arm64 as well)?  Besides the exports which were my prime concern,
 
-Or are you saying that you would like to literraly want to send the same
-skb to each of the nested audit daemons?
+https://github.com/sjenning/zsmapbench
 
-Or are you thinking of something else?
+I need to recall the memory. IIRC, it was almost 30% faster at that time
+in ARM so was not trivial at that time. However, it was story from
+several years ago.
 
-Eric
+> zsmalloc with pgtable mappings also is the only user of map_kernel_range
+> outside of vmalloc.c, if it really is another code base for tiny
+> improvements we could mark map_kernel_range or in fact remove it entirely
+> and open code it in the remaining callers.
+
+I alsh have temped to remove it. Let me have time to revist it in this
+chance.
+
+Thanks.
