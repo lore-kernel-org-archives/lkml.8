@@ -2,50 +2,49 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
+X-Spam-Status: No, score=-11.8 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C455AC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07550C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:14:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A674F20644
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:14:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C882D214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:14:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503712AbgDPJN7 (ORCPT
+        id S2502551AbgDPJOJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 05:13:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37608 "EHLO
+        Thu, 16 Apr 2020 05:14:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2501955AbgDPIbh (ORCPT
+        with ESMTP id S2502299AbgDPIbf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 04:31:37 -0400
+        Thu, 16 Apr 2020 04:31:35 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10D8BC08ED7D;
-        Thu, 16 Apr 2020 01:31:36 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA3B9C03C1AC;
+        Thu, 16 Apr 2020 01:31:34 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jOzvj-0000ny-Jv; Thu, 16 Apr 2020 10:31:27 +0200
+        id 1jOzvi-0000my-I9; Thu, 16 Apr 2020 10:31:26 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 164AE1C03A9;
-        Thu, 16 Apr 2020 10:31:27 +0200 (CEST)
-Date:   Thu, 16 Apr 2020 08:31:26 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 216D11C03A9;
+        Thu, 16 Apr 2020 10:31:26 +0200 (CEST)
+Date:   Thu, 16 Apr 2020 08:31:25 -0000
 From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] tools headers UAPI: Sync linux/fscrypt.h with the
- kernel sources
+Subject: [tip: perf/urgent] tools headers UAPI: Update tools's copy of drm.h headers
 Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Jiri Olsa <jolsa@kernel.org>,
+        Daniel Stone <daniels@collabora.com>,
+        Jiri Olsa <jolsa@kernel.org>, Lyude Paul <lyude@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <158702588669.28353.15018008921881778001.tip-bot2@tip-bot2>
+Message-ID: <158702588575.28353.16234290288257799961.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -61,76 +60,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     1abcb9d96dada352c7721105f4efec16784ae87c
-Gitweb:        https://git.kernel.org/tip/1abcb9d96dada352c7721105f4efec16784ae87c
+Commit-ID:     0719bdf46737c9060f67e35824af5bfff5084083
+Gitweb:        https://git.kernel.org/tip/0719bdf46737c9060f67e35824af5bfff5084083
 Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate:    Tue, 14 Apr 2020 09:17:22 -03:00
+AuthorDate:    Tue, 14 Apr 2020 09:29:03 -03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitterDate: Tue, 14 Apr 2020 11:02:52 -03:00
 
-tools headers UAPI: Sync linux/fscrypt.h with the kernel sources
+tools headers UAPI: Update tools's copy of drm.h headers
 
-To pick the changes from:
+Picking the changes from:
 
-  e98ad464750c ("fscrypt: add FS_IOC_GET_ENCRYPTION_NONCE ioctl")
+  455e00f1412f ("drm: Add getfb2 ioctl")
 
-That don't trigger any changes in tooling.
+Silencing these perf build warnings:
 
-This silences this perf build warning:
+  Warning: Kernel ABI header at 'tools/include/uapi/drm/drm.h' differs from latest version at 'include/uapi/drm/drm.h'
+  diff -u tools/include/uapi/drm/drm.h include/uapi/drm/drm.h
 
-  Warning: Kernel ABI header at 'tools/include/uapi/linux/fscrypt.h' differs from latest version at 'include/uapi/linux/fscrypt.h'
-  diff -u tools/include/uapi/linux/fscrypt.h include/uapi/linux/fscrypt.h
+Now 'perf trace' and other code that might use the
+tools/perf/trace/beauty autogenerated tables will be able to translate
+this new ioctl code into a string:
 
-In time we should come up with something like:
-
-  $ tools/perf/trace/beauty/fsconfig.sh
-  static const char *fsconfig_cmds[] = {
-  	[0] = "SET_FLAG",
-  	[1] = "SET_STRING",
-  	[2] = "SET_BINARY",
-  	[3] = "SET_PATH",
-  	[4] = "SET_PATH_EMPTY",
-  	[5] = "SET_FD",
-  	[6] = "CMD_CREATE",
-  	[7] = "CMD_RECONFIGURE",
-  };
+  $ tools/perf/trace/beauty/drm_ioctl.sh > before
+  $ cp include/uapi/drm/drm.h tools/include/uapi/drm/drm.h
+  $ tools/perf/trace/beauty/drm_ioctl.sh > after
+  $ diff -u before after
+  --- before	2020-04-14 09:28:45.461821077 -0300
+  +++ after	2020-04-14 09:28:53.594782685 -0300
+  @@ -107,6 +107,7 @@
+   	[0xCB] = "SYNCOBJ_QUERY",
+   	[0xCC] = "SYNCOBJ_TRANSFER",
+   	[0xCD] = "SYNCOBJ_TIMELINE_SIGNAL",
+  +	[0xCE] = "MODE_GETFB2",
+   	[DRM_COMMAND_BASE + 0x00] = "I915_INIT",
+   	[DRM_COMMAND_BASE + 0x01] = "I915_FLUSH",
+   	[DRM_COMMAND_BASE + 0x02] = "I915_FLIP",
   $
-
-And:
-
-  $ tools/perf/trace/beauty/drm_ioctl.sh | head
-  #ifndef DRM_COMMAND_BASE
-  #define DRM_COMMAND_BASE                0x40
-  #endif
-  static const char *drm_ioctl_cmds[] = {
-  	[0x00] = "VERSION",
-  	[0x01] = "GET_UNIQUE",
-  	[0x02] = "GET_MAGIC",
-  	[0x03] = "IRQ_BUSID",
-  	[0x04] = "GET_MAP",
-  	[0x05] = "GET_CLIENT",
-  $
-
-For fscrypt's ioctls.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Eric Biggers <ebiggers@google.com>
+Cc: Daniel Stone <daniels@collabora.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Lyude Paul <lyude@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/uapi/linux/fscrypt.h | 1 +
- 1 file changed, 1 insertion(+)
+ tools/include/uapi/drm/drm.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/include/uapi/linux/fscrypt.h b/tools/include/uapi/linux/fscrypt.h
-index 0d8a6f4..a10e3cd 100644
---- a/tools/include/uapi/linux/fscrypt.h
-+++ b/tools/include/uapi/linux/fscrypt.h
-@@ -163,6 +163,7 @@ struct fscrypt_get_key_status_arg {
- #define FS_IOC_REMOVE_ENCRYPTION_KEY		_IOWR('f', 24, struct fscrypt_remove_key_arg)
- #define FS_IOC_REMOVE_ENCRYPTION_KEY_ALL_USERS	_IOWR('f', 25, struct fscrypt_remove_key_arg)
- #define FS_IOC_GET_ENCRYPTION_KEY_STATUS	_IOWR('f', 26, struct fscrypt_get_key_status_arg)
-+#define FS_IOC_GET_ENCRYPTION_NONCE		_IOR('f', 27, __u8[16])
+diff --git a/tools/include/uapi/drm/drm.h b/tools/include/uapi/drm/drm.h
+index 868bf79..808b48a 100644
+--- a/tools/include/uapi/drm/drm.h
++++ b/tools/include/uapi/drm/drm.h
+@@ -948,6 +948,8 @@ extern "C" {
+ #define DRM_IOCTL_SYNCOBJ_TRANSFER	DRM_IOWR(0xCC, struct drm_syncobj_transfer)
+ #define DRM_IOCTL_SYNCOBJ_TIMELINE_SIGNAL	DRM_IOWR(0xCD, struct drm_syncobj_timeline_array)
  
- /**********************************************************************/
- 
++#define DRM_IOCTL_MODE_GETFB2		DRM_IOWR(0xCE, struct drm_mode_fb_cmd2)
++
+ /**
+  * Device specific ioctls should only be in their respective headers
+  * The device specific ioctl range is from 0x40 to 0x9f.
