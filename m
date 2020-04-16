@@ -2,68 +2,131 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D684C3815B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 18:02:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1FC3C38A29
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 18:05:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6946C221EB
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 18:02:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFA8021924
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 18:05:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Nl5IfyW6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437443AbgDPSCI (ORCPT
+        id S2387982AbgDPSFk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 14:02:08 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:50297 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727794AbgDPSCG (ORCPT
+        Thu, 16 Apr 2020 14:05:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42810 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731394AbgDPSFi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 14:02:06 -0400
-Received: from callcc.thunk.org (pool-72-93-95-157.bstnma.fios.verizon.net [72.93.95.157])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 03GI1hAl008861
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Apr 2020 14:01:43 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id EA2DB42013D; Thu, 16 Apr 2020 14:01:42 -0400 (EDT)
-Date:   Thu, 16 Apr 2020 14:01:42 -0400
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Jan Kara <jack@suse.cz>, linux-kernel@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH RFC 4/8] fs/ext4: Introduce DAX inode flag
-Message-ID: <20200416180142.GE5187@mit.edu>
-References: <20200414040030.1802884-1-ira.weiny@intel.com>
- <20200414040030.1802884-5-ira.weiny@intel.com>
- <20200415120846.GG6126@quack2.suse.cz>
- <20200415203924.GD2309605@iweiny-DESK2.sc.intel.com>
+        Thu, 16 Apr 2020 14:05:38 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43234C061A41
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 11:05:38 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id v7so22386562qkc.0
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 11:05:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Fftro3jZbixsL8aeMcmWYxRlcOZc1xYOuCyBw47w/C8=;
+        b=Nl5IfyW61dNBvqPmzCjDg2WCgVKn+WFlEvYzGa2/Vrnc/VsdQvuSMtSJLw96V+j4cv
+         dejqS2JY8YzSiyRBlm/hUKJgwK0Tzom0hkNIV5ncn9tn6oI8GL9vvyOSS+TwwBl3sWr6
+         eB1vfy9a/ugWT7bvmGZ8rswnhmYtjyiewE66r/iz8C0/ifJemhTzwk37NhpK5HVa2mGC
+         mct5lE9F2dC0DGY9hSdmw0pKAAp++x4KY85qRRtX7ytHUbEKeNAyxdXTsiSKdER8zo9l
+         mDhbSmRmNGo36pfEh+D9rtGp/tvR2jQxxDtegfyWmsNeEflc3I7b5Hqfkgt66pgB08TY
+         cBAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Fftro3jZbixsL8aeMcmWYxRlcOZc1xYOuCyBw47w/C8=;
+        b=LBlFvJPNYpMo2mJH4aV41QNN1w+2pNlARCdYij89dy1KDpBphQl7NdkWMyaBYQ0F/X
+         8bfRc6jLQFOx2aQbNlrs3UDKk6N+9ELzK4R2XXcVg0qMPVPVeFq3X+ijHCoTMDmpSPWS
+         cNxjZPjCpqkbkgWlulIHn/zEPfqpcdHV+CfAqURaU+NJ81aquIuzAvxAmgcKh6k/iL7D
+         rzTrzdW1lY8aOt5qfTTBUo6bsawA+LIiMUv7DNO+HmWrkIM0TbqNvo1ePvZ2Sf6dn8sI
+         5r7QjP9yNDKY9PMdEORCSZSKYWnz49WDVyDMYsDX0Kl4+wIJAZag2IuFFUtkSkTtIWRN
+         Ezfw==
+X-Gm-Message-State: AGi0PuY7cA5wbUNYW173ihBfF7/MI0UbihjeLczmJbRhTUeIVRUJ1XZF
+        qtaRi4tAc1Aq+Wsi/6RSXzLZtg==
+X-Google-Smtp-Source: APiQypJriZ2ts89EQA9ZmbRGIKxW4OALaXNJVu4hOm4BVdrkDvh3k+fSMcXaWS8jrdSR/LMHDO1tYg==
+X-Received: by 2002:a37:8741:: with SMTP id j62mr30990828qkd.441.1587060337403;
+        Thu, 16 Apr 2020 11:05:37 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id n185sm6205781qke.82.2020.04.16.11.05.36
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 16 Apr 2020 11:05:36 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jP8tM-00069t-Dc; Thu, 16 Apr 2020 15:05:36 -0300
+Date:   Thu, 16 Apr 2020 15:05:36 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
+        "masahiroy@kernel.org" <masahiroy@kernel.org>,
+        "Laurent.pinchart@ideasonboard.com" 
+        <Laurent.pinchart@ideasonboard.com>,
+        "leon@kernel.org" <leon@kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "nico@fluxnic.net" <nico@fluxnic.net>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "kieran.bingham+renesas@ideasonboard.com" 
+        <kieran.bingham+renesas@ideasonboard.com>,
+        "a.hajda@samsung.com" <a.hajda@samsung.com>,
+        "jonas@kwiboo.se" <jonas@kwiboo.se>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>
+Subject: Re: [RFC 0/6] Regressions for "imply" behavior change
+Message-ID: <20200416180536.GW5100@ziepe.ca>
+References: <20200414152312.GF5100@ziepe.ca>
+ <CAK8P3a1PjP9_b5NdmqTLeGN4y+3JXx_yyTE8YAf1u5rYHWPA9g@mail.gmail.com>
+ <f6d83b08fc0bc171b5ba5b2a0bc138727d92e2c0.camel@mellanox.com>
+ <CAK8P3a1-J=4EAxh7TtQxugxwXk239u8ffgxZNRdw_WWy8ExFoQ@mail.gmail.com>
+ <834c7606743424c64951dd2193ca15e29799bf18.camel@mellanox.com>
+ <CAK8P3a3Wx5_bUOKnN3_hG5nLOqv3WCUtMSq6vOkJzWZgsmAz+A@mail.gmail.com>
+ <874ktj4tvn.fsf@intel.com>
+ <CAK8P3a1S2x1jnx9Q5B22vX8gBHs0Ztu-znA9hqZ5xp5tRAykGg@mail.gmail.com>
+ <20200416145235.GR5100@ziepe.ca>
+ <CAK8P3a3HwFYKfZftm2fWE=Lzi486rXpMBwjy1F4oohYU2+o7-g@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200415203924.GD2309605@iweiny-DESK2.sc.intel.com>
+In-Reply-To: <CAK8P3a3HwFYKfZftm2fWE=Lzi486rXpMBwjy1F4oohYU2+o7-g@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 01:39:25PM -0700, Ira Weiny wrote:
+On Thu, Apr 16, 2020 at 05:58:31PM +0200, Arnd Bergmann wrote:
+> On Thu, Apr 16, 2020 at 4:52 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> > On Thu, Apr 16, 2020 at 02:38:50PM +0200, Arnd Bergmann wrote:
+> > > On Thu, Apr 16, 2020 at 12:17 PM Jani Nikula <jani.nikula@linux.intel.com> wrote:
+> > > > Of course, this is all just talk until someone(tm) posts a patch
+> > > > actually making the change. I've looked at the kconfig tool sources
+> > > > before; not going to make the same mistake again.
+> > >
+> > > Right. OTOH whoever implements it gets to pick the color of the
+> > > bikeshed. ;-)
+> >
+> > I hope someone takes it up, especially now that imply, which
+> > apparently used to do this, doesn't any more :)
 > 
-> I'm on top of 5.6 released.  Did this get removed for 5.7?  I've heard there are
-> some boot issues with 5.7-rc1 so I'm holding out for rc2.
+> The old 'imply' was something completely different, it was more of a
+> 'try to select if you can so we can assume it's there, but give up
+> if it can only be a module and we need it to be built-in".
 
-Yes, it got removed in 5.7-rc1 in commit 4337ecd1fe99.
+But it seems to have done this as a side-effect, and drivers were
+relying on that, otherwise this series wouldn't exist..
 
-The boot issues with 5.7-rc1 is why ext4.git tree is now based off of
-v5.7-rc1-35-g00086336a8d9: Merge tag 'efi-urgent-2020-04-15'....
-
-You might want to see if 00086336a8d9 works for you (and if not, let
-the x86 and/or efi folks know).
-
-					- Ted
+Jason
