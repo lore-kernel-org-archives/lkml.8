@@ -2,101 +2,118 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC2F2C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 02:16:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79444C3815B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 02:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84F2E2072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 02:16:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D13920737
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 02:17:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587003439;
+	bh=7jbHIbkIv+g7KwSbl0G4SwQ+s3EbSDnsxuzrtjKoAkE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eIHYarprVFw3L9944Mzhy7YltkU1gqOkg82angDW6UCqVSJalQOmZSw4t5QjtiBhY
+	 QR36XhOUxIkqkNDoT2zci5nSAHzG7wFG0/fe9siVxlsxKLSFNyo2ii8Irarsxk19Av
+	 ywgICHMJfoqWiZMVhNx6wAW6tiwxWKaA8Wioi/Lc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731972AbgDPCQX (ORCPT
+        id S1732479AbgDPCRR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 22:16:23 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2335 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728397AbgDPCQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 22:16:20 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 39A5686E337A8F2A7A88;
-        Thu, 16 Apr 2020 10:16:10 +0800 (CST)
-Received: from [127.0.0.1] (10.166.213.7) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Thu, 16 Apr 2020
- 10:15:59 +0800
-Subject: Re: [PATCH] x86/kvm: make steal_time static
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        <sean.j.christopherson@intel.com>, <vkuznets@redhat.com>,
-        <wanpengli@tencent.com>, <jmattson@google.com>, <joro@8bytes.org>,
-        <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <x86@kernel.org>, <hpa@zytor.com>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Hulk Robot <hulkci@huawei.com>
-References: <20200415084939.6367-1-yanaijie@huawei.com>
- <d1700173-29c1-2e7c-46bd-471876d96762@redhat.com>
-From:   Jason Yan <yanaijie@huawei.com>
-Message-ID: <35c3890e-0c45-0dac-e9f0-f2a9446a387d@huawei.com>
-Date:   Thu, 16 Apr 2020 10:15:58 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Wed, 15 Apr 2020 22:17:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34308 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732005AbgDPCRH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Apr 2020 22:17:07 -0400
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6320A20656;
+        Thu, 16 Apr 2020 02:17:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587003425;
+        bh=7jbHIbkIv+g7KwSbl0G4SwQ+s3EbSDnsxuzrtjKoAkE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vuojUktZ+aZ0sgh2r1xUOcuxkaqXBRVoYIySFcbjU4d+99EUVZSMPiYl9Pp4ubLeg
+         CshgWl4eWJIRP0iC25Ks7DmXqGlZa7pJMJ8O3kIqhdm8BX8mRT2+W2Ui/DiAUTIn+U
+         +Q/jNYaLiSOPsTSjlwCcQnzgxcf7OdW602yH0vEE=
+Date:   Wed, 15 Apr 2020 19:17:03 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     syzbot <syzbot+fc0674cde00b66844470@syzkaller.appspotmail.com>,
+        davem@davemloft.net, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: crypto: api - Fix use-after-free and race in crypto_spawn_alg
+Message-ID: <20200416021703.GD816@sol.localdomain>
+References: <0000000000002656a605a2a34356@google.com>
+ <20200410060942.GA4048@gondor.apana.org.au>
 MIME-Version: 1.0
-In-Reply-To: <d1700173-29c1-2e7c-46bd-471876d96762@redhat.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.166.213.7]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200410060942.GA4048@gondor.apana.org.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-在 2020/4/15 22:42, Paolo Bonzini 写道:
-> On 15/04/20 10:49, Jason Yan wrote:
->> Fix the following sparse warning:
->>
->> arch/x86/kernel/kvm.c:58:1: warning: symbol '__pcpu_scope_steal_time'
->> was not declared. Should it be static?
->>
->> Reported-by: Hulk Robot <hulkci@huawei.com>
->> Signed-off-by: Jason Yan <yanaijie@huawei.com>
->> ---
->>   arch/x86/kernel/kvm.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
->> index 6efe0410fb72..f75010cde5d5 100644
->> --- a/arch/x86/kernel/kvm.c
->> +++ b/arch/x86/kernel/kvm.c
->> @@ -55,7 +55,7 @@ static int __init parse_no_stealacc(char *arg)
->>   early_param("no-steal-acc", parse_no_stealacc);
->>   
->>   static DEFINE_PER_CPU_DECRYPTED(struct kvm_vcpu_pv_apf_data, apf_reason) __aligned(64);
->> -DEFINE_PER_CPU_DECRYPTED(struct kvm_steal_time, steal_time) __aligned(64) __visible;
->> +static DEFINE_PER_CPU_DECRYPTED(struct kvm_steal_time, steal_time) __aligned(64) __visible;
->>   static int has_steal_clock = 0;
->>   
->>   /*
->>
+On Fri, Apr 10, 2020 at 04:09:42PM +1000, Herbert Xu wrote:
+> There are two problems in crypto_spawn_alg.  First of all it may
+> return spawn->alg even if spawn->dead is set.  This results in a
+> double-free as detected by syzbot.
 > 
-> Queued, thanks.
+> Secondly the setting of the DYING flag is racy because we hold
+> the read-lock instead of the write-lock.  We should instead call
+> crypto_shoot_alg in a safe manner by gaining a refcount, dropping
+> the lock, and then releasing the refcount.
 > 
-
-Sorry that I found 14e581c381b9 ("x86/kvm: Make steal_time visible")
-said that it is used by assembler code but I didn't find where.
-Please drop this patch if it's true.
-
-Sorry to make this trouble again.
-
-Thanks,
-
-Jason
-
-> Paolo
+> This patch fixes both problems.
 > 
+> Reported-by: syzbot+fc0674cde00b66844470@syzkaller.appspotmail.com
+> Fixes: 4f87ee118d16 ("crypto: api - Do not zap spawn->alg")
+> Fixes: 73669cc55646 ("crypto: api - Fix race condition in...")
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 > 
-> .
-> 
+> diff --git a/crypto/algapi.c b/crypto/algapi.c
+> index 69605e21af92..f8b4dc161c02 100644
+> --- a/crypto/algapi.c
+> +++ b/crypto/algapi.c
+> @@ -716,17 +716,27 @@ EXPORT_SYMBOL_GPL(crypto_drop_spawn);
+>  
+>  static struct crypto_alg *crypto_spawn_alg(struct crypto_spawn *spawn)
+>  {
+> -	struct crypto_alg *alg;
+> +	struct crypto_alg *alg = ERR_PTR(-EAGAIN);
+> +	struct crypto_alg *target;
+> +	bool shoot = false;
+>  
+>  	down_read(&crypto_alg_sem);
+> -	alg = spawn->alg;
+> -	if (!spawn->dead && !crypto_mod_get(alg)) {
+> -		alg->cra_flags |= CRYPTO_ALG_DYING;
+> -		alg = NULL;
+> +	if (!spawn->dead) {
+> +		alg = spawn->alg;
+> +		if (!crypto_mod_get(alg)) {
+> +			target = crypto_alg_get(alg);
+> +			shoot = true;
+> +			alg = ERR_PTR(-EAGAIN);
+> +		}
+>  	}
+>  	up_read(&crypto_alg_sem);
+>  
+> -	return alg ?: ERR_PTR(-EAGAIN);
+> +	if (shoot) {
+> +		crypto_shoot_alg(target);
+> +		crypto_alg_put(target);
+> +	}
+> +
+> +	return alg;
+>  }
 
+Wouldn't it be a bit simpler to set 'target = NULL', remove 'shoot',
+and use 'if (target)' instead of 'if (shoot)'?
+
+- Eric
