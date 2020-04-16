@@ -2,174 +2,100 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4303C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBCFBC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:57:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9156422242
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:57:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nR2DKDho"
+	by mail.kernel.org (Postfix) with ESMTP id A6D9E206A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:57:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587049059;
+	bh=V0otI6gVyfDSkDi9pLuqdj9z9fHD1hVrU6r4MDAkjaU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=DDIySSuBsaAfhQkw5jR/7lMAGMacBxYYJI8BYVky1flmO7rDu/ldhw0SvjCT6fw4m
+	 dBhj0q3J20mNgQz82zK8WXcIyeqp/8Z0h5va+UPPqZc/02WzUWu366PbJquQoW7DsM
+	 nTVTWkW1iThHih4h6DLEXXwB1y0uNk/Wx46Z+7PU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727965AbgDPO5W (ORCPT
+        id S2409356AbgDPO5h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:57:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41302 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2409337AbgDPO5I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:57:08 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C1AAC061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 07:57:08 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id c12so2130252qvj.5
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 07:57:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ayGQgUTRID9GEmunMYdarzjkWcmhCRbQvl02NWxC1jk=;
-        b=nR2DKDho8XHafYwLEV0Gre/Y3+Yuh1C4Tgo9jOemer0vEV0PRHNcKVaBBJByc8ieaQ
-         3ZNv/i4KHvKmRpR/kTjG+unp/OPlqGtid4rKMnnVkUAs32mRQgEtL3KZqUk6z7TvZ0wW
-         ogj1Q4rk1SB/sb5X8U88QwWHnIfWD61NnxImlEBx8k897wTemNZqvBn5u5+VzhCqtzQ/
-         JpqB7hAbq60ro4hXW1eu0/RCqNwr5pQBwLCtX4HiRlk42qCLcl6G4y4oKBrZqShQ6c38
-         sRf5xD/nA5TPqsn3PC4pClIanKSBe2zSViWSlsD2fLCTIt0XZQXztFdHliqeAy01no8k
-         EKYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ayGQgUTRID9GEmunMYdarzjkWcmhCRbQvl02NWxC1jk=;
-        b=a2Ro2bzPhdUUvvnuBdwNWPgKcsWvmQipLDzHtIFbi4guvYPZP0/mGCylgg261zhfO4
-         3YiaBKTtdVXbPMequoyxL/g090TI1JKMQfgXrUGpqjhfmHWC9ZfQ1gX92dwDQzfHTSNu
-         lI+GSWRrO9HMXmJysy1FtsOOwqXu1utYLim/OxfGptyO5OLOy+/lr7zdfOoThfmxQbu/
-         V0CXvuB7wwlBmAgRoLdL8e63lQZQU7NkqtRnxkF6mBJubyTclPz4wGf1hoIFaUrUIujD
-         8WkXv5EcpRjkKJQQDksacanOOB0AgfSX6gCBYfZLISs6RxreDHh09BMBL9zqCarF3ugg
-         D2Jw==
-X-Gm-Message-State: AGi0PubeFzLyPDivfNOpn1+kNTW488UyMkAnPwodIsd9NUavHe+c21Ai
-        Abe57XcDow7rh/GP551Xnu4=
-X-Google-Smtp-Source: APiQypKcf0abDkQCinb8LmismPdA6WNuKV4LRqht8eqdWB5AgNGC42NHPLB9h49AqSRDsSrHYafpvg==
-X-Received: by 2002:a0c:9aea:: with SMTP id k42mr10542592qvf.91.1587049027292;
-        Thu, 16 Apr 2020 07:57:07 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id x7sm9827437qkx.36.2020.04.16.07.57.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2020 07:57:06 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 978BB409A3; Thu, 16 Apr 2020 11:57:04 -0300 (-03)
-Date:   Thu, 16 Apr 2020 11:57:04 -0300
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 10/16] perf tools: Add support for synthesized sample type
-Message-ID: <20200416145704.GA1842@kernel.org>
-References: <20200401101613.6201-1-adrian.hunter@intel.com>
- <20200401101613.6201-11-adrian.hunter@intel.com>
- <20200416145426.GA31666@kernel.org>
+        Thu, 16 Apr 2020 10:57:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41308 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728463AbgDPO5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:57:25 -0400
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F2CE22250;
+        Thu, 16 Apr 2020 14:57:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587049044;
+        bh=V0otI6gVyfDSkDi9pLuqdj9z9fHD1hVrU6r4MDAkjaU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=eH5cwJ6Vemlq8tWwK/OI3bNQgP5TkacIgI9R7K7Ci9iaafK3wmZ1z5nIWGI8/MBnz
+         KXsK5TfkIkqYJDqTj17R6leB9fZfjGtAHPkUG3X5ad08PfSEsmIaYwJnabN+rt5414
+         LLTsKgZyeKV1nE2tfNkkvkDbjmUre6zUShW/6Fso=
+Received: by mail-il1-f182.google.com with SMTP id u5so7183316ilb.5;
+        Thu, 16 Apr 2020 07:57:24 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZlzxmKXYaEvrjB7eOG4NTlP+w4vqL/pjP0JGuKetdOiHvhVDcK
+        bKhpqpWNGCoSokMnbIVsCZ9q6ndXCx5+e5auwKo=
+X-Google-Smtp-Source: APiQypJOghpmilZOFUzSx9f9kqFywMdVN+qnaJPXwQkShHHhsviduS/U5YL3G4CG0thdgj8z1jRPR7OHKPMe596W/oQ=
+X-Received: by 2002:a92:991c:: with SMTP id p28mr6599337ili.258.1587049044044;
+ Thu, 16 Apr 2020 07:57:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200416145426.GA31666@kernel.org>
-X-Url:  http://acmel.wordpress.com
+References: <eb0d88d0-879e-c500-261e-69c76fb68a89@linux.intel.com>
+ <CAMj1kXGGdwuP6X5jvbqmjsP2+bZ7CoJKZ5-WVoPYEjq9HTjuDA@mail.gmail.com> <9ae0c751-5024-6eda-ca78-80cfd1ed066f@linux.intel.com>
+In-Reply-To: <9ae0c751-5024-6eda-ca78-80cfd1ed066f@linux.intel.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Thu, 16 Apr 2020 16:57:13 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXH+9wM5xwm31YE=CY6WUyeCt66r-3g5SohisQPcz3x-Kg@mail.gmail.com>
+Message-ID: <CAMj1kXH+9wM5xwm31YE=CY6WUyeCt66r-3g5SohisQPcz3x-Kg@mail.gmail.com>
+Subject: Re: Regression with commit 0a67361dcdaa
+To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Apr 16, 2020 at 11:54:26AM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Wed, Apr 01, 2020 at 01:16:07PM +0300, Adrian Hunter escreveu:
-> > For reporting purposes, an evsel sample can have a callchain synthesized
-> > from AUX area data. Add support for keeping track of synthesized sample
-> > types. Note, the recorded sample_type cannot be changed because it is
-> > needed to continue to parse events.
-> > 
-> > Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-> > ---
-> >  tools/perf/util/evsel.c |  2 +-
-> >  tools/perf/util/evsel.h | 15 ++++++++++++++-
-> >  2 files changed, 15 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> > index eb880efbce16..60e6cd49dee3 100644
-> > --- a/tools/perf/util/evsel.c
-> > +++ b/tools/perf/util/evsel.c
-> > @@ -2136,7 +2136,7 @@ int perf_evsel__parse_sample(struct evsel *evsel, union perf_event *event,
-> >  		}
-> >  	}
-> >  
-> > -	if (evsel__has_callchain(evsel)) {
-> > +	if (type & PERF_SAMPLE_CALLCHAIN) {
-> >  		const u64 max_callchain_nr = UINT64_MAX / sizeof(u64);
-> 
-> This ends up looking unrelated, I had to go and look at the source to
-> see that this is just a simplification, i.e. earlier in this function
-> (perf_evsel__parse_sample) we have:
-> 
->         u64 type = evsel->core.attr.sample_type;
-> 
-> So the above doesn't change anything, good, but slowed reviewing a bit,
-> please consider next time to have this in a separate patch, I'll do it
-> this time.
+On Thu, 16 Apr 2020 at 16:56, Jarkko Nikula
+<jarkko.nikula@linux.intel.com> wrote:
+>
+> On 4/16/20 5:36 PM, Ard Biesheuvel wrote:
+> > On Thu, 16 Apr 2020 at 16:35, Jarkko Nikula
+> > <jarkko.nikula@linux.intel.com> wrote:
+> >>
+> >> Hi
+> >>
+> >> v5.7-rc1 hangs in early boot on an Intel Atom based prototype hardware
+> >> while v5.6 boots fine. I bisected the regression into 0a67361dcdaa
+> >> ("efi/x86: Remove runtime table address from kexec EFI setup data").
+> >>
+> >> v5.7-rc1 caused a reboot loop on another Intel Core based prototype HW.
+> >> Reboots also on top of 0a67361dcdaa but boots fine with that commit
+> >> reverted.
+> >>
+> >> Our test system uses kexec to boot the test kernel. These two machines
+> >> got regression with v5.7-rc1. We have also others that boot fine.
+> >>
+> >
+> > This should already be fixed in Linus's tree. Please report back
+> > whether that solves your problem or not.
+> >
+> Ah, I forgot to pull & test before bisecting...
+>
+> Yes, both machines boot fine with the HEAD 00086336a8d9 ("Merge tag
+> 'efi-urgent-2020-04-15' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip").
+>
 
-I've added this as the cset comment:
 
-Using 'type' variable for checking for callchains is equivalent to using
-evsel__has_callchain(evsel) and is how the other PERF_SAMPLE_ bits are checked
-in this function, so use it to be consistent.
- 
-> Thanks,
-> 
-> - Arnaldo
->   
-> >  		OVERFLOW_CHECK_u64(array);
-> > diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-> > index 53187c501ee8..e64ed4202cab 100644
-> > --- a/tools/perf/util/evsel.h
-> > +++ b/tools/perf/util/evsel.h
-> > @@ -104,6 +104,14 @@ struct evsel {
-> >  		perf_evsel__sb_cb_t	*cb;
-> >  		void			*data;
-> >  	} side_band;
-> > +	/*
-> > +	 * For reporting purposes, an evsel sample can have a callchain
-> > +	 * synthesized from AUX area data. Keep track of synthesized sample
-> > +	 * types here. Note, the recorded sample_type cannot be changed because
-> > +	 * it is needed to continue to parse events.
-> > +	 * See also evsel__has_callchain().
-> > +	 */
-> > +	__u64			synth_sample_type;
-> >  };
-> >  
-> >  struct perf_missing_features {
-> > @@ -398,7 +406,12 @@ static inline bool perf_evsel__has_branch_hw_idx(const struct evsel *evsel)
-> >  
-> >  static inline bool evsel__has_callchain(const struct evsel *evsel)
-> >  {
-> > -	return (evsel->core.attr.sample_type & PERF_SAMPLE_CALLCHAIN) != 0;
-> > +	/*
-> > +	 * For reporting purposes, an evsel sample can have a recorded callchain
-> > +	 * or a callchain synthesized from AUX area data.
-> > +	 */
-> > +	return evsel->core.attr.sample_type & PERF_SAMPLE_CALLCHAIN ||
-> > +	       evsel->synth_sample_type & PERF_SAMPLE_CALLCHAIN;
-> >  }
-> >  
-> >  struct perf_env *perf_evsel__env(struct evsel *evsel);
-> > -- 
-> > 2.17.1
-> > 
-> 
-> -- 
-> 
-> - Arnaldo
-
--- 
-
-- Arnaldo
+OK, good to know. Thanks for confirming.
