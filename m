@@ -2,55 +2,56 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC8F8C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B2CC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:33:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C04B214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:33:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 653E6214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:33:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587051206;
-	bh=UCUtmq9O84OUYC+GZF7mjcM9yAlMLxS1lex7u964yK4=;
+	s=default; t=1587051210;
+	bh=ZvkWGyVyXoU3fn/f085zajaeF163Rb5c896Mue3TRZA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c3ZpDvDLK2cs0aG42JLvlJ7/uB9URr/3CgORDYcyFsXR2OIw5UzAtK68x5Xi2wZ5w
-	 Mau3Lh7U8m0FcjS+2M+uJuuHnyEWhUdSQBu6e6TjTQVHX76y8UYHl+/JAa/MsuPZdw
-	 B86h4sV1aJDDF9U/oDxtcXO0oKdD8QcsmYx69QZc=
+	b=x2JzacMRyfY9mQqWc1UfSIgUqhbNClXF8jjb1MyPlq8ygpJjkWXzHT3LN+t1kc2Wa
+	 PjtJz3+t1wdQ9UaRxGzHLh9VqUpsnsMsYG4OKxF7froQt91d0SXAmLeLFyFYtPZVcR
+	 2DsumKeE/79VdrUbqWCVhkZIBHIqWEH2UVyTpuXI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442517AbgDPPdY (ORCPT
+        id S2898293AbgDPNlV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:33:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54364 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:41:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898318AbgDPNl2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:41:28 -0400
+        id S2896556AbgDPNcy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:32:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB18B20732;
-        Thu, 16 Apr 2020 13:41:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D020221F9;
+        Thu, 16 Apr 2020 13:31:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044488;
-        bh=UCUtmq9O84OUYC+GZF7mjcM9yAlMLxS1lex7u964yK4=;
+        s=default; t=1587043896;
+        bh=ZvkWGyVyXoU3fn/f085zajaeF163Rb5c896Mue3TRZA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ns1ij95BesEpteRWRWYisqWgaCHOtwUFfgmCaB+kTd0q7HFQkat1mmuzFqJy82+y2
-         5w+uN0p98wa/tylXH416iwNO5ffA52rtN9U64rhQWse2BPzFD4hlXCURG27+lbBpak
-         gJL4fiRz9YgV0a4t8Hxt5MX4dmdgVkEGVe5L7lR0=
+        b=HaeZY9qF50Gu2Y+GaoKq4KFknUI9wJocwRt4VWLnV34eJr9Vg9UN8PD6VPJp+qwpm
+         at92FmXSL4fRUKnprB8FKwB2CVZxnSQa2nf4f9dZynwrBJpuJEUFn7ByYT26sJbOsw
+         aonmo/BgZ0JVLbLQOASv6eMgISaIIgMq1Isgd4/I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Laurentiu Tudor <laurentiu.tudor@nxp.com>,
         Scott Wood <oss@buserror.net>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.5 237/257] powerpc/fsl_booke: Avoid creating duplicate tlb1 entry
-Date:   Thu, 16 Apr 2020 15:24:48 +0200
-Message-Id: <20200416131355.209900249@linuxfoundation.org>
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 144/146] powerpc/fsl_booke: Avoid creating duplicate tlb1 entry
+Date:   Thu, 16 Apr 2020 15:24:45 +0200
+Message-Id: <20200416131302.052157709@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
-References: <20200416131325.891903893@linuxfoundation.org>
+In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
+References: <20200416131242.353444678@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,7 +63,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 
-commit aa4113340ae6c2811e046f08c2bc21011d20a072 upstream.
+[ Upstream commit aa4113340ae6c2811e046f08c2bc21011d20a072 ]
 
 In the current implementation, the call to loadcam_multi() is wrapped
 between switch_to_as1() and restore_to_as0() calls so, when it tries
@@ -76,15 +77,16 @@ Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 Acked-by: Scott Wood <oss@buserror.net>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Link: https://lore.kernel.org/r/20200123111914.2565-1-laurentiu.tudor@nxp.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/mm/nohash/tlb_low.S |   12 +++++++++++-
+ arch/powerpc/mm/tlb_nohash_low.S | 12 +++++++++++-
  1 file changed, 11 insertions(+), 1 deletion(-)
 
---- a/arch/powerpc/mm/nohash/tlb_low.S
-+++ b/arch/powerpc/mm/nohash/tlb_low.S
-@@ -397,7 +397,7 @@ _GLOBAL(set_context)
+diff --git a/arch/powerpc/mm/tlb_nohash_low.S b/arch/powerpc/mm/tlb_nohash_low.S
+index e066a658acac6..56f58a362ea56 100644
+--- a/arch/powerpc/mm/tlb_nohash_low.S
++++ b/arch/powerpc/mm/tlb_nohash_low.S
+@@ -402,7 +402,7 @@ _GLOBAL(set_context)
   * extern void loadcam_entry(unsigned int index)
   *
   * Load TLBCAM[index] entry in to the L2 CAM MMU
@@ -93,7 +95,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
   */
  _GLOBAL(loadcam_entry)
  	mflr	r5
-@@ -433,6 +433,10 @@ END_MMU_FTR_SECTION_IFSET(MMU_FTR_BIG_PH
+@@ -438,6 +438,10 @@ END_MMU_FTR_SECTION_IFSET(MMU_FTR_BIG_PHYS)
   */
  _GLOBAL(loadcam_multi)
  	mflr	r8
@@ -104,7 +106,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  
  	/*
  	 * Set up temporary TLB entry that is the same as what we're
-@@ -458,6 +462,7 @@ _GLOBAL(loadcam_multi)
+@@ -463,6 +467,7 @@ _GLOBAL(loadcam_multi)
  	mtmsr	r6
  	isync
  
@@ -112,7 +114,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  	mr	r9,r3
  	add	r10,r3,r4
  2:	bl	loadcam_entry
-@@ -466,6 +471,10 @@ _GLOBAL(loadcam_multi)
+@@ -471,6 +476,10 @@ _GLOBAL(loadcam_multi)
  	mr	r3,r9
  	blt	2b
  
@@ -123,7 +125,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  	/* Return to AS=0 and clear the temporary entry */
  	mfmsr	r6
  	rlwinm.	r6,r6,0,~(MSR_IS|MSR_DS)
-@@ -481,6 +490,7 @@ _GLOBAL(loadcam_multi)
+@@ -486,6 +495,7 @@ _GLOBAL(loadcam_multi)
  	tlbwe
  	isync
  
@@ -131,5 +133,8 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  	mtlr	r8
  	blr
  #endif
+-- 
+2.20.1
+
 
 
