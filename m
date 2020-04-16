@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8127CC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A35ABC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:42:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54AAC2222C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:42:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BB7B2222C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:42:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587044540;
-	bh=pPQAnpLJ6swHilZZiXwdXrhXTemHxz69XOukH7cla4c=;
+	s=default; t=1587044549;
+	bh=TBa/gNjvjTHN3djEFnEHH8oe/fBri/XKmyoBAZzUjjY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c0oUc00s7DuHyf4WASc6ue+WqhE7WOFjgPeYj80uEvTDD1wC03PjWOTPquBeUBLKM
-	 VXYLiuLJSoUy/ei9QndGMJcnAho7v+o+o6CAE1M/4+uFgmGSfEIlaT0W1gZfgPUzfn
-	 GUmojjfpHPXeI+H6vnlGQV6xR8h/pBg4SdUWVAO0=
+	b=zOSylILqxCnecyhBSJaPCXBX4nLOKbrmIvV8JvJ7SBPjL7ob4JAodaJGzxvm9hIh4
+	 vD8ubMEhKR7JuLn+42kqVcJjRdT0wSQVhebBTUkq/I1mCpBnCRasbHOVjMsstz3AW0
+	 ah9qNFbOt+abQzl4WtmPLJeCZcTgNVXdNKXdrtcg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726601AbgDPNmP (ORCPT
+        id S2407344AbgDPNm0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:42:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44084 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:42:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896659AbgDPNdC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2896672AbgDPNdC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Apr 2020 09:33:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 107B022287;
-        Thu, 16 Apr 2020 13:32:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 952A722284;
+        Thu, 16 Apr 2020 13:32:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043971;
-        bh=pPQAnpLJ6swHilZZiXwdXrhXTemHxz69XOukH7cla4c=;
+        s=default; t=1587043969;
+        bh=TBa/gNjvjTHN3djEFnEHH8oe/fBri/XKmyoBAZzUjjY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Nii+c1BSyI/GYnXdKZKO87ntrbk5xV5t5RbBXQjA9QCSAHDctyTzbsFna/xd/j4RC
-         HuKuptN6s9y5r8oqRUlMHK2dep10CemSmX/2atbnQAYoM8Rrcrzh0eY+lKY4uT6qV8
-         6M+1C8AIRSH5+ZusLiveTgUBMq+aPHar/hMotN2o=
+        b=lYFTpizNIiWNHUz0EkVetgNmp3YzBfyazL63udZNQe/qPmLtRpJ+z5qYykpqWU06y
+         nvfmgNSksyrxvZT1clQvFJhPaUQ1U/RwaoVaGIotCIoBwH06dzZ0Azx6Dznu9i4m3g
+         W1zBQfHKESt2inPwg+YmKYCJZdfrv02hI1jJ8Bgo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
+        stable@vger.kernel.org,
+        Mohammad Rasim <mohammad.rasim96@gmail.com>,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 003/257] ARM: dts: Fix dm814x Ethernet by changing to use rgmii-id mode
-Date:   Thu, 16 Apr 2020 15:20:54 +0200
-Message-Id: <20200416131326.312287280@linuxfoundation.org>
+Subject: [PATCH 5.5 027/257] media: rc: add keymap for Videostrong KII Pro
+Date:   Thu, 16 Apr 2020 15:21:18 +0200
+Message-Id: <20200416131329.341904651@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -59,81 +62,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Mohammad Rasim <mohammad.rasim96@gmail.com>
 
-[ Upstream commit b46b2b7ba6e104d265ab705914859ec0db7a98c5 ]
+[ Upstream commit 30defecb98400575349a7d32f0526e1dc42ea83e ]
 
-Commit cd28d1d6e52e ("net: phy: at803x: Disable phy delay for RGMII mode")
-caused a regression for dm814x boards where NFSroot would no longer work.
+This is an NEC remote control device shipped with the Videostrong KII Pro
+tv box as well as other devices from videostrong.
 
-Let's fix the issue by configuring "rgmii-id" mode as internal delays are
-needed that is no longer the case with "rgmii" mode.
-
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Mohammad Rasim <mohammad.rasim96@gmail.com>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/dm8148-evm.dts       | 4 ++--
- arch/arm/boot/dts/dm8148-t410.dts      | 4 ++--
- arch/arm/boot/dts/dra62x-j5eco-evm.dts | 4 ++--
- 3 files changed, 6 insertions(+), 6 deletions(-)
+ drivers/media/rc/keymaps/Makefile             |  1 +
+ .../media/rc/keymaps/rc-videostrong-kii-pro.c | 83 +++++++++++++++++++
+ include/media/rc-map.h                        |  1 +
+ 3 files changed, 85 insertions(+)
+ create mode 100644 drivers/media/rc/keymaps/rc-videostrong-kii-pro.c
 
-diff --git a/arch/arm/boot/dts/dm8148-evm.dts b/arch/arm/boot/dts/dm8148-evm.dts
-index 3931fb068ff09..91d1018ab75fc 100644
---- a/arch/arm/boot/dts/dm8148-evm.dts
-+++ b/arch/arm/boot/dts/dm8148-evm.dts
-@@ -24,12 +24,12 @@
- 
- &cpsw_emac0 {
- 	phy-handle = <&ethphy0>;
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-id";
- };
- 
- &cpsw_emac1 {
- 	phy-handle = <&ethphy1>;
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-id";
- };
- 
- &davinci_mdio {
-diff --git a/arch/arm/boot/dts/dm8148-t410.dts b/arch/arm/boot/dts/dm8148-t410.dts
-index 9e43d5ec0bb2f..79ccdd4470f4c 100644
---- a/arch/arm/boot/dts/dm8148-t410.dts
-+++ b/arch/arm/boot/dts/dm8148-t410.dts
-@@ -33,12 +33,12 @@
- 
- &cpsw_emac0 {
- 	phy-handle = <&ethphy0>;
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-id";
- };
- 
- &cpsw_emac1 {
- 	phy-handle = <&ethphy1>;
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-id";
- };
- 
- &davinci_mdio {
-diff --git a/arch/arm/boot/dts/dra62x-j5eco-evm.dts b/arch/arm/boot/dts/dra62x-j5eco-evm.dts
-index 861ab90a3f3aa..c16e183822bee 100644
---- a/arch/arm/boot/dts/dra62x-j5eco-evm.dts
-+++ b/arch/arm/boot/dts/dra62x-j5eco-evm.dts
-@@ -24,12 +24,12 @@
- 
- &cpsw_emac0 {
- 	phy-handle = <&ethphy0>;
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-id";
- };
- 
- &cpsw_emac1 {
- 	phy-handle = <&ethphy1>;
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-id";
- };
- 
- &davinci_mdio {
+diff --git a/drivers/media/rc/keymaps/Makefile b/drivers/media/rc/keymaps/Makefile
+index 63261ef6380a9..aaa1bf81d00d4 100644
+--- a/drivers/media/rc/keymaps/Makefile
++++ b/drivers/media/rc/keymaps/Makefile
+@@ -119,6 +119,7 @@ obj-$(CONFIG_RC_MAP) += rc-adstech-dvb-t-pci.o \
+ 			rc-videomate-m1f.o \
+ 			rc-videomate-s350.o \
+ 			rc-videomate-tv-pvr.o \
++			rc-videostrong-kii-pro.o \
+ 			rc-wetek-hub.o \
+ 			rc-wetek-play2.o \
+ 			rc-winfast.o \
+diff --git a/drivers/media/rc/keymaps/rc-videostrong-kii-pro.c b/drivers/media/rc/keymaps/rc-videostrong-kii-pro.c
+new file mode 100644
+index 0000000000000..414d4d231e7ed
+--- /dev/null
++++ b/drivers/media/rc/keymaps/rc-videostrong-kii-pro.c
+@@ -0,0 +1,83 @@
++// SPDX-License-Identifier: GPL-2.0+
++//
++// Copyright (C) 2019 Mohammad Rasim <mohammad.rasim96@gmail.com>
++
++#include <media/rc-map.h>
++#include <linux/module.h>
++
++//
++// Keytable for the Videostrong KII Pro STB remote control
++//
++
++static struct rc_map_table kii_pro[] = {
++	{ 0x59, KEY_POWER },
++	{ 0x19, KEY_MUTE },
++	{ 0x42, KEY_RED },
++	{ 0x40, KEY_GREEN },
++	{ 0x00, KEY_YELLOW },
++	{ 0x03, KEY_BLUE },
++	{ 0x4a, KEY_BACK },
++	{ 0x48, KEY_FORWARD },
++	{ 0x08, KEY_PREVIOUSSONG},
++	{ 0x0b, KEY_NEXTSONG},
++	{ 0x46, KEY_PLAYPAUSE },
++	{ 0x44, KEY_STOP },
++	{ 0x1f, KEY_FAVORITES},	//KEY_F5?
++	{ 0x04, KEY_PVR },
++	{ 0x4d, KEY_EPG },
++	{ 0x02, KEY_INFO },
++	{ 0x09, KEY_SUBTITLE },
++	{ 0x01, KEY_AUDIO },
++	{ 0x0d, KEY_HOMEPAGE },
++	{ 0x11, KEY_TV },	// DTV ?
++	{ 0x06, KEY_UP },
++	{ 0x5a, KEY_LEFT },
++	{ 0x1a, KEY_ENTER },	// KEY_OK ?
++	{ 0x1b, KEY_RIGHT },
++	{ 0x16, KEY_DOWN },
++	{ 0x45, KEY_MENU },
++	{ 0x05, KEY_ESC },
++	{ 0x13, KEY_VOLUMEUP },
++	{ 0x17, KEY_VOLUMEDOWN },
++	{ 0x58, KEY_APPSELECT },
++	{ 0x12, KEY_VENDOR },	// mouse
++	{ 0x55, KEY_PAGEUP },	// KEY_CHANNELUP ?
++	{ 0x15, KEY_PAGEDOWN },	// KEY_CHANNELDOWN ?
++	{ 0x52, KEY_1 },
++	{ 0x50, KEY_2 },
++	{ 0x10, KEY_3 },
++	{ 0x56, KEY_4 },
++	{ 0x54, KEY_5 },
++	{ 0x14, KEY_6 },
++	{ 0x4e, KEY_7 },
++	{ 0x4c, KEY_8 },
++	{ 0x0c, KEY_9 },
++	{ 0x18, KEY_WWW },	// KEY_F7
++	{ 0x0f, KEY_0 },
++	{ 0x51, KEY_BACKSPACE },
++};
++
++static struct rc_map_list kii_pro_map = {
++	.map = {
++		.scan     = kii_pro,
++		.size     = ARRAY_SIZE(kii_pro),
++		.rc_proto = RC_PROTO_NEC,
++		.name     = RC_MAP_KII_PRO,
++	}
++};
++
++static int __init init_rc_map_kii_pro(void)
++{
++	return rc_map_register(&kii_pro_map);
++}
++
++static void __exit exit_rc_map_kii_pro(void)
++{
++	rc_map_unregister(&kii_pro_map);
++}
++
++module_init(init_rc_map_kii_pro)
++module_exit(exit_rc_map_kii_pro)
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Mohammad Rasim <mohammad.rasim96@gmail.com>");
+diff --git a/include/media/rc-map.h b/include/media/rc-map.h
+index f99575a0d29c8..d22810dcd85c6 100644
+--- a/include/media/rc-map.h
++++ b/include/media/rc-map.h
+@@ -274,6 +274,7 @@ struct rc_map *rc_map_get(const char *name);
+ #define RC_MAP_VIDEOMATE_K100            "rc-videomate-k100"
+ #define RC_MAP_VIDEOMATE_S350            "rc-videomate-s350"
+ #define RC_MAP_VIDEOMATE_TV_PVR          "rc-videomate-tv-pvr"
++#define RC_MAP_KII_PRO                   "rc-videostrong-kii-pro"
+ #define RC_MAP_WETEK_HUB                 "rc-wetek-hub"
+ #define RC_MAP_WETEK_PLAY2               "rc-wetek-play2"
+ #define RC_MAP_WINFAST                   "rc-winfast"
 -- 
 2.20.1
 
