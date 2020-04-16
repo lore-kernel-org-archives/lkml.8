@@ -2,160 +2,161 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A088C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B2EAC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:05:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E728B20771
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:04:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="LXVKImBS"
+	by mail.kernel.org (Postfix) with ESMTP id 5A9C120771
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:05:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437869AbgDPHEz (ORCPT
+        id S2438014AbgDPHFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 03:04:55 -0400
-Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:31734 "EHLO
-        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2438309AbgDPHEq (ORCPT
+        Thu, 16 Apr 2020 03:05:46 -0400
+Received: from mail-il1-f198.google.com ([209.85.166.198]:49648 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437954AbgDPHFQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 03:04:46 -0400
-Received: from pps.filterd (m0167090.ppops.net [127.0.0.1])
-        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03G70eBw026007;
-        Thu, 16 Apr 2020 03:04:32 -0400
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2177.outbound.protection.outlook.com [104.47.58.177])
-        by mx0b-00128a01.pphosted.com with ESMTP id 30dn7jmdvx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Apr 2020 03:04:32 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=P7qSjwzm5KZTT4ijNpLt2vlQ9sey2r6jbABW0yGi5ZXaOqfYCvCNDrc03vZklklz7Y/nuOJlKDg36wu6bOuaJGhd+ALjRwenFBS8ndQGQqQDslJZ+CP7EDdrRb8l4m9jOeIm+KH45pHgbKLe07bK9cwSnMYD21VhuScvDtkiq6B55dAybRQYIZBa/FKHsDbj/YYyXEWgQNuAWBx2ehInU9YSA5u8gnY1e3ndwVL+KqdYxAkzrEdYVmaBOCOcWHr7IMwkNDlIIhiYwzLQu8DBbtxuGUcG0G3figIJOGc390OVECJAt3jK8XlbSEj18yCWMeP8EQdjI+mwZzGrPKp+RA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xu5EfCF1vnc1RAvnMyFtTHyW0FsrkeuDJu5b3/loJM4=;
- b=Ih1ZQAARi1jXN+FoAZUC1of5jqEMJAdmDRyb2EPoNf7FjxwdG4o8aJxIb3qPpKVKgwM9MeUoGdF0JEO3UpEW2ksdx38ukkv4WI2Y/Y28cIM6eJPmO+VzcZm7pOkdRJxnlbcXbXdBf2dJFevt7ieYCauoGTRxL4Hfx/39ML0Vt/xPYtSMLyWQksK7vCnGSeUxEdzYf9Dq3FWwgDDTPcKxJYlOf80LXgzHQxff5uxKmjoepkiokAkaK92Hb74fkOkNl1BHTIXt6Dwr3V8cMnf+FqOC4ckXqY0oiphNrZJB6nk67voUYbSZqVc+KzSBheAvum6BDop1NADLZ6lMHJQsyg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
- dkim=pass header.d=analog.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xu5EfCF1vnc1RAvnMyFtTHyW0FsrkeuDJu5b3/loJM4=;
- b=LXVKImBSadeFdYbBmuQwXXATSnKgUJSpAagrEL1B+QYXeZ7dh3MqZtRCP/pMb+Y9Qi1lhezWU50T0GvQ4HdZ74fVawJVgPaBKC/Pbf0gSiXNlQD7TUzDZZDFZw84fS8YkvNnu37IJoA8plq7Y8zOJQbozmJAc3jBG4Ucf6JwVVw=
-Received: from DM6PR03MB4411.namprd03.prod.outlook.com (2603:10b6:5:10f::14)
- by DM6PR03MB4442.namprd03.prod.outlook.com (2603:10b6:5:10a::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.26; Thu, 16 Apr
- 2020 07:04:30 +0000
-Received: from DM6PR03MB4411.namprd03.prod.outlook.com
- ([fe80::c47f:ceee:cfda:6a7f]) by DM6PR03MB4411.namprd03.prod.outlook.com
- ([fe80::c47f:ceee:cfda:6a7f%3]) with mapi id 15.20.2921.027; Thu, 16 Apr 2020
- 07:04:30 +0000
-From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-To:     "jic23@kernel.org" <jic23@kernel.org>,
-        "lars@metafoo.de" <lars@metafoo.de>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
-Subject: Re: [PATCH v2] iio: core: register chardev only if needed
-Thread-Topic: [PATCH v2] iio: core: register chardev only if needed
-Thread-Index: AQHWEjfBZCWPnaEudUWFdTBfvszEb6h46meAgAFMZwCAABCeAIABDq+A
-Date:   Thu, 16 Apr 2020 07:04:30 +0000
-Message-ID: <74cc4f24377a420953496281f9ac34648420ee36.camel@analog.com>
-References: <20200414083656.7696-1-alexandru.ardelean@analog.com>
-         <20200414190629.2d85759e@archlinux>
-         <761fb0aef92e5e026df78b6679329dbbb55b6226.camel@analog.com>
-         <5d3d6bad-934d-41c5-d167-dd69734e8015@metafoo.de>
-In-Reply-To: <5d3d6bad-934d-41c5-d167-dd69734e8015@metafoo.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [188.27.130.47]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 7e705194-a56b-483d-3718-08d7e1d46902
-x-ms-traffictypediagnostic: DM6PR03MB4442:
-x-microsoft-antispam-prvs: <DM6PR03MB4442C7FDE282D842EA3CCBCDF9D80@DM6PR03MB4442.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0375972289
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR03MB4411.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(346002)(376002)(396003)(136003)(39860400002)(366004)(76116006)(2906002)(53546011)(66556008)(110136005)(66446008)(186003)(66946007)(66476007)(64756008)(316002)(91956017)(6506007)(8676002)(26005)(4326008)(36756003)(86362001)(8936002)(478600001)(2616005)(81156014)(71200400001)(6486002)(6512007)(5660300002)(54906003);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: analog.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 15ipc7KMVPsLT2BVrq8bFl2ewt5o5F/HN4hY8jCmKLeAjsBYs7oylTPwef7aLnn/2KlBn3coPqv90oSbhgTuOFaQbZY3DFNMp8YK4NWXsNgjV2EjDs5ILAdh+lKsdKz7ZF7x+63ssKR4q4x8XkTUQuJxon5puA7LFkRx8GYvJ0wjUR48Ti77ynaZYSNjr4HG6og9fH4hXsEJNIy5dYNfk2F4gOJPoe2gj+wyIbU5Ba/y05qPE21vWbmlLK/6LWzJWm7SSxhhJKY5iCvrXPk7JFnMn0pOvKkE/TcC2/tUXNRiHnpBYnKXevBb4bBCvlrM+eIQF50UYp2+tO0qarG5k6ZFuKCbM85TTifvbaS4YNLTRbdXoKROEr1Ct50p/JzBkLtqZzth/+EjkrN1hSwqsrNbIO0FbhFA/iczEsn/PbpyoMiO+AlMACeV8xFzYCeF
-x-ms-exchange-antispam-messagedata: ZdedjFAElXC3LQb3ns+MT7z/F97iS3A1xU5OhzKXIoH40IyrpWE13DMcXgPkQhjJNvt26Ahl402J61jPbOOJEww3kqYabMwN9qZ2cKNsABvb/07EiFAOzwq53aiAQSij5eT02mIHFR4pgApzYe7DNg==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <64361FA6F3895D4786F23F4E6A81D60B@namprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 16 Apr 2020 03:05:16 -0400
+Received: by mail-il1-f198.google.com with SMTP id r17so8088729ila.16
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 00:05:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=TVvBVOi41Qo7r/+UOsEfQG1z/YRIhNfOcDF384KFc24=;
+        b=WkH+fHWXGSnVsLJBV7d1styZtO7XIViHOKQx3TDSQ+Q0QG48SCJJ2IyQqeTzRlZOew
+         1v78OgOUWZsfaXnfVVkKwW6AOXwR2bdZtkq/AkwmTVQZx4qp5WdAD4wVlX0gEXdV9RnR
+         ihuaZe1YSiEdl8Cra+24zjJuXgjs4kGPGdXCeowb7QbivebFE+trCO1l0Gi62ghnhvaq
+         NmJJXMcYElBVAtLQWKqIph2IDRcQ6ZiQmPHVmr2jd+EWL+Ifh6ufSNRfyrjlMBzZJDWL
+         3i69UEMyXevBeSSTgKEkPHinAL+HF8hoTzrxnKnk2N+vvGHW3r7BtEzzK4Thu1uzzpqg
+         0gpA==
+X-Gm-Message-State: AGi0PuZYW+3xZWzw7yY3/mb0Kapcm9JqI+BIn1dtbPh7ktWmGSR+F+Rj
+        g0x+e9GISpHdHGIY/5Tb/+gyASRdVRbhbICHJIRFqssVb1C7
+X-Google-Smtp-Source: APiQypKBqNDHPOkuF+tpw9qAi5DbjodJ5a9xwXABXAyXw6VezRclbW19E1SSkdh9CYCb+KnhaYXF/crHs7oo6yopYcjrft2QOZu3
 MIME-Version: 1.0
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7e705194-a56b-483d-3718-08d7e1d46902
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Apr 2020 07:04:30.6064
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: l9xaeTHViC6BCkLuNuuIYcUr1WKorPxDCA/C/oBHmWeMpApx7pdKeZIes1Mt1oGc+pCJmayp+ydZ5nweXo86f7uNMWLybyGbxNQff7e7R+Q=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB4442
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-16_02:2020-04-14,2020-04-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 spamscore=0 priorityscore=1501 bulkscore=0
- lowpriorityscore=0 mlxscore=0 suspectscore=0 mlxlogscore=999 adultscore=0
- phishscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004160045
+X-Received: by 2002:a6b:7203:: with SMTP id n3mr16253379ioc.23.1587020714552;
+ Thu, 16 Apr 2020 00:05:14 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 00:05:14 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f1377e05a3630d32@google.com>
+Subject: KMSAN: uninit-value in sctp_ootb_pkt_new
+From:   syzbot <syzbot+6751381fe5a26df5b74d@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, glider@google.com, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, linux-sctp@vger.kernel.org,
+        marcelo.leitner@gmail.com, netdev@vger.kernel.org,
+        nhorman@tuxdriver.com, syzkaller-bugs@googlegroups.com,
+        vyasevich@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTA0LTE1IGF0IDE2OjU1ICswMjAwLCBMYXJzLVBldGVyIENsYXVzZW4gd3Jv
-dGU6DQo+IFtFeHRlcm5hbF0NCj4gDQo+IE9uIDQvMTUvMjAgMzo1NiBQTSwgQXJkZWxlYW4sIEFs
-ZXhhbmRydSB3cm90ZToNCj4gPiBPbiBUdWUsIDIwMjAtMDQtMTQgYXQgMTk6MDYgKzAxMDAsIEpv
-bmF0aGFuIENhbWVyb24gd3JvdGU6DQo+ID4gPiBbRXh0ZXJuYWxdDQo+ID4gPiANCj4gPiA+IE9u
-IFR1ZSwgMTQgQXByIDIwMjAgMTE6MzY6NTYgKzAzMDANCj4gPiA+IEFsZXhhbmRydSBBcmRlbGVh
-biA8YWxleGFuZHJ1LmFyZGVsZWFuQGFuYWxvZy5jb20+IHdyb3RlOg0KPiA+ID4gDQo+ID4gPiA+
-IFRoZSBmaW5hbCBpbnRlbnQgaXMgdG8gbG9jYWxpemUgYWxsIGJ1ZmZlciBvcHMgaW50byB0aGUN
-Cj4gPiA+ID4gaW5kdXN0cmlhbGlvLWJ1ZmZlci5jIGZpbGUsIHRvIGJlIGFibGUgdG8gYWRkIHN1
-cHBvcnQgZm9yIG11bHRpcGxlDQo+ID4gPiA+IGJ1ZmZlcnMNCj4gPiA+ID4gcGVyIElJTyBkZXZp
-Y2UuDQo+ID4gPiA+IA0KPiA+ID4gPiBXZSBvbmx5IG5lZWQgYSBjaGFyZGV2IGlmIHdlIG5lZWQg
-dG8gc3VwcG9ydCBidWZmZXJzIGFuZC9vciBldmVudHMuDQo+ID4gPiA+IA0KPiA+ID4gPiBXaXRo
-IHRoaXMgY2hhbmdlLCBhIGNoYXJkZXYgd2lsbCBiZSBjcmVhdGVkOg0KPiA+ID4gPiAxLiBpZiB0
-aGVyZSBpcyBhbiBJSU8gYnVmZmVyIGF0dGFjaGVkIE9SDQo+ID4gPiA+IDIuIGlmIHRoZXJlIGlz
-IGFuIGV2ZW50X2ludGVyZmFjZSBjb25maWd1cmVkDQo+ID4gPiA+IA0KPiA+ID4gPiBPdGhlcndp
-c2UsIG5vIGNoYXJkZXYgd2lsbCBiZSBjcmVhdGVkLg0KPiA+ID4gPiBRdWl0ZSBhIGxvdCBvZiBJ
-SU8gZGV2aWNlcyBkb24ndCByZWFsbHkgbmVlZCBhIGNoYXJkZXYsIHNvIHRoaXMgaXMgYQ0KPiA+
-ID4gPiBtaW5vcg0KPiA+ID4gPiBpbXByb3ZlbWVudCB0byB0aGUgSUlPIGNvcmUsIGFzIHRoZSBJ
-SU8gZGV2aWNlIHdpbGwgdGFrZSB1cCBmZXdlcg0KPiA+ID4gPiByZXNvdXJjZXMuDQo+ID4gPiA+
-IA0KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBBbGV4YW5kcnUgQXJkZWxlYW4gPGFsZXhhbmRydS5h
-cmRlbGVhbkBhbmFsb2cuY29tPg0KPiA+ID4gPiAtLS0NCj4gPiA+ID4gDQo+ID4gPiA+IENoYW5n
-ZWxvZyB2MSAtPiB2MjoNCj4gPiA+ID4gKiBzcGxpdCBhd2F5IGZyb20gc2VyaWVzICdpaW86IGNv
-cmUsYnVmZmVyOiByZS1vcmdhbml6ZSBjaGFyZGV2DQo+ID4gPiA+IGNyZWF0aW9uJzsNCj4gPiA+
-ID4gICAgaSdtIGdldHRpbmcgdGhlIGZlZWxpbmcgdGhhdCB0aGlzIGhhcyBzb21lIHZhbHVlIG9u
-IGl0J3Mgb3duOw0KPiA+ID4gPiAgICBubyBpZGVhIGlmIGl0IG5lZWRzICdGaXhlcycgdGFnOyBp
-dCBpcyBhIGJpdCBmdXp6eSB0byBwb2ludCB0byBhDQo+ID4gPiA+IHBhdGNoDQo+ID4gPiA+ICAg
-IHdoaWNoIHRoaXMgd291bGQgYmUgZml4ZWQgYnkgdGhpczsgaSdtIGd1ZXNzaW5nIGl0IHdvdWxk
-IGJlIGZpbmUNCj4gPiA+ID4gICAgd2l0aG91dCBvbmUNCj4gPiA+IEknZCBhcmd1ZSBpdCdzIGFu
-ICdvcHRpbWl6YXRpb24nIHJhdGhlciB0aGFuIGEgZml4IDopDQo+ID4gPiANCj4gPiA+IFN0aWxs
-IGxvb2tzIGdvb2QgdG8gbWUgYnV0IEknZCBsaWtlIGl0IHRvIHNpdCBmb3IgYSBsaXR0bGUgd2hp
-bGUgdG8NCj4gPiA+IHNlZSBpZiBhbnlvbmUgcG9pbnRzIG91dCBzb21ldGhpbmcgd2UgYXJlIGJv
-dGggbWlzc2luZyENCj4gPiA+IA0KPiA+IFRoaXMgaXMgbm90IGdvb2QuDQo+ID4gSXQgc2VlbXMg
-dGhhdCBJIGRpZCBub3QgcHJvcGVybHkgdGVzdCBhbGwgY2FzZXMuDQo+ID4gSSBoYWQgdG8gYnJl
-YWsgYSBkZXZpY2UgdG8gbm90IGhhdmUgYW4gZXZlbnRfaW50ZXJmYWNlIHRvIG5vdGljZSB0aGF0
-IHRoZQ0KPiA+IHN5c2ZzDQo+ID4gZG9lc24ndCBnZXQgaW5zdGFudGlhdGVkIGVpdGhlciBiZWNh
-dXNlIGRldmljZV9hZGQgaXMgbWlzc2luZy4NCj4gPiANCj4gPiBXaWxsIGRvIGFub3RoZXIgdHJ5
-Lg0KPiANCj4gSSB0aGluayB5b3UgYWxzbyBoYXZlIHRvIG1ha2UgdGhlIGBpbmRpb19kZXYtPmRl
-di5kZXZ0ID0gLi4uYCANCj4gY29uZGl0aW9uYWwuIE9yIGNvbmRpdGlvbmFsbHkgdXNlIGRldmlj
-ZV9hZGQoKSBpbnN0ZWFkIG9mIGRldmljZV9hZGRfY2RldigpLg0KPiANCj4gSWYgeW91IGdvIGZv
-ciB0aGUgZm9ybWVyIHlvdSBuZWVkIHRvIGNhbGwgY2Rldl9kZXZpY2VfZGVsKCkgDQo+IHVuY29u
-ZGl0aW9uYWxseSwgZm9yIHRoZSBsYXR0ZXIgY2FsbCBkZXZpY2VfZGVsKCkgb3IgY2Rldl9kZXZp
-Y2VfZGVsKCkgDQo+IGRlcGVuZGluZyBvbiB3aGV0aGVyIHRoZSBjZGV2IHdhcyByZWdpc3RlcmVk
-Lg0KDQpJIHdhcyB0aGlua2luZyBvZiBjb25kaXRpb25hbGx5IHVzaW5nIGNkZXZfZGV2aWNlX2Fk
-ZC9kZWwoKSBzb21laG93Lg0KQnV0LCB0aGlzIGNvbXBsaWNhdGVzIHRoZSByZXN0IG9mIHRoZSBz
-ZXJpZXMgYSBiaXQuDQpBbmQgSSBhbSB0aGlua2luZyBvZiBob3cgdG8gc2ltcGxpZnkgaXQuDQoN
-CkFueXdheSwgdGhpcyB3aWxsIGdvIGJhY2sgdG8gdGhlIHNlcmllcyAgwq9cXyjjg4QpXy/Crw0K
-DQo+IA0KPiAtIExhcnMNCj4gDQo+IA0K
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    75303409 kmsan: dma: call KMSAN hooks for DMA mappings whe..
+git tree:       https://github.com/google/kmsan.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=11d2f9e7e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7811db4cc444a7f6
+dashboard link: https://syzkaller.appspot.com/bug?extid=6751381fe5a26df5b74d
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+6751381fe5a26df5b74d@syzkaller.appspotmail.com
+
+=====================================================
+BUG: KMSAN: uninit-value in __arch_swab32 arch/x86/include/uapi/asm/swab.h:10 [inline]
+BUG: KMSAN: uninit-value in __fswab32 include/uapi/linux/swab.h:60 [inline]
+BUG: KMSAN: uninit-value in sctp_ootb_pkt_new+0x202/0x540 net/sctp/sm_statefuns.c:6256
+CPU: 0 PID: 20127 Comm: syz-executor.2 Not tainted 5.6.0-rc7-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1c9/0x220 lib/dump_stack.c:118
+ kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:118
+ __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
+ __arch_swab32 arch/x86/include/uapi/asm/swab.h:10 [inline]
+ __fswab32 include/uapi/linux/swab.h:60 [inline]
+ sctp_ootb_pkt_new+0x202/0x540 net/sctp/sm_statefuns.c:6256
+ sctp_sf_tabort_8_4_8+0xe6/0x7e0 net/sctp/sm_statefuns.c:3372
+ sctp_sf_do_5_1B_init+0x6be/0x1b60 net/sctp/sm_statefuns.c:338
+ sctp_do_sm+0x2b4/0x9a30 net/sctp/sm_sideeffect.c:1153
+ sctp_endpoint_bh_rcv+0xd54/0xfe0 net/sctp/endpointola.c:395
+ sctp_inq_push+0x300/0x420 net/sctp/inqueue.c:80
+ sctp_rcv+0x48b9/0x5410 net/sctp/input.c:256
+ ip_protocol_deliver_rcu+0x700/0xbc0 net/ipv4/ip_input.c:204
+ ip_local_deliver_finish net/ipv4/ip_input.c:231 [inline]
+ NF_HOOK include/linux/netfilter.h:307 [inline]
+ ip_local_deliver+0x62a/0x7c0 net/ipv4/ip_input.c:252
+ dst_input include/net/dst.h:442 [inline]
+ ip_rcv_finish net/ipv4/ip_input.c:428 [inline]
+ NF_HOOK include/linux/netfilter.h:307 [inline]
+ ip_rcv+0x6cf/0x750 net/ipv4/ip_input.c:538
+ __netif_receive_skb_one_core net/core/dev.c:5187 [inline]
+ __netif_receive_skb net/core/dev.c:5301 [inline]
+ netif_receive_skb_internal net/core/dev.c:5391 [inline]
+ netif_receive_skb+0xbb5/0xf20 net/core/dev.c:5450
+ tun_rx_batched include/linux/skbuff.h:4351 [inline]
+ tun_get_user+0x6aef/0x6f60 drivers/net/tun.c:1997
+ tun_chr_write_iter+0x1f2/0x360 drivers/net/tun.c:2026
+ call_write_iter include/linux/fs.h:1902 [inline]
+ new_sync_write fs/read_write.c:483 [inline]
+ __vfs_write+0xa5a/0xca0 fs/read_write.c:496
+ vfs_write+0x44a/0x8f0 fs/read_write.c:558
+ ksys_write+0x267/0x450 fs/read_write.c:611
+ __do_sys_write fs/read_write.c:623 [inline]
+ __se_sys_write+0x92/0xb0 fs/read_write.c:620
+ __x64_sys_write+0x4a/0x70 fs/read_write.c:620
+ do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:296
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x45c889
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f973b07dc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007f973b07e6d4 RCX: 000000000045c889
+RDX: 000000000000002e RSI: 00000000200001c0 RDI: 0000000000000003
+RBP: 000000000076bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 0000000000000d0d R14: 00000000004cf3b9 R15: 000000000076bf0c
+
+Uninit was created at:
+ kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
+ kmsan_internal_poison_shadow+0x66/0xd0 mm/kmsan/kmsan.c:127
+ kmsan_slab_alloc+0x8a/0xe0 mm/kmsan/kmsan_hooks.c:82
+ slab_alloc_node mm/slub.c:2801 [inline]
+ __kmalloc_node_track_caller+0xb40/0x1200 mm/slub.c:4420
+ __kmalloc_reserve net/core/skbuff.c:142 [inline]
+ __alloc_skb+0x2fd/0xac0 net/core/skbuff.c:210
+ alloc_skb include/linux/skbuff.h:1081 [inline]
+ alloc_skb_with_frags+0x18c/0xa70 net/core/skbuff.c:5764
+ sock_alloc_send_pskb+0xada/0xc60 net/core/sock.c:2245
+ tun_alloc_skb drivers/net/tun.c:1529 [inline]
+ tun_get_user+0x10ae/0x6f60 drivers/net/tun.c:1843
+ tun_chr_write_iter+0x1f2/0x360 drivers/net/tun.c:2026
+ call_write_iter include/linux/fs.h:1902 [inline]
+ new_sync_write fs/read_write.c:483 [inline]
+ __vfs_write+0xa5a/0xca0 fs/read_write.c:496
+ vfs_write+0x44a/0x8f0 fs/read_write.c:558
+ ksys_write+0x267/0x450 fs/read_write.c:611
+ __do_sys_write fs/read_write.c:623 [inline]
+ __se_sys_write+0x92/0xb0 fs/read_write.c:620
+ __x64_sys_write+0x4a/0x70 fs/read_write.c:620
+ do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:296
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+=====================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
