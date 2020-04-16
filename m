@@ -2,105 +2,78 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 990AAC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42AEAC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:32:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77493214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:32:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587051155;
-	bh=mDyuvzBU0DHXlkElGu1lIgKkQhTG1xpoGSILQu6UrOE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AVY3scPDMMLiCuHH3a9RVZjPcW2QoJ5S5ULBWpz1KQFD/oZ30te16d3fb3EbaPYYi
-	 HI1/MBghNfphZCi6nIq5//WeeAowGj3WcXYzt+c9DQSiUEuq4QWggpR4k1cenR6LYM
-	 0/9xyeBMJzIq7/3eSgukLjfFgDeEPpgk57qLeoyo=
+	by mail.kernel.org (Postfix) with ESMTP id 22CE7214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:32:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="wYtN3PzQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410446AbgDPPcY (ORCPT
+        id S2410500AbgDPPci (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:32:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55264 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727125AbgDPNmU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:42:20 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        Thu, 16 Apr 2020 11:32:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46876 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2410465AbgDPPc0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 11:32:26 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6D7EC061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 08:32:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=cxO05dwwYyFWwu+Hjn5nmvuxzYZOEhq4dvVTeZURZr4=; b=wYtN3PzQ7GgPwToOvgM9/4hK/R
+        Z8HkRKuRdSqdOi7AT6JMqdGX15fKOb7s2Lc9UYQAcmr3E+BKt+XQw+R+z7p2+DgpIuazcYd9QXT3x
+        VxTnE8LG5+3T5uG5xwVp2R3eSL238wUg99IHUpaIMlSd0+pxOVFbDqyA5atwM4VLpJrEDc/ipXKMP
+        p0kS5h02C4jMaD7nb2tep9Zq55UAxKHfOmqRS1HtPehAtIBIOQ9FusbDpQCwHmv3ytzEPce/fDmHM
+        F0QFebRgPvB1UycdQK85sfdaL7mT54E43I+QpfDNlQsQ7UorSdbjV1D0SwLhGWxRXVzD9uOolpJqa
+        vmiZAONA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jP6Un-0004ut-No; Thu, 16 Apr 2020 15:32:05 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E1D32222E;
-        Thu, 16 Apr 2020 13:42:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044540;
-        bh=mDyuvzBU0DHXlkElGu1lIgKkQhTG1xpoGSILQu6UrOE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BMaXPPPpkr4F5wWBJG/T6OTLCBKVJu95xtkyCjE3/AutH2kzJiL6UyUw2hfE2GN08
-         iyFSTLRK2i2oOJgD+gcnwQC28QJ75hf3Eht2OBVEAwG0bw3mnmbA+RA5gm5T6iFI+A
-         K4tCmi9ae6uLrK8xjc5R8KP2P/MpNmHDY7mpHr/c=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Imre Deak <imre.deak@intel.com>,
-        =?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 250/257] drm/i915/icl+: Dont enable DDI IO power on a TypeC port in TBT mode
-Date:   Thu, 16 Apr 2020 15:25:01 +0200
-Message-Id: <20200416131356.855824146@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
-References: <20200416131325.891903893@linuxfoundation.org>
-User-Agent: quilt/0.66
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 73E9730477A;
+        Thu, 16 Apr 2020 17:32:04 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 5E0382B0DED29; Thu, 16 Apr 2020 17:32:04 +0200 (CEST)
+Date:   Thu, 16 Apr 2020 17:32:04 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     jpoimboe@redhat.com, alexandre.chartre@oracle.com
+Cc:     linux-kernel@vger.kernel.org, jthierry@redhat.com,
+        tglx@linutronix.de, x86@kernel.org
+Subject: Re: [RFC][PATCH 0/7] objtool vs retpoline
+Message-ID: <20200416153204.GR20730@hirez.programming.kicks-ass.net>
+References: <20200416150752.569029800@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200416150752.569029800@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Imre Deak <imre.deak@intel.com>
+On Thu, Apr 16, 2020 at 05:07:52PM +0200, Peter Zijlstra wrote:
+> Hi!
+> 
+> Based on Alexandre's patches, here's a few patches that apply on top of my
+> other series:
+> 
+>   https://lkml.kernel.org/r/20200416114706.625340212@infradead.org
+> 
+> which seems to build a clean defconfig without ANNOTATE_NOSPEC_ALTERNATIVE on.
+> 
+> I've not tried to boot the thing, I'll leave that to the robots.
 
-The DDI IO power well must not be enabled for a TypeC port in TBT mode,
-ensure this during driver loading/system resume.
+Find a slightly cleaner, and more actually working, version here:
 
-This gets rid of error messages like
-[drm] *ERROR* power well DDI E TC2 IO state mismatch (refcount 1/enabled 0)
-
-and avoids leaking the power ref when disabling the output.
-
-Cc: <stable@vger.kernel.org> # v5.4+
-Signed-off-by: Imre Deak <imre.deak@intel.com>
-Reviewed-by: José Roberto de Souza <jose.souza@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200330152244.11316-1-imre.deak@intel.com
-(cherry picked from commit f77a2db27f26c3ccba0681f7e89fef083718f07f)
-Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/i915/display/intel_ddi.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/i915/display/intel_ddi.c b/drivers/gpu/drm/i915/display/intel_ddi.c
-index 1488822398fed..4872c357eb6da 100644
---- a/drivers/gpu/drm/i915/display/intel_ddi.c
-+++ b/drivers/gpu/drm/i915/display/intel_ddi.c
-@@ -2235,7 +2235,11 @@ static void intel_ddi_get_power_domains(struct intel_encoder *encoder,
- 		return;
- 
- 	dig_port = enc_to_dig_port(&encoder->base);
--	intel_display_power_get(dev_priv, dig_port->ddi_io_power_domain);
-+
-+	if (!intel_phy_is_tc(dev_priv, phy) ||
-+	    dig_port->tc_mode != TC_PORT_TBT_ALT)
-+		intel_display_power_get(dev_priv,
-+					dig_port->ddi_io_power_domain);
- 
- 	/*
- 	 * AUX power is only needed for (e)DP mode, and for HDMI mode on TC
--- 
-2.20.1
-
-
-
+  git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git core/objtool-retpoline
