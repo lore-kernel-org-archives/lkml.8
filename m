@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E721CC352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 664B0C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:54:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C63B62076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:54:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 442B620786
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:54:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587045252;
-	bh=KAASmrYb++HJPA3aAIxo3b3Wo1cOBCFKWgeDuqpjtIQ=;
+	s=default; t=1587045256;
+	bh=R8wM+RdBEmGGBgeRokphm76zWrNCKuGo6rJ2KLrBV2M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JBNWaXQPvJOmJCnzSsfsUmkaHkJqiVDuDIJz2HW4zRhZuB0p57AN53SAYGRe6tgWF
-	 k8c+WeMcMXvMxrE729aXh+hfzXkZ04bgwuDjis6HzjMR72KyXy3rAQFE/V0UDTCc3U
-	 8LXVx1WoKJezAnzDGt89NK85IZnUICY4hSLSnLDc=
+	b=tiSPY+2/Uio/pIOBb3vZQF95TwHGhBo768Vx3WiKhVYhXcoLTDAAMgadjSRmyssKT
+	 zfWzTYfxtpPlVv1sWapFciCO1xE8XqPGGZurUiyf1YOtWf+UKks8f4B071Yz6ttgwu
+	 IIS0lPmrpW2mwl3u3bFYKqC+ga/R5OFYQfHmOZwM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2898789AbgDPNyI (ORCPT
+        id S1728213AbgDPNyO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:54:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49688 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:54:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897450AbgDPNhZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:37:25 -0400
+        id S2897531AbgDPNhq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:37:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12A5A221F7;
-        Thu, 16 Apr 2020 13:37:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2EF322202;
+        Thu, 16 Apr 2020 13:37:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044244;
-        bh=KAASmrYb++HJPA3aAIxo3b3Wo1cOBCFKWgeDuqpjtIQ=;
+        s=default; t=1587044264;
+        bh=R8wM+RdBEmGGBgeRokphm76zWrNCKuGo6rJ2KLrBV2M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ihG3Xbvsrw6sjd5zRh8//ERAwohfqbxW6nmOby5uuA9PK0XQBf+zdSUV7H8QxuN2+
-         FDwQcENsIOXGXwqB5U22P16YLsvRd8ZZtjvHJPB68yTZPMV8b7MdSWEYzb0G787JYs
-         PjSG0XrLxBaut6nsgEmDC8XhjcJmsOj3f6Pq9RIY=
+        b=Kyyu1vVCaZqs5g8Prb2EkhxQP85UzsmioM1Om2Orj6zimvPiSqSkstYFasRZ9r5xQ
+         BKLBA6wWHG2DbxsHShFK4bXcuTcjWo0tkrfz6yHKBGdbmpNWDTEAtcicbaylr6IEYU
+         uhGSafbMbkdpA8/+WFABSJ5tb9Ji43D3xUNQFWw4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vipul Kumar <vipulk0511@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH 5.5 139/257] x86/tsc_msr: Make MSR derived TSC frequency more accurate
-Date:   Thu, 16 Apr 2020 15:23:10 +0200
-Message-Id: <20200416131343.827334574@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Peter Xu <peterx@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.5 146/257] KVM: x86: Allocate new rmap and large page tracking when moving memslot
+Date:   Thu, 16 Apr 2020 15:23:17 +0200
+Message-Id: <20200416131344.706861909@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -60,225 +61,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit fac01d11722c92a186b27ee26cd429a8066adfb5 upstream.
+commit edd4fa37baa6ee8e44dc65523b27bd6fe44c94de upstream.
 
-The "Intel 64 and IA-32 Architectures Software Developer’s Manual Volume 4:
-Model-Specific Registers" has the following table for the values from
-freq_desc_byt:
+Reallocate a rmap array and recalcuate large page compatibility when
+moving an existing memslot to correctly handle the alignment properties
+of the new memslot.  The number of rmap entries required at each level
+is dependent on the alignment of the memslot's base gfn with respect to
+that level, e.g. moving a large-page aligned memslot so that it becomes
+unaligned will increase the number of rmap entries needed at the now
+unaligned level.
 
-   000B: 083.3 MHz
-   001B: 100.0 MHz
-   010B: 133.3 MHz
-   011B: 116.7 MHz
-   100B: 080.0 MHz
+Not updating the rmap array is the most obvious bug, as KVM accesses
+garbage data beyond the end of the rmap.  KVM interprets the bad data as
+pointers, leading to non-canonical #GPs, unexpected #PFs, etc...
 
-Notice how for e.g the 83.3 MHz value there are 3 significant digits, which
-translates to an accuracy of a 1000 ppm, where as a typical crystal
-oscillator is 20 - 100 ppm, so the accuracy of the frequency format used in
-the Software Developer’s Manual is not really helpful.
+  general protection fault: 0000 [#1] SMP
+  CPU: 0 PID: 1909 Comm: move_memory_reg Not tainted 5.4.0-rc7+ #139
+  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
+  RIP: 0010:rmap_get_first+0x37/0x50 [kvm]
+  Code: <48> 8b 3b 48 85 ff 74 ec e8 6c f4 ff ff 85 c0 74 e3 48 89 d8 5b c3
+  RSP: 0018:ffffc9000021bbc8 EFLAGS: 00010246
+  RAX: ffff00617461642e RBX: ffff00617461642e RCX: 0000000000000012
+  RDX: ffff88827400f568 RSI: ffffc9000021bbe0 RDI: ffff88827400f570
+  RBP: 0010000000000000 R08: ffffc9000021bd00 R09: ffffc9000021bda8
+  R10: ffffc9000021bc48 R11: 0000000000000000 R12: 0030000000000000
+  R13: 0000000000000000 R14: ffff88827427d700 R15: ffffc9000021bce8
+  FS:  00007f7eda014700(0000) GS:ffff888277a00000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 00007f7ed9216ff8 CR3: 0000000274391003 CR4: 0000000000162eb0
+  Call Trace:
+   kvm_mmu_slot_set_dirty+0xa1/0x150 [kvm]
+   __kvm_set_memory_region.part.64+0x559/0x960 [kvm]
+   kvm_set_memory_region+0x45/0x60 [kvm]
+   kvm_vm_ioctl+0x30f/0x920 [kvm]
+   do_vfs_ioctl+0xa1/0x620
+   ksys_ioctl+0x66/0x70
+   __x64_sys_ioctl+0x16/0x20
+   do_syscall_64+0x4c/0x170
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+  RIP: 0033:0x7f7ed9911f47
+  Code: <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 21 6f 2c 00 f7 d8 64 89 01 48
+  RSP: 002b:00007ffc00937498 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+  RAX: ffffffffffffffda RBX: 0000000001ab0010 RCX: 00007f7ed9911f47
+  RDX: 0000000001ab1350 RSI: 000000004020ae46 RDI: 0000000000000004
+  RBP: 000000000000000a R08: 0000000000000000 R09: 00007f7ed9214700
+  R10: 00007f7ed92149d0 R11: 0000000000000246 R12: 00000000bffff000
+  R13: 0000000000000003 R14: 00007f7ed9215000 R15: 0000000000000000
+  Modules linked in: kvm_intel kvm irqbypass
+  ---[ end trace 0c5f570b3358ca89 ]---
 
-As far as we know Bay Trail SoCs use a 25 MHz crystal and Cherry Trail
-uses a 19.2 MHz crystal, the crystal is the source clock for a root PLL
-which outputs 1600 and 100 MHz. It is unclear if the root PLL outputs are
-used directly by the CPU clock PLL or if there is another PLL in between.
+The disallow_lpage tracking is more subtle.  Failure to update results
+in KVM creating large pages when it shouldn't, either due to stale data
+or again due to indexing beyond the end of the metadata arrays, which
+can lead to memory corruption and/or leaking data to guest/userspace.
 
-This does not matter though, we can model the chain of PLLs as a single PLL
-with a quotient equal to the quotients of all PLLs in the chain multiplied.
+Note, the arrays for the old memslot are freed by the unconditional call
+to kvm_free_memslot() in __kvm_set_memory_region().
 
-So we can create a simplified model of the CPU clock setup using a
-reference clock of 100 MHz plus a quotient which gets us as close to the
-frequency from the SDM as possible.
-
-For the 83.3 MHz example from above this would give 100 MHz * 5 / 6 = 83
-and 1/3 MHz, which matches exactly what has been measured on actual
-hardware.
-
-Use a simplified PLL model with a reference clock of 100 MHz for all Bay
-and Cherry Trail models.
-
-This has been tested on the following models:
-
-              CPU freq before:        CPU freq after:
-Intel N2840   2165.800 MHz            2166.667 MHz
-Intel Z3736   1332.800 MHz            1333.333 MHz
-Intel Z3775   1466.300 MHz            1466.667 MHz
-Intel Z8350   1440.000 MHz            1440.000 MHz
-Intel Z8750   1600.000 MHz            1600.000 MHz
-
-This fixes the time drifting by about 1 second per hour (20 - 30 seconds
-per day) on (some) devices which rely on the tsc_msr.c code to determine
-the TSC frequency.
-
-Reported-by: Vipul Kumar <vipulk0511@gmail.com>
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Fixes: 05da45583de9b ("KVM: MMU: large page support")
 Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20200223140610.59612-3-hdegoede@redhat.com
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Reviewed-by: Peter Xu <peterx@redhat.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/tsc_msr.c |   97 ++++++++++++++++++++++++++++++++++++++++------
- 1 file changed, 86 insertions(+), 11 deletions(-)
+ arch/x86/kvm/x86.c |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
---- a/arch/x86/kernel/tsc_msr.c
-+++ b/arch/x86/kernel/tsc_msr.c
-@@ -18,6 +18,28 @@
- #define MAX_NUM_FREQS	16 /* 4 bits to select the frequency */
- 
- /*
-+ * The frequency numbers in the SDM are e.g. 83.3 MHz, which does not contain a
-+ * lot of accuracy which leads to clock drift. As far as we know Bay Trail SoCs
-+ * use a 25 MHz crystal and Cherry Trail uses a 19.2 MHz crystal, the crystal
-+ * is the source clk for a root PLL which outputs 1600 and 100 MHz. It is
-+ * unclear if the root PLL outputs are used directly by the CPU clock PLL or
-+ * if there is another PLL in between.
-+ * This does not matter though, we can model the chain of PLLs as a single PLL
-+ * with a quotient equal to the quotients of all PLLs in the chain multiplied.
-+ * So we can create a simplified model of the CPU clock setup using a reference
-+ * clock of 100 MHz plus a quotient which gets us as close to the frequency
-+ * from the SDM as possible.
-+ * For the 83.3 MHz example from above this would give us 100 MHz * 5 / 6 =
-+ * 83 and 1/3 MHz, which matches exactly what has been measured on actual hw.
-+ */
-+#define TSC_REFERENCE_KHZ 100000
-+
-+struct muldiv {
-+	u32 multiplier;
-+	u32 divider;
-+};
-+
-+/*
-  * If MSR_PERF_STAT[31] is set, the maximum resolved bus ratio can be
-  * read in MSR_PLATFORM_ID[12:8], otherwise in MSR_PERF_STAT[44:40].
-  * Unfortunately some Intel Atom SoCs aren't quite compliant to this,
-@@ -26,6 +48,11 @@
-  */
- struct freq_desc {
- 	bool use_msr_plat;
-+	struct muldiv muldiv[MAX_NUM_FREQS];
-+	/*
-+	 * Some CPU frequencies in the SDM do not map to known PLL freqs, in
-+	 * that case the muldiv array is empty and the freqs array is used.
-+	 */
- 	u32 freqs[MAX_NUM_FREQS];
- 	u32 mask;
- };
-@@ -47,31 +74,66 @@ static const struct freq_desc freq_desc_
- 	.mask = 0x07,
- };
- 
-+/*
-+ * Bay Trail SDM MSR_FSB_FREQ frequencies simplified PLL model:
-+ *  000:   100 *  5 /  6  =  83.3333 MHz
-+ *  001:   100 *  1 /  1  = 100.0000 MHz
-+ *  010:   100 *  4 /  3  = 133.3333 MHz
-+ *  011:   100 *  7 /  6  = 116.6667 MHz
-+ *  100:   100 *  4 /  5  =  80.0000 MHz
-+ */
- static const struct freq_desc freq_desc_byt = {
- 	.use_msr_plat = true,
--	.freqs = { 83300, 100000, 133300, 116700, 80000, 0, 0, 0 },
-+	.muldiv = { { 5, 6 }, { 1, 1 }, { 4, 3 }, { 7, 6 },
-+		    { 4, 5 } },
- 	.mask = 0x07,
- };
- 
-+/*
-+ * Cherry Trail SDM MSR_FSB_FREQ frequencies simplified PLL model:
-+ * 0000:   100 *  5 /  6  =  83.3333 MHz
-+ * 0001:   100 *  1 /  1  = 100.0000 MHz
-+ * 0010:   100 *  4 /  3  = 133.3333 MHz
-+ * 0011:   100 *  7 /  6  = 116.6667 MHz
-+ * 0100:   100 *  4 /  5  =  80.0000 MHz
-+ * 0101:   100 * 14 / 15  =  93.3333 MHz
-+ * 0110:   100 *  9 / 10  =  90.0000 MHz
-+ * 0111:   100 *  8 /  9  =  88.8889 MHz
-+ * 1000:   100 *  7 /  8  =  87.5000 MHz
-+ */
- static const struct freq_desc freq_desc_cht = {
- 	.use_msr_plat = true,
--	.freqs = { 83300, 100000, 133300, 116700, 80000, 93300, 90000,
--		   88900, 87500 },
-+	.muldiv = { { 5, 6 }, {  1,  1 }, { 4,  3 }, { 7, 6 },
-+		    { 4, 5 }, { 14, 15 }, { 9, 10 }, { 8, 9 },
-+		    { 7, 8 } },
- 	.mask = 0x0f,
- };
- 
-+/*
-+ * Merriefield SDM MSR_FSB_FREQ frequencies simplified PLL model:
-+ * 0001:   100 *  1 /  1  = 100.0000 MHz
-+ * 0010:   100 *  4 /  3  = 133.3333 MHz
-+ */
- static const struct freq_desc freq_desc_tng = {
- 	.use_msr_plat = true,
--	.freqs = { 0, 100000, 133300, 0, 0, 0, 0, 0 },
-+	.muldiv = { { 0, 0 }, { 1, 1 }, { 4, 3 } },
- 	.mask = 0x07,
- };
- 
-+/*
-+ * Moorefield SDM MSR_FSB_FREQ frequencies simplified PLL model:
-+ * 0000:   100 *  5 /  6  =  83.3333 MHz
-+ * 0001:   100 *  1 /  1  = 100.0000 MHz
-+ * 0010:   100 *  4 /  3  = 133.3333 MHz
-+ * 0011:   100 *  1 /  1  = 100.0000 MHz
-+ */
- static const struct freq_desc freq_desc_ann = {
- 	.use_msr_plat = true,
--	.freqs = { 83300, 100000, 133300, 100000, 0, 0, 0, 0 },
-+	.muldiv = { { 5, 6 }, { 1, 1 }, { 4, 3 }, { 1, 1 } },
- 	.mask = 0x0f,
- };
- 
-+/* 24 MHz crystal? : 24 * 13 / 4 = 78 MHz */
- static const struct freq_desc freq_desc_lgm = {
- 	.use_msr_plat = true,
- 	.freqs = { 78000, 78000, 78000, 78000, 78000, 78000, 78000, 78000 },
-@@ -97,9 +159,10 @@ static const struct x86_cpu_id tsc_msr_c
-  */
- unsigned long cpu_khz_from_msr(void)
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -9768,6 +9768,13 @@ int kvm_arch_create_memslot(struct kvm *
  {
--	u32 lo, hi, ratio, freq;
-+	u32 lo, hi, ratio, freq, tscref;
- 	const struct freq_desc *freq_desc;
- 	const struct x86_cpu_id *id;
-+	const struct muldiv *md;
- 	unsigned long res;
- 	int index;
+ 	int i;
  
-@@ -119,12 +182,24 @@ unsigned long cpu_khz_from_msr(void)
- 	/* Get FSB FREQ ID */
- 	rdmsr(MSR_FSB_FREQ, lo, hi);
- 	index = lo & freq_desc->mask;
-+	md = &freq_desc->muldiv[index];
- 
--	/* Map CPU reference clock freq ID(0-7) to CPU reference clock freq(KHz) */
--	freq = freq_desc->freqs[index];
--
--	/* TSC frequency = maximum resolved freq * maximum resolved bus ratio */
--	res = freq * ratio;
 +	/*
-+	 * Note this also catches cases where the index points to an unpopulated
-+	 * part of muldiv, in that case the else will set freq and res to 0.
++	 * Clear out the previous array pointers for the KVM_MR_MOVE case.  The
++	 * old arrays will be freed by __kvm_set_memory_region() if installing
++	 * the new memslot is successful.
 +	 */
-+	if (md->divider) {
-+		tscref = TSC_REFERENCE_KHZ * md->multiplier;
-+		freq = DIV_ROUND_CLOSEST(tscref, md->divider);
-+		/*
-+		 * Multiplying by ratio before the division has better
-+		 * accuracy than just calculating freq * ratio.
-+		 */
-+		res = DIV_ROUND_CLOSEST(tscref * ratio, md->divider);
-+	} else {
-+		freq = freq_desc->freqs[index];
-+		res = freq * ratio;
-+	}
++	memset(&slot->arch, 0, sizeof(slot->arch));
++
+ 	for (i = 0; i < KVM_NR_PAGE_SIZES; ++i) {
+ 		struct kvm_lpage_info *linfo;
+ 		unsigned long ugfn;
+@@ -9849,6 +9856,10 @@ int kvm_arch_prepare_memory_region(struc
+ 				const struct kvm_userspace_memory_region *mem,
+ 				enum kvm_mr_change change)
+ {
++	if (change == KVM_MR_MOVE)
++		return kvm_arch_create_memslot(kvm, memslot,
++					       mem->memory_size >> PAGE_SHIFT);
++
+ 	return 0;
+ }
  
- 	if (freq == 0)
- 		pr_err("Error MSR_FSB_FREQ index %d is unknown\n", index);
 
 
