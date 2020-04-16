@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F20EC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2391BC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:28:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BF7C21D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:28:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 014FF21D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:28:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587047285;
-	bh=VZ39YWwP05qYCay5b0xukEXzfT7EKSUhftLU/x7SAco=;
+	s=default; t=1587047294;
+	bh=7rP73lTWU6+Q7t9AJyrmnd9s5HX/5v+B3ctmotKKrpU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HCZdFGTUdbpB22gkwBwyXAIKn/0RzSf1sNfubWaqHK6olvkB2PX8I63RW/gQNNDCv
-	 Hl/lLLWRSuKtteEsk5JWVLWykl/3leLnqfRW8PMTRi54zHL/Y2btrJpz8NRmNLABfQ
-	 ZAR0StS3gZHsqbdSfhFvOe0kXgGT+SnHmlhLbWBc=
+	b=hMKHk8G7pU5MEc1pmKAknR3Lh4hM/lX5YHFFi/cmVZfKeG68xvKTvYe9KSaATUZc6
+	 VuyropYY434FhpNNmQbWsVtrT1j/4Z9pAUikFbpv2M4p9SNZJokN22I3h6xbN8Kpb5
+	 0MlyrabCH8QZG3kx0zQnss5TPbf7MX8zO5EER9zc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732051AbgDPO2B (ORCPT
+        id S2390296AbgDPO2K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:28:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47062 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:28:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728635AbgDPOAB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:00:01 -0400
+        id S2406183AbgDPOAE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:00:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 787B2217D8;
-        Thu, 16 Apr 2020 14:00:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E5DC21734;
+        Thu, 16 Apr 2020 14:00:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045600;
-        bh=VZ39YWwP05qYCay5b0xukEXzfT7EKSUhftLU/x7SAco=;
+        s=default; t=1587045603;
+        bh=7rP73lTWU6+Q7t9AJyrmnd9s5HX/5v+B3ctmotKKrpU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sKSQOdA6vlcU/3I6S3Fl41ge9LYvCc75MF7TOzMJCkcFuJoc6azoCk8Kgtv7/YEcB
-         XmE8Ip648l3NNrKhG4eMSSBMyx9WIkjwyUxNqjGQ/aiY1856PY5lzhOxqmg6uBoTND
-         qVmSoSJwW/5kpcte279iZ28WypM71HUb0k+fSTDY=
+        b=CKewqjzu8nHbIjXFuhAZjnq4gSrYKhtkX6qKmyOXumAxFQoogrOSmRkg67mknJllC
+         MqoITKrGtZayuugnfizXNuCUY7o5Rj5aSRGgKzgbDGhcEpktSZ5auaqk+pMhNDk/37
+         Be3ggPu6vXDJk11fr+waaVUvDjppvHz6Kz9SyjRE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrei Botila <andrei.botila@nxp.com>,
-        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.6 184/254] crypto: caam - update xts sector size for large input length
-Date:   Thu, 16 Apr 2020 15:24:33 +0200
-Message-Id: <20200416131349.381275941@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>
+Subject: [PATCH 5.6 202/254] drm/etnaviv: rework perfmon query infrastructure
+Date:   Thu, 16 Apr 2020 15:24:51 +0200
+Message-Id: <20200416131351.366951961@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -60,59 +60,136 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrei Botila <andrei.botila@nxp.com>
+From: Christian Gmeiner <christian.gmeiner@gmail.com>
 
-commit 3f142b6a7b573bde6cff926f246da05652c61eb4 upstream.
+commit ed1dd899baa32d47d9a93d98336472da50564346 upstream.
 
-Since in the software implementation of XTS-AES there is
-no notion of sector every input length is processed the same way.
-CAAM implementation has the notion of sector which causes different
-results between the software implementation and the one in CAAM
-for input lengths bigger than 512 bytes.
-Increase sector size to maximum value on 16 bits.
+Report the correct perfmon domains and signals depending
+on the supported feature flags.
 
-Fixes: c6415a6016bf ("crypto: caam - add support for acipher xts(aes)")
-Cc: <stable@vger.kernel.org> # v4.12+
-Signed-off-by: Andrei Botila <andrei.botila@nxp.com>
-Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Fixes: 9e2c2e273012 ("drm/etnaviv: add infrastructure to query perf counter")
+Cc: stable@vger.kernel.org
+Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/caam/caamalg_desc.c |   16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/etnaviv/etnaviv_perfmon.c |   59 ++++++++++++++++++++++++++----
+ 1 file changed, 52 insertions(+), 7 deletions(-)
 
---- a/drivers/crypto/caam/caamalg_desc.c
-+++ b/drivers/crypto/caam/caamalg_desc.c
-@@ -1524,7 +1524,13 @@ EXPORT_SYMBOL(cnstr_shdsc_skcipher_decap
-  */
- void cnstr_shdsc_xts_skcipher_encap(u32 * const desc, struct alginfo *cdata)
- {
--	__be64 sector_size = cpu_to_be64(512);
-+	/*
-+	 * Set sector size to a big value, practically disabling
-+	 * sector size segmentation in xts implementation. We cannot
-+	 * take full advantage of this HW feature with existing
-+	 * crypto API / dm-crypt SW architecture.
-+	 */
-+	__be64 sector_size = cpu_to_be64(BIT(15));
- 	u32 *key_jump_cmd;
+--- a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
++++ b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
+@@ -32,6 +32,7 @@ struct etnaviv_pm_domain {
+ };
  
- 	init_sh_desc(desc, HDR_SHARE_SERIAL | HDR_SAVECTX);
-@@ -1577,7 +1583,13 @@ EXPORT_SYMBOL(cnstr_shdsc_xts_skcipher_e
-  */
- void cnstr_shdsc_xts_skcipher_decap(u32 * const desc, struct alginfo *cdata)
- {
--	__be64 sector_size = cpu_to_be64(512);
-+	/*
-+	 * Set sector size to a big value, practically disabling
-+	 * sector size segmentation in xts implementation. We cannot
-+	 * take full advantage of this HW feature with existing
-+	 * crypto API / dm-crypt SW architecture.
-+	 */
-+	__be64 sector_size = cpu_to_be64(BIT(15));
- 	u32 *key_jump_cmd;
+ struct etnaviv_pm_domain_meta {
++	unsigned int feature;
+ 	const struct etnaviv_pm_domain *domains;
+ 	u32 nr_domains;
+ };
+@@ -410,36 +411,78 @@ static const struct etnaviv_pm_domain do
  
- 	init_sh_desc(desc, HDR_SHARE_SERIAL | HDR_SAVECTX);
+ static const struct etnaviv_pm_domain_meta doms_meta[] = {
+ 	{
++		.feature = chipFeatures_PIPE_3D,
+ 		.nr_domains = ARRAY_SIZE(doms_3d),
+ 		.domains = &doms_3d[0]
+ 	},
+ 	{
++		.feature = chipFeatures_PIPE_2D,
+ 		.nr_domains = ARRAY_SIZE(doms_2d),
+ 		.domains = &doms_2d[0]
+ 	},
+ 	{
++		.feature = chipFeatures_PIPE_VG,
+ 		.nr_domains = ARRAY_SIZE(doms_vg),
+ 		.domains = &doms_vg[0]
+ 	}
+ };
+ 
++static unsigned int num_pm_domains(const struct etnaviv_gpu *gpu)
++{
++	unsigned int num = 0, i;
++
++	for (i = 0; i < ARRAY_SIZE(doms_meta); i++) {
++		const struct etnaviv_pm_domain_meta *meta = &doms_meta[i];
++
++		if (gpu->identity.features & meta->feature)
++			num += meta->nr_domains;
++	}
++
++	return num;
++}
++
++static const struct etnaviv_pm_domain *pm_domain(const struct etnaviv_gpu *gpu,
++	unsigned int index)
++{
++	const struct etnaviv_pm_domain *domain = NULL;
++	unsigned int offset = 0, i;
++
++	for (i = 0; i < ARRAY_SIZE(doms_meta); i++) {
++		const struct etnaviv_pm_domain_meta *meta = &doms_meta[i];
++
++		if (!(gpu->identity.features & meta->feature))
++			continue;
++
++		if (meta->nr_domains < (index - offset)) {
++			offset += meta->nr_domains;
++			continue;
++		}
++
++		domain = meta->domains + (index - offset);
++	}
++
++	return domain;
++}
++
+ int etnaviv_pm_query_dom(struct etnaviv_gpu *gpu,
+ 	struct drm_etnaviv_pm_domain *domain)
+ {
+-	const struct etnaviv_pm_domain_meta *meta = &doms_meta[domain->pipe];
++	const unsigned int nr_domains = num_pm_domains(gpu);
+ 	const struct etnaviv_pm_domain *dom;
+ 
+-	if (domain->iter >= meta->nr_domains)
++	if (domain->iter >= nr_domains)
+ 		return -EINVAL;
+ 
+-	dom = meta->domains + domain->iter;
++	dom = pm_domain(gpu, domain->iter);
++	if (!dom)
++		return -EINVAL;
+ 
+ 	domain->id = domain->iter;
+ 	domain->nr_signals = dom->nr_signals;
+ 	strncpy(domain->name, dom->name, sizeof(domain->name));
+ 
+ 	domain->iter++;
+-	if (domain->iter == meta->nr_domains)
++	if (domain->iter == nr_domains)
+ 		domain->iter = 0xff;
+ 
+ 	return 0;
+@@ -448,14 +491,16 @@ int etnaviv_pm_query_dom(struct etnaviv_
+ int etnaviv_pm_query_sig(struct etnaviv_gpu *gpu,
+ 	struct drm_etnaviv_pm_signal *signal)
+ {
+-	const struct etnaviv_pm_domain_meta *meta = &doms_meta[signal->pipe];
++	const unsigned int nr_domains = num_pm_domains(gpu);
+ 	const struct etnaviv_pm_domain *dom;
+ 	const struct etnaviv_pm_signal *sig;
+ 
+-	if (signal->domain >= meta->nr_domains)
++	if (signal->domain >= nr_domains)
+ 		return -EINVAL;
+ 
+-	dom = meta->domains + signal->domain;
++	dom = pm_domain(gpu, signal->domain);
++	if (!dom)
++		return -EINVAL;
+ 
+ 	if (signal->iter >= dom->nr_signals)
+ 		return -EINVAL;
 
 
