@@ -2,121 +2,59 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1529C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:21:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D8B7C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:26:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9F39206D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:21:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hkTtnz2D"
+	by mail.kernel.org (Postfix) with ESMTP id 54A01206E9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:26:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502681AbgDPJVH (ORCPT
+        id S2392158AbgDPJ0Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 05:21:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45346 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2392093AbgDPJUx (ORCPT
+        Thu, 16 Apr 2020 05:26:16 -0400
+Received: from baliza.dreformarra.com ([134.73.232.212]:4057 "HELO
+        elitetorrent1.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with SMTP id S2392063AbgDPJ0I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 05:20:53 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A78EBC061A41
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 02:20:51 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id x23so5054232lfq.1
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 02:20:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iuZQPq25LlhzAjymFw6DX/CB5GWOdpk6lIwmaoZu2BE=;
-        b=hkTtnz2DkVpj5FadPidho1Yi0E3E7wBAIYmB61/Kj4lK/X8UrCLL81x5xmrcWGWc+H
-         azS6fkmcowWvwOnDXcI9l4y6Ucno0mzyziNpLxV9Mthz8Y0YUdXq82D8FzhAITXPdDF8
-         3tFd/DXFS5Ty+STvGvcwXllNt8lFNMCiTuvCiXYSz2PukY3ig/gTtCqCjuJHHyXpd1A3
-         QDfx/KUMUCLzLxrTqLoSlNd+gU4YBuAYH/DvcY6yoeUzHZc1o3NaKorVY+VcrIzkfObd
-         u7uovSiNsexRzNZk8c0flO0ZydCK1WaSDd1IcMQT71DefMnE/zm8iho+FD/0QJcA2MJG
-         wMcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iuZQPq25LlhzAjymFw6DX/CB5GWOdpk6lIwmaoZu2BE=;
-        b=HEM2sToZaoGocszHGAy62a7nYaLmLMQlENaxH/2QxV9DBieN9mOviaZw3U53wTcycK
-         36shLT205rO5o8yWL8G48UmSuYDfpw4RnqVvNGmKwjau4xNKHpUxqyiE0ZOAfQqJ46hS
-         JccBHhJweQJCRMB132kHToJWWIBsSIXcvyMTFTP65jxVtyUckYlcJvJY/JKUtJxsn8LL
-         d2zjyDFW3AV/HC0AwMtgWJJIenwBVx5WoDUwblz0IacBEEWPj44OAfVARa64uOTorsxH
-         TTP4wFcewcvgOWQxo5FTe2dfZTOhc8tzrk3i/r8lj69Whgj/cPbj2OEMOwXnHjNEvL4s
-         intw==
-X-Gm-Message-State: AGi0Pubb/BGoSsWjyKoUEtTaVRXmJS7Pu4OqnMVlSH4KNM7Z2pOnpriX
-        AnSoBm3O4hRbpD8th51woCIQ6KlV2QC8L47Ejbxqbg==
-X-Google-Smtp-Source: APiQypJvAs9P0NYlc+VDp3QIFWPUjuxP+cKRiyTPcwcbTngB4Tr+zwZ10UYlTO8u+2AsTbbibFkxTpAAASs25r3y/l8=
-X-Received: by 2002:a05:6512:52c:: with SMTP id o12mr5352302lfc.217.1587028850060;
- Thu, 16 Apr 2020 02:20:50 -0700 (PDT)
+        Thu, 16 Apr 2020 05:26:08 -0400
+Received: from [160.29.222.251] by mmx09.tilkbans.com with SMTP; Thu, 16 Apr 2020 08:21:00 -0100
+Received: from unknown (85.138.70.71)
+        by mail.webhostings4u.com with SMTP; Thu, 16 Apr 2020 08:08:16 -0100
+Message-ID: <DF9332A7.48AB2D17@elitetorrent1.com>
+Date:   Thu, 16 Apr 2020 07:40:29 -0100
+From:   "elitetorrent1.com" <info@elitetorrent1.com>
+User-Agent: Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.8.1.19) Gecko/20090105 Thunderbird/2.0.0.19
+X-Accept-Language: en-us
 MIME-Version: 1.0
-References: <20200402203656.27047-1-michael@walle.cc> <20200402203656.27047-11-michael@walle.cc>
- <CAMpxmJVE3PgVCxkQ-ryc5=KSrKcpdmk1cnJUxJBz9QFCx-e_+A@mail.gmail.com>
- <80bd8661ec8a1f5eda3f09a267846eaa@walle.cc> <CAMpxmJVC7e9JnHzBo-h8M1+KmcA32=Rvxo7+znH=-kAbcCr_LQ@mail.gmail.com>
- <e0388a2137e23d76b2415a7549c01dd1@walle.cc> <CAMpxmJW1x4Orh1BZ4TUoCsYeaAAZ4NBUNvoMG9JgP0iLvXTOtg@mail.gmail.com>
- <62d157198a75a59ada15c496deeab49b@walle.cc> <eab972adf53bbac20b5a9e613fcfb5b0@walle.cc>
-In-Reply-To: <eab972adf53bbac20b5a9e613fcfb5b0@walle.cc>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 16 Apr 2020 11:20:38 +0200
-Message-ID: <CACRpkdZPZ4nFQ6B3tGG9wvceoTWqAkfY0r1UKs2pf_c=ZNBG=w@mail.gmail.com>
-Subject: Re: [PATCH v2 10/16] gpio: add a reusable generic gpio_chip using regmap
-To:     Michael Walle <michael@walle.cc>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+To:     <linux-kernel@vger.kernel.org>
+Cc:     <linux-msdos@vger.kernel.org>, <linux-raid@vger.kernel.org>,
+        <linux-scsi@vger.kernel.org>, <linux-smp@vger.kernel.org>
+Subject: Download latest movies from elitetorrent1.com
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 9:57 PM Michael Walle <michael@walle.cc> wrote:
 
-> So what about the following:
->
-> #define GPIO_REGMAP_ADDR_ZERO (unsigned int)(-1)
+While sitting home during the lock out, why not watch some nice movies. 
 
-Yeah with regmap explicitly using int I guess we can't use
-S32_MAX, so that is fair.
+All for free, makes sense?
 
-> So this way the user might assign the base addresses the normal way
-> except when he wants to use zero, in that case he has to use
->
->    ->base_adr = GPIO_REGMAP_ADDR_ZERO;
->
-> gpio-regmap.c could use then:
->
-> if (base_addr)
->    something_useful(gpio_regmap_addr(base_addr));
->
-> unsigned int gpio_regmap_addr(unsigned int addr)
-> {
->    return (addr == GPIO_REGMAP_ADDR_ZERO) ? 0 : addr;
-> }
+visit us now
+https://elitetorrent1.com/
 
-That's reasonably clean.
 
-Yours,
-Linus Walleij
+
+
+
+Unsubscribe from our database here
+https://forms.icann.org/en/resources/compliance/complaints/registrars/stand
+ards-complaint-form
+
+
