@@ -2,109 +2,140 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5789C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:10:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F099C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:10:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B099720771
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:10:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587021035;
-	bh=ryc6wxWPw9o1JBywIVfmLfQfPLw/yNBffMQNg8SEEvY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=w5vTu1P+4Tzm5di3HHv85R1Pl6gUqWZjFBLmt03nebyPWlAcwu52IqAMhMHeA51p/
-	 R/PEgXWL1jYB8qjFsP8B9lB61mtC7ijGzbdbQtwBxqVo+9XyVPX/K2/gXyXep3S94K
-	 0b3mNZfzoZOo4L9AX4eJkXPwdgxD5hTCNnjTaHxE=
+	by mail.kernel.org (Postfix) with ESMTP id 29E1520771
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:10:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m+x5Ir3O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438533AbgDPHKe (ORCPT
+        id S2438568AbgDPHKy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 03:10:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50386 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437186AbgDPHK3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 03:10:29 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 257FB20771;
-        Thu, 16 Apr 2020 07:10:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587021029;
-        bh=ryc6wxWPw9o1JBywIVfmLfQfPLw/yNBffMQNg8SEEvY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dt7W3di72wz2z2ARB0niotEho/ZirUa6JoEZ7XeG02dWm9SXiDH05NrrrxyPbQUjx
-         WFG4WMY/l+XMZwptWODKf3D6CfxcAz3LWkDk9W30P/Iz6CVAu4FlTaoDD3lttWLDKC
-         jhV6CPm++eT0Xm3S4MG6sU04fMvY24BAx6CCJsjE=
-Date:   Thu, 16 Apr 2020 08:10:24 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Jiping Ma <jiping.ma2@windriver.com>
-Cc:     will.deacon@arm.com, mark.rutland@arm.com, catalin.marinas@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        acme@kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] Perf: support to unwind userspace application stacks
- generated with thumb.
-Message-ID: <20200416071023.GB29742@willie-the-truck>
-References: <20200416053829.130395-1-jiping.ma2@windriver.com>
+        Thu, 16 Apr 2020 03:10:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53116 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2437186AbgDPHKq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 03:10:46 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5222EC061A0C;
+        Thu, 16 Apr 2020 00:10:46 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id h26so3521957wrb.7;
+        Thu, 16 Apr 2020 00:10:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=5dN5oxpwy9nSWFYmHgWall5d4CLbrW0LWzFjFt92VW8=;
+        b=m+x5Ir3OUCeDFFwt2ZRIJgCEn0yllxTi4y1s94otYe4s2zRw84Sk0gSkCHj+l6uq/A
+         56sx0Aqh8tHFsRbQt7K3kw6UyI5LrED+itKFV8OBTXNrOubsRNzZL2rQFfQpdh+vdH3b
+         N//I51NW5XUl34hSlq5WHBXc3nocNVnzta5Fg8jkfxloJEZf9puUVGrnHnK9IeqzPliF
+         inWlFnQ36/gkrwpxzTpCS686THujWbvQk2BJ8bG5E0vb/4xiNOIDt41D+eBzdrwXP30o
+         NnmgDfUTJ5XDq/MxzB9loSM+JYKC8mwvm6IFzaWQxRJfO2a6JrT/azl3Y6QXW9UGobmh
+         sj9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5dN5oxpwy9nSWFYmHgWall5d4CLbrW0LWzFjFt92VW8=;
+        b=IaEnMfzmQd9wfLlHC7975rfNMYCVwYDGVnWVON17yAGAtiXXyAdONG85FXitIOJG2w
+         XnY1IG28FxlD8aJK1a4rhLQkvUnEceh0cDhfB3Tn++XNbmriSKjEtgoRB18Ffp21A5cJ
+         WgoCrv4V4YA6Fbu00U9qF7fSgkrAtoUkD79IOv92G7acW3/NghGjKHel+GmDqsWC2af9
+         YmfitXNb8xlS/VXnBU1uz2P6L+FtUIzI4Av7p/EBk6J1xF0By+SGgazRbM+C+4a4AfhV
+         MEdsYFt0u0MpzpVI2Agtcx+Ms3E6mvVmXP3TSkJiW/7/mYtXv4MvIHHoFPXSFV92hIiq
+         l5kA==
+X-Gm-Message-State: AGi0PubP5OzJ9taDidtVH3hJGUGBXrDE1Fl3ZjoHe6sWV/7LB/0ep8UL
+        YlBOCMT8QHrJtLiTZka1TjY5osKf
+X-Google-Smtp-Source: APiQypKPg/oR4d8FSJOcfgwxG485F8H0FZzTyY8BGgh91d9W5DdLheO68gDDFzfmoiG5v0kB57ffIg==
+X-Received: by 2002:adf:9cc8:: with SMTP id h8mr32095572wre.167.1587021044877;
+        Thu, 16 Apr 2020 00:10:44 -0700 (PDT)
+Received: from ?IPv6:2001:a61:2482:101:3351:6160:8173:cc31? ([2001:a61:2482:101:3351:6160:8173:cc31])
+        by smtp.gmail.com with ESMTPSA id s14sm2412615wmh.18.2020.04.16.00.10.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Apr 2020 00:10:44 -0700 (PDT)
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Subject: Removal of the ioctl_list(2) manual page (was: Re: ioctl_list.2:
+ complete overhaul needed)
+To:     Heinrich Schuchardt <xypron.glpk@gmx.de>,
+        Eugene Syromyatnikov <evgsyr@gmail.com>
+Cc:     mtk.manpages@gmail.com, linux-man <linux-man@vger.kernel.org>,
+        Mike Christie <mchristi@redhat.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>
+References: <545F8D2E.5030308@gmx.de>
+ <CAKgNAkh-HBjh5AqNpTTfQjgeJVYx9LGpGDzO87zMWEmgMOd0bA@mail.gmail.com>
+ <CACGkJdv5Be4KqmsP2AK99FmkZ5hB9jJk9YzsrS8Qzph8ceBvvQ@mail.gmail.com>
+ <5e9b4408-410f-6fb4-9c8b-0bd68e64577d@gmx.de>
+Message-ID: <ebd773bc-1277-c346-3edc-370c843cc968@gmail.com>
+Date:   Thu, 16 Apr 2020 09:10:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200416053829.130395-1-jiping.ma2@windriver.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <5e9b4408-410f-6fb4-9c8b-0bd68e64577d@gmx.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 01:38:29PM +0800, Jiping Ma wrote:
-> Only push sp and lr in the stack for thumb mode. it will go
-> through the stack find sp and lr.
-> 
-> Change this to the more detailed description of the patch
-> 
-> Signed-off-by: Jiping Ma <jiping.ma2@windriver.com>
-> ---
->  arch/arm64/kernel/perf_callchain.c | 36 +++++++++++++++++++++++++++---
->  1 file changed, 33 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm64/kernel/perf_callchain.c b/arch/arm64/kernel/perf_callchain.c
-> index bcafd7dcfe8b..97dde271c121 100644
-> --- a/arch/arm64/kernel/perf_callchain.c
-> +++ b/arch/arm64/kernel/perf_callchain.c
-> @@ -104,6 +104,30 @@ compat_user_backtrace(struct compat_frame_tail __user *tail,
->  
->  	return (struct compat_frame_tail __user *)compat_ptr(buftail.fp) - 1;
->  }
-> +
-> +void
-> +user_backtrace_thumb(struct perf_callchain_entry_ctx *entry,
-> +		     struct pt_regs *regs)
-> +{
-> +	u32 sp;
-> +	u32 *sp_t;
-> +	/*
-> +	 * Only push sp, lr to stack.
-> +	 */
-> +	for (sp = regs->compat_sp; (sp < current->mm->start_stack) &&
-> +		(entry->nr < entry->max_stack); sp += 4) {
-> +		sp_t = (u32 *)(unsigned long)sp;
-> +		if ((*sp_t > regs->compat_sp) &&
-> +			(*sp_t < current->mm->start_stack)) {
-> +			if (*(sp_t + 1) < current->mm->end_code &&
-> +				*(sp_t + 1) > current->mm->start_code) {
-> +				perf_callchain_store(entry,  *(sp_t + 1)-1);
-> +				sp += 4;
-> +			}
-> +		}
-> +	}
-> +}
+[CC widened]
 
-This looks like a pile of fragile heuristics to me. Why don't you just use
-libunwind in userspace, the same way you'd have to if you compiled without
-framepointers?
+Hello Heinrich, Eugene,
 
-Will
+On 4/14/20 6:21 PM, Heinrich Schuchardt wrote:
+> On 2020-04-14 17:37, Eugene Syromyatnikov wrote:
+>> On Tue, Apr 14, 2020 at 5:18 PM Michael Kerrisk (man-pages)
+>> <mtk.manpages@gmail.com> wrote:
+>>>
+>>> Hello Heinrich,
+>>>
+>>> On Sun, 9 Nov 2014 at 16:52, Heinrich Schuchardt <xypron.glpk@gmx.de> wrote:
+
+[...]
+
+>>> As you suggest, I've removed the hex values from the lists.
+>>
+>> Those can be replaced with the _IO* macro definitions. Meanwhile,  the
+>> list is somewhat far from complete; strace has some approximation that
+>> can be uses a basis of a more complete and reliable list
+>> (linux/{32,64}/ioctls_inc*.h and linux/*/ioctls_arch*.h), but I'm not
+>> sure if it is worth adding to the man page (moreover, entries are
+>> constantly being added and changed there; yes, breaking the kernel ABI
+>> in the process sometimes).
+> 
+> Man-pages like netdevices.7 or ioctl_fat.2 are what is needed to help a
+> user who does not want to read through the kernel code.
+> 
+> If ioctl_list.2 has not been reasonably maintained since Linux 1.3.27
+> and hence is not a reliable source of information, shouldn't it be dropped?
+
+As already noted, I'm inclined to agree that yes, this page probably
+should be removed. What really is needed is pages such as ioctl_fat(2),
+ioctl_userfaultfd(2), and ioctl_ns(2) that give useful details
+to user-space programmers.
+
+Just FYI, I've queued a change that removes the ioctl_list(2) page
+in a private branch. By the time of the next release, I'll merge
+that branch, unless someone has (good) objections.
+
+There is one piece of ioctl_list(2) that is perhaps worth preserving:
+the "ioctl structure" subsection. As part of these changes, I've
+migrated that text to ioctl(2).
+
+Cheers,
+
+Michael
+
+-- 
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
