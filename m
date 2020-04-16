@@ -2,147 +2,108 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EDB2C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:43:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19C2EC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:43:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30CC720732
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:43:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E03492076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:43:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587044639;
+	bh=b0mQ4z0wqoBcbwo6tGPHmVziT4WViLYPWS9IMTkTYEw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=CKWyWmELatc/6H01I1hG1BbJTKmvjZVcDSxOot8rcjpQ6Q0HnWr324O8o+dQbaThb
+	 SKXwZOpLX50aa+7l0T9BdTZHBSuK1P1fmsA4o4Yx6yojjnTXkY+7K1kRGrqKADrj4C
+	 NRjVmNe1jfHoN33JyX1qr/3ZcdaiCzbXOKy9E4a8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2897388AbgDPNnq (ORCPT
+        id S2898393AbgDPNn4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:43:46 -0400
-Received: from foss.arm.com ([217.140.110.172]:60900 "EHLO foss.arm.com"
+        Thu, 16 Apr 2020 09:43:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896755AbgDPNdo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:33:44 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 544F11FB;
-        Thu, 16 Apr 2020 06:33:42 -0700 (PDT)
-Received: from [10.57.59.184] (unknown [10.57.59.184])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 243AF3F68F;
-        Thu, 16 Apr 2020 06:33:40 -0700 (PDT)
-Subject: Re: [PATCH 1/2] iommu: arm-smmu-impl: Convert to a generic reset
- implementation
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Rob Clark <robdclark@gmail.com>
-Cc:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Tomasz Figa <tfiga@chromium.org>
-References: <cover.1579692800.git.saiprakash.ranjan@codeaurora.org>
- <e7ba4dbd8e9c8aedd6f5db1b3453d9782b7943cd.1579692800.git.saiprakash.ranjan@codeaurora.org>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <cc3e3ed5-b187-c4a1-8229-974821a9e1ad@arm.com>
-Date:   Thu, 16 Apr 2020 14:33:38 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S2896806AbgDPNdx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:33:53 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AEBA21D91;
+        Thu, 16 Apr 2020 13:33:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587044032;
+        bh=b0mQ4z0wqoBcbwo6tGPHmVziT4WViLYPWS9IMTkTYEw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=wKM6vn5p3U6E7i/FFnsfhFu51AGs9786hSbYTnbqErEdvgYNenfhlmCgxVk2S+XUG
+         /H6xlbePGStbYImLt8Je9IqgtnlFKm/tUMiuZuvDls3O1OygqefhrtPSZzWJ2yLKBX
+         vL03qAjhTRpwFGcerfjklolu5XZUXuu7l/m96kWA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Tao Zhou <ouwen210@hotmail.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Mel Gorman <mgorman@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 053/257] sched/fair: Fix condition of avg_load calculation
+Date:   Thu, 16 Apr 2020 15:21:44 +0200
+Message-Id: <20200416131332.577020698@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
+References: <20200416131325.891903893@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <e7ba4dbd8e9c8aedd6f5db1b3453d9782b7943cd.1579692800.git.saiprakash.ranjan@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-22 11:48 am, Sai Prakash Ranjan wrote:
-> Currently the QCOM specific smmu reset implementation is very
-> specific to SDM845 SoC and has a wait-for-safe logic which
-> may not be required for other SoCs. So move the SDM845 specific
-> logic to its specific reset function. Also add SC7180 SMMU
-> compatible for calling into QCOM specific implementation.
-> 
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> ---
->   drivers/iommu/arm-smmu-impl.c |  8 +++++---
->   drivers/iommu/arm-smmu-qcom.c | 16 +++++++++++++---
->   2 files changed, 18 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/iommu/arm-smmu-impl.c b/drivers/iommu/arm-smmu-impl.c
-> index 74d97a886e93..c75b9d957b70 100644
-> --- a/drivers/iommu/arm-smmu-impl.c
-> +++ b/drivers/iommu/arm-smmu-impl.c
-> @@ -150,6 +150,8 @@ static const struct arm_smmu_impl arm_mmu500_impl = {
->   
->   struct arm_smmu_device *arm_smmu_impl_init(struct arm_smmu_device *smmu)
->   {
-> +	const struct device_node *np = smmu->dev->of_node;
-> +
->   	/*
->   	 * We will inevitably have to combine model-specific implementation
->   	 * quirks with platform-specific integration quirks, but everything
-> @@ -166,11 +168,11 @@ struct arm_smmu_device *arm_smmu_impl_init(struct arm_smmu_device *smmu)
->   		break;
->   	}
->   
-> -	if (of_property_read_bool(smmu->dev->of_node,
-> -				  "calxeda,smmu-secure-config-access"))
-> +	if (of_property_read_bool(np, "calxeda,smmu-secure-config-access"))
->   		smmu->impl = &calxeda_impl;
->   
-> -	if (of_device_is_compatible(smmu->dev->of_node, "qcom,sdm845-smmu-500"))
-> +	if (of_device_is_compatible(np, "qcom,sdm845-smmu-500") ||
-> +	    of_device_is_compatible(np, "qcom,sc7180-smmu-500"))
->   		return qcom_smmu_impl_init(smmu);
->   
->   	return smmu;
-> diff --git a/drivers/iommu/arm-smmu-qcom.c b/drivers/iommu/arm-smmu-qcom.c
-> index 24c071c1d8b0..64a4ab270ab7 100644
-> --- a/drivers/iommu/arm-smmu-qcom.c
-> +++ b/drivers/iommu/arm-smmu-qcom.c
-> @@ -15,8 +15,6 @@ static int qcom_sdm845_smmu500_reset(struct arm_smmu_device *smmu)
->   {
->   	int ret;
->   
-> -	arm_mmu500_reset(smmu);
-> -
->   	/*
->   	 * To address performance degradation in non-real time clients,
->   	 * such as USB and UFS, turn off wait-for-safe on sdm845 based boards,
-> @@ -30,8 +28,20 @@ static int qcom_sdm845_smmu500_reset(struct arm_smmu_device *smmu)
->   	return ret;
->   }
->   
-> +static int qcom_smmu500_reset(struct arm_smmu_device *smmu)
-> +{
-> +	const struct device_node *np = smmu->dev->of_node;
-> +
-> +	arm_mmu500_reset(smmu);
-> +
-> +	if (of_device_is_compatible(np, "qcom,sdm845-smmu-500"))
-> +		return qcom_sdm845_smmu500_reset(smmu);
-> +
-> +	return 0;
-> +}
-> +
->   static const struct arm_smmu_impl qcom_smmu_impl = {
-> -	.reset = qcom_sdm845_smmu500_reset,
-> +	.reset = qcom_smmu500_reset,
->   };
+From: Tao Zhou <ouwen210@hotmail.com>
 
-It might be logical to have a separate SDM845 impl rather than 
-indirecting within the callback itself, but I'm not too concerned either 
-way. For the arm-smmu-impl.c changes,
+[ Upstream commit 6c8116c914b65be5e4d6f66d69c8142eb0648c22 ]
 
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+In update_sg_wakeup_stats(), the comment says:
 
-Thanks,
-Robin.
+Computing avg_load makes sense only when group is fully
+busy or overloaded.
 
->   
->   struct arm_smmu_device *qcom_smmu_impl_init(struct arm_smmu_device *smmu)
-> 
+But, the code below this comment does not check like this.
+
+>From reading the code about avg_load in other functions, I
+confirm that avg_load should be calculated in fully busy or
+overloaded case. The comment is correct and the checking
+condition is wrong. So, change that condition.
+
+Fixes: 57abff067a08 ("sched/fair: Rework find_idlest_group()")
+Signed-off-by: Tao Zhou <ouwen210@hotmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+Acked-by: Mel Gorman <mgorman@suse.de>
+Link: https://lkml.kernel.org/r/Message-ID:
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ kernel/sched/fair.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 0ff2f43ac9cd7..1f5ea23c752be 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -8323,7 +8323,8 @@ static inline void update_sg_wakeup_stats(struct sched_domain *sd,
+ 	 * Computing avg_load makes sense only when group is fully busy or
+ 	 * overloaded
+ 	 */
+-	if (sgs->group_type < group_fully_busy)
++	if (sgs->group_type == group_fully_busy ||
++		sgs->group_type == group_overloaded)
+ 		sgs->avg_load = (sgs->group_load * SCHED_CAPACITY_SCALE) /
+ 				sgs->group_capacity;
+ }
+-- 
+2.20.1
+
+
+
