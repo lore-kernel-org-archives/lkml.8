@@ -2,253 +2,195 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 062B0C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 05:11:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD215C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 05:12:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFE5C20771
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 05:11:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587013899;
-	bh=fDFOYc2JP9X2PnU6xs4pwnTDlmL0jIO2P8egFQobZ5A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=y+Xwy7Detk8nXdvGYnUO5UNUxh++eZi2lc+swPnygmO6ki3t6zfV/rQy1ytxccKsQ
-	 r/wjInP4Zbe2k+ceHXKHndRZPLrPuQHnZt6okIoxJ8MywbUAEsEibdq+XO+dH5YL/H
-	 7IjfltRJh1xmgBvGWAThLN4Wwq5DBxzxTip8A6W0=
+	by mail.kernel.org (Postfix) with ESMTP id C26DD20771
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 05:12:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405314AbgDPFLh (ORCPT
+        id S2406074AbgDPFMl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 01:11:37 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:44900 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404971AbgDPFLb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 01:11:31 -0400
-Received: by mail-pf1-f195.google.com with SMTP id b72so1124923pfb.11
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 22:11:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Ktnl9MOJN5QfQGMo4Fp/e21nrvvvyYTv/dAUq5hfxUw=;
-        b=XZ24rP7CFiD9vws4WLLspvEYnP39djMlmegMtiEV/lWhVmNddYfeBh8ENrheQHVFQV
-         NvMpGSA9D6N4DBpxfaAaiLHMW65Oot3DPj+GhV+dpMUcY4ggfizvSIvKVsUffWlxviEP
-         DVxXGYuL9UwlemHKW0oJ9O7Vzn6Grp+16NLCIw+zLzOkNC80/fEOn4GIWWcLaswzWxwS
-         GC6Yv8jEGp6fvnXyqWW9NFnc2ocr8FBkepTyd/oP+jGIIKjki43d8EKV51lsXUA/Uqqo
-         pR3IHrUj2URJZ/R40N4JVnIOhtcW09FX5FRdT3RbLANFLhYPGI5x575SW2AliwU5C86+
-         /xpg==
-X-Gm-Message-State: AGi0Pua9GYpg7G3x7xmNzX5nl4kOhG3l1Ube1hQIQyi++d40n7cqmgPM
-        wtfH0FrGRJnHvAHkK3ArroI=
-X-Google-Smtp-Source: APiQypJ7SDEuQJTD4RQzpirmzTKaWfBXXLpQXiuu2+OwtSrm3e0NG+/getdajx+ghP0JWSPDGTr8sg==
-X-Received: by 2002:a63:e942:: with SMTP id q2mr29721423pgj.34.1587013890547;
-        Wed, 15 Apr 2020 22:11:30 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id a22sm10301310pfg.169.2020.04.15.22.11.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2020 22:11:28 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id D0CC840277; Thu, 16 Apr 2020 05:11:27 +0000 (UTC)
-Date:   Thu, 16 Apr 2020 05:11:27 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Sergei Trofimovich <slyfox@gentoo.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Josh Triplett <josh@joshtriplett.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Sergey Kvachonok <ravenexp@gmail.com>,
-        Tony Vroon <chainsaw@gentoo.org>
-Subject: Re: [PATCH] umh: always return error when helper was not called
-Message-ID: <20200416051127.GF11244@42.do-not-panic.com>
-References: <20200415065940.4103990-1-slyfox@gentoo.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200415065940.4103990-1-slyfox@gentoo.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 16 Apr 2020 01:12:41 -0400
+Received: from mx.socionext.com ([202.248.49.38]:55850 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406149AbgDPFMc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 01:12:32 -0400
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 16 Apr 2020 14:12:27 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id A338960057;
+        Thu, 16 Apr 2020 14:12:27 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Thu, 16 Apr 2020 14:12:27 +0900
+Received: from plum.e01.socionext.com (unknown [10.213.132.32])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id EA77F1A12AD;
+        Thu, 16 Apr 2020 14:12:26 +0900 (JST)
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [PATCH] dt-bindings: thermal: Convert UniPhier thermal monitor to json-schema
+Date:   Thu, 16 Apr 2020 14:12:15 +0900
+Message-Id: <1587013935-21760-1-git-send-email-hayashi.kunihiko@socionext.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sergei, first, thanks for your patch and bug report!!
+Convert the UniPhier thermal monitor binding to DT schema format.
 
-On Wed, Apr 15, 2020 at 07:59:40AM +0100, Sergei Trofimovich wrote:
-> Before this change on a system with the following setup crashed kernel:
-> 
-> ```
-> CONFIG_STATIC_USERMODEHELPER=y
-> CONFIG_STATIC_USERMODEHELPER_PATH=""
-> kernel.core_pattern = |/usr/lib/systemd/systemd-coredump %P %u %g %s %t %c %h %e
-> ```
+Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+---
+ .../thermal/socionext,uniphier-thermal.yaml        | 57 +++++++++++++++++++
+ .../bindings/thermal/uniphier-thermal.txt          | 65 ----------------------
+ 2 files changed, 57 insertions(+), 65 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/thermal/socionext,uniphier-thermal.yaml
+ delete mode 100644 Documentation/devicetree/bindings/thermal/uniphier-thermal.txt
 
-Let us backtrack. The combination of:
+diff --git a/Documentation/devicetree/bindings/thermal/socionext,uniphier-thermal.yaml b/Documentation/devicetree/bindings/thermal/socionext,uniphier-thermal.yaml
+new file mode 100644
+index 0000000..bdddc5b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/thermal/socionext,uniphier-thermal.yaml
+@@ -0,0 +1,57 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/thermal/socionext,uniphier-thermal.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Socionext UniPhier thermal monitor
++
++description: |
++  This describes the devicetree bindings for thermal monitor supported by
++  PVT(Process, Voltage and Temperature) monitoring unit implemented on
++  Socionext UniPhier SoCs.
++
++maintainers:
++  - Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
++
++properties:
++  compatible:
++    enum:
++      - socionext,uniphier-pxs2-thermal
++      - socionext,uniphier-ld20-thermal
++      - socionext,uniphier-pxs3-thermal
++
++  interrupts:
++    maxItems: 1
++
++  "#thermal-sensor-cells":
++    const: 0
++
++  socionext,tmod-calibration:
++    $ref: /schemas/types.yaml#/definitions/uint32-array
++    description:
++      A pair of calibrated values referred from PVT, in case that the values
++      aren't set on SoC, like a reference board.
++
++required:
++  - compatible
++  - interrupts
++  - "#thermal-sensor-cells"
++
++additionalProperties: false
++
++examples:
++  - |
++    // The UniPhier thermal should be a subnode of a "syscon" compatible node.
++
++    sysctrl@61840000 {
++        compatible = "socionext,uniphier-ld20-sysctrl",
++                     "simple-mfd", "syscon";
++        reg = <0x61840000 0x10000>;
++
++        pvtctl: thermal {
++                compatible = "socionext,uniphier-ld20-thermal";
++                interrupts = <0 3 1>;
++                #thermal-sensor-cells = <0>;
++        };
++    };
+diff --git a/Documentation/devicetree/bindings/thermal/uniphier-thermal.txt b/Documentation/devicetree/bindings/thermal/uniphier-thermal.txt
+deleted file mode 100644
+index ceb92a9..0000000
+--- a/Documentation/devicetree/bindings/thermal/uniphier-thermal.txt
++++ /dev/null
+@@ -1,65 +0,0 @@
+-* UniPhier Thermal bindings
+-
+-This describes the devicetree bindings for thermal monitor supported by
+-PVT(Process, Voltage and Temperature) monitoring unit implemented on Socionext
+-UniPhier SoCs.
+-
+-Required properties:
+-- compatible :
+-  - "socionext,uniphier-pxs2-thermal" : For UniPhier PXs2 SoC
+-  - "socionext,uniphier-ld20-thermal" : For UniPhier LD20 SoC
+-  - "socionext,uniphier-pxs3-thermal" : For UniPhier PXs3 SoC
+-- interrupts : IRQ for the temperature alarm
+-- #thermal-sensor-cells : Should be 0. See ./thermal.txt for details.
+-
+-Optional properties:
+-- socionext,tmod-calibration: A pair of calibrated values referred from PVT,
+-                              in case that the values aren't set on SoC,
+-                              like a reference board.
+-
+-Example:
+-
+-	sysctrl@61840000 {
+-		compatible = "socionext,uniphier-ld20-sysctrl",
+-			     "simple-mfd", "syscon";
+-		reg = <0x61840000 0x10000>;
+-		...
+-		pvtctl: pvtctl {
+-			compatible = "socionext,uniphier-ld20-thermal";
+-			interrupts = <0 3 1>;
+-			#thermal-sensor-cells = <0>;
+-		};
+-		...
+-	};
+-
+-	thermal-zones {
+-		cpu_thermal {
+-			polling-delay-passive = <250>;	/* 250ms */
+-			polling-delay = <1000>;		/* 1000ms */
+-			thermal-sensors = <&pvtctl>;
+-
+-			trips {
+-				cpu_crit: cpu_crit {
+-					temperature = <110000>;	/* 110C */
+-					hysteresis = <2000>;
+-					type = "critical";
+-				};
+-				cpu_alert: cpu_alert {
+-					temperature = <100000>;	/* 100C */
+-					hysteresis = <2000>;
+-					type = "passive";
+-				};
+-			};
+-
+-			cooling-maps {
+-				map0 {
+-					trip = <&cpu_alert>;
+-					cooling-device = <&cpu0 (-1) (-1)>;
+-				};
+-				map1 {
+-					trip = <&cpu_alert>;
+-					cooling-device = <&cpu2 (-1) (-1)>;
+-				};
+-			};
+-		};
+-	};
+-- 
+2.7.4
 
-CONFIG_STATIC_USERMODEHELPER=y                                                
-CONFIG_STATIC_USERMODEHELPER_PATH=""
-
-is documented on the kconfig files for when you *want to disable all
-usermode helper programs.
-
-> The crash happens when a core dump is attempted:
-> 
-> ```
-> [    2.819676] BUG: kernel NULL pointer dereference, address: 0000000000000020
-> [    2.819859] #PF: supervisor read access in kernel mode
-> [    2.820035] #PF: error_code(0x0000) - not-present page
-> [    2.820188] PGD 0 P4D 0
-> [    2.820305] Oops: 0000 [#1] SMP PTI
-> [    2.820436] CPU: 2 PID: 89 Comm: a Not tainted 5.7.0-rc1+ #7
-> [    2.820680] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20190711_202441-buildvm-armv7-10.arm.fedoraproject.org-2.fc31 04/01/2014
-> [    2.821150] RIP: 0010:do_coredump+0xd80/0x1060
-> [    2.821385] Code: e8 95 11 ed ff 48 c7 c6 cc a7 b4 81 48 8d bd 28 ff ff ff 89 c2 e8 70 f1 ff ff 41 89 c2 85 c0 0f 84 72 f7 ff ff e9 b4 fe ff ff <48> 8b 57 20 0f b7 02 66 25 00 f0 66 3d 00 8
-> 0 0f 84 9c 01 00 00 44
-> [    2.822014] RSP: 0000:ffffc9000029bcb8 EFLAGS: 00010246
-> [    2.822339] RAX: 0000000000000000 RBX: ffff88803f860000 RCX: 000000000000000a
-> [    2.822746] RDX: 0000000000000009 RSI: 0000000000000282 RDI: 0000000000000000
-> [    2.823141] RBP: ffffc9000029bde8 R08: 0000000000000000 R09: ffffc9000029bc00
-> [    2.823508] R10: 0000000000000001 R11: ffff88803dec90be R12: ffffffff81c39da0
-> [    2.823902] R13: ffff88803de84400 R14: 0000000000000000 R15: 0000000000000000
-> [    2.824285] FS:  00007fee08183540(0000) GS:ffff88803e480000(0000) knlGS:0000000000000000
-> [    2.824767] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [    2.825111] CR2: 0000000000000020 CR3: 000000003f856005 CR4: 0000000000060ea0
-> [    2.825479] Call Trace:
-> [    2.825790]  get_signal+0x11e/0x720
-> [    2.826087]  do_signal+0x1d/0x670
-> [    2.826361]  ? force_sig_info_to_task+0xc1/0xf0
-> [    2.826691]  ? force_sig_fault+0x3c/0x40
-> [    2.826996]  ? do_trap+0xc9/0x100
-> [    2.827179]  exit_to_usermode_loop+0x49/0x90
-> [    2.827359]  prepare_exit_to_usermode+0x77/0xb0
-> [    2.827559]  ? invalid_op+0xa/0x30
-> [    2.827747]  ret_from_intr+0x20/0x20
-> [    2.827921] RIP: 0033:0x55e2c76d2129
-> [    2.828107] Code: 2d ff ff ff e8 68 ff ff ff 5d c6 05 18 2f 00 00 01 c3 0f 1f 80 00 00 00 00 c3 0f 1f 80 00 00 00 00 e9 7b ff ff ff 55 48 89 e5 <0f> 0b b8 00 00 00 00 5d c3 66 2e 0f 1f 84 0
-> 0 00 00 00 00 0f 1f 40
-> [    2.828603] RSP: 002b:00007fffeba5e080 EFLAGS: 00010246
-> [    2.828801] RAX: 000055e2c76d2125 RBX: 0000000000000000 RCX: 00007fee0817c718
-> [    2.829034] RDX: 00007fffeba5e188 RSI: 00007fffeba5e178 RDI: 0000000000000001
-> [    2.829257] RBP: 00007fffeba5e080 R08: 0000000000000000 R09: 00007fee08193c00
-> [    2.829482] R10: 0000000000000009 R11: 0000000000000000 R12: 000055e2c76d2040
-> [    2.829727] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-> [    2.829964] CR2: 0000000000000020
-> [    2.830149] ---[ end trace ceed83d8c68a1bf1 ]---
-> ```
-> 
-> Here is the sequence of events why it happens:
-> fs/coredump.c:do_coredump():
-> 1. create 'coredump_params = { .file = NULL }'
-> 2. detect pipe mode
-> 3. `call_usermodehelper_setup(..., umh_pipe_setup, ...)`
-> 4. `call_usermodehelper_exec()`
-> 5. (if both succeeded) `file_start_write(cprm.file);`
-> 
-> Here crash happens at [5.] as `cprm.file` is still NULL.
-> 
-> Normally it works because `fs/coredump.c:umh_pipe_setup()` is called
-> successfully and populates `.file` field (or returns the error):
-> 
-> ```
-> static int umh_pipe_setup(struct subprocess_info *info, struct cred *new)
-> {
->         //...
->         struct coredump_params *cp = (struct coredump_params *)info->data;
->         // ...
->         cp->file = files[1];
->         // ...
-> }
-> ```
-> 
-> But in our case neither happens because `kernel/umh.c:call_usermodehelper_exec()`
-> has a special case:
-> 
-> ```
-> int call_usermodehelper_exec(struct subprocess_info *sub_info, int wait)
-> {
->     int retval = 0;
->     // ...
->     /*
->      * If there is no binary for us to call, then just return and get out of
->      * here.  This allows us to set STATIC_USERMODEHELPER_PATH to "" and
->      * disable all call_usermodehelper() calls.
->      */
->     if (strlen(sub_info->path) == 0)
->         goto out;
->     ...
->     out:
->         // ...
->         return retval;
-> 
-> ```
-> 
-> This breaks assumption of `do_coredump()`: "either helper was called successfully
-> and created a file to dump core to or it failed".
-> 
-> This change converts this special case to `-EPERM` error.
-> 
-> This way we notify user that helper call was not successful
-> and don't attempt to act on uninitialized `.file` field.
-> 
-> User gets `"Core dump to |%s pipe failed\n` dmesg entry.
-> 
-> Reported-by: Sergey Kvachonok <ravenexp@gmail.com>
-> Reported-by: Tony Vroon <chainsaw@gentoo.org>
-> Bug: https://bugzilla.kernel.org/show_bug.cgi?id=199795
-> Signed-off-by: Sergei Trofimovich <slyfox@gentoo.org>
-> CC: Luis Chamberlain <mcgrof@kernel.org>
-> ---
->  kernel/umh.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/umh.c b/kernel/umh.c
-> index 7f255b5a8845..66b02634a9ba 100644
-> --- a/kernel/umh.c
-> +++ b/kernel/umh.c
-> @@ -565,8 +565,10 @@ int call_usermodehelper_exec(struct subprocess_info *sub_info, int wait)
->  	 * here.  This allows us to set STATIC_USERMODEHELPER_PATH to "" and
->  	 * disable all call_usermodehelper() calls.
->  	 */
-> -	if (strlen(sub_info->path) == 0)
-> +	if (strlen(sub_info->path) == 0) {
-> +		retval = -EPERM;
->  		goto out;
-> +	}
->  
->  	/*
->  	 * Set the completion pointer only if there is a waiter.
-
-Stakeholders with this setup likely already are relying on the fact that
-we don't return -EPERM. Your change to return -EPERM may fix the crash
-you are seeing, but it may also break existing userspace, granted
-for a crashdump that may not matter much, however I agree it is stupid
-to crash on a crash :)
-
-Anyway, I don't think its a good idea to return -EPERM unless
-stakeholders really find a strong reason to change old behaviour.
-
-Can you try this patch instead?
-
-diff --git a/fs/coredump.c b/fs/coredump.c
-index f8296a82d01d..6957d513685e 100644
---- a/fs/coredump.c
-+++ b/fs/coredump.c
-@@ -786,6 +786,15 @@ void do_coredump(const kernel_siginfo_t *siginfo)
- 	if (displaced)
- 		put_files_struct(displaced);
- 	if (!dump_interrupted()) {
-+		/*
-+		 * umh disabled with CONFIG_STATIC_USERMODEHELPER_PATH="" would
-+		 * have this set to NULL.
-+		 */
-+		if (!cprm.file) {
-+			printk(KERN_INFO "Core dump to |%s disabled\n",
-+			       cn.corename);
-+			goto close_fail;
-+		}
- 		file_start_write(cprm.file);
- 		core_dumped = binfmt->core_dump(&cprm);
- 		file_end_write(cprm.file);
