@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E72C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:46:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE4EDC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74B2D21734
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:46:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B055E21974
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:46:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587044774;
-	bh=/jBEvEgXCQZ1DdImLGA4F+YExQtCem7Wrkl2o0a/ldg=;
+	s=default; t=1587044780;
+	bh=AL4Duf7m5IvoTTD4d2+gCaDhn7bLAW1D0iwX6syCWJw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S8D2h2Mv/wZ1pVQfBXaeNCYO9COHu7e666X9zIVZ33G/HAp4LwKt3wbpqUUkxNf1a
-	 gkN5DIPnA9lXvnSg6KIm7tKQEwss0TSnp5z0XPvpln5VnR6BKtaalIG53qtS6AbgXs
-	 ny3CSSB+ehHZepwbBcOlJmBsT2p/UiHR1+c3YeWM=
+	b=Gy2vwaL9AMonhgJZlf8P6uPQi5MLPmgX0gmBC3PpibdLuKDkWdBeGUadFbrsTuQbP
+	 QzkYLh+kOl7XuELBFL0LczyHNIyXmSIKh30jd2lq6IJZ0a3ahfz6oTD70Q0sHB3XY4
+	 qcPICtFw23zwtRajAVq5puHzsXQZggKi8W/wEDp0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392288AbgDPNqJ (ORCPT
+        id S2898539AbgDPNqT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:46:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46416 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:46:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897007AbgDPNew (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:34:52 -0400
+        id S2897027AbgDPNe4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:34:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61212208E4;
-        Thu, 16 Apr 2020 13:34:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D2A4208E4;
+        Thu, 16 Apr 2020 13:34:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044091;
-        bh=/jBEvEgXCQZ1DdImLGA4F+YExQtCem7Wrkl2o0a/ldg=;
+        s=default; t=1587044096;
+        bh=AL4Duf7m5IvoTTD4d2+gCaDhn7bLAW1D0iwX6syCWJw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bd/b2nd+JdgzZucoV83phJlkokRwdB/sZa+zUfrR1t85FjliGGFgCKG1YOe+p7nsI
-         PzWTkGvHvq0BO+HhKCvbFY6F2k0E6iTJM0TLTFuUWJytzMfkdLw+J64kgGSws8/BQ1
-         ylfRsUPycuIIS82QlkQaEX9N3y5g73EuV3Z41ESg=
+        b=orlGN9nEI7Q8LFrkOCr705qvjWHc0FQADt7WG0WMpPGmgRfsLo3ZLeO1T/ARWhYqO
+         FmZLZ2x+xIBpl6894k1AKd8G6C3ntHMewn1rVrjd/mJrMSLHSxIpSxGNYkcKe+TLaW
+         4j9Bdj0keJER0H2cziMOvLAbUveBWYJ30Py2YY8Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Johannes Thumshirn <jth@kernel.org>,
-        Hannes Reinecke <hare@suse.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 036/257] null_blk: Fix the null_add_dev() error path
-Date:   Thu, 16 Apr 2020 15:21:27 +0200
-Message-Id: <20200416131330.464870316@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christoph Niedermaier <cniedermaier@dh-electronics.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 028/257] cpufreq: imx6q: Fixes unwanted cpu overclocking on i.MX6ULL
+Date:   Thu, 16 Apr 2020 15:21:19 +0200
+Message-Id: <20200416131329.471239529@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -64,95 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Christoph Niedermaier <cniedermaier@dh-electronics.com>
 
-[ Upstream commit 2004bfdef945fe55196db6b9cdf321fbc75bb0de ]
+[ Upstream commit 36eb7dc1bd42fe5f850329c893768ff89b696fba ]
 
-If null_add_dev() fails, clear dev->nullb.
+imx6ul_opp_check_speed_grading is called for both i.MX6UL and i.MX6ULL.
+Since the i.MX6ULL was introduced to a separate ocotp compatible node
+later, it is possible that the i.MX6ULL has also dtbs with
+"fsl,imx6ull-ocotp". On a system without nvmem-cell speed grade a
+missing check on this node causes a driver fail without considering
+the cpu speed grade.
 
-This patch fixes the following KASAN complaint:
+This patch prevents unwanted cpu overclocking on i.MX6ULL with compatible
+node "fsl,imx6ull-ocotp" in old dtbs without nvmem-cell speed grade.
 
-BUG: KASAN: use-after-free in nullb_device_submit_queues_store+0xcf/0x160 [null_blk]
-Read of size 8 at addr ffff88803280fc30 by task check/8409
-
-Call Trace:
- dump_stack+0xa5/0xe6
- print_address_description.constprop.0+0x26/0x260
- __kasan_report.cold+0x7b/0x99
- kasan_report+0x16/0x20
- __asan_load8+0x58/0x90
- nullb_device_submit_queues_store+0xcf/0x160 [null_blk]
- configfs_write_file+0x1c4/0x250 [configfs]
- __vfs_write+0x4c/0x90
- vfs_write+0x145/0x2c0
- ksys_write+0xd7/0x180
- __x64_sys_write+0x47/0x50
- do_syscall_64+0x6f/0x2f0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x7ff370926317
-Code: 64 89 02 48 c7 c0 ff ff ff ff eb bb 0f 1f 80 00 00 00 00 f3 0f 1e fa 64 8b 04 25 18 00 00 00 85 c0 75 10 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 51 c3 48 83 ec 28 48 89 54 24 18 48 89 74 24
-RSP: 002b:00007fff2dd2da48 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 00007ff370926317
-RDX: 0000000000000002 RSI: 0000559437ef23f0 RDI: 0000000000000001
-RBP: 0000559437ef23f0 R08: 000000000000000a R09: 0000000000000001
-R10: 0000559436703471 R11: 0000000000000246 R12: 0000000000000002
-R13: 00007ff370a006a0 R14: 00007ff370a014a0 R15: 00007ff370a008a0
-
-Allocated by task 8409:
- save_stack+0x23/0x90
- __kasan_kmalloc.constprop.0+0xcf/0xe0
- kasan_kmalloc+0xd/0x10
- kmem_cache_alloc_node_trace+0x129/0x4c0
- null_add_dev+0x24a/0xe90 [null_blk]
- nullb_device_power_store+0x1b6/0x270 [null_blk]
- configfs_write_file+0x1c4/0x250 [configfs]
- __vfs_write+0x4c/0x90
- vfs_write+0x145/0x2c0
- ksys_write+0xd7/0x180
- __x64_sys_write+0x47/0x50
- do_syscall_64+0x6f/0x2f0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 8409:
- save_stack+0x23/0x90
- __kasan_slab_free+0x112/0x160
- kasan_slab_free+0x12/0x20
- kfree+0xdf/0x250
- null_add_dev+0xaf3/0xe90 [null_blk]
- nullb_device_power_store+0x1b6/0x270 [null_blk]
- configfs_write_file+0x1c4/0x250 [configfs]
- __vfs_write+0x4c/0x90
- vfs_write+0x145/0x2c0
- ksys_write+0xd7/0x180
- __x64_sys_write+0x47/0x50
- do_syscall_64+0x6f/0x2f0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Fixes: 2984c8684f96 ("nullb: factor disk parameters")
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Cc: Johannes Thumshirn <jth@kernel.org>
-Cc: Hannes Reinecke <hare@suse.com>
-Cc: Ming Lei <ming.lei@redhat.com>
-Cc: Christoph Hellwig <hch@infradead.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 2733fb0d0699 ("cpufreq: imx6q: read OCOTP through nvmem for imx6ul/imx6ull")
+Signed-off-by: Christoph Niedermaier <cniedermaier@dh-electronics.com>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/null_blk_main.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/cpufreq/imx6q-cpufreq.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/block/null_blk_main.c b/drivers/block/null_blk_main.c
-index ae8d4bc532b0b..97bb53d7fa348 100644
---- a/drivers/block/null_blk_main.c
-+++ b/drivers/block/null_blk_main.c
-@@ -1790,6 +1790,7 @@ out_cleanup_queues:
- 	cleanup_queues(nullb);
- out_free_nullb:
- 	kfree(nullb);
-+	dev->nullb = NULL;
- out:
- 	return rv;
- }
+diff --git a/drivers/cpufreq/imx6q-cpufreq.c b/drivers/cpufreq/imx6q-cpufreq.c
+index 648a09a1778a3..1fcbbd53a48a2 100644
+--- a/drivers/cpufreq/imx6q-cpufreq.c
++++ b/drivers/cpufreq/imx6q-cpufreq.c
+@@ -280,6 +280,9 @@ static int imx6ul_opp_check_speed_grading(struct device *dev)
+ 		void __iomem *base;
+ 
+ 		np = of_find_compatible_node(NULL, NULL, "fsl,imx6ul-ocotp");
++		if (!np)
++			np = of_find_compatible_node(NULL, NULL,
++						     "fsl,imx6ull-ocotp");
+ 		if (!np)
+ 			return -ENOENT;
+ 
 -- 
 2.20.1
 
