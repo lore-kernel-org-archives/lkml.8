@@ -2,113 +2,106 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D7CC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C843C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:33:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5067421927
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:33:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="aNHWx7WM"
+	by mail.kernel.org (Postfix) with ESMTP id F2CA521D94
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:33:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587047606;
+	bh=rBfYVgzqaXNXJ3d9X1+p40wbhKpuonfJlXM9Z5iyP1w=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=PmWTnZI+/OkM734e5cLnGdFzbZfNWgBRKVnA1se+bVU7GoaGbWFSkIA4e5mMfqx64
+	 RiU3FUrFi7RQ+L+pJDsqrjdER0GKtkilS/gQO3h0PgWvHAHyPmbzRJj9OHF8MTsF79
+	 zmYy0phiDTwyHHRTR3wIrJym8lKTqwPKqLMN8YpQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502354AbgDPOdR (ORCPT
+        id S2394402AbgDPOdW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:33:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35310 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2441985AbgDPOSs (ORCPT
+        Thu, 16 Apr 2020 10:33:22 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35684 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2442467AbgDPOTd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:18:48 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BD30C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 07:18:48 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id i3so1720868pgk.1
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 07:18:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MyOJremCk3EzjpsoU30tfV1XsZhjh2TFfXRegC+y3HU=;
-        b=aNHWx7WMCL3pKFz9abn899+tHqiepX+XwwEwwGdmPKekjZeTAnze7RmlacZ/MJneA/
-         RNWLU2soROhviQV/QcI3F4TuuhHY//2cY4sYxyWivTrwonrJAd3dkIVV5qQqkEUPJ01y
-         HOxl+7u178O+/9Vz+eNoNQ2o/yjoUVK+qdcr784IqnE05VfiYElHZFf4BHJ+c3ACgVtk
-         4JStNRBD48DMBlE6Hc6MRo0F7QVeSCoRQ+xILjAXXnARjH7qylOo0M72OnNGphMeKrs7
-         WvHGHJKRkuH40YAOEhuu4qtpN9xdm/+uU88yf2Z74/RdnbAu8638q//xy5+LmiWlFPrX
-         wsaQ==
+        Thu, 16 Apr 2020 10:19:33 -0400
+Received: by mail-wr1-f65.google.com with SMTP id x18so5082858wrq.2;
+        Thu, 16 Apr 2020 07:19:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MyOJremCk3EzjpsoU30tfV1XsZhjh2TFfXRegC+y3HU=;
-        b=b3jmWlNbI+maMjdLuiX9ZnKkuBQvBNs4EIXWWQn0GWBQg4lndDl8PxKamszlj9YvNx
-         mpAUvySwR46rntDswJ/jm1Mzimm0FlmU5L4ho8Zdhu1Ce9a+kiRRzxSlaeCsgQrXa5l2
-         4THkf1+6urh6G0+hj5MVgLiK1KWW9VRiACwKj8vcQwm1b4p+Cdn8FiQy7yXSc3Oilbdd
-         yMXDZmY20FzSsn1CZbqHfgbyp5dIg3/H7oD6ruSSD4yY1z28n4cHiH8dPzZHK7WbUvBc
-         IxnmIOM1S2VeyC11jdp1NrQEJLVObfeEMjHvaVkbowrg8AJibBb3eDzm3cmUb6yGcEX9
-         h6gg==
-X-Gm-Message-State: AGi0Pub3n6S9ouNnlyTyniklFShxWPKRLx4Azhwe5tQo3fh8/fDnikxo
-        YaC4Vb8Rfs/y/oeQd97W6xVBVw==
-X-Google-Smtp-Source: APiQypJPiEwkGlvpiMcrn0ZRytjDUeoUJMF2YfxXT7BGQVmAq1Ot1RHWYwnx3DB4fcAV6UPbU/AtqQ==
-X-Received: by 2002:a63:1103:: with SMTP id g3mr5762695pgl.206.1587046728061;
-        Thu, 16 Apr 2020 07:18:48 -0700 (PDT)
-Received: from Smcdef-MBP.lan ([103.136.220.69])
-        by smtp.gmail.com with ESMTPSA id x16sm3221935pfc.61.2020.04.16.07.18.43
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 16 Apr 2020 07:18:47 -0700 (PDT)
-From:   Muchun Song <songmuchun@bytedance.com>
-To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        mingo@kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Muchun Song <songmuchun@bytedance.com>
-Subject: [PATCH] sched/cpuacct: Fix charge cpuacct.usage_sys incorrently.
-Date:   Thu, 16 Apr 2020 22:18:33 +0800
-Message-Id: <20200416141833.50663-1-songmuchun@bytedance.com>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=m0VhAW35sYGbmqBDqDgP95uCn4UOL5vdZQ31iJuOhmg=;
+        b=o18st+ZqXrvuci9Frv/Pqbpa17HcON1LX8Ts6mmxZmx0duMYkwr+SFaD2du3/pCw7A
+         XpMt3SJEFsQAMqlIg9yUBuhBYYFYEwr1BKRZTUSpp0+DB1xe/zDMIFCzR8LD0elGXLFt
+         VFR4HCE4UQ8pO9Q5oX3WeMs0V8IsU7iOJDpcJ/dEaTvCa8TZ9u2nJAAaykXOMK0roUNy
+         w7oxY3+3qX9Ip1VvTdw8tqDhI0cLraVcbsd3MvfJTePWgWZcuVv3sebD9pKEvea9eHCb
+         UrbKCK/ZEmAFfHvk525Ih7xYCFXF/h3RzxEzpnP8QSVjcH+oQd+AbiB3TB89LQFirYnj
+         vvqg==
+X-Gm-Message-State: AGi0PuZt6wOGq77lxczXily4SRxhADi5lyJfh0Twz+ImDJGkSNR1wGn6
+        y+YYtXhwwklq66gmuSy47Zqg96BVfFyfV2tPtBE=
+X-Google-Smtp-Source: APiQypIqoZ6A7S4FfBq8sVfVTZby+9I0Eqg8qgFjmcGTcyUMg0hmBXSJVIJulNZbU/jAyc3qaTpFfqZPcFZxevJ7H9k=
+X-Received: by 2002:adf:8149:: with SMTP id 67mr36997629wrm.60.1587046771019;
+ Thu, 16 Apr 2020 07:19:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200415054050.31645-1-irogers@google.com>
+In-Reply-To: <20200415054050.31645-1-irogers@google.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Thu, 16 Apr 2020 23:19:19 +0900
+Message-ID: <CAM9d7cj4fMsnDLgq0rHwqb6_ZLKP-AOzyyAP4kd=b=P5-t5NGQ@mail.gmail.com>
+Subject: Re: [PATCH v5 0/3] perf synthetic events
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>, Petr Mladek <pmladek@suse.com>,
+        Andrey Zhizhikin <andrey.z@gmail.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The user_mode(task_pt_regs(tsk)) always return true for
-user thread, and false for kernel thread. So it means that
-the cpuacct.usage_sys is the time that kernel thread uses
-not the time that thread uses in the kernel mode. We can
-use get_irq_regs() instead of task_pt_regs() to fix it.
+Hi Ian,
 
-Signed-off-by: Muchun Song <songmuchun@bytedance.com>
----
- kernel/sched/cpuacct.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+On Wed, Apr 15, 2020 at 2:40 PM Ian Rogers <irogers@google.com> wrote:
+>
+> Add a multi-threaded version of the internals synthesize benchmark. It
+> attempts to compute a time per event synthesized, but as it is reading
+> /proc there are issues:
+>  - permissions if not run as root
+>  - "random" nature of /proc
+>
+> By default the benchmark is disabled but can be enabled with a
+> flag. It has been useful in gauging the value of multi-threaded
+> improvements not included here as their value appears minimal.
+>
+> The patch set includes 2 patches that improve synthesis performance
+> and updates the benchmark numbers:
+> https://lore.kernel.org/lkml/20200411064248.247530-1-irogers@google.com/
+>
+> v4 added a missing test file
+> v3 improved documenation, return values and added testing to the io framework
+>    following feedback from namhyung@kernel.org.
+> v2 addressed single threaded synthesize benchmark issues from jolsa@redhat.com
+> https://lore.kernel.org/lkml/20200402154357.107873-1-irogers@google.com/
+>
+> Ian Rogers (3):
+>   perf bench: add a multi-threaded synthesize benchmark
+>   tools api: add a lightweight buffered reading api
+>   perf synthetic events: Remove use of sscanf from /proc reading
 
-diff --git a/kernel/sched/cpuacct.c b/kernel/sched/cpuacct.c
-index 6448b0438ffb2..edfc62554648e 100644
---- a/kernel/sched/cpuacct.c
-+++ b/kernel/sched/cpuacct.c
-@@ -5,6 +5,7 @@
-  * Based on the work by Paul Menage (menage@google.com) and Balbir Singh
-  * (balbir@in.ibm.com).
-  */
-+#include <asm/irq_regs.h>
- #include "sched.h"
- 
- /* Time spent by the tasks of the CPU accounting group executing in ... */
-@@ -339,7 +340,7 @@ void cpuacct_charge(struct task_struct *tsk, u64 cputime)
- {
- 	struct cpuacct *ca;
- 	int index = CPUACCT_STAT_SYSTEM;
--	struct pt_regs *regs = task_pt_regs(tsk);
-+	struct pt_regs *regs = get_irq_regs();
- 
- 	if (regs && user_mode(regs))
- 		index = CPUACCT_STAT_USER;
--- 
-2.11.0
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
+Thanks
+Namhyung
