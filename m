@@ -4,118 +4,99 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B92ABC2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 02:32:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36161C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 02:34:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B3122076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 02:32:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16EB7206F9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 02:34:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qicloPiy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LeAIfPwL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388303AbgDPCca (ORCPT
+        id S2388490AbgDPCeg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 22:32:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38318 "EHLO
+        Wed, 15 Apr 2020 22:34:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1733009AbgDPCcZ (ORCPT
+        by vger.kernel.org with ESMTP id S2388304AbgDPCea (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 22:32:25 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B18FC061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 19:32:24 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id i3so947970pgk.1
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 19:32:24 -0700 (PDT)
+        Wed, 15 Apr 2020 22:34:30 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FB59C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 19:34:30 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id t11so942554pgg.2
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 19:34:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:date:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=TqEg5Op8tvCWqEi639RgXT0ywOBk8iUyJxWjz6oTWuk=;
-        b=qicloPiyu1Mxkeo/8xV5Zt+B740ERXtlKv1GKL3ZEYU+baSzY7tQAx0HLDvG5bDm22
-         wTkX2CuuX5I5UflUGCC5Y1MTcgMCxTP2gjJedTpbAU8p8cA8ckIOzXJ3PzSwRTM9JmT+
-         cPhMd1pbXfYHSXpKSCdl/lUXrmW4mPov4ouLSyDabRtuqWKIo/Nn7FwIrfXpynPVeg5q
-         IdsnymYllTysXu8RfoxNbS01e5eL7Xo4zEXy63aSBLttfbnHyPMbq/RYZIWNJIG2SB6I
-         m7IDaAhTubeoBgFy0C0RmC4YFIZ7Y8p9IzgLDmsyrd1mVcCH+qIBDCu/BSiVsIBgZdeS
-         Yufw==
+        bh=VGCTsZjOfwFALrkTwHQ3BpKRCT5jRI1JLGMxn0Y9Io0=;
+        b=LeAIfPwLQw9DBknPFg6e3/Rarsty8kFj4HU0JI76pU69OVXr0j/8WdtKwEcp5TWflh
+         uqqsaqXNv9unt0JC2Y/BvfZIa58C5Nl0RT1xCiNAxvzyQicyraupyqrhdRL6+TG/eGyl
+         N8U2b6A8FUntyv+jkwOuSLFuavktCQyxzPpywiGCfm8QTEjt+Y4uqbg9uLhDSsiuUx8X
+         7S6wkr9E4gXIi7hviHV60h0vPxFd7IfL3QXmRSuydREOBqJGO3edua5hTnb/tp72Zg5o
+         ibs8RYaNSsET90SlRjRcO0dXKCDfBqr+itjKqesOUKsO6yNw64QHC2K9c9MENU+byHL9
+         7kEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:date:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=TqEg5Op8tvCWqEi639RgXT0ywOBk8iUyJxWjz6oTWuk=;
-        b=Gtv9y/N0B24vEFADjHoWTfNbd6RPKfTGPgWZPWHCrfZyAO0muNAEP5Md5gT7GTF6zo
-         y3SiOTxL1WG3jIIATcth9ez6eNBVzxKZUdkA6Fn6wZ04Ggm6DnHEZq+AtsK4pAkwONVb
-         Mrnj3dinLymteCjM7qVxgAFdmuYmRokphHPfz4T4BgrCu0jmt0SiP6z139AqR8qmDGHd
-         GnVR3NCBklgYgC4CWu4ylaAWCht/pQXXBSHWvmUda2ZTEOgTEa3GZ/dUV8Ilz3b+Pkfr
-         3wIGfm8UBTg7hm/GIDhfY8EBfA7YjkeeaEEv9/xH1B3ozbBBaGfXfaclAWlyLg8D4Un0
-         7aBQ==
-X-Gm-Message-State: AGi0PuaQklygRkUf7T+Vtj7f8jUMWPNu2OpTvzRXLF8nlEkzMOZxEXu8
-        GjIgKW+dTd8dT/r6cmW1qrk=
-X-Google-Smtp-Source: APiQypK8pVGa63dJJifvm3fmi1vHAiheO3sVzgrb7mfXJ0EnjVzqUhHdy3h04ELTWP+k5TX8mUkUhg==
-X-Received: by 2002:a63:4b16:: with SMTP id y22mr28163012pga.251.1587004343436;
-        Wed, 15 Apr 2020 19:32:23 -0700 (PDT)
+        bh=VGCTsZjOfwFALrkTwHQ3BpKRCT5jRI1JLGMxn0Y9Io0=;
+        b=KL1x0PbQPQJy4kj4amCVyg89/MrZvnEO1dAJl6eS9594sNA9gaYVAaZWJseal0nuPS
+         lBSWSJvNS+T/VIW+8AH3WCr9r0LVDSLv1xnSQWloRiGRNRNNREXeoJYwd9TU/aehw/Z6
+         u6tAxKZm/z7UZ3qsY9l0WeU8Qpwz7/Kw2X7T1XvWjKfq2S8A+VcfoAXriCaxcDE3/ARj
+         +aMApqylwz0GYNfRmV5ZM9Vs/9mgFniUSiTYTTZS9cS3ASuFMswdeKkbrD9L4dfSRoUU
+         xQHjWSTCTvKpqGdTHaLVcfpjdHV8S61LLQoGzOcbN1uqDNWLIomvqZhjF3hw2wlTZ1z7
+         TkXw==
+X-Gm-Message-State: AGi0PubEwPgPI+I2cZIbCNH1EVWY+smT8vstad72XQUSg9AzjBB30BI8
+        kXGljBYV1Vbf4S545y3N3vw=
+X-Google-Smtp-Source: APiQypLQYpXG1C0l+UPgqnSiTa4WrIO0PT9bf1rvG3mQFlUYrH603chFIPsz2jx1VV7kknZVDneQ/w==
+X-Received: by 2002:a63:4047:: with SMTP id n68mr29012752pga.321.1587004469709;
+        Wed, 15 Apr 2020 19:34:29 -0700 (PDT)
 Received: from localhost (181.56.30.125.dy.iij4u.or.jp. [125.30.56.181])
-        by smtp.gmail.com with ESMTPSA id u24sm11928468pgo.65.2020.04.15.19.32.21
+        by smtp.gmail.com with ESMTPSA id i13sm14969773pfa.113.2020.04.15.19.34.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2020 19:32:22 -0700 (PDT)
+        Wed, 15 Apr 2020 19:34:29 -0700 (PDT)
 From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Date:   Thu, 16 Apr 2020 11:32:19 +0900
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
+Date:   Thu, 16 Apr 2020 11:34:25 +0900
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Petr Mladek <pmladek@suse.com>,
         Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
         linux-kernel@vger.kernel.org,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH v3 1/3] lib/vsprintf: Print time64_t in human readable
- format
-Message-ID: <20200416023219.GA30641@jagdpanzerIV.localdomain>
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v3 0/3] lib/vsprintf: Introduce %ptT for time64_t
+Message-ID: <20200416023425.GB30641@jagdpanzerIV.localdomain>
 References: <20200415170046.33374-1-andriy.shevchenko@linux.intel.com>
- <20200415170046.33374-2-andriy.shevchenko@linux.intel.com>
+ <20200415132011.624f35f6@gandalf.local.home>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200415170046.33374-2-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20200415132011.624f35f6@gandalf.local.home>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/04/15 20:00), Andy Shevchenko wrote:
-[..]
->  #include <linux/of.h>
->  #include <net/addrconf.h>
-> @@ -1819,6 +1820,29 @@ char *rtc_str(char *buf, char *end, const struct rtc_time *tm,
->  	return buf;
->  }
->  
-> +static noinline_for_stack
-> +char *time64_str(char *buf, char *end, const time64_t time,
-> +		 struct printf_spec spec, const char *fmt)
-> +{
-> +	struct rtc_time rtc_time;
-> +	struct tm tm;
-> +
-> +	time64_to_tm(time, 0, &tm);
-> +
-> +	rtc_time.tm_sec = tm.tm_sec;
-> +	rtc_time.tm_min = tm.tm_min;
-> +	rtc_time.tm_hour = tm.tm_hour;
-> +	rtc_time.tm_mday = tm.tm_mday;
-> +	rtc_time.tm_mon = tm.tm_mon;
-> +	rtc_time.tm_year = tm.tm_year;
-> +	rtc_time.tm_wday = tm.tm_wday;
-> +	rtc_time.tm_yday = tm.tm_yday;
-> +
-> +	rtc_time.tm_isdst = 0;
+On (20/04/15 13:20), Steven Rostedt wrote:
+> On Wed, 15 Apr 2020 20:00:43 +0300
+> Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+> 
+> > It is a logical continuation of previously applied %ptR for struct rtc_time.
+> > We have few users of time64_t that would like to print it.
+> > 
+> > Andrew, since Petr can't pay attention on this perhaps it can be passed thru
+> > your tree?
+> > 
+> > Sergey, Steven, what do you think?
+> 
+> I'm fine with these changes. Sergey, what do you think?
 
-Here you convert time64_t (signed, we also have unsigned version - timeu64_t)
-to tm first and then convert tm to rtc_time. Will rtc_time64_to_tm() do the
-trick?
+I'm not against it in general, I'm slightly concerned if "two users"
+is enough of a justification for new vsprintf() specifier.
 
 	-ss
