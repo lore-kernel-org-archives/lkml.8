@@ -2,49 +2,49 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
+X-Spam-Status: No, score=-11.7 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07550C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE56EC38A29
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:14:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C882D214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:14:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92ACB20656
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:14:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502551AbgDPJOJ (ORCPT
+        id S2503750AbgDPJOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 05:14:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37598 "EHLO
+        Thu, 16 Apr 2020 05:14:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502299AbgDPIbf (ORCPT
+        with ESMTP id S2502282AbgDPIbd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 04:31:35 -0400
+        Thu, 16 Apr 2020 04:31:33 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA3B9C03C1AC;
-        Thu, 16 Apr 2020 01:31:34 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91226C03C1AA;
+        Thu, 16 Apr 2020 01:31:33 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jOzvi-0000my-I9; Thu, 16 Apr 2020 10:31:26 +0200
+        id 1jOzvh-0000m3-6o; Thu, 16 Apr 2020 10:31:25 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 216D11C03A9;
-        Thu, 16 Apr 2020 10:31:26 +0200 (CEST)
-Date:   Thu, 16 Apr 2020 08:31:25 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C6B511C03A9;
+        Thu, 16 Apr 2020 10:31:24 +0200 (CEST)
+Date:   Thu, 16 Apr 2020 08:31:24 -0000
 From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] tools headers UAPI: Update tools's copy of drm.h headers
+Subject: [tip: perf/urgent] tools headers: Adopt verbatim copy of
+ compiletime_assert() from kernel sources
 Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Daniel Stone <daniels@collabora.com>,
-        Jiri Olsa <jolsa@kernel.org>, Lyude Paul <lyude@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <158702588575.28353.16234290288257799961.tip-bot2@tip-bot2>
+Message-ID: <158702588443.28353.14454733787351707299.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -60,64 +60,59 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     0719bdf46737c9060f67e35824af5bfff5084083
-Gitweb:        https://git.kernel.org/tip/0719bdf46737c9060f67e35824af5bfff5084083
+Commit-ID:     5b992add7d32d3106f121c85ad99d2986dc3b8e6
+Gitweb:        https://git.kernel.org/tip/5b992add7d32d3106f121c85ad99d2986dc3b8e6
 Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate:    Tue, 14 Apr 2020 09:29:03 -03:00
+AuthorDate:    Tue, 14 Apr 2020 11:37:29 -03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Tue, 14 Apr 2020 11:02:52 -03:00
+CommitterDate: Tue, 14 Apr 2020 11:39:28 -03:00
 
-tools headers UAPI: Update tools's copy of drm.h headers
+tools headers: Adopt verbatim copy of compiletime_assert() from kernel sources
 
-Picking the changes from:
-
-  455e00f1412f ("drm: Add getfb2 ioctl")
-
-Silencing these perf build warnings:
-
-  Warning: Kernel ABI header at 'tools/include/uapi/drm/drm.h' differs from latest version at 'include/uapi/drm/drm.h'
-  diff -u tools/include/uapi/drm/drm.h include/uapi/drm/drm.h
-
-Now 'perf trace' and other code that might use the
-tools/perf/trace/beauty autogenerated tables will be able to translate
-this new ioctl code into a string:
-
-  $ tools/perf/trace/beauty/drm_ioctl.sh > before
-  $ cp include/uapi/drm/drm.h tools/include/uapi/drm/drm.h
-  $ tools/perf/trace/beauty/drm_ioctl.sh > after
-  $ diff -u before after
-  --- before	2020-04-14 09:28:45.461821077 -0300
-  +++ after	2020-04-14 09:28:53.594782685 -0300
-  @@ -107,6 +107,7 @@
-   	[0xCB] = "SYNCOBJ_QUERY",
-   	[0xCC] = "SYNCOBJ_TRANSFER",
-   	[0xCD] = "SYNCOBJ_TIMELINE_SIGNAL",
-  +	[0xCE] = "MODE_GETFB2",
-   	[DRM_COMMAND_BASE + 0x00] = "I915_INIT",
-   	[DRM_COMMAND_BASE + 0x01] = "I915_FLUSH",
-   	[DRM_COMMAND_BASE + 0x02] = "I915_FLIP",
-  $
+Will be needed when syncing the linux/bits.h header, in the next cset.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Daniel Stone <daniels@collabora.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Lyude Paul <lyude@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/uapi/drm/drm.h | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/include/linux/compiler.h | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/tools/include/uapi/drm/drm.h b/tools/include/uapi/drm/drm.h
-index 868bf79..808b48a 100644
---- a/tools/include/uapi/drm/drm.h
-+++ b/tools/include/uapi/drm/drm.h
-@@ -948,6 +948,8 @@ extern "C" {
- #define DRM_IOCTL_SYNCOBJ_TRANSFER	DRM_IOWR(0xCC, struct drm_syncobj_transfer)
- #define DRM_IOCTL_SYNCOBJ_TIMELINE_SIGNAL	DRM_IOWR(0xCD, struct drm_syncobj_timeline_array)
+diff --git a/tools/include/linux/compiler.h b/tools/include/linux/compiler.h
+index 1827c2f..180f771 100644
+--- a/tools/include/linux/compiler.h
++++ b/tools/include/linux/compiler.h
+@@ -10,6 +10,32 @@
+ # define __compiletime_error(message)
+ #endif
  
-+#define DRM_IOCTL_MODE_GETFB2		DRM_IOWR(0xCE, struct drm_mode_fb_cmd2)
++#ifdef __OPTIMIZE__
++# define __compiletime_assert(condition, msg, prefix, suffix)		\
++	do {								\
++		extern void prefix ## suffix(void) __compiletime_error(msg); \
++		if (!(condition))					\
++			prefix ## suffix();				\
++	} while (0)
++#else
++# define __compiletime_assert(condition, msg, prefix, suffix) do { } while (0)
++#endif
 +
- /**
-  * Device specific ioctls should only be in their respective headers
-  * The device specific ioctl range is from 0x40 to 0x9f.
++#define _compiletime_assert(condition, msg, prefix, suffix) \
++	__compiletime_assert(condition, msg, prefix, suffix)
++
++/**
++ * compiletime_assert - break build and emit msg if condition is false
++ * @condition: a compile-time constant condition to check
++ * @msg:       a message to emit if condition is false
++ *
++ * In tradition of POSIX assert, this macro will break the build if the
++ * supplied condition is *false*, emitting the supplied error message if the
++ * compiler has support to do so.
++ */
++#define compiletime_assert(condition, msg) \
++	_compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
++
+ /* Optimization barrier */
+ /* The "volatile" is due to gcc bugs */
+ #define barrier() __asm__ __volatile__("": : :"memory")
