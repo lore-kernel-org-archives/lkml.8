@@ -2,53 +2,51 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82527C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C10C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:39:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5ECF921D91
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:39:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BD6521D91
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:39:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587051576;
-	bh=HdXtnSDiFfxfTy6EzlLlUY/QDpdHEh4TrJnt8XaWZyw=;
+	s=default; t=1587051583;
+	bh=hgPkzyxVn+byTaGfndP7S5S157RnPZaOS24ouN5TYPw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l+ccDUaS13QltIP9+CtsY+IRX/cqC3cn75hxZ341HxSrKh6nQqabefa53Y1EcA1rT
-	 NPb6/ytLbhz+kGqwZEpTRGry3sj0na12AKxIUhp1LD+DSg08IChvtFa4RSHULYXBuY
-	 BFSFPGjFg67tzgqcTO7OgnVMVjP0WJj/a9IXNUX0=
+	b=i6tdlDLsB+FaRHPmQzbLbWV2Q9VQZ2rbpJwsPLTtSN+DRIPy00Yxaio4colT6W/6N
+	 LRvIoIty1KPODQoCKL4SjoUxNXCKF/gFRjTCHFMFjENVyZGqDBgLID+wg1EZR1WaK+
+	 mfvcADaGPVwB3cEtT2IrEnEa0YKPS6RW7UiikAPE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395413AbgDPPjf (ORCPT
+        id S1729333AbgDPPjl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:39:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50780 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:39:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897682AbgDPNiT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:38:19 -0400
+        id S2897680AbgDPNiR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:38:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71028221F7;
-        Thu, 16 Apr 2020 13:38:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7C21221F4;
+        Thu, 16 Apr 2020 13:38:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044298;
-        bh=HdXtnSDiFfxfTy6EzlLlUY/QDpdHEh4TrJnt8XaWZyw=;
+        s=default; t=1587044296;
+        bh=hgPkzyxVn+byTaGfndP7S5S157RnPZaOS24ouN5TYPw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E27llNphJsjWCSb/i4G9Ag+eHDqOAHSgHi7ctcGiDdVyo+uP60FMJVgwwyO29UBZ6
-         +WIJWI+VlZyrGkDUPaBgkwhrlVddFnNDamFbDjViL833Qe+9GQfvfHKbSTi1HVtmCw
-         DlgwPpBHWZsKsLIHh+585bbLQF5sHIkDs3/isp0Q=
+        b=CPLezYK8SrqvO0VpxIYgRycy8KPcBQK00rdUP7M3E2W//IQTck8LKR/IrDBvLGZc2
+         76s86XdyMz1AYyZBYSP5XbgFK7SuQT0+7TcYfI8MBz0WzBlS5oGx6eZ7Iip/MLBhxj
+         2mkRDQva/o/DkdAGR7FjpOuOuWQ//xVy4Pu3pScI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Matthew Garrett <matthewgarrett@google.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH 5.5 120/257] tpm: Dont make log failures fatal
-Date:   Thu, 16 Apr 2020 15:22:51 +0200
-Message-Id: <20200416131341.305815793@linuxfoundation.org>
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.5 158/257] btrfs: Dont submit any btree write bio if the fs has errors
+Date:   Thu, 16 Apr 2020 15:23:29 +0200
+Message-Id: <20200416131346.341991413@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -61,92 +59,227 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthew Garrett <matthewgarrett@google.com>
+From: Qu Wenruo <wqu@suse.com>
 
-commit 805fa88e0780b7ce1cc9b649dd91a0a7164c6eb4 upstream.
+commit b3ff8f1d380e65dddd772542aa9bff6c86bf715a upstream.
 
-If a TPM is in disabled state, it's reasonable for it to have an empty
-log. Bailing out of probe in this case means that the PPI interface
-isn't available, so there's no way to then enable the TPM from the OS.
-In general it seems reasonable to ignore log errors - they shouldn't
-interfere with any other TPM functionality.
+[BUG]
+There is a fuzzed image which could cause KASAN report at unmount time.
 
-Signed-off-by: Matthew Garrett <matthewgarrett@google.com>
-Cc: stable@vger.kernel.org # 4.19.x
-Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+  BUG: KASAN: use-after-free in btrfs_queue_work+0x2c1/0x390
+  Read of size 8 at addr ffff888067cf6848 by task umount/1922
+
+  CPU: 0 PID: 1922 Comm: umount Tainted: G        W         5.0.21 #1
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+  Call Trace:
+   dump_stack+0x5b/0x8b
+   print_address_description+0x70/0x280
+   kasan_report+0x13a/0x19b
+   btrfs_queue_work+0x2c1/0x390
+   btrfs_wq_submit_bio+0x1cd/0x240
+   btree_submit_bio_hook+0x18c/0x2a0
+   submit_one_bio+0x1be/0x320
+   flush_write_bio.isra.41+0x2c/0x70
+   btree_write_cache_pages+0x3bb/0x7f0
+   do_writepages+0x5c/0x130
+   __writeback_single_inode+0xa3/0x9a0
+   writeback_single_inode+0x23d/0x390
+   write_inode_now+0x1b5/0x280
+   iput+0x2ef/0x600
+   close_ctree+0x341/0x750
+   generic_shutdown_super+0x126/0x370
+   kill_anon_super+0x31/0x50
+   btrfs_kill_super+0x36/0x2b0
+   deactivate_locked_super+0x80/0xc0
+   deactivate_super+0x13c/0x150
+   cleanup_mnt+0x9a/0x130
+   task_work_run+0x11a/0x1b0
+   exit_to_usermode_loop+0x107/0x130
+   do_syscall_64+0x1e5/0x280
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+[CAUSE]
+The fuzzed image has a completely screwd up extent tree:
+
+  leaf 29421568 gen 8 total ptrs 6 free space 3587 owner EXTENT_TREE
+  refs 2 lock (w:0 r:0 bw:0 br:0 sw:0 sr:0) lock_owner 0 current 5938
+          item 0 key (12587008 168 4096) itemoff 3942 itemsize 53
+                  extent refs 1 gen 9 flags 1
+                  ref#0: extent data backref root 5 objectid 259 offset 0 count 1
+          item 1 key (12591104 168 8192) itemoff 3889 itemsize 53
+                  extent refs 1 gen 9 flags 1
+                  ref#0: extent data backref root 5 objectid 271 offset 0 count 1
+          item 2 key (12599296 168 4096) itemoff 3836 itemsize 53
+                  extent refs 1 gen 9 flags 1
+                  ref#0: extent data backref root 5 objectid 259 offset 4096 count 1
+          item 3 key (29360128 169 0) itemoff 3803 itemsize 33
+                  extent refs 1 gen 9 flags 2
+                  ref#0: tree block backref root 5
+          item 4 key (29368320 169 1) itemoff 3770 itemsize 33
+                  extent refs 1 gen 9 flags 2
+                  ref#0: tree block backref root 5
+          item 5 key (29372416 169 0) itemoff 3737 itemsize 33
+                  extent refs 1 gen 9 flags 2
+                  ref#0: tree block backref root 5
+
+Note that leaf 29421568 doesn't have its backref in the extent tree.
+Thus extent allocator can re-allocate leaf 29421568 for other trees.
+
+In short, the bug is caused by:
+
+- Existing tree block gets allocated to log tree
+  This got its generation bumped.
+
+- Log tree balance cleaned dirty bit of offending tree block
+  It will not be written back to disk, thus no WRITTEN flag.
+
+- Original owner of the tree block gets COWed
+  Since the tree block has higher transid, no WRITTEN flag, it's reused,
+  and not traced by transaction::dirty_pages.
+
+- Transaction aborted
+  Tree blocks get cleaned according to transaction::dirty_pages. But the
+  offending tree block is not recorded at all.
+
+- Filesystem unmount
+  All pages are assumed to be are clean, destroying all workqueue, then
+  call iput(btree_inode).
+  But offending tree block is still dirty, which triggers writeback, and
+  causes use-after-free bug.
+
+The detailed sequence looks like this:
+
+- Initial status
+  eb: 29421568, header=WRITTEN bflags_dirty=0, page_dirty=0, gen=8,
+      not traced by any dirty extent_iot_tree.
+
+- New tree block is allocated
+  Since there is no backref for 29421568, it's re-allocated as new tree
+  block.
+  Keep in mind that tree block 29421568 is still referred by extent
+  tree.
+
+- Tree block 29421568 is filled for log tree
+  eb: 29421568, header=0 bflags_dirty=1, page_dirty=1, gen=9 << (gen bumped)
+      traced by btrfs_root::dirty_log_pages
+
+- Some log tree operations
+  Since the fs is using node size 4096, the log tree can easily go a
+  level higher.
+
+- Log tree needs balance
+  Tree block 29421568 gets all its content pushed to right, thus now
+  it is empty, and we don't need it.
+  btrfs_clean_tree_block() from __push_leaf_right() get called.
+
+  eb: 29421568, header=0 bflags_dirty=0, page_dirty=0, gen=9
+      traced by btrfs_root::dirty_log_pages
+
+- Log tree write back
+  btree_write_cache_pages() goes through dirty pages ranges, but since
+  page of tree block 29421568 gets cleaned already, it's not written
+  back to disk. Thus it doesn't have WRITTEN bit set.
+  But ranges in dirty_log_pages are cleared.
+
+  eb: 29421568, header=0 bflags_dirty=0, page_dirty=0, gen=9
+      not traced by any dirty extent_iot_tree.
+
+- Extent tree update when committing transaction
+  Since tree block 29421568 has transid equal to running trans, and has
+  no WRITTEN bit, should_cow_block() will use it directly without adding
+  it to btrfs_transaction::dirty_pages.
+
+  eb: 29421568, header=0 bflags_dirty=1, page_dirty=1, gen=9
+      not traced by any dirty extent_iot_tree.
+
+  At this stage, we're doomed. We have a dirty eb not tracked by any
+  extent io tree.
+
+- Transaction gets aborted due to corrupted extent tree
+  Btrfs cleans up dirty pages according to transaction::dirty_pages and
+  btrfs_root::dirty_log_pages.
+  But since tree block 29421568 is not tracked by neither of them, it's
+  still dirty.
+
+  eb: 29421568, header=0 bflags_dirty=1, page_dirty=1, gen=9
+      not traced by any dirty extent_iot_tree.
+
+- Filesystem unmount
+  Since all cleanup is assumed to be done, all workqueus are destroyed.
+  Then iput(btree_inode) is called, expecting no dirty pages.
+  But tree 29421568 is still dirty, thus triggering writeback.
+  Since all workqueues are already freed, we cause use-after-free.
+
+This shows us that, log tree blocks + bad extent tree can cause wild
+dirty pages.
+
+[FIX]
+To fix the problem, don't submit any btree write bio if the filesytem
+has any error.  This is the last safe net, just in case other cleanup
+haven't caught catch it.
+
+Link: https://github.com/bobfuzzer/CVE/tree/master/CVE-2019-19377
+CC: stable@vger.kernel.org # 5.4+
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/char/tpm/eventlog/common.c |   12 ++++--------
- drivers/char/tpm/tpm-chip.c        |    4 +---
- drivers/char/tpm/tpm.h             |    2 +-
- 3 files changed, 6 insertions(+), 12 deletions(-)
+ fs/btrfs/extent_io.c |   35 ++++++++++++++++++++++++++++++++++-
+ 1 file changed, 34 insertions(+), 1 deletion(-)
 
---- a/drivers/char/tpm/eventlog/common.c
-+++ b/drivers/char/tpm/eventlog/common.c
-@@ -99,11 +99,8 @@ static int tpm_read_log(struct tpm_chip
-  *
-  * If an event log is found then the securityfs files are setup to
-  * export it to userspace, otherwise nothing is done.
-- *
-- * Returns -ENODEV if the firmware has no event log or securityfs is not
-- * supported.
-  */
--int tpm_bios_log_setup(struct tpm_chip *chip)
-+void tpm_bios_log_setup(struct tpm_chip *chip)
- {
- 	const char *name = dev_name(&chip->dev);
- 	unsigned int cnt;
-@@ -112,7 +109,7 @@ int tpm_bios_log_setup(struct tpm_chip *
- 
- 	rc = tpm_read_log(chip);
- 	if (rc < 0)
--		return rc;
-+		return;
- 	log_version = rc;
- 
- 	cnt = 0;
-@@ -158,13 +155,12 @@ int tpm_bios_log_setup(struct tpm_chip *
- 		cnt++;
+--- a/fs/btrfs/extent_io.c
++++ b/fs/btrfs/extent_io.c
+@@ -3931,6 +3931,7 @@ int btree_write_cache_pages(struct addre
+ 		.extent_locked = 0,
+ 		.sync_io = wbc->sync_mode == WB_SYNC_ALL,
+ 	};
++	struct btrfs_fs_info *fs_info = BTRFS_I(mapping->host)->root->fs_info;
+ 	int ret = 0;
+ 	int done = 0;
+ 	int nr_to_write_done = 0;
+@@ -4044,7 +4045,39 @@ retry:
+ 		end_write_bio(&epd, ret);
+ 		return ret;
  	}
- 
--	return 0;
-+	return;
- 
- err:
--	rc = PTR_ERR(chip->bios_dir[cnt]);
- 	chip->bios_dir[cnt] = NULL;
- 	tpm_bios_log_teardown(chip);
--	return rc;
-+	return;
+-	ret = flush_write_bio(&epd);
++	/*
++	 * If something went wrong, don't allow any metadata write bio to be
++	 * submitted.
++	 *
++	 * This would prevent use-after-free if we had dirty pages not
++	 * cleaned up, which can still happen by fuzzed images.
++	 *
++	 * - Bad extent tree
++	 *   Allowing existing tree block to be allocated for other trees.
++	 *
++	 * - Log tree operations
++	 *   Exiting tree blocks get allocated to log tree, bumps its
++	 *   generation, then get cleaned in tree re-balance.
++	 *   Such tree block will not be written back, since it's clean,
++	 *   thus no WRITTEN flag set.
++	 *   And after log writes back, this tree block is not traced by
++	 *   any dirty extent_io_tree.
++	 *
++	 * - Offending tree block gets re-dirtied from its original owner
++	 *   Since it has bumped generation, no WRITTEN flag, it can be
++	 *   reused without COWing. This tree block will not be traced
++	 *   by btrfs_transaction::dirty_pages.
++	 *
++	 *   Now such dirty tree block will not be cleaned by any dirty
++	 *   extent io tree. Thus we don't want to submit such wild eb
++	 *   if the fs already has error.
++	 */
++	if (!test_bit(BTRFS_FS_STATE_ERROR, &fs_info->fs_state)) {
++		ret = flush_write_bio(&epd);
++	} else {
++		ret = -EUCLEAN;
++		end_write_bio(&epd, ret);
++	}
+ 	return ret;
  }
  
- void tpm_bios_log_teardown(struct tpm_chip *chip)
---- a/drivers/char/tpm/tpm-chip.c
-+++ b/drivers/char/tpm/tpm-chip.c
-@@ -596,9 +596,7 @@ int tpm_chip_register(struct tpm_chip *c
- 
- 	tpm_sysfs_add_device(chip);
- 
--	rc = tpm_bios_log_setup(chip);
--	if (rc != 0 && rc != -ENODEV)
--		return rc;
-+	tpm_bios_log_setup(chip);
- 
- 	tpm_add_ppi(chip);
- 
---- a/drivers/char/tpm/tpm.h
-+++ b/drivers/char/tpm/tpm.h
-@@ -235,7 +235,7 @@ int tpm2_prepare_space(struct tpm_chip *
- int tpm2_commit_space(struct tpm_chip *chip, struct tpm_space *space, void *buf,
- 		      size_t *bufsiz);
- 
--int tpm_bios_log_setup(struct tpm_chip *chip);
-+void tpm_bios_log_setup(struct tpm_chip *chip);
- void tpm_bios_log_teardown(struct tpm_chip *chip);
- int tpm_dev_common_init(void);
- void tpm_dev_common_exit(void);
 
 
