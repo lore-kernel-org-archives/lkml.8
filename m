@@ -2,275 +2,173 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 044DAC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:34:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CF47C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:34:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D92E821D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:34:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587047645;
-	bh=bi7/m79MnrOcKtz1yNvD6Frj0cbUVGLU7NJgSHvxF2I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iAZKybH1v3E1OIYENwZTaMtf1RRjd16y5jaKYEGqtBVbBvigmS1y4yWiBZc8nBgVN
-	 oXIdpkvxzm2BAW9xvOs+JBr1YmamLZWQUOKWHPrY4cS9+XqXYMRRUZOL4sHyfrVw4y
-	 kG9sPX+jxxDtnPv4vEvCjQ9neGqsHkRYC0oCfmRM=
+	by mail.kernel.org (Postfix) with ESMTP id 4A74121927
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:34:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qj8hoC1S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394390AbgDPOdN (ORCPT
+        id S2394332AbgDPOcu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:33:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59918 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2442133AbgDPOSf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:18:35 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FD4D2063A;
-        Thu, 16 Apr 2020 14:18:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587046714;
-        bh=bi7/m79MnrOcKtz1yNvD6Frj0cbUVGLU7NJgSHvxF2I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Yi9hpirh1VtMlOGs0kGvX5fXAQAutpS3AwXEDY0pBvWzLHPLsyr9y6rTT+mlhSexI
-         8mZW2a3+sS9h7wpZPaT2ju6Ag4XCy7zSEByC0Z99bGfZjuqR83ehFJbjEgpiUCX/WG
-         5L0sH/InBOfdRrcHB/wO9rF1b/29CQLo7xeW3gFM=
-Date:   Thu, 16 Apr 2020 16:18:32 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Mateusz Holenko <mholenko@antmicro.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Stafford Horne <shorne@gmail.com>,
-        Karol Gugala <kgugala@antmicro.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Filip Kokosinski <fkokosinski@antmicro.com>,
-        Pawel Czarnecki <pczarnecki@internships.antmicro.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 3/5] drivers/soc/litex: add LiteX SoC Controller driver
-Message-ID: <20200416141832.GA1356374@kroah.com>
-References: <20200402084513.4173306-0-mholenko@antmicro.com>
- <20200402084513.4173306-3-mholenko@antmicro.com>
- <CAPk366QLHbR9cnLs244VbOXOLAg56yhG7O-DEAc1x1ZTvthiig@mail.gmail.com>
- <20200402074259.GC2755501@kroah.com>
- <CAPk366Qm62TtwM7xNUSUT4L+7MwWDSPXyGCWXrXHYPjLeVf9OA@mail.gmail.com>
+        Thu, 16 Apr 2020 10:32:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34290 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2436806AbgDPOMK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:12:10 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5E0DC061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 07:12:09 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id d77so4752373wmd.3
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 07:12:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4Aq3yCWYFY7wHOrarhjqlc9bx2dHHg6e1wr/Ld66Bgk=;
+        b=qj8hoC1SDgxFYAOGk71xzeMxtQHSHIwu8PjiwZmBwGsSYm8IihfCJCrxSJQXtgl/X5
+         c+vj6s/DYv24YDqAcfxP0rDCEsTpYk4GBQPzggmvav5urfiGyH1ZRJGVr7ex09wkDSg9
+         UkAqo5nXwdI70dkW1gu71uyo+FBwMZgwCr+VDW/vG8iaXlKniFv853cJ2Ij1oYbQv24B
+         iywACOyCQlFVLtOUXLo0UZnJ070gUMqihP5hdPy/x198yIny7nL2RQuqmfhp0yFtwfoT
+         1gdOARsCdOIIa13ccLMoiyMMGWvR2W6vc02+JH3e/jjWGKUKYJbro6D36gYa7n5glZ/e
+         0zMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4Aq3yCWYFY7wHOrarhjqlc9bx2dHHg6e1wr/Ld66Bgk=;
+        b=K1FtiYWk024M/RuR7G56v/jIY3gjBt7PvI7KfoP0Aa3g+5q6zUKazqMP2utGEJCWRM
+         VFXspwq0TV56bBEfyR85NEoC/yCBQtUks3VOI628LjzqqrsoT5K3CxKzcbFOCpEdEMDp
+         /sMlpmKSDDq2atEfLP3gSSYWG84sp4r2ZFYt2KnvUF4TOpUMYpD+3pvH0iF9bxIuL+7k
+         Fep1iNi6s59AlMJrkSiUFJ88P/iVoB0ntZ7r/lIVvMP/rrnAfWN74gVUjCrdLFluc2pO
+         zUXmYjL6KRNOQwYBM1pI5friWAzhLH/aoyyk5BCOnvvJn17/CvkWoldR+Z9U7DAQDg9E
+         4hzQ==
+X-Gm-Message-State: AGi0PuZ5LKApTPjovQhnATAbT83BF05k7jfDuAeFTRK1pQPRyIb/2nXM
+        BMRDRWfb9NLQ+rpMvW+7qHnxZjioOQ+Uo9xObgI=
+X-Google-Smtp-Source: APiQypIdWsKrNQFF3dbcu9dwh9adYCneRxwMvuzjpcjrEw5XcBXEAlvWpyxBcdkIEMdK28QlkmPrguTfgw0bFBIiK48=
+X-Received: by 2002:a1c:7f91:: with SMTP id a139mr4858422wmd.164.1587046327780;
+ Thu, 16 Apr 2020 07:12:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPk366Qm62TtwM7xNUSUT4L+7MwWDSPXyGCWXrXHYPjLeVf9OA@mail.gmail.com>
+References: <20200416104707.20219-1-david@redhat.com> <20200416104707.20219-2-david@redhat.com>
+In-Reply-To: <20200416104707.20219-2-david@redhat.com>
+From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Date:   Thu, 16 Apr 2020 16:11:56 +0200
+Message-ID: <CAM9Jb+iBAHr+UjxZBUGugQ_+9Z0a6CPAp8gXWorE57_rOQ9xqA@mail.gmail.com>
+Subject: Re: [PATCH RFC 1/2] mm/memory_hotplug: no need to init new pgdat with node_start_pfn
+To:     David Hildenbrand <david@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>, Baoquan He <bhe@redhat.com>,
+        Oscar Salvador <osalvador@suse.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 02, 2020 at 03:50:34PM +0200, Mateusz Holenko wrote:
-> On Thu, Apr 2, 2020 at 9:43 AM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Thu, Apr 02, 2020 at 08:50:40AM +0200, Mateusz Holenko wrote:
-> > > On Thu, Apr 2, 2020 at 8:46 AM Mateusz Holenko <mholenko@antmicro.com> wrote:
-> > > >
-> > > > From: Pawel Czarnecki <pczarnecki@internships.antmicro.com>
-> > > >
-> > > > This commit adds driver for the FPGA-based LiteX SoC
-> > > > Controller from LiteX SoC builder.
-> > > >
-> > > > Co-developed-by: Mateusz Holenko <mholenko@antmicro.com>
-> > > > Signed-off-by: Mateusz Holenko <mholenko@antmicro.com>
-> > > > Signed-off-by: Pawel Czarnecki <pczarnecki@internships.antmicro.com>
-> > > > ---
-> > > >
-> > > > Notes:
-> > > >     Changes in v4:
-> > > >     - fixed indent in Kconfig's help section
-> > > >     - fixed copyright header
-> > > >     - changed compatible to "litex,soc-controller"
-> > > >     - simplified litex_soc_ctrl_probe
-> > > >     - removed unnecessary litex_soc_ctrl_remove
-> > > >
-> > > >     This commit has been introduced in v3 of the patchset.
-> > > >
-> > > >     It includes a simplified version of common 'litex.h'
-> > > >     header introduced in v2 of the patchset.
-> > > >
-> > > >  MAINTAINERS                        |   2 +
-> > > >  drivers/soc/Kconfig                |   1 +
-> > > >  drivers/soc/Makefile               |   1 +
-> > > >  drivers/soc/litex/Kconfig          |  14 ++
-> > > >  drivers/soc/litex/Makefile         |   3 +
-> > > >  drivers/soc/litex/litex_soc_ctrl.c | 217 +++++++++++++++++++++++++++++
-> > > >  include/linux/litex.h              |  45 ++++++
-> > > >  7 files changed, 283 insertions(+)
-> > > >  create mode 100644 drivers/soc/litex/Kconfig
-> > > >  create mode 100644 drivers/soc/litex/Makefile
-> > > >  create mode 100644 drivers/soc/litex/litex_soc_ctrl.c
-> > > >  create mode 100644 include/linux/litex.h
-> > > >
-> > > > diff --git a/MAINTAINERS b/MAINTAINERS
-> > > > index 2f5ede8a08aa..a35be1be90d5 100644
-> > > > --- a/MAINTAINERS
-> > > > +++ b/MAINTAINERS
-> > > > @@ -9729,6 +9729,8 @@ M:        Karol Gugala <kgugala@antmicro.com>
-> > > >  M:     Mateusz Holenko <mholenko@antmicro.com>
-> > > >  S:     Maintained
-> > > >  F:     Documentation/devicetree/bindings/*/litex,*.yaml
-> > > > +F:     drivers/soc/litex/litex_soc_ctrl.c
-> > > > +F:     include/linux/litex.h
-> > > >
-> > > >  LIVE PATCHING
-> > > >  M:     Josh Poimboeuf <jpoimboe@redhat.com>
-> > > > diff --git a/drivers/soc/Kconfig b/drivers/soc/Kconfig
-> > > > index 1778f8c62861..78add2a163be 100644
-> > > > --- a/drivers/soc/Kconfig
-> > > > +++ b/drivers/soc/Kconfig
-> > > > @@ -9,6 +9,7 @@ source "drivers/soc/bcm/Kconfig"
-> > > >  source "drivers/soc/fsl/Kconfig"
-> > > >  source "drivers/soc/imx/Kconfig"
-> > > >  source "drivers/soc/ixp4xx/Kconfig"
-> > > > +source "drivers/soc/litex/Kconfig"
-> > > >  source "drivers/soc/mediatek/Kconfig"
-> > > >  source "drivers/soc/qcom/Kconfig"
-> > > >  source "drivers/soc/renesas/Kconfig"
-> > > > diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
-> > > > index 8b49d782a1ab..fd016b51cddd 100644
-> > > > --- a/drivers/soc/Makefile
-> > > > +++ b/drivers/soc/Makefile
-> > > > @@ -14,6 +14,7 @@ obj-$(CONFIG_ARCH_GEMINI)     += gemini/
-> > > >  obj-$(CONFIG_ARCH_MXC)         += imx/
-> > > >  obj-$(CONFIG_ARCH_IXP4XX)      += ixp4xx/
-> > > >  obj-$(CONFIG_SOC_XWAY)         += lantiq/
-> > > > +obj-$(CONFIG_LITEX_SOC_CONTROLLER) += litex/
-> > > >  obj-y                          += mediatek/
-> > > >  obj-y                          += amlogic/
-> > > >  obj-y                          += qcom/
-> > > > diff --git a/drivers/soc/litex/Kconfig b/drivers/soc/litex/Kconfig
-> > > > new file mode 100644
-> > > > index 000000000000..71264c0e1d6c
-> > > > --- /dev/null
-> > > > +++ b/drivers/soc/litex/Kconfig
-> > > > @@ -0,0 +1,14 @@
-> > > > +# SPDX-License_Identifier: GPL-2.0
-> > > > +
-> > > > +menu "Enable LiteX SoC Builder specific drivers"
-> > > > +
-> > > > +config LITEX_SOC_CONTROLLER
-> > > > +       tristate "Enable LiteX SoC Controller driver"
-> > > > +       help
-> > > > +         This option enables the SoC Controller Driver which verifies
-> > > > +         LiteX CSR access and provides common litex_get_reg/litex_set_reg
-> > > > +         accessors.
-> > > > +         All drivers that use functions from litex.h must depend on
-> > > > +         LITEX_SOC_CONTROLLER.
-> > > > +
-> > > > +endmenu
-> > > > diff --git a/drivers/soc/litex/Makefile b/drivers/soc/litex/Makefile
-> > > > new file mode 100644
-> > > > index 000000000000..98ff7325b1c0
-> > > > --- /dev/null
-> > > > +++ b/drivers/soc/litex/Makefile
-> > > > @@ -0,0 +1,3 @@
-> > > > +# SPDX-License_Identifier: GPL-2.0
-> > > > +
-> > > > +obj-$(CONFIG_LITEX_SOC_CONTROLLER)     += litex_soc_ctrl.o
-> > > > diff --git a/drivers/soc/litex/litex_soc_ctrl.c b/drivers/soc/litex/litex_soc_ctrl.c
-> > > > new file mode 100644
-> > > > index 000000000000..5defba000fd4
-> > > > --- /dev/null
-> > > > +++ b/drivers/soc/litex/litex_soc_ctrl.c
-> > > > @@ -0,0 +1,217 @@
-> > > > +// SPDX-License-Identifier: GPL-2.0
-> > > > +/*
-> > > > + * LiteX SoC Controller Driver
-> > > > + *
-> > > > + * Copyright (C) 2020 Antmicro <www.antmicro.com>
-> > > > + *
-> > > > + */
-> > > > +
-> > > > +#include <linux/litex.h>
-> > > > +#include <linux/device.h>
-> > > > +#include <linux/errno.h>
-> > > > +#include <linux/of.h>
-> > > > +#include <linux/of_platform.h>
-> > > > +#include <linux/platform_device.h>
-> > > > +#include <linux/printk.h>
-> > > > +#include <linux/module.h>
-> > > > +#include <linux/errno.h>
-> > > > +#include <linux/io.h>
-> > > > +
-> > > > +/*
-> > > > + * The parameters below are true for LiteX SoC
-> > > > + * configured for 8-bit CSR Bus, 32-bit aligned.
-> > > > + *
-> > > > + * Supporting other configurations will require
-> > > > + * extending the logic in this header.
-> > > > + */
-> > > > +#define LITEX_REG_SIZE             0x4
-> > > > +#define LITEX_SUBREG_SIZE          0x1
-> > > > +#define LITEX_SUBREG_SIZE_BIT      (LITEX_SUBREG_SIZE * 8)
-> > > > +
-> > > > +static DEFINE_SPINLOCK(csr_lock);
-> > > > +
-> > > > +static inline unsigned long read_pointer_with_barrier(
-> > > > +       const volatile void __iomem *addr)
-> > > > +{
-> > > > +       unsigned long val;
-> > > > +
-> > > > +       __io_br();
-> > > > +       val = *(const volatile unsigned long __force *)addr;
-> > > > +       __io_ar();
-> > > > +       return val;
-> > > > +}
-> > > > +
-> > > > +static inline void write_pointer_with_barrier(
-> > > > +       volatile void __iomem *addr, unsigned long val)
-> > > > +{
-> > > > +       __io_br();
-> > > > +       *(volatile unsigned long __force *)addr = val;
-> > > > +       __io_ar();
-> > > > +}
-> > > > +
-> > >
-> > > I'm defining read_pointer_with_barrier/write_pointer_with_barrier in
-> > > order to make sure that a series of reads/writes to a single CSR
-> > > register will not be reordered by the compiler.
-> >
-> > Please do not do this, there are core kernel calls for this, otherwise
-> > this would be required by every individual driver, which would be crazy.
-> >
-> > > Does __raw_readl/__raw_writel guarantee this property? If so, I could
-> > > drop my functions and use the system ones instead.
-> >
-> > Try it and see.
-> 
-> Since I want to avoid read/write reordering caused by the compiler
-> optimizations I don't want to rely on a single manual test.
-> What I mean is that even if it works now for me, it does not guarantee
-> that it will in the future version of the compiler/using different
-> compilation flags/etc, right?
+> A hotadded node/pgdat will span no pages at all, until memory is moved to
+> the zone/node via move_pfn_range_to_zone() -> resize_pgdat_range - e.g.,
+> when onlining memory blocks. We don't have to initialize the
+> node_start_pfn to the memory we are adding.
+>
+> Note: we'll also end up with pgdat->node_start_pfn == 0 when offlined the
+> last memory block belonging to a node (via remove_pfn_range_from_zone()->
+> update_pgdat_span()).
+>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  mm/memory_hotplug.c | 15 ++++++---------
+>  1 file changed, 6 insertions(+), 9 deletions(-)
+>
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index 47cf6036eb31..9b15ce465be2 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -866,10 +866,9 @@ static void reset_node_present_pages(pg_data_t *pgdat)
+>  }
+>
+>  /* we are OK calling __meminit stuff here - we have CONFIG_MEMORY_HOTPLUG */
+> -static pg_data_t __ref *hotadd_new_pgdat(int nid, u64 start)
+> +static pg_data_t __ref *hotadd_new_pgdat(int nid)
+>  {
+>         struct pglist_data *pgdat;
+> -       unsigned long start_pfn = PFN_DOWN(start);
+>
+>         pgdat = NODE_DATA(nid);
+>         if (!pgdat) {
+> @@ -899,9 +898,8 @@ static pg_data_t __ref *hotadd_new_pgdat(int nid, u64 start)
+>         }
+>
+>         /* we can use NODE_DATA(nid) from here */
+> -
+>         pgdat->node_id = nid;
+> -       pgdat->node_start_pfn = start_pfn;
+> +       pgdat->node_start_pfn = 0;
+>
+>         /* init node's zones as empty zones, we don't have any present pages.*/
+>         free_area_init_core_hotplug(nid);
+> @@ -936,7 +934,6 @@ static void rollback_node_hotadd(int nid)
+>  /**
+>   * try_online_node - online a node if offlined
+>   * @nid: the node ID
+> - * @start: start addr of the node
+>   * @set_node_online: Whether we want to online the node
+>   * called by cpu_up() to online a node without onlined memory.
+>   *
+> @@ -945,7 +942,7 @@ static void rollback_node_hotadd(int nid)
+>   * 0 -> the node is already online
+>   * -ENOMEM -> the node could not be allocated
+>   */
+> -static int __try_online_node(int nid, u64 start, bool set_node_online)
+> +static int __try_online_node(int nid, bool set_node_online)
+>  {
+>         pg_data_t *pgdat;
+>         int ret = 1;
+> @@ -953,7 +950,7 @@ static int __try_online_node(int nid, u64 start, bool set_node_online)
+>         if (node_online(nid))
+>                 return 0;
+>
+> -       pgdat = hotadd_new_pgdat(nid, start);
+> +       pgdat = hotadd_new_pgdat(nid);
+>         if (!pgdat) {
+>                 pr_err("Cannot online node %d due to NULL pgdat\n", nid);
+>                 ret = -ENOMEM;
+> @@ -977,7 +974,7 @@ int try_online_node(int nid)
+>         int ret;
+>
+>         mem_hotplug_begin();
+> -       ret =  __try_online_node(nid, 0, true);
+> +       ret =  __try_online_node(nid, true);
+>         mem_hotplug_done();
+>         return ret;
+>  }
+> @@ -1031,7 +1028,7 @@ int __ref add_memory_resource(int nid, struct resource *res)
+>          */
+>         memblock_add_node(start, size, nid);
+>
+> -       ret = __try_online_node(nid, start, false);
+> +       ret = __try_online_node(nid, false);
+>         if (ret < 0)
+>                 goto error;
+>         new_node = ret;
+> --
 
-No, if the common functions stop working, then they will be fixed.  If
-you try to roll your own and they stop working in the future, no one
-will notice.
+Looks right thing to me. Will wait for others to comment.
 
-Please use the common in-kernel functions for this, it's not ok for
-drivers to try to do it themselves for basic things like this, no matter
-what platform they think they are designed for :)
+Acked-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
 
-thanks,
-
-greg k-h
+> 2.25.1
+>
