@@ -2,172 +2,80 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FFD1C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:02:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADCE4C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF6122076A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:02:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="O8oy2RFi"
+	by mail.kernel.org (Postfix) with ESMTP id 789C82076A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:03:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407552AbgDPGCg (ORCPT
+        id S2407609AbgDPGDH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 02:02:36 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:62434 "EHLO pegase1.c-s.fr"
+        Thu, 16 Apr 2020 02:03:07 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:41096 "EHLO fornost.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407219AbgDPGC3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 02:02:29 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 492pXf3l6tz9tymJ;
-        Thu, 16 Apr 2020 08:02:26 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=O8oy2RFi; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id g-FuaxY7oTtY; Thu, 16 Apr 2020 08:02:26 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 492pXf1zxrz9tymG;
-        Thu, 16 Apr 2020 08:02:26 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1587016946; bh=hTy16bHLpfNFXF319tqIwS+sWuGHucopXVc/QbhW67s=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=O8oy2RFimIrYMQU6MOhSUDlpsJHr6m+uld+wQJw+BGfDvNaWMNnWU+tE2HxDT1tk1
-         1ljd3fzGwO/8xVpaMoG2PvW+zrCn+JLLj60PI5Qlvlu9SS1pYu+IX+ZrGDva/4xAjI
-         6lrUGp1uXE7zJW2a9klM0meDl1MZZMq4InFtJ2rc=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5A4388B778;
-        Thu, 16 Apr 2020 08:02:27 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id s9h0hRILTj-Q; Thu, 16 Apr 2020 08:02:27 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 87A7E8B756;
-        Thu, 16 Apr 2020 08:02:26 +0200 (CEST)
-Subject: Re: [PATCH v2,5/5] drivers: uio: new driver for fsl_85xx_cache_sram
-To:     Wang Wenhu <wenhu.wang@vivo.com>
-Cc:     gregkh@linuxfoundation.org, kernel@vivo.com,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        mpe@ellerman.id.au, oss@buserror.net
-References: <37b6b890-e537-7424-6b26-04565681f40a@c-s.fr>
- <20200416052247.112887-1-wenhu.wang@vivo.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <99ae46c0-1160-6ad2-e426-6dcc9191ab41@c-s.fr>
-Date:   Thu, 16 Apr 2020 08:02:19 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S2407219AbgDPGDD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 02:03:03 -0400
+Received: from gwarestrin.me.apana.org.au ([192.168.0.7] helo=gwarestrin.arnor.me.apana.org.au)
+        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
+        id 1jOxai-0004JT-Ro; Thu, 16 Apr 2020 16:01:37 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 16 Apr 2020 16:01:36 +1000
+Date:   Thu, 16 Apr 2020 16:01:36 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+Cc:     davem@davemloft.net, ebiggers@kernel.org, ebiggers@google.com,
+        pvanleeuwen@rambus.com, zohar@linux.ibm.com, gilad@benyossef.com,
+        jarkko.sakkinen@linux.intel.com, dmitry.kasatkin@intel.com,
+        nicstange@gmail.com, tadeusz.struk@intel.com, jmorris@namei.org,
+        serge@hallyn.com, zhang.jia@linux.alibaba.com,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/7] crpyto: introduce OSCCA certificate and SM2
+ asymmetric algorithm
+Message-ID: <20200416060136.GA19149@gondor.apana.org.au>
+References: <20200402123504.84628-1-tianjia.zhang@linux.alibaba.com>
 MIME-Version: 1.0
-In-Reply-To: <20200416052247.112887-1-wenhu.wang@vivo.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200402123504.84628-1-tianjia.zhang@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 16/04/2020 à 07:22, Wang Wenhu a écrit :
-> Yes, kzalloc() would clean the allocated areas and the init of remaining array
-> elements are redundant. I will remove the block in v3.
+On Thu, Apr 02, 2020 at 08:34:57PM +0800, Tianjia Zhang wrote:
+> Hello all,
 > 
->>>> +		dev_err(&pdev->dev, "error no valid uio-map configured\n");
->>>> +		ret = -EINVAL;
->>>> +		goto err_info_free_internel;
->>>> +	}
->>>> +
->>>> +	info->version = "0.1.0";
->>>
->>> Could you define some DRIVER_VERSION in the top of the file next to
->>> DRIVER_NAME instead of hard coding in the middle on a function ?
->>
->> That's what v1 had, and Greg KH said to remove it.  I'm guessing that he
->> thought it was the common-but-pointless practice of having the driver print a
->> version number that never gets updated, rather than something the UIO API
->> (unfortunately, compared to a feature query interface) expects.  That said,
->> I'm not sure what the value is of making it a macro since it should only be
->> used once, that use is self documenting, it isn't tunable, etc.  Though if
->> this isn't a macro, UIO_NAME also shouldn't be (and if it is made a macro
->> again, it should be UIO_VERSION, not DRIVER_VERSION).
->>
->> Does this really need a three-part version scheme?  What's wrong with a
->> version of "1", to be changed to "2" in the hopefully-unlikely event that the
->> userspace API changes?  Assuming UIO is used for this at all, which doesn't
->> seem like a great fit to me.
->>
->> -Scott
->>
+> This new module implement the OSCCA certificate and SM2 public key
+> algorithm. It was published by State Encryption Management Bureau, China.
+> List of specifications for OSCCA certificate and SM2 elliptic curve
+> public key cryptography:
 > 
-> As Scott mentioned, the version define as necessity by uio core but actually
-> useless for us here(and for many other type of devices I guess). So maybe the better
-> way is to set it optionally, but this belong first to uio core.
+> * GM/T 0003.1-2012
+> * GM/T 0003.2-2012
+> * GM/T 0003.3-2012
+> * GM/T 0003.4-2012
+> * GM/T 0003.5-2012
+> * GM/T 0015-2012
+> * GM/T 0009-2012 
 > 
-> For the cache-sram uio driver, I will define an UIO_VERSION micro as a compromise
-> fit all wonders, no confusing as Greg first mentioned.
+> IETF: https://tools.ietf.org/html/draft-shen-sm2-ecdsa-02
+> oscca: http://www.oscca.gov.cn/sca/xxgk/2010-12/17/content_1002386.shtml
+> scctc: http://www.gmbz.org.cn/main/bzlb.html
+> 
+> These patchs add the OID object identifier defined by OSCCA. The
+> x509 certificate supports sm2-with-sm3 type certificate parsing
+> and verification.
 
-Yes I like it.
+I don't have any objections to the crypto API bits, but obviously
+this is contingent on the x509 bits getting accepted since that's
+the only in-kernel user.  So can I see some acks on that please?
 
-> 
->>> +static const struct of_device_id uio_mpc85xx_l2ctlr_of_match[] = {
->>> +	{	.compatible = "uio,fsl,p2020-l2-cache-controller",	},
->>> +	{	.compatible = "uio,fsl,p2010-l2-cache-controller",	},
->>> +	{	.compatible = "uio,fsl,p1020-l2-cache-controller",	},
->>> +	{	.compatible = "uio,fsl,p1011-l2-cache-controller",	},
->>> +	{	.compatible = "uio,fsl,p1013-l2-cache-controller",	},
->>> +	{	.compatible = "uio,fsl,p1022-l2-cache-controller",	},
->>> +	{	.compatible = "uio,fsl,mpc8548-l2-cache-controller",	},
->>> +	{	.compatible = "uio,fsl,mpc8544-l2-cache-controller",	},
->>> +	{	.compatible = "uio,fsl,mpc8572-l2-cache-controller",	},
->>> +	{	.compatible = "uio,fsl,mpc8536-l2-cache-controller",	},
->>> +	{	.compatible = "uio,fsl,p1021-l2-cache-controller",	},
->>> +	{	.compatible = "uio,fsl,p1012-l2-cache-controller",	},
->>> +	{	.compatible = "uio,fsl,p1025-l2-cache-controller",	},
->>> +	{	.compatible = "uio,fsl,p1016-l2-cache-controller",	},
->>> +	{	.compatible = "uio,fsl,p1024-l2-cache-controller",	},
->>> +	{	.compatible = "uio,fsl,p1015-l2-cache-controller",	},
->>> +	{	.compatible = "uio,fsl,p1010-l2-cache-controller",	},
->>> +	{	.compatible = "uio,fsl,bsc9131-l2-cache-controller",	},
->>> +	{},
->>> +};
->>
->> NACK
->>
->> The device tree describes the hardware, not what driver you want to bind the
->> hardware to, or how you want to allocate the resources.  And even if defining
->> nodes for sram allocation were the right way to go, why do you have a separate
->> compatible for each chip when you're just describing software configuration?
->>
->> Instead, have module parameters that take the sizes and alignments you'd like
->> to allocate and expose to userspace.  Better still would be some sort of
->> dynamic allocation (e.g. open a fd, ioctl to set the requested size/alignment,
->> if it succeeds you can mmap it, and when the fd is closed the region is
->> freed).
->>
->> -Scott
->>
-> 
-> Can not agree more. But what if I want to define more than one cache-sram uio devices?
-> How about use the device tree for pseudo uio cache-sram driver?
-> 
-> static const struct of_device_id uio_mpc85xx_l2ctlr_of_match[] = {
-> 	{	.compatible = "uio,cache-sram",	},
-> 	{},
-> };
-> 
-
-You can still give it a name in line with your driver, ie: 
-"uio,mpc85xx-cache-sram"
-
-After, it you have different behaviours depending on the compatible, 
-then you have to add a .data field which will tell the driver which 
-behaviour to implement.
-
-Christophe
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
