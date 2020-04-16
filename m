@@ -2,157 +2,188 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C8BC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:48:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9341FC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:48:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFE7221D93
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:48:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B52321D93
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:48:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fTo8Ucms"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Krne45FA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394741AbgDPOso (ORCPT
+        id S2394543AbgDPOsx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:48:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39920 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2394595AbgDPOsS (ORCPT
+        Thu, 16 Apr 2020 10:48:53 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52765 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2394733AbgDPOsi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:48:18 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5409BC061A0C;
-        Thu, 16 Apr 2020 07:48:18 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id o10so16537703qtr.6;
-        Thu, 16 Apr 2020 07:48:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=hqU3RukC+Wcy1beI5mHwFrne2ji8Zyuh2QqLhWnxtHQ=;
-        b=fTo8UcmsXD7A4NEtK3NfBs49RNNLGi8bxg8SWycx2D/czAgWIQTTGo/VvyAmQ+0fYs
-         kx+EfbJ7RyO56KbIZfrC5aCoJdh6TyLnlrfjp0NCPwAw6S57AU11ThPuH9nJQCdmG3H5
-         dno7C3cer5UF4qIRAtg6tbFzFUPOZW7qfQntg6Cfe8S44N+OOUjhpylckOpPTPsxmKlX
-         jiFwa3EbZgVlr/ngN8+zDaANiyc3pwcm5y4QmI055bj8g5IB7mHGaE7B09V3keALJFfJ
-         7pUq8YICJvXL4P4/T4M2D19LkyOmkaPtzLHVqgwuqOB3dNezlTF8uWqEf/cJy+97EaNa
-         xG9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=hqU3RukC+Wcy1beI5mHwFrne2ji8Zyuh2QqLhWnxtHQ=;
-        b=MrWrKXKIj0jt2d83c9a7t8vMOBCjbUnDzk3VnrGXzaGlbI5+ZAi7lVr5zRvSlqQXZk
-         /V6LswMkUjbWaRxk82wyQv2AwvgcZF8XZMd5lc3eTDjTVSbHe11ji9UgbLzYpsiOh4Ma
-         o73aWBKuLJZm1x37V2Jz087ZwtxJMdABEhy5nnneGexdlXsufKz1BkpSmvHlTiYTnx9l
-         96hWlTGUSBQNyEtWifRBl5MKB5PyDbRn33YvPk9hvjj1/gu3+RFlbyx8WmEM+AaZ7ZnQ
-         bqGAt4tIvKMVxvOpzCsf9mjtQOP6LY6B+yDFD5QsilRyq/YOgMZnifb4wYG0dM28Jes+
-         GWNw==
-X-Gm-Message-State: AGi0PuZhqkMBoHLujRx4R3rOAs34zbzzymbwyVt5mqd4k1KLHbWhoZav
-        pgIb0ahtKcyVWAP0xwa8T0g=
-X-Google-Smtp-Source: APiQypJ9bGDSqwPsZ0XN/Iu2gtQIYZ2l4vmi9YmWye0Bcsk+dfXSmqg2MkX3IQZo0l71xMCmebXclg==
-X-Received: by 2002:aed:3bf2:: with SMTP id s47mr15097558qte.126.1587048497317;
-        Thu, 16 Apr 2020 07:48:17 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id o7sm2584717qkh.76.2020.04.16.07.48.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2020 07:48:16 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Thu, 16 Apr 2020 10:48:15 -0400
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        X86 ML <x86@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 5/5] efi/x86: Check for bad relocations
-Message-ID: <20200416144815.GA3267283@rani.riverdale.lan>
-References: <20200415221520.2692512-1-nivedita@alum.mit.edu>
- <20200415221520.2692512-6-nivedita@alum.mit.edu>
- <CAMj1kXFMMeYUPirY10JJfs31Z5GnHvUe=gLgG6SUJY9uWj588g@mail.gmail.com>
+        Thu, 16 Apr 2020 10:48:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587048517;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=mMOcvd8rqB/SDYGbEUATBrqiayoKdChDgtyzI2z56+k=;
+        b=Krne45FAuGtE+nCqLRJI2urtG1H855rkgdOygzUb8CAk6ntjUqaWou8CFiRuOxy0wASgJ/
+        C/Fzc1ng1e8/UbQ1keRubk8PqXJ3lg7BVydY4DnhvDi/fl+jZXxSZ/xn8YcLjIEm7B5FO6
+        P56j/AN6g8y6ZoIy2E4Kh+ESDb1bKaI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-458-Le46VK3hP4KmFRFu2epPvQ-1; Thu, 16 Apr 2020 10:48:29 -0400
+X-MC-Unique: Le46VK3hP4KmFRFu2epPvQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5360E85EE81;
+        Thu, 16 Apr 2020 14:48:12 +0000 (UTC)
+Received: from w520.home (ovpn-112-162.phx2.redhat.com [10.3.112.162])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9CDFE5C1C5;
+        Thu, 16 Apr 2020 14:48:11 +0000 (UTC)
+Date:   Thu, 16 Apr 2020 08:48:11 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     "Liu, Yi L" <yi.l.liu@intel.com>
+Cc:     "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>, "Wu, Hao" <hao.wu@intel.com>
+Subject: Re: [PATCH v1 7/8] vfio/type1: Add VFIO_IOMMU_CACHE_INVALIDATE
+Message-ID: <20200416084811.5acf4424@w520.home>
+In-Reply-To: <20200416084031.7266ad40@w520.home>
+References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
+        <1584880325-10561-8-git-send-email-yi.l.liu@intel.com>
+        <20200402142428.2901432e@w520.home>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D807C4A@SHSMSX104.ccr.corp.intel.com>
+        <20200403093436.094b1928@w520.home>
+        <A2975661238FB949B60364EF0F2C25743A231BAA@SHSMSX104.ccr.corp.intel.com>
+        <20200416084031.7266ad40@w520.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXFMMeYUPirY10JJfs31Z5GnHvUe=gLgG6SUJY9uWj588g@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 09:38:36AM +0200, Ard Biesheuvel wrote:
-> On Thu, 16 Apr 2020 at 00:15, Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> >
-> > Add relocation checking for x86 as well to catch non-PC-relative
-> > relocations that require runtime processing, since the EFI stub does not
-> > do any runtime relocation processing.
-> >
-> > This will catch, for example, data relocations created by static
-> > initializers of pointers.
-> >
-> > Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-> > ---
-> >  drivers/firmware/efi/libstub/Makefile | 10 +++++-----
-> >  1 file changed, 5 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-> > index 0bb2916eb12b..2aff59812a54 100644
-> > --- a/drivers/firmware/efi/libstub/Makefile
-> > +++ b/drivers/firmware/efi/libstub/Makefile
-> > @@ -96,6 +96,8 @@ STUBCOPY_RELOC-$(CONFIG_ARM)  := R_ARM_ABS
-> >  # .bss section here so it's easy to pick out in the linker script.
-> >  #
-> >  STUBCOPY_FLAGS-$(CONFIG_X86)   += --rename-section .bss=.bss.efistub,load,alloc
-> > +STUBCOPY_RELOC-$(CONFIG_X86_32) := 'R_X86_32_(8|16|32)'
-> 
-> This should be R_386_xxx
+On Thu, 16 Apr 2020 08:40:31 -0600
+Alex Williamson <alex.williamson@redhat.com> wrote:
 
-Oops. I tested 64-bit but not 32-bit. I'll fix.
+> On Thu, 16 Apr 2020 10:40:03 +0000
+> "Liu, Yi L" <yi.l.liu@intel.com> wrote:
+> 
+> > Hi Alex,
+> > Still have a direction question with you. Better get agreement with you
+> > before heading forward.
+> >   
+> > > From: Alex Williamson <alex.williamson@redhat.com>
+> > > Sent: Friday, April 3, 2020 11:35 PM    
+> > [...]  
+> > > > > > + *
+> > > > > > + * returns: 0 on success, -errno on failure.
+> > > > > > + */
+> > > > > > +struct vfio_iommu_type1_cache_invalidate {
+> > > > > > +	__u32   argsz;
+> > > > > > +	__u32   flags;
+> > > > > > +	struct	iommu_cache_invalidate_info cache_info;
+> > > > > > +};
+> > > > > > +#define VFIO_IOMMU_CACHE_INVALIDATE      _IO(VFIO_TYPE,    
+> > > VFIO_BASE    
+> > > > > + 24)
+> > > > >
+> > > > > The future extension capabilities of this ioctl worry me, I wonder if
+> > > > > we should do another data[] with flag defining that data as CACHE_INFO.    
+> > > >
+> > > > Can you elaborate? Does it mean with this way we don't rely on iommu
+> > > > driver to provide version_to_size conversion and instead we just pass
+> > > > data[] to iommu driver for further audit?    
+> > > 
+> > > No, my concern is that this ioctl has a single function, strictly tied
+> > > to the iommu uapi.  If we replace cache_info with data[] then we can
+> > > define a flag to specify that data[] is struct
+> > > iommu_cache_invalidate_info, and if we need to, a different flag to
+> > > identify data[] as something else.  For example if we get stuck
+> > > expanding cache_info to meet new demands and develop a new uapi to
+> > > solve that, how would we expand this ioctl to support it rather than
+> > > also create a new ioctl?  There's also a trade-off in making the ioctl
+> > > usage more difficult for the user.  I'd still expect the vfio layer to
+> > > check the flag and interpret data[] as indicated by the flag rather
+> > > than just passing a blob of opaque data to the iommu layer though.
+> > > Thanks,    
+> > 
+> > Based on your comments about defining a single ioctl and a unified
+> > vfio structure (with a @data[] field) for pasid_alloc/free, bind/
+> > unbind_gpasid, cache_inv. After some offline trying, I think it would
+> > be good for bind/unbind_gpasid and cache_inv as both of them use the
+> > iommu uapi definition. While the pasid alloc/free operation doesn't.
+> > It would be weird to put all of them together. So pasid alloc/free
+> > may have a separate ioctl. It would look as below. Does this direction
+> > look good per your opinion?
+> > 
+> > ioctl #22: VFIO_IOMMU_PASID_REQUEST
+> > /**
+> >   * @pasid: used to return the pasid alloc result when flags == ALLOC_PASID
+> >   *         specify a pasid to be freed when flags == FREE_PASID
+> >   * @range: specify the allocation range when flags == ALLOC_PASID
+> >   */
+> > struct vfio_iommu_pasid_request {
+> > 	__u32	argsz;
+> > #define VFIO_IOMMU_ALLOC_PASID	(1 << 0)
+> > #define VFIO_IOMMU_FREE_PASID	(1 << 1)
+> > 	__u32	flags;
+> > 	__u32	pasid;
+> > 	struct {
+> > 		__u32	min;
+> > 		__u32	max;
+> > 	} range;
+> > };  
+> 
+> Can't the ioctl return the pasid valid on alloc (like GET_DEVICE_FD)?
 
-> 
-> > +STUBCOPY_RELOC-$(CONFIG_X86_64) := 'R_X86_64_(8|16|32|32S|64)'
-> >
-> 
-> ... and in general, I think we only need the native pointer sized ones, so
-> 
-> R_386_32
-> R_X86_64_64
+s/valid/value/
 
-Ok.
+> Would it be useful to support freeing a range of pasids?  If so then we
+> could simply use range for both, ie. allocate a pasid from this range
+> and return it, or free all pasids in this range?  vfio already needs to
+> track pasids to free them on release, so presumably this is something
+> we could support easily.
+>  
+> > ioctl #23: VFIO_IOMMU_NESTING_OP
+> > struct vfio_iommu_type1_nesting_op {
+> > 	__u32	argsz;
+> > 	__u32	flags;
+> > 	__u32	op;
+> > 	__u8	data[];
+> > };  
+> 
+> data only has 4-byte alignment, I think we really want it at an 8-byte
+> alignment.  This is why I embedded the "op" into the flag for
+> DEVICE_FEATURE.  Thanks,
+> 
+> Alex
+> 
+> > 
+> > /* Nesting Ops */
+> > #define VFIO_IOMMU_NESTING_OP_BIND_PGTBL        0
+> > #define VFIO_IOMMU_NESTING_OP_UNBIND_PGTBL      1
+> > #define VFIO_IOMMU_NESTING_OP_CACHE_INVLD       2
+> >  
+> > Thanks,
+> > Yi Liu
+> >   
+> 
+> _______________________________________________
+> iommu mailing list
+> iommu@lists.linux-foundation.org
+> https://lists.linuxfoundation.org/mailman/listinfo/iommu
+> 
 
-> 
-> >  $(obj)/%.stub.o: $(obj)/%.o FORCE
-> >         $(call if_changed,stubcopy)
-> > @@ -107,16 +109,14 @@ $(obj)/%.stub.o: $(obj)/%.o FORCE
-> >  # this time, use objcopy and leave all sections in place.
-> >  #
-> >
-> > -cmd_stubrelocs_check-y = /bin/true
-> > -
-> > -cmd_stubrelocs_check-$(CONFIG_EFI_ARMSTUB) =                           \
-> > +cmd_stubrelocs_check =                                                 \
-> >         $(STRIP) --strip-debug -o $@ $<;                                \
-> > -       if $(OBJDUMP) -r $@ | grep $(STUBCOPY_RELOC-y); then            \
-> > +       if $(OBJDUMP) -r $@ | grep -E $(STUBCOPY_RELOC-y); then         \
-> 
-> ... which means we don't need to -E either
-> 
-> >                 echo "$@: absolute symbol references not allowed in the EFI stub" >&2; \
-> >                 /bin/false;                                             \
-> >         fi
-> >
-> >  quiet_cmd_stubcopy = STUBCPY $@
-> >        cmd_stubcopy =                                                   \
-> > -       $(cmd_stubrelocs_check-y);                                      \
-> > +       $(cmd_stubrelocs_check);                                        \
-> >         $(OBJCOPY) $(STUBCOPY_FLAGS-y) $< $@
-> > --
-> > 2.24.1
-> >
-> 
-> Could we fold this into the previous x86 patch, and drop the one that
-> splits off the relocation check from stubcpy?
-
-Will do.
