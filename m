@@ -2,159 +2,139 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7CCFC352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70C72C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:02:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F356214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:01:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D000214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:02:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Vs9mBwFJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l9OHz4Xu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2894687AbgDPNBz (ORCPT
+        id S2894778AbgDPNCx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:01:55 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:21516 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2894700AbgDPNBs (ORCPT
+        Thu, 16 Apr 2020 09:02:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51772 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2894629AbgDPNCp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:01:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587042104;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Eu6b6HDAloa0ypWgaxME9iI3u+iDHWfSGslG1thqHSI=;
-        b=Vs9mBwFJtn3uZ8Bld7z0BW26cBoLpNkKFwIaotRLczUbtX0Pv1hbJUlWbY8UfCQWQI42td
-        YVVc4csSYl07jpuVUC7zQhBADdSjRv2edYqqnk1GMjm76/RX5suUQtVl8usr6QVAICQsfN
-        ZEplv6tKl4afGoopIrOiUgOKIpUfvU0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-135-hChMLAzGMqqPJHzgmWdWww-1; Thu, 16 Apr 2020 09:01:43 -0400
-X-MC-Unique: hChMLAzGMqqPJHzgmWdWww-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A7B32802564;
-        Thu, 16 Apr 2020 13:01:41 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-113-129.rdu2.redhat.com [10.10.113.129])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C45B75DA89;
-        Thu, 16 Apr 2020 13:01:39 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <87v9lzu3cx.fsf@oldenburg2.str.redhat.com>
-References: <87v9lzu3cx.fsf@oldenburg2.str.redhat.com> <874ktl2ide.fsf@oldenburg2.str.redhat.com> <3865908.1586874010@warthog.procyon.org.uk> <128769.1587032833@warthog.procyon.org.uk>
-To:     Florian Weimer <fweimer@redhat.com>
-Cc:     dhowells@redhat.com, linux-nfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org, linux-afs@lists.infradead.org,
-        ceph-devel@vger.kernel.org, keyrings@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: What's a good default TTL for DNS keys in the kernel
+        Thu, 16 Apr 2020 09:02:45 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00000C061A0C;
+        Thu, 16 Apr 2020 06:02:44 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id e26so4471148wmk.5;
+        Thu, 16 Apr 2020 06:02:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=DsXbXqSR3WQQ/q3QyWRXNvBRy+VnfDMjqm/TEYscBoU=;
+        b=l9OHz4Xu8UUrVETfqDUe78B77QloOSjAuW1zUUPhF6mnjZNyfmYlTZlstQ7DTLMZXx
+         QZp/1o3zt7Pyua6lAgb+Fg8JZ+UNuL0xMB0C5Rg4lNWyh/Y0n58k3khWQmgQMgFW10vA
+         UZEt/WHoic7XKdFncgmdMdD/ERfOIihkhdAZpnaTfjz7gEfcQKaaIbuGilMxFH/Hmcnq
+         2BajeBWSbyY3UWqPnOuAa6ECF+V1+As5iLm580KPCfBt0++Ja+vZt6Yl9Pj6jFpP4SRk
+         6EYcyexDlQ2/QiQcgXyU+yM+IM2Z3TOfzzI21YEHupFpmb5JU3l3/cnQBP7SsJaWacdV
+         /X0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=DsXbXqSR3WQQ/q3QyWRXNvBRy+VnfDMjqm/TEYscBoU=;
+        b=YjH+W+hL1At2/TEVQLR4Sj2ju5oav+deJEQYTYda1Lc98yx9XzxXF9bbfeTezsQqlQ
+         g5+vd4WeS4BXMT2UeZBEruwJEv2LMrPOVG9nDEVNnMY3PnSJLfleyAJtq6HIxJKHBlHx
+         VYDUGWm5seF3/b5BO3BV7+yvazpCjzbCVyL+rLE+ySXcLlw17ry8pXBbtC1CsKfnP+Gp
+         lQKg6Rj4I61OpX0U2NIReyqpwadaNdZa+Wh49kfG4zR/qv/LD/QskObgooGU7+1AXcIa
+         2NBrJqA3K/sr3fvi8pXmWsRu595aHXEJsVcZMK7y8rEwe2z50fVk0sH9yv6dwu2D46y9
+         ZPFA==
+X-Gm-Message-State: AGi0PuYEpUweRxu+BeDXJ7FWjC8zXEV0UTz9WV+ZbOF91gXTKBhK0dmz
+        hzkQUwgW7xon6LyIv/PDT3M=
+X-Google-Smtp-Source: APiQypJmGVgOCUB4Bi9u+4yal3fthikSw/VxSVv6cs2uWMvyqqMrS3fjb25iU4fphqExvZQpuidm6Q==
+X-Received: by 2002:a1c:7706:: with SMTP id t6mr4806123wmi.110.1587042163757;
+        Thu, 16 Apr 2020 06:02:43 -0700 (PDT)
+Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id c18sm26903597wrx.5.2020.04.16.06.02.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Apr 2020 06:02:42 -0700 (PDT)
+Subject: Re: [PATCH 2/4] arm64: dts: rockchip: Add RGA support to the PX30
+To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Jacob Chen <jacob-chen@iotwrt.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Hans Verkuil <hansverk@cisco.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+References: <20200416115047.233720-1-paul.kocialkowski@bootlin.com>
+ <20200416115047.233720-3-paul.kocialkowski@bootlin.com>
+From:   Johan Jonker <jbx6244@gmail.com>
+Message-ID: <478f0a8b-f819-62f4-83b8-27918c4c2431@gmail.com>
+Date:   Thu, 16 Apr 2020 15:02:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <142354.1587042098.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Thu, 16 Apr 2020 14:01:38 +0100
-Message-ID: <142355.1587042098@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <20200416115047.233720-3-paul.kocialkowski@bootlin.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Florian Weimer <fweimer@redhat.com> wrote:
+Hi Paul,
 
-> > Florian Weimer <fweimer@redhat.com> wrote:
-> >
-> >> You can get the real TTL if you do a DNS resolution on the name and
-> >> match the addresses against what you get out of the NSS functions.  I=
-f
-> >> they match, you can use the TTL from DNS.  Hackish, but it does give =
-you
-> >> *some* TTL value.
-> >
-> > I guess I'd have to do that in parallel.
-> =
+The conversion of rockchip-rga.txt to rockchip-rga.yaml by myself just
+has been approved by robh.
+Maybe place dts patches at the end of a patch serie.
+Could you include a &rga patch if your device is supported in mainline,
+so we can test with:
+make ARCH=arm64 dtbs_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/rockchip-rga.yaml
 
-> Not necessary.  You can do the getaddrinfo lookup first and then perform
-> the query.
+Johan
 
-That means that the latency of both is added together and causes the first
-mount to take longer - though as long as you have a local DNS cache, that'=
-s
-fine.
+On 4/16/20 1:50 PM, Paul Kocialkowski wrote:
+> The PX30 features a RGA block: add the necessary node to support it.
+> 
+> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> ---
+>  arch/arm64/boot/dts/rockchip/px30.dtsi | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/px30.dtsi b/arch/arm64/boot/dts/rockchip/px30.dtsi
+> index 75908c587511..4bfbee9d4123 100644
+> --- a/arch/arm64/boot/dts/rockchip/px30.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/px30.dtsi
+> @@ -1104,6 +1104,17 @@ vopl_mmu: iommu@ff470f00 {
+>  		status = "disabled";
+>  	};
+>  
+> +	rga: rga@ff480000 {
+> +		compatible = "rockchip,px30-rga";
+> +		reg = <0x0 0xff480000 0x0 0x10000>;
+> +		interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH 0>;
+> +		clocks = <&cru ACLK_RGA>, <&cru HCLK_RGA>, <&cru SCLK_RGA_CORE>;
+> +		clock-names = "aclk", "hclk", "sclk";
+> +		resets = <&cru SRST_RGA>, <&cru SRST_RGA_A>, <&cru SRST_RGA_H>;
+> +		reset-names = "core", "axi", "ahb";
+> +		power-domains = <&power PX30_PD_VO>;
 
-> > AFS keeps track of the expiration on the record and will issue a new l=
-ookup
-> > when the data expires, but NFS doesn't make use of this information.
-> =
+		status = "disabled";
 
-> And it will switch servers at that point?  Or only if the existing
-> server association fails/times out?
-
-AFS will switch servers at the next operation if the server list changes. =
- And
-if the current op tries to access an old server and gets bounced, this sho=
-uld
-trigger an immediate reevaluation.  It also regularly probes the servers a=
-nd
-interfaces it knows about to find which one's accessible and which has the
-best response and can switch servers on that basis also.
-
-I should also note that AFS deletes the dns_resolver key after reading it =
-and
-maintains the expiry information in its internal structs.
-
-Note also that in AFS this only applies to locating the Volume Location
-servers (which is a layer of abstraction that hides which server(s) a volu=
-me
-resides on and what their addresses are).  The VL service is queried to fi=
-nd
-out where file servers are (giving you their addresses itself so you don't
-need to access the DNS there).
-
-> > The keyring subsystem will itself dispose of dns_resolver keys that
-> > expire and request_key() will only upcall again if the key has
-> > expired.
-> =
-
-> What's are higher-level effects of that?
-
-If the record never expires (the current case), the address lookup in the
-kernel (dns_query()) will always return the same address until someone
-manually evicts it.
-
-Otherwise, once the record expires, the kernel will just upcall again.
-
-> I'm still not convinced that the kernel *needs* accurate TTL
-> information.  The benefit from upcall avoidance likely vanishes quickly
-> after the in-kernel TTL increases beyond 5 or so.  That's just my guess,
-> though.
-
-You might be right - certainly for NFS and CIFS where the address ascribed=
- to
-a superblock is hard to change as it partly defines the superblock.  Chang=
-e
-the address and your superblock in now a different thing as far as the VFS=
- is
-concerned.
-
-This makes fscache indexing tricky for NFS.  How do you define a superbloc=
-k?
-Is it address?  Is it hostname?  What happens if one or the other changes?
-What happens if there are two or more addresses (say ipv4 and ipv6 addrs)?
-
-AFS defined some abstractions for this: the cell name and the volume ID
-number.  The physical location of the volume doesn't matter - and the volu=
-me
-can even be moved around whilst in use.
-
-David
+> +	};
+> +
+>  	qos_gmac: qos@ff518000 {
+>  		compatible = "syscon";
+>  		reg = <0x0 0xff518000 0x0 0x20>;
+> 
 
