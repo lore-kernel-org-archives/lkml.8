@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F0B3C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:35:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 183C4C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:35:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE15B2223D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:35:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E339C21D91
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:35:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587051330;
-	bh=iGAvezQIXpomV+U2h6LGXS5TodfnQCAsqZ5z6i5QdVU=;
+	s=default; t=1587051340;
+	bh=j2JTeMUQcJQF4DGF/2vYwdzn6cK3zbBJV6eCQlvgkOc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pQBoztWYkoJqv+A8AEbQ7QMagQNYlGFPfvUF+yhfmyItZM5d7NhXs/wvOWUlIiiks
-	 YBjQedlRk9vqY+29TvZgfDYmqHbtvLd3738+GzB4fiDJyxaPxwUJ29K6PIW9uXBC7/
-	 ECMNQ+u9n1fI++VeX+GvpvubyKRKjZqD3k4ehhYk=
+	b=hCfwFU6+RfURAqGPDoOez7j8T9MLXEUq9ELPo79lxePGG7i6XwR/bNbBr6FMsK2Y2
+	 Q9Ka7TSh/UMZ1LUWeEAGzffOQfDOZbt7dysNfAtUmP238Ue9uCSEH73smTyTj9wnQK
+	 wX5tXHRD/jnqyNqXp4GkwlWyNFkTPmLKOLenhVdM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506268AbgDPPf3 (ORCPT
+        id S2894618AbgDPPfj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:35:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53048 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:35:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897379AbgDPNk2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:40:28 -0400
+        id S2898100AbgDPNkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:40:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0623D20732;
-        Thu, 16 Apr 2020 13:40:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 132BB20732;
+        Thu, 16 Apr 2020 13:40:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044427;
-        bh=iGAvezQIXpomV+U2h6LGXS5TodfnQCAsqZ5z6i5QdVU=;
+        s=default; t=1587044422;
+        bh=j2JTeMUQcJQF4DGF/2vYwdzn6cK3zbBJV6eCQlvgkOc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AIF5VgD6s0iUghEfTSXpb85szNDXKN5P7+s3naHo33rNdDoE2eKr2pZxd1JFUw/Z1
-         +D9Bbwykcd0TCqMlNPCVNmp/PadiAE6AVqvclGl+fbnG85BuqqF9mQOd3DSkxrUzYU
-         6YMLqXJbqlhWUpjqp0YyOcRBC/OdojFnN0NVJLYc=
+        b=EKzx3VTuK/riUi7vKIYS6HJFeoPYNTNwSKGZhFHlRi3r2zKmBJpiJ55tUkqc/8UmB
+         4Mh/r3qSHexDiGbwfM7u8PVmKwMRKHqwSrJhHOQHphlf2pcjj8NsKnXvEQLAgkKXOl
+         NYlKM7nhYx+DREDyigWcamA4QOeDSab8zo1sa7LI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Libor Pechacek <lpechacek@suse.cz>,
-        Michal Suchanek <msuchanek@suse.de>,
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
         Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.5 214/257] powerpc/pseries: Avoid NULL pointer dereference when drmem is unavailable
-Date:   Thu, 16 Apr 2020 15:24:25 +0200
-Message-Id: <20200416131352.769866052@linuxfoundation.org>
+Subject: [PATCH 5.5 204/257] selftests/powerpc: Add tlbie_test in .gitignore
+Date:   Thu, 16 Apr 2020 15:24:15 +0200
+Message-Id: <20200416131351.561449010@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -60,101 +59,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Libor Pechacek <lpechacek@suse.cz>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit a83836dbc53e96f13fec248ecc201d18e1e3111d upstream.
+commit 47bf235f324c696395c30541fe4fcf99fcd24188 upstream.
 
-In guests without hotplugagble memory drmem structure is only zero
-initialized. Trying to manipulate DLPAR parameters results in a crash.
+The commit identified below added tlbie_test but forgot to add it in
+.gitignore.
 
-  $ echo "memory add count 1" > /sys/kernel/dlpar
-  Oops: Kernel access of bad area, sig: 11 [#1]
-  LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
-  ...
-  NIP:  c0000000000ff294 LR: c0000000000ff248 CTR: 0000000000000000
-  REGS: c0000000fb9d3880 TRAP: 0300   Tainted: G            E      (5.5.0-rc6-2-default)
-  MSR:  8000000000009033 <SF,EE,ME,IR,DR,RI,LE>  CR: 28242428  XER: 20000000
-  CFAR: c0000000009a6c10 DAR: 0000000000000010 DSISR: 40000000 IRQMASK: 0
-  ...
-  NIP dlpar_memory+0x6e4/0xd00
-  LR  dlpar_memory+0x698/0xd00
-  Call Trace:
-    dlpar_memory+0x698/0xd00 (unreliable)
-    handle_dlpar_errorlog+0xc0/0x190
-    dlpar_store+0x198/0x4a0
-    kobj_attr_store+0x30/0x50
-    sysfs_kf_write+0x64/0x90
-    kernfs_fop_write+0x1b0/0x290
-    __vfs_write+0x3c/0x70
-    vfs_write+0xd0/0x260
-    ksys_write+0xdc/0x130
-    system_call+0x5c/0x68
-
-Taking closer look at the code, I can see that for_each_drmem_lmb is a
-macro expanding into `for (lmb = &drmem_info->lmbs[0]; lmb <=
-&drmem_info->lmbs[drmem_info->n_lmbs - 1]; lmb++)`. When drmem_info->lmbs
-is NULL, the loop would iterate through the whole address range if it
-weren't stopped by the NULL pointer dereference on the next line.
-
-This patch aligns for_each_drmem_lmb and for_each_drmem_lmb_in_range
-macro behavior with the common C semantics, where the end marker does
-not belong to the scanned range, and alters get_lmb_range() semantics.
-As a side effect, the wraparound observed in the crash is prevented.
-
-Fixes: 6c6ea53725b3 ("powerpc/mm: Separate ibm, dynamic-memory data from DT format")
-Cc: stable@vger.kernel.org # v4.16+
-Signed-off-by: Libor Pechacek <lpechacek@suse.cz>
-Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+Fixes: 93cad5f78995 ("selftests/powerpc: Add test case for tlbie vs mtpidr ordering issue")
+Cc: stable@vger.kernel.org # v5.4+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200131132829.10281-1-msuchanek@suse.de
+Link: https://lore.kernel.org/r/259f9c06ed4563c4fa4fa8ffa652347278d769e7.1582847784.git.christophe.leroy@c-s.fr
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/include/asm/drmem.h                |    4 ++--
- arch/powerpc/platforms/pseries/hotplug-memory.c |    8 ++++----
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ tools/testing/selftests/powerpc/mm/.gitignore |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/powerpc/include/asm/drmem.h
-+++ b/arch/powerpc/include/asm/drmem.h
-@@ -27,12 +27,12 @@ struct drmem_lmb_info {
- extern struct drmem_lmb_info *drmem_info;
- 
- #define for_each_drmem_lmb_in_range(lmb, start, end)		\
--	for ((lmb) = (start); (lmb) <= (end); (lmb)++)
-+	for ((lmb) = (start); (lmb) < (end); (lmb)++)
- 
- #define for_each_drmem_lmb(lmb)					\
- 	for_each_drmem_lmb_in_range((lmb),			\
- 		&drmem_info->lmbs[0],				\
--		&drmem_info->lmbs[drmem_info->n_lmbs - 1])
-+		&drmem_info->lmbs[drmem_info->n_lmbs])
- 
- /*
-  * The of_drconf_cell_v1 struct defines the layout of the LMB data
---- a/arch/powerpc/platforms/pseries/hotplug-memory.c
-+++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
-@@ -223,7 +223,7 @@ static int get_lmb_range(u32 drc_index,
- 			 struct drmem_lmb **end_lmb)
- {
- 	struct drmem_lmb *lmb, *start, *end;
--	struct drmem_lmb *last_lmb;
-+	struct drmem_lmb *limit;
- 
- 	start = NULL;
- 	for_each_drmem_lmb(lmb) {
-@@ -236,10 +236,10 @@ static int get_lmb_range(u32 drc_index,
- 	if (!start)
- 		return -EINVAL;
- 
--	end = &start[n_lmbs - 1];
-+	end = &start[n_lmbs];
- 
--	last_lmb = &drmem_info->lmbs[drmem_info->n_lmbs - 1];
--	if (end > last_lmb)
-+	limit = &drmem_info->lmbs[drmem_info->n_lmbs];
-+	if (end > limit)
- 		return -EINVAL;
- 
- 	*start_lmb = start;
+--- a/tools/testing/selftests/powerpc/mm/.gitignore
++++ b/tools/testing/selftests/powerpc/mm/.gitignore
+@@ -5,3 +5,4 @@ prot_sao
+ segv_errors
+ wild_bctr
+ large_vm_fork_separation
++tlbie_test
 
 
