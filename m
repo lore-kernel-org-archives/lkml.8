@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F7FAC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:41:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80119C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50C1521D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:41:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59CD321D94
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:41:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587048107;
-	bh=If3d0bFf0ABqG7dx9nfsBE7DqGX0DiVXtdEGTMR+un8=;
+	s=default; t=1587048109;
+	bh=6TTcpu+0ILQXfGivzEXVIP+0l4H93b4bpnRFX31rZqE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BXNllkp9lIwV1fMtfLxy8OFBB9y7qVnoZZwvNoqN0NkFbskC62UT+wDBZhRdtcI5f
-	 9AdFPY+woRof7l0mJtbulHXU15hcWdStEhcNxcKe81CZUvj6Rz+ZGtstECsCYdNvuX
-	 H2E6Ed0KyoU287jHC6GQtGky/DChU0ZUmoQefWXI=
+	b=TPEhFAyKOdJu5uW1szn1G5uHibcCFEVvNZDt50Bq+4lHQJU8+Ezbc3kWrSryhVLKd
+	 Jxzgr2ZxffK315vLY8Xv6bT+YjH3FPfq79CjpGlqOv0PKVOzyJcaerOinyDRJjFnZi
+	 R2L4EYfpEw2a/l+wUiY0/3CRimzS3UWOM/ohzPUc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392741AbgDPOBI (ORCPT
+        id S2394459AbgDPOlr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:01:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53284 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:41:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898143AbgDPNkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:40:37 -0400
+        id S2392752AbgDPOBP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:01:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D11102076D;
-        Thu, 16 Apr 2020 13:40:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 268CF20732;
+        Thu, 16 Apr 2020 14:01:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044437;
-        bh=If3d0bFf0ABqG7dx9nfsBE7DqGX0DiVXtdEGTMR+un8=;
+        s=default; t=1587045674;
+        bh=6TTcpu+0ILQXfGivzEXVIP+0l4H93b4bpnRFX31rZqE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cVdxwL2TV10vTk8W1QCXfO2wDHcX/1iJIgvGTVp7zDDRBv+D4kysQf7Ej2RRoxSXT
-         VLZNHfhI1yy741clRLissR0Ix0aT/31wgP29DLrOk409YjrDmU+WCTmxL5Bk2j9mA4
-         y+H0RUIF09L27z7Az4bWOtLUdNM67+ShuuXLr3i8=
+        b=HhgYA9TAegDBd4GFu0QKsD52A3NfCwd0QCJuQ56F/f1tqpYljnwUAGjDZ2INdiyNR
+         CkNBlSruY3jvzJ9Jy/Vp3BK/XkejFy/hdIdZxAMS5tRED5f4Z9uKVATMjxbycN4XEt
+         eAIJwR6KIk3we5lkSsVdffOspXnXdNO5/3QGi2+0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-Subject: [PATCH 5.5 218/257] NFS: Fix a page leak in nfs_destroy_unlinked_subrequests()
-Date:   Thu, 16 Apr 2020 15:24:29 +0200
-Message-Id: <20200416131353.238465268@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Subject: [PATCH 5.6 182/254] xarray: Fix early termination of xas_for_each_marked
+Date:   Thu, 16 Apr 2020 15:24:31 +0200
+Message-Id: <20200416131349.154274290@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
-References: <20200416131325.891903893@linuxfoundation.org>
+In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
+References: <20200416131325.804095985@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,31 +59,204 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Matthew Wilcox (Oracle) <willy@infradead.org>
 
-commit add42de31721fa29ed77a7ce388674d69f9d31a4 upstream.
+commit 7e934cf5ace1dceeb804f7493fa28bb697ed3c52 upstream.
 
-When we detach a subrequest from the list, we must also release the
-reference it holds to the parent.
+xas_for_each_marked() is using entry == NULL as a termination condition
+of the iteration. When xas_for_each_marked() is used protected only by
+RCU, this can however race with xas_store(xas, NULL) in the following
+way:
 
-Fixes: 5b2b5187fa85 ("NFS: Fix nfs_page_group_destroy() and nfs_lock_and_join_requests() race cases")
-Cc: stable@vger.kernel.org # v4.14+
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+TASK1                                   TASK2
+page_cache_delete()         	        find_get_pages_range_tag()
+                                          xas_for_each_marked()
+                                            xas_find_marked()
+                                              off = xas_find_chunk()
+
+  xas_store(&xas, NULL)
+    xas_init_marks(&xas);
+    ...
+    rcu_assign_pointer(*slot, NULL);
+                                              entry = xa_entry(off);
+
+And thus xas_for_each_marked() terminates prematurely possibly leading
+to missed entries in the iteration (translating to missing writeback of
+some pages or a similar problem).
+
+If we find a NULL entry that has been marked, skip it (unless we're trying
+to allocate an entry).
+
+Reported-by: Jan Kara <jack@suse.cz>
+CC: stable@vger.kernel.org
+Fixes: ef8e5717db01 ("page cache: Convert delete_batch to XArray")
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/write.c |    1 +
- 1 file changed, 1 insertion(+)
+ include/linux/xarray.h                       |    6 +
+ lib/xarray.c                                 |    2 
+ tools/testing/radix-tree/Makefile            |    4 -
+ tools/testing/radix-tree/iteration_check_2.c |   87 +++++++++++++++++++++++++++
+ tools/testing/radix-tree/main.c              |    1 
+ tools/testing/radix-tree/test.h              |    1 
+ 6 files changed, 98 insertions(+), 3 deletions(-)
 
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -441,6 +441,7 @@ nfs_destroy_unlinked_subrequests(struct
+--- a/include/linux/xarray.h
++++ b/include/linux/xarray.h
+@@ -1648,6 +1648,7 @@ static inline void *xas_next_marked(stru
+ 								xa_mark_t mark)
+ {
+ 	struct xa_node *node = xas->xa_node;
++	void *entry;
+ 	unsigned int offset;
+ 
+ 	if (unlikely(xas_not_node(node) || node->shift))
+@@ -1659,7 +1660,10 @@ static inline void *xas_next_marked(stru
+ 		return NULL;
+ 	if (offset == XA_CHUNK_SIZE)
+ 		return xas_find_marked(xas, max, mark);
+-	return xa_entry(xas->xa, node, offset);
++	entry = xa_entry(xas->xa, node, offset);
++	if (!entry)
++		return xas_find_marked(xas, max, mark);
++	return entry;
+ }
+ 
+ /*
+--- a/lib/xarray.c
++++ b/lib/xarray.c
+@@ -1208,6 +1208,8 @@ void *xas_find_marked(struct xa_state *x
  		}
  
- 		subreq->wb_head = subreq;
-+		nfs_release_request(old_head);
+ 		entry = xa_entry(xas->xa, xas->xa_node, xas->xa_offset);
++		if (!entry && !(xa_track_free(xas->xa) && mark == XA_FREE_MARK))
++			continue;
+ 		if (!xa_is_node(entry))
+ 			return entry;
+ 		xas->xa_node = xa_to_node(entry);
+--- a/tools/testing/radix-tree/Makefile
++++ b/tools/testing/radix-tree/Makefile
+@@ -7,8 +7,8 @@ LDLIBS+= -lpthread -lurcu
+ TARGETS = main idr-test multiorder xarray
+ CORE_OFILES := xarray.o radix-tree.o idr.o linux.o test.o find_bit.o bitmap.o
+ OFILES = main.o $(CORE_OFILES) regression1.o regression2.o regression3.o \
+-	 regression4.o \
+-	 tag_check.o multiorder.o idr-test.o iteration_check.o benchmark.o
++	 regression4.o tag_check.o multiorder.o idr-test.o iteration_check.o \
++	 iteration_check_2.o benchmark.o
  
- 		if (test_and_clear_bit(PG_INODE_REF, &subreq->wb_flags)) {
- 			nfs_release_request(subreq);
+ ifndef SHIFT
+ 	SHIFT=3
+--- /dev/null
++++ b/tools/testing/radix-tree/iteration_check_2.c
+@@ -0,0 +1,87 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * iteration_check_2.c: Check that deleting a tagged entry doesn't cause
++ * an RCU walker to finish early.
++ * Copyright (c) 2020 Oracle
++ * Author: Matthew Wilcox <willy@infradead.org>
++ */
++#include <pthread.h>
++#include "test.h"
++
++static volatile bool test_complete;
++
++static void *iterator(void *arg)
++{
++	XA_STATE(xas, arg, 0);
++	void *entry;
++
++	rcu_register_thread();
++
++	while (!test_complete) {
++		xas_set(&xas, 0);
++		rcu_read_lock();
++		xas_for_each_marked(&xas, entry, ULONG_MAX, XA_MARK_0)
++			;
++		rcu_read_unlock();
++		assert(xas.xa_index >= 100);
++	}
++
++	rcu_unregister_thread();
++	return NULL;
++}
++
++static void *throbber(void *arg)
++{
++	struct xarray *xa = arg;
++
++	rcu_register_thread();
++
++	while (!test_complete) {
++		int i;
++
++		for (i = 0; i < 100; i++) {
++			xa_store(xa, i, xa_mk_value(i), GFP_KERNEL);
++			xa_set_mark(xa, i, XA_MARK_0);
++		}
++		for (i = 0; i < 100; i++)
++			xa_erase(xa, i);
++	}
++
++	rcu_unregister_thread();
++	return NULL;
++}
++
++void iteration_test2(unsigned test_duration)
++{
++	pthread_t threads[2];
++	DEFINE_XARRAY(array);
++	int i;
++
++	printv(1, "Running iteration test 2 for %d seconds\n", test_duration);
++
++	test_complete = false;
++
++	xa_store(&array, 100, xa_mk_value(100), GFP_KERNEL);
++	xa_set_mark(&array, 100, XA_MARK_0);
++
++	if (pthread_create(&threads[0], NULL, iterator, &array)) {
++		perror("create iterator thread");
++		exit(1);
++	}
++	if (pthread_create(&threads[1], NULL, throbber, &array)) {
++		perror("create throbber thread");
++		exit(1);
++	}
++
++	sleep(test_duration);
++	test_complete = true;
++
++	for (i = 0; i < 2; i++) {
++		if (pthread_join(threads[i], NULL)) {
++			perror("pthread_join");
++			exit(1);
++		}
++	}
++
++	xa_destroy(&array);
++}
+--- a/tools/testing/radix-tree/main.c
++++ b/tools/testing/radix-tree/main.c
+@@ -311,6 +311,7 @@ int main(int argc, char **argv)
+ 	regression4_test();
+ 	iteration_test(0, 10 + 90 * long_run);
+ 	iteration_test(7, 10 + 90 * long_run);
++	iteration_test2(10 + 90 * long_run);
+ 	single_thread_tests(long_run);
+ 
+ 	/* Free any remaining preallocated nodes */
+--- a/tools/testing/radix-tree/test.h
++++ b/tools/testing/radix-tree/test.h
+@@ -34,6 +34,7 @@ void xarray_tests(void);
+ void tag_check(void);
+ void multiorder_checks(void);
+ void iteration_test(unsigned order, unsigned duration);
++void iteration_test2(unsigned duration);
+ void benchmark(void);
+ void idr_checks(void);
+ void ida_tests(void);
 
 
