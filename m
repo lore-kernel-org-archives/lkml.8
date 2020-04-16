@@ -2,87 +2,83 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD5AC2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 00:10:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94485C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 00:11:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 974852076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 00:10:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586995802;
-	bh=7OoEdTIbZbawvfXHjZVQWrdguetwyrwt+MnIwYEPXwo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UlSGOilHs6Y4XyVGdDET556PAOK2XCVgpqwX2mUtXYDMF0sRPhR3mFxZYgER3WAn3
-	 2FYGtMIJKrJ77FYNwurLVrF4YDFO5otTz2qAYtfbq/wHL7WgSXxjkXeIQoGoteb44L
-	 kZiq3hIwv3QcWm+HVwk4Qebq/mXmPCgJQy3E8VRo=
+	by mail.kernel.org (Postfix) with ESMTP id 6B1A52076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 00:11:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391372AbgDPAJ6 (ORCPT
+        id S2391444AbgDPALY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Apr 2020 20:09:58 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:44539 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732827AbgDPAJo (ORCPT
+        Wed, 15 Apr 2020 20:11:24 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:36083 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391270AbgDPALG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Apr 2020 20:09:44 -0400
-Received: by mail-pf1-f194.google.com with SMTP id b72so791223pfb.11;
-        Wed, 15 Apr 2020 17:09:42 -0700 (PDT)
+        Wed, 15 Apr 2020 20:11:06 -0400
+Received: by mail-io1-f69.google.com with SMTP id p9so6759964ioh.3
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 17:11:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MpW66db2TQolWnI94YZHor4fyLu1EvPbEE+3crcrgOA=;
-        b=aT9XffR2zO2o8DBzAsHDzQ9lZki09VTdlA0sGuWrpNmacdEUMdnNCk4r82xaPrQsUv
-         CmS60ERiO40DdDbXUrf1bMQnbMsnvmWqMaPPw1+ighQXy8A5UVeVMwcrkUZblaMygLLy
-         gIybm1q8WNNTatdzGBV2AQa0r+8lYsId0ulLi5ToYJYpZ0YHN+ZmDZYbr06c0EJlbUx3
-         gnIWXWS+tlezqcrG7ZeRoOoKsE44SLGEwJt0PvVy3ODg9K/zVEez9tly+BwYjYEQPSID
-         xC8ZQjVqM2Apdaf801rF16bGjkVlwOGxuTCvLgRNHrJNWpdyyIHJkvReL2g9HbZD/dgO
-         6LHg==
-X-Gm-Message-State: AGi0PuZrOPF57EMbZgsK2NC456IMZPwP9PJLdZ+uXV5SkRuuvK7lJUiT
-        lB7Q/p/r9u7WGrb4rU6dvps=
-X-Google-Smtp-Source: APiQypLrQO2DM+Ep9IB6PtTHaaRO59cFlOYiTyody/qhtTsCEdrSI5RZRl9YI2E2UEk4F4CVu8xz7A==
-X-Received: by 2002:a65:6887:: with SMTP id e7mr8956981pgt.318.1586995782145;
-        Wed, 15 Apr 2020 17:09:42 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id t12sm9468095pgm.37.2020.04.15.17.09.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2020 17:09:40 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 2070140277; Thu, 16 Apr 2020 00:09:40 +0000 (UTC)
-Date:   Thu, 16 Apr 2020 00:09:40 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Xiaoming Ni <nixiaoming@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     keescook@chromium.org, yzaikin@google.com,
-        James.Bottomley@HansenPartnership.com, deller@gmx.de,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-parisc@vger.kernel.org, wangle6@huawei.com,
-        victor.lisheng@huawei.com
-Subject: Re: [PATCH] parisc: add sysctl file interface panic_on_stackoverflow
-Message-ID: <20200416000940.GY11244@42.do-not-panic.com>
-References: <1586610379-51745-1-git-send-email-nixiaoming@huawei.com>
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=fpoqVPhszf0NVg05C+Ce87uumBc0cG0RasYX5KRrK/A=;
+        b=twUFJ+s0ioh5PHTp5bpU/F2FTI59EUrki8X0PSEK7C8T8DrHiMXXwzCUXq8nkW2VWf
+         9tvelCVjlIEj/Om3F9C/qBg4H7uNWAlYJ52XJfxkMUgiB33YAXcjkArr3epQ8hs3KXuh
+         cyN9NqQGALT/hIFAT8MckdKseCMT0PoCrXGTtaq2Ee9q5nR6RZq2mwVLszd2Ynd5gkts
+         /enjHm0QGO9tx5ftZlnD76Kgw5qAKgLzD3Z9BcJbKropXEPsNhLkOVETJj8ngLwQZDIa
+         TswYdRgoNkmnojowvsRo3CK8tnWttAIrKx8c+7lFZzukGLoxuBRqmysit3/YJImZds0U
+         tQzg==
+X-Gm-Message-State: AGi0PubGQFlvj/BTwBqjrQWviV1GS1r1/USuNs8htP8+frb98pO8azNM
+        3rAJksbc8uvYW3h51+fFGLj5v0NGVtomZXhjc9V3hoccRr9b
+X-Google-Smtp-Source: APiQypKcCgI3/2owP+Ax+avsl/BzFIkiA31xvFAOZDOMymkWaDm+4dJSPNPqeM8Ut+RNphNBCe4mDPpNDLKfGAmGhhXHK5QOcm+K
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1586610379-51745-1-git-send-email-nixiaoming@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Received: by 2002:a02:7b05:: with SMTP id q5mr28919026jac.105.1586995863913;
+ Wed, 15 Apr 2020 17:11:03 -0700 (PDT)
+Date:   Wed, 15 Apr 2020 17:11:03 -0700
+In-Reply-To: <0000000000003ec128058c7624ec@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000ba8e5605a35d4465@google.com>
+Subject: Re: WARNING in kernfs_create_dir_ns
+From:   syzbot <syzbot+38f5d5cf7ae88c46b11a@syzkaller.appspotmail.com>
+To:     a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org,
+        davem@davemloft.net, gregkh@linuxfoundation.org, hdanton@sina.com,
+        hongjiefang@asrmicro.com, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org, longman@redhat.com,
+        mareklindner@neomailbox.ch, mingo@kernel.org,
+        netdev@vger.kernel.org, peterz@infradead.org,
+        sw@simonwunderlich.de, syzkaller-bugs@googlegroups.com,
+        tj@kernel.org, ulf.hansson@linaro.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 11, 2020 at 09:06:19PM +0800, Xiaoming Ni wrote:
-> The variable sysctl_panic_on_stackoverflow is used in
-> arch/parisc/kernel/irq.c and arch/x86/kernel/irq_32.c, but the sysctl file
-> interface panic_on_stackoverflow only exists on x86.
-> 
-> Add sysctl file interface panic_on_stackoverflow for parisc
-> 
-> Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
+syzbot suspects this bug was fixed by commit:
 
-Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
+commit 810507fe6fd5ff3de429121adff49523fabb643a
+Author: Waiman Long <longman@redhat.com>
+Date:   Thu Feb 6 15:24:08 2020 +0000
 
-  Luis
+    locking/lockdep: Reuse freed chain_hlocks entries
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1008138be00000
+start commit:   72825454 Merge branch 'x86-urgent-for-linus' of git://git...
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9a31528e58cc12e2
+dashboard link: https://syzkaller.appspot.com/bug?extid=38f5d5cf7ae88c46b11a
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12a6c439a00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1353c323a00000
+
+If the result looks correct, please mark the bug fixed by replying with:
+
+#syz fix: locking/lockdep: Reuse freed chain_hlocks entries
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
