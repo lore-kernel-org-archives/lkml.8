@@ -2,52 +2,51 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E78F9C352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:46:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68959C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:46:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C35822076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:46:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 389AF2076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:46:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587044784;
-	bh=lb20TAWB1L8o9R9POCRdfn3ZTAVt4zIsBHpavNxlDo0=;
+	s=default; t=1587044791;
+	bh=HdizPfjVsQk6OW/5Fhc56Trey2v1qKgX3QcEPGOiDjU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2EPBisJkD71+DZ2GbSusa51hm53s+MVw2LPd6+3XcFoV7qxe8bSUJasAmt9KgPMJg
-	 PuPJS1BJZ/uEBBvKHad5AQQrX+2ifp3p6gihB2yjdcOurPHrjPuAZGQ0OLmnqImRlG
-	 ZTUQMbgUIxEoIIJfZO0C7OJ60rMCFZY8kqm8ingQ=
+	b=dWWvKKeWn1BA0J76kgrcUgL4zoJyR61/2yM2H2ijJL7LfZ7U3kFi/aCykKh5WciTl
+	 cLFSX17i8jA8BQ43Z9ecvZ8s06B2Zuexn+OlsS/jO8ss0cYq7pJVvW1V40d8FL6Wj6
+	 CC+lnqRpLdft1Y9tpZJStdCKpTUd1ScVSr6Cjwss=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2898582AbgDPNqX (ORCPT
+        id S2898588AbgDPNq3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:46:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46756 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:46:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897037AbgDPNe7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:34:59 -0400
+        id S2897053AbgDPNfE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:35:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A303A20732;
-        Thu, 16 Apr 2020 13:34:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B003221EB;
+        Thu, 16 Apr 2020 13:35:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044099;
-        bh=lb20TAWB1L8o9R9POCRdfn3ZTAVt4zIsBHpavNxlDo0=;
+        s=default; t=1587044104;
+        bh=HdizPfjVsQk6OW/5Fhc56Trey2v1qKgX3QcEPGOiDjU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rUXo5z69/y3QyHldAtFNbVmqixYZIDbI/qcDRIZDydJ359pxENx6Z9DcV1WS6WV4v
-         785cwdMqGG/MTcTCyTf5M0gEko0Bj0C+gM8XnRfOJ78oqmj0htv49lY5GiU84SWO8+
-         xkuFifSlbWzpo9t4Cz7KASfogEeUL2XfBE5IxpO0=
+        b=XbwFPnG93evRRK7YGKEar/drCMq1AaZq9YaIK+gUp/fFAefNu/K/91PNngTHaV6l/
+         54NpFV9QRC7emE47N9mgsO2d7f0dn5Wr4+EeaGLGk5perUrHf31uuCTO5+ayDUsD51
+         6YBgGaG6+n4QWFClsml6XhV5cVX9jMBlF8NvZjFo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Junyong Sun <sunjunyong@xiaomi.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 073/257] firmware: fix a double abort case with fw_load_sysfs_fallback
-Date:   Thu, 16 Apr 2020 15:22:04 +0200
-Message-Id: <20200416131335.057874466@linuxfoundation.org>
+        stable@vger.kernel.org, Gyeongtaek Lee <gt82.lee@samsung.com>,
+        Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.5 083/257] ASoC: dpcm: allow start or stop during pause for backend
+Date:   Thu, 16 Apr 2020 15:22:14 +0200
+Message-Id: <20200416131336.325424525@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -60,81 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Junyong Sun <sunjy516@gmail.com>
+From: 이경택 <gt82.lee@samsung.com>
 
-[ Upstream commit bcfbd3523f3c6eea51a74d217a8ebc5463bcb7f4 ]
+commit 21fca8bdbb64df1297e8c65a746c4c9f4a689751 upstream.
 
-fw_sysfs_wait_timeout may return err with -ENOENT
-at fw_load_sysfs_fallback and firmware is already
-in abort status, no need to abort again, so skip it.
+soc_compr_trigger_fe() allows start or stop after pause_push.
+In dpcm_be_dai_trigger(), however, only pause_release is allowed
+command after pause_push.
+So, start or stop after pause in compress offload is always
+returned as error if the compress offload is used with dpcm.
+To fix the problem, SND_SOC_DPCM_STATE_PAUSED should be allowed
+for start or stop command.
 
-This issue is caused by concurrent situation like below:
-when thread 1# wait firmware loading, thread 2# may write
--1 to abort loading and wakeup thread 1# before it timeout.
-so wait_for_completion_killable_timeout of thread 1# would
-return remaining time which is != 0 with fw_st->status
-FW_STATUS_ABORTED.And the results would be converted into
-err -ENOENT in __fw_state_wait_common and transfered to
-fw_load_sysfs_fallback in thread 1#.
-The -ENOENT means firmware status is already at ABORTED,
-so fw_load_sysfs_fallback no need to get mutex to abort again.
------------------------------
-thread 1#,wait for loading
-fw_load_sysfs_fallback
- ->fw_sysfs_wait_timeout
-    ->__fw_state_wait_common
-       ->wait_for_completion_killable_timeout
-
-in __fw_state_wait_common,
-...
-93    ret = wait_for_completion_killable_timeout(&fw_st->completion, timeout);
-94    if (ret != 0 && fw_st->status == FW_STATUS_ABORTED)
-95       return -ENOENT;
-96    if (!ret)
-97	 return -ETIMEDOUT;
-98
-99    return ret < 0 ? ret : 0;
------------------------------
-thread 2#, write -1 to abort loading
-firmware_loading_store
- ->fw_load_abort
-   ->__fw_load_abort
-     ->fw_state_aborted
-       ->__fw_state_set
-         ->complete_all
-
-in __fw_state_set,
-...
-111    if (status == FW_STATUS_DONE || status == FW_STATUS_ABORTED)
-112       complete_all(&fw_st->completion);
--------------------------------------------
-BTW,the double abort issue would not cause kernel panic or create an issue,
-but slow down it sometimes.The change is just a minor optimization.
-
-Signed-off-by: Junyong Sun <sunjunyong@xiaomi.com>
-Acked-by: Luis Chamberlain <mcgrof@kernel.org>
-Link: https://lore.kernel.org/r/1583202968-28792-1-git-send-email-sunjunyong@xiaomi.com
+Signed-off-by: Gyeongtaek Lee <gt82.lee@samsung.com>
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
+Link: https://lore.kernel.org/r/004d01d607c1$7a3d5250$6eb7f6f0$@samsung.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+
 ---
- drivers/base/firmware_loader/fallback.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/soc-pcm.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/base/firmware_loader/fallback.c b/drivers/base/firmware_loader/fallback.c
-index 62ee90b4db56e..70efbb22dfc30 100644
---- a/drivers/base/firmware_loader/fallback.c
-+++ b/drivers/base/firmware_loader/fallback.c
-@@ -525,7 +525,7 @@ static int fw_load_sysfs_fallback(struct fw_sysfs *fw_sysfs,
- 	}
+--- a/sound/soc/soc-pcm.c
++++ b/sound/soc/soc-pcm.c
+@@ -2256,7 +2256,8 @@ int dpcm_be_dai_trigger(struct snd_soc_p
+ 		switch (cmd) {
+ 		case SNDRV_PCM_TRIGGER_START:
+ 			if ((be->dpcm[stream].state != SND_SOC_DPCM_STATE_PREPARE) &&
+-			    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_STOP))
++			    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_STOP) &&
++			    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_PAUSED))
+ 				continue;
  
- 	retval = fw_sysfs_wait_timeout(fw_priv, timeout);
--	if (retval < 0) {
-+	if (retval < 0 && retval != -ENOENT) {
- 		mutex_lock(&fw_lock);
- 		fw_load_abort(fw_sysfs);
- 		mutex_unlock(&fw_lock);
--- 
-2.20.1
-
+ 			ret = dpcm_do_trigger(dpcm, be_substream, cmd);
+@@ -2286,7 +2287,8 @@ int dpcm_be_dai_trigger(struct snd_soc_p
+ 			be->dpcm[stream].state = SND_SOC_DPCM_STATE_START;
+ 			break;
+ 		case SNDRV_PCM_TRIGGER_STOP:
+-			if (be->dpcm[stream].state != SND_SOC_DPCM_STATE_START)
++			if ((be->dpcm[stream].state != SND_SOC_DPCM_STATE_START) &&
++			    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_PAUSED))
+ 				continue;
+ 
+ 			if (!snd_soc_dpcm_can_be_free_stop(fe, be, stream))
 
 
