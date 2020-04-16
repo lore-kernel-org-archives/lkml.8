@@ -2,131 +2,164 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=FORGED_MUA_MOZILLA,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 540E8C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:38:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B59C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:39:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30F8B20784
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:38:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587022738;
-	bh=VV/3DC9vERvU4YrbpBLum76SN/pkTOMrb0l8+7m+IYc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=2mynTX6fCRKqiZlHKh6TlqhTpNAgPG8ZxyxMbUvaNqv64b4kIij1YZSMrXnRb674n
-	 2uK341BOWZw3id/ZOULdLEMSxkjuN/f2PLCiZt8GnSoBiEQGczzibiX7UBoe5ohW2t
-	 EcFQ1EwV7gg5+c+l/7uiSMRjuujHsZCcfLEm3MKc=
+	by mail.kernel.org (Postfix) with ESMTP id ADEF22064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:39:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439477AbgDPHiz (ORCPT
+        id S2439507AbgDPHjd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 03:38:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40872 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2439282AbgDPHiu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 03:38:50 -0400
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A38F220732;
-        Thu, 16 Apr 2020 07:38:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587022728;
-        bh=VV/3DC9vERvU4YrbpBLum76SN/pkTOMrb0l8+7m+IYc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=THez1ktQblEbH8mIOjliZ9nHegmEdCiCQOVY75ZyKMIONgngNQ3kLhYCOF/0qE3nL
-         Kr2pWUkvMGr//TIo7flY+1AJ0u6LfKGLOKzRyVczRntnBOzY5OrMCZe7F8rY9K+xSz
-         weDjNA049UXEK24cRxf1QWjTYH+GKtkLwk6TtoBA=
-Received: by mail-il1-f181.google.com with SMTP id e4so6005785ils.4;
-        Thu, 16 Apr 2020 00:38:48 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYwXGJyRBc4wwujuOIpq3S8aGaM+p82ne0wsDhAfkMkHMyMX0BV
-        nU6s0Ls8v2dRIDBcEMusVgh8JSvkz2NhYB1iFMg=
-X-Google-Smtp-Source: APiQypKwS2h8U391uzNKCmOqjuNNrE1w7gTx5KL56FsELQfE8h+3cnsyXXe3rqGBVOXTBgNa0YzocF8xftIYsai20hQ=
-X-Received: by 2002:a92:c788:: with SMTP id c8mr9210476ilk.279.1587022728075;
- Thu, 16 Apr 2020 00:38:48 -0700 (PDT)
+        Thu, 16 Apr 2020 03:39:33 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:48902 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2439282AbgDPHjV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 03:39:21 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03G7cbpW140143
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 03:39:21 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30ehw1j0xd-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 03:39:18 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <riteshh@linux.ibm.com>;
+        Thu, 16 Apr 2020 08:38:32 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 16 Apr 2020 08:38:28 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03G7bwF544499322
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Apr 2020 07:37:58 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8670DA405C;
+        Thu, 16 Apr 2020 07:39:04 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8A1E3A405F;
+        Thu, 16 Apr 2020 07:39:01 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.90.179])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 16 Apr 2020 07:38:59 +0000 (GMT)
+Subject: Re: [RFC 1/1] ext4: Fix overflow case for map.m_len in
+ ext4_iomap_begin_*
+To:     Jan Kara <jack@suse.cz>
+Cc:     tytso@mit.edu, linux-ext4@vger.kernel.org, adilger@dilger.ca,
+        darrick.wong@oracle.com, hch@infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, willy@infradead.org,
+        linux-unionfs@vger.kernel.org,
+        syzbot+77fa5bdb65cc39711820@syzkaller.appspotmail.com
+References: <00000000000048518b05a2fef23a@google.com>
+ <dea98f0b07e16de219d8741c1fefc7cb476cb482.1586681010.git.riteshh@linux.ibm.com>
+ <20200414155013.GF28226@quack2.suse.cz>
+From:   Ritesh Harjani <riteshh@linux.ibm.com>
+Date:   Thu, 16 Apr 2020 13:08:55 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20200415221520.2692512-1-nivedita@alum.mit.edu> <20200415221520.2692512-6-nivedita@alum.mit.edu>
-In-Reply-To: <20200415221520.2692512-6-nivedita@alum.mit.edu>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Thu, 16 Apr 2020 09:38:36 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXFMMeYUPirY10JJfs31Z5GnHvUe=gLgG6SUJY9uWj588g@mail.gmail.com>
-Message-ID: <CAMj1kXFMMeYUPirY10JJfs31Z5GnHvUe=gLgG6SUJY9uWj588g@mail.gmail.com>
-Subject: Re: [PATCH 5/5] efi/x86: Check for bad relocations
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        X86 ML <x86@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200414155013.GF28226@quack2.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20041607-0016-0000-0000-00000305759E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20041607-0017-0000-0000-000033697825
+Message-Id: <20200416073901.8A1E3A405F@b06wcsmtp001.portsmouth.uk.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-16_02:2020-04-14,2020-04-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
+ lowpriorityscore=0 suspectscore=0 mlxlogscore=889 mlxscore=0 phishscore=0
+ spamscore=0 clxscore=1015 adultscore=0 priorityscore=1501 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004160045
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Apr 2020 at 00:15, Arvind Sankar <nivedita@alum.mit.edu> wrote:
->
-> Add relocation checking for x86 as well to catch non-PC-relative
-> relocations that require runtime processing, since the EFI stub does not
-> do any runtime relocation processing.
->
-> This will catch, for example, data relocations created by static
-> initializers of pointers.
->
-> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-> ---
->  drivers/firmware/efi/libstub/Makefile | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-> index 0bb2916eb12b..2aff59812a54 100644
-> --- a/drivers/firmware/efi/libstub/Makefile
-> +++ b/drivers/firmware/efi/libstub/Makefile
-> @@ -96,6 +96,8 @@ STUBCOPY_RELOC-$(CONFIG_ARM)  := R_ARM_ABS
->  # .bss section here so it's easy to pick out in the linker script.
->  #
->  STUBCOPY_FLAGS-$(CONFIG_X86)   += --rename-section .bss=.bss.efistub,load,alloc
-> +STUBCOPY_RELOC-$(CONFIG_X86_32) := 'R_X86_32_(8|16|32)'
 
-This should be R_386_xxx
+Sorry Jan and others. Please ignore this patch.
+I will resend a proper one after making sure it is tested via syzbot.
 
-> +STUBCOPY_RELOC-$(CONFIG_X86_64) := 'R_X86_64_(8|16|32|32S|64)'
->
+On 4/14/20 9:20 PM, Jan Kara wrote:
+> On Sun 12-04-20 14:54:35, Ritesh Harjani wrote:
+>> EXT4_MAX_LOGICAL_BLOCK - map.m_lblk + 1 in case when
+>> map.m_lblk (offset) is 0 could overflow an unsigned int
+>> and become 0.
+>>
+>> Fix this.
+>>
+>> Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
+>> Reported-by: syzbot+77fa5bdb65cc39711820@syzkaller.appspotmail.com
+>> Fixes: d3b6f23f7167 ("ext4: move ext4_fiemap to use iomap framework")
+> 
+> The patch looks good to me. You can add:
+> 
+> Reviewed-by: Jan Kara <jack@suse.cz>
+> 
+> 								Honza
+> 
+>> ---
+>>   fs/ext4/inode.c | 12 ++++++++++--
+>>   1 file changed, 10 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+>> index e416096fc081..d630ec7a9c8e 100644
+>> --- a/fs/ext4/inode.c
+>> +++ b/fs/ext4/inode.c
+>> @@ -3424,6 +3424,7 @@ static int ext4_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
+>>   	int ret;
+>>   	struct ext4_map_blocks map;
+>>   	u8 blkbits = inode->i_blkbits;
+>> +	loff_t len;
+>>   
+>>   	if ((offset >> blkbits) > EXT4_MAX_LOGICAL_BLOCK)
+>>   		return -EINVAL;
+>> @@ -3435,8 +3436,11 @@ static int ext4_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
+>>   	 * Calculate the first and last logical blocks respectively.
+>>   	 */
+>>   	map.m_lblk = offset >> blkbits;
+>> -	map.m_len = min_t(loff_t, (offset + length - 1) >> blkbits,
+>> +	len = min_t(loff_t, (offset + length - 1) >> blkbits,
+>>   			  EXT4_MAX_LOGICAL_BLOCK) - map.m_lblk + 1;
+>> +	if (len > EXT4_MAX_LOGICAL_BLOCK)
+>> +		len = EXT4_MAX_LOGICAL_BLOCK;
+>> +	map.m_len = len;
+>>   
+>>   	if (flags & IOMAP_WRITE)
+>>   		ret = ext4_iomap_alloc(inode, &map, flags);
+>> @@ -3524,6 +3528,7 @@ static int ext4_iomap_begin_report(struct inode *inode, loff_t offset,
+>>   	bool delalloc = false;
+>>   	struct ext4_map_blocks map;
+>>   	u8 blkbits = inode->i_blkbits;
+>> +	loff_t len
+>>   
+>>   	if ((offset >> blkbits) > EXT4_MAX_LOGICAL_BLOCK)
+>>   		return -EINVAL;
+>> @@ -3541,8 +3546,11 @@ static int ext4_iomap_begin_report(struct inode *inode, loff_t offset,
+>>   	 * Calculate the first and last logical block respectively.
+>>   	 */
+>>   	map.m_lblk = offset >> blkbits;
+>> -	map.m_len = min_t(loff_t, (offset + length - 1) >> blkbits,
+>> +	len = min_t(loff_t, (offset + length - 1) >> blkbits,
+>>   			  EXT4_MAX_LOGICAL_BLOCK) - map.m_lblk + 1;
+>> +	if (len > EXT4_MAX_LOGICAL_BLOCK)
+>> +		len = EXT4_MAX_LOGICAL_BLOCK;
+>> +	map.m_len = len;
+>>   
+>>   	/*
+>>   	 * Fiemap callers may call for offset beyond s_bitmap_maxbytes.
+>> -- 
+>> 2.21.0
+>>
 
-... and in general, I think we only need the native pointer sized ones, so
-
-R_386_32
-R_X86_64_64
-
->  $(obj)/%.stub.o: $(obj)/%.o FORCE
->         $(call if_changed,stubcopy)
-> @@ -107,16 +109,14 @@ $(obj)/%.stub.o: $(obj)/%.o FORCE
->  # this time, use objcopy and leave all sections in place.
->  #
->
-> -cmd_stubrelocs_check-y = /bin/true
-> -
-> -cmd_stubrelocs_check-$(CONFIG_EFI_ARMSTUB) =                           \
-> +cmd_stubrelocs_check =                                                 \
->         $(STRIP) --strip-debug -o $@ $<;                                \
-> -       if $(OBJDUMP) -r $@ | grep $(STUBCOPY_RELOC-y); then            \
-> +       if $(OBJDUMP) -r $@ | grep -E $(STUBCOPY_RELOC-y); then         \
-
-... which means we don't need to -E either
-
->                 echo "$@: absolute symbol references not allowed in the EFI stub" >&2; \
->                 /bin/false;                                             \
->         fi
->
->  quiet_cmd_stubcopy = STUBCPY $@
->        cmd_stubcopy =                                                   \
-> -       $(cmd_stubrelocs_check-y);                                      \
-> +       $(cmd_stubrelocs_check);                                        \
->         $(OBJCOPY) $(STUBCOPY_FLAGS-y) $< $@
-> --
-> 2.24.1
->
-
-Could we fold this into the previous x86 patch, and drop the one that
-splits off the relocation check from stubcpy?
