@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7645C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:18:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADD27C352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:18:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D19D206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:18:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E7E820786
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:18:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587050320;
-	bh=fMLIyDP/lYEuiTPFzI3pkD5ODNrHkB8NU4tNj+hxTOQ=;
+	s=default; t=1587050322;
+	bh=iVmwkz8EgRJnXLRutVASrhUbDoue5vmscpYq+WaBHQA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b7IjRPO8s2o4CnBFQh6mdPhmfT/FGZ45R8YryBh79BlsnsnmZnYcoI9JQJSPXLc0A
-	 js2ZpaywxP6G4AaifB9fnGe5agppDP9y0xeE7TctcY0NqeH0FWdNrkKqrdb1tP+a6u
-	 5q2spjXAY7v0j/GuPVS2QkKznOFXXxtbbIAj5ATo=
+	b=RYlSnEmNLVSva15+ArNhbnk/tz1XqcAbFV4Ly202iumG+07zmdSSoKjsSlsWNqx66
+	 9JUNOO0ubMjA15DFDVAX4LruT3x+zHi1TZPE+lTqVMpvlzhFHQOE8Rq1tHk7mXjqcb
+	 8LJ41WIWhrxH6TCx9zpn8EbaexJ/pgYQVP3R9CIY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633189AbgDPPSi (ORCPT
+        id S2633097AbgDPPSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:18:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34434 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:18:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898742AbgDPNs2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:48:28 -0400
+        id S2898739AbgDPNs3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:48:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54BF321744;
-        Thu, 16 Apr 2020 13:48:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4FE620732;
+        Thu, 16 Apr 2020 13:48:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044906;
-        bh=fMLIyDP/lYEuiTPFzI3pkD5ODNrHkB8NU4tNj+hxTOQ=;
+        s=default; t=1587044909;
+        bh=iVmwkz8EgRJnXLRutVASrhUbDoue5vmscpYq+WaBHQA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PuSSBMwqY23MxjoBoDX1bX0LxiGk4f1oiWHKS82/GH/r1I9kJgY2/z1a6lWaYQPWX
-         mPzROdt8YaBzmcH5V8dvlNyPi4/MeDg7VCPyTJDtrMzSPuAji/U0f4IusuL0oXb+mT
-         Gqy6K0KIyRfdwakaUCEQkcdnwV7bK2Y+5sd6/cdE=
+        b=b6G6GNpzT5l4qiqKKczW3vJF7dMY1QlH7/3rqNTKheU/7eJ1iCiea0cw232hRWE/Z
+         nX4yEciEOrasg74bQKwBrqBUWA4bE8Va7bSQWrYyd0J4kAbTwNVHEmvxl2drvnMoFz
+         rDeY9sT1xhBCXzXcHc1GFuBmoKVocUtz1h4z8MFM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rosioru Dragos <dragos.rosioru@nxp.com>,
-        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.4 150/232] crypto: mxs-dcp - fix scatterlist linearization for hash
-Date:   Thu, 16 Apr 2020 15:24:04 +0200
-Message-Id: <20200416131333.754132608@linuxfoundation.org>
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>
+Subject: [PATCH 5.4 151/232] erofs: correct the remaining shrink objects
+Date:   Thu, 16 Apr 2020 15:24:05 +0200
+Message-Id: <20200416131333.871108933@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -60,110 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rosioru Dragos <dragos.rosioru@nxp.com>
+From: Gao Xiang <gaoxiang25@huawei.com>
 
-commit fa03481b6e2e82355c46644147b614f18c7a8161 upstream.
+commit 9d5a09c6f3b5fb85af20e3a34827b5d27d152b34 upstream.
 
-The incorrect traversal of the scatterlist, during the linearization phase
-lead to computing the hash value of the wrong input buffer.
-New implementation uses scatterwalk_map_and_copy()
-to address this issue.
+The remaining count should not include successful
+shrink attempts.
 
-Cc: <stable@vger.kernel.org>
-Fixes: 15b59e7c3733 ("crypto: mxs - Add Freescale MXS DCP driver")
-Signed-off-by: Rosioru Dragos <dragos.rosioru@nxp.com>
-Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: e7e9a307be9d ("staging: erofs: introduce workstation for decompression")
+Cc: <stable@vger.kernel.org> # 4.19+
+Link: https://lore.kernel.org/r/20200226081008.86348-1-gaoxiang25@huawei.com
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- drivers/crypto/mxs-dcp.c |   54 ++++++++++++++++++++++-------------------------
- 1 file changed, 26 insertions(+), 28 deletions(-)
 
---- a/drivers/crypto/mxs-dcp.c
-+++ b/drivers/crypto/mxs-dcp.c
-@@ -20,6 +20,7 @@
- #include <crypto/sha.h>
- #include <crypto/internal/hash.h>
- #include <crypto/internal/skcipher.h>
-+#include <crypto/scatterwalk.h>
+---
+ fs/erofs/utils.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/fs/erofs/utils.c
++++ b/fs/erofs/utils.c
+@@ -294,7 +294,7 @@ static unsigned long erofs_shrink_scan(s
+ 		spin_unlock(&erofs_sb_list_lock);
+ 		sbi->shrinker_run_no = run_no;
  
- #define DCP_MAX_CHANS	4
- #define DCP_BUF_SZ	PAGE_SIZE
-@@ -621,49 +622,46 @@ static int dcp_sha_req_to_buf(struct cry
- 	struct dcp_async_ctx *actx = crypto_ahash_ctx(tfm);
- 	struct dcp_sha_req_ctx *rctx = ahash_request_ctx(req);
- 	struct hash_alg_common *halg = crypto_hash_alg_common(tfm);
--	const int nents = sg_nents(req->src);
+-		freed += erofs_shrink_workstation(sbi, nr, false);
++		freed += erofs_shrink_workstation(sbi, nr - freed, false);
  
- 	uint8_t *in_buf = sdcp->coh->sha_in_buf;
- 	uint8_t *out_buf = sdcp->coh->sha_out_buf;
- 
--	uint8_t *src_buf;
--
- 	struct scatterlist *src;
- 
--	unsigned int i, len, clen;
-+	unsigned int i, len, clen, oft = 0;
- 	int ret;
- 
- 	int fin = rctx->fini;
- 	if (fin)
- 		rctx->fini = 0;
- 
--	for_each_sg(req->src, src, nents, i) {
--		src_buf = sg_virt(src);
--		len = sg_dma_len(src);
-+	src = req->src;
-+	len = req->nbytes;
- 
--		do {
--			if (actx->fill + len > DCP_BUF_SZ)
--				clen = DCP_BUF_SZ - actx->fill;
--			else
--				clen = len;
-+	while (len) {
-+		if (actx->fill + len > DCP_BUF_SZ)
-+			clen = DCP_BUF_SZ - actx->fill;
-+		else
-+			clen = len;
- 
--			memcpy(in_buf + actx->fill, src_buf, clen);
--			len -= clen;
--			src_buf += clen;
--			actx->fill += clen;
-+		scatterwalk_map_and_copy(in_buf + actx->fill, src, oft, clen,
-+					 0);
- 
--			/*
--			 * If we filled the buffer and still have some
--			 * more data, submit the buffer.
--			 */
--			if (len && actx->fill == DCP_BUF_SZ) {
--				ret = mxs_dcp_run_sha(req);
--				if (ret)
--					return ret;
--				actx->fill = 0;
--				rctx->init = 0;
--			}
--		} while (len);
-+		len -= clen;
-+		oft += clen;
-+		actx->fill += clen;
-+
-+		/*
-+		 * If we filled the buffer and still have some
-+		 * more data, submit the buffer.
-+		 */
-+		if (len && actx->fill == DCP_BUF_SZ) {
-+			ret = mxs_dcp_run_sha(req);
-+			if (ret)
-+				return ret;
-+			actx->fill = 0;
-+			rctx->init = 0;
-+		}
- 	}
- 
- 	if (fin) {
+ 		spin_lock(&erofs_sb_list_lock);
+ 		/* Get the next list element before we move this one */
 
 
