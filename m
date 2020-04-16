@@ -2,164 +2,181 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76333C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB65CC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:57:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 594D221D7F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:57:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A040D21D7F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:57:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634538AbgDPL5Y (ORCPT
+        id S2634566AbgDPL5q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 07:57:24 -0400
-Received: from 5.mo69.mail-out.ovh.net ([46.105.43.105]:51481 "EHLO
-        5.mo69.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2634512AbgDPL45 (ORCPT
+        Thu, 16 Apr 2020 07:57:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41586 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2634459AbgDPL5G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 07:56:57 -0400
-Received: from player699.ha.ovh.net (unknown [10.110.208.144])
-        by mo69.mail-out.ovh.net (Postfix) with ESMTP id F1C938B908
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 10:07:56 +0200 (CEST)
-Received: from kaod.org (82-64-250-170.subs.proxad.net [82.64.250.170])
-        (Authenticated sender: clg@kaod.org)
-        by player699.ha.ovh.net (Postfix) with ESMTPSA id 5E029116DD815;
-        Thu, 16 Apr 2020 08:07:49 +0000 (UTC)
-Subject: Re: [PATCH] KVM: PPC: Book3S HV: Handle non-present PTEs in page
- fault functions
-To:     Paul Mackerras <paulus@ozlabs.org>, kvm@vger.kernel.org,
-        kvm-ppc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        groug@kaod.org, David Gibson <david@gibson.dropbear.id.au>
-References: <20200416050335.GB10545@blackberry>
-From:   =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
-Message-ID: <a4e1bf29-af52-232e-d0d2-06206fa05fbe@kaod.org>
-Date:   Thu, 16 Apr 2020 10:07:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200416050335.GB10545@blackberry>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 1322932392823262182
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrfeehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepuffvfhfhkffffgggjggtgfesthekredttdefjeenucfhrhhomhepveorughrihgtpgfnvggpifhorghtvghruceotghlgheskhgrohgurdhorhhgqeenucffohhmrghinheprhgvughhrghtrdgtohhmnecukfhppedtrddtrddtrddtpdekvddrieegrddvhedtrddujedtnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhlrgihvghrieelledrhhgrrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpegtlhhgsehkrghougdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+        Thu, 16 Apr 2020 07:57:06 -0400
+Received: from albert.telenet-ops.be (albert.telenet-ops.be [IPv6:2a02:1800:110:4::f00:1a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32AF3C061A0F
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 04:57:06 -0700 (PDT)
+Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:fd83:81bb:c1d7:433d])
+        by albert.telenet-ops.be with bizsmtp
+        id TPx02200L4dKHqf06Px0Vl; Thu, 16 Apr 2020 13:57:03 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jP38e-0003KX-8w; Thu, 16 Apr 2020 13:57:00 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jP38e-0005Jv-6x; Thu, 16 Apr 2020 13:57:00 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     Robert Richter <rrichter@marvell.com>,
+        Wei Xu <xuwei5@hisilicon.com>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 1/2] arm64: Sort vendor-specific errata
+Date:   Thu, 16 Apr 2020 13:56:57 +0200
+Message-Id: <20200416115658.20406-2-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200416115658.20406-1-geert+renesas@glider.be>
+References: <20200416115658.20406-1-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/16/20 7:03 AM, Paul Mackerras wrote:
-> Since cd758a9b57ee "KVM: PPC: Book3S HV: Use __gfn_to_pfn_memslot in HPT
-> page fault handler", it's been possible in fairly rare circumstances to
-> load a non-present PTE in kvmppc_book3s_hv_page_fault() when running a
-> guest on a POWER8 host.
-> 
-> Because that case wasn't checked for, we could misinterpret the non-present
-> PTE as being a cache-inhibited PTE.  That could mismatch with the
-> corresponding hash PTE, which would cause the function to fail with -EFAULT
-> a little further down.  That would propagate up to the KVM_RUN ioctl()
-> generally causing the KVM userspace (usually qemu) to fall over.
-> 
-> This addresses the problem by catching that case and returning to the guest
-> instead, letting it fault again, and retrying the whole page fault from
-> the beginning.
-> 
-> For completeness, this fixes the radix page fault handler in the same
-> way.  For radix this didn't cause any obvious misbehaviour, because we
-> ended up putting the non-present PTE into the guest's partition-scoped
-> page tables, leading immediately to another hypervisor data/instruction
-> storage interrupt, which would go through the page fault path again
-> and fix things up.
-> 
-> Fixes: cd758a9b57ee "KVM: PPC: Book3S HV: Use __gfn_to_pfn_memslot in HPT page fault handler"
-> Bugzilla: https://bugzilla.redhat.com/show_bug.cgi?id=1820402
-> Reported-by: David Gibson <david@gibson.dropbear.id.au>
-> Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
+Sort configuration options for vendor-specific errata by vendor, to
+increase uniformity.
+Move ARM64_WORKAROUND_REPEAT_TLBI up, as it is also selected by
+ARM64_ERRATUM_1286807.
 
-I didn't see the reported issue with the current 5.7-rc1. Anyhow I gave
-this patch a try on a P8 host and a P9 host with a radix guest and a hash 
-guest (using rhel6). Passthrough is fine also.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ arch/arm64/Kconfig | 72 +++++++++++++++++++++++-----------------------
+ 1 file changed, 36 insertions(+), 36 deletions(-)
 
-Tested-by: Cédric Le Goater <clg@kaod.org>
-
-The code looks correct,
-
-Reviewed-by: Cédric Le Goater <clg@kaod.org>
-
-Thanks,
-
-C. 
-
-
-> ---
-> This is a reworked version of the patch David Gibson sent recently,
-> with the fix applied to the radix case as well. The commit message
-> is mostly stolen from David's patch.
-> 
->  arch/powerpc/kvm/book3s_64_mmu_hv.c    | 9 +++++----
->  arch/powerpc/kvm/book3s_64_mmu_radix.c | 9 +++++----
->  2 files changed, 10 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/powerpc/kvm/book3s_64_mmu_hv.c b/arch/powerpc/kvm/book3s_64_mmu_hv.c
-> index 3aecec8..20b7dce 100644
-> --- a/arch/powerpc/kvm/book3s_64_mmu_hv.c
-> +++ b/arch/powerpc/kvm/book3s_64_mmu_hv.c
-> @@ -604,18 +604,19 @@ int kvmppc_book3s_hv_page_fault(struct kvm_run *run, struct kvm_vcpu *vcpu,
->  	 */
->  	local_irq_disable();
->  	ptep = __find_linux_pte(vcpu->arch.pgdir, hva, NULL, &shift);
-> +	pte = __pte(0);
-> +	if (ptep)
-> +		pte = *ptep;
-> +	local_irq_enable();
->  	/*
->  	 * If the PTE disappeared temporarily due to a THP
->  	 * collapse, just return and let the guest try again.
->  	 */
-> -	if (!ptep) {
-> -		local_irq_enable();
-> +	if (!pte_present(pte)) {
->  		if (page)
->  			put_page(page);
->  		return RESUME_GUEST;
->  	}
-> -	pte = *ptep;
-> -	local_irq_enable();
->  	hpa = pte_pfn(pte) << PAGE_SHIFT;
->  	pte_size = PAGE_SIZE;
->  	if (shift)
-> diff --git a/arch/powerpc/kvm/book3s_64_mmu_radix.c b/arch/powerpc/kvm/book3s_64_mmu_radix.c
-> index 134fbc1..7bf94ba 100644
-> --- a/arch/powerpc/kvm/book3s_64_mmu_radix.c
-> +++ b/arch/powerpc/kvm/book3s_64_mmu_radix.c
-> @@ -815,18 +815,19 @@ int kvmppc_book3s_instantiate_page(struct kvm_vcpu *vcpu,
->  	 */
->  	local_irq_disable();
->  	ptep = __find_linux_pte(vcpu->arch.pgdir, hva, NULL, &shift);
-> +	pte = __pte(0);
-> +	if (ptep)
-> +		pte = *ptep;
-> +	local_irq_enable();
->  	/*
->  	 * If the PTE disappeared temporarily due to a THP
->  	 * collapse, just return and let the guest try again.
->  	 */
-> -	if (!ptep) {
-> -		local_irq_enable();
-> +	if (!pte_present(pte)) {
->  		if (page)
->  			put_page(page);
->  		return RESUME_GUEST;
->  	}
-> -	pte = *ptep;
-> -	local_irq_enable();
->  
->  	/* If we're logging dirty pages, always map single pages */
->  	large_enable = !(memslot->flags & KVM_MEM_LOG_DIRTY_PAGES);
-> 
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 40fb05d96c6072c9..8d33d7fed6d8549b 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -553,6 +553,9 @@ config ARM64_ERRATUM_1530923
+ 
+ 	  If unsure, say Y.
+ 
++config ARM64_WORKAROUND_REPEAT_TLBI
++	bool
++
+ config ARM64_ERRATUM_1286807
+ 	bool "Cortex-A76: Modification of the translation table for a virtual address might lead to read-after-read ordering violation"
+ 	default y
+@@ -694,6 +697,35 @@ config CAVIUM_TX2_ERRATUM_219
+ 
+ 	  If unsure, say Y.
+ 
++config FUJITSU_ERRATUM_010001
++	bool "Fujitsu-A64FX erratum E#010001: Undefined fault may occur wrongly"
++	default y
++	help
++	  This option adds a workaround for Fujitsu-A64FX erratum E#010001.
++	  On some variants of the Fujitsu-A64FX cores ver(1.0, 1.1), memory
++	  accesses may cause undefined fault (Data abort, DFSC=0b111111).
++	  This fault occurs under a specific hardware condition when a
++	  load/store instruction performs an address translation using:
++	  case-1  TTBR0_EL1 with TCR_EL1.NFD0 == 1.
++	  case-2  TTBR0_EL2 with TCR_EL2.NFD0 == 1.
++	  case-3  TTBR1_EL1 with TCR_EL1.NFD1 == 1.
++	  case-4  TTBR1_EL2 with TCR_EL2.NFD1 == 1.
++
++	  The workaround is to ensure these bits are clear in TCR_ELx.
++	  The workaround only affects the Fujitsu-A64FX.
++
++	  If unsure, say Y.
++
++config HISILICON_ERRATUM_161600802
++	bool "Hip07 161600802: Erroneous redistributor VLPI base"
++	default y
++	help
++	  The HiSilicon Hip07 SoC uses the wrong redistributor base
++	  when issued ITS commands such as VMOVP and VMAPP, and requires
++	  a 128kB offset to be applied to the target address in this commands.
++
++	  If unsure, say Y.
++
+ config QCOM_FALKOR_ERRATUM_1003
+ 	bool "Falkor E1003: Incorrect translation due to ASID change"
+ 	default y
+@@ -705,9 +737,6 @@ config QCOM_FALKOR_ERRATUM_1003
+ 	  is unchanged. Work around the erratum by invalidating the walk cache
+ 	  entries for the trampoline before entering the kernel proper.
+ 
+-config ARM64_WORKAROUND_REPEAT_TLBI
+-	bool
+-
+ config QCOM_FALKOR_ERRATUM_1009
+ 	bool "Falkor E1009: Prematurely complete a DSB after a TLBI"
+ 	default y
+@@ -729,25 +758,6 @@ config QCOM_QDF2400_ERRATUM_0065
+ 
+ 	  If unsure, say Y.
+ 
+-config SOCIONEXT_SYNQUACER_PREITS
+-	bool "Socionext Synquacer: Workaround for GICv3 pre-ITS"
+-	default y
+-	help
+-	  Socionext Synquacer SoCs implement a separate h/w block to generate
+-	  MSI doorbell writes with non-zero values for the device ID.
+-
+-	  If unsure, say Y.
+-
+-config HISILICON_ERRATUM_161600802
+-	bool "Hip07 161600802: Erroneous redistributor VLPI base"
+-	default y
+-	help
+-	  The HiSilicon Hip07 SoC uses the wrong redistributor base
+-	  when issued ITS commands such as VMOVP and VMAPP, and requires
+-	  a 128kB offset to be applied to the target address in this commands.
+-
+-	  If unsure, say Y.
+-
+ config QCOM_FALKOR_ERRATUM_E1041
+ 	bool "Falkor E1041: Speculative instruction fetches might cause errant memory access"
+ 	default y
+@@ -758,22 +768,12 @@ config QCOM_FALKOR_ERRATUM_E1041
+ 
+ 	  If unsure, say Y.
+ 
+-config FUJITSU_ERRATUM_010001
+-	bool "Fujitsu-A64FX erratum E#010001: Undefined fault may occur wrongly"
++config SOCIONEXT_SYNQUACER_PREITS
++	bool "Socionext Synquacer: Workaround for GICv3 pre-ITS"
+ 	default y
+ 	help
+-	  This option adds a workaround for Fujitsu-A64FX erratum E#010001.
+-	  On some variants of the Fujitsu-A64FX cores ver(1.0, 1.1), memory
+-	  accesses may cause undefined fault (Data abort, DFSC=0b111111).
+-	  This fault occurs under a specific hardware condition when a
+-	  load/store instruction performs an address translation using:
+-	  case-1  TTBR0_EL1 with TCR_EL1.NFD0 == 1.
+-	  case-2  TTBR0_EL2 with TCR_EL2.NFD0 == 1.
+-	  case-3  TTBR1_EL1 with TCR_EL1.NFD1 == 1.
+-	  case-4  TTBR1_EL2 with TCR_EL2.NFD1 == 1.
+-
+-	  The workaround is to ensure these bits are clear in TCR_ELx.
+-	  The workaround only affects the Fujitsu-A64FX.
++	  Socionext Synquacer SoCs implement a separate h/w block to generate
++	  MSI doorbell writes with non-zero values for the device ID.
+ 
+ 	  If unsure, say Y.
+ 
+-- 
+2.17.1
 
