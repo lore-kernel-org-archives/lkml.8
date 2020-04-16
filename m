@@ -2,145 +2,219 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E845C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:23:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 778C2C352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C90920857
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:23:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 575E22223E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 16:24:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J52186us"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="QKxm7zWN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410771AbgDPQXV (ORCPT
+        id S2393666AbgDPQYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 12:23:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54942 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729633AbgDPQXN (ORCPT
+        Thu, 16 Apr 2020 12:24:18 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:51417 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732064AbgDPQYP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 12:23:13 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D0C0C061A0C;
-        Thu, 16 Apr 2020 09:23:13 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id 20so13835245qkl.10;
-        Thu, 16 Apr 2020 09:23:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=zyCDv7z5P0ha1HmRsnaqPPghx3RwbCflcoKCK45AcNQ=;
-        b=J52186us0PCS+Cz5RZA6O1mgs7unxz8luOWtHeEVsVCLVREwEDlIrfHaKZtURXKodV
-         urpmXfWvnimP59fPHugAPdEkZTxtlAVSbB7ecb8pq5VmzOkGpbM/CLn1a92wDTczam19
-         arxKY9C6PJzYJeFj9YmPiL/rAYlzCKtAvXt/FY7RaFCkkelB+6bhcWwQzNT9XZ81ZJQ8
-         HVTqzf52Vu+6+nQOrZm5gMHc4KtdUL2772KVcy6PkLZtHJvKwQYYQ5o3l5X4rQnQtZy1
-         oz4VhpBsCu3nR7f2sqXZS/LLg4OpnNItIx8d3lmVUlkKIx9+tX98dB4X1+VQPC/wK4TE
-         AUHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=zyCDv7z5P0ha1HmRsnaqPPghx3RwbCflcoKCK45AcNQ=;
-        b=MZ7LWV5sxmHVGWjYSwaIRhRreQzXGFQjF6RVI7CW50dI8oS2a36geYLio5cBSB/6Ao
-         LFBOPcbTTlnjqu2me62I8ityzjWExv0fYV9ZQ1GTRazmwmPaMVQuhnHI5aam9MjgEuoc
-         2z61IAnwTK7bGhm7apW5rpBJM+yTuDDlJ49jIqZXpXHuM+wT4Kry33RFiCt4twbSnpLa
-         nsZ5SFf/0VWIKqWuVIfAp8bGj5LcbdKnaWqCIfosa44faKfO1lZgQFT7yfO8E9NcULGj
-         HvRtvt5H6uzMJ8foBd/E8n7Jo8hKf5IcPFKJLj0Q0o8bVlwC3SFGm4O9yR+U5fBGB3mi
-         3erg==
-X-Gm-Message-State: AGi0PubbSx1Mgf+NXctnLCwkkNuqRWeKWA3xC73IQGxglAYN5Maej0EW
-        YFbZQjMNq+YfegOrllNY9TdJU0iBfZpOoA==
-X-Google-Smtp-Source: APiQypLbzSLCVFS1K2wcJuiSSKo7Ug5S+nV6EpBYg/kFWNvmaebKGIrDFk8kqGe/sp5s/DnbLsbl2w==
-X-Received: by 2002:a37:8787:: with SMTP id j129mr32366716qkd.157.1587054192708;
-        Thu, 16 Apr 2020 09:23:12 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id r18sm884383qtt.25.2020.04.16.09.23.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2020 09:23:11 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id DEFB5409A3; Thu, 16 Apr 2020 13:23:09 -0300 (-03)
-Date:   Thu, 16 Apr 2020 13:23:09 -0300
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jiwei Sun <jiwei.sun@windriver.com>,
-        yuzhoujian <yuzhoujian@didichuxing.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v10 1/4] perf doc: allow ASCIIDOC_EXTRA to be an argument
-Message-ID: <20200416162309.GH2650@kernel.org>
-References: <20200416162058.201954-1-irogers@google.com>
- <20200416162058.201954-2-irogers@google.com>
+        Thu, 16 Apr 2020 12:24:15 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1587054254; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=bwde/P04Uj3GTzNnCbAcH3UyrPWOeOqsIWQwb1Jxqqc=;
+ b=QKxm7zWNODYXc9RljLMgjzzUEDObnZ9bI2I4Vg1jN7liOWv9HpO4zDOAAbv60m4jgsatPniH
+ clMpzmQi3me+Q0gNpjfxVeS/C+NHBGtuuNWoM9d73MhPPi2r31aAWHbis8aRtuvgbtZS3tTL
+ J2CVgerNuP79L9BZEbclqdOYKGs=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e9886a1.7f930d7a33b0-smtp-out-n04;
+ Thu, 16 Apr 2020 16:24:01 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 4D503C44788; Thu, 16 Apr 2020 16:24:00 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8065AC433BA;
+        Thu, 16 Apr 2020 16:23:58 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200416162058.201954-2-irogers@google.com>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 16 Apr 2020 21:53:58 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stephen Boyd <swboyd@chromium.org>,
+        iommu@lists.linux-foundation.org,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 2/2] iommu/arm-smmu: Allow client devices to select direct
+ mapping
+In-Reply-To: <3f12cefb-3887-859c-ddf5-c7a0fc755152@arm.com>
+References: <cover.1579692800.git.saiprakash.ranjan@codeaurora.org>
+ <813cc5b2da10c27db982254b274bf26008a9e6da.1579692800.git.saiprakash.ranjan@codeaurora.org>
+ <3f12cefb-3887-859c-ddf5-c7a0fc755152@arm.com>
+Message-ID: <540fc55811d0a60a929ff1f694d6d271@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Apr 16, 2020 at 09:20:55AM -0700, Ian Rogers escreveu:
-> This will allow parent makefiles to pass values to asciidoc.
+Hi Robin,
 
-Thanks, applied
- 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/Documentation/Makefile | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+On 2020-04-16 19:28, Robin Murphy wrote:
+> On 2020-01-22 11:48 am, Sai Prakash Ranjan wrote:
+>> From: Jordan Crouse <jcrouse@codeaurora.org>
+>> 
+>> Some client devices want to directly map the IOMMU themselves instead
+>> of using the DMA domain. Allow those devices to opt in to direct
+>> mapping by way of a list of compatible strings.
+>> 
+>> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+>> Co-developed-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>> ---
+>>   drivers/iommu/arm-smmu-qcom.c | 39 
+>> +++++++++++++++++++++++++++++++++++
+>>   drivers/iommu/arm-smmu.c      |  3 +++
+>>   drivers/iommu/arm-smmu.h      |  5 +++++
+>>   3 files changed, 47 insertions(+)
+>> 
+>> diff --git a/drivers/iommu/arm-smmu-qcom.c 
+>> b/drivers/iommu/arm-smmu-qcom.c
+>> index 64a4ab270ab7..ff746acd1c81 100644
+>> --- a/drivers/iommu/arm-smmu-qcom.c
+>> +++ b/drivers/iommu/arm-smmu-qcom.c
+>> @@ -3,6 +3,7 @@
+>>    * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+>>    */
+>>   +#include <linux/of_device.h>
+>>   #include <linux/qcom_scm.h>
+>>     #include "arm-smmu.h"
+>> @@ -11,6 +12,43 @@ struct qcom_smmu {
+>>   	struct arm_smmu_device smmu;
+>>   };
+>>   +static const struct arm_smmu_client_match_data qcom_adreno = {
+>> +	.direct_mapping = true,
+>> +};
+>> +
+>> +static const struct arm_smmu_client_match_data qcom_mdss = {
+>> +	.direct_mapping = true,
+>> +};
 > 
-> diff --git a/tools/perf/Documentation/Makefile b/tools/perf/Documentation/Makefile
-> index 31824d5269cc..6e54979c2124 100644
-> --- a/tools/perf/Documentation/Makefile
-> +++ b/tools/perf/Documentation/Makefile
-> @@ -48,7 +48,7 @@ man5dir=$(mandir)/man5
->  man7dir=$(mandir)/man7
->  
->  ASCIIDOC=asciidoc
-> -ASCIIDOC_EXTRA = --unsafe -f asciidoc.conf
-> +ASCIIDOC_EXTRA += --unsafe -f asciidoc.conf
->  ASCIIDOC_HTML = xhtml11
->  MANPAGE_XSL = manpage-normal.xsl
->  XMLTO_EXTRA =
-> @@ -59,7 +59,7 @@ HTML_REF = origin/html
->  
->  ifdef USE_ASCIIDOCTOR
->  ASCIIDOC = asciidoctor
-> -ASCIIDOC_EXTRA = -a compat-mode
-> +ASCIIDOC_EXTRA += -a compat-mode
->  ASCIIDOC_EXTRA += -I. -rasciidoctor-extensions
->  ASCIIDOC_EXTRA += -a mansource="perf" -a manmanual="perf Manual"
->  ASCIIDOC_HTML = xhtml5
-> -- 
-> 2.26.1.301.g55bc3eb7cb9-goog
+> Might it make sense to group these by the desired SMMU behaviour
+> rather than (apparently) what kind of device the client happens to be,
+> which seems like a completely arbitrary distinction from the SMMU
+> driver's PoV?
 > 
+
+Sorry, I did not get the "grouping by the desired SMMU behaviour" thing.
+Could you please give some more details?
+
+>> +
+>> +static const struct of_device_id qcom_smmu_client_of_match[] = {
+>> +	{ .compatible = "qcom,adreno", .data = &qcom_adreno },
+>> +	{ .compatible = "qcom,mdp4", .data = &qcom_mdss },
+>> +	{ .compatible = "qcom,mdss", .data = &qcom_mdss },
+>> +	{ .compatible = "qcom,sc7180-mdss", .data = &qcom_mdss },
+>> +	{ .compatible = "qcom,sdm845-mdss", .data = &qcom_mdss },
+>> +	{},
+>> +};
+>> +
+>> +static const struct arm_smmu_client_match_data *
+>> +qcom_smmu_client_data(struct device *dev)
+>> +{
+>> +	const struct of_device_id *match =
+>> +		of_match_device(qcom_smmu_client_of_match, dev);
+>> +
+>> +	return match ? match->data : NULL;
+> 
+> of_device_get_match_data() is your friend.
+> 
+
+Ok will use it.
+
+>> +}
+>> +
+>> +static int qcom_smmu_request_domain(struct device *dev)
+>> +{
+>> +	const struct arm_smmu_client_match_data *client;
+>> +
+>> +	client = qcom_smmu_client_data(dev);
+>> +	if (client)
+>> +		iommu_request_dm_for_dev(dev);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>   static int qcom_sdm845_smmu500_reset(struct arm_smmu_device *smmu)
+>>   {
+>>   	int ret;
+>> @@ -41,6 +79,7 @@ static int qcom_smmu500_reset(struct arm_smmu_device 
+>> *smmu)
+>>   }
+>>     static const struct arm_smmu_impl qcom_smmu_impl = {
+>> +	.req_domain = qcom_smmu_request_domain,
+>>   	.reset = qcom_smmu500_reset,
+>>   };
+>>   diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+>> index 16c4b87af42b..67dd9326247a 100644
+>> --- a/drivers/iommu/arm-smmu.c
+>> +++ b/drivers/iommu/arm-smmu.c
+>> @@ -1448,6 +1448,9 @@ static int arm_smmu_add_device(struct device 
+>> *dev)
+>>   	device_link_add(dev, smmu->dev,
+>>   			DL_FLAG_PM_RUNTIME | DL_FLAG_AUTOREMOVE_SUPPLIER);
+>>   +	if (smmu->impl && smmu->impl->req_domain)
+>> +		return smmu->impl->req_domain(dev);
+>> +
+> 
+> There are about 5 different patchsets flying around at the moment that
+> all touch default domain allocation, so this is a fast-moving target,
+> but I think where the dust should settle is with arm_smmu_ops
+> forwarding .def_domain_type (or whatever it ends up as) calls to
+> arm_smmu_impl as appropriate.
+> 
+
+I'll wait till the dust settles down and then post the next version.
+
+>>   	return 0;
+>>     out_cfg_free:
+>> diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
+>> index 8d1cd54d82a6..059dc9c39f64 100644
+>> --- a/drivers/iommu/arm-smmu.h
+>> +++ b/drivers/iommu/arm-smmu.h
+>> @@ -244,6 +244,10 @@ enum arm_smmu_arch_version {
+>>   	ARM_SMMU_V2,
+>>   };
+>>   +struct arm_smmu_client_match_data {
+>> +	bool direct_mapping;
+>> +};
+> 
+> Does this need to be public? I don't see the other users...
+> 
+
+Will move this out.
+
+Thanks,
+Sai
 
 -- 
-
-- Arnaldo
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
