@@ -2,96 +2,149 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B78F7C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30083C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:45:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8ACB521D7F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:45:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LoPHn4aW"
+	by mail.kernel.org (Postfix) with ESMTP id 1742A21D95
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:45:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506475AbgDPLpB (ORCPT
+        id S2506578AbgDPLpO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 07:45:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39504 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2634025AbgDPLny (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 07:43:54 -0400
-Received: from mail-wr1-x44a.google.com (mail-wr1-x44a.google.com [IPv6:2a00:1450:4864:20::44a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21DACC061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 04:43:54 -0700 (PDT)
-Received: by mail-wr1-x44a.google.com with SMTP id r11so1550261wrx.21
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 04:43:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=/kCl4Qp/HWFb3bfjnVpgsPir2dBStE2GQr6w0WtQly4=;
-        b=LoPHn4aWZllHhakXzK28hq0gYhdoPqjIUb5q8/9LUlHog4lr4YMsmhmr8PmtJTdMav
-         xM6ygCdhcmyyvfd/mJ8DK3mdTAY9KsDJy6ksfNFP+kPKzedwwKjmPRVSb0f5b538c2G5
-         WHSBeN5XustfBv4quIIiTSQDddY1iixE9KDr/fqmBHTmJPz+uP4AOB9efp28tE+mDE2P
-         /fQ6mz3ZOi+SukgXRg232QEAxg43TB7bzsLQC7GHociU8BZGVw/bquOFTGonDwSou/m2
-         Zkj3TJJbNndy9201si0eQbdT0J8AABk0pWCg+ZCj2/Nn0u/qS3iOlZuFfuGZbGyYAEFU
-         RQrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=/kCl4Qp/HWFb3bfjnVpgsPir2dBStE2GQr6w0WtQly4=;
-        b=Lj7ZOtiF7vJaYa9pMn2SvORGbVYt+dud/MpSLHPuIdrPc69ubVVabQVQRKK2bVmaBm
-         M6B/vYoBa1CI5c8Z4O454UZ6a5T5sdl9qLl0esn3VvLXfDwEp5uwlTauQ9kxF5EIigK5
-         U8Lcd6diejfIt2xb0TsjdwId4CYzXUrDsk/A10qEm91N+NqfGIWRIfUM1EYCbNLTP/8q
-         bhU06Vi5FiX+GFB/PR6hWmVxrcIPUb7HOPd2kLQvadw5Vlf5Y+HtvBWvhSraHOQaYZUQ
-         uLuk/P5GzdGBUzUPDeHCbA1BWOVbVeH33GNWzY0mHyXvzv/8/zO1GKL9vRM3lDkW0/wA
-         QS6g==
-X-Gm-Message-State: AGi0PuZkV0u0a1IV4ahUGEwMNi6hVkLFkYHs0dKabeYgDsv4tXfywt/H
-        vTaQFQwA11UOJKPVCPfatDLyPCOOmg==
-X-Google-Smtp-Source: APiQypLbJHPjUQ2RlNkAM2mV95H3x40l/9Wm7yqr0AuKQvBVjKLGdfbybl/iUwu5f7bkVTRNSwWM4kQfuA==
-X-Received: by 2002:a5d:404a:: with SMTP id w10mr7562452wrp.397.1587037432601;
- Thu, 16 Apr 2020 04:43:52 -0700 (PDT)
-Date:   Thu, 16 Apr 2020 13:42:57 +0200
-Message-Id: <20200416114256.226329-1-elver@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.26.1.301.g55bc3eb7cb9-goog
-Subject: [PATCH] kunit: Add missing newline in summary message
-From:   Marco Elver <elver@google.com>
-To:     elver@google.com
-Cc:     linux-kernel@vger.kernel.org, brendanhiggins@google.com,
-        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        alan.maguire@oracle.com, frank.rowand@sony.com,
-        skhan@linuxfoundation.org
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 16 Apr 2020 07:45:14 -0400
+Received: from foss.arm.com ([217.140.110.172]:59306 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2634046AbgDPLoC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 07:44:02 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BE53DC14;
+        Thu, 16 Apr 2020 04:44:01 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A31B73F73D;
+        Thu, 16 Apr 2020 04:44:00 -0700 (PDT)
+References: <20200415210512.805-1-valentin.schneider@arm.com> <20200415210512.805-7-valentin.schneider@arm.com> <CAKfTPtA5-S_EyzZMDMr9SuVQmWZNdLXOVSLMAMTD+6Bow4jJBQ@mail.gmail.com> <20200416104725.GM20730@hirez.programming.kicks-ass.net>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH v3 6/9] sched: Kill select_task_rq()'s sd_flag parameter
+In-reply-to: <20200416104725.GM20730@hirez.programming.kicks-ass.net>
+Date:   Thu, 16 Apr 2020 12:43:54 +0100
+Message-ID: <jhjwo6f7j0l.mognet@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add missing newline, as otherwise flushing of the final summary message
-to the console log can be delayed.
 
-Fixes: e2219db280e3 ("kunit: add debugfs /sys/kernel/debug/kunit/<suite>/results display")
-Signed-off-by: Marco Elver <elver@google.com>
----
- lib/kunit/test.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 16/04/20 11:47, Peter Zijlstra wrote:
+> On Thu, Apr 16, 2020 at 09:42:36AM +0200, Vincent Guittot wrote:
+>> On Wed, 15 Apr 2020 at 23:05, Valentin Schneider
+>> > @@ -6622,13 +6622,25 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
+>> >   * preempt must be disabled.
+>> >   */
+>> >  static int
+>> > +select_task_rq_fair(struct task_struct *p, int prev_cpu, int wake_flags)
+>> >  {
+>> > +       int sync = (wake_flags & WF_SYNC) && !(current->flags & PF_EXITING);
+>> >         struct sched_domain *tmp, *sd = NULL;
+>> >         int cpu = smp_processor_id();
+>> >         int new_cpu = prev_cpu;
+>> >         int want_affine = 0;
+>> > -       int sync = (wake_flags & WF_SYNC) && !(current->flags & PF_EXITING);
+>> > +       int sd_flag;
+>> > +
+>> > +       switch (wake_flags & (WF_TTWU | WF_FORK | WF_EXEC)) {
+>>
+>> You remove a function parameter, which was directly set with the right
+>> flag, but then you add a switch case to recreate this sd_flag
+>> internally. Not sure we can say that it's real benefit
+>>
+>> > +       case WF_TTWU:
+>> > +               sd_flag = SD_BALANCE_WAKE;
+>> > +               break;
+>> > +       case WF_FORK:
+>> > +               sd_flag = SD_BALANCE_FORK;
+>> > +               break;
+>> > +       default:
+>> > +               sd_flag = SD_BALANCE_EXEC;
+>> > +       }
+>
+> Agreed, that's a bit yuck, how about something like so instead:
+>
 
-diff --git a/lib/kunit/test.c b/lib/kunit/test.c
-index 7a6430a7fca0..ccb2ffad8dcf 100644
---- a/lib/kunit/test.c
-+++ b/lib/kunit/test.c
-@@ -93,7 +93,7 @@ static void kunit_print_ok_not_ok(void *test_or_suite,
- 	 * representation.
- 	 */
- 	if (suite)
--		pr_info("%s %zd - %s",
-+		pr_info("%s %zd - %s\n",
- 			kunit_status_to_string(is_ok),
- 			test_number, description);
- 	else
--- 
-2.26.1.301.g55bc3eb7cb9-goog
+Aligning the SD_* and WF_* flags sure makes it simpler, I just wasn't
+daring enough to do that. I suppose we'll want some BUILD_BUG_ON() checks
+just for good measure.
 
+Also, it doesn't directly solve the switch case of 9/9, but I may get out
+of it with some hackery such as what I suggested in my reply to Vincent.
+
+>
+> --- a/include/linux/sched/topology.h
+> +++ b/include/linux/sched/topology.h
+> @@ -11,10 +11,12 @@
+>   */
+>  #ifdef CONFIG_SMP
+>
+> +/* First nibble of SD_flag is shared with WF_flag */
+>  #define SD_BALANCE_NEWIDLE	0x0001	/* Balance when about to become idle */
+>  #define SD_BALANCE_EXEC		0x0002	/* Balance on exec */
+>  #define SD_BALANCE_FORK		0x0004	/* Balance on fork, clone */
+>  #define SD_BALANCE_WAKE		0x0008  /* Balance on wakeup */
+> +
+>  #define SD_WAKE_AFFINE		0x0010	/* Wake task to waking CPU */
+>  #define SD_ASYM_CPUCAPACITY	0x0020  /* Domain members have different CPU capacities */
+>  #define SD_SHARE_CPUCAPACITY	0x0040	/* Domain members share CPU capacity */
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -6635,16 +6635,8 @@ select_task_rq_fair(struct task_struct *
+>       int want_affine = 0;
+>       int sd_flag;
+>
+> -	switch (wake_flags & (WF_TTWU | WF_FORK | WF_EXEC)) {
+> -	case WF_TTWU:
+> -		sd_flag = SD_BALANCE_WAKE;
+> -		break;
+> -	case WF_FORK:
+> -		sd_flag = SD_BALANCE_FORK;
+> -		break;
+> -	default:
+> -		sd_flag = SD_BALANCE_EXEC;
+> -	}
+> +	/* SD_flags and WF_flags share the first nibble */
+> +	sd_flag = wake_flags & 0xf;
+>
+>       if (sd_flag & SD_BALANCE_WAKE) {
+>               record_wakee(p);
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -1685,11 +1685,12 @@ static inline int task_on_rq_migrating(s
+>  /*
+>   * Wake flags
+>   */
+> -#define WF_SYNC			0x01		/* Waker goes to sleep after wakeup */
+> -#define WF_TTWU                 0x02            /* Regular task wakeup */
+> -#define WF_FORK			0x04		/* Child wakeup after fork */
+> -#define WF_EXEC			0x08		/* "Fake" wakeup at exec */
+> -#define WF_MIGRATED		0x10		/* Internal use, task got migrated */
+> +#define WF_EXEC			0x02	/* SD_BALANCE_EXEC */
+> +#define WF_FORK			0x04	/* SD_BALANCE_FORK */
+> +#define WF_TTWU			0x08	/* SD_BALANCE_WAKE */
+> +
+> +#define WF_SYNC			0x10	/* Waker goes to sleep after wakeup */
+> +#define WF_MIGRATED		0x20	/* Internal use, task got migrated */
+>
+>  /*
+>   * To aid in avoiding the subversion of "niceness" due to uneven distribution
