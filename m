@@ -2,137 +2,154 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD2BCC352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:23:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C046CC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:23:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A82C322241
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:23:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qzuDzGpL"
+	by mail.kernel.org (Postfix) with ESMTP id 9F2812224E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:23:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587050622;
+	bh=ZIoIsXIaQkSSo9DwrSDuxVUKUDWHBUIiPNGyWCNpMjY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=TpnJDNYIHHLxfWJY7e+Pp9wfWRNv6Kf4BG2cYGnM9LQ3WNdYBFKOS8DjQdJP2C4yG
+	 viJQhA7nEuaf9UQ5/VjZhy20it6asPSgTzfqhVfThw8wThZ2qLaYHRIzv6uQ6S/qbx
+	 yDX/y2O0nuOBC0cREh+L/YhOxDoN2myTfNqqu1rY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504059AbgDPPXd (ORCPT
+        id S2438677AbgDPPXl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:23:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45414 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2392261AbgDPPX0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 11:23:26 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70E55C061A0C;
-        Thu, 16 Apr 2020 08:23:26 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id k21so3381056otl.5;
-        Thu, 16 Apr 2020 08:23:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sDKDxRsvr9/0tnocd3cnf/IOYw0smGMIaggntAhf7sA=;
-        b=qzuDzGpLCGu7BUgaNTFhhEejkw0MvAlN2DPmQLMrBqU1v4yWsiG1tEqyPbXbNvUjeo
-         bLcBrNKgxIgnQVm4Pew28MRBLZUTdZVShPop7K3izBQBymzxAxLjDf6pXZI5xRsDE7L5
-         DVkwvDK0nGVpckgYmdkRer8sDuQ5EMrmIx6eKhPKl4sCoDB7+KxvNX7MYKmPAjWWLCJ0
-         iIre7bCji+qEPwN41tTHgeU2eKhSv57vbXZhW06MIRJSa+wsQRo27LG+aJYSnQM3YJF9
-         26R5vq4zelVgz+BGRozeyaD1U/bEVK1Eq0pZrVtUTBjnxuO7kf4VDUqrvmuqMD08k6LF
-         8skg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sDKDxRsvr9/0tnocd3cnf/IOYw0smGMIaggntAhf7sA=;
-        b=M67WDtCELfvAqgpF53XJhtwjgbGH72wr0Rn4P05y8TAueRUNRIF3S+bC0BosjoZ/6B
-         XaeJ/VLRbU6gyzBb+5CEZWxKQAtKneegl5hyTHiBynById/61zJLVEk6aW7QxvAeYnFL
-         YQOqIcALQsmWfxqdrryVWUVyd0HmpRrCOgGQMndRbrUsXVUO1o6ki8JO7FpwKaHsvah7
-         lV0+y4SXVmAABr+4ZXBhptICQxuOBPRrAnY9rL+1VamHTp2o7gbFNFfhMW0+7kBJlJkX
-         LIdxmp3ZLJoCLgZXy6kIl0kIOpLmFtNR1KkSelgt+gRH1E14rwBo4wcPsheNSCgH9uG0
-         hurA==
-X-Gm-Message-State: AGi0PuaVOUK8kBQyNrmZ1RVlMzTPc8kkgx4Xu9mSBZZB8OoQ1LQqKUtL
-        W+OGeMkuz+xwYpZzKq7eQ/5+14LDd4X2MJpg/Ho=
-X-Google-Smtp-Source: APiQypJE2h+x6KBr6qqRxBMg3KHROW+KikW03R+TXV1d2SClZNdS7Dc8Qzpwvc2hixH/5z7JnCNbiVjdFOBVmuUm0oU=
-X-Received: by 2002:a9d:19ca:: with SMTP id k68mr27607601otk.232.1587050605773;
- Thu, 16 Apr 2020 08:23:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200416001414.25746-1-TheSven73@gmail.com> <20200416001414.25746-2-TheSven73@gmail.com>
- <20200416124239.GH5354@sirena.org.uk>
-In-Reply-To: <20200416124239.GH5354@sirena.org.uk>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Thu, 16 Apr 2020 11:23:14 -0400
-Message-ID: <CAGngYiVXk+1Qzs3yLwyne3X567_yvbuRfXkjihmGc0EigHo50A@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] ASoC: Add initial ZL38060 driver
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+        Thu, 16 Apr 2020 11:23:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37050 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2395153AbgDPPXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 11:23:32 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A022214D8;
+        Thu, 16 Apr 2020 15:23:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587050611;
+        bh=ZIoIsXIaQkSSo9DwrSDuxVUKUDWHBUIiPNGyWCNpMjY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=bBTzd9OrYpXGg6ORHDevc26biU8U6Ir9eDMrYVbq0oazh6OMuVNc+sGyIZ47f/7em
+         9meS9HRqxJekEbvO8q77PIn9Lnv5yio2WbX+XoF1s/KEVYXbiaOmjD7h4soWVtcrHG
+         7bhbBJI+VfwXU79XQ6M8zC9fvfiC7rsu/xGQ/jfU=
+Date:   Thu, 16 Apr 2020 16:23:28 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     alsa-devel@alsa-project.org, Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>, devicetree@vger.kernel.org,
+        dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Jaroslav Kysela <perex@perex.cz>,
+        Jiri Kosina <trivial@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Liam Girdwood <lgirdwood@gmail.com>, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Stefan Popa <stefan.popa@analog.com>,
         Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        alsa-devel@alsa-project.org,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+        Vinod Koul <vkoul@kernel.org>
+Subject: Applied "ASoC: Fix misspellings of "Analog Devices"" to the asoc tree
+In-Reply-To:  <20200416103058.15269-7-geert+renesas@glider.be>
+Message-Id:  <applied-20200416103058.15269-7-geert+renesas@glider.be>
+X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thank you Mark for the constructive feedback !
-A few follow-up questions below.
+The patch
 
-On Thu, Apr 16, 2020 at 8:42 AM Mark Brown <broonie@kernel.org> wrote:
->
-> > +++ b/sound/soc/codecs/zl38060.c
-> > @@ -0,0 +1,643 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * Codec driver for Microsemi ZL38060 Connected Home Audio Processor.
-> > + *
->
-> Please make the entire comment a C++ one so things look more
-> intentional.
+   ASoC: Fix misspellings of "Analog Devices"
 
-The 'weird' combination of // SPDX and /* Description/copyright */ seems to
-be a kernel-wide standard (for C files, at least) ?
+has been applied to the asoc tree at
 
-E.g.:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/sound/soc/codecs/wm9090.c?h=v5.7-rc1#n2
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/sound/soc/codecs/wm8904.c?h=v5.7-rc1#n2
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
-Ok to keep?
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
->
-> > +skip_setup:
-> > +     if (priv->amp_en_gpio && tx) {
-> > +             /* enable the external amplifier before playback starts */
-> > +             gpiod_set_value_cansleep(priv->amp_en_gpio, 1);
-> > +             if (priv->amp_startup_delay_ms)
-> > +                     msleep(priv->amp_startup_delay_ms);
-> > +     }
->
-> This external amplifier support shouldn't be here, if there's other
-> devices in the system then they will have their own drivers and the
-> machine driver will take care of linking things together.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-In our application, the amp is a "dumb" class-D amp with a single enable line:
-https://www.onsemi.com/pub/Collateral/FAB3103-D.pdf
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-I am not sure how I could make this more general. Could you point me to an
-example somewhere in the tree?
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
->
-> > +     priv->regmap = devm_regmap_init(dev, &zl38_regmap_bus, spi,
-> > +                                     &zl38_regmap_conf);
-> > +     if (IS_ERR(priv->regmap))
-> > +             return PTR_ERR(priv->regmap);
->
-> devm_regmap_init_spi()
+Thanks,
+Mark
 
-I wish !! This chip has complex SPI addressing, using an "address" which:
-- is variable length, depending on the page of the register being accessed;
-- contains a field with the length of the data to follow.
+From b938b25f49cdb47397b0215b69cdd5251b4b2f8b Mon Sep 17 00:00:00 2001
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Date: Thu, 16 Apr 2020 12:30:58 +0200
+Subject: [PATCH] ASoC: Fix misspellings of "Analog Devices"
 
-Unfortunately, during firmware programming, multi-writes are mandatory
-(usually address header + 32 data bytes).
+According to https://www.analog.com/, the company name is spelled
+"Analog Devices".
 
-Implementing my own regmap_bus looked like the only way out.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Link: https://lore.kernel.org/r/20200416103058.15269-7-geert+renesas@glider.be
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/codecs/ad1980.c  | 2 +-
+ sound/soc/codecs/ad73311.c | 2 +-
+ sound/soc/codecs/wm8782.c  | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/sound/soc/codecs/ad1980.c b/sound/soc/codecs/ad1980.c
+index c4414c725c1f..43b1337bac37 100644
+--- a/sound/soc/codecs/ad1980.c
++++ b/sound/soc/codecs/ad1980.c
+@@ -2,7 +2,7 @@
+ /*
+  * ad1980.c  --  ALSA Soc AD1980 codec support
+  *
+- * Copyright:	Analog Device Inc.
++ * Copyright:	Analog Devices Inc.
+  * Author:	Roy Huang <roy.huang@analog.com>
+  * 		Cliff Cai <cliff.cai@analog.com>
+  */
+diff --git a/sound/soc/codecs/ad73311.c b/sound/soc/codecs/ad73311.c
+index 10daf61f0294..b98bf19f594e 100644
+--- a/sound/soc/codecs/ad73311.c
++++ b/sound/soc/codecs/ad73311.c
+@@ -2,7 +2,7 @@
+ /*
+  * ad73311.c  --  ALSA Soc AD73311 codec support
+  *
+- * Copyright:	Analog Device Inc.
++ * Copyright:	Analog Devices Inc.
+  * Author:	Cliff Cai <cliff.cai@analog.com>
+  */
+ 
+diff --git a/sound/soc/codecs/wm8782.c b/sound/soc/codecs/wm8782.c
+index aa5577e364d0..f89855c616eb 100644
+--- a/sound/soc/codecs/wm8782.c
++++ b/sound/soc/codecs/wm8782.c
+@@ -7,7 +7,7 @@
+  * Author: Johannes Stezenbach <js@sig21.net>
+  *
+  * based on ad73311.c
+- * Copyright:	Analog Device Inc.
++ * Copyright:	Analog Devices Inc.
+  * Author:	Cliff Cai <cliff.cai@analog.com>
+  */
+ 
+-- 
+2.20.1
+
