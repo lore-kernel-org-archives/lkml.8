@@ -2,293 +2,124 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0568FC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:26:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE75C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:27:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB1BA2078A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:26:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2B362078A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:27:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="LK4ebbDC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407985AbgDPG0Q (ORCPT
+        id S2408004AbgDPG1J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 02:26:16 -0400
-Received: from ZXSHCAS1.zhaoxin.com ([203.148.12.81]:35595 "EHLO
-        ZXSHCAS1.zhaoxin.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2407774AbgDPG0M (ORCPT
+        Thu, 16 Apr 2020 02:27:09 -0400
+Received: from www381.your-server.de ([78.46.137.84]:50540 "EHLO
+        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407774AbgDPG0t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 02:26:12 -0400
-Received: from zxbjmbx2.zhaoxin.com (10.29.252.164) by ZXSHCAS1.zhaoxin.com
- (10.28.252.161) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Thu, 16 Apr
- 2020 14:26:03 +0800
-Received: from [10.28.64.103] (10.28.64.103) by zxbjmbx2.zhaoxin.com
- (10.29.252.164) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Thu, 16 Apr
- 2020 14:26:02 +0800
-Subject: Re: [PATCH] x86/perf: Add hardware performance events support for
- Zhaoxin CPU.
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
-        <namhyung@kernel.org>, <tglx@linutronix.de>, <bp@alien8.de>,
-        <x86@kernel.org>, <hpa@zytor.com>, <linux-kernel@vger.kernel.org>,
-        <cooperyan@zhaoxin.com>, <codyyao@zhaoxin.com>
-References: <1586747669-4827-1-git-send-email-CodyYao-oc@zhaoxin.com>
- <20200415102340.GB20730@hirez.programming.kicks-ass.net>
-From:   CodyYao-oc <CodyYao-oc@zhaoxin.com>
-Message-ID: <d7ef73fb-aa89-4f9c-d54a-7bd0562e9ea3@zhaoxin.com>
-Date:   Thu, 16 Apr 2020 14:26:32 +0800
+        Thu, 16 Apr 2020 02:26:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
+         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=g7Vi2/Hb9U0pCoO0gaAbAqRZVAlk6m1vSaGchp2ohlg=; b=LK4ebbDCkXX7MaIt9QBxINRgzo
+        H7pcr0u7SGyf1iU1JpONUKf7VlmabyIqAHgJ61lIdaGQWS0/bFzTfIqpQpd/t7musWK7OC+T6rdRH
+        /G+a4vP16iCVNQbmPCiMAC4cAm9m/FhPCWXJVoVT3pOdUn0VWg3AEGWZib9gW40ejPX4f5Z52guAh
+        YzLdLpzG9klokaVfNLrVV9abiIAq7FDt4hkzR0Lf1y8KMcnTjwOfoy75771lgaQxKjU/JTfO00e8L
+        Fg6pHzy0ZxYs4WveuKJxNjGuTCi+LDp7/pWVuQim5kY9iShUCV3jgqLHQGECaTIhZqE0mMG45Zm4i
+        urzqQY9w==;
+Received: from sslproxy01.your-server.de ([78.46.139.224])
+        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <lars@metafoo.de>)
+        id 1jOxyv-0001c5-Qz; Thu, 16 Apr 2020 08:26:38 +0200
+Received: from [82.135.73.197] (helo=[192.168.178.20])
+        by sslproxy01.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <lars@metafoo.de>)
+        id 1jOxyv-000Q4G-FE; Thu, 16 Apr 2020 08:26:37 +0200
+Subject: Re: [PATCH 2/3] iio: adc: ti-ads8344: remove tx_buf from driver data
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Jonathan Cameron <jic23@kernel.org>
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200415212257.161238-1-alexandre.belloni@bootlin.com>
+ <20200415212257.161238-3-alexandre.belloni@bootlin.com>
+From:   Lars-Peter Clausen <lars@metafoo.de>
+Message-ID: <3b3adb8b-24a0-acb8-7b03-d905733319d5@metafoo.de>
+Date:   Thu, 16 Apr 2020 08:26:36 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200415102340.GB20730@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20200415212257.161238-3-alexandre.belloni@bootlin.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.28.64.103]
-X-ClientProxiedBy: ZXSHCAS1.zhaoxin.com (10.28.252.161) To
- zxbjmbx2.zhaoxin.com (10.29.252.164)
+X-Authenticated-Sender: lars@metafoo.de
+X-Virus-Scanned: Clear (ClamAV 0.102.2/25783/Wed Apr 15 14:03:13 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/4/15 下午6:23, Peter Zijlstra wrote:
-> On Mon, Apr 13, 2020 at 11:14:29AM +0800, CodyYao-oc wrote:
->> Zhaoxin CPU has provided facilities for monitoring performance
->> via PMU(Performance Monitor Unit), but the functionality is unused so far.
->> Therefore, add support for zhaoxin pmu to make performance related
->> hardware events available.
->>
->> Signed-off-by: CodyYao-oc <CodyYao-oc@zhaoxin.com>
->> Reported-by: kbuild test robot <lkp@intel.com>
-> 
-> What's that reported-by thing? Did the robot complain you didn't have a
-> PMU implementation?
+On 4/15/20 11:22 PM, Alexandre Belloni wrote:
+> There is no need to keep tx_buf around, it is only used for the conversion.
 >
-Hi Peter, it's a warning message about uninitialized variable, paste the 
-log below, sorry for miss it. Futhermore, it will disappear base on your 
-newly modified patch. Thanks!
-
-[All warnings (new ones prefixed by >>):
-
- >> arch/x86/events/zhaoxin/core.c:362:6: warning: variable 'is_zxc' is 
-used uninitialized whenever 'if' condition is false 
-[-Wsometimes-uninitialized]
-            if (boot_cpu_data.x86 == 0x06 &&
-                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    arch/x86/events/zhaoxin/core.c:369:6: note: uninitialized use occurs 
-here
-            if (is_zxc)
-                ^~~~~~
-    arch/x86/events/zhaoxin/core.c:362:2: note: remove the 'if' if its 
-condition is always true
-            if (boot_cpu_data.x86 == 0x06 &&
-            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- >> arch/x86/events/zhaoxin/core.c:362:6: warning: variable 'is_zxc' is 
-used uninitialized whenever '&&' condition is false 
-[-Wsometimes-uninitialized]
-            if (boot_cpu_data.x86 == 0x06 &&
-                ^~~~~~~~~~~~~~~~~~~~~~~~~
-    arch/x86/events/zhaoxin/core.c:369:6: note: uninitialized use occurs 
-here
-            if (is_zxc)
-                ^~~~~~
-    arch/x86/events/zhaoxin/core.c:362:6: note: remove the '&&' if its 
-condition is always true
-            if (boot_cpu_data.x86 == 0x06 &&
-                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    arch/x86/events/zhaoxin/core.c:352:13: note: initialize the variable 
-'is_zxc' to silence this warning
-            bool is_zxc;
-                       ^
-                        = 0
-    2 warnings generated.]
-
-Reported-by: kbuild test rebot<lkp@intel.com>
-
-> Anyway, I've made the below changes to the patch.
-> 
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 > ---
-> --- a/arch/x86/events/perf_event.h
-> +++ b/arch/x86/events/perf_event.h
-> @@ -618,6 +618,7 @@ struct x86_pmu {
->   
->   	/* PMI handler bits */
->   	unsigned int	late_ack		:1,
-> +			enabled_ack		:1,
->   			counter_freezing	:1;
->   	/*
->   	 * sysfs attrs
-> --- a/arch/x86/events/zhaoxin/core.c
-> +++ b/arch/x86/events/zhaoxin/core.c
-> @@ -357,10 +357,9 @@ static int zhaoxin_pmu_handle_irq(struct
->   {
->   	struct perf_sample_data data;
->   	struct cpu_hw_events *cpuc;
-> -	int bit;
-> -	u64 status;
-> -	bool is_zxc = false;
->   	int handled = 0;
-> +	u64 status;
-> +	int bit;
->   
->   	cpuc = this_cpu_ptr(&cpu_hw_events);
->   	apic_write(APIC_LVTPC, APIC_DM_NMI);
-> @@ -369,14 +368,8 @@ static int zhaoxin_pmu_handle_irq(struct
->   	if (!status)
->   		goto done;
->   
-> -	if (boot_cpu_data.x86 == 0x06 &&
-> -		(boot_cpu_data.x86_model == 0x0f ||
-> -			boot_cpu_data.x86_model == 0x19))
-> -		is_zxc = true;
->   again:
+>   drivers/iio/adc/ti-ads8344.c | 18 ++++++------------
+>   1 file changed, 6 insertions(+), 12 deletions(-)
+>
+> diff --git a/drivers/iio/adc/ti-ads8344.c b/drivers/iio/adc/ti-ads8344.c
+> index 6da50ea35217..9b2d3a8ea6bd 100644
+> --- a/drivers/iio/adc/ti-ads8344.c
+> +++ b/drivers/iio/adc/ti-ads8344.c
+> @@ -22,13 +22,7 @@
+>   struct ads8344 {
+>   	struct spi_device *spi;
+>   	struct regulator *reg;
+> -	/*
+> -	 * Lock protecting access to adc->tx_buff and rx_buff,
+> -	 * especially from concurrent read on sysfs file.
+> -	 */
+> -	struct mutex lock;
 > -
-> -	/*Clearing status works only if the global control is enable on zxc.*/
-> -	if (is_zxc)
-> +	if (x86_pmu.enabled_ack)
->   		zxc_pmu_ack_status(status);
->   	else
->   		zhaoxin_pmu_ack_status(status);
-> @@ -504,12 +497,10 @@ static __init void zhaoxin_arch_events_q
->   	int bit;
+> -	u8 tx_buf ____cacheline_aligned;
+> +	struct mutex lock; /* protect from concurrent conversions */
+>   };
 >   
->   	/* disable event that reported as not presend by cpuid */
-> -	for_each_set_bit(bit, x86_pmu.events_mask,
-> -			ARRAY_SIZE(zx_arch_events_map)) {
-> -
-> +	for_each_set_bit(bit, x86_pmu.events_mask, ARRAY_SIZE(zx_arch_events_map)) {
->   		zx_pmon_event_map[zx_arch_events_map[bit].id] = 0;
->   		pr_warn("CPUID marked event: \'%s\' unavailable\n",
-> -				zx_arch_events_map[bit].name);
-> +			zx_arch_events_map[bit].name);
->   	}
->   }
+>   #define ADS8344_VOLTAGE_CHANNEL(chan, si)				\
+> @@ -77,13 +71,13 @@ static int ads8344_adc_conversion(struct ads8344 *adc, int channel,
+>   	int ret;
+>   	u8 buf[3];
+
+spi_write() might use the buffer in a DMA transfer, so it can't be on 
+the stack and needs to be in its own cacheline.
+
 >   
-> @@ -534,12 +525,12 @@ __init int zhaoxin_pmu_init(void)
->   		return -ENODEV;
+> -	adc->tx_buf = ADS8344_START;
+> +	buf[0] = ADS8344_START;
+>   	if (!differential)
+> -		adc->tx_buf |= ADS8344_SINGLE_END;
+> -	adc->tx_buf |= ADS8344_CHANNEL(channel);
+> -	adc->tx_buf |= ADS8344_CLOCK_INTERNAL;
+> +		buf[0] |= ADS8344_SINGLE_END;
+> +	buf[0] |= ADS8344_CHANNEL(channel);
+> +	buf[0] |= ADS8344_CLOCK_INTERNAL;
 >   
->   	version = eax.split.version_id;
-> -	if (version == 2) {
-> -		x86_pmu = zhaoxin_pmu;
-> -		pr_info("Version check pass!\n");
-> -	} else
-> +	if (version != 2)
->   		return -ENODEV;
+> -	ret = spi_write(spi, &adc->tx_buf, 1);
+> +	ret = spi_write(spi, buf, 1);
+>   	if (ret)
+>   		return ret;
 >   
-> +	x86_pmu = zhaoxin_pmu;
-> +	pr_info("Version check pass!\n");
-> +
->   	x86_pmu.version			= version;
->   	x86_pmu.num_counters		= eax.split.num_counters;
->   	x86_pmu.cntval_bits		= eax.split.bit_width;
-> @@ -552,11 +543,13 @@ __init int zhaoxin_pmu_init(void)
->   
->   	switch (boot_cpu_data.x86) {
->   	case 0x06:
-> -		if (boot_cpu_data.x86_model == 0x0f ||
-> -			boot_cpu_data.x86_model == 0x19) {
-> +		if (boot_cpu_data.x86_model == 0x0f || boot_cpu_data.x86_model == 0x19) {
->   
->   			x86_pmu.max_period = x86_pmu.cntval_mask >> 1;
->   
-> +			/* Clearing status works only if the global control is enable on zxc. */
-> +			x86_pmu.enabled_ack = 1;
-> +
->   			x86_pmu.event_constraints = zxc_event_constraints;
->   			zx_pmon_event_map[PERF_COUNT_HW_INSTRUCTIONS] = 0;
->   			zx_pmon_event_map[PERF_COUNT_HW_CACHE_REFERENCES] = 0;
-> @@ -564,40 +557,37 @@ __init int zhaoxin_pmu_init(void)
->   			zx_pmon_event_map[PERF_COUNT_HW_BUS_CYCLES] = 0;
->   
->   			pr_cont("ZXC events, ");
-> -		} else
-> -			return -ENODEV;
-> -		break;
-> +			break;
-> +		}
-> +		return -ENODEV;
-> +
->   	case 0x07:
->   		zx_pmon_event_map[PERF_COUNT_HW_STALLED_CYCLES_FRONTEND] =
-> -		X86_CONFIG(.event = 0x01, .umask = 0x01, .inv = 0x01, .cmask = 0x01);
-> +			X86_CONFIG(.event = 0x01, .umask = 0x01, .inv = 0x01, .cmask = 0x01);
->   
->   		zx_pmon_event_map[PERF_COUNT_HW_STALLED_CYCLES_BACKEND] =
-> -		X86_CONFIG(.event = 0x0f, .umask = 0x04, .inv = 0, .cmask = 0);
-> +			X86_CONFIG(.event = 0x0f, .umask = 0x04, .inv = 0, .cmask = 0);
->   
->   		switch (boot_cpu_data.x86_model) {
->   		case 0x1b:
->   			memcpy(hw_cache_event_ids, zxd_hw_cache_event_ids,
-> -				sizeof(hw_cache_event_ids));
-> +			       sizeof(hw_cache_event_ids));
->   
->   			x86_pmu.event_constraints = zxd_event_constraints;
->   
-> -			zx_pmon_event_map[PERF_COUNT_HW_BRANCH_INSTRUCTIONS]
-> -				= 0x0700;
-> -			zx_pmon_event_map[PERF_COUNT_HW_BRANCH_MISSES]
-> -				= 0x0709;
-> +			zx_pmon_event_map[PERF_COUNT_HW_BRANCH_INSTRUCTIONS] = 0x0700;
-> +			zx_pmon_event_map[PERF_COUNT_HW_BRANCH_MISSES] = 0x0709;
->   
->   			pr_cont("ZXD events, ");
->   			break;
->   		case 0x3b:
->   			memcpy(hw_cache_event_ids, zxe_hw_cache_event_ids,
-> -				sizeof(hw_cache_event_ids));
-> +			       sizeof(hw_cache_event_ids));
->   
->   			x86_pmu.event_constraints = zxd_event_constraints;
->   
-> -			zx_pmon_event_map[PERF_COUNT_HW_BRANCH_INSTRUCTIONS]
-> -				= 0x0028;
-> -			zx_pmon_event_map[PERF_COUNT_HW_BRANCH_MISSES]
-> -				= 0x0029;
-> +			zx_pmon_event_map[PERF_COUNT_HW_BRANCH_INSTRUCTIONS] = 0x0028;
-> +			zx_pmon_event_map[PERF_COUNT_HW_BRANCH_MISSES] = 0x0029;
->   
->   			pr_cont("ZXE events, ");
->   			break;
-> @@ -605,13 +595,13 @@ __init int zhaoxin_pmu_init(void)
->   			return -ENODEV;
->   		}
->   		break;
-> +
->   	default:
->   		return -ENODEV;
->   	}
->   
->   	x86_pmu.intel_ctrl = (1 << (x86_pmu.num_counters)) - 1;
-> -	x86_pmu.intel_ctrl |=
-> -		((1LL << x86_pmu.num_counters_fixed)-1) << INTEL_PMC_IDX_FIXED;
-> +	x86_pmu.intel_ctrl |= ((1LL << x86_pmu.num_counters_fixed)-1) << INTEL_PMC_IDX_FIXED;
->   
->   	if (x86_pmu.event_constraints) {
->   		for_each_event_constraint(c, x86_pmu.event_constraints) {
-> --- a/arch/x86/kernel/cpu/perfctr-watchdog.c
-> +++ b/arch/x86/kernel/cpu/perfctr-watchdog.c
-> @@ -63,6 +63,7 @@ static inline unsigned int nmi_perfctr_m
->   		case 15:
->   			return msr - MSR_P4_BPU_PERFCTR0;
->   		}
-> +		fallthrough;
->   	case X86_VENDOR_ZHAOXIN:
->   	case X86_VENDOR_CENTAUR:
->   		return msr - MSR_ARCH_PERFMON_PERFCTR0;
-> @@ -95,6 +96,7 @@ static inline unsigned int nmi_evntsel_m
->   		case 15:
->   			return msr - MSR_P4_BSU_ESCR0;
->   		}
-> +		fallthrough;
->   	case X86_VENDOR_ZHAOXIN:
->   	case X86_VENDOR_CENTAUR:
->   		return msr - MSR_ARCH_PERFMON_EVENTSEL0;
-> .
-> 
+
 
