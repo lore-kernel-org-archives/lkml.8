@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA311C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B137C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:06:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89883206D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:06:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E4A1206D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:06:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587045969;
-	bh=lmDFwSRJINaEuNcm0imgBOH7qPo597f26/3MDbu0cUE=;
+	s=default; t=1587045977;
+	bh=hFO4jLIKH+x5/7ssSNwRO2Wq0ZVgFPUvQpXBS26CSuE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nBtn4N87UIeFg2hsBs2cj9dudb8jYaOlIXz9TxXi0BUaVkVonsbgQxMWo+s+Hntkg
-	 YvaYfKjhLxdo4mbjklIvp8S8kz2JVDNuTfSE+65pF9tIrxUoLETXPJKOP22amvYXLN
-	 Z/PBt51iZQRNQa9ONFgM5CyUvTJT2twg09E9ezPY=
+	b=AAyz6LwkELUkNiWvvOvD2cqx8s99WBL80pbW1z7DW5p7q1+u7gQqQcHbWxOIATD+M
+	 dSAqL3J6phJzC0a26cdQC9qHR/CP01+XQh9s+BUNnWH2GYVltkw9boeJYPqEzq6Fon
+	 YDiHOfodDh8WpWPEHAr4keGJza8fFIHzf6EUqKV8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409493AbgDPOGG (ORCPT
+        id S1727978AbgDPOEy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:06:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57476 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:04:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2506637AbgDPNoM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:44:12 -0400
+        id S2392208AbgDPNnF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:43:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3E9E2076D;
-        Thu, 16 Apr 2020 13:44:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28A7F2223E;
+        Thu, 16 Apr 2020 13:43:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044651;
-        bh=lmDFwSRJINaEuNcm0imgBOH7qPo597f26/3MDbu0cUE=;
+        s=default; t=1587044584;
+        bh=hFO4jLIKH+x5/7ssSNwRO2Wq0ZVgFPUvQpXBS26CSuE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fU5fuDIMfQvRoK8iecAuMtlHKEwisGbkn4D63QqbnaH7I1ly35Xi+ao8JSE+kJYK5
-         Z9wQcqtYIhmW6BDEgu2Yj7l0dXWAIUeFhVnf8A5kgzdzMThvnFfnyC4J5i6RolhE14
-         ji5gplDcNgxmTSqF5WxinK5hq4WDNiRt74HaLqbo=
+        b=yHtMoGqVFgTY1OyIW2skAqLoAqG2xG0izTP7PLVUJIDqkNZT8IHW0cdk/3Pc7Qf6T
+         jsFkEamm5YDwDULh9H3hCZ5hlqz8cRGR0gBG+XEcQEtOlhHg2HX1zSFrah9MV6i4g4
+         M9yc3RNmAKtchdKzIOjiFcsJlz3Gf6JYybkF/8kk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Reitemeyer <nick.reitemeyer@web.de>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        stable@vger.kernel.org, Ondrej Jirman <megous@megous.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <maxime@cerno.tech>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 006/232] Input: tm2-touchkey - add support for Coreriver TC360 variant
-Date:   Thu, 16 Apr 2020 15:21:40 +0200
-Message-Id: <20200416131317.331398711@linuxfoundation.org>
+Subject: [PATCH 5.4 002/232] bus: sunxi-rsb: Return correct data when mixing 16-bit and 8-bit reads
+Date:   Thu, 16 Apr 2020 15:21:36 +0200
+Message-Id: <20200416131316.920781685@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -60,50 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Reitemeyer <nick.reitemeyer@web.de>
+From: Ondrej Jirman <megous@megous.com>
 
-[ Upstream commit da3289044833769188c0da945d2cec90af35e87e ]
+[ Upstream commit a43ab30dcd4a1abcdd0d2461bf1cf7c0817f6cd3 ]
 
-The Coreriver TouchCore 360 is like the midas board touchkey, but it is
-using a fixed regulator.
+When doing a 16-bit read that returns data in the MSB byte, the
+RSB_DATA register will keep the MSB byte unchanged when doing
+the following 8-bit read. sunxi_rsb_read() will then return
+a result that contains high byte from 16-bit read mixed with
+the 8-bit result.
 
-Signed-off-by: Nick Reitemeyer <nick.reitemeyer@web.de>
-Link: https://lore.kernel.org/r/20200121141525.3404-3-nick.reitemeyer@web.de
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+The consequence is that after this happens the PMIC's regmap will
+look like this: (0x33 is the high byte from the 16-bit read)
+
+% cat /sys/kernel/debug/regmap/sunxi-rsb-3a3/registers
+00: 33
+01: 33
+02: 33
+03: 33
+04: 33
+05: 33
+06: 33
+07: 33
+08: 33
+09: 33
+0a: 33
+0b: 33
+0c: 33
+0d: 33
+0e: 33
+[snip]
+
+Fix this by masking the result of the read with the correct mask
+based on the size of the read. There are no 16-bit users in the
+mainline kernel, so this doesn't need to get into the stable tree.
+
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+Acked-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/keyboard/tm2-touchkey.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/bus/sunxi-rsb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/input/keyboard/tm2-touchkey.c b/drivers/input/keyboard/tm2-touchkey.c
-index 14b55bacdd0f1..fb078e049413f 100644
---- a/drivers/input/keyboard/tm2-touchkey.c
-+++ b/drivers/input/keyboard/tm2-touchkey.c
-@@ -75,6 +75,14 @@ static struct touchkey_variant aries_touchkey_variant = {
- 	.cmd_led_off = ARIES_TOUCHKEY_CMD_LED_OFF,
- };
+diff --git a/drivers/bus/sunxi-rsb.c b/drivers/bus/sunxi-rsb.c
+index be79d6c6a4e45..1bb00a959c67f 100644
+--- a/drivers/bus/sunxi-rsb.c
++++ b/drivers/bus/sunxi-rsb.c
+@@ -345,7 +345,7 @@ static int sunxi_rsb_read(struct sunxi_rsb *rsb, u8 rtaddr, u8 addr,
+ 	if (ret)
+ 		goto unlock;
  
-+static const struct touchkey_variant tc360_touchkey_variant = {
-+	.keycode_reg = 0x00,
-+	.base_reg = 0x00,
-+	.fixed_regulator = true,
-+	.cmd_led_on = TM2_TOUCHKEY_CMD_LED_ON,
-+	.cmd_led_off = TM2_TOUCHKEY_CMD_LED_OFF,
-+};
-+
- static int tm2_touchkey_led_brightness_set(struct led_classdev *led_dev,
- 					    enum led_brightness brightness)
- {
-@@ -327,6 +335,9 @@ static const struct of_device_id tm2_touchkey_of_match[] = {
- 	}, {
- 		.compatible = "cypress,aries-touchkey",
- 		.data = &aries_touchkey_variant,
-+	}, {
-+		.compatible = "coreriver,tc360-touchkey",
-+		.data = &tc360_touchkey_variant,
- 	},
- 	{ },
- };
+-	*buf = readl(rsb->regs + RSB_DATA);
++	*buf = readl(rsb->regs + RSB_DATA) & GENMASK(len * 8 - 1, 0);
+ 
+ unlock:
+ 	mutex_unlock(&rsb->lock);
 -- 
 2.20.1
 
