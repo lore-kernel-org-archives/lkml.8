@@ -2,52 +2,53 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C1D0C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F00C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:41:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A88B2223C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:41:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A62352222C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:41:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587044461;
-	bh=z4Y8kmHA0kzaiF82tX9ljWFZJuBuSiiOA2BFNp01Q+Q=;
+	s=default; t=1587044473;
+	bh=YT2uPu+CvbKPtXH7NT0G3Z7bnBFybUw4cBTirjFdyIA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C56JsVyVMgORoamB45V6Z3Fe54K+l+TP2CQdKJ+N8uvJb1L3UrlZM2Y53dvNCOYFm
-	 d7S4l/I6B+I9rraSpOjdObOVNxDhuZhij4lJSzmUqWttjprRzdeWrLGDYUVZQABqGA
-	 l3APz3LPGRjOMvBcSDvxMqRXNIC+NCALNoMWnWBE=
+	b=hGD61BCQZ/UN/ypdJU2l7tSu4HV9pFSQOpIEkVRgyw8aXyExp7Ybr25fVAsTOH15v
+	 pz7XG/usfww1G3bfA9rbJrTCqMAEmrXUcfZxV4gqw/BB6W7VPQGDDsR30VoW5iEOX7
+	 kzE8rtOVzA+nhmwGJTsROX7DzFaSVDS+PqoRsDPg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2898233AbgDPNk7 (ORCPT
+        id S2898266AbgDPNlM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:40:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41672 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:41:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896467AbgDPNcf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:32:35 -0400
+        id S2896270AbgDPNah (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:30:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5553321D94;
-        Thu, 16 Apr 2020 13:31:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 716B6206E9;
+        Thu, 16 Apr 2020 13:30:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043873;
-        bh=z4Y8kmHA0kzaiF82tX9ljWFZJuBuSiiOA2BFNp01Q+Q=;
+        s=default; t=1587043836;
+        bh=YT2uPu+CvbKPtXH7NT0G3Z7bnBFybUw4cBTirjFdyIA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MQf6PqqJkSMM4rEGT6DEi47Zw9J9bY60nVlo4emI3uGIRje7Cg0ftgiLt6Qs6V3VI
-         kpkLjC/Qf+Y8iBUHd4AUK5yb222m2yJmDHH0NqFEKPPwny1+s8tHXZJakaM2LnG62U
-         4eLdKy0n/2Io0t2wSGw4bqvYNaWk+hSF6+8mjvAM=
+        b=cZHgfFiYsBLicpa/vdFpVouDR8NUY8UD4ny3NQZUdzJdeCZsqBibGm1rlcEm4tw7m
+         oo3V2glyte/S05AoosQR3COvwRcSJslSpziKC/RMeD76w20Q5MgJ2b9UqYbPt7hC4i
+         VE8uBUWCbOkeLDiAOrHpetZNfnr7vsD1jj3W08LE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gilad Ben-Yossef <gilad@benyossef.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 136/146] crypto: ccree - zero out internal struct before use
-Date:   Thu, 16 Apr 2020 15:24:37 +0200
-Message-Id: <20200416131301.008084729@linuxfoundation.org>
+        stable@vger.kernel.org, Janosch Frank <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: [PATCH 4.19 080/146] KVM: s390: vsie: Fix region 1 ASCE sanity shadow address checks
+Date:   Thu, 16 Apr 2020 15:23:41 +0200
+Message-Id: <20200416131253.818790582@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
 References: <20200416131242.353444678@linuxfoundation.org>
@@ -60,98 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gilad Ben-Yossef <gilad@benyossef.com>
+From: David Hildenbrand <david@redhat.com>
 
-[ Upstream commit 9f31eb6e08cc1b0eb3926eebf4c51467479a7722 ]
+commit a1d032a49522cb5368e5dfb945a85899b4c74f65 upstream.
 
-We did not zero out the internal struct before use causing problem
-in some rare error code paths.
+In case we have a region 1 the following calculation
+(31 + ((gmap->asce & _ASCE_TYPE_MASK) >> 2)*11)
+results in 64. As shifts beyond the size are undefined the compiler is
+free to use instructions like sllg. sllg will only use 6 bits of the
+shift value (here 64) resulting in no shift at all. That means that ALL
+addresses will be rejected.
 
-Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The can result in endless loops, e.g. when prefix cannot get mapped.
+
+Fixes: 4be130a08420 ("s390/mm: add shadow gmap support")
+Tested-by: Janosch Frank <frankja@linux.ibm.com>
+Reported-by: Janosch Frank <frankja@linux.ibm.com>
+Cc: <stable@vger.kernel.org> # v4.8+
+Signed-off-by: David Hildenbrand <david@redhat.com>
+Link: https://lore.kernel.org/r/20200403153050.20569-2-david@redhat.com
+Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
+[borntraeger@de.ibm.com: fix patch description, remove WARN_ON_ONCE]
+Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/crypto/ccree/cc_aead.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ arch/s390/mm/gmap.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/crypto/ccree/cc_aead.c b/drivers/crypto/ccree/cc_aead.c
-index aa6b45bc13b98..c9233420fe421 100644
---- a/drivers/crypto/ccree/cc_aead.c
-+++ b/drivers/crypto/ccree/cc_aead.c
-@@ -2058,6 +2058,8 @@ static int cc_aead_encrypt(struct aead_request *req)
- 	struct aead_req_ctx *areq_ctx = aead_request_ctx(req);
- 	int rc;
+--- a/arch/s390/mm/gmap.c
++++ b/arch/s390/mm/gmap.c
+@@ -787,14 +787,18 @@ static void gmap_call_notifier(struct gm
+ static inline unsigned long *gmap_table_walk(struct gmap *gmap,
+ 					     unsigned long gaddr, int level)
+ {
++	const int asce_type = gmap->asce & _ASCE_TYPE_MASK;
+ 	unsigned long *table;
  
-+	memset(areq_ctx, 0, sizeof(*areq_ctx));
+ 	if ((gmap->asce & _ASCE_TYPE_MASK) + 4 < (level * 4))
+ 		return NULL;
+ 	if (gmap_is_shadow(gmap) && gmap->removed)
+ 		return NULL;
+-	if (gaddr & (-1UL << (31 + ((gmap->asce & _ASCE_TYPE_MASK) >> 2)*11)))
 +
- 	/* No generated IV required */
- 	areq_ctx->backup_iv = req->iv;
- 	areq_ctx->backup_giv = NULL;
-@@ -2087,6 +2089,8 @@ static int cc_rfc4309_ccm_encrypt(struct aead_request *req)
- 		goto out;
- 	}
- 
-+	memset(areq_ctx, 0, sizeof(*areq_ctx));
++	if (asce_type != _ASCE_TYPE_REGION1 &&
++	    gaddr & (-1UL << (31 + (asce_type >> 2) * 11)))
+ 		return NULL;
 +
- 	/* No generated IV required */
- 	areq_ctx->backup_iv = req->iv;
- 	areq_ctx->backup_giv = NULL;
-@@ -2106,6 +2110,8 @@ static int cc_aead_decrypt(struct aead_request *req)
- 	struct aead_req_ctx *areq_ctx = aead_request_ctx(req);
- 	int rc;
- 
-+	memset(areq_ctx, 0, sizeof(*areq_ctx));
-+
- 	/* No generated IV required */
- 	areq_ctx->backup_iv = req->iv;
- 	areq_ctx->backup_giv = NULL;
-@@ -2133,6 +2139,8 @@ static int cc_rfc4309_ccm_decrypt(struct aead_request *req)
- 		goto out;
- 	}
- 
-+	memset(areq_ctx, 0, sizeof(*areq_ctx));
-+
- 	/* No generated IV required */
- 	areq_ctx->backup_iv = req->iv;
- 	areq_ctx->backup_giv = NULL;
-@@ -2250,6 +2258,8 @@ static int cc_rfc4106_gcm_encrypt(struct aead_request *req)
- 		goto out;
- 	}
- 
-+	memset(areq_ctx, 0, sizeof(*areq_ctx));
-+
- 	/* No generated IV required */
- 	areq_ctx->backup_iv = req->iv;
- 	areq_ctx->backup_giv = NULL;
-@@ -2273,6 +2283,8 @@ static int cc_rfc4543_gcm_encrypt(struct aead_request *req)
- 	struct aead_req_ctx *areq_ctx = aead_request_ctx(req);
- 	int rc;
- 
-+	memset(areq_ctx, 0, sizeof(*areq_ctx));
-+
- 	//plaintext is not encryped with rfc4543
- 	areq_ctx->plaintext_authenticate_only = true;
- 
-@@ -2305,6 +2317,8 @@ static int cc_rfc4106_gcm_decrypt(struct aead_request *req)
- 		goto out;
- 	}
- 
-+	memset(areq_ctx, 0, sizeof(*areq_ctx));
-+
- 	/* No generated IV required */
- 	areq_ctx->backup_iv = req->iv;
- 	areq_ctx->backup_giv = NULL;
-@@ -2328,6 +2342,8 @@ static int cc_rfc4543_gcm_decrypt(struct aead_request *req)
- 	struct aead_req_ctx *areq_ctx = aead_request_ctx(req);
- 	int rc;
- 
-+	memset(areq_ctx, 0, sizeof(*areq_ctx));
-+
- 	//plaintext is not decryped with rfc4543
- 	areq_ctx->plaintext_authenticate_only = true;
- 
--- 
-2.20.1
-
+ 	table = gmap->table;
+ 	switch (gmap->asce & _ASCE_TYPE_MASK) {
+ 	case _ASCE_TYPE_REGION1:
 
 
