@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C5A1C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:38:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F54AC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:38:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76A7C21BE5
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:38:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42C51221F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:38:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587044312;
-	bh=TN8Jsvc4R6VFu2iQk7i/opH8BrugUejtTWKPKNSGQOA=;
+	s=default; t=1587044317;
+	bh=GMCeEdBjC+Mv67Ici8GialvdPUryQ4WJJTJWdXnnZhc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S6TZcRQ8O6Zj5LSFc7vb0aHbw8ZEoxHeDPKiPVIW2iQiU0SIFLtPP5NQYbwIw7sNT
-	 E6VjklqwDwo4NBtubw6u8Q/dBE5oAaEQl7KaT87fLeZ0+3U6C4egwGRNLsiKpIykGl
-	 Y5GajZTxWNdOi7Y4a9qp7Wx/2ayb5KHP25oEIsgc=
+	b=WorfnWjc1Ft+ylHJwEoda4IdpLxfNHVJ0mn24D1upsnejiO5ncLVIn9vfMNB0XDPA
+	 dmKPs2w12K3u72V/8iTftMKBuUheDiJQs/u0nJZmpNxCMQl+1I9ubo/ehi0hhFWkF4
+	 RRhvSALcuaJgmA47pwApcNbUUXZ57hpOdtF94c14=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2897697AbgDPNi2 (ORCPT
+        id S2897714AbgDPNif (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:38:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40520 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:38:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896206AbgDPNaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:30:20 -0400
+        id S2895616AbgDPNaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:30:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 497FD20767;
-        Thu, 16 Apr 2020 13:30:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88AB5206E9;
+        Thu, 16 Apr 2020 13:30:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043819;
-        bh=TN8Jsvc4R6VFu2iQk7i/opH8BrugUejtTWKPKNSGQOA=;
+        s=default; t=1587043822;
+        bh=GMCeEdBjC+Mv67Ici8GialvdPUryQ4WJJTJWdXnnZhc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sDRfM1jMRoxfxD1fF2NhMwDk194SYolsk/9rRwhB3oTOWKo9qSkqB03IeFyBs0Svw
-         ngtROKxqe12c9NNIxReG/tM1YgUKHTsRuf75lXysM8Mhtlr933ADTaHK30sU06lT08
-         samTD+tNuE/A49zUUkw8gbs4Uv7WunHWJPX9kHqU=
+        b=LaNnOKBO/HfPBfK2xGbVwmKjsQ8/rvMS4MtdhgB++rIF/QvIIs2PS8rIdXkj7kxTL
+         lhJUDvElOo2pHQ2qxBhxGyJQjgaUEKty0fgIIy8ToQHY7INpPMpPKbfxSMziGrRSxd
+         E2TQ41YX3YYQpeftzVqt+Tsu/N+mgT3WE0ARnf8o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        stable@vger.kernel.org, Changwei Ge <chge@linux.alibaba.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Jeff Vander Stoep <jeffv@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        NeilBrown <neilb@suse.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
+        Jun Piao <piaojun@huawei.com>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 112/146] fs/filesystems.c: downgrade user-reachable WARN_ONCE() to pr_warn_once()
-Date:   Thu, 16 Apr 2020 15:24:13 +0200
-Message-Id: <20200416131257.982156775@linuxfoundation.org>
+Subject: [PATCH 4.19 113/146] ocfs2: no need try to truncate file beyond i_size
+Date:   Thu, 16 Apr 2020 15:24:14 +0200
+Message-Id: <20200416131258.108216435@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
 References: <20200416131242.353444678@linuxfoundation.org>
@@ -66,55 +66,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Changwei Ge <chge@linux.alibaba.com>
 
-commit 26c5d78c976ca298e59a56f6101a97b618ba3539 upstream.
+commit 783fda856e1034dee90a873f7654c418212d12d7 upstream.
 
-After request_module(), nothing is stopping the module from being
-unloaded until someone takes a reference to it via try_get_module().
+Linux fallocate(2) with FALLOC_FL_PUNCH_HOLE mode set, its offset can
+exceed the inode size.  Ocfs2 now doesn't allow that offset beyond inode
+size.  This restriction is not necessary and violates fallocate(2)
+semantics.
 
-The WARN_ONCE() in get_fs_type() is thus user-reachable, via userspace
-running 'rmmod' concurrently.
+If fallocate(2) offset is beyond inode size, just return success and do
+nothing further.
 
-Since WARN_ONCE() is for kernel bugs only, not for user-reachable
-situations, downgrade this warning to pr_warn_once().
+Otherwise, ocfs2 will crash the kernel.
 
-Keep it printed once only, since the intent of this warning is to detect
-a bug in modprobe at boot time.  Printing the warning more than once
-wouldn't really provide any useful extra information.
+  kernel BUG at fs/ocfs2//alloc.c:7264!
+   ocfs2_truncate_inline+0x20f/0x360 [ocfs2]
+   ocfs2_remove_inode_range+0x23c/0xcb0 [ocfs2]
+   __ocfs2_change_file_space+0x4a5/0x650 [ocfs2]
+   ocfs2_fallocate+0x83/0xa0 [ocfs2]
+   vfs_fallocate+0x148/0x230
+   SyS_fallocate+0x48/0x80
+   do_syscall_64+0x79/0x170
 
-Fixes: 41124db869b7 ("fs: warn in case userspace lied about modprobe return")
-Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Changwei Ge <chge@linux.alibaba.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Jessica Yu <jeyu@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jeff Vander Stoep <jeffv@google.com>
-Cc: Jessica Yu <jeyu@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Luis Chamberlain <mcgrof@kernel.org>
-Cc: NeilBrown <neilb@suse.com>
-Cc: <stable@vger.kernel.org>		[4.13+]
-Link: http://lkml.kernel.org/r/20200312202552.241885-3-ebiggers@kernel.org
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Gang He <ghe@suse.com>
+Cc: Jun Piao <piaojun@huawei.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200407082754.17565-1-chge@linux.alibaba.com
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/filesystems.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/ocfs2/alloc.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/fs/filesystems.c
-+++ b/fs/filesystems.c
-@@ -267,7 +267,9 @@ struct file_system_type *get_fs_type(con
- 	fs = __get_fs_type(name, len);
- 	if (!fs && (request_module("fs-%.*s", len, name) == 0)) {
- 		fs = __get_fs_type(name, len);
--		WARN_ONCE(!fs, "request_module fs-%.*s succeeded, but still no fs?\n", len, name);
-+		if (!fs)
-+			pr_warn_once("request_module fs-%.*s succeeded, but still no fs?\n",
-+				     len, name);
- 	}
+--- a/fs/ocfs2/alloc.c
++++ b/fs/ocfs2/alloc.c
+@@ -7403,6 +7403,10 @@ int ocfs2_truncate_inline(struct inode *
+ 	struct ocfs2_dinode *di = (struct ocfs2_dinode *)di_bh->b_data;
+ 	struct ocfs2_inline_data *idata = &di->id2.i_data;
  
- 	if (dot && fs && !(fs->fs_flags & FS_HAS_SUBTYPE)) {
++	/* No need to punch hole beyond i_size. */
++	if (start >= i_size_read(inode))
++		return 0;
++
+ 	if (end > i_size_read(inode))
+ 		end = i_size_read(inode);
+ 
 
 
