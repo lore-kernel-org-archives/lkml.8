@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3632AC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:15:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 583C6C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:15:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04FF02076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:15:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 357B9206B9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:15:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587046525;
-	bh=PWaJRkt2NCn98O26SrArzGJFYoewu/KCLQ6IM41AeVw=;
+	s=default; t=1587046531;
+	bh=zIMMVk7TAcD0zD+FRPSfWoTEuxM27h+7dOkzAQzeEjw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g6IZh4T7FYNusei+wDHfGRj2al0T9+l/292o9Cy+B/J8yuUckF1dtc4XVdggJDXrG
-	 AQY7YiI7HAKCOL9WBUH/xeyeNAjScx4uvjKXJ8Vvws6R+ESgl/dIfpBcMlj7U3qmd/
-	 H7Vk3lHYSn+QhQP7u40Od5A/39QgF21a2dF5mEtk=
+	b=RYuaowrZIyg1pu2dJOCMZ26w3sX7d9Qs9vcOahCDsVd9lZQIWzQYTe63TYXsKLOkp
+	 0+HeCkpUqQ16ZYcPad0Q74VGEftmWRqeCZtStx00J9xdh88opn4sNn+k+KEYKUBz4b
+	 SSGW6yDuUWcWaItI4pUHHta9dUI6aDBfQKZTisf8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727893AbgDPOPX (ORCPT
+        id S1728328AbgDPOPa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:15:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37334 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:15:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408720AbgDPNvQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:51:16 -0400
+        id S2392370AbgDPNv1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:51:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 979EA2063A;
-        Thu, 16 Apr 2020 13:51:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D87C82063A;
+        Thu, 16 Apr 2020 13:51:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045075;
-        bh=PWaJRkt2NCn98O26SrArzGJFYoewu/KCLQ6IM41AeVw=;
+        s=default; t=1587045087;
+        bh=zIMMVk7TAcD0zD+FRPSfWoTEuxM27h+7dOkzAQzeEjw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Oh2HvuTVjSvPC2//ZQSCxsjq6qDxzK/qhEMfIgW/RLONLbTPzHvosAoFxXO/ju88t
-         USGvzWYc9mmPopmonIS3BAXRswT3AJHD94EGW24GaD8V3oPHKJr6rf26vAMTLU/NYy
-         NnmKiJIuPFs/c8Gy7aKCnCRuhs79HoDm3YH5sFAM=
+        b=ELXX9UwFYWneD6GYp4VXL0FGF7HHODu5VK8IP5Pcz5o5y+sSPZrFR3WgGvhjIu+Yb
+         bmR6rFhKoB3r134lUnaTOMltUgkwinYtqUsN/8sVNGOz0qcbPU7CmRaogSUozX6Jn0
+         XRMi4vG5oI+PQCS2L58jPO4Kc2jX2STeqf4cjgms=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rafael Aquini <aquini@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Eric B Munson <emunson@akamai.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 179/232] selftests: vm: drop dependencies on page flags from mlock2 tests
-Date:   Thu, 16 Apr 2020 15:24:33 +0200
-Message-Id: <20200416131337.451418109@linuxfoundation.org>
+        stable@vger.kernel.org, Bean Huo <beanhuo@micron.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Asutosh Das <asutoshd@codeaurora.org>,
+        Can Guo <cang@codeaurora.org>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.4 174/232] scsi: ufs: fix Auto-Hibern8 error detection
+Date:   Thu, 16 Apr 2020 15:24:28 +0200
+Message-Id: <20200416131336.817023449@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -64,393 +63,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Hocko <mhocko@suse.com>
+From: Stanley Chu <stanley.chu@mediatek.com>
 
-commit eea274d64e6ea8aff2224d33d0851133a84cc7b5 upstream.
+commit 5a244e0ea67b293abb1d26c825db2ddde5f2862f upstream.
 
-It was noticed that mlock2 tests are failing after 9c4e6b1a7027f ("mm,
-mlock, vmscan: no more skipping pagevecs") because the patch has changed
-the timing on when the page is added to the unevictable LRU list and thus
-gains the unevictable page flag.
+Auto-Hibern8 may be disabled by some vendors or sysfs in runtime even if
+Auto-Hibern8 capability is supported by host. If Auto-Hibern8 capability is
+supported by host but not actually enabled, Auto-Hibern8 error shall not
+happen.
 
-The test was just too dependent on the implementation details which were
-true at the time when it was introduced.  Page flags and the timing when
-they are set is something no userspace should ever depend on.  The test
-should be testing only for the user observable contract of the tested
-syscalls.  Those are defined pretty well for the mlock and there are other
-means for testing them.  In fact this is already done and testing for page
-flags can be safely dropped to achieve the aimed purpose.  Present bits
-can be checked by /proc/<pid>/smaps RSS field and the locking state by
-VmFlags although I would argue that Locked: field would be more
-appropriate.
+To fix this, provide a way to detect if Auto-Hibern8 is actually enabled
+first, and bypass Auto-Hibern8 disabling case in
+ufshcd_is_auto_hibern8_error().
 
-Drop all the page flag machinery and considerably simplify the test.  This
-should be more robust for future kernel changes while checking the
-promised contract is still valid.
-
-Fixes: 9c4e6b1a7027f ("mm, mlock, vmscan: no more skipping pagevecs")
-Reported-by: Rafael Aquini <aquini@redhat.com>
-Signed-off-by: Michal Hocko <mhocko@suse.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Rafael Aquini <aquini@redhat.com>
-Cc: Shakeel Butt <shakeelb@google.com>
-Cc: Eric B Munson <emunson@akamai.com>
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200324154218.GS19542@dhcp22.suse.cz
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 821744403913 ("scsi: ufs: Add error-handling of Auto-Hibernate")
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200129105251.12466-4-stanley.chu@mediatek.com
+Reviewed-by: Bean Huo <beanhuo@micron.com>
+Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
+Reviewed-by: Can Guo <cang@codeaurora.org>
+Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/testing/selftests/vm/mlock2-tests.c |  233 ++++--------------------------
- 1 file changed, 37 insertions(+), 196 deletions(-)
+ drivers/scsi/ufs/ufshcd.c |    3 ++-
+ drivers/scsi/ufs/ufshcd.h |    6 ++++++
+ 2 files changed, 8 insertions(+), 1 deletion(-)
 
---- a/tools/testing/selftests/vm/mlock2-tests.c
-+++ b/tools/testing/selftests/vm/mlock2-tests.c
-@@ -67,59 +67,6 @@ out:
- 	return ret;
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -5467,7 +5467,8 @@ static void ufshcd_update_uic_error(stru
+ static bool ufshcd_is_auto_hibern8_error(struct ufs_hba *hba,
+ 					 u32 intr_mask)
+ {
+-	if (!ufshcd_is_auto_hibern8_supported(hba))
++	if (!ufshcd_is_auto_hibern8_supported(hba) ||
++	    !ufshcd_is_auto_hibern8_enabled(hba))
+ 		return false;
+ 
+ 	if (!(intr_mask & UFSHCD_UIC_HIBERN8_MASK))
+--- a/drivers/scsi/ufs/ufshcd.h
++++ b/drivers/scsi/ufs/ufshcd.h
+@@ -55,6 +55,7 @@
+ #include <linux/clk.h>
+ #include <linux/completion.h>
+ #include <linux/regulator/consumer.h>
++#include <linux/bitfield.h>
+ #include "unipro.h"
+ 
+ #include <asm/irq.h>
+@@ -771,6 +772,11 @@ static inline bool ufshcd_is_auto_hibern
+ 	return (hba->capabilities & MASK_AUTO_HIBERN8_SUPPORT);
  }
  
--static uint64_t get_pageflags(unsigned long addr)
--{
--	FILE *file;
--	uint64_t pfn;
--	unsigned long offset;
--
--	file = fopen("/proc/self/pagemap", "r");
--	if (!file) {
--		perror("fopen pagemap");
--		_exit(1);
--	}
--
--	offset = addr / getpagesize() * sizeof(pfn);
--
--	if (fseek(file, offset, SEEK_SET)) {
--		perror("fseek pagemap");
--		_exit(1);
--	}
--
--	if (fread(&pfn, sizeof(pfn), 1, file) != 1) {
--		perror("fread pagemap");
--		_exit(1);
--	}
--
--	fclose(file);
--	return pfn;
--}
--
--static uint64_t get_kpageflags(unsigned long pfn)
--{
--	uint64_t flags;
--	FILE *file;
--
--	file = fopen("/proc/kpageflags", "r");
--	if (!file) {
--		perror("fopen kpageflags");
--		_exit(1);
--	}
--
--	if (fseek(file, pfn * sizeof(flags), SEEK_SET)) {
--		perror("fseek kpageflags");
--		_exit(1);
--	}
--
--	if (fread(&flags, sizeof(flags), 1, file) != 1) {
--		perror("fread kpageflags");
--		_exit(1);
--	}
--
--	fclose(file);
--	return flags;
--}
--
- #define VMFLAGS "VmFlags:"
- 
- static bool is_vmflag_set(unsigned long addr, const char *vmflag)
-@@ -159,19 +106,13 @@ out:
- #define RSS  "Rss:"
- #define LOCKED "lo"
- 
--static bool is_vma_lock_on_fault(unsigned long addr)
-+static unsigned long get_value_for_name(unsigned long addr, const char *name)
- {
--	bool ret = false;
--	bool locked;
--	FILE *smaps = NULL;
--	unsigned long vma_size, vma_rss;
- 	char *line = NULL;
--	char *value;
- 	size_t size = 0;
--
--	locked = is_vmflag_set(addr, LOCKED);
--	if (!locked)
--		goto out;
-+	char *value_ptr;
-+	FILE *smaps = NULL;
-+	unsigned long value = -1UL;
- 
- 	smaps = seek_to_smaps_entry(addr);
- 	if (!smaps) {
-@@ -180,112 +121,70 @@ static bool is_vma_lock_on_fault(unsigne
- 	}
- 
- 	while (getline(&line, &size, smaps) > 0) {
--		if (!strstr(line, SIZE)) {
-+		if (!strstr(line, name)) {
- 			free(line);
- 			line = NULL;
- 			size = 0;
- 			continue;
- 		}
- 
--		value = line + strlen(SIZE);
--		if (sscanf(value, "%lu kB", &vma_size) < 1) {
-+		value_ptr = line + strlen(name);
-+		if (sscanf(value_ptr, "%lu kB", &value) < 1) {
- 			printf("Unable to parse smaps entry for Size\n");
- 			goto out;
- 		}
- 		break;
- 	}
- 
--	while (getline(&line, &size, smaps) > 0) {
--		if (!strstr(line, RSS)) {
--			free(line);
--			line = NULL;
--			size = 0;
--			continue;
--		}
--
--		value = line + strlen(RSS);
--		if (sscanf(value, "%lu kB", &vma_rss) < 1) {
--			printf("Unable to parse smaps entry for Rss\n");
--			goto out;
--		}
--		break;
--	}
--
--	ret = locked && (vma_rss < vma_size);
- out:
--	free(line);
- 	if (smaps)
- 		fclose(smaps);
--	return ret;
-+	free(line);
-+	return value;
- }
- 
--#define PRESENT_BIT     0x8000000000000000ULL
--#define PFN_MASK        0x007FFFFFFFFFFFFFULL
--#define UNEVICTABLE_BIT (1UL << 18)
--
--static int lock_check(char *map)
-+static bool is_vma_lock_on_fault(unsigned long addr)
- {
--	unsigned long page_size = getpagesize();
--	uint64_t page1_flags, page2_flags;
-+	bool locked;
-+	unsigned long vma_size, vma_rss;
-+
-+	locked = is_vmflag_set(addr, LOCKED);
-+	if (!locked)
-+		return false;
- 
--	page1_flags = get_pageflags((unsigned long)map);
--	page2_flags = get_pageflags((unsigned long)map + page_size);
-+	vma_size = get_value_for_name(addr, SIZE);
-+	vma_rss = get_value_for_name(addr, RSS);
- 
--	/* Both pages should be present */
--	if (((page1_flags & PRESENT_BIT) == 0) ||
--	    ((page2_flags & PRESENT_BIT) == 0)) {
--		printf("Failed to make both pages present\n");
--		return 1;
--	}
-+	/* only one page is faulted in */
-+	return (vma_rss < vma_size);
-+}
- 
--	page1_flags = get_kpageflags(page1_flags & PFN_MASK);
--	page2_flags = get_kpageflags(page2_flags & PFN_MASK);
-+#define PRESENT_BIT     0x8000000000000000ULL
-+#define PFN_MASK        0x007FFFFFFFFFFFFFULL
-+#define UNEVICTABLE_BIT (1UL << 18)
- 
--	/* Both pages should be unevictable */
--	if (((page1_flags & UNEVICTABLE_BIT) == 0) ||
--	    ((page2_flags & UNEVICTABLE_BIT) == 0)) {
--		printf("Failed to make both pages unevictable\n");
--		return 1;
--	}
-+static int lock_check(unsigned long addr)
++static inline bool ufshcd_is_auto_hibern8_enabled(struct ufs_hba *hba)
 +{
-+	bool locked;
-+	unsigned long vma_size, vma_rss;
- 
--	if (!is_vmflag_set((unsigned long)map, LOCKED)) {
--		printf("VMA flag %s is missing on page 1\n", LOCKED);
--		return 1;
--	}
-+	locked = is_vmflag_set(addr, LOCKED);
-+	if (!locked)
-+		return false;
- 
--	if (!is_vmflag_set((unsigned long)map + page_size, LOCKED)) {
--		printf("VMA flag %s is missing on page 2\n", LOCKED);
--		return 1;
--	}
-+	vma_size = get_value_for_name(addr, SIZE);
-+	vma_rss = get_value_for_name(addr, RSS);
- 
--	return 0;
-+	return (vma_rss == vma_size);
- }
- 
- static int unlock_lock_check(char *map)
- {
--	unsigned long page_size = getpagesize();
--	uint64_t page1_flags, page2_flags;
--
--	page1_flags = get_pageflags((unsigned long)map);
--	page2_flags = get_pageflags((unsigned long)map + page_size);
--	page1_flags = get_kpageflags(page1_flags & PFN_MASK);
--	page2_flags = get_kpageflags(page2_flags & PFN_MASK);
--
--	if ((page1_flags & UNEVICTABLE_BIT) || (page2_flags & UNEVICTABLE_BIT)) {
--		printf("A page is still marked unevictable after unlock\n");
--		return 1;
--	}
--
- 	if (is_vmflag_set((unsigned long)map, LOCKED)) {
- 		printf("VMA flag %s is present on page 1 after unlock\n", LOCKED);
- 		return 1;
- 	}
- 
--	if (is_vmflag_set((unsigned long)map + page_size, LOCKED)) {
--		printf("VMA flag %s is present on page 2 after unlock\n", LOCKED);
--		return 1;
--	}
--
- 	return 0;
- }
- 
-@@ -311,7 +210,7 @@ static int test_mlock_lock()
- 		goto unmap;
- 	}
- 
--	if (lock_check(map))
-+	if (!lock_check((unsigned long)map))
- 		goto unmap;
- 
- 	/* Now unlock and recheck attributes */
-@@ -330,64 +229,18 @@ out:
- 
- static int onfault_check(char *map)
- {
--	unsigned long page_size = getpagesize();
--	uint64_t page1_flags, page2_flags;
--
--	page1_flags = get_pageflags((unsigned long)map);
--	page2_flags = get_pageflags((unsigned long)map + page_size);
--
--	/* Neither page should be present */
--	if ((page1_flags & PRESENT_BIT) || (page2_flags & PRESENT_BIT)) {
--		printf("Pages were made present by MLOCK_ONFAULT\n");
--		return 1;
--	}
--
- 	*map = 'a';
--	page1_flags = get_pageflags((unsigned long)map);
--	page2_flags = get_pageflags((unsigned long)map + page_size);
--
--	/* Only page 1 should be present */
--	if ((page1_flags & PRESENT_BIT) == 0) {
--		printf("Page 1 is not present after fault\n");
--		return 1;
--	} else if (page2_flags & PRESENT_BIT) {
--		printf("Page 2 was made present\n");
--		return 1;
--	}
--
--	page1_flags = get_kpageflags(page1_flags & PFN_MASK);
--
--	/* Page 1 should be unevictable */
--	if ((page1_flags & UNEVICTABLE_BIT) == 0) {
--		printf("Failed to make faulted page unevictable\n");
--		return 1;
--	}
--
- 	if (!is_vma_lock_on_fault((unsigned long)map)) {
- 		printf("VMA is not marked for lock on fault\n");
- 		return 1;
- 	}
- 
--	if (!is_vma_lock_on_fault((unsigned long)map + page_size)) {
--		printf("VMA is not marked for lock on fault\n");
--		return 1;
--	}
--
- 	return 0;
- }
- 
- static int unlock_onfault_check(char *map)
- {
- 	unsigned long page_size = getpagesize();
--	uint64_t page1_flags;
--
--	page1_flags = get_pageflags((unsigned long)map);
--	page1_flags = get_kpageflags(page1_flags & PFN_MASK);
--
--	if (page1_flags & UNEVICTABLE_BIT) {
--		printf("Page 1 is still marked unevictable after unlock\n");
--		return 1;
--	}
- 
- 	if (is_vma_lock_on_fault((unsigned long)map) ||
- 	    is_vma_lock_on_fault((unsigned long)map + page_size)) {
-@@ -445,7 +298,6 @@ static int test_lock_onfault_of_present(
- 	char *map;
- 	int ret = 1;
- 	unsigned long page_size = getpagesize();
--	uint64_t page1_flags, page2_flags;
- 
- 	map = mmap(NULL, 2 * page_size, PROT_READ | PROT_WRITE,
- 		   MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
-@@ -465,17 +317,6 @@ static int test_lock_onfault_of_present(
- 		goto unmap;
- 	}
- 
--	page1_flags = get_pageflags((unsigned long)map);
--	page2_flags = get_pageflags((unsigned long)map + page_size);
--	page1_flags = get_kpageflags(page1_flags & PFN_MASK);
--	page2_flags = get_kpageflags(page2_flags & PFN_MASK);
--
--	/* Page 1 should be unevictable */
--	if ((page1_flags & UNEVICTABLE_BIT) == 0) {
--		printf("Failed to make present page unevictable\n");
--		goto unmap;
--	}
--
- 	if (!is_vma_lock_on_fault((unsigned long)map) ||
- 	    !is_vma_lock_on_fault((unsigned long)map + page_size)) {
- 		printf("VMA with present pages is not marked lock on fault\n");
-@@ -507,7 +348,7 @@ static int test_munlockall()
- 		goto out;
- 	}
- 
--	if (lock_check(map))
-+	if (!lock_check((unsigned long)map))
- 		goto unmap;
- 
- 	if (munlockall()) {
-@@ -549,7 +390,7 @@ static int test_munlockall()
- 		goto out;
- 	}
- 
--	if (lock_check(map))
-+	if (!lock_check((unsigned long)map))
- 		goto unmap;
- 
- 	if (munlockall()) {
++	return FIELD_GET(UFSHCI_AHIBERN8_TIMER_MASK, hba->ahit) ? true : false;
++}
++
+ #define ufshcd_writel(hba, val, reg)	\
+ 	writel((val), (hba)->mmio_base + (reg))
+ #define ufshcd_readl(hba, reg)	\
 
 
