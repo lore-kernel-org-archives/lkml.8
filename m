@@ -2,124 +2,121 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3232BC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:40:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3925BC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:41:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 178C32064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:40:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C5492064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:41:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439574AbgDPHkv (ORCPT
+        id S2439592AbgDPHly (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 03:40:51 -0400
-Received: from mga09.intel.com ([134.134.136.24]:21937 "EHLO mga09.intel.com"
+        Thu, 16 Apr 2020 03:41:54 -0400
+Received: from mga12.intel.com ([192.55.52.136]:37066 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2439525AbgDPHko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 03:40:44 -0400
-IronPort-SDR: i1evGNAnXSA4N7qLfEQy1aX48rWdvl0iGcGDOYVN6XHoZ/JopmNCqBzUlnNt1KBAmUvJVsJJ/x
- tp01VMIofnYg==
+        id S2439413AbgDPHl0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 03:41:26 -0400
+IronPort-SDR: z3C7Jh3oSXE2UbVzbF6hYFbOEhsbKHASqaZ2c3Zkywq8u29eG6ZyQGpOGhNrTXEXgOaNJnnDTI
+ r73VasWlGW8A==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 00:40:42 -0700
-IronPort-SDR: VP83vGAdJ9meTq/qfmSI6r/NfD6Qw6KHe9qbmHBDKXmLIdPI77iMcyLhMZk7YBchrgSjfjkjJE
- Pmmv4CPyIqGQ==
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 00:41:26 -0700
+IronPort-SDR: 9gMtqRjRYcECo8zZS2jw2o7HXakW8rbvZ1z1uJDT8Tl2nZQO8Ninm2iuy2YLkbGx9swTpe4d+6
+ XBFg6izq0KTQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,390,1580803200"; 
-   d="scan'208";a="363906563"
-Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.254.209.171]) ([10.254.209.171])
-  by fmsmga001.fm.intel.com with ESMTP; 16 Apr 2020 00:40:38 -0700
-Cc:     baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
-        ashok.raj@intel.com, jacob.jun.pan@linux.intel.com,
-        kevin.tian@intel.com,
-        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Daniel Drake <drake@endlessm.com>,
-        Derrick Jonathan <jonathan.derrick@intel.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v3 1/3] iommu/vt-d: Allow 32bit devices to uses DMA domain
-To:     Christoph Hellwig <hch@lst.de>
-References: <20200416062354.10307-1-baolu.lu@linux.intel.com>
- <20200416062354.10307-2-baolu.lu@linux.intel.com>
- <20200416070102.GA12588@lst.de>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <e11d8138-f704-2f5e-c0b1-70b367a33d5d@linux.intel.com>
-Date:   Thu, 16 Apr 2020 15:40:38 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+   d="scan'208";a="363906708"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.87]) ([10.237.72.87])
+  by fmsmga001.fm.intel.com with ESMTP; 16 Apr 2020 00:41:22 -0700
+Subject: Re: [PATCH 3/7] mmc: sdhci: fix SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     Suneel Garapati <suneel.garapati@xilinx.com>,
+        Kevin Liu <kliu5@marvell.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
+References: <cover.1585827904.git.mirq-linux@rere.qmqm.pl>
+ <eb105eedaa387ced14bb687e38d3aa33d4fcf70a.1585827904.git.mirq-linux@rere.qmqm.pl>
+ <67dc68ce-d8ec-4486-f4f9-3fb2580d2675@intel.com>
+ <20200415160302.GB19897@qmqm.qmqm.pl>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <a49b6a25-14f5-ca1b-b493-e40ec4984b04@intel.com>
+Date:   Thu, 16 Apr 2020 10:40:32 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200416070102.GA12588@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200415160302.GB19897@qmqm.qmqm.pl>
+Content-Type: text/plain; charset=iso-8859-2
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
-
-On 2020/4/16 15:01, Christoph Hellwig wrote:
-> On Thu, Apr 16, 2020 at 02:23:52PM +0800, Lu Baolu wrote:
->> Currently, if a 32bit device initially uses an identity domain,
->> Intel IOMMU driver will convert it forcibly to a DMA one if its
->> address capability is not enough for the whole system memory.
->> The motivation was to overcome the overhead caused by possible
->> bounced buffer.
+On 15/04/20 7:03 pm, Micha³ Miros³aw wrote:
+> On Wed, Apr 15, 2020 at 04:06:02PM +0300, Adrian Hunter wrote:
+>> On 2/04/20 2:54 pm, Micha³ Miros³aw wrote:
+>>> Fix returned clock rate for SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN case.
 >>
->> Unfortunately, this improvement has led to many problems. For
->> example, some 32bit devices are required to use an identity
->> domain, forcing them to use DMA domain will cause the device
->> not to work anymore. On the other hand, the VMD sub-devices
->> share a domain but each sub-device might have different address
->> capability. Forcing a VMD sub-device to use DMA domain blindly
->> will impact the operation of other sub-devices without any
->> notification. Further more, PCI aliased devices (PCI bridge
->> and all devices beneath it, VMD devices and various devices
->> quirked with pci_add_dma_alias()) must use the same domain.
->> Forcing one device to switch to DMA domain during runtime
->> will cause in-fligh DMAs for other devices to abort or target
->> to other memory which might cause undefind system behavior.
+>> Does this change anything, because it looks the same to me?
 > 
-> This commit log doesn't actually explain what you are chaning, and
-> as far as I can tell it just removes the code to change the domain
-> at run time, which seems to not actually match the subject or
+> The value of real_div is fixed this way. With previous code after
+> applying the quirk you would have real_div = 1 instead of real_div = 2.
 
-This removes the domain switching in iommu_need_mapping(). Another place
-where the private domain is used is intel_iommu_add_device(). Joerg's
-patch set has remove that. So with domain switching in
-iommu_need_mapping() removed, the private domain helpers could be
-removed now. Otherwise, the compiler will complain that some functions
-are defined but not used.
-
-> description.  I'd need to look at the final code, but it seems like
-> this will still cause bounce buffering instead of using dynamic
-> mapping, which still seems like an awful idea.
-
-Yes. If the user chooses to use identity domain by default through
-kernel command, identity domain will be applied for all devices. For
-those devices with limited addressing capability, bounce buffering will
-be used when they try to access the memory beyond their address
-capability. This won't cause any kernel regression as far as I can see.
-
-Switching domain during runtime with drivers loaded will cause real
-problems as I said in the commit message. That's the reason why I am
-proposing to remove it. If we want to keep it, we have to make sure that
-switching domain for one device should not impact other devices which
-share the same domain with it. Furthermore, it's better to implement it
-in the generic layer to keep device driver behavior consistent on all
-architectures.
+That kind of thing should be in the commit message.  Please also explain
+what effect this has (the actual clock value will be too high, but also what
+problems does that manifest) and what hardware is affected.
 
 > 
-> Also from a purely stylistic perspective a lot of the lines seem
-> very short and not use up the whole 73 charaters allowed.
+> Best Regards,
+> Micha³ Miros³aw
 > 
+>>
+>>>
+>>> Signed-off-by: Micha³ Miros³aw <mirq-linux@rere.qmqm.pl>
+>>> Cc: stable@kernel.vger.org
+>>> Fixes: d1955c3a9a1d ("mmc: sdhci: add quirk SDHCI_QUIRK_CLOCK_DIV_ZERO_BROKEN")
+>>> ---
+>>>  drivers/mmc/host/sdhci.c | 10 +++++-----
+>>>  1 file changed, 5 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+>>> index b2dc4f1cfa5c..a043bf5e3565 100644
+>>> --- a/drivers/mmc/host/sdhci.c
+>>> +++ b/drivers/mmc/host/sdhci.c
+>>> @@ -1807,9 +1807,12 @@ u16 sdhci_calc_clk(struct sdhci_host *host, unsigned int clock,
+>>>  
+>>>  		if (!host->clk_mul || switch_base_clk) {
+>>>  			/* Version 3.00 divisors must be a multiple of 2. */
+>>> -			if (host->max_clk <= clock)
+>>> +			if (host->max_clk <= clock) {
+>>>  				div = 1;
+>>> -			else {
+>>> +				if ((host->quirks2 & SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN)
+>>> +					&& host->max_clk <= 25000000)
+>>> +					div = 2;
+>>> +			} else {
+>>>  				for (div = 2; div < SDHCI_MAX_DIV_SPEC_300;
+>>>  				     div += 2) {
+>>>  					if ((host->max_clk / div) <= clock)
+>>> @@ -1818,9 +1821,6 @@ u16 sdhci_calc_clk(struct sdhci_host *host, unsigned int clock,
+>>>  			}
+>>>  			real_div = div;
+>>>  			div >>= 1;
+>>> -			if ((host->quirks2 & SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN)
+>>> -				&& !div && host->max_clk <= 25000000)
+>>> -				div = 1;
+>>>  		}
+>>>  	} else {
+>>>  		/* Version 2.00 divisors must be a power of 2. */
+>>>
+>>
 
-Yes. I will try to use up the allowed characters.
-
-Best regards,
-baolu
