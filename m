@@ -2,107 +2,122 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5117C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:30:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6892C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:31:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B497C208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:30:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gsrVZ52W"
+	by mail.kernel.org (Postfix) with ESMTP id AF515208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:31:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633260AbgDPL3p (ORCPT
+        id S2633052AbgDPLa7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 07:29:45 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:38078 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2506161AbgDPLNo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 07:13:44 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03GBBqgN030064;
-        Thu, 16 Apr 2020 06:11:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1587035512;
-        bh=k2DSChJsC5w+CN2J7vJJZEb4snfJnHNW2TEax9vEJxE=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=gsrVZ52WgX3/SSFrPRLL1lrPY58rVMmheeKgXIPDzVjmXLAObAK/LTdeY5alA5Z0b
-         GQH+gXyvthVFqnRQhnXlCgFNI6FQMfJDimrawb3qzGOymtIouq+WKHdfiy/HqMw9Tc
-         ENwgjYlewGgZOr0up4Zf0YMWGN3Mc0sJ1EVNG1eM=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03GBBqQI073223
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 16 Apr 2020 06:11:52 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 16
- Apr 2020 06:11:52 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 16 Apr 2020 06:11:52 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03GBBjD0122831;
-        Thu, 16 Apr 2020 06:11:48 -0500
-Subject: Re: [PATCH] net: cpts: Condition WARN_ON on PTP_1588_CLOCK
-To:     Clay McClure <clay@daemons.net>
-CC:     "David S. Miller" <davem@davemloft.net>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200416085627.1882-1-clay@daemons.net>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <6fef3a00-6c18-b775-d1b4-dfd692261bd3@ti.com>
-Date:   Thu, 16 Apr 2020 14:11:45 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 16 Apr 2020 07:30:59 -0400
+Received: from foss.arm.com ([217.140.110.172]:58956 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2506191AbgDPLJb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 07:09:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EB356C14;
+        Thu, 16 Apr 2020 03:45:30 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D08083F73D;
+        Thu, 16 Apr 2020 03:45:29 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 11:45:27 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Andrei Vagin <avagin@gmail.com>
+Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dmitry Safonov <dima@arista.com>
+Subject: Re: [PATCH 3/6] arm64/vdso: Add time napespace page
+Message-ID: <20200416104527.GD4987@lakrids.cambridge.arm.com>
+References: <20200416052618.804515-1-avagin@gmail.com>
+ <20200416052618.804515-4-avagin@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200416085627.1882-1-clay@daemons.net>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200416052618.804515-4-avagin@gmail.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Andrei,
 
+On Wed, Apr 15, 2020 at 10:26:15PM -0700, Andrei Vagin wrote:
+> diff --git a/arch/arm64/include/asm/vdso.h b/arch/arm64/include/asm/vdso.h
+> index 07468428fd29..351c145d3808 100644
+> --- a/arch/arm64/include/asm/vdso.h
+> +++ b/arch/arm64/include/asm/vdso.h
+> @@ -12,6 +12,12 @@
+>   */
+>  #define VDSO_LBASE	0x0
+>  
+> +#ifdef CONFIG_TIME_NS
+> +#define __VVAR_PAGES    2
+> +#else
+> +#define __VVAR_PAGES    1
+> +#endif
+> +
+>  #ifndef __ASSEMBLY__
+  
+> +#ifdef CONFIG_TIME_NS
+> +static __always_inline const struct vdso_data *__arch_get_timens_vdso_data(void)
+> +{
+> +	const struct vdso_data *ret;
+> +
+> +	ret = _timens_data;
+> +	OPTIMIZER_HIDE_VAR(ret);
+> +
+> +	return ret;
+> +}
+> +#endif
 
-On 16/04/2020 11:56, Clay McClure wrote:
-> CPTS_MOD merely implies PTP_1588_CLOCK; it is possible to build cpts
-> without PTP clock support. In that case, ptp_clock_register() returns
-> NULL and we should not WARN_ON(cpts->clock) when downing the interface.
-> The ptp_*() functions are stubbed without PTP_1588_CLOCK, so it's safe
-> to pass them a null pointer.
+Sorry for the confusion here, but please either:
 
-Could you explain the purpose of the exercise (Enabling CPTS with PTP_1588_CLOCK disabled), pls?
+* Add a preparatory patch making __arch_get_vdso_data() use
+  OPTIMIZER_HIDE_VAR(), and use OPTIMIZER_HIDE_VAR() here.
 
-> 
-> Signed-off-by: Clay McClure <clay@daemons.net>
-> ---
->   drivers/net/ethernet/ti/cpts.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/ethernet/ti/cpts.c b/drivers/net/ethernet/ti/cpts.c
-> index fd214f8730a9..daf4505f4a70 100644
-> --- a/drivers/net/ethernet/ti/cpts.c
-> +++ b/drivers/net/ethernet/ti/cpts.c
-> @@ -646,7 +646,7 @@ EXPORT_SYMBOL_GPL(cpts_register);
->   
->   void cpts_unregister(struct cpts *cpts)
->   {
-> -	if (WARN_ON(!cpts->clock))
-> +	if (IS_REACHABLE(PTP_1588_CLOCK) && WARN_ON(!cpts->clock))
->   		return;
->   
->   	ptp_clock_unregister(cpts->clock);
-> 
+* Use the same assembly as __arch_get_vdso_data() currently does.
 
--- 
-Best regards,
-grygorii
+... and either way add a comment here:
+
+	/* See __arch_get_vdso_data() */
+
+... so taht the rationale is obvious.
+
+[...]
+
+> +enum vvar_pages {
+> +	VVAR_DATA_PAGE_OFFSET = 0,
+> +#ifdef CONFIG_TIME_NS
+> +	VVAR_TIMENS_PAGE_OFFSET = 1,
+> +#endif /* CONFIG_TIME_NS */
+> +	VVAR_NR_PAGES = __VVAR_PAGES,
+> +};
+
+Pet peeve, but we don't need the initializers here, as enums start from
+zero. The last element shouldn't have a trailing comma as we don't
+expect to add elements after it in future.
+
+Rather than assigning to VVAR_NR_PAGES, it'd be better to use a
+BUILD_BUG_ON() to verify that it is the number we expect:
+
+enum vvar_pages {
+	VVAR_DATA_PAGE,
+#ifdef CONFIG_TIME_NS
+	VVAR_TIMENS_PAGE,
+#endif
+	VVAR_NR_PAGES
+};
+
+BUILD_BUG_ON(VVAR_NR_PAGES != __VVAR_PAGES);
+
+Thanks,
+Mark.
