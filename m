@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD0AC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:19:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 346C4C352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:19:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F7DA2063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:19:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 125382076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:19:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587046768;
-	bh=GsCdRkH6Shz5a43jOx+xZYYuDbINTK0YiB1BnatUcgQ=;
+	s=default; t=1587046778;
+	bh=m34EV4u497pdWfdKRzmO7og1J4bNyHyupnt3lFY+C/4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NsK7Jr4E8sjCc5A/JNc5Xo+aWcXfpq4AkYdZUyHnUw3UILnm3nBBSu+Z+ebEmtavT
-	 gotZ7pblbhVE4ZARwxLGhawtg6aQALZ4fq3N8IJ0fMMpLaxI8S9xdftL5Q6pBFPd7e
-	 u7hdNTd/6txxfylZ24xfbfqGnlFBlnn4x8UufyZw=
+	b=N269dKwbsMMbGX60AaXk70FhekDlAx/5R5EmROrK+NhtvpYyMMaXIgLionmCkHUwH
+	 Y3rKRPijWJoetfTSg1pAekT/RJ0ZFQxYrN0e5jPUrkBM+QoyNqJyD/OsME3nP5JkrU
+	 QKui4FXlquSrwkYSGUMaJo/Qstg8YS0Zn89+UShk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442455AbgDPOTY (ORCPT
+        id S2502753AbgDPOTe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:19:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40608 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:19:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898638AbgDPNyE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:54:04 -0400
+        id S2898669AbgDPNyI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:54:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA3AA20732;
-        Thu, 16 Apr 2020 13:54:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 425DE2076D;
+        Thu, 16 Apr 2020 13:54:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045244;
-        bh=GsCdRkH6Shz5a43jOx+xZYYuDbINTK0YiB1BnatUcgQ=;
+        s=default; t=1587045246;
+        bh=m34EV4u497pdWfdKRzmO7og1J4bNyHyupnt3lFY+C/4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f6VT7a4a36hodGbsP87ZRBAIozVBTPLw4GfDnfGXD/mdCECE7QOjBV+rx9sflJrpR
-         8QDjxC0P6VCPt2DNtLfpyAoDJD2CzaUI8W/za+iNJEq7Yt/KG5Atyhl/8f+B5rELvW
-         /gEU0aNqGgdpDck1Qu//S6HI6wtQ4IZhWq1HEOC4=
+        b=mePSvAvqK84Hs+bBY1lMVp85VXzBwkx1vcdaFT2SUOksHbPI+uJXboNwKRmV/9T02
+         g8TSNIQlQYm39yNReufgdwBGyprhSuk8DG0NTBwF8JtousgAHJg6iQvjjkk/Gr1ZjP
+         vwCEaZu5aaVWhH+1/7PQBqJU+YMb4sKDw8ny+WII=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Price <steven.price@arm.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 014/254] arm64/mm: Hold memory hotplug lock while walking for kernel page table dump
-Date:   Thu, 16 Apr 2020 15:21:43 +0200
-Message-Id: <20200416131327.591440866@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 015/254] sched/vtime: Prevent unstable evaluation of WARN(vtime->state)
+Date:   Thu, 16 Apr 2020 15:21:44 +0200
+Message-Id: <20200416131327.722023294@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -63,57 +61,154 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anshuman Khandual <anshuman.khandual@arm.com>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-[ Upstream commit bf2b59f60ee1fefa768d62ec6e8f4b4d9e04c691 ]
+[ Upstream commit f1dfdab694eb3838ac26f4b73695929c07d92a33 ]
 
-The arm64 page table dump code can race with concurrent modification of the
-kernel page tables. When a leaf entries are modified concurrently, the dump
-code may log stale or inconsistent information for a VA range, but this is
-otherwise not harmful.
+As the vtime is sampled under loose seqcount protection by kcpustat, the
+vtime fields may change as the code flows. Where logic dictates a field
+has a static value, use a READ_ONCE.
 
-When intermediate levels of table are freed, the dump code will continue to
-use memory which has been freed and potentially reallocated for another
-purpose. In such cases, the dump code may dereference bogus addresses,
-leading to a number of potential problems.
-
-Intermediate levels of table may by freed during memory hot-remove,
-which will be enabled by a subsequent patch. To avoid racing with
-this, take the memory hotplug lock when walking the kernel page table.
-
-Acked-by: David Hildenbrand <david@redhat.com>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-Reviewed-by: Steven Price <steven.price@arm.com>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: 74722bb223d0 ("sched/vtime: Bring up complete kcpustat accessor")
+Link: https://lkml.kernel.org/r/20200123180849.28486-1-frederic@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/mm/ptdump_debugfs.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ kernel/sched/cputime.c | 41 ++++++++++++++++++++++-------------------
+ 1 file changed, 22 insertions(+), 19 deletions(-)
 
-diff --git a/arch/arm64/mm/ptdump_debugfs.c b/arch/arm64/mm/ptdump_debugfs.c
-index 1f2eae3e988b6..d29d722ec3ec6 100644
---- a/arch/arm64/mm/ptdump_debugfs.c
-+++ b/arch/arm64/mm/ptdump_debugfs.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/debugfs.h>
-+#include <linux/memory_hotplug.h>
- #include <linux/seq_file.h>
- 
- #include <asm/ptdump.h>
-@@ -7,7 +8,10 @@
- static int ptdump_show(struct seq_file *m, void *v)
- {
- 	struct ptdump_info *info = m->private;
-+
-+	get_online_mems();
- 	ptdump_walk(m, info);
-+	put_online_mems();
- 	return 0;
+diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
+index cff3e656566d6..dac9104d126f7 100644
+--- a/kernel/sched/cputime.c
++++ b/kernel/sched/cputime.c
+@@ -909,8 +909,10 @@ void task_cputime(struct task_struct *t, u64 *utime, u64 *stime)
+ 	} while (read_seqcount_retry(&vtime->seqcount, seq));
  }
- DEFINE_SHOW_ATTRIBUTE(ptdump);
+ 
+-static int vtime_state_check(struct vtime *vtime, int cpu)
++static int vtime_state_fetch(struct vtime *vtime, int cpu)
+ {
++	int state = READ_ONCE(vtime->state);
++
+ 	/*
+ 	 * We raced against a context switch, fetch the
+ 	 * kcpustat task again.
+@@ -927,10 +929,10 @@ static int vtime_state_check(struct vtime *vtime, int cpu)
+ 	 *
+ 	 * Case 1) is ok but 2) is not. So wait for a safe VTIME state.
+ 	 */
+-	if (vtime->state == VTIME_INACTIVE)
++	if (state == VTIME_INACTIVE)
+ 		return -EAGAIN;
+ 
+-	return 0;
++	return state;
+ }
+ 
+ static u64 kcpustat_user_vtime(struct vtime *vtime)
+@@ -949,14 +951,15 @@ static int kcpustat_field_vtime(u64 *cpustat,
+ {
+ 	struct vtime *vtime = &tsk->vtime;
+ 	unsigned int seq;
+-	int err;
+ 
+ 	do {
++		int state;
++
+ 		seq = read_seqcount_begin(&vtime->seqcount);
+ 
+-		err = vtime_state_check(vtime, cpu);
+-		if (err < 0)
+-			return err;
++		state = vtime_state_fetch(vtime, cpu);
++		if (state < 0)
++			return state;
+ 
+ 		*val = cpustat[usage];
+ 
+@@ -969,7 +972,7 @@ static int kcpustat_field_vtime(u64 *cpustat,
+ 		 */
+ 		switch (usage) {
+ 		case CPUTIME_SYSTEM:
+-			if (vtime->state == VTIME_SYS)
++			if (state == VTIME_SYS)
+ 				*val += vtime->stime + vtime_delta(vtime);
+ 			break;
+ 		case CPUTIME_USER:
+@@ -981,11 +984,11 @@ static int kcpustat_field_vtime(u64 *cpustat,
+ 				*val += kcpustat_user_vtime(vtime);
+ 			break;
+ 		case CPUTIME_GUEST:
+-			if (vtime->state == VTIME_GUEST && task_nice(tsk) <= 0)
++			if (state == VTIME_GUEST && task_nice(tsk) <= 0)
+ 				*val += vtime->gtime + vtime_delta(vtime);
+ 			break;
+ 		case CPUTIME_GUEST_NICE:
+-			if (vtime->state == VTIME_GUEST && task_nice(tsk) > 0)
++			if (state == VTIME_GUEST && task_nice(tsk) > 0)
+ 				*val += vtime->gtime + vtime_delta(vtime);
+ 			break;
+ 		default:
+@@ -1036,23 +1039,23 @@ static int kcpustat_cpu_fetch_vtime(struct kernel_cpustat *dst,
+ {
+ 	struct vtime *vtime = &tsk->vtime;
+ 	unsigned int seq;
+-	int err;
+ 
+ 	do {
+ 		u64 *cpustat;
+ 		u64 delta;
++		int state;
+ 
+ 		seq = read_seqcount_begin(&vtime->seqcount);
+ 
+-		err = vtime_state_check(vtime, cpu);
+-		if (err < 0)
+-			return err;
++		state = vtime_state_fetch(vtime, cpu);
++		if (state < 0)
++			return state;
+ 
+ 		*dst = *src;
+ 		cpustat = dst->cpustat;
+ 
+ 		/* Task is sleeping, dead or idle, nothing to add */
+-		if (vtime->state < VTIME_SYS)
++		if (state < VTIME_SYS)
+ 			continue;
+ 
+ 		delta = vtime_delta(vtime);
+@@ -1061,15 +1064,15 @@ static int kcpustat_cpu_fetch_vtime(struct kernel_cpustat *dst,
+ 		 * Task runs either in user (including guest) or kernel space,
+ 		 * add pending nohz time to the right place.
+ 		 */
+-		if (vtime->state == VTIME_SYS) {
++		if (state == VTIME_SYS) {
+ 			cpustat[CPUTIME_SYSTEM] += vtime->stime + delta;
+-		} else if (vtime->state == VTIME_USER) {
++		} else if (state == VTIME_USER) {
+ 			if (task_nice(tsk) > 0)
+ 				cpustat[CPUTIME_NICE] += vtime->utime + delta;
+ 			else
+ 				cpustat[CPUTIME_USER] += vtime->utime + delta;
+ 		} else {
+-			WARN_ON_ONCE(vtime->state != VTIME_GUEST);
++			WARN_ON_ONCE(state != VTIME_GUEST);
+ 			if (task_nice(tsk) > 0) {
+ 				cpustat[CPUTIME_GUEST_NICE] += vtime->gtime + delta;
+ 				cpustat[CPUTIME_NICE] += vtime->gtime + delta;
+@@ -1080,7 +1083,7 @@ static int kcpustat_cpu_fetch_vtime(struct kernel_cpustat *dst,
+ 		}
+ 	} while (read_seqcount_retry(&vtime->seqcount, seq));
+ 
+-	return err;
++	return 0;
+ }
+ 
+ void kcpustat_cpu_fetch(struct kernel_cpustat *dst, int cpu)
 -- 
 2.20.1
 
