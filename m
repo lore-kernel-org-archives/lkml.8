@@ -2,117 +2,77 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 577DEC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:22:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19009C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CDAA21734
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:22:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OtzsmKq4"
+	by mail.kernel.org (Postfix) with ESMTP id F3B3C21841
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:24:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2632745AbgDPLWg (ORCPT
+        id S2633039AbgDPLYe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 07:22:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35732 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2632917AbgDPLTr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 07:19:47 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D12A6C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 04:19:45 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id e25so886543ljg.5
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 04:19:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=NGDiAiHa7gOkZcjetP+fIoZxVSWT0kUGxzHZFTTg7do=;
-        b=OtzsmKq4kHVDABFucflRXQScsA5dK0d8y+T7VpIusux0bdbzOkryTGmdsRMejMModx
-         hG+VUUfuAGphGgNl/ZWXlXnkPfKW8XJTUtB2InKKwK+VcmtS133aXqUYztuRFDgCKwYr
-         CuXgPqQNihksSjAt6Quo/CXuja6kdP04P2Gvo1/g98aFnINd6I9yEQ/8pZ1kl2n2D588
-         7oh3h6PhgI4kgcrI04UrK/gjC7byofTga40iU9XD5p9G/tTD9nCNZdb0xlIsO1aFBAIB
-         1GMRLSIgOunDZtfkEJg5DwnLQjfuOZf9TkvUJjQS3MjVtW9RVo8n1pZUQ1yFDHuupZdE
-         870A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=NGDiAiHa7gOkZcjetP+fIoZxVSWT0kUGxzHZFTTg7do=;
-        b=I3k+KDhQeHiOU4JcDC2TY2YAiSFt8LWJU64fgtScVztsIWkt0at2pmemsyrcMkxcNs
-         mTs7zFS+54toHLs021oo04BZh8NK7fuB9BMXfAnnYSQ6Dc42nGMBbgJisX4wn4OvTlWa
-         CmMzALDtZaEIdOwDI5q61cUDSplhAidDqQU0S+NfSSNcaVooMEuw/WcXi7VdgBtcbSBX
-         DDMBBlG3AfiVn+QPxCWZl1baVuzVzSlEuUHQnYPCXuJmhK8kC4scRb6zT+Ro/cqxwOEH
-         EHlHzERn/aX/ODQA+2jdyUcrtdiFvjmHX4P+4nGoUheNFnIhK8pbyQhE5bo9C5hqQ8GA
-         QT0A==
-X-Gm-Message-State: AGi0PuZb+/FXqnY5TXdNaGZm8pxcq3VGd15T7loLujqfznufyNBmqglM
-        Wm/Ldh/VivuIPWh3FCi5f6uH1k77NIy82ajsYfnhAg==
-X-Google-Smtp-Source: APiQypJy9THPwjoS7Jo2tqNfqwFCh62pVSbwOBq6PdDLITxyc2Xnd0cf+VlMiSRhsUAbLwuDb/LTyMe0TXHxVDUdths=
-X-Received: by 2002:a2e:5048:: with SMTP id v8mr5663453ljd.99.1587035984361;
- Thu, 16 Apr 2020 04:19:44 -0700 (PDT)
+        Thu, 16 Apr 2020 07:24:34 -0400
+Received: from relay.sw.ru ([185.231.240.75]:39622 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2633001AbgDPLU4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 07:20:56 -0400
+Received: from [192.168.15.163]
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1jP2ZF-0003vx-HH; Thu, 16 Apr 2020 14:20:25 +0300
+Subject: Re: [PATCH v4] mm/ksm: Fix NULL pointer dereference when KSM zero
+ page is enabled
+To:     Markus Elfring <Markus.Elfring@web.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Muchun Song <songmuchun@bytedance.com>,
+        Xiongchun Duan <duanxiongchun@bytedance.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        David Hildenbrand <david@redhat.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>
+References: <20200416025034.29780-1-songmuchun@bytedance.com>
+ <20200415195841.da4361916f662a0136a271a5@linux-foundation.org>
+ <516df5d7-b514-11dc-130e-f1a2edce0108@web.de>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <e620f913-d0fb-7d48-b6b2-d4c6b433b563@virtuozzo.com>
+Date:   Thu, 16 Apr 2020 14:20:24 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200320093125.23092-1-brgl@bgdev.pl> <CACRpkdZgWUwmmuXn12DS3TsQS0yQxcweqK6HGxBm=V_2LBLBMw@mail.gmail.com>
- <CAMpxmJUb09KGreHw6Bdz79rbnQE7oZnWg_5qN_FhzoS2-XccFA@mail.gmail.com>
-In-Reply-To: <CAMpxmJUb09KGreHw6Bdz79rbnQE7oZnWg_5qN_FhzoS2-XccFA@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 16 Apr 2020 13:19:33 +0200
-Message-ID: <CACRpkdaeWtk1fiGMX7QkkCZ-DcFqSvSB9xQmuLy1VO+QWsZo6w@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: don't call sleeping functions with a spinlock taken
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <516df5d7-b514-11dc-130e-f1a2edce0108@web.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 2:27 PM Bartosz Golaszewski
-<bgolaszewski@baylibre.com> wrote:
-> wt., 14 kwi 2020 o 14:00 Linus Walleij <linus.walleij@linaro.org> napisa=
-=C5=82(a):
-> >
-> > On Fri, Mar 20, 2020 at 10:31 AM Bartosz Golaszewski <brgl@bgdev.pl> wr=
-ote:
-> >
-> > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > >
-> > > We must not call pinctrl_gpio_can_use_line() with the gpio_lock taken
-> > > as it takes a mutex internally. Let's move the call before taking the
-> > > spinlock and store the return value.
-> > >
-> > > This isn't perfect - there's a moment between calling
-> > > pinctrl_gpio_can_use_line() and taking the spinlock where the situati=
-on
-> > > can change but it isn't a regression either: previously this part was=
-n't
-> > > protected at all and it only affects the information user-space is
-> > > seeing.
-> > >
-> > > Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> > > Fixes: d2ac25798208 ("gpiolib: provide a dedicated function for setti=
-ng lineinfo")
-> > > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > I'm sorry that I lost track of this patch :(
-> >
-> > Do we still need something like this or has it been fixed
-> > by some other patches?
-> >
-> > Yours,
-> > Linus Walleij
->
-> Nope, this is still an issue. Do you have a better idea than mine?
+On 16.04.2020 09:14, Markus Elfring wrote:
+> …
+>>> +++ b/mm/ksm.c
+>>> @@ -2112,8 +2112,15 @@ static void cmp_and_merge_page(struct page *page, struct rmap_item *rmap_item)
+> …
+>>> +		if (vma)
+>>> +			err = try_to_merge_one_page(vma, page,
+>>> +					ZERO_PAGE(rmap_item->address));
+>>> +		else
+>>> +			/**
+>>> +			 * If the vma is out of date, we do not need to
+>>> +			 * continue.
+>>> +			 */
+>>> +			err = 0;
+>>>  		up_read(&mm->mmap_sem);
+> …
+>> It's conventional to put braces around multi-line blocks such as this.
+> 
+> Are there different views to consider around the usage of single statements
+> together with curly brackets in if branches?
 
-Nope, can you just queue it in your tree?
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+For me Andrew's conversion is the best readable. I try to comment the code
+the same way myself. I even thought it's kernel default style :)
 
-Yours,
-Linus Walleij
+Kirill
+
