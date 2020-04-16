@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8B0CC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D17C4C352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:37:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B592121927
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:37:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A601821D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:37:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587047855;
-	bh=ZIcAg89D5twlHgvCRgZyM3HhzVVvVDgs3ml5dsPPPn8=;
+	s=default; t=1587047876;
+	bh=RlPp1iaNAIZtXV/7DCpgYxXxtz24O5yn7VLRupqjAtw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rBkd06yBoK0kObzGhI2p7wEi11xZVqNPySaZZPOuSej2+BZERfS7q7rkEqtO6qoEO
-	 uV3v4hgIjQ+TyccQdDmT7zMZQoUZO4a7xLswrVn16A0TtMVLeNBb+u8QfruHlbPfwc
-	 ZpUMbz5A9qaAcTfMu8eYpE21FNv+d9/d60FiNARs=
+	b=MmaUNgKk+SQyItaRcRrGM5+xev+qpmu9g9F6RLxhwPX46cGTdMVOyiUf4G8KR4Dkl
+	 aeqJwIseBhvY/lhPLtVpIcHWage8EJ6b1Cyvz1YYld3DkvDI2Xf8DoIdYTbcDyxmRy
+	 Q2kFWH+mRlncAiT13UBSosk9Jn8h2GTcDyHEa7hQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393458AbgDPOJP (ORCPT
+        id S2393235AbgDPOIF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:09:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59974 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:08:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392290AbgDPNqK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:46:10 -0400
+        id S2898505AbgDPNpX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:45:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 507352076D;
-        Thu, 16 Apr 2020 13:46:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BDD620732;
+        Thu, 16 Apr 2020 13:45:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044769;
-        bh=ZIcAg89D5twlHgvCRgZyM3HhzVVvVDgs3ml5dsPPPn8=;
+        s=default; t=1587044723;
+        bh=RlPp1iaNAIZtXV/7DCpgYxXxtz24O5yn7VLRupqjAtw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PCjEzSIyM72zgoDTbfRbjZBykvu54vI6A76Mz+jkJETtoXzR2QXpJuN+KCow7yPsU
-         10lYKYOVf6x1+P06+CwGaZZY5XPrdmD1jsDFoiv/O5pMh5xiI3Zz91/fVFXUV5QyJ/
-         cURCcz567RINhV+66+Qo5EXju7v5o6jLknFXNQ90=
+        b=geL4oxBB5Su+U22c5SBXYgiU+L8YMKgut2tGXeqL5w2qM4l8H7wrDuEGYxSogtrOs
+         zgzIFxaGVAGpMlS0mKzzWkQLa2jHv6N04p7dju4dMX3c+FVMV865Wky2LHV16A2YbQ
+         jV3ScxW+ecuHzEpFZ8Kx2MEwbiufRJg7fGW6C3Zs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 5.4 087/232] media: venus: firmware: Ignore secure call error on first resume
-Date:   Thu, 16 Apr 2020 15:23:01 +0200
-Message-Id: <20200416131325.885035660@linuxfoundation.org>
+        stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>,
+        Felipe Balbi <balbi@kernel.org>
+Subject: [PATCH 5.4 074/232] usb: gadget: composite: Inform controller driver of self-powered
+Date:   Thu, 16 Apr 2020 15:22:48 +0200
+Message-Id: <20200416131324.532258700@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -61,44 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
 
-commit 2632e7b618a7730969f9782593c29ca53553aa22 upstream.
+commit 5e5caf4fa8d3039140b4548b6ab23dd17fce9b2c upstream.
 
-With the latest cleanup in qcom scm driver the secure monitor
-call for setting the remote processor state returns EINVAL when
-it is called for the first time and after another scm call
-auth_and_reset. The error returned from scm call could be ignored
-because the state transition is already done in auth_and_reset.
+Different configuration/condition may draw different power. Inform the
+controller driver of the change so it can respond properly (e.g.
+GET_STATUS request). This fixes an issue with setting MaxPower from
+configfs. The composite driver doesn't check this value when setting
+self-powered.
 
-Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
 Cc: stable@vger.kernel.org
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Fixes: 88af8bbe4ef7 ("usb: gadget: the start of the configfs interface")
+Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/platform/qcom/venus/firmware.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/usb/gadget/composite.c |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
---- a/drivers/media/platform/qcom/venus/firmware.c
-+++ b/drivers/media/platform/qcom/venus/firmware.c
-@@ -44,8 +44,14 @@ static void venus_reset_cpu(struct venus
- 
- int venus_set_hw_state(struct venus_core *core, bool resume)
- {
--	if (core->use_tz)
--		return qcom_scm_set_remote_state(resume, 0);
-+	int ret;
+--- a/drivers/usb/gadget/composite.c
++++ b/drivers/usb/gadget/composite.c
+@@ -861,6 +861,11 @@ static int set_config(struct usb_composi
+ 	else
+ 		power = min(power, 900U);
+ done:
++	if (power <= USB_SELF_POWER_VBUS_MAX_DRAW)
++		usb_gadget_set_selfpowered(gadget);
++	else
++		usb_gadget_clear_selfpowered(gadget);
 +
-+	if (core->use_tz) {
-+		ret = qcom_scm_set_remote_state(resume, 0);
-+		if (resume && ret == -EINVAL)
-+			ret = 0;
-+		return ret;
-+	}
+ 	usb_gadget_vbus_draw(gadget, power);
+ 	if (result >= 0 && cdev->delayed_status)
+ 		result = USB_GADGET_DELAYED_STATUS;
+@@ -2279,6 +2284,7 @@ void composite_suspend(struct usb_gadget
  
- 	if (resume)
- 		venus_reset_cpu(core);
+ 	cdev->suspended = 1;
+ 
++	usb_gadget_set_selfpowered(gadget);
+ 	usb_gadget_vbus_draw(gadget, 2);
+ }
+ 
+@@ -2307,6 +2313,9 @@ void composite_resume(struct usb_gadget
+ 		else
+ 			maxpower = min(maxpower, 900U);
+ 
++		if (maxpower > USB_SELF_POWER_VBUS_MAX_DRAW)
++			usb_gadget_clear_selfpowered(gadget);
++
+ 		usb_gadget_vbus_draw(gadget, maxpower);
+ 	}
+ 
 
 
