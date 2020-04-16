@@ -2,130 +2,101 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD68C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:42:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 223DAC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:42:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAE7E2223D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:42:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E60DF2224F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:42:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587051732;
-	bh=Mj4msVtmQONYhcgmUcQloVMegHSeu02UZ1iqSI5EdKs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=frgdM06a6kP+skqjBH8LZ6Y+hiaGLvxvLp3xnlb5xdxHaJckokcEi11prZaykBcaS
-	 fz/GOUmrSxeh2yRvGWY308Fcx8ly4CcV9QxuBq8qBn3EO2SksjDT21YHr59CWLPU0J
-	 PrmlqAWrRWQ0Yy0ctItdPeN9LeMH1IN4gRv+meWs=
+	s=default; t=1587051739;
+	bh=79z7BDql8stYOus3GTROCiSx/mTNrMJNRyoDBHRU8TQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Y62FdvBiuX34J3eScllU5NDq6RvVaamfUcweLcnk7t78Lm6Yr5UVI0r4u+Moajovq
+	 j4iHAlGqAh9JuvITQskJrbF3lbh/DQQUW8mHfep/fvQE3f4grd+83pZR6EwQBFyWto
+	 vSUv87KYBM4qTJ2Hy9b1D+GWriXxtvRc6iYfNxoM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395394AbgDPPmK (ORCPT
+        id S2897329AbgDPNga (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:42:10 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:35019 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2395513AbgDPPl7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 11:41:59 -0400
-Received: by mail-ot1-f67.google.com with SMTP id e20so3455780otl.2;
-        Thu, 16 Apr 2020 08:41:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=v2r2r7O0CFpemVMZF52M89j+FDaTZj9iicBxWLrdGKQ=;
-        b=cWxSd2WFCpFpPKJYhn5g9auh747t7vpQLWrKQiFns9euE2mwmJAxx4OswvcW1SJdNr
-         5pBjf6DV7dvZCsq/fSzoUVXlvHRMkSx5+4PlPcqxb8BQm35ojCCp0MlczkoZdT58Ta9L
-         BLYBbqLol5UHyDawboY8p67ytB3sBdgT3UQNQYdCNc4vftu64uKewgavnd19LZdU6PWA
-         R96S9mVXSX/WFaMjCeyPrONJ43dwpqq0/TAWr1f9VwP6OVDa3Bqix21AjhDx+GCjR7ck
-         uKHyl+TEPCjWd8upAIVIeBD/5m6jvkVL9UlByAYK3e+k1npepC+Ytb0Vcxb/mHfkUayd
-         wrNg==
-X-Gm-Message-State: AGi0PuYG8NhUrTEKoXVwKRBu6oI4hiyibXJJem/CiN5kOx3pT3FFcZ1v
-        l18MSUDnR7YzSGa3yYkHEEWvNbNvbGQtpZ1Q3RU=
-X-Google-Smtp-Source: APiQypKYmfqXSVukeSYfuQdxJzi/Fy9tusMoaZDOo2RFrsmXI9m1AdnnIuDy0Q/dp38vblR7AcNuNmt5u6ZjLa0nqSU=
-X-Received: by 2002:a9d:6ac8:: with SMTP id m8mr17036281otq.262.1587051718557;
- Thu, 16 Apr 2020 08:41:58 -0700 (PDT)
+        Thu, 16 Apr 2020 09:36:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39738 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2896056AbgDPN3n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:29:43 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7B99208E4;
+        Thu, 16 Apr 2020 13:29:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587043783;
+        bh=79z7BDql8stYOus3GTROCiSx/mTNrMJNRyoDBHRU8TQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=EAp+quYAmlkpHIl6yjlrtilIHz8idXSpXdxwFiHtNsBBnBvLyjzgJE6sKr1hhDdTb
+         dR3CgNEWZ8ZjuqRbKoXmai7ZXKn2W8QhmANE9CL9iXvYkctMutBurXwu/JgjZnPRFW
+         OU7JnZXMqpRd36EWzkml89lRLhOYhzyKNkCVZ+J0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Laura Abbott <labbott@redhat.com>,
+        Anssi Hannula <anssi.hannula@bitwise.fi>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 4.19 098/146] tools: gpio: Fix out-of-tree build regression
+Date:   Thu, 16 Apr 2020 15:23:59 +0200
+Message-Id: <20200416131256.157696583@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
+References: <20200416131242.353444678@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200416054745.740-1-ggherdovich@suse.cz> <20200416054745.740-2-ggherdovich@suse.cz>
-In-Reply-To: <20200416054745.740-2-ggherdovich@suse.cz>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 16 Apr 2020 17:41:47 +0200
-Message-ID: <CAJZ5v0hypB1cYAis6+tg5_ckY6Z4-Xbif8ZUj5ZP+M9SFHM4fw@mail.gmail.com>
-Subject: Re: [PATCH 1/4] x86, sched: Bail out of frequency invariance if base
- frequency is unknown
-To:     Giovanni Gherdovich <ggherdovich@suse.cz>
-Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@suse.de>, Len Brown <lenb@kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Doug Smythies <dsmythies@telus.net>,
-        Like Xu <like.xu@linux.intel.com>,
-        Neil Rickert <nwr10cst-oslnx@yahoo.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 7:48 AM Giovanni Gherdovich <ggherdovich@suse.cz> wrote:
->
-> Some hypervisors such as VMWare ESXi 5.5 advertise support for
-> X86_FEATURE_APERFMPERF but then fill all MSR's with zeroes. In particular,
-> MSR_PLATFORM_INFO set to zero tricks the code that wants to know the base
-> clock frequency of the CPU (highest non-turbo frequency), producing a
-> division by zero when computing the ratio turbo_freq/base_freq necessary
-> for frequency invariant accounting.
->
-> It is to be noted that even if MSR_PLATFORM_INFO contained the appropriate
-> data, APERF and MPERF are constantly zero on ESXi 5.5, thus freq-invariance
-> couldn't be done in principle (not that it would make a lot of sense in a
-> VM anyway). The real problem is advertising X86_FEATURE_APERFMPERF. This
-> appears to be fixed in more recent versions: ESXi 6.7 doesn't advertise
-> that feature.
->
-> Signed-off-by: Giovanni Gherdovich <ggherdovich@suse.cz>
-> Fixes: 1567c3e3467c ("x86, sched: Add support for frequency invariance")
+From: Anssi Hannula <anssi.hannula@bitwise.fi>
 
-Please feel free to add
+commit 82f04bfe2aff428b063eefd234679b2d693228ed upstream.
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Commit 0161a94e2d1c7 ("tools: gpio: Correctly add make dependencies for
+gpio_utils") added a make rule for gpio-utils-in.o but used $(output)
+instead of the correct $(OUTPUT) for the output directory, breaking
+out-of-tree build (O=xx) with the following error:
 
-to all patches in the series and I'm expecting them to be routed through tip.
+  No rule to make target 'out/tools/gpio/gpio-utils-in.o', needed by 'out/tools/gpio/lsgpio-in.o'.  Stop.
 
-Thanks!
+Fix that.
 
-> ---
->  arch/x86/kernel/smpboot.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
->
-> diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-> index fe3ab9632f3b..3a318ec9bc17 100644
-> --- a/arch/x86/kernel/smpboot.c
-> +++ b/arch/x86/kernel/smpboot.c
-> @@ -1985,6 +1985,15 @@ static bool intel_set_max_freq_ratio(void)
->         return false;
->
->  out:
-> +       /*
-> +        * Some hypervisors advertise X86_FEATURE_APERFMPERF
-> +        * but then fill all MSR's with zeroes.
-> +        */
-> +       if (!base_freq) {
-> +               pr_debug("Couldn't determine cpu base frequency, necessary for scale-invariant accounting.\n");
-> +               return false;
-> +       }
-> +
->         arch_turbo_freq_ratio = div_u64(turbo_freq * SCHED_CAPACITY_SCALE,
->                                         base_freq);
->         arch_set_max_freq_ratio(turbo_disabled());
-> --
-> 2.16.4
->
+Fixes: 0161a94e2d1c ("tools: gpio: Correctly add make dependencies for gpio_utils")
+Cc: <stable@vger.kernel.org>
+Cc: Laura Abbott <labbott@redhat.com>
+Signed-off-by: Anssi Hannula <anssi.hannula@bitwise.fi>
+Link: https://lore.kernel.org/r/20200325103154.32235-1-anssi.hannula@bitwise.fi
+Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ tools/gpio/Makefile |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/tools/gpio/Makefile
++++ b/tools/gpio/Makefile
+@@ -35,7 +35,7 @@ $(OUTPUT)include/linux/gpio.h: ../../inc
+ 
+ prepare: $(OUTPUT)include/linux/gpio.h
+ 
+-GPIO_UTILS_IN := $(output)gpio-utils-in.o
++GPIO_UTILS_IN := $(OUTPUT)gpio-utils-in.o
+ $(GPIO_UTILS_IN): prepare FORCE
+ 	$(Q)$(MAKE) $(build)=gpio-utils
+ 
+
+
