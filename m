@@ -2,280 +2,414 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA8FC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:04:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B9BC352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:04:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D68F20787
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:04:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WM/Rly1N"
+	by mail.kernel.org (Postfix) with ESMTP id 8424220771
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:04:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438435AbgDPHEG (ORCPT
+        id S2438324AbgDPHEp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 03:04:06 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:21216 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2438174AbgDPHDz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 03:03:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587020633;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=u8Fe4HRBZIpxRs2mIcqmv3RiTnssjCSY9lhZeXvdF9I=;
-        b=WM/Rly1NitS+VYy6Y2QqYvq1lk8LnyN5AJiy5Noxyn/LYlQj2PDEAWEnmj6n1Ac6fsQbWK
-        5yhMjGy7kECWJBXUH08fE0+kZOsPxBwqpfp7H+3E6awDQkcFGGfKGLvPotI3zo7Q/TIIMv
-        qviSam0ELui+TGvxi+A46+7F3eIwNwQ=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-142-y3Bs39A7P6yk-H3_jkHMKQ-1; Thu, 16 Apr 2020 03:03:52 -0400
-X-MC-Unique: y3Bs39A7P6yk-H3_jkHMKQ-1
-Received: by mail-wr1-f71.google.com with SMTP id h95so1235709wrh.11
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 00:03:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=u8Fe4HRBZIpxRs2mIcqmv3RiTnssjCSY9lhZeXvdF9I=;
-        b=eXBvQwp5WkdkYdTo7f2vnMD7hLr/shKbYS6xCK860psYNKV+V2W2M55AVly+5J9mPl
-         L3sVdvh7Vd+8uO4ZCc6yVmabu2cwYmHeMrv94vX2hgnMXRdixBSil1DIk7kAU5jwwVpZ
-         yoK/ZM9O3yxAwSjM2pLOiicESvjD/t+BD5Whc/E13JA+p34fqF9/BkxSeXJPuvZ/eqxJ
-         VttSPB43hwCiNW0MiMjEkAT0UZhlk+zovZtlE4dimOxd8p14zwZ9tn3JSjO8y0Qdznrc
-         henvGW88t5svjBruVfMTdheWaRaV8Lkr2Q7HsOoaTM3hWacYyHStqQvfolNGyhe1mx9o
-         jrgg==
-X-Gm-Message-State: AGi0Puah727/qX/9dRumSeBdlWTj2zB08VGV8VdbcB2lOS23PE0OpPrp
-        msCmFfHsBCL2Y7kKelZY4GeOWt0Ybvg6XfI/wCqNqsJAqRZT6FlmS2O6y+gxYJy1rVYua9Jvf44
-        /3Gstd8Xxy2ZMhIMDXzExeolq
-X-Received: by 2002:a5d:4005:: with SMTP id n5mr7830137wrp.242.1587020631091;
-        Thu, 16 Apr 2020 00:03:51 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKzVfRYkQQjXNmPRmmEuweWR0AsvTUy66VIOLHRJ9IcCVXdD+fbCSvkQnkvtw8EzDw2iMvttg==
-X-Received: by 2002:a5d:4005:: with SMTP id n5mr7830094wrp.242.1587020630785;
-        Thu, 16 Apr 2020 00:03:50 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id o16sm26785055wrs.44.2020.04.16.00.03.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2020 00:03:49 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Cc:     kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-mips@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        tianjia.zhang@linux.alibaba.com, pbonzini@redhat.com,
-        tsbogend@alpha.franken.de, paulus@ozlabs.org, mpe@ellerman.id.au,
-        benh@kernel.crashing.org, borntraeger@de.ibm.com,
-        frankja@linux.ibm.com, david@redhat.com, cohuck@redhat.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        sean.j.christopherson@intel.com, wanpengli@tencent.com,
-        jmattson@google.com, joro@8bytes.org, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
-        maz@kernel.org, james.morse@arm.com, julien.thierry.kdev@gmail.com,
-        suzuki.poulose@arm.com, christoffer.dall@arm.com,
-        peterx@redhat.com, thuth@redhat.com
-Subject: Re: [PATCH v2] KVM: Optimize kvm_arch_vcpu_ioctl_run function
-In-Reply-To: <20200416051057.26526-1-tianjia.zhang@linux.alibaba.com>
-References: <20200416051057.26526-1-tianjia.zhang@linux.alibaba.com>
-Date:   Thu, 16 Apr 2020 09:03:47 +0200
-Message-ID: <878sivx67g.fsf@vitty.brq.redhat.com>
+        Thu, 16 Apr 2020 03:04:45 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2338 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2437167AbgDPHEg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 03:04:36 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 6537431995AEF8AD665D;
+        Thu, 16 Apr 2020 15:04:32 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server (TLS) id 14.3.487.0; Thu, 16 Apr
+ 2020 15:04:27 +0800
+Subject: Re: [f2fs-dev] [PATCH] f2fs: prevent meta updates while checkpoint is
+ in progress
+To:     Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sahitya Tummala <stummala@codeaurora.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+References: <1585219019-24831-1-git-send-email-stummala@codeaurora.org>
+ <20200331035419.GB79749@google.com> <20200331090608.GZ20234@codeaurora.org>
+ <20200331184307.GA198665@google.com> <20200401050801.GA20234@codeaurora.org>
+ <20200403171727.GB68460@google.com> <20200403172750.GD68460@google.com>
+ <20200413174237.GC39092@google.com> <20200414134403.GA69282@google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <bc5ffa2f-df9e-06a5-d784-31fda3596935@huawei.com>
+Date:   Thu, 16 Apr 2020 15:04:27 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200414134403.GA69282@google.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tianjia Zhang <tianjia.zhang@linux.alibaba.com> writes:
-
-> In earlier versions of kvm, 'kvm_run' is an independent structure
-> and is not included in the vcpu structure. At present, 'kvm_run'
-> is already included in the vcpu structure, so the parameter
-> 'kvm_run' is redundant.
->
-> This patch simplify the function definition, removes the extra
-> 'kvm_run' parameter, and extract it from the 'kvm_vcpu' structure
-> if necessary.
->
-> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+On 2020/4/14 21:44, Jaegeuk Kim wrote:
+> On 04/13, Jaegeuk Kim wrote:
+>> On 04/03, Jaegeuk Kim wrote:
+>>> On 04/03, Jaegeuk Kim wrote:
+>>>> On 04/01, Sahitya Tummala wrote:
+>>>>> Hi Jaegeuk,
+>>>>>
+>>>>> Got it.
+>>>>> The diff below looks good to me.
+>>>>> Would you like me to test it and put a patch for this?
+>>>>
+>>>> Sahitya, Chao,
+>>>>
+>>>> Could you please take a look at this patch and test intensively?
+>>>>
+>>>> Thanks,
+> 
+> v4:
+>  - fix deadlock
+> 
+>>From fcbf75b308a8b933706c7e4dd18f275129baa928 Mon Sep 17 00:00:00 2001
+> From: Jaegeuk Kim <jaegeuk@kernel.org>
+> Date: Tue, 31 Mar 2020 11:43:07 -0700
+> Subject: [PATCH] f2fs: refactor resize_fs to avoid meta updates in progress
+> 
+> Sahitya raised an issue:
+> - prevent meta updates while checkpoint is in progress
+> 
+> allocate_segment_for_resize() can cause metapage updates if
+> it requires to change the current node/data segments for resizing.
+> Stop these meta updates when there is a checkpoint already
+> in progress to prevent inconsistent CP data.
+> 
+> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 > ---
->
-> v2 change:
->   remove 'kvm_run' parameter and extract it from 'kvm_vcpu'
->
->  arch/mips/kvm/mips.c       |  3 ++-
->  arch/powerpc/kvm/powerpc.c |  3 ++-
->  arch/s390/kvm/kvm-s390.c   |  3 ++-
->  arch/x86/kvm/x86.c         | 11 ++++++-----
->  include/linux/kvm_host.h   |  2 +-
->  virt/kvm/arm/arm.c         |  6 +++---
->  virt/kvm/kvm_main.c        |  2 +-
->  7 files changed, 17 insertions(+), 13 deletions(-)
->
-> diff --git a/arch/mips/kvm/mips.c b/arch/mips/kvm/mips.c
-> index 8f05dd0a0f4e..ec24adf4857e 100644
-> --- a/arch/mips/kvm/mips.c
-> +++ b/arch/mips/kvm/mips.c
-> @@ -439,8 +439,9 @@ int kvm_arch_vcpu_ioctl_set_guest_debug(struct kvm_vcpu *vcpu,
->  	return -ENOIOCTLCMD;
->  }
->  
-> -int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *run)
-> +int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
->  {
-> +	struct kvm_run *run = vcpu->run;
->  	int r = -EINTR;
->  
->  	vcpu_load(vcpu);
-> diff --git a/arch/powerpc/kvm/powerpc.c b/arch/powerpc/kvm/powerpc.c
-> index e15166b0a16d..7e24691e138a 100644
-> --- a/arch/powerpc/kvm/powerpc.c
-> +++ b/arch/powerpc/kvm/powerpc.c
-> @@ -1764,8 +1764,9 @@ int kvm_vcpu_ioctl_set_one_reg(struct kvm_vcpu *vcpu, struct kvm_one_reg *reg)
->  	return r;
->  }
->  
-> -int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *run)
-> +int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
->  {
-> +	struct kvm_run *run = vcpu->run;
->  	int r;
->  
->  	vcpu_load(vcpu);
-> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-> index 19a81024fe16..443af3ead739 100644
-> --- a/arch/s390/kvm/kvm-s390.c
-> +++ b/arch/s390/kvm/kvm-s390.c
-> @@ -4333,8 +4333,9 @@ static void store_regs(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
->  		store_regs_fmt2(vcpu, kvm_run);
->  }
->  
-> -int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
-> +int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
->  {
-> +	struct kvm_run *kvm_run = vcpu->run;
->  	int rc;
->  
->  	if (kvm_run->immediate_exit)
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 3bf2ecafd027..a0338e86c90f 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -8707,8 +8707,9 @@ static void kvm_put_guest_fpu(struct kvm_vcpu *vcpu)
->  	trace_kvm_fpu(0);
->  }
->  
-> -int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
-> +int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
->  {
-> +	struct kvm_run *kvm_run = vcpu->run;
->  	int r;
->  
->  	vcpu_load(vcpu);
-> @@ -8726,18 +8727,18 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
->  		r = -EAGAIN;
->  		if (signal_pending(current)) {
->  			r = -EINTR;
-> -			vcpu->run->exit_reason = KVM_EXIT_INTR;
-> +			kvm_run->exit_reason = KVM_EXIT_INTR;
->  			++vcpu->stat.signal_exits;
->  		}
->  		goto out;
+>  fs/f2fs/checkpoint.c        |   6 +-
+>  fs/f2fs/f2fs.h              |   2 +-
+>  fs/f2fs/file.c              |   5 +-
+>  fs/f2fs/gc.c                | 112 ++++++++++++++++++++----------------
+>  fs/f2fs/super.c             |   1 -
+>  include/trace/events/f2fs.h |   4 +-
+>  6 files changed, 72 insertions(+), 58 deletions(-)
+> 
+> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+> index 6be357c8e0020..dcb3a15574c99 100644
+> --- a/fs/f2fs/checkpoint.c
+> +++ b/fs/f2fs/checkpoint.c
+> @@ -1554,7 +1554,8 @@ int f2fs_write_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
+>  			return 0;
+>  		f2fs_warn(sbi, "Start checkpoint disabled!");
 >  	}
+> -	mutex_lock(&sbi->cp_mutex);
+> +	if (cpc->reason != CP_RESIZE)
+> +		mutex_lock(&sbi->cp_mutex);
 >  
-> -	if (vcpu->run->kvm_valid_regs & ~KVM_SYNC_X86_VALID_FIELDS) {
-> +	if (kvm_run->kvm_valid_regs & ~KVM_SYNC_X86_VALID_FIELDS) {
->  		r = -EINVAL;
->  		goto out;
->  	}
->  
-> -	if (vcpu->run->kvm_dirty_regs) {
-> +	if (kvm_run->kvm_dirty_regs) {
->  		r = sync_regs(vcpu);
->  		if (r != 0)
->  			goto out;
-> @@ -8767,7 +8768,7 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
->  
+>  	if (!is_sbi_flag_set(sbi, SBI_IS_DIRTY) &&
+>  		((cpc->reason & CP_FASTBOOT) || (cpc->reason & CP_SYNC) ||
+> @@ -1623,7 +1624,8 @@ int f2fs_write_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
+>  	f2fs_update_time(sbi, CP_TIME);
+>  	trace_f2fs_write_checkpoint(sbi->sb, cpc->reason, "finish checkpoint");
 >  out:
->  	kvm_put_guest_fpu(vcpu);
-> -	if (vcpu->run->kvm_valid_regs)
-> +	if (kvm_run->kvm_valid_regs)
->  		store_regs(vcpu);
->  	post_kvm_run_save(vcpu);
->  	kvm_sigset_deactivate(vcpu);
-> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-> index 6d58beb65454..1e17ef719595 100644
-> --- a/include/linux/kvm_host.h
-> +++ b/include/linux/kvm_host.h
-> @@ -866,7 +866,7 @@ int kvm_arch_vcpu_ioctl_set_mpstate(struct kvm_vcpu *vcpu,
->  				    struct kvm_mp_state *mp_state);
->  int kvm_arch_vcpu_ioctl_set_guest_debug(struct kvm_vcpu *vcpu,
->  					struct kvm_guest_debug *dbg);
-> -int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run);
-> +int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu);
+> -	mutex_unlock(&sbi->cp_mutex);
+> +	if (cpc->reason != CP_RESIZE)
+> +		mutex_unlock(&sbi->cp_mutex);
+>  	return err;
+>  }
 >  
->  int kvm_arch_init(void *opaque);
->  void kvm_arch_exit(void);
-> diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
-> index 48d0ec44ad77..f5390ac2165b 100644
-> --- a/virt/kvm/arm/arm.c
-> +++ b/virt/kvm/arm/arm.c
-> @@ -639,7 +639,6 @@ static void check_vcpu_requests(struct kvm_vcpu *vcpu)
->  /**
->   * kvm_arch_vcpu_ioctl_run - the main VCPU run function to execute guest code
->   * @vcpu:	The VCPU pointer
-> - * @run:	The kvm_run structure pointer used for userspace state exchange
->   *
->   * This function is called through the VCPU_RUN ioctl called from user space. It
->   * will execute VM code in a loop until the time slice for the process is used
-> @@ -647,8 +646,9 @@ static void check_vcpu_requests(struct kvm_vcpu *vcpu)
->   * return with return value 0 and with the kvm_run structure filled in with the
->   * required data for the requested emulation.
->   */
-> -int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *run)
-> +int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> index 801c04858bc94..da5e9dd747fab 100644
+> --- a/fs/f2fs/f2fs.h
+> +++ b/fs/f2fs/f2fs.h
+> @@ -194,6 +194,7 @@ enum {
+>  #define	CP_DISCARD	0x00000010
+>  #define CP_TRIMMED	0x00000020
+>  #define CP_PAUSE	0x00000040
+> +#define CP_RESIZE 	0x00000080
+>  
+>  #define MAX_DISCARD_BLOCKS(sbi)		BLKS_PER_SEC(sbi)
+>  #define DEF_MAX_DISCARD_REQUEST		8	/* issue 8 discards per round */
+> @@ -1423,7 +1424,6 @@ struct f2fs_sb_info {
+>  	unsigned int segs_per_sec;		/* segments per section */
+>  	unsigned int secs_per_zone;		/* sections per zone */
+>  	unsigned int total_sections;		/* total section count */
+> -	struct mutex resize_mutex;		/* for resize exclusion */
+>  	unsigned int total_node_count;		/* total node block count */
+>  	unsigned int total_valid_node_count;	/* valid node block count */
+>  	loff_t max_file_blocks;			/* max block index of file */
+> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> index dc470358f25eb..212c5996d3807 100644
+> --- a/fs/f2fs/file.c
+> +++ b/fs/f2fs/file.c
+> @@ -3306,7 +3306,6 @@ static int f2fs_ioc_resize_fs(struct file *filp, unsigned long arg)
 >  {
-> +	struct kvm_run *run = vcpu->run;
->  	int ret;
+>  	struct f2fs_sb_info *sbi = F2FS_I_SB(file_inode(filp));
+>  	__u64 block_count;
+> -	int ret;
 >  
->  	if (unlikely(!kvm_vcpu_initialized(vcpu)))
-> @@ -659,7 +659,7 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *run)
->  		return ret;
+>  	if (!capable(CAP_SYS_ADMIN))
+>  		return -EPERM;
+> @@ -3318,9 +3317,7 @@ static int f2fs_ioc_resize_fs(struct file *filp, unsigned long arg)
+>  			   sizeof(block_count)))
+>  		return -EFAULT;
 >  
->  	if (run->exit_reason == KVM_EXIT_MMIO) {
-> -		ret = kvm_handle_mmio_return(vcpu, vcpu->run);
-> +		ret = kvm_handle_mmio_return(vcpu, run);
+> -	ret = f2fs_resize_fs(sbi, block_count);
+> -
+> -	return ret;
+> +	return f2fs_resize_fs(sbi, block_count);
+>  }
+>  
+>  static int f2fs_ioc_enable_verity(struct file *filp, unsigned long arg)
+> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+> index 26248c8936db0..ad395b774a0b2 100644
+> --- a/fs/f2fs/gc.c
+> +++ b/fs/f2fs/gc.c
+> @@ -1399,12 +1399,29 @@ void f2fs_build_gc_manager(struct f2fs_sb_info *sbi)
+>  				GET_SEGNO(sbi, FDEV(0).end_blk) + 1;
+>  }
+>  
+> -static int free_segment_range(struct f2fs_sb_info *sbi, unsigned int start,
+> -							unsigned int end)
+> +static int free_segment_range(struct f2fs_sb_info *sbi,
+> +				unsigned int secs, bool gc_only)
+>  {
+> -	int type;
+> -	unsigned int segno, next_inuse;
+> +	unsigned int segno, next_inuse, start, end;
+> +	struct cp_control cpc = { CP_RESIZE, 0, 0, 0 };
+> +	int gc_mode, gc_type;
+>  	int err = 0;
+> +	int type;
+> +
+> +	/* Force block allocation for GC */
+> +	MAIN_SECS(sbi) -= secs;
+> +	start = MAIN_SECS(sbi) * sbi->segs_per_sec;
+> +	end = MAIN_SEGS(sbi) - 1;
+> +
+> +	mutex_lock(&DIRTY_I(sbi)->seglist_lock);
+> +	for (gc_mode = 0; gc_mode < MAX_GC_POLICY; gc_mode++)
+> +		if (SIT_I(sbi)->last_victim[gc_mode] >= start)
+> +			SIT_I(sbi)->last_victim[gc_mode] = 0;
+> +
+> +	for (gc_type = BG_GC; gc_type <= FG_GC; gc_type++)
+> +		if (sbi->next_victim_seg[gc_type] >= start)
+> +			sbi->next_victim_seg[gc_type] = NULL_SEGNO;
+> +	mutex_unlock(&DIRTY_I(sbi)->seglist_lock);
+>  
+>  	/* Move out cursegs from the target range */
+>  	for (type = CURSEG_HOT_DATA; type < NR_CURSEG_TYPE; type++)
+> @@ -1417,18 +1434,20 @@ static int free_segment_range(struct f2fs_sb_info *sbi, unsigned int start,
+>  			.iroot = RADIX_TREE_INIT(gc_list.iroot, GFP_NOFS),
+>  		};
+>  
+> -		down_write(&sbi->gc_lock);
+>  		do_garbage_collect(sbi, segno, &gc_list, FG_GC);
+> -		up_write(&sbi->gc_lock);
+>  		put_gc_inode(&gc_list);
 
-I don't know much about ARM but this also seems redundant,
-kvm_handle_mmio_return() is also able to extruct 'struct kvm_run' from'
-'struct kvm_vcpu'. This likely deserves it's own patch though.
+Granularity is still large, how about handling userspace signal here
+to provide a termination way in case of user don't want / can't wait
+for more time.
 
->  		if (ret)
->  			return ret;
+	if (fatal_signal_pending(current))
+		return -ERESTARTSYS;
+
+Thanks,
+
+>  
+> -		if (get_valid_blocks(sbi, segno, true))
+> -			return -EAGAIN;
+> +		if (!gc_only && get_valid_blocks(sbi, segno, true)) {
+> +			err = -EAGAIN;
+> +			goto out;
+> +		}
 >  	}
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index 74bdb7bf3295..e18faea89146 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -3135,7 +3135,7 @@ static long kvm_vcpu_ioctl(struct file *filp,
->  				synchronize_rcu();
->  			put_pid(oldpid);
->  		}
-> -		r = kvm_arch_vcpu_ioctl_run(vcpu, vcpu->run);
-> +		r = kvm_arch_vcpu_ioctl_run(vcpu);
->  		trace_kvm_userspace_exit(vcpu->run->exit_reason, r);
->  		break;
+> +	if (gc_only)
+> +		goto out;
+>  
+> -	err = f2fs_sync_fs(sbi->sb, 1);
+> +	err = f2fs_write_checkpoint(sbi, &cpc);
+>  	if (err)
+> -		return err;
+> +		goto out;
+>  
+>  	next_inuse = find_next_inuse(FREE_I(sbi), end + 1, start);
+>  	if (next_inuse <= end) {
+> @@ -1436,6 +1455,8 @@ static int free_segment_range(struct f2fs_sb_info *sbi, unsigned int start,
+>  			 next_inuse);
+>  		f2fs_bug_on(sbi, 1);
 >  	}
-
-Looked at non-x86 arches just briefly but there seems to be no
-controversy here, so
-
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-
--- 
-Vitaly
-
+> +out:
+> +	MAIN_SECS(sbi) -= secs;
+>  	return err;
+>  }
+>  
+> @@ -1481,6 +1502,7 @@ static void update_fs_metadata(struct f2fs_sb_info *sbi, int secs)
+>  
+>  	SM_I(sbi)->segment_count = (int)SM_I(sbi)->segment_count + segs;
+>  	MAIN_SEGS(sbi) = (int)MAIN_SEGS(sbi) + segs;
+> +	MAIN_SECS(sbi) += secs;
+>  	FREE_I(sbi)->free_sections = (int)FREE_I(sbi)->free_sections + secs;
+>  	FREE_I(sbi)->free_segments = (int)FREE_I(sbi)->free_segments + segs;
+>  	F2FS_CKPT(sbi)->user_block_count = cpu_to_le64(user_block_count + blks);
+> @@ -1502,8 +1524,8 @@ static void update_fs_metadata(struct f2fs_sb_info *sbi, int secs)
+>  int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
+>  {
+>  	__u64 old_block_count, shrunk_blocks;
+> +	struct cp_control cpc = { CP_RESIZE, 0, 0, 0 };
+>  	unsigned int secs;
+> -	int gc_mode, gc_type;
+>  	int err = 0;
+>  	__u32 rem;
+>  
+> @@ -1538,10 +1560,27 @@ int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
+>  		return -EINVAL;
+>  	}
+>  
+> -	freeze_bdev(sbi->sb->s_bdev);
+> -
+>  	shrunk_blocks = old_block_count - block_count;
+>  	secs = div_u64(shrunk_blocks, BLKS_PER_SEC(sbi));
+> +
+> +	/* stop other GC */
+> +	if (!down_write_trylock(&sbi->gc_lock))
+> +		return -EAGAIN;
+> +
+> +	/* stop CP to protect MAIN_SEC in free_segment_range */
+> +	f2fs_lock_op(sbi);
+> +	err = free_segment_range(sbi, secs, true);
+> +	f2fs_unlock_op(sbi);
+> +	up_write(&sbi->gc_lock);
+> +	if (err)
+> +		return err;
+> +
+> +	set_sbi_flag(sbi, SBI_IS_RESIZEFS);
+> +
+> +	freeze_super(sbi->sb);
+> +	down_write(&sbi->gc_lock);
+> +	mutex_lock(&sbi->cp_mutex);
+> +
+>  	spin_lock(&sbi->stat_lock);
+>  	if (shrunk_blocks + valid_user_blocks(sbi) +
+>  		sbi->current_reserved_blocks + sbi->unusable_block_count +
+> @@ -1550,69 +1589,44 @@ int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
+>  	else
+>  		sbi->user_block_count -= shrunk_blocks;
+>  	spin_unlock(&sbi->stat_lock);
+> -	if (err) {
+> -		thaw_bdev(sbi->sb->s_bdev, sbi->sb);
+> -		return err;
+> -	}
+> -
+> -	mutex_lock(&sbi->resize_mutex);
+> -	set_sbi_flag(sbi, SBI_IS_RESIZEFS);
+> -
+> -	mutex_lock(&DIRTY_I(sbi)->seglist_lock);
+> -
+> -	MAIN_SECS(sbi) -= secs;
+> -
+> -	for (gc_mode = 0; gc_mode < MAX_GC_POLICY; gc_mode++)
+> -		if (SIT_I(sbi)->last_victim[gc_mode] >=
+> -					MAIN_SECS(sbi) * sbi->segs_per_sec)
+> -			SIT_I(sbi)->last_victim[gc_mode] = 0;
+> -
+> -	for (gc_type = BG_GC; gc_type <= FG_GC; gc_type++)
+> -		if (sbi->next_victim_seg[gc_type] >=
+> -					MAIN_SECS(sbi) * sbi->segs_per_sec)
+> -			sbi->next_victim_seg[gc_type] = NULL_SEGNO;
+> -
+> -	mutex_unlock(&DIRTY_I(sbi)->seglist_lock);
+> +	if (err)
+> +		goto out_err;
+>  
+> -	err = free_segment_range(sbi, MAIN_SECS(sbi) * sbi->segs_per_sec,
+> -			MAIN_SEGS(sbi) - 1);
+> +	err = free_segment_range(sbi, secs, false);
+>  	if (err)
+> -		goto out;
+> +		goto recover_out;
+>  
+>  	update_sb_metadata(sbi, -secs);
+>  
+>  	err = f2fs_commit_super(sbi, false);
+>  	if (err) {
+>  		update_sb_metadata(sbi, secs);
+> -		goto out;
+> +		goto recover_out;
+>  	}
+>  
+> -	mutex_lock(&sbi->cp_mutex);
+>  	update_fs_metadata(sbi, -secs);
+>  	clear_sbi_flag(sbi, SBI_IS_RESIZEFS);
+>  	set_sbi_flag(sbi, SBI_IS_DIRTY);
+> -	mutex_unlock(&sbi->cp_mutex);
+>  
+> -	err = f2fs_sync_fs(sbi->sb, 1);
+> +	err = f2fs_write_checkpoint(sbi, &cpc);
+>  	if (err) {
+> -		mutex_lock(&sbi->cp_mutex);
+>  		update_fs_metadata(sbi, secs);
+> -		mutex_unlock(&sbi->cp_mutex);
+>  		update_sb_metadata(sbi, secs);
+>  		f2fs_commit_super(sbi, false);
+>  	}
+> -out:
+> +recover_out:
+>  	if (err) {
+>  		set_sbi_flag(sbi, SBI_NEED_FSCK);
+>  		f2fs_err(sbi, "resize_fs failed, should run fsck to repair!");
+>  
+> -		MAIN_SECS(sbi) += secs;
+>  		spin_lock(&sbi->stat_lock);
+>  		sbi->user_block_count += shrunk_blocks;
+>  		spin_unlock(&sbi->stat_lock);
+>  	}
+> +out_err:
+> +	mutex_unlock(&sbi->cp_mutex);
+> +	up_write(&sbi->gc_lock);
+> +	thaw_super(sbi->sb);
+>  	clear_sbi_flag(sbi, SBI_IS_RESIZEFS);
+> -	mutex_unlock(&sbi->resize_mutex);
+> -	thaw_bdev(sbi->sb->s_bdev, sbi->sb);
+>  	return err;
+>  }
+> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+> index 43a61ed592c10..33da1ad238d72 100644
+> --- a/fs/f2fs/super.c
+> +++ b/fs/f2fs/super.c
+> @@ -3420,7 +3420,6 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
+>  	init_rwsem(&sbi->gc_lock);
+>  	mutex_init(&sbi->writepages);
+>  	mutex_init(&sbi->cp_mutex);
+> -	mutex_init(&sbi->resize_mutex);
+>  	init_rwsem(&sbi->node_write);
+>  	init_rwsem(&sbi->node_change);
+>  
+> diff --git a/include/trace/events/f2fs.h b/include/trace/events/f2fs.h
+> index 3577fa67690af..421a661bfd5aa 100644
+> --- a/include/trace/events/f2fs.h
+> +++ b/include/trace/events/f2fs.h
+> @@ -50,6 +50,7 @@ TRACE_DEFINE_ENUM(CP_RECOVERY);
+>  TRACE_DEFINE_ENUM(CP_DISCARD);
+>  TRACE_DEFINE_ENUM(CP_TRIMMED);
+>  TRACE_DEFINE_ENUM(CP_PAUSE);
+> +TRACE_DEFINE_ENUM(CP_RESIZE);
+>  
+>  #define show_block_type(type)						\
+>  	__print_symbolic(type,						\
+> @@ -126,7 +127,8 @@ TRACE_DEFINE_ENUM(CP_PAUSE);
+>  		{ CP_RECOVERY,	"Recovery" },				\
+>  		{ CP_DISCARD,	"Discard" },				\
+>  		{ CP_PAUSE,	"Pause" },				\
+> -		{ CP_TRIMMED,	"Trimmed" })
+> +		{ CP_TRIMMED,	"Trimmed" },				\
+> +		{ CP_RESIZE,	"Resize" })
+>  
+>  #define show_fsync_cpreason(type)					\
+>  	__print_symbolic(type,						\
+> 
