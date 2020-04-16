@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3760C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:36:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 146D2C352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:36:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA4C6214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:36:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3DEF214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:36:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587051405;
-	bh=UNh0GgZ5iRahcSR9YwXtGHyMEu2+qInqjaAHe6Rzyf8=;
+	s=default; t=1587051413;
+	bh=Myj1CDp0UdOsG9VN9HTP9WtLs++9igsmwDL49tx1CsU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B4Qv/BJsEqlpT39u8yQnkVfNi7HPUOMuVY0dX5Fb2wHtBWlFz8a8re1cv8lE57AN2
-	 t7rpz+/GywuF5JgHgpgokzfqg9e49oQmZLjmQ0I8IpzxESQYPjM0d/raxJSItdXmFq
-	 mZPhcMPpmADP8NIsXD22O7siQvqS3ub6V/wKQSqQ=
+	b=2FlrIyopqCUzMBB82b82PIlVDTyO7nxnhecgrJJtH+4WdFsvidm7ehC9f26n/aySx
+	 5KULD6PFqqLitbKNEFpcbjLg1vHwGeyHt8GW8MSpmJzSQY6mrLYiMD5aeOkUDnHsIB
+	 Ev99rPyvuf3ZElumioCUOx7bj4vxrruVUD3b2X58=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395326AbgDPPgn (ORCPT
+        id S2441598AbgDPPgw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:36:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52354 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:36:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898005AbgDPNjx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:39:53 -0400
+        id S2897880AbgDPNjp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:39:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC4752222C;
-        Thu, 16 Apr 2020 13:39:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 999252063A;
+        Thu, 16 Apr 2020 13:39:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044392;
-        bh=UNh0GgZ5iRahcSR9YwXtGHyMEu2+qInqjaAHe6Rzyf8=;
+        s=default; t=1587044385;
+        bh=Myj1CDp0UdOsG9VN9HTP9WtLs++9igsmwDL49tx1CsU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f0rWHkqW6JY9mqbuEUvP8onDk3JfIf1ielWo2DxBHf3Qn99od5b7yBNYSI3yP+t7z
-         vyRnICmAoOc2xgdMyO7UoNWuB7TffpL5nZlKqq5vqmCxkRzufb6G4xzLESr53aWGK1
-         F8Ux2PAztjhZyYmjVgJwiSI9QCmCVX+yb4WzbKgA=
+        b=XydSTFfOL1+RT1TqtAdKPT8CqaQXCWhz+gCSJgf8YBf++rJBML8boiRAPFyM+8tyk
+         /nrL1Y6DKMBkSXIxJX9oND5VD430G4iE1rUAZ8xkmij/o4lH7bFqi18VX/m7/kTXoK
+         pwbP/a2PCHuc3siaE9xd2BADrBuE1QElv/nwz1ho=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <jsmart2021@gmail.com>,
+        stable@vger.kernel.org, Jens Remus <jremus@linux.ibm.com>,
+        Benjamin Block <bblock@linux.ibm.com>,
+        Steffen Maier <maier@linux.ibm.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.5 198/257] scsi: lpfc: Fix broken Credit Recovery after driver load
-Date:   Thu, 16 Apr 2020 15:24:09 +0200
-Message-Id: <20200416131350.895170770@linuxfoundation.org>
+Subject: [PATCH 5.5 195/257] scsi: zfcp: fix missing erp_lock in port recovery trigger for point-to-point
+Date:   Thu, 16 Apr 2020 15:24:06 +0200
+Message-Id: <20200416131350.576747147@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -60,146 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Steffen Maier <maier@linux.ibm.com>
 
-commit 835214f5d5f516a38069bc077c879c7da00d6108 upstream.
+commit 819732be9fea728623e1ed84eba28def7384ad1f upstream.
 
-When driver is set to enable bb credit recovery, the switch displayed the
-setting as inactive.  If the link bounces, it switches to Active.
+v2.6.27 commit cc8c282963bd ("[SCSI] zfcp: Automatically attach remote
+ports") introduced zfcp automatic port scan.
 
-During link up processing, the driver currently does a MBX_READ_SPARAM
-followed by a MBX_CONFIG_LINK. These mbox commands are queued to be
-executed, one at a time and the completion is processed by the worker
-thread.  Since the MBX_READ_SPARAM is done BEFORE the MBX_CONFIG_LINK, the
-BB_SC_N bit is never set the the returned values. BB Credit recovery status
-only gets set after the driver requests the feature in CONFIG_LINK, which
-is done after the link up. Thus the ordering of READ_SPARAM needs to follow
-the CONFIG_LINK.
+Before that, the user had to use the sysfs attribute "port_add" of an FCP
+device (adapter) to add and open remote (target) ports, even for the remote
+peer port in point-to-point topology. That code path did a proper port open
+recovery trigger taking the erp_lock.
 
-Fix by reordering so that READ_SPARAM is done after CONFIG_LINK.  Added a
-HBA_DEFER_FLOGI flag so that any FLOGI handling waits until after the
-READ_SPARAM is done so that the proper BB credit value is set in the FLOGI
-payload.
+Since above commit, a new helper function zfcp_erp_open_ptp_port()
+performed an UNlocked port open recovery trigger. This can race with other
+parallel recovery triggers. In zfcp_erp_action_enqueue() this could corrupt
+e.g. adapter->erp_total_count or adapter->erp_ready_head.
 
-Fixes: 6bfb16208298 ("scsi: lpfc: Fix configuration of BB credit recovery in service parameters")
-Cc: <stable@vger.kernel.org> # v5.4+
-Link: https://lore.kernel.org/r/20200128002312.16346-4-jsmart2021@gmail.com
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
+As already found for fabric topology in v4.17 commit fa89adba1941 ("scsi:
+zfcp: fix infinite iteration on ERP ready list"), there was an endless loop
+during tracing of rport (un)block.  A subsequent v4.18 commit 9e156c54ace3
+("scsi: zfcp: assert that the ERP lock is held when tracing a recovery
+trigger") introduced a lockdep assertion for that case.
+
+As a side effect, that lockdep assertion now uncovered the unlocked code
+path for PtP. It is from within an adapter ERP action:
+
+zfcp_erp_strategy[1479]  intentionally DROPs erp lock around
+                         zfcp_erp_strategy_do_action()
+zfcp_erp_strategy_do_action[1441]      NO erp lock
+zfcp_erp_adapter_strategy[876]         NO erp lock
+zfcp_erp_adapter_strategy_open[855]    NO erp lock
+zfcp_erp_adapter_strategy_open_fsf[806]NO erp lock
+zfcp_erp_adapter_strat_fsf_xconf[772]  erp lock only around
+                                       zfcp_erp_action_to_running(),
+                                       BUT *_not_* around
+                                       zfcp_erp_enqueue_ptp_port()
+zfcp_erp_enqueue_ptp_port[728]         BUG: *_not_* taking erp lock
+_zfcp_erp_port_reopen[432]             assumes to be called with erp lock
+zfcp_erp_action_enqueue[314]           assumes to be called with erp lock
+zfcp_dbf_rec_trig[288]                 _checks_ to be called with erp lock:
+	lockdep_assert_held(&adapter->erp_lock);
+
+It causes the following lockdep warning:
+
+WARNING: CPU: 2 PID: 775 at drivers/s390/scsi/zfcp_dbf.c:288
+                            zfcp_dbf_rec_trig+0x16a/0x188
+no locks held by zfcperp0.0.17c0/775.
+
+Fix this by using the proper locked recovery trigger helper function.
+
+Link: https://lore.kernel.org/r/20200312174505.51294-2-maier@linux.ibm.com
+Fixes: cc8c282963bd ("[SCSI] zfcp: Automatically attach remote ports")
+Cc: <stable@vger.kernel.org> #v2.6.27+
+Reviewed-by: Jens Remus <jremus@linux.ibm.com>
+Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
+Signed-off-by: Steffen Maier <maier@linux.ibm.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/lpfc/lpfc.h         |    1 
- drivers/scsi/lpfc/lpfc_hbadisc.c |   59 +++++++++++++++++++++++++--------------
- 2 files changed, 40 insertions(+), 20 deletions(-)
+ drivers/s390/scsi/zfcp_erp.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/scsi/lpfc/lpfc.h
-+++ b/drivers/scsi/lpfc/lpfc.h
-@@ -749,6 +749,7 @@ struct lpfc_hba {
- 					 * capability
- 					 */
- #define HBA_FLOGI_ISSUED	0x100000 /* FLOGI was issued */
-+#define HBA_DEFER_FLOGI		0x800000 /* Defer FLOGI till read_sparm cmpl */
+--- a/drivers/s390/scsi/zfcp_erp.c
++++ b/drivers/s390/scsi/zfcp_erp.c
+@@ -725,7 +725,7 @@ static void zfcp_erp_enqueue_ptp_port(st
+ 				 adapter->peer_d_id);
+ 	if (IS_ERR(port)) /* error or port already attached */
+ 		return;
+-	_zfcp_erp_port_reopen(port, 0, "ereptp1");
++	zfcp_erp_port_reopen(port, 0, "ereptp1");
+ }
  
- 	uint32_t fcp_ring_in_use; /* When polling test if intr-hndlr active*/
- 	struct lpfc_dmabuf slim2p;
---- a/drivers/scsi/lpfc/lpfc_hbadisc.c
-+++ b/drivers/scsi/lpfc/lpfc_hbadisc.c
-@@ -1162,13 +1162,16 @@ lpfc_mbx_cmpl_local_config_link(struct l
- 	}
- 
- 	/* Start discovery by sending a FLOGI. port_state is identically
--	 * LPFC_FLOGI while waiting for FLOGI cmpl
-+	 * LPFC_FLOGI while waiting for FLOGI cmpl. Check if sending
-+	 * the FLOGI is being deferred till after MBX_READ_SPARAM completes.
- 	 */
--	if (vport->port_state != LPFC_FLOGI)
--		lpfc_initial_flogi(vport);
--	else if (vport->fc_flag & FC_PT2PT)
--		lpfc_disc_start(vport);
--
-+	if (vport->port_state != LPFC_FLOGI) {
-+		if (!(phba->hba_flag & HBA_DEFER_FLOGI))
-+			lpfc_initial_flogi(vport);
-+	} else {
-+		if (vport->fc_flag & FC_PT2PT)
-+			lpfc_disc_start(vport);
-+	}
- 	return;
- 
- out:
-@@ -3093,6 +3096,14 @@ lpfc_mbx_cmpl_read_sparam(struct lpfc_hb
- 	lpfc_mbuf_free(phba, mp->virt, mp->phys);
- 	kfree(mp);
- 	mempool_free(pmb, phba->mbox_mem_pool);
-+
-+	/* Check if sending the FLOGI is being deferred to after we get
-+	 * up to date CSPs from MBX_READ_SPARAM.
-+	 */
-+	if (phba->hba_flag & HBA_DEFER_FLOGI) {
-+		lpfc_initial_flogi(vport);
-+		phba->hba_flag &= ~HBA_DEFER_FLOGI;
-+	}
- 	return;
- 
- out:
-@@ -3223,6 +3234,23 @@ lpfc_mbx_process_link_up(struct lpfc_hba
- 	}
- 
- 	lpfc_linkup(phba);
-+	sparam_mbox = NULL;
-+
-+	if (!(phba->hba_flag & HBA_FCOE_MODE)) {
-+		cfglink_mbox = mempool_alloc(phba->mbox_mem_pool, GFP_KERNEL);
-+		if (!cfglink_mbox)
-+			goto out;
-+		vport->port_state = LPFC_LOCAL_CFG_LINK;
-+		lpfc_config_link(phba, cfglink_mbox);
-+		cfglink_mbox->vport = vport;
-+		cfglink_mbox->mbox_cmpl = lpfc_mbx_cmpl_local_config_link;
-+		rc = lpfc_sli_issue_mbox(phba, cfglink_mbox, MBX_NOWAIT);
-+		if (rc == MBX_NOT_FINISHED) {
-+			mempool_free(cfglink_mbox, phba->mbox_mem_pool);
-+			goto out;
-+		}
-+	}
-+
- 	sparam_mbox = mempool_alloc(phba->mbox_mem_pool, GFP_KERNEL);
- 	if (!sparam_mbox)
- 		goto out;
-@@ -3243,20 +3271,7 @@ lpfc_mbx_process_link_up(struct lpfc_hba
- 		goto out;
- 	}
- 
--	if (!(phba->hba_flag & HBA_FCOE_MODE)) {
--		cfglink_mbox = mempool_alloc(phba->mbox_mem_pool, GFP_KERNEL);
--		if (!cfglink_mbox)
--			goto out;
--		vport->port_state = LPFC_LOCAL_CFG_LINK;
--		lpfc_config_link(phba, cfglink_mbox);
--		cfglink_mbox->vport = vport;
--		cfglink_mbox->mbox_cmpl = lpfc_mbx_cmpl_local_config_link;
--		rc = lpfc_sli_issue_mbox(phba, cfglink_mbox, MBX_NOWAIT);
--		if (rc == MBX_NOT_FINISHED) {
--			mempool_free(cfglink_mbox, phba->mbox_mem_pool);
--			goto out;
--		}
--	} else {
-+	if (phba->hba_flag & HBA_FCOE_MODE) {
- 		vport->port_state = LPFC_VPORT_UNKNOWN;
- 		/*
- 		 * Add the driver's default FCF record at FCF index 0 now. This
-@@ -3313,6 +3328,10 @@ lpfc_mbx_process_link_up(struct lpfc_hba
- 		}
- 		/* Reset FCF roundrobin bmask for new discovery */
- 		lpfc_sli4_clear_fcf_rr_bmask(phba);
-+	} else {
-+		if (phba->bbcredit_support && phba->cfg_enable_bbcr &&
-+		    !(phba->link_flag & LS_LOOPBACK_MODE))
-+			phba->hba_flag |= HBA_DEFER_FLOGI;
- 	}
- 
- 	return;
+ static enum zfcp_erp_act_result zfcp_erp_adapter_strat_fsf_xconf(
 
 
