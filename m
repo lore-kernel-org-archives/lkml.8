@@ -2,192 +2,378 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E19AC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:40:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC4E4C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:40:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44A4A21D94
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:40:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AEFE20656
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:40:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H1PRjyup"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JYrZTDq9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506528AbgDPLkE (ORCPT
+        id S2506477AbgDPLkn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 07:40:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60824 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2505925AbgDPK7n (ORCPT
+        Thu, 16 Apr 2020 07:40:43 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:30759 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2505884AbgDPK71 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 06:59:43 -0400
-Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 615BDC025481
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 03:59:43 -0700 (PDT)
-Received: by mail-ua1-x941.google.com with SMTP id c24so2031686uap.13
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 03:59:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=p/NQn3x2dQrPgmua+MkXZ2CPgsicQ89yPGaFimgDCmY=;
-        b=H1PRjyupkz+ecVblYlD5uZ6r4HV5zKCOh+pkNDaV9amQ+qoxu3nkqACQli5ciwIiPE
-         RZYTRcRro5ZMqNbQf4/M1vESYaAobmD4nNuC0g72XoFTuHA9BzE6oyn5+UZPvtNAlJEW
-         ie/Lt169KGZ57WHaUv2tfQZD62uiHLfBim1YFbVgseXfc9JvQkfriTgSS7/0211ybdZR
-         vY785wUltPwG3+Y3GOoKYBsPOR6lhKm25CiMM1z+OitCgs5fCmLii0es72sWXK7AhmWu
-         v4PzLn8cVZR22flguxUivk/kqmXVeFMLyegDsuJNhiW5y+CWuztKa+zfIYH2w41QuLYZ
-         TDog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=p/NQn3x2dQrPgmua+MkXZ2CPgsicQ89yPGaFimgDCmY=;
-        b=oyYQub1GCeMFupvvUYOBynyk2ie9dEIOLXFvLBsGhNiHTvHExPs+9oJcg/6PMBbgZ+
-         Hc6pUGLcIjQrs0prdYZ/z0TwNMUq/LYPVdT0Z0SjmeGFgzEIPeh43cQUqwwAOppBQR6f
-         TH32EN00T0xCjbrw5MnhHbbXtyIUzmddOE06wwcyOZtrN+q6vMR9Z2eoplAMLnT0fuVE
-         35P0UvxKcP187L+KavMwB2kJoNxlXSStTNtJgvDOSSZFLkNMm/eYhrWf9ZM6RsjwHBxj
-         vYpfw1TyIdpM7MdhiPwf5kwH+FrCOoTIf4eXJ1JWokzvA3vTqFq7xEpJYd06fxJTzygZ
-         AxRg==
-X-Gm-Message-State: AGi0PuYqzgzbhpcHuMbviI87PUOI97Lmlk5hpOK4stmF85nrxuAV8+hR
-        cEqfXJylNNtd4RJJgvrfc3h9070ZdJZNNKBACd1b+A==
-X-Google-Smtp-Source: APiQypIheC8zF+5u1sxqSHfIaGuYjJzSfh8tnXKmJeq8phNdy3w/AXb9wUOkMUHaVScHJYnzRhCpI5N5eo01eUkNqKU=
-X-Received: by 2002:ab0:2ea:: with SMTP id 97mr8516870uah.129.1587034782283;
- Thu, 16 Apr 2020 03:59:42 -0700 (PDT)
+        Thu, 16 Apr 2020 06:59:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587034765;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=zrEKSSN8/EAqQUNimNNV6BWUwR7d8MldVkCfVxEYZ00=;
+        b=JYrZTDq9s87DwBnK5US3jBHKEGVUKandCoXzgKZzZQ+yzLd3ftCsnkEsQK1fFAbozNXKBe
+        vnWMP/MHk3nvySmHowx0EXV83NfEemRiim7kM/B3CKjXWur1KvqqLPKJahWM8wj1TTTVRv
+        XzdzQ3l5/fOr1MfX3nHQ2vtDsrV8Jv8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-255-41x9CDCPN-iIoR7bt7X92g-1; Thu, 16 Apr 2020 06:59:23 -0400
+X-MC-Unique: 41x9CDCPN-iIoR7bt7X92g-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7FE418017FF;
+        Thu, 16 Apr 2020 10:59:21 +0000 (UTC)
+Received: from [10.36.115.53] (ovpn-115-53.ams2.redhat.com [10.36.115.53])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id AA0CA5D9E2;
+        Thu, 16 Apr 2020 10:59:15 +0000 (UTC)
+Subject: Re: [PATCH v11 07/10] iommu/vt-d: Add svm/sva invalidate function
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jonathan Cameron <jic23@kernel.org>
+References: <1585939334-21396-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1585939334-21396-8-git-send-email-jacob.jun.pan@linux.intel.com>
+ <7867ade8-3e11-30af-b123-7f8ac3722b81@redhat.com>
+ <20200410145621.30242b2d@jacob-builder>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <abee5ee3-ff7c-4849-4831-9591eb07ea63@redhat.com>
+Date:   Thu, 16 Apr 2020 12:59:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-References: <1583886030-11339-1-git-send-email-skomatineni@nvidia.com> <CA+G9fYvreAv5HmZg0O4VvLvf_PYSvzD1rp08XONNQGExctgQ0Q@mail.gmail.com>
-In-Reply-To: <CA+G9fYvreAv5HmZg0O4VvLvf_PYSvzD1rp08XONNQGExctgQ0Q@mail.gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 16 Apr 2020 12:59:06 +0200
-Message-ID: <CAPDyKFpZEiqTdD6O-y6Sw7ifXF__MHAv0zKT=RFKs+Fmvr-K_Q@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] sdhci: tegra: Implement Tegra specific set_timeout callback
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        "(Exiting) Baolin Wang" <baolin.wang@linaro.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Bradley Bolen <bradleybolen@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Aniruddha Tvs Rao <anrao@nvidia.com>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200410145621.30242b2d@jacob-builder>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Apr 2020 at 19:55, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
->
-> On Fri, 13 Mar 2020 at 06:41, Sowjanya Komatineni
-> <skomatineni@nvidia.com> wrote:
-> >
-> > Tegra host supports HW busy detection and timeouts based on the
-> > count programmed in SDHCI_TIMEOUT_CONTROL register and max busy
-> > timeout it supports is 11s in finite busy wait mode.
-> >
-> > Some operations like SLEEP_AWAKE, ERASE and flush cache through
-> > SWITCH commands take longer than 11s and Tegra host supports
-> > infinite HW busy wait mode where HW waits forever till the card
-> > is busy without HW timeout.
-> >
-> > This patch implements Tegra specific set_timeout sdhci_ops to allow
-> > switching between finite and infinite HW busy detection wait modes
-> > based on the device command expected operation time.
-> >
-> > Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> > ---
-> >  drivers/mmc/host/sdhci-tegra.c | 31 +++++++++++++++++++++++++++++++
-> >  1 file changed, 31 insertions(+)
-> >
-> > diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
-> > index a25c3a4..fa8f6a4 100644
-> > --- a/drivers/mmc/host/sdhci-tegra.c
-> > +++ b/drivers/mmc/host/sdhci-tegra.c
-> > @@ -45,6 +45,7 @@
-> >  #define SDHCI_TEGRA_CAP_OVERRIDES_DQS_TRIM_SHIFT       8
-> >
-> >  #define SDHCI_TEGRA_VENDOR_MISC_CTRL                   0x120
-> > +#define SDHCI_MISC_CTRL_ERASE_TIMEOUT_LIMIT            BIT(0)
-> >  #define SDHCI_MISC_CTRL_ENABLE_SDR104                  0x8
->
-> >  #define SDHCI_MISC_CTRL_ENABLE_SDR50                   0x10
-> >  #define SDHCI_MISC_CTRL_ENABLE_SDHCI_SPEC_300          0x20
-> > @@ -1227,6 +1228,34 @@ static u32 sdhci_tegra_cqhci_irq(struct sdhci_host *host, u32 intmask)
-> >         return 0;
-> >  }
-> >
-> > +static void tegra_sdhci_set_timeout(struct sdhci_host *host,
-> > +                                   struct mmc_command *cmd)
-> > +{
-> > +       u32 val;
-> > +
-> > +       /*
-> > +        * HW busy detection timeout is based on programmed data timeout
-> > +        * counter and maximum supported timeout is 11s which may not be
-> > +        * enough for long operations like cache flush, sleep awake, erase.
-> > +        *
-> > +        * ERASE_TIMEOUT_LIMIT bit of VENDOR_MISC_CTRL register allows
-> > +        * host controller to wait for busy state until the card is busy
-> > +        * without HW timeout.
-> > +        *
-> > +        * So, use infinite busy wait mode for operations that may take
-> > +        * more than maximum HW busy timeout of 11s otherwise use finite
-> > +        * busy wait mode.
-> > +        */
-> > +       val = sdhci_readl(host, SDHCI_TEGRA_VENDOR_MISC_CTRL);
-> > +       if (cmd && cmd->busy_timeout >= 11 * HZ)
-> > +               val |= SDHCI_MISC_CTRL_ERASE_TIMEOUT_LIMIT;
-> > +       else
-> > +               val &= ~SDHCI_MISC_CTRL_ERASE_TIMEOUT_LIMIT;
-> > +       sdhci_writel(host, val, SDHCI_TEGRA_VENDOR_MISC_CTRL);
-> > +
-> > +       __sdhci_set_timeout(host, cmd);
->
-> kernel build on arm and arm64 architecture failed on stable-rc 4.19
-> (arm), 5.4 (arm64) and 5.5 (arm64)
->
-> drivers/mmc/host/sdhci-tegra.c: In function 'tegra_sdhci_set_timeout':
-> drivers/mmc/host/sdhci-tegra.c:1256:2: error: implicit declaration of
-> function '__sdhci_set_timeout'; did you mean
-> 'tegra_sdhci_set_timeout'? [-Werror=implicit-function-declaration]
->   __sdhci_set_timeout(host, cmd);
->   ^~~~~~~~~~~~~~~~~~~
->   tegra_sdhci_set_timeout
->
-> Full build log,
-> https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-stable-rc-5.5/DISTRO=lkft,MACHINE=am57xx-evm,label=docker-lkft/83/consoleText
-> https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-stable-rc-5.4/DISTRO=lkft,MACHINE=juno,label=docker-lkft/158/consoleText
-> https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-stable-rc-4.19/DISTRO=lkft,MACHINE=am57xx-evm,label=docker-lkft/511/consoleText
->
-> - Naresh
+Hi Jacob,
+On 4/10/20 11:56 PM, Jacob Pan wrote:
+> On Thu, 9 Apr 2020 10:50:34 +0200
+> Auger Eric <eric.auger@redhat.com> wrote:
+> 
+>> Hi Jacob,
+>>
+>> On 4/3/20 8:42 PM, Jacob Pan wrote:
+>>> When Shared Virtual Address (SVA) is enabled for a guest OS via
+>>> vIOMMU, we need to provide invalidation support at IOMMU API and
+>>> driver level. This patch adds Intel VT-d specific function to
+>>> implement iommu passdown invalidate API for shared virtual address.
+>>>
+>>> The use case is for supporting caching structure invalidation
+>>> of assigned SVM capable devices. Emulated IOMMU exposes queue
+>>> invalidation capability and passes down all descriptors from the
+>>> guest to the physical IOMMU.
+>>>
+>>> The assumption is that guest to host device ID mapping should be
+>>> resolved prior to calling IOMMU driver. Based on the device handle,
+>>> host IOMMU driver can replace certain fields before submit to the
+>>> invalidation queue.
+>>>
+>>> ---
+>>> v11 - Removed 2D map array, use -EINVAL in granularity lookup array.
+>>>       Fixed devTLB invalidation granularity mapping. Disregard G=1
+>>> case and use address selective invalidation only.
+>>>
+>>> v7 review fixed in v10
+>>> ---
+>>>
+>>> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+>>> Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+>>> Signed-off-by: Liu, Yi L <yi.l.liu@intel.com>
+>>> ---
+>>>  drivers/iommu/intel-iommu.c | 158
+>>> ++++++++++++++++++++++++++++++++++++++++++++ 1 file changed, 158
+>>> insertions(+)
+>>>
+>>> diff --git a/drivers/iommu/intel-iommu.c
+>>> b/drivers/iommu/intel-iommu.c index 94c7993dac6a..045c5c08d71d
+>>> 100644 --- a/drivers/iommu/intel-iommu.c
+>>> +++ b/drivers/iommu/intel-iommu.c
+>>> @@ -5594,6 +5594,163 @@ static void
+>>> intel_iommu_aux_detach_device(struct iommu_domain *domain,
+>>> aux_domain_remove_dev(to_dmar_domain(domain), dev); }
+>>>  
+>>> +/*
+>>> + * 2D array for converting and sanitizing IOMMU generic TLB
+>>> granularity to
+>>> + * VT-d granularity. Invalidation is typically included in the
+>>> unmap operation
+>>> + * as a result of DMA or VFIO unmap. However, for assigned devices
+>>> guest
+>>> + * owns the first level page tables. Invalidations of translation
+>>> caches in the
+>>> + * guest are trapped and passed down to the host.
+>>> + *
+>>> + * vIOMMU in the guest will only expose first level page tables,
+>>> therefore
+>>> + * we do not support IOTLB granularity for request without PASID
+>>> (second level).
+>>> + *
+>>> + * For example, to find the VT-d granularity encoding for IOTLB
+>>> + * type and page selective granularity within PASID:
+>>> + * X: indexed by iommu cache type
+>>> + * Y: indexed by enum iommu_inv_granularity
+>>> + * [IOMMU_CACHE_INV_TYPE_IOTLB][IOMMU_INV_GRANU_ADDR]
+>>> + */
+>>> +
+>>> +const static int
+>>> inv_type_granu_table[IOMMU_CACHE_INV_TYPE_NR][IOMMU_INV_GRANU_NR] =
+>>> {
+>>> +	/*
+>>> +	 * PASID based IOTLB invalidation: PASID selective (per
+>>> PASID),
+>>> +	 * page selective (address granularity)
+>>> +	 */
+>>> +	{-EINVAL, QI_GRAN_NONG_PASID, QI_GRAN_PSI_PASID},
+>>> +	/* PASID based dev TLBs */
+>>> +	{-EINVAL, -EINVAL, QI_DEV_IOTLB_GRAN_PASID_SEL},
+>>> +	/* PASID cache */
+>>> +	{-EINVAL, -EINVAL, -EINVAL}
+>>> +};
+>>> +
+>>> +static inline int to_vtd_granularity(int type, int granu)
+>>> +{
+>>> +	return inv_type_granu_table[type][granu];
+>>> +}
+>>> +
+>>> +static inline u64 to_vtd_size(u64 granu_size, u64 nr_granules)
+>>> +{
+>>> +	u64 nr_pages = (granu_size * nr_granules) >>
+>>> VTD_PAGE_SHIFT; +
+>>> +	/* VT-d size is encoded as 2^size of 4K pages, 0 for 4k, 9
+>>> for 2MB, etc.
+>>> +	 * IOMMU cache invalidate API passes granu_size in bytes,
+>>> and number of
+>>> +	 * granu size in contiguous memory.
+>>> +	 */
+>>> +	return order_base_2(nr_pages);
+>>> +}
+>>> +
+>>> +#ifdef CONFIG_INTEL_IOMMU_SVM
+>>> +static int intel_iommu_sva_invalidate(struct iommu_domain *domain,
+>>> +		struct device *dev, struct
+>>> iommu_cache_invalidate_info *inv_info) +{
+>>> +	struct dmar_domain *dmar_domain = to_dmar_domain(domain);
+>>> +	struct device_domain_info *info;
+>>> +	struct intel_iommu *iommu;
+>>> +	unsigned long flags;
+>>> +	int cache_type;
+>>> +	u8 bus, devfn;
+>>> +	u16 did, sid;
+>>> +	int ret = 0;
+>>> +	u64 size = 0;
+>>> +
+>>> +	if (!inv_info || !dmar_domain ||
+>>> +		inv_info->version !=
+>>> IOMMU_CACHE_INVALIDATE_INFO_VERSION_1)
+>>> +		return -EINVAL;
+>>> +
+>>> +	if (!dev || !dev_is_pci(dev))
+>>> +		return -ENODEV;  
+>>
+>> Check (domain->flags & DOMAIN_FLAG_NESTING_MODE)?
+> Good point
+> 
+>>> +
+>>> +	iommu = device_to_iommu(dev, &bus, &devfn);
+>>> +	if (!iommu)
+>>> +		return -ENODEV;
+>>> +
+>>> +	spin_lock_irqsave(&device_domain_lock, flags);
+>>> +	spin_lock(&iommu->lock);
+>>> +	info = iommu_support_dev_iotlb(dmar_domain, iommu, bus,
+>>> devfn);
+>>> +	if (!info) {
+>>> +		ret = -EINVAL;
+>>> +		goto out_unlock;
+>>> +	}
+>>> +	did = dmar_domain->iommu_did[iommu->seq_id];
+>>> +	sid = PCI_DEVID(bus, devfn);
+>>> +
+>>> +	/* Size is only valid in non-PASID selective invalidation
+>>> */
+>>> +	if (inv_info->granularity != IOMMU_INV_GRANU_PASID)
+>>> +		size =
+>>> to_vtd_size(inv_info->addr_info.granule_size,
+>>> +
+>>> inv_info->addr_info.nb_granules); +
+>>> +	for_each_set_bit(cache_type, (unsigned long
+>>> *)&inv_info->cache, IOMMU_CACHE_INV_TYPE_NR) {
+>>> +		int granu = 0;
+>>> +		u64 pasid = 0;
+>>> +
+>>> +		granu = to_vtd_granularity(cache_type,
+>>> inv_info->granularity);
+>>> +		if (granu == -EINVAL) {
+>>> +			pr_err("Invalid cache type and granu
+>>> combination %d/%d\n", cache_type,
+>>> +				inv_info->granularity);  
+>> rate unlimited traces here and after.
+still to be fixed
+>> ret = -EINVAL?
+>> also related to the discussion we had on the VFIO series. What is the
+>> error policy?
+> Invalidation should not fail, there is no way to tell the guest. this
+> can be a void function or VFIO can ignore it similar to what is done to
+> iommu_unmap.
+OK it was just for reminder
+> 
+> 
+>>> +			break;
+>>> +		}
+>>> +
+>>> +		/* PASID is stored in different locations based on
+>>> granularity */  
+>> not sure the above comment really is requested
+> Just to explain the situation where PASID can be in pasid_info or
+> addr_info.
+> 
+>>> +		if (inv_info->granularity == IOMMU_INV_GRANU_PASID
+>>> &&
+>>> +			inv_info->pasid_info.flags &
+>>> IOMMU_INV_PASID_FLAGS_PASID)
+>>> +			pasid = inv_info->pasid_info.pasid;
+>>> +		else if (inv_info->granularity ==
+>>> IOMMU_INV_GRANU_ADDR &&
+>>> +			inv_info->addr_info.flags &
+>>> IOMMU_INV_ADDR_FLAGS_PASID)
+>>> +			pasid = inv_info->addr_info.pasid;
+>>> +
+>>> +		switch (BIT(cache_type)) {
+>>> +		case IOMMU_CACHE_INV_TYPE_IOTLB:
+>>> +			if ((inv_info->granularity ==
+>>> IOMMU_INV_GRANU_ADDR) &&
+>>> +				size && (inv_info->addr_info.addr
+>>> & ((BIT(VTD_PAGE_SHIFT + size)) - 1))) {
+>>> +				pr_err("Address out of range,
+>>> 0x%llx, size order %llu\n",
+>>> +					inv_info->addr_info.addr,
+>>> size);
+>>> +				ret = -ERANGE;
+>>> +				goto out_unlock;
+>>> +			}
+>>> +
+>>> +			qi_flush_piotlb(iommu, did,
+>>> +					pasid,
+>>> +
+>>> mm_to_dma_pfn(inv_info->addr_info.addr),  
+>> This does not sound correct to me:
+>> inv_info->addr_info.addr and inv_info->addr_info.flags are not valid
+>> in case of PASID-selective invalidation
+> If granu is PASID-selective, this address is ignored. Since npages = -1.
+Ah OK. Maybe add a comment since it is a bit strange to see irrelevant
+fields to be called in PASID-selective case.
 
-Thanks for reporting! What a mess.
+Thanks
 
-It turns out that the commit that was queued for stable that is
-causing the above errors, also requires another commit.
+Eric
+> 
+>>> +					(granu ==
+>>> QI_GRAN_NONG_PASID) ? -1 : 1 << size,
+>>> +					inv_info->addr_info.flags
+>>> & IOMMU_INV_ADDR_FLAGS_LEAF); +
+>>> +			/*
+>>> +			 * Always flush device IOTLB if ATS is
+>>> enabled. vIOMMU
+>>> +			 * in the guest may assume IOTLB flush is
+>>> inclusive,
+>>> +			 * which is more efficient.
+>>> +			 */
+>>> +			if (info->ats_enabled)
+>>> +				qi_flush_dev_iotlb_pasid(iommu,
+>>> sid, info->pfsid,
+>>> +						pasid,
+>>> info->ats_qdep,
+>>> +
+>>> inv_info->addr_info.addr, size,  
+>> same
+>>> +						granu);
+>>> +			break;
+>>> +		case IOMMU_CACHE_INV_TYPE_DEV_IOTLB:
+>>> +			if (info->ats_enabled)
+>>> +				qi_flush_dev_iotlb_pasid(iommu,
+>>> sid, info->pfsid,
+>>> +
+>>> inv_info->addr_info.pasid, info->ats_qdep,  
+>> nit: use pasid directly
+> will do.
+> 
+>>> +
+>>> inv_info->addr_info.addr, size,
+>>> +						granu);
+>>> +			else
+>>> +				pr_warn("Passdown device IOTLB
+>>> flush w/o ATS!\n");
+>>> +			break;
+>>> +		case IOMMU_CACHE_INV_TYPE_PASID:
+>>> +			qi_flush_pasid_cache(iommu, did, granu,
+>>> inv_info->pasid_info.pasid);
+>>> +			break;
+>>> +		default:
+>>> +			dev_err(dev, "Unsupported IOMMU
+>>> invalidation type %d\n",
+>>> +				cache_type);
+>>> +			ret = -EINVAL;
+>>> +		}
+>>> +	}
+>>> +out_unlock:
+>>> +	spin_unlock(&iommu->lock);
+>>> +	spin_unlock_irqrestore(&device_domain_lock, flags);
+>>> +
+>>> +	return ret;
+>>> +}
+>>> +#endif
+>>> +
+>>>  static int intel_iommu_map(struct iommu_domain *domain,
+>>>  			   unsigned long iova, phys_addr_t hpa,
+>>>  			   size_t size, int iommu_prot, gfp_t gfp)
+>>> @@ -6179,6 +6336,7 @@ const struct iommu_ops intel_iommu_ops = {
+>>>  	.is_attach_deferred	=
+>>> intel_iommu_is_attach_deferred, .pgsize_bitmap		=
+>>> INTEL_IOMMU_PGSIZES, #ifdef CONFIG_INTEL_IOMMU_SVM
+>>> +	.cache_invalidate	= intel_iommu_sva_invalidate,
+>>>  	.sva_bind_gpasid	= intel_svm_bind_gpasid,
+>>>  	.sva_unbind_gpasid	= intel_svm_unbind_gpasid,
+>>>  #endif
+>>>   
+>> Thanks
+>>
+>> Eric
+>>
+> 
+> [Jacob Pan]
+> 
 
-The commit that was queued:
-5e958e4aacf4 ("sdhci: tegra: Implement Tegra specific set_timeout callback")
-
-The additional commit needed (which was added in v5.6-rc1):
-7d76ed77cfbd ("mmc: sdhci: Refactor sdhci_set_timeout()")
-
-However, the above commit needs a manual backport (quite trivial, but
-still) for the relevant stable kernels, to allow it to solve the build
-problems.
-
-Greg, Sasha - I suggest you to drop the offending commit from the
-stable kernels, for now. I think it's better to let Sowjanya deal with
-the backports, then send them in small series instead.
-
-Kind regards
-Uffe
