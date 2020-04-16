@@ -2,124 +2,157 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 106C0C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C8BC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:48:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E22F82223D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:48:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFE7221D93
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:48:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="GK1YygrF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fTo8Ucms"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394729AbgDPOsb (ORCPT
+        id S2394741AbgDPOso (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:48:31 -0400
-Received: from m12-15.163.com ([220.181.12.15]:41115 "EHLO m12-15.163.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388313AbgDPOsU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:48:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=Subject:From:Message-ID:Date:MIME-Version; bh=ZQh8z
-        vaxY75qRenaS2+9ZBLOwyTNAytPW3k4i9ijrVc=; b=GK1YygrFtatATaJVoO56P
-        hng3VrGOv784QI2W6ZXsWS85QE0uNQ82LuIwqO8IUE4yUfg8mKXPfWYtmMvb/Mee
-        15U89pwYTYbABP4ezatVClCBPfRAFZ8QOiHhz9s3PQXPDne87fhfmS8Fwyk4u/yA
-        5jukIUYgiNye2pbmEhbdps=
-Received: from [192.168.0.6] (unknown [125.82.10.107])
-        by smtp11 (Coremail) with SMTP id D8CowAAnNupBb5he2_OiDg--.557S2;
-        Thu, 16 Apr 2020 22:44:18 +0800 (CST)
-Subject: Re: [PATCH v2] net/mlx5: add the missing space character
-To:     Saeed Mahameed <saeedm@mellanox.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "leon@kernel.org" <leon@kernel.org>
-Cc:     "cai@lca.pw" <cai@lca.pw>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "lsahlber@redhat.com" <lsahlber@redhat.com>,
-        "kw@linux.com" <kw@linux.com>,
-        "xiubli@redhat.com" <xiubli@redhat.com>,
-        "airlied@redhat.com" <airlied@redhat.com>,
-        Moshe Shemesh <moshe@mellanox.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "wqu@suse.com" <wqu@suse.com>,
-        "chris@chris-wilson.co.uk" <chris@chris-wilson.co.uk>,
-        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
-        "stfrench@microsoft.com" <stfrench@microsoft.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-References: <20200403042659.9167-1-xianfengting221@163.com>
- <14df0ecf093bb2df4efaf9e6f5220ea2bf863f53.camel@mellanox.com>
-From:   Hu Haowen <xianfengting221@163.com>
-Message-ID: <fae7a094-62e8-d797-a89b-23faf0eb374e@163.com>
-Date:   Thu, 16 Apr 2020 22:44:17 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 16 Apr 2020 10:48:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39920 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2394595AbgDPOsS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:48:18 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5409BC061A0C;
+        Thu, 16 Apr 2020 07:48:18 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id o10so16537703qtr.6;
+        Thu, 16 Apr 2020 07:48:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=hqU3RukC+Wcy1beI5mHwFrne2ji8Zyuh2QqLhWnxtHQ=;
+        b=fTo8UcmsXD7A4NEtK3NfBs49RNNLGi8bxg8SWycx2D/czAgWIQTTGo/VvyAmQ+0fYs
+         kx+EfbJ7RyO56KbIZfrC5aCoJdh6TyLnlrfjp0NCPwAw6S57AU11ThPuH9nJQCdmG3H5
+         dno7C3cer5UF4qIRAtg6tbFzFUPOZW7qfQntg6Cfe8S44N+OOUjhpylckOpPTPsxmKlX
+         jiFwa3EbZgVlr/ngN8+zDaANiyc3pwcm5y4QmI055bj8g5IB7mHGaE7B09V3keALJFfJ
+         7pUq8YICJvXL4P4/T4M2D19LkyOmkaPtzLHVqgwuqOB3dNezlTF8uWqEf/cJy+97EaNa
+         xG9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=hqU3RukC+Wcy1beI5mHwFrne2ji8Zyuh2QqLhWnxtHQ=;
+        b=MrWrKXKIj0jt2d83c9a7t8vMOBCjbUnDzk3VnrGXzaGlbI5+ZAi7lVr5zRvSlqQXZk
+         /V6LswMkUjbWaRxk82wyQv2AwvgcZF8XZMd5lc3eTDjTVSbHe11ji9UgbLzYpsiOh4Ma
+         o73aWBKuLJZm1x37V2Jz087ZwtxJMdABEhy5nnneGexdlXsufKz1BkpSmvHlTiYTnx9l
+         96hWlTGUSBQNyEtWifRBl5MKB5PyDbRn33YvPk9hvjj1/gu3+RFlbyx8WmEM+AaZ7ZnQ
+         bqGAt4tIvKMVxvOpzCsf9mjtQOP6LY6B+yDFD5QsilRyq/YOgMZnifb4wYG0dM28Jes+
+         GWNw==
+X-Gm-Message-State: AGi0PuZhqkMBoHLujRx4R3rOAs34zbzzymbwyVt5mqd4k1KLHbWhoZav
+        pgIb0ahtKcyVWAP0xwa8T0g=
+X-Google-Smtp-Source: APiQypJ9bGDSqwPsZ0XN/Iu2gtQIYZ2l4vmi9YmWye0Bcsk+dfXSmqg2MkX3IQZo0l71xMCmebXclg==
+X-Received: by 2002:aed:3bf2:: with SMTP id s47mr15097558qte.126.1587048497317;
+        Thu, 16 Apr 2020 07:48:17 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id o7sm2584717qkh.76.2020.04.16.07.48.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Apr 2020 07:48:16 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Thu, 16 Apr 2020 10:48:15 -0400
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        X86 ML <x86@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 5/5] efi/x86: Check for bad relocations
+Message-ID: <20200416144815.GA3267283@rani.riverdale.lan>
+References: <20200415221520.2692512-1-nivedita@alum.mit.edu>
+ <20200415221520.2692512-6-nivedita@alum.mit.edu>
+ <CAMj1kXFMMeYUPirY10JJfs31Z5GnHvUe=gLgG6SUJY9uWj588g@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <14df0ecf093bb2df4efaf9e6f5220ea2bf863f53.camel@mellanox.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-CM-TRANSID: D8CowAAnNupBb5he2_OiDg--.557S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7tw4xtFWrXF15ArW3Gw4rXwb_yoW8ZF18pF
-        s5Jay7Ca1ktryUXa1xZF48Z3s5Cws5Ka48WF4fK3s5Xr1kt3WfGr15KrW5CFnI9r1fJ3ya
-        qFnrZFW7Aw15WaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jKApnUUUUU=
-X-Originating-IP: [125.82.10.107]
-X-CM-SenderInfo: h0ld0wxhqj3xtqjsjii6rwjhhfrp/1tbiQwMIAFc7OSCDLgAAsQ
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXFMMeYUPirY10JJfs31Z5GnHvUe=gLgG6SUJY9uWj588g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Apr 16, 2020 at 09:38:36AM +0200, Ard Biesheuvel wrote:
+> On Thu, 16 Apr 2020 at 00:15, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> >
+> > Add relocation checking for x86 as well to catch non-PC-relative
+> > relocations that require runtime processing, since the EFI stub does not
+> > do any runtime relocation processing.
+> >
+> > This will catch, for example, data relocations created by static
+> > initializers of pointers.
+> >
+> > Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+> > ---
+> >  drivers/firmware/efi/libstub/Makefile | 10 +++++-----
+> >  1 file changed, 5 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
+> > index 0bb2916eb12b..2aff59812a54 100644
+> > --- a/drivers/firmware/efi/libstub/Makefile
+> > +++ b/drivers/firmware/efi/libstub/Makefile
+> > @@ -96,6 +96,8 @@ STUBCOPY_RELOC-$(CONFIG_ARM)  := R_ARM_ABS
+> >  # .bss section here so it's easy to pick out in the linker script.
+> >  #
+> >  STUBCOPY_FLAGS-$(CONFIG_X86)   += --rename-section .bss=.bss.efistub,load,alloc
+> > +STUBCOPY_RELOC-$(CONFIG_X86_32) := 'R_X86_32_(8|16|32)'
+> 
+> This should be R_386_xxx
 
-On 2020/4/9 3:42 AM, Saeed Mahameed wrote:
-> On Fri, 2020-04-03 at 12:26 +0800, Hu Haowen wrote:
->> Commit 91b56d8462a9 ("net/mlx5: improve some comments") did not add
->> that missing space character and this commit is used to fix it up.
->>
->> Fixes: 91b56d8462a9 ("net/mlx5: improve some comments")
->>
-> Please re-spin and submit to net-next once net-next re-opens,
-> avoid referencing the above commit since this patch is a stand alone
-> and has nothing to do with that patch.. just have a stand alone commit
-> message explaining the space fix.
+Oops. I tested 64-bit but not 32-bit. I'll fix.
 
-Sorry for my late reply. Because I'm a kernel newbie, I know nothing
-about the basic methods and manners in the kernel development. Thanks
-a lot for your patience on my mistake, pointing it out and fixing it
-up.
+> 
+> > +STUBCOPY_RELOC-$(CONFIG_X86_64) := 'R_X86_64_(8|16|32|32S|64)'
+> >
+> 
+> ... and in general, I think we only need the native pointer sized ones, so
+> 
+> R_386_32
+> R_X86_64_64
 
-Btw, did net-next re-open and did my changes get into the mainline?
+Ok.
 
+> 
+> >  $(obj)/%.stub.o: $(obj)/%.o FORCE
+> >         $(call if_changed,stubcopy)
+> > @@ -107,16 +109,14 @@ $(obj)/%.stub.o: $(obj)/%.o FORCE
+> >  # this time, use objcopy and leave all sections in place.
+> >  #
+> >
+> > -cmd_stubrelocs_check-y = /bin/true
+> > -
+> > -cmd_stubrelocs_check-$(CONFIG_EFI_ARMSTUB) =                           \
+> > +cmd_stubrelocs_check =                                                 \
+> >         $(STRIP) --strip-debug -o $@ $<;                                \
+> > -       if $(OBJDUMP) -r $@ | grep $(STUBCOPY_RELOC-y); then            \
+> > +       if $(OBJDUMP) -r $@ | grep -E $(STUBCOPY_RELOC-y); then         \
+> 
+> ... which means we don't need to -E either
+> 
+> >                 echo "$@: absolute symbol references not allowed in the EFI stub" >&2; \
+> >                 /bin/false;                                             \
+> >         fi
+> >
+> >  quiet_cmd_stubcopy = STUBCPY $@
+> >        cmd_stubcopy =                                                   \
+> > -       $(cmd_stubrelocs_check-y);                                      \
+> > +       $(cmd_stubrelocs_check);                                        \
+> >         $(OBJCOPY) $(STUBCOPY_FLAGS-y) $< $@
+> > --
+> > 2.24.1
+> >
+> 
+> Could we fold this into the previous x86 patch, and drop the one that
+> splits off the relocation check from stubcpy?
 
->
-> i fixed the commit message of the previous patch, so the Fixes tag is
-> unnecessary
->
->> Signed-off-by: Hu Haowen <xianfengting221@163.com>
->
->> ---
->>   drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c
->> b/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c
->> index c9c9b479bda5..31bddb48e5c3 100644
->> --- a/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c
->> +++ b/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c
->> @@ -676,7 +676,7 @@ static void mlx5_fw_tracer_handle_traces(struct
->> work_struct *work)
->>   	block_count = tracer->buff.size / TRACER_BLOCK_SIZE_BYTE;
->>   	start_offset = tracer->buff.consumer_index *
->> TRACER_BLOCK_SIZE_BYTE;
->>   
->> -	/* Copy the block to local buffer to avoid HW override while
->> being processed*/
->> +	/* Copy the block to local buffer to avoid HW override while
->> being processed */
->>   	memcpy(tmp_trace_block, tracer->buff.log_buf + start_offset,
->>   	       TRACER_BLOCK_SIZE_BYTE);
->>   
-
+Will do.
