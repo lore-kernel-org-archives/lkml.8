@@ -2,113 +2,145 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75268C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC01C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:35:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 510BF206D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:34:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 585FB20787
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:35:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mFdfZi8V"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="rtGQAc6K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408063AbgDPGeh (ORCPT
+        id S2408112AbgDPGe7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 02:34:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47440 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2407932AbgDPGec (ORCPT
+        Thu, 16 Apr 2020 02:34:59 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:63814 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407932AbgDPGeq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 02:34:32 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D412AC061A10
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 23:34:31 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id a25so3485101wrd.0
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Apr 2020 23:34:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=0zaVLvpq9xyTb6tnL5lflzeTc3OD1xVdDRy9b/kylC4=;
-        b=mFdfZi8VBTlwLtP0JTgvvick+7svv6vG9/rG7kqJVdsx7j4WTAwfHqs6HIWFQomHeJ
-         QRxfjpa18BSA4VXbHmcIUmuDtse9X/hdmh/XQiyJ7jEfV081PEJ9tosvNZ+odwiT5hxG
-         fAuY4M7K7YRoqM3JJSExPdZ/FXUazHY4EY9pPLCpFSHR47L1O64WI4C5aFBHEZ1Bbbzk
-         VyRiPRQ9GjOSEu5CKBTWAW/RasKWbr1bdS4jRAqXs0BovImMBsKywoXudzx+lrdfJqOr
-         c4YxSwYJ7+crMFX9rHyCdduz7Zz4FRn76B6VprKnWQ/mwxNDcnFGS+A3ZiWZ4x0P/8LK
-         xXQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=0zaVLvpq9xyTb6tnL5lflzeTc3OD1xVdDRy9b/kylC4=;
-        b=iXMH6xsgi8EtbXuWapcs2F24DuABlYWbQKn2BkPXXdMfXiICIcYSHLWH1nOZLTCIRv
-         nLSM1fZSFw3wFALaDEAeUJTfJHGTwgU7zfTzaNZYgEF3XnpXiTuqharum5tf9nNF0pCw
-         aFank9UOR0kW7OOD2jwitJdVbKxb/b8rIp0RCWqF9nY4tUJyawnFonK5xze+vSDIm4vy
-         1/sktATU7G22lamlokike/f9s4BurdzLR7n1NRkbala+Zvi3VbK1LZYU4i7M9azuf8OI
-         bAo33jOlZO4Y2koj94uOGnx667GOQShqKL2kskHmJ2Ys3e4ZhUmUTKMvYQDI1Pp0H3yC
-         xxpw==
-X-Gm-Message-State: AGi0PuZMOfopqxalK3IrxKdCJ1wO17eib2Wo1/RsLOCy2WT2t/ff+RC8
-        SYfmFCmUwUgTHHKl6jiiXUmzUg==
-X-Google-Smtp-Source: APiQypJEpTtqeTr9o0OHWVCd4YNULVp1q0q9U2Soz/KtkpNaaDcqmR9MRis2lZmNki6Q0+MIaix0pA==
-X-Received: by 2002:a5d:5392:: with SMTP id d18mr12081099wrv.278.1587018870349;
-        Wed, 15 Apr 2020 23:34:30 -0700 (PDT)
-Received: from dell ([95.149.164.124])
-        by smtp.gmail.com with ESMTPSA id 5sm2419784wmg.34.2020.04.15.23.34.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2020 23:34:29 -0700 (PDT)
-Date:   Thu, 16 Apr 2020 07:35:19 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     fabrice.gasnier@st.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
-        daniel.lezcano@linaro.org, tglx@linutronix.de,
-        devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 1/6] dt-bindings: mfd: Document STM32 low power timer
- bindings
-Message-ID: <20200416063519.GN2167633@dell>
-References: <20200401083909.18886-1-benjamin.gaignard@st.com>
- <20200401083909.18886-2-benjamin.gaignard@st.com>
+        Thu, 16 Apr 2020 02:34:46 -0400
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200416063438epoutp01b1121836b3c460eda5841e41ea72f297~GOUMINP0i2527925279epoutp01f
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 06:34:38 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200416063438epoutp01b1121836b3c460eda5841e41ea72f297~GOUMINP0i2527925279epoutp01f
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1587018878;
+        bh=ypbsvyhjVcYP3b7mJXEBHON652dLD6LimgwxQLEbcVg=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=rtGQAc6KaLvW+YsdH2BqVy2f+H0q97O7WSiuOk59Ko9pKwl8oYr0lHc4fLcJ9uNa5
+         PnlIMlL11oGvBRomJzRlA+6h/hlsTGJhhEoRiUBNpjERS2LGXKtWQ2aQCzYD4WJWrO
+         GZbUtdqlXwBO2DZdZZL3fJ65SpXD9H/btmyvI9aE=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200416063438epcas1p19ed71eb6f5562220caa12ba0c522daaf~GOUL2lWLk1555415554epcas1p1m;
+        Thu, 16 Apr 2020 06:34:38 +0000 (GMT)
+Received: from epsmges1p1.samsung.com (unknown [182.195.40.166]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 492qFn2THczMqYkp; Thu, 16 Apr
+        2020 06:34:37 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        BD.E2.04402.A7CF79E5; Thu, 16 Apr 2020 15:34:34 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+        20200416063434epcas1p3465ee3316a5d55ab11cfe6d056cd4825~GOUHt8b3c2907429074epcas1p3I;
+        Thu, 16 Apr 2020 06:34:34 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200416063434epsmtrp121f998f476051f5253b7296bd7dddb3c~GOUHs3KOH2862128621epsmtrp11;
+        Thu, 16 Apr 2020 06:34:34 +0000 (GMT)
+X-AuditID: b6c32a35-76bff70000001132-53-5e97fc7a9dab
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        44.4A.04158.97CF79E5; Thu, 16 Apr 2020 15:34:33 +0900 (KST)
+Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200416063433epsmtip22dd791dee7908fa564fb4d2b9b37af0b~GOUHgt-mx1229512295epsmtip2d;
+        Thu, 16 Apr 2020 06:34:33 +0000 (GMT)
+From:   "Namjae Jeon" <namjae.jeon@samsung.com>
+To:     "'Jason Yan'" <yanaijie@huawei.com>
+Cc:     <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sj1557.seo@samsung.com>
+In-Reply-To: <20200414120225.35540-1-yanaijie@huawei.com>
+Subject: RE: [PATCH] exfat: remove the assignment of 0 to bool variable
+Date:   Thu, 16 Apr 2020 15:34:33 +0900
+Message-ID: <003f01d613b9$17864000$4692c000$@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200401083909.18886-2-benjamin.gaignard@st.com>
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQHfREGer/8Wwi5J5+kbn3sveF3gFwD0yP6kqGFCiRA=
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupmk+LIzCtJLcpLzFFi42LZdlhTV7fqz/Q4g1fHxS327D3JYnF51xw2
+        iy3/jrBaLNrTyezA4tFy5C2rR9+WVYwenzfJBTBH5dhkpCampBYppOYl56dk5qXbKnkHxzvH
+        m5oZGOoaWlqYKynkJeam2iq5+AToumXmAG1TUihLzCkFCgUkFhcr6dvZFOWXlqQqZOQXl9gq
+        pRak5BQYGhToFSfmFpfmpesl5+daGRoYGJkCVSbkZJx+O4Gp4DBbxdFjyxkbGKexdjFycEgI
+        mEjsuqDTxcjFISSwg1Hi0qz3bBDOJ0aJxdcWMEM43xglms6uAXI4wTp27H7PApHYyygx5+tR
+        KOclo8TPya9ZQKrYBHQl/v3ZzwZiiwioS7SvvckOYjMLxEss3nEcLM4pYCkx99gusHphAXeJ
+        WzvXMoHYLAKqEq8eHmEEsXmBaiY1XGKHsAUlTs58wgIxR15i+9s5UBcpSPx8uowVYpeVxMdT
+        cxkhakQkZne2gb0gIXCCTaJz2jFGiAYXiW2/P7ND2MISr45vgbKlJF72t7FDAqZa4uN+qPkd
+        jBIvvttC2MYSN9dvAIcds4CmxPpd+hBhRYmdv2HW8km8+9oDDV5eiY42IYgSVYm+S4eZIGxp
+        ia72D+wTGJVmIXlsFpLHZiF5YBbCsgWMLKsYxVILinPTU4sNCwyR43oTIzghapnuYJxyzucQ
+        owAHoxIPr8HLaXFCrIllxZW5hxglOJiVRHh3+E+PE+JNSaysSi3Kjy8qzUktPsRoCgz3icxS
+        osn5wGSdVxJvaGpkbGxsYWJmbmZqrCTOO/V6TpyQQHpiSWp2ampBahFMHxMHp1QDY9H9zDNm
+        2vWGexbm5tnKqEu8UVGJ7yxOcqvxCmuqYj7s7cEjePkHw+EzCU96ZKL1y7vfGGjGh3yWO3fp
+        V0bIzDsHWTLW70tincut5/Vtup/7/8Jd/2fuXmKsf/F48M7v5kuOhrK/2LxL4KTYxAdxec/+
+        yHycYnC++G5/vO6jN3bqp2Wi7j0SVWIpzkg01GIuKk4EAD4pbHeeAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrKLMWRmVeSWpSXmKPExsWy7bCSvG7ln+lxBv8Xm1ns2XuSxeLyrjls
+        Flv+HWG1WLSnk9mBxaPlyFtWj74tqxg9Pm+SC2CO4rJJSc3JLEst0rdL4Mo4/XYCU8Fhtoqj
+        x5YzNjBOY+1i5OSQEDCR2LH7PUsXIxeHkMBuRom7j09DJaQljp04w9zFyAFkC0scPlwMUfOc
+        UaJ/zTFGkBo2AV2Jf3/2s4HYIgLqEu1rb7KD2MwCiRJnlrSxQjR0MUrsmNYINpRTwFJi7rFd
+        LCC2sIC7xK2da5lAbBYBVYlXD4+ADeUFqpnUcIkdwhaUODnzCQvIEcwCehJtGxkh5stLbH87
+        hxniTgWJn0+XsULcYCXx8dRcqBoRidmdbcwTGIVnIZk0C2HSLCSTZiHpWMDIsopRMrWgODc9
+        t9iwwCgvtVyvODG3uDQvXS85P3cTIzgytLR2MJ44EX+IUYCDUYmHt+P1tDgh1sSy4srcQ4wS
+        HMxKIrw7/KfHCfGmJFZWpRblxxeV5qQWH2KU5mBREueVzz8WKSSQnliSmp2aWpBaBJNl4uCU
+        amBU+jRXk01edUPEi9xpH5z15bN3ztPeseVqwo6X2YF2vV1vgzvXNL7/Zuiv9WDquhWbZWxS
+        Jn3vUtF5KissrXg1hXveg/q6X4mW751OdH07IO4syfFvLQvr9iese24L65i914u6tsW6MWHC
+        Crc7K1bdlhJY4acU4amnfqKR+bn29Fv/JJN8vr1XYinOSDTUYi4qTgQAnm1OdIgCAAA=
+X-CMS-MailID: 20200416063434epcas1p3465ee3316a5d55ab11cfe6d056cd4825
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200414113819epcas1p4eafa861bec639fcdcb931fb68c1086ce
+References: <CGME20200414113819epcas1p4eafa861bec639fcdcb931fb68c1086ce@epcas1p4.samsung.com>
+        <20200414120225.35540-1-yanaijie@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 01 Apr 2020, Benjamin Gaignard wrote:
-
-> Add a subnode to STM low power timer bindings to support timer driver
+> There is no need to init 'sync' in exfat_set_vol_flags().
+> This also fixes the following coccicheck warning:
 > 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> fs/exfat/super.c:104:6-10: WARNING: Assignment of 0/1 to bool variable
+> 
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+Pushed it to exfat dev.
+
+Thanks for your patch!
 > ---
-> version 6:
-> - only use one interrupt
+>  fs/exfat/super.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> version 5:
-> - the previous has been acked-by Rob but since I have docummented
->   interrupts and interrupt-names properties I haven't applied it here.
+> diff --git a/fs/exfat/super.c b/fs/exfat/super.c index
+> 16ed202ef527..b86755468904 100644
+> --- a/fs/exfat/super.c
+> +++ b/fs/exfat/super.c
+> @@ -101,7 +101,7 @@ int exfat_set_vol_flags(struct super_block *sb,
+> unsigned short new_flag)  {
+>  	struct exfat_sb_info *sbi = EXFAT_SB(sb);
+>  	struct pbr64 *bpb;
+> -	bool sync = 0;
+> +	bool sync;
 > 
-> version 4:
-> - change compatible and subnode names
-> - document wakeup-source property
-> 
->  .../devicetree/bindings/mfd/st,stm32-lptimer.yaml   | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
+>  	/* flags are not changed */
+>  	if (sbi->vol_flag == new_flag)
+> --
+> 2.21.1
 
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
