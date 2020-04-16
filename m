@@ -2,270 +2,85 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20BEBC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:54:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C068C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:54:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1DB72076A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:54:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E9AE20784
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 07:54:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440332AbgDPHyq (ORCPT
+        id S2440365AbgDPHyv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 03:54:46 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:56326 "EHLO
+        Thu, 16 Apr 2020 03:54:51 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:13228 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2439690AbgDPHyJ (ORCPT
+        by vger.kernel.org with ESMTP id S2440146AbgDPHyN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 03:54:09 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03G7YI4d049707
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 03:54:06 -0400
+        Thu, 16 Apr 2020 03:54:13 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03G7Y11o103651
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 03:54:12 -0400
 Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30efpqdr78-1
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30edx1rnkg-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 03:54:06 -0400
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 03:54:12 -0400
 Received: from localhost
         by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <psampat@linux.ibm.com>;
-        Thu, 16 Apr 2020 08:53:27 +0100
+        Thu, 16 Apr 2020 08:53:33 +0100
 Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
         by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 16 Apr 2020 08:53:24 +0100
+        Thu, 16 Apr 2020 08:53:31 +0100
 Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03G7qshZ47120850
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03G7r1wZ41550118
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Apr 2020 07:52:54 GMT
+        Thu, 16 Apr 2020 07:53:01 GMT
 Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DE9E6AE058;
-        Thu, 16 Apr 2020 07:54:00 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 58805AE04D;
+        Thu, 16 Apr 2020 07:54:07 +0000 (GMT)
 Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 15EFFAE055;
-        Thu, 16 Apr 2020 07:53:59 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 86059AE057;
+        Thu, 16 Apr 2020 07:54:05 +0000 (GMT)
 Received: from pratiks-thinkpad.ibmuc.com (unknown [9.79.182.109])
         by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 16 Apr 2020 07:53:58 +0000 (GMT)
+        Thu, 16 Apr 2020 07:54:05 +0000 (GMT)
 From:   Pratik Rajesh Sampat <psampat@linux.ibm.com>
 To:     linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org,
         mpe@ellerman.id.au, skiboot@lists.ozlabs.org, oohall@gmail.com,
         ego@linux.vnet.ibm.com, linuxram@us.ibm.com,
         pratik.r.sampat@gmail.com, psampat@linux.ibm.com
-Subject: [PATCH v7 0/3] powerpc/powernv: Introduce interface for self-restore support
-Date:   Thu, 16 Apr 2020 13:23:55 +0530
+Subject: [PATCH v7 3/3] powerpc/powernv: Preference optimization for SPRs with constant values
+Date:   Thu, 16 Apr 2020 13:23:58 +0530
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200416075358.75155-1-psampat@linux.ibm.com>
+References: <20200416075358.75155-1-psampat@linux.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 20041607-0016-0000-0000-00000305778B
+x-cbid: 20041607-0016-0000-0000-00000305778F
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20041607-0017-0000-0000-000033697A2A
-Message-Id: <20200416075358.75155-1-psampat@linux.ibm.com>
+x-cbparentid: 20041607-0017-0000-0000-000033697A2E
+Message-Id: <20200416075358.75155-4-psampat@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
  definitions=2020-04-16_02:2020-04-14,2020-04-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 phishscore=0
- mlxscore=0 suspectscore=0 mlxlogscore=999 bulkscore=0 priorityscore=1501
- clxscore=1015 lowpriorityscore=0 spamscore=0 malwarescore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
+ adultscore=0 priorityscore=1501 phishscore=0 mlxlogscore=999
+ impostorscore=0 clxscore=1015 lowpriorityscore=0 malwarescore=0 mlxscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2003020000 definitions=main-2004160045
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-v6: https://lkml.org/lkml/2020/3/26/99
-Changelog
-v6-->v7
-Based on comments from Gautham Shenoy
-1. Using static keys instead of booleans to cache support
-2. extract_save_restore_state_dt device tree parser function documented
-
-Background
-==========
-
-The power management framework on POWER systems include core idle
-states that lose context. Deep idle states namely "winkle" on POWER8
-and "stop4" and "stop5" on POWER9 can be entered by a CPU to save
-different levels of power, as a consequence of which all the
-hypervisor resources such as SPRs and SCOMs are lost.
-
-For most SPRs, saving and restoration of content for SPRs and SCOMs
-is handled by the hypervisor kernel prior to entering an post exit
-from an idle state respectively. However, there is a small set of
-critical SPRs and XSCOMs that are expected to contain sane values even
-before the control is transferred to the hypervisor kernel at system
-reset vector.
-
-For this purpose, microcode firmware provides a mechanism to restore
-values on certain SPRs. The communication mechanism between the
-hypervisor kernel and the microcode is a standard interface called
-sleep-winkle-engine (SLW) on Power8 and Stop-API on Power9 which is
-abstracted by OPAL calls from the hypervisor kernel. The Stop-API
-provides an interface known as the self-restore API, to which the SPR
-number and a predefined value to be restored on wake-up from a deep
-stop state is supplied.
-
-
-Motivation to introduce a new Stop-API
-======================================
-
-The self-restore API expects not just the SPR number but also the
-value with which the SPR is restored. This is good for those SPRs such
-as HSPRG0 whose values do not change at runtime, since for them, the
-kernel can invoke the self-restore API at boot time once the values of
-these SPRs are determined.
-
-However, there are use-cases where-in the value to be saved cannot be
-known or cannot be updated in the layer it currently is.
-The shortcomings and the new use-cases which cannot be served by the
-existing self-restore API, serves as motivation for a new API:
-
-Shortcoming1:
-------------
-In a special wakeup scenario, SPRs such as PSSCR, whose values can
-change at runtime, are compelled to make the self-restore API call
-every time before entering a deep-idle state rendering it to be
-prohibitively expensive
-
-Shortcoming2:
-------------
-The value of LPCR is dynamic based on if the CPU is entered a stop
-state during cpu idle versus cpu hotplug.
-Today, an additional self-restore call is made before entering
-CPU-Hotplug to clear the PECE1 bit in stop-API so that if we are
-woken up by a special wakeup on an offlined CPU, we go back to stop
-with the the bit cleared.
-There is a overhead of an extra call
-
-New Use-case:
--------------
-In the case where the hypervisor is running on an
-ultravisor environment, the boot time is too late in the cycle to make
-the self-restore API calls, as these cannot be invoked from an
-non-secure context anymore
-
-To address these shortcomings, the firmware provides another API known
-as the self-save API. The self-save API only takes the SPR number as a
-parameter and will ensure that on wakeup from a deep-stop state the
-SPR is restored with the value that it contained prior to entering the
-deep-stop.
-
-Contrast between self-save and self-restore APIs
-================================================
-
-		  Before entering
-                  deep idle     |---------------|
-                  ------------> | HCODE A       |
-                  |             |---------------|
-   |---------|    |
-   |   CPU   |----|
-   |---------|    |
-                  |             |---------------|
-                  |------------>| HCODE B       |
-                  On waking up  |---------------|
-                from deep idle
-
-When a self-restore API is invoked, the HCODE inserts instructions
-into "HCODE B" region of the above figure to restore the content of
-the SPR to the said value. The "HCODE B" region gets executed soon
-after the CPU wakes up from a deep idle state, thus executing the
-inserted instructions, thereby restoring the contents of the SPRs to
-the required values.
-
-When a self-save API is invoked, the HCODE inserts instructions into
-the "HCODE A" region of the above figure to save the content of the
-SPR into some location in memory. It also inserts instructions into
-the "HCODE B" region to restore the content of the SPR to the
-corresponding value saved in the memory by the instructions in "HCODE
-A" region.
-
-Thus, in contrast with self-restore, the self-save API *does not* need
-a value to be passed to it, since it ensures that the value of SPR
-before entering deep stop is saved, and subsequently the same value is
-restored.
-
-Self-save and self-restore are complementary features since,
-self-restore can help in restoring a different value in the SPR on
-wakeup from a deep-idle state than what it had before entering the
-deep idle state. This was used in POWER8 for HSPRG0 to distinguish a
-wakeup from Winkle vs Fastsleep.
-
-Limitations of self-save
-========================
-Ideally all SPRs should be available for self-save, but HID0 is very
-tricky to implement in microcode due to various endianess quirks.
-Couple of implementation schemes were buggy and hence HID0 was left
-out to be self-restore only.
-
-The fallout of this limitation is as follows:
-
-* In Non PEF environment, no issue. Linux will use self-restore for
-  HID0 as it does today and no functional impact.
-
-* In PEF environment, the HID0 restore value is decided by OPAL during
-  boot and it is setup for LE hypervisor with radix MMU. This is the
-  default and current working configuration of a PEF environment.
-  However if there is a change, then HV Linux will try to change the
-  HID0 value to something different than what OPAL decided, at which
-  time deep-stop states will be disabled under this new PEF
-  environment.
-
-A simple and workable design is achieved by scoping the power
-management deep-stop state support only to a known default PEF
-environment. Any deviation will affect *only* deep stop-state support
-(stop4,5) in that environment and not have any functional impediment
-to the environment itself.
-
-In future, if there is a need to support changing of HID0 to various
-values under PEF environment and support deep-stop states, it can be
-worked out via an ultravisor call or improve the microcode design to
-include HID0 in self-save.  These future scheme would be an extension
-and does not break or make the current implementation scheme
-redundant.
-
-Design Choices
-==============
-
-Presenting the design choices in front of us:
-
-Design-Choice 1:
-----------------
-A simple implementation is to just replace self-restore calls with
-self-save as it is direct super-set.
-
-Pros:
-A simple design, quick to implement
-
-
-Cons:
-* Breaks backward compatibility. Self-restore has historically been
-  supported in the firmware and an old firmware running on an new
-  kernel will be incompatible and deep stop states will be cut.
-* Furthermore, critical SPRs which need to be restored
-  before 0x100 vector like HID0 are not supported by self-save.
-
-Design-Choice 2:
-----------------
-Advertise both self-restore and self-save from OPAL including the set
-of registers that each support. The kernel can then choose which API
-to go with.
-For the sake of simplicity, in case both modes are supported for an
-SPR by default self-save would be called for it.
-
-Pros:
-* Backwards compatible
-
-Cons:
-Overhead in parsing device tree with the SPR list
-
-Possible optimization with Approach2:
--------------------------------------
 There are SPRs whose values don't tend to change over time and invoking
 self-save on them, where the values are gotten each time may turn out to
 be inefficient. In that case calling a self-restore where passing the
-value makes more sense as, if the value is same, the memory location
+value makes more sense as, if the value is same the memory location
 is not updated.
 SPRs that dont change are as follows:
 SPRN_HSPRG0,
@@ -274,55 +89,205 @@ SPRN_PTCR,
 SPRN_HMEER,
 SPRN_HID0,
 
-The values of PSSCR and MSR change at runtime and hence, the kernel
-cannot determine during boot time what their values will be before
-entering a particular deep-stop state.
+There are also SPRs whose values change and/or their value may not be
+correcty determinable in the kernel. Eg: MSR and PSSCR
 
-Therefore, a preference based interface is introduced for choosing
-between self-save or self-restore between for each SPR.
-The per-SPR preference is only a refinement of
-approach 2 purely for performance reasons. It can be dropped if the
-complexity is not deemed worth the returns.
+The value of LPCR is dynamic based on if the CPU is entered a stop
+state during cpu idle versus cpu hotplug.
 
-Patches Organization
-====================
-Design Choice 2 has been chosen as an implementation to demonstrate in
-the patch series.
+Therefore in this optimization patch, introducing the concept of
+preference for each SPR to choose from in the case both self-save and
+self-restore is supported.
 
-Patch1:
-Devises an interface which lists all the interested SPRs, along with
-highlighting the support of mode.
-It is an isomorphic patch to replicate the functionality of the older
-self-restore firmware for the new interface
+The preference bitmask is shown as below:
+----------------------------
+|... | 2nd pref | 1st pref |
+----------------------------
+MSB			  LSB
 
-Patch2:
-Introduces the self-save API and leverages upon the struct interface to
-add another supported mode in the mix of saving and restoring. It also
-enforces that in case both modes are supported self-save is chosen over
-self-restore
+The preference from higher to lower is from LSB to MSB with a shift of 8
+bits.
+Example:
+Prefer self save first, if not available then prefer self
+restore
+The preference mask for this scenario will be seen as below.
+((FIRMWARE_RESTORE << PREFERENCE_SHIFT) | FIRMWARE_SELF_SAVE)
+---------------------------------
+|... | Self restore | Self save |
+---------------------------------
+MSB			        LSB
 
-The commit also parses the device-tree and populate support for
-self-save and self-restore in the supported mask
+Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
+---
+ arch/powerpc/platforms/powernv/idle.c | 88 +++++++++++++++++++++------
+ 1 file changed, 70 insertions(+), 18 deletions(-)
 
-Patch3:
-Introduce an optimization to allow preference to choose between one more
-over the one when both both modes are supported. This optimization can
-allow for better performance for the SPRs that don't change in value and
-hence self-restore is a better alternative, and in cases when it is
-known for values to change self-save is more convenient.
-
-Pratik Rajesh Sampat (3):
-  powerpc/powernv: Introduce interface for self-restore support
-  powerpc/powernv: Introduce support and parsing for self-save API
-  powerpc/powernv: Preference optimization for SPRs with constant values
-
- .../bindings/powerpc/opal/power-mgt.txt       |  18 +
- arch/powerpc/include/asm/opal-api.h           |   3 +-
- arch/powerpc/include/asm/opal.h               |   1 +
- arch/powerpc/platforms/powernv/idle.c         | 389 +++++++++++++++---
- arch/powerpc/platforms/powernv/opal-call.c    |   1 +
- 5 files changed, 355 insertions(+), 57 deletions(-)
-
+diff --git a/arch/powerpc/platforms/powernv/idle.c b/arch/powerpc/platforms/powernv/idle.c
+index fdcb18a8a05b..daa2f920bd05 100644
+--- a/arch/powerpc/platforms/powernv/idle.c
++++ b/arch/powerpc/platforms/powernv/idle.c
+@@ -43,6 +43,31 @@
+ #define FIRMWARE_SELF_SAVE    0x2
+ #define KERNEL_SAVE_RESTORE   0x4
+ 
++#define NR_PREFERENCES    2
++#define PREFERENCE_SHIFT  4
++#define PREFERENCE_MASK   0xf
++/*
++ * Bitmask defining the kind of preferences available.
++ * Note : The higher to lower preference is from LSB to MSB, with a shift of
++ * 4 bits.
++ * ----------------------------
++ * |    | 2nd pref | 1st pref |
++ * ----------------------------
++ * MSB			      LSB
++ */
++/* Prefer Restore if available, otherwise unsupported */
++#define PREFER_SELF_RESTORE_ONLY	FIRMWARE_RESTORE
++/* Prefer Save if available, otherwise unsupported */
++#define PREFER_SELF_SAVE_ONLY		FIRMWARE_SELF_SAVE
++/* Prefer Restore when available, otherwise prefer Save */
++#define PREFER_RESTORE_SAVE		((FIRMWARE_SELF_SAVE << \
++					  PREFERENCE_SHIFT)\
++					  | FIRMWARE_RESTORE)
++/* Prefer Save when available, otherwise prefer Restore*/
++#define PREFER_SAVE_RESTORE		((FIRMWARE_RESTORE <<\
++					  PREFERENCE_SHIFT)\
++					  | FIRMWARE_SELF_SAVE)
++
+ static u32 supported_cpuidle_states;
+ struct pnv_idle_states_t *pnv_idle_states;
+ int nr_pnv_idle_states;
+@@ -52,6 +77,7 @@ DEFINE_STATIC_KEY_FALSE(is_ptcr_self_save);
+ 
+ struct preferred_sprs {
+ 	u64 spr;
++	u32 preferred_mode;
+ 	u32 supported_mode;
+ };
+ 
+@@ -66,42 +92,52 @@ struct preferred_sprs {
+ struct preferred_sprs preferred_sprs[] = {
+ 	{
+ 		.spr = SPRN_HSPRG0,
++		.preferred_mode = PREFER_RESTORE_SAVE,
+ 		.supported_mode = FIRMWARE_RESTORE,
+ 	},
+ 	{
+ 		.spr = SPRN_LPCR,
++		.preferred_mode = PREFER_SAVE_RESTORE,
+ 		.supported_mode = FIRMWARE_RESTORE,
+ 	},
+ 	{
+ 		.spr = SPRN_PTCR,
++		.preferred_mode = PREFER_RESTORE_SAVE,
+ 		.supported_mode = KERNEL_SAVE_RESTORE,
+ 	},
+ 	{
+ 		.spr = SPRN_HMEER,
++		.preferred_mode = PREFER_RESTORE_SAVE,
+ 		.supported_mode = FIRMWARE_RESTORE,
+ 	},
+ 	{
+ 		.spr = SPRN_HID0,
++		.preferred_mode = PREFER_RESTORE_SAVE,
+ 		.supported_mode = FIRMWARE_RESTORE,
+ 	},
+ 	{
+ 		.spr = P9_STOP_SPR_MSR,
++		.preferred_mode = PREFER_SAVE_RESTORE,
+ 		.supported_mode = FIRMWARE_RESTORE,
+ 	},
+ 	{
+ 		.spr = P9_STOP_SPR_PSSCR,
++		.preferred_mode = PREFER_SAVE_RESTORE,
+ 		.supported_mode = FIRMWARE_RESTORE,
+ 	},
+ 	{
+ 		.spr = SPRN_HID1,
++		.preferred_mode = PREFER_RESTORE_SAVE,
+ 		.supported_mode = FIRMWARE_RESTORE,
+ 	},
+ 	{
+ 		.spr = SPRN_HID4,
++		.preferred_mode = PREFER_SELF_RESTORE_ONLY,
+ 		.supported_mode = FIRMWARE_RESTORE,
+ 	},
+ 	{
+ 		.spr = SPRN_HID5,
++		.preferred_mode = PREFER_SELF_RESTORE_ONLY,
+ 		.supported_mode = FIRMWARE_RESTORE,
+ 	}
+ };
+@@ -218,7 +254,9 @@ static int pnv_self_restore_sprs(u64 pir, int cpu, u64 spr)
+ 
+ static int pnv_self_save_restore_sprs(void)
+ {
+-	int rc, index, cpu;
++	int rc, index, cpu, k;
++	bool is_initialized;
++	u32 preferred;
+ 	u64 pir;
+ 	struct preferred_sprs curr_spr;
+ 
+@@ -234,26 +272,40 @@ static int pnv_self_save_restore_sprs(void)
+ 			     curr_spr.spr == SPRN_HID4  ||
+ 			     curr_spr.spr == SPRN_HID5))
+ 				continue;
+-
+-			if (curr_spr.supported_mode & FIRMWARE_SELF_SAVE) {
+-				rc = opal_slw_self_save_reg(pir,
+-							curr_spr.spr);
+-				if (rc != 0)
+-					return rc;
+-				switch (curr_spr.spr) {
+-				case SPRN_LPCR:
+-					static_branch_enable(&is_lpcr_self_save);
++			for (k = 0; k < NR_PREFERENCES; k++) {
++				preferred = curr_spr.preferred_mode
++					& PREFERENCE_MASK;
++				if (preferred & curr_spr.supported_mode &
++				    FIRMWARE_SELF_SAVE) {
++					is_initialized = true;
++					rc = opal_slw_self_save_reg(pir,
++								    curr_spr.spr);
++					if (rc != 0)
++						return rc;
++					switch (curr_spr.spr) {
++					case SPRN_LPCR:
++						static_branch_enable(&is_lpcr_self_save);
++						break;
++					case SPRN_PTCR:
++						static_branch_enable(&is_ptcr_self_save);
++						break;
++					}
+ 					break;
+-				case SPRN_PTCR:
+-					static_branch_enable(&is_ptcr_self_save);
++				} else if (preferred & curr_spr.supported_mode &
++					   FIRMWARE_RESTORE) {
++					is_initialized = true;
++					rc = pnv_self_restore_sprs(pir, cpu,
++								   curr_spr.spr);
++					if (rc != 0)
++						return rc;
+ 					break;
+ 				}
+-			} else if (curr_spr.supported_mode & FIRMWARE_RESTORE) {
+-				rc = pnv_self_restore_sprs(pir, cpu,
+-							   curr_spr.spr);
+-				if (rc != 0)
+-					return rc;
+-			} else {
++				preferred_sprs[index].preferred_mode =
++					preferred_sprs[index].preferred_mode >>
++					PREFERENCE_SHIFT;
++				curr_spr = preferred_sprs[index];
++			}
++			if (!is_initialized) {
+ 				if (curr_spr.supported_mode & KERNEL_SAVE_RESTORE ||
+ 				    (cpu_has_feature(CPU_FTR_ARCH_300) &&
+ 				     (curr_spr.spr == SPRN_HID1 ||
 -- 
 2.17.1
 
