@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF1F2C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F401C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:43:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2FC3214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:42:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6294E214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:43:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587051772;
-	bh=wgY92Up2hqj3U3bxEm7of4dFDNE/XdwTMo46DQJ7BiA=;
+	s=default; t=1587051780;
+	bh=lmkka/v+e0LVHKZ2vvrySdat1p0yz6685QOOxkl6kLo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=skJth8o8AzrSfVwHAWdC/JqTgA72j9PfE6t/olq0F+UeTp2QiVBlG6Y00Q8OxxEMp
-	 VTD5BwgS+NIpUA22BJghTzXBnOgsCCFtMC9mCLjo7L58yNIc0FjJqP0qfNhX+UaVyU
-	 Lams45mx8sBuPymH7w3AgJHx2pKoQq/nye2t8nhk=
+	b=luBshOk3t80JEyE2FTplX3lmjzY/b4pjyccnlimIsOoT0c/QRxVkJ7Q1fWzZnoedk
+	 QYSNrRHTYucu3HpJQTZItrHm20GoVPEX1HYTuBfv1C+UvzSYt79O/0Akc5Q7DxDvr/
+	 Dwnbo+apnNyoZamo+prTpxOBehIY7xmD58FaYrVw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395385AbgDPPmu (ORCPT
+        id S2634059AbgDPPm6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:42:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48324 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:42:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896833AbgDPNgN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:36:13 -0400
+        id S2897280AbgDPNgJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:36:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7953221F4;
-        Thu, 16 Apr 2020 13:36:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CED29221F4;
+        Thu, 16 Apr 2020 13:36:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044173;
-        bh=wgY92Up2hqj3U3bxEm7of4dFDNE/XdwTMo46DQJ7BiA=;
+        s=default; t=1587044168;
+        bh=lmkka/v+e0LVHKZ2vvrySdat1p0yz6685QOOxkl6kLo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v8r0zCIJPXUuy/7B8OaRFSZ7bC4zTCEL62Sp89oO+bU9EJ5PZ0gbcaG7CBdonKOmx
-         n4Zm+XCt1VvzvbZ1+8w8hOJnSgP73la2GtUa2XiPaJm13vFriZEv4KkkGghdLJx/7Y
-         mUCx0hoPBmUovZ1d+qX5cfe+ZRH7aTLw0Qn4fbG4=
+        b=Sp0o5gegMFIHzpzEeJ/7vvtRUfoRDcGRBjWQVNn2zcs3fSIHfNnc87TV3kMHkUdTB
+         Nv+lciryOSKCJRpI+o87uKkYxSC0jJVEZ7+OsFUfo7y+Sx+zMJLojeEZxQ0QhzquJf
+         5BgmmLl7z50KaINiVT+Qbrc7V2iTbHnE1RemUyi4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Zimmermann <tzimmermann@suse.de>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: [PATCH 5.5 109/257] thermal: devfreq_cooling: inline all stubs for CONFIG_DEVFREQ_THERMAL=n
-Date:   Thu, 16 Apr 2020 15:22:40 +0200
-Message-Id: <20200416131339.828721213@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Ond=C5=99ej=20Caletka?= <ondrej@caletka.cz>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.5 107/257] ACPICA: Allow acpi_any_gpe_status_set() to skip one GPE
+Date:   Thu, 16 Apr 2020 15:22:38 +0200
+Message-Id: <20200416131339.556308465@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -60,48 +60,204 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-commit 3f5b9959041e0db6dacbea80bb833bff5900999f upstream.
+commit 0ce792d660bda990c675eaf14ce09594a9b85cbf upstream.
 
-When CONFIG_DEVFREQ_THERMAL is disabled all functions except
-of_devfreq_cooling_register_power() were already inlined. Also inline
-the last function to avoid compile errors when multiple drivers call
-of_devfreq_cooling_register_power() when CONFIG_DEVFREQ_THERMAL is not
-set. Compilation failed with the following message:
-  multiple definition of `of_devfreq_cooling_register_power'
-(which then lists all usages of of_devfreq_cooling_register_power())
+The check carried out by acpi_any_gpe_status_set() is not precise enough
+for the suspend-to-idle implementation in Linux and in some cases it is
+necessary make it skip one GPE (specifically, the EC GPE) from the check
+to prevent a race condition leading to a premature system resume from
+occurring.
 
-Thomas Zimmermann reported this problem [0] on a kernel config with
-CONFIG_DRM_LIMA={m,y}, CONFIG_DRM_PANFROST={m,y} and
-CONFIG_DEVFREQ_THERMAL=n after both, the lima and panfrost drivers
-gained devfreq cooling support.
+For this reason, redefine acpi_any_gpe_status_set() to take the number
+of a GPE to skip as an argument.
 
-[0] https://www.spinics.net/lists/dri-devel/msg252825.html
-
-Fixes: a76caf55e5b356 ("thermal: Add devfreq cooling")
-Cc: stable@vger.kernel.org
-Reported-by: Thomas Zimmermann <tzimmermann@suse.de>
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Tested-by: Thomas Zimmermann <tzimmermann@suse.de>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20200403205133.1101808-1-martin.blumenstingl@googlemail.com
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206629
+Tested-by: Ondřej Caletka <ondrej@caletka.cz>
+Cc: 5.4+ <stable@vger.kernel.org> # 5.4+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/devfreq_cooling.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/acpi/acpica/achware.h |    2 -
+ drivers/acpi/acpica/evxfgpe.c |   17 ++++++++++-----
+ drivers/acpi/acpica/hwgpe.c   |   47 +++++++++++++++++++++++++++++++++---------
+ drivers/acpi/sleep.c          |    2 -
+ include/acpi/acpixf.h         |    2 -
+ 5 files changed, 53 insertions(+), 17 deletions(-)
 
---- a/include/linux/devfreq_cooling.h
-+++ b/include/linux/devfreq_cooling.h
-@@ -75,7 +75,7 @@ void devfreq_cooling_unregister(struct t
+--- a/drivers/acpi/acpica/achware.h
++++ b/drivers/acpi/acpica/achware.h
+@@ -101,7 +101,7 @@ acpi_status acpi_hw_enable_all_runtime_g
  
- #else /* !CONFIG_DEVFREQ_THERMAL */
+ acpi_status acpi_hw_enable_all_wakeup_gpes(void);
  
--struct thermal_cooling_device *
-+static inline struct thermal_cooling_device *
- of_devfreq_cooling_register_power(struct device_node *np, struct devfreq *df,
- 				  struct devfreq_cooling_power *dfc_power)
+-u8 acpi_hw_check_all_gpes(void);
++u8 acpi_hw_check_all_gpes(acpi_handle gpe_skip_device, u32 gpe_skip_number);
+ 
+ acpi_status
+ acpi_hw_enable_runtime_gpe_block(struct acpi_gpe_xrupt_info *gpe_xrupt_info,
+--- a/drivers/acpi/acpica/evxfgpe.c
++++ b/drivers/acpi/acpica/evxfgpe.c
+@@ -799,17 +799,19 @@ ACPI_EXPORT_SYMBOL(acpi_enable_all_wakeu
+  *
+  * FUNCTION:    acpi_any_gpe_status_set
+  *
+- * PARAMETERS:  None
++ * PARAMETERS:  gpe_skip_number      - Number of the GPE to skip
+  *
+  * RETURN:      Whether or not the status bit is set for any GPE
+  *
+- * DESCRIPTION: Check the status bits of all enabled GPEs and return TRUE if any
+- *              of them is set or FALSE otherwise.
++ * DESCRIPTION: Check the status bits of all enabled GPEs, except for the one
++ *              represented by the "skip" argument, and return TRUE if any of
++ *              them is set or FALSE otherwise.
+  *
+  ******************************************************************************/
+-u32 acpi_any_gpe_status_set(void)
++u32 acpi_any_gpe_status_set(u32 gpe_skip_number)
  {
+ 	acpi_status status;
++	acpi_handle gpe_device;
+ 	u8 ret;
+ 
+ 	ACPI_FUNCTION_TRACE(acpi_any_gpe_status_set);
+@@ -819,7 +821,12 @@ u32 acpi_any_gpe_status_set(void)
+ 		return (FALSE);
+ 	}
+ 
+-	ret = acpi_hw_check_all_gpes();
++	status = acpi_get_gpe_device(gpe_skip_number, &gpe_device);
++	if (ACPI_FAILURE(status)) {
++		gpe_device = NULL;
++	}
++
++	ret = acpi_hw_check_all_gpes(gpe_device, gpe_skip_number);
+ 	(void)acpi_ut_release_mutex(ACPI_MTX_EVENTS);
+ 
+ 	return (ret);
+--- a/drivers/acpi/acpica/hwgpe.c
++++ b/drivers/acpi/acpica/hwgpe.c
+@@ -444,12 +444,19 @@ acpi_hw_enable_wakeup_gpe_block(struct a
+ 	return (AE_OK);
+ }
+ 
++struct acpi_gpe_block_status_context {
++	struct acpi_gpe_register_info *gpe_skip_register_info;
++	u8 gpe_skip_mask;
++	u8 retval;
++};
++
+ /******************************************************************************
+  *
+  * FUNCTION:    acpi_hw_get_gpe_block_status
+  *
+  * PARAMETERS:  gpe_xrupt_info      - GPE Interrupt info
+  *              gpe_block           - Gpe Block info
++ *              context             - GPE list walk context data
+  *
+  * RETURN:      Success
+  *
+@@ -460,12 +467,13 @@ acpi_hw_enable_wakeup_gpe_block(struct a
+ static acpi_status
+ acpi_hw_get_gpe_block_status(struct acpi_gpe_xrupt_info *gpe_xrupt_info,
+ 			     struct acpi_gpe_block_info *gpe_block,
+-			     void *ret_ptr)
++			     void *context)
+ {
++	struct acpi_gpe_block_status_context *c = context;
+ 	struct acpi_gpe_register_info *gpe_register_info;
+ 	u64 in_enable, in_status;
+ 	acpi_status status;
+-	u8 *ret = ret_ptr;
++	u8 ret_mask;
+ 	u32 i;
+ 
+ 	/* Examine each GPE Register within the block */
+@@ -485,7 +493,11 @@ acpi_hw_get_gpe_block_status(struct acpi
+ 			continue;
+ 		}
+ 
+-		*ret |= in_enable & in_status;
++		ret_mask = in_enable & in_status;
++		if (ret_mask && c->gpe_skip_register_info == gpe_register_info) {
++			ret_mask &= ~c->gpe_skip_mask;
++		}
++		c->retval |= ret_mask;
+ 	}
+ 
+ 	return (AE_OK);
+@@ -561,24 +573,41 @@ acpi_status acpi_hw_enable_all_wakeup_gp
+  *
+  * FUNCTION:    acpi_hw_check_all_gpes
+  *
+- * PARAMETERS:  None
++ * PARAMETERS:  gpe_skip_device      - GPE devoce of the GPE to skip
++ *              gpe_skip_number      - Number of the GPE to skip
+  *
+  * RETURN:      Combined status of all GPEs
+  *
+- * DESCRIPTION: Check all enabled GPEs in all GPE blocks and return TRUE if the
++ * DESCRIPTION: Check all enabled GPEs in all GPE blocks, except for the one
++ *              represented by the "skip" arguments, and return TRUE if the
+  *              status bit is set for at least one of them of FALSE otherwise.
+  *
+  ******************************************************************************/
+ 
+-u8 acpi_hw_check_all_gpes(void)
++u8 acpi_hw_check_all_gpes(acpi_handle gpe_skip_device, u32 gpe_skip_number)
+ {
+-	u8 ret = 0;
++	struct acpi_gpe_block_status_context context = {
++		.gpe_skip_register_info = NULL,
++		.retval = 0,
++	};
++	struct acpi_gpe_event_info *gpe_event_info;
++	acpi_cpu_flags flags;
+ 
+ 	ACPI_FUNCTION_TRACE(acpi_hw_check_all_gpes);
+ 
+-	(void)acpi_ev_walk_gpe_list(acpi_hw_get_gpe_block_status, &ret);
++	flags = acpi_os_acquire_lock(acpi_gbl_gpe_lock);
++
++	gpe_event_info = acpi_ev_get_gpe_event_info(gpe_skip_device,
++						    gpe_skip_number);
++	if (gpe_event_info) {
++		context.gpe_skip_register_info = gpe_event_info->register_info;
++		context.gpe_skip_mask = acpi_hw_get_gpe_register_bit(gpe_event_info);
++	}
++
++	acpi_os_release_lock(acpi_gbl_gpe_lock, flags);
+ 
+-	return (ret != 0);
++	(void)acpi_ev_walk_gpe_list(acpi_hw_get_gpe_block_status, &context);
++	return (context.retval != 0);
+ }
+ 
+ #endif				/* !ACPI_REDUCED_HARDWARE */
+--- a/drivers/acpi/sleep.c
++++ b/drivers/acpi/sleep.c
+@@ -1023,7 +1023,7 @@ static bool acpi_s2idle_wake(void)
+ 		 * status bit from unset to set between the checks with the
+ 		 * status bits of all the other GPEs unset.
+ 		 */
+-		if (acpi_any_gpe_status_set() && !acpi_ec_dispatch_gpe())
++		if (acpi_any_gpe_status_set(U32_MAX) && !acpi_ec_dispatch_gpe())
+ 			return true;
+ 
+ 		/*
+--- a/include/acpi/acpixf.h
++++ b/include/acpi/acpixf.h
+@@ -752,7 +752,7 @@ ACPI_HW_DEPENDENT_RETURN_UINT32(u32 acpi
+ ACPI_HW_DEPENDENT_RETURN_STATUS(acpi_status acpi_disable_all_gpes(void))
+ ACPI_HW_DEPENDENT_RETURN_STATUS(acpi_status acpi_enable_all_runtime_gpes(void))
+ ACPI_HW_DEPENDENT_RETURN_STATUS(acpi_status acpi_enable_all_wakeup_gpes(void))
+-ACPI_HW_DEPENDENT_RETURN_UINT32(u32 acpi_any_gpe_status_set(void))
++ACPI_HW_DEPENDENT_RETURN_UINT32(u32 acpi_any_gpe_status_set(u32 gpe_skip_number))
+ ACPI_HW_DEPENDENT_RETURN_UINT32(u32 acpi_any_fixed_event_status_set(void))
+ 
+ ACPI_HW_DEPENDENT_RETURN_STATUS(acpi_status
 
 
