@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E780C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:40:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A7AC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:40:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40F22214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:40:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D980D21D91
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:40:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587051602;
-	bh=shd0LP0Bg8wGz6s3YwEhALAbANLNDLZwnav84oEtfjo=;
+	s=default; t=1587051609;
+	bh=jecDxhdbIUC2i9PxgzsZxqXdLuxpex7RGNa3KibokSw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jgwzyPxOptmRcIWABuiSwF7n3tKlArKshQsDD6C7MmZbR8YQvHCgfBfNyd97YIo8u
-	 a4YNXr1TcS8Hz+FTAYwsCOpca4jC7Y7jZKzmXMpwbSLLjBVh2VecZF0cOKwUndNixT
-	 ZEKxFZzazAXsWENRhmxMcS4exXCtyHL1XvLcU4xc=
+	b=AyIuxyy0NG9/WOqryaTQxDuximfloXC+1B75fUc0oK0BcJuBnowPLWlA5TZXu083L
+	 k4gS6RZVo0N9vqy7SFJ6hsosnlBKrA/xlQ5n6/xa/UyPlHupIdShpfKr6MPqBbhwgn
+	 PXSZxk7myx9YcuQug4CdD6qtmfQjQR+OP9EOJb3s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395445AbgDPPkA (ORCPT
+        id S2395285AbgDPPkH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:40:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50456 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:40:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897622AbgDPNiE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:38:04 -0400
+        id S2896928AbgDPNh7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:37:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6349920732;
-        Thu, 16 Apr 2020 13:38:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EA6F221F4;
+        Thu, 16 Apr 2020 13:37:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044283;
-        bh=shd0LP0Bg8wGz6s3YwEhALAbANLNDLZwnav84oEtfjo=;
+        s=default; t=1587044278;
+        bh=jecDxhdbIUC2i9PxgzsZxqXdLuxpex7RGNa3KibokSw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Loh7J90ST2vRKdND7RrQxWzNwJBj/EyrX14IUl8Y3zMOPykK7M2XsVtb9pcsfJFHq
-         f1cdKBXlCKdnUiOb9DZBdHiPHmK0j3OniEyVWFhX3XA70xI3PFFZn2boEXE2sqyLCU
-         uN07oY2krG/kMqSWyscaSRNebSk+sWg5pJXyDH5c=
+        b=neAPvekIibn8npCMIElW2Sx+5sVVNxPUqGiapqACbG3HC6402L1OH/LoTDfYmi5XS
+         dZkWQZQv0VIr2AaHMKQznRM/pzYfAHRmViNPZfzcz5fcAReg/eXeFlqCZ7Nl3DuAJv
+         g/nNpfVRpSaFRSoL9WZ9mg9bM4axVxkeXbWGr3rw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Frieder Schrempf <frieder.schrempf@kontron.de>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 5.5 154/257] mtd: spinand: Do not erase the block before writing a bad block marker
-Date:   Thu, 16 Apr 2020 15:23:25 +0200
-Message-Id: <20200416131345.831934767@linuxfoundation.org>
+        stable@vger.kernel.org, Yilu Lin <linyilu@huawei.com>,
+        Steve French <stfrench@microsoft.com>,
+        Ronnie Sahlberg <lsahlber@redhat.com>
+Subject: [PATCH 5.5 152/257] CIFS: Fix bug which the return value by asynchronous read is error
+Date:   Thu, 16 Apr 2020 15:23:23 +0200
+Message-Id: <20200416131345.551035978@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -61,50 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frieder Schrempf <frieder.schrempf@kontron.de>
+From: Yilu Lin <linyilu@huawei.com>
 
-commit b645ad39d56846618704e463b24bb994c9585c7f upstream.
+commit 97adda8b3ab703de8e4c8d27646ddd54fe22879c upstream.
 
-Currently when marking a block, we use spinand_erase_op() to erase
-the block before writing the marker to the OOB area. Doing so without
-waiting for the operation to finish can lead to the marking failing
-silently and no bad block marker being written to the flash.
+This patch is used to fix the bug in collect_uncached_read_data()
+that rc is automatically converted from a signed number to an
+unsigned number when the CIFS asynchronous read fails.
+It will cause ctx->rc is error.
 
-In fact we don't need to do an erase at all before writing the BBM.
-The ECC is disabled for raw accesses to the OOB data and we don't
-need to work around any issues with chips reporting ECC errors as it
-is known to be the case for raw NAND.
+Example:
+Share a directory and create a file on the Windows OS.
+Mount the directory to the Linux OS using CIFS.
+On the CIFS client of the Linux OS, invoke the pread interface to
+deliver the read request.
 
-Fixes: 7529df465248 ("mtd: nand: Add core infrastructure to support SPI NANDs")
-Cc: stable@vger.kernel.org
-Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Link: https://lore.kernel.org/linux-mtd/20200218100432.32433-4-frieder.schrempf@kontron.de
+The size of the read length plus offset of the read request is greater
+than the maximum file size.
+
+In this case, the CIFS server on the Windows OS returns a failure
+message (for example, the return value of
+smb2.nt_status is STATUS_INVALID_PARAMETER).
+
+After receiving the response message, the CIFS client parses
+smb2.nt_status to STATUS_INVALID_PARAMETER
+and converts it to the Linux error code (rdata->result=-22).
+
+Then the CIFS client invokes the collect_uncached_read_data function to
+assign the value of rdata->result to rc, that is, rc=rdata->result=-22.
+
+The type of the ctx->total_len variable is unsigned integer,
+the type of the rc variable is integer, and the type of
+the ctx->rc variable is ssize_t.
+
+Therefore, during the ternary operation, the value of rc is
+automatically converted to an unsigned number. The final result is
+ctx->rc=4294967274. However, the expected result is ctx->rc=-22.
+
+Signed-off-by: Yilu Lin <linyilu@huawei.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+CC: Stable <stable@vger.kernel.org>
+Acked-by: Ronnie Sahlberg <lsahlber@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mtd/nand/spi/core.c |    3 ---
- 1 file changed, 3 deletions(-)
+ fs/cifs/file.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/mtd/nand/spi/core.c
-+++ b/drivers/mtd/nand/spi/core.c
-@@ -612,7 +612,6 @@ static int spinand_markbad(struct nand_d
- 	};
- 	int ret;
+--- a/fs/cifs/file.c
++++ b/fs/cifs/file.c
+@@ -3842,7 +3842,7 @@ again:
+ 	if (rc == -ENODATA)
+ 		rc = 0;
  
--	/* Erase block before marking it bad. */
- 	ret = spinand_select_target(spinand, pos->target);
- 	if (ret)
- 		return ret;
-@@ -621,8 +620,6 @@ static int spinand_markbad(struct nand_d
- 	if (ret)
- 		return ret;
+-	ctx->rc = (rc == 0) ? ctx->total_len : rc;
++	ctx->rc = (rc == 0) ? (ssize_t)ctx->total_len : rc;
  
--	spinand_erase_op(spinand, pos);
--
- 	return spinand_write_page(spinand, &req);
- }
+ 	mutex_unlock(&ctx->aio_mutex);
  
 
 
