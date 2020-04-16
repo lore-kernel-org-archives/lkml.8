@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C19A7C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:21:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B95C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:21:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1544214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:21:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D028214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:21:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587050509;
-	bh=W2NX7RUrjeSGIxVbUNcuOSZnXLYhBIfIG0GMm8GFxD4=;
+	s=default; t=1587050515;
+	bh=onF0Q3ck23MEhrOfebvcgKutD7Bobnp4aqHWm2/ayD4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I7QYJp8o/PMF50rl2bUgtUk7YggXG4hwDDNi1lSoCZ+gypUOoADsAYJQRrg5U94e/
-	 AnFkyV1RpH7echZjajgDKJmmdTITrF13x7zAoUqFLqT9mHNU2vUZyl8arzIDUilVnp
-	 61HtRfq9jK7+mHNNdrhRtDGk8Ygh0MSA/v5zDrB8=
+	b=MfQtcJ19T9pZ+T4kvc9Gf0ECc00bV5MBgD7KTxGUVpCQLG9Ksz6F3Vn+qG/9OS38g
+	 rGXW+MGZx0B9IDOKRlPR753ZkSdmwLn4+5TZKFcXOAqRiqqVbzuIKrIm2kRCOoUO2U
+	 bQfY0kQaauHYD9weiEP5nOij4ATZ9xviEmbUFPNY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503888AbgDPPVs (ORCPT
+        id S2633565AbgDPPVx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:21:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60740 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:21:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898606AbgDPNqh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:46:37 -0400
+        id S2898599AbgDPNqc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:46:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43784208E4;
-        Thu, 16 Apr 2020 13:46:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55AEC21974;
+        Thu, 16 Apr 2020 13:46:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044796;
-        bh=W2NX7RUrjeSGIxVbUNcuOSZnXLYhBIfIG0GMm8GFxD4=;
+        s=default; t=1587044791;
+        bh=onF0Q3ck23MEhrOfebvcgKutD7Bobnp4aqHWm2/ayD4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CGncjACT2BLWQWusMJ66/omnKwDE3tSKZPK6VjtaCG6zySy1d48kizrxb53TQW0OU
-         O9YB7TiBJFQNtooayTAPFdKeIT+SQgNyI7BA7HBmVQ40h3Ka8ScumGOqUQhEnJVjg2
-         JYgG31+ofFN7uoRNV+4Hlvu9NYF2k6ShizC46Fgc=
+        b=C13ngBRdOcowph6JBYB4z0vz2JeqqxDLdLSuflSEmkTCsSz7n1uyFmN5PP2+79n6z
+         cMUiA0mYNmaYptkjvMNtb7A+Ptn+EgO+tZlFjDzwK1xyqnAlnrxWePpdhy5ozitWTO
+         DGaljyihOf+3cqEEBSz/sgbhNjM7EBtT/KG1Cim8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 5.4 088/232] media: hantro: Read be32 words starting at every fourth byte
-Date:   Thu, 16 Apr 2020 15:23:02 +0200
-Message-Id: <20200416131326.002278291@linuxfoundation.org>
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>
+Subject: [PATCH 5.4 104/232] sched/fair: Fix enqueue_task_fair warning
+Date:   Thu, 16 Apr 2020 15:23:18 +0200
+Message-Id: <20200416131328.097402688@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -62,72 +62,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+From: Vincent Guittot <vincent.guittot@linaro.org>
 
-commit e34bca49e4953e5c2afc0425303199a5fd515f82 upstream.
+commit fe61468b2cbc2b7ce5f8d3bf32ae5001d4c434e9 upstream.
 
-Since (luma/chroma)_qtable is an array of unsigned char, indexing it
-returns consecutive byte locations, but we are supposed to read the arrays
-in four-byte words. Consequently, we should be pointing
-get_unaligned_be32() at consecutive word locations instead.
+When a cfs rq is throttled, the latter and its child are removed from the
+leaf list but their nr_running is not changed which includes staying higher
+than 1. When a task is enqueued in this throttled branch, the cfs rqs must
+be added back in order to ensure correct ordering in the list but this can
+only happens if nr_running == 1.
+When cfs bandwidth is used, we call unconditionnaly list_add_leaf_cfs_rq()
+when enqueuing an entity to make sure that the complete branch will be
+added.
 
-Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Reviewed-by: Ezequiel Garcia <ezequiel@collabora.com>
-Tested-by: Ezequiel Garcia <ezequiel@collabora.com>
+Similarly unthrottle_cfs_rq() can stop adding cfs in the list when a parent
+is throttled. Iterate the remaining entity to ensure that the complete
+branch will be added in the list.
+
+Reported-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Tested-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
 Cc: stable@vger.kernel.org
-Fixes: 00c30f42c7595f "media: rockchip vpu: remove some unused vars"
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: stable@vger.kernel.org #v5.1+
+Link: https://lkml.kernel.org/r/20200306135257.25044-1-vincent.guittot@linaro.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/media/hantro/hantro_h1_jpeg_enc.c     |    9 +++++++--
- drivers/staging/media/hantro/rk3399_vpu_hw_jpeg_enc.c |    9 +++++++--
- 2 files changed, 14 insertions(+), 4 deletions(-)
+ kernel/sched/fair.c |   26 ++++++++++++++++++++++----
+ 1 file changed, 22 insertions(+), 4 deletions(-)
 
---- a/drivers/staging/media/hantro/hantro_h1_jpeg_enc.c
-+++ b/drivers/staging/media/hantro/hantro_h1_jpeg_enc.c
-@@ -67,12 +67,17 @@ hantro_h1_jpeg_enc_set_qtable(struct han
- 			      unsigned char *chroma_qtable)
- {
- 	u32 reg, i;
-+	__be32 *luma_qtable_p;
-+	__be32 *chroma_qtable_p;
-+
-+	luma_qtable_p = (__be32 *)luma_qtable;
-+	chroma_qtable_p = (__be32 *)chroma_qtable;
- 
- 	for (i = 0; i < H1_JPEG_QUANT_TABLE_COUNT; i++) {
--		reg = get_unaligned_be32(&luma_qtable[i]);
-+		reg = get_unaligned_be32(&luma_qtable_p[i]);
- 		vepu_write_relaxed(vpu, reg, H1_REG_JPEG_LUMA_QUAT(i));
- 
--		reg = get_unaligned_be32(&chroma_qtable[i]);
-+		reg = get_unaligned_be32(&chroma_qtable_p[i]);
- 		vepu_write_relaxed(vpu, reg, H1_REG_JPEG_CHROMA_QUAT(i));
- 	}
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -3927,6 +3927,7 @@ static inline void check_schedstat_requi
+ #endif
  }
---- a/drivers/staging/media/hantro/rk3399_vpu_hw_jpeg_enc.c
-+++ b/drivers/staging/media/hantro/rk3399_vpu_hw_jpeg_enc.c
-@@ -98,12 +98,17 @@ rk3399_vpu_jpeg_enc_set_qtable(struct ha
- 			       unsigned char *chroma_qtable)
- {
- 	u32 reg, i;
-+	__be32 *luma_qtable_p;
-+	__be32 *chroma_qtable_p;
+ 
++static inline bool cfs_bandwidth_used(void);
+ 
+ /*
+  * MIGRATION
+@@ -4005,10 +4006,16 @@ enqueue_entity(struct cfs_rq *cfs_rq, st
+ 		__enqueue_entity(cfs_rq, se);
+ 	se->on_rq = 1;
+ 
+-	if (cfs_rq->nr_running == 1) {
++	/*
++	 * When bandwidth control is enabled, cfs might have been removed
++	 * because of a parent been throttled but cfs->nr_running > 1. Try to
++	 * add it unconditionnally.
++	 */
++	if (cfs_rq->nr_running == 1 || cfs_bandwidth_used())
+ 		list_add_leaf_cfs_rq(cfs_rq);
 +
-+	luma_qtable_p = (__be32 *)luma_qtable;
-+	chroma_qtable_p = (__be32 *)chroma_qtable;
- 
- 	for (i = 0; i < VEPU_JPEG_QUANT_TABLE_COUNT; i++) {
--		reg = get_unaligned_be32(&luma_qtable[i]);
-+		reg = get_unaligned_be32(&luma_qtable_p[i]);
- 		vepu_write_relaxed(vpu, reg, VEPU_REG_JPEG_LUMA_QUAT(i));
- 
--		reg = get_unaligned_be32(&chroma_qtable[i]);
-+		reg = get_unaligned_be32(&chroma_qtable_p[i]);
- 		vepu_write_relaxed(vpu, reg, VEPU_REG_JPEG_CHROMA_QUAT(i));
- 	}
++	if (cfs_rq->nr_running == 1)
+ 		check_enqueue_throttle(cfs_rq);
+-	}
  }
+ 
+ static void __clear_buddies_last(struct sched_entity *se)
+@@ -4589,11 +4596,22 @@ void unthrottle_cfs_rq(struct cfs_rq *cf
+ 			break;
+ 	}
+ 
+-	assert_list_leaf_cfs_rq(rq);
+-
+ 	if (!se)
+ 		add_nr_running(rq, task_delta);
+ 
++	/*
++	 * The cfs_rq_throttled() breaks in the above iteration can result in
++	 * incomplete leaf list maintenance, resulting in triggering the
++	 * assertion below.
++	 */
++	for_each_sched_entity(se) {
++		cfs_rq = cfs_rq_of(se);
++
++		list_add_leaf_cfs_rq(cfs_rq);
++	}
++
++	assert_list_leaf_cfs_rq(rq);
++
+ 	/* Determine whether we need to wake up potentially idle CPU: */
+ 	if (rq->curr == rq->idle && rq->cfs.nr_running)
+ 		resched_curr(rq);
 
 
