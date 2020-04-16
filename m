@@ -2,136 +2,74 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADABFC352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 19:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85BF4C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 19:02:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AECB20786
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 19:02:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="QM5X6cMe"
+	by mail.kernel.org (Postfix) with ESMTP id 6DE6C20786
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 19:02:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729457AbgDPTCS (ORCPT
+        id S1729974AbgDPTC3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 15:02:18 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:24965 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728250AbgDPTCQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 15:02:16 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1587063735; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=QHkedZEwWQEVeZsqvvOLG0I8Dhpk5m6hlvwQ9hGoh0A=; b=QM5X6cMe9LTkzJRp8TPgTh108VQBF++IZH50T2NsJpT7tiVWIEEsPm1C+52TNO540Y3QGixO
- 5SLmmotaZ3DodV9ydjLMRwvH1zrR3N1JTLY9gO1MsOJ4SZKciSyI79uwzISANNtoZYqWiuzc
- dwGQbCcMvUOLXXz0ThIdnzae4T4=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e98ab8b.7f4c067a4420-smtp-out-n04;
- Thu, 16 Apr 2020 19:01:31 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 9262BC433F2; Thu, 16 Apr 2020 19:01:31 +0000 (UTC)
-Received: from [10.46.162.249] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: hemantk)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E66AFC433CB;
-        Thu, 16 Apr 2020 19:01:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E66AFC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=hemantk@codeaurora.org
-Subject: Re: [PATCH 1/2] bus: mhi: core: Fix parsing of mhi_flags
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        "jhugo@codeaurora.org; dan.carpenter"@oracle.com
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        smohanad@codeaurora.org, dan.carpenter@oracle.com
-References: <20200413120741.2832-1-manivannan.sadhasivam@linaro.org>
-From:   Hemant Kumar <hemantk@codeaurora.org>
-Message-ID: <73d4815e-af00-e4cd-95c5-5043d334224c@codeaurora.org>
-Date:   Thu, 16 Apr 2020 12:01:30 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20200413120741.2832-1-manivannan.sadhasivam@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Thu, 16 Apr 2020 15:02:29 -0400
+Received: from gate.crashing.org ([63.228.1.57]:48202 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727800AbgDPTC0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 15:02:26 -0400
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 03GJ20UU003931;
+        Thu, 16 Apr 2020 14:02:00 -0500
+Received: (from segher@localhost)
+        by gate.crashing.org (8.14.1/8.14.1/Submit) id 03GJ1wgI003930;
+        Thu, 16 Apr 2020 14:01:59 -0500
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date:   Thu, 16 Apr 2020 14:01:58 -0500
+From:   Segher Boessenkool <segher@kernel.crashing.org>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, npiggin@gmail.com,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v2] powerpc/uaccess: Implement unsafe_put_user() using 'asm goto'
+Message-ID: <20200416190158.GC26902@gate.crashing.org>
+References: <c9abd91e9bb0b3dd6e3470015e92b98bc2483780.1586942304.git.christophe.leroy@c-s.fr> <20200415223747.GX26902@gate.crashing.org> <f797e5ac-a29a-0eb0-89c8-ff0a9f537ccf@c-s.fr>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+In-Reply-To: <f797e5ac-a29a-0eb0-89c8-ff0a9f537ccf@c-s.fr>
+User-Agent: Mutt/1.4.2.3i
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mani,
+On Thu, Apr 16, 2020 at 02:41:56PM +0200, Christophe Leroy wrote:
+> Le 16/04/2020 � 00:37, Segher Boessenkool a �crit�:
+> >>+	__put_user_nocheck_goto((__typeof__(*(ptr)))(x), (ptr), 
+> >>sizeof(*(ptr)), label)
+> >
+> >This line gets too long, can you break it up somehow?
+> 
+> This line has 86 chars.
 
-On 4/13/20 5:07 AM, Manivannan Sadhasivam wrote:
-> With the current parsing of mhi_flags, the following statement always
-> return false:
->
-> eob = !!(flags & MHI_EOB);
->
-> This is due to the fact that 'enum mhi_flags' starts with index 0 and we
-> are using direct AND operation to extract each bit. Fix this by using
-> BIT() macro to extract each bit and make the mhi_flags index start from 1.
->
-> Fixes: 189ff97cca53 ("bus: mhi: core: Add support for data transfer")
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->   drivers/bus/mhi/core/main.c | 6 +++---
->   include/linux/mhi.h         | 2 +-
->   2 files changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
-> index eb4256b81406..4165a853c189 100644
-> --- a/drivers/bus/mhi/core/main.c
-> +++ b/drivers/bus/mhi/core/main.c
-> @@ -1090,9 +1090,9 @@ int mhi_gen_tre(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan,
->   	if (ret)
->   		return ret;
->   
-> -	eob = !!(flags & MHI_EOB);
-> -	eot = !!(flags & MHI_EOT);
-> -	chain = !!(flags & MHI_CHAIN);
-> +	eob = !!(flags & BIT(0));
-> +	eot = !!(flags & BIT(1));
-> +	chain = !!(flags & BIT(2));
+(And your mail program has wrapped it ;-) )
 
-How about setting enums  with BIT macro and still use same enums above. 
-If flags is having MHI _CHAIN (enum value 3) but comparing with BIT(2) 
-(value 4) will not work.
+> powerpc arch tolerates lines with up to 90 chars, see 
+> arch/powerpc/tools/checkpatch.sh
 
->   	bei = !!(mhi_chan->intmod);
->   
->   	mhi_tre = tre_ring->wp;
-> diff --git a/include/linux/mhi.h b/include/linux/mhi.h
-> index ad1996001965..22185fecbbf2 100644
-> --- a/include/linux/mhi.h
-> +++ b/include/linux/mhi.h
-> @@ -53,7 +53,7 @@ enum mhi_callback {
->    * @MHI_CHAIN: Linked transfer
->    */
->   enum mhi_flags {
-> -	MHI_EOB,
-> +	MHI_EOB = 1,
->   	MHI_EOT,
->   	MHI_CHAIN,
->   };
+I *tolerate* it as well, sure, but long lines are bad for readability.
+Like, I noticed it because it wrapped :-)
 
-enum mhi_flags {
+That "90" thing is just dumb, we should get rid of it.  Sometimes you
+can have long lines, if that is better than the alternatives.  There
+does not need to be a ridiculous "rule" that is unhappy *both* ways!
 
-     MHI_EOB = BIT(0),
+(This is true for many things in checkpatch, btw...  Rules of thumb,
+not rules).
 
-     MHI_EOT = BIT(1),
 
-     MHI_CHAIN = BIT(2),
-
-}
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Segher
