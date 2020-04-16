@@ -7,50 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8BC6C352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:32:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8990AC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:33:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CABF822242
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:32:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62D0421927
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:33:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587051172;
-	bh=7Cy+Z5k2LepY15IBrx2bepvfp44ohwzM436i7z1/ZDw=;
+	s=default; t=1587051184;
+	bh=qmD2AabpT/gSApKTT7ytFVEBPKgxs9NvEOjVgOMFvy8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A8l/nHzox5cmd4GUlvGWhWWibGXkJ8dq2LRmu+cZmUYhO08d7/5cyFaXlTiiB+MTH
-	 dvPNrHZ/F0Vf4q18+k9jLPZXrX01hdHNr1BeKB5/B5NJS+qzNFXfMJN2uJFwfOpp+3
-	 r2KJd5YZcGU0O97TQQLtbw6S38OsU3bRbsH3ElUs=
+	b=r1PwFwL4b/E8cwMKb1dsY0V8tj7ELZ4MiKMTESE/yS8pSF9YeSwyacnO0b/v0+Fzd
+	 d3Z+33pP1kKPVa7xDeOYDvC675ysIs/lkwOZeIgL3vFINemsUwBLcs7oPn5lYqDwv5
+	 7n9TkC+ApLWMUgYs83jirZzzWlv1rEjyFmFWql5U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442472AbgDPPcv (ORCPT
+        id S2442485AbgDPPdD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:32:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55032 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:33:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726539AbgDPNmF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:42:05 -0400
+        id S2897763AbgDPNlt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:41:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8BA620732;
-        Thu, 16 Apr 2020 13:42:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15ED22222D;
+        Thu, 16 Apr 2020 13:41:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044525;
-        bh=7Cy+Z5k2LepY15IBrx2bepvfp44ohwzM436i7z1/ZDw=;
+        s=default; t=1587044505;
+        bh=qmD2AabpT/gSApKTT7ytFVEBPKgxs9NvEOjVgOMFvy8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=we+0Zhxjp3acpJ3s9OZLM6Ni6sVH/fo/LT2zJx/j6SDSi02GPto6Jgxob/cGVlr0D
-         /tGiAlhFaFfGlTmEx3Q6iv19A8+YkCosXlROymxt+9zziDlpX3GaWUrdXH3MYFC7wT
-         iK1YxIO/5XuXls4rZfnUx2ZyHZ6XNODaFC3CWY94=
+        b=OJbS4hW+tk4dVwi8Ssd6IiQ5pPWWxw+MjgVmSeZZfeEeqrgaBZvR8LHflULn+1RBQ
+         qUqvCWagKt/jj7hDtSe4WauKYyTb5Zg9czi8C6QLSKXqg1ERdu2rmz6A88HJR91sM2
+         xkdbsAinMBm4TTtE9Y7NVvsSiEoCf53xkJEmVjug=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Leonardo Bras <leonardo@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Shuah Khan <shuah@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.5 203/257] selftests/vm: fix map_hugetlb length used for testing read and write
-Date:   Thu, 16 Apr 2020 15:24:14 +0200
-Message-Id: <20200416131351.454384761@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.5 243/257] powerpc/64: Prevent stack protection in early boot
+Date:   Thu, 16 Apr 2020 15:24:54 +0200
+Message-Id: <20200416131356.189312593@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -63,76 +58,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-commit cabc30da10e677c67ab9a136b1478175734715c5 upstream.
+commit 7053f80d96967d8e72e9f2a724bbfc3906ce2b07 upstream.
 
-Commit fa7b9a805c79 ("tools/selftest/vm: allow choosing mem size and page
-size in map_hugetlb") added the possibility to change the size of memory
-mapped for the test, but left the read and write test using the default
-value.  This is unnoticed when mapping a length greater than the default
-one, but segfaults otherwise.
+The previous commit reduced the amount of code that is run before we
+setup a paca. However there are still a few remaining functions that
+run with no paca, or worse, with an arbitrary value in r13 that will
+be used as a paca pointer.
 
-Fix read_bytes() and write_bytes() by giving them the real length.
+In particular the stack protector canary is stored in the paca, so if
+stack protector is activated for any of these functions we will read
+the stack canary from wherever r13 points. If r13 happens to point
+outside of memory we will get a machine check / checkstop.
 
-Also fix the call to munmap().
+For example if we modify initialise_paca() to trigger stack
+protection, and then boot in the mambo simulator with r13 poisoned in
+skiboot before calling the kernel:
 
-Fixes: fa7b9a805c79 ("tools/selftest/vm: allow choosing mem size and page size in map_hugetlb")
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Leonardo Bras <leonardo@linux.ibm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/9a404a13c871c4bd0ba9ede68f69a1225180dd7e.1580978385.git.christophe.leroy@c-s.fr
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+  DEBUG: 19952232: (19952232): INSTRUCTION: PC=0xC0000000191FC1E8: [0x3C4C006D]: addis   r2,r12,0x6D [fetch]
+  DEBUG: 19952236: (19952236): INSTRUCTION: PC=0xC00000001807EAD8: [0x7D8802A6]: mflr    r12 [fetch]
+  FATAL ERROR: 19952276: (19952276): Check Stop for 0:0: Machine Check with ME bit of MSR off
+  DEBUG: 19952276: (19952276): INSTRUCTION: PC=0xC0000000191FCA7C: [0xE90D0CF8]: ld      r8,0xCF8(r13) [Instruction Failed]
+  INFO: 19952276: (19952277): ** Execution stopped: Mambo Error, Machine Check Stop,  **
+  systemsim % bt
+  pc:                             0xC0000000191FCA7C      initialise_paca+0x54
+  lr:                             0xC0000000191FC22C      early_setup+0x44
+  stack:0x00000000198CBED0        0x0     +0x0
+  stack:0x00000000198CBF00        0xC0000000191FC22C      early_setup+0x44
+  stack:0x00000000198CBF90        0x1801C968      +0x1801C968
+
+So annotate the relevant functions to ensure stack protection is never
+enabled for them.
+
+Fixes: 06ec27aea9fc ("powerpc/64: add stack protector support")
+Cc: stable@vger.kernel.org # v4.20+
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200320032116.1024773-2-mpe@ellerman.id.au
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/testing/selftests/vm/map_hugetlb.c |   14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ arch/powerpc/kernel/paca.c     |    4 ++--
+ arch/powerpc/kernel/setup.h    |    6 ++++++
+ arch/powerpc/kernel/setup_64.c |    2 +-
+ 3 files changed, 9 insertions(+), 3 deletions(-)
 
---- a/tools/testing/selftests/vm/map_hugetlb.c
-+++ b/tools/testing/selftests/vm/map_hugetlb.c
-@@ -45,20 +45,20 @@ static void check_bytes(char *addr)
- 	printf("First hex is %x\n", *((unsigned int *)addr));
+--- a/arch/powerpc/kernel/paca.c
++++ b/arch/powerpc/kernel/paca.c
+@@ -176,7 +176,7 @@ static struct slb_shadow * __init new_sl
+ struct paca_struct **paca_ptrs __read_mostly;
+ EXPORT_SYMBOL(paca_ptrs);
+ 
+-void __init initialise_paca(struct paca_struct *new_paca, int cpu)
++void __init __nostackprotector initialise_paca(struct paca_struct *new_paca, int cpu)
+ {
+ #ifdef CONFIG_PPC_PSERIES
+ 	new_paca->lppaca_ptr = NULL;
+@@ -205,7 +205,7 @@ void __init initialise_paca(struct paca_
  }
  
--static void write_bytes(char *addr)
-+static void write_bytes(char *addr, size_t length)
+ /* Put the paca pointer into r13 and SPRG_PACA */
+-void setup_paca(struct paca_struct *new_paca)
++void __nostackprotector setup_paca(struct paca_struct *new_paca)
  {
- 	unsigned long i;
+ 	/* Setup r13 */
+ 	local_paca = new_paca;
+--- a/arch/powerpc/kernel/setup.h
++++ b/arch/powerpc/kernel/setup.h
+@@ -8,6 +8,12 @@
+ #ifndef __ARCH_POWERPC_KERNEL_SETUP_H
+ #define __ARCH_POWERPC_KERNEL_SETUP_H
  
--	for (i = 0; i < LENGTH; i++)
-+	for (i = 0; i < length; i++)
- 		*(addr + i) = (char)i;
- }
++#ifdef CONFIG_CC_IS_CLANG
++#define __nostackprotector
++#else
++#define __nostackprotector __attribute__((__optimize__("no-stack-protector")))
++#endif
++
+ void initialize_cache_info(void);
+ void irqstack_early_init(void);
  
--static int read_bytes(char *addr)
-+static int read_bytes(char *addr, size_t length)
+--- a/arch/powerpc/kernel/setup_64.c
++++ b/arch/powerpc/kernel/setup_64.c
+@@ -279,7 +279,7 @@ void __init record_spr_defaults(void)
+  * device-tree is not accessible via normal means at this point.
+  */
+ 
+-void __init early_setup(unsigned long dt_ptr)
++void __init __nostackprotector early_setup(unsigned long dt_ptr)
  {
- 	unsigned long i;
+ 	static __initdata struct paca_struct boot_paca;
  
- 	check_bytes(addr);
--	for (i = 0; i < LENGTH; i++)
-+	for (i = 0; i < length; i++)
- 		if (*(addr + i) != (char)i) {
- 			printf("Mismatch at %lu\n", i);
- 			return 1;
-@@ -96,11 +96,11 @@ int main(int argc, char **argv)
- 
- 	printf("Returned address is %p\n", addr);
- 	check_bytes(addr);
--	write_bytes(addr);
--	ret = read_bytes(addr);
-+	write_bytes(addr, length);
-+	ret = read_bytes(addr, length);
- 
- 	/* munmap() length of MAP_HUGETLB memory must be hugepage aligned */
--	if (munmap(addr, LENGTH)) {
-+	if (munmap(addr, length)) {
- 		perror("munmap");
- 		exit(1);
- 	}
 
 
