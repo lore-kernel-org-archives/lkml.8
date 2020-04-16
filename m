@@ -2,56 +2,56 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A492C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:01:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16523C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:01:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04F59206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:01:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1AEF206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:01:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587049315;
-	bh=fpNrlUUTJSSi/PQgLIPLo6vQitr48svphV9IQte/vuY=;
+	s=default; t=1587049317;
+	bh=EQ1k2gTPI8/+F0eoMKp4zbsWBOpHntjGdtwF7NODGi0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v4yC8NyRiuucN25GvCclhFBEfUexGE6uzOljzlUKmqFG6/85FURd98ExqAynhWhqn
-	 OX7uFNdghzL3QRjq3ih1SMBFxjiTDtAABJ9xHAm9QP23kM6gRV0k7eexQeAQre9QmO
-	 /wzasYsYif+br4kiW4VjD+OF/3RoTpPUw0T9bqcU=
+	b=ONJf+jpiyqD6GsLBW2sguZ5uyHnTZ81XtH6VeGzG/5xdmnXIc5IR1UWr7QhD7qKqx
+	 sdbZHIWGWbilBzj3UUqiDAusaOUJsC2ccXh9jXevqJQw+RjBZzSRJWMjWLgBVRwX84
+	 EYOik7pXHAXzwY5iTkdOvgGsO+63+mbv+w3a2Qgo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409382AbgDPPBy (ORCPT
+        id S2898824AbgDPNyK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:01:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40792 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:54:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408077AbgDPNyO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:54:14 -0400
+        id S2897533AbgDPNhr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:37:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 863CA2076D;
-        Thu, 16 Apr 2020 13:54:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A9C3221EB;
+        Thu, 16 Apr 2020 13:37:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045254;
-        bh=fpNrlUUTJSSi/PQgLIPLo6vQitr48svphV9IQte/vuY=;
+        s=default; t=1587044266;
+        bh=EQ1k2gTPI8/+F0eoMKp4zbsWBOpHntjGdtwF7NODGi0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XzPgZpUIoBWh+C44cDJvJ5jpPORKSVmdEkEJL+pWFFNrHsYx19X+GroAHB3u65E3Z
-         kP7yVi+etXDl75Vx86CSU4N5jyes2H/Lw5w6hjqeeBYauz+eazJCU5hbgSAp9ysiAR
-         bfRs+PHkGCuxRVnRe/tMX0i7OTFIjMiDBzGIXd2g=
+        b=lQWPeLquzzKfTSlFmYpMHpNEHvofw/xqkQHiwJg2kTGQF0a2myNZ2Bru4pNCRUKsR
+         TTzV8Kn9sxipk3jv0GWhn20adWbzjLMsAAWzXgxayXnr2TQUVumBw9+7lIkIAANVu7
+         0PNjGERb5SM8GoHkvF0u9qlThR6IycVgZJStfWxg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Helen Koike <helen.koike@collabora.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 008/254] media: staging: rkisp1: use consistent bus_info string for media_dev
-Date:   Thu, 16 Apr 2020 15:21:37 +0200
-Message-Id: <20200416131326.784707488@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.5 147/257] KVM: VMX: Always VMCLEAR in-use VMCSes during crash with kexec support
+Date:   Thu, 16 Apr 2020 15:23:18 +0200
+Message-Id: <20200416131344.839768817@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
-References: <20200416131325.804095985@linuxfoundation.org>
+In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
+References: <20200416131325.891903893@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,41 +61,180 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Helen Koike <helen.koike@collabora.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-[ Upstream commit 12d3d8090bc5e8cdda2f56caed2a2a0d70009456 ]
+commit 31603d4fc2bb4f0815245d496cb970b27b4f636a upstream.
 
-Media device is using a slightly different bus_info string
-"platform: rkisp1" (with a space) instead of "platform:rkisp1" used by
-the rest of rkisp1 code.
-This causes errors when using v4l2-util tools that uses the bus_info
-string to identify the device.
+VMCLEAR all in-use VMCSes during a crash, even if kdump's NMI shootdown
+interrupted a KVM update of the percpu in-use VMCS list.
 
-Fixes: d65dd85281fb ("media: staging: rkisp1: add Rockchip ISP1 base driver")
-Signed-off-by: Helen Koike <helen.koike@collabora.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Because NMIs are not blocked by disabling IRQs, it's possible that
+crash_vmclear_local_loaded_vmcss() could be called while the percpu list
+of VMCSes is being modified, e.g. in the middle of list_add() in
+vmx_vcpu_load_vmcs().  This potential corner case was called out in the
+original commit[*], but the analysis of its impact was wrong.
+
+Skipping the VMCLEARs is wrong because it all but guarantees that a
+loaded, and therefore cached, VMCS will live across kexec and corrupt
+memory in the new kernel.  Corruption will occur because the CPU's VMCS
+cache is non-coherent, i.e. not snooped, and so the writeback of VMCS
+memory on its eviction will overwrite random memory in the new kernel.
+The VMCS will live because the NMI shootdown also disables VMX, i.e. the
+in-progress VMCLEAR will #UD, and existing Intel CPUs do not flush the
+VMCS cache on VMXOFF.
+
+Furthermore, interrupting list_add() and list_del() is safe due to
+crash_vmclear_local_loaded_vmcss() using forward iteration.  list_add()
+ensures the new entry is not visible to forward iteration unless the
+entire add completes, via WRITE_ONCE(prev->next, new).  A bad "prev"
+pointer could be observed if the NMI shootdown interrupted list_del() or
+list_add(), but list_for_each_entry() does not consume ->prev.
+
+In addition to removing the temporary disabling of VMCLEAR, open code
+loaded_vmcs_init() in __loaded_vmcs_clear() and reorder VMCLEAR so that
+the VMCS is deleted from the list only after it's been VMCLEAR'd.
+Deleting the VMCS before VMCLEAR would allow a race where the NMI
+shootdown could arrive between list_del() and vmcs_clear() and thus
+neither flow would execute a successful VMCLEAR.  Alternatively, more
+code could be moved into loaded_vmcs_init(), but that gets rather silly
+as the only other user, alloc_loaded_vmcs(), doesn't need the smp_wmb()
+and would need to work around the list_del().
+
+Update the smp_*() comments related to the list manipulation, and
+opportunistically reword them to improve clarity.
+
+[*] https://patchwork.kernel.org/patch/1675731/#3720461
+
+Fixes: 8f536b7697a0 ("KVM: VMX: provide the vmclear function and a bitmap to support VMCLEAR in kdump")
+Cc: stable@vger.kernel.org
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Message-Id: <20200321193751.24985-2-sean.j.christopherson@intel.com>
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/staging/media/rkisp1/rkisp1-dev.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/x86/kvm/vmx/vmx.c |   67 +++++++++++--------------------------------------
+ 1 file changed, 16 insertions(+), 51 deletions(-)
 
-diff --git a/drivers/staging/media/rkisp1/rkisp1-dev.c b/drivers/staging/media/rkisp1/rkisp1-dev.c
-index 558126e66465c..9b47f41b36e94 100644
---- a/drivers/staging/media/rkisp1/rkisp1-dev.c
-+++ b/drivers/staging/media/rkisp1/rkisp1-dev.c
-@@ -502,8 +502,7 @@ static int rkisp1_probe(struct platform_device *pdev)
- 	strscpy(rkisp1->media_dev.model, RKISP1_DRIVER_NAME,
- 		sizeof(rkisp1->media_dev.model));
- 	rkisp1->media_dev.dev = &pdev->dev;
--	strscpy(rkisp1->media_dev.bus_info,
--		"platform: " RKISP1_DRIVER_NAME,
-+	strscpy(rkisp1->media_dev.bus_info, RKISP1_BUS_INFO,
- 		sizeof(rkisp1->media_dev.bus_info));
- 	media_device_init(&rkisp1->media_dev);
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -664,43 +664,15 @@ void loaded_vmcs_init(struct loaded_vmcs
+ }
  
--- 
-2.20.1
-
+ #ifdef CONFIG_KEXEC_CORE
+-/*
+- * This bitmap is used to indicate whether the vmclear
+- * operation is enabled on all cpus. All disabled by
+- * default.
+- */
+-static cpumask_t crash_vmclear_enabled_bitmap = CPU_MASK_NONE;
+-
+-static inline void crash_enable_local_vmclear(int cpu)
+-{
+-	cpumask_set_cpu(cpu, &crash_vmclear_enabled_bitmap);
+-}
+-
+-static inline void crash_disable_local_vmclear(int cpu)
+-{
+-	cpumask_clear_cpu(cpu, &crash_vmclear_enabled_bitmap);
+-}
+-
+-static inline int crash_local_vmclear_enabled(int cpu)
+-{
+-	return cpumask_test_cpu(cpu, &crash_vmclear_enabled_bitmap);
+-}
+-
+ static void crash_vmclear_local_loaded_vmcss(void)
+ {
+ 	int cpu = raw_smp_processor_id();
+ 	struct loaded_vmcs *v;
+ 
+-	if (!crash_local_vmclear_enabled(cpu))
+-		return;
+-
+ 	list_for_each_entry(v, &per_cpu(loaded_vmcss_on_cpu, cpu),
+ 			    loaded_vmcss_on_cpu_link)
+ 		vmcs_clear(v->vmcs);
+ }
+-#else
+-static inline void crash_enable_local_vmclear(int cpu) { }
+-static inline void crash_disable_local_vmclear(int cpu) { }
+ #endif /* CONFIG_KEXEC_CORE */
+ 
+ static void __loaded_vmcs_clear(void *arg)
+@@ -712,19 +684,24 @@ static void __loaded_vmcs_clear(void *ar
+ 		return; /* vcpu migration can race with cpu offline */
+ 	if (per_cpu(current_vmcs, cpu) == loaded_vmcs->vmcs)
+ 		per_cpu(current_vmcs, cpu) = NULL;
+-	crash_disable_local_vmclear(cpu);
++
++	vmcs_clear(loaded_vmcs->vmcs);
++	if (loaded_vmcs->shadow_vmcs && loaded_vmcs->launched)
++		vmcs_clear(loaded_vmcs->shadow_vmcs);
++
+ 	list_del(&loaded_vmcs->loaded_vmcss_on_cpu_link);
+ 
+ 	/*
+-	 * we should ensure updating loaded_vmcs->loaded_vmcss_on_cpu_link
+-	 * is before setting loaded_vmcs->vcpu to -1 which is done in
+-	 * loaded_vmcs_init. Otherwise, other cpu can see vcpu = -1 fist
+-	 * then adds the vmcs into percpu list before it is deleted.
++	 * Ensure all writes to loaded_vmcs, including deleting it from its
++	 * current percpu list, complete before setting loaded_vmcs->vcpu to
++	 * -1, otherwise a different cpu can see vcpu == -1 first and add
++	 * loaded_vmcs to its percpu list before it's deleted from this cpu's
++	 * list. Pairs with the smp_rmb() in vmx_vcpu_load_vmcs().
+ 	 */
+ 	smp_wmb();
+ 
+-	loaded_vmcs_init(loaded_vmcs);
+-	crash_enable_local_vmclear(cpu);
++	loaded_vmcs->cpu = -1;
++	loaded_vmcs->launched = 0;
+ }
+ 
+ void loaded_vmcs_clear(struct loaded_vmcs *loaded_vmcs)
+@@ -1333,18 +1310,17 @@ void vmx_vcpu_load_vmcs(struct kvm_vcpu
+ 	if (!already_loaded) {
+ 		loaded_vmcs_clear(vmx->loaded_vmcs);
+ 		local_irq_disable();
+-		crash_disable_local_vmclear(cpu);
+ 
+ 		/*
+-		 * Read loaded_vmcs->cpu should be before fetching
+-		 * loaded_vmcs->loaded_vmcss_on_cpu_link.
+-		 * See the comments in __loaded_vmcs_clear().
++		 * Ensure loaded_vmcs->cpu is read before adding loaded_vmcs to
++		 * this cpu's percpu list, otherwise it may not yet be deleted
++		 * from its previous cpu's percpu list.  Pairs with the
++		 * smb_wmb() in __loaded_vmcs_clear().
+ 		 */
+ 		smp_rmb();
+ 
+ 		list_add(&vmx->loaded_vmcs->loaded_vmcss_on_cpu_link,
+ 			 &per_cpu(loaded_vmcss_on_cpu, cpu));
+-		crash_enable_local_vmclear(cpu);
+ 		local_irq_enable();
+ 	}
+ 
+@@ -2260,17 +2236,6 @@ static int hardware_enable(void)
+ 	INIT_LIST_HEAD(&per_cpu(blocked_vcpu_on_cpu, cpu));
+ 	spin_lock_init(&per_cpu(blocked_vcpu_on_cpu_lock, cpu));
+ 
+-	/*
+-	 * Now we can enable the vmclear operation in kdump
+-	 * since the loaded_vmcss_on_cpu list on this cpu
+-	 * has been initialized.
+-	 *
+-	 * Though the cpu is not in VMX operation now, there
+-	 * is no problem to enable the vmclear operation
+-	 * for the loaded_vmcss_on_cpu list is empty!
+-	 */
+-	crash_enable_local_vmclear(cpu);
+-
+ 	rdmsrl(MSR_IA32_FEATURE_CONTROL, old);
+ 
+ 	test_bits = FEATURE_CONTROL_LOCKED;
 
 
