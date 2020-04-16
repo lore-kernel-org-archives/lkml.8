@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA6AC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:16:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C3EC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0732214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:16:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1F87214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:16:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587050198;
-	bh=3ScBCzDGVqDqZeQ7247CTqy5NBsjjC2WXKUdOEqo8bM=;
+	s=default; t=1587050203;
+	bh=TFXnfxHugoSP3Q7WZCuT3ZsZo+7q/qP8JgVFHiV9l8U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OlLle2D1BDcv8/eEGw+P3qt3aPd20e7wjyezTg7kl6SHC/O4/tKlukG2T04groaZs
-	 48F4A0VD6oa/j1rxrcXXwzQwwqaX6mpTxusnmEr8M/kR0qFSekuM+DBAW9NNc5dZG2
-	 FcCfzsK20Wzg21sPs/WRK3BiE7fCKS+JELAEotKQ=
+	b=JwIRggZO9AS85RHgfBKwg97JJILpC/4kDJ71s8+TlNvim8dSARj+p+b+YjO63EwWc
+	 2SqhtPLiOZB7D8ZmvN9gBUysWFlYOLecqq+GHLIC4aC3AKnSTMghluG3FPmd9+w7Tg
+	 dLY5jod4zOwod6/vN69YlRwAjQV36usZoimFyVn8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729381AbgDPNuB (ORCPT
+        id S2503922AbgDPPQl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:50:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48578 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:16:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897328AbgDPNg0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:36:26 -0400
+        id S2441377AbgDPNuC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:50:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0041A208E4;
-        Thu, 16 Apr 2020 13:36:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF763217D8;
+        Thu, 16 Apr 2020 13:49:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044185;
-        bh=3ScBCzDGVqDqZeQ7247CTqy5NBsjjC2WXKUdOEqo8bM=;
+        s=default; t=1587044970;
+        bh=TFXnfxHugoSP3Q7WZCuT3ZsZo+7q/qP8JgVFHiV9l8U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GkP4ISPjtOc5QS1734EDSdymCN0AK5USmXH1zzd8xZOA/zgE30NcNWZt/HtSBKVpv
-         AM+ymR8HTOz7z3lPhpHtWgxkxBe6e1CAICCTZ+yrgYeZZ4/3DjPouuGRCCwlXDm/yg
-         EAZCUIPxBqSnWxd4dooUS+UiP+uJz8bHkS9+nXu8=
+        b=EMQqW2YOeM58uqXzkbAPVP9xYwJE+5x9cu3slGF5Ld4k2UtkU9h5qB5etMnXEYhUV
+         3vZCnHtaidqNkaiDAseKrTbYA8ctsYSNHU9/25pi5TUY/NNaFbQiiQrm2SpNfD6Xmd
+         l4ZsmFLH2rXzuOtn95UJnw+/TRyDAvOehwrmBHyw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Hoyer <David.Hoyer@netapp.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Keith Busch <kbusch@kernel.org>
-Subject: [PATCH 5.5 113/257] PCI: pciehp: Fix indefinite wait on sysfs requests
-Date:   Thu, 16 Apr 2020 15:22:44 +0200
-Message-Id: <20200416131340.380324440@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Frieder Schrempf <frieder.schrempf@kontron.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 5.4 135/232] mtd: spinand: Stop using spinand->oobbuf for buffering bad block markers
+Date:   Thu, 16 Apr 2020 15:23:49 +0200
+Message-Id: <20200416131331.864786637@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
-References: <20200416131325.891903893@linuxfoundation.org>
+In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
+References: <20200416131316.640996080@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,119 +61,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukas Wunner <lukas@wunner.de>
+From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-commit 3e487d2e4aa466decd226353755c9d423e8fbacc upstream.
+commit 2148937501ee3d663e0010e519a553fea67ad103 upstream.
 
-David Hoyer reports that powering pciehp slots up or down via sysfs may
-hang:  The call to wait_event() in pciehp_sysfs_enable_slot() and
-_disable_slot() does not return because ctrl->ist_running remains true.
+For reading and writing the bad block markers, spinand->oobbuf is
+currently used as a buffer for the marker bytes. During the
+underlying read and write operations to actually get/set the content
+of the OOB area, the content of spinand->oobbuf is reused and changed
+by accessing it through spinand->oobbuf and/or spinand->databuf.
 
-This flag, which was introduced by commit 157c1062fcd8 ("PCI: pciehp: Avoid
-returning prematurely from sysfs requests"), signifies that the IRQ thread
-pciehp_ist() is running.  It is set to true at the top of pciehp_ist() and
-reset to false at the end.  However there are two additional return
-statements in pciehp_ist() before which the commit neglected to reset the
-flag to false and wake up waiters for the flag.
+This is a flaw in the original design of the SPI NAND core and at the
+latest from 13c15e07eedf ("mtd: spinand: Handle the case where
+PROGRAM LOAD does not reset the cache") on, it results in not having
+the bad block marker written at all, as the spinand->oobbuf is
+cleared to 0xff after setting the marker bytes to zero.
 
-That omission opens up the following race when powering up the slot:
+To fix it, we now just store the two bytes for the marker on the
+stack and let the read/write operations copy it from/to the page
+buffer later.
 
-* pciehp_ist() runs because a PCI_EXP_SLTSTA_PDC event was requested
-  by pciehp_sysfs_enable_slot()
-
-* pciehp_ist() turns on slot power via the following call stack:
-  pciehp_handle_presence_or_link_change() -> pciehp_enable_slot() ->
-  __pciehp_enable_slot() -> board_added() -> pciehp_power_on_slot()
-
-* after slot power is turned on, the link comes up, resulting in a
-  PCI_EXP_SLTSTA_DLLSC event
-
-* the IRQ handler pciehp_isr() stores the event in ctrl->pending_events
-  and returns IRQ_WAKE_THREAD
-
-* the IRQ thread is already woken (it's bringing up the slot), but the
-  genirq code remembers to re-run the IRQ thread after it has finished
-  (such that it can deal with the new event) by setting IRQTF_RUNTHREAD
-  via __handle_irq_event_percpu() -> __irq_wake_thread()
-
-* the IRQ thread removes PCI_EXP_SLTSTA_DLLSC from ctrl->pending_events
-  via board_added() -> pciehp_check_link_status() in order to deal with
-  presence and link flaps per commit 6c35a1ac3da6 ("PCI: pciehp:
-  Tolerate initially unstable link")
-
-* after pciehp_ist() has successfully brought up the slot, it resets
-  ctrl->ist_running to false and wakes up the sysfs requester
-
-* the genirq code re-runs pciehp_ist(), which sets ctrl->ist_running
-  to true but then returns with IRQ_NONE because ctrl->pending_events
-  is empty
-
-* pciehp_sysfs_enable_slot() is finally woken but notices that
-  ctrl->ist_running is true, hence continues waiting
-
-The only way to get the hung task going again is to trigger a hotplug
-event which brings down the slot, e.g. by yanking out the card.
-
-The same race exists when powering down the slot because remove_board()
-likewise clears link or presence changes in ctrl->pending_events per commit
-3943af9d01e9 ("PCI: pciehp: Ignore Link State Changes after powering off a
-slot") and thereby may cause a re-run of pciehp_ist() which returns with
-IRQ_NONE without resetting ctrl->ist_running to false.
-
-Fix by adding a goto label before the teardown steps at the end of
-pciehp_ist() and jumping to that label from the two return statements which
-currently neglect to reset the ctrl->ist_running flag.
-
-Fixes: 157c1062fcd8 ("PCI: pciehp: Avoid returning prematurely from sysfs requests")
-Link: https://lore.kernel.org/r/cca1effa488065cb055120aa01b65719094bdcb5.1584530321.git.lukas@wunner.de
-Reported-by: David Hoyer <David.Hoyer@netapp.com>
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Keith Busch <kbusch@kernel.org>
-Cc: stable@vger.kernel.org	# v4.19+
+Fixes: 7529df465248 ("mtd: nand: Add core infrastructure to support SPI NANDs")
+Cc: stable@vger.kernel.org
+Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Link: https://lore.kernel.org/linux-mtd/20200218100432.32433-2-frieder.schrempf@kontron.de
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/hotplug/pciehp_hpc.c |   14 +++++++-------
+ drivers/mtd/nand/spi/core.c |   14 +++++++-------
  1 file changed, 7 insertions(+), 7 deletions(-)
 
---- a/drivers/pci/hotplug/pciehp_hpc.c
-+++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -625,17 +625,15 @@ static irqreturn_t pciehp_ist(int irq, v
- 	if (atomic_fetch_and(~RERUN_ISR, &ctrl->pending_events) & RERUN_ISR) {
- 		ret = pciehp_isr(irq, dev_id);
- 		enable_irq(irq);
--		if (ret != IRQ_WAKE_THREAD) {
--			pci_config_pm_runtime_put(pdev);
--			return ret;
--		}
-+		if (ret != IRQ_WAKE_THREAD)
-+			goto out;
- 	}
+--- a/drivers/mtd/nand/spi/core.c
++++ b/drivers/mtd/nand/spi/core.c
+@@ -568,18 +568,18 @@ static int spinand_mtd_write(struct mtd_
+ static bool spinand_isbad(struct nand_device *nand, const struct nand_pos *pos)
+ {
+ 	struct spinand_device *spinand = nand_to_spinand(nand);
++	u8 marker[2] = { };
+ 	struct nand_page_io_req req = {
+ 		.pos = *pos,
+-		.ooblen = 2,
++		.ooblen = sizeof(marker),
+ 		.ooboffs = 0,
+-		.oobbuf.in = spinand->oobbuf,
++		.oobbuf.in = marker,
+ 		.mode = MTD_OPS_RAW,
+ 	};
  
- 	synchronize_hardirq(irq);
- 	events = atomic_xchg(&ctrl->pending_events, 0);
- 	if (!events) {
--		pci_config_pm_runtime_put(pdev);
--		return IRQ_NONE;
-+		ret = IRQ_NONE;
-+		goto out;
- 	}
+-	memset(spinand->oobbuf, 0, 2);
+ 	spinand_select_target(spinand, pos->target);
+ 	spinand_read_page(spinand, &req, false);
+-	if (spinand->oobbuf[0] != 0xff || spinand->oobbuf[1] != 0xff)
++	if (marker[0] != 0xff || marker[1] != 0xff)
+ 		return true;
  
- 	/* Check Attention Button Pressed */
-@@ -664,10 +662,12 @@ static irqreturn_t pciehp_ist(int irq, v
- 		pciehp_handle_presence_or_link_change(ctrl, events);
- 	up_read(&ctrl->reset_lock);
+ 	return false;
+@@ -603,11 +603,12 @@ static int spinand_mtd_block_isbad(struc
+ static int spinand_markbad(struct nand_device *nand, const struct nand_pos *pos)
+ {
+ 	struct spinand_device *spinand = nand_to_spinand(nand);
++	u8 marker[2] = { };
+ 	struct nand_page_io_req req = {
+ 		.pos = *pos,
+ 		.ooboffs = 0,
+-		.ooblen = 2,
+-		.oobbuf.out = spinand->oobbuf,
++		.ooblen = sizeof(marker),
++		.oobbuf.out = marker,
+ 	};
+ 	int ret;
  
-+	ret = IRQ_HANDLED;
-+out:
- 	pci_config_pm_runtime_put(pdev);
- 	ctrl->ist_running = false;
- 	wake_up(&ctrl->requester);
--	return IRQ_HANDLED;
-+	return ret;
+@@ -622,7 +623,6 @@ static int spinand_markbad(struct nand_d
+ 
+ 	spinand_erase_op(spinand, pos);
+ 
+-	memset(spinand->oobbuf, 0, 2);
+ 	return spinand_write_page(spinand, &req);
  }
  
- static int pciehp_poll(void *data)
 
 
