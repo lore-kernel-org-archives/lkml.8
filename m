@@ -2,121 +2,122 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B87E1C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93E1FC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:38:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 950DA214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:38:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587051502;
-	bh=ZrHzyFlGKUss73Jc+wNUE+fZkpYQLAwarN1zR6GzVN4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j39NRw06x34FZz52vXZVQddbp2Tv+nxqOosd6KLlsOoAlU99YxZQ2PRoHzvedfhNI
-	 YgIuvw8NYtGl91CdSjVaLsE420ab2WQUZmf+6m/K43RzhoooTnKkIBEInzWCp/hLvg
-	 8ZEZHuMIvux/KplEcjZvfz+x33Wk0ljGe0X2Gf6U=
+	by mail.kernel.org (Postfix) with ESMTP id 7554F2076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:38:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395362AbgDPPiT (ORCPT
+        id S2395373AbgDPPia (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 16 Apr 2020 11:38:30 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:38598 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2395361AbgDPPiT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Apr 2020 11:38:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51428 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897789AbgDPNjB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:39:01 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CA9822203;
-        Thu, 16 Apr 2020 13:39:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044340;
-        bh=ZrHzyFlGKUss73Jc+wNUE+fZkpYQLAwarN1zR6GzVN4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N97JfX5VpLh9VroROYJjg5P+GfJAMbIf66KBijuCn+69PuB099ZLaN1X/0CQWuU8J
-         ECpvcfJ160uQhMTlE4MrkJ5lfCVxJ4BPztyy10Do/Jk7wYhmhpol0FveLS+r/ISyjs
-         oe9p2XY0V1vOQcn00gJJ7WuX3XQ6Jox7mhmO3ibQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.5 161/257] btrfs: set update the uuid generation as soon as possible
-Date:   Thu, 16 Apr 2020 15:23:32 +0200
-Message-Id: <20200416131346.690964572@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
-References: <20200416131325.891903893@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: by mail-ot1-f67.google.com with SMTP id k21so3424820otl.5;
+        Thu, 16 Apr 2020 08:38:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lw132FJ1IkHMDhBaUz9OoWvHN6gIUc3nGCLM6oGU1MU=;
+        b=Ohxo0TgYT84hGGjNfx80J4lWtmSSGdDmAX+fK1BRxguPvpnrWbL4kHK6Ebf9ycegIh
+         OpyPLxZIxjZ3OV+nWuNrM2usJfcckEXTzY5DrMbj5XeRBEzu3WSYQa3NV47g3uXwYmJj
+         oE50HOdLjD40PuvqWmFIbyqYhLPthnh5wPIghHMqO0uoOBk5BQfUey7/UCrSqaofF8ac
+         YjEfxNHrF9Dy1e3AYwsBhK5nmhkxpefFaJA9i3FrWDlqkcfSTNXIiKKArRGnyfUJPRmg
+         +p6eX3HW/BHEL7zq3txR1wfsmJsS7+xpZHpFxLnbtn//MQk6/e20FyTFzQt4umq4mUCm
+         Eagg==
+X-Gm-Message-State: AGi0PuY2dj7gk+C06xkyEv0C9VhjO/Lke/bY1WVOJ6+QuJWoGC+f5LLN
+        17ezpkFP/td1EALjSIVM7KE5Al9Fcy0s/4cGI84=
+X-Google-Smtp-Source: APiQypI12iXIrm8mtmSb+XKSEPYhA1HFJq3oTSPTAEFz3A7lZAnTnLkLIG43fWAGSkgC9em1kdGMDMbBxLJi/Z6CDKA=
+X-Received: by 2002:a9d:76c7:: with SMTP id p7mr26140182otl.145.1587051498619;
+ Thu, 16 Apr 2020 08:38:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200416115658.20406-1-geert+renesas@glider.be>
+ <20200416115658.20406-3-geert+renesas@glider.be> <20200416125630.GF4987@lakrids.cambridge.arm.com>
+In-Reply-To: <20200416125630.GF4987@lakrids.cambridge.arm.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 16 Apr 2020 17:38:07 +0200
+Message-ID: <CAMuHMdWRW4+YLR8fz0hUTAPupRkM4Y5c82XHuOWSvNYOh-BZ0A@mail.gmail.com>
+Subject: Re: [PATCH 2/2] [RFC] arm64: Add dependencies to vendor-specific errata
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>, Wei Xu <xuwei5@hisilicon.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Robert Richter <rrichter@marvell.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+Hi Mark,
 
-commit 75ec1db8717a8f0a9d9c8d033e542fdaa7b73898 upstream.
+On Thu, Apr 16, 2020 at 2:56 PM Mark Rutland <mark.rutland@arm.com> wrote:
+> On Thu, Apr 16, 2020 at 01:56:58PM +0200, Geert Uytterhoeven wrote:
+> > Currently the user is asked about enabling support for each and every
+> > vendor-specific erratum, even when support for the specific platform is
+> > not enabled.
+> >
+> > Fix this by adding platform dependencies to the config options
+> > controlling support for vendor-specific errata.
+> >
+> > Note that FUJITSU_ERRATUM_010001 is left untouched, as no config symbol
+> > exists for the Fujitsu A64FX platform.
+> >
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+> I'm not su1re that it makes sense to do this in general, becaose the
+> ARCH_* platform symbols are about plactform/SoC support (e.g. pinctrl
+> drivers), and these are (mostly) CPU-local and/or VM-visible.
+>
+> I think that it makes sense for those to be independent because:
+>
+> * future SoCs in the same family might not need the same CPU errata
+>   workarounds, and it's arguably just as confusing to have the option
+>   there.
 
-In my EIO stress testing I noticed I was getting forced to rescan the
-uuid tree pretty often, which was weird.  This is because my error
-injection stuff would sometimes inject an error after log replay but
-before we loaded the UUID tree.  If log replay committed the transaction
-it wouldn't have updated the uuid tree generation, but the tree was
-valid and didn't change, so there's no reason to not update the
-generation here.
+True.  But at least the dependency restricts the confusion to a smaller
+audience.
 
-Fix this by setting the BTRFS_FS_UPDATE_UUID_TREE_GEN bit immediately
-after reading all the fs roots if the uuid tree generation matches the
-fs generation.  Then any transaction commits that happen during mount
-won't screw up our uuid tree state, forcing us to do needless uuid
-rescans.
+> * It prevents building a minimal VM image with all (non-virtualized)
+>   platform support disabled, but all possible (VM-visible) errata
+>   options enabled. I do that occassionally for testing/analysis, and I
+>   can imagine this is useful for those building images that are only
+>   intended to be used in VMs.
 
-Fixes: 70f801754728 ("Btrfs: check UUID tree during mount if required")
-CC: stable@vger.kernel.org # 4.19+
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Oh, you also want to build a "generic" guest kernel, with all ARCH_*
+symbols disabled. Let's hope a maleficent user cannot disable errata
+mitigations in the guest kernel and break the host ;-)
+And perhaps you do want to enable some platform-specific drivers for
+VFIO pass-through?  Hence having ARCH_* dependencies on those drivers
+means they cannot be enabled :-( Hmm...
 
----
- fs/btrfs/disk-io.c |   14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+> I think the change to SOCIONEXT_SYNQUACER_PREITS makes sense given
+> that's a platform-level detail. Arguably that should be moved into
+> drivers/irqchip/Kconfig.
 
---- a/fs/btrfs/disk-io.c
-+++ b/fs/btrfs/disk-io.c
-@@ -3054,6 +3054,18 @@ int __cold open_ctree(struct super_block
- 	if (ret)
- 		goto fail_tree_roots;
- 
-+	/*
-+	 * If we have a uuid root and we're not being told to rescan we need to
-+	 * check the generation here so we can set the
-+	 * BTRFS_FS_UPDATE_UUID_TREE_GEN bit.  Otherwise we could commit the
-+	 * transaction during a balance or the log replay without updating the
-+	 * uuid generation, and then if we crash we would rescan the uuid tree,
-+	 * even though it was perfectly fine.
-+	 */
-+	if (fs_info->uuid_root && !btrfs_test_opt(fs_info, RESCAN_UUID_TREE) &&
-+	    fs_info->generation == btrfs_super_uuid_tree_generation(disk_super))
-+		set_bit(BTRFS_FS_UPDATE_UUID_TREE_GEN, &fs_info->flags);
-+
- 	ret = btrfs_verify_dev_extents(fs_info);
- 	if (ret) {
- 		btrfs_err(fs_info,
-@@ -3284,8 +3296,6 @@ int __cold open_ctree(struct super_block
- 			close_ctree(fs_info);
- 			return ret;
- 		}
--	} else {
--		set_bit(BTRFS_FS_UPDATE_UUID_TREE_GEN, &fs_info->flags);
- 	}
- 	set_bit(BTRFS_FS_OPEN, &fs_info->flags);
- 
+OK, makes sense.
 
+Gr{oetje,eeting}s,
 
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
