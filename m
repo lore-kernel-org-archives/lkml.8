@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64116C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:08:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5C90C352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:08:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FCBF206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:08:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6D8F206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:08:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587049716;
-	bh=7Cy+Z5k2LepY15IBrx2bepvfp44ohwzM436i7z1/ZDw=;
+	s=default; t=1587049726;
+	bh=S7FgOGEPXO+mwEgvwhgh8BwzMsUFhgiQCOTY+wSpslw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OlDnZMngnau5YnBEPFE4044xZbRBiFtMa9t/ZOxu8ohcRMoWsR91OXeMjD18UeAm1
-	 aP2HcJnDBzvrzb0YJ5eDtKgRyssqdGoaRbdAWNWiU5wrHXvI9TqH+SJNHTUTzJ/r/c
-	 c1RIBzjqi06rmwk8gh49lxd0+kz37z05/+DTUsZg=
+	b=IzZiOsqI7RU8r8QDK5VlQMeOGk87Hwjve9yANLbBYXoJBPWaNdH9maXtamWGd9bGi
+	 +cGonBcVUyFUFRbLt/EBwuqobqig9gcCy/mhdMakeyNFw4ugnVYNEEOl0ljFldVE3I
+	 Hlu7yxP06TB3A6DQXMWpZrnijwWtmRrLBPi7rrR4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394881AbgDPPId (ORCPT
+        id S2440220AbgDPPIn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:08:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37412 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:08:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408731AbgDPNvS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:51:18 -0400
+        id S2408706AbgDPNvK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:51:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18BD220732;
-        Thu, 16 Apr 2020 13:51:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AAA5D2078B;
+        Thu, 16 Apr 2020 13:51:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045077;
-        bh=7Cy+Z5k2LepY15IBrx2bepvfp44ohwzM436i7z1/ZDw=;
+        s=default; t=1587045070;
+        bh=S7FgOGEPXO+mwEgvwhgh8BwzMsUFhgiQCOTY+wSpslw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TBXUbhs6Hr2FPmaLsR7XGdKLKygGeAkzN5uMI1ZGouFbDrynUcF5nPxoYpj5woNXE
-         qvgoDAsdKoco+qrTHuQGKjHeZgIhu+h4XZ86Wn0K4CcGgAI4l0CZyzp45Ig93eSTjw
-         a/LmiRAonQ//4N4GYFop7QHDGtGMoxxlOra1spI4=
+        b=temUKq4IpuS4RPoybuzPSnujNx3KvSyyvfCA7tNBVrETcAUqWTWfcbnGwKvRwF98t
+         sSPfP86knowyKlKHdSKpsyWvr6Zs+ruErbjf1mFWVW3xKH9beFF2CUDLUwTEld8wEP
+         3kWD2mDtrfk+1jTLplGHFHX/6P+gCeCN2xsjdrgc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Leonardo Bras <leonardo@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Shuah Khan <shuah@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 180/232] selftests/vm: fix map_hugetlb length used for testing read and write
-Date:   Thu, 16 Apr 2020 15:24:34 +0200
-Message-Id: <20200416131337.587177556@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.4 215/232] scsi: mpt3sas: Fix kernel panic observed on soft HBA unplug
+Date:   Thu, 16 Apr 2020 15:25:09 +0200
+Message-Id: <20200416131342.378848952@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
 References: <20200416131316.640996080@linuxfoundation.org>
@@ -63,76 +60,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Sreekanth Reddy <sreekanth.reddy@broadcom.com>
 
-commit cabc30da10e677c67ab9a136b1478175734715c5 upstream.
+commit cc41f11a21a51d6869d71e525a7264c748d7c0d7 upstream.
 
-Commit fa7b9a805c79 ("tools/selftest/vm: allow choosing mem size and page
-size in map_hugetlb") added the possibility to change the size of memory
-mapped for the test, but left the read and write test using the default
-value.  This is unnoticed when mapping a length greater than the default
-one, but segfaults otherwise.
+Generic protection fault type kernel panic is observed when user performs
+soft (ordered) HBA unplug operation while IOs are running on drives
+connected to HBA.
 
-Fix read_bytes() and write_bytes() by giving them the real length.
+When user performs ordered HBA removal operation, the kernel calls PCI
+device's .remove() call back function where driver is flushing out all the
+outstanding SCSI IO commands with DID_NO_CONNECT host byte and also unmaps
+sg buffers allocated for these IO commands.
 
-Also fix the call to munmap().
+However, in the ordered HBA removal case (unlike of real HBA hot removal),
+HBA device is still alive and hence HBA hardware is performing the DMA
+operations to those buffers on the system memory which are already unmapped
+while flushing out the outstanding SCSI IO commands and this leads to
+kernel panic.
 
-Fixes: fa7b9a805c79 ("tools/selftest/vm: allow choosing mem size and page size in map_hugetlb")
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Leonardo Bras <leonardo@linux.ibm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/9a404a13c871c4bd0ba9ede68f69a1225180dd7e.1580978385.git.christophe.leroy@c-s.fr
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Don't flush out the outstanding IOs from .remove() path in case of ordered
+removal since HBA will be still alive in this case and it can complete the
+outstanding IOs. Flush out the outstanding IOs only in case of 'physical
+HBA hot unplug' where there won't be any communication with the HBA.
+
+During shutdown also it is possible that HBA hardware can perform DMA
+operations on those outstanding IO buffers which are completed with
+DID_NO_CONNECT by the driver from .shutdown(). So same above fix is applied
+in shutdown path as well.
+
+It is safe to drop the outstanding commands when HBA is inaccessible such
+as when permanent PCI failure happens, when HBA is in non-operational
+state, or when someone does a real HBA hot unplug operation. Since driver
+knows that HBA is inaccessible during these cases, it is safe to drop the
+outstanding commands instead of waiting for SCSI error recovery to kick in
+and clear these outstanding commands.
+
+Link: https://lore.kernel.org/r/1585302763-23007-1-git-send-email-sreekanth.reddy@broadcom.com
+Fixes: c666d3be99c0 ("scsi: mpt3sas: wait for and flush running commands on shutdown/unload")
+Cc: stable@vger.kernel.org #v4.14.174+
+Signed-off-by: Sreekanth Reddy <sreekanth.reddy@broadcom.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- tools/testing/selftests/vm/map_hugetlb.c |   14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
 
---- a/tools/testing/selftests/vm/map_hugetlb.c
-+++ b/tools/testing/selftests/vm/map_hugetlb.c
-@@ -45,20 +45,20 @@ static void check_bytes(char *addr)
- 	printf("First hex is %x\n", *((unsigned int *)addr));
- }
+---
+ drivers/scsi/mpt3sas/mpt3sas_scsih.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+--- a/drivers/scsi/mpt3sas/mpt3sas_scsih.c
++++ b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
+@@ -9747,8 +9747,8 @@ static void scsih_remove(struct pci_dev
  
--static void write_bytes(char *addr)
-+static void write_bytes(char *addr, size_t length)
- {
- 	unsigned long i;
+ 	ioc->remove_host = 1;
  
--	for (i = 0; i < LENGTH; i++)
-+	for (i = 0; i < length; i++)
- 		*(addr + i) = (char)i;
- }
+-	mpt3sas_wait_for_commands_to_complete(ioc);
+-	_scsih_flush_running_cmds(ioc);
++	if (!pci_device_is_present(pdev))
++		_scsih_flush_running_cmds(ioc);
  
--static int read_bytes(char *addr)
-+static int read_bytes(char *addr, size_t length)
- {
- 	unsigned long i;
+ 	_scsih_fw_event_cleanup_queue(ioc);
  
- 	check_bytes(addr);
--	for (i = 0; i < LENGTH; i++)
-+	for (i = 0; i < length; i++)
- 		if (*(addr + i) != (char)i) {
- 			printf("Mismatch at %lu\n", i);
- 			return 1;
-@@ -96,11 +96,11 @@ int main(int argc, char **argv)
+@@ -9831,8 +9831,8 @@ scsih_shutdown(struct pci_dev *pdev)
  
- 	printf("Returned address is %p\n", addr);
- 	check_bytes(addr);
--	write_bytes(addr);
--	ret = read_bytes(addr);
-+	write_bytes(addr, length);
-+	ret = read_bytes(addr, length);
+ 	ioc->remove_host = 1;
  
- 	/* munmap() length of MAP_HUGETLB memory must be hugepage aligned */
--	if (munmap(addr, LENGTH)) {
-+	if (munmap(addr, length)) {
- 		perror("munmap");
- 		exit(1);
- 	}
+-	mpt3sas_wait_for_commands_to_complete(ioc);
+-	_scsih_flush_running_cmds(ioc);
++	if (!pci_device_is_present(pdev))
++		_scsih_flush_running_cmds(ioc);
+ 
+ 	_scsih_fw_event_cleanup_queue(ioc);
+ 
 
 
