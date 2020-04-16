@@ -7,45 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A54EC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D214C352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:45:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57D6B206B9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:45:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2618206B9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:45:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587048304;
-	bh=I8PHgfdD0SDvIxDAZKoac40s1IpppyWu12/+HSUbMSs=;
+	s=default; t=1587048317;
+	bh=7Cy+Z5k2LepY15IBrx2bepvfp44ohwzM436i7z1/ZDw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S5atdSVZTy5TNxU+GdmtL3MAoiwhY3xUT23IZr+zwVnC3QUMfPUzQOskCWNwsB/Qx
-	 QtzEMloNMW2f2c5NR17369MxSOr4P7z7hQ769UaXJaBTROpWFFLh+nf9P3iKlOZjKV
-	 kDy/AJXJpY2C60vm2et1ydFLGZAH/XmU7QMBjXtU=
+	b=x0F83eI5SoFhep+WOQ5QUblLE+21NM3PxCbV/tapJvCcl9SzObNXL4La+BK5jnYxR
+	 Oh0zno5cE3cSNNzitG5V9Ao2l+9adZBooU2AswwuVFNlbOiOlH1ZYrYMWdAo9aqly5
+	 eaXNTP+tT0ZTWdGXGeTis7zIAvXbg5/Xj3EWyHdg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394588AbgDPOpC (ORCPT
+        id S2394566AbgDPOpO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:45:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46776 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:45:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409349AbgDPN7v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:59:51 -0400
+        id S2898883AbgDPN7r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:59:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF7F121734;
-        Thu, 16 Apr 2020 13:59:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2325217D8;
+        Thu, 16 Apr 2020 13:59:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045591;
-        bh=I8PHgfdD0SDvIxDAZKoac40s1IpppyWu12/+HSUbMSs=;
+        s=default; t=1587045586;
+        bh=7Cy+Z5k2LepY15IBrx2bepvfp44ohwzM436i7z1/ZDw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HZPKcc0eiQEO45bCcBNcKCC36C3wP3Z0+SfIpX/5y4d1jo7Y5ktG9Uar/VyjQYkxN
-         0kTxKlIrS52qQ3P0IapTSED/MpshMGSffi6cxKsyF3mLWGNNA0b727PZbgwouJVt0j
-         pifZfP2G7XC0dUsPBNsIuHdzqACbe7w0+Y9lUZZw=
+        b=G3SIyytfbr+1dV6oLGM0QIY3Fu31AH2E2/EyQjiaR3mj9OO5Lekqfpa6xv/KeOehO
+         7vmuhmGDRES+Etc4/o15sjn00oSmjM469Y7XNrRFvVplB6+Q7OmcOXnr6OMXGaAvFW
+         A7Iq64y8ntmLryrQlEgPSM1jDQHJ3+OlsgdRLJp4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.6 198/254] selftests/powerpc: Fix try-run when source tree is not writable
-Date:   Thu, 16 Apr 2020 15:24:47 +0200
-Message-Id: <20200416131350.920961896@linuxfoundation.org>
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Leonardo Bras <leonardo@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Shuah Khan <shuah@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.6 196/254] selftests/vm: fix map_hugetlb length used for testing read and write
+Date:   Thu, 16 Apr 2020 15:24:45 +0200
+Message-Id: <20200416131350.710084080@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -58,57 +63,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit 9686813f6e9d5568bc045de0be853411e44958c8 upstream.
+commit cabc30da10e677c67ab9a136b1478175734715c5 upstream.
 
-We added a usage of try-run to pmu/ebb/Makefile to detect if the
-toolchain supported the -no-pie option.
+Commit fa7b9a805c79 ("tools/selftest/vm: allow choosing mem size and page
+size in map_hugetlb") added the possibility to change the size of memory
+mapped for the test, but left the read and write test using the default
+value.  This is unnoticed when mapping a length greater than the default
+one, but segfaults otherwise.
 
-This fails if we build out-of-tree and the source tree is not
-writable, as try-run tries to write its temporary files to the current
-directory. That leads to the -no-pie option being silently dropped,
-which leads to broken executables with some toolchains.
+Fix read_bytes() and write_bytes() by giving them the real length.
 
-If we remove the redirect to /dev/null in try-run, we see the error:
+Also fix the call to munmap().
 
-  make[3]: Entering directory '/linux/tools/testing/selftests/powerpc/pmu/ebb'
-  /usr/bin/ld: cannot open output file .54.tmp: Read-only file system
-  collect2: error: ld returned 1 exit status
-  make[3]: Nothing to be done for 'all'.
-
-And looking with strace we see it's trying to use a file that's in the
-source tree:
-
-  lstat("/linux/tools/testing/selftests/powerpc/pmu/ebb/.54.tmp", 0x7ffffc0f83c8)
-
-We can fix it by setting TMPOUT to point to the $(OUTPUT) directory,
-and we can verify with strace it's now trying to write to the output
-directory:
-
-  lstat("/output/kselftest/powerpc/pmu/ebb/.54.tmp", 0x7fffd1bf6bf8)
-
-And also see that the -no-pie option is now correctly detected.
-
-Fixes: 0695f8bca93e ("selftests/powerpc: Handle Makefile for unrecognized option")
-Cc: stable@vger.kernel.org # v5.5+
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200327095319.2347641-1-mpe@ellerman.id.au
+Fixes: fa7b9a805c79 ("tools/selftest/vm: allow choosing mem size and page size in map_hugetlb")
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Leonardo Bras <leonardo@linux.ibm.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/9a404a13c871c4bd0ba9ede68f69a1225180dd7e.1580978385.git.christophe.leroy@c-s.fr
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/testing/selftests/powerpc/pmu/ebb/Makefile |    1 +
- 1 file changed, 1 insertion(+)
+ tools/testing/selftests/vm/map_hugetlb.c |   14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
---- a/tools/testing/selftests/powerpc/pmu/ebb/Makefile
-+++ b/tools/testing/selftests/powerpc/pmu/ebb/Makefile
-@@ -7,6 +7,7 @@ noarg:
- # The EBB handler is 64-bit code and everything links against it
- CFLAGS += -m64
+--- a/tools/testing/selftests/vm/map_hugetlb.c
++++ b/tools/testing/selftests/vm/map_hugetlb.c
+@@ -45,20 +45,20 @@ static void check_bytes(char *addr)
+ 	printf("First hex is %x\n", *((unsigned int *)addr));
+ }
  
-+TMPOUT = $(OUTPUT)/
- # Toolchains may build PIE by default which breaks the assembly
- no-pie-option := $(call try-run, echo 'int main() { return 0; }' | \
-         $(CC) -Werror $(KBUILD_CPPFLAGS) $(CC_OPTION_CFLAGS) -no-pie -x c - -o "$$TMP", -no-pie)
+-static void write_bytes(char *addr)
++static void write_bytes(char *addr, size_t length)
+ {
+ 	unsigned long i;
+ 
+-	for (i = 0; i < LENGTH; i++)
++	for (i = 0; i < length; i++)
+ 		*(addr + i) = (char)i;
+ }
+ 
+-static int read_bytes(char *addr)
++static int read_bytes(char *addr, size_t length)
+ {
+ 	unsigned long i;
+ 
+ 	check_bytes(addr);
+-	for (i = 0; i < LENGTH; i++)
++	for (i = 0; i < length; i++)
+ 		if (*(addr + i) != (char)i) {
+ 			printf("Mismatch at %lu\n", i);
+ 			return 1;
+@@ -96,11 +96,11 @@ int main(int argc, char **argv)
+ 
+ 	printf("Returned address is %p\n", addr);
+ 	check_bytes(addr);
+-	write_bytes(addr);
+-	ret = read_bytes(addr);
++	write_bytes(addr, length);
++	ret = read_bytes(addr, length);
+ 
+ 	/* munmap() length of MAP_HUGETLB memory must be hugepage aligned */
+-	if (munmap(addr, LENGTH)) {
++	if (munmap(addr, length)) {
+ 		perror("munmap");
+ 		exit(1);
+ 	}
 
 
