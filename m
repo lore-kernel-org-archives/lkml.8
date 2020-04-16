@@ -2,126 +2,158 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C95A9C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46F21C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F86D21927
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:28:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587050927;
-	bh=7RdBcKbcSA8txvE3ou1/hXYhwhq2DHXO8rive13W17M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gIMHNQ8MRfzVBaW2xOtKi1Xwrw708Wd+eXWjmeW4/zlx7scynMjBouriQ6bQr1ZBH
-	 E72DYW/Z+n/0nRM40olXSWWdDnca79XK96wft+N3lIUurmrtC+90RwJdqx0WTIpe5s
-	 6TUZT9BYuOWBUSy0rxCEVERrYFAU+uo70V8loivI=
+	by mail.kernel.org (Postfix) with ESMTP id 1F480214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:28:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="rFEynzgF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404185AbgDPP2p (ORCPT
+        id S2395269AbgDPP2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:28:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57344 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898421AbgDPNoC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:44:02 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1CDB2076D;
-        Thu, 16 Apr 2020 13:44:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044641;
-        bh=7RdBcKbcSA8txvE3ou1/hXYhwhq2DHXO8rive13W17M=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KfxOS3sUxLoquHCNZ54SKnJ4yAGCHd9tTM3TYCBOGQMltF97kO7S2+Oz5AAkGMksX
-         U3aIF4xoRFhKp8mD0NqYJUz/HbvDh3X81EsEqQtbmMkSbgTU9BwM1w78I2Gq9MTWBY
-         vjkbUnwSJ3Ch5KD339GomVw+X+52Y7/ka/M5obHI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sungbo Eo <mans0n@gorani.run>,
-        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 040/232] irqchip/versatile-fpga: Handle chained IRQs properly
-Date:   Thu, 16 Apr 2020 15:22:14 +0200
-Message-Id: <20200416131320.890660320@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
-References: <20200416131316.640996080@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 16 Apr 2020 11:28:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46232 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2442429AbgDPP2d (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 11:28:33 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D692BC061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 08:28:32 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id c63so21719481qke.2
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 08:28:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=rMGtreOatVEYR4xQ6VveBD3ZVWSgS2maUcU8W3yRfLE=;
+        b=rFEynzgFeDpdYxV542CPzFNIhibQUIccPl7/zDGoabrupO/hNa/co4cyDuvDCgMYac
+         xXggmGZjBfmkynF5ZwWrrzoEplkuCpqDhpMztPGbgrBy2zlF8uCCrU2Z/tMxwWjnmrry
+         u4ml82A3DWaW5w/4uXDWe0SVsnQroiVkEvYmgwckkkJ8u0esLgaymLIz0ZMbJMTXQ9Pv
+         6yh8dDq8ttWGYnIwrsqCx/FlwRdSssWs5Sn9NIHvwsNRAR2VcYM1PczxmjzG2gkpf30Z
+         XwrFytBiB7osgdp2UOlSVOFF0U/x7pdA94kwna1TwTMDg4Vh0dNKkbbkBVQs8JDBRT2V
+         kUQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=rMGtreOatVEYR4xQ6VveBD3ZVWSgS2maUcU8W3yRfLE=;
+        b=Pird4jiO4sPU3HUuIetth1O2bE7uoFMCrhLAtQGqBdSbaqX5HcsXGLjGfVED/sx2RF
+         ymuFR0nUOn3T4/B7xcEJoO7gKS3IqCraXQpc801aYsPfAKnuUTjo00hY4CbZ8wHy40mq
+         rTyNCCmlvXZc4Q+TMNenQLMrMUZ9ud3QmIoEMSNwr43zio/7urwEyCY/jUEqDrCgRtx+
+         ylXSmwsPlqq4B7b8t9KPPaU4HI3QAxr4bA/I8snh1BwVcSIjejmBm73V2SHy8OQUWmeK
+         Ktb4emU61HoOv3BZxVSC0p0moxdeuN1mTXuQxa38OuZyNviWsjJGW00SQGodb9Ab91az
+         Sxcg==
+X-Gm-Message-State: AGi0PubZkKDRbjDB3xWLvRMJNRycBkdj1wKViaHzMetfwIxFjOPMrShZ
+        utuL0f4VV52bgRFP6zVmnvaOw0nlajU=
+X-Google-Smtp-Source: APiQypJz4CZcsYAURwShmRlrfrBK99Z4C5EudPpGHD28P1A0CKliH58xqsqe116TmRINxbeHvAnpZw==
+X-Received: by 2002:a37:e307:: with SMTP id y7mr22919119qki.420.1587050911999;
+        Thu, 16 Apr 2020 08:28:31 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::e623])
+        by smtp.gmail.com with ESMTPSA id z18sm16400475qtz.77.2020.04.16.08.28.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Apr 2020 08:28:31 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 11:28:30 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     akpm@linux-foundation.org, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
+        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
+        yang.shi@linux.alibaba.com, willy@infradead.org,
+        shakeelb@google.com, Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Roman Gushchin <guro@fb.com>,
+        Chris Down <chris@chrisdown.name>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vlastimil Babka <vbabka@suse.cz>, Qian Cai <cai@lca.pw>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        swkhack <swkhack@gmail.com>,
+        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Colin Ian King <colin.king@canonical.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Peng Fan <peng.fan@nxp.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Wei Yang <richard.weiyang@gmail.com>
+Subject: Re: [PATCH v8 03/10] mm/lru: replace pgdat lru_lock with lruvec lock
+Message-ID: <20200416152830.GA195132@cmpxchg.org>
+References: <1579143909-156105-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1579143909-156105-4-git-send-email-alex.shi@linux.alibaba.com>
+ <20200116215222.GA64230@cmpxchg.org>
+ <cdcdb710-1d78-6fac-48d7-35519ddcdc6a@linux.alibaba.com>
+ <20200413180725.GA99267@cmpxchg.org>
+ <8e7bf170-2bb5-f862-c12b-809f7f7d96cb@linux.alibaba.com>
+ <20200414163114.GA136578@cmpxchg.org>
+ <54af0662-cbb4-88c7-7eae-f969684025dd@linux.alibaba.com>
+ <0bed9f1a-400d-d9a9-aeb4-de1dd9ccbb45@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <0bed9f1a-400d-d9a9-aeb4-de1dd9ccbb45@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sungbo Eo <mans0n@gorani.run>
+Hi Alex,
 
-[ Upstream commit 486562da598c59e9f835b551d7cf19507de2d681 ]
+On Thu, Apr 16, 2020 at 04:01:20PM +0800, Alex Shi wrote:
+> 
+> 
+> 在 2020/4/15 下午9:42, Alex Shi 写道:
+> > Hi Johannes,
+> > 
+> > Thanks a lot for point out!
+> > 
+> > Charging in __read_swap_cache_async would ask for 3 layers function arguments
+> > pass, that would be a bit ugly. Compare to this, could we move out the
+> > lru_cache add after commit_charge, like ksm copied pages?
+> > 
+> > That give a bit extra non lru list time, but the page just only be used only
+> > after add_anon_rmap setting. Could it cause troubles?
+> 
+> Hi Johannes & Andrew,
+> 
+> Doing lru_cache_add_anon during swapin_readahead can give a very short timing 
+> for possible page reclaiming for these few pages.
+> 
+> If we delay these few pages lru adding till after the vm_fault target page 
+> get memcg charging(mem_cgroup_commit_charge) and activate, we could skip the 
+> mem_cgroup_try_charge/commit_charge/cancel_charge process in __read_swap_cache_async().
+> But the cost is maximum SWAP_RA_ORDER_CEILING number pages on each cpu miss
+> page reclaiming in a short time. On the other hand, save the target vm_fault
+> page from reclaiming before activate it during that time.
 
-Enclose the chained handler with chained_irq_{enter,exit}(), so that the
-muxed interrupts get properly acked.
+The readahead pages surrounding the faulting page might never get
+accessed and pile up to large amounts. Users can also trigger
+non-faulting readahead with MADV_WILLNEED.
 
-This patch also fixes a reboot bug on OX820 SoC, where the jiffies timer
-interrupt is never acked. The kernel waits a clock tick forever in
-calibrate_delay_converge(), which leads to a boot hang.
+So unfortunately, I don't see a way to keep these pages off the
+LRU. They do need to be reclaimable, or they become a DoS vector.
 
-Fixes: c41b16f8c9d9 ("ARM: integrator/versatile: consolidate FPGA IRQ handling code")
-Signed-off-by: Sungbo Eo <mans0n@gorani.run>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/20200319023448.1479701-1-mans0n@gorani.run
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/irqchip/irq-versatile-fpga.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/irqchip/irq-versatile-fpga.c b/drivers/irqchip/irq-versatile-fpga.c
-index 928858dada756..70e2cfff8175f 100644
---- a/drivers/irqchip/irq-versatile-fpga.c
-+++ b/drivers/irqchip/irq-versatile-fpga.c
-@@ -6,6 +6,7 @@
- #include <linux/irq.h>
- #include <linux/io.h>
- #include <linux/irqchip.h>
-+#include <linux/irqchip/chained_irq.h>
- #include <linux/irqchip/versatile-fpga.h>
- #include <linux/irqdomain.h>
- #include <linux/module.h>
-@@ -68,12 +69,16 @@ static void fpga_irq_unmask(struct irq_data *d)
- 
- static void fpga_irq_handle(struct irq_desc *desc)
- {
-+	struct irq_chip *chip = irq_desc_get_chip(desc);
- 	struct fpga_irq_data *f = irq_desc_get_handler_data(desc);
--	u32 status = readl(f->base + IRQ_STATUS);
-+	u32 status;
-+
-+	chained_irq_enter(chip, desc);
- 
-+	status = readl(f->base + IRQ_STATUS);
- 	if (status == 0) {
- 		do_bad_IRQ(desc);
--		return;
-+		goto out;
- 	}
- 
- 	do {
-@@ -82,6 +87,9 @@ static void fpga_irq_handle(struct irq_desc *desc)
- 		status &= ~(1 << irq);
- 		generic_handle_irq(irq_find_mapping(f->domain, irq));
- 	} while (status);
-+
-+out:
-+	chained_irq_exit(chip, desc);
- }
- 
- /*
--- 
-2.20.1
-
-
-
+I'm currently preparing a small patch series to make swap ownership
+tracking an integral part of memcg and change the swapin charging
+sequence, then you don't have to worry about it. This will also
+unblock Joonsoo's "workingset protection/detection on the anonymous
+LRU list" patch series, since he is blocked on the same problem - he
+needs the correct LRU available at swapin time to process refaults
+correctly. Both of your patch series are already pretty large, they
+shouldn't need to also deal with that.
