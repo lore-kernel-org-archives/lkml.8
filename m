@@ -2,52 +2,52 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B93C5C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5146C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98F56214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:56:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 810E5214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:56:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587052587;
-	bh=19QKTddurbi672AhDIJRCyJpWZUsSF5911PoHUXsXDM=;
+	s=default; t=1587052603;
+	bh=0kYo+Ygoz8g+mwJNSuGqdJSweqANX1YCeMGUlk4MmN8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WT1gYazkDoZfqo0Oj+quRvTZ3oea1epYEzzR2Si7SLdLVhQEU016IC/qFyPY/KvaN
-	 0sHlXc7dQ0fW3fY77+17dGSosRlVyN6G+os65a1XNOzutSQuazsyOkgiUNimZLuR/q
-	 gbVwT+aPCtt8+I9nZLcYNutTVlBYBAY1ZVZbWz6E=
+	b=eiGvnIdET25MrOa0xNdW5n81p+LHK9MiC4XYlKm3PzAsj8zKANEWZz9OF5YE7UEp0
+	 XHEt1YizqoaohewZ+tv1R1+JOXxPmUeT7xdOanvvsFAESpQdwg2xzvsFQy3UZr7KAe
+	 +1sJKUIiQOpibzGXLektdB/LBILfupp+gc7vX5mU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442818AbgDPP4Z (ORCPT
+        id S2407099AbgDPP4l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:56:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38298 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:56:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2895916AbgDPN25 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:28:57 -0400
+        id S2895879AbgDPN2v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:28:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2B9621D82;
-        Thu, 16 Apr 2020 13:28:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6271E206E9;
+        Thu, 16 Apr 2020 13:28:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043737;
-        bh=19QKTddurbi672AhDIJRCyJpWZUsSF5911PoHUXsXDM=;
+        s=default; t=1587043729;
+        bh=0kYo+Ygoz8g+mwJNSuGqdJSweqANX1YCeMGUlk4MmN8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jk73RtChGy3K/xqFJJXSIIvXnWZ3ErviGq8sJtEvjb9kAtEUYXhS4oYo5Vp7Hiact
-         N6w7J4lfe4mDM0rEoKUtngKX3tQovWfRyX/A7ZH2z8/Wx2eOaLrheHpTEEjhw+/WeZ
-         71R3nzH2AIN+0TJ36hQ2PWPxZK9TDVVo2LVNvccQ=
+        b=n34dG3ztWMgVyOTsYclzAingEhblf7dGD1KuzpnJkGBWKr+ylZF85ilfMDn75wDS6
+         xetSoYLC2etxHZDX0Vzgot0sheCOyQC6/iTgGgPz1dmBmQ2eLQYHTMLaE/HGDz8ONm
+         aI1i99bghyHlRQw3fUWBpY+QGD8MafRV3vuBP+uQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeff Mahoney <jeffm@suse.com>,
-        Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 038/146] btrfs: qgroup: ensure qgroup_rescan_running is only set when the worker is at least queued
-Date:   Thu, 16 Apr 2020 15:22:59 +0200
-Message-Id: <20200416131247.710411283@linuxfoundation.org>
+        stable@vger.kernel.org, Pei Huang <huangpei@loongson.cn>,
+        Huacai Chen <chenhc@lemote.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Subject: [PATCH 4.19 074/146] MIPS/tlbex: Fix LDDIR usage in setup_pw() for Loongson-3
+Date:   Thu, 16 Apr 2020 15:23:35 +0200
+Message-Id: <20200416131253.069150894@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131242.353444678@linuxfoundation.org>
 References: <20200416131242.353444678@linuxfoundation.org>
@@ -60,140 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+From: Huacai Chen <chenhc@lemote.com>
 
-[ Upstream commit d61acbbf54c612ea9bf67eed609494cda0857b3a ]
+commit d191aaffe3687d1e73e644c185f5f0550ec242b5 upstream.
 
-[BUG]
-There are some reports about btrfs wait forever to unmount itself, with
-the following call trace:
+LDDIR/LDPTE is Loongson-3's acceleration for Page Table Walking. If BD
+(Base Directory, the 4th page directory) is not enabled, then GDOffset
+is biased by BadVAddr[63:62]. So, if GDOffset (aka. BadVAddr[47:36] for
+Loongson-3) is big enough, "0b11(BadVAddr[63:62])|BadVAddr[47:36]|...."
+can far beyond pg_swapper_dir. This means the pg_swapper_dir may NOT be
+accessed by LDDIR correctly, so fix it by set PWDirExt in CP0_PWCtl.
 
-  INFO: task umount:4631 blocked for more than 491 seconds.
-        Tainted: G               X  5.3.8-2-default #1
-  "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-  umount          D    0  4631   3337 0x00000000
-  Call Trace:
-  ([<00000000174adf7a>] __schedule+0x342/0x748)
-   [<00000000174ae3ca>] schedule+0x4a/0xd8
-   [<00000000174b1f08>] schedule_timeout+0x218/0x420
-   [<00000000174af10c>] wait_for_common+0x104/0x1d8
-   [<000003ff804d6994>] btrfs_qgroup_wait_for_completion+0x84/0xb0 [btrfs]
-   [<000003ff8044a616>] close_ctree+0x4e/0x380 [btrfs]
-   [<0000000016fa3136>] generic_shutdown_super+0x8e/0x158
-   [<0000000016fa34d6>] kill_anon_super+0x26/0x40
-   [<000003ff8041ba88>] btrfs_kill_super+0x28/0xc8 [btrfs]
-   [<0000000016fa39f8>] deactivate_locked_super+0x68/0x98
-   [<0000000016fcb198>] cleanup_mnt+0xc0/0x140
-   [<0000000016d6a846>] task_work_run+0xc6/0x110
-   [<0000000016d04f76>] do_notify_resume+0xae/0xb8
-   [<00000000174b30ae>] system_call+0xe2/0x2c8
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Pei Huang <huangpei@loongson.cn>
+Signed-off-by: Huacai Chen <chenhc@lemote.com>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-[CAUSE]
-The problem happens when we have called qgroup_rescan_init(), but
-not queued the worker. It can be caused mostly by error handling.
-
-	Qgroup ioctl thread		|	Unmount thread
-----------------------------------------+-----------------------------------
-					|
-btrfs_qgroup_rescan()			|
-|- qgroup_rescan_init()			|
-|  |- qgroup_rescan_running = true;	|
-|					|
-|- trans = btrfs_join_transaction()	|
-|  Some error happened			|
-|					|
-|- btrfs_qgroup_rescan() returns error	|
-   But qgroup_rescan_running == true;	|
-					| close_ctree()
-					| |- btrfs_qgroup_wait_for_completion()
-					|    |- running == true;
-					|    |- wait_for_completion();
-
-btrfs_qgroup_rescan_worker is never queued, thus no one is going to wake
-up close_ctree() and we get a deadlock.
-
-All involved qgroup_rescan_init() callers are:
-
-- btrfs_qgroup_rescan()
-  The example above. It's possible to trigger the deadlock when error
-  happened.
-
-- btrfs_quota_enable()
-  Not possible. Just after qgroup_rescan_init() we queue the work.
-
-- btrfs_read_qgroup_config()
-  It's possible to trigger the deadlock. It only init the work, the
-  work queueing happens in btrfs_qgroup_rescan_resume().
-  Thus if error happened in between, deadlock is possible.
-
-We shouldn't set fs_info->qgroup_rescan_running just in
-qgroup_rescan_init(), as at that stage we haven't yet queued qgroup
-rescan worker to run.
-
-[FIX]
-Set qgroup_rescan_running before queueing the work, so that we ensure
-the rescan work is queued when we wait for it.
-
-Fixes: 8d9eddad1946 ("Btrfs: fix qgroup rescan worker initialization")
-Signed-off-by: Jeff Mahoney <jeffm@suse.com>
-[ Change subject and cause analyse, use a smaller fix ]
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/qgroup.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ arch/mips/mm/tlbex.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/fs/btrfs/qgroup.c b/fs/btrfs/qgroup.c
-index 0cd043f03081e..cbd40826f5dcf 100644
---- a/fs/btrfs/qgroup.c
-+++ b/fs/btrfs/qgroup.c
-@@ -1032,6 +1032,7 @@ out_add_root:
- 	ret = qgroup_rescan_init(fs_info, 0, 1);
- 	if (!ret) {
- 	        qgroup_rescan_zero_tracking(fs_info);
-+		fs_info->qgroup_rescan_running = true;
- 	        btrfs_queue_work(fs_info->qgroup_rescan_workers,
- 	                         &fs_info->qgroup_rescan_work);
- 	}
-@@ -2906,7 +2907,6 @@ qgroup_rescan_init(struct btrfs_fs_info *fs_info, u64 progress_objectid,
- 		sizeof(fs_info->qgroup_rescan_progress));
- 	fs_info->qgroup_rescan_progress.objectid = progress_objectid;
- 	init_completion(&fs_info->qgroup_rescan_completion);
--	fs_info->qgroup_rescan_running = true;
+--- a/arch/mips/mm/tlbex.c
++++ b/arch/mips/mm/tlbex.c
+@@ -1479,6 +1479,7 @@ static void build_r4000_tlb_refill_handl
  
- 	spin_unlock(&fs_info->qgroup_lock);
- 	mutex_unlock(&fs_info->qgroup_rescan_lock);
-@@ -2972,8 +2972,11 @@ btrfs_qgroup_rescan(struct btrfs_fs_info *fs_info)
- 
- 	qgroup_rescan_zero_tracking(fs_info);
- 
-+	mutex_lock(&fs_info->qgroup_rescan_lock);
-+	fs_info->qgroup_rescan_running = true;
- 	btrfs_queue_work(fs_info->qgroup_rescan_workers,
- 			 &fs_info->qgroup_rescan_work);
-+	mutex_unlock(&fs_info->qgroup_rescan_lock);
- 
- 	return 0;
- }
-@@ -3009,9 +3012,13 @@ int btrfs_qgroup_wait_for_completion(struct btrfs_fs_info *fs_info,
- void
- btrfs_qgroup_rescan_resume(struct btrfs_fs_info *fs_info)
+ static void setup_pw(void)
  {
--	if (fs_info->qgroup_flags & BTRFS_QGROUP_STATUS_FLAG_RESCAN)
-+	if (fs_info->qgroup_flags & BTRFS_QGROUP_STATUS_FLAG_RESCAN) {
-+		mutex_lock(&fs_info->qgroup_rescan_lock);
-+		fs_info->qgroup_rescan_running = true;
- 		btrfs_queue_work(fs_info->qgroup_rescan_workers,
- 				 &fs_info->qgroup_rescan_work);
-+		mutex_unlock(&fs_info->qgroup_rescan_lock);
-+	}
- }
++	unsigned int pwctl;
+ 	unsigned long pgd_i, pgd_w;
+ #ifndef __PAGETABLE_PMD_FOLDED
+ 	unsigned long pmd_i, pmd_w;
+@@ -1505,6 +1506,7 @@ static void setup_pw(void)
  
- /*
--- 
-2.20.1
-
+ 	pte_i = ilog2(_PAGE_GLOBAL);
+ 	pte_w = 0;
++	pwctl = 1 << 30; /* Set PWDirExt */
+ 
+ #ifndef __PAGETABLE_PMD_FOLDED
+ 	write_c0_pwfield(pgd_i << 24 | pmd_i << 12 | pt_i << 6 | pte_i);
+@@ -1515,8 +1517,9 @@ static void setup_pw(void)
+ #endif
+ 
+ #ifdef CONFIG_MIPS_HUGE_TLB_SUPPORT
+-	write_c0_pwctl(1 << 6 | psn);
++	pwctl |= (1 << 6 | psn);
+ #endif
++	write_c0_pwctl(pwctl);
+ 	write_c0_kpgd((long)swapper_pg_dir);
+ 	kscratch_used_mask |= (1 << 7); /* KScratch6 is used for KPGD */
+ }
 
 
