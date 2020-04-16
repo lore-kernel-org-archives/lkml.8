@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48865C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:50:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD50AC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 264B421D91
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:50:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FBA3214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:50:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587052207;
-	bh=iryEKzf2hO9H4jsbyGgbgdA/v/MMTMlVjJvsGOanEFs=;
+	s=default; t=1587052216;
+	bh=kObJDC/1q5HTeBBBFM095gnld/bSmt4OyfjVyl3BCH4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fhsoF/aizVvA5ieu+C29rWswpEb7XuXstJ2leypAafV1I6P6UiEN+D0xgSziv67+3
-	 lhngBQne+eL2cz8bIJ/FRKt0VN2s5Lz9HIz2iiQWd2ksRc4Jv5M50ar7eNBCj0RqfH
-	 B/vKqjqg8RadyHoFLygetYwRNyWYoAFVwmuJPSgk=
+	b=obeugvb7glEjamqRzzbCJsBzSfgt3pxsIslfrKo3w5o/MntwH/GxwDKYxyFQDI5bk
+	 mYKUP9A9LJK57ejD53lfGBkZemmHpAqGa++z5eAopi5yCL7BeRtB8PUy3wIzcetuFs
+	 zGGss+atukrWfxe/wPNamY6ivUFmcIoI1qRwtmQ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438023AbgDPPuG (ORCPT
+        id S2442740AbgDPPuM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:50:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44138 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 11:50:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896616AbgDPNc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:32:58 -0400
+        id S2896584AbgDPNc4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:32:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 828BC22262;
-        Thu, 16 Apr 2020 13:32:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7946F2223E;
+        Thu, 16 Apr 2020 13:32:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587043947;
-        bh=iryEKzf2hO9H4jsbyGgbgdA/v/MMTMlVjJvsGOanEFs=;
+        s=default; t=1587043925;
+        bh=kObJDC/1q5HTeBBBFM095gnld/bSmt4OyfjVyl3BCH4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pdCaLLHeXpOLlBjJD9CDx1EX+u710YMyQlk67zAneMCcdaMpaaKMLEOVxAedF6wGL
-         4kAn5ucaGt4HlwlHfu1fz09aNr5YTTyH1HZKRJUKUn7TgaS00m34l+tv1Bm7VA2LUV
-         O+IW+nYMMpW5wHvuQnEKovzi+k5rdNYj3Qf6BB9k=
+        b=CDGOqcowP5Q7daeB0U3eZFCYvNGjcuOL++8ebkaKt648kUBOpHMea+3OROVUGJ63D
+         B8C7bbuiprmo/KlBhvGSb7gUA77c+hfqDMoafKKlyN6xe9O/ZJze4XrpHMy/eZjQjH
+         rq/ifNNYls3DvwmlThkTS6VTbcpI0WUCkyrsx/78=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Luo bin <luobin9@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 019/257] hinic: fix wrong value of MIN_SKB_LEN
-Date:   Thu, 16 Apr 2020 15:21:10 +0200
-Message-Id: <20200416131328.327118824@linuxfoundation.org>
+Subject: [PATCH 5.5 010/257] rxrpc: Fix call interruptibility handling
+Date:   Thu, 16 Apr 2020 15:21:01 +0200
+Message-Id: <20200416131327.148884549@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -60,32 +59,253 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luo bin <luobin9@huawei.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 7296695fc16dd1761dbba8b68a9181c71cef0633 ]
+[ Upstream commit e138aa7d3271ac1b0690ae2c9b04d51468dce1d6 ]
 
-the minimum value of skb len that hw supports is 32 rather than 17
+Fix the interruptibility of kernel-initiated client calls so that they're
+either only interruptible when they're waiting for a call slot to come
+available or they're not interruptible at all.  Either way, they're not
+interruptible during transmission.
 
-Signed-off-by: Luo bin <luobin9@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This should help prevent StoreData calls from being interrupted when
+writeback is in progress.  It doesn't, however, handle interruption during
+the receive phase.
+
+Userspace-initiated calls are still interruptable.  After the signal has
+been handled, sendmsg() will return the amount of data copied out of the
+buffer and userspace can perform another sendmsg() call to continue
+transmission.
+
+Fixes: bc5e3a546d55 ("rxrpc: Use MSG_WAITALL to tell sendmsg() to temporarily ignore signals")
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/huawei/hinic/hinic_tx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/afs/rxrpc.c          |  3 ++-
+ include/net/af_rxrpc.h  |  8 +++++++-
+ net/rxrpc/af_rxrpc.c    |  4 ++--
+ net/rxrpc/ar-internal.h |  4 ++--
+ net/rxrpc/call_object.c |  3 +--
+ net/rxrpc/conn_client.c | 13 +++++++++---
+ net/rxrpc/sendmsg.c     | 44 +++++++++++++++++++++++++++++++++--------
+ 7 files changed, 60 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_tx.c b/drivers/net/ethernet/huawei/hinic/hinic_tx.c
-index 375d81d03e866..365016450bdbe 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_tx.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_tx.c
-@@ -45,7 +45,7 @@
+diff --git a/fs/afs/rxrpc.c b/fs/afs/rxrpc.c
+index 27a879eaa5a4e..1ecc67da6c1a4 100644
+--- a/fs/afs/rxrpc.c
++++ b/fs/afs/rxrpc.c
+@@ -414,7 +414,8 @@ void afs_make_call(struct afs_addr_cursor *ac, struct afs_call *call, gfp_t gfp)
+ 					  afs_wake_up_async_call :
+ 					  afs_wake_up_call_waiter),
+ 					 call->upgrade,
+-					 call->intr,
++					 (call->intr ? RXRPC_PREINTERRUPTIBLE :
++					  RXRPC_UNINTERRUPTIBLE),
+ 					 call->debug_id);
+ 	if (IS_ERR(rxcall)) {
+ 		ret = PTR_ERR(rxcall);
+diff --git a/include/net/af_rxrpc.h b/include/net/af_rxrpc.h
+index 299240df79e4a..04e97bab6f28b 100644
+--- a/include/net/af_rxrpc.h
++++ b/include/net/af_rxrpc.h
+@@ -16,6 +16,12 @@ struct sock;
+ struct socket;
+ struct rxrpc_call;
  
- #define HW_CONS_IDX(sq)                 be16_to_cpu(*(u16 *)((sq)->hw_ci_addr))
++enum rxrpc_interruptibility {
++	RXRPC_INTERRUPTIBLE,	/* Call is interruptible */
++	RXRPC_PREINTERRUPTIBLE,	/* Call can be cancelled whilst waiting for a slot */
++	RXRPC_UNINTERRUPTIBLE,	/* Call should not be interruptible at all */
++};
++
+ /*
+  * Debug ID counter for tracing.
+  */
+@@ -41,7 +47,7 @@ struct rxrpc_call *rxrpc_kernel_begin_call(struct socket *,
+ 					   gfp_t,
+ 					   rxrpc_notify_rx_t,
+ 					   bool,
+-					   bool,
++					   enum rxrpc_interruptibility,
+ 					   unsigned int);
+ int rxrpc_kernel_send_data(struct socket *, struct rxrpc_call *,
+ 			   struct msghdr *, size_t,
+diff --git a/net/rxrpc/af_rxrpc.c b/net/rxrpc/af_rxrpc.c
+index bad0d6adcc49f..15ee92d795815 100644
+--- a/net/rxrpc/af_rxrpc.c
++++ b/net/rxrpc/af_rxrpc.c
+@@ -285,7 +285,7 @@ struct rxrpc_call *rxrpc_kernel_begin_call(struct socket *sock,
+ 					   gfp_t gfp,
+ 					   rxrpc_notify_rx_t notify_rx,
+ 					   bool upgrade,
+-					   bool intr,
++					   enum rxrpc_interruptibility interruptibility,
+ 					   unsigned int debug_id)
+ {
+ 	struct rxrpc_conn_parameters cp;
+@@ -310,7 +310,7 @@ struct rxrpc_call *rxrpc_kernel_begin_call(struct socket *sock,
+ 	memset(&p, 0, sizeof(p));
+ 	p.user_call_ID = user_call_ID;
+ 	p.tx_total_len = tx_total_len;
+-	p.intr = intr;
++	p.interruptibility = interruptibility;
  
--#define MIN_SKB_LEN                     17
-+#define MIN_SKB_LEN			32
+ 	memset(&cp, 0, sizeof(cp));
+ 	cp.local		= rx->local;
+diff --git a/net/rxrpc/ar-internal.h b/net/rxrpc/ar-internal.h
+index 394d18857979a..3eb1ab40ca5cb 100644
+--- a/net/rxrpc/ar-internal.h
++++ b/net/rxrpc/ar-internal.h
+@@ -489,7 +489,6 @@ enum rxrpc_call_flag {
+ 	RXRPC_CALL_BEGAN_RX_TIMER,	/* We began the expect_rx_by timer */
+ 	RXRPC_CALL_RX_HEARD,		/* The peer responded at least once to this call */
+ 	RXRPC_CALL_RX_UNDERRUN,		/* Got data underrun */
+-	RXRPC_CALL_IS_INTR,		/* The call is interruptible */
+ 	RXRPC_CALL_DISCONNECTED,	/* The call has been disconnected */
+ };
  
- #define	MAX_PAYLOAD_OFFSET	        221
- #define TRANSPORT_OFFSET(l4_hdr, skb)	((u32)((l4_hdr) - (skb)->data))
+@@ -598,6 +597,7 @@ struct rxrpc_call {
+ 	atomic_t		usage;
+ 	u16			service_id;	/* service ID */
+ 	u8			security_ix;	/* Security type */
++	enum rxrpc_interruptibility interruptibility; /* At what point call may be interrupted */
+ 	u32			call_id;	/* call ID on connection  */
+ 	u32			cid;		/* connection ID plus channel index */
+ 	int			debug_id;	/* debug ID for printks */
+@@ -720,7 +720,7 @@ struct rxrpc_call_params {
+ 		u32		normal;		/* Max time since last call packet (msec) */
+ 	} timeouts;
+ 	u8			nr_timeouts;	/* Number of timeouts specified */
+-	bool			intr;		/* The call is interruptible */
++	enum rxrpc_interruptibility interruptibility; /* How is interruptible is the call? */
+ };
+ 
+ struct rxrpc_send_params {
+diff --git a/net/rxrpc/call_object.c b/net/rxrpc/call_object.c
+index c9f34b0a11df4..f07970207b544 100644
+--- a/net/rxrpc/call_object.c
++++ b/net/rxrpc/call_object.c
+@@ -237,8 +237,7 @@ struct rxrpc_call *rxrpc_new_client_call(struct rxrpc_sock *rx,
+ 		return call;
+ 	}
+ 
+-	if (p->intr)
+-		__set_bit(RXRPC_CALL_IS_INTR, &call->flags);
++	call->interruptibility = p->interruptibility;
+ 	call->tx_total_len = p->tx_total_len;
+ 	trace_rxrpc_call(call->debug_id, rxrpc_call_new_client,
+ 			 atomic_read(&call->usage),
+diff --git a/net/rxrpc/conn_client.c b/net/rxrpc/conn_client.c
+index ea7d4c21f8893..f2a1a5dbb5a7b 100644
+--- a/net/rxrpc/conn_client.c
++++ b/net/rxrpc/conn_client.c
+@@ -655,13 +655,20 @@ static int rxrpc_wait_for_channel(struct rxrpc_call *call, gfp_t gfp)
+ 
+ 		add_wait_queue_exclusive(&call->waitq, &myself);
+ 		for (;;) {
+-			if (test_bit(RXRPC_CALL_IS_INTR, &call->flags))
++			switch (call->interruptibility) {
++			case RXRPC_INTERRUPTIBLE:
++			case RXRPC_PREINTERRUPTIBLE:
+ 				set_current_state(TASK_INTERRUPTIBLE);
+-			else
++				break;
++			case RXRPC_UNINTERRUPTIBLE:
++			default:
+ 				set_current_state(TASK_UNINTERRUPTIBLE);
++				break;
++			}
+ 			if (call->call_id)
+ 				break;
+-			if (test_bit(RXRPC_CALL_IS_INTR, &call->flags) &&
++			if ((call->interruptibility == RXRPC_INTERRUPTIBLE ||
++			     call->interruptibility == RXRPC_PREINTERRUPTIBLE) &&
+ 			    signal_pending(current)) {
+ 				ret = -ERESTARTSYS;
+ 				break;
+diff --git a/net/rxrpc/sendmsg.c b/net/rxrpc/sendmsg.c
+index 1cbd43eeda937..0fcf157aa09f8 100644
+--- a/net/rxrpc/sendmsg.c
++++ b/net/rxrpc/sendmsg.c
+@@ -62,7 +62,7 @@ static int rxrpc_wait_for_tx_window_intr(struct rxrpc_sock *rx,
+  * Wait for space to appear in the Tx queue uninterruptibly, but with
+  * a timeout of 2*RTT if no progress was made and a signal occurred.
+  */
+-static int rxrpc_wait_for_tx_window_nonintr(struct rxrpc_sock *rx,
++static int rxrpc_wait_for_tx_window_waitall(struct rxrpc_sock *rx,
+ 					    struct rxrpc_call *call)
+ {
+ 	rxrpc_seq_t tx_start, tx_win;
+@@ -87,8 +87,7 @@ static int rxrpc_wait_for_tx_window_nonintr(struct rxrpc_sock *rx,
+ 		if (call->state >= RXRPC_CALL_COMPLETE)
+ 			return call->error;
+ 
+-		if (test_bit(RXRPC_CALL_IS_INTR, &call->flags) &&
+-		    timeout == 0 &&
++		if (timeout == 0 &&
+ 		    tx_win == tx_start && signal_pending(current))
+ 			return -EINTR;
+ 
+@@ -102,6 +101,26 @@ static int rxrpc_wait_for_tx_window_nonintr(struct rxrpc_sock *rx,
+ 	}
+ }
+ 
++/*
++ * Wait for space to appear in the Tx queue uninterruptibly.
++ */
++static int rxrpc_wait_for_tx_window_nonintr(struct rxrpc_sock *rx,
++					    struct rxrpc_call *call,
++					    long *timeo)
++{
++	for (;;) {
++		set_current_state(TASK_UNINTERRUPTIBLE);
++		if (rxrpc_check_tx_space(call, NULL))
++			return 0;
++
++		if (call->state >= RXRPC_CALL_COMPLETE)
++			return call->error;
++
++		trace_rxrpc_transmit(call, rxrpc_transmit_wait);
++		*timeo = schedule_timeout(*timeo);
++	}
++}
++
+ /*
+  * wait for space to appear in the transmit/ACK window
+  * - caller holds the socket locked
+@@ -119,10 +138,19 @@ static int rxrpc_wait_for_tx_window(struct rxrpc_sock *rx,
+ 
+ 	add_wait_queue(&call->waitq, &myself);
+ 
+-	if (waitall)
+-		ret = rxrpc_wait_for_tx_window_nonintr(rx, call);
+-	else
+-		ret = rxrpc_wait_for_tx_window_intr(rx, call, timeo);
++	switch (call->interruptibility) {
++	case RXRPC_INTERRUPTIBLE:
++		if (waitall)
++			ret = rxrpc_wait_for_tx_window_waitall(rx, call);
++		else
++			ret = rxrpc_wait_for_tx_window_intr(rx, call, timeo);
++		break;
++	case RXRPC_PREINTERRUPTIBLE:
++	case RXRPC_UNINTERRUPTIBLE:
++	default:
++		ret = rxrpc_wait_for_tx_window_nonintr(rx, call, timeo);
++		break;
++	}
+ 
+ 	remove_wait_queue(&call->waitq, &myself);
+ 	set_current_state(TASK_RUNNING);
+@@ -628,7 +656,7 @@ int rxrpc_do_sendmsg(struct rxrpc_sock *rx, struct msghdr *msg, size_t len)
+ 		.call.tx_total_len	= -1,
+ 		.call.user_call_ID	= 0,
+ 		.call.nr_timeouts	= 0,
+-		.call.intr		= true,
++		.call.interruptibility	= RXRPC_INTERRUPTIBLE,
+ 		.abort_code		= 0,
+ 		.command		= RXRPC_CMD_SEND_DATA,
+ 		.exclusive		= false,
 -- 
 2.20.1
 
