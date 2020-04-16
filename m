@@ -2,91 +2,114 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABCE9C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:56:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1381FC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:57:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7ED6C2087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:56:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF5E02087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 06:57:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nNqwKXMc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N5/wr5Fc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437566AbgDPG4b (ORCPT
+        id S2437185AbgDPG5D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 02:56:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50838 "EHLO
+        Thu, 16 Apr 2020 02:57:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2436700AbgDPG4W (ORCPT
+        by vger.kernel.org with ESMTP id S2436660AbgDPG4w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 02:56:22 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 628CCC061A0C;
-        Wed, 15 Apr 2020 23:56:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=C5xKJW9GVLUaEwmsGcgxx38194ESNJpidrJ6svW+S14=; b=nNqwKXMcvO1nCQPM6W3MouyrS5
-        MCb8h0GleAEjJan4ZUms7JqwTlQvsvnhav/+i5elBTStKBOPlYONP0aFn4xujiGrbUhMSJr1yY6xA
-        WFDV0IVuJgs3xulDUdJz/FW1fWMXoeYm7/bsUi7qFJgG8EblogzGCSwk7vRCYAvHFdRjouKDclHZX
-        qS0kd77pONKQKEJxxj9q7lfpY9lFJ5IWtC9dgCaAwruR+Zi9o2IJABHqcuD1oWO5hLMM/sSEjAu4y
-        Hlb6UcyGt8fXE/zq6GExtd5DiddbTh3FtQRFSJw9XMCCfW6brizWGSy6JDytp6jvaFZFIZSE67LaE
-        fvV0qhYQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jOyRe-0003t8-6k; Thu, 16 Apr 2020 06:56:18 +0000
-Date:   Wed, 15 Apr 2020 23:56:18 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     NeilBrown <neilb@suse.de>
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        "Anna.Schumaker@Netapp.com" <Anna.Schumaker@netapp.com>,
+        Thu, 16 Apr 2020 02:56:52 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D697C061A0C;
+        Wed, 15 Apr 2020 23:56:52 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id k18so1021635pll.6;
+        Wed, 15 Apr 2020 23:56:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Qj5kgZ4ZycbAqsn/p7zs9dZ6xqHz+7ARuIFuoD3k3CY=;
+        b=N5/wr5Fco2wljHjzliXhvFmJFSotzjTFEMHU8zVUulMJEDhDXIHq9CIHwmHxHaH1CD
+         z+CXoBgEmlkGkAoGSWygBuZTlHHllwi7KDdOk6xxawYdmStZuuGaZIf7OM8pw8LCxyZe
+         CO5OnPub9PZcWklFTXogbCupMm9ZShRarCfm+OibotImuwf1xq+W+s7M2CwzkgzdQAh4
+         sZ1RZFLmo50L7IjL9LTDMy2Wz5Z932Yaj0M4k/aMXyANPni2DO3C9BV9D7yrWDc9EaaW
+         31WvtvAtSHnXIENA/e0D4fFt3qZ0MiGVYWxMaJT0MmO9StHKUrIRS7M/LBczcjSQZSka
+         j8jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Qj5kgZ4ZycbAqsn/p7zs9dZ6xqHz+7ARuIFuoD3k3CY=;
+        b=YLUVj1Gn5TAtFwOit3trlpQn+A+CovBA3KRyVhVvwhmX091JJyyF/hH83Zvv8SZJ8V
+         UiG+vh36lJWULOnhM3GTPgwszfrUiK0rpM5NMrYy7nMBYJTJgE39HzGKOtEZ5Wbt8goa
+         OfW0YeiMw+HRGNUKycd5z6DWlnY1U28aw0TteT4ABlWp66JirF2ktTYA+800PgH7fT5B
+         nIrTRqiqy8oVFz5QI/xw0XNSergfzeszHonPbNNe4AvbxSSvMJO6QPpybbU1RFCodBhs
+         wfqcz2ShRsoZyOEaFO27yOggZxYl3e0xf2l3wnARW4c8Y11pe/VoXV1ywPH30vf6KrPX
+         xkDg==
+X-Gm-Message-State: AGi0PuZ3tuhNfilJcLBWAa9ZhUIUynzRUf4IadKz23kCV5CGkgNOkNl+
+        51rDQ9ElAAG+iOFTOCjHejI=
+X-Google-Smtp-Source: APiQypLG4TJ+NW7W0Hjp0IMS5gRAiLqoRQrHx2kNg1LBi9nBaICMZv3bqdiBtF8K4/JmGe1+OecfnQ==
+X-Received: by 2002:a17:902:cf87:: with SMTP id l7mr8998414ply.307.1587020211294;
+        Wed, 15 Apr 2020 23:56:51 -0700 (PDT)
+Received: from gmail.com ([2601:600:817f:a132:df3e:521d:99d5:710d])
+        by smtp.gmail.com with ESMTPSA id v4sm15818108pfb.31.2020.04.15.23.56.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2020 23:56:50 -0700 (PDT)
+Date:   Wed, 15 Apr 2020 23:56:48 -0700
+From:   Andrei Vagin <avagin@gmail.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Jan Kara <jack@suse.cz>, Michal Hocko <mhocko@kernel.org>,
-        linux-mm@kvack.org, linux-nfs@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2 V3] MM: Discard NR_UNSTABLE_NFS, use NR_WRITEBACK
- instead.
-Message-ID: <20200416065618.GB1092@infradead.org>
-References: <87tv2b7q72.fsf@notabene.neil.brown.name>
- <87v9miydai.fsf@notabene.neil.brown.name>
- <87ftdgw58w.fsf@notabene.neil.brown.name>
- <87wo6gs26e.fsf@notabene.neil.brown.name>
- <87r1wos23k.fsf@notabene.neil.brown.name>
+        Michael Kerrisk <mtk.manpages@gmail.com>
+Cc:     linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>
+Subject: Re: [PATCH v2] timens: show clock symbolic names in
+ /proc/pid/timens_offsets
+Message-ID: <20200416065648.GA801745@gmail.com>
+References: <96bedbaf-49ea-f24b-b7b1-fb9a57fb6c7d@gmail.com>
+ <20200411154031.642557-1-avagin@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=koi8-r
 Content-Disposition: inline
-In-Reply-To: <87r1wos23k.fsf@notabene.neil.brown.name>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200411154031.642557-1-avagin@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 10:31:27AM +1000, NeilBrown wrote:
->  	return global_node_page_state(NR_FILE_DIRTY) +
-> -		global_node_page_state(NR_UNSTABLE_NFS) +
->  		get_nr_dirty_inodes();
+On Sat, Apr 11, 2020 at 08:40:31AM -0700, Andrei Vagin wrote:
+> Michael Kerrisk suggested to replace numeric clock IDs on symbolic
+> names.
+> 
+> Now the content of these files looks like this:
+> $ cat /proc/774/timens_offsets
+> monotonic      864000         0
+> boottime      1728000         0
+> 
+> For setting offsets, both representations of clocks can be used.
+> 
+> As for compatibility, it is acceptable to change things as long as
+> userspace doesn't care. The format of timens_offsets files is very
+> new and there are no userspace tools that rely on this format.
+> 
+> But three projects crun, util-linux and criu rely on the interface of
+> setting time offsets and this is why we need to continue supporting the
+> clock IDs in this case.
+> 
+> Fixes: 04a8682a71be ("fs/proc: Introduce /proc/pid/timens_offsets")
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Eric W. Biederman <ebiederm@xmission.com>
+> Cc: Dmitry Safonov <0x7f454c46@gmail.com>
+> Acked-by: Michael Kerrisk <mtk.manpages@gmail.com>                                                                                                                                            
 
-Nit: this could a single line now:
+Thomas and Andrew, could you merge this patch? I am sorry, I used the
+wrong subsystem prefix. Let me know if I need to send the third version
+of this patch.
 
-  	return global_node_page_state(NR_FILE_DIRTY) + get_nr_dirty_inodes();
-
-> +		/* This page is really still in write-back - just that the
-> +		 * writeback is happening on the server now.
-> +		 */
-
-This needs to switch to the canonical kernel comment style.
-
-> +	if (off == NR_VMSTAT_ITEMS - 1) {
-> +		/* We've come to the end - add any deprecated counters
-> +		 * to avoid breaking userspace which might depend on
-> +		 * them being present.
-> +		 */
-
-Same here.
-
-Otherwise looks good:
-
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Thanks,
+Andrei
