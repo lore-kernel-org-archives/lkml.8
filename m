@@ -2,98 +2,81 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C812BC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 08:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3EF9C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 08:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C1B020644
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 08:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D37020784
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 08:44:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502521AbgDPIlX (ORCPT
+        id S2502779AbgDPInw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 04:41:23 -0400
-Received: from m17618.mail.qiye.163.com ([59.111.176.18]:9067 "EHLO
-        m17618.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2441345AbgDPIfX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 04:35:23 -0400
-Received: from ubuntu.localdomain (unknown [58.251.74.226])
-        by m17618.mail.qiye.163.com (Hmail) with ESMTPA id 91F444E2730;
-        Thu, 16 Apr 2020 15:49:33 +0800 (CST)
-From:   Wang Wenhu <wenhu.wang@vivo.com>
-To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        oss@buserror.net, christophe.leroy@c-s.fr,
-        linuxppc-dev@lists.ozlabs.org
-Cc:     kernel@vivo.com, Wang Wenhu <wenhu.wang@vivo.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH v3,1/4] powerpc: sysdev: fix compile error for fsl_85xx_l2ctlr
-Date:   Thu, 16 Apr 2020 00:49:15 -0700
-Message-Id: <20200416074918.3617-2-wenhu.wang@vivo.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200416074918.3617-1-wenhu.wang@vivo.com>
-References: <20200415152442.122873-1-wenhu.wang@vivo.com>
- <20200416074918.3617-1-wenhu.wang@vivo.com>
+        Thu, 16 Apr 2020 04:43:52 -0400
+Received: from mga14.intel.com ([192.55.52.115]:12452 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2502551AbgDPIiZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 04:38:25 -0400
+IronPort-SDR: NA/ynhL3iCMIkdNNHsBTSAuS3MBlund7S1oeUWQVBHmxUJKW/GxqsvS3feZhLRB+lsTcOE9Fhu
+ VJACoFc1VhVw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 01:38:23 -0700
+IronPort-SDR: rdm/YyN9bcHeb9GkMPmye0GRmbe4rYsAjLnoGkIXuxjYDrG319KjtNuSgE3re9qKzAukkPKeqO
+ HMYr5Dl8YcUg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,390,1580803200"; 
+   d="scan'208";a="427756139"
+Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.254.209.171]) ([10.254.209.171])
+  by orsmga005.jf.intel.com with ESMTP; 16 Apr 2020 01:38:20 -0700
+Cc:     baolu.lu@linux.intel.com, "Raj, Ashok" <ashok.raj@intel.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 6/7] iommu/vt-d: Add page request draining support
+To:     "Tian, Kevin" <kevin.tian@intel.com>,
+        Joerg Roedel <joro@8bytes.org>
+References: <20200415052542.30421-1-baolu.lu@linux.intel.com>
+ <20200415052542.30421-7-baolu.lu@linux.intel.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D8209CE@SHSMSX104.ccr.corp.intel.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <acf26559-49d2-653c-156d-3ef383b43879@linux.intel.com>
+Date:   Thu, 16 Apr 2020 16:38:19 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSVVNQk1LS0tLQkJKQ0lKSFlXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OAg6DCo5PTg3Dgg1DRE*Myg2
-        MkpPFEhVSlVKTkNMS0lISExIQk1CVTMWGhIXVQweFRMOVQwaFRw7DRINFFUYFBZFWVdZEgtZQVlO
-        Q1VJTkpVTE9VSUlNWVdZCAFZQUhKSEI3Bg++
-X-HM-Tid: 0a7181f6e61f9376kuws91f444e2730
+In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D8209CE@SHSMSX104.ccr.corp.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Include "linux/of_address.h" to fix the compile error for
-mpc85xx_l2ctlr_of_probe() when compiling fsl_85xx_cache_sram.c.
+Hi Kevin,
 
-  CC      arch/powerpc/sysdev/fsl_85xx_l2ctlr.o
-arch/powerpc/sysdev/fsl_85xx_l2ctlr.c: In function ‘mpc85xx_l2ctlr_of_probe’:
-arch/powerpc/sysdev/fsl_85xx_l2ctlr.c:90:11: error: implicit declaration of function ‘of_iomap’; did you mean ‘pci_iomap’? [-Werror=implicit-function-declaration]
-  l2ctlr = of_iomap(dev->dev.of_node, 0);
-           ^~~~~~~~
-           pci_iomap
-arch/powerpc/sysdev/fsl_85xx_l2ctlr.c:90:9: error: assignment makes pointer from integer without a cast [-Werror=int-conversion]
-  l2ctlr = of_iomap(dev->dev.of_node, 0);
-         ^
-cc1: all warnings being treated as errors
-scripts/Makefile.build:267: recipe for target 'arch/powerpc/sysdev/fsl_85xx_l2ctlr.o' failed
-make[2]: *** [arch/powerpc/sysdev/fsl_85xx_l2ctlr.o] Error 1
+On 2020/4/15 19:10, Tian, Kevin wrote:
+> the completion of above sequence ensures that previous queued
+> page group responses are sent out and received by the endpoint
+> and vice versa all in-fly page requests from the endpoint are queued
+> in iommu page request queue. Then comes a problem - you didn't
+> wait for completion of those newly-queued requests and their
+> responses.
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-Cc: Scott Wood <oss@buserror.net>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: linuxppc-dev@lists.ozlabs.org
-Fixes: 6db92cc9d07d ("powerpc/85xx: add cache-sram support")
-Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
----
-Changes since v1:
- * None
-Changes since v2:
- * None
----
- arch/powerpc/sysdev/fsl_85xx_l2ctlr.c | 1 +
- 1 file changed, 1 insertion(+)
+I thought about this again.
 
-diff --git a/arch/powerpc/sysdev/fsl_85xx_l2ctlr.c b/arch/powerpc/sysdev/fsl_85xx_l2ctlr.c
-index 2d0af0c517bb..7533572492f0 100644
---- a/arch/powerpc/sysdev/fsl_85xx_l2ctlr.c
-+++ b/arch/powerpc/sysdev/fsl_85xx_l2ctlr.c
-@@ -10,6 +10,7 @@
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/of_platform.h>
-+#include <linux/of_address.h>
- #include <asm/io.h>
- 
- #include "fsl_85xx_cache_ctlr.h"
--- 
-2.17.1
+We do page request draining after PASID table entry gets torn down and
+the devTLB gets invalidated. At this point, if any new page request for
+this pasid comes in, IOMMU will generate an unrecoverable fault and
+response the device with IR (Invalid Request). IOMMU won't put this page
+request into the queue. [VT-d spec 7.4.1]
 
+Hence, we don't need to worry about the newly-queued requests here.
+
+Best regards,
+baolu
