@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E4EC352BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:29:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFF3C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:29:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA4E321927
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:29:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BE5921927
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 14:29:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587047348;
-	bh=xl7673xMCxZLA8+BCaQwHav7o+Wj5R0wofxcq25bs3Q=;
+	s=default; t=1587047349;
+	bh=W67J4mpFhxI5aIfA8+lYU7Gbb6BRpGz4wwe69mq9YR8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q/yQ4Jp9Bj0NyxQjwGygUIgoCjTEIyp7ItxcTsvZabyaIBdSnCjDCEqdoPUBDIWQf
-	 MoHZSCzOeC4S4tS7UKdw8+W3r+uc7C2710yVyvvETC9BxCVncR1KWgPV8hbWZPyfPz
-	 Ros7HAbI4tDK9Xk869o3cDCHB76EXwaxeJ9AvCL8=
+	b=J72/t4ypBiUUDjzRNeld+emV0+Yko3wDX6Oeu3ARBgh8carPvUUqIDu8kl+ZAJhnj
+	 4/TIFjh5cn8WwOCzEGqMpR4ox8M3QXXRmGrAKsSs1BnXZ9u26nmPK0Z0PpHVPUoULl
+	 05W2bonhsJExi86i0g8VrDpgeYBC9vgIuief15iw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436912AbgDPO3B (ORCPT
+        id S2441359AbgDPO3E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:29:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47720 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 10:29:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392645AbgDPOAm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:00:42 -0400
+        id S2392697AbgDPOAz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:00:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD1182078B;
-        Thu, 16 Apr 2020 14:00:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 744D12078B;
+        Thu, 16 Apr 2020 14:00:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587045640;
-        bh=xl7673xMCxZLA8+BCaQwHav7o+Wj5R0wofxcq25bs3Q=;
+        s=default; t=1587045654;
+        bh=W67J4mpFhxI5aIfA8+lYU7Gbb6BRpGz4wwe69mq9YR8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SBw/4/YTzK8eBjWyN6VyNKZVBn/DniuZTsWMwWibtA0Bjp0f/nRs3gjT162b3/4r0
-         JO2hN3sE6PlHdarbDyDiEwYhr8r12z6NYuQZZHpea3KIgegH69ytWzIiOsN1BuxAI1
-         LrGYSRNv6ta0IBcK/FMjC9YzORFfwpwdkEn/tUtY=
+        b=IRYvXvweRxm7CqBVigwoc6meNAzTBT8YwPdPuOmv7oKFoSP2mOhbb63bxSPE9CkQs
+         IfTouPlUl0zVjOYUHxri6WgClpCzLMb1CDTtcE3nC5CdhQJNpk3oxqNsXVaC9aRf3M
+         ARQ3KpUx2D0DY8zh9kC7XHovAbX9FeGtUYq666Nc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Olga Kornievskaia <aglo@umich.edu>,
-        Scott Mayhew <smayhew@redhat.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-Subject: [PATCH 5.6 216/254] NFS: Fix a few constant_table array definitions
-Date:   Thu, 16 Apr 2020 15:25:05 +0200
-Message-Id: <20200416131353.023090263@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Gilad Ben-Yossef <gilad@benyossef.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.6 186/254] crypto: ccree - only try to map auth tag if needed
+Date:   Thu, 16 Apr 2020 15:24:35 +0200
+Message-Id: <20200416131349.608563665@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.804095985@linuxfoundation.org>
 References: <20200416131325.804095985@linuxfoundation.org>
@@ -60,58 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Scott Mayhew <smayhew@redhat.com>
+From: Gilad Ben-Yossef <gilad@benyossef.com>
 
-commit 529af90576cfa44aa107e9876e2ebaa053983986 upstream.
+commit 504e84abec7a635b861afd8d7f92ecd13eaa2b09 upstream.
 
-nfs_vers_tokens, nfs_xprt_protocol_tokens, and nfs_secflavor_tokens were
-all missing an empty item at the end of the array, allowing
-lookup_constant() to potentially walk off the end and trigger and oops.
+Make sure to only add the size of the auth tag to the source mapping
+for encryption if it is an in-place operation. Failing to do this
+previously caused us to try and map auth size len bytes from a NULL
+mapping and crashing if both the cryptlen and assoclen are zero.
 
-Reported-by: Olga Kornievskaia <aglo@umich.edu>
-Signed-off-by: Scott Mayhew <smayhew@redhat.com>
-Fixes: e38bb238ed8c ("NFS: Convert mount option parsing to use functionality from fs_parser.h")
-Cc: stable@vger.kernel.org # v5.6
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+Cc: stable@vger.kernel.org # v4.19+
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/fs_context.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/crypto/ccree/cc_buffer_mgr.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/fs/nfs/fs_context.c
-+++ b/fs/nfs/fs_context.c
-@@ -190,6 +190,7 @@ static const struct constant_table nfs_v
- 	{ "4.0",	Opt_vers_4_0 },
- 	{ "4.1",	Opt_vers_4_1 },
- 	{ "4.2",	Opt_vers_4_2 },
-+	{}
- };
+--- a/drivers/crypto/ccree/cc_buffer_mgr.c
++++ b/drivers/crypto/ccree/cc_buffer_mgr.c
+@@ -1109,9 +1109,11 @@ int cc_map_aead_request(struct cc_drvdat
+ 	}
  
- enum {
-@@ -202,13 +203,14 @@ enum {
- 	nr__Opt_xprt
- };
- 
--static const struct constant_table nfs_xprt_protocol_tokens[nr__Opt_xprt] = {
-+static const struct constant_table nfs_xprt_protocol_tokens[] = {
- 	{ "rdma",	Opt_xprt_rdma },
- 	{ "rdma6",	Opt_xprt_rdma6 },
- 	{ "tcp",	Opt_xprt_tcp },
- 	{ "tcp6",	Opt_xprt_tcp6 },
- 	{ "udp",	Opt_xprt_udp },
- 	{ "udp6",	Opt_xprt_udp6 },
-+	{}
- };
- 
- enum {
-@@ -239,6 +241,7 @@ static const struct constant_table nfs_s
- 	{ "spkm3i",	Opt_sec_spkmi },
- 	{ "spkm3p",	Opt_sec_spkmp },
- 	{ "sys",	Opt_sec_sys },
-+	{}
- };
- 
- /*
+ 	size_to_map = req->cryptlen + areq_ctx->assoclen;
+-	if (areq_ctx->gen_ctx.op_type == DRV_CRYPTO_DIRECTION_ENCRYPT)
++	/* If we do in-place encryption, we also need the auth tag */
++	if ((areq_ctx->gen_ctx.op_type == DRV_CRYPTO_DIRECTION_ENCRYPT) &&
++	   (req->src == req->dst)) {
+ 		size_to_map += authsize;
+-
++	}
+ 	if (is_gcm4543)
+ 		size_to_map += crypto_aead_ivsize(tfm);
+ 	rc = cc_map_sg(dev, req->src, size_to_map, DMA_BIDIRECTIONAL,
 
 
