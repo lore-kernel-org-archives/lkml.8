@@ -2,347 +2,263 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D39C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 08:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69222C352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 08:58:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A67D720784
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 08:57:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="SEl8P7G0"
+	by mail.kernel.org (Postfix) with ESMTP id 5022C2078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 08:58:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503007AbgDPI51 (ORCPT
+        id S2503145AbgDPI6K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 04:57:27 -0400
-Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:33739 "EHLO
-        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2502539AbgDPIxh (ORCPT
+        Thu, 16 Apr 2020 04:58:10 -0400
+Received: from mx05.melco.co.jp ([192.218.140.145]:53079 "EHLO
+        mx05.melco.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2502971AbgDPIwR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 04:53:37 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id P0H4jxyAClKa1P0H8jRAHU; Thu, 16 Apr 2020 10:53:34 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1587027214; bh=9WOEBGbhNWTWcb5wWzuotRMRLjvovmKy5rtSmeTedTE=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=SEl8P7G0mwLjPn9eWvjTiuFGw9iZ9bwnWPqwuuazeuv3r43hYnswxzm41g9wNxa+U
-         e4IUhAzkpkS66FA/oMPQLwd6ulJu0gQrVNuDwuKnXZpxKi6pKgQKLDVxdVlW5VRptK
-         GgjuG6WfoFAl+7fC0d8FkVoehar11oQ7rkKLj6oKFYJ+8UifmnS5vksGi76DjBCit6
-         cDsmB9DzHs9fsJCPsXEZgfzEblGtfIclWnliZuE4mylLk5Fa40aqW3vltCBLo1JOZB
-         EVMJc0P3GhX09ZY0eXIdLatoUJ8WbCLsmtHhtWZrriZckxav7p9OmZj8ZB9OmGJekx
-         k057i3p4wqpag==
-Subject: Re: [RFC][PATCH] media: v4l2-ctrls: add more NULL pointer checks
-To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Tomasz Figa <tfiga@chromium.org>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200410103501.1083-1-sergey.senozhatsky@gmail.com>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <c83c137b-b801-a06b-e324-09dd3bbc9daf@xs4all.nl>
-Date:   Thu, 16 Apr 2020 10:53:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 16 Apr 2020 04:52:17 -0400
+Received: from mr05.melco.co.jp (mr05 [133.141.98.165])
+        by mx05.melco.co.jp (Postfix) with ESMTP id 659653A3F41;
+        Thu, 16 Apr 2020 17:51:41 +0900 (JST)
+Received: from mr05.melco.co.jp (unknown [127.0.0.1])
+        by mr05.imss (Postfix) with ESMTP id 492tHx2VgNzRkJW;
+        Thu, 16 Apr 2020 17:51:41 +0900 (JST)
+Received: from mf03_second.melco.co.jp (unknown [192.168.20.183])
+        by mr05.melco.co.jp (Postfix) with ESMTP id 492tHx2BWLzRkJg;
+        Thu, 16 Apr 2020 17:51:41 +0900 (JST)
+Received: from mf03.melco.co.jp (unknown [133.141.98.183])
+        by mf03_second.melco.co.jp (Postfix) with ESMTP id 492tHx2DkzzRkCV;
+        Thu, 16 Apr 2020 17:51:41 +0900 (JST)
+Received: from tux532.tad.melco.co.jp (unknown [133.141.243.226])
+        by mf03.melco.co.jp (Postfix) with ESMTP id 492tHx1mJgzRkBs;
+        Thu, 16 Apr 2020 17:51:41 +0900 (JST)
+Received:  from tux532.tad.melco.co.jp
+        by tux532.tad.melco.co.jp (unknown) with ESMTP id 03G8pfNA025279;
+        Thu, 16 Apr 2020 17:51:41 +0900
+Received: from tux390.tad.melco.co.jp (tux390.tad.melco.co.jp [127.0.0.1])
+        by postfix.imss70 (Postfix) with ESMTP id 09CBF17E07A;
+        Thu, 16 Apr 2020 17:51:41 +0900 (JST)
+Received: from tux554.tad.melco.co.jp (tadpost1.tad.melco.co.jp [10.168.7.223])
+        by tux390.tad.melco.co.jp (Postfix) with ESMTP id F135217E079;
+        Thu, 16 Apr 2020 17:51:40 +0900 (JST)
+Received: from tux554.tad.melco.co.jp
+        by tux554.tad.melco.co.jp (unknown) with ESMTP id 03G8pePX013596;
+        Thu, 16 Apr 2020 17:51:40 +0900
+From:   Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+To:     Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp
+Cc:     Mori.Takahiro@ab.MitsubishiElectric.co.jp,
+        motai.hirotaka@aj.mitsubishielectric.co.jp,
+        Namjae Jeon <namjae.jeon@samsung.com>,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3] exfat: replace 'time_ms' with 'time_cs'
+Date:   Thu, 16 Apr 2020 17:51:21 +0900
+Message-Id: <20200416085121.57495-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-In-Reply-To: <20200410103501.1083-1-sergey.senozhatsky@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfItyTbJnDaB/ZbLYq9psKWKGdq8VZJMWZrpzkMWGM3MDByU7HQUSBJPT+xx9RsksERX5vxKaNk8MaySiZ4I25tEZPj+5I8bLyDs59SPC0tQPCc1MZMDc
- L8ZzLkp6GqUPRsqTPxhtL9doDwFst25nWB54a+CXavr2AqJXAknHGz/RxiP8lKdacuAx+zw54ZY3qMKXtmz4JLVav8CESRbZws/2pax5mNmF966wPIw7Nw/m
- mcuy54Gp82EgRhJLdd/mtfSeHSZ/wsw+Yez7T2zKWdnX8yrn8SSSmuGnoQ373i6VwCJjIsLUDNCLj+llpEqsTMwEalry8tqy1fJGiOmyAO8=
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/04/2020 12:35, Sergey Senozhatsky wrote:
-> A number of v4l2-ctrls functions gracefully handle NULL ctrl pointers,
-> for instance, v4l2_g_ctrl(), v4l2_ctrl_activate(), __v4l2_ctrl_grab()
-> to name a few. But not all of them. It is relatively easy to crash the
-> kernel with the NULL pointer dereference:
-> 
-> 	# modprobe vivid node_types=0x60000
-> 	$ v4l2-compliance
-> 
-> BUG: kernel NULL pointer dereference, address: 0000000000000020
-> PF: supervisor read access in kernel mode
-> PF: error_code(0x0000) - not-present page
-> PGD 0 P4D 0
-> Oops: 0000 [#1] SMP PTI
-> RIP: 0010:v4l2_ctrl_s_ctrl.isra.0+0x4/0x30 [vivid]
-> Call Trace:
->  vidioc_s_input.cold+0x1a8/0x38d [vivid]
->  __video_do_ioctl+0x372/0x3a0 [videodev]
->  ? v4l_enumstd+0x20/0x20 [videodev]
->  ? v4l_enumstd+0x20/0x20 [videodev]
->  video_usercopy+0x1cb/0x450 [videodev]
->  v4l2_ioctl+0x3f/0x50 [videodev]
->  ksys_ioctl+0x3f1/0x7e0
->  ? vfs_write+0x1c4/0x1f0
->  __x64_sys_ioctl+0x11/0x20
->  do_syscall_64+0x49/0x2c0
->  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> 
-> vivid driver crashes the kernel in various places, for instance,
-> 
-> 	v4l2_ctrl_modify_range(dev->brightness, ...);
-> or
-> 	v4l2_ctrl_s_ctrl(dev->brightness, ...);
-> 
-> because ->brightness (and quite likely some more controls) is NULL.
-> While we may fix the vivid driver, it would be safer to fix core
-> API. This patch adds more NULL pointer checks to ctrl API.
-> 
-> Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-> ---
->  drivers/media/v4l2-core/v4l2-ctrls.c | 22 ++++++++++++++++-
->  include/media/v4l2-ctrls.h           | 37 ++++++++++++++++++++++++++--
->  2 files changed, 56 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-> index 93d33d1db4e8..02a60f67c2ee 100644
-> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
-> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-> @@ -2869,6 +2869,9 @@ EXPORT_SYMBOL(v4l2_ctrl_add_handler);
->  
->  bool v4l2_ctrl_radio_filter(const struct v4l2_ctrl *ctrl)
->  {
-> +	if (WARN_ON(!ctrl))
-> +		return false;
-> +
->  	if (V4L2_CTRL_ID2WHICH(ctrl->id) == V4L2_CTRL_CLASS_FM_TX)
->  		return true;
->  	if (V4L2_CTRL_ID2WHICH(ctrl->id) == V4L2_CTRL_CLASS_FM_RX)
-> @@ -3794,7 +3797,9 @@ s32 v4l2_ctrl_g_ctrl(struct v4l2_ctrl *ctrl)
->  	struct v4l2_ext_control c;
->  
->  	/* It's a driver bug if this happens. */
-> -	WARN_ON(!ctrl->is_int);
-> +	if (WARN_ON(!ctrl || !ctrl->is_int))
-> +		return -EINVAL;
+Replace "time_ms"  with "time_cs" in the file directory entry structure
+and related functions.
 
-Just return 0 here. The return value is the control's value, not an error code.
-So all you can do here is return 0 in the absence of anything better.
+The unit of create_time_ms/modify_time_ms in File Directory Entry are not
+'milli-second', but 'centi-second'.
+The exfat specification uses the term '10ms', but instead use 'cs' as in
+"msdos_fs.h".
 
-> +
->  	c.value = 0;
->  	get_ctrl(ctrl, &c);
->  	return c.value;
-> @@ -4212,6 +4217,9 @@ EXPORT_SYMBOL(v4l2_s_ctrl);
->  
->  int __v4l2_ctrl_s_ctrl(struct v4l2_ctrl *ctrl, s32 val)
->  {
-> +	if (!ctrl)
+Signed-off-by: Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+---
+Changes in v3:
+ - change time_10ms to time_cs
+ - revert calculation formula to original
+ - change subject & commit-log
+ - rebase to 'linkinjeon/exfat.git' dev branch 
+Changes in v2:
+ - fix spelling mistakes in commit-log.
 
-Change this to 'if (WARN_ON(!ctrl))'
+fs/exfat/dir.c       |  8 ++++----
+ fs/exfat/exfat_fs.h  |  4 ++--
+ fs/exfat/exfat_raw.h |  4 ++--
+ fs/exfat/file.c      |  2 +-
+ fs/exfat/inode.c     |  4 ++--
+ fs/exfat/misc.c      | 18 +++++++++---------
+ fs/exfat/namei.c     |  4 ++--
+ 7 files changed, 22 insertions(+), 22 deletions(-)
 
-I don't think NULL pointers should be silently ignored: it really
-indicates a driver bug. It it certainly a good idea to WARN instead.
-
-The same is true for the functions below.
-
-That means that vivid should be fixed as well, but at least it should
-just WARN instead of crashing, that's certainly a good improvement.
-
-Regards,
-
-	Hans
-
-> +		return -EINVAL;
-> +
->  	lockdep_assert_held(ctrl->handler->lock);
->  
->  	/* It's a driver bug if this happens. */
-> @@ -4223,6 +4231,9 @@ EXPORT_SYMBOL(__v4l2_ctrl_s_ctrl);
->  
->  int __v4l2_ctrl_s_ctrl_int64(struct v4l2_ctrl *ctrl, s64 val)
->  {
-> +	if (!ctrl)
-> +		return -EINVAL;
-> +
->  	lockdep_assert_held(ctrl->handler->lock);
->  
->  	/* It's a driver bug if this happens. */
-> @@ -4234,6 +4245,9 @@ EXPORT_SYMBOL(__v4l2_ctrl_s_ctrl_int64);
->  
->  int __v4l2_ctrl_s_ctrl_string(struct v4l2_ctrl *ctrl, const char *s)
->  {
-> +	if (!ctrl)
-> +		return -EINVAL;
-> +
->  	lockdep_assert_held(ctrl->handler->lock);
->  
->  	/* It's a driver bug if this happens. */
-> @@ -4246,6 +4260,9 @@ EXPORT_SYMBOL(__v4l2_ctrl_s_ctrl_string);
->  int __v4l2_ctrl_s_ctrl_area(struct v4l2_ctrl *ctrl,
->  			    const struct v4l2_area *area)
->  {
-> +	if (!ctrl)
-> +		return -EINVAL;
-> +
->  	lockdep_assert_held(ctrl->handler->lock);
->  
->  	/* It's a driver bug if this happens. */
-> @@ -4447,6 +4464,9 @@ int __v4l2_ctrl_modify_range(struct v4l2_ctrl *ctrl,
->  	bool range_changed = false;
->  	int ret;
->  
-> +	if (!ctrl)
-> +		return -EINVAL;
-> +
->  	lockdep_assert_held(ctrl->handler->lock);
->  
->  	switch (ctrl->type) {
-> diff --git a/include/media/v4l2-ctrls.h b/include/media/v4l2-ctrls.h
-> index 7db9e719a583..22d7ea500f96 100644
-> --- a/include/media/v4l2-ctrls.h
-> +++ b/include/media/v4l2-ctrls.h
-> @@ -755,6 +755,8 @@ int v4l2_ctrl_add_handler(struct v4l2_ctrl_handler *hdl,
->   * transmitter class controls.
->   *
->   * This function is to be used with v4l2_ctrl_add_handler().
-> + *
-> + * Returns false if ctrl == NULL.
->   */
->  bool v4l2_ctrl_radio_filter(const struct v4l2_ctrl *ctrl);
->  
-> @@ -884,7 +886,7 @@ static inline void v4l2_ctrl_grab(struct v4l2_ctrl *ctrl, bool grabbed)
->   * @step value is interpreted as a menu_skip_mask.
->   *
->   * An error is returned if one of the range arguments is invalid for this
-> - * control type.
-> + * control type. Returns -EINVAL if ctrl == NULL.
->   *
->   * The caller is responsible for acquiring the control handler mutex on behalf
->   * of __v4l2_ctrl_modify_range().
-> @@ -906,7 +908,7 @@ int __v4l2_ctrl_modify_range(struct v4l2_ctrl *ctrl,
->   * @step value is interpreted as a menu_skip_mask.
->   *
->   * An error is returned if one of the range arguments is invalid for this
-> - * control type.
-> + * control type. Returns -EINVAL if ctrl == NULL.
->   *
->   * This function assumes that the control handler is not locked and will
->   * take the lock itself.
-> @@ -916,6 +918,9 @@ static inline int v4l2_ctrl_modify_range(struct v4l2_ctrl *ctrl,
->  {
->  	int rval;
->  
-> +	if (!ctrl)
-> +		return -EINVAL;
-> +
->  	v4l2_ctrl_lock(ctrl);
->  	rval = __v4l2_ctrl_modify_range(ctrl, min, max, step, def);
->  	v4l2_ctrl_unlock(ctrl);
-> @@ -982,6 +987,8 @@ const s64 *v4l2_ctrl_get_int_menu(u32 id, u32 *len);
->   * used from within the &v4l2_ctrl_ops functions.
->   *
->   * This function is for integer type controls only.
-> + *
-> + * Returns -EINVAL if ctrl == NULL.
->   */
->  s32 v4l2_ctrl_g_ctrl(struct v4l2_ctrl *ctrl);
->  
-> @@ -996,6 +1003,8 @@ s32 v4l2_ctrl_g_ctrl(struct v4l2_ctrl *ctrl);
->   * allowing it to be used from within the &v4l2_ctrl_ops functions.
->   *
->   * This function is for integer type controls only.
-> + *
-> + * Returns -EINVAL is ctrl == NULL.
->   */
->  int __v4l2_ctrl_s_ctrl(struct v4l2_ctrl *ctrl, s32 val);
->  
-> @@ -1010,11 +1019,16 @@ int __v4l2_ctrl_s_ctrl(struct v4l2_ctrl *ctrl, s32 val);
->   * used from within the &v4l2_ctrl_ops functions.
->   *
->   * This function is for integer type controls only.
-> + *
-> + * Return -EINVAL is ctrl == NULL.
->   */
->  static inline int v4l2_ctrl_s_ctrl(struct v4l2_ctrl *ctrl, s32 val)
->  {
->  	int rval;
->  
-> +	if (!ctrl)
-> +		return -EINVAL;
-> +
->  	v4l2_ctrl_lock(ctrl);
->  	rval = __v4l2_ctrl_s_ctrl(ctrl, val);
->  	v4l2_ctrl_unlock(ctrl);
-> @@ -1062,11 +1076,16 @@ int __v4l2_ctrl_s_ctrl_int64(struct v4l2_ctrl *ctrl, s64 val);
->   * used from within the &v4l2_ctrl_ops functions.
->   *
->   * This function is for 64-bit integer type controls only.
-> + *
-> + * Returns -EINVAL if ctrl == NULL.
->   */
->  static inline int v4l2_ctrl_s_ctrl_int64(struct v4l2_ctrl *ctrl, s64 val)
->  {
->  	int rval;
->  
-> +	if (!ctrl)
-> +		return -EINVAL;
-> +
->  	v4l2_ctrl_lock(ctrl);
->  	rval = __v4l2_ctrl_s_ctrl_int64(ctrl, val);
->  	v4l2_ctrl_unlock(ctrl);
-> @@ -1085,6 +1104,8 @@ static inline int v4l2_ctrl_s_ctrl_int64(struct v4l2_ctrl *ctrl, s64 val)
->   * allowing it to be used from within the &v4l2_ctrl_ops functions.
->   *
->   * This function is for string type controls only.
-> + *
-> + * Returns -EINVAL if ctrl == NULL.
->   */
->  int __v4l2_ctrl_s_ctrl_string(struct v4l2_ctrl *ctrl, const char *s);
->  
-> @@ -1100,11 +1121,16 @@ int __v4l2_ctrl_s_ctrl_string(struct v4l2_ctrl *ctrl, const char *s);
->   * used from within the &v4l2_ctrl_ops functions.
->   *
->   * This function is for string type controls only.
-> + *
-> + * Returns -EINVAL if ctrl == NULL.
->   */
->  static inline int v4l2_ctrl_s_ctrl_string(struct v4l2_ctrl *ctrl, const char *s)
->  {
->  	int rval;
->  
-> +	if (!ctrl)
-> +		return -EINVAL;
-> +
->  	v4l2_ctrl_lock(ctrl);
->  	rval = __v4l2_ctrl_s_ctrl_string(ctrl, s);
->  	v4l2_ctrl_unlock(ctrl);
-> @@ -1123,6 +1149,8 @@ static inline int v4l2_ctrl_s_ctrl_string(struct v4l2_ctrl *ctrl, const char *s)
->   * allowing it to be used from within the &v4l2_ctrl_ops functions.
->   *
->   * This function is for area type controls only.
-> + *
-> + * Returns -EINVAL if ctrl == NULL.
->   */
->  int __v4l2_ctrl_s_ctrl_area(struct v4l2_ctrl *ctrl,
->  			    const struct v4l2_area *area);
-> @@ -1139,12 +1167,17 @@ int __v4l2_ctrl_s_ctrl_area(struct v4l2_ctrl *ctrl,
->   * used from within the &v4l2_ctrl_ops functions.
->   *
->   * This function is for area type controls only.
-> + *
-> + * Returns -EINVAL if ctrl == NULL.
->   */
->  static inline int v4l2_ctrl_s_ctrl_area(struct v4l2_ctrl *ctrl,
->  					const struct v4l2_area *area)
->  {
->  	int rval;
->  
-> +	if (!ctrl)
-> +		return -EINVAL;
-> +
->  	v4l2_ctrl_lock(ctrl);
->  	rval = __v4l2_ctrl_s_ctrl_area(ctrl, area);
->  	v4l2_ctrl_unlock(ctrl);
-> 
+diff --git a/fs/exfat/dir.c b/fs/exfat/dir.c
+index 53ae965da..b5a237c33 100644
+--- a/fs/exfat/dir.c
++++ b/fs/exfat/dir.c
+@@ -137,12 +137,12 @@ static int exfat_readdir(struct inode *inode, struct exfat_dir_entry *dir_entry)
+ 					ep->dentry.file.create_tz,
+ 					ep->dentry.file.create_time,
+ 					ep->dentry.file.create_date,
+-					ep->dentry.file.create_time_ms);
++					ep->dentry.file.create_time_cs);
+ 			exfat_get_entry_time(sbi, &dir_entry->mtime,
+ 					ep->dentry.file.modify_tz,
+ 					ep->dentry.file.modify_time,
+ 					ep->dentry.file.modify_date,
+-					ep->dentry.file.modify_time_ms);
++					ep->dentry.file.modify_time_cs);
+ 			exfat_get_entry_time(sbi, &dir_entry->atime,
+ 					ep->dentry.file.access_tz,
+ 					ep->dentry.file.access_time,
+@@ -461,12 +461,12 @@ int exfat_init_dir_entry(struct inode *inode, struct exfat_chain *p_dir,
+ 			&ep->dentry.file.create_tz,
+ 			&ep->dentry.file.create_time,
+ 			&ep->dentry.file.create_date,
+-			&ep->dentry.file.create_time_ms);
++			&ep->dentry.file.create_time_cs);
+ 	exfat_set_entry_time(sbi, &ts,
+ 			&ep->dentry.file.modify_tz,
+ 			&ep->dentry.file.modify_time,
+ 			&ep->dentry.file.modify_date,
+-			&ep->dentry.file.modify_time_ms);
++			&ep->dentry.file.modify_time_cs);
+ 	exfat_set_entry_time(sbi, &ts,
+ 			&ep->dentry.file.access_tz,
+ 			&ep->dentry.file.access_time,
+diff --git a/fs/exfat/exfat_fs.h b/fs/exfat/exfat_fs.h
+index 4ced4c0d9..f619b9250 100644
+--- a/fs/exfat/exfat_fs.h
++++ b/fs/exfat/exfat_fs.h
+@@ -511,9 +511,9 @@ void exfat_msg(struct super_block *sb, const char *lv, const char *fmt, ...)
+ 	exfat_msg(sb, KERN_INFO, fmt, ##__VA_ARGS__)
+ 
+ void exfat_get_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
+-		u8 tz, __le16 time, __le16 date, u8 time_ms);
++		u8 tz, __le16 time, __le16 date, u8 time_cs);
+ void exfat_set_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
+-		u8 *tz, __le16 *time, __le16 *date, u8 *time_ms);
++		u8 *tz, __le16 *time, __le16 *date, u8 *time_cs);
+ unsigned short exfat_calc_chksum_2byte(void *data, int len,
+ 		unsigned short chksum, int type);
+ void exfat_update_bh(struct super_block *sb, struct buffer_head *bh, int sync);
+diff --git a/fs/exfat/exfat_raw.h b/fs/exfat/exfat_raw.h
+index 2a841010e..8d6c64a75 100644
+--- a/fs/exfat/exfat_raw.h
++++ b/fs/exfat/exfat_raw.h
+@@ -136,8 +136,8 @@ struct exfat_dentry {
+ 			__le16 modify_date;
+ 			__le16 access_time;
+ 			__le16 access_date;
+-			__u8 create_time_ms;
+-			__u8 modify_time_ms;
++			__u8 create_time_cs;
++			__u8 modify_time_cs;
+ 			__u8 create_tz;
+ 			__u8 modify_tz;
+ 			__u8 access_tz;
+diff --git a/fs/exfat/file.c b/fs/exfat/file.c
+index 483f68375..5eff50afd 100644
+--- a/fs/exfat/file.c
++++ b/fs/exfat/file.c
+@@ -165,7 +165,7 @@ int __exfat_truncate(struct inode *inode, loff_t new_size)
+ 				&ep->dentry.file.modify_tz,
+ 				&ep->dentry.file.modify_time,
+ 				&ep->dentry.file.modify_date,
+-				&ep->dentry.file.modify_time_ms);
++				&ep->dentry.file.modify_time_cs);
+ 		ep->dentry.file.attr = cpu_to_le16(ei->attr);
+ 
+ 		/* File size should be zero if there is no cluster allocated */
+diff --git a/fs/exfat/inode.c b/fs/exfat/inode.c
+index 06887492f..3f367d081 100644
+--- a/fs/exfat/inode.c
++++ b/fs/exfat/inode.c
+@@ -56,12 +56,12 @@ static int __exfat_write_inode(struct inode *inode, int sync)
+ 			&ep->dentry.file.create_tz,
+ 			&ep->dentry.file.create_time,
+ 			&ep->dentry.file.create_date,
+-			&ep->dentry.file.create_time_ms);
++			&ep->dentry.file.create_time_cs);
+ 	exfat_set_entry_time(sbi, &inode->i_mtime,
+ 			&ep->dentry.file.modify_tz,
+ 			&ep->dentry.file.modify_time,
+ 			&ep->dentry.file.modify_date,
+-			&ep->dentry.file.modify_time_ms);
++			&ep->dentry.file.modify_time_cs);
+ 	exfat_set_entry_time(sbi, &inode->i_atime,
+ 			&ep->dentry.file.access_tz,
+ 			&ep->dentry.file.access_time,
+diff --git a/fs/exfat/misc.c b/fs/exfat/misc.c
+index d32beb172..0d521ca24 100644
+--- a/fs/exfat/misc.c
++++ b/fs/exfat/misc.c
+@@ -75,7 +75,7 @@ static void exfat_adjust_tz(struct timespec64 *ts, u8 tz_off)
+ 
+ /* Convert a EXFAT time/date pair to a UNIX date (seconds since 1 1 70). */
+ void exfat_get_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
+-		u8 tz, __le16 time, __le16 date, u8 time_ms)
++		u8 tz, __le16 time, __le16 date, u8 time_cs)
+ {
+ 	u16 t = le16_to_cpu(time);
+ 	u16 d = le16_to_cpu(date);
+@@ -84,10 +84,10 @@ void exfat_get_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
+ 			      t >> 11, (t >> 5) & 0x003F, (t & 0x001F) << 1);
+ 
+ 
+-	/* time_ms field represent 0 ~ 199(1990 ms) */
+-	if (time_ms) {
+-		ts->tv_sec += time_ms / 100;
+-		ts->tv_nsec = (time_ms % 100) * 10 * NSEC_PER_MSEC;
++	/* time_cs field represent 0 ~ 199cs(1990 ms) */
++	if (time_cs) {
++		ts->tv_sec += time_cs / 100;
++		ts->tv_nsec = (time_cs % 100) * 10 * NSEC_PER_MSEC;
+ 	}
+ 
+ 	if (tz & EXFAT_TZ_VALID)
+@@ -100,7 +100,7 @@ void exfat_get_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
+ 
+ /* Convert linear UNIX date to a EXFAT time/date pair. */
+ void exfat_set_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
+-		u8 *tz, __le16 *time, __le16 *date, u8 *time_ms)
++		u8 *tz, __le16 *time, __le16 *date, u8 *time_cs)
+ {
+ 	struct tm tm;
+ 	u16 t, d;
+@@ -112,9 +112,9 @@ void exfat_set_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
+ 	*time = cpu_to_le16(t);
+ 	*date = cpu_to_le16(d);
+ 
+-	/* time_ms field represent 0 ~ 199(1990 ms) */
+-	if (time_ms)
+-		*time_ms = (tm.tm_sec & 1) * 100 +
++	/* time_cs field represent 0 ~ 199cs(1990 ms) */
++	if (time_cs)
++		*time_cs = (tm.tm_sec & 1) * 100 +
+ 			ts->tv_nsec / (10 * NSEC_PER_MSEC);
+ 
+ 	/*
+diff --git a/fs/exfat/namei.c b/fs/exfat/namei.c
+index 549274fef..27c0fe5c1 100644
+--- a/fs/exfat/namei.c
++++ b/fs/exfat/namei.c
+@@ -687,12 +687,12 @@ static int exfat_find(struct inode *dir, struct qstr *qname,
+ 				ep->dentry.file.create_tz,
+ 				ep->dentry.file.create_time,
+ 				ep->dentry.file.create_date,
+-				ep->dentry.file.create_time_ms);
++				ep->dentry.file.create_time_cs);
+ 		exfat_get_entry_time(sbi, &info->mtime,
+ 				ep->dentry.file.modify_tz,
+ 				ep->dentry.file.modify_time,
+ 				ep->dentry.file.modify_date,
+-				ep->dentry.file.modify_time_ms);
++				ep->dentry.file.modify_time_cs);
+ 		exfat_get_entry_time(sbi, &info->atime,
+ 				ep->dentry.file.access_tz,
+ 				ep->dentry.file.access_time,
+-- 
+2.25.0
 
