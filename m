@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A47C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A60ADC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:59:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5695122203
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:59:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C0462078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:59:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587045564;
-	bh=aXAtVK+3azr1DoaYGy80vAEztDOR8O4VG7NpPABhYWg=;
+	s=default; t=1587045576;
+	bh=P/0lskj5n+fVsZdBwi59YdaK/6ajOC5ljhBBmqt4dHw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z/L9kn4S5zOiQltjbujpNBRgXBGg5FMsQn9CzOHw5ORTGkj22dPdplh7i7r1Z1NEu
-	 K8hNXWdOKRxndoWzeiDKqTDWMA40w8723yPhv+0pkce0qjgu/3nBmVCWWeZfSL3ml3
-	 YXv2veE18593BGvjbHW8MEyXtpfISd6wccMcOBsU=
+	b=rI6zZtIPwmRWlKYJUtvueDa6mcQg4Y4Dv3R+qy3VsNq2dkGXzbOqHc/tEXbKE/E0D
+	 SoqYTVYpDx2W8EdJ/vQ96qJ98XKb56e6YimnVVk6t7lfLAZTU597yIbSRjQHTQXADX
+	 D8sY1DCH9mjqoMgkF1c146LcZbrJnGe4Cd5WKsqc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2898861AbgDPN7W (ORCPT
+        id S1729162AbgDPN7e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:59:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52512 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 09:59:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898032AbgDPNkA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:40:00 -0400
+        id S2898049AbgDPNkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:40:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D468218AC;
-        Thu, 16 Apr 2020 13:39:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF23520732;
+        Thu, 16 Apr 2020 13:40:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044399;
-        bh=aXAtVK+3azr1DoaYGy80vAEztDOR8O4VG7NpPABhYWg=;
+        s=default; t=1587044402;
+        bh=P/0lskj5n+fVsZdBwi59YdaK/6ajOC5ljhBBmqt4dHw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=baKMh1coucDXqOT5HiQp57zZDSA67OPzkF1i06qgXgM2XWGj1542ae6eq1nMiT0wR
-         47E1xXtZTbLc9t1FmegMF8WlQ4KRlaQCsv4AqKsJT20G+hlzsi1fUsXdTu74H9WmXb
-         vQ55T3wdTjGRJHiNnY9zoPlvpl2Yv5czN2/7PagM=
+        b=bQja+geixbrFiiX3egihn9sTb0/tcWbEK6YJGTfPupIyvHU5cl2lBVmEFM5Je9InM
+         MtqTsfQkoQBKZOV31cYbEvNgHfZ8GMDoOnSy5zuQR++cHJ2Z1c13OOhygqZbhMWsxn
+         H3RloXmC98iNMw75YeXGfW6Dw0k/2RCxy3hnRPm4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>,
-        Roger Quadros <rogerq@ti.com>, stable@kernel.org,
-        Tero Kristo <t-kristo@ti.com>
-Subject: [PATCH 5.5 200/257] arm64: dts: ti: k3-am65: Add clocks to dwc3 nodes
-Date:   Thu, 16 Apr 2020 15:24:11 +0200
-Message-Id: <20200416131351.113959638@linuxfoundation.org>
+        stable@vger.kernel.org, Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Fredrik Strupe <fredrik@strupe.net>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: [PATCH 5.5 201/257] arm64: armv8_deprecated: Fix undef_hook mask for thumb setend
+Date:   Thu, 16 Apr 2020 15:24:12 +0200
+Message-Id: <20200416131351.219534451@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
 References: <20200416131325.891903893@linuxfoundation.org>
@@ -60,45 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Gerlach <d-gerlach@ti.com>
+From: Fredrik Strupe <fredrik@strupe.net>
 
-commit a81e5442d796ccfa2cc97d205a5477053264d978 upstream.
+commit fc2266011accd5aeb8ebc335c381991f20e26e33 upstream.
 
-The TI sci-clk driver can scan the DT for all clocks provided by system
-firmware and does this by checking the clocks property of all nodes, so
-we must add this to the dwc3 nodes so USB clocks are available.
+For thumb instructions, call_undef_hook() in traps.c first reads a u16,
+and if the u16 indicates a T32 instruction (u16 >= 0xe800), a second
+u16 is read, which then makes up the the lower half-word of a T32
+instruction. For T16 instructions, the second u16 is not read,
+which makes the resulting u32 opcode always have the upper half set to
+0.
 
-Without this USB does not work with latest system firmware i.e.
-[    1.714662] clk: couldn't get parent clock 0 for /interconnect@100000/dwc3@4020000
+However, having the upper half of instr_mask in the undef_hook set to 0
+masks out the upper half of all thumb instructions - both T16 and T32.
+This results in trapped T32 instructions with the lower half-word equal
+to the T16 encoding of setend (b650) being matched, even though the upper
+half-word is not 0000 and thus indicates a T32 opcode.
 
-Fixes: cc54a99464ccd ("arm64: dts: ti: k3-am6: add USB suppor")
-Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
-Signed-off-by: Roger Quadros <rogerq@ti.com>
-Cc: stable@kernel.org
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
+An example of such a T32 instruction is eaa0b650, which should raise a
+SIGILL since T32 instructions with an eaa prefix are unallocated as per
+Arm ARM, but instead works as a SETEND because the second half-word is set
+to b650.
+
+This patch fixes the issue by extending instr_mask to include the
+upper u32 half, which will still match T16 instructions where the upper
+half is 0, but not T32 instructions.
+
+Fixes: 2d888f48e056 ("arm64: Emulate SETEND for AArch32 tasks")
+Cc: <stable@vger.kernel.org> # 4.0.x-
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Fredrik Strupe <fredrik@strupe.net>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/boot/dts/ti/k3-am65-main.dtsi |    2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/kernel/armv8_deprecated.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-@@ -307,6 +307,7 @@
- 		interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
- 		dma-coherent;
- 		power-domains = <&k3_pds 151 TI_SCI_PD_EXCLUSIVE>;
-+		clocks = <&k3_clks 151 2>, <&k3_clks 151 7>;
- 		assigned-clocks = <&k3_clks 151 2>, <&k3_clks 151 7>;
- 		assigned-clock-parents = <&k3_clks 151 4>,	/* set REF_CLK to 20MHz i.e. PER0_PLL/48 */
- 					 <&k3_clks 151 9>;	/* set PIPE3_TXB_CLK to CLK_12M_RC/256 (for HS only) */
-@@ -346,6 +347,7 @@
- 		interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
- 		dma-coherent;
- 		power-domains = <&k3_pds 152 TI_SCI_PD_EXCLUSIVE>;
-+		clocks = <&k3_clks 152 2>;
- 		assigned-clocks = <&k3_clks 152 2>;
- 		assigned-clock-parents = <&k3_clks 152 4>;	/* set REF_CLK to 20MHz i.e. PER0_PLL/48 */
- 
+--- a/arch/arm64/kernel/armv8_deprecated.c
++++ b/arch/arm64/kernel/armv8_deprecated.c
+@@ -601,7 +601,7 @@ static struct undef_hook setend_hooks[]
+ 	},
+ 	{
+ 		/* Thumb mode */
+-		.instr_mask	= 0x0000fff7,
++		.instr_mask	= 0xfffffff7,
+ 		.instr_val	= 0x0000b650,
+ 		.pstate_mask	= (PSR_AA32_T_BIT | PSR_AA32_MODE_MASK),
+ 		.pstate_val	= (PSR_AA32_T_BIT | PSR_AA32_MODE_USR),
 
 
