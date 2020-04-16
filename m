@@ -2,190 +2,93 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A74C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:57:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73415C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEC2A208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:57:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EC6C208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 12:58:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2894635AbgDPM5q (ORCPT
+        id S2894654AbgDPM6a convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 08:57:46 -0400
-Received: from foss.arm.com ([217.140.110.172]:60366 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2894447AbgDPM5l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 08:57:41 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 409AA1FB;
-        Thu, 16 Apr 2020 05:57:40 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B093E3F68F;
-        Thu, 16 Apr 2020 05:57:38 -0700 (PDT)
-Date:   Thu, 16 Apr 2020 13:57:36 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>, linux-arm-msm@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, Wei Xu <xuwei5@hisilicon.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Robert Richter <rrichter@marvell.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/2] arm64: Sort vendor-specific errata
-Message-ID: <20200416125736.GG4987@lakrids.cambridge.arm.com>
-References: <20200416115658.20406-1-geert+renesas@glider.be>
- <20200416115658.20406-2-geert+renesas@glider.be>
+        Thu, 16 Apr 2020 08:58:30 -0400
+Received: from zimbra2.kalray.eu ([92.103.151.219]:46790 "EHLO
+        zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2894447AbgDPM61 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 08:58:27 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id DB4B227E0DCF;
+        Thu, 16 Apr 2020 14:58:24 +0200 (CEST)
+Received: from zimbra2.kalray.eu ([127.0.0.1])
+        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id DHH_5V3HGF-F; Thu, 16 Apr 2020 14:58:24 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id A277C27E0DD4;
+        Thu, 16 Apr 2020 14:58:24 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
+Received: from zimbra2.kalray.eu ([127.0.0.1])
+        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id zT3WScpoRkvn; Thu, 16 Apr 2020 14:58:24 +0200 (CEST)
+Received: from zimbra2.kalray.eu (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id 8F92327E0DD2;
+        Thu, 16 Apr 2020 14:58:24 +0200 (CEST)
+Date:   Thu, 16 Apr 2020 14:58:24 +0200 (CEST)
+From:   =?utf-8?Q?Cl=C3=A9ment?= Leger <cleger@kalrayinc.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-spi <linux-spi@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Message-ID: <1262823717.15763605.1587041904410.JavaMail.zimbra@kalray.eu>
+In-Reply-To: <20200416124725.GI5354@sirena.org.uk>
+References: <20200416110823.22565-1-cleger@kalray.eu> <20200416110916.22633-1-cleger@kalray.eu> <20200416110916.22633-2-cleger@kalray.eu> <20200416113539.GG5354@sirena.org.uk> <622416308.15749883.1587037855167.JavaMail.zimbra@kalray.eu> <20200416124725.GI5354@sirena.org.uk>
+Subject: Re: [PATCH 2/2] spi: dw: remove cs_control and poll_mode members
+ from chip_data
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200416115658.20406-2-geert+renesas@glider.be>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [192.168.40.202]
+X-Mailer: Zimbra 8.8.15_GA_3895 (ZimbraWebClient - FF68 (Linux)/8.8.15_GA_3895)
+Thread-Topic: remove cs_control and poll_mode members from chip_data
+Thread-Index: u6+BzXYec9ZWEUrvuKhpkEo14J92aA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 01:56:57PM +0200, Geert Uytterhoeven wrote:
-> Sort configuration options for vendor-specific errata by vendor, to
-> increase uniformity.
-> Move ARM64_WORKAROUND_REPEAT_TLBI up, as it is also selected by
-> ARM64_ERRATUM_1286807.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-This makes sense to me, so FWIW:
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+----- On 16 Apr, 2020, at 14:47, Mark Brown broonie@kernel.org wrote:
 
-Mark.
+> On Thu, Apr 16, 2020 at 01:50:55PM +0200, Clément Leger wrote:
+>> Hi Mark,
+> 
+> Please don't top post, reply in line with needed context.  This allows
+> readers to readily follow the flow of conversation and understand what
+> you are talking about and also helps ensure that everything in the
+> discussion is being addressed.
 
-> ---
->  arch/arm64/Kconfig | 72 +++++++++++++++++++++++-----------------------
->  1 file changed, 36 insertions(+), 36 deletions(-)
+Sorry, I'll take care of that.
+
 > 
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 40fb05d96c6072c9..8d33d7fed6d8549b 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -553,6 +553,9 @@ config ARM64_ERRATUM_1530923
->  
->  	  If unsure, say Y.
->  
-> +config ARM64_WORKAROUND_REPEAT_TLBI
-> +	bool
-> +
->  config ARM64_ERRATUM_1286807
->  	bool "Cortex-A76: Modification of the translation table for a virtual address might lead to read-after-read ordering violation"
->  	default y
-> @@ -694,6 +697,35 @@ config CAVIUM_TX2_ERRATUM_219
->  
->  	  If unsure, say Y.
->  
-> +config FUJITSU_ERRATUM_010001
-> +	bool "Fujitsu-A64FX erratum E#010001: Undefined fault may occur wrongly"
-> +	default y
-> +	help
-> +	  This option adds a workaround for Fujitsu-A64FX erratum E#010001.
-> +	  On some variants of the Fujitsu-A64FX cores ver(1.0, 1.1), memory
-> +	  accesses may cause undefined fault (Data abort, DFSC=0b111111).
-> +	  This fault occurs under a specific hardware condition when a
-> +	  load/store instruction performs an address translation using:
-> +	  case-1  TTBR0_EL1 with TCR_EL1.NFD0 == 1.
-> +	  case-2  TTBR0_EL2 with TCR_EL2.NFD0 == 1.
-> +	  case-3  TTBR1_EL1 with TCR_EL1.NFD1 == 1.
-> +	  case-4  TTBR1_EL2 with TCR_EL2.NFD1 == 1.
-> +
-> +	  The workaround is to ensure these bits are clear in TCR_ELx.
-> +	  The workaround only affects the Fujitsu-A64FX.
-> +
-> +	  If unsure, say Y.
-> +
-> +config HISILICON_ERRATUM_161600802
-> +	bool "Hip07 161600802: Erroneous redistributor VLPI base"
-> +	default y
-> +	help
-> +	  The HiSilicon Hip07 SoC uses the wrong redistributor base
-> +	  when issued ITS commands such as VMOVP and VMAPP, and requires
-> +	  a 128kB offset to be applied to the target address in this commands.
-> +
-> +	  If unsure, say Y.
-> +
->  config QCOM_FALKOR_ERRATUM_1003
->  	bool "Falkor E1003: Incorrect translation due to ASID change"
->  	default y
-> @@ -705,9 +737,6 @@ config QCOM_FALKOR_ERRATUM_1003
->  	  is unchanged. Work around the erratum by invalidating the walk cache
->  	  entries for the trampoline before entering the kernel proper.
->  
-> -config ARM64_WORKAROUND_REPEAT_TLBI
-> -	bool
-> -
->  config QCOM_FALKOR_ERRATUM_1009
->  	bool "Falkor E1009: Prematurely complete a DSB after a TLBI"
->  	default y
-> @@ -729,25 +758,6 @@ config QCOM_QDF2400_ERRATUM_0065
->  
->  	  If unsure, say Y.
->  
-> -config SOCIONEXT_SYNQUACER_PREITS
-> -	bool "Socionext Synquacer: Workaround for GICv3 pre-ITS"
-> -	default y
-> -	help
-> -	  Socionext Synquacer SoCs implement a separate h/w block to generate
-> -	  MSI doorbell writes with non-zero values for the device ID.
-> -
-> -	  If unsure, say Y.
-> -
-> -config HISILICON_ERRATUM_161600802
-> -	bool "Hip07 161600802: Erroneous redistributor VLPI base"
-> -	default y
-> -	help
-> -	  The HiSilicon Hip07 SoC uses the wrong redistributor base
-> -	  when issued ITS commands such as VMOVP and VMAPP, and requires
-> -	  a 128kB offset to be applied to the target address in this commands.
-> -
-> -	  If unsure, say Y.
-> -
->  config QCOM_FALKOR_ERRATUM_E1041
->  	bool "Falkor E1041: Speculative instruction fetches might cause errant memory access"
->  	default y
-> @@ -758,22 +768,12 @@ config QCOM_FALKOR_ERRATUM_E1041
->  
->  	  If unsure, say Y.
->  
-> -config FUJITSU_ERRATUM_010001
-> -	bool "Fujitsu-A64FX erratum E#010001: Undefined fault may occur wrongly"
-> +config SOCIONEXT_SYNQUACER_PREITS
-> +	bool "Socionext Synquacer: Workaround for GICv3 pre-ITS"
->  	default y
->  	help
-> -	  This option adds a workaround for Fujitsu-A64FX erratum E#010001.
-> -	  On some variants of the Fujitsu-A64FX cores ver(1.0, 1.1), memory
-> -	  accesses may cause undefined fault (Data abort, DFSC=0b111111).
-> -	  This fault occurs under a specific hardware condition when a
-> -	  load/store instruction performs an address translation using:
-> -	  case-1  TTBR0_EL1 with TCR_EL1.NFD0 == 1.
-> -	  case-2  TTBR0_EL2 with TCR_EL2.NFD0 == 1.
-> -	  case-3  TTBR1_EL1 with TCR_EL1.NFD1 == 1.
-> -	  case-4  TTBR1_EL2 with TCR_EL2.NFD1 == 1.
-> -
-> -	  The workaround is to ensure these bits are clear in TCR_ELx.
-> -	  The workaround only affects the Fujitsu-A64FX.
-> +	  Socionext Synquacer SoCs implement a separate h/w block to generate
-> +	  MSI doorbell writes with non-zero values for the device ID.
->  
->  	  If unsure, say Y.
->  
-> -- 
-> 2.17.1
+>> Sorry, maybe the commit message was not clear enough but actually
+>> these fields were not initialized so it does not break anything
+>> (ie, the default values were always used).
 > 
+> When you remove the definition of the struct and declaration of the
+> variable pointing to it then the code won't compile.
+
+Yes I know and I took care of that but there is probably a misunderstanding.
+There is actually two structs with the same members (dw_chip_info and
+chip_data). The first one (chip_info) if it exists, is copied into the
+second (chip_data). First patch [1/2] removes the part of code that did
+copy these fields. And then second patchs removes the usage of chip_data
+fields. Please let me know if I missed something. I tried to recompile it
+and there is no build breakage.
+
+Clément
+
 > 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> > > This means that your first patch will break the build, to keep things
