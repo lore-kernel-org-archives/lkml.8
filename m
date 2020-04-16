@@ -2,120 +2,153 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E7DC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B576C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:18:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 447B121D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:18:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587050295;
-	bh=BAqaTz0T9ZLSoESWHVpY+5zttuwGC2+hAE3UYDhFKOQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dvQ5Y5xK0FBpQQEanCFUaUwxshszro00S8NX7eeaU5fSHm4MsUdTL65LwKDXzEFzy
-	 Xxhi4jrbn1lGPKVECIQBwZJFOg0HDeyFyltmhtXKQt3uLbf6Y+AYtlJtG/7Wu6mY51
-	 xWBicsR6pyeJC2tJzTSr7ByRwcsaHL4xAQzLMeVA=
+	by mail.kernel.org (Postfix) with ESMTP id D97D421D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:18:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="KunL1GHn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504029AbgDPPSK (ORCPT
+        id S2395084AbgDPPST (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:18:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34518 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2898746AbgDPNsi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:48:38 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41D39208E4;
-        Thu, 16 Apr 2020 13:48:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044911;
-        bh=BAqaTz0T9ZLSoESWHVpY+5zttuwGC2+hAE3UYDhFKOQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S7N0m5RjiP42FcbsZpIXulchpjICSYjtT6eIO27o5fHfCkCPFvznaTmEH4Qs1QQtI
-         HdyQ+wW9iJiwpZhGL5/U7QmbylLXoT4oxGqlsBWmswt+t3Q6/KLuiFGOLiNPPMwV06
-         eOrmlD9cKY9c9fEOXVniFQcABPwnse8W7tD7uWgI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.4 152/232] io_uring: honor original task RLIMIT_FSIZE
-Date:   Thu, 16 Apr 2020 15:24:06 +0200
-Message-Id: <20200416131334.008677152@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131316.640996080@linuxfoundation.org>
-References: <20200416131316.640996080@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 16 Apr 2020 11:18:19 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:42002 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2442384AbgDPPSH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 11:18:07 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 20E5497D;
+        Thu, 16 Apr 2020 17:18:03 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1587050283;
+        bh=kRV0TK76jaLsKumnRx9oBxQ+fB9EZ/hBhcVvcCrUN8Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KunL1GHnZWE+ve/sOLaoFkAzYPKX6+/n+r78iuYJs7x5e+okkGATOqE6ApGMnuikF
+         /2ayUcQFN/Z9UdwuSHJbBCZB/V8aA1w7KUzO09ROtISEFr9rEn/3j6xTfoHtnx7/rk
+         eGxptalaFyRgrldUK2vtce1M8FhIp7rddugLnmJg=
+Date:   Thu, 16 Apr 2020 18:17:51 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>
+Subject: Re: [RFC 5/6] drm/rcar-du: fix selection of CMM driver
+Message-ID: <20200416151751.GD4796@pendragon.ideasonboard.com>
+References: <20200414201739.GJ19819@pendragon.ideasonboard.com>
+ <CAK8P3a0hd5bsezrJS3+GV2nRMui4P5yeD2Rk7wQpJsAZeOCOUg@mail.gmail.com>
+ <20200414205158.GM19819@pendragon.ideasonboard.com>
+ <CAK8P3a1PZbwdvdH_Gi9UQVUz2+_a8QDxKuWLqPtjhK1stxzMBQ@mail.gmail.com>
+ <CAMuHMdUb=XXucGUbxt26tZ1xu9pdyVUB8RVsfB2SffURVVXwSg@mail.gmail.com>
+ <CAK8P3a1uasBFg9dwvPEcokrRhYE2qh6iwOMW1fDTY+LBZMrTjg@mail.gmail.com>
+ <CAK8P3a0CoPUTSJp6ddDnmabo59iE73pugGSYayoeB5N57az9_w@mail.gmail.com>
+ <20200415211220.GQ4758@pendragon.ideasonboard.com>
+ <CAK8P3a1rDZO4cuL6VAXgu9sOiedcHqOSL7ELhpvULz+YYRaGbA@mail.gmail.com>
+ <CAKMK7uEoZ1jC8c25tPVX20kcdC1=+TpUUNyf+-c=sg5iK2cTZA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAKMK7uEoZ1jC8c25tPVX20kcdC1=+TpUUNyf+-c=sg5iK2cTZA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+On Thu, Apr 16, 2020 at 08:51:14AM +0200, Daniel Vetter wrote:
+> On Wed, Apr 15, 2020 at 11:22 PM Arnd Bergmann wrote:
+> > On Wed, Apr 15, 2020 at 11:12 PM Laurent Pinchart wrote:
+> > > On Wed, Apr 15, 2020 at 09:07:14PM +0200, Arnd Bergmann wrote:
+> > > > On Wed, Apr 15, 2020 at 5:18 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> > > > > On Wed, Apr 15, 2020 at 4:13 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > > > > On Wed, Apr 15, 2020 at 3:47 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> > > > > > > On Tue, Apr 14, 2020 at 10:52 PM Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
+> > > > > > > > Doesn't "imply" mean it gets selected by default but can be manually
+> > > > > > > > disabled ?
+> > > > > > >
+> > > > > > > That may be what it means now (I still don't understand how it's defined
+> > > > > > > as of v5.7-rc1), but traditionally it was more like a 'select if all
+> > > > > > > dependencies are met'.
+> > > > > >
+> > > > > > That's still what it is supposed to mean right now ;-)
+> > > > > > Except that now it should correctly handle the modular case, too.
+> > > > >
+> > > > > Then there is a bug. If I run 'make menuconfig' now on a mainline kernel
+> > > > > and enable CONFIG_DRM_RCAR_DU, I can set
+> > > > > DRM_RCAR_CMM and DRM_RCAR_LVDS to 'y', 'n' or 'm' regardless
+> > > > > of whether CONFIG_DRM_RCAR_DU is 'm' or 'y'. The 'implies'
+> > > > > statement seems to be ignored entirely, except as reverse 'default'
+> > > > > setting.
+> > > >
+> > > > Here is another version that should do what we want and is only
+> > > > half-ugly. I can send that as a proper patch if it passes my testing
+> > > > and nobody hates it too much.
+> > >
+> > > This may be a stupid question, but doesn't this really call for fixing
+> > > Kconfig ? This seems to be such a common pattern that requiring
+> > > constructs similar to the ones below will be a never-ending chase of
+> > > offenders.
+> >
+> > Maybe, I suppose the hardest part here would be to come up with
+> > an appropriate name for the keyword ;-)
+> >
+> > Any suggestions?
 
-commit 4ed734b0d0913e566a9d871e15d24eb240f269f7 upstream.
+Would it make sense to fix the imply semantics ? Or are they use cases
+for the current behaviour of imply ? "recommend" could be another
+keyword. I think we should try to limit the number of keywords though,
+as it would otherwise become quite messy.
 
-With the previous fixes for number of files open checking, I added some
-debug code to see if we had other spots where we're checking rlimit()
-against the async io-wq workers. The only one I found was file size
-checking, which we should also honor.
+> > This specific issue is fairly rare though, in most cases the dependencies
+> > are in the right order so a Kconfig symbol 'depends on' a second one
+> > when the corresponding loadable module uses symbols from that second
+> > module. The problem here is that the two are mixed up.
+> >
+> > The much more common problem is the one where one needs to
+> > wrong
+> >
+> > config FOO
+> >        depends on BAR || !BAR
+> >
+> > To ensure the dependency is either met or BAR is disabled, but
+> > not FOO=y with BAR=m. If you have any suggestions for a keyword
+> > for that thing, we can clean up hundreds of such instances.
+> 
+> Some ideas:
+> 
+> config FOO
+>     can use  BAR
+>     maybe BAR
+>     optional BAR
 
-During write and fallocate prep, store the max file size and override
-that for the current ask if we're in io-wq worker context.
+Another idea,
 
-Cc: stable@vger.kernel.org # 5.1+
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+	depends optionally on BAR
 
+> We should probably double-check that this is only ever used for when
+> both FOO and BAR are tri-state, since without that it doesn't make
+> much sense.
 
----
- fs/io_uring.c |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+-- 
+Regards,
 
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -331,6 +331,7 @@ struct io_kiocb {
- #define REQ_F_ISREG		2048	/* regular file */
- #define REQ_F_MUST_PUNT		4096	/* must be punted even for NONBLOCK */
- #define REQ_F_TIMEOUT_NOSEQ	8192	/* no timeout sequence */
-+	unsigned long		fsize;
- 	u64			user_data;
- 	u32			result;
- 	u32			sequence;
-@@ -1085,6 +1086,9 @@ static int io_prep_rw(struct io_kiocb *r
- 	if (S_ISREG(file_inode(req->file)->i_mode))
- 		req->flags |= REQ_F_ISREG;
- 
-+	if (force_nonblock)
-+		req->fsize = rlimit(RLIMIT_FSIZE);
-+
- 	/*
- 	 * If the file doesn't support async, mark it as REQ_F_MUST_PUNT so
- 	 * we know to async punt it even if it was opened O_NONBLOCK
-@@ -1504,10 +1508,17 @@ static int io_write(struct io_kiocb *req
- 		}
- 		kiocb->ki_flags |= IOCB_WRITE;
- 
-+		if (!force_nonblock)
-+			current->signal->rlim[RLIMIT_FSIZE].rlim_cur = req->fsize;
-+
- 		if (file->f_op->write_iter)
- 			ret2 = call_write_iter(file, kiocb, &iter);
- 		else
- 			ret2 = loop_rw_iter(WRITE, file, kiocb, &iter);
-+
-+		if (!force_nonblock)
-+			current->signal->rlim[RLIMIT_FSIZE].rlim_cur = RLIM_INFINITY;
-+
- 		if (!force_nonblock || ret2 != -EAGAIN) {
- 			io_rw_done(kiocb, ret2);
- 		} else {
-
-
+Laurent Pinchart
