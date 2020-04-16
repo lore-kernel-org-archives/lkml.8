@@ -2,251 +2,84 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E573DC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B78C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:59:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7AAA206E9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:59:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51D99206E9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:59:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587038380;
+	bh=C02HcDV/4ymZNiH43m0bSPRVlDyWt+JoeqGraHiMLd0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zoeD873YE4HF11doW8N45PxCiUw+KC7Gw+0hGFtL7S5heTpNHHUb1WxfjMSP1xHkZ
+	 qgUGh3UTH1nEv/CGxVztivayc5j7yu4FCsfilm8AdUwsB+UgN8pc0pxxhbYbIDv6b4
+	 cpobVpHuZbjYa3Sa1wYlIFXxM5ug4x1OvHDQ3pHI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634791AbgDPL7T (ORCPT
+        id S2634786AbgDPL7e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 07:59:19 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:58726 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2634579AbgDPL6J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 07:58:09 -0400
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03GBqVpT019700;
-        Thu, 16 Apr 2020 07:58:09 -0400
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 30dn9adgm8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Apr 2020 07:58:08 -0400
-Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 03GBw7aZ016574
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Thu, 16 Apr 2020 07:58:07 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Thu, 16 Apr
- 2020 07:58:06 -0400
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Thu, 16 Apr 2020 07:58:06 -0400
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 03GBw2DY013213;
-        Thu, 16 Apr 2020 07:58:05 -0400
-From:   <alexandru.tachici@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-CC:     <jic23@kernel.org>, <robh+dt@kernel.org>
-Subject: [PATCH v2 2/2] dt-bindings: iio: dac: AD5570R fix bindings errors
-Date:   Thu, 16 Apr 2020 14:58:48 +0300
-Message-ID: <20200416115848.56156-3-alexandru.tachici@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200416115848.56156-1-alexandru.tachici@analog.com>
-References: <20200416115848.56156-1-alexandru.tachici@analog.com>
+        Thu, 16 Apr 2020 07:59:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57642 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2634634AbgDPL6a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 07:58:30 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84BA521D7F;
+        Thu, 16 Apr 2020 11:58:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587038307;
+        bh=C02HcDV/4ymZNiH43m0bSPRVlDyWt+JoeqGraHiMLd0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=URf8tVUpg0dmW48kXtETXHP24CfevH1ltJdpvaAbByZa5tCvk27qPG9Kfjtvb4RAs
+         tlGYb9cWL6gOnGvPrPDx0n8WM9ShN8U2ZjoQEDehefBb+vVe2Mnw3CPY3McZnvoZ9w
+         Bg39tBl0Nx4JN2v/pxk4wIRYnLg1kI+62/88Of/0=
+Date:   Thu, 16 Apr 2020 12:58:22 +0100
+From:   Will Deacon <will@kernel.org>
+To:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu
+Cc:     linux-kernel@vger.kernel.org,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Doug Anderson <dianders@chromium.org>, kernel-team@android.com
+Subject: Re: [PATCH 8/8] arm64: cpufeature: Add an overview comment for the
+ cpufeature framework
+Message-ID: <20200416115817.GB32443@willie-the-truck>
+References: <20200414213114.2378-1-will@kernel.org>
+ <20200414213114.2378-9-will@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-16_03:2020-04-14,2020-04-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 phishscore=0
- impostorscore=0 bulkscore=0 malwarescore=0 mlxlogscore=999 clxscore=1015
- mlxscore=0 priorityscore=1501 suspectscore=0 adultscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004160084
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200414213114.2378-9-will@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandru Tachici <alexandru.tachici@analog.com>
+Hi Suzuki,
 
-Replaced num property with reg property, fixed errors
-reported by dt-binding-check.
+On Tue, Apr 14, 2020 at 10:31:14PM +0100, Will Deacon wrote:
+> Now that Suzuki isn't within throwing distance, I thought I'd better add
+> a rough overview comment to cpufeature.c so that it doesn't take me days
+> to remember how it works next time.
+> 
+> Signed-off-by: Will Deacon <will@kernel.org>
+> ---
+>  arch/arm64/kernel/cpufeature.c | 43 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 43 insertions(+)
 
-Fixes: ea52c21268e6 ("iio: dac: ad5770r: Add AD5770R support")
-Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
----
- .../bindings/iio/dac/adi,ad5770r.yaml         | 82 +++++++++----------
- 1 file changed, 39 insertions(+), 43 deletions(-)
+Any chance you can look at this one, please? I don't trust myself to get
+all of the details right here! I'm also wondering whether we should mention
+something about KVM and the guest view of the registers.
 
-diff --git a/Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml b/Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml
-index d9c25cf4b92f..87e9b2802013 100644
---- a/Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml
-+++ b/Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml
-@@ -2,7 +2,7 @@
- # Copyright 2020 Analog Devices Inc.
- %YAML 1.2
- ---
--$id: http://devicetree.org/schemas/bindings/iio/dac/adi,ad5770r.yaml#
-+$id: http://devicetree.org/schemas/iio/dac/adi,ad5770r.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
- title: Analog Devices AD5770R DAC device driver
-@@ -49,83 +49,77 @@ properties:
-       asserted during driver probe.
-     maxItems: 1
- 
--  channel0:
-+  channel@0:
-     description: Represents an external channel which are
-       connected to the DAC. Channel 0 can act both as a current
-       source and sink.
-     type: object
- 
-     properties:
--      num:
-+      reg:
-         description: This represents the channel number.
--        items:
--          const: 0
-+        const: 0
- 
-       adi,range-microamp:
-           description: Output range of the channel.
-           oneOf:
--            - $ref: /schemas/types.yaml#/definitions/int32-array
-             - items:
--                - enum: [0 300000]
--                - enum: [-60000 0]
--                - enum: [-60000 300000]
-+                - const: 0
-+                - const: 300000
-+            - items:
-+                - const: -60000
-+                - const: 0
-+            - items:
-+                - const: -60000
-+                - const: 300000
- 
--  channel1:
-+  channel@1:
-     description: Represents an external channel which are
-       connected to the DAC.
-     type: object
- 
-     properties:
--      num:
-+      reg:
-         description: This represents the channel number.
--        items:
--          const: 1
-+        const: 1
- 
-       adi,range-microamp:
-           description: Output range of the channel.
--          oneOf:
--            - $ref: /schemas/types.yaml#/definitions/uint32-array
--            - items:
--                - enum: [0 140000]
--                - enum: [0 250000]
-+          items:
-+            - const: 0
-+            - enum: [ 140000, 250000 ]
- 
--  channel2:
-+  channel@2:
-     description: Represents an external channel which are
-       connected to the DAC.
-     type: object
- 
-     properties:
--      num:
-+      reg:
-         description: This represents the channel number.
--        items:
--          const: 2
-+        const: 2
- 
-       adi,range-microamp:
-           description: Output range of the channel.
--          oneOf:
--            - $ref: /schemas/types.yaml#/definitions/uint32-array
--            - items:
--                - enum: [0 140000]
--                - enum: [0 250000]
-+          items:
-+            - const: 0
-+            - enum: [ 55000, 150000 ]
- 
- patternProperties:
-   "^channel@([3-5])$":
-     type: object
-     description: Represents the external channels which are connected to the DAC.
-     properties:
--      num:
-+      reg:
-         description: This represents the channel number.
--        items:
--          minimum: 3
--          maximum: 5
-+        minimum: 3
-+        maximum: 5
- 
-       adi,range-microamp:
-           description: Output range of the channel.
--          oneOf:
--            - $ref: /schemas/types.yaml#/definitions/uint32-array
--            - items:
--                - enum: [0 45000]
--                - enum: [0 100000]
-+          items:
-+            - const: 0
-+            - enum: [ 45000, 100000 ]
- 
- required:
- - reg
-@@ -150,34 +144,36 @@ examples:
-                         vref-supply = <&vref>;
-                         adi,external-resistor;
-                         reset-gpios = <&gpio 22 0>;
-+                        #address-cells = <1>;
-+                        #size-cells = <0>;
- 
-                         channel@0 {
--                                num = <0>;
--                                adi,range-microamp = <(-60000) 300000>;
-+                                reg = <0>;
-+                                adi,range-microamp = <0 300000>;
-                         };
- 
-                         channel@1 {
--                                num = <1>;
-+                                reg = <1>;
-                                 adi,range-microamp = <0 140000>;
-                         };
- 
-                         channel@2 {
--                                num = <2>;
-+                                reg = <2>;
-                                 adi,range-microamp = <0 55000>;
-                         };
- 
-                         channel@3 {
--                                num = <3>;
-+                                reg = <3>;
-                                 adi,range-microamp = <0 45000>;
-                         };
- 
-                         channel@4 {
--                                num = <4>;
-+                                reg = <4>;
-                                 adi,range-microamp = <0 45000>;
-                         };
- 
-                         channel@5 {
--                                num = <5>;
-+                                reg = <5>;
-                                 adi,range-microamp = <0 45000>;
-                         };
-                 };
--- 
-2.20.1
+What do you think?
 
+Will
