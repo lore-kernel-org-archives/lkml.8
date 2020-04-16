@@ -2,135 +2,130 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB83C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:42:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD68C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:42:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E02EB21D91
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:42:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAE7E2223D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:42:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587051725;
-	bh=YvEO37qKCjWeczjWU6192GteB1w/O74tNl8rInnF+to=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zuq9suvC81XjIbcn256xusuAAEsoKTBd7uLU+hBkuRR5ONFF4TiQLS9Cx2cwL93ZY
-	 MYLN7XJx2M3BPzKhKhz5iCQJ0i/aj2qh8ICiRRgj8brCeUTbihWTlPYrewSVlCknjk
-	 aFMzd61rSB/TeoSbJJh0DDHPZ+3duItYRTiRp7TE=
+	s=default; t=1587051732;
+	bh=Mj4msVtmQONYhcgmUcQloVMegHSeu02UZ1iqSI5EdKs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=frgdM06a6kP+skqjBH8LZ6Y+hiaGLvxvLp3xnlb5xdxHaJckokcEi11prZaykBcaS
+	 fz/GOUmrSxeh2yRvGWY308Fcx8ly4CcV9QxuBq8qBn3EO2SksjDT21YHr59CWLPU0J
+	 PrmlqAWrRWQ0Yy0ctItdPeN9LeMH1IN4gRv+meWs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633818AbgDPPmE (ORCPT
+        id S2395394AbgDPPmK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:42:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48976 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897368AbgDPNgu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:36:50 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9795F208E4;
-        Thu, 16 Apr 2020 13:36:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587044210;
-        bh=YvEO37qKCjWeczjWU6192GteB1w/O74tNl8rInnF+to=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ryl6V0VYSpW0q4WDOjtVIL8FG9jt1ZGcd7eJJLZtQitvxdIjNlFz2HVCor1iCzqle
-         XyC6wbAAT41zuxGr1YCwV/Kjn/2hI5iwjv8VhyMbO2ia7iZjTn2HY8iKm59lq4rexl
-         4c8gwLwwFG2HnHTj/yPiHkc2ckqHhZWwGxpLjPPc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Boqun Feng <boqun.feng@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Pavankumar Kondeti <pkondeti@codeaurora.org>
-Subject: [PATCH 5.5 126/257] cpu/hotplug: Ignore pm_wakeup_pending() for disable_nonboot_cpus()
-Date:   Thu, 16 Apr 2020 15:22:57 +0200
-Message-Id: <20200416131342.112609544@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200416131325.891903893@linuxfoundation.org>
-References: <20200416131325.891903893@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 16 Apr 2020 11:42:10 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:35019 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2395513AbgDPPl7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 11:41:59 -0400
+Received: by mail-ot1-f67.google.com with SMTP id e20so3455780otl.2;
+        Thu, 16 Apr 2020 08:41:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=v2r2r7O0CFpemVMZF52M89j+FDaTZj9iicBxWLrdGKQ=;
+        b=cWxSd2WFCpFpPKJYhn5g9auh747t7vpQLWrKQiFns9euE2mwmJAxx4OswvcW1SJdNr
+         5pBjf6DV7dvZCsq/fSzoUVXlvHRMkSx5+4PlPcqxb8BQm35ojCCp0MlczkoZdT58Ta9L
+         BLYBbqLol5UHyDawboY8p67ytB3sBdgT3UQNQYdCNc4vftu64uKewgavnd19LZdU6PWA
+         R96S9mVXSX/WFaMjCeyPrONJ43dwpqq0/TAWr1f9VwP6OVDa3Bqix21AjhDx+GCjR7ck
+         uKHyl+TEPCjWd8upAIVIeBD/5m6jvkVL9UlByAYK3e+k1npepC+Ytb0Vcxb/mHfkUayd
+         wrNg==
+X-Gm-Message-State: AGi0PuYG8NhUrTEKoXVwKRBu6oI4hiyibXJJem/CiN5kOx3pT3FFcZ1v
+        l18MSUDnR7YzSGa3yYkHEEWvNbNvbGQtpZ1Q3RU=
+X-Google-Smtp-Source: APiQypKYmfqXSVukeSYfuQdxJzi/Fy9tusMoaZDOo2RFrsmXI9m1AdnnIuDy0Q/dp38vblR7AcNuNmt5u6ZjLa0nqSU=
+X-Received: by 2002:a9d:6ac8:: with SMTP id m8mr17036281otq.262.1587051718557;
+ Thu, 16 Apr 2020 08:41:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200416054745.740-1-ggherdovich@suse.cz> <20200416054745.740-2-ggherdovich@suse.cz>
+In-Reply-To: <20200416054745.740-2-ggherdovich@suse.cz>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 16 Apr 2020 17:41:47 +0200
+Message-ID: <CAJZ5v0hypB1cYAis6+tg5_ckY6Z4-Xbif8ZUj5ZP+M9SFHM4fw@mail.gmail.com>
+Subject: Re: [PATCH 1/4] x86, sched: Bail out of frequency invariance if base
+ frequency is unknown
+To:     Giovanni Gherdovich <ggherdovich@suse.cz>
+Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@suse.de>, Len Brown <lenb@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Doug Smythies <dsmythies@telus.net>,
+        Like Xu <like.xu@linux.intel.com>,
+        Neil Rickert <nwr10cst-oslnx@yahoo.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+On Thu, Apr 16, 2020 at 7:48 AM Giovanni Gherdovich <ggherdovich@suse.cz> wrote:
+>
+> Some hypervisors such as VMWare ESXi 5.5 advertise support for
+> X86_FEATURE_APERFMPERF but then fill all MSR's with zeroes. In particular,
+> MSR_PLATFORM_INFO set to zero tricks the code that wants to know the base
+> clock frequency of the CPU (highest non-turbo frequency), producing a
+> division by zero when computing the ratio turbo_freq/base_freq necessary
+> for frequency invariant accounting.
+>
+> It is to be noted that even if MSR_PLATFORM_INFO contained the appropriate
+> data, APERF and MPERF are constantly zero on ESXi 5.5, thus freq-invariance
+> couldn't be done in principle (not that it would make a lot of sense in a
+> VM anyway). The real problem is advertising X86_FEATURE_APERFMPERF. This
+> appears to be fixed in more recent versions: ESXi 6.7 doesn't advertise
+> that feature.
+>
+> Signed-off-by: Giovanni Gherdovich <ggherdovich@suse.cz>
+> Fixes: 1567c3e3467c ("x86, sched: Add support for frequency invariance")
 
-commit e98eac6ff1b45e4e73f2e6031b37c256ccb5d36b upstream.
+Please feel free to add
 
-A recent change to freeze_secondary_cpus() which added an early abort if a
-wakeup is pending missed the fact that the function is also invoked for
-shutdown, reboot and kexec via disable_nonboot_cpus().
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-In case of disable_nonboot_cpus() the wakeup event needs to be ignored as
-the purpose is to terminate the currently running kernel.
+to all patches in the series and I'm expecting them to be routed through tip.
 
-Add a 'suspend' argument which is only set when the freeze is in context of
-a suspend operation. If not set then an eventually pending wakeup event is
-ignored.
+Thanks!
 
-Fixes: a66d955e910a ("cpu/hotplug: Abort disabling secondary CPUs if wakeup is pending")
-Reported-by: Boqun Feng <boqun.feng@gmail.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Pavankumar Kondeti <pkondeti@codeaurora.org>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/874kuaxdiz.fsf@nanos.tec.linutronix.de
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- include/linux/cpu.h |   12 +++++++++---
- kernel/cpu.c        |    4 ++--
- 2 files changed, 11 insertions(+), 5 deletions(-)
-
---- a/include/linux/cpu.h
-+++ b/include/linux/cpu.h
-@@ -138,12 +138,18 @@ static inline void get_online_cpus(void)
- static inline void put_online_cpus(void) { cpus_read_unlock(); }
- 
- #ifdef CONFIG_PM_SLEEP_SMP
--extern int freeze_secondary_cpus(int primary);
-+int __freeze_secondary_cpus(int primary, bool suspend);
-+static inline int freeze_secondary_cpus(int primary)
-+{
-+	return __freeze_secondary_cpus(primary, true);
-+}
-+
- static inline int disable_nonboot_cpus(void)
- {
--	return freeze_secondary_cpus(0);
-+	return __freeze_secondary_cpus(0, false);
- }
--extern void enable_nonboot_cpus(void);
-+
-+void enable_nonboot_cpus(void);
- 
- static inline int suspend_disable_secondary_cpus(void)
- {
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -1212,7 +1212,7 @@ EXPORT_SYMBOL_GPL(cpu_up);
- #ifdef CONFIG_PM_SLEEP_SMP
- static cpumask_var_t frozen_cpus;
- 
--int freeze_secondary_cpus(int primary)
-+int __freeze_secondary_cpus(int primary, bool suspend)
- {
- 	int cpu, error = 0;
- 
-@@ -1237,7 +1237,7 @@ int freeze_secondary_cpus(int primary)
- 		if (cpu == primary)
- 			continue;
- 
--		if (pm_wakeup_pending()) {
-+		if (suspend && pm_wakeup_pending()) {
- 			pr_info("Wakeup pending. Abort CPU freeze\n");
- 			error = -EBUSY;
- 			break;
-
-
+> ---
+>  arch/x86/kernel/smpboot.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+>
+> diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
+> index fe3ab9632f3b..3a318ec9bc17 100644
+> --- a/arch/x86/kernel/smpboot.c
+> +++ b/arch/x86/kernel/smpboot.c
+> @@ -1985,6 +1985,15 @@ static bool intel_set_max_freq_ratio(void)
+>         return false;
+>
+>  out:
+> +       /*
+> +        * Some hypervisors advertise X86_FEATURE_APERFMPERF
+> +        * but then fill all MSR's with zeroes.
+> +        */
+> +       if (!base_freq) {
+> +               pr_debug("Couldn't determine cpu base frequency, necessary for scale-invariant accounting.\n");
+> +               return false;
+> +       }
+> +
+>         arch_turbo_freq_ratio = div_u64(turbo_freq * SCHED_CAPACITY_SCALE,
+>                                         base_freq);
+>         arch_set_max_freq_ratio(turbo_disabled());
+> --
+> 2.16.4
+>
