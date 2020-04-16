@@ -2,147 +2,68 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC37C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 22:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A82D2C38A29
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 22:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1C0122202
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 22:15:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VSpuvb+Q"
+	by mail.kernel.org (Postfix) with ESMTP id 86E26221F9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 22:15:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587075326;
+	bh=HOqPb2Qq8e5yW7Jlud99HTRS62wgavXqv2O8zf4R+io=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=TI0YDYjCbI6N2GTyjI484ORzoXWirKOUfj1fdxmuv0/xDuMHzI4Q2ioYXEJdZsoL6
+	 eDqCxC0gEmr9FWjE4VLd5Bndm+TZJQgpqNCnrPMjMsvsPZrb+Gh0QMjxOiko68r09z
+	 tpOcVG+tQib81/cBX3elQDzXmcnOFu7Xy5TKMFT8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728893AbgDPWPU (ORCPT
+        id S1729381AbgDPWPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 18:15:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53348 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729205AbgDPWPN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 18:15:13 -0400
-Received: from mail-pg1-x549.google.com (mail-pg1-x549.google.com [IPv6:2607:f8b0:4864:20::549])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DD43C061A0F
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 15:15:13 -0700 (PDT)
-Received: by mail-pg1-x549.google.com with SMTP id 35so4496772pgw.9
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 15:15:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=a6tQ7DnVmCoPtEQQNpyDptK3byF4qMP4x4cRpQx2XV4=;
-        b=VSpuvb+QoQf9QGJO/bKkb6a0mMCT1c3qTQfqf3ZY85vjlilCuSXENOmeQHb62koM9w
-         XbeY0yOTY99mBk2z8OYdIwryXikTZYnpqid/PoniY/ODL3f752x75QbCGFJP/uOO4Q6I
-         H+Wn9lzayNhLqbP+JKr9O4A76GE6/GwcYAyu3QAIHZVIOuGle7F+ed9VytOMVZWkQZLt
-         Y7OyGpM5qn5aKjI3NIpX2F4PF+N5jwGswsfjHTZjAnY0rSaRg+8XF7lLkLtXIwOHe29o
-         FM731+xhUXrdyelizdVpWsBZ60c6tfI3OcnmpeOQQXrQNfcR5OCsxtaizgyQmbo/Fk+6
-         GeQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=a6tQ7DnVmCoPtEQQNpyDptK3byF4qMP4x4cRpQx2XV4=;
-        b=KYLEDYIO5Nax2TVfPuOSR3nRf6IN6FoKWq89IpFgTQBFoueHKDDSl6twU5HhV27D87
-         riPohjgemCi+N4O9G1K6kquFeH1DfD9hK4/nxRfDuc44mrGzVvzNPIfZBxb2yTspOEYk
-         g7FE7Z1KRNIqobcIO2et53qyOEqWQYA37noXvfhgoVv9Di5bNQp1W1Uqjjb4zKDVnU4Z
-         Utem5PUy96YA6joGB2C4uX6X8MeOCusnUjXA1ZPkUVTdZYcM8aOsgtlv5qMwwho5LaAT
-         5sKMSmEFrQgjcXbdDFO8E5Kly26NY9kSz1FRCKcGKHOFpMwp6NZF+WuwWs0Gl7ZM5TD3
-         in9g==
-X-Gm-Message-State: AGi0PuYQEVWl5iGUh/LRBfSe1D86VoCui6nZDuVq7cr6GYA+XjLQCjyi
-        BbDeMkCoGFI7YGEtUvkG8YsJ9yo8vxWQ
-X-Google-Smtp-Source: APiQypIDOMildhMQgDP32zuTFSthoR2gRh2sx0VRQzNoI4pCDN4T3ENCpQgvTfArzjKf2QHi410X4TPtHJKc
-X-Received: by 2002:a17:90a:f689:: with SMTP id cl9mr596069pjb.43.1587075312472;
- Thu, 16 Apr 2020 15:15:12 -0700 (PDT)
-Date:   Thu, 16 Apr 2020 15:14:56 -0700
-In-Reply-To: <20200416221457.46710-1-irogers@google.com>
-Message-Id: <20200416221457.46710-4-irogers@google.com>
-Mime-Version: 1.0
-References: <20200416221457.46710-1-irogers@google.com>
-X-Mailer: git-send-email 2.26.1.301.g55bc3eb7cb9-goog
-Subject: [PATCH v11 3/4] perf pmu: add perf_pmu__find_by_type helper
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jiwei Sun <jiwei.sun@windriver.com>,
-        yuzhoujian <yuzhoujian@didichuxing.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 16 Apr 2020 18:15:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54632 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729205AbgDPWPW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 18:15:22 -0400
+Subject: Re: [GIT] Networking
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587075322;
+        bh=HOqPb2Qq8e5yW7Jlud99HTRS62wgavXqv2O8zf4R+io=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=2d0Y6r1PfdUwFvnMNIwdttt5Ucro/FTLyg0R7OIheqwM4lfiSASrM8W6GX01ZURm9
+         Xo9Umbh0Ku/DjHw2KEqTQXlfgmJECfF0He8rZFSq7AVVH49aUJBk/iwlwdZFM2CHCi
+         s7m5eHkiZYSLTZPxAmnr5r76irxfpyKScGr+oVJk=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200416.141936.727995804019732370.davem@davemloft.net>
+References: <20200416.141936.727995804019732370.davem@davemloft.net>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200416.141936.727995804019732370.davem@davemloft.net>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git
+ refs/heads/master
+X-PR-Tracked-Commit-Id: d518691cbd3be3dae218e05cca3f3fc9b2f1aa77
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: c8372665b4b96d6a818b2693dd49236d5f9c8bc2
+Message-Id: <158707532201.2733.5261507215167344130.pr-tracker-bot@kernel.org>
+Date:   Thu, 16 Apr 2020 22:15:22 +0000
+To:     David Miller <davem@davemloft.net>
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephane Eranian <eranian@google.com>
+The pull request you sent on Thu, 16 Apr 2020 14:19:36 -0700 (PDT):
 
-This is used by libpfm4 during event parsing to locate the pmu for an
-event.
+> git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git refs/heads/master
 
-Signed-off-by: Stephane Eranian <eranian@google.com>
-Reviewed-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/pmu.c | 11 +++++++++++
- tools/perf/util/pmu.h |  1 +
- 2 files changed, 12 insertions(+)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/c8372665b4b96d6a818b2693dd49236d5f9c8bc2
 
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index ef6a63f3d386..5e918ca740c6 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -869,6 +869,17 @@ static struct perf_pmu *pmu_find(const char *name)
- 	return NULL;
- }
- 
-+struct perf_pmu *perf_pmu__find_by_type(unsigned int type)
-+{
-+	struct perf_pmu *pmu;
-+
-+	list_for_each_entry(pmu, &pmus, list)
-+		if (pmu->type == type)
-+			return pmu;
-+
-+	return NULL;
-+}
-+
- struct perf_pmu *perf_pmu__scan(struct perf_pmu *pmu)
- {
- 	/*
-diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-index 5fb3f16828df..de3b868d912c 100644
---- a/tools/perf/util/pmu.h
-+++ b/tools/perf/util/pmu.h
-@@ -65,6 +65,7 @@ struct perf_pmu_alias {
- };
- 
- struct perf_pmu *perf_pmu__find(const char *name);
-+struct perf_pmu *perf_pmu__find_by_type(unsigned int type);
- int perf_pmu__config(struct perf_pmu *pmu, struct perf_event_attr *attr,
- 		     struct list_head *head_terms,
- 		     struct parse_events_error *error);
+Thank you!
+
 -- 
-2.26.1.301.g55bc3eb7cb9-goog
-
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
