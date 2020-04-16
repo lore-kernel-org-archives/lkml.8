@@ -2,161 +2,413 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91D09C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:47:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E4EC352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:47:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FDB5206E9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:47:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587037661;
-	bh=lKwbnEdUTTba3AJVKzmuvKJ2X9FO6D210s3WkJT/zZQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VjGFMvzn9EmKoNsgrscbwJqikLu7usLGO5mSRxnT5Rv64k2PXINU5w+PcCeJOWBti
-	 5ptg4Ge2gViwMeLnIblpPoavu1cGWassm/ORJbotjT5ujQbIU1g21NEtJoGMyBxkNV
-	 QkKGOGTSynPq/3ii5MVQ4UQUy2V1P36nEdDIC/oc=
+	by mail.kernel.org (Postfix) with ESMTP id 79F4E22204
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 11:47:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506554AbgDPLrf (ORCPT
+        id S2504613AbgDPKSI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 07:47:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55366 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2504827AbgDPKZO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 06:25:14 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 457552192A;
-        Thu, 16 Apr 2020 10:25:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587032711;
-        bh=lKwbnEdUTTba3AJVKzmuvKJ2X9FO6D210s3WkJT/zZQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=W2uMPyIU+mZIh4oNdYX1OAnVqWzjphWKBN2GBWPvfUx+i38L7tiemQkppi+gxHlZW
-         JlF2YNYah1X+HwUMB3yZOQ35X0ro+n9Y78fNlVj/EfyxfoZZsOyB5MYhQSYl8R4ERW
-         H/AbdIG7irc1sh8ffKpw66MvAQ+0sft+pvgi+fyg=
-Date:   Thu, 16 Apr 2020 12:25:08 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     driverdevel <devel@driverdev.osuosl.org>, nd <nd@arm.com>,
-        Todd Kjos <tkjos@android.com>,
-        Lecopzer Chen <lecopzer.chen@mediatek.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        lkml <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>,
-        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-        Anders Pedersen <anders.pedersen@arm.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        "Darren Hart (VMware)" <dvhart@infradead.org>,
-        =?iso-8859-1?Q?=D8rjan?= Eide <orjan.eide@arm.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Martijn Coenen <maco@android.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Christian Brauner <christian@brauner.io>,
-        linux-media@vger.kernel.org
-Subject: Re: [PATCH] staging: android: ion: Skip sync if not mapped
-Message-ID: <20200416102508.GA820251@kroah.com>
-References: <20200414134629.54567-1-orjan.eide@arm.com>
- <20200414141849.55654-1-orjan.eide@arm.com>
- <20200414142810.GA958163@kroah.com>
- <CALAqxLX-SUhHPH6ewt-s9cEMc8DtMTgXem=JruAkLofuJf1syg@mail.gmail.com>
+        Thu, 16 Apr 2020 06:18:08 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2341 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2441511AbgDPKRU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 06:17:20 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id DB013ED08882747518D6;
+        Thu, 16 Apr 2020 18:17:12 +0800 (CST)
+Received: from szvp000203569.huawei.com (10.120.216.130) by
+ DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 16 Apr 2020 18:17:04 +0800
+From:   Chao Yu <yuchao0@huawei.com>
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH] f2fs: support read iostat
+Date:   Thu, 16 Apr 2020 18:16:56 +0800
+Message-ID: <20200416101656.106970-1-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.18.0.rc1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CALAqxLX-SUhHPH6ewt-s9cEMc8DtMTgXem=JruAkLofuJf1syg@mail.gmail.com>
+Content-Type: text/plain
+X-Originating-IP: [10.120.216.130]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 09:41:31PM -0700, John Stultz wrote:
-> On Tue, Apr 14, 2020 at 7:28 AM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Tue, Apr 14, 2020 at 04:18:47PM +0200, Ørjan Eide wrote:
-> > > Only sync the sg-list of an Ion dma-buf attachment when the attachment
-> > > is actually mapped on the device.
-> > >
-> > > dma-bufs may be synced at any time. It can be reached from user space
-> > > via DMA_BUF_IOCTL_SYNC, so there are no guarantees from callers on when
-> > > syncs may be attempted, and dma_buf_end_cpu_access() and
-> > > dma_buf_begin_cpu_access() may not be paired.
-> > >
-> > > Since the sg_list's dma_address isn't set up until the buffer is used
-> > > on the device, and dma_map_sg() is called on it, the dma_address will be
-> > > NULL if sync is attempted on the dma-buf before it's mapped on a device.
-> > >
-> > > Before v5.0 (commit 55897af63091 ("dma-direct: merge swiotlb_dma_ops
-> > > into the dma_direct code")) this was a problem as the dma-api (at least
-> > > the swiotlb_dma_ops on arm64) would use the potentially invalid
-> > > dma_address. How that failed depended on how the device handled physical
-> > > address 0. If 0 was a valid address to physical ram, that page would get
-> > > flushed a lot, while the actual pages in the buffer would not get synced
-> > > correctly. While if 0 is an invalid physical address it may cause a
-> > > fault and trigger a crash.
-> > >
-> > > In v5.0 this was incidentally fixed by commit 55897af63091 ("dma-direct:
-> > > merge swiotlb_dma_ops into the dma_direct code"), as this moved the
-> > > dma-api to use the page pointer in the sg_list, and (for Ion buffers at
-> > > least) this will always be valid if the sg_list exists at all.
-> > >
-> > > But, this issue is re-introduced in v5.3 with
-> > > commit 449fa54d6815 ("dma-direct: correct the physical addr in
-> > > dma_direct_sync_sg_for_cpu/device") moves the dma-api back to the old
-> > > behaviour and picks the dma_address that may be invalid.
-> > >
-> > > dma-buf core doesn't ensure that the buffer is mapped on the device, and
-> > > thus have a valid sg_list, before calling the exporter's
-> > > begin_cpu_access.
-> > >
-> > > Signed-off-by: Ørjan Eide <orjan.eide@arm.com>
-> > > ---
-> > >  drivers/staging/android/ion/ion.c | 12 ++++++++++++
-> > >  1 file changed, 12 insertions(+)
-> > >
-> > > Resubmit without disclaimer, sorry about that.
-> > >
-> > > This seems to be part of a bigger issue where dma-buf exporters assume
-> > > that their dma-buf begin_cpu_access and end_cpu_access callbacks have a
-> > > certain guaranteed behavior, which isn't ensured by dma-buf core.
-> > >
-> > > This patch fixes this in ion only, but it also needs to be fixed for
-> > > other exporters, either handled like this in each exporter, or in
-> > > dma-buf core before calling into the exporters.
-> > >
-> > > diff --git a/drivers/staging/android/ion/ion.c b/drivers/staging/android/ion/ion.c
-> > > index 38b51eace4f9..7b752ba0cb6d 100644
-> > > --- a/drivers/staging/android/ion/ion.c
-> > > +++ b/drivers/staging/android/ion/ion.c
-> >
-> > Now that we have the dma-buff stuff in the tree, do we even need the
-> > ion code in the kernel anymore?  Can't we delete it now?
-> >
-> 
-> I agree that we shouldn't be taking further (non-security/cleanup)
-> patches to the ION code.
-> 
-> I'd like to give developers a little bit of a transition period (I was
-> thinking a year, but really just one LTS release that has both would
-> do) where they can move their ION heaps over to dmabuf heaps and test
-> both against the same tree.
-> 
-> But I do think we can mark it as deprecated and let folks know that
-> around the end of the year it will be deleted.
+Adds to support accounting read IOs from userspace/kernel.
 
-No one ever notices "depreciated" things, they only notice if the code
-is no longer there :)
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+---
+ fs/f2fs/checkpoint.c        |  5 ++++
+ fs/f2fs/data.c              |  6 +++++
+ fs/f2fs/f2fs.h              | 37 +++++++++++++++++++-------
+ fs/f2fs/file.c              | 12 ++++++++-
+ fs/f2fs/gc.c                |  6 +++++
+ fs/f2fs/node.c              |  8 +++++-
+ fs/f2fs/sysfs.c             | 52 +++++++++++++++++++++++++------------
+ include/trace/events/f2fs.h | 23 ++++++++++++++--
+ 8 files changed, 118 insertions(+), 31 deletions(-)
 
-So I'm all for just deleting it and seeing who even notices...
+diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+index dcb3a15574c9..eafe37eab5e0 100644
+--- a/fs/f2fs/checkpoint.c
++++ b/fs/f2fs/checkpoint.c
+@@ -86,6 +86,8 @@ static struct page *__get_meta_page(struct f2fs_sb_info *sbi, pgoff_t index,
+ 		return ERR_PTR(err);
+ 	}
+ 
++	f2fs_update_iostat(sbi, FS_META_READ_IO, F2FS_BLKSIZE);
++
+ 	lock_page(page);
+ 	if (unlikely(page->mapping != mapping)) {
+ 		f2fs_put_page(page, 1);
+@@ -266,6 +268,9 @@ int f2fs_ra_meta_pages(struct f2fs_sb_info *sbi, block_t start, int nrpages,
+ 		fio.page = page;
+ 		err = f2fs_submit_page_bio(&fio);
+ 		f2fs_put_page(page, err ? 1 : 0);
++
++		if (!err)
++			f2fs_update_iostat(sbi, FS_META_READ_IO, F2FS_BLKSIZE);
+ 	}
+ out:
+ 	blk_finish_plug(&plug);
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index 22a31e2401cf..676f48bf79eb 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -1033,6 +1033,7 @@ static int f2fs_submit_page_read(struct inode *inode, struct page *page,
+ 	}
+ 	ClearPageError(page);
+ 	inc_page_count(sbi, F2FS_RD_DATA);
++	f2fs_update_iostat(sbi, FS_DATA_READ_IO, F2FS_BLKSIZE);
+ 	__submit_bio(sbi, bio, DATA);
+ 	return 0;
+ }
+@@ -2089,6 +2090,7 @@ static int f2fs_read_single_page(struct inode *inode, struct page *page,
+ 		goto submit_and_realloc;
+ 
+ 	inc_page_count(F2FS_I_SB(inode), F2FS_RD_DATA);
++	f2fs_update_iostat(F2FS_I_SB(inode), FS_DATA_READ_IO, F2FS_BLKSIZE);
+ 	ClearPageError(page);
+ 	*last_block_in_bio = block_nr;
+ 	goto out;
+@@ -2224,6 +2226,7 @@ int f2fs_read_multi_pages(struct compress_ctx *cc, struct bio **bio_ret,
+ 			goto submit_and_realloc;
+ 
+ 		inc_page_count(sbi, F2FS_RD_DATA);
++		f2fs_update_iostat(sbi, FS_DATA_READ_IO, F2FS_BLKSIZE);
+ 		ClearPageError(page);
+ 		*last_block_in_bio = blkaddr;
+ 	}
+@@ -3581,6 +3584,9 @@ static ssize_t f2fs_direct_IO(struct kiocb *iocb, struct iov_iter *iter)
+ 		} else if (err < 0) {
+ 			f2fs_write_failed(mapping, offset + count);
+ 		}
++	} else {
++		if (err > 0)
++			f2fs_update_iostat(sbi, APP_DIRECT_READ_IO, err);
+ 	}
+ 
+ out:
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 9dd1fc957b94..bae8e65deed6 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -1093,8 +1093,9 @@ enum cp_reason_type {
+ };
+ 
+ enum iostat_type {
+-	APP_DIRECT_IO,			/* app direct IOs */
+-	APP_BUFFERED_IO,		/* app buffered IOs */
++	/* WRITE IO */
++	APP_DIRECT_IO,			/* app direct write IOs */
++	APP_BUFFERED_IO,		/* app buffered write IOs */
+ 	APP_WRITE_IO,			/* app write IOs */
+ 	APP_MAPPED_IO,			/* app mapped IOs */
+ 	FS_DATA_IO,			/* data IOs from kworker/fsync/reclaimer */
+@@ -1105,6 +1106,17 @@ enum iostat_type {
+ 	FS_CP_DATA_IO,			/* data IOs from checkpoint */
+ 	FS_CP_NODE_IO,			/* node IOs from checkpoint */
+ 	FS_CP_META_IO,			/* meta IOs from checkpoint */
++
++	/* READ IO */
++	APP_DIRECT_READ_IO,		/* app direct read IOs */
++	APP_BUFFERED_READ_IO,		/* app buffered read IOs */
++	APP_READ_IO,			/* app read IOs */
++	APP_MAPPED_READ_IO,		/* app mapped read IOs */
++	FS_DATA_READ_IO,		/* data read IOs */
++	FS_NODE_READ_IO,		/* node read IOs */
++	FS_META_READ_IO,		/* meta read IOs */
++
++	/* other */
+ 	FS_DISCARD,			/* discard */
+ 	NR_IO_TYPE,
+ };
+@@ -1509,8 +1521,8 @@ struct f2fs_sb_info {
+ 
+ 	/* For app/fs IO statistics */
+ 	spinlock_t iostat_lock;
+-	unsigned long long write_iostat[NR_IO_TYPE];
+-	unsigned long long prev_write_iostat[NR_IO_TYPE];
++	unsigned long long rw_iostat[NR_IO_TYPE];
++	unsigned long long prev_rw_iostat[NR_IO_TYPE];
+ 	bool iostat_enable;
+ 	unsigned long iostat_next_period;
+ 	unsigned int iostat_period_ms;
+@@ -3018,8 +3030,8 @@ static inline void f2fs_reset_iostat(struct f2fs_sb_info *sbi)
+ 
+ 	spin_lock(&sbi->iostat_lock);
+ 	for (i = 0; i < NR_IO_TYPE; i++) {
+-		sbi->write_iostat[i] = 0;
+-		sbi->prev_write_iostat[i] = 0;
++		sbi->rw_iostat[i] = 0;
++		sbi->prev_rw_iostat[i] = 0;
+ 	}
+ 	spin_unlock(&sbi->iostat_lock);
+ }
+@@ -3032,12 +3044,17 @@ static inline void f2fs_update_iostat(struct f2fs_sb_info *sbi,
+ 	if (!sbi->iostat_enable)
+ 		return;
+ 	spin_lock(&sbi->iostat_lock);
+-	sbi->write_iostat[type] += io_bytes;
++	sbi->rw_iostat[type] += io_bytes;
+ 
+ 	if (type == APP_WRITE_IO || type == APP_DIRECT_IO)
+-		sbi->write_iostat[APP_BUFFERED_IO] =
+-			sbi->write_iostat[APP_WRITE_IO] -
+-			sbi->write_iostat[APP_DIRECT_IO];
++		sbi->rw_iostat[APP_BUFFERED_IO] =
++			sbi->rw_iostat[APP_WRITE_IO] -
++			sbi->rw_iostat[APP_DIRECT_IO];
++
++	if (type == APP_READ_IO || type == APP_DIRECT_READ_IO)
++		sbi->rw_iostat[APP_BUFFERED_READ_IO] =
++			sbi->rw_iostat[APP_READ_IO] -
++			sbi->rw_iostat[APP_DIRECT_READ_IO];
+ 	spin_unlock(&sbi->iostat_lock);
+ 
+ 	f2fs_record_iostat(sbi);
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index 212c5996d380..ea04fb4dcdbd 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -40,6 +40,10 @@ static vm_fault_t f2fs_filemap_fault(struct vm_fault *vmf)
+ 	ret = filemap_fault(vmf);
+ 	up_read(&F2FS_I(inode)->i_mmap_sem);
+ 
++	if (!ret)
++		f2fs_update_iostat(F2FS_I_SB(inode), APP_MAPPED_READ_IO,
++							F2FS_BLKSIZE);
++
+ 	trace_f2fs_filemap_fault(inode, vmf->pgoff, (unsigned long)ret);
+ 
+ 	return ret;
+@@ -3822,11 +3826,17 @@ static ssize_t f2fs_file_read_iter(struct kiocb *iocb, struct iov_iter *iter)
+ {
+ 	struct file *file = iocb->ki_filp;
+ 	struct inode *inode = file_inode(file);
++	int ret;
+ 
+ 	if (!f2fs_is_compress_backend_ready(inode))
+ 		return -EOPNOTSUPP;
+ 
+-	return generic_file_read_iter(iocb, iter);
++	ret = generic_file_read_iter(iocb, iter);
++
++	if (ret > 0)
++		f2fs_update_iostat(F2FS_I_SB(inode), APP_READ_IO, ret);
++
++	return ret;
+ }
+ 
+ static ssize_t f2fs_file_write_iter(struct kiocb *iocb, struct iov_iter *from)
+diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+index ad395b774a0b..1cd4992aeec0 100644
+--- a/fs/f2fs/gc.c
++++ b/fs/f2fs/gc.c
+@@ -737,6 +737,9 @@ static int ra_data_block(struct inode *inode, pgoff_t index)
+ 		goto put_encrypted_page;
+ 	f2fs_put_page(fio.encrypted_page, 0);
+ 	f2fs_put_page(page, 1);
++
++	f2fs_update_iostat(sbi, FS_DATA_READ_IO, F2FS_BLKSIZE);
++
+ 	return 0;
+ put_encrypted_page:
+ 	f2fs_put_page(fio.encrypted_page, 1);
+@@ -840,6 +843,9 @@ static int move_data_block(struct inode *inode, block_t bidx,
+ 			f2fs_put_page(mpage, 1);
+ 			goto up_out;
+ 		}
++
++		f2fs_update_iostat(fio.sbi, FS_DATA_READ_IO, F2FS_BLKSIZE);
++
+ 		lock_page(mpage);
+ 		if (unlikely(mpage->mapping != META_MAPPING(fio.sbi) ||
+ 						!PageUptodate(mpage))) {
+diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
+index ecbd6bd14a49..4da0d8713df5 100644
+--- a/fs/f2fs/node.c
++++ b/fs/f2fs/node.c
+@@ -1300,7 +1300,13 @@ static int read_node_page(struct page *page, int op_flags)
+ 	}
+ 
+ 	fio.new_blkaddr = fio.old_blkaddr = ni.blk_addr;
+-	return f2fs_submit_page_bio(&fio);
++
++	err = f2fs_submit_page_bio(&fio);
++
++	if (!err)
++		f2fs_update_iostat(sbi, FS_NODE_READ_IO, F2FS_BLKSIZE);
++
++	return err;
+ }
+ 
+ /*
+diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
+index d05cb68c2637..eaf8088548f0 100644
+--- a/fs/f2fs/sysfs.c
++++ b/fs/f2fs/sysfs.c
+@@ -781,9 +781,9 @@ void f2fs_record_iostat(struct f2fs_sb_info *sbi)
+ 				msecs_to_jiffies(sbi->iostat_period_ms);
+ 
+ 	for (i = 0; i < NR_IO_TYPE; i++) {
+-		iostat_diff[i] = sbi->write_iostat[i] -
+-				sbi->prev_write_iostat[i];
+-		sbi->prev_write_iostat[i] = sbi->write_iostat[i];
++		iostat_diff[i] = sbi->rw_iostat[i] -
++				sbi->prev_rw_iostat[i];
++		sbi->prev_rw_iostat[i] = sbi->rw_iostat[i];
+ 	}
+ 	spin_unlock(&sbi->iostat_lock);
+ 
+@@ -802,33 +802,51 @@ static int __maybe_unused iostat_info_seq_show(struct seq_file *seq,
+ 
+ 	seq_printf(seq, "time:		%-16llu\n", now);
+ 
+-	/* print app IOs */
++	/* print app write IOs */
+ 	seq_printf(seq, "app buffered:	%-16llu\n",
+-				sbi->write_iostat[APP_BUFFERED_IO]);
++				sbi->rw_iostat[APP_BUFFERED_IO]);
+ 	seq_printf(seq, "app direct:	%-16llu\n",
+-				sbi->write_iostat[APP_DIRECT_IO]);
++				sbi->rw_iostat[APP_DIRECT_IO]);
+ 	seq_printf(seq, "app mapped:	%-16llu\n",
+-				sbi->write_iostat[APP_MAPPED_IO]);
++				sbi->rw_iostat[APP_MAPPED_IO]);
+ 
+-	/* print fs IOs */
++	/* print fs write IOs */
+ 	seq_printf(seq, "fs data:	%-16llu\n",
+-				sbi->write_iostat[FS_DATA_IO]);
++				sbi->rw_iostat[FS_DATA_IO]);
+ 	seq_printf(seq, "fs node:	%-16llu\n",
+-				sbi->write_iostat[FS_NODE_IO]);
++				sbi->rw_iostat[FS_NODE_IO]);
+ 	seq_printf(seq, "fs meta:	%-16llu\n",
+-				sbi->write_iostat[FS_META_IO]);
++				sbi->rw_iostat[FS_META_IO]);
+ 	seq_printf(seq, "fs gc data:	%-16llu\n",
+-				sbi->write_iostat[FS_GC_DATA_IO]);
++				sbi->rw_iostat[FS_GC_DATA_IO]);
+ 	seq_printf(seq, "fs gc node:	%-16llu\n",
+-				sbi->write_iostat[FS_GC_NODE_IO]);
++				sbi->rw_iostat[FS_GC_NODE_IO]);
+ 	seq_printf(seq, "fs cp data:	%-16llu\n",
+-				sbi->write_iostat[FS_CP_DATA_IO]);
++				sbi->rw_iostat[FS_CP_DATA_IO]);
+ 	seq_printf(seq, "fs cp node:	%-16llu\n",
+-				sbi->write_iostat[FS_CP_NODE_IO]);
++				sbi->rw_iostat[FS_CP_NODE_IO]);
+ 	seq_printf(seq, "fs cp meta:	%-16llu\n",
+-				sbi->write_iostat[FS_CP_META_IO]);
++				sbi->rw_iostat[FS_CP_META_IO]);
++
++	/* print app read IOs */
++	seq_printf(seq, "app buffered:	%-16llu\n",
++				sbi->rw_iostat[APP_BUFFERED_READ_IO]);
++	seq_printf(seq, "app direct:	%-16llu\n",
++				sbi->rw_iostat[APP_DIRECT_READ_IO]);
++	seq_printf(seq, "app mapped:	%-16llu\n",
++				sbi->rw_iostat[APP_MAPPED_READ_IO]);
++
++	/* print fs read IOs */
++	seq_printf(seq, "fs data:	%-16llu\n",
++				sbi->rw_iostat[FS_DATA_READ_IO]);
++	seq_printf(seq, "fs node:	%-16llu\n",
++				sbi->rw_iostat[FS_NODE_READ_IO]);
++	seq_printf(seq, "fs meta:	%-16llu\n",
++				sbi->rw_iostat[FS_META_READ_IO]);
++
++	/* print other IOs */
+ 	seq_printf(seq, "fs discard:	%-16llu\n",
+-				sbi->write_iostat[FS_DISCARD]);
++				sbi->rw_iostat[FS_DISCARD]);
+ 
+ 	return 0;
+ }
+diff --git a/include/trace/events/f2fs.h b/include/trace/events/f2fs.h
+index 421a661bfd5a..4dbcdc6d2738 100644
+--- a/include/trace/events/f2fs.h
++++ b/include/trace/events/f2fs.h
+@@ -1835,6 +1835,13 @@ TRACE_EVENT(f2fs_iostat,
+ 		__field(unsigned long long,	fs_cp_dio)
+ 		__field(unsigned long long,	fs_cp_nio)
+ 		__field(unsigned long long,	fs_cp_mio)
++		__field(unsigned long long,	app_drio)
++		__field(unsigned long long,	app_brio)
++		__field(unsigned long long,	app_rio)
++		__field(unsigned long long,	app_mrio)
++		__field(unsigned long long,	fs_drio)
++		__field(unsigned long long,	fs_nrio)
++		__field(unsigned long long,	fs_mrio)
+ 		__field(unsigned long long,	fs_discard)
+ 	),
+ 
+@@ -1852,6 +1859,13 @@ TRACE_EVENT(f2fs_iostat,
+ 		__entry->fs_cp_dio	= iostat[FS_CP_DATA_IO];
+ 		__entry->fs_cp_nio	= iostat[FS_CP_NODE_IO];
+ 		__entry->fs_cp_mio	= iostat[FS_CP_META_IO];
++		__entry->app_drio	= iostat[APP_DIRECT_READ_IO];
++		__entry->app_brio	= iostat[APP_BUFFERED_READ_IO];
++		__entry->app_rio	= iostat[APP_READ_IO];
++		__entry->app_mrio	= iostat[APP_MAPPED_READ_IO];
++		__entry->fs_drio	= iostat[FS_DATA_READ_IO];
++		__entry->fs_nrio	= iostat[FS_NODE_READ_IO];
++		__entry->fs_mrio	= iostat[FS_META_READ_IO];
+ 		__entry->fs_discard	= iostat[FS_DISCARD];
+ 	),
+ 
+@@ -1859,12 +1873,17 @@ TRACE_EVENT(f2fs_iostat,
+ 		"app [write=%llu (direct=%llu, buffered=%llu), mapped=%llu], "
+ 		"fs [data=%llu, node=%llu, meta=%llu, discard=%llu], "
+ 		"gc [data=%llu, node=%llu], "
+-		"cp [data=%llu, node=%llu, meta=%llu]",
++		"cp [data=%llu, node=%llu, meta=%llu], "
++		"app [read=%llu (direct=%llu, buffered=%llu), mapped=%llu], "
++		"fs [data=%llu, node=%llu, meta=%llu]",
+ 		show_dev(__entry->dev), __entry->app_wio, __entry->app_dio,
+ 		__entry->app_bio, __entry->app_mio, __entry->fs_dio,
+ 		__entry->fs_nio, __entry->fs_mio, __entry->fs_discard,
+ 		__entry->fs_gc_dio, __entry->fs_gc_nio, __entry->fs_cp_dio,
+-		__entry->fs_cp_nio, __entry->fs_cp_mio)
++		__entry->fs_cp_nio, __entry->fs_cp_mio,
++		__entry->app_rio, __entry->app_drio, __entry->app_brio,
++		__entry->app_mrio, __entry->fs_drio, __entry->fs_nrio,
++		__entry->fs_mrio)
+ );
+ 
+ #endif /* _TRACE_F2FS_H */
+-- 
+2.18.0.rc1
 
-thanks,
-
-greg k-h
