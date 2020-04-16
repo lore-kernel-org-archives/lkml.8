@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD79DC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:00:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12141C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:00:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2BFD206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:00:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFB5D20771
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 15:00:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JFl0zZWw"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Usb+FvXd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439197AbgDPPAs (ORCPT
+        id S2439233AbgDPPAx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:00:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41808 "EHLO
+        Thu, 16 Apr 2020 11:00:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2394876AbgDPPAY (ORCPT
+        by vger.kernel.org with ESMTP id S2438837AbgDPPAd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 11:00:24 -0400
+        Thu, 16 Apr 2020 11:00:33 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6477FC061A0F;
-        Thu, 16 Apr 2020 08:00:24 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7160AC061A10;
+        Thu, 16 Apr 2020 08:00:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=Faditfx/FJbi4tKcW240iX0ey7G6EjY+VLjH16rVRCA=; b=JFl0zZWwSvM3g+lWExkdidXOqn
-        DF5Vajh9bT/64ZrzbSg9+q8Tp1WxoeArprkoyWg8i6AaLujYY6cmb2xatC8YgIJX+AEgyh6oULWlN
-        7c2wkQ9JJ5usw/+WZEhKopcclNDKuq4Y6g3VLuwCezCurduPwcZdVxBG5w+5q3oeqbK9GUMKrizgO
-        dbZt35/GLOQ+dXPwS0vK2+M4A4d8fIxF/H0nuwZVczj6YjKnKDyfuwo2lrjfwMq/XvujU5nA1ANsM
-        fT5u37ZGmV507XUmJhgfLSAD+dK62rVhASVwmdxeYj0nCoJI+kvkHhQJuRp4rwyteYqQgEt8hnzbS
-        o2YI/TIA==;
+        bh=yyuJrtfVyD3fUEUFSeqLWA3IrF2yJjSqrC/bf4Fe8oE=; b=Usb+FvXdnqXan+JxkQBhdGOZlg
+        wA8UpejFK3n0fE9XGKnHea/t+aVmCLNRdL7zyLOKMHR/dWmt8G+Uti19C3t90dgjsk4S7ZmmczWW/
+        Ez3AKbTKg6yUn6tUW5+u4MpklOAJAQnTCpStyLhkGLJDPCmD0JQX8BrT1uo7sHkztqwtq1fc9ZM2b
+        o78zCaIVcICZg6b86ord1mHoE9JLaN/VgoJYMDdw8Sgqo+kfaEwvvg/+opdzznV32stUMmPSO0mvj
+        LXNeSO8BGPnOt71kyP+5iI5jquMiHZDOCO0MSCezo82fW/woNvE7xDCV4KBMauuhWx5/PsaqHRErw
+        2IXgzbiQ==;
 Received: from [2001:4bb8:184:4aa1:c70:4a89:bc61:2] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jP605-00029F-6L; Thu, 16 Apr 2020 15:00:21 +0000
+        id 1jP60F-00037B-JH; Thu, 16 Apr 2020 15:00:31 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Cc:     Liam Girdwood <lgirdwood@gmail.com>,
         Mark Brown <broonie@kernel.org>, linux-mips@vger.kernel.org,
         linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
-Subject: [PATCH 3/7] MIPS: cleanup fixup_bigphys_addr handling
-Date:   Thu, 16 Apr 2020 17:00:07 +0200
-Message-Id: <20200416150011.820984-4-hch@lst.de>
+Subject: [PATCH 7/7] MIPS: use ioremap_page_range
+Date:   Thu, 16 Apr 2020 17:00:11 +0200
+Message-Id: <20200416150011.820984-8-hch@lst.de>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200416150011.820984-1-hch@lst.de>
 References: <20200416150011.820984-1-hch@lst.de>
@@ -58,265 +58,164 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fixup_bigphys_addr is only provided by the alchemy platform.  Remove
-all the stubs, and ensure we only call it if it is actually implemented.
-
-Also don't bother implementing io_remap_pfn_range if we don't have to,
-and move the remaining implementation to alchemy platform code.
+Use the generic ioremap_page_range helper instead of reimplementing it.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- arch/mips/Kconfig                            |  4 +++
- arch/mips/alchemy/common/setup.c             | 16 ++++++---
- arch/mips/include/asm/mach-au1x00/ioremap.h  | 38 --------------------
- arch/mips/include/asm/mach-bcm63xx/ioremap.h |  5 ---
- arch/mips/include/asm/mach-bmips/ioremap.h   |  5 ---
- arch/mips/include/asm/mach-generic/ioremap.h |  9 -----
- arch/mips/include/asm/mach-tx39xx/ioremap.h  |  9 -----
- arch/mips/include/asm/mach-tx49xx/ioremap.h  |  9 -----
- arch/mips/include/asm/pgtable.h              | 23 ++++++------
- arch/mips/pci/pci-alchemy.c                  |  2 +-
- 10 files changed, 27 insertions(+), 93 deletions(-)
- delete mode 100644 arch/mips/include/asm/mach-au1x00/ioremap.h
+ arch/mips/mm/ioremap.c | 112 ++++-------------------------------------
+ 1 file changed, 11 insertions(+), 101 deletions(-)
 
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 690718b3701a..a7b580d14345 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -92,6 +92,9 @@ config MIPS
- 	select SYSCTL_EXCEPTION_TRACE
- 	select VIRT_TO_BUS
+diff --git a/arch/mips/mm/ioremap.c b/arch/mips/mm/ioremap.c
+index c5b5181c7cd0..b6dad2fd5575 100644
+--- a/arch/mips/mm/ioremap.c
++++ b/arch/mips/mm/ioremap.c
+@@ -14,99 +14,14 @@
+ #include <linux/slab.h>
+ #include <linux/vmalloc.h>
+ #include <linux/mm_types.h>
++#include <linux/io.h>
+ #include <asm/cacheflush.h>
+-#include <asm/io.h>
+ #include <asm/tlbflush.h>
+ #include <ioremap.h>
  
-+config MIPS_FIXUP_BIGPHYS_ADDR
-+	bool
-+
- menu "Machine selection"
+ #define IS_LOW512(addr) (!((phys_addr_t)(addr) & (phys_addr_t) ~0x1fffffffULL))
+ #define IS_KSEG1(addr) (((unsigned long)(addr) & ~0x1fffffffUL) == CKSEG1)
  
- choice
-@@ -157,6 +160,7 @@ config MIPS_ALCHEMY
- 	select CSRC_R4K
- 	select IRQ_MIPS_CPU
- 	select DMA_MAYBE_COHERENT	# Au1000,1500,1100 aren't, rest is
-+	select MIPS_FIXUP_BIGPHYS_ADDR if PCI
- 	select SYS_HAS_CPU_MIPS32_R1
- 	select SYS_SUPPORTS_32BIT_KERNEL
- 	select SYS_SUPPORTS_APM_EMULATION
-diff --git a/arch/mips/alchemy/common/setup.c b/arch/mips/alchemy/common/setup.c
-index 7faaa6d593a7..a8cbc552bd64 100644
---- a/arch/mips/alchemy/common/setup.c
-+++ b/arch/mips/alchemy/common/setup.c
-@@ -72,9 +72,9 @@ void __init plat_mem_setup(void)
- 	iomem_resource.end = IOMEM_RESOURCE_END;
- }
- 
--#if defined(CONFIG_PHYS_ADDR_T_64BIT) && defined(CONFIG_PCI)
-+#ifdef CONFIG_MIPS_FIXUP_BIGPHYS_ADDR
- /* This routine should be valid for all Au1x based boards */
--phys_addr_t __fixup_bigphys_addr(phys_addr_t phys_addr, phys_addr_t size)
-+phys_addr_t fixup_bigphys_addr(phys_addr_t phys_addr, phys_addr_t size)
- {
- 	unsigned long start = ALCHEMY_PCI_MEMWIN_START;
- 	unsigned long end = ALCHEMY_PCI_MEMWIN_END;
-@@ -90,5 +90,13 @@ phys_addr_t __fixup_bigphys_addr(phys_addr_t phys_addr, phys_addr_t size)
- 	/* default nop */
- 	return phys_addr;
- }
--EXPORT_SYMBOL(__fixup_bigphys_addr);
--#endif
-+
-+int io_remap_pfn_range(struct vm_area_struct *vma, unsigned long vaddr,
-+		unsigned long pfn, unsigned long size, pgprot_t prot)
-+{
-+	phys_addr_t phys_addr = fixup_bigphys_addr(pfn << PAGE_SHIFT, size);
-+
-+	return remap_pfn_range(vma, vaddr, phys_addr >> PAGE_SHIFT, size, prot);
-+}
-+EXPORT_SYMBOL(io_remap_pfn_range);
-+#endif /* CONFIG_MIPS_FIXUP_BIGPHYS_ADDR */
-diff --git a/arch/mips/include/asm/mach-au1x00/ioremap.h b/arch/mips/include/asm/mach-au1x00/ioremap.h
-deleted file mode 100644
-index f6877ed8b8d0..000000000000
---- a/arch/mips/include/asm/mach-au1x00/ioremap.h
-+++ /dev/null
-@@ -1,38 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-or-later */
--/*
-- *	include/asm-mips/mach-au1x00/ioremap.h
-- */
--#ifndef __ASM_MACH_AU1X00_IOREMAP_H
--#define __ASM_MACH_AU1X00_IOREMAP_H
--
--#include <linux/types.h>
--
--#if defined(CONFIG_PHYS_ADDR_T_64BIT) && defined(CONFIG_PCI)
--extern phys_addr_t __fixup_bigphys_addr(phys_addr_t, phys_addr_t);
--#else
--static inline phys_addr_t __fixup_bigphys_addr(phys_addr_t phys_addr, phys_addr_t size)
+-static inline void remap_area_pte(pte_t * pte, unsigned long address,
+-	phys_addr_t size, phys_addr_t phys_addr, unsigned long flags)
 -{
--	return phys_addr;
--}
--#endif
+-	phys_addr_t end;
+-	unsigned long pfn;
+-	pgprot_t pgprot = __pgprot(_PAGE_GLOBAL | _PAGE_PRESENT | __READABLE
+-				   | __WRITEABLE | flags);
 -
--/*
-- * Allow physical addresses to be fixed up to help 36-bit peripherals.
-- */
--static inline phys_addr_t fixup_bigphys_addr(phys_addr_t phys_addr, phys_addr_t size)
--{
--	return __fixup_bigphys_addr(phys_addr, size);
+-	address &= ~PMD_MASK;
+-	end = address + size;
+-	if (end > PMD_SIZE)
+-		end = PMD_SIZE;
+-	BUG_ON(address >= end);
+-	pfn = phys_addr >> PAGE_SHIFT;
+-	do {
+-		if (!pte_none(*pte)) {
+-			printk("remap_area_pte: page already exists\n");
+-			BUG();
+-		}
+-		set_pte(pte, pfn_pte(pfn, pgprot));
+-		address += PAGE_SIZE;
+-		pfn++;
+-		pte++;
+-	} while (address && (address < end));
 -}
 -
--static inline void __iomem *plat_ioremap(phys_addr_t offset, unsigned long size,
--	unsigned long flags)
+-static inline int remap_area_pmd(pmd_t * pmd, unsigned long address,
+-	phys_addr_t size, phys_addr_t phys_addr, unsigned long flags)
 -{
--	return NULL;
--}
+-	phys_addr_t end;
 -
--static inline int plat_iounmap(const volatile void __iomem *addr)
--{
+-	address &= ~PGDIR_MASK;
+-	end = address + size;
+-	if (end > PGDIR_SIZE)
+-		end = PGDIR_SIZE;
+-	phys_addr -= address;
+-	BUG_ON(address >= end);
+-	do {
+-		pte_t * pte = pte_alloc_kernel(pmd, address);
+-		if (!pte)
+-			return -ENOMEM;
+-		remap_area_pte(pte, address, end - address, address + phys_addr, flags);
+-		address = (address + PMD_SIZE) & PMD_MASK;
+-		pmd++;
+-	} while (address && (address < end));
 -	return 0;
 -}
 -
--#endif /* __ASM_MACH_AU1X00_IOREMAP_H */
-diff --git a/arch/mips/include/asm/mach-bcm63xx/ioremap.h b/arch/mips/include/asm/mach-bcm63xx/ioremap.h
-index 8cd261ec0a75..73f31825bbf3 100644
---- a/arch/mips/include/asm/mach-bcm63xx/ioremap.h
-+++ b/arch/mips/include/asm/mach-bcm63xx/ioremap.h
-@@ -4,11 +4,6 @@
- 
- #include <bcm63xx_cpu.h>
- 
--static inline phys_addr_t fixup_bigphys_addr(phys_addr_t phys_addr, phys_addr_t size)
+-static int remap_area_pages(unsigned long address, phys_addr_t phys_addr,
+-	phys_addr_t size, unsigned long flags)
 -{
--	return phys_addr;
+-	int error;
+-	pgd_t * dir;
+-	unsigned long end = address + size;
+-
+-	phys_addr -= address;
+-	dir = pgd_offset(&init_mm, address);
+-	flush_cache_all();
+-	BUG_ON(address >= end);
+-	do {
+-		p4d_t *p4d;
+-		pud_t *pud;
+-		pmd_t *pmd;
+-
+-		error = -ENOMEM;
+-		p4d = p4d_alloc(&init_mm, dir, address);
+-		if (!p4d)
+-			break;
+-		pud = pud_alloc(&init_mm, p4d, address);
+-		if (!pud)
+-			break;
+-		pmd = pmd_alloc(&init_mm, pud, address);
+-		if (!pmd)
+-			break;
+-		if (remap_area_pmd(pmd, address, end - address,
+-					 phys_addr + address, flags))
+-			break;
+-		error = 0;
+-		address = (address + PGDIR_SIZE) & PGDIR_MASK;
+-		dir++;
+-	} while (address && (address < end));
+-	flush_tlb_all();
+-	return error;
 -}
 -
- static inline int is_bcm63xx_internal_registers(phys_addr_t offset)
+ static int __ioremap_check_ram(unsigned long start_pfn, unsigned long nr_pages,
+ 			       void *arg)
  {
- 	switch (bcm63xx_get_cpu_id()) {
-diff --git a/arch/mips/include/asm/mach-bmips/ioremap.h b/arch/mips/include/asm/mach-bmips/ioremap.h
-index 52632ebc705f..63b4af9916b6 100644
---- a/arch/mips/include/asm/mach-bmips/ioremap.h
-+++ b/arch/mips/include/asm/mach-bmips/ioremap.h
-@@ -4,11 +4,6 @@
+@@ -135,7 +50,7 @@ void __iomem *ioremap_prot(phys_addr_t phys_addr, unsigned long size,
+ 	unsigned long offset, pfn, last_pfn;
+ 	struct vm_struct *area;
+ 	phys_addr_t last_addr;
+-	void *addr;
++	unsigned long vaddr;
+ 	void __iomem *cpu_addr;
  
- #include <linux/types.h>
+ 	cpu_addr = plat_ioremap(phys_addr, size, flags);
+@@ -183,27 +98,22 @@ void __iomem *ioremap_prot(phys_addr_t phys_addr, unsigned long size,
+ 	area = get_vm_area(size, VM_IOREMAP);
+ 	if (!area)
+ 		return NULL;
+-	addr = area->addr;
+-	if (remap_area_pages((unsigned long) addr, phys_addr, size, flags)) {
+-		vunmap(addr);
++	vaddr = (unsigned long)area->addr;
++
++	flags |= _PAGE_GLOBAL | _PAGE_PRESENT | __READABLE | __WRITEABLE;
++	if (ioremap_page_range(vaddr, vaddr + size, phys_addr,
++			__pgprot(flags))) {
++		free_vm_area(area);
+ 		return NULL;
+ 	}
  
--static inline phys_addr_t fixup_bigphys_addr(phys_addr_t phys_addr, phys_addr_t size)
--{
--	return phys_addr;
--}
--
- static inline int is_bmips_internal_registers(phys_addr_t offset)
+-	return (void __iomem *) (offset + (char *)addr);
++	return (void __iomem *)(vaddr + offset);
+ }
+ EXPORT_SYMBOL(ioremap_prot);
+ 
+ void iounmap(const volatile void __iomem *addr)
  {
- 	if (offset >= 0xfff80000)
-diff --git a/arch/mips/include/asm/mach-generic/ioremap.h b/arch/mips/include/asm/mach-generic/ioremap.h
-index 4e36ea25ed33..f2442b84545c 100644
---- a/arch/mips/include/asm/mach-generic/ioremap.h
-+++ b/arch/mips/include/asm/mach-generic/ioremap.h
-@@ -7,15 +7,6 @@
- 
- #include <linux/types.h>
- 
--/*
-- * Allow physical addresses to be fixed up to help peripherals located
-- * outside the low 32-bit range -- generic pass-through version.
-- */
--static inline phys_addr_t fixup_bigphys_addr(phys_addr_t phys_addr, phys_addr_t size)
--{
--	return phys_addr;
--}
+-	struct vm_struct *p;
 -
- static inline void __iomem *plat_ioremap(phys_addr_t offset, unsigned long size,
- 	unsigned long flags)
- {
-diff --git a/arch/mips/include/asm/mach-tx39xx/ioremap.h b/arch/mips/include/asm/mach-tx39xx/ioremap.h
-index 077b3c9971f7..157a7292397e 100644
---- a/arch/mips/include/asm/mach-tx39xx/ioremap.h
-+++ b/arch/mips/include/asm/mach-tx39xx/ioremap.h
-@@ -7,15 +7,6 @@
- 
- #include <linux/types.h>
- 
--/*
-- * Allow physical addresses to be fixed up to help peripherals located
-- * outside the low 32-bit range -- generic pass-through version.
-- */
--static inline phys_addr_t fixup_bigphys_addr(phys_addr_t phys_addr, phys_addr_t size)
--{
--	return phys_addr;
--}
+-	if (plat_iounmap(addr) || IS_KSEG1(addr))
+-		return;
 -
- static inline void __iomem *plat_ioremap(phys_addr_t offset, unsigned long size,
- 	unsigned long flags)
- {
-diff --git a/arch/mips/include/asm/mach-tx49xx/ioremap.h b/arch/mips/include/asm/mach-tx49xx/ioremap.h
-index c6b9e05f44c4..b1f3710acf8e 100644
---- a/arch/mips/include/asm/mach-tx49xx/ioremap.h
-+++ b/arch/mips/include/asm/mach-tx49xx/ioremap.h
-@@ -7,15 +7,6 @@
- 
- #include <linux/types.h>
- 
--/*
-- * Allow physical addresses to be fixed up to help peripherals located
-- * outside the low 32-bit range -- generic pass-through version.
-- */
--static inline phys_addr_t fixup_bigphys_addr(phys_addr_t phys_addr, phys_addr_t size)
--{
--	return phys_addr;
--}
+-	p = remove_vm_area((void *) (PAGE_MASK & (unsigned long __force) addr));
+-	if (!p)
+-		printk(KERN_ERR "iounmap: bad address %p\n", addr);
 -
- static inline void __iomem *plat_ioremap(phys_addr_t offset, unsigned long size,
- 	unsigned long flags)
- {
-diff --git a/arch/mips/include/asm/pgtable.h b/arch/mips/include/asm/pgtable.h
-index f1801e7a4b15..aab0ec174f68 100644
---- a/arch/mips/include/asm/pgtable.h
-+++ b/arch/mips/include/asm/pgtable.h
-@@ -507,20 +507,17 @@ static inline void update_mmu_cache_pmd(struct vm_area_struct *vma,
- 
- #define kern_addr_valid(addr)	(1)
- 
--#ifdef CONFIG_PHYS_ADDR_T_64BIT
--extern int remap_pfn_range(struct vm_area_struct *vma, unsigned long from, unsigned long pfn, unsigned long size, pgprot_t prot);
--
--static inline int io_remap_pfn_range(struct vm_area_struct *vma,
--		unsigned long vaddr,
--		unsigned long pfn,
--		unsigned long size,
--		pgprot_t prot)
--{
--	phys_addr_t phys_addr_high = fixup_bigphys_addr(pfn << PAGE_SHIFT, size);
--	return remap_pfn_range(vma, vaddr, phys_addr_high >> PAGE_SHIFT, size, prot);
--}
-+/*
-+ * Allow physical addresses to be fixed up to help 36-bit peripherals.
-+ */
-+#ifdef CONFIG_MIPS_FIXUP_BIGPHYS_ADDR
-+phys_addr_t fixup_bigphys_addr(phys_addr_t addr, phys_addr_t size);
-+int io_remap_pfn_range(struct vm_area_struct *vma, unsigned long vaddr,
-+		unsigned long pfn, unsigned long size, pgprot_t prot);
- #define io_remap_pfn_range io_remap_pfn_range
--#endif
-+#else
-+#define fixup_bigphys_addr(addr, size)	(addr)
-+#endif /* CONFIG_MIPS_FIXUP_BIGPHYS_ADDR */
- 
- #ifdef CONFIG_TRANSPARENT_HUGEPAGE
- 
-diff --git a/arch/mips/pci/pci-alchemy.c b/arch/mips/pci/pci-alchemy.c
-index 01a2af8215c8..7285b5667568 100644
---- a/arch/mips/pci/pci-alchemy.c
-+++ b/arch/mips/pci/pci-alchemy.c
-@@ -52,7 +52,7 @@ struct alchemy_pci_context {
- static struct alchemy_pci_context *__alchemy_pci_ctx;
- 
- 
--/* IO/MEM resources for PCI. Keep the memres in sync with __fixup_bigphys_addr
-+/* IO/MEM resources for PCI. Keep the memres in sync with fixup_bigphys_addr
-  * in arch/mips/alchemy/common/setup.c
-  */
- static struct resource alchemy_pci_def_memres = {
+-	kfree(p);
++	if (!plat_iounmap(addr) && !IS_KSEG1(addr))
++		vunmap((void *)((unsigned long)addr & PAGE_MASK));
+ }
+ EXPORT_SYMBOL(iounmap);
 -- 
 2.25.1
 
