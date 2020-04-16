@@ -2,137 +2,120 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE4D5C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:35:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8057C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:35:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2E7421BE5
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:35:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D153C21BE5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:35:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503834AbgDPJfi (ORCPT
+        id S2503860AbgDPJfo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 05:35:38 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34810 "EHLO mx2.suse.de"
+        Thu, 16 Apr 2020 05:35:44 -0400
+Received: from mga12.intel.com ([192.55.52.136]:43263 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2503615AbgDPJfc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 05:35:32 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id C7BC9AD0E;
-        Thu, 16 Apr 2020 09:35:29 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id D25621E1250; Thu, 16 Apr 2020 11:35:28 +0200 (CEST)
-Date:   Thu, 16 Apr 2020 11:35:28 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Jan Kara <jack@suse.cz>, viro@zeniv.linux.org.uk,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org, andres@anarazel.de, willy@infradead.org,
-        dhowells@redhat.com, hch@infradead.org, akpm@linux-foundation.org,
-        david@fromorbit.com
-Subject: Re: [PATCH v5 2/2] buffer: record blockdev write errors in
- super_block that it backs
-Message-ID: <20200416093528.GC23739@quack2.suse.cz>
-References: <20200415121300.228017-1-jlayton@kernel.org>
- <20200415121300.228017-3-jlayton@kernel.org>
- <20200415140642.GK6126@quack2.suse.cz>
- <b4161f1df3436d7371ab7e88709169e9a391f15d.camel@kernel.org>
+        id S2503787AbgDPJfd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 05:35:33 -0400
+IronPort-SDR: FaOqx3gjHusiIA7aLJig4pR7+mOB0+oesPCHSTLjldh5LEUDLnD37H5S3l1Gs/de7oyTpQA57F
+ 9p/Bk4HRrcew==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 02:35:32 -0700
+IronPort-SDR: xTBdCFZ+AyNj7x+sI6oWf2cORZqbOuteXGFH1D7+A8fhQKnjpK5phcfYqEG1bS0ATPkjdpf+ub
+ aTAjF3ZJiA6Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,390,1580803200"; 
+   d="scan'208";a="242595587"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga007.jf.intel.com with ESMTP; 16 Apr 2020 02:35:32 -0700
+Received: from [10.255.154.239] (vramuthx-MOBL1.gar.corp.intel.com [10.255.154.239])
+        by linux.intel.com (Postfix) with ESMTP id 3F5C05803E3;
+        Thu, 16 Apr 2020 02:35:28 -0700 (PDT)
+Subject: Re: [PATCH v1 2/2] mtd: rawnand: Add NAND controller support on Intel
+ LGM SoC
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     anders.roxell@linaro.org, andriy.shevchenko@intel.com,
+        arnd@arndb.de, boris.brezillon@collabora.com,
+        brendanhiggins@google.com, cheol.yong.kim@intel.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, masonccyang@mxic.com.tw,
+        miquel.raynal@bootlin.com, piotrs@cadence.com,
+        qi-ming.wu@intel.com, richard@nod.at, robh+dt@kernel.org,
+        tglx@linutronix.de, vigneshr@ti.com
+References: <20200414022433.36622-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200415220533.733834-1-martin.blumenstingl@googlemail.com>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <c33c8653-16a2-5bcd-97a9-511d958b755a@linux.intel.com>
+Date:   Thu, 16 Apr 2020 17:35:26 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b4161f1df3436d7371ab7e88709169e9a391f15d.camel@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200415220533.733834-1-martin.blumenstingl@googlemail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 15-04-20 12:22:27, Jeff Layton wrote:
-> On Wed, 2020-04-15 at 16:06 +0200, Jan Kara wrote:
-> > On Wed 15-04-20 08:13:00, Jeff Layton wrote:
-> > > From: Jeff Layton <jlayton@redhat.com>
-> > > 
-> > > When syncing out a block device (a'la __sync_blockdev), any error
-> > > encountered will only be recorded in the bd_inode's mapping. When the
-> > > blockdev contains a filesystem however, we'd like to also record the
-> > > error in the super_block that's stored there.
-> > > 
-> > > Make mark_buffer_write_io_error also record the error in the
-> > > corresponding super_block when a writeback error occurs and the block
-> > > device contains a mounted superblock.
-> > > 
-> > > Since superblocks are RCU freed, hold the rcu_read_lock to ensure
-> > > that the superblock doesn't go away while we're marking it.
-> > > 
-> > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > > ---
-> > >  fs/buffer.c | 7 +++++++
-> > >  1 file changed, 7 insertions(+)
-> > > 
-> > > diff --git a/fs/buffer.c b/fs/buffer.c
-> > > index f73276d746bb..2a4a5cc20418 100644
-> > > --- a/fs/buffer.c
-> > > +++ b/fs/buffer.c
-> > > @@ -1154,12 +1154,19 @@ EXPORT_SYMBOL(mark_buffer_dirty);
-> > >  
-> > >  void mark_buffer_write_io_error(struct buffer_head *bh)
-> > >  {
-> > > +	struct super_block *sb;
-> > > +
-> > >  	set_buffer_write_io_error(bh);
-> > >  	/* FIXME: do we need to set this in both places? */
-> > >  	if (bh->b_page && bh->b_page->mapping)
-> > >  		mapping_set_error(bh->b_page->mapping, -EIO);
-> > >  	if (bh->b_assoc_map)
-> > >  		mapping_set_error(bh->b_assoc_map, -EIO);
-> > > +	rcu_read_lock();
-> > > +	sb = bh->b_bdev->bd_super;
-> > 
-> > You still need READ_ONCE() here. Otherwise the dereference below can still
-> > result in refetch and NULL ptr deref.
-> > 
-> > 								Honza
-> > 
-> 
-> Huh? That seems like a really suspicious thing for the compiler/arch to
-> do. We are checking that sb isn't NULL before we dereference it. Doesn't
-> that imply a data dependency? How could the value of "sb" change after
-> that?
+Hi Martin,
 
-Because the compiler is free to optimize the local variable away and
-actually compile the dereference below as bh->b_bdev->bd_super->s_wb_err
-(from C11 standard POV such code is equivalent since in C11 memory model
-it is assumed there are no concurrent accesses). And READ_ONCE() is a way
-to forbid compiler from doing such optimization - through 'volatile'
-keyword it tells the compiler there may be concurrent accesses happening
-and makes sure the value is really fetched into the local variable and used
-from there. There are good articles about this on LWN - I'd give you a link
-but LWN seems to be down today. But the latest article is about KCSAN and
-from there are links to older articles about compiler optimizations.
+     Thank you so much for review comments and your time...
 
-> I'm also not sure I understand how using READ_ONCE really helps there if
-> we can't count on the value of a local variable not changing.
+On 16/4/2020 6:05 am, Martin Blumenstingl wrote:
+> Hi,
+>
+> first of all: thank you for working on upstreaming this.
+> Especially since you are going to use the new exec_op style in v2 as
+> Boris suggested.
+>
+>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>
+>> This patch adds the new IP of Nand Flash Controller(NFC) support
+>> on Intel's Lightning Mountain(LGM) SoC.
+>>
+>> DMA is used for burst data transfer operation, also DMA HW supports
+>> aligned 32bit memory address and aligned data access by default.
+>> DMA burst of 8 supported. Data register used to support the read/write
+>> operation from/to device.
+> I am wondering how this new hardware is different from the Lantiq NAND
+> controller IP - for which there is already a driver in mainline (it's
+> in drivers/mtd/nand/raw/xway_nand.c).
+> The CON and WAIT registers look suspiciously similar.
+>
+> As far as I understand the "old" SoCs (VRX200 and earlier) don't have
+> a built-in ECC engine. This seems to have changed with ARX300 though
+> (again, AFAIK).
+>
+> A bit of lineage on these SoCs (initially these were developed by
+> Infineon. Lantiq then started as an Infineon spin-off in 2009 and
+> was then acquired by Intel in 2015):
+> - Danube
+> - ARX100 from 2008/2009
+> - VRX200 from 2009/2010
+> - ARX300 from 2014
+> - GRX350 from 2015/2016
+> - GRX550 from 2017
+> - and now finally: LGM from 2020 (est.)
+>
+> The existing xway_nand driver supports the Danube, ARX100 and VRX200
+> SoCs.
+Lantiq upstreamed a driver for an older version of this IP core 8 years 
+ago, see here:
+https://elixir.bootlin.com/linux/v5.5.6/source/drivers/mtd/nand/raw/xway_nand.c 
+It does not support DMA and ECC.
+This upstream driver works with the xrx200, I do not know how well it 
+works with other SoCs.
 
-I hope I've explained this above.
-
-								Honza
-
-> > > +	if (sb)
-> > > +		errseq_set(&sb->s_wb_err, -EIO);
-> > > +	rcu_read_unlock();
-> > >  }
-> > >  EXPORT_SYMBOL(mark_buffer_write_io_error);
-> > >  
-> > > -- 
-> > > 2.25.2
-> > > 
-> 
-> -- 
-> Jeff Layton <jlayton@kernel.org>
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Regards
+Vadivel
+>
+>
+> Best regards,
+> Martin
