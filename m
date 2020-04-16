@@ -2,195 +2,93 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F3FC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A3AC352BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:01:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FA8420784
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:01:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qMyY08os"
+	by mail.kernel.org (Postfix) with ESMTP id DA01F206B9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 09:01:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503072AbgDPJB0 (ORCPT
+        id S2503242AbgDPJBu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 05:01:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40274 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502923AbgDPIsR (ORCPT
+        Thu, 16 Apr 2020 05:01:50 -0400
+Received: from cmccmta3.chinamobile.com ([221.176.66.81]:2384 "EHLO
+        cmccmta3.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2502998AbgDPI7N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 04:48:17 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B69FC061A10
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 01:48:12 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id k1so3857957wrx.4
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Apr 2020 01:48:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=gCC6rxpfNBHEEJoswTl2+v3GlY13e+wv1Apu4C5uUJ0=;
-        b=qMyY08os0xXarDJEQ8j9nJU1G/4i1ajvSN1547JGWNAU4kptYy+l0ETyItzmwelvLC
-         nCDep5Cl1t95mbiIhlCDcowJNJGFakofRU/UeiPQv049DorrDQDyvOhQ0iXlohLp8hin
-         3bAdw+39EFnaQiFiejH+534QfsSXNhMyYx4ZtJs1O8APzJpuT9KiZORIU2xx8m9me3GJ
-         nRCzeSz6fhZnRuGUV65gJOj0k8DMrASVs1ffDMfO5wQ+4MKhMzyo1Hf7xWdNJii/ENzy
-         uOrTcZOmWLeo1D6phvtKajqfSbjF0JkyzG19tN5chV4GtOZYui9witk4RNmc7L0KIuBW
-         GEOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=gCC6rxpfNBHEEJoswTl2+v3GlY13e+wv1Apu4C5uUJ0=;
-        b=bZgbylvH98ByyNXo1T6evCgKM+pLgkqgUM9Dd29qam9Sog6d3lYWapcqowHnn7V2lJ
-         z5jJAgvpzXSaef/KnvyGVYVfSxSOkqQtoyRzqJ1ktIrsXSYbowmj3cf1qknQaPRnNsir
-         qum3Ort+UUrmduDY2mKM3cmu/DPAAHyV7lPEWGcrSNv0MNjZvTCcDG6Hw2hebDqWrSze
-         arO+ZaLw8lca7ovqAjrIPIcp861w9A/vLS96hjXWWBrUrKypIJgg6e0tsZWWX+kk0VJy
-         eg19VLUNYXrdrSjnb7KwMwPUoNqDgX32+urN3bsfLyR6nGuRJthYemTRRN4Oh1Lm9Y7R
-         7iKQ==
-X-Gm-Message-State: AGi0Pub/4NK2xcYPu2gfhUNKljVvh8tYMNdGFCdZjPdV804tRrUmaChR
-        w0pczgXTp0GrsMijoF0R0Ed1sQ==
-X-Google-Smtp-Source: APiQypLyhDVW4E+VOlBHWErivAdlGrtxixDqwonOAkbRNQamJnKVsV0vJKLtvSLryabLtX0HhH0tLg==
-X-Received: by 2002:a5d:4286:: with SMTP id k6mr21252278wrq.222.1587026890846;
-        Thu, 16 Apr 2020 01:48:10 -0700 (PDT)
-Received: from dell ([95.149.164.124])
-        by smtp.gmail.com with ESMTPSA id z15sm14429845wrs.47.2020.04.16.01.48.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2020 01:48:10 -0700 (PDT)
-Date:   Thu, 16 Apr 2020 09:49:10 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Josef Friedl <josef.friedl@speed.at>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ran Bi <ran.bi@mediatek.com>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
-        srv_heupstream@mediatek.com
-Subject: Re: [PATCH v12 1/6] mfd: mt6397: Modify suspend/resume behavior
-Message-ID: <20200416084910.GX2167633@dell>
-References: <1586333531-21641-1-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1586333531-21641-2-git-send-email-hsin-hsiung.wang@mediatek.com>
+        Thu, 16 Apr 2020 04:59:13 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.19]) by rmmx-syy-dmz-app10-12010 (RichMail) with SMTP id 2eea5e981e32466-81700; Thu, 16 Apr 2020 16:58:26 +0800 (CST)
+X-RM-TRANSID: 2eea5e981e32466-81700
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from [172.20.145.111] (unknown[112.25.154.146])
+        by rmsmtp-syy-appsvr10-12010 (RichMail) with SMTP id 2eea5e981e31183-3c8ab;
+        Thu, 16 Apr 2020 16:58:26 +0800 (CST)
+X-RM-TRANSID: 2eea5e981e31183-3c8ab
+Subject: Re: [PATCH] i2c: drivers: Avoid unnecessary check inefm32_i2c_probe()
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     wsa@the-dreams.de, o.rempel@pengutronix.de, ardb@kernel.org,
+        linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <20200415140640.19948-1-tangbin@cmss.chinamobile.com>
+ <20200415143133.qwbes5whbqx5jf2j@pengutronix.de>
+ <20cc01b8-2661-7b3e-3dbc-38f7e282679b@cmss.chinamobile.com>
+ <20200416065014.7umocf2aohz6q2nn@pengutronix.de>
+From:   Tang Bin <tangbin@cmss.chinamobile.com>
+Message-ID: <145d0ba7-fca4-20f6-a6e2-6fc370bc9a57@cmss.chinamobile.com>
+Date:   Thu, 16 Apr 2020 17:00:21 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <20200416065014.7umocf2aohz6q2nn@pengutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1586333531-21641-2-git-send-email-hsin-hsiung.wang@mediatek.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 08 Apr 2020, Hsin-Hsiung Wang wrote:
+Hi Uwe:
 
-> Some pmics don't need backup interrupt settings, so we change to use
-> pm notifier for the pmics which are necessary to store settings.
-> 
-> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-> ---
->  drivers/mfd/mt6397-core.c       | 30 ------------------------------
->  drivers/mfd/mt6397-irq.c        | 35 ++++++++++++++++++++++++++++++++++-
->  include/linux/mfd/mt6397/core.h |  2 ++
->  3 files changed, 36 insertions(+), 31 deletions(-)
-> 
-> diff --git a/drivers/mfd/mt6397-core.c b/drivers/mfd/mt6397-core.c
-> index 0437c85..d2e70d8 100644
-> --- a/drivers/mfd/mt6397-core.c
-> +++ b/drivers/mfd/mt6397-core.c
-> @@ -100,35 +100,6 @@ static const struct mfd_cell mt6397_devs[] = {
->  	}
->  };
->  
-> -#ifdef CONFIG_PM_SLEEP
-> -static int mt6397_irq_suspend(struct device *dev)
-> -{
-> -	struct mt6397_chip *chip = dev_get_drvdata(dev);
-> -
-> -	regmap_write(chip->regmap, chip->int_con[0], chip->wake_mask[0]);
-> -	regmap_write(chip->regmap, chip->int_con[1], chip->wake_mask[1]);
-> -
-> -	enable_irq_wake(chip->irq);
-> -
-> -	return 0;
-> -}
-> -
-> -static int mt6397_irq_resume(struct device *dev)
-> -{
-> -	struct mt6397_chip *chip = dev_get_drvdata(dev);
-> -
-> -	regmap_write(chip->regmap, chip->int_con[0], chip->irq_masks_cur[0]);
-> -	regmap_write(chip->regmap, chip->int_con[1], chip->irq_masks_cur[1]);
-> -
-> -	disable_irq_wake(chip->irq);
-> -
-> -	return 0;
-> -}
-> -#endif
-> -
-> -static SIMPLE_DEV_PM_OPS(mt6397_pm_ops, mt6397_irq_suspend,
-> -			mt6397_irq_resume);
-> -
->  struct chip_data {
->  	u32 cid_addr;
->  	u32 cid_shift;
-> @@ -238,7 +209,6 @@ static struct platform_driver mt6397_driver = {
->  	.driver = {
->  		.name = "mt6397",
->  		.of_match_table = of_match_ptr(mt6397_of_match),
-> -		.pm = &mt6397_pm_ops,
->  	},
->  	.id_table = mt6397_id,
->  };
-> diff --git a/drivers/mfd/mt6397-irq.c b/drivers/mfd/mt6397-irq.c
-> index b2d3ce1..2924919 100644
-> --- a/drivers/mfd/mt6397-irq.c
-> +++ b/drivers/mfd/mt6397-irq.c
-> @@ -9,6 +9,7 @@
->  #include <linux/of_irq.h>
->  #include <linux/platform_device.h>
->  #include <linux/regmap.h>
-> +#include <linux/suspend.h>
->  #include <linux/mfd/mt6323/core.h>
->  #include <linux/mfd/mt6323/registers.h>
->  #include <linux/mfd/mt6397/core.h>
-> @@ -81,7 +82,7 @@ static struct irq_chip mt6397_irq_chip = {
->  static void mt6397_irq_handle_reg(struct mt6397_chip *mt6397, int reg,
->  				  int irqbase)
->  {
-> -	unsigned int status;
-> +	unsigned int status = 0;
+On 2020/4/16 14:50, Uwe Kleine-König wrote:
+>>>> diff --git a/drivers/i2c/busses/i2c-efm32.c b/drivers/i2c/busses/i2c-efm32.c
+>>>> index 4de31fae7..4786ef6b2 100644
+>>>> --- a/drivers/i2c/busses/i2c-efm32.c
+>>>> +++ b/drivers/i2c/busses/i2c-efm32.c
+>>>> @@ -312,9 +312,6 @@ static int efm32_i2c_probe(struct platform_device *pdev)
+>>>>    	int ret;
+>>>>    	u32 clkdiv;
+>>>> -	if (!np)
+>>>> -		return -EINVAL;
+>>>> -
+>>> I don't care much about this change. While the statement that this
+>>> driver is only instantiated on dt platforms is probably right,
+>>> explicitly checking for it might still prevent surprises later, serves
+>>> as explicit statement for the driver reader that non-dt isn't supposed
+>>> to work and given that the check is cheap I tend slightly to just keep
+>>> it.
+>>>
+>> In this driver, the function efm32_i2c_probe() can be triggered only if the
+>> platform_device and platform_driver matches,  and the matching condition is
+>> DTS. It's my opinion.
+> I admit I didn't recheck, but I think the driver will also be matched on
+> non-dt platforms that provide an "efm32-i2c" device.
 
-This looks like an unrelated change, no?
+Year, I agree with you, the driver should be matched on dt or non-dt 
+platforms. But for non-dt platforms, I think this driver may need minor 
+changes, after all, it is just suitable for the dt platforms right now. 
+That's my shallow opinions.
 
->  	int i, irq, ret;
->  
->  	ret = regmap_read(mt6397->regmap, reg, &status);
-> @@ -128,6 +129,36 @@ static const struct irq_domain_ops mt6397_irq_domain_ops = {
->  	.map = mt6397_irq_domain_map,
->  };
+Thanks for your patient guidance and reply, thank you. I think you are 
+also a good teacher, thanks.
 
-Other than that.
+Tang Bin
 
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+>
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+
+
