@@ -2,174 +2,122 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F5DC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6005C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:42:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E931221F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:40:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="tKMoiJzj"
+	by mail.kernel.org (Postfix) with ESMTP id 8617A221F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 20:42:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587069741;
+	bh=ESlwOvz35Ein/xZEcTEu3CokgsYuWQqOyfvZUaVNrYU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZwMbufgu3Ns10lpcuaye7mYbESEzF59yB1rQVU0FyEgmipD5PPb0KokulrU07tD7G
+	 50G54o8BidTdfg8kTXQZRZb6w4kV2G/QxexbKwJOubMt54WXM7QT1FdSWEjmPHfC0i
+	 2Do3AhxcVLnsi9l5EFe6A/hx2e3Mw8td6dWLXGYc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731720AbgDPUkP (ORCPT
+        id S1732694AbgDPUmV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 16:40:15 -0400
-Received: from cmta19.telus.net ([209.171.16.92]:40649 "EHLO cmta19.telus.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726114AbgDPUkO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 16:40:14 -0400
-Received: from dougxps ([173.180.45.4])
-        by cmsmtp with SMTP
-        id PBIwjhLWDFblkPBIxj6pVE; Thu, 16 Apr 2020 14:40:13 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
-        t=1587069613; bh=kMrSu5wL+W/PT4AK4fBhYDNmaytt313olJcVR9Tlz1g=;
-        h=From:To:Cc:References:In-Reply-To:Subject:Date;
-        b=tKMoiJzjnG4seufXgIta8ArcQIDrvLyDrKglytbfYtWYoq5d1pY7d2dC9EwaAVGT3
-         LosdB78kONx/JQw8lZ9BZQDjAB8zNjhn1ZEG+xvTI2pkHy7+bkeMrjcss+JDwSuXA7
-         pXh2O3ihrPJox7LxneIgGhjC3xUh/RR5twnTmeJn6LEg13ITxUI5dE3FH3RP7nKmJN
-         W0dzMAcpmfbimLPmdWQWiJxfMd9BAHp0FiIleSNGlvFL1S/45Bg9cQgyps1HSYRZg9
-         2NDAwe2e8QTpFfv8hIHr3IvPdx5nNTcvX3kmTUhtWfJgcDpESKavrXOcuDitWP9ihh
-         73V207wd1t1Qg==
-X-Telus-Authed: none
-X-Authority-Analysis: v=2.3 cv=BNTNU2YG c=1 sm=1 tr=0
- a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
- a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
- a=kj9zAlcOel0A:10 a=Ic_2fVt4t7qr8CzPNX0A:9 a=CjuIK1q_8ugA:10
-From:   "Doug Smythies" <dsmythies@telus.net>
-To:     "'Chen Yu'" <yu.c.chen@intel.com>
-Cc:     "'Len Brown'" <lenb@kernel.org>,
-        "'Rafael J. Wysocki'" <rjw@rjwysocki.net>,
-        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>
-References: <cover.1586782089.git.yu.c.chen@intel.com> <db96fd31afd0ff65e4041665293b96c984e675bc.1586782089.git.yu.c.chen@intel.com> <001901d613a4$010e0a70$032a1f50$@net> <20200416170611.GA23628@chenyu-office.sh.intel.com>
-In-Reply-To: <20200416170611.GA23628@chenyu-office.sh.intel.com>
-Subject: RE: [PATCH 2/3][v2] tools/power turbostat: Introduce functions to accumulate RAPL consumption
-Date:   Thu, 16 Apr 2020 13:40:09 -0700
-Message-ID: <001201d6142f$39fcde20$adf69a60$@net>
+        Thu, 16 Apr 2020 16:42:21 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:41470 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731844AbgDPUmB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 16:42:01 -0400
+Received: by mail-ot1-f68.google.com with SMTP id c3so153569otp.8;
+        Thu, 16 Apr 2020 13:42:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=anW0cTk2V2JJay0BG4lZbAZX39UmWgVy33oQofhYL+o=;
+        b=TrOIgi/Psi9lHEQb0p80KCPztg6udz4+rr0XyCa8Wkt57hera+PoysMJRclxDiM/7t
+         tCUFQiKwFGtZFk80IsqoxTrrcKd3YsUVaKvd0io//86RBx7n0MgbwjXTEc/HorcO3N+1
+         DsXgZjF2jNj7U0ZTHpTulxAHeKStOIRo4atSFMyMw7q8XarNxhspS4czCwzi9VgTL1UC
+         FaH4zzO2AbA3QrHhKiO2rDseQbzJ60KIHsWCC5ECKMtBKG2oqUBb+KpSWfFyvgZL2OC/
+         K9k/7P4X3YN8FJXAid1NOJn1DFJHpR4c3pJxYfuky4mWsPRn2ORllT7NvbWEqkcz9+EN
+         ODcQ==
+X-Gm-Message-State: AGi0PuZzUWvCP681alK6PrRPA81k8SRaaWAKc8BzuZhL+W1YFJIFBTK6
+        sk6bY7VySAvn4HXqL0KCDg==
+X-Google-Smtp-Source: APiQypLW3db/YOgTAVu/J1ZAay4EFYrxFtuax8O/ijjNSMUub8dIEYBEUvJBFYL72MQmqT4sac6WuA==
+X-Received: by 2002:a9d:6644:: with SMTP id q4mr39174otm.229.1587069719796;
+        Thu, 16 Apr 2020 13:41:59 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id s13sm8064384oov.28.2020.04.16.13.41.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Apr 2020 13:41:59 -0700 (PDT)
+Received: (nullmailer pid 13530 invoked by uid 1000);
+        Thu, 16 Apr 2020 20:41:58 -0000
+Date:   Thu, 16 Apr 2020 15:41:58 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Philipp Rossak <embed3d@gmail.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org,
+        "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH v6 01/12] dt-bindings: add img,pvrsgx.yaml for
+ Imagination GPUs
+Message-ID: <20200416204158.GA1006@bogus>
+References: <cover.1586939718.git.hns@goldelico.com>
+ <06fb6569259bb9183d0a0d0fe70ec4f3033b8aab.1586939718.git.hns@goldelico.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Office Outlook 12.0
-Content-Language: en-ca
-Thread-Index: AdYUEUlAclnAOCYlSaea7n5JOlcPYAAHAhlw
-X-CMAE-Envelope: MS4wfMI4Diz8wlDDwDXTilLSmN6awGayPgr4FX4048AH1mpBUd26YhPDXL1JdzVXnqEKKcZVfJgXUT7KpaAGct5mXxdhhk0zMwHcZCr5aNe/Y23zfV5yaNsU
- 4oK3hW61E9q5I1ynDhhXRGrM6mL5SmgwM94luH/3u0eaZQTXWLa2yjt4Bmuurg/dUymywk08L3xDgemI9g7hCRK2tjnEz5VcfUcEuMmNmlHPOEby63Zm1mbQ
- cYynMKeHADu/40OseeHzWNhUtFTwzvafqbrvzK4pi7KEvAp7niKFNcbQb8UVLrFJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <06fb6569259bb9183d0a0d0fe70ec4f3033b8aab.1586939718.git.hns@goldelico.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020.04.10:06 Chen Yu wrote:
-> On Wed, Apr 15, 2020 at 09:03:34PM -0700, Doug Smythies wrote:
->> On 2020.04.15 05:57 Chen Yu wrote:
+On Wed, 15 Apr 2020 10:35:08 +0200, "H. Nikolaus Schaller" wrote:
+> The Imagination PVR/SGX GPU is part of several SoC from
+> multiple vendors, e.g. TI OMAP, Ingenic JZ4780, Intel Poulsbo,
+> Allwinner A83 and others.
 > 
->>> +	/*
->>> +	 * A wraparound time is calculated early.
->>> +	 */
->>> +	its.it_interval.tv_sec = rapl_joule_counter_range;
->> 
->> Would this be o.K.?
->> 
->> +	its.it_interval.tv_sec = rapl_joule_counter_range / 2;
->> 
-> This should be okay. I've checked the defination of TDP, and
-> on a wiki page it has mentioned that[1]:
-> "Some sources state that the peak power for a microprocessor
-> is usually 1.5 times the TDP rating"
-> although the defination of TDP varies, using 2 * TDP should
-> be safe.
+> With this binding, we describe how the SGX processor is
+> interfaced to the SoC (registers, interrupt etc.).
+> 
+> In most cases, Clock, Reset and power management is handled
+> by a parent node or elsewhere (e.g. code in the driver).
+> 
+> Tested by make dt_binding_check dtbs_check
+> 
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> ---
+>  .../devicetree/bindings/gpu/img,pvrsgx.yaml   | 122 ++++++++++++++++++
+>  1 file changed, 122 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
+> 
 
-O.K. Great.
-By the way, I have already tested it (in addition to the previously e-mailed patch correction):
+My bot found errors running 'make dt_binding_check' on your patch:
 
-First, with this:
+Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml:  while parsing a block mapping
+  in "<unicode string>", line 74, column 13
+did not find expected key
+  in "<unicode string>", line 117, column 21
+Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/gpu/img,pvrsgx.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/gpu/img,pvrsgx.example.dts] Error 1
+make[1]: *** Waiting for unfinished jobs....
+Makefile:1264: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
-	its.it_interval.tv_sec = rapl_joule_counter_range;
+See https://patchwork.ozlabs.org/patch/1270997
 
-Result:
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
 
-sudo ./turbostat --Summary --interval 3200 --show Avg_MHz,Busy%,Bzy_MHz,IRQ,PkgTmp,PkgWatt,GFXWatt
-...
-RAPL: 2759 sec. Joule Counter Range, at 95 Watts
-...
-cpu0: MSR_PKG_POWER_INFO: 0x000002f8 (95 W TDP, RAPL 0 - 0 W, 0.000000 sec.)
-cpu0: MSR_PKG_POWER_LIMIT: 0x4283e800dd8320 (UNlocked)
-cpu0: PKG Limit #1: ENabled (100.000000 Watts, 28.000000 sec, clamp ENabled)
-cpu0: PKG Limit #2: ENabled (125.000000 Watts, 0.002441* sec, clamp DISabled)
-...
-Avg_MHz Busy%   Bzy_MHz IRQ     PkgTmp  PkgWatt GFXWatt
-4039    100.20  4031    7211202 64      18.29   0.00
-4033    100.22  4024    7254993 66      18.00   0.00
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
 
-actual (using a shorter interval, that doesn't wrap around):
-
-Avg_MHz Busy%   Bzy_MHz IRQ     PkgTmp  PkgWatt GFXWatt
-4032    100.22  4023    676360  65      99.92   0.00
-4029    100.23  4019    676629  65      99.91   0.00
-4032    100.22  4023    676771  65      99.91   0.00
-4037    100.22  4028    675430  65      99.91   0.00
-4032    100.22  4023    675819  65      99.91   0.00
-4028    100.23  4019    676541  65      99.91   0.00
-4042    100.22  4033    675857  64      99.91   0.00
-4029    100.23  4020    675597  65      99.91   0.00
-4027    100.23  4017    676201  65      3751748943144.71        0.00
-4034    100.22  4025    676402  65      99.91   0.00
-4035    100.22  4026    674982  65      99.91   0.00
-4032    100.22  4023    676012  64      99.91   0.00
-4034    100.22  4025    723696  66      99.91   0.00
-4039    100.22  4030    676342  64      99.91   0.00
-4028    100.23  4018    676082  65      99.91   0.00
-4028    100.23  4019    676218  65      99.91   0.00
-4038    100.22  4030    675771  65      99.91   0.00
-4031    100.22  4022    674282  65      3751749380702.93        0.00
-4031    100.22  4022    676314  65      99.91   0.00
-4039    100.22  4030    676197  65      99.91   0.00
-
-And now with this:
-
-	its.it_interval.tv_sec = rapl_joule_counter_range / 2;
-
-Avg_MHz Busy%   Bzy_MHz IRQ     PkgTmp  PkgWatt GFXWatt
-4032    100.22  4023    7205931 65      99.91   0.00
-4033    100.22  4023    7208003 65      99.91   0.00
-4034    100.22  4024    7205563 65      99.91   0.00
-
-and using the shorter interval:
-
-Avg_MHz Busy%   Bzy_MHz IRQ     PkgTmp  PkgWatt GFXWatt
-4028    100.23  4019    676147  64      99.92   0.00
-4027    100.23  4017    675857  65      99.91   0.00
-4036    100.22  4027    675736  65      99.91   0.00
-4032    100.22  4023    674758  65      99.91   0.00
-4032    100.22  4022    675692  65      99.91   0.00
-4032    100.22  4023    676275  65      99.91   0.00
-4043    100.22  4035    676001  66      99.91   0.00
-4028    100.23  4019    676277  65      99.91   0.00
-4028    100.23  4019    676420  65      99.91   0.00
-4028    100.23  4019    675884  65      99.91   0.00
-4037    100.22  4028    675293  65      99.91   0.00
-4030    100.23  4021    674025  66      99.91   0.00
-4031    100.22  4022    676462  65      99.91   0.00
-4032    100.22  4023    676007  66      99.91   0.00
-4047    100.21  4038    676424  65      99.91   0.00
-4030    100.22  4021    676853  65      99.91   0.00
-4028    100.23  4019    676553  65      99.91   0.00
-4034    100.22  4025    675880  65      99.91   0.00
-4036    100.22  4027    674824  65      99.91   0.00
-4033    100.22  4024    674577  65      99.91   0.00
-4031    100.22  4022    676599  65      99.91   0.00
-4041    100.22  4032    676675  66      99.91   0.00
-
-Note that it is very much on purpose that I have set
-TDP to 100 watts on this processor, whereas the
-default is 95 watts. Notice the package temperature,
-after several hours of running power throttled to
-a CPU frequency of 4.03 GHz.
-
-... Doug
-
-
+Please check and re-submit.
