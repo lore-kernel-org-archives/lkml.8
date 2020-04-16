@@ -2,93 +2,92 @@ Return-Path: <SRS0=1dCa=6A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD2FC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A14C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:07:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85A7D214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:04:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ED4821D79
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Apr 2020 13:07:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2894846AbgDPNE3 (ORCPT
+        id S2894786AbgDPNH3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:04:29 -0400
-Received: from foss.arm.com ([217.140.110.172]:60510 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2894786AbgDPNEZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:04:25 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A79F61FB;
-        Thu, 16 Apr 2020 06:04:24 -0700 (PDT)
-Received: from [192.168.1.19] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A8EB53F68F;
-        Thu, 16 Apr 2020 06:04:23 -0700 (PDT)
-Subject: Re: [PATCH v3 9/9] sched/topology: Define and use shortcut pointers
- for wakeup sd_flag scan
-To:     Valentin Schneider <valentin.schneider@arm.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-References: <20200415210512.805-1-valentin.schneider@arm.com>
- <20200415210512.805-10-valentin.schneider@arm.com>
- <CAKfTPtBDGzrvG=YhjBZBEgfx5EtM-rTC-dWX5phqh4bOY5XqgA@mail.gmail.com>
- <jhj4ktjpw2z.mognet@arm.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <d508a6a5-c04f-087f-8767-6fb397b70055@arm.com>
-Date:   Thu, 16 Apr 2020 15:04:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 16 Apr 2020 09:07:29 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:34857 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2894692AbgDPNHT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:07:19 -0400
+Received: from mail-qk1-f172.google.com ([209.85.222.172]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MXpM2-1jjuWG0tyO-00Y6IA; Thu, 16 Apr 2020 15:07:16 +0200
+Received: by mail-qk1-f172.google.com with SMTP id l25so21143204qkk.3;
+        Thu, 16 Apr 2020 06:07:15 -0700 (PDT)
+X-Gm-Message-State: AGi0PuaCuoECuJVy9gUNj8qegAWs4qh2KMh97Ge+nPrtZK7Uaz6HRTR5
+        0en66QtYnvkti9lLEDsYwTh0CX1CYrnBDQTerXs=
+X-Google-Smtp-Source: APiQypIhmxZomDyPI8hn1HA79vovNwkrPUqhu3fHt73HrirP0DJ/PgzDEYqgh4E4jJVMGFCKn/J8UzK64DqY6qWvfL4=
+X-Received: by 2002:a37:63d0:: with SMTP id x199mr15671947qkb.3.1587042435017;
+ Thu, 16 Apr 2020 06:07:15 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <jhj4ktjpw2z.mognet@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200416115658.20406-1-geert+renesas@glider.be> <20200416115658.20406-2-geert+renesas@glider.be>
+In-Reply-To: <20200416115658.20406-2-geert+renesas@glider.be>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 16 Apr 2020 15:06:55 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a14Vk1JKRYZkkAhC9fAV4CMQzvux_FWdNkn39OwsYn4mA@mail.gmail.com>
+Message-ID: <CAK8P3a14Vk1JKRYZkkAhC9fAV4CMQzvux_FWdNkn39OwsYn4mA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] arm64: Sort vendor-specific errata
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Robert Richter <rrichter@marvell.com>,
+        Wei Xu <xuwei5@hisilicon.com>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:cKIPdBDmganPCmYpbOwn6REz2pxkK+ju8nIo6xpIixo05eSCdjv
+ NZmwsXQag4IUtUt1K0P1FfNCr2zQOpHdWaYF+8YEXebzINhM/smLRiw66PgOmrazZ9t1XBo
+ r7Lw5VwMooGahJI5YU6auDNnq7qe1GOdc7Rs7O1RqDuASopEUkETC006ELx/Y45EXJOsFKh
+ QeDTa92bQ2lZ+LNR6Wk1g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:7KxYyPtqaCE=:AUmirVDEPpP6TKAiQBEiIU
+ k2+gXvw/Gmmmvir8ZAzHXNkYJduUsW73x+H8Nr/TxC4xItfpJCIvmKSP2gYOasQioVBkHhonZ
+ mSkIpv7pFSC+fIvo64LzBLfGo+vemfWw/iLF9YsVoqgIHqtCojwES0Mc02+lh/USSKeY8kDgu
+ Ymg3WZkggQxJXFHk2pa7z5oV0eHIi46ob/yebby49YsXnBd9EkWFFcf4DuvmHT/UE3CdGosHf
+ eABPBmrsWREmyE5uq+i5Odqor7yIJT9kE5yncHfwwQ8u4sNSsVxJw8b+CSUydyl2ToCrg1/Uv
+ QwZDloGy0yNyMEr7KL55MQCNFFrzE+B9IDcSTU8B0IjIWOsBXd/T+CTemHu2bfdeg4MhTw22J
+ PrGoKIWD2JrHnryF3gmhu9/XDZsW9wOncLMCGVBErMXveL+iI6Pemy+gSvmQO+Yk4Ket/EDZH
+ AsNoeounvYI2cCgrTv+lOk7bqiKqEr9cq9lzts8qPdYpbMjz+vGDmLMRjHA/vP2bCAiF7yB+9
+ 5OysB6ywHbIHHMrnWHmeGDi7LLk/Ml+a0ogY+3HKSgPLRnHryqYlfMraxbCX5zVY5cM4xFn+1
+ bAzvdH/c/ErmjmJn4rgMTkkDoUZNvh9M2N/IiE9Xqh1etCLwwRMye6hmoms4+jwqselLqrY6t
+ wzSC0T/uXrb7SFgFzSBhfik1WnyFFSN8v9PHkss2qedvV6XSqqPtTzSoOA0UmE5AekZ7Y0UQX
+ HM+J/Ro7bMruBoCYrS1A1o4J/TKp9JRHCOf+/vNa33Bu8W1QA7UbMjBc3Ld3MNpf7Cz6kCgIV
+ c6NqEK5RSZzs92x1H+lYQ4IVbGCtZxl+2lzd1+fejWcVgYwMEE=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16.04.20 12:24, Valentin Schneider wrote:
-> 
-> On 16/04/20 08:46, Vincent Guittot wrote:
->>> @@ -6657,7 +6646,19 @@ select_task_rq_fair(struct task_struct *p, int prev_cpu, int wake_flags)
->>>
->>>         rcu_read_lock();
->>>
->>> -       sd = highest_flag_domain(cpu, sd_flag);
->>> +       switch (wake_flags & (WF_TTWU | WF_FORK | WF_EXEC)) {
->>> +       case WF_TTWU:
->>> +               sd_flag = SD_BALANCE_WAKE;
->>> +               sd = rcu_dereference(per_cpu(sd_balance_wake, cpu));
->>
->> It's worth having a direct pointer for the fast path which we always
->> try to keep short but the other paths are already slow and will not
->> get any benefit of this per cpu pointer.
->> We should keep the loop for the slow paths
->>
-> 
-> Which fast/slow paths are you referring to here? want_affine vs
-> !want_affine? If so, do you then mean that we should do the switch case
-> only when !want_affine, and otherwise look for the domain via the
-> for_each_domain() loop?
+On Thu, Apr 16, 2020 at 1:57 PM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+>
+> Sort configuration options for vendor-specific errata by vendor, to
+> increase uniformity.
+> Move ARM64_WORKAROUND_REPEAT_TLBI up, as it is also selected by
+> ARM64_ERRATUM_1286807.
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Coming back to the v2 discussion on this patch
+Looks fine to me, though I wonder if we should move the errata
+menu to a separate Kconfig file, given that it's already longer than the
+Kconfig.platforms and Kconfig.debug files at 500 lines.
 
-https://lore.kernel.org/r/20200311181601.18314-10-valentin.schneider@arm.com
+Maybe a Kconfig.cpu with both the "ARMv8.x architectural features" and
+errata menus?
 
-SD_BALANCE_WAKE is not used in mainline anymore, so wakeups are always
-fast today.
+Either way,
 
-I.e. you wouldn't need a per_cpu(sd_balance_wake, cpu) since it's always
-NULL.
-
-I.e. want_affine logic and the 'for_each_domain(cpu, tmp)' isn't needed
-anymore.
-
-This will dramatically simplify the code in select_task_rq_fair().
-
-But I guess Vincent wants to keep the functionality so we're able to
-enable SD_BALANCE_WAKE on certain sd's?
+Acked-by: Arnd Bergmann <arnd@arndb.de
